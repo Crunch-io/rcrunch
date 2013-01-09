@@ -1,0 +1,14 @@
+Package: rcrunch
+Type: Package
+Title: Crunch.io Database Tools
+Version: 0.0.1
+Date: 2013-01-08
+Author: Neal Richardson <neal@crunch.io>
+Maintainer: Mike Malecki <malecki@crunch.io>, Neal Richardson <neal@crunch.io>
+Description: An interface for accessing the Crunch.io database
+License: GPL (>= 3)
+LazyLoad: yes
+Depends:
+    R (>= 2.15.0)
+Imports:
+    RCurl
