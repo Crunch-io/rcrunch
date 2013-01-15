@@ -1,0 +1,1 @@
+is.error <- function (x) inherits(x, "error")

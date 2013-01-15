@@ -16,3 +16,5 @@ Collate:
     'auth.R'
     'rcrunch.R'
     'api.R'
+    'user.R'
+    'misc.R'
