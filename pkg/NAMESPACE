@@ -1,5 +1,6 @@
 export(login)
 export(logout)
+importFrom(RJSONIO,fromJSON)
 importFrom(RJSONIO,toJSON)
 importFrom(httr,GET)
 importFrom(httr,POST)

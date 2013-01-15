@@ -18,3 +18,4 @@ Collate:
     'api.R'
     'user.R'
     'misc.R'
+    'shoji.R'

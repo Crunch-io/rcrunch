@@ -13,5 +13,5 @@ test_that("API root can be fetched", {
     login("***REMOVED***")
     expect_false(is.error(getAPIroot()))
     urls <- getAPIroot()
-    expect_true(is.list(urls))
+    expect_true(is.shoji(urls))
 })

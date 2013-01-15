@@ -13,7 +13,23 @@ crunchAPI <- function (http.verb, url, ..., auth.required=TRUE) {
     http.verb <- validateHttpVerb(http.verb)
     http.verb <- selectHttpFunction(http.verb)
     
-    http.verb(url, ..., config=list(auth))
+    out <- http.verb(url, ..., config=list(auth))
+    
+    if (length(out$content)) {
+        if (is.JSON.response(out)) {
+            out <- parseJSONresponse(out$content)
+        }
+    }
+    return(out)
+}
+
+is.JSON.response <- function (x) {
+    isTRUE(grepl("application/json", x$headers[["content-type"]], fixed=TRUE))
+}
+
+##' @importFrom RJSONIO fromJSON
+parseJSONresponse <- function (x) {
+    fromJSON(rawToChar(x), simplifyWithNames=FALSE)
 }
 
 supported.verbs <- c("GET", "PUT", "POST")
@@ -46,3 +62,4 @@ selectHttpFunction <- function (x) {
 getAPIroot <- function () {
     crunchAPI("GET", file.path(crunch.api.endpoint, "api/"))
 }
+
