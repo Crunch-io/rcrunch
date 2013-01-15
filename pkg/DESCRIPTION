@@ -14,3 +14,4 @@ Imports:
     httr
 Collate:
     'auth.R'
+    'rcrunch.R'

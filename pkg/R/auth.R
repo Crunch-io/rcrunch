@@ -6,8 +6,18 @@
 ##' @format An environment.
 ##' @keywords internal
 auth_store <- NULL
-logout <- function () {
+.log_out <- function () {
   auth_store <<- new.env(hash = TRUE, parent = emptyenv())
 }
-logout()
+.log_out()
 
+##' Kill the active Crunch session
+##' @export 
+logout <- function () {
+    rm(list=ls(envir=auth_store), envir=auth_store)
+}
+
+login <- function (email) {
+    auth_store$cookie <- list(email)
+    invisible()
+}

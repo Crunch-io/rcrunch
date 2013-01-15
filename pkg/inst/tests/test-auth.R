@@ -12,7 +12,7 @@ test_that("Authentication sets a cookie in the auth_store", {
 })
 
 test_that("Logging out deletes cookies", {
-    auth_store$cookie <- "something"
+    login(email="fake.user@crunch.test")
     expect_false(length(ls(envir=auth_store))==0)
     logout()
     expect_true(length(ls(envir=auth_store))==0)
