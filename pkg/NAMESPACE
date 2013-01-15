@@ -1,0 +1,7 @@
+export(login)
+export(logout)
+importFrom(RJSONIO,toJSON)
+importFrom(httr,GET)
+importFrom(httr,POST)
+importFrom(httr,PUT)
+importFrom(httr,set_cookies)
