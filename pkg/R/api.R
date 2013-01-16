@@ -33,7 +33,6 @@ parseJSONresponse <- function (x) {
 }
 
 supported.verbs <- c("GET", "PUT", "POST")
-crunch.api.endpoint <- "http://localhost:8080"
 
 ##' Validate HTTP verbs
 ##' @param x character
@@ -60,6 +59,6 @@ selectHttpFunction <- function (x) {
 }
 
 getAPIroot <- function () {
-    crunchAPI("GET", file.path(crunch.api.endpoint, "api/"))
+    crunchAPI("GET", .crunch_api())
 }
 

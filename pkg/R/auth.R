@@ -5,16 +5,16 @@
 ##'
 ##' @format An environment.
 ##' @keywords internal
-auth_store <- NULL
+session_store <- NULL
 makeAuthStore <- function () {
-  auth_store <<- new.env(hash = TRUE, parent = emptyenv())
+    session_store <<- new.env(hash = TRUE, parent = emptyenv())
 }
 makeAuthStore()
 
 ##' Kill the active Crunch session
 ##' @export 
 logout <- function () {
-    rm(list=ls(envir=auth_store), envir=auth_store)
+    rm(list=ls(envir=session_store), envir=session_store)
 }
 
 ##' Authenticate with the Crunch API
@@ -22,8 +22,7 @@ logout <- function () {
 ##' @param ... additional parameters
 ##' @export 
 login <- function (email, ...) {
-    
-    out <- crunchAPI("POST", "http://localhost:8080/api/",
+    out <- crunchAPI("POST", .crunch_api(),
         body=basicAuthArgs(email), auth.required=FALSE)
     
     saveToken(out$cookies)
@@ -38,7 +37,7 @@ basicAuthArgs <- function (x) {
 
 ##' @importFrom httr set_cookies
 saveToken <- function (cookie) {
-    auth_store$cookie <- do.call("set_cookies", cookie)
+    session_store$cookie <- do.call("set_cookies", cookie)
 }
 
-getToken <- function () auth_store$cookie
+getToken <- function () session_store$cookie

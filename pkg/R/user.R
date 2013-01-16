@@ -1,3 +1,3 @@
 getUserURLs <- function () {
-    crunchAPI("GET", getAPIroot()$body$user_url)
+    crunchAPI("GET", getAPIroot()$urls$user_url)
 }

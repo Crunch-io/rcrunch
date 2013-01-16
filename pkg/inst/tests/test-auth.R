@@ -1,13 +1,13 @@
 context("Authentication")
 
-test_that("On package load, the auth_store exists", {
-    expect_true(is.environment(auth_store))
+test_that("On package load, the session_store exists", {
+    expect_true(is.environment(session_store))
 })
 
-test_that("setToken saves a cookie in the auth_store", {
+test_that("setToken saves a cookie in the session_store", {
     saveToken(list(token="fake.user@crunch.test"))
-    expect_true(exists("cookie", envir=auth_store))
-    expect_true(is.list(auth_store$cookie))
+    expect_true(exists("cookie", envir=session_store))
+    expect_true(is.list(session_store$cookie))
 })
 
 test_that("getToken can retrieve a token", {
@@ -16,9 +16,9 @@ test_that("getToken can retrieve a token", {
 })
 
 test_that("Logging out deletes cookies", {
-    expect_false(length(ls(envir=auth_store))==0)
+    expect_true("cookie" %in% ls(envir=session_store))
     logout()
-    expect_true(length(ls(envir=auth_store))==0)
+    expect_false("cookie" %in% ls(envir=session_store))
 })
 
 test_that("basicAuthArgs", {
