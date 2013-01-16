@@ -15,9 +15,9 @@ test_that("getToken can retrieve a token", {
     expect_identical(class(test.token), "config")
 })
 
-test_that("Logging out deletes cookies", {
+test_that("session info can be deleted out deletes cookies", {
     expect_true("cookie" %in% ls(envir=session_store))
-    logout()
+    deleteSessionInfo()
     expect_false("cookie" %in% ls(envir=session_store))
 })
 
@@ -28,7 +28,9 @@ test_that("basicAuthArgs", {
 })
 
 test_that("login works if crunch is running", {
-    logout()
+    deleteSessionInfo()
     login("***REMOVED***")
     expect_identical(class(getToken()), "config")
+    expect_true("urls" %in% ls(envir=session_store))
 })
+

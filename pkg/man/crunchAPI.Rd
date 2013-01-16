@@ -2,7 +2,7 @@
 \alias{crunchAPI}
 \title{Main Crunch API handling function}
 \usage{
-  crunchAPI(http.verb, url, ..., auth.required = TRUE)
+  crunchAPI(http.verb, url, ...)
 }
 \arguments{
   \item{http.verb}{character in GET, PUT, POST}

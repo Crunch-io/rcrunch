@@ -14,6 +14,12 @@ makeAuthStore()
 ##' Kill the active Crunch session
 ##' @export 
 logout <- function () {
+    logging_out <- sessionURL("logout_url")
+    if (!is.null(logging_out)) GET(logging_out)
+    deleteSessionInfo()
+}
+
+deleteSessionInfo <- function () {
     rm(list=ls(envir=session_store), envir=session_store)
 }
 
@@ -22,11 +28,15 @@ logout <- function () {
 ##' @param ... additional parameters
 ##' @export 
 login <- function (email, ...) {
-    out <- crunchAPI("POST", .crunch_api(),
-        body=basicAuthArgs(email), auth.required=FALSE)
-    
+    out <- crunchAuth(email, ...)
     saveToken(out$cookies)
+    saveSessionURLs(getAPIroot()$urls)
+    saveSessionURLs(getUserURLs()$urls)
     invisible()
+}
+
+crunchAuth <- function (email, ...) {
+    POST(getOption("crunch.api.endpoint"), body=basicAuthArgs(email))
 }
 
 ##' @importFrom RJSONIO toJSON
@@ -38,6 +48,17 @@ basicAuthArgs <- function (x) {
 ##' @importFrom httr set_cookies
 saveToken <- function (cookie) {
     session_store$cookie <- do.call("set_cookies", cookie)
+}
+
+saveSessionURLs <- function (x) {
+    if (is.null(session_store$urls)) session_store$urls <- list()
+    session_store$urls <- update(session_store$urls, x)
+}
+
+sessionURL <- function (x=NULL) {
+    out <- session_store$urls
+    if (!is.null(x)) out <- out[[x]]
+    return(out)
 }
 
 getToken <- function () session_store$cookie
