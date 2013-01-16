@@ -18,12 +18,6 @@ handleAPIresponse <- function (response) {
     } else {
         stop_for_status(response)
     }
-    # simple.status <- simpleResponseStatus(response$status_code)
-    # if (simple.status>3) {
-    #     stop("")
-    # } else {
-    #     return(content(response))
-    # }
 }
 
 simpleResponseStatus <- function (code) {
