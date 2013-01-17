@@ -5,9 +5,10 @@
 ##' @param auth.required logical: does this API call require authentication? If 
 ##' so, the function will try to fetch the session token from the local store,
 ##' and it will throw an error if no session has been authenticated
-crunchAPI <- function (http.verb, url, ...) {
-    x <- selectHttpFunction(http.verb)(url, ..., config=list(getToken()))
-    out <- handleAPIresponse(x)
+crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, config=list(verbose=FALSE), ...) {
+    configs <- update.list(crunchConfig(), config)
+    x <- selectHttpFunction(http.verb)(url, ..., config=configs)
+    out <- response.handler(x)
     return(out)
 }
 
@@ -18,6 +19,20 @@ handleAPIresponse <- function (response) {
     } else {
         stop_for_status(response)
     }
+}
+
+crunchConfig <- function () {
+    tk <- getToken()
+    if (is.null(tk)) tk <- list()
+    c(tk, crunchHTTPheaders())
+}
+
+crunchHTTPheaders <- function () {
+    list(httpheader=list(`User-Agent`=crunchUserAgent()))
+}
+
+crunchUserAgent <- function () {
+    paste("rcrunch", packageVersion("rcrunch"))
 }
 
 simpleResponseStatus <- function (code) {

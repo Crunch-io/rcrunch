@@ -11,12 +11,16 @@ test_that("HTTP verbs are validated", {
 
 test_that("API root can be fetched", {
     login("***REMOVED***")
-    expect_false(is.error(getAPIroot()))
+    expect_false(is.error(try(getAPIroot())))
     urls <- getAPIroot()
     expect_true(is.shoji(urls))
 })
 
 test_that("API calls throw an error if user is not authenticated", {
     logout()
-    expect_error(getAPIroot())
+    expect_error(getAPIroot(), "403")
+})
+
+test_that("crunchConfig", {
+    expect_identical(crunchConfig(), crunchHTTPheaders())
 })
