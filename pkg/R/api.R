@@ -7,18 +7,31 @@
 ##' and it will throw an error if no session has been authenticated
 crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, config=list(verbose=FALSE), ...) {
     configs <- update.list(crunchConfig(), config)
-    x <- selectHttpFunction(http.verb)(url, ..., config=configs)
+    x <- try(selectHttpFunction(http.verb)(url, ..., config=configs), 
+        silent=TRUE)
     out <- response.handler(x)
     return(out)
 }
 
 ##' @importFrom httr content stop_for_status http_status
 handleAPIresponse <- function (response) {
+    response <- handleAPIerror(response)
     if (http_status(response)$category == "success") {
         return(content(response))
     } else {
         stop_for_status(response)
     }
+}
+
+handleAPIerror <- function (response) {
+    if (is.error(response)) {
+        if (crunchIsDown(response)) {
+            stop("Cannot connect to Crunch API", call.=FALSE)
+        } else {
+            stop(attr(response, "condition"))
+        }
+    }
+    return(response)    
 }
 
 crunchConfig <- function () {
@@ -63,3 +76,11 @@ getAPIroot <- function () {
     crunchAPI("GET", getOption("crunch.api.endpoint"))
 }
 
+crunchAPIcanBeReached <- function () {
+    testing <- try(getAPIroot(), silent=TRUE)
+    return(!crunchIsDown(testing))
+}
+
+crunchIsDown <- function (response) {
+    is.error(response) && "COULDNT_CONNECT" %in% class(attr(response, "condition"))
+}

@@ -3,7 +3,8 @@
 \title{Main Crunch API handling function}
 \usage{
   crunchAPI(http.verb, url,
-    response.handler = handleAPIresponse, ...)
+    response.handler = handleAPIresponse,
+    config = list(verbose = FALSE), ...)
 }
 \arguments{
   \item{http.verb}{character in GET, PUT, POST}

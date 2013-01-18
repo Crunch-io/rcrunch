@@ -19,3 +19,4 @@ Collate:
     'user.R'
     'misc.R'
     'shoji.R'
+    'datasets.R'

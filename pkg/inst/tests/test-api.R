@@ -16,11 +16,15 @@ test_that("API root can be fetched", {
     expect_true(is.shoji(urls))
 })
 
-test_that("API calls throw an error if user is not authenticated", {
-    logout()
-    expect_error(getAPIroot(), "403")
-})
+if (crunchAPIcanBeReached()) {
+    test_that("API calls throw an error if user is not authenticated", {
+        logout()
+        expect_error(getAPIroot(), "403")
+    })
+}
 
 test_that("crunchConfig", {
     expect_identical(crunchConfig(), crunchHTTPheaders())
+    login("***REMOVED***")
+    expect_identical(length(crunchConfig()), 2L)
 })

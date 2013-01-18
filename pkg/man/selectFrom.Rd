@@ -1,0 +1,25 @@
+\name{selectFrom}
+\alias{selectFrom}
+\title{Generic List Element Extractor}
+\usage{
+  selectFrom(key, xlist, ifnot = NA, simplify = TRUE)
+}
+\arguments{
+  \item{key}{character naming the key(s) to extract}
+
+  \item{xlist}{list containing other lists from which you
+  want to extract}
+
+  \item{ifnot}{what to return if the key is not found in a
+  given xlist element}
+
+  \item{simplify}{logical, passed to sapply internally}
+}
+\value{
+  the requested element(s). If length(key)>1, a named list
+  of those elements
+}
+\description{
+  Generic List Element Extractor
+}
+
