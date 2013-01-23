@@ -6,18 +6,16 @@
 ##' @format An environment.
 ##' @keywords internal
 session_store <- NULL
-makeAuthStore <- function () {
+makeSessionStore <- function () {
     session_store <<- new.env(hash = TRUE, parent = emptyenv())
 }
-makeAuthStore()
+makeSessionStore()
 
 ##' Kill the active Crunch session
 ##' @export 
 logout <- function () {
     logging_out <- sessionURL("logout_url")
-    if (!is.null(logging_out)) {
-        GET(logging_out)#, response.handler=handleAPIerror)
-    }
+    if (!is.null(logging_out)) GET(logging_out)
     deleteSessionInfo()
 }
 
@@ -39,8 +37,7 @@ login <- function (email, ...) {
 }
 
 crunchAuth <- function (email, ...) {
-    POST(getOption("crunch.api.endpoint"),
-        body=basicAuthArgs(email))#, response.handler=handleAPIerror)
+    POST(getOption("crunch.api.endpoint"), body=basicAuthArgs(email))
 }
 
 ##' @importFrom RJSONIO toJSON
