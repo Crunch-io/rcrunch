@@ -1,3 +1,4 @@
+##' @export 
 newDataset <- function (file, name=basename(file)) {
     if (!file.exists(file)) {
         stop("File not found", call.=FALSE)
@@ -9,19 +10,16 @@ newDataset <- function (file, name=basename(file)) {
 }
 
 ##' @importFrom httr upload_file
-##' @export 
 createSource <- function (file) {
-    out <- POST(session_store$urls$sources_url, body=list(uploaded_file=upload_file(file)))
-    return(out)
+    POST(sessionURL("sources_url"), body=list(uploaded_file=upload_file(file)))
 }
 
 ##' @export 
 createDataset <- function (name) {
-    out <- POST(session_store$urls$datasets_url, body=list(name=name))
-    return(out)
+    POST(sessionURL("datasets_url"), body=list(name=name))
 }
 
 addSourceToDataset <- function (dataset_url, source_url) {
     ds <- GET(dataset_url)
-    crunch.API("POST", ds$urls$actions_url, )  ###
+    POST(ds$urls$actions_url, )  ###
 }
