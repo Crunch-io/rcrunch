@@ -1,10 +1,10 @@
 \docType{data}
-\name{auth_store}
-\alias{auth_store}
+\name{session_store}
+\alias{session_store}
 \title{Stay authenticated.}
 \format{An environment.}
 \usage{
-  auth_store
+  session_store
 }
 \description{
   The auth store keeps the session token after

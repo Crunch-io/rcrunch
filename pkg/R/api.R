@@ -13,11 +13,29 @@ crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, confi
     return(out)
 }
 
+GET <- function (...) {
+    crunchAPI("GET", ...)
+}
+
+PUT <- function (...) {
+    crunchAPI("PUT", ...)
+}
+
+POST <- function (...) {
+    crunchAPI("POST", ...)
+}
+
 ##' @importFrom httr content stop_for_status http_status
 handleAPIresponse <- function (response) {
     response <- handleAPIerror(response)
     if (http_status(response)$category == "success") {
-        return(content(response))
+        if (response$status_code==201) {
+            return(response$headers$location)
+        } else if (response$status_code==204 || length(response$content)==0) {
+            invisible(response)
+        } else {
+            return(content(response))            
+        }
     } else {
         stop_for_status(response)
     }
@@ -63,17 +81,16 @@ parseJSONresponse <- function (x, simplifyWithNames=FALSE, ...) {
 }
 
 ##' Select the right function to run that HTTP call
-##' @importFrom httr GET PUT POST
 ##' @param x character HTTP verb name
 ##' @return the corresponding function from the \code{httr} package
 selectHttpFunction <- function (x) {
-    x <- list(GET=GET, PUT=PUT, POST=POST)[[toupper(x)]]
+    x <- list(GET=httr:::GET, PUT=httr:::PUT, POST=httr:::POST)[[toupper(x)]]
     stopifnot(is.function(x))
     return(x)
 }
 
 getAPIroot <- function () {
-    crunchAPI("GET", getOption("crunch.api.endpoint"))
+    GET(getOption("crunch.api.endpoint"))
 }
 
 crunchAPIcanBeReached <- function () {

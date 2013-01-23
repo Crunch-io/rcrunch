@@ -19,4 +19,5 @@ Collate:
     'user.R'
     'misc.R'
     'shoji.R'
-    'datasets.R'
+    'get_datasets.R'
+    'new_dataset.R'
