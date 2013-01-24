@@ -29,13 +29,13 @@ test_that("basicAuthArgs", {
 
 test_that("login works if crunch is running", {
     deleteSessionInfo()
-    login("***REMOVED***")
+    login(test.user)
     expect_identical(class(getToken()), "config")
     expect_true("urls" %in% ls(envir=session_store))
 })
 
 test_that("session URLs can be retrieved", {
-    login("***REMOVED***")
+    login(test.user)
     expect_true(is.character(sessionURL("user_url")))
     expect_true(is.list(sessionURL()))
     logout()

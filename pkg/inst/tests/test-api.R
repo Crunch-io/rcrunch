@@ -10,7 +10,7 @@ test_that("HTTP verbs are validated", {
 })
 
 test_that("API root can be fetched", {
-    login("***REMOVED***")
+    login(test.user)
     expect_false(is.error(try(getAPIroot())))
     urls <- getAPIroot()
     expect_true(is.shoji(urls))
@@ -25,6 +25,6 @@ if (crunchAPIcanBeReached()) {
 
 test_that("crunchConfig", {
     expect_identical(crunchConfig(), crunchHTTPheaders())
-    login("***REMOVED***")
+    login(test.user)
     expect_identical(length(crunchConfig()), 2L)
 })

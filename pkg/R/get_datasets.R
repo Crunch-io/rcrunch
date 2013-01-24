@@ -1,3 +1,23 @@
+##' Show the names of all Crunch datasets
+##' @param refresh logical: should the function check the Crunch API for new datasets? Default is FALSE. 
+##' @return Character vector of dataset names, each of which would be a valid input for \code{\link{loadDataset}}
+##' @export 
+listDatasets <- function (refresh=FALSE) {
+    if (refresh && crunchAPIcanBeReached()) {
+        updateDatasetList()
+    }
+    return(names(dataset_list()))
+}
+
+##' Refresh the local list of Crunch datasets
+##' @param x the dataset URLs. You shouldn't change the default.
+##' @return Nothing. Called for its side effects of setting local environment variables.
+##' @export 
+updateDatasetList <- function (x=getUserDatasetURLs()) {
+    saveDatasetURLs(x)
+    updateDatasetListFromURLs()
+}
+
 getUserDatasetURLs <- function () {
     GET(sessionURL("datasets_url"))$entities
 }
@@ -6,34 +26,41 @@ saveDatasetURLs <- function (x=getUserDatasetURLs()) {
     saveSessionURLs(list(user_dataset_urls=x))
 }
 
-##' @export 
-listDatasets <- function (refresh=FALSE) {
-    latest.datasets <- getUserDatasetURLs()
-    if (refresh || datasetsAreStale(latest.datasets)) {
-        saveDatasetURLs(latest.datasets)
-        updateDatasetList()
-    }
-    return(names(session_store$datasets))
-}
-
 datasetsAreStale <- function (crunch.datasets=getUserDatasetURLs()) {
     length(session_store$datasets) != length(crunch.datasets)
 }
 
-##' @export 
-updateDatasetList <- function () {
-    session_store$datasets <- lapply(session_store$user_dataset_urls,
-        GET)
-    names(session_store$datasets) <- selectFrom("name", session_store$datasets) ## or alias?
+updateDatasetListFromURLs <- function (x=sessionURL("user_dataset_urls")) {
+    session_store$datasets <- getDatasetObjects(x)
 }
 
+dataset_list <- function () session_store$datasets
+
+getDatasetObjects <- function (x=sessionURL("user_dataset_urls")) {
+    out <- lapply(x, GET)
+    names(out) <- selectFrom("body$name", out) ## or alias?
+    return(out)
+}
+
+##' Load a Crunch Dataset
+##' @param dataset.name character, the name of a Crunch dataset you have access to. 
+##' @param dataset.list, the local session store from which to retrieve the dataset's resource URLs. You shouldn't change this.
+##' @return An object of class \code{crunchdf}
 ##' @export 
-loadFromCrunch <- function (dataset.name) {
-    this.dataset <- session_store$datasets
-    if (is.null(this.dataset)) {
-        stop(paste(dataset.name, "not found"))
-    }
+loadDataset <- function (dataset.name, dataset.list=dataset_list()) {
+    dataset <- selectDatasetFromList(dataset.name, dataset.list)
     ## GET variables
     ## S3 class it
+    return(dataset)
+}
+
+selectDatasetFromList <- function (name, dslist=NULL) {
+    this.dataset <- dslist
+    if (!is.null(this.dataset)) {
+        this.dataset <- this.dataset[[name]]
+    }
+    if (is.null(this.dataset)) {
+        stop(paste(name, "not found"), call.=FALSE)
+    }
     return(this.dataset)
 }
