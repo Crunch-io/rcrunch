@@ -1,6 +1,6 @@
 is.error <- function (x) inherits(x, "try-error")
 
-update.list <- function (x, y) {
+updateList <- function (x, y) {
     x[names(y)] <- y
     return(x)
 }
@@ -8,7 +8,7 @@ update.list <- function (x, y) {
 ##' Generic List Element Extractor
 ##'
 ##'
-##' @param key character naming the key(s) to extract
+##' @param key character naming the key(s) to extract. Can traverse list elements by separating them with \code{$}.
 ##' @param xlist list containing other lists from which you want to extract
 ##' @param ifnot what to return if the key is not found in a given xlist element
 ##' @param simplify logical, passed to sapply internally
@@ -16,7 +16,9 @@ update.list <- function (x, y) {
 ##' elements
 ##' @export
 selectFrom <- function (key, xlist, ifnot=NA, simplify=TRUE) {
-    #stopifnot(is.list(xlist))
+    if (!is.list(xlist)) {
+        stop("xlist must be a list object")
+    }
     if (length(key)>1) {
         y <- sapply(key, selectFrom, xlist, ifnot, simplify=FALSE)
     } else {

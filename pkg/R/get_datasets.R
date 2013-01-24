@@ -8,26 +8,23 @@ saveDatasetURLs <- function (x=getUserDatasetURLs()) {
 
 ##' @export 
 listDatasets <- function (refresh=FALSE) {
-    if (refresh || datasetsAreStale()) updateDatasetList()
+    latest.datasets <- getUserDatasetURLs()
+    if (refresh || datasetsAreStale(latest.datasets)) {
+        saveDatasetURLs(latest.datasets)
+        updateDatasetList()
+    }
     return(names(session_store$datasets))
 }
 
-datasetsAreStale <- function () {
-    length(session_store$datasets) != length(session_store$user_dataset_urls)
+datasetsAreStale <- function (crunch.datasets=getUserDatasetURLs()) {
+    length(session_store$datasets) != length(crunch.datasets)
 }
 
 ##' @export 
 updateDatasetList <- function () {
     session_store$datasets <- lapply(session_store$user_dataset_urls,
-        fetch_a_dataset)
-    names(session_store$datasets) <- selectFrom(session_store$datasets, 
-        "alias") ## or just name?
-}
-
-fetch_a_dataset <- function (ds.url) {
-    out <- crunch.API("GET", ds.url)
-    ## S3 class this?
-    return(out)
+        GET)
+    names(session_store$datasets) <- selectFrom("name", session_store$datasets) ## or alias?
 }
 
 ##' @export 

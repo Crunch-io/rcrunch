@@ -34,3 +34,12 @@ test_that("login works if crunch is running", {
     expect_true("urls" %in% ls(envir=session_store))
 })
 
+test_that("session URLs can be retrieved", {
+    login("***REMOVED***")
+    expect_true(is.character(sessionURL("user_url")))
+    expect_true(is.list(sessionURL()))
+    logout()
+    expect_error(sessionURL("user_url"), 
+        "You must authenticate before making this request")
+})
+

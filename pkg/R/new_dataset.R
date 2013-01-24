@@ -7,19 +7,21 @@ newDataset <- function (file, name=basename(file)) {
     ds <- createDataset(name)
     addSourceToDataset(ds, source)
     updateDatasetList()
+    invisible(loadFromCrunch(name))
 }
 
 ##' @importFrom httr upload_file
-createSource <- function (file) {
-    POST(sessionURL("sources_url"), body=list(uploaded_file=upload_file(file)))
+createSource <- function (file, ...) {
+    POST(sessionURL("sources_url"), body=list(uploaded_file=upload_file(file)),
+        ...)
 }
 
 ##' @export 
 createDataset <- function (name) {
-    POST(sessionURL("datasets_url"), body=list(name=name))
+    POST(sessionURL("datasets_url"), body=toJSON(list(name=name)))
 }
 
 addSourceToDataset <- function (dataset_url, source_url) {
     ds <- GET(dataset_url)
-    POST(ds$urls$actions_url, )  ###
+    POST(ds$urls$sources_url, body=toJSON(list(source_url=source_url)))
 }

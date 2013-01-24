@@ -13,10 +13,11 @@
 
   \item{...}{additional arguments}
 
-  \item{auth.required}{logical: does this API call require
-  authentication? If so, the function will try to fetch the
-  session token from the local store, and it will throw an
-  error if no session has been authenticated}
+  \item{response.handler}{function that takes a http
+  response object and does something with it}
+
+  \item{config}{list of config parameters. See httr
+  documentation.}
 }
 \description{
   Main Crunch API handling function

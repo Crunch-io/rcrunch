@@ -8,19 +8,20 @@
 session_store <- NULL
 makeSessionStore <- function () {
     session_store <<- new.env(hash = TRUE, parent = emptyenv())
+    session_store$.globals <- list(prompt=getOption("prompt"))
 }
 makeSessionStore()
 
 ##' Kill the active Crunch session
 ##' @export 
 logout <- function () {
-    logging_out <- sessionURL("logout_url")
-    if (!is.null(logging_out)) GET(logging_out)
+    if (is.authenticated()) GET(sessionURL("logout_url"))
     deleteSessionInfo()
+    options(prompt = session_store$.globals$prompt)
 }
 
 deleteSessionInfo <- function () {
-    rm(list=ls(envir=session_store), envir=session_store)
+    rm(list=setdiff(ls(envir=session_store), ".globals"), envir=session_store)
 }
 
 ##' Authenticate with the Crunch API
@@ -28,11 +29,14 @@ deleteSessionInfo <- function () {
 ##' @param ... additional parameters
 ##' @export 
 login <- function (email, ...) {
+    logout()
     out <- crunchAuth(email, ...)
     saveToken(out$cookies)
     saveSessionURLs(getAPIroot()$urls)
     saveSessionURLs(getUserURLs())
-    saveDatasetURLs()    
+    saveDatasetURLs()
+    message("Logged into crunch.io as ", email)
+    options(prompt = paste("[crunch]", session_store$.globals$prompt)) 
     invisible()
 }
 
@@ -53,13 +57,19 @@ saveToken <- function (cookie) {
 
 saveSessionURLs <- function (x) {
     if (is.null(session_store$urls)) session_store$urls <- list()
-    session_store$urls <- update(session_store$urls, x)
+    session_store$urls <- updateList(session_store$urls, x)
 }
 
 sessionURL <- function (x=NULL) {
-    out <- session_store$urls
-    if (!is.null(x)) out <- out[[x]]
-    return(out)
+    if (is.authenticated()) {
+        out <- session_store$urls
+        if (!is.null(x)) out <- out[[x]]
+        return(out)
+    } else {
+        stop("You must authenticate before making this request")
+    }
 }
 
 getToken <- function () session_store$cookie
+
+is.authenticated <- function () !is.null(getToken())

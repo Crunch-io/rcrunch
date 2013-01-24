@@ -2,11 +2,11 @@
 ##' @param http.verb character in GET, PUT, POST
 ##' @param url character URL to do the verb on
 ##' @param ... additional arguments
-##' @param auth.required logical: does this API call require authentication? If 
-##' so, the function will try to fetch the session token from the local store,
-##' and it will throw an error if no session has been authenticated
+##' @param response.handler function that takes a http response object and does something with it
+##' @param config list of config parameters. See httr documentation.
 crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, config=list(verbose=FALSE), ...) {
-    configs <- update.list(crunchConfig(), config)
+    configs <- updateList(crunchConfig(), config)
+    url ## force lazy eval of url before inserting in try() below
     x <- try(selectHttpFunction(http.verb)(url, ..., config=configs), 
         silent=TRUE)
     out <- response.handler(x)
