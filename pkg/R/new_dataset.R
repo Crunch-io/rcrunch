@@ -1,3 +1,8 @@
+##' Upload a data.frame to Crunch to make a new dataset
+##' @param x a data.frame or other rectangular R object
+##' @param name character, the name to give the new Crunch dataset. Default is the name of the R object passed in \code{x}
+##' @return If successful, an object of class crunchdf.
+##' @export
 newDataset <- function (x, name=substitute(x), ...) {
     # v1: dump a csv, then route through newDatasetFromFile.
     # later, we'll want to serialize some other way that preserves metadata
