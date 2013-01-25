@@ -4,7 +4,8 @@
 \usage{
   crunchAPI(http.verb, url,
     response.handler = handleAPIresponse,
-    config = list(verbose = FALSE), ...)
+    config = list(verbose = FALSE),
+    status.handlers = list(), ...)
 }
 \arguments{
   \item{http.verb}{character in GET, PUT, POST}

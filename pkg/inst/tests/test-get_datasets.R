@@ -41,3 +41,8 @@ test_that("A dataset object can be retrieved, if it exists", {
     expect_error(loadDataset("this is totally not a dataset", 
         "this is totally not a dataset not found"))
 })
+
+test_that("listDatasets has datasets after a login (and datasets exist)", {
+    login(test.user)
+    expect_true(length(listDatasets())>0)
+})

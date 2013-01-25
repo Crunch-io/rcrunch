@@ -31,24 +31,31 @@ deleteSessionInfo <- function () {
 login <- function (email, ...) {
     logout()
     out <- crunchAuth(email, ...)
+    saveUser(email)
     saveToken(out$cookies)
     saveSessionURLs(getAPIroot()$urls)
     saveSessionURLs(getUserURLs())
-    saveDatasetURLs()
+    updateDatasetList()
     message("Logged into crunch.io as ", email)
     options(prompt = paste("[crunch]", session_store$.globals$prompt)) 
     invisible()
 }
 
+saveUser <- function (x) {
+    session_store$email <- x
+}
+
 crunchAuth <- function (email, ...) {
-    POST(getOption("crunch.api.endpoint"), body=basicAuthArgs(email))
+    POST(getOption("crunch.api.endpoint"), body=basicAuthArgs(email, ...), 
+        status.handlers=list(`403`=function (response, user=email) {
+            stop(paste("Unable to authenticate", user), call.=FALSE)
+        }))
 }
 
 ##' @importFrom RJSONIO toJSON
-basicAuthArgs <- function (x) {
+basicAuthArgs <- function (x, ...) {
     return(toJSON(list(email=x)))
 }
-
 
 ##' @importFrom httr set_cookies
 saveToken <- function (cookie) {

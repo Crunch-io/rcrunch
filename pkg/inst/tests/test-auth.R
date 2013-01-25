@@ -32,6 +32,16 @@ test_that("login works if crunch is running", {
     login(test.user)
     expect_identical(class(getToken()), "config")
     expect_true("urls" %in% ls(envir=session_store))
+    expect_true(is.authenticated())
+})
+
+test_that("crunchAuth succeeds when it should and not when it shouldn't", {
+    logout()
+    expect_true(is.list(crunchAuth(test.user)))
+    login(test.user) ## so we can logout; crunch API is misbehaving
+    logout()
+    expect_error(crunchAuth("lkjasdfksdfkjhl"), 
+        "Unable to authenticate lkjasdfksdfkjhl")
 })
 
 test_that("session URLs can be retrieved", {

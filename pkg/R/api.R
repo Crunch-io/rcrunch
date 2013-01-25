@@ -4,12 +4,16 @@
 ##' @param ... additional arguments
 ##' @param response.handler function that takes a http response object and does something with it
 ##' @param config list of config parameters. See httr documentation.
-crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, config=list(verbose=FALSE), ...) {
+crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, config=list(verbose=FALSE), status.handlers=list(), ...) {
     configs <- updateList(crunchConfig(), config)
     url ## force lazy eval of url before inserting in try() below
     x <- try(selectHttpFunction(http.verb)(url, ..., config=configs), 
         silent=TRUE)
-    out <- response.handler(x)
+    if (length(status.handlers)) {
+        out <- response.handler(x, special.statuses=status.handlers)
+    } else {
+        out <- response.handler(x)
+    }
     return(out)
 }
 
@@ -25,13 +29,21 @@ POST <- function (...) {
     crunchAPI("POST", ...)
 }
 
+##' Do the right thing with the HTTP response
+##' @param response an httr response object
+##' @param special.statuses an optional named list of functions by status code.
+##' @return The full HTTP response object, just the content, or any other status-specific action 
 ##' @importFrom httr content stop_for_status http_status
-handleAPIresponse <- function (response) {
+handleAPIresponse <- function (response, special.statuses=list()) {
     response <- handleAPIerror(response)
-    if (http_status(response)$category == "success") {
-        if (response$status_code==201) {
+    code <- response$status_code
+    handler <- special.statuses[[as.character(code)]]
+    if (is.function(handler)) {
+        invisible(handler(response))
+    } else if (http_status(response)$category == "success") {
+        if (code==201) {
             return(response$headers$location)
-        } else if (response$status_code==204 || length(response$content)==0) {
+        } else if (code==204 || length(response$content)==0) {
             invisible(response)
         } else {
             return(content(response))            
