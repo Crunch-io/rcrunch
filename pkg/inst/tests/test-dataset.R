@@ -18,3 +18,10 @@ test_that("Datasets only contain variables", {
     expect_error(CrunchDataset(list(foo=34), name="test ds"), 
         ".*1 element is not a Crunch variable object.")
 })
+
+test_that("Can construct Dataset from shoji document", {
+    sho <- fromJSON(system.file("dataset.json", package="rcrunch", mustWork=TRUE), simplifyWithNames=FALSE)
+    expect_true(is.dataset(.cr.dataset.shoji(sho)))
+    expect_true(is.dataset(as(sho, "CrunchDataset")))
+    expect_true(is.dataset(as.dataset(sho)))
+})

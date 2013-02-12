@@ -1,0 +1,24 @@
+{
+    "element": "shoji:entity",
+    "self": "http://localhost:8080/api/datasets/511a7c49778030653aab5963/",
+    "description": "Detail for a given dataset",
+    "body": {
+        "user_id": "00002",
+        "description": "",
+        "tags": [
+            "Untagged"
+        ],
+        "sources": [
+            "511a7c49778030653aab5962"
+        ],
+        "id": "511a7c49778030653aab5963",
+        "name": "test ds"
+    },
+    "urls": {
+        "variables_url": "http://localhost:8080/api/datasets/511a7c49778030653aab5963/variables/",
+        "sources_url": "http://localhost:8080/api/datasets/511a7c49778030653aab5963/sources/",
+        "actions_url": "http://localhost:8080/api/datasets/511a7c49778030653aab5963/actions/",
+        "rows_url": "http://localhost:8080/api/datasets/511a7c49778030653aab5963/rows/",
+        "tags_url": "http://localhost:8080/api/datasets/511a7c49778030653aab5963/tags/"
+    }
+}

@@ -1,3 +1,4 @@
+S3method(is,shoji)
 export(listDatasets)
 export(loadDataset)
 export(login)

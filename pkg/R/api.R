@@ -46,7 +46,11 @@ handleAPIresponse <- function (response, special.statuses=list()) {
         } else if (code==204 || length(response$content)==0) {
             invisible(response)
         } else {
-            return(content(response))            
+            out <- content(response)
+            if (is.shoji.like(out)) {
+                class(out) <- "shoji"
+            }
+            return(out)            
         }
     } else {
         stop_for_status(response)
