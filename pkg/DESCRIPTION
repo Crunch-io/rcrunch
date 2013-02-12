@@ -21,3 +21,5 @@ Collate:
     'shoji.R'
     'get_datasets.R'
     'new_dataset.R'
+    'dataset.R'
+    'variable.R'
