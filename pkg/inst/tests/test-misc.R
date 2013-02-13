@@ -26,11 +26,3 @@ test_that("selectFrom selects what it should", {
     expect_identical(selectFrom("b", l2), c(2, NA))
     expect_error(selectFrom("b", 5), "xlist must be a list object")
 })
-
-test_that("is.shoji", {
-    fo <- list(element=1, self=2, description=3)
-    expect_false(is.shoji(fo))
-    expect_true(is.shoji.like(fo))
-    class(fo) <- "shoji"
-    expect_true(is.shoji(fo))
-})

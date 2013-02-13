@@ -19,7 +19,7 @@ updateDatasetList <- function (x=getUserDatasetURLs()) {
 }
 
 getUserDatasetURLs <- function () {
-    GET(sessionURL("datasets_url"))$entities
+    getShojiCollectionURLs(sessionURL("datasets_url"))
 }
 
 saveDatasetURLs <- function (x=getUserDatasetURLs()) {
@@ -37,15 +37,13 @@ updateDatasetListFromURLs <- function (x=sessionURL("user_dataset_urls")) {
 dataset_list <- function () session_store$datasets
 
 getDatasetObjects <- function (x=sessionURL("user_dataset_urls")) {
-    out <- lapply(x, GET)
-    names(out) <- selectFrom("body$name", out) ## or alias?
-    return(out)
+    getShojiCollectionContents(x, "body$name") ## or alias?
 }
 
 ##' Load a Crunch Dataset
 ##' @param dataset.name character, the name of a Crunch dataset you have access to. 
 ##' @param dataset.list, the local session store from which to retrieve the dataset's resource URLs. You shouldn't change this.
-##' @return An object of class \code{crunchdf}
+##' @return An object of class \code{CrunchDataset}
 ##' @export 
 loadDataset <- function (dataset.name, dataset.list=dataset_list()) {
     dataset <- selectDatasetFromList(dataset.name, dataset.list)

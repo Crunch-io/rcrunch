@@ -13,7 +13,7 @@
   change this.}
 }
 \value{
-  An object of class \code{crunchdf}
+  An object of class \code{CrunchDataset}
 }
 \description{
   Load a Crunch Dataset

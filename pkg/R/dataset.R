@@ -1,12 +1,6 @@
-CrunchDataset <- setClass("CrunchDataset", contains="list", 
-    representation(
-        name="character",
-        self.url="character",
-        urls="list"
-    ))
 
 validCrunchDataset <- function (object) {
-    oname <- object@name
+    oname <- object@body$name
     are.vars <- vapply(object, is.variable, logical(1))
     if (!all(are.vars)) {
         badcount <- sum(!are.vars)
@@ -21,20 +15,24 @@ validCrunchDataset <- function (object) {
 }
 setValidity("CrunchDataset", validCrunchDataset)
 
-.cr.dataset.shoji <- function (x) {
-    bod <- c(x[["body"]], urls=x[["urls"]])
-    out <- do.call("new", c(Class="CrunchDataset", 
-        bod[names(bod) %in% slotNames("CrunchDataset")]))
-    out@self.url <- x[["self"]]
-    ## get variables
+.cr.dataset.shojiObject <- function (x, ...) {
+    out <- CrunchDataset(x, ...)
+    if (length(list(...))==0) {
+        ## get variables
+        #vars <- getShojiCollection(out@urls$variables_url, "body$alias")
+        #out@.Data <- lapply(vars, as.variable)
+    }
     return(out)
 }
 
 is.dataset <- function (x) inherits(x, "CrunchDataset")
 
 setGeneric("name", function (x) standardGeneric("name"))
-setMethod("name", "CrunchDataset", function (x) x@name)
+setMethod("name", "CrunchDataset", function (x) x@body$name)
 
-setAs("shoji", "CrunchDataset", function (from) .cr.dataset.shoji(from))
+setAs("ShojiObject", "CrunchDataset", 
+    function (from) .cr.dataset.shojiObject(from))
+setAs("shoji", "CrunchDataset", 
+    function (from) as(as.shojiObject(from), "CrunchDataset"))
 
 as.dataset <- function (x) as(x, "CrunchDataset")
