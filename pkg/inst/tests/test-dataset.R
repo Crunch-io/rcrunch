@@ -52,3 +52,8 @@ test_that("A dataset with variables inherits from list", {
     expect_identical(test.ds$age, vars$age)
     expect_true(var_test_fn(test.ds))
 })
+
+test_that("Read only flag gets set appropriately", {
+    expect_false(is.readonly(test.ds))
+    expect_true(is.readonly(test.ds[1]))
+})

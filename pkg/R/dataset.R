@@ -38,3 +38,11 @@ setAs("shoji", "CrunchDataset",
     function (from) as(as.shojiObject(from), "CrunchDataset"))
 
 as.dataset <- function (x) as(x, "CrunchDataset")
+
+is.readonly <- function (x) isTRUE(x@readonly)
+
+setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
+    x@.Data <- x@.Data[i]
+    x@readonly <- TRUE ## we don't want to overwrite the big object accidentally
+    return(x)
+})

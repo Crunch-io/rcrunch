@@ -18,4 +18,8 @@ ShojiObject <- setClass("ShojiObject",
 
 CrunchVariable <- setClass("CrunchVariable", contains="ShojiObject")
     
-CrunchDataset <- setClass("CrunchDataset", contains=c("list", "ShojiObject"))
+CrunchDataset <- setClass("CrunchDataset", contains=c("list", "ShojiObject"),
+    representation= representation(
+        readonly="logical"
+    ), 
+    prototype=prototype(readonly=FALSE))
