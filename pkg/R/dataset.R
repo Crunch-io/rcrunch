@@ -15,6 +15,13 @@ validCrunchDataset <- function (object) {
 }
 setValidity("CrunchDataset", validCrunchDataset)
 
+
+
+is.dataset <- function (x) inherits(x, "CrunchDataset")
+
+setGeneric("name", function (x) standardGeneric("name"))
+setMethod("name", "CrunchDataset", function (x) x@body$name)
+
 .cr.dataset.shojiObject <- function (x, ...) {
     out <- CrunchDataset(x, ...)
     if (length(list(...))==0) {
@@ -24,11 +31,6 @@ setValidity("CrunchDataset", validCrunchDataset)
     }
     return(out)
 }
-
-is.dataset <- function (x) inherits(x, "CrunchDataset")
-
-setGeneric("name", function (x) standardGeneric("name"))
-setMethod("name", "CrunchDataset", function (x) x@body$name)
 
 setAs("ShojiObject", "CrunchDataset", 
     function (from) .cr.dataset.shojiObject(from))

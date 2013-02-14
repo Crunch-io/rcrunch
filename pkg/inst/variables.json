@@ -1,0 +1,286 @@
+[
+    {
+        "family": "categorical",
+        "alias": "gender",
+        "wording": "Gender",
+        "name": "Gender",
+        "categories": [
+            {
+                "code": 1,
+                "name": "Male",
+                "_id": "0c93298d4e63b81bbb5be68a11a01604",
+                "missing": false
+            },
+            {
+                "code": 2,
+                "name": "Female",
+                "_id": "b294894bdb9074056fa439d25a9348bd",
+                "missing": false
+            }
+        ],
+        "tags": []
+    },
+    {
+        "family": "categorical",
+        "alias": "educ",
+        "wording": "Education",
+        "name": "Education",
+        "categories": [
+            {
+                "code": 1,
+                "name": "Less than high school",
+                "_id": "5a430cd57e61d3857ca33809562ee08e",
+                "missing": false
+            },
+            {
+                "code": 2,
+                "name": "High school graduate",
+                "_id": "dd5203e573406ab75dd324dc77ce89a8",
+                "missing": false
+            },
+            {
+                "code": 3,
+                "name": "2-year degree",
+                "_id": "198596e5668485f1aa65b9525b349578",
+                "missing": false
+            },
+            {
+                "code": 4,
+                "name": "4-year college, no degree",
+                "_id": "a1aeeecb2beb2275680e8bddceb149c5",
+                "missing": false
+            },
+            {
+                "code": 5,
+                "name": "4-year degree",
+                "_id": "87e6fff83dbaa1a659db80f2f210211a",
+                "missing": false
+            },
+            {
+                "code": 6,
+                "name": "Postgraduate degree",
+                "_id": "0e76efd4b0a8ddab343bd1f7135f25a4",
+                "missing": false
+            }
+        ],
+        "tags": []
+    },
+    {
+        "family": "categorical",
+        "alias": "race",
+        "wording": "Race\/Ethnicity",
+        "name": "Race\/Ethnicity",
+        "categories": [
+            {
+                "code": 1,
+                "name": "White",
+                "_id": "a912ce58bca9314f6dea1cd56659d44d",
+                "missing": false
+            },
+            {
+                "code": 2,
+                "name": "Black or African-American",
+                "_id": "f37caa3c5831599f72ebc16869793041",
+                "missing": false
+            },
+            {
+                "code": 3,
+                "name": "Hispanic or Latino",
+                "_id": "a88da763fed3e69e5d137cb9606b42c2",
+                "missing": false
+            },
+            {
+                "code": 4,
+                "name": "Asian or Asian-American",
+                "_id": "21ea1a9a6829b891076f6e5ecc537257",
+                "missing": false
+            },
+            {
+                "code": 5,
+                "name": "Native American",
+                "_id": "26ebd274355e048f33d43c5ccb577c18",
+                "missing": false
+            },
+            {
+                "code": 6,
+                "name": "Mixed Race",
+                "_id": "7edf7337bfefa9ad3f8f971abe117870",
+                "missing": false
+            },
+            {
+                "code": 7,
+                "name": "Other",
+                "_id": "c342ebabc06e744e69fc49919686d1da",
+                "missing": false
+            },
+            {
+                "code": 8,
+                "name": "Middle Eastern",
+                "_id": "b6546b96379b72425f51afedd228824f",
+                "missing": false
+            }
+        ],
+        "tags": ["tag 1", "tag 2"]
+    },
+    {
+        "family": "categorical",
+        "alias": "income",
+        "wording": "Income",
+        "name": "Income",
+        "categories": [
+            {
+                "code": 1,
+                "name": "Less than $10,000",
+                "_id": "e9251c027552e0f09556d507a7bee9ba",
+                "missing": false
+            },
+            {
+                "code": 2,
+                "name": "$10,000-$14,999",
+                "_id": "9c11b804cd53e9553a527c5f15ec29c1",
+                "missing": false
+            },
+            {
+                "code": 3,
+                "name": "$15,000-$19,999",
+                "_id": "ad17dd0bb597dd4d02a650bfc1f889dd",
+                "missing": false
+            },
+            {
+                "code": 4,
+                "name": "$20,000-$24,999",
+                "_id": "d8b7d2540bcd1e1efab1acc344810e64",
+                "missing": false
+            },
+            {
+                "code": 5,
+                "name": "$25,000-$29,999",
+                "_id": "7093a83ec98b8137d1e9971bb11c88fa",
+                "missing": false
+            },
+            {
+                "code": 6,
+                "name": "$30,000-$39,999",
+                "_id": "9524712c4e662f0114b4deb5804df076",
+                "missing": false
+            },
+            {
+                "code": 7,
+                "name": "$40,000-$49,999",
+                "_id": "6dc68bcd376568f7ed7f600777870223",
+                "missing": false
+            },
+            {
+                "code": 8,
+                "name": "$50,000-$59,999",
+                "_id": "ab7c34e8d41f22872a6177abf35357d4",
+                "missing": false
+            },
+            {
+                "code": 9,
+                "name": "$60,000-$69,999",
+                "_id": "e1c3ebc994af16490547ce7168830847",
+                "missing": false
+            },
+            {
+                "code": 10,
+                "name": "$70,000-$79,999",
+                "_id": "1d4672806a3888f12bc731420dd15e19",
+                "missing": false
+            },
+            {
+                "code": 11,
+                "name": "$80,000-$99,999",
+                "_id": "412f3176fe5bde920369fde30321691e",
+                "missing": false
+            },
+            {
+                "code": 12,
+                "name": "$100,000-$119,999",
+                "_id": "968476dde4cab2b9a209d13dacbee634",
+                "missing": false
+            },
+            {
+                "code": 13,
+                "name": "$120,000-$149,999",
+                "_id": "1b466f2d4bf6693f12fdeb723e810ce1",
+                "missing": false
+            },
+            {
+                "code": 14,
+                "name": "$150,000 or more",
+                "_id": "1ea9f7bc2d80a2ce67e9f3fa2157dcd4",
+                "missing": false
+            }
+        ],
+        "tags": ["tag 2"]
+    },
+    {
+        "family": "categorical",
+        "alias": "marstat",
+        "wording": "Marital Status",
+        "name": "Marital Status",
+        "categories": [
+            {
+                "code": 1,
+                "name": "Married",
+                "_id": "0e113c244601ecba6296a0bb6fbfb53f",
+                "missing": false
+            },
+            {
+                "code": 2,
+                "name": "Separated",
+                "_id": "540192ea488fb24f758bb12404ab7004",
+                "missing": false
+            },
+            {
+                "code": 3,
+                "name": "Divorced",
+                "_id": "70a8c2af4f59739d96029265564397b1",
+                "missing": false
+            },
+            {
+                "code": 4,
+                "name": "Widowed",
+                "_id": "f7fc88ccbde05411346bd9c4d563f10c",
+                "missing": false
+            },
+            {
+                "code": 5,
+                "name": "Single",
+                "_id": "d164624eadbaae8c6047c014fc0e4063",
+                "missing": false
+            },
+            {
+                "code": 6,
+                "name": "Domestic partnership",
+                "_id": "50277c27f2b030c033a88b6294f51fdf",
+                "missing": false
+            }
+        ],
+        "tags": ["tag 2"]
+    },
+    {
+        "name": "Age",
+        "description": "Age of respondent",
+        "type": "integer",
+        "family": "numeric",
+        "tags": [],
+        "alias": "age"
+    },
+    {
+        "name": "Coffee consumption",
+        "description": "Cups of coffee per week",
+        "type": "float",
+        "family": "numeric",
+        "tags": ["tag 1" , "tag 2"],
+        "alias": "coffeeConsumption"
+    },
+    {
+        "name": "Text variable ftw",
+        "description": "random hex characters",
+        "family": "text",
+        "tags": ["tag 1"],
+        "alias": "textVar"
+    }
+]
