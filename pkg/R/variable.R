@@ -1,7 +1,17 @@
-
+##' @rdname crunch-is
+##' @export
 is.variable <- function (x) inherits(x, "CrunchVariable")
+
+##' @rdname crunch-is
+##' @export
 is.numericVariable <- function (x) inherits(x, "NumericVariable")
+
+##' @rdname crunch-is
+##' @export
 is.categoricalVariable <- function (x) inherits(x, "CategoricalVariable")
+
+##' @rdname crunch-is
+##' @export
 is.textVariable <- function (x) inherits(x, "TextVariable")
 
 .cr.variable.shojiObject <- function (x, ...) {

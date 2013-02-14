@@ -1,4 +1,3 @@
-
 validCrunchDataset <- function (object) {
     oname <- object@body$name
     are.vars <- vapply(object, is.variable, logical(1))
@@ -15,8 +14,11 @@ validCrunchDataset <- function (object) {
 }
 setValidity("CrunchDataset", validCrunchDataset)
 
-
-
+##' Is it?
+##' @rdname crunch-is
+##' @param x an object
+##' @return logical
+##' @export 
 is.dataset <- function (x) inherits(x, "CrunchDataset")
 
 setGeneric("name", function (x) standardGeneric("name"))
