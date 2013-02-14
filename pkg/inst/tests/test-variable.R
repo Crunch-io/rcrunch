@@ -2,6 +2,7 @@ context("Variables")
 
 vars <- fromJSON(system.file("variables.json", package="rcrunch",
     mustWork=TRUE), simplifyWithNames=FALSE)
+names(vars) <- selectFrom("alias", vars)
 vars <- lapply(vars, function (x) structure(list(body=x), class="shoji"))
 
 test_that("Variable init, as, is", {
@@ -11,4 +12,33 @@ test_that("Variable init, as, is", {
     expect_true(all(vapply(lapply(vars, as.variable), is.variable, logical(1))))
     expect_false(is.variable(5))
     expect_false(is.variable(NULL))
+})
+
+test_that("Subclass constructor selector", {
+    expect_equivalent(class(pickSubclassConstructor("numeric")), 
+        "classGeneratorFunction")
+    expect_identical(pickSubclassConstructor("numeric"), NumericVariable)
+    expect_identical(pickSubclassConstructor("categorical"), CategoricalVariable)
+    expect_identical(pickSubclassConstructor("text"), TextVariable)
+    expect_identical(pickSubclassConstructor(), CrunchVariable)
+    expect_identical(pickSubclassConstructor("foo"), CrunchVariable)
+})
+
+v <- lapply(vars, as.variable)
+
+test_that("Variable type method", {
+    expect_identical(type(v[["age"]]), "numeric")
+    expect_identical(type(v$gender), "categorical")
+})
+
+test_that("Variable subclass definitions, is and as", {
+    expect_equivalent(class(v[["age"]]), "NumericVariable")
+    expect_equivalent(class(v[["gender"]]), "CategoricalVariable")
+    expect_equivalent(class(v[["textVar"]]), "TextVariable")
+    expect_true(is.numericVariable(v[["age"]]))
+    expect_true(is.categoricalVariable(v[["gender"]]))
+    expect_true(is.textVariable(v[["textVar"]]))
+    expect_true(is.numericVariable(as.numericVariable(v[["gender"]])))
+    expect_true(is.categoricalVariable(as.categoricalVariable(v[["age"]])))
+    expect_true(is.textVariable(as.textVariable(v[["gender"]])))
 })

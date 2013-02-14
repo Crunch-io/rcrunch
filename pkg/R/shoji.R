@@ -29,5 +29,13 @@ as.shojiObject <- function (x) as(x, "ShojiObject")
 
 is.shojiObject <- function (x) inherits(x, "ShojiObject")
 
-## write 'refresh' method that GETs self url, and does new(Class, ...)
+## 'refresh' method that GETs self url, and does new(Class, ...)
+.cr.shoji.refresh <- function (x) {
+    Class <- class(x)  ## in case x is a subclass of ShojiObject
+    return(as(GET(x@self), Class))
+}
+
+setGeneric("refresh", function (x) standardGeneric("refresh"))
+setMethod("refresh", "ShojiObject", .cr.shoji.refresh)
+
 
