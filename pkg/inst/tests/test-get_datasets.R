@@ -37,7 +37,7 @@ test_that("Dataset list can be retrieved if authenticated", {
 })
 
 test_that("A dataset object can be retrieved, if it exists", {
-    expect_true(is.list(loadDataset("dflisttest")))
+    expect_true(is.dataset(loadDataset("dflisttest")))
     expect_error(loadDataset("this is totally not a dataset", 
         "this is totally not a dataset not found"))
 })

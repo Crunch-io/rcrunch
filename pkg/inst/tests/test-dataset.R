@@ -45,10 +45,12 @@ vars <- lapply(vars, as.variable)
 test.ds <- .cr.dataset.shojiObject(as.shojiObject(ds), vars)
 
 test_that("A dataset with variables inherits from list", {
+    expect_false(is.null(names(test.ds)))
     expect_identical(names(test.ds), names(vars))
     expect_true(is.variable(test.ds[[1]]))
+    expect_true("age" %in% names(test.ds))
     expect_true(is.variable(test.ds$age))
-    expect_true(is.dataset(test.ds[1])) ## fails
+    expect_true(is.dataset(test.ds[1]))
     expect_identical(test.ds$age, vars$age)
     expect_true(var_test_fn(test.ds))
 })

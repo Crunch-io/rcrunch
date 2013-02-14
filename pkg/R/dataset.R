@@ -26,8 +26,11 @@ setMethod("name", "CrunchDataset", function (x) x@body$name)
     out <- CrunchDataset(x, ...)
     if (length(list(...))==0) {
         ## get variables
-        #vars <- getShojiCollection(out@urls$variables_url, "body$alias")
-        #out@.Data <- lapply(vars, as.variable)
+        urls <- out@urls$variables_url
+        if (!is.null(urls)) {
+            vars <- getShojiCollection(urls, "body$alias")
+            out@.Data <- lapply(vars, as.variable)
+        }
     }
     return(out)
 }

@@ -47,9 +47,7 @@ getDatasetObjects <- function (x=sessionURL("user_dataset_urls")) {
 ##' @export 
 loadDataset <- function (dataset.name, dataset.list=dataset_list()) {
     dataset <- selectDatasetFromList(dataset.name, dataset.list)
-    ## GET variables
-    ## S3 class it
-    return(dataset)
+    return(as.dataset(dataset))
 }
 
 selectDatasetFromList <- function (name, dslist=NULL) {
