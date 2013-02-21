@@ -67,3 +67,13 @@ selectFromWhere <- function (where=TRUE, xlist, key=NULL, ifnot=NA,
         return(xlist)
     }
 }
+
+##' Collapse string vector for making docs
+##'
+##' Empty strings will be replaced with newlines. 
+##' @param x character
+##' @return character vector of length 1
+doc <- function (x) {
+    x[nchar(x)==0] <- "\n"
+    return(paste0("\n ", paste(x, collapse=" "), "\n"))
+}

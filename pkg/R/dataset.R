@@ -24,6 +24,9 @@ is.dataset <- function (x) inherits(x, "CrunchDataset")
 setGeneric("name", function (x) standardGeneric("name"))
 setMethod("name", "CrunchDataset", function (x) x@body$name)
 
+setGeneric("description", function (x) standardGeneric("description"))
+setMethod("description", "CrunchDataset", function (x) x@body$description)
+
 .cr.dataset.shojiObject <- function (x, ...) {
     out <- CrunchDataset(x, ...)
     if (length(list(...))==0) {
@@ -50,4 +53,31 @@ setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     x@.Data <- x@.Data[i]
     x@readonly <- TRUE ## we don't want to overwrite the big object accidentally
     return(x)
+})
+
+showCrunchDataset <- function (x) {
+    n <- sQuote(name(x))
+    out <- c("Dataset", n, "")
+    if (!is.null(x@body$description)) {
+        out <- c(out, x@body$description, "")
+    }
+    
+    out <- c(out, 
+            "", 
+            "Contains", length(x), "variables:", "",
+            "")
+    vars <- vapply(na.omit(names(x)), function (i) {
+        ### REMOVE THE NA.OMIT
+        header <- paste0("$", i, ":")
+        paste(c(header, getNameAndType(x[[i]]), "\n"), collapse=" ")
+    }, character(1))
+    out <- c(out, vars)
+    
+    return(doc(out))
+}
+
+setMethod("show", "CrunchDataset", function (object) {
+    out <- showCrunchDataset(object)
+    cat(out)
+    invisible(out)
 })

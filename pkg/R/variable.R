@@ -53,3 +53,6 @@ pickSubclassConstructor <- function (x=NULL) {
 
 setGeneric("type", function (x) standardGeneric("type"))
 setMethod("type", "CrunchVariable", function (x) x@body$family)
+
+setMethod("name", "CrunchVariable", function (x) x@body$name)
+setMethod("description", "CrunchVariable", function (x) x@body$description)
