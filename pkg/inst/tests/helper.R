@@ -13,6 +13,8 @@ vars <- fromJSON(system.file("variables.json", package="rcrunch",
 names(vars) <- selectFrom("alias", vars)
 vars <- lapply(vars, function (x) structure(list(body=x), class="shoji"))
 
+vars2 <- lapply(vars, as.variable)
+
 ## Summaries
 sums <- fromJSON(system.file("summaries.json", package="rcrunch",
     mustWork=TRUE), simplifyWithNames=FALSE)

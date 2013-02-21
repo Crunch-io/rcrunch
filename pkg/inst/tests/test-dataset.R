@@ -32,7 +32,6 @@ test_that("Can construct Dataset from shoji document", {
 })
 
 ## Variable fake fixtures
-vars2 <- lapply(vars, as.variable)
 test.ds <- .cr.dataset.shojiObject(as.shojiObject(ds), vars2)
 
 test_that("A dataset with variables inherits from list", {
