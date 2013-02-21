@@ -25,3 +25,4 @@ Collate:
     'dataset.R'
     'variable.R'
     'show-variable.R'
+    'variable-summary.R'

@@ -1,0 +1,208 @@
+{
+    "gender": {
+        "categories": [
+            {
+                "_id": "0c93298d4e63b81bbb5be68a11a01604",
+                "count": 425 
+            },
+            {
+                "_id": "b294894bdb9074056fa439d25a9348bd",
+                "count": 501 
+            }
+        ], 
+        "valid_count": 926,
+        "missing_count": 74
+    },
+    "educ": {
+        "categories": [
+            {
+                "_id": "5a430cd57e61d3857ca33809562ee08e",
+                "count": 112 
+            },
+            {
+                "_id": "dd5203e573406ab75dd324dc77ce89a8",
+                "count": 134 
+            },
+            {
+                "_id": "198596e5668485f1aa65b9525b349578",
+                "count": 41 
+            },
+            {
+                "_id": "a1aeeecb2beb2275680e8bddceb149c5",
+                "count": 380 
+            },
+            {
+                "_id": "87e6fff83dbaa1a659db80f2f210211a",
+                "count": 229 
+            },
+            {
+                "_id": "0e76efd4b0a8ddab343bd1f7135f25a4",
+                "count": 88 
+            }
+        ], 
+        "valid_count": 982,
+        "missing_count": 18
+    },
+    "race": {
+        "categories": [
+            {
+                "_id": "a912ce58bca9314f6dea1cd56659d44d",
+                "count": 729 
+            },
+            {
+                "_id": "f37caa3c5831599f72ebc16869793041",
+                "count": 124 
+            },
+            {
+                "_id": "a88da763fed3e69e5d137cb9606b42c2",
+                "count": 69 
+            },
+            {
+                "_id": "21ea1a9a6829b891076f6e5ecc537257",
+                "count": 24 
+            },
+            {
+                "_id": "26ebd274355e048f33d43c5ccb577c18",
+                "count": 2 
+            },
+            {
+                "_id": "7edf7337bfefa9ad3f8f971abe117870",
+                "count": 15 
+            },
+            {
+                "_id": "c342ebabc06e744e69fc49919686d1da",
+                "count": 21 
+            },
+            {
+                "_id": "b6546b96379b72425f51afedd228824f",
+                "count": 0
+            }
+        ], 
+        "valid_count": 984,
+        "missing_count": 16
+    },
+    "income": {
+        "categories": [
+            {
+                "_id": "e9251c027552e0f09556d507a7bee9ba",
+                "count": 301
+            },
+            {
+                "_id": "9c11b804cd53e9553a527c5f15ec29c1",
+                "count": 77
+            },
+            {
+                "_id": "ad17dd0bb597dd4d02a650bfc1f889dd",
+                "count": 111
+            },
+            {
+                "_id": "d8b7d2540bcd1e1efab1acc344810e64",
+                "count": 61
+            },
+            {
+                "_id": "7093a83ec98b8137d1e9971bb11c88fa",
+                "count": 125
+            },
+            {
+                "_id": "9524712c4e662f0114b4deb5804df076",
+                "count": 87
+            },
+            {
+                "_id": "6dc68bcd376568f7ed7f600777870223",
+                "count": 68
+            },
+            {
+                "_id": "ab7c34e8d41f22872a6177abf35357d4",
+                "count": 87
+            },
+            {
+                "_id": "e1c3ebc994af16490547ce7168830847",
+                "count": 33
+            },
+            {
+                "_id": "1d4672806a3888f12bc731420dd15e19",
+                "count": 20
+            },
+            {
+                "_id": "412f3176fe5bde920369fde30321691e",
+                "count": 8
+            },
+            {
+                "_id": "968476dde4cab2b9a209d13dacbee634",
+                "count": 5
+            },
+            {
+                "_id": "1b466f2d4bf6693f12fdeb723e810ce1",
+                "count": 0
+            },
+            {
+                "_id": "1ea9f7bc2d80a2ce67e9f3fa2157dcd4",
+                "count": 1
+            }
+        ], 
+        "valid_count": 984,
+        "missing_count": 16
+    },
+    "marstat": {
+        "categories": [
+            {
+                "_id": "0e113c244601ecba6296a0bb6fbfb53f",
+                "count": 330
+            },
+            {
+                "_id": "540192ea488fb24f758bb12404ab7004",
+                "count": 392
+            },
+            {
+                "_id": "70a8c2af4f59739d96029265564397b1",
+                "count": 208
+            },
+            {
+                "_id": "f7fc88ccbde05411346bd9c4d563f10c",
+                "count": 7
+            },
+            {
+                "_id": "d164624eadbaae8c6047c014fc0e4063",
+                "count": 43
+            },
+            {
+                "_id": "50277c27f2b030c033a88b6294f51fdf",
+                "count": 20
+            }
+        ],
+        "valid_count": 1000,
+        "missing_count": 0
+    },
+    "age": {
+        "histogram": {
+            "at": [ 15, 25, 35, 45, 55, 65, 75, 85, 95, 105 ],
+            "value": [ 8, 66, 116, 196, 217, 189, 113, 63, 26, 6 ]
+        },
+        "mean": 56.5321112,
+        "sd": 17.39251,
+        "median": 56,
+        "min": 18,
+        "max": 108,
+        "valid_count": 1000,
+        "missing_count": 0
+    },
+    "coffeeConsumption": {
+        "histogram": {
+            "at": [   0.25,   0.75,   1.25,   1.75,   2.25,   2.75,   3.25,   3.75,   4.25,   4.75,   5.25,   5.75,   6.25,   6.75,   7.25,   7.75,   8.25,   8.75,   9.25 ],
+            "value": [ 74, 67, 127, 144, 127, 146, 73, 83, 52, 50, 19, 18, 10, 4, 3, 0, 2, 0, 1 ]
+        },
+        "mean": 2.51722315,
+        "sd": 1.478391,
+        "median": 2.36742,
+        "min": 0.01859,
+        "max": 9.491890,
+        "valid_count": 1000,
+        "missing_count": 0
+    },
+    "textVariableFtw": {
+        "valid_count": 843,
+        "missing_count": 157,
+        "n_unique": 841,
+        "max_chars": 47
+    }
+}
