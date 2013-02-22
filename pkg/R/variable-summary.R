@@ -42,15 +42,15 @@ basetable <- base::table
 
 ##' @export 
 table <- function (..., exclude, useNA, dnn, deparse.level) {
-	m <- match.call()
-	
-	if (is.variable(..1)) {
+    m <- match.call()
+
+    if (is.variable(..1)) {
         FUN <- "CategoricalVariable.table"
     } else {
         FUN <- "basetable"
     }
     m[[1]] <- as.name(FUN)
-	eval(m, parent.frame())
+    eval(m, parent.frame())
 }
 
 CategoricalVariable.summary <- function (object, ...) {
