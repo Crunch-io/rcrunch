@@ -27,29 +27,30 @@ test_that("basicAuthArgs", {
         simplifyWithNames=FALSE)))
 })
 
-test_that("login works if crunch is running", {
-    deleteSessionInfo()
-    login(test.user)
-    expect_identical(class(getToken()), "config")
-    expect_true("urls" %in% ls(envir=session_store))
-    expect_true(is.authenticated())
-})
+if (!run.only.local.tests) {
+    test_that("login works if crunch is running", {
+        deleteSessionInfo()
+        login(test.user)
+        expect_identical(class(getToken()), "config")
+        expect_true("urls" %in% ls(envir=session_store))
+        expect_true(is.authenticated())
+    })
 
-test_that("crunchAuth succeeds when it should and not when it shouldn't", {
-    logout()
-    expect_true(is.list(crunchAuth(test.user)))
-    login(test.user) ## so we can logout; crunch API is misbehaving
-    logout()
-    expect_error(crunchAuth("lkjasdfksdfkjhl"), 
-        "Unable to authenticate lkjasdfksdfkjhl")
-})
+    test_that("crunchAuth succeeds when it should and not when it shouldn't", {
+        logout()
+        expect_true(is.list(crunchAuth(test.user)))
+        login(test.user) ## so we can logout; crunch API is misbehaving
+        logout()
+        expect_error(crunchAuth("lkjasdfksdfkjhl"), 
+            "Unable to authenticate lkjasdfksdfkjhl")
+    })
 
-test_that("session URLs can be retrieved", {
-    login(test.user)
-    expect_true(is.character(sessionURL("user_url")))
-    expect_true(is.list(sessionURL()))
-    logout()
-    expect_error(sessionURL("user_url"), 
-        "You must authenticate before making this request")
-})
-
+    test_that("session URLs can be retrieved", {
+        login(test.user)
+        expect_true(is.character(sessionURL("user_url")))
+        expect_true(is.list(sessionURL()))
+        logout()
+        expect_error(sessionURL("user_url"), 
+            "You must authenticate before making this request")
+    })
+}
