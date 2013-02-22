@@ -56,3 +56,6 @@ setMethod("type", "CrunchVariable", function (x) x@body$family)
 
 setMethod("name", "CrunchVariable", function (x) x@body$name)
 setMethod("description", "CrunchVariable", function (x) x@body$description)
+
+setGeneric("categories", function (x) standardGeneric("categories"))
+setMethod("categories", "CrunchVariable", function (x) x@body$categories)
