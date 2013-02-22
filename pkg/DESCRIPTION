@@ -26,3 +26,4 @@ Collate:
     'variable.R'
     'show-variable.R'
     'variable-summary.R'
+    'table.R'

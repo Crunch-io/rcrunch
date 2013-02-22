@@ -17,7 +17,10 @@ test_that("CategoricalVariable.table", {
         selectFrom("name", categories(v1)))
 })
 
-test_that("table method?", {
+test_that("table method", {
     testtable <- makeCategoricalTable(vars$gender$body$categories, sums$gender$body$categories)
     expect_identical(testtable, table(v1))
+    expect_identical(table(1:5), base::table(1:5))
+    expect_identical(table(useNA="ifany", 1:5), base::table(useNA="ifany", 1:5))
+    expect_identical(testtable, table(useNA="ifany", v1))
 })

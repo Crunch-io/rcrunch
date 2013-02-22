@@ -22,13 +22,17 @@ makeCategoricalTable <- function (categories, summaries) {
     return(values)
 }
 
-CategoricalVariable.table <- function (...) {
+CategoricalVariable.table <- function (..., 
+                    exclude = if (useNA == "no") c(NA, NaN), 
+                    useNA = c("no", "ifany", "always"), dnn = list.names(...),
+                    deparse.level = 1) {
     var <- ..1
     summary <- getSummary(var)
     return(makeCategoricalTable(categories(var), summary$body$categories))
 }
 
-##' @export
-setGeneric("table", function (...) standardGeneric("table"))
-##' @export
-setMethod("table", "CategoricalVariable", CategoricalVariable.table)
+setGeneric("table", signature="...")
+##' @export 
+setMethod("table", "ANY", function (...) base::table(...))
+setMethod("table", "CategoricalVariable", 
+    function (...) CategoricalVariable.table(...))
