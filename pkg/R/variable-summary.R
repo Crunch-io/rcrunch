@@ -27,12 +27,37 @@ CategoricalVariable.table <- function (...,
                     useNA = c("no", "ifany", "always"), dnn = list.names(...),
                     deparse.level = 1) {
     var <- ..1
-    summary <- getSummary(var)
-    return(makeCategoricalTable(categories(var), summary$body$categories))
+    summ <- getSummary(var)$body
+    out <- makeCategoricalTable(categories(var), summ$categories)
+    add.na <- useNA=="always" || (useNA=="ifany" && summ$missing_count>0)
+    if (add.na) {
+        cl <- class(out)
+        out <- c(out, `<NA>`=summ$missing_count)
+        class(out) <- cl
+    }
+    return(out)
 }
 
-setGeneric("table", signature="...")
+basetable <- base::table
+
 ##' @export 
-setMethod("table", "ANY", function (...) base::table(...))
-setMethod("table", "CategoricalVariable", 
-    function (...) CategoricalVariable.table(...))
+table <- function (..., exclude, useNA, dnn, deparse.level) {
+	m <- match.call()
+	
+	if (is.variable(..1)) {
+        FUN <- "CategoricalVariable.table"
+    } else {
+        FUN <- "basetable"
+    }
+    m[[1]] <- as.name(FUN)
+	eval(m, parent.frame())
+}
+
+CategoricalVariable.summary <- function (object, ...) {
+    summ <- getSummary(object)
+    tab <- makeCategoricalTable(categories(object), summ$body$categories)
+    tab <- tab[order(tab, decreasing=TRUE)]
+    class(tab) <- c("CategoricalVariableSummary", class(tab))
+    attr(tab, "varname") <- getNameAndType(object)
+    return(tab)
+}
