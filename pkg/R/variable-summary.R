@@ -39,19 +39,31 @@ CategoricalVariable.table <- function (...,
 }
 
 basetable <- base::table
-
 ##' @export 
 table <- function (..., exclude, useNA, dnn, deparse.level) {
     m <- match.call()
-
-    if (is.variable(..1)) {
+    
+    dots <- list(...)
+    are.vars <- vapply(dots, is.variable, logical(1))
+    if (length(are.vars) && all(are.vars)) {
+        if (length(are.vars)>1) {
+            stop("Cannot currently tabulate more than one Crunch variable", 
+                call.=FALSE)
+        }
         FUN <- "CategoricalVariable.table"
+    } else if (any(are.vars)) {
+        stop("Cannot currently tabulate Crunch variables with ", 
+            "non-Crunch vectors", call.=FALSE)
     } else {
         FUN <- "basetable"
     }
     m[[1]] <- as.name(FUN)
     eval(m, parent.frame())
 }
+
+#setGeneric("table", signature="...")
+##' @export 
+#setMethod("table", "CategoricalVariable", CategoricalVariable.table)
 
 CategoricalVariable.summary <- function (object, ...) {
     summ <- getSummary(object)

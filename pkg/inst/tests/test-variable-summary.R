@@ -29,7 +29,7 @@ test_that("options in CategoricalVariable.table", {
     expect_identical(length(CategoricalVariable.table(gen, useNA="always")), 3L)
 })
 
-test_that("table method", {
+test_that("table 'method' dispatch", {
     testtable <- makeCategoricalTable(vars$gender$body$categories, sums$gender$body$categories)
     expect_identical(testtable, table(v1))
     expect_identical(CategoricalVariable.table(v1, useNA="ifany"), 
@@ -37,6 +37,12 @@ test_that("table method", {
     expect_identical(table(1:5), base::table(1:5))
     expect_identical(table(useNA="ifany", 1:5), base::table(useNA="ifany", 1:5))
     expect_identical(table(useNA="ifany", c(NA, 1:5)), base::table(useNA="ifany", c(NA, 1:5)))
-    
     expect_identical(testtable, table(useNA="no", v1))
+})
+
+test_that("unsupported table methods", {
+    expect_error(table(v1, v1), "Cannot currently tabulate more than one Crunch variable")
+    expect_error(table(v1, 1:5), "Cannot currently tabulate Crunch variables with non-Crunch vectors")
+    expect_error(table(1:5, v1), "Cannot currently tabulate Crunch variables with non-Crunch vectors")
+    expect_error(table(), "nothing to tabulate")
 })

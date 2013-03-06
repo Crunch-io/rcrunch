@@ -1,4 +1,5 @@
 S3method(is,shoji)
+export(CategoricalVariable.summary)
 export(is.categoricalVariable)
 export(is.dataset)
 export(is.numericVariable)
