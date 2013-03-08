@@ -1,5 +1,6 @@
-run.only.local.tests <- TRUE
+run.only.local.tests <- FALSE
 
+## .onAttach stuff, for testthat to work right
 options(crunch.api.endpoint="http://localhost:8080/api/", warn=1)
 assign("application/json", parseJSONresponse, envir=httr:::parsers)
 test.user <- "***REMOVED***"
@@ -21,3 +22,5 @@ vars2 <- lapply(vars, as.variable)
 sums <- fromJSON(system.file("summaries.json", package="rcrunch",
     mustWork=TRUE), simplifyWithNames=FALSE)
 sums <- lapply(sums, function (x) structure(list(body=x), class="shoji"))
+
+df <- data.frame(v1=rnorm(20), v2=letters[1:20], v3=8:27)

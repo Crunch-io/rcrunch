@@ -31,9 +31,10 @@ if (!run.only.local.tests) {
     test_that("login works if crunch is running", {
         deleteSessionInfo()
         login(test.user)
-        expect_identical(class(getToken()), "config")
-        expect_true("urls" %in% ls(envir=session_store))
-        expect_true(is.authenticated())
+            expect_identical(class(getToken()), "config")
+            expect_true("urls" %in% ls(envir=session_store))
+            expect_true(is.authenticated())
+        logout()
     })
 
     test_that("crunchAuth succeeds when it should and not when it shouldn't", {
@@ -47,8 +48,8 @@ if (!run.only.local.tests) {
 
     test_that("session URLs can be retrieved", {
         login(test.user)
-        expect_true(is.character(sessionURL("user_url")))
-        expect_true(is.list(sessionURL()))
+            expect_true(is.character(sessionURL("user_url")))
+            expect_true(is.list(sessionURL()))
         logout()
         expect_error(sessionURL("user_url"), 
             "You must authenticate before making this request")

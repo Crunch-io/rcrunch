@@ -1,0 +1,22 @@
+\name{setCrunchSlot}
+\alias{setCrunchSlot}
+\title{Base setter for Crunch objects}
+\usage{
+  setCrunchSlot(x, i, value)
+}
+\arguments{
+  \item{x}{a ShojiObject or subclass thereof}
+
+  \item{i}{character the slot name to update}
+
+  \item{value}{whatever the new value of that slot should
+  be}
+}
+\value{
+  x modified accordingly. If \code{x} isn't read-only, it
+  will also post the edit to the Crunch server.
+}
+\description{
+  Base setter for Crunch objects
+}
+

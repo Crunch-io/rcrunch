@@ -12,9 +12,10 @@ test_that("HTTP verbs are validated", {
 if (!run.only.local.tests) {
     test_that("API root can be fetched", {
         login(test.user)
-        expect_false(is.error(try(getAPIroot())))
-        urls <- getAPIroot()
-        expect_true(is.shoji(urls))
+            expect_false(is.error(try(getAPIroot())))
+            urls <- getAPIroot()
+            expect_true(is.shoji(urls))
+        logout()
     })
 
     if (crunchAPIcanBeReached()) {
@@ -27,6 +28,7 @@ if (!run.only.local.tests) {
     test_that("crunchConfig", {
         expect_identical(crunchConfig(), crunchHTTPheaders())
         login(test.user)
-        expect_identical(length(crunchConfig()), 2L)
+            expect_identical(length(crunchConfig()), 2L)
+        logout()
     })
 }

@@ -49,3 +49,29 @@ test_that("Read only flag gets set appropriately", {
     expect_false(is.readonly(test.ds))
     expect_true(is.readonly(test.ds[1]))
 })
+
+test_that("Name and description setters in read only mode", {
+    dataset <- test.ds
+    readonly(dataset) <- TRUE
+    name(dataset) <- "Bond. James Bond."
+    expect_false(identical(name(dataset), name(test.ds)))
+    expect_identical(name(dataset), "Bond. James Bond.")
+    description(dataset) <- "007"
+    expect_false(identical(description(dataset), description(test.ds)))
+    expect_identical(description(dataset), "007")
+})
+
+if (!run.only.local.tests) {
+   test_that("Name and description setters push to server", {
+       login(test.user)
+           setter_test <- df
+           d2 <- setter_test <- newDataset(setter_test)
+           name(setter_test) <- "Bond. James Bond."
+           expect_identical(name(refresh(d2)), name(setter_test))
+       logout()
+   })
+   
+   test_that("Name and description setters don't push to server if readonly", {
+       
+   })
+}

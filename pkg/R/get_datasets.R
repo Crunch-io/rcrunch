@@ -50,13 +50,13 @@ loadDataset <- function (dataset.name, dataset.list=dataset_list()) {
     return(as.dataset(dataset))
 }
 
-selectDatasetFromList <- function (name, dslist=NULL) {
+selectDatasetFromList <- function (dsname, dslist=NULL) {
     this.dataset <- dslist
     if (!is.null(this.dataset)) {
-        this.dataset <- this.dataset[[name]]
+        this.dataset <- this.dataset[[dsname]]
     }
     if (is.null(this.dataset)) {
-        stop(paste(name, "not found"), call.=FALSE)
+        stop(paste(dsname, "not found"), call.=FALSE)
     }
     return(this.dataset)
 }

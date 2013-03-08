@@ -8,7 +8,7 @@ newDataset <- function (x, name=substitute(x), ...) {
     # later, we'll want to serialize some other way that preserves metadata
     file <- tempfile(fileext=".csv")
     write.csv(x, file=file, row.names=FALSE)
-    invisible(newDatasetFromFile(file, name=name, ...))
+    invisible(newDatasetFromFile(file, name=as.character(name), ...))
 }
 
 ##' Upload a file to Crunch to make a new dataset
@@ -24,7 +24,7 @@ newDatasetFromFile <- function (file, name=basename(file), ...) {
     ds <- createDataset(name)
     addSourceToDataset(ds, source)
     updateDatasetList()
-    invisible(name)
+    invisible(as.dataset(GET(ds)))
 }
 
 ##' @importFrom httr upload_file

@@ -21,11 +21,22 @@ setValidity("CrunchDataset", validCrunchDataset)
 ##' @export 
 is.dataset <- function (x) inherits(x, "CrunchDataset")
 
+setDatasetName <- function (x, value) setCrunchSlot(x, "name", value)
+setDatasetDescription <- function (x, value) {
+    setCrunchSlot(x, "description", value)
+}
+
 setGeneric("name", function (x) standardGeneric("name"))
 setMethod("name", "CrunchDataset", function (x) x@body$name)
+setGeneric("name<-", function (x, value) standardGeneric("name<-"),
+    signature="x")
+setMethod("name<-", "CrunchDataset", setDatasetName)
 
 setGeneric("description", function (x) standardGeneric("description"))
 setMethod("description", "CrunchDataset", function (x) x@body$description)
+setGeneric("description<-", 
+    function (x, value) standardGeneric("description<-"), signature="x")
+setMethod("description<-", "CrunchDataset", setDatasetDescription)
 
 .cr.dataset.shojiObject <- function (x, ...) {
     out <- CrunchDataset(x, ...)
@@ -47,11 +58,9 @@ setAs("shoji", "CrunchDataset",
 
 as.dataset <- function (x) as(x, "CrunchDataset")
 
-is.readonly <- function (x) isTRUE(x@readonly)
-
 setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     x@.Data <- x@.Data[i]
-    x@readonly <- TRUE ## we don't want to overwrite the big object accidentally
+    readonly(x) <- TRUE ## we don't want to overwrite the big object accidentally
     return(x)
 })
 

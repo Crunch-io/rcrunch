@@ -21,3 +21,23 @@ test_that("shoji S3 to ShojiObject", {
     class(fo) <- "shoji"
     expect_true(is.shojiObject(as.shojiObject(fo)))
 })
+
+test_that("attributeURL", {
+    testds <- as.dataset(ds)
+    expect_identical(attributeURL(testds, "name"), paste0(ds$self, "name"))
+})
+
+if (!run.only.local.tests) {
+    test_that("refresh", {
+        refresh_test <- df
+        login(test.user)
+            rt <- newDataset(refresh_test)
+            expect_identical(rt, refresh(rt))
+            rt2 <- rt
+            rt2@body$name <- "something else"
+            expect_false(identical(rt2, rt))
+            expect_false(identical(rt2, refresh(rt2)))
+            expect_identical(refresh(rt2), rt)
+        logout()
+    })
+}
