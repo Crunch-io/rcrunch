@@ -21,7 +21,7 @@ if (!run.only.local.tests) {
     if (crunchAPIcanBeReached()) {
         test_that("API calls throw an error if user is not authenticated", {
             logout()
-            expect_error(getAPIroot(), "403")
+            expect_error(getAPIroot(), "401")
         })
     }
 

@@ -15,7 +15,7 @@ makeSessionStore()
 ##' Kill the active Crunch session
 ##' @export 
 logout <- function () {
-    if (is.authenticated()) GET(sessionURL("logout_url"))
+    if (is.authenticated()) try(GET(sessionURL("logout_url")), silent=TRUE) ## hack?
     deleteSessionInfo()
     options(prompt = session_store$.globals$prompt)
 }
@@ -47,14 +47,14 @@ saveUser <- function (x) {
 
 crunchAuth <- function (email, ...) {
     POST(getOption("crunch.api.endpoint"), body=basicAuthArgs(email, ...), 
-        status.handlers=list(`403`=function (response, user=email) {
+        status.handlers=list(`401`=function (response, user=email) {
             stop(paste("Unable to authenticate", user), call.=FALSE)
         }))
 }
 
 ##' @importFrom RJSONIO toJSON
 basicAuthArgs <- function (x, ...) {
-    return(toJSON(list(email=x)))
+    return(toJSON(list(email=x, ...)))
 }
 
 ##' @importFrom httr set_cookies

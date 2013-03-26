@@ -39,7 +39,7 @@ if (!run.only.local.tests) {
 
     test_that("crunchAuth succeeds when it should and not when it shouldn't", {
         logout()
-        expect_true(is.list(crunchAuth(test.user)))
+        expect_true(is.list(crunchAuth(test.user, password=test.pw)))
         login(test.user) ## so we can logout; crunch API is misbehaving
         logout()
         expect_error(crunchAuth("lkjasdfksdfkjhl"), 
