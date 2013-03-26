@@ -50,7 +50,7 @@ setMethod("refresh", "ShojiObject", .cr.shoji.refresh)
 setCrunchSlot <- function (x, i, value) {
     slot(x, "body")[[i]] <- value
     if (!is.readonly(x)) {
-        PUT(attributeURL(x, i), body=toJSON(list(value=value)))
+        PUT(self(x), body=toJSON(structure(value, .Names=i)))
     }
     return(x)
 }

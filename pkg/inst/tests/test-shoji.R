@@ -22,11 +22,6 @@ test_that("shoji S3 to ShojiObject", {
     expect_true(is.shojiObject(as.shojiObject(fo)))
 })
 
-test_that("attributeURL", {
-    testds <- as.dataset(ds)
-    expect_identical(attributeURL(testds, "name"), paste0(ds$self, "name"))
-})
-
 if (!run.only.local.tests) {
     test_that("refresh", {
         refresh_test <- df
