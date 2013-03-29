@@ -4,11 +4,23 @@
 ##' @return If successful, an object of class crunchdf.
 ##' @export
 newDataset <- function (x, name=substitute(x), ...) {
+    
+    is.2D <- !is.null(dim(x)) && length(dim(x)) %in% 2
+    if (!is.2D) {
+        stop("Can only make a Crunch dataset from a two-dimensional data ",
+            "structure", call.=FALSE)
+    }
+    
     # v1: dump a csv, then route through newDatasetFromFile.
     # later, we'll want to serialize some other way that preserves metadata
     file <- tempfile(fileext=".csv")
     write.csv(x, file=file, row.names=FALSE)
-    invisible(newDatasetFromFile(file, name=as.character(name), ...))
+    crunchdf <- newDatasetFromFile(file, name=as.character(name), ...)
+    
+    ## Update variable types based on what we know
+    vartypes <- crunchType(x)
+    crunchdf[] <- mapply(castVariable, x=crunchdf, to=vartypes)
+    invisible(crunchdf)
 }
 
 ##' Upload a file to Crunch to make a new dataset

@@ -1,0 +1,18 @@
+\name{serialPaste}
+\alias{serialPaste}
+\title{Make a prose list
+Function to paste together a list of items, separated by commas (if more than 2), and with the last one having the collapse string.}
+\usage{
+  serialPaste(x, collapse = "and")
+}
+\arguments{
+  \item{x}{vector or list}
+
+  \item{collapse}{default="and"}
+}
+\description{
+  Make a prose list Function to paste together a list of
+  items, separated by commas (if more than 2), and with the
+  last one having the collapse string.
+}
+

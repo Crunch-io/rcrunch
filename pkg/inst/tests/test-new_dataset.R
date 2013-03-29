@@ -42,12 +42,26 @@ if (!run.only.local.tests) {
     })
     
     test_that("Dataset can be made from a data.frame", {
+        expect_error(newDataset(NULL), 
+            "Can only make a Crunch dataset from a two-dimensional data")
+        expect_error(newDataset(1:5), 
+            "Can only make a Crunch dataset from a two-dimensional data")
         login(test.user)
             making_a_dataset_from_df <- df
             newDataset(making_a_dataset_from_df)
             expect_true("making_a_dataset_from_df" %in% listDatasets())
             testcrdf <- newDataset(df)
             expect_true(is.dataset(testcrdf))
+            ## Should also test doing this with a matrix
+        logout()
+    })
+    
+    test_that("Dataset variable types get set correctly", {
+        login(test.user)
+            testdf <- loadDataset("making_a_dataset_from_df")
+            expect_true(is.Numeric(testdf[["v1"]]))
+            expect_true(is.Text(testdf[["v2"]]))
+            expect_true(is.Numeric(testdf[["v3"]]))
         logout()
     })
 }

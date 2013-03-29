@@ -1,8 +1,8 @@
 \name{is.dataset}
-\alias{is.categoricalVariable}
+\alias{is.Categorical}
+\alias{is.Numeric}
+\alias{is.Text}
 \alias{is.dataset}
-\alias{is.numericVariable}
-\alias{is.textVariable}
 \alias{is.variable}
 \title{Is it?}
 \usage{
@@ -10,11 +10,11 @@
 
   is.variable(x)
 
-  is.numericVariable(x)
+  is.Numeric(x)
 
-  is.categoricalVariable(x)
+  is.Categorical(x)
 
-  is.textVariable(x)
+  is.Text(x)
 }
 \arguments{
   \item{x}{an object}
