@@ -1,18 +1,20 @@
+VARIABLE_TYPES <- c("numeric", "text", "categorical")
+
 ##' @rdname crunch-is
 ##' @export
 is.variable <- function (x) inherits(x, "CrunchVariable")
 
 ##' @rdname crunch-is
 ##' @export
-is.numericVariable <- function (x) inherits(x, "NumericVariable")
+is.Numeric <- function (x) inherits(x, "NumericVariable")
 
 ##' @rdname crunch-is
 ##' @export
-is.categoricalVariable <- function (x) inherits(x, "CategoricalVariable")
+is.Categorical <- function (x) inherits(x, "CategoricalVariable")
 
 ##' @rdname crunch-is
 ##' @export
-is.textVariable <- function (x) inherits(x, "TextVariable")
+is.Text <- function (x) inherits(x, "TextVariable")
 
 .cr.variable.shojiObject <- function (x, ...) {
     out <- CrunchVariable(x, ...)
@@ -30,9 +32,12 @@ as.variable <- function (x, subtype=NULL) {
     return(x)
 }
 
-as.numericVariable <- function (x) as.variable(x, "numeric")
-as.categoricalVariable <- function (x) as.variable(x, "categorical")
-as.textVariable <- function (x) as.variable(x, "text")
+## In case variable type has been changed, need to instantiate off of new type
+setMethod("refresh", "CrunchVariable", function (x) as.variable(GET(self(x))))
+
+as.Numeric <- function (x) as.variable(x, "numeric")
+as.Categorical <- function (x) as.variable(x, "categorical")
+as.Text <- function (x) as.variable(x, "text")
 
 subclassVariable <- function (x, to=NULL) {
     if (is.null(to)) to <- type(x)
@@ -53,6 +58,22 @@ pickSubclassConstructor <- function (x=NULL) {
 
 setGeneric("type", function (x) standardGeneric("type"))
 setMethod("type", "CrunchVariable", function (x) x@body$family)
+## do type casting as type<-
+
+castVariable <- function (x, to) {
+    if (!(to %in% VARIABLE_TYPES)) {
+        stop(sQuote(to), " is not a valid Crunch variable type. Valid types ",
+            "are ", serialPaste(sQuote(VARIABLE_TYPES)))
+    }
+    POST(cast_url(x), body=toJSON(list(cast_as=to)))
+    invisible(refresh(x))
+}
+
+cast_url <- function (x) x@urls$cast_url
+
+setGeneric("type<-", function (x, value) standardGeneric("type<-"))
+setMethod("type<-", "CrunchVariable", 
+    function (x, value) castVariable(x, value))
 
 setMethod("name", "CrunchVariable", function (x) x@body$name)
 setMethod("description", "CrunchVariable", function (x) x@body$description)

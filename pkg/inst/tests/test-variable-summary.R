@@ -46,3 +46,13 @@ test_that("unsupported table methods", {
     expect_error(table(1:5, v1), "Cannot currently tabulate Crunch variables with non-Crunch vectors")
     expect_error(table(), "nothing to tabulate")
 })
+
+# if (!run.only.local.tests) {
+#     test_that("can fetch variable summaries from Crunch, and they're right", {
+#         testdf <- loadDataset("making_a_dataset_from_df") ## from previous test
+#         expect_true(is.shoji(getSummary(testdf$v1)))
+#         summ <- getSummary(testdf$v1)
+#         # expect_equivalent(mean(df$v1), summ$body$mean)
+#         # expect_equivalent(sd(df$v1), summ$body$sd)
+#     })
+# }

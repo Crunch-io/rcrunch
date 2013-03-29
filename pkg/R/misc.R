@@ -77,3 +77,15 @@ doc <- function (x) {
     x[nchar(x)==0] <- "\n"
     return(paste0("\n ", paste(x, collapse=" "), "\n"))
 }
+
+##' Make a prose list
+##' Function to paste together a list of items, separated by commas (if more than 2), and with the last one having the collapse string.
+##'
+##' @param x vector or list
+##' @param collapse default="and"
+##' @export
+serialPaste <- function (x, collapse="and") {
+	if (length(x)>1) x[length(x)] <- paste(collapse, x[length(x)])
+	join.with <- ifelse(length(x)>2, ", ", " ")
+	return(paste(x, collapse=join.with))
+}
