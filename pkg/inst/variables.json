@@ -1,6 +1,6 @@
 [
     {
-        "family": "categorical",
+        "type": "categorical",
         "alias": "gender",
         "wording": "Gender",
         "name": "Gender",
@@ -21,7 +21,7 @@
         "tags": []
     },
     {
-        "family": "categorical",
+        "type": "categorical",
         "alias": "educ",
         "wording": "Education",
         "name": "Education",
@@ -66,7 +66,7 @@
         "tags": []
     },
     {
-        "family": "categorical",
+        "type": "categorical",
         "alias": "race",
         "wording": "Race\/Ethnicity",
         "name": "Race\/Ethnicity",
@@ -123,7 +123,7 @@
         "tags": ["tag 1", "tag 2"]
     },
     {
-        "family": "categorical",
+        "type": "categorical",
         "alias": "income",
         "wording": "Income",
         "name": "Income",
@@ -216,7 +216,7 @@
         "tags": ["tag 2"]
     },
     {
-        "family": "categorical",
+        "type": "categorical",
         "alias": "marstat",
         "wording": "Marital Status",
         "name": "Marital Status",
@@ -263,23 +263,23 @@
     {
         "name": "Age",
         "description": "Age of respondent",
-        "type": "integer",
-        "family": "numeric",
+        "subtype": "integer",
+        "type": "numeric",
         "tags": [],
         "alias": "age"
     },
     {
         "name": "Coffee consumption",
         "description": "Cups of coffee per week",
-        "type": "float",
-        "family": "numeric",
+        "subtype": "float",
+        "type": "numeric",
         "tags": ["tag 1" , "tag 2"],
         "alias": "coffeeConsumption"
     },
     {
         "name": "Text variable ftw",
         "description": "random hex characters",
-        "family": "text",
+        "type": "text",
         "tags": ["tag 1"],
         "alias": "textVar"
     }

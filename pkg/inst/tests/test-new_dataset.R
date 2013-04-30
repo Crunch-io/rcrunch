@@ -1,4 +1,4 @@
-context("making a new dataset")
+context("Making a new dataset")
 
 if (!run.only.local.tests) {
     test_that("Source file can be uploaded if logged in", {
