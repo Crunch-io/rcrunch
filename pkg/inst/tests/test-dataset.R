@@ -63,7 +63,7 @@ test_that("Name and description setters in read only mode", {
 
 if (!run.only.local.tests) {
    test_that("Name and description setters push to server", {
-       login(test.user)
+       login()
            setter_test <- df
            d2 <- setter_test <- newDataset(setter_test)
            name(setter_test) <- "Bond. James Bond."

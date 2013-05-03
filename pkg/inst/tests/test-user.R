@@ -2,7 +2,7 @@ context("User stuff")
 
 if (!run.only.local.tests) {
     test_that("User URLs can be fetched", {
-        login(test.user)
+        login()
             expect_false(is.error(getUserURLs()))
             urls <- getUserURLs()
             expect_true(is.list(urls))

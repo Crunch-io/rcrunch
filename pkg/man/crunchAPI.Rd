@@ -3,8 +3,7 @@
 \title{Main Crunch API handling function}
 \usage{
   crunchAPI(http.verb, url,
-    response.handler = handleAPIresponse,
-    config = list(verbose = FALSE),
+    response.handler = handleAPIresponse, config = list(),
     status.handlers = list(), ...)
 }
 \arguments{

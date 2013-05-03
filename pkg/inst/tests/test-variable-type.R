@@ -16,7 +16,7 @@ test_that("R object types are translated to Crunch vars", {
 
 if (!run.only.local.tests) {
     test_that("type casting and 'as'", {
-        login(test.user)
+        login()
             testdf <- loadDataset("making_a_dataset_from_df") 
                 ## from previous test
             v1.was.text <- is.Text(testdf[["v1"]])

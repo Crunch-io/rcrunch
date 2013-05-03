@@ -1,11 +1,13 @@
 run.only.local.tests <- TRUE
 
 ## .onAttach stuff, for testthat to work right
-options(crunch.api.endpoint="http://localhost:8080/api/", warn=1)
+options(crunch.api.endpoint="http://localhost:8080/api/", 
+        warn=1, 
+        crunch.email=getOption("test.user"),
+        crunch.pw=getOption("test.pw"))
 assign("application/json", parseJSONresponse, envir=httr:::parsers)
 test.user <- "***REMOVED***"
 test.pw <- "***REMOVED***"
-login <- function (...) rcrunch::login(..., password=test.pw)
 
 ## Dataset fixture
 ds <- fromJSON(system.file("dataset.json", package="rcrunch", 

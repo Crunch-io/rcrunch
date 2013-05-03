@@ -25,7 +25,7 @@ test_that("shoji S3 to ShojiObject", {
 if (!run.only.local.tests) {
     test_that("refresh", {
         refresh_test <- df
-        login(test.user)
+        login()
             rt <- newDataset(refresh_test)
             expect_identical(rt, refresh(rt))
             rt2 <- rt

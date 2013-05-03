@@ -22,15 +22,22 @@ test_that("session info can be deleted out deletes cookies", {
 })
 
 test_that("basicAuthArgs", {
-    expect_true(is.character(basicAuthArgs("myemail")))
-    expect_true(is.list(RJSONIO:::fromJSON(basicAuthArgs("myemail"),
+    expect_true(is.character(basicAuthArgs(email="myemail")))
+    expect_true(is.list(RJSONIO:::fromJSON(basicAuthArgs(email="myemail"),
         simplifyWithNames=FALSE)))
+})
+
+test_that("login checks for email and password before POSTing", {
+    expect_error(crunchAuth(email=NULL), 
+        "Must supply the email address associated with your crunch.io account")
+    expect_error(crunchAuth(email=1L, password=NULL), 
+        "Must supply a password")
 })
 
 if (!run.only.local.tests) {
     test_that("login works if crunch is running", {
         deleteSessionInfo()
-        login(test.user)
+        login()
             expect_identical(class(getToken()), "config")
             expect_true("urls" %in% ls(envir=session_store))
             expect_true(is.authenticated())
@@ -40,14 +47,14 @@ if (!run.only.local.tests) {
     test_that("crunchAuth succeeds when it should and not when it shouldn't", {
         logout()
         expect_true(is.list(crunchAuth(test.user, password=test.pw)))
-        login(test.user) ## so we can logout; crunch API is misbehaving
+        login() ## so we can logout; crunch API is misbehaving
         logout()
         expect_error(crunchAuth("lkjasdfksdfkjhl"), 
             "Unable to authenticate lkjasdfksdfkjhl")
     })
 
     test_that("session URLs can be retrieved", {
-        login(test.user)
+        login()
             expect_true(is.character(sessionURL("user_url")))
             expect_true(is.list(sessionURL()))
         logout()

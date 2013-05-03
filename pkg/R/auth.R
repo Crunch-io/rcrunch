@@ -28,9 +28,10 @@ deleteSessionInfo <- function () {
 ##' @param email the user's email address
 ##' @param ... additional parameters
 ##' @export 
-login <- function (email, ...) {
+login <- function (email=getOption("crunch.email"),
+                   password=getOption("crunch.pw"), ...) {
     logout()
-    out <- crunchAuth(email, ...)
+    out <- crunchAuth(email=email, password=password, ...)
     saveUser(email)
     saveToken(out$cookies)
     saveSessionURLs(getAPIroot()$urls)
@@ -45,16 +46,29 @@ saveUser <- function (x) {
     session_store$email <- x
 }
 
-crunchAuth <- function (email, ...) {
-    POST(getOption("crunch.api.endpoint"), body=basicAuthArgs(email, ...), 
+crunchAuth <- function (email, password=NULL, ...) {
+    
+    if (is.null(email)) {
+        stop("Must supply the email address associated with your crunch.io account", call.=FALSE)
+    }
+    if (is.null(password)) {
+        if (interactive()) {
+            ## prompt for password
+        } # else {
+            stop("Must supply a password", call.=FALSE)
+        #}
+    }
+    
+    POST(getOption("crunch.api.endpoint"), 
+        body=basicAuthArgs(email=email, password=password, ...), 
         status.handlers=list(`401`=function (response, user=email) {
             stop(paste("Unable to authenticate", user), call.=FALSE)
         }))
 }
 
 ##' @importFrom RJSONIO toJSON
-basicAuthArgs <- function (x, ...) {
-    return(toJSON(list(email=x, ...)))
+basicAuthArgs <- function (...) {
+    return(toJSON(list(...)))
 }
 
 ##' @importFrom httr set_cookies

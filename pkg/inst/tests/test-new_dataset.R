@@ -2,7 +2,7 @@ context("Making a new dataset")
 
 if (!run.only.local.tests) {
     test_that("Source file can be uploaded if logged in", {
-        login(test.user)
+        login()
             testfile <- system.file("fake.csv", package="rcrunch",
                 mustWork=TRUE)
             expect_true(createSource(testfile, 
@@ -18,7 +18,7 @@ if (!run.only.local.tests) {
     })
 
     test_that("Dataset container object can be created if logged in", {
-        login(test.user)
+        login()
             expect_true(createDataset("testfile", 
                 response.handler=function (response) response$status_code==201))
         logout()
@@ -31,7 +31,7 @@ if (!run.only.local.tests) {
     })
 
     test_that("Source can be added to Dataset", {
-        login(test.user)
+        login()
             testfile <- system.file("fake.csv", package="rcrunch",
                 mustWork=TRUE)
             source <- createSource(testfile)
@@ -46,7 +46,7 @@ if (!run.only.local.tests) {
             "Can only make a Crunch dataset from a two-dimensional data")
         expect_error(newDataset(1:5), 
             "Can only make a Crunch dataset from a two-dimensional data")
-        login(test.user)
+        login()
             making_a_dataset_from_df <- df
             newDataset(making_a_dataset_from_df)
             expect_true("making_a_dataset_from_df" %in% listDatasets())
@@ -57,7 +57,7 @@ if (!run.only.local.tests) {
     })
     
     test_that("Dataset variable types get set correctly", {
-        login(test.user)
+        login()
             testdf <- loadDataset("making_a_dataset_from_df")
             expect_true(is.Numeric(testdf[["v1"]]))
             expect_true(is.Text(testdf[["v2"]]))
