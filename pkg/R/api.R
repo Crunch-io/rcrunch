@@ -4,7 +4,7 @@
 ##' @param ... additional arguments
 ##' @param response.handler function that takes a http response object and does something with it
 ##' @param config list of config parameters. See httr documentation.
-crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, config=list(verbose=FALSE), status.handlers=list(), ...) {
+crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, config=list(), status.handlers=list(), ...) {
     configs <- updateList(crunchConfig(), config)
     url ## force lazy eval of url before inserting in try() below
     x <- try(selectHttpFunction(http.verb)(url, ..., config=configs), 
@@ -69,9 +69,7 @@ handleAPIerror <- function (response) {
 }
 
 crunchConfig <- function () {
-    tk <- getToken()
-    if (is.null(tk)) tk <- list()
-    c(tk, crunchHTTPheaders())
+    c(getToken(), list(verbose=FALSE, sslversion=3L), crunchHTTPheaders())
 }
 
 crunchHTTPheaders <- function () {
