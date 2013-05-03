@@ -1,7 +1,7 @@
 VARIABLE_TYPES <- c("numeric", "text", "categorical")
 
 setGeneric("type", function (x) standardGeneric("type"))
-setMethod("type", "CrunchVariable", function (x) x@body$family)
+setMethod("type", "CrunchVariable", function (x) x@body$type)
 ## do type casting as type<-
 
 castVariable <- function (x, to) {
