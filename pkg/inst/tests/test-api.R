@@ -9,6 +9,12 @@ test_that("HTTP verbs are validated", {
     expect_error(selectHttpFunction(c("PUT", "POST")))
 })
 
+config.args <- c("sslversion", "httpheader", "verbose")
+
+test_that("crunchConfig has right structure", {
+    expect_true(setequal(names(crunchConfig()), config.args))
+})
+
 if (!run.only.local.tests) {
     test_that("API root can be fetched", {
         login()
@@ -26,9 +32,8 @@ if (!run.only.local.tests) {
     }
 
     test_that("crunchConfig", {
-        expect_identical(crunchConfig(), crunchHTTPheaders())
         login()
-            expect_identical(length(crunchConfig()), 2L)
+            expect_identical(length(crunchConfig()), length(config.args) + 1L)
         logout()
     })
 }

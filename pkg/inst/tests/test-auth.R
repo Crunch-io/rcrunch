@@ -46,10 +46,14 @@ if (!run.only.local.tests) {
 
     test_that("crunchAuth succeeds when it should and not when it shouldn't", {
         logout()
-        expect_true(is.list(crunchAuth(test.user, password=test.pw)))
-        login() ## so we can logout; crunch API is misbehaving
+        em <- getOption("crunch.email")
+        pw <- getOption("crunch.pw")
+        expect_true(is.character(em))
+        expect_true(is.character(pw))
+        expect_true(is.list(crunchAuth(em, password=pw)))
+        login()
         logout()
-        expect_error(crunchAuth("lkjasdfksdfkjhl"), 
+        expect_error(crunchAuth("lkjasdfksdfkjhl", password="w23nrnsod"), 
             "Unable to authenticate lkjasdfksdfkjhl")
     })
 
