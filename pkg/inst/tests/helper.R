@@ -6,8 +6,6 @@ options(crunch.api.endpoint="http://localhost:8080/api/",
         crunch.email=getOption("test.user"),
         crunch.pw=getOption("test.pw"))
 assign("application/json", parseJSONresponse, envir=httr:::parsers)
-test.user <- "***REMOVED***"
-test.pw <- "***REMOVED***"
 
 ## Dataset fixture
 ds <- fromJSON(system.file("dataset.json", package="rcrunch", 
