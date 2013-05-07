@@ -25,8 +25,25 @@ deleteSessionInfo <- function () {
 }
 
 ##' Authenticate with the Crunch API
-##' @param email the user's email address
-##' @param ... additional parameters
+##'
+##' Note that you can store your Crunch account info in your .Rprofile under
+##' "crunch.email" and "crunch.pw" for convenience. If you do so, you can simply
+##' \code{login()} to authenticate. For running batch jobs, this could be
+##' particularly useful. However, be warned that storing your 
+##' password in a plain text file such as .Rprofile is a security risk (though
+##' perhaps less so than in every .R script you write), and we
+##' cannot officially recommend that you do so.
+##'
+##' If a password is not supplied (or, if no arguments are supplied and only
+##' the \code{crunch.email} is specified in .Rprofile), and you are in an 
+##' interactive session, you will be prompted to enter your password. At 
+##' present, this is the most secure practice as your password is not stored
+##' locally.
+##'
+##' @param email the email address associated with the user's Crunch account
+##' @param password the password associated with the user's Crunch account
+##' @param ... additional parameters passed in the authentication. Not 
+##' currently supported by the Crunch API.
 ##' @export 
 login <- function (email=getOption("crunch.email"),
                    password=getOption("crunch.pw"), ...) {
@@ -46,17 +63,20 @@ saveUser <- function (x) {
     session_store$email <- x
 }
 
+##' Validate authentication inputs and then POST to the API
+##' @param email character, see \code{\link{login}}
+##' @param password character, see \code{\link{login}}
+##' @param ... see \code{\link{login}}
 crunchAuth <- function (email, password=NULL, ...) {
-    
     if (is.null(email)) {
         stop("Must supply the email address associated with your crunch.io account", call.=FALSE)
     }
     if (is.null(password)) {
         if (interactive()) {
-            ## prompt for password
-        } # else {
+            password <- readline(paste0("Crunch.io password for ", email, ": "))
+        } else {
             stop("Must supply a password", call.=FALSE)
-        #}
+        }
     }
     
     POST(getOption("crunch.api.endpoint"), 

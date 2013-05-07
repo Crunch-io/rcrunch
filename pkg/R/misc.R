@@ -49,8 +49,8 @@ selectFrom <- function (key, xlist, ifnot=NA, simplify=TRUE) {
 ##' element. Passed to \code{\link{selectFrom}}.
 ##' @param simplify logical, passed to \code{\link{selectFrom}}.
 ##' @examples
-##' f <- fetchQDF("econ0003x20120623")
-##' selectFromWhere(name=="birthyr", f$questions)
+##' vars <- loadJSONMocks("variables.json")
+##' selectFromWhere(name=="Gender", vars)
 ##' @export
 selectFromWhere <- function (where=TRUE, xlist, key=NULL, ifnot=NA,
                             simplify=TRUE) {
@@ -88,4 +88,15 @@ serialPaste <- function (x, collapse="and") {
 	if (length(x)>1) x[length(x)] <- paste(collapse, x[length(x)])
 	join.with <- ifelse(length(x)>2, ", ", " ")
 	return(paste(x, collapse=join.with))
+}
+
+##' Load API sample objects for testing
+##' @param filename character the name of the file. Current options are 
+##' "dataset.json", "variables.json", "summaries.json".
+##' @return The deserialized contents of the JSON file, typically a list.
+##' @importFrom RJSONIO fromJSON
+##' @export
+loadJSONMocks <- function (filename) {
+    fromJSON(system.file(filename, package="rcrunch", mustWork=TRUE),
+        simplifyWithNames=FALSE)
 }

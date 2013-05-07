@@ -1,4 +1,4 @@
-run.only.local.tests <- FALSE
+run.only.local.tests <- TRUE
 
 ## .onAttach stuff, for testthat to work right
 options(crunch.api.endpoint="http://localhost:8080/api/", 
@@ -8,21 +8,18 @@ options(crunch.api.endpoint="http://localhost:8080/api/",
 assign("application/json", parseJSONresponse, envir=httr:::parsers)
 
 ## Dataset fixture
-ds <- fromJSON(system.file("dataset.json", package="rcrunch", 
-    mustWork=TRUE), simplifyWithNames=FALSE)
+ds <- loadJSONMocks("dataset.json")
 class(ds) <- "shoji"
 
 ## Variables
-vars <- fromJSON(system.file("variables.json", package="rcrunch",
-    mustWork=TRUE), simplifyWithNames=FALSE)
+vars <- loadJSONMocks("variables.json")
 names(vars) <- selectFrom("alias", vars)
 vars <- lapply(vars, function (x) structure(list(body=x), class="shoji"))
 
 vars2 <- lapply(vars, as.variable)
 
 ## Summaries
-sums <- fromJSON(system.file("summaries.json", package="rcrunch",
-    mustWork=TRUE), simplifyWithNames=FALSE)
+sums <- loadJSONMocks("summaries.json")
 sums <- lapply(sums, function (x) structure(list(body=x), class="shoji"))
 
 df <- data.frame(v1=rnorm(20), v2=letters[1:20], v3=8:27)

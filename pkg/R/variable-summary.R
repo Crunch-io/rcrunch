@@ -62,7 +62,7 @@ table <- function (..., exclude, useNA, dnn, deparse.level) {
 }
 
 #setGeneric("table", signature="...")
-##' @export 
+# ##' @export 
 #setMethod("table", "CategoricalVariable", CategoricalVariable.table)
 
 CategoricalVariable.summary <- function (object, ...) {

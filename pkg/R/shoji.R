@@ -3,6 +3,7 @@ is.shoji.like <- function (x) {
 }
 
 ##' @S3method is shoji
+##' @importFrom methods is
 is.shoji <- function (x) inherits(x, "shoji")
 
 setOldClass("shoji")

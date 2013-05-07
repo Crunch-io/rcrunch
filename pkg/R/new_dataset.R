@@ -1,7 +1,8 @@
 ##' Upload a data.frame to Crunch to make a new dataset
 ##' @param x a data.frame or other rectangular R object
 ##' @param name character, the name to give the new Crunch dataset. Default is the name of the R object passed in \code{x}
-##' @return If successful, an object of class crunchdf.
+##' @param ... additional arguments passed to \code{ \link{newDatasetFromFile}}
+##' @return If successful, an object of class CrunchDataset.
 ##' @export
 newDataset <- function (x, name=substitute(x), ...) {
     
@@ -27,6 +28,7 @@ newDataset <- function (x, name=substitute(x), ...) {
 ##' @param file character, the path to a file to upload
 ##' @param name character, the name to give the new Crunch dataset. Default is the file name
 ##' @return If successful, an object of class crunchdf.
+##' @param ... additional arguments, currently not implemented
 ##' @export 
 newDatasetFromFile <- function (file, name=basename(file), ...) {
     if (!file.exists(file)) {

@@ -9,6 +9,9 @@
 
   \item{name}{character, the name to give the new Crunch
   dataset. Default is the file name}
+
+  \item{...}{additional arguments, currently not
+  implemented}
 }
 \value{
   If successful, an object of class crunchdf.

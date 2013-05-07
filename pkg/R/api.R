@@ -1,9 +1,14 @@
 ##' Main Crunch API handling function
 ##' @param http.verb character in GET, PUT, POST
 ##' @param url character URL to do the verb on
-##' @param ... additional arguments
-##' @param response.handler function that takes a http response object and does something with it
+##' @param ... additional arguments passed to \code{GET}, \code{PUT}, or
+##' \code{POST}
+##' @param response.handler function that takes a http response object and does
+##' something with it
 ##' @param config list of config parameters. See httr documentation.
+##' @param status.handlers named list of specific HTTP statuses and a response
+##' function to call in the case where that status is returned. Passed to the
+##' \code{response.handler} function.
 crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, config=list(), status.handlers=list(), ...) {
     configs <- updateList(crunchConfig(), config)
     url ## force lazy eval of url before inserting in try() below
@@ -90,7 +95,7 @@ is.JSON.response <- function (x) {
 
 ##' @importFrom RJSONIO fromJSON
 parseJSONresponse <- function (x, simplifyWithNames=FALSE, ...) {
-    RJSONIO:::fromJSON(httr:::parse_text(x, encoding = "UTF-8"),
+    fromJSON(httr:::parse_text(x, encoding = "UTF-8"),
         simplifyWithNames=simplifyWithNames, ...)
 }
 

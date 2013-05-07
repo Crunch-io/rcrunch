@@ -11,7 +11,9 @@ LazyLoad: yes
 Depends:
     R (>= 2.15.0)
 Imports:
-    httr
+    httr,
+    RJSONIO,
+    methods
 Collate:
     'AllClasses.R'
     'auth.R'

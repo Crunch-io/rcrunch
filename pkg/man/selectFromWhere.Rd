@@ -27,7 +27,7 @@
   Extract list element(s) conditionally
 }
 \examples{
-f <- fetchQDF("econ0003x20120623")
-selectFromWhere(name=="birthyr", f$questions)
+vars <- loadJSONMocks("variables.json")
+selectFromWhere(name=="Gender", vars)
 }
 
