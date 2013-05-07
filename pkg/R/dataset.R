@@ -41,14 +41,41 @@ setMethod("description<-", "CrunchDataset", setDatasetDescription)
 .cr.dataset.shojiObject <- function (x, ...) {
     out <- CrunchDataset(x, ...)
     if (length(list(...))==0) {
-        ## get variables
-        urls <- out@urls$variables_url
-        if (!is.null(urls)) {
-            vars <- getShojiCollection(urls, "body$alias")
-            out@.Data <- lapply(vars, as.variable)
-        }
+        vars <- getDatasetVariables(out)
+        if (length(vars)) out@.Data <- vars
     }
     return(out)
+}
+
+getDatasetVariables <- function (x) {
+    if (!is.null(x@urls$all_variables_url)) {
+        return(getAllDatasetVariables(x))
+    } else {
+        return(getDatasetVariablesFromCollection(x))
+    }
+}
+
+getDatasetVariablesFromCollection <- function (x) {
+    urls <- x@urls$variables_url
+    if (!is.null(urls)) {
+        vars <- getShojiCollection(urls, "body$alias")
+        vars <- lapply(vars, as.variable)
+        return(vars)
+    } else {
+        return(list())
+    }
+}
+
+getAllDatasetVariables <- function (x) {
+    url <- x@urls$all_variables_url
+    vars <- GET(url)
+    vars <- lapply(vars, function (a) {
+        class(a) <- "shoji"
+        return(a)
+    })
+    names(vars) <- selectFrom("body$alias", vars)
+    vars <- lapply(vars, as.variable)
+    return(vars)
 }
 
 setAs("ShojiObject", "CrunchDataset", 
