@@ -8,7 +8,9 @@ R package for interacting with the Crunch API
 
 ## Running tests
 
-`$ make test` is all you need. Does require the `testthat` package for R.
+`$ make test` is all you need. Does require the `testthat` package for R. 
+
+Testing has two options: unit tests only, and tests that communicate with an API server. To enable the latter, set the logical parameter `run.local.tests.only` to `FALSE` in `pkg/inst/tests/helper.R`. You will also need to specify a test user and password to authenticate as, either by editing `helper.R` further or by setting `test.user` and `test.pw` in your `.Rprofile`.
 
 ## Updating documentation
 
