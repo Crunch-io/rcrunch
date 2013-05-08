@@ -18,3 +18,8 @@ test_that("category getters", {
     expect_identical(names(Cats), selectFrom(CATEGORY_NAME_MAP[["name"]], cats))
     expect_identical(values(Cats), selectFrom(CATEGORY_NAME_MAP[["value"]], cats))
 })
+
+## to do: 
+### category setters
+### add Categories init to CategoricalVariable init
+### update categorical methods as needed (e.g. summary)

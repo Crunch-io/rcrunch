@@ -1,3 +1,4 @@
+## To insulate us from API nomenclature and changes to
 CATEGORY_NAME_MAP = list(
     name="name",
     value="code"
