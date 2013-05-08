@@ -27,3 +27,6 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("list", "ShojiObject"),
         readonly="logical"
     ), 
     prototype=prototype(readonly=FALSE))
+
+Categories <- setClass("Categories", contains="list")
+Category <- setClass("Category", contains="namedList")

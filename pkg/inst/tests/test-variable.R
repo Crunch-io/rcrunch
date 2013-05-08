@@ -29,3 +29,7 @@ test_that("Variable subclass definitions, is", {
     expect_true(is.Categorical(v[["gender"]]))
     expect_true(is.Text(v[["textVar"]]))
 })
+
+test_that("Categories", {
+    
+})

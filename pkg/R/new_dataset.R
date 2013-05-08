@@ -12,15 +12,29 @@ newDataset <- function (x, name=substitute(x), ...) {
             "structure", call.=FALSE)
     }
     
-    # v1: dump a csv, then route through newDatasetFromFile.
+    # v1: dump a csv, then route through newDatasetFromFile. 
+    # then manipulate the remote dataset
     # later, we'll want to serialize some other way that preserves metadata
+    
+    ## This code is data.frame specific. need to modify for matrix type
+    
+    ## First, collect original type information
+    vartypes <- crunchType(x)
+    are.factor <- vapply(x, is.factor, logical(1))
+    if (any(are.factor)) {
+        factor.levels <- lapply(x[are.factor], levels)
+        x[are.factor] <- lapply(x[are.factor], as.numeric)
+    }
+    
     file <- tempfile(fileext=".csv")
     write.csv(x, file=file, row.names=FALSE)
     crunchdf <- newDatasetFromFile(file, name=as.character(name), ...)
     
     ## Update variable types based on what we know
-    vartypes <- crunchType(x)
     crunchdf[] <- mapply(castVariable, x=crunchdf, to=vartypes)
+    if (any(are.factor)) {
+        
+    }
     invisible(crunchdf)
 }
 

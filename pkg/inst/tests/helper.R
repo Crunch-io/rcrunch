@@ -22,4 +22,5 @@ vars2 <- lapply(vars, as.variable)
 sums <- loadJSONMocks("summaries.json")
 sums <- lapply(sums, function (x) structure(list(body=x), class="shoji"))
 
-df <- data.frame(v1=rnorm(20), v2=letters[1:20], v3=8:27)
+df <- data.frame(v1=rnorm(20), v2=letters[1:20], v3=8:27,
+                 v4=as.factor(LETTERS[2:3]), stringsAsFactors=FALSE)

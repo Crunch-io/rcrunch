@@ -62,6 +62,7 @@ if (!run.only.local.tests) {
             expect_true(is.Numeric(testdf[["v1"]]))
             expect_true(is.Text(testdf[["v2"]]))
             expect_true(is.Numeric(testdf[["v3"]]))
+            expect_true(is.Categorical(testdf[["v4"]]))
         logout()
     })
 }

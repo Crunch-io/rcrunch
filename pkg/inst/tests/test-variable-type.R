@@ -11,7 +11,8 @@ test_that("R object types are translated to Crunch vars", {
     expect_identical(crunchType(1:5), "numeric")
     expect_identical(crunchType(letters[1:5]), "text")
     expect_identical(crunchType(df), 
-        structure(c("numeric", "text", "numeric"), .Names=names(df)))
+        structure(c("numeric", "text", "numeric", "categorical"),
+        .Names=names(df)))
 })
 
 if (!run.only.local.tests) {
