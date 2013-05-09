@@ -38,3 +38,24 @@ crunchType <- function (x) {
         return("text")
     }
 }
+
+setGeneric("preUpload", function (x) standardGeneric("preUpload"), signature="x")
+setMethod("preUpload", "data.frame", function (x) {
+    x[] <- lapply(x, preUpload)
+    return(x)
+})
+setMethod("preUpload", "ANY", function (x) x)
+setMethod("preUpload", "factor", function (x) as.numeric(x))
+
+setGeneric("postUpload", 
+    function (source.var, crunch.var) standardGeneric("postUpload"),
+    signature="source.var")
+setMethod("postUpload", "ANY", function (source.var, crunch.var) {
+    castVariable(crunch.var, "text")
+})
+setMethod("postUpload", "numeric", function (source.var, crunch.var) {
+    castVariable(crunch.var, "numeric")
+})
+setMethod("postUpload", "factor", function (source.var, crunch.var) {
+    castVariable(crunch.var, "categorical")
+})

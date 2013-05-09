@@ -41,6 +41,7 @@ setGeneric("values<-", function (x, value) standardGeneric("values<-"))
 setMethod("values<-", "Categories", function (x, value) {
     mapply(match.fun("values<-"), x, value=value)
 })
+setMethod("toJSON", "Categories", function (x, ...) toJSON(I(x@.Data)))
 
 #####
 
@@ -64,7 +65,6 @@ setMethod("name<-", "Category", function (x, value) {
     x[[CATEGORY_NAME_MAP[["name"]]]] <- value
     return(x)
 })
-
 setGeneric("value", function (x) standardGeneric("value"))
 setMethod("value", "Category", function (x) x[[CATEGORY_NAME_MAP[["value"]]]])
 setGeneric("value<-", function (x, value) standardGeneric("value<-"))

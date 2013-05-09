@@ -18,23 +18,17 @@ newDataset <- function (x, name=substitute(x), ...) {
     
     ## This code is data.frame specific. need to modify for matrix type
     
-    ## First, collect original type information
-    vartypes <- crunchType(x)
-    are.factor <- vapply(x, is.factor, logical(1))
-    if (any(are.factor)) {
-        factor.levels <- lapply(x[are.factor], levels)
-        x[are.factor] <- lapply(x[are.factor], as.numeric)
-    }
-    
     file <- tempfile(fileext=".csv")
-    write.csv(x, file=file, row.names=FALSE)
+    write.csv(preUpload(x), file=file, row.names=FALSE)
     crunchdf <- newDatasetFromFile(file, name=as.character(name), ...)
     
     ## Update variable types based on what we know
-    crunchdf[] <- mapply(castVariable, x=crunchdf, to=vartypes)
-    if (any(are.factor)) {
-        
-    }
+    crunchdf[] <- sapply(names(crunchdf), function (i) {
+        postUpload(x[[i]], crunchdf[[i]])
+    }, simplify=FALSE)
+    
+    ## You can write methods for preUpload and postUpload for any variable type
+    
     invisible(crunchdf)
 }
 

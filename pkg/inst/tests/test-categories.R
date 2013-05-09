@@ -19,6 +19,13 @@ test_that("category getters", {
     expect_identical(values(Cats), selectFrom(CATEGORY_NAME_MAP[["value"]], cats))
 })
 
+test_that("categories toJSON", {
+    frj <- function (...) fromJSON(..., simplifyWithNames=FALSE)
+    expect_identical(cats, frj(toJSON(Cats)))
+    expect_identical(cats[1], frj(toJSON(Cats[1])))
+    expect_identical(cats[[1]], frj(toJSON(Cats[[1]])))
+})
+
 ## to do: 
 ### category setters
 ### add Categories init to CategoricalVariable init
