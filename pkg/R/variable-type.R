@@ -19,26 +19,6 @@ setGeneric("type<-", function (x, value) standardGeneric("type<-"))
 setMethod("type<-", "CrunchVariable", 
     function (x, value) castVariable(x, value))
 
-# translateVariableType <- function (x, to.crunch=TRUE) {
-#     if (to.crunch) {
-#         crunchType(x)
-#     } else {
-#         RType(x)
-#     }
-# }
-
-crunchType <- function (x) {
-    if (is.data.frame(x)) {
-        return(vapply(x, crunchType, character(1)))
-    } else if (is.numeric(x)) {
-        return("numeric")
-    } else if (is.factor(x)) {
-        return("categorical")
-    } else {
-        return("text")
-    }
-}
-
 setGeneric("preUpload", function (x) standardGeneric("preUpload"), signature="x")
 setMethod("preUpload", "data.frame", function (x) {
     x[] <- lapply(x, preUpload)
