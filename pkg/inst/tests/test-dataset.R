@@ -62,16 +62,16 @@ test_that("Name and description setters in read only mode", {
 })
 
 if (!run.only.local.tests) {
-   test_that("Name and description setters push to server", {
-       login()
-           setter_test <- df
-           d2 <- setter_test <- newDataset(setter_test)
-           name(setter_test) <- "Bond. James Bond."
-           expect_identical(name(refresh(d2)), name(setter_test))
-       logout()
-   })
+    with(test.authentication, { 
+        test_that("Name and description setters push to server", {
+            setter_test <- df
+            d2 <- setter_test <- newDataset(setter_test)
+            name(setter_test) <- "Bond. James Bond."
+            expect_identical(name(refresh(d2)), name(setter_test))
+        })
+        
+        test_that("Name and description setters don't push to server if readonly", {
    
-   test_that("Name and description setters don't push to server if readonly", {
-       
-   })
+        })
+    })
 }

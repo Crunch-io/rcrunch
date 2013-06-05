@@ -16,7 +16,7 @@ test_that("makeCategoricalTable", {
 })
 
 v1 <- as.variable(vars$gender)
-v1@urls$summary_url <- sums$gender
+v1@urls$summary_url <- sums$gender ## Injecting summary in, then use fake HTTP
 
 with(fake.HTTP, {
     test_that("CategoricalVariable.table", {

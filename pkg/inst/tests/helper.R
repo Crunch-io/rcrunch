@@ -39,6 +39,3 @@ vars2 <- mapply(function (var, val) {
     var@urls$values_url <- val
     return(var)
 }, var=vars2, val=vals)
-
-## Setup-teardown
-test.authentication <- setup.and.teardown(login, logout)

@@ -8,21 +8,19 @@ test_that("selectDatasetFromList", {
 })
 
 if (!run.only.local.tests) {
-    test_that("getUserDatasetURLs gets what we expect", {
-        login()
-            ds.url <- createDataset("getdsurl test")
-            expect_true(is.character(getUserDatasetURLs()))
-            expect_true(ds.url %in% getUserDatasetURLs())
-        logout()
-    })
-
     test_that("getUserDatasetURLs requires authentication", {
         logout()
         expect_error(getUserDatasetURLs(), 
             "You must authenticate before making this request")
     })
     
-    suppressMessages(login())
+    with(test.authentication, {
+        test_that("getUserDatasetURLs gets what we expect", {
+            ds.url <- createDataset("getdsurl test")
+            expect_true(is.character(getUserDatasetURLs()))
+            expect_true(ds.url %in% getUserDatasetURLs())
+        })
+        
         test_that("some setup", {
             dflisttest <- df
             newDataset(dflisttest)
@@ -43,11 +41,8 @@ if (!run.only.local.tests) {
             expect_error(loadDataset("this is totally not a dataset", 
                 "this is totally not a dataset not found"))
         })
-    logout()
-
-    test_that("listDatasets has datasets after a login (and datasets exist)", {
-        login()
+        test_that("listDatasets has datasets after a login (and datasets exist)", {
             expect_true(length(listDatasets())>0)
-        logout()
+        })
     })
 }

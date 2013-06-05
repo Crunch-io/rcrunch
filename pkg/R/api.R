@@ -23,33 +23,35 @@ crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, confi
 }
 
 ## So that we can swap them out for testing
+http_verbs <- NULL
 makeHTTPStore <- function () {
-    http <<- new.env(hash = TRUE)
-    http$GET <- function (...) crunchAPI("GET", ...)
-    http$PUT <- function (...) crunchAPI("PUT", ...)
-    http$POST <- function (...) crunchAPI("POST", ...)
+    http_verbs <<- new.env(hash = TRUE, parent = emptyenv())
+}
+addRealHTTPVerbs <- function () {
+    http_verbs$GET <- function (...) crunchAPI("GET", ...)
+    http_verbs$PUT <- function (...) crunchAPI("PUT", ...)
+    http_verbs$POST <- function (...) crunchAPI("POST", ...)
 }
 makeHTTPStore()
+addRealHTTPVerbs()
 
 GET <- function (...) {
-    http$GET(...)
-    #crunchAPI("GET", ...)
+    http_verbs$GET(...)
 }
 
 PUT <- function (...) {
-    http$PUT(...)
-    # crunchAPI("PUT", ...)
+    http_verbs$PUT(...)
 }
 
 POST <- function (...) {
-    http$POST(...)
-    # crunchAPI("POST", ...)
+    http_verbs$POST(...)
 }
 
 ##' Do the right thing with the HTTP response
 ##' @param response an httr response object
 ##' @param special.statuses an optional named list of functions by status code.
-##' @return The full HTTP response object, just the content, or any other status-specific action 
+##' @return The full HTTP response object, just the content, or any other
+##' status-specific action 
 ##' @importFrom httr content stop_for_status http_status
 handleAPIresponse <- function (response, special.statuses=list()) {
     response <- handleAPIerror(response)
