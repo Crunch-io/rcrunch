@@ -1,12 +1,18 @@
 context("Variable summaries")
 
+tablecats <- Categories(vars$gender$body$categories)
+tablesums <- sums$gender$body$categories
+
+test_that("ids getter for summaries", {
+    expect_identical(ids(tablesums), selectFrom("_id", tablesums))
+    expect_true(setequal(ids(tablecats), ids(tablesums)))
+})
+
 test_that("makeCategoricalTable", {
-    testtable <- makeCategoricalTable(vars$gender$body$categories,
-        sums$gender$body$categories)
+    testtable <- makeCategoricalTable(tablecats, tablesums)
     expect_true(is.table(testtable))
     expect_identical(length(testtable), 2L)
-    expect_identical(names(testtable), 
-        selectFrom("name", vars$gender$body$categories))
+    expect_identical(names(testtable), names(tablecats))
 })
 
 v1 <- as.variable(vars$gender)
@@ -14,8 +20,7 @@ v1@urls$summary_url <- sums$gender
 
 test_that("CategoricalVariable.table", {
     expect_true(is.table(CategoricalVariable.table(v1)))
-    expect_identical(names(CategoricalVariable.table(v1)), 
-        selectFrom("name", categories(v1)))
+    expect_identical(names(CategoricalVariable.table(v1)), names(tablecats))
 })
 
 test_that("options in CategoricalVariable.table", {
@@ -30,7 +35,7 @@ test_that("options in CategoricalVariable.table", {
 })
 
 test_that("table 'method' dispatch", {
-    testtable <- makeCategoricalTable(vars$gender$body$categories, sums$gender$body$categories)
+    testtable <- makeCategoricalTable(tablecats, tablesums)
     expect_identical(testtable, table(v1))
     expect_identical(CategoricalVariable.table(v1, useNA="ifany"), 
         table(v1, useNA="ifany"))

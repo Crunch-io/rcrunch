@@ -1,7 +1,8 @@
 ## To insulate us from API nomenclature and changes to
 CATEGORY_NAME_MAP = list(
     name="name",
-    value="code"
+    value="code",
+    id="_id"
 )
 
 validCategories <- function (object) {
@@ -33,6 +34,14 @@ setMethod("values", "Categories", function (x) {
     out <- try(vapply(x, value, numeric(1)), silent=TRUE)
     if (is.error(out)) out <- rep(list(NULL), length(x))
     return(out)
+})
+setGeneric("ids", function (x) standardGeneric("ids"))
+setMethod("ids", "Categories", function (x) {
+    vapply(x, id, character(1))
+})
+## for summaries
+setMethod("ids", "list", function (x) {
+    vapply(x, id, character(1))
 })
 setMethod("names<-", "Categories", function (x, value) {
     mapply(match.fun("names<-"), x, value=value)
@@ -72,3 +81,7 @@ setMethod("value<-", "Category", function (x, value) {
     x[[CATEGORY_NAME_MAP[["value"]]]] <- value
     return(x)
 })
+
+setGeneric("id", function (x) standardGeneric("id"))
+setMethod("id", "Category", function (x) x[[CATEGORY_NAME_MAP[["id"]]]])
+setMethod("id", "list", function (x) x[[CATEGORY_NAME_MAP[["id"]]]])

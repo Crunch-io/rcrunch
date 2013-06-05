@@ -16,13 +16,12 @@ test_that("crunchConfig has right structure", {
 })
 
 if (!run.only.local.tests) {
-    test_that("API root can be fetched", {
-        login()
+    with(test.authentication, 
+        test_that("API root can be fetched", {
             expect_false(is.error(try(getAPIroot())))
             urls <- getAPIroot()
             expect_true(is.shoji(urls))
-        logout()
-    })
+        }))
 
     if (crunchAPIcanBeReached()) {
         test_that("API calls throw an error if user is not authenticated", {
@@ -31,9 +30,8 @@ if (!run.only.local.tests) {
         })
     }
 
-    test_that("crunchConfig", {
-        login()
+    with(test.authentication, 
+        test_that("crunchConfig", {
             expect_identical(length(crunchConfig()), length(config.args) + 1L)
-        logout()
-    })
+    }))
 }

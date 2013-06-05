@@ -1,3 +1,10 @@
+init.CategoricalVariable <- function (.Object, ...) {
+    .Object <- callNextMethod()
+    .Object@body$categories <- Categories(.Object@body$categories)
+    return(.Object)
+}
+setMethod("initialize", "CategoricalVariable", init.CategoricalVariable)
+
 ##' @rdname crunch-is
 ##' @export
 is.variable <- function (x) inherits(x, "CrunchVariable")

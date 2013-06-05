@@ -19,6 +19,7 @@ setGeneric("type<-", function (x, value) standardGeneric("type<-"))
 setMethod("type<-", "CrunchVariable", 
     function (x, value) castVariable(x, value))
 
+##' Methods that prepare a data.frame to be written out as CSV and uploaded
 setGeneric("preUpload", function (x) standardGeneric("preUpload"), signature="x")
 setMethod("preUpload", "data.frame", function (x) {
     x[] <- lapply(x, preUpload)
@@ -27,6 +28,8 @@ setMethod("preUpload", "data.frame", function (x) {
 setMethod("preUpload", "ANY", function (x) x)
 setMethod("preUpload", "factor", function (x) as.numeric(x))
 
+##' Functions that modify remote Crunch variables after uploading CSV so that
+##' all metadata R knows is translated to Crunch.
 setGeneric("postUpload", 
     function (source.var, crunch.var) standardGeneric("postUpload"),
     signature="source.var")
@@ -38,4 +41,5 @@ setMethod("postUpload", "numeric", function (source.var, crunch.var) {
 })
 setMethod("postUpload", "factor", function (source.var, crunch.var) {
     castVariable(crunch.var, "categorical")
+    ## this is where we'll add the category renaming
 })

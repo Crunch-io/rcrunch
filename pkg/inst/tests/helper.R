@@ -24,3 +24,17 @@ sums <- lapply(sums, function (x) structure(list(body=x), class="shoji"))
 
 df <- data.frame(v1=rnorm(20), v2=letters[1:20], v3=8:27,
                  v4=as.factor(LETTERS[2:3]), stringsAsFactors=FALSE)
+
+## Values
+setGeneric("mockValues", function (x, n, ...) standardGeneric("mockValues"))
+setMethod("mockValues", "NumericVariable", function (x, n, ...) rnorm(n, ...))
+setMethod("mockValues", "TextVariable", function (x, n, ...) {
+    sample(letters, n, replace=TRUE, ...)
+})
+setMethod("mockValues", "CategoricalVariable", function (x, n, ...) {
+    sample(as.vector(names(categories(x))), n, replace=TRUE, ...)
+})
+# vals <- lapply(vars2, mockValues, n=25)
+
+## Setup-teardown
+test.authentication <- setup.and.teardown(login, logout)

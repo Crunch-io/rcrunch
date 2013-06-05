@@ -13,11 +13,10 @@ getSummary <- function (x) {
 }
 
 makeCategoricalTable <- function (categories, summaries) {
-    id_key <- "_id"
-    category_ids <- selectFrom(id_key, categories)
-    summary_ids <- selectFrom(id_key, summaries)
+    category_ids <- ids(categories)
+    summary_ids <- ids(summaries)
     values <- selectFrom("count", summaries)[match(summary_ids, category_ids)]
-    names(values) <- selectFrom("name", categories)
+    names(values) <- names(categories)
     class(values) <- "table"
     return(values)
 }

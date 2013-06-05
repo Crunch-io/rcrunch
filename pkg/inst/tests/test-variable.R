@@ -31,5 +31,14 @@ test_that("Variable subclass definitions, is", {
 })
 
 test_that("Categories", {
+    expected <- Categories(vars$gender$body$categories)
+    thisone <- categories(v[["gender"]])
+    expect_true(is.categories(thisone))
+    expect_identical(length(thisone), 2L)
+    expect_identical(class(thisone), class(expected))
+    expect_identical(length(thisone), length(expected))
     
+    expect_identical(categories(v[["gender"]]), Categories(vars$gender$body$categories))
+    expect_true(is.category(categories(v[["gender"]])[[1]]))
+    expect_identical(categories(v[["age"]]), NULL)
 })
