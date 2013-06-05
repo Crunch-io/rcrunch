@@ -32,9 +32,13 @@ setMethod("mockValues", "TextVariable", function (x, n, ...) {
     sample(letters, n, replace=TRUE, ...)
 })
 setMethod("mockValues", "CategoricalVariable", function (x, n, ...) {
-    sample(as.vector(names(categories(x))), n, replace=TRUE, ...)
+    sample(names(categories(x)), n, replace=TRUE, ...)
 })
-# vals <- lapply(vars2, mockValues, n=25)
+vals <- lapply(vars2, mockValues, n=25)
+vars2 <- mapply(function (var, val) {
+    var@urls$values_url <- val
+    return(var)
+}, var=vars2, val=vals)
 
 ## Setup-teardown
 test.authentication <- setup.and.teardown(login, logout)

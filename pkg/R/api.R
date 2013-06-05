@@ -22,16 +22,28 @@ crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, confi
     return(out)
 }
 
+## So that we can swap them out for testing
+makeHTTPStore <- function () {
+    http <<- new.env(hash = TRUE)
+    http$GET <- function (...) crunchAPI("GET", ...)
+    http$PUT <- function (...) crunchAPI("PUT", ...)
+    http$POST <- function (...) crunchAPI("POST", ...)
+}
+makeHTTPStore()
+
 GET <- function (...) {
-    crunchAPI("GET", ...)
+    http$GET(...)
+    #crunchAPI("GET", ...)
 }
 
 PUT <- function (...) {
-    crunchAPI("PUT", ...)
+    http$PUT(...)
+    # crunchAPI("PUT", ...)
 }
 
 POST <- function (...) {
-    crunchAPI("POST", ...)
+    http$POST(...)
+    # crunchAPI("POST", ...)
 }
 
 ##' Do the right thing with the HTTP response
