@@ -18,38 +18,50 @@ test_that("makeCategoricalTable", {
 v1 <- as.variable(vars$gender)
 v1@urls$summary_url <- sums$gender
 
-test_that("CategoricalVariable.table", {
-    expect_true(is.table(CategoricalVariable.table(v1)))
-    expect_identical(names(CategoricalVariable.table(v1)), names(tablecats))
-})
+with(fake.HTTP, {
+    test_that("CategoricalVariable.table", {
+        expect_true(is.table(CategoricalVariable.table(v1)))
+        expect_identical(names(CategoricalVariable.table(v1)), names(tablecats))
+    })
 
-test_that("options in CategoricalVariable.table", {
-    gen <- v1
-    expect_identical(length(CategoricalVariable.table(gen, useNA="no")), 2L)
-    expect_identical(length(CategoricalVariable.table(gen, useNA="ifany")), 3L)
-    expect_identical(length(CategoricalVariable.table(gen, useNA="always")), 3L)
-    expect_true(is.table(CategoricalVariable.table(gen, useNA="always")))
-    gen@urls$summary_url$body$missing_count <- 0
-    expect_identical(length(CategoricalVariable.table(gen, useNA="ifany")), 2L)
-    expect_identical(length(CategoricalVariable.table(gen, useNA="always")), 3L)
-})
+    test_that("options in CategoricalVariable.table", {
+        gen <- v1
+        expect_identical(length(CategoricalVariable.table(gen, useNA="no")),
+            2L)
+        expect_identical(length(CategoricalVariable.table(gen, useNA="ifany")),
+            3L)
+        expect_identical(length(CategoricalVariable.table(gen, useNA="always")),
+            3L)
+        expect_true(is.table(CategoricalVariable.table(gen, useNA="always")))
+        gen@urls$summary_url$body$missing_count <- 0
+        expect_identical(length(CategoricalVariable.table(gen, useNA="ifany")),
+            2L)
+        expect_identical(length(CategoricalVariable.table(gen, useNA="always")),
+            3L)
+    })
 
-test_that("table 'method' dispatch", {
-    testtable <- makeCategoricalTable(tablecats, tablesums)
-    expect_identical(testtable, table(v1))
-    expect_identical(CategoricalVariable.table(v1, useNA="ifany"), 
-        table(v1, useNA="ifany"))
-    expect_identical(table(1:5), base::table(1:5))
-    expect_identical(table(useNA="ifany", 1:5), base::table(useNA="ifany", 1:5))
-    expect_identical(table(useNA="ifany", c(NA, 1:5)), base::table(useNA="ifany", c(NA, 1:5)))
-    expect_identical(testtable, table(useNA="no", v1))
-})
+    test_that("table 'method' dispatch", {
+        testtable <- makeCategoricalTable(tablecats, tablesums)
+        expect_identical(testtable, table(v1))
+        expect_identical(CategoricalVariable.table(v1, useNA="ifany"), 
+            table(v1, useNA="ifany"))
+        expect_identical(table(1:5), base::table(1:5))
+        expect_identical(table(useNA="ifany", 1:5), 
+            base::table(useNA="ifany", 1:5))
+        expect_identical(table(useNA="ifany", c(NA, 1:5)),
+            base::table(useNA="ifany", c(NA, 1:5)))
+        expect_identical(testtable, table(useNA="no", v1))
+    })
 
-test_that("unsupported table methods", {
-    expect_error(table(v1, v1), "Cannot currently tabulate more than one Crunch variable")
-    expect_error(table(v1, 1:5), "Cannot currently tabulate Crunch variables with non-Crunch vectors")
-    expect_error(table(1:5, v1), "Cannot currently tabulate Crunch variables with non-Crunch vectors")
-    expect_error(table(), "nothing to tabulate")
+    test_that("unsupported table methods", {
+        expect_error(table(v1, v1), 
+            "Cannot currently tabulate more than one Crunch variable")
+        expect_error(table(v1, 1:5), 
+            "Cannot currently tabulate Crunch variables with non-Crunch vectors")
+        expect_error(table(1:5, v1), 
+            "Cannot currently tabulate Crunch variables with non-Crunch vectors")
+        expect_error(table(), "nothing to tabulate")
+    })
 })
 
 # if (!run.only.local.tests) {

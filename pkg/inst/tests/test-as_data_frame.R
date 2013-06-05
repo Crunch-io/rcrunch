@@ -1,18 +1,17 @@
 context("Getting values to make local R objects")
 
-with(fake.HTTP, 
+## Variable fake fixtures for dataset
+test.ds <- .cr.dataset.shojiObject(as.shojiObject(ds), vars2)
+
+with(fake.HTTP, {
     test_that("as.vector on Variables", {
         expect_true(is.numeric(getValues(vars2$age)))
         expect_false(is.factor(getValues(vars2$gender)))
         expect_true(all(getValues(vars2$gender) %in% names(categories(vars2$gender))))
         expect_true(is.factor(as.vector(vars2$gender)))
         expect_true(all(levels(as.vector(vars2$gender)) %in% names(categories(vars2$gender))))
-    }))
+    })
 
-## Variable fake fixtures for dataset
-test.ds <- .cr.dataset.shojiObject(as.shojiObject(ds), vars2)
-
-with(fake.HTTP, {
     test_that("as.data.frame on CrunchDataset", {
         expect_true(is.data.frame(as.data.frame(test.ds)))
         expect_identical(dim(as.data.frame(test.ds)), c(25L, length(test.ds)))

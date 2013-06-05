@@ -2,10 +2,8 @@ getSummary <- function (x) {
     url <- x@urls$summary_url
     if (is.null(url)) {
         stop("No summary available", call.=FALSE)
-    } else if (is.character(url)) {
-        ## Flexibilized so that object can be injected for tests
-        url <- GET(url)
     }
+    url <- GET(url)
     if (!is.shoji(url)) {
         stop("Error in retrieving summary", call.=FALSE)
     }
