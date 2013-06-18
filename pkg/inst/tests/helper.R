@@ -1,4 +1,4 @@
-run.only.local.tests <- TRUE
+run.only.local.tests <- FALSE
 
 ## .onAttach stuff, for testthat to work right
 options(crunch.api.endpoint="http://localhost:8080/api/", 
@@ -22,7 +22,9 @@ vars2 <- lapply(vars, as.variable)
 sums <- loadJSONMocks("summaries.json")
 sums <- lapply(sums, function (x) structure(list(body=x), class="shoji"))
 
-df <- data.frame(v1=rnorm(20), v2=letters[1:20], v3=8:27,
+df <- data.frame(v1=c(rep(NA_real_, 5), rnorm(15)), 
+                 v2=c(letters[1:15], rep(NA_character_, 5)), 
+                 v3=8:27,
                  v4=as.factor(LETTERS[2:3]), stringsAsFactors=FALSE)
 
 ## Values
@@ -32,7 +34,7 @@ setMethod("mockValues", "TextVariable", function (x, n, ...) {
     sample(letters, n, replace=TRUE, ...)
 })
 setMethod("mockValues", "CategoricalVariable", function (x, n, ...) {
-    sample(names(categories(x)), n, replace=TRUE, ...)
+    sample(ids(categories(x)), n, replace=TRUE, ...)
 })
 vals <- lapply(vars2, mockValues, n=25)
 vars2 <- mapply(function (var, val) {

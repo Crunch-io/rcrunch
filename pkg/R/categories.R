@@ -37,11 +37,13 @@ setMethod("values", "Categories", function (x) {
 })
 setGeneric("ids", function (x) standardGeneric("ids"))
 setMethod("ids", "Categories", function (x) {
-    vapply(x, id, character(1))
+    # vapply(x, id, character(1))
+    sapply(x, id)
 })
 ## for summaries
 setMethod("ids", "list", function (x) {
-    vapply(x, id, character(1))
+    # vapply(x, id, character(1))
+    sapply(x, id)
 })
 setMethod("names<-", "Categories", function (x, value) {
     mapply(match.fun("names<-"), x, value=value)
