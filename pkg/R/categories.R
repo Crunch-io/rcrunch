@@ -45,13 +45,17 @@ setMethod("ids", "list", function (x) {
     # vapply(x, id, character(1))
     sapply(x, id)
 })
-setMethod("names<-", "Categories", function (x, value) {
-    mapply(match.fun("names<-"), x, value=value)
-})
+
+setNames <- function (x, value) {
+    mapply(setName, x, value=value)
+}
+setValues <- function (x, value) {
+    mapply(setValue, x, value=value)
+}
+
+setMethod("names<-", "Categories", setNames)
 setGeneric("values<-", function (x, value) standardGeneric("values<-"))
-setMethod("values<-", "Categories", function (x, value) {
-    mapply(match.fun("values<-"), x, value=value)
-})
+setMethod("values<-", "Categories", setValues)
 setMethod("toJSON", "Categories", function (x, ...) toJSON(I(x@.Data)))
 
 #####
@@ -69,20 +73,23 @@ validCategory <- function (object) {
 }
 setValidity("Category", validCategory)
 
+setName <- function (x, value) {
+    x[[CATEGORY_NAME_MAP[["name"]]]] <- value
+    return(x)
+}
+setValue <- function (x, value) {
+    x[[CATEGORY_NAME_MAP[["value"]]]] <- value
+    return(x)
+}
+
 setMethod("$", "Category", function (x, name) callNextMethod())
 setMethod("$<-", "Category", function (x, name, value) callNextMethod())
 setMethod("name", "Category", function (x) x[[CATEGORY_NAME_MAP[["name"]]]])
-setMethod("name<-", "Category", function (x, value) {
-    x[[CATEGORY_NAME_MAP[["name"]]]] <- value
-    return(x)
-})
+setMethod("name<-", "Category", setName)
 setGeneric("value", function (x) standardGeneric("value"))
 setMethod("value", "Category", function (x) x[[CATEGORY_NAME_MAP[["value"]]]])
 setGeneric("value<-", function (x, value) standardGeneric("value<-"))
-setMethod("value<-", "Category", function (x, value) {
-    x[[CATEGORY_NAME_MAP[["value"]]]] <- value
-    return(x)
-})
+setMethod("value<-", "Category", setValue)
 
 setGeneric("id", function (x) standardGeneric("id"))
 setMethod("id", "Category", function (x) x[[CATEGORY_NAME_MAP[["id"]]]])

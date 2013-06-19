@@ -62,7 +62,7 @@ attributeURL <- function (x, attribute) {
     return(paste0(url, attribute))
 }
 
-is.readonly <- function (x) isTRUE(x@readonly)
+is.readonly <- function (x) isTRUE(x@readonly) && !is.null(self(x))
 setReadonly <- function (x, value) {
     x@readonly <- as.logical(value)
     x
