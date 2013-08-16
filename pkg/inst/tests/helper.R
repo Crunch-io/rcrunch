@@ -1,4 +1,4 @@
-run.only.local.tests <- TRUE
+run.only.local.tests <- FALSE
 
 ## .onAttach stuff, for testthat to work right
 options(crunch.api.endpoint="http://localhost:8080/api/", 
@@ -7,7 +7,41 @@ options(crunch.api.endpoint="http://localhost:8080/api/",
         crunch.pw=getOption("test.pw"))
 assign("application/json", parseJSONresponse, envir=httr:::parsers)
 
-## Dataset fixture
+#####################
+## Test decorators ##
+#####################
+setup.and.teardown <- function (setup, teardown) {
+    structure(list(setup=setup, teardown=teardown), class="SUTD")
+}
+
+##' @S3method with SUTD
+with.SUTD <- function (data, expr, ...) {
+    env <- parent.frame()
+    on.exit(data$teardown())
+    data$setup()
+    eval(substitute(expr), envir=parent.frame())
+}
+
+## note that this works because testthat evals within package namespace
+addFakeHTTPVerbs <- function () {
+    http_verbs$GET <- function (url, ...) url
+    http_verbs$PUT <- function (...) crunchAPI("PUT", ...)
+    http_verbs$POST <- function (...) crunchAPI("POST", ...)
+}
+
+## Mock backend
+fake.HTTP <- setup.and.teardown(addFakeHTTPVerbs, addRealHTTPVerbs)
+
+## Setup-teardown
+test.authentication <- setup.and.teardown(
+    function () suppressMessages(login()), 
+    logout)
+
+###################
+## Mock fixtures ##
+###################
+
+## Datasets
 ds <- loadJSONMocks("dataset.json")
 class(ds) <- "shoji"
 
