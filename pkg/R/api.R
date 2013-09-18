@@ -12,6 +12,7 @@
 crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, config=list(), status.handlers=list(), ...) {
     configs <- updateList(crunchConfig(), config)
     url ## force lazy eval of url before inserting in try() below
+    if (isTRUE(getOption("crunch.debug"))) message(paste(http.verb, url))
     x <- try(selectHttpFunction(http.verb)(url, ..., config=configs), 
         silent=TRUE)
     if (length(status.handlers)) {
@@ -78,7 +79,9 @@ handleAPIresponse <- function (response, special.statuses=list()) {
 
 handleAPIerror <- function (response) {
     if (is.error(response)) {
-        if (crunchIsDown(response)) {
+        if (attr(response, "condition")$message == "Empty reply from server"){
+            stop("Server did not respond. Please check your local configuration and try again later.", call.=FALSE)
+        } else if (crunchIsDown(response)) {
             stop("Cannot connect to Crunch API", call.=FALSE)
         } else {
             stop(attr(response, "condition"))
