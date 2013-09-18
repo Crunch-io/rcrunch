@@ -1,2 +1,3 @@
 *.pyc
 pkg.Rcheck/
+*.orig

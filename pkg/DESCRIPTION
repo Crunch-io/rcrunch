@@ -30,5 +30,4 @@ Collate:
     'variable-summary.R'
     'variable-type.R'
     'categories.R'
-    'test-helpers.R'
     'variable-to-R.R'

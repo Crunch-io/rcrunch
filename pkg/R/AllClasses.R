@@ -16,7 +16,11 @@ ShojiObject <- setClass("ShojiObject",
         template="ANY"
     ))
 
-CrunchVariable <- setClass("CrunchVariable", contains="ShojiObject")
+CrunchVariable <- setClass("CrunchVariable", contains="ShojiObject",
+    representation= representation(
+        readonly="logical"
+    ), 
+    prototype=prototype(readonly=FALSE))
 NumericVariable <- setClass("NumericVariable", contains="CrunchVariable")
 CategoricalVariable <- setClass("CategoricalVariable",
     contains="CrunchVariable")
