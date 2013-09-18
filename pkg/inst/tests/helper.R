@@ -1,4 +1,4 @@
-run.only.local.tests <- TRUE
+run.only.local.tests <- FALSE
 
 ## .onAttach stuff, for testthat to work right
 options(crunch.api.endpoint="http://localhost:8080/api/", 

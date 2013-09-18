@@ -94,3 +94,27 @@ setMethod("value<-", "Category", setValue)
 setGeneric("id", function (x) standardGeneric("id"))
 setMethod("id", "Category", function (x) x[[CATEGORY_NAME_MAP[["id"]]]])
 setMethod("id", "list", function (x) x[[CATEGORY_NAME_MAP[["id"]]]])
+
+show.values <- function (x) TRUE ## make this actually do something? need to point at variable, not categories, or otherwise embed that attribute in the categories object.
+
+showCategory <- function (x) {
+    out <- name(x)
+    if (show.values(x)) out <- paste0("[ ", value(x), " ]  ", out)
+    return(out)
+}
+
+setMethod("show", "Category", function (object) {
+    out <- showCategory(object)
+    cat(out)
+    invisible(out)
+})
+
+showCategories <- function (x) {
+    vapply(x, showCategory, character(1))
+}
+
+setMethod("show", "Categories", function (object) {
+    out <- showCategories(object)
+    cat(out, sep="\n")
+    invisible(out)
+})

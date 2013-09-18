@@ -29,8 +29,8 @@ if (!run.only.local.tests) {
                 mustWork=TRUE)
             source <- createSource(testfile)
             ds <- createDataset("add source test")
-            expect_true(addSourceToDataset(ds, source, 
-                response.handler=function (response) response$status_code==204))
+            expect_equal(addSourceToDataset(ds, source, 
+                response.handler=function (response) as.character(response$status_code)), "204")
         })
         test_that("Dataset can be made from a data.frame", {
             expect_error(newDataset(NULL), 

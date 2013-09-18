@@ -12,6 +12,7 @@
 crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, config=list(), status.handlers=list(), ...) {
     configs <- updateList(crunchConfig(), config)
     url ## force lazy eval of url before inserting in try() below
+    message(paste(http.verb, url))
     x <- try(selectHttpFunction(http.verb)(url, ..., config=configs), 
         silent=TRUE)
     if (length(status.handlers)) {
