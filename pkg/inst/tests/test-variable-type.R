@@ -12,27 +12,28 @@ test_that("R object types are translated to Crunch vars", {
 })
 
 if (!run.only.local.tests) {
-    test_that("type casting and 'as'", {
-        login()
-            testdf <- loadDataset("making_a_dataset_from_df") 
-                ## from previous test
-            v1.was.text <- is.Text(testdf[["v1"]])
-            if (!v1.was.text) type(testdf[["v1"]]) <- "text"
-            testvar <- testdf[["v1"]]
+    with(test.authentication, {
+        with(test.dataset(df), {
+            test_that("type casting and 'as'", {
+                testdf <- .setup 
+                v1.was.text <- is.Text(testdf[["v1"]])
+                if (!v1.was.text) type(testdf[["v1"]]) <- "text"
+                testvar <- testdf[["v1"]]
+    
+                expect_true(is.Text(testvar))
+                expect_true(is.Numeric(castVariable(testvar, "numeric")))
+                expect_true(is.Text(castVariable(testvar, "text")))    
+                type(testvar) <- "numeric"
+                expect_true(is.Numeric(testvar))
+                expect_false(is.Numeric(testdf[["v1"]])) 
+                expect_true(is.Numeric(refresh(testdf[["v1"]])))
+                    ## since they're the same remote object
+                if (v1.was.text) type(testdf[["v1"]]) <- "text"
+                    ## to reset the dataset, since there aren't test teardowns
         
-            expect_true(is.Text(testvar))
-            expect_true(is.Numeric(castVariable(testvar, "numeric")))
-            expect_true(is.Text(castVariable(testvar, "text")))    
-            type(testvar) <- "numeric"
-            expect_true(is.Numeric(testvar))
-            expect_false(is.Numeric(testdf[["v1"]])) 
-            expect_true(is.Numeric(refresh(testdf[["v1"]])))
-                ## since they're the same remote object
-            if (v1.was.text) type(testdf[["v1"]]) <- "text"
-                ## to reset the dataset, since there aren't test teardowns
-            
-            expect_error(castVariable(, "foo"), 
-                paste(sQuote("foo"), "is not a valid Crunch variable type."))
-        logout()
+                expect_error(castVariable(, "foo"), 
+                    paste(sQuote("foo"), "is not a valid Crunch variable type."))
+            })
+        })
     })
 }

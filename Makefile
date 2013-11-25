@@ -4,4 +4,4 @@ doc:
 
 test:
 	R CMD INSTALL pkg
-	R --slave -e 'library(testthat); test_package("rcrunch")'
+	R --slave -e 'library(testthat); system.time(test_package("rcrunch"))'

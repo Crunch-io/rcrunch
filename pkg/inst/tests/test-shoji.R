@@ -23,16 +23,17 @@ test_that("shoji S3 to ShojiObject", {
 })
 
 if (!run.only.local.tests) {
-    test_that("refresh", {
-        refresh_test <- df
-        login()
-            rt <- newDataset(refresh_test)
-            expect_identical(rt, refresh(rt))
-            rt2 <- rt
-            rt2@body$name <- "something else"
-            expect_false(identical(rt2, rt))
-            expect_false(identical(rt2, refresh(rt2)))
-            expect_identical(refresh(rt2), rt)
-        logout()
+    with(test.authentication, {
+        with(test.dataset(df, "refresh_test"), {
+            test_that("refresh", {
+                rt <- .setup
+                expect_identical(rt, refresh(rt))
+                rt2 <- rt
+                rt2@body$name <- "something else"
+                expect_false(identical(rt2, rt))
+                expect_false(identical(rt2, refresh(rt2)))
+                expect_identical(refresh(rt2), rt)
+            })
+        })
     })
 }

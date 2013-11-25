@@ -18,7 +18,7 @@ setup.and.teardown <- function (setup, teardown) {
 with.SUTD <- function (data, expr, ...) {
     env <- parent.frame()
     on.exit(data$teardown())
-    data$setup()
+    env$.setup <- data$setup() ## rm this after running?
     eval(substitute(expr), envir=parent.frame())
 }
 
@@ -36,6 +36,14 @@ fake.HTTP <- setup.and.teardown(addFakeHTTPVerbs, addRealHTTPVerbs)
 test.authentication <- setup.and.teardown(
     function () suppressMessages(login()), 
     logout)
+
+test.dataset <- function (df, name=substitute(df)) {
+    name <- as.character(name)
+    return(setup.and.teardown(
+        function () newDataset(df, name=name),
+        function () delete(loadDataset(name))
+    ))
+}
 
 ###################
 ## Mock fixtures ##
