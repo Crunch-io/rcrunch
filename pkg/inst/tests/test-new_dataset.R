@@ -30,7 +30,7 @@ if (!run.only.local.tests) {
             source <- createSource(testfile)
             ds <- createDataset("add source test")
             expect_equal(addSourceToDataset(ds, source, 
-                response.handler=function (response) as.character(response$status_code)), "204")
+                response.handler=function (response) as.character(response$status_code)), "201")
         })
         test_that("Dataset can be made from a data.frame", {
             expect_error(newDataset(NULL), 
@@ -50,6 +50,20 @@ if (!run.only.local.tests) {
             expect_true(is.Text(testdf[["v2"]]))
             expect_true(is.Numeric(testdf[["v3"]]))
             expect_true(is.Categorical(testdf[["v4"]]))
+        })
+        test_that("Datasets can be deleted", {
+            testdf <- newDataset(df, name="delete-me")
+            df.name <- name(testdf) ## In case a dataset with this name already existed and the name was munged to be made unique
+            expect_true(df.name %in% listDatasets())
+            expect_true(DELETE(self(testdf), 
+                response.handler=function (response) response$status_code==204))
+            expect_false(df.name %in% listDatasets(refresh=TRUE))
+            
+            ## Do again but with the S4 method
+            testdf <- newDataset(df, name="delete-me")
+            df.name <- name(testdf)
+            delete(testdf)
+            expect_false(df.name %in% listDatasets())
         })
     })
 }

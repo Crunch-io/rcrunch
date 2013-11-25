@@ -42,6 +42,15 @@ setMethod("self", "ShojiObject", function (x) x@self)
 setGeneric("refresh", function (x) standardGeneric("refresh"))
 setMethod("refresh", "ShojiObject", .cr.shoji.refresh)
 
+setGeneric("delete", function (x) standardGeneric("delete"))
+setMethod("delete", "ShojiObject", function (x) invisible(DELETE(self(x))))
+setMethod("delete", "CrunchDataset", function (x) {
+    out <- callNextMethod()
+    updateDatasetList()
+    invisible(out)
+})
+setMethod("delete", "ANY", function (x) stop("'delete' only valid for Crunch objects"))
+
 ##' Base setter for Crunch objects
 ##' @param x a ShojiObject or subclass thereof
 ##' @param i character the slot name to update

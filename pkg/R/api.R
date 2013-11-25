@@ -32,6 +32,7 @@ addRealHTTPVerbs <- function () {
     http_verbs$GET <- function (...) crunchAPI("GET", ...)
     http_verbs$PUT <- function (...) crunchAPI("PUT", ...)
     http_verbs$POST <- function (...) crunchAPI("POST", ...)
+    http_verbs$DELETE <- function (...) crunchAPI("DELETE", ...)
 }
 makeHTTPStore()
 addRealHTTPVerbs()
@@ -46,6 +47,10 @@ PUT <- function (...) {
 
 POST <- function (...) {
     http_verbs$POST(...)
+}
+
+DELETE <- function (...) {
+    http_verbs$DELETE(...)
 }
 
 ##' Do the right thing with the HTTP response
@@ -120,7 +125,8 @@ parseJSONresponse <- function (x, simplifyWithNames=FALSE, ...) {
 ##' @param x character HTTP verb name
 ##' @return the corresponding function from the \code{httr} package
 selectHttpFunction <- function (x) {
-    x <- list(GET=httr:::GET, PUT=httr:::PUT, POST=httr:::POST)[[toupper(x)]]
+    x <- list(GET=httr:::GET, PUT=httr:::PUT, POST=httr:::POST,
+        DELETE=httr:::DELETE)[[toupper(x)]]
     stopifnot(is.function(x))
     return(x)
 }
