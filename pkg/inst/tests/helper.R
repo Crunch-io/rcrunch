@@ -37,11 +37,24 @@ test.authentication <- setup.and.teardown(
     function () suppressMessages(login()), 
     logout)
 
+
+preexisting_datasets <- c()
+new.dataset.with.setup <- function (...) {
+    preexisting_datasets <<- GET(sessionURL("datasets_url"))$entities
+    return(newDataset(...))
+}
+
+purge <- function () {
+    for (i in setdiff(GET(sessionURL("datasets_url"))$entities, preexisting_datasets)) {
+        try(DELETE(i))
+    }
+    preexisting_datasets <<- c()
+}
 test.dataset <- function (df, name=substitute(df)) {
     name <- as.character(name)
     return(setup.and.teardown(
-        function () newDataset(df, name=name),
-        function () delete(loadDataset(name))
+        function () new.dataset.with.setup(df, name=name),
+        purge #function () delete(loadDataset(name))
     ))
 }
 

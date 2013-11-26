@@ -1,35 +1,29 @@
 context("Retrieving dataset list and single datasets")
 
-test_that("selectDatasetFromList", {
-    biglist <- list(ds1=5L, ds98=3L)
-    expect_identical(selectDatasetFromList("ds1", biglist), 5L)
-    expect_error(selectDatasetFromList("ds9", biglist), "ds9 not found")
-    expect_error(selectDatasetFromList("ds9", NULL), "ds9 not found")
-})
-
 if (!run.only.local.tests) {
-    test_that("getUserDatasetURLs requires authentication", {
+    test_that("getDatasetCollection requires authentication", {
         logout()
-        expect_error(getUserDatasetURLs(), 
+        expect_error(getDatasetCollection(), 
             "You must authenticate before making this request")
     })
     
     with(test.authentication, {
-        test_that("getUserDatasetURLs gets what we expect", {
+        test_that("getDatasetCollection gets what we expect", {
+            col0 <- getDatasetCollection()
+            expect_true(is.list(col0))
             ds.url <- createDataset("getdsurl test")
-            expect_true(is.character(getUserDatasetURLs()))
-            expect_true(ds.url %in% getUserDatasetURLs())
+            col1 <- getDatasetCollection()
+            expect_true(is.list(col1))
+            expect_equal(length(col1), length(col0) + 1)
+            expect_equal(col1[[length(col1)]]$datasetName, "getdsurl test")
+            expect_equal(col1[[length(col1)]]$datasetUrl, ds.url)
+
             ## teardown
             DELETE(ds.url)
             updateDatasetList()
         })
-        
+                
         with(test.dataset(df, "dflisttest"), {
-            test_that("Dataset objects can be retrieved if authenticated", {
-                expect_true(is.list(getDatasetObjects(getUserDatasetURLs())))
-                expect_true("dflisttest" %in% names(getDatasetObjects(getUserDatasetURLs())))
-            })
-
             test_that("Dataset list can be retrieved if authenticated", {
                 expect_true(is.character(listDatasets()))
                 expect_true("dflisttest" %in% listDatasets())

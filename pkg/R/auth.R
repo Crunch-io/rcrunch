@@ -48,11 +48,12 @@ deleteSessionInfo <- function () {
 login <- function (email=getOption("crunch.email"),
                    password=getOption("crunch.pw"), ...) {
     logout()
-    out <- crunchAuth(email=email, password=password, ...)
+    auth <- crunchAuth(email=email, password=password, ...)
+    ## Save stuff in the session cache
     saveUser(email)
-    saveToken(out$cookies)
+    saveToken(auth$cookies)
     saveSessionURLs(getAPIroot()$urls)
-    saveSessionURLs(getUserURLs())
+    saveSessionURLs(getUserResourceURLs())
     updateDatasetList()
     message("Logged into crunch.io as ", email)
     options(prompt = paste("[crunch]", session_store$.globals$prompt)) 
@@ -69,7 +70,8 @@ saveUser <- function (x) {
 ##' @param ... see \code{\link{login}}
 crunchAuth <- function (email, password=NULL, ...) {
     if (is.null(email)) {
-        stop("Must supply the email address associated with your crunch.io account", call.=FALSE)
+        stop("Must supply the email address associated with your crunch.io account",
+            call.=FALSE)
     }
     if (is.null(password)) {
         if (interactive()) {
