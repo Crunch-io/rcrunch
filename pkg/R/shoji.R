@@ -60,15 +60,10 @@ setMethod("delete", "ANY", function (x) stop("'delete' only valid for Crunch obj
 setCrunchSlot <- function (x, i, value) {
     slot(x, "body")[[i]] <- value
     if (!is.readonly(x)) {
-        PUT(self(x), body=toJSON(structure(value, .Names=i)))
+        payload <- toJSON(structure(list(value), .Names=i))
+        PUT(self(x), body=payload)
     }
     return(x)
-}
-
-attributeURL <- function (x, attribute) {
-    url <- self(x)
-    if (substr(url, nchar(url), nchar(url)) != "/") url <- paste0(url, "/")
-    return(paste0(url, attribute))
 }
 
 is.readonly <- function (x) isTRUE(x@readonly) && !is.null(self(x))

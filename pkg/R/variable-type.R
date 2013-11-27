@@ -40,6 +40,13 @@ setMethod("postUpload", "numeric", function (source.var, crunch.var) {
     castVariable(crunch.var, "numeric")
 })
 setMethod("postUpload", "factor", function (source.var, crunch.var) {
-    castVariable(crunch.var, "categorical")
-    ## this is where we'll add the category renaming
+    casted <- castVariable(crunch.var, "categorical")
+    ## Rename the categories
+    cats <- categories(casted)
+    v <- values(cats)
+    n <- names(cats)
+    n[!is.na(v)] <- levels(source.var)[v[!is.na(v)]]
+    names(cats) <- n    
+    categories(casted) <- cats
+    invisible(casted)
 })

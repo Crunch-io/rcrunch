@@ -64,7 +64,11 @@ pickSubclassConstructor <- function (x=NULL) {
 setMethod("name", "CrunchVariable", function (x) x@body$name)
 setMethod("name<-", "CrunchVariable", function (x, value) setCrunchSlot(x, "name", value))
 setMethod("description", "CrunchVariable", function (x) x@body$description)
-setMethod("description<-", "CrunchVariable", function (x, value) setCrunchSlot(x, "description", value))
+setMethod("description<-", "CrunchVariable", 
+    function (x, value) setCrunchSlot(x, "description", value))
 
 setGeneric("categories", function (x) standardGeneric("categories"))
 setMethod("categories", "CrunchVariable", function (x) x@body$categories)
+setGeneric("categories<-", function (x, value) standardGeneric("categories<-"))
+setMethod("categories<-", "CrunchVariable", 
+    function (x, value) setCrunchSlot(x, "categories", value))

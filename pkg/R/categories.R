@@ -28,12 +28,22 @@ setMethod("initialize", "Categories", init.Categories)
 
 is.categories <- function (x) inherits(x, "Categories")
 
+setMethod("[", c("Categories", "ANY"), function (x, i, ...) {
+    x@.Data <- x@.Data[i]
+    return(x)
+})
+setMethod("[<-", c("Categories", "ANY"), function (x, i, ..., value) {
+    x@.Data[i] <- value
+    return(x)
+})
 setMethod("names", "Categories", function (x) vapply(x, name, character(1)))
 setGeneric("values", function (x) standardGeneric("values"))
 setMethod("values", "Categories", function (x) {
-    out <- try(vapply(x, value, numeric(1)), silent=TRUE)
-    if (is.error(out)) out <- rep(list(NULL), length(x))
-    return(out)
+    # out <- as.numeric(unlist(lapply(x, value)))
+    # out <- try(vapply(x, value, numeric(1)), silent=TRUE)
+    # if (is.error(out)) out <- rep(list(NULL), length(x))
+    return(vapply(x, value, numeric(1)))
+    # return(out)
 })
 setGeneric("ids", function (x) standardGeneric("ids"))
 setMethod("ids", "Categories", function (x) {
@@ -47,10 +57,12 @@ setMethod("ids", "list", function (x) {
 })
 
 setNames <- function (x, value) {
-    mapply(setName, x, value=value)
+    x@.Data <- mapply(setName, x@.Data, value=value, SIMPLIFY=FALSE)
+    return(x)
 }
 setValues <- function (x, value) {
-    mapply(setValue, x, value=value)
+    x@.Data <- mapply(setValue, x@.Data, value=value, SIMPLIFY=FALSE)
+    return(x)
 }
 
 setMethod("names<-", "Categories", setNames)
@@ -78,7 +90,11 @@ setName <- function (x, value) {
     return(x)
 }
 setValue <- function (x, value) {
-    x[[CATEGORY_NAME_MAP[["value"]]]] <- value
+    value_to_set <- suppressWarnings(as.numeric(value))
+    if (is.na(value_to_set) && !is.na(value)) {
+        stop("Category values must be numeric", call.=FALSE)
+    }
+    x[[CATEGORY_NAME_MAP[["value"]]]] <- value_to_set
     return(x)
 }
 
@@ -87,7 +103,10 @@ setMethod("$<-", "Category", function (x, name, value) callNextMethod())
 setMethod("name", "Category", function (x) x[[CATEGORY_NAME_MAP[["name"]]]])
 setMethod("name<-", "Category", setName)
 setGeneric("value", function (x) standardGeneric("value"))
-setMethod("value", "Category", function (x) x[[CATEGORY_NAME_MAP[["value"]]]])
+setMethod("value", "Category", function (x) {
+    v <- x[[CATEGORY_NAME_MAP[["value"]]]]
+    return(ifelse(is.null(v), NA_real_, as.numeric(v)))
+})
 setGeneric("value<-", function (x, value) standardGeneric("value<-"))
 setMethod("value<-", "Category", setValue)
 

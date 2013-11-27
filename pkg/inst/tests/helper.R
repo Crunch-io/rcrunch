@@ -32,12 +32,12 @@ addFakeHTTPVerbs <- function () {
 ## Mock backend
 fake.HTTP <- setup.and.teardown(addFakeHTTPVerbs, addRealHTTPVerbs)
 
-## Setup-teardown
+## Auth setup-teardown
 test.authentication <- setup.and.teardown(
     function () suppressMessages(login()), 
     logout)
 
-
+## Create a test dataset and then destroy it after tests
 preexisting_datasets <- c()
 new.dataset.with.setup <- function (...) {
     preexisting_datasets <<- GET(sessionURL("datasets_url"))$entities
@@ -50,11 +50,10 @@ purge <- function () {
     }
     preexisting_datasets <<- c()
 }
-test.dataset <- function (df, name=substitute(df)) {
-    name <- as.character(name)
+test.dataset <- function (df, ...) {
     return(setup.and.teardown(
-        function () new.dataset.with.setup(df, name=name),
-        purge #function () delete(loadDataset(name))
+        function () new.dataset.with.setup(df, ...),
+        purge
     ))
 }
 
