@@ -32,3 +32,4 @@ Collate:
     'categories.R'
     'category.R'
     'variable-to-R.R'
+    'multipleresponse.R'

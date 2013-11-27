@@ -25,6 +25,10 @@ is.Text <- function (x) inherits(x, "TextVariable")
 ##' @export
 is.Datetime <- function (x) inherits(x, "DatetimeVariable")
 
+##' @rdname crunch-is
+##' @export
+is.Multiple <- is.MultipleResponse <- function (x) inherits(x, "MultipleResponseVariable")
+
 .cr.variable.shojiObject <- function (x, ...) {
     out <- CrunchVariable(x, ...)
     return(out)
@@ -59,7 +63,8 @@ pickSubclassConstructor <- function (x=NULL) {
             categorical=CategoricalVariable,
             numeric=NumericVariable,
             text=TextVariable,
-            datetime=DatetimeVariable
+            datetime=DatetimeVariable,
+            multipleresponse=MultipleResponseVariable
         )
     if (!is.null(x)) x <- constructors[[x]]
     if (is.null(x)) x <- CrunchVariable
@@ -77,3 +82,6 @@ setMethod("categories", "CrunchVariable", function (x) x@body$categories)
 setGeneric("categories<-", function (x, value) standardGeneric("categories<-"))
 setMethod("categories<-", "CrunchVariable", 
     function (x, value) setCrunchSlot(x, "categories", value))
+
+setGeneric("datasetReference", function (x) standardGeneric("datasetReference"))
+setMethod("datasetReference", "CrunchVariable", function (x) x@urls$dataset_url)

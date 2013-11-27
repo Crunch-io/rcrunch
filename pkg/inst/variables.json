@@ -303,5 +303,27 @@
         "id": "d7c21314ca9e453c93069168681a285c",
         "header_order": 3,
         "description": "Interview Start Time"
+    },
+    {
+        "name": "mymrset",
+        "format": {
+            "data": {"digits": 2}, 
+            "summary": {"digits": 2}
+        },
+        "tags": [],
+        "missing_reasons": {"No Data": -1}, 
+        "discarded": false,
+        "alias": "mymrset", 
+        "categories": [
+            {"code": 0.0, "name": "0.0", "missing": false, "selected": false, "_id": 1},
+            {"code": 1.0, "name": "1.0", "missing": false, "selected": true, "_id": 2},
+            {"code": null, "name": "No Data", "missing": true, "selected": false, "_id": -1}
+        ], 
+        "dataset_id": "14715604be4d499fbe2445bca9f3eee0", 
+        "view": {"include_noneoftheabove": false, "column_width": null},
+        "type": "multipleresponse", 
+        "id": "949d2dc7e7a24e6090cc88bb92e1d2fb", 
+        "header_order": 4, 
+        "description": "My multiple response set"
     }
 ]
