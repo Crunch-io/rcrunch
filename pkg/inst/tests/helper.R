@@ -7,6 +7,9 @@ options(crunch.api.endpoint="http://localhost:8080/api/",
         crunch.pw=getOption("test.pw"))
 assign("application/json", parseJSONresponse, envir=httr:::parsers)
 
+## for the test running...S.....
+skip <- function (...) cat("S")
+
 #####################
 ## Test decorators ##
 #####################
@@ -79,7 +82,9 @@ sums <- lapply(sums, function (x) structure(list(body=x), class="shoji"))
 df <- data.frame(v1=c(rep(NA_real_, 5), rnorm(15)), 
                  v2=c(letters[1:15], rep(NA_character_, 5)), 
                  v3=8:27,
-                 v4=as.factor(LETTERS[2:3]), stringsAsFactors=FALSE)
+                 v4=as.factor(LETTERS[2:3]),
+                 v5=as.Date(1:20, origin="1955-11-05"),
+                 stringsAsFactors=FALSE)
 
 ## Values
 setGeneric("mockValues", function (x, n, ...) standardGeneric("mockValues"))
@@ -88,8 +93,15 @@ setMethod("mockValues", "TextVariable", function (x, n, ...) {
     sample(letters, n, replace=TRUE, ...)
 })
 setMethod("mockValues", "CategoricalVariable", function (x, n, ...) {
-    sample(ids(categories(x)), n, replace=TRUE, ...)
+    sample(names(categories(x)), n, replace=TRUE, ...)
 })
+setMethod("mockValues", "DatetimeVariable", function (x, n, ...) {
+    as.character(sample(as.Date(1:100, origin="1955-11-05"), n, replace=TRUE, ...))
+})
+setMethod("mockValues", "CrunchVariable", function (x, n, ...) {
+    sample(letters, n, replace=TRUE, ...)
+})
+
 vals <- lapply(vars2, mockValues, n=25)
 vars2 <- mapply(function (var, val) {
     var@urls$values_url <- val

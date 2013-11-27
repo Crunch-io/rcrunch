@@ -7,7 +7,7 @@ with(fake.HTTP, {
     test_that("as.vector on Variables", {
         expect_true(is.numeric(getValues(vars2$age)))
         expect_false(is.factor(getValues(vars2$gender)))
-        expect_true(all(getValues(vars2$gender) %in% ids(categories(vars2$gender))))
+        expect_true(all(getValues(vars2$gender) %in% names(categories(vars2$gender))))
         expect_true(is.factor(as.vector(vars2$gender)))
         expect_true(all(levels(as.vector(vars2$gender)) %in% names(categories(vars2$gender))))
     })
@@ -47,6 +47,7 @@ if (!run.only.local.tests) {
                 expect_true(is.Text(test.asdf[["v2"]]))
                 expect_true(is.Numeric(test.asdf[["v3"]]))
                 expect_true(is.Categorical(test.asdf[["v4"]]))
+                expect_true(is.Datetime(test.asdf$v5))
         
                 expect_true(is.numeric(as.vector(test.asdf$v1)))
                 expect_identical(sum(is.na(as.vector(test.asdf$v1))), 5L)
@@ -54,17 +55,19 @@ if (!run.only.local.tests) {
         
                 expect_true(is.character(as.vector(test.asdf$v2)))
                 ## skip these: NAs aren't being detected as missing in the CSV
-                ## importer
-                # expect_identical(sum(is.na(as.vector(test.asdf$v2))), 5L)
-                # expect_equivalent(as.vector(test.asdf$v2), df$v2)
+                ## importer for text variables, and we aren't casting them after
+                skip(expect_identical(sum(is.na(as.vector(test.asdf$v2))), 5L))
+                skip(expect_equivalent(as.vector(test.asdf$v2), df$v2))
         
                 expect_true(is.numeric(as.vector(test.asdf$v3)))
                 expect_equivalent(as.vector(test.asdf$v3), df$v3)
-        
+                
                 expect_true(is.factor(as.vector(test.asdf$v4)))
-                ##: skip bc postUpload category renaming not implemented, or
-                ## category<- at all
-                # expect_equivalent(as.vector(test.asdf$v4), df$v4)
+                expect_equivalent(as.vector(test.asdf$v4), df$v4)
+                
+                expect_true(inherits(as.vector(test.asdf$v5), "POSIXt"))
+                expect_equivalent(as.vector(test.asdf$v5),
+                    as.POSIXct(as.character(df$v5)))
             })
         
             test_that("as.data.frame with API", {

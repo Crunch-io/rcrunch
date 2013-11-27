@@ -51,7 +51,7 @@ if (!run.only.local.tests) {
             delete(testcrdf)
             ## Should also test doing this with a matrix
         })
-        with(test.dataset(df, "making_a_dataset_from_df"), {
+        with(test.dataset(df), {
             test_that("Dataset variable types get set correctly", {
                 testdf <- .setup
                 expect_true(is.Numeric(testdf[["v1"]]))
@@ -61,6 +61,7 @@ if (!run.only.local.tests) {
                 expect_true(all(levels(df$v4) %in% names(categories(testdf$v4))))
                 expect_identical(categories(testdf$v4), categories(refresh(testdf$v4)))
                 expect_identical(testdf$v4, refresh(testdf$v4))
+                expect_true(is.Datetime(testdf$v5))
             })
         })
         test_that("Datasets can be deleted", {

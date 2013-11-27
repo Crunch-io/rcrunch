@@ -15,6 +15,8 @@ test_that("Subclass constructor selector", {
     expect_identical(pickSubclassConstructor("numeric"), NumericVariable)
     expect_identical(pickSubclassConstructor("categorical"), CategoricalVariable)
     expect_identical(pickSubclassConstructor("text"), TextVariable)
+    expect_identical(pickSubclassConstructor("datetime"), DatetimeVariable)
+    # expect_identical(pickSubclassConstructor("multiple"), MultipleResponseVariable)
     expect_identical(pickSubclassConstructor(), CrunchVariable)
     expect_identical(pickSubclassConstructor("foo"), CrunchVariable)
 })
@@ -25,9 +27,11 @@ test_that("Variable subclass definitions, is", {
     expect_equivalent(class(v[["age"]]), "NumericVariable")
     expect_equivalent(class(v[["gender"]]), "CategoricalVariable")
     expect_equivalent(class(v[["textVar"]]), "TextVariable")
+    expect_equivalent(class(v$starttime), "DatetimeVariable")
     expect_true(is.Numeric(v[["age"]]))
     expect_true(is.Categorical(v[["gender"]]))
     expect_true(is.Text(v[["textVar"]]))
+    expect_true(is.Datetime(v$starttime))
 })
 
 test_that("Categories", {

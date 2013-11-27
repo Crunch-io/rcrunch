@@ -17,7 +17,10 @@ as.vector.CrunchVariable <- function (x, mode) getValues(x)
 ##' @S3method as.vector CategoricalVariable
 as.vector.CategoricalVariable <- function (x, mode) {
     out <- as.vector.CrunchVariable(x)
-    out <- as.factor(names(categories(x))[match(out, ids(categories(x)))])
+    ## If sending ids:
+    # out <- as.factor(names(categories(x))[match(out, ids(categories(x)))])
+    ## If sending category names
+    out <- factor(out, levels=names(categories(x)))
     return(out)
 }
 
@@ -35,6 +38,13 @@ as.vector.TextVariable <- function (x, mode) {
     missings <- vapply(out, Negate(is.character), logical(1))
     out[missings] <- NA_character_
     return(as.character(unlist(out)))
+}
+
+##' @S3method as.vector DatetimeVariable
+as.vector.DatetimeVariable <- function (x, mode) {
+    out <- as.vector.TextVariable(x) ## Because that's how they come across the wire
+    return(as.POSIXct(out))
+    ## see http://stackoverflow.com/questions/12125886/parsing-iso8601-in-r to improve
 }
 
 ## Left here in case we prefer keeping it S4. But as.data.frame apparently 

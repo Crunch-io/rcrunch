@@ -1,4 +1,4 @@
-VARIABLE_TYPES <- c("numeric", "text", "categorical")
+VARIABLE_TYPES <- c("numeric", "text", "categorical") ## Add datetime when server supports
 
 setGeneric("type", function (x) standardGeneric("type"))
 setMethod("type", "CrunchVariable", function (x) x@body$type)
@@ -27,6 +27,8 @@ setMethod("preUpload", "data.frame", function (x) {
 })
 setMethod("preUpload", "ANY", function (x) x)
 setMethod("preUpload", "factor", function (x) as.numeric(x))
+setMethod("preUpload", "Date", function (x) as.character(x))
+setMethod("preUpload", "POSIXt", function (x) as.character(x))
 
 ##' Functions that modify remote Crunch variables after uploading CSV so that
 ##' all metadata R knows is translated to Crunch.
@@ -49,4 +51,12 @@ setMethod("postUpload", "factor", function (source.var, crunch.var) {
     names(cats) <- n    
     categories(casted) <- cats
     invisible(casted)
+})
+setMethod("postUpload", "Date", function (source.var, crunch.var) {
+    # castVariable(crunch.var, "datetime")  ## server autodetects
+    crunch.var
+})
+setMethod("postUpload", "POSIXt", function (source.var, crunch.var) {
+    # castVariable(crunch.var, "datetime")  ## server autodetects
+    crunch.var
 })

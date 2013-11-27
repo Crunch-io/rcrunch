@@ -282,5 +282,26 @@
         "type": "text",
         "tags": ["tag 1"],
         "alias": "textVar"
+    },
+    {
+        "name": "starttime",
+        "format": {
+            "data": "%Y-%m-%d",
+            "summary": "%Y-%m-%d"
+        }, 
+        "tags": [],
+        "missing_reasons": {"No Data": -1},
+        "discarded": false,
+        "alias": "starttime",
+        "categories": [],
+        "dataset_id": "a106fab0f7cb42a1b8a40f6d01d9c949",
+        "view": {
+            "units": "s",
+            "column_width": null
+        },
+        "type": "datetime",
+        "id": "d7c21314ca9e453c93069168681a285c",
+        "header_order": 3,
+        "description": "Interview Start Time"
     }
 ]

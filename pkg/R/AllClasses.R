@@ -25,6 +25,7 @@ NumericVariable <- setClass("NumericVariable", contains="CrunchVariable")
 CategoricalVariable <- setClass("CategoricalVariable",
     contains="CrunchVariable")
 TextVariable <- setClass("TextVariable", contains="CrunchVariable")
+DatetimeVariable <- setClass("DatetimeVariable", contains="CrunchVariable")
 
 CrunchDataset <- setClass("CrunchDataset", contains=c("list", "ShojiObject"),
     representation= representation(

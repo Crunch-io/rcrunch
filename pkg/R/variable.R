@@ -21,6 +21,10 @@ is.Categorical <- function (x) inherits(x, "CategoricalVariable")
 ##' @export
 is.Text <- function (x) inherits(x, "TextVariable")
 
+##' @rdname crunch-is
+##' @export
+is.Datetime <- function (x) inherits(x, "DatetimeVariable")
+
 .cr.variable.shojiObject <- function (x, ...) {
     out <- CrunchVariable(x, ...)
     return(out)
@@ -54,7 +58,8 @@ pickSubclassConstructor <- function (x=NULL) {
     constructors <- list(
             categorical=CategoricalVariable,
             numeric=NumericVariable,
-            text=TextVariable
+            text=TextVariable,
+            datetime=DatetimeVariable
         )
     if (!is.null(x)) x <- constructors[[x]]
     if (is.null(x)) x <- CrunchVariable
