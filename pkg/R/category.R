@@ -1,0 +1,74 @@
+is.category <- function (x) inherits(x, "Category")
+
+validCategory <- function (object) {
+    is.cat <- all(c("_id", "name") %in% names(object))
+    if (!all(is.cat)) {
+        val <- "Not a category"
+    } else {
+        val <- TRUE  
+    }
+    return(val)
+}
+setValidity("Category", validCategory)
+
+init.Category <- function (.Object, ...) {
+    .Object <- callNextMethod()
+    s <- order(.Object@names)
+    .Object@.Data <- .Object@.Data[s]
+    .Object@names <- .Object@names[s]
+    return(.Object)
+}
+setMethod("initialize", "Category", init.Category)
+
+setName <- function (x, value) {
+    x[[CATEGORY_NAME_MAP[["name"]]]] <- value
+    return(x)
+}
+setValue <- function (x, value) {
+    value_to_set <- suppressWarnings(as.numeric(value))
+    if (is.na(value_to_set) && !is.na(value)) {
+        stop("Category values must be numeric", call.=FALSE)
+    }
+    x[[CATEGORY_NAME_MAP[["value"]]]] <- value_to_set
+    return(x)
+}
+
+setMethod("$", "Category", function (x, name) callNextMethod())
+setMethod("$<-", "Category", function (x, name, value) callNextMethod())
+setMethod("name", "Category", function (x) x[[CATEGORY_NAME_MAP[["name"]]]])
+setMethod("name<-", "Category", setName)
+setGeneric("value", function (x) standardGeneric("value"))
+setMethod("value", "Category", function (x) {
+    v <- x[[CATEGORY_NAME_MAP[["value"]]]]
+    return(ifelse(is.null(v), NA_real_, as.numeric(v)))
+})
+setGeneric("value<-", function (x, value) standardGeneric("value<-"))
+setMethod("value<-", "Category", setValue)
+
+setGeneric("id", function (x) standardGeneric("id"))
+setMethod("id", "Category", function (x) x[[CATEGORY_NAME_MAP[["id"]]]])
+setMethod("id", "list", function (x) x[[CATEGORY_NAME_MAP[["id"]]]])
+
+show.values <- function (x) TRUE ## make this actually do something? need to point at variable, not categories, or otherwise embed that attribute in the categories object.
+
+showCategory <- function (x) {
+    out <- name(x)
+    if (show.values(x)) out <- paste0("[ ", value(x), " ]  ", out)
+    return(out)
+}
+
+setMethod("show", "Category", function (object) {
+    out <- showCategory(object)
+    cat(out)
+    invisible(out)
+})
+
+showCategories <- function (x) {
+    vapply(x, showCategory, character(1))
+}
+
+setMethod("show", "Categories", function (object) {
+    out <- showCategories(object)
+    cat(out, sep="\n")
+    invisible(out)
+})

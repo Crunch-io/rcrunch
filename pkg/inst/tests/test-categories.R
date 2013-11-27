@@ -29,9 +29,9 @@ test_that("category getters", {
 
 test_that("categories toJSON", {
     frj <- function (...) fromJSON(..., simplifyWithNames=FALSE)
-    expect_identical(cats, frj(toJSON(Cats)))
-    expect_identical(cats[1], frj(toJSON(Cats[1])))
-    expect_identical(cats[[1]], frj(toJSON(Cats[[1]])))
+    expect_identical(Cats, Categories(frj(toJSON(Cats))))
+    expect_identical(Cats[1], Categories(frj(toJSON(Cats[1]))))
+    expect_identical(Cats[[1]], Category(frj(toJSON(Cats[[1]]))))
 })
 
 test_that("category setters", {

@@ -59,6 +59,8 @@ if (!run.only.local.tests) {
                 expect_true(is.Numeric(testdf[["v3"]]))
                 expect_true(is.Categorical(testdf[["v4"]]))
                 expect_true(all(levels(df$v4) %in% names(categories(testdf$v4))))
+                expect_identical(categories(testdf$v4), categories(refresh(testdf$v4)))
+                expect_identical(testdf$v4, refresh(testdf$v4))
             })
         })
         test_that("Datasets can be deleted", {
