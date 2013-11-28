@@ -100,11 +100,25 @@ crunchConfig <- function () {
 }
 
 crunchHTTPheaders <- function () {
-    list(httpheader=list(`User-Agent`=crunchUserAgent()))
+    list(httpheader=list(`User-Agent`=getCrunchUserAgent()))
 }
 
 crunchUserAgent <- function () {
-    paste("rcrunch", packageVersion("rcrunch"))
+    rc <- paste("rcrunch", packageVersion("rcrunch"))
+    try(rc <- paste(httr:::default_ua(), rc, sep=" / "), silent=TRUE)
+    return(rc)
+}
+
+setCrunchUserAgent <- function () {
+    session_store$user_agent <- crunchUserAgent()
+}
+
+getCrunchUserAgent <- function () {
+    ua <- session_store$user_agent
+    if (is.null(ua)) { ## Should only happen if not logged in
+        ua <- crunchUserAgent()
+    }
+    return(ua)
 }
 
 simpleResponseStatus <- function (code) {
@@ -116,6 +130,7 @@ is.JSON.response <- function (x) {
 }
 
 ##' @importFrom RJSONIO fromJSON
+## Looks like httr has switched to RJSONIO, so this may not be necessary any more
 parseJSONresponse <- function (x, simplifyWithNames=FALSE, ...) {
     fromJSON(httr:::parse_text(x, encoding = "UTF-8"),
         simplifyWithNames=simplifyWithNames, ...)

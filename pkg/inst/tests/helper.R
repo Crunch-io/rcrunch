@@ -8,7 +8,7 @@ options(crunch.api.endpoint="http://localhost:8080/api/",
 assign("application/json", parseJSONresponse, envir=httr:::parsers)
 
 ## for the test running...S.....
-skip <- function (...) cat("S")
+skip <- function (...) cat(colourise("S", "yellow"))
 
 #####################
 ## Test decorators ##
@@ -53,6 +53,7 @@ purge <- function () {
     }
     preexisting_datasets <<- c()
 }
+
 test.dataset <- function (df, ...) {
     return(setup.and.teardown(
         function () new.dataset.with.setup(df, ...),
@@ -85,6 +86,12 @@ df <- data.frame(v1=c(rep(NA_real_, 5), rnorm(15)),
                  v4=as.factor(LETTERS[2:3]),
                  v5=as.Date(1:20, origin="1955-11-05"),
                  stringsAsFactors=FALSE)
+
+mrdf <- data.frame(mr_1=c(1,0,1,NA_real_),
+                   mr_2=c(0,0,1,NA_real_),
+                   mr_3=c(0,0,1,NA_real_),
+                   v4=as.factor(LETTERS[2:3]),
+                   stringsAsFactors=FALSE)
 
 ## Values
 setGeneric("mockValues", function (x, n, ...) standardGeneric("mockValues"))

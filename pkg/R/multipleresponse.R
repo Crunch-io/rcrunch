@@ -47,6 +47,7 @@ makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key="alias", 
         list_of_variables <- dataset[matches]
     }
     
+    ## Assert all variables are Variables, then:
     var_urls <- vapply(list_of_variables, self, character(1), USE.NAMES=FALSE)
     payload <- list(name=name, variables=I(var_urls)) ## extend backend to take ...
     out <- POST(dataset@urls$bind_url, body=toJSON(payload))
