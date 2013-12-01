@@ -19,19 +19,31 @@
 ##' just-created variable on the server.
 ##' @export
 makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key="alias", name, ...) {
+    listOfVariablesIsValid <- function (lov) {
+        return(is.list(lov) && all(vapply(lov, is.variable, logical(1))))
+    }
+    datasetURLfromVariables <- function (lov) {
+        ds_urls <- unique(vapply(lov, datasetReference, character(1)))
+        if (length(ds_urls) > 1) {
+            ## see if list of variables actually do belong to same dataset
+            stop("All variables to be bound together must be from the same dataset",
+                call.=FALSE)
+        }
+        return(ds_urls)
+    }
+    
+    if (missing(name)) {
+        stop("Must provide the name for the new variable", call.=FALSE)
+    }
     if (is.null(dataset)) {
         if (is.dataset(list_of_variables)) {
             ## as in, if the list of variables is a [ extraction from a Dataset
             dataset <- list_of_variables
+        } else if (!listOfVariablesIsValid(list_of_variables)) {
+            stop("Must provide a Dataset and either a list of Variables to combine or a pattern to identify Variables within that Dataset")
         } else {
-            ## see if list of variables actually do belong to same dataset
-            ds_urls <- unique(vapply(list_of_variables, datasetReference, character(1)))
-            if (length(ds_urls) == 1) {
-                dataset <- as.dataset(GET(ds_urls))
-            } else {
-                stop("All variables to be bound together must be from the same dataset",
-                    call.=FALSE)
-            }
+            ds_url <- datasetURLfromVariables(list_of_variables)
+            dataset <- as.dataset(GET(ds_url))
         }
     }
     if (is.null(dataset)) {
@@ -39,7 +51,7 @@ makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key="alias", 
     }
     
     if (!is.null(pattern)) {
-        keys <- selectFrom(key, dataset)
+        keys <- selectFrom(key, lapply(dataset[], function (x) x@body))
         matches <- grep(pattern, keys)
         if (!length(matches)) {
             stop("Pattern did not match any variables", call.=FALSE)
@@ -47,10 +59,18 @@ makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key="alias", 
         list_of_variables <- dataset[matches]
     }
     
-    ## Assert all variables are Variables, then:
+    ## Assert all variables are Variables
+    if (!listOfVariablesIsValid(list_of_variables)) {
+        stop("Invalid list of Variables to combine")
+    }
+    ## Assert variables correspond to the dataset
+    ## NPR: re-enable this to prevent a possible 500 error when the user-datasets stuff
+    ## is cleared up on the server
+    # if (datasetURLfromVariables(list_of_variables) != self(dataset)) {
+    #     stop("`list_of_variables` must be from `dataset`")
+    # }
     var_urls <- vapply(list_of_variables, self, character(1), USE.NAMES=FALSE)
     payload <- list(name=name, variables=I(var_urls)) ## extend backend to take ...
     out <- POST(dataset@urls$bind_url, body=toJSON(payload))
-    refresh(dataset)
     invisible(as.variable(GET(out)))
 }

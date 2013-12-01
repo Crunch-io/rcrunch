@@ -12,10 +12,11 @@ test_that("Dataset getters get", {
 })
 
 var_test_fn <- function (x) all(vapply(x, is.variable, logical(1)))
+is_valid_dataset <- function (x) is.dataset(x) && var_test_fn(x)
 
 test_that("Datasets only contain variables", {
     d1 <- CrunchDataset(body=list(name="test ds"))
-    expect_true(var_test_fn(d1))
+    expect_true(is_valid_dataset(d1))
     expect_error(CrunchDataset(list(foo=34), body=list(name="test ds")), 
         ".*1 element is not a Crunch variable object.")
 })
@@ -34,7 +35,7 @@ test_that("Can construct Dataset from shoji document", {
 ## Variable fake fixtures
 test.ds <- .cr.dataset.shojiObject(as.shojiObject(ds), vars2)
 
-test_that("A dataset with variables inherits from list", {
+test_that("Dataset has names() and extract methods work", {
     expect_false(is.null(names(test.ds)))
     expect_identical(names(test.ds), names(vars2))
     expect_true(is.variable(test.ds[[1]]))
@@ -42,7 +43,10 @@ test_that("A dataset with variables inherits from list", {
     expect_true(is.variable(test.ds$age))
     expect_true(is.dataset(test.ds[1]))
     expect_identical(test.ds$age, vars2$age)
-    expect_true(var_test_fn(test.ds))
+    expect_true(is_valid_dataset(test.ds))
+    expect_true(is_valid_dataset(test.ds[1]))
+    expect_true(is_valid_dataset(test.ds["age"]))
+    expect_true(is_valid_dataset(test.ds[names(test.ds)=="age"]))
 })
 
 test_that("Read only flag gets set appropriately", {

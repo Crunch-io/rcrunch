@@ -52,8 +52,8 @@ if (!run.only.local.tests) {
             ## Should also test doing this with a matrix
         })
         with(test.dataset(df), {
+            testdf <- .setup
             test_that("Dataset variable types get set correctly", {
-                testdf <- .setup
                 expect_true(is.Numeric(testdf[["v1"]]))
                 expect_true(is.Text(testdf[["v2"]]))
                 expect_true(is.Numeric(testdf[["v3"]]))
@@ -62,6 +62,13 @@ if (!run.only.local.tests) {
                 expect_identical(categories(testdf$v4), categories(refresh(testdf$v4)))
                 expect_identical(testdf$v4, refresh(testdf$v4))
                 expect_true(is.Datetime(testdf$v5))
+            })
+            
+            test_that("names() are the same and in the right order", {
+                expect_identical(names(df), names(testdf))
+                with(test.dataset(mrdf), {
+                    expect_identical(names(mrdf), names(.setup))
+                })
             })
         })
         test_that("Datasets can be deleted", {

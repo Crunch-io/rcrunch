@@ -59,7 +59,8 @@ getDatasetVariablesFromCollection <- function (x) {
     urls <- x@urls$variables_url
     if (!is.null(urls)) {
         vars <- getShojiCollection(urls, "body$alias")
-        vars <- lapply(vars, as.variable)
+        ordering <- order(selectFrom("body$header_order", vars))
+        vars <- lapply(vars[ordering], as.variable)
         return(vars)
     } else {
         return(list())
@@ -74,7 +75,8 @@ getAllDatasetVariables <- function (x) {
         return(a)
     })
     names(vars) <- selectFrom("body$alias", vars)
-    vars <- lapply(vars, as.variable)
+    ordering <- order(selectFrom("body$header_order", vars))
+    vars <- lapply(vars[ordering], as.variable)
     return(vars)
 }
 
@@ -89,6 +91,10 @@ setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     x@.Data <- x@.Data[i]
     readonly(x) <- TRUE ## we don't want to overwrite the big object accidentally
     return(x)
+})
+setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
+    i <- names(x) %in% i
+    callNextMethod(x, i, ..., drop=drop)
 })
 
 showCrunchDataset <- function (x) {
