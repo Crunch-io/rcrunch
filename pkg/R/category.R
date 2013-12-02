@@ -1,3 +1,10 @@
+## To insulate us from API nomenclature and changes to
+CATEGORY_NAME_MAP = list(
+    name="name",
+    value="code",
+    id="_id"
+)
+
 is.category <- function (x) inherits(x, "Category")
 
 validCategory <- function (object) {
@@ -13,6 +20,9 @@ setValidity("Category", validCategory)
 
 init.Category <- function (.Object, ...) {
     .Object <- callNextMethod()
+    ## Make sure category elements are sorted so that identical categories are
+    ## evaluated identically. Order doesn't matter for object, but R lists are
+    ## ordered.
     s <- order(.Object@names)
     .Object@.Data <- .Object@.Data[s]
     .Object@names <- .Object@names[s]
@@ -60,15 +70,5 @@ showCategory <- function (x) {
 setMethod("show", "Category", function (object) {
     out <- showCategory(object)
     cat(out)
-    invisible(out)
-})
-
-showCategories <- function (x) {
-    vapply(x, showCategory, character(1))
-}
-
-setMethod("show", "Categories", function (object) {
-    out <- showCategories(object)
-    cat(out, sep="\n")
     invisible(out)
 })

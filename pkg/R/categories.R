@@ -1,10 +1,3 @@
-## To insulate us from API nomenclature and changes to
-CATEGORY_NAME_MAP = list(
-    name="name",
-    value="code",
-    id="_id"
-)
-
 validCategories <- function (object) {
     are.cats <- vapply(object, is.category, logical(1))
     if (!all(are.cats)) {
@@ -38,23 +31,10 @@ setMethod("[<-", c("Categories", "ANY"), function (x, i, ..., value) {
 })
 setMethod("names", "Categories", function (x) vapply(x, name, character(1)))
 setGeneric("values", function (x) standardGeneric("values"))
-setMethod("values", "Categories", function (x) {
-    # out <- as.numeric(unlist(lapply(x, value)))
-    # out <- try(vapply(x, value, numeric(1)), silent=TRUE)
-    # if (is.error(out)) out <- rep(list(NULL), length(x))
-    return(vapply(x, value, numeric(1)))
-    # return(out)
-})
+setMethod("values", "Categories", function (x) vapply(x, value, numeric(1)))
 setGeneric("ids", function (x) standardGeneric("ids"))
-setMethod("ids", "Categories", function (x) {
-    # vapply(x, id, character(1))
-    sapply(x, id)
-})
-## for summaries
-setMethod("ids", "list", function (x) {
-    # vapply(x, id, character(1))
-    sapply(x, id)
-})
+setMethod("ids", "Categories", function (x) sapply(x, id)) ## could assert numeric?
+setMethod("ids", "list", function (x) sapply(x, id)) ## for summaries
 
 setNames <- function (x, value) {
     x[] <- mapply(setName, x, value=value, SIMPLIFY=FALSE)
@@ -69,3 +49,13 @@ setMethod("names<-", "Categories", setNames)
 setGeneric("values<-", function (x, value) standardGeneric("values<-"))
 setMethod("values<-", "Categories", setValues)
 setMethod("toJSON", "Categories", function (x, ...) toJSON(I(x@.Data)))
+
+showCategories <- function (x) {
+    vapply(x, showCategory, character(1))
+}
+
+setMethod("show", "Categories", function (object) {
+    out <- showCategories(object)
+    cat(out, sep="\n")
+    invisible(out)
+})
