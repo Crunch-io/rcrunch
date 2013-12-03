@@ -42,20 +42,18 @@ test.authentication <- setup.and.teardown(
     logout)
 
 ## Create a test dataset and then destroy it after tests
-preexisting_datasets <- NULL
+datasets_to_purge <- c()
 new.dataset.with.setup <- function (...) {
-    if (is.null(preexisting_datasets)) {
-        p <- GET(sessionURL("datasets_url"))$entities
-        if (isTRUE(getOption('crunch.debug'))) message("Setting ", length(p), " preexisting datasets")
-        preexisting_datasets <<- p
-    }
-    return(newDataset(...))
+    out <- newDataset(...)
+    datasets_to_purge <<- c(datasets_to_purge, self(out))
+    return(out)
 }
 
 purge <- function () {
-    if (isTRUE(getOption('crunch.debug'))) message("Reading ", length(preexisting_datasets), " preexisting datasets")
-    for (i in setdiff(GET(sessionURL("datasets_url"))$entities, preexisting_datasets)) {
-        try(DELETE(i))
+    len <- length(datasets_to_purge)
+    if (len) {
+        try(DELETE(datasets_to_purge[len]))
+        datasets_to_purge <<- datasets_to_purge[-len]
     }
 }
 
