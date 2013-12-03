@@ -64,10 +64,11 @@ if (!run.only.local.tests) {
                 expect_true(is.Datetime(testdf$v5))
             })
             
-            test_that("names() are the same and in the right order", {
-                expect_identical(names(df), names(testdf))
-                with(test.dataset(mrdf), {
-                    expect_identical(names(mrdf), names(.setup))
+            with(test.dataset(mrdf), {
+                testmrdf <- .setup
+                test_that("names() are the same and in the right order", {
+                    expect_identical(names(df), names(testdf))
+                    expect_identical(names(mrdf), names(testmrdf))
                 })
             })
         })

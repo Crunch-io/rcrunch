@@ -2,7 +2,8 @@ run.only.local.tests <- FALSE
 
 ## .onAttach stuff, for testthat to work right
 options(crunch.api.endpoint=getOption("test.api"), 
-        warn=1, 
+        warn=1,
+        crunch.debug=FALSE,
         crunch.email=getOption("test.user"),
         crunch.pw=getOption("test.pw"))
 assign("application/json", parseJSONresponse, envir=httr:::parsers)
@@ -41,17 +42,21 @@ test.authentication <- setup.and.teardown(
     logout)
 
 ## Create a test dataset and then destroy it after tests
-preexisting_datasets <- c()
+preexisting_datasets <- NULL
 new.dataset.with.setup <- function (...) {
-    preexisting_datasets <<- GET(sessionURL("datasets_url"))$entities
+    if (is.null(preexisting_datasets)) {
+        p <- GET(sessionURL("datasets_url"))$entities
+        if (isTRUE(getOption('crunch.debug'))) message("Setting ", length(p), " preexisting datasets")
+        preexisting_datasets <<- p
+    }
     return(newDataset(...))
 }
 
 purge <- function () {
+    if (isTRUE(getOption('crunch.debug'))) message("Reading ", length(preexisting_datasets), " preexisting datasets")
     for (i in setdiff(GET(sessionURL("datasets_url"))$entities, preexisting_datasets)) {
         try(DELETE(i))
     }
-    preexisting_datasets <<- c()
 }
 
 test.dataset <- function (df, ...) {
