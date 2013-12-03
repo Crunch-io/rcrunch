@@ -9,6 +9,11 @@ if (!run.only.local.tests) {
                 expect_true(is.Multiple(var))
                 testdf <- refresh(testdf)
                 expect_equal(c("test1", "v4"), names(testdf))
+                name(var) <- "TESTONE"
+                testdf <- refresh(testdf)
+                expect_equal(c("TESTONE", "v4"), 
+                    vapply(testdf, name, character(1), USE.NAMES=FALSE))
+                    ## because names() point to variable aliases
             })
             with(test.dataset(mrdf), {
                 testdf <- .setup
