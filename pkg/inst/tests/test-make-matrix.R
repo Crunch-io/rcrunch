@@ -51,6 +51,23 @@ if (!run.only.local.tests) {
                 }))
             })
         })
+        
+        test_that("can make MultipleResponse from Matrix", {
+            with(test.dataset(mrdf), {
+                testdf <- .setup
+                var <- makeMatrix(pattern="mr_[123]", dataset=testdf,
+                    name="test1")
+                expect_true(is.Matrix(var))
+                
+                categories(var)[[1]]$selected <- TRUE
+                var <- refresh(var)
+                expect_true(is.Multiple(var))
+                
+                categories(var)[[1]]$selected <- FALSE
+                var <- refresh(var)
+                expect_true(is.Matrix(var))
+            })
+        })
     })
 }
 
