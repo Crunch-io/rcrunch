@@ -29,6 +29,8 @@ is.Datetime <- function (x) inherits(x, "DatetimeVariable")
 ##' @export
 is.Multiple <- is.MultipleResponse <- function (x) inherits(x, "MultipleResponseVariable")
 
+is.Matrix <- function (x) class(x) %in% "CategoricalMatrixVariable" ## so it doesn't return true for MultipleResponse
+
 .cr.variable.shojiObject <- function (x, ...) {
     out <- CrunchVariable(x, ...)
     return(out)
@@ -64,7 +66,8 @@ pickSubclassConstructor <- function (x=NULL) {
             numeric=NumericVariable,
             text=TextVariable,
             datetime=DatetimeVariable,
-            multipleresponse=MultipleResponseVariable
+            multipleresponse=MultipleResponseVariable,
+            categoricalmatrix=CategoricalMatrixVariable
         )
     if (!is.null(x)) x <- constructors[[x]]
     if (is.null(x)) x <- CrunchVariable

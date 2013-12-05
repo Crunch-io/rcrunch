@@ -1,12 +1,12 @@
-context("Multiple response")
+context("Categorical Matrix")
 
 if (!run.only.local.tests) {
     with(test.authentication, {
-        test_that("can make MR in several ways", {
+        test_that("can make Matrix in several ways", {
             with(test.dataset(mrdf), {
                 testdf <- .setup
-                var <- makeMR(testdf[1:3], name="test1")
-                expect_true(is.Multiple(var))
+                var <- makeMatrix(testdf[1:3], name="test1")
+                expect_true(is.Matrix(var))
                 testdf <- refresh(testdf)
                 expect_equal(c("test1", "v4"), names(testdf))
                 name(var) <- "TESTONE"
@@ -17,15 +17,15 @@ if (!run.only.local.tests) {
             })
             with(test.dataset(mrdf), {
                 testdf <- .setup
-                var <- makeMR(testdf[c("mr_1", "mr_2", "mr_3")], name="test1")
-                expect_true(is.Multiple(var))
+                var <- makeMatrix(testdf[c("mr_1", "mr_2", "mr_3")], name="test1")
+                expect_true(is.Matrix(var))
                 testdf <- refresh(testdf)
                 expect_equal(c("test1", "v4"), names(testdf))                
             })
             with(test.dataset(mrdf), {
                 testdf <- .setup
-                var <- makeMR(pattern="mr_[123]", dataset=testdf, name="test1")
-                expect_true(is.Multiple(var))
+                var <- makeMatrix(pattern="mr_[123]", dataset=testdf, name="test1")
+                expect_true(is.Matrix(var))
                 testdf <- refresh(testdf)
                 expect_equal(c("test1", "v4"), names(testdf))
             })
@@ -33,20 +33,20 @@ if (!run.only.local.tests) {
         
         with(test.dataset(mrdf), {
             testdf <- .setup
-            test_that("makeMR error conditions", {
+            test_that("makeMatrix error conditions", {
                 no.name <- "Must provide the name for the new variable"
                 no.match <- "Pattern did not match any variables"
                 need.variables <- "Invalid list of Variables to combine"
                 ds.mismatch <- "`list_of_variables` must be from `dataset`"
-                expect_error(makeMR(), no.name)
-                expect_error(makeMR(pattern="mr_[123]", dataset=testdf), no.name)
-                expect_error(makeMR(pattern="rm_", dataset=testdf, name="foo"),
+                expect_error(makeMatrix(), no.name)
+                expect_error(makeMatrix(pattern="mr_[123]", dataset=testdf), no.name)
+                expect_error(makeMatrix(pattern="rm_", dataset=testdf, name="foo"),
                     no.match)
-                expect_error(makeMR(c("mr_1", "mr_2", "mr_3"), dataset=testdf,
+                expect_error(makeMatrix(c("mr_1", "mr_2", "mr_3"), dataset=testdf,
                     name="foo"), need.variables)
                 skip(with(test.dataset(df), {
                     nottestdf <- .setup
-                    expect_error(makeMR(testdf[1:3], dataset=nottestdf, name="test1"),
+                    expect_error(makeMatrix(testdf[1:3], dataset=nottestdf, name="test1"),
                         ds.mismatch)
                 }))
             })
@@ -54,4 +54,4 @@ if (!run.only.local.tests) {
     })
 }
 
-## then add tests for MR variable entities. but note that response names aren't exposed in API yet.
+## then add tests for matrix variable entities. but note that subvariable names aren't exposed in API yet.

@@ -1,4 +1,4 @@
-##' Make a Multiple Response variable
+##' Make a Categorical Matrix variable
 ##'
 ##' @param list_of_variables a list of Variable objects to bind together, or a
 ##' Dataset object containing only the Variables to bind (as in from subsetting
@@ -11,14 +11,14 @@
 ##' bind within \code{dataset}.
 ##' @param key character, the name of the Variable field in which to search
 ##' with \code{pattern}. Default is 'alias'.
-##' @param name character, the name that the new Multiple Response variable
+##' @param name character, the name that the new Categorical Matrix variable
 ##' should have. Required.
 ##' @param ... Optional additional attributes to set on the new variable. Not
 ##' yet supported.
-##' @return The object of class MultipleResponseVariable corresponding to the 
+##' @return The object of class CategoricalMatrixVariable corresponding to the 
 ##' just-created variable on the server.
 ##' @export
-makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key="alias", name, ...) {
+makeMatrix <- function (list_of_variables, dataset=NULL, pattern=NULL, key="alias", name, ...) {
     listOfVariablesIsValid <- function (lov) {
         return(is.list(lov) && all(vapply(lov, is.variable, logical(1))))
     }
