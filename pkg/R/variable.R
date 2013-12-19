@@ -4,6 +4,7 @@ init.CategoricalVariable <- function (.Object, ...) {
     return(.Object)
 }
 setMethod("initialize", "CategoricalVariable", init.CategoricalVariable)
+setMethod("initialize", "CategoricalMatrixVariable", init.CategoricalVariable)
 
 ##' @rdname crunch-is
 ##' @export
@@ -80,11 +81,21 @@ setMethod("description", "CrunchVariable", function (x) x@body$description)
 setMethod("description<-", "CrunchVariable", 
     function (x, value) setCrunchSlot(x, "description", value))
 
-setGeneric("categories", function (x) standardGeneric("categories"))
 setMethod("categories", "CrunchVariable", function (x) x@body$categories)
-setGeneric("categories<-", function (x, value) standardGeneric("categories<-"))
 setMethod("categories<-", "CrunchVariable", 
     function (x, value) setCrunchSlot(x, "categories", value))
 
-setGeneric("datasetReference", function (x) standardGeneric("datasetReference"))
+.dichotomize.var <- function (x, i) {
+    categories(x) <- dichotomize(categories(x), i)
+    return(refresh(x))
+}
+.undichotomize.var <- function (x) {
+    categories(x) <- undichotomize(categories(x))
+    return(refresh(x))
+}
+setMethod("dichotomize", "CategoricalVariable", .dichotomize.var)
+setMethod("dichotomize", "CategoricalMatrixVariable", .dichotomize.var)
+setMethod("undichotomize", "CategoricalVariable", .undichotomize.var)
+setMethod("undichotomize", "CategoricalMatrixVariable", .undichotomize.var)
+
 setMethod("datasetReference", "CrunchVariable", function (x) x@urls$dataset_url)

@@ -36,13 +36,10 @@ is.shojiObject <- function (x) inherits(x, "ShojiObject")
     return(as(GET(self(x)), Class))
 }
 
-setGeneric("self", function (x) standardGeneric("self"))
 setMethod("self", "ShojiObject", function (x) x@self)
 
-setGeneric("refresh", function (x) standardGeneric("refresh"))
 setMethod("refresh", "ShojiObject", .cr.shoji.refresh)
 
-setGeneric("delete", function (x) standardGeneric("delete"))
 setMethod("delete", "ShojiObject", function (x) invisible(DELETE(self(x))))
 setMethod("delete", "CrunchDataset", function (x) {
     out <- callNextMethod()
@@ -60,7 +57,8 @@ setMethod("delete", "ANY", function (x) stop("'delete' only valid for Crunch obj
 setCrunchSlot <- function (x, i, value) {
     slot(x, "body")[[i]] <- value
     if (!is.readonly(x)) {
-        payload <- toJSON(structure(list(value), .Names=i))
+        body <- structure(list(value), .Names=i)
+        payload <- toJSON(body)
         PUT(self(x), body=payload)
     }
     return(x)
@@ -71,6 +69,5 @@ setReadonly <- function (x, value) {
     x@readonly <- as.logical(value)
     x
 }
-setGeneric("readonly<-", function (x, value) standardGeneric("readonly<-"))
 setMethod("readonly<-", "ShojiObject", setReadonly)
 

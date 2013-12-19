@@ -43,19 +43,22 @@ setValue <- function (x, value) {
     return(x)
 }
 
-setMethod("$", "Category", function (x, name) callNextMethod())
-setMethod("$<-", "Category", function (x, name, value) callNextMethod())
+# setMethod("$", "Category", function (x, name) callNextMethod())
+# setMethod("$<-", "Category", function (x, name, value) callNextMethod())
+setMethod("$", "Category", function (x, name) x[[name]])
+setMethod("$<-", "Category", function (x, name, value) {
+    x[[name]] <- value
+    return(x)
+})
+
 setMethod("name", "Category", function (x) x[[CATEGORY_NAME_MAP[["name"]]]])
 setMethod("name<-", "Category", setName)
-setGeneric("value", function (x) standardGeneric("value"))
 setMethod("value", "Category", function (x) {
     v <- x[[CATEGORY_NAME_MAP[["value"]]]]
     return(ifelse(is.null(v), NA_real_, as.numeric(v)))
 })
-setGeneric("value<-", function (x, value) standardGeneric("value<-"))
 setMethod("value<-", "Category", setValue)
 
-setGeneric("id", function (x) standardGeneric("id"))
 setMethod("id", "Category", function (x) x[[CATEGORY_NAME_MAP[["id"]]]])
 setMethod("id", "list", function (x) x[[CATEGORY_NAME_MAP[["id"]]]])
 
@@ -72,3 +75,5 @@ setMethod("show", "Category", function (object) {
     cat(out)
     invisible(out)
 })
+
+setMethod("is.selected", "Category", function (x) isTRUE(x$selected))

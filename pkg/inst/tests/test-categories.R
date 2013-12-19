@@ -56,6 +56,33 @@ test_that("categories setters", {
     expect_equal(names(Cats), c("masculino", "donne"))
 })
 
+test_that("dichotomize", {
+    male <- Cats[[1]]
+    expect_false(is.selected(male))
+    male$selected <- TRUE
+    expect_true(is.selected(male))
+    expect_equal(name(male), "Male")
+    
+    expect_false(is.dichotomized(Cats))
+    dCats <- dichotomize(Cats, 1)
+    expect_true(is.dichotomized(dCats))
+    expect_true(is.selected(dCats[[1]]))
+    expect_false(is.selected(dCats[[2]]))
+    expect_equal(name(dCats[[1]]), "Male")
+    expect_equal(names(dCats), c("Male", "Female"))
+    
+    dCats2 <- dichotomize(Cats, "Female")
+    expect_true(is.dichotomized(dCats2))
+    expect_false(is.selected(dCats2[[1]]))
+    expect_true(is.selected(dCats2[[2]]))
+    
+    expect_error(dichotomize(Cats, "Cat!")) ## What should the error be?
+    
+    Cats2 <- undichotomize(dCats)
+    expect_false(is.dichotomized(Cats2))
+    expect_false(is.selected(Cats2[[1]]))
+})
+
 if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df), {

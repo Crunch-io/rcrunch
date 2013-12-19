@@ -16,6 +16,7 @@ Imports:
     methods
 Collate:
     'AllClasses.R'
+    'AllGenerics.R'
     'auth.R'
     'rcrunch.R'
     'api.R'

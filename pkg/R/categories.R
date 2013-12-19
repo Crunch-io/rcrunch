@@ -30,9 +30,7 @@ setMethod("[<-", c("Categories", "ANY"), function (x, i, ..., value) {
     return(x)
 })
 setMethod("names", "Categories", function (x) vapply(x, name, character(1)))
-setGeneric("values", function (x) standardGeneric("values"))
 setMethod("values", "Categories", function (x) vapply(x, value, numeric(1)))
-setGeneric("ids", function (x) standardGeneric("ids"))
 setMethod("ids", "Categories", function (x) sapply(x, id)) ## could assert numeric?
 setMethod("ids", "list", function (x) sapply(x, id)) ## for summaries
 
@@ -46,7 +44,6 @@ setValues <- function (x, value) {
 }
 
 setMethod("names<-", "Categories", setNames)
-setGeneric("values<-", function (x, value) standardGeneric("values<-"))
 setMethod("values<-", "Categories", setValues)
 setMethod("toJSON", "Categories", function (x, ...) toJSON(I(x@.Data)))
 
@@ -58,4 +55,35 @@ setMethod("show", "Categories", function (object) {
     out <- showCategories(object)
     cat(out, sep="\n")
     invisible(out)
+})
+
+setMethod("is.dichotomized", "Categories", function (x) any(vapply(x, is.selected, logical(1))))
+
+##' @param x Categories
+##' @param i valid indices for x
+##' @return Categories appropriately dichotomized
+.dichotomize.categories <- function (x, i) {
+    x[i] <- lapply(x[i], function (a) {
+        a$selected <- TRUE
+        return(a)
+    })
+    return(x)
+}
+
+setMethod("dichotomize", c("Categories", "numeric"), .dichotomize.categories)
+setMethod("dichotomize", c("Categories", "logical"), .dichotomize.categories)
+setMethod("dichotomize", c("Categories", "character"), function (x, i) {
+    ind <- names(x) %in% i
+    if (!any(ind)) {
+        stop("Category not found") ## make nicer error message
+    }
+    return(dichotomize(x, ind))
+})
+
+setMethod("undichotomize", "Categories", function (x) {
+    x[] <- lapply(x[], function (a) {
+        a$selected <- FALSE
+        return(a)
+    })
+    return(x)
 })

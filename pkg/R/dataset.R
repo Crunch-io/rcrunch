@@ -26,16 +26,12 @@ setDatasetDescription <- function (x, value) {
     setCrunchSlot(x, "description", value)
 }
 
-setGeneric("name", function (x) standardGeneric("name"))
 setMethod("name", "CrunchDataset", function (x) x@body$name)
-setGeneric("name<-", function (x, value) standardGeneric("name<-"),
-    signature="x")
+
 setMethod("name<-", "CrunchDataset", setDatasetName)
 
-setGeneric("description", function (x) standardGeneric("description"))
 setMethod("description", "CrunchDataset", function (x) x@body$description)
-setGeneric("description<-", 
-    function (x, value) standardGeneric("description<-"), signature="x")
+
 setMethod("description<-", "CrunchDataset", setDatasetDescription)
 
 .cr.dataset.shojiObject <- function (x, ...) {

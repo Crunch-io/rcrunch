@@ -72,5 +72,6 @@ makeMatrix <- function (list_of_variables, dataset=NULL, pattern=NULL, key="alia
     var_urls <- vapply(list_of_variables, self, character(1), USE.NAMES=FALSE)
     payload <- list(name=name, variables=I(var_urls)) ## extend backend to take ...
     out <- POST(dataset@urls$bind_url, body=toJSON(payload))
+    ## could apply ... here
     invisible(as.variable(GET(out)))
 }
