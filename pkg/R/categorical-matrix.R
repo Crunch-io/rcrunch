@@ -1,4 +1,4 @@
-##' Make a Categorical Matrix variable
+##' Make a Categorical Matrix or Multiple Response variable
 ##'
 ##' @param list_of_variables a list of Variable objects to bind together, or a
 ##' Dataset object containing only the Variables to bind (as in from subsetting
@@ -13,12 +13,34 @@
 ##' with \code{pattern}. Default is 'alias'.
 ##' @param name character, the name that the new Categorical Matrix variable
 ##' should have. Required.
+##' @param selections character, for \code{makeMR}, the names of the 
+##' categories to mark as the dichotomous selections. Required for 
+##' \code{makeMR}; ignored in \code{makeMatrix}.
 ##' @param ... Optional additional attributes to set on the new variable. Not
 ##' yet supported.
-##' @return The object of class CategoricalMatrixVariable corresponding to the 
-##' just-created variable on the server.
+##' @return The object of class CategoricalMatrixVariable or
+##' MultipleResponseVariable corresponding to the just-created variable on the
+##' server.
 ##' @export
 makeMatrix <- function (list_of_variables, dataset=NULL, pattern=NULL, key="alias", name, ...) {
+    
+    Call <- match.call(expand.dots=FALSE)
+    
+    if (missing(name)) {
+        stop("Must provide the name for the new variable", call.=FALSE)
+    }
+    
+    Call[[1L]] <- as.name("prepareBindInputs")
+    x <- eval.parent(Call)
+    
+    invisible(bindVariables(x$list_of_variables, x$dataset, name, ...))
+}
+
+##' Given inputs to makeMatrix/makeMR, parse and validate
+##' @param ... Stuff from calling function that will be ignored.
+prepareBindInputs <- function (list_of_variables, dataset=NULL, pattern=NULL,
+                               key="alias", ...) {
+    
     listOfVariablesIsValid <- function (lov) {
         return(is.list(lov) && all(vapply(lov, is.variable, logical(1))))
     }
@@ -32,9 +54,6 @@ makeMatrix <- function (list_of_variables, dataset=NULL, pattern=NULL, key="alia
         return(ds_urls)
     }
     
-    if (missing(name)) {
-        stop("Must provide the name for the new variable", call.=FALSE)
-    }
     if (is.null(dataset)) {
         if (is.dataset(list_of_variables)) {
             ## as in, if the list of variables is a [ extraction from a Dataset
@@ -69,6 +88,12 @@ makeMatrix <- function (list_of_variables, dataset=NULL, pattern=NULL, key="alia
     # if (datasetURLfromVariables(list_of_variables) != self(dataset)) {
     #     stop("`list_of_variables` must be from `dataset`")
     # }
+    
+    return(list(dataset=dataset, list_of_variables=list_of_variables))
+}
+
+##' Take variables and their dataset and bind them into a new array variable
+bindVariables <- function (list_of_variables, dataset, name, ...) {
     var_urls <- vapply(list_of_variables, self, character(1), USE.NAMES=FALSE)
     payload <- list(name=name, variables=I(var_urls)) ## extend backend to take ...
     out <- POST(dataset@urls$bind_url, body=toJSON(payload))

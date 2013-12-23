@@ -83,6 +83,61 @@ if (!run.only.local.tests) {
                 expect_true(is.Matrix(var))
             })
         })
+        
+        test_that("can make MultipleResponse directly", {
+            with(test.dataset(mrdf), {
+                testdf <- .setup
+                cast.these <- grep("mr_", names(testdf))
+                testdf[cast.these] <- lapply(testdf[cast.these],
+                    castVariable, "categorical")
+                var <- makeMR(pattern="mr_[123]", dataset=testdf,
+                    name="test1", selections="1.0")
+                expect_true(is.Multiple(var))
+                
+                var <- undichotomize(var)
+                expect_true(is.Matrix(var))
+            })
+            
+            with(test.dataset(mrdf), {
+                testdf <- .setup
+                test_that("makeMR error conditions", {
+                    no.name <- "Must provide the name for the new variable"
+                    no.match <- "Pattern did not match any variables"
+                    need.variables <- "Invalid list of Variables to combine"
+                    ds.mismatch <- "`list_of_variables` must be from `dataset`"
+                    no.selections <- paste("Must provide the names of the", 
+                        "category or categories that indicate the dichotomous",
+                        "selection")
+                    invalid.selection <- paste("not found in",
+                        "variable's categories")
+                    not.categorical <- "are not Categorical"
+                    expect_error(makeMR(), no.name)
+                    expect_error(makeMR(pattern="mr_[123]", dataset=testdf),
+                        no.name)
+                    expect_error(makeMR(pattern="rm_", dataset=testdf,
+                        name="foo", selections="foo"), no.match)
+                    expect_error(makeMR(c("mr_1", "mr_2", "mr_3"),
+                        dataset=testdf, name="foo", selections="foo"),
+                        need.variables)
+                    skip(with(test.dataset(df), {
+                        nottestdf <- .setup
+                        expect_error(makeMR(testdf[1:3], dataset=nottestdf,
+                            name="test1"), ds.mismatch)
+                    }))
+                    expect_error(makeMR(pattern="mr_[123]", dataset=testdf,
+                        name="test1", selections="Not a Selection!"),
+                        not.categorical)
+                    cast.these <- grep("mr_", names(testdf))
+                    testdf[cast.these] <- lapply(testdf[cast.these],
+                        castVariable, "categorical")
+                    expect_error(makeMR(pattern="mr_[123]", dataset=testdf,
+                        name="test1", selections="Not a Selection!"),
+                        invalid.selection)
+                    expect_error(makeMR(pattern="mr_[123]", dataset=testdf,
+                        name="test1"), no.selections)
+                })
+            })
+        })
     })
 }
 

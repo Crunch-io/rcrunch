@@ -76,7 +76,8 @@ pickSubclassConstructor <- function (x=NULL) {
 }
 
 setMethod("name", "CrunchVariable", function (x) x@body$name)
-setMethod("name<-", "CrunchVariable", function (x, value) setCrunchSlot(x, "name", value))
+setMethod("name<-", "CrunchVariable", 
+    function (x, value) setCrunchSlot(x, "name", value))
 setMethod("description", "CrunchVariable", function (x) x@body$description)
 setMethod("description<-", "CrunchVariable", 
     function (x, value) setCrunchSlot(x, "description", value))
@@ -87,11 +88,11 @@ setMethod("categories<-", "CrunchVariable",
 
 .dichotomize.var <- function (x, i) {
     categories(x) <- dichotomize(categories(x), i)
-    return(refresh(x))
+    invisible(refresh(x))
 }
 .undichotomize.var <- function (x) {
     categories(x) <- undichotomize(categories(x))
-    return(refresh(x))
+    invisible(refresh(x))
 }
 setMethod("dichotomize", "CategoricalVariable", .dichotomize.var)
 setMethod("dichotomize", "CategoricalMatrixVariable", .dichotomize.var)

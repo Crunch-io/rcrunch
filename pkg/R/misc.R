@@ -14,7 +14,6 @@ updateList <- function (x, y) {
 ##' @param simplify logical, passed to sapply internally
 ##' @return the requested element(s). If length(key)>1, a named list of those
 ##' elements
-##' @export
 selectFrom <- function (key, xlist, ifnot=NA, simplify=TRUE) {
     if (!is.list(xlist)) {
         stop("xlist must be a list object")
@@ -51,7 +50,6 @@ selectFrom <- function (key, xlist, ifnot=NA, simplify=TRUE) {
 ##' @examples
 ##' vars <- loadJSONMocks("variables.json")
 ##' selectFromWhere(name=="Gender", vars)
-##' @export
 selectFromWhere <- function (where=TRUE, xlist, key=NULL, ifnot=NA,
                             simplify=TRUE) {
     where <- substitute(where)
@@ -83,7 +81,6 @@ doc <- function (x) {
 ##'
 ##' @param x vector or list
 ##' @param collapse default="and"
-##' @export
 serialPaste <- function (x, collapse="and") {
 	if (length(x)>1) x[length(x)] <- paste(collapse, x[length(x)])
 	join.with <- ifelse(length(x)>2, ", ", " ")
@@ -95,7 +92,6 @@ serialPaste <- function (x, collapse="and") {
 ##' "dataset.json", "variables.json", "summaries.json".
 ##' @return The deserialized contents of the JSON file, typically a list.
 ##' @importFrom RJSONIO fromJSON
-##' @export
 loadJSONMocks <- function (filename) {
     fromJSON(system.file(filename, package="rcrunch", mustWork=TRUE),
         simplifyWithNames=FALSE)

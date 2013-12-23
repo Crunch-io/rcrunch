@@ -43,8 +43,6 @@ setValue <- function (x, value) {
     return(x)
 }
 
-# setMethod("$", "Category", function (x, name) callNextMethod())
-# setMethod("$<-", "Category", function (x, name, value) callNextMethod())
 setMethod("$", "Category", function (x, name) x[[name]])
 setMethod("$<-", "Category", function (x, name, value) {
     x[[name]] <- value

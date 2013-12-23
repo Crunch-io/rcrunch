@@ -1,15 +1,18 @@
-VARIABLE_TYPES <- c("numeric", "text", "categorical") ## Add datetime when server supports
+CASTABLE_TYPES <- c("numeric", "text", "categorical") ## Add datetime when server supports
 
 setMethod("type", "CrunchVariable", function (x) x@body$type)
 ## do type casting as type<-
 
 castVariable <- function (x, to) {
-    if (!(to %in% VARIABLE_TYPES)) {
-        stop(sQuote(to), " is not a valid Crunch variable type. Valid types ",
-            "are ", serialPaste(sQuote(VARIABLE_TYPES)))
+    if (!(to %in% CASTABLE_TYPES)) {
+        stop(sQuote(to), " is not a Crunch variable type that can be assigned.",
+            " Valid types are ", serialPaste(sQuote(CASTABLE_TYPES)))
     }
-    POST(cast_url(x), body=toJSON(list(cast_as=to)))
-    invisible(refresh(x))
+    if (type(x) != to) { ## no-op if cast type is same as current type
+        POST(cast_url(x), body=toJSON(list(cast_as=to)))
+        x <- refresh(x)
+    }
+    invisible(x)
 }
 
 cast_url <- function (x) x@urls$cast_url

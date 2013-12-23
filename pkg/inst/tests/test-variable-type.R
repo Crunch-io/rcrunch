@@ -29,7 +29,7 @@ if (!run.only.local.tests) {
                     ## since they're the same remote object
         
                 expect_error(castVariable(, "foo"), 
-                    paste(sQuote("foo"), "is not a valid Crunch variable type."))
+                    paste(sQuote("foo"), "is not a Crunch variable type that can be assigned."))
             })
         })
     })

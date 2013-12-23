@@ -34,3 +34,4 @@ Collate:
     'category.R'
     'variable-to-R.R'
     'categorical-matrix.R'
+    'multiple-response.R'

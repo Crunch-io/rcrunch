@@ -75,8 +75,8 @@ test_that("dichotomize", {
     expect_true(is.dichotomized(dCats2))
     expect_false(is.selected(dCats2[[1]]))
     expect_true(is.selected(dCats2[[2]]))
-    
-    expect_error(dichotomize(Cats, "Cat!")) ## What should the error be?
+  
+    expect_error(dichotomize(Cats, "Cat!"))
     
     Cats2 <- undichotomize(dCats)
     expect_false(is.dichotomized(Cats2))
