@@ -2,13 +2,13 @@
 CATEGORY_NAME_MAP = list(
     name="name",
     value="code",
-    id="_id"
+    id="id"
 )
 
 is.category <- function (x) inherits(x, "Category")
 
 validCategory <- function (object) {
-    is.cat <- all(c("_id", "name") %in% names(object))
+    is.cat <- all(c('id', "name") %in% names(object))
     if (!all(is.cat)) {
         val <- "Not a category"
     } else {
