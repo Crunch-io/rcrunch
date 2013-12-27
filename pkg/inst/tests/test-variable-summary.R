@@ -4,7 +4,7 @@ tablecats <- Categories(vars$gender$body$categories)
 tablesums <- sums$gender$body$categories
 
 test_that("ids getter for summaries", {
-    expect_identical(ids(tablesums), selectFrom('id', tablesums))
+    expect_identical(ids(tablesums), selectFrom("id", tablesums))
     expect_true(setequal(ids(tablecats), ids(tablesums)))
 })
 

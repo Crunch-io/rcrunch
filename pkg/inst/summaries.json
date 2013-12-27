@@ -2,11 +2,11 @@
     "gender": {
         "categories": [
             {
-                'id': "0c93298d4e63b81bbb5be68a11a01604",
+                "id": "0c93298d4e63b81bbb5be68a11a01604",
                 "count": 425 
             },
             {
-                'id': "b294894bdb9074056fa439d25a9348bd",
+                "id": "b294894bdb9074056fa439d25a9348bd",
                 "count": 501 
             }
         ], 
@@ -16,27 +16,27 @@
     "educ": {
         "categories": [
             {
-                'id': "5a430cd57e61d3857ca33809562ee08e",
+                "id": "5a430cd57e61d3857ca33809562ee08e",
                 "count": 112 
             },
             {
-                'id': "dd5203e573406ab75dd324dc77ce89a8",
+                "id": "dd5203e573406ab75dd324dc77ce89a8",
                 "count": 134 
             },
             {
-                'id': "198596e5668485f1aa65b9525b349578",
+                "id": "198596e5668485f1aa65b9525b349578",
                 "count": 41 
             },
             {
-                'id': "a1aeeecb2beb2275680e8bddceb149c5",
+                "id": "a1aeeecb2beb2275680e8bddceb149c5",
                 "count": 380 
             },
             {
-                'id': "87e6fff83dbaa1a659db80f2f210211a",
+                "id": "87e6fff83dbaa1a659db80f2f210211a",
                 "count": 229 
             },
             {
-                'id': "0e76efd4b0a8ddab343bd1f7135f25a4",
+                "id": "0e76efd4b0a8ddab343bd1f7135f25a4",
                 "count": 88 
             }
         ], 
@@ -46,35 +46,35 @@
     "race": {
         "categories": [
             {
-                'id': "a912ce58bca9314f6dea1cd56659d44d",
+                "id": "a912ce58bca9314f6dea1cd56659d44d",
                 "count": 729 
             },
             {
-                'id': "f37caa3c5831599f72ebc16869793041",
+                "id": "f37caa3c5831599f72ebc16869793041",
                 "count": 124 
             },
             {
-                'id': "a88da763fed3e69e5d137cb9606b42c2",
+                "id": "a88da763fed3e69e5d137cb9606b42c2",
                 "count": 69 
             },
             {
-                'id': "21ea1a9a6829b891076f6e5ecc537257",
+                "id": "21ea1a9a6829b891076f6e5ecc537257",
                 "count": 24 
             },
             {
-                'id': "26ebd274355e048f33d43c5ccb577c18",
+                "id": "26ebd274355e048f33d43c5ccb577c18",
                 "count": 2 
             },
             {
-                'id': "7edf7337bfefa9ad3f8f971abe117870",
+                "id": "7edf7337bfefa9ad3f8f971abe117870",
                 "count": 15 
             },
             {
-                'id': "c342ebabc06e744e69fc49919686d1da",
+                "id": "c342ebabc06e744e69fc49919686d1da",
                 "count": 21 
             },
             {
-                'id': "b6546b96379b72425f51afedd228824f",
+                "id": "b6546b96379b72425f51afedd228824f",
                 "count": 0
             }
         ], 
@@ -84,59 +84,59 @@
     "income": {
         "categories": [
             {
-                'id': "e9251c027552e0f09556d507a7bee9ba",
+                "id": "e9251c027552e0f09556d507a7bee9ba",
                 "count": 301
             },
             {
-                'id': "9c11b804cd53e9553a527c5f15ec29c1",
+                "id": "9c11b804cd53e9553a527c5f15ec29c1",
                 "count": 77
             },
             {
-                'id': "ad17dd0bb597dd4d02a650bfc1f889dd",
+                "id": "ad17dd0bb597dd4d02a650bfc1f889dd",
                 "count": 111
             },
             {
-                'id': "d8b7d2540bcd1e1efab1acc344810e64",
+                "id": "d8b7d2540bcd1e1efab1acc344810e64",
                 "count": 61
             },
             {
-                'id': "7093a83ec98b8137d1e9971bb11c88fa",
+                "id": "7093a83ec98b8137d1e9971bb11c88fa",
                 "count": 125
             },
             {
-                'id': "9524712c4e662f0114b4deb5804df076",
+                "id": "9524712c4e662f0114b4deb5804df076",
                 "count": 87
             },
             {
-                'id': "6dc68bcd376568f7ed7f600777870223",
+                "id": "6dc68bcd376568f7ed7f600777870223",
                 "count": 68
             },
             {
-                'id': "ab7c34e8d41f22872a6177abf35357d4",
+                "id": "ab7c34e8d41f22872a6177abf35357d4",
                 "count": 87
             },
             {
-                'id': "e1c3ebc994af16490547ce7168830847",
+                "id": "e1c3ebc994af16490547ce7168830847",
                 "count": 33
             },
             {
-                'id': "1d4672806a3888f12bc731420dd15e19",
+                "id": "1d4672806a3888f12bc731420dd15e19",
                 "count": 20
             },
             {
-                'id': "412f3176fe5bde920369fde30321691e",
+                "id": "412f3176fe5bde920369fde30321691e",
                 "count": 8
             },
             {
-                'id': "968476dde4cab2b9a209d13dacbee634",
+                "id": "968476dde4cab2b9a209d13dacbee634",
                 "count": 5
             },
             {
-                'id': "1b466f2d4bf6693f12fdeb723e810ce1",
+                "id": "1b466f2d4bf6693f12fdeb723e810ce1",
                 "count": 0
             },
             {
-                'id': "1ea9f7bc2d80a2ce67e9f3fa2157dcd4",
+                "id": "1ea9f7bc2d80a2ce67e9f3fa2157dcd4",
                 "count": 1
             }
         ], 
@@ -146,27 +146,27 @@
     "marstat": {
         "categories": [
             {
-                'id': "0e113c244601ecba6296a0bb6fbfb53f",
+                "id": "0e113c244601ecba6296a0bb6fbfb53f",
                 "count": 330
             },
             {
-                'id': "540192ea488fb24f758bb12404ab7004",
+                "id": "540192ea488fb24f758bb12404ab7004",
                 "count": 392
             },
             {
-                'id': "70a8c2af4f59739d96029265564397b1",
+                "id": "70a8c2af4f59739d96029265564397b1",
                 "count": 208
             },
             {
-                'id': "f7fc88ccbde05411346bd9c4d563f10c",
+                "id": "f7fc88ccbde05411346bd9c4d563f10c",
                 "count": 7
             },
             {
-                'id': "d164624eadbaae8c6047c014fc0e4063",
+                "id": "d164624eadbaae8c6047c014fc0e4063",
                 "count": 43
             },
             {
-                'id': "50277c27f2b030c033a88b6294f51fdf",
+                "id": "50277c27f2b030c033a88b6294f51fdf",
                 "count": 20
             }
         ],
