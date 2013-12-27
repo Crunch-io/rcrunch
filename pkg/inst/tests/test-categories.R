@@ -18,12 +18,12 @@ test_that("category slicers", {
 
 test_that("category getters", {
     male <- Cats[[1]]
-    expect_identical(name(male), cats[[1]][[CATEGORY_NAME_MAP[["name"]]]])
-    expect_identical(value(male), cats[[1]][[CATEGORY_NAME_MAP[["value"]]]])
-    expect_identical(id(male), cats[[1]][[CATEGORY_NAME_MAP[["id"]]]])
-    expect_identical(names(Cats), selectFrom(CATEGORY_NAME_MAP[["name"]], cats))
-    expect_identical(values(Cats), selectFrom(CATEGORY_NAME_MAP[["value"]], cats))
-    expect_identical(ids(Cats), selectFrom(CATEGORY_NAME_MAP[["id"]], cats))
+    expect_identical(name(male), cats[[1]][["name"]])
+    expect_identical(value(male), cats[[1]][["numeric_value"]])
+    expect_identical(id(male), cats[[1]][["id"]])
+    expect_identical(names(Cats), selectFrom("name", cats))
+    expect_identical(values(Cats), selectFrom("numeric_value", cats))
+    expect_identical(ids(Cats), selectFrom("id", cats))
     expect_identical(length(ids(Cats)), 2L)
 })
 

@@ -1,10 +1,3 @@
-## To insulate us from API nomenclature and changes to
-CATEGORY_NAME_MAP = list(
-    name="name",
-    value="code",
-    id="id"
-)
-
 is.category <- function (x) inherits(x, "Category")
 
 validCategory <- function (object) {
@@ -31,7 +24,7 @@ init.Category <- function (.Object, ...) {
 setMethod("initialize", "Category", init.Category)
 
 setName <- function (x, value) {
-    x[[CATEGORY_NAME_MAP[["name"]]]] <- value
+    x[["name"]] <- value
     return(x)
 }
 setValue <- function (x, value) {
@@ -39,7 +32,7 @@ setValue <- function (x, value) {
     if (is.na(value_to_set) && !is.na(value)) {
         stop("Category values must be numeric", call.=FALSE)
     }
-    x[[CATEGORY_NAME_MAP[["value"]]]] <- value_to_set
+    x[["numeric_value"]] <- value_to_set
     return(x)
 }
 
@@ -49,16 +42,16 @@ setMethod("$<-", "Category", function (x, name, value) {
     return(x)
 })
 
-setMethod("name", "Category", function (x) x[[CATEGORY_NAME_MAP[["name"]]]])
+setMethod("name", "Category", function (x) x[["name"]])
 setMethod("name<-", "Category", setName)
 setMethod("value", "Category", function (x) {
-    v <- x[[CATEGORY_NAME_MAP[["value"]]]]
+    v <- x[["numeric_value"]]
     return(ifelse(is.null(v), NA_real_, as.numeric(v)))
 })
 setMethod("value<-", "Category", setValue)
 
-setMethod("id", "Category", function (x) x[[CATEGORY_NAME_MAP[["id"]]]])
-setMethod("id", "list", function (x) x[[CATEGORY_NAME_MAP[["id"]]]])
+setMethod("id", "Category", function (x) x[["id"]])
+setMethod("id", "list", function (x) x[["id"]])
 
 show.values <- function (x) TRUE ## make this actually do something? need to point at variable, not categories, or otherwise embed that attribute in the categories object.
 
