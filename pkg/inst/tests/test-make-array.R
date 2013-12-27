@@ -1,12 +1,12 @@
-context("Categorical Matrix")
+context("Categorical Array")
 
 if (!run.only.local.tests) {
     with(test.authentication, {
-        test_that("can make Matrix in several ways", {
+        test_that("can make Categorical Array in several ways", {
             with(test.dataset(mrdf), {
                 testdf <- .setup
-                var <- makeMatrix(testdf[1:3], name="test1")
-                expect_true(is.Matrix(var))
+                var <- makeArray(testdf[1:3], name="test1")
+                expect_true(is.CA(var))
                 testdf <- refresh(testdf)
                 expect_equal(c("test1", "v4"), names(testdf))
                 name(var) <- "TESTONE"
@@ -17,17 +17,17 @@ if (!run.only.local.tests) {
             })
             with(test.dataset(mrdf), {
                 testdf <- .setup
-                var <- makeMatrix(testdf[c("mr_1", "mr_2", "mr_3")],
+                var <- makeArray(testdf[c("mr_1", "mr_2", "mr_3")],
                     name="test1")
-                expect_true(is.Matrix(var))
+                expect_true(is.CA(var))
                 testdf <- refresh(testdf)
                 expect_equal(c("test1", "v4"), names(testdf))                
             })
             with(test.dataset(mrdf), {
                 testdf <- .setup
-                var <- makeMatrix(pattern="mr_[123]", dataset=testdf,
+                var <- makeArray(pattern="mr_[123]", dataset=testdf,
                     name="test1")
-                expect_true(is.Matrix(var))
+                expect_true(is.CA(var))
                 testdf <- refresh(testdf)
                 expect_equal(c("test1", "v4"), names(testdf))
             })
@@ -35,32 +35,32 @@ if (!run.only.local.tests) {
         
         with(test.dataset(mrdf), {
             testdf <- .setup
-            test_that("makeMatrix error conditions", {
+            test_that("makeArray error conditions", {
                 no.name <- "Must provide the name for the new variable"
                 no.match <- "Pattern did not match any variables"
                 need.variables <- "Invalid list of Variables to combine"
                 ds.mismatch <- "`list_of_variables` must be from `dataset`"
-                expect_error(makeMatrix(), no.name)
-                expect_error(makeMatrix(pattern="mr_[123]", dataset=testdf),
+                expect_error(makeArray(), no.name)
+                expect_error(makeArray(pattern="mr_[123]", dataset=testdf),
                     no.name)
-                expect_error(makeMatrix(pattern="rm_", dataset=testdf,
+                expect_error(makeArray(pattern="rm_", dataset=testdf,
                     name="foo"), no.match)
-                expect_error(makeMatrix(c("mr_1", "mr_2", "mr_3"),
+                expect_error(makeArray(c("mr_1", "mr_2", "mr_3"),
                     dataset=testdf, name="foo"), need.variables)
                 skip(with(test.dataset(df), {
                     nottestdf <- .setup
-                    expect_error(makeMatrix(testdf[1:3], dataset=nottestdf,
+                    expect_error(makeArray(testdf[1:3], dataset=nottestdf,
                         name="test1"), ds.mismatch)
                 }))
             })
         })
         
-        test_that("can make MultipleResponse from Matrix", {
+        test_that("can make MultipleResponse from CategoricalArray", {
             with(test.dataset(mrdf), {
                 testdf <- .setup
-                var <- makeMatrix(pattern="mr_[123]", dataset=testdf,
+                var <- makeArray(pattern="mr_[123]", dataset=testdf,
                     name="test1")
-                expect_true(is.Matrix(var))
+                expect_true(is.CA(var))
                 expect_true(is.categories(categories(var)))
                 
                 categories(var)[[1]]$selected <- TRUE
@@ -68,19 +68,19 @@ if (!run.only.local.tests) {
                 expect_true(is.Multiple(var))
                 categories(var)[[1]]$selected <- FALSE
                 var <- refresh(var)
-                expect_true(is.Matrix(var))
+                expect_true(is.CA(var))
                 
                 categories(var) <- dichotomize(categories(var), 1)
                 var <- refresh(var)
                 expect_true(is.Multiple(var))
                 categories(var) <- undichotomize(categories(var))
                 var <- refresh(var)
-                expect_true(is.Matrix(var))
+                expect_true(is.CA(var))
                 
                 var <- dichotomize(var, 1)
                 expect_true(is.Multiple(var))
                 var <- undichotomize(var)
-                expect_true(is.Matrix(var))
+                expect_true(is.CA(var))
             })
         })
         
@@ -95,7 +95,7 @@ if (!run.only.local.tests) {
                 expect_true(is.Multiple(var))
                 
                 var <- undichotomize(var)
-                expect_true(is.Matrix(var))
+                expect_true(is.CA(var))
             })
             
             with(test.dataset(mrdf), {

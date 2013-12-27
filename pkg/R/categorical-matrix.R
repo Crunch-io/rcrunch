@@ -1,4 +1,4 @@
-##' Make a Categorical Matrix or Multiple Response variable
+##' Make a Categorical Array or Multiple Response variable
 ##'
 ##' @param list_of_variables a list of Variable objects to bind together, or a
 ##' Dataset object containing only the Variables to bind (as in from subsetting
@@ -11,18 +11,18 @@
 ##' bind within \code{dataset}.
 ##' @param key character, the name of the Variable field in which to search
 ##' with \code{pattern}. Default is 'alias'.
-##' @param name character, the name that the new Categorical Matrix variable
+##' @param name character, the name that the new Categorical Array variable
 ##' should have. Required.
 ##' @param selections character, for \code{makeMR}, the names of the 
 ##' categories to mark as the dichotomous selections. Required for 
-##' \code{makeMR}; ignored in \code{makeMatrix}.
+##' \code{makeMR}; ignored in \code{makeArray}.
 ##' @param ... Optional additional attributes to set on the new variable. Not
 ##' yet supported.
-##' @return The object of class CategoricalMatrixVariable or
+##' @return The object of class CategoricalArrayVariable or
 ##' MultipleResponseVariable corresponding to the just-created variable on the
 ##' server.
 ##' @export
-makeMatrix <- function (list_of_variables, dataset=NULL, pattern=NULL, key="alias", name, ...) {
+makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key="alias", name, ...) {
     
     Call <- match.call(expand.dots=FALSE)
     
@@ -36,7 +36,7 @@ makeMatrix <- function (list_of_variables, dataset=NULL, pattern=NULL, key="alia
     invisible(bindVariables(x$list_of_variables, x$dataset, name, ...))
 }
 
-##' Given inputs to makeMatrix/makeMR, parse and validate
+##' Given inputs to makeArray/makeMR, parse and validate
 ##' @param ... Stuff from calling function that will be ignored.
 prepareBindInputs <- function (list_of_variables, dataset=NULL, pattern=NULL,
                                key="alias", ...) {

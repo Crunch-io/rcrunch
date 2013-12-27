@@ -4,7 +4,7 @@ init.CategoricalVariable <- function (.Object, ...) {
     return(.Object)
 }
 setMethod("initialize", "CategoricalVariable", init.CategoricalVariable)
-setMethod("initialize", "CategoricalMatrixVariable", init.CategoricalVariable)
+setMethod("initialize", "CategoricalArrayVariable", init.CategoricalVariable)
 
 ##' @rdname crunch-is
 ##' @export
@@ -28,9 +28,11 @@ is.Datetime <- function (x) inherits(x, "DatetimeVariable")
 
 ##' @rdname crunch-is
 ##' @export
-is.Multiple <- is.MultipleResponse <- function (x) inherits(x, "MultipleResponseVariable")
+is.Multiple <- is.MR <- is.MultipleResponse <- function (x) inherits(x, "MultipleResponseVariable")
 
-is.Matrix <- function (x) class(x) %in% "CategoricalMatrixVariable" ## so it doesn't return true for MultipleResponse
+##' @rdname crunch-is
+##' @export
+is.CA <- is.CategoricalArray <- function (x) class(x) %in% "CategoricalArrayVariable" ## so it doesn't return true for MultipleResponse
 
 .cr.variable.shojiObject <- function (x, ...) {
     out <- CrunchVariable(x, ...)
@@ -67,8 +69,8 @@ pickSubclassConstructor <- function (x=NULL) {
             numeric=NumericVariable,
             text=TextVariable,
             datetime=DatetimeVariable,
-            multipleresponse=MultipleResponseVariable,
-            categoricalmatrix=CategoricalMatrixVariable
+            multiple_response=MultipleResponseVariable,
+            categorical_array=CategoricalArrayVariable
         )
     if (!is.null(x)) x <- constructors[[x]]
     if (is.null(x)) x <- CrunchVariable
@@ -95,8 +97,8 @@ setMethod("categories<-", "CrunchVariable",
     invisible(refresh(x))
 }
 setMethod("dichotomize", "CategoricalVariable", .dichotomize.var)
-setMethod("dichotomize", "CategoricalMatrixVariable", .dichotomize.var)
+setMethod("dichotomize", "CategoricalArrayVariable", .dichotomize.var)
 setMethod("undichotomize", "CategoricalVariable", .undichotomize.var)
-setMethod("undichotomize", "CategoricalMatrixVariable", .undichotomize.var)
+setMethod("undichotomize", "CategoricalArrayVariable", .undichotomize.var)
 
 setMethod("datasetReference", "CrunchVariable", function (x) x@urls$dataset_url)
