@@ -93,6 +93,13 @@ setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE)
     callNextMethod(x, i, ..., drop=drop)
 })
 
+setMethod("dim", "CrunchDataset", function (x) {
+    nrow <- as.integer(GET(x@urls$summary_url)$rows$filtered)
+    ## use filtered because every other request will take the applied filter
+    return(c(nrow, length(x)))
+})
+setMethod("ncol", "CrunchDataset", function (x) length(x))
+
 showCrunchDataset <- function (x) {
     n <- sQuote(name(x))
     out <- c("Dataset", n, "")
@@ -102,7 +109,7 @@ showCrunchDataset <- function (x) {
     
     out <- c(out, 
             "", 
-            "Contains", length(x), "variables:", "",
+            "Contains", nrow(x), "rows of", ncol(x), "variables:", "",
             "")
     vars <- vapply(na.omit(names(x)), function (i) {
         ### REMOVE THE NA.OMIT
@@ -129,11 +136,9 @@ setMethod("show", "CrunchDataset", function (object) {
 ##' @param ... additional arguments passed to \code{grep}
 ##' @return indices of the Variables that match the pattern, or the matching
 ##' key values if value=TRUE is passed to \code{grep}
-findVariables <- function (dataset, pattern, key, ...) {
+##' @export
+findVariables <- function (dataset, pattern, key="alias", ...) {
     keys <- selectFrom(key, lapply(dataset[], function (x) x@body))
     matches <- grep(pattern, keys, ...)
-    if (!length(matches)) {
-        stop("Pattern did not match any variables", call.=FALSE)
-    }
     return(matches)
 }

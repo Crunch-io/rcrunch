@@ -77,5 +77,14 @@ if (!run.only.local.tests) {
         test_that("Name and description setters don't push to server if readonly", {
 
         })
+        
+        with(test.dataset(df), {
+            testdf <- .setup
+            test_that("dataset dim", {
+                expect_identical(dim(testdf), dim(df))
+                expect_identical(nrow(testdf), nrow(df))
+                expect_identical(ncol(testdf), ncol(df))
+            })
+        })
     })
 }

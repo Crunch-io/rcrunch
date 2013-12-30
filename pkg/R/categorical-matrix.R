@@ -71,6 +71,9 @@ prepareBindInputs <- function (list_of_variables, dataset=NULL, pattern=NULL,
     
     if (!is.null(pattern)) {
         matches <- findVariables(dataset, pattern=pattern, key=key)
+        if (!length(matches)) {
+            stop("Pattern did not match any variables", call.=FALSE)
+        }
         list_of_variables <- dataset[matches]
     }
     

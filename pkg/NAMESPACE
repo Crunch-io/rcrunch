@@ -9,6 +9,7 @@ exportClasses(CrunchDataset, NumericVariable, TextVariable, CategoricalVariable,
 exportMethods(name, "name<-", description, "description<-", "$", "$<-", names, "names<-", values, "values<-", ids, value, "value<-", "categories", "dichotomize", "undichotomize", "hide", "unhide")
 export(CategoricalVariable.summary)
 export(as.vector.CrunchVariable)
+export(findVariables)
 export(hiddenVariables)
 export(hideVariables)
 export(`hiddenVariables<-`)
