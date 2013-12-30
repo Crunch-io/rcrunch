@@ -27,6 +27,8 @@ setGeneric("postUpload",
 setGeneric("categories", function (x) standardGeneric("categories"))
 setGeneric("categories<-", function (x, value) standardGeneric("categories<-"))
 setGeneric("datasetReference", function (x) standardGeneric("datasetReference"))
+setGeneric("hide", function (x) standardGeneric("hide"))
+setGeneric("unhide", function (x) standardGeneric("unhide"))
 
 setGeneric("self", function (x) standardGeneric("self"))
 setGeneric("refresh", function (x) standardGeneric("refresh"))

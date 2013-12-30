@@ -1,7 +1,7 @@
 run.only.local.tests <- FALSE
 
 ## .onAttach stuff, for testthat to work right
-options(crunch.api.endpoint=getOption("test.api"), 
+options(crunch.api=getOption("test.api"), 
         warn=1,
         crunch.debug=FALSE,
         crunch.email=getOption("test.user"),

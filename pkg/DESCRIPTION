@@ -35,3 +35,4 @@ Collate:
     'variable-to-R.R'
     'categorical-matrix.R'
     'multiple-response.R'
+    'hide-variables.R'

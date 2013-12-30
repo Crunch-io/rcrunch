@@ -147,7 +147,7 @@ selectHttpFunction <- function (x) {
 }
 
 getAPIroot <- function () {
-    GET(getOption("crunch.api.endpoint"))
+    GET(getOption("crunch.api"))
 }
 
 crunchAPIcanBeReached <- function () {

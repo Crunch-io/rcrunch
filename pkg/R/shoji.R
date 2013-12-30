@@ -16,7 +16,7 @@ getShojiCollectionURLs <- function (x) {
 ##' Given a set of entity URLs, get their content
 getShojiCollectionContents <- function (entities, namekey=NULL) {
     out <- lapply(entities, GET)
-    if (!is.null(namekey)) names(out) <- selectFrom(namekey, out)
+    if (!is.null(namekey) && length(out)) names(out) <- selectFrom(namekey, out)
     return(out)
 }
 

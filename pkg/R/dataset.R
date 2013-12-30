@@ -119,3 +119,21 @@ setMethod("show", "CrunchDataset", function (object) {
     cat(out)
     invisible(out)
 })
+
+##' Search a Dataset or list of Variables
+##'
+##' A version of \code{\link{grep}} for Crunch objects
+##' @param dataset the Dataset or list of Crunch objects to search
+##' @param pattern regular expression, passed to \code{grep}
+##' @param key the field in the Crunch objects in which to grep
+##' @param ... additional arguments passed to \code{grep}
+##' @return indices of the Variables that match the pattern, or the matching
+##' key values if value=TRUE is passed to \code{grep}
+findVariables <- function (dataset, pattern, key, ...) {
+    keys <- selectFrom(key, lapply(dataset[], function (x) x@body))
+    matches <- grep(pattern, keys, ...)
+    if (!length(matches)) {
+        stop("Pattern did not match any variables", call.=FALSE)
+    }
+    return(matches)
+}

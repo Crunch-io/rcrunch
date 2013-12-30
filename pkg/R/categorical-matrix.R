@@ -70,11 +70,7 @@ prepareBindInputs <- function (list_of_variables, dataset=NULL, pattern=NULL,
     }
     
     if (!is.null(pattern)) {
-        keys <- selectFrom(key, lapply(dataset[], function (x) x@body))
-        matches <- grep(pattern, keys)
-        if (!length(matches)) {
-            stop("Pattern did not match any variables", call.=FALSE)
-        }
+        matches <- findVariables(dataset, pattern=pattern, key=key)
         list_of_variables <- dataset[matches]
     }
     

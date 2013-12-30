@@ -82,7 +82,7 @@ crunchAuth <- function (email, password=NULL, ...) {
         }
     }
     
-    POST(getOption("crunch.api.endpoint"), 
+    POST(getOption("crunch.api"), 
         body=basicAuthArgs(email=email, password=password, ...), 
         status.handlers=list(`401`=function (response, user=email) {
             stop(paste("Unable to authenticate", user), call.=FALSE)
