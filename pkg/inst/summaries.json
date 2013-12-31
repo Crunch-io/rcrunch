@@ -2,12 +2,20 @@
     "gender": {
         "categories": [
             {
+                "name": "Male",
                 "id": "0c93298d4e63b81bbb5be68a11a01604",
                 "count": 425 
             },
             {
+                "name": "Female",
                 "id": "b294894bdb9074056fa439d25a9348bd",
                 "count": 501 
+            },
+            {
+                "name": "No Data",
+                "id": -1,
+                "missing": true,
+                "count": 74
             }
         ], 
         "valid_count": 926,
@@ -16,28 +24,52 @@
     "educ": {
         "categories": [
             {
+                "numeric_value": 1,
+                "name": "Less than high school",
                 "id": "5a430cd57e61d3857ca33809562ee08e",
-                "count": 112 
+                "missing": false,
+                "count": 112
             },
             {
+                "numeric_value": 2,
+                "name": "High school graduate",
                 "id": "dd5203e573406ab75dd324dc77ce89a8",
+                "missing": false,
                 "count": 134 
             },
             {
+                "numeric_value": 3,
+                "name": "2-year degree",
                 "id": "198596e5668485f1aa65b9525b349578",
+                "missing": false,
                 "count": 41 
             },
             {
+                "numeric_value": 4,
+                "name": "4-year college, no degree",
                 "id": "a1aeeecb2beb2275680e8bddceb149c5",
+                "missing": false,
                 "count": 380 
             },
             {
+                "numeric_value": 5,
+                "name": "4-year degree",
                 "id": "87e6fff83dbaa1a659db80f2f210211a",
+                "missing": false,
                 "count": 229 
             },
             {
+                "numeric_value": 6,
+                "name": "Postgraduate degree",
                 "id": "0e76efd4b0a8ddab343bd1f7135f25a4",
+                "missing": false,
                 "count": 88 
+            },
+            {
+                "name": "No Data",
+                "id": -1,
+                "missing": true,
+                "count": 18
             }
         ], 
         "valid_count": 982,

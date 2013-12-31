@@ -81,7 +81,7 @@ vars2 <- lapply(vars, as.variable)
 
 ## Summaries
 sums <- loadJSONMocks("summaries.json")
-sums <- lapply(sums, function (x) structure(list(body=x), class="shoji"))
+# sums <- lapply(sums, function (x) structure(list(body=x), class="shoji"))
 
 df <- data.frame(v1=c(rep(NA_real_, 5), rnorm(15)), 
                  v2=c(letters[1:15], rep(NA_character_, 5)), 

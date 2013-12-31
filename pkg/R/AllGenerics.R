@@ -37,3 +37,7 @@ setGeneric("readonly<-", function (x, value) standardGeneric("readonly<-"))
 
 setGeneric("dim")
 setGeneric("ncol")
+setGeneric("mean")
+setGeneric("sd")
+setGeneric("median")
+setGeneric("na.omit")

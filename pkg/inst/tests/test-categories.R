@@ -7,7 +7,7 @@ test_that("category init", {
     expect_true(is.category(Category(cats[[1]])))
     expect_true(inherits(Categories(cats), "Categories"))
     expect_true(is.categories(Categories(cats)))
-    expect_identical(length(cats), 2L)
+    expect_identical(length(cats), 3L)
 })
 
 Cats <- Categories(cats)
@@ -24,7 +24,7 @@ test_that("category getters", {
     expect_identical(names(Cats), selectFrom("name", cats))
     expect_identical(values(Cats), selectFrom("numeric_value", cats))
     expect_identical(ids(Cats), selectFrom("id", cats))
-    expect_identical(length(ids(Cats)), 2L)
+    expect_identical(length(ids(Cats)), 3L)
 })
 
 test_that("categories toJSON", {
@@ -47,13 +47,13 @@ test_that("category setters", {
 })
 
 test_that("categories setters", {
-    new_names <- c("masculino", "femenino")
+    new_names <- c("masculino", "femenino", "No Data")
     names(Cats) <- new_names
     expect_true(is.categories(Cats))
     expect_equal(names(Cats), new_names)
     names(Cats)[2] <- "donne"
     expect_true(is.categories(Cats))
-    expect_equal(names(Cats), c("masculino", "donne"))
+    expect_equal(names(Cats)[1:2], c("masculino", "donne"))
 })
 
 test_that("dichotomize", {
@@ -69,7 +69,7 @@ test_that("dichotomize", {
     expect_true(is.selected(dCats[[1]]))
     expect_false(is.selected(dCats[[2]]))
     expect_equal(name(dCats[[1]]), "Male")
-    expect_equal(names(dCats), c("Male", "Female"))
+    expect_equal(names(dCats), c("Male", "Female", "No Data"))
     
     dCats2 <- dichotomize(Cats, "Female")
     expect_true(is.dichotomized(dCats2))
@@ -81,6 +81,13 @@ test_that("dichotomize", {
     Cats2 <- undichotomize(dCats)
     expect_false(is.dichotomized(Cats2))
     expect_false(is.selected(Cats2[[1]]))
+})
+
+test_that("na.omit", {
+    expect_identical(length(Cats), 3L)
+    expect_identical(length(na.omit(Cats)), 2L)
+    expect_true(is.categories(na.omit(Cats)))
+    expect_true(all(vapply(na.omit(Cats), is.category, logical(1))))
 })
 
 if (!run.only.local.tests) {

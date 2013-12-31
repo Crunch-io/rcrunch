@@ -41,7 +41,7 @@ test_that("Categories", {
     expected <- Categories(vars$gender$body$categories)
     thisone <- categories(v[["gender"]])
     expect_true(is.categories(thisone))
-    expect_identical(length(thisone), 2L)
+    expect_identical(length(thisone), 3L)
     expect_identical(class(thisone), class(expected))
     expect_identical(length(thisone), length(expected))
     

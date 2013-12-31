@@ -16,6 +16,11 @@
                 "name": "Female",
                 "id": "b294894bdb9074056fa439d25a9348bd",
                 "missing": false
+            },
+            {
+                "id": -1,
+                "name": "No Data",
+                "missing": true
             }
         ],
         "tags": []

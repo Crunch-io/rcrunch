@@ -15,5 +15,6 @@ getNameAndType <- function (x) {
 setMethod("show", "CrunchVariable", function (object) {
     out <- showCrunchVariable(object)
     cat(out)
+    print(summary(object))
     invisible(out)
 })

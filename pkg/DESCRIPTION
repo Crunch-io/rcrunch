@@ -36,3 +36,4 @@ Collate:
     'categorical-matrix.R'
     'multiple-response.R'
     'hide-variables.R'
+    'univariate.R'
