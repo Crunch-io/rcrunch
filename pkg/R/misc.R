@@ -96,3 +96,13 @@ loadJSONMocks <- function (filename) {
     fromJSON(system.file(filename, package="rcrunch", mustWork=TRUE),
         simplifyWithNames=FALSE)
 }
+
+loadMockVariables <- function () {
+    files <- dir(system.file("variables", package="rcrunch", mustWork=TRUE), 
+        full.names=TRUE)
+    out <- lapply(files, function (x) {
+        structure(fromJSON(x, simplifyWithNames=FALSE), class="shoji")
+    })
+    names(out) <- sub("\\.json", "", basename(files))
+    return(out)
+}

@@ -20,12 +20,19 @@ getFrequencies <- function (x) {
     return(url)
 }
 
-makeCategoricalTable <- function (frequencies) {
-    frequencies <- .na.omit.categories(frequencies)
-    values <- structure(selectFrom("count", frequencies),
-        .Names=selectFrom("name", frequencies),
-        class="table")
-    return(values)
+makeCategoricalTable <- function (frequencies, add.na=FALSE) {
+    freqs <- .na.omit.categories(frequencies)
+    counts <- selectFrom("count", freqs)
+    n <- selectFrom("name", freqs)
+    if (add.na) {
+        n <- c(n, "<NA>")
+        missings <- selectFromWhere(isTRUE(missing), frequencies, key="count")
+        counts <- c(counts, sum(missings))
+    }
+    return(structure(as.integer(counts), 
+        .Dim = length(counts),
+        .Dimnames = structure(list(n), .Names = ""), 
+        class = "table"))
 }
 
 CategoricalVariable.table <- function (..., 
@@ -34,20 +41,9 @@ CategoricalVariable.table <- function (...,
                     deparse.level = 1) {
     var <- ..1
     summ <- getSummary(var)
-    out <- makeCategoricalTable(summ$categories)
     useNA <- match.arg(useNA)
     add.na <- useNA=="always" || (useNA=="ifany" && summ$missing_count>0)
-    if (add.na) {
-        cl <- class(out)
-        out <- c(out, `<NA>`=summ$missing_count)
-        class(out) <- cl
-    }
-    ## Figure this out:
-    # n <- names(out)
-    # names(out) <- NULL
-    # out <- array(as.integer(out), length(out), dimnames=list(n))
-    # class(out) <- "table"
-    return(out)
+    return(makeCategoricalTable(summ$categories, add.na))
 }
 
 ##' @export 
@@ -76,7 +72,7 @@ table <- function (..., exclude, useNA, dnn, deparse.level) {
 # ##' @export 
 #setMethod("table", "CategoricalVariable", CategoricalVariable.table)
 
-##' s3method summary CategoricalVariable
+##' @s3method summary CategoricalVariable
 summary.CategoricalVariable <- function (object, ...) {
     tab <- table(object)
     tab <- tab[order(tab, decreasing=TRUE)]
@@ -85,14 +81,14 @@ summary.CategoricalVariable <- function (object, ...) {
     return(tab)
 }
 
-##' s3method print CategoricalVariableSummary
+##' @s3method print CategoricalVariableSummary
 print.CategoricalVariableSummary <- function (x, ...) {
     # class(x) <- class(x)[-1] ## uh, call next method
     # attr(x, "varname") <- NULL
     print(data.frame(Count=x))
 }
 
-##' s3method summary NumericVariable
+##' @s3method summary NumericVariable
 summary.NumericVariable <- function (object, ...) {
     summ <- getSummary(object)
     fivenum <- sapply(summ$fivenum, function (x) x[[2]])
@@ -101,17 +97,8 @@ summary.NumericVariable <- function (object, ...) {
         out <- c(out, summ$missing_count)
     }
     names(out) <- c("Min.", "1st Qu.", "Median", "Mean", "3rd Qu.", "Max.", "NA's")[1:length(out)]
-    class(out) <- c("NumericVariableSummary", "table")
+    class(out) <- c("NumericVariableSummary", "summaryDefault", "table")
     attr(out, "varname") <- getNameAndType(object)
     return(out)
-}
-
-##' s3method print NumericVariableSummary
-print.NumericVariableSummary <- function (x, ...) {
-    
-    class(x) <- class(x)[-1] ## uh, call next method
-    attr(x, "varname") <- NULL
-    print(str(x))
-    print(as.data.frame(x))
 }
 

@@ -1,5 +1,7 @@
 run.only.local.tests <- FALSE
 
+set.seed(666)
+
 ## .onAttach stuff, for testthat to work right
 options(crunch.api=getOption("test.api"), 
         warn=1,
@@ -73,16 +75,16 @@ ds <- loadJSONMocks("dataset.json")
 class(ds) <- "shoji"
 
 ## Variables
+## These are outdated and should be deprecated in favor of the v2s
 vars <- loadJSONMocks("variables.json")
 names(vars) <- selectFrom("alias", vars)
 vars <- lapply(vars, function (x) structure(list(body=x), class="shoji"))
-
 vars2 <- lapply(vars, as.variable)
 
-## Summaries
-sums <- loadJSONMocks("summaries.json")
-# sums <- lapply(sums, function (x) structure(list(body=x), class="shoji"))
+vars_v2 <- loadMockVariables()
+variables_v2 <- lapply(vars_v2, as.variable)
 
+## Data frames to make datasets with
 df <- data.frame(v1=c(rep(NA_real_, 5), rnorm(15)), 
                  v2=c(letters[1:15], rep(NA_character_, 5)), 
                  v3=8:27,
