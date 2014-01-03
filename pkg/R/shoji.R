@@ -38,6 +38,7 @@ is.shojiObject <- function (x) inherits(x, "ShojiObject")
 
 setMethod("self", "ShojiObject", function (x) x@self)
 
+##' @export
 setMethod("refresh", "ShojiObject", .cr.shoji.refresh)
 
 setMethod("delete", "ShojiObject", function (x) invisible(DELETE(self(x))))

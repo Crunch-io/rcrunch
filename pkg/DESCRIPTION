@@ -33,7 +33,7 @@ Collate:
     'categories.R'
     'category.R'
     'variable-to-R.R'
-    'categorical-matrix.R'
+    'categorical-array.R'
     'multiple-response.R'
     'hide-variables.R'
     'univariate.R'

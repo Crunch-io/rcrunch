@@ -96,8 +96,10 @@ setMethod("categories<-", "CrunchVariable",
     categories(x) <- undichotomize(categories(x))
     invisible(refresh(x))
 }
+##' @export
 setMethod("dichotomize", "CategoricalVariable", .dichotomize.var)
 setMethod("dichotomize", "CategoricalArrayVariable", .dichotomize.var)
+##' @export
 setMethod("undichotomize", "CategoricalVariable", .undichotomize.var)
 setMethod("undichotomize", "CategoricalArrayVariable", .undichotomize.var)
 

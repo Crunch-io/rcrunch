@@ -30,7 +30,7 @@ makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key="alias
         stop("Must provide the name for the new variable", call.=FALSE)
     }
     
-    Call[[1L]] <- as.name("prepareBindInputs")
+    Call[[1L]] <- quote(rcrunch:::prepareBindInputs)
     x <- eval.parent(Call)
     
     invisible(bindVariables(x$list_of_variables, x$dataset, name, ...))
