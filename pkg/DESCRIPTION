@@ -37,3 +37,4 @@ Collate:
     'multiple-response.R'
     'hide-variables.R'
     'univariate.R'
+    'test-helper.R'
