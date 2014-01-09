@@ -36,21 +36,29 @@ setValue <- function (x, value) {
     return(x)
 }
 
+##' @export
 setMethod("$", "Category", function (x, name) x[[name]])
+##' @export
 setMethod("$<-", "Category", function (x, name, value) {
     x[[name]] <- value
     return(x)
 })
 
+##' @export
 setMethod("name", "Category", function (x) x[["name"]])
+##' @export
 setMethod("name<-", "Category", setName)
+##' @export
 setMethod("value", "Category", function (x) {
     v <- x[["numeric_value"]]
     return(ifelse(is.null(v), NA_real_, as.numeric(v)))
 })
+##' @export
 setMethod("value<-", "Category", setValue)
 
+##' @export
 setMethod("id", "Category", function (x) x[["id"]])
+##' @export
 setMethod("id", "list", function (x) x[["id"]])
 
 show.values <- function (x) TRUE ## make this actually do something? need to point at variable, not categories, or otherwise embed that attribute in the categories object.
@@ -61,10 +69,12 @@ showCategory <- function (x) {
     return(out)
 }
 
+##' @export
 setMethod("show", "Category", function (object) {
     out <- showCategory(object)
     cat(out)
     invisible(out)
 })
 
+##' @export
 setMethod("is.selected", "Category", function (x) isTRUE(x$selected))

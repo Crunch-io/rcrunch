@@ -12,6 +12,7 @@ getNameAndType <- function (x) {
     return(c(varname, vartype))
 }
 
+##' @export
 setMethod("show", "CrunchVariable", function (object) {
     out <- showCrunchVariable(object)
     cat(out)

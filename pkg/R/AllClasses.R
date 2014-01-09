@@ -21,19 +21,28 @@ CrunchVariable <- setClass("CrunchVariable", contains="ShojiObject",
         readonly="logical"
     ), 
     prototype=prototype(readonly=FALSE))
+##' @export
 NumericVariable <- setClass("NumericVariable", contains="CrunchVariable")
+##' @export
 CategoricalVariable <- setClass("CategoricalVariable",
     contains="CrunchVariable")
+##' @export
 TextVariable <- setClass("TextVariable", contains="CrunchVariable")
+##' @export
 DatetimeVariable <- setClass("DatetimeVariable", contains="CrunchVariable")
+##' @export
 CategoricalArrayVariable <- setClass("CategoricalArrayVariable", contains="CrunchVariable")
+##' @export
 MultipleResponseVariable <-setClass("MultipleResponseVariable", contains="CategoricalArrayVariable")
 
+##' @export
 CrunchDataset <- setClass("CrunchDataset", contains=c("list", "ShojiObject"),
     representation= representation(
         readonly="logical"
     ), 
     prototype=prototype(readonly=FALSE))
 
+##' @export
 Categories <- setClass("Categories", contains="list")
+##' @export
 Category <- setClass("Category", contains="namedList")

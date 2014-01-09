@@ -36,17 +36,21 @@ is.shojiObject <- function (x) inherits(x, "ShojiObject")
     return(as(GET(self(x)), Class))
 }
 
+##' @export
 setMethod("self", "ShojiObject", function (x) x@self)
 
 ##' @export
 setMethod("refresh", "ShojiObject", .cr.shoji.refresh)
 
+##' @export
 setMethod("delete", "ShojiObject", function (x) invisible(DELETE(self(x))))
+##' @export
 setMethod("delete", "CrunchDataset", function (x) {
     out <- callNextMethod()
     updateDatasetList()
     invisible(out)
 })
+##' @export
 setMethod("delete", "ANY", function (x) stop("'delete' only valid for Crunch objects"))
 
 ##' Base setter for Crunch objects
@@ -70,5 +74,6 @@ setReadonly <- function (x, value) {
     x@readonly <- as.logical(value)
     x
 }
+##' @export
 setMethod("readonly<-", "ShojiObject", setReadonly)
 

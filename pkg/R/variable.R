@@ -51,6 +51,7 @@ as.variable <- function (x, subtype=NULL) {
 }
 
 ## In case variable type has been changed, need to instantiate off of new type
+##' @export
 setMethod("refresh", "CrunchVariable", function (x) as.variable(GET(self(x))))
 
 as.Numeric <- function (x) as.variable(x, "numeric")
@@ -77,14 +78,20 @@ pickSubclassConstructor <- function (x=NULL) {
     return(x)
 }
 
+##' @export
 setMethod("name", "CrunchVariable", function (x) x@body$name)
+##' @export
 setMethod("name<-", "CrunchVariable", 
     function (x, value) setCrunchSlot(x, "name", value))
+##' @export
 setMethod("description", "CrunchVariable", function (x) x@body$description)
+##' @export
 setMethod("description<-", "CrunchVariable", 
     function (x, value) setCrunchSlot(x, "description", value))
 
+##' @export
 setMethod("categories", "CrunchVariable", function (x) x@body$categories)
+##' @export
 setMethod("categories<-", "CrunchVariable", 
     function (x, value) setCrunchSlot(x, "categories", value))
 
@@ -98,9 +105,11 @@ setMethod("categories<-", "CrunchVariable",
 }
 ##' @export
 setMethod("dichotomize", "CategoricalVariable", .dichotomize.var)
+##' @export
 setMethod("dichotomize", "CategoricalArrayVariable", .dichotomize.var)
 ##' @export
 setMethod("undichotomize", "CategoricalVariable", .undichotomize.var)
+##' @export
 setMethod("undichotomize", "CategoricalArrayVariable", .undichotomize.var)
 
 setMethod("datasetReference", "CrunchVariable", function (x) x@urls$dataset_url)

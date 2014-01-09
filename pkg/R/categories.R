@@ -21,17 +21,23 @@ setMethod("initialize", "Categories", init.Categories)
 
 is.categories <- function (x) inherits(x, "Categories")
 
+##' @export
 setMethod("[", c("Categories", "ANY"), function (x, i, ...) {
     x@.Data <- x@.Data[i]
     return(x)
 })
+##' @export
 setMethod("[<-", c("Categories", "ANY"), function (x, i, ..., value) {
     x@.Data[i] <- value
     return(x)
 })
+##' @export
 setMethod("names", "Categories", function (x) vapply(x, name, character(1)))
+##' @export
 setMethod("values", "Categories", function (x) vapply(x, value, numeric(1)))
+##' @export
 setMethod("ids", "Categories", function (x) sapply(x, id)) ## could assert numeric?
+##' @export
 setMethod("ids", "list", function (x) sapply(x, id)) ## for summaries
 
 setNames <- function (x, value) {
@@ -43,20 +49,25 @@ setValues <- function (x, value) {
     return(x)
 }
 
+##' @export
 setMethod("names<-", "Categories", setNames)
+##' @export
 setMethod("values<-", "Categories", setValues)
+##' @export
 setMethod("toJSON", "Categories", function (x, ...) toJSON(I(x@.Data)))
 
 showCategories <- function (x) {
     vapply(x, showCategory, character(1))
 }
 
+##' @export
 setMethod("show", "Categories", function (object) {
     out <- showCategories(object)
     cat(out, sep="\n")
     invisible(out)
 })
 
+##' @export
 setMethod("is.dichotomized", "Categories", function (x) any(vapply(x, is.selected, logical(1))))
 
 ##' Internal method for dichtomizing Categories (or lists)
@@ -72,8 +83,11 @@ setMethod("is.dichotomized", "Categories", function (x) any(vapply(x, is.selecte
     return(x)
 }
 
+##' @export
 setMethod("dichotomize", c("Categories", "numeric"), .dichotomize.categories)
+##' @export
 setMethod("dichotomize", c("Categories", "logical"), .dichotomize.categories)
+##' @export
 setMethod("dichotomize", c("Categories", "character"), function (x, i) {
     ind <- names(x) %in% i
     if (!any(ind)) {
@@ -82,6 +96,7 @@ setMethod("dichotomize", c("Categories", "character"), function (x, i) {
     return(dichotomize(x, ind))
 })
 
+##' @export
 setMethod("undichotomize", "Categories", function (x) {
     x[] <- lapply(x[], function (a) {
         a$selected <- FALSE
@@ -100,6 +115,7 @@ setMethod("undichotomize", "Categories", function (x) {
     return(object)
 }
 
+##' @export
 setMethod("na.omit", "Categories", function (object, ...) {
     Categories(.na.omit.categories(object))
 })

@@ -26,12 +26,13 @@ setDatasetDescription <- function (x, value) {
     setCrunchSlot(x, "description", value)
 }
 
+##' @export
 setMethod("name", "CrunchDataset", function (x) x@body$name)
-
+##' @export
 setMethod("name<-", "CrunchDataset", setDatasetName)
-
+##' @export
 setMethod("description", "CrunchDataset", function (x) x@body$description)
-
+##' @export
 setMethod("description<-", "CrunchDataset", setDatasetDescription)
 
 .cr.dataset.shojiObject <- function (x, ...) {
@@ -83,21 +84,25 @@ setAs("shoji", "CrunchDataset",
 
 as.dataset <- function (x) as(x, "CrunchDataset")
 
+##' @export
 setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     x@.Data <- x@.Data[i]
     readonly(x) <- TRUE ## we don't want to overwrite the big object accidentally
     return(x)
 })
+##' @export
 setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
     i <- names(x) %in% i
     callNextMethod(x, i, ..., drop=drop)
 })
 
+##' @export
 setMethod("dim", "CrunchDataset", function (x) {
     nrow <- as.integer(GET(x@urls$summary_url)$rows$filtered)
     ## use filtered because every other request will take the applied filter
     return(c(nrow, length(x)))
 })
+##' @export
 setMethod("ncol", "CrunchDataset", function (x) length(x))
 
 showCrunchDataset <- function (x) {
@@ -121,6 +126,7 @@ showCrunchDataset <- function (x) {
     return(doc(out))
 }
 
+##' @export
 setMethod("show", "CrunchDataset", function (object) {
     out <- showCrunchDataset(object)
     cat(out)

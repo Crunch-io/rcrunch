@@ -1,5 +1,6 @@
 CASTABLE_TYPES <- c("numeric", "text", "categorical") ## Add datetime when server supports
 
+##' @export
 setMethod("type", "CrunchVariable", function (x) x@body$type)
 ## do type casting as type<-
 
@@ -17,6 +18,7 @@ castVariable <- function (x, to) {
 
 cast_url <- function (x) x@urls$cast_url
 
+##' @export
 setMethod("type<-", "CrunchVariable", 
     function (x, value) castVariable(x, value))
 
