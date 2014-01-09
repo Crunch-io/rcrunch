@@ -59,6 +59,8 @@ setMethod("show", "Categories", function (object) {
 
 setMethod("is.dichotomized", "Categories", function (x) any(vapply(x, is.selected, logical(1))))
 
+##' Internal method for dichtomizing Categories (or lists)
+##' @rdname dichotomize-internal
 ##' @param x Categories
 ##' @param i valid indices for x
 ##' @return Categories appropriately dichotomized

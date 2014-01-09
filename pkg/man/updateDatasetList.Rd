@@ -2,11 +2,7 @@
 \alias{updateDatasetList}
 \title{Refresh the local list of Crunch datasets}
 \usage{
-  updateDatasetList(x = getUserDatasetURLs())
-}
-\arguments{
-  \item{x}{the dataset URLs. You shouldn't change the
-  default.}
+  updateDatasetList()
 }
 \value{
   Nothing. Called for its side effects of setting local

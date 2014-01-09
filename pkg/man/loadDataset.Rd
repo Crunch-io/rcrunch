@@ -2,7 +2,7 @@
 \alias{loadDataset}
 \title{Load a Crunch Dataset}
 \usage{
-  loadDataset(dataset.name, dataset.list = dataset_list())
+  loadDataset(dataset.name)
 }
 \arguments{
   \item{dataset.name}{character, the name of a Crunch

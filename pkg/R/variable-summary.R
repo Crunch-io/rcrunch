@@ -72,7 +72,7 @@ table <- function (..., exclude, useNA, dnn, deparse.level) {
 # ##' @export 
 #setMethod("table", "CategoricalVariable", CategoricalVariable.table)
 
-##' @s3method summary CategoricalVariable
+##' @S3method                 summary CategoricalVariable
 summary.CategoricalVariable <- function (object, ...) {
     tab <- table(object)
     tab <- tab[order(tab, decreasing=TRUE)]
@@ -81,14 +81,14 @@ summary.CategoricalVariable <- function (object, ...) {
     return(tab)
 }
 
-##' @s3method print CategoricalVariableSummary
+##' @S3method                 print CategoricalVariableSummary
 print.CategoricalVariableSummary <- function (x, ...) {
     # class(x) <- class(x)[-1] ## uh, call next method
     # attr(x, "varname") <- NULL
     print(data.frame(Count=x))
 }
 
-##' @s3method summary NumericVariable
+##' @S3method                 summary NumericVariable
 summary.NumericVariable <- function (object, ...) {
     summ <- getSummary(object)
     fivenum <- sapply(summ$fivenum, function (x) x[[2]])

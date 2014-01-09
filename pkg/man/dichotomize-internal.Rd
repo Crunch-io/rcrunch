@@ -1,0 +1,18 @@
+\name{.dichotomize.categories}
+\alias{.dichotomize.categories}
+\title{Internal method for dichtomizing Categories (or lists)}
+\usage{
+  .dichotomize.categories(x, i)
+}
+\arguments{
+  \item{x}{Categories}
+
+  \item{i}{valid indices for x}
+}
+\value{
+  Categories appropriately dichotomized
+}
+\description{
+  Internal method for dichtomizing Categories (or lists)
+}
+
