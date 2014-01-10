@@ -95,9 +95,9 @@ if (!run.only.local.tests) {
         with(test.dataset(df), {
             testdf <- .setup
             test_that("categories setters persist to the server", {
-                expect_equal(names(categories(testdf$v4)), c("B", "C", "No Data"))
+                expect_equal(names(categories(testdf$v4)), c("B", "C"))
                 names(categories(testdf$v4))[1] <- "V"
-                expect_equal(names(categories(testdf$v4)), c("V", "C", "No Data"))
+                expect_equal(names(categories(testdf$v4)), c("V", "C"))
                 expect_identical(names(categories(testdf$v4)),
                     names(categories(refresh(testdf)$v4)))
             })
