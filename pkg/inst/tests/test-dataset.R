@@ -35,6 +35,12 @@ test_that("Can construct Dataset from shoji document", {
 ## Variable fake fixtures
 test.ds <- .cr.dataset.shojiObject(as.shojiObject(ds), vars2)
 
+test_that("findVariables", {
+    expect_identical(findVariables(test.ds, "^educ", key="alias"), 2L)
+    expect_identical(findVariables(test.ds, "^educ", key="alias", value=TRUE), "educ")
+    
+})
+
 test_that("Dataset has names() and extract methods work", {
     expect_false(is.null(names(test.ds)))
     expect_identical(names(test.ds), names(vars2))
@@ -47,6 +53,7 @@ test_that("Dataset has names() and extract methods work", {
     expect_true(is_valid_dataset(test.ds[1]))
     expect_true(is_valid_dataset(test.ds["age"]))
     expect_true(is_valid_dataset(test.ds[names(test.ds)=="age"]))
+    expect_identical(names(test.ds[2:3]), c("educ", "race"))
 })
 
 test_that("Read only flag gets set appropriately", {

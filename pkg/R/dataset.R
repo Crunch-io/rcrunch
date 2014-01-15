@@ -85,6 +85,11 @@ setAs("shoji", "CrunchDataset",
 as.dataset <- function (x) as(x, "CrunchDataset")
 
 ##' @export
+setMethod("names", "CrunchDataset", function (x) {
+    findVariables(x, key="alias", value=TRUE)
+})
+
+##' @export
 setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     x@.Data <- x@.Data[i]
     readonly(x) <- TRUE ## we don't want to overwrite the big object accidentally
@@ -137,14 +142,17 @@ setMethod("show", "CrunchDataset", function (object) {
 ##'
 ##' A version of \code{\link{grep}} for Crunch objects
 ##' @param dataset the Dataset or list of Crunch objects to search
-##' @param pattern regular expression, passed to \code{grep}
+##' @param pattern regular expression, passed to \code{grep}. If "", returns all.
 ##' @param key the field in the Crunch objects in which to grep
-##' @param ... additional arguments passed to \code{grep}
+##' @param ... additional arguments passed to \code{grep}. If \code{value=TRUE},
+##' returns the values of \code{key} where matches are found, not the variables
+##' themselves
 ##' @return indices of the Variables that match the pattern, or the matching
 ##' key values if value=TRUE is passed to \code{grep}
 ##' @export
-findVariables <- function (dataset, pattern, key="alias", ...) {
+findVariables <- function (dataset, pattern="", key="alias", ...) {
     keys <- selectFrom(key, lapply(dataset[], function (x) x@body))
     matches <- grep(pattern, keys, ...)
+    names(matches) <- NULL
     return(matches)
 }
