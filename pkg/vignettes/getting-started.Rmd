@@ -1,0 +1,33 @@
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Getting Started with RCrunch}
+-->
+
+```{r hello, results='asis'}
+cat('_hello_ **markdown**!', '\n')
+```
+
+# Crunch and RCrunch basics
+
+## The Crunch API
+
+## Accounts
+
+## Datasets
+
+## Variables
+
+# Setting up a session
+
+# Logging in
+
+# Loading Crunch datasets
+
+# Adding datasets to Crunch
+
+# Manipulating datasets
+
+## Hide Variables
+
+## Create Array variables
+

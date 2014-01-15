@@ -9,11 +9,14 @@ Description: An interface for accessing the Crunch.io database
 License: GPL (>= 3)
 LazyLoad: yes
 Depends:
-    R (>= 2.15.0)
+    R (>= 3.0.0)
 Imports:
     httr,
     RJSONIO,
     methods
+Suggests:
+    knitr
+VignetteBuilder: knitr
 Collate:
     'AllClasses.R'
     'AllGenerics.R'
