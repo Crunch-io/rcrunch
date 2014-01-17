@@ -62,8 +62,10 @@ Of course, you can also upload datasets with rcrunch.
 ds <- newDatasetFromFile("PLMX0151ZBHD_OUTPUT.sav")
 ```
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
+## Enable the fiction that we have loaded data via whaam
 plmx <- loadDataset("PLMX0151ZBHD_OUTPUT.sav")
-delete(plmx)
+name(plmx) <- "Civil Military Relations Survey"
+updateDatasetList()
 ```
 
 # Loading Crunch datasets into rcrunch
@@ -81,3 +83,4 @@ listDatasets()
 
 ## Create Array Variables
 
+## Add Computed Variables
