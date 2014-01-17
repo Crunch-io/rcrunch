@@ -156,3 +156,13 @@ findVariables <- function (dataset, pattern="", key="alias", ...) {
     names(matches) <- NULL
     return(matches)
 }
+
+addVariable <- function (dataset, values, ...) {
+    variable.metadata <- updateList(toVariable(values), list(...))
+    payload <- toJSON(variable.metadata)
+    var_url <- POST(dataset@urls$variables_url, body=payload)
+    dataset <- refresh(dataset) ## would like not to do this
+    # variable <- as.variable(GET(var_url))
+    # dataset@.Data[[variable@body$alias]] <- variable
+    return(dataset)
+}

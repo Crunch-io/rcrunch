@@ -62,6 +62,7 @@ DELETE <- function (...) {
 handleAPIresponse <- function (response, special.statuses=list()) {
     response <- handleAPIerror(response)
     code <- response$status_code
+    if (isTRUE(getOption("crunch.debug"))) message(code)
     handler <- special.statuses[[as.character(code)]]
     if (is.function(handler)) {
         invisible(handler(response))

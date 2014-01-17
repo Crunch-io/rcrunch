@@ -41,3 +41,4 @@ Collate:
     'hide-variables.R'
     'univariate.R'
     'test-helper.R'
+    'R-to-variable.R'

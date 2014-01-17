@@ -41,3 +41,5 @@ setGeneric("mean")
 setGeneric("sd")
 setGeneric("median")
 setGeneric("na.omit")
+
+setGeneric("toVariable", function (x) standardGeneric("toVariable"))
