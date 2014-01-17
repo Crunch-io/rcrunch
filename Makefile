@@ -11,4 +11,4 @@ test-ci:
     # mkdir /var/lib/jenkins/R
 	R --slave -e 'install.packages(c("httr", "RJSONIO", "codetools", "testthat"), lib="/var/lib/jenkins/R", repo="http://cran.at.r-project.org")'
 	R CMD INSTALL --library=/var/lib/jenkins/R pkg
-	R --slave -e '.libPaths("/var/lib/jenkins/R"); library(testthat); test_package("rcrunch")'
+	R --slave -e '.libPaths("/var/lib/jenkins/R"); library(testthat); sink(file="rcrunch.tap"); test_package("rcrunch", reporter="tap"); sink()'
