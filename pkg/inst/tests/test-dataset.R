@@ -38,7 +38,22 @@ test.ds <- .cr.dataset.shojiObject(as.shojiObject(ds), vars2)
 test_that("findVariables", {
     expect_identical(findVariables(test.ds, "^educ", key="alias"), 2L)
     expect_identical(findVariables(test.ds, "^educ", key="alias", value=TRUE), "educ")
-    
+})
+
+test_that("useAlias exists and affects names()", {
+    thisds <- test.ds
+    expect_true(thisds@useAlias)
+    expect_identical(names(thisds), 
+        findVariables(thisds, key="alias", value=TRUE))
+    thisds@useAlias <- FALSE
+    expect_false(thisds@useAlias)
+    expect_identical(names(thisds), 
+        findVariables(thisds, key="name", value=TRUE))
+})
+
+test_that("useAlias is an argument to as.dataset", {
+    expect_equal(as.dataset(ds)@useAlias, default.useAlias())
+    expect_false(as.dataset(ds, useAlias=FALSE)@useAlias)
 })
 
 test_that("Dataset has names() and extract methods work", {

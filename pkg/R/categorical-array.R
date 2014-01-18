@@ -22,7 +22,7 @@
 ##' MultipleResponseVariable corresponding to the just-created variable on the
 ##' server.
 ##' @export
-makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key="alias", name, ...) {
+makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key=namekey(dataset), name, ...) {
     
     Call <- match.call(expand.dots=FALSE)
     

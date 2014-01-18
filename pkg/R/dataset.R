@@ -82,11 +82,17 @@ setAs("ShojiObject", "CrunchDataset",
 setAs("shoji", "CrunchDataset", 
     function (from) as(as.shojiObject(from), "CrunchDataset"))
 
-as.dataset <- function (x) as(x, "CrunchDataset")
+as.dataset <- function (x, useAlias=default.useAlias()) {
+    out <- as(x, "CrunchDataset")
+    out@useAlias <- useAlias
+    return(out)
+}
+
+namekey <- function (dataset) ifelse(dataset@useAlias, "alias", "name")
 
 ##' @export
 setMethod("names", "CrunchDataset", function (x) {
-    findVariables(x, key="alias", value=TRUE)
+    findVariables(x, key=namekey(x), value=TRUE)
 })
 
 ##' @export

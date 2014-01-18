@@ -27,11 +27,12 @@ dataset_collection <- function () session_store$datasets
 ##' Load a Crunch Dataset
 ##' @param dataset.name character, the name of a Crunch dataset you have access to. 
 ##' @param dataset.list, the local session store from which to retrieve the dataset's resource URLs. You shouldn't change this.
+##' @param useAlias logical whether variable alias or name should be used as R variable names when the dataset is returned. Default is TRUE, meaning alias. They're more computer friendly.
 ##' @return An object of class \code{CrunchDataset}
 ##' @export 
-loadDataset <- function (dataset.name) {
+loadDataset <- function (dataset.name, useAlias=default.useAlias()) {
     dataset <- selectDatasetFromCollection(dataset.name, dataset_collection())
-    return(as.dataset(GET(dataset$datasetUrl)))
+    return(as.dataset(GET(dataset$datasetUrl), useAlias=useAlias))
 }
 
 selectDatasetFromCollection <- function (dsname, dslist=list()) {

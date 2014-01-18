@@ -36,9 +36,11 @@ newDataset <- function (x, name=substitute(x), ...) {
 ##' @param file character, the path to a file to upload
 ##' @param name character, the name to give the new Crunch dataset. Default is the file name
 ##' @return If successful, an object of class crunchdf.
+##' @param useAlias logical whether variable alias or name should be used as R variable names when the dataset is returned. Default is TRUE, meaning alias. They're more computer friendly.
 ##' @param ... additional arguments, currently not implemented
 ##' @export 
-newDatasetFromFile <- function (file, name=basename(file), ...) {
+newDatasetFromFile <- function (file, name=basename(file),
+                                useAlias=default.useAlias(), ...) {
     if (!file.exists(file)) {
         stop("File not found", call.=FALSE)
     }
@@ -46,7 +48,7 @@ newDatasetFromFile <- function (file, name=basename(file), ...) {
     ds <- createDataset(name)
     addSourceToDataset(ds, source)
     updateDatasetList()
-    invisible(as.dataset(GET(ds)))
+    invisible(as.dataset(GET(ds), useAlias=useAlias))
 }
 
 ##' @importFrom httr upload_file

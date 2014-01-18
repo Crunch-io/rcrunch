@@ -35,12 +35,19 @@ CategoricalArrayVariable <- setClass("CategoricalArrayVariable", contains="Crunc
 ##' @export
 MultipleResponseVariable <-setClass("MultipleResponseVariable", contains="CategoricalArrayVariable")
 
+default.useAlias <- function () {
+    opt <- getOption("crunch.useAlias")
+    return(is.null(opt) || isTRUE(opt))
+}
+
 ##' @export
 CrunchDataset <- setClass("CrunchDataset", contains=c("list", "ShojiObject"),
     representation= representation(
-        readonly="logical"
+        readonly="logical",
+        useAlias="logical"
     ), 
-    prototype=prototype(readonly=FALSE))
+    prototype=prototype(readonly=FALSE,
+        useAlias=default.useAlias()))
 
 ##' @export
 Categories <- setClass("Categories", contains="list")

@@ -51,6 +51,14 @@ if (!run.only.local.tests) {
             delete(testcrdf)
             ## Should also test doing this with a matrix
         })
+        test_that("newDataset(FromFile) passes useAlias", {
+            d1 <- newDataset(df)
+            expect_equal(d1@useAlias, default.useAlias())
+            delete(d1)
+            d1 <- newDataset(df, useAlias=FALSE)
+            expect_false(d1@useAlias)
+            delete(d1)
+        })
         with(test.dataset(df), {
             testdf <- .setup
             test_that("Dataset variable types get set correctly", {

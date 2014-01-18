@@ -34,6 +34,11 @@ if (!run.only.local.tests) {
                 expect_error(loadDataset("this is totally not a dataset", 
                     "this is totally not a dataset not found"))
             })
+            test_that("loadDataset respects useAlias", {
+                expect_equal(loadDataset("dflisttest")@useAlias,
+                    default.useAlias())
+                expect_false(loadDataset("dflisttest", useAlias=FALSE)@useAlias)
+            })
             test_that("listDatasets has datasets after a login (and datasets exist)", {
                 expect_true(length(listDatasets())>0)
             })
