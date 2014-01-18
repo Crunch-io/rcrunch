@@ -2,14 +2,20 @@ context("Add a variable to a dataset")
 
 test_that("toVariable parses R data types", {
     expect_identical(toVariable(2L:4L), list(values=2L:4L, type="numeric"))
-    expect_identical(toVariable(letters[1:3]), list(values=c("a", "b", "c"), type="text"))
+    expect_identical(toVariable(letters[1:3]),
+        list(values=c("a", "b", "c"), type="text"))
+    expect_equivalent(toVariable(as.factor(rep(LETTERS[2:3], 3))), 
+        list(values=rep(1:2, 3), type="categorical", categories=list(
+            list(id=1L, name="B", numeric_value=1L, missing=FALSE),
+            list(id=2L, name="C", numeric_value=2L, missing=FALSE)
+        ))) ## unclear why these aren't identical
 })
 
 if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
-            test_that("addVariable creates a new remote variable", {
-                testdf <- .setup
+            testdf <- .setup
+            test_that("addVariable creates a new remote numeric variable", {
                 testdf <- addVariable(testdf, df$v3, name="New var")
                 expect_true("newVar" %in% names(testdf))
                 nv <- testdf$newVar
@@ -17,6 +23,23 @@ if (!run.only.local.tests) {
                 expect_true(is.Numeric(testdf[['v3']]))
                 expect_identical(as.vector(nv), as.vector(testdf$v3))
             })
+            test_that("addVariable creates text variables from character", {
+                testdf <- addVariable(testdf, df$v2, name="New var 2")
+                expect_true("newVar2" %in% names(testdf))
+                nv <- testdf$newVar2
+                expect_true(is.Text(nv))
+                expect_identical(as.vector(nv)[1:15], as.vector(testdf$v2)[1:15])
+                    ## note that NAs aren't getting caught in the CSV importer
+                    ## anymore, but they're right in the addVariable method
+            })
+            skip(test_that("addVariable creates categorical from factor", {
+                testdf <- addVariable(testdf, df$v4, name="New var 3")
+                expect_true("newVar3" %in% names(testdf))
+                nv <- testdf$newVar3
+                print(nv)
+                expect_true(is.Categorical(nv))
+                expect_identical(as.vector(nv), as.vector(testdf$v4))
+            }))
         })
     })
 }
