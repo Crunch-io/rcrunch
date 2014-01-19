@@ -39,7 +39,7 @@ makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key=nameke
 ##' Given inputs to makeArray/makeMR, parse and validate
 ##' @param ... Stuff from calling function that will be ignored.
 prepareBindInputs <- function (list_of_variables, dataset=NULL, pattern=NULL,
-                               key="alias", ...) {
+                               key=namekey(dataset), ...) {
     
     listOfVariablesIsValid <- function (lov) {
         return(is.list(lov) && all(vapply(lov, is.variable, logical(1))))

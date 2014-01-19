@@ -156,7 +156,7 @@ setMethod("show", "CrunchDataset", function (object) {
 ##' @return indices of the Variables that match the pattern, or the matching
 ##' key values if value=TRUE is passed to \code{grep}
 ##' @export
-findVariables <- function (dataset, pattern="", key="alias", ...) {
+findVariables <- function (dataset, pattern="", key=namekey(dataset), ...) {
     keys <- selectFrom(key, lapply(dataset[], function (x) x@body))
     matches <- grep(pattern, keys, ...)
     names(matches) <- NULL

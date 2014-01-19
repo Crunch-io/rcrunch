@@ -1,6 +1,6 @@
 ##' @rdname makeArray
 ##' @export
-makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key="alias", name, selections, ...) {
+makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key=namekey(dataset), name, selections, ...) {
     Call <- match.call(expand.dots=FALSE)
     
     if (missing(name)) {

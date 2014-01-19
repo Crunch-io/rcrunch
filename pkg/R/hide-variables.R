@@ -28,7 +28,7 @@ setMethod("unhide", "CrunchVariable", function (x) {
 ##' @param ... optional additional arguments to \code{grep}
 ##' @return (invisibly) \code{dataset} with the specified variables (un)hidden
 ##' @export
-hideVariables <- function (dataset, variables, pattern=NULL, key="alias", ...) {
+hideVariables <- function (dataset, variables, pattern=NULL, key=namekey(dataset), ...) {
     if (!is.null(pattern)) {
         variables <- findVariables(dataset, pattern=pattern, key=key, ...)
     }
@@ -44,7 +44,7 @@ hideVariables <- function (dataset, variables, pattern=NULL, key="alias", ...) {
 
 ##' @rdname hideVariables
 ##' @export
-unhideVariables <- function (dataset, variables, pattern=NULL, key="alias", 
+unhideVariables <- function (dataset, variables, pattern=NULL, key=namekey(dataset), 
                             ...) {
     hidden.vars <- hiddenVariablesList(dataset)
     if (!is.null(pattern)) {
