@@ -8,6 +8,12 @@ setMethod("toVariable", "factor", function (x) {
     return(list(values=as.integer(x), type="categorical",
         categories=categoriesFromLevels(levels(x))))
 })
+setMethod("toVariable", "Date", function (x) {
+    return(list(values=as.character(x), type="datetime"))
+})
+# setMethod("toVariable", "POSIXt", function (x) {
+#     return(list(values=as.character(x), type="datetime"))
+# })
 
 categoriesFromLevels <- function (x) {
     return(lapply(seq_along(x), function (i) {

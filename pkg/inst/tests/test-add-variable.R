@@ -39,6 +39,21 @@ if (!run.only.local.tests) {
                 expect_true(is.Categorical(nv))
                 expect_identical(as.vector(nv), as.vector(testdf$v4))
             })
+            test_that("addVariable creates datetime from Date", {
+                testdf <- addVariable(testdf, df$v5, name="New var 4")
+                expect_true("newVar4" %in% names(testdf))
+                nv <- testdf$newVar4
+                expect_true(is.Datetime(nv))
+                expect_identical(as.vector(nv), as.vector(testdf$v5))
+            })
+            skip(test_that("addVariable creates datetime from POSIXct", {
+                testdf <- addVariable(testdf, as.POSIXct(df$v5),
+                    name="New var 5")
+                expect_true("newVar5" %in% names(testdf))
+                nv <- testdf$newVar5
+                expect_true(is.Datetime(nv))
+                expect_identical(as.vector(nv), as.vector(testdf$v5))
+            }), reason="Can't support POSIXt until the app supports timezones")
         })
     })
 }
