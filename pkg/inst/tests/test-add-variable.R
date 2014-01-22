@@ -32,14 +32,13 @@ if (!run.only.local.tests) {
                     ## note that NAs aren't getting caught in the CSV importer
                     ## anymore, but they're right in the addVariable method
             })
-            skip(test_that("addVariable creates categorical from factor", {
+            test_that("addVariable creates categorical from factor", {
                 testdf <- addVariable(testdf, df$v4, name="New var 3")
                 expect_true("newVar3" %in% names(testdf))
                 nv <- testdf$newVar3
-                print(nv)
                 expect_true(is.Categorical(nv))
                 expect_identical(as.vector(nv), as.vector(testdf$v4))
-            }))
+            })
         })
     })
 }
