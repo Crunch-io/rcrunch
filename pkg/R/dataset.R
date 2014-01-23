@@ -107,6 +107,21 @@ setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE)
     callNextMethod(x, i, ..., drop=drop)
 })
 
+.addVariableSetter <- function (x, i, value) {
+    if (i %in% names(x)) {
+        stop("Cannot currently overwrite existing Variables with [[<-",
+            call.=FALSE)
+    }
+    addVariable(x, values=value, name=i)
+}
+##' @export
+setMethod("[[<-", c("CrunchDataset", "character"), .addVariableSetter)
+setMethod("[[<-", c("CrunchDataset", "ANY"), function (x, i, value) {
+    stop("Only character (name) indexing supported for [[<-", call.=FALSE)
+})
+##' @export
+setMethod("$<-", c("CrunchDataset"), function (x, name, value) .addVariableSetter(x, i=name, value))
+
 ##' @export
 setMethod("dim", "CrunchDataset", function (x) {
     nrow <- as.integer(GET(x@urls$summary_url)$rows$filtered)
@@ -164,6 +179,15 @@ findVariables <- function (dataset, pattern="", key=namekey(dataset), ...) {
 }
 
 addVariable <- function (dataset, values, ...) {
+    new <- length(values)
+    old <- nrow(dataset)
+    if (new == 1 && old > 1) {
+        values <- rep(values, old)
+        new <- old
+    }
+    if (new != old) {
+        stop("replacement has ", new, " rows, data has ", old)
+    }
     variable.metadata <- updateList(toVariable(values), list(...))
     payload <- toJSON(variable.metadata)
     var_url <- POST(dataset@urls$variables_url, body=payload)

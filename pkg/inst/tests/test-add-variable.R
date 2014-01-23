@@ -55,5 +55,28 @@ if (!run.only.local.tests) {
                 expect_identical(as.vector(nv), as.vector(testdf$v5))
             }), reason="Can't support POSIXt until the app supports timezones")
         })
+        
+        with(test.dataset(df), {
+            testdf <- .setup
+            test_that("[[<- and $<- cannot overwrite existing variables", {
+                expect_error(testdf[["v2"]] <- 1:20, 
+                    "Cannot currently overwrite existing Variables")
+                expect_error(testdf$v2 <- 1:20, 
+                    "Cannot currently overwrite existing Variables")
+                expect_error(testdf[[2]] <- 1:20, 
+                    "Only character \\(name\\) indexing supported")
+            })
+            test_that("[[<- adds variables", {
+                testdf$newvariable <- 20:1
+                expect_true(is.Numeric(testdf$newvariable))
+                expect_identical(mean(testdf$newvariable), 10.5)
+            })
+            test_that("Variable lengths must match, in an R way", {
+                expect_error(testdf[['not valid']] <- 1:7, 
+                    "replacement has 7 rows, data has 20")
+                testdf[['ok']] <- 1
+                expect_identical(as.vector(testdf$ok), rep(1, 20))
+            })
+        })
     })
 }
