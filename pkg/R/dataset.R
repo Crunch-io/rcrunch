@@ -108,6 +108,10 @@ setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE)
 })
 
 .addVariableSetter <- function (x, i, value) {
+    if (is.variable(value)) {
+        x@.Data[[i]] <- value
+        return(x)
+    }
     if (i %in% names(x)) {
         stop("Cannot currently overwrite existing Variables with [[<-",
             call.=FALSE)
