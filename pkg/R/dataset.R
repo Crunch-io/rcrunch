@@ -201,7 +201,7 @@ addVariable <- function (dataset, values, ...) {
 
 POSTNewVariable <- function (collection_url, values, ...) {
     variable.metadata <- updateList(toVariable(values), list(...))
-    invisible(POST(collection_url, body=toJSON(variable.metadata)))
+    invisible(POST(collection_url, body=toJSON(variable.metadata, digits=15)))
 }
 
 addVariables <- function (dataset, vars) {
@@ -209,6 +209,8 @@ addVariables <- function (dataset, vars) {
     nvars <- ncol(vars)
     vars_url <- dataset@urls$variables_url
     for (i in seq_len(nvars)) {
-        POSTNewVariable(vars_url, vars[[i]], name=names(vars)[i])
+        POSTNewVariable(vars_url, vars[[i]], name=names(vars)[i],
+            header_order=(i-1))
     }
+    invisible(refresh(dataset))
 }

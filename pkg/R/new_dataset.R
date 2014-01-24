@@ -4,23 +4,22 @@
 ##' @param ... additional arguments passed to \code{ \link{newDatasetFromFile}}
 ##' @return If successful, an object of class CrunchDataset.
 ##' @export
+newDataset <- function (x, name=substitute(x),
+                                useAlias=default.useAlias(), ...) {
 
-# newDataset <- function (x, name=substitute(x),
-#                                 useAlias=default.useAlias(), ...) {
-# 
-#     is.2D <- !is.null(dim(x)) && length(dim(x)) %in% 2
-#     if (!is.2D) {
-#         stop("Can only make a Crunch dataset from a two-dimensional data ",
-#             "structure", call.=FALSE)
-#     }
-#     
-#     crunchdf <- createDataset(name, useAlias=useAlias, ...)
-#     crunchdf <- addVariables(crunchdf, x)
-#     updateDatasetList()
-#     invisible(crunchdf)
-# }
+    is.2D <- !is.null(dim(x)) && length(dim(x)) %in% 2
+    if (!is.2D) {
+        stop("Can only make a Crunch dataset from a two-dimensional data ",
+            "structure", call.=FALSE)
+    }
+    
+    crunchdf <- createDataset(name=name, useAlias=useAlias, ...)
+    crunchdf <- addVariables(crunchdf, x)
+    updateDatasetList()
+    invisible(crunchdf)
+}
 
-newDataset <- newDatasetViaFile <- function (x, name=substitute(x), ...) {
+newDatasetViaFile <- function (x, name=substitute(x), ...) {
     
     is.2D <- !is.null(dim(x)) && length(dim(x)) %in% 2
     if (!is.2D) {
@@ -60,8 +59,8 @@ newDatasetFromFile <- function (file, name=basename(file),
     if (!file.exists(file)) {
         stop("File not found", call.=FALSE)
     }
-    ds <- addSourceToDataset(createDataset(name, useAlias=useAlias),
-        createSource(file))
+    ds <- createDataset(name, useAlias=useAlias)
+    ds <- addSourceToDataset(ds, createSource(file))
     updateDatasetList()
     invisible(ds)
 }

@@ -71,6 +71,7 @@ if (!run.only.local.tests) {
             testdf <- .setup
             test_that("can fetch variable summaries", {
                 summ <- getSummary(testdf$v1)
+                print(summ)
                 expect_true(is.list(summ))
                 expect_equivalent(summ$mean, mean(df$v1, na.rm=TRUE))
                 expect_equivalent(summ$stddev, sd(df$v1, na.rm=TRUE))

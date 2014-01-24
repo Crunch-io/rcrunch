@@ -14,6 +14,7 @@ if (!run.only.local.tests) {
     })
         
     with(test.authentication, {
+        ## New dataset by file upload method
         test_that("Source file can be uploaded if logged in", {
             expect_true(createSource(testfile, 
                 response.handler=function (response) response$status_code==201))
@@ -49,16 +50,19 @@ if (!run.only.local.tests) {
             delete(testcrdf)
             ## Should also test doing this with a matrix
         })
+        
+        ## New dataset by add variable API
         test_that("newDataset by addVariables", {
             expect_error(newDataset(NULL), 
                 "Can only make a Crunch dataset from a two-dimensional data")
             expect_error(newDataset(1:5), 
                 "Can only make a Crunch dataset from a two-dimensional data")
-            dx <- newDataset(df, "addVariables")
+            dx <- try(newDataset(df, "addVariables"))
                 expect_true("addVariables" %in% listDatasets())
                 expect_true(is.dataset(dx))
                 expect_equivalent(mean(dx$v3), mean(df$v3))
-            delete(dx)
+                expect_identical(dim(dx), dim(df))
+            try(delete(dx))
         })
         
         test_that("newDataset(FromFile) passes useAlias", {
@@ -77,7 +81,8 @@ if (!run.only.local.tests) {
                 expect_true(is.Numeric(testdf[["v3"]]))
                 expect_true(is.Categorical(testdf[["v4"]]))
                 expect_true(all(levels(df$v4) %in% names(categories(testdf$v4))))
-                expect_identical(categories(testdf$v4), categories(refresh(testdf$v4)))
+                expect_identical(categories(testdf$v4),
+                    categories(refresh(testdf$v4)))
                 expect_identical(testdf$v4, refresh(testdf$v4))
                 expect_true(is.Datetime(testdf$v5))
             })
@@ -85,7 +90,9 @@ if (!run.only.local.tests) {
             with(test.dataset(mrdf), {
                 testmrdf <- .setup
                 test_that("names() are the same and in the right order", {
+                    expect_true(setequal(names(df), names(testdf)))
                     expect_identical(names(df), names(testdf))
+                    expect_true(setequal(names(mrdf), names(testmrdf)))
                     expect_identical(names(mrdf), names(testmrdf))
                 })
             })
