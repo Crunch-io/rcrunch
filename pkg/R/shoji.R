@@ -41,6 +41,12 @@ setMethod("self", "ShojiObject", function (x) x@self)
 
 ##' @export
 setMethod("refresh", "ShojiObject", .cr.shoji.refresh)
+setMethod("refresh", "CrunchDataset", function (x) {
+    ua <- x@useAlias
+    out <- callNextMethod()
+    out@useAlias <- ua
+    return(out)
+})
 
 ##' @export
 setMethod("delete", "ShojiObject", function (x) invisible(DELETE(self(x))))

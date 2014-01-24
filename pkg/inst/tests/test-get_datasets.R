@@ -11,16 +11,14 @@ if (!run.only.local.tests) {
         test_that("getDatasetCollection gets what we expect", {
             col0 <- getDatasetCollection()
             expect_true(is.list(col0))
-            ds.url <- createDataset("getdsurl test")
-            col1 <- getDatasetCollection()
-            expect_true(is.list(col1))
-            expect_equal(length(col1), length(col0) + 1)
-            expect_equal(col1[[length(col1)]]$datasetName, "getdsurl test")
-            expect_equal(col1[[length(col1)]]$datasetUrl, ds.url)
-
-            ## teardown
-            DELETE(ds.url)
-            updateDatasetList()
+            with(test.dataset(df, "getdsurl test"), {
+                testdf <- .setup
+                col1 <- getDatasetCollection()
+                expect_true(is.list(col1))
+                expect_equal(length(col1), length(col0) + 1)
+                expect_equal(col1[[length(col1)]]$datasetName, "getdsurl test")
+                expect_equal(col1[[length(col1)]]$datasetUrl, self(testdf))
+            })
         })
                 
         with(test.dataset(df, "dflisttest"), {

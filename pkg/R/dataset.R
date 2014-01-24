@@ -192,11 +192,23 @@ addVariable <- function (dataset, values, ...) {
     if (new != old) {
         stop("replacement has ", new, " rows, data has ", old)
     }
-    variable.metadata <- updateList(toVariable(values), list(...))
-    payload <- toJSON(variable.metadata)
-    var_url <- POST(dataset@urls$variables_url, body=payload)
+    var_url <- POSTNewVariable(dataset@urls$variables_url, values, ...)
     dataset <- refresh(dataset) ## would like not to do this
     # variable <- as.variable(GET(var_url))
     # dataset@.Data[[variable@body$alias]] <- variable
-    return(dataset)
+    invisible(dataset)
+}
+
+POSTNewVariable <- function (collection_url, values, ...) {
+    variable.metadata <- updateList(toVariable(values), list(...))
+    invisible(POST(collection_url, body=toJSON(variable.metadata)))
+}
+
+addVariables <- function (dataset, vars) {
+    ## assume data frame
+    nvars <- ncol(vars)
+    vars_url <- dataset@urls$variables_url
+    for (i in seq_len(nvars)) {
+        POSTNewVariable(vars_url, vars[[i]], name=names(vars)[i])
+    }
 }

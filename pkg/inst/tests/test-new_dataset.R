@@ -1,9 +1,9 @@
 context("Making a new dataset")
 
+testfile <- system.file("fake.csv", package="rcrunch", mustWork=TRUE)
 if (!run.only.local.tests) {
     test_that("Source file cannot be uploaded if not logged in", {
         logout()
-        testfile <- system.file("fake.csv", package="rcrunch", mustWork=TRUE)
         expect_error(createSource(testfile), 
             "You must authenticate before making this request")
     })
@@ -12,51 +12,61 @@ if (!run.only.local.tests) {
         expect_error(createDataset("testfile"), 
             "You must authenticate before making this request")
     })
-    
+        
     with(test.authentication, {
         test_that("Source file can be uploaded if logged in", {
-            testfile <- system.file("fake.csv", package="rcrunch",
-                mustWork=TRUE)
             expect_true(createSource(testfile, 
                 response.handler=function (response) response$status_code==201))
         })
         test_that("Dataset container object can be created if logged in", {
-            expect_true(createDataset("testfile", 
-                response.handler=function (response) response$status_code==201))
+            expect_true(is.dataset(createDataset("testfile")))
             ## Tear down
             updateDatasetList()
             delete(loadDataset("testfile"))
         })
         test_that("Source can be added to Dataset", {
-            testfile <- system.file("fake.csv", package="rcrunch",
-                mustWork=TRUE)
             source <- createSource(testfile)
             ds <- createDataset("add source test")
-            expect_equal(addSourceToDataset(ds, source, 
-                response.handler=function (response) as.character(response$status_code)), "201")
-            ## Tear down
-            updateDatasetList()
+                expect_true(is.dataset(addSourceToDataset(ds, source)))
+                ## Tear down
+                updateDatasetList()
             delete(loadDataset("add source test"))
         })
-        test_that("Dataset can be made from a data.frame", {
+        test_that("newDatasetFromFile creates a dataset", {
+            df <- newDatasetFromFile(testfile)
+                expect_true(is.dataset(df))
+                localdf <- read.csv(testfile)
+                expect_equivalent(mean(df[[2]]), mean(localdf[[2]]))
+            delete(df)
+        })
+        test_that("Dataset can be made from a data.frame by dumping a csv", {
+            d1 <- newDatasetViaFile(df, name="making_a_dataset_from_df")
+                expect_true("making_a_dataset_from_df" %in% listDatasets())
+            delete(d1)
+            
+            testcrdf <- newDatasetViaFile(df)
+                expect_true(is.dataset(testcrdf))
+            delete(testcrdf)
+            ## Should also test doing this with a matrix
+        })
+        test_that("newDataset by addVariables", {
             expect_error(newDataset(NULL), 
                 "Can only make a Crunch dataset from a two-dimensional data")
             expect_error(newDataset(1:5), 
                 "Can only make a Crunch dataset from a two-dimensional data")
-            d1 <- newDataset(df, name="making_a_dataset_from_df")
-            expect_true("making_a_dataset_from_df" %in% listDatasets())
-            delete(d1)
-            testcrdf <- newDataset(df)
-            expect_true(is.dataset(testcrdf))
-            delete(testcrdf)
-            ## Should also test doing this with a matrix
+            dx <- newDataset(df, "addVariables")
+                expect_true("addVariables" %in% listDatasets())
+                expect_true(is.dataset(dx))
+                expect_equivalent(mean(dx$v3), mean(df$v3))
+            delete(dx)
         })
+        
         test_that("newDataset(FromFile) passes useAlias", {
             d1 <- newDataset(df)
-            expect_equal(d1@useAlias, default.useAlias())
+                expect_equal(d1@useAlias, default.useAlias())
             delete(d1)
             d1 <- newDataset(df, useAlias=FALSE)
-            expect_false(d1@useAlias)
+                expect_false(d1@useAlias)
             delete(d1)
         })
         with(test.dataset(df), {

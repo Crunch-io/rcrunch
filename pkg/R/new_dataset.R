@@ -4,7 +4,23 @@
 ##' @param ... additional arguments passed to \code{ \link{newDatasetFromFile}}
 ##' @return If successful, an object of class CrunchDataset.
 ##' @export
-newDataset <- function (x, name=substitute(x), ...) {
+
+# newDataset <- function (x, name=substitute(x),
+#                                 useAlias=default.useAlias(), ...) {
+# 
+#     is.2D <- !is.null(dim(x)) && length(dim(x)) %in% 2
+#     if (!is.2D) {
+#         stop("Can only make a Crunch dataset from a two-dimensional data ",
+#             "structure", call.=FALSE)
+#     }
+#     
+#     crunchdf <- createDataset(name, useAlias=useAlias, ...)
+#     crunchdf <- addVariables(crunchdf, x)
+#     updateDatasetList()
+#     invisible(crunchdf)
+# }
+
+newDataset <- newDatasetViaFile <- function (x, name=substitute(x), ...) {
     
     is.2D <- !is.null(dim(x)) && length(dim(x)) %in% 2
     if (!is.2D) {
@@ -44,11 +60,10 @@ newDatasetFromFile <- function (file, name=basename(file),
     if (!file.exists(file)) {
         stop("File not found", call.=FALSE)
     }
-    source <- createSource(file)
-    ds <- createDataset(name)
-    addSourceToDataset(ds, source)
+    ds <- addSourceToDataset(createDataset(name, useAlias=useAlias),
+        createSource(file))
     updateDatasetList()
-    invisible(as.dataset(GET(ds), useAlias=useAlias))
+    invisible(ds)
 }
 
 ##' @importFrom httr upload_file
@@ -57,12 +72,17 @@ createSource <- function (file, ...) {
         ...)
 }
 
-createDataset <- function (name, ...) {
-    POST(sessionURL("datasets_url"), body=toJSON(list(name=name)), ...)
+createDataset <- function (name, useAlias=default.useAlias(), ...) {
+    dataset_url <- POST(sessionURL("datasets_url"), body=toJSON(list(name=name)),
+        ...)
+    invisible(as.dataset(GET(dataset_url), useAlias=useAlias))
 }
 
-addSourceToDataset <- function (dataset_url, source_url, ...) {
-    ds <- GET(dataset_url)
-    POST(ds$urls$sources_url, body=toJSON(list(source_url=source_url)), ...)
+addSourceToDataset <- function (dataset, source_url, ...) {
+    POST(dataset@urls$sources_url, body=toJSON(list(source_url=source_url)), ...)
+    invisible(refresh(dataset))
 }
 
+.delete_all_my_datasets <- function () {
+    lapply(dataset_collection(), function (x) DELETE(x$datasetUrl))
+}

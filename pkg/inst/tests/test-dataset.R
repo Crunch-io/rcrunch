@@ -107,6 +107,14 @@ if (!run.only.local.tests) {
                 expect_identical(nrow(testdf), nrow(df))
                 expect_identical(ncol(testdf), ncol(df))
             })
+            
+            test_that("refresh keeps useAlias setting", {
+                expect_true(testdf@useAlias)
+                expect_true(refresh(testdf)@useAlias)
+                testdf@useAlias <- FALSE
+                expect_false(testdf@useAlias)
+                expect_false(refresh(testdf)@useAlias)
+            })
         })
     })
 }
