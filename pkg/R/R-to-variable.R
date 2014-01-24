@@ -14,6 +14,11 @@ setMethod("toVariable", "Date", function (x) {
 # setMethod("toVariable", "POSIXt", function (x) {
 #     return(list(values=as.character(x), type="datetime"))
 # })
+setMethod("toVariable", "logical", function (x) {
+    ## Make it categorical
+    return(list(values=2L-as.integer(x), type="categorical", 
+        categories=categoriesFromLevels(c("True", "False"))))
+})
 
 categoriesFromLevels <- function (x) {
     return(lapply(seq_along(x), function (i) {

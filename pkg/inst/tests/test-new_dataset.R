@@ -85,6 +85,7 @@ if (!run.only.local.tests) {
                     categories(refresh(testdf$v4)))
                 expect_identical(testdf$v4, refresh(testdf$v4))
                 expect_true(is.Datetime(testdf$v5))
+                expect_true(is.Categorical(testdf$v6))
             })
             
             with(test.dataset(mrdf), {

@@ -96,6 +96,7 @@ df <- data.frame(v1=c(rep(NA_real_, 5), rnorm(15)),
                  v3=8:27,
                  v4=as.factor(LETTERS[2:3]),
                  v5=as.Date(1:20, origin="1955-11-05"),
+                 v6=TRUE,
                  stringsAsFactors=FALSE)
 
 mrdf <- data.frame(mr_1=c(1,0,1,NA_real_),
