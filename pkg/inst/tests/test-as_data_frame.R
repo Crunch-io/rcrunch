@@ -55,7 +55,9 @@ if (!run.only.local.tests) {
         
                 expect_true(is.character(as.vector(test.asdf$v2)))
                 ## skip these: NAs aren't being detected as missing in the CSV
-                ## importer for text variables, and we aren't casting them after
+                ## importer for text variables, and we aren't casting them after.
+                ## Looks like they're not being properly imported via the
+                ## add variable API either.
                 skip(expect_identical(sum(is.na(as.vector(test.asdf$v2))), 5L))
                 skip(expect_equivalent(as.vector(test.asdf$v2), df$v2))
         
