@@ -78,5 +78,40 @@ if (!run.only.local.tests) {
                 expect_identical(as.vector(testdf$ok), rep(1, 20))
             })
         })
+        
+        test_that("addVariables that are categorical_array", {
+            ds <- createDataset("add CA")
+            newvar <- list(
+                name="Categorical array",
+                description="Here are some variables. They go together.",
+                type="categorical_array",
+                subvariables=lapply(names(mrdf)[1:3],
+                    function (x) toVariable(as.factor(mrdf[[x]]), name=x))
+            )
+            POSTNewVariable(ds@urls$variables_url, newvar,
+                bind_url=ds@urls$bind_url)
+            ds <- refresh(ds)
+            expect_true(is.CA(ds$categoricalArray))
+            delete(ds)
+        })
+        test_that("addVariables that are multiple_response", {
+            ds <- createDataset("add CA")
+            newvar <- list(
+                name="Multiple response",
+                description="Here are some variables. They go together.",
+                type="multiple_response",
+                subvariables=lapply(names(mrdf)[1:3],
+                    function (x) toVariable(as.factor(mrdf[[x]]), name=x))
+            )
+            newvar$subvariables <- lapply(newvar$subvariables, function (x) {
+                x$categories[[1]]$selected <- TRUE
+                return(x)
+            })
+            POSTNewVariable(ds@urls$variables_url, newvar,
+                bind_url=ds@urls$bind_url)
+            ds <- refresh(ds)
+            expect_true(is.MR(ds$multipleResponse))
+            delete(ds)
+        })
     })
 }
