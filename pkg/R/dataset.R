@@ -206,6 +206,7 @@ POSTNewVariable <- function (collection_url, variable, bind_url=NULL) {
     
     if (variable$type %in% c("multiple_response", "categorical_array")) {
         ## assumes: array of subvariables included, and if MR, at least one category has selected: TRUE
+        ## TODO: make the data import API take array types directly
         variable$type <- NULL
         subvars <- variable$subvariables
         variable$subvariables <- NULL
