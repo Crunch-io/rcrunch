@@ -201,7 +201,22 @@ addVariable <- function (dataset, values, ...) {
 
 POSTNewVariable <- function (collection_url, values, ...) {
     variable.metadata <- updateList(toVariable(values), list(...))
-    invisible(POST(collection_url, body=toJSON(variable.metadata, digits=15)))
+    if (variable.metadata$type %in% 
+        c("multiple_response", "categorical_array")) {
+        
+        subvars <- variable.metadata$subvariables
+        variable.metadata$subvariables <- NULL
+        var_urls <- lapply(subvars, function (x) {
+            POST(collection_url, body=toJSON(x, digits=15))
+        })
+        FUN <- list(multiple_response=makeMR, 
+            categorical_array=makeArray)[variable.metadata$type]
+        variable.metadata$type <- NULL
+        invisible(self(do.call(FUN, variable.metadata)))
+    } else {
+        invisible(POST(collection_url, body=toJSON(variable.metadata,
+            digits=15)))
+    }
 }
 
 addVariables <- function (dataset, vars) {

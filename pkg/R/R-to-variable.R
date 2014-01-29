@@ -1,20 +1,20 @@
-setMethod("toVariable", "character", function (x) {
+setMethod("toVariable", "character", function (x, ...) {
     return(list(values=x, type="text"))
 })
-setMethod("toVariable", "numeric", function (x) {
+setMethod("toVariable", "numeric", function (x, ...) {
     return(list(values=x, type="numeric"))
 })
-setMethod("toVariable", "factor", function (x) {
+setMethod("toVariable", "factor", function (x, ...) {
     return(list(values=as.integer(x), type="categorical",
         categories=categoriesFromLevels(levels(x))))
 })
-setMethod("toVariable", "Date", function (x) {
+setMethod("toVariable", "Date", function (x, ...) {
     return(list(values=as.character(x), type="datetime"))
 })
 # setMethod("toVariable", "POSIXt", function (x) {
 #     return(list(values=as.character(x), type="datetime"))
 # })
-setMethod("toVariable", "logical", function (x) {
+setMethod("toVariable", "logical", function (x, ...) {
     ## Make it categorical
     return(list(values=2L-as.integer(x), type="categorical", 
         categories=categoriesFromLevels(c("True", "False"))))
