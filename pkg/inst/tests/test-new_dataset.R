@@ -20,18 +20,16 @@ if (!run.only.local.tests) {
                 response.handler=function (response) response$status_code==201))
         })
         test_that("Dataset container object can be created if logged in", {
-            expect_true(is.dataset(createDataset("testfile")))
-            ## Tear down
-            updateDatasetList()
-            delete(loadDataset("testfile"))
+            with(test.dataset(), {
+                expect_true(is.dataset(.setup))
+            })
         })
         test_that("Source can be added to Dataset", {
             source <- createSource(testfile)
-            ds <- createDataset("add source test")
+            with(test.dataset(), {
+                ds <- .setup
                 expect_true(is.dataset(addSourceToDataset(ds, source)))
-                ## Tear down
-                updateDatasetList()
-            delete(loadDataset("add source test"))
+            })
         })
         test_that("newDatasetFromFile creates a dataset", {
             df <- newDatasetFromFile(testfile)

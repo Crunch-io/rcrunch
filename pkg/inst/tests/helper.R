@@ -51,8 +51,12 @@ test.authentication <- setup.and.teardown(
 
 ## Create a test dataset and then destroy it after tests
 datasets_to_purge <- c()
-new.dataset.with.setup <- function (...) {
-    out <- newDataset(...)
+new.dataset.with.setup <- function (df=NULL, ...) {
+    if (is.null(df)) {
+        out <- createDataset(name="test", ...)
+    } else {
+        out <- newDataset(df, ...)
+    }
     datasets_to_purge <<- c(datasets_to_purge, self(out))
     return(out)
 }
@@ -65,7 +69,7 @@ purge <- function () {
     }
 }
 
-test.dataset <- function (df, ...) {
+test.dataset <- function (df=NULL, ...) {
     return(setup.and.teardown(
         function () new.dataset.with.setup(df, ...),
         purge
