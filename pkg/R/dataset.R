@@ -192,30 +192,30 @@ addVariable <- function (dataset, values, ...) {
     if (new != old) {
         stop("replacement has ", new, " rows, data has ", old)
     }
-    var_url <- POSTNewVariable(dataset@urls$variables_url, values, ...)
+    variable <- updateList(toVariable(values), list(...))
+    var_url <- POSTNewVariable(dataset@urls$variables_url, variable)
     dataset <- refresh(dataset) ## would like not to do this
     # variable <- as.variable(GET(var_url))
     # dataset@.Data[[variable@body$alias]] <- variable
     invisible(dataset)
 }
 
-POSTNewVariable <- function (collection_url, values, ...) {
-    variable.metadata <- updateList(toVariable(values), list(...))
-    if (variable.metadata$type %in% 
-        c("multiple_response", "categorical_array")) {
-        
-        subvars <- variable.metadata$subvariables
-        variable.metadata$subvariables <- NULL
-        var_urls <- lapply(subvars, function (x) {
-            POST(collection_url, body=toJSON(x, digits=15))
-        })
-        FUN <- list(multiple_response=makeMR, 
-            categorical_array=makeArray)[variable.metadata$type]
-        variable.metadata$type <- NULL
-        invisible(self(do.call(FUN, variable.metadata)))
+POSTNewVariable <- function (collection_url, variable, bind_url=NULL) {
+    
+    do.POST <- function (x) POST(collection_url, body=toJSON(x, digits=15))
+    
+    if (variable$type %in% c("multiple_response", "categorical_array")) {
+        ## assumes: array of subvariables included, and if MR, at least one category has selected: TRUE
+        variable$type <- NULL
+        subvars <- variable$subvariables
+        variable$subvariables <- NULL
+        var_urls <- unlist(lapply(subvars, do.POST))
+        variable$bind_url <- bind_url
+        variable$variable_urls <- var_urls
+        out <- do.call(POSTBindVariables, variable)
+        invisible(out)
     } else {
-        invisible(POST(collection_url, body=toJSON(variable.metadata,
-            digits=15)))
+        invisible(do.POST(variable))
     }
 }
 
@@ -224,8 +224,8 @@ addVariables <- function (dataset, vars) {
     nvars <- ncol(vars)
     vars_url <- dataset@urls$variables_url
     for (i in seq_len(nvars)) {
-        POSTNewVariable(vars_url, vars[[i]], name=names(vars)[i],
-            header_order=(i-1))
+        POSTNewVariable(vars_url, updateList(toVariable(vars[[i]]),
+            list(name=names(vars)[i], header_order=(i-1))))
     }
     invisible(refresh(dataset))
 }

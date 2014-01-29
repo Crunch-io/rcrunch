@@ -94,8 +94,13 @@ prepareBindInputs <- function (list_of_variables, dataset=NULL, pattern=NULL,
 ##' Take variables and their dataset and bind them into a new array variable
 bindVariables <- function (list_of_variables, dataset, name, ...) {
     var_urls <- vapply(list_of_variables, self, character(1), USE.NAMES=FALSE)
-    payload <- list(name=name, variables=I(var_urls)) ## extend backend to take ...
-    out <- POST(dataset@urls$bind_url, body=toJSON(payload))
+    out <- POSTBindVariables(dataset@urls$bind_url, var_urls, name=name, ...)
     ## could apply ... here
     invisible(as.variable(GET(out)))
+}
+
+POSTBindVariables <- function (bind_url, variable_urls, ...) {
+    payload <- list(variables=I(variable_urls), ...)
+    ## extend backend to take ...
+    return(POST(bind_url, body=toJSON(payload)))
 }
