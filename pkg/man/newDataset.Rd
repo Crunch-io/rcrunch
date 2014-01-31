@@ -2,7 +2,8 @@
 \alias{newDataset}
 \title{Upload a data.frame to Crunch to make a new dataset}
 \usage{
-  newDataset(x, name = substitute(x), ...)
+  newDataset(x, name = substitute(x),
+    useAlias = default.useAlias(), ...)
 }
 \arguments{
   \item{x}{a data.frame or other rectangular R object}

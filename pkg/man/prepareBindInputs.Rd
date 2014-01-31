@@ -3,7 +3,7 @@
 \title{Given inputs to makeArray/makeMR, parse and validate}
 \usage{
   prepareBindInputs(list_of_variables, dataset = NULL,
-    pattern = NULL, key = "alias", ...)
+    pattern = NULL, key = namekey(dataset), ...)
 }
 \arguments{
   \item{...}{Stuff from calling function that will be
