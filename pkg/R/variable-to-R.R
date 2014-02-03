@@ -20,6 +20,7 @@ as.vector.CategoricalVariable <- function (x, mode) {
     ## If sending ids:
     # out <- as.factor(names(categories(x))[match(out, ids(categories(x)))])
     ## If sending category names
+    ## TODO: remove category names that are missing since those are NA in the data
     out <- factor(out, levels=names(categories(x)))
     return(out)
 }

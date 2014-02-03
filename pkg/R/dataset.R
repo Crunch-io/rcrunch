@@ -220,6 +220,8 @@ POSTNewVariable <- function (collection_url, variable, bind_url=NULL) {
     }
 }
 
+## TODO: add header order offset from ncol(dataset), and cache dim(dataset) on instantiating
+
 addVariables <- function (dataset, vars) {
     ## assume data frame
     nvars <- ncol(vars)
