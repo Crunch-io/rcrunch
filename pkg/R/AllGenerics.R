@@ -14,13 +14,13 @@ setGeneric("name", function (x) standardGeneric("name"))
 setGeneric("name<-", function (x, value) standardGeneric("name<-"),
     signature="x")
 setGeneric("description", function (x) standardGeneric("description"))
-setGeneric("description<-", 
+setGeneric("description<-",
     function (x, value) standardGeneric("description<-"), signature="x")
 
 setGeneric("type", function (x) standardGeneric("type"))
 setGeneric("type<-", function (x, value) standardGeneric("type<-"))
 setGeneric("preUpload", function (x) standardGeneric("preUpload"), signature="x")
-setGeneric("postUpload", 
+setGeneric("postUpload",
     function (source.var, crunch.var) standardGeneric("postUpload"),
     signature="source.var")
 
@@ -42,4 +42,5 @@ setGeneric("sd")
 setGeneric("median")
 setGeneric("na.omit")
 
+##' @export
 setGeneric("toVariable", function (x, ...) standardGeneric("toVariable"))

@@ -4,10 +4,10 @@
 \title{Make a Categorical Array or Multiple Response variable}
 \usage{
   makeArray(list_of_variables, dataset = NULL,
-    pattern = NULL, key = "alias", name, ...)
+    pattern = NULL, key = namekey(dataset), name, ...)
 
   makeMR(list_of_variables, dataset = NULL, pattern = NULL,
-    key = "alias", name, selections, ...)
+    key = namekey(dataset), name, selections, ...)
 }
 \arguments{
   \item{list_of_variables}{a list of Variable objects to
