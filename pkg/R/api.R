@@ -74,7 +74,10 @@ handleAPIresponse <- function (response, special.statuses=list()) {
         } else {
             out <- content(response)
             if (is.shoji.like(out)) {
-                class(out) <- "shoji"
+                class(out) <- c("shoji", out$element)
+            }
+            if ("shoji:view" %in% class(out)) {
+                out <- out$value
             }
             return(out)            
         }

@@ -1,7 +1,7 @@
 context("Shoji")
 
 test_that("is.shoji", {
-    fo <- list(element=1, self=2, description=3)
+    fo <- list(element="shoji:view", self=2, description=3)
     expect_false(is.shoji(fo))
     expect_true(is.shoji.like(fo))
     class(fo) <- "shoji"

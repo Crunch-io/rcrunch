@@ -1,5 +1,5 @@
 is.shoji.like <- function (x) {
-    is.list(x) && all(c("element", "self", "description") %in% names(x))
+    is.list(x) && "element" %in% names(x) && substr(as.character(x$element), 1, 5) == "shoji"
 }
 
 ##' @S3method is shoji
