@@ -1,9 +1,9 @@
 context("Getting values to make local R objects")
 
-## Variable fake fixtures for dataset
-test.ds <- .cr.dataset.shojiObject(as.shojiObject(ds), vars2)
 
 with(fake.HTTP, {
+    ## Variable fake fixtures for dataset
+    test.ds <- .cr.dataset.shojiObject(as.shojiObject(ds), vars2)
     test_that("as.vector on Variables", {
         expect_true(is.numeric(getValues(vars2$age)))
         expect_false(is.factor(getValues(vars2$gender)))

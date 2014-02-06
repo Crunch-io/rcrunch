@@ -41,6 +41,7 @@ setMethod("description<-", "CrunchDataset", setDatasetDescription)
         vars <- getDatasetVariables(out)
         if (length(vars)) out@.Data <- vars
     }
+    out@.dim <- getDim(out)
     return(out)
 }
 
@@ -88,6 +89,17 @@ as.dataset <- function (x, useAlias=default.useAlias()) {
     return(out)
 }
 
+##' @export
+setMethod("dim", "CrunchDataset", function (x) x@.dim)
+
+getDim <- function (dataset) {
+    summary_url <- dataset@urls$summary_url
+    nrow <- as.integer(GET(summary_url)$rows$filtered)
+    ## use filtered because every other request will take the applied filter
+    return(c(nrow, length(dataset)))
+}
+
+
 namekey <- function (dataset) ifelse(dataset@useAlias, "alias", "name")
 
 ##' @export
@@ -125,15 +137,6 @@ setMethod("[[<-", c("CrunchDataset", "ANY"), function (x, i, value) {
 })
 ##' @export
 setMethod("$<-", c("CrunchDataset"), function (x, name, value) .addVariableSetter(x, i=name, value))
-
-##' @export
-setMethod("dim", "CrunchDataset", function (x) {
-    nrow <- as.integer(GET(x@urls$summary_url)$rows$filtered)
-    ## use filtered because every other request will take the applied filter
-    return(c(nrow, length(x)))
-})
-##' @export
-setMethod("ncol", "CrunchDataset", function (x) length(x))
 
 showCrunchDataset <- function (x) {
     n <- sQuote(name(x))
@@ -231,4 +234,24 @@ addVariables <- function (dataset, vars) {
             toVariable(vars[[i]], name=names(vars)[i], header_order=(i-1)))
     }
     invisible(refresh(dataset))
+}
+
+weight <- function (x) {
+    stopifnot(is.dataset(x))
+    w <- x@body$weight
+    if (!is.null(w)) {
+        w <- as.variable(GET(w))
+    }
+    return(w)
+}
+
+`weight<-` <- function (x, value) {
+    stopifnot(is.dataset(x))
+    if (is.variable(value)) {
+        value <- self(value)
+    } else if (!is.null(value)) {
+        stop("Weight must be a Variable or NULL")
+    }
+    x <- setCrunchSlot(x, "weight", value)
+    return(x)
 }

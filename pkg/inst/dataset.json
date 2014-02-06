@@ -15,5 +15,10 @@
         "name": "test ds"
     },
     "urls": {
+        "summary_url": {
+            "rows": {
+                "filtered": 0
+            }
+        }
     }
 }

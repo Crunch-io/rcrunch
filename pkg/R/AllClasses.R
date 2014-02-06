@@ -44,10 +44,12 @@ default.useAlias <- function () {
 CrunchDataset <- setClass("CrunchDataset", contains=c("list", "ShojiObject"),
     representation= representation(
         readonly="logical",
-        useAlias="logical"
+        useAlias="logical",
+        .dim="numeric"
     ), 
     prototype=prototype(readonly=FALSE,
-        useAlias=default.useAlias()))
+        useAlias=default.useAlias(),
+        .dim=numeric(2)))
 
 ##' @export
 Categories <- setClass("Categories", contains="list")
