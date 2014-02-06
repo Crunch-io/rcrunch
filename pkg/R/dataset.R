@@ -187,7 +187,7 @@ findVariables <- function (dataset, pattern="", key=namekey(dataset), ...) {
 
 addVariable <- function (dataset, values, ...) {
     new <- length(values)
-    old <- nrow(dataset)
+    old <- getDim(dataset)[1]
     if (new == 1 && old > 1) {
         values <- rep(values, old)
         new <- old
@@ -236,6 +236,10 @@ addVariables <- function (dataset, vars) {
     invisible(refresh(dataset))
 }
 
+##' Get the dataset's weight
+##' @param x a Dataset
+##' @return a Variable if there is a weight, else NULL
+##' @export
 weight <- function (x) {
     stopifnot(is.dataset(x))
     w <- x@body$weight
@@ -245,6 +249,11 @@ weight <- function (x) {
     return(w)
 }
 
+##' Set the dataset's weight
+##' @param x a Dataset
+##' @param value a Variable to set as weight, or NULL to remove the existing weight
+##' @return x, modified accordingly
+##' @export
 `weight<-` <- function (x, value) {
     stopifnot(is.dataset(x))
     if (is.variable(value)) {
