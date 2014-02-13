@@ -9,6 +9,11 @@ test_that("toVariable parses R data types", {
             list(id=1L, name="B", numeric_value=1L, missing=FALSE),
             list(id=2L, name="C", numeric_value=2L, missing=FALSE)
         ))) ## unclear why these aren't identical
+    options(crunch.max.categories=4)
+    expect_identical(getOption("crunch.max.categories"), 4)
+    expect_identical(toVariable(as.factor(letters[1:5])), 
+        list(values=c("a", "b", "c", "d", "e"), type="text"))
+    options(crunch.max.categories=256)
 })
 
 if (!run.only.local.tests) {

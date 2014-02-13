@@ -5,6 +5,11 @@ setMethod("toVariable", "numeric", function (x, ...) {
     return(list(values=x, type="numeric", ...))
 })
 setMethod("toVariable", "factor", function (x, ...) {
+    nlevels <- length(levels(x))
+    max.categories <- getOption("crunch.max.categories")
+    if (!is.null(max.categories) && nlevels > max.categories) {
+        return(toVariable(as.character(x)))
+    } 
     out <- list(values=as.integer(x), type="categorical",
         categories=categoriesFromLevels(levels(x)), ...)
     return(NAToCategory(out))
