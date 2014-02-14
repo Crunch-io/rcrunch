@@ -128,7 +128,7 @@ setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE)
         stop("Cannot currently overwrite existing Variables with [[<-",
             call.=FALSE)
     }
-    addVariable(x, values=value, name=i)
+    addVariable(x, values=value, name=i, alias=i)
 }
 ##' @export
 setMethod("[[<-", c("CrunchDataset", "character"), .addVariableSetter)
@@ -223,15 +223,15 @@ POSTNewVariable <- function (collection_url, variable, bind_url=NULL) {
     }
 }
 
-## TODO: add header order offset from ncol(dataset), and cache dim(dataset) on instantiating
-
 addVariables <- function (dataset, vars) {
     ## assume data frame
     nvars <- ncol(vars)
+    offset <- ncol(dataset) - 1
     vars_url <- dataset@urls$variables_url
     for (i in seq_len(nvars)) {
         POSTNewVariable(vars_url,
-            toVariable(vars[[i]], name=names(vars)[i], header_order=(i-1)))
+            toVariable(vars[[i]], name=names(vars)[i], alias=names(vars)[i],
+            header_order=(offset+i)))
     }
     invisible(refresh(dataset))
 }

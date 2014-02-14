@@ -1,7 +1,8 @@
 context("Add a variable to a dataset")
 
 test_that("toVariable parses R data types", {
-    expect_identical(toVariable(2L:4L), list(values=2L:4L, type="numeric"))
+    expect_identical(toVariable(2L:4L, name="Numbers!", alias="num"),
+        list(values=2L:4L, type="numeric", name="Numbers!", alias="num"))
     expect_identical(toVariable(letters[1:3]),
         list(values=c("a", "b", "c"), type="text"))
     expect_equivalent(toVariable(as.factor(rep(LETTERS[2:3], 3))), 
