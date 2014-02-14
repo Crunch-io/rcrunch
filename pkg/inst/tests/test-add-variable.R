@@ -13,6 +13,8 @@ test_that("toVariable parses R data types", {
     expect_identical(getOption("crunch.max.categories"), 4)
     expect_identical(toVariable(as.factor(letters[1:5])), 
         list(values=c("a", "b", "c", "d", "e"), type="text"))
+    expect_identical(toVariable(as.factor(letters[1:5]), name="v1"), 
+        list(values=c("a", "b", "c", "d", "e"), type="text", name="v1"))
     options(crunch.max.categories=256)
 })
 

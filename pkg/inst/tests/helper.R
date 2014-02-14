@@ -1,4 +1,4 @@
-run.only.local.tests <- FALSE
+run.only.local.tests <- isTRUE(as.logical(Sys.getenv("LOCALONLY")))
 
 set.seed(666)
 

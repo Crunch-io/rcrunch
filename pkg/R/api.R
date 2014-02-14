@@ -82,6 +82,12 @@ handleAPIresponse <- function (response, special.statuses=list()) {
             return(out)            
         }
     } else {
+        if (isTRUE(getOption("crunch.debug"))) {
+            out <- try(content(response), silent=TRUE)
+            if (!inherits(out, "try-error") && "message" %in% try(names(out))) {
+                message(response$message)
+            }            
+        }
         stop_for_status(response)
     }
 }

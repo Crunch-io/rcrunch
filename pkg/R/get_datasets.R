@@ -31,7 +31,12 @@ dataset_collection <- function () session_store$datasets
 ##' @return An object of class \code{CrunchDataset}
 ##' @export 
 loadDataset <- function (dataset.name, useAlias=default.useAlias()) {
-    dataset <- selectDatasetFromCollection(dataset.name, dataset_collection())
+    if (is.numeric(dataset.name)) {
+        stopifnot(length(dataset.name) == 1)
+        dataset <- dataset_collection()[[dataset.name]]
+    } else {
+        dataset <- selectDatasetFromCollection(dataset.name, dataset_collection())
+    }
     return(as.dataset(GET(dataset$datasetUrl), useAlias=useAlias))
 }
 
