@@ -97,7 +97,7 @@ getDim <- function (dataset, filtered=TRUE) {
     ## use filtered by default because every other request will take the applied filter
     
     summary_url <- dataset@urls$summary_url
-    nrow <- round(GET(summary_url)$rows[[which.count]])
+    nrow <- as.integer(round(GET(summary_url)$rows[[which.count]]))
     return(c(nrow, length(dataset)))
 }
 
