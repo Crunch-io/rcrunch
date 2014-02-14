@@ -92,10 +92,12 @@ as.dataset <- function (x, useAlias=default.useAlias()) {
 ##' @export
 setMethod("dim", "CrunchDataset", function (x) x@.dim)
 
-getDim <- function (dataset) {
+getDim <- function (dataset, filtered=TRUE) {
+    which.count <- ifelse(isTRUE(filtered), "filtered", "total")
+    ## use filtered by default because every other request will take the applied filter
+    
     summary_url <- dataset@urls$summary_url
-    nrow <- as.integer(GET(summary_url)$rows$filtered)
-    ## use filtered because every other request will take the applied filter
+    nrow <- round(GET(summary_url)$rows[[which.count]])
     return(c(nrow, length(dataset)))
 }
 
@@ -187,7 +189,7 @@ findVariables <- function (dataset, pattern="", key=namekey(dataset), ...) {
 
 addVariable <- function (dataset, values, ...) {
     new <- length(values)
-    old <- getDim(dataset)[1]
+    old <- getDim(dataset, filtered=FALSE)[1]
     if (new == 1 && old > 1) {
         values <- rep(values, old)
         new <- old
