@@ -42,3 +42,4 @@ Collate:
     'univariate.R'
     'test-helper.R'
     'R-to-variable.R'
+    'variable-order.R'

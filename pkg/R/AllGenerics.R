@@ -34,6 +34,8 @@ setGeneric("self", function (x) standardGeneric("self"))
 setGeneric("refresh", function (x) standardGeneric("refresh"))
 setGeneric("delete", function (x) standardGeneric("delete"))
 setGeneric("readonly<-", function (x, value) standardGeneric("readonly<-"))
+setGeneric("entities", function (x) standardGeneric("entities"))
+setGeneric("entities<-", function (x, value) standardGeneric("entities<-"))
 
 setGeneric("dim")
 setGeneric("ncol")
