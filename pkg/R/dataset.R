@@ -117,8 +117,11 @@ setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
 })
 ##' @export
 setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
-    i <- names(x) %in% i
-    callNextMethod(x, i, ..., drop=drop)
+    w <- match(i, names(x))
+    if (any(is.na(w))) {
+        stop("Undefined columns selected: ", serialPaste(i[is.na(w)]))
+    }
+    callNextMethod(x, w, ..., drop=drop)
 })
 
 .addVariableSetter <- function (x, i, value) {

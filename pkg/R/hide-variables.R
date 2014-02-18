@@ -39,13 +39,20 @@ hideVariables <- function (dataset, variables, pattern=NULL, key=namekey(dataset
 ##' @rdname hideVariables
 ##' @export
 `hiddenVariables<-` <- function (x, value) {
-    hideVariables(x, value)
+    if (is.character(value)) {
+        value <- na.omit(match(value, names(x)))
+    }
+    if (length(value)) {
+        return(hideVariables(x, value))
+    } else {
+        return(x)
+    }
 }
 
 ##' @rdname hideVariables
 ##' @export
-unhideVariables <- function (dataset, variables, pattern=NULL, key=namekey(dataset), 
-                            ...) {
+unhideVariables <- function (dataset, variables, pattern=NULL,
+                            key=namekey(dataset), ...) {
     hidden.vars <- hiddenVariablesList(dataset)
     if (!is.null(pattern)) {
         variables <- findVariables(hidden.vars, pattern=pattern, key=key, ...)

@@ -61,5 +61,5 @@ VariableGrouping <- setClass("VariableGrouping", contains="list")
 ##' @export
 VariableGroup <- setClass("VariableGroup", representation=representation(
     group="character",
-    entities="AsIs"
+    entities="character"
 ))
