@@ -57,6 +57,21 @@ setMethod("toJSON", "VariableGroup", function (x, ...) {
     toJSON(list(group=x@group, entities=I(x@entities)))
 })
 
+##' @export
+setMethod("[", c("VariableGrouping", "ANY"), function (x, i, ..., drop=FALSE) {
+    x@.Data <- x@.Data[i]
+    return(x)
+})
+##' @export
+setMethod("[", c("VariableGrouping", "character"), function (x, i, ..., drop=FALSE) {
+    w <- match(i, names(x))
+    if (any(is.na(w))) {
+        stop("Undefined groups selected: ", serialPaste(i[is.na(w)]))
+    }
+    callNextMethod(x, w, ..., drop=drop)
+})
+
+
 getVariableOrderURL <- function (dataset) {
     u <- dataset@urls$variables_url
     catalog <- GET(u)

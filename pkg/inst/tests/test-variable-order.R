@@ -50,7 +50,15 @@ if (!run.only.local.tests) {
                     list(group="Group 2.5", entities=self(ds$v4)),
                     list(group="Group 2", entities=c(self(ds$v6), self(ds$v2)))
                 ))
-                
+            })
+            vg <- VariableGrouping(
+                VariableGroup(name="Group 1", 
+                    entities=ds[c("v1", "v3", "v5")]),
+                VariableGroup(name="Group 2.5", entities=ds["v4"]),
+                VariableGroup(name="Group 2", 
+                    entities=ds[c("v6", "v2")]))
+                    
+            test_that("Can manipulate VariableGroupings", {
                 expect_identical(entities(vg[[1]]),
                     c(self(ds$v1), self(ds$v3), self(ds$v5)))
                 expect_identical(entities(vg), 
@@ -74,6 +82,12 @@ if (!run.only.local.tests) {
                     list(group="G1", entities=self(ds$v3)),
                     list(group="G2", entities=c(self(ds$v6), self(ds$v2)))
                 ))
+            })
+            
+            test_that("Can set VariableGroupings", {
+                ds <- setVariableOrder(ds, vg)
+                expect_identical(getVariableOrder(ds)[-4], vg)
+                    ## Prune #4 because it is the "ungrouped", which is empty
             })
         })
     })
