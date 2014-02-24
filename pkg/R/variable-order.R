@@ -54,7 +54,12 @@ setMethod("names<-", "VariableGrouping",
 setMethod("toJSON", "VariableGrouping", function (x, ...) toJSON(x@.Data, ...))
     ## need that toJSON method so that names don't get assigned bc of the names() method
 setMethod("toJSON", "VariableGroup", function (x, ...) {
-    toJSON(list(group=x@group, entities=I(x@entities)))
+    ents <- x@entities
+    if (length(ents) == 0) {
+        ## toJSON(character(0)) is [""], which is length 1 :(
+        ents <- list() ## but toJSON(list()) is []
+    }
+    toJSON(list(group=x@group, entities=I(ents)))
 })
 
 ##' @export

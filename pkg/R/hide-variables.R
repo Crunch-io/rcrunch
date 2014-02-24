@@ -72,8 +72,7 @@ hiddenVariablesList <- function (dataset) {
 
 ##' Show the names of hidden variables within the dataset
 ##' @param dataset the Dataset
-##' @return a vector of the names of Variables marked as hidden. Vector elements
-##' are named by the Variables' aliases.
+##' @return a vector of the names of Variables marked as hidden.
 ##' @export
 hiddenVariables <- function (dataset) {
     hv <- hiddenVariablesList(dataset)

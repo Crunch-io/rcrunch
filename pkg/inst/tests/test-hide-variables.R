@@ -39,11 +39,11 @@ if (!run.only.local.tests) {
                     c("v2", "v3"))
                 expect_true(all(vapply(hiddenVariablesList(testdf), is.variable,
                     logical(1))))
-                expect_identical(hiddenVariables(testdf), c(v2="v2", v3="v3"))
+                expect_identical(hiddenVariables(testdf), c("v2", "v3"))
                 
                 hiddenVariables(testdf) <- "v3"
                 ## work like is.na<-, i.e. adds hiding but doesn't unhide by omitting
-                expect_identical(hiddenVariables(testdf), c(v2="v2", v3="v3"))
+                expect_identical(hiddenVariables(testdf), c("v2", "v3"))
                 expect_identical(names(testdf)[1:2], c("v1", "v4"))
                 hiddenVariables(testdf) <- "v4"
                 expect_identical(names(testdf)[1:2], c("v1", "v5"))
