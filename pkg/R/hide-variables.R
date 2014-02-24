@@ -78,7 +78,7 @@ hiddenVariablesList <- function (dataset) {
 hiddenVariables <- function (dataset) {
     hv <- hiddenVariablesList(dataset)
     if (length(hv)) {
-        return(vapply(hv, function (x) name(x), character(1)))
+        return(vapply(hv, function (x) name(x), character(1), USE.NAMES=FALSE))
     } else {
         return(c())
     }

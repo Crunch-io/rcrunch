@@ -197,7 +197,7 @@ addVariable <- function (dataset, values, ...) {
         values <- rep(values, old)
         new <- old
     }
-    if (new != old) {
+    if (old > 0 && new != old) {
         stop("replacement has ", new, " rows, data has ", old)
     }
     var_url <- POSTNewVariable(dataset@urls$variables_url, 

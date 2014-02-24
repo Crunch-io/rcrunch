@@ -78,6 +78,7 @@ getVariableOrderURL <- function (dataset) {
     return(catalog$views$hierarchical_order)
 }
 
+##' @export
 getVariableOrder <- function (dataset) {
     if (is.null(dataset@urls$order_url)) {
         ## Something of a hack since we don't have caching.
@@ -86,6 +87,7 @@ getVariableOrder <- function (dataset) {
     return(do.call(VariableGrouping, GET(dataset@urls$order_url)$groups))
 }
 
+##' @export
 setVariableOrder <- function (x, value) {
     if (is.null(x@urls$order_url)) {
         ## Something of a hack since we don't have caching.
