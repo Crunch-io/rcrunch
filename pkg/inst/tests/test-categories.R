@@ -100,6 +100,9 @@ if (!run.only.local.tests) {
                 expect_equal(names(categories(testdf$v4)), c("V", "C"))
                 expect_identical(names(categories(testdf$v4)),
                     names(categories(refresh(testdf)$v4)))
+                
+                categories(testdf$v4) <- categories(testdf$v4)[2:1]
+                expect_equal(names(categories(testdf$v4)), c("C", "V"))
             })
         })
     })
