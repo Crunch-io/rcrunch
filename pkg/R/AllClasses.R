@@ -57,3 +57,11 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("namedList", "ShojiObject"
 Categories <- setClass("Categories", contains="list")
 ##' @export
 Category <- setClass("Category", contains="namedList")
+
+##' @export
+VariableGrouping <- setClass("VariableGrouping", contains="list")
+##' @export
+VariableGroup <- setClass("VariableGroup", representation=representation(
+    group="character",
+    entities="character"
+))

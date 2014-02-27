@@ -87,20 +87,35 @@ if (!run.only.local.tests) {
             })
         })
         
+        ca.var <- list(
+            name="Categorical array",
+            description="Here are some variables. They go together.",
+            type="categorical_array",
+            subvariables=lapply(names(mrdf)[1:3],
+                function (x) toVariable(as.factor(mrdf[[x]]), name=x))
+        )
         test_that("addVariables that are categorical_array", {
             with(test.dataset(), {
                 ds <- .setup
-                newvar <- list(
-                    name="Categorical array",
-                    description="Here are some variables. They go together.",
-                    type="categorical_array",
-                    subvariables=lapply(names(mrdf)[1:3],
-                        function (x) toVariable(as.factor(mrdf[[x]]), name=x))
-                )
-                POSTNewVariable(ds@urls$variables_url, newvar,
+                POSTNewVariable(ds@urls$variables_url, ca.var,
                     bind_url=ds@urls$bind_url)
                 ds <- refresh(ds)
                 expect_true(is.CA(ds$categoricalArray))
+            })
+        })
+        test_that("adding an array cleans up after self if one subvar errors", {
+            with(test.dataset(), {
+                c2 <- ca.var
+                c2$subvariables[[4]] <- list(this="is", not="a", valid="variable")
+                ds <- .setup
+                nvars.before <- ncol(ds)
+                expect_identical(nvars.before, 0L)
+                expect_error(POSTNewVariable(ds@urls$variables_url, c2,
+                    bind_url=ds@urls$bind_url), 
+                    "Subvariables errored on upload")
+                ds <- refresh(ds)
+                skip(expect_identical(ncol(ds), nvars.before),
+                    "Cannot yet DELETE variables")
             })
         })
         test_that("addVariables that are multiple_response", {
