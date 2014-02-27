@@ -41,17 +41,19 @@ default.useAlias <- function () {
 }
 
 ##' @export
-CrunchDataset <- setClass("CrunchDataset", contains=c("namedList", "ShojiObject"),
+CrunchDataset <- setClass("CrunchDataset", contains=c("list", "ShojiObject"),
     representation= representation(
         readonly="logical",
         useAlias="logical",
         .dim="numeric",
-        .order="list"
+        .order="list",
+        variables="character"
     ), 
     prototype=prototype(readonly=FALSE,
         useAlias=default.useAlias(),
         .dim=numeric(2),
-        .order=list()))
+        .order=list(),
+        variables=character()))
 
 ##' @export
 Categories <- setClass("Categories", contains="list")

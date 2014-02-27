@@ -39,10 +39,9 @@ setMethod("description<-", "CrunchDataset", setDatasetDescription)
     out <- CrunchDataset(x, ...)
     if (length(list(...))==0) {
         vars <- getDatasetVariables(out)
-        if (length(vars$variables)) {
-            out@.Data <- vars$variables
-            out@.order <- vars$order
-        }
+        out@.Data <- vars$variables
+        out@variables <- names(vars$variables)
+        out@.order <- vars$order
     }
     out@.dim <- getDim(out)
     return(out)
@@ -52,46 +51,12 @@ getDatasetVariables <- function (x) {
     u <- x@urls$variables_url
     catalog <- GET(u)
     varIndex <- catalog$index
-    varOrder <- GET(catalog$views$hierarchical_order)$groups
-    ungrouped <- vapply(varOrder, function (g) g$group == "ungrouped", logical(1))
-    varOrder <- c(varOrder[!ungrouped], varOrder[ungrouped])
-    vo <- unlist(lapply(varOrder, function (g) g$entities))
-    varIndex <- varIndex[vo]
+    varOrder <- do.call(VariableGrouping,
+        GET(catalog$views$hierarchical_order)$groups)
+    print(entities(varOrder))
+    varIndex <- varIndex[entities(varOrder)]
     return(list(variables=varIndex, order=varOrder))
 }
-
-# getDatasetVariables <- function (x) {
-#     if (!is.null(x@urls$all_variables_url)) {
-#         return(getAllDatasetVariables(x))
-#     } else {
-#         return(getDatasetVariablesFromCollection(x))
-#     }
-# }
-
-# getDatasetVariablesFromCollection <- function (x) {
-#     urls <- x@urls$variables_url
-#     if (!is.null(urls)) {
-#         vars <- getShojiCollection(urls, "body$alias")
-#         ordering <- order(selectFrom("body$header_order", vars))
-#         vars <- lapply(vars[ordering], as.variable)
-#         return(vars)
-#     } else {
-#         return(list())
-#     }
-# }
-# 
-# getAllDatasetVariables <- function (x) {
-#     url <- x@urls$all_variables_url
-#     vars <- GET(url)
-#     vars <- lapply(vars, function (a) {
-#         class(a) <- "shoji"
-#         return(a)
-#     })
-#     names(vars) <- selectFrom("body$alias", vars)
-#     ordering <- order(selectFrom("body$header_order", vars))
-#     vars <- lapply(vars[ordering], as.variable)
-#     return(vars)
-# }
 
 setAs("ShojiObject", "CrunchDataset", 
     function (from) .cr.dataset.shojiObject(from))
@@ -140,7 +105,7 @@ setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE)
 })
 ##' @export
 setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
-    return(as.variable(GET(names(x@.Data)[i])))
+    return(as.variable(GET(x@variables[i])))
 })
 ##' @export
 setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
