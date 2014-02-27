@@ -89,7 +89,6 @@ if (!run.only.local.tests) {
             with(test.dataset(mrdf), {
                 testmrdf <- .setup
                 test_that("names() are the same and in the right order", {
-                    print(names(testdf))
                     expect_true(setequal(names(df), names(testdf)))
                     expect_identical(names(df), names(testdf))
                     expect_true(setequal(names(mrdf), names(testmrdf)))

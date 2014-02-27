@@ -53,7 +53,6 @@ getDatasetVariables <- function (x) {
     varIndex <- catalog$index
     varOrder <- do.call(VariableGrouping,
         GET(catalog$views$hierarchical_order)$groups)
-    print(entities(varOrder))
     varIndex <- varIndex[entities(varOrder)]
     return(list(variables=varIndex, order=varOrder))
 }
@@ -168,15 +167,21 @@ setMethod("show", "CrunchDataset", function (object) {
 ##' @param dataset the Dataset or list of Crunch objects to search
 ##' @param pattern regular expression, passed to \code{grep}. If "", returns all.
 ##' @param key the field in the Crunch objects in which to grep
+##' @param hidden logical whether hidden variables should be searched. Default is FALSE
 ##' @param ... additional arguments passed to \code{grep}. If \code{value=TRUE},
 ##' returns the values of \code{key} where matches are found, not the variables
 ##' themselves
 ##' @return indices of the Variables that match the pattern, or the matching
 ##' key values if value=TRUE is passed to \code{grep}
 ##' @export
-findVariables <- function (dataset, pattern="", key=namekey(dataset), ...) {
+findVariables <- function (dataset, pattern="", key=namekey(dataset), hidden=FALSE, ...) {
     # keys <- selectFrom(key, lapply(dataset[], function (x) x@body))
-    keys <- selectFrom(key, dataset@.Data)
+    d <- dataset@.Data
+    if (!hidden) {
+        hidden.vars <- vapply(d, function (v) isTRUE(v$discarded), logical(1))
+        d <- d[!hidden.vars]
+    }
+    keys <- selectFrom(key, d)
     matches <- grep(pattern, keys, ...)
     names(matches) <- NULL
     return(matches)

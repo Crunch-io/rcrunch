@@ -16,9 +16,6 @@ if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
             ds <- .setup
-            # print(getVariableOrder(ds))
-            # print(VariableGrouping(list(list(name="ungrouped", 
-            # entities=vapply(ds, function (x) self(x), character(1), USE.NAMES=FALSE)))))
         skip({
         test_that("Can get VariableGrouping from dataset", {
                 expect_identical(getVariableOrder(ds), 

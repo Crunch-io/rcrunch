@@ -21,7 +21,7 @@ test_that("Datasets only contain variables", {
         ".*1 element is not a Crunch variable object.")
 })
 
-with(fake.HTTP, {
+skip(with(fake.HTTP, {
     ## Uses structures from helper.R
     test_that("Can construct Dataset from shoji document", {
         sho <- ds
@@ -87,7 +87,7 @@ with(fake.HTTP, {
         expect_false(identical(description(dataset), description(test.ds)))
         expect_identical(description(dataset), "007")
     })
-})
+}))
 
 if (!run.only.local.tests) {
     with(test.authentication, {

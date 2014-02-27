@@ -1,9 +1,9 @@
 context("Getting values to make local R objects")
 
 
-with(fake.HTTP, {
+skip(with(fake.HTTP, {
     ## Variable fake fixtures for dataset
-    test.ds <- .cr.dataset.shojiObject(as.shojiObject(ds), vars2)
+    test.ds <- CrunchDataset(as.shojiObject(ds), vars2, variables=vars2)
     test_that("as.vector on Variables", {
         expect_true(is.numeric(getValues(vars2$age)))
         expect_false(is.factor(getValues(vars2$gender)))
@@ -35,7 +35,7 @@ with(fake.HTTP, {
             expect_identical(test.lm[[i]], expected[[i]])
         }
     })
-})
+}))
 
 if (!run.only.local.tests) {
     with(test.authentication, {
