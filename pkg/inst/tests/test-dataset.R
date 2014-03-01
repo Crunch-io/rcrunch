@@ -21,24 +21,12 @@ test_that("Datasets only contain variables", {
         ".*1 element is not a Crunch variable object.")
 })
 
-skip(with(fake.HTTP, {
-    ## Uses structures from helper.R
-    test_that("Can construct Dataset from shoji document", {
-        sho <- ds
-        sh2 <- as.shojiObject(sho)
-        expect_true(is.dataset(.cr.dataset.shojiObject(sh2)))
-        expect_true(is.dataset(as(sh2, "CrunchDataset")))
-        expect_true(is.dataset(as(sho, "CrunchDataset")))
-        expect_true(is.dataset(as.dataset(sh2)))
-        expect_true(is.dataset(as.dataset(sho)))
-    })
-
-    ## Variable fake fixtures
-    test.ds <- .cr.dataset.shojiObject(as.shojiObject(ds), vars2)
+with(fake.HTTP, {
+    test.ds <- as.dataset(GET("api/datasets/dataset1.json"))
 
     test_that("findVariables", {
-        expect_identical(findVariables(test.ds, "^educ", key="alias"), 2L)
-        expect_identical(findVariables(test.ds, "^educ", key="alias", value=TRUE), "educ")
+        expect_identical(findVariables(test.ds, "^gend", key="alias"), 2L)
+        expect_identical(findVariables(test.ds, "^bir", key="alias", value=TRUE), "birthyr")
     })
 
     test_that("useAlias exists and affects names()", {
@@ -53,23 +41,22 @@ skip(with(fake.HTTP, {
     })
 
     test_that("useAlias is an argument to as.dataset", {
-        expect_equal(as.dataset(ds)@useAlias, default.useAlias())
-        expect_false(as.dataset(ds, useAlias=FALSE)@useAlias)
+        expect_equal(as.dataset(GET("api/datasets/dataset1.json"))@useAlias, default.useAlias())
+        expect_false(as.dataset(GET("api/datasets/dataset1.json"), useAlias=FALSE)@useAlias)
     })
 
     test_that("Dataset has names() and extract methods work", {
         expect_false(is.null(names(test.ds)))
-        expect_identical(names(test.ds), names(vars2))
+        expect_identical(names(test.ds), c("birthyr", "gender"))
         expect_true(is.variable(test.ds[[1]]))
-        expect_true("age" %in% names(test.ds))
-        expect_true(is.variable(test.ds$age))
+        expect_true("birthyr" %in% names(test.ds))
+        expect_true(is.variable(test.ds$birthyr))
         expect_true(is.dataset(test.ds[1]))
-        expect_identical(test.ds$age, vars2$age)
         expect_true(is_valid_dataset(test.ds))
         expect_true(is_valid_dataset(test.ds[1]))
-        expect_true(is_valid_dataset(test.ds["age"]))
-        expect_true(is_valid_dataset(test.ds[names(test.ds)=="age"]))
-        expect_identical(names(test.ds[2:3]), c("educ", "race"))
+        expect_true(is_valid_dataset(test.ds["birthyr"]))
+        expect_true(is_valid_dataset(test.ds[names(test.ds)=="birthyr"]))
+        expect_identical(names(test.ds[2]), c("gender"))
     })
 
     test_that("Read only flag gets set appropriately", {
@@ -87,7 +74,7 @@ skip(with(fake.HTTP, {
         expect_false(identical(description(dataset), description(test.ds)))
         expect_identical(description(dataset), "007")
     })
-}))
+})
 
 if (!run.only.local.tests) {
     with(test.authentication, {

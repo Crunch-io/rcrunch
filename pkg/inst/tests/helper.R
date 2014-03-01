@@ -36,7 +36,10 @@ with.SUTD <- function (data, expr, ...) {
 
 ## note that this works because testthat evals within package namespace
 addFakeHTTPVerbs <- function () {
-    http_verbs$GET <- function (url, ...) url
+    http_verbs$GET <- function (url, ...) {
+        # print(url)
+        handleShoji(fromJSON(system.file(url, package="rcrunch"), simplifyWithNames=FALSE))
+    }
     http_verbs$PUT <- function (...) crunchAPI("PUT", ...)
     http_verbs$POST <- function (...) crunchAPI("POST", ...)
 }
@@ -81,7 +84,7 @@ test.dataset <- function (df=NULL, ...) {
 ###################
 
 ## Datasets
-ds <- loadJSONMocks("dataset.json")
+ds <- loadJSONMocks("api/datasets/dataset1.json")
 class(ds) <- "shoji"
 
 ## Variables
@@ -113,6 +116,7 @@ mrdf <- data.frame(mr_1=c(1,0,1,NA_real_),
 
 vals <- lapply(vars2, mockValues, n=25)
 vars2 <- mapply(function (var, val) {
+    # cat(toJSON(val))
     var@urls$values_url <- val
     return(var)
 }, var=vars2, val=vals)

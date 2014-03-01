@@ -1,41 +1,41 @@
 context("Getting values to make local R objects")
 
 
-skip(with(fake.HTTP, {
+with(fake.HTTP, {
     ## Variable fake fixtures for dataset
-    test.ds <- CrunchDataset(as.shojiObject(ds), vars2, variables=vars2)
+    test.ds <- as.dataset(GET("api/datasets/dataset1.json"))
     test_that("as.vector on Variables", {
-        expect_true(is.numeric(getValues(vars2$age)))
-        expect_false(is.factor(getValues(vars2$gender)))
-        expect_true(all(getValues(vars2$gender) %in% names(categories(vars2$gender))))
-        expect_true(is.factor(as.vector(vars2$gender)))
-        expect_true(all(levels(as.vector(vars2$gender)) %in% names(categories(vars2$gender))))
+        expect_true(is.numeric(getValues(test.ds$birthyr)))
+        expect_false(is.factor(getValues(test.ds$gender)))
+        expect_true(all(getValues(test.ds$gender) %in% names(categories(test.ds$gender))))
+        expect_true(is.factor(as.vector(test.ds$gender)))
+        expect_true(all(levels(as.vector(test.ds$gender)) %in% names(categories(test.ds$gender))))
     })
 
     test_that("as.data.frame on CrunchDataset", {
         expect_true(is.data.frame(as.data.frame(test.ds)))
         expect_identical(dim(as.data.frame(test.ds)), c(25L, length(test.ds)))
         expect_identical(names(as.data.frame(test.ds)), names(test.ds))
-        expect_identical(as.data.frame(test.ds)$age, as.vector(vars2$age))
+        expect_identical(as.data.frame(test.ds)$birthyr, as.vector(test.ds$birthyr))
     })
     
     test.df <- as.data.frame(test.ds)
     
     test_that("model.frame thus works on CrunchDataset", {
-        expect_identical(model.frame(age ~ gender, data=test.df),
-            model.frame(age ~ gender, data=test.ds))
+        expect_identical(model.frame(birthyr ~ gender, data=test.df),
+            model.frame(birthyr ~ gender, data=test.ds))
     })
     
     test_that("so lm() should work too", {
-        test.lm <- lm(age ~ gender, data=test.ds)
-        expected <- lm(age ~ gender, data=test.df)
+        test.lm <- lm(birthyr ~ gender, data=test.ds)
+        expected <- lm(birthyr ~ gender, data=test.df)
         expect_true(inherits(test.lm, "lm"))
         expect_identical(names(test.lm), names(expected))
         for (i in setdiff(names(expected), "call")) {
             expect_identical(test.lm[[i]], expected[[i]])
         }
     })
-}))
+})
 
 if (!run.only.local.tests) {
     with(test.authentication, {
