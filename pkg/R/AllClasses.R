@@ -47,13 +47,15 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("list", "ShojiObject"),
         useAlias="logical",
         .dim="numeric",
         .order="list",
-        variables="character"
+        variables="character",
+        hiddenVariables="list"
     ), 
     prototype=prototype(readonly=FALSE,
         useAlias=default.useAlias(),
         .dim=numeric(2),
         .order=list(),
-        variables=character()))
+        variables=character(),
+        hiddenVariables=list()))
 
 ##' @export
 Categories <- setClass("Categories", contains="list")

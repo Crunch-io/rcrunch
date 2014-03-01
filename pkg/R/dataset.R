@@ -39,8 +39,10 @@ setMethod("description<-", "CrunchDataset", setDatasetDescription)
     out <- CrunchDataset(x, ...)
     if (length(list(...))==0) {
         vars <- getDatasetVariables(out)
-        out@.Data <- vars$variables
-        out@variables <- names(vars$variables)
+        hiddenvars <- vapply(vars$variables, function (v) isTRUE(v$discarded), logical(1))
+        out@hiddenVariables <- vars$variables[hiddenvars]
+        out@.Data <- vars$variables[!hiddenvars]
+        out@variables <- names(vars$variables[!hiddenvars])
         out@.order <- vars$order
     }
     out@.dim <- getDim(out)
@@ -91,6 +93,7 @@ setMethod("names", "CrunchDataset", function (x) {
 ##' @export
 setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     x@.Data <- x@.Data[i]
+    x@variables <- x@variables[i]
     readonly(x) <- TRUE ## we don't want to overwrite the big object accidentally
     return(x)
 })
@@ -174,14 +177,12 @@ setMethod("show", "CrunchDataset", function (object) {
 ##' @return indices of the Variables that match the pattern, or the matching
 ##' key values if value=TRUE is passed to \code{grep}
 ##' @export
-findVariables <- function (dataset, pattern="", key=namekey(dataset), hidden=FALSE, ...) {
-    # keys <- selectFrom(key, lapply(dataset[], function (x) x@body))
-    d <- dataset@.Data
-    if (!hidden) {
-        hidden.vars <- vapply(d, function (v) isTRUE(v$discarded), logical(1))
-        d <- d[!hidden.vars]
+findVariables <- function (dataset, pattern="", key=namekey(dataset), ...) {
+    
+    if (is.dataset(dataset)) {
+        dataset <- dataset@.Data
     }
-    keys <- selectFrom(key, d)
+    keys <- selectFrom(key, dataset)
     matches <- grep(pattern, keys, ...)
     names(matches) <- NULL
     return(matches)
@@ -278,3 +279,8 @@ weight <- function (x) {
     x <- setCrunchSlot(x, "weight", value)
     return(x)
 }
+
+setMethod("lapply", "CrunchDataset", function (X, FUN, ...) {
+    vars <- lapply(X@variables, function (x) as.variable(GET(x)))
+    callNextMethod(vars, FUN, ...)
+})
