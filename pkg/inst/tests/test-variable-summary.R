@@ -1,22 +1,23 @@
 context("Variable summaries")
 
-tablecats <- categories(variables_v2$gender)
-tablesums <- variables_v2$gender@urls$summary_url$categories
-
-test_that("ids getter for summaries", {
-    expect_identical(ids(tablesums), selectFrom("id", tablesums))
-    expect_true(setequal(ids(tablecats), ids(tablesums)))
-})
-
-test_that("makeCategoricalTable", {
-    testtable <- makeCategoricalTable(tablesums)
-    expect_true(is.table(testtable))
-    expect_identical(length(testtable), 2L)
-    expect_identical(names(testtable), names(na.omit(tablecats)))
-})
-
 with(fake.HTTP, {
-    gen <- variables_v2$gender
+    ds2 <- as.dataset(GET("api/datasets/dataset1.json"))
+    gen <- ds2$gender
+    tablecats <- categories(gen)
+    tablesums <- GET(gen@urls$summary_url)$categories
+
+    test_that("ids getter for summaries", {
+        expect_identical(ids(tablesums), selectFrom("id", tablesums))
+        expect_true(setequal(ids(tablecats), ids(tablesums)))
+    })
+
+    test_that("makeCategoricalTable", {
+        testtable <- makeCategoricalTable(tablesums)
+        expect_true(is.table(testtable))
+        expect_identical(length(testtable), 2L)
+        expect_identical(names(testtable), names(na.omit(tablecats)))
+    })
+
     
     test_that("CategoricalVariable.table", {
         expect_true(is.table(CategoricalVariable.table(gen)))
@@ -32,7 +33,9 @@ with(fake.HTTP, {
         expect_identical(length(CategoricalVariable.table(gen, useNA="always")),
             3L)
         expect_true(is.table(CategoricalVariable.table(gen, useNA="always")))
-        gen@urls$summary_url$missing_count <- 10
+        ## Now see what happens if there are missing values
+        gen@urls$summary_url <- sub("summary", "summary_with_missing",
+            gen@urls$summary_url)
         expect_identical(length(CategoricalVariable.table(gen, useNA="no")),
             2L)
         expect_identical(length(CategoricalVariable.table(gen, useNA="ifany")),
