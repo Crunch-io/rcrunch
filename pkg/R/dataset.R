@@ -243,12 +243,10 @@ POSTNewVariable <- function (collection_url, variable, bind_url=NULL) {
 addVariables <- function (dataset, vars) {
     ## assume data frame
     nvars <- ncol(vars)
-    offset <- ncol(dataset) - 1
     vars_url <- dataset@urls$variables_url
     for (i in seq_len(nvars)) {
         POSTNewVariable(vars_url,
-            toVariable(vars[[i]], name=names(vars)[i], alias=names(vars)[i],
-            header_order=(offset+i)))
+            toVariable(vars[[i]], name=names(vars)[i], alias=names(vars)[i]))
     }
     invisible(refresh(dataset))
 }

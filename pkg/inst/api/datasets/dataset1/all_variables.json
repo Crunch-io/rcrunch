@@ -57,7 +57,6 @@
             },
             "type": "categorical",
             "id": "66ae9881e3524f7db84970d556c34552",
-            "header_order": 138,
             "description": "Gender"
         },
         "urls": {
@@ -92,7 +91,6 @@
             },
             "type": "numeric",
             "id": "f78ca47313144b57adfb495893968e70",
-            "header_order": 137,
             "description": "Birth Year"
         },
         "urls": {
