@@ -99,7 +99,7 @@ handleAPIerror <- function (response) {
 }
 
 crunchConfig <- function () {
-    c(getToken(), list(verbose=FALSE, sslversion=3L), crunchHTTPheaders())
+    c(getToken(), httr:::default_config(), list(verbose=FALSE, sslversion=3L), crunchHTTPheaders())
 }
 
 crunchHTTPheaders <- function () {
