@@ -1,3 +1,4 @@
 *.pyc
 pkg.Rcheck/
 *.orig
+rcrunch*.tar.gz

@@ -12,7 +12,8 @@ test_that("HTTP verbs are validated", {
 config.args <- c("sslversion", "httpheader", "verbose")
 
 test_that("crunchConfig has right structure", {
-    expect_true(setequal(names(crunchConfig()), config.args))
+    expect_true(all(config.args %in% names(crunchConfig())))
+    expect_identical(crunchConfig()$encoding, "gzip")
 })
 
 if (!run.only.local.tests) {
@@ -31,7 +32,7 @@ if (!run.only.local.tests) {
     }
 
     with(test.authentication, 
-        test_that("crunchConfig", {
-            expect_identical(length(crunchConfig()), length(config.args) + 1L)
+        test_that("cookie is in the request header", {
+            expect_true("cookie" %in% names(crunchConfig()))
     }))
 }
