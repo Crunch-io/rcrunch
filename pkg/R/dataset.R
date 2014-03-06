@@ -211,7 +211,6 @@ addVariable <- function (dataset, values, ...) {
 POSTNewVariable <- function (collection_url, variable, bind_url=NULL) {
     
     do.POST <- function (x) POST(collection_url, body=toJSON(x, digits=15))
-    # test <- function () stop("")
     is.error <- function (x) inherits(x, "try-error")
     
     if (variable$type %in% c("multiple_response", "categorical_array")) {
