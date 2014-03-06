@@ -1,6 +1,6 @@
 validCrunchDataset <- function (object) {
     oname <- object@body$name
-    are.vars <- vapply(object, is.variable, logical(1))
+    are.vars <- vapply(object, is.variable.tuple, logical(1))
     if (!all(are.vars)) {
         badcount <- sum(!are.vars)
         val <- paste0("Invalid dataset ", sQuote(oname), ": ", badcount, 
@@ -284,3 +284,7 @@ setMethod("lapply", "CrunchDataset", function (X, FUN, ...) {
     vars <- lapply(X@variables, function (x) as.variable(GET(x)))
     callNextMethod(vars, FUN, ...)
 })
+
+is.variable.tuple <- function (x) {
+    is.list(x) && all(c("name", "alias", "type", "id") %in% names(x))
+}

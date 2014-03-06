@@ -24,8 +24,7 @@ if (!run.only.local.tests) {
                 expect_true(is.Text(castVariable(testvar, "text")))    
                 type(testvar) <- "numeric"
                 expect_true(is.Numeric(testvar))
-                expect_false(is.Numeric(testdf[["v1"]])) 
-                expect_true(is.Numeric(refresh(testdf[["v1"]])))
+                expect_true(is.Numeric(testdf[["v1"]]))
                     ## since they're the same remote object
         
                 expect_error(castVariable(, "foo"), 
