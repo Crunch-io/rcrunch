@@ -45,5 +45,9 @@ with(fake.HTTP, {
         expect_identical(name(ds$gender), "Gender")
         expect_identical(description(ds$starttime), "Interview Start Time")
     })
+    
+    test_that("refresh", {
+        expect_identical(ds$gender, refresh(ds$gender))
+    })
 })
 

@@ -47,7 +47,7 @@ with(fake.HTTP, {
 
     test_that("Dataset has names() and extract methods work", {
         expect_false(is.null(names(test.ds)))
-        expect_identical(names(test.ds), c("birthyr", "gender"))
+        expect_identical(names(test.ds), c("birthyr", "gender", "mymrset", "textVar", "starttime"))
         expect_true(is.variable(test.ds[[1]]))
         expect_true("birthyr" %in% names(test.ds))
         expect_true(is.variable(test.ds$birthyr))

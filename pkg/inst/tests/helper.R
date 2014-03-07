@@ -79,13 +79,6 @@ test.dataset <- function (df=NULL, ...) {
     ))
 }
 
-###################
-## Mock fixtures ##
-###################
-
-## Datasets
-ds <- loadJSONMocks("api/datasets/dataset1.json")
-class(ds) <- "shoji"
 
 ## Data frames to make datasets with
 df <- data.frame(v1=c(rep(NA_real_, 5), rnorm(15)), 

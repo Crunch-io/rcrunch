@@ -223,7 +223,7 @@ weight <- function (x) {
 }
 
 setMethod("lapply", "CrunchDataset", function (X, FUN, ...) {
-    vars <- lapply(X@variables, function (x) as.variable(GET(x)))
+    vars <- lapply(seq_along(X@variables), function (i) X[[i]])
     callNextMethod(vars, FUN, ...)
 })
 

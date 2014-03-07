@@ -55,7 +55,9 @@ as.variable <- function (x, subtype=NULL, tuple=IndexTuple()) {
 
 ## In case variable type has been changed, need to instantiate off of new type
 ##' @export
-setMethod("refresh", "CrunchVariable", function (x) as.variable(GET(self(x))))
+setMethod("refresh", "CrunchVariable", function (x) {
+    as.variable(GET(self(x)), tuple=refresh(x@tuple))
+})
 
 as.Numeric <- function (x) as.variable(x, "numeric")
 as.Categorical <- function (x) as.variable(x, "categorical")
@@ -100,7 +102,8 @@ setMethod("categories", "CategoricalArrayVariable", function (x) x@body$categori
 ##' @export
 setMethod("categories<-", "CategoricalVariable", 
     function (x, value) setCrunchSlot(x, "categories", value))
-
+setMethod("categories<-", "CategoricalArrayVariable", 
+    function (x, value) setCrunchSlot(x, "categories", value))
 
 .dichotomize.var <- function (x, i) {
     categories(x) <- dichotomize(categories(x), i)

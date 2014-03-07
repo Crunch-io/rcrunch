@@ -44,3 +44,4 @@ Collate:
     'R-to-variable.R'
     'variable-order.R'
     'add-variable.R'
+    'tuple.R'
