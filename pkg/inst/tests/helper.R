@@ -87,16 +87,6 @@ test.dataset <- function (df=NULL, ...) {
 ds <- loadJSONMocks("api/datasets/dataset1.json")
 class(ds) <- "shoji"
 
-## Variables
-## These are outdated and should be deprecated in favor of the v2s
-vars <- loadJSONMocks("variables.json")
-names(vars) <- selectFrom("alias", vars)
-vars <- lapply(vars, function (x) structure(list(body=x), class="shoji"))
-vars2 <- lapply(vars, as.variable)
-
-vars_v2 <- loadMockVariables()
-variables_v2 <- lapply(vars_v2, as.variable)
-
 ## Data frames to make datasets with
 df <- data.frame(v1=c(rep(NA_real_, 5), rnorm(15)), 
                  v2=c(letters[1:15], rep(NA_character_, 5)), 
@@ -111,12 +101,3 @@ mrdf <- data.frame(mr_1=c(1,0,1,NA_real_),
                    mr_3=c(0,0,1,NA_real_),
                    v4=as.factor(LETTERS[2:3]),
                    stringsAsFactors=FALSE)
-
-## Values
-
-vals <- lapply(vars2, mockValues, n=25)
-vars2 <- mapply(function (var, val) {
-    # cat(toJSON(val))
-    var@urls$values_url <- val
-    return(var)
-}, var=vars2, val=vals)

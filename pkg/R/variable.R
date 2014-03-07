@@ -44,9 +44,12 @@ setAs("ShojiObject", "CrunchVariable",
 setAs("shoji", "CrunchVariable", 
     function (from) do.call("CrunchVariable", from))
     
-as.variable <- function (x, subtype=NULL) {
+as.variable <- function (x, subtype=NULL, tuple=IndexTuple()) {
     x <- as(x, "CrunchVariable")
-    if (is.variable(x)) x <- subclassVariable(x, to=subtype)
+    if (is.variable(x)) {
+        x <- subclassVariable(x, to=subtype)
+        x@tuple <- tuple
+    }
     return(x)
 }
 
@@ -79,21 +82,25 @@ pickSubclassConstructor <- function (x=NULL) {
 }
 
 ##' @export
-setMethod("name", "CrunchVariable", function (x) x@body$name)
+setMethod("name", "CrunchVariable", function (x) x@tuple@body$name)
 ##' @export
 setMethod("name<-", "CrunchVariable", 
     function (x, value) setCrunchSlot(x, "name", value))
 ##' @export
-setMethod("description", "CrunchVariable", function (x) x@body$description)
+setMethod("description", "CrunchVariable", function (x) x@tuple@body$description)
 ##' @export
 setMethod("description<-", "CrunchVariable", 
     function (x, value) setCrunchSlot(x, "description", value))
 
 ##' @export
-setMethod("categories", "CrunchVariable", function (x) x@body$categories)
+setMethod("categories", "CrunchVariable", function (x) NULL)
+setMethod("categories", "CategoricalVariable", function (x) x@body$categories)
+setMethod("categories", "CategoricalArrayVariable", function (x) x@body$categories)
+
 ##' @export
-setMethod("categories<-", "CrunchVariable", 
+setMethod("categories<-", "CategoricalVariable", 
     function (x, value) setCrunchSlot(x, "categories", value))
+
 
 .dichotomize.var <- function (x, i) {
     categories(x) <- dichotomize(categories(x), i)

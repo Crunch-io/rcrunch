@@ -16,11 +16,20 @@ ShojiObject <- setClass("ShojiObject",
         template="ANY"
     ))
 
+IndexTuple <- setClass("IndexTuple", 
+    representation(
+        index_url="character",
+        entity_url="character",
+        body="list"
+    ))
+
 CrunchVariable <- setClass("CrunchVariable", contains="ShojiObject",
     representation= representation(
-        readonly="logical"
+        readonly="logical",
+        tuple="IndexTuple"
     ), 
-    prototype=prototype(readonly=FALSE))
+    prototype=prototype(readonly=FALSE, tuple=IndexTuple()))
+
 ##' @export
 NumericVariable <- setClass("NumericVariable", contains="CrunchVariable")
 ##' @export
