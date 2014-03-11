@@ -1,0 +1,47 @@
+{
+    "count": 1000,
+    "missing_count": 0,
+    "missing_frequencies": [
+        {
+            "count": 0,
+            "value": "Skipped"
+        },
+        {
+            "count": 0,
+            "value": "Not Asked"
+        }
+    ],
+    "categories": [
+        {
+            "count": 466,
+            "id": 1,
+            "name": "Male",
+            "missing": false
+        },
+        {
+            "count": 534,
+            "id": 2,
+            "name": "Female",
+            "missing": false
+        },
+        {
+            "count": 0,
+            "id": 3,
+            "name": "Skipped",
+            "missing": true
+        },
+        {
+            "count": 0,
+            "id": 4,
+            "name": "Not Asked",
+            "missing": true
+        },
+        {
+            "count": 0,
+            "id": -1,
+            "name": "No Data",
+            "missing": true
+        }
+    ],
+    "valid_count": 1000
+}

@@ -1,0 +1,36 @@
+{
+    "element": "shoji:entity",
+    "self": "api/datasets/dataset1/variables/birthyr.json",
+    "body": {
+        "name": "birthyr",
+        "format": {
+            "data": {
+                "digits": 2
+            },
+            "summary": {
+                "digits": 2
+            }
+        },
+        "tags": [],
+        "missing_reasons": {
+            "No Data": -1,
+            "Skipped": 1,
+            "Not Asked": 2
+        },
+        "discarded": false,
+        "alias": "birthyr",
+        "categories": [],
+        "dataset_id": "a45d1b42dbca4b27a40c61f0e3c39723",
+        "view": {
+            "column_width": null
+        },
+        "type": "numeric",
+        "id": "f78ca47313144b57adfb495893968e70",
+        "description": "Birth Year"
+    },
+    "urls": {
+        "summary_url": "api/datasets/dataset1/variables/birthyr/summary.json",
+        "values_url": "api/datasets/dataset1/variables/birthyr/values.json"
+    },
+    "description": "Details for a given Variable"
+}

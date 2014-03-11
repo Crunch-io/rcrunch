@@ -72,16 +72,15 @@ handleAPIresponse <- function (response, special.statuses=list()) {
         } else if (code==204 || length(response$content)==0) {
             invisible(response)
         } else {
-            out <- content(response)
-            if (is.shoji.like(out)) {
-                class(out) <- c("shoji", out$element)
-            }
-            if ("shoji:view" %in% class(out)) {
-                out <- out$value
-            }
-            return(out)            
+            return(handleShoji(content(response)))            
         }
     } else {
+        if (isTRUE(getOption("crunch.debug"))) {
+            out <- try(content(response), silent=TRUE)
+            if (!inherits(out, "try-error") && "message" %in% try(names(out))) {
+                message(response$message)
+            }            
+        }
         stop_for_status(response)
     }
 }
@@ -100,7 +99,7 @@ handleAPIerror <- function (response) {
 }
 
 crunchConfig <- function () {
-    c(getToken(), list(verbose=FALSE, sslversion=3L), crunchHTTPheaders())
+    c(getToken(), httr:::default_config(), list(verbose=isTRUE(getOption("crunch.debug")), sslversion=3L), crunchHTTPheaders())
 }
 
 crunchHTTPheaders <- function () {
@@ -138,6 +137,16 @@ is.JSON.response <- function (x) {
 parseJSONresponse <- function (x, simplifyWithNames=FALSE, ...) {
     fromJSON(httr:::parse_text(x, encoding = "UTF-8"),
         simplifyWithNames=simplifyWithNames, ...)
+}
+
+handleShoji <- function (x) {
+    if (is.shoji.like(x)) {
+        class(x) <- c("shoji", x$element)
+    }
+    if ("shoji:view" %in% class(x)) {
+        x <- x$value
+    }
+    return(x)
 }
 
 ##' Select the right function to run that HTTP call

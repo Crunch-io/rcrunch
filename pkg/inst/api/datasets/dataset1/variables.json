@@ -1,0 +1,27 @@
+{
+    "element": "shoji:catalog",
+    "self": "datasets/dataset1/variables.json",
+    "specification": "https://alpha.crunch.io/api/specifications/variables/",
+    "description": "List of Variables of this dataset",
+    "index": {
+        "api/datasets/dataset1/variables/gender.json": {
+            "name": "Gender",
+            "discarded": false,
+            "alias": "gender",
+            "type": "categorical",
+            "id": "gender",
+            "description": "Gender"
+        },
+        "api/datasets/dataset1/variables/birthyr.json": {
+            "name": "Birth Year",
+            "discarded": false,
+            "alias": "birthyr",
+            "type": "numeric",
+            "id": "birthyr",
+            "description": null
+        }
+    },
+    "views": {
+        "hierarchical_order": "api/datasets/dataset1/hierarchical.json"
+    }
+}

@@ -39,18 +39,28 @@ hideVariables <- function (dataset, variables, pattern=NULL, key=namekey(dataset
 ##' @rdname hideVariables
 ##' @export
 `hiddenVariables<-` <- function (x, value) {
-    hideVariables(x, value)
+    if (is.character(value)) {
+        value <- na.omit(match(value, names(x)))
+    }
+    if (length(value)) {
+        return(hideVariables(x, value))
+    } else {
+        return(x)
+    }
 }
 
 ##' @rdname hideVariables
 ##' @export
-unhideVariables <- function (dataset, variables, pattern=NULL, key=namekey(dataset), 
-                            ...) {
+unhideVariables <- function (dataset, variables, pattern=NULL,
+                            key=namekey(dataset), ...) {
     hidden.vars <- hiddenVariablesList(dataset)
     if (!is.null(pattern)) {
-        variables <- findVariables(hidden.vars, pattern=pattern, key=key, ...)
+        variables <- findVariables(hidden.vars, pattern=pattern, key=key, ..., value=FALSE)
+    } else if (is.character(variables)) {
+        ## This should really be a variable collection [ method
+        variables <- selectFrom(key, hidden.vars) %in% variables
     }
-    lapply(hidden.vars[variables], function (x) unhide(x))
+    lapply(names(hidden.vars[variables]), function (x) unhide(as.variable(GET(x))))
     invisible(refresh(dataset))
 }
 
@@ -58,20 +68,17 @@ unhideVariables <- function (dataset, variables, pattern=NULL, key=namekey(datas
 ##' @param dataset the Dataset
 ##' @return a list of Variables marked as hidden
 hiddenVariablesList <- function (dataset) {
-    vars <- getShojiCollection(dataset@urls$discarded_variables_url,
-        "body$alias")
-    return(lapply(vars, as.variable))
+    return(dataset@hiddenVariables)
 }
 
 ##' Show the names of hidden variables within the dataset
 ##' @param dataset the Dataset
-##' @return a vector of the names of Variables marked as hidden. Vector elements
-##' are named by the Variables' aliases.
+##' @return a vector of the names of Variables marked as hidden.
 ##' @export
 hiddenVariables <- function (dataset) {
     hv <- hiddenVariablesList(dataset)
     if (length(hv)) {
-        return(vapply(hv, function (x) name(x), character(1)))
+        return(vapply(hv, function (x) x$name, character(1), USE.NAMES=FALSE))
     } else {
         return(c())
     }

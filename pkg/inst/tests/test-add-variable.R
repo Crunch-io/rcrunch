@@ -1,7 +1,8 @@
 context("Add a variable to a dataset")
 
 test_that("toVariable parses R data types", {
-    expect_identical(toVariable(2L:4L), list(values=2L:4L, type="numeric"))
+    expect_identical(toVariable(2L:4L, name="Numbers!", alias="num"),
+        list(values=2L:4L, type="numeric", name="Numbers!", alias="num"))
     expect_identical(toVariable(letters[1:3]),
         list(values=c("a", "b", "c"), type="text"))
     expect_equivalent(toVariable(as.factor(rep(LETTERS[2:3], 3))), 
@@ -13,6 +14,8 @@ test_that("toVariable parses R data types", {
     expect_identical(getOption("crunch.max.categories"), 4)
     expect_identical(toVariable(as.factor(letters[1:5])), 
         list(values=c("a", "b", "c", "d", "e"), type="text"))
+    expect_identical(toVariable(as.factor(letters[1:5]), name="v1"), 
+        list(values=c("a", "b", "c", "d", "e"), type="text", name="v1"))
     options(crunch.max.categories=256)
 })
 
@@ -84,20 +87,35 @@ if (!run.only.local.tests) {
             })
         })
         
+        ca.var <- list(
+            name="Categorical array",
+            description="Here are some variables. They go together.",
+            type="categorical_array",
+            subvariables=lapply(names(mrdf)[1:3],
+                function (x) toVariable(as.factor(mrdf[[x]]), name=x))
+        )
         test_that("addVariables that are categorical_array", {
             with(test.dataset(), {
                 ds <- .setup
-                newvar <- list(
-                    name="Categorical array",
-                    description="Here are some variables. They go together.",
-                    type="categorical_array",
-                    subvariables=lapply(names(mrdf)[1:3],
-                        function (x) toVariable(as.factor(mrdf[[x]]), name=x))
-                )
-                POSTNewVariable(ds@urls$variables_url, newvar,
+                POSTNewVariable(ds@urls$variables_url, ca.var,
                     bind_url=ds@urls$bind_url)
                 ds <- refresh(ds)
                 expect_true(is.CA(ds$categoricalArray))
+            })
+        })
+        test_that("adding an array cleans up after self if one subvar errors", {
+            with(test.dataset(), {
+                c2 <- ca.var
+                c2$subvariables[[4]] <- list(this="is", not="a", valid="variable")
+                ds <- .setup
+                nvars.before <- ncol(ds)
+                expect_identical(nvars.before, 0L)
+                expect_error(POSTNewVariable(ds@urls$variables_url, c2,
+                    bind_url=ds@urls$bind_url), 
+                    "Subvariables errored on upload")
+                ds <- refresh(ds)
+                skip(expect_identical(ncol(ds), nvars.before),
+                    "Cannot yet DELETE variables")
             })
         })
         test_that("addVariables that are multiple_response", {

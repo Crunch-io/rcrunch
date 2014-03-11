@@ -1,6 +1,6 @@
 validCrunchDataset <- function (object) {
     oname <- object@body$name
-    are.vars <- vapply(object, is.variable, logical(1))
+    are.vars <- vapply(object, is.variable.tuple, logical(1))
     if (!all(are.vars)) {
         badcount <- sum(!are.vars)
         val <- paste0("Invalid dataset ", sQuote(oname), ": ", badcount, 
@@ -39,43 +39,24 @@ setMethod("description<-", "CrunchDataset", setDatasetDescription)
     out <- CrunchDataset(x, ...)
     if (length(list(...))==0) {
         vars <- getDatasetVariables(out)
-        if (length(vars)) out@.Data <- vars
+        hiddenvars <- vapply(vars$variables, function (v) isTRUE(v$discarded), logical(1))
+        out@hiddenVariables <- vars$variables[hiddenvars]
+        out@.Data <- vars$variables[!hiddenvars]
+        out@variables <- names(vars$variables[!hiddenvars])
+        out@.order <- vars$order
     }
     out@.dim <- getDim(out)
     return(out)
 }
 
 getDatasetVariables <- function (x) {
-    if (!is.null(x@urls$all_variables_url)) {
-        return(getAllDatasetVariables(x))
-    } else {
-        return(getDatasetVariablesFromCollection(x))
-    }
-}
-
-getDatasetVariablesFromCollection <- function (x) {
-    urls <- x@urls$variables_url
-    if (!is.null(urls)) {
-        vars <- getShojiCollection(urls, "body$alias")
-        ordering <- order(selectFrom("body$header_order", vars))
-        vars <- lapply(vars[ordering], as.variable)
-        return(vars)
-    } else {
-        return(list())
-    }
-}
-
-getAllDatasetVariables <- function (x) {
-    url <- x@urls$all_variables_url
-    vars <- GET(url)
-    vars <- lapply(vars, function (a) {
-        class(a) <- "shoji"
-        return(a)
-    })
-    names(vars) <- selectFrom("body$alias", vars)
-    ordering <- order(selectFrom("body$header_order", vars))
-    vars <- lapply(vars[ordering], as.variable)
-    return(vars)
+    u <- x@urls$variables_url
+    catalog <- GET(u)
+    varIndex <- catalog$index
+    varOrder <- do.call(VariableGrouping,
+        GET(catalog$views$hierarchical_order)$groups)
+    varIndex <- varIndex[entities(varOrder)]
+    return(list(variables=varIndex, order=varOrder))
 }
 
 setAs("ShojiObject", "CrunchDataset", 
@@ -92,10 +73,12 @@ as.dataset <- function (x, useAlias=default.useAlias()) {
 ##' @export
 setMethod("dim", "CrunchDataset", function (x) x@.dim)
 
-getDim <- function (dataset) {
+getDim <- function (dataset, filtered=TRUE) {
+    which.count <- ifelse(isTRUE(filtered), "filtered", "total")
+    ## use filtered by default because every other request will take the applied filter
+    
     summary_url <- dataset@urls$summary_url
-    nrow <- as.integer(GET(summary_url)$rows$filtered)
-    ## use filtered because every other request will take the applied filter
+    nrow <- as.integer(round(GET(summary_url)$rows[[which.count]]))
     return(c(nrow, length(dataset)))
 }
 
@@ -110,14 +93,29 @@ setMethod("names", "CrunchDataset", function (x) {
 ##' @export
 setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     x@.Data <- x@.Data[i]
+    x@variables <- x@variables[i]
     readonly(x) <- TRUE ## we don't want to overwrite the big object accidentally
     return(x)
 })
 ##' @export
 setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
+    w <- match(i, names(x))
+    if (any(is.na(w))) {
+        stop("Undefined columns selected: ", serialPaste(i[is.na(w)]))
+    }
+    callNextMethod(x, w, ..., drop=drop)
+})
+##' @export
+setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
+    return(as.variable(GET(x@variables[i])))
+})
+##' @export
+setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
     i <- names(x) %in% i
     callNextMethod(x, i, ..., drop=drop)
 })
+##' @export
+setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 
 .addVariableSetter <- function (x, i, value) {
     if (is.variable(value)) {
@@ -128,7 +126,7 @@ setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE)
         stop("Cannot currently overwrite existing Variables with [[<-",
             call.=FALSE)
     }
-    addVariable(x, values=value, name=i)
+    addVariable(x, values=value, name=i, alias=i)
 }
 ##' @export
 setMethod("[[<-", c("CrunchDataset", "character"), .addVariableSetter)
@@ -172,6 +170,7 @@ setMethod("show", "CrunchDataset", function (object) {
 ##' @param dataset the Dataset or list of Crunch objects to search
 ##' @param pattern regular expression, passed to \code{grep}. If "", returns all.
 ##' @param key the field in the Crunch objects in which to grep
+##' @param hidden logical whether hidden variables should be searched. Default is FALSE
 ##' @param ... additional arguments passed to \code{grep}. If \code{value=TRUE},
 ##' returns the values of \code{key} where matches are found, not the variables
 ##' themselves
@@ -179,7 +178,11 @@ setMethod("show", "CrunchDataset", function (object) {
 ##' key values if value=TRUE is passed to \code{grep}
 ##' @export
 findVariables <- function (dataset, pattern="", key=namekey(dataset), ...) {
-    keys <- selectFrom(key, lapply(dataset[], function (x) x@body))
+    
+    if (is.dataset(dataset)) {
+        dataset <- dataset@.Data
+    }
+    keys <- selectFrom(key, dataset)
     matches <- grep(pattern, keys, ...)
     names(matches) <- NULL
     return(matches)
@@ -187,12 +190,12 @@ findVariables <- function (dataset, pattern="", key=namekey(dataset), ...) {
 
 addVariable <- function (dataset, values, ...) {
     new <- length(values)
-    old <- getDim(dataset)[1]
+    old <- getDim(dataset, filtered=FALSE)[1]
     if (new == 1 && old > 1) {
         values <- rep(values, old)
         new <- old
     }
-    if (new != old) {
+    if (old > 0 && new != old) {
         stop("replacement has ", new, " rows, data has ", old)
     }
     var_url <- POSTNewVariable(dataset@urls$variables_url, 
@@ -206,6 +209,7 @@ addVariable <- function (dataset, values, ...) {
 POSTNewVariable <- function (collection_url, variable, bind_url=NULL) {
     
     do.POST <- function (x) POST(collection_url, body=toJSON(x, digits=15))
+    is.error <- function (x) inherits(x, "try-error")
     
     if (variable$type %in% c("multiple_response", "categorical_array")) {
         ## assumes: array of subvariables included, and if MR, at least one category has selected: TRUE
@@ -213,7 +217,17 @@ POSTNewVariable <- function (collection_url, variable, bind_url=NULL) {
         variable$type <- NULL
         subvars <- variable$subvariables
         variable$subvariables <- NULL
-        var_urls <- unlist(lapply(subvars, do.POST))
+        
+        var_urls <- lapply(subvars, function (x) try(do.POST(x)))
+        errs <- vapply(var_urls, is.error, logical(1))
+        if (any(errs)) {
+            ## Delete subvariables that were added, then raise
+            # lapply(var_urls[!errs], function (x) DELETE(x))
+            ## (DELETE not yet supported on variables: https://www.pivotaltracker.com/story/show/65806670)
+            stop("Subvariables errored on upload", call.=FALSE)
+        } else {
+            var_urls <- unlist(var_urls)
+        }
         variable$bind_url <- bind_url
         variable$variable_urls <- var_urls
         out <- do.call("POSTBindVariables", variable)
@@ -223,15 +237,13 @@ POSTNewVariable <- function (collection_url, variable, bind_url=NULL) {
     }
 }
 
-## TODO: add header order offset from ncol(dataset), and cache dim(dataset) on instantiating
-
 addVariables <- function (dataset, vars) {
     ## assume data frame
     nvars <- ncol(vars)
     vars_url <- dataset@urls$variables_url
     for (i in seq_len(nvars)) {
         POSTNewVariable(vars_url,
-            toVariable(vars[[i]], name=names(vars)[i], header_order=(i-1)))
+            toVariable(vars[[i]], name=names(vars)[i], alias=names(vars)[i]))
     }
     invisible(refresh(dataset))
 }
@@ -263,4 +275,13 @@ weight <- function (x) {
     }
     x <- setCrunchSlot(x, "weight", value)
     return(x)
+}
+
+setMethod("lapply", "CrunchDataset", function (X, FUN, ...) {
+    vars <- lapply(X@variables, function (x) as.variable(GET(x)))
+    callNextMethod(vars, FUN, ...)
+})
+
+is.variable.tuple <- function (x) {
+    is.list(x) && all(c("name", "alias", "type", "id") %in% names(x))
 }

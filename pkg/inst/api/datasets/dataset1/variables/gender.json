@@ -1,5 +1,6 @@
 {
     "element": "shoji:entity",
+    "self": "api/datasets/dataset1/variables/gender.json",
     "body": {
         "name": "gender",
         "format": {
@@ -56,57 +57,11 @@
         },
         "type": "categorical",
         "id": "66ae9881e3524f7db84970d556c34552",
-        "header_order": 138,
         "description": "Gender"
     },
     "urls": {
-        "summary_url":{
-            "count": 1000,
-            "missing_count": 0,
-            "missing_frequencies": [
-                {
-                    "count": 0,
-                    "value": "Skipped"
-                },
-                {
-                    "count": 0,
-                    "value": "Not Asked"
-                }
-            ],
-            "categories": [
-                {
-                    "count": 466,
-                    "id": 1,
-                    "name": "Male",
-                    "missing": false
-                },
-                {
-                    "count": 534,
-                    "id": 2,
-                    "name": "Female",
-                    "missing": false
-                },
-                {
-                    "count": 0,
-                    "id": 3,
-                    "name": "Skipped",
-                    "missing": true
-                },
-                {
-                    "count": 0,
-                    "id": 4,
-                    "name": "Not Asked",
-                    "missing": true
-                },
-                {
-                    "count": 0,
-                    "id": -1,
-                    "name": "No Data",
-                    "missing": true
-                }
-            ],
-            "valid_count": 1000
-        }
+        "summary_url": "api/datasets/dataset1/variables/gender/summary.json",
+        "values_url": "api/datasets/dataset1/variables/gender/values.json"
     },
     "description": "Details for a given Variable"
 }
