@@ -55,9 +55,12 @@ unhideVariables <- function (dataset, variables, pattern=NULL,
                             key=namekey(dataset), ...) {
     hidden.vars <- hiddenVariablesList(dataset)
     if (!is.null(pattern)) {
-        variables <- findVariables(hidden.vars, pattern=pattern, key=key, ...)
+        variables <- findVariables(hidden.vars, pattern=pattern, key=key, ..., value=FALSE)
+    } else if (is.character(variables)) {
+        ## This should really be a variable collection [ method
+        variables <- selectFrom(key, hidden.vars) %in% variables
     }
-    lapply(hidden.vars[variables], function (x) unhide(x))
+    lapply(names(hidden.vars[variables]), function (x) unhide(as.variable(GET(x))))
     invisible(refresh(dataset))
 }
 
@@ -65,9 +68,7 @@ unhideVariables <- function (dataset, variables, pattern=NULL,
 ##' @param dataset the Dataset
 ##' @return a list of Variables marked as hidden
 hiddenVariablesList <- function (dataset) {
-    vars <- getShojiCollection(dataset@urls$discarded_variables_url,
-        "body$alias")
-    return(lapply(vars, as.variable))
+    return(dataset@hiddenVariables)
 }
 
 ##' Show the names of hidden variables within the dataset
@@ -77,7 +78,7 @@ hiddenVariablesList <- function (dataset) {
 hiddenVariables <- function (dataset) {
     hv <- hiddenVariablesList(dataset)
     if (length(hv)) {
-        return(vapply(hv, function (x) name(x), character(1), USE.NAMES=FALSE))
+        return(vapply(hv, function (x) x$name, character(1), USE.NAMES=FALSE))
     } else {
         return(c())
     }

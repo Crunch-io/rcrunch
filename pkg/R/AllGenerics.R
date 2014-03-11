@@ -46,3 +46,5 @@ setGeneric("na.omit")
 
 ##' @export
 setGeneric("toVariable", function (x, ...) standardGeneric("toVariable"))
+
+setGeneric("lapply")

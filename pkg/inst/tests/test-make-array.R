@@ -88,7 +88,8 @@ if (!run.only.local.tests) {
             with(test.dataset(mrdf), {
                 testdf <- .setup
                 cast.these <- grep("mr_", names(testdf))
-                testdf[cast.these] <- lapply(testdf[cast.these],
+                #testdf[cast.these] <- 
+                lapply(testdf[cast.these],
                     castVariable, "categorical")
                 var <- makeMR(pattern="mr_[123]", dataset=testdf,
                     name="test1", selections="1.0")
@@ -128,7 +129,8 @@ if (!run.only.local.tests) {
                         name="test1", selections="Not a Selection!"),
                         not.categorical)
                     cast.these <- grep("mr_", names(testdf))
-                    testdf[cast.these] <- lapply(testdf[cast.these],
+                    #testdf[cast.these] <- 
+                    lapply(testdf[cast.these],
                         castVariable, "categorical")
                     expect_error(makeMR(pattern="mr_[123]", dataset=testdf,
                         name="test1", selections="Not a Selection!"),

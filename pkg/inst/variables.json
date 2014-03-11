@@ -306,7 +306,6 @@
         },
         "type": "datetime",
         "id": "d7c21314ca9e453c93069168681a285c",
-        "header_order": 3,
         "description": "Interview Start Time"
     },
     {
@@ -328,7 +327,6 @@
         "view": {"include_noneoftheabove": false, "column_width": null},
         "type": "multiple_response", 
         "id": "949d2dc7e7a24e6090cc88bb92e1d2fb", 
-        "header_order": 4, 
         "description": "My multiple response set"
     }
 ]

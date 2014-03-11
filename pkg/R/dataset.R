@@ -1,6 +1,6 @@
 validCrunchDataset <- function (object) {
     oname <- object@body$name
-    are.vars <- vapply(object, is.variable, logical(1))
+    are.vars <- vapply(object, is.variable.tuple, logical(1))
     if (!all(are.vars)) {
         badcount <- sum(!are.vars)
         val <- paste0("Invalid dataset ", sQuote(oname), ": ", badcount, 
@@ -39,43 +39,24 @@ setMethod("description<-", "CrunchDataset", setDatasetDescription)
     out <- CrunchDataset(x, ...)
     if (length(list(...))==0) {
         vars <- getDatasetVariables(out)
-        if (length(vars)) out@.Data <- vars
+        hiddenvars <- vapply(vars$variables, function (v) isTRUE(v$discarded), logical(1))
+        out@hiddenVariables <- vars$variables[hiddenvars]
+        out@.Data <- vars$variables[!hiddenvars]
+        out@variables <- names(vars$variables[!hiddenvars])
+        out@.order <- vars$order
     }
     out@.dim <- getDim(out)
     return(out)
 }
 
 getDatasetVariables <- function (x) {
-    if (!is.null(x@urls$all_variables_url)) {
-        return(getAllDatasetVariables(x))
-    } else {
-        return(getDatasetVariablesFromCollection(x))
-    }
-}
-
-getDatasetVariablesFromCollection <- function (x) {
-    urls <- x@urls$variables_url
-    if (!is.null(urls)) {
-        vars <- getShojiCollection(urls, "body$alias")
-        ordering <- order(selectFrom("body$header_order", vars))
-        vars <- lapply(vars[ordering], as.variable)
-        return(vars)
-    } else {
-        return(list())
-    }
-}
-
-getAllDatasetVariables <- function (x) {
-    url <- x@urls$all_variables_url
-    vars <- GET(url)
-    vars <- lapply(vars, function (a) {
-        class(a) <- "shoji"
-        return(a)
-    })
-    names(vars) <- selectFrom("body$alias", vars)
-    ordering <- order(selectFrom("body$header_order", vars))
-    vars <- lapply(vars[ordering], as.variable)
-    return(vars)
+    u <- x@urls$variables_url
+    catalog <- GET(u)
+    varIndex <- catalog$index
+    varOrder <- do.call(VariableGrouping,
+        GET(catalog$views$hierarchical_order)$groups)
+    varIndex <- varIndex[entities(varOrder)]
+    return(list(variables=varIndex, order=varOrder))
 }
 
 setAs("ShojiObject", "CrunchDataset", 
@@ -112,6 +93,7 @@ setMethod("names", "CrunchDataset", function (x) {
 ##' @export
 setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     x@.Data <- x@.Data[i]
+    x@variables <- x@variables[i]
     readonly(x) <- TRUE ## we don't want to overwrite the big object accidentally
     return(x)
 })
@@ -123,6 +105,17 @@ setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE)
     }
     callNextMethod(x, w, ..., drop=drop)
 })
+##' @export
+setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
+    return(as.variable(GET(x@variables[i])))
+})
+##' @export
+setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
+    i <- names(x) %in% i
+    callNextMethod(x, i, ..., drop=drop)
+})
+##' @export
+setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 
 .addVariableSetter <- function (x, i, value) {
     if (is.variable(value)) {
@@ -177,6 +170,7 @@ setMethod("show", "CrunchDataset", function (object) {
 ##' @param dataset the Dataset or list of Crunch objects to search
 ##' @param pattern regular expression, passed to \code{grep}. If "", returns all.
 ##' @param key the field in the Crunch objects in which to grep
+##' @param hidden logical whether hidden variables should be searched. Default is FALSE
 ##' @param ... additional arguments passed to \code{grep}. If \code{value=TRUE},
 ##' returns the values of \code{key} where matches are found, not the variables
 ##' themselves
@@ -184,7 +178,11 @@ setMethod("show", "CrunchDataset", function (object) {
 ##' key values if value=TRUE is passed to \code{grep}
 ##' @export
 findVariables <- function (dataset, pattern="", key=namekey(dataset), ...) {
-    keys <- selectFrom(key, lapply(dataset[], function (x) x@body))
+    
+    if (is.dataset(dataset)) {
+        dataset <- dataset@.Data
+    }
+    keys <- selectFrom(key, dataset)
     matches <- grep(pattern, keys, ...)
     names(matches) <- NULL
     return(matches)
@@ -242,12 +240,10 @@ POSTNewVariable <- function (collection_url, variable, bind_url=NULL) {
 addVariables <- function (dataset, vars) {
     ## assume data frame
     nvars <- ncol(vars)
-    offset <- ncol(dataset) - 1
     vars_url <- dataset@urls$variables_url
     for (i in seq_len(nvars)) {
         POSTNewVariable(vars_url,
-            toVariable(vars[[i]], name=names(vars)[i], alias=names(vars)[i],
-            header_order=(offset+i)))
+            toVariable(vars[[i]], name=names(vars)[i], alias=names(vars)[i]))
     }
     invisible(refresh(dataset))
 }
@@ -279,4 +275,13 @@ weight <- function (x) {
     }
     x <- setCrunchSlot(x, "weight", value)
     return(x)
+}
+
+setMethod("lapply", "CrunchDataset", function (X, FUN, ...) {
+    vars <- lapply(X@variables, function (x) as.variable(GET(x)))
+    callNextMethod(vars, FUN, ...)
+})
+
+is.variable.tuple <- function (x) {
+    is.list(x) && all(c("name", "alias", "type", "id") %in% names(x))
 }

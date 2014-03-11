@@ -61,5 +61,6 @@ as.vector.DatetimeVariable <- function (x, mode) {
 as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE, ...) {
     default.stringsAsFactors <- function () FALSE
     out <- lapply(x, as.vector)
+    names(out) <- names(x)
     return(as.data.frame(out, ...))
 }
