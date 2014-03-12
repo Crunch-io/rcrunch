@@ -231,6 +231,12 @@ POSTNewVariable <- function (collection_url, variable, bind_url=NULL) {
         variable$bind_url <- bind_url
         variable$variable_urls <- var_urls
         out <- do.call("POSTBindVariables", variable)
+        ## Hack:
+        if (!is.null(variable$description)) {
+            PUT(out, body=toJSON(list(description=variable$description)))
+            ## heh heh. PUT out.
+        }
+        ## /hack
         invisible(out)
     } else {
         invisible(do.POST(variable))
