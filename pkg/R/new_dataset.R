@@ -72,8 +72,7 @@ createSource <- function (file, ...) {
 }
 
 createDataset <- function (name, useAlias=default.useAlias(), ...) {
-    dataset_url <- POST(sessionURL("datasets_url"), body=toJSON(list(name=name)),
-        ...)
+    dataset_url <- POST(sessionURL("datasets_url"), body=toJSON(list(name=name, ...)))
     invisible(as.dataset(GET(dataset_url), useAlias=useAlias))
 }
 

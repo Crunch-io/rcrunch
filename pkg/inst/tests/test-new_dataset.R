@@ -55,9 +55,10 @@ if (!run.only.local.tests) {
                 "Can only make a Crunch dataset from a two-dimensional data")
             expect_error(newDataset(1:5), 
                 "Can only make a Crunch dataset from a two-dimensional data")
-            dx <- try(newDataset(df, "addVariables"))
+            dx <- try(newDataset(df, "addVariables", description="a description"))
                 expect_true("addVariables" %in% listDatasets())
                 expect_true(is.dataset(dx))
+                expect_identical(description(dx), "a description")
                 expect_equivalent(mean(dx$v3), mean(df$v3))
                 expect_identical(dim(dx), dim(df))
             try(delete(dx))
