@@ -24,7 +24,7 @@ if (!run.only.local.tests) {
         with(test.dataset(df), {
             testdf <- .setup
             test_that("addVariable creates a new remote numeric variable", {
-                testdf <- addVariable(testdf, df$v3, name="New var")
+                testdf <- addVariable(testdf, df$v3, name="New var", alias="newVar")
                 expect_true("newVar" %in% names(testdf))
                 nv <- testdf$newVar
                 expect_true(is.Numeric(nv))
@@ -32,7 +32,7 @@ if (!run.only.local.tests) {
                 expect_identical(as.vector(nv), as.vector(testdf$v3))
             })
             test_that("addVariable creates text variables from character", {
-                testdf <- addVariable(testdf, df$v2, name="New var 2")
+                testdf <- addVariable(testdf, df$v2, name="New var 2", alias="newVar2")
                 expect_true("newVar2" %in% names(testdf))
                 nv <- testdf$newVar2
                 expect_true(is.Text(nv))
@@ -41,14 +41,14 @@ if (!run.only.local.tests) {
                     ## anymore, but they're right in the addVariable method
             })
             test_that("addVariable creates categorical from factor", {
-                testdf <- addVariable(testdf, df$v4, name="New var 3")
+                testdf <- addVariable(testdf, df$v4, name="New var 3", alias="newVar3")
                 expect_true("newVar3" %in% names(testdf))
                 nv <- testdf$newVar3
                 expect_true(is.Categorical(nv))
                 expect_identical(as.vector(nv), as.vector(testdf$v4))
             })
             test_that("addVariable creates datetime from Date", {
-                testdf <- addVariable(testdf, df$v5, name="New var 4")
+                testdf <- addVariable(testdf, df$v5, name="New var 4", alias="newVar4")
                 expect_true("newVar4" %in% names(testdf))
                 nv <- testdf$newVar4
                 expect_true(is.Datetime(nv))
@@ -56,7 +56,7 @@ if (!run.only.local.tests) {
             })
             skip(test_that("addVariable creates datetime from POSIXct", {
                 testdf <- addVariable(testdf, as.POSIXct(df$v5),
-                    name="New var 5")
+                    name="New var 5", alias="newVar5")
                 expect_true("newVar5" %in% names(testdf))
                 nv <- testdf$newVar5
                 expect_true(is.Datetime(nv))
@@ -89,6 +89,7 @@ if (!run.only.local.tests) {
         
         ca.var <- list(
             name="Categorical array",
+            alias="categoricalArray",
             description="Here are some variables. They go together.",
             type="categorical_array",
             subvariables=lapply(names(mrdf)[1:3],
@@ -101,6 +102,8 @@ if (!run.only.local.tests) {
                     bind_url=ds@urls$bind_url)
                 ds <- refresh(ds)
                 expect_true(is.CA(ds$categoricalArray))
+                expect_identical(description(ds$categoricalArray), 
+                    "Here are some variables. They go together.")
             })
         })
         test_that("adding an array cleans up after self if one subvar errors", {
@@ -123,6 +126,7 @@ if (!run.only.local.tests) {
                 ds <- .setup
                 newvar <- list(
                     name="Multiple response",
+                    alias="multipleResponse",
                     description="Here are some variables. They go together.",
                     type="multiple_response",
                     subvariables=lapply(names(mrdf)[1:3],
