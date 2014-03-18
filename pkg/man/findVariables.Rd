@@ -15,6 +15,9 @@
   \item{key}{the field in the Crunch objects in which to
   grep}
 
+  \item{hidden}{logical whether hidden variables should be
+  searched. Default is FALSE}
+
   \item{...}{additional arguments passed to \code{grep}. If
   \code{value=TRUE}, returns the values of \code{key} where
   matches are found, not the variables themselves}

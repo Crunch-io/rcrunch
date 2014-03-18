@@ -44,15 +44,20 @@ setAs("ShojiObject", "CrunchVariable",
 setAs("shoji", "CrunchVariable", 
     function (from) do.call("CrunchVariable", from))
     
-as.variable <- function (x, subtype=NULL) {
+as.variable <- function (x, subtype=NULL, tuple=IndexTuple()) {
     x <- as(x, "CrunchVariable")
-    if (is.variable(x)) x <- subclassVariable(x, to=subtype)
+    if (is.variable(x)) {
+        x <- subclassVariable(x, to=subtype)
+        x@tuple <- tuple
+    }
     return(x)
 }
 
 ## In case variable type has been changed, need to instantiate off of new type
 ##' @export
-setMethod("refresh", "CrunchVariable", function (x) as.variable(GET(self(x))))
+setMethod("refresh", "CrunchVariable", function (x) {
+    as.variable(GET(self(x)), tuple=refresh(x@tuple))
+})
 
 as.Numeric <- function (x) as.variable(x, "numeric")
 as.Categorical <- function (x) as.variable(x, "categorical")
@@ -79,20 +84,25 @@ pickSubclassConstructor <- function (x=NULL) {
 }
 
 ##' @export
-setMethod("name", "CrunchVariable", function (x) x@body$name)
+setMethod("name", "CrunchVariable", function (x) x@tuple@body$name)
 ##' @export
 setMethod("name<-", "CrunchVariable", 
     function (x, value) setCrunchSlot(x, "name", value))
 ##' @export
-setMethod("description", "CrunchVariable", function (x) x@body$description)
+setMethod("description", "CrunchVariable", function (x) x@tuple@body$description)
 ##' @export
 setMethod("description<-", "CrunchVariable", 
     function (x, value) setCrunchSlot(x, "description", value))
 
 ##' @export
-setMethod("categories", "CrunchVariable", function (x) x@body$categories)
+setMethod("categories", "CrunchVariable", function (x) NULL)
+setMethod("categories", "CategoricalVariable", function (x) x@body$categories)
+setMethod("categories", "CategoricalArrayVariable", function (x) x@body$categories)
+
 ##' @export
-setMethod("categories<-", "CrunchVariable", 
+setMethod("categories<-", "CategoricalVariable", 
+    function (x, value) setCrunchSlot(x, "categories", value))
+setMethod("categories<-", "CategoricalArrayVariable", 
     function (x, value) setCrunchSlot(x, "categories", value))
 
 .dichotomize.var <- function (x, i) {

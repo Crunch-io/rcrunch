@@ -107,11 +107,16 @@ setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE)
 })
 ##' @export
 setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
-    return(as.variable(GET(x@variables[i])))
+    url <- x@variables[i]
+    if (is.na(url)) stop("Subscript out of bounds", call.=FALSE)
+    tuple <- IndexTuple(index_url=x@urls$variables_url, entity_url=url, body=x@.Data[[i]])
+    return(as.variable(GET(url), tuple=tuple))
 })
 ##' @export
 setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
-    i <- names(x) %in% i
+    stopifnot(length(i) == 1)
+    i <- match(i, names(x))
+    if (is.na(i)) return(NULL)
     callNextMethod(x, i, ..., drop=drop)
 })
 ##' @export
@@ -188,66 +193,6 @@ findVariables <- function (dataset, pattern="", key=namekey(dataset), ...) {
     return(matches)
 }
 
-addVariable <- function (dataset, values, ...) {
-    new <- length(values)
-    old <- getDim(dataset, filtered=FALSE)[1]
-    if (new == 1 && old > 1) {
-        values <- rep(values, old)
-        new <- old
-    }
-    if (old > 0 && new != old) {
-        stop("replacement has ", new, " rows, data has ", old)
-    }
-    var_url <- POSTNewVariable(dataset@urls$variables_url, 
-        toVariable(values, ...))
-    dataset <- refresh(dataset) ## would like not to do this
-    # variable <- as.variable(GET(var_url))
-    # dataset@.Data[[variable@body$alias]] <- variable
-    invisible(dataset)
-}
-
-POSTNewVariable <- function (collection_url, variable, bind_url=NULL) {
-    
-    do.POST <- function (x) POST(collection_url, body=toJSON(x, digits=15))
-    is.error <- function (x) inherits(x, "try-error")
-    
-    if (variable$type %in% c("multiple_response", "categorical_array")) {
-        ## assumes: array of subvariables included, and if MR, at least one category has selected: TRUE
-        ## TODO: make the data import API take array types directly
-        variable$type <- NULL
-        subvars <- variable$subvariables
-        variable$subvariables <- NULL
-        
-        var_urls <- lapply(subvars, function (x) try(do.POST(x)))
-        errs <- vapply(var_urls, is.error, logical(1))
-        if (any(errs)) {
-            ## Delete subvariables that were added, then raise
-            # lapply(var_urls[!errs], function (x) DELETE(x))
-            ## (DELETE not yet supported on variables: https://www.pivotaltracker.com/story/show/65806670)
-            stop("Subvariables errored on upload", call.=FALSE)
-        } else {
-            var_urls <- unlist(var_urls)
-        }
-        variable$bind_url <- bind_url
-        variable$variable_urls <- var_urls
-        out <- do.call("POSTBindVariables", variable)
-        invisible(out)
-    } else {
-        invisible(do.POST(variable))
-    }
-}
-
-addVariables <- function (dataset, vars) {
-    ## assume data frame
-    nvars <- ncol(vars)
-    vars_url <- dataset@urls$variables_url
-    for (i in seq_len(nvars)) {
-        POSTNewVariable(vars_url,
-            toVariable(vars[[i]], name=names(vars)[i], alias=names(vars)[i]))
-    }
-    invisible(refresh(dataset))
-}
-
 ##' Get the dataset's weight
 ##' @param x a Dataset
 ##' @return a Variable if there is a weight, else NULL
@@ -278,7 +223,7 @@ weight <- function (x) {
 }
 
 setMethod("lapply", "CrunchDataset", function (X, FUN, ...) {
-    vars <- lapply(X@variables, function (x) as.variable(GET(x)))
+    vars <- lapply(seq_along(X@variables), function (i) X[[i]])
     callNextMethod(vars, FUN, ...)
 })
 

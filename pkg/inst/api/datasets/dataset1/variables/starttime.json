@@ -1,0 +1,25 @@
+{
+    "element": "shoji:entity",
+    "self": "api/datasets/dataset1/variables/starttime.json",
+    "body": {
+        "format": {
+            "data": "%Y-%m-%d",
+            "summary": "%Y-%m-%d"
+        }, 
+        "tags": [],
+        "missing_reasons": {"No Data": -1},
+        "categories": [],
+        "dataset_id": "a106fab0f7cb42a1b8a40f6d01d9c949",
+        "view": {
+            "units": "s",
+            "column_width": null
+        },
+        "type": "datetime",
+        "id": "d7c21314ca9e453c93069168681a285c"
+    },
+    "urls": {
+        "summary_url": "api/datasets/dataset1/variables/starttime/summary.json",
+        "values_url": "api/datasets/dataset1/variables/starttime/values.json"
+    },
+    "description": "Details for a given Variable"
+}

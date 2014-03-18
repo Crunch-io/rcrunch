@@ -47,7 +47,7 @@ with(fake.HTTP, {
 
     test_that("Dataset has names() and extract methods work", {
         expect_false(is.null(names(test.ds)))
-        expect_identical(names(test.ds), c("birthyr", "gender"))
+        expect_identical(names(test.ds), c("birthyr", "gender", "mymrset", "textVar", "starttime"))
         expect_true(is.variable(test.ds[[1]]))
         expect_true("birthyr" %in% names(test.ds))
         expect_true(is.variable(test.ds$birthyr))
@@ -57,6 +57,8 @@ with(fake.HTTP, {
         expect_true(is_valid_dataset(test.ds["birthyr"]))
         expect_true(is_valid_dataset(test.ds[names(test.ds)=="birthyr"]))
         expect_identical(names(test.ds[2]), c("gender"))
+        expect_identical(test.ds$not.a.var.name, NULL)
+        expect_error(test.ds[[999]], "Subscript out of bounds")
     })
 
     test_that("Read only flag gets set appropriately", {

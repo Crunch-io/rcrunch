@@ -1,6 +1,6 @@
 {
     "element": "shoji:catalog",
-    "self": "datasets/dataset1/variables.json",
+    "self": "api/datasets/dataset1/variables.json",
     "specification": "https://alpha.crunch.io/api/specifications/variables/",
     "description": "List of Variables of this dataset",
     "index": {
@@ -19,6 +19,30 @@
             "type": "numeric",
             "id": "birthyr",
             "description": null
+        },
+        "api/datasets/dataset1/variables/starttime.json": {
+            "name": "starttime",
+            "discarded": false,
+            "alias": "starttime",
+            "type": "datetime",
+            "id": "starttime",
+            "description": "Interview Start Time"
+        },
+        "api/datasets/dataset1/variables/mymrset.json": {
+            "name": "mymrset",
+            "discarded": false,
+            "alias": "mymrset", 
+            "type": "numeric",
+            "id": "mymrset",
+            "description": "My multiple response set"
+        },
+        "api/datasets/dataset1/variables/textVar.json": {
+            "name": "Text variable ftw",
+            "discarded": false,
+            "alias": "textVar",
+            "type": "text",
+            "id": "text",
+            "description": "random hex characters"
         }
     },
     "views": {

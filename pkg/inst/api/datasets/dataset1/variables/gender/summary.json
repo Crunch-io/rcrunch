@@ -26,18 +26,6 @@
         },
         {
             "count": 0,
-            "id": 3,
-            "name": "Skipped",
-            "missing": true
-        },
-        {
-            "count": 0,
-            "id": 4,
-            "name": "Not Asked",
-            "missing": true
-        },
-        {
-            "count": 0,
             "id": -1,
             "name": "No Data",
             "missing": true
