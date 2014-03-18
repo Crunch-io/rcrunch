@@ -1,10 +1,12 @@
-init.Shoji <- function (.Object, ...) {
-    slots <- slotNames(.Object)
-    dots <- list(...)
-    for (i in slots) if (!is.null(dots[[i]])) slot(.Object, i) <- dots[[i]] 
-    return(.Object)
-}
-setMethod("initialize", "ShojiObject", init.Shoji)
+# init.Shoji <- function (.Object, ...) {
+#     slots <- slotNames(.Object)
+#     dots <- list(...)
+#     if (is.shojiObject(dots[[1]])) return (dots[[1]])
+#     print(dots)
+#     for (i in slots) if (!is.null(dots[[i]])) slot(.Object, i) <- dots[[i]] 
+#     return(.Object)
+# }
+# setMethod("initialize", "ShojiObject", init.Shoji)
 
 is.shoji.like <- function (x) {
     is.list(x) && "element" %in% names(x) && substr(as.character(x$element), 1, 5) == "shoji"
@@ -33,7 +35,7 @@ getShojiCollection <- function (x, namekey=NULL) {
     getShojiCollectionContents(getShojiCollectionURLs(x), namekey=namekey)
 }
     
-setAs("shoji", "ShojiObject", function (from) do.call("ShojiObject", from))
+setAs("shoji", "ShojiObject", function (from) do.call("ShojiObject", from[names(from) %in% slotNames(ShojiObject())]))
 as.shojiObject <- function (x) as(x, "ShojiObject")
 
 is.shojiObject <- function (x) inherits(x, "ShojiObject")
