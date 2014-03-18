@@ -1,3 +1,13 @@
+init.Dataset <- function (.Object, shoji, ...) {
+    if (!missing(shoji) && is.shojiObject(shoji)) {
+        for (i in slotNames(shoji)) slot(.Object, i) <- slot(shoji, i)
+    } else {
+        .Object <- callNextMethod(.Object, ...)
+    }
+    return(.Object)
+}
+setMethod("initialize", "CrunchDataset", init.Dataset)
+
 validCrunchDataset <- function (object) {
     oname <- object@body$name
     are.vars <- vapply(object, is.variable.tuple, logical(1))
@@ -35,16 +45,14 @@ setMethod("description", "CrunchDataset", function (x) x@body$description)
 ##' @export
 setMethod("description<-", "CrunchDataset", setDatasetDescription)
 
-.cr.dataset.shojiObject <- function (x, ...) {
-    out <- CrunchDataset(x, ...)
-    if (length(list(...))==0) {
-        vars <- getDatasetVariables(out)
-        hiddenvars <- vapply(vars$variables, function (v) isTRUE(v$discarded), logical(1))
-        out@hiddenVariables <- vars$variables[hiddenvars]
-        out@.Data <- vars$variables[!hiddenvars]
-        out@variables <- names(vars$variables[!hiddenvars])
-        out@.order <- vars$order
-    }
+.cr.dataset.shojiObject <- function (x) {
+    out <- CrunchDataset(shoji=x)
+    vars <- getDatasetVariables(out)
+    hiddenvars <- vapply(vars$variables, function (v) isTRUE(v$discarded), logical(1))
+    out@hiddenVariables <- vars$variables[hiddenvars]
+    out@.Data <- vars$variables[!hiddenvars]
+    out@variables <- names(vars$variables[!hiddenvars])
+    out@.order <- vars$order
     out@.dim <- getDim(out)
     return(out)
 }

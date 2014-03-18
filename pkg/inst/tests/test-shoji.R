@@ -14,7 +14,9 @@ test_that("ShojiObject init and is", {
     fo <- list(element=1, self=2, description=3)
     class(fo) <- "shoji"
     expect_false(is.shojiObject(fo))
-    skip(expect_true(is.shojiObject(ShojiObject(element=1, self=2, description=3, foo=4, junk=5))), "didn't implement this in the initialize method")
+    expect_true(is.shojiObject(ShojiObject(element=1, self=2, description=3, foo=4, junk=5)))
+    sh <- ShojiObject(element=1, self=2, description=3, foo=4, junk=5)
+    expect_identical(sh@self, 2)
 })
 
 test_that("shoji S3 to ShojiObject", {

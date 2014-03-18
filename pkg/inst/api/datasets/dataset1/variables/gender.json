@@ -47,5 +47,6 @@
         "summary_url": "api/datasets/dataset1/variables/gender/summary.json",
         "values_url": "api/datasets/dataset1/variables/gender/values.json"
     },
-    "description": "Details for a given Variable"
+    "description": "Details for a given Variable",
+    "future_shoji_attribute": {}
 }
