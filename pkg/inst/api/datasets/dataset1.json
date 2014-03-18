@@ -17,5 +17,6 @@
     "urls": {
         "summary_url": "api/datasets/dataset1/summary.json",
         "variables_url": "api/datasets/dataset1/variables.json"
-    }
+    },
+    "some_other_key": {}
 }

@@ -1,3 +1,15 @@
+init.Shoji <- function (.Object, ...) {
+    slots <- slotNames(.Object)
+    dots <- list(...)
+    if (length(dots) && is.shojiObject(dots[[1]])) {
+        for (i in slots) slot(.Object, i) <- slot(dots[[1]], i)
+    } else {
+        for (i in slots) if (!is.null(dots[[i]])) slot(.Object, i) <- dots[[i]]
+    }
+    return(.Object)
+}
+setMethod("initialize", "ShojiObject", init.Shoji)
+
 is.shoji.like <- function (x) {
     is.list(x) && "element" %in% names(x) && substr(as.character(x$element), 1, 5) == "shoji"
 }
