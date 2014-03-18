@@ -14,12 +14,14 @@ test_that("ShojiObject init and is", {
     fo <- list(element=1, self=2, description=3)
     class(fo) <- "shoji"
     expect_false(is.shojiObject(fo))
+    expect_true(is.shojiObject(ShojiObject(element=1, self=2, description=3, foo=4, junk=5)))
 })
 
 test_that("shoji S3 to ShojiObject", {
     fo <- list(element=1, self=2, description=3)
     class(fo) <- "shoji"
     expect_true(is.shojiObject(as.shojiObject(fo)))
+    expect_true(is.shojiObject(as.shojiObject(structure(list(element=1, self=2, description=3, foo=4, junk=5), class="shoji"))))
 })
 
 if (!run.only.local.tests) {
