@@ -98,17 +98,14 @@ handleAPIerror <- function (response) {
     return(response)    
 }
 
+##' @importFrom httr add_headers
 crunchConfig <- function () {
-    c(getToken(), httr:::default_config(), list(verbose=isTRUE(getOption("crunch.debug")), sslversion=3L), crunchHTTPheaders())
-}
-
-crunchHTTPheaders <- function () {
-    list(httpheader=list(`User-Agent`=getCrunchUserAgent()))
+    c(getToken(), httr:::default_config(), list(verbose=isTRUE(getOption("crunch.debug")), sslversion=3L), add_headers(`user-agent`=getCrunchUserAgent()))
 }
 
 crunchUserAgent <- function () {
-    rc <- paste("rcrunch", packageVersion("rcrunch"))
-    try(rc <- paste(httr:::default_ua(), rc, sep=" / "), silent=TRUE)
+    rc <- paste("rcrunch", packageVersion("rcrunch"), sep="/")
+    try(rc <- paste(httr:::default_ua(), rc), silent=TRUE)
     return(rc)
 }
 
