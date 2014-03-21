@@ -62,6 +62,9 @@ if (!run.only.local.tests) {
                 expect_true(is.Datetime(nv))
                 expect_identical(as.vector(nv), as.vector(testdf$v5))
             }), reason="Can't support POSIXt until the app supports timezones")
+            test_that("adding variable with duplicate name fails", {
+                expect_error(addVariable(testdf, df$v5, name="New var 4", alias="newVar4"), "Variable with name: New var 4 already exists")
+            })
         })
         
         with(test.dataset(df), {
