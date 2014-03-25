@@ -7,7 +7,10 @@
             {
                 "entities": [
                     "api/datasets/dataset1/variables/birthyr.json",
-                    "api/datasets/dataset1/variables/gender.json"
+                    "api/datasets/dataset1/variables/gender.json",
+                    "api/datasets/dataset1/variables/mymrset.json",
+                    "api/datasets/dataset1/variables/textVar.json",
+                    "api/datasets/dataset1/variables/starttime.json"
                 ],
                 "group": "ungrouped"
             }

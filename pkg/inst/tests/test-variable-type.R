@@ -1,14 +1,13 @@
 context("Variable types")
 
-v <- lapply(vars, as.variable)
-
-test_that("Variable type method", {
-    expect_identical(type(v[["age"]]), "numeric")
-    expect_identical(type(v$gender), "categorical")
-})
-
-test_that("R object types are translated to Crunch vars", {
-    # replace this with some testing of preUpload and postUpload
+with(fake.HTTP, {
+    ## Variable fake fixtures for dataset
+    test.ds <- as.dataset(GET("api/datasets/dataset1.json"))
+    
+    test_that("Variable type method", {
+        expect_identical(type(test.ds[["birthyr"]]), "numeric")
+        expect_identical(type(test.ds$gender), "categorical")
+    })
 })
 
 if (!run.only.local.tests) {

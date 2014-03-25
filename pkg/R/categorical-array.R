@@ -96,7 +96,13 @@ bindVariables <- function (list_of_variables, dataset, name, ...) {
     var_urls <- vapply(list_of_variables, self, character(1), USE.NAMES=FALSE)
     out <- POSTBindVariables(dataset@urls$bind_url, var_urls, name=name, ...)
     ## could apply ... here
-    invisible(as.variable(GET(out)))
+    invisible(returnNewVariable(out, dataset))
+}
+
+returnNewVariable <- function (variable_url, dataset) {
+    dataset <- refresh(dataset)
+    newvar.index <- match(variable_url, dataset@variables)
+    return(dataset[[newvar.index]])
 }
 
 POSTBindVariables <- function (bind_url, variable_urls, ...) {

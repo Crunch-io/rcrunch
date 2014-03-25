@@ -37,5 +37,6 @@ makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key=namekey(d
     }
     
     var <- bindVariables(x$list_of_variables, x$dataset, name, ...)
-    invisible(dichotomize(var, selections))
+    var <- dichotomize(var, selections)
+    invisible(var)
 }

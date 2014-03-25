@@ -1,94 +1,96 @@
 context("Categories")
 
-cats <- vars$gender$body$categories
+with(fake.HTTP, {
+    ds <- as.dataset(GET("api/datasets/dataset1.json"))
+    cats <- categories(ds$gender)
 
-test_that("category init", {
-    expect_true(inherits(Category(cats[[1]]), "Category"))
-    expect_true(is.category(Category(cats[[1]])))
-    expect_true(inherits(Categories(cats), "Categories"))
-    expect_true(is.categories(Categories(cats)))
-    expect_identical(length(cats), 3L)
-})
+    test_that("category init", {
+        expect_true(inherits(cats[[1]], "Category"))
+        expect_true(is.category(cats[[1]]))
+        expect_true(inherits(cats, "Categories"))
+        expect_true(is.categories(cats))
+        expect_identical(length(cats), 3L)
+    })
 
-Cats <- Categories(cats)
-
-test_that("category slicers", {
-    expect_true(is.categories(Cats[1]))
-})
-
-test_that("category getters", {
-    male <- Cats[[1]]
-    expect_identical(name(male), cats[[1]][["name"]])
-    expect_identical(value(male), cats[[1]][["numeric_value"]])
-    expect_identical(id(male), cats[[1]][["id"]])
-    expect_identical(names(Cats), selectFrom("name", cats))
-    expect_identical(values(Cats), selectFrom("numeric_value", cats))
-    expect_identical(ids(Cats), selectFrom("id", cats))
-    expect_identical(length(ids(Cats)), 3L)
-})
-
-test_that("categories toJSON", {
-    frj <- function (...) fromJSON(..., simplifyWithNames=FALSE)
-    expect_identical(Cats, Categories(frj(toJSON(Cats))))
-    expect_identical(Cats[1], Categories(frj(toJSON(Cats[1]))))
-    expect_identical(Cats[[1]], Category(frj(toJSON(Cats[[1]]))))
-})
-
-test_that("category setters", {
-    male <- Cats[[1]]
-    name(male) <- "uomo"
-    expect_identical(name(male), "uomo")
-    expect_true(is.category(male))
-    value(male) <- 42
-    expect_identical(value(male), 42)
-    expect_error(id(male) <- 4)
-    expect_error(value(male) <- "foo")
-    expect_true(is.category(male))
-})
-
-test_that("categories setters", {
-    new_names <- c("masculino", "femenino", "No Data")
-    names(Cats) <- new_names
-    expect_true(is.categories(Cats))
-    expect_equal(names(Cats), new_names)
-    names(Cats)[2] <- "donne"
-    expect_true(is.categories(Cats))
-    expect_equal(names(Cats)[1:2], c("masculino", "donne"))
-})
-
-test_that("dichotomize", {
-    male <- Cats[[1]]
-    expect_false(is.selected(male))
-    male$selected <- TRUE
-    expect_true(is.selected(male))
-    expect_equal(name(male), "Male")
+    test_that("category slicers", {
+        expect_true(is.categories(cats[1]))
+    })
     
-    expect_false(is.dichotomized(Cats))
-    dCats <- dichotomize(Cats, 1)
-    expect_true(is.dichotomized(dCats))
-    expect_true(is.selected(dCats[[1]]))
-    expect_false(is.selected(dCats[[2]]))
-    expect_equal(name(dCats[[1]]), "Male")
-    expect_equal(names(dCats), c("Male", "Female", "No Data"))
+    test_that("categories toJSON", {
+        frj <- function (...) fromJSON(..., simplifyWithNames=FALSE)
+        expect_identical(cats, Categories(frj(toJSON(cats))))
+        expect_identical(cats[1], Categories(frj(toJSON(cats[1]))))
+        expect_identical(cats[[1]], Category(frj(toJSON(cats[[1]]))))
+    })
     
-    dCats2 <- dichotomize(Cats, "Female")
-    expect_true(is.dichotomized(dCats2))
-    expect_false(is.selected(dCats2[[1]]))
-    expect_true(is.selected(dCats2[[2]]))
-  
-    expect_error(dichotomize(Cats, "Cat!"))
-    
-    Cats2 <- undichotomize(dCats)
-    expect_false(is.dichotomized(Cats2))
-    expect_false(is.selected(Cats2[[1]]))
+    test_that("category getters", {
+        male <- cats[[1]]
+        expect_identical(name(male), "Male")
+        expect_identical(value(male), 1)
+        expect_identical(id(male), 1)
+        expect_identical(names(cats), c("Male", "Female", "No Data"))
+        expect_identical(values(cats), c(1, 2, NA))
+        expect_identical(ids(cats), c(1, 2, -1))
+    })
+
+    test_that("category setters", {
+        male <- cats[[1]]
+        name(male) <- "uomo"
+        expect_identical(name(male), "uomo")
+        expect_true(is.category(male))
+        value(male) <- 42
+        expect_identical(value(male), 42)
+        expect_error(id(male) <- 4)
+        expect_error(value(male) <- "foo")
+        expect_true(is.category(male))
+    })
+
+    test_that("categories setters", {
+        new_names <- c("masculino", "femenino", "No Data")
+        names(cats) <- new_names
+        expect_true(is.categories(cats))
+        expect_equal(names(cats), new_names)
+        names(cats)[2] <- "donne"
+        expect_true(is.categories(cats))
+        expect_equal(names(cats)[1:2], c("masculino", "donne"))
+    })
+
+    test_that("dichotomize", {
+        male <- cats[[1]]
+        expect_false(is.selected(male))
+        male$selected <- TRUE
+        expect_true(is.selected(male))
+        expect_equal(name(male), "Male")
+
+        expect_false(is.dichotomized(cats))
+        dcats <- dichotomize(cats, 1)
+        expect_true(is.dichotomized(dcats))
+        expect_true(is.selected(dcats[[1]]))
+        expect_false(is.selected(dcats[[2]]))
+        expect_equal(name(dcats[[1]]), "Male")
+        expect_equal(names(dcats), c("Male", "Female", "No Data"))
+
+        dcats2 <- dichotomize(cats, "Female")
+        expect_true(is.dichotomized(dcats2))
+        expect_false(is.selected(dcats2[[1]]))
+        expect_true(is.selected(dcats2[[2]]))
+
+        expect_error(dichotomize(cats, "Cat!"))
+
+        cats2 <- undichotomize(dcats)
+        expect_false(is.dichotomized(cats2))
+        expect_false(is.selected(cats2[[1]]))
+    })
+
+    test_that("na.omit", {
+        expect_identical(length(cats), 3L)
+        expect_identical(length(na.omit(cats)), 2L)
+        expect_true(is.categories(na.omit(cats)))
+        expect_true(all(vapply(na.omit(cats), is.category, logical(1))))
+    })
 })
 
-test_that("na.omit", {
-    expect_identical(length(Cats), 3L)
-    expect_identical(length(na.omit(Cats)), 2L)
-    expect_true(is.categories(na.omit(Cats)))
-    expect_true(all(vapply(na.omit(Cats), is.category, logical(1))))
-})
+
 
 if (!run.only.local.tests) {
     with(test.authentication, {

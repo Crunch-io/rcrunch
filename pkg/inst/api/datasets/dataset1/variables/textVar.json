@@ -1,0 +1,13 @@
+{
+    "element": "shoji:entity",
+    "self": "api/datasets/dataset1/variables/textVar.json",
+    "body": {
+        "type": "text",
+        "tags": ["tag 1"]
+    },
+    "urls": {
+        "summary_url": "api/datasets/dataset1/variables/textVar/summary.json",
+        "values_url": "api/datasets/dataset1/variables/textVar/values.json"
+    },
+    "description": "Details for a given Variable"
+}

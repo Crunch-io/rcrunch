@@ -4,6 +4,7 @@ context("Getting values to make local R objects")
 with(fake.HTTP, {
     ## Variable fake fixtures for dataset
     test.ds <- as.dataset(GET("api/datasets/dataset1.json"))
+    test.ds <- test.ds[!(names(test.ds) %in% "mymrset")] ## Defer implementing MR as.vector
     test_that("as.vector on Variables", {
         expect_true(is.numeric(getValues(test.ds$birthyr)))
         expect_false(is.factor(getValues(test.ds$gender)))
