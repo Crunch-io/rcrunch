@@ -21,12 +21,6 @@ test_that("session info can be deleted out deletes cookies", {
     expect_false("cookie" %in% ls(envir=session_store))
 })
 
-test_that("basicAuthArgs", {
-    expect_true(is.character(basicAuthArgs(email="myemail")))
-    expect_true(is.list(RJSONIO:::fromJSON(basicAuthArgs(email="myemail"),
-        simplifyWithNames=FALSE)))
-})
-
 test_that("login checks for email and password before POSTing", {
     expect_error(crunchAuth(email=NULL), 
         "Must supply the email address associated with your crunch.io account")
