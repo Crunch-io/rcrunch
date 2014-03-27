@@ -58,7 +58,7 @@ DELETE <- function (...) {
 ##' @param special.statuses an optional named list of functions by status code.
 ##' @return The full HTTP response object, just the content, or any other
 ##' status-specific action 
-##' @importFrom httr content stop_for_status http_status
+##' @importFrom httr content http_status
 handleAPIresponse <- function (response, special.statuses=list()) {
     response <- handleAPIerror(response)
     code <- response$status_code
@@ -75,13 +75,12 @@ handleAPIresponse <- function (response, special.statuses=list()) {
             return(handleShoji(content(response)))            
         }
     } else {
-        if (isTRUE(getOption("crunch.debug"))) {
-            out <- try(content(response), silent=TRUE)
-            if (!inherits(out, "try-error") && "message" %in% try(names(out))) {
-                message(response$message)
-            }            
+        msg <- http_status(response)$message
+        msg2 <- try(content(response)$message, silent=TRUE)
+        if (!is.error(msg2)) {
+            msg <- paste(msg, msg2, sep=": ")
         }
-        stop_for_status(response)
+        stop(msg, call. = FALSE)
     }
 }
 
