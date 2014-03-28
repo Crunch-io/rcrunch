@@ -120,8 +120,7 @@ if (!run.only.local.tests) {
                     bind_url=ds@urls$bind_url), 
                     "Subvariables errored on upload")
                 ds <- refresh(ds)
-                skip(expect_identical(ncol(ds), nvars.before),
-                    "Cannot yet DELETE variables")
+                skip(expect_identical(ncol(ds), nvars.before), "DELETE still leaves variables in hierarchical order")
             })
         })
         test_that("addVariables that are multiple_response", {
