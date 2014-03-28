@@ -31,13 +31,11 @@ if (!run.only.local.tests) {
                 testdf <- refresh(testdf)
                 expect_equal(c("test1", "v4"), names(testdf))
                 ## unbind.
-                skip({
-                    u <- try(unbind(testdf$test1))
-                    expect_false(is.error(u))
-                    testdf <- refresh(testdf)
-                    expect_identical(names(testdf), names(mrdf))
-                    expect_identical(ncol(testdf), 4L)
-                })
+                u <- try(unbind(testdf$test1))
+                expect_false(is.error(u))
+                testdf <- refresh(testdf)
+                expect_true(setequal(names(testdf), names(mrdf)))
+                expect_identical(ncol(testdf), 4L)
             })
         })
         
@@ -107,14 +105,11 @@ if (!run.only.local.tests) {
                 expect_true(is.CA(var))
                 
                 ## unbind.
-                skip({
-                    u <- try(unbind(var))
-                    expect_false(is.error(u))
-                    testdf <- refresh(testdf)
-                    print(getDatasetVariables(testdf))
-                    expect_identical(names(testdf), names(mrdf))
-                    expect_identical(ncol(testdf), 4L)
-                })
+                u <- try(unbind(var))
+                expect_false(is.error(u))
+                testdf <- refresh(testdf)
+                expect_true(setequal(names(testdf), names(mrdf)))
+                expect_identical(ncol(testdf), 4L)
             })
             
             with(test.dataset(mrdf), {
