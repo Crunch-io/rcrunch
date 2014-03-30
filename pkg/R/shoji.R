@@ -84,6 +84,7 @@ setCrunchSlot <- function (x, i, value) {
         payload <- toJSON(body)
         PUT(self(x), body=payload)
     }
+    print(slot(x, "body")[[i]])
     return(x)
 }
 

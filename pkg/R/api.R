@@ -31,6 +31,7 @@ makeHTTPStore <- function () {
 addRealHTTPVerbs <- function () {
     http_verbs$GET <- function (...) crunchAPI("GET", ...)
     http_verbs$PUT <- function (...) crunchAPI("PUT", ...)
+    http_verbs$PATCH <- function (...) crunchAPI("PATCH", ...)
     http_verbs$POST <- function (...) crunchAPI("POST", ...)
     http_verbs$DELETE <- function (...) crunchAPI("DELETE", ...)
 }
@@ -43,6 +44,10 @@ GET <- function (...) {
 
 PUT <- function (...) {
     http_verbs$PUT(...)
+}
+
+PATCH <- function (...) {
+    http_verbs$PATCH(...)
 }
 
 POST <- function (...) {
@@ -150,7 +155,7 @@ handleShoji <- function (x) {
 ##' @return the corresponding function from the \code{httr} package
 selectHttpFunction <- function (x) {
     x <- list(GET=httr:::GET, PUT=httr:::PUT, POST=httr:::POST,
-        DELETE=httr:::DELETE)[[toupper(x)]]
+        DELETE=httr:::DELETE, PATCH=httr:::PATCH)[[toupper(x)]]
     stopifnot(is.function(x))
     return(x)
 }

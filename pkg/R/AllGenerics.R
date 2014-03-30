@@ -36,6 +36,8 @@ setGeneric("delete", function (x) standardGeneric("delete"))
 setGeneric("readonly<-", function (x, value) standardGeneric("readonly<-"))
 setGeneric("entities", function (x) standardGeneric("entities"))
 setGeneric("entities<-", function (x, value) standardGeneric("entities<-"))
+setGeneric("tuple", function (x) standardGeneric("tuple"))
+setGeneric("tuple<-", function (x, value) standardGeneric("tuple<-"))
 
 setGeneric("dim")
 setGeneric("ncol")

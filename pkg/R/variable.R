@@ -6,6 +6,12 @@ init.CategoricalVariable <- function (.Object, ...) {
 setMethod("initialize", "CategoricalVariable", init.CategoricalVariable)
 setMethod("initialize", "CategoricalArrayVariable", init.CategoricalVariable)
 
+setMethod("tuple", "CrunchVariable", function (x) x@tuple)
+setMethod("tuple<-", "CrunchVariable", function (x, value) {
+    x@tuple <- value
+    return(x)
+})
+
 ##' @rdname crunch-is
 ##' @export
 is.variable <- function (x) inherits(x, "CrunchVariable")
@@ -48,7 +54,7 @@ as.variable <- function (x, subtype=NULL, tuple=IndexTuple()) {
     x <- as(x, "CrunchVariable")
     if (is.variable(x)) {
         x <- subclassVariable(x, to=subtype)
-        x@tuple <- tuple
+        tuple(x) <- tuple
     }
     return(x)
 }
@@ -56,7 +62,7 @@ as.variable <- function (x, subtype=NULL, tuple=IndexTuple()) {
 ## In case variable type has been changed, need to instantiate off of new type
 ##' @export
 setMethod("refresh", "CrunchVariable", function (x) {
-    as.variable(GET(self(x)), tuple=refresh(x@tuple))
+    as.variable(GET(self(x)), tuple=refresh(tuple(x)))
 })
 
 as.Numeric <- function (x) as.variable(x, "numeric")
@@ -84,15 +90,15 @@ pickSubclassConstructor <- function (x=NULL) {
 }
 
 ##' @export
-setMethod("name", "CrunchVariable", function (x) x@tuple@body$name)
+setMethod("name", "CrunchVariable", function (x) tuple(x)$name)
 ##' @export
 setMethod("name<-", "CrunchVariable", 
-    function (x, value) setCrunchSlot(x, "name", value))
+    function (x, value) setTupleSlot(x, "name", value))
 ##' @export
-setMethod("description", "CrunchVariable", function (x) x@tuple@body$description)
+setMethod("description", "CrunchVariable", function (x) tuple(x)$description)
 ##' @export
 setMethod("description<-", "CrunchVariable", 
-    function (x, value) setCrunchSlot(x, "description", value))
+    function (x, value) setTupleSlot(x, "description", value))
 
 ##' @export
 setMethod("categories", "CrunchVariable", function (x) NULL)

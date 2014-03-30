@@ -3,3 +3,29 @@ setMethod("refresh", "IndexTuple", function (x) {
     x@body <- index.list[[x@entity_url]]
     return(x)
 })
+
+setMethod("$", "IndexTuple", function (x, name) x@body[[name]]) 
+setMethod("$<-", "IndexTuple", function (x, name, value) {
+    x@body[[name]] <- value
+    return(x)
+})
+setMethod("[[", "IndexTuple", function (x, i) x@body[[i]])
+setMethod("[[<-", "IndexTuple", function (x, i, value) {
+    x@body[[i]] <- value
+    return(x)
+})
+
+setTupleSlot <- function (x, name, value) {
+    if (!inherits(x, "IndexTuple")) {
+        tuple(x) <- setTupleSlot(tuple(x), name, value)
+    } else {
+        x[[name]] <- value
+        ## HACK because backend is sending invalid data. Remove when https://www.pivotaltracker.com/story/show/68505152 is accepted
+        x$discarded <- isTRUE(x$discarded)
+        
+        ## NB: no readonly mode. YAGNI?
+        payload <- toJSON(structure(list(x@body), .Names=x@entity_url))
+        try(PATCH(x@index_url, body=payload))
+    }
+    invisible(x)
+}

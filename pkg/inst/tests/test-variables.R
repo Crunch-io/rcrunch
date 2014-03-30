@@ -62,5 +62,30 @@ if (!run.only.local.tests) {
                 expect_false("v1" %in% names(refresh(ds)))
             })
         })
+        
+        with(test.dataset(df), {
+            ds <- .setup
+            test_that("can modify names and descriptions", {
+                name(ds$v1) <- "Variable 1"
+                skip(expect_identical(name(ds$v1), "Variable 1"), 
+                    "updating vars within dataset isn't refreshing")
+                description(ds$v2) <- "Description 2"
+                skip(expect_identical(description(ds$v2), "Description 2"),
+                    "updating vars within dataset isn't refreshing")
+                ds <- refresh(ds)
+                expect_identical(name(ds$v1), "Variable 1")
+                expect_identical(description(ds$v2), "Description 2")
+                
+                v1 <- ds$v1
+                name(v1) <- "alt"
+                expect_identical(name(v1), "alt")
+                v1 <- refresh(v1)
+                expect_identical(name(v1), "alt")
+                description(v1) <- "asdf"
+                expect_identical(description(v1), "asdf")
+                v1 <- refresh(v1)
+                expect_identical(description(v1), "asdf")
+            })
+        })
     })
 }
