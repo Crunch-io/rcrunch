@@ -30,6 +30,12 @@ if (!run.only.local.tests) {
                 expect_true(is.CA(var))
                 testdf <- refresh(testdf)
                 expect_equal(c("test1", "v4"), names(testdf))
+                ## unbind.
+                u <- try(unbind(testdf$test1))
+                expect_false(is.error(u))
+                testdf <- refresh(testdf)
+                expect_true(setequal(names(testdf), names(mrdf)))
+                expect_identical(ncol(testdf), 4L)
             })
         })
         
@@ -97,6 +103,13 @@ if (!run.only.local.tests) {
                 
                 var <- undichotomize(var)
                 expect_true(is.CA(var))
+                
+                ## unbind.
+                u <- try(unbind(var))
+                expect_false(is.error(u))
+                testdf <- refresh(testdf)
+                expect_true(setequal(names(testdf), names(mrdf)))
+                expect_identical(ncol(testdf), 4L)
             })
             
             with(test.dataset(mrdf), {

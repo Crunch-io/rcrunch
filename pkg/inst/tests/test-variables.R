@@ -51,3 +51,16 @@ with(fake.HTTP, {
     })
 })
 
+if (!run.only.local.tests) {
+    with(test.authentication, {
+        with(test.dataset(df), {
+            ds <- .setup
+            test_that("can delete variables", {
+                expect_true("v1" %in% names(ds))
+                d <- try(delete(ds$v1))
+                expect_false(is.error(d))
+                expect_false("v1" %in% names(refresh(ds)))
+            })
+        })
+    })
+}

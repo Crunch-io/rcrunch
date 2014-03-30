@@ -115,13 +115,14 @@ if (!run.only.local.tests) {
                 c2$subvariables[[4]] <- list(this="is", not="a", valid="variable")
                 ds <- .setup
                 nvars.before <- ncol(ds)
+                vars.before <- getDatasetVariables(ds)
                 expect_identical(nvars.before, 0L)
                 expect_error(POSTNewVariable(ds@urls$variables_url, c2,
                     bind_url=ds@urls$bind_url), 
                     "Subvariables errored on upload")
                 ds <- refresh(ds)
-                skip(expect_identical(ncol(ds), nvars.before),
-                    "Cannot yet DELETE variables")
+                expect_identical(ncol(ds), nvars.before)
+                expect_identical(getDatasetVariables(ds), vars.before)
             })
         })
         test_that("addVariables that are multiple_response", {

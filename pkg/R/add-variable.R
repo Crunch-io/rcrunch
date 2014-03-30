@@ -31,9 +31,8 @@ POSTNewVariable <- function (collection_url, variable, bind_url=NULL) {
         var_urls <- lapply(subvars, function (x) try(do.POST(x)))
         errs <- vapply(var_urls, is.error, logical(1))
         if (any(errs)) {
-            ## Delete subvariables that were added, then raise
-            # lapply(var_urls[!errs], function (x) DELETE(x))
-            ## (DELETE not yet supported on variables: https://www.pivotaltracker.com/story/show/65806670)
+            # Delete subvariables that were added, then raise
+            lapply(var_urls[!errs], function (x) DELETE(x))
             stop("Subvariables errored on upload", call.=FALSE)
         } else {
             var_urls <- unlist(var_urls)
