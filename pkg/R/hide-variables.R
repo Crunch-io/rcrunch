@@ -5,13 +5,13 @@
 ##' @return (invisibly) the Variable, hidden or unhidden
 ##' @export
 setMethod("hide", "CrunchVariable", function (x) {
-    invisible(setCrunchSlot(x, "discarded", TRUE))
+    invisible(setTupleSlot(x, "discarded", TRUE))
 })
 
 ##' @rdname hide
 ##' @export
 setMethod("unhide", "CrunchVariable", function (x) {
-    invisible(setCrunchSlot(x, "discarded", FALSE))
+    invisible(setTupleSlot(x, "discarded", FALSE))
 })
 
 

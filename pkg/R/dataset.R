@@ -132,6 +132,7 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 
 .addVariableSetter <- function (x, i, value) {
     if (is.variable(value)) {
+        ## TODO: update this to also update the right indextuple
         x@.Data[[i]] <- value
         return(x)
     }

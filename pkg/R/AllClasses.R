@@ -11,9 +11,13 @@ ShojiObject <- setClass("ShojiObject",
         description="ANY",
         body="ANY",
         urls="ANY",
-        entities="ANY",
         specification="ANY",
-        template="ANY"
+        entities="ANY" ## prune this
+    ))
+
+ShojiCatalog <- setClass("ShojiCatalog", contains="ShojiObject", 
+    representation(
+        index="list"
     ))
 
 IndexTuple <- setClass("IndexTuple", 
