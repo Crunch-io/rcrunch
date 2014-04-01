@@ -5,9 +5,7 @@
 
 # Crunch and RCrunch basics
 
-Crunch is a cloud-based data store and analytic engine. R is a programming language (technically the language is S, but the R dialect has eclipsed the commercial S-Plus implementation) and an interactive desktop environment for using the language.
-
-Crunch also has a web client for doing the most common analytic tasks, allowing analysts and clients to see their data and interact with it. Most of the time, clients will use the web client to explore data, quickly making tables and graphs, filters and subsets. 
+Crunch is a cloud-based data store and analytic engine. It has a web client for doing the most common analytic tasks, allowing analysts and clients to see their data and interact with it. Most of the time, clients will use the web client to explore data, quickly making tables and graphs, filters and subsets. The *rcrunch* package for R allows analysts to interact with and manipulate Crunch datasets from within R.
 
 ```{r, message=FALSE}
 library(rcrunch)
@@ -15,9 +13,9 @@ library(rcrunch)
 
 ## The Crunch API
 
-Both *rcrunch* and the Crunch web application talk to the same Crunch Application Programming Interface. Within an R script or interactive session, the rcrunch package is designed to make interacting with your data in Crunch into idiomatic R.
+Both *rcrunch* and the Crunch web application talk to the same Crunch Application Programming Interface (API). Within an R script or interactive session, the rcrunch package is designed to make interacting with your data in Crunch into idiomatic R.
 
-The Crunch API is served over secure http, and uses [Shoji](https://bitbucket.org/fumanchu/shoji/src), a way to structure APIs with JSON. When you call most rcrunch functions, they'll take care of using [httr](https://github.com/hadley/httr) or [RCurl](http://www.omegahat.org/RCurl/), and in general API results are turned into R objects. Some functions act more like commands, such as `login()`, but its side effects are documented in the regular package documentation.
+The Crunch API is served over secure http, and uses [Shoji](https://bitbucket.org/fumanchu/shoji/src), a way to structure APIs with JSON. When you call rcrunch functions, they'll take care of using [httr](https://github.com/hadley/httr) (which wraps [RCurl](http://www.omegahat.org/RCurl/)), and API responses are turned into R objects. Some functions act more like commands, such as `login()`, but its side effects are documented in the regular package documentation.
 
 ## Accounts
 
@@ -45,7 +43,9 @@ The Crunch data store is built around datasets, which contain variables. Unlike 
 
 # Adding datasets to Crunch
 
-The easiest way to add data is through the web client. Just click *Import Data* and upload either a csv or an spss sav file. 
+## Via the web client
+
+In the web application, click *Import Data* and upload either a .csv or an SPSS .sav file. 
 
 ![Uploading data](upload.png)
 ![Loaded data](loaded.png)
@@ -56,19 +56,31 @@ Since the dataset is loaded as soon as it's uploaded, we can go ahead and change
 
 ## Adding datasets with rcrunch
 
-Of course, you can also upload datasets with rcrunch.
+Of course, you can also create datasets with rcrunch. There are two methods:
+
+### 1. newDatasetFromFile
+
+`newDatasetFromFile` essentially does what you would do in the web application: uploads your file and creates a dataset from it.
 
 ```{r}
-ds <- newDatasetFromFile("PLMX0151ZBHD_OUTPUT.sav")
+ds <- newDatasetFromFile("PLMX0151ZBHD_OUTPUT.sav", name="Civil Military Relations Survey")
 ```
 ```{r echo=FALSE, warning=FALSE, message=FALSE}
 ## Enable the fiction that we have loaded data via whaam
-plmx <- loadDataset("PLMX0151ZBHD_OUTPUT.sav")
-name(plmx) <- "Civil Military Relations Survey"
-updateDatasetList()
+plmx <- loadDataset("Civil Military Relations Survey")
 ```
 
+### 2. newDataset
+
+Alternatively, you can create a dataset from any `data.frame` you have in your R session:
+
+    library(foreign)
+    df <- read.spss("PLMX0151ZBHD_OUTPUT.sav")
+    ds <- newDataset(df, name="Civil Military Relations Survey")
+
 # Loading Crunch datasets into rcrunch
+
+Datasets already existing on the Crunch server can be loaded by name or by position within the dataset list using `loadDataset`:
 
 ```{r}
 listDatasets()
@@ -106,11 +118,11 @@ hiddenVariables(ds)
 
 ## Create Array Variables
 
-Sometimes variables' source datasets don't contain all of the metadata needed to create the more complex representations available in Crunch datasets. Plain-text csv files, for example, can't express that some columns are actually indicator matrices of multiple selections (Multiple Response Variables). Most SPSS sav files do not indicate Categorical Arrays as being part of a group (they are simply several categorical variables), and the format does not support non-categorical numeric-valued arrays that are sometimes used in surveys for ratings or 'thermometer' type respones.
+Sometimes variables' source datasets don't contain all of the metadata needed to create the more complex representations available in Crunch datasets. Plain-text .csv files, for example, can't express that some columns are actually indicator matrices of multiple selections (Multiple Response Variables). Most SPSS .sav files do not indicate Categorical Arrays (otherwise known as "grids") as being part of a group--they are simply several categorical variables--and the format does not support non-categorical numeric-valued arrays that are sometimes used in surveys for ratings or 'thermometer' type responses.
 
-You can use rcrunch to "bind" Multiple Response and Categorical Arrays into a Crunch array variable (Numeric Array support is planned for the near future).
+You can use rcrunch to "bind" Multiple Response and Categorical Arrays into a Crunch array variable.
 
-One of the resasons to use R with Crunch is to borrow the power of scripting for repetitive tasks. Hiding variables by regular expression is an obvious use case for datasets with a number of variables that are important to the data but not used for most analytic tasks. Most R functions that work on Crunch datasets have an optional `pattern` argument that lets you use regular expressions for these "bulk" operations. Having hidden the constant `spend_Batt`, we can now group the other `spend_` variables into a Categorical Array.
+One of the reasons to use R with Crunch is to borrow the power of scripting for repetitive tasks. Hiding variables by regular expression is an obvious use case for datasets with a number of variables that are important to the data but not used for most analytic tasks. Most R functions that work on Crunch datasets have an optional `pattern` argument that lets you use regular expressions for these "bulk" operations. Having hidden the constant `spend_Batt`, we can now group the other `spend_` variables into a Categorical Array.
 
 ```{r bind}
 (spending <- makeArray(pattern="^spend_", dataset=ds, name="Federal Spending"))
