@@ -1,12 +1,23 @@
-init.Dataset <- function (.Object, shoji, ...) {
+init.fromShoji <- function (.Object, shoji, ...) {
+    slots <- slotNames(.Object)
     if (!missing(shoji) && is.shojiObject(shoji)) {
-        for (i in slotNames(shoji)) slot(.Object, i) <- slot(shoji, i)
+        for (i in slotNames(shoji)) {
+            if (i in slots) {
+                slot(.Object, i) <- slot(shoji, i)
+            }
+        }
+        dots <- list(...)
+        for (i in names(dots)) {
+            if (i in slots) {
+                slot(.Object, i) <- dots[[i]]
+            }
+        }
     } else {
         .Object <- callNextMethod(.Object, ...)
     }
     return(.Object)
 }
-setMethod("initialize", "CrunchDataset", init.Dataset)
+setMethod("initialize", "CrunchDataset", init.fromShoji)
 
 validCrunchDataset <- function (object) {
     oname <- object@body$name

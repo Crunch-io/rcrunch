@@ -19,20 +19,25 @@ is.shoji.like <- function (x) {
 is.shoji <- function (x) inherits(x, "shoji")
 
 setOldClass("shoji")
-    
-setAs("shoji", "ShojiObject", function (from) do.call("ShojiObject", from))
+
+## TODO: modify here to switch off on element: type, init Object/Catalog/etc.
+setAs("shoji", "ShojiObject", function (from) {
+    cl <- ifelse(from$element == "shoji:catalog", "ShojiCatalog", "ShojiObject")
+    return(do.call(cl, from))
+})
 as.shojiObject <- function (x) as(x, "ShojiObject")
 
 is.shojiObject <- function (x) inherits(x, "ShojiObject")
+is.shojiCatalog <- function (x) inherits(x, "ShojiCatalog")
+
+##' @export
+setMethod("self", "ShojiObject", function (x) x@self)
 
 ## 'refresh' method that GETs self url, and does new(Class, ...)
 .cr.shoji.refresh <- function (x) {
     Class <- class(x)  ## in case x is a subclass of ShojiObject
     return(as(GET(self(x)), Class))
 }
-
-##' @export
-setMethod("self", "ShojiObject", function (x) x@self)
 
 ##' @export
 setMethod("refresh", "ShojiObject", .cr.shoji.refresh)

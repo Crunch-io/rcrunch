@@ -26,6 +26,18 @@ test_that("shoji S3 to ShojiObject", {
     expect_true(is.shojiObject(as.shojiObject(structure(list(element=1, self=2, description=3, foo=4, junk=5), class="shoji"))))
 })
 
+test_that("ShojiCatalog", {
+    fo <- list(element=1, self=2, description=3, index=list(a=4, b=5))
+    class(fo) <- "shoji"
+    sho <- as.shojiObject(fo)
+    expect_false(is.shojiCatalog(sho))
+    expect_error(sho@index)
+    fo$element <- "shoji:catalog"
+    sho <- as.shojiObject(fo)
+    expect_true(is.shojiCatalog(sho))
+    expect_identical(sho@index, fo$index)
+})
+
 if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df, "refresh_test"), {

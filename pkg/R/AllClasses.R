@@ -82,3 +82,6 @@ VariableGroup <- setClass("VariableGroup", representation=representation(
     group="character",
     entities="character"
 ))
+
+VariableCatalog <- setClass("VariableCatalog", contains="ShojiCatalog",
+    representation(order="VariableGrouping"))
