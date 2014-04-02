@@ -12,6 +12,7 @@ ShojiObject <- setClass("ShojiObject",
         body="ANY",
         urls="ANY",
         specification="ANY",
+        views="ANY",
         entities="ANY" ## prune this
     ))
 

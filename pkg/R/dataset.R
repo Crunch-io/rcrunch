@@ -2,13 +2,13 @@ init.fromShoji <- function (.Object, shoji, ...) {
     slots <- slotNames(.Object)
     if (!missing(shoji) && is.shojiObject(shoji)) {
         for (i in slotNames(shoji)) {
-            if (i in slots) {
+            if (i %in% slots) {
                 slot(.Object, i) <- slot(shoji, i)
             }
         }
         dots <- list(...)
         for (i in names(dots)) {
-            if (i in slots) {
+            if (i %in% slots) {
                 slot(.Object, i) <- dots[[i]]
             }
         }

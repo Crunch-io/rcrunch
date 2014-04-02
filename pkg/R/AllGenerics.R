@@ -38,6 +38,7 @@ setGeneric("entities", function (x) standardGeneric("entities"))
 setGeneric("entities<-", function (x, value) standardGeneric("entities<-"))
 setGeneric("tuple", function (x) standardGeneric("tuple"))
 setGeneric("tuple<-", function (x, value) standardGeneric("tuple<-"))
+setGeneric("ordering", function (x) standardGeneric("ordering"))
 
 setGeneric("dim")
 setGeneric("ncol")
