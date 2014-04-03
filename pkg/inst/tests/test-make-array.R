@@ -21,7 +21,13 @@ if (!run.only.local.tests) {
                     name="test1")
                 expect_true(is.CA(var))
                 testdf <- refresh(testdf)
-                expect_equal(c("test1", "v4"), names(testdf))                
+                expect_equal(c("test1", "v4"), names(testdf))
+                ## delete array variable
+                u <- try(delete(testdf$test1))
+                expect_false(is.error(u))
+                testdf <- refresh(testdf)
+                expect_identical(names(testdf), "v4")
+                expect_identical(ncol(testdf), 1L)   
             })
             with(test.dataset(mrdf), {
                 testdf <- .setup
