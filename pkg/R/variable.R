@@ -132,5 +132,12 @@ setMethod("datasetReference", "CrunchVariable", function (x) x@urls$dataset_url)
 
 unbind <- function (x) {
     stopifnot(inherits(x, "CategoricalArrayVariable"))
-    invisible(POST(x@urls$unbind_url, body=toJSON(list())))
+    invisible(DELETE(self(x)))
 }
+
+setMethod("delete", "CategoricalArrayVariable", function (x) {
+    subvars <- x@body$subvariables
+    out <- DELETE(self(x))
+    lapply(subvars, DELETE)
+    invisible(out)
+})
