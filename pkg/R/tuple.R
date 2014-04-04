@@ -20,10 +20,7 @@ setTupleSlot <- function (x, name, value) {
         tuple(x) <- setTupleSlot(tuple(x), name, value)
     } else {
         x[[name]] <- value
-        ## HACK because backend is sending invalid data. Remove when https://www.pivotaltracker.com/story/show/68505152 is accepted
-        x$discarded <- isTRUE(x$discarded)
-        
-        ## NB: no readonly mode. YAGNI?
+        ## NB: no readonly mode. implement later if needed.
         payload <- toJSON(structure(list(x@body), .Names=x@entity_url))
         try(PATCH(x@index_url, body=payload))
     }
