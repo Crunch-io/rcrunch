@@ -38,7 +38,7 @@ NAToCategory <- function (var.metadata) {
         var.metadata$values[is.na(var.metadata$values)] <- -1L
         var.metadata$categories[[length(var.metadata$categories)+1]] <- list(
             id=-1L,
-            name="No data",
+            name="No Data",
             numeric_value=NULL,
             missing=TRUE
         )
