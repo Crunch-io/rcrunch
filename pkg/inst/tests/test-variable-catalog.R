@@ -22,6 +22,27 @@ with(fake.HTTP, {
     })
     
     test_that("active/hidden getters", {
-        
+        expect_identical(active(varcat),
+            varcat@index[entities(ordering(varcat))])
+        expect_identical(hidden(varcat), list())
+        varcat@index[[2]]$discarded <- TRUE
+        expect_identical(names(active(varcat)), 
+            c("api/datasets/dataset1/variables/gender.json",
+            "api/datasets/dataset1/variables/mymrset.json",
+            "api/datasets/dataset1/variables/textVar.json",
+            "api/datasets/dataset1/variables/starttime.json"))
+        expect_identical(names(hidden(varcat)),
+            "api/datasets/dataset1/variables/birthyr.json")
+    })
+    
+    test_that("Extract methods", {
+        expect_true(inherits(varcat[["api/datasets/dataset1/variables/gender.json"]], "VariableTuple"))
+        expect_identical(varcat[["api/datasets/dataset1/variables/gender.json"]]@body,
+            varcat@index[["api/datasets/dataset1/variables/gender.json"]])
+        expect_identical(varcat[2:3], varcat@index[2:3])
+    })
+    
+    test_that("entity method for tuple", {
+        expect_true(is.Categorical(entity(varcat[["api/datasets/dataset1/variables/gender.json"]])))
     })
 })

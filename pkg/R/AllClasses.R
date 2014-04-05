@@ -27,13 +27,14 @@ IndexTuple <- setClass("IndexTuple",
         entity_url="character",
         body="list"
     ))
+VariableTuple <- setClass("VariableTuple", contains="IndexTuple")
 
 CrunchVariable <- setClass("CrunchVariable", contains="ShojiObject",
     representation= representation(
         readonly="logical",
-        tuple="IndexTuple"
+        tuple="VariableTuple"
     ), 
-    prototype=prototype(readonly=FALSE, tuple=IndexTuple()))
+    prototype=prototype(readonly=FALSE, tuple=VariableTuple()))
 
 ##' @export
 NumericVariable <- setClass("NumericVariable", contains="CrunchVariable")
@@ -55,21 +56,17 @@ default.useAlias <- function () {
 }
 
 ##' @export
-CrunchDataset <- setClass("CrunchDataset", contains=c("list", "ShojiObject"),
+CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
     representation= representation(
         readonly="logical",
         useAlias="logical",
         .dim="numeric",
-        .order="list",
-        variables="character",
-        hiddenVariables="list"
+        variables="VariableCatalog",
     ), 
     prototype=prototype(readonly=FALSE,
         useAlias=default.useAlias(),
         .dim=numeric(2),
-        .order=list(),
-        variables=character(),
-        hiddenVariables=list()))
+        variables=VariableCatalog()))
 
 ##' @export
 Categories <- setClass("Categories", contains="list")

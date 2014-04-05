@@ -21,7 +21,7 @@ setMethod("initialize", "CrunchDataset", init.fromShoji)
 
 validCrunchDataset <- function (object) {
     oname <- object@body$name
-    are.vars <- vapply(object, is.variable.tuple, logical(1))
+    are.vars <- vapply(object@variables, is.variable.tuple, logical(1))
     if (!all(are.vars)) {
         badcount <- sum(!are.vars)
         val <- paste0("Invalid dataset ", sQuote(oname), ": ", badcount, 
@@ -58,24 +58,13 @@ setMethod("description<-", "CrunchDataset", setDatasetDescription)
 
 .cr.dataset.shojiObject <- function (x) {
     out <- CrunchDataset(shoji=x)
-    vars <- getDatasetVariables(out)
-    hiddenvars <- vapply(vars$variables, function (v) isTRUE(v$discarded), logical(1))
-    out@hiddenVariables <- vars$variables[hiddenvars]
-    out@.Data <- vars$variables[!hiddenvars]
-    out@variables <- names(vars$variables[!hiddenvars])
-    out@.order <- vars$order
+    out@variables <- getDatasetVariables(out)
     out@.dim <- getDim(out)
     return(out)
 }
 
 getDatasetVariables <- function (x) {
-    u <- x@urls$variables_url
-    catalog <- GET(u)
-    varIndex <- catalog$index
-    varOrder <- do.call(VariableGrouping,
-        GET(catalog$views$hierarchical_order)$groups)
-    varIndex <- varIndex[entities(varOrder)]
-    return(list(variables=varIndex, order=varOrder))
+    return(do.call(VariableCatalog, GET(x@urls$variables_url))
 }
 
 setAs("ShojiObject", "CrunchDataset", 
@@ -111,8 +100,7 @@ setMethod("names", "CrunchDataset", function (x) {
 
 ##' @export
 setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
-    x@.Data <- x@.Data[i]
-    x@variables <- x@variables[i]
+    x@variables@index <- active(x@variables)[i] ## TODO: start here. what about ordering? subset it too? or make it drop vars that aren't found in index
     readonly(x) <- TRUE ## we don't want to overwrite the big object accidentally
     return(x)
 })
@@ -205,7 +193,7 @@ setMethod("show", "CrunchDataset", function (object) {
 findVariables <- function (dataset, pattern="", key=namekey(dataset), ...) {
     
     if (is.dataset(dataset)) {
-        dataset <- dataset@.Data
+        dataset <- active(dataset@variables)
     }
     keys <- selectFrom(key, dataset)
     matches <- grep(pattern, keys, ...)
