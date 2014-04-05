@@ -9,12 +9,15 @@ setMethod("initialize", "VariableCatalog", init.VariableCatalog)
 setMethod("ordering", "VariableCatalog", function (x) x@order)
 
 setMethod("active", "VariableCatalog", function (x) {
-    selectFromWhere(!isTRUE(discarded), x@index[entities(ordering(x))],
+    x@index <- selectFromWhere(!isTRUE(discarded),
+        x@index[intersect(entities(ordering(x)), names(x@index))],
         simplify=FALSE)
+    return(x)
 })
 
 setMethod("hidden", "VariableCatalog", function (x) {
-    selectFromWhere(isTRUE(discarded), x@index, simplify=FALSE)
+    x@index <- selectFromWhere(isTRUE(discarded), x@index, simplify=FALSE)
+    return(x)
 })
 
 setMethod("[", c("VariableCatalog", "ANY"), function (x, i, ..., drop) {

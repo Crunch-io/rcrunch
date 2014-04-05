@@ -22,17 +22,20 @@ with(fake.HTTP, {
     })
     
     test_that("active/hidden getters", {
-        expect_identical(active(varcat),
+        expect_identical(active(varcat)@index,
             varcat@index[entities(ordering(varcat))])
-        expect_identical(hidden(varcat), list())
+        expect_identical(hidden(varcat)@index, list())
         varcat@index[[2]]$discarded <- TRUE
-        expect_identical(names(active(varcat)), 
+        expect_true(inherits(active(varcat), "VariableCatalog"))
+        expect_true(inherits(hidden(varcat), "VariableCatalog"))
+        expect_identical(names(active(varcat)@index), 
             c("api/datasets/dataset1/variables/gender.json",
             "api/datasets/dataset1/variables/mymrset.json",
             "api/datasets/dataset1/variables/textVar.json",
             "api/datasets/dataset1/variables/starttime.json"))
-        expect_identical(names(hidden(varcat)),
+        expect_identical(names(hidden(varcat)@index),
             "api/datasets/dataset1/variables/birthyr.json")
+        expect_identical(active(hidden(varcat)), hidden(active(varcat)))
     })
     
     test_that("Extract methods", {

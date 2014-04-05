@@ -50,29 +50,6 @@ CategoricalArrayVariable <- setClass("CategoricalArrayVariable", contains="Crunc
 ##' @export
 MultipleResponseVariable <-setClass("MultipleResponseVariable", contains="CategoricalArrayVariable")
 
-default.useAlias <- function () {
-    opt <- getOption("crunch.useAlias")
-    return(is.null(opt) || isTRUE(opt))
-}
-
-##' @export
-CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
-    representation= representation(
-        readonly="logical",
-        useAlias="logical",
-        .dim="numeric",
-        variables="VariableCatalog",
-    ), 
-    prototype=prototype(readonly=FALSE,
-        useAlias=default.useAlias(),
-        .dim=numeric(2),
-        variables=VariableCatalog()))
-
-##' @export
-Categories <- setClass("Categories", contains="list")
-##' @export
-Category <- setClass("Category", contains="namedList")
-
 ##' @export
 VariableGrouping <- setClass("VariableGrouping", contains="list")
 ##' @export
@@ -83,3 +60,29 @@ VariableGroup <- setClass("VariableGroup", representation=representation(
 
 VariableCatalog <- setClass("VariableCatalog", contains="ShojiCatalog",
     representation(order="VariableGrouping"))
+
+default.useAlias <- function () {
+    opt <- getOption("crunch.useAlias")
+    return(is.null(opt) || isTRUE(opt))
+}
+
+##' @export
+CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
+    representation=representation(
+        readonly="logical",
+        useAlias="logical",
+        .dim="numeric",
+        variables="VariableCatalog"
+    ), 
+    prototype=prototype(
+        readonly=FALSE,
+        useAlias=default.useAlias(),
+        .dim=numeric(2),
+        variables=VariableCatalog()))
+
+##' @export
+Categories <- setClass("Categories", contains="list")
+##' @export
+Category <- setClass("Category", contains="namedList")
+
+

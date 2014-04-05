@@ -64,7 +64,7 @@ setMethod("description<-", "CrunchDataset", setDatasetDescription)
 }
 
 getDatasetVariables <- function (x) {
-    return(do.call(VariableCatalog, GET(x@urls$variables_url))
+    return(do.call(VariableCatalog, GET(x@urls$variables_url)))
 }
 
 setAs("ShojiObject", "CrunchDataset", 
@@ -100,7 +100,7 @@ setMethod("names", "CrunchDataset", function (x) {
 
 ##' @export
 setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
-    x@variables@index <- active(x@variables)[i] ## TODO: start here. what about ordering? subset it too? or make it drop vars that aren't found in index
+    x@variables <- active(x@variables)[i]
     readonly(x) <- TRUE ## we don't want to overwrite the big object accidentally
     return(x)
 })
@@ -114,10 +114,7 @@ setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE)
 })
 ##' @export
 setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
-    url <- x@variables[i]
-    if (is.na(url)) stop("Subscript out of bounds", call.=FALSE)
-    tuple <- IndexTuple(index_url=x@urls$variables_url, entity_url=url, body=x@.Data[[i]])
-    return(as.variable(GET(url), tuple=tuple))
+    return(entity(x@variables[[i]]))
 })
 ##' @export
 setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
