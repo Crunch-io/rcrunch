@@ -6,17 +6,14 @@ if (!run.only.local.tests) {
             testdf <- .setup
             var1 <- testdf[[1]]
             test_that("Hide and unhide method for variables", {
-                expect_true(name(var1) %in% vapply(testdf[], 
-                    function (x) name(x), character(1)))
+                expect_true(name(var1) %in% findVariables(testdf, key="name", value=TRUE))
                 var1 <- hide(var1)
                 testdf <- refresh(testdf)
-                expect_false(name(var1) %in% vapply(testdf[], 
-                    function (x) name(x), character(1)))
+                expect_false(name(var1) %in% findVariables(testdf, key="name", value=TRUE))
                 
                 var1 <- unhide(var1)
                 testdf <- refresh(testdf)
-                expect_true(name(var1) %in% vapply(testdf[], 
-                    function (x) name(x), character(1)))
+                expect_true(name(var1) %in% findVariables(testdf, key="name", value=TRUE))
             })
         })
         
@@ -24,23 +21,31 @@ if (!run.only.local.tests) {
             testdf <- .setup
             
             test_that("hideVariables and hiddenVariables for Dataset", {
-                expect_equivalent(hiddenVariablesList(testdf), list())
+                expect_equivalent(hidden(testdf)@index, list())
                 expect_identical(hiddenVariables(testdf), c())
+                expect_identical(dim(testdf), dim(df))
                 
                 testdf <- hideVariables(testdf, c("v2", "v3"))
                 expect_identical(names(testdf)[1:2], c("v1", "v4"))
                 expect_identical(hiddenVariables(testdf), c("v2", "v3"))
+                expect_identical(length(hidden(testdf)), 2L)
+                expect_identical(length(active(testdf@variables)), ncol(df)-2L)
+                expect_identical(dim(testdf), c(nrow(df), ncol(df)-2L))
                 
                 hiddenVariables(testdf) <- "v3"
                 ## work like is.na<-, i.e. adds hiding but doesn't unhide by omitting
                 expect_identical(hiddenVariables(testdf), c("v2", "v3"))
                 expect_identical(names(testdf)[1:2], c("v1", "v4"))
+                expect_identical(dim(testdf), c(nrow(df), ncol(df)-2L))
+                
                 hiddenVariables(testdf) <- "v4"
                 expect_identical(names(testdf)[1:2], c("v1", "v5"))
                 expect_identical(hiddenVariables(testdf), c("v2", "v3", "v4"))
+                expect_identical(dim(testdf), c(nrow(df), ncol(df)-3L))
                 
                 testdf <- unhideVariables(testdf, c("v2", "v3", "v4"))
                 expect_identical(hiddenVariables(testdf), c())
+                expect_identical(dim(testdf), dim(df))
             })
         })
         
@@ -49,9 +54,11 @@ if (!run.only.local.tests) {
             
             test_that("hideVariables with grep (and by index)", {
                 testdf <- hideVariables(testdf, pattern="v[23]")
+                # print("ok")
                 expect_identical(names(testdf)[1:2], c("v1", "v4"))
                 
                 testdf <- unhideVariables(testdf, pattern="v[23]")
+                # print("ok")
                 expect_identical(hiddenVariables(testdf), c())
             })
             

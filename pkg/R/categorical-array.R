@@ -2,7 +2,7 @@
 ##'
 ##' @param list_of_variables a list of Variable objects to bind together, or a
 ##' Dataset object containing only the Variables to bind (as in from subsetting
-##' a Dataset). If omitted, must supply \code{dataset} and \code{pattern}.
+##' a Dataset), or values (e.g. names) of variables corresponding to \code{key}. If omitted, must supply \code{dataset} and \code{pattern}. If specifying values, must include \code{dataset}.
 ##' @param dataset the Crunch Dataset to which the variables in 
 ##' \code{list_of_variables} belong, or in which to search for variables based
 ##' on \code{pattern}. If omitted, \code{list_of_variables} must exist and all
@@ -38,7 +38,7 @@ makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key=nameke
 
 ##' Given inputs to makeArray/makeMR, parse and validate
 ##' @param ... Stuff from calling function that will be ignored.
-prepareBindInputs <- function (list_of_variables, dataset=NULL, pattern=NULL,
+prepareBindInputs <- function (list_of_variables=NULL, dataset=NULL, pattern=NULL,
                                key=namekey(dataset), ...) {
     
     listOfVariablesIsValid <- function (lov) {
@@ -54,55 +54,43 @@ prepareBindInputs <- function (list_of_variables, dataset=NULL, pattern=NULL,
         return(ds_urls)
     }
     
+    variable_urls <- NULL
     if (is.null(dataset)) {
         if (is.dataset(list_of_variables)) {
             ## as in, if the list of variables is a [ extraction from a Dataset
             dataset <- list_of_variables
-        } else if (!listOfVariablesIsValid(list_of_variables)) {
-            stop("Must provide a Dataset and either a list of Variables to combine or a pattern to identify Variables within that Dataset")
-        } else {
+            variable_urls <- urls(dataset@variables)
+        } else if (listOfVariablesIsValid(list_of_variables)) {
             ds_url <- datasetURLfromVariables(list_of_variables)
             dataset <- as.dataset(GET(ds_url))
+            variable_urls <- vapply(list_of_variables, function (x) self(x), character(1), USE.NAMES=FALSE)
+        } else {
+            stop("Must provide a Dataset and either a list of Variables to combine or a pattern to identify Variables within that Dataset")
         }
     }
     if (is.null(dataset)) {
-        stop("Must supply a Crunch dataset in which to make the Multiple Response variable", call.=FALSE)
+        stop("Must supply a Crunch dataset in which to make the array variable", call.=FALSE)
     }
     
-    if (!is.null(pattern)) {
-        matches <- findVariables(dataset, pattern=pattern, key=key)
-        if (!length(matches)) {
+    if (is.null(variable_urls)) {
+        variable_urls <- findVariableURLs(dataset, refs=list_of_variables, pattern=pattern, key=key)
+        if (!length(variable_urls)) {
             stop("Pattern did not match any variables", call.=FALSE)
         }
-        list_of_variables <- dataset[matches]
     }
     
-    ## Assert all variables are Variables
-    if (!listOfVariablesIsValid(list_of_variables)) {
-        stop("Invalid list of Variables to combine")
-    }
-    ## Assert variables correspond to the dataset
-    ## NPR: re-enable this to prevent a possible 500 error when the user-datasets stuff
-    ## is cleared up on the server
-    # if (datasetURLfromVariables(list_of_variables) != self(dataset)) {
-    #     stop("`list_of_variables` must be from `dataset`")
-    # }
-    
-    return(list(dataset=dataset, list_of_variables=list_of_variables))
+    return(list(dataset=dataset, list_of_variables=variable_urls))
 }
 
 ##' Take variables and their dataset and bind them into a new array variable
-bindVariables <- function (list_of_variables, dataset, name, ...) {
-    var_urls <- vapply(list_of_variables, self, character(1), USE.NAMES=FALSE)
+bindVariables <- function (var_urls, dataset, name, ...) {
     out <- POSTBindVariables(dataset@urls$bind_url, var_urls, name=name, ...)
-    ## could apply ... here
     invisible(returnNewVariable(out, dataset))
 }
 
 returnNewVariable <- function (variable_url, dataset) {
     dataset <- refresh(dataset)
-    newvar.index <- match(variable_url, dataset@variables)
-    return(dataset[[newvar.index]])
+    return(entity(dataset@variables[[variable_url]]))
 }
 
 POSTBindVariables <- function (bind_url, variable_urls, ...) {

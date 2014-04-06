@@ -12,8 +12,11 @@
 \arguments{
   \item{list_of_variables}{a list of Variable objects to
   bind together, or a Dataset object containing only the
-  Variables to bind (as in from subsetting a Dataset). If
-  omitted, must supply \code{dataset} and \code{pattern}.}
+  Variables to bind (as in from subsetting a Dataset), or
+  values (e.g. names) of variables corresponding to
+  \code{key}. If omitted, must supply \code{dataset} and
+  \code{pattern}. If specifying values, must include
+  \code{dataset}.}
 
   \item{dataset}{the Crunch Dataset to which the variables
   in \code{list_of_variables} belong, or in which to search

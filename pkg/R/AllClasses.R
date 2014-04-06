@@ -71,13 +71,13 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
     representation=representation(
         readonly="logical",
         useAlias="logical",
-        .dim="numeric",
+        .nrow="numeric",
         variables="VariableCatalog"
     ), 
     prototype=prototype(
         readonly=FALSE,
         useAlias=default.useAlias(),
-        .dim=numeric(2),
+        .nrow=numeric(1),
         variables=VariableCatalog()))
 
 ##' @export

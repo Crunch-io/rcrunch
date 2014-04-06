@@ -21,7 +21,14 @@ setMethod("hidden", "VariableCatalog", function (x) {
 })
 
 setMethod("[", c("VariableCatalog", "ANY"), function (x, i, ..., drop) {
-    x@index[i]
+    x@index <- x@index[i]
+    return(x)
+})
+setMethod("[<-", c("VariableCatalog", "character", "missing", "VariableCatalog"), function (x, i, j, value) {
+    ## Validate!
+    x@index[i] <- value@index[i]
+    ## No save, I don't think. PATCH outside this fn? 
+    return(x)
 })
 
 setMethod("[[", c("VariableCatalog", "character"), function (x, i, ...) {
@@ -31,3 +38,21 @@ setMethod("[[", c("VariableCatalog", "ANY"), function (x, i, ...) {
     VariableTuple(index_url=self(x), entity_url=names(x@index)[i],
         body=x@index[[i]])
 })
+setMethod("[[<-", c("VariableCatalog", "character", "missing", "VariableTuple"), 
+    function (x, i, j, value) {
+        x@index[[i]] <- value@body
+        return(x)
+    })
+setMethod("[[<-", c("VariableCatalog", "character", "missing", "CrunchVariable"), 
+   function (x, i, j, value) {
+       stopifnot(i == self(value))
+       x[[i]] <- tuple(value)
+       return(x)
+   })
+
+setMethod("length", "VariableCatalog", function (x) length(x@index))
+setMethod("lapply", "VariableCatalog", function (X, FUN, ...) lapply(X@index, FUN, ...))
+
+urls <- function (x) {
+    names(x@index)
+}

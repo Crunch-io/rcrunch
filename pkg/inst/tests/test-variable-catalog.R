@@ -33,8 +33,11 @@ with(fake.HTTP, {
             "api/datasets/dataset1/variables/mymrset.json",
             "api/datasets/dataset1/variables/textVar.json",
             "api/datasets/dataset1/variables/starttime.json"))
+        expect_identical(length(active(varcat)), 4L)
         expect_identical(names(hidden(varcat)@index),
             "api/datasets/dataset1/variables/birthyr.json")
+        expect_identical(length(hidden(varcat)), 1L)
+        expect_identical(length(varcat), 5L)
         expect_identical(active(hidden(varcat)), hidden(active(varcat)))
     })
     
@@ -42,7 +45,7 @@ with(fake.HTTP, {
         expect_true(inherits(varcat[["api/datasets/dataset1/variables/gender.json"]], "VariableTuple"))
         expect_identical(varcat[["api/datasets/dataset1/variables/gender.json"]]@body,
             varcat@index[["api/datasets/dataset1/variables/gender.json"]])
-        expect_identical(varcat[2:3], varcat@index[2:3])
+        expect_identical(varcat[2:3]@index, varcat@index[2:3])
     })
     
     test_that("entity method for tuple", {

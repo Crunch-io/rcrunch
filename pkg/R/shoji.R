@@ -83,3 +83,12 @@ setReadonly <- function (x, value) {
 ##' @export
 setMethod("readonly<-", "ShojiObject", setReadonly)
 
+setIndexSlot <- function (x, i, value) {
+    x@index <- lapply(x, function (a) {
+        a[[i]] <- value
+        return(a)
+    })
+    # cat(toJSON(x@index))
+    PATCH(self(x), body=toJSON(x@index))
+    return(x)
+}

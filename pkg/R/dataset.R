@@ -59,7 +59,7 @@ setMethod("description<-", "CrunchDataset", setDatasetDescription)
 .cr.dataset.shojiObject <- function (x) {
     out <- CrunchDataset(shoji=x)
     out@variables <- getDatasetVariables(out)
-    out@.dim <- getDim(out)
+    out@.nrow <- getNrow(out)
     return(out)
 }
 
@@ -79,15 +79,15 @@ as.dataset <- function (x, useAlias=default.useAlias()) {
 }
 
 ##' @export
-setMethod("dim", "CrunchDataset", function (x) x@.dim)
+setMethod("dim", "CrunchDataset", function (x) c(x@.nrow, length(active(x@variables))))
 
-getDim <- function (dataset, filtered=TRUE) {
+getNrow <- function (dataset, filtered=TRUE) {
     which.count <- ifelse(isTRUE(filtered), "filtered", "total")
     ## use filtered by default because every other request will take the applied filter
     
     summary_url <- dataset@urls$summary_url
-    nrow <- as.integer(round(GET(summary_url)$rows[[which.count]]))
-    return(c(nrow, length(dataset)))
+    nrows <- as.integer(round(GET(summary_url)$rows[[which.count]]))
+    return(nrows)
 }
 
 
@@ -97,6 +97,10 @@ namekey <- function (dataset) ifelse(dataset@useAlias, "alias", "name")
 setMethod("names", "CrunchDataset", function (x) {
     findVariables(x, key=namekey(x), value=TRUE)
 })
+
+variableNames <- function (x) {
+    findVariables(x, key="name", value=TRUE)
+}
 
 ##' @export
 setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
@@ -114,7 +118,11 @@ setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE)
 })
 ##' @export
 setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
-    return(entity(x@variables[[i]]))
+    out <- try(entity(active(x@variables)[[i]]), silent=TRUE)
+    if (is.error(out)) {
+        stop(attr(out, "condition")$message, call.=FALSE)
+    }
+    return(out)
 })
 ##' @export
 setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
@@ -128,8 +136,8 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 
 .addVariableSetter <- function (x, i, value) {
     if (is.variable(value)) {
-        ## TODO: update this to also update the right indextuple
-        x@.Data[[i]] <- value
+        ## What do we do with "i"? ## Just confirm that matches namekey(value)?
+        x@variables[[self(value)]] <- value
         return(x)
     }
     if (i %in% names(x)) {
@@ -157,6 +165,7 @@ showCrunchDataset <- function (x) {
             "", 
             "Contains", nrow(x), "rows of", ncol(x), "variables:", "",
             "")
+    ## TODO: update with VariableCatalog
     vars <- vapply(na.omit(names(x)), function (i) {
         ### REMOVE THE NA.OMIT
         header <- paste0("$", i, ":")
@@ -187,13 +196,17 @@ setMethod("show", "CrunchDataset", function (object) {
 ##' @return indices of the Variables that match the pattern, or the matching
 ##' key values if value=TRUE is passed to \code{grep}
 ##' @export
-findVariables <- function (dataset, pattern="", key=namekey(dataset), ...) {
+findVariables <- function (dataset, refs=NULL, pattern="", key=namekey(dataset), ...) {
     
     if (is.dataset(dataset)) {
-        dataset <- active(dataset@variables)
+        dataset <- active(dataset@variables)@index
     }
     keys <- selectFrom(key, dataset)
-    matches <- grep(pattern, keys, ...)
+    if (is.null(refs)) {
+        matches <- grep(pattern, keys, ...)
+    } else {
+        matches <- which(keys %in% refs)
+    }
     names(matches) <- NULL
     return(matches)
 }
@@ -206,7 +219,7 @@ weight <- function (x) {
     stopifnot(is.dataset(x))
     w <- x@body$weight
     if (!is.null(w)) {
-        w <- as.variable(GET(w))
+        w <- entity(x@variables[[w]])
     }
     return(w)
 }
@@ -228,7 +241,7 @@ weight <- function (x) {
 }
 
 setMethod("lapply", "CrunchDataset", function (X, FUN, ...) {
-    vars <- lapply(seq_along(X@variables), function (i) X[[i]])
+    vars <- lapply(seq_along(active(X@variables)), function (i) X[[i]])
     callNextMethod(vars, FUN, ...)
 })
 

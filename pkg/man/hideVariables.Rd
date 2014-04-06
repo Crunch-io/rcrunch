@@ -4,13 +4,13 @@
 \alias{unhideVariables}
 \title{Hide and Unhide Variables Within a Dataset}
 \usage{
-  hideVariables(dataset, variables, pattern = NULL,
+  hideVariables(dataset, variables = NULL, pattern = NULL,
     key = namekey(dataset), ...)
 
   hiddenVariables(x, value) <- value
 
-  unhideVariables(dataset, variables, pattern = NULL,
-    key = namekey(dataset), ...)
+  unhideVariables(dataset, variables = NULL,
+    pattern = NULL, key = namekey(dataset), ...)
 }
 \arguments{
   \item{dataset}{the Dataset to modify}

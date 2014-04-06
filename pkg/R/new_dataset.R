@@ -38,13 +38,14 @@ newDatasetViaFile <- function (x, name=substitute(x), ...) {
     crunchdf <- newDatasetFromFile(file, name=as.character(name), ...)
     
     ## Update variable types based on what we know
-    crunchdf[] <- sapply(names(crunchdf), function (i) {
+    # crunchdf[] <- 
+    sapply(names(crunchdf), function (i) {
         postUpload(x[[i]], crunchdf[[i]])
     }, simplify=FALSE)
     
     ## You can write methods for preUpload and postUpload for any variable type
     
-    invisible(crunchdf)
+    invisible(refresh(crunchdf))
 }
 
 ##' Upload a file to Crunch to make a new dataset

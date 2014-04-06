@@ -1,6 +1,6 @@
 addVariable <- function (dataset, values, ...) {
     new <- length(values)
-    old <- getDim(dataset, filtered=FALSE)[1]
+    old <- getNrow(dataset, filtered=FALSE)
     if (new == 1 && old > 1) {
         values <- rep(values, old)
         new <- old

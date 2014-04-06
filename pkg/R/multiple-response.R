@@ -15,20 +15,20 @@ makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key=namekey(d
     Call[[1L]] <- as.name("prepareBindInputs")
     x <- eval.parent(Call)
     
-    ## Ensure all are categorical? Or require that outside?
-    # x$list_of_variables <- lapply(x$list_of_variables, castVariable, "categorical")
-    are.categorical <- vapply(x$list_of_variables, is.Categorical, logical(1))
+    ## Get the actual variables so that we can validate
+    vars <- lapply(x$list_of_variables, function (u) entity(x$dataset@variables[[u]]))
+    are.categorical <- vapply(vars, is.Categorical, logical(1))
     if (!all(are.categorical)) {
-        varnames <- vapply(x$list_of_variables[!are.categorical], 
+        varnames <- vapply(vars[!are.categorical], 
             function (x) name(x),
             character(1))
         stop(serialPaste(varnames), 
             " are not Categorical variables. Convert them to ",
-            "Categorical before combining to Multiple Response")
+            "Categorical before combining to Multiple Response", call.=FALSE)
     }
     
     ## Validate selections before binding
-    catnames <- unique(unlist(lapply(x$list_of_variables, 
+    catnames <- unique(unlist(lapply(vars, 
         function (y) names(categories(y)))))
     if (!all(selections %in% catnames)) {
         stop("Selection(s) not found in variable's categories. ", 
