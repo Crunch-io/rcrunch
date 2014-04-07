@@ -33,8 +33,11 @@ login(email="xkcd@crunch.io", password="correct horse battery staple")
 
 ```{r, results='hide', echo=FALSE, message=FALSE}
 ## The vignette is designed to be run at package build time against localhost with nonsecure credentials!
-options(crunch.api="http://localhost:8080/api/")
-login("***REMOVED***", "***REMOVED***")
+options(crunch.api=getOption("test.api"), 
+        crunch.debug=FALSE,
+        crunch.email=getOption("test.user"),
+        crunch.pw=getOption("test.pw"))
+login()
 ```
 
 This will log you in to the crunch API. All of these parameters can be also be set as R `options` so you can simply `login()`.
