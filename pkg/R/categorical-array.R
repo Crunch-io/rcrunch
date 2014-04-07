@@ -33,7 +33,7 @@ makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key=nameke
     Call[[1L]] <- quote(rcrunch:::prepareBindInputs)
     x <- eval.parent(Call)
     
-    invisible(bindVariables(x$list_of_variables, x$dataset, name, ...))
+    invisible(bindVariables(x$variable_urls, x$dataset, name, type="categorical_array", ...))
 }
 
 ##' Given inputs to makeArray/makeMR, parse and validate
@@ -79,12 +79,12 @@ prepareBindInputs <- function (list_of_variables=NULL, dataset=NULL, pattern=NUL
         }
     }
     
-    return(list(dataset=dataset, list_of_variables=variable_urls))
+    return(list(dataset=dataset, variable_urls=variable_urls))
 }
 
 ##' Take variables and their dataset and bind them into a new array variable
 bindVariables <- function (var_urls, dataset, name, ...) {
-    out <- POSTBindVariables(dataset@urls$bind_url, var_urls, name=name, ...)
+    out <- POSTBindVariables(dataset@urls$variables_url, var_urls, name=name, ...)
     invisible(returnNewVariable(out, dataset))
 }
 
@@ -95,6 +95,5 @@ returnNewVariable <- function (variable_url, dataset) {
 
 POSTBindVariables <- function (bind_url, variable_urls, ...) {
     payload <- list(variables=I(variable_urls), ...)
-    ## extend backend to take ...
     return(POST(bind_url, body=toJSON(payload)))
 }

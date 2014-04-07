@@ -154,6 +154,8 @@ setMethod("[[<-", c("CrunchDataset", "ANY"), function (x, i, value) {
 ##' @export
 setMethod("$<-", c("CrunchDataset"), function (x, name, value) .addVariableSetter(x, i=name, value))
 
+## TODO: add [<-.CrunchDataset, CrunchDataset/VariableCatalog
+
 showCrunchDataset <- function (x) {
     n <- sQuote(name(x))
     out <- c("Dataset", n, "")
@@ -182,34 +184,6 @@ setMethod("show", "CrunchDataset", function (object) {
     cat(out)
     invisible(out)
 })
-
-##' Search a Dataset or list of Variables
-##'
-##' A version of \code{\link{grep}} for Crunch objects
-##' @param dataset the Dataset or list of Crunch objects to search
-##' @param pattern regular expression, passed to \code{grep}. If "", returns all.
-##' @param key the field in the Crunch objects in which to grep
-##' @param hidden logical whether hidden variables should be searched. Default is FALSE
-##' @param ... additional arguments passed to \code{grep}. If \code{value=TRUE},
-##' returns the values of \code{key} where matches are found, not the variables
-##' themselves
-##' @return indices of the Variables that match the pattern, or the matching
-##' key values if value=TRUE is passed to \code{grep}
-##' @export
-findVariables <- function (dataset, refs=NULL, pattern="", key=namekey(dataset), ...) {
-    
-    if (is.dataset(dataset)) {
-        dataset <- active(dataset@variables)@index
-    }
-    keys <- selectFrom(key, dataset)
-    if (is.null(refs)) {
-        matches <- grep(pattern, keys, ...)
-    } else {
-        matches <- which(keys %in% refs)
-    }
-    names(matches) <- NULL
-    return(matches)
-}
 
 ##' Get the dataset's weight
 ##' @param x a Dataset

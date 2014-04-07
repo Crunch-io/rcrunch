@@ -16,7 +16,7 @@ makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key=namekey(d
     x <- eval.parent(Call)
     
     ## Get the actual variables so that we can validate
-    vars <- lapply(x$list_of_variables, function (u) entity(x$dataset@variables[[u]]))
+    vars <- lapply(x$variable_urls, function (u) entity(x$dataset@variables[[u]]))
     are.categorical <- vapply(vars, is.Categorical, logical(1))
     if (!all(are.categorical)) {
         varnames <- vapply(vars[!are.categorical], 
@@ -36,7 +36,7 @@ makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key=namekey(d
         ## Could return more useful messaging here
     }
     
-    var <- bindVariables(x$list_of_variables, x$dataset, name, ...)
-    var <- dichotomize(var, selections)
+    var <- bindVariables(x$variable_urls, x$dataset, name, type="multiple_response", selected_categories=I(selections), ...)
+    # var <- dichotomize(var, selections)
     invisible(var)
 }

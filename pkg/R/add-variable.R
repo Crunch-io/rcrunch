@@ -16,6 +16,7 @@ addVariable <- function (dataset, values, ...) {
     invisible(dataset)
 }
 
+##' bind_url arg is being deprecated
 POSTNewVariable <- function (collection_url, variable, bind_url=NULL) {
     
     do.POST <- function (x) POST(collection_url, body=toJSON(x, digits=15))
@@ -24,7 +25,6 @@ POSTNewVariable <- function (collection_url, variable, bind_url=NULL) {
     if (variable$type %in% c("multiple_response", "categorical_array")) {
         ## assumes: array of subvariables included, and if MR, at least one category has selected: TRUE
         ## TODO: make the data import API take array types directly
-        variable$type <- NULL
         subvars <- variable$subvariables
         variable$subvariables <- NULL
         
@@ -34,16 +34,11 @@ POSTNewVariable <- function (collection_url, variable, bind_url=NULL) {
             # Delete subvariables that were added, then raise
             lapply(var_urls[!errs], function (x) DELETE(x))
             stop("Subvariables errored on upload", call.=FALSE)
-        } else {
-            var_urls <- unlist(var_urls)
         }
-        variable$bind_url <- bind_url
-        variable$variable_urls <- var_urls
-        out <- do.call("POSTBindVariables", variable)
-        invisible(out)
-    } else {
-        invisible(do.POST(variable))
+        # Else prepare to POST array definition
+        variable$variables <- I(unlist(var_urls))
     }
+    invisible(do.POST(variable))
 }
 
 addVariables <- function (dataset, vars) {

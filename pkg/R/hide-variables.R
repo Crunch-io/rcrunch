@@ -39,20 +39,6 @@ hideVariables <- function (dataset, variables=NULL, pattern=NULL, key=namekey(da
     invisible(dataset)
 }
 
-findVariableURLs <- function (x, refs=NULL, pattern="", key=namekey(x), ...) {
-    if (is.dataset(x)) {
-        key
-        return(findVariableURLs(active(x@variables), refs=refs, pattern=pattern, key=key,
-            ...))
-    } else if (inherits(x, "VariableCatalog")) {
-        return(findVariableURLs(x@index, refs=refs, pattern=pattern, key=key,
-            ...))
-    } else if (!is.numeric(refs)) {
-        refs <- findVariables(x, refs=refs, pattern=pattern, key=key, ...)
-    }
-    return(names(x)[refs])
-}
-
 ##' @rdname hideVariables
 ##' @export
 `hiddenVariables<-` <- function (x, value) {

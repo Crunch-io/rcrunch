@@ -45,3 +45,4 @@ Collate:
     'add-variable.R'
     'tuple.R'
     'variable-catalog.R'
+    'find.R'
