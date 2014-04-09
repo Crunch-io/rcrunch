@@ -56,3 +56,9 @@ setMethod("lapply", "VariableCatalog", function (X, FUN, ...) lapply(X@index, FU
 urls <- function (x) {
     names(x@index)
 }
+
+# setAs("VariableCatalog", "list", 
+#     function (from) from@index)
+
+##' @S3method as.list VariableCatalog
+as.list.VariableCatalog <- function (x, ...) lapply(names(x@index), function (i) x[[i]])

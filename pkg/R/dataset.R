@@ -156,35 +156,6 @@ setMethod("$<-", c("CrunchDataset"), function (x, name, value) .addVariableSette
 
 ## TODO: add [<-.CrunchDataset, CrunchDataset/VariableCatalog
 
-showCrunchDataset <- function (x) {
-    n <- sQuote(name(x))
-    out <- c("Dataset", n, "")
-    if (!is.null(x@body$description)) {
-        out <- c(out, x@body$description, "")
-    }
-    
-    out <- c(out, 
-            "", 
-            "Contains", nrow(x), "rows of", ncol(x), "variables:", "",
-            "")
-    ## TODO: update with VariableCatalog
-    vars <- vapply(na.omit(names(x)), function (i) {
-        ### REMOVE THE NA.OMIT
-        header <- paste0("$", i, ":")
-        paste(c(header, getNameAndType(x[[i]]), "\n"), collapse=" ")
-    }, character(1))
-    out <- c(out, vars)
-    
-    return(doc(out))
-}
-
-##' @export
-setMethod("show", "CrunchDataset", function (object) {
-    out <- showCrunchDataset(object)
-    cat(out)
-    invisible(out)
-})
-
 ##' Get the dataset's weight
 ##' @param x a Dataset
 ##' @return a Variable if there is a weight, else NULL

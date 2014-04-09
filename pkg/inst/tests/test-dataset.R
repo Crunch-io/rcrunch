@@ -64,6 +64,16 @@ with(fake.HTTP, {
         expect_false(identical(description(dataset), description(test.ds)))
         expect_identical(description(dataset), "007")
     })
+    
+    test_that("show method", {
+        expect_identical(describeDatasetVariables(test.ds), 
+            c("$birthyr: Birth Year (numeric) \n",
+            "$gender: Gender (categorical) \n",
+            "$mymrset: mymrset (multiple_response) \n",
+            "$textVar: Text variable ftw (text) \n",
+            "$starttime: starttime (datetime) \n"     
+        ))
+    })
 })
 
 if (!run.only.local.tests) {

@@ -30,7 +30,6 @@ Collate:
     'new_dataset.R'
     'dataset.R'
     'variable.R'
-    'show-variable.R'
     'variable-summary.R'
     'variable-type.R'
     'categories.R'
@@ -46,3 +45,4 @@ Collate:
     'tuple.R'
     'variable-catalog.R'
     'find.R'
+    'show.R'
