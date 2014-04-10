@@ -19,6 +19,25 @@ test_that("toVariable parses R data types", {
     options(crunch.max.categories=256)
 })
 
+test_that("POSTNewVariable rejects invalid categories", {
+    expect_error(POSTNewVariable("", 
+        list(type="categorical", name="bad ids",
+            categories=list(
+                list(id=-1L, name="B", numeric_value=1L, missing=FALSE),
+                list(id=2L, name="C", numeric_value=2L, missing=FALSE),
+                list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+            ))), 
+        "Invalid category ids: must be unique")
+    expect_error(POSTNewVariable("", 
+        list(type="categorical", name="bad names",
+            categories=list(
+                list(id=1L, name="Name 1", numeric_value=1L, missing=FALSE),
+                list(id=2L, name="Name 1", numeric_value=2L, missing=FALSE),
+                list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+            ))), 
+        "Invalid category names: must be unique")
+})
+
 if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df), {

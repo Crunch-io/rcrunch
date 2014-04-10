@@ -2,19 +2,24 @@ validCategories <- function (object) {
     are.cats <- vapply(object, is.category, logical(1))
     if (!all(are.cats)) {
         badcount <- sum(!are.cats)
-        val <- paste0("Invalid categories: ", badcount, 
+        return(paste0("Invalid categories: ", badcount, 
             ifelse(badcount>1, 
                 " elements are not Crunch category objects.", 
-                " element is not a Crunch category object."))
-    } else {
-        val <- TRUE  
+                " element is not a Crunch category object.")))
     }
-    return(val)
+    if (any(duplicated(names(object)))) {
+        return("Invalid category names: must be unique")
+    }
+    if (any(duplicated(ids(object)))) {
+        return("Invalid category ids: must be unique")
+    }
+    return(TRUE)
 }
 setValidity("Categories", validCategories)
 
 init.Categories <- function (.Object, ...) {
     .Object@.Data <- lapply(..1, Category)
+    validObject(.Object)
     return(.Object)
 }
 setMethod("initialize", "Categories", init.Categories)
@@ -36,7 +41,7 @@ setMethod("names", "Categories", function (x) vapply(x, name, character(1)))
 ##' @export
 setMethod("values", "Categories", function (x) vapply(x, value, numeric(1)))
 ##' @export
-setMethod("ids", "Categories", function (x) sapply(x, id)) ## could assert numeric?
+setMethod("ids", "Categories", function (x) vapply(x, id, numeric(1)))
 ##' @export
 setMethod("ids", "list", function (x) sapply(x, id)) ## for summaries
 

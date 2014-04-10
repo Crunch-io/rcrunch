@@ -11,6 +11,19 @@ with(fake.HTTP, {
         expect_true(is.categories(cats))
         expect_identical(length(cats), 3L)
     })
+    
+    test_that("Categories validation", {
+        expect_error(Categories(list(
+            list(id=-1L, name="B", numeric_value=1L, missing=FALSE),
+            list(id=2L, name="C", numeric_value=2L, missing=FALSE),
+            list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+        )), "Invalid category ids: must be unique")
+        expect_error(Categories(list(
+            list(id=1L, name="Name 1", numeric_value=1L, missing=FALSE),
+            list(id=2L, name="Name 1", numeric_value=2L, missing=FALSE),
+            list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+        )), "Invalid category names: must be unique")
+    })
 
     test_that("category slicers", {
         expect_true(is.categories(cats[1]))
