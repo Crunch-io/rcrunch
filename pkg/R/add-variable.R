@@ -37,6 +37,8 @@ POSTNewVariable <- function (collection_url, variable, bind_url=NULL) {
         }
         # Else prepare to POST array definition
         variable$variables <- I(unlist(var_urls))
+    } else if (variable$type == "categorical") {
+        Categories(variable$categories) ## will error if cats are invalid
     }
     invisible(do.POST(variable))
 }
