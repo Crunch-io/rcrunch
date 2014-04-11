@@ -40,8 +40,9 @@ addFakeHTTPVerbs <- function () {
         # print(url)
         handleShoji(fromJSON(system.file(url, package="rcrunch"), simplifyWithNames=FALSE))
     }
-    http_verbs$PUT <- function (...) crunchAPI("PUT", ...)
-    http_verbs$POST <- function (...) crunchAPI("POST", ...)
+    http_verbs$PUT <- function (...) invisible()
+    http_verbs$PATCH <- function (...) invisible()
+    http_verbs$POST <- function (...) invisible()
 }
 
 ## Mock backend

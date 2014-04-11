@@ -11,22 +11,12 @@ test_that("Dataset getters get", {
         CrunchDataset(body=list(name="test ds"))@body$name)
 })
 
-var_test_fn <- function (x) all(vapply(x, is.variable, logical(1)))
-is_valid_dataset <- function (x) is.dataset(x) && var_test_fn(x)
-
-test_that("Datasets only contain variables", {
-    d1 <- CrunchDataset(body=list(name="test ds"))
-    expect_true(is_valid_dataset(d1))
-    skip(expect_error(CrunchDataset(list(foo=34), body=list(name="test ds")), 
-        ".*1 element is not a Crunch variable object."))
-})
-
 with(fake.HTTP, {
     test.ds <- as.dataset(GET("api/datasets/dataset1.json"))
 
     test_that("findVariables", {
-        expect_identical(findVariables(test.ds, "^gend", key="alias"), 2L)
-        expect_identical(findVariables(test.ds, "^bir", key="alias", value=TRUE), "birthyr")
+        expect_identical(findVariables(test.ds, pattern="^gend", key="alias"), 2L)
+        expect_identical(findVariables(test.ds, pattern="^bir", key="alias", value=TRUE), "birthyr")
     })
 
     test_that("useAlias exists and affects names()", {
@@ -52,13 +42,11 @@ with(fake.HTTP, {
         expect_true("birthyr" %in% names(test.ds))
         expect_true(is.variable(test.ds$birthyr))
         expect_true(is.dataset(test.ds[1]))
-        expect_true(is_valid_dataset(test.ds))
-        expect_true(is_valid_dataset(test.ds[1]))
-        expect_true(is_valid_dataset(test.ds["birthyr"]))
-        expect_true(is_valid_dataset(test.ds[names(test.ds)=="birthyr"]))
+        expect_true(is.dataset(test.ds["birthyr"]))
+        expect_true(is.dataset(test.ds[names(test.ds)=="birthyr"]))
         expect_identical(names(test.ds[2]), c("gender"))
         expect_identical(test.ds$not.a.var.name, NULL)
-        expect_error(test.ds[[999]], "Subscript out of bounds")
+        expect_error(test.ds[[999]], "subscript out of bounds")
     })
 
     test_that("Read only flag gets set appropriately", {
@@ -75,6 +63,16 @@ with(fake.HTTP, {
         description(dataset) <- "007"
         expect_false(identical(description(dataset), description(test.ds)))
         expect_identical(description(dataset), "007")
+    })
+    
+    test_that("show method", {
+        expect_identical(describeDatasetVariables(test.ds), 
+            c("$birthyr: Birth Year (numeric) \n",
+            "$gender: Gender (categorical) \n",
+            "$mymrset: mymrset (multiple_response) \n",
+            "$textVar: Text variable ftw (text) \n",
+            "$starttime: starttime (datetime) \n"     
+        ))
     })
 })
 

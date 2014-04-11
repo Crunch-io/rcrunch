@@ -1,16 +1,27 @@
-init.Dataset <- function (.Object, shoji, ...) {
+init.fromShoji <- function (.Object, shoji, ...) {
+    slots <- slotNames(.Object)
     if (!missing(shoji) && is.shojiObject(shoji)) {
-        for (i in slotNames(shoji)) slot(.Object, i) <- slot(shoji, i)
+        for (i in slotNames(shoji)) {
+            if (i %in% slots) {
+                slot(.Object, i) <- slot(shoji, i)
+            }
+        }
+        dots <- list(...)
+        for (i in names(dots)) {
+            if (i %in% slots) {
+                slot(.Object, i) <- dots[[i]]
+            }
+        }
     } else {
         .Object <- callNextMethod(.Object, ...)
     }
     return(.Object)
 }
-setMethod("initialize", "CrunchDataset", init.Dataset)
+setMethod("initialize", "CrunchDataset", init.fromShoji)
 
 validCrunchDataset <- function (object) {
     oname <- object@body$name
-    are.vars <- vapply(object, is.variable.tuple, logical(1))
+    are.vars <- vapply(object@variables, is.variable.tuple, logical(1))
     if (!all(are.vars)) {
         badcount <- sum(!are.vars)
         val <- paste0("Invalid dataset ", sQuote(oname), ": ", badcount, 
@@ -47,24 +58,13 @@ setMethod("description<-", "CrunchDataset", setDatasetDescription)
 
 .cr.dataset.shojiObject <- function (x) {
     out <- CrunchDataset(shoji=x)
-    vars <- getDatasetVariables(out)
-    hiddenvars <- vapply(vars$variables, function (v) isTRUE(v$discarded), logical(1))
-    out@hiddenVariables <- vars$variables[hiddenvars]
-    out@.Data <- vars$variables[!hiddenvars]
-    out@variables <- names(vars$variables[!hiddenvars])
-    out@.order <- vars$order
-    out@.dim <- getDim(out)
+    out@variables <- getDatasetVariables(out)
+    out@.nrow <- getNrow(out)
     return(out)
 }
 
 getDatasetVariables <- function (x) {
-    u <- x@urls$variables_url
-    catalog <- GET(u)
-    varIndex <- catalog$index
-    varOrder <- do.call(VariableGrouping,
-        GET(catalog$views$hierarchical_order)$groups)
-    varIndex <- varIndex[entities(varOrder)]
-    return(list(variables=varIndex, order=varOrder))
+    return(do.call(VariableCatalog, GET(x@urls$variables_url)))
 }
 
 setAs("ShojiObject", "CrunchDataset", 
@@ -79,15 +79,15 @@ as.dataset <- function (x, useAlias=default.useAlias()) {
 }
 
 ##' @export
-setMethod("dim", "CrunchDataset", function (x) x@.dim)
+setMethod("dim", "CrunchDataset", function (x) c(x@.nrow, length(active(x@variables))))
 
-getDim <- function (dataset, filtered=TRUE) {
+getNrow <- function (dataset, filtered=TRUE) {
     which.count <- ifelse(isTRUE(filtered), "filtered", "total")
     ## use filtered by default because every other request will take the applied filter
     
     summary_url <- dataset@urls$summary_url
-    nrow <- as.integer(round(GET(summary_url)$rows[[which.count]]))
-    return(c(nrow, length(dataset)))
+    nrows <- as.integer(round(GET(summary_url)$rows[[which.count]]))
+    return(nrows)
 }
 
 
@@ -98,10 +98,13 @@ setMethod("names", "CrunchDataset", function (x) {
     findVariables(x, key=namekey(x), value=TRUE)
 })
 
+variableNames <- function (x) {
+    findVariables(x, key="name", value=TRUE)
+}
+
 ##' @export
 setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
-    x@.Data <- x@.Data[i]
-    x@variables <- x@variables[i]
+    x@variables <- active(x@variables)[i]
     readonly(x) <- TRUE ## we don't want to overwrite the big object accidentally
     return(x)
 })
@@ -115,10 +118,11 @@ setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE)
 })
 ##' @export
 setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
-    url <- x@variables[i]
-    if (is.na(url)) stop("Subscript out of bounds", call.=FALSE)
-    tuple <- IndexTuple(index_url=x@urls$variables_url, entity_url=url, body=x@.Data[[i]])
-    return(as.variable(GET(url), tuple=tuple))
+    out <- try(entity(active(x@variables)[[i]]), silent=TRUE)
+    if (is.error(out)) {
+        stop(attr(out, "condition")$message, call.=FALSE)
+    }
+    return(out)
 })
 ##' @export
 setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
@@ -132,7 +136,8 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 
 .addVariableSetter <- function (x, i, value) {
     if (is.variable(value)) {
-        x@.Data[[i]] <- value
+        ## What do we do with "i"? ## Just confirm that matches namekey(value)?
+        x@variables[[self(value)]] <- value
         return(x)
     }
     if (i %in% names(x)) {
@@ -149,57 +154,7 @@ setMethod("[[<-", c("CrunchDataset", "ANY"), function (x, i, value) {
 ##' @export
 setMethod("$<-", c("CrunchDataset"), function (x, name, value) .addVariableSetter(x, i=name, value))
 
-showCrunchDataset <- function (x) {
-    n <- sQuote(name(x))
-    out <- c("Dataset", n, "")
-    if (!is.null(x@body$description)) {
-        out <- c(out, x@body$description, "")
-    }
-    
-    out <- c(out, 
-            "", 
-            "Contains", nrow(x), "rows of", ncol(x), "variables:", "",
-            "")
-    vars <- vapply(na.omit(names(x)), function (i) {
-        ### REMOVE THE NA.OMIT
-        header <- paste0("$", i, ":")
-        paste(c(header, getNameAndType(x[[i]]), "\n"), collapse=" ")
-    }, character(1))
-    out <- c(out, vars)
-    
-    return(doc(out))
-}
-
-##' @export
-setMethod("show", "CrunchDataset", function (object) {
-    out <- showCrunchDataset(object)
-    cat(out)
-    invisible(out)
-})
-
-##' Search a Dataset or list of Variables
-##'
-##' A version of \code{\link{grep}} for Crunch objects
-##' @param dataset the Dataset or list of Crunch objects to search
-##' @param pattern regular expression, passed to \code{grep}. If "", returns all.
-##' @param key the field in the Crunch objects in which to grep
-##' @param hidden logical whether hidden variables should be searched. Default is FALSE
-##' @param ... additional arguments passed to \code{grep}. If \code{value=TRUE},
-##' returns the values of \code{key} where matches are found, not the variables
-##' themselves
-##' @return indices of the Variables that match the pattern, or the matching
-##' key values if value=TRUE is passed to \code{grep}
-##' @export
-findVariables <- function (dataset, pattern="", key=namekey(dataset), ...) {
-    
-    if (is.dataset(dataset)) {
-        dataset <- dataset@.Data
-    }
-    keys <- selectFrom(key, dataset)
-    matches <- grep(pattern, keys, ...)
-    names(matches) <- NULL
-    return(matches)
-}
+## TODO: add [<-.CrunchDataset, CrunchDataset/VariableCatalog
 
 ##' Get the dataset's weight
 ##' @param x a Dataset
@@ -209,7 +164,7 @@ weight <- function (x) {
     stopifnot(is.dataset(x))
     w <- x@body$weight
     if (!is.null(w)) {
-        w <- as.variable(GET(w))
+        w <- entity(x@variables[[w]])
     }
     return(w)
 }
@@ -231,7 +186,7 @@ weight <- function (x) {
 }
 
 setMethod("lapply", "CrunchDataset", function (X, FUN, ...) {
-    vars <- lapply(seq_along(X@variables), function (i) X[[i]])
+    vars <- lapply(seq_along(active(X@variables)), function (i) X[[i]])
     callNextMethod(vars, FUN, ...)
 })
 

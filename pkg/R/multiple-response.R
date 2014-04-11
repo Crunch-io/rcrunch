@@ -15,20 +15,20 @@ makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key=namekey(d
     Call[[1L]] <- as.name("prepareBindInputs")
     x <- eval.parent(Call)
     
-    ## Ensure all are categorical? Or require that outside?
-    # x$list_of_variables <- lapply(x$list_of_variables, castVariable, "categorical")
-    are.categorical <- vapply(x$list_of_variables, is.Categorical, logical(1))
+    ## Get the actual variables so that we can validate
+    vars <- lapply(x$variable_urls, function (u) entity(x$dataset@variables[[u]]))
+    are.categorical <- vapply(vars, is.Categorical, logical(1))
     if (!all(are.categorical)) {
-        varnames <- vapply(x$list_of_variables[!are.categorical], 
+        varnames <- vapply(vars[!are.categorical], 
             function (x) name(x),
             character(1))
         stop(serialPaste(varnames), 
             " are not Categorical variables. Convert them to ",
-            "Categorical before combining to Multiple Response")
+            "Categorical before combining to Multiple Response", call.=FALSE)
     }
     
     ## Validate selections before binding
-    catnames <- unique(unlist(lapply(x$list_of_variables, 
+    catnames <- unique(unlist(lapply(vars, 
         function (y) names(categories(y)))))
     if (!all(selections %in% catnames)) {
         stop("Selection(s) not found in variable's categories. ", 
@@ -36,7 +36,7 @@ makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key=namekey(d
         ## Could return more useful messaging here
     }
     
-    var <- bindVariables(x$list_of_variables, x$dataset, name, ...)
-    var <- dichotomize(var, selections)
+    var <- bindVariables(x$variable_urls, x$dataset, name, type="multiple_response", selected_categories=I(selections), ...)
+    # var <- dichotomize(var, selections)
     invisible(var)
 }

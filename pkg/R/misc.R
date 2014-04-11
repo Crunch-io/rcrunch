@@ -47,9 +47,6 @@ selectFrom <- function (key, xlist, ifnot=NA, simplify=TRUE) {
 ##' @param ifnot what to return if the key is not found in a given xlist
 ##' element. Passed to \code{\link{selectFrom}}.
 ##' @param simplify logical, passed to \code{\link{selectFrom}}.
-##' @examples
-##' vars <- loadJSONMocks("variables.json")
-##' selectFromWhere(name=="Gender", vars)
 selectFromWhere <- function (where=TRUE, xlist, key=NULL, ifnot=NA,
                             simplify=TRUE) {
     where <- substitute(where)
@@ -85,24 +82,4 @@ serialPaste <- function (x, collapse="and") {
 	if (length(x)>1) x[length(x)] <- paste(collapse, x[length(x)])
 	join.with <- ifelse(length(x)>2, ", ", " ")
 	return(paste(x, collapse=join.with))
-}
-
-##' Load API sample objects for testing
-##' @param filename character the name of the file. Current options are 
-##' "dataset.json", "variables.json", "summaries.json".
-##' @return The deserialized contents of the JSON file, typically a list.
-##' @importFrom RJSONIO fromJSON
-loadJSONMocks <- function (filename) {
-    fromJSON(system.file(filename, package="rcrunch", mustWork=TRUE),
-        simplifyWithNames=FALSE)
-}
-
-loadMockVariables <- function () {
-    files <- dir(paste0(system.file("api/datasets/dataset1/variables/", package="rcrunch", mustWork=TRUE), "*.json"), 
-        full.names=TRUE)
-    out <- lapply(files, function (x) {
-        structure(fromJSON(x, simplifyWithNames=FALSE), class="shoji")
-    })
-    names(out) <- sub("\\.json", "", basename(files))
-    return(out)
 }

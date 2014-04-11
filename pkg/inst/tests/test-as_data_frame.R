@@ -4,7 +4,14 @@ context("Getting values to make local R objects")
 with(fake.HTTP, {
     ## Variable fake fixtures for dataset
     test.ds <- as.dataset(GET("api/datasets/dataset1.json"))
-    test.ds <- test.ds[!(names(test.ds) %in% "mymrset")] ## Defer implementing MR as.vector
+    hiddenVariables(test.ds) <- "mymrset" # Defer implementing MR as.vector
+    test_that("setup", {
+        expect_identical(dim(test.ds), c(nrow(test.ds), ncol(test.ds)))
+        expect_identical(dim(test.ds), c(25L, 4L))
+        expect_identical(names(test.ds),
+            c("birthyr", "gender", "textVar", "starttime"))
+    })
+    
     test_that("as.vector on Variables", {
         expect_true(is.numeric(getValues(test.ds$birthyr)))
         expect_false(is.factor(getValues(test.ds$gender)))
@@ -15,7 +22,7 @@ with(fake.HTTP, {
 
     test_that("as.data.frame on CrunchDataset", {
         expect_true(is.data.frame(as.data.frame(test.ds)))
-        expect_identical(dim(as.data.frame(test.ds)), c(25L, length(test.ds)))
+        expect_identical(dim(as.data.frame(test.ds)), c(25L, ncol(test.ds)))
         expect_identical(names(as.data.frame(test.ds)), names(test.ds))
         expect_identical(as.data.frame(test.ds)$birthyr, as.vector(test.ds$birthyr))
     })

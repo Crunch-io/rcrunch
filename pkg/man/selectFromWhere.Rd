@@ -26,8 +26,4 @@
 \description{
   Extract list element(s) conditionally
 }
-\examples{
-vars <- loadJSONMocks("variables.json")
-selectFromWhere(name=="Gender", vars)
-}
 

@@ -2,7 +2,7 @@
 \alias{findVariables}
 \title{Search a Dataset or list of Variables}
 \usage{
-  findVariables(dataset, pattern = "",
+  findVariables(dataset, refs = NULL, pattern = "",
     key = namekey(dataset), ...)
 }
 \arguments{

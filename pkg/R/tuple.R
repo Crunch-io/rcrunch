@@ -26,3 +26,10 @@ setTupleSlot <- function (x, name, value) {
     }
     invisible(x)
 }
+
+setMethod("entity", "VariableTuple", function (x) {
+    return(as.variable(GET(x@entity_url), tuple=x))
+})
+
+setMethod("name", "IndexTuple", function (x) x@body$name)
+setMethod("type", "IndexTuple", function (x) x@body$type)

@@ -10,6 +10,8 @@ setMethod("initialize", "VariableGrouping", init.VariableGrouping)
 init.VariableGroup <- function (.Object, group, entities, ...) {
     if (is.list(entities)) {
         entities <- vapply(entities, function (x) self(x), character(1), USE.NAMES=FALSE)
+    } else if (is.dataset(entities)) {
+        entities <- names(entities@variables@index)
     }
     dots <- list(...)
     if ("name" %in% names(dots)) group <- dots$name

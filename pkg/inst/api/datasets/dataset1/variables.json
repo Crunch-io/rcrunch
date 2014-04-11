@@ -32,7 +32,7 @@
             "name": "mymrset",
             "discarded": false,
             "alias": "mymrset", 
-            "type": "numeric",
+            "type": "multiple_response",
             "id": "mymrset",
             "description": "My multiple response set"
         },
