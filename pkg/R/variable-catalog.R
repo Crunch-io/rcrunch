@@ -20,10 +20,6 @@ setMethod("hidden", "VariableCatalog", function (x) {
     return(x)
 })
 
-setMethod("[", c("VariableCatalog", "ANY"), function (x, i, ..., drop) {
-    x@index <- x@index[i]
-    return(x)
-})
 setMethod("[<-", c("VariableCatalog", "character", "missing", "VariableCatalog"), function (x, i, j, value) {
     ## Validate!
     x@index[i] <- value@index[i]
@@ -49,16 +45,3 @@ setMethod("[[<-", c("VariableCatalog", "character", "missing", "CrunchVariable")
        x[[i]] <- tuple(value)
        return(x)
    })
-
-setMethod("length", "VariableCatalog", function (x) length(x@index))
-setMethod("lapply", "VariableCatalog", function (X, FUN, ...) lapply(X@index, FUN, ...))
-
-urls <- function (x) {
-    names(x@index)
-}
-
-# setAs("VariableCatalog", "list", 
-#     function (from) from@index)
-
-##' @S3method as.list VariableCatalog
-as.list.VariableCatalog <- function (x, ...) lapply(names(x@index), function (i) x[[i]])

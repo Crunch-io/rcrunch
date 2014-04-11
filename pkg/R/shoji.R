@@ -41,12 +41,6 @@ setMethod("self", "ShojiObject", function (x) x@self)
 
 ##' @export
 setMethod("refresh", "ShojiObject", .cr.shoji.refresh)
-setMethod("refresh", "CrunchDataset", function (x) {
-    ua <- x@useAlias
-    out <- callNextMethod()
-    out@useAlias <- ua
-    return(out)
-})
 
 ##' @export
 setMethod("delete", "ShojiObject", function (x) invisible(DELETE(self(x))))
@@ -88,7 +82,23 @@ setIndexSlot <- function (x, i, value) {
         a[[i]] <- value
         return(a)
     })
-    # cat(toJSON(x@index))
     PATCH(self(x), body=toJSON(x@index))
     return(x)
 }
+
+setMethod("[", c("ShojiCatalog", "ANY"), function (x, i, ..., drop) {
+   x@index <- x@index[i]
+   return(x)
+})
+setMethod("length", "ShojiCatalog", function (x) length(x@index))
+setMethod("lapply", "ShojiCatalog", function (X, FUN, ...) lapply(X@index, FUN, ...))
+
+urls <- function (x) {
+    names(x@index)
+}
+
+# setAs("VariableCatalog", "list", 
+#     function (from) from@index)
+
+##' @S3method as.list ShojiCatalog
+as.list.ShojiCatalog <- function (x, ...) lapply(names(x@index), function (i) x[[i]])

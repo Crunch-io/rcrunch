@@ -46,3 +46,4 @@ Collate:
     'variable-catalog.R'
     'find.R'
     'show.R'
+    'dataset-catalog.R'

@@ -50,7 +50,7 @@ setAs("ShojiObject", "CrunchVariable",
 setAs("shoji", "CrunchVariable", 
     function (from) do.call("CrunchVariable", from))
     
-as.variable <- function (x, subtype=NULL, tuple=IndexTuple()) {
+as.variable <- function (x, subtype=NULL, tuple=VariableTuple()) {
     x <- as(x, "CrunchVariable")
     if (is.variable(x)) {
         x <- subclassVariable(x, to=subtype)
