@@ -37,7 +37,6 @@ with.SUTD <- function (data, expr, ...) {
 ## note that this works because testthat evals within package namespace
 addFakeHTTPVerbs <- function () {
     http_verbs$GET <- function (url, ...) {
-        # print(url)
         handleShoji(fromJSON(system.file(url, package="rcrunch"), simplifyWithNames=FALSE))
     }
     http_verbs$PUT <- function (...) invisible()

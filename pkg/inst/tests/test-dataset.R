@@ -3,16 +3,12 @@ context("Dataset object and methods")
 test_that("Dataset can be created", {
     expect_equivalent(class(CrunchDataset(body=list(name="test ds"))), "CrunchDataset")
     expect_true(is.dataset(CrunchDataset(body=list(name="test ds"))))
-    expect_identical(CrunchDataset(body=list(name="test ds"))@body$name, "test ds")
-})
-
-test_that("Dataset getters get", {
-    expect_identical(name(CrunchDataset(body=list(name="test ds"))),
-        CrunchDataset(body=list(name="test ds"))@body$name)
 })
 
 with(fake.HTTP, {
-    test.ds <- as.dataset(GET("api/datasets/dataset1.json"))
+    session_store$datasets <- do.call("DatasetCatalog", GET("api/datasets.json"))
+    test.ds <- loadDataset("test ds")
+    # test.ds <- as.dataset(GET("api/datasets/dataset1.json"))
 
     test_that("findVariables", {
         expect_identical(findVariables(test.ds, pattern="^gend", key="alias"), 2L)
@@ -31,8 +27,12 @@ with(fake.HTTP, {
     })
 
     test_that("useAlias is an argument to as.dataset", {
-        expect_equal(as.dataset(GET("api/datasets/dataset1.json"))@useAlias, default.useAlias())
-        expect_false(as.dataset(GET("api/datasets/dataset1.json"), useAlias=FALSE)@useAlias)
+        expect_equal(as.dataset(GET("api/datasets/dataset1.json"),
+            tuple=datasetCatalog()[["api/datasets/dataset1.json"]])@useAlias,
+            default.useAlias())
+        expect_false(as.dataset(GET("api/datasets/dataset1.json"),
+            tuple=datasetCatalog()[["api/datasets/dataset1.json"]],
+            useAlias=FALSE)@useAlias)
     })
 
     test_that("Dataset has names() and extract methods work", {
@@ -73,6 +73,11 @@ with(fake.HTTP, {
             "$textVar: Text variable ftw (text) \n",
             "$starttime: starttime (datetime) \n"     
         ))
+    })
+    
+    test_that("dataset can refresh", {
+        ds <- loadDataset("test ds")
+        expect_identical(ds, refresh(ds))
     })
 })
 

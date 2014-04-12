@@ -15,7 +15,6 @@ newDataset <- function (x, name=substitute(x),
     
     crunchdf <- createDataset(name=name, useAlias=useAlias, ...)
     crunchdf <- addVariables(crunchdf, x)
-    updateDatasetList()
     invisible(crunchdf)
 }
 
@@ -62,7 +61,6 @@ newDatasetFromFile <- function (file, name=basename(file),
     }
     ds <- createDataset(name, useAlias=useAlias)
     ds <- addSourceToDataset(ds, createSource(file))
-    updateDatasetList()
     invisible(ds)
 }
 
@@ -74,7 +72,10 @@ createSource <- function (file, ...) {
 
 createDataset <- function (name, useAlias=default.useAlias(), ...) {
     dataset_url <- POST(sessionURL("datasets_url"), body=toJSON(list(name=name, ...)))
-    invisible(as.dataset(GET(dataset_url), useAlias=useAlias))
+    updateDatasetList()
+    ds <- entity(datasetCatalog()[[dataset_url]])
+    ds@useAlias <- useAlias
+    invisible(ds)
 }
 
 addSourceToDataset <- function (dataset, source_url, ...) {
@@ -83,5 +84,5 @@ addSourceToDataset <- function (dataset, source_url, ...) {
 }
 
 .delete_all_my_datasets <- function () {
-    lapply(dataset_collection(), function (x) DELETE(x$datasetUrl))
+    lapply(datasetCatalog(), function (x) DELETE(x$datasetUrl))
 }

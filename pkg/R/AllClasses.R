@@ -28,6 +28,7 @@ IndexTuple <- setClass("IndexTuple",
         body="list"
     ))
 VariableTuple <- setClass("VariableTuple", contains="IndexTuple")
+DatasetTuple <- setClass("DatasetTuple", contains="IndexTuple")
 
 CrunchVariable <- setClass("CrunchVariable", contains="ShojiObject",
     representation= representation(
@@ -60,6 +61,7 @@ VariableGroup <- setClass("VariableGroup", representation=representation(
 
 VariableCatalog <- setClass("VariableCatalog", contains="ShojiCatalog",
     representation(order="VariableGrouping"))
+DatasetCatalog <- setClass("DatasetCatalog", contains="ShojiCatalog")
 
 default.useAlias <- function () {
     opt <- getOption("crunch.useAlias")
@@ -72,13 +74,15 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
         readonly="logical",
         useAlias="logical",
         .nrow="numeric",
-        variables="VariableCatalog"
+        variables="VariableCatalog",
+        tuple="DatasetTuple"
     ), 
     prototype=prototype(
         readonly=FALSE,
         useAlias=default.useAlias(),
         .nrow=numeric(1),
-        variables=VariableCatalog()))
+        variables=VariableCatalog(),
+        tuple=DatasetTuple()))
 
 ##' @export
 Categories <- setClass("Categories", contains="list")

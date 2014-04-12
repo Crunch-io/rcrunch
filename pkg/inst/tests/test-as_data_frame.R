@@ -2,8 +2,10 @@ context("Getting values to make local R objects")
 
 
 with(fake.HTTP, {
-    ## Variable fake fixtures for dataset
-    test.ds <- as.dataset(GET("api/datasets/dataset1.json"))
+    session_store$datasets <- do.call("DatasetCatalog", GET("api/datasets.json"))
+    test.ds <- loadDataset("test ds")
+    # test.ds <- as.dataset(GET("api/datasets/dataset1.json"))
+    
     hiddenVariables(test.ds) <- "mymrset" # Defer implementing MR as.vector
     test_that("setup", {
         expect_identical(dim(test.ds), c(nrow(test.ds), ncol(test.ds)))

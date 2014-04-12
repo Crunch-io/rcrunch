@@ -42,6 +42,7 @@ setGeneric("ordering", function (x) standardGeneric("ordering"))
 setGeneric("entity", function (x) standardGeneric("entity"))
 setGeneric("active", function (x) standardGeneric("active"))
 setGeneric("hidden", function (x) standardGeneric("hidden"))
+setGeneric("archived", function (x) standardGeneric("archived"))
 
 setGeneric("dim")
 setGeneric("ncol")

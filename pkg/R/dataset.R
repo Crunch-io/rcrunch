@@ -42,17 +42,17 @@ setValidity("CrunchDataset", validCrunchDataset)
 ##' @export 
 is.dataset <- function (x) inherits(x, "CrunchDataset")
 
-setDatasetName <- function (x, value) setCrunchSlot(x, "name", value)
+setDatasetName <- function (x, value) setTupleSlot(x, "name", value)
 setDatasetDescription <- function (x, value) {
-    setCrunchSlot(x, "description", value)
+    setTupleSlot(x, "description", value)
 }
 
 ##' @export
-setMethod("name", "CrunchDataset", function (x) x@body$name)
+setMethod("name", "CrunchDataset", function (x) tuple(x)$name)
 ##' @export
 setMethod("name<-", "CrunchDataset", setDatasetName)
 ##' @export
-setMethod("description", "CrunchDataset", function (x) x@body$description)
+setMethod("description", "CrunchDataset", function (x) tuple(x)$description)
 ##' @export
 setMethod("description<-", "CrunchDataset", setDatasetDescription)
 
@@ -72,9 +72,10 @@ setAs("ShojiObject", "CrunchDataset",
 setAs("shoji", "CrunchDataset", 
     function (from) as(as.shojiObject(from), "CrunchDataset"))
 
-as.dataset <- function (x, useAlias=default.useAlias()) {
+as.dataset <- function (x, useAlias=default.useAlias(), tuple=DatasetTuple()) {
     out <- as(x, "CrunchDataset")
     out@useAlias <- useAlias
+    tuple(out) <- tuple
     return(out)
 }
 
@@ -193,3 +194,13 @@ setMethod("lapply", "CrunchDataset", function (X, FUN, ...) {
 is.variable.tuple <- function (x) {
     is.list(x) && all(c("name", "alias", "type", "id") %in% names(x))
 }
+
+setMethod("tuple", "CrunchDataset", function (x) x@tuple)
+setMethod("tuple<-", "CrunchDataset", function (x, value) {
+    x@tuple <- value
+    return(x)
+})
+
+setMethod("refresh", "CrunchDataset", function (x) {
+    as.dataset(GET(self(x)), useAlias=x@useAlias, tuple=refresh(tuple(x)))
+})

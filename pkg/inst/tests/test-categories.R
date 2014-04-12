@@ -1,7 +1,9 @@
 context("Categories")
 
 with(fake.HTTP, {
-    ds <- as.dataset(GET("api/datasets/dataset1.json"))
+    session_store$datasets <- do.call("DatasetCatalog", GET("api/datasets.json"))
+    ds <- loadDataset("test ds")
+    # ds <- as.dataset(GET("api/datasets/dataset1.json"))
     cats <- categories(ds$gender)
 
     test_that("category init", {
