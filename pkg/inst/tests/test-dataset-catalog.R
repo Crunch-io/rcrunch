@@ -44,6 +44,11 @@ with(fake.HTTP, {
         expect_identical(datcat[["api/datasets/dataset1.json"]]@body,
             datcat@index[["api/datasets/dataset1.json"]])
         expect_identical(datcat[2:3]@index, datcat@index[2:3])
+        expect_error(datcat[[500]], "subscript out of bounds")
+    })
+    
+    test_that("names", {
+        expect_identical(names(datcat), c("an archived dataset", "ECON.sav", "test ds"))
     })
     
     test_that("entity method for tuple", {

@@ -74,6 +74,11 @@ with(fake.HTTP, {
             "$starttime: starttime (datetime) \n"     
         ))
     })
+    
+    test_that("dataset can refresh", {
+        ds <- as.dataset(GET("api/datasets/dataset1.json"))
+        expect_identical(ds, refresh(ds))
+    })
 })
 
 if (!run.only.local.tests) {

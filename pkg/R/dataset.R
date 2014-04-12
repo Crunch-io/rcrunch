@@ -204,8 +204,3 @@ setMethod("tuple<-", "CrunchDataset", function (x, value) {
 setMethod("refresh", "CrunchDataset", function (x) {
     as.dataset(GET(self(x)), useAlias=x@useAlias, tuple=refresh(tuple(x)))
 })
-
-## In case variable type has been changed, need to instantiate off of new type
-##' @export
-setMethod("refresh", "CrunchDataset", function (x) {
-})

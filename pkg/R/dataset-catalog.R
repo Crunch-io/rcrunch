@@ -32,3 +32,5 @@ setMethod("[[", c("DatasetCatalog", "ANY"), function (x, i, ...) {
     DatasetTuple(index_url=self(x), entity_url=names(x@index)[i],
         body=x@index[[i]])
 })
+
+setMethod("names", "DatasetCatalog", function (x) vapply(x@index, function (a) a$name, character(1), USE.NAMES=FALSE))

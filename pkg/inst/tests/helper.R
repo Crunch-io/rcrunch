@@ -61,6 +61,7 @@ new.dataset.with.setup <- function (df=NULL, ...) {
     } else {
         out <- newDataset(df, ...)
     }
+    print(out)
     datasets_to_purge <<- c(datasets_to_purge, self(out))
     return(out)
 }

@@ -2,27 +2,29 @@
 ##' @param refresh logical: should the function check the Crunch API for new datasets? Default is FALSE. 
 ##' @return Character vector of dataset names, each of which would be a valid input for \code{\link{loadDataset}}
 ##' @export 
-listDatasets <- function (refresh=FALSE) {
+listDatasets <- function (kind=c("active", "all", "archived"), refresh=FALSE) {
     if (refresh && crunchAPIcanBeReached()) {
         updateDatasetList()
     }
-    return(vapply(dataset_collection(), function (x) x$datasetName, character(1)))
+    return(names(subsetDatasetCatalog(match.arg(kind))))
+}
+
+subsetDatasetCatalog <- function (kind, catalog=datasetCatalog()) {
+    return(switch(kind, 
+        active=active(catalog),
+        all=catalog,
+        archived=archived(catalog)))
 }
 
 ##' Refresh the local list of Crunch datasets
 ##' @return Nothing. Called for its side effects of setting local environment variables.
 ##' @export 
 updateDatasetList <- function () {
-    session_store$datasets <- getDatasetCollection()
+    session_store$datasets <- do.call(DatasetCatalog,
+        GET(sessionURL("datasets_url")))
 }
 
-## Get the dataset collection from the appropriate URL
-getDatasetCollection <- function () {
-    resp <- GET(sessionURL("datasets_list_view"))
-    return(resp$body$active) ## we may want to also support archived datasets
-}
-
-dataset_collection <- function () session_store$datasets
+datasetCatalog <- function () session_store$datasets
 
 ##' Load a Crunch Dataset
 ##' @param dataset.name character, the name of a Crunch dataset you have access to. 
@@ -30,18 +32,21 @@ dataset_collection <- function () session_store$datasets
 ##' @param useAlias logical whether variable alias or name should be used as R variable names when the dataset is returned. Default is TRUE, meaning alias. They're more computer friendly.
 ##' @return An object of class \code{CrunchDataset}
 ##' @export 
-loadDataset <- function (dataset.name, useAlias=default.useAlias()) {
-    if (is.numeric(dataset.name)) {
-        stopifnot(length(dataset.name) == 1)
-        dataset <- dataset_collection()[[dataset.name]]
-    } else {
-        dataset <- selectDatasetFromCollection(dataset.name, dataset_collection())
+loadDataset <- function (dataset.name, kind=c("active", "all", "archived"), useAlias=default.useAlias()) {
+    dss <- subsetDatasetCatalog(match.arg(kind))
+    
+    if (!is.numeric(dataset.name)) {
+        dataset.name <- selectDatasetFromCatalog(dataset.name, dss)
     }
-    return(as.dataset(GET(dataset$datasetUrl), useAlias=useAlias))
+    stopifnot(length(dataset.name) == 1)
+
+    dataset <- entity(dss[[dataset.name]])
+    dataset@useAlias <- useAlias
+    return(dataset)
 }
 
-selectDatasetFromCollection <- function (dsname, dslist=list()) {
-    found <- Filter(function (x) x$datasetName == dsname, dslist)
+selectDatasetFromCatalog <- function (dsname, catalog) {
+    found <- which(names(catalog) %in% dsname)
     if (length(found)==0) {
         stop(paste(dsname, "not found"), call.=FALSE)
     } else if (length(found) > 1) {
@@ -49,5 +54,5 @@ selectDatasetFromCollection <- function (dsname, dslist=list()) {
             call.=FALSE)
         # stop("Datasets with duplicate names found. Cannot select by name.", call.=FALSE)
     } 
-    return(found[[1]])
+    return(found[1])
 }

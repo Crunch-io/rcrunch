@@ -22,7 +22,7 @@
         },
         "api/datasets/dataset3.json": {
             "owner_display_name": "George",
-            "name": "ECON0003_WTS_W240_DEMO.sav",
+            "name": "ECON.sav",
             "description": "",
             "archived": false,
             "id": "95c0b45fe0af492594863f818cb913d2",
