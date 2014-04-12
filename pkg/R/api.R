@@ -72,20 +72,26 @@ handleAPIresponse <- function (response, special.statuses=list()) {
     if (is.function(handler)) {
         invisible(handler(response))
     } else if (http_status(response)$category == "success") {
-        if (code==201) {
+        if (code == 201) {
             return(response$headers$location)
-        } else if (code==204 || length(response$content)==0) {
+        } else if (code == 204 || length(response$content) == 0) {
             invisible(response)
         } else {
             return(handleShoji(content(response)))            
         }
     } else {
+        if (code == 410) {
+            stop("The API resource at ",
+                response$url, 
+                " has moved permanently. Please upgrade rcrunch to the ",
+                "latest version.", call.=FALSE)
+        }
         msg <- http_status(response)$message
         msg2 <- try(content(response)$message, silent=TRUE)
         if (!is.error(msg2)) {
             msg <- paste(msg, msg2, sep=": ")
         }
-        stop(msg, call. = FALSE)
+        stop(msg, call.=FALSE)
     }
 }
 
