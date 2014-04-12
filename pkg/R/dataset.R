@@ -42,17 +42,17 @@ setValidity("CrunchDataset", validCrunchDataset)
 ##' @export 
 is.dataset <- function (x) inherits(x, "CrunchDataset")
 
-setDatasetName <- function (x, value) setCrunchSlot(x, "name", value)
+setDatasetName <- function (x, value) setTupleSlot(x, "name", value)
 setDatasetDescription <- function (x, value) {
-    setCrunchSlot(x, "description", value)
+    setTupleSlot(x, "description", value)
 }
 
 ##' @export
-setMethod("name", "CrunchDataset", function (x) x@body$name)
+setMethod("name", "CrunchDataset", function (x) tuple(x)$name)
 ##' @export
 setMethod("name<-", "CrunchDataset", setDatasetName)
 ##' @export
-setMethod("description", "CrunchDataset", function (x) x@body$description)
+setMethod("description", "CrunchDataset", function (x) tuple(x)$description)
 ##' @export
 setMethod("description<-", "CrunchDataset", setDatasetDescription)
 

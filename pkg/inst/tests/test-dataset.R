@@ -3,12 +3,6 @@ context("Dataset object and methods")
 test_that("Dataset can be created", {
     expect_equivalent(class(CrunchDataset(body=list(name="test ds"))), "CrunchDataset")
     expect_true(is.dataset(CrunchDataset(body=list(name="test ds"))))
-    expect_identical(CrunchDataset(body=list(name="test ds"))@body$name, "test ds")
-})
-
-test_that("Dataset getters get", {
-    expect_identical(name(CrunchDataset(body=list(name="test ds"))),
-        CrunchDataset(body=list(name="test ds"))@body$name)
 })
 
 with(fake.HTTP, {
