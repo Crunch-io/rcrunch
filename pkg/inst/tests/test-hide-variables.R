@@ -54,11 +54,9 @@ if (!run.only.local.tests) {
             
             test_that("hideVariables with grep (and by index)", {
                 testdf <- hideVariables(testdf, pattern="v[23]")
-                # print("ok")
                 expect_identical(names(testdf)[1:2], c("v1", "v4"))
                 
                 testdf <- unhideVariables(testdf, pattern="v[23]")
-                # print("ok")
                 expect_identical(hiddenVariables(testdf), c())
             })
             

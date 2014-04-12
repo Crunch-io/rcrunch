@@ -42,7 +42,6 @@ if (!run.only.local.tests) {
                 expect_equal(length(col1), length(col0) + 1)
             })
         })
-        print("yo") 
         with(test.dataset(df, "dflisttest"), {
             test_that("Dataset list can be retrieved if authenticated", {
                 expect_true(is.character(listDatasets()))
@@ -52,7 +51,6 @@ if (!run.only.local.tests) {
 
             test_that("A dataset object can be retrieved, if it exists", {
                 expect_true(is.dataset(loadDataset("dflisttest")))
-                print("hello")
                 expect_error(loadDataset("this is totally not a dataset", 
                     "this is totally not a dataset not found"))
                 expect_true(is.dataset(loadDataset(1)))

@@ -37,7 +37,6 @@ with.SUTD <- function (data, expr, ...) {
 ## note that this works because testthat evals within package namespace
 addFakeHTTPVerbs <- function () {
     http_verbs$GET <- function (url, ...) {
-        # print(url)
         handleShoji(fromJSON(system.file(url, package="rcrunch"), simplifyWithNames=FALSE))
     }
     http_verbs$PUT <- function (...) invisible()
@@ -61,7 +60,6 @@ new.dataset.with.setup <- function (df=NULL, ...) {
     } else {
         out <- newDataset(df, ...)
     }
-    print(out)
     datasets_to_purge <<- c(datasets_to_purge, self(out))
     return(out)
 }
