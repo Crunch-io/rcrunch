@@ -64,7 +64,7 @@ setCrunchSlot <- function (x, i, value) {
     if (!is.readonly(x)) {
         body <- structure(list(value), .Names=i)
         payload <- toJSON(body)
-        PUT(self(x), body=payload)
+        PATCH(self(x), body=payload)
     }
     return(x)
 }
