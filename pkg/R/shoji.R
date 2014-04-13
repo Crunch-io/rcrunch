@@ -1,14 +1,21 @@
 init.Shoji <- function (.Object, ...) {
     slots <- slotNames(.Object)
     dots <- list(...)
+    ## Different cases are so you can call the class constructor directly 
+    ## with different inputs
     if (length(dots) && is.shojiObject(dots[[1]])) {
+        ## Init from a parent class, e.g. CrunchObject(ShojiObject(x))
         slots <- intersect(slots, slotNames(dots[[1]]))
         for (i in slots) {
             slot(.Object, i) <- slot(dots[[1]], i)
         }
     } else if (length(dots) && is.shoji(dots[[1]])) {
+        ## Init straight from API response, e.g. CrunchObject(GET(x))
         .Object <- do.call("init.Shoji", c(.Object=.Object, dots[[1]], ...))
     } else {
+        ## Init from kwargs, e.g. CrunchObject(body=list, urls=list())
+        ## Should this be open for all cases? I.e. init with a ShojiObject and
+        ## ... args?
         for (i in slots) {
             if (!is.null(dots[[i]])) {
                 slot(.Object, i) <- dots[[i]]
