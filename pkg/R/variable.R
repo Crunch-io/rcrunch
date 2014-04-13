@@ -38,17 +38,27 @@ is.Multiple <- is.MR <- is.MultipleResponse <- function (x) inherits(x, "Multipl
 
 ##' @rdname crunch-is
 ##' @export
-is.CA <- is.CategoricalArray <- function (x) class(x) %in% "CategoricalArrayVariable" ## so it doesn't return true for MultipleResponse
+is.MR <- is.Multiple
+
+##' @rdname crunch-is
+##' @export
+is.MultipleResponse <- is.Multiple
+
+##' @rdname crunch-is
+##' @export
+is.CA <- function (x) class(x) %in% "CategoricalArrayVariable" ## so it doesn't return true for MultipleResponse
+
+##' @rdname crunch-is
+##' @export
+is.CategoricalArray <- is.CA
 
 .cr.variable.shojiObject <- function (x, ...) {
     out <- CrunchVariable(x, ...)
     return(out)
 }
 
-setAs("ShojiObject", "CrunchVariable", 
-    function (from) .cr.variable.shojiObject(from))
-setAs("shoji", "CrunchVariable", 
-    function (from) do.call("CrunchVariable", from))
+setAs("ShojiObject", "CrunchVariable", function (from) CrunchVariable(from))
+setAs("shoji", "CrunchVariable", function (from) CrunchVariable(from))
     
 as.variable <- function (x, subtype=NULL, tuple=VariableTuple()) {
     x <- as(x, "CrunchVariable")

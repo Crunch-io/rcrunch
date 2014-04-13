@@ -6,7 +6,7 @@ test_that("Dataset can be created", {
 })
 
 with(fake.HTTP, {
-    session_store$datasets <- do.call("DatasetCatalog", GET("api/datasets.json"))
+    session_store$datasets <- DatasetCatalog(GET("api/datasets.json"))
     test.ds <- loadDataset("test ds")
     # test.ds <- as.dataset(GET("api/datasets/dataset1.json"))
 

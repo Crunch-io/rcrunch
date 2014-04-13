@@ -5,11 +5,11 @@ with(fake.HTTP, {
     blob <- GET(dataset.catalog.url)
     
     test_that("DatasetCatalog instantiates from Shoji", {
-        expect_true(inherits(do.call("DatasetCatalog", blob),
+        expect_true(inherits(DatasetCatalog(blob),
             "DatasetCatalog"))
     })
     
-    datcat <- do.call("DatasetCatalog", blob)
+    datcat <- DatasetCatalog(blob)
     
     test_that("DatasetCatalog has the right contents", {
         expect_identical(names(datcat@index),

@@ -1,39 +1,7 @@
-init.fromShoji <- function (.Object, shoji, ...) {
-    slots <- slotNames(.Object)
-    if (!missing(shoji) && is.shojiObject(shoji)) {
-        for (i in slotNames(shoji)) {
-            if (i %in% slots) {
-                slot(.Object, i) <- slot(shoji, i)
-            }
-        }
-        dots <- list(...)
-        for (i in names(dots)) {
-            if (i %in% slots) {
-                slot(.Object, i) <- dots[[i]]
-            }
-        }
-    } else {
-        .Object <- callNextMethod(.Object, ...)
-    }
-    return(.Object)
-}
-setMethod("initialize", "CrunchDataset", init.fromShoji)
-
-validCrunchDataset <- function (object) {
-    oname <- object@body$name
-    are.vars <- vapply(object@variables, is.variable.tuple, logical(1))
-    if (!all(are.vars)) {
-        badcount <- sum(!are.vars)
-        val <- paste0("Invalid dataset ", sQuote(oname), ": ", badcount, 
-            ifelse(badcount>1, 
-                " elements are not Crunch variable objects.", 
-                " element is not a Crunch variable object."))
-    } else {
-        val <- TRUE  
-    }
-    return(val)
-}
-setValidity("CrunchDataset", validCrunchDataset)
+# init.CrunchDataset <- function (.Object, ...) {
+#     .Object <- callNextMethod(.Object, ...)
+# }
+# setMethod("initialize", "CrunchDataset", init.CrunchDataset)
 
 ##' Is it?
 ##' @rdname crunch-is
@@ -57,14 +25,14 @@ setMethod("description", "CrunchDataset", function (x) tuple(x)$description)
 setMethod("description<-", "CrunchDataset", setDatasetDescription)
 
 .cr.dataset.shojiObject <- function (x) {
-    out <- CrunchDataset(shoji=x)
+    out <- CrunchDataset(x)
     out@variables <- getDatasetVariables(out)
     out@.nrow <- getNrow(out)
     return(out)
 }
 
 getDatasetVariables <- function (x) {
-    return(do.call(VariableCatalog, GET(x@urls$variables_url)))
+    return(VariableCatalog(GET(x@urls$variables_url)))
 }
 
 setAs("ShojiObject", "CrunchDataset", 
@@ -203,4 +171,11 @@ setMethod("tuple<-", "CrunchDataset", function (x, value) {
 
 setMethod("refresh", "CrunchDataset", function (x) {
     as.dataset(GET(self(x)), useAlias=x@useAlias, tuple=refresh(tuple(x)))
+})
+
+##' @export
+setMethod("delete", "CrunchDataset", function (x) {
+    out <- callNextMethod()
+    updateDatasetList()
+    invisible(out)
 })
