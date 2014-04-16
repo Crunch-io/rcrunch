@@ -14,11 +14,13 @@ test_that("Subclass constructor selector", {
 })
 
 with(fake.HTTP, {
-    ds <- as.dataset(GET("api/datasets/dataset1.json"))
+    session_store$datasets <- do.call("DatasetCatalog", GET("api/datasets.json"))
+    ds <- loadDataset("test ds")
+    # ds <- as.dataset(GET("api/datasets/dataset1.json"))
     
     test_that("Variable init, as, is", {
         expect_true(is.variable(ds[[1]]))
-        expect_true(all(vapply(ds, is.variable, logical(1))))
+        skip(expect_true(all(vapply(ds, is.variable, logical(1)))))
         expect_false(is.variable(5))
         expect_false(is.variable(NULL))
     })
@@ -51,3 +53,41 @@ with(fake.HTTP, {
     })
 })
 
+if (!run.only.local.tests) {
+    with(test.authentication, {
+        with(test.dataset(df), {
+            ds <- .setup
+            test_that("can delete variables", {
+                expect_true("v1" %in% names(ds))
+                d <- try(delete(ds$v1))
+                expect_false(is.error(d))
+                expect_false("v1" %in% names(refresh(ds)))
+            })
+        })
+        
+        with(test.dataset(df), {
+            ds <- .setup
+            test_that("can modify names and descriptions", {
+                name(ds$v1) <- "Variable 1"
+                skip(expect_identical(name(ds$v1), "Variable 1"), 
+                    "updating vars within dataset isn't refreshing")
+                description(ds$v2) <- "Description 2"
+                skip(expect_identical(description(ds$v2), "Description 2"),
+                    "updating vars within dataset isn't refreshing")
+                ds <- refresh(ds)
+                expect_identical(name(ds$v1), "Variable 1")
+                expect_identical(description(ds$v2), "Description 2")
+                
+                v1 <- ds$v1
+                name(v1) <- "alt"
+                expect_identical(name(v1), "alt")
+                v1 <- refresh(v1)
+                expect_identical(name(v1), "alt")
+                description(v1) <- "asdf"
+                expect_identical(description(v1), "asdf")
+                v1 <- refresh(v1)
+                expect_identical(description(v1), "asdf")
+            })
+        })
+    })
+}

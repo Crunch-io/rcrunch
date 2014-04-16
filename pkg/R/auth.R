@@ -69,6 +69,7 @@ saveUser <- function (x) {
 ##' @param email character, see \code{\link{login}}
 ##' @param password character, see \code{\link{login}}
 ##' @param ... see \code{\link{login}}
+##' @importFrom RJSONIO toJSON
 crunchAuth <- function (email, password=NULL, ...) {
     if (is.null(email)) {
         stop("Must supply the email address associated with your crunch.io account",
@@ -82,16 +83,11 @@ crunchAuth <- function (email, password=NULL, ...) {
         }
     }
     
-    POST(getOption("crunch.api"), 
-        body=basicAuthArgs(email=email, password=password, ...), 
+    POST(file.path(getOption("crunch.api"), "public/login/"), 
+        body=toJSON(list(email=email, password=password, ...)), 
         status.handlers=list(`401`=function (response, user=email) {
             stop(paste("Unable to authenticate", user), call.=FALSE)
         }))
-}
-
-##' @importFrom RJSONIO toJSON
-basicAuthArgs <- function (...) {
-    return(toJSON(list(...)))
 }
 
 ##' @importFrom httr set_cookies

@@ -15,7 +15,6 @@ newDataset <- function (x, name=substitute(x),
     
     crunchdf <- createDataset(name=name, useAlias=useAlias, ...)
     crunchdf <- addVariables(crunchdf, x)
-    updateDatasetList()
     invisible(crunchdf)
 }
 
@@ -38,13 +37,14 @@ newDatasetViaFile <- function (x, name=substitute(x), ...) {
     crunchdf <- newDatasetFromFile(file, name=as.character(name), ...)
     
     ## Update variable types based on what we know
-    crunchdf[] <- sapply(names(crunchdf), function (i) {
+    # crunchdf[] <- 
+    sapply(names(crunchdf), function (i) {
         postUpload(x[[i]], crunchdf[[i]])
     }, simplify=FALSE)
     
     ## You can write methods for preUpload and postUpload for any variable type
     
-    invisible(crunchdf)
+    invisible(refresh(crunchdf))
 }
 
 ##' Upload a file to Crunch to make a new dataset
@@ -61,7 +61,6 @@ newDatasetFromFile <- function (file, name=basename(file),
     }
     ds <- createDataset(name, useAlias=useAlias)
     ds <- addSourceToDataset(ds, createSource(file))
-    updateDatasetList()
     invisible(ds)
 }
 
@@ -73,7 +72,10 @@ createSource <- function (file, ...) {
 
 createDataset <- function (name, useAlias=default.useAlias(), ...) {
     dataset_url <- POST(sessionURL("datasets_url"), body=toJSON(list(name=name, ...)))
-    invisible(as.dataset(GET(dataset_url), useAlias=useAlias))
+    updateDatasetList()
+    ds <- entity(datasetCatalog()[[dataset_url]])
+    ds@useAlias <- useAlias
+    invisible(ds)
 }
 
 addSourceToDataset <- function (dataset, source_url, ...) {
@@ -82,5 +84,5 @@ addSourceToDataset <- function (dataset, source_url, ...) {
 }
 
 .delete_all_my_datasets <- function () {
-    lapply(dataset_collection(), function (x) DELETE(x$datasetUrl))
+    lapply(names(datasetCatalog()@index), DELETE)
 }

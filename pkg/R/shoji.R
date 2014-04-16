@@ -20,27 +20,18 @@ is.shoji <- function (x) inherits(x, "shoji")
 
 setOldClass("shoji")
 
-##' Given a collections URL, get the entity URLs
-getShojiCollectionURLs <- function (x) {
-    GET(x)$entities
-}
-
-##' Given a set of entity URLs, get their content
-getShojiCollectionContents <- function (entities, namekey=NULL) {
-    out <- lapply(entities, GET)
-    if (!is.null(namekey) && length(out)) names(out) <- selectFrom(namekey, out)
-    return(out)
-}
-
-##' Get all the entities from a collection
-getShojiCollection <- function (x, namekey=NULL) {
-    getShojiCollectionContents(getShojiCollectionURLs(x), namekey=namekey)
-}
-    
-setAs("shoji", "ShojiObject", function (from) do.call("ShojiObject", from))
+## TODO: modify here to switch off on element: type, init Object/Catalog/etc.
+setAs("shoji", "ShojiObject", function (from) {
+    cl <- ifelse(from$element == "shoji:catalog", "ShojiCatalog", "ShojiObject")
+    return(do.call(cl, from))
+})
 as.shojiObject <- function (x) as(x, "ShojiObject")
 
 is.shojiObject <- function (x) inherits(x, "ShojiObject")
+is.shojiCatalog <- function (x) inherits(x, "ShojiCatalog")
+
+##' @export
+setMethod("self", "ShojiObject", function (x) x@self)
 
 ## 'refresh' method that GETs self url, and does new(Class, ...)
 .cr.shoji.refresh <- function (x) {
@@ -49,16 +40,7 @@ is.shojiObject <- function (x) inherits(x, "ShojiObject")
 }
 
 ##' @export
-setMethod("self", "ShojiObject", function (x) x@self)
-
-##' @export
 setMethod("refresh", "ShojiObject", .cr.shoji.refresh)
-setMethod("refresh", "CrunchDataset", function (x) {
-    ua <- x@useAlias
-    out <- callNextMethod()
-    out@useAlias <- ua
-    return(out)
-})
 
 ##' @export
 setMethod("delete", "ShojiObject", function (x) invisible(DELETE(self(x))))
@@ -82,7 +64,7 @@ setCrunchSlot <- function (x, i, value) {
     if (!is.readonly(x)) {
         body <- structure(list(value), .Names=i)
         payload <- toJSON(body)
-        PUT(self(x), body=payload)
+        PATCH(self(x), body=payload)
     }
     return(x)
 }
@@ -95,3 +77,28 @@ setReadonly <- function (x, value) {
 ##' @export
 setMethod("readonly<-", "ShojiObject", setReadonly)
 
+setIndexSlot <- function (x, i, value) {
+    x@index <- lapply(x, function (a) {
+        a[[i]] <- value
+        return(a)
+    })
+    PATCH(self(x), body=toJSON(x@index))
+    return(x)
+}
+
+setMethod("[", c("ShojiCatalog", "ANY"), function (x, i, ..., drop) {
+   x@index <- x@index[i]
+   return(x)
+})
+setMethod("length", "ShojiCatalog", function (x) length(x@index))
+setMethod("lapply", "ShojiCatalog", function (X, FUN, ...) lapply(X@index, FUN, ...))
+
+urls <- function (x) {
+    names(x@index)
+}
+
+# setAs("VariableCatalog", "list", 
+#     function (from) from@index)
+
+##' @S3method as.list ShojiCatalog
+as.list.ShojiCatalog <- function (x, ...) lapply(names(x@index), function (i) x[[i]])

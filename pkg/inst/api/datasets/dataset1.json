@@ -4,15 +4,13 @@
     "description": "Detail for a given dataset",
     "body": {
         "user_id": "00002",
-        "description": "",
         "tags": [
             "Untagged"
         ],
         "sources": [
             "511a7c49778030653aab5962"
         ],
-        "id": "511a7c49778030653aab5963",
-        "name": "test ds"
+        "id": "511a7c49778030653aab5963"
     },
     "urls": {
         "summary_url": "api/datasets/dataset1/summary.json",

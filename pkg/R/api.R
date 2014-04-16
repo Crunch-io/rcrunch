@@ -31,6 +31,7 @@ makeHTTPStore <- function () {
 addRealHTTPVerbs <- function () {
     http_verbs$GET <- function (...) crunchAPI("GET", ...)
     http_verbs$PUT <- function (...) crunchAPI("PUT", ...)
+    http_verbs$PATCH <- function (...) crunchAPI("PATCH", ...)
     http_verbs$POST <- function (...) crunchAPI("POST", ...)
     http_verbs$DELETE <- function (...) crunchAPI("DELETE", ...)
 }
@@ -43,6 +44,10 @@ GET <- function (...) {
 
 PUT <- function (...) {
     http_verbs$PUT(...)
+}
+
+PATCH <- function (...) {
+    http_verbs$PATCH(...)
 }
 
 POST <- function (...) {
@@ -67,20 +72,26 @@ handleAPIresponse <- function (response, special.statuses=list()) {
     if (is.function(handler)) {
         invisible(handler(response))
     } else if (http_status(response)$category == "success") {
-        if (code==201) {
+        if (code == 201) {
             return(response$headers$location)
-        } else if (code==204 || length(response$content)==0) {
+        } else if (code == 204 || length(response$content) == 0) {
             invisible(response)
         } else {
             return(handleShoji(content(response)))            
         }
     } else {
+        if (code == 410) {
+            stop("The API resource at ",
+                response$url, 
+                " has moved permanently. Please upgrade rcrunch to the ",
+                "latest version.", call.=FALSE)
+        }
         msg <- http_status(response)$message
         msg2 <- try(content(response)$message, silent=TRUE)
         if (!is.error(msg2)) {
             msg <- paste(msg, msg2, sep=": ")
         }
-        stop(msg, call. = FALSE)
+        stop(msg, call.=FALSE)
     }
 }
 
@@ -150,7 +161,7 @@ handleShoji <- function (x) {
 ##' @return the corresponding function from the \code{httr} package
 selectHttpFunction <- function (x) {
     x <- list(GET=httr:::GET, PUT=httr:::PUT, POST=httr:::POST,
-        DELETE=httr:::DELETE)[[toupper(x)]]
+        DELETE=httr:::DELETE, PATCH=httr:::PATCH)[[toupper(x)]]
     stopifnot(is.function(x))
     return(x)
 }

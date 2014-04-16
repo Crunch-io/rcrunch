@@ -35,4 +35,9 @@ if (!run.only.local.tests) {
         test_that("cookie is in the request header", {
             expect_true("cookie" %in% names(crunchConfig()))
     }))
+    
+    test_that("Deprecated endpoints tell user to upgrade", {
+        expect_error(GET("http://httpbin.org/status/410"), 
+            "The API resource at http://httpbin.org/status/410 has moved permanently. Please upgrade rcrunch to the latest version.")
+    })
 }

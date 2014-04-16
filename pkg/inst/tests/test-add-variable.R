@@ -19,6 +19,25 @@ test_that("toVariable parses R data types", {
     options(crunch.max.categories=256)
 })
 
+test_that("POSTNewVariable rejects invalid categories", {
+    expect_error(POSTNewVariable("", 
+        list(type="categorical", name="bad ids",
+            categories=list(
+                list(id=-1L, name="B", numeric_value=1L, missing=FALSE),
+                list(id=2L, name="C", numeric_value=2L, missing=FALSE),
+                list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+            ))), 
+        "Invalid category ids: must be unique")
+    expect_error(POSTNewVariable("", 
+        list(type="categorical", name="bad names",
+            categories=list(
+                list(id=1L, name="Name 1", numeric_value=1L, missing=FALSE),
+                list(id=2L, name="Name 1", numeric_value=2L, missing=FALSE),
+                list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+            ))), 
+        "Invalid category names: must be unique")
+})
+
 if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
@@ -101,8 +120,7 @@ if (!run.only.local.tests) {
         test_that("addVariables that are categorical_array", {
             with(test.dataset(), {
                 ds <- .setup
-                POSTNewVariable(ds@urls$variables_url, ca.var,
-                    bind_url=ds@urls$bind_url)
+                POSTNewVariable(ds@urls$variables_url, ca.var)
                 ds <- refresh(ds)
                 expect_true(is.CA(ds$categoricalArray))
                 expect_identical(description(ds$categoricalArray), 
@@ -115,13 +133,13 @@ if (!run.only.local.tests) {
                 c2$subvariables[[4]] <- list(this="is", not="a", valid="variable")
                 ds <- .setup
                 nvars.before <- ncol(ds)
+                vars.before <- getDatasetVariables(ds)
                 expect_identical(nvars.before, 0L)
-                expect_error(POSTNewVariable(ds@urls$variables_url, c2,
-                    bind_url=ds@urls$bind_url), 
+                expect_error(POSTNewVariable(ds@urls$variables_url, c2), 
                     "Subvariables errored on upload")
                 ds <- refresh(ds)
-                skip(expect_identical(ncol(ds), nvars.before),
-                    "Cannot yet DELETE variables")
+                expect_identical(ncol(ds), nvars.before)
+                expect_identical(getDatasetVariables(ds), vars.before)
             })
         })
         test_that("addVariables that are multiple_response", {
@@ -139,8 +157,7 @@ if (!run.only.local.tests) {
                     x$categories[[1]]$selected <- TRUE
                     return(x)
                 })
-                POSTNewVariable(ds@urls$variables_url, newvar,
-                    bind_url=ds@urls$bind_url)
+                POSTNewVariable(ds@urls$variables_url, newvar)
                 ds <- refresh(ds)
                 expect_true(is.MR(ds$multipleResponse))
             })
