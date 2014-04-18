@@ -2,7 +2,8 @@
 \alias{listDatasets}
 \title{Show the names of all Crunch datasets}
 \usage{
-  listDatasets(refresh = FALSE)
+  listDatasets(kind = c("active", "all", "archived"),
+    refresh = FALSE)
 }
 \arguments{
   \item{refresh}{logical: should the function check the
