@@ -51,17 +51,9 @@ is.CA <- function (x) class(x) %in% "CategoricalArrayVariable" ## so it doesn't 
 ##' @rdname crunch-is
 ##' @export
 is.CategoricalArray <- is.CA
-
-.cr.variable.shojiObject <- function (x, ...) {
-    out <- CrunchVariable(x, ...)
-    return(out)
-}
-
-setAs("ShojiObject", "CrunchVariable", function (from) CrunchVariable(from))
-setAs("shoji", "CrunchVariable", function (from) CrunchVariable(from))
     
 as.variable <- function (x, subtype=NULL, tuple=VariableTuple()) {
-    x <- as(x, "CrunchVariable")
+    x <- CrunchVariable(x)
     if (is.variable(x)) {
         x <- subclassVariable(x, to=subtype)
         tuple(x) <- tuple

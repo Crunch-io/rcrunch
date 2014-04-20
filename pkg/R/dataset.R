@@ -1,7 +1,23 @@
-# init.CrunchDataset <- function (.Object, ...) {
-#     .Object <- callNextMethod(.Object, ...)
-# }
-# setMethod("initialize", "CrunchDataset", init.CrunchDataset)
+init.CrunchDataset <- function (.Object, ...) {
+    .Object <- callNextMethod(.Object, ...)
+    .Object@variables <- getDatasetVariables(.Object)
+    .Object@.nrow <- getNrow(.Object)
+    return(.Object)
+}
+setMethod("initialize", "CrunchDataset", init.CrunchDataset)
+
+getDatasetVariables <- function (x) {
+    return(VariableCatalog(GET(x@urls$variables_url)))
+}
+
+getNrow <- function (dataset, filtered=TRUE) {
+    which.count <- ifelse(isTRUE(filtered), "filtered", "total")
+    ## use filtered by default because every other request will take the applied filter
+    
+    summary_url <- dataset@urls$summary_url
+    nrows <- as.integer(round(GET(summary_url)$rows[[which.count]]))
+    return(nrows)
+}
 
 ##' Is it?
 ##' @rdname crunch-is
@@ -24,24 +40,9 @@ setMethod("description", "CrunchDataset", function (x) tuple(x)$description)
 ##' @export
 setMethod("description<-", "CrunchDataset", setDatasetDescription)
 
-.cr.dataset.shojiObject <- function (x) {
-    out <- CrunchDataset(x)
-    out@variables <- getDatasetVariables(out)
-    out@.nrow <- getNrow(out)
-    return(out)
-}
-
-getDatasetVariables <- function (x) {
-    return(VariableCatalog(GET(x@urls$variables_url)))
-}
-
-setAs("ShojiObject", "CrunchDataset", 
-    function (from) .cr.dataset.shojiObject(from))
-setAs("shoji", "CrunchDataset", 
-    function (from) as(as.shojiObject(from), "CrunchDataset"))
-
 as.dataset <- function (x, useAlias=default.useAlias(), tuple=DatasetTuple()) {
-    out <- as(x, "CrunchDataset")
+    # out <- as(x, "CrunchDataset")
+    out <- CrunchDataset(x)
     out@useAlias <- useAlias
     tuple(out) <- tuple
     return(out)
@@ -49,16 +50,6 @@ as.dataset <- function (x, useAlias=default.useAlias(), tuple=DatasetTuple()) {
 
 ##' @export
 setMethod("dim", "CrunchDataset", function (x) c(x@.nrow, length(active(x@variables))))
-
-getNrow <- function (dataset, filtered=TRUE) {
-    which.count <- ifelse(isTRUE(filtered), "filtered", "total")
-    ## use filtered by default because every other request will take the applied filter
-    
-    summary_url <- dataset@urls$summary_url
-    nrows <- as.integer(round(GET(summary_url)$rows[[which.count]]))
-    return(nrows)
-}
-
 
 namekey <- function (dataset) ifelse(dataset@useAlias, "alias", "name")
 
