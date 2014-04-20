@@ -1,10 +1,26 @@
 init.Shoji <- function (.Object, ...) {
     slots <- slotNames(.Object)
     dots <- list(...)
+    ## Different cases are so you can call the class constructor directly 
+    ## with different inputs
     if (length(dots) && is.shojiObject(dots[[1]])) {
-        for (i in slots) slot(.Object, i) <- slot(dots[[1]], i)
+        ## Init from a parent class, e.g. CrunchObject(ShojiObject(x))
+        slots <- intersect(slots, slotNames(dots[[1]]))
+        for (i in slots) {
+            slot(.Object, i) <- slot(dots[[1]], i)
+        }
+    } else if (length(dots) && is.shoji(dots[[1]])) {
+        ## Init straight from API response, e.g. CrunchObject(GET(x))
+        .Object <- do.call("init.Shoji", c(.Object=.Object, dots[[1]], ...))
     } else {
-        for (i in slots) if (!is.null(dots[[i]])) slot(.Object, i) <- dots[[i]]
+        ## Init from kwargs, e.g. CrunchObject(body=list, urls=list())
+        ## Should this be open for all cases? I.e. init with a ShojiObject and
+        ## ... args?
+        for (i in slots) {
+            if (!is.null(dots[[i]])) {
+                slot(.Object, i) <- dots[[i]]
+            }
+        }
     }
     return(.Object)
 }
@@ -20,7 +36,6 @@ is.shoji <- function (x) inherits(x, "shoji")
 
 setOldClass("shoji")
 
-## TODO: modify here to switch off on element: type, init Object/Catalog/etc.
 setAs("shoji", "ShojiObject", function (from) {
     cl <- ifelse(from$element == "shoji:catalog", "ShojiCatalog", "ShojiObject")
     return(do.call(cl, from))
@@ -33,23 +48,14 @@ is.shojiCatalog <- function (x) inherits(x, "ShojiCatalog")
 ##' @export
 setMethod("self", "ShojiObject", function (x) x@self)
 
-## 'refresh' method that GETs self url, and does new(Class, ...)
-.cr.shoji.refresh <- function (x) {
-    Class <- class(x)  ## in case x is a subclass of ShojiObject
-    return(as(GET(self(x)), Class))
-}
-
 ##' @export
-setMethod("refresh", "ShojiObject", .cr.shoji.refresh)
+setMethod("refresh", "ShojiObject", function (x) {
+    Class <- class(x)  ## in case x is a subclass of ShojiObject
+    return(do.call(Class, GET(self(x))))
+})
 
 ##' @export
 setMethod("delete", "ShojiObject", function (x) invisible(DELETE(self(x))))
-##' @export
-setMethod("delete", "CrunchDataset", function (x) {
-    out <- callNextMethod()
-    updateDatasetList()
-    invisible(out)
-})
 ##' @export
 setMethod("delete", "ANY", function (x) stop("'delete' only valid for Crunch objects"))
 

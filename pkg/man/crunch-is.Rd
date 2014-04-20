@@ -1,8 +1,11 @@
 \name{is.dataset}
 \alias{is.CA}
 \alias{is.Categorical}
+\alias{is.CategoricalArray}
 \alias{is.Datetime}
+\alias{is.MR}
 \alias{is.Multiple}
+\alias{is.MultipleResponse}
 \alias{is.Numeric}
 \alias{is.Text}
 \alias{is.dataset}
@@ -23,7 +26,13 @@
 
   is.Multiple(x)
 
+  is.MR(x)
+
+  is.MultipleResponse(x)
+
   is.CA(x)
+
+  is.CategoricalArray(x)
 }
 \arguments{
   \item{x}{an object}

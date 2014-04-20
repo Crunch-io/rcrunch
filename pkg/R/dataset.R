@@ -1,39 +1,23 @@
-init.fromShoji <- function (.Object, shoji, ...) {
-    slots <- slotNames(.Object)
-    if (!missing(shoji) && is.shojiObject(shoji)) {
-        for (i in slotNames(shoji)) {
-            if (i %in% slots) {
-                slot(.Object, i) <- slot(shoji, i)
-            }
-        }
-        dots <- list(...)
-        for (i in names(dots)) {
-            if (i %in% slots) {
-                slot(.Object, i) <- dots[[i]]
-            }
-        }
-    } else {
-        .Object <- callNextMethod(.Object, ...)
-    }
+init.CrunchDataset <- function (.Object, ...) {
+    .Object <- callNextMethod(.Object, ...)
+    .Object@variables <- getDatasetVariables(.Object)
+    .Object@.nrow <- getNrow(.Object)
     return(.Object)
 }
-setMethod("initialize", "CrunchDataset", init.fromShoji)
+setMethod("initialize", "CrunchDataset", init.CrunchDataset)
 
-validCrunchDataset <- function (object) {
-    oname <- object@body$name
-    are.vars <- vapply(object@variables, is.variable.tuple, logical(1))
-    if (!all(are.vars)) {
-        badcount <- sum(!are.vars)
-        val <- paste0("Invalid dataset ", sQuote(oname), ": ", badcount, 
-            ifelse(badcount>1, 
-                " elements are not Crunch variable objects.", 
-                " element is not a Crunch variable object."))
-    } else {
-        val <- TRUE  
-    }
-    return(val)
+getDatasetVariables <- function (x) {
+    return(VariableCatalog(GET(x@urls$variables_url)))
 }
-setValidity("CrunchDataset", validCrunchDataset)
+
+getNrow <- function (dataset, filtered=TRUE) {
+    which.count <- ifelse(isTRUE(filtered), "filtered", "total")
+    ## use filtered by default because every other request will take the applied filter
+    
+    summary_url <- dataset@urls$summary_url
+    nrows <- as.integer(round(GET(summary_url)$rows[[which.count]]))
+    return(nrows)
+}
 
 ##' Is it?
 ##' @rdname crunch-is
@@ -56,24 +40,9 @@ setMethod("description", "CrunchDataset", function (x) tuple(x)$description)
 ##' @export
 setMethod("description<-", "CrunchDataset", setDatasetDescription)
 
-.cr.dataset.shojiObject <- function (x) {
-    out <- CrunchDataset(shoji=x)
-    out@variables <- getDatasetVariables(out)
-    out@.nrow <- getNrow(out)
-    return(out)
-}
-
-getDatasetVariables <- function (x) {
-    return(do.call(VariableCatalog, GET(x@urls$variables_url)))
-}
-
-setAs("ShojiObject", "CrunchDataset", 
-    function (from) .cr.dataset.shojiObject(from))
-setAs("shoji", "CrunchDataset", 
-    function (from) as(as.shojiObject(from), "CrunchDataset"))
-
 as.dataset <- function (x, useAlias=default.useAlias(), tuple=DatasetTuple()) {
-    out <- as(x, "CrunchDataset")
+    # out <- as(x, "CrunchDataset")
+    out <- CrunchDataset(x)
     out@useAlias <- useAlias
     tuple(out) <- tuple
     return(out)
@@ -81,16 +50,6 @@ as.dataset <- function (x, useAlias=default.useAlias(), tuple=DatasetTuple()) {
 
 ##' @export
 setMethod("dim", "CrunchDataset", function (x) c(x@.nrow, length(active(x@variables))))
-
-getNrow <- function (dataset, filtered=TRUE) {
-    which.count <- ifelse(isTRUE(filtered), "filtered", "total")
-    ## use filtered by default because every other request will take the applied filter
-    
-    summary_url <- dataset@urls$summary_url
-    nrows <- as.integer(round(GET(summary_url)$rows[[which.count]]))
-    return(nrows)
-}
-
 
 namekey <- function (dataset) ifelse(dataset@useAlias, "alias", "name")
 
@@ -136,24 +95,46 @@ setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE
 setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 
 .addVariableSetter <- function (x, i, value) {
-    if (is.variable(value)) {
-        ## What do we do with "i"? ## Just confirm that matches namekey(value)?
-        x@variables[[self(value)]] <- value
-        return(x)
-    }
     if (i %in% names(x)) {
         stop("Cannot currently overwrite existing Variables with [[<-",
             call.=FALSE)
     }
     addVariable(x, values=value, name=i, alias=i)
 }
+
+.updateVariableSetter <- function (x, i, value) {
+    ## Confirm that i matches namekey(value)
+    if (i != tuple(value)[[namekey(x)]]) {
+        stop("Cannot overwrite one Variable with another", call.=FALSE)
+    }
+    x@variables[[self(value)]] <- value
+    return(x)
+}
+
 ##' @export
-setMethod("[[<-", c("CrunchDataset", "character"), .addVariableSetter)
+setMethod("[[<-", c("CrunchDataset", "character", "missing", "CrunchVariable"), 
+    .updateVariableSetter)
+setMethod("[[<-", c("CrunchDataset", "ANY", "missing", "CrunchVariable"), 
+    function (x, i, value) .updateVariableSetter(x, names(x)[i], value))
+setMethod("[[<-", c("CrunchDataset", "character", "missing", "ANY"), .addVariableSetter)
 setMethod("[[<-", c("CrunchDataset", "ANY"), function (x, i, value) {
     stop("Only character (name) indexing supported for [[<-", call.=FALSE)
 })
 ##' @export
-setMethod("$<-", c("CrunchDataset"), function (x, name, value) .addVariableSetter(x, i=name, value))
+setMethod("$<-", c("CrunchDataset"), function (x, name, value) {
+    x[[name]] <- value
+    return(x)
+})
+
+setMethod("[<-", c("CrunchDataset", "ANY", "missing", "list"), 
+    function (x, i, j, value) {
+        stopifnot(length(i) == length(value), 
+            all(vapply(value, is.variable, logical(1))))
+        for (z in seq_along(i)) {
+            x[[i[z]]] <- value[[z]]
+        }
+        return(x)
+    })
 
 ## TODO: add [<-.CrunchDataset, CrunchDataset/VariableCatalog
 
@@ -186,11 +167,6 @@ weight <- function (x) {
     return(x)
 }
 
-setMethod("lapply", "CrunchDataset", function (X, FUN, ...) {
-    vars <- lapply(seq_along(active(X@variables)), function (i) X[[i]])
-    callNextMethod(vars, FUN, ...)
-})
-
 is.variable.tuple <- function (x) {
     is.list(x) && all(c("name", "alias", "type", "id") %in% names(x))
 }
@@ -204,3 +180,15 @@ setMethod("tuple<-", "CrunchDataset", function (x, value) {
 setMethod("refresh", "CrunchDataset", function (x) {
     as.dataset(GET(self(x)), useAlias=x@useAlias, tuple=refresh(tuple(x)))
 })
+
+##' @export
+setMethod("delete", "CrunchDataset", function (x) {
+    out <- callNextMethod()
+    updateDatasetList()
+    invisible(out)
+})
+
+##' @S3method as.list CrunchDataset
+as.list.CrunchDataset <- function (x, ...) {
+    lapply(seq_along(active(x@variables)), function (i) x[[i]])
+}
