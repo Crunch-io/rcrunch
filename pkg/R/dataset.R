@@ -95,24 +95,46 @@ setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE
 setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 
 .addVariableSetter <- function (x, i, value) {
-    if (is.variable(value)) {
-        ## What do we do with "i"? ## Just confirm that matches namekey(value)?
-        x@variables[[self(value)]] <- value
-        return(x)
-    }
     if (i %in% names(x)) {
         stop("Cannot currently overwrite existing Variables with [[<-",
             call.=FALSE)
     }
     addVariable(x, values=value, name=i, alias=i)
 }
+
+.updateVariableSetter <- function (x, i, value) {
+    ## Confirm that i matches namekey(value)
+    if (i != tuple(value)[[namekey(x)]]) {
+        stop("Cannot overwrite one Variable with another", call.=FALSE)
+    }
+    x@variables[[self(value)]] <- value
+    return(x)
+}
+
 ##' @export
-setMethod("[[<-", c("CrunchDataset", "character"), .addVariableSetter)
+setMethod("[[<-", c("CrunchDataset", "character", "missing", "CrunchVariable"), 
+    .updateVariableSetter)
+setMethod("[[<-", c("CrunchDataset", "ANY", "missing", "CrunchVariable"), 
+    function (x, i, value) .updateVariableSetter(x, names(x)[i], value))
+setMethod("[[<-", c("CrunchDataset", "character", "missing", "ANY"), .addVariableSetter)
 setMethod("[[<-", c("CrunchDataset", "ANY"), function (x, i, value) {
     stop("Only character (name) indexing supported for [[<-", call.=FALSE)
 })
 ##' @export
-setMethod("$<-", c("CrunchDataset"), function (x, name, value) .addVariableSetter(x, i=name, value))
+setMethod("$<-", c("CrunchDataset"), function (x, name, value) {
+    x[[name]] <- value
+    return(x)
+})
+
+setMethod("[<-", c("CrunchDataset", "ANY", "missing", "list"), 
+    function (x, i, j, value) {
+        stopifnot(length(i) == length(value), 
+            all(vapply(value, is.variable, logical(1))))
+        for (z in seq_along(i)) {
+            x[[i[z]]] <- value[[z]]
+        }
+        return(x)
+    })
 
 ## TODO: add [<-.CrunchDataset, CrunchDataset/VariableCatalog
 

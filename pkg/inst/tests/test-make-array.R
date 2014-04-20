@@ -9,10 +9,11 @@ if (!run.only.local.tests) {
                 expect_true(is.CA(var))
                 testdf <- refresh(testdf)
                 expect_equal(c("test1", "v4"), names(testdf))
-                skip({name(var) <- "TESTONE"
-                testdf <- refresh(testdf)
-                expect_equal(c("TESTONE", "v4"), variableNames(testdf))
-                    ## because names() point to variable aliases
+                skip({
+                    name(var) <- "TESTONE"
+                    testdf <- refresh(testdf)
+                    expect_equal(c("TESTONE", "v4"), variableNames(testdf))
+                        ## because names() point to variable aliases
                 }, "investigate backend error")
             })
             with(test.dataset(mrdf), {
@@ -99,8 +100,7 @@ if (!run.only.local.tests) {
             with(test.dataset(mrdf), {
                 testdf <- .setup
                 cast.these <- grep("mr_", names(testdf))
-                #testdf[cast.these] <- 
-                lapply(testdf[cast.these],
+                testdf[cast.these] <- lapply(testdf[cast.these],
                     castVariable, "categorical")
                 var <- makeMR(pattern="mr_[123]", dataset=testdf,
                     name="test1", selections="1.0")
@@ -147,8 +147,7 @@ if (!run.only.local.tests) {
                             name="test1"), ds.mismatch)
                     }), "userdataset problem?")
                     cast.these <- grep("mr_", names(testdf))
-                    #testdf[cast.these] <- 
-                    lapply(testdf[cast.these],
+                    testdf[cast.these] <- lapply(testdf[cast.these],
                         castVariable, "categorical")
                     expect_error(makeMR(pattern="mr_[123]", dataset=testdf,
                         name="test1", selections="Not a Selection!"),
