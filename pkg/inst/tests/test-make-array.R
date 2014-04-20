@@ -160,4 +160,4 @@ if (!run.only.local.tests) {
     })
 }
 
-## then add tests for matrix variable entities. but note that subvariable names aren't exposed in API yet.
+## then add tests for array variable entities. but note that subvariable names aren't exposed in API yet.

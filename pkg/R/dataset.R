@@ -41,7 +41,6 @@ setMethod("description", "CrunchDataset", function (x) tuple(x)$description)
 setMethod("description<-", "CrunchDataset", setDatasetDescription)
 
 as.dataset <- function (x, useAlias=default.useAlias(), tuple=DatasetTuple()) {
-    # out <- as(x, "CrunchDataset")
     out <- CrunchDataset(x)
     out@useAlias <- useAlias
     tuple(out) <- tuple
