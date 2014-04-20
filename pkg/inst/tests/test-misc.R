@@ -26,3 +26,26 @@ test_that("selectFrom selects what it should", {
     expect_identical(selectFrom("b", l2), c(2, NA))
     expect_error(selectFrom("b", 5), "xlist must be a list object")
 })
+
+test_that("SUTD", {
+    a <- NULL
+    tester <- setup.and.teardown(function () a <<- FALSE, function () a <<- TRUE)
+    
+    expect_true(is.null(a))
+    with(tester, {
+        expect_false(is.null(a))
+        expect_false(a)
+        ## Test that assertion failures are raised
+        # expect_false(TRUE)
+    })
+    expect_true(a)
+    
+    a <- NULL
+    expect_true(is.null(a))
+    with(tester, {
+        expect_false(is.null(a))
+        expect_false(a)
+        stop(call.=FALSE)
+    })
+    expect_true(a)
+})

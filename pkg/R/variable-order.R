@@ -21,6 +21,7 @@ init.VariableGroup <- function (.Object, group, entities, ...) {
 }
 setMethod("initialize", "VariableGroup", init.VariableGroup)
 
+##' @export
 setMethod("entities", "VariableGroup", function (x) x@entities)
 setMethod("entities", "VariableGrouping", function (x) {
     ## To get a flattened view
@@ -104,11 +105,18 @@ setVariableOrder <- function (x, value) {
     invisible(x)
 }
 
-# getDatasetVariables <- function (x) {
-#     u <- x@urls$variables_url
-#     catalog <- GET(u)
-#     varIndex <- catalog$index
-#     varOrder <- VariableGrouping(GET(catalog$views$hierarchical_order)$groups)
-#     varIndex <- varIndex[entities(varOrder)]
-#     return(list(variables=varIndex, order=varOrder))
-# }
+##' @export
+printVariableOrder <- function (x) {
+    ## VariableGrouping should get a proper show method
+    if (is.dataset(x)) {
+        return(printVariableOrder(x@variables))
+    }
+    stopifnot(inherits(x, "VariableCatalog"))
+    invisible(lapply(x@order, printVariableGroup, index=x@index))
+}
+
+printVariableGroup <- function (group, index) {
+    cat(name(group), "\n")
+    print(vapply(index[entities(group)], function (x) x[["name"]], character(1), USE.NAMES=FALSE))
+    invisible()
+}

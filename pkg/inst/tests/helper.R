@@ -31,7 +31,7 @@ with.SUTD <- function (data, expr, ...) {
     env <- parent.frame()
     on.exit(data$teardown())
     env$.setup <- data$setup() ## rm this after running?
-    eval(substitute(expr), envir=parent.frame())
+    try(eval(substitute(expr), envir=parent.frame()))
 }
 
 ## note that this works because testthat evals within package namespace
