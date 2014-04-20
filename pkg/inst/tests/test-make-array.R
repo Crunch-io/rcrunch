@@ -135,17 +135,17 @@ if (!run.only.local.tests) {
                         no.name)
                     expect_error(makeMR(pattern="rm_", dataset=testdf,
                         name="foo", selections="foo"), no.match)
-                    skip(expect_error(makeMR(c("mr_1", "mr_2", "mr_3"),
+                    expect_error(makeMR(c("mr_1", "mr_2", "mr_3"),
                         dataset=testdf, name="foo", selections="foo"),
-                        need.variables), "regression: vars are showing up numeric")
+                        not.categorical)
+                    expect_error(makeMR(pattern="mr_[123]", dataset=testdf,
+                        name="test1", selections="Not a Selection!"),
+                        not.categorical)
                     skip(with(test.dataset(df), {
                         nottestdf <- .setup
                         expect_error(makeMR(testdf[1:3], dataset=nottestdf,
                             name="test1"), ds.mismatch)
-                    }))
-                    expect_error(makeMR(pattern="mr_[123]", dataset=testdf,
-                        name="test1", selections="Not a Selection!"),
-                        not.categorical)
+                    }), "userdataset problem?")
                     cast.these <- grep("mr_", names(testdf))
                     #testdf[cast.these] <- 
                     lapply(testdf[cast.these],

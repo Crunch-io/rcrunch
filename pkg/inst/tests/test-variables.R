@@ -20,8 +20,7 @@ with(fake.HTTP, {
     
     test_that("Variable init, as, is", {
         expect_true(is.variable(ds[[1]]))
-        skip(expect_true(all(vapply(ds, is.variable, logical(1)))),
-            "no method for coercing this S4 class to a vector")
+        expect_true(all(vapply(ds, is.variable, logical(1))))
         expect_false(is.variable(5))
         expect_false(is.variable(NULL))
     })

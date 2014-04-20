@@ -145,11 +145,6 @@ weight <- function (x) {
     return(x)
 }
 
-setMethod("lapply", "CrunchDataset", function (X, FUN, ...) {
-    vars <- lapply(seq_along(active(X@variables)), function (i) X[[i]])
-    callNextMethod(vars, FUN, ...)
-})
-
 is.variable.tuple <- function (x) {
     is.list(x) && all(c("name", "alias", "type", "id") %in% names(x))
 }
@@ -170,3 +165,8 @@ setMethod("delete", "CrunchDataset", function (x) {
     updateDatasetList()
     invisible(out)
 })
+
+##' @S3method as.list CrunchDataset
+as.list.CrunchDataset <- function (x, ...) {
+    lapply(seq_along(active(x@variables)), function (i) x[[i]])
+}
