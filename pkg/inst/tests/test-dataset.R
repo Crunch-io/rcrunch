@@ -9,6 +9,15 @@ with(fake.HTTP, {
     test_that("Dataset can be created", {
         expect_true(is.dataset(test.ds))
     })
+    
+    test_that("Dataset VariableCatalog index is sorted", {
+        expect_identical(urls(test.ds@variables), 
+            c("api/datasets/dataset1/variables/birthyr.json",
+            "api/datasets/dataset1/variables/gender.json",
+            "api/datasets/dataset1/variables/mymrset.json",
+            "api/datasets/dataset1/variables/starttime.json",
+            "api/datasets/dataset1/variables/textVar.json"))
+    })
 
     test_that("findVariables", {
         expect_identical(findVariables(test.ds, pattern="^gend", key="alias"), 2L)

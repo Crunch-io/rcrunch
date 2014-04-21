@@ -1,6 +1,8 @@
 init.CrunchDataset <- function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     .Object@variables <- getDatasetVariables(.Object)
+    ## So they test as identical, force order
+    .Object@variables@index <- .Object@variables@index[order(names(.Object@variables@index))]
     .Object@.nrow <- getNrow(.Object)
     return(.Object)
 }

@@ -36,11 +36,6 @@ test_that("ShojiCatalog", {
     sho <- as.shojiObject(fo)
     expect_true(is.shojiCatalog(sho))
     expect_identical(sho@index, fo$index)
-    
-    fo2 <- fo
-    fo2$index <- fo2$index[c(2,1)]
-    expect_identical(as.shojiObject(fo), as.shojiObject(fo2))
-    
 })
 
 if (!run.only.local.tests) {

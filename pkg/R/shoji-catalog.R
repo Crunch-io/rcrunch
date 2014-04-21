@@ -1,11 +1,3 @@
-init.ShojiCatalog <- function (.Object, ...) {
-    .Object <- callNextMethod(.Object, ...)
-    ## To ensure deterministic order of @index
-    .Object@index <- .Object@index[order(names(.Object@index))]
-    return(.Object)
-}
-setMethod("initialize", "ShojiCatalog", init.ShojiCatalog)
-
 is.shojiCatalog <- function (x) inherits(x, "ShojiCatalog")
 
 setIndexSlot <- function (x, i, value) {
