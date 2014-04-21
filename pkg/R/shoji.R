@@ -26,6 +26,14 @@ init.Shoji <- function (.Object, ...) {
 }
 setMethod("initialize", "ShojiObject", init.Shoji)
 
+init.ShojiCatalog <- function (.Object, ...) {
+    .Object <- callNextMethod(.Object, ...)
+    ## To ensure deterministic order of @index
+    .Object@index <- .Object@index[order(names(.Object@index))]
+    return(.Object)
+}
+setMethod("initialize", "ShojiCatalog", init.ShojiCatalog)
+
 is.shoji.like <- function (x) {
     is.list(x) && "element" %in% names(x) && substr(as.character(x$element), 1, 5) == "shoji"
 }
