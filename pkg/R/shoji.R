@@ -26,14 +26,6 @@ init.Shoji <- function (.Object, ...) {
 }
 setMethod("initialize", "ShojiObject", init.Shoji)
 
-init.ShojiCatalog <- function (.Object, ...) {
-    .Object <- callNextMethod(.Object, ...)
-    ## To ensure deterministic order of @index
-    .Object@index <- .Object@index[order(names(.Object@index))]
-    return(.Object)
-}
-setMethod("initialize", "ShojiCatalog", init.ShojiCatalog)
-
 is.shoji.like <- function (x) {
     is.list(x) && "element" %in% names(x) && substr(as.character(x$element), 1, 5) == "shoji"
 }
@@ -51,7 +43,6 @@ setAs("shoji", "ShojiObject", function (from) {
 as.shojiObject <- function (x) as(x, "ShojiObject")
 
 is.shojiObject <- function (x) inherits(x, "ShojiObject")
-is.shojiCatalog <- function (x) inherits(x, "ShojiCatalog")
 
 ##' @export
 setMethod("self", "ShojiObject", function (x) x@self)
@@ -90,29 +81,3 @@ setReadonly <- function (x, value) {
 }
 ##' @export
 setMethod("readonly<-", "ShojiObject", setReadonly)
-
-setIndexSlot <- function (x, i, value) {
-    x@index <- lapply(x, function (a) {
-        a[[i]] <- value
-        return(a)
-    })
-    PATCH(self(x), body=toJSON(x@index))
-    return(x)
-}
-
-setMethod("[", c("ShojiCatalog", "ANY"), function (x, i, ..., drop) {
-   x@index <- x@index[i]
-   return(x)
-})
-setMethod("length", "ShojiCatalog", function (x) length(x@index))
-setMethod("lapply", "ShojiCatalog", function (X, FUN, ...) lapply(X@index, FUN, ...))
-
-urls <- function (x) {
-    names(x@index)
-}
-
-# setAs("VariableCatalog", "list", 
-#     function (from) from@index)
-
-##' @S3method as.list ShojiCatalog
-as.list.ShojiCatalog <- function (x, ...) lapply(names(x@index), function (i) x[[i]])

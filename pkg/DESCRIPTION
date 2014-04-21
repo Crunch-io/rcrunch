@@ -47,3 +47,4 @@ Collate:
     'find.R'
     'show.R'
     'dataset-catalog.R'
+    'shoji-catalog.R'
