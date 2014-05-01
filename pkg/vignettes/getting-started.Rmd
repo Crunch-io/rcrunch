@@ -61,9 +61,17 @@ Since the dataset is loaded as soon as it's uploaded, we can go ahead and change
 
 Of course, you can also create datasets with rcrunch. There are two methods:
 
-### 1. newDatasetFromFile
+### 1. newDataset
 
-`newDatasetFromFile` essentially does what you would do in the web application: uploads your file and creates a dataset from it.
+You can create a dataset from any `data.frame` you have in your R session with `newDataset`:
+
+    library(foreign)
+    df <- read.spss("PLMX0151ZBHD_OUTPUT.sav")
+    ds <- newDataset(df, name="Civil Military Relations Survey")
+
+### 2. newDatasetFromFile
+
+Alternatively, `newDatasetFromFile` essentially does what you would do in the web application: uploads your file and creates a dataset from it.
 
 ```{r}
 ds <- newDatasetFromFile("PLMX0151ZBHD_OUTPUT.sav", name="Civil Military Relations Survey")
@@ -73,21 +81,14 @@ ds <- newDatasetFromFile("PLMX0151ZBHD_OUTPUT.sav", name="Civil Military Relatio
 plmx <- loadDataset("Civil Military Relations Survey")
 ```
 
-### 2. newDataset
-
-Alternatively, you can create a dataset from any `data.frame` you have in your R session:
-
-    library(foreign)
-    df <- read.spss("PLMX0151ZBHD_OUTPUT.sav")
-    ds <- newDataset(df, name="Civil Military Relations Survey")
-
 # Loading Crunch datasets into rcrunch
 
-Datasets already existing on the Crunch server can be loaded by name or by position within the dataset list using `loadDataset`:
+Datasets already existing on the Crunch server can be loaded with `loadDataset`. The function takes either the dataset's name, or the position within the dataset list returned by `listDatasets`:
 
 ```{r}
 listDatasets()
-(ds <- loadDataset("Civil Military Relations Survey"))
+ds <- loadDataset("Civil Military Relations Survey")
+is.dataset(ds)
 ```
 
 # Manipulating datasets
