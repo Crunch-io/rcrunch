@@ -1,14 +1,23 @@
 context("Dataset object and methods") 
 
-test_that("Dataset can be created", {
-    expect_equivalent(class(CrunchDataset(body=list(name="test ds"))), "CrunchDataset")
-    expect_true(is.dataset(CrunchDataset(body=list(name="test ds"))))
-})
 
 with(fake.HTTP, {
-    session_store$datasets <- do.call("DatasetCatalog", GET("api/datasets.json"))
+    session_store$datasets <- DatasetCatalog(GET("api/datasets.json"))
     test.ds <- loadDataset("test ds")
     # test.ds <- as.dataset(GET("api/datasets/dataset1.json"))
+    
+    test_that("Dataset can be created", {
+        expect_true(is.dataset(test.ds))
+    })
+    
+    test_that("Dataset VariableCatalog index is sorted", {
+        expect_identical(urls(test.ds@variables), 
+            c("api/datasets/dataset1/variables/birthyr.json",
+            "api/datasets/dataset1/variables/gender.json",
+            "api/datasets/dataset1/variables/mymrset.json",
+            "api/datasets/dataset1/variables/starttime.json",
+            "api/datasets/dataset1/variables/textVar.json"))
+    })
 
     test_that("findVariables", {
         expect_identical(findVariables(test.ds, pattern="^gend", key="alias"), 2L)
@@ -108,6 +117,32 @@ if (!run.only.local.tests) {
                 testdf@useAlias <- FALSE
                 expect_false(testdf@useAlias)
                 expect_false(refresh(testdf)@useAlias)
+            })
+            
+            test_that("Dataset [[<-", {
+                v1 <- testdf$v1
+                name(v1) <- "Variable One"
+                testdf$v1 <- v1
+                expect_identical(variableNames(testdf)[1], "Variable One")
+                expect_error(testdf$v2 <- v1, 
+                    "Cannot overwrite one Variable")
+            })
+        })
+
+        with(test.dataset(mrdf), {
+            testdf <- .setup
+            test_that("Dataset [<-", {
+                cast.these <- grep("mr_", names(testdf))
+                expect_true(all(vapply(active(testdf@variables)[cast.these], 
+                    function (x) x$type == "numeric", logical(1))))
+                expect_true(all(vapply(testdf[cast.these], 
+                    function (x) is.Numeric(x), logical(1))))
+                testdf[cast.these] <- lapply(testdf[cast.these],
+                    castVariable, "categorical")
+                expect_true(all(vapply(active(testdf@variables)[cast.these], 
+                    function (x) x$type == "categorical", logical(1))))
+                expect_true(all(vapply(testdf[cast.these], 
+                    function (x) is.Categorical(x), logical(1))))
             })
         })
     })

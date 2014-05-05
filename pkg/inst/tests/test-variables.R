@@ -14,13 +14,13 @@ test_that("Subclass constructor selector", {
 })
 
 with(fake.HTTP, {
-    session_store$datasets <- do.call("DatasetCatalog", GET("api/datasets.json"))
+    session_store$datasets <- DatasetCatalog(GET("api/datasets.json"))
     ds <- loadDataset("test ds")
     # ds <- as.dataset(GET("api/datasets/dataset1.json"))
     
     test_that("Variable init, as, is", {
         expect_true(is.variable(ds[[1]]))
-        skip(expect_true(all(vapply(ds, is.variable, logical(1)))))
+        expect_true(all(vapply(ds, is.variable, logical(1))))
         expect_false(is.variable(5))
         expect_false(is.variable(NULL))
     })
@@ -69,11 +69,9 @@ if (!run.only.local.tests) {
             ds <- .setup
             test_that("can modify names and descriptions", {
                 name(ds$v1) <- "Variable 1"
-                skip(expect_identical(name(ds$v1), "Variable 1"), 
-                    "updating vars within dataset isn't refreshing")
+                expect_identical(name(ds$v1), "Variable 1")
                 description(ds$v2) <- "Description 2"
-                skip(expect_identical(description(ds$v2), "Description 2"),
-                    "updating vars within dataset isn't refreshing")
+                expect_identical(description(ds$v2), "Description 2")
                 ds <- refresh(ds)
                 expect_identical(name(ds$v1), "Variable 1")
                 expect_identical(description(ds$v2), "Description 2")

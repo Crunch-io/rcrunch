@@ -2,7 +2,9 @@
 \alias{loadDataset}
 \title{Load a Crunch Dataset}
 \usage{
-  loadDataset(dataset.name, useAlias = default.useAlias())
+  loadDataset(dataset.name,
+    kind = c("active", "all", "archived"),
+    useAlias = default.useAlias())
 }
 \arguments{
   \item{dataset.name}{character, the name of a Crunch

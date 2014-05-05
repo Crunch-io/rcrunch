@@ -11,25 +11,20 @@ test_that("VariableGroup and Grouping objects can be made", {
         entities=""), vg1), "VariableGrouping"))
 })
 
-
 if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
             ds <- .setup
-        skip({
-        test_that("Can get VariableGrouping from dataset", {
+            test_that("Can get VariableGrouping from dataset", {
                 expect_identical(getVariableOrder(ds), 
-                    VariableGrouping(list(list(name="ungrouped", 
-                    entities=vapply(ds, function (x) self(x), character(1), USE.NAMES=FALSE)))))
+                    VariableGrouping(VariableGroup(name="ungrouped", 
+                    entities=urls(active(ds@variables)))))
             })
             test_that("Can make VariableGroup(ing) from Variables", {
-                expect_identical(getVariableOrder(ds)[[1]], 
-                    VariableGroup(name="ungrouped", entities=ds[]))
-                expect_identical(getVariableOrder(ds)[[1]], 
-                    VariableGroup(name="ungrouped", entities=ds))
+                expect_true(setequal(entities(getVariableOrder(ds)[[1]]), 
+                    entities(VariableGroup(name="ungrouped", entities=ds))))
             })
         })
-        }, "Server is duplicating v1")
         
         with(test.dataset(df), {
             ds <- .setup

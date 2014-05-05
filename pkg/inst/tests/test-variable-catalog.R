@@ -5,11 +5,11 @@ with(fake.HTTP, {
     varblob <- GET(variables.catalog.url)
     
     test_that("VariableCatalog instantiates from Shoji", {
-        expect_true(inherits(do.call("VariableCatalog", varblob),
+        expect_true(inherits(VariableCatalog(varblob),
             "VariableCatalog"))
     })
     
-    varcat <- do.call("VariableCatalog", varblob)
+    varcat <- VariableCatalog(varblob)
     varorder <- do.call(VariableGrouping,
         GET("api/datasets/dataset1/hierarchical.json")$groups) ## this seems wrong, shouldn't select "groups" out, should inherit from ShojiObject
     
