@@ -35,18 +35,22 @@ if (!run.only.local.tests) {
         test_that("datasetCatalog gets what we expect", {
             col0 <- datasetCatalog()
             expect_true(inherits(col0, "DatasetCatalog"))
-            with(test.dataset(df, "getdsurl test"), {
+            with(test.dataset(df), {
                 testdf <- .setup
                 col1 <- datasetCatalog()
                 expect_true(inherits(col1, "DatasetCatalog"))
                 expect_equal(length(col1), length(col0) + 1)
             })
         })
-        with(test.dataset(df, "dflisttest"), {
+        with(test.dataset(df), {
+            ds <- .setup
+            dsname <- name(ds)
             test_that("Dataset list can be retrieved if authenticated", {
                 expect_true(is.character(listDatasets()))
                 expect_true(length(listDatasets())>0)
-                expect_true("dflisttest" %in% listDatasets())
+                expect_true(is.character(dsname))
+                expect_true(nchar(dsname) > 0)
+                expect_true(dsname %in% listDatasets())
             })
 
             test_that("A dataset object can be retrieved, if it exists", {

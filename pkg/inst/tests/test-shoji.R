@@ -40,7 +40,7 @@ test_that("ShojiCatalog", {
 
 if (!run.only.local.tests) {
     with(test.authentication, {
-        with(test.dataset(df, "refresh_test"), {
+        with(test.dataset(df), {
             test_that("refresh", {
                 rt <- .setup
                 expect_identical(rt, refresh(rt))
