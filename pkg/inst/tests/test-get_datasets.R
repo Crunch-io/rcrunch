@@ -54,16 +54,16 @@ if (!run.only.local.tests) {
             })
 
             test_that("A dataset object can be retrieved, if it exists", {
-                expect_true(is.dataset(loadDataset("dflisttest")))
+                expect_true(is.dataset(loadDataset(dsname)))
                 expect_error(loadDataset("this is totally not a dataset", 
                     "this is totally not a dataset not found"))
                 expect_true(is.dataset(loadDataset(1)))
                 expect_error(loadDataset(999))
             })
             test_that("loadDataset respects useAlias", {
-                expect_equal(loadDataset("dflisttest")@useAlias,
+                expect_equal(loadDataset(dsname)@useAlias,
                     default.useAlias())
-                expect_false(loadDataset("dflisttest", useAlias=FALSE)@useAlias)
+                expect_false(loadDataset(dsname, useAlias=FALSE)@useAlias)
             })
         })
     })
