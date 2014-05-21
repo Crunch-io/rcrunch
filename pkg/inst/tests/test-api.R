@@ -18,7 +18,7 @@ test_that("crunchConfig has right structure", {
 
 test_that("crunchUserAgent", {
     expect_true(grepl("rcrunch", getCrunchUserAgent()))
-    expect_true(grepl("rcrunch", session_store$user_agent))
+    expect_true(grepl("rcrunch", session_store$.globals$user_agent))
     expect_false(is.error(try(setCrunchUserAgent("anotherpackage/3.1.4"))))
     expect_true(grepl("anotherpackage", getCrunchUserAgent()))
 })
