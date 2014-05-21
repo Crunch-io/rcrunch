@@ -121,12 +121,12 @@ crunchUserAgent <- function (x) {
 }
 
 setCrunchUserAgent <- function (x) {
-    session_store$user_agent <- crunchUserAgent(x)
+    session_store$.globals$user_agent <- crunchUserAgent(x)
 }
 
 getCrunchUserAgent <- function () {
-    ua <- session_store$user_agent
-    if (is.null(ua)) { ## Should only happen if not logged in
+    ua <- session_store$.globals$user_agent
+    if (is.null(ua)) { ## Should not happen
         ua <- crunchUserAgent()
     }
     return(ua)
