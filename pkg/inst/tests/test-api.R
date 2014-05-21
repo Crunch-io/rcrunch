@@ -16,6 +16,13 @@ test_that("crunchConfig has right structure", {
     expect_identical(crunchConfig()$encoding, "gzip")
 })
 
+test_that("crunchUserAgent", {
+    expect_true(grepl("rcrunch", getCrunchUserAgent()))
+    expect_true(grepl("rcrunch", session_store$user_agent))
+    expect_false(is.error(try(setCrunchUserAgent("anotherpackage/3.1.4"))))
+    expect_true(grepl("anotherpackage", getCrunchUserAgent()))
+})
+
 if (!run.only.local.tests) {
     with(test.authentication, 
         test_that("API root can be fetched", {
