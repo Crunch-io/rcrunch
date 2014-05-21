@@ -7,5 +7,6 @@
     }
     options(warn=1)
     assign("application/json", parseJSONresponse, envir=httr:::parsers)
+    setCrunchUserAgent()
     invisible()
 }

@@ -52,7 +52,6 @@ login <- function (email=getOption("crunch.email"),
     ## Save stuff in the session cache
     saveUser(email)
     saveToken(auth$cookies)
-    setCrunchUserAgent()
     saveSessionURLs(getAPIroot()$urls)
     saveSessionURLs(getUserResourceURLs())
     updateDatasetList()

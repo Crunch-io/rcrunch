@@ -113,14 +113,15 @@ crunchConfig <- function () {
     c(getToken(), httr:::default_config(), list(verbose=isTRUE(getOption("crunch.debug")), sslversion=3L), add_headers(`user-agent`=getCrunchUserAgent()))
 }
 
-crunchUserAgent <- function () {
+crunchUserAgent <- function (x) {
     rc <- paste("rcrunch", packageVersion("rcrunch"), sep="/")
     try(rc <- paste(httr:::default_ua(), rc), silent=TRUE)
+    if (!missing(x)) rc <- paste(rc, x)
     return(rc)
 }
 
-setCrunchUserAgent <- function () {
-    session_store$user_agent <- crunchUserAgent()
+setCrunchUserAgent <- function (x) {
+    session_store$user_agent <- crunchUserAgent(x)
 }
 
 getCrunchUserAgent <- function () {
