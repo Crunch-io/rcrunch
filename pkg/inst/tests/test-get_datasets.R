@@ -57,8 +57,10 @@ if (!run.only.local.tests) {
                 expect_true(is.dataset(loadDataset(dsname)))
                 expect_error(loadDataset("this is totally not a dataset", 
                     "this is totally not a dataset not found"))
-                expect_true(is.dataset(loadDataset(1)))
-                expect_error(loadDataset(999))
+                dsnum <- which(listDatasets() %in% dsname)
+                expect_true(is.numeric(dsnum))
+                expect_true(is.dataset(loadDataset(dsnum)))
+                expect_error(loadDataset(9999))
             })
             test_that("loadDataset respects useAlias", {
                 expect_equal(loadDataset(dsname)@useAlias,
