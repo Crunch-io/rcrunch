@@ -35,31 +35,37 @@ if (!run.only.local.tests) {
         test_that("datasetCatalog gets what we expect", {
             col0 <- datasetCatalog()
             expect_true(inherits(col0, "DatasetCatalog"))
-            with(test.dataset(df, "getdsurl test"), {
+            with(test.dataset(df), {
                 testdf <- .setup
                 col1 <- datasetCatalog()
                 expect_true(inherits(col1, "DatasetCatalog"))
                 expect_equal(length(col1), length(col0) + 1)
             })
         })
-        with(test.dataset(df, "dflisttest"), {
+        with(test.dataset(df), {
+            ds <- .setup
+            dsname <- name(ds)
             test_that("Dataset list can be retrieved if authenticated", {
                 expect_true(is.character(listDatasets()))
                 expect_true(length(listDatasets())>0)
-                expect_true("dflisttest" %in% listDatasets())
+                expect_true(is.character(dsname))
+                expect_true(nchar(dsname) > 0)
+                expect_true(dsname %in% listDatasets())
             })
 
             test_that("A dataset object can be retrieved, if it exists", {
-                expect_true(is.dataset(loadDataset("dflisttest")))
+                expect_true(is.dataset(loadDataset(dsname)))
                 expect_error(loadDataset("this is totally not a dataset", 
                     "this is totally not a dataset not found"))
-                expect_true(is.dataset(loadDataset(1)))
-                expect_error(loadDataset(999))
+                dsnum <- which(listDatasets() %in% dsname)
+                expect_true(is.numeric(dsnum))
+                expect_true(is.dataset(loadDataset(dsnum)))
+                expect_error(loadDataset(9999))
             })
             test_that("loadDataset respects useAlias", {
-                expect_equal(loadDataset("dflisttest")@useAlias,
+                expect_equal(loadDataset(dsname)@useAlias,
                     default.useAlias())
-                expect_false(loadDataset("dflisttest", useAlias=FALSE)@useAlias)
+                expect_false(loadDataset(dsname, useAlias=FALSE)@useAlias)
             })
         })
     })

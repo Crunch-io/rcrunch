@@ -9,12 +9,10 @@ if (!run.only.local.tests) {
                 expect_true(is.CA(var))
                 testdf <- refresh(testdf)
                 expect_equal(c("test1", "v4"), names(testdf))
-                skip({
-                    name(var) <- "TESTONE"
-                    testdf <- refresh(testdf)
-                    expect_equal(c("TESTONE", "v4"), variableNames(testdf))
-                        ## because names() point to variable aliases
-                }, "investigate backend error")
+                name(var) <- "TESTONE"
+                testdf <- refresh(testdf)
+                expect_equal(c("TESTONE", "v4"), variableNames(testdf))
+                    ## because names() point to variable aliases
             })
             with(test.dataset(mrdf), {
                 testdf <- .setup

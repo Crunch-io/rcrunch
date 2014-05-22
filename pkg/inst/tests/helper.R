@@ -6,6 +6,7 @@ set.seed(666)
 options(crunch.api=getOption("test.api"), 
         warn=1,
         crunch.debug=FALSE,
+        digits.secs=3,
         crunch.email=getOption("test.user"),
         crunch.pw=getOption("test.pw"))
 assign("application/json", parseJSONresponse, envir=httr:::parsers)
@@ -56,10 +57,11 @@ test.authentication <- setup.and.teardown(
 ## Create a test dataset and then destroy it after tests
 datasets_to_purge <- c()
 new.dataset.with.setup <- function (df=NULL, ...) {
+    now <- strftime(Sys.time(), usetz=TRUE)
     if (is.null(df)) {
-        out <- createDataset(name="test", ...)
+        out <- createDataset(name=now, ...)
     } else {
-        out <- newDataset(df, ...)
+        out <- newDataset(df, name=now, ...)
     }
     datasets_to_purge <<- c(datasets_to_purge, self(out))
     return(out)

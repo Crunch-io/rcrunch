@@ -49,7 +49,7 @@ with(fake.HTTP, {
 
 if (!run.only.local.tests) {
     with(test.authentication, {
-        with(test.dataset(df, "as.data.frame"), {
+        with(test.dataset(df), {
             test.asdf <- .setup
         
             test_that("as.vector methods correctly handle data from the API", {

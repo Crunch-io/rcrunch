@@ -92,7 +92,7 @@ with(fake.HTTP, {
 
 if (!run.only.local.tests) {
     with(test.authentication, {
-        with(test.dataset(df, "setter_test"), {
+        with(test.dataset(df), {
             test_that("Name and description setters push to server", {
                 d2 <- setter_test <- .setup
                 name(setter_test) <- "Bond. James Bond."
