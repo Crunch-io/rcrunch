@@ -32,11 +32,12 @@ if (!run.only.local.tests) {
             })
         })
         test_that("newDatasetFromFile creates a dataset", {
-            df <- newDatasetFromFile(testfile)
-                expect_true(is.dataset(df))
+            ds <- newDatasetFromFile(testfile)
+                expect_true(is.dataset(ds))
                 localdf <- read.csv(testfile)
-                expect_equivalent(mean(df[[2]]), mean(localdf[[2]]))
-            delete(df)
+                expect_identical(dim(ds), dim(localdf))
+                expect_equivalent(mean(ds[[2]]), mean(localdf[[2]]))
+            delete(ds)
         })
         test_that("Dataset can be made from a data.frame by dumping a csv", {
             d1 <- newDatasetViaFile(df, name="making_a_dataset_from_df")
