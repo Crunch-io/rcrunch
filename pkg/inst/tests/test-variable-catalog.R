@@ -46,6 +46,11 @@ with(fake.HTTP, {
         expect_identical(varcat[["api/datasets/dataset1/variables/gender.json"]]@body,
             varcat@index[["api/datasets/dataset1/variables/gender.json"]])
         expect_identical(varcat[2:3]@index, varcat@index[2:3])
+        expect_error(varcat[[999]], "subscript out of bounds")
+        skip({
+            expect_error(varcat[["asdf"]], "subscript out of bounds")
+            expect_error(varcat[999:1000], "subscript out of bounds")
+        }, "Not implemented")
     })
     
     test_that("entity method for tuple", {
