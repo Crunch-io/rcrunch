@@ -88,7 +88,7 @@ addSourceToDataset <- function (dataset, source_url, ...) {
         )
     )
     batch_url <- POST(batches_url, body=toJSON(body), ...)
-    pollBatchStatus(batch_url, batches_url)
+    pollBatchStatus(batch_url, GET(batches_url))
     invisible(refresh(dataset))
 }
 
