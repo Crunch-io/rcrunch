@@ -79,7 +79,16 @@ createDataset <- function (name, useAlias=default.useAlias(), ...) {
 }
 
 addSourceToDataset <- function (dataset, source_url, ...) {
-    POST(dataset@urls$sources_url, body=toJSON(list(source_url=source_url)), ...)
+    batches_url <- dataset@catalogs$batches
+    body <- list(
+        element="shoji:entity",
+        body=list(
+            source=source_url,
+            workflow=I()
+        )
+    )
+    batch_url <- POST(batches_url, body=toJSON(body), ...)
+    pollBatchStatus(batch_url, GET(batches_url))
     invisible(refresh(dataset))
 }
 
