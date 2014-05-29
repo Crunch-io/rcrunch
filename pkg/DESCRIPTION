@@ -48,3 +48,4 @@ Collate:
     'show.R'
     'dataset-catalog.R'
     'shoji-catalog.R'
+    'batches.R'
