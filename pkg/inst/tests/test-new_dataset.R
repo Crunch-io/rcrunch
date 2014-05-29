@@ -1,6 +1,12 @@
 context("Making a new dataset")
 
 testfile <- system.file("fake.csv", package="rcrunch", mustWork=TRUE)
+localdf <- read.csv(testfile)
+
+test_that("fake.csv is what we expect", {
+    expect_identical(dim(localdf), c(20L, 6L))
+})
+
 if (!run.only.local.tests) {
     test_that("Source file cannot be uploaded if not logged in", {
         logout()
@@ -28,23 +34,27 @@ if (!run.only.local.tests) {
             source <- createSource(testfile)
             with(test.dataset(), {
                 ds <- .setup
-                expect_true(is.dataset(addSourceToDataset(ds, source)))
+                ds <- try(addSourceToDataset(ds, source))
+                expect_true(is.dataset(ds))
+                expect_identical(nrow(ds), 20L)
+                expect_identical(ncol(ds), 6L)
             })
         })
         test_that("newDatasetFromFile creates a dataset", {
-            ds <- newDatasetFromFile(testfile)
+            ds <- newDatasetFromFile(testfile, name=uniqueDatasetName())
                 expect_true(is.dataset(ds))
-                localdf <- read.csv(testfile)
-                expect_identical(dim(ds), dim(localdf))
+                expect_identical(nrow(ds), 20L)
+                expect_identical(ncol(ds), 6L)
                 expect_equivalent(mean(ds[[2]]), mean(localdf[[2]]))
             delete(ds)
         })
         test_that("Dataset can be made from a data.frame by dumping a csv", {
-            d1 <- newDatasetViaFile(df, name="making_a_dataset_from_df")
-                expect_true("making_a_dataset_from_df" %in% listDatasets())
+            dsname <- uniqueDatasetName()
+            d1 <- newDatasetViaFile(df, name=dsname)
+                expect_true(dsname %in% listDatasets())
             delete(d1)
             
-            testcrdf <- newDatasetViaFile(df)
+            testcrdf <- newDatasetViaFile(df, name=uniqueDatasetName())
                 expect_true(is.dataset(testcrdf))
             delete(testcrdf)
             ## Should also test doing this with a matrix
@@ -56,8 +66,9 @@ if (!run.only.local.tests) {
                 "Can only make a Crunch dataset from a two-dimensional data")
             expect_error(newDataset(1:5), 
                 "Can only make a Crunch dataset from a two-dimensional data")
-            dx <- try(newDataset(df, "addVariables", description="a description"))
-                expect_true("addVariables" %in% listDatasets())
+            dsname <- uniqueDatasetName()
+            dx <- try(newDataset(df, name=dsname, description="a description"))
+                expect_true(dsname %in% listDatasets())
                 expect_true(is.dataset(dx))
                 expect_identical(description(dx), "a description")
                 expect_equivalent(mean(dx$v3), mean(df$v3))
@@ -66,10 +77,10 @@ if (!run.only.local.tests) {
         })
         
         test_that("newDataset(FromFile) passes useAlias", {
-            d1 <- newDataset(df)
+            d1 <- newDataset(df, name=uniqueDatasetName())
                 expect_equal(d1@useAlias, default.useAlias())
             delete(d1)
-            d1 <- newDataset(df, useAlias=FALSE)
+            d1 <- newDataset(df, name=uniqueDatasetName(), useAlias=FALSE)
                 expect_false(d1@useAlias)
             delete(d1)
         })
@@ -99,18 +110,19 @@ if (!run.only.local.tests) {
             })
         })
         test_that("Datasets can be deleted", {
-            testdf <- newDataset(df, name="delete-me")
-            df.name <- name(testdf) ## In case a dataset with this name already existed and the name was munged to be made unique
-            expect_true(df.name %in% listDatasets())
+            dsname <- uniqueDatasetName()
+            testdf <- newDataset(df, name=dsname)
+            expect_true(dsname %in% listDatasets())
             expect_true(DELETE(self(testdf), 
                 response.handler=function (response) response$status_code==204))
-            expect_false(df.name %in% listDatasets(refresh=TRUE))
+            expect_false(dsname %in% listDatasets(refresh=TRUE))
             
             ## Do again but with the S4 method
-            testdf <- newDataset(df, name="delete-me")
-            df.name <- name(testdf)
+            dsname <- uniqueDatasetName()
+            testdf <- newDataset(df, name=dsname)
+            expect_true(dsname %in% listDatasets())
             delete(testdf)
-            expect_false(df.name %in% listDatasets())
+            expect_false(dsname %in% listDatasets())
         })
     })
 }
