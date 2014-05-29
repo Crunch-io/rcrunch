@@ -196,3 +196,5 @@ setMethod("delete", "CrunchDataset", function (x) {
 as.list.CrunchDataset <- function (x, ...) {
     lapply(seq_along(active(x@variables)), function (i) x[[i]])
 }
+
+batches <- function (x) GET(x@catalogs$batches)

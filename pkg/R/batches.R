@@ -8,7 +8,7 @@ pollBatchStatus <- function (batch.url, catalog, until=c("imported", "ready"),
         if (status %in% c("conflict")) { ## is there another failure status?
             stop("Error on import", call.=FALSE)
         } else if (status %in% until) {
-            invisible()
+            invisible(status)
         }
         
         Sys.sleep(frequency)

@@ -49,3 +49,4 @@ Collate:
     'dataset-catalog.R'
     'shoji-catalog.R'
     'batches.R'
+    'append-dataset.R'
