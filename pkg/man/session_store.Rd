@@ -8,7 +8,8 @@
 }
 \description{
   The auth store keeps the session token after
-  authentication so that all API calls can use it.
+  authentication so that all API calls can use it. We can
+  also store other things in it.
 }
 \keyword{datasets}
 \keyword{internal}

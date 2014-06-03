@@ -1,6 +1,6 @@
 init.CategoricalVariable <- function (.Object, ...) {
     .Object <- callNextMethod()
-    .Object@body$categories <- Categories(.Object@body$categories)
+    .Object$categories <- Categories(.Object$categories)
     return(.Object)
 }
 setMethod("initialize", "CategoricalVariable", init.CategoricalVariable)
@@ -104,8 +104,8 @@ setMethod("description<-", "CrunchVariable",
 
 ##' @export
 setMethod("categories", "CrunchVariable", function (x) NULL)
-setMethod("categories", "CategoricalVariable", function (x) x@body$categories)
-setMethod("categories", "CategoricalArrayVariable", function (x) x@body$categories)
+setMethod("categories", "CategoricalVariable", function (x) x$categories)
+setMethod("categories", "CategoricalArrayVariable", function (x) x$categories)
 
 ##' @export
 setMethod("categories<-", "CategoricalVariable", 
@@ -138,7 +138,7 @@ unbind <- function (x) {
 }
 
 setMethod("delete", "CategoricalArrayVariable", function (x) {
-    subvars <- x@body$subvariables
+    subvars <- x$subvariables
     out <- DELETE(self(x))
     lapply(subvars, DELETE)
     invisible(out)

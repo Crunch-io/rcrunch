@@ -1,7 +1,7 @@
 ##' Stay authenticated.
 ##'
 ##' The auth store keeps the session token after authentication so that all 
-##' API calls can use it.
+##' API calls can use it. We can also store other things in it.
 ##'
 ##' @format An environment.
 ##' @keywords internal
@@ -15,7 +15,7 @@ makeSessionStore()
 ##' Kill the active Crunch session
 ##' @export 
 logout <- function () {
-    if (is.authenticated()) try(GET(sessionURL("logout_url")), silent=TRUE) ## hack?
+    if (is.authenticated()) try(GET(sessionURL("logout_url")), silent=TRUE)
     deleteSessionInfo()
     options(prompt = session_store$.globals$prompt)
 }
@@ -49,19 +49,17 @@ login <- function (email=getOption("crunch.email"),
                    password=getOption("crunch.pw"), ...) {
     logout()
     auth <- crunchAuth(email=email, password=password, ...)
+    
     ## Save stuff in the session cache
-    saveUser(email)
     saveToken(auth$cookies)
     saveSessionURLs(getAPIroot()$urls)
-    saveSessionURLs(getUserResourceURLs())
+    session_store$user <- getUser()
+    saveSessionURLs(session_store$user@urls)
     updateDatasetList()
+    
     message("Logged into crunch.io as ", email)
     options(prompt = paste("[crunch]", session_store$.globals$prompt)) 
     invisible()
-}
-
-saveUser <- function (x) {
-    session_store$email <- x
 }
 
 ##' Validate authentication inputs and then POST to the API
