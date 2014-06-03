@@ -84,11 +84,11 @@ addSourceToDataset <- function (dataset, source_url, ...) {
         element="shoji:entity",
         body=list(
             source=source_url,
-            workflow=I()
+            workflow=I(list())
         )
     )
     batch_url <- POST(batches_url, body=toJSON(body), ...)
-    pollBatchStatus(batch_url, GET(batches_url))
+    pollBatchStatus(batch_url, ShojiCatalog(GET(batches_url)))
     invisible(refresh(dataset))
 }
 
