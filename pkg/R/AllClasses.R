@@ -11,6 +11,7 @@ ShojiObject <- setClass("ShojiObject",
         description="ANY",
         body="ANY",
         urls="ANY",
+        catalogs="ANY",
         specification="ANY",
         views="ANY"
     ))
