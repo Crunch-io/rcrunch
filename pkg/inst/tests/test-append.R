@@ -1,5 +1,40 @@
 context("Append datasets")
 
+test_that("Conflict messages are formatted correctly", {
+    c1 <- list()
+    c2 <- list(var1=list(
+        list(
+            message="No good",
+            resolution="But I fixed it already"
+        )
+    ))
+    c3 <- list(
+        var2=list(
+            list(
+                message="No good",
+                resolution="But I fixed it already"
+            )
+        ),
+        var1=list(
+            list(
+                message="Also no good",
+                resolution="Also fixed"
+            ), 
+            list(
+                message="Oh, and there was another problem",
+                resolution="But it's also cool"
+            )
+        )
+    )
+    expect_identical(formatConflicts(c1), "No conflicts.")
+    expect_identical(formatConflicts(c2), 
+        "var1: Conflict: No good; Resolution: But I fixed it already")
+    expect_identical(formatConflicts(c3), 
+        c("var2: Conflict: No good; Resolution: But I fixed it already",
+        "var1: (1) Conflict: Also no good; Resolution: Also fixed\n(2) Conflict: Oh, and there was another problem; Resolution: But it's also cool"))
+    
+})
+
 skip({
 
 if (!run.only.local.tests) {
@@ -31,7 +66,7 @@ if (!run.only.local.tests) {
                     expect_true(inherits(p1.batches, "ShojiCatalog"))
                     expect_identical(length(p1.batches), 1L)
                     expect_error(appendDataset(part1, part2, confirm=TRUE))
-                    expect_identical(length(GET(part1@catalogs$batches)), 1L)
+                    expect_identical(length(batches(part1)), 1L)
                     try(out <- appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
@@ -58,7 +93,7 @@ if (!run.only.local.tests) {
                     expect_true(inherits(p1.batches, "ShojiCatalog"))
                     expect_identical(length(p1.batches), 1L)
                     expect_error(appendDataset(part1, part2))
-                    expect_identical(length(GET(part1@catalogs$batches)), 1L)
+                    expect_identical(length(batches(part1)), 1L)
                 })
             })
         })

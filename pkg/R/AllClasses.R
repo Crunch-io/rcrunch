@@ -61,6 +61,7 @@ VariableGroup <- setClass("VariableGroup", representation=representation(
 VariableCatalog <- setClass("VariableCatalog", contains="ShojiCatalog",
     representation(order="VariableGrouping"))
 DatasetCatalog <- setClass("DatasetCatalog", contains="ShojiCatalog")
+BatchCatalog <- setClass("BatchCatalog", contains="ShojiCatalog")
 
 default.useAlias <- function () {
     opt <- getOption("crunch.useAlias")

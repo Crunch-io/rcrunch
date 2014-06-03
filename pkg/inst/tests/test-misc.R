@@ -45,7 +45,7 @@ test_that("SUTD", {
     with(tester, {
         expect_false(is.null(a))
         expect_false(a)
-        stop(call.=FALSE)
+        stop("Testing error handling, please ignore", call.=FALSE)
     })
     expect_true(a)
 })

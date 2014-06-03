@@ -1,10 +1,25 @@
-appendDataset <- function (dataset1, dataset2, confirm=interactive()) {
-    stopifnot(is.dataset(dataset1))
+appendDataset <- function (dataset1, dataset2, confirm=interactive(),
+                            cleanup=TRUE) {
     
+    stopifnot(is.dataset(dataset1))
+    batch_url <- addBatchToDataset(dataset1, dataset2)    
+    dataset <- try(acceptAppendResolutions(batch_url, dataset1, confirm=confirm),
+        silent=TRUE)
+    if (is.error(dataset)) {
+        if (cleanup) {
+            DELETE(batch_url)
+        } else {
+            message("Batch URL: ", batch_url) ## So you can fix and retry
+        }
+        rethrow(dataset)
+    }
+    invisible(dataset)
+}
+
+addBatchToDataset <- function (dataset1, dataset2) {
     if (!is.dataset(dataset2)) {
         ## TODO: compose batch directly, not as dataset?
-        temp.ds.name <- paste("Appending to", name(dataset1),
-            strftime(Sys.time(), usetz=TRUE))
+        temp.ds.name <- paste("Appending to", name(dataset1), now())
         message("Creating ", sQuote(temp.ds.name), " as temporary dataset")
         dataset2 <- newDataset(dataset2, name=temp.ds.name)
     }
@@ -17,42 +32,49 @@ appendDataset <- function (dataset1, dataset2, confirm=interactive()) {
             workflow=I()
         )
     )
-    batch_url <- POST(batches_url, body=toJSON(body))
-    status <- try(pollBatchStatus(batch_url, GET(batches_url), until="ready"),
-        silent=TRUE)
-    batch <- GET(batch_url)
+    invisible(POST(batches_url, body=toJSON(body)))
+}
+
+acceptAppendResolutions <- function (batch_url, dataset, ...) {
+    status <- pollBatchStatus(batch_url, batches(dataset), until="ready")
     
-    if (is.error(status)) {
-        message(conflicts) ## define conflicts
-        DELETE(batch_url) ## right? for now at least?
-        stop("Message about manually resolving conflicts and trying again")
+    batch <- GET(batch_url)
+    resolutions <- batch@body$conflicts
+    ## Report on what was done/will be done
+    message(paste(formatConflicts(resolutions), collapse="\n"))
+    
+    if (status == "conflict") {
+        ## message(the fatal conflicts)
+        err <- c("There are conflicts that cannot be resolved automatically.",
+            "Please manually address them and retry.")
+        stop(paste(err, collapse=" "), call.=FALSE)
+        
     }
     
-    ## On success ("ready"):
-    resolutions <- batch@body$conflicts
+    ## Else: On success ("ready"):
     if (length(resolutions)) {
-        ## Report on what was done/will be done
-        message(resolutions) ## get var names matched, iterate over resolutions and print $message and $resolution
-        if (confirm) {
-            if (!interactive()) {
-                DELETE(batch_url) ## right? for now at least?
-                stop("Message about manually resolving conflicts and trying again")
-            }
-            ok <- FALSE
-            while (!ok) {
-                proceed <- tolower(readline("Accept these resolutions? (y/n) "))
-                if (proceed == "y") {
-                    ok <- TRUE
-                } else if (proceed == "n") {
-                    DELETE(batch_url) ## right? for now at least?
-                    stop("Message about manually resolving conflicts and trying again")
-                }
-            }
+        ## If there are any resolved conflicts, seek confirmation to proceed,
+        ## if required. Abort if authorization required and not obtained.
+        if (confirm && !askForPermission("Accept these resolutions?")) {
+            err <- c("Permission to automatically resolve conflicts not given.",
+                "Aborting. Please manually resolve conflicts, or set",
+                "confirm=FALSE, and try again.")
+            stop(paste(err, collapse=" "), call.=FALSE)
         }
     }
     
     ## Proceed.
-    batch <- setCrunchSlot(batch, "status", "importing") ## correct?
-    pollBatchStatus(batch_url, GET(batches_url), until="imported")
-    invisible(refresh(dataset1))
+    batch <- setCrunchSlot(batch, "status", "importing")
+    pollBatchStatus(batch_url, batches(dataset), until="imported")
+    invisible(refresh(dataset))
+}
+
+askForPermission <- function (prompt="") {
+    if (!interactive()) return(FALSE)
+    prompt <- paste(prompt, "(y/n) ")
+    proceed <- ""
+    while (!(proceed %in% c("y", "n"))) {
+        proceed <- tolower(readline(prompt))
+    }
+    return(proceed == "y")
 }

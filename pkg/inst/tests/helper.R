@@ -54,17 +54,16 @@ test.authentication <- setup.and.teardown(
     function () suppressMessages(login()), 
     logout)
 
-uniqueDatasetName <- function () {
-    strftime(Sys.time(), usetz=TRUE)
-}
+uniqueDatasetName <- now
+
 ## Create a test dataset and then destroy it after tests
 datasets_to_purge <- c()
 new.dataset.with.setup <- function (df=NULL, ...) {
-    now <- uniqueDatasetName()
+    unique.name <- uniqueDatasetName()
     if (is.null(df)) {
-        out <- createDataset(name=now, ...)
+        out <- createDataset(name=unique.name, ...)
     } else {
-        out <- newDataset(df, name=now, ...)
+        out <- newDataset(df, name=unique.name, ...)
     }
     datasets_to_purge <<- c(datasets_to_purge, self(out))
     return(out)

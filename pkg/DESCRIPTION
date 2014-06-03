@@ -50,3 +50,4 @@ Collate:
     'shoji-catalog.R'
     'batches.R'
     'append-dataset.R'
+    'batch-catalog.R'
