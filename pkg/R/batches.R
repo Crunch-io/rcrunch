@@ -1,6 +1,7 @@
 pollBatchStatus <- function (batch.url, catalog, until="imported",
                             frequency=2, timeout=60) {
-        
+    
+    until <- match.arg(until)
     for (i in seq_len(ceiling(timeout / frequency))) {
         status <- catalog[[batch.url]]$status
         if (status %in% c("failed")) {
@@ -8,7 +9,6 @@ pollBatchStatus <- function (batch.url, catalog, until="imported",
         } else if (status %in% until) {
             invisible(status)
         }
-        
         Sys.sleep(frequency)
         catalog <- refresh(catalog)
     }
