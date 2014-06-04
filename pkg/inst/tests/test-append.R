@@ -35,6 +35,17 @@ test_that("Conflict messages are formatted correctly", {
     
 })
 
+test_that("default.timeout", {
+    opt <- getOption("crunch.timeout")
+        options(crunch.timeout=7)
+        expect_identical(default.timeout(), 7)
+        options(crunch.timeout=NULL)
+        expect_identical(default.timeout(), 60)
+        options(crunch.timeout=list())
+        expect_identical(default.timeout(), 60)        
+    options(crunch.timeout=opt)
+})
+
 skip({
 
 if (!run.only.local.tests) {

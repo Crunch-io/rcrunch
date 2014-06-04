@@ -28,7 +28,7 @@ addBatchToDataset <- function (dataset1, dataset2) {
     body <- list(
         element="shoji:entity",
         body=list(
-            dataset=self(dataset2), ## Totally guessing about this API
+            dataset=self(dataset2),
             workflow=I()
         )
     )
