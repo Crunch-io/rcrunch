@@ -4,8 +4,6 @@ pollBatchStatus <- function (batch.url, catalog, until="imported",
     starttime <- Sys.time()
     while (difftime(Sys.time(), starttime, units="secs") < timeout) {
         status <- catalog[[batch.url]]$status
-        print(status)
-        print(until)
         if (status %in% c("failed")) {
             stop("Error on import", call.=FALSE)
         } else if (status %in% until) {
