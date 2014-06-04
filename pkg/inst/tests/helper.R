@@ -7,6 +7,7 @@ options(crunch.api=getOption("test.api"),
         warn=1,
         crunch.debug=FALSE,
         digits.secs=3,
+        crunch.timeout=5,
         crunch.email=getOption("test.user"),
         crunch.pw=getOption("test.pw"))
 assign("application/json", parseJSONresponse, envir=httr:::parsers)

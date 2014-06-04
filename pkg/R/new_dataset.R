@@ -88,6 +88,12 @@ addSourceToDataset <- function (dataset, source_url, ...) {
         )
     )
     batch_url <- POST(batches_url, body=toJSON(body), ...)
+    status <- pollBatchStatus(batch_url, ShojiCatalog(GET(batches_url)),
+        until="ready")
+    if (status != "ready") {
+        stop("Error importing file", call.=FALSE)
+    }
+    PATCH(batch_url, body=toJSON(list(status="importing")))
     pollBatchStatus(batch_url, ShojiCatalog(GET(batches_url)))
     invisible(refresh(dataset))
 }

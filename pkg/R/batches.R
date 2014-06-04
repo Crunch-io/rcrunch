@@ -1,17 +1,25 @@
-pollBatchStatus <- function (batch.url, catalog, until=c("imported", "ready"),
-                            frequency=2, timeout=60) {
+pollBatchStatus <- function (batch.url, catalog, until="imported",
+                            wait=1, timeout=default.timeout()) {
     
-    until <- match.arg(until)
-    for (i in seq_len(ceiling(timeout / frequency))) {
+    starttime <- Sys.time()
+    while (difftime(Sys.time(), starttime, units="secs") < timeout) {
         status <- catalog[[batch.url]]$status
-        if (status %in% c("conflict")) { ## is there another failure status?
+        print(status)
+        print(until)
+        if (status %in% c("failed")) {
             stop("Error on import", call.=FALSE)
         } else if (status %in% until) {
             return(status)
         }
-        Sys.sleep(frequency)
+        Sys.sleep(wait)
         catalog <- refresh(catalog)
     }
     
     stop("Timed out. Check back later.", call.=FALSE)
+}
+
+default.timeout <- function () {
+    opt <- getOption("crunch.timeout")
+    if (is.null(opt) || !is.numeric(opt)) opt <- 60
+    return(opt)
 }
