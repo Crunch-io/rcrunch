@@ -71,6 +71,14 @@ if (!run.only.local.tests) {
             cats <- categories(part1$v4)
             with(test.dataset(df), {
                 part2 <- .setup
+                v3.1 <- as.vector(part1$v3)
+                v3.2 <- as.vector(part2$v3)
+                test_that("our assumptions about these two datasets", {
+                    expect_true(is.numeric(v3.1))
+                    expect_true(is.numeric(v3.2))
+                    expect_equivalent(v3.1, df$v3)
+                    expect_equivalent(v3.2, df$v3)
+                })
                 test_that("append handles two identical Datasets", {
                     out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
@@ -78,11 +86,14 @@ if (!run.only.local.tests) {
                     expect_identical(self(out), self(part1))
                     skip({
                         expect_identical(dim(out), c(nrow(df)*2L, ncol(df)))
+                        expect_identical(getNrow(out), nrow(df)*2L)
                         expect_identical(nrow(out), length(as.vector(out$v3)))
                     }, "Dataset /summary/ isn't updating to the new row count")
                     expect_identical(categories(out$v4)[1:2], cats)
-                    skip(expect_identical(as.vector(out$v3), rep(df$v3, 2)),
-                        "The second 20 rows are all NA")
+                    skip({
+                        expect_equivalent(as.vector(out$v3), rep(df$v3, 2))
+                        expect_identical(as.vector(out$v3), c(v3.1, v3.2))
+                    }, "The second 20 rows are all NA")
                 })
             })
         })
