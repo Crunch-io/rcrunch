@@ -29,7 +29,7 @@ addBatchToDataset <- function (dataset1, dataset2) {
         element="shoji:entity",
         body=list(
             dataset=self(dataset2),
-            workflow=I()
+            workflow=I(list())
         )
     )
     invisible(POST(batches_url, body=toJSON(body)))
@@ -38,7 +38,7 @@ addBatchToDataset <- function (dataset1, dataset2) {
 acceptAppendResolutions <- function (batch_url, dataset, ...) {
     status <- pollBatchStatus(batch_url, batches(dataset), until="ready")
     
-    batch <- GET(batch_url)
+    batch <- ShojiObject(GET(batch_url))
     resolutions <- batch@body$conflicts
     ## Report on what was done/will be done
     message(paste(formatConflicts(resolutions), collapse="\n"))
