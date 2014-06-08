@@ -48,7 +48,6 @@ test_that("default.timeout", {
 
 if (!run.only.local.tests) {
     with(test.authentication, {
-        
         with(test.dataset(df), {
             part1 <- .setup
             cats <- categories(part1$v4)
@@ -98,6 +97,33 @@ if (!run.only.local.tests) {
             })
         })
 
+        file1 <- newDatasetFromFile(testfile.csv, name=now())
+            file2 <- newDatasetFromFile(testfile.csv, name=now())
+            # try({
+                v3.1 <- as.vector(file1$v3)
+                v3.2 <- as.vector(file2$v3)
+                test_that("our assumptions about these two datasets from file", {
+                    expect_true(is.numeric(v3.1))
+                    expect_true(is.numeric(v3.2))
+                    expect_equivalent(v3.1, testfile.df$v3)
+                    expect_equivalent(v3.2, testfile.df$v3)
+                })
+                
+                test_that("append handles two identical Datasets from file", {
+                    out <- try(appendDataset(file1, file2))
+                    expect_false(is.error(out))
+                    expect_true(is.dataset(out))
+                    expect_identical(self(out), self(part1))
+                    expect_identical(dim(out), c(nrow(testfile.df)*2L, ncol(testfile.df)))
+                    expect_identical(getNrow(out), nrow(testfile.df)*2L)
+                    expect_identical(nrow(out), length(as.vector(out$v3)))
+                    expect_identical(categories(out$v4)[1:2], cats)
+                    expect_equivalent(as.vector(out$v3), rep(testfile.df$v3, 2))
+                    expect_identical(as.vector(out$v3), c(v3.1, v3.2))
+                })
+            # })
+            delete(file2)
+        delete(file1)
 
 skip({
         

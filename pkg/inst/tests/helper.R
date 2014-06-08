@@ -122,3 +122,6 @@ mrdf <- data.frame(mr_1=c(1,0,1,NA_real_),
                    mr_3=c(0,0,1,NA_real_),
                    v4=as.factor(LETTERS[2:3]),
                    stringsAsFactors=FALSE)
+
+testfile.csv <- system.file("fake.csv", package="rcrunch", mustWork=TRUE)
+testfile.df <- read.csv(testfile.csv)
