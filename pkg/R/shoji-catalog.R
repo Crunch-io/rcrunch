@@ -13,6 +13,9 @@ setMethod("[", c("ShojiCatalog", "ANY"), function (x, i, ..., drop) {
    x@index <- x@index[i]
    return(x)
 })
+setMethod("[[", c("ShojiCatalog", "ANY"), function (x, i, ...) {
+    x@index[[i]]
+})
 setMethod("length", "ShojiCatalog", function (x) length(x@index))
 setMethod("lapply", "ShojiCatalog", function (X, FUN, ...) lapply(X@index, FUN, ...))
 

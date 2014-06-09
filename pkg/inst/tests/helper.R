@@ -7,6 +7,7 @@ options(crunch.api=getOption("test.api"),
         warn=1,
         crunch.debug=FALSE,
         digits.secs=3,
+        crunch.timeout=5,
         crunch.email=getOption("test.user"),
         crunch.pw=getOption("test.pw"))
 assign("application/json", parseJSONresponse, envir=httr:::parsers)
@@ -46,6 +47,28 @@ addFakeHTTPVerbs <- function () {
     http_verbs$POST <- function (...) invisible()
 }
 
+timed.HTTP <- function (filename=tmpfile(), append=FALSE) {
+    return(setup.and.teardown(function () {
+        suppressMessages(trace("crunchAPI", 
+            exit=quote(cat(paste(c(http.verb, url, x$status_code,
+                ifelse(is.null(x$headers$`content-length`), 
+                NA, x$headers$`content-length`), 
+                format(x$times, scientific=FALSE)),
+                collapse="\t"), "\n")),
+            print=FALSE, where=crunchConfig))
+        message("Writing HTTP timings to ", filename)
+        sink(filename, append=append)
+        if (!append) {
+            cat(paste("method", "url", "status", "content_length", "redirect",
+                "namelookup", "connect", "pretransfer", "starttransfer", "total",
+                sep="\t"), "\n")
+        }
+    }, function () {
+        sink()
+        suppressMessages(untrace("crunchAPI", where=crunchConfig))
+    }))
+}
+
 ## Mock backend
 fake.HTTP <- setup.and.teardown(addFakeHTTPVerbs, addRealHTTPVerbs)
 
@@ -54,10 +77,13 @@ test.authentication <- setup.and.teardown(
     function () suppressMessages(login()), 
     logout)
 
+uniqueDatasetName <- function () {
+    strftime(Sys.time(), usetz=TRUE)
+}
 ## Create a test dataset and then destroy it after tests
 datasets_to_purge <- c()
 new.dataset.with.setup <- function (df=NULL, ...) {
-    now <- strftime(Sys.time(), usetz=TRUE)
+    now <- uniqueDatasetName()
     if (is.null(df)) {
         out <- createDataset(name=now, ...)
     } else {

@@ -79,9 +79,12 @@ setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE)
 })
 ##' @export
 setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
-    out <- try(entity(active(x@variables)[[i]]), silent=TRUE)
-    if (is.error(out)) {
-        stop(attr(out, "condition")$message, call.=FALSE)
+    out <- active(x@variables)[[i]]
+    if (!is.null(out)) {
+        out <- try(entity(out), silent=TRUE)
+        if (is.error(out)) {
+            stop(attr(out, "condition")$message, call.=FALSE)
+        }
     }
     return(out)
 })
