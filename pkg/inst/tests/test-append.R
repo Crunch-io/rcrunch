@@ -46,6 +46,10 @@ test_that("default.timeout", {
     options(crunch.timeout=opt)
 })
 
+test_that("askForPermission says no if not interactive", {
+    expect_false(askForPermission())
+})
+
 if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
@@ -77,22 +81,20 @@ if (!run.only.local.tests) {
                     expect_true(is.numeric(v3.2))
                     expect_equivalent(v3.1, df$v3)
                     expect_equivalent(v3.2, df$v3)
+                    expect_identical(dim(part1), dim(part2))
+                    expect_identical(dim(part1), dim(df))
                 })
                 test_that("append handles two identical Datasets", {
                     out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
                     expect_identical(self(out), self(part1))
-                    skip({
-                        expect_identical(dim(out), c(nrow(df)*2L, ncol(df)))
-                        expect_identical(getNrow(out), nrow(df)*2L)
-                        expect_identical(nrow(out), length(as.vector(out$v3)))
-                    }, "Dataset /summary/ isn't updating to the new row count")
+                    expect_identical(dim(out), c(nrow(df)*2L, ncol(df)))
+                    expect_identical(getNrow(out), nrow(df)*2L)
+                    expect_identical(nrow(out), length(as.vector(out$v3)))
                     expect_identical(categories(out$v4)[1:2], cats)
-                    skip({
-                        expect_equivalent(as.vector(out$v3), rep(df$v3, 2))
-                        expect_identical(as.vector(out$v3), c(v3.1, v3.2))
-                    }, "The second 20 rows are all NA")
+                    expect_equivalent(as.vector(out$v3), rep(df$v3, 2))
+                    expect_identical(as.vector(out$v3), c(v3.1, v3.2))
                 })
             })
         })
@@ -114,43 +116,50 @@ if (!run.only.local.tests) {
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
                     expect_identical(self(out), self(file1))
-                    expect_identical(dim(out), c(nrow(testfile.df)*2L, ncol(testfile.df)))
+                    expect_identical(dim(out),
+                        c(nrow(testfile.df)*2L, ncol(testfile.df)))
                     expect_identical(getNrow(out), nrow(testfile.df)*2L)
                     expect_identical(nrow(out), length(as.vector(out$V3)))
-                    skip({
-                        expect_equivalent(as.vector(out$V3), rep(testfile.df$V3, 2))
-                        expect_identical(as.vector(out$V3), c(v3.1, v3.2))
-                    }, "The second 20 rows are all NA")
-                    
+                    expect_equivalent(as.vector(out$V3), rep(testfile.df$V3, 2))
+                    expect_identical(as.vector(out$V3), c(v3.1, v3.2))  
                 })
             })
             delete(file2)
         delete(file1)
-
-skip({
         
         with(test.dataset(df[,2:5]), {
             part1 <- .setup
             cats <- categories(part1$v4)
-            with(test.dataset(df[1:3]), {
+            with(test.dataset(df[,1:3]), {
                 part2 <- .setup
                 test_that("append handles missing variables from each", {
                     p1.batches <- batches(part1)
                     expect_true(inherits(p1.batches, "ShojiCatalog"))
                     expect_identical(length(p1.batches), 1L)
-                    expect_error(appendDataset(part1, part2, confirm=TRUE))
-                    expect_identical(length(batches(part1)), 1L)
+                    skip({
+                        expect_error(appendDataset(part1, part2, confirm=TRUE))
+                        expect_identical(length(batches(part1)), 1L)
+                    }, "this reports no conflicts")
                     out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
                     expect_identical(length(refresh(p1.batches)), 2L)
-                    expect_identical(dim(out), c(nrow(df)*2L, 5L))
-                    expect_identical(categories(out$v4), cats)
-                    expect_identical(as.vector(out$v3), rep(df$v3, 2))
+                    expect_identical(ncol(out), 5L) # false, only has v2-v5
+                    expect_true(setequal(names(out), paste0("v", 1:5))) # ^^
+                    expect_identical(nrow(out), nrow(df) * 2L) # false, has nrow=20
+                    expect_identical(categories(out$v4)[1:2], cats)
+                    expect_equivalent(as.vector(out$v3), rep(df$v3, 2))
                     expect_identical(as.vector(out$v1), 
-                        c(rep(NA, nrow(df)), df$v1))
-                    expect_identical(as.vector(out$v5), 
-                        c(df$v5, rep(NA, nrow(df))))
+                        c(rep(NA, nrow(df)), df$v1)) # false, v1 didn't get added
+                    expect_identical(length(as.vector(out$v5)), 40L) # false: 20
+                    expect_identical(length(as.vector(out$v4)), 40L) # false: 20
+                    expect_equivalent(as.vector(out$v4)[1:20], df$v4)
+                    expect_equivalent(as.vector(out$v4), 
+                        factor(levels(df$v4)[c(df$v4, 
+                            factor(rep(NA_character_, nrow(df))))])) # false, didn't get NAs
+                    expect_equivalent(as.vector(out$v5)[1:20], df$v5)
+                    expect_equivalent(as.vector(out$v5), 
+                        c(df$v5, rep(NA, nrow(df)))) # false, didn't get NAs
                 })
             })
         })
@@ -194,6 +203,5 @@ skip({
                 })
             })
         })
-})
     })
 }

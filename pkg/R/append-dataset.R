@@ -35,20 +35,20 @@ addBatchToDataset <- function (dataset1, dataset2) {
     invisible(POST(batches_url, body=toJSON(body)))
 }
 
-acceptAppendResolutions <- function (batch_url, dataset, ...) {
+acceptAppendResolutions <- function (batch_url, dataset, confirm=interactive(), ...) {
     status <- pollBatchStatus(batch_url, batches(dataset), until="ready")
     
     batch <- ShojiObject(GET(batch_url))
     resolutions <- batch@body$conflicts
     ## Report on what was done/will be done
     message(paste(formatConflicts(resolutions), collapse="\n"))
+    # cat(paste(formatConflicts(resolutions), collapse="\n"))
     
     if (status == "conflict") {
         ## message(the fatal conflicts)
         err <- c("There are conflicts that cannot be resolved automatically.",
             "Please manually address them and retry.")
         stop(paste(err, collapse=" "), call.=FALSE)
-        
     }
     
     ## Else: On success ("ready"):
