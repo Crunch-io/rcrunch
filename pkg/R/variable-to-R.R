@@ -16,12 +16,9 @@ as.vector.CrunchVariable <- function (x, mode) getValues(x)
 
 ##' @S3method as.vector CategoricalVariable
 as.vector.CategoricalVariable <- function (x, mode) {
-    out <- as.vector.CrunchVariable(x)
-    ## If sending ids:
-    # out <- as.factor(names(categories(x))[match(out, ids(categories(x)))])
-    ## If sending category names
-    ## TODO: remove category names that are missing since those are NA in the data
-    out <- factor(out, levels=names(categories(x)))
+    out <- as.vector.NumericVariable(x)
+    cats <- na.omit(categories(x))
+    out <- factor(names(cats)[match(out, ids(cats))], levels=names(cats))
     return(out)
 }
 

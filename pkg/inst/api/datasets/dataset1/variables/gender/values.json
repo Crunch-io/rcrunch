@@ -1,5 +1,5 @@
 {
     "element": "shoji:view",
     "self": "api/datasets/dataset1/variables/gender/values.json", 
-    "value": [ "Female", "Female", "No Data", "Female", "Female", "Female", "Male", "No Data", "No Data", "Female", "Male", "Female", "Male", "No Data", "No Data", "No Data", "Female", "Female", "Female", "No Data", "Male", "Male", "Male", "No Data", "Male" ]
+    "value": [ 2, 2, {"?": -1}, 2, 2, 2, 1, {"?": -1}, {"?": -1}, 2, 1, 2, 1, {"?": -1}, {"?": -1}, {"?": -1}, 2, 2, 2, {"?": -1}, 1, 1, 1, {"?": -1}, 1 ]
 }
