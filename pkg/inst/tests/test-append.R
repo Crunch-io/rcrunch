@@ -132,14 +132,14 @@ if (!run.only.local.tests) {
             cats <- categories(part1$v4)
             with(test.dataset(df[,1:3]), {
                 part2 <- .setup
-                test_that("append handles missing variables from each", {
-                    p1.batches <- batches(part1)
+                p1.batches <- batches(part1)
+                test_that("if I insist on confirmation, it fails if there are conflicts", {
                     expect_true(inherits(p1.batches, "ShojiCatalog"))
                     expect_identical(length(p1.batches), 1L)
-                    # skip({
-                        expect_error(appendDataset(part1, part2, confirm=TRUE))
-                        expect_identical(length(batches(part1)), 1L)
-                    # }, "this reports no conflicts")
+                    expect_error(appendDataset(part1, part2, confirm=TRUE))
+                    expect_identical(length(batches(part1)), 1L)
+                })
+                test_that("append handles missing variables from each", {
                     out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
@@ -155,14 +155,49 @@ if (!run.only.local.tests) {
                     expect_equivalent(as.vector(out$v1), 
                         c(rep(NA, nrow(df)), df$v1))
                     expect_identical(length(as.vector(out$v5)), 40L) # false: 20
-                    expect_identical(length(as.vector(out$v4)), 40L) # false: 20
+                    expect_identical(length(as.vector(out$v4)), 40L) # false: 20, sometimes!
                     expect_equivalent(as.vector(out$v4)[1:20], df$v4)
                     expect_equivalent(as.vector(out$v4), 
                         factor(levels(df$v4)[c(df$v4, 
-                            factor(rep(NA_character_, nrow(df))))])) # false, length=20 not 40, NAs not added
+                            factor(rep(NA_character_, nrow(df))))])) # false, length=20 not 40, NAs not added, sometimes!
                     expect_equivalent(as.Date(as.vector(out$v5))[1:20], df$v5)
                     expect_equivalent(as.Date(as.vector(out$v5)), 
                         c(df$v5, rep(NA, nrow(df)))) # false, didn't get NAs like v4
+                })
+            })
+        })
+        
+        with(test.dataset(df[,1:3]), {
+            part1 <- .setup
+            with(test.dataset(df[,2:5]), {
+                part2 <- .setup
+                cats <- categories(part2$v4)
+                
+                test_that("append with missing variables the other way", {
+                    p1.batches <- batches(part1)
+                    out <- try(appendDataset(part1, part2))
+                    expect_false(is.error(out))
+                    expect_true(is.dataset(out))
+                    print(as.data.frame(out))
+                    print(lapply(out, as.vector))
+                    expect_identical(length(refresh(p1.batches)), 2L)
+                    expect_identical(ncol(out), 5L)
+                    expect_identical(ncol(out), length(out@variables))
+                    expect_true(setequal(names(out), paste0("v", 1:5)))
+                    expect_identical(nrow(out), nrow(df) * 2L)
+                    expect_identical(categories(out$v4)[1:2], cats)
+                    expect_equivalent(as.vector(out$v3), rep(df$v3, 2))
+                    expect_equivalent(as.vector(out$v1), 
+                        c(df$v1, rep(NA, nrow(df))))
+                    expect_identical(length(as.vector(out$v5)), 40L)
+                    expect_identical(length(as.vector(out$v4)), 40L)
+                    expect_equivalent(as.vector(out$v4)[21:40], df$v4)
+                    expect_equivalent(as.vector(out$v4), 
+                        factor(levels(df$v4)[c(
+                            factor(rep(NA_character_, nrow(df))), df$v4)]))
+                    expect_equivalent(as.Date(as.vector(out$v5))[21:40], df$v5)
+                    expect_equivalent(as.numeric(as.Date(as.vector(out$v5))), 
+                        c(rep(NA, nrow(df)), df$v5))
                 })
             })
         })
@@ -182,7 +217,6 @@ if (!run.only.local.tests) {
                 })
             })
         })
-        
         
         with(test.dataset(mrdf), {
             part1 <- .setup
