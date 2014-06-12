@@ -47,15 +47,18 @@ addFakeHTTPVerbs <- function () {
     http_verbs$POST <- function (...) invisible()
 }
 
-timed.HTTP <- function (filename=tmpfile(), append=FALSE) {
-    return(setup.and.teardown(function () {
+## Mock backend
+fake.HTTP <- setup.and.teardown(addFakeHTTPVerbs, addRealHTTPVerbs)
+
+timingTracer <- function (filename=tempfile(), append=FALSE) {
+    return(function () {
         suppressMessages(trace("crunchAPI", 
             exit=quote(cat(paste(c(http.verb, url, x$status_code,
                 ifelse(is.null(x$headers$`content-length`), 
                 NA, x$headers$`content-length`), 
                 format(x$times, scientific=FALSE)),
                 collapse="\t"), "\n")),
-            print=FALSE, where=crunchConfig))
+            print=FALSE, where=CrunchDataset))
         message("Writing HTTP timings to ", filename)
         sink(filename, append=append)
         if (!append) {
@@ -63,14 +66,21 @@ timed.HTTP <- function (filename=tmpfile(), append=FALSE) {
                 "namelookup", "connect", "pretransfer", "starttransfer", "total",
                 sep="\t"), "\n")
         }
-    }, function () {
-        sink()
-        suppressMessages(untrace("crunchAPI", where=crunchConfig))
-    }))
+    })
 }
 
-## Mock backend
-fake.HTTP <- setup.and.teardown(addFakeHTTPVerbs, addRealHTTPVerbs)
+startTiming <- function (filename=tempfile(), append=FALSE) {
+    timingTracer(filename, append)()
+}
+
+stopTiming <- function () {
+    sink()
+    suppressMessages(untrace("crunchAPI", where=CrunchDataset))
+}
+
+timed.HTTP <- function (filename=tempfile(), append=FALSE) {
+    return(setup.and.teardown(timingTracer(filename, append), stopTiming))
+}
 
 ## Auth setup-teardown
 test.authentication <- setup.and.teardown(
