@@ -136,13 +136,15 @@ if (!run.only.local.tests) {
                     p1.batches <- batches(part1)
                     expect_true(inherits(p1.batches, "ShojiCatalog"))
                     expect_identical(length(p1.batches), 1L)
-                    skip({
+                    # skip({
                         expect_error(appendDataset(part1, part2, confirm=TRUE))
                         expect_identical(length(batches(part1)), 1L)
-                    }, "this reports no conflicts")
+                    # }, "this reports no conflicts")
                     out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
+                    print(as.data.frame(out))
+                    print(lapply(out, as.vector))
                     expect_identical(length(refresh(p1.batches)), 2L)
                     expect_identical(ncol(out), 5L)
                     expect_identical(ncol(out), length(out@variables))
