@@ -6,12 +6,12 @@ pollBatchStatus <- function (batch.url, catalog, until="imported",
         difftime(Sys.time(), since, units=units)
     }
     status <- catalog[[batch.url]]$status
-    print(status)
+    # print(status)
     while (status == "importing" && timer(starttime) < timeout) {
         Sys.sleep(wait)
         catalog <- refresh(catalog)
         status <- catalog[[batch.url]]$status
-        print(status)
+        # print(status)
     }
     
     if (status %in% "importing") {

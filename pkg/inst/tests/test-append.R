@@ -143,26 +143,24 @@ if (!run.only.local.tests) {
                     out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
-                    print(as.data.frame(out))
-                    print(lapply(out, as.vector))
                     expect_identical(length(refresh(p1.batches)), 2L)
                     expect_identical(ncol(out), 5L)
                     expect_identical(ncol(out), length(out@variables))
                     expect_true(setequal(names(out), paste0("v", 1:5)))
-                    expect_identical(nrow(out), nrow(df) * 2L) # false, has nrow=20
+                    expect_identical(nrow(out), nrow(df) * 2L)
                     expect_identical(categories(out$v4)[1:2], cats)
                     expect_equivalent(as.vector(out$v3), rep(df$v3, 2))
                     expect_equivalent(as.vector(out$v1), 
                         c(rep(NA, nrow(df)), df$v1))
-                    expect_identical(length(as.vector(out$v5)), 40L) # false: 20
-                    expect_identical(length(as.vector(out$v4)), 40L) # false: 20, sometimes!
+                    expect_identical(length(as.vector(out$v5)), 40L)
+                    expect_identical(length(as.vector(out$v4)), 40L)
                     expect_equivalent(as.vector(out$v4)[1:20], df$v4)
                     expect_equivalent(as.vector(out$v4), 
                         factor(levels(df$v4)[c(df$v4, 
-                            factor(rep(NA_character_, nrow(df))))])) # false, length=20 not 40, NAs not added, sometimes!
+                            factor(rep(NA_character_, nrow(df))))]))
                     expect_equivalent(as.Date(as.vector(out$v5))[1:20], df$v5)
                     expect_equivalent(as.Date(as.vector(out$v5)), 
-                        c(df$v5, rep(NA, nrow(df)))) # false, didn't get NAs like v4
+                        c(df$v5, rep(NA, nrow(df))))
                 })
             })
         })
@@ -178,8 +176,6 @@ if (!run.only.local.tests) {
                     out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
-                    print(as.data.frame(out))
-                    print(lapply(out, as.vector))
                     expect_identical(length(refresh(p1.batches)), 2L)
                     expect_identical(ncol(out), 5L)
                     expect_identical(ncol(out), length(out@variables))
@@ -245,7 +241,6 @@ if (!run.only.local.tests) {
             })
         })
         
-        skip({
         with(test.dataset(mrdf), {
             part1 <- .setup
             cast.these <- grep("mr_", names(part1))
@@ -269,6 +264,5 @@ if (!run.only.local.tests) {
                 })
             })
         })
-        }, "this clearly isn't happening yet")
     })
 }
