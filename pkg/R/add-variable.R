@@ -16,11 +16,9 @@ addVariable <- function (dataset, values, ...) {
     invisible(dataset)
 }
 
-##' bind_url arg is being deprecated
-POSTNewVariable <- function (collection_url, variable, bind_url=NULL) {
+POSTNewVariable <- function (collection_url, variable) {
     
     do.POST <- function (x) POST(collection_url, body=toJSON(x, digits=15))
-    is.error <- function (x) inherits(x, "try-error")
     
     if (variable$type %in% c("multiple_response", "categorical_array")) {
         ## assumes: array of subvariables included, and if MR, at least one category has selected: TRUE
