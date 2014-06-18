@@ -16,6 +16,9 @@ with(fake.HTTP, {
             "api/datasets/dataset1/variables/gender.json",
             "api/datasets/dataset1/variables/mymrset.json",
             "api/datasets/dataset1/variables/starttime.json",
+            "api/datasets/dataset1/variables/subvar1.json",
+            "api/datasets/dataset1/variables/subvar2.json",
+            "api/datasets/dataset1/variables/subvar3.json",
             "api/datasets/dataset1/variables/textVar.json"))
     })
 
