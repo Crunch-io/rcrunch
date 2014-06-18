@@ -12,6 +12,30 @@
             "id": "gender",
             "description": "Gender"
         },
+        "api/datasets/dataset1/variables/subvar1.json": {
+            "name": "Second",
+            "discarded": false,
+            "alias": "subvar1",
+            "type": "categorical",
+            "id": "subvar1",
+            "description": null
+        },
+        "api/datasets/dataset1/variables/subvar2.json": {
+            "name": "First",
+            "discarded": false,
+            "alias": "subvar2",
+            "type": "categorical",
+            "id": "gender",
+            "description": null
+        },
+        "api/datasets/dataset1/variables/subvar3.json": {
+            "name": "Last",
+            "discarded": false,
+            "alias": "subvar3",
+            "type": "categorical",
+            "id": "subvar3",
+            "description": null
+        },
         "api/datasets/dataset1/variables/birthyr.json": {
             "name": "Birth Year",
             "discarded": false,
