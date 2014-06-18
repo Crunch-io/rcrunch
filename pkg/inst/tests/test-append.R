@@ -280,7 +280,11 @@ if (!run.only.local.tests) {
                     name="test1", selections="1.0")
                 test_that("set up MR for appending", {
                     expect_true(is.Multiple(var1))
+                    expect_identical(names(subvariables(var1)),
+                        c("mr_1", "mr_2"))
                     expect_true(is.Multiple(var2))
+                    expect_identical(names(subvariables(var1)),
+                        c("mr_2", "mr_3"))
                 })
                 test_that("arrays with different subvariables can append", {
                     out <- try(appendDataset(part1, part2))
@@ -288,6 +292,8 @@ if (!run.only.local.tests) {
                     expect_true(is.dataset(out))
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
                     expect_true(is.Multiple(out$test1))
+                    expect_identical(names(subvariables(out$test1)),
+                        c("mr_1", "mr_2", "mr_3"))
                 })
             })
         })
