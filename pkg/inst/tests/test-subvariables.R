@@ -13,6 +13,19 @@ with(fake.HTTP, {
         expect_true(inherits(subvariables(mr), "Subvariables"))
         expect_identical(names(subvariables(mr)), c("First", "Second", "Last"))
     })
+    
+    test_that("subvariable name setter error checking", {
+        expect_error(names(subvariables(mr)) <- 1:3)
+        expect_error(names(subvariables(mr)) <- c("First", "Second"))
+        expect_error(names(subvariables(mr)) <- c("First", "First", "First"))
+    })
+    
+    test_that("subvariable setter validation", {
+        expect_error(subvariables(mr) <- Subvariables(), 
+            "Can only reorder, not change, subvariables")
+        expect_error(subvariables(mr) <- subvariables(mr)[1:2], 
+            "Can only reorder, not change, subvariables")
+    })
 })
 
 if (!run.only.local.tests) {
@@ -42,8 +55,13 @@ if (!run.only.local.tests) {
                     c("mr_3", "mr_1", "M.R. Two"))
             })
             test_that("can't (yet) otherwise modify subvariables", {
-                expect_error(subvariables(var) <- NULL)
-                expect_error(subvariables(var) <- Subvariables())
+                expect_error(subvariables(var) <- NULL,
+                    "Can only assign an object of class Subvariables")
+                with(test.dataset(df), {
+                    fake <- Subvariables(.setup@variables[1:3])
+                    expect_error(subvariables(var) <- fake,
+                        "Can only reorder, not change, subvariables")
+                })
             })
         })
     })
