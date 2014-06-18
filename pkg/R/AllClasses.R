@@ -38,7 +38,6 @@ CrunchVariable <- setClass("CrunchVariable", contains="ShojiObject",
         tuple="VariableTuple"
     ), 
     prototype=prototype(readonly=FALSE, tuple=VariableTuple()))
-
 ##' @export
 NumericVariable <- setClass("NumericVariable", contains="CrunchVariable")
 ##' @export
@@ -49,9 +48,11 @@ TextVariable <- setClass("TextVariable", contains="CrunchVariable")
 ##' @export
 DatetimeVariable <- setClass("DatetimeVariable", contains="CrunchVariable")
 ##' @export
-CategoricalArrayVariable <- setClass("CategoricalArrayVariable", contains="CrunchVariable")
+CategoricalArrayVariable <- setClass("CategoricalArrayVariable",
+    contains="CrunchVariable")
 ##' @export
-MultipleResponseVariable <-setClass("MultipleResponseVariable", contains="CategoricalArrayVariable")
+MultipleResponseVariable <-setClass("MultipleResponseVariable",
+    contains="CategoricalArrayVariable")
 
 ##' @export
 VariableGrouping <- setClass("VariableGrouping", contains="list")
@@ -90,4 +91,4 @@ Categories <- setClass("Categories", contains="list")
 ##' @export
 Category <- setClass("Category", contains="namedList")
 
-
+Subvariables <- setClass("Subvariables", contains="ShojiCatalog")
