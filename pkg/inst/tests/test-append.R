@@ -283,7 +283,7 @@ if (!run.only.local.tests) {
                     expect_identical(names(subvariables(var1)),
                         c("mr_1", "mr_2"))
                     expect_true(is.Multiple(var2))
-                    expect_identical(names(subvariables(var1)),
+                    expect_identical(names(subvariables(var2)),
                         c("mr_2", "mr_3"))
                 })
                 test_that("arrays with different subvariables can append", {
