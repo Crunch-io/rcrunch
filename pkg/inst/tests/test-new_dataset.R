@@ -1,28 +1,25 @@
 context("Making a new dataset")
 
-testfile <- system.file("fake.csv", package="rcrunch", mustWork=TRUE)
-localdf <- read.csv(testfile)
-
 test_that("fake.csv is what we expect", {
-    expect_identical(dim(localdf), c(20L, 6L))
+    expect_identical(dim(testfile.df), c(20L, 6L))
 })
 
 if (!run.only.local.tests) {
     test_that("Source file cannot be uploaded if not logged in", {
         logout()
-        expect_error(createSource(testfile), 
+        expect_error(createSource(testfile.csv), 
             "You must authenticate before making this request")
     })
     test_that("Dataset container object cannot be created if not logged in", {
         logout()
-        expect_error(createDataset("testfile"), 
+        expect_error(createDataset("testfile.csv"), 
             "You must authenticate before making this request")
     })
         
     with(test.authentication, {
         ## New dataset by file upload method
         test_that("Source file can be uploaded if logged in", {
-            expect_true(createSource(testfile, 
+            expect_true(createSource(testfile.csv, 
                 response.handler=function (response) response$status_code==201))
         })
         test_that("Dataset container object can be created if logged in", {
@@ -31,7 +28,7 @@ if (!run.only.local.tests) {
             })
         })
         test_that("Source can be added to Dataset", {
-            source <- createSource(testfile)
+            source <- createSource(testfile.csv)
             with(test.dataset(), {
                 ds <- .setup
                 ds <- try(addSourceToDataset(ds, source))
@@ -41,11 +38,11 @@ if (!run.only.local.tests) {
             })
         })
         test_that("newDatasetFromFile creates a dataset", {
-            ds <- newDatasetFromFile(testfile, name=uniqueDatasetName())
+            ds <- newDatasetFromFile(testfile.csv, name=uniqueDatasetName())
                 expect_true(is.dataset(ds))
                 expect_identical(nrow(ds), 20L)
                 expect_identical(ncol(ds), 6L)
-                expect_equivalent(mean(ds[[2]]), mean(localdf[[2]]))
+                expect_equivalent(mean(ds[[2]]), mean(testfile.df[[2]]))
             delete(ds)
         })
         test_that("Dataset can be made from a data.frame by dumping a csv", {
@@ -59,7 +56,7 @@ if (!run.only.local.tests) {
             delete(testcrdf)
             ## Should also test doing this with a matrix
         })
-skip({        
+# skip({        
         ## New dataset by add variable API
         test_that("newDataset by addVariables", {
             expect_error(newDataset(NULL), 
@@ -124,7 +121,7 @@ skip({
             delete(testdf)
             expect_false(dsname %in% listDatasets())
         })
-})
+# })
     })
 }
 

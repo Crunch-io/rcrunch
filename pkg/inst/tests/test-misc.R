@@ -45,7 +45,13 @@ test_that("SUTD", {
     with(tester, {
         expect_false(is.null(a))
         expect_false(a)
-        stop(call.=FALSE)
+        stop("Testing error handling, please ignore", call.=FALSE)
     })
     expect_true(a)
+})
+
+test_that("rethrow a caught error", {
+    e <- try(stop("error in a box", call.=FALSE), silent=TRUE)
+    expect_true(is.error(e))
+    expect_error(rethrow(e), "error in a box")
 })

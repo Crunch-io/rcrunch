@@ -6,7 +6,7 @@ if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(), {
             ds <- .setup
-            with(timed.HTTP("timings.tsv"), {
+            with(timed.HTTP("hierarchical_timings.tsv"), {
                 for (i in as.vector(outer(letters, letters, FUN=paste0))) {
                     ds[[i]] <- rnorm(5)
                 }
@@ -15,3 +15,19 @@ if (!run.only.local.tests) {
     })
 }
 })
+
+
+mockArrayDataset <- function (nvars, nsubvars=5, nrows=3) {
+    ds <- rcrunch:::createDataset(name=paste("Arrays", rcrunch:::now()))
+    for (i in as.vector(outer(letters, letters, FUN=paste0))[seq_len(nvars)]) {
+        rcrunch:::POSTNewVariable(ds@urls$variables_url, list(
+            name=i,
+            type="categorical_array",
+            subvariables=lapply(seq_len(nsubvars),
+                function (x) toVariable(as.factor(seq_len(nrows)), 
+                    name=paste(i, x, sep="_")))
+        ))
+    }
+    invisible(refresh(ds))
+}
+

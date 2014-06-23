@@ -46,6 +46,8 @@ setGeneric("entity", function (x) standardGeneric("entity"))
 setGeneric("active", function (x) standardGeneric("active"))
 setGeneric("hidden", function (x) standardGeneric("hidden"))
 setGeneric("archived", function (x) standardGeneric("archived"))
+setGeneric("imported", function (x) standardGeneric("imported"))
+setGeneric("pending", function (x) standardGeneric("pending"))
 
 setGeneric("dim")
 setGeneric("ncol")

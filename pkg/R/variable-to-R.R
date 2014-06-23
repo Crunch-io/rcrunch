@@ -6,7 +6,6 @@ getValues <- function (x, ...) {
     } else {
         return(GET(url))
     }
-    
 }
 
 ##' as.vector methods for Crunch variables
