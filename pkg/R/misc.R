@@ -1,5 +1,7 @@
 is.error <- function (x) inherits(x, "try-error")
 
+rethrow <- function (x) stop(attr(x, "condition"))
+
 updateList <- function (x, y) {
     x[names(y)] <- y
     return(x)
@@ -83,3 +85,5 @@ serialPaste <- function (x, collapse="and") {
 	join.with <- ifelse(length(x)>2, ", ", " ")
 	return(paste(x, collapse=join.with))
 }
+
+now <- function () strftime(Sys.time(), usetz=TRUE)

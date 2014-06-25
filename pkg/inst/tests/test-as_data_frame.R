@@ -17,7 +17,6 @@ with(fake.HTTP, {
     test_that("as.vector on Variables", {
         expect_true(is.numeric(getValues(test.ds$birthyr)))
         expect_false(is.factor(getValues(test.ds$gender)))
-        expect_true(all(getValues(test.ds$gender) %in% names(categories(test.ds$gender))))
         expect_true(is.factor(as.vector(test.ds$gender)))
         expect_true(all(levels(as.vector(test.ds$gender)) %in% names(categories(test.ds$gender))))
     })

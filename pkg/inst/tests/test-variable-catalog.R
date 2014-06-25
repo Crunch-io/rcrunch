@@ -25,7 +25,7 @@ with(fake.HTTP, {
         expect_identical(active(varcat)@index,
             varcat@index[entities(ordering(varcat))])
         expect_identical(hidden(varcat)@index, list())
-        varcat@index[[2]]$discarded <- TRUE
+        varcat@index[[5]]$discarded <- TRUE
         expect_true(inherits(active(varcat), "VariableCatalog"))
         expect_true(inherits(hidden(varcat), "VariableCatalog"))
         expect_identical(names(active(varcat)@index), 
@@ -37,7 +37,7 @@ with(fake.HTTP, {
         expect_identical(names(hidden(varcat)@index),
             "api/datasets/dataset1/variables/birthyr.json")
         expect_identical(length(hidden(varcat)), 1L)
-        expect_identical(length(varcat), 5L)
+        expect_identical(length(varcat), 8L)
         expect_identical(active(hidden(varcat)), hidden(active(varcat)))
     })
     

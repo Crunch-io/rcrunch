@@ -102,7 +102,7 @@ handleAPIerror <- function (response) {
         } else if (crunchIsDown(response)) {
             stop("Cannot connect to Crunch API", call.=FALSE)
         } else {
-            stop(attr(response, "condition"))
+            rethrow(response)
         }
     }
     return(response)    

@@ -47,15 +47,18 @@ addFakeHTTPVerbs <- function () {
     http_verbs$POST <- function (...) invisible()
 }
 
-timed.HTTP <- function (filename=tmpfile(), append=FALSE) {
-    return(setup.and.teardown(function () {
+## Mock backend
+fake.HTTP <- setup.and.teardown(addFakeHTTPVerbs, addRealHTTPVerbs)
+
+timingTracer <- function (filename=tempfile(), append=FALSE) {
+    return(function () {
         suppressMessages(trace("crunchAPI", 
             exit=quote(cat(paste(c(http.verb, url, x$status_code,
                 ifelse(is.null(x$headers$`content-length`), 
                 NA, x$headers$`content-length`), 
                 format(x$times, scientific=FALSE)),
                 collapse="\t"), "\n")),
-            print=FALSE, where=crunchConfig))
+            print=FALSE, where=CrunchDataset))
         message("Writing HTTP timings to ", filename)
         sink(filename, append=append)
         if (!append) {
@@ -63,31 +66,37 @@ timed.HTTP <- function (filename=tmpfile(), append=FALSE) {
                 "namelookup", "connect", "pretransfer", "starttransfer", "total",
                 sep="\t"), "\n")
         }
-    }, function () {
-        sink()
-        suppressMessages(untrace("crunchAPI", where=crunchConfig))
-    }))
+    })
 }
 
-## Mock backend
-fake.HTTP <- setup.and.teardown(addFakeHTTPVerbs, addRealHTTPVerbs)
+startTiming <- function (filename=tempfile(), append=FALSE) {
+    timingTracer(filename, append)()
+}
+
+stopTiming <- function () {
+    sink()
+    suppressMessages(untrace("crunchAPI", where=CrunchDataset))
+}
+
+timed.HTTP <- function (filename=tempfile(), append=FALSE) {
+    return(setup.and.teardown(timingTracer(filename, append), stopTiming))
+}
 
 ## Auth setup-teardown
 test.authentication <- setup.and.teardown(
     function () suppressMessages(login()), 
     logout)
 
-uniqueDatasetName <- function () {
-    strftime(Sys.time(), usetz=TRUE)
-}
+uniqueDatasetName <- now
+
 ## Create a test dataset and then destroy it after tests
 datasets_to_purge <- c()
 new.dataset.with.setup <- function (df=NULL, ...) {
-    now <- uniqueDatasetName()
+    unique.name <- uniqueDatasetName()
     if (is.null(df)) {
-        out <- createDataset(name=now, ...)
+        out <- createDataset(name=unique.name, ...)
     } else {
-        out <- newDataset(df, name=now, ...)
+        out <- newDataset(df, name=unique.name, ...)
     }
     datasets_to_purge <<- c(datasets_to_purge, self(out))
     return(out)
@@ -123,3 +132,6 @@ mrdf <- data.frame(mr_1=c(1,0,1,NA_real_),
                    mr_3=c(0,0,1,NA_real_),
                    v4=as.factor(LETTERS[2:3]),
                    stringsAsFactors=FALSE)
+
+testfile.csv <- system.file("fake.csv", package="rcrunch", mustWork=TRUE)
+testfile.df <- read.csv(testfile.csv)

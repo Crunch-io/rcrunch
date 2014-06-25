@@ -2,8 +2,7 @@
     "element": "shoji:entity",
     "self": "api/datasets/dataset1/variables/textVar.json",
     "body": {
-        "type": "text",
-        "tags": ["tag 1"]
+        "type": "text"
     },
     "urls": {
         "summary_url": "api/datasets/dataset1/variables/textVar/summary.json",

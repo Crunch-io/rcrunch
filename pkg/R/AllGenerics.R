@@ -26,6 +26,9 @@ setGeneric("postUpload",
 
 setGeneric("categories", function (x) standardGeneric("categories"))
 setGeneric("categories<-", function (x, value) standardGeneric("categories<-"))
+setGeneric("subvariables", function (x) standardGeneric("subvariables"))
+setGeneric("subvariables<-", 
+    function (x, value) standardGeneric("subvariables<-"))
 setGeneric("datasetReference", function (x) standardGeneric("datasetReference"))
 setGeneric("hide", function (x) standardGeneric("hide"))
 setGeneric("unhide", function (x) standardGeneric("unhide"))
@@ -43,6 +46,8 @@ setGeneric("entity", function (x) standardGeneric("entity"))
 setGeneric("active", function (x) standardGeneric("active"))
 setGeneric("hidden", function (x) standardGeneric("hidden"))
 setGeneric("archived", function (x) standardGeneric("archived"))
+setGeneric("imported", function (x) standardGeneric("imported"))
+setGeneric("pending", function (x) standardGeneric("pending"))
 
 setGeneric("dim")
 setGeneric("ncol")

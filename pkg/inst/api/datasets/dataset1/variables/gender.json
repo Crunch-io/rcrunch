@@ -7,7 +7,6 @@
                 "digits": 2
             }
         },
-        "tags": [],
         "missing_reasons": {
             "No Data": -1,
             "Skipped": 3,

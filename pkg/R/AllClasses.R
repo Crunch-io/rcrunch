@@ -6,6 +6,7 @@
 ##' CrunchDataset.
 ShojiObject <- setClass("ShojiObject",
     representation(
+        readonly="logical",
         element="ANY",
         self="ANY",
         description="ANY",
@@ -14,7 +15,8 @@ ShojiObject <- setClass("ShojiObject",
         catalogs="ANY",
         specification="ANY",
         views="ANY"
-    ))
+    ),
+    prototype=prototype(readonly=FALSE))
 
 ShojiCatalog <- setClass("ShojiCatalog", contains="ShojiObject", 
     representation(
@@ -36,7 +38,6 @@ CrunchVariable <- setClass("CrunchVariable", contains="ShojiObject",
         tuple="VariableTuple"
     ), 
     prototype=prototype(readonly=FALSE, tuple=VariableTuple()))
-
 ##' @export
 NumericVariable <- setClass("NumericVariable", contains="CrunchVariable")
 ##' @export
@@ -47,9 +48,11 @@ TextVariable <- setClass("TextVariable", contains="CrunchVariable")
 ##' @export
 DatetimeVariable <- setClass("DatetimeVariable", contains="CrunchVariable")
 ##' @export
-CategoricalArrayVariable <- setClass("CategoricalArrayVariable", contains="CrunchVariable")
+CategoricalArrayVariable <- setClass("CategoricalArrayVariable",
+    contains="CrunchVariable")
 ##' @export
-MultipleResponseVariable <-setClass("MultipleResponseVariable", contains="CategoricalArrayVariable")
+MultipleResponseVariable <-setClass("MultipleResponseVariable",
+    contains="CategoricalArrayVariable")
 
 ##' @export
 VariableGrouping <- setClass("VariableGrouping", contains="list")
@@ -62,6 +65,7 @@ VariableGroup <- setClass("VariableGroup", representation=representation(
 VariableCatalog <- setClass("VariableCatalog", contains="ShojiCatalog",
     representation(order="VariableGrouping"))
 DatasetCatalog <- setClass("DatasetCatalog", contains="ShojiCatalog")
+BatchCatalog <- setClass("BatchCatalog", contains="ShojiCatalog")
 
 default.useAlias <- function () {
     opt <- getOption("crunch.useAlias")
@@ -71,14 +75,12 @@ default.useAlias <- function () {
 ##' @export
 CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
     representation=representation(
-        readonly="logical",
         useAlias="logical",
         .nrow="numeric",
         variables="VariableCatalog",
         tuple="DatasetTuple"
     ), 
     prototype=prototype(
-        readonly=FALSE,
         useAlias=default.useAlias(),
         .nrow=numeric(1),
         variables=VariableCatalog(),
@@ -89,4 +91,4 @@ Categories <- setClass("Categories", contains="list")
 ##' @export
 Category <- setClass("Category", contains="namedList")
 
-
+Subvariables <- setClass("Subvariables", contains="ShojiCatalog")
