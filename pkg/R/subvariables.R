@@ -33,3 +33,11 @@ setMethod("names<-", "Subvariables", function (x, value) {
     PATCH(self(x), body=toJSON(x@index))
     return(x)
 })
+
+setMethod("[[", c("Subvariables", "character"), function (x, i, ...) {
+    VariableTuple(index_url=self(x), entity_url=i, body=x@index[[i]])
+})
+setMethod("[[", c("Subvariables", "ANY"), function (x, i, ...) {
+    VariableTuple(index_url=self(x), entity_url=names(x@index)[i],
+        body=x@index[[i]])
+})

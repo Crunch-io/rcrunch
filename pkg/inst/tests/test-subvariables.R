@@ -26,6 +26,11 @@ with(fake.HTTP, {
         expect_error(subvariables(mr) <- subvariables(mr)[1:2], 
             "Can only reorder, not change, subvariables")
     })
+    
+    test_that("can extract a subvariable as a Variable", {
+        expect_true(inherits(subvariables(mr)[[1]], "VariableTuple"))
+        expect_true(is.Categorical(entity(subvariables(mr)[[1]])))
+    })
 })
 
 if (!run.only.local.tests) {
