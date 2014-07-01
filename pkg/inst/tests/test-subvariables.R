@@ -44,6 +44,22 @@ with(fake.HTTP, {
         expect_true(is.Categorical(entity(subvariables(mr)$Second)))
         expect_true(is.null(subvariables(mr)$Other))
     })
+    
+    test_that("can extract directly from array variable", {
+        expect_true(inherits(mr[[1]], "VariableTuple"))
+        expect_true(is.Categorical(entity(mr[[1]])))
+        expect_true(inherits(mr[["Second"]], "VariableTuple"))
+        expect_true(is.Categorical(entity(mr[["Second"]])))
+        expect_true(inherits(mr$Second, "VariableTuple"))
+        expect_true(is.Categorical(entity(mr$Second)))
+        expect_true(is.null(mr$Other))
+        
+        expect_true(inherits(mr[1:2], "Subvariables"))
+        expect_true(inherits(mr[c("First", "Last")],
+            "Subvariables"))
+        expect_error(mr[c("First", "Other")],
+            "Undefined subvariables selected")
+    })
 })
 
 if (!run.only.local.tests) {

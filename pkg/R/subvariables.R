@@ -52,3 +52,12 @@ setMethod("[", c("Subvariables", "character"), function (x, i, ...) {
     }
     callNextMethod(x, w, ...)
 })
+
+setMethod("[", "CategoricalArrayVariable", function (x, i, ...) {
+    return(subvariables(x)[i, ...])
+})
+setMethod("[[", "CategoricalArrayVariable", function (x, i, ...) {
+    return(subvariables(x)[[i, ...]])
+})
+setMethod("$", "CategoricalArrayVariable", 
+    function (x, name) subvariables(x)[[name]])
