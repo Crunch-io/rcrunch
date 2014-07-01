@@ -35,9 +35,20 @@ setMethod("names<-", "Subvariables", function (x, value) {
 })
 
 setMethod("[[", c("Subvariables", "character"), function (x, i, ...) {
-    VariableTuple(index_url=self(x), entity_url=i, body=x@index[[i]])
+    i <- match(i, names(x))
+    if (is.na(i)) return(NULL)
+    callNextMethod(x, i, ...)    
 })
 setMethod("[[", c("Subvariables", "ANY"), function (x, i, ...) {
     VariableTuple(index_url=self(x), entity_url=names(x@index)[i],
         body=x@index[[i]])
+})
+setMethod("$", "Subvariables", function (x, name) x[[name]])
+
+setMethod("[", c("Subvariables", "character"), function (x, i, ...) {
+    w <- match(i, names(x))
+    if (any(is.na(w))) {
+        stop("Undefined subvariables selected: ", serialPaste(i[is.na(w)]))
+    }
+    callNextMethod(x, w, ...)
 })

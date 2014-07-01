@@ -20,6 +20,14 @@ with(fake.HTTP, {
         expect_error(names(subvariables(mr)) <- c("First", "First", "First"))
     })
     
+    test_that("[.Subvariables", {
+        expect_true(inherits(subvariables(mr)[1:2], "Subvariables"))
+        expect_true(inherits(subvariables(mr)[c("First", "Last")],
+            "Subvariables"))
+        expect_error(subvariables(mr)[c("First", "Other")],
+            "Undefined subvariables selected")
+    })
+    
     test_that("subvariable setter validation", {
         expect_error(subvariables(mr) <- Subvariables(), 
             "Can only reorder, not change, subvariables")
@@ -30,6 +38,11 @@ with(fake.HTTP, {
     test_that("can extract a subvariable as a Variable", {
         expect_true(inherits(subvariables(mr)[[1]], "VariableTuple"))
         expect_true(is.Categorical(entity(subvariables(mr)[[1]])))
+        expect_true(inherits(subvariables(mr)[["Second"]], "VariableTuple"))
+        expect_true(is.Categorical(entity(subvariables(mr)[["Second"]])))
+        expect_true(inherits(subvariables(mr)$Second, "VariableTuple"))
+        expect_true(is.Categorical(entity(subvariables(mr)$Second)))
+        expect_true(is.null(subvariables(mr)$Other))
     })
 })
 
