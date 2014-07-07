@@ -49,8 +49,8 @@ if (!run.only.local.tests) {
                 rt2 <- rt
                 rt2$name <- "something else"
                 expect_false(identical(rt2, rt))
-                expect_false(identical(rt2, refresh(rt2)))
-                expect_identical(refresh(rt2), rt)
+                expect_true(identical(rt2, refresh(rt2)))
+                expect_identical(refresh(rt), rt2)
             })
         })
     })

@@ -17,7 +17,7 @@ getNrow <- function (dataset, filtered=TRUE) {
     ## use filtered by default because every other request will take the applied filter
     
     summary_url <- dataset@urls$summary_url
-    nrows <- as.integer(round(GET(summary_url)$rows[[which.count]]))
+    nrows <- as.integer(round(GET(summary_url)$unweighted[[which.count]]))
     return(nrows)
 }
 
