@@ -40,8 +40,12 @@ setMethod("[[", c("Subvariables", "character"), function (x, i, ...) {
     callNextMethod(x, i, ...)    
 })
 setMethod("[[", c("Subvariables", "ANY"), function (x, i, ...) {
-    VariableTuple(index_url=self(x), entity_url=names(x@index)[i],
+    out <- VariableTuple(index_url=self(x), entity_url=names(x@index)[i],
         body=x@index[[i]])
+    if (!is.null(out)) {
+        out <- entity(out)
+    }
+    return(out)
 })
 setMethod("$", "Subvariables", function (x, name) x[[name]])
 
@@ -52,6 +56,9 @@ setMethod("[", c("Subvariables", "character"), function (x, i, ...) {
     }
     callNextMethod(x, w, ...)
 })
+
+##' @S3method as.list Subvariables
+as.list.Subvariables <- function (x, ...) lapply(names(x), function (i) x[[i]])
 
 setMethod("[", "CategoricalArrayVariable", function (x, i, ...) {
     return(subvariables(x)[i, ...])
