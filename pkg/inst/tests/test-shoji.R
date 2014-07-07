@@ -18,7 +18,6 @@ test_that("ShojiObject init and is", {
     sh <- ShojiObject(element=1, self=2, description=3, foo=4, junk=5,
         body=list(a=12, f=66))
     expect_identical(sh@self, 2)
-    expect_identical(sh$a, 12)
 })
 
 test_that("shoji S3 to ShojiObject", {
@@ -47,10 +46,10 @@ if (!run.only.local.tests) {
                 rt <- .setup
                 expect_identical(rt, refresh(rt))
                 rt2 <- rt
-                rt2$name <- "something else"
+                rt2@body$name <- "something else"
                 expect_false(identical(rt2, rt))
-                expect_true(identical(rt2, refresh(rt2)))
-                expect_identical(refresh(rt), rt2)
+                expect_false(identical(rt2, refresh(rt2)))
+                expect_identical(refresh(rt2), rt)
             })
         })
     })

@@ -12,7 +12,7 @@ addVariable <- function (dataset, values, ...) {
         toVariable(values, ...))
     dataset <- refresh(dataset) ## would like not to do this
     # variable <- as.variable(GET(var_url))
-    # dataset@.Data[[variable$alias]] <- variable
+    # dataset@.Data[[variable@body$alias]] <- variable
     invisible(dataset)
 }
 

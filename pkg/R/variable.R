@@ -1,6 +1,6 @@
 init.CategoricalVariable <- function (.Object, ...) {
     .Object <- callNextMethod()
-    .Object$categories <- Categories(.Object$categories)
+    .Object@body$categories <- Categories(.Object@body$categories)
     return(.Object)
 }
 setMethod("initialize", "CategoricalVariable", init.CategoricalVariable)
@@ -34,7 +34,7 @@ is.Datetime <- function (x) inherits(x, "DatetimeVariable")
 
 ##' @rdname crunch-is
 ##' @export
-is.Multiple <- is.MR <- is.MultipleResponse <- function (x) inherits(x, "MultipleResponseVariable")
+is.Multiple <- function (x) inherits(x, "MultipleResponseVariable")
 
 ##' @rdname crunch-is
 ##' @export
@@ -104,8 +104,9 @@ setMethod("description<-", "CrunchVariable",
 
 ##' @export
 setMethod("categories", "CrunchVariable", function (x) NULL)
-setMethod("categories", "CategoricalVariable", function (x) x$categories)
-setMethod("categories", "CategoricalArrayVariable", function (x) x$categories)
+setMethod("categories", "CategoricalVariable", function (x) x@body$categories)
+setMethod("categories", "CategoricalArrayVariable",
+    function (x) x@body$categories)
 
 ##' @export
 setMethod("categories<-", "CategoricalVariable", 
@@ -138,7 +139,7 @@ unbind <- function (x) {
 }
 
 setMethod("delete", "CategoricalArrayVariable", function (x) {
-    subvars <- x$subvariables
+    subvars <- x@body$subvariables
     out <- DELETE(self(x))
     lapply(subvars, DELETE)
     invisible(out)
