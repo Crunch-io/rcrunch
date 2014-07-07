@@ -58,6 +58,17 @@ setMethod("delete", "ShojiObject", function (x) invisible(DELETE(self(x))))
 ##' @export
 setMethod("delete", "ANY", function (x) stop("'delete' only valid for Crunch objects"))
 
+setMethod("$", "ShojiObject", function (x, name) x@body[[name]]) 
+setMethod("$<-", "ShojiObject", function (x, name, value) {
+    x@body[[name]] <- value
+    return(x)
+})
+setMethod("[[", "ShojiObject", function (x, i) x@body[[i]])
+setMethod("[[<-", "ShojiObject", function (x, i, value) {
+    x@body[[i]] <- value
+    return(x)
+})
+
 ##' Base setter for Crunch objects
 ##' @param x a ShojiObject or subclass thereof
 ##' @param i character the slot name to update
