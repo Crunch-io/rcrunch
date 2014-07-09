@@ -17,8 +17,8 @@ test_that("Conflict messages are formatted correctly", {
         ),
         var1=list(
             list(
-                message="Also no good",
-                resolution="Also fixed"
+                message="No good",
+                resolution="But I fixed it already"
             ), 
             list(
                 message="Oh, and there was another problem",
@@ -26,12 +26,19 @@ test_that("Conflict messages are formatted correctly", {
             )
         )
     )
+    expect_equivalent(flattenConflicts(c3), 
+        data.frame(
+            message=c("No good", "No good", "Oh, and there was another problem"),
+            resolution=c("But I fixed it already", "But I fixed it already", "But it's also cool"),
+            url=c("var2", "var1", "var1"),
+            stringsAsFactors=FALSE))
+    
     expect_identical(formatConflicts(c1), "No conflicts.")
     expect_identical(formatConflicts(c2), 
-        "var1: Conflict: No good; Resolution: But I fixed it already")
+        paste("Conflict: No good; Resolution: But I fixed it already; 1 variable:", dQuote("var1")))
     expect_identical(formatConflicts(c3), 
-        c("var2: Conflict: No good; Resolution: But I fixed it already",
-        "var1: (1) Conflict: Also no good; Resolution: Also fixed\n(2) Conflict: Oh, and there was another problem; Resolution: But it's also cool"))
+        c(paste("Conflict: No good; Resolution: But I fixed it already; 2 variables:", dQuote("var2"), "and", dQuote("var1")),
+        paste("Conflict: Oh, and there was another problem; Resolution: But it's also cool; 1 variable:", dQuote("var1"))))
     
 })
 
