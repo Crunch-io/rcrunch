@@ -45,14 +45,55 @@ loadDataset <- function (dataset.name, kind=c("active", "all", "archived"), useA
     return(dataset)
 }
 
-selectDatasetFromCatalog <- function (dsname, catalog) {
+selectDatasetFromCatalog <- function (dsname, catalog, strict=FALSE) {
     found <- which(names(catalog) %in% dsname)
     if (length(found)==0) {
-        stop(paste(dsname, "not found"), call.=FALSE)
+        stop(paste(dQuote(dsname), "not found"), call.=FALSE)
     } else if (length(found) > 1) {
-        warning("Datasets with duplicate names found. Returning first match.",
-            call.=FALSE)
-        # stop("Datasets with duplicate names found. Cannot select by name.", call.=FALSE)
+        if (strict) {
+            stop("Datasets with duplicate names found. Cannot select by name.",
+                call.=FALSE)
+        } else {
+            warning(paste("Datasets with duplicate names found.",
+                "Returning first match."), call.=FALSE)
+        }
     } 
     return(found[1])
+}
+
+##' Delete a dataset from the dataset list
+##'
+##' This function lets you delete a dataset without first loading it. If you
+##' have a dataset that somehow is corrupted and won't load, you can delete it
+##' this way. 
+##'
+##' The function also works on CrunchDataset objects, just like
+##' \code{\link{delete}}, which may be useful if you have loaded another 
+##' package that masks the \code{delete} method.
+##' @param x The name (character) of a dataset, its (numeric) position in the
+##' return of \code{\link{listDatasets}}, or an object of class
+##' \code{CrunchDataset}. x can only be of length 1--this function is not 
+##' vectorized (for your protection).
+##' @return (Invisibly) the API response from deleting the dataset
+##' @export
+deleteDataset <- function (x) {
+    if (is.dataset(x)) {
+        out <- delete(x)
+    } else {
+        if (!is.numeric(x)) {
+            x <- selectDatasetFromCatalog(x, datasetCatalog(), strict=TRUE)
+        }
+        stopifnot(length(x) == 1)
+        
+        ds.tuple <- datasetCatalog()[[x]]
+        if (interactive()) {
+            message(paste("Deleting dataset", dQuote(name(ds.tuple)), 
+                "in 5 seconds. Press ctrl-C to abort."))
+            Sys.sleep(5)
+        }
+        out <- DELETE(ds.tuple@entity_url)
+    }
+
+    updateDatasetList()
+    invisible(out)
 }

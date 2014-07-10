@@ -55,8 +55,8 @@ if (!run.only.local.tests) {
 
             test_that("A dataset object can be retrieved, if it exists", {
                 expect_true(is.dataset(loadDataset(dsname)))
-                expect_error(loadDataset("this is totally not a dataset", 
-                    "this is totally not a dataset not found"))
+                expect_error(loadDataset("this is totally not a dataset"), 
+                    paste(dQuote("this is totally not a dataset"), "not found"))
                 dsnum <- which(listDatasets() %in% dsname)
                 expect_true(is.numeric(dsnum))
                 expect_true(is.dataset(loadDataset(dsnum)))
@@ -66,6 +66,40 @@ if (!run.only.local.tests) {
                 expect_equal(loadDataset(dsname)@useAlias,
                     default.useAlias())
                 expect_false(loadDataset(dsname, useAlias=FALSE)@useAlias)
+            })
+            
+            test_that("deleteDataset by name", {
+                expect_error(deleteDataset("this is totally not a dataset", 
+                    paste(dQuote("this is totally not a dataset"), "not found")))
+                out <- try(deleteDataset(dsname))
+                expect_false(is.error(out))
+                expect_false(dsname %in% listDatasets())
+            })
+        })
+        
+        with(test.dataset(df), {
+            ds <- .setup
+            dsname <- name(ds)
+            dsnum <- which(listDatasets() %in% dsname)
+            test_that("deleteDataset by index", {
+                expect_true(dsname %in% listDatasets())
+                
+                expect_error(deleteDataset(dsnum + 9999), 
+                    "subscript out of bounds")
+                out <- try(deleteDataset(dsnum))
+                expect_false(is.error(out))
+                expect_false(dsname %in% listDatasets())
+            })
+        })
+        
+        with(test.dataset(df), {
+            ds <- .setup
+            dsname <- name(ds)
+            test_that("deleteDataset on Dataset object", {
+                expect_true(dsname %in% listDatasets())
+                out <- try(deleteDataset(ds))
+                expect_false(is.error(out))
+                expect_false(dsname %in% listDatasets())
             })
         })
     })
