@@ -21,12 +21,11 @@ POSTNewVariable <- function (collection_url, variable) {
     do.POST <- function (x) POST(collection_url, body=toJSON(x, digits=15))
     
     if (variable$type %in% c("multiple_response", "categorical_array")) {
-        ## assumes: array of subvariables included, and if MR, at least one category has selected: TRUE
+        ## assumes: array of subvariables included, and if MR, at least one
+        ## category has selected: TRUE
         ## TODO: make the data import API take array types directly
-        subvars <- variable$subvariables
-        variable$subvariables <- NULL
-        
-        var_urls <- lapply(subvars, function (x) try(do.POST(x)))
+
+        var_urls <- lapply(variable$subvariables, function (x) try(do.POST(x)))
         errs <- vapply(var_urls, is.error, logical(1))
         if (any(errs)) {
             # Delete subvariables that were added, then raise
@@ -34,7 +33,7 @@ POSTNewVariable <- function (collection_url, variable) {
             stop("Subvariables errored on upload", call.=FALSE)
         }
         # Else prepare to POST array definition
-        variable$variables <- I(unlist(var_urls))
+        variable$subvariables <- I(unlist(var_urls))
     } else if (variable$type == "categorical") {
         Categories(variable$categories) ## will error if cats are invalid
     }
