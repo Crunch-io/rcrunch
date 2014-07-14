@@ -1,0 +1,34 @@
+context("Update a dataset")
+
+## For functional transformations, distinguish between "do this update to fix this data once" and "do this to every batch I append too"?
+
+if (!run.only.local.tests) {
+    with(test.authentication, {
+        with(test.dataset(df), {
+            ds <- .setup
+            test_that("Can update numeric variable with values", {
+                try(ds$v3 <- 9:28)
+                expect_true(all((as.vector(ds$v3) - df$v2) == 1))
+            })
+            
+            test_that("Value recycling on insert is consistent with R", {
+                try(ds$v3 <- 1)
+                expect_true(all(as.vector(ds$v3) == 1))
+            })
+            
+            test_that("Can update numeric variable with filter and values", {
+                try(ds$v3[1:10] <- 2)
+                expect_equivalent(mean(ds$v3), 1.5)
+                try(ds$v3[ds$v3 == 1] <- 3)
+                expect_equivalent(mean(ds$v3), 2.5)
+                try(ds[ds$v3 == 2, "v3"] <- 4)
+                expect_equivalent(mean(ds$v3), 3.5)
+            })
+            
+            test_that("Can update numeric variable with expresssion", {
+                try(ds$v3 <- ds$v3 + 2)
+                expect_equivalent(as.vector(ds$v3), c(rep(6, 10), ))
+            })
+        })
+    })
+}
