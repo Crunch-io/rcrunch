@@ -101,6 +101,11 @@ setMethod("description", "CrunchVariable", function (x) tuple(x)$description)
 ##' @export
 setMethod("description<-", "CrunchVariable", 
     function (x, value) setTupleSlot(x, "description", value))
+##' @export
+setMethod("alias", "CrunchVariable", function (x) tuple(x)$alias)
+##' @export
+setMethod("alias<-", "CrunchVariable", 
+    function (x, value) setTupleSlot(x, "alias", value))
 
 ##' @export
 setMethod("categories", "CrunchVariable", function (x) NULL)

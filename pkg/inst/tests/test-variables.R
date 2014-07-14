@@ -46,6 +46,7 @@ with(fake.HTTP, {
     test_that("Tuple metadata", {
         expect_identical(name(ds$gender), "Gender")
         expect_identical(description(ds$starttime), "Interview Start Time")
+        expect_identical(alias(ds$gender), "gender")
     })
     
     test_that("refresh", {
@@ -85,6 +86,10 @@ if (!run.only.local.tests) {
                 expect_identical(description(v1), "asdf")
                 v1 <- refresh(v1)
                 expect_identical(description(v1), "asdf")
+                alias(v1) <- "Alias!"
+                expect_identical(alias(v1), "Alias!")
+                v1 <- refresh(v1)
+                expect_identical(alias(v1), "Alias!")
             })
         })
     })

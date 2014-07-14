@@ -45,3 +45,18 @@ setMethod("[[<-", c("VariableCatalog", "character", "missing", "CrunchVariable")
        x[[i]] <- tuple(value)
        return(x)
    })
+
+setMethod("names", "VariableCatalog", function (x) {
+    vapply(x@index, function (a) a[["name"]], character(1), USE.NAMES=FALSE)
+})
+setMethod("names<-", "VariableCatalog", function (x, value) {
+    mapSetIndexSlot(x, "name", value)
+})
+##' @export
+setMethod("aliases", "VariableCatalog", function (x) {
+    vapply(x@index, function (a) a[["alias"]], character(1), USE.NAMES=FALSE)
+})
+##' @export
+setMethod("aliases<-", "VariableCatalog", function (x, value) {
+    mapSetIndexSlot(x, "alias", value)
+})

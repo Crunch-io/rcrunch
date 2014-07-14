@@ -22,7 +22,7 @@ setMethod("show", "CrunchVariable", function (object) {
 
 describeDatasetVariables <- function (dataset) {
     nk <- namekey(dataset)
-    return(vapply(active(dataset@variables), function (v) {
+    return(vapply(variables(dataset), function (v) {
         header <- paste0("$", v[[nk]], ":")
         paste(c(header, getNameAndType(v), "\n"), collapse=" ")
     }, character(1)))
