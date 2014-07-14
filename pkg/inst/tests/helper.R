@@ -105,7 +105,7 @@ new.dataset.with.setup <- function (df=NULL, ...) {
 purge <- function () {
     len <- length(datasets_to_purge)
     if (len) {
-        try(DELETE(datasets_to_purge[len]))
+        try(DELETE(datasets_to_purge[len]), silent=TRUE)
         datasets_to_purge <<- datasets_to_purge[-len]
     }
 }

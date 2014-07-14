@@ -34,7 +34,7 @@ is.Datetime <- function (x) inherits(x, "DatetimeVariable")
 
 ##' @rdname crunch-is
 ##' @export
-is.Multiple <- is.MR <- is.MultipleResponse <- function (x) inherits(x, "MultipleResponseVariable")
+is.Multiple <- function (x) inherits(x, "MultipleResponseVariable")
 
 ##' @rdname crunch-is
 ##' @export
@@ -101,11 +101,17 @@ setMethod("description", "CrunchVariable", function (x) tuple(x)$description)
 ##' @export
 setMethod("description<-", "CrunchVariable", 
     function (x, value) setTupleSlot(x, "description", value))
+##' @export
+setMethod("alias", "CrunchVariable", function (x) tuple(x)$alias)
+##' @export
+setMethod("alias<-", "CrunchVariable", 
+    function (x, value) setTupleSlot(x, "alias", value))
 
 ##' @export
 setMethod("categories", "CrunchVariable", function (x) NULL)
 setMethod("categories", "CategoricalVariable", function (x) x@body$categories)
-setMethod("categories", "CategoricalArrayVariable", function (x) x@body$categories)
+setMethod("categories", "CategoricalArrayVariable",
+    function (x) x@body$categories)
 
 ##' @export
 setMethod("categories<-", "CategoricalVariable", 

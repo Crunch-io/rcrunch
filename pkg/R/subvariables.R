@@ -33,3 +33,38 @@ setMethod("names<-", "Subvariables", function (x, value) {
     PATCH(self(x), body=toJSON(x@index))
     return(x)
 })
+
+setMethod("[[", c("Subvariables", "character"), function (x, i, ...) {
+    i <- match(i, names(x))
+    if (is.na(i)) return(NULL)
+    callNextMethod(x, i, ...)    
+})
+setMethod("[[", c("Subvariables", "ANY"), function (x, i, ...) {
+    out <- VariableTuple(index_url=self(x), entity_url=names(x@index)[i],
+        body=x@index[[i]])
+    if (!is.null(out)) {
+        out <- entity(out)
+    }
+    return(out)
+})
+setMethod("$", "Subvariables", function (x, name) x[[name]])
+
+setMethod("[", c("Subvariables", "character"), function (x, i, ...) {
+    w <- match(i, names(x))
+    if (any(is.na(w))) {
+        stop("Undefined subvariables selected: ", serialPaste(i[is.na(w)]))
+    }
+    callNextMethod(x, w, ...)
+})
+
+##' @S3method as.list Subvariables
+as.list.Subvariables <- function (x, ...) lapply(names(x), function (i) x[[i]])
+
+setMethod("[", "CategoricalArrayVariable", function (x, i, ...) {
+    return(subvariables(x)[i, ...])
+})
+setMethod("[[", "CategoricalArrayVariable", function (x, i, ...) {
+    return(subvariables(x)[[i, ...]])
+})
+setMethod("$", "CategoricalArrayVariable", 
+    function (x, name) subvariables(x)[[name]])

@@ -30,20 +30,41 @@ default.timeout <- function () {
 }
 
 formatConflicts <- function (x) {
+    ## x is list, keys are variable URLs, objects are arrays of objects with keys "message" and "resolution" (in R-speak, s/array/list/, s/object/list/, s/keys/names/)
     if (length(x)) {
-        return(mapply(function (i, m) paste0(i, ": ", formatConflictMessage(m)),
-            i=names(x), m=x, USE.NAMES=FALSE))
+        x <- groupConflicts(x)
+        return(vapply(x, formatConflictMessage, character(1), USE.NAMES=FALSE))
     } else {
         return("No conflicts.")
     }
 }
 
+groupConflicts <- function (x) {
+    ## reshape conflicts to be by conflict-resolution, not by variable
+    flat <- flattenConflicts(x)
+    ## split by message, then by resolution
+    return(unlist(lapply(split(flat, flat$message), 
+        function (x) split(x, x$resolution)), recursive=FALSE))
+}
+
+flattenConflicts <- function (x) {
+    ## flatten object to data.frame with url, message, resolution
+    out <- mapply(function (i, d) {
+        df <- do.call(rbind, lapply(d, as.data.frame, stringsAsFactors=FALSE))
+        df$url <- i
+        return(df)
+    }, i=names(x), d=x, SIMPLIFY=FALSE)
+    return(do.call(rbind, out))
+}
+
 formatConflictMessage <- function (x) {
-    x <- sapply(x, function (a) paste0("Conflict: ", a$message, "; Resolution: ",
-        a$resolution))
-    if (length(x) > 1) {
-        x <- paste0("(", seq_along(x), ") ", x, collapse="\n")
-    }
-    return(x)
+    ## receives a data.frame with variable URLs and common conflict and resolution
+    conflict <- paste("Conflict:", unique(x$message))
+    resolution <- paste("Resolution:", unique(x$resolution))
+    ## those should be length 1 by construction
+    
+    vars <- paste0(nrow(x), " variable", ifelse(nrow(x) > 1, "s", ""), ": ", 
+        serialPaste(dQuote(x$url)))
+    return(paste(conflict, resolution, vars, sep="; "))
 }
 

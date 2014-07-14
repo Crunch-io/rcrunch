@@ -20,11 +20,45 @@ with(fake.HTTP, {
         expect_error(names(subvariables(mr)) <- c("First", "First", "First"))
     })
     
+    test_that("[.Subvariables", {
+        expect_true(inherits(subvariables(mr)[1:2], "Subvariables"))
+        expect_true(inherits(subvariables(mr)[c("First", "Last")],
+            "Subvariables"))
+        expect_error(subvariables(mr)[c("First", "Other")],
+            "Undefined subvariables selected")
+    })
+    
     test_that("subvariable setter validation", {
         expect_error(subvariables(mr) <- Subvariables(), 
             "Can only reorder, not change, subvariables")
         expect_error(subvariables(mr) <- subvariables(mr)[1:2], 
             "Can only reorder, not change, subvariables")
+    })
+    
+    test_that("can extract a subvariable as a Variable", {
+        expect_true(inherits(subvariables(mr)[[1]], "CrunchVariable"))
+        expect_true(is.Categorical(subvariables(mr)[[1]]))
+        expect_true(inherits(subvariables(mr)[["Second"]], "CrunchVariable"))
+        expect_true(is.Categorical(subvariables(mr)[["Second"]]))
+        expect_true(inherits(subvariables(mr)$Second, "CrunchVariable"))
+        expect_true(is.Categorical(subvariables(mr)$Second))
+        expect_true(is.null(subvariables(mr)$Other))
+    })
+    
+    test_that("can extract directly from array variable", {
+        expect_true(inherits(mr[[1]], "CrunchVariable"))
+        expect_true(is.Categorical(mr[[1]]))
+        expect_true(inherits(mr[["Second"]], "CrunchVariable"))
+        expect_true(is.Categorical(mr[["Second"]]))
+        expect_true(inherits(mr$Second, "CrunchVariable"))
+        expect_true(is.Categorical(mr$Second))
+        expect_true(is.null(mr$Other))
+        
+        expect_true(inherits(mr[1:2], "Subvariables"))
+        expect_true(inherits(mr[c("First", "Last")],
+            "Subvariables"))
+        expect_error(mr[c("First", "Other")],
+            "Undefined subvariables selected")
     })
 })
 

@@ -15,7 +15,8 @@ test_that("ShojiObject init and is", {
     class(fo) <- "shoji"
     expect_false(is.shojiObject(fo))
     expect_true(is.shojiObject(ShojiObject(element=1, self=2, description=3, foo=4, junk=5)))
-    sh <- ShojiObject(element=1, self=2, description=3, foo=4, junk=5)
+    sh <- ShojiObject(element=1, self=2, description=3, foo=4, junk=5,
+        body=list(a=12, f=66))
     expect_identical(sh@self, 2)
 })
 

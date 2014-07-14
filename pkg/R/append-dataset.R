@@ -59,8 +59,7 @@ acceptAppendResolutions <- function (batch_url, dataset, confirm=interactive(), 
     batch <- ShojiObject(GET(batch_url))
     resolutions <- batch@body$conflicts
     ## Report on what was done/will be done
-    message(paste(formatConflicts(resolutions), collapse="\n"))
-    # cat(paste(formatConflicts(resolutions), collapse="\n"))
+    for (i in resolutions) message(i)
     
     if (status == "conflict") {
         ## message(the fatal conflicts)

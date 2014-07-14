@@ -56,4 +56,32 @@ with(fake.HTTP, {
     test_that("entity method for tuple", {
         expect_true(is.Categorical(entity(varcat[["api/datasets/dataset1/variables/gender.json"]])))
     })
+    
+    test_that("name and alias getters", {
+        expect_identical(names(varcat)[1:3], c("Gender", "Second", "First"))
+        expect_identical(aliases(varcat)[1:2], c("gender", "subvar1"))
+    })
 })
+
+if (!run.only.local.tests) {
+    with(test.authentication, {
+        with(test.dataset(df), {
+            ds <- .setup
+            test_that("can set names and aliases", {
+                n <- names(df)
+                expect_identical(names(variables(ds)), n)
+                expect_identical(aliases(variables(ds)), n)
+                names(variables(ds))[2:3] <- c("two", "three")
+                n2 <- n
+                n2[2:3] <- c("two", "three")
+                expect_identical(names(variables(ds)), n2)
+                expect_identical(names(variables(refresh(ds))), n2)
+                n3 <- n
+                n3[c(2,4)] <- c("due", "quattro")
+                aliases(variables(ds))[c(2,4)] <- c("due", "quattro")
+                expect_identical(aliases(variables(ds)), n3)
+                expect_identical(aliases(variables(refresh(ds))), n3)
+            })
+        })
+    })
+}

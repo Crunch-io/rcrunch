@@ -9,6 +9,17 @@ setIndexSlot <- function (x, i, value) {
     return(x)
 }
 
+mapSetIndexSlot <- function (x, i, value) {
+    if (length(value) == 1) value <- rep(value, length(x))
+    stopifnot(length(x) == length(value))
+    x@index <- mapply(function (a, v) {
+        a[[i]] <- v
+        return(a)
+    }, a=x@index, v=value, SIMPLIFY=FALSE)
+    PATCH(self(x), body=toJSON(x@index))
+    return(x)
+}
+
 setMethod("[", c("ShojiCatalog", "ANY"), function (x, i, ..., drop) {
    x@index <- x@index[i]
    return(x)

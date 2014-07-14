@@ -27,6 +27,15 @@ if (!run.only.local.tests) {
                     structure(c(B=sum(seq(8, 26, 2)), C=sum(seq(9, 27, 2))), 
                     class="table"))
             })
+            
+            test_that("If weight is set, dim() is still unweighted", {
+                weight(ds) <- NULL
+                expect_identical(nrow(ds), 20L)
+                weight(ds) <- ds$v3
+                expect_identical(nrow(ds), 20L)
+                ds <- refresh(ds)
+                expect_identical(nrow(ds), 20L)
+            })
         })
     })
 }

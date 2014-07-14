@@ -16,6 +16,12 @@ setGeneric("name<-", function (x, value) standardGeneric("name<-"),
 setGeneric("description", function (x) standardGeneric("description"))
 setGeneric("description<-",
     function (x, value) standardGeneric("description<-"), signature="x")
+setGeneric("alias", function (x) standardGeneric("alias"))
+setGeneric("alias<-", function (x, value) standardGeneric("alias<-"),
+    signature="x")
+setGeneric("aliases", function (x) standardGeneric("aliases"))
+setGeneric("aliases<-", function (x, value) standardGeneric("aliases<-"),
+    signature="x")
 
 setGeneric("type", function (x) standardGeneric("type"))
 setGeneric("type<-", function (x, value) standardGeneric("type<-"))
@@ -26,6 +32,8 @@ setGeneric("postUpload",
 
 setGeneric("categories", function (x) standardGeneric("categories"))
 setGeneric("categories<-", function (x, value) standardGeneric("categories<-"))
+setGeneric("variables", function (x) standardGeneric("variables"))
+setGeneric("variables<-", function (x, value) standardGeneric("variables<-"))
 setGeneric("subvariables", function (x) standardGeneric("subvariables"))
 setGeneric("subvariables<-", 
     function (x, value) standardGeneric("subvariables<-"))
