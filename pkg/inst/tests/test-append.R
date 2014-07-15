@@ -3,26 +3,37 @@ context("Append datasets")
 test_that("Conflict messages are formatted correctly", {
     c1 <- list()
     c2 <- list(var1=list(
-        list(
+        conflicts=list(list(
             message="No good",
             resolution="But I fixed it already"
+        )),
+        metadata=list(
+            name="First"
         )
     ))
     c3 <- list(
         var2=list(
-            list(
+            conflicts=list(list(
                 message="No good",
                 resolution="But I fixed it already"
+            )),
+            metadata=list(
+                name="Second"
             )
         ),
         var1=list(
-            list(
-                message="No good",
-                resolution="But I fixed it already"
-            ), 
-            list(
-                message="Oh, and there was another problem",
-                resolution="But it's also cool"
+            conflicts=list(
+                list(
+                    message="No good",
+                    resolution="But I fixed it already"
+                ), 
+                list(
+                    message="Oh, and there was another problem",
+                    resolution="But it's also cool"
+                )
+            ),
+            metadata=list(
+                name="First"
             )
         )
     )
@@ -31,14 +42,15 @@ test_that("Conflict messages are formatted correctly", {
             message=c("No good", "No good", "Oh, and there was another problem"),
             resolution=c("But I fixed it already", "But I fixed it already", "But it's also cool"),
             url=c("var2", "var1", "var1"),
+            name=c("Second", "First", "First"),
             stringsAsFactors=FALSE))
     
     expect_identical(formatConflicts(c1), "No conflicts.")
     expect_identical(formatConflicts(c2), 
-        paste("Conflict: No good; Resolution: But I fixed it already; 1 variable:", dQuote("var1")))
+        paste("Conflict: No good; Resolution: But I fixed it already; 1 variable:", dQuote("First")))
     expect_identical(formatConflicts(c3), 
-        c(paste("Conflict: No good; Resolution: But I fixed it already; 2 variables:", dQuote("var2"), "and", dQuote("var1")),
-        paste("Conflict: Oh, and there was another problem; Resolution: But it's also cool; 1 variable:", dQuote("var1"))))
+        c(paste("Conflict: No good; Resolution: But I fixed it already; 2 variables:", dQuote("Second"), "and", dQuote("First")),
+        paste("Conflict: Oh, and there was another problem; Resolution: But it's also cool; 1 variable:", dQuote("First"))))
     
 })
 

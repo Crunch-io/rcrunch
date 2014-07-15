@@ -50,8 +50,9 @@ groupConflicts <- function (x) {
 flattenConflicts <- function (x) {
     ## flatten object to data.frame with url, message, resolution
     out <- mapply(function (i, d) {
-        df <- do.call(rbind, lapply(d, as.data.frame, stringsAsFactors=FALSE))
+        df <- do.call(rbind, lapply(d$conflicts, as.data.frame, stringsAsFactors=FALSE))
         df$url <- i
+        df$name <- d$metadata$name
         return(df)
     }, i=names(x), d=x, SIMPLIFY=FALSE)
     return(do.call(rbind, out))
@@ -63,8 +64,10 @@ formatConflictMessage <- function (x) {
     resolution <- paste("Resolution:", unique(x$resolution))
     ## those should be length 1 by construction
     
+    varnames <- x$name
+    if (is.null(varnames)) varnames <- x$url
     vars <- paste0(nrow(x), " variable", ifelse(nrow(x) > 1, "s", ""), ": ", 
-        serialPaste(dQuote(x$url)))
+        serialPaste(dQuote(unique(varnames))))
     return(paste(conflict, resolution, vars, sep="; "))
 }
 
