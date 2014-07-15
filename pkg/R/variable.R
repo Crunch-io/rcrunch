@@ -143,7 +143,7 @@ unbind <- function (x) {
     invisible(DELETE(self(x)))
 }
 
-setMethod("delete", "CategoricalArrayVariable", function (x) {
+setMethod("delete", "CategoricalArrayVariable", function (x, ...) {
     subvars <- x@body$subvariables
     out <- DELETE(self(x))
     lapply(subvars, DELETE)

@@ -148,5 +148,20 @@ if (!run.only.local.tests) {
                     function (x) is.Categorical(x), logical(1))))
             })
         })
+        
+        test_that("Dataset deleting is safe", {
+            with(test.dataset(df), {
+                ds <- .setup
+                expect_error(delete(ds, confirm=TRUE), 
+                    "Must confirm deleting dataset")
+                ds.sub <- ds[1]
+                expect_true(is.dataset(ds.sub))
+                expect_true(is.readonly(ds.sub))
+                expect_error(delete(ds.sub), 
+                    "Must confirm deleting dataset")
+                ## Then can delete
+                expect_false(is.error(delete(ds.sub, confirm=FALSE)))
+            })
+        })
     })
 }
