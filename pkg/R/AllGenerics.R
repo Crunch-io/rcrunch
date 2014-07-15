@@ -43,7 +43,8 @@ setGeneric("unhide", function (x) standardGeneric("unhide"))
 
 setGeneric("self", function (x) standardGeneric("self"))
 setGeneric("refresh", function (x) standardGeneric("refresh"))
-setGeneric("delete", function (x) standardGeneric("delete"))
+setGeneric("delete", function (x, ...) standardGeneric("delete"),
+    signature="x")
 setGeneric("readonly<-", function (x, value) standardGeneric("readonly<-"))
 setGeneric("entities", function (x) standardGeneric("entities"))
 setGeneric("entities<-", function (x, value) standardGeneric("entities<-"))

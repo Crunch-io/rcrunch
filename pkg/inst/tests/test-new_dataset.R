@@ -56,7 +56,7 @@ if (!run.only.local.tests) {
             delete(testcrdf)
             ## Should also test doing this with a matrix
         })
-# skip({        
+
         ## New dataset by add variable API
         test_that("newDataset by addVariables", {
             expect_error(newDataset(NULL), 
@@ -121,7 +121,7 @@ if (!run.only.local.tests) {
             delete(testdf)
             expect_false(dsname %in% listDatasets())
         })
-# })
+        
     })
 }
 

@@ -186,11 +186,16 @@ setMethod("refresh", "CrunchDataset", function (x) {
 })
 
 ##' @export
-setMethod("delete", "CrunchDataset", function (x) {
-    out <- callNextMethod()
-    updateDatasetList()
-    invisible(out)
-})
+setMethod("delete", "CrunchDataset", 
+    function (x, confirm=interactive() | is.readonly(x), ...) {
+        prompt <- paste0("Really delete dataset ", dQuote(name(x)), "?")
+        if (confirm && !askForPermission(prompt)) {
+            stop("Must confirm deleting dataset", call.=FALSE)
+        }
+        out <- callNextMethod()
+        updateDatasetList()
+        invisible(out)
+    })
 
 ##' @S3method as.list CrunchDataset
 as.list.CrunchDataset <- function (x, ...) {
