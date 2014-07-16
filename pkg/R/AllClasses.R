@@ -55,7 +55,7 @@ MultipleResponseVariable <-setClass("MultipleResponseVariable",
     contains="CategoricalArrayVariable")
 
 ##' @export
-VariableGrouping <- setClass("VariableGrouping", contains="list")
+VariableOrder <- setClass("VariableOrder", contains="list")
 ##' @export
 VariableGroup <- setClass("VariableGroup", representation=representation(
     group="character",
@@ -63,7 +63,7 @@ VariableGroup <- setClass("VariableGroup", representation=representation(
 ))
 
 VariableCatalog <- setClass("VariableCatalog", contains="ShojiCatalog",
-    representation(order="VariableGrouping"))
+    representation(order="VariableOrder"))
 DatasetCatalog <- setClass("DatasetCatalog", contains="ShojiCatalog")
 BatchCatalog <- setClass("BatchCatalog", contains="ShojiCatalog")
 

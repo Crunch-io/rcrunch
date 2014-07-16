@@ -10,7 +10,7 @@ with(fake.HTTP, {
     })
     
     varcat <- VariableCatalog(varblob)
-    varorder <- do.call(VariableGrouping,
+    varorder <- do.call(VariableOrder,
         GET("api/datasets/dataset1/hierarchical.json")$groups) ## this seems wrong, shouldn't select "groups" out, should inherit from ShojiObject
     
     test_that("VariableCatalog has the right contents", {

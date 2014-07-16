@@ -1,37 +1,49 @@
 context("Variable grouping and order setting")
 
-test_that("VariableGroup and Grouping objects can be made", {
+test_that("VariableGroup and Order objects can be made", {
     expect_true(inherits(VariableGroup(group="group1", entities=""),
         "VariableGroup"))
     expect_true(inherits(VariableGroup(name="group1", entities=""),
         "VariableGroup"))
     vg1 <- VariableGroup(name="group1", entities="")
-    expect_true(inherits(VariableGrouping(vg1), "VariableGrouping"))
-    expect_true(inherits(VariableGrouping(list(name="group1",
-        entities=""), vg1), "VariableGrouping"))
+    expect_true(inherits(VariableOrder(vg1), "VariableOrder"))
+    expect_true(inherits(VariableOrder(list(name="group1",
+        entities=""), vg1), "VariableOrder"))
 })
+
+with(fake.HTTP, {
+    session_store$datasets <- DatasetCatalog(GET("api/datasets.json"))
+    test.ds <- loadDataset("test ds")
+    
+    test_that("ordering methods on variables catalog", {
+        expect_true(inherits(ordering(variables(test.ds)), "VariableOrder"))
+        expect_true(inherits(ordering(test.ds), "VariableOrder"))
+        expect_identical(ordering(variables(test.ds)), ordering(test.ds))
+    })
+})
+
 
 if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
             ds <- .setup
-            test_that("Can get VariableGrouping from dataset", {
-                expect_identical(getVariableOrder(ds), 
-                    VariableGrouping(VariableGroup(name="ungrouped", 
+            test_that("Can get VariableOrder from dataset", {
+                expect_identical(ordering(ds), 
+                    VariableOrder(VariableGroup(name="ungrouped", 
                     entities=urls(active(ds@variables)))))
             })
-            test_that("Can make VariableGroup(ing) from Variables", {
-                expect_true(setequal(entities(getVariableOrder(ds)[[1]]), 
+            test_that("Can make VariableGroup/Order from Variables", {
+                expect_true(setequal(entities(ordering(ds)[[1]]), 
                     entities(VariableGroup(name="ungrouped", entities=ds))))
             })
         })
         
         with(test.dataset(df), {
             ds <- .setup
-            test_that("Can construct VariableGroupings from variables", {
-                vg <- VariableGrouping(
+            test_that("Can construct VariableOrder from variables", {
+                vg <- VariableOrder(
                     VariableGroup(name="Group 1", 
-                        entities=ds[c("v1", "v3", "v5")]),
+                        variables=ds[c("v1", "v3", "v5")]),
                     VariableGroup(name="Group 2.5", entities=ds["v4"]),
                     VariableGroup(name="Group 2", 
                         entities=ds[c("v6", "v2")]))
@@ -43,14 +55,14 @@ if (!run.only.local.tests) {
                     list(group="Group 2", entities=c(self(ds$v6), self(ds$v2)))
                 ))
             })
-            vg <- VariableGrouping(
+            vg <- VariableOrder(
                 VariableGroup(name="Group 1", 
                     entities=ds[c("v1", "v3", "v5")]),
-                VariableGroup(name="Group 2.5", entities=ds["v4"]),
+                VariableGroup(name="Group 2.5", variables=ds["v4"]),
                 VariableGroup(name="Group 2", 
                     entities=ds[c("v6", "v2")]))
                     
-            test_that("Can manipulate VariableGroupings", {
+            test_that("Can manipulate VariableOrder", {
                 expect_identical(entities(vg[[1]]),
                     c(self(ds$v1), self(ds$v3), self(ds$v5)))
                 expect_identical(entities(vg), 
@@ -76,10 +88,20 @@ if (!run.only.local.tests) {
                 ))
             })
             
-            test_that("Can set VariableGroupings", {
-                ds <- setVariableOrder(ds, vg)
-                expect_identical(getVariableOrder(ds)[-4], vg)
+            original.order <- ordering(ds)
+            test_that("Can set VariableOrders", {
+                expect_false(identical(vg, original.order))
+                ordering(ds) <- vg
+                expect_identical(ordering(ds)[-4], vg)
                     ## Prune #4 because it is the "ungrouped", which is empty
+                expect_identical(ordering(refresh(ds))[-4], vg)
+
+                ds <- refresh(ds)
+                expect_false(identical(ordering(variables(ds)), original.order))
+                ordering(variables(ds)) <- original.order
+                expect_identical(ordering(variables(ds)), original.order)
+                expect_identical(ordering(variables(refresh(ds))),
+                    original.order)
             })
         })
     })

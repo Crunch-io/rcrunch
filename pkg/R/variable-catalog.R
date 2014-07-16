@@ -1,12 +1,18 @@
 init.VariableCatalog <- function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
-    .Object@order <- do.call(VariableGrouping,
+    .Object@order <- do.call(VariableOrder,
         GET(.Object@views$hierarchical_order)$groups)
     return(.Object)
 }
 setMethod("initialize", "VariableCatalog", init.VariableCatalog)
 
 setMethod("ordering", "VariableCatalog", function (x) x@order)
+setMethod("ordering<-", "VariableCatalog", function (x, value) {
+    stopifnot(inherits(value, "VariableOrder"))
+    x@order <- value
+    PUT(x@views$hierarchical_order, body=toJSON(list(groups=value)))
+    return(x)
+})
 
 setMethod("active", "VariableCatalog", function (x) {
     x@index <- selectFromWhere(!isTRUE(discarded),
