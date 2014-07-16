@@ -210,5 +210,14 @@ setMethod("variables<-", c("CrunchDataset", "VariableCatalog"),
     function (x, value) {
         v <- names(value@index)
         x@variables[v] <- value
+        ordering(x@variables) <- ordering(value)
         return(x)
     })
+
+##' @export
+setMethod("ordering", "CrunchDataset", function (x) ordering(variables(x)))
+##' @export
+setMethod("ordering<-", "CrunchDataset", function (x, value) {
+    ordering(variables(x)) <- value
+    return(x)
+})
