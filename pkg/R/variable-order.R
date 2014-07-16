@@ -92,6 +92,6 @@ printVariableOrder <- function (x) {
 
 printVariableGroup <- function (group, index) {
     cat(name(group), "\n")
-    print(vapply(index[entities(group)], function (x) x[["name"]], character(1), USE.NAMES=FALSE))
+    print(vapply(index[entities(group)], function (x) x[["name"]] %||% "(Hidden variable)", character(1), USE.NAMES=FALSE))
     invisible()
 }
