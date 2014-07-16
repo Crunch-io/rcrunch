@@ -1,12 +1,18 @@
 init.VariableCatalog <- function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
-    .Object@order <- do.call(VariableGrouping,
+    .Object@order <- do.call(VariableOrder,
         GET(.Object@views$hierarchical_order)$groups)
     return(.Object)
 }
 setMethod("initialize", "VariableCatalog", init.VariableCatalog)
 
 setMethod("ordering", "VariableCatalog", function (x) x@order)
+setMethod("ordering<-", "VariableCatalog", function (x, value) {
+    stopifnot(inherits(value, "VariableOrder"))
+    x@order <- value
+    PUT(x@views$hierarchical_order, body=toJSON(list(groups=value)))
+    return(x)
+})
 
 setMethod("active", "VariableCatalog", function (x) {
     x@index <- selectFromWhere(!isTRUE(discarded),
@@ -45,3 +51,18 @@ setMethod("[[<-", c("VariableCatalog", "character", "missing", "CrunchVariable")
        x[[i]] <- tuple(value)
        return(x)
    })
+
+setMethod("names", "VariableCatalog", function (x) {
+    vapply(x@index, function (a) a[["name"]], character(1), USE.NAMES=FALSE)
+})
+setMethod("names<-", "VariableCatalog", function (x, value) {
+    mapSetIndexSlot(x, "name", value)
+})
+##' @export
+setMethod("aliases", "VariableCatalog", function (x) {
+    vapply(x@index, function (a) a[["alias"]], character(1), USE.NAMES=FALSE)
+})
+##' @export
+setMethod("aliases<-", "VariableCatalog", function (x, value) {
+    mapSetIndexSlot(x, "alias", value)
+})

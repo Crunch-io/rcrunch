@@ -101,6 +101,11 @@ setMethod("description", "CrunchVariable", function (x) tuple(x)$description)
 ##' @export
 setMethod("description<-", "CrunchVariable", 
     function (x, value) setTupleSlot(x, "description", value))
+##' @export
+setMethod("alias", "CrunchVariable", function (x) tuple(x)$alias)
+##' @export
+setMethod("alias<-", "CrunchVariable", 
+    function (x, value) setTupleSlot(x, "alias", value))
 
 ##' @export
 setMethod("categories", "CrunchVariable", function (x) NULL)
@@ -138,7 +143,7 @@ unbind <- function (x) {
     invisible(DELETE(self(x)))
 }
 
-setMethod("delete", "CategoricalArrayVariable", function (x) {
+setMethod("delete", "CategoricalArrayVariable", function (x, ...) {
     subvars <- x@body$subvariables
     out <- DELETE(self(x))
     lapply(subvars, DELETE)

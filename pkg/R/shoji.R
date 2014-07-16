@@ -54,9 +54,9 @@ setMethod("refresh", "ShojiObject", function (x) {
 })
 
 ##' @export
-setMethod("delete", "ShojiObject", function (x) invisible(DELETE(self(x))))
+setMethod("delete", "ShojiObject", function (x, ...) invisible(DELETE(self(x))))
 ##' @export
-setMethod("delete", "ANY", function (x) stop("'delete' only valid for Crunch objects"))
+setMethod("delete", "ANY", function (x, ...) stop("'delete' only valid for Crunch objects"))
 
 ##' Base setter for Crunch objects
 ##' @param x a ShojiObject or subclass thereof

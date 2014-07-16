@@ -135,6 +135,7 @@ if (!run.only.local.tests) {
                 nvars.before <- ncol(ds)
                 vars.before <- getDatasetVariables(ds)
                 expect_identical(nvars.before, 0L)
+                note("The following error is expected: ")
                 expect_error(POSTNewVariable(ds@urls$variables_url, c2), 
                     "Subvariables errored on upload")
                 ds <- refresh(ds)

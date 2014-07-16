@@ -17,9 +17,11 @@ is.tap.reporter <- grepl('reporter ?= ?"tap"',
     paste(deparse(sys.calls()[[1]]), collapse=""))
 if (is.tap.reporter) {
     skip <- function (..., reason="") invisible() # cat("skip ", reason, "\n")
+    note <- function (...) invisible()
 } else {
     ## for the test running...S.....
     skip <- function (...) cat(colourise("S", "yellow"))
+    note <- cat
 }
 
 #####################

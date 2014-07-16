@@ -14,7 +14,7 @@
 findVariables <- function (dataset, refs=NULL, pattern="", key=namekey(dataset), ...) {
     
     if (is.dataset(dataset)) {
-        dataset <- active(dataset@variables)@index
+        dataset <- variables(dataset)@index
     }
     keys <- selectFrom(key, dataset)
     if (is.null(refs)) {
@@ -29,8 +29,8 @@ findVariables <- function (dataset, refs=NULL, pattern="", key=namekey(dataset),
 findVariableURLs <- function (x, refs=NULL, pattern="", key=namekey(x), ...) {
     if (is.dataset(x)) {
         key
-        return(findVariableURLs(active(x@variables), refs=refs, pattern=pattern, key=key,
-            ...))
+        return(findVariableURLs(variables(x), refs=refs, pattern=pattern,
+            key=key, ...))
     } else if (inherits(x, "VariableCatalog")) {
         return(findVariableURLs(x@index, refs=refs, pattern=pattern, key=key,
             ...))

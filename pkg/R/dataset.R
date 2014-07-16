@@ -65,7 +65,7 @@ variableNames <- function (x) {
 
 ##' @export
 setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
-    x@variables <- active(x@variables)[i]
+    x@variables <- variables(x)[i]
     readonly(x) <- TRUE ## we don't want to overwrite the big object accidentally
     return(x)
 })
@@ -79,7 +79,7 @@ setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE)
 })
 ##' @export
 setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
-    out <- active(x@variables)[[i]]
+    out <- variables(x)[[i]]
     if (!is.null(out)) {
         out <- try(entity(out), silent=TRUE)
         if (is.error(out)) {
@@ -186,15 +186,38 @@ setMethod("refresh", "CrunchDataset", function (x) {
 })
 
 ##' @export
-setMethod("delete", "CrunchDataset", function (x) {
-    out <- callNextMethod()
-    updateDatasetList()
-    invisible(out)
-})
+setMethod("delete", "CrunchDataset", 
+    function (x, confirm=interactive() | is.readonly(x), ...) {
+        prompt <- paste0("Really delete dataset ", dQuote(name(x)), "?")
+        if (confirm && !askForPermission(prompt)) {
+            stop("Must confirm deleting dataset", call.=FALSE)
+        }
+        out <- callNextMethod()
+        updateDatasetList()
+        invisible(out)
+    })
 
 ##' @S3method as.list CrunchDataset
 as.list.CrunchDataset <- function (x, ...) {
-    lapply(seq_along(active(x@variables)), function (i) x[[i]])
+    lapply(seq_along(variables(x)), function (i) x[[i]])
 }
 
 batches <- function (x) BatchCatalog(GET(x@catalogs$batches))
+##' @export
+setMethod("variables", "CrunchDataset", function (x) active(x@variables))
+##' @export
+setMethod("variables<-", c("CrunchDataset", "VariableCatalog"), 
+    function (x, value) {
+        v <- names(value@index)
+        x@variables[v] <- value
+        ordering(x@variables) <- ordering(value)
+        return(x)
+    })
+
+##' @export
+setMethod("ordering", "CrunchDataset", function (x) ordering(variables(x)))
+##' @export
+setMethod("ordering<-", "CrunchDataset", function (x, value) {
+    ordering(variables(x)) <- value
+    return(x)
+})
