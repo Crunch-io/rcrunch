@@ -80,37 +80,11 @@ setMethod("[", c("VariableOrder", "character"), function (x, i, ..., drop=FALSE)
     callNextMethod(x, w, ..., drop=drop)
 })
 
-
-getVariableOrderURL <- function (dataset) {
-    u <- dataset@urls$variables_url
-    catalog <- GET(u)
-    return(catalog$views$hierarchical_order)
-}
-
-##' @export
-getVariableOrder <- function (dataset) {
-    if (is.null(dataset@urls$order_url)) {
-        ## Something of a hack since we don't have caching.
-        dataset@urls$order_url <- getVariableOrderURL(dataset)
-    }
-    return(do.call(VariableOrder, GET(dataset@urls$order_url)$groups))
-}
-
-##' @export
-setVariableOrder <- function (x, value) {
-    if (is.null(x@urls$order_url)) {
-        ## Something of a hack since we don't have caching.
-        x@urls$order_url <- getVariableOrderURL(x)
-    }
-    PUT(x@urls$order_url, body=toJSON(list(groups=value)))
-    invisible(x)
-}
-
 ##' @export
 printVariableOrder <- function (x) {
     ## VariableOrder should get a proper show method
     if (is.dataset(x)) {
-        return(printVariableOrder(x@variables))
+        return(printVariableOrder(variables(x)))
     }
     stopifnot(inherits(x, "VariableCatalog"))
     invisible(lapply(x@order, printVariableGroup, index=x@index))
