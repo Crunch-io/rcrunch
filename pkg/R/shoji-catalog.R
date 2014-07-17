@@ -12,12 +12,21 @@ setIndexSlot <- function (x, i, value) {
 mapSetIndexSlot <- function (x, i, value) {
     if (length(value) == 1) value <- rep(value, length(x))
     stopifnot(length(x) == length(value))
+    
+    old <- x@index
     x@index <- mapply(function (a, v) {
         a[[i]] <- v
         return(a)
     }, a=x@index, v=value, SIMPLIFY=FALSE)
-    PATCH(self(x), body=toJSON(x@index))
+    to.update <- dirtyElements(old, x@index)
+    if (any(to.update)) {
+        PATCH(self(x), body=toJSON(x@index[to.update]))
+    }
     return(x)
+}
+
+dirtyElements <- function (x, y) {
+    !mapply(identical, x, y, USE.NAMES=FALSE, SIMPLIFY=TRUE)
 }
 
 setMethod("[", c("ShojiCatalog", "ANY"), function (x, i, ..., drop) {
