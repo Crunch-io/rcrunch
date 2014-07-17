@@ -143,8 +143,19 @@ is.JSON.response <- function (x) {
 ##' @importFrom RJSONIO fromJSON
 ## Looks like httr has switched to RJSONIO, so this may not be necessary any more
 parseJSONresponse <- function (x, simplifyWithNames=FALSE, ...) {
-    fromJSON(httr:::parse_text(x, encoding = "UTF-8"),
-        simplifyWithNames=simplifyWithNames, ...)
+    mungeEncoding(fromJSON(httr:::parse_text(x, encoding = "UTF-8"),
+        simplifyWithNames=simplifyWithNames, ...))
+}
+
+mungeEncoding <- function (x, to="latin1") {
+    ## Pending resolution of https://github.com/duncantl/RJSONIO/issues/6
+    ## or https://github.com/jeroenooms/jsonlite/issues/5
+    if (is.list(x)) {
+        x <- lapply(x, mungeEncoding, to=to)
+    } else if (is.character(x)) {
+        Encoding(x) <- to
+    }
+    return(x)
 }
 
 handleShoji <- function (x) {

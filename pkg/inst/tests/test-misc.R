@@ -55,3 +55,25 @@ test_that("rethrow a caught error", {
     expect_true(is.error(e))
     expect_error(rethrow(e), "error in a box")
 })
+
+test_that("encoding", {
+    s <- iconv("aided_follow_grid:ElCorteInglés", to="UTF-8")
+    expect_identical(Encoding(s), "UTF-8")
+    expect_true(grepl("Inglés", s))
+    sj <- toJSON(s)
+    expect_true(grepl("Inglés", sj))
+    s2 <- fromJSON(sj)
+    expect_identical(s2, s)
+})
+
+if (!run.only.local.tests) {
+    with(test.authentication, {
+        with(test.dataset(df), {
+            ds <- .setup
+            s <- iconv("aided_follow_grid:ElCorteInglés", to="UTF-8")
+            name(ds$v1) <- s
+            expect_identical(name(ds$v1), s)
+            expect_identical(name(refresh(ds)$v1), s)
+        })
+    })
+}
