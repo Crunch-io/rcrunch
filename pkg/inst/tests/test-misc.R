@@ -56,6 +56,21 @@ test_that("rethrow a caught error", {
     expect_error(rethrow(e), "error in a box")
 })
 
+test_that("dirtyElements", {
+    x <- list(
+        list(a=1, b=1),
+        list(a="1", b="1"),
+        list(a="d", b="e")
+    )
+    y <- x
+    expect_false(any(dirtyElements(x, y)))
+    y[[2]]$b <- "f"
+    y[[1]]$b <- 1
+    expect_identical(dirtyElements(x, y), c(FALSE, TRUE, FALSE))
+    y[[3]]$a <- "f"
+    expect_identical(dirtyElements(x, y), c(FALSE, TRUE, TRUE))
+})
+
 test_that("encoding", {
     s <- iconv("aided_follow_grid:ElCorteInglés", to="UTF-8")
     expect_identical(Encoding(s), "UTF-8")
