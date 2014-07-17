@@ -61,3 +61,40 @@ test_that("%||%", {
     expect_identical(NULL %||% "g", "g")
     expect_identical("f" %||% stop("Nooooooo!"), "f")
 })
+
+test_that("dirtyElements", {
+    x <- list(
+        list(a=1, b=1),
+        list(a="1", b="1"),
+        list(a="d", b="e")
+    )
+    y <- x
+    expect_false(any(dirtyElements(x, y)))
+    y[[2]]$b <- "f"
+    y[[1]]$b <- 1
+    expect_identical(dirtyElements(x, y), c(FALSE, TRUE, FALSE))
+    y[[3]]$a <- "f"
+    expect_identical(dirtyElements(x, y), c(FALSE, TRUE, TRUE))
+})
+
+test_that("encoding", {
+    s <- iconv("aided_follow_grid:ElCorteInglés", to="UTF-8")
+    expect_identical(Encoding(s), "UTF-8")
+    expect_true(grepl("Inglés", s))
+    sj <- toJSON(s)
+    expect_true(grepl("Inglés", sj))
+    s2 <- fromJSON(sj)
+    expect_identical(s2, s)
+})
+
+if (!run.only.local.tests) {
+    with(test.authentication, {
+        with(test.dataset(df), {
+            ds <- .setup
+            s <- iconv("aided_follow_grid:ElCorteInglés", to="UTF-8")
+            name(ds$v1) <- s
+            expect_identical(name(ds$v1), s)
+            expect_identical(name(refresh(ds)$v1), s)
+        })
+    })
+}

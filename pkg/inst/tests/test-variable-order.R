@@ -103,6 +103,17 @@ if (!run.only.local.tests) {
                 expect_identical(ordering(variables(refresh(ds))),
                     original.order)
             })
+            
+            test_that("Can manipulate VariableOrder that's part of a dataset", {
+                ordering(ds) <- vg
+                expect_identical(names(ordering(ds)), 
+                    c("Group 1", "Group 2.5", "Group 2"))
+                names(ordering(ds))[3] <- "Three"
+                expect_identical(names(ordering(ds)), 
+                    c("Group 1", "Group 2.5", "Three"))
+                expect_identical(names(ordering(ds)), 
+                    c("Group 1", "Group 2.5", "Three"))
+            })
         })
     })
 }
