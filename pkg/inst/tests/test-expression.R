@@ -35,11 +35,12 @@ if (!run.only.local.tests) {
                 expect_identical(as.vector(ds$v3 * ds$v3), df$v3^2)
             })
 
-            skip(test_that("Logical expressions evaluate", {
+            test_that("Logical expressions evaluate", {
                 e1 <- try(ds$v3 < 10)
                 expect_true(inherits(e1, "CrunchExpression"))
-                expect_identical(as.vector(e1), as.vector(ds$v3) < 10)
-            }, "select with logical expression not supported"))
+                skip(expect_identical(as.vector(e1), as.vector(ds$v3) < 10),
+                    "select with logical expression not supported")
+            })
             
             test_that("expressions on expresssions evaluate", {
                 e3 <- try(ds$v3 + ds$v3 + 10)
@@ -48,6 +49,12 @@ if (!run.only.local.tests) {
                 e4 <- try(ds$v3 + ds$v3 * 2)
                 expect_true(inherits(e4, "CrunchExpression"))
                 expect_identical(as.vector(e4), 3*df$v3)
+            })
+            
+            test_that("filters on variables evaluate", {
+                e5 <- try(ds$v3[ds$v3 < 10])
+                expect_true(inherits(e5, "CrunchExpression"))
+                expect_identical(as.vector(e5), c(8, 9))
             })
         })
     })

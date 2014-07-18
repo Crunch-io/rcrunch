@@ -8,7 +8,8 @@ if (!run.only.local.tests) {
             ds <- .setup
             test_that("Can update numeric variable with values", {
                 try(ds$v3 <- 9:28)
-                expect_true(all((as.vector(ds$v3) - df$v2) == 1))
+                test <- as.vector(ds$v3) - df$v3
+                expect_true(all(test == 1))
             })
             
             test_that("Value recycling on insert is consistent with R", {

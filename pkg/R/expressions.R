@@ -49,8 +49,11 @@ setMethod("datasetReference", "CrunchExpression", function (x) x@dataset_url)
 ##' @export 
 ##' @S3method as.vector CrunchExpression
 as.vector.CrunchExpression <- function (x, mode) {
-    payload <- toJSON(list(command="select", variables=list(out=zcl(x))))
-    out <- POST(paste0(x@dataset_url, "table/"), body=payload)
+    payload <- list(command="select", variables=list(out=zcl(x)))
+    if (length(x@filter)) {
+        payload[["filter"]] <- x@filter
+    }
+    out <- POST(paste0(x@dataset_url, "table/"), body=toJSON(payload))
     return(columnParser(out$metadata$out$type)(out$data$out))
 }
 

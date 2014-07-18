@@ -151,3 +151,7 @@ setMethod("delete", "CategoricalArrayVariable", function (x, ...) {
     lapply(subvars, DELETE)
     invisible(out)
 })
+
+setMethod("[", c("CrunchVariable", "CrunchExpression"), function (x, i, ...) {
+    CrunchExpression(dataset_url=datasetReference(x), expression=zcl(x), filter=zcl(i))
+})

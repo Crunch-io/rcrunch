@@ -14,7 +14,8 @@ ShojiObject <- setClass("ShojiObject",
         urls="ANY",
         catalogs="ANY",
         specification="ANY",
-        views="ANY"
+        views="ANY",
+        fragments="ANY"
     ),
     prototype=prototype(readonly=FALSE))
 

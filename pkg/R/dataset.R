@@ -100,10 +100,18 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 
 .addVariableSetter <- function (x, i, value) {
     if (i %in% names(x)) {
-        stop("Cannot currently overwrite existing Variables with [[<-",
-            call.=FALSE)
+        return(update_values(x, i, value))
+    } else {
+        addVariable(x, values=value, name=i, alias=i)
     }
-    addVariable(x, values=value, name=i, alias=i)
+}
+
+update_values <- function (x, i, value) {
+    update_url <- x@fragments$table
+    variable <- x[[i]] ## shouldn't need the whole variable
+    payload <- list(command="update", variables=structure(list(zcl(typeof(value, variable))), .Names=tuple(variable)$id))
+    out <- POST(update_url, body=toJSON(payload))
+    return(x)
 }
 
 .updateVariableSetter <- function (x, i, value) {
