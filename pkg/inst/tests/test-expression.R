@@ -7,6 +7,8 @@ with(fake.HTTP, {
     test_that("Arithmetic generates expressions", {
         e1 <- try(ds$birthyr + 5)
         expect_true(inherits(e1, "CrunchExpression"))
+        expect_identical(zcl(e1), list(`function`="+",
+            args=list(list(variable="birthyr"), list(value=5))))
         e2 <- try(5 + ds$birthyr)
         expect_true(inherits(e2, "CrunchExpression"))
     })
@@ -15,7 +17,7 @@ with(fake.HTTP, {
         e1 <- try(ds$birthyr < 0)
         expect_true(inherits(e1, "CrunchExpression"))
     })
-}
+})
 
 if (!run.only.local.tests) {
     with(test.authentication, {

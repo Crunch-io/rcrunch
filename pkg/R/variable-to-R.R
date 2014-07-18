@@ -21,20 +21,30 @@ as.vector.CategoricalVariable <- function (x, mode) {
     return(out)
 }
 
+parse_column <- list(
+    numeric=function (col, variable) {
+        missings <- vapply(col, Negate(is.numeric), logical(1))
+        col[missings] <- NA_real_
+        return(as.numeric(unlist(col)))
+    },
+    text=function (col, variable) {
+        missings <- vapply(col, Negate(is.character), logical(1))
+        col[missings] <- NA_character_
+        return(as.character(unlist(col)))
+    }
+)
+columnParser <- function (vartype) {
+    return(parse_column[[vartype]] %||% parse_column[["numeric"]])
+}
+
 ##' @S3method as.vector NumericVariable
 as.vector.NumericVariable <- function (x, mode) {
-    out <- as.vector.CrunchVariable(x)
-    missings <- vapply(out, Negate(is.numeric), logical(1))
-    out[missings] <- NA_real_
-    return(as.numeric(unlist(out)))
+    columnParser("numeric")(as.vector.CrunchVariable(x))
 }
 
 ##' @S3method as.vector TextVariable
 as.vector.TextVariable <- function (x, mode) {
-    out <- as.vector.CrunchVariable(x)
-    missings <- vapply(out, Negate(is.character), logical(1))
-    out[missings] <- NA_character_
-    return(as.character(unlist(out)))
+    columnParser("text")(as.vector.CrunchVariable(x))
 }
 
 ##' @S3method as.vector DatetimeVariable

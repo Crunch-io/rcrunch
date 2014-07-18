@@ -103,6 +103,7 @@ setMethod("description<-", "CrunchVariable",
     function (x, value) setTupleSlot(x, "description", value))
 ##' @export
 setMethod("alias", "CrunchVariable", function (x) tuple(x)$alias)
+
 ##' @export
 setMethod("alias<-", "CrunchVariable", 
     function (x, value) setTupleSlot(x, "alias", value))
@@ -137,6 +138,7 @@ setMethod("undichotomize", "CategoricalVariable", .undichotomize.var)
 setMethod("undichotomize", "CategoricalArrayVariable", .undichotomize.var)
 
 setMethod("datasetReference", "CrunchVariable", function (x) x@urls$dataset_url)
+setMethod("datasetReference", "ANY", function (x) NULL)
 
 unbind <- function (x) {
     stopifnot(inherits(x, "CategoricalArrayVariable"))
