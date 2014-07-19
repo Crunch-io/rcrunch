@@ -155,3 +155,25 @@ setMethod("delete", "CategoricalArrayVariable", function (x, ...) {
 setMethod("[", c("CrunchVariable", "CrunchExpression"), function (x, i, ...) {
     CrunchExpression(dataset_url=datasetReference(x), expression=zcl(x), filter=zcl(i))
 })
+
+setMethod("[<-", c("CrunchVariable", "missing", "missing", "numeric"), function (x, i, j, value) {
+    payload <- list(command="update", variables=structure(list(zcl(typeof(value, x))), .Names=tuple(x)$id))
+    out <- POST(paste0(datasetReference(x), "table/"), body=toJSON(payload))
+    return(x)
+})
+
+setMethod("[<-", c("CrunchVariable", "numeric", "missing", "numeric"), function (x, i, j, value) {
+    payload <- list(command="update", variables=structure(list(zcl(typeof(value, x))), .Names=tuple(x)$id))
+    ## How to turn numeric into filter?
+    # payload[["filter"]] <- list(`function`="in", args=list(list(column=I(seq_len(NUMBEROFROWSINTHEDATASET)), type=list(class="numeric")), list(column=I(i), type=list(class="numeric"))))
+    out <- POST(paste0(datasetReference(x), "table/"), body=toJSON(payload))
+    return(x)
+})
+
+setMethod("[<-", c("CrunchVariable", "CrunchExpression", "missing", "numeric"), function (x, i, j, value) {
+    payload <- list(command="update", variables=structure(list(zcl(typeof(value, x))), .Names=tuple(x)$id))
+    ## Need to make sure expression is logical for filtering...
+    payload[["filter"]] <- zcl(i)
+    out <- POST(paste0(datasetReference(x), "table/"), body=toJSON(payload))
+    return(x)
+})

@@ -106,10 +106,11 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
     }
 }
 
-update_values <- function (x, i, value) {
+update_values <- function (x, i, value, filter=NULL) {
     update_url <- x@fragments$table
     variable <- x[[i]] ## shouldn't need the whole variable
     payload <- list(command="update", variables=structure(list(zcl(typeof(value, variable))), .Names=tuple(variable)$id))
+    if (!is.null(filter)) payload[["filter"]] <- zcl(filter)
     out <- POST(update_url, body=toJSON(payload))
     return(x)
 }
@@ -147,6 +148,10 @@ setMethod("[<-", c("CrunchDataset", "ANY", "missing", "list"),
         }
         return(x)
     })
+
+# setMethod("[<-", c("CrunchDataset", "CrunchExpression", "ANY", "numeric"), function (x, i, j, value) {
+#     
+# })
 
 ## TODO: add [<-.CrunchDataset, CrunchDataset/VariableCatalog
 
