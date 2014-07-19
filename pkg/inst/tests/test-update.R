@@ -25,10 +25,7 @@ if (!run.only.local.tests) {
                 expect_equivalent(mean(ds$v3), 1.5)
                 try(ds$v3[ds$v3 == 1] <- 3)
                 expect_equivalent(mean(ds$v3), 2.5)
-                skip(try(ds[ds$v3 == 2, "v3"] <- 4),
-                    "do this later")
-                ## instead:
-                try(ds$v3[ds$v3 == 2] <- 4)
+                try(ds[ds$v3 == 2, "v3"] <- 4)
                 expect_equivalent(mean(ds$v3), 3.5)
                 try(ds$v3[] <- c(rep(5, 10), rep(7, 10)))
                 expect_equivalent(mean(ds$v3), 6)

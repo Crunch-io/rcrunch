@@ -53,3 +53,5 @@ Collate:
     'append-dataset.R'
     'batch-catalog.R'
     'expressions.R'
+    'dataset-extract.R'
+    'zcl.R'

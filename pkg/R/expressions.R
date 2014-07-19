@@ -1,5 +1,5 @@
 math.exp <- function (e1, e2, operator) {
-    ex <- structure(list(operator, list(zcl(e1), zcl(e2))), .Names=c("function", "args"))
+    ex <- zfunc(operator, e1, e2)
     ds.url <- unique(unlist(lapply(list(e1, e2), datasetReference))) %||% ""
     CrunchExpression(expression=ex, dataset_url=ds.url)
 }
@@ -28,22 +28,6 @@ for (i in c("+", "-", "*", "/", "<", ">", "==")) {
     setMethod(i, c("CrunchVariable", "CrunchExpression"), vxv(i))
 }
 
-setMethod("zcl", "CrunchExpression", function (x) x@expression)
-setMethod("zcl", "CrunchVariable", function (x) list(variable=tuple(x)$id))
-setMethod("zcl", "numeric", function (x) {
-    typeof <- attr(x, "typeof")
-    attributes(x) <- NULL
-    if (length(x) == 1) {
-        out <- list(value=x)
-    } else {
-        out <- list(column=x)
-    }
-    if (!is.null(typeof)) {
-        out$type <- list(`function`="typeof", args=list(zcl(typeof)))
-    }
-    return(out)
-})
-
 setMethod("datasetReference", "CrunchExpression", function (x) x@dataset_url)
 
 ##' @export 
@@ -55,10 +39,4 @@ as.vector.CrunchExpression <- function (x, mode) {
     }
     out <- POST(paste0(x@dataset_url, "table/"), body=toJSON(payload))
     return(columnParser(out$metadata$out$type)(out$data$out))
-}
-
-typeof <- function (x, variable) {
-    attr(x, "typeof") <- variable
-    # print(str(x))
-    return(x)
 }
