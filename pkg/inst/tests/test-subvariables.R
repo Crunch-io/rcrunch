@@ -64,8 +64,7 @@ with(fake.HTTP, {
 
 if (!run.only.local.tests) {
     with(test.authentication, {
-        with(test.dataset(mrdf), {
-            testdf <- .setup
+        with(test.dataset(mrdf, "testdf"), {
             cast.these <- grep("mr_", names(testdf))
             testdf[cast.these] <- lapply(testdf[cast.these],
                 castVariable, "categorical")
@@ -92,7 +91,7 @@ if (!run.only.local.tests) {
                 expect_error(subvariables(var) <- NULL,
                     "Can only assign an object of class Subvariables")
                 with(test.dataset(df), {
-                    fake <- Subvariables(.setup@variables[1:3])
+                    fake <- Subvariables(ds@variables[1:3])
                     expect_error(subvariables(var) <- fake,
                         "Can only reorder, not change, subvariables")
                 })

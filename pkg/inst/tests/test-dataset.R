@@ -97,17 +97,16 @@ if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
             test_that("Name and description setters push to server", {
-                d2 <- setter_test <- .setup
-                name(setter_test) <- "Bond. James Bond."
-                expect_identical(name(refresh(d2)), name(setter_test))
+                d2 <- ds
+                name(ds) <- "Bond. James Bond."
+                expect_identical(name(refresh(d2)), name(ds))
             })
         })
         test_that("Name and description setters don't push to server if readonly", {
 
         })
         
-        with(test.dataset(df), {
-            testdf <- .setup
+        with(test.dataset(df, "testdf"), {
             test_that("dataset dim", {
                 expect_identical(dim(testdf), dim(df))
                 expect_identical(nrow(testdf), nrow(df))
@@ -132,8 +131,7 @@ if (!run.only.local.tests) {
             })
         })
 
-        with(test.dataset(mrdf), {
-            testdf <- .setup
+        with(test.dataset(mrdf, "testdf"), {
             test_that("Dataset [<-", {
                 cast.these <- grep("mr_", names(testdf))
                 expect_true(all(vapply(active(testdf@variables)[cast.these], 
@@ -151,7 +149,6 @@ if (!run.only.local.tests) {
         
         test_that("Dataset deleting is safe", {
             with(test.dataset(df), {
-                ds <- .setup
                 expect_error(delete(ds, confirm=TRUE), 
                     "Must confirm deleting dataset")
                 ds.sub <- ds[1]

@@ -57,7 +57,6 @@ with(fake.HTTP, {
 if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
-            ds <- .setup
             test_that("can delete variables", {
                 expect_true("v1" %in% names(ds))
                 d <- try(delete(ds$v1))
@@ -67,7 +66,6 @@ if (!run.only.local.tests) {
         })
         
         with(test.dataset(df), {
-            ds <- .setup
             test_that("can modify names and descriptions", {
                 name(ds$v1) <- "Variable 1"
                 expect_identical(name(ds$v1), "Variable 1")

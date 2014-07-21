@@ -22,8 +22,6 @@ with(fake.HTTP, {
 if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
-            ds <- .setup
-            
             test_that("Arithmetic expressions evaluate", {
                 e1 <- try(ds$v3 + 5)
                 expect_true(inherits(e1, "CrunchExpression"))

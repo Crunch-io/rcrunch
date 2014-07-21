@@ -12,9 +12,8 @@ with(fake.HTTP, {
 
 if (!run.only.local.tests) {
     with(test.authentication, {
-        with(test.dataset(df), {
+        with(test.dataset(df, "testdf"), {
             test_that("type casting and 'as'", {
-                testdf <- .setup 
                 if (!is.Text(testdf[["v1"]])) type(testdf[["v1"]]) <- "text"
                 testvar <- testdf[["v1"]]
     

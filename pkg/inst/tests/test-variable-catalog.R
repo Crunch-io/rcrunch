@@ -66,7 +66,6 @@ with(fake.HTTP, {
 if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
-            ds <- .setup
             test_that("can set names and aliases", {
                 n <- names(df)
                 expect_identical(names(variables(ds)), n)

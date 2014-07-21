@@ -27,15 +27,16 @@ if (is.tap.reporter) {
 #####################
 ## Test decorators ##
 #####################
-setup.and.teardown <- function (setup, teardown) {
-    structure(list(setup=setup, teardown=teardown), class="SUTD")
+setup.and.teardown <- function (setup, teardown, obj.name=".setup") {
+    structure(list(setup=setup, teardown=teardown, obj.name=obj.name),
+        class="SUTD")
 }
 
 ##' @S3method with SUTD
 with.SUTD <- function (data, expr, ...) {
     env <- parent.frame()
     on.exit(data$teardown())
-    env$.setup <- data$setup() ## rm this after running?
+    assign(data$obj.name, data$setup(), envir=env) ## rm this after running?
     try(eval(substitute(expr), envir=parent.frame()))
 }
 
@@ -112,10 +113,11 @@ purge <- function () {
     }
 }
 
-test.dataset <- function (df=NULL, ...) {
+test.dataset <- function (df=NULL, obj.name="ds", ...) {
     return(setup.and.teardown(
         function () new.dataset.with.setup(df, ...),
-        purge
+        purge,
+        obj.name
     ))
 }
 

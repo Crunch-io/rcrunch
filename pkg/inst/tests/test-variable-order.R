@@ -26,7 +26,6 @@ with(fake.HTTP, {
 if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
-            ds <- .setup
             test_that("Can get VariableOrder from dataset", {
                 expect_identical(ordering(ds), 
                     VariableOrder(VariableGroup(name="ungrouped", 
@@ -39,7 +38,6 @@ if (!run.only.local.tests) {
         })
         
         with(test.dataset(df), {
-            ds <- .setup
             test_that("Can construct VariableOrder from variables", {
                 vg <- VariableOrder(
                     VariableGroup(name="Group 1", 

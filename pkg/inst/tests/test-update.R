@@ -5,7 +5,7 @@ context("Update a dataset")
 if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
-            ds <- .setup
+
             test_that("Can update numeric variable with values", {
                 try(ds$v3 <- 9:28)
                 test <- as.vector(ds$v3) - df$v3
