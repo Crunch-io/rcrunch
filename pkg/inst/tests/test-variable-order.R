@@ -92,9 +92,10 @@ if (!run.only.local.tests) {
             test_that("Can set VariableOrders", {
                 expect_false(identical(vg, original.order))
                 ordering(ds) <- vg
-                expect_identical(ordering(ds)[-4], vg)
-                    ## Prune #4 because it is the "ungrouped", which is empty
-                expect_identical(ordering(refresh(ds))[-4], vg)
+                expect_identical(grouped(ordering(ds)), vg)
+                expect_identical(grouped(ordering(refresh(ds))), vg)
+                expect_true(inherits(ungrouped(ordering(ds)), "VariableGroup"))
+                expect_true(inherits(ungrouped(ordering(refresh(ds))), "VariableGroup"))
 
                 ds <- refresh(ds)
                 expect_false(identical(ordering(variables(ds)), original.order))
@@ -107,11 +108,11 @@ if (!run.only.local.tests) {
             test_that("Can manipulate VariableOrder that's part of a dataset", {
                 ordering(ds) <- vg
                 expect_identical(names(ordering(ds)), 
-                    c("Group 1", "Group 2.5", "Group 2"))
+                    c("Group 1", "Group 2.5", "Group 2", "ungrouped"))
                 names(ordering(ds))[3] <- "Three"
                 expect_identical(names(ordering(ds)), 
-                    c("Group 1", "Group 2.5", "Three"))
-                expect_identical(names(ordering(ds)), 
+                    c("Group 1", "Group 2.5", "Three", "ungrouped"))
+                expect_identical(names(grouped(ordering(ds))), 
                     c("Group 1", "Group 2.5", "Three"))
             })
         })

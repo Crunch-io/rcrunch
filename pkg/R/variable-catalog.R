@@ -9,8 +9,9 @@ setMethod("initialize", "VariableCatalog", init.VariableCatalog)
 setMethod("ordering", "VariableCatalog", function (x) x@order)
 setMethod("ordering<-", "VariableCatalog", function (x, value) {
     stopifnot(inherits(value, "VariableOrder"))
-    x@order <- value
     PUT(x@views$hierarchical_order, body=toJSON(list(groups=value)))
+    x@order <- do.call(VariableOrder,
+        GET(x@views$hierarchical_order)$groups)
     return(x)
 })
 

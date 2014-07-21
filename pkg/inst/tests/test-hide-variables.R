@@ -66,5 +66,19 @@ if (!run.only.local.tests) {
                 
             })
         })
+        
+        with(test.dataset(df), {
+            ds <- .setup
+            test_that("can hide variables by group", {
+                ordering(ds) <- VariableOrder(
+                    VariableGroup(name="g1", variables=ds$v1),
+                    VariableGroup(name="group2", variables=ds[c("v3", "v4")])
+                )
+                expect_identical(length(grouped(ordering(ds))), 2L)
+                ds <- hideVariables(ds, ungrouped(ordering(ds)))
+                expect_identical(length(hiddenVariables(ds)), ncol(df) - 3L)
+                expect_true(all(c("v2", "v5") %in% hiddenVariables(ds)))
+            })
+        })
     })
 }
