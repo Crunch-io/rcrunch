@@ -1,5 +1,6 @@
 setMethod("zcl", "CrunchExpression", function (x) x@expression)
-setMethod("zcl", "CrunchVariable", function (x) list(variable=tuple(x)$id))
+setMethod("zcl", "CrunchVariable", function (x) zcl(tuple(x)))
+setMethod("zcl", "VariableTuple", function (x) list(variable=x$id))
 setMethod("zcl", "numeric", function (x) {
     zztype <- attr(x, "typeof")
     attributes(x) <- NULL
@@ -16,7 +17,6 @@ setMethod("zcl", "numeric", function (x) {
     }
     return(out)
 })
-setMethod("zcl", "VariableTuple", function (x) list(variable=x$id))
 
 typeof <- function (x, variable) {
     if (is.character(variable)) {
