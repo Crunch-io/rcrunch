@@ -41,9 +41,31 @@ if (!run.only.local.tests) {
                     c(rep(7, 10), rep(9, 5), rep(0, 5)))
             })
             
+            test_that("Can update text", {
+                
+            })
+            
+            test_that("Can update datetime", {
+                
+            })
+            
             test_that("Can update categorical variables", {
                 try(ds$v4[is.na(ds$v2)] <- "B")
                 expect_identical(table(ds$v4)["B"], 13L)
+            })
+            
+            test_that("Can update with missing values", {
+                
+            })
+            
+            test_that("Can 'mark missing'", {
+                
+            })
+        })
+        
+        with(test.dataset(mrdf), {
+            test_that("Can update array subvariables", {
+                
             })
         })
     })

@@ -7,8 +7,14 @@ with(fake.HTTP, {
     test_that("Arithmetic generates expressions", {
         e1 <- try(ds$birthyr + 5)
         expect_true(inherits(e1, "CrunchExpression"))
-        expect_identical(zcl(e1), list(`function`="+",
-            args=list(list(variable="birthyr"), list(value=5, type=list(`function`="typeof", args=list(list(variable="birthyr")))))))
+        zexp <- list(`function`="+",
+            args=list(
+                list(variable="birthyr"),
+                list(value=5, type=list(`function`="typeof",
+                    args=list(list(variable="birthyr"))))
+            )
+        )
+        expect_identical(zcl(e1), zexp)
         e2 <- try(5 + ds$birthyr)
         expect_true(inherits(e2, "CrunchExpression"))
     })

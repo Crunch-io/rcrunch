@@ -93,7 +93,8 @@ if (!run.only.local.tests) {
                 expect_identical(grouped(ordering(ds)), vg)
                 expect_identical(grouped(ordering(refresh(ds))), vg)
                 expect_true(inherits(ungrouped(ordering(ds)), "VariableGroup"))
-                expect_true(inherits(ungrouped(ordering(refresh(ds))), "VariableGroup"))
+                expect_true(inherits(ungrouped(ordering(refresh(ds))),
+                    "VariableGroup"))
 
                 ds <- refresh(ds)
                 expect_false(identical(ordering(variables(ds)), original.order))

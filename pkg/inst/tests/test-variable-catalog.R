@@ -11,7 +11,9 @@ with(fake.HTTP, {
     
     varcat <- VariableCatalog(varblob)
     varorder <- do.call(VariableOrder,
-        GET("api/datasets/dataset1/hierarchical.json")$groups) ## this seems wrong, shouldn't select "groups" out, should inherit from ShojiObject
+        GET("api/datasets/dataset1/hierarchical.json")$groups)
+        ## this seems wrong, shouldn't select "groups" out, should inherit from
+        ## ShojiObject
     
     test_that("VariableCatalog has the right contents", {
         expect_identical(names(varcat@index), names(varblob$index))
@@ -41,10 +43,11 @@ with(fake.HTTP, {
         expect_identical(active(hidden(varcat)), hidden(active(varcat)))
     })
     
+    gender.url <- "api/datasets/dataset1/variables/gender.json"
     test_that("Extract methods", {
-        expect_true(inherits(varcat[["api/datasets/dataset1/variables/gender.json"]], "VariableTuple"))
-        expect_identical(varcat[["api/datasets/dataset1/variables/gender.json"]]@body,
-            varcat@index[["api/datasets/dataset1/variables/gender.json"]])
+        expect_true(inherits(varcat[[gender.url]], "VariableTuple"))
+        expect_identical(varcat[[gender.url]]@body,
+            varcat@index[[gender.url]])
         expect_identical(varcat[2:3]@index, varcat@index[2:3])
         expect_error(varcat[[999]], "subscript out of bounds")
         skip({
@@ -54,7 +57,7 @@ with(fake.HTTP, {
     })
     
     test_that("entity method for tuple", {
-        expect_true(is.Categorical(entity(varcat[["api/datasets/dataset1/variables/gender.json"]])))
+        expect_true(is.Categorical(entity(varcat[[gender.url]])))
     })
     
     test_that("name and alias getters", {
