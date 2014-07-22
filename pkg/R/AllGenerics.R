@@ -65,6 +65,8 @@ setGeneric("mean")
 setGeneric("length")
 setGeneric("sd")
 setGeneric("median")
+setGeneric("min")
+setGeneric("max")
 setGeneric("na.omit")
 
 ##' @export

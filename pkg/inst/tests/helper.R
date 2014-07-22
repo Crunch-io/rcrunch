@@ -127,7 +127,7 @@ df <- data.frame(v1=c(rep(NA_real_, 5), rnorm(15)),
                  v2=c(letters[1:15], rep(NA_character_, 5)), 
                  v3=8:27,
                  v4=as.factor(LETTERS[2:3]),
-                 v5=as.Date(1:20, origin="1955-11-05"),
+                 v5=as.Date(0:19, origin="1955-11-05"),
                  v6=TRUE,
                  stringsAsFactors=FALSE)
 

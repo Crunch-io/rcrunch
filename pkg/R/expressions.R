@@ -19,21 +19,17 @@ vxv <- function (i) {
     return(function (e1, e2) math.exp(e1, e2, i))
 }
 
-for (i in c("+", "-", "*", "/")) {
+for (i in c("+", "-", "*", "/", "<", ">", ">=", "<=")) {
     setMethod(i, c("NumericVariable", "numeric"), vxr(i))
     setMethod(i, c("numeric", "NumericVariable"), rxv(i))
-    setMethod(i, c("CrunchExpression", "numeric"), vxv(i)) # no typeof?
-    setMethod(i, c("numeric", "CrunchExpression"), vxv(i)) # no typeof?
-    setMethod(i, c("CrunchVariable", "CrunchVariable"), vxv(i))
-    setMethod(i, c("CrunchExpression", "CrunchVariable"), vxv(i))
-    setMethod(i, c("CrunchVariable", "CrunchExpression"), vxv(i))
-}
-
-for (i in c("<", ">", ">=", "<=")) {
-    setMethod(i, c("NumericVariable", "numeric"), vxr(i))
-    setMethod(i, c("numeric", "NumericVariable"), rxv(i))
-    setMethod(i, c("CrunchExpression", "numeric"), vxv(i)) # no typeof?
-    setMethod(i, c("numeric", "CrunchExpression"), vxv(i)) # no typeof?
+    for (j in c("Date", "POSIXt")) {
+        setMethod(i, c("DatetimeVariable", j), vxr(i))
+        setMethod(i, c(j, "DatetimeVariable"), rxv(i))
+    }
+    for (j in c("numeric", "Date", "POSIXt")) {
+        setMethod(i, c("CrunchExpression", j), vxv(i)) # no typeof?
+        setMethod(i, c(j, "CrunchExpression"), vxv(i)) # no typeof?
+    }    
     setMethod(i, c("CrunchVariable", "CrunchVariable"), vxv(i))
     setMethod(i, c("CrunchExpression", "CrunchVariable"), vxv(i))
     setMethod(i, c("CrunchVariable", "CrunchExpression"), vxv(i))
@@ -49,10 +45,17 @@ for (i in c("==", "!=")) {
     setMethod(i, c("CrunchVariable", "CrunchExpression"), vxv(i))
 }
 
-.inCrunch <- function (x, table) math.exp(x, typeof(table, x), "contains")
-setMethod("%in%", c("TextVariable", "character"), .inCrunch)
-setMethod("%in%", c("NumericVariable", "numeric"), .inCrunch)
+.signatures <- list(
+    c("TextVariable", "character"),
+    c("NumericVariable", "numeric"),
+    c("DatetimeVariable", "Date"),
+    c("DatetimeVariable", "POSIXt")
+)
 
+.inCrunch <- function (x, table) math.exp(x, typeof(table, x), "contains")
+for (i in seq_along(.signatures)) {
+    setMethod("%in%", .signatures[[i]], .inCrunch)
+}
 
 setMethod("datasetReference", "CrunchExpression", function (x) x@dataset_url)
 

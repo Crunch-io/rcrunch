@@ -17,9 +17,10 @@ if (!run.only.local.tests) {
             })
             
             test_that("Can update numeric variable with filter and values", {
-                try(ds$v3[1:10] <- 2)
-                skip(expect_equivalent(mean(ds$v3), 1.5),
-                    "How do I create filter with numeric indices?")
+                skip({
+                    try(ds$v3[1:10] <- 2)
+                    expect_equivalent(mean(ds$v3), 1.5)
+                }, "How do I create filter with numeric indices?")
                 ds$v3 <- c(rep(2, 10), rep(1, 10))
                 expect_equivalent(mean(ds$v3), 1.5)
                 try(ds$v3[ds$v3 == 1] <- 3)
@@ -51,7 +52,9 @@ if (!run.only.local.tests) {
             })
             
             test_that("Can update datetime", {
-                
+                newvals <- as.Date(0:12, origin="1985-10-26")
+                try(ds$v5[ds$v5 >= as.Date("1955-11-12")] <- newvals)
+                expect_identical(max(ds$v5), as.POSIXct("1985-11-07"))
             })
             
             skip(test_that("Can update categorical variables", {

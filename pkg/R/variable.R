@@ -161,54 +161,35 @@ setMethod("[", c("CrunchVariable", "CrunchExpression"), function (x, i, ...) {
     payload <- list(command="update", 
         variables=structure(list(zcl(typeof(value, variable))),
             .Names=tuple(variable)$id))
-    if (!is.null(filter)) {
-        payload[["filter"]] <- zcl(filter)
-    }
+    payload[["filter"]] <- zcl(filter)
     update_url <- paste0(datasetReference(variable), "table/")
     # cat(toJSON(payload))
     invisible(POST(update_url, body=toJSON(payload)))
 }
 
-setMethod("[<-", c("CrunchVariable", "missing", "missing", "numeric"), 
-    function (x, i, j, value) {
-        out <- .updateVariable(x, value)
-        return(x)
-    })
+.dispatchFilter <- function (x) {
+    ## How to turn numeric into filter?
+    # fil <- list(`function`="contains", args=list(
+    #     list(column=I(seq_len(20)), type=list(class="numeric")), 
+    #     list(column=I(x), type=list(class="numeric"))))
+    # cat(toJSON(fil))
+    # class(fil) <- "zcl"
+    # fil <- seq_len(20) %in% x
+    return(x)
+}
 
-setMethod("[<-", c("CrunchVariable", "numeric", "missing", "numeric"), 
-    function (x, i, j, value) {
-        ## How to turn numeric into filter?
-        # payload[["filter"]] <- list(`function`="in", args=list(list(column=I(seq_len(NUMBEROFROWSINTHEDATASET)), type=list(class="numeric")), list(column=I(i), type=list(class="numeric"))))
-        fil <- NULL
-        out <- .updateVariable(x, value, filter=fil)
-        return(x)
-    })
+.sigs <- list(
+    c("TextVariable", "character"),
+    c("NumericVariable", "numeric"),
+    c("DatetimeVariable", "Date"),
+    c("DatetimeVariable", "POSIXt")
+)
 
-setMethod("[<-", c("CrunchVariable", "CrunchExpression", "missing", "numeric"),
-    function (x, i, j, value) {
-        ## Need to make sure expression is logical for filtering...
-        out <- .updateVariable(x, value, filter=i)
-        return(x)
-    })
-
-setMethod("[<-", c("TextVariable", "missing", "missing", "character"), 
-    function (x, i, j, value) {
-        out <- .updateVariable(x, value)
-        return(x)
-    })
-
-setMethod("[<-", c("TextVariable", "numeric", "missing", "character"), 
-    function (x, i, j, value) {
-        ## How to turn numeric into filter?
-        # payload[["filter"]] <- list(`function`="in", args=list(list(column=I(seq_len(NUMBEROFROWSINTHEDATASET)), type=list(class="numeric")), list(column=I(i), type=list(class="numeric"))))
-        fil <- NULL
-        out <- .updateVariable(x, value, filter=fil)
-        return(x)
-    })
-
-setMethod("[<-", c("TextVariable", "CrunchExpression", "missing", "character"),
-    function (x, i, j, value) {
-        ## Need to make sure expression is logical for filtering...
-        out <- .updateVariable(x, value, filter=i)
-        return(x)
-    })
+for (i in seq_along(.sigs)) {
+    setMethod("[<-", c(.sigs[[i]][1], "ANY", "missing", .sigs[[i]][2]),
+        function (x, i, j, value) {
+            if (missing(i)) i <- NULL
+            out <- .updateVariable(x, value, filter=.dispatchFilter(i))
+            return(x)
+        })
+}
