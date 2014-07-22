@@ -55,6 +55,7 @@ update_values <- function (x, i, value, filter=NULL) {
     updates <- structure(list(zcl(typeof(value, vartuple))), .Names=vartuple$id)
     payload <- list(command="update", variables=updates)
     if (!is.null(filter)) payload[["filter"]] <- zcl(filter)
+    # cat(toJSON(payload))
     out <- POST(update_url, body=toJSON(payload))
     return(x)
 }
@@ -96,7 +97,7 @@ setMethod("[<-", c("CrunchDataset", "ANY", "missing", "list"),
 
 ## TODO: add similar [<-.CrunchDataset, CrunchDataset/VariableCatalog
 
-setMethod("[<-", c("CrunchDataset", "CrunchExpression", "ANY", "numeric"),
+setMethod("[<-", c("CrunchDataset", "CrunchExpression", "ANY", "ANY"),
      function (x, i, j, value) {
         if (j %in% names(x)) {
             return(update_values(x, j, value, filter=i))

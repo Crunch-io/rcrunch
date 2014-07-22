@@ -42,17 +42,22 @@ if (!run.only.local.tests) {
             })
             
             test_that("Can update text", {
-                
+                try(ds$v2[is.na(ds$v1)] <- "z")
+                expect_identical(as.vector(ds$v2)[1:8], 
+                    c(rep("z", 5), "f", "g", "h"))
+                try(ds[ds$v2 %in% "z", "v2"] <- "y")
+                expect_identical(as.vector(ds$v2)[1:8], 
+                    c(rep("y", 5), "f", "g", "h"))
             })
             
             test_that("Can update datetime", {
                 
             })
             
-            test_that("Can update categorical variables", {
+            skip(test_that("Can update categorical variables", {
                 try(ds$v4[is.na(ds$v2)] <- "B")
                 expect_identical(table(ds$v4)["B"], 13L)
-            })
+            }))
             
             test_that("Can update with missing values", {
                 

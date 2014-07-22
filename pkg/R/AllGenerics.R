@@ -72,5 +72,6 @@ setGeneric("toVariable", function (x, ...) standardGeneric("toVariable"))
 
 setGeneric("lapply")
 setGeneric("is.na")
+setGeneric("%in%")
 
 setGeneric("zcl", function (x) standardGeneric("zcl"))

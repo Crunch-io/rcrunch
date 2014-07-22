@@ -153,27 +153,62 @@ setMethod("delete", "CategoricalArrayVariable", function (x, ...) {
 })
 
 setMethod("[", c("CrunchVariable", "CrunchExpression"), function (x, i, ...) {
-    CrunchExpression(dataset_url=datasetReference(x), expression=zcl(x), filter=zcl(i))
+    CrunchExpression(dataset_url=datasetReference(x), expression=zcl(x),
+        filter=zcl(i))
 })
 
-setMethod("[<-", c("CrunchVariable", "missing", "missing", "numeric"), function (x, i, j, value) {
-    payload <- list(command="update", variables=structure(list(zcl(typeof(value, x))), .Names=tuple(x)$id))
-    out <- POST(paste0(datasetReference(x), "table/"), body=toJSON(payload))
-    return(x)
-})
+.updateVariable <- function (variable, value, filter=NULL) {
+    payload <- list(command="update", 
+        variables=structure(list(zcl(typeof(value, variable))),
+            .Names=tuple(variable)$id))
+    if (!is.null(filter)) {
+        payload[["filter"]] <- zcl(filter)
+    }
+    update_url <- paste0(datasetReference(variable), "table/")
+    # cat(toJSON(payload))
+    invisible(POST(update_url, body=toJSON(payload)))
+}
 
-setMethod("[<-", c("CrunchVariable", "numeric", "missing", "numeric"), function (x, i, j, value) {
-    payload <- list(command="update", variables=structure(list(zcl(typeof(value, x))), .Names=tuple(x)$id))
-    ## How to turn numeric into filter?
-    # payload[["filter"]] <- list(`function`="in", args=list(list(column=I(seq_len(NUMBEROFROWSINTHEDATASET)), type=list(class="numeric")), list(column=I(i), type=list(class="numeric"))))
-    out <- POST(paste0(datasetReference(x), "table/"), body=toJSON(payload))
-    return(x)
-})
+setMethod("[<-", c("CrunchVariable", "missing", "missing", "numeric"), 
+    function (x, i, j, value) {
+        out <- .updateVariable(x, value)
+        return(x)
+    })
 
-setMethod("[<-", c("CrunchVariable", "CrunchExpression", "missing", "numeric"), function (x, i, j, value) {
-    payload <- list(command="update", variables=structure(list(zcl(typeof(value, x))), .Names=tuple(x)$id))
-    ## Need to make sure expression is logical for filtering...
-    payload[["filter"]] <- zcl(i)
-    out <- POST(paste0(datasetReference(x), "table/"), body=toJSON(payload))
-    return(x)
-})
+setMethod("[<-", c("CrunchVariable", "numeric", "missing", "numeric"), 
+    function (x, i, j, value) {
+        ## How to turn numeric into filter?
+        # payload[["filter"]] <- list(`function`="in", args=list(list(column=I(seq_len(NUMBEROFROWSINTHEDATASET)), type=list(class="numeric")), list(column=I(i), type=list(class="numeric"))))
+        fil <- NULL
+        out <- .updateVariable(x, value, filter=fil)
+        return(x)
+    })
+
+setMethod("[<-", c("CrunchVariable", "CrunchExpression", "missing", "numeric"),
+    function (x, i, j, value) {
+        ## Need to make sure expression is logical for filtering...
+        out <- .updateVariable(x, value, filter=i)
+        return(x)
+    })
+
+setMethod("[<-", c("TextVariable", "missing", "missing", "character"), 
+    function (x, i, j, value) {
+        out <- .updateVariable(x, value)
+        return(x)
+    })
+
+setMethod("[<-", c("TextVariable", "numeric", "missing", "character"), 
+    function (x, i, j, value) {
+        ## How to turn numeric into filter?
+        # payload[["filter"]] <- list(`function`="in", args=list(list(column=I(seq_len(NUMBEROFROWSINTHEDATASET)), type=list(class="numeric")), list(column=I(i), type=list(class="numeric"))))
+        fil <- NULL
+        out <- .updateVariable(x, value, filter=fil)
+        return(x)
+    })
+
+setMethod("[<-", c("TextVariable", "CrunchExpression", "missing", "character"),
+    function (x, i, j, value) {
+        ## Need to make sure expression is logical for filtering...
+        out <- .updateVariable(x, value, filter=i)
+        return(x)
+    })

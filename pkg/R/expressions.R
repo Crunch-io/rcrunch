@@ -19,7 +19,27 @@ vxv <- function (i) {
     return(function (e1, e2) math.exp(e1, e2, i))
 }
 
-for (i in c("+", "-", "*", "/", "<", ">", "==")) {
+for (i in c("+", "-", "*", "/")) {
+    setMethod(i, c("NumericVariable", "numeric"), vxr(i))
+    setMethod(i, c("numeric", "NumericVariable"), rxv(i))
+    setMethod(i, c("CrunchExpression", "numeric"), vxv(i)) # no typeof?
+    setMethod(i, c("numeric", "CrunchExpression"), vxv(i)) # no typeof?
+    setMethod(i, c("CrunchVariable", "CrunchVariable"), vxv(i))
+    setMethod(i, c("CrunchExpression", "CrunchVariable"), vxv(i))
+    setMethod(i, c("CrunchVariable", "CrunchExpression"), vxv(i))
+}
+
+for (i in c("<", ">", ">=", "<=")) {
+    setMethod(i, c("NumericVariable", "numeric"), vxr(i))
+    setMethod(i, c("numeric", "NumericVariable"), rxv(i))
+    setMethod(i, c("CrunchExpression", "numeric"), vxv(i)) # no typeof?
+    setMethod(i, c("numeric", "CrunchExpression"), vxv(i)) # no typeof?
+    setMethod(i, c("CrunchVariable", "CrunchVariable"), vxv(i))
+    setMethod(i, c("CrunchExpression", "CrunchVariable"), vxv(i))
+    setMethod(i, c("CrunchVariable", "CrunchExpression"), vxv(i))
+}
+
+for (i in c("==", "!=")) {
     setMethod(i, c("CrunchVariable", "numeric"), vxr(i))
     setMethod(i, c("numeric", "CrunchVariable"), rxv(i))
     setMethod(i, c("CrunchExpression", "numeric"), vxv(i)) # no typeof?
@@ -28,6 +48,11 @@ for (i in c("+", "-", "*", "/", "<", ">", "==")) {
     setMethod(i, c("CrunchExpression", "CrunchVariable"), vxv(i))
     setMethod(i, c("CrunchVariable", "CrunchExpression"), vxv(i))
 }
+
+.inCrunch <- function (x, table) math.exp(x, typeof(table, x), "contains")
+setMethod("%in%", c("TextVariable", "character"), .inCrunch)
+setMethod("%in%", c("NumericVariable", "numeric"), .inCrunch)
+
 
 setMethod("datasetReference", "CrunchExpression", function (x) x@dataset_url)
 

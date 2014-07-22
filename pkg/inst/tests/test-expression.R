@@ -59,6 +59,7 @@ if (!run.only.local.tests) {
                 e5 <- try(ds$v3[ds$v3 < 10])
                 expect_true(inherits(e5, "CrunchExpression"))
                 expect_identical(as.vector(e5), c(8, 9))
+                expect_identical(as.vector(ds$v3[ds$v3 %in% 10]), 10)
             })
         })
     })
