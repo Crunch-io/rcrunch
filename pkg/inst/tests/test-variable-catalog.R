@@ -68,6 +68,11 @@ if (!run.only.local.tests) {
         with(test.dataset(df), {
             ds <- .setup
             test_that("can set names and aliases", {
+                trace("crunchAPI", 
+                    exit=quote(cat(ifelse(http.verb == "PATCH", 
+                        paste(c(http.verb, url, list(...)[["body"]], "\n"), 
+                            collapse="\t"), ""))),
+                    print=FALSE, where=CrunchDataset)
                 n <- names(df)
                 print(n)
                 expect_identical(names(variables(ds)), n)
@@ -86,6 +91,7 @@ if (!run.only.local.tests) {
                 expect_identical(aliases(variables(ds)), n3)
                 print(aliases(variables(refresh(ds))))
                 expect_identical(aliases(variables(refresh(ds))), n3)
+                untrace("crunchAPI", where=CrunchDataset)
             })
         })
     })
