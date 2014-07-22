@@ -53,6 +53,10 @@ for (i in c("==", "!=")) {
 )
 
 .inCrunch <- function (x, table) math.exp(x, typeof(table, x), "contains")
+
+##' @export
+setMethod("%in%", .signatures[[1]], .inCrunch) ## do this for roxygen
+
 for (i in seq_along(.signatures)) {
     setMethod("%in%", .signatures[[i]], .inCrunch)
 }
