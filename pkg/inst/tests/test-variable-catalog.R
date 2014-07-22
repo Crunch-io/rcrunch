@@ -69,17 +69,22 @@ if (!run.only.local.tests) {
             ds <- .setup
             test_that("can set names and aliases", {
                 n <- names(df)
+                print(n)
                 expect_identical(names(variables(ds)), n)
                 expect_identical(aliases(variables(ds)), n)
                 names(variables(ds))[2:3] <- c("two", "three")
                 n2 <- n
                 n2[2:3] <- c("two", "three")
+                print(n2)
                 expect_identical(names(variables(ds)), n2)
+                print(names(variables(refresh(ds))))
                 expect_identical(names(variables(refresh(ds))), n2)
                 n3 <- n
                 n3[c(2,4)] <- c("due", "quattro")
+                print(n3)
                 aliases(variables(ds))[c(2,4)] <- c("due", "quattro")
                 expect_identical(aliases(variables(ds)), n3)
+                print(aliases(variables(refresh(ds))))
                 expect_identical(aliases(variables(refresh(ds))), n3)
             })
         })
