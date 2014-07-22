@@ -124,3 +124,6 @@ setMethod("undichotomize", "Categories", function (x) {
 setMethod("na.omit", "Categories", function (object, ...) {
     Categories(.na.omit.categories(object))
 })
+
+##' @export
+setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical(1), USE.NAMES=FALSE), .Names=names(x)))

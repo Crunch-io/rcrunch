@@ -22,8 +22,9 @@ vxv <- function (i) {
 for (i in c("+", "-", "*", "/", "<", ">", "==")) {
     setMethod(i, c("CrunchVariable", "numeric"), vxr(i))
     setMethod(i, c("numeric", "CrunchVariable"), rxv(i))
+    setMethod(i, c("CrunchExpression", "numeric"), vxv(i)) # no typeof?
+    setMethod(i, c("numeric", "CrunchExpression"), vxv(i)) # no typeof?
     setMethod(i, c("CrunchVariable", "CrunchVariable"), vxv(i))
-    setMethod(i, c("CrunchExpression", "numeric"), vxv(i))
     setMethod(i, c("CrunchExpression", "CrunchVariable"), vxv(i))
     setMethod(i, c("CrunchVariable", "CrunchExpression"), vxv(i))
 }
@@ -40,3 +41,8 @@ as.vector.CrunchExpression <- function (x, mode) {
     out <- POST(paste0(x@dataset_url, "table/"), body=toJSON(payload))
     return(columnParser(out$metadata$out$type)(out$data$out))
 }
+
+setMethod("is.na", "CrunchVariable", function (x) {
+    CrunchExpression(expression=zfunc("is_missing", x),
+        dataset_url=datasetReference(x))
+})

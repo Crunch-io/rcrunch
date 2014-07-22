@@ -5,7 +5,6 @@ context("Update a dataset")
 if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
-
             test_that("Can update numeric variable with values", {
                 try(ds$v3 <- 9:28)
                 test <- as.vector(ds$v3) - df$v3
@@ -34,6 +33,17 @@ if (!run.only.local.tests) {
             test_that("Can update numeric variable with expresssion", {
                 try(ds$v3 <- ds$v3 + 2)
                 expect_equivalent(as.vector(ds$v3), c(rep(7, 10), rep(9, 10)))
+            })
+            
+            test_that("Can filter on is.na", {
+                try(ds$v3[is.na(ds$v2)] <- 0)
+                expect_equivalent(as.vector(ds$v3), 
+                    c(rep(7, 10), rep(9, 5), rep(0, 5)))
+            })
+            
+            test_that("Can update categorical variables", {
+                try(ds$v4[is.na(ds$v2)] <- "B")
+                expect_identical(table(ds$v4)["B"], 13L)
             })
         })
     })

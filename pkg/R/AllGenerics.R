@@ -71,5 +71,6 @@ setGeneric("na.omit")
 setGeneric("toVariable", function (x, ...) standardGeneric("toVariable"))
 
 setGeneric("lapply")
+setGeneric("is.na")
 
 setGeneric("zcl", function (x) standardGeneric("zcl"))

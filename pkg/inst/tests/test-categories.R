@@ -96,6 +96,13 @@ with(fake.HTTP, {
         expect_false(is.dichotomized(cats2))
         expect_false(is.selected(cats2[[1]]))
     })
+    
+    test_that("is.na", {
+        expect_identical(is.na(cats), structure(c(FALSE, FALSE, TRUE), 
+            .Names=c("Male", "Female", "No Data")))
+        expect_true(is.na(cats[[3]]))
+        expect_false(is.na(cats[[1]]))
+    })
 
     test_that("na.omit", {
         expect_identical(length(cats), 3L)

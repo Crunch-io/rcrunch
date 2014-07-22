@@ -78,3 +78,5 @@ setMethod("show", "Category", function (object) {
 
 ##' @export
 setMethod("is.selected", "Category", function (x) isTRUE(x$selected))
+
+setMethod("is.na", "Category", function (x) isTRUE(x$missing))
