@@ -193,15 +193,18 @@ for (i in seq_along(.sigs)) {
             return(x)
         })
 }
+
 setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "numeric"),
     function (x, i, j, value) {
         if (missing(i)) i <- NULL
-        if (all(c(NA_integer_, -1) %in% value)) {
+        if (all(c(NA, -1) %in% value)) {
             stop("Cannot have both NA and -1 when specifying category ids",
                 call.=FALSE)
         }
         value[is.na(value)] <- -1
         invalids <- setdiff(value, ids(categories(x)))
+        add.no.data <- -1 %in% invalids
+        invalids <- setdiff(invalids, -1)
         if (length(invalids)) {
             plural <- length(invalids) > 1
             stop(paste0("Input value", ifelse(plural, "s ", " "),
@@ -209,9 +212,17 @@ setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "numeric"),
                 "not present in the category ids of variable ", dQuote(name(x))),
                 call.=FALSE)
         }
+        # if (add.no.data) {
+        #     newcats <- categories(x)
+        #     newcats[[length(newcats) + 1]] <- Category(.no.data)
+        #     print(class(newcats))
+        #     print(newcats)
+        #     categories(x) <- newcats
+        # }
         out <- .updateVariable(x, value, filter=.dispatchFilter(i))
         return(x)
     })
+
 setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "character"),
     function (x, i, j, value) {
         if (missing(i)) i <- NULL
@@ -229,9 +240,22 @@ setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "character"),
         out <- .updateVariable(x, value, filter=.dispatchFilter(i))
         return(x)
     })
+
 setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "factor"),
-function (x, i, j, value) {
-    if (missing(i)) i <- NULL
-    x[i] <- as.character(value)
-    return(x)
-})
+    function (x, i, j, value) {
+        if (missing(i)) i <- NULL
+        x[i] <- as.character(value) ## Inefficient, but probably fine
+        return(x)
+    })
+
+setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
+    function (x, i, j, value) {
+        if (all(is.na(value))) {
+            value <- ifelse(is.Text(x), NA_character_, NA_integer_)
+        } else {
+            stop("Cannot update CrunchVariable with logical", call.=FALSE)
+        }
+        if (missing(i)) i <- NULL
+        x[i] <- value
+        return(x)
+    })

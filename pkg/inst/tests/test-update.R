@@ -68,15 +68,22 @@ if (!run.only.local.tests) {
                     "Input values A, D, and E are not present in the category names of variable")
             })
             
-            skip({
             test_that("Can update with missing values", {
+                expect_identical(length(categories(ds$v4)), 2L)
                 try(ds$v4[is.na(ds$v2)] <- NA)
+                skip(expect_identical(length(categories(ds$v4)), 3L),
+                    "This isn't adding No Data category")
                 expect_identical(as.vector(ds$v4),
                     as.factor(c(rep(LETTERS[2:3], length=15), rep(NA, 5))))
-                try(ds$v1[is.na(ds$v4)] <- NA)
-                expect_identical(sum(is.na(as.vector(ds$v1))), 10L)
+                skip({
+                    try(ds$v1[is.na(ds$v4)] <- NA)
+                    expect_identical(as.vector(ds$v1[is.na(ds$v4)]), 
+                        rep(NA_integer_, 5))
+                    expect_identical(sum(is.na(as.vector(ds$v1))), 10L)
+                }, "is.na(ds$v4) returns 0 rows")
             })
             
+            skip({
             test_that("Can 'mark missing'", {
                 try(is.na(ds$v5) <- ds$v4 == "B")
                 try(is.na(ds$v6) <- ds$v4 %in% "C")
