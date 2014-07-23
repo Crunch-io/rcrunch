@@ -235,19 +235,12 @@ if (!run.only.local.tests) {
         })
         
         with(test.dataset(mrdf, "part1"), {
-            cast.these <- grep("mr_", names(part1))
-            part1[cast.these] <- lapply(part1[cast.these],
-                castVariable, "categorical")
-            var1 <- makeMR(pattern="mr_[123]", dataset=part1,
-                name="test1", selections="1.0")
+            part1 <- mrdf.setup(part1, selections="1.0")
             with(test.dataset(mrdf, "part2"), {
-                part2[cast.these] <- lapply(part2[cast.these],
-                    castVariable, "categorical")
-                var2 <- makeMR(pattern="mr_[123]", dataset=part2,
-                    name="test1", selections="1.0")
+                part2 <- mrdf.setup(part2, selections="1.0")
                 test_that("set up MR for appending", {
-                    expect_true(is.Multiple(var1))
-                    expect_true(is.Multiple(var2))
+                    expect_true(is.Multiple(part1$test1))
+                    expect_true(is.Multiple(part2$test1))
                     expect_identical(length(batches(part1)), 1L)
                     expect_identical(length(batches(part2)), 1L)
                 })
@@ -264,15 +257,12 @@ if (!run.only.local.tests) {
         })
         
         with(test.dataset(mrdf, "part1"), {
-            cast.these <- grep("mr_", names(part1))
-            part1[cast.these] <- lapply(part1[cast.these],
-                castVariable, "categorical")
-            var <- makeMR(pattern="mr_[123]", dataset=part1,
-                name="test1", selections="1.0")
+            part1 <- mrdf.setup(part1, selections="1.0")
             test_that("set up MR for appending", {
-                expect_true(is.Multiple(var))
+                expect_true(is.Multiple(part1$test1))
             })
             with(test.dataset(mrdf, "part2"), {
+                cast.these <- grep("mr_", names(part2))
                 part2[cast.these] <- lapply(part2[cast.these],
                     castVariable, "categorical")
                 test_that("unbound subvariables get lined up", {
@@ -288,22 +278,15 @@ if (!run.only.local.tests) {
         })
         
         with(test.dataset(mrdf[-3], "part1"), {
-            cast.these <- grep("mr_", names(part1))
-            part1[cast.these] <- lapply(part1[cast.these],
-                castVariable, "categorical")
-            var1 <- makeMR(pattern="mr_[12]", dataset=part1,
-                name="test1", selections="1.0")
+            part1 <- mrdf.setup(part1, selections="1.0")
             with(test.dataset(mrdf[-1], "part2"), {
-                part2[cast.these] <- lapply(part2[cast.these],
-                    castVariable, "categorical")
-                var2 <- makeMR(pattern="mr_[23]", dataset=part2,
-                    name="test1", selections="1.0")
+                part2 <- mrdf.setup(part2, selections="1.0")
                 test_that("set up MR for appending", {
-                    expect_true(is.Multiple(var1))
-                    expect_identical(names(subvariables(var1)),
+                    expect_true(is.Multiple(part1$test1))
+                    expect_identical(names(subvariables(part1$test1)),
                         c("mr_1", "mr_2"))
-                    expect_true(is.Multiple(var2))
-                    expect_identical(names(subvariables(var2)),
+                    expect_true(is.Multiple(part2$test1))
+                    expect_identical(names(subvariables(part2$test1)),
                         c("mr_2", "mr_3"))
                 })
                 test_that("arrays with different subvariables can append", {

@@ -64,13 +64,9 @@ with(fake.HTTP, {
 
 if (!run.only.local.tests) {
     with(test.authentication, {
-        with(test.dataset(mrdf, "testdf"), {
-            cast.these <- grep("mr_", names(testdf))
-            testdf[cast.these] <- lapply(testdf[cast.these],
-                castVariable, "categorical")
-            var <- makeMR(pattern="mr_[123]", dataset=testdf,
-                name="test1", selections="1.0")
-            
+        with(test.dataset(mrdf), {
+            ds <- mrdf.setup(ds, selections="1.0")
+            var <- ds$test1
             test_that("setup test case 2", {
                 expect_true(is.Multiple(var))
                 expect_identical(names(subvariables(var)),
@@ -90,8 +86,8 @@ if (!run.only.local.tests) {
             test_that("can't (yet) otherwise modify subvariables", {
                 expect_error(subvariables(var) <- NULL,
                     "Can only assign an object of class Subvariables")
-                with(test.dataset(df), {
-                    fake <- Subvariables(ds@variables[1:3])
+                with(test.dataset(df, "other.ds"), {
+                    fake <- Subvariables(other.ds@variables[1:3])
                     expect_error(subvariables(var) <- fake,
                         "Can only reorder, not change, subvariables")
                 })

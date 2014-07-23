@@ -57,21 +57,35 @@ if (!run.only.local.tests) {
                 expect_identical(max(ds$v5), as.POSIXct("1985-11-07"))
             })
             
-            skip(test_that("Can update categorical variables", {
+            test_that("Can update categorical variables", {
                 try(ds$v4[is.na(ds$v2)] <- "B")
-                expect_identical(table(ds$v4)["B"], 13L)
-            }))
+                expect_identical(table(ds$v4)["B"], c(B=13L))
+                try(ds$v4[is.na(ds$v2)] <- factor("C"))
+                expect_identical(table(ds$v4)["C"], c(C=12L))
+                try(ds$v4[is.na(ds$v2)] <- c(2,1,2,1,2))
+                expect_equivalent(table(ds$v4), table(df$v4))
+                expect_error(ds$v4[is.na(ds$v2)] <- as.factor(LETTERS[1:5]),
+                    "Input values A, D, and E are not present in the category names of variable")
+            })
             
+            skip({
             test_that("Can update with missing values", {
-                
+                try(ds$v4[is.na(ds$v2)] <- NA)
+                expect_identical(as.vector(ds$v4),
+                    as.factor(c(rep(LETTERS[2:3], length=15), rep(NA, 5))))
+                try(ds$v1[is.na(ds$v4)] <- NA)
+                expect_identical(sum(is.na(as.vector(ds$v1))), 10L)
             })
             
             test_that("Can 'mark missing'", {
-                
+                try(is.na(ds$v5) <- ds$v4 == "B")
+                try(is.na(ds$v6) <- ds$v4 %in% "C")
+            })
             })
         })
         
         with(test.dataset(mrdf), {
+            ds <- mrdf.setup(ds)
             test_that("Can update array subvariables", {
                 
             })

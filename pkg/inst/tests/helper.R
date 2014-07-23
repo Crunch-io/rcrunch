@@ -139,3 +139,16 @@ mrdf <- data.frame(mr_1=c(1,0,1,NA_real_),
 
 testfile.csv <- system.file("fake.csv", package="rcrunch", mustWork=TRUE)
 testfile.df <- read.csv(testfile.csv)
+
+mrdf.setup <- function (dataset, pattern="mr_", name="test1", selections=NULL) {
+    cast.these <- grep(pattern, names(dataset))
+    dataset[cast.these] <- lapply(dataset[cast.these],
+        castVariable, "categorical")
+    if (is.null(selections)) {
+        var <- makeArray(pattern=pattern, dataset=dataset, name=name)
+    } else {
+        var <- makeMR(pattern=pattern, dataset=dataset, name=name,
+            selections=selections)
+    }
+    return(refresh(dataset))
+}

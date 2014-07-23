@@ -193,3 +193,45 @@ for (i in seq_along(.sigs)) {
             return(x)
         })
 }
+setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "numeric"),
+    function (x, i, j, value) {
+        if (missing(i)) i <- NULL
+        if (all(c(NA_integer_, -1) %in% value)) {
+            stop("Cannot have both NA and -1 when specifying category ids",
+                call.=FALSE)
+        }
+        value[is.na(value)] <- -1
+        invalids <- setdiff(value, ids(categories(x)))
+        if (length(invalids)) {
+            plural <- length(invalids) > 1
+            stop(paste0("Input value", ifelse(plural, "s ", " "),
+                serialPaste(invalids), ifelse(plural, " are ", " is "),
+                "not present in the category ids of variable ", dQuote(name(x))),
+                call.=FALSE)
+        }
+        out <- .updateVariable(x, value, filter=.dispatchFilter(i))
+        return(x)
+    })
+setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "character"),
+    function (x, i, j, value) {
+        if (missing(i)) i <- NULL
+        value[is.na(value)] <- "No Data"
+        invalids <- setdiff(value, names(categories(x)))
+        if (length(invalids)) {
+            plural <- length(invalids) > 1
+            stop(paste0("Input value", ifelse(plural, "s ", " "),
+                serialPaste(invalids), ifelse(plural, " are ", " is "),
+                "not present in the category names of variable ",
+                dQuote(name(x))),
+                call.=FALSE)
+        }
+        value <- ids(categories(x))[match(value, names(categories(x)))]
+        out <- .updateVariable(x, value, filter=.dispatchFilter(i))
+        return(x)
+    })
+setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "factor"),
+function (x, i, j, value) {
+    if (missing(i)) i <- NULL
+    x[i] <- as.character(value)
+    return(x)
+})
