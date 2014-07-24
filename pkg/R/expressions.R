@@ -19,14 +19,25 @@ vxv <- function (i) {
     return(function (e1, e2) math.exp(e1, e2, i))
 }
 
+.sigs <- list(
+    c("TextVariable", "character"),
+    c("NumericVariable", "numeric"),
+    c("DatetimeVariable", "Date"),
+    c("DatetimeVariable", "POSIXt"),
+    c("CategoricalVariable", "numeric")
+)
+
+.rtypes <- unique(vapply(.sigs, function (a) a[[2]], character(1)))
+.nomath <- which(!vapply(.sigs, 
+    function (a) a[[1]] %in% c("TextVariable", "CategoricalVariable"),
+    logical(1)))
+
 for (i in c("+", "-", "*", "/", "<", ">", ">=", "<=")) {
-    setMethod(i, c("NumericVariable", "numeric"), vxr(i))
-    setMethod(i, c("numeric", "NumericVariable"), rxv(i))
-    for (j in c("Date", "POSIXt")) {
-        setMethod(i, c("DatetimeVariable", j), vxr(i))
-        setMethod(i, c(j, "DatetimeVariable"), rxv(i))
+    for (j in .nomath) {
+        setMethod(i, .sigs[[j]], vxr(i))
+        setMethod(i, rev(.sigs[[j]]), rxv(i))
     }
-    for (j in c("numeric", "Date", "POSIXt")) {
+    for (j in setdiff(.rtypes, "character")) {
         setMethod(i, c("CrunchExpression", j), vxv(i)) # no typeof?
         setMethod(i, c(j, "CrunchExpression"), vxv(i)) # no typeof?
     }    
@@ -35,30 +46,55 @@ for (i in c("+", "-", "*", "/", "<", ">", ">=", "<=")) {
     setMethod(i, c("CrunchVariable", "CrunchExpression"), vxv(i))
 }
 
+.catmeth <- function (i, Rarg=1) {
+    force(i)
+    force(Rarg)
+    return(function (e1, e2) {
+        if (Rarg == 1) {
+            e1 <- typeof(n2i(as.character(e1), categories(e2)), e2)
+        } else {
+            e2 <- typeof(n2i(as.character(e2), categories(e1)), e1)
+        }
+        return(math.exp(e1, e2, i))
+    })
+}
+
 for (i in c("==", "!=")) {
-    setMethod(i, c("CrunchVariable", "numeric"), vxr(i))
-    setMethod(i, c("numeric", "CrunchVariable"), rxv(i))
-    setMethod(i, c("CrunchExpression", "numeric"), vxv(i)) # no typeof?
-    setMethod(i, c("numeric", "CrunchExpression"), vxv(i)) # no typeof?
+    for (j in seq_along(.sigs)) {
+        setMethod(i, .sigs[[j]], vxr(i))
+        setMethod(i, rev(.sigs[[j]]), rxv(i))
+    }
+    setMethod(i, c("CategoricalVariable", "character"), .catmeth(i, 2))
+    setMethod(i, c("CategoricalVariable", "factor"), .catmeth(i, 2))
+    setMethod(i, c("character", "CategoricalVariable"), .catmeth(i, 1))
+    setMethod(i, c("factor", "CategoricalVariable"), .catmeth(i, i))
+    for (j in .rtypes) {
+        setMethod(i, c("CrunchExpression", j), vxv(i)) # no typeof?
+        setMethod(i, c(j, "CrunchExpression"), vxv(i)) # no typeof?
+    }
     setMethod(i, c("CrunchVariable", "CrunchVariable"), vxv(i))
     setMethod(i, c("CrunchExpression", "CrunchVariable"), vxv(i))
     setMethod(i, c("CrunchVariable", "CrunchExpression"), vxv(i))
 }
 
-.signatures <- list(
-    c("TextVariable", "character"),
-    c("NumericVariable", "numeric"),
-    c("DatetimeVariable", "Date"),
-    c("DatetimeVariable", "POSIXt")
-)
+setMethod("&", c("CrunchExpression", "CrunchExpression"), vxv("and"))
+setMethod("|", c("CrunchExpression", "CrunchExpression"), vxv("or"))
+setMethod("!", c("CrunchExpression"), 
+    function (x) {
+        CrunchExpression(expression=zfunc("not", x),
+            dataset_url=datasetReference(x))
+    })
+
 
 .inCrunch <- function (x, table) math.exp(x, typeof(table, x), "contains")
 
 ##' @export
-setMethod("%in%", .signatures[[1]], .inCrunch) ## do this for roxygen
-
-for (i in seq_along(.signatures)) {
-    setMethod("%in%", .signatures[[i]], .inCrunch)
+setMethod("%in%", c("CategoricalVariable", "character"), 
+    function (x, table) .inCrunch(x, n2i(table, categories(x))))
+setMethod("%in%", c("CategoricalVariable", "factor"), 
+    function (x, table) x %in% as.character(table))
+for (i in seq_along(.sigs)) {
+    setMethod("%in%", .sigs[[i]], .inCrunch)
 }
 
 setMethod("datasetReference", "CrunchExpression", function (x) x@dataset_url)

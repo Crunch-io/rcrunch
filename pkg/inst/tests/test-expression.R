@@ -60,6 +60,13 @@ if (!run.only.local.tests) {
                 expect_true(inherits(e5, "CrunchExpression"))
                 expect_identical(as.vector(e5), c(8, 9))
                 expect_identical(as.vector(ds$v3[ds$v3 %in% 10]), 10)
+                expect_identical(length(as.vector(ds$v3[ds$v4 %in% "B"])), 10L)
+                expect_equivalent(as.vector(ds$v3[ds$v4 %in% "B"]), 
+                    df$v3[df$v4 %in% "B"])
+                expect_equivalent(as.vector(ds$v3[ds$v3 >= 10 & ds$v3 < 13]),
+                    10:12)
+                expect_equivalent(as.vector(ds$v3[!(ds$v4 %in% "B")]), 
+                    df$v3[df$v4 %in% "C"])
             })
         })
     })

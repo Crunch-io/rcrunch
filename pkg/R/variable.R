@@ -236,7 +236,7 @@ setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "character"),
                 dQuote(name(x))),
                 call.=FALSE)
         }
-        value <- ids(categories(x))[match(value, names(categories(x)))]
+        value <- n2i(value, categories(x))
         out <- .updateVariable(x, value, filter=.dispatchFilter(i))
         return(x)
     })
@@ -250,12 +250,27 @@ setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "factor"),
 
 setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
     function (x, i, j, value) {
+        cal <- match.call()
+        print(cal)
         if (all(is.na(value))) {
             value <- ifelse(is.Text(x), NA_character_, NA_integer_)
         } else {
             stop("Cannot update CrunchVariable with logical", call.=FALSE)
         }
         if (missing(i)) i <- NULL
+        i <- zcl(.dispatchFilter(i))
+        
+        x@fragments$missing_rules
+        
         x[i] <- value
         return(x)
     })
+
+setMethod("is.na<-", "CrunchVariable", function (x, value) {
+    lab <- gsub('"', "", deparse(substitute(value)))
+    value <- zcl(.dispatchFilter(value))
+    payload <- structure(list(value), .Names=lab)
+    cat(toJSON(payload))
+    out <- POST(x@fragments$missing_rules, body=toJSON(payload))
+    return(x)
+})

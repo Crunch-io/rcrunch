@@ -68,26 +68,38 @@ if (!run.only.local.tests) {
                     "Input values A, D, and E are not present in the category names of variable")
             })
             
-            test_that("Can update with missing values", {
-                expect_identical(length(categories(ds$v4)), 2L)
-                try(ds$v4[is.na(ds$v2)] <- NA)
-                skip(expect_identical(length(categories(ds$v4)), 3L),
-                    "This isn't adding No Data category")
-                expect_identical(as.vector(ds$v4),
-                    as.factor(c(rep(LETTERS[2:3], length=15), rep(NA, 5))))
-                skip({
+            skip({
+                test_that("Can update with missing values", {
+                    expect_identical(length(categories(ds$v4)), 2L)
+                    try(ds$v4[is.na(ds$v2)] <- NA)
+                    expect_identical(length(categories(ds$v4)), 3L)
+                    expect_identical(as.vector(ds$v4),
+                        as.factor(c(rep(LETTERS[2:3], length=15), rep(NA, 5))))
                     try(ds$v1[is.na(ds$v4)] <- NA)
                     expect_identical(as.vector(ds$v1[is.na(ds$v4)]), 
                         rep(NA_integer_, 5))
                     expect_identical(sum(is.na(as.vector(ds$v1))), 10L)
-                }, "is.na(ds$v4) returns 0 rows")
+                })
+            }, "No Data isn't added, and is.na(ds$v4) returns 0 rows")
+            
+            test_that("reset test dataset", {
+                ds$v3[] <- df$v3
+                expect_equivalent(as.vector(ds$v3), df$v3)
+                ds$v4[] <- rep(1:2, length=20)
+                expect_equivalent(table(ds$v4), table(df$v4))
             })
             
-            skip({
             test_that("Can 'mark missing'", {
-                try(is.na(ds$v5) <- ds$v4 == "B")
-                try(is.na(ds$v6) <- ds$v4 %in% "C")
-            })
+                skip({
+                    try(is.na(ds$v3) <- ds$v3 >= 10 & ds$v3 < 13)
+                    expect_equivalent(as.vector(ds$v3),
+                        c(8, 9, rep(NA, 3), 13:27))
+                    try(is.na(ds$v5) <- ds$v4 == "B")
+                    expect_identical(sum(is.na(as.vector(ds$v5))), 10L)
+                    try(is.na(ds$v3) <- ds$v4 %in% "C")
+                    print(as.vector(ds$v3))
+                    expect_identical(sum(is.na(as.vector(ds$v3))), 10L)
+                }, "mark missing as function seems not to work")
             })
         })
         
