@@ -111,7 +111,8 @@ setMethod("undichotomize", "Categories", function (x) {
 })
 
 .na.omit.categories <- function (object, ...) {
-    missings <- is.na(object)
+    missings <- vapply(object, function (x) isTRUE(x$missing), logical(1),
+        USE.NAMES=FALSE)
     if (any(missings)) {
         object <- object[!missings]
         attr(object, "na.action") <- which(missings)

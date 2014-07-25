@@ -47,16 +47,16 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 }
 
 update_values <- function (x, i, value, filter=NULL) {
-    update_url <- x@fragments$table
-    if (is.character(i)) {
-        i <- match(i, names(x))
+    if (length(i) != 1) {
+        stop("Can only update one variable at a time (for the moment)",
+            call.=FALSE)
     }
-    vartuple <- variables(x)[[i]]
-    updates <- structure(list(zcl(typeof(value, vartuple))), .Names=vartuple$id)
-    payload <- list(command="update", variables=updates)
-    if (!is.null(filter)) payload[["filter"]] <- zcl(filter)
-    # cat(toJSON(payload))
-    out <- POST(update_url, body=toJSON(payload))
+    variable <- x[[i]]
+    if (is.null(filter)) {
+        variable[] <- value
+    } else {
+        variable[filter] <- value
+    }
     return(x)
 }
 
@@ -106,3 +106,4 @@ setMethod("[<-", c("CrunchDataset", "CrunchExpression", "ANY", "ANY"),
                 call.=FALSE)
         }
     })
+

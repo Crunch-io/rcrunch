@@ -180,7 +180,7 @@ setMethod("[", c("CrunchVariable", "CrunchExpression"), function (x, i, ...) {
         variables=.updatePayload(variable, value))
     payload[["filter"]] <- zcl(filter)
     update_url <- paste0(datasetReference(variable), "table/")
-    cat(toJSON(payload))
+    # cat(toJSON(payload))
     invisible(POST(update_url, body=toJSON(payload)))
 }
 
@@ -199,7 +199,8 @@ setMethod("[", c("CrunchVariable", "CrunchExpression"), function (x, i, ...) {
     c("TextVariable", "character"),
     c("NumericVariable", "numeric"),
     c("DatetimeVariable", "Date"),
-    c("DatetimeVariable", "POSIXt")
+    c("DatetimeVariable", "POSIXt"),
+    c("CrunchVariable", "CrunchExpression")
 )
 
 for (i in seq_along(.sigs)) {
@@ -291,7 +292,7 @@ setMethod("is.na<-", "CrunchVariable", function (x, value) {
     lab <- gsub('"', "", deparse(substitute(value)))
     value <- zcl(.dispatchFilter(value))
     payload <- structure(list(value), .Names=lab)
-    cat(toJSON(payload))
+    # cat(toJSON(payload))
     out <- POST(x@fragments$missing_rules, body=toJSON(payload))
     return(x)
 })

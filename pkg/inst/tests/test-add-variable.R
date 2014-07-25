@@ -86,11 +86,7 @@ if (!run.only.local.tests) {
         })
         
         with(test.dataset(df, "testdf"), {
-            test_that("[[<- and $<- cannot overwrite existing variables", {
-                expect_error(testdf[["v2"]] <- 1:20, 
-                    "Cannot currently overwrite existing Variables")
-                expect_error(testdf$v2 <- 1:20, 
-                    "Cannot currently overwrite existing Variables")
+            test_that("assignment restrictions", {
                 expect_error(testdf[[2]] <- 1:20, 
                     "Only character \\(name\\) indexing supported")
             })
