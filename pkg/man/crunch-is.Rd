@@ -1,4 +1,5 @@
 \name{is.dataset}
+\alias{is.Array}
 \alias{is.CA}
 \alias{is.Categorical}
 \alias{is.CategoricalArray}
@@ -31,6 +32,8 @@
   is.MultipleResponse(x)
 
   is.CA(x)
+
+  is.Array(x)
 
   is.CategoricalArray(x)
 }
