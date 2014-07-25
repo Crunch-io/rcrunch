@@ -50,6 +50,10 @@ is.CA <- function (x) class(x) %in% "CategoricalArrayVariable" ## so it doesn't 
 
 ##' @rdname crunch-is
 ##' @export
+is.Array <- function (x) inherits(x, "CategoricalArrayVariable")
+
+##' @rdname crunch-is
+##' @export
 is.CategoricalArray <- is.CA
     
 as.variable <- function (x, subtype=NULL, tuple=VariableTuple()) {
@@ -157,13 +161,26 @@ setMethod("[", c("CrunchVariable", "CrunchExpression"), function (x, i, ...) {
         filter=zcl(i))
 })
 
+.updatePayload <- function (variable, value) {
+    if (is.Array(variable)) {
+        subvars <- subvariables(variable)@index
+        subids <- unlist(lapply(subvars, function (x) x$id))
+        out <- lapply(subids, function (x) zcl(typeof(value, structure(zfunc("typeof", structure(list(variable=x), class="zcl")), class="zcl"))))
+        # out <- rep(list(zcl(typeof(value, "categorical"))), length(subvars))
+        names(out) <- subids
+    } else {
+        out <- structure(list(zcl(typeof(value, variable))),
+            .Names=tuple(variable)$id)
+    }
+    return(out)
+}
+
 .updateVariable <- function (variable, value, filter=NULL) {
     payload <- list(command="update", 
-        variables=structure(list(zcl(typeof(value, variable))),
-            .Names=tuple(variable)$id))
+        variables=.updatePayload(variable, value))
     payload[["filter"]] <- zcl(filter)
     update_url <- paste0(datasetReference(variable), "table/")
-    # cat(toJSON(payload))
+    cat(toJSON(payload))
     invisible(POST(update_url, body=toJSON(payload)))
 }
 
@@ -194,8 +211,9 @@ for (i in seq_along(.sigs)) {
         })
 }
 
-setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "numeric"),
-    function (x, i, j, value) {
+## Set of functions to use in multiple dispatches
+.categorical.update <- list(
+    numeric=function (x, i, j, value) {
         if (missing(i)) i <- NULL
         if (all(c(NA, -1) %in% value)) {
             stop("Cannot have both NA and -1 when specifying category ids",
@@ -221,10 +239,8 @@ setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "numeric"),
         # }
         out <- .updateVariable(x, value, filter=.dispatchFilter(i))
         return(x)
-    })
-
-setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "character"),
-    function (x, i, j, value) {
+    },
+    character=function (x, i, j, value) {
         if (missing(i)) i <- NULL
         value[is.na(value)] <- "No Data"
         invalids <- setdiff(value, names(categories(x)))
@@ -239,32 +255,37 @@ setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "character"),
         value <- n2i(value, categories(x))
         out <- .updateVariable(x, value, filter=.dispatchFilter(i))
         return(x)
-    })
-
-setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "factor"),
-    function (x, i, j, value) {
+    },
+    factor=function (x, i, j, value) {
         if (missing(i)) i <- NULL
         x[i] <- as.character(value) ## Inefficient, but probably fine
         return(x)
-    })
+    }
+)
 
-setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
-    function (x, i, j, value) {
-        cal <- match.call()
-        print(cal)
-        if (all(is.na(value))) {
-            value <- ifelse(is.Text(x), NA_character_, NA_integer_)
-        } else {
-            stop("Cannot update CrunchVariable with logical", call.=FALSE)
-        }
-        if (missing(i)) i <- NULL
-        i <- zcl(.dispatchFilter(i))
-        
-        x@fragments$missing_rules
-        
-        x[i] <- value
-        return(x)
-    })
+for (i in c("CategoricalVariable", "CategoricalArrayVariable")) {
+    for (j in c("numeric", "character", "factor")) {
+        setMethod("[<-", c(i, "ANY", "missing", j), .categorical.update[[j]])
+    }
+}
+
+# setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
+#     function (x, i, j, value) {
+#         cal <- match.call()
+#         print(cal)
+#         if (all(is.na(value))) {
+#             value <- ifelse(is.Text(x), NA_character_, NA_integer_)
+#         } else {
+#             stop("Cannot update CrunchVariable with logical", call.=FALSE)
+#         }
+#         if (missing(i)) i <- NULL
+#         i <- zcl(.dispatchFilter(i))
+#         
+#         x@fragments$missing_rules
+#         
+#         x[i] <- value
+#         return(x)
+#     })
 
 setMethod("is.na<-", "CrunchVariable", function (x, value) {
     lab <- gsub('"', "", deparse(substitute(value)))

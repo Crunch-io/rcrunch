@@ -35,7 +35,7 @@ setMethod("zcl", "zcl", function (x) x)
 
 typeof <- function (x, variable) {
     if (is.character(variable)) {
-        variable <- list(type=list(class=variable))
+        variable <- list(class=variable)
     } else if (is.variable(variable) || inherits(variable, "VariableTuple")) {
         variable <- zfunc("typeof", variable)
     }

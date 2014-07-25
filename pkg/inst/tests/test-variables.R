@@ -32,6 +32,8 @@ with(fake.HTTP, {
         expect_true(is.Text(ds[["textVar"]]))
         expect_true(is.Datetime(ds$starttime))
         expect_true(is.Multiple(ds$mymrset))
+        expect_true(is.Array(ds$mymrset))
+        expect_false(is.CA(ds$mymrset))
     })
     
     test_that("Categories", {
