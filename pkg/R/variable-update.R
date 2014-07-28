@@ -16,6 +16,7 @@
     payload <- list(command="update", 
         variables=.updatePayload(variable, value))
     payload[["filter"]] <- zcl(filter)
+    # payload[["frame"]] <- "primary"
     update_url <- paste0(datasetReference(variable), "table/")
     # cat(toJSON(payload))
     invisible(POST(update_url, body=toJSON(payload)))
