@@ -33,6 +33,13 @@
     return(x)
 }
 
+setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"),
+    function (x, i, j, value) {
+        ## Backstop error so you don't get "Object of class S4 is not subsettable"
+        stop(paste("Cannot update", class(x), "with type", class(value)),
+            call.=FALSE)
+    })
+
 .sigs <- list(
     c("TextVariable", "character"),
     c("NumericVariable", "numeric"),
@@ -49,6 +56,16 @@ for (i in seq_along(.sigs)) {
             return(x)
         })
 }
+
+setMethod("[<-", c("CrunchVariable", "CrunchExpression", "missing", "CrunchExpression"),
+    function (x, i, j, value) {
+        if (!identical(zcl(i), value@filter)) {
+            stop("Cannot update a variable with a value that has a different filter",
+                call.=FALSE)
+        } else {
+            callNextMethod()
+        }
+    })
 
 ## Set of functions to use in multiple dispatches
 .categorical.update <- list(
@@ -110,6 +127,7 @@ for (i in c("CategoricalVariable", "CategoricalArrayVariable")) {
 
 # setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
 #     function (x, i, j, value) {
+#           ## For assigning NA
 #         cal <- match.call()
 #         print(cal)
 #         if (all(is.na(value))) {

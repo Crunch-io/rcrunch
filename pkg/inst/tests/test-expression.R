@@ -68,6 +68,11 @@ if (!run.only.local.tests) {
                 expect_equivalent(as.vector(ds$v3[!(ds$v4 %in% "B")]), 
                     df$v3[df$v4 %in% "C"])
             })
+            
+            test_that("filtered categorical returns factor", {
+                expect_equivalent(as.vector(ds$v4[ds$v4 == "B"]), 
+                    factor(rep("B", 10)))
+            })
         })
     })
 }

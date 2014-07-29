@@ -107,7 +107,10 @@ as.vector.CrunchExpression <- function (x, mode) {
         payload[["filter"]] <- x@filter
     }
     out <- POST(paste0(x@dataset_url, "table/"), body=toJSON(payload))
-    return(columnParser(out$metadata$out$type)(out$data$out))
+    ## pass in the variable metadata to the column parser
+    variable <- as.variable(structure(list(body=out$metadata$out),
+        class="shoji"))
+    return(columnParser(out$metadata$out$type)(out$data$out, variable))
 }
 
 setMethod("is.na", "CrunchVariable", function (x) {
