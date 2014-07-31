@@ -12,7 +12,7 @@ makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key=namekey(d
             "selection"), call.=FALSE)
     }
     
-    Call[[1L]] <- as.name("prepareBindInputs")
+    Call[[1L]] <- quote(rcrunch:::prepareBindInputs)
     x <- eval.parent(Call)
     
     ## Get the actual variables so that we can validate

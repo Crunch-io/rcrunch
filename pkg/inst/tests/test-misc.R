@@ -56,6 +56,12 @@ test_that("rethrow a caught error", {
     expect_error(rethrow(e), "error in a box")
 })
 
+test_that("%||%", {
+    expect_identical("f" %||% "g", "f")
+    expect_identical(NULL %||% "g", "g")
+    expect_identical("f" %||% stop("Nooooooo!"), "f")
+})
+
 test_that("dirtyElements", {
     x <- list(
         list(a=1, b=1),
