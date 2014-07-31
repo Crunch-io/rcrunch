@@ -60,6 +60,12 @@ with(fake.HTTP, {
         expect_error(mr[c("First", "Other")],
             "Undefined subvariables selected")
     })
+    
+    test_that("show method for Subvariables", {
+        mr <- refresh(mr)
+        expect_identical(showSubvariables(subvariables(mr)), 
+            "\n Subvariables: \n   $`First`\n   $`Second`\n   $`Last`\n\n")
+    })
 })
 
 if (!run.only.local.tests) {

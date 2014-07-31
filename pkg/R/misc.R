@@ -89,5 +89,5 @@ serialPaste <- function (x, collapse="and") {
 now <- function () strftime(Sys.time(), usetz=TRUE)
 
 ## Borrowed from Hadley
-"%||%" <- function(a, b) if (!is.null(a)) a else b
+"%||%" <- function (a, b) if (!is.null(a)) a else b
 
