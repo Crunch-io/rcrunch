@@ -1,8 +1,7 @@
 showCrunchVariable <- function (x) {
-    out <- c(getNameAndType(x), "")
+    out <- getNameAndType(x)
     desc <- x@body$description
-    if (!is.null(desc)) out <- c(out, desc, "")
-    out <- c(out, "")
+    if (!is.null(desc)) out <- c(out, "", desc)
     return(doc(out))
 }
 
@@ -15,8 +14,14 @@ getNameAndType <- function (x) {
 ##' @export
 setMethod("show", "CrunchVariable", function (object) {
     out <- showCrunchVariable(object)
+    cat(out, "\n")
+    try(print(summary(object)), silent=TRUE)
+    invisible(out)
+})
+
+setMethod("show", "MultipleResponseVariable", function (object) {
+    out <- c(showCrunchVariable(object), showSubvariables(subvariables(object)))
     cat(out)
-    print(summary(object))
     invisible(out)
 })
 
@@ -48,6 +53,20 @@ showCrunchDataset <- function (x) {
 ##' @export
 setMethod("show", "CrunchDataset", function (object) {
     out <- showCrunchDataset(object)
+    cat(out)
+    invisible(out)
+})
+
+showSubvariables <- function (object) {
+    out <- c("Subvariables:", "", vapply(object@index, function (x) {
+        paste0("  $`", x$name, "`\n")
+    }, character(1)))
+    return(doc(out))
+}
+
+##' @export
+setMethod("show", "Subvariables", function (object) {
+    out <- showSubvariables(object)
     cat(out)
     invisible(out)
 })
