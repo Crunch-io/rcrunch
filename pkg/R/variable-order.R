@@ -24,7 +24,7 @@ setMethod("initialize", "VariableOrder", init.VariableOrder)
         }
     } else if (is.dataset(x)) {
         x <- names(x@variables@index)
-    } else if (is.variable(entities)) {
+    } else if (is.variable(x)) {
         x <- self(x)
     } else if (!(is.character(x) || inherits(x, "VariableGroup"))) {
         stop("")
