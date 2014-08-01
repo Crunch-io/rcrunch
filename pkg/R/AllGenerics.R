@@ -46,7 +46,7 @@ setGeneric("refresh", function (x) standardGeneric("refresh"))
 setGeneric("delete", function (x, ...) standardGeneric("delete"),
     signature="x")
 setGeneric("readonly<-", function (x, value) standardGeneric("readonly<-"))
-setGeneric("entities", function (x) standardGeneric("entities"))
+setGeneric("entities", function (x, ...) standardGeneric("entities"))
 setGeneric("entities<-", function (x, value) standardGeneric("entities<-"))
 setGeneric("tuple", function (x) standardGeneric("tuple"))
 setGeneric("tuple<-", function (x, value) standardGeneric("tuple<-"))
