@@ -62,6 +62,7 @@ setMethod("entities", "VariableOrder", function (x, unlist=TRUE) {
     }
     return(es)
 })
+##' @export
 setMethod("entities<-", "VariableGroup", function (x, value) {
     x@entities <- .initEntities(value)
     return(x)
