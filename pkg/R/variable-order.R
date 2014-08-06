@@ -7,36 +7,64 @@ init.VariableOrder <- function (.Object, ...) {
 }
 setMethod("initialize", "VariableOrder", init.VariableOrder)
 
+.initEntities <- function (x) {
+    if (is.list(x)) {
+        raw.groups <- vapply(x, 
+            function (a) {
+                is.list(a) && setequal(c("group", "entities"), names(a))
+            }, logical(1))
+        x[raw.groups] <- lapply(x[raw.groups], 
+            function (a) do.call(VariableGroup, a))
+        nested.groups <- vapply(x, 
+            function (a) inherits(a, "VariableGroup"), logical(1))
+        if (any(nested.groups)) {
+            x[!nested.groups] <- lapply(x[!nested.groups], .initEntities)
+        } else {
+            x <- vapply(x, .initEntities, character(1), USE.NAMES=FALSE)
+        }
+    } else if (is.dataset(x)) {
+        x <- names(x@variables@index)
+    } else if (is.variable(x)) {
+        x <- self(x)
+    } else if (!(is.character(x) || inherits(x, "VariableGroup"))) {
+        stop("")
+    }
+    return(x)
+}
+
 init.VariableGroup <- function (.Object, group, entities, ...) {
     dots <- list(...)
     if ("variables" %in% names(dots)) entities <- dots$variables
-    if (is.list(entities)) {
-        entities <- vapply(entities, function (x) self(x), character(1), USE.NAMES=FALSE)
-    } else if (is.dataset(entities)) {
-        entities <- names(entities@variables@index)
-    } else if (is.variable(entities)) {
-        entities <- self(entities)
-    }
     if ("name" %in% names(dots)) group <- dots$name
     .Object@group <- group
-    .Object@entities <- entities
+    .Object@entities <- .initEntities(entities)
     return(.Object)
 }
 setMethod("initialize", "VariableGroup", init.VariableGroup)
 
 ##' @export
-setMethod("entities", "VariableGroup", function (x) x@entities)
-setMethod("entities", "VariableOrder", function (x) {
+setMethod("entities", "VariableGroup", function (x, unlist=TRUE) {
+    out <- x@entities
+    if (is.list(out)) {
+        nested.groups <- vapply(out, 
+            function (a) inherits(a, "VariableGroup"), logical(1))
+        out[nested.groups] <- lapply(out[nested.groups], 
+            function (a) entities(a))
+        if (unlist) out <- unique(unlist(out))
+    }
+    return(out)
+})
+setMethod("entities", "VariableOrder", function (x, unlist=TRUE) {
     ## To get a flattened view
     es <- lapply(x, function (a) entities(a))
-    return(unique(unlist(es)))
-})
-setMethod("entities<-", "VariableGroup", function (x, value) {
-    if (is.list(value)) {
-        value <- vapply(value, function (x) self(x), character(1),
-            USE.NAMES=FALSE)
+    if (unlist) {
+        es <- unique(unlist(es))
     }
-    x@entities <- value
+    return(es)
+})
+##' @export
+setMethod("entities<-", "VariableGroup", function (x, value) {
+    x@entities <- .initEntities(value)
     return(x)
 })
 
@@ -59,13 +87,21 @@ setMethod("names<-", "VariableOrder",
     })
 setMethod("toJSON", "VariableOrder", function (x, ...) toJSON(x@.Data, ...))
     ## need that toJSON method so that names don't get assigned bc of the names() method
-setMethod("toJSON", "VariableGroup", function (x, ...) {
+
+.jsonprep.vargroup <- function (x) {
     ents <- x@entities
     if (length(ents) == 0) {
         ## toJSON(character(0)) is [""], which is length 1 :(
         ents <- list() ## but toJSON(list()) is []
+    } else if (is.list(ents)) {
+        nested.groups <- vapply(ents, inherits, logical(1),
+            what="VariableGroup")
+        ents[nested.groups] <- lapply(ents[nested.groups], .jsonprep.vargroup)
     }
-    toJSON(list(group=x@group, entities=I(ents)))
+    return(list(group=x@group, entities=I(ents)))
+}
+setMethod("toJSON", "VariableGroup", function (x, ...) {
+    toJSON(.jsonprep.vargroup(x), ...)
 })
 
 ##' @export
@@ -94,6 +130,7 @@ printVariableOrder <- function (x) {
 
 printVariableGroup <- function (group, index) {
     cat(name(group), "\n")
+    ## extend this to display nested groups
     print(vapply(index[entities(group)], function (x) x[["name"]] %||% "(Hidden variable)", character(1), USE.NAMES=FALSE))
     invisible()
 }
