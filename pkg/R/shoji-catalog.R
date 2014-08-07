@@ -1,3 +1,20 @@
+init.ShojiCatalog <- function (.Object, ...) {
+    .Object <- callNextMethod(.Object, ...)
+    names(.Object@index) <- absolutizeURLs(names(.Object@index), .Object@self)
+    return(.Object)
+}
+setMethod("initialize", "ShojiCatalog", init.ShojiCatalog)
+
+absolutizeURLs <- function (urls, base) {
+    ## Detect if we have relative urls, and then concatenate if so
+    if (length(urls) && ## if there is anything to munge
+        !any(substr(urls, 1, 4) == "http") && ## the urls don't start with http
+        substr(base, nchar(base), nchar(base)) == "/") { ## because of test mock
+            urls <- paste0(base, urls)
+        }
+    return(urls)
+}
+
 is.shojiCatalog <- function (x) inherits(x, "ShojiCatalog")
 
 setIndexSlot <- function (x, i, value) {

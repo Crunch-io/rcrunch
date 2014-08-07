@@ -39,6 +39,12 @@ test_that("ShojiCatalog", {
     expect_identical(sho@index, fo$index)
 })
 
+with(fake.HTTP, {
+    full.urls <- DatasetCatalog(GET("api/datasets.json"))
+    rel.urls <- DatasetCatalog(GET("api/datasets-relative-urls.json"))
+    expect_identical(names(full.urls@index), names(rel.urls@index))
+})
+
 if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
