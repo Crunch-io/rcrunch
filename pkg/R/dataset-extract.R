@@ -40,13 +40,13 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 
 .addVariableSetter <- function (x, i, value) {
     if (i %in% names(x)) {
-        return(update_values(x, i, value))
+        return(.updateValues(x, i, value))
     } else {
         addVariable(x, values=value, name=i, alias=i)
     }
 }
 
-update_values <- function (x, i, value, filter=NULL) {
+.updateValues <- function (x, i, value, filter=NULL) {
     if (length(i) != 1) {
         stop("Can only update one variable at a time (for the moment)",
             call.=FALSE)
@@ -100,7 +100,7 @@ setMethod("[<-", c("CrunchDataset", "ANY", "missing", "list"),
 setMethod("[<-", c("CrunchDataset", "CrunchExpression", "ANY", "ANY"),
      function (x, i, j, value) {
         if (j %in% names(x)) {
-            return(update_values(x, j, value, filter=i))
+            return(.updateValues(x, j, value, filter=i))
         } else {
             stop("Cannot add variable to dataset with a row index specified",
                 call.=FALSE)

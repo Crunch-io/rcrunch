@@ -23,6 +23,11 @@
 }
 
 .dispatchFilter <- function (x) {
+    if (is.numeric(x)) {
+        ## Temporary backstop error so you don't get ZZ9Error, Filter expressions MUST be function references."
+        stop("Update with numeric index not yet supported",
+            call.=FALSE)
+    }
     ## How to turn numeric into filter?
     # fil <- list(`function`="contains", args=list(
     #     list(column=I(seq_len(20)), type=list(class="numeric")), 
@@ -39,7 +44,7 @@ setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"),
         stop(paste("Cannot update", class(x), "with type", class(value)),
             call.=FALSE)
     })
-
+    
 .sigs <- list(
     c("TextVariable", "character"),
     c("NumericVariable", "numeric"),
@@ -145,6 +150,9 @@ for (i in c("CategoricalVariable", "CategoricalArrayVariable")) {
 #     })
 
 setMethod("is.na<-", "CrunchVariable", function (x, value) {
+    ## Temporarily kill this method until API supports correctly
+    stop("is.na<- not yet supported for CrunchVariables", call.=FALSE)
+    
     lab <- gsub('"', "", deparse(substitute(value)))
     value <- zcl(.dispatchFilter(value))
     payload <- structure(list(value), .Names=lab)
