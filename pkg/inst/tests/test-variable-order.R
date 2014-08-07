@@ -20,6 +20,53 @@ with(fake.HTTP, {
         expect_true(inherits(ordering(test.ds), "VariableOrder"))
         expect_identical(ordering(variables(test.ds)), ordering(test.ds))
     })
+    
+    test.ord <- ordering(test.ds)
+    ents <- entities(test.ord)
+    test_that("can create nested groups", {
+        ord <- try(VariableOrder(
+            VariableGroup(name="Group 1", entities=list(ents[1], 
+                VariableGroup(name="Nested", entities=ents[2:3]),
+                ents[4])),
+            VariableGroup(name="Group 2", entities=ents[5])))
+        expect_true(inherits(ord, "VariableOrder"))
+        expect_identical(entities(ord), ents)
+        
+        varcat <- test.ds@variables
+        varcat@views$hierarchical_order <- sub("hierarchical",
+            "nested-hierarchical", varcat@views$hierarchical_order)
+        expect_identical(do.call(VariableOrder,
+            GET(varcat@views$hierarchical_order)$groups), ord)
+            
+        vglist <- fromJSON(toJSON(ord))
+        expect_identical(vglist, list(
+            list(
+                group="Group 1",
+                entities=list(
+                    ents[1],
+                    list(
+                        group="Nested",
+                        entities=ents[2:3]
+                    ),
+                    ents[4]
+                    )
+                ),
+            list(
+                group="Group 2",
+                entities=ents[5]
+            )
+        ))
+    })
+    
+    test_that("can assign nested groups in entities", {
+        ng <- list(ents[1], 
+                    VariableGroup(name="Nested", entities=ents[2:3]),
+                    ents[4])
+        try(entities(test.ord[[1]]) <- ng)
+        expect_identical(entities(test.ord[[1]], unlist=FALSE), 
+            list(ents[1], ents[2:3], ents[4]))
+        expect_identical(entities(test.ord[[1]]), ents[1:4])
+    })
 })
 
 

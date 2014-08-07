@@ -55,12 +55,13 @@ CategoricalArrayVariable <- setClass("CategoricalArrayVariable",
 MultipleResponseVariable <-setClass("MultipleResponseVariable",
     contains="CategoricalArrayVariable")
 
+setClassUnion("characterOrList", c("character", "list"))
 ##' @export
 VariableOrder <- setClass("VariableOrder", contains="list")
 ##' @export
 VariableGroup <- setClass("VariableGroup", representation=representation(
     group="character",
-    entities="character"
+    entities="characterOrList"
 ))
 
 VariableCatalog <- setClass("VariableCatalog", contains="ShojiCatalog",
