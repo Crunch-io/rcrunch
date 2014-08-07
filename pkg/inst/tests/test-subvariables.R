@@ -68,7 +68,7 @@ with(fake.HTTP, {
     })
 })
 
-if (!run.only.local.tests) {
+if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(mrdf), {
             ds <- mrdf.setup(ds, selections="1.0")

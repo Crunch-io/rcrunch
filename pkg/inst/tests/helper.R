@@ -1,4 +1,4 @@
-run.only.local.tests <- isTRUE(as.logical(Sys.getenv("LOCALONLY")))
+run.integration.tests <- Sys.getenv("LOCALONLY") == "FALSE"
 
 set.seed(666)
 

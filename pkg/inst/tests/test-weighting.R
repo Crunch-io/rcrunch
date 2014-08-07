@@ -1,6 +1,6 @@
 context("Weights")
 
-if (!run.only.local.tests) {
+if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
             test_that("Can set weight variable", {

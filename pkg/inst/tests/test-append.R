@@ -69,7 +69,7 @@ test_that("askForPermission says no if not interactive", {
     expect_false(askForPermission())
 })
 
-if (!run.only.local.tests) {
+if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df, "part1"), {
             cats <- categories(part1$v4)

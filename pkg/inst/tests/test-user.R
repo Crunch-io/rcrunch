@@ -8,7 +8,7 @@ with(fake.HTTP, {
     })
 })
 
-if (!run.only.local.tests) {
+if (run.integration.tests) {
     test_that("User can be fetched", {
         with(test.authentication, {
             user <- try(getUser())

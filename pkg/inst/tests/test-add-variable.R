@@ -38,7 +38,7 @@ test_that("POSTNewVariable rejects invalid categories", {
         "Invalid category names: must be unique")
 })
 
-if (!run.only.local.tests) {
+if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df, "testdf"), {
             test_that("addVariable creates a new remote numeric variable", {

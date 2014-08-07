@@ -4,7 +4,7 @@ test_that("fake.csv is what we expect", {
     expect_identical(dim(testfile.df), c(20L, 6L))
 })
 
-if (!run.only.local.tests) {
+if (run.integration.tests) {
     test_that("Source file cannot be uploaded if not logged in", {
         logout()
         expect_error(createSource(testfile.csv), 

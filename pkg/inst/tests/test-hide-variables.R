@@ -1,6 +1,6 @@
 context("Hiding variables")
 
-if (!run.only.local.tests) {
+if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df, "testdf"), {
             var1 <- testdf[[1]]

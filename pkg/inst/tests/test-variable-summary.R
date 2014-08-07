@@ -70,7 +70,7 @@ with(fake.HTTP, {
     })
 })
 
-if (!run.only.local.tests) {
+if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df, "testdf"), {
             test_that("can fetch variable summaries", {

@@ -28,7 +28,7 @@ test_that("login checks for email and password before POSTing", {
         "Must supply a password")
 })
 
-if (!run.only.local.tests) {
+if (run.integration.tests) {
     test_that("login works if crunch is running", {
         deleteSessionInfo()
         login()

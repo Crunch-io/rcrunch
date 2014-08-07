@@ -1,6 +1,6 @@
 context("Categorical Array")
 
-if (!run.only.local.tests) {
+if (run.integration.tests) {
     with(test.authentication, {
         test_that("can make Categorical Array in several ways", {
             with(test.dataset(mrdf, "testdf"), {

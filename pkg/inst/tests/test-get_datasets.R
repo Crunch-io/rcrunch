@@ -24,7 +24,7 @@ with(fake.HTTP, {
     })
 })
 
-if (!run.only.local.tests) {
+if (run.integration.tests) {
     test_that("updateDatasetList requires authentication", {
         logout()
         expect_error(updateDatasetList(), 

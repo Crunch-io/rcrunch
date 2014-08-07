@@ -2,7 +2,7 @@ context("Timings")
 
 
 skip({
-if (!run.only.local.tests) {
+if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(), {
             with(timed.HTTP("hierarchical_timings.tsv"), {

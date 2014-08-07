@@ -2,7 +2,7 @@ context("Update a dataset")
 
 ## For functional transformations, distinguish between "do this update to fix this data once" and "do this to every batch I append too"?
 
-if (!run.only.local.tests) {
+if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
             test_that("Can update numeric variable with values", {

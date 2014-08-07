@@ -39,7 +39,7 @@ test_that("ShojiCatalog", {
     expect_identical(sho@index, fo$index)
 })
 
-if (!run.only.local.tests) {
+if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
             test_that("refresh", {

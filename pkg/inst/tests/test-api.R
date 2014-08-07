@@ -23,7 +23,7 @@ test_that("crunchUserAgent", {
     expect_true(grepl("anotherpackage", getCrunchUserAgent()))
 })
 
-if (!run.only.local.tests) {
+if (run.integration.tests) {
     with(test.authentication, 
         test_that("API root can be fetched", {
             expect_false(is.error(try(getAPIroot())))
