@@ -1,3 +1,4 @@
+##' @export
 setGeneric("values", function (x) standardGeneric("values"))
 setGeneric("values<-", function (x, value) standardGeneric("values<-"))
 
