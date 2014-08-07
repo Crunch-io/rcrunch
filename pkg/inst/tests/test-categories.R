@@ -96,6 +96,13 @@ with(fake.HTTP, {
         expect_false(is.dichotomized(cats2))
         expect_false(is.selected(cats2[[1]]))
     })
+    
+    test_that("is.na", {
+        expect_identical(is.na(cats), structure(c(FALSE, FALSE, TRUE), 
+            .Names=c("Male", "Female", "No Data")))
+        expect_true(is.na(cats[[3]]))
+        expect_false(is.na(cats[[1]]))
+    })
 
     test_that("na.omit", {
         expect_identical(length(cats), 3L)
@@ -109,8 +116,7 @@ with(fake.HTTP, {
 
 if (!run.only.local.tests) {
     with(test.authentication, {
-        with(test.dataset(df), {
-            testdf <- .setup
+        with(test.dataset(df, "testdf"), {
             test_that("categories setters persist to the server", {
                 expect_equal(names(categories(testdf$v4)), c("B", "C"))
                 names(categories(testdf$v4))[1] <- "V"

@@ -23,6 +23,13 @@ init.Category <- function (.Object, ...) {
 }
 setMethod("initialize", "Category", init.Category)
 
+.no.data <- list(
+    id=-1L,
+    name="No Data",
+    numeric_value=NULL,
+    missing=TRUE
+)
+
 setName <- function (x, value) {
     x[["name"]] <- value
     return(x)
@@ -78,3 +85,5 @@ setMethod("show", "Category", function (object) {
 
 ##' @export
 setMethod("is.selected", "Category", function (x) isTRUE(x$selected))
+
+setMethod("is.na", "Category", function (x) isTRUE(x$missing))

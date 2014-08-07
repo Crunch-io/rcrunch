@@ -3,8 +3,7 @@ context("Categorical Array")
 if (!run.only.local.tests) {
     with(test.authentication, {
         test_that("can make Categorical Array in several ways", {
-            with(test.dataset(mrdf), {
-                testdf <- .setup
+            with(test.dataset(mrdf, "testdf"), {
                 var <- makeArray(testdf[1:3], name="test1")
                 expect_true(is.CA(var))
                 testdf <- refresh(testdf)
@@ -14,8 +13,7 @@ if (!run.only.local.tests) {
                 expect_equal(c("TESTONE", "v4"), variableNames(testdf))
                     ## because names() point to variable aliases
             })
-            with(test.dataset(mrdf), {
-                testdf <- .setup
+            with(test.dataset(mrdf, "testdf"), {
                 var <- makeArray(testdf[c("mr_1", "mr_2", "mr_3")],
                     name="test1")
                 expect_true(is.CA(var))
@@ -28,8 +26,7 @@ if (!run.only.local.tests) {
                 expect_identical(names(testdf), "v4")
                 expect_identical(ncol(testdf), 1L)   
             })
-            with(test.dataset(mrdf), {
-                testdf <- .setup
+            with(test.dataset(mrdf, "testdf"), {
                 var <- makeArray(pattern="mr_[123]", dataset=testdf,
                     name="test1")
                 expect_true(is.CA(var))
@@ -44,8 +41,7 @@ if (!run.only.local.tests) {
             })
         })
         
-        with(test.dataset(mrdf), {
-            testdf <- .setup
+        with(test.dataset(mrdf, "testdf"), {
             test_that("makeArray error conditions", {
                 no.name <- "Must provide the name for the new variable"
                 no.match <- "Pattern did not match any variables"
@@ -57,8 +53,7 @@ if (!run.only.local.tests) {
                     name="foo"), no.match)
                 expect_true(is.CA(makeArray(c("mr_1", "mr_2", "mr_3"),
                     dataset=testdf, name="foo")))
-                skip(with(test.dataset(df), {
-                    nottestdf <- .setup
+                skip(with(test.dataset(df, "nottestdf"), {
                     expect_error(makeArray(testdf[1:3], dataset=nottestdf,
                         name="test1"), ds.mismatch)
                 }))
@@ -66,8 +61,7 @@ if (!run.only.local.tests) {
         })
         
         test_that("can make MultipleResponse from CategoricalArray", {
-            with(test.dataset(mrdf), {
-                testdf <- .setup
+            with(test.dataset(mrdf, "testdf"), {
                 var <- makeArray(pattern="mr_[123]", dataset=testdf,
                     name="test1")
                 expect_true(is.CA(var))
@@ -95,8 +89,7 @@ if (!run.only.local.tests) {
         })
         
         test_that("can make MultipleResponse directly", {
-            with(test.dataset(mrdf), {
-                testdf <- .setup
+            with(test.dataset(mrdf, "testdf"), {
                 cast.these <- grep("mr_", names(testdf))
                 testdf[cast.these] <- lapply(testdf[cast.these],
                     castVariable, "categorical")
@@ -115,8 +108,7 @@ if (!run.only.local.tests) {
                 expect_identical(ncol(testdf), 4L)
             })
             
-            with(test.dataset(mrdf), {
-                testdf <- .setup
+            with(test.dataset(mrdf, "testdf"), {
                 test_that("makeMR error conditions", {
                     no.name <- "Must provide the name for the new variable"
                     no.match <- "Pattern did not match any variables"
@@ -139,8 +131,7 @@ if (!run.only.local.tests) {
                     expect_error(makeMR(pattern="mr_[123]", dataset=testdf,
                         name="test1", selections="Not a Selection!"),
                         not.categorical)
-                    skip(with(test.dataset(df), {
-                        nottestdf <- .setup
+                    skip(with(test.dataset(df, "nottestdf"), {
                         expect_error(makeMR(testdf[1:3], dataset=nottestdf,
                             name="test1"), ds.mismatch)
                     }), "userdataset problem?")

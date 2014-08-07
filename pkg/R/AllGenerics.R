@@ -16,7 +16,7 @@ setGeneric("name<-", function (x, value) standardGeneric("name<-"),
 setGeneric("description", function (x) standardGeneric("description"))
 setGeneric("description<-",
     function (x, value) standardGeneric("description<-"), signature="x")
-setGeneric("alias", function (x) standardGeneric("alias"))
+setGeneric("alias")
 setGeneric("alias<-", function (x, value) standardGeneric("alias<-"),
     signature="x")
 setGeneric("aliases", function (x) standardGeneric("aliases"))
@@ -65,9 +65,16 @@ setGeneric("mean")
 setGeneric("length")
 setGeneric("sd")
 setGeneric("median")
+setGeneric("min")
+setGeneric("max")
 setGeneric("na.omit")
 
 ##' @export
 setGeneric("toVariable", function (x, ...) standardGeneric("toVariable"))
 
 setGeneric("lapply")
+setGeneric("is.na")
+setGeneric("is.na<-")
+setGeneric("%in%")
+
+setGeneric("zcl", function (x) standardGeneric("zcl"))

@@ -32,6 +32,8 @@ with(fake.HTTP, {
         expect_true(is.Text(ds[["textVar"]]))
         expect_true(is.Datetime(ds$starttime))
         expect_true(is.Multiple(ds$mymrset))
+        expect_true(is.Array(ds$mymrset))
+        expect_false(is.CA(ds$mymrset))
     })
     
     test_that("Categories", {
@@ -57,7 +59,6 @@ with(fake.HTTP, {
 if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
-            ds <- .setup
             test_that("can delete variables", {
                 expect_true("v1" %in% names(ds))
                 d <- try(delete(ds$v1))
@@ -67,7 +68,6 @@ if (!run.only.local.tests) {
         })
         
         with(test.dataset(df), {
-            ds <- .setup
             test_that("can modify names and descriptions", {
                 name(ds$v1) <- "Variable 1"
                 expect_identical(name(ds$v1), "Variable 1")

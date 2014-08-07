@@ -3,12 +3,16 @@ getSummary <- function (x) {
     if (is.null(url)) {
         stop("No summary available", call.=FALSE)
     }
-    url <- GET(url)
+    out <- GET(url)
     ## Summaries don't return as shoji entities
     # if (!is.shoji(url)) {
     #     stop("Error in retrieving summary", call.=FALSE)
     # }
-    return(url)
+    if (is.Datetime(x)) {
+        toR <- columnParser("datetime")
+        for (i in c("min", "max")) out[[i]] <- toR(out[[i]])
+    }
+    return(out)
 }
 
 getFrequencies <- function (x) {

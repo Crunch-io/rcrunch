@@ -73,7 +73,6 @@ with(fake.HTTP, {
 if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
-            ds <- .setup
             test_that("Can get VariableOrder from dataset", {
                 expect_identical(ordering(ds), 
                     VariableOrder(VariableGroup(name="ungrouped", 
@@ -86,7 +85,6 @@ if (!run.only.local.tests) {
         })
         
         with(test.dataset(df), {
-            ds <- .setup
             test_that("Can construct VariableOrder from variables", {
                 vg <- VariableOrder(
                     VariableGroup(name="Group 1", 
@@ -142,7 +140,8 @@ if (!run.only.local.tests) {
                 expect_identical(grouped(ordering(ds)), vg)
                 expect_identical(grouped(ordering(refresh(ds))), vg)
                 expect_true(inherits(ungrouped(ordering(ds)), "VariableGroup"))
-                expect_true(inherits(ungrouped(ordering(refresh(ds))), "VariableGroup"))
+                expect_true(inherits(ungrouped(ordering(refresh(ds))),
+                    "VariableGroup"))
 
                 ds <- refresh(ds)
                 expect_false(identical(ordering(variables(ds)), original.order))

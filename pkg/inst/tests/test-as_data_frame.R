@@ -48,51 +48,49 @@ with(fake.HTTP, {
 
 if (!run.only.local.tests) {
     with(test.authentication, {
-        with(test.dataset(df), {
-            test.asdf <- .setup
-        
+        with(test.dataset(df), {        
             test_that("as.vector methods correctly handle data from the API", {
-                expect_true(is.Numeric(test.asdf[["v1"]]))
-                expect_true(is.Text(test.asdf[["v2"]]))
-                expect_true(is.Numeric(test.asdf[["v3"]]))
-                expect_true(is.Categorical(test.asdf[["v4"]]))
-                expect_true(is.Datetime(test.asdf$v5))
+                expect_true(is.Numeric(ds[["v1"]]))
+                expect_true(is.Text(ds[["v2"]]))
+                expect_true(is.Numeric(ds[["v3"]]))
+                expect_true(is.Categorical(ds[["v4"]]))
+                expect_true(is.Datetime(ds$v5))
         
-                expect_true(is.numeric(as.vector(test.asdf$v1)))
-                expect_identical(sum(is.na(as.vector(test.asdf$v1))), 5L)
-                expect_equivalent(as.vector(test.asdf$v1), df$v1)
+                expect_true(is.numeric(as.vector(ds$v1)))
+                expect_identical(sum(is.na(as.vector(ds$v1))), 5L)
+                expect_equivalent(as.vector(ds$v1), df$v1)
         
-                expect_true(is.character(as.vector(test.asdf$v2)))
-                expect_identical(sum(is.na(as.vector(test.asdf$v2))), 5L)
-                expect_equivalent(as.vector(test.asdf$v2), df$v2)
+                expect_true(is.character(as.vector(ds$v2)))
+                expect_identical(sum(is.na(as.vector(ds$v2))), 5L)
+                expect_equivalent(as.vector(ds$v2), df$v2)
         
-                expect_true(is.numeric(as.vector(test.asdf$v3)))
-                expect_equivalent(as.vector(test.asdf$v3), df$v3)
+                expect_true(is.numeric(as.vector(ds$v3)))
+                expect_equivalent(as.vector(ds$v3), df$v3)
                 
-                expect_true(is.factor(as.vector(test.asdf$v4)))
-                expect_equivalent(as.vector(test.asdf$v4), df$v4)
+                expect_true(is.factor(as.vector(ds$v4)))
+                expect_equivalent(as.vector(ds$v4), df$v4)
                 
-                expect_true(inherits(as.vector(test.asdf$v5), "POSIXt"))
-                expect_equivalent(as.vector(test.asdf$v5),
+                expect_true(inherits(as.vector(ds$v5), "POSIXt"))
+                expect_equivalent(as.vector(ds$v5),
                     as.POSIXct(as.character(df$v5)))
             })
         
             test_that("as.data.frame with API", {
-                expect_true(is.data.frame(as.data.frame(test.asdf)))
-                expect_identical(dim(as.data.frame(test.asdf)), dim(df))
-                expect_identical(names(as.data.frame(test.asdf)), names(df))
-                expect_identical(as.data.frame(test.asdf)$v1,
-                    as.vector(test.asdf$v1))
+                expect_true(is.data.frame(as.data.frame(ds)))
+                expect_identical(dim(as.data.frame(ds)), dim(df))
+                expect_identical(names(as.data.frame(ds)), names(df))
+                expect_identical(as.data.frame(ds)$v1,
+                    as.vector(ds$v1))
             })
         
             test_that("model.frame thus works on CrunchDataset over API", {
                 ## would like this to be "identical" instead of "equivalent"
-                expect_equivalent(model.frame(v1 ~ v3, data=test.asdf),
+                expect_equivalent(model.frame(v1 ~ v3, data=ds),
                     model.frame(v1 ~ v3, data=df))
             })
         
             test_that("so lm() should work too over the API", {
-                test.lm <- lm(v1 ~ v3, data=test.asdf)
+                test.lm <- lm(v1 ~ v3, data=ds)
                 expected <- lm(v1 ~ v3, data=df)
                 expect_true(inherits(test.lm, "lm"))
                 expect_identical(names(test.lm), names(expected))

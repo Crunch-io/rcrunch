@@ -72,8 +72,7 @@ with(fake.HTTP, {
 
 if (!run.only.local.tests) {
     with(test.authentication, {
-        with(test.dataset(df), {
-            testdf <- .setup
+        with(test.dataset(df, "testdf"), {
             test_that("can fetch variable summaries", {
                 summ <- getSummary(testdf$v1)
                 expect_true(is.list(summ))

@@ -22,9 +22,10 @@ setMethod("toVariable", "Date", function (x, ...) {
 # })
 setMethod("toVariable", "logical", function (x, ...) {
     ## Make it categorical
-    return(list(values=2L-as.integer(x), type="categorical", 
+    out <- list(values=2L-as.integer(x), type="categorical", 
         categories=categoriesFromLevels(c("True", "False")),
-        ...))
+        ...)
+    return(NAToCategory(out))
 })
 
 categoriesFromLevels <- function (x) {
@@ -36,12 +37,7 @@ categoriesFromLevels <- function (x) {
 NAToCategory <- function (var.metadata) {
     if (any(is.na(var.metadata$values))) {
         var.metadata$values[is.na(var.metadata$values)] <- -1L
-        var.metadata$categories[[length(var.metadata$categories)+1]] <- list(
-            id=-1L,
-            name="No Data",
-            numeric_value=NULL,
-            missing=TRUE
-        )
+        var.metadata$categories[[length(var.metadata$categories)+1]] <- .no.data
     }
     return(var.metadata)
 }

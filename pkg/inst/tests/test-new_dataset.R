@@ -24,13 +24,12 @@ if (!run.only.local.tests) {
         })
         test_that("Dataset container object can be created if logged in", {
             with(test.dataset(), {
-                expect_true(is.dataset(.setup))
+                expect_true(is.dataset(ds))
             })
         })
         test_that("Source can be added to Dataset", {
             source <- createSource(testfile.csv)
             with(test.dataset(), {
-                ds <- .setup
                 ds <- try(addSourceToDataset(ds, source))
                 expect_true(is.dataset(ds))
                 expect_identical(nrow(ds), 20L)
@@ -81,8 +80,7 @@ if (!run.only.local.tests) {
                 expect_false(d1@useAlias)
             delete(d1)
         })
-        with(test.dataset(df), {
-            testdf <- .setup
+        with(test.dataset(df, "testdf"), {
             test_that("Dataset variable types get set correctly", {
                 expect_true(is.Numeric(testdf[["v1"]]))
                 expect_true(is.Text(testdf[["v2"]]))
@@ -96,8 +94,7 @@ if (!run.only.local.tests) {
                 expect_true(is.Categorical(testdf$v6))
             })
             
-            with(test.dataset(mrdf), {
-                testmrdf <- .setup
+            with(test.dataset(mrdf, "testmrdf"), {
                 test_that("names() are the same and in the right order", {
                     expect_true(setequal(names(df), names(testdf)))
                     expect_identical(names(df), names(testdf))

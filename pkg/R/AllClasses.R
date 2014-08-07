@@ -14,7 +14,8 @@ ShojiObject <- setClass("ShojiObject",
         urls="ANY",
         catalogs="ANY",
         specification="ANY",
-        views="ANY"
+        views="ANY",
+        fragments="ANY"
     ),
     prototype=prototype(readonly=FALSE))
 
@@ -93,3 +94,17 @@ Categories <- setClass("Categories", contains="list")
 Category <- setClass("Category", contains="namedList")
 
 Subvariables <- setClass("Subvariables", contains="ShojiCatalog")
+
+CrunchExpression <- setClass("CrunchExpression",
+    representation=representation(
+        dataset_url="character",
+        expression="list",
+        filter="list",
+        variables="VariableCatalog"
+    ),
+    prototype=prototype(
+        dataset_url="",
+        expression=list(),
+        filter=list(),
+        variables=VariableCatalog()
+    ))

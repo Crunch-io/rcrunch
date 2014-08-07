@@ -2,8 +2,7 @@ context("Hiding variables")
 
 if (!run.only.local.tests) {
     with(test.authentication, {
-        with(test.dataset(df), {
-            testdf <- .setup
+        with(test.dataset(df, "testdf"), {
             var1 <- testdf[[1]]
             test_that("Hide and unhide method for variables", {
                 expect_true(name(var1) %in% findVariables(testdf, key="name", value=TRUE))
@@ -17,9 +16,7 @@ if (!run.only.local.tests) {
             })
         })
         
-        with(test.dataset(df), {
-            testdf <- .setup
-            
+        with(test.dataset(df, "testdf"), {            
             test_that("hideVariables and hiddenVariables for Dataset", {
                 expect_equivalent(hidden(testdf)@index, list())
                 expect_identical(hiddenVariables(testdf), c())
@@ -49,9 +46,7 @@ if (!run.only.local.tests) {
             })
         })
         
-        with(test.dataset(df), {
-            testdf <- .setup
-            
+        with(test.dataset(df, "testdf"), {
             test_that("hideVariables with grep (and by index)", {
                 testdf <- hideVariables(testdf, pattern="v[23]")
                 expect_identical(names(testdf)[1:2], c("v1", "v4"))
@@ -68,7 +63,6 @@ if (!run.only.local.tests) {
         })
         
         with(test.dataset(df), {
-            ds <- .setup
             test_that("can hide variables by group", {
                 ordering(ds) <- VariableOrder(
                     VariableGroup(name="g1", variables=ds$v1),

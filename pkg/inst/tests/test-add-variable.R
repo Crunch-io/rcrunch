@@ -40,8 +40,7 @@ test_that("POSTNewVariable rejects invalid categories", {
 
 if (!run.only.local.tests) {
     with(test.authentication, {
-        with(test.dataset(df), {
-            testdf <- .setup
+        with(test.dataset(df, "testdf"), {
             test_that("addVariable creates a new remote numeric variable", {
                 testdf <- addVariable(testdf, df$v3, name="New var", alias="newVar")
                 expect_true("newVar" %in% names(testdf))
@@ -86,13 +85,8 @@ if (!run.only.local.tests) {
             })
         })
         
-        with(test.dataset(df), {
-            testdf <- .setup
-            test_that("[[<- and $<- cannot overwrite existing variables", {
-                expect_error(testdf[["v2"]] <- 1:20, 
-                    "Cannot currently overwrite existing Variables")
-                expect_error(testdf$v2 <- 1:20, 
-                    "Cannot currently overwrite existing Variables")
+        with(test.dataset(df, "testdf"), {
+            test_that("assignment restrictions", {
                 expect_error(testdf[[2]] <- 1:20, 
                     "Only character \\(name\\) indexing supported")
             })
@@ -119,7 +113,6 @@ if (!run.only.local.tests) {
         )
         test_that("addVariables that are categorical_array", {
             with(test.dataset(), {
-                ds <- .setup
                 POSTNewVariable(ds@urls$variables_url, ca.var)
                 ds <- refresh(ds)
                 expect_true(is.CA(ds$categoricalArray))
@@ -131,13 +124,13 @@ if (!run.only.local.tests) {
             with(test.dataset(), {
                 c2 <- ca.var
                 c2$subvariables[[4]] <- list(this="is", not="a", valid="variable")
-                ds <- .setup
                 nvars.before <- ncol(ds)
                 vars.before <- getDatasetVariables(ds)
                 expect_identical(nvars.before, 0L)
-                note("The following error is expected: ")
-                expect_error(POSTNewVariable(ds@urls$variables_url, c2), 
-                    "Subvariables errored on upload")
+                with(silencer, 
+                    expect_error(POSTNewVariable(ds@urls$variables_url, c2), 
+                        "Subvariables errored on upload")
+                )
                 ds <- refresh(ds)
                 expect_identical(ncol(ds), nvars.before)
                 expect_identical(getDatasetVariables(ds), vars.before)
@@ -145,7 +138,6 @@ if (!run.only.local.tests) {
         })
         test_that("addVariables that are multiple_response", {
             with(test.dataset(), {
-                ds <- .setup
                 newvar <- list(
                     name="Multiple response",
                     alias="multipleResponse",

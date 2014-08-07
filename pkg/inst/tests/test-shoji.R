@@ -43,13 +43,12 @@ if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
             test_that("refresh", {
-                rt <- .setup
-                expect_identical(rt, refresh(rt))
-                rt2 <- rt
-                rt2@body$name <- "something else"
-                expect_false(identical(rt2, rt))
-                expect_false(identical(rt2, refresh(rt2)))
-                expect_identical(refresh(rt2), rt)
+                expect_identical(ds, refresh(ds))
+                ds2 <- ds
+                ds2@body$name <- "something else"
+                expect_false(identical(ds2, ds))
+                expect_false(identical(ds2, refresh(ds2)))
+                expect_identical(refresh(ds2), ds)
             })
         })
     })

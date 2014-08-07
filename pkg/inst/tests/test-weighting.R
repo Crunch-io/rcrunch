@@ -3,7 +3,6 @@ context("Weights")
 if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
-            ds <- .setup
             test_that("Can set weight variable", {
                 expect_identical(weight(ds), NULL)
                 weight(ds) <- ds$v3

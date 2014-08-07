@@ -90,7 +90,6 @@ test_that("encoding", {
 if (!run.only.local.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
-            ds <- .setup
             s <- iconv("aided_follow_grid:ElCorteInglés", to="UTF-8")
             name(ds$v1) <- s
             expect_identical(name(ds$v1), s)

@@ -111,7 +111,8 @@ setMethod("undichotomize", "Categories", function (x) {
 })
 
 .na.omit.categories <- function (object, ...) {
-    missings <- vapply(object, function (x) isTRUE(x$missing), logical(1))
+    missings <- vapply(object, function (x) isTRUE(x$missing), logical(1),
+        USE.NAMES=FALSE)
     if (any(missings)) {
         object <- object[!missings]
         attr(object, "na.action") <- which(missings)
@@ -124,3 +125,12 @@ setMethod("undichotomize", "Categories", function (x) {
 setMethod("na.omit", "Categories", function (object, ...) {
     Categories(.na.omit.categories(object))
 })
+
+##' @export
+setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical(1), USE.NAMES=FALSE), .Names=names(x)))
+
+n2i <- function (x, cats) {
+    ## Convert x from category names to the corresponding category ids
+    if (is.variable(cats)) cats <- categories(cats)
+    return(ids(cats)[match(x, names(cats))])
+}

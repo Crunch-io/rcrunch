@@ -36,14 +36,12 @@ if (!run.only.local.tests) {
             col0 <- datasetCatalog()
             expect_true(inherits(col0, "DatasetCatalog"))
             with(test.dataset(df), {
-                testdf <- .setup
                 col1 <- datasetCatalog()
                 expect_true(inherits(col1, "DatasetCatalog"))
                 expect_equal(length(col1), length(col0) + 1)
             })
         })
         with(test.dataset(df), {
-            ds <- .setup
             dsname <- name(ds)
             test_that("Dataset list can be retrieved if authenticated", {
                 expect_true(is.character(listDatasets()))
@@ -78,7 +76,6 @@ if (!run.only.local.tests) {
         })
         
         with(test.dataset(df), {
-            ds <- .setup
             dsname <- name(ds)
             dsnum <- which(listDatasets() %in% dsname)
             test_that("deleteDataset by index", {
@@ -93,7 +90,6 @@ if (!run.only.local.tests) {
         })
         
         with(test.dataset(df), {
-            ds <- .setup
             dsname <- name(ds)
             test_that("deleteDataset on Dataset object", {
                 expect_true(dsname %in% listDatasets())

@@ -17,25 +17,24 @@ is.tap.reporter <- grepl('reporter ?= ?"tap"',
     paste(deparse(sys.calls()[[1]]), collapse=""))
 if (is.tap.reporter) {
     skip <- function (..., reason="") invisible() # cat("skip ", reason, "\n")
-    note <- function (...) invisible()
 } else {
     ## for the test running...S.....
     skip <- function (...) cat(colourise("S", "yellow"))
-    note <- cat
 }
 
 #####################
 ## Test decorators ##
 #####################
-setup.and.teardown <- function (setup, teardown) {
-    structure(list(setup=setup, teardown=teardown), class="SUTD")
+setup.and.teardown <- function (setup, teardown, obj.name=".setup") {
+    structure(list(setup=setup, teardown=teardown, obj.name=obj.name),
+        class="SUTD")
 }
 
 ##' @S3method with SUTD
 with.SUTD <- function (data, expr, ...) {
     env <- parent.frame()
     on.exit(data$teardown())
-    env$.setup <- data$setup() ## rm this after running?
+    assign(data$obj.name, data$setup(), envir=env) ## rm this after running?
     try(eval(substitute(expr), envir=parent.frame()))
 }
 
@@ -84,6 +83,13 @@ timed.HTTP <- function (filename=tempfile(), append=FALSE) {
     return(setup.and.teardown(timingTracer(filename, append), stopTiming))
 }
 
+silencer <- setup.and.teardown(function () {
+    showerrs <- getOption("show.error.messages")
+    options(show.error.messages=FALSE, show.err.msg.orig=showerrs)
+}, function () {
+    options(show.error.message=getOption("show.err.msg.orig"))
+})
+
 ## Auth setup-teardown
 test.authentication <- setup.and.teardown(
     function () suppressMessages(login()), 
@@ -112,10 +118,11 @@ purge <- function () {
     }
 }
 
-test.dataset <- function (df=NULL, ...) {
+test.dataset <- function (df=NULL, obj.name="ds", ...) {
     return(setup.and.teardown(
         function () new.dataset.with.setup(df, ...),
-        purge
+        purge,
+        obj.name
     ))
 }
 
@@ -125,7 +132,7 @@ df <- data.frame(v1=c(rep(NA_real_, 5), rnorm(15)),
                  v2=c(letters[1:15], rep(NA_character_, 5)), 
                  v3=8:27,
                  v4=as.factor(LETTERS[2:3]),
-                 v5=as.Date(1:20, origin="1955-11-05"),
+                 v5=as.Date(0:19, origin="1955-11-05"),
                  v6=TRUE,
                  stringsAsFactors=FALSE)
 
@@ -137,3 +144,16 @@ mrdf <- data.frame(mr_1=c(1,0,1,NA_real_),
 
 testfile.csv <- system.file("fake.csv", package="rcrunch", mustWork=TRUE)
 testfile.df <- read.csv(testfile.csv)
+
+mrdf.setup <- function (dataset, pattern="mr_", name="test1", selections=NULL) {
+    cast.these <- grep(pattern, names(dataset))
+    dataset[cast.these] <- lapply(dataset[cast.these],
+        castVariable, "categorical")
+    if (is.null(selections)) {
+        var <- makeArray(pattern=pattern, dataset=dataset, name=name)
+    } else {
+        var <- makeMR(pattern=pattern, dataset=dataset, name=name,
+            selections=selections)
+    }
+    return(refresh(dataset))
+}
