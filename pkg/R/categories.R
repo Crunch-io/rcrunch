@@ -94,6 +94,7 @@ setMethod("is.dichotomized", "Categories", function (x) any(vapply(x, is.selecte
 }
 
 ##' Indicate how categories represent a dichotomized value
+##' @rdname dichotomize
 ##' @export
 setMethod("dichotomize", c("Categories", "numeric"), .dichotomize.categories)
 setMethod("dichotomize", c("Categories", "logical"), .dichotomize.categories)

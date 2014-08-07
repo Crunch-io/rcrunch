@@ -41,6 +41,7 @@ DatasetTuple <- setClass("DatasetTuple", contains="IndexTuple")
 ##' be persisted on the server? Default is \code{FALSE}
 ##' @slot tuple An object of class VariableTuple. These contain attributes, such
 ##' as name and description, that are found in the index of the \code{\link{VariableCatalog}}
+##' @rdname CrunchVariable
 CrunchVariable <- setClass("CrunchVariable", contains="ShojiObject",
     representation= representation(
         readonly="logical",
@@ -95,6 +96,7 @@ setClassUnion("characterOrList", c("character", "list"))
 ##' more generally, this field can be referenced as "name" as well.
 ##' @slot entities a character vector of variable URLs, or a list containing a
 ##' combination of variable URLs and VariableGroup objects.
+##' @rdname VariableOrder
 ##' @export VariableOrder
 VariableOrder <- setClass("VariableOrder", contains="list")
 
@@ -141,6 +143,7 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
 ##' Categoricals, contain Categories. Categories are a subclass of list that
 ##' contains only Category objects. Category objects themselves subclass list
 ##' and contain the following fields: "name", "id", "numeric_value", "missing", and optionally "selected". 
+##' @rdname Categories
 ##' @export
 Categories <- setClass("Categories", contains="list")
 
