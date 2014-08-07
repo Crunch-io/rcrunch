@@ -47,6 +47,16 @@ is.shojiObject <- function (x) inherits(x, "ShojiObject")
 ##' @export
 setMethod("self", "ShojiObject", function (x) x@self)
 
+##' Get a fresh copy from the server
+##'
+##' Crunch objects usually keep themselves in sync with the server when you
+##' manipulate them, but sometimes they can drift. Maybe someone else has
+##' modified the dataset you're working on, or maybe
+##' you have modified a variable outside of the context of its dataset. 
+##' refresh() allows you to get back in sync.
+##' 
+##' @param x pretty much any Crunch object
+##' @return a new version of \code{x}
 ##' @export
 setMethod("refresh", "ShojiObject", function (x) {
     Class <- class(x)  ## in case x is a subclass of ShojiObject

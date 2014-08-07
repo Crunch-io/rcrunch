@@ -88,10 +88,6 @@ setClassUnion("characterOrList", c("character", "list"))
 ##' VariableGroups. VariableGroup objects contain a group name and an set of
 ##' "entities", which can be variable references or other nested VariableGroups.
 ##'
-##' The \code{ordering} methods allow you to get and set a VariableOrder on
-##' a \code{\link{CrunchDataset}} or on the \code{\link{VariableCatalog}} that
-##' the dataset contains.
-##'
 ##' @slot group character, the name of the VariableGroup. In the constructor and
 ##' more generally, this field can be referenced as "name" as well.
 ##' @slot entities a character vector of variable URLs, or a list containing a

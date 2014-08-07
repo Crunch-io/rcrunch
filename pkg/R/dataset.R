@@ -134,14 +134,3 @@ setMethod("variables<-", c("CrunchDataset", "VariableCatalog"),
         ordering(x@variables) <- ordering(value)
         return(x)
     })
-
-##' @rdname VariableOrder
-##' @export
-setMethod("ordering", "CrunchDataset", function (x) ordering(variables(x)))
-
-##' @rdname VariableOrder
-##' @export
-setMethod("ordering<-", "CrunchDataset", function (x, value) {
-    ordering(variables(x)) <- value
-    return(x)
-})
