@@ -144,6 +144,7 @@ printVariableGroup <- function (group, index) {
 ##' @param var.order an object of class VariableOrder
 ##' @return For grouped(), a VariableOrder with "ungrouped" omitted. For
 ##' ungrouped(), a VariableGroup.
+##' @seealso VariableOrder
 ##' @export
 grouped <- function (var.order) {
     var.order[names(var.order) != "ungrouped"]

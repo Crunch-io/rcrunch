@@ -36,10 +36,15 @@ setMethod("[<-", c("Categories", "ANY"), function (x, i, ..., value) {
     x@.Data[i] <- value
     return(x)
 })
+
 ##' @export
 setMethod("names", "Categories", function (x) vapply(x, name, character(1)))
+
+##' @rdname Categories
 ##' @export
 setMethod("values", "Categories", function (x) vapply(x, value, numeric(1)))
+
+##' @rdname Categories
 ##' @export
 setMethod("ids", "Categories", function (x) vapply(x, id, numeric(1)))
 ##' @export
@@ -88,11 +93,10 @@ setMethod("is.dichotomized", "Categories", function (x) any(vapply(x, is.selecte
     return(x)
 }
 
+##' Indicate how categories represent a dichotomized value
 ##' @export
 setMethod("dichotomize", c("Categories", "numeric"), .dichotomize.categories)
-##' @export
 setMethod("dichotomize", c("Categories", "logical"), .dichotomize.categories)
-##' @export
 setMethod("dichotomize", c("Categories", "character"), function (x, i) {
     ind <- names(x) %in% i
     if (!any(ind)) {
@@ -101,6 +105,7 @@ setMethod("dichotomize", c("Categories", "character"), function (x, i) {
     return(dichotomize(x, ind))
 })
 
+##' @rdname dichotomize
 ##' @export
 setMethod("undichotomize", "Categories", function (x) {
     x[] <- lapply(x[], function (a) {

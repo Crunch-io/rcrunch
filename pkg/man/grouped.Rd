@@ -22,4 +22,7 @@
   within it, but which variables are present in it is
   determined server-side.
 }
+\seealso{
+  VariableOrder
+}
 

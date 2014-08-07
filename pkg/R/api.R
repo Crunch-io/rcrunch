@@ -38,25 +38,11 @@ addRealHTTPVerbs <- function () {
 makeHTTPStore()
 addRealHTTPVerbs()
 
-GET <- function (...) {
-    http_verbs$GET(...)
-}
-
-PUT <- function (...) {
-    http_verbs$PUT(...)
-}
-
-PATCH <- function (...) {
-    http_verbs$PATCH(...)
-}
-
-POST <- function (...) {
-    http_verbs$POST(...)
-}
-
-DELETE <- function (...) {
-    http_verbs$DELETE(...)
-}
+GET <- function (...) http_verbs$GET(...)
+PUT <- function (...) http_verbs$PUT(...)
+PATCH <- function (...) http_verbs$PATCH(...)
+POST <- function (...) http_verbs$POST(...)
+DELETE <- function (...) http_verbs$DELETE(...)
 
 ##' Do the right thing with the HTTP response
 ##' @param response an httr response object
@@ -110,7 +96,9 @@ handleAPIerror <- function (response) {
 
 ##' @importFrom httr add_headers
 crunchConfig <- function () {
-    c(getToken(), httr:::default_config(), list(verbose=isTRUE(getOption("crunch.debug")), sslversion=3L), add_headers(`user-agent`=getCrunchUserAgent()))
+    c(getToken(), httr:::default_config(),
+        list(verbose=isTRUE(getOption("crunch.debug")), sslversion=3L),
+        add_headers(`user-agent`=getCrunchUserAgent()))
 }
 
 crunchUserAgent <- function (x) {

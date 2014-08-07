@@ -77,14 +77,40 @@ MultipleResponseVariable <-setClass("MultipleResponseVariable",
 
 setClassUnion("characterOrList", c("character", "list"))
 
-##' @export
+##' Organize Variables within a Dataset
+##'
+##' Variables in the Crunch web application can be viewed in an ordered, 
+##' hierarchical list. These objects and methods allow you to modify that order
+##' from R.
+##'
+##' A VariableOrder object is a subclass of \code{list} that contains 
+##' VariableGroups. VariableGroup objects contain a group name and an set of
+##' "entities", which can be variable references or other nested VariableGroups.
+##'
+##' The \code{ordering} methods allow you to get and set a VariableOrder on
+##' a \code{\link{CrunchDataset}} or on the \code{\link{VariableCatalog}} that
+##' the dataset contains.
+##'
+##' @slot group character, the name of the VariableGroup. In the constructor and
+##' more generally, this field can be referenced as "name" as well.
+##' @slot entities a character vector of variable URLs, or a list containing a
+##' combination of variable URLs and VariableGroup objects.
+##' @export VariableOrder
 VariableOrder <- setClass("VariableOrder", contains="list")
-##' @export
+
+##' @rdname VariableOrder
+##' @export VariableGroup
 VariableGroup <- setClass("VariableGroup", representation=representation(
     group="character",
     entities="characterOrList"
 ))
 
+##' Collection of Variables within a Dataset
+##'
+##' A VariableCatalog contains references to all variables in a dataset, plus
+##' some descriptive metadata about each. VariableCatalogs also contain a
+##' \code{\link{VariableOrder}} that governs how variables within it are
+##' organized.
 VariableCatalog <- setClass("VariableCatalog", contains="ShojiCatalog",
     representation(order="VariableOrder"))
 DatasetCatalog <- setClass("DatasetCatalog", contains="ShojiCatalog")
@@ -109,8 +135,16 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
         variables=VariableCatalog(),
         tuple=DatasetTuple()))
 
+##' Categories in CategoricalVariables
+##' 
+##' CategoricalVariables, as well as the array types composed from
+##' Categoricals, contain Categories. Categories are a subclass of list that
+##' contains only Category objects. Category objects themselves subclass list
+##' and contain the following fields: "name", "id", "numeric_value", "missing", and optionally "selected". 
 ##' @export
 Categories <- setClass("Categories", contains="list")
+
+##' @rdname Categories
 ##' @export
 Category <- setClass("Category", contains="namedList")
 
