@@ -30,7 +30,7 @@ is.shoji.like <- function (x) {
     is.list(x) && "element" %in% names(x) && substr(as.character(x$element), 1, 5) == "shoji"
 }
 
-##' @S3method is shoji
+##' @export
 ##' @importFrom methods is
 is.shoji <- function (x) inherits(x, "shoji")
 

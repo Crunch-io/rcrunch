@@ -57,7 +57,7 @@ setMethod("[", c("Subvariables", "character"), function (x, i, ...) {
     callNextMethod(x, w, ...)
 })
 
-##' @S3method as.list Subvariables
+##' @export
 as.list.Subvariables <- function (x, ...) lapply(names(x), function (i) x[[i]])
 
 setMethod("[", "CategoricalArrayVariable", function (x, i, ...) {

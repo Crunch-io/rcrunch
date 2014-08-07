@@ -43,5 +43,5 @@ urls <- function (x) {
     names(x@index)
 }
 
-##' @S3method as.list ShojiCatalog
+##' @export
 as.list.ShojiCatalog <- function (x, ...) lapply(names(x@index), function (i) x[[i]])

@@ -99,7 +99,6 @@ for (i in seq_along(.sigs)) {
 
 setMethod("datasetReference", "CrunchExpression", function (x) x@dataset_url)
 
-##' @export 
 ##' @S3method as.vector CrunchExpression
 as.vector.CrunchExpression <- function (x, mode) {
     payload <- list(command="select", variables=list(out=zcl(x)))

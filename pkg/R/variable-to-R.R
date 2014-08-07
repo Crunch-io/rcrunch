@@ -60,7 +60,10 @@ as.vector.DatetimeVariable <- function (x, mode) {
     columnParser("datetime")(as.vector.CrunchVariable(x))
 }
 
-##' @S3method as.data.frame CrunchDataset
+##' as.data.frame method for CrunchDataset
+##'
+##' @rdname dataset-to-R
+##' @export
 as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE, ...) {
     default.stringsAsFactors <- function () FALSE
     out <- lapply(x, as.vector)

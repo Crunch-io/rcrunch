@@ -1,5 +1,5 @@
 doc:
-	R --slave -e 'library(devtools); document("pkg")'
+	R --slave -e 'library(roxygen2); roxygenise("pkg")'
 	git add pkg/man/*.Rd
 
 test:

@@ -118,7 +118,7 @@ setMethod("delete", "CrunchDataset",
         invisible(out)
     })
 
-##' @S3method as.list CrunchDataset
+##' @export
 as.list.CrunchDataset <- function (x, ...) {
     lapply(seq_along(variables(x)), function (i) x[[i]])
 }

@@ -30,7 +30,6 @@ setup.and.teardown <- function (setup, teardown, obj.name=".setup") {
         class="SUTD")
 }
 
-##' @S3method with SUTD
 with.SUTD <- function (data, expr, ...) {
     env <- parent.frame()
     on.exit(data$teardown())

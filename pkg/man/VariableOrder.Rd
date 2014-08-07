@@ -6,12 +6,18 @@
 \alias{VariableOrder}
 \alias{VariableOrder-class}
 \alias{ordering,CrunchDataset-method}
+\alias{ordering,VariableCatalog-method}
 \alias{ordering<-,CrunchDataset-method}
+\alias{ordering<-,VariableCatalog-method}
 \title{Organize Variables within a Dataset}
 \usage{
 \S4method{ordering}{CrunchDataset}(x)
 
 \S4method{ordering}{CrunchDataset}(x) <- value
+
+\S4method{ordering}{VariableCatalog}(x)
+
+\S4method{ordering}{VariableCatalog}(x) <- value
 }
 \description{
 Variables in the Crunch web application can be viewed in an ordered,

@@ -6,7 +6,12 @@ init.VariableCatalog <- function (.Object, ...) {
 }
 setMethod("initialize", "VariableCatalog", init.VariableCatalog)
 
+##' @rdname VariableOrder
+##' @export
 setMethod("ordering", "VariableCatalog", function (x) x@order)
+
+##' @rdname VariableOrder
+##' @export
 setMethod("ordering<-", "VariableCatalog", function (x, value) {
     stopifnot(inherits(value, "VariableOrder"))
     PUT(x@views$hierarchical_order, body=toJSON(list(groups=value)))
