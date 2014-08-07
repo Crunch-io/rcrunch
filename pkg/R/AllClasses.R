@@ -33,29 +33,50 @@ IndexTuple <- setClass("IndexTuple",
 VariableTuple <- setClass("VariableTuple", contains="IndexTuple")
 DatasetTuple <- setClass("DatasetTuple", contains="IndexTuple")
 
+##' Variables in Crunch
+##'
+##' Variables are S4 objects. All inherit from the base class
+##' \code{CrunchVariable}.
+##' @slot readonly logical: should changes made to this variable object locally
+##' be persisted on the server? Default is \code{FALSE}
+##' @slot tuple An object of class VariableTuple. These contain attributes, such
+##' as name and description, that are found in the index of the \code{\link{VariableCatalog}}
 CrunchVariable <- setClass("CrunchVariable", contains="ShojiObject",
     representation= representation(
         readonly="logical",
         tuple="VariableTuple"
     ), 
     prototype=prototype(readonly=FALSE, tuple=VariableTuple()))
-##' @export
+
+##' @rdname CrunchVariable
+##' @export NumericVariable
 NumericVariable <- setClass("NumericVariable", contains="CrunchVariable")
-##' @export
+
+##' @rdname CrunchVariable
+##' @export CategoricalVariable
 CategoricalVariable <- setClass("CategoricalVariable",
     contains="CrunchVariable")
-##' @export
+    
+##' @rdname CrunchVariable
+##' @export TextVariable
 TextVariable <- setClass("TextVariable", contains="CrunchVariable")
-##' @export
+
+##' @rdname CrunchVariable
+##' @export DatetimeVariable
 DatetimeVariable <- setClass("DatetimeVariable", contains="CrunchVariable")
-##' @export
+
+##' @rdname CrunchVariable
+##' @export CategoricalArrayVariable
 CategoricalArrayVariable <- setClass("CategoricalArrayVariable",
     contains="CrunchVariable")
-##' @export
+
+##' @rdname CrunchVariable
+##' @export MultipleResponseVariable
 MultipleResponseVariable <-setClass("MultipleResponseVariable",
     contains="CategoricalArrayVariable")
 
 setClassUnion("characterOrList", c("character", "list"))
+
 ##' @export
 VariableOrder <- setClass("VariableOrder", contains="list")
 ##' @export

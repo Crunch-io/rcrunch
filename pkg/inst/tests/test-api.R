@@ -1,14 +1,5 @@
 context("API calling")
 
-test_that("HTTP verbs are validated", {
-    expect_identical(httr:::POST, selectHttpFunction("POST"))
-    expect_error(selectHttpFunction())
-    expect_error(selectHttpFunction(2))
-    expect_error(selectHttpFunction(list(foo=4)))
-    expect_error(selectHttpFunction("BREW"))
-    expect_error(selectHttpFunction(c("PUT", "POST")))
-})
-
 config.args <- c("sslversion", "httpheader", "verbose")
 
 test_that("crunchConfig has right structure", {

@@ -13,8 +13,8 @@ crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, confi
     configs <- updateList(crunchConfig(), config)
     url ## force lazy eval of url before inserting in try() below
     if (isTRUE(getOption("crunch.debug"))) message(paste(http.verb, url))
-    x <- try(selectHttpFunction(http.verb)(url, ..., config=configs), 
-        silent=TRUE)
+    FUN <- get(http.verb, envir=asNamespace("httr"))
+    x <- try(FUN(url, ..., config=configs), silent=TRUE)
     if (length(status.handlers)) {
         out <- response.handler(x, special.statuses=status.handlers)
     } else {
@@ -132,14 +132,6 @@ getCrunchUserAgent <- function () {
     return(ua)
 }
 
-simpleResponseStatus <- function (code) {
-    as.integer(code) %/% 100L
-}
-
-is.JSON.response <- function (x) {
-    isTRUE(grepl("application/json", x$headers[["content-type"]], fixed=TRUE))
-}
-
 ##' @importFrom RJSONIO fromJSON
 ## Looks like httr has switched to RJSONIO, so this may not be necessary any more
 parseJSONresponse <- function (x, simplifyWithNames=FALSE, ...) {
@@ -165,16 +157,6 @@ handleShoji <- function (x) {
     if ("shoji:view" %in% class(x)) {
         x <- x$value
     }
-    return(x)
-}
-
-##' Select the right function to run that HTTP call
-##' @param x character HTTP verb name
-##' @return the corresponding function from the \code{httr} package
-selectHttpFunction <- function (x) {
-    x <- list(GET=httr:::GET, PUT=httr:::PUT, POST=httr:::POST,
-        DELETE=httr:::DELETE, PATCH=httr:::PATCH)[[toupper(x)]]
-    stopifnot(is.function(x))
     return(x)
 }
 
