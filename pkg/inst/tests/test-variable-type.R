@@ -1,8 +1,7 @@
 context("Variable types")
 
 with(fake.HTTP, {
-    ## Variable fake fixtures for dataset
-    test.ds <- as.dataset(GET("api/datasets/dataset1.json"))
+    test.ds <- loadDataset("test ds")
     
     test_that("Variable type method", {
         expect_identical(type(test.ds[["birthyr"]]), "numeric")

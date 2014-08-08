@@ -28,7 +28,11 @@ getNrow <- function (dataset, filtered=TRUE) {
 ##' @export 
 is.dataset <- function (x) inherits(x, "CrunchDataset")
 
-setDatasetName <- function (x, value) setTupleSlot(x, "name", value)
+setDatasetName <- function (x, value) {
+    out <- setTupleSlot(x, "name", value)
+    updateDatasetList() ## could just modify rather than refresh
+    invisible(out)
+}
 setDatasetDescription <- function (x, value) {
     setTupleSlot(x, "description", value)
 }
@@ -109,12 +113,7 @@ setMethod("refresh", "CrunchDataset", function (x) {
 ##' @export
 setMethod("delete", "CrunchDataset", 
     function (x, confirm=interactive() | is.readonly(x), ...) {
-        prompt <- paste0("Really delete dataset ", dQuote(name(x)), "?")
-        if (confirm && !askForPermission(prompt)) {
-            stop("Must confirm deleting dataset", call.=FALSE)
-        }
-        out <- callNextMethod()
-        updateDatasetList()
+        out <- delete(tuple(x), confirm=confirm)
         invisible(out)
     })
 

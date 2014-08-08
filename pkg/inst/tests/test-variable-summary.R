@@ -1,9 +1,7 @@
 context("Variable summaries")
 
 with(fake.HTTP, {
-    session_store$datasets <- DatasetCatalog(GET("api/datasets.json"))
     ds2 <- loadDataset("test ds")
-    # ds2 <- as.dataset(GET("api/datasets/dataset1.json"))
     gen <- ds2$gender
     tablecats <- categories(gen)
     tablesums <- GET(gen@urls$summary_url)$categories

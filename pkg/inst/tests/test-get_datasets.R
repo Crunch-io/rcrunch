@@ -98,5 +98,23 @@ if (run.integration.tests) {
                 expect_false(dsname %in% listDatasets())
             })
         })
+                
+        with(test.dataset(df), {
+            dsname <- name(ds)
+            newname <- paste0("New name ", now())
+            
+            test_that("renaming a dataset refreshes the dataset list", {
+                expect_true(dsname %in% listDatasets())
+                name(ds) <- newname
+                expect_false(dsname %in% listDatasets())
+                expect_true(newname %in% listDatasets())
+            })
+            
+            test_that("deleting a dataset refreshes the dataset list", {
+                delete(ds)
+                expect_false(dsname %in% listDatasets())
+                expect_false(newname %in% listDatasets())
+            })
+        })
     })
 }

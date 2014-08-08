@@ -1,7 +1,6 @@
 context("Subvariables")
 
 with(fake.HTTP, {
-    session_store$datasets <- DatasetCatalog(GET("api/datasets.json"))
     test.ds <- loadDataset("test ds")
     mr <- test.ds$mymrset
     

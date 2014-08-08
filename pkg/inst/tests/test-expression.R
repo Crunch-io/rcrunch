@@ -1,7 +1,6 @@
 context("Expressions")
 
 with(fake.HTTP, {
-    session_store$datasets <- DatasetCatalog(GET("api/datasets.json"))
     ds <- loadDataset("test ds")
     
     test_that("Arithmetic generates expressions", {

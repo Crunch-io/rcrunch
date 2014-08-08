@@ -14,9 +14,7 @@ test_that("Subclass constructor selector", {
 })
 
 with(fake.HTTP, {
-    session_store$datasets <- DatasetCatalog(GET("api/datasets.json"))
     ds <- loadDataset("test ds")
-    # ds <- as.dataset(GET("api/datasets/dataset1.json"))
     
     test_that("Variable init, as, is", {
         expect_true(is.variable(ds[[1]]))

@@ -45,6 +45,9 @@ addFakeHTTPVerbs <- function () {
     http_verbs$PUT <- function (...) invisible()
     http_verbs$PATCH <- function (...) invisible()
     http_verbs$POST <- function (...) invisible()
+    session_store$urls <- list(datasets_url="api/datasets.json")
+    session_store$cookie <- 12345 ## so it thinks we're authenticated
+    try(updateDatasetList())
 }
 
 ## Mock backend

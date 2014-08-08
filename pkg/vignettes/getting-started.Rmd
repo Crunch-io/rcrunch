@@ -53,10 +53,6 @@ In the web application, click *Import Data* and upload either a .csv or an SPSS 
 ![Uploading data](upload.png)
 ![Loaded data](loaded.png)
 
-Since the dataset is loaded as soon as it's uploaded, we can go ahead and change its name on the web client before connecting with rcrunch.
-
-![Editing the dataset name](editName.png)
-
 ## Adding datasets with rcrunch
 
 Of course, you can also create datasets with rcrunch. There are two methods:
@@ -93,14 +89,11 @@ is.dataset(ds)
 
 # Manipulating datasets
 
-From here, we can set a number of dataset properties, such as toggling a weight variable, changing the name or adding a description, from within R and our changes are carried out on the Crunch dataset.
-
-> Note: sometimes changes from rcrunch are applied to the remote dataset but not immediately reflected in the rcrunch environment. As the package develops, these 'sync hiccups' should be smoothed out.
-> For example, because rcrunch attaches to datasets by their name, changing their name requires a call to `updateDatasetList()` before `loadDataset` on the new name.
+From here, we can set a number of dataset properties, such as toggling a weight variable, changing the name or adding a description, from within R, and our changes are carried out on the remote Crunch dataset.
 
 ## Hide Variables
 
-Datasets often contain variables that you may want to use -- perhaps through a derived variable, a transformation (or recode) -- or simply not be relevant for the analytic tasks at hand. In short, you want to hide them. Of course they are never deleted, but they no longer clutter the dataset "workspace" 
+Datasets often contain variables that you may want to use -- perhaps through a derived variable, a transformation, or a recode -- or that may simply not be relevant for the analytic tasks at hand. In short, you want to hide them. They aren't deleted, so you can restore them if you need them later, but they no longer clutter the dataset "workspace".
 
 As with a typical R data.frame, you typically assign the return of a dataset-level function back to the variable representing the dataset in your R script or session. As with the `is.na` function, you can update a variable by assigning it to the hidden variables list.
 
@@ -113,7 +106,7 @@ hiddenVariables(ds)
 
 ![hidden variables](hidden.png)
 
-These variables are now hidden in the application. And, just as you could restore them there, you can also restore them from R:
+These variables are now hidden, both locally in your R session and remotely on the server, which you can see in the web application. And, just as you could restore them there, you can also restore them from R:
 
 ```{r unhide}
 ds <- unhideVariables(ds, 'caseid')

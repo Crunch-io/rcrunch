@@ -12,7 +12,6 @@ test_that("VariableGroup and Order objects can be made", {
 })
 
 with(fake.HTTP, {
-    session_store$datasets <- DatasetCatalog(GET("api/datasets.json"))
     test.ds <- loadDataset("test ds")
     
     test_that("ordering methods on variables catalog", {

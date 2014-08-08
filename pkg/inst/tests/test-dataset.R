@@ -2,9 +2,7 @@ context("Dataset object and methods")
 
 
 with(fake.HTTP, {
-    session_store$datasets <- DatasetCatalog(GET("api/datasets.json"))
     test.ds <- loadDataset("test ds")
-    # test.ds <- as.dataset(GET("api/datasets/dataset1.json"))
     
     test_that("Dataset can be created", {
         expect_true(is.dataset(test.ds))
