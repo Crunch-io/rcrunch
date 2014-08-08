@@ -70,6 +70,7 @@ showCategories <- function (x) {
     vapply(x, showCategory, character(1))
 }
 
+##' @importFrom methods show
 ##' @export
 setMethod("show", "Categories", function (object) {
     out <- showCategories(object)

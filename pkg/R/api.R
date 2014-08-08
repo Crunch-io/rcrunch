@@ -101,6 +101,7 @@ crunchConfig <- function () {
         add_headers(`user-agent`=getCrunchUserAgent()))
 }
 
+##' @importFrom utils packageVersion
 crunchUserAgent <- function (x) {
     rc <- paste("rcrunch", packageVersion("rcrunch"), sep="/")
     try(rc <- paste(httr:::default_ua(), rc), silent=TRUE)

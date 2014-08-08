@@ -38,7 +38,7 @@ options(crunch.api=getOption("test.api"),
 login()
 ```
 
-This will log you in to the crunch API. All of these parameters can be also be set as R `options` so you can simply `login()`.
+This will log you in to the crunch API. All of these parameters can be also be set as R `options` so you can simply `login()`. See `?login` for details.
 
 ## Datasets and Variables
 

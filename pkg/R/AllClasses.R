@@ -109,6 +109,7 @@ VariableGroup <- setClass("VariableGroup", representation=representation(
 ##' some descriptive metadata about each. VariableCatalogs also contain a
 ##' \code{\link{VariableOrder}} that governs how variables within it are
 ##' organized.
+##' @rdname VariableCatalog
 VariableCatalog <- setClass("VariableCatalog", contains="ShojiCatalog",
     representation(order="VariableOrder"))
 DatasetCatalog <- setClass("DatasetCatalog", contains="ShojiCatalog")
