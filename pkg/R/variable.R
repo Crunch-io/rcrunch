@@ -65,7 +65,6 @@ as.variable <- function (x, subtype=NULL, tuple=VariableTuple()) {
     return(x)
 }
 
-## In case variable type has been changed, need to instantiate off of new type
 ##' @export
 setMethod("refresh", "CrunchVariable", function (x) {
     as.variable(GET(self(x)), tuple=refresh(tuple(x)))
@@ -144,6 +143,14 @@ setMethod("undichotomize", "CategoricalArrayVariable", .undichotomize.var)
 setMethod("datasetReference", "CrunchVariable", function (x) x@urls$dataset_url)
 setMethod("datasetReference", "ANY", function (x) NULL)
 
+##' Split an array or multiple-response variable into its CategoricalVariables
+##'
+##' @param x a CategoricalArrayVariable or MultipleResponseVariable
+##' @return invisibly, the API response from DELETEing the array variable
+##' definition. If you \code{\link{refresh}} the corresponding dataset after
+##' unbinding, you should see the array variable removed and its subvariables
+##' promoted to regular variables.
+##' @export
 unbind <- function (x) {
     stopifnot(inherits(x, "CategoricalArrayVariable"))
     invisible(DELETE(self(x)))

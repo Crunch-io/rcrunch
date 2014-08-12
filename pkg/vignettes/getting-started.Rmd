@@ -30,12 +30,11 @@ login(email="xkcd@crunch.io", password="correct horse battery staple")
 ```
 
 ```{r, results='hide', echo=FALSE, message=FALSE}
-## The vignette is designed to be run at package build time against localhost with nonsecure credentials!
-options(crunch.api=getOption("test.api"), 
-        crunch.debug=FALSE,
-        crunch.email=getOption("test.user"),
-        crunch.pw=getOption("test.pw"))
-login()
+## Because the vignette tasks require communicating with a remote host,
+## we do all the work ahead of time and save a workspace, which we load here.
+## We'll then reference saved objects in that as if we had just retrieved them
+## from the server
+load("getting-started.RData")
 ```
 
 This will log you in to the crunch API. All of these parameters can be also be set as R `options` so you can simply `login()`. See `?login` for details.
@@ -51,7 +50,6 @@ The Crunch data store is built around datasets, which contain variables. Unlike 
 In the web application, click *Import Data* and upload either a .csv or an SPSS .sav file. 
 
 ![Uploading data](upload.png)
-![Loaded data](loaded.png)
 
 ## Adding datasets with rcrunch
 
@@ -61,29 +59,35 @@ Of course, you can also create datasets with rcrunch. There are two methods:
 
 You can create a dataset from any `data.frame` you have in your R session with `newDataset`:
 
-    library(foreign)
-    df <- read.spss("PLMX0151ZBHD_OUTPUT.sav")
-    ds <- newDataset(df, name="Civil Military Relations Survey")
+```{r}
+load("economist.RData")
+dim(df)
+```
+```{r, eval=FALSE}
+ds <- newDataset(df, name="Economist/YouGov Weekly Survey")
+```
+```{r}
+dim(ds)
+```
 
 ### 2. newDatasetFromFile
 
-Alternatively, `newDatasetFromFile` essentially does what you would do in the web application: uploads your file and creates a dataset from it.
-
-```{r}
-ds <- newDatasetFromFile("PLMX0151ZBHD_OUTPUT.sav", name="Civil Military Relations Survey")
-```
-```{r echo=FALSE, warning=FALSE, message=FALSE}
-## Enable the fiction that we have loaded data via whaam
-plmx <- loadDataset("Civil Military Relations Survey")
-```
+Alternatively, `newDatasetFromFile` essentially does what you would do in the web application: uploads your file and creates a dataset from it. If you have an SPSS or CSV file, you can upload it with that.
 
 # Loading Crunch datasets into rcrunch
 
 Datasets already existing on the Crunch server can be loaded with `loadDataset`. The function takes either the dataset's name, or the position within the dataset list returned by `listDatasets`:
 
-```{r}
+```{r, eval=FALSE}
 listDatasets()
-ds <- loadDataset("Civil Military Relations Survey")
+```
+```
+## [1] "Economist/YouGov Weekly Survey"
+```
+```{r, eval=FALSE}
+ds <- loadDataset("Economist/YouGov Weekly Survey")
+```
+```{r}
 is.dataset(ds)
 ```
 
@@ -95,45 +99,32 @@ From here, we can set a number of dataset properties, such as toggling a weight 
 
 Datasets often contain variables that you may want to use -- perhaps through a derived variable, a transformation, or a recode -- or that may simply not be relevant for the analytic tasks at hand. In short, you want to hide them. They aren't deleted, so you can restore them if you need them later, but they no longer clutter the dataset "workspace".
 
-As with a typical R data.frame, you typically assign the return of a dataset-level function back to the variable representing the dataset in your R script or session. As with the `is.na` function, you can update a variable by assigning it to the hidden variables list.
+As with a typical R data.frame, you typically assign the return of a dataset-level function back to the variable representing the dataset in your R script or session. 
 
-```{r hide-variables}
-ds <- hideVariables(ds, 'caseid')
-hiddenVariables(ds)
-hiddenVariables(ds) <- 'spend_Batt'
+```{r, eval=FALSE}
+ds <- hideVariables(ds, "comments")
 hiddenVariables(ds)
 ```
+```
+## [1] "comments"
+```
 
-![hidden variables](hidden.png)
+As with the `is.na` function, you can update a variable by assigning it to the hidden variables list.
+
+```{r, eval=FALSE}
+hiddenVariables(ds) <- "pid7others"
+hiddenVariables(ds)
+```
+```
+## [1] "comments"  "pid7others"
+```
 
 These variables are now hidden, both locally in your R session and remotely on the server, which you can see in the web application. And, just as you could restore them there, you can also restore them from R:
 
-```{r unhide}
-ds <- unhideVariables(ds, 'caseid')
+```{r unhide, eval=FALSE}
+ds <- unhideVariables(ds, "pid7others")
 hiddenVariables(ds)
 ```
-
-## Create Array Variables
-
-Sometimes variables' source datasets don't contain all of the metadata needed to create the more complex representations available in Crunch datasets. Plain-text .csv files, for example, can't express that some columns are actually indicator matrices of multiple selections (Multiple Response Variables). Most SPSS .sav files do not indicate Categorical Arrays (otherwise known as "grids") as being part of a group--they are simply several categorical variables--and the format does not support non-categorical numeric-valued arrays that are sometimes used in surveys for ratings or 'thermometer' type responses.
-
-You can use rcrunch to "bind" Multiple Response and Categorical Arrays into a Crunch array variable.
-
-One of the reasons to use R with Crunch is to borrow the power of scripting for repetitive tasks. Hiding variables by regular expression is an obvious use case for datasets with a number of variables that are important to the data but not used for most analytic tasks. Most R functions that work on Crunch datasets have an optional `pattern` argument that lets you use regular expressions for these "bulk" operations. Having hidden the constant `spend_Batt`, we can now group the other `spend_` variables into a Categorical Array.
-
-```{r bind}
-(spending <- makeArray(pattern="^spend_", dataset=ds, name="Federal Spending"))
 ```
-
-In the Crunch web application, the Federal Spending array has gone from seven separate categorical variable cards to just one, where the subvariables are shown as rows, and the common categories across all of them are shown as columns:
-
-![Categorical Array variable card](array-card.png)
-
-![Array table in analysis view](array-table.png)
-
-
-```{r, results='hide', echo=FALSE, message=FALSE}
-## teardown
-delete(ds)
-logout()
+## [1] "comments"
 ```
