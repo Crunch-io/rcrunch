@@ -36,7 +36,6 @@ getValues <- function (x, ...) {
 }
 
 ##' as.vector methods for Crunch variables
-##' @export 
 ##' @S3method as.vector CrunchVariable
 as.vector.CrunchVariable <- function (x, mode) getValues(x)
 

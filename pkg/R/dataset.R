@@ -110,6 +110,7 @@ setMethod("refresh", "CrunchDataset", function (x) {
     as.dataset(GET(self(x)), useAlias=x@useAlias, tuple=refresh(tuple(x)))
 })
 
+##' @rdname delete
 ##' @export
 setMethod("delete", "CrunchDataset", 
     function (x, confirm=interactive() | is.readonly(x), ...) {

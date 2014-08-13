@@ -120,6 +120,9 @@ default.useAlias <- function () {
     return(is.null(opt) || isTRUE(opt))
 }
 
+##' Crunch Datasets
+##'
+##' @rdname CrunchDataset
 ##' @export
 CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
     representation=representation(
@@ -140,6 +143,9 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
 ##' Categoricals, contain Categories. Categories are a subclass of list that
 ##' contains only Category objects. Category objects themselves subclass list
 ##' and contain the following fields: "name", "id", "numeric_value", "missing", and optionally "selected". 
+##'
+##' @param x For the attribute getters and setters, an object of class
+##' Category or Categories
 ##' @rdname Categories
 ##' @export
 Categories <- setClass("Categories", contains="list")

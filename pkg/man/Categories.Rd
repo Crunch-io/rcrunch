@@ -13,6 +13,10 @@
 
 \S4method{ids}{Categories}(x)
 }
+\arguments{
+\item{x}{For the attribute getters and setters, an object of class
+Category or Categories}
+}
 \description{
 CategoricalVariables, as well as the array types composed from
 Categoricals, contain Categories. Categories are a subclass of list that

@@ -63,8 +63,24 @@ setMethod("refresh", "ShojiObject", function (x) {
     return(do.call(Class, GET(self(x))))
 })
 
+##' Delete a Crunch object from the server
+##'
+##' These methods delete entites, notably Datasets and Variables within them,
+##' from the server. This action is permanent and cannot be undone, so it
+##' should not be done lightly. Consider instead using \code{\link{archive}}
+##' for datasets and \code{\link{hide}} for variables
+##'
+##' @param x a Crunch object
+##' @param confirm logical: should the user be asked to confirm deletion. 
+##' Option available for datasets only. Default is \code{TRUE} if in an
+##' interactive session.
+##' @param ... additional arguments, in the generic
+##' @seealso archive hide deleteDataset
+##' @rdname delete
 ##' @export
 setMethod("delete", "ShojiObject", function (x, ...) invisible(DELETE(self(x))))
+
+##' @rdname delete
 ##' @export
 setMethod("delete", "ANY", function (x, ...) stop("'delete' only valid for Crunch objects"))
 
