@@ -77,6 +77,7 @@ setMethod("refresh", "ShojiObject", function (x) {
 ##' @param ... additional arguments, in the generic
 ##' @seealso archive hide deleteDataset
 ##' @rdname delete
+##' @aliases delete
 ##' @export
 setMethod("delete", "ShojiObject", function (x, ...) invisible(DELETE(self(x))))
 

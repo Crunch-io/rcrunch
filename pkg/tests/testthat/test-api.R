@@ -1,17 +1,16 @@
 context("API calling")
 
-config.args <- c("sslversion", "httpheader", "verbose")
-
 test_that("crunchConfig has right structure", {
-    expect_true(all(config.args %in% names(crunchConfig())))
-    expect_identical(crunchConfig()$encoding, "gzip")
+    expect_identical(httr:::default_config()$encoding, "gzip")
+    expect_identical(httr:::default_config()$sslversion, 3L)
 })
 
 test_that("crunchUserAgent", {
-    expect_true(grepl("rcrunch", getCrunchUserAgent()))
-    expect_true(grepl("rcrunch", session_store$.globals$user_agent))
-    expect_false(is.error(try(setCrunchUserAgent("anotherpackage/3.1.4"))))
-    expect_true(grepl("anotherpackage", getCrunchUserAgent()))
+    expect_true(grepl("rcrunch", crunchUserAgent()))
+    expect_true(grepl("rcrunch",
+        getOption("httr_config")$httpheader["user-agent"]))
+    expect_false(is.error(try(crunchUserAgent("anotherpackage/3.1.4"))))
+    expect_true(grepl("anotherpackage", crunchUserAgent("anotherpackage")))
 })
 
 if (run.integration.tests) {
@@ -28,11 +27,6 @@ if (run.integration.tests) {
             expect_error(getAPIroot(), "401")
         })
     }
-
-    with(test.authentication, 
-        test_that("cookie is in the request header", {
-            expect_true("cookie" %in% names(crunchConfig()))
-    }))
     
     test_that("Deprecated endpoints tell user to upgrade", {
         expect_error(GET("http://httpbin.org/status/410"), 

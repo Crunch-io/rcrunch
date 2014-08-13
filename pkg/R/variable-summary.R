@@ -61,15 +61,16 @@ table <- function (..., exclude, useNA, dnn, deparse.level) {
             stop("Cannot currently tabulate more than one Crunch variable", 
                 call.=FALSE)
         }
-        FUN <- quote(rcrunch:::CategoricalVariable.table)
+        m[[1]] <- quote(CategoricalVariable.table)
+        where <- parent.frame()
+        return(eval(m, envir=where, enclos=asNamespace("rcrunch")))
     } else if (any(are.vars)) {
         stop("Cannot currently tabulate Crunch variables with ", 
             "non-Crunch vectors", call.=FALSE)
     } else {
-        FUN <- quote(base::table)
+        m[[1]] <- quote(base::table)
+        return(eval.parent(m))
     }
-    m[[1]] <- FUN
-    eval(m, parent.frame())
 }
 
 #setGeneric("table", signature="...")

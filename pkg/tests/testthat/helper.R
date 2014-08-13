@@ -10,8 +10,8 @@ options(crunch.api=getOption("test.api"),
         crunch.timeout=5,
         crunch.email=getOption("test.user"),
         crunch.pw=getOption("test.pw"))
-assign("application/json", parseJSONresponse, envir=httr:::parsers)
-setCrunchUserAgent()
+# assign("application/json", parseJSONresponse, envir=httr:::parsers)
+# set_config(crunchConfig())
 
 is.tap.reporter <- grepl('reporter ?= ?"tap"', 
     paste(deparse(sys.calls()[[1]]), collapse=""))

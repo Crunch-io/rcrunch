@@ -13,7 +13,9 @@ Depends:
 Imports:
     httr,
     RJSONIO,
-    methods
+    methods,
+    RCurl
 Suggests:
-    knitr
+    knitr,
+    testthat
 VignetteBuilder: knitr
