@@ -35,29 +35,10 @@ getValues <- function (x, ...) {
     }
 }
 
-##' as.vector methods for Crunch variables
-##' @S3method as.vector CrunchVariable
-as.vector.CrunchVariable <- function (x, mode) getValues(x)
-
-##' @S3method as.vector NumericVariable
-as.vector.NumericVariable <- function (x, mode) {
-    columnParser("numeric")(as.vector.CrunchVariable(x))
-}
-
-##' @S3method as.vector TextVariable
-as.vector.TextVariable <- function (x, mode) {
-    columnParser("text")(as.vector.CrunchVariable(x))
-}
-
-##' @S3method as.vector CategoricalVariable
-as.vector.CategoricalVariable <- function (x, mode) {
-    columnParser("categorical")(as.vector.CrunchVariable(x), x)
-}
-
-##' @S3method as.vector DatetimeVariable
-as.vector.DatetimeVariable <- function (x, mode) {
-    columnParser("datetime")(as.vector.CrunchVariable(x))
-}
+##' @export
+setMethod("as.vector", "CrunchVariable", function (x, mode) {
+    columnParser(type(x))(getValues(x), x)
+})
 
 ##' as.data.frame method for CrunchDataset
 ##'

@@ -69,6 +69,7 @@ setGeneric("median")
 setGeneric("min")
 setGeneric("max")
 setGeneric("na.omit")
+setGeneric("as.vector")
 
 ##' @export
 setGeneric("toVariable", function (x, ...) standardGeneric("toVariable"))

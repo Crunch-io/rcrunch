@@ -99,8 +99,8 @@ for (i in seq_along(.sigs)) {
 
 setMethod("datasetReference", "CrunchExpression", function (x) x@dataset_url)
 
-##' @S3method as.vector CrunchExpression
-as.vector.CrunchExpression <- function (x, mode) {
+##' @export
+setMethod("as.vector", "CrunchExpression", function (x, mode) {
     payload <- list(command="select", variables=list(out=zcl(x)))
     if (length(x@filter)) {
         payload[["filter"]] <- x@filter
@@ -110,7 +110,7 @@ as.vector.CrunchExpression <- function (x, mode) {
     variable <- as.variable(structure(list(body=out$metadata$out),
         class="shoji"))
     return(columnParser(out$metadata$out$type)(out$data$out, variable))
-}
+})
 
 setMethod("is.na", "CrunchVariable", function (x) {
     CrunchExpression(expression=zfunc("is_missing", x),
