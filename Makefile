@@ -13,3 +13,6 @@ test-ci:
 
 clean:
 	R --slave -e 'options(crunch.api=getOption("test.api"), crunch.email=getOption("test.user"), crunch.pw=getOption("test.pw")); library(rcrunch); login(); rcrunch:::.delete_all_my_datasets()'
+
+check:
+	R CMD CHECK --as-cran pkg

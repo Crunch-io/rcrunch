@@ -1,5 +1,4 @@
 run.integration.tests <- Sys.getenv("LOCALONLY") == "FALSE"
-
 set.seed(666)
 
 ## .onAttach stuff, for testthat to work right
@@ -10,8 +9,6 @@ options(crunch.api=getOption("test.api"),
         crunch.timeout=5,
         crunch.email=getOption("test.user"),
         crunch.pw=getOption("test.pw"))
-# assign("application/json", parseJSONresponse, envir=httr:::parsers)
-# set_config(crunchConfig())
 
 is.tap.reporter <- grepl('reporter ?= ?"tap"', 
     paste(deparse(sys.calls()[[1]]), collapse=""))
@@ -40,7 +37,7 @@ with.SUTD <- function (data, expr, ...) {
 ## note that this works because testthat evals within package namespace
 addFakeHTTPVerbs <- function () {
     http_verbs$GET <- function (url, ...) {
-        handleShoji(fromJSON(system.file(url, package="rcrunch"), simplifyWithNames=FALSE))
+        handleShoji(fromJSON(url, simplifyWithNames=FALSE))
     }
     http_verbs$PUT <- function (...) invisible()
     http_verbs$PATCH <- function (...) invisible()
@@ -144,7 +141,7 @@ mrdf <- data.frame(mr_1=c(1,0,1,NA_real_),
                    v4=as.factor(LETTERS[2:3]),
                    stringsAsFactors=FALSE)
 
-testfile.csv <- system.file("fake.csv", package="rcrunch", mustWork=TRUE)
+testfile.csv <- "fake.csv"
 testfile.df <- read.csv(testfile.csv)
 
 mrdf.setup <- function (dataset, pattern="mr_", name="test1", selections=NULL) {
