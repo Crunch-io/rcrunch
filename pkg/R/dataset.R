@@ -63,13 +63,10 @@ setMethod("names", "CrunchDataset", function (x) {
     findVariables(x, key=namekey(x), value=TRUE)
 })
 
-variableNames <- function (x) {
-    findVariables(x, key="name", value=TRUE)
-}
-
-##' Get the dataset's weight
+##' Dataset weights
 ##' @param x a Dataset
-##' @return a Variable if there is a weight, else NULL
+##' @param value a Variable to set as weight, or NULL to remove the existing weight
+##' @return For the getter, a Variable if there is a weight, else NULL. For the setter, x, modified accordingly
 ##' @export
 weight <- function (x) {
     stopifnot(is.dataset(x))
@@ -80,10 +77,7 @@ weight <- function (x) {
     return(w)
 }
 
-##' Set the dataset's weight
-##' @param x a Dataset
-##' @param value a Variable to set as weight, or NULL to remove the existing weight
-##' @return x, modified accordingly
+##' @rdname weight 
 ##' @export
 `weight<-` <- function (x, value) {
     stopifnot(is.dataset(x))

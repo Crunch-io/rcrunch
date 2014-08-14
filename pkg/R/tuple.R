@@ -18,7 +18,8 @@ setMethod("[[<-", "IndexTuple", function (x, i, value) {
 setTupleSlot <- function (x, name, value) {
     if (!inherits(x, "IndexTuple")) {
         tuple(x) <- setTupleSlot(tuple(x), name, value)
-    } else {
+    } else if (!identical(x[[name]], value)) {
+        ## Skip updating if not modified
         x[[name]] <- value
         ## NB: no readonly mode. implement later if needed.
         payload <- toJSON(structure(list(x@body), .Names=x@entity_url))

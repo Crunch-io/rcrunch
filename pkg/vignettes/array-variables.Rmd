@@ -7,16 +7,57 @@
 
 Sometimes variables' source datasets don't contain all of the metadata needed to create the more complex representations available in Crunch datasets. Plain-text .csv files, for example, can't express that some columns are actually indicator matrices of multiple selections (Multiple Response Variables). Most SPSS .sav files do not indicate Categorical Arrays (otherwise known as "grids") as being part of a group--they are simply several categorical variables. The same is true for an R `data.frame`.
 
+## Creating an array
+
 You can use rcrunch to "bind" categorical variables into Multiple Response and Categorical Array variables.
 
-One of the reasons to use R with Crunch is to leverage the power of scripting for tasks that would be repetitive in a GUI. Many rcrunch functions operating on Crunch datasets have an optional `pattern` argument that lets you use regular expressions for these "bulk" operations. Having hidden the constant `spend_Batt`, we can now group the other `spend_` variables into a Categorical Array.
+One of the reasons to use R with Crunch is to leverage the power of scripting for tasks that would be repetitive in a GUI. Many rcrunch functions operating on Crunch datasets have an optional `pattern` argument that lets you use regular expressions for these "bulk" operations. 
 
 ```{r bind, eval=FALSE}
-spending <- makeArray(pattern="^spend_", dataset=ds, name="Federal Spending")
+grep("^imiss_", names(ds), value=TRUE)
+ds$imiss_b
+ds$imissArray <- makeArray(pattern="^imiss_", dataset=ds, name="Issue importance")
+ds$imissArray
 ```
 
-In the Crunch web application, the Federal Spending array has gone from seven separate categorical variable cards to just one, where the subvariables are shown as rows, and the common categories across all of them are shown as columns:
+In the Crunch web application, the set of "important issue" variables have gone from thirteen separate categorical variable cards to just one, where the subvariables are shown as rows, and the common categories across all of them are shown as columns:
 
 ![Categorical Array variable card](array-card.png)
 
-![Array table in analysis view](array-table.png)
+update that png
+
+## Manipulating subvariables
+
+```{r, eval=FALSE}
+subvariables(ds$imissArray)
+names(subvariables(ds$imissArray))
+names(subvariables(ds$imissArray)) <- c("The economy", "Immigration", 
+    "The environment", "Terrorism", "Gay rights", "Education", 
+    "Health care", "Social security", "The budget deficit", 
+    "The war in Afghanistan", "Taxes", "Medicare", "Abortion")
+sorting <- order(names(subvariables(ds$imissArray)))
+subvariables(ds$imissArray) <- subvariables(ds$imissArray)[sorting]
+```
+## Creating multiple response variables
+
+```{r, eval=FALSE}
+ds$boap_1
+ds$boap <- makeMR(pattern="^boap_[0-9]+", dataset=ds, name="Approval of Obama on issues", selections=c("Strongly approve", "Somewhat approve"))
+```
+
+## (un)dichotomize
+```{r, eval=FALSE}
+ds$boap <- undichotomize(ds$boap)
+ds$boap
+ds$boap <- dichotomize(ds$boap, "Strongly approve")
+ds$boap
+```
+
+## Splitting arrays back into categoricals
+
+```{r, eval=FALSE}
+grep("boap", names(ds), value=TRUE)
+unbind(ds$boap)
+ds <- refresh(ds)
+grep("boap", names(ds), value=TRUE)
+```

@@ -63,7 +63,21 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 .updateVariableMetadata <- function (x, i, value) {
     ## Confirm that i matches namekey(value)
     if (i != tuple(value)[[namekey(x)]]) {
-        stop("Cannot overwrite one Variable with another", call.=FALSE)
+        if (is.CA(value) || is.MR(value)) {
+            ## We may have a variable created by makeArray/MR, and it's not
+            ## yet in our variable catalog. Let's check.
+            x <- refresh(x)
+            if (!(self(value) %in% names(x@variables@index))) {
+                stop("This variable does not belong to this dataset", 
+                    call.=FALSE)
+            }
+            ## Finally, update value with `i` if it is
+            ## different. I.e. set the alias based on i if not otherwise
+            ## specified. (setTupleSlot does the checking)
+            tuple(value) <- setTupleSlot(tuple(value), namekey(x), i)
+        } else {
+            stop("Cannot overwrite one Variable with another", call.=FALSE)
+        }
     }
     x@variables[[self(value)]] <- value
     return(x)

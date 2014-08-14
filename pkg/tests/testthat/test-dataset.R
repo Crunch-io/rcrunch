@@ -123,25 +123,31 @@ if (run.integration.tests) {
                 v1 <- testdf$v1
                 name(v1) <- "Variable One"
                 testdf$v1 <- v1
-                expect_identical(variableNames(testdf)[1], "Variable One")
+                expect_identical(names(variables(testdf))[1], "Variable One")
                 expect_error(testdf$v2 <- v1, 
                     "Cannot overwrite one Variable")
             })
         })
 
-        with(test.dataset(mrdf, "testdf"), {
+        with(test.dataset(mrdf), {
+            cast.these <- grep("mr_", names(ds))
             test_that("Dataset [<-", {
-                cast.these <- grep("mr_", names(testdf))
-                expect_true(all(vapply(active(testdf@variables)[cast.these], 
+                expect_true(all(vapply(active(ds@variables)[cast.these], 
                     function (x) x$type == "numeric", logical(1))))
-                expect_true(all(vapply(testdf[cast.these], 
+                expect_true(all(vapply(ds[cast.these], 
                     function (x) is.Numeric(x), logical(1))))
-                testdf[cast.these] <- lapply(testdf[cast.these],
+                ds[cast.these] <- lapply(ds[cast.these],
                     castVariable, "categorical")
-                expect_true(all(vapply(active(testdf@variables)[cast.these], 
+                expect_true(all(vapply(active(ds@variables)[cast.these], 
                     function (x) x$type == "categorical", logical(1))))
-                expect_true(all(vapply(testdf[cast.these], 
+                expect_true(all(vapply(ds[cast.these], 
                     function (x) is.Categorical(x), logical(1))))
+            })
+            test_that("Dataset [[<- on new array variable", {
+                try(ds$test1 <- makeArray(ds[cast.these], 
+                    name="Array variable"))
+                expect_true(is.CA(ds$test1))
+                expect_identical(name(ds$test1), "Array variable")
             })
         })
         
