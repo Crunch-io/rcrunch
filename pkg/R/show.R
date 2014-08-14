@@ -19,7 +19,7 @@ setMethod("show", "CrunchVariable", function (object) {
     invisible(out)
 })
 
-setMethod("show", "MultipleResponseVariable", function (object) {
+setMethod("show", "CategoricalArrayVariable", function (object) {
     out <- c(showCrunchVariable(object), showSubvariables(subvariables(object)))
     cat(out)
     invisible(out)

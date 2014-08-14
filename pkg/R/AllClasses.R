@@ -154,6 +154,12 @@ Categories <- setClass("Categories", contains="list")
 ##' @export
 Category <- setClass("Category", contains="namedList")
 
+##' Subvariables in Array Variables
+##'
+##' Multiple-response and categorical-array variables contain a set of 
+##' subvariables within them. 
+##'
+##' @rdname Subvariables
 Subvariables <- setClass("Subvariables", contains="ShojiCatalog")
 
 CrunchExpression <- setClass("CrunchExpression",

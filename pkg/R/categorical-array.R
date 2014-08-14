@@ -33,7 +33,7 @@ makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key=nameke
     
     Call[[1L]] <- quote(prepareBindInputs)
     where <- parent.frame()
-    x <- eval(Call, envir=where, enclos=asNamespace("rcrunch"))
+    x <- eval(Call, envir=asNamespace("rcrunch"), enclos=where)
     
     invisible(bindVariables(x$variable_urls, x$dataset, name,
         type="categorical_array", ...))

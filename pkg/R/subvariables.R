@@ -1,9 +1,11 @@
+##' @rdname Subvariables
 ##' @export
 setMethod("subvariables", "CategoricalArrayVariable", function (x) {
     vars <- VariableCatalog(GET(tuple(x)@index_url))
     return(Subvariables(vars[x@body$subvariables]))
 })
 
+##' @rdname Subvariables
 ##' @export
 setMethod("subvariables<-", c("CategoricalArrayVariable", "ANY"),
     function (x, value) {
@@ -19,10 +21,14 @@ setMethod("subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
         return(setCrunchSlot(x, "subvariables", new))
     })
 
+##' @rdname Subvariables
+##' @export
 setMethod("names", "Subvariables", function (x) {
     vapply(x@index, function (a) a$name, character(1), USE.NAMES=FALSE)
 })
 
+##' @rdname Subvariables
+##' @export
 setMethod("names<-", "Subvariables", function (x, value) {
     stopifnot(is.character(value), length(x) == length(value),
         !any(duplicated(value)))
