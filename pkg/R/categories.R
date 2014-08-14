@@ -36,10 +36,15 @@ setMethod("[<-", c("Categories", "ANY"), function (x, i, ..., value) {
     x@.Data[i] <- value
     return(x)
 })
+
 ##' @export
 setMethod("names", "Categories", function (x) vapply(x, name, character(1)))
+
+##' @rdname Categories
 ##' @export
 setMethod("values", "Categories", function (x) vapply(x, value, numeric(1)))
+
+##' @rdname Categories
 ##' @export
 setMethod("ids", "Categories", function (x) vapply(x, id, numeric(1)))
 ##' @export
@@ -65,6 +70,7 @@ showCategories <- function (x) {
     vapply(x, showCategory, character(1))
 }
 
+##' @importFrom methods show
 ##' @export
 setMethod("show", "Categories", function (object) {
     out <- showCategories(object)
@@ -88,11 +94,11 @@ setMethod("is.dichotomized", "Categories", function (x) any(vapply(x, is.selecte
     return(x)
 }
 
+##' Indicate how categories represent a dichotomized value
+##' @rdname dichotomize
 ##' @export
 setMethod("dichotomize", c("Categories", "numeric"), .dichotomize.categories)
-##' @export
 setMethod("dichotomize", c("Categories", "logical"), .dichotomize.categories)
-##' @export
 setMethod("dichotomize", c("Categories", "character"), function (x, i) {
     ind <- names(x) %in% i
     if (!any(ind)) {
@@ -101,6 +107,7 @@ setMethod("dichotomize", c("Categories", "character"), function (x, i) {
     return(dichotomize(x, ind))
 })
 
+##' @rdname dichotomize
 ##' @export
 setMethod("undichotomize", "Categories", function (x) {
     x[] <- lapply(x[], function (a) {
@@ -111,7 +118,8 @@ setMethod("undichotomize", "Categories", function (x) {
 })
 
 .na.omit.categories <- function (object, ...) {
-    missings <- vapply(object, function (x) isTRUE(x$missing), logical(1))
+    missings <- vapply(object, function (x) isTRUE(x$missing), logical(1),
+        USE.NAMES=FALSE)
     if (any(missings)) {
         object <- object[!missings]
         attr(object, "na.action") <- which(missings)
@@ -124,3 +132,12 @@ setMethod("undichotomize", "Categories", function (x) {
 setMethod("na.omit", "Categories", function (object, ...) {
     Categories(.na.omit.categories(object))
 })
+
+##' @export
+setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical(1), USE.NAMES=FALSE), .Names=names(x)))
+
+n2i <- function (x, cats) {
+    ## Convert x from category names to the corresponding category ids
+    if (is.variable(cats)) cats <- categories(cats)
+    return(ids(cats)[match(x, names(cats))])
+}

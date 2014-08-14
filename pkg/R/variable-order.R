@@ -42,49 +42,6 @@ init.VariableGroup <- function (.Object, group, entities, ...) {
 }
 setMethod("initialize", "VariableGroup", init.VariableGroup)
 
-##' @export
-setMethod("entities", "VariableGroup", function (x, unlist=TRUE) {
-    out <- x@entities
-    if (is.list(out)) {
-        nested.groups <- vapply(out, 
-            function (a) inherits(a, "VariableGroup"), logical(1))
-        out[nested.groups] <- lapply(out[nested.groups], 
-            function (a) entities(a))
-        if (unlist) out <- unique(unlist(out))
-    }
-    return(out)
-})
-setMethod("entities", "VariableOrder", function (x, unlist=TRUE) {
-    ## To get a flattened view
-    es <- lapply(x, function (a) entities(a))
-    if (unlist) {
-        es <- unique(unlist(es))
-    }
-    return(es)
-})
-##' @export
-setMethod("entities<-", "VariableGroup", function (x, value) {
-    x@entities <- .initEntities(value)
-    return(x)
-})
-
-setMethod("name", "VariableGroup", function (x) x@group)
-setMethod("name<-", "VariableGroup", function (x, value) {
-    x@group <- value ## Should check that we're not renaming "ungrouped"
-    return(x)
-})
-
-setMethod("names", "VariableOrder", 
-    function (x) vapply(x, function (a) name(a), character(1)))
-setMethod("names<-", "VariableOrder", 
-    function (x, value) {
-        x@.Data <- mapply(
-            function (y, v) {
-                y@group <- v
-                return(y)
-            }, y=x, v=value, SIMPLIFY=FALSE, USE.NAMES=FALSE)
-        return(x)
-    })
 setMethod("toJSON", "VariableOrder", function (x, ...) toJSON(x@.Data, ...))
     ## need that toJSON method so that names don't get assigned bc of the names() method
 
@@ -144,6 +101,7 @@ printVariableGroup <- function (group, index) {
 ##' @param var.order an object of class VariableOrder
 ##' @return For grouped(), a VariableOrder with "ungrouped" omitted. For
 ##' ungrouped(), a VariableGroup.
+##' @seealso VariableOrder
 ##' @export
 grouped <- function (var.order) {
     var.order[names(var.order) != "ungrouped"]

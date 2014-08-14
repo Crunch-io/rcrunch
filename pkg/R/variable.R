@@ -50,6 +50,10 @@ is.CA <- function (x) class(x) %in% "CategoricalArrayVariable" ## so it doesn't 
 
 ##' @rdname crunch-is
 ##' @export
+is.Array <- function (x) inherits(x, "CategoricalArrayVariable")
+
+##' @rdname crunch-is
+##' @export
 is.CategoricalArray <- is.CA
     
 as.variable <- function (x, subtype=NULL, tuple=VariableTuple()) {
@@ -61,7 +65,6 @@ as.variable <- function (x, subtype=NULL, tuple=VariableTuple()) {
     return(x)
 }
 
-## In case variable type has been changed, need to instantiate off of new type
 ##' @export
 setMethod("refresh", "CrunchVariable", function (x) {
     as.variable(GET(self(x)), tuple=refresh(tuple(x)))
@@ -102,7 +105,8 @@ setMethod("description", "CrunchVariable", function (x) tuple(x)$description)
 setMethod("description<-", "CrunchVariable", 
     function (x, value) setTupleSlot(x, "description", value))
 ##' @export
-setMethod("alias", "CrunchVariable", function (x) tuple(x)$alias)
+setMethod("alias", "CrunchVariable", function (object) tuple(object)$alias)
+
 ##' @export
 setMethod("alias<-", "CrunchVariable", 
     function (x, value) setTupleSlot(x, "alias", value))
@@ -137,7 +141,16 @@ setMethod("undichotomize", "CategoricalVariable", .undichotomize.var)
 setMethod("undichotomize", "CategoricalArrayVariable", .undichotomize.var)
 
 setMethod("datasetReference", "CrunchVariable", function (x) x@urls$dataset_url)
+setMethod("datasetReference", "ANY", function (x) NULL)
 
+##' Split an array or multiple-response variable into its CategoricalVariables
+##'
+##' @param x a CategoricalArrayVariable or MultipleResponseVariable
+##' @return invisibly, the API response from DELETEing the array variable
+##' definition. If you \code{\link{refresh}} the corresponding dataset after
+##' unbinding, you should see the array variable removed and its subvariables
+##' promoted to regular variables.
+##' @export
 unbind <- function (x) {
     stopifnot(inherits(x, "CategoricalArrayVariable"))
     invisible(DELETE(self(x)))
@@ -148,4 +161,9 @@ setMethod("delete", "CategoricalArrayVariable", function (x, ...) {
     out <- DELETE(self(x))
     lapply(subvars, DELETE)
     invisible(out)
+})
+
+setMethod("[", c("CrunchVariable", "CrunchExpression"), function (x, i, ...) {
+    CrunchExpression(dataset_url=datasetReference(x), expression=zcl(x),
+        filter=zcl(i))
 })

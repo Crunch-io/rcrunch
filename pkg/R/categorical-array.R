@@ -2,7 +2,9 @@
 ##'
 ##' @param list_of_variables a list of Variable objects to bind together, or a
 ##' Dataset object containing only the Variables to bind (as in from subsetting
-##' a Dataset), or values (e.g. names) of variables corresponding to \code{key}. If omitted, must supply \code{dataset} and \code{pattern}. If specifying values, must include \code{dataset}.
+##' a Dataset), or values (e.g. names) of variables corresponding to \code{key}.
+##' If omitted, must supply \code{dataset} and \code{pattern}. If specifying
+##' values, must include \code{dataset}.
 ##' @param dataset the Crunch Dataset to which the variables in 
 ##' \code{list_of_variables} belong, or in which to search for variables based
 ##' on \code{pattern}. If omitted, \code{list_of_variables} must exist and all
@@ -16,8 +18,7 @@
 ##' @param selections character, for \code{makeMR}, the names of the 
 ##' categories to mark as the dichotomous selections. Required for 
 ##' \code{makeMR}; ignored in \code{makeArray}.
-##' @param ... Optional additional attributes to set on the new variable. Not
-##' yet supported.
+##' @param ... Optional additional attributes to set on the new variable.
 ##' @return The object of class CategoricalArrayVariable or
 ##' MultipleResponseVariable corresponding to the just-created variable on the
 ##' server.
@@ -30,17 +31,18 @@ makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key=nameke
         stop("Must provide the name for the new variable", call.=FALSE)
     }
     
-    Call[[1L]] <- quote(rcrunch:::prepareBindInputs)
-    x <- eval.parent(Call)
+    Call[[1L]] <- quote(prepareBindInputs)
+    where <- parent.frame()
+    x <- eval(Call, envir=where, enclos=asNamespace("rcrunch"))
     
-    invisible(bindVariables(x$variable_urls, x$dataset, name, type="categorical_array", ...))
+    invisible(bindVariables(x$variable_urls, x$dataset, name,
+        type="categorical_array", ...))
 }
 
-##' Given inputs to makeArray/makeMR, parse and validate
-##' @param ... Stuff from calling function that will be ignored.
-prepareBindInputs <- function (list_of_variables=NULL, dataset=NULL, pattern=NULL,
-                               key=namekey(dataset), ...) {
-    
+prepareBindInputs <- function (list_of_variables=NULL, dataset=NULL,
+                               pattern=NULL, key=namekey(dataset), ...) {
+
+    ##' Given inputs to makeArray/makeMR, parse and validate
     listOfVariablesIsValid <- function (lov) {
         return(is.list(lov) && all(vapply(lov, is.variable, logical(1))))
     }
@@ -82,8 +84,8 @@ prepareBindInputs <- function (list_of_variables=NULL, dataset=NULL, pattern=NUL
     return(list(dataset=dataset, variable_urls=variable_urls))
 }
 
-##' Take variables and their dataset and bind them into a new array variable
 bindVariables <- function (var_urls, dataset, name, ...) {
+    ## Take variables and their dataset and bind them into a new array variable
     out <- POSTBindVariables(dataset@urls$variables_url, var_urls, name=name,
         ...)
     invisible(returnNewVariable(out, dataset))

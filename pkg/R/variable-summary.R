@@ -3,12 +3,16 @@ getSummary <- function (x) {
     if (is.null(url)) {
         stop("No summary available", call.=FALSE)
     }
-    url <- GET(url)
+    out <- GET(url)
     ## Summaries don't return as shoji entities
     # if (!is.shoji(url)) {
     #     stop("Error in retrieving summary", call.=FALSE)
     # }
-    return(url)
+    if (is.Datetime(x)) {
+        toR <- columnParser("datetime")
+        for (i in c("min", "max")) out[[i]] <- toR(out[[i]])
+    }
+    return(out)
 }
 
 getFrequencies <- function (x) {
@@ -57,22 +61,23 @@ table <- function (..., exclude, useNA, dnn, deparse.level) {
             stop("Cannot currently tabulate more than one Crunch variable", 
                 call.=FALSE)
         }
-        FUN <- quote(rcrunch:::CategoricalVariable.table)
+        m[[1]] <- quote(CategoricalVariable.table)
+        where <- parent.frame()
+        return(eval(m, envir=where, enclos=asNamespace("rcrunch")))
     } else if (any(are.vars)) {
         stop("Cannot currently tabulate Crunch variables with ", 
             "non-Crunch vectors", call.=FALSE)
     } else {
-        FUN <- quote(base::table)
+        m[[1]] <- quote(base::table)
+        return(eval.parent(m))
     }
-    m[[1]] <- FUN
-    eval(m, parent.frame())
 }
 
 #setGeneric("table", signature="...")
 # ##' @export 
 #setMethod("table", "CategoricalVariable", CategoricalVariable.table)
 
-##' @S3method summary CategoricalVariable
+##' @export
 summary.CategoricalVariable <- function (object, ...) {
     tab <- table(object)
     tab <- tab[order(tab, decreasing=TRUE)]
@@ -81,14 +86,14 @@ summary.CategoricalVariable <- function (object, ...) {
     return(tab)
 }
 
-##' @S3method print CategoricalVariableSummary
+##' @export
 print.CategoricalVariableSummary <- function (x, ...) {
     # class(x) <- class(x)[-1] ## uh, call next method
     # attr(x, "varname") <- NULL
     print(data.frame(Count=x))
 }
 
-##' @S3method summary NumericVariable
+##' @export
 summary.NumericVariable <- function (object, ...) {
     summ <- getSummary(object)
     fivenum <- sapply(summ$fivenum, function (x) x[[2]])

@@ -28,7 +28,11 @@ getNrow <- function (dataset, filtered=TRUE) {
 ##' @export 
 is.dataset <- function (x) inherits(x, "CrunchDataset")
 
-setDatasetName <- function (x, value) setTupleSlot(x, "name", value)
+setDatasetName <- function (x, value) {
+    out <- setTupleSlot(x, "name", value)
+    updateDatasetList() ## could just modify rather than refresh
+    invisible(out)
+}
 setDatasetDescription <- function (x, value) {
     setTupleSlot(x, "description", value)
 }
@@ -59,92 +63,10 @@ setMethod("names", "CrunchDataset", function (x) {
     findVariables(x, key=namekey(x), value=TRUE)
 })
 
-variableNames <- function (x) {
-    findVariables(x, key="name", value=TRUE)
-}
-
-##' @export
-setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
-    x@variables <- variables(x)[i]
-    readonly(x) <- TRUE ## we don't want to overwrite the big object accidentally
-    return(x)
-})
-##' @export
-setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
-    w <- match(i, names(x))
-    if (any(is.na(w))) {
-        stop("Undefined columns selected: ", serialPaste(i[is.na(w)]))
-    }
-    callNextMethod(x, w, ..., drop=drop)
-})
-##' @export
-setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
-    out <- variables(x)[[i]]
-    if (!is.null(out)) {
-        out <- try(entity(out), silent=TRUE)
-        if (is.error(out)) {
-            stop(attr(out, "condition")$message, call.=FALSE)
-        }
-    }
-    return(out)
-})
-##' @export
-setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
-    stopifnot(length(i) == 1)
-    i <- match(i, names(x))
-    if (is.na(i)) return(NULL)
-    callNextMethod(x, i, ..., drop=drop)
-})
-##' @export
-setMethod("$", "CrunchDataset", function (x, name) x[[name]])
-
-.addVariableSetter <- function (x, i, value) {
-    if (i %in% names(x)) {
-        stop("Cannot currently overwrite existing Variables with [[<-",
-            call.=FALSE)
-    }
-    addVariable(x, values=value, name=i, alias=i)
-}
-
-.updateVariableSetter <- function (x, i, value) {
-    ## Confirm that i matches namekey(value)
-    if (i != tuple(value)[[namekey(x)]]) {
-        stop("Cannot overwrite one Variable with another", call.=FALSE)
-    }
-    x@variables[[self(value)]] <- value
-    return(x)
-}
-
-##' @export
-setMethod("[[<-", c("CrunchDataset", "character", "missing", "CrunchVariable"), 
-    .updateVariableSetter)
-setMethod("[[<-", c("CrunchDataset", "ANY", "missing", "CrunchVariable"), 
-    function (x, i, value) .updateVariableSetter(x, names(x)[i], value))
-setMethod("[[<-", c("CrunchDataset", "character", "missing", "ANY"), .addVariableSetter)
-setMethod("[[<-", c("CrunchDataset", "ANY"), function (x, i, value) {
-    stop("Only character (name) indexing supported for [[<-", call.=FALSE)
-})
-##' @export
-setMethod("$<-", c("CrunchDataset"), function (x, name, value) {
-    x[[name]] <- value
-    return(x)
-})
-
-setMethod("[<-", c("CrunchDataset", "ANY", "missing", "list"), 
-    function (x, i, j, value) {
-        stopifnot(length(i) == length(value), 
-            all(vapply(value, is.variable, logical(1))))
-        for (z in seq_along(i)) {
-            x[[i[z]]] <- value[[z]]
-        }
-        return(x)
-    })
-
-## TODO: add [<-.CrunchDataset, CrunchDataset/VariableCatalog
-
-##' Get the dataset's weight
+##' Dataset weights
 ##' @param x a Dataset
-##' @return a Variable if there is a weight, else NULL
+##' @param value a Variable to set as weight, or NULL to remove the existing weight
+##' @return For the getter, a Variable if there is a weight, else NULL. For the setter, x, modified accordingly
 ##' @export
 weight <- function (x) {
     stopifnot(is.dataset(x))
@@ -155,10 +77,7 @@ weight <- function (x) {
     return(w)
 }
 
-##' Set the dataset's weight
-##' @param x a Dataset
-##' @param value a Variable to set as weight, or NULL to remove the existing weight
-##' @return x, modified accordingly
+##' @rdname weight 
 ##' @export
 `weight<-` <- function (x, value) {
     stopifnot(is.dataset(x))
@@ -185,19 +104,15 @@ setMethod("refresh", "CrunchDataset", function (x) {
     as.dataset(GET(self(x)), useAlias=x@useAlias, tuple=refresh(tuple(x)))
 })
 
+##' @rdname delete
 ##' @export
 setMethod("delete", "CrunchDataset", 
     function (x, confirm=interactive() | is.readonly(x), ...) {
-        prompt <- paste0("Really delete dataset ", dQuote(name(x)), "?")
-        if (confirm && !askForPermission(prompt)) {
-            stop("Must confirm deleting dataset", call.=FALSE)
-        }
-        out <- callNextMethod()
-        updateDatasetList()
+        out <- delete(tuple(x), confirm=confirm)
         invisible(out)
     })
 
-##' @S3method as.list CrunchDataset
+##' @export
 as.list.CrunchDataset <- function (x, ...) {
     lapply(seq_along(variables(x)), function (i) x[[i]])
 }
@@ -213,11 +128,3 @@ setMethod("variables<-", c("CrunchDataset", "VariableCatalog"),
         ordering(x@variables) <- ordering(value)
         return(x)
     })
-
-##' @export
-setMethod("ordering", "CrunchDataset", function (x) ordering(variables(x)))
-##' @export
-setMethod("ordering<-", "CrunchDataset", function (x, value) {
-    ordering(variables(x)) <- value
-    return(x)
-})

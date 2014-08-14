@@ -1,8 +1,8 @@
 Package: rcrunch
 Type: Package
 Title: Crunch.io Database Tools
-Version: 0.5.6
-Date: 2014-07-31
+Version: 0.6.0
+Date: 2014-08-06
 Author: Neal Richardson <neal@crunch.io>
 Maintainer: Neal Richardson <neal@crunch.io>
 Description: An interface for accessing the Crunch.io database
@@ -13,42 +13,9 @@ Depends:
 Imports:
     httr,
     RJSONIO,
-    methods
+    methods,
+    RCurl
 Suggests:
-    knitr
+    knitr,
+    testthat
 VignetteBuilder: knitr
-Collate:
-    'AllClasses.R'
-    'AllGenerics.R'
-    'auth.R'
-    'rcrunch.R'
-    'api.R'
-    'user.R'
-    'misc.R'
-    'shoji.R'
-    'get_datasets.R'
-    'new_dataset.R'
-    'dataset.R'
-    'variable.R'
-    'variable-summary.R'
-    'variable-type.R'
-    'categories.R'
-    'category.R'
-    'variable-to-R.R'
-    'categorical-array.R'
-    'multiple-response.R'
-    'hide-variables.R'
-    'univariate.R'
-    'R-to-variable.R'
-    'variable-order.R'
-    'add-variable.R'
-    'tuple.R'
-    'variable-catalog.R'
-    'find.R'
-    'show.R'
-    'dataset-catalog.R'
-    'shoji-catalog.R'
-    'batches.R'
-    'subvariables.R'
-    'append-dataset.R'
-    'batch-catalog.R'

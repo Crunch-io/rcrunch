@@ -1,3 +1,4 @@
+##' @importFrom httr set_config
 .onAttach <- function (lib, pkg="pkg") {
     if (is.null(getOption("crunch.api"))) {
         options(crunch.api="https://beta.crunch.io/api/")
@@ -7,6 +8,6 @@
     }
     options(warn=1)
     assign("application/json", parseJSONresponse, envir=httr:::parsers)
-    setCrunchUserAgent()
+    set_config(crunchConfig())
     invisible()
 }

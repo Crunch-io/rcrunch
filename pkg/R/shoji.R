@@ -30,7 +30,7 @@ is.shoji.like <- function (x) {
     is.list(x) && "element" %in% names(x) && substr(as.character(x$element), 1, 5) == "shoji"
 }
 
-##' @S3method is shoji
+##' @export
 ##' @importFrom methods is
 is.shoji <- function (x) inherits(x, "shoji")
 
@@ -47,14 +47,41 @@ is.shojiObject <- function (x) inherits(x, "ShojiObject")
 ##' @export
 setMethod("self", "ShojiObject", function (x) x@self)
 
+##' Get a fresh copy from the server
+##'
+##' Crunch objects usually keep themselves in sync with the server when you
+##' manipulate them, but sometimes they can drift. Maybe someone else has
+##' modified the dataset you're working on, or maybe
+##' you have modified a variable outside of the context of its dataset. 
+##' refresh() allows you to get back in sync.
+##' 
+##' @param x pretty much any Crunch object
+##' @return a new version of \code{x}
 ##' @export
 setMethod("refresh", "ShojiObject", function (x) {
     Class <- class(x)  ## in case x is a subclass of ShojiObject
     return(do.call(Class, GET(self(x))))
 })
 
+##' Delete a Crunch object from the server
+##'
+##' These methods delete entites, notably Datasets and Variables within them,
+##' from the server. This action is permanent and cannot be undone, so it
+##' should not be done lightly. Consider instead using \code{\link{archive}}
+##' for datasets and \code{\link{hide}} for variables
+##'
+##' @param x a Crunch object
+##' @param confirm logical: should the user be asked to confirm deletion. 
+##' Option available for datasets only. Default is \code{TRUE} if in an
+##' interactive session.
+##' @param ... additional arguments, in the generic
+##' @seealso archive hide deleteDataset
+##' @rdname delete
+##' @aliases delete
 ##' @export
 setMethod("delete", "ShojiObject", function (x, ...) invisible(DELETE(self(x))))
+
+##' @rdname delete
 ##' @export
 setMethod("delete", "ANY", function (x, ...) stop("'delete' only valid for Crunch objects"))
 

@@ -10,11 +10,11 @@
 ##' function to call in the case where that status is returned. Passed to the
 ##' \code{response.handler} function.
 crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, config=list(), status.handlers=list(), ...) {
-    configs <- updateList(crunchConfig(), config)
+    # print(sys.call(-3)) ## Investigate putting calling function in header
     url ## force lazy eval of url before inserting in try() below
     if (isTRUE(getOption("crunch.debug"))) message(paste(http.verb, url))
-    x <- try(selectHttpFunction(http.verb)(url, ..., config=configs), 
-        silent=TRUE)
+    FUN <- get(http.verb, envir=asNamespace("httr"))
+    x <- try(FUN(url, ..., config=config), silent=TRUE)
     if (length(status.handlers)) {
         out <- response.handler(x, special.statuses=status.handlers)
     } else {
@@ -38,25 +38,11 @@ addRealHTTPVerbs <- function () {
 makeHTTPStore()
 addRealHTTPVerbs()
 
-GET <- function (...) {
-    http_verbs$GET(...)
-}
-
-PUT <- function (...) {
-    http_verbs$PUT(...)
-}
-
-PATCH <- function (...) {
-    http_verbs$PATCH(...)
-}
-
-POST <- function (...) {
-    http_verbs$POST(...)
-}
-
-DELETE <- function (...) {
-    http_verbs$DELETE(...)
-}
+GET <- function (...) http_verbs$GET(...)
+PUT <- function (...) http_verbs$PUT(...)
+PATCH <- function (...) http_verbs$PATCH(...)
+POST <- function (...) http_verbs$POST(...)
+DELETE <- function (...) http_verbs$DELETE(...)
 
 ##' Do the right thing with the HTTP response
 ##' @param response an httr response object
@@ -108,41 +94,31 @@ handleAPIerror <- function (response) {
     return(response)    
 }
 
-##' @importFrom httr add_headers
+##' @importFrom httr config
 crunchConfig <- function () {
-    c(getToken(), httr:::default_config(), list(verbose=isTRUE(getOption("crunch.debug")), sslversion=3L), add_headers(`user-agent`=getCrunchUserAgent()))
+    config(verbose=isTRUE(getOption("crunch.debug")),
+        sslversion=3L,
+        httpheader=c(`user-agent`=crunchUserAgent()))
 }
 
+##' @importFrom utils packageVersion
+##' @importFrom RCurl curlVersion
 crunchUserAgent <- function (x) {
-    rc <- paste("rcrunch", packageVersion("rcrunch"), sep="/")
-    try(rc <- paste(httr:::default_ua(), rc), silent=TRUE)
-    if (!missing(x)) rc <- paste(rc, x)
-    return(rc)
-}
-
-setCrunchUserAgent <- function (x) {
-    session_store$.globals$user_agent <- crunchUserAgent(x)
-}
-
-getCrunchUserAgent <- function () {
-    ua <- session_store$.globals$user_agent
-    if (is.null(ua)) { ## Should not happen
-        ua <- crunchUserAgent()
-    }
+    ## Cf. httr:::default_ua
+    versions <- c(
+        curl = RCurl::curlVersion()$version,
+        Rcurl = as.character(packageVersion("RCurl")),
+        httr = as.character(packageVersion("httr")),
+        rcrunch = as.character(packageVersion("rcrunch"))
+    )
+    ua <- paste0(names(versions), "/", versions, collapse = " ")
+    if (!missing(x)) ua <- paste(ua, x)
     return(ua)
 }
 
-simpleResponseStatus <- function (code) {
-    as.integer(code) %/% 100L
-}
-
-is.JSON.response <- function (x) {
-    isTRUE(grepl("application/json", x$headers[["content-type"]], fixed=TRUE))
-}
-
 ##' @importFrom RJSONIO fromJSON
-## Looks like httr has switched to RJSONIO, so this may not be necessary any more
 parseJSONresponse <- function (x, simplifyWithNames=FALSE, ...) {
+    ## Investigate not doing this anymore with httr 0.4
     mungeEncoding(fromJSON(httr:::parse_text(x, encoding = "UTF-8"),
         simplifyWithNames=simplifyWithNames, ...))
 }
@@ -165,16 +141,6 @@ handleShoji <- function (x) {
     if ("shoji:view" %in% class(x)) {
         x <- x$value
     }
-    return(x)
-}
-
-##' Select the right function to run that HTTP call
-##' @param x character HTTP verb name
-##' @return the corresponding function from the \code{httr} package
-selectHttpFunction <- function (x) {
-    x <- list(GET=httr:::GET, PUT=httr:::PUT, POST=httr:::POST,
-        DELETE=httr:::DELETE, PATCH=httr:::PATCH)[[toupper(x)]]
-    stopifnot(is.function(x))
     return(x)
 }
 

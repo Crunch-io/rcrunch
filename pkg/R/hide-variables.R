@@ -3,6 +3,7 @@
 ##' Hide and Unhide Variables
 ##' @param x a Variable to hide or unhide
 ##' @return (invisibly) the Variable, hidden or unhidden
+##' @rdname hide
 ##' @export
 setMethod("hide", "CrunchVariable", function (x) {
     invisible(setTupleSlot(x, "discarded", TRUE))

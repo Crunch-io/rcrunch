@@ -74,26 +74,20 @@ selectDatasetFromCatalog <- function (dsname, catalog, strict=FALSE) {
 ##' return of \code{\link{listDatasets}}, or an object of class
 ##' \code{CrunchDataset}. x can only be of length 1--this function is not 
 ##' vectorized (for your protection).
+##' @param ... additional parameters (such as \code{confirm}) passed to 
+##' \code{delete}
 ##' @return (Invisibly) the API response from deleting the dataset
+##' @seealso delete
 ##' @export
-deleteDataset <- function (x) {
-    if (is.dataset(x)) {
-        out <- delete(x)
-    } else {
+deleteDataset <- function (x, ...) {
+    if (!is.dataset(x)) {
         if (!is.numeric(x)) {
             x <- selectDatasetFromCatalog(x, datasetCatalog(), strict=TRUE)
         }
         stopifnot(length(x) == 1)
         
-        ds.tuple <- datasetCatalog()[[x]]
-        if (interactive()) {
-            message(paste("Deleting dataset", dQuote(name(ds.tuple)), 
-                "in 5 seconds. Press ctrl-C to abort."))
-            Sys.sleep(5)
-        }
-        out <- DELETE(ds.tuple@entity_url)
+        x <- datasetCatalog()[[x]]
     }
-
-    updateDatasetList()
+    out <- delete(x, ...)
     invisible(out)
 }
