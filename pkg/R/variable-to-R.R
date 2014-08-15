@@ -35,6 +35,13 @@ getValues <- function (x, ...) {
     }
 }
 
+##' Convert Variables to local R objects
+##'
+##' @param x a CrunchVariable subclass
+##' @param mode argument not used: part of the generic \code{as.vector}
+##' signature
+##' @param an R vector of the type corresponding to the Variable. E.g. 
+##' CategoricalVariable yields type factor, NumericVariable yields numeric, etc.
 ##' @export
 setMethod("as.vector", "CrunchVariable", function (x, mode) {
     columnParser(type(x))(getValues(x), x)
