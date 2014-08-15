@@ -31,14 +31,32 @@ makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key=nameke
         stop("Must provide the name for the new variable", call.=FALSE)
     }
     
-    Call[[1L]] <- quote(prepareBindInputs)
-    where <- parent.frame()
-    x <- eval(Call, envir=asNamespace("rcrunch"), enclos=where)
+    Call[[1L]] <- as.name("prepareBindInputs")
+    x <- eval.parent(Call)
     
-    invisible(bindVariables(x$variable_urls, x$dataset, name,
-        type="categorical_array", ...))
+    out <- bindVariables(x$variable_urls, x$dataset, name,
+        type="categorical_array", ...)
+    invisible(out)
 }
 
+##' Internal function to gather variable URLs for binding
+##'
+##' Exported only for nonstandard evaluation in makeArray and makeMR
+##'
+##' @param list_of_variables a list of Variable objects to bind together, or a
+##' Dataset object containing only the Variables to bind (as in from subsetting
+##' a Dataset), or values (e.g. names) of variables corresponding to \code{key}.
+##' If omitted, must supply \code{dataset} and \code{pattern}. If specifying
+##' values, must include \code{dataset}.
+##' @param dataset the Crunch Dataset to which the variables in 
+##' \code{list_of_variables} belong, or in which to search for variables based
+##' on \code{pattern}. If omitted, \code{list_of_variables} must exist and all
+##' Variables in the list must belong to the same Dataset
+##' @param pattern An optional regular expression to search for variables to 
+##' bind within \code{dataset}.
+##' @param key character, the name of the Variable field in which to search
+##' with \code{pattern}. Default is 'alias'.
+##' @export
 prepareBindInputs <- function (list_of_variables=NULL, dataset=NULL,
                                pattern=NULL, key=namekey(dataset), ...) {
 

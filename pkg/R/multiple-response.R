@@ -12,9 +12,8 @@ makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key=namekey(d
             "selection"), call.=FALSE)
     }
     
-    Call[[1L]] <- quote(prepareBindInputs)
-    where <- parent.frame()
-    x <- eval(Call, envir=asNamespace("rcrunch"), enclos=where)
+    Call[[1L]] <- as.name("prepareBindInputs")
+    x <- eval.parent(Call)
     
     ## Get the actual variables so that we can validate
     vars <- lapply(x$variable_urls, 
