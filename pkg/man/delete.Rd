@@ -30,6 +30,6 @@ should not be done lightly. Consider instead using \code{\link{archive}}
 for datasets and \code{\link{hide}} for variables
 }
 \seealso{
-archive hide deleteDataset
+hide deleteDataset
 }
 

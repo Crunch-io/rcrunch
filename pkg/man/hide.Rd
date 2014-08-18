@@ -2,18 +2,24 @@
 \docType{methods}
 \name{hide,CrunchVariable-method}
 \alias{hide,CrunchVariable-method}
+\alias{hide,VariableCatalog-method}
 \alias{unhide,CrunchVariable-method}
+\alias{unhide,VariableCatalog-method}
 \title{Hide and Unhide Variables}
 \usage{
 \S4method{hide}{CrunchVariable}(x)
 
+\S4method{hide}{VariableCatalog}(x)
+
 \S4method{unhide}{CrunchVariable}(x)
+
+\S4method{unhide}{VariableCatalog}(x)
 }
 \arguments{
-\item{x}{a Variable to hide or unhide}
+\item{x}{a Variable or subset of a VariableCatalog to hide or unhide}
 }
 \value{
-(invisibly) the Variable, hidden or unhidden
+(invisibly) the Variable or VariableCatalog, hidden or unhidden
 }
 \description{
 Hide and Unhide Variables

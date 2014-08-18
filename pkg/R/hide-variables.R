@@ -1,13 +1,15 @@
 ## Variable methods
 
 ##' Hide and Unhide Variables
-##' @param x a Variable to hide or unhide
-##' @return (invisibly) the Variable, hidden or unhidden
+##' @param x a Variable or subset of a VariableCatalog to hide or unhide
+##' @return (invisibly) the Variable or VariableCatalog, hidden or unhidden
 ##' @rdname hide
 ##' @export
 setMethod("hide", "CrunchVariable", function (x) {
     invisible(setTupleSlot(x, "discarded", TRUE))
 })
+##' @rdname hide
+##' @export
 setMethod("hide", "VariableCatalog", function (x) {
     invisible(setIndexSlot(x, "discarded", TRUE))
 })
@@ -17,6 +19,8 @@ setMethod("hide", "VariableCatalog", function (x) {
 setMethod("unhide", "CrunchVariable", function (x) {
     invisible(setTupleSlot(x, "discarded", FALSE))
 })
+##' @rdname hide
+##' @export
 setMethod("unhide", "VariableCatalog", function (x) {
     invisible(setIndexSlot(x, "discarded", FALSE))
 })
@@ -33,6 +37,7 @@ setMethod("unhide", "VariableCatalog", function (x) {
 ##' \code{pattern}. Default is "alias"
 ##' @param ... optional additional arguments to \code{grep}
 ##' @return (invisibly) \code{dataset} with the specified variables (un)hidden
+##' @seealso hide
 ##' @export
 hideVariables <- function (dataset, variables=NULL, pattern=NULL, key=namekey(dataset), ...) {
     var.urls <- findVariableURLs(dataset, refs=variables, pattern=pattern, key=key, ...)
