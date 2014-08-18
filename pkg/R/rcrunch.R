@@ -7,7 +7,8 @@
         options(crunch.max.categories=256)
     }
     options(warn=1)
-    assign("application/json", parseJSONresponse, envir=httr:::parsers)
+    assign("application/json", parseJSONresponse, 
+        envir=get("parsers", envir=asNamespace("httr")))
     set_config(crunchConfig())
     invisible()
 }

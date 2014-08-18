@@ -119,7 +119,8 @@ crunchUserAgent <- function (x) {
 ##' @importFrom RJSONIO fromJSON
 parseJSONresponse <- function (x, simplifyWithNames=FALSE, ...) {
     ## Investigate not doing this anymore with httr 0.4
-    mungeEncoding(fromJSON(httr:::parse_text(x, encoding = "UTF-8"),
+    text.parser <- get("parse_text", envir=asNamespace("httr"))
+    mungeEncoding(fromJSON(text.parser(x, encoding = "UTF-8"),
         simplifyWithNames=simplifyWithNames, ...))
 }
 
