@@ -83,15 +83,32 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
     return(x)
 }
 
+.deriveVariableSetter <- function (x, i, value) {
+    if (i %in% names(x)) {
+        stop("Cannot overwrite Variable", call.=FALSE)
+    } else {
+        deriveVariable(x, value, name=i, alias=i)
+    }
+}
+
 ##' @export
-setMethod("[[<-", c("CrunchDataset", "character", "missing", "CrunchVariable"), 
+setMethod("[[<-", 
+    c("CrunchDataset", "character", "missing", "CrunchVariable"), 
     .updateVariableMetadata)
-setMethod("[[<-", c("CrunchDataset", "ANY", "missing", "CrunchVariable"), 
+setMethod("[[<-", 
+    c("CrunchDataset", "ANY", "missing", "CrunchVariable"), 
     function (x, i, value) .updateVariableMetadata(x, names(x)[i], value))
-setMethod("[[<-", c("CrunchDataset", "character", "missing", "ANY"), .addVariableSetter)
-setMethod("[[<-", c("CrunchDataset", "ANY"), function (x, i, value) {
-    stop("Only character (name) indexing supported for [[<-", call.=FALSE)
-})
+setMethod("[[<-", 
+    c("CrunchDataset", "character", "missing", "ANY"),
+    .addVariableSetter)
+setMethod("[[<-", 
+    c("CrunchDataset", "character", "missing", "CrunchExpression"), 
+    .deriveVariableSetter)
+setMethod("[[<-", 
+    c("CrunchDataset", "ANY"), 
+    function (x, i, value) {
+        stop("Only character (name) indexing supported for [[<-", call.=FALSE)
+    })
 ##' @export
 setMethod("$<-", c("CrunchDataset"), function (x, name, value) {
     x[[name]] <- value
