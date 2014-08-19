@@ -137,19 +137,14 @@ if (run.integration.tests) {
             test_that("setup for update with wrong number of values", {
                 expect_identical(len, 10L)
             })
-            
-            skip({
-                test_that("Trying to update with too many values fails", {
-                    expect_error(ds$v4[ds$v4 == "B"] <- rep(1, len + 5), 
-                        "an error message")
-                })
-            
-                test_that("Trying to update with too few values fails", {
-                    expect_error(ds$v4[ds$v4 == "B"] <- rep(1, len - 3), 
-                        "an error message")
-                })
+            test_that("Trying to update with too many values fails", {
+                expect_error(ds$v4[ds$v4 == "B"] <- rep(1, len + 5), 
+                    "expected 10 values, got 15")
             })
-            
+            test_that("Trying to update with too few values fails", {
+                expect_error(ds$v4[ds$v4 == "B"] <- rep(1, len - 3), 
+                    "expected 10 values, got 7")
+            })
             test_that("Trying to update with different filters fails", {
                 expect_error(ds$v4[ds$v4 == "B"] <- ds$v4[ds$v4 == "C"], 
                     "Cannot update a variable with a value that has a different filter")
