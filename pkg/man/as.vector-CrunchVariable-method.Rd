@@ -11,9 +11,10 @@
 
 \item{mode}{argument not used: part of the generic \code{as.vector}
 signature}
-
-\item{an}{R vector of the type corresponding to the Variable. E.g.
-CategoricalVariable yields type factor, NumericVariable yields numeric, etc.}
+}
+\value{
+an R vector of the type corresponding to the Variable. E.g.
+CategoricalVariable yields type factor, NumericVariable yields numeric, etc.
 }
 \description{
 Convert Variables to local R objects

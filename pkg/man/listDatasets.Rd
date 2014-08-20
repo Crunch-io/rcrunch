@@ -6,10 +6,15 @@
 listDatasets(kind = c("active", "all", "archived"), refresh = FALSE)
 }
 \arguments{
-\item{refresh}{logical: should the function check the Crunch API for new datasets? Default is FALSE.}
+\item{kind}{character specifying whether to look in active, archived, or all
+datasets.}
+
+\item{refresh}{logical: should the function check the Crunch API for new
+datasets? Default is FALSE.}
 }
 \value{
-Character vector of dataset names, each of which would be a valid input for \code{\link{loadDataset}}
+Character vector of dataset names, each of which would be a valid
+input for \code{\link{loadDataset}}
 }
 \description{
 Show the names of all Crunch datasets

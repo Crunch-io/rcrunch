@@ -2,9 +2,12 @@
 ##'
 ##' A version of \code{\link{grep}} for Crunch objects
 ##' @param dataset the Dataset or list of Crunch objects to search
-##' @param pattern regular expression, passed to \code{grep}. If "", returns all.
+##' @param refs vector of specific values in \code{key} to look for, as an
+##' alternative to pattern matching. Default is \code{NULL}, which means to
+##' use \code{grep} instead.
+##' @param pattern regular expression, passed to \code{grep}. If "", returns
+##' all.
 ##' @param key the field in the Crunch objects in which to grep
-##' @param hidden logical whether hidden variables should be searched. Default is FALSE
 ##' @param ... additional arguments passed to \code{grep}. If \code{value=TRUE},
 ##' returns the values of \code{key} where matches are found, not the variables
 ##' themselves

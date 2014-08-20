@@ -56,11 +56,13 @@ makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key=nameke
 ##' bind within \code{dataset}.
 ##' @param key character, the name of the Variable field in which to search
 ##' with \code{pattern}. Default is 'alias'.
+##' @param ... additional arguments, which are ignored
+##' @param a list with two elements: "dataset" and "variable_urls"
 ##' @export
 prepareBindInputs <- function (list_of_variables=NULL, dataset=NULL,
                                pattern=NULL, key=namekey(dataset), ...) {
 
-    ##' Given inputs to makeArray/makeMR, parse and validate
+    ## Given inputs to makeArray/makeMR, parse and validate
     listOfVariablesIsValid <- function (lov) {
         return(is.list(lov) && all(vapply(lov, is.variable, logical(1))))
     }
