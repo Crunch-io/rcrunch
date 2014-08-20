@@ -1,3 +1,26 @@
+##' Subvariables in Array Variables
+##'
+##' Multiple-response and categorical-array variables contain a set of 
+##' subvariables within them. The Subvariables class encapsulates them.
+##'
+##' Subvariables can be accessed from array variables (including multiple
+##' response) with the \code{subvariables} method. They can be assigned back
+##' with the \code{subvariables<-} setter, but there are limitations to what
+##' is supported. Specifically, you can reorder subvariables, but you cannot
+##' add or remove subvariables by \code{subvariables<-} assignment.
+##'
+##' Subvariables have a \code{names} attribute that can be accessed, showing
+##' the display names of the subvariables. These can be set with the 
+##' \code{names<-} method. 
+##'
+##' Finally, subvariables can be accessed as regular (categorical) variables
+##' with the \code{$} and \code{[[} extract methods. 
+##' 
+##' See the vignette on array variables for further details and examples.
+##'
+##' @param x A Variable or Subvariables object
+##' @param value For the setters, the appropriate values to set
+##'
 ##' @rdname Subvariables
 ##' @export
 setMethod("subvariables", "CategoricalArrayVariable", function (x) {
@@ -11,6 +34,8 @@ setMethod("subvariables<-", c("CategoricalArrayVariable", "ANY"),
     function (x, value) {
         stop("Can only assign an object of class Subvariables", call.=FALSE)
     })
+##' @rdname Subvariables
+##' @export
 setMethod("subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
     function (x, value) {
         old <- x@body$subvariables

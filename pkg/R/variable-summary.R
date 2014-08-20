@@ -74,9 +74,18 @@ table <- function (..., exclude, useNA, dnn, deparse.level) {
 }
 
 #setGeneric("table", signature="...")
-# ##' @export 
+# ## @export 
 #setMethod("table", "CategoricalVariable", CategoricalVariable.table)
 
+##' Summary methods for Crunch Variables
+##' 
+##' @param object A Variable
+##' @param ... additional arguments, ignored (they're in the summary.default)
+##' signature
+##' @return a summary response. Categorical variable summaries should work like
+##' summary.factor; Numeric variables should be like summary.numeric. Other
+##' Variable types are not yet supported.
+##' @rdname crunch-summary
 ##' @export
 summary.CategoricalVariable <- function (object, ...) {
     tab <- table(object)
@@ -93,6 +102,7 @@ print.CategoricalVariableSummary <- function (x, ...) {
     print(data.frame(Count=x))
 }
 
+##' @rdname crunch-summary
 ##' @export
 summary.NumericVariable <- function (object, ...) {
     summ <- getSummary(object)

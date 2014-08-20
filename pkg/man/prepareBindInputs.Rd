@@ -23,6 +23,11 @@ bind within \code{dataset}.}
 
 \item{key}{character, the name of the Variable field in which to search
 with \code{pattern}. Default is 'alias'.}
+
+\item{...}{additional arguments, which are ignored}
+}
+\value{
+a list with two elements: "dataset" and "variable_urls"
 }
 \description{
 Exported only for nonstandard evaluation in makeArray and makeMR

@@ -124,23 +124,6 @@ setMethod("categories<-", "CategoricalVariable",
 setMethod("categories<-", "CategoricalArrayVariable", 
     function (x, value) setCrunchSlot(x, "categories", value))
 
-.dichotomize.var <- function (x, i) {
-    categories(x) <- dichotomize(categories(x), i)
-    invisible(refresh(x))
-}
-.undichotomize.var <- function (x) {
-    categories(x) <- undichotomize(categories(x))
-    invisible(refresh(x))
-}
-##' @export
-setMethod("dichotomize", "CategoricalVariable", .dichotomize.var)
-##' @export
-setMethod("dichotomize", "CategoricalArrayVariable", .dichotomize.var)
-##' @export
-setMethod("undichotomize", "CategoricalVariable", .undichotomize.var)
-##' @export
-setMethod("undichotomize", "CategoricalArrayVariable", .undichotomize.var)
-
 setMethod("datasetReference", "CrunchVariable", function (x) x@urls$dataset_url)
 setMethod("datasetReference", "ANY", function (x) NULL)
 

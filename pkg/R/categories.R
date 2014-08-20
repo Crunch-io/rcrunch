@@ -26,17 +26,20 @@ setMethod("initialize", "Categories", init.Categories)
 
 is.categories <- function (x) inherits(x, "Categories")
 
+##' @rdname Categories
 ##' @export
 setMethod("[", c("Categories", "ANY"), function (x, i, ...) {
     x@.Data <- x@.Data[i]
     return(x)
 })
+##' @rdname Categories
 ##' @export
 setMethod("[<-", c("Categories", "ANY"), function (x, i, ..., value) {
     x@.Data[i] <- value
     return(x)
 })
 
+##' @rdname Categories
 ##' @export
 setMethod("names", "Categories", function (x) vapply(x, name, character(1)))
 
@@ -59,63 +62,14 @@ setValues <- function (x, value) {
     return(x)
 }
 
+##' @rdname Categories
 ##' @export
 setMethod("names<-", "Categories", setNames)
+##' @rdname Categories
 ##' @export
 setMethod("values<-", "Categories", setValues)
 ##' @export
 setMethod("toJSON", "Categories", function (x, ...) toJSON(I(x@.Data)))
-
-showCategories <- function (x) {
-    vapply(x, showCategory, character(1))
-}
-
-##' @importFrom methods show
-##' @export
-setMethod("show", "Categories", function (object) {
-    out <- showCategories(object)
-    cat(out, sep="\n")
-    invisible(out)
-})
-
-##' @export
-setMethod("is.dichotomized", "Categories", function (x) any(vapply(x, is.selected, logical(1))))
-
-##' Internal method for dichtomizing Categories (or lists)
-##' @rdname dichotomize-internal
-##' @param x Categories
-##' @param i valid indices for x
-##' @return Categories appropriately dichotomized
-.dichotomize.categories <- function (x, i) {
-    x[i] <- lapply(x[i], function (a) {
-        a$selected <- TRUE
-        return(a)
-    })
-    return(x)
-}
-
-##' Indicate how categories represent a dichotomized value
-##' @rdname dichotomize
-##' @export
-setMethod("dichotomize", c("Categories", "numeric"), .dichotomize.categories)
-setMethod("dichotomize", c("Categories", "logical"), .dichotomize.categories)
-setMethod("dichotomize", c("Categories", "character"), function (x, i) {
-    ind <- names(x) %in% i
-    if (!any(ind)) {
-        stop("Category not found") ## make nicer error message
-    }
-    return(dichotomize(x, ind))
-})
-
-##' @rdname dichotomize
-##' @export
-setMethod("undichotomize", "Categories", function (x) {
-    x[] <- lapply(x[], function (a) {
-        a$selected <- FALSE
-        return(a)
-    })
-    return(x)
-})
 
 .na.omit.categories <- function (object, ...) {
     missings <- vapply(object, function (x) isTRUE(x$missing), logical(1),

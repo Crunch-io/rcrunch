@@ -6,6 +6,18 @@
 \method{as.data.frame}{CrunchDataset}(x, row.names = NULL, optional = FALSE,
   ...)
 }
+\arguments{
+\item{x}{a CrunchDataset}
+
+\item{row.names}{part of as.data.frame signature. Ignored.}
+
+\item{optional}{part of as.data.frame signature. Ignored.}
+
+\item{...}{additional arguments passed to as.data.frame.default}
+}
+\value{
+a data.frame
+}
 \description{
 as.data.frame method for CrunchDataset
 }

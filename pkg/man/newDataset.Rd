@@ -8,7 +8,11 @@ newDataset(x, name = substitute(x), useAlias = default.useAlias(), ...)
 \arguments{
 \item{x}{a data.frame or other rectangular R object}
 
-\item{name}{character, the name to give the new Crunch dataset. Default is the name of the R object passed in \code{x}}
+\item{name}{character, the name to give the new Crunch dataset. Default is
+the name of the R object passed in \code{x}}
+
+\item{useAlias}{logical whether variable alias or name should be used as R
+variable names when the dataset is returned. Default is TRUE, meaning alias.}
 
 \item{...}{additional arguments passed to \code{ \link{newDatasetFromFile}}}
 }
