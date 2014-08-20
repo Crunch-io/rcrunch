@@ -2,7 +2,7 @@
 \name{summary.CategoricalVariable}
 \alias{summary.CategoricalVariable}
 \alias{summary.NumericVariable}
-\title{#}
+\title{Summary methods for Crunch Variables}
 \usage{
 \method{summary}{CategoricalVariable}(object, ...)
 
@@ -20,6 +20,6 @@ summary.factor; Numeric variables should be like summary.numeric. Other
 Variable types are not yet supported.
 }
 \description{
-#
+Summary methods for Crunch Variables
 }
 
