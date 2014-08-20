@@ -172,3 +172,6 @@ CrunchExpression <- setClass("CrunchExpression",
         filter=list(),
         variables=VariableCatalog()
     ))
+
+CrunchLogicalExpression <- setClass("CrunchLogicalExpression",
+    contains="CrunchExpression")

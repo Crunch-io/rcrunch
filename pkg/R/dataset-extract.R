@@ -85,9 +85,9 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 
 .deriveVariableSetter <- function (x, i, value) {
     if (i %in% names(x)) {
-        stop("Cannot overwrite Variable", call.=FALSE)
+        return(.updateValues(x, i, value))
     } else {
-        deriveVariable(x, value, name=i, alias=i)
+        return(deriveVariable(x, value, name=i, alias=i))
     }
 }
 
@@ -104,6 +104,11 @@ setMethod("[[<-",
 setMethod("[[<-", 
     c("CrunchDataset", "character", "missing", "CrunchExpression"), 
     .deriveVariableSetter)
+setMethod("[[<-", 
+    c("CrunchDataset", "character", "missing", "CrunchLogicalExpression"), 
+    function (x, i, value) {
+        stop("Cannot currently derive a logical variable", call.=FALSE)
+    })
 setMethod("[[<-", 
     c("CrunchDataset", "ANY"), 
     function (x, i, value) {

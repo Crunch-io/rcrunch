@@ -7,7 +7,13 @@ math.exp <- function (e1, e2, operator) {
     ## Generic function that creates ZCL of `e1 %operator% e2`
     ex <- zfunc(operator, e1, e2)
     ds.url <- unique(unlist(lapply(list(e1, e2), datasetReference))) %||% ""
-    CrunchExpression(expression=ex, dataset_url=ds.url)
+    logics <- c("contains", "<", ">", ">=", "<=", "==", "!=", "&", "|")
+    if (operator %in% logics) {
+        Constructor <- CrunchLogicalExpression
+    } else {
+        Constructor <- CrunchExpression
+    }
+    return(Constructor(expression=ex, dataset_url=ds.url))
 }
 
 vxr <- function (i) {
@@ -90,7 +96,7 @@ setMethod("&", c("CrunchExpression", "CrunchExpression"), vxv("and"))
 setMethod("|", c("CrunchExpression", "CrunchExpression"), vxv("or"))
 setMethod("!", c("CrunchExpression"), 
     function (x) {
-        CrunchExpression(expression=zfunc("not", x),
+        CrunchLogicalExpression(expression=zfunc("not", x),
             dataset_url=datasetReference(x))
     })
 
@@ -122,6 +128,6 @@ setMethod("as.vector", "CrunchExpression", function (x, mode) {
 })
 
 setMethod("is.na", "CrunchVariable", function (x) {
-    CrunchExpression(expression=zfunc("is_missing", x),
+    CrunchLogicalExpression(expression=zfunc("is_missing", x),
         dataset_url=datasetReference(x))
 })
