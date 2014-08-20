@@ -57,7 +57,7 @@ makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key=nameke
 ##' @param key character, the name of the Variable field in which to search
 ##' with \code{pattern}. Default is 'alias'.
 ##' @param ... additional arguments, which are ignored
-##' @param a list with two elements: "dataset" and "variable_urls"
+##' @return a list with two elements: "dataset" and "variable_urls"
 ##' @export
 prepareBindInputs <- function (list_of_variables=NULL, dataset=NULL,
                                pattern=NULL, key=namekey(dataset), ...) {

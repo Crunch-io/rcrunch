@@ -25,8 +25,9 @@ bind within \code{dataset}.}
 with \code{pattern}. Default is 'alias'.}
 
 \item{...}{additional arguments, which are ignored}
-
-\item{a}{list with two elements: "dataset" and "variable_urls"}
+}
+\value{
+a list with two elements: "dataset" and "variable_urls"
 }
 \description{
 Exported only for nonstandard evaluation in makeArray and makeMR
