@@ -7,24 +7,42 @@
 \alias{names<-,Subvariables-method}
 \alias{subvariables,CategoricalArrayVariable-method}
 \alias{subvariables<-,CategoricalArrayVariable,ANY-method}
+\alias{subvariables<-,CategoricalArrayVariable,Subvariables-method}
 \title{Subvariables in Array Variables}
 \usage{
 \S4method{subvariables}{CategoricalArrayVariable}(x)
 
 \S4method{subvariables}{CategoricalArrayVariable,ANY}(x) <- value
 
+\S4method{subvariables}{CategoricalArrayVariable,Subvariables}(x) <- value
+
 \S4method{names}{Subvariables}(x)
 
 \S4method{names}{Subvariables}(x) <- value
 }
 \arguments{
-\item{x}{an \R object.}
+\item{x}{A Variable or Subvariables object}
 
-\item{value}{a character vector of up to the same length as \code{x}, or
-    \code{NULL}.}
+\item{value}{For the setters, the appropriate values to set}
 }
 \description{
 Multiple-response and categorical-array variables contain a set of
-subvariables within them.
+subvariables within them. The Subvariables class encapsulates them.
+}
+\details{
+Subvariables can be accessed from array variables (including multiple
+response) with the \code{subvariables} method. They can be assigned back
+with the \code{subvariables<-} setter, but there are limitations to what
+is supported. Specifically, you can reorder subvariables, but you cannot
+add or remove subvariables by \code{subvariables<-} assignment.
+
+Subvariables have a \code{names} attribute that can be accessed, showing
+the display names of the subvariables. These can be set with the
+\code{names<-} method.
+
+Finally, subvariables can be accessed as regular (categorical) variables
+with the \code{$} and \code{[[} extract methods.
+
+See the vignette on array variables for further details and examples.
 }
 

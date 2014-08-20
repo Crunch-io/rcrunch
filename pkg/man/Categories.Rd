@@ -21,6 +21,7 @@ Category or Categories}
 CategoricalVariables, as well as the array types composed from
 Categoricals, contain Categories. Categories are a subclass of list that
 contains only Category objects. Category objects themselves subclass list
-and contain the following fields: "name", "id", "numeric_value", "missing", and optionally "selected".
+and contain the following fields: "name", "id", "numeric_value", "missing",
+and optionally "selected".
 }
 
