@@ -20,24 +20,29 @@ POSTNewVariable <- function (collection_url, variable) {
     
     do.POST <- function (x) POST(collection_url, body=toJSON(x, digits=15))
     
-    if (variable$type %in% c("multiple_response", "categorical_array")) {
-        ## assumes: array of subvariables included, and if MR, at least one
-        ## category has selected: TRUE
-        ## TODO: make the data import API take array types directly
+    if (!("expr" %in% names(variable))) {
+        ## If deriving a variable, skip this and go straight to POSTing
+        if (variable$type %in% c("multiple_response", "categorical_array")) {
+            ## assumes: array of subvariables included, and if MR, at least one
+            ## category has selected: TRUE
+            ## TODO: make the data import API take array types directly
 
-        var_urls <- lapply(variable$subvariables, function (x) try(do.POST(x)))
-        errs <- vapply(var_urls, is.error, logical(1))
-        if (any(errs)) {
-            # Delete subvariables that were added, then raise
-            lapply(var_urls[!errs], function (x) DELETE(x))
-            stop("Subvariables errored on upload", call.=FALSE)
+            var_urls <- lapply(variable$subvariables,
+                function (x) try(do.POST(x)))
+            errs <- vapply(var_urls, is.error, logical(1))
+            if (any(errs)) {
+                # Delete subvariables that were added, then raise
+                lapply(var_urls[!errs], function (x) DELETE(x))
+                stop("Subvariables errored on upload", call.=FALSE)
+            }
+            # Else prepare to POST array definition
+            variable$subvariables <- I(unlist(var_urls))
+        } else if (variable$type == "categorical") {
+            Categories(variable$categories) ## will error if cats are invalid
         }
-        # Else prepare to POST array definition
-        variable$subvariables <- I(unlist(var_urls))
-    } else if (variable$type == "categorical") {
-        Categories(variable$categories) ## will error if cats are invalid
     }
-    invisible(do.POST(variable))
+    out <- do.POST(variable)
+    invisible(out)
 }
 
 addVariables <- function (dataset, vars) {
@@ -49,4 +54,14 @@ addVariables <- function (dataset, vars) {
             toVariable(vars[[i]], name=names(vars)[i], alias=names(vars)[i]))
     }
     invisible(refresh(dataset))
+}
+
+deriveVariable <- function (dataset, expr, ...) {
+    derivation <- list(...)
+    derivation$expr <- zcl(expr)
+    var_url <- POSTNewVariable(dataset@urls$variables_url, derivation)
+    dataset <- refresh(dataset) ## would like not to do this
+    # variable <- as.variable(GET(var_url))
+    # dataset@.Data[[variable@body$alias]] <- variable
+    invisible(dataset)
 }
