@@ -10,7 +10,8 @@ updateList <- function (x, y) {
 ##' Generic List Element Extractor
 ##'
 ##'
-##' @param key character naming the key(s) to extract. Can traverse list elements by separating them with \code{$}.
+##' @param key character naming the key(s) to extract. Can traverse list
+##' elements by separating them with \code{$}.
 ##' @param xlist list containing other lists from which you want to extract
 ##' @param ifnot what to return if the key is not found in a given xlist element
 ##' @param simplify logical, passed to sapply internally
@@ -76,7 +77,8 @@ doc <- function (x) {
 }
 
 ##' Make a prose list
-##' Function to paste together a list of items, separated by commas (if more than 2), and with the last one having the collapse string.
+##' Function to paste together a list of items, separated by commas (if more
+##' than 2), and with the last one having the collapse string.
 ##'
 ##' @param x vector or list
 ##' @param collapse default="and"
