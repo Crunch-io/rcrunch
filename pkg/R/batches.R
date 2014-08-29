@@ -7,14 +7,16 @@ pollBatchStatus <- function (batch.url, catalog, until="imported",
     }
     status <- catalog[[batch.url]]$status
     # print(status)
-    while (status == "importing" && timer(starttime) < timeout) {
+    while (status %in% c("idle", "importing") && timer(starttime) < timeout) {
         Sys.sleep(wait)
         catalog <- refresh(catalog)
         status <- catalog[[batch.url]]$status
         # print(status)
     }
     
-    if (status %in% "importing") {
+    if (status %in% "idle") {
+        stop("Append process failed to start on the server", call.=FALSE)
+    } else if (status %in% "importing") {
         stop("Timed out. Check back later.", call.=FALSE)
     } else if (status %in% c(until, "conflict")) {
         return(status)

@@ -58,7 +58,7 @@ handleAPIresponse <- function (response, special.statuses=list()) {
     if (is.function(handler)) {
         invisible(handler(response))
     } else if (http_status(response)$category == "success") {
-        if (code == 201) {
+        if (code %in% c(201, 202) && length(response$headers$location)) {
             return(response$headers$location)
         } else if (code == 204 || length(response$content) == 0) {
             invisible(response)
