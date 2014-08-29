@@ -92,7 +92,8 @@ addSourceToDataset <- function (dataset, source_url, ...) {
         element="shoji:entity",
         body=list(
             source=source_url,
-            workflow=I(list())
+            workflow=I(list()),
+            async=TRUE
         )
     )
     batch_url <- POST(batches_url, body=toJSON(body), ...)
