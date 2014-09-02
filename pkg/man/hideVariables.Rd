@@ -35,4 +35,7 @@ unhideVariables(dataset, variables = NULL, pattern = NULL,
 \description{
 Hide and Unhide Variables Within a Dataset
 }
+\seealso{
+hide
+}
 

@@ -5,22 +5,70 @@
 \alias{Categories-class}
 \alias{Category}
 \alias{Category-class}
+\alias{[,Categories,ANY-method}
+\alias{[<-,Categories,ANY,ANY,ANY-method}
 \alias{ids,Categories-method}
+\alias{names,Categories-method}
+\alias{names<-,Categories-method}
 \alias{values,Categories-method}
+\alias{values<-,Categories-method}
 \title{Categories in CategoricalVariables}
 \usage{
+\S4method{[}{Categories,ANY}(x, i, j, ..., drop = TRUE)
+
+\S4method{[}{Categories,ANY,ANY,ANY}(x, i, j, ...) <- value
+
+\S4method{names}{Categories}(x)
+
 \S4method{values}{Categories}(x)
 
 \S4method{ids}{Categories}(x)
+
+\S4method{names}{Categories}(x) <- value
+
+\S4method{values}{Categories}(x) <- value
 }
 \arguments{
 \item{x}{For the attribute getters and setters, an object of class
 Category or Categories}
+
+\item{i}{
+    indices specifying elements to extract or replace.  Indices are
+    \code{numeric} or \code{character} vectors or empty (missing) or
+    \code{NULL}.  Numeric values are coerced to integer as by
+    \code{\link{as.integer}} (and hence truncated towards zero).
+    Character vectors will be matched to the \code{\link{names}} of the
+    object (or for matrices/arrays, the \code{\link{dimnames}}):
+    see \sQuote{Character indices} below for further details.
+
+    For \code{[}-indexing only: \code{i}, \code{j}, \code{\dots} can be
+    logical vectors, indicating elements/slices to select.  Such vectors
+    are recycled if necessary to match the corresponding extent.
+    \code{i}, \code{j}, \code{\dots} can also be negative integers,
+    indicating elements/slices to leave out of the selection.
+
+    When indexing arrays by \code{[} a single argument \code{i} can be a
+    matrix with as many columns as there are dimensions of \code{x}; the
+    result is then a vector with elements corresponding to the sets of
+    indices in each row of \code{i}.
+
+    An index value of \code{NULL} is treated as if it were \code{integer(0)}.
+  }
+
+\item{drop}{For matrices and arrays.  If \code{TRUE} the result is
+    coerced to the lowest possible dimension (see the examples).  This
+    only works for extracting elements, not for the replacement.  See
+    \code{\link{drop}} for further details.
+  }
+
+\item{value}{typically an array-like \R object of a similar class as
+    \code{x}.}
 }
 \description{
 CategoricalVariables, as well as the array types composed from
 Categoricals, contain Categories. Categories are a subclass of list that
 contains only Category objects. Category objects themselves subclass list
-and contain the following fields: "name", "id", "numeric_value", "missing", and optionally "selected".
+and contain the following fields: "name", "id", "numeric_value", "missing",
+and optionally "selected".
 }
 

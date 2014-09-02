@@ -57,6 +57,7 @@ setMethod("self", "ShojiObject", function (x) x@self)
 ##' 
 ##' @param x pretty much any Crunch object
 ##' @return a new version of \code{x}
+##' @rdname refresh
 ##' @export
 setMethod("refresh", "ShojiObject", function (x) {
     Class <- class(x)  ## in case x is a subclass of ShojiObject
@@ -75,7 +76,7 @@ setMethod("refresh", "ShojiObject", function (x) {
 ##' Option available for datasets only. Default is \code{TRUE} if in an
 ##' interactive session.
 ##' @param ... additional arguments, in the generic
-##' @seealso archive hide deleteDataset
+##' @seealso hide deleteDataset
 ##' @rdname delete
 ##' @aliases delete
 ##' @export

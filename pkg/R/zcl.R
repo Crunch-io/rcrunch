@@ -1,13 +1,24 @@
+## Functions to make ZZ9 Command Language query objects
+
 r2zcl <- function (x) {
+    ## Convert an R vector to a value/column to be sent in a ZCL request.
+    ## Called inside the zcl() method.
     v <- toVariable(x)
     attributes(v$values) <- NULL
     
+    ## Grab any "typeof" attribute that's been attached. This is so we can
+    ## assert that the type we're sending matches the type of some other 
+    ## variable, usually another variable in our CrunchExpression
     zztype <- attr(x, "typeof")
+    
+    ## If there is a single value, call it "value". Else it is a "column" array
     if (length(x) == 1) {
         out <- list(value=v$values)
     } else {
         out <- list(column=v$values)
     }
+    
+    ## Add type information since we have it, so that ZZ9 doesn't have to guess
     if (!is.null(zztype)) {
         out$type <- zztype
     } else {
@@ -16,6 +27,7 @@ r2zcl <- function (x) {
     return(out)
 }
 
+## Methods to convert various objects to ZCL
 setMethod("zcl", "CrunchExpression", function (x) x@expression)
 setMethod("zcl", "CrunchVariable", function (x) zcl(tuple(x)))
 setMethod("zcl", "VariableTuple", function (x) list(variable=x$id))
@@ -34,6 +46,7 @@ setOldClass("zcl")
 setMethod("zcl", "zcl", function (x) x)
 
 typeof <- function (x, variable) {
+    ## Add ZCL metadata asserting that x is the same type as variable
     if (is.character(variable)) {
         variable <- list(class=variable)
     } else if (is.variable(variable) || inherits(variable, "VariableTuple")) {
@@ -44,5 +57,6 @@ typeof <- function (x, variable) {
 }
 
 zfunc <- function (func, ...) {
+    ## Wrapper that creates ZCL function syntax
     return(list(`function`=func, args=lapply(list(...), zcl)))
 }

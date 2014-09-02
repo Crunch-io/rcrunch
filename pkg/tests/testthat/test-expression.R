@@ -20,7 +20,7 @@ with(fake.HTTP, {
     
     test_that("Logic generates expressions", {
         e1 <- try(ds$birthyr < 0)
-        expect_true(inherits(e1, "CrunchExpression"))
+        expect_true(inherits(e1, "CrunchLogicalExpression"))
     })
 })
 
@@ -40,7 +40,7 @@ if (run.integration.tests) {
 
             test_that("Logical expressions evaluate", {
                 e1 <- try(ds$v3 < 10)
-                expect_true(inherits(e1, "CrunchExpression"))
+                expect_true(inherits(e1, "CrunchLogicalExpression"))
                 skip(expect_identical(as.vector(e1), as.vector(ds$v3) < 10),
                     "select with logical expression not supported")
             })

@@ -1,6 +1,10 @@
 ##' Upload a data.frame to Crunch to make a new dataset
+##'
 ##' @param x a data.frame or other rectangular R object
-##' @param name character, the name to give the new Crunch dataset. Default is the name of the R object passed in \code{x}
+##' @param name character, the name to give the new Crunch dataset. Default is
+##' the name of the R object passed in \code{x}
+##' @param useAlias logical whether variable alias or name should be used as R
+##' variable names when the dataset is returned. Default is TRUE, meaning alias.
 ##' @param ... additional arguments passed to \code{ \link{newDatasetFromFile}}
 ##' @return If successful, an object of class CrunchDataset.
 ##' @export
@@ -48,10 +52,14 @@ newDatasetViaFile <- function (x, name=substitute(x), ...) {
 }
 
 ##' Upload a file to Crunch to make a new dataset
+##'
 ##' @param file character, the path to a file to upload
-##' @param name character, the name to give the new Crunch dataset. Default is the file name
+##' @param name character, the name to give the new Crunch dataset. Default is
+##' the file name
 ##' @return If successful, an object of class crunchdf.
-##' @param useAlias logical whether variable alias or name should be used as R variable names when the dataset is returned. Default is TRUE, meaning alias. They're more computer friendly.
+##' @param useAlias logical whether variable alias or name should be used as R
+##' variable names when the dataset is returned. Default is TRUE, meaning alias.
+##' They're more computer friendly.
 ##' @param ... additional arguments, currently not implemented
 ##' @export 
 newDatasetFromFile <- function (file, name=basename(file),

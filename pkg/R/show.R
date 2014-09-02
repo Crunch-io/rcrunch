@@ -25,6 +25,18 @@ setMethod("show", "CategoricalArrayVariable", function (object) {
     invisible(out)
 })
 
+showCategories <- function (x) {
+    vapply(x, showCategory, character(1))
+}
+
+##' @importFrom methods show
+##' @export
+setMethod("show", "Categories", function (object) {
+    out <- showCategories(object)
+    cat(out, sep="\n")
+    invisible(out)
+})
+
 describeDatasetVariables <- function (dataset) {
     nk <- namekey(dataset)
     return(vapply(variables(dataset), function (v) {

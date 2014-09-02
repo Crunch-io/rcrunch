@@ -142,7 +142,8 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
 ##' CategoricalVariables, as well as the array types composed from
 ##' Categoricals, contain Categories. Categories are a subclass of list that
 ##' contains only Category objects. Category objects themselves subclass list
-##' and contain the following fields: "name", "id", "numeric_value", "missing", and optionally "selected". 
+##' and contain the following fields: "name", "id", "numeric_value", "missing",
+##' and optionally "selected". 
 ##'
 ##' @param x For the attribute getters and setters, an object of class
 ##' Category or Categories
@@ -154,12 +155,8 @@ Categories <- setClass("Categories", contains="list")
 ##' @export
 Category <- setClass("Category", contains="namedList")
 
-##' Subvariables in Array Variables
-##'
-##' Multiple-response and categorical-array variables contain a set of 
-##' subvariables within them. 
-##'
 ##' @rdname Subvariables
+##' @export
 Subvariables <- setClass("Subvariables", contains="ShojiCatalog")
 
 CrunchExpression <- setClass("CrunchExpression",
@@ -175,3 +172,6 @@ CrunchExpression <- setClass("CrunchExpression",
         filter=list(),
         variables=VariableCatalog()
     ))
+
+CrunchLogicalExpression <- setClass("CrunchLogicalExpression",
+    contains="CrunchExpression")

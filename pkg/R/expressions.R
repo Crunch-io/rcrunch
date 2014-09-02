@@ -1,20 +1,35 @@
+## "Ops" for Crunch Variables
+##
+## Most of the indirection here is to programatically create the Ops methods
+## for the right combinations of multiple-dispatch signatures
+
 math.exp <- function (e1, e2, operator) {
+    ## Generic function that creates ZCL of `e1 %operator% e2`
     ex <- zfunc(operator, e1, e2)
     ds.url <- unique(unlist(lapply(list(e1, e2), datasetReference))) %||% ""
-    CrunchExpression(expression=ex, dataset_url=ds.url)
+    logics <- c("contains", "<", ">", ">=", "<=", "==", "!=", "&", "|")
+    if (operator %in% logics) {
+        Constructor <- CrunchLogicalExpression
+    } else {
+        Constructor <- CrunchExpression
+    }
+    return(Constructor(expression=ex, dataset_url=ds.url))
 }
 
 vxr <- function (i) {
+    ## Create math.exp of Variable x R.object
     force(i)
     return(function (e1, e2) math.exp(e1, typeof(e2, e1), i))
 }
 
 rxv <- function (i) {
+    ## Create math.exp of R.object x Variable
     force(i)
     return(function (e1, e2) math.exp(typeof(e1, e2), e2, i))
 }
 
 vxv <- function (i) {
+    ## Create math.exp of two non-R.objects
     force(i)
     return(function (e1, e2) math.exp(e1, e2, i))
 }
@@ -81,7 +96,7 @@ setMethod("&", c("CrunchExpression", "CrunchExpression"), vxv("and"))
 setMethod("|", c("CrunchExpression", "CrunchExpression"), vxv("or"))
 setMethod("!", c("CrunchExpression"), 
     function (x) {
-        CrunchExpression(expression=zfunc("not", x),
+        CrunchLogicalExpression(expression=zfunc("not", x),
             dataset_url=datasetReference(x))
     })
 
@@ -113,6 +128,6 @@ setMethod("as.vector", "CrunchExpression", function (x, mode) {
 })
 
 setMethod("is.na", "CrunchVariable", function (x) {
-    CrunchExpression(expression=zfunc("is_missing", x),
+    CrunchLogicalExpression(expression=zfunc("is_missing", x),
         dataset_url=datasetReference(x))
 })

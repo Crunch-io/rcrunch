@@ -1,6 +1,6 @@
 doc:
 	R --slave -e 'library(roxygen2); roxygenise("pkg")'
-	git add pkg/man/*.Rd
+	git add --all pkg/man/*.Rd
 
 test:
 	R CMD INSTALL --install-tests pkg

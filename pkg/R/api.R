@@ -118,14 +118,18 @@ crunchUserAgent <- function (x) {
 
 ##' @importFrom RJSONIO fromJSON
 parseJSONresponse <- function (x, simplifyWithNames=FALSE, ...) {
-    ## Investigate not doing this anymore with httr 0.4
-    mungeEncoding(fromJSON(httr:::parse_text(x, encoding = "UTF-8"),
+    ## Investigate not doing this anymore with httr 0.4, which uses jsonlite
+    ## Update: still would have to pass in `unicode=TRUE` somewhere, so won't
+    ## just be able to use httr's json parser out of the box
+    text.parser <- get("parse_text", envir=asNamespace("httr"))
+    mungeEncoding(fromJSON(text.parser(x, encoding = "UTF-8"),
         simplifyWithNames=simplifyWithNames, ...))
 }
 
 mungeEncoding <- function (x, to="latin1") {
     ## Pending resolution of https://github.com/duncantl/RJSONIO/issues/6
     ## or https://github.com/jeroenooms/jsonlite/issues/5
+    ## Update: fixed in jsonlite, not yet in RJSONIO.
     if (is.list(x)) {
         x <- lapply(x, mungeEncoding, to=to)
     } else if (is.character(x)) {

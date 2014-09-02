@@ -40,7 +40,7 @@ getValues <- function (x, ...) {
 ##' @param x a CrunchVariable subclass
 ##' @param mode argument not used: part of the generic \code{as.vector}
 ##' signature
-##' @param an R vector of the type corresponding to the Variable. E.g. 
+##' @return an R vector of the type corresponding to the Variable. E.g. 
 ##' CategoricalVariable yields type factor, NumericVariable yields numeric, etc.
 ##' @export
 setMethod("as.vector", "CrunchVariable", function (x, mode) {
@@ -49,6 +49,11 @@ setMethod("as.vector", "CrunchVariable", function (x, mode) {
 
 ##' as.data.frame method for CrunchDataset
 ##'
+##' @param x a CrunchDataset
+##' @param row.names part of as.data.frame signature. Ignored.
+##' @param optional part of as.data.frame signature. Ignored.
+##' @param ... additional arguments passed to as.data.frame.default
+##' @return a data.frame
 ##' @rdname dataset-to-R
 ##' @export
 as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE, ...) {

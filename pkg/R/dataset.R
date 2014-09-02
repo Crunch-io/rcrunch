@@ -100,6 +100,8 @@ setMethod("tuple<-", "CrunchDataset", function (x, value) {
     return(x)
 })
 
+##' @rdname refresh
+##' @export
 setMethod("refresh", "CrunchDataset", function (x) {
     as.dataset(GET(self(x)), useAlias=x@useAlias, tuple=refresh(tuple(x)))
 })
