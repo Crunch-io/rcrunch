@@ -77,17 +77,13 @@ if (run.integration.tests) {
                 test_that("can add batches to dataset", {
                     p1.batches <- batches(part1)
                     expect_true(inherits(p1.batches, "ShojiCatalog"))
-                    skip({
-                        expect_identical(length(p1.batches), 1L)
-                        expect_identical(length(batches(part2)), 1L)
-                    }, "batch catalogs are incomplete on the server")
+                    expect_identical(length(p1.batches), 1L)
+                    expect_identical(length(batches(part2)), 1L)
                     out <- try(addBatchToDataset(part1, part2))
                     expect_true(is.character(out))
                     expect_true(grepl("/batches/", out))
-                    skip({
-                        expect_identical(length(batches(part1)), 2L)
-                        expect_true(out %in% names(batches(part1)@index))
-                    }, "batch catalogs are incomplete on the server")
+                    expect_identical(length(batches(part1)), 2L)
+                    expect_true(out %in% names(batches(part1)@index))
                 })
             })
         })
@@ -103,18 +99,15 @@ if (run.integration.tests) {
                     expect_equivalent(v3.2, df$v3)
                     expect_identical(dim(part1), dim(part2))
                     expect_identical(dim(part1), dim(df))
-                    skip({
-                        expect_identical(length(batches(part1)), 1L)
-                        expect_identical(length(batches(part2)), 1L)
-                    }, "batch catalogs are incomplete on the server")
+                    expect_identical(length(batches(part1)), 1L)
+                    expect_identical(length(batches(part2)), 1L)
                 })
                 test_that("append handles two identical Datasets", {
                     out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
                     expect_identical(self(out), self(part1))
-                    skip(expect_identical(length(batches(out)), 2L),
-                        "3 != 2")
+                    expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out), c(nrow(df)*2L, ncol(df)))
                     expect_identical(getNrow(out), nrow(df)*2L)
                     expect_identical(nrow(out), length(as.vector(out$v3)))
@@ -135,10 +128,8 @@ if (run.integration.tests) {
                     expect_true(is.numeric(v3.2))
                     expect_equivalent(v3.1, testfile.df$V3)
                     expect_equivalent(v3.2, testfile.df$V3)
-                    skip({
-                        expect_identical(length(batches(file1)), 1L)
-                        expect_identical(length(batches(file2)), 1L)
-                    }, "batch catalogs are incomplete on the server")
+                    expect_identical(length(batches(file1)), 1L)
+                    expect_identical(length(batches(file2)), 1L)
                 })
                 
                 test_that("append handles two identical Datasets from file", {
@@ -146,8 +137,7 @@ if (run.integration.tests) {
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
                     expect_identical(self(out), self(file1))
-                    skip(expect_identical(length(batches(out)), 2L),
-                        "3 != 2")
+                    expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out),
                         c(nrow(testfile.df)*2L, ncol(testfile.df)))
                     expect_identical(getNrow(out), nrow(testfile.df)*2L)
@@ -165,20 +155,15 @@ if (run.integration.tests) {
                 p1.batches <- batches(part1)
                 test_that("if I insist on confirmation, it fails if there are conflicts", {
                     expect_true(inherits(p1.batches, "ShojiCatalog"))
-                    skip({
-                        expect_identical(length(p1.batches), 1L)
-                    }, "batch catalogs are incomplete on the server")
+                    expect_identical(length(p1.batches), 1L)
                     expect_error(appendDataset(part1, part2, confirm=TRUE))
-                    skip({
-                        expect_identical(length(batches(part1)), 1L)
-                    }, "batch catalogs are incomplete on the server")
+                    expect_identical(length(batches(part1)), 1L)
                 })
                 test_that("append handles missing variables from each", {
                     out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
-                    skip(expect_identical(length(refresh(p1.batches)), 2L),
-                        "3 != 2")
+                    expect_identical(length(refresh(p1.batches)), 2L)
                     expect_identical(ncol(out), 5L)
                     expect_identical(ncol(out), length(out@variables))
                     expect_true(setequal(names(out), paste0("v", 1:5)))
@@ -209,8 +194,7 @@ if (run.integration.tests) {
                     out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
-                    skip(expect_identical(length(refresh(p1.batches)), 2L),
-                        "3 != 2")
+                    expect_identical(length(refresh(p1.batches)), 2L)
                     expect_identical(ncol(out), 5L)
                     expect_identical(ncol(out), length(out@variables))
                     expect_true(setequal(names(out), paste0("v", 1:5)))
@@ -239,13 +223,9 @@ if (run.integration.tests) {
                 test_that("append fails on type mismatch", {
                     p1.batches <- batches(part1)
                     expect_true(inherits(p1.batches, "ShojiCatalog"))
-                    skip({
-                        expect_identical(length(p1.batches), 1L)
-                    }, "batch catalogs are incomplete on the server")
+                    expect_identical(length(p1.batches), 1L)
                     expect_error(appendDataset(part1, part2))
-                    skip({
-                        expect_identical(length(batches(part1)), 1L)
-                    }, "batch catalogs are incomplete on the server")
+                    expect_identical(length(batches(part1)), 1L)
                 })
             })
         })
@@ -257,17 +237,14 @@ if (run.integration.tests) {
                 test_that("set up MR for appending", {
                     expect_true(is.Multiple(part1$test1))
                     expect_true(is.Multiple(part2$test1))
-                    skip({
-                        expect_identical(length(batches(part1)), 1L)
-                        expect_identical(length(batches(part2)), 1L)
-                    }, "batch catalogs are incomplete on the server")
+                    expect_identical(length(batches(part1)), 1L)
+                    expect_identical(length(batches(part2)), 1L)
                 })
                 test_that("identical datasets with arrays can append", {
                     out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
-                    skip(expect_identical(length(batches(out)), 2L),
-                        "3 != 2")
+                    expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
                     expect_true(is.Multiple(out$test1))
                 })
@@ -287,8 +264,7 @@ if (run.integration.tests) {
                     out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
-                    skip(expect_identical(length(batches(out)), 2L),
-                        "3 != 2")
+                    expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
                     expect_true(is.Multiple(out$test1))
                 })
@@ -311,8 +287,7 @@ if (run.integration.tests) {
                     out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
-                    skip(expect_identical(length(batches(out)), 2L),
-                        "3 != 2")
+                    expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
                     expect_true(is.Multiple(out$test1))
                     expect_identical(names(subvariables(out$test1)),
