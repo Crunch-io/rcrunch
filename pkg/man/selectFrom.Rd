@@ -6,7 +6,8 @@
 selectFrom(key, xlist, ifnot = NA, simplify = TRUE)
 }
 \arguments{
-\item{key}{character naming the key(s) to extract. Can traverse list elements by separating them with \code{$}.}
+\item{key}{character naming the key(s) to extract. Can traverse list
+elements by separating them with \code{$}.}
 
 \item{xlist}{list containing other lists from which you want to extract}
 

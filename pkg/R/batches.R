@@ -1,7 +1,7 @@
-pollBatchStatus <- function (batch.url, catalog, until="imported",
-                            wait=1, timeout=default.timeout()) {
+pollBatchStatus <- function (batch.url, catalog, until="imported", wait=1) {
     
     starttime <- Sys.time()
+    timeout <- crunchTimeout()
     timer <- function (since, units="secs") {
         difftime(Sys.time(), since, units=units)
     }
@@ -17,7 +17,7 @@ pollBatchStatus <- function (batch.url, catalog, until="imported",
     if (status %in% "idle") {
         stop("Append process failed to start on the server", call.=FALSE)
     } else if (status %in% "importing") {
-        stop("Timed out. Check back later.", call.=FALSE)
+        stop("Timed out. Check back later. Consider also increasing options(crunch.timeout)", call.=FALSE)
     } else if (status %in% c(until, "conflict")) {
         return(status)
     } else {
@@ -25,7 +25,7 @@ pollBatchStatus <- function (batch.url, catalog, until="imported",
     }
 }
 
-default.timeout <- function () {
+crunchTimeout <- function () {
     opt <- getOption("crunch.timeout")
     if (is.null(opt) || !is.numeric(opt)) opt <- 60
     return(opt)
