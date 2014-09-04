@@ -6,6 +6,9 @@
     if (is.null(getOption("crunch.max.categories"))) {
         options(crunch.max.categories=256)
     }
+    if (is.null(getOption("crunch.timeout"))) {
+        options(crunch.timeout=60)
+    }
     options(warn=1)
     assign("application/json", parseJSONresponse, 
         envir=get("parsers", envir=asNamespace("httr")))
