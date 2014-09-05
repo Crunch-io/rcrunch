@@ -83,10 +83,65 @@ setMethod("$", "Subvariables", function (x, name) x[[name]])
 setMethod("[", c("Subvariables", "character"), function (x, i, ...) {
     w <- match(i, names(x))
     if (any(is.na(w))) {
-        stop("Undefined subvariables selected: ", serialPaste(i[is.na(w)]))
+        stop("Undefined subvariables selected: ", serialPaste(i[is.na(w)]),
+            call.=FALSE)
     }
-    callNextMethod(x, w, ...)
+    return(x[w])
 })
+
+setMethod("[[<-", 
+    c("Subvariables", "character", "missing", "CrunchVariable"), 
+    function (x, i, value) {
+        i <- match(i, names(x))
+        if (is.na(i)) {
+            stop("subscript out of bounds", call.=FALSE)
+        }
+        callNextMethod(x, i, value)    
+    })
+setMethod("[[<-", 
+    c("Subvariables", "ANY", "missing", "CrunchVariable"), 
+    function (x, i, value) {
+        if (self(value) != names(x@index)[i]) {
+            stop("Cannot add or remove subvariables", call.=FALSE)
+        }
+        x@index[[self(value)]] <- tuple(value)@body
+        return(x)
+    })
+setMethod("[[<-", 
+    c("Subvariables", "ANY", "missing", "NULL"),
+    function (x, i, value) {
+        stop("Cannot add or remove subvariables", call.=FALSE)
+    })
+setMethod("[[<-", 
+    c("Subvariables", "ANY", "missing", "ANY"),
+    function (x, i, value) {
+        stop("Can only assign Variables into an object of class Subvariables",
+            call.=FALSE)
+    })
+
+setMethod("[<-", c("Subvariables", "character", "missing", "Subvariables"), 
+    function (x, i, value) {
+        w <- match(i, names(x))
+        if (any(is.na(w))) {
+            stop("Undefined subvariables selected: ", serialPaste(i[is.na(w)]))
+        }
+        callNextMethod(x, w, value)
+    })
+setMethod("[<-", c("Subvariables", "ANY", "missing", "Subvariables"), 
+    function (x, i, value) {
+        inbound <- vapply(value, function (a) self(a), character(1))
+        if (!all(inbound %in% names(x@index)[i])) {
+            stop("Cannot add or remove subvariables", call.=FALSE)
+        }
+        x@index[i] <- value@index
+        names(x@index)[i] <- inbound
+        return(x)
+    })
+setMethod("[<-", c("Subvariables", "ANY", "missing", "ANY"), 
+    function (x, i, value) {
+        stop("Can only assign Variables into an object of class Subvariables",
+            call.=FALSE)
+    })
 
 ##' @export
 as.list.Subvariables <- function (x, ...) lapply(names(x), function (i) x[[i]])

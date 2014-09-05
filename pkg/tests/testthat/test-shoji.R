@@ -37,6 +37,14 @@ test_that("ShojiCatalog", {
     sho <- as.shojiObject(fo)
     expect_true(is.shojiCatalog(sho))
     expect_identical(sho@index, fo$index)
+    expect_true(is.shojiCatalog(sho[1]))
+    expect_error(sho[2:3], "Subscript out of bounds: 3")
+    expect_true(is.shojiCatalog(sho[c(TRUE, FALSE)]))
+    expect_error(sho[c(TRUE, FALSE, TRUE)], 
+        "Subscript out of bounds: got 3 logicals, need 2")
+    expect_identical(sho[TRUE], sho)
+    expect_identical(sho["a"], sho[1])
+    expect_error(sho[c("a", "c")], "Undefined elements selected: c")
 })
 
 with(fake.HTTP, {

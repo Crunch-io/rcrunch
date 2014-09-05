@@ -83,10 +83,45 @@ if (run.integration.tests) {
                 expect_identical(names(subvariables(var)),
                     c("mr_1", "M.R. Two", "mr_3"))
             })
+            
+            test_that("can rename one subvariable", {
+                try(name(subvariables(var)[[2]]) <- "Due")
+                expect_identical(names(subvariables(var)),
+                    c("mr_1", "Due", "mr_3"))
+                sv <- subvariables(var)
+                try(name(sv[[2]]) <- "M.R. Two")
+                expect_identical(names(sv),
+                    c("mr_1", "M.R. Two", "mr_3"))
+                expect_error(name(sv[[4]]) <- "Four",
+                    "subscript out of bounds")
+                expect_error(sv[[2]] <- ds$v4,
+                    "Cannot add or remove subvariables")
+                expect_error(sv[[2]] <- NULL,
+                    "Cannot add or remove subvariables")
+                expect_error(sv[[2]] <- "not a variable", 
+                    "Can only assign Variables into an object of class Subvariables")
+            })
+            test_that("can rename some subvariables", {
+                try(names(subvariables(var)[2:3]) <- c("Dois", "Três"))
+                expect_identical(names(subvariables(var)),
+                    c("mr_1", "Dois", "Três"))
+                sv <- subvariables(var)
+                try(names(sv[2:3]) <- c("M.R. Two", "mr_3"))
+                expect_identical(names(sv),
+                    c("mr_1", "M.R. Two", "mr_3"))
+                expect_error(names(sv[3:4]) <- c("3", "4"),
+                    "Subscript out of bounds: 4")
+                expect_error(sv[2:3] <- c("not a variable", "nor this"), 
+                    "Can only assign Variables into an object of class Subvariables")
+            })
+            
             test_that("can reorder subvariables", {
                 try(subvariables(var) <- subvariables(var)[c(3,1,2)])
                 expect_identical(names(subvariables(var)),
                     c("mr_3", "mr_1", "M.R. Two"))
+                try(subvariables(var)[1:2] <- subvariables(var)[c(2,1)])
+                expect_identical(names(subvariables(var)),
+                    c("mr_1", "mr_3", "M.R. Two"))
             })
             test_that("can't (yet) otherwise modify subvariables", {
                 expect_error(subvariables(var) <- NULL,
@@ -95,6 +130,8 @@ if (run.integration.tests) {
                     fake <- Subvariables(other.ds@variables[1:3])
                     expect_error(subvariables(var) <- fake,
                         "Can only reorder, not change, subvariables")
+                    expect_error(subvariables(var)[1:2] <- fake[1:2],
+                        "Cannot add or remove subvariables")
                 })
             })
         })

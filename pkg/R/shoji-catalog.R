@@ -46,9 +46,32 @@ dirtyElements <- function (x, y) {
     !mapply(identical, x, y, USE.NAMES=FALSE, SIMPLIFY=TRUE)
 }
 
+setMethod("[", c("ShojiCatalog", "character"), function (x, i, ..., drop) {
+    w <- match(i, names(x@index))
+    if (any(is.na(w))) {
+        stop("Undefined elements selected: ", serialPaste(i[is.na(w)]),
+            call.=FALSE)
+    }
+    callNextMethod(x, w, value)
+})
+setMethod("[", c("ShojiCatalog", "numeric"), function (x, i, ..., drop) {
+    bad <- abs(as.integer(i)) > length(x)
+    if (any(bad)) {
+        stop("Subscript out of bounds: ", i[bad], call.=FALSE)
+    }
+    callNextMethod(x, i, value)
+})
+setMethod("[", c("ShojiCatalog", "logical"), function (x, i, ..., drop) {
+    if (length(i) > length(x)) {
+        stop("Subscript out of bounds: got ", length(i), " logicals, need ",
+            length(x), call.=FALSE)
+    }
+    x@index <- x@index[i]
+    return(x)
+})
 setMethod("[", c("ShojiCatalog", "ANY"), function (x, i, ..., drop) {
-   x@index <- x@index[i]
-   return(x)
+    x@index <- x@index[i]
+    return(x)
 })
 setMethod("[[", c("ShojiCatalog", "ANY"), function (x, i, ...) {
     x@index[[i]]
