@@ -84,7 +84,7 @@ weight <- function (x) {
     if (is.variable(value)) {
         value <- self(value)
     } else if (!is.null(value)) {
-        stop("Weight must be a Variable or NULL")
+        halt("Weight must be a Variable or NULL")
     }
     x <- setCrunchSlot(x, "weight", value)
     return(x)

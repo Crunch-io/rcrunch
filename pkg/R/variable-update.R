@@ -25,8 +25,7 @@
 .dispatchFilter <- function (x) {
     if (is.numeric(x)) {
         ## Temporary backstop error so you don't get ZZ9Error, Filter expressions MUST be function references."
-        stop("Update with numeric index not yet supported",
-            call.=FALSE)
+        halt("Update with numeric index not yet supported")
     }
     ## How to turn numeric into filter?
     # fil <- list(`function`="contains", args=list(
@@ -41,8 +40,7 @@
 setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"),
     function (x, i, j, value) {
         ## Backstop error so you don't get "Object of class S4 is not subsettable"
-        stop(paste("Cannot update", class(x), "with type", class(value)),
-            call.=FALSE)
+        halt(paste("Cannot update", class(x), "with type", class(value)))
     })
     
 .sigs <- list(
@@ -65,8 +63,7 @@ for (i in seq_along(.sigs)) {
 setMethod("[<-", c("CrunchVariable", "CrunchExpression", "missing", "CrunchExpression"),
     function (x, i, j, value) {
         if (!identical(zcl(i), value@filter)) {
-            stop("Cannot update a variable with a value that has a different filter",
-                call.=FALSE)
+            halt("Cannot update a variable with a value that has a different filter")
         } else {
             callNextMethod()
         }
@@ -77,8 +74,7 @@ setMethod("[<-", c("CrunchVariable", "CrunchExpression", "missing", "CrunchExpre
     numeric=function (x, i, j, value) {
         if (missing(i)) i <- NULL
         if (all(c(NA, -1) %in% value)) {
-            stop("Cannot have both NA and -1 when specifying category ids",
-                call.=FALSE)
+            halt("Cannot have both NA and -1 when specifying category ids")
         }
         value[is.na(value)] <- -1
         invalids <- setdiff(value, ids(categories(x)))
@@ -86,10 +82,9 @@ setMethod("[<-", c("CrunchVariable", "CrunchExpression", "missing", "CrunchExpre
         invalids <- setdiff(invalids, -1)
         if (length(invalids)) {
             plural <- length(invalids) > 1
-            stop(paste0("Input value", ifelse(plural, "s ", " "),
+            halt(paste0("Input value", ifelse(plural, "s ", " "),
                 serialPaste(invalids), ifelse(plural, " are ", " is "),
-                "not present in the category ids of variable ", dQuote(name(x))),
-                call.=FALSE)
+                "not present in the category ids of variable ", dQuote(name(x))))
         }
         # if (add.no.data) {
         #     newcats <- categories(x)
@@ -107,11 +102,10 @@ setMethod("[<-", c("CrunchVariable", "CrunchExpression", "missing", "CrunchExpre
         invalids <- setdiff(value, names(categories(x)))
         if (length(invalids)) {
             plural <- length(invalids) > 1
-            stop(paste0("Input value", ifelse(plural, "s ", " "),
+            halt(paste0("Input value", ifelse(plural, "s ", " "),
                 serialPaste(invalids), ifelse(plural, " are ", " is "),
                 "not present in the category names of variable ",
-                dQuote(name(x))),
-                call.=FALSE)
+                dQuote(name(x))))
         }
         value <- n2i(value, categories(x))
         out <- .updateVariable(x, value, filter=.dispatchFilter(i))
@@ -138,7 +132,7 @@ for (i in c("CategoricalVariable", "CategoricalArrayVariable")) {
 #         if (all(is.na(value))) {
 #             value <- ifelse(is.Text(x), NA_character_, NA_integer_)
 #         } else {
-#             stop("Cannot update CrunchVariable with logical", call.=FALSE)
+#             halt("Cannot update CrunchVariable with logical")
 #         }
 #         if (missing(i)) i <- NULL
 #         i <- zcl(.dispatchFilter(i))
@@ -151,7 +145,7 @@ for (i in c("CategoricalVariable", "CategoricalArrayVariable")) {
 
 setMethod("is.na<-", "CrunchVariable", function (x, value) {
     ## Temporarily kill this method until API supports correctly
-    stop("is.na<- not yet supported for CrunchVariables", call.=FALSE)
+    halt("is.na<- not yet supported for CrunchVariables")
     
     lab <- gsub('"', "", deparse(substitute(value)))
     value <- zcl(.dispatchFilter(value))

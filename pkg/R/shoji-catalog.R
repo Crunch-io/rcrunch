@@ -49,22 +49,21 @@ dirtyElements <- function (x, y) {
 setMethod("[", c("ShojiCatalog", "character"), function (x, i, ..., drop) {
     w <- match(i, names(x@index))
     if (any(is.na(w))) {
-        stop("Undefined elements selected: ", serialPaste(i[is.na(w)]),
-            call.=FALSE)
+        halt("Undefined elements selected: ", serialPaste(i[is.na(w)]))
     }
     callNextMethod(x, w, value)
 })
 setMethod("[", c("ShojiCatalog", "numeric"), function (x, i, ..., drop) {
     bad <- abs(as.integer(i)) > length(x)
     if (any(bad)) {
-        stop("Subscript out of bounds: ", i[bad], call.=FALSE)
+        halt("Subscript out of bounds: ", i[bad])
     }
     callNextMethod(x, i, value)
 })
 setMethod("[", c("ShojiCatalog", "logical"), function (x, i, ..., drop) {
     if (length(i) > length(x)) {
-        stop("Subscript out of bounds: got ", length(i), " logicals, need ",
-            length(x), call.=FALSE)
+        halt("Subscript out of bounds: got ", length(i), " logicals, need ",
+            length(x))
     }
     x@index <- x@index[i]
     return(x)

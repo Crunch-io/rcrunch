@@ -58,14 +58,13 @@ loadDataset <- function (dataset.name, kind=c("active", "all", "archived"), useA
 selectDatasetFromCatalog <- function (dsname, catalog, strict=FALSE) {
     found <- which(names(catalog) %in% dsname)
     if (length(found)==0) {
-        stop(paste(dQuote(dsname), "not found"), call.=FALSE)
+        halt(paste(dQuote(dsname), "not found"))
     } else if (length(found) > 1) {
         if (strict) {
-            stop("Datasets with duplicate names found. Cannot select by name.",
-                call.=FALSE)
+            halt("Datasets with duplicate names found. Cannot select by name.")
         } else {
             warning(paste("Datasets with duplicate names found.",
-                "Returning first match."), call.=FALSE)
+                "Returning first match."))
         }
     } 
     return(found[1])

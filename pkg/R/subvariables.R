@@ -32,7 +32,7 @@ setMethod("subvariables", "CategoricalArrayVariable", function (x) {
 ##' @export
 setMethod("subvariables<-", c("CategoricalArrayVariable", "ANY"),
     function (x, value) {
-        stop("Can only assign an object of class Subvariables", call.=FALSE)
+        halt("Can only assign an object of class Subvariables")
     })
 ##' @rdname Subvariables
 ##' @export
@@ -41,7 +41,7 @@ setMethod("subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
         old <- x@body$subvariables
         new <- names(value@index)
         if (!setequal(old, new)) {
-            stop("Can only reorder, not change, subvariables", call.=FALSE)
+            halt("Can only reorder, not change, subvariables")
         }
         return(setCrunchSlot(x, "subvariables", new))
     })
@@ -83,8 +83,7 @@ setMethod("$", "Subvariables", function (x, name) x[[name]])
 setMethod("[", c("Subvariables", "character"), function (x, i, ...) {
     w <- match(i, names(x))
     if (any(is.na(w))) {
-        stop("Undefined subvariables selected: ", serialPaste(i[is.na(w)]),
-            call.=FALSE)
+        halt("Undefined subvariables selected: ", serialPaste(i[is.na(w)]))
     }
     return(x[w])
 })
@@ -94,7 +93,7 @@ setMethod("[[<-",
     function (x, i, value) {
         i <- match(i, names(x))
         if (is.na(i)) {
-            stop("subscript out of bounds", call.=FALSE)
+            halt("subscript out of bounds")
         }
         callNextMethod(x, i, value)    
     })
@@ -102,7 +101,7 @@ setMethod("[[<-",
     c("Subvariables", "ANY", "missing", "CrunchVariable"), 
     function (x, i, value) {
         if (self(value) != names(x@index)[i]) {
-            stop("Cannot add or remove subvariables", call.=FALSE)
+            halt("Cannot add or remove subvariables")
         }
         x@index[[self(value)]] <- tuple(value)@body
         return(x)
@@ -110,20 +109,19 @@ setMethod("[[<-",
 setMethod("[[<-", 
     c("Subvariables", "ANY", "missing", "NULL"),
     function (x, i, value) {
-        stop("Cannot add or remove subvariables", call.=FALSE)
+        halt("Cannot add or remove subvariables")
     })
 setMethod("[[<-", 
     c("Subvariables", "ANY", "missing", "ANY"),
     function (x, i, value) {
-        stop("Can only assign Variables into an object of class Subvariables",
-            call.=FALSE)
+        halt("Can only assign Variables into an object of class Subvariables")
     })
 
 setMethod("[<-", c("Subvariables", "character", "missing", "Subvariables"), 
     function (x, i, value) {
         w <- match(i, names(x))
         if (any(is.na(w))) {
-            stop("Undefined subvariables selected: ", serialPaste(i[is.na(w)]))
+            halt("Undefined subvariables selected: ", serialPaste(i[is.na(w)]))
         }
         callNextMethod(x, w, value)
     })
@@ -131,7 +129,7 @@ setMethod("[<-", c("Subvariables", "ANY", "missing", "Subvariables"),
     function (x, i, value) {
         inbound <- vapply(value, function (a) self(a), character(1))
         if (!all(inbound %in% names(x@index)[i])) {
-            stop("Cannot add or remove subvariables", call.=FALSE)
+            halt("Cannot add or remove subvariables")
         }
         x@index[i] <- value@index
         names(x@index)[i] <- inbound
@@ -139,8 +137,7 @@ setMethod("[<-", c("Subvariables", "ANY", "missing", "Subvariables"),
     })
 setMethod("[<-", c("Subvariables", "ANY", "missing", "ANY"), 
     function (x, i, value) {
-        stop("Can only assign Variables into an object of class Subvariables",
-            call.=FALSE)
+        halt("Can only assign Variables into an object of class Subvariables")
     })
 
 ##' @export

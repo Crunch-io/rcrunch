@@ -69,21 +69,20 @@ login <- function (email=getOption("crunch.email"),
 ##' @importFrom RJSONIO toJSON
 crunchAuth <- function (email, password=NULL, ...) {
     if (is.null(email)) {
-        stop("Must supply the email address associated with your crunch.io account",
-            call.=FALSE)
+        halt("Must supply the email address associated with your crunch.io account")
     }
     if (is.null(password)) {
         if (interactive()) {
             password <- readline(paste0("Crunch.io password for ", email, ": "))
         } else {
-            stop("Must supply a password", call.=FALSE)
+            halt("Must supply a password")
         }
     }
     
     POST(file.path(getOption("crunch.api"), "public/login/"), 
         body=toJSON(list(email=email, password=password, ...)), 
         status.handlers=list(`401`=function (response, user=email) {
-            stop(paste("Unable to authenticate", user), call.=FALSE)
+            halt(paste("Unable to authenticate", user))
         }))
 }
 
@@ -103,7 +102,7 @@ sessionURL <- function (x=NULL) {
         if (!is.null(x)) out <- out[[x]]
         return(out)
     } else {
-        stop("You must authenticate before making this request")
+        halt("You must authenticate before making this request")
     }
 }
 

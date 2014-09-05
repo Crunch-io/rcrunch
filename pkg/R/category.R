@@ -37,7 +37,7 @@ setName <- function (x, value) {
 setValue <- function (x, value) {
     value_to_set <- suppressWarnings(as.numeric(value))
     if (is.na(value_to_set) && !is.na(value)) {
-        stop("Category values must be numeric", call.=FALSE)
+        halt("Category values must be numeric")
     }
     x[["numeric_value"]] <- value_to_set
     return(x)

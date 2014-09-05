@@ -1,7 +1,7 @@
 context("Various helper functions")
 
 test_that("is.error", {
-    expect_true(is.error(try(stop(""), silent=TRUE)))
+    expect_true(is.error(try(halt(""), silent=TRUE)))
     expect_false(is.error("not an error"))
     expect_false(is.error(NULL))
     expect_false(is.error(NA))
@@ -29,7 +29,8 @@ test_that("selectFrom selects what it should", {
 
 test_that("SUTD", {
     a <- NULL
-    tester <- setup.and.teardown(function () a <<- FALSE, function () a <<- TRUE)
+    tester <- setup.and.teardown(function () a <<- FALSE,
+        function () a <<- TRUE)
     
     expect_true(is.null(a))
     with(tester, {
@@ -45,13 +46,13 @@ test_that("SUTD", {
     with(tester, {
         expect_false(is.null(a))
         expect_false(a)
-        stop("Testing error handling, please ignore", call.=FALSE)
+        halt("Testing error handling, please ignore")
     })
     expect_true(a)
 })
 
 test_that("rethrow a caught error", {
-    e <- try(stop("error in a box", call.=FALSE), silent=TRUE)
+    e <- try(halt("error in a box"), silent=TRUE)
     expect_true(is.error(e))
     expect_error(rethrow(e), "error in a box")
 })
@@ -59,7 +60,7 @@ test_that("rethrow a caught error", {
 test_that("%||%", {
     expect_identical("f" %||% "g", "f")
     expect_identical(NULL %||% "g", "g")
-    expect_identical("f" %||% stop("Nooooooo!"), "f")
+    expect_identical("f" %||% halt("Nooooooo!"), "f")
 })
 
 test_that("dirtyElements", {

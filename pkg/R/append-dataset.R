@@ -68,7 +68,7 @@ acceptAppendResolutions <- function (batch_url, dataset,
         ## message(the fatal conflicts)
         err <- c("There are conflicts that cannot be resolved automatically.",
             "Please manually address them and retry.")
-        stop(paste(err, collapse=" "), call.=FALSE)
+        halt(paste(err, collapse=" "))
     }
     
     ## Else: On success ("ready"):
@@ -79,7 +79,7 @@ acceptAppendResolutions <- function (batch_url, dataset,
             err <- c("Permission to automatically resolve conflicts not given.",
                 "Aborting. Please manually resolve conflicts, or set",
                 "confirm=FALSE, and try again.")
-            stop(paste(err, collapse=" "), call.=FALSE)
+            halt(paste(err, collapse=" "))
         }
     }
     

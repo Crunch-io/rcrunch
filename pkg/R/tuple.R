@@ -43,7 +43,7 @@ setMethod("delete", "IndexTuple", function (x) DELETE(x@entity_url))
 setMethod("delete", "DatasetTuple", function (x, confirm=interactive(), ...) {
     prompt <- paste0("Really delete dataset ", dQuote(name(x)), "?")
     if (confirm && !askForPermission(prompt)) {
-        stop("Must confirm deleting dataset", call.=FALSE)
+        halt("Must confirm deleting dataset")
     }
     out <- callNextMethod()
     updateDatasetList()

@@ -15,13 +15,13 @@ pollBatchStatus <- function (batch.url, catalog, until="imported", wait=1) {
     }
     
     if (status %in% "idle") {
-        stop("Append process failed to start on the server", call.=FALSE)
+        halt("Append process failed to start on the server")
     } else if (status %in% "importing") {
-        stop("Timed out. Check back later. Consider also increasing options(crunch.timeout)", call.=FALSE)
+        halt("Timed out. Check back later. Consider also increasing options(crunch.timeout)")
     } else if (status %in% c(until, "conflict")) {
         return(status)
     } else {
-        stop(status, call.=FALSE)
+        halt(status)
     }
 }
 

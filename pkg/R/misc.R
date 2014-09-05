@@ -1,6 +1,8 @@
 is.error <- function (x) inherits(x, "try-error")
 
-rethrow <- function (x) stop(attr(x, "condition"))
+halt <- function (...) stop(..., call.=FALSE)
+
+rethrow <- function (x) halt(attr(x, "condition")$message)
 
 updateList <- function (x, y) {
     x[names(y)] <- y
@@ -19,7 +21,7 @@ updateList <- function (x, y) {
 ##' elements
 selectFrom <- function (key, xlist, ifnot=NA, simplify=TRUE) {
     if (!is.list(xlist)) {
-        stop("xlist must be a list object")
+        halt("xlist must be a list object")
     }
     if (length(key)>1) {
         y <- sapply(key, selectFrom, xlist, ifnot, simplify=FALSE)

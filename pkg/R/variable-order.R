@@ -27,7 +27,7 @@ setMethod("initialize", "VariableOrder", init.VariableOrder)
     } else if (is.variable(x)) {
         x <- self(x)
     } else if (!(is.character(x) || inherits(x, "VariableGroup"))) {
-        stop("")
+        halt("")
     }
     return(x)
 }
@@ -70,7 +70,7 @@ setMethod("[", c("VariableOrder", "ANY"), function (x, i, ..., drop=FALSE) {
 setMethod("[", c("VariableOrder", "character"), function (x, i, ..., drop=FALSE) {
     w <- match(i, names(x))
     if (any(is.na(w))) {
-        stop("Undefined groups selected: ", serialPaste(i[is.na(w)]))
+        halt("Undefined groups selected: ", serialPaste(i[is.na(w)]))
     }
     callNextMethod(x, w, ..., drop=drop)
 })

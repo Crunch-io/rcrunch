@@ -11,23 +11,23 @@
 
 ##' @export
 setMethod("mean", "CrunchVariable", function (x, ...) {
-    stop(sQuote("mean"), " is not defined for ", class(x), call.=FALSE)
+    halt(sQuote("mean"), " is not defined for ", class(x))
 })
 ##' @export
 setMethod("sd", "CrunchVariable", function (x, na.rm) {
-    stop(sQuote('sd'), " is not defined for ", class(x), call.=FALSE)
+    halt(sQuote('sd'), " is not defined for ", class(x))
 })
 ##' @export
 setMethod("median", "CrunchVariable", function (x, na.rm) {
-    stop(sQuote('median'), " is not defined for ", class(x), call.=FALSE)
+    halt(sQuote('median'), " is not defined for ", class(x))
 })
 ##' @export
 setMethod("min", "CrunchVariable", function (x, na.rm) {
-    stop(sQuote('min'), " is not defined for ", class(x), call.=FALSE)
+    halt(sQuote('min'), " is not defined for ", class(x))
 })
 ##' @export
 setMethod("max", "CrunchVariable", function (x, na.rm) {
-    stop(sQuote('max'), " is not defined for ", class(x), call.=FALSE)
+    halt(sQuote('max'), " is not defined for ", class(x))
 })
 
 
