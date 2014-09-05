@@ -61,10 +61,10 @@ setMethod("names", "VariableOrder",
 ##' @export
 setMethod("names<-", "VariableOrder", 
     function (x, value) {
-        x@.Data <- mapply(
+        x@value$groups <- mapply(
             function (y, v) {
                 y@group <- v
                 return(y)
-            }, y=x, v=value, SIMPLIFY=FALSE, USE.NAMES=FALSE)
+            }, y=x@value$groups, v=value, SIMPLIFY=FALSE, USE.NAMES=FALSE)
         return(x)
     })

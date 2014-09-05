@@ -1,7 +1,6 @@
 init.VariableCatalog <- function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
-    .Object@order <- do.call(VariableOrder,
-        GET(.Object@views$hierarchical_order)$groups)
+    .Object@order <- VariableOrder(GET(.Object@views$hierarchical_order))
     return(.Object)
 }
 setMethod("initialize", "VariableCatalog", init.VariableCatalog)

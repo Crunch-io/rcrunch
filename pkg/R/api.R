@@ -143,7 +143,7 @@ handleShoji <- function (x) {
     if (is.shoji.like(x)) {
         class(x) <- c("shoji", x$element)
     }
-    if ("shoji:view" %in% class(x)) {
+    if ("shoji:view" %in% class(x) && !is.shoji.order.like(x)) {
         x <- x$value
     }
     return(x)
