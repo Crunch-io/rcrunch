@@ -73,10 +73,10 @@ setMethod("hidden", "CrunchDataset", function (x) hidden(x@variables))
 ##' @param dataset the Dataset
 ##' @return a vector of the names of Variables marked as hidden.
 ##' @export
-hiddenVariables <- function (dataset) {
+hiddenVariables <- function (dataset, key="name") {
     hv <- hidden(dataset)
     if (length(hv)) {
-        return(sort(vapply(hv@index, function (x) x$name, character(1),
+        return(sort(vapply(hv@index, function (x) x[[key]], character(1),
             USE.NAMES=FALSE)))
     } else {
         return(c())

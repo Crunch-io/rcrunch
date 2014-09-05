@@ -28,9 +28,29 @@ setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
 ##' @export
 setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
     stopifnot(length(i) == 1)
-    i <- match(i, names(x))
-    if (is.na(i)) return(NULL)
-    callNextMethod(x, i, ..., drop=drop)
+    n <- match(i, names(x))
+    if (is.na(n)) {
+        ## See if the variable in question is hidden
+        hvars <- hidden(x)
+        hnames <- findVariables(hvars, key=namekey(x), value=TRUE)
+        n <- match(i, hnames)
+        if (is.na(n)) {
+            return(NULL)
+        } else {
+            ## If so, return it with a warning
+            out <- hidden(x)[[n]]
+            if (!is.null(out)) {
+                out <- try(entity(out), silent=TRUE)
+                if (is.error(out)) {
+                    halt(attr(out, "condition")$message)
+                }
+            }
+            warning("Variable ", i, " is hidden", call.=FALSE)
+            return(out)
+        }
+    } else {
+        return(callNextMethod(x, n, ..., drop=drop))
+    }
 })
 ##' @export
 setMethod("$", "CrunchDataset", function (x, name) x[[name]])

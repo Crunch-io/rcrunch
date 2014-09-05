@@ -39,10 +39,14 @@ if (run.integration.tests) {
                 expect_identical(names(testdf)[1:2], c("v1", "v5"))
                 expect_identical(hiddenVariables(testdf), c("v2", "v3", "v4"))
                 expect_identical(dim(testdf), c(nrow(df), ncol(df)-3L))
+                expect_warning(testdf$v2, "hidden")
+                expect_true(is.Text(suppressWarnings(testdf$v2)))
                 
                 testdf <- unhideVariables(testdf, c("v2", "v3", "v4"))
                 expect_identical(hiddenVariables(testdf), c())
                 expect_identical(dim(testdf), dim(df))
+                expect_that(testdf$v2, does_not_give_warning())
+                expect_true(is.Text(testdf$v2))
             })
         })
         

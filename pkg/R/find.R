@@ -17,7 +17,10 @@
 findVariables <- function (dataset, refs=NULL, pattern="", key=namekey(dataset), ...) {
     
     if (is.dataset(dataset)) {
-        dataset <- variables(dataset)@index
+        dataset <- variables(dataset)
+    }
+    if (inherits(dataset, "VariableCatalog")) {
+        dataset <- dataset@index
     }
     keys <- selectFrom(key, dataset)
     if (is.null(refs)) {

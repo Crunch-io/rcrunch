@@ -125,6 +125,16 @@ test.dataset <- function (df=NULL, obj.name="ds", ...) {
     ))
 }
 
+## Expectations
+
+does_not_give_warning <- function () {
+    function (expr) {
+        warnings <- evaluate_promise(expr)$warnings
+        expectation(length(warnings) == 0, 
+                paste0(length(warnings), " warnings created"),
+                "no warnings given")
+    }
+}
 
 ## Data frames to make datasets with
 df <- data.frame(v1=c(rep(NA_real_, 5), rnorm(15)), 
