@@ -118,36 +118,38 @@ if (run.integration.tests) {
             })
         })
 
-        file1 <- newDatasetFromFile(testfile.csv, name=now())
+        try({
+            file1 <- newDatasetFromFile(testfile.csv, name=now())
             file2 <- newDatasetFromFile(testfile.csv, name=now())
-            try({
-                v3.1 <- as.vector(file1$V3)
-                v3.2 <- as.vector(file2$V3)
-                test_that("our assumptions about these two datasets from file", {
-                    expect_true(is.numeric(v3.1))
-                    expect_true(is.numeric(v3.2))
-                    expect_equivalent(v3.1, testfile.df$V3)
-                    expect_equivalent(v3.2, testfile.df$V3)
-                    expect_identical(length(batches(file1)), 1L)
-                    expect_identical(length(batches(file2)), 1L)
-                })
-                
-                test_that("append handles two identical Datasets from file", {
-                    out <- try(appendDataset(file1, file2))
-                    expect_false(is.error(out))
-                    expect_true(is.dataset(out))
-                    expect_identical(self(out), self(file1))
-                    expect_identical(length(batches(out)), 2L)
-                    expect_identical(dim(out),
-                        c(nrow(testfile.df)*2L, ncol(testfile.df)))
-                    expect_identical(getNrow(out), nrow(testfile.df)*2L)
-                    expect_identical(nrow(out), length(as.vector(out$V3)))
-                    expect_equivalent(as.vector(out$V3), rep(testfile.df$V3, 2))
-                    expect_identical(as.vector(out$V3), c(v3.1, v3.2))  
-                })
+            v3.1 <- as.vector(file1$V3)
+            v3.2 <- as.vector(file2$V3)
+            
+            test_that("our assumptions about these two datasets from file", {
+                expect_true(is.numeric(v3.1))
+                expect_true(is.numeric(v3.2))
+                expect_equivalent(v3.1, testfile.df$V3)
+                expect_equivalent(v3.2, testfile.df$V3)
+                expect_identical(length(batches(file1)), 1L)
+                expect_identical(length(batches(file2)), 1L)
             })
+            
+            test_that("append handles two identical Datasets from file", {
+                out <- try(appendDataset(file1, file2))
+                expect_false(is.error(out))
+                expect_true(is.dataset(out))
+                expect_identical(self(out), self(file1))
+                expect_identical(length(batches(out)), 2L)
+                expect_identical(dim(out),
+                    c(nrow(testfile.df)*2L, ncol(testfile.df)))
+                expect_identical(getNrow(out), nrow(testfile.df)*2L)
+                expect_identical(nrow(out), length(as.vector(out$V3)))
+                expect_equivalent(as.vector(out$V3), rep(testfile.df$V3, 2))
+                expect_identical(as.vector(out$V3), c(v3.1, v3.2))  
+            })
+
             delete(file2)
-        delete(file1)
+            delete(file1)
+        })
         
         with(test.dataset(df[,2:5], "part1"), {
             cats <- categories(part1$v4)
