@@ -237,8 +237,8 @@ if (run.integration.tests) {
             with(test.dataset(mrdf, "part2"), {
                 part2 <- mrdf.setup(part2, selections="1.0")
                 test_that("set up MR for appending", {
-                    expect_true(is.Multiple(part1$test1))
-                    expect_true(is.Multiple(part2$test1))
+                    expect_true(is.Multiple(part1$MR))
+                    expect_true(is.Multiple(part2$MR))
                     expect_identical(length(batches(part1)), 1L)
                     expect_identical(length(batches(part2)), 1L)
                 })
@@ -248,7 +248,7 @@ if (run.integration.tests) {
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
-                    expect_true(is.Multiple(out$test1))
+                    expect_true(is.Multiple(out$MR))
                 })
             })
         })
@@ -256,7 +256,7 @@ if (run.integration.tests) {
         with(test.dataset(mrdf, "part1"), {
             part1 <- mrdf.setup(part1, selections="1.0")
             test_that("set up MR for appending", {
-                expect_true(is.Multiple(part1$test1))
+                expect_true(is.Multiple(part1$MR))
             })
             with(test.dataset(mrdf, "part2"), {
                 cast.these <- grep("mr_", names(part2))
@@ -268,9 +268,9 @@ if (run.integration.tests) {
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
-                    expect_true(is.variable(out$test1))
-                    expect_true(is.Multiple(out$test1))
-                    expect_identical(names(subvariables(out$test1)),
+                    expect_true(is.variable(out$MR))
+                    expect_true(is.Multiple(out$MR))
+                    expect_identical(names(subvariables(out$MR)),
                         c("mr_1", "mr_2", "mr_3"))
                 })
             })
@@ -281,11 +281,11 @@ if (run.integration.tests) {
             with(test.dataset(mrdf[-1], "part2"), {
                 part2 <- mrdf.setup(part2, selections="1.0")
                 test_that("set up MR for appending", {
-                    expect_true(is.Multiple(part1$test1))
-                    expect_identical(names(subvariables(part1$test1)),
+                    expect_true(is.Multiple(part1$MR))
+                    expect_identical(names(subvariables(part1$MR)),
                         c("mr_1", "mr_2"))
-                    expect_true(is.Multiple(part2$test1))
-                    expect_identical(names(subvariables(part2$test1)),
+                    expect_true(is.Multiple(part2$MR))
+                    expect_identical(names(subvariables(part2$MR)),
                         c("mr_2", "mr_3"))
                 })
                 test_that("arrays with different subvariables can append", {
@@ -294,9 +294,9 @@ if (run.integration.tests) {
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
-                    expect_true(is.variable(out$test1))
-                    expect_true(is.Multiple(out$test1))
-                    expect_identical(names(subvariables(out$test1)),
+                    expect_true(is.variable(out$MR))
+                    expect_true(is.Multiple(out$MR))
+                    expect_identical(names(subvariables(out$MR)),
                         c("mr_1", "mr_2", "mr_3"))
                 })
             })

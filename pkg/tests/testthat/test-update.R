@@ -116,18 +116,18 @@ if (run.integration.tests) {
         with(test.dataset(mrdf), {
             ds <- mrdf.setup(ds)
             test_that("Can update array subvariables", {
-                expect_equivalent(as.vector(ds$test1$mr_1), 
+                expect_equivalent(as.vector(ds$CA$mr_1), 
                     as.factor(c("1.0", "0.0", "1.0", NA)))
-                expect_equivalent(as.vector(ds$test1$mr_2), 
+                expect_equivalent(as.vector(ds$CA$mr_2), 
                     as.factor(c("0.0", "0.0", "1.0", NA)))
-                expect_equivalent(as.vector(ds$test1$mr_3), 
+                expect_equivalent(as.vector(ds$CA$mr_3), 
                     as.factor(c("0.0", "0.0", "1.0", NA)))
-                try(ds$test1[ds$v4 == "B"] <- c("1.0"))
-                expect_equivalent(as.vector(ds$test1$mr_1), 
+                try(ds$CA[ds$v4 == "B"] <- c("1.0"))
+                expect_equivalent(as.vector(ds$CA$mr_1), 
                     as.factor(c("1.0", "0.0", "1.0", NA)))
-                expect_equivalent(as.vector(ds$test1$mr_2), 
+                expect_equivalent(as.vector(ds$CA$mr_2), 
                     as.factor(c("1.0", "0.0", "1.0", NA)))
-                expect_equivalent(as.vector(ds$test1$mr_3), 
+                expect_equivalent(as.vector(ds$CA$mr_3), 
                     as.factor(c("1.0", "0.0", "1.0", NA)))
             })
         })

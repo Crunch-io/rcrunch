@@ -71,7 +71,7 @@ if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(mrdf), {
             ds <- mrdf.setup(ds, selections="1.0")
-            var <- ds$test1
+            var <- ds$MR
             test_that("setup test case 2", {
                 expect_true(is.Multiple(var))
                 expect_identical(names(subvariables(var)),

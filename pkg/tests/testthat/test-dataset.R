@@ -144,10 +144,10 @@ if (run.integration.tests) {
                     function (x) is.Categorical(x), logical(1))))
             })
             test_that("Dataset [[<- on new array variable", {
-                try(ds$test1 <- makeArray(ds[cast.these], 
+                try(ds$arrayVar <- makeArray(ds[cast.these], 
                     name="Array variable"))
-                expect_true(is.CA(ds$test1))
-                expect_identical(name(ds$test1), "Array variable")
+                expect_true(is.CA(ds$arrayVar))
+                expect_identical(name(ds$arrayVar), "Array variable")
             })
         })
         
