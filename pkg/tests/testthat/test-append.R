@@ -268,7 +268,10 @@ if (run.integration.tests) {
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
+                    expect_true(is.variable(out$test1))
                     expect_true(is.Multiple(out$test1))
+                    expect_identical(names(subvariables(out$test1)),
+                        c("mr_1", "mr_2", "mr_3"))
                 })
             })
         })
@@ -291,6 +294,7 @@ if (run.integration.tests) {
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
+                    expect_true(is.variable(out$test1))
                     expect_true(is.Multiple(out$test1))
                     expect_identical(names(subvariables(out$test1)),
                         c("mr_1", "mr_2", "mr_3"))
