@@ -5,7 +5,7 @@ if (run.integration.tests) {
         with(test.dataset(df), {
             try(ds$v3a <- ds$v3 + 5)
             test_that("A derived variable is created on the server", {
-                expect_true("v3a" %in% names(refresh(ds)@variables))
+                expect_true("v3a" %in% names(allVariables(refresh(ds))))
             })
             test_that("The derived variable has been added to the hierarchical order", {
                 expect_true("v3a" %in% names(variables(refresh(ds))))

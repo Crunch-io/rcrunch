@@ -86,7 +86,7 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
             ## We may have a variable created by makeArray/MR, and it's not
             ## yet in our variable catalog. Let's check.
             x <- refresh(x)
-            if (!(self(value) %in% urls(x@variables))) {
+            if (!(self(value) %in% urls(allVariables(x)))) {
                 halt("This variable does not belong to this dataset")
             }
             ## Finally, update value with `i` if it is
@@ -97,7 +97,7 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
             halt("Cannot overwrite one Variable with another")
         }
     }
-    x@variables[[self(value)]] <- value
+    allVariables(x)[[self(value)]] <- value
     return(x)
 }
 

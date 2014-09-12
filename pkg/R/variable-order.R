@@ -23,7 +23,7 @@ setMethod("initialize", "VariableOrder", init.VariableOrder)
             x <- vapply(x, .initEntities, character(1), USE.NAMES=FALSE)
         }
     } else if (is.dataset(x)) {
-        x <- urls(x@variables)
+        x <- urls(allVariables(x))
     } else if (is.variable(x)) {
         x <- self(x)
     } else if (!(is.character(x) || inherits(x, "VariableGroup"))) {

@@ -127,7 +127,7 @@ if (run.integration.tests) {
                 expect_error(subvariables(var) <- NULL,
                     "Can only assign an object of class Subvariables")
                 with(test.dataset(df, "other.ds"), {
-                    fake <- Subvariables(other.ds@variables[1:3])
+                    fake <- Subvariables(allVariables(other.ds)[1:3])
                     expect_error(subvariables(var) <- fake,
                         "Can only reorder, not change, subvariables")
                     expect_error(subvariables(var)[1:2] <- fake[1:2],
