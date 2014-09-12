@@ -12,10 +12,9 @@ with(fake.HTTP, {
     datcat <- DatasetCatalog(blob)
     
     test_that("DatasetCatalog has the right contents", {
-        expect_identical(names(datcat@index),
+        expect_identical(urls(datcat),
             names(blob$index)[c(2,3,1)]) ## sorting
-        expect_true(all(grepl("api/dataset",
-            names(datcat@index))))
+        expect_true(all(grepl("api/dataset", urls(datcat))))
         expect_identical(self(datcat), dataset.catalog.url)
     })
     
@@ -23,16 +22,15 @@ with(fake.HTTP, {
         ## NOTE: deferring the "shared" collection
         expect_true(inherits(active(datcat), "DatasetCatalog"))
         expect_true(inherits(archived(datcat), "DatasetCatalog"))
-        expect_identical(active(datcat)@index,
-            datcat@index)
-        expect_equivalent(archived(datcat)@index, list())
-        datcat@index[[1]]$archived <- TRUE
+        expect_identical(index(active(datcat)), index(datcat))
+        expect_equivalent(index(archived(datcat)), list())
+        index(datcat)[[1]]$archived <- TRUE
         expect_true(inherits(active(datcat), "DatasetCatalog"))
         expect_true(inherits(archived(datcat), "DatasetCatalog"))
-        expect_identical(names(active(datcat)@index), 
+        expect_identical(urls(active(datcat)), 
             c("api/datasets/dataset3.json", "api/datasets/dataset1.json"))
         expect_identical(length(active(datcat)), 2L)
-        expect_identical(names(archived(datcat)@index),
+        expect_identical(urls(archived(datcat)),
             "api/datasets/dataset2.json")
         expect_identical(length(archived(datcat)), 1L)
         expect_identical(length(datcat), 3L)
@@ -42,8 +40,8 @@ with(fake.HTTP, {
     test_that("Extract methods", {
         expect_true(inherits(datcat[["api/datasets/dataset1.json"]], "DatasetTuple"))
         expect_identical(datcat[["api/datasets/dataset1.json"]]@body,
-            datcat@index[["api/datasets/dataset1.json"]])
-        expect_identical(datcat[2:3]@index, datcat@index[2:3])
+            index(datcat)[["api/datasets/dataset1.json"]])
+        expect_identical(index(datcat[2:3]), index(datcat)[2:3])
         expect_error(datcat[[500]], "subscript out of bounds")
     })
     

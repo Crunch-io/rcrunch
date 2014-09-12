@@ -39,7 +39,7 @@ setMethod("subvariables<-", c("CategoricalArrayVariable", "ANY"),
 setMethod("subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
     function (x, value) {
         old <- x@body$subvariables
-        new <- names(value@index)
+        new <- urls(value)
         if (!setequal(old, new)) {
             halt("Can only reorder, not change, subvariables")
         }
@@ -49,7 +49,7 @@ setMethod("subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
 ##' @rdname Subvariables
 ##' @export
 setMethod("names", "Subvariables", function (x) {
-    vapply(x@index, function (a) a$name, character(1), USE.NAMES=FALSE)
+    vapply(index(x), function (a) a$name, character(1), USE.NAMES=FALSE)
 })
 
 ##' @rdname Subvariables
@@ -57,11 +57,11 @@ setMethod("names", "Subvariables", function (x) {
 setMethod("names<-", "Subvariables", function (x, value) {
     stopifnot(is.character(value), length(x) == length(value),
         !any(duplicated(value)))
-    x@index <- mapply(function (tuple, val) {
+    index(x) <- mapply(function (tuple, val) {
             tuple[["name"]] <- val
             return(tuple)
-        }, tuple=x@index, val=value, SIMPLIFY=FALSE, USE.NAMES=TRUE)
-    PATCH(self(x), body=toJSON(x@index))
+        }, tuple=index(x), val=value, SIMPLIFY=FALSE, USE.NAMES=TRUE)
+    PATCH(self(x), body=toJSON(index(x)))
     return(x)
 })
 
@@ -71,8 +71,8 @@ setMethod("[[", c("Subvariables", "character"), function (x, i, ...) {
     callNextMethod(x, i, ...)    
 })
 setMethod("[[", c("Subvariables", "ANY"), function (x, i, ...) {
-    out <- VariableTuple(index_url=self(x), entity_url=names(x@index)[i],
-        body=x@index[[i]])
+    out <- VariableTuple(index_url=self(x), entity_url=urls(x)[i],
+        body=index(x)[[i]])
     if (!is.null(out)) {
         out <- entity(out)
     }
@@ -100,10 +100,10 @@ setMethod("[[<-",
 setMethod("[[<-", 
     c("Subvariables", "ANY", "missing", "CrunchVariable"), 
     function (x, i, value) {
-        if (self(value) != names(x@index)[i]) {
+        if (self(value) != urls(x)[i]) {
             halt("Cannot add or remove subvariables")
         }
-        x@index[[self(value)]] <- tuple(value)@body
+        index(x)[[self(value)]] <- tuple(value)@body
         return(x)
     })
 setMethod("[[<-", 
@@ -128,11 +128,11 @@ setMethod("[<-", c("Subvariables", "character", "missing", "Subvariables"),
 setMethod("[<-", c("Subvariables", "ANY", "missing", "Subvariables"), 
     function (x, i, value) {
         inbound <- vapply(value, function (a) self(a), character(1))
-        if (!all(inbound %in% names(x@index)[i])) {
+        if (!all(inbound %in% urls(x)[i])) {
             halt("Cannot add or remove subvariables")
         }
-        x@index[i] <- value@index
-        names(x@index)[i] <- inbound
+        index(x)[i] <- index(value)
+        names(index(x))[i] <- inbound
         return(x)
     })
 setMethod("[<-", c("Subvariables", "ANY", "missing", "ANY"), 

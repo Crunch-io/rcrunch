@@ -23,7 +23,7 @@ setMethod("initialize", "VariableOrder", init.VariableOrder)
             x <- vapply(x, .initEntities, character(1), USE.NAMES=FALSE)
         }
     } else if (is.dataset(x)) {
-        x <- names(x@variables@index)
+        x <- urls(x@variables)
     } else if (is.variable(x)) {
         x <- self(x)
     } else if (!(is.character(x) || inherits(x, "VariableGroup"))) {
@@ -82,7 +82,7 @@ printVariableOrder <- function (x) {
         return(printVariableOrder(variables(x)))
     }
     stopifnot(inherits(x, "VariableCatalog"))
-    invisible(lapply(x@order, printVariableGroup, index=x@index))
+    invisible(lapply(x@order, printVariableGroup, index=index(x)))
 }
 
 printVariableGroup <- function (group, index) {

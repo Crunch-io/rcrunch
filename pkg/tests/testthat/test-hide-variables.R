@@ -18,7 +18,7 @@ if (run.integration.tests) {
         
         with(test.dataset(df, "testdf"), {            
             test_that("hideVariables and hiddenVariables for Dataset", {
-                expect_equivalent(hidden(testdf)@index, list())
+                expect_equivalent(index(hidden(testdf)), list())
                 expect_identical(hiddenVariables(testdf), c())
                 expect_identical(dim(testdf), dim(df))
                 

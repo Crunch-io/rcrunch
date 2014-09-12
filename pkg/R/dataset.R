@@ -125,7 +125,7 @@ setMethod("variables", "CrunchDataset", function (x) active(x@variables))
 ##' @export
 setMethod("variables<-", c("CrunchDataset", "VariableCatalog"), 
     function (x, value) {
-        v <- names(value@index)
+        v <- urls(value)
         x@variables[v] <- value
         ordering(x@variables) <- ordering(value)
         return(x)

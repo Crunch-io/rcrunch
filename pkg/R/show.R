@@ -70,7 +70,7 @@ setMethod("show", "CrunchDataset", function (object) {
 })
 
 showSubvariables <- function (object) {
-    out <- c("Subvariables:", "", vapply(object@index, function (x) {
+    out <- c("Subvariables:", "", vapply(index(object), function (x) {
         paste0("  $`", x$name, "`\n")
     }, character(1)))
     return(doc(out))

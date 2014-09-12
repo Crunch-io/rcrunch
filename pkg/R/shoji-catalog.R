@@ -18,11 +18,11 @@ absolutizeURLs <- function (urls, base) {
 is.shojiCatalog <- function (x) inherits(x, "ShojiCatalog")
 
 setIndexSlot <- function (x, i, value) {
-    x@index <- lapply(x, function (a) {
+    index(x) <- lapply(x, function (a) {
         a[[i]] <- value
         return(a)
     })
-    PATCH(self(x), body=toJSON(x@index))
+    PATCH(self(x), body=toJSON(index(x)))
     return(x)
 }
 
@@ -30,14 +30,14 @@ mapSetIndexSlot <- function (x, i, value) {
     if (length(value) == 1) value <- rep(value, length(x))
     stopifnot(length(x) == length(value))
     
-    old <- x@index
-    x@index <- mapply(function (a, v) {
+    old <- index(x)
+    index(x) <- mapply(function (a, v) {
         a[[i]] <- v
         return(a)
-    }, a=x@index, v=value, SIMPLIFY=FALSE)
-    to.update <- dirtyElements(old, x@index)
+    }, a=index(x), v=value, SIMPLIFY=FALSE)
+    to.update <- dirtyElements(old, index(x))
     if (any(to.update)) {
-        PATCH(self(x), body=toJSON(x@index[to.update]))
+        PATCH(self(x), body=toJSON(index(x)[to.update]))
     }
     return(x)
 }
@@ -47,7 +47,7 @@ dirtyElements <- function (x, y) {
 }
 
 setMethod("[", c("ShojiCatalog", "character"), function (x, i, ..., drop) {
-    w <- match(i, names(x@index))
+    w <- match(i, urls(x))
     if (any(is.na(w))) {
         halt("Undefined elements selected: ", serialPaste(i[is.na(w)]))
     }
@@ -65,22 +65,28 @@ setMethod("[", c("ShojiCatalog", "logical"), function (x, i, ..., drop) {
         halt("Subscript out of bounds: got ", length(i), " logicals, need ",
             length(x))
     }
-    x@index <- x@index[i]
+    index(x) <- index(x)[i]
     return(x)
 })
 setMethod("[", c("ShojiCatalog", "ANY"), function (x, i, ..., drop) {
-    x@index <- x@index[i]
+    index(x) <- index(x)[i]
     return(x)
 })
 setMethod("[[", c("ShojiCatalog", "ANY"), function (x, i, ...) {
-    x@index[[i]]
+    index(x)[[i]]
 })
-setMethod("length", "ShojiCatalog", function (x) length(x@index))
-setMethod("lapply", "ShojiCatalog", function (X, FUN, ...) lapply(X@index, FUN, ...))
-
-urls <- function (x) {
-    names(x@index)
-}
+setMethod("length", "ShojiCatalog", function (x) length(index(x)))
+setMethod("lapply", "ShojiCatalog", function (X, FUN, ...) lapply(index(X), FUN, ...))
 
 ##' @export
-as.list.ShojiCatalog <- function (x, ...) lapply(names(x@index), function (i) x[[i]])
+setMethod("index", "ShojiCatalog", function (x) x@index)
+##' @export
+setMethod("index<-", "ShojiCatalog", function (x, value) {
+    x@index <- value
+    return(x)
+})
+
+urls <- function (x) names(index(x))
+
+##' @export
+as.list.ShojiCatalog <- function (x, ...) lapply(names(index(x)), function (i) x[[i]])

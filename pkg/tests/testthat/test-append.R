@@ -83,7 +83,7 @@ if (run.integration.tests) {
                     expect_true(is.character(out))
                     expect_true(grepl("/batches/", out))
                     expect_identical(length(batches(part1)), 2L)
-                    expect_true(out %in% names(batches(part1)@index))
+                    expect_true(out %in% urls(batches(part1)))
                 })
             })
         })
