@@ -4,7 +4,8 @@ test_that("Subclass constructor selector", {
     expect_equivalent(class(pickSubclassConstructor("numeric")), 
         "classGeneratorFunction")
     expect_identical(pickSubclassConstructor("numeric"), NumericVariable)
-    expect_identical(pickSubclassConstructor("categorical"), CategoricalVariable)
+    expect_identical(pickSubclassConstructor("categorical"),
+        CategoricalVariable)
     expect_identical(pickSubclassConstructor("text"), TextVariable)
     expect_identical(pickSubclassConstructor("datetime"), DatetimeVariable)
     expect_identical(pickSubclassConstructor("multiple_response"),
@@ -34,16 +35,17 @@ with(fake.HTTP, {
         expect_false(is.CA(ds$mymrset))
     })
     
-    test_that("Categories", {
+    test_that("Categories for categorical", {
         thisone <- categories(ds$gender)
         expect_true(is.categories(thisone))
         expect_identical(length(thisone), 3L)
-
         expect_true(is.category(thisone[[1]]))
+    })
+    test_that("Categories for noncategorical", {
         expect_identical(categories(ds$birthyr), NULL)
     })
     
-    test_that("Tuple metadata", {
+    test_that("Variable metadata retrieved from tuples", {
         expect_identical(name(ds$gender), "Gender")
         expect_identical(description(ds$starttime), "Interview Start Time")
         expect_identical(alias(ds$gender), "gender")
@@ -66,27 +68,27 @@ if (run.integration.tests) {
         })
         
         with(test.dataset(df), {
-            test_that("can modify names and descriptions", {
-                name(ds$v1) <- "Variable 1"
+            name(ds$v1) <- "Variable 1"
+            description(ds$v2) <- "Description 2"
+            test_that("can modify names and descriptions on var in dataset", {
                 expect_identical(name(ds$v1), "Variable 1")
-                description(ds$v2) <- "Description 2"
                 expect_identical(description(ds$v2), "Description 2")
                 ds <- refresh(ds)
                 expect_identical(name(ds$v1), "Variable 1")
                 expect_identical(description(ds$v2), "Description 2")
-                
-                v1 <- ds$v1
-                name(v1) <- "alt"
+            })
+            
+            v1 <- ds$v1
+            name(v1) <- "alt"
+            description(v1) <- "asdf"
+            alias(v1) <- "Alias!"
+            test_that("can modify name, description, alias on var object", {
                 expect_identical(name(v1), "alt")
-                v1 <- refresh(v1)
-                expect_identical(name(v1), "alt")
-                description(v1) <- "asdf"
                 expect_identical(description(v1), "asdf")
-                v1 <- refresh(v1)
-                expect_identical(description(v1), "asdf")
-                alias(v1) <- "Alias!"
                 expect_identical(alias(v1), "Alias!")
                 v1 <- refresh(v1)
+                expect_identical(name(v1), "alt")
+                expect_identical(description(v1), "asdf")
                 expect_identical(alias(v1), "Alias!")
             })
         })

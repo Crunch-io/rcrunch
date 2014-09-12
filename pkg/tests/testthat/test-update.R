@@ -59,13 +59,20 @@ if (run.integration.tests) {
                 expect_identical(max(ds$v5), as.POSIXct("1985-11-07"))
             })
             
-            test_that("Can update categorical variables", {
-                try(ds$v4[is.na(ds$v2)] <- "B")
+            ## Categorical
+            try(ds$v4[is.na(ds$v2)] <- "B")
+            test_that("Can update categorical variables with character", {
                 expect_identical(table(ds$v4)["B"], c(B=13L))
-                try(ds$v4[is.na(ds$v2)] <- factor("C"))
+            })
+            try(ds$v4[is.na(ds$v2)] <- factor("C"))
+            test_that("Can update categorical with factor", {
                 expect_identical(table(ds$v4)["C"], c(C=12L))
-                try(ds$v4[is.na(ds$v2)] <- c(2,1,2,1,2))
+            })
+            try(ds$v4[is.na(ds$v2)] <- c(2,1,2,1,2))
+            test_that("Can update categorical with numeric (ids)", {
                 expect_equivalent(table(ds$v4), table(df$v4))
+            })
+            test_that("Validation on categorical update", {
                 expect_error(ds$v4[is.na(ds$v2)] <- as.factor(LETTERS[1:5]),
                     "Input values A, D, and E are not present in the category names of variable")
             })
@@ -115,14 +122,16 @@ if (run.integration.tests) {
         
         with(test.dataset(mrdf), {
             ds <- mrdf.setup(ds)
-            test_that("Can update array subvariables", {
+            test_that("Subvariable values before trying to update", {
                 expect_equivalent(as.vector(ds$CA$mr_1), 
                     as.factor(c("1.0", "0.0", "1.0", NA)))
                 expect_equivalent(as.vector(ds$CA$mr_2), 
                     as.factor(c("0.0", "0.0", "1.0", NA)))
                 expect_equivalent(as.vector(ds$CA$mr_3), 
                     as.factor(c("0.0", "0.0", "1.0", NA)))
-                try(ds$CA[ds$v4 == "B"] <- c("1.0"))
+            })
+            try(ds$CA[ds$v4 == "B"] <- c("1.0"))
+            test_that("Can update array subvariables", {
                 expect_equivalent(as.vector(ds$CA$mr_1), 
                     as.factor(c("1.0", "0.0", "1.0", NA)))
                 expect_equivalent(as.vector(ds$CA$mr_2), 

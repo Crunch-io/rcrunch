@@ -56,12 +56,14 @@ if (run.integration.tests) {
             ## Should also test doing this with a matrix
         })
 
-        ## New dataset by add variable API
-        test_that("newDataset by addVariables", {
+        test_that("newDataset input validation", {
             expect_error(newDataset(NULL), 
                 "Can only make a Crunch dataset from a two-dimensional data")
             expect_error(newDataset(1:5), 
                 "Can only make a Crunch dataset from a two-dimensional data")
+        })
+        
+        test_that("newDataset by addVariables", {
             dsname <- uniqueDatasetName()
             dx <- try(newDataset(df, name=dsname, description="a description"))
                 expect_true(dsname %in% listDatasets())
@@ -72,7 +74,7 @@ if (run.integration.tests) {
             try(delete(dx))
         })
         
-        test_that("newDataset(FromFile) passes useAlias", {
+        test_that("newDataset passes useAlias", {
             d1 <- newDataset(df, name=uniqueDatasetName())
                 expect_equal(d1@useAlias, default.useAlias())
             delete(d1)
@@ -80,24 +82,24 @@ if (run.integration.tests) {
                 expect_false(d1@useAlias)
             delete(d1)
         })
-        with(test.dataset(df, "testdf"), {
+        with(test.dataset(df), {
             test_that("Dataset variable types get set correctly", {
-                expect_true(is.Numeric(testdf[["v1"]]))
-                expect_true(is.Text(testdf[["v2"]]))
-                expect_true(is.Numeric(testdf[["v3"]]))
-                expect_true(is.Categorical(testdf[["v4"]]))
-                expect_true(all(levels(df$v4) %in% names(categories(testdf$v4))))
-                expect_identical(categories(testdf$v4),
-                    categories(refresh(testdf$v4)))
-                expect_identical(testdf$v4, refresh(testdf$v4))
-                expect_true(is.Datetime(testdf$v5))
-                expect_true(is.Categorical(testdf$v6))
+                expect_true(is.Numeric(ds[["v1"]]))
+                expect_true(is.Text(ds[["v2"]]))
+                expect_true(is.Numeric(ds[["v3"]]))
+                expect_true(is.Categorical(ds[["v4"]]))
+                expect_true(all(levels(df$v4) %in% names(categories(ds$v4))))
+                expect_identical(categories(ds$v4),
+                    categories(refresh(ds$v4)))
+                expect_identical(ds$v4, refresh(ds$v4))
+                expect_true(is.Datetime(ds$v5))
+                expect_true(is.Categorical(ds$v6))
             })
             
             with(test.dataset(mrdf, "testmrdf"), {
                 test_that("names() are the same and in the right order", {
-                    expect_true(setequal(names(df), names(testdf)))
-                    expect_identical(names(df), names(testdf))
+                    expect_true(setequal(names(df), names(ds)))
+                    expect_identical(names(df), names(ds))
                     expect_true(setequal(names(mrdf), names(testmrdf)))
                     expect_identical(names(mrdf), names(testmrdf))
                 })

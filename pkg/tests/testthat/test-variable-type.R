@@ -1,5 +1,11 @@
 context("Variable types")
 
+test_that("Validation on type setting", {
+    expect_error(castVariable(, "foo"), 
+        paste(sQuote("foo"), 
+        "is not a Crunch variable type that can be assigned."))
+})
+
 with(fake.HTTP, {
     test.ds <- loadDataset("test ds")
     
@@ -11,21 +17,17 @@ with(fake.HTTP, {
 
 if (run.integration.tests) {
     with(test.authentication, {
-        with(test.dataset(df, "testdf"), {
+        with(test.dataset(df), {
             test_that("type casting and 'as'", {
-                if (!is.Text(testdf[["v1"]])) type(testdf[["v1"]]) <- "text"
-                testvar <- testdf[["v1"]]
-    
+                testvar <- ds$v1
+                type(testvar) <- "text"
                 expect_true(is.Text(testvar))
                 expect_true(is.Numeric(castVariable(testvar, "numeric")))
-                expect_true(is.Text(castVariable(testvar, "text")))    
+                expect_true(is.Text(castVariable(testvar, "text")))
+                
                 type(testvar) <- "numeric"
                 expect_true(is.Numeric(testvar))
-                expect_true(is.Numeric(testdf[["v1"]]))
-                    ## since they're the same remote object
-        
-                expect_error(castVariable(, "foo"), 
-                    paste(sQuote("foo"), "is not a Crunch variable type that can be assigned."))
+                expect_true(is.Numeric(ds$v1)) ## same remote object
             })
         })
     })
