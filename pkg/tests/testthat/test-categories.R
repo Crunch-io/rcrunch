@@ -114,16 +114,29 @@ with(fake.HTTP, {
 
 if (run.integration.tests) {
     with(test.authentication, {
-        with(test.dataset(df, "testdf"), {
+        with(test.dataset(df), {
             test_that("categories setters persist to the server", {
-                expect_equal(names(categories(testdf$v4)), c("B", "C"))
-                names(categories(testdf$v4))[1] <- "V"
-                expect_equal(names(categories(testdf$v4)), c("V", "C"))
-                expect_identical(names(categories(testdf$v4)),
-                    names(categories(refresh(testdf)$v4)))
+                expect_equal(names(categories(ds$v4)), c("B", "C"))
+                names(categories(ds$v4))[1] <- "V"
+                expect_equal(names(categories(ds$v4)), c("V", "C"))
+                expect_identical(names(categories(ds$v4)),
+                    names(categories(refresh(ds)$v4)))
                 
-                categories(testdf$v4) <- categories(testdf$v4)[2:1]
-                expect_equal(names(categories(testdf$v4)), c("C", "V"))
+                categories(ds$v4) <- categories(ds$v4)[2:1]
+                expect_equal(names(categories(ds$v4)), c("C", "V"))
+            })
+            test_that("categories<- with invalid input gives helpful message", {
+                expect_error(categories(ds$v4) <- 1:3,
+                    "`categories(x) <- value` only accepts Categories, not numeric. Did you mean `values(categories(x)) <- value`?",
+                    fixed=TRUE)
+                expect_error(categories(ds$v4) <- c("A", "B", "C"),
+                    "`categories(x) <- value` only accepts Categories, not character. Did you mean `names(categories(x)) <- value`?",
+                    fixed=TRUE)
+                expect_error(categories(ds$v4) <- list(),
+                    "`categories(x) <- value` only accepts Categories, not list.",
+                    fixed=TRUE)
+                expect_error(categories(ds$v1) <- 1:3,
+                    "category assignment not defined for NumericVariable")
             })
         })
     })
