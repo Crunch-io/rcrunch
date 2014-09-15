@@ -114,6 +114,13 @@ if (run.integration.tests) {
                 expect_error(sv[2:3] <- c("not a variable", "nor this"), 
                     "Can only assign Variables into an object of class Subvariables")
             })
+            test_that("subvariables aliases", {
+                expect_identical(aliases(subvariables(var)),
+                    c("mr_1", "mr_2", "mr_3"))
+                aliases(subvariables(var)) <- paste0("mr_", 5:7)
+                expect_identical(aliases(subvariables(var)),
+                    c("mr_5", "mr_6", "mr_7"))
+            })
             
             test_that("can reorder subvariables", {
                 try(subvariables(var) <- subvariables(var)[c(3,1,2)])

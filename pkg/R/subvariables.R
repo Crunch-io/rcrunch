@@ -65,6 +65,25 @@ setMethod("names<-", "Subvariables", function (x, value) {
     return(x)
 })
 
+##' @rdname Subvariables
+##' @export
+setMethod("aliases", "Subvariables", function (x) {
+    vapply(index(x), function (a) a$alias, character(1), USE.NAMES=FALSE)
+})
+
+##' @rdname Subvariables
+##' @export
+setMethod("aliases<-", "Subvariables", function (x, value) {
+    stopifnot(is.character(value), length(x) == length(value),
+        !any(duplicated(value)))
+    index(x) <- mapply(function (tuple, val) {
+            tuple[["alias"]] <- val
+            return(tuple)
+        }, tuple=index(x), val=value, SIMPLIFY=FALSE, USE.NAMES=TRUE)
+    PATCH(self(x), body=toJSON(index(x)))
+    return(x)
+})
+
 setMethod("[[", c("Subvariables", "character"), function (x, i, ...) {
     i <- match(i, names(x))
     if (is.na(i)) return(NULL)
