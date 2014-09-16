@@ -4,7 +4,10 @@ R package for interacting with the Crunch API
 
 ## Installing
 
-`$ R CMD INSTALL pkg` installs from source. Or you could run the tests, which installs the package in the process.
+    $ R --slave -e 'install.packages(c("httr", "RJSONIO", "codetools", "testthat"), repo="http://cran.at.r-project.org")'
+    $ make test
+
+This installs dependencies and then runs the tests, which installs `rcrunch` in the process.
 
 ## Running tests
 
