@@ -51,8 +51,11 @@ groupConflicts <- function (x) {
 
 flattenConflicts <- function (x) {
     ## flatten object to data.frame with url, message, resolution
+    dfconflicts <- function (clist) {
+        as.data.frame(clist[c("message", "resolution")], stringsAsFactors=FALSE)
+    }
     out <- mapply(function (i, d) {
-        df <- do.call(rbind, lapply(d$conflicts, as.data.frame, stringsAsFactors=FALSE))
+        df <- do.call(rbind, lapply(d$conflicts, dfconflicts))
         df$url <- i
         df$name <- d$metadata$name
         return(df)
