@@ -56,7 +56,7 @@ test_that("Simple conflict messages are formatted correctly", {
 
 source("conflicts.R")
 test_that("Complex conflicts are formatted", {
-    print(formatConflicts(mock.conflicts))
+    # print(formatConflicts(mock.conflicts))
     expect_identical(formatConflicts(mock.conflicts), 
         c(paste("Conflict: Only in existing dataset; Resolution: Additional rows will be marked missing.; 1 variable:", dQuote("mr_1")),
         paste("Conflict: Only in new dataset; Resolution: Variable will be added with existing rows marked missing.; 1 variable:", dQuote("mr_3")),
