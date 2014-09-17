@@ -154,7 +154,8 @@ mrdf <- data.frame(mr_1=c(1,0,1,NA_real_),
 testfile.csv <- "fake.csv"
 testfile.df <- read.csv(testfile.csv)
 
-mrdf.setup <- function (dataset, pattern="mr_", name="test1", selections=NULL) {
+mrdf.setup <- function (dataset, pattern="mr_", name=ifelse(is.null(selections),
+                        "CA", "MR"), selections=NULL) {
     cast.these <- grep(pattern, names(dataset))
     dataset[cast.these] <- lapply(dataset[cast.these],
         castVariable, "categorical")

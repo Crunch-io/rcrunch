@@ -80,11 +80,12 @@ prepareBindInputs <- function (list_of_variables=NULL, dataset=NULL,
         if (is.dataset(list_of_variables)) {
             ## as in, if the list of variables is a [ extraction from a Dataset
             dataset <- list_of_variables
-            variable_urls <- urls(dataset@variables)
+            variable_urls <- urls(allVariables(dataset))
         } else if (listOfVariablesIsValid(list_of_variables)) {
             ds_url <- datasetURLfromVariables(list_of_variables)
             dataset <- as.dataset(GET(ds_url))
-            variable_urls <- vapply(list_of_variables, function (x) self(x), character(1), USE.NAMES=FALSE)
+            variable_urls <- vapply(list_of_variables,
+                function (x) self(x), character(1), USE.NAMES=FALSE)
         } else {
             halt("Must provide a Dataset and either a list of Variables to combine or a pattern to identify Variables within that Dataset")
         }
@@ -112,7 +113,7 @@ bindVariables <- function (var_urls, dataset, name, ...) {
 
 returnNewVariable <- function (variable_url, dataset) {
     dataset <- refresh(dataset)
-    return(entity(dataset@variables[[variable_url]]))
+    return(entity(allVariables(dataset)[[variable_url]]))
 }
 
 POSTBindVariables <- function (catalog_url, variable_urls, ...) {

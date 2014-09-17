@@ -15,28 +15,32 @@ with(fake.HTTP, {
         ## this seems wrong, shouldn't select "groups" out, should inherit from
         ## ShojiObject
     
+    test_that("VariableCatalog index method", {
+        expect_identical(names(index(varcat)), names(varcat@index))
+        expect_identical(names(index(varcat)), names(varblob$index))
+    })
+    
     test_that("VariableCatalog has the right contents", {
-        expect_identical(names(varcat@index), names(varblob$index))
         expect_true(all(grepl("api/datasets/dataset1/variables",
-            names(varcat@index))))
+            urls(varcat))))
         expect_identical(self(varcat), variables.catalog.url)
         expect_identical(ordering(varcat), varorder)
     })
     
     test_that("active/hidden getters", {
-        expect_identical(active(varcat)@index,
-            varcat@index[entities(ordering(varcat))])
-        expect_identical(hidden(varcat)@index, list())
-        varcat@index[[5]]$discarded <- TRUE
+        expect_identical(index(active(varcat)),
+            index(varcat)[entities(ordering(varcat))])
+        expect_identical(index(hidden(varcat)), list())
+        index(varcat)[[5]]$discarded <- TRUE
         expect_true(inherits(active(varcat), "VariableCatalog"))
         expect_true(inherits(hidden(varcat), "VariableCatalog"))
-        expect_identical(names(active(varcat)@index), 
+        expect_identical(urls(active(varcat)), 
             c("api/datasets/dataset1/variables/gender.json",
             "api/datasets/dataset1/variables/mymrset.json",
             "api/datasets/dataset1/variables/textVar.json",
             "api/datasets/dataset1/variables/starttime.json"))
         expect_identical(length(active(varcat)), 4L)
-        expect_identical(names(hidden(varcat)@index),
+        expect_identical(urls(hidden(varcat)),
             "api/datasets/dataset1/variables/birthyr.json")
         expect_identical(length(hidden(varcat)), 1L)
         expect_identical(length(varcat), 8L)
@@ -47,8 +51,8 @@ with(fake.HTTP, {
     test_that("Extract methods", {
         expect_true(inherits(varcat[[gender.url]], "VariableTuple"))
         expect_identical(varcat[[gender.url]]@body,
-            varcat@index[[gender.url]])
-        expect_identical(varcat[2:3]@index, varcat@index[2:3])
+            index(varcat)[[gender.url]])
+        expect_identical(index(varcat[2:3]), index(varcat)[2:3])
         expect_error(varcat[[999]], "subscript out of bounds")
         skip({
             expect_error(varcat[["asdf"]], "subscript out of bounds")

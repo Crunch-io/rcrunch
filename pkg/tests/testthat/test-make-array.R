@@ -4,22 +4,22 @@ if (run.integration.tests) {
     with(test.authentication, {
         test_that("can make Categorical Array with Dataset subset", {
             with(test.dataset(mrdf), {
-                var <- makeArray(ds[1:3], name="test1")
+                var <- makeArray(ds[1:3], name="arrayVar")
                 expect_true(is.CA(var))
                 ds <- refresh(ds)
-                expect_equal(c("test1", "v4"), names(ds))
+                expect_equal(c("arrayVar", "v4"), names(ds))
                 name(var) <- "TESTONE"
                 ds <- refresh(ds)
                 expect_equal(c("TESTONE", "v4"), names(variables(ds)))
             })
             with(test.dataset(mrdf), {
                 var <- makeArray(ds[c("mr_1", "mr_2", "mr_3")],
-                    name="test1")
+                    name="arrayVar")
                 expect_true(is.CA(var))
                 ds <- refresh(ds)
-                expect_equal(c("test1", "v4"), names(ds))
+                expect_equal(c("arrayVar", "v4"), names(ds))
                 ## delete array variable
-                u <- try(delete(ds$test1))
+                u <- try(delete(ds$arrayVar))
                 expect_false(is.error(u))
                 ds <- refresh(ds)
                 expect_identical(names(ds), "v4")
@@ -29,12 +29,12 @@ if (run.integration.tests) {
         test_that("can make Categorical Array with pattern", {
             with(test.dataset(mrdf), {
                 var <- makeArray(pattern="mr_[123]", dataset=ds,
-                    name="test1")
+                    name="arrayVar")
                 expect_true(is.CA(var))
                 ds <- refresh(ds)
-                expect_equal(c("test1", "v4"), names(ds))
+                expect_equal(c("arrayVar", "v4"), names(ds))
                 ## unbind.
-                u <- try(unbind(ds$test1))
+                u <- try(unbind(ds$arrayVar))
                 expect_false(is.error(u))
                 ds <- refresh(ds)
                 expect_true(setequal(names(ds), names(mrdf)))
@@ -56,7 +56,7 @@ if (run.integration.tests) {
                     dataset=ds, name="foo")))
                 skip(with(test.dataset(df, "notds"), {
                     expect_error(makeArray(ds[1:3], dataset=notds,
-                        name="test1"), ds.mismatch)
+                        name="arrayVar"), ds.mismatch)
                 }), "Errors, but does so unexpectedly")
             })
         })
@@ -64,7 +64,7 @@ if (run.integration.tests) {
         test_that("can make MultipleResponse from CategoricalArray", {
             with(test.dataset(mrdf), {
                 var <- makeArray(pattern="mr_[123]", dataset=ds,
-                    name="test1")
+                    name="arrayVar")
                 expect_true(is.CA(var))
                 expect_true(is.categories(categories(var)))
                 
@@ -95,7 +95,7 @@ if (run.integration.tests) {
                 ds[cast.these] <- lapply(ds[cast.these],
                     castVariable, "categorical")
                 var <- makeMR(pattern="mr_[123]", dataset=ds,
-                    name="test1", selections="1.0")
+                    name="arrayVar", selections="1.0")
                 expect_true(is.Multiple(var))
                 
                 var <- undichotomize(var)
@@ -130,20 +130,20 @@ if (run.integration.tests) {
                         dataset=ds, name="foo", selections="foo"),
                         not.categorical)
                     expect_error(makeMR(pattern="mr_[123]", dataset=ds,
-                        name="test1", selections="Not a Selection!"),
+                        name="arrayVar", selections="Not a Selection!"),
                         not.categorical)
                     skip(with(test.dataset(df, "notds"), {
                         expect_error(makeMR(ds[1:3], dataset=notds,
-                            name="test1"), ds.mismatch)
+                            name="arrayVar"), ds.mismatch)
                     }), "userdataset problem?")
                     cast.these <- grep("mr_", names(ds))
                     ds[cast.these] <- lapply(ds[cast.these],
                         castVariable, "categorical")
                     expect_error(makeMR(pattern="mr_[123]", dataset=ds,
-                        name="test1", selections="Not a Selection!"),
+                        name="arrayVar", selections="Not a Selection!"),
                         invalid.selection)
                     expect_error(makeMR(pattern="mr_[123]", dataset=ds,
-                        name="test1"), no.selections)
+                        name="arrayVar"), no.selections)
                 })
             })
         })

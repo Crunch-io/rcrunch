@@ -25,7 +25,11 @@ appendDataset <- function (dataset1, dataset2, confirm=interactive(),
         confirm=confirm), silent=TRUE)
     if (is.error(dataset)) {
         if (cleanup) {
-            DELETE(batch_url)
+            d <- try(DELETE(batch_url), silent=TRUE)
+            if (is.error(d)) {
+                warning("Batch ", batch_url, 
+                    " could not be deleted. It may still be processing.")
+            }
         } else {
             message("Batch URL: ", batch_url) ## So you can fix and retry
         }
@@ -60,7 +64,9 @@ acceptAppendResolutions <- function (batch_url, dataset,
     status <- pollBatchStatus(batch_url, batches(dataset), until="ready")
     
     batch <- ShojiObject(GET(batch_url))
-    resolutions <- batch@body$conflicts
+    cflicts <- batch@body$conflicts
+    resolutions <- formatConflicts(cflicts)
+    # dput(resolutions)
     ## Report on what was done/will be done
     for (i in resolutions) message(i)
     
@@ -72,7 +78,7 @@ acceptAppendResolutions <- function (batch_url, dataset,
     }
     
     ## Else: On success ("ready"):
-    if (length(resolutions)) {
+    if (length(cflicts)) {
         ## If there are any resolved conflicts, seek confirmation to proceed,
         ## if required. Abort if authorization required and not obtained.
         if (confirm && !askForPermission("Accept these resolutions?")) {

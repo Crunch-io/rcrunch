@@ -2,65 +2,80 @@ context("Hiding variables")
 
 if (run.integration.tests) {
     with(test.authentication, {
-        with(test.dataset(df, "testdf"), {
-            var1 <- testdf[[1]]
+        with(test.dataset(df), {
+            var1 <- ds[[1]]
             test_that("Hide and unhide method for variables", {
-                expect_true(name(var1) %in% findVariables(testdf, key="name", value=TRUE))
+                expect_true(name(var1) %in% findVariables(ds, key="name",
+                    value=TRUE))
                 var1 <- hide(var1)
-                testdf <- refresh(testdf)
-                expect_false(name(var1) %in% findVariables(testdf, key="name", value=TRUE))
+                ds <- refresh(ds)
+                expect_false(name(var1) %in% findVariables(ds, key="name",
+                    value=TRUE))
                 
                 var1 <- unhide(var1)
-                testdf <- refresh(testdf)
-                expect_true(name(var1) %in% findVariables(testdf, key="name", value=TRUE))
+                ds <- refresh(ds)
+                expect_true(name(var1) %in% findVariables(ds, key="name",
+                    value=TRUE))
             })
         })
         
-        with(test.dataset(df, "testdf"), {            
-            test_that("hideVariables and hiddenVariables for Dataset", {
-                expect_equivalent(hidden(testdf)@index, list())
-                expect_identical(hiddenVariables(testdf), c())
-                expect_identical(dim(testdf), dim(df))
-                
-                testdf <- hideVariables(testdf, c("v2", "v3"))
-                expect_identical(names(testdf)[1:2], c("v1", "v4"))
-                expect_identical(hiddenVariables(testdf), c("v2", "v3"))
-                expect_identical(length(hidden(testdf)), 2L)
-                expect_identical(length(active(testdf@variables)), ncol(df)-2L)
-                expect_identical(dim(testdf), c(nrow(df), ncol(df)-2L))
-                
-                hiddenVariables(testdf) <- "v3"
-                ## work like is.na<-, i.e. adds hiding but doesn't unhide by omitting
-                expect_identical(hiddenVariables(testdf), c("v2", "v3"))
-                expect_identical(names(testdf)[1:2], c("v1", "v4"))
-                expect_identical(dim(testdf), c(nrow(df), ncol(df)-2L))
-                
-                hiddenVariables(testdf) <- "v4"
-                expect_identical(names(testdf)[1:2], c("v1", "v5"))
-                expect_identical(hiddenVariables(testdf), c("v2", "v3", "v4"))
-                expect_identical(dim(testdf), c(nrow(df), ncol(df)-3L))
-                expect_warning(testdf$v2, "hidden")
-                expect_true(is.Text(suppressWarnings(testdf$v2)))
-                
-                testdf <- unhideVariables(testdf, c("v2", "v3", "v4"))
-                expect_identical(hiddenVariables(testdf), c())
-                expect_identical(dim(testdf), dim(df))
-                expect_that(testdf$v2, does_not_give_warning())
-                expect_true(is.Text(testdf$v2))
+        with(test.dataset(df), {            
+            test_that("There are no hidden variables to start", {
+                expect_equivalent(index(hidden(ds)), list())
+                expect_identical(hiddenVariables(ds), c())
+                expect_identical(dim(ds), dim(df))
+            })
+            
+            try(ds <- hideVariables(ds, c("v2", "v3")))
+            test_that("hideVariables hides by alias", {
+                expect_identical(names(ds)[1:2], c("v1", "v4"))
+                expect_identical(hiddenVariables(ds), c("v2", "v3"))
+                expect_identical(length(hidden(ds)), 2L)
+                expect_identical(length(variables(ds)), ncol(df) - 2L)
+                expect_identical(dim(ds), c(nrow(df), ncol(df) - 2L))
+            })
+            
+            try(hiddenVariables(ds) <- "v3")
+            ## work like is.na<-, i.e. adds but doesn't unhide by omitting
+            test_that("hiddenVariables<- does nothing if already hidden", {
+                expect_identical(hiddenVariables(ds), c("v2", "v3"))
+                expect_identical(names(ds)[1:2], c("v1", "v4"))
+                expect_identical(dim(ds), c(nrow(df), ncol(df) - 2L))
+            })
+            
+            try(hiddenVariables(ds) <- "v4")
+            test_that("hiddenVariables<- adds variables", {
+                expect_identical(names(ds)[1:2], c("v1", "v5"))
+                expect_identical(hiddenVariables(ds), c("v2", "v3", "v4"))
+                expect_identical(dim(ds), c(nrow(df), ncol(df)-3L))
+            })
+            
+            test_that("hidden variables can be accessed with $", {
+                expect_warning(ds$v2, "hidden")
+                expect_true(is.Text(suppressWarnings(ds$v2)))
+            })
+            
+            try(ds <- unhideVariables(ds, c("v2", "v3", "v4")))
+            
+            test_that("unhideVariables by alias", {
+                expect_identical(hiddenVariables(ds), c())
+                expect_identical(dim(ds), dim(df))
+                expect_that(ds$v2, does_not_give_warning())
+                expect_true(is.Text(ds$v2))
             })
         })
         
-        with(test.dataset(df, "testdf"), {
+        with(test.dataset(df), {
             test_that("hideVariables with grep (and by index)", {
-                testdf <- hideVariables(testdf, pattern="v[23]")
-                expect_identical(names(testdf)[1:2], c("v1", "v4"))
+                ds <- hideVariables(ds, pattern="v[23]")
+                expect_identical(names(ds)[1:2], c("v1", "v4"))
                 
-                testdf <- unhideVariables(testdf, pattern="v[23]")
-                expect_identical(hiddenVariables(testdf), c())
+                ds <- unhideVariables(ds, pattern="v[23]")
+                expect_identical(hiddenVariables(ds), c())
             })
             
             test_that("Error handling", {
-                expect_identical(hiddenVariables(testdf), c()) # To be clear
+                expect_identical(hiddenVariables(ds), c()) # To be clear
                 ## Need something better than subscript out of bounds, probably
                 
             })

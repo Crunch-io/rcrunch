@@ -54,7 +54,8 @@ as.dataset <- function (x, useAlias=default.useAlias(), tuple=DatasetTuple()) {
 }
 
 ##' @export
-setMethod("dim", "CrunchDataset", function (x) c(x@.nrow, length(active(x@variables))))
+setMethod("dim", "CrunchDataset",
+    function (x) c(x@.nrow, length(variables(x))))
 
 namekey <- function (dataset) ifelse(dataset@useAlias, "alias", "name")
 
@@ -72,7 +73,7 @@ weight <- function (x) {
     stopifnot(is.dataset(x))
     w <- x@body$weight
     if (!is.null(w)) {
-        w <- entity(x@variables[[w]])
+        w <- entity(allVariables(x)[[w]])
     }
     return(w)
 }
@@ -120,13 +121,21 @@ as.list.CrunchDataset <- function (x, ...) {
 }
 
 batches <- function (x) BatchCatalog(GET(x@catalogs$batches))
+
+setDatasetVariables <- function (x, value) {
+    v <- urls(value)
+    x@variables[v] <- value
+    ordering(x@variables) <- ordering(value)
+    return(x)
+}
+
 ##' @export
-setMethod("variables", "CrunchDataset", function (x) active(x@variables))
+setMethod("variables", "CrunchDataset", function (x) active(allVariables(x)))
 ##' @export
-setMethod("variables<-", c("CrunchDataset", "VariableCatalog"), 
-    function (x, value) {
-        v <- names(value@index)
-        x@variables[v] <- value
-        ordering(x@variables) <- ordering(value)
-        return(x)
-    })
+setMethod("variables<-", c("CrunchDataset", "VariableCatalog"),
+    setDatasetVariables)
+##' @export
+setMethod("allVariables", "CrunchDataset", function (x) x@variables)
+##' @export
+setMethod("allVariables<-", c("CrunchDataset", "VariableCatalog"), 
+    setDatasetVariables)

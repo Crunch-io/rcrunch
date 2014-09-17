@@ -108,5 +108,5 @@ addSourceToDataset <- function (dataset, source_url, ...) {
 }
 
 .delete_all_my_datasets <- function () {
-    lapply(names(datasetCatalog()@index), DELETE)
+    lapply(urls(datasetCatalog()), DELETE)
 }

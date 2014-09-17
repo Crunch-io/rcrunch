@@ -1,6 +1,6 @@
 .updatePayload <- function (variable, value) {
     if (is.Array(variable)) {
-        subvars <- subvariables(variable)@index
+        subvars <- index(subvariables(variable))
         subids <- unlist(lapply(subvars, function (x) x$id))
         out <- lapply(subids, function (x) zcl(typeof(value, structure(zfunc("typeof", structure(list(variable=x), class="zcl")), class="zcl"))))
         # out <- rep(list(zcl(typeof(value, "categorical"))), length(subvars))

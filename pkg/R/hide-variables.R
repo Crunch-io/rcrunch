@@ -41,7 +41,8 @@ setMethod("unhide", "VariableCatalog", function (x) {
 ##' @export
 hideVariables <- function (dataset, variables=NULL, pattern=NULL, key=namekey(dataset), ...) {
     var.urls <- findVariableURLs(dataset, refs=variables, pattern=pattern, key=key, ...)
-    dataset@variables[var.urls] <- hide(dataset@variables[var.urls])
+    allVariables(dataset)[var.urls] <- hide(allVariables(dataset)[var.urls])
+    # dataset@variables[var.urls] <- hide(dataset@variables[var.urls])
     invisible(dataset)
 }
 
@@ -63,11 +64,11 @@ hideVariables <- function (dataset, variables=NULL, pattern=NULL, key=namekey(da
 unhideVariables <- function (dataset, variables=NULL, pattern=NULL,
                             key=namekey(dataset), ...) {
     var.urls <- findVariableURLs(hidden(dataset), refs=variables, pattern=pattern, key=key, ...)
-    dataset@variables[var.urls] <- unhide(dataset@variables[var.urls])
+    allVariables(dataset)[var.urls] <- unhide(allVariables(dataset)[var.urls])
     invisible(dataset)
 }
 
-setMethod("hidden", "CrunchDataset", function (x) hidden(x@variables))
+setMethod("hidden", "CrunchDataset", function (x) hidden(allVariables(x)))
 
 ##' Show the names of hidden variables within the dataset
 ##' @param dataset the Dataset
@@ -76,7 +77,7 @@ setMethod("hidden", "CrunchDataset", function (x) hidden(x@variables))
 hiddenVariables <- function (dataset, key="name") {
     hv <- hidden(dataset)
     if (length(hv)) {
-        return(sort(vapply(hv@index, function (x) x[[key]], character(1),
+        return(sort(vapply(index(hv), function (x) x[[key]], character(1),
             USE.NAMES=FALSE)))
     } else {
         return(c())

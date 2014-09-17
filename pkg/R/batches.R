@@ -16,7 +16,7 @@ pollBatchStatus <- function (batch.url, catalog, until="imported", wait=1) {
     
     if (status %in% "idle") {
         halt("Append process failed to start on the server")
-    } else if (status %in% "importing") {
+    } else if (status %in% c("analyzing", "importing")) {
         halt("Timed out. Check back later. Consider also increasing options(crunch.timeout)")
     } else if (status %in% c(until, "conflict")) {
         return(status)
@@ -51,8 +51,11 @@ groupConflicts <- function (x) {
 
 flattenConflicts <- function (x) {
     ## flatten object to data.frame with url, message, resolution
+    dfconflicts <- function (clist) {
+        as.data.frame(clist[c("message", "resolution")], stringsAsFactors=FALSE)
+    }
     out <- mapply(function (i, d) {
-        df <- do.call(rbind, lapply(d$conflicts, as.data.frame, stringsAsFactors=FALSE))
+        df <- do.call(rbind, lapply(d$conflicts, dfconflicts))
         df$url <- i
         df$name <- d$metadata$name
         return(df)
