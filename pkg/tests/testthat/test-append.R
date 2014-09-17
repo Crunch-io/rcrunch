@@ -268,15 +268,12 @@ if (run.integration.tests) {
                 unbind(part2$CA)
                 part2 <- refresh(part2)
                 undichotomized_cats <- Categories(list(
-                    list(id=1, missing=FALSE, name="1.0", numeric_value=1),
-                    list(id=2, missing=FALSE, name="0.0", numeric_value=0), 
+                    list(id=1, missing=FALSE, name="0.0", numeric_value=0),
+                    list(id=2, missing=FALSE, name="1.0", numeric_value=1), 
                     list(id=-1, missing=TRUE, name="No Data", numeric_value=NULL)))
                 test_that("set up MR for appending", {
                     expect_true(is.Multiple(part1$MR))
                     expect_true(is.null(part2$MR))
-                    # print(str(mr_cats))
-                    # print(str(subvar_cats))
-                    # print(str(categories(part2$mr_1)))
                     expect_identical(mr_cats, subvar_cats)
                     expect_identical(mr_cats, dichotomized_cats)
                     expect_identical(categories(part2$mr_1), 
@@ -301,7 +298,7 @@ if (run.integration.tests) {
                     expect_identical(categories(out$MR), dichotomized_cats)
                     expect_identical(categories(out$MR$mr_1), dichotomized_cats)
                     expect_false(identical(categories(out$MR),
-                        undichotomized_cats)) ## Compare to below
+                        undichotomized_cats)) ## Looks like we're taking the wrong cats
                     expect_identical(as.vector(out$MR$mr_1), 
                         rep(as.vector(part2$mr_1), 2))
                     expect_true(is.Multiple(out$MR))
@@ -349,7 +346,7 @@ if (run.integration.tests) {
                     expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
                     expect_true(is.variable(out$MR))
-                    print(str(categories(out$MR)))
+                    # print(str(categories(out$MR)))
                     expect_identical(categories(out$MR), dichotomized_cats)
                     expect_identical(categories(out$MR$mr_1), dichotomized_cats)
                     expect_false(identical(categories(out$MR),
