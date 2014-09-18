@@ -32,16 +32,16 @@ setMethod("subvariables", "CategoricalArrayVariable", function (x) {
 ##' @export
 setMethod("subvariables<-", c("CategoricalArrayVariable", "ANY"),
     function (x, value) {
-        stop("Can only assign an object of class Subvariables", call.=FALSE)
+        halt("Can only assign an object of class Subvariables")
     })
 ##' @rdname Subvariables
 ##' @export
 setMethod("subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
     function (x, value) {
         old <- x@body$subvariables
-        new <- names(value@index)
+        new <- urls(value)
         if (!setequal(old, new)) {
-            stop("Can only reorder, not change, subvariables", call.=FALSE)
+            halt("Can only reorder, not change, subvariables")
         }
         return(setCrunchSlot(x, "subvariables", new))
     })
@@ -49,7 +49,7 @@ setMethod("subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
 ##' @rdname Subvariables
 ##' @export
 setMethod("names", "Subvariables", function (x) {
-    vapply(x@index, function (a) a$name, character(1), USE.NAMES=FALSE)
+    vapply(index(x), function (a) a$name, character(1), USE.NAMES=FALSE)
 })
 
 ##' @rdname Subvariables
@@ -57,11 +57,30 @@ setMethod("names", "Subvariables", function (x) {
 setMethod("names<-", "Subvariables", function (x, value) {
     stopifnot(is.character(value), length(x) == length(value),
         !any(duplicated(value)))
-    x@index <- mapply(function (tuple, val) {
+    index(x) <- mapply(function (tuple, val) {
             tuple[["name"]] <- val
             return(tuple)
-        }, tuple=x@index, val=value, SIMPLIFY=FALSE, USE.NAMES=TRUE)
-    PATCH(self(x), body=toJSON(x@index))
+        }, tuple=index(x), val=value, SIMPLIFY=FALSE, USE.NAMES=TRUE)
+    PATCH(self(x), body=toJSON(index(x)))
+    return(x)
+})
+
+##' @rdname Subvariables
+##' @export
+setMethod("aliases", "Subvariables", function (x) {
+    vapply(index(x), function (a) a$alias, character(1), USE.NAMES=FALSE)
+})
+
+##' @rdname Subvariables
+##' @export
+setMethod("aliases<-", "Subvariables", function (x, value) {
+    stopifnot(is.character(value), length(x) == length(value),
+        !any(duplicated(value)))
+    index(x) <- mapply(function (tuple, val) {
+            tuple[["alias"]] <- val
+            return(tuple)
+        }, tuple=index(x), val=value, SIMPLIFY=FALSE, USE.NAMES=TRUE)
+    PATCH(self(x), body=toJSON(index(x)))
     return(x)
 })
 
@@ -71,8 +90,8 @@ setMethod("[[", c("Subvariables", "character"), function (x, i, ...) {
     callNextMethod(x, i, ...)    
 })
 setMethod("[[", c("Subvariables", "ANY"), function (x, i, ...) {
-    out <- VariableTuple(index_url=self(x), entity_url=names(x@index)[i],
-        body=x@index[[i]])
+    out <- VariableTuple(index_url=self(x), entity_url=urls(x)[i],
+        body=index(x)[[i]])
     if (!is.null(out)) {
         out <- entity(out)
     }
@@ -83,10 +102,62 @@ setMethod("$", "Subvariables", function (x, name) x[[name]])
 setMethod("[", c("Subvariables", "character"), function (x, i, ...) {
     w <- match(i, names(x))
     if (any(is.na(w))) {
-        stop("Undefined subvariables selected: ", serialPaste(i[is.na(w)]))
+        halt("Undefined subvariables selected: ", serialPaste(i[is.na(w)]))
     }
-    callNextMethod(x, w, ...)
+    return(x[w])
 })
+
+setMethod("[[<-", 
+    c("Subvariables", "character", "missing", "CrunchVariable"), 
+    function (x, i, value) {
+        i <- match(i, names(x))
+        if (is.na(i)) {
+            halt("subscript out of bounds")
+        }
+        callNextMethod(x, i, value)    
+    })
+setMethod("[[<-", 
+    c("Subvariables", "ANY", "missing", "CrunchVariable"), 
+    function (x, i, value) {
+        if (self(value) != urls(x)[i]) {
+            halt("Cannot add or remove subvariables")
+        }
+        index(x)[[self(value)]] <- tuple(value)@body
+        return(x)
+    })
+setMethod("[[<-", 
+    c("Subvariables", "ANY", "missing", "NULL"),
+    function (x, i, value) {
+        halt("Cannot add or remove subvariables")
+    })
+setMethod("[[<-", 
+    c("Subvariables", "ANY", "missing", "ANY"),
+    function (x, i, value) {
+        halt("Can only assign Variables into an object of class Subvariables")
+    })
+
+setMethod("[<-", c("Subvariables", "character", "missing", "Subvariables"), 
+    function (x, i, value) {
+        w <- match(i, names(x))
+        if (any(is.na(w))) {
+            halt("Undefined subvariables selected: ", serialPaste(i[is.na(w)]))
+        }
+        callNextMethod(x, w, value)
+    })
+setMethod("[<-", c("Subvariables", "ANY", "missing", "Subvariables"), 
+    function (x, i, value) {
+        inbound <- vapply(value, function (a) self(a), character(1))
+        if (!all(inbound %in% urls(x)[i])) {
+            halt("Cannot add or remove subvariables")
+        }
+        index(x)[i] <- index(value)
+        names(index(x))[i] <- inbound
+        return(x)
+    })
+setMethod("[<-", c("Subvariables", "ANY", "missing", "ANY"), 
+    function (x, i, value) {
+        halt("Can only assign Variables into an object of class Subvariables")
+    })
 
 ##' @export
 as.list.Subvariables <- function (x, ...) lapply(names(x), function (i) x[[i]])

@@ -6,7 +6,7 @@ addVariable <- function (dataset, values, ...) {
         new <- old
     }
     if (old > 0 && new != old) {
-        stop("replacement has ", new, " rows, data has ", old)
+        halt("replacement has ", new, " rows, data has ", old)
     }
     var_url <- POSTNewVariable(dataset@urls$variables_url, 
         toVariable(values, ...))
@@ -33,7 +33,7 @@ POSTNewVariable <- function (collection_url, variable) {
             if (any(errs)) {
                 # Delete subvariables that were added, then raise
                 lapply(var_urls[!errs], function (x) DELETE(x))
-                stop("Subvariables errored on upload", call.=FALSE)
+                halt("Subvariables errored on upload")
             }
             # Else prepare to POST array definition
             variable$subvariables <- I(unlist(var_urls))

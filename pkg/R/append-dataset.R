@@ -21,11 +21,15 @@ appendDataset <- function (dataset1, dataset2, confirm=interactive(),
     
     stopifnot(is.dataset(dataset1))
     batch_url <- addBatchToDataset(dataset1, dataset2)    
-    dataset <- try(acceptAppendResolutions(batch_url, dataset1, confirm=confirm),
-        silent=TRUE)
+    dataset <- try(acceptAppendResolutions(batch_url, dataset1,
+        confirm=confirm), silent=TRUE)
     if (is.error(dataset)) {
         if (cleanup) {
-            DELETE(batch_url)
+            d <- try(DELETE(batch_url), silent=TRUE)
+            if (is.error(d)) {
+                warning("Batch ", batch_url, 
+                    " could not be deleted. It may still be processing.")
+            }
         } else {
             message("Batch URL: ", batch_url) ## So you can fix and retry
         }
@@ -47,17 +51,22 @@ addBatchToDataset <- function (dataset1, dataset2) {
         element="shoji:entity",
         body=list(
             dataset=self(dataset2),
-            workflow=I(list())
+            workflow=I(list()),
+            async=TRUE
         )
     )
     invisible(POST(batches_url, body=toJSON(body)))
 }
 
-acceptAppendResolutions <- function (batch_url, dataset, confirm=interactive(), ...) {
+acceptAppendResolutions <- function (batch_url, dataset, 
+                                    confirm=interactive(), ...) {
+    
     status <- pollBatchStatus(batch_url, batches(dataset), until="ready")
     
     batch <- ShojiObject(GET(batch_url))
-    resolutions <- batch@body$conflicts
+    cflicts <- batch@body$conflicts
+    resolutions <- formatConflicts(cflicts)
+    # dput(resolutions)
     ## Report on what was done/will be done
     for (i in resolutions) message(i)
     
@@ -65,23 +74,23 @@ acceptAppendResolutions <- function (batch_url, dataset, confirm=interactive(), 
         ## message(the fatal conflicts)
         err <- c("There are conflicts that cannot be resolved automatically.",
             "Please manually address them and retry.")
-        stop(paste(err, collapse=" "), call.=FALSE)
+        halt(paste(err, collapse=" "))
     }
     
     ## Else: On success ("ready"):
-    if (length(resolutions)) {
+    if (length(cflicts)) {
         ## If there are any resolved conflicts, seek confirmation to proceed,
         ## if required. Abort if authorization required and not obtained.
         if (confirm && !askForPermission("Accept these resolutions?")) {
             err <- c("Permission to automatically resolve conflicts not given.",
                 "Aborting. Please manually resolve conflicts, or set",
                 "confirm=FALSE, and try again.")
-            stop(paste(err, collapse=" "), call.=FALSE)
+            halt(paste(err, collapse=" "))
         }
     }
     
     ## Proceed.
-    batch <- setCrunchSlot(batch, "status", "importing")
+    batch <- setCrunchSlot(batch, "status", "importing") ## Async?
     pollBatchStatus(batch_url, batches(dataset), until="imported")
     invisible(refresh(dataset))
 }

@@ -84,7 +84,7 @@ setMethod("delete", "ShojiObject", function (x, ...) invisible(DELETE(self(x))))
 
 ##' @rdname delete
 ##' @export
-setMethod("delete", "ANY", function (x, ...) stop("'delete' only valid for Crunch objects"))
+setMethod("delete", "ANY", function (x, ...) halt("'delete' only valid for Crunch objects"))
 
 ##' Base setter for Crunch objects
 ##' @param x a ShojiObject or subclass thereof

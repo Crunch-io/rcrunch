@@ -10,7 +10,7 @@ setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
 setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
     w <- match(i, names(x))
     if (any(is.na(w))) {
-        stop("Undefined columns selected: ", serialPaste(i[is.na(w)]))
+        halt("Undefined columns selected: ", serialPaste(i[is.na(w)]))
     }
     callNextMethod(x, w, ..., drop=drop)
 })
@@ -20,7 +20,7 @@ setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     if (!is.null(out)) {
         out <- try(entity(out), silent=TRUE)
         if (is.error(out)) {
-            stop(attr(out, "condition")$message, call.=FALSE)
+            halt(attr(out, "condition")$message)
         }
     }
     return(out)
@@ -28,9 +28,29 @@ setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
 ##' @export
 setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
     stopifnot(length(i) == 1)
-    i <- match(i, names(x))
-    if (is.na(i)) return(NULL)
-    callNextMethod(x, i, ..., drop=drop)
+    n <- match(i, names(x))
+    if (is.na(n)) {
+        ## See if the variable in question is hidden
+        hvars <- hidden(x)
+        hnames <- findVariables(hvars, key=namekey(x), value=TRUE)
+        n <- match(i, hnames)
+        if (is.na(n)) {
+            return(NULL)
+        } else {
+            ## If so, return it with a warning
+            out <- hidden(x)[[n]]
+            if (!is.null(out)) {
+                out <- try(entity(out), silent=TRUE)
+                if (is.error(out)) {
+                    halt(attr(out, "condition")$message)
+                }
+            }
+            warning("Variable ", i, " is hidden", call.=FALSE)
+            return(out)
+        }
+    } else {
+        return(callNextMethod(x, n, ..., drop=drop))
+    }
 })
 ##' @export
 setMethod("$", "CrunchDataset", function (x, name) x[[name]])
@@ -48,8 +68,7 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 
 .updateValues <- function (x, i, value, filter=NULL) {
     if (length(i) != 1) {
-        stop("Can only update one variable at a time (for the moment)",
-            call.=FALSE)
+        halt("Can only update one variable at a time (for the moment)")
     }
     variable <- x[[i]]
     if (is.null(filter)) {
@@ -67,19 +86,18 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
             ## We may have a variable created by makeArray/MR, and it's not
             ## yet in our variable catalog. Let's check.
             x <- refresh(x)
-            if (!(self(value) %in% names(x@variables@index))) {
-                stop("This variable does not belong to this dataset", 
-                    call.=FALSE)
+            if (!(self(value) %in% urls(allVariables(x)))) {
+                halt("This variable does not belong to this dataset")
             }
             ## Finally, update value with `i` if it is
             ## different. I.e. set the alias based on i if not otherwise
             ## specified. (setTupleSlot does the checking)
             tuple(value) <- setTupleSlot(tuple(value), namekey(x), i)
         } else {
-            stop("Cannot overwrite one Variable with another", call.=FALSE)
+            halt("Cannot overwrite one Variable with another")
         }
     }
-    x@variables[[self(value)]] <- value
+    allVariables(x)[[self(value)]] <- value
     return(x)
 }
 
@@ -107,12 +125,12 @@ setMethod("[[<-",
 setMethod("[[<-", 
     c("CrunchDataset", "character", "missing", "CrunchLogicalExpression"), 
     function (x, i, value) {
-        stop("Cannot currently derive a logical variable", call.=FALSE)
+        halt("Cannot currently derive a logical variable")
     })
 setMethod("[[<-", 
     c("CrunchDataset", "ANY"), 
     function (x, i, value) {
-        stop("Only character (name) indexing supported for [[<-", call.=FALSE)
+        halt("Only character (name) indexing supported for [[<-")
     })
 ##' @export
 setMethod("$<-", c("CrunchDataset"), function (x, name, value) {
@@ -138,8 +156,7 @@ setMethod("[<-", c("CrunchDataset", "CrunchExpression", "ANY", "ANY"),
         if (j %in% names(x)) {
             return(.updateValues(x, j, value, filter=i))
         } else {
-            stop("Cannot add variable to dataset with a row index specified",
-                call.=FALSE)
+            halt("Cannot add variable to dataset with a row index specified")
         }
     })
 

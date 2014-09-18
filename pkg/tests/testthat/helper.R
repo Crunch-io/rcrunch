@@ -6,7 +6,7 @@ options(crunch.api=getOption("test.api"),
         warn=1,
         crunch.debug=FALSE,
         digits.secs=3,
-        crunch.timeout=5,
+        crunch.timeout=15,
         crunch.email=getOption("test.user"),
         crunch.pw=getOption("test.pw"))
 
@@ -125,6 +125,16 @@ test.dataset <- function (df=NULL, obj.name="ds", ...) {
     ))
 }
 
+## Expectations
+
+does_not_give_warning <- function () {
+    function (expr) {
+        warnings <- evaluate_promise(expr)$warnings
+        expectation(length(warnings) == 0, 
+                paste0(length(warnings), " warnings created"),
+                "no warnings given")
+    }
+}
 
 ## Data frames to make datasets with
 df <- data.frame(v1=c(rep(NA_real_, 5), rnorm(15)), 
@@ -144,7 +154,8 @@ mrdf <- data.frame(mr_1=c(1,0,1,NA_real_),
 testfile.csv <- "fake.csv"
 testfile.df <- read.csv(testfile.csv)
 
-mrdf.setup <- function (dataset, pattern="mr_", name="test1", selections=NULL) {
+mrdf.setup <- function (dataset, pattern="mr_", name=ifelse(is.null(selections),
+                        "CA", "MR"), selections=NULL) {
     cast.these <- grep(pattern, names(dataset))
     dataset[cast.these] <- lapply(dataset[cast.these],
         castVariable, "categorical")

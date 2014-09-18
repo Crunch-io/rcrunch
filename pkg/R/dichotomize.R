@@ -39,7 +39,7 @@ setMethod("dichotomize", c("Categories", "logical"), .dichotomize.categories)
 setMethod("dichotomize", c("Categories", "character"), function (x, i) {
     ind <- names(x) %in% i
     if (!any(ind)) {
-        stop("Category not found") ## make nicer error message
+        halt("Category not found") ## make nicer error message
     }
     return(dichotomize(x, ind))
 })

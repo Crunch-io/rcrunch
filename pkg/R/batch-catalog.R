@@ -6,11 +6,11 @@ init.BatchCatalog <- function (.Object, ...) {
 setMethod("initialize", "BatchCatalog", init.BatchCatalog)
 
 setMethod("imported", "BatchCatalog", function (x) {
-    x@index <- Filter(function (a) isTRUE(a$status == "imported"), x@index)
+    index(x) <- Filter(function (a) isTRUE(a$status == "imported"), index(x))
     return(x)
 })
 
 setMethod("pending", "BatchCatalog", function (x) {
-    x@index <- Filter(function (a) !isTRUE(a$status == "imported"), x@index)
+    index(x) <- Filter(function (a) !isTRUE(a$status == "imported"), index(x))
     return(x)
 })

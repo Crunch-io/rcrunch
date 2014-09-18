@@ -32,17 +32,25 @@ test_that("ShojiCatalog", {
     class(fo) <- "shoji"
     sho <- as.shojiObject(fo)
     expect_false(is.shojiCatalog(sho))
-    expect_error(sho@index)
+    expect_error(index(sho))
     fo$element <- "shoji:catalog"
     sho <- as.shojiObject(fo)
     expect_true(is.shojiCatalog(sho))
-    expect_identical(sho@index, fo$index)
+    expect_identical(index(sho), fo$index)
+    expect_true(is.shojiCatalog(sho[1]))
+    expect_error(sho[2:3], "Subscript out of bounds: 3")
+    expect_true(is.shojiCatalog(sho[c(TRUE, FALSE)]))
+    expect_error(sho[c(TRUE, FALSE, TRUE)], 
+        "Subscript out of bounds: got 3 logicals, need 2")
+    expect_identical(sho[TRUE], sho)
+    expect_identical(sho["a"], sho[1])
+    expect_error(sho[c("a", "c")], "Undefined elements selected: c")
 })
 
 with(fake.HTTP, {
     full.urls <- DatasetCatalog(GET("api/datasets.json"))
     rel.urls <- DatasetCatalog(GET("api/datasets-relative-urls.json"))
-    expect_identical(names(full.urls@index), names(rel.urls@index))
+    expect_identical(urls(full.urls), urls(rel.urls))
 })
 
 if (run.integration.tests) {

@@ -6,7 +6,7 @@ setMethod("type", "CrunchVariable", function (x) x@body$type)
 
 castVariable <- function (x, to) {
     if (!(to %in% CASTABLE_TYPES)) {
-        stop(sQuote(to), " is not a Crunch variable type that can be assigned.",
+        halt(sQuote(to), " is not a Crunch variable type that can be assigned.",
             " Valid types are ", serialPaste(sQuote(CASTABLE_TYPES)))
     }
     if (type(x) != to) { ## no-op if cast type is same as current type

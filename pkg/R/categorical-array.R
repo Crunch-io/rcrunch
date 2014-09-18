@@ -28,7 +28,7 @@ makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key=nameke
     Call <- match.call(expand.dots=FALSE)
     
     if (missing(name)) {
-        stop("Must provide the name for the new variable", call.=FALSE)
+        halt("Must provide the name for the new variable")
     }
     
     Call[[1L]] <- as.name("prepareBindInputs")
@@ -70,8 +70,7 @@ prepareBindInputs <- function (list_of_variables=NULL, dataset=NULL,
         ds_urls <- unique(vapply(lov, datasetReference, character(1)))
         if (length(ds_urls) > 1) {
             ## see if list of variables actually do belong to same dataset
-            stop("All variables to be bound together must be from the same dataset",
-                call.=FALSE)
+            halt("All variables to be bound together must be from the same dataset")
         }
         return(ds_urls)
     }
@@ -81,23 +80,24 @@ prepareBindInputs <- function (list_of_variables=NULL, dataset=NULL,
         if (is.dataset(list_of_variables)) {
             ## as in, if the list of variables is a [ extraction from a Dataset
             dataset <- list_of_variables
-            variable_urls <- urls(dataset@variables)
+            variable_urls <- urls(allVariables(dataset))
         } else if (listOfVariablesIsValid(list_of_variables)) {
             ds_url <- datasetURLfromVariables(list_of_variables)
             dataset <- as.dataset(GET(ds_url))
-            variable_urls <- vapply(list_of_variables, function (x) self(x), character(1), USE.NAMES=FALSE)
+            variable_urls <- vapply(list_of_variables,
+                function (x) self(x), character(1), USE.NAMES=FALSE)
         } else {
-            stop("Must provide a Dataset and either a list of Variables to combine or a pattern to identify Variables within that Dataset")
+            halt("Must provide a Dataset and either a list of Variables to combine or a pattern to identify Variables within that Dataset")
         }
     }
     if (is.null(dataset)) {
-        stop("Must supply a Crunch dataset in which to make the array variable", call.=FALSE)
+        halt("Must supply a Crunch dataset in which to make the array variable")
     }
     
     if (is.null(variable_urls)) {
         variable_urls <- findVariableURLs(dataset, refs=list_of_variables, pattern=pattern, key=key)
         if (!length(variable_urls)) {
-            stop("Pattern did not match any variables", call.=FALSE)
+            halt("Pattern did not match any variables")
         }
     }
     
@@ -113,7 +113,7 @@ bindVariables <- function (var_urls, dataset, name, ...) {
 
 returnNewVariable <- function (variable_url, dataset) {
     dataset <- refresh(dataset)
-    return(entity(dataset@variables[[variable_url]]))
+    return(entity(allVariables(dataset)[[variable_url]]))
 }
 
 POSTBindVariables <- function (catalog_url, variable_urls, ...) {

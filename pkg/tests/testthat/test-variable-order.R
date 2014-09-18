@@ -31,7 +31,7 @@ with(fake.HTTP, {
         expect_true(inherits(ord, "VariableOrder"))
         expect_identical(entities(ord), ents)
         
-        varcat <- test.ds@variables
+        varcat <- allVariables(test.ds)
         varcat@views$hierarchical_order <- sub("hierarchical",
             "nested-hierarchical", varcat@views$hierarchical_order)
         expect_identical(do.call(VariableOrder,
@@ -75,7 +75,7 @@ if (run.integration.tests) {
             test_that("Can get VariableOrder from dataset", {
                 expect_identical(ordering(ds), 
                     VariableOrder(VariableGroup(name="ungrouped", 
-                    entities=urls(active(ds@variables)))))
+                    entities=urls(variables(ds)))))
             })
             test_that("Can make VariableGroup/Order from Variables", {
                 expect_true(setequal(entities(ordering(ds)[[1]]), 

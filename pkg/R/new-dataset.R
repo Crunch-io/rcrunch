@@ -13,8 +13,8 @@ newDataset <- function (x, name=substitute(x),
 
     is.2D <- !is.null(dim(x)) && length(dim(x)) %in% 2
     if (!is.2D) {
-        stop("Can only make a Crunch dataset from a two-dimensional data ",
-            "structure", call.=FALSE)
+        halt("Can only make a Crunch dataset from a two-dimensional data ",
+            "structure")
     }
     
     crunchdf <- createDataset(name=name, useAlias=useAlias, ...)
@@ -26,8 +26,8 @@ newDatasetViaFile <- function (x, name=substitute(x), ...) {
     
     is.2D <- !is.null(dim(x)) && length(dim(x)) %in% 2
     if (!is.2D) {
-        stop("Can only make a Crunch dataset from a two-dimensional data ",
-            "structure", call.=FALSE)
+        halt("Can only make a Crunch dataset from a two-dimensional data ",
+            "structure")
     }
     
     # v1: dump a csv, then route through newDatasetFromFile. 
@@ -65,7 +65,7 @@ newDatasetViaFile <- function (x, name=substitute(x), ...) {
 newDatasetFromFile <- function (file, name=basename(file),
                                 useAlias=default.useAlias(), ...) {
     if (!file.exists(file)) {
-        stop("File not found", call.=FALSE)
+        halt("File not found")
     }
     ds <- createDataset(name, useAlias=useAlias)
     ds <- addSourceToDataset(ds, createSource(file))
@@ -92,14 +92,15 @@ addSourceToDataset <- function (dataset, source_url, ...) {
         element="shoji:entity",
         body=list(
             source=source_url,
-            workflow=I(list())
+            workflow=I(list()),
+            async=TRUE
         )
     )
     batch_url <- POST(batches_url, body=toJSON(body), ...)
     status <- pollBatchStatus(batch_url, ShojiCatalog(GET(batches_url)),
         until="ready")
     if (status != "ready") {
-        stop("Error importing file", call.=FALSE)
+        halt("Error importing file")
     }
     PATCH(batch_url, body=toJSON(list(status="importing")))
     pollBatchStatus(batch_url, ShojiCatalog(GET(batches_url)))
@@ -107,5 +108,5 @@ addSourceToDataset <- function (dataset, source_url, ...) {
 }
 
 .delete_all_my_datasets <- function () {
-    lapply(names(datasetCatalog()@index), DELETE)
+    lapply(urls(datasetCatalog()), DELETE)
 }

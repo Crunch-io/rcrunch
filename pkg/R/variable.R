@@ -119,10 +119,44 @@ setMethod("categories", "CategoricalArrayVariable",
     function (x) x@body$categories)
 
 ##' @export
-setMethod("categories<-", "CategoricalVariable", 
+setMethod("categories<-", c("CategoricalVariable", "Categories"), 
     function (x, value) setCrunchSlot(x, "categories", value))
-setMethod("categories<-", "CategoricalArrayVariable", 
+setMethod("categories<-", c("CategoricalArrayVariable", "Categories"), 
     function (x, value) setCrunchSlot(x, "categories", value))
+setMethod("categories<-", c("CategoricalVariable", "numeric"), 
+    function (x, value) {
+        halt("`categories(x) <- value` only accepts Categories, not numeric. ",
+            "Did you mean `values(categories(x)) <- value`?")
+    })
+setMethod("categories<-", c("CategoricalVariable", "character"), 
+    function (x, value) {
+        halt("`categories(x) <- value` only accepts Categories, not ",
+            "character. Did you mean `names(categories(x)) <- value`?")
+    })
+setMethod("categories<-", c("CategoricalVariable", "ANY"), 
+    function (x, value) {
+        halt("`categories(x) <- value` only accepts Categories, not ", 
+            class(value), ".")
+    })
+setMethod("categories<-", c("CategoricalArrayVariable", "numeric"), 
+    function (x, value) {
+        halt("`categories(x) <- value` only accepts Categories, not numeric. ",
+            "Did you mean `values(categories(x)) <- value`?")
+    })
+setMethod("categories<-", c("CategoricalArrayVariable", "character"), 
+    function (x, value) {
+        halt("`categories(x) <- value` only accepts Categories, not ",
+            "character. Did you mean `names(categories(x)) <- value`?")
+    })
+setMethod("categories<-", c("CategoricalArrayVariable", "ANY"), 
+    function (x, value) {
+        halt("`categories(x) <- value` only accepts Categories, not ", 
+            class(value), ".")
+    })
+setMethod("categories<-", c("CrunchVariable", "ANY"), 
+    function (x, value) {
+        halt("category assignment not defined for ", class(x))
+    })
 
 setMethod("datasetReference", "CrunchVariable", function (x) x@urls$dataset_url)
 setMethod("datasetReference", "ANY", function (x) NULL)

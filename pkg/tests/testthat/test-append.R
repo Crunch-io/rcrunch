@@ -1,42 +1,43 @@
 context("Append datasets")
 
-test_that("Conflict messages are formatted correctly", {
-    c1 <- list()
-    c2 <- list(var1=list(
+c1 <- list()
+c2 <- list(var1=list(
+    conflicts=list(list(
+        message="No good",
+        resolution="But I fixed it already"
+    )),
+    metadata=list(
+        name="First"
+    )
+))
+c3 <- list(
+    var2=list(
         conflicts=list(list(
             message="No good",
             resolution="But I fixed it already"
         )),
         metadata=list(
-            name="First"
+            name="Second"
         )
-    ))
-    c3 <- list(
-        var2=list(
-            conflicts=list(list(
+    ),
+    var1=list(
+        conflicts=list(
+            list(
                 message="No good",
                 resolution="But I fixed it already"
-            )),
-            metadata=list(
-                name="Second"
+            ), 
+            list(
+                message="Oh, and there was another problem",
+                resolution="But it's also cool"
             )
         ),
-        var1=list(
-            conflicts=list(
-                list(
-                    message="No good",
-                    resolution="But I fixed it already"
-                ), 
-                list(
-                    message="Oh, and there was another problem",
-                    resolution="But it's also cool"
-                )
-            ),
-            metadata=list(
-                name="First"
-            )
+        metadata=list(
+            name="First"
         )
     )
+)
+
+test_that("Simple conflict messages are formatted correctly", {
     expect_equivalent(flattenConflicts(c3), 
         data.frame(
             message=c("No good", "No good", "Oh, and there was another problem"),
@@ -51,17 +52,24 @@ test_that("Conflict messages are formatted correctly", {
     expect_identical(formatConflicts(c3), 
         c(paste("Conflict: No good; Resolution: But I fixed it already; 2 variables:", dQuote("Second"), "and", dQuote("First")),
         paste("Conflict: Oh, and there was another problem; Resolution: But it's also cool; 1 variable:", dQuote("First"))))
-    
 })
 
-test_that("default.timeout", {
+source("conflicts.R")
+test_that("Complex conflicts are formatted", {
+    expect_identical(formatConflicts(mock.conflicts), 
+        c(paste("Conflict: Only in existing dataset; Resolution: Additional rows will be marked missing.; 1 variable:", dQuote("mr_1")),
+        paste("Conflict: Only in new dataset; Resolution: Variable will be added with existing rows marked missing.; 1 variable:", dQuote("mr_3")),
+        paste("Conflict: Subvariables didn't match; Resolution: Union of subvariables will be used; 1 variable:", dQuote("MR"))))
+})
+
+test_that("crunchTimeout", {
     opt <- getOption("crunch.timeout")
         options(crunch.timeout=7)
-        expect_identical(default.timeout(), 7)
+        expect_identical(crunchTimeout(), 7)
         options(crunch.timeout=NULL)
-        expect_identical(default.timeout(), 60)
+        expect_identical(crunchTimeout(), 60)
         options(crunch.timeout=list())
-        expect_identical(default.timeout(), 60)        
+        expect_identical(crunchTimeout(), 60)        
     options(crunch.timeout=opt)
 })
 
@@ -74,20 +82,18 @@ if (run.integration.tests) {
         with(test.dataset(df, "part1"), {
             cats <- categories(part1$v4)
             with(test.dataset(df, "part2"), {
-                test_that("can add batches to dataset", {
-                    p1.batches <- batches(part1)
+                p1.batches <- batches(part1)
+                test_that("Batches before appending are right", {
                     expect_true(inherits(p1.batches, "ShojiCatalog"))
-                    skip({
-                        expect_identical(length(p1.batches), 1L)
-                        expect_identical(length(batches(part2)), 1L)
-                    }, "batch catalogs are incomplete on the server")
-                    out <- try(addBatchToDataset(part1, part2))
+                    expect_identical(length(p1.batches), 1L)
+                    expect_identical(length(batches(part2)), 1L)
+                })
+                out <- suppressMessages(try(addBatchToDataset(part1, part2)))
+                test_that("can add batches to dataset", {
                     expect_true(is.character(out))
                     expect_true(grepl("/batches/", out))
-                    skip({
-                        expect_identical(length(batches(part1)), 2L)
-                        expect_true(out %in% names(batches(part1)@index))
-                    }, "batch catalogs are incomplete on the server")
+                    expect_identical(length(batches(part1)), 2L)
+                    expect_true(out %in% urls(batches(part1)))
                 })
             })
         })
@@ -96,25 +102,22 @@ if (run.integration.tests) {
             with(test.dataset(df, "part2"), {
                 v3.1 <- as.vector(part1$v3)
                 v3.2 <- as.vector(part2$v3)
-                test_that("our assumptions about these two datasets", {
+                test_that("Setup for appending identical datasets", {
                     expect_true(is.numeric(v3.1))
                     expect_true(is.numeric(v3.2))
                     expect_equivalent(v3.1, df$v3)
                     expect_equivalent(v3.2, df$v3)
                     expect_identical(dim(part1), dim(part2))
                     expect_identical(dim(part1), dim(df))
-                    skip({
-                        expect_identical(length(batches(part1)), 1L)
-                        expect_identical(length(batches(part2)), 1L)
-                    }, "batch catalogs are incomplete on the server")
+                    expect_identical(length(batches(part1)), 1L)
+                    expect_identical(length(batches(part2)), 1L)
                 })
+                out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("append handles two identical Datasets", {
-                    out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
                     expect_identical(self(out), self(part1))
-                    skip(expect_identical(length(batches(out)), 2L),
-                        "3 != 2")
+                    expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out), c(nrow(df)*2L, ncol(df)))
                     expect_identical(getNrow(out), nrow(df)*2L)
                     expect_identical(nrow(out), length(as.vector(out$v3)))
@@ -125,39 +128,38 @@ if (run.integration.tests) {
             })
         })
 
-        file1 <- newDatasetFromFile(testfile.csv, name=now())
+        try({
+            file1 <- newDatasetFromFile(testfile.csv, name=now())
             file2 <- newDatasetFromFile(testfile.csv, name=now())
-            try({
-                v3.1 <- as.vector(file1$V3)
-                v3.2 <- as.vector(file2$V3)
-                test_that("our assumptions about these two datasets from file", {
-                    expect_true(is.numeric(v3.1))
-                    expect_true(is.numeric(v3.2))
-                    expect_equivalent(v3.1, testfile.df$V3)
-                    expect_equivalent(v3.2, testfile.df$V3)
-                    skip({
-                        expect_identical(length(batches(file1)), 1L)
-                        expect_identical(length(batches(file2)), 1L)
-                    }, "batch catalogs are incomplete on the server")
-                })
-                
-                test_that("append handles two identical Datasets from file", {
-                    out <- try(appendDataset(file1, file2))
-                    expect_false(is.error(out))
-                    expect_true(is.dataset(out))
-                    expect_identical(self(out), self(file1))
-                    skip(expect_identical(length(batches(out)), 2L),
-                        "3 != 2")
-                    expect_identical(dim(out),
-                        c(nrow(testfile.df)*2L, ncol(testfile.df)))
-                    expect_identical(getNrow(out), nrow(testfile.df)*2L)
-                    expect_identical(nrow(out), length(as.vector(out$V3)))
-                    expect_equivalent(as.vector(out$V3), rep(testfile.df$V3, 2))
-                    expect_identical(as.vector(out$V3), c(v3.1, v3.2))  
-                })
+            v3.1 <- as.vector(file1$V3)
+            v3.2 <- as.vector(file2$V3)
+            
+            test_that("our assumptions about these two datasets from file", {
+                expect_true(is.numeric(v3.1))
+                expect_true(is.numeric(v3.2))
+                expect_equivalent(v3.1, testfile.df$V3)
+                expect_equivalent(v3.2, testfile.df$V3)
+                expect_identical(length(batches(file1)), 1L)
+                expect_identical(length(batches(file2)), 1L)
             })
+            
+            test_that("append handles two identical Datasets from file", {
+                out <- try(appendDataset(file1, file2))
+                expect_false(is.error(out))
+                expect_true(is.dataset(out))
+                expect_identical(self(out), self(file1))
+                expect_identical(length(batches(out)), 2L)
+                expect_identical(dim(out),
+                    c(nrow(testfile.df)*2L, ncol(testfile.df)))
+                expect_identical(getNrow(out), nrow(testfile.df)*2L)
+                expect_identical(nrow(out), length(as.vector(out$V3)))
+                expect_equivalent(as.vector(out$V3), rep(testfile.df$V3, 2))
+                expect_identical(as.vector(out$V3), c(v3.1, v3.2))  
+            })
+
             delete(file2)
-        delete(file1)
+            delete(file1)
+        })
         
         with(test.dataset(df[,2:5], "part1"), {
             cats <- categories(part1$v4)
@@ -165,22 +167,17 @@ if (run.integration.tests) {
                 p1.batches <- batches(part1)
                 test_that("if I insist on confirmation, it fails if there are conflicts", {
                     expect_true(inherits(p1.batches, "ShojiCatalog"))
-                    skip({
-                        expect_identical(length(p1.batches), 1L)
-                    }, "batch catalogs are incomplete on the server")
+                    expect_identical(length(p1.batches), 1L)
                     expect_error(appendDataset(part1, part2, confirm=TRUE))
-                    skip({
-                        expect_identical(length(batches(part1)), 1L)
-                    }, "batch catalogs are incomplete on the server")
+                    expect_identical(length(batches(part1)), 1L)
                 })
                 test_that("append handles missing variables from each", {
                     out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
-                    skip(expect_identical(length(refresh(p1.batches)), 2L),
-                        "3 != 2")
+                    expect_identical(length(refresh(p1.batches)), 2L)
                     expect_identical(ncol(out), 5L)
-                    expect_identical(ncol(out), length(out@variables))
+                    expect_identical(ncol(out), length(allVariables(out)))
                     expect_true(setequal(names(out), paste0("v", 1:5)))
                     expect_identical(nrow(out), nrow(df) * 2L)
                     expect_identical(categories(out$v4)[1:2], cats)
@@ -209,10 +206,9 @@ if (run.integration.tests) {
                     out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
-                    skip(expect_identical(length(refresh(p1.batches)), 2L),
-                        "3 != 2")
+                    expect_identical(length(refresh(p1.batches)), 2L)
                     expect_identical(ncol(out), 5L)
-                    expect_identical(ncol(out), length(out@variables))
+                    expect_identical(ncol(out), length(allVariables(out)))
                     expect_true(setequal(names(out), paste0("v", 1:5)))
                     expect_identical(nrow(out), nrow(df) * 2L)
                     expect_identical(categories(out$v4)[1:2], cats)
@@ -239,13 +235,9 @@ if (run.integration.tests) {
                 test_that("append fails on type mismatch", {
                     p1.batches <- batches(part1)
                     expect_true(inherits(p1.batches, "ShojiCatalog"))
-                    skip({
-                        expect_identical(length(p1.batches), 1L)
-                    }, "batch catalogs are incomplete on the server")
+                    expect_identical(length(p1.batches), 1L)
                     expect_error(appendDataset(part1, part2))
-                    skip({
-                        expect_identical(length(batches(part1)), 1L)
-                    }, "batch catalogs are incomplete on the server")
+                    expect_identical(length(batches(part1)), 1L)
                 })
             })
         })
@@ -255,42 +247,126 @@ if (run.integration.tests) {
             with(test.dataset(mrdf, "part2"), {
                 part2 <- mrdf.setup(part2, selections="1.0")
                 test_that("set up MR for appending", {
-                    expect_true(is.Multiple(part1$test1))
-                    expect_true(is.Multiple(part2$test1))
-                    skip({
-                        expect_identical(length(batches(part1)), 1L)
-                        expect_identical(length(batches(part2)), 1L)
-                    }, "batch catalogs are incomplete on the server")
+                    expect_true(is.Multiple(part1$MR))
+                    expect_true(is.Multiple(part2$MR))
+                    expect_identical(length(batches(part1)), 1L)
+                    expect_identical(length(batches(part2)), 1L)
                 })
                 test_that("identical datasets with arrays can append", {
                     out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
-                    skip(expect_identical(length(batches(out)), 2L),
-                        "3 != 2")
+                    expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
-                    expect_true(is.Multiple(out$test1))
+                    expect_true(is.Multiple(out$MR))
                 })
             })
         })
         
         with(test.dataset(mrdf, "part1"), {
             part1 <- mrdf.setup(part1, selections="1.0")
-            test_that("set up MR for appending", {
-                expect_true(is.Multiple(part1$test1))
-            })
+            mr_cats <- categories(part1$MR)
+            subvar_cats <- categories(part1$MR$mr_1)
+            dichotomized_cats <- Categories(list(
+                list(id=1, missing=FALSE, name="0.0", numeric_value=0, selected=FALSE), 
+                list(id=2, missing=FALSE, name="1.0", numeric_value=1, selected=TRUE),
+                list(id=-1, missing=TRUE, name="No Data", numeric_value=NULL, selected=FALSE)))
             with(test.dataset(mrdf, "part2"), {
+                ## Dichotomize this way so that categories get aligned
+                ## (via supertype)              
+                part2 <- mrdf.setup(part2)
+                unbind(part2$CA)
+                part2 <- refresh(part2)
+                undichotomized_cats <- Categories(list(
+                    list(id=1, missing=FALSE, name="0.0", numeric_value=0),
+                    list(id=2, missing=FALSE, name="1.0", numeric_value=1), 
+                    list(id=-1, missing=TRUE, name="No Data", numeric_value=NULL)))
+                test_that("set up MR for appending", {
+                    expect_true(is.Multiple(part1$MR))
+                    expect_true(is.null(part2$MR))
+                    expect_identical(mr_cats, subvar_cats)
+                    expect_identical(mr_cats, dichotomized_cats)
+                    expect_identical(categories(part2$mr_1), 
+                        undichotomized_cats)
+                    expect_false(identical(dichotomized_cats,
+                        undichotomized_cats)) ## Just being clear about that
+                    expect_identical(as.vector(part1$MR$mr_1),
+                        as.vector(part2$mr_1))
+                    expect_identical(as.vector(part1$MR$mr_2),
+                        as.vector(part2$mr_2))
+                    expect_identical(as.vector(part1$MR$mr_3),
+                        as.vector(part2$mr_3))
+                })
+                out <- suppressMessages(try(appendDataset(part1, part2)))
+                test_that("unbound subvariables get lined up", {
+                    expect_false(is.error(out))
+                    expect_true(is.dataset(out))
+                    expect_identical(length(batches(out)), 2L)
+                    expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
+                    expect_true(is.variable(out$MR))
+                    # print(str(categories(out$MR)))
+                    expect_identical(categories(out$MR), dichotomized_cats)
+                    expect_identical(categories(out$MR$mr_1), dichotomized_cats)
+                    expect_false(identical(categories(out$MR),
+                        undichotomized_cats)) ## Looks like we're taking the wrong cats
+                    expect_identical(as.vector(out$MR$mr_1), 
+                        rep(as.vector(part2$mr_1), 2))
+                    expect_true(is.Multiple(out$MR))
+                    expect_identical(names(subvariables(out$MR)),
+                        c("mr_1", "mr_2", "mr_3"))
+                })
+            })
+        })
+        with(test.dataset(mrdf, "part1"), {
+            part1 <- mrdf.setup(part1, selections="1.0")
+            mr_cats <- categories(part1$MR)
+            subvar_cats <- categories(part1$MR$mr_1)
+            dichotomized_cats <- Categories(list(
+                list(id=1, missing=FALSE, name="0.0", numeric_value=0, selected=FALSE), 
+                list(id=2, missing=FALSE, name="1.0", numeric_value=1, selected=TRUE),
+                list(id=-1, missing=TRUE, name="No Data", numeric_value=NULL, selected=FALSE)))
+            with(test.dataset(mrdf, "part2"), {                
                 cast.these <- grep("mr_", names(part2))
                 part2[cast.these] <- lapply(part2[cast.these],
                     castVariable, "categorical")
-                test_that("unbound subvariables get lined up", {
-                    out <- try(appendDataset(part1, part2))
+                undichotomized_cats <- Categories(list(
+                    list(id=2, missing=FALSE, name="0.0", numeric_value=0),
+                    list(id=1, missing=FALSE, name="1.0", numeric_value=1), 
+                    list(id=-1, missing=TRUE, name="No Data", numeric_value=NULL)))
+                test_that("set up MR for appending", {
+                    expect_true(is.Multiple(part1$MR))
+                    expect_true(is.null(part2$MR))
+                    expect_identical(mr_cats, subvar_cats)
+                    expect_identical(mr_cats, dichotomized_cats)
+                    expect_identical(categories(part2$mr_1), 
+                        undichotomized_cats)
+                    expect_false(identical(dichotomized_cats,
+                        undichotomized_cats)) ## Just being clear about that
+                    expect_identical(as.vector(part1$MR$mr_1),
+                        as.vector(part2$mr_1))
+                    expect_identical(as.vector(part1$MR$mr_2),
+                        as.vector(part2$mr_2))
+                    expect_identical(as.vector(part1$MR$mr_3),
+                        as.vector(part2$mr_3))
+                })
+                out <- suppressMessages(try(appendDataset(part1, part2)))
+                test_that("unbound subvars with not identical cats", {
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
-                    skip(expect_identical(length(batches(out)), 2L),
-                        "3 != 2")
+                    expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
-                    expect_true(is.Multiple(out$test1))
+                    expect_true(is.variable(out$MR))
+                    # print(str(categories(out$MR)))
+                    expect_identical(categories(out$MR), dichotomized_cats)
+                    expect_identical(categories(out$MR$mr_1), dichotomized_cats)
+                    expect_false(identical(categories(out$MR),
+                        undichotomized_cats)) ## To be clear about the problem
+                    ## Not handling categories with different ids but same names
+                    expect_identical(as.vector(out$MR$mr_1), 
+                        rep(as.vector(part2$mr_1), 2))
+                    expect_true(is.Multiple(out$MR))
+                    expect_identical(names(subvariables(out$MR)),
+                        c("mr_1", "mr_2", "mr_3"))
                 })
             })
         })
@@ -300,22 +376,22 @@ if (run.integration.tests) {
             with(test.dataset(mrdf[-1], "part2"), {
                 part2 <- mrdf.setup(part2, selections="1.0")
                 test_that("set up MR for appending", {
-                    expect_true(is.Multiple(part1$test1))
-                    expect_identical(names(subvariables(part1$test1)),
+                    expect_true(is.Multiple(part1$MR))
+                    expect_identical(names(subvariables(part1$MR)),
                         c("mr_1", "mr_2"))
-                    expect_true(is.Multiple(part2$test1))
-                    expect_identical(names(subvariables(part2$test1)),
+                    expect_true(is.Multiple(part2$MR))
+                    expect_identical(names(subvariables(part2$MR)),
                         c("mr_2", "mr_3"))
                 })
                 test_that("arrays with different subvariables can append", {
                     out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
-                    skip(expect_identical(length(batches(out)), 2L),
-                        "3 != 2")
+                    expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
-                    expect_true(is.Multiple(out$test1))
-                    expect_identical(names(subvariables(out$test1)),
+                    expect_true(is.variable(out$MR))
+                    expect_true(is.Multiple(out$MR))
+                    expect_identical(names(subvariables(out$MR)),
                         c("mr_1", "mr_2", "mr_3"))
                 })
             })

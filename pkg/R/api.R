@@ -58,7 +58,7 @@ handleAPIresponse <- function (response, special.statuses=list()) {
     if (is.function(handler)) {
         invisible(handler(response))
     } else if (http_status(response)$category == "success") {
-        if (code == 201) {
+        if (code %in% c(201, 202) && length(response$headers$location)) {
             return(response$headers$location)
         } else if (code == 204 || length(response$content) == 0) {
             invisible(response)
@@ -67,26 +67,27 @@ handleAPIresponse <- function (response, special.statuses=list()) {
         }
     } else {
         if (code == 410) {
-            stop("The API resource at ",
+            halt("The API resource at ",
                 response$url, 
                 " has moved permanently. Please upgrade rcrunch to the ",
-                "latest version.", call.=FALSE)
+                "latest version.")
         }
         msg <- http_status(response)$message
         msg2 <- try(content(response)$message, silent=TRUE)
         if (!is.error(msg2)) {
             msg <- paste(msg, msg2, sep=": ")
         }
-        stop(msg, call.=FALSE)
+        halt(msg)
     }
 }
 
 handleAPIerror <- function (response) {
     if (is.error(response)) {
         if (attr(response, "condition")$message == "Empty reply from server"){
-            stop("Server did not respond. Please check your local configuration and try again later.", call.=FALSE)
+            halt("Server did not respond. Please check your local ",
+                "configuration and try again later.")
         } else if (crunchIsDown(response)) {
-            stop("Cannot connect to Crunch API", call.=FALSE)
+            halt("Cannot connect to Crunch API")
         } else {
             rethrow(response)
         }

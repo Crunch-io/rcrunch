@@ -1,6 +1,5 @@
 context("Dataset object and methods") 
 
-
 with(fake.HTTP, {
     test.ds <- loadDataset("test ds")
     
@@ -9,7 +8,7 @@ with(fake.HTTP, {
     })
     
     test_that("Dataset VariableCatalog index is sorted", {
-        expect_identical(urls(test.ds@variables), 
+        expect_identical(urls(allVariables(test.ds)), 
             c("api/datasets/dataset1/variables/birthyr.json",
             "api/datasets/dataset1/variables/gender.json",
             "api/datasets/dataset1/variables/mymrset.json",
@@ -21,8 +20,10 @@ with(fake.HTTP, {
     })
 
     test_that("findVariables", {
-        expect_identical(findVariables(test.ds, pattern="^gend", key="alias"), 2L)
-        expect_identical(findVariables(test.ds, pattern="^bir", key="alias", value=TRUE), "birthyr")
+        expect_identical(findVariables(test.ds, pattern="^gend", key="alias"),
+            2L)
+        expect_identical(findVariables(test.ds, pattern="^bir", key="alias",
+            value=TRUE), "birthyr")
     })
 
     test_that("useAlias exists and affects names()", {
@@ -104,27 +105,27 @@ if (run.integration.tests) {
 
         })
         
-        with(test.dataset(df, "testdf"), {
+        with(test.dataset(df), {
             test_that("dataset dim", {
-                expect_identical(dim(testdf), dim(df))
-                expect_identical(nrow(testdf), nrow(df))
-                expect_identical(ncol(testdf), ncol(df))
+                expect_identical(dim(ds), dim(df))
+                expect_identical(nrow(ds), nrow(df))
+                expect_identical(ncol(ds), ncol(df))
             })
             
             test_that("refresh keeps useAlias setting", {
-                expect_true(testdf@useAlias)
-                expect_true(refresh(testdf)@useAlias)
-                testdf@useAlias <- FALSE
-                expect_false(testdf@useAlias)
-                expect_false(refresh(testdf)@useAlias)
+                expect_true(ds@useAlias)
+                expect_true(refresh(ds)@useAlias)
+                ds@useAlias <- FALSE
+                expect_false(ds@useAlias)
+                expect_false(refresh(ds)@useAlias)
             })
             
             test_that("Dataset [[<-", {
-                v1 <- testdf$v1
+                v1 <- ds$v1
                 name(v1) <- "Variable One"
-                testdf$v1 <- v1
-                expect_identical(names(variables(testdf))[1], "Variable One")
-                expect_error(testdf$v2 <- v1, 
+                ds$v1 <- v1
+                expect_identical(names(variables(ds))[1], "Variable One")
+                expect_error(ds$v2 <- v1, 
                     "Cannot overwrite one Variable")
             })
         })
@@ -132,22 +133,22 @@ if (run.integration.tests) {
         with(test.dataset(mrdf), {
             cast.these <- grep("mr_", names(ds))
             test_that("Dataset [<-", {
-                expect_true(all(vapply(active(ds@variables)[cast.these], 
+                expect_true(all(vapply(variables(ds)[cast.these], 
                     function (x) x$type == "numeric", logical(1))))
                 expect_true(all(vapply(ds[cast.these], 
                     function (x) is.Numeric(x), logical(1))))
                 ds[cast.these] <- lapply(ds[cast.these],
                     castVariable, "categorical")
-                expect_true(all(vapply(active(ds@variables)[cast.these], 
+                expect_true(all(vapply(variables(ds)[cast.these], 
                     function (x) x$type == "categorical", logical(1))))
                 expect_true(all(vapply(ds[cast.these], 
                     function (x) is.Categorical(x), logical(1))))
             })
             test_that("Dataset [[<- on new array variable", {
-                try(ds$test1 <- makeArray(ds[cast.these], 
+                try(ds$arrayVar <- makeArray(ds[cast.these], 
                     name="Array variable"))
-                expect_true(is.CA(ds$test1))
-                expect_identical(name(ds$test1), "Array variable")
+                expect_true(is.CA(ds$arrayVar))
+                expect_identical(name(ds$arrayVar), "Array variable")
             })
         })
         

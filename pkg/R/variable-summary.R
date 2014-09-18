@@ -1,12 +1,12 @@
 getSummary <- function (x) {
     url <- x@urls$summary_url
     if (is.null(url)) {
-        stop("No summary available", call.=FALSE)
+        halt("No summary available")
     }
     out <- GET(url)
     ## Summaries don't return as shoji entities
     # if (!is.shoji(url)) {
-    #     stop("Error in retrieving summary", call.=FALSE)
+    #     halt("Error in retrieving summary")
     # }
     if (is.Datetime(x)) {
         toR <- columnParser("datetime")
@@ -18,7 +18,7 @@ getSummary <- function (x) {
 getFrequencies <- function (x) {
     url <- x@urls$frequencies_url
     if (is.null(url)) {
-        stop("No frequencies available", call.=FALSE)
+        halt("No frequencies available")
     }
     url <- GET(url)
     return(url)
@@ -58,15 +58,14 @@ table <- function (..., exclude, useNA, dnn, deparse.level) {
     are.vars <- vapply(dots, is.variable, logical(1))
     if (length(are.vars) && all(are.vars)) {
         if (length(are.vars)>1) {
-            stop("Cannot currently tabulate more than one Crunch variable", 
-                call.=FALSE)
+            halt("Cannot currently tabulate more than one Crunch variable")
         }
         m[[1]] <- quote(CategoricalVariable.table)
         where <- parent.frame()
         return(eval(m, envir=where, enclos=asNamespace("rcrunch")))
     } else if (any(are.vars)) {
-        stop("Cannot currently tabulate Crunch variables with ", 
-            "non-Crunch vectors", call.=FALSE)
+        halt("Cannot currently tabulate Crunch variables with ", 
+            "non-Crunch vectors")
     } else {
         m[[1]] <- quote(base::table)
         return(eval.parent(m))

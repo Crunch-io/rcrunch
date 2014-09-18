@@ -4,12 +4,12 @@ makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key=namekey(d
     Call <- match.call(expand.dots=FALSE)
     
     if (missing(name)) {
-        stop("Must provide the name for the new variable", call.=FALSE)
+        halt("Must provide the name for the new variable")
     }
     if (missing(selections)) {
-        stop(paste("Must provide the names of the", 
+        halt(paste("Must provide the names of the", 
             "category or categories that indicate the dichotomous",
-            "selection"), call.=FALSE)
+            "selection"))
     }
     
     Call[[1L]] <- as.name("prepareBindInputs")
@@ -17,23 +17,23 @@ makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key=namekey(d
     
     ## Get the actual variables so that we can validate
     vars <- lapply(x$variable_urls, 
-        function (u) entity(x$dataset@variables[[u]]))
+        function (u) entity(allVariables(x$dataset)[[u]]))
     are.categorical <- vapply(vars, is.Categorical, logical(1))
     if (!all(are.categorical)) {
         varnames <- vapply(vars[!are.categorical], 
             function (x) name(x),
             character(1))
-        stop(serialPaste(varnames), 
+        halt(serialPaste(varnames), 
             " are not Categorical variables. Convert them to ",
-            "Categorical before combining to Multiple Response", call.=FALSE)
+            "Categorical before combining to Multiple Response")
     }
     
     ## Validate selections before binding
     catnames <- unique(unlist(lapply(vars, 
         function (y) names(categories(y)))))
     if (!all(selections %in% catnames)) {
-        stop("Selection(s) not found in variable's categories. ", 
-            "Category names are: ", serialPaste(catnames), call.=FALSE)
+        halt("Selection(s) not found in variable's categories. ", 
+            "Category names are: ", serialPaste(catnames))
         ## Could return more useful messaging here
     }
     

@@ -3,7 +3,7 @@
 \alias{hiddenVariables}
 \title{Show the names of hidden variables within the dataset}
 \usage{
-hiddenVariables(dataset)
+hiddenVariables(dataset, key = "name")
 }
 \arguments{
 \item{dataset}{the Dataset}
