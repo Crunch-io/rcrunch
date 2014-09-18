@@ -56,7 +56,6 @@ test_that("Simple conflict messages are formatted correctly", {
 
 source("conflicts.R")
 test_that("Complex conflicts are formatted", {
-    # print(formatConflicts(mock.conflicts))
     expect_identical(formatConflicts(mock.conflicts), 
         c(paste("Conflict: Only in existing dataset; Resolution: Additional rows will be marked missing.; 1 variable:", dQuote("mr_1")),
         paste("Conflict: Only in new dataset; Resolution: Variable will be added with existing rows marked missing.; 1 variable:", dQuote("mr_3")),
@@ -83,12 +82,14 @@ if (run.integration.tests) {
         with(test.dataset(df, "part1"), {
             cats <- categories(part1$v4)
             with(test.dataset(df, "part2"), {
-                test_that("can add batches to dataset", {
-                    p1.batches <- batches(part1)
+                p1.batches <- batches(part1)
+                test_that("Batches before appending are right", {
                     expect_true(inherits(p1.batches, "ShojiCatalog"))
                     expect_identical(length(p1.batches), 1L)
                     expect_identical(length(batches(part2)), 1L)
-                    out <- try(addBatchToDataset(part1, part2))
+                })
+                out <- suppressMessages(try(addBatchToDataset(part1, part2)))
+                test_that("can add batches to dataset", {
                     expect_true(is.character(out))
                     expect_true(grepl("/batches/", out))
                     expect_identical(length(batches(part1)), 2L)
@@ -101,7 +102,7 @@ if (run.integration.tests) {
             with(test.dataset(df, "part2"), {
                 v3.1 <- as.vector(part1$v3)
                 v3.2 <- as.vector(part2$v3)
-                test_that("our assumptions about these two datasets", {
+                test_that("Setup for appending identical datasets", {
                     expect_true(is.numeric(v3.1))
                     expect_true(is.numeric(v3.2))
                     expect_equivalent(v3.1, df$v3)
@@ -111,8 +112,8 @@ if (run.integration.tests) {
                     expect_identical(length(batches(part1)), 1L)
                     expect_identical(length(batches(part2)), 1L)
                 })
+                out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("append handles two identical Datasets", {
-                    out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
                     expect_identical(self(out), self(part1))
