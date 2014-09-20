@@ -180,15 +180,19 @@ if (run.integration.tests) {
             })
         })
         
-        datetime1 <- data.frame(wave=as.Date(rep(c("2014-04-15", "2014-06-15"), 4)))
-        datetime2 <- data.frame(wave=as.Date(rep("2014-08-15", 4)))
+        datetime1 <- data.frame(
+            cat=factor(c("A", "B")),
+            wave=as.Date(rep(c("2014-04-15", "2014-06-15"), 4)))
+        datetime2 <- data.frame(
+            cat=factor(c("B", "C")),
+            wave=as.Date(rep("2014-08-15", 4)))
         with(test.dataset(datetime1, "part1"), {
             with(test.dataset(datetime2, "part2"), {
                 test_that("setup for datetime appending", {
                     expect_true(is.Datetime(part1$wave))
                     expect_true(is.Datetime(part2$wave))
                 })
-                out <- try(appendDataset(part1, part2))
+                out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("Datetimes are correctly appended", {
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))

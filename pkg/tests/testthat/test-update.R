@@ -59,6 +59,20 @@ if (run.integration.tests) {
                 expect_identical(max(ds$v5), as.POSIXct("1985-11-07"))
             })
             
+            date.before <- rep(c("2014-04-15", "2014-08-15"), 2)
+            date.after <- c("2014-04-15", "2014-09-15", "2014-04-15",
+                "2014-09-15")
+            date.df <- data.frame(wave=as.Date(date.before))
+            with(test.dataset(date.df, "date.ds"), {
+                test_that("Another datetime update", {
+                    expect_identical(as.vector(date.ds$wave),
+                        as.POSIXct(date.before))
+                    try(date.ds$wave[date.ds$wave == as.Date("2014-08-15")] <- as.Date("2014-09-15"))
+                    expect_identical(as.vector(date.ds$wave),
+                        as.POSIXct(date.after))
+                })
+            })
+            
             ## Categorical
             try(ds$v4[is.na(ds$v2)] <- "B")
             test_that("Can update categorical variables with character", {
