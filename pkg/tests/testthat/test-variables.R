@@ -68,16 +68,26 @@ if (run.integration.tests) {
         })
         
         with(test.dataset(df), {
+            test_that("before modifying", {
+                expect_identical(name(ds$v1), "v1")
+                expect_identical(description(ds$v2), "")
+                expect_identical(alias(ds$v1), "v1")
+            })
             name(ds$v1) <- "Variable 1"
             description(ds$v2) <- "Description 2"
-            test_that("can modify names and descriptions on var in dataset", {
-                expect_identical(name(ds$v1), "Variable 1")
+            alias(ds$v1) <- "var1"
+            test_that("can modify name, description, alias on var in dataset", {
+                expect_true(is.null(ds$v1))
+                expect_identical(name(ds$var1), "Variable 1")
+                expect_identical(alias(ds$var1), "var1")
                 expect_identical(description(ds$v2), "Description 2")
                 ds <- refresh(ds)
-                expect_identical(name(ds$v1), "Variable 1")
+                expect_true(is.null(ds$v1))
+                expect_identical(name(ds$var1), "Variable 1")
                 expect_identical(description(ds$v2), "Description 2")
             })
-            
+        })
+        with(test.dataset(df), {
             v1 <- ds$v1
             name(v1) <- "alt"
             description(v1) <- "asdf"

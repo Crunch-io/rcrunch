@@ -94,7 +94,12 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
             ## specified. (setTupleSlot does the checking)
             tuple(value) <- setTupleSlot(tuple(value), namekey(x), i)
         } else {
-            halt("Cannot overwrite one Variable with another")
+            ## Check that we're changing `namekey`
+            v <- Filter(function (a) a[[namekey(x)]] == i,
+                index(allVariables(x)))
+            if (!(length(v) == 1 && names(v) == self(value))) {
+                halt("Cannot overwrite one Variable with another")
+            }
         }
     }
     allVariables(x)[[self(value)]] <- value

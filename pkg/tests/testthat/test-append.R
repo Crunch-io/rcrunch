@@ -1,67 +1,5 @@
 context("Append datasets")
 
-c1 <- list()
-c2 <- list(var1=list(
-    conflicts=list(list(
-        message="No good",
-        resolution="But I fixed it already"
-    )),
-    metadata=list(
-        name="First"
-    )
-))
-c3 <- list(
-    var2=list(
-        conflicts=list(list(
-            message="No good",
-            resolution="But I fixed it already"
-        )),
-        metadata=list(
-            name="Second"
-        )
-    ),
-    var1=list(
-        conflicts=list(
-            list(
-                message="No good",
-                resolution="But I fixed it already"
-            ), 
-            list(
-                message="Oh, and there was another problem",
-                resolution="But it's also cool"
-            )
-        ),
-        metadata=list(
-            name="First"
-        )
-    )
-)
-
-test_that("Simple conflict messages are formatted correctly", {
-    expect_equivalent(flattenConflicts(c3), 
-        data.frame(
-            message=c("No good", "No good", "Oh, and there was another problem"),
-            resolution=c("But I fixed it already", "But I fixed it already", "But it's also cool"),
-            url=c("var2", "var1", "var1"),
-            name=c("Second", "First", "First"),
-            stringsAsFactors=FALSE))
-    
-    expect_identical(formatConflicts(c1), "No conflicts.")
-    expect_identical(formatConflicts(c2), 
-        paste("Conflict: No good; Resolution: But I fixed it already; 1 variable:", dQuote("First")))
-    expect_identical(formatConflicts(c3), 
-        c(paste("Conflict: No good; Resolution: But I fixed it already; 2 variables:", dQuote("Second"), "and", dQuote("First")),
-        paste("Conflict: Oh, and there was another problem; Resolution: But it's also cool; 1 variable:", dQuote("First"))))
-})
-
-source("conflicts.R")
-test_that("Complex conflicts are formatted", {
-    expect_identical(formatConflicts(mock.conflicts), 
-        c(paste("Conflict: Only in existing dataset; Resolution: Additional rows will be marked missing.; 1 variable:", dQuote("mr_1")),
-        paste("Conflict: Only in new dataset; Resolution: Variable will be added with existing rows marked missing.; 1 variable:", dQuote("mr_3")),
-        paste("Conflict: Subvariables didn't match; Resolution: Union of subvariables will be used; 1 variable:", dQuote("MR"))))
-})
-
 test_that("crunchTimeout", {
     opt <- getOption("crunch.timeout")
         options(crunch.timeout=7)
@@ -242,157 +180,28 @@ if (run.integration.tests) {
             })
         })
         
-        with(test.dataset(mrdf, "part1"), {
-            part1 <- mrdf.setup(part1, selections="1.0")
-            with(test.dataset(mrdf, "part2"), {
-                part2 <- mrdf.setup(part2, selections="1.0")
-                test_that("set up MR for appending", {
-                    expect_true(is.Multiple(part1$MR))
-                    expect_true(is.Multiple(part2$MR))
-                    expect_identical(length(batches(part1)), 1L)
-                    expect_identical(length(batches(part2)), 1L)
-                })
-                test_that("identical datasets with arrays can append", {
-                    out <- try(appendDataset(part1, part2))
-                    expect_false(is.error(out))
-                    expect_true(is.dataset(out))
-                    expect_identical(length(batches(out)), 2L)
-                    expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
-                    expect_true(is.Multiple(out$MR))
-                })
-            })
-        })
-        
-        with(test.dataset(mrdf, "part1"), {
-            part1 <- mrdf.setup(part1, selections="1.0")
-            mr_cats <- categories(part1$MR)
-            subvar_cats <- categories(part1$MR$mr_1)
-            dichotomized_cats <- Categories(list(
-                list(id=1, missing=FALSE, name="0.0", numeric_value=0, selected=FALSE), 
-                list(id=2, missing=FALSE, name="1.0", numeric_value=1, selected=TRUE),
-                list(id=-1, missing=TRUE, name="No Data", numeric_value=NULL, selected=FALSE)))
-            with(test.dataset(mrdf, "part2"), {
-                ## Dichotomize this way so that categories get aligned
-                ## (via supertype)              
-                part2 <- mrdf.setup(part2)
-                unbind(part2$CA)
-                part2 <- refresh(part2)
-                undichotomized_cats <- Categories(list(
-                    list(id=1, missing=FALSE, name="0.0", numeric_value=0),
-                    list(id=2, missing=FALSE, name="1.0", numeric_value=1), 
-                    list(id=-1, missing=TRUE, name="No Data", numeric_value=NULL)))
-                test_that("set up MR for appending", {
-                    expect_true(is.Multiple(part1$MR))
-                    expect_true(is.null(part2$MR))
-                    expect_identical(mr_cats, subvar_cats)
-                    expect_identical(mr_cats, dichotomized_cats)
-                    expect_identical(categories(part2$mr_1), 
-                        undichotomized_cats)
-                    expect_false(identical(dichotomized_cats,
-                        undichotomized_cats)) ## Just being clear about that
-                    expect_identical(as.vector(part1$MR$mr_1),
-                        as.vector(part2$mr_1))
-                    expect_identical(as.vector(part1$MR$mr_2),
-                        as.vector(part2$mr_2))
-                    expect_identical(as.vector(part1$MR$mr_3),
-                        as.vector(part2$mr_3))
+        datetime1 <- data.frame(
+            cat=factor(c("A", "B")),
+            wave=as.Date(rep(c("2014-04-15", "2014-06-15"), 4)))
+        datetime2 <- data.frame(
+            cat=factor(c("B", "C")),
+            wave=as.Date(rep("2014-08-15", 4)))
+        with(test.dataset(datetime1, "part1"), {
+            with(test.dataset(datetime2, "part2"), {
+                test_that("setup for datetime appending", {
+                    expect_true(is.Datetime(part1$wave))
+                    expect_true(is.Datetime(part2$wave))
                 })
                 out <- suppressMessages(try(appendDataset(part1, part2)))
-                test_that("unbound subvariables get lined up", {
+                test_that("Datetimes are correctly appended", {
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 2L)
-                    expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
-                    expect_true(is.variable(out$MR))
-                    # print(str(categories(out$MR)))
-                    expect_identical(categories(out$MR), dichotomized_cats)
-                    expect_identical(categories(out$MR$mr_1), dichotomized_cats)
-                    expect_false(identical(categories(out$MR),
-                        undichotomized_cats)) ## Looks like we're taking the wrong cats
-                    expect_identical(as.vector(out$MR$mr_1), 
-                        rep(as.vector(part2$mr_1), 2))
-                    expect_true(is.Multiple(out$MR))
-                    expect_identical(names(subvariables(out$MR)),
-                        c("mr_1", "mr_2", "mr_3"))
-                })
-            })
-        })
-        with(test.dataset(mrdf, "part1"), {
-            part1 <- mrdf.setup(part1, selections="1.0")
-            mr_cats <- categories(part1$MR)
-            subvar_cats <- categories(part1$MR$mr_1)
-            dichotomized_cats <- Categories(list(
-                list(id=1, missing=FALSE, name="0.0", numeric_value=0, selected=FALSE), 
-                list(id=2, missing=FALSE, name="1.0", numeric_value=1, selected=TRUE),
-                list(id=-1, missing=TRUE, name="No Data", numeric_value=NULL, selected=FALSE)))
-            with(test.dataset(mrdf, "part2"), {                
-                cast.these <- grep("mr_", names(part2))
-                part2[cast.these] <- lapply(part2[cast.these],
-                    castVariable, "categorical")
-                undichotomized_cats <- Categories(list(
-                    list(id=2, missing=FALSE, name="0.0", numeric_value=0),
-                    list(id=1, missing=FALSE, name="1.0", numeric_value=1), 
-                    list(id=-1, missing=TRUE, name="No Data", numeric_value=NULL)))
-                test_that("set up MR for appending", {
-                    expect_true(is.Multiple(part1$MR))
-                    expect_true(is.null(part2$MR))
-                    expect_identical(mr_cats, subvar_cats)
-                    expect_identical(mr_cats, dichotomized_cats)
-                    expect_identical(categories(part2$mr_1), 
-                        undichotomized_cats)
-                    expect_false(identical(dichotomized_cats,
-                        undichotomized_cats)) ## Just being clear about that
-                    expect_identical(as.vector(part1$MR$mr_1),
-                        as.vector(part2$mr_1))
-                    expect_identical(as.vector(part1$MR$mr_2),
-                        as.vector(part2$mr_2))
-                    expect_identical(as.vector(part1$MR$mr_3),
-                        as.vector(part2$mr_3))
-                })
-                out <- suppressMessages(try(appendDataset(part1, part2)))
-                test_that("unbound subvars with not identical cats", {
-                    expect_false(is.error(out))
-                    expect_true(is.dataset(out))
-                    expect_identical(length(batches(out)), 2L)
-                    expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
-                    expect_true(is.variable(out$MR))
-                    # print(str(categories(out$MR)))
-                    expect_identical(categories(out$MR), dichotomized_cats)
-                    expect_identical(categories(out$MR$mr_1), dichotomized_cats)
-                    expect_false(identical(categories(out$MR),
-                        undichotomized_cats)) ## To be clear about the problem
-                    ## Not handling categories with different ids but same names
-                    expect_identical(as.vector(out$MR$mr_1), 
-                        rep(as.vector(part2$mr_1), 2))
-                    expect_true(is.Multiple(out$MR))
-                    expect_identical(names(subvariables(out$MR)),
-                        c("mr_1", "mr_2", "mr_3"))
-                })
-            })
-        })
-        
-        with(test.dataset(mrdf[-3], "part1"), {
-            part1 <- mrdf.setup(part1, selections="1.0")
-            with(test.dataset(mrdf[-1], "part2"), {
-                part2 <- mrdf.setup(part2, selections="1.0")
-                test_that("set up MR for appending", {
-                    expect_true(is.Multiple(part1$MR))
-                    expect_identical(names(subvariables(part1$MR)),
-                        c("mr_1", "mr_2"))
-                    expect_true(is.Multiple(part2$MR))
-                    expect_identical(names(subvariables(part2$MR)),
-                        c("mr_2", "mr_3"))
-                })
-                test_that("arrays with different subvariables can append", {
-                    out <- try(appendDataset(part1, part2))
-                    expect_false(is.error(out))
-                    expect_true(is.dataset(out))
-                    expect_identical(length(batches(out)), 2L)
-                    expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
-                    expect_true(is.variable(out$MR))
-                    expect_true(is.Multiple(out$MR))
-                    expect_identical(names(subvariables(out$MR)),
-                        c("mr_1", "mr_2", "mr_3"))
+                    expect_identical(nrow(out), 12L)
+                    expect_true(is.Datetime(out$wave))
+                    expect_equivalent(as.vector(out$wave),
+                        as.POSIXct(c(rep(c("2014-04-15", "2014-06-15"), 4), 
+                        rep("2014-08-15", 4))))
                 })
             })
         })

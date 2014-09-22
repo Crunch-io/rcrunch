@@ -125,7 +125,9 @@ batches <- function (x) BatchCatalog(GET(x@catalogs$batches))
 setDatasetVariables <- function (x, value) {
     v <- urls(value)
     x@variables[v] <- value
-    ordering(x@variables) <- ordering(value)
+    if (!identical(ordering(x@variables), ordering(value))) {
+        ordering(x@variables) <- ordering(value)
+    }
     return(x)
 }
 
