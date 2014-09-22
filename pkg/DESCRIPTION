@@ -2,7 +2,7 @@ Package: rcrunch
 Type: Package
 Title: Crunch.io Database Tools
 Version: 0.6.5
-Date: 2014-09-19
+Date: 2014-09-22
 Author: Neal Richardson <neal@crunch.io>
 Maintainer: Neal Richardson <neal@crunch.io>
 Description: An interface for accessing the Crunch.io database
