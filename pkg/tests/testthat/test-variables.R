@@ -102,5 +102,27 @@ if (run.integration.tests) {
                 expect_identical(alias(v1), "Alias!")
             })
         })
+        
+        with(test.dataset(mrdf), {
+            ds <- mrdf.setup(ds)
+            test_that("before modifying", {
+                expect_identical(name(ds$CA), "CA")
+                expect_identical(description(ds$CA), "")
+                expect_identical(alias(ds$CA), "CA")
+            })
+            name(ds$CA) <- "Variable 1"
+            description(ds$CA) <- "Description 1"
+            alias(ds$CA) <- "var1"
+            test_that("can modify name, description, alias on var in dataset", {
+                expect_true(is.null(ds$CA))
+                expect_identical(name(ds$var1), "Variable 1")
+                expect_identical(alias(ds$var1), "var1")
+                expect_identical(description(ds$var1), "Description 1")
+                ds <- refresh(ds)
+                expect_true(is.null(ds$CA))
+                expect_identical(name(ds$var1), "Variable 1")
+                expect_identical(description(ds$var1), "Description 1")
+            })
+        })
     })
 }
