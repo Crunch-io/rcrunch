@@ -15,6 +15,14 @@ test_that("askForPermission says no if not interactive", {
     expect_false(askForPermission())
 })
 
+with(fake.HTTP, {
+    ds <- loadDataset("test ds")
+    test_that("Cannot append dataset to itself", {
+        expect_error(appendDataset(ds, ds),
+            "Cannot append dataset to itself")
+    })
+})
+
 if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df, "part1"), {
