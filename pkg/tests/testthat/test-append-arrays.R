@@ -156,5 +156,21 @@ if (run.integration.tests) {
                 })
             })
         })
+        
+        sparsemrdf1 <- data.frame(v4=factor(rep(c("a", "b"), 500)))
+        sparsemrdf2 <- data.frame(mr_1=rep(c(1,0,1,NA_real_), 250),
+                           mr_2=rep(c(0,0,1,NA_real_), 250),
+                           v4=as.factor(LETTERS[2:3]))
+        with(test.dataset(sparsemrdf1, "part1"), {
+            with(test.dataset(sparsemrdf2, "part2"), {
+                part2 <- mrdf.setup(part2)
+                out <- suppressMessages(try(appendDataset(part1, part2)))
+                test_that("Sparse append with array", {
+                    expect_identical(nrow(out), 2000L)
+                    expect_identical(as.vector(out$CA$mr_2),
+                        factor(c(rep(NA, 1000), rep(c("0.0", "0.0", "1.0", NA), 250))))
+                })
+            })
+        })
     })
 }

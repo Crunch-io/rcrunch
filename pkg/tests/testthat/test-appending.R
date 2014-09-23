@@ -213,5 +213,19 @@ if (run.integration.tests) {
                 })
             })
         })
+        
+        sparse1 <- data.frame(A=factor(c("A", "B")), B=1:1000)
+        sparse2 <- data.frame(B=1:1000, C=factor(c("C", "D")))
+        with(test.dataset(sparse1, "part1"), {
+            with(test.dataset(sparse2, "part2"), {
+                out <- suppressMessages(try(appendDataset(part1, part2)))
+                test_that("Datasets with more rows append (sparseness test)", {
+                    expect_identical(mean(out$B), 1001/2)
+                    expect_identical(length(as.vector(out$C)), 2000L)
+                    expect_identical(as.vector(out$C), 
+                        factor(c(rep(NA, 1000), rep(c("C", "D"), 500))))
+                })
+            })
+        })
     })
 }
