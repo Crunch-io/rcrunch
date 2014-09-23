@@ -51,6 +51,20 @@ with(fake.HTTP, {
         expect_identical(alias(ds$gender), "gender")
     })
     
+    test_that("Variable setters (mock)", {
+        tp <- tuple(ds$gender)@body
+        tp$name <- "Sex"
+        mock.tuple <- structure(list(tp), .Names=self(ds$gender))
+        expect_error(name(ds$gender) <- "Sex",
+            paste("PATCH", self(variables(ds)), toJSON(mock.tuple)),
+            fixed=TRUE)
+    })
+    
+    test_that("Variable setters don't hit server if data not changed", {
+        expect_that(name(ds$gender) <- "Gender",
+            does_not_throw_error())
+    })
+    
     test_that("refresh", {
         expect_identical(ds$gender, refresh(ds$gender))
     })
