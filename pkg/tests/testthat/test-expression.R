@@ -33,8 +33,7 @@ if (run.integration.tests) {
                 e2 <- try(5 + ds$v3)
                 expect_true(inherits(e2, "CrunchExpression"))
                 expect_identical(as.vector(e1), as.vector(ds$v3) + 5)
-                skip(expect_identical(as.vector(e1), as.vector(e2)),
-                    "non-broadcastable output operand with shape (1) doesn't match the broadcast shape (20)")
+                expect_identical(as.vector(e1), as.vector(e2))
                 expect_identical(as.vector(ds$v3 * ds$v3), df$v3^2)
             })
 
