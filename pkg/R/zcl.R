@@ -22,7 +22,7 @@ r2zcl <- function (x) {
     if (!is.null(zztype)) {
         out$type <- zztype
     } else {
-        out$type <- list(class=v$type)
+        out$type <- list(value=list(class=v$type))
     }
     return(out)
 }
@@ -44,6 +44,7 @@ setMethod("zcl", "logical", function (x) {
 setMethod("zcl", "NULL", function (x) NULL)
 setOldClass("zcl")
 setMethod("zcl", "zcl", function (x) x)
+setMethod("zcl", "list", function (x) x) ## is this a good idea?
 
 typeof <- function (x, variable) {
     ## Add ZCL metadata asserting that x is the same type as variable

@@ -185,3 +185,11 @@ setMethod("[", c("CrunchVariable", "CrunchExpression"), function (x, i, ...) {
     CrunchExpression(dataset_url=datasetReference(x), expression=zcl(x),
         filter=zcl(i))
 })
+setMethod("[", c("CrunchVariable", "numeric"), function (x, i, ...) {
+    CrunchExpression(dataset_url=datasetReference(x), expression=zcl(x),
+        filter=.dispatchFilter(i))
+})
+setMethod("[", c("CrunchVariable", "logical"), function (x, i, ...) {
+    CrunchExpression(dataset_url=datasetReference(x), expression=zcl(x),
+        filter=.dispatchFilter(i))
+})

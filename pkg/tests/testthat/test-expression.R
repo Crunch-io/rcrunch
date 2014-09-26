@@ -67,6 +67,13 @@ if (run.integration.tests) {
                     df$v3[df$v4 %in% "C"])
             })
             
+            test_that("R numeric filter evaluates", {
+                expect_equivalent(as.vector(ds$v3[6]), df$v3[6])
+            })
+            test_that("R logical filter evaluates", {
+                expect_identical(as.vector(ds$v3[df$v3 < 10]), c(8, 9))
+            })
+            
             test_that("filtered categorical returns factor", {
                 expect_equivalent(as.vector(ds$v4[ds$v4 == "B"]), 
                     factor(rep("B", 10)))

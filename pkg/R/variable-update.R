@@ -1,9 +1,19 @@
+.updateVariable <- function (variable, value, filter=NULL) {
+    ## Construct a ZCL update payload, then POST it
+    payload <- list(command="update", 
+        variables=.updatePayload(variable, value))
+    payload[["filter"]] <- zcl(filter)
+    update_url <- paste0(datasetReference(variable), "table/")
+    # cat(toJSON(payload))
+    invisible(POST(update_url, body=toJSON(payload)))
+}
+
 .updatePayload <- function (variable, value) {
+    ## Construct the "variables" key of a ZCL update payload
     if (is.Array(variable)) {
         subvars <- index(subvariables(variable))
         subids <- unlist(lapply(subvars, function (x) x$id))
         out <- lapply(subids, function (x) zcl(typeof(value, structure(zfunc("typeof", structure(list(variable=x), class="zcl")), class="zcl"))))
-        # out <- rep(list(zcl(typeof(value, "categorical"))), length(subvars))
         names(out) <- subids
     } else {
         out <- structure(list(zcl(typeof(value, variable))),
@@ -12,29 +22,19 @@
     return(out)
 }
 
-.updateVariable <- function (variable, value, filter=NULL) {
-    payload <- list(command="update", 
-        variables=.updatePayload(variable, value))
-    payload[["filter"]] <- zcl(filter)
-    # payload[["frame"]] <- "primary"
-    update_url <- paste0(datasetReference(variable), "table/")
-    # cat(toJSON(payload))
-    invisible(POST(update_url, body=toJSON(payload)))
-}
-
-.dispatchFilter <- function (x) {
-    if (is.numeric(x)) {
-        ## Temporary backstop error so you don't get ZZ9Error, Filter expressions MUST be function references."
-        halt("Update with numeric index not yet supported")
+.dispatchFilter <- function (f) {
+    ## Given a valid R index (numeric, logical) or CrunchExp, make a ZCL (?) filter
+    if (is.logical(f)) {
+        ## Validate
+        f <- which(f)
     }
-    ## How to turn numeric into filter?
-    # fil <- list(`function`="contains", args=list(
-    #     list(column=I(seq_len(20)), type=list(class="numeric")), 
-    #     list(column=I(x), type=list(class="numeric"))))
-    # cat(toJSON(fil))
-    # class(fil) <- "zcl"
-    # fil <- seq_len(20) %in% x
-    return(x)
+    if (is.numeric(f)) {
+        ## Validate
+        
+        fun <- ifelse(length(f) == 1, "==", "in")
+        f <- zfunc(fun, zfunc("row"), f - 1)  ## 1-base to 0-base counting
+    }
+    return(f)
 }
 
 setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"),
