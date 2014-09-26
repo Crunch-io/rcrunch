@@ -12,8 +12,8 @@ if (run.integration.tests) {
                     expect_identical(length(batches(part1)), 1L)
                     expect_identical(length(batches(part2)), 1L)
                 })
+                out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("identical datasets with arrays can append", {
-                    out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 2L)
@@ -143,8 +143,8 @@ if (run.integration.tests) {
                     expect_identical(names(subvariables(part2$MR)),
                         c("mr_2", "mr_3"))
                 })
+                out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("arrays with different subvariables can append", {
-                    out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 2L)

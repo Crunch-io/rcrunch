@@ -88,9 +88,8 @@ if (run.integration.tests) {
                 expect_identical(length(batches(file1)), 1L)
                 expect_identical(length(batches(file2)), 1L)
             })
-            
+            out <- suppressMessages(try(appendDataset(file1, file2)))
             test_that("append handles two identical Datasets from file", {
-                out <- try(appendDataset(file1, file2))
                 expect_false(is.error(out))
                 expect_true(is.dataset(out))
                 expect_identical(self(out), self(file1))
@@ -117,8 +116,8 @@ if (run.integration.tests) {
                     expect_error(appendDataset(part1, part2, confirm=TRUE))
                     expect_identical(length(batches(part1)), 1L)
                 })
+                out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("append handles missing variables from each", {
-                    out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
                     expect_identical(length(refresh(p1.batches)), 2L)
@@ -146,10 +145,9 @@ if (run.integration.tests) {
         with(test.dataset(df[,1:3], "part1"), {
             with(test.dataset(df[,2:5], "part2"), {
                 cats <- categories(part2$v4)
-                
+                p1.batches <- batches(part1)
+                out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("append with missing variables the other way", {
-                    p1.batches <- batches(part1)
-                    out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
                     expect_identical(length(refresh(p1.batches)), 2L)
