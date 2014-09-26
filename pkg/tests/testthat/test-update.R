@@ -56,7 +56,7 @@ if (run.integration.tests) {
             test_that("Can update datetime", {
                 newvals <- as.Date(0:12, origin="1985-10-26")
                 try(ds$v5[ds$v5 >= as.Date("1955-11-12")] <- newvals)
-                expect_identical(max(ds$v5), as.POSIXct("1985-11-07"))
+                expect_identical(max(ds$v5), as.Date("1985-11-07"))
             })
             
             date.before <- rep(c("2014-04-15", "2014-08-15"), 2)
@@ -66,10 +66,10 @@ if (run.integration.tests) {
             with(test.dataset(date.df, "date.ds"), {
                 test_that("Another datetime update", {
                     expect_identical(as.vector(date.ds$wave),
-                        as.POSIXct(date.before))
+                        as.Date(date.before))
                     try(date.ds$wave[date.ds$wave == as.Date("2014-08-15")] <- as.Date("2014-09-15"))
                     expect_identical(as.vector(date.ds$wave),
-                        as.POSIXct(date.after))
+                        as.Date(date.after))
                 })
             })
             

@@ -7,7 +7,7 @@ math.exp <- function (e1, e2, operator) {
     ## Generic function that creates ZCL of `e1 %operator% e2`
     ex <- zfunc(operator, e1, e2)
     ds.url <- unique(unlist(lapply(list(e1, e2), datasetReference))) %||% ""
-    logics <- c("contains", "<", ">", ">=", "<=", "==", "!=", "&", "|")
+    logics <- c("contains", "<", ">", ">=", "<=", "==", "!=", "and", "or")
     if (operator %in% logics) {
         Constructor <- CrunchLogicalExpression
     } else {

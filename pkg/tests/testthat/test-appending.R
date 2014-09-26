@@ -113,7 +113,9 @@ if (run.integration.tests) {
                 test_that("if I insist on confirmation, it fails if there are conflicts", {
                     expect_true(inherits(p1.batches, "ShojiCatalog"))
                     expect_identical(length(p1.batches), 1L)
-                    expect_error(appendDataset(part1, part2, confirm=TRUE))
+                    expect_error(suppressMessages(appendDataset(part1, part2,
+                        confirm=TRUE)),
+                        "Please manually resolve conflicts")
                     expect_identical(length(batches(part1)), 1L)
                 })
                 out <- suppressMessages(try(appendDataset(part1, part2)))
@@ -206,8 +208,7 @@ if (run.integration.tests) {
                     expect_identical(nrow(out), 12L)
                     expect_true(is.Datetime(out$wave))
                     expect_equivalent(as.vector(out$wave),
-                        as.POSIXct(c(rep(c("2014-04-15", "2014-06-15"), 4), 
-                        rep("2014-08-15", 4))))
+                        c(datetime1$wave, datetime2$wave))
                 })
             })
         })

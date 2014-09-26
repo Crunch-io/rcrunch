@@ -53,18 +53,46 @@ if (run.integration.tests) {
                 expect_identical(as.vector(e4), 3*df$v3)
             })
             
-            test_that("filters on variables evaluate", {
+            varnames <- names(df[-6])
+            test_that("Select values with Numeric inequality filter", {
                 e5 <- try(ds$v3[ds$v3 < 10])
                 expect_true(inherits(e5, "CrunchExpression"))
                 expect_identical(as.vector(e5), c(8, 9))
-                expect_identical(as.vector(ds$v3[ds$v3 %in% 10]), 10)
+                for (i in varnames) {
+                    expect_equivalent(as.vector(ds[[i]][ds$v3 < 10]),
+                        df[[i]][1:2], info=i)
+                }
+            })
+            test_that("Select values with %in% on Numeric", {
+                for (i in varnames) {
+                    expect_equivalent(as.vector(ds[[i]][ds$v3 %in% 10]),
+                        df[[i]][3], info=i)
+                }
+            })
+            test_that("Select values with %in% on Categorical", {
                 expect_identical(length(as.vector(ds$v3[ds$v4 %in% "B"])), 10L)
-                expect_equivalent(as.vector(ds$v3[ds$v4 %in% "B"]), 
-                    df$v3[df$v4 %in% "B"])
+                for (i in varnames) {
+                    expect_equivalent(as.vector(ds[[i]][ds$v4 %in% "B"]), 
+                        df[[i]][df$v4 %in% "B"], info=i)
+                }
+            })
+            test_that("Select values with &ed filter", {
                 expect_equivalent(as.vector(ds$v3[ds$v3 >= 10 & ds$v3 < 13]),
                     10:12)
+                f <- ds$v3 >= 10 & ds$v3 < 13
+                expect_true(inherits(f, "CrunchLogicalExpression"))
+                for (i in varnames) {
+                    expect_equivalent(as.vector(ds[[i]][f]), 
+                        df[[i]][3:5], info=i)
+                }
+            })
+            test_that("Select values with negated filter", {
                 expect_equivalent(as.vector(ds$v3[!(ds$v4 %in% "B")]), 
                     df$v3[df$v4 %in% "C"])
+                for (i in varnames) {
+                    expect_equivalent(as.vector(ds[[i]][!(ds$v4 %in% "B")]), 
+                        df[[i]][df$v4 %in% "C"], info=i)
+                }
             })
             
             test_that("R numeric filter evaluates", {
