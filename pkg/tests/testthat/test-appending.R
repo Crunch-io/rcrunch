@@ -41,6 +41,12 @@ if (run.integration.tests) {
                     expect_identical(length(batches(part1)), 2L)
                     expect_true(out %in% urls(batches(part1)))
                 })
+                status <- pollBatchStatus(out, batches(part1),
+                    until="ready")
+                test_that("batch status can be polled while we wait", {
+                    expect_false(is.error(status))
+                    expect_identical(status, "ready")
+                })
             })
         })
         with(test.dataset(df, "part1"), {
