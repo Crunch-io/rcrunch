@@ -39,9 +39,18 @@ addFakeHTTPVerbs <- function () {
     http_verbs$GET <- function (url, ...) {
         handleShoji(fromJSON(url, simplifyWithNames=FALSE))
     }
-    http_verbs$PUT <- function (...) invisible()
-    http_verbs$PATCH <- function (...) invisible()
-    http_verbs$POST <- function (...) invisible()
+    http_verbs$PUT <- function (url, body, ...) {
+        stop("PUT ", url, " ", body, call.=FALSE)
+    }
+    http_verbs$PATCH <- function (url, body, ...) {
+        stop("PATCH ", url, " ", body, call.=FALSE)
+    }
+    http_verbs$POST <- function (url, body, ...) {
+        stop("POST ", url, " ", body, call.=FALSE)
+    }
+    http_verbs$DELETE <- function (...) function (url, ...) {
+        stop("DELETE ", url, call.=FALSE)
+    }
     session_store$urls <- list(datasets_url="api/datasets.json")
     session_store$cookie <- 12345 ## so it thinks we're authenticated
     try(updateDatasetList())
@@ -133,6 +142,14 @@ does_not_give_warning <- function () {
         expectation(length(warnings) == 0, 
                 paste0(length(warnings), " warnings created"),
                 "no warnings given")
+    }
+}
+
+does_not_throw_error <- function () {
+    function (expr) {
+        res <- try(force(expr), TRUE)
+        error <- inherits(res, "try-error")
+        expectation(!error, "threw an error", "no error thrown")
     }
 }
 

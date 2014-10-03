@@ -15,6 +15,14 @@ test_that("askForPermission says no if not interactive", {
     expect_false(askForPermission())
 })
 
+with(fake.HTTP, {
+    ds <- loadDataset("test ds")
+    test_that("Cannot append dataset to itself", {
+        expect_error(appendDataset(ds, ds),
+            "Cannot append dataset to itself")
+    })
+})
+
 if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df, "part1"), {
@@ -32,6 +40,12 @@ if (run.integration.tests) {
                     expect_true(grepl("/batches/", out))
                     expect_identical(length(batches(part1)), 2L)
                     expect_true(out %in% urls(batches(part1)))
+                })
+                status <- pollBatchStatus(out, batches(part1),
+                    until="ready")
+                test_that("batch status can be polled while we wait", {
+                    expect_false(is.error(status))
+                    expect_identical(status, "ready")
                 })
             })
         })
@@ -80,9 +94,8 @@ if (run.integration.tests) {
                 expect_identical(length(batches(file1)), 1L)
                 expect_identical(length(batches(file2)), 1L)
             })
-            
+            out <- suppressMessages(try(appendDataset(file1, file2)))
             test_that("append handles two identical Datasets from file", {
-                out <- try(appendDataset(file1, file2))
                 expect_false(is.error(out))
                 expect_true(is.dataset(out))
                 expect_identical(self(out), self(file1))
@@ -106,11 +119,13 @@ if (run.integration.tests) {
                 test_that("if I insist on confirmation, it fails if there are conflicts", {
                     expect_true(inherits(p1.batches, "ShojiCatalog"))
                     expect_identical(length(p1.batches), 1L)
-                    expect_error(appendDataset(part1, part2, confirm=TRUE))
+                    expect_error(suppressMessages(appendDataset(part1, part2,
+                        confirm=TRUE)),
+                        "Please manually resolve conflicts")
                     expect_identical(length(batches(part1)), 1L)
                 })
+                out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("append handles missing variables from each", {
-                    out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
                     expect_identical(length(refresh(p1.batches)), 2L)
@@ -138,10 +153,9 @@ if (run.integration.tests) {
         with(test.dataset(df[,1:3], "part1"), {
             with(test.dataset(df[,2:5], "part2"), {
                 cats <- categories(part2$v4)
-                
+                p1.batches <- batches(part1)
+                out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("append with missing variables the other way", {
-                    p1.batches <- batches(part1)
-                    out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
                     expect_identical(length(refresh(p1.batches)), 2L)
@@ -200,8 +214,21 @@ if (run.integration.tests) {
                     expect_identical(nrow(out), 12L)
                     expect_true(is.Datetime(out$wave))
                     expect_equivalent(as.vector(out$wave),
-                        as.POSIXct(c(rep(c("2014-04-15", "2014-06-15"), 4), 
-                        rep("2014-08-15", 4))))
+                        c(datetime1$wave, datetime2$wave))
+                })
+            })
+        })
+        
+        sparse1 <- data.frame(A=factor(c("A", "B")), B=1:1000)
+        sparse2 <- data.frame(B=1:1000, C=factor(c("C", "D")))
+        with(test.dataset(sparse1, "part1"), {
+            with(test.dataset(sparse2, "part2"), {
+                out <- suppressMessages(try(appendDataset(part1, part2)))
+                test_that("Datasets with more rows append (sparseness test)", {
+                    expect_identical(mean(out$B), 1001/2)
+                    expect_identical(length(as.vector(out$C)), 2000L)
+                    expect_identical(as.vector(out$C), 
+                        factor(c(rep(NA, 1000), rep(c("C", "D"), 500))))
                 })
             })
         })

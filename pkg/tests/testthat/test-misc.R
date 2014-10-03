@@ -5,6 +5,7 @@ test_that("is.error", {
     expect_false(is.error("not an error"))
     expect_false(is.error(NULL))
     expect_false(is.error(NA))
+    expect_that("not an error", does_not_throw_error())
 })
 
 test_that("update list", {

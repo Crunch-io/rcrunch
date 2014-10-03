@@ -31,7 +31,7 @@ test_that("login checks for email and password before POSTing", {
 if (run.integration.tests) {
     test_that("login works if crunch is running", {
         deleteSessionInfo()
-        login()
+        suppressMessages(login())
             expect_identical(class(getToken()), "config")
             expect_true("urls" %in% ls(envir=session_store))
             expect_true(is.authenticated())
@@ -45,14 +45,14 @@ if (run.integration.tests) {
         expect_true(is.character(em))
         expect_true(is.character(pw))
         expect_true(is.list(crunchAuth(em, password=pw)))
-        login()
+        suppressMessages(login())
         logout()
         expect_error(crunchAuth("lkjasdfksdfkjhl", password="w23nrnsod"), 
             "Unable to authenticate lkjasdfksdfkjhl")
     })
 
     test_that("session URLs can be retrieved", {
-        login()
+        suppressMessages(login())
             expect_true(is.character(sessionURL("user_url")))
             expect_true(is.list(sessionURL()))
         logout()

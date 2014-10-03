@@ -25,7 +25,7 @@ setTupleSlot <- function (x, name, value) {
         x[[name]] <- value
         ## NB: no readonly mode. implement later if needed.
         payload <- toJSON(structure(list(x@body), .Names=x@entity_url))
-        try(PATCH(x@index_url, body=payload))
+        PATCH(x@index_url, body=payload)
     }
     invisible(x)
 }

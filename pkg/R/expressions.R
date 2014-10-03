@@ -7,7 +7,7 @@ math.exp <- function (e1, e2, operator) {
     ## Generic function that creates ZCL of `e1 %operator% e2`
     ex <- zfunc(operator, e1, e2)
     ds.url <- unique(unlist(lapply(list(e1, e2), datasetReference))) %||% ""
-    logics <- c("contains", "<", ">", ">=", "<=", "==", "!=", "&", "|")
+    logics <- c("contains", "<", ">", ">=", "<=", "==", "!=", "and", "or")
     if (operator %in% logics) {
         Constructor <- CrunchLogicalExpression
     } else {
@@ -120,6 +120,7 @@ setMethod("as.vector", "CrunchExpression", function (x, mode) {
     if (length(x@filter)) {
         payload[["filter"]] <- x@filter
     }
+    # cat(toJSON(payload))
     out <- POST(paste0(x@dataset_url, "table/"), body=toJSON(payload))
     ## pass in the variable metadata to the column parser
     variable <- as.variable(structure(list(body=out$metadata$out),

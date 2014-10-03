@@ -165,6 +165,13 @@ as.list.Subvariables <- function (x, ...) lapply(names(x), function (i) x[[i]])
 setMethod("[", "CategoricalArrayVariable", function (x, i, ...) {
     return(subvariables(x)[i, ...])
 })
+## Special methods so as not to conflict with c("CrunchVariable", "numeric")
+setMethod("[", c("CategoricalArrayVariable", "numeric"), function (x, i, ...) {
+    return(subvariables(x)[i, ...])
+})
+setMethod("[", c("CategoricalArrayVariable", "logical"), function (x, i, ...) {
+    return(subvariables(x)[i, ...])
+})
 setMethod("[[", "CategoricalArrayVariable", function (x, i, ...) {
     return(subvariables(x)[[i, ...]])
 })

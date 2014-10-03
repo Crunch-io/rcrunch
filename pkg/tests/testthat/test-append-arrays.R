@@ -12,8 +12,8 @@ if (run.integration.tests) {
                     expect_identical(length(batches(part1)), 1L)
                     expect_identical(length(batches(part2)), 1L)
                 })
+                out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("identical datasets with arrays can append", {
-                    out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 2L)
@@ -143,8 +143,8 @@ if (run.integration.tests) {
                     expect_identical(names(subvariables(part2$MR)),
                         c("mr_2", "mr_3"))
                 })
+                out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("arrays with different subvariables can append", {
-                    out <- try(appendDataset(part1, part2))
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 2L)
@@ -153,6 +153,22 @@ if (run.integration.tests) {
                     expect_true(is.Multiple(out$MR))
                     expect_identical(names(subvariables(out$MR)),
                         c("mr_1", "mr_2", "mr_3"))
+                })
+            })
+        })
+        
+        sparsemrdf1 <- data.frame(v4=factor(rep(c("a", "b"), 500)))
+        sparsemrdf2 <- data.frame(mr_1=c(1,0,1,1,0, rep(NA, 995)),
+                           mr_2=c(rep(NA, 995), 0, 1, 1, 1, 0),
+                           v4=as.factor(LETTERS[2:3]))
+        with(test.dataset(sparsemrdf1, "part1"), {
+            with(test.dataset(sparsemrdf2, "part2"), {
+                part2 <- mrdf.setup(part2)
+                out <- suppressMessages(try(appendDataset(part1, part2)))
+                test_that("Sparse append with array", {
+                    expect_identical(nrow(out), 2000L)
+                    expect_identical(as.vector(out$CA$mr_2),
+                        factor(c(rep(NA, 1995), "0.0", "1.0", "1.0", "1.0", "0.0")))
                 })
             })
         })

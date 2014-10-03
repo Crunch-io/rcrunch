@@ -17,7 +17,12 @@ parse_column <- list(
     },
     datetime=function (col, variable) {
         out <- columnParser("text")(col)
-        return(as.POSIXct(out)) ## return Date if resolution >= D?
+        if (all(grepl("[0-9]{4}-[0-9]{2}-[0-9]{2}", out))) {
+            ## return Date if resolution >= D
+            return(as.Date(out))
+        } else {
+            return(as.POSIXct(out))
+        }
         ## see http://stackoverflow.com/questions/12125886/parsing-iso8601-in-r to improve
     }
 )
