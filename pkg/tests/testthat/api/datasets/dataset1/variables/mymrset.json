@@ -20,6 +20,7 @@
             "api/datasets/dataset1/variables/subvar1.json",
             "api/datasets/dataset1/variables/subvar3.json"
         ],
+        "subvariables_catalog": "api/datasets/dataset1/variables/mymrset/subvariables.json",
         "id": "949d2dc7e7a24e6090cc88bb92e1d2fb"
     },
     "urls": {

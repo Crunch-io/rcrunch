@@ -31,7 +31,7 @@ with(fake.HTTP, {
         expect_identical(index(active(varcat)),
             index(varcat)[entities(ordering(varcat))])
         expect_identical(index(hidden(varcat)), list())
-        index(varcat)[[5]]$discarded <- TRUE
+        index(varcat)[[2]]$discarded <- TRUE
         expect_true(inherits(active(varcat), "VariableCatalog"))
         expect_true(inherits(hidden(varcat), "VariableCatalog"))
         expect_identical(urls(active(varcat)), 
@@ -43,7 +43,7 @@ with(fake.HTTP, {
         expect_identical(urls(hidden(varcat)),
             "api/datasets/dataset1/variables/birthyr.json")
         expect_identical(length(hidden(varcat)), 1L)
-        expect_identical(length(varcat), 8L)
+        expect_identical(length(varcat), 5L)
         expect_identical(active(hidden(varcat)), hidden(active(varcat)))
     })
     
@@ -65,8 +65,9 @@ with(fake.HTTP, {
     })
     
     test_that("name and alias getters", {
-        expect_identical(names(varcat)[1:3], c("Gender", "Second", "First"))
-        expect_identical(aliases(varcat)[1:2], c("gender", "subvar1"))
+        expect_identical(names(varcat)[1:3],
+            c("Gender", "Birth Year", "starttime"))
+        expect_identical(aliases(varcat)[1:2], c("gender", "birthyr"))
     })
 })
 
