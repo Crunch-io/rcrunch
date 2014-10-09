@@ -77,6 +77,16 @@ if (run.integration.tests) {
                     expect_equivalent(as.vector(out$v3), rep(df$v3, 2))
                     expect_identical(as.vector(out$v3), c(v3.1, v3.2))
                 })
+                
+                try(DELETE(names(batches(out)@index)[2]))
+                out <- refresh(out)
+                test_that("deleting a batch drops its rows", {
+                    expect_true(is.dataset(out))
+                    expect_identical(length(batches(out)), 1L)
+                    expect_identical(dim(out), dim(df))
+                    expect_identical(categories(out$v4)[1:2], cats)
+                    expect_equivalent(as.vector(out$v3), df$v3)
+                })
             })
         })
 

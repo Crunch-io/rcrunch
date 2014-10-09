@@ -24,7 +24,9 @@
 ##' @rdname Subvariables
 ##' @export
 setMethod("subvariables", "CategoricalArrayVariable", function (x) {
-    vars <- VariableCatalog(GET(tuple(x)@index_url))
+    tup <- tuple(x)
+    catalog_url <- tup$subvariables_catalog %||% tup@index_url
+    vars <- ShojiCatalog(GET(catalog_url))
     return(Subvariables(vars[x@body$subvariables]))
 })
 
