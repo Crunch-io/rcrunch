@@ -1,6 +1,6 @@
 context("Joining datasets")
 
-skip{(
+skip({
 join1 <- data.frame(keyvar=c(2, 4, 5, 3), v1=factor(letters[c(2,4)]))
 join2 <- data.frame(keyvar=10:1, v2=factor(LETTERS[1:5]))
 
