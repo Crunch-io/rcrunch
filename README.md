@@ -15,7 +15,12 @@ This installs dependencies and then runs the tests, which installs `rcrunch` in 
 
 Testing has two options: unit tests only, and tests that communicate with an API server. This is governed by an environment variable, `LOCALONLY`. This is true by default, meaning that API integration tests are not run. To modify this and test against the Crunch API, you can run `$ export LOCALONLY=FALSE && make test`. 
 
-To run integration tests, you will need to specify a test user, password, and API server to communicate with, either by editing `pkg/inst/tests/helper.R` or by setting `test.user`, `test.pw`, and `test.api` in your `.Rprofile`.
+To run integration tests, you will need to specify a test user, password, and API server to communicate with, either by editing `pkg/inst/tests/helper.R` or by setting `test.user`, `test.pw`, and `test.api` in your `.Rprofile`, as in:
+
+    options(test.user="magic.testuser@crunch.io",
+            test.pw="t0pSecretP@ssw0rD",
+            test.api="http://local.crunch.io:8080/api/")
+
 
 ## Updating documentation
 
