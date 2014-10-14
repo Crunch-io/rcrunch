@@ -123,8 +123,8 @@ parseJSONresponse <- function (x, simplifyWithNames=FALSE, ...) {
     ## Update: still would have to pass in `unicode=TRUE` somewhere, so won't
     ## just be able to use httr's json parser out of the box
     text.parser <- get("parse_text", envir=asNamespace("httr"))
-    mungeEncoding(fromJSON(text.parser(x, encoding = "UTF-8"),
-        simplifyWithNames=simplifyWithNames, ...))
+    out <- text.parser(x, encoding = "UTF-8")
+    mungeEncoding(fromJSON(out, simplifyWithNames=simplifyWithNames, ...))
 }
 
 mungeEncoding <- function (x, to="latin1") {
