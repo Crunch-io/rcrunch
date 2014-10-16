@@ -98,7 +98,7 @@ handleAPIerror <- function (response) {
 ##' @importFrom httr config
 crunchConfig <- function () {
     config(verbose=isTRUE(getOption("crunch.debug")),
-        sslversion=3L,
+        sslversion="SSLVERSION_TLSv1_2",
         httpheader=c(`user-agent`=crunchUserAgent()))
 }
 
