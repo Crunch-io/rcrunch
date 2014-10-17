@@ -1,50 +1,52 @@
 init.VariableOrder <- function (.Object, ...) {
-    vg <- function (x) {
+    vg <- function (x, u) {
         if (inherits(x, "VariableGroup")) return(x)
-        do.call(VariableGroup, x)
+        do.call(VariableGroup, c(x, url.base=u))
     }
     .Object <- callNextMethod(.Object, ...)
     dots <- list(...)
     if (length(dots) && !is.shoji(dots[[1]])) {
-        .Object@value$groups <- lapply(dots, vg)
+        .Object@value$groups <- lapply(dots, vg, u=NULL)
     } else {
-        .Object@value$groups <- lapply(.Object@value$groups, vg)
+        .Object@value$groups <- lapply(.Object@value$groups, vg, u=.Object@self)
     }
     return(.Object)
 }
 setMethod("initialize", "VariableOrder", init.VariableOrder)
 
-.initEntities <- function (x) {
+.initEntities <- function (x, url.base=NULL) {
     if (is.list(x)) {
         raw.groups <- vapply(x, 
             function (a) {
                 is.list(a) && setequal(c("group", "entities"), names(a))
             }, logical(1))
         x[raw.groups] <- lapply(x[raw.groups], 
-            function (a) do.call(VariableGroup, a))
+            function (a) do.call(VariableGroup, c(a, url.base=url.base)))
         nested.groups <- vapply(x, 
             function (a) inherits(a, "VariableGroup"), logical(1))
         if (any(nested.groups)) {
-            x[!nested.groups] <- lapply(x[!nested.groups], .initEntities)
+            x[!nested.groups] <- lapply(x[!nested.groups], .initEntities, url.base=url.base)
         } else {
-            x <- vapply(x, .initEntities, character(1), USE.NAMES=FALSE)
+            x <- vapply(x, .initEntities, character(1), USE.NAMES=FALSE, url.base=url.base)
         }
     } else if (is.dataset(x)) {
         x <- urls(allVariables(x))
     } else if (is.variable(x)) {
         x <- self(x)
     } else if (!(is.character(x) || inherits(x, "VariableGroup"))) {
+        print(x)
         halt("")
     }
+    if (!is.null(url.base)) x <- absolutizeURLs(x, url.base)
     return(x)
 }
 
-init.VariableGroup <- function (.Object, group, entities, ...) {
+init.VariableGroup <- function (.Object, group, entities, url.base=NULL, ...) {
     dots <- list(...)
     if ("variables" %in% names(dots)) entities <- dots$variables
     if ("name" %in% names(dots)) group <- dots$name
     .Object@group <- group
-    .Object@entities <- .initEntities(entities)
+    .Object@entities <- .initEntities(entities, url.base)
     return(.Object)
 }
 setMethod("initialize", "VariableGroup", init.VariableGroup)

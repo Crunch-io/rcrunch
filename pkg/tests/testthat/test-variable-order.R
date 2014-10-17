@@ -20,6 +20,14 @@ with(fake.HTTP, {
         expect_identical(ordering(variables(test.ds)), ordering(test.ds))
     })
     
+    test_that("relative URLs in hierarchical order", {
+        varcat <- allVariables(test.ds)
+        varcat@views$hierarchical_order <- sub("hierarchical",
+            "relative-hierarchical", varcat@views$hierarchical_order)
+        expect_identical(varcat@order@value,
+            VariableOrder(GET(varcat@views$hierarchical_order))@value)
+    })
+    
     test.ord <- ordering(test.ds)
     ents <- entities(test.ord)
     test_that("can create nested groups", {
