@@ -37,8 +37,8 @@ setMethod("ordering<-", "VariableCatalog", function (x, value) {
             serialPaste(bad.entities))
     }
     
-    PUT(x@views$hierarchical_order, body=toJSON(list(groups=value)))
-    x@order <- do.call(VariableOrder,
-        GET(x@views$hierarchical_order)$groups)
+    PUT(x@views$hierarchical_order, body=toJSON(value))
+    x@order <- VariableOrder(GET(x@views$hierarchical_order))
+
     return(x)
 })

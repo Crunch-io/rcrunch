@@ -12,7 +12,7 @@ init.VariableCatalog <- function (.Object, ...) {
     # print(.Object)
     h_url <- .Object@views$hierarchical_order
     if (!is.null(h_url)) {
-        .Object@order <- do.call(VariableOrder, GET(h_url)$groups)
+        .Object@order <- VariableOrder(GET(h_url))
     }
     return(.Object)
 }
