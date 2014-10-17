@@ -1,8 +1,8 @@
 ##' @rdname refresh
 ##' @export
 setMethod("refresh", "IndexTuple", function (x) {
-    index.list <- GET(x@index_url)$index
-    x@body <- index.list[[x@entity_url]]
+    catalog <- ShojiCatalog(GET(x@index_url))
+    x@body <- catalog[[x@entity_url]]
     return(x)
 })
 

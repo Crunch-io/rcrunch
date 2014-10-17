@@ -1,7 +1,7 @@
 {
     "element": "shoji:catalog",
     "self": "api/datasets.json",
-    "specification": "https://beta.crunch.io/api/specifications/user_datasets/",
+    "specification": "https://beta.crunch.io/api/specifications/datasets/",
     "description": "List of Datasets that belong to this user. POST a Dataset representation (serialized JSON) here to create a new one; a 201 response indicates success and returns the location of the new object. GET that URL to retrieve the object.",
     "index": {
         "api/datasets/dataset1.json": {

@@ -52,6 +52,6 @@
         }
     },
     "views": {
-        "hierarchical_order": "api/datasets/dataset1/hierarchical.json"
+        "hierarchical_order": "api/datasets/dataset1/variables/hierarchical.json"
     }
 }

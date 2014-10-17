@@ -1,7 +1,19 @@
 init.VariableCatalog <- function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
-    .Object@order <- do.call(VariableOrder,
-        GET(.Object@views$hierarchical_order)$groups)
+    # print(.Object)
+    .Object@index <- lapply(.Object@index, function (x, b) {
+        for (i in c("subvariables", "subvariables_catalog")) {
+            if (!is.null(x[[i]])) {
+                x[[i]] <- absolutizeURLs(x[[i]], b)
+            }
+        }
+        return(x)
+    }, b=.Object@self)
+    # print(.Object)
+    h_url <- .Object@views$hierarchical_order
+    if (!is.null(h_url)) {
+        .Object@order <- do.call(VariableOrder, GET(h_url)$groups)
+    }
     return(.Object)
 }
 setMethod("initialize", "VariableCatalog", init.VariableCatalog)

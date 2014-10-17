@@ -26,7 +26,7 @@
 setMethod("subvariables", "CategoricalArrayVariable", function (x) {
     tup <- tuple(x)
     catalog_url <- tup$subvariables_catalog %||% tup@index_url
-    vars <- ShojiCatalog(GET(catalog_url))
+    vars <- VariableCatalog(GET(catalog_url))
     return(Subvariables(vars[x@body$subvariables]))
 })
 
