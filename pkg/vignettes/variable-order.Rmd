@@ -3,7 +3,7 @@
 %\VignetteIndexEntry{Variable Order}
 -->
 
-```{r, results='hide', echo=FALSE, message=FALSE}
+```{r, results='hide', echo=FALSE, message=FALSE, eval=FALSE}
 library(rcrunch)
 load("variable-order.RData")
 ```
@@ -23,7 +23,7 @@ Picking up with the dataset we used in the Array Variables vignette, we can fetc
 ```{r, eval=FALSE}
 ordering(ds)
 ```
-```{r, echo=FALSE}
+```{r, echo=FALSE, eval=FALSE}
 ordering(start)
 ```
 
