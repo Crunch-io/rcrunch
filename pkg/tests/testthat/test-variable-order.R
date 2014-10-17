@@ -75,7 +75,7 @@ if (run.integration.tests) {
             test_that("Can get VariableOrder from dataset", {
                 expect_identical(ordering(ds)@value, 
                     VariableOrder(VariableGroup(name="ungrouped", 
-                    entities=urls(variables(ds)))))
+                    entities=urls(variables(ds))))@value)
             })
             test_that("Can make VariableGroup/Order from Variables", {
                 expect_true(setequal(entities(ordering(ds)[[1]]), 
@@ -99,33 +99,44 @@ if (run.integration.tests) {
                     list(group="Group 2", entities=c(self(ds$v6), self(ds$v2)))
                 )))
             })
-            vg <- VariableOrder(
+            starting.vg <- vg <- VariableOrder(
                 VariableGroup(name="Group 1", 
                     entities=ds[c("v1", "v3", "v5")]),
                 VariableGroup(name="Group 2.5", variables=ds["v4"]),
                 VariableGroup(name="Group 2", 
                     entities=ds[c("v6", "v2")]))
                     
-            test_that("Can manipulate VariableOrder", {
+            test_that("Get entities from VariableOrder and Group", {
                 expect_identical(entities(vg[[1]]),
                     c(self(ds$v1), self(ds$v3), self(ds$v5)))
                 expect_identical(entities(vg), 
                     c(self(ds$v1), self(ds$v3), self(ds$v5), self(ds$v4),
                     self(ds$v6), self(ds$v2)))
-                entities(vg[[2]]) <- self(ds$v2)
+            })
+            
+            try(entities(vg[[2]]) <- self(ds$v2))
+            test_that("Set URLs -> entities on VariableGroup", {
                 expect_identical(entities(vg[[2]]), self(ds$v2))
                 expect_identical(entities(vg), 
                     c(self(ds$v1), self(ds$v3), self(ds$v5), self(ds$v2),
                     self(ds$v6)))
-                entities(vg[[2]]) <- list(ds$v3)
+            })
+            try(entities(vg[[2]]) <- list(ds$v3))
+            test_that("Set variables -> entities on VariableGroup", {
                 expect_identical(entities(vg[[2]]), self(ds$v3))
-                name(vg[[2]]) <- "Group 3"
+            })
+            
+            try(name(vg[[2]]) <- "Group 3")
+            test_that("Set name on VariableGroup", {
                 expect_identical(names(vg), c("Group 1", "Group 3", "Group 2"))
-                expect_identical(entities(vg[[2]]), self(ds$v3))
-                names(vg) <- c("G3", "G1", "G2")
+            })
+            try(names(vg) <- c("G3", "G1", "G2"))
+            test_that("Set names on VariableOrder", {
                 expect_identical(names(vg), c("G3", "G1", "G2"))
-                expect_identical(entities(vg[[2]]), self(ds$v3))
-                vglist <- fromJSON(toJSON(vg))
+            })
+            
+            try(vglist <- fromJSON(toJSON(vg)))
+            test_that("VariableOrder to/fromJSON", {
                 expect_identical(vglist, list(groups=list(
                     list(group="G3", 
                         entities=c(self(ds$v1), self(ds$v3), self(ds$v5))),
@@ -143,11 +154,11 @@ if (run.integration.tests) {
             })
             
             original.order <- ordering(ds)
-            test_that("Can set VariableOrders", {
-                expect_false(identical(vg, original.order))
-                ordering(ds) <- vg
-                expect_identical(grouped(ordering(ds))@value, vg@value)
-                expect_identical(grouped(ordering(refresh(ds)))@value, vg@value)
+            test_that("Can set VariableOrder on dataset", {
+                expect_false(identical(starting.vg, original.order))
+                ordering(ds) <- starting.vg
+                expect_identical(grouped(ordering(ds))@value, starting.vg@value)
+                expect_identical(grouped(ordering(refresh(ds)))@value, starting.vg@value)
                 expect_true(inherits(ungrouped(ordering(ds)), "VariableGroup"))
                 expect_true(inherits(ungrouped(ordering(refresh(ds))),
                     "VariableGroup"))
@@ -163,7 +174,7 @@ if (run.integration.tests) {
             })
             
             test_that("Can manipulate VariableOrder that's part of a dataset", {
-                ordering(ds) <- vg
+                ordering(ds) <- starting.vg
                 expect_identical(names(ordering(ds)), 
                     c("Group 1", "Group 2.5", "Group 2", "ungrouped"))
                 names(ordering(ds))[3] <- "Three"
@@ -171,6 +182,14 @@ if (run.integration.tests) {
                     c("Group 1", "Group 2.5", "Three", "ungrouped"))
                 expect_identical(names(grouped(ordering(ds))), 
                     c("Group 1", "Group 2.5", "Three"))
+            })
+            
+            test_that("ordering<- validation", {
+                bad.vg <- starting.vg
+                entities(bad.vg[[1]]) <- c(entities(bad.vg[[1]])[-2],
+                    "/not/a/variable")
+                expect_error(ordering(ds) <- bad.vg, 
+                    "Variable URL referenced in Order not present in catalog: /not/a/variable")
             })
         })
     })

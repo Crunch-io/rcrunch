@@ -46,6 +46,11 @@ addBatchToDataset <- function (dataset1, dataset2) {
         dataset2 <- newDataset(dataset2, name=temp.ds.name)
     }
     
+    ## Validate
+    if (identical(self(dataset1), self(dataset2))) {
+        halt("Cannot append dataset to itself")
+    }
+    
     batches_url <- dataset1@catalogs$batches
     body <- list(
         element="shoji:entity",

@@ -80,11 +80,14 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 }
 
 .updateVariableMetadata <- function (x, i, value) {
-    ## Confirm that i matches namekey(value)
-    if (i != tuple(value)[[namekey(x)]]) {
+    ## Confirm that x[[i]] has the same URL as value
+    v <- Filter(function (a) a[[namekey(x)]] == i,
+        index(allVariables(x)))
+    i.matches.value <- length(v) == 1 && names(v) == self(value)
+    if (!i.matches.value) {
+        ## We may have a variable created by makeArray/MR, and it's not
+        ## yet in our variable catalog. Let's check.
         if (is.CA(value) || is.MR(value)) {
-            ## We may have a variable created by makeArray/MR, and it's not
-            ## yet in our variable catalog. Let's check.
             x <- refresh(x)
             if (!(self(value) %in% urls(allVariables(x)))) {
                 halt("This variable does not belong to this dataset")

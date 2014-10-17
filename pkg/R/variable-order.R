@@ -72,6 +72,9 @@ setMethod("toJSON", "VariableGroup", function (x, ...) {
 as.list.VariableOrder <- function (x, ...) x@value$groups
 
 ##' @export
+setMethod("length", "VariableOrder", function (x) length(x@value$groups))
+
+##' @export
 setMethod("[", c("VariableOrder", "ANY"), function (x, i, ..., drop=FALSE) {
     x@value$groups <- x@value$groups[i]
     return(x)

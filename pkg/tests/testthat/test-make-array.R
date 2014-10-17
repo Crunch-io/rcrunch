@@ -6,6 +6,8 @@ if (run.integration.tests) {
             with(test.dataset(mrdf), {
                 var <- makeArray(ds[1:3], name="arrayVar")
                 expect_true(is.CA(var))
+                expect_false(any(unlist(lapply(tuple(var)$subvariables,
+                    is.null)))) ## API sanity check
                 ds <- refresh(ds)
                 expect_equal(c("arrayVar", "v4"), names(ds))
                 name(var) <- "TESTONE"

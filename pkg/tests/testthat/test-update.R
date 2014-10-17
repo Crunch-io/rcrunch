@@ -11,25 +11,25 @@ if (run.integration.tests) {
                 expect_true(all(test == 1))
             })
             
+            try(ds$v3 <- 1)
             test_that("Value recycling on insert is consistent with R", {
-                try(ds$v3 <- 1)
                 expect_true(all(as.vector(ds$v3) == 1))
             })
             
-            test_that("Can update numeric variable with filter and values", {
-                expect_error(ds$v3[1:10] <- 2, 
-                    "Update with numeric index not yet supported")
-                skip({
-                    try(ds$v3[1:10] <- 2)
-                    expect_equivalent(mean(ds$v3), 1.5)
-                }, "How do I create filter with numeric indices?")
-                ds$v3 <- c(rep(2, 10), rep(1, 10))
+            try(ds$v3[1:10] <- 2)
+            test_that("Update numeric with R numeric filter and values", {
                 expect_equivalent(mean(ds$v3), 1.5)
-                try(ds$v3[ds$v3 == 1] <- 3)
+            })
+            try(ds$v3[ds$v3 == 1] <- 3)
+            test_that("Update numeric with LogicalExpression filter", {
                 expect_equivalent(mean(ds$v3), 2.5)
-                try(ds[ds$v3 == 2, "v3"] <- 4)
+            })
+            try(ds[ds$v3 == 2, "v3"] <- 4)
+            test_that("Update with LogicalExpression within dataset", {
                 expect_equivalent(mean(ds$v3), 3.5)
-                try(ds$v3[] <- c(rep(5, 10), rep(7, 10)))
+            })
+            try(ds$v3 <- c(rep(5, 10), rep(7, 10)))
+            test_that("Just update the values", {
                 expect_equivalent(mean(ds$v3), 6)
             })
             
@@ -56,7 +56,21 @@ if (run.integration.tests) {
             test_that("Can update datetime", {
                 newvals <- as.Date(0:12, origin="1985-10-26")
                 try(ds$v5[ds$v5 >= as.Date("1955-11-12")] <- newvals)
-                expect_identical(max(ds$v5), as.POSIXct("1985-11-07"))
+                expect_identical(max(ds$v5), as.Date("1985-11-07"))
+            })
+            
+            date.before <- rep(c("2014-04-15", "2014-08-15"), 2)
+            date.after <- c("2014-04-15", "2014-09-15", "2014-04-15",
+                "2014-09-15")
+            date.df <- data.frame(wave=as.Date(date.before))
+            with(test.dataset(date.df, "date.ds"), {
+                test_that("Another datetime update", {
+                    expect_identical(as.vector(date.ds$wave),
+                        as.Date(date.before))
+                    try(date.ds$wave[date.ds$wave == as.Date("2014-08-15")] <- as.Date("2014-09-15"))
+                    expect_identical(as.vector(date.ds$wave),
+                        as.Date(date.after))
+                })
             })
             
             ## Categorical

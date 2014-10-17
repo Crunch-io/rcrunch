@@ -12,30 +12,6 @@
             "id": "gender",
             "description": "Gender"
         },
-        "api/datasets/dataset1/variables/subvar1.json": {
-            "name": "Second",
-            "discarded": false,
-            "alias": "subvar1",
-            "type": "categorical",
-            "id": "subvar1",
-            "description": null
-        },
-        "api/datasets/dataset1/variables/subvar2.json": {
-            "name": "First",
-            "discarded": false,
-            "alias": "subvar2",
-            "type": "categorical",
-            "id": "gender",
-            "description": null
-        },
-        "api/datasets/dataset1/variables/subvar3.json": {
-            "name": "Last",
-            "discarded": false,
-            "alias": "subvar3",
-            "type": "categorical",
-            "id": "subvar3",
-            "description": null
-        },
         "api/datasets/dataset1/variables/birthyr.json": {
             "name": "Birth Year",
             "discarded": false,
@@ -58,7 +34,13 @@
             "alias": "mymrset", 
             "type": "multiple_response",
             "id": "mymrset",
-            "description": "My multiple response set"
+            "description": "My multiple response set",
+            "subvariables": [
+                "api/datasets/dataset1/variables/subvar2.json",
+                "api/datasets/dataset1/variables/subvar1.json",
+                "api/datasets/dataset1/variables/subvar3.json"
+            ],
+            "subvariables_catalog": "api/datasets/dataset1/variables/mymrset/subvariables.json"
         },
         "api/datasets/dataset1/variables/textVar.json": {
             "name": "Text variable ftw",
@@ -70,6 +52,6 @@
         }
     },
     "views": {
-        "hierarchical_order": "api/datasets/dataset1/hierarchical.json"
+        "hierarchical_order": "api/datasets/dataset1/variables/hierarchical.json"
     }
 }

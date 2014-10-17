@@ -3,8 +3,8 @@ context("Getting values to make local R objects")
 
 with(fake.HTTP, {
     test.ds <- loadDataset("test ds")
-    
-    hiddenVariables(test.ds) <- "mymrset" # Defer implementing MR as.vector
+    test.ds@variables@index[["api/datasets/dataset1/variables/mymrset.json"]]$discarded <- TRUE
+    # hiddenVariables(test.ds) <- "mymrset" # Defer implementing MR as.vector
     test_that("setup", {
         expect_identical(dim(test.ds), c(nrow(test.ds), ncol(test.ds)))
         expect_identical(dim(test.ds), c(25L, 4L))
@@ -68,9 +68,8 @@ if (run.integration.tests) {
                 expect_true(is.factor(as.vector(ds$v4)))
                 expect_equivalent(as.vector(ds$v4), df$v4)
                 
-                expect_true(inherits(as.vector(ds$v5), "POSIXt"))
-                expect_equivalent(as.vector(ds$v5),
-                    as.POSIXct(as.character(df$v5)))
+                expect_true(inherits(as.vector(ds$v5), "Date"))
+                expect_equivalent(as.vector(ds$v5), df$v5)
             })
         
             test_that("as.data.frame with API", {
