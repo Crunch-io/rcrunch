@@ -11,7 +11,7 @@ with(fake.HTTP, {
     
     varcat <- VariableCatalog(varblob)
     varorder <- do.call(VariableOrder,
-        GET("api/datasets/dataset1/hierarchical.json")$groups)
+        GET("api/datasets/dataset1/variables/hierarchical.json")$groups)
         ## this seems wrong, shouldn't select "groups" out, should inherit from
         ## ShojiObject
     

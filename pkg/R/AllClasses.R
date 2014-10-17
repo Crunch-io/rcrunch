@@ -23,6 +23,10 @@ ShojiCatalog <- setClass("ShojiCatalog", contains="ShojiObject",
     representation(
         index="list"
     ))
+ShojiOrder <- setClass("ShojiOrder", contains="ShojiObject",
+    representation(
+        value="list"
+    ))
 
 IndexTuple <- setClass("IndexTuple", 
     representation(
@@ -94,7 +98,7 @@ setClassUnion("characterOrList", c("character", "list"))
 ##' combination of variable URLs and VariableGroup objects.
 ##' @rdname VariableOrder
 ##' @export VariableOrder
-VariableOrder <- setClass("VariableOrder", contains="list")
+VariableOrder <- setClass("VariableOrder", contains="ShojiOrder")
 
 ##' @rdname VariableOrder
 ##' @export VariableGroup

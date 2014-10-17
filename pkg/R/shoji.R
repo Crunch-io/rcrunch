@@ -30,6 +30,11 @@ is.shoji.like <- function (x) {
     is.list(x) && "element" %in% names(x) && substr(as.character(x$element), 1, 5) == "shoji"
 }
 
+is.shoji.order.like <- function (x) {
+    ## Hack. But anticipating Order becoming not a shoji:view
+    is.shoji.like(x) && x$element == "shoji:view" && identical(names(x$value), "groups")
+}
+
 ##' @export
 ##' @importFrom methods is
 is.shoji <- function (x) inherits(x, "shoji")

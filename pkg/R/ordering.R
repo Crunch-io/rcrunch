@@ -7,7 +7,8 @@
 ##'
 ##' @param x a VariableCatalog or CrunchDataset
 ##' @param value a valid VariableOrder object
-##' @return \code{ordering} returns a VariableOrder object, while \code{ordering<-} sets the VariableOrder in \code{value} on \code{x}
+##' @return \code{ordering} returns a VariableOrder object, while
+##' \code{ordering<-} sets the VariableOrder in \code{value} on \code{x}
 ##' @rdname ordering
 ##' @export
 setMethod("ordering", "CrunchDataset", function (x) ordering(variables(x)))
@@ -15,7 +16,7 @@ setMethod("ordering", "CrunchDataset", function (x) ordering(variables(x)))
 ##' @rdname ordering
 ##' @export
 setMethod("ordering<-", "CrunchDataset", function (x, value) {
-    ordering(variables(x)) <- value
+    ordering(allVariables(x)) <- value
     return(x)
 })
 
@@ -27,8 +28,17 @@ setMethod("ordering", "VariableCatalog", function (x) x@order)
 ##' @export
 setMethod("ordering<-", "VariableCatalog", function (x, value) {
     stopifnot(inherits(value, "VariableOrder"))
-    PUT(x@views$hierarchical_order, body=toJSON(list(groups=value)))
-    x@order <- do.call(VariableOrder,
-        GET(x@views$hierarchical_order)$groups)
+    ## Validate.
+    new.entities <- entities(value)
+    bad.entities <- setdiff(new.entities, urls(x))
+    if (length(bad.entities)) {
+        halt("Variable URL", ifelse(length(bad.entities) > 1, "s", ""),
+            " referenced in Order not present in catalog: ", 
+            serialPaste(bad.entities))
+    }
+    
+    PUT(x@views$hierarchical_order, body=toJSON(value))
+    x@order <- VariableOrder(GET(x@views$hierarchical_order))
+
     return(x)
 })

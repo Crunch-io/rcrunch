@@ -1,49 +1,58 @@
 init.VariableOrder <- function (.Object, ...) {
-    .Object@.Data <- lapply(list(...), function (x) {
+    vg <- function (x, u) {
         if (inherits(x, "VariableGroup")) return(x)
-        do.call(VariableGroup, x)
-    })
+        do.call(VariableGroup, c(x, url.base=u))
+    }
+    .Object <- callNextMethod(.Object, ...)
+    dots <- list(...)
+    if (length(dots) && !is.shoji(dots[[1]])) {
+        .Object@value$groups <- lapply(dots, vg, u=NULL)
+    } else {
+        .Object@value$groups <- lapply(.Object@value$groups, vg, u=.Object@self)
+    }
     return(.Object)
 }
 setMethod("initialize", "VariableOrder", init.VariableOrder)
 
-.initEntities <- function (x) {
+.initEntities <- function (x, url.base=NULL) {
     if (is.list(x)) {
         raw.groups <- vapply(x, 
             function (a) {
                 is.list(a) && setequal(c("group", "entities"), names(a))
             }, logical(1))
         x[raw.groups] <- lapply(x[raw.groups], 
-            function (a) do.call(VariableGroup, a))
+            function (a) do.call(VariableGroup, c(a, url.base=url.base)))
         nested.groups <- vapply(x, 
             function (a) inherits(a, "VariableGroup"), logical(1))
         if (any(nested.groups)) {
-            x[!nested.groups] <- lapply(x[!nested.groups], .initEntities)
+            x[!nested.groups] <- lapply(x[!nested.groups], .initEntities, url.base=url.base)
         } else {
-            x <- vapply(x, .initEntities, character(1), USE.NAMES=FALSE)
+            x <- vapply(x, .initEntities, character(1), USE.NAMES=FALSE, url.base=url.base)
         }
     } else if (is.dataset(x)) {
         x <- urls(allVariables(x))
     } else if (is.variable(x)) {
         x <- self(x)
     } else if (!(is.character(x) || inherits(x, "VariableGroup"))) {
+        print(x)
         halt("")
     }
+    if (!is.null(url.base)) x <- absolutizeURLs(x, url.base)
     return(x)
 }
 
-init.VariableGroup <- function (.Object, group, entities, ...) {
+init.VariableGroup <- function (.Object, group, entities, url.base=NULL, ...) {
     dots <- list(...)
     if ("variables" %in% names(dots)) entities <- dots$variables
     if ("name" %in% names(dots)) group <- dots$name
     .Object@group <- group
-    .Object@entities <- .initEntities(entities)
+    .Object@entities <- .initEntities(entities, url.base)
     return(.Object)
 }
 setMethod("initialize", "VariableGroup", init.VariableGroup)
 
-setMethod("toJSON", "VariableOrder", function (x, ...) toJSON(x@.Data, ...))
-    ## need that toJSON method so that names don't get assigned bc of the names() method
+setMethod("toJSON", "VariableOrder",
+    function (x, ...) toJSON(x@value, ...))
 
 .jsonprep.vargroup <- function (x) {
     ents <- x@entities
@@ -62,8 +71,14 @@ setMethod("toJSON", "VariableGroup", function (x, ...) {
 })
 
 ##' @export
+as.list.VariableOrder <- function (x, ...) x@value$groups
+
+##' @export
+setMethod("length", "VariableOrder", function (x) length(x@value$groups))
+
+##' @export
 setMethod("[", c("VariableOrder", "ANY"), function (x, i, ..., drop=FALSE) {
-    x@.Data <- x@.Data[i]
+    x@value$groups <- x@value$groups[i]
     return(x)
 })
 ##' @export
@@ -73,6 +88,45 @@ setMethod("[", c("VariableOrder", "character"), function (x, i, ..., drop=FALSE)
         halt("Undefined groups selected: ", serialPaste(i[is.na(w)]))
     }
     callNextMethod(x, w, ..., drop=drop)
+})
+
+setMethod("[[", c("VariableOrder", "ANY"), function (x, i, ..., drop=FALSE) {
+    x@value$groups[[i]]
+})
+
+setMethod("[<-", c("VariableOrder", "character", "missing", "VariableOrder"), 
+    function (x, i, j, value) {
+        w <- match(i, names(x))
+        if (any(is.na(w))) {
+            halt("Undefined groups selected: ", serialPaste(i[is.na(w)]))
+        }
+        callNextMethod(x, w, value=value)
+    })
+setMethod("[<-", c("VariableOrder", "ANY", "missing", "VariableOrder"), 
+   function (x, i, j, value) {
+       x@value$groups[i] <- value@value$groups
+       return(x)
+   })
+setMethod("[[<-", c("VariableOrder", "character", "missing", "VariableGroup"), 
+    function (x, i, j, value) {
+        w <- match(i, names(x))
+        if (any(is.na(w))) {
+            halt("Undefined group selected: ", serialPaste(i[is.na(w)]))
+        }
+        callNextMethod(x, w, value=value)
+    })
+setMethod("[[<-", c("VariableOrder", "ANY", "missing", "VariableGroup"), 
+   function (x, i, j, value) {
+       x@value$groups[[i]] <- value
+       return(x)
+   })
+
+##' @export
+setMethod("$", "VariableOrder", function (x, name) x[[name]])
+##' @export
+setMethod("$<-", "VariableOrder", function (x, name, value) {
+    x[[name]] <- value
+    return(x)
 })
 
 ##' @export

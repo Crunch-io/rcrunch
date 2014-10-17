@@ -2,7 +2,7 @@ context("API calling")
 
 test_that("crunchConfig has right structure", {
     expect_identical(httr:::default_config()$encoding, "gzip")
-    expect_identical(httr:::default_config()$sslversion, 3L)
+    expect_identical(httr:::default_config()$sslversion, "SSLVERSION_TLSv1_2")
 })
 
 test_that("crunchUserAgent", {

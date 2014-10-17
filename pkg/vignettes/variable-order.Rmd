@@ -1,0 +1,29 @@
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Variable Order}
+-->
+
+```{r, results='hide', echo=FALSE, message=FALSE}
+library(rcrunch)
+load("variable-order.RData")
+```
+
+# Variable Order and Organization
+
+In the web application, variables in a dataset are displayed in a list on the left side of the screen.
+
+<!-- screenshot -->
+
+Typically, when you import a dataset, the variable list is flat, but it can be organized into an accordion-like hierarchy. The "tag editor" in the GUI allows you to perform this organization visually, but you can also manage this metadata from `rcrunch`.
+
+## Viewing the order
+
+Picking up with the dataset we used in the Array Variables vignette, we can fetch the `ordering` property of the dataset to view the current organization:
+
+```{r, eval=FALSE}
+ordering(ds)
+```
+```{r, echo=FALSE}
+ordering(start)
+```
+

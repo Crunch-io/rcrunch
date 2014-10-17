@@ -89,6 +89,17 @@ test_that("encoding", {
     expect_identical(s2, s)
 })
 
+test_that("joinPath", {
+    expect_identical(joinPath("api/datasets/", "../variables/"),
+        "api/variables/")
+    expect_identical(joinPath("api/variables/", "4412es.json"),
+        "api/variables/4412es.json")
+    expect_identical(joinPath("a/b/c/d/../e/f/", "g/../../h/"),
+        "a/b/c/e/h/")
+    expect_identical(joinPath("api/datasets/", "/variables/"),
+        "/variables/")
+})
+
 if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {

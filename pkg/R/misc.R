@@ -92,6 +92,58 @@ serialPaste <- function (x, collapse="and") {
 
 now <- function () strftime(Sys.time(), usetz=TRUE)
 
+##' @importFrom httr parse_url build_url
+absolutizeURLs <- function (urls, base) {
+    ## Detect if we have relative urls, and then concatenate if so
+    if (length(urls) && ## if there is anything to munge
+        !any(substr(urls, 1, 4) == "http") && ## the urls don't start with http
+        substr(base, nchar(base), nchar(base)) == "/") { ## because of test mock
+            # urls <- paste0(base, urls)
+            base.url <- parse_url(base)
+            urls <- vapply(urls, function (x, b) {
+                b$path <- joinPath(b$path, x)
+                if (is.null(b$scheme)) return(b$path) ## If file path and not URL
+                return(build_url(b))
+            }, character(1), b=base.url, USE.NAMES=FALSE)
+        }
+    return(urls)
+}
+
+joinPath <- function (base.path, relative.part) {
+    first.char <- substr(relative.part, 1, 1)
+    if (first.char == "/") {
+        ## This is absolute, relative to the host
+        return(relative.part)
+    } 
+    u <- c(strsplit(base.path, "/")[[1]], strsplit(relative.part, "/")[[1]])
+    if (any(u == "..")) {
+        ## If we're here, we must have some normalization to do
+        i <- 1
+        n <- length(u)
+        while (i <= n) {
+            if (u[i] == "..") {
+                ## Remove i and the one before it, and roll the counter back
+                u <- u[-c(i-1, i)]
+                n <- n - 2
+                i <- i - 1
+            } else {
+                i <- i + 1
+            }
+        }
+    
+        out <- paste(u, collapse="/")
+        last.char <- substr(relative.part, nchar(relative.part),
+            nchar(relative.part))
+        if (last.char == "/") {
+            out <- paste0(out, "/")
+        }
+        return(out)
+    } else {
+        ## Assume this requires no path normalization
+        return(paste0(base.path, relative.part))
+    }
+}
+
 ## Borrowed from Hadley
 "%||%" <- function (a, b) if (!is.null(a)) a else b
 
