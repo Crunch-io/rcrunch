@@ -1,0 +1,29 @@
+{
+    "element": "shoji:view",
+    "self": "api/datasets/dataset1/variables/hierarchical/",
+    "description": "Hierarchical ordering of dataset variables",
+    "value": {
+        "groups": [
+            {
+                "entities": [
+                    "../birthyr.json",
+                    {
+                        "entities": [
+                            "../gender.json",
+                            "../mymrset.json"
+                        ],
+                        "group": "Nested"
+                    },
+                    "../textVar.json"
+                ],
+                "group": "Group 1"
+            },
+            {
+                "entities": [
+                    "../starttime.json"
+                ],
+                "group": "Group 2"
+            }
+        ]
+    }
+}
