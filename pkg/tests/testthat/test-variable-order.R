@@ -13,6 +13,7 @@ test_that("VariableGroup and Order objects can be made", {
 
 with(fake.HTTP, {
     test.ds <- loadDataset("test ds")
+    varcat <- allVariables(test.ds)
     
     test_that("ordering methods on variables catalog", {
         expect_true(inherits(ordering(variables(test.ds)), "VariableOrder"))
@@ -21,31 +22,40 @@ with(fake.HTTP, {
     })
     
     test_that("relative URLs in hierarchical order", {
-        varcat <- allVariables(test.ds)
-        varcat@views$hierarchical_order <- sub("hierarchical",
-            "relative-hierarchical", varcat@views$hierarchical_order)
-        expect_identical(varcat@order@value,
-            VariableOrder(GET(varcat@views$hierarchical_order))@value)
+        vc <- varcat
+        vc@views$hierarchical_order <- sub("hierarchical",
+            "relative-hierarchical", vc@views$hierarchical_order)
+        expect_identical(vc@order@value,
+            VariableOrder(GET(vc@views$hierarchical_order))@value)
     })
     
     test.ord <- ordering(test.ds)
     ents <- entities(test.ord)
-    test_that("can create nested groups", {
-        ord <- try(VariableOrder(
-            VariableGroup(name="Group 1", entities=list(ents[1], 
-                VariableGroup(name="Nested", entities=ents[2:3]),
-                ents[4])),
-            VariableGroup(name="Group 2", entities=ents[5])))
-        expect_true(inherits(ord, "VariableOrder"))
-        expect_identical(entities(ord), ents)
-        
-        varcat <- allVariables(test.ds)
-        varcat@views$hierarchical_order <- sub("hierarchical",
-            "nested-hierarchical", varcat@views$hierarchical_order)
-        expect_identical(ord@value,
-            VariableOrder(GET(varcat@views$hierarchical_order))@value)
-            
-        vglist <- fromJSON(toJSON(ord))
+    nested.ord <- try(VariableOrder(
+        VariableGroup(name="Group 1", entities=list(ents[1], 
+            VariableGroup(name="Nested", entities=ents[2:3]),
+            ents[4])),
+        VariableGroup(name="Group 2", entities=ents[5])))
+    test_that("Can create nested groups", {
+        expect_true(inherits(nested.ord, "VariableOrder"))
+        expect_identical(entities(nested.ord), ents)
+    })
+    test_that("Can read nested groups from the API", {
+        vc <- varcat
+        vc@views$hierarchical_order <- sub("hierarchical",
+            "nested-hierarchical", vc@views$hierarchical_order)
+        expect_identical(nested.ord@value,
+            VariableOrder(GET(vc@views$hierarchical_order))@value)
+    })
+    test_that("Nested groups can also have relative urls", {
+        vc <- varcat
+        vc@views$hierarchical_order <- sub("hierarchical",
+            "relative-and-nested-hierarchical", vc@views$hierarchical_order)
+        expect_identical(nested.ord@value,
+            VariableOrder(GET(vc@views$hierarchical_order))@value)
+    })
+    test_that("Nested groups can serialize and deserialize", {
+        vglist <- fromJSON(toJSON(nested.ord))
         expect_identical(vglist, list(groups=list(
             list(
                 group="Group 1",

@@ -73,7 +73,17 @@ crunchAuth <- function (email, password=NULL, ...) {
     }
     if (is.null(password)) {
         if (interactive()) {
-            password <- readline(paste0("Crunch.io password for ", email, ": "))
+            cat(paste0("Crunch.io password for ", email, ": "))
+            unix.alike <- .Platform$OS.type == "unix"
+            if (unix.alike) {
+                ## Don't print the password being typed
+                system("stty -echo")
+            }
+            password <- readline()
+            if (unix.alike) {
+                system("stty echo")
+                cat("\n")
+            }
         } else {
             halt("Must supply a password")
         }

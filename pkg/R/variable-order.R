@@ -37,7 +37,7 @@ setMethod("initialize", "VariableOrder", init.VariableOrder)
         print(x)
         halt("")
     }
-    if (!is.null(url.base)) x <- absolutizeURLs(x, url.base)
+    if (!is.null(url.base) && is.character(x)) x <- absolutizeURLs(x, url.base)
     return(x)
 }
 

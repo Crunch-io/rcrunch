@@ -10,10 +10,8 @@ with(fake.HTTP, {
     })
     
     varcat <- VariableCatalog(varblob)
-    varorder <- do.call(VariableOrder,
-        GET("api/datasets/dataset1/variables/hierarchical.json")$groups)
-        ## this seems wrong, shouldn't select "groups" out, should inherit from
-        ## ShojiObject
+    order.url <- "api/datasets/dataset1/variables/hierarchical.json"
+    varorder <- VariableOrder(GET(order.url))
     
     test_that("VariableCatalog index method", {
         expect_identical(names(index(varcat)), names(varcat@index))
