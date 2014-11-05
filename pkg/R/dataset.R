@@ -9,7 +9,16 @@ init.CrunchDataset <- function (.Object, ...) {
 setMethod("initialize", "CrunchDataset", init.CrunchDataset)
 
 getDatasetVariables <- function (x) {
-    return(VariableCatalog(GET(x@urls$variables_url)))
+    varcat_url <- x@urls$variables_url
+    if (substr(varcat_url, nchar(varcat_url), nchar(varcat_url)) == "/") {
+        ## To work around test fixtures
+        ## Add query params
+        print("here")
+        return(VariableCatalog(GET(varcat_url, 
+            query=list(relative="on", nosubvars=1))))
+    } else {
+        return(VariableCatalog(GET(varcat_url)))
+    }
 }
 
 getNrow <- function (dataset, filtered=TRUE) {
