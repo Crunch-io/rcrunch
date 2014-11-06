@@ -4,7 +4,7 @@ doc:
 
 test:
 	R CMD INSTALL --install-tests pkg
-	R --slave -e 'library(testthat); setwd("pkg/tests"); system.time(test_check("rcrunch", filter="${file}"))'
+	R --slave -e 'library(testthat); setwd("pkg/tests"); system.time(test_check("rcrunch", filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
 
 test-ci:
 	R --slave -e 'install.packages(c("httr", "RJSONIO", "codetools", "testthat"), repo="http://cran.at.r-project.org", lib=Sys.getenv("R_LIB"))'
