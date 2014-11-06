@@ -1,6 +1,6 @@
 {
     "element": "shoji:entity",
-    "self": "api/users/user1.json",
+    "self": "/api/users/user1.json",
     "description": "Detail for a given user",
     "body": {
         "id": "00002",
@@ -11,7 +11,7 @@
         "preferences": {}
     },
     "urls": {
-        "datasets_url": "api/datasets.json"
+        "datasets_url": "/api/datasets.json"
     },
     "some_other_key": {}
 }

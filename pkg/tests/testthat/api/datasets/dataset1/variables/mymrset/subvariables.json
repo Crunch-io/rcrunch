@@ -1,10 +1,10 @@
 {
     "element": "shoji:catalog",
-    "self": "api/datasets/dataset1/variables/mymrset/subvariables.json",
+    "self": "/api/datasets/dataset1/variables/mymrset/subvariables.json",
     "specification": "https://alpha.crunch.io/api/specifications/variables/",
     "description": "List of Subvariables of this Variable",
     "index": {
-        "api/datasets/dataset1/variables/subvar1.json": {
+        "/api/datasets/dataset1/variables/subvar1.json": {
             "name": "Second",
             "discarded": false,
             "alias": "subvar1",
@@ -12,7 +12,7 @@
             "id": "subvar1",
             "description": null
         },
-        "api/datasets/dataset1/variables/subvar2.json": {
+        "/api/datasets/dataset1/variables/subvar2.json": {
             "name": "First",
             "discarded": false,
             "alias": "subvar2",
@@ -20,7 +20,7 @@
             "id": "gender",
             "description": null
         },
-        "api/datasets/dataset1/variables/subvar3.json": {
+        "/api/datasets/dataset1/variables/subvar3.json": {
             "name": "Last",
             "discarded": false,
             "alias": "subvar3",

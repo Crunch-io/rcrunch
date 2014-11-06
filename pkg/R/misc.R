@@ -96,13 +96,12 @@ now <- function () strftime(Sys.time(), usetz=TRUE)
 absolutizeURLs <- function (urls, base) {
     ## Detect if we have relative urls, and then concatenate if so
     if (length(urls) && ## if there is anything to munge
-        !any(substr(urls, 1, 4) == "http") && ## the urls don't start with http
-        substr(base, nchar(base), nchar(base)) == "/") { ## because of test mock
-            # urls <- paste0(base, urls)
+        !any(substr(urls, 1, 4) == "http")) { ## the urls don't start with http
             base.url <- parse_url(base)
             urls <- vapply(urls, function (x, b) {
                 b$path <- joinPath(b$path, x)
                 if (is.null(b$scheme)) return(b$path) ## If file path and not URL
+                b$query <- NULL ## Catalog query params aren't valid for entities
                 return(build_url(b))
             }, character(1), b=base.url, USE.NAMES=FALSE)
         }

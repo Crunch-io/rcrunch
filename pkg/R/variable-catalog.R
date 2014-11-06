@@ -1,6 +1,7 @@
 init.VariableCatalog <- function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     # print(.Object)
+    # print(names(.Object@index))
     .Object@index <- lapply(.Object@index, function (x, b) {
         for (i in c("subvariables", "subvariables_catalog")) {
             if (!is.null(x[[i]])) {
@@ -14,6 +15,7 @@ init.VariableCatalog <- function (.Object, ...) {
     if (!is.null(h_url)) {
         .Object@order <- VariableOrder(GET(h_url))
     }
+    # print(names(.Object@index))
     return(.Object)
 }
 setMethod("initialize", "VariableCatalog", init.VariableCatalog)

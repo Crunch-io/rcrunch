@@ -37,6 +37,9 @@ with.SUTD <- function (data, expr, ...) {
 ## note that this works because testthat evals within package namespace
 addFakeHTTPVerbs <- function () {
     http_verbs$GET <- function (url, ...) {
+        url <- unlist(strsplit(url, "?", fixed=TRUE))[1] ## remove query params
+        url <- sub("\\/$", ".json", url)
+        url <- sub("^\\/", "", url) ## relative to cwd
         handleShoji(fromJSON(url, simplifyWithNames=FALSE))
     }
     http_verbs$PUT <- function (url, body, ...) {
@@ -51,7 +54,7 @@ addFakeHTTPVerbs <- function () {
     http_verbs$DELETE <- function (...) function (url, ...) {
         stop("DELETE ", url, call.=FALSE)
     }
-    session_store$urls <- list(datasets_url="api/datasets.json")
+    session_store$urls <- list(datasets_url="/api/datasets.json")
     session_store$cookie <- 12345 ## so it thinks we're authenticated
     try(updateDatasetList())
 }

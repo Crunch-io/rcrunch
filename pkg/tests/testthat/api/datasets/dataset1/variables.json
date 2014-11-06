@@ -1,10 +1,10 @@
 {
     "element": "shoji:catalog",
-    "self": "api/datasets/dataset1/variables.json",
-    "specification": "https://alpha.crunch.io/api/specifications/variables/",
+    "self": "/api/datasets/dataset1/variables.json",
+    "specification": "/api/specifications/variables/",
     "description": "List of Variables of this dataset",
     "index": {
-        "api/datasets/dataset1/variables/gender.json": {
+        "/api/datasets/dataset1/variables/gender.json": {
             "name": "Gender",
             "discarded": false,
             "alias": "gender",
@@ -12,7 +12,7 @@
             "id": "gender",
             "description": "Gender"
         },
-        "api/datasets/dataset1/variables/birthyr.json": {
+        "/api/datasets/dataset1/variables/birthyr.json": {
             "name": "Birth Year",
             "discarded": false,
             "alias": "birthyr",
@@ -20,7 +20,7 @@
             "id": "birthyr",
             "description": null
         },
-        "api/datasets/dataset1/variables/starttime.json": {
+        "/api/datasets/dataset1/variables/starttime.json": {
             "name": "starttime",
             "discarded": false,
             "alias": "starttime",
@@ -28,7 +28,7 @@
             "id": "starttime",
             "description": "Interview Start Time"
         },
-        "api/datasets/dataset1/variables/mymrset.json": {
+        "/api/datasets/dataset1/variables/mymrset.json": {
             "name": "mymrset",
             "discarded": false,
             "alias": "mymrset", 
@@ -36,13 +36,13 @@
             "id": "mymrset",
             "description": "My multiple response set",
             "subvariables": [
-                "api/datasets/dataset1/variables/subvar2.json",
-                "api/datasets/dataset1/variables/subvar1.json",
-                "api/datasets/dataset1/variables/subvar3.json"
+                "/api/datasets/dataset1/variables/subvar2.json",
+                "/api/datasets/dataset1/variables/subvar1.json",
+                "/api/datasets/dataset1/variables/subvar3.json"
             ],
-            "subvariables_catalog": "api/datasets/dataset1/variables/mymrset/subvariables.json"
+            "subvariables_catalog": "/api/datasets/dataset1/variables/mymrset/subvariables.json"
         },
-        "api/datasets/dataset1/variables/textVar.json": {
+        "/api/datasets/dataset1/variables/textVar.json": {
             "name": "Text variable ftw",
             "discarded": false,
             "alias": "textVar",
@@ -52,6 +52,6 @@
         }
     },
     "views": {
-        "hierarchical_order": "api/datasets/dataset1/variables/hierarchical.json"
+        "hierarchical_order": "/api/datasets/dataset1/variables/hierarchical.json"
     }
 }

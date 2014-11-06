@@ -2,7 +2,7 @@ context("User stuff")
 
 with(fake.HTTP, {
     test_that("Getting user object", {
-        user <- getUser("api/users/user1.json")
+        user <- getUser("/api/users/user1.json")
         expect_true(inherits(user, "ShojiObject"))
         expect_identical(user@body$email, "fake.user@example.com")
     })

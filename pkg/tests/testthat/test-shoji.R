@@ -14,7 +14,8 @@ test_that("ShojiObject init and is", {
     fo <- list(element=1, self=2, description=3)
     class(fo) <- "shoji"
     expect_false(is.shojiObject(fo))
-    expect_true(is.shojiObject(ShojiObject(element=1, self=2, description=3, foo=4, junk=5)))
+    expect_true(is.shojiObject(ShojiObject(element=1, self=2, description=3,
+        foo=4, junk=5)))
     sh <- ShojiObject(element=1, self=2, description=3, foo=4, junk=5,
         body=list(a=12, f=66))
     expect_identical(sh@self, 2)
@@ -24,11 +25,12 @@ test_that("shoji S3 to ShojiObject", {
     fo <- list(element=1, self=2, description=3)
     class(fo) <- "shoji"
     expect_true(is.shojiObject(as.shojiObject(fo)))
-    expect_true(is.shojiObject(as.shojiObject(structure(list(element=1, self=2, description=3, foo=4, junk=5), class="shoji"))))
+    expect_true(is.shojiObject(as.shojiObject(structure(list(element=1, self=2,
+        description=3, foo=4, junk=5), class="shoji"))))
 })
 
 test_that("ShojiCatalog", {
-    fo <- list(element=1, self=2, description=3, index=list(a=4, b=5))
+    fo <- list(element=1, self=2, description=3, index=list(`/a`=4, `/b`=5))
     class(fo) <- "shoji"
     sho <- as.shojiObject(fo)
     expect_false(is.shojiCatalog(sho))
@@ -43,13 +45,13 @@ test_that("ShojiCatalog", {
     expect_error(sho[c(TRUE, FALSE, TRUE)], 
         "Subscript out of bounds: got 3 logicals, need 2")
     expect_identical(sho[TRUE], sho)
-    expect_identical(sho["a"], sho[1])
-    expect_error(sho[c("a", "c")], "Undefined elements selected: c")
+    expect_identical(sho["/a"], sho[1])
+    expect_error(sho[c("/a", "c")], "Undefined elements selected: c")
 })
 
 with(fake.HTTP, {
-    full.urls <- DatasetCatalog(GET("api/datasets.json"))
-    rel.urls <- DatasetCatalog(GET("api/datasets-relative-urls.json"))
+    full.urls <- DatasetCatalog(GET("/api/datasets.json"))
+    rel.urls <- DatasetCatalog(GET("/api/datasets-relative-urls.json"))
     expect_identical(urls(full.urls), urls(rel.urls))
 })
 

@@ -9,11 +9,11 @@ with(fake.HTTP, {
     
     test_that("Dataset VariableCatalog index is sorted", {
         expect_identical(urls(allVariables(test.ds)), 
-            c("api/datasets/dataset1/variables/birthyr.json",
-            "api/datasets/dataset1/variables/gender.json",
-            "api/datasets/dataset1/variables/mymrset.json",
-            "api/datasets/dataset1/variables/starttime.json",
-            "api/datasets/dataset1/variables/textVar.json"))
+            c("/api/datasets/dataset1/variables/birthyr.json",
+            "/api/datasets/dataset1/variables/gender.json",
+            "/api/datasets/dataset1/variables/mymrset.json",
+            "/api/datasets/dataset1/variables/starttime.json",
+            "/api/datasets/dataset1/variables/textVar.json"))
     })
 
     test_that("findVariables", {
@@ -35,11 +35,11 @@ with(fake.HTTP, {
     })
 
     test_that("useAlias is an argument to as.dataset", {
-        expect_equal(as.dataset(GET("api/datasets/dataset1.json"),
-            tuple=datasetCatalog()[["api/datasets/dataset1.json"]])@useAlias,
+        expect_equal(as.dataset(GET("/api/datasets/dataset1.json"),
+            tuple=datasetCatalog()[["/api/datasets/dataset1.json"]])@useAlias,
             default.useAlias())
-        expect_false(as.dataset(GET("api/datasets/dataset1.json"),
-            tuple=datasetCatalog()[["api/datasets/dataset1.json"]],
+        expect_false(as.dataset(GET("/api/datasets/dataset1.json"),
+            tuple=datasetCatalog()[["/api/datasets/dataset1.json"]],
             useAlias=FALSE)@useAlias)
     })
 

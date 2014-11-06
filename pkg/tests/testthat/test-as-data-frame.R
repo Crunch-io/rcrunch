@@ -3,7 +3,7 @@ context("Getting values to make local R objects")
 
 with(fake.HTTP, {
     test.ds <- loadDataset("test ds")
-    test.ds@variables@index[["api/datasets/dataset1/variables/mymrset.json"]]$discarded <- TRUE
+    test.ds@variables@index[["/api/datasets/dataset1/variables/mymrset.json"]]$discarded <- TRUE
     # hiddenVariables(test.ds) <- "mymrset" # Defer implementing MR as.vector
     test_that("setup", {
         expect_identical(dim(test.ds), c(nrow(test.ds), ncol(test.ds)))

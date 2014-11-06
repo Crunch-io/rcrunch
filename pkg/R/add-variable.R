@@ -11,6 +11,7 @@ addVariable <- function (dataset, values, ...) {
     var_url <- POSTNewVariable(dataset@urls$variables_url, 
         toVariable(values, ...))
     dataset <- refresh(dataset) ## would like not to do this
+    # print(var_url %in% urls(variables(dataset)))
     # variable <- as.variable(GET(var_url))
     # dataset@.Data[[variable@body$alias]] <- variable
     invisible(dataset)

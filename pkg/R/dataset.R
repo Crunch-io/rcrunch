@@ -10,14 +10,9 @@ setMethod("initialize", "CrunchDataset", init.CrunchDataset)
 
 getDatasetVariables <- function (x) {
     varcat_url <- x@urls$variables_url
-    if (substr(varcat_url, nchar(varcat_url), nchar(varcat_url)) == "/") {
-        ## To work around test fixtures
-        ## Add query params
-        return(VariableCatalog(GET(varcat_url,#)))#, 
-            query=list(relative="on"))))#, nosubvars=1))))
-    } else {
-        return(VariableCatalog(GET(varcat_url)))
-    }
+    ## Add query params
+    return(VariableCatalog(GET(varcat_url, 
+        query=list(nosubvars=1, relative="on"))))
 }
 
 getNrow <- function (dataset, filtered=TRUE) {

@@ -1,7 +1,7 @@
 context("Variable catalog")
 
 with(fake.HTTP, {
-    variables.catalog.url <- "api/datasets/dataset1/variables.json"
+    variables.catalog.url <- "/api/datasets/dataset1/variables.json"
     varblob <- GET(variables.catalog.url)
     
     test_that("VariableCatalog instantiates from Shoji", {
@@ -10,7 +10,7 @@ with(fake.HTTP, {
     })
     
     varcat <- VariableCatalog(varblob)
-    order.url <- "api/datasets/dataset1/variables/hierarchical.json"
+    order.url <- "/api/datasets/dataset1/variables/hierarchical.json"
     varorder <- VariableOrder(GET(order.url))
     
     test_that("VariableCatalog index method", {
@@ -19,7 +19,7 @@ with(fake.HTTP, {
     })
     
     test_that("VariableCatalog has the right contents", {
-        expect_true(all(grepl("api/datasets/dataset1/variables",
+        expect_true(all(grepl("/api/datasets/dataset1/variables",
             urls(varcat))))
         expect_identical(self(varcat), variables.catalog.url)
         expect_identical(ordering(varcat), varorder)
@@ -33,19 +33,19 @@ with(fake.HTTP, {
         expect_true(inherits(active(varcat), "VariableCatalog"))
         expect_true(inherits(hidden(varcat), "VariableCatalog"))
         expect_identical(urls(active(varcat)), 
-            c("api/datasets/dataset1/variables/gender.json",
-            "api/datasets/dataset1/variables/mymrset.json",
-            "api/datasets/dataset1/variables/textVar.json",
-            "api/datasets/dataset1/variables/starttime.json"))
+            c("/api/datasets/dataset1/variables/gender.json",
+            "/api/datasets/dataset1/variables/mymrset.json",
+            "/api/datasets/dataset1/variables/textVar.json",
+            "/api/datasets/dataset1/variables/starttime.json"))
         expect_identical(length(active(varcat)), 4L)
         expect_identical(urls(hidden(varcat)),
-            "api/datasets/dataset1/variables/birthyr.json")
+            "/api/datasets/dataset1/variables/birthyr.json")
         expect_identical(length(hidden(varcat)), 1L)
         expect_identical(length(varcat), 5L)
         expect_identical(active(hidden(varcat)), hidden(active(varcat)))
     })
     
-    gender.url <- "api/datasets/dataset1/variables/gender.json"
+    gender.url <- "/api/datasets/dataset1/variables/gender.json"
     test_that("Extract methods", {
         expect_true(inherits(varcat[[gender.url]], "VariableTuple"))
         expect_identical(varcat[[gender.url]]@body,
