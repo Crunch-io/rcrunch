@@ -38,11 +38,28 @@ addRealHTTPVerbs <- function () {
 makeHTTPStore()
 addRealHTTPVerbs()
 
-GET <- function (...) http_verbs$GET(...)
-PUT <- function (...) http_verbs$PUT(...)
-PATCH <- function (...) http_verbs$PATCH(...)
-POST <- function (...) http_verbs$POST(...)
-DELETE <- function (...) http_verbs$DELETE(...)
+##' HTTP methods for communicating with the Crunch API
+##'
+##' @param ... see \code{\link{crunchAPI}} for details. \code{url} is the first
+##' named argument and is required; \code{body} is also required for PUT, 
+##' PATCH, and POST. 
+##' @return Depends on the response status of the HTTP request and any custom
+##' handlers.
+##' @rdname http-methods
+##' @export
+crGET <- function (...) http_verbs$GET(...)
+##' @rdname http-methods
+##' @export
+crPUT <- function (...) http_verbs$PUT(...)
+##' @rdname http-methods
+##' @export
+crPATCH <- function (...) http_verbs$PATCH(...)
+##' @rdname http-methods
+##' @export
+crPOST <- function (...) http_verbs$POST(...)
+##' @rdname http-methods
+##' @export
+crDELETE <- function (...) http_verbs$DELETE(...)
 
 ##' Do the right thing with the HTTP response
 ##' @param response an httr response object
@@ -150,7 +167,7 @@ handleShoji <- function (x) {
 }
 
 getAPIroot <- function () {
-    GET(getOption("crunch.api"))
+    crGET(getOption("crunch.api"))
 }
 
 crunchAPIcanBeReached <- function () {

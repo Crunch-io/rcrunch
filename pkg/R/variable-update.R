@@ -5,7 +5,7 @@
     payload[["filter"]] <- zcl(filter)
     update_url <- paste0(datasetReference(variable), "table/")
     # cat(toJSON(payload))
-    invisible(POST(update_url, body=toJSON(payload)))
+    invisible(crPOST(update_url, body=toJSON(payload)))
 }
 
 .updatePayload <- function (variable, value) {
@@ -151,6 +151,6 @@ setMethod("is.na<-", "CrunchVariable", function (x, value) {
     value <- zcl(.dispatchFilter(value))
     payload <- structure(list(value), .Names=lab)
     # cat(toJSON(payload))
-    out <- POST(x@fragments$missing_rules, body=toJSON(payload))
+    out <- crPOST(x@fragments$missing_rules, body=toJSON(payload))
     return(x)
 })

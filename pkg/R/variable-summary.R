@@ -3,7 +3,7 @@ getSummary <- function (x) {
     if (is.null(url)) {
         halt("No summary available")
     }
-    out <- GET(url)
+    out <- crGET(url)
     ## Summaries don't return as shoji entities
     # if (!is.shoji(url)) {
     #     halt("Error in retrieving summary")
@@ -20,7 +20,7 @@ getFrequencies <- function (x) {
     if (is.null(url)) {
         halt("No frequencies available")
     }
-    url <- GET(url)
+    url <- crGET(url)
     return(url)
 }
 

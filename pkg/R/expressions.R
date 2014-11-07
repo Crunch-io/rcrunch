@@ -121,7 +121,7 @@ setMethod("as.vector", "CrunchExpression", function (x, mode) {
         payload[["filter"]] <- x@filter
     }
     # cat(toJSON(payload))
-    out <- POST(paste0(x@dataset_url, "table/"), body=toJSON(payload))
+    out <- crPOST(paste0(x@dataset_url, "table/"), body=toJSON(payload))
     ## pass in the variable metadata to the column parser
     variable <- as.variable(structure(list(body=out$metadata$out),
         class="shoji"))

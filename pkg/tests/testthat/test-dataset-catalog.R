@@ -2,7 +2,7 @@ context("Dataset catalog")
 
 with(fake.HTTP, {
     dataset.catalog.url <- "/api/datasets.json"
-    blob <- GET(dataset.catalog.url)
+    blob <- crGET(dataset.catalog.url)
     
     test_that("DatasetCatalog instantiates from Shoji", {
         expect_true(inherits(DatasetCatalog(blob),

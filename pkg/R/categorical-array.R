@@ -83,7 +83,7 @@ prepareBindInputs <- function (list_of_variables=NULL, dataset=NULL,
             variable_urls <- urls(allVariables(dataset))
         } else if (listOfVariablesIsValid(list_of_variables)) {
             ds_url <- datasetURLfromVariables(list_of_variables)
-            dataset <- as.dataset(GET(ds_url))
+            dataset <- as.dataset(crGET(ds_url))
             variable_urls <- vapply(list_of_variables,
                 function (x) self(x), character(1), USE.NAMES=FALSE)
         } else {
@@ -118,5 +118,5 @@ returnNewVariable <- function (variable_url, dataset) {
 
 POSTBindVariables <- function (catalog_url, variable_urls, ...) {
     payload <- list(variables=I(variable_urls), ...)
-    return(POST(catalog_url, body=toJSON(payload)))
+    return(crPOST(catalog_url, body=toJSON(payload)))
 }

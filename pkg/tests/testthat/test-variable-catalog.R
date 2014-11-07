@@ -2,7 +2,7 @@ context("Variable catalog")
 
 with(fake.HTTP, {
     variables.catalog.url <- "/api/datasets/dataset1/variables.json"
-    varblob <- GET(variables.catalog.url)
+    varblob <- crGET(variables.catalog.url)
     
     test_that("VariableCatalog instantiates from Shoji", {
         expect_true(inherits(VariableCatalog(varblob),
@@ -11,7 +11,7 @@ with(fake.HTTP, {
     
     varcat <- VariableCatalog(varblob)
     order.url <- "/api/datasets/dataset1/variables/hierarchical.json"
-    varorder <- VariableOrder(GET(order.url))
+    varorder <- VariableOrder(crGET(order.url))
     
     test_that("VariableCatalog index method", {
         expect_identical(names(index(varcat)), names(varcat@index))

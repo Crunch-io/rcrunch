@@ -16,7 +16,7 @@ the file name}
 variable names when the dataset is returned. Default is TRUE, meaning alias.
 They're more computer friendly.}
 
-\item{...}{additional arguments, currently not implemented}
+\item{...}{additional arguments passed to \code{ \link{createDataset}}}
 }
 \value{
 If successful, an object of class crunchdf.

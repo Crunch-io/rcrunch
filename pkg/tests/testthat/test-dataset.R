@@ -35,10 +35,10 @@ with(fake.HTTP, {
     })
 
     test_that("useAlias is an argument to as.dataset", {
-        expect_equal(as.dataset(GET("/api/datasets/dataset1.json"),
+        expect_equal(as.dataset(crGET("/api/datasets/dataset1.json"),
             tuple=datasetCatalog()[["/api/datasets/dataset1.json"]])@useAlias,
             default.useAlias())
-        expect_false(as.dataset(GET("/api/datasets/dataset1.json"),
+        expect_false(as.dataset(crGET("/api/datasets/dataset1.json"),
             tuple=datasetCatalog()[["/api/datasets/dataset1.json"]],
             useAlias=FALSE)@useAlias)
     })

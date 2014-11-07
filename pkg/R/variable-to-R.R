@@ -34,9 +34,9 @@ getValues <- function (x, ...) {
     url <- x@urls$values_url
     query <- list(...)
     if (length(query)) {
-        return(GET(url, query=list(...)))
+        return(crGET(url, query=list(...)))
     } else {
-        return(GET(url))
+        return(crGET(url))
     }
 }
 

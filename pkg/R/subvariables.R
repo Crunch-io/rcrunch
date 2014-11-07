@@ -26,7 +26,7 @@
 setMethod("subvariables", "CategoricalArrayVariable", function (x) {
     tup <- tuple(x)
     catalog_url <- tup$subvariables_catalog %||% tup@index_url
-    vars <- VariableCatalog(GET(catalog_url))
+    vars <- VariableCatalog(crGET(catalog_url))
     return(Subvariables(vars[x@body$subvariables]))
 })
 
@@ -63,7 +63,7 @@ setMethod("names<-", "Subvariables", function (x, value) {
             tuple[["name"]] <- val
             return(tuple)
         }, tuple=index(x), val=value, SIMPLIFY=FALSE, USE.NAMES=TRUE)
-    PATCH(self(x), body=toJSON(index(x)))
+    crPATCH(self(x), body=toJSON(index(x)))
     return(x)
 })
 
@@ -82,7 +82,7 @@ setMethod("aliases<-", "Subvariables", function (x, value) {
             tuple[["alias"]] <- val
             return(tuple)
         }, tuple=index(x), val=value, SIMPLIFY=FALSE, USE.NAMES=TRUE)
-    PATCH(self(x), body=toJSON(index(x)))
+    crPATCH(self(x), body=toJSON(index(x)))
     return(x)
 })
 

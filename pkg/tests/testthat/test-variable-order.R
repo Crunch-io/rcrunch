@@ -26,7 +26,7 @@ with(fake.HTTP, {
         vc@views$hierarchical_order <- sub("hierarchical",
             "relative-hierarchical", vc@views$hierarchical_order)
         expect_identical(vc@order@value,
-            VariableOrder(GET(vc@views$hierarchical_order))@value)
+            VariableOrder(crGET(vc@views$hierarchical_order))@value)
     })
     
     test.ord <- ordering(test.ds)
@@ -45,14 +45,14 @@ with(fake.HTTP, {
         vc@views$hierarchical_order <- sub("hierarchical",
             "nested-hierarchical", vc@views$hierarchical_order)
         expect_identical(nested.ord@value,
-            VariableOrder(GET(vc@views$hierarchical_order))@value)
+            VariableOrder(crGET(vc@views$hierarchical_order))@value)
     })
     test_that("Nested groups can also have relative urls", {
         vc <- varcat
         vc@views$hierarchical_order <- sub("hierarchical",
             "relative-and-nested-hierarchical", vc@views$hierarchical_order)
         expect_identical(nested.ord@value,
-            VariableOrder(GET(vc@views$hierarchical_order))@value)
+            VariableOrder(crGET(vc@views$hierarchical_order))@value)
     })
     test_that("Nested groups can serialize and deserialize", {
         vglist <- fromJSON(toJSON(nested.ord))

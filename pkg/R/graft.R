@@ -11,7 +11,7 @@
 ##' @export
 cloneDataset <- function (dataset, useAlias=default.useAlias(), ...) {
     payload <- list(clone_from=self(dataset))
-    dataset_url <- POST(sessionURL("datasets_url"), body=toJSON(payload))
+    dataset_url <- crPOST(sessionURL("datasets_url"), body=toJSON(payload))
     updateDatasetList()
     clone <- entity(datasetCatalog()[[dataset_url]])
     clone@useAlias <- useAlias
@@ -45,7 +45,7 @@ graftDataset <- function (primary, clone) {
         " and graft it onto ", dQuote(name(primary)), "?")
     if (askForPermission(msg)) {
         payload <- list(command="graft", dataset=self(clone))
-        POST(self(primary), body=toJSON(payload))
+        crPOST(self(primary), body=toJSON(payload))
     } else {
         halt("Permission to graft not given. Aborting")
     }

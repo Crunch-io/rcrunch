@@ -12,7 +12,7 @@ setIndexSlot <- function (x, i, value) {
         a[[i]] <- value
         return(a)
     })
-    PATCH(self(x), body=toJSON(index(x)))
+    crPATCH(self(x), body=toJSON(index(x)))
     return(x)
 }
 
@@ -27,7 +27,7 @@ mapSetIndexSlot <- function (x, i, value) {
     }, a=index(x), v=value, SIMPLIFY=FALSE)
     to.update <- dirtyElements(old, index(x))
     if (any(to.update)) {
-        PATCH(self(x), body=toJSON(index(x)[to.update]))
+        crPATCH(self(x), body=toJSON(index(x)[to.update]))
     }
     return(x)
 }

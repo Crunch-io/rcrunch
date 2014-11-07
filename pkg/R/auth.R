@@ -15,7 +15,7 @@ makeSessionStore()
 ##' Kill the active Crunch session
 ##' @export 
 logout <- function () {
-    if (is.authenticated()) try(GET(sessionURL("logout_url")), silent=TRUE)
+    if (is.authenticated()) try(crGET(sessionURL("logout_url")), silent=TRUE)
     deleteSessionInfo()
     options(prompt = session_store$.globals$prompt)
 }
@@ -89,7 +89,7 @@ crunchAuth <- function (email, password=NULL, ...) {
         }
     }
     
-    POST(file.path(getOption("crunch.api"), "public/login/"), 
+    crPOST(file.path(getOption("crunch.api"), "public/login/"), 
         body=toJSON(list(email=email, password=password, ...)), 
         status.handlers=list(`401`=function (response, user=email) {
             halt(paste("Unable to authenticate", user))

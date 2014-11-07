@@ -78,7 +78,7 @@ if (run.integration.tests) {
                     expect_identical(as.vector(out$v3), c(v3.1, v3.2))
                 })
                 
-                try(DELETE(names(batches(out)@index)[2]))
+                try(crDELETE(names(batches(out)@index)[2]))
                 out <- refresh(out)
                 test_that("deleting a batch drops its rows", {
                     expect_true(is.dataset(out))

@@ -50,8 +50,8 @@ test_that("ShojiCatalog", {
 })
 
 with(fake.HTTP, {
-    full.urls <- DatasetCatalog(GET("/api/datasets.json"))
-    rel.urls <- DatasetCatalog(GET("/api/datasets-relative-urls.json"))
+    full.urls <- DatasetCatalog(crGET("/api/datasets.json"))
+    rel.urls <- DatasetCatalog(crGET("/api/datasets-relative-urls.json"))
     expect_identical(urls(full.urls), urls(rel.urls))
 })
 

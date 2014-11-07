@@ -2,7 +2,7 @@ context("Retrieving dataset list and single datasets")
 
 with(fake.HTTP, {
     dataset.catalog.url <- "/api/datasets.json"
-    datcat <- DatasetCatalog(GET(dataset.catalog.url))
+    datcat <- DatasetCatalog(crGET(dataset.catalog.url))
     index(datcat)[[1]]$archived <- TRUE
     session_store$datasets <- datcat ## as if we had done updateDatasetList
     

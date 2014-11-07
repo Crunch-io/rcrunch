@@ -11,15 +11,14 @@ addVariable <- function (dataset, values, ...) {
     var_url <- POSTNewVariable(dataset@urls$variables_url, 
         toVariable(values, ...))
     dataset <- refresh(dataset) ## would like not to do this
-    # print(var_url %in% urls(variables(dataset)))
-    # variable <- as.variable(GET(var_url))
+    # variable <- as.variable(crGET(var_url))
     # dataset@.Data[[variable@body$alias]] <- variable
     invisible(dataset)
 }
 
-POSTNewVariable <- function (collection_url, variable) {
+POSTNewVariable <- function (catalog_url, variable) {
     
-    do.POST <- function (x) POST(collection_url, body=toJSON(x, digits=15))
+    do.POST <- function (x) crPOST(catalog_url, body=toJSON(x, digits=15))
     
     if (!("expr" %in% names(variable))) {
         ## If deriving a variable, skip this and go straight to POSTing
@@ -33,7 +32,7 @@ POSTNewVariable <- function (collection_url, variable) {
             errs <- vapply(var_urls, is.error, logical(1))
             if (any(errs)) {
                 # Delete subvariables that were added, then raise
-                lapply(var_urls[!errs], function (x) DELETE(x))
+                lapply(var_urls[!errs], function (x) crDELETE(x))
                 halt("Subvariables errored on upload")
             }
             # Else prepare to POST array definition
@@ -62,7 +61,7 @@ deriveVariable <- function (dataset, expr, ...) {
     derivation$expr <- zcl(expr)
     var_url <- POSTNewVariable(dataset@urls$variables_url, derivation)
     dataset <- refresh(dataset) ## would like not to do this
-    # variable <- as.variable(GET(var_url))
+    # variable <- as.variable(crGET(var_url))
     # dataset@.Data[[variable@body$alias]] <- variable
     invisible(dataset)
 }

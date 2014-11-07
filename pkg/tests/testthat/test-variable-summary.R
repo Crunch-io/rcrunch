@@ -4,7 +4,7 @@ with(fake.HTTP, {
     ds2 <- loadDataset("test ds")
     gen <- ds2$gender
     tablecats <- categories(gen)
-    tablesums <- GET(gen@urls$summary_url)$categories
+    tablesums <- crGET(gen@urls$summary_url)$categories
 
     test_that("ids getter for summaries", {
         expect_identical(ids(tablesums), selectFrom("id", tablesums))

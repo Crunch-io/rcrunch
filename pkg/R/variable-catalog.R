@@ -13,7 +13,7 @@ init.VariableCatalog <- function (.Object, ...) {
     # print(.Object)
     h_url <- .Object@views$hierarchical_order
     if (!is.null(h_url)) {
-        .Object@order <- VariableOrder(GET(h_url))
+        .Object@order <- VariableOrder(crGET(h_url))
     }
     # print(names(.Object@index))
     return(.Object)
