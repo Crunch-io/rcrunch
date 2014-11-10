@@ -10,9 +10,7 @@ addVariable <- function (dataset, values, ...) {
     }
     var_url <- POSTNewVariable(dataset@urls$variables_url, 
         toVariable(values, ...))
-    dataset <- refresh(dataset) ## would like not to do this
-    # variable <- as.variable(crGET(var_url))
-    # dataset@.Data[[variable@body$alias]] <- variable
+    dataset <- refresh(dataset)
     invisible(dataset)
 }
 
@@ -60,8 +58,6 @@ deriveVariable <- function (dataset, expr, ...) {
     derivation <- list(...)
     derivation$expr <- zcl(expr)
     var_url <- POSTNewVariable(dataset@urls$variables_url, derivation)
-    dataset <- refresh(dataset) ## would like not to do this
-    # variable <- as.variable(crGET(var_url))
-    # dataset@.Data[[variable@body$alias]] <- variable
+    dataset <- refresh(dataset)
     invisible(dataset)
 }
