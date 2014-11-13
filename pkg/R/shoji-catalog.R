@@ -27,7 +27,14 @@ mapSetIndexSlot <- function (x, i, value) {
     }, a=index(x), v=value, SIMPLIFY=FALSE)
     to.update <- dirtyElements(old, index(x))
     if (any(to.update)) {
-        crPATCH(self(x), body=toJSON(index(x)[to.update]))
+        ## Make sure certain fields are [] in the JSON
+        ensure <- c("subvariables")
+        payload <- lapply(index(x)[to.update], function (p) {
+            these <- intersect(ensure, names(p))
+            if (length(these)) p[these] <- lapply(p[these], I)
+            return(p)
+        })
+        crPATCH(self(x), body=toJSON(payload))
     }
     return(x)
 }

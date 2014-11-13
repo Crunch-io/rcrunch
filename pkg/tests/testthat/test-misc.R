@@ -89,6 +89,16 @@ test_that("encoding", {
     expect_identical(s2, s)
 })
 
+skip(test_that("encoding and parseJSONResponse", {
+    print(fromJSON("utf-test.json",
+        simplifyWithNames=FALSE, encoding="UTF-8"))
+    print(mungeEncoding(fromJSON("utf-test.json",
+        simplifyWithNames=FALSE)))
+    expect_identical(mungeEncoding(fromJSON("utf-test.json",
+        simplifyWithNames=FALSE)), 
+        "Budějovický Budvar")
+}))
+
 test_that("joinPath", {
     expect_identical(joinPath("/api/datasets/", "../variables/"),
         "/api/variables/")

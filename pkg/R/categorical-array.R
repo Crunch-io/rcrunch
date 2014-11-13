@@ -117,6 +117,6 @@ returnNewVariable <- function (variable_url, dataset) {
 }
 
 POSTBindVariables <- function (catalog_url, variable_urls, ...) {
-    payload <- list(variables=I(variable_urls), ...)
+    payload <- list(subvariables=I(variable_urls), ...)
     return(crPOST(catalog_url, body=toJSON(payload)))
 }

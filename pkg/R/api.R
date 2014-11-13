@@ -135,7 +135,7 @@ crunchUserAgent <- function (x) {
 }
 
 ##' @importFrom RJSONIO fromJSON
-parseJSONresponse <- function (x, simplifyWithNames=FALSE, ...) {
+parseJSONResponse <- function (x, simplifyWithNames=FALSE, ...) {
     ## Investigate not doing this anymore with httr 0.4, which uses jsonlite
     ## Update: still would have to pass in `unicode=TRUE` somewhere, so won't
     ## just be able to use httr's json parser out of the box
