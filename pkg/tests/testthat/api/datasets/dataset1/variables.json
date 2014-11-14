@@ -34,7 +34,7 @@
             "alias": "mymrset", 
             "type": "multiple_response",
             "id": "mymrset",
-            "description": "My multiple response set",
+            "description": "Budějovický Budvar",
             "subvariables": [
                 "/api/datasets/dataset1/variables/subvar2.json",
                 "/api/datasets/dataset1/variables/subvar1.json",

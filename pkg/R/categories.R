@@ -49,7 +49,7 @@ setMethod("values", "Categories", function (x) vapply(x, value, numeric(1)))
 
 ##' @rdname Categories
 ##' @export
-setMethod("ids", "Categories", function (x) vapply(x, id, numeric(1)))
+setMethod("ids", "Categories", function (x) vapply(x, id, integer(1)))
 ##' @export
 setMethod("ids", "list", function (x) sapply(x, id)) ## for summaries
 

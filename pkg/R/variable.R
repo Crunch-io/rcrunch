@@ -62,6 +62,10 @@ as.variable <- function (x, subtype=NULL, tuple=VariableTuple()) {
         x <- subclassVariable(x, to=subtype)
         tuple(x) <- tuple
     }
+    ## For the jsonlite no-simplify deserializer
+    if ("subvariables" %in% names(x@body)) {
+        x@body[["subvariables"]] <- absolutizeURLs(unlist(x@body[["subvariables"]]), self(x))
+    }
     return(x)
 }
 

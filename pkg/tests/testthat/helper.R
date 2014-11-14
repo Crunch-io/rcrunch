@@ -40,7 +40,10 @@ addFakeHTTPVerbs <- function () {
         url <- unlist(strsplit(url, "?", fixed=TRUE))[1] ## remove query params
         url <- sub("\\/$", ".json", url)
         url <- sub("^\\/", "", url) ## relative to cwd
-        handleShoji(fromJSON(url, simplifyWithNames=FALSE))
+        # print(url)
+        out <- handleShoji(fromJSON(url, simplifyVector=FALSE))
+        # print(out)
+        return(out)
     }
     http_verbs$PUT <- function (url, body, ...) {
         stop("PUT ", url, " ", body, call.=FALSE)

@@ -79,25 +79,6 @@ test_that("dirtyElements", {
     expect_identical(dirtyElements(x, y), c(FALSE, TRUE, TRUE))
 })
 
-test_that("encoding", {
-    s <- iconv("aided_follow_grid:ElCorteInglés", to="UTF-8")
-    expect_identical(Encoding(s), "UTF-8")
-    expect_true(grepl("Inglés", s))
-    sj <- toJSON(s)
-    expect_true(grepl("Inglés", sj))
-    s2 <- fromJSON(sj)
-    expect_identical(s2, s)
-})
-
-skip(test_that("encoding and parseJSONResponse", {
-    print(fromJSON("utf-test.json",
-        simplifyWithNames=FALSE, encoding="UTF-8"))
-    print(mungeEncoding(fromJSON("utf-test.json",
-        simplifyWithNames=FALSE)))
-    expect_identical(mungeEncoding(fromJSON("utf-test.json",
-        simplifyWithNames=FALSE)), 
-        "Budějovický Budvar")
-}))
 
 test_that("joinPath", {
     expect_identical(joinPath("/api/datasets/", "../variables/"),
@@ -109,14 +90,3 @@ test_that("joinPath", {
     expect_identical(joinPath("/api/datasets/", "/variables/"),
         "/variables/")
 })
-
-if (run.integration.tests) {
-    with(test.authentication, {
-        with(test.dataset(df), {
-            s <- iconv("aided_follow_grid:ElCorteInglés", to="UTF-8")
-            name(ds$v1) <- s
-            expect_identical(name(ds$v1), s)
-            expect_identical(name(refresh(ds)$v1), s)
-        })
-    })
-}

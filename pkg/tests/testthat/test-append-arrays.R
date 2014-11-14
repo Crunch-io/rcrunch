@@ -28,9 +28,9 @@ if (run.integration.tests) {
             mr_cats <- categories(part1$MR)
             subvar_cats <- categories(part1$MR$mr_1)
             dichotomized_cats <- Categories(list(
-                list(id=1, missing=FALSE, name="0.0", numeric_value=0, selected=FALSE), 
-                list(id=2, missing=FALSE, name="1.0", numeric_value=1, selected=TRUE),
-                list(id=-1, missing=TRUE, name="No Data", numeric_value=NULL, selected=FALSE)))
+                list(id=1L, missing=FALSE, name="0.0", numeric_value=0, selected=FALSE), 
+                list(id=2L, missing=FALSE, name="1.0", numeric_value=1, selected=TRUE),
+                list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL, selected=FALSE)))
             with(test.dataset(mrdf, "part2"), {
                 ## Dichotomize this way so that categories get aligned
                 ## (via supertype)              
@@ -82,17 +82,17 @@ if (run.integration.tests) {
             mr_cats <- categories(part1$MR)
             subvar_cats <- categories(part1$MR$mr_1)
             dichotomized_cats <- Categories(list(
-                list(id=1, missing=FALSE, name="0.0", numeric_value=0, selected=FALSE), 
-                list(id=2, missing=FALSE, name="1.0", numeric_value=1, selected=TRUE),
-                list(id=-1, missing=TRUE, name="No Data", numeric_value=NULL, selected=FALSE)))
+                list(id=1L, missing=FALSE, name="0.0", numeric_value=0, selected=FALSE), 
+                list(id=2L, missing=FALSE, name="1.0", numeric_value=1, selected=TRUE),
+                list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL, selected=FALSE)))
             with(test.dataset(mrdf, "part2"), {                
                 cast.these <- grep("mr_", names(part2))
                 part2[cast.these] <- lapply(part2[cast.these],
                     castVariable, "categorical")
                 undichotomized_cats <- Categories(list(
-                    list(id=2, missing=FALSE, name="0.0", numeric_value=0),
-                    list(id=1, missing=FALSE, name="1.0", numeric_value=1), 
-                    list(id=-1, missing=TRUE, name="No Data", numeric_value=NULL)))
+                    list(id=2L, missing=FALSE, name="0.0", numeric_value=0),
+                    list(id=1L, missing=FALSE, name="1.0", numeric_value=1), 
+                    list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL)))
                 test_that("set up MR for appending", {
                     expect_true(is.Multiple(part1$MR))
                     expect_true(is.null(part2$MR))
