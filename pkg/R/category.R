@@ -64,9 +64,9 @@ setMethod("value", "Category", function (x) {
 setMethod("value<-", "Category", setValue)
 
 ##' @export
-setMethod("id", "Category", function (x) x[["id"]])
+setMethod("id", "Category", function (x) as.integer(x[["id"]]))
 ##' @export
-setMethod("id", "list", function (x) x[["id"]])
+setMethod("id", "list", function (x) as.integer(x[["id"]]))
 
 show.values <- function (x) TRUE ## make this actually do something? need to point at variable, not categories, or otherwise embed that attribute in the categories object.
 
