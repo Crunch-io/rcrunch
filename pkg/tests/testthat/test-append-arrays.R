@@ -19,6 +19,7 @@ if (run.integration.tests) {
                     expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
                     expect_true(is.Multiple(out$MR))
+                    expect_true(is.dataset(refresh(part2)))
                 })
             })
         })
@@ -58,17 +59,19 @@ if (run.integration.tests) {
                         as.vector(part2$mr_3))
                 })
                 out <- suppressMessages(try(appendDataset(part1, part2)))
+                test_that("Dataset #2 isn't modified by appending to another", {
+                    expect_identical(refresh(part2), part2)
+                })
                 test_that("unbound subvariables get lined up", {
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
                     expect_true(is.variable(out$MR))
-                    # print(str(categories(out$MR)))
                     expect_identical(categories(out$MR), dichotomized_cats)
                     expect_identical(categories(out$MR$mr_1), dichotomized_cats)
                     expect_false(identical(categories(out$MR),
-                        undichotomized_cats)) ## Looks like we're taking the wrong cats
+                        undichotomized_cats))
                     expect_identical(as.vector(out$MR$mr_1), 
                         rep(as.vector(part2$mr_1), 2))
                     expect_true(is.Multiple(out$MR))
