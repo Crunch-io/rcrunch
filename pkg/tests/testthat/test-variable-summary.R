@@ -7,7 +7,7 @@ with(fake.HTTP, {
     tablesums <- crGET(gen@urls$summary_url)$categories
 
     test_that("ids getter for summaries", {
-        expect_identical(ids(tablesums), selectFrom("id", tablesums))
+        expect_equivalent(ids(tablesums), selectFrom("id", tablesums))
         expect_true(setequal(ids(tablecats), ids(tablesums)))
     })
 
