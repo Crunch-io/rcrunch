@@ -38,9 +38,9 @@ if (run.integration.tests) {
                 unbind(part2$CA)
                 part2 <- refresh(part2)
                 undichotomized_cats <- Categories(list(
-                    list(id=1, missing=FALSE, name="0.0", numeric_value=0),
-                    list(id=2, missing=FALSE, name="1.0", numeric_value=1), 
-                    list(id=-1, missing=TRUE, name="No Data", numeric_value=NULL)))
+                    list(id=1L, missing=FALSE, name="0.0", numeric_value=0),
+                    list(id=2L, missing=FALSE, name="1.0", numeric_value=1), 
+                    list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL)))
                 test_that("set up MR for appending", {
                     expect_true(is.Multiple(part1$MR))
                     expect_true(is.null(part2$MR))
