@@ -10,10 +10,10 @@
 ##' @return a CrunchDataset cloned from \code{dataset}
 ##' @export
 cloneDataset <- function (dataset, useAlias=default.useAlias(), ...) {
-    payload <- list(clone_from=self(dataset))
-    dataset_url <- crPOST(sessionURL("datasets_url"), body=toJSON(payload))
+    payload <- list(command="clone")
+    new_dataset_url <- crPOST(self(dataset), body=toJSON(payload))
     updateDatasetList()
-    clone <- entity(datasetCatalog()[[dataset_url]])
+    clone <- entity(datasetCatalog()[[new_dataset_url]])
     clone@useAlias <- useAlias
     invisible(clone)
 }
