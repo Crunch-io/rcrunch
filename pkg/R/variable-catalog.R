@@ -32,7 +32,7 @@ setMethod("initialize", "VariableCatalog", init.VariableCatalog)
 
 setMethod("active", "VariableCatalog", function (x) {
     index(x) <- selectFromWhere(!isTRUE(discarded),
-        index(x)[intersect(entities(ordering(x)), urls(x))],
+        index(x)[intersect(urls(ordering(x)), urls(x))],
         simplify=FALSE)
     return(x)
 })

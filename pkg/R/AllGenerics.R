@@ -45,6 +45,7 @@ setGeneric("datasetReference", function (x) standardGeneric("datasetReference"))
 setGeneric("hide", function (x) standardGeneric("hide"))
 setGeneric("unhide", function (x) standardGeneric("unhide"))
 
+setGeneric("urls", function (x) standardGeneric("urls"))
 setGeneric("self", function (x) standardGeneric("self"))
 setGeneric("refresh", function (x) standardGeneric("refresh"))
 setGeneric("delete", function (x, ...) standardGeneric("delete"),

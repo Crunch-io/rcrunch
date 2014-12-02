@@ -32,15 +32,15 @@ with(fake.HTTP, {
     })
     
     test.ord <- ordering(test.ds)
-    ents <- entities(test.ord)
+    ent.urls <- urls(test.ord)
     nested.ord <- try(VariableOrder(
-        VariableGroup(name="Group 1", entities=list(ents[1], 
-            VariableGroup(name="Nested", entities=ents[2:3]),
-            ents[4])),
-        VariableGroup(name="Group 2", entities=ents[5])))
+        VariableGroup(name="Group 1", entities=list(ent.urls[1], 
+            VariableGroup(name="Nested", entities=ent.urls[2:3]),
+            ent.urls[4])),
+        VariableGroup(name="Group 2", entities=ent.urls[5])))
     test_that("Can create nested groups", {
         expect_true(inherits(nested.ord, "VariableOrder"))
-        expect_identical(entities(nested.ord), ents)
+        expect_identical(urls(nested.ord), ent.urls)
     })
     test_that("Can read nested groups from the API", {
         vc <- varcat
@@ -62,29 +62,29 @@ with(fake.HTTP, {
             list(
                 group="Group 1",
                 entities=list(
-                    ents[1],
+                    ent.urls[1],
                     list(
                         group="Nested",
-                        entities=as.list(ents[2:3])
+                        entities=as.list(ent.urls[2:3])
                     ),
-                    ents[4]
+                    ent.urls[4]
                     )
                 ),
             list(
                 group="Group 2",
-                entities=as.list(ents[5])
+                entities=as.list(ent.urls[5])
             )
         )))
     })
     
     test_that("can assign nested groups in entities", {
-        ng <- list(ents[1], 
-                    VariableGroup(name="Nested", entities=ents[2:3]),
-                    ents[4])
+        ng <- list(ent.urls[1], 
+                    VariableGroup(name="Nested", entities=ent.urls[2:3]),
+                    ent.urls[4])
         try(entities(test.ord[[1]]) <- ng)
-        expect_identical(entities(test.ord[[1]], unlist=FALSE), 
-            list(ents[1], ents[2:3], ents[4]))
-        expect_identical(entities(test.ord[[1]]), ents[1:4])
+        expect_identical(entities(test.ord[[1]]), 
+            list(ent.urls[1], ent.urls[2:3], ent.urls[4]))
+        expect_identical(urls(test.ord[[1]]), ent.urls[1:4])
     })
 })
 
@@ -126,24 +126,24 @@ if (run.integration.tests) {
                 VariableGroup(name="Group 2", 
                     entities=ds[c("v6", "v2")]))
                     
-            test_that("Get entities from VariableOrder and Group", {
-                expect_identical(entities(vg[[1]]),
+            test_that("Get urls from VariableOrder and Group", {
+                expect_identical(urls(vg[[1]]),
                     c(self(ds$v1), self(ds$v3), self(ds$v5)))
-                expect_identical(entities(vg), 
+                expect_identical(urls(vg), 
                     c(self(ds$v1), self(ds$v3), self(ds$v5), self(ds$v4),
                     self(ds$v6), self(ds$v2)))
             })
             
             try(entities(vg[[2]]) <- self(ds$v2))
             test_that("Set URLs -> entities on VariableGroup", {
-                expect_identical(entities(vg[[2]]), self(ds$v2))
-                expect_identical(entities(vg), 
+                expect_identical(urls(vg[[2]]), self(ds$v2))
+                expect_identical(urls(vg), 
                     c(self(ds$v1), self(ds$v3), self(ds$v5), self(ds$v2),
                     self(ds$v6)))
             })
             try(entities(vg[[2]]) <- list(ds$v3))
             test_that("Set variables -> entities on VariableGroup", {
-                expect_identical(entities(vg[[2]]), self(ds$v3))
+                expect_identical(urls(vg[[2]]), self(ds$v3))
             })
             
             try(name(vg[[2]]) <- "Group 3")

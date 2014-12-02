@@ -34,7 +34,7 @@ findVariables <- function (dataset, refs=NULL, pattern="", key=namekey(dataset),
 
 findVariableURLs <- function (x, refs=NULL, pattern="", key=namekey(x), ...) {
     if (inherits(refs, "VariableOrder") || inherits(refs, "VariableGroup")) {
-        return(entities(refs))
+        return(urls(refs))
     } else if (is.dataset(x)) {
         key
         return(findVariableURLs(variables(x), refs=refs, pattern=pattern,

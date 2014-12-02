@@ -11,9 +11,9 @@
 \alias{names<-,VariableOrder-method}
 \title{Manipulate VariableGroup and VariableOrder}
 \usage{
-\S4method{entities}{VariableGroup}(x, unlist = TRUE)
+\S4method{entities}{VariableGroup}(x, simplify = FALSE)
 
-\S4method{entities}{VariableOrder}(x, unlist = TRUE)
+\S4method{entities}{VariableOrder}(x, simplify = FALSE)
 
 \S4method{entities}{VariableGroup}(x) <- value
 
@@ -28,15 +28,15 @@
 \arguments{
 \item{x}{a VariableGroup or VariableOrder}
 
-\item{unlist}{logical: should variable URLs inside of groups be flattened or
-preserved in their nested lists? Default is \code{TRUE}, meaning flattened.}
-
 \item{value}{For name, a character (length-1 vector); for names, a character
 vector of equal length to the number of VariableGroups beind modified; for
 entities, either a character vector of variable URLs or a list containing a
 combination of variable URLs and VariableGroups. Note that group names must
 be unique, should be greater than 0 characters long, and "ungrouped" is a
 reserved group name.}
+
+\item{unlist}{logical: should variable URLs inside of groups be flattened or
+preserved in their nested lists? Default is \code{TRUE}, meaning flattened.}
 }
 \value{
 Variable references, VariableGroups, or group names, as appropriate.

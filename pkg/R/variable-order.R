@@ -34,6 +34,7 @@ setMethod("initialize", "VariableOrder", init.VariableOrder)
     } else if (is.variable(x)) {
         x <- self(x)
     } else if (!(is.character(x) || inherits(x, "VariableGroup"))) {
+        ## What should happen here?
         print(x)
         halt("")
     }
@@ -142,7 +143,7 @@ printVariableOrder <- function (x) {
 printVariableGroup <- function (group, index) {
     cat(name(group), "\n")
     ## extend this to display nested groups
-    print(vapply(index[entities(group)], function (x) x[["name"]] %||% "(Hidden variable)", character(1), USE.NAMES=FALSE))
+    print(vapply(index[urls(group)], function (x) x[["name"]] %||% "(Hidden variable)", character(1), USE.NAMES=FALSE))
     invisible()
 }
 
