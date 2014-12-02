@@ -1,5 +1,5 @@
 {
     "element": "shoji:view",
-    "self": "api/datasets/dataset1/variables/textVar/values.json", 
+    "self": "/api/datasets/dataset1/variables/textVar/values.json", 
     "value": [ "w", "n", "x", "b", "q", "s", "l", "v", "v", "y", "m", "t", "s", "e", "z", "k", "n", "w", "v", "i", "h", "z", "m", "c", "x" ]
 }

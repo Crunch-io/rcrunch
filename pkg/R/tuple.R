@@ -1,7 +1,7 @@
 ##' @rdname refresh
 ##' @export
 setMethod("refresh", "IndexTuple", function (x) {
-    catalog <- ShojiCatalog(GET(x@index_url))
+    catalog <- ShojiCatalog(crGET(x@index_url))
     x@body <- catalog[[x@entity_url]]
     return(x)
 })
@@ -25,20 +25,20 @@ setTupleSlot <- function (x, name, value) {
         x[[name]] <- value
         ## NB: no readonly mode. implement later if needed.
         payload <- toJSON(structure(list(x@body), .Names=x@entity_url))
-        PATCH(x@index_url, body=payload)
+        crPATCH(x@index_url, body=payload)
     }
     invisible(x)
 }
 
 setMethod("entity", "VariableTuple", function (x) {
-    return(as.variable(GET(x@entity_url), tuple=x))
+    return(as.variable(crGET(x@entity_url), tuple=x))
 })
 
 setMethod("entity", "DatasetTuple", function (x) {
-    return(as.dataset(GET(x@entity_url), tuple=x))
+    return(as.dataset(crGET(x@entity_url), tuple=x))
 })
 
-setMethod("delete", "IndexTuple", function (x) DELETE(x@entity_url))
+setMethod("delete", "IndexTuple", function (x) crDELETE(x@entity_url))
 
 setMethod("delete", "DatasetTuple", function (x, confirm=interactive(), ...) {
     prompt <- paste0("Really delete dataset ", dQuote(name(x)), "?")

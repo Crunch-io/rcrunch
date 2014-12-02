@@ -5,7 +5,7 @@
 ##' the name of the R object passed in \code{x}
 ##' @param useAlias logical whether variable alias or name should be used as R
 ##' variable names when the dataset is returned. Default is TRUE, meaning alias.
-##' @param ... additional arguments passed to \code{ \link{newDatasetFromFile}}
+##' @param ... additional arguments passed to \code{ \link{createDataset}}
 ##' @return If successful, an object of class CrunchDataset.
 ##' @export
 newDataset <- function (x, name=substitute(x),
@@ -17,38 +17,9 @@ newDataset <- function (x, name=substitute(x),
             "structure")
     }
     
-    crunchdf <- createDataset(name=name, useAlias=useAlias, ...)
-    crunchdf <- addVariables(crunchdf, x)
-    invisible(crunchdf)
-}
-
-newDatasetViaFile <- function (x, name=substitute(x), ...) {
-    
-    is.2D <- !is.null(dim(x)) && length(dim(x)) %in% 2
-    if (!is.2D) {
-        halt("Can only make a Crunch dataset from a two-dimensional data ",
-            "structure")
-    }
-    
-    # v1: dump a csv, then route through newDatasetFromFile. 
-    # then manipulate the remote dataset
-    # later, we'll want to serialize some other way that preserves metadata
-    
-    ## This code is data.frame specific. need to modify for matrix type
-    
-    file <- tempfile(fileext=".csv")
-    write.csv(preUpload(x), file=file, row.names=FALSE)
-    crunchdf <- newDatasetFromFile(file, name=as.character(name), ...)
-    
-    ## Update variable types based on what we know
-    # crunchdf[] <- 
-    sapply(names(crunchdf), function (i) {
-        postUpload(x[[i]], crunchdf[[i]])
-    }, simplify=FALSE)
-    
-    ## You can write methods for preUpload and postUpload for any variable type
-    
-    invisible(refresh(crunchdf))
+    ds <- createDataset(name=name, useAlias=useAlias, ...)
+    ds <- addVariables(ds, x)
+    invisible(ds)
 }
 
 ##' Upload a file to Crunch to make a new dataset
@@ -60,26 +31,43 @@ newDatasetViaFile <- function (x, name=substitute(x), ...) {
 ##' @param useAlias logical whether variable alias or name should be used as R
 ##' variable names when the dataset is returned. Default is TRUE, meaning alias.
 ##' They're more computer friendly.
-##' @param ... additional arguments, currently not implemented
+##' @param ... additional arguments passed to \code{ \link{createDataset}}
 ##' @export 
 newDatasetFromFile <- function (file, name=basename(file),
                                 useAlias=default.useAlias(), ...) {
     if (!file.exists(file)) {
         halt("File not found")
     }
-    ds <- createDataset(name, useAlias=useAlias)
+    ds <- createDataset(name, useAlias=useAlias, ...)
     ds <- addSourceToDataset(ds, createSource(file))
     invisible(ds)
 }
 
 ##' @importFrom httr upload_file
 createSource <- function (file, ...) {
-    POST(sessionURL("sources_url"), body=list(uploaded_file=upload_file(file)),
-        ...)
+    crPOST(sessionURL("sources_url"),
+        body=list(uploaded_file=upload_file(file)), ...)
 }
 
+##' Create an empty dataset
+##'
+##' Use only if you're writing a function to create a Crunch dataset from a
+##' custom data structure. If you have a data.frame, just call
+##' \code{\link{newDataset}} on it.
+##'
+##' @param name character, the name to give the new Crunch dataset. This is
+##' required.
+##' @param useAlias logical whether variable alias or name should be used as R
+##' variable names when the dataset is returned. Default is TRUE, meaning alias.
+##' This argument is only relevant for the dataset object that is returned;
+##' it has no effect on the contents of the object created on the server.
+##' @param ... additional arguments for the POST to create the dataset, such as
+##' "description". 
+##' @return An object of class CrunchDataset.
+##' @export
 createDataset <- function (name, useAlias=default.useAlias(), ...) {
-    dataset_url <- POST(sessionURL("datasets_url"), body=toJSON(list(name=name, ...)))
+    dataset_url <- crPOST(sessionURL("datasets_url"),
+        body=toJSON(list(name=name, ...)))
     updateDatasetList()
     ds <- entity(datasetCatalog()[[dataset_url]])
     ds@useAlias <- useAlias
@@ -96,17 +84,17 @@ addSourceToDataset <- function (dataset, source_url, ...) {
             async=TRUE
         )
     )
-    batch_url <- POST(batches_url, body=toJSON(body), ...)
-    status <- pollBatchStatus(batch_url, ShojiCatalog(GET(batches_url)),
+    batch_url <- crPOST(batches_url, body=toJSON(body), ...)
+    status <- pollBatchStatus(batch_url, ShojiCatalog(crGET(batches_url)),
         until="ready")
     if (status != "ready") {
         halt("Error importing file")
     }
-    PATCH(batch_url, body=toJSON(list(status="importing")))
-    pollBatchStatus(batch_url, ShojiCatalog(GET(batches_url)))
+    crPATCH(batch_url, body=toJSON(list(status="importing")))
+    pollBatchStatus(batch_url, ShojiCatalog(crGET(batches_url)))
     invisible(refresh(dataset))
 }
 
 .delete_all_my_datasets <- function () {
-    lapply(urls(datasetCatalog()), DELETE)
+    lapply(urls(datasetCatalog()), crDELETE)
 }

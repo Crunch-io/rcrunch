@@ -1,19 +1,31 @@
 init.VariableCatalog <- function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     # print(.Object)
+    # print(names(.Object@index))
     .Object@index <- lapply(.Object@index, function (x, b) {
-        for (i in c("subvariables", "subvariables_catalog")) {
-            if (!is.null(x[[i]])) {
-                x[[i]] <- absolutizeURLs(x[[i]], b)
-            }
+        if ("subvariables" %in% names(x)) {
+            ## unlist, for jsonlite
+            x[["subvariables"]] <- absolutizeURLs(unlist(x[["subvariables"]]),
+                b)
         }
+        if ("subvariables_catalog" %in% names(x)) {
+            x[["subvariables_catalog"]] <- absolutizeURLs(x[["subvariables_catalog"]], b)
+        }
+        # for (i in c("subvariables", "subvariables_catalog")) {
+        #     if (!is.null(x[[i]])) {
+        #         x[[i]] <- absolutizeURLs(x[[i]], b)
+        #     }
+        # }
         return(x)
     }, b=.Object@self)
     # print(.Object)
     h_url <- .Object@views$hierarchical_order
     if (!is.null(h_url)) {
-        .Object@order <- VariableOrder(GET(h_url))
+        o <- crGET(h_url, query=list(relative="on"))
+        # print(o)
+        .Object@order <- VariableOrder(o)
     }
+    # print(names(.Object@index))
     return(.Object)
 }
 setMethod("initialize", "VariableCatalog", init.VariableCatalog)

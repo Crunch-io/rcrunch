@@ -1,6 +1,6 @@
 {
     "element": "shoji:entity",
-    "self": "api/datasets/dataset1.json",
+    "self": "/api/datasets/dataset1.json",
     "description": "Detail for a given dataset",
     "body": {
         "user_id": "00002",
@@ -13,8 +13,8 @@
         "id": "511a7c49778030653aab5963"
     },
     "urls": {
-        "summary_url": "api/datasets/dataset1/summary.json",
-        "variables_url": "api/datasets/dataset1/variables.json"
+        "summary_url": "/api/datasets/dataset1/summary.json",
+        "variables_url": "/api/datasets/dataset1/variables.json"
     },
     "some_other_key": {}
 }

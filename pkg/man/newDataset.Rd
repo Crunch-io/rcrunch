@@ -14,7 +14,7 @@ the name of the R object passed in \code{x}}
 \item{useAlias}{logical whether variable alias or name should be used as R
 variable names when the dataset is returned. Default is TRUE, meaning alias.}
 
-\item{...}{additional arguments passed to \code{ \link{newDatasetFromFile}}}
+\item{...}{additional arguments passed to \code{ \link{createDataset}}}
 }
 \value{
 If successful, an object of class CrunchDataset.

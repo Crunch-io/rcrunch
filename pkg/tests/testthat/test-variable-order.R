@@ -1,5 +1,7 @@
 context("Variable grouping and order setting")
 
+cereal <- function (x) fromJSON(toJSON(x), simplifyVector=FALSE)
+
 test_that("VariableGroup and Order objects can be made", {
     expect_true(inherits(VariableGroup(group="group1", entities=""),
         "VariableGroup"))
@@ -26,7 +28,7 @@ with(fake.HTTP, {
         vc@views$hierarchical_order <- sub("hierarchical",
             "relative-hierarchical", vc@views$hierarchical_order)
         expect_identical(vc@order@value,
-            VariableOrder(GET(vc@views$hierarchical_order))@value)
+            VariableOrder(crGET(vc@views$hierarchical_order))@value)
     })
     
     test.ord <- ordering(test.ds)
@@ -45,17 +47,17 @@ with(fake.HTTP, {
         vc@views$hierarchical_order <- sub("hierarchical",
             "nested-hierarchical", vc@views$hierarchical_order)
         expect_identical(nested.ord@value,
-            VariableOrder(GET(vc@views$hierarchical_order))@value)
+            VariableOrder(crGET(vc@views$hierarchical_order))@value)
     })
     test_that("Nested groups can also have relative urls", {
         vc <- varcat
         vc@views$hierarchical_order <- sub("hierarchical",
             "relative-and-nested-hierarchical", vc@views$hierarchical_order)
         expect_identical(nested.ord@value,
-            VariableOrder(GET(vc@views$hierarchical_order))@value)
+            VariableOrder(crGET(vc@views$hierarchical_order))@value)
     })
     test_that("Nested groups can serialize and deserialize", {
-        vglist <- fromJSON(toJSON(nested.ord))
+        vglist <- fromJSON(toJSON(nested.ord), simplifyVector=FALSE)
         expect_identical(vglist, list(groups=list(
             list(
                 group="Group 1",
@@ -63,14 +65,14 @@ with(fake.HTTP, {
                     ents[1],
                     list(
                         group="Nested",
-                        entities=ents[2:3]
+                        entities=as.list(ents[2:3])
                     ),
                     ents[4]
                     )
                 ),
             list(
                 group="Group 2",
-                entities=ents[5]
+                entities=as.list(ents[5])
             )
         )))
     })
@@ -109,12 +111,12 @@ if (run.integration.tests) {
                     VariableGroup(name="Group 2.5", entities=ds["v4"]),
                     VariableGroup(name="Group 2", 
                         entities=ds[c("v6", "v2")]))
-                vglist <- fromJSON(toJSON(vg))
+                vglist <- cereal(vg)
                 expect_identical(vglist, list(groups=list(
                     list(group="Group 1", 
-                        entities=c(self(ds$v1), self(ds$v3), self(ds$v5))),
-                    list(group="Group 2.5", entities=self(ds$v4)),
-                    list(group="Group 2", entities=c(self(ds$v6), self(ds$v2)))
+                        entities=list(self(ds$v1), self(ds$v3), self(ds$v5))),
+                    list(group="Group 2.5", entities=list(self(ds$v4))),
+                    list(group="Group 2", entities=list(self(ds$v6), self(ds$v2)))
                 )))
             })
             starting.vg <- vg <- VariableOrder(
@@ -153,21 +155,21 @@ if (run.integration.tests) {
                 expect_identical(names(vg), c("G3", "G1", "G2"))
             })
             
-            try(vglist <- fromJSON(toJSON(vg)))
+            try(vglist <- cereal(vg))
             test_that("VariableOrder to/fromJSON", {
                 expect_identical(vglist, list(groups=list(
                     list(group="G3", 
-                        entities=c(self(ds$v1), self(ds$v3), self(ds$v5))),
-                    list(group="G1", entities=self(ds$v3)),
-                    list(group="G2", entities=c(self(ds$v6), self(ds$v2)))
+                        entities=list(self(ds$v1), self(ds$v3), self(ds$v5))),
+                    list(group="G1", entities=list(self(ds$v3))),
+                    list(group="G2", entities=list(self(ds$v6), self(ds$v2)))
                 )))
                 
                 vg[1:2] <- vg[c(2,1)]
-                expect_identical(fromJSON(toJSON(vg)), list(groups=list(
-                    list(group="G1", entities=self(ds$v3)),
+                expect_identical(cereal(vg), list(groups=list(
+                    list(group="G1", entities=list(self(ds$v3))),
                     list(group="G3", 
-                        entities=c(self(ds$v1), self(ds$v3), self(ds$v5))),
-                    list(group="G2", entities=c(self(ds$v6), self(ds$v2)))
+                        entities=list(self(ds$v1), self(ds$v3), self(ds$v5))),
+                    list(group="G2", entities=list(self(ds$v6), self(ds$v2)))
                 )))
             })
             

@@ -19,6 +19,7 @@ if (run.integration.tests) {
                     expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
                     expect_true(is.Multiple(out$MR))
+                    expect_true(is.dataset(refresh(part2)))
                 })
             })
         })
@@ -28,9 +29,9 @@ if (run.integration.tests) {
             mr_cats <- categories(part1$MR)
             subvar_cats <- categories(part1$MR$mr_1)
             dichotomized_cats <- Categories(list(
-                list(id=1, missing=FALSE, name="0.0", numeric_value=0, selected=FALSE), 
-                list(id=2, missing=FALSE, name="1.0", numeric_value=1, selected=TRUE),
-                list(id=-1, missing=TRUE, name="No Data", numeric_value=NULL, selected=FALSE)))
+                list(id=1L, missing=FALSE, name="0.0", numeric_value=0, selected=FALSE), 
+                list(id=2L, missing=FALSE, name="1.0", numeric_value=1, selected=TRUE),
+                list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL, selected=FALSE)))
             with(test.dataset(mrdf, "part2"), {
                 ## Dichotomize this way so that categories get aligned
                 ## (via supertype)              
@@ -38,9 +39,9 @@ if (run.integration.tests) {
                 unbind(part2$CA)
                 part2 <- refresh(part2)
                 undichotomized_cats <- Categories(list(
-                    list(id=1, missing=FALSE, name="0.0", numeric_value=0),
-                    list(id=2, missing=FALSE, name="1.0", numeric_value=1), 
-                    list(id=-1, missing=TRUE, name="No Data", numeric_value=NULL)))
+                    list(id=1L, missing=FALSE, name="0.0", numeric_value=0),
+                    list(id=2L, missing=FALSE, name="1.0", numeric_value=1), 
+                    list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL)))
                 test_that("set up MR for appending", {
                     expect_true(is.Multiple(part1$MR))
                     expect_true(is.null(part2$MR))
@@ -58,17 +59,19 @@ if (run.integration.tests) {
                         as.vector(part2$mr_3))
                 })
                 out <- suppressMessages(try(appendDataset(part1, part2)))
+                test_that("Dataset #2 isn't modified by appending to another", {
+                    expect_identical(refresh(part2), part2)
+                })
                 test_that("unbound subvariables get lined up", {
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
                     expect_true(is.variable(out$MR))
-                    # print(str(categories(out$MR)))
                     expect_identical(categories(out$MR), dichotomized_cats)
                     expect_identical(categories(out$MR$mr_1), dichotomized_cats)
                     expect_false(identical(categories(out$MR),
-                        undichotomized_cats)) ## Looks like we're taking the wrong cats
+                        undichotomized_cats))
                     expect_identical(as.vector(out$MR$mr_1), 
                         rep(as.vector(part2$mr_1), 2))
                     expect_true(is.Multiple(out$MR))
@@ -82,17 +85,17 @@ if (run.integration.tests) {
             mr_cats <- categories(part1$MR)
             subvar_cats <- categories(part1$MR$mr_1)
             dichotomized_cats <- Categories(list(
-                list(id=1, missing=FALSE, name="0.0", numeric_value=0, selected=FALSE), 
-                list(id=2, missing=FALSE, name="1.0", numeric_value=1, selected=TRUE),
-                list(id=-1, missing=TRUE, name="No Data", numeric_value=NULL, selected=FALSE)))
+                list(id=1L, missing=FALSE, name="0.0", numeric_value=0, selected=FALSE), 
+                list(id=2L, missing=FALSE, name="1.0", numeric_value=1, selected=TRUE),
+                list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL, selected=FALSE)))
             with(test.dataset(mrdf, "part2"), {                
                 cast.these <- grep("mr_", names(part2))
                 part2[cast.these] <- lapply(part2[cast.these],
                     castVariable, "categorical")
                 undichotomized_cats <- Categories(list(
-                    list(id=2, missing=FALSE, name="0.0", numeric_value=0),
-                    list(id=1, missing=FALSE, name="1.0", numeric_value=1), 
-                    list(id=-1, missing=TRUE, name="No Data", numeric_value=NULL)))
+                    list(id=2L, missing=FALSE, name="0.0", numeric_value=0),
+                    list(id=1L, missing=FALSE, name="1.0", numeric_value=1), 
+                    list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL)))
                 test_that("set up MR for appending", {
                     expect_true(is.Multiple(part1$MR))
                     expect_true(is.null(part2$MR))

@@ -4,10 +4,10 @@ doc:
 
 test:
 	R CMD INSTALL --install-tests pkg
-	R --slave -e 'library(testthat); setwd("pkg/tests"); system.time(test_check("rcrunch", filter="${file}"))'
+	R --slave -e 'library(testthat); setwd("pkg/tests"); system.time(test_check("rcrunch", filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
 
 test-ci:
-	R --slave -e 'install.packages(c("httr", "RJSONIO", "codetools", "testthat"), repo="http://cran.at.r-project.org", lib=Sys.getenv("R_LIB"))'
+	R --slave -e 'install.packages(c("jsonlite", "httr", "RJSONIO", "codetools", "testthat"), repo="http://cran.at.r-project.org", lib=Sys.getenv("R_LIB"))'
 	R CMD INSTALL -l $(R_LIB) pkg
 	R --slave -e '.libPaths(Sys.getenv("R_LIB")); options(test.user=Sys.getenv("R_TEST_USER"), test.pw=Sys.getenv("R_TEST_PW"), test.api=Sys.getenv("R_TEST_API")); library(testthat); sink(file="rcrunch.tap"); setwd("pkg/tests"); test_check("rcrunch", reporter="tap"); sink()'
 

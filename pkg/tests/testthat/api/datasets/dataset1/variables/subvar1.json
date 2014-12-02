@@ -1,6 +1,6 @@
 {
     "element": "shoji:entity",
-    "self": "api/datasets/dataset1/variables/subvar1.json",
+    "self": "/api/datasets/dataset1/variables/subvar1.json",
     "body": {
         "format": {
             "data": {"digits": 2}, 
@@ -23,8 +23,8 @@
         "id": "fff"
     },
     "urls": {
-        "summary_url": "api/datasets/dataset1/variables/subvar1/summary.json",
-        "values_url": "api/datasets/dataset1/variables/subvar1/values.json"
+        "summary_url": "/api/datasets/dataset1/variables/subvar1/summary.json",
+        "values_url": "/api/datasets/dataset1/variables/subvar1/values.json"
     },
     "description": "Details for a given Variable"
 }

@@ -38,11 +38,28 @@ addRealHTTPVerbs <- function () {
 makeHTTPStore()
 addRealHTTPVerbs()
 
-GET <- function (...) http_verbs$GET(...)
-PUT <- function (...) http_verbs$PUT(...)
-PATCH <- function (...) http_verbs$PATCH(...)
-POST <- function (...) http_verbs$POST(...)
-DELETE <- function (...) http_verbs$DELETE(...)
+##' HTTP methods for communicating with the Crunch API
+##'
+##' @param ... see \code{\link{crunchAPI}} for details. \code{url} is the first
+##' named argument and is required; \code{body} is also required for PUT, 
+##' PATCH, and POST. 
+##' @return Depends on the response status of the HTTP request and any custom
+##' handlers.
+##' @rdname http-methods
+##' @export
+crGET <- function (...) http_verbs$GET(...)
+##' @rdname http-methods
+##' @export
+crPUT <- function (...) http_verbs$PUT(...)
+##' @rdname http-methods
+##' @export
+crPATCH <- function (...) http_verbs$PATCH(...)
+##' @rdname http-methods
+##' @export
+crPOST <- function (...) http_verbs$POST(...)
+##' @rdname http-methods
+##' @export
+crDELETE <- function (...) http_verbs$DELETE(...)
 
 ##' Do the right thing with the HTTP response
 ##' @param response an httr response object
@@ -117,26 +134,14 @@ crunchUserAgent <- function (x) {
     return(ua)
 }
 
-##' @importFrom RJSONIO fromJSON
-parseJSONresponse <- function (x, simplifyWithNames=FALSE, ...) {
+##' @importFrom jsonlite fromJSON
+parseJSONResponse <- function (x, simplifyWithNames=FALSE, ...) {
     ## Investigate not doing this anymore with httr 0.4, which uses jsonlite
     ## Update: still would have to pass in `unicode=TRUE` somewhere, so won't
     ## just be able to use httr's json parser out of the box
     text.parser <- get("parse_text", envir=asNamespace("httr"))
     out <- text.parser(x, encoding = "UTF-8")
-    mungeEncoding(fromJSON(out, simplifyWithNames=simplifyWithNames, ...))
-}
-
-mungeEncoding <- function (x, to="latin1") {
-    ## Pending resolution of https://github.com/duncantl/RJSONIO/issues/6
-    ## or https://github.com/jeroenooms/jsonlite/issues/5
-    ## Update: fixed in jsonlite, not yet in RJSONIO.
-    if (is.list(x)) {
-        x <- lapply(x, mungeEncoding, to=to)
-    } else if (is.character(x)) {
-        Encoding(x) <- to
-    }
-    return(x)
+    fromJSON(out, simplifyVector=FALSE, ...)
 }
 
 handleShoji <- function (x) {
@@ -150,7 +155,7 @@ handleShoji <- function (x) {
 }
 
 getAPIroot <- function () {
-    GET(getOption("crunch.api"))
+    crGET(getOption("crunch.api"))
 }
 
 crunchAPIcanBeReached <- function () {

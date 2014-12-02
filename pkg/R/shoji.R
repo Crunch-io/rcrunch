@@ -10,7 +10,7 @@ init.Shoji <- function (.Object, ...) {
             slot(.Object, i) <- slot(dots[[1]], i)
         }
     } else if (length(dots) && is.shoji(dots[[1]])) {
-        ## Init straight from API response, e.g. CrunchObject(GET(x))
+        ## Init straight from API response, e.g. CrunchObject(crGET(x))
         .Object <- do.call("init.Shoji", c(.Object=.Object, dots[[1]], ...))
     } else {
         ## Init from kwargs, e.g. CrunchObject(body=list, urls=list())
@@ -66,7 +66,7 @@ setMethod("self", "ShojiObject", function (x) x@self)
 ##' @export
 setMethod("refresh", "ShojiObject", function (x) {
     Class <- class(x)  ## in case x is a subclass of ShojiObject
-    return(do.call(Class, GET(self(x))))
+    return(do.call(Class, crGET(self(x))))
 })
 
 ##' Delete a Crunch object from the server
@@ -85,7 +85,7 @@ setMethod("refresh", "ShojiObject", function (x) {
 ##' @rdname delete
 ##' @aliases delete
 ##' @export
-setMethod("delete", "ShojiObject", function (x, ...) invisible(DELETE(self(x))))
+setMethod("delete", "ShojiObject", function (x, ...) invisible(crDELETE(self(x))))
 
 ##' @rdname delete
 ##' @export
@@ -102,7 +102,7 @@ setCrunchSlot <- function (x, i, value) {
     if (!is.readonly(x)) {
         body <- structure(list(value), .Names=i)
         payload <- toJSON(body)
-        PATCH(self(x), body=payload)
+        crPATCH(self(x), body=payload)
     }
     return(x)
 }

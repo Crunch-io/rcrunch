@@ -32,7 +32,7 @@ joinDatasets <- function (x, y, by=intersect(names(x), names(y)), by.x=by,
     
     payload <- structure(list(list(left_key=x_url, right_key=y_url)),
         .Names=paste0(join_url, tuple(y)$id, "/"))
-    PATCH(join_url, body=toJSON(payload))
+    crPATCH(join_url, body=toJSON(payload))
     invisible(refresh(x))
 }
 

@@ -62,13 +62,17 @@ as.variable <- function (x, subtype=NULL, tuple=VariableTuple()) {
         x <- subclassVariable(x, to=subtype)
         tuple(x) <- tuple
     }
+    ## For the jsonlite no-simplify deserializer
+    if ("subvariables" %in% names(x@body)) {
+        x@body[["subvariables"]] <- absolutizeURLs(unlist(x@body[["subvariables"]]), self(x))
+    }
     return(x)
 }
 
 ##' @rdname refresh
 ##' @export
 setMethod("refresh", "CrunchVariable", function (x) {
-    as.variable(GET(self(x)), tuple=refresh(tuple(x)))
+    as.variable(crGET(self(x)), tuple=refresh(tuple(x)))
 })
 
 as.Numeric <- function (x) as.variable(x, "numeric")
@@ -171,13 +175,13 @@ setMethod("datasetReference", "ANY", function (x) NULL)
 ##' @export
 unbind <- function (x) {
     stopifnot(inherits(x, "CategoricalArrayVariable"))
-    invisible(DELETE(self(x)))
+    invisible(crDELETE(self(x)))
 }
 
 setMethod("delete", "CategoricalArrayVariable", function (x, ...) {
     subvars <- x@body$subvariables
-    out <- DELETE(self(x))
-    lapply(subvars, DELETE)
+    out <- crDELETE(self(x))
+    lapply(subvars, crDELETE)
     invisible(out)
 })
 

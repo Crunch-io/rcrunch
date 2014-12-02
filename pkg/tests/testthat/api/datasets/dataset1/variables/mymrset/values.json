@@ -1,5 +1,5 @@
 {
     "element": "shoji:view",
-    "self": "api/datasets/dataset1/variables/gender/mymrset.json", 
+    "self": "/api/datasets/dataset1/variables/gender/mymrset.json", 
     "value": [ ]
 }

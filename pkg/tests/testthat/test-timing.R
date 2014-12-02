@@ -17,7 +17,7 @@ if (run.integration.tests) {
 
 
 mockArrayDataset <- function (nvars, nsubvars=5, nrows=3) {
-    ds <- rcrunch:::createDataset(name=paste("Arrays", rcrunch:::now()))
+    ds <- createDataset(name=paste("Arrays", rcrunch:::now()))
     for (i in as.vector(outer(letters, letters, FUN=paste0))[seq_len(nvars)]) {
         rcrunch:::POSTNewVariable(ds@urls$variables_url, list(
             name=i,

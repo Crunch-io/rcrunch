@@ -25,7 +25,7 @@ appendDataset <- function (dataset1, dataset2, confirm=interactive(),
         confirm=confirm), silent=TRUE)
     if (is.error(dataset)) {
         if (cleanup) {
-            d <- try(DELETE(batch_url), silent=TRUE)
+            d <- try(crDELETE(batch_url), silent=TRUE)
             if (is.error(d)) {
                 warning("Batch ", batch_url, 
                     " could not be deleted. It may still be processing.")
@@ -60,7 +60,7 @@ addBatchToDataset <- function (dataset1, dataset2) {
             async=TRUE
         )
     )
-    invisible(POST(batches_url, body=toJSON(body)))
+    invisible(crPOST(batches_url, body=toJSON(body)))
 }
 
 acceptAppendResolutions <- function (batch_url, dataset, 
@@ -68,7 +68,7 @@ acceptAppendResolutions <- function (batch_url, dataset,
     
     status <- pollBatchStatus(batch_url, batches(dataset), until="ready")
     
-    batch <- ShojiObject(GET(batch_url))
+    batch <- ShojiObject(crGET(batch_url))
     cflicts <- batch@body$conflicts
     resolutions <- formatConflicts(cflicts)
     # dput(resolutions)

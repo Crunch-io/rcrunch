@@ -1,6 +1,6 @@
 {
     "element": "shoji:view",
-    "self": "api/datasets/dataset1/variables/relative-hierarchical/",
+    "self": "/api/datasets/dataset1/variables/relative-hierarchical/",
     "description": "Hierarchical ordering of dataset variables",
     "value": {
         "groups": [

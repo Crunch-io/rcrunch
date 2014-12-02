@@ -9,7 +9,10 @@ init.CrunchDataset <- function (.Object, ...) {
 setMethod("initialize", "CrunchDataset", init.CrunchDataset)
 
 getDatasetVariables <- function (x) {
-    return(VariableCatalog(GET(x@urls$variables_url)))
+    varcat_url <- x@urls$variables_url
+    ## Add query params
+    return(VariableCatalog(crGET(varcat_url, 
+        query=list(nosubvars=1, relative="on"))))
 }
 
 getNrow <- function (dataset, filtered=TRUE) {
@@ -17,7 +20,7 @@ getNrow <- function (dataset, filtered=TRUE) {
     ## use filtered by default because every other request will take the applied filter
     
     summary_url <- dataset@urls$summary_url
-    nrows <- as.integer(round(GET(summary_url)$unweighted[[which.count]]))
+    nrows <- as.integer(round(crGET(summary_url)$unweighted[[which.count]]))
     return(nrows)
 }
 
@@ -104,7 +107,7 @@ setMethod("tuple<-", "CrunchDataset", function (x, value) {
 ##' @rdname refresh
 ##' @export
 setMethod("refresh", "CrunchDataset", function (x) {
-    as.dataset(GET(self(x)), useAlias=x@useAlias, tuple=refresh(tuple(x)))
+    as.dataset(crGET(self(x)), useAlias=x@useAlias, tuple=refresh(tuple(x)))
 })
 
 ##' @rdname delete
@@ -120,9 +123,9 @@ as.list.CrunchDataset <- function (x, ...) {
     lapply(seq_along(variables(x)), function (i) x[[i]])
 }
 
-batches <- function (x) BatchCatalog(GET(x@catalogs$batches))
+batches <- function (x) BatchCatalog(crGET(x@catalogs$batches))
 
-joins <- function (x) ShojiCatalog(GET(x@catalogs$joins))
+joins <- function (x) ShojiCatalog(crGET(x@catalogs$joins))
 
 setDatasetVariables <- function (x, value) {
     v <- urls(value)

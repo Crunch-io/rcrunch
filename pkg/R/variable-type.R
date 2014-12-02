@@ -10,7 +10,7 @@ castVariable <- function (x, to) {
             " Valid types are ", serialPaste(sQuote(CASTABLE_TYPES)))
     }
     if (type(x) != to) { ## no-op if cast type is same as current type
-        POST(cast_url(x), body=toJSON(list(cast_as=to)))
+        crPOST(cast_url(x), body=toJSON(list(cast_as=to)))
         x <- refresh(x)
     }
     invisible(x)

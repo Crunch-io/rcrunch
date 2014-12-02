@@ -30,7 +30,7 @@ with(fake.HTTP, {
     })
     
     test_that("categories toJSON", {
-        frj <- function (...) fromJSON(..., simplifyWithNames=FALSE)
+        frj <- function (...) fromJSON(..., simplifyVector=FALSE)
         expect_identical(cats, Categories(frj(toJSON(cats))))
         expect_identical(cats[1], Categories(frj(toJSON(cats[1]))))
         expect_identical(cats[[1]], Category(frj(toJSON(cats[[1]]))))
@@ -40,10 +40,10 @@ with(fake.HTTP, {
         male <- cats[[1]]
         expect_identical(name(male), "Male")
         expect_identical(value(male), 1)
-        expect_identical(id(male), 1)
+        expect_identical(id(male), 1L)
         expect_identical(names(cats), c("Male", "Female", "No Data"))
         expect_identical(values(cats), c(1, 2, NA))
-        expect_identical(ids(cats), c(1, 2, -1))
+        expect_identical(ids(cats), c(1L, 2L, -1L))
     })
 
     test_that("category setters", {

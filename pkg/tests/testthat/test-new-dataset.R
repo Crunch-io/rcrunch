@@ -44,17 +44,6 @@ if (run.integration.tests) {
                 expect_equivalent(mean(ds[[2]]), mean(testfile.df[[2]]))
             delete(ds)
         })
-        test_that("Dataset can be made from a data.frame by dumping a csv", {
-            dsname <- uniqueDatasetName()
-            d1 <- newDatasetViaFile(df, name=dsname)
-                expect_true(dsname %in% listDatasets())
-            delete(d1)
-            
-            testcrdf <- newDatasetViaFile(df, name=uniqueDatasetName())
-                expect_true(is.dataset(testcrdf))
-            delete(testcrdf)
-            ## Should also test doing this with a matrix
-        })
 
         test_that("newDataset input validation", {
             expect_error(newDataset(NULL), 
@@ -109,7 +98,7 @@ if (run.integration.tests) {
             dsname <- uniqueDatasetName()
             testdf <- newDataset(df, name=dsname)
             expect_true(dsname %in% listDatasets())
-            expect_true(DELETE(self(testdf), 
+            expect_true(crDELETE(self(testdf), 
                 response.handler=function (response) response$status_code==204))
             expect_false(dsname %in% listDatasets(refresh=TRUE))
             

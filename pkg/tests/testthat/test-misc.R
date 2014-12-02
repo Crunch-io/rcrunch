@@ -79,34 +79,14 @@ test_that("dirtyElements", {
     expect_identical(dirtyElements(x, y), c(FALSE, TRUE, TRUE))
 })
 
-test_that("encoding", {
-    s <- iconv("aided_follow_grid:ElCorteInglés", to="UTF-8")
-    expect_identical(Encoding(s), "UTF-8")
-    expect_true(grepl("Inglés", s))
-    sj <- toJSON(s)
-    expect_true(grepl("Inglés", sj))
-    s2 <- fromJSON(sj)
-    expect_identical(s2, s)
-})
 
 test_that("joinPath", {
-    expect_identical(joinPath("api/datasets/", "../variables/"),
-        "api/variables/")
-    expect_identical(joinPath("api/variables/", "4412es.json"),
-        "api/variables/4412es.json")
+    expect_identical(joinPath("/api/datasets/", "../variables/"),
+        "/api/variables/")
+    expect_identical(joinPath("/api/variables/", "4412es.json"),
+        "/api/variables/4412es.json")
     expect_identical(joinPath("a/b/c/d/../e/f/", "g/../../h/"),
         "a/b/c/e/h/")
-    expect_identical(joinPath("api/datasets/", "/variables/"),
+    expect_identical(joinPath("/api/datasets/", "/variables/"),
         "/variables/")
 })
-
-if (run.integration.tests) {
-    with(test.authentication, {
-        with(test.dataset(df), {
-            s <- iconv("aided_follow_grid:ElCorteInglés", to="UTF-8")
-            name(ds$v1) <- s
-            expect_identical(name(ds$v1), s)
-            expect_identical(name(refresh(ds)$v1), s)
-        })
-    })
-}
