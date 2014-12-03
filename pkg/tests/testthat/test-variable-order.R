@@ -77,14 +77,48 @@ with(fake.HTTP, {
         )))
     })
     
+    ng <- list(ent.urls[1], 
+                VariableGroup(name="Nested", entities=ent.urls[2:3]),
+                ent.urls[4])
     test_that("can assign nested groups in entities", {
-        ng <- list(ent.urls[1], 
-                    VariableGroup(name="Nested", entities=ent.urls[2:3]),
-                    ent.urls[4])
-        try(entities(test.ord[[1]]) <- ng)
-        expect_identical(entities(test.ord[[1]]), 
-            list(ent.urls[1], ent.urls[2:3], ent.urls[4]))
-        expect_identical(urls(test.ord[[1]]), ent.urls[1:4])
+        to <- test.ord
+        try(entities(to[[1]]) <- ng)
+        expect_identical(entities(to[[1]]), ng)
+        expect_identical(urls(to[[1]]), ent.urls[1:4])
+        expect_identical(to[[1]][[2]], 
+            VariableGroup(name="Nested", entities=ent.urls[2:3]))
+        expect_identical(entities(to[[1]][[2]]), as.list(ent.urls[2:3]))
+    })
+    test_that("can assign group into order", {
+        to <- test.ord
+        try(to[[1]] <- VariableGroup(name="[[<-", entities=ng))
+        expect_identical(entities(to[[1]]), ng)
+        expect_identical(name(to[[1]]), "[[<-")
+        expect_identical(urls(to[[1]]), ent.urls[1:4])
+        expect_identical(to[[1]][[2]], 
+            VariableGroup(name="Nested", entities=ent.urls[2:3]))
+    })
+    test_that("can assign group into group", {
+        to <- test.ord
+        try(to[[1]] <- VariableGroup(name="[[<-", entities=ng))
+        expect_identical(to[[1]][[1]], ent.urls[1])
+        try(to[[1]][[1]] <- VariableGroup(name="Nest2",
+            entities=to[[1]][[1]]))
+        expect_identical(entities(to[[1]]), 
+            list(VariableGroup(name="Nest2", entities=ent.urls[1]), 
+                VariableGroup(name="Nested", entities=ent.urls[2:3]),
+                ent.urls[4]))
+        expect_identical(urls(to[[1]]), ent.urls[1:4]) 
+    })
+    test_that("can assign into a nested group", {
+        to <- test.ord
+        try(to[[1]] <- VariableGroup(name="[[<-", entities=ng))
+        try(entities(to[[1]][[2]]) <- rev(entities(to[[1]][[2]])))
+        expect_identical(entities(to[[1]]), 
+            list(ent.urls[1], 
+                VariableGroup(name="Nested", entities=ent.urls[3:2]),
+                ent.urls[4]))
+        expect_identical(urls(to[[1]]), ent.urls[c(1,3,2,4)])
     })
 })
 

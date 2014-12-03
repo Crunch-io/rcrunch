@@ -17,12 +17,12 @@
 ##' @export
 setMethod("entities", "VariableGroup", function (x, simplify=FALSE) {
     out <- x@entities
-    if (is.list(out)) {
+    if (simplify) {
         nested.groups <- vapply(out, 
             function (a) inherits(a, "VariableGroup"), logical(1))
         out[nested.groups] <- lapply(out[nested.groups], 
-            function (a) entities(a))
-        if (simplify) out <- unique(unlist(out))
+            function (a) entities(a, simplify=TRUE))
+        out <- unique(unlist(out))
     }
     return(out)
 })
@@ -30,7 +30,7 @@ setMethod("entities", "VariableGroup", function (x, simplify=FALSE) {
 ##' @export
 setMethod("entities", "VariableOrder", function (x, simplify=FALSE) {
     ## To get a flattened view
-    es <- lapply(x, function (a) entities(a))
+    es <- lapply(x, function (a) entities(a, simplify=simplify))
     if (simplify) {
         es <- unique(unlist(es))
     }

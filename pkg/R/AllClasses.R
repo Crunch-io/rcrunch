@@ -80,8 +80,6 @@ CategoricalArrayVariable <- setClass("CategoricalArrayVariable",
 MultipleResponseVariable <-setClass("MultipleResponseVariable",
     contains="CategoricalArrayVariable")
 
-setClassUnion("characterOrList", c("character", "list"))
-
 ##' Organize Variables within a Dataset
 ##'
 ##' Variables in the Crunch web application can be viewed in an ordered, 
@@ -104,7 +102,7 @@ VariableOrder <- setClass("VariableOrder", contains="ShojiOrder")
 ##' @export VariableGroup
 VariableGroup <- setClass("VariableGroup", representation=representation(
     group="character",
-    entities="characterOrList"
+    entities="list"
 ))
 
 ##' Collection of Variables within a Dataset

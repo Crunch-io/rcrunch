@@ -84,7 +84,7 @@ if (run.integration.tests) {
         with(test.dataset(df), {
             test_that("can hide variables by group", {
                 ordering(ds) <- VariableOrder(
-                    VariableGroup(name="g1", variables=ds$v1),
+                    VariableGroup(name="g1", variables=list(ds$v1)),
                     VariableGroup(name="group2", variables=ds[c("v3", "v4")])
                 )
                 expect_identical(length(grouped(ordering(ds))), 2L)
