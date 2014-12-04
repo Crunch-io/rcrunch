@@ -11,7 +11,7 @@ install-ci:
 	R CMD INSTALL --install-tests -l $(R_LIB) pkg
 
 test-ci:
-	R --slave -e '.libPaths(Sys.getenv("R_LIB")); options(test.user=Sys.getenv("R_TEST_USER"), test.pw=Sys.getenv("R_TEST_PW"), test.api=Sys.getenv("R_TEST_API")); library(testthat); sink(file="rcrunch.tap"); test_check("rcrunch", reporter="tap"); sink()'
+	R --slave -e '.libPaths(Sys.getenv("R_LIB")); options(test.user=Sys.getenv("R_TEST_USER"), test.pw=Sys.getenv("R_TEST_PW"), test.api=Sys.getenv("R_TEST_API")); library(testthat); sink(file="rcrunch.tap"); setwd("pkg/tests"); test_check("rcrunch", reporter="tap"); sink()'
 
 clean:
 	R --slave -e 'options(crunch.api=getOption("test.api"), crunch.email=getOption("test.user"), crunch.pw=getOption("test.pw")); library(rcrunch); login(); rcrunch:::.delete_all_my_datasets()'
