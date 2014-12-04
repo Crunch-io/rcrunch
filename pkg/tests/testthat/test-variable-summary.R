@@ -1,8 +1,8 @@
 context("Variable summaries")
 
 with(fake.HTTP, {
-    ds2 <- loadDataset("test ds")
-    gen <- ds2$gender
+    ds <- loadDataset("test ds")
+    gen <- ds$gender
     tablecats <- categories(gen)
     tablesums <- crGET(gen@urls$summary_url)$categories
 
@@ -65,6 +65,8 @@ with(fake.HTTP, {
         expect_error(table(1:5, gen), 
             "Cannot currently tabulate Crunch variables with non-Crunch vectors")
         expect_error(table(), "nothing to tabulate")
+        expect_error(table(ds$birthyr),
+            "Only CategoricalVariables currently supported for table()")
     })
 })
 
