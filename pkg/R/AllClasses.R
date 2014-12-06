@@ -96,7 +96,14 @@ MultipleResponseVariable <-setClass("MultipleResponseVariable",
 ##' combination of variable URLs and VariableGroup objects.
 ##' @rdname VariableOrder
 ##' @export VariableOrder
-VariableOrder <- setClass("VariableOrder", contains="ShojiOrder")
+VariableOrder <- setClass("VariableOrder", contains="ShojiOrder",
+    representation=representation(
+        vars="ANY"
+    ),
+    prototype=prototype(
+        vars=NULL
+    )
+)
 
 ##' @rdname VariableOrder
 ##' @export VariableGroup
