@@ -29,8 +29,7 @@ setMethod("ordering", "VariableCatalog", function (x) x@order)
 setMethod("ordering<-", "VariableCatalog", function (x, value) {
     stopifnot(inherits(value, "VariableOrder"))
     ## Validate.
-    new.entities <- entities(value)
-    bad.entities <- setdiff(new.entities, urls(x))
+    bad.entities <- setdiff(urls(value), urls(x))
     if (length(bad.entities)) {
         halt("Variable URL", ifelse(length(bad.entities) > 1, "s", ""),
             " referenced in Order not present in catalog: ", 

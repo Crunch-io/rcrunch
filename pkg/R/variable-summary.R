@@ -60,7 +60,10 @@ table <- function (..., exclude, useNA, dnn, deparse.level) {
         if (length(are.vars)>1) {
             halt("Cannot currently tabulate more than one Crunch variable")
         }
-        m[[1]] <- quote(CategoricalVariable.table)
+        if (!is.Categorical(dots[[1]])) {
+            halt("Only CategoricalVariables currently supported for table()")
+        }
+        m[[1]] <- get("CategoricalVariable.table", asNamespace("rcrunch"))
         where <- parent.frame()
         return(eval(m, envir=where, enclos=asNamespace("rcrunch")))
     } else if (any(are.vars)) {

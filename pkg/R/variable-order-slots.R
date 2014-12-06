@@ -15,27 +15,31 @@
 ##' @seealso grouped
 ##' @aliases entities
 ##' @export
-setMethod("entities", "VariableGroup", function (x, unlist=TRUE) {
+setMethod("entities", "VariableGroup", function (x, simplify=FALSE) {
     out <- x@entities
-    if (is.list(out)) {
+    if (simplify) {
         nested.groups <- vapply(out, 
             function (a) inherits(a, "VariableGroup"), logical(1))
         out[nested.groups] <- lapply(out[nested.groups], 
-            function (a) entities(a))
-        if (unlist) out <- unique(unlist(out))
+            function (a) entities(a, simplify=TRUE))
+        out <- unique(unlist(out))
     }
     return(out)
 })
 ##' @rdname VariableOrder-slots
 ##' @export
-setMethod("entities", "VariableOrder", function (x, unlist=TRUE) {
+setMethod("entities", "VariableOrder", function (x, simplify=FALSE) {
     ## To get a flattened view
-    es <- lapply(x, function (a) entities(a))
-    if (unlist) {
+    es <- lapply(x, function (a) entities(a, simplify=simplify))
+    if (simplify) {
         es <- unique(unlist(es))
     }
     return(es)
 })
+
+setMethod("urls", "VariableOrder", function (x) entities(x, simplify=TRUE))
+setMethod("urls", "VariableGroup", function (x) entities(x, simplify=TRUE))
+
 ##' @rdname VariableOrder-slots
 ##' @export
 setMethod("entities<-", "VariableGroup", function (x, value) {

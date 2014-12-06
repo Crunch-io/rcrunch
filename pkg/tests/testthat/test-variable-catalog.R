@@ -27,7 +27,7 @@ with(fake.HTTP, {
     
     test_that("active/hidden getters", {
         expect_identical(index(active(varcat)),
-            index(varcat)[entities(ordering(varcat))])
+            index(varcat)[urls(ordering(varcat))])
         expect_identical(index(hidden(varcat)), list())
         index(varcat)[[2]]$discarded <- TRUE
         expect_true(inherits(active(varcat), "VariableCatalog"))

@@ -83,7 +83,7 @@ setMethod("index<-", "ShojiCatalog", function (x, value) {
     return(x)
 })
 
-urls <- function (x) names(index(x))
+setMethod("urls", "ShojiCatalog", function (x) names(index(x)))
 
 ##' @export
 as.list.ShojiCatalog <- function (x, ...) lapply(names(index(x)), function (i) x[[i]])

@@ -15,31 +15,54 @@ init.VariableOrder <- function (.Object, ...) {
 setMethod("initialize", "VariableOrder", init.VariableOrder)
 
 .initEntities <- function (x, url.base=NULL) {
+    ## Sanitize the inputs in VariableGroup construction/updating
+    ## Result should be a list, each element being either a URL (character) 
+    ## or VariableGroup
+    
+    ## Valid inputs:
+    ## 1) A dataset: take all urls
+    ## 2) A character vector of urls
+    ## 3) A list of
+    ## a) variables: take self
+    ## b) mixed character and VariableGroups
+    ## c) mixed character and lists that should be VariableGroups (fromJSON)
+    if (is.dataset(x)) {
+        return(.initEntities(urls(allVariables(x)), url.base=url.base))
+    }
+    if (is.character(x)) {
+        return(.initEntities(as.list(x), url.base=url.base))
+    }
     if (is.list(x)) {
+        ## Init raw (fromJSON) groups
         raw.groups <- vapply(x, 
             function (a) {
                 is.list(a) && setequal(c("group", "entities"), names(a))
             }, logical(1))
         x[raw.groups] <- lapply(x[raw.groups], 
             function (a) do.call(VariableGroup, c(a, url.base=url.base)))
+        ## Get self if any are Variables
+        vars <- vapply(x, is.variable, logical(1))
+        x[vars] <- lapply(x[vars], self)
+        ## Now everything should be valid
         nested.groups <- vapply(x, 
-            function (a) inherits(a, "VariableGroup"), logical(1))
-        if (any(nested.groups)) {
-            x[!nested.groups] <- lapply(x[!nested.groups], .initEntities, url.base=url.base)
-        } else {
-            x <- vapply(x, .initEntities, character(1), USE.NAMES=FALSE, url.base=url.base)
+            function (a) inherits(a, "VariableGroup"),
+            logical(1))
+        string.urls <- vapply(x, 
+            function (a) is.character(a) && length(a) == 1,
+            logical(1))
+        stopifnot(all(string.urls | nested.groups))
+        
+        ## Absolutize if needed
+        if (!is.null(url.base)) {
+            x[string.urls] <- lapply(x[string.urls], absolutizeURLs,
+                base=url.base)
         }
-    } else if (is.dataset(x)) {
-        x <- urls(allVariables(x))
-    } else if (is.variable(x)) {
-        x <- self(x)
-    } else if (!(is.character(x) || inherits(x, "VariableGroup"))) {
-        print(x)
-        halt("")
-    }
-    if (!is.null(url.base) && is.character(x)) x <- absolutizeURLs(x, url.base)
-    return(x)
+        return(x)
+    } 
+    halt(class(x), " is an invalid input for entities")
 }
+
+
 
 init.VariableGroup <- function (.Object, group, entities, url.base=NULL, ...) {
     dots <- list(...)
@@ -116,16 +139,29 @@ setMethod("[[<-", c("VariableOrder", "character", "missing", "VariableGroup"),
         callNextMethod(x, w, value=value)
     })
 setMethod("[[<-", c("VariableOrder", "ANY", "missing", "VariableGroup"), 
-   function (x, i, j, value) {
-       x@value$groups[[i]] <- value
-       return(x)
-   })
+    function (x, i, j, value) {
+        x@value$groups[[i]] <- value
+        return(x)
+    })
+setMethod("[[<-", c("VariableOrder", "ANY", "missing", "ANY"), 
+    function (x, i, j, value) {
+        halt("Cannot assign an object of class ", dQuote(class(value)), 
+            " into a VariableOrder")
+    })
 
 ##' @export
 setMethod("$", "VariableOrder", function (x, name) x[[name]])
 ##' @export
 setMethod("$<-", "VariableOrder", function (x, name, value) {
     x[[name]] <- value
+    return(x)
+})
+
+setMethod("[[", "VariableGroup", function (x, i, ..., drop=FALSE) {
+    entities(x)[[i]]
+})
+setMethod("[[<-", c("VariableGroup", "ANY", "missing", "VariableGroup"), function (x, i, j, value, drop=FALSE) {
+    entities(x)[[i]] <- value
     return(x)
 })
 
@@ -142,7 +178,7 @@ printVariableOrder <- function (x) {
 printVariableGroup <- function (group, index) {
     cat(name(group), "\n")
     ## extend this to display nested groups
-    print(vapply(index[entities(group)], function (x) x[["name"]] %||% "(Hidden variable)", character(1), USE.NAMES=FALSE))
+    print(vapply(index[urls(group)], function (x) x[["name"]] %||% "(Hidden variable)", character(1), USE.NAMES=FALSE))
     invisible()
 }
 
