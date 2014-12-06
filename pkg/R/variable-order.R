@@ -182,6 +182,17 @@ printVariableGroup <- function (group, index) {
     invisible()
 }
 
+showVariableOrder <- function (x) {
+    invisible(lapply(x, printVariableGroup, index=x@vars))
+}
+
+##' @export
+setMethod("show", "VariableOrder", function (object) {
+    out <- showVariableOrder(object)
+    # cat(out, sep="\n")
+    invisible(out)
+})
+
 ##' Get un(grouped) VariableGroups
 ##'
 ##' "ungrouped" is a magic VariableGroup that contains all variables not found

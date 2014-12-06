@@ -22,7 +22,11 @@ setMethod("ordering<-", "CrunchDataset", function (x, value) {
 
 ##' @rdname ordering
 ##' @export
-setMethod("ordering", "VariableCatalog", function (x) x@order)
+setMethod("ordering", "VariableCatalog", function (x) {
+    out <- x@order
+    out@vars <- index(x)
+    return(out)
+})
 
 ##' @rdname ordering
 ##' @export
