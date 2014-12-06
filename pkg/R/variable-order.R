@@ -139,10 +139,15 @@ setMethod("[[<-", c("VariableOrder", "character", "missing", "VariableGroup"),
         callNextMethod(x, w, value=value)
     })
 setMethod("[[<-", c("VariableOrder", "ANY", "missing", "VariableGroup"), 
-   function (x, i, j, value) {
-       x@value$groups[[i]] <- value
-       return(x)
-   })
+    function (x, i, j, value) {
+        x@value$groups[[i]] <- value
+        return(x)
+    })
+setMethod("[[<-", c("VariableOrder", "ANY", "missing", "ANY"), 
+    function (x, i, j, value) {
+        halt("Cannot assign an object of class ", dQuote(class(value)), 
+            " into a VariableOrder")
+    })
 
 ##' @export
 setMethod("$", "VariableOrder", function (x, name) x[[name]])

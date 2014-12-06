@@ -119,6 +119,17 @@ with(fake.HTTP, {
                 VariableGroup(name="Nested", entities=ent.urls[3:2]),
                 ent.urls[4]))
         expect_identical(urls(to[[1]]), ent.urls[c(1,3,2,4)])
+        expect_identical(name(to[[1]]), "[[<-")
+        try(name(to[[1]]) <- "Something better")
+        expect_identical(name(to[[1]]), "Something better")
+    })
+    
+    test_that("Validation on Order/Group [[<-", {
+        to <- test.ord
+        expect_true(inherits(to, "VariableOrder"))
+        skip(expect_error(to[[1]] <- ent.urls, 
+            "Cannot insert multiple variables. Perhaps you want to insert a nested group? Or maybe manipulate the entire entities vector?"),
+            "Not sure what this expectation should be")
     })
 })
 
