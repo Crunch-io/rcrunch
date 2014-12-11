@@ -15,6 +15,11 @@ setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE)
     callNextMethod(x, w, ..., drop=drop)
 })
 ##' @export
+setMethod("[", c("CrunchDataset", "missing", "ANY"), function (x, i, j, ..., drop=FALSE) {
+    x[j]
+})
+
+##' @export
 setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     out <- variables(x)[[i]]
     if (!is.null(out)) {
