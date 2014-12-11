@@ -45,7 +45,8 @@ newDatasetFromFile <- function (file, name=basename(file),
 
 ##' @importFrom httr upload_file
 createSource <- function (file, ...) {
-    crPOST(sessionURL("sources_url"),
+    source_url <- rootURL("sources", session_store$user) ## BAD!
+    crPOST(source_url, #sessionURL("sources"),
         body=list(uploaded_file=upload_file(file)), ...)
 }
 
@@ -66,7 +67,7 @@ createSource <- function (file, ...) {
 ##' @return An object of class CrunchDataset.
 ##' @export
 createDataset <- function (name, useAlias=default.useAlias(), ...) {
-    dataset_url <- crPOST(sessionURL("datasets_url"),
+    dataset_url <- crPOST(sessionURL("datasets"),
         body=toJSON(list(name=name, ...)))
     updateDatasetList()
     ds <- entity(datasetCatalog()[[dataset_url]])

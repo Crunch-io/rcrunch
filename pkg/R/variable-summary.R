@@ -1,5 +1,5 @@
 getSummary <- function (x) {
-    url <- x@urls$summary_url
+    url <- shojiURL(x, "views", "summary")
     if (is.null(url)) {
         halt("No summary available")
     }
@@ -16,7 +16,7 @@ getSummary <- function (x) {
 }
 
 getFrequencies <- function (x) {
-    url <- x@urls$frequencies_url
+    url <- shojiURL(x, "views", "frequencies")
     if (is.null(url)) {
         halt("No frequencies available")
     }

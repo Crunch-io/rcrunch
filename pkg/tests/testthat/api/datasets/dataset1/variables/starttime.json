@@ -16,9 +16,9 @@
         "type": "datetime",
         "id": "d7c21314ca9e453c93069168681a285c"
     },
-    "urls": {
-        "summary_url": "/api/datasets/dataset1/variables/starttime/summary.json",
-        "values_url": "/api/datasets/dataset1/variables/starttime/values.json"
+    "views": {
+        "summary": "/api/datasets/dataset1/variables/starttime/summary.json",
+        "values": "/api/datasets/dataset1/variables/starttime/values.json"
     },
     "description": "Details for a given Variable"
 }

@@ -23,9 +23,9 @@
         "type": "numeric",
         "id": "f78ca47313144b57adfb495893968e70"
     },
-    "urls": {
-        "summary_url": "/api/datasets/dataset1/variables/birthyr/summary.json",
-        "values_url": "/api/datasets/dataset1/variables/birthyr/values.json"
+    "views": {
+        "summary": "/api/datasets/dataset1/variables/birthyr/summary.json",
+        "values": "/api/datasets/dataset1/variables/birthyr/values.json"
     },
     "description": "Details for a given Variable"
 }

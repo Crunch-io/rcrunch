@@ -9,7 +9,7 @@ init.CrunchDataset <- function (.Object, ...) {
 setMethod("initialize", "CrunchDataset", init.CrunchDataset)
 
 getDatasetVariables <- function (x) {
-    varcat_url <- x@urls$variables_url
+    varcat_url <- variableCatalogURL(x)
     ## Add query params
     return(VariableCatalog(crGET(varcat_url, 
         query=list(nosubvars=1, relative="on"))))
@@ -19,8 +19,8 @@ getNrow <- function (dataset, filtered=TRUE) {
     which.count <- ifelse(isTRUE(filtered), "filtered", "total")
     ## use filtered by default because every other request will take the applied filter
     
-    summary_url <- dataset@urls$summary_url
-    nrows <- as.integer(round(crGET(summary_url)$unweighted[[which.count]]))
+    u <- summaryURL(dataset)
+    nrows <- as.integer(round(crGET(u)$unweighted[[which.count]]))
     return(nrows)
 }
 
@@ -135,6 +135,12 @@ setDatasetVariables <- function (x, value) {
     }
     return(x)
 }
+
+variableCatalogURL <- function (dataset) {
+    shojiURL(dataset, "catalogs", "variables")
+}
+
+summaryURL <- function (x) shojiURL(x, "views", "summary")
 
 ##' @export
 setMethod("variables", "CrunchDataset", function (x) active(allVariables(x)))

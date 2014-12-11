@@ -31,7 +31,7 @@ columnParser <- function (vartype) {
 }
 
 getValues <- function (x, ...) {
-    url <- x@urls$values_url
+    url <- shojiURL(x, "views", "values")
     query <- list(...)
     if (length(query)) {
         return(crGET(url, query=list(...)))

@@ -4,9 +4,9 @@
     "body": {
         "type": "text"
     },
-    "urls": {
-        "summary_url": "/api/datasets/dataset1/variables/textVar/summary.json",
-        "values_url": "/api/datasets/dataset1/variables/textVar/values.json"
+    "views": {
+        "summary": "/api/datasets/dataset1/variables/textVar/summary.json",
+        "values": "/api/datasets/dataset1/variables/textVar/values.json"
     },
     "description": "Details for a given Variable"
 }

@@ -33,7 +33,7 @@ if (run.integration.tests) {
         deleteSessionInfo()
         suppressMessages(login())
             expect_identical(class(getToken()), "config")
-            expect_true("urls" %in% ls(envir=session_store))
+            expect_true("root" %in% ls(envir=session_store))
             expect_true(is.authenticated())
         logout()
     })
@@ -53,10 +53,9 @@ if (run.integration.tests) {
 
     test_that("session URLs can be retrieved", {
         suppressMessages(login())
-            expect_true(is.character(sessionURL("user_url")))
-            expect_true(is.list(sessionURL()))
+            expect_true(is.character(sessionURL("datasets")))
         logout()
-        expect_error(sessionURL("user_url"), 
+        expect_error(sessionURL("datasets"), 
             "You must authenticate before making this request")
     })
 }

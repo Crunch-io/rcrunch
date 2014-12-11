@@ -23,9 +23,9 @@
         "subvariables_catalog": "/api/datasets/dataset1/variables/mymrset/subvariables.json",
         "id": "949d2dc7e7a24e6090cc88bb92e1d2fb"
     },
-    "urls": {
-        "summary_url": "/api/datasets/dataset1/variables/mymrset/summary.json",
-        "values_url": "/api/datasets/dataset1/variables/mymrset/values.json"
+    "views": {
+        "summary": "/api/datasets/dataset1/variables/mymrset/summary.json",
+        "values": "/api/datasets/dataset1/variables/mymrset/values.json"
     },
     "description": "Details for a given Variable"
 }

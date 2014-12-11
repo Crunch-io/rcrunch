@@ -1,0 +1,19 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/root.json",
+    "catalogs": {
+        "datasets": "/api/datasets.json",
+        "users": "/api/users.json",
+        "sources": "/api/sources.json",
+        "accounts": "/api/accounts.json",
+        "public": "/api/public.json"
+    },
+    "views": {
+    },
+    "fake_zz9_error": "/api/fake_zz9_error.json",
+    "urls": {
+        "user_url": "/api/users/user1.json",
+        "logout_url": "/api/logout.json"
+    },
+    "description": "The API root. GET user_url to access your Crunch resources. GET logout_url to sign out."
+}

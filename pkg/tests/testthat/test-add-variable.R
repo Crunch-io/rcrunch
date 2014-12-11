@@ -120,7 +120,7 @@ if (run.integration.tests) {
         )
         test_that("addVariables that are categorical_array", {
             with(test.dataset(), {
-                POSTNewVariable(ds@urls$variables_url, ca.var)
+                POSTNewVariable(variableCatalogURL(ds), ca.var)
                 ds <- refresh(ds)
                 expect_true(is.CA(ds$categoricalArray))
                 expect_identical(description(ds$categoricalArray), 
@@ -135,7 +135,7 @@ if (run.integration.tests) {
                 vars.before <- getDatasetVariables(ds)
                 expect_identical(nvars.before, 0L)
                 with(silencer, 
-                    expect_error(POSTNewVariable(ds@urls$variables_url, c2), 
+                    expect_error(POSTNewVariable(variableCatalogURL(ds), c2), 
                         "Subvariables errored on upload")
                 )
                 ds <- refresh(ds)
@@ -157,7 +157,7 @@ if (run.integration.tests) {
                     x$categories[[1]]$selected <- TRUE
                     return(x)
                 })
-                POSTNewVariable(ds@urls$variables_url, newvar)
+                POSTNewVariable(variableCatalogURL(ds), newvar)
                 ds <- refresh(ds)
                 expect_true(is.MR(ds$multipleResponse))
             })

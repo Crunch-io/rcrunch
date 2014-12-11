@@ -114,3 +114,11 @@ setReadonly <- function (x, value) {
 }
 ##' @export
 setMethod("readonly<-", "ShojiObject", setReadonly)
+
+shojiURL <- function (x, collection=c("catalogs", "views", "fragments"), key) {
+    if (!is.shojiObject(x)) {
+        halt("Cannot get Shoji URL from object of class ", dQuote(class(x)))
+    }
+    collection <- match.arg(collection)
+    return(slot(x, collection)[[key]])
+}
