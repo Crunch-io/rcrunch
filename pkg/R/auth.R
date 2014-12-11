@@ -15,7 +15,7 @@ makeSessionStore()
 ##' Kill the active Crunch session
 ##' @export 
 logout <- function () {
-    if (is.authenticated()) try(crGET(sessionURL("logout_url")), silent=TRUE)
+    if (is.authenticated()) try(crGET(rootURL("logout")), silent=TRUE)
     deleteSessionInfo()
     options(prompt = session_store$.globals$prompt)
 }
@@ -52,9 +52,8 @@ login <- function (email=getOption("crunch.email"),
     
     ## Save stuff in the session cache
     saveToken(auth$cookies)
-    saveSessionURLs(getAPIroot()$urls)
+    session_store$root <- getAPIroot()
     session_store$user <- getUser()
-    saveSessionURLs(session_store$user@urls)
     updateDatasetList()
     
     message("Logged into crunch.io as ", email)
@@ -99,21 +98,6 @@ crunchAuth <- function (email, password=NULL, ...) {
 ##' @importFrom httr set_cookies
 saveToken <- function (cookie) {
     session_store$cookie <- do.call("set_cookies", cookie)
-}
-
-saveSessionURLs <- function (x) {
-    if (is.null(session_store$urls)) session_store$urls <- list()
-    session_store$urls <- updateList(session_store$urls, x)
-}
-
-sessionURL <- function (x=NULL) {
-    if (is.authenticated()) {
-        out <- session_store$urls
-        if (!is.null(x)) out <- out[[x]]
-        return(out)
-    } else {
-        halt("You must authenticate before making this request")
-    }
 }
 
 getToken <- function () session_store$cookie

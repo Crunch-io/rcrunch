@@ -8,7 +8,7 @@ addVariable <- function (dataset, values, ...) {
     if (old > 0 && new != old) {
         halt("replacement has ", new, " rows, data has ", old)
     }
-    var_url <- POSTNewVariable(dataset@urls$variables_url, 
+    var_url <- POSTNewVariable(shojiURL(dataset, "catalogs", "variables"), 
         toVariable(values, ...))
     dataset <- refresh(dataset)
     invisible(dataset)
@@ -46,7 +46,7 @@ POSTNewVariable <- function (catalog_url, variable) {
 addVariables <- function (dataset, vars) {
     ## assume data frame
     nvars <- ncol(vars)
-    vars_url <- dataset@urls$variables_url
+    vars_url <- variableCatalogURL(dataset)
     for (i in seq_len(nvars)) {
         POSTNewVariable(vars_url,
             toVariable(vars[[i]], name=names(vars)[i], alias=names(vars)[i]))
@@ -57,7 +57,7 @@ addVariables <- function (dataset, vars) {
 deriveVariable <- function (dataset, expr, ...) {
     derivation <- list(...)
     derivation$expr <- zcl(expr)
-    var_url <- POSTNewVariable(dataset@urls$variables_url, derivation)
+    var_url <- POSTNewVariable(variableCatalogURL(dataset), derivation)
     dataset <- refresh(dataset)
     invisible(dataset)
 }

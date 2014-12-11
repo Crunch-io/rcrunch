@@ -106,7 +106,7 @@ prepareBindInputs <- function (list_of_variables=NULL, dataset=NULL,
 
 bindVariables <- function (var_urls, dataset, name, ...) {
     ## Take variables and their dataset and bind them into a new array variable
-    out <- POSTBindVariables(dataset@urls$variables_url, var_urls, name=name,
+    out <- POSTBindVariables(variableCatalogURL(dataset), var_urls, name=name,
         ...)
     invisible(returnNewVariable(out, dataset))
 }

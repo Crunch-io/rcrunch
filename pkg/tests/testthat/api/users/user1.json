@@ -10,8 +10,8 @@
         "id_method": "pwhash",
         "preferences": {}
     },
-    "urls": {
-        "datasets_url": "/api/datasets.json"
+    "catalogs": {
+        "datasets": "/api/datasets.json"
     },
     "some_other_key": {}
 }

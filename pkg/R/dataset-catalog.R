@@ -8,7 +8,7 @@ setMethod("initialize", "DatasetCatalog", init.DatasetCatalog)
 setMethod("active", "DatasetCatalog", function (x) {
     index(x) <- Filter(function (a) !isTRUE(a$archived), index(x))
     ## Not implementing user check now. 
-    # me <- sessionURL("user_url")
+    # me <- userURL()
     # if (!is.null(me)) {
     #     index(x) <- Filter(function (a) a$owner_id == me, index(x))
     # }
@@ -18,7 +18,7 @@ setMethod("active", "DatasetCatalog", function (x) {
 setMethod("archived", "DatasetCatalog", function (x) {
     index(x) <- Filter(function (a) isTRUE(a$archived), index(x))
     ## Not implementing user check now. 
-    # me <- sessionURL("user_url")
+    # me <- userURL()
     # if (!is.null(me)) {
     #     index(x) <- Filter(function (a) a$owner_id == me, index(x))
     # }

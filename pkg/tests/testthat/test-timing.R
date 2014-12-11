@@ -19,7 +19,7 @@ if (run.integration.tests) {
 mockArrayDataset <- function (nvars, nsubvars=5, nrows=3) {
     ds <- createDataset(name=paste("Arrays", rcrunch:::now()))
     for (i in as.vector(outer(letters, letters, FUN=paste0))[seq_len(nvars)]) {
-        rcrunch:::POSTNewVariable(ds@urls$variables_url, list(
+        rcrunch:::POSTNewVariable(variableCatalogURL(ds), list(
             name=i,
             type="categorical_array",
             subvariables=lapply(seq_len(nsubvars),

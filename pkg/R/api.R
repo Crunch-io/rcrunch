@@ -154,8 +154,28 @@ handleShoji <- function (x) {
     return(x)
 }
 
-getAPIroot <- function () {
-    crGET(getOption("crunch.api"))
+getAPIroot <- function (x=getOption("crunch.api")) {
+    ShojiObject(crGET(x))
+}
+
+sessionURL <- function (key, collection="catalogs") {
+    if (is.authenticated()) {
+        return(shojiURL(session_store$root, collection, key))
+    } else {
+        halt("You must authenticate before making this request")
+    }
+}
+
+rootURL <- function (x, obj=session_store$root) {
+    ## DEPRECATE ME
+    if (!is.authenticated()) {
+        halt("You must authenticate before making this request")
+    }
+    if (is.shojiObject(obj)) {
+        return(obj@urls[[paste0(x, "_url")]])
+    } else {
+        return(NULL)
+    }
 }
 
 crunchAPIcanBeReached <- function () {

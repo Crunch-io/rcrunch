@@ -4,7 +4,7 @@ with(fake.HTTP, {
     ds <- loadDataset("test ds")
     gen <- ds$gender
     tablecats <- categories(gen)
-    tablesums <- crGET(gen@urls$summary_url)$categories
+    tablesums <- crGET(summaryURL(gen))$categories
 
     test_that("ids getter for summaries", {
         expect_equivalent(ids(tablesums), selectFrom("id", tablesums))
@@ -34,8 +34,8 @@ with(fake.HTTP, {
             3L)
         expect_true(is.table(CategoricalVariable.table(gen, useNA="always")))
         ## Now see what happens if there are missing values
-        gen@urls$summary_url <- sub("summary", "summary_with_missing",
-            gen@urls$summary_url)
+        gen@views$summary <- sub("summary", "summary_with_missing",
+            gen@views$summary)
         expect_identical(length(CategoricalVariable.table(gen, useNA="no")),
             2L)
         expect_identical(length(CategoricalVariable.table(gen, useNA="ifany")),

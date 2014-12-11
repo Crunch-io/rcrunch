@@ -18,7 +18,7 @@ if (run.integration.tests) {
         test_that("API root can be fetched", {
             expect_false(is.error(try(getAPIroot())))
             urls <- getAPIroot()
-            expect_true(is.shoji(urls))
+            expect_true(is.shojiObject(urls))
         }))
 
     if (crunchAPIcanBeReached()) {

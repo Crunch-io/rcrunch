@@ -42,9 +42,9 @@
         "type": "categorical",
         "id": "66ae9881e3524f7db84970d556c34552"
     },
-    "urls": {
-        "summary_url": "/api/datasets/dataset1/variables/gender/summary.json",
-        "values_url": "/api/datasets/dataset1/variables/gender/values.json"
+    "views": {
+        "summary": "/api/datasets/dataset1/variables/gender/summary.json",
+        "values": "/api/datasets/dataset1/variables/gender/values.json"
     },
     "description": "Details for a given Variable",
     "future_shoji_attribute": {}
