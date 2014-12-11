@@ -25,6 +25,14 @@ with(fake.HTTP, {
         expect_identical(as.data.frame(test.ds)$birthyr, as.vector(test.ds$birthyr))
     })
     
+    test_that("as.data.frame size limit", {
+        options(crunch.data.frame.limit=50)
+            expect_error(as.data.frame(test.ds), 
+                "Dataset too large to coerce")
+            expect_true(is.data.frame(as.data.frame(test.ds[,1:2])))
+        options(crunch.data.frame.limit=10000)
+    })
+    
     test.df <- as.data.frame(test.ds)
     
     test_that("model.frame thus works on CrunchDataset", {
