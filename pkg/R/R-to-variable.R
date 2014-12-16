@@ -15,10 +15,10 @@ setMethod("toVariable", "factor", function (x, ...) {
     return(NAToCategory(out))
 })
 setMethod("toVariable", "Date", function (x, ...) {
-    return(list(values=as.character(x), type="datetime", ...))
+    return(list(values=as.character(x), type="datetime", resolution="D", ...))
 })
 # setMethod("toVariable", "POSIXt", function (x) {
-#     return(list(values=as.character(x), type="datetime", ...))
+#     return(list(values=as.character(x), type="datetime", resolution="s", ...))
 # })
 setMethod("toVariable", "logical", function (x, ...) {
     ## Make it categorical
