@@ -8,7 +8,7 @@ test:
 
 install-ci:
 	R --slave -e 'install.packages(c("jsonlite", "httr", "RJSONIO", "codetools", "testthat", "devtools"), repo="http://cran.at.r-project.org", lib=Sys.getenv("R_LIB"))'
-	R --slave -e 'library(devtools); install_github("nealrichardson/httr")'
+	R --slave -e '.libPaths(Sys.getenv("R_LIB")); library(devtools); install_github("nealrichardson/httr")'
 	R CMD INSTALL --install-tests -l $(R_LIB) pkg
 
 test-ci:
