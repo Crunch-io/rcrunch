@@ -1,7 +1,5 @@
 context("Variable grouping and order setting")
 
-cereal <- function (x) fromJSON(toJSON(x), simplifyVector=FALSE)
-
 test_that("VariableGroup and Order objects can be made", {
     expect_true(inherits(VariableGroup(group="group1", entities=""),
         "VariableGroup"))

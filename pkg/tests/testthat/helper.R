@@ -19,6 +19,8 @@ if (is.tap.reporter) {
     skip <- function (...) cat(colourise("S", "yellow"))
 }
 
+cereal <- function (x) fromJSON(toJSON(x), simplifyVector=FALSE)
+
 #####################
 ## Test decorators ##
 #####################

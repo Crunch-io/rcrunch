@@ -1,0 +1,13 @@
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Analyzing data with rcrunch}
+-->
+
+[Previous: transform and derive](derive.html)
+
+# Computing with R and Crunch
+
+## table, xtab
+
+## as.data.frame
+

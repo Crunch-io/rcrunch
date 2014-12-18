@@ -68,6 +68,14 @@ setMethod("names<-", "Categories", setNames)
 ##' @rdname Categories
 ##' @export
 setMethod("values<-", "Categories", setValues)
+##' @rdname Categories
+##' @export
+setMethod("ids<-", "Categories", function (x, value) {
+    if (!identical(ids(x), value)) {
+        halt("Cannot modify category ids")
+    }
+    return(x)
+})
 ##' @export
 setMethod("toJSON", "Categories", function (x, ...) toJSON(I(x@.Data)))
 
@@ -95,3 +103,24 @@ n2i <- function (x, cats) {
     if (is.variable(cats)) cats <- categories(cats)
     return(ids(cats)[match(x, names(cats))])
 }
+
+##' @export
+setMethod("is.na<-", c("Categories", "character"), function (x, value) {
+    ix <- match(value, names(x))
+    if (any(is.na(ix))) {
+        halt(ifelse(sum(is.na(ix)) > 1, "Categories", "Category"), 
+            " not found: ", serialPaste(dQuote(value[is.na(ix)])))
+    }
+    x[ix] <- lapply(x[ix], `is.na<-`, value=TRUE)
+    return(x)
+})
+
+##' @export
+setMethod("is.na<-", c("Categories", "logical"), function (x, value) {
+    stopifnot(length(x) == length(value))
+    x@.Data <- mapply(function (x, value) {
+            is.na(x) <- value
+            return(x)
+        }, x=x@.Data, value=value, USE.NAMES=FALSE, SIMPLIFY=FALSE)
+    return(x)
+})

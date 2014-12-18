@@ -1,0 +1,16 @@
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Manipulating variables and deriving new ones}
+-->
+
+[Previous: variable organization](variable-order.html)
+
+# Transforming and deriving
+
+## Expressions
+
+## Creating derived variables
+
+## Updating values
+
+[Next: analyzing data](analyze.html)

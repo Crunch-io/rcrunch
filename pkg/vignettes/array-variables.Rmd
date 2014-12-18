@@ -3,6 +3,9 @@
 %\VignetteIndexEntry{Array Variables}
 -->
 
+[Previous: variables](variables.html)
+
+
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(rcrunch)
 load("array-variables.RData")
@@ -73,7 +76,7 @@ print(summary_imiss_b)
 
 The names `imiss_b` through `imiss_t` are unsatisfying from a human-readability perspective: you can't tell which political issues correspond to the variables. Unfortunately, we didn't have additional metadata on these survey questions in the `data.frame` we imported initially. However, we can rectify this.
 
-Subvariables have a names attribute that we can get:
+Subvariables have methods similar to those for [categories](variables.html). They have a names attribute that we can get:
 
 ```{r, eval=FALSE}
 names(subvariables(ds$imiss))
@@ -183,3 +186,5 @@ Now, if we check the names of `ds`, we see our full set of `boap_*` former subva
 ```{r}
 grep("boap", names(ds), value=TRUE)
 ```
+
+[Next: variable organization](variable-order.html)

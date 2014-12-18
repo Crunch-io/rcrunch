@@ -29,11 +29,11 @@ with(fake.HTTP, {
         expect_true(is.categories(cats[1]))
     })
     
-    test_that("categories toJSON", {
-        frj <- function (...) fromJSON(..., simplifyVector=FALSE)
-        expect_identical(cats, Categories(frj(toJSON(cats))))
-        expect_identical(cats[1], Categories(frj(toJSON(cats[1]))))
-        expect_identical(cats[[1]], Category(frj(toJSON(cats[[1]]))))
+    test_that("categories to/fromJSON", {
+        ## cereal serializes to JSON and then deserializes
+        expect_identical(cats, Categories(cereal(cats)))
+        expect_identical(cats[1], Categories(cereal(cats[1])))
+        expect_identical(cats[[1]], Category(cereal(cats[[1]])))
     })
     
     test_that("category getters", {
@@ -66,6 +66,11 @@ with(fake.HTTP, {
         names(cats)[2] <- "donne"
         expect_true(is.categories(cats))
         expect_equal(names(cats)[1:2], c("masculino", "donne"))
+    })
+    
+    test_that("categories ids cannot be set", {
+        expect_error(ids(cats) <- rev(ids(cats)), 
+            "Cannot modify category ids")
     })
 
     test_that("dichotomize", {
@@ -100,6 +105,25 @@ with(fake.HTTP, {
             .Names=c("Male", "Female", "No Data")))
         expect_true(is.na(cats[[3]]))
         expect_false(is.na(cats[[1]]))
+    })
+    
+    test_that("is.na<- by name", {
+        cats <- cats  
+        try(is.na(cats) <- "Female")
+        expect_true(is.categories(cats))
+        expect_identical(is.na(cats), structure(c(FALSE, TRUE, TRUE), 
+            .Names=c("Male", "Female", "No Data")))
+        expect_error(is.na(cats) <- c("Male", "Prefer not to say"),
+            paste0("Category not found: ", dQuote("Prefer not to say")))
+        expect_identical(is.na(cats), structure(c(FALSE, TRUE, TRUE), 
+            .Names=c("Male", "Female", "No Data")))
+    })
+    test_that("is.na<- by logical", {
+        cats <- cats
+        try(is.na(cats) <- c(TRUE, FALSE, FALSE))
+        expect_true(is.categories(cats))
+        expect_identical(is.na(cats), structure(c(TRUE, FALSE, FALSE), 
+            .Names=c("Male", "Female", "No Data")))
     })
 
     test_that("na.omit", {

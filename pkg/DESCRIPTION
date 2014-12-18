@@ -1,11 +1,11 @@
 Package: rcrunch
 Type: Package
-Title: Crunch.io Database Tools
-Version: 0.9.2
-Date: 2014-12-11
+Title: Crunch.io Data Tools
+Version: 0.9.3
+Date: 2014-12-17
 Author: Neal Richardson <neal@crunch.io>
 Maintainer: Neal Richardson <neal@crunch.io>
-Description: An interface for accessing the Crunch.io database
+Description: An interface for accessing and manipulating datasets in Crunch.io
 License: GPL (>= 3)
 LazyLoad: yes
 Depends:
@@ -13,6 +13,7 @@ Depends:
 Imports:
     httr,
     RJSONIO,
+    jsonlite,
     methods,
     RCurl
 Suggests:

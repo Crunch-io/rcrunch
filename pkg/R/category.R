@@ -87,3 +87,9 @@ setMethod("show", "Category", function (object) {
 setMethod("is.selected", "Category", function (x) isTRUE(x$selected))
 
 setMethod("is.na", "Category", function (x) isTRUE(x$missing))
+
+setMethod("is.na<-", c("Category", "logical"), function (x, value) {
+    stopifnot(length(value) == 1)
+    x$missing <- isTRUE(value)
+    return(x)
+})

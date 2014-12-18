@@ -6,6 +6,7 @@ setGeneric("id", function (x) standardGeneric("id"))
 setGeneric("is.selected", function (x) standardGeneric("is.selected"))
 
 setGeneric("ids", function (x) standardGeneric("ids"))
+setGeneric("ids<-", function (x, value) standardGeneric("ids<-"))
 setGeneric("is.dichotomized", function (x) standardGeneric("is.dichotomized"))
 setGeneric("dichotomize", function (x, i) standardGeneric("dichotomize"))
 setGeneric("undichotomize", function (x) standardGeneric("undichotomize"))
