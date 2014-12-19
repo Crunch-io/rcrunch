@@ -53,7 +53,7 @@ login <- function (email=getOption("crunch.email"),
     ## Save stuff in the session cache
     saveToken(auth$cookies)
     session_store$root <- getAPIroot()
-    session_store$user <- getUser()
+    # session_store$user <- getUser()
     updateDatasetList()
     
     message("Logged into crunch.io as ", email)

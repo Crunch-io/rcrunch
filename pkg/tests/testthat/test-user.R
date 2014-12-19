@@ -14,7 +14,6 @@ if (run.integration.tests) {
             user <- try(getUser())
             expect_false(is.error(user))
             expect_true(inherits(user, "ShojiObject"))
-            expect_true(!is.null(session_store$user))
         })
     })
 

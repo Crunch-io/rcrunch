@@ -26,4 +26,7 @@ Use only if you're writing a function to create a Crunch dataset from a
 custom data structure. If you have a data.frame, just call
 \code{\link{newDataset}} on it.
 }
+\seealso{
+newDataset
+}
 
