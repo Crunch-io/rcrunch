@@ -74,6 +74,8 @@ init.VariableGroup <- function (.Object, group, entities, url.base=NULL, ...) {
 }
 setMethod("initialize", "VariableGroup", init.VariableGroup)
 
+##' @rdname tojson-crunch
+##' @export
 setMethod("toJSON", "VariableOrder",
     function (x, ...) toJSON(x@value, ...))
 
@@ -89,6 +91,8 @@ setMethod("toJSON", "VariableOrder",
     }
     return(list(group=x@group, entities=I(ents)))
 }
+##' @rdname tojson-crunch
+##' @export
 setMethod("toJSON", "VariableGroup", function (x, ...) {
     toJSON(.jsonprep.vargroup(x), ...)
 })
@@ -165,7 +169,6 @@ setMethod("[[<-", c("VariableGroup", "ANY", "missing", "VariableGroup"), functio
     return(x)
 })
 
-##' @export
 printVariableOrder <- function (x) {
     ## VariableOrder should get a proper show method
     if (is.dataset(x)) {
@@ -186,6 +189,7 @@ showVariableOrder <- function (x) {
     invisible(lapply(x, printVariableGroup, index=x@vars))
 }
 
+##' @rdname show-crunch
 ##' @export
 setMethod("show", "VariableOrder", function (object) {
     out <- showVariableOrder(object)

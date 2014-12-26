@@ -4,11 +4,9 @@
 \name{Subvariables-class}
 \alias{Subvariables}
 \alias{Subvariables-class}
-\alias{aliases,Subvariables-method}
-\alias{aliases<-,Subvariables-method}
-\alias{names,Subvariables-method}
-\alias{names<-,Subvariables-method}
+\alias{subvariables}
 \alias{subvariables,CategoricalArrayVariable-method}
+\alias{subvariables<-}
 \alias{subvariables<-,CategoricalArrayVariable,ANY-method}
 \alias{subvariables<-,CategoricalArrayVariable,Subvariables-method}
 \title{Subvariables in Array Variables}
@@ -18,14 +16,6 @@
 \S4method{subvariables}{CategoricalArrayVariable,ANY}(x) <- value
 
 \S4method{subvariables}{CategoricalArrayVariable,Subvariables}(x) <- value
-
-\S4method{names}{Subvariables}(x)
-
-\S4method{names}{Subvariables}(x) <- value
-
-\S4method{aliases}{Subvariables}(x)
-
-\S4method{aliases}{Subvariables}(x) <- value
 }
 \arguments{
 \item{x}{A Variable or Subvariables object}
@@ -51,5 +41,8 @@ Finally, subvariables can be accessed as regular (categorical) variables
 with the \code{$} and \code{[[} extract methods.
 
 See the vignette on array variables for further details and examples.
+}
+\seealso{
+subvars-extract describe-catalog
 }
 

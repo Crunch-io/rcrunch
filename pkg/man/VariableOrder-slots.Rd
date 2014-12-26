@@ -5,6 +5,7 @@
 \alias{entities}
 \alias{entities,VariableGroup-method}
 \alias{entities,VariableOrder-method}
+\alias{entities<-}
 \alias{entities<-,VariableGroup-method}
 \alias{name,VariableGroup-method}
 \alias{name<-,VariableGroup-method}
@@ -29,15 +30,15 @@
 \arguments{
 \item{x}{a VariableGroup or VariableOrder}
 
+\item{simplify}{logical: should variable URLs inside of groups be flattened
+or preserved in their nested lists? Default is \code{FALSE}.}
+
 \item{value}{For name, a character (length-1 vector); for names, a character
 vector of equal length to the number of VariableGroups beind modified; for
 entities, either a character vector of variable URLs or a list containing a
 combination of variable URLs and VariableGroups. Note that group names must
 be unique, should be greater than 0 characters long, and "ungrouped" is a
 reserved group name.}
-
-\item{unlist}{logical: should variable URLs inside of groups be flattened or
-preserved in their nested lists? Default is \code{TRUE}, meaning flattened.}
 }
 \value{
 Variable references, VariableGroups, or group names, as appropriate.

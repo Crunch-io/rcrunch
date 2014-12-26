@@ -1,4 +1,17 @@
-##' @rdname refresh
+##' Methods for IndexTuples
+##'
+##' IndexTuples are objects extracted from ShojiCatalogs. They are internally
+##' used.
+##'
+##' @param x a Tuple
+##' @param name a Tuple slot to get or set
+##' @param i In [[, a Tuple slot to get
+##' @param ... additional arguments to [[, ignored
+##' @param value What to set in a given slot
+##' @param confirm For \code{delete}, whether confirmation is required. See
+##' \code{\link{delete}}.
+##' @rdname tuple-methods
+##' @aliases entity
 ##' @export
 setMethod("refresh", "IndexTuple", function (x) {
     catalog <- ShojiCatalog(crGET(x@index_url))
@@ -6,12 +19,20 @@ setMethod("refresh", "IndexTuple", function (x) {
     return(x)
 })
 
+##' @rdname tuple-methods
+##' @export
 setMethod("$", "IndexTuple", function (x, name) x@body[[name]]) 
+##' @rdname tuple-methods
+##' @export
 setMethod("$<-", "IndexTuple", function (x, name, value) {
     x@body[[name]] <- value
     return(x)
 })
+##' @rdname tuple-methods
+##' @export
 setMethod("[[", "IndexTuple", function (x, i) x@body[[i]])
+##' @rdname tuple-methods
+##' @export
 setMethod("[[<-", "IndexTuple", function (x, i, value) {
     x@body[[i]] <- value
     return(x)
@@ -30,16 +51,22 @@ setTupleSlot <- function (x, name, value) {
     invisible(x)
 }
 
+##' @rdname tuple-methods
+##' @export
 setMethod("entity", "VariableTuple", function (x) {
     return(as.variable(crGET(x@entity_url), tuple=x))
 })
-
+##' @rdname tuple-methods
+##' @export
 setMethod("entity", "DatasetTuple", function (x) {
     return(as.dataset(crGET(x@entity_url), tuple=x))
 })
 
+##' @rdname tuple-methods
+##' @export
 setMethod("delete", "IndexTuple", function (x) crDELETE(x@entity_url))
-
+##' @rdname tuple-methods
+##' @export
 setMethod("delete", "DatasetTuple", function (x, confirm=interactive(), ...) {
     prompt <- paste0("Really delete dataset ", dQuote(name(x)), "?")
     if (confirm && !askForPermission(prompt)) {
@@ -50,5 +77,10 @@ setMethod("delete", "DatasetTuple", function (x, confirm=interactive(), ...) {
     invisible(out)
 })
 
+##' @rdname tuple-methods
+##' @export
 setMethod("name", "IndexTuple", function (x) x$name)
+
+##' @rdname tuple-methods
+##' @export
 setMethod("type", "IndexTuple", function (x) x$type)

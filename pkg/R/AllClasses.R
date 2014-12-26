@@ -117,6 +117,7 @@ VariableGroup <- setClass("VariableGroup", representation=representation(
 ##' \code{\link{VariableOrder}} that governs how variables within it are
 ##' organized.
 ##' @rdname VariableCatalog
+##' @aliases VariableCatalog
 VariableCatalog <- setClass("VariableCatalog", contains="ShojiCatalog",
     representation(order="VariableOrder"))
 DatasetCatalog <- setClass("DatasetCatalog", contains="ShojiCatalog")
@@ -154,7 +155,13 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
 ##'
 ##' @param x For the attribute getters and setters, an object of class
 ##' Category or Categories
+##' @param i For the [ methods, just as with list extract methods
+##' @param j Invalid argument to [, but in the generic's signature
+##' @param ... additional arguments to [, ignored
+##' @param drop Invalid argument to [, but in the generic's signature
+##' @param value For [<-, the replacement Category to insert 
 ##' @rdname Categories
+##' @aliases Categories ids ids<- values values<-
 ##' @export
 Categories <- setClass("Categories", contains="list")
 
@@ -166,7 +173,7 @@ Category <- setClass("Category", contains="namedList")
 ##' @export
 Subvariables <- setClass("Subvariables", contains="ShojiCatalog")
 
-CrunchExpression <- setClass("CrunchExpression",
+CrunchExpr <- setClass("CrunchExpr",
     representation=representation(
         dataset_url="character",
         expression="list",
@@ -180,5 +187,5 @@ CrunchExpression <- setClass("CrunchExpression",
         variables=VariableCatalog()
     ))
 
-CrunchLogicalExpression <- setClass("CrunchLogicalExpression",
-    contains="CrunchExpression")
+CrunchLogicalExpr <- setClass("CrunchLogicalExpr",
+    contains="CrunchExpr")

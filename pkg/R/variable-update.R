@@ -37,6 +37,15 @@
     return(f)
 }
 
+##' Updating variables with expressions or values
+##'
+##' @param x a Variable
+##' @param i a CrunchLogicalExpr or R index, optionally
+##' @param j Invalid
+##' @param value an R vector or a CrunchExpr with which to update
+##' @return \code{x} duly modified
+##' @rdname variable-update
+##' @export
 setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"),
     function (x, i, j, value) {
         ## Backstop error so you don't get "Object of class S4 is not subsettable"
@@ -48,19 +57,51 @@ setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"),
     c("NumericVariable", "numeric"),
     c("DatetimeVariable", "Date"),
     c("DatetimeVariable", "POSIXt"),
-    c("CrunchVariable", "CrunchExpression")
+    c("CrunchVariable", "CrunchExpr")
 )
+
+.var.updater <- function (x, i, j, value) {
+    if (missing(i)) i <- NULL
+    out <- .updateVariable(x, value, filter=.dispatchFilter(i))
+    return(x)
+}
 
 for (i in seq_along(.sigs)) {
     setMethod("[<-", c(.sigs[[i]][1], "ANY", "missing", .sigs[[i]][2]),
-        function (x, i, j, value) {
-            if (missing(i)) i <- NULL
-            out <- .updateVariable(x, value, filter=.dispatchFilter(i))
-            return(x)
-        })
+        .var.updater)
 }
 
-setMethod("[<-", c("CrunchVariable", "CrunchExpression", "missing", "CrunchExpression"),
+# for (i in seq_along(.sigs)) {
+#         cat('
+# ##\' @rdname variable-update
+# ##\' @export
+# setMethod("[<-", c("', .sigs[[i]][1], '", "ANY", "missing", "', .sigs[[i]][2], '"),
+#     .var.updater)', sep="")
+# }
+
+##' @rdname variable-update
+##' @export
+setMethod("[<-", c("TextVariable", "ANY", "missing", "character"),
+    .var.updater)
+##' @rdname variable-update
+##' @export
+setMethod("[<-", c("NumericVariable", "ANY", "missing", "numeric"),
+    .var.updater)
+##' @rdname variable-update
+##' @export
+setMethod("[<-", c("DatetimeVariable", "ANY", "missing", "Date"),
+    .var.updater)
+##' @rdname variable-update
+##' @export
+setMethod("[<-", c("DatetimeVariable", "ANY", "missing", "POSIXt"),
+    .var.updater)
+##' @rdname variable-update
+##' @export
+setMethod("[<-", c("CrunchVariable", "ANY", "missing", "CrunchExpr"),
+    .var.updater)
+##' @rdname variable-update
+##' @export
+setMethod("[<-", c("CrunchVariable", "CrunchExpr", "missing", "CrunchExpr"),
     function (x, i, j, value) {
         if (!identical(zcl(i), value@filter)) {
             halt("Cannot update a variable with a value that has a different filter")
@@ -123,6 +164,34 @@ for (i in c("CategoricalVariable", "CategoricalArrayVariable")) {
         setMethod("[<-", c(i, "ANY", "missing", j), .categorical.update[[j]])
     }
 }
+
+# for (i in c("CategoricalVariable", "CategoricalArrayVariable")) {
+#     for (j in c("numeric", "character", "factor")) {
+#         cat('
+# ##\' @rdname variable-update
+# ##\' @export
+# setMethod("[<-", c("', i, '", "ANY", "missing", "', j, '"), .categorical.update[["', j, '"]])', sep="")
+#     }
+# }
+
+##' @rdname variable-update
+##' @export
+setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "numeric"), .categorical.update[["numeric"]])
+##' @rdname variable-update
+##' @export
+setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "character"), .categorical.update[["character"]])
+##' @rdname variable-update
+##' @export
+setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "factor"), .categorical.update[["factor"]])
+##' @rdname variable-update
+##' @export
+setMethod("[<-", c("CategoricalArrayVariable", "ANY", "missing", "numeric"), .categorical.update[["numeric"]])
+##' @rdname variable-update
+##' @export
+setMethod("[<-", c("CategoricalArrayVariable", "ANY", "missing", "character"), .categorical.update[["character"]])
+##' @rdname variable-update
+##' @export
+setMethod("[<-", c("CategoricalArrayVariable", "ANY", "missing", "factor"), .categorical.update[["factor"]])
 
 # setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
 #     function (x, i, j, value) {

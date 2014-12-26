@@ -99,64 +99,97 @@ pickSubclassConstructor <- function (x=NULL) {
     return(x)
 }
 
+##' @rdname describe
 ##' @export
 setMethod("name", "CrunchVariable", function (x) tuple(x)$name)
+##' @rdname describe
 ##' @export
 setMethod("name<-", "CrunchVariable", 
     function (x, value) setTupleSlot(x, "name", value))
+##' @rdname describe
 ##' @export
 setMethod("description", "CrunchVariable", function (x) tuple(x)$description)
+##' @rdname describe
 ##' @export
 setMethod("description<-", "CrunchVariable", 
     function (x, value) setTupleSlot(x, "description", value))
+##' @rdname describe
 ##' @export
 setMethod("alias", "CrunchVariable", function (object) tuple(object)$alias)
-
+##' @rdname describe
 ##' @export
 setMethod("alias<-", "CrunchVariable", 
     function (x, value) setTupleSlot(x, "alias", value))
 
+##' Get and set Categories on Variables
+##'
+##' @param x a Variable
+##' @param value for the setters, an object of class Categories to set. 
+##' @return Getters return Categories; setters return \code{x} duly modified.
+##' @rdname var-categories
+##' @aliases var-categories categories categories<-
 ##' @export
 setMethod("categories", "CrunchVariable", function (x) NULL)
+##' @rdname var-categories
+##' @export
 setMethod("categories", "CategoricalVariable", function (x) x@body$categories)
+##' @rdname var-categories
+##' @export
 setMethod("categories", "CategoricalArrayVariable",
     function (x) x@body$categories)
 
+##' @rdname var-categories
 ##' @export
 setMethod("categories<-", c("CategoricalVariable", "Categories"), 
     function (x, value) setCrunchSlot(x, "categories", value))
+##' @rdname var-categories
+##' @export
 setMethod("categories<-", c("CategoricalArrayVariable", "Categories"), 
     function (x, value) setCrunchSlot(x, "categories", value))
+##' @rdname var-categories
+##' @export
 setMethod("categories<-", c("CategoricalVariable", "numeric"), 
     function (x, value) {
         halt("`categories(x) <- value` only accepts Categories, not numeric. ",
             "Did you mean `values(categories(x)) <- value`?")
     })
+##' @rdname var-categories
+##' @export
 setMethod("categories<-", c("CategoricalVariable", "character"), 
     function (x, value) {
         halt("`categories(x) <- value` only accepts Categories, not ",
             "character. Did you mean `names(categories(x)) <- value`?")
     })
+##' @rdname var-categories
+##' @export
 setMethod("categories<-", c("CategoricalVariable", "ANY"), 
     function (x, value) {
         halt("`categories(x) <- value` only accepts Categories, not ", 
             class(value), ".")
     })
+##' @rdname var-categories
+##' @export
 setMethod("categories<-", c("CategoricalArrayVariable", "numeric"), 
     function (x, value) {
         halt("`categories(x) <- value` only accepts Categories, not numeric. ",
             "Did you mean `values(categories(x)) <- value`?")
     })
+##' @rdname var-categories
+##' @export
 setMethod("categories<-", c("CategoricalArrayVariable", "character"), 
     function (x, value) {
         halt("`categories(x) <- value` only accepts Categories, not ",
             "character. Did you mean `names(categories(x)) <- value`?")
     })
+##' @rdname var-categories
+##' @export
 setMethod("categories<-", c("CategoricalArrayVariable", "ANY"), 
     function (x, value) {
         halt("`categories(x) <- value` only accepts Categories, not ", 
             class(value), ".")
     })
+##' @rdname var-categories
+##' @export
 setMethod("categories<-", c("CrunchVariable", "ANY"), 
     function (x, value) {
         halt("category assignment not defined for ", class(x))
@@ -178,6 +211,8 @@ unbind <- function (x) {
     invisible(crDELETE(self(x)))
 }
 
+##' @rdname delete
+##' @export
 setMethod("delete", "CategoricalArrayVariable", function (x, ...) {
     subvars <- x@body$subvariables
     out <- crDELETE(self(x))
@@ -185,15 +220,15 @@ setMethod("delete", "CategoricalArrayVariable", function (x, ...) {
     invisible(out)
 })
 
-setMethod("[", c("CrunchVariable", "CrunchExpression"), function (x, i, ...) {
-    CrunchExpression(dataset_url=datasetReference(x), expression=zcl(x),
+setMethod("[", c("CrunchVariable", "CrunchExpr"), function (x, i, ...) {
+    CrunchExpr(dataset_url=datasetReference(x), expression=zcl(x),
         filter=zcl(i))
 })
 setMethod("[", c("CrunchVariable", "numeric"), function (x, i, ...) {
-    CrunchExpression(dataset_url=datasetReference(x), expression=zcl(x),
+    CrunchExpr(dataset_url=datasetReference(x), expression=zcl(x),
         filter=.dispatchFilter(i))
 })
 setMethod("[", c("CrunchVariable", "logical"), function (x, i, ...) {
-    CrunchExpression(dataset_url=datasetReference(x), expression=zcl(x),
+    CrunchExpr(dataset_url=datasetReference(x), expression=zcl(x),
         filter=.dispatchFilter(i))
 })

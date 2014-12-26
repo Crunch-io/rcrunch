@@ -25,14 +25,20 @@ setMethod("archived", "DatasetCatalog", function (x) {
     return(x)
 })
 
+##' @rdname catalog-extract
+##' @export
 setMethod("[[", c("DatasetCatalog", "character"), function (x, i, ...) {
     DatasetTuple(index_url=self(x), entity_url=i, body=index(x)[[i]])
 })
+##' @rdname catalog-extract
+##' @export
 setMethod("[[", c("DatasetCatalog", "ANY"), function (x, i, ...) {
     DatasetTuple(index_url=self(x), entity_url=urls(x)[i],
         body=index(x)[[i]])
 })
 
+##' @rdname describe-catalog
+##' @export
 setMethod("names", "DatasetCatalog", function (x) {
     vapply(index(x), function (a) a$name, character(1), USE.NAMES=FALSE)
 })

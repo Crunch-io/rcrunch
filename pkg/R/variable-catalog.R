@@ -42,6 +42,8 @@ setMethod("hidden", "VariableCatalog", function (x) {
     return(x)
 })
 
+##' @rdname catalog-extract
+##' @export
 setMethod("[<-", c("VariableCatalog", "character", "missing", "VariableCatalog"), function (x, i, j, value) {
     ## Validate!
     index(x)[i] <- index(value)[i]
@@ -49,36 +51,66 @@ setMethod("[<-", c("VariableCatalog", "character", "missing", "VariableCatalog")
     return(x)
 })
 
+##' @rdname catalog-extract
+##' @export
 setMethod("[[", c("VariableCatalog", "character"), function (x, i, ...) {
     VariableTuple(index_url=self(x), entity_url=i, body=index(x)[[i]])
 })
+##' @rdname catalog-extract
+##' @export
 setMethod("[[", c("VariableCatalog", "ANY"), function (x, i, ...) {
     VariableTuple(index_url=self(x), entity_url=urls(x)[i],
         body=index(x)[[i]])
 })
+##' @rdname catalog-extract
+##' @export
 setMethod("[[<-", c("VariableCatalog", "character", "missing", "VariableTuple"), 
     function (x, i, j, value) {
         index(x)[[i]] <- value@body
         return(x)
     })
+##' @rdname catalog-extract
+##' @export
 setMethod("[[<-", c("VariableCatalog", "character", "missing", "CrunchVariable"), 
-   function (x, i, j, value) {
-       stopifnot(i == self(value))
-       x[[i]] <- tuple(value)
-       return(x)
-   })
+    function (x, i, j, value) {
+        stopifnot(i == self(value))
+        x[[i]] <- tuple(value)
+        return(x)
+    })
 
+##' Get and set names, aliases on Catalog-type objects
+##' 
+##' These methods let you get and set names and aliases for variables in a
+##' Dataset's catalog, or within \code{\link{Subvariables}} in an array 
+##' variable. They work like the base R names methods.
+##'
+##' Note that the \code{names} method on a Dataset returns the aliases of its
+##' variables by default. See the vignette on variables for more information.
+##'
+##' @param x a VariableCatalog, Subvariables, or similar object
+##' @param value For the setters, an appropriate-length character vector to
+##' assign
+##' @return Getters return the character object in the specified slot; setters
+##' return \code{x} duly modified.
+##' @export
+##' @aliases describe-catalog aliases aliases<-
+##' @seealso Subvariables Categories base::names
+##' @rdname describe-catalog
 setMethod("names", "VariableCatalog", function (x) {
     vapply(index(x), function (a) a[["name"]], character(1), USE.NAMES=FALSE)
 })
+##' @export
+##' @rdname describe-catalog
 setMethod("names<-", "VariableCatalog", function (x, value) {
     mapSetIndexSlot(x, "name", value)
 })
 ##' @export
+##' @rdname describe-catalog
 setMethod("aliases", "VariableCatalog", function (x) {
     vapply(index(x), function (a) a[["alias"]], character(1), USE.NAMES=FALSE)
 })
 ##' @export
+##' @rdname describe-catalog
 setMethod("aliases<-", "VariableCatalog", function (x, value) {
     mapSetIndexSlot(x, "alias", value)
 })

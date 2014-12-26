@@ -40,12 +40,27 @@ setDatasetDescription <- function (x, value) {
     setTupleSlot(x, "description", value)
 }
 
+##' Name, alias, and description for Crunch objects
+##'
+##' @param x a Dataset or Variable. 
+##' @param object Same as \code{x} but for the \code{alias} method, in order to
+##' match the generic from another package. Note that \code{alias} is only
+##' defined for Variables.
+##' @param value For the setters, a length-1 character vector to assign
+##' @return Getters return the character object in the specified slot; setters
+##' return \code{x} duly modified.
+##' @rdname describe
+##' @aliases describe name name<- description description<- alias<-
+##' @seealso describe-categories describe-catalog
 ##' @export
 setMethod("name", "CrunchDataset", function (x) tuple(x)$name)
+##' @rdname describe
 ##' @export
 setMethod("name<-", "CrunchDataset", setDatasetName)
+##' @rdname describe
 ##' @export
 setMethod("description", "CrunchDataset", function (x) tuple(x)$description)
+##' @rdname describe
 ##' @export
 setMethod("description<-", "CrunchDataset", setDatasetDescription)
 
@@ -56,12 +71,20 @@ as.dataset <- function (x, useAlias=default.useAlias(), tuple=DatasetTuple()) {
     return(out)
 }
 
+##' Dataset dimensions
+##'
+##' @param x a Dataset
+##' @return integer vector of length 2, indicating the number of rows and
+##' non-hidden variables in the dataset. Array subvariables are excluded from
+##' the column count.
+##' @seealso base::dim
 ##' @export
 setMethod("dim", "CrunchDataset",
     function (x) c(x@.nrow, length(variables(x))))
 
 namekey <- function (dataset) ifelse(dataset@useAlias, "alias", "name")
 
+##' @rdname describe-catalog
 ##' @export
 setMethod("names", "CrunchDataset", function (x) {
     findVariables(x, key=namekey(x), value=TRUE)
@@ -69,8 +92,10 @@ setMethod("names", "CrunchDataset", function (x) {
 
 ##' Dataset weights
 ##' @param x a Dataset
-##' @param value a Variable to set as weight, or NULL to remove the existing weight
-##' @return For the getter, a Variable if there is a weight, else NULL. For the setter, x, modified accordingly
+##' @param value a Variable to set as weight, or NULL to remove the existing
+##' weight
+##' @return For the getter, a Variable if there is a weight, else NULL. For the
+##' setter, x, modified accordingly
 ##' @export
 weight <- function (x) {
     stopifnot(is.dataset(x))
@@ -142,13 +167,34 @@ variableCatalogURL <- function (dataset) {
 
 summaryURL <- function (x) shojiURL(x, "views", "summary")
 
+##' Access a Dataset's Variables Catalog
+##'
+##' Datasets contain collections of variables. For a few purposes, such as
+##' editing variables' metadata, it is helpful to access these variable catalogs
+##' more directly. 
+##'
+##' \code{variables} gives just the active variables in the dataset, while 
+##' \code{allVariables}, as the name suggests, yields all variables, including
+##' hidden variables.
+##' @param x a Dataset
+##' @param value For the setters, a VariableCatalog to assign.
+##' @return Getters return VariableCatalog; setters return \code{x} duly
+##' modified.
+##' @rdname dataset-variables
+##' @aliases dataset-variables variables variables<- allVariables allVariables<-
 ##' @export
 setMethod("variables", "CrunchDataset", function (x) active(allVariables(x)))
+##' @rdname dataset-variables
 ##' @export
 setMethod("variables<-", c("CrunchDataset", "VariableCatalog"),
     setDatasetVariables)
+##' @rdname dataset-variables
 ##' @export
 setMethod("allVariables", "CrunchDataset", function (x) x@variables)
+##' @rdname dataset-variables
 ##' @export
 setMethod("allVariables<-", c("CrunchDataset", "VariableCatalog"), 
     setDatasetVariables)
+    
+setMethod("hidden", "CrunchDataset", function (x) hidden(allVariables(x)))
+    

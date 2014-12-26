@@ -8,11 +8,16 @@
 \alias{Category-class}
 \alias{[,Categories,ANY-method}
 \alias{[<-,Categories,ANY,ANY,ANY-method}
+\alias{ids}
 \alias{ids,Categories-method}
+\alias{ids,list-method}
+\alias{ids<-}
 \alias{ids<-,Categories-method}
 \alias{names,Categories-method}
 \alias{names<-,Categories-method}
+\alias{values}
 \alias{values,Categories-method}
+\alias{values<-}
 \alias{values<-,Categories-method}
 \title{Categories in CategoricalVariables}
 \usage{
@@ -26,6 +31,8 @@
 
 \S4method{ids}{Categories}(x)
 
+\S4method{ids}{list}(x)
+
 \S4method{names}{Categories}(x) <- value
 
 \S4method{values}{Categories}(x) <- value
@@ -35,6 +42,16 @@
 \arguments{
 \item{x}{For the attribute getters and setters, an object of class
 Category or Categories}
+
+\item{i}{For the [ methods, just as with list extract methods}
+
+\item{j}{Invalid argument to [, but in the generic's signature}
+
+\item{...}{additional arguments to [, ignored}
+
+\item{drop}{Invalid argument to [, but in the generic's signature}
+
+\item{value}{For [<-, the replacement Category to insert}
 }
 \description{
 CategoricalVariables, as well as the array types composed from

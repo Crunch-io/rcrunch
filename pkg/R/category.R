@@ -51,20 +51,35 @@ setMethod("$<-", "Category", function (x, name, value) {
     return(x)
 })
 
+##' Category attributes
+##' 
+##' @param x a Category
+##' @param value For the setters, an appropriate value to set
+##' @return \code{name} returns character; \code{value} and \code{id} return
+##' numeric; value but not id may be \code{NA}; \code{is.selected} returns
+##' logical indicating whether this Category is a "selected" dichotomy. Setters
+##' return \code{x} duly modified.
+##' @rdname describe-category
+##' @aliases value value<- id is.selected describe-category
+##' @seealso Categories dichotomize
 ##' @export
 setMethod("name", "Category", function (x) x[["name"]])
+##' @rdname describe-category
 ##' @export
 setMethod("name<-", "Category", setName)
+##' @rdname describe-category
 ##' @export
 setMethod("value", "Category", function (x) {
     v <- x[["numeric_value"]]
     return(ifelse(is.null(v), NA_real_, as.numeric(v)))
 })
+##' @rdname describe-category
 ##' @export
 setMethod("value<-", "Category", setValue)
-
+##' @rdname describe-category
 ##' @export
 setMethod("id", "Category", function (x) as.integer(x[["id"]]))
+##' @rdname describe-category
 ##' @export
 setMethod("id", "list", function (x) as.integer(x[["id"]]))
 
@@ -76,6 +91,7 @@ showCategory <- function (x) {
     return(out)
 }
 
+##' @rdname show-crunch
 ##' @export
 setMethod("show", "Category", function (object) {
     out <- showCategory(object)
@@ -83,11 +99,16 @@ setMethod("show", "Category", function (object) {
     invisible(out)
 })
 
+##' @rdname describe-category
 ##' @export
 setMethod("is.selected", "Category", function (x) isTRUE(x$selected))
 
+##' @rdname is-na-categories
+##' @export
 setMethod("is.na", "Category", function (x) isTRUE(x$missing))
 
+##' @rdname is-na-categories
+##' @export
 setMethod("is.na<-", c("Category", "logical"), function (x, value) {
     stopifnot(length(value) == 1)
     x$missing <- isTRUE(value)

@@ -4,6 +4,7 @@
 ##' @param x a Variable or subset of a VariableCatalog to hide or unhide
 ##' @return (invisibly) the Variable or VariableCatalog, hidden or unhidden
 ##' @rdname hide
+##' @aliases hide unhide
 ##' @export
 setMethod("hide", "CrunchVariable", function (x) {
     invisible(setTupleSlot(x, "discarded", TRUE))
@@ -68,10 +69,9 @@ unhideVariables <- function (dataset, variables=NULL, pattern=NULL,
     invisible(dataset)
 }
 
-setMethod("hidden", "CrunchDataset", function (x) hidden(allVariables(x)))
-
 ##' Show the names of hidden variables within the dataset
 ##' @param dataset the Dataset
+##' @param key the Variable attribute to return. Default is "alias"
 ##' @return a vector of the names of Variables marked as hidden.
 ##' @export
 hiddenVariables <- function (dataset, key="name") {

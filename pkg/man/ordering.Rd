@@ -2,8 +2,10 @@
 % Please edit documentation in R/ordering.R
 \docType{methods}
 \name{ordering,CrunchDataset-method}
+\alias{ordering}
 \alias{ordering,CrunchDataset-method}
 \alias{ordering,VariableCatalog-method}
+\alias{ordering<-}
 \alias{ordering<-,CrunchDataset-method}
 \alias{ordering<-,VariableCatalog-method}
 \title{Get and set VariableOrder}

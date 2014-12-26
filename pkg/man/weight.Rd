@@ -12,10 +12,12 @@ weight(x) <- value
 \arguments{
 \item{x}{a Dataset}
 
-\item{value}{a Variable to set as weight, or NULL to remove the existing weight}
+\item{value}{a Variable to set as weight, or NULL to remove the existing
+weight}
 }
 \value{
-For the getter, a Variable if there is a weight, else NULL. For the setter, x, modified accordingly
+For the getter, a Variable if there is a weight, else NULL. For the
+setter, x, modified accordingly
 }
 \description{
 Dataset weights

@@ -50,6 +50,15 @@ CategoricalVariable.table <- function (...,
     return(makeCategoricalTable(summ$categories, add.na))
 }
 
+##' Table function for Crunch objects
+##'
+##' @param ... things to tabulate
+##' @param exclude see \code{link{base:table}}
+##' @param useNA see \code{link{base:table}}
+##' @param dnn see \code{link{base:table}}
+##' @param deparse.level see \code{link{base:table}}
+##' @return a table object
+##' @seealso base::table
 ##' @export 
 table <- function (..., exclude, useNA, dnn, deparse.level) {
     m <- match.call()

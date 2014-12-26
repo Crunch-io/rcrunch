@@ -7,13 +7,13 @@
 ##' combination of variable URLs and VariableGroups. Note that group names must
 ##' be unique, should be greater than 0 characters long, and "ungrouped" is a
 ##' reserved group name.
-##' @param unlist logical: should variable URLs inside of groups be flattened or
-##' preserved in their nested lists? Default is \code{TRUE}, meaning flattened.
+##' @param simplify logical: should variable URLs inside of groups be flattened 
+##' or preserved in their nested lists? Default is \code{FALSE}.
 ##' @return Variable references, VariableGroups, or group names, as appropriate.
 ##' @rdname VariableOrder-slots
 ##' @seealso VariableOrder
 ##' @seealso grouped
-##' @aliases entities
+##' @aliases entities entities<-
 ##' @export
 setMethod("entities", "VariableGroup", function (x, simplify=FALSE) {
     out <- x@entities

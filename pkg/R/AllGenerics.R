@@ -79,6 +79,16 @@ setGeneric("na.omit")
 ##' @export
 setGeneric("as.vector")
 
+##' Generic method for converting objects to Crunch representations
+##'
+##' If you have other object types you wish to convert to Crunch variables, 
+##' you can declare methods for \code{toVariable}
+##' @param x the object
+##' @param ... additional arguments
+##' @return a list object suitable for POSTing to the Crunch API. See the API
+##' documentation for specifications. 
+##' @rdname toVariable
+##' @aliases toVariable
 ##' @export
 setGeneric("toVariable", function (x, ...) standardGeneric("toVariable"))
 

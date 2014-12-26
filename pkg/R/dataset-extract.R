@@ -128,10 +128,10 @@ setMethod("[[<-",
     c("CrunchDataset", "character", "missing", "ANY"),
     .addVariableSetter)
 setMethod("[[<-", 
-    c("CrunchDataset", "character", "missing", "CrunchExpression"), 
+    c("CrunchDataset", "character", "missing", "CrunchExpr"), 
     .deriveVariableSetter)
 setMethod("[[<-", 
-    c("CrunchDataset", "character", "missing", "CrunchLogicalExpression"), 
+    c("CrunchDataset", "character", "missing", "CrunchLogicalExpr"), 
     function (x, i, value) {
         halt("Cannot currently derive a logical variable")
     })
@@ -159,7 +159,7 @@ setMethod("[<-", c("CrunchDataset", "ANY", "missing", "list"),
 
 ## TODO: add similar [<-.CrunchDataset, CrunchDataset/VariableCatalog
 
-setMethod("[<-", c("CrunchDataset", "CrunchExpression", "ANY", "ANY"),
+setMethod("[<-", c("CrunchDataset", "CrunchExpr", "ANY", "ANY"),
      function (x, i, j, value) {
         if (j %in% names(x)) {
             return(.updateValues(x, j, value, filter=i))

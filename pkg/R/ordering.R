@@ -10,6 +10,7 @@
 ##' @return \code{ordering} returns a VariableOrder object, while
 ##' \code{ordering<-} sets the VariableOrder in \code{value} on \code{x}
 ##' @rdname ordering
+##' @aliases ordering ordering<-
 ##' @export
 setMethod("ordering", "CrunchDataset", function (x) ordering(variables(x)))
 

@@ -1,5 +1,19 @@
 CASTABLE_TYPES <- c("numeric", "text", "categorical") ## Add datetime when server supports
 
+##' Change the type of Crunch variables
+##'
+##' Numeric, text, and categorical variables can be cast to one another by
+##' assigning them a new "type". This modifes the storage of the data on the
+##' server and should only be done in narrow circumstances, as in when importing
+##' data from a different file format has resulted in incorrect types being
+##' specified. 
+##'
+##' @param x a Variable
+##' @param value For the setter, a character value in c("numeric", "text",
+##' "categorical")
+##' @return Getter returns character; setter returns \code{x} duly modified.
+##' @rdname type
+##' @aliases type type<-
 ##' @export
 setMethod("type", "CrunchVariable", function (x) x@body$type)
 ## do type casting as type<-
@@ -16,6 +30,7 @@ castVariable <- function (x, to) {
     invisible(x)
 }
 
+##' @rdname type
 ##' @export
 setMethod("type<-", "CrunchVariable", 
     function (x, value) castVariable(x, value))

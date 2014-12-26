@@ -8,6 +8,8 @@ hiddenVariables(dataset, key = "name")
 }
 \arguments{
 \item{dataset}{the Dataset}
+
+\item{key}{the Variable attribute to return. Default is "alias"}
 }
 \value{
 a vector of the names of Variables marked as hidden.

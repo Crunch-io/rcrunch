@@ -15,6 +15,8 @@
 ##' numeric indices are positional, not with reference to category ids.
 ##' @return Categories or the Variable, (un)dichotomized accoringly
 ##' @rdname dichotomize
+##' @aliases dichotomize is.dichotomized undichotomize
+##' @seealso describe-category
 ##' @export
 setMethod("is.dichotomized", "Categories",
     function (x) any(vapply(x, is.selected, logical(1))))

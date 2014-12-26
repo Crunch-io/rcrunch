@@ -8,7 +8,7 @@ r2zcl <- function (x) {
     
     ## Grab any "typeof" attribute that's been attached. This is so we can
     ## assert that the type we're sending matches the type of some other 
-    ## variable, usually another variable in our CrunchExpression
+    ## variable, usually another variable in our CrunchExpr
     zztype <- attr(x, "typeof")
     
     ## If there is a single value, call it "value". Else it is a "column" array
@@ -28,7 +28,7 @@ r2zcl <- function (x) {
 }
 
 ## Methods to convert various objects to ZCL
-setMethod("zcl", "CrunchExpression", function (x) x@expression)
+setMethod("zcl", "CrunchExpr", function (x) x@expression)
 setMethod("zcl", "CrunchVariable", function (x) zcl(tuple(x)))
 setMethod("zcl", "VariableTuple", function (x) list(variable=x$id))
 setMethod("zcl", "numeric", r2zcl)

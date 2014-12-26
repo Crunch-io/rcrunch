@@ -22,6 +22,8 @@
 ##' @param value For the setters, the appropriate values to set
 ##'
 ##' @rdname Subvariables
+##' @aliases Subvariables subvariables subvariables<-
+##' @seealso subvars-extract describe-catalog
 ##' @export
 setMethod("subvariables", "CategoricalArrayVariable", function (x) {
     tup <- tuple(x)
@@ -48,13 +50,13 @@ setMethod("subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
         return(setCrunchSlot(x, "subvariables", new))
     })
 
-##' @rdname Subvariables
+##' @rdname describe-catalog
 ##' @export
 setMethod("names", "Subvariables", function (x) {
     vapply(index(x), function (a) a$name, character(1), USE.NAMES=FALSE)
 })
 
-##' @rdname Subvariables
+##' @rdname describe-catalog
 ##' @export
 setMethod("names<-", "Subvariables", function (x, value) {
     stopifnot(is.character(value), length(x) == length(value),
@@ -67,13 +69,13 @@ setMethod("names<-", "Subvariables", function (x, value) {
     return(x)
 })
 
-##' @rdname Subvariables
+##' @rdname describe-catalog
 ##' @export
 setMethod("aliases", "Subvariables", function (x) {
     vapply(index(x), function (a) a$alias, character(1), USE.NAMES=FALSE)
 })
 
-##' @rdname Subvariables
+##' @rdname describe-catalog
 ##' @export
 setMethod("aliases<-", "Subvariables", function (x, value) {
     stopifnot(is.character(value), length(x) == length(value),
@@ -86,11 +88,26 @@ setMethod("aliases<-", "Subvariables", function (x, value) {
     return(x)
 })
 
+##' Extract and modify subsets of subvariables
+##'
+##' @param x Subvariables or an array Variable (which contains subvariables)
+##' @param i which subvariables to extract
+##' @param name For \code{\$}, the name (not alias) of the subvariable to
+##' extract
+##' @param j Invalid
+##' @param drop Invalid
+##' @param ... additional arguments
+##' @param value For updating, a CrunchExpr
+##' @return A subset of \code{x} if extracting, otherwise \code{x} duly modified
+##' @rdname subvars-extract
+##' @export
 setMethod("[[", c("Subvariables", "character"), function (x, i, ...) {
     i <- match(i, names(x))
     if (is.na(i)) return(NULL)
     callNextMethod(x, i, ...)    
 })
+##' @rdname subvars-extract
+##' @export
 setMethod("[[", c("Subvariables", "ANY"), function (x, i, ...) {
     out <- VariableTuple(index_url=self(x), entity_url=urls(x)[i],
         body=index(x)[[i]])
@@ -99,8 +116,12 @@ setMethod("[[", c("Subvariables", "ANY"), function (x, i, ...) {
     }
     return(out)
 })
+##' @rdname subvars-extract
+##' @export
 setMethod("$", "Subvariables", function (x, name) x[[name]])
 
+##' @rdname subvars-extract
+##' @export
 setMethod("[", c("Subvariables", "character"), function (x, i, ...) {
     w <- match(i, names(x))
     if (any(is.na(w))) {
@@ -109,6 +130,8 @@ setMethod("[", c("Subvariables", "character"), function (x, i, ...) {
     return(x[w])
 })
 
+##' @rdname subvars-extract
+##' @export
 setMethod("[[<-", 
     c("Subvariables", "character", "missing", "CrunchVariable"), 
     function (x, i, value) {
@@ -118,6 +141,8 @@ setMethod("[[<-",
         }
         callNextMethod(x, i, value)    
     })
+##' @rdname subvars-extract
+##' @export
 setMethod("[[<-", 
     c("Subvariables", "ANY", "missing", "CrunchVariable"), 
     function (x, i, value) {
@@ -127,17 +152,23 @@ setMethod("[[<-",
         index(x)[[self(value)]] <- tuple(value)@body
         return(x)
     })
+##' @rdname subvars-extract
+##' @export
 setMethod("[[<-", 
     c("Subvariables", "ANY", "missing", "NULL"),
     function (x, i, value) {
         halt("Cannot add or remove subvariables")
     })
+##' @rdname subvars-extract
+##' @export
 setMethod("[[<-", 
     c("Subvariables", "ANY", "missing", "ANY"),
     function (x, i, value) {
         halt("Can only assign Variables into an object of class Subvariables")
     })
 
+##' @rdname subvars-extract
+##' @export
 setMethod("[<-", c("Subvariables", "character", "missing", "Subvariables"), 
     function (x, i, value) {
         w <- match(i, names(x))
@@ -146,6 +177,8 @@ setMethod("[<-", c("Subvariables", "character", "missing", "Subvariables"),
         }
         callNextMethod(x, w, value)
     })
+##' @rdname subvars-extract
+##' @export
 setMethod("[<-", c("Subvariables", "ANY", "missing", "Subvariables"), 
     function (x, i, value) {
         inbound <- vapply(value, function (a) self(a), character(1))
@@ -156,6 +189,8 @@ setMethod("[<-", c("Subvariables", "ANY", "missing", "Subvariables"),
         names(index(x))[i] <- inbound
         return(x)
     })
+##' @rdname subvars-extract
+##' @export
 setMethod("[<-", c("Subvariables", "ANY", "missing", "ANY"), 
     function (x, i, value) {
         halt("Can only assign Variables into an object of class Subvariables")
@@ -164,18 +199,29 @@ setMethod("[<-", c("Subvariables", "ANY", "missing", "ANY"),
 ##' @export
 as.list.Subvariables <- function (x, ...) lapply(names(x), function (i) x[[i]])
 
+##' @rdname subvars-extract
+##' @export
 setMethod("[", "CategoricalArrayVariable", function (x, i, ...) {
     return(subvariables(x)[i, ...])
 })
 ## Special methods so as not to conflict with c("CrunchVariable", "numeric")
+
+##' @rdname subvars-extract
+##' @export
 setMethod("[", c("CategoricalArrayVariable", "numeric"), function (x, i, ...) {
     return(subvariables(x)[i, ...])
 })
+##' @rdname subvars-extract
+##' @export
 setMethod("[", c("CategoricalArrayVariable", "logical"), function (x, i, ...) {
     return(subvariables(x)[i, ...])
 })
+##' @rdname subvars-extract
+##' @export
 setMethod("[[", "CategoricalArrayVariable", function (x, i, ...) {
     return(subvariables(x)[[i, ...]])
 })
+##' @rdname subvars-extract
+##' @export
 setMethod("$", "CategoricalArrayVariable", 
     function (x, name) subvariables(x)[[name]])

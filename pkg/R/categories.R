@@ -50,6 +50,7 @@ setMethod("values", "Categories", function (x) vapply(x, value, numeric(1)))
 ##' @rdname Categories
 ##' @export
 setMethod("ids", "Categories", function (x) vapply(x, id, integer(1)))
+##' @rdname Categories
 ##' @export
 setMethod("ids", "list", function (x) sapply(x, id)) ## for summaries
 
@@ -76,6 +77,22 @@ setMethod("ids<-", "Categories", function (x, value) {
     }
     return(x)
 })
+
+##' toJSON methods for Crunch objects
+##' 
+##' @param x the object
+##' @param container argument to the generic, not used
+##' @param collapse argument to the generic, not used
+##' @param .level argument to the generic, not used
+##' @param .withNames argument to the generic, not used
+##' @param .na argument to the generic, not used
+##' @param .escapeEscapes argument to the generic, not used
+##' @param pretty argument to the generic, not used
+##' @param asIs argument to the generic, not used
+##' @param .inf argument to the generic, not used
+##' @param ... additional arguments argument to the generic, not used
+##' @return JSON-serialized character object
+##' @rdname tojson-crunch
 ##' @export
 setMethod("toJSON", "Categories", function (x, ...) toJSON(I(x@.Data)))
 
@@ -90,11 +107,27 @@ setMethod("toJSON", "Categories", function (x, ...) toJSON(I(x@.Data)))
     return(object)
 }
 
+##' Omit missing categories
+##' @param object Categories
+##' @param ... additional arguments, ignored
+##' @return \code{object} with any categories that have missing: TRUE excluded
 ##' @export
 setMethod("na.omit", "Categories", function (object, ...) {
     Categories(.na.omit.categories(object))
 })
 
+##' is.na for Categories
+##'
+##' @param x Categories or a single Category
+##' @param value To change the missingness of categories, supply either (1)
+##' a logical vector of equal length of the categories (or length 1 for the 
+##' Category method), or (2) the names of the categories to mark as missing. 
+##' If supplying the latter, any categories already indicated as missing will
+##' remain missing.
+##' @return Getters return logical, a named vector in the case of the Categories
+##' method; setters return \code{x} duly modified.
+##' @rdname is-na-categories
+##' @aliases is-na-categories
 ##' @export
 setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical(1), USE.NAMES=FALSE), .Names=names(x)))
 
@@ -104,6 +137,7 @@ n2i <- function (x, cats) {
     return(ids(cats)[match(x, names(cats))])
 }
 
+##' @rdname is-na-categories
 ##' @export
 setMethod("is.na<-", c("Categories", "character"), function (x, value) {
     ix <- match(value, names(x))
@@ -115,6 +149,7 @@ setMethod("is.na<-", c("Categories", "character"), function (x, value) {
     return(x)
 })
 
+##' @rdname is-na-categories
 ##' @export
 setMethod("is.na<-", c("Categories", "logical"), function (x, value) {
     stopifnot(length(x) == length(value))

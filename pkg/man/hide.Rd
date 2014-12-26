@@ -2,8 +2,10 @@
 % Please edit documentation in R/hide-variables.R
 \docType{methods}
 \name{hide,CrunchVariable-method}
+\alias{hide}
 \alias{hide,CrunchVariable-method}
 \alias{hide,VariableCatalog-method}
+\alias{unhide}
 \alias{unhide,CrunchVariable-method}
 \alias{unhide,VariableCatalog-method}
 \title{Hide and Unhide Variables}

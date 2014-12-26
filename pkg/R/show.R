@@ -11,6 +11,13 @@ getNameAndType <- function (x) {
     return(c(varname, vartype))
 }
 
+##' Show methods for Crunch objects
+##'
+##' @param object the object
+##' @return invisibly
+##' @seealso methods::show
+##' @importFrom methods show
+##' @rdname show-crunch
 ##' @export
 setMethod("show", "CrunchVariable", function (object) {
     out <- showCrunchVariable(object)
@@ -19,6 +26,8 @@ setMethod("show", "CrunchVariable", function (object) {
     invisible(out)
 })
 
+##' @rdname show-crunch
+##' @export
 setMethod("show", "CategoricalArrayVariable", function (object) {
     out <- c(showCrunchVariable(object), showSubvariables(subvariables(object)))
     cat(out)
@@ -29,7 +38,7 @@ showCategories <- function (x) {
     vapply(x, showCategory, character(1))
 }
 
-##' @importFrom methods show
+##' @rdname show-crunch
 ##' @export
 setMethod("show", "Categories", function (object) {
     out <- showCategories(object)
@@ -62,6 +71,7 @@ showCrunchDataset <- function (x) {
     return(doc(out))
 }
 
+##' @rdname show-crunch
 ##' @export
 setMethod("show", "CrunchDataset", function (object) {
     out <- showCrunchDataset(object)
@@ -76,6 +86,7 @@ showSubvariables <- function (object) {
     return(doc(out))
 }
 
+##' @rdname show-crunch
 ##' @export
 setMethod("show", "Subvariables", function (object) {
     out <- showSubvariables(object)

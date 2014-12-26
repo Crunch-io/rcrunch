@@ -1,9 +1,15 @@
+##' @rdname toVariable
+##' @export
 setMethod("toVariable", "character", function (x, ...) {
     return(list(values=x, type="text", ...))
 })
+##' @rdname toVariable
+##' @export
 setMethod("toVariable", "numeric", function (x, ...) {
     return(list(values=x, type="numeric", ...))
 })
+##' @rdname toVariable
+##' @export
 setMethod("toVariable", "factor", function (x, ...) {
     nlevels <- length(levels(x))
     max.categories <- getOption("crunch.max.categories")
@@ -14,12 +20,17 @@ setMethod("toVariable", "factor", function (x, ...) {
         categories=categoriesFromLevels(levels(x)), ...)
     return(NAToCategory(out))
 })
+##' @rdname toVariable
+##' @export
 setMethod("toVariable", "Date", function (x, ...) {
     return(list(values=as.character(x), type="datetime", resolution="D", ...))
 })
 # setMethod("toVariable", "POSIXt", function (x) {
 #     return(list(values=as.character(x), type="datetime", resolution="s", ...))
 # })
+
+##' @rdname toVariable
+##' @export
 setMethod("toVariable", "logical", function (x, ...) {
     ## Make it categorical
     out <- list(values=2L-as.integer(x), type="categorical", 

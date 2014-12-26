@@ -2,12 +2,15 @@
 % Please edit documentation in R/dichotomize.R
 \docType{methods}
 \name{is.dichotomized,Categories-method}
+\alias{dichotomize}
 \alias{dichotomize,CategoricalArrayVariable,ANY-method}
 \alias{dichotomize,CategoricalVariable,ANY-method}
 \alias{dichotomize,Categories,character-method}
 \alias{dichotomize,Categories,logical-method}
 \alias{dichotomize,Categories,numeric-method}
+\alias{is.dichotomized}
 \alias{is.dichotomized,Categories-method}
+\alias{undichotomize}
 \alias{undichotomize,CategoricalArrayVariable-method}
 \alias{undichotomize,CategoricalVariable-method}
 \alias{undichotomize,Categories-method}
@@ -51,5 +54,8 @@ methods let you set that state.
 \code{dichotomize} lets you specify which categories are "selected", while
 \code{undichotomize} strips that selection information. Dichotomize converts
 a Categorical Array to a Multiple Response, and undichotomize converts back.
+}
+\seealso{
+describe-category
 }
 

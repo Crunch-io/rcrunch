@@ -35,6 +35,7 @@ is.shoji.order.like <- function (x) {
     is.shoji.like(x) && x$element == "shoji:view" && identical(names(x$value), "groups")
 }
 
+##' @rdname crunch-is
 ##' @export
 ##' @importFrom methods is
 is.shoji <- function (x) inherits(x, "shoji")
@@ -49,6 +50,11 @@ as.shojiObject <- function (x) as(x, "ShojiObject")
 
 is.shojiObject <- function (x) inherits(x, "ShojiObject")
 
+##' Get the URL of this object
+##' @param x a Crunch object
+##' @return the URL for \code{x}
+##' @aliases self
+##' @rdname self
 ##' @export
 setMethod("self", "ShojiObject", function (x) x@self)
 
@@ -63,6 +69,7 @@ setMethod("self", "ShojiObject", function (x) x@self)
 ##' @param x pretty much any Crunch object
 ##' @return a new version of \code{x}
 ##' @rdname refresh
+##' @aliases refresh
 ##' @export
 setMethod("refresh", "ShojiObject", function (x) {
     Class <- class(x)  ## in case x is a subclass of ShojiObject
@@ -73,7 +80,7 @@ setMethod("refresh", "ShojiObject", function (x) {
 ##'
 ##' These methods delete entites, notably Datasets and Variables within them,
 ##' from the server. This action is permanent and cannot be undone, so it
-##' should not be done lightly. Consider instead using \code{\link{archive}}
+##' should not be done lightly. Consider instead using \code{archive}
 ##' for datasets and \code{\link{hide}} for variables
 ##'
 ##' @param x a Crunch object
@@ -112,7 +119,7 @@ setReadonly <- function (x, value) {
     x@readonly <- as.logical(value)
     x
 }
-##' @export
+
 setMethod("readonly<-", "ShojiObject", setReadonly)
 
 shojiURL <- function (x, collection=c("catalogs", "views", "fragments"), key) {

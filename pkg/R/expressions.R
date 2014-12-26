@@ -1,3 +1,33 @@
+##' Construct Crunch Expressions
+##'
+##' Crunch Expressions, i.e. \code{CrunchExpr} and \code{CrunchLogicalExpr},
+##' encapuslate derivations of Crunch variables, which are only evaluated when
+##' passed to a function like \code{as.vector}. They allow you to compose
+##' functional expressions of variables and evaluate them against the server
+##' only when appropriate.
+##'
+##' @param x an input
+##' @param table For \code{\%in\%}. See \code{\link{base::match}}
+##' @param mode For \code{as.vector}. Ignored.
+##' @return Most functions return a CrunchExpr or CrunchLogicalExpr. 
+##' \code{as.vector} returns an R vector.
+##' @aliases expressions
+##' @rdname expressions
+##' @export
+setMethod("as.vector", "CrunchExpr", function (x, mode) {
+    payload <- list(command="select", variables=list(out=zcl(x)))
+    if (length(x@filter)) {
+        payload[["filter"]] <- x@filter
+    }
+    # cat(toJSON(payload))
+    out <- crPOST(paste0(x@dataset_url, "table/"), body=toJSON(payload))
+    ## pass in the variable metadata to the column parser
+    variable <- as.variable(structure(list(body=out$metadata$out),
+        class="shoji"))
+    return(columnParser(out$metadata$out$type)(out$data$out, variable))
+})
+
+
 ## "Ops" for Crunch Variables
 ##
 ## Most of the indirection here is to programatically create the Ops methods
@@ -9,9 +39,9 @@ math.exp <- function (e1, e2, operator) {
     ds.url <- unique(unlist(lapply(list(e1, e2), datasetReference))) %||% ""
     logics <- c("contains", "<", ">", ">=", "<=", "==", "!=", "and", "or")
     if (operator %in% logics) {
-        Constructor <- CrunchLogicalExpression
+        Constructor <- CrunchLogicalExpr
     } else {
-        Constructor <- CrunchExpression
+        Constructor <- CrunchExpr
     }
     return(Constructor(expression=ex, dataset_url=ds.url))
 }
@@ -53,12 +83,12 @@ for (i in c("+", "-", "*", "/", "<", ">", ">=", "<=")) {
         setMethod(i, rev(.sigs[[j]]), rxv(i))
     }
     for (j in setdiff(.rtypes, "character")) {
-        setMethod(i, c("CrunchExpression", j), vxv(i)) # no typeof?
-        setMethod(i, c(j, "CrunchExpression"), vxv(i)) # no typeof?
+        setMethod(i, c("CrunchExpr", j), vxv(i)) # no typeof?
+        setMethod(i, c(j, "CrunchExpr"), vxv(i)) # no typeof?
     }    
     setMethod(i, c("CrunchVariable", "CrunchVariable"), vxv(i))
-    setMethod(i, c("CrunchExpression", "CrunchVariable"), vxv(i))
-    setMethod(i, c("CrunchVariable", "CrunchExpression"), vxv(i))
+    setMethod(i, c("CrunchExpr", "CrunchVariable"), vxv(i))
+    setMethod(i, c("CrunchVariable", "CrunchExpr"), vxv(i))
 }
 
 .catmeth <- function (i, Rarg=1) {
@@ -84,51 +114,45 @@ for (i in c("==", "!=")) {
     setMethod(i, c("character", "CategoricalVariable"), .catmeth(i, 1))
     setMethod(i, c("factor", "CategoricalVariable"), .catmeth(i, i))
     for (j in .rtypes) {
-        setMethod(i, c("CrunchExpression", j), vxv(i)) # no typeof?
-        setMethod(i, c(j, "CrunchExpression"), vxv(i)) # no typeof?
+        setMethod(i, c("CrunchExpr", j), vxv(i)) # no typeof?
+        setMethod(i, c(j, "CrunchExpr"), vxv(i)) # no typeof?
     }
     setMethod(i, c("CrunchVariable", "CrunchVariable"), vxv(i))
-    setMethod(i, c("CrunchExpression", "CrunchVariable"), vxv(i))
-    setMethod(i, c("CrunchVariable", "CrunchExpression"), vxv(i))
+    setMethod(i, c("CrunchExpr", "CrunchVariable"), vxv(i))
+    setMethod(i, c("CrunchVariable", "CrunchExpr"), vxv(i))
 }
 
-setMethod("&", c("CrunchExpression", "CrunchExpression"), vxv("and"))
-setMethod("|", c("CrunchExpression", "CrunchExpression"), vxv("or"))
-setMethod("!", c("CrunchExpression"), 
+setMethod("&", c("CrunchExpr", "CrunchExpr"), vxv("and"))
+setMethod("|", c("CrunchExpr", "CrunchExpr"), vxv("or"))
+
+##' @rdname expressions
+##' @export
+setMethod("!", c("CrunchExpr"), 
     function (x) {
-        CrunchLogicalExpression(expression=zfunc("not", x),
+        CrunchLogicalExpr(expression=zfunc("not", x),
             dataset_url=datasetReference(x))
     })
 
 
 .inCrunch <- function (x, table) math.exp(x, typeof(table, x), "contains")
 
+##' @rdname expressions
 ##' @export
 setMethod("%in%", c("CategoricalVariable", "character"), 
     function (x, table) .inCrunch(x, n2i(table, categories(x))))
+##' @rdname expressions
+##' @export
 setMethod("%in%", c("CategoricalVariable", "factor"), 
     function (x, table) x %in% as.character(table))
 for (i in seq_along(.sigs)) {
     setMethod("%in%", .sigs[[i]], .inCrunch)
 }
 
-setMethod("datasetReference", "CrunchExpression", function (x) x@dataset_url)
+setMethod("datasetReference", "CrunchExpr", function (x) x@dataset_url)
 
+##' @rdname expressions
 ##' @export
-setMethod("as.vector", "CrunchExpression", function (x, mode) {
-    payload <- list(command="select", variables=list(out=zcl(x)))
-    if (length(x@filter)) {
-        payload[["filter"]] <- x@filter
-    }
-    # cat(toJSON(payload))
-    out <- crPOST(paste0(x@dataset_url, "table/"), body=toJSON(payload))
-    ## pass in the variable metadata to the column parser
-    variable <- as.variable(structure(list(body=out$metadata$out),
-        class="shoji"))
-    return(columnParser(out$metadata$out$type)(out$data$out, variable))
-})
-
 setMethod("is.na", "CrunchVariable", function (x) {
-    CrunchLogicalExpression(expression=zfunc("is_missing", x),
+    CrunchLogicalExpr(expression=zfunc("is_missing", x),
         dataset_url=datasetReference(x))
 })
