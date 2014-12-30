@@ -24,6 +24,6 @@ a table object
 Table function for Crunch objects
 }
 \seealso{
-base::table
+\code{\link[base]{table}}
 }
 

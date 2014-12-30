@@ -15,7 +15,7 @@ getNameAndType <- function (x) {
 ##'
 ##' @param object the object
 ##' @return invisibly
-##' @seealso methods::show
+##' @seealso \code{\link[methods]{show}}
 ##' @importFrom methods show
 ##' @rdname show-crunch
 ##' @export

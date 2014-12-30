@@ -57,6 +57,6 @@ Note that the \code{names} method on a Dataset returns the aliases of its
 variables by default. See the vignette on variables for more information.
 }
 \seealso{
-Subvariables Categories base::names
+Subvariables Categories \code{\link[base]{names}}
 }
 

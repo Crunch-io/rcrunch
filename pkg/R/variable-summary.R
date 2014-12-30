@@ -58,7 +58,7 @@ CategoricalVariable.table <- function (...,
 ##' @param dnn see \code{link{base:table}}
 ##' @param deparse.level see \code{link{base:table}}
 ##' @return a table object
-##' @seealso base::table
+##' @seealso \code{\link[base]{table}}
 ##' @export 
 table <- function (..., exclude, useNA, dnn, deparse.level) {
     m <- match.call()

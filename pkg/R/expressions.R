@@ -7,7 +7,7 @@
 ##' only when appropriate.
 ##'
 ##' @param x an input
-##' @param table For \code{\%in\%}. See \code{\link{base::match}}
+##' @param table For \code{\%in\%}. See \code{\link[base]{match}}
 ##' @param mode For \code{as.vector}. Ignored.
 ##' @return Most functions return a CrunchExpr or CrunchLogicalExpr. 
 ##' \code{as.vector} returns an R vector.
@@ -144,9 +144,27 @@ setMethod("%in%", c("CategoricalVariable", "character"),
 ##' @export
 setMethod("%in%", c("CategoricalVariable", "factor"), 
     function (x, table) x %in% as.character(table))
+
+## Iterated version of below: 
 for (i in seq_along(.sigs)) {
     setMethod("%in%", .sigs[[i]], .inCrunch)
 }
+
+##' @rdname expressions
+##' @export
+setMethod("%in%", c("TextVariable", "character"), .inCrunch)
+##' @rdname expressions
+##' @export
+setMethod("%in%", c("NumericVariable", "numeric"), .inCrunch)
+##' @rdname expressions
+##' @export
+setMethod("%in%", c("DatetimeVariable", "Date"), .inCrunch)
+##' @rdname expressions
+##' @export
+setMethod("%in%", c("DatetimeVariable", "POSIXt"), .inCrunch)
+##' @rdname expressions
+##' @export
+setMethod("%in%", c("CategoricalVariable", "numeric"), .inCrunch)
 
 setMethod("datasetReference", "CrunchExpr", function (x) x@dataset_url)
 

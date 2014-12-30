@@ -1,11 +1,25 @@
-## Things that get
-
+##' Subset datasets and extract variables
+##'
+##' @param x a CrunchDataset
+##' @param i if character, identifies variables to extract based on their 
+##' aliases (by default, i.e. when x's \code{useAlias} is TRUE); if numeric or 
+##' logical, extracts variables accordingly. Note that this is the as.list 
+##' extraction, columns of the dataset rather than rows. 
+##' @param name like \code{i} but for \code{\$}
+##' @param j column extraction, as described above
+##' @param drop logical: autmatically simplify a 1-column Dataset to a Variable?
+##' Default is FALSE, and the TRUE option is in fact not implemented.
+##' @param ... additional arguments
+##' @return \code{[} yields a Dataset; \code{[[} and \$ return a Variable
+##' @rdname dataset-extract
+##' @aliases dataset-extract
 ##' @export
 setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     x@variables <- variables(x)[i]
     readonly(x) <- TRUE ## we don't want to overwrite the big object accidentally
     return(x)
 })
+##' @rdname dataset-extract
 ##' @export
 setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
     w <- match(i, names(x))
@@ -14,11 +28,13 @@ setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE)
     }
     callNextMethod(x, w, ..., drop=drop)
 })
+##' @rdname dataset-extract
 ##' @export
 setMethod("[", c("CrunchDataset", "missing", "ANY"), function (x, i, j, ..., drop=FALSE) {
     x[j]
 })
 
+##' @rdname dataset-extract
 ##' @export
 setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     out <- variables(x)[[i]]
@@ -30,6 +46,7 @@ setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     }
     return(out)
 })
+##' @rdname dataset-extract
 ##' @export
 setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
     stopifnot(length(i) == 1)
@@ -57,6 +74,7 @@ setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE
         return(callNextMethod(x, n, ..., drop=drop))
     }
 })
+##' @rdname dataset-extract
 ##' @export
 setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 
@@ -117,35 +135,62 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
     }
 }
 
+##' Update a variable or variables in a dataset
+##'
+##' @param x a CrunchDataset
+##' @param i For \code{[}, a \code{CrunchLogicalExpr}, numeric, or logical vector defining a subset of the rows of \code{x}. For \code{[[}, see \code{j} for the as.list column subsetting. 
+##' @param j if character, identifies variables to extract based on their 
+##' aliases (by default, i.e. when x's \code{useAlias} is TRUE); if numeric or 
+##' logical, extracts variables accordingly. Note that this is the as.list 
+##' extraction, columns of the dataset rather than rows. 
+##' @param name like \code{j} but for \code{\$}
+##' @param value replacement values to insert. These can be \code{crunchExpr}s 
+##' or R vectors of the corresponding type
+##' @return \code{x}, modified.
+##' @aliases dataset-update
+##' @rdname dataset-update
 ##' @export
 setMethod("[[<-", 
     c("CrunchDataset", "character", "missing", "CrunchVariable"), 
     .updateVariableMetadata)
+##' @rdname dataset-update
+##' @export
 setMethod("[[<-", 
     c("CrunchDataset", "ANY", "missing", "CrunchVariable"), 
     function (x, i, value) .updateVariableMetadata(x, names(x)[i], value))
+##' @rdname dataset-update
+##' @export
 setMethod("[[<-", 
     c("CrunchDataset", "character", "missing", "ANY"),
     .addVariableSetter)
+##' @rdname dataset-update
+##' @export
 setMethod("[[<-", 
     c("CrunchDataset", "character", "missing", "CrunchExpr"), 
     .deriveVariableSetter)
+##' @rdname dataset-update
+##' @export
 setMethod("[[<-", 
     c("CrunchDataset", "character", "missing", "CrunchLogicalExpr"), 
     function (x, i, value) {
         halt("Cannot currently derive a logical variable")
     })
+##' @rdname dataset-update
+##' @export
 setMethod("[[<-", 
     c("CrunchDataset", "ANY"), 
     function (x, i, value) {
         halt("Only character (name) indexing supported for [[<-")
     })
+##' @rdname dataset-update
 ##' @export
 setMethod("$<-", c("CrunchDataset"), function (x, name, value) {
     x[[name]] <- value
     return(x)
 })
 
+##' @rdname dataset-update
+##' @export
 setMethod("[<-", c("CrunchDataset", "ANY", "missing", "list"), 
     function (x, i, j, value) {
         ## For lapplying over variables to edit metadata
@@ -159,6 +204,8 @@ setMethod("[<-", c("CrunchDataset", "ANY", "missing", "list"),
 
 ## TODO: add similar [<-.CrunchDataset, CrunchDataset/VariableCatalog
 
+##' @rdname dataset-update
+##' @export
 setMethod("[<-", c("CrunchDataset", "CrunchExpr", "ANY", "ANY"),
      function (x, i, j, value) {
         if (j %in% names(x)) {

@@ -77,7 +77,7 @@ as.dataset <- function (x, useAlias=default.useAlias(), tuple=DatasetTuple()) {
 ##' @return integer vector of length 2, indicating the number of rows and
 ##' non-hidden variables in the dataset. Array subvariables are excluded from
 ##' the column count.
-##' @seealso base::dim
+##' @seealso \code{\link[base]{dim}}
 ##' @export
 setMethod("dim", "CrunchDataset",
     function (x) c(x@.nrow, length(variables(x))))

@@ -4,7 +4,7 @@
 ##' DatetimeVariable
 ##' @param ... additional arguments to \code{mean}
 ##' @param na.rm logical: exclude missings?
-##' @seealso base::mean base::sd base::median base::min base::max
+##' @seealso \code{\link[base]{mean}} \code{\link[stats]{sd}} \code{\link[stats]{median}} \code{\link[base]{min}} \code{\link[base]{max}}
 ##' @rdname crunch-uni
 ##' @aliases mean sd median min max
 ##' @export

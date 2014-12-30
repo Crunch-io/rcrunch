@@ -5,6 +5,11 @@
 \alias{!,CrunchExpr-method}
 \alias{\%in\%,CategoricalVariable,character-method}
 \alias{\%in\%,CategoricalVariable,factor-method}
+\alias{\%in\%,CategoricalVariable,numeric-method}
+\alias{\%in\%,DatetimeVariable,Date-method}
+\alias{\%in\%,DatetimeVariable,POSIXt-method}
+\alias{\%in\%,NumericVariable,numeric-method}
+\alias{\%in\%,TextVariable,character-method}
 \alias{as.vector,CrunchExpr-method}
 \alias{expressions}
 \alias{is.na,CrunchVariable-method}
@@ -18,6 +23,16 @@
 
 \S4method{\%in\%}{CategoricalVariable,factor}(x, table)
 
+\S4method{\%in\%}{TextVariable,character}(x, table)
+
+\S4method{\%in\%}{NumericVariable,numeric}(x, table)
+
+\S4method{\%in\%}{DatetimeVariable,Date}(x, table)
+
+\S4method{\%in\%}{DatetimeVariable,POSIXt}(x, table)
+
+\S4method{\%in\%}{CategoricalVariable,numeric}(x, table)
+
 \S4method{is.na}{CrunchVariable}(x)
 }
 \arguments{
@@ -25,7 +40,7 @@
 
 \item{mode}{For \code{as.vector}. Ignored.}
 
-\item{table}{For \code{\%in\%}. See \code{\link{base::match}}}
+\item{table}{For \code{\%in\%}. See \code{\link[base]{match}}}
 }
 \value{
 Most functions return a CrunchExpr or CrunchLogicalExpr.

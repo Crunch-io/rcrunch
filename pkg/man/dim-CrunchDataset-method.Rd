@@ -19,6 +19,6 @@ the column count.
 Dataset dimensions
 }
 \seealso{
-base::dim
+\code{\link[base]{dim}}
 }
 

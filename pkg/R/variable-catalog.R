@@ -94,7 +94,7 @@ setMethod("[[<-", c("VariableCatalog", "character", "missing", "CrunchVariable")
 ##' return \code{x} duly modified.
 ##' @export
 ##' @aliases describe-catalog aliases aliases<-
-##' @seealso Subvariables Categories base::names
+##' @seealso Subvariables Categories \code{\link[base]{names}}
 ##' @rdname describe-catalog
 setMethod("names", "VariableCatalog", function (x) {
     vapply(index(x), function (a) a[["name"]], character(1), USE.NAMES=FALSE)
