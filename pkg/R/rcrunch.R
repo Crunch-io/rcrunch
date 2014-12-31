@@ -10,8 +10,6 @@
         options(crunch.timeout=60)
     }
     options(warn=1)
-    assign("application/json", parseJSONResponse, 
-        envir=get("parsers", envir=asNamespace("httr")))
     set_config(crunchConfig())
     invisible()
 }

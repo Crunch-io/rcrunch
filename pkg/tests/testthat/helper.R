@@ -1,6 +1,8 @@
 run.integration.tests <- Sys.getenv("LOCALONLY") == "FALSE"
 set.seed(666)
 
+fromJSON <- jsonlite::fromJSON
+
 ## .onAttach stuff, for testthat to work right
 options(crunch.api=getOption("test.api"), 
         warn=1,
@@ -19,6 +21,7 @@ if (is.tap.reporter) {
     skip <- function (...) cat(colourise("S", "yellow"))
 }
 
+## Test serialize and deserialize
 cereal <- function (x) fromJSON(toJSON(x), simplifyVector=FALSE)
 
 #####################

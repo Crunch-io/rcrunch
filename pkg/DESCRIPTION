@@ -13,7 +13,6 @@ Depends:
 Imports:
     httr,
     RJSONIO,
-    jsonlite,
     methods,
     RCurl
 Suggests:
