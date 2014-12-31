@@ -28,7 +28,7 @@ interactive session.}
 \item{...}{additional arguments, in the generic}
 }
 \description{
-These methods delete entites, notably Datasets and Variables within them,
+These methods delete entities, notably Datasets and Variables within them,
 from the server. This action is permanent and cannot be undone, so it
 should not be done lightly. Consider instead using \code{archive}
 for datasets and \code{\link{hide}} for variables

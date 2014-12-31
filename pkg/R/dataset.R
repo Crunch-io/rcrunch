@@ -78,6 +78,7 @@ as.dataset <- function (x, useAlias=default.useAlias(), tuple=DatasetTuple()) {
 ##' non-hidden variables in the dataset. Array subvariables are excluded from
 ##' the column count.
 ##' @seealso \code{\link[base]{dim}}
+##' @rdname dim-dataset
 ##' @export
 setMethod("dim", "CrunchDataset",
     function (x) c(x@.nrow, length(variables(x))))
@@ -129,13 +130,38 @@ setMethod("tuple<-", "CrunchDataset", function (x, value) {
     return(x)
 })
 
+##' Get a fresh copy from the server
+##'
+##' Crunch objects usually keep themselves in sync with the server when you
+##' manipulate them, but sometimes they can drift. Maybe someone else has
+##' modified the dataset you're working on, or maybe
+##' you have modified a variable outside of the context of its dataset. 
+##' refresh() allows you to get back in sync.
+##' 
+##' @param x pretty much any Crunch object
+##' @return a new version of \code{x}
 ##' @rdname refresh
+##' @aliases refresh
 ##' @export
 setMethod("refresh", "CrunchDataset", function (x) {
     as.dataset(crGET(self(x)), useAlias=x@useAlias, tuple=refresh(tuple(x)))
 })
 
+##' Delete a Crunch object from the server
+##'
+##' These methods delete entities, notably Datasets and Variables within them,
+##' from the server. This action is permanent and cannot be undone, so it
+##' should not be done lightly. Consider instead using \code{archive}
+##' for datasets and \code{\link{hide}} for variables
+##'
+##' @param x a Crunch object
+##' @param confirm logical: should the user be asked to confirm deletion. 
+##' Option available for datasets only. Default is \code{TRUE} if in an
+##' interactive session.
+##' @param ... additional arguments, in the generic
+##' @seealso hide deleteDataset
 ##' @rdname delete
+##' @aliases delete
 ##' @export
 setMethod("delete", "CrunchDataset", 
     function (x, confirm=interactive() | is.readonly(x), ...) {
