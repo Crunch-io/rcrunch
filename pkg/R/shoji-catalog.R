@@ -92,6 +92,10 @@ setMethod("[", c("ShojiCatalog", "ANY"), function (x, i, ...) {
 setMethod("[[", c("ShojiCatalog", "ANY"), function (x, i, ...) {
     index(x)[[i]]
 })
+##' Length of Catalog
+##' @param x a Catalog
+##' @return Integer: the number of elements in the index list
+##' @export
 setMethod("length", "ShojiCatalog", function (x) length(index(x)))
 setMethod("lapply", "ShojiCatalog", function (X, FUN, ...) lapply(index(X), FUN, ...))
 

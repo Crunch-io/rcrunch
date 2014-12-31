@@ -100,14 +100,36 @@ setMethod("toJSON", "VariableGroup", function (x, ...) {
 ##' @export
 as.list.VariableOrder <- function (x, ...) x@value$groups
 
+##' Length of VariableOrder
+##' @param x a VariableOrder
+##' @return Integer: the number of VariableGroups in the VariableOrder
 ##' @export
 setMethod("length", "VariableOrder", function (x) length(x@value$groups))
 
+##' Extract and update in VariableOrder and VariableGroup
+##'
+##' @param x a VariableOrder or VariableGroup
+##' @param i an index. Numeric and logical indexing supported for both classes;
+##' character indexing supported for VariableOrder, matching on VariableGroup
+##' names
+##' @param name Same as i but for \code{\$}
+##' @param j Invalid
+##' @param value For update methods, an object equivalent in class to what is
+##' being updated
+##' @param ... additional arguments
+##' @param drop Ignored
+##' @return \code{[[} and \code{\$} on a VariableOrder return the VariableGroup.
+##' \code{[[} on VariableGroup returns the entity within, either a character
+##' (URL) or nested VariableGroup. \code{[} and assignment methods return
+##' objects of the same class as \code{x}
+##' @rdname variable-order-extract
+##' @aliases variable-order-extract
 ##' @export
 setMethod("[", c("VariableOrder", "ANY"), function (x, i, ..., drop=FALSE) {
     x@value$groups <- x@value$groups[i]
     return(x)
 })
+##' @rdname variable-order-extract
 ##' @export
 setMethod("[", c("VariableOrder", "character"), function (x, i, ..., drop=FALSE) {
     w <- match(i, names(x))
@@ -117,10 +139,14 @@ setMethod("[", c("VariableOrder", "character"), function (x, i, ..., drop=FALSE)
     callNextMethod(x, w, ..., drop=drop)
 })
 
-setMethod("[[", c("VariableOrder", "ANY"), function (x, i, ..., drop=FALSE) {
+##' @rdname variable-order-extract
+##' @export
+setMethod("[[", c("VariableOrder", "ANY"), function (x, i, ...) {
     x@value$groups[[i]]
 })
 
+##' @rdname variable-order-extract
+##' @export
 setMethod("[<-", c("VariableOrder", "character", "missing", "VariableOrder"), 
     function (x, i, j, value) {
         w <- match(i, names(x))
@@ -129,11 +155,15 @@ setMethod("[<-", c("VariableOrder", "character", "missing", "VariableOrder"),
         }
         callNextMethod(x, w, value=value)
     })
+##' @rdname variable-order-extract
+##' @export
 setMethod("[<-", c("VariableOrder", "ANY", "missing", "VariableOrder"), 
    function (x, i, j, value) {
        x@value$groups[i] <- value@value$groups
        return(x)
    })
+##' @rdname variable-order-extract
+##' @export
 setMethod("[[<-", c("VariableOrder", "character", "missing", "VariableGroup"), 
     function (x, i, j, value) {
         w <- match(i, names(x))
@@ -142,29 +172,39 @@ setMethod("[[<-", c("VariableOrder", "character", "missing", "VariableGroup"),
         }
         callNextMethod(x, w, value=value)
     })
+##' @rdname variable-order-extract
+##' @export
 setMethod("[[<-", c("VariableOrder", "ANY", "missing", "VariableGroup"), 
     function (x, i, j, value) {
         x@value$groups[[i]] <- value
         return(x)
     })
+##' @rdname variable-order-extract
+##' @export
 setMethod("[[<-", c("VariableOrder", "ANY", "missing", "ANY"), 
     function (x, i, j, value) {
         halt("Cannot assign an object of class ", dQuote(class(value)), 
             " into a VariableOrder")
     })
 
+##' @rdname variable-order-extract
 ##' @export
 setMethod("$", "VariableOrder", function (x, name) x[[name]])
+##' @rdname variable-order-extract
 ##' @export
 setMethod("$<-", "VariableOrder", function (x, name, value) {
     x[[name]] <- value
     return(x)
 })
 
-setMethod("[[", "VariableGroup", function (x, i, ..., drop=FALSE) {
+##' @rdname variable-order-extract
+##' @export
+setMethod("[[", "VariableGroup", function (x, i, ...) {
     entities(x)[[i]]
 })
-setMethod("[[<-", c("VariableGroup", "ANY", "missing", "VariableGroup"), function (x, i, j, value, drop=FALSE) {
+##' @rdname variable-order-extract
+##' @export
+setMethod("[[<-", c("VariableGroup", "ANY", "missing", "VariableGroup"), function (x, i, j, value) {
     entities(x)[[i]] <- value
     return(x)
 })

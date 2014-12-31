@@ -15,6 +15,8 @@
 \alias{[<-,DatetimeVariable,ANY,missing,POSIXt-method}
 \alias{[<-,NumericVariable,ANY,missing,numeric-method}
 \alias{[<-,TextVariable,ANY,missing,character-method}
+\alias{is.na<-,CrunchVariable,ANY-method}
+\alias{variable-update}
 \title{Updating variables with expressions or values}
 \usage{
 \S4method{[}{CrunchVariable,ANY,missing,ANY}(x, i, j) <- value
@@ -42,6 +44,8 @@
 \S4method{[}{CategoricalArrayVariable,ANY,missing,character}(x, i, j) <- value
 
 \S4method{[}{CategoricalArrayVariable,ANY,missing,factor}(x, i, j) <- value
+
+\S4method{is.na}{CrunchVariable,ANY}(x) <- value
 }
 \arguments{
 \item{x}{a Variable}

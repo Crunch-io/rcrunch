@@ -220,14 +220,32 @@ setMethod("delete", "CategoricalArrayVariable", function (x, ...) {
     invisible(out)
 })
 
+##' "Subset" a Variable
+##'
+##' These methods subset variables by creating Expressions, which can be 
+##' composed and evaluated as needed.
+##' @param x a Variable
+##' @param i a CrunchExpr, logical, or numeric
+##' @param ... additional arguments, ignored
+##' @param j Invalid
+##' @param drop Invalid
+##' @return a CrunchExpr containing references to the variable \code{x} and the
+##' filter logic contained in \code{i}
+##' @aliases variable-extract
+##' @rdname variable-extract
+##' @export
 setMethod("[", c("CrunchVariable", "CrunchExpr"), function (x, i, ...) {
     CrunchExpr(dataset_url=datasetReference(x), expression=zcl(x),
         filter=zcl(i))
 })
+##' @rdname variable-extract
+##' @export
 setMethod("[", c("CrunchVariable", "numeric"), function (x, i, ...) {
     CrunchExpr(dataset_url=datasetReference(x), expression=zcl(x),
         filter=.dispatchFilter(i))
 })
+##' @rdname variable-extract
+##' @export
 setMethod("[", c("CrunchVariable", "logical"), function (x, i, ...) {
     CrunchExpr(dataset_url=datasetReference(x), expression=zcl(x),
         filter=.dispatchFilter(i))

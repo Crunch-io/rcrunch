@@ -43,8 +43,20 @@ setValue <- function (x, value) {
     return(x)
 }
 
+##' Access Category fields directly
+##' 
+##' Don't do this. Instead, use the category setters.
+##'
+##' @param x a Category
+##' @param name a field within \code{x}
+##' @param value a value for that field to update
+##' @return \code{\$} returns the value of the desired field. Setter
+##' returns \code{x} duly modified.
+##' @seealso describe-category
+##' @rdname category-extract
 ##' @export
 setMethod("$", "Category", function (x, name) x[[name]])
+##' @rdname category-extract
 ##' @export
 setMethod("$<-", "Category", function (x, name, value) {
     x[[name]] <- value

@@ -45,6 +45,7 @@
 ##' @param value an R vector or a CrunchExpr with which to update
 ##' @return \code{x} duly modified
 ##' @rdname variable-update
+##' @aliases variable-update
 ##' @export
 setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"),
     function (x, i, j, value) {
@@ -212,6 +213,8 @@ setMethod("[<-", c("CategoricalArrayVariable", "ANY", "missing", "factor"), .cat
 #         return(x)
 #     })
 
+##' @rdname variable-update
+##' @export
 setMethod("is.na<-", "CrunchVariable", function (x, value) {
     ## Temporarily kill this method until API supports correctly
     halt("is.na<- not yet supported for CrunchVariables")
