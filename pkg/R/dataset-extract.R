@@ -214,4 +214,3 @@ setMethod("[<-", c("CrunchDataset", "CrunchExpr", "ANY", "ANY"),
             halt("Cannot add variable to dataset with a row index specified")
         }
     })
-
