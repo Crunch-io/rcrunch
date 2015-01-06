@@ -65,6 +65,7 @@ createSource <- function (file, ...) {
 ##' "description". 
 ##' @return An object of class CrunchDataset.
 ##' @seealso newDataset
+##' @keywords internal
 ##' @export
 createDataset <- function (name, useAlias=default.useAlias(), ...) {
     dataset_url <- crPOST(sessionURL("datasets"),

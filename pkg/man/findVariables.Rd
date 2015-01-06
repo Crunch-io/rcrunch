@@ -30,4 +30,5 @@ key values if value=TRUE is passed to \code{grep}
 \description{
 A version of \code{\link{grep}} for Crunch objects
 }
+\keyword{internal}
 

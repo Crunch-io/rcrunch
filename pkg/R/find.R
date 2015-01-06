@@ -13,6 +13,7 @@
 ##' themselves
 ##' @return indices of the Variables that match the pattern, or the matching
 ##' key values if value=TRUE is passed to \code{grep}
+##' @keywords internal
 ##' @export
 findVariables <- function (dataset, refs=NULL, pattern="", key=namekey(dataset), ...) {
     

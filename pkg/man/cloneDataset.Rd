@@ -22,4 +22,5 @@ This function makes a copy of a Crunch Dataset and its associated variables
 and variable ordering. It does not copy filters, saved analyses, sharing
 privileges, etc.
 }
+\keyword{internal}
 

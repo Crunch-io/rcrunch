@@ -8,6 +8,7 @@
 ##' variable names when the dataset is returned. Default is TRUE, meaning alias.
 ##' @param ... additional arguments, currently ignored
 ##' @return a CrunchDataset cloned from \code{dataset}
+##' @keywords internal
 ##' @export
 cloneDataset <- function (dataset, useAlias=default.useAlias(), ...) {
     payload <- list(command="clone")
@@ -34,6 +35,7 @@ cloneDataset <- function (dataset, useAlias=default.useAlias(), ...) {
 ##' @param clone the CrunchDataset you wish to take data from to graft onto
 ##' \code{primary}
 ##' @return \code{primary} with the data from \code{clone} grafted onto it
+##' @keywords internal
 ##' @export
 graftDataset <- function (primary, clone) {
     stopifnot(is.dataset(primary), is.dataset(clone))
