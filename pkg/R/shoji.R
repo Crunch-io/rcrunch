@@ -73,13 +73,13 @@ setMethod("delete", "ShojiObject", function (x, ...) invisible(crDELETE(self(x))
 ##' @export
 setMethod("delete", "ANY", function (x, ...) halt("'delete' only valid for Crunch objects"))
 
-##' Base setter for Crunch objects
-##' @param x a ShojiObject or subclass thereof
-##' @param i character the slot name to update
-##' @param value whatever the new value of that slot should be
-##' @return x modified accordingly. If \code{x} isn't read-only, it will also
-##' post the edit to the Crunch server.
 setCrunchSlot <- function (x, i, value) {
+    ##' Base setter for Crunch objects
+    ##' @param x a ShojiObject or subclass thereof
+    ##' @param i character the slot name to update
+    ##' @param value whatever the new value of that slot should be
+    ##' @return x modified accordingly. If \code{x} isn't read-only, it will also
+    ##' post the edit to the Crunch server.
     slot(x, "body")[[i]] <- value
     if (!is.readonly(x)) {
         body <- structure(list(value), .Names=i)

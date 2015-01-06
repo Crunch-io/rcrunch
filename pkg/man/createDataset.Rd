@@ -29,4 +29,5 @@ custom data structure. If you have a data.frame, just call
 \seealso{
 newDataset
 }
+\keyword{internal}
 

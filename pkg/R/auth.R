@@ -61,12 +61,13 @@ login <- function (email=getOption("crunch.email"),
     invisible()
 }
 
-##' Validate authentication inputs and then POST to the API
-##' @param email character, see \code{\link{login}}
-##' @param password character, see \code{\link{login}}
-##' @param ... see \code{\link{login}}
 ##' @importFrom RJSONIO toJSON
 crunchAuth <- function (email, password=NULL, ...) {
+    ##' Validate authentication inputs and then POST to the API
+    ##' @param email character, see \code{\link{login}}
+    ##' @param password character, see \code{\link{login}}
+    ##' @param ... see \code{\link{login}}
+    ##' @keywords internal
     if (is.null(email)) {
         halt("Must supply the email address associated with your crunch.io account")
     }

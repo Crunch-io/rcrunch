@@ -61,13 +61,13 @@ crPOST <- function (...) http_verbs$POST(...)
 ##' @export
 crDELETE <- function (...) http_verbs$DELETE(...)
 
-##' Do the right thing with the HTTP response
-##' @param response an httr response object
-##' @param special.statuses an optional named list of functions by status code.
-##' @return The full HTTP response object, just the content, or any other
-##' status-specific action 
 ##' @importFrom httr content http_status
 handleAPIresponse <- function (response, special.statuses=list()) {
+    ##' Do the right thing with the HTTP response
+    ##' @param response an httr response object
+    ##' @param special.statuses an optional named list of functions by status code.
+    ##' @return The full HTTP response object, just the content, or any other
+    ##' status-specific action 
     response <- handleAPIerror(response)
     code <- response$status_code
     if (isTRUE(getOption("crunch.debug"))) message(code)
