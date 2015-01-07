@@ -9,7 +9,7 @@
 You can install the latest package version from within R using the `devtools` package:
 
     # install.packages("devtools")
-    devtools::install_github("Crunch-io/rcrunch")
+    devtools::install_github("Crunch-io/rcrunch", subdir="pkg")
 
 ## Getting started
 
