@@ -10,9 +10,12 @@
 \alias{[<-,VariableOrder,character,missing,VariableOrder-method}
 \alias{[[,VariableGroup,ANY-method}
 \alias{[[,VariableOrder,ANY-method}
+\alias{[[,VariableOrder,character-method}
 \alias{[[<-,VariableGroup,ANY,missing,VariableGroup-method}
 \alias{[[<-,VariableOrder,ANY,missing,ANY-method}
+\alias{[[<-,VariableOrder,ANY,missing,NULL-method}
 \alias{[[<-,VariableOrder,ANY,missing,VariableGroup-method}
+\alias{[[<-,VariableOrder,character,missing,NULL-method}
 \alias{[[<-,VariableOrder,character,missing,VariableGroup-method}
 \alias{variable-order-extract}
 \title{Extract and update in VariableOrder and VariableGroup}
@@ -23,6 +26,10 @@
 
 \S4method{[[}{VariableOrder,ANY}(x, i, j, ...)
 
+\S4method{[[}{VariableOrder,character}(x, i, j, ...)
+
+\S4method{$}{VariableOrder}(x, name)
+
 \S4method{[}{VariableOrder,character,missing,VariableOrder}(x, i, j) <- value
 
 \S4method{[}{VariableOrder,ANY,missing,VariableOrder}(x, i, j) <- value
@@ -32,6 +39,10 @@
 \S4method{[[}{VariableOrder,ANY,missing,VariableGroup}(x, i, j) <- value
 
 \S4method{[[}{VariableOrder,ANY,missing,ANY}(x, i, j) <- value
+
+\S4method{[[}{VariableOrder,ANY,missing,`NULL`}(x, i, j) <- value
+
+\S4method{[[}{VariableOrder,character,missing,`NULL`}(x, i, j) <- value
 
 \S4method{$}{VariableOrder}(x, name)
 
@@ -54,10 +65,10 @@ names}
 
 \item{drop}{Ignored}
 
+\item{name}{Same as i but for \code{\$}}
+
 \item{value}{For update methods, an object equivalent in class to what is
 being updated}
-
-\item{name}{Same as i but for \code{\$}}
 }
 \value{
 \code{[[} and \code{\$} on a VariableOrder return the VariableGroup.

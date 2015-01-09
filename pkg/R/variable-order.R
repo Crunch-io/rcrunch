@@ -147,6 +147,17 @@ setMethod("[[", c("VariableOrder", "ANY"), function (x, i, ...) {
 
 ##' @rdname variable-order-extract
 ##' @export
+setMethod("[[", c("VariableOrder", "character"), function (x, i, ...) {
+    w <- match(i, names(x))
+    callNextMethod(x, w, ..., drop=drop)
+})
+
+##' @rdname variable-order-extract
+##' @export
+setMethod("$", "VariableOrder", function (x, name) x[[name]])
+
+##' @rdname variable-order-extract
+##' @export
 setMethod("[<-", c("VariableOrder", "character", "missing", "VariableOrder"), 
     function (x, i, j, value) {
         w <- match(i, names(x))
@@ -185,6 +196,24 @@ setMethod("[[<-", c("VariableOrder", "ANY", "missing", "ANY"),
     function (x, i, j, value) {
         halt("Cannot assign an object of class ", dQuote(class(value)), 
             " into a VariableOrder")
+    })
+
+##' @rdname variable-order-extract
+##' @export
+setMethod("[[<-", c("VariableOrder", "ANY", "missing", "NULL"), 
+    function (x, i, j, value) {
+        x@value$groups[[i]] <- value
+        return(x)
+    })
+##' @rdname variable-order-extract
+##' @export
+setMethod("[[<-", c("VariableOrder", "character", "missing", "NULL"), 
+    function (x, i, j, value) {
+        w <- match(i, names(x))
+        if (any(is.na(w))) {
+            halt("Undefined group selected: ", serialPaste(i[is.na(w)]))
+        }
+        callNextMethod(x, w, value=value)
     })
 
 ##' @rdname variable-order-extract
