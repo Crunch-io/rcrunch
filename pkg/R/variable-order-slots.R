@@ -37,7 +37,11 @@ setMethod("entities", "VariableOrder", function (x, simplify=FALSE) {
     return(es)
 })
 
+##' @rdname urls
+##' @export
 setMethod("urls", "VariableOrder", function (x) entities(x, simplify=TRUE))
+##' @rdname urls
+##' @export
 setMethod("urls", "VariableGroup", function (x) entities(x, simplify=TRUE))
 
 ##' @rdname VariableOrder-slots

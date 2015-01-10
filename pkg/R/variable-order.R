@@ -244,25 +244,38 @@ printVariableOrder <- function (x) {
         return(printVariableOrder(variables(x)))
     }
     stopifnot(inherits(x, "VariableCatalog"))
-    invisible(lapply(x@order, printVariableGroup, index=index(x)))
+    out <- showVariableOrder(x@order, vars=index(x))
+    cat(out, sep="\n")
+    cat("\n")
+    invisible(out)
 }
 
-printVariableGroup <- function (group, index) {
-    cat(name(group), "\n")
-    ## extend this to display nested groups
-    print(vapply(index[urls(group)], function (x) x[["name"]] %||% "(Hidden variable)", character(1), USE.NAMES=FALSE))
-    invisible()
+printVariableGroup <- function (x, index) {
+    if (inherits(x, "VariableGroup")) {
+        ents <- entities(x)
+        if (length(ents)) {
+            group <- unlist(lapply(ents, printVariableGroup, index=index))
+        } else {
+            group <- "(Empty group)"
+        }
+        out <- c(paste0("[+] ", name(x)), paste0("    ", group))
+    } else {
+        tup <- index[[x]] %||% list()
+        out <- tup[["name"]] %||% "(Hidden variable)"
+    }
+    return(out)
 }
 
-showVariableOrder <- function (x) {
-    invisible(lapply(x, printVariableGroup, index=x@vars))
+showVariableOrder <- function (x, vars=x@vars) {
+    return(unlist(lapply(x, printVariableGroup, index=vars)))
 }
 
 ##' @rdname show-crunch
 ##' @export
 setMethod("show", "VariableOrder", function (object) {
     out <- showVariableOrder(object)
-    # cat(out, sep="\n")
+    cat(out, sep="\n")
+    cat("\n")
     invisible(out)
 })
 

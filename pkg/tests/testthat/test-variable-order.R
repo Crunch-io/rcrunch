@@ -156,6 +156,31 @@ with(fake.HTTP, {
             "Cannot insert multiple variables. Perhaps you want to insert a nested group? Or maybe manipulate the entire entities vector?"),
             "Not sure what this expectation should be")
     })
+    
+    test_that("VariableOrder/Group show methods", {
+        expect_identical(showVariableOrder(nested.ord, vars=variables(test.ds)),
+            c("[+] Group 1",
+              "    Birth Year",
+              "    [+] Nested",
+              "        Gender",
+              "        mymrset",
+              "    Text variable ftw",
+              "[+] Group 2",
+              "    starttime"))
+        no <- nested.ord
+        no[[3]] <- VariableGroup("Group 3", entities=list())
+        expect_identical(showVariableOrder(no, vars=variables(test.ds)),
+            c("[+] Group 1",
+              "    Birth Year",
+              "    [+] Nested",
+              "        Gender",
+              "        mymrset",
+              "    Text variable ftw",
+              "[+] Group 2",
+              "    starttime",
+              "[+] Group 3",
+              "    (Empty group)"))
+    })
 })
 
 
