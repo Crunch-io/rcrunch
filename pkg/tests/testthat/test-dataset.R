@@ -58,6 +58,14 @@ with(fake.HTTP, {
         expect_identical(test.ds$not.a.var.name, NULL)
         expect_error(test.ds[[999]], "subscript out of bounds")
     })
+    
+    test_that("Extract from dataset by VariableOrder/Group", {
+        ents <- c("/api/datasets/dataset1/variables/gender.json",
+            "/api/datasets/dataset1/variables/mymrset.json")
+        ord <- VariableOrder(VariableGroup("G1", entities=ents))
+        expect_identical(test.ds[ord[[1]]], test.ds[c("gender", "mymrset")])
+        expect_identical(test.ds[ord], test.ds[c("gender", "mymrset")])
+    })
 
     test_that("Read only flag gets set appropriately", {
         expect_false(is.readonly(test.ds))

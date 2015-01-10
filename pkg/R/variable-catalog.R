@@ -1,44 +1,35 @@
 init.VariableCatalog <- function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
-    # print(.Object)
-    # print(names(.Object@index))
     .Object@index <- lapply(.Object@index, function (x, b) {
         if ("subvariables" %in% names(x)) {
-            ## unlist, for jsonlite
+            ## Unlist, for jsonlite
             x[["subvariables"]] <- absolutizeURLs(unlist(x[["subvariables"]]),
                 b)
         }
         if ("subvariables_catalog" %in% names(x)) {
             x[["subvariables_catalog"]] <- absolutizeURLs(x[["subvariables_catalog"]], b)
         }
-        # for (i in c("subvariables", "subvariables_catalog")) {
-        #     if (!is.null(x[[i]])) {
-        #         x[[i]] <- absolutizeURLs(x[[i]], b)
-        #     }
-        # }
         return(x)
     }, b=.Object@self)
-    # print(.Object)
     h_url <- .Object@views$hierarchical_order
     if (!is.null(h_url)) {
         o <- crGET(h_url, query=list(relative="on"))
-        # print(o)
         .Object@order <- VariableOrder(o)
     }
-    # print(names(.Object@index))
     return(.Object)
 }
 setMethod("initialize", "VariableCatalog", init.VariableCatalog)
 
+.discardedTuple <- function (x) isTRUE(x[["discarded"]])
+
 setMethod("active", "VariableCatalog", function (x) {
-    index(x) <- selectFromWhere(!isTRUE(discarded),
-        index(x)[intersect(urls(ordering(x)), urls(x))],
-        simplify=FALSE)
+    index(x) <- Filter(Negate(.discardedTuple),
+        index(x)[intersect(urls(ordering(x)), urls(x))])
     return(x)
 })
 
 setMethod("hidden", "VariableCatalog", function (x) {
-    index(x) <- selectFromWhere(isTRUE(discarded), index(x), simplify=FALSE)
+    index(x) <- Filter(.discardedTuple, index(x))
     return(x)
 })
 
@@ -61,6 +52,18 @@ setMethod("[[", c("VariableCatalog", "character"), function (x, i, ...) {
 setMethod("[[", c("VariableCatalog", "ANY"), function (x, i, ...) {
     VariableTuple(index_url=self(x), entity_url=urls(x)[i],
         body=index(x)[[i]])
+})
+##' @rdname catalog-extract
+##' @export
+setMethod("[", c("VariableCatalog", "VariableOrder"), function (x, i, ...) {
+    index(x) <- index(x)[urls(i)]
+    return(x)
+})
+##' @rdname catalog-extract
+##' @export
+setMethod("[", c("VariableCatalog", "VariableGroup"), function (x, i, ...) {
+    index(x) <- index(x)[urls(i)]
+    return(x)
 })
 ##' @rdname catalog-extract
 ##' @export

@@ -28,7 +28,7 @@ with(fake.HTTP, {
     test_that("active/hidden getters", {
         expect_identical(index(active(varcat)),
             index(varcat)[urls(ordering(varcat))])
-        expect_identical(index(hidden(varcat)), list())
+        expect_equivalent(index(hidden(varcat)), list())
         index(varcat)[[2]]$discarded <- TRUE
         expect_true(inherits(active(varcat), "VariableCatalog"))
         expect_true(inherits(hidden(varcat), "VariableCatalog"))
@@ -46,7 +46,7 @@ with(fake.HTTP, {
     })
     
     gender.url <- "/api/datasets/dataset1/variables/gender.json"
-    test_that("Extract methods", {
+    test_that("Extract methods: character and numeric", {
         expect_true(inherits(varcat[[gender.url]], "VariableTuple"))
         expect_identical(varcat[[gender.url]]@body,
             index(varcat)[[gender.url]])
@@ -56,6 +56,15 @@ with(fake.HTTP, {
             expect_error(varcat[["asdf"]], "subscript out of bounds")
             expect_error(varcat[999:1000], "subscript out of bounds")
         }, "Not implemented")
+    })
+    
+    test_that("Extract methods: VariableOrder/Group", {
+        ents <- c("/api/datasets/dataset1/variables/gender.json",
+            "/api/datasets/dataset1/variables/mymrset.json")
+        ord <- VariableOrder(VariableGroup("G1", entities=ents))
+        expect_identical(names(varcat[ents]), c("Gender", "mymrset"))
+        expect_identical(varcat[ord[[1]]], varcat[ents])
+        expect_identical(varcat[ord], varcat[ents])
     })
     
     test_that("entity method for tuple", {
