@@ -24,6 +24,9 @@ setGeneric("alias<-", function (x, value) standardGeneric("alias<-"),
 setGeneric("aliases", function (x) standardGeneric("aliases"))
 setGeneric("aliases<-", function (x, value) standardGeneric("aliases<-"),
     signature="x")
+setGeneric("descriptions", function (x) standardGeneric("descriptions"))
+setGeneric("descriptions<-", 
+    function (x, value) standardGeneric("descriptions<-"), signature="x")
 
 setGeneric("type", function (x) standardGeneric("type"))
 setGeneric("type<-", function (x, value) standardGeneric("type<-"))

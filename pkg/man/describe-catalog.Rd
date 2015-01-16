@@ -9,6 +9,8 @@
 \alias{aliases<-,Subvariables-method}
 \alias{aliases<-,VariableCatalog-method}
 \alias{describe-catalog}
+\alias{descriptions,VariableCatalog-method}
+\alias{descriptions<-,VariableCatalog-method}
 \alias{names,CrunchDataset-method}
 \alias{names,DatasetCatalog-method}
 \alias{names,Subvariables-method}
@@ -36,6 +38,10 @@
 \S4method{aliases}{VariableCatalog}(x)
 
 \S4method{aliases}{VariableCatalog}(x) <- value
+
+\S4method{descriptions}{VariableCatalog}(x)
+
+\S4method{descriptions}{VariableCatalog}(x) <- value
 }
 \arguments{
 \item{x}{a VariableCatalog, Subvariables, or similar object}

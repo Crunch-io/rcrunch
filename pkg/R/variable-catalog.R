@@ -35,15 +35,6 @@ setMethod("hidden", "VariableCatalog", function (x) {
 
 ##' @rdname catalog-extract
 ##' @export
-setMethod("[<-", c("VariableCatalog", "character", "missing", "VariableCatalog"), function (x, i, j, value) {
-    ## Validate!
-    index(x)[i] <- index(value)[i]
-    ## No save, I don't think. PATCH outside this fn? 
-    return(x)
-})
-
-##' @rdname catalog-extract
-##' @export
 setMethod("[[", c("VariableCatalog", "character"), function (x, i, ...) {
     VariableTuple(index_url=self(x), entity_url=i, body=index(x)[[i]])
 })
@@ -52,18 +43,6 @@ setMethod("[[", c("VariableCatalog", "character"), function (x, i, ...) {
 setMethod("[[", c("VariableCatalog", "ANY"), function (x, i, ...) {
     VariableTuple(index_url=self(x), entity_url=urls(x)[i],
         body=index(x)[[i]])
-})
-##' @rdname catalog-extract
-##' @export
-setMethod("[", c("VariableCatalog", "VariableOrder"), function (x, i, ...) {
-    index(x) <- index(x)[urls(i)]
-    return(x)
-})
-##' @rdname catalog-extract
-##' @export
-setMethod("[", c("VariableCatalog", "VariableGroup"), function (x, i, ...) {
-    index(x) <- index(x)[urls(i)]
-    return(x)
 })
 ##' @rdname catalog-extract
 ##' @export
@@ -80,6 +59,38 @@ setMethod("[[<-", c("VariableCatalog", "character", "missing", "CrunchVariable")
         x[[i]] <- tuple(value)
         return(x)
     })
+##' @rdname catalog-extract
+##' @export
+setMethod("[", c("VariableCatalog", "VariableOrder"), function (x, i, ...) {
+    index(x) <- index(x)[urls(i)]
+    return(x)
+})
+##' @rdname catalog-extract
+##' @export
+setMethod("[", c("VariableCatalog", "VariableGroup"), function (x, i, ...) {
+    index(x) <- index(x)[urls(i)]
+    return(x)
+})
+##' @rdname catalog-extract
+##' @export
+setMethod("[<-", c("VariableCatalog", "character", "missing", "VariableCatalog"), function (x, i, j, value) {
+    ## Validate!
+    index(x)[i] <- index(value)[i]
+    ## No save, I don't think. PATCH outside this fn? 
+    return(x)
+})
+##' @rdname catalog-extract
+##' @export
+setMethod("[<-", c("VariableCatalog", "VariableOrder", "missing", "VariableCatalog"), function (x, i, j, value) {
+    i <- urls(i)
+    callNextMethod(x, i, value=value)
+})
+##' @rdname catalog-extract
+##' @export
+setMethod("[<-", c("VariableCatalog", "VariableGroup", "missing", "VariableCatalog"), function (x, i, j, value) {
+    i <- urls(i)
+    callNextMethod(x, i, value=value)
+})
 
 ##' Get and set names, aliases on Catalog-type objects
 ##' 
@@ -116,4 +127,15 @@ setMethod("aliases", "VariableCatalog", function (x) {
 ##' @rdname describe-catalog
 setMethod("aliases<-", "VariableCatalog", function (x, value) {
     mapSetIndexSlot(x, "alias", value)
+})
+
+##' @export
+##' @rdname describe-catalog
+setMethod("descriptions", "VariableCatalog", function (x) {
+    vapply(index(x), function (a) a[["description"]], character(1), USE.NAMES=FALSE)
+})
+##' @export
+##' @rdname describe-catalog
+setMethod("descriptions<-", "VariableCatalog", function (x, value) {
+    mapSetIndexSlot(x, "description", value)
 })

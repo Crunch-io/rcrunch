@@ -82,7 +82,13 @@ with(fake.HTTP, {
 if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
-            test_that("can set names and aliases", {
+            test_that("Can set descriptions", {
+                expect_identical(descriptions(variables(ds)), rep("", ncol(ds)))
+                descriptions(variables(ds))[2:3] <- c("Des 1", "Des 2")
+                expect_identical(descriptions(variables(ds))[1:4], 
+                    c("", "Des 1", "Des 2", ""))
+            })
+            test_that("Can set names and aliases", {
                 n <- names(df)
                 expect_identical(names(variables(ds)), n)
                 expect_identical(aliases(variables(ds)), n)
@@ -96,6 +102,19 @@ if (run.integration.tests) {
                 aliases(variables(ds))[c(2,4)] <- c("due", "quattro")
                 expect_identical(aliases(variables(ds)), n3)
                 expect_identical(aliases(variables(refresh(ds))), n3)
+            })
+            
+            test_that("Can [<- with VariableGroup/Order", {
+                names(variables(ds))[2:3] <- c("two", "three")
+                ord <- VariableOrder(VariableGroup("a group", entities=ds[2:3]))
+                expect_identical(names(variables(ds)[ord]), 
+                    c("two", "three"))
+                try(names(variables(ds)[ord[[1]]]) <- c("TWO", "Three"))
+                expect_identical(names(variables(ds)[ord]), 
+                    c("TWO", "Three"))
+                try(names(variables(ds)[ord]) <- c("2", "3"))
+                expect_identical(names(variables(ds)[ord]), 
+                    c("2", "3"))
             })
         })
     })

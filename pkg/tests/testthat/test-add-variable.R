@@ -153,23 +153,32 @@ if (run.integration.tests) {
                 expect_identical(getDatasetVariables(ds), vars.before)
             })
         })
+        arrayvar <- list(
+            name="This is an array",
+            alias="an_array",
+            description="Here are some variables. They go together.",
+            type="categorical_array",
+            subvariables=lapply(names(mrdf)[1:3],
+                function (x) toVariable(as.factor(mrdf[[x]]), name=x))
+        )
+        test_that("addVariables that are categorical_array", {
+            with(test.dataset(), {
+                POSTNewVariable(variableCatalogURL(ds), arrayvar)
+                ds <- refresh(ds)
+                expect_true(is.CA(ds$an_array))
+            })
+        })
         test_that("addVariables that are multiple_response", {
             with(test.dataset(), {
-                newvar <- list(
-                    name="Multiple response",
-                    alias="multipleResponse",
-                    description="Here are some variables. They go together.",
-                    type="multiple_response",
-                    subvariables=lapply(names(mrdf)[1:3],
-                        function (x) toVariable(as.factor(mrdf[[x]]), name=x))
-                )
+                newvar <- arrayvar
+                newvar$type <- "multiple_response"
                 newvar$subvariables <- lapply(newvar$subvariables, function (x) {
                     x$categories[[1]]$selected <- TRUE
                     return(x)
                 })
                 POSTNewVariable(variableCatalogURL(ds), newvar)
                 ds <- refresh(ds)
-                expect_true(is.MR(ds$multipleResponse))
+                expect_true(is.MR(ds$an_array))
             })
         })
     })
