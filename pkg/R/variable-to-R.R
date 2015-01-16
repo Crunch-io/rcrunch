@@ -15,6 +15,12 @@ parse_column <- list(
         out <- factor(names(cats)[match(out, ids(cats))], levels=names(cats))
         return(out)
     },
+    categorical_array=function (col, variable) {
+        out <- columnParser("categorical")(unlist(col), variable)
+        ncols <- length(tuple(variable)$subvariables)
+        out <- t(structure(out, .Dim=c(ncols, length(out)/ncols)))
+        return(out)
+    },
     datetime=function (col, variable) {
         out <- columnParser("text")(col)
         if (all(grepl("[0-9]{4}-[0-9]{2}-[0-9]{2}", out))) {
@@ -70,5 +76,6 @@ as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE, 
     }
     out <- lapply(x, as.vector)
     names(out) <- names(x)
-    return(as.data.frame(out, ...))
+    # return(as.data.frame(out, ...))
+    return(structure(out, class="data.frame", row.names=c(NA, -nrow(x))))
 }

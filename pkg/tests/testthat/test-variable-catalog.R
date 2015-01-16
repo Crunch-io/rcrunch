@@ -36,12 +36,13 @@ with(fake.HTTP, {
             c("/api/datasets/dataset1/variables/gender.json",
             "/api/datasets/dataset1/variables/mymrset.json",
             "/api/datasets/dataset1/variables/textVar.json",
-            "/api/datasets/dataset1/variables/starttime.json"))
-        expect_identical(length(active(varcat)), 4L)
+            "/api/datasets/dataset1/variables/starttime.json",
+            "/api/datasets/dataset1/variables/catarray.json"))
+        expect_identical(length(active(varcat)), 5L)
         expect_identical(urls(hidden(varcat)),
             "/api/datasets/dataset1/variables/birthyr.json")
         expect_identical(length(hidden(varcat)), 1L)
-        expect_identical(length(varcat), 5L)
+        expect_identical(length(varcat), 6L)
         expect_identical(active(hidden(varcat)), hidden(active(varcat)))
     })
     

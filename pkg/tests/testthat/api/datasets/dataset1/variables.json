@@ -42,6 +42,20 @@
             ],
             "subvariables_catalog": "/api/datasets/dataset1/variables/mymrset/subvariables.json"
         },
+        "/api/datasets/dataset1/variables/catarray.json": {
+            "name": "Cat Array",
+            "discarded": false,
+            "alias": "catarray", 
+            "type": "categorical_array",
+            "id": "qwert",
+            "description": "An array of cats",
+            "subvariables": [
+                "/api/datasets/dataset1/variables/subvar2.json",
+                "/api/datasets/dataset1/variables/subvar1.json",
+                "/api/datasets/dataset1/variables/subvar3.json"
+            ],
+            "subvariables_catalog": "/api/datasets/dataset1/variables/mymrset/subvariables.json"
+        },
         "/api/datasets/dataset1/variables/textVar.json": {
             "name": "Text variable ftw",
             "discarded": false,

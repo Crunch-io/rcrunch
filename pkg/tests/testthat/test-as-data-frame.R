@@ -1,5 +1,11 @@
 context("Getting values to make local R objects")
 
+ca.values <- structure(c(2L, 2L, 1L, NA, 1L, 2L, 1L, 2L, 2L, 2L, NA, 2L, NA, 
+NA, 1L, 1L, 2L, 2L, 2L, 1L, NA, 1L, NA, NA, 1L, 1L, 1L, 2L, NA, 
+NA, NA, NA, 1L, 2L, NA, NA, 1L, NA, NA, NA, 1L, 2L, 1L, 1L, 1L, 
+NA, 1L, NA, 1L, 2L, 1L, NA, 1L, 2L, NA, 1L, 2L, NA, 1L, NA, 2L, 
+1L, 1L, 2L, 1L, 1L, 2L, 1L, NA, 1L, 2L, 1L, 1L, 1L, 2L), .Dim = c(25L, 
+3L), levels=c("A", "B"), class="factor")
 
 with(fake.HTTP, {
     test.ds <- loadDataset("test ds")
@@ -7,15 +13,21 @@ with(fake.HTTP, {
     # hiddenVariables(test.ds) <- "mymrset" # Defer implementing MR as.vector
     test_that("setup", {
         expect_identical(dim(test.ds), c(nrow(test.ds), ncol(test.ds)))
-        expect_identical(dim(test.ds), c(25L, 4L))
+        expect_identical(dim(test.ds), c(25L, 5L))
         expect_identical(names(test.ds),
-            c("birthyr", "gender", "textVar", "starttime"))
+            c("birthyr", "gender", "textVar", "starttime", "catarray"))
     })
     
     test_that("as.vector on Variables", {
         expect_true(is.numeric(as.vector(test.ds$birthyr)))
         expect_true(is.factor(as.vector(test.ds$gender)))
         expect_true(all(levels(as.vector(test.ds$gender)) %in% names(categories(test.ds$gender))))
+    })
+    
+    test_that("as.vector on Categorical Array", {
+        expect_true(is.CA(test.ds$catarray))
+        expect_true(is.matrix(as.vector(test.ds$catarray)))
+        expect_identical(as.vector(test.ds$catarray), ca.values)
     })
 
     test_that("as.data.frame on CrunchDataset", {

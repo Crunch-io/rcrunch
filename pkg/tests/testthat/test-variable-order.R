@@ -35,15 +35,16 @@ with(fake.HTTP, {
         VariableGroup(name="Group 1", entities=list(ent.urls[1], 
             VariableGroup(name="Nested", entities=ent.urls[2:3]),
             ent.urls[4])),
-        VariableGroup(name="Group 2", entities=ent.urls[5])))
+        VariableGroup(name="Group 2", entities=ent.urls[5:6])))
     
     test_that("Can extract group(s) by name", {
         expect_identical(nested.ord[["Group 2"]], 
-            VariableGroup(name="Group 2", entities=ent.urls[5]))
+            VariableGroup(name="Group 2", entities=ent.urls[5:6]))
         expect_identical(nested.ord$`Group 2`, 
-            VariableGroup(name="Group 2", entities=ent.urls[5]))
+            VariableGroup(name="Group 2", entities=ent.urls[5:6]))
         expect_identical(nested.ord["Group 2"], 
-            VariableOrder(VariableGroup(name="Group 2", entities=ent.urls[5])))
+            VariableOrder(VariableGroup(name="Group 2",
+            entities=ent.urls[5:6])))
     })
     test_that("Can create nested groups", {
         expect_true(inherits(nested.ord, "VariableOrder"))
@@ -79,7 +80,7 @@ with(fake.HTTP, {
                 ),
             list(
                 group="Group 2",
-                entities=as.list(ent.urls[5])
+                entities=as.list(ent.urls[5:6])
             )
         )))
     })
@@ -166,7 +167,8 @@ with(fake.HTTP, {
               "        mymrset",
               "    Text variable ftw",
               "[+] Group 2",
-              "    starttime"))
+              "    starttime",
+              "    Cat Array"))
         no <- nested.ord
         no[[3]] <- VariableGroup("Group 3", entities=list())
         expect_identical(showVariableOrder(no, vars=variables(test.ds)),
@@ -178,6 +180,7 @@ with(fake.HTTP, {
               "    Text variable ftw",
               "[+] Group 2",
               "    starttime",
+              "    Cat Array",
               "[+] Group 3",
               "    (Empty group)"))
     })

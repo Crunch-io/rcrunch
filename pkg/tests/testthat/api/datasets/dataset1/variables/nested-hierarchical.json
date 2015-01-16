@@ -20,7 +20,8 @@
             },
             {
                 "entities": [
-                    "/api/datasets/dataset1/variables/starttime.json"
+                    "/api/datasets/dataset1/variables/starttime.json",
+                    "/api/datasets/dataset1/variables/catarray.json"
                 ],
                 "group": "Group 2"
             }
