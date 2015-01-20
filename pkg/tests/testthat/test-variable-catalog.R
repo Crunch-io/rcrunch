@@ -28,7 +28,7 @@ with(fake.HTTP, {
     test_that("active/hidden getters", {
         expect_identical(index(active(varcat)),
             index(varcat)[urls(ordering(varcat))])
-        expect_identical(index(hidden(varcat)), list())
+        expect_equivalent(index(hidden(varcat)), list())
         index(varcat)[[2]]$discarded <- TRUE
         expect_true(inherits(active(varcat), "VariableCatalog"))
         expect_true(inherits(hidden(varcat), "VariableCatalog"))
@@ -36,17 +36,18 @@ with(fake.HTTP, {
             c("/api/datasets/dataset1/variables/gender.json",
             "/api/datasets/dataset1/variables/mymrset.json",
             "/api/datasets/dataset1/variables/textVar.json",
-            "/api/datasets/dataset1/variables/starttime.json"))
-        expect_identical(length(active(varcat)), 4L)
+            "/api/datasets/dataset1/variables/starttime.json",
+            "/api/datasets/dataset1/variables/catarray.json"))
+        expect_identical(length(active(varcat)), 5L)
         expect_identical(urls(hidden(varcat)),
             "/api/datasets/dataset1/variables/birthyr.json")
         expect_identical(length(hidden(varcat)), 1L)
-        expect_identical(length(varcat), 5L)
+        expect_identical(length(varcat), 6L)
         expect_identical(active(hidden(varcat)), hidden(active(varcat)))
     })
     
     gender.url <- "/api/datasets/dataset1/variables/gender.json"
-    test_that("Extract methods", {
+    test_that("Extract methods: character and numeric", {
         expect_true(inherits(varcat[[gender.url]], "VariableTuple"))
         expect_identical(varcat[[gender.url]]@body,
             index(varcat)[[gender.url]])
@@ -56,6 +57,15 @@ with(fake.HTTP, {
             expect_error(varcat[["asdf"]], "subscript out of bounds")
             expect_error(varcat[999:1000], "subscript out of bounds")
         }, "Not implemented")
+    })
+    
+    test_that("Extract methods: VariableOrder/Group", {
+        ents <- c("/api/datasets/dataset1/variables/gender.json",
+            "/api/datasets/dataset1/variables/mymrset.json")
+        ord <- VariableOrder(VariableGroup("G1", entities=ents))
+        expect_identical(names(varcat[ents]), c("Gender", "mymrset"))
+        expect_identical(varcat[ord[[1]]], varcat[ents])
+        expect_identical(varcat[ord], varcat[ents])
     })
     
     test_that("entity method for tuple", {
@@ -72,7 +82,13 @@ with(fake.HTTP, {
 if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
-            test_that("can set names and aliases", {
+            test_that("Can set descriptions", {
+                expect_identical(descriptions(variables(ds)), rep("", ncol(ds)))
+                descriptions(variables(ds))[2:3] <- c("Des 1", "Des 2")
+                expect_identical(descriptions(variables(ds))[1:4], 
+                    c("", "Des 1", "Des 2", ""))
+            })
+            test_that("Can set names and aliases", {
                 n <- names(df)
                 expect_identical(names(variables(ds)), n)
                 expect_identical(aliases(variables(ds)), n)
@@ -86,6 +102,19 @@ if (run.integration.tests) {
                 aliases(variables(ds))[c(2,4)] <- c("due", "quattro")
                 expect_identical(aliases(variables(ds)), n3)
                 expect_identical(aliases(variables(refresh(ds))), n3)
+            })
+            
+            test_that("Can [<- with VariableGroup/Order", {
+                names(variables(ds))[2:3] <- c("two", "three")
+                ord <- VariableOrder(VariableGroup("a group", entities=ds[2:3]))
+                expect_identical(names(variables(ds)[ord]), 
+                    c("two", "three"))
+                try(names(variables(ds)[ord[[1]]]) <- c("TWO", "Three"))
+                expect_identical(names(variables(ds)[ord]), 
+                    c("TWO", "Three"))
+                try(names(variables(ds)[ord]) <- c("2", "3"))
+                expect_identical(names(variables(ds)[ord]), 
+                    c("2", "3"))
             })
         })
     })

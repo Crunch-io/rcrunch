@@ -119,6 +119,17 @@ setMethod("index<-", "ShojiCatalog", function (x, value) {
     return(x)
 })
 
+##' Get the URLs contained in a Catalog or Order object
+##'
+##' Sometimes it is useful to extract flattened vector of URLs from more
+##' complex objects for purposes like subsetting or doing set comparisons.
+##'
+##' @param x a Catalog, Order, or Group object
+##' @return A character vector of URLs
+##' @aliases urls
+##' @keywords internal
+##' @rdname urls
+##' @export
 setMethod("urls", "ShojiCatalog", function (x) names(index(x)))
 
 ##' @export

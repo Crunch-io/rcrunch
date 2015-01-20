@@ -1,53 +1,35 @@
 init.VariableCatalog <- function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
-    # print(.Object)
-    # print(names(.Object@index))
     .Object@index <- lapply(.Object@index, function (x, b) {
         if ("subvariables" %in% names(x)) {
-            ## unlist, for jsonlite
+            ## Unlist, for jsonlite
             x[["subvariables"]] <- absolutizeURLs(unlist(x[["subvariables"]]),
                 b)
         }
         if ("subvariables_catalog" %in% names(x)) {
             x[["subvariables_catalog"]] <- absolutizeURLs(x[["subvariables_catalog"]], b)
         }
-        # for (i in c("subvariables", "subvariables_catalog")) {
-        #     if (!is.null(x[[i]])) {
-        #         x[[i]] <- absolutizeURLs(x[[i]], b)
-        #     }
-        # }
         return(x)
     }, b=.Object@self)
-    # print(.Object)
     h_url <- .Object@views$hierarchical_order
     if (!is.null(h_url)) {
         o <- crGET(h_url, query=list(relative="on"))
-        # print(o)
         .Object@order <- VariableOrder(o)
     }
-    # print(names(.Object@index))
     return(.Object)
 }
 setMethod("initialize", "VariableCatalog", init.VariableCatalog)
 
+.discardedTuple <- function (x) isTRUE(x[["discarded"]])
+
 setMethod("active", "VariableCatalog", function (x) {
-    index(x) <- selectFromWhere(!isTRUE(discarded),
-        index(x)[intersect(urls(ordering(x)), urls(x))],
-        simplify=FALSE)
+    index(x) <- Filter(Negate(.discardedTuple),
+        index(x)[intersect(urls(ordering(x)), urls(x))])
     return(x)
 })
 
 setMethod("hidden", "VariableCatalog", function (x) {
-    index(x) <- selectFromWhere(isTRUE(discarded), index(x), simplify=FALSE)
-    return(x)
-})
-
-##' @rdname catalog-extract
-##' @export
-setMethod("[<-", c("VariableCatalog", "character", "missing", "VariableCatalog"), function (x, i, j, value) {
-    ## Validate!
-    index(x)[i] <- index(value)[i]
-    ## No save, I don't think. PATCH outside this fn? 
+    index(x) <- Filter(.discardedTuple, index(x))
     return(x)
 })
 
@@ -77,6 +59,38 @@ setMethod("[[<-", c("VariableCatalog", "character", "missing", "CrunchVariable")
         x[[i]] <- tuple(value)
         return(x)
     })
+##' @rdname catalog-extract
+##' @export
+setMethod("[", c("VariableCatalog", "VariableOrder"), function (x, i, ...) {
+    index(x) <- index(x)[urls(i)]
+    return(x)
+})
+##' @rdname catalog-extract
+##' @export
+setMethod("[", c("VariableCatalog", "VariableGroup"), function (x, i, ...) {
+    index(x) <- index(x)[urls(i)]
+    return(x)
+})
+##' @rdname catalog-extract
+##' @export
+setMethod("[<-", c("VariableCatalog", "character", "missing", "VariableCatalog"), function (x, i, j, value) {
+    ## Validate!
+    index(x)[i] <- index(value)[i]
+    ## No save, I don't think. PATCH outside this fn? 
+    return(x)
+})
+##' @rdname catalog-extract
+##' @export
+setMethod("[<-", c("VariableCatalog", "VariableOrder", "missing", "VariableCatalog"), function (x, i, j, value) {
+    i <- urls(i)
+    callNextMethod(x, i, value=value)
+})
+##' @rdname catalog-extract
+##' @export
+setMethod("[<-", c("VariableCatalog", "VariableGroup", "missing", "VariableCatalog"), function (x, i, j, value) {
+    i <- urls(i)
+    callNextMethod(x, i, value=value)
+})
 
 ##' Get and set names, aliases on Catalog-type objects
 ##' 
@@ -113,4 +127,15 @@ setMethod("aliases", "VariableCatalog", function (x) {
 ##' @rdname describe-catalog
 setMethod("aliases<-", "VariableCatalog", function (x, value) {
     mapSetIndexSlot(x, "alias", value)
+})
+
+##' @export
+##' @rdname describe-catalog
+setMethod("descriptions", "VariableCatalog", function (x) {
+    vapply(index(x), function (a) a[["description"]], character(1), USE.NAMES=FALSE)
+})
+##' @export
+##' @rdname describe-catalog
+setMethod("descriptions<-", "VariableCatalog", function (x, value) {
+    mapSetIndexSlot(x, "description", value)
 })

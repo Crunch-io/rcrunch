@@ -10,7 +10,8 @@
                     "../gender.json",
                     "../mymrset.json",
                     "../textVar.json",
-                    "../starttime.json"
+                    "../starttime.json",
+                    "../catarray.json"
                 ],
                 "group": "ungrouped"
             }

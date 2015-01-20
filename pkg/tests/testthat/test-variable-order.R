@@ -35,7 +35,17 @@ with(fake.HTTP, {
         VariableGroup(name="Group 1", entities=list(ent.urls[1], 
             VariableGroup(name="Nested", entities=ent.urls[2:3]),
             ent.urls[4])),
-        VariableGroup(name="Group 2", entities=ent.urls[5])))
+        VariableGroup(name="Group 2", entities=ent.urls[5:6])))
+    
+    test_that("Can extract group(s) by name", {
+        expect_identical(nested.ord[["Group 2"]], 
+            VariableGroup(name="Group 2", entities=ent.urls[5:6]))
+        expect_identical(nested.ord$`Group 2`, 
+            VariableGroup(name="Group 2", entities=ent.urls[5:6]))
+        expect_identical(nested.ord["Group 2"], 
+            VariableOrder(VariableGroup(name="Group 2",
+            entities=ent.urls[5:6])))
+    })
     test_that("Can create nested groups", {
         expect_true(inherits(nested.ord, "VariableOrder"))
         expect_identical(urls(nested.ord), ent.urls)
@@ -70,7 +80,7 @@ with(fake.HTTP, {
                 ),
             list(
                 group="Group 2",
-                entities=as.list(ent.urls[5])
+                entities=as.list(ent.urls[5:6])
             )
         )))
     })
@@ -95,6 +105,24 @@ with(fake.HTTP, {
         expect_identical(urls(to[[1]]), ent.urls[1:4])
         expect_identical(to[[1]][[2]], 
             VariableGroup(name="Nested", entities=ent.urls[2:3]))
+    })
+    test_that("can assign NULL into order to remove a group", {
+        no <- no2 <- no3 <- nested.ord
+        no[[2]] <- NULL
+        expect_identical(no, VariableOrder(
+            VariableGroup(name="Group 1", entities=list(ent.urls[1], 
+                VariableGroup(name="Nested", entities=ent.urls[2:3]),
+                ent.urls[4]))))
+        no2[["Group 2"]] <- NULL
+        expect_identical(no2, VariableOrder(
+            VariableGroup(name="Group 1", entities=list(ent.urls[1], 
+                VariableGroup(name="Nested", entities=ent.urls[2:3]),
+                ent.urls[4]))))
+        no3$`Group 2` <- NULL
+        expect_identical(no3, VariableOrder(
+            VariableGroup(name="Group 1", entities=list(ent.urls[1], 
+                VariableGroup(name="Nested", entities=ent.urls[2:3]),
+                ent.urls[4]))))
     })
     test_that("can assign group into group", {
         to <- test.ord
@@ -128,6 +156,33 @@ with(fake.HTTP, {
         skip(expect_error(to[[1]] <- ent.urls, 
             "Cannot insert multiple variables. Perhaps you want to insert a nested group? Or maybe manipulate the entire entities vector?"),
             "Not sure what this expectation should be")
+    })
+    
+    test_that("VariableOrder/Group show methods", {
+        expect_identical(showVariableOrder(nested.ord, vars=variables(test.ds)),
+            c("[+] Group 1",
+              "    Birth Year",
+              "    [+] Nested",
+              "        Gender",
+              "        mymrset",
+              "    Text variable ftw",
+              "[+] Group 2",
+              "    starttime",
+              "    Cat Array"))
+        no <- nested.ord
+        no[[3]] <- VariableGroup("Group 3", entities=list())
+        expect_identical(showVariableOrder(no, vars=variables(test.ds)),
+            c("[+] Group 1",
+              "    Birth Year",
+              "    [+] Nested",
+              "        Gender",
+              "        mymrset",
+              "    Text variable ftw",
+              "[+] Group 2",
+              "    starttime",
+              "    Cat Array",
+              "[+] Group 3",
+              "    (Empty group)"))
     })
 })
 

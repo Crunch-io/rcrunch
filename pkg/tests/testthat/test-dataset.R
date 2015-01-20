@@ -10,6 +10,7 @@ with(fake.HTTP, {
     test_that("Dataset VariableCatalog index is sorted", {
         expect_identical(urls(allVariables(test.ds)), 
             c("/api/datasets/dataset1/variables/birthyr.json",
+            "/api/datasets/dataset1/variables/catarray.json",
             "/api/datasets/dataset1/variables/gender.json",
             "/api/datasets/dataset1/variables/mymrset.json",
             "/api/datasets/dataset1/variables/starttime.json",
@@ -45,7 +46,7 @@ with(fake.HTTP, {
 
     test_that("Dataset has names() and extract methods work", {
         expect_false(is.null(names(test.ds)))
-        expect_identical(names(test.ds), c("birthyr", "gender", "mymrset", "textVar", "starttime"))
+        expect_identical(names(test.ds), c("birthyr", "gender", "mymrset", "textVar", "starttime", "catarray"))
         expect_true(is.variable(test.ds[[1]]))
         expect_true("birthyr" %in% names(test.ds))
         expect_true(is.variable(test.ds$birthyr))
@@ -57,6 +58,14 @@ with(fake.HTTP, {
         expect_identical(dim(test.ds[2]), c(25L, 1L))
         expect_identical(test.ds$not.a.var.name, NULL)
         expect_error(test.ds[[999]], "subscript out of bounds")
+    })
+    
+    test_that("Extract from dataset by VariableOrder/Group", {
+        ents <- c("/api/datasets/dataset1/variables/gender.json",
+            "/api/datasets/dataset1/variables/mymrset.json")
+        ord <- VariableOrder(VariableGroup("G1", entities=ents))
+        expect_identical(test.ds[ord[[1]]], test.ds[c("gender", "mymrset")])
+        expect_identical(test.ds[ord], test.ds[c("gender", "mymrset")])
     })
 
     test_that("Read only flag gets set appropriately", {
@@ -81,7 +90,8 @@ with(fake.HTTP, {
             "$gender: Gender (categorical) \n",
             "$mymrset: mymrset (multiple_response) \n",
             "$textVar: Text variable ftw (text) \n",
-            "$starttime: starttime (datetime) \n"     
+            "$starttime: starttime (datetime) \n",
+            "$catarray: Cat Array (categorical_array) \n"
         ))
     })
     

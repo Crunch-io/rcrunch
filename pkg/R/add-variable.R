@@ -21,22 +21,41 @@ POSTNewVariable <- function (catalog_url, variable) {
     if (!("expr" %in% names(variable))) {
         ## If deriving a variable, skip this and go straight to POSTing
         if (variable$type %in% c("multiple_response", "categorical_array")) {
-            ## assumes: array of subvariables included, and if MR, at least one
+            ## Assumes: array of subvariables included, and if MR, at least one
             ## category has selected: TRUE
-            ## TODO: make the data import API take array types directly
-
-            var_urls <- lapply(variable$subvariables,
-                function (x) try(do.POST(x)))
-            errs <- vapply(var_urls, is.error, logical(1))
-            if (any(errs)) {
-                # Delete subvariables that were added, then raise
-                lapply(var_urls[!errs], function (x) crDELETE(x))
-                halt("Subvariables errored on upload")
+            if (!("subvariables" %in% names(variable))) {
+                halt("Cannot create array variable without specifying",
+                    " subvariables")
             }
-            # Else prepare to POST array definition
-            variable$subvariables <- I(unlist(var_urls))
-        } else if (variable$type == "categorical") {
-            Categories(variable$categories) ## will error if cats are invalid
+            ## Two options supported: 
+            ## (1) Create array from single array definition
+            ## (2) Create subvariables individually and then bind them
+            ## Sniff to see which case we have. If (1), proceed normally
+            is_catvardef <- function (x) {
+                all(c("categories", "values") %in% names(x))
+            }
+            is_arraydef <- is_catvardef(variable) &&
+                !any(vapply(variable$subvariables, is_catvardef, logical(1)))
+            if (!is_arraydef) {
+                lapply(variable$subvariables, function (x) {
+                    Categories(x$categories) ## Will error if invalid
+                })
+                
+                ## Upload subvars, then bind
+                var_urls <- lapply(variable$subvariables,
+                    function (x) try(do.POST(x)))
+                errs <- vapply(var_urls, is.error, logical(1))
+                if (any(errs)) {
+                    # Delete subvariables that were added, then raise
+                    lapply(var_urls[!errs], function (x) crDELETE(x))
+                    halt("Subvariables errored on upload")
+                }
+                # Else prepare to POST array definition
+                variable$subvariables <- I(unlist(var_urls))
+            }
+        }
+        if ("categories" %in% names(variable)) {
+            Categories(variable$categories) ## Will error if cats are invalid
         }
     }
     out <- do.POST(variable)

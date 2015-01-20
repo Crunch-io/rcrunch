@@ -20,7 +20,8 @@
             },
             {
                 "entities": [
-                    "../starttime.json"
+                    "../starttime.json",
+                    "../catarray.json"
                 ],
                 "group": "Group 2"
             }

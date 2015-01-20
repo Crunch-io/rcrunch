@@ -6,6 +6,10 @@
 \alias{[,ShojiCatalog,character-method}
 \alias{[,ShojiCatalog,logical-method}
 \alias{[,ShojiCatalog,numeric-method}
+\alias{[,VariableCatalog,VariableGroup-method}
+\alias{[,VariableCatalog,VariableOrder-method}
+\alias{[<-,VariableCatalog,VariableGroup,missing,VariableCatalog-method}
+\alias{[<-,VariableCatalog,VariableOrder,missing,VariableCatalog-method}
 \alias{[<-,VariableCatalog,character,missing,VariableCatalog-method}
 \alias{[[,DatasetCatalog,ANY-method}
 \alias{[[,DatasetCatalog,character-method}
@@ -30,9 +34,6 @@
 
 \S4method{[[}{ShojiCatalog,ANY}(x, i, j, ...)
 
-\S4method{[}{VariableCatalog,character,missing,VariableCatalog}(x, i, j) <-
-  value
-
 \S4method{[[}{VariableCatalog,character}(x, i, j, ...)
 
 \S4method{[[}{VariableCatalog,ANY}(x, i, j, ...)
@@ -40,6 +41,19 @@
 \S4method{[[}{VariableCatalog,character,missing,VariableTuple}(x, i, j) <- value
 
 \S4method{[[}{VariableCatalog,character,missing,CrunchVariable}(x, i, j) <-
+  value
+
+\S4method{[}{VariableCatalog,VariableOrder}(x, i, j, ..., drop = TRUE)
+
+\S4method{[}{VariableCatalog,VariableGroup}(x, i, j, ..., drop = TRUE)
+
+\S4method{[}{VariableCatalog,character,missing,VariableCatalog}(x, i, j) <-
+  value
+
+\S4method{[}{VariableCatalog,VariableOrder,missing,VariableCatalog}(x, i, j) <-
+  value
+
+\S4method{[}{VariableCatalog,VariableGroup,missing,VariableCatalog}(x, i, j) <-
   value
 }
 \arguments{

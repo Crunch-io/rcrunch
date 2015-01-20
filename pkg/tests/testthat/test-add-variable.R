@@ -50,127 +50,74 @@ test_that("POSTNewVariable rejects invalid categories", {
 
 if (run.integration.tests) {
     with(test.authentication, {
-        with(test.dataset(df, "testdf"), {
+        with(test.dataset(df), {
             test_that("addVariable creates a new remote numeric variable", {
-                testdf <- addVariable(testdf, df$v3, name="New var",
+                ds <- addVariable(ds, df$v3, name="New var",
                     alias="newVar")
-                expect_true("newVar" %in% names(testdf))
-                nv <- testdf$newVar
+                expect_true("newVar" %in% names(ds))
+                nv <- ds$newVar
                 expect_true(is.Numeric(nv))
-                expect_true(is.Numeric(testdf[['v3']]))
-                expect_identical(as.vector(nv), as.vector(testdf$v3))
+                expect_true(is.Numeric(ds[['v3']]))
+                expect_identical(as.vector(nv), as.vector(ds$v3))
             })
             test_that("addVariable creates text variables from character", {
-                testdf <- addVariable(testdf, df$v2, name="New var 2",
+                ds <- addVariable(ds, df$v2, name="New var 2",
                     alias="newVar2")
-                expect_true("newVar2" %in% names(testdf))
-                nv <- testdf$newVar2
+                expect_true("newVar2" %in% names(ds))
+                nv <- ds$newVar2
                 expect_true(is.Text(nv))
                 expect_identical(as.vector(nv)[1:15],
-                    as.vector(testdf$v2)[1:15])
+                    as.vector(ds$v2)[1:15])
                     ## note that NAs aren't getting caught in the CSV importer
                     ## anymore, but they're right in the addVariable method
             })
             test_that("addVariable creates categorical from factor", {
-                testdf <- addVariable(testdf, df$v4, name="New var 3",
+                ds <- addVariable(ds, df$v4, name="New var 3",
                     alias="newVar3")
-                expect_true("newVar3" %in% names(testdf))
-                nv <- testdf$newVar3
+                expect_true("newVar3" %in% names(ds))
+                nv <- ds$newVar3
                 expect_true(is.Categorical(nv))
-                expect_identical(as.vector(nv), as.vector(testdf$v4))
+                expect_identical(as.vector(nv), as.vector(ds$v4))
             })
             test_that("addVariable creates datetime from Date", {
-                testdf <- addVariable(testdf, df$v5, name="New var 4",
+                ds <- addVariable(ds, df$v5, name="New var 4",
                     alias="newVar4")
-                expect_true("newVar4" %in% names(testdf))
-                nv <- testdf$newVar4
+                expect_true("newVar4" %in% names(ds))
+                nv <- ds$newVar4
                 expect_true(is.Datetime(nv))
-                expect_identical(as.vector(nv), as.vector(testdf$v5))
+                expect_identical(as.vector(nv), as.vector(ds$v5))
             })
             skip(test_that("addVariable creates datetime from POSIXct", {
-                testdf <- addVariable(testdf, as.POSIXct(df$v5),
+                ds <- addVariable(ds, as.POSIXct(df$v5),
                     name="New var 5", alias="newVar5")
-                expect_true("newVar5" %in% names(testdf))
-                nv <- testdf$newVar5
+                expect_true("newVar5" %in% names(ds))
+                nv <- ds$newVar5
                 expect_true(is.Datetime(nv))
-                expect_identical(as.vector(nv), as.vector(testdf$v5))
+                expect_identical(as.vector(nv), as.vector(ds$v5))
             }), reason="Can't support POSIXt until the app supports timezones")
             test_that("adding variable with duplicate name fails", {
-                expect_error(addVariable(testdf, df$v5, name="New var 4",
+                expect_error(addVariable(ds, df$v5, name="New var 4",
                     alias="newVar4"), 
                     "Variable with name: New var 4 already exists")
             })
         })
         
-        with(test.dataset(df, "testdf"), {
+        with(test.dataset(df), {
             test_that("assignment restrictions", {
-                expect_error(testdf[[2]] <- 1:20, 
+                expect_error(ds[[2]] <- 1:20, 
                     "Only character \\(name\\) indexing supported")
             })
             test_that("[[<- adds variables", {
-                testdf$newvariable <- 20:1
-                expect_true(is.Numeric(testdf$newvariable))
-                expect_identical(mean(testdf$newvariable), 10.5)
+                ds$newvariable <- 20:1
+                expect_true(is.Numeric(ds$newvariable))
+                expect_identical(mean(ds$newvariable), 10.5)
             })
             test_that("Variable lengths must match, in an R way", {
-                expect_error(testdf[['not valid']] <- 1:7, 
+                expect_error(ds[['not valid']] <- 1:7, 
                     "replacement has 7 rows, data has 20")
-                testdf[['ok']] <- 1
-                expect_identical(as.vector(testdf$ok), rep(1, 20))
+                ds[['ok']] <- 1
+                expect_identical(as.vector(ds$ok), rep(1, 20))
             })
-        })
-        
-        ca.var <- list(
-            name="Categorical array",
-            alias="categoricalArray",
-            description="Here are some variables. They go together.",
-            type="categorical_array",
-            subvariables=lapply(names(mrdf)[1:3],
-                function (x) toVariable(as.factor(mrdf[[x]]), name=x))
-        )
-        test_that("addVariables that are categorical_array", {
-            with(test.dataset(), {
-                POSTNewVariable(variableCatalogURL(ds), ca.var)
-                ds <- refresh(ds)
-                expect_true(is.CA(ds$categoricalArray))
-                expect_identical(description(ds$categoricalArray), 
-                    "Here are some variables. They go together.")
-            })
-        })
-        test_that("adding an array cleans up after self if one subvar errors", {
-            with(test.dataset(), {
-                c2 <- ca.var
-                c2$subvariables[[4]] <- list(this="is", not="a", valid="variable")
-                nvars.before <- ncol(ds)
-                vars.before <- getDatasetVariables(ds)
-                expect_identical(nvars.before, 0L)
-                with(silencer, 
-                    expect_error(POSTNewVariable(variableCatalogURL(ds), c2), 
-                        "Subvariables errored on upload")
-                )
-                ds <- refresh(ds)
-                expect_identical(ncol(ds), nvars.before)
-                expect_identical(getDatasetVariables(ds), vars.before)
-            })
-        })
-        test_that("addVariables that are multiple_response", {
-            with(test.dataset(), {
-                newvar <- list(
-                    name="Multiple response",
-                    alias="multipleResponse",
-                    description="Here are some variables. They go together.",
-                    type="multiple_response",
-                    subvariables=lapply(names(mrdf)[1:3],
-                        function (x) toVariable(as.factor(mrdf[[x]]), name=x))
-                )
-                newvar$subvariables <- lapply(newvar$subvariables, function (x) {
-                    x$categories[[1]]$selected <- TRUE
-                    return(x)
-                })
-                POSTNewVariable(variableCatalogURL(ds), newvar)
-                ds <- refresh(ds)
-                expect_true(is.MR(ds$multipleResponse))
-            })
-        })
+        })        
     })
 }
