@@ -59,14 +59,14 @@ if (run.integration.tests) {
             c2$subvariables <- lapply(c2$subvariables, function (x) {
                 x[!(names(x) %in% c("type", "categories", "values"))]
             })
-            skip(with(test.dataset(), {
+            with(test.dataset(), {
                 try(POSTNewVariable(variableCatalogURL(ds), c2))
                 ds <- refresh(ds)
                 expect_true(is.CA(ds$categoricalArray))
                 expect_identical(description(ds$categoricalArray), 
                     "Here are some variables. They go together.")
                 expect_identical(as.vector(ds$categoricalArray), ca.values)
-            }), "Throws server error")
+            })
         })
         test_that("adding an array cleans up after self if one subvar errors", {
             with(test.dataset(), {
