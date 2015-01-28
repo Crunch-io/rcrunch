@@ -46,6 +46,9 @@ setOldClass("zcl")
 setMethod("zcl", "zcl", function (x) x)
 setMethod("zcl", "list", function (x) x) ## is this a good idea?
 
+setMethod("absolute.zcl", "ANY", function (x) zcl(x))
+setMethod("absolute.zcl", "CrunchVariable", function (x) list(variable=self(x)))
+
 typeof <- function (x, variable) {
     ## Add ZCL metadata asserting that x is the same type as variable
     if (is.character(variable)) {
