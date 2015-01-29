@@ -190,4 +190,6 @@ CrunchExpr <- setClass("CrunchExpr",
 CrunchLogicalExpr <- setClass("CrunchLogicalExpr",
     contains="CrunchExpr")
 
-CrunchCube <- setClass("CrunchCube", contains="list")
+CrunchCube <- setClass("CrunchCube", contains="list",
+    representation=representation(useNA="character"),
+    prototype=prototype(useNA="no"))

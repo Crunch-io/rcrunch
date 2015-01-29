@@ -7,9 +7,11 @@
 ##' cross-classifying variables, separated by '+', on the right hand side.
 ##' Compare to \code{\link[stats]{xtabs}}.
 ##' @param data an object of class \code{CrunchDataset}
+##' @param useNA whether to include missing values in tabular results. See
+##' \code{\link[base]{table}}.
 ##' @return an object of class \code{CrunchCube}
 ##' @export
-getCube <- function (formula, data) {
+getCube <- function (formula, data, useNA=c("no", "ifany", "always")) {
     f <- terms(formula)
     f.vars <- attr(f, "variables")
     all.f.vars <- all.vars(f.vars)
@@ -25,25 +27,42 @@ getCube <- function (formula, data) {
     } else {
         measures <- list(count=zfunc("cube_count"))
     }
-    dimensions <- lapply(vars, absolute.zcl)
-    names(dimensions) <- NULL
     
-    query <- list(dimensions=dimensions,
+    query <- list(dimensions=varsToCubeDimensions(vars),
         measures=measures,
         weight=NULL) ## Weight should be an argument
     cube_url <- shojiURL(data, "views", "cube")
-    return(CrunchCube(crGET(cube_url, query=list(query=toJSON(query)))))
+    return(CrunchCube(crGET(cube_url, query=list(query=toJSON(query))),
+        useNA=match.arg(useNA)))
+}
+
+varsToCubeDimensions <- function (vars) {
+    ## Given variables, construct the appropriate ZCL to get a cube with them
+    ## as dimensions
+    dimensions <- unlist(lapply(vars, function (x) {
+        v <- absolute.zcl(x)
+        if (is.MR(x)) {
+            ## Multiple response gets "selected_array" and "each"
+            return(list(zfunc("selected_array", v),
+                list(each=self(x))))
+        } else if (is.CA(x)) {
+            ## Categorical array gets the var reference and "each"
+            return(list(v,
+                list(each=self(x))))
+        } else {
+            ## Just the var ref, but nest in a list so we can unlist below to
+            ## flatten
+            return(list(v))
+        }
+    }), recursive=FALSE)
+    names(dimensions) <- NULL
+    return(dimensions)
 }
 
 cubeToArray <- function (x, measure="count") {
     d <- unlist(x$result$measures[[measure]]$data)
     d <- round(d) ## digits should be an argument
-    dimnames <- lapply(x$result$dimensions, function (a) {
-        cats <- a$type$categories ## If enumerated, won't be categories
-        vapply(cats, function (ct) ct$name, character(1))
-    })
-    names(dimnames) <- vapply(x$result$dimensions, 
-        function (a) a$references$name, character(1))
+    dimnames <- cubeDimnames(x)
     ndims <- length(dimnames)
     if (ndims > 1) {
         ## Cube arrays come in row-col-etc. order, not column-major.
@@ -57,6 +76,73 @@ cubeToArray <- function (x, measure="count") {
         ap[1:2] <- 2:1
         out <- aperm(out, ap)
         names(dimnames(out))[1:2] <- names(dimnames(out))[2:1]
+        marginals <- lapply(x$result$margin[as.character(seq_len(ndims) - 1)],
+            unlist)
+    } else {
+        ## Kind of a hack. We just want to know whether there are 0 values
+        ## for pruning
+        marginals <- list(as.vector(out))
     }
+    
+    ## Evaluate which to drop
+    keep.these <- mapply(pruneDimension, dimension=x$result$dimensions, 
+        marginal=marginals, 
+        MoreArgs=list(useNA=x@useNA),
+        SIMPLIFY=FALSE,
+        USE.NAMES=FALSE)
+    names(keep.these) <- names(dimnames(out))
+    out <- do.call("[", c(list(x=out, drop=FALSE), keep.these))
     return(out)
 }
+
+cubeDimnames <- function (cube) {
+    ## Grab the row/col/etc. labels from the cube
+    dimnames <- lapply(cube$result$dimensions, function (a) {
+        cats <- a$type$categories %||% a$type$elements
+        ## If enumerated, will be "elements", not "categories"
+        vapply(cats, elementName, character(1))
+    })
+    names(dimnames) <- vapply(cube$result$dimensions, 
+        function (a) a$references$name, character(1))
+    return(dimnames)
+}
+
+elementName <- function (el) {
+    out <- el$value
+    if (is.null(out)) {
+        out <- el$name
+    } else if (is.list(out)) {
+        ## This is a subvariable
+        out <- out$references$name
+    }
+    if (is.null(out)) {
+        ## Damn. You may be here because you're hitting missing values in an
+        ## array or multiple response, or the __any__ or __none__ values. 
+        ## Bail out.
+        out <- "<NA>" #el$id
+    }
+    return(as.character(out))
+}
+
+pruneDimension <- function (dimension, marginal, useNA) {
+    ## Returns logicals of which rows/cols/etc. should be kept
+    
+    cats <- dimension$type$categories %||% dimension$type$elements
+    ## Always drop __any__ and __none__
+    out <- vapply(cats, Negate(function (x) {
+        is.list(x$value) && x$value$id %in% c("__any__", "__none__")
+    }), logical(1))
+    
+    if (useNA != "always") {
+        ## Means drop missing always, or only keep if there are any
+        valid.cats <- !vapply(cats, function (x) isTRUE(x$missing), logical(1))
+        if (useNA == "ifany") {
+            valid.cats <- valid.cats | vapply(marginal, length, integer(1)) > 0
+        }
+        ## But still drop __any__ or __none__
+        out <- valid.cats & out
+    }
+
+    return(out) 
+}
+

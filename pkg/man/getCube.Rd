@@ -4,7 +4,7 @@
 \alias{getCube}
 \title{Crosstab and otherwise aggregate variables in a dataset}
 \usage{
-getCube(formula, data)
+getCube(formula, data, useNA = c("no", "ifany", "always"))
 }
 \arguments{
 \item{formula}{an object of class 'formula' object with the
@@ -12,6 +12,9 @@ cross-classifying variables, separated by '+', on the right hand side.
 Compare to \code{\link[stats]{xtabs}}.}
 
 \item{data}{an object of class \code{CrunchDataset}}
+
+\item{useNA}{whether to include missing values in tabular results. See
+\code{\link[base]{table}}.}
 }
 \value{
 an object of class \code{CrunchCube}
