@@ -5,6 +5,7 @@
 \alias{show,CategoricalArrayVariable-method}
 \alias{show,Categories-method}
 \alias{show,Category-method}
+\alias{show,CrunchCube-method}
 \alias{show,CrunchDataset-method}
 \alias{show,CrunchVariable-method}
 \alias{show,Subvariables-method}
@@ -22,6 +23,8 @@
 \S4method{show}{CrunchDataset}(object)
 
 \S4method{show}{Subvariables}(object)
+
+\S4method{show}{CrunchCube}(object)
 
 \S4method{show}{VariableOrder}(object)
 }

@@ -1,17 +1,38 @@
-crCube <- function (dimensions, measures, data) {
-    var_catalog <- allVariables(data)
-    var_urls <- urls(var_catalog)[match(dimensions, aliases(var_catalog))]
-    stopifnot(all(!is.na(var_urls)))
-    dimensions <- lapply(var_urls, function (i) {
-        list(variable=i)  ## This should be a zcl method
-        ## Note also that different types require different params
-    })
+##' Crosstab and otherwise aggregate variables in a dataset
+##'
+##' Create a contingency table or other aggregation from cross-classifying
+##' variables in a CrunchDataset.
+##'
+##' @param formula an object of class 'formula' object with the
+##' cross-classifying variables, separated by '+', on the right hand side.
+##' Compare to \code{\link[stats]{xtabs}}.
+##' @param data an object of class \code{CrunchDataset}
+##' @return an object of class \code{CrunchCube}
+##' @export
+getCube <- function (formula, data) {
+    f <- terms(formula)
+    f.vars <- attr(f, "variables")
+    all.f.vars <- all.vars(f.vars)
+    vars <- lapply(all.vars(f.vars), function (x) data[[x]])
+    names(vars) <- all.f.vars
+    v.call <- do.call(substitute, list(expr=f.vars, env=vars))
+    vars <- eval(v.call)
+    
+    resp <- attr(f, "response")
+    if (resp) {
+        measures <- lapply(vars[resp], absolute.zcl)
+        vars <- vars[-resp]
+    } else {
+        measures <- list(count=zfunc("cube_count"))
+    }
+    dimensions <- lapply(vars, absolute.zcl)
     names(dimensions) <- NULL
+    
     query <- list(dimensions=dimensions,
-        measures=list(count=rcrunch:::zfunc("cube_count")),
+        measures=measures,
         weight=NULL) ## Weight should be an argument
     cube_url <- shojiURL(data, "views", "cube")
-    crGET(cube_url, query=list(query=toJSON(query)))
+    return(CrunchCube(crGET(cube_url, query=list(query=toJSON(query)))))
 }
 
 cubeToArray <- function (x, measure="count") {
@@ -38,30 +59,4 @@ cubeToArray <- function (x, measure="count") {
         names(dimnames(out))[1:2] <- names(dimnames(out))[2:1]
     }
     return(out)
-}
-
-getCube <- function (formula, dataset) {
-    f <- terms(formula)
-    f.vars <- attr(f, "variables")
-    all.f.vars <- all.vars(f.vars)
-    vars <- lapply(all.vars(f.vars), function (x) dataset[[x]])
-    names(vars) <- all.f.vars
-    v.call <- do.call(substitute, list(expr=f.vars, env=vars))
-    vars <- eval(v.call)
-    
-    resp <- attr(f, "response")
-    if (resp) {
-        measures <- lapply(vars[resp], absolute.zcl)
-        vars <- vars[-resp]
-    } else {
-        measures <- list(count=zfunc("cube_count"))
-    }
-    dimensions <- lapply(vars, absolute.zcl)
-    names(dimensions) <- NULL
-    
-    query <- list(dimensions=dimensions,
-        measures=measures,
-        weight=NULL) ## Weight should be an argument
-    cube_url <- shojiURL(dataset, "views", "cube")
-    return(CrunchCube(crGET(cube_url, query=list(query=toJSON(query)))))
 }
