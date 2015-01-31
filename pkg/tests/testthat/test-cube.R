@@ -4,6 +4,13 @@ cubedf <- df
 cubedf$v7 <- as.factor(c(rep("C", 10), rep("D", 5), rep("E", 5)))
 cubedf$v8 <- as.Date(0:1, origin="1955-11-05")
 
+test_that("bin CrunchExpr", {
+    x <- list(variable="test") ## "ZCL"
+    expect_true(inherits(bin(x), "CrunchExpr"))
+    expect_identical(zcl(bin(x)),
+        list(`function`="bin", args=list(list(variable="test"))))
+})
+
 if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(cubedf), {
@@ -75,6 +82,47 @@ if (run.integration.tests) {
                         v7=LETTERS[3:5])))
             })
             
+            test_that("univariate cube with binned numeric", {
+                kube <- try(getCube(~ bin(v3), data=ds))
+                expect_true(inherits(kube, "CrunchCube"))
+                expect_equivalent(cubeToArray(kube),
+                    array(c(2, 5, 5, 5, 3), dim=c(5L),
+                        dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25",
+                        "25-30"))))
+            })
+            test_that("bivariate cube with binned numeric", {
+                expect_equivalent(cubeToArray(getCube(~ bin(v3) + v7, data=ds)),
+                    array(c(2, 5, 3, 0, 0,
+                            0, 0, 0, 2, 3), dim=c(5L, 2L),
+                        dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25",
+                        "25-30"),
+                        v7=c("C", "E"))))
+                expect_equivalent(cubeToArray(getCube(~ bin(v3) + v7, data=ds,
+                    useNA="ifany")),
+                    array(c(2, 5, 3, 0, 0,
+                            0, 0, 2, 3, 0,
+                            0, 0, 0, 2, 3), dim=c(5L, 3L),
+                        dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25",
+                        "25-30"), 
+                        v7=LETTERS[3:5])))
+                expect_equivalent(cubeToArray(getCube(~ bin(v3) + v7, data=ds,
+                    useNA="always")),
+                    array(c(2, 5, 3, 0, 0,
+                            0, 0, 2, 3, 0,
+                            0, 0, 0, 2, 3), dim=c(5L, 3L),
+                        dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25",
+                        "25-30"), 
+                        v7=LETTERS[3:5])))
+            })
+            test_that("unbinned numeric", {
+                expect_equivalent(cubeToArray(getCube(~ v1, data=ds)),
+                    array(rep(1, 15), dim=15L, dimnames=list(v1=df$v1[6:20])))
+                expect_equivalent(cubeToArray(getCube(~ v1, data=ds,
+                    useNA="ifany")),
+                    array(c(rep(1, 15), 5), dim=16L,
+                        dimnames=list(v1=c(df$v1[6:20], "<NA>"))))
+            })
+            
             with(test.dataset(mrdf, "mrds"), {
                 mrds <- mrdf.setup(mrds, selections="1.0")
                 test_that("univariate multiple response cube", {
@@ -102,7 +150,6 @@ if (run.integration.tests) {
                     
                     kube <- try(getCube(~ v4 + MR, data=mrds, useNA="ifany"))
                     expect_true(inherits(kube, "CrunchCube"))
-                    print(kube)
                     expect_equivalent(cubeToArray(kube),
                         array(c(2, 0, 1, 0, 1, 0, 0, 1), dim=c(2L, 4L),
                             dimnames=list(v4=c("B", "C"),

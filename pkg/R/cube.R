@@ -110,18 +110,30 @@ cubeDimnames <- function (cube) {
 elementName <- function (el) {
     out <- el$value
     if (is.null(out)) {
+        ## This is probably categorical. Try "name" instead of "value".
         out <- el$name
     } else if (is.list(out)) {
-        ## This is a subvariable
-        out <- out$references$name
+        if (length(out) == 2 && is.null(names(out))) {
+            ## el$value is bin boundaries, as in a binned numeric.
+            out <- paste(unlist(out), collapse="-")
+        } else {
+            ## This is probably a subvariable. Look for its name.
+            out <- out$references$name
+        }
     }
     if (is.null(out)) {
         ## Damn. You may be here because you're hitting missing values in an
         ## array or multiple response, or the __any__ or __none__ values. 
         ## Bail out.
-        out <- "<NA>" #el$id
+        out <- "<NA>"
     }
     return(as.character(out))
+}
+
+elementIsAnyOrNone <- function (el) {
+    is.list(el$value) && ## Element has $value and value is a list
+        "id" %in% names(el$value) && ## "value" has names (is not bin)
+        el$value$id %in% c("__any__", "__none__") 
 }
 
 pruneDimension <- function (dimension, marginal, useNA) {
@@ -129,9 +141,7 @@ pruneDimension <- function (dimension, marginal, useNA) {
     
     cats <- dimension$type$categories %||% dimension$type$elements
     ## Always drop __any__ and __none__
-    out <- vapply(cats, Negate(function (x) {
-        is.list(x$value) && x$value$id %in% c("__any__", "__none__")
-    }), logical(1))
+    out <- vapply(cats, Negate(elementIsAnyOrNone), logical(1))
     
     if (useNA != "always") {
         ## Means drop missing always, or only keep if there are any
