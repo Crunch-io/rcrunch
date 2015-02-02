@@ -23,7 +23,8 @@ ShojiCatalog <- setClass("ShojiCatalog", contains="ShojiObject",
     ))
 ShojiOrder <- setClass("ShojiOrder", contains="ShojiObject",
     representation(
-        value="list"
+        value="list", ## <-- DEPRECATE
+        graph="list"  ## The new one
     ))
 
 IndexTuple <- setClass("IndexTuple", 

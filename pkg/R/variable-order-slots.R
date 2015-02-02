@@ -16,30 +16,29 @@
 ##' @aliases entities entities<-
 ##' @export
 setMethod("entities", "VariableGroup", function (x, simplify=FALSE) {
-    out <- x@entities
-    if (simplify) {
-        nested.groups <- vapply(out, 
-            function (a) inherits(a, "VariableGroup"), logical(1))
-        out[nested.groups] <- lapply(out[nested.groups], 
-            function (a) entities(a, simplify=TRUE))
-        out <- unique(unlist(out))
-    }
-    return(out)
+    entities(x@entities, simplify=simplify)
 })
 ##' @rdname VariableOrder-slots
 ##' @export
 setMethod("entities", "VariableOrder", function (x, simplify=FALSE) {
     ## To get a flattened view
-    es <- lapply(x, function (a) entities(a, simplify=simplify))
+    entities(x@graph, simplify=simplify)
+})
+
+setMethod("entities", "list", function (x, simplify=FALSE) {
     if (simplify) {
-        es <- unique(unlist(es))
+        nested.groups <- vapply(x, 
+            function (a) inherits(a, "VariableGroup"), logical(1))
+        x[nested.groups] <- lapply(x[nested.groups], 
+            function (a) entities(a, simplify=TRUE))
+        x <- unique(unlist(x))
     }
-    return(es)
+    return(x)
 })
 
 ##' @rdname urls
 ##' @export
-setMethod("urls", "VariableOrder", function (x) entities(x, simplify=TRUE))
+setMethod("urls", "VariableOrder", function (x) entities(x@graph, simplify=TRUE))
 ##' @rdname urls
 ##' @export
 setMethod("urls", "VariableGroup", function (x) entities(x, simplify=TRUE))
@@ -48,6 +47,12 @@ setMethod("urls", "VariableGroup", function (x) entities(x, simplify=TRUE))
 ##' @export
 setMethod("entities<-", "VariableGroup", function (x, value) {
     x@entities <- .initEntities(value)
+    return(x)
+})
+##' @rdname VariableOrder-slots
+##' @export
+setMethod("entities<-", "VariableOrder", function (x, value) {
+    x@graph <- .initEntities(value)
     return(x)
 })
 
@@ -64,7 +69,7 @@ setMethod("name<-", "VariableGroup", function (x, value) {
 ##' @rdname VariableOrder-slots
 ##' @export
 setMethod("names", "VariableOrder", 
-    function (x) vapply(x, function (a) name(a), character(1)))
+    function (x) vapply(x, function (a) name(a) %||% NA_character_, character(1)))
 ##' @rdname VariableOrder-slots
 ##' @export
 setMethod("names<-", "VariableOrder", 

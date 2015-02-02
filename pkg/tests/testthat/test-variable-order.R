@@ -66,22 +66,14 @@ with(fake.HTTP, {
     })
     test_that("Nested groups can serialize and deserialize", {
         vglist <- fromJSON(toJSON(nested.ord), simplifyVector=FALSE)
-        expect_identical(vglist, list(groups=list(
-            list(
-                group="Group 1",
-                entities=list(
+        expect_identical(vglist, list(graph=list(
+            list(`Group 1`=list(
                     ent.urls[1],
-                    list(
-                        group="Nested",
-                        entities=as.list(ent.urls[2:3])
-                    ),
+                    list(`Nested`=as.list(ent.urls[2:3])),
                     ent.urls[4]
                     )
                 ),
-            list(
-                group="Group 2",
-                entities=as.list(ent.urls[5:6])
-            )
+            list(`Group 2`=as.list(ent.urls[5:6]))
         )))
     })
     
@@ -90,12 +82,12 @@ with(fake.HTTP, {
                 ent.urls[4])
     test_that("can assign nested groups in entities", {
         to <- test.ord
-        try(entities(to[[1]]) <- ng)
-        expect_identical(entities(to[[1]]), ng)
-        expect_identical(urls(to[[1]]), ent.urls[1:4])
-        expect_identical(to[[1]][[2]], 
+        try(entities(to) <- ng)
+        expect_identical(entities(to), entities(ng))
+        expect_identical(urls(to), ent.urls[1:4])
+        expect_identical(to[[2]], 
             VariableGroup(name="Nested", entities=ent.urls[2:3]))
-        expect_identical(entities(to[[1]][[2]]), as.list(ent.urls[2:3]))
+        expect_identical(entities(to[[2]]), as.list(ent.urls[2:3]))
     })
     test_that("can assign group into order", {
         to <- test.ord

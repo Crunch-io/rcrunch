@@ -1,30 +1,25 @@
 {
-    "element": "shoji:view",
-    "self": "/api/datasets/dataset1/variables/hierarchical/",
+    "element": "shoji:order",
+    "self": "/api/datasets/dataset1/variables/relative-and-nested-hierarchical.json",
     "description": "Hierarchical ordering of dataset variables",
-    "value": {
-        "groups": [
-            {
-                "entities": [
-                    "../birthyr.json",
-                    {
-                        "entities": [
-                            "../gender.json",
-                            "../mymrset.json"
-                        ],
-                        "group": "Nested"
-                    },
-                    "../textVar.json"
-                ],
-                "group": "Group 1"
-            },
-            {
-                "entities": [
-                    "../starttime.json",
-                    "../catarray.json"
-                ],
-                "group": "Group 2"
-            }
-        ]
-    }
+    "graph": [
+        {
+            "Group 1": [
+                "../birthyr.json",
+                {
+                    "Nested": [
+                        "../gender.json",
+                        "../mymrset.json"
+                    ]
+                },
+                "../textVar.json"
+            ]
+        },
+        {
+            "Group 2": [
+                "../starttime.json",
+                "../catarray.json"
+            ]
+        }
+    ]
 }

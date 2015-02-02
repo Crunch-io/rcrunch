@@ -1,14 +1,10 @@
 init.VariableOrder <- function (.Object, ...) {
-    vg <- function (x, u) {
-        if (inherits(x, "VariableGroup")) return(x)
-        do.call(VariableGroup, c(x, url.base=u))
-    }
     .Object <- callNextMethod(.Object, ...)
     dots <- list(...)
     if (length(dots) && !is.shoji(dots[[1]])) {
-        .Object@value$groups <- lapply(dots, vg, u=NULL)
+        .Object@graph <- .initEntities(dots, u=NULL)
     } else {
-        .Object@value$groups <- lapply(.Object@value$groups, vg, u=.Object@self)
+        .Object@graph <- .initEntities(.Object@graph, u=.Object@self)
     }
     return(.Object)
 }
@@ -34,12 +30,10 @@ setMethod("initialize", "VariableOrder", init.VariableOrder)
     }
     if (is.list(x)) {
         ## Init raw (fromJSON) groups
-        raw.groups <- vapply(x, 
-            function (a) {
-                is.list(a) && setequal(c("group", "entities"), names(a))
-            }, logical(1))
+        raw.groups <- vapply(x, is.list, logical(1))
         x[raw.groups] <- lapply(x[raw.groups], 
-            function (a) do.call(VariableGroup, c(a, url.base=url.base)))
+            function (a) VariableGroup(group=names(a), entities=a[[1]],
+                url.base=url.base)) ## The new shoji:order structure
         ## Get self if any are Variables
         vars <- vapply(x, is.variable, logical(1))
         x[vars] <- lapply(x[vars], self)
@@ -62,8 +56,6 @@ setMethod("initialize", "VariableOrder", init.VariableOrder)
     halt(class(x), " is an invalid input for entities")
 }
 
-
-
 init.VariableGroup <- function (.Object, group, entities, url.base=NULL, ...) {
     dots <- list(...)
     if ("variables" %in% names(dots)) entities <- dots$variables
@@ -77,7 +69,7 @@ setMethod("initialize", "VariableGroup", init.VariableGroup)
 ##' @rdname tojson-crunch
 ##' @export
 setMethod("toJSON", "VariableOrder",
-    function (x, ...) toJSON(x@value, ...))
+    function (x, ...) toJSON(list(graph=x@graph, ...)))
 
 .jsonprep.vargroup <- function (x) {
     ents <- x@entities
@@ -89,7 +81,7 @@ setMethod("toJSON", "VariableOrder",
             what="VariableGroup")
         ents[nested.groups] <- lapply(ents[nested.groups], .jsonprep.vargroup)
     }
-    return(list(group=x@group, entities=I(ents)))
+    return(structure(list(I(ents)), .Names=x@group))
 }
 ##' @rdname tojson-crunch
 ##' @export
@@ -98,7 +90,7 @@ setMethod("toJSON", "VariableGroup", function (x, ...) {
 })
 
 ##' @export
-as.list.VariableOrder <- function (x, ...) x@value$groups
+as.list.VariableOrder <- function (x, ...) x@graph
 
 ##' Length of VariableOrder
 ##' @param x a VariableOrder
@@ -126,7 +118,7 @@ setMethod("length", "VariableOrder", function (x) length(x@value$groups))
 ##' @aliases variable-order-extract
 ##' @export
 setMethod("[", c("VariableOrder", "ANY"), function (x, i, ..., drop=FALSE) {
-    x@value$groups <- x@value$groups[i]
+    x@graph <- x@graph[i]
     return(x)
 })
 ##' @rdname variable-order-extract
@@ -142,7 +134,7 @@ setMethod("[", c("VariableOrder", "character"), function (x, i, ..., drop=FALSE)
 ##' @rdname variable-order-extract
 ##' @export
 setMethod("[[", c("VariableOrder", "ANY"), function (x, i, ...) {
-    x@value$groups[[i]]
+    x@graph[[i]]
 })
 
 ##' @rdname variable-order-extract
@@ -170,7 +162,7 @@ setMethod("[<-", c("VariableOrder", "character", "missing", "VariableOrder"),
 ##' @export
 setMethod("[<-", c("VariableOrder", "ANY", "missing", "VariableOrder"), 
    function (x, i, j, value) {
-       x@value$groups[i] <- value@value$groups
+       x@graph[i] <- value@graph
        return(x)
    })
 ##' @rdname variable-order-extract
@@ -187,7 +179,7 @@ setMethod("[[<-", c("VariableOrder", "character", "missing", "VariableGroup"),
 ##' @export
 setMethod("[[<-", c("VariableOrder", "ANY", "missing", "VariableGroup"), 
     function (x, i, j, value) {
-        x@value$groups[[i]] <- value
+        x@graph[[i]] <- value
         return(x)
     })
 ##' @rdname variable-order-extract
@@ -202,7 +194,7 @@ setMethod("[[<-", c("VariableOrder", "ANY", "missing", "ANY"),
 ##' @export
 setMethod("[[<-", c("VariableOrder", "ANY", "missing", "NULL"), 
     function (x, i, j, value) {
-        x@value$groups[[i]] <- value
+        x@graph[[i]] <- value
         return(x)
     })
 ##' @rdname variable-order-extract
