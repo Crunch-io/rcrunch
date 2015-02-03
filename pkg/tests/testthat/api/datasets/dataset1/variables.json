@@ -65,7 +65,7 @@
             "description": "random hex characters"
         }
     },
-    "views": {
-        "hierarchical_order": "/api/datasets/dataset1/variables/hierarchical.json"
+    "orders": {
+        "hier": "/api/datasets/dataset1/variables/hierarchical.json"
     }
 }

@@ -19,11 +19,12 @@ ShojiObject <- setClass("ShojiObject",
 
 ShojiCatalog <- setClass("ShojiCatalog", contains="ShojiObject", 
     representation(
-        index="list"
+        index="list",
+        orders="list"
     ))
 ShojiOrder <- setClass("ShojiOrder", contains="ShojiObject",
     representation(
-        value="list"
+        graph="list"
     ))
 
 IndexTuple <- setClass("IndexTuple", 
