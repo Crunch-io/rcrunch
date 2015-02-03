@@ -23,10 +23,10 @@ with(fake.HTTP, {
     
     test_that("relative URLs in hierarchical order", {
         vc <- varcat
-        vc@views$hierarchical_order <- sub("hierarchical",
-            "relative-hierarchical", vc@views$hierarchical_order)
-        expect_identical(vc@order@value,
-            VariableOrder(crGET(vc@views$hierarchical_order))@value)
+        vc@orders$hier <- sub("hierarchical",
+            "relative-hierarchical", vc@orders$hier)
+        expect_identical(entities(vc@order),
+            entities(VariableOrder(crGET(vc@orders$hier))))
     })
     
     test.ord <- ordering(test.ds)
@@ -52,20 +52,20 @@ with(fake.HTTP, {
     })
     test_that("Can read nested groups from the API", {
         vc <- varcat
-        vc@views$hierarchical_order <- sub("hierarchical",
-            "nested-hierarchical", vc@views$hierarchical_order)
-        expect_identical(nested.ord@value,
-            VariableOrder(crGET(vc@views$hierarchical_order))@value)
+        vc@orders$hier <- sub("hierarchical",
+            "nested-hierarchical", vc@orders$hier)
+        expect_identical(entities(nested.ord),
+            entities(VariableOrder(crGET(vc@orders$hier))))
     })
     test_that("Nested groups can also have relative urls", {
         vc <- varcat
-        vc@views$hierarchical_order <- sub("hierarchical",
-            "relative-and-nested-hierarchical", vc@views$hierarchical_order)
-        expect_identical(nested.ord@value,
-            VariableOrder(crGET(vc@views$hierarchical_order))@value)
+        vc@orders$hier <- sub("hierarchical",
+            "relative-and-nested-hierarchical", vc@orders$hier)
+        expect_identical(entities(nested.ord),
+            entities(VariableOrder(crGET(vc@orders$hier))))
     })
     test_that("Nested groups can serialize and deserialize", {
-        vglist <- fromJSON(toJSON(nested.ord), simplifyVector=FALSE)
+        vglist <- cereal(nested.ord)
         expect_identical(vglist, list(graph=list(
             list(`Group 1`=list(
                     ent.urls[1],
@@ -183,17 +183,9 @@ if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
             test_that("Can get VariableOrder from dataset", {
-                expect_identical(ordering(ds)@value, 
-                    VariableOrder(VariableGroup(name="ungrouped", 
-                    entities=urls(variables(ds))))@value)
+                expect_true(setequal(unlist(entities(ordering(ds))), 
+                    urls(allVariables(ds))))
             })
-            test_that("Can make VariableGroup/Order from Variables", {
-                expect_true(setequal(entities(ordering(ds)[[1]]), 
-                    entities(VariableGroup(name="ungrouped", entities=ds))))
-            })
-        })
-        
-        with(test.dataset(df), {
             test_that("Can construct VariableOrder from variables", {
                 vg <- VariableOrder(
                     VariableGroup(name="Group 1", 
@@ -202,11 +194,10 @@ if (run.integration.tests) {
                     VariableGroup(name="Group 2", 
                         entities=ds[c("v6", "v2")]))
                 vglist <- cereal(vg)
-                expect_identical(vglist, list(groups=list(
-                    list(group="Group 1", 
-                        entities=list(self(ds$v1), self(ds$v3), self(ds$v5))),
-                    list(group="Group 2.5", entities=list(self(ds$v4))),
-                    list(group="Group 2", entities=list(self(ds$v6), self(ds$v2)))
+                expect_identical(vglist, list(graph=list(
+                    list(`Group 1`=list(self(ds$v1), self(ds$v3), self(ds$v5))),
+                    list(`Group 2.5`=list(self(ds$v4))),
+                    list(`Group 2`=list(self(ds$v6), self(ds$v2)))
                 )))
             })
             starting.vg <- vg <- VariableOrder(
@@ -247,19 +238,17 @@ if (run.integration.tests) {
             
             try(vglist <- cereal(vg))
             test_that("VariableOrder to/fromJSON", {
-                expect_identical(vglist, list(groups=list(
-                    list(group="G3", 
-                        entities=list(self(ds$v1), self(ds$v3), self(ds$v5))),
-                    list(group="G1", entities=list(self(ds$v3))),
-                    list(group="G2", entities=list(self(ds$v6), self(ds$v2)))
+                expect_identical(vglist, list(graph=list(
+                    list(`G3`=list(self(ds$v1), self(ds$v3), self(ds$v5))),
+                    list(`G1`=list(self(ds$v3))),
+                    list(`G2`=list(self(ds$v6), self(ds$v2)))
                 )))
                 
                 vg[1:2] <- vg[c(2,1)]
-                expect_identical(cereal(vg), list(groups=list(
-                    list(group="G1", entities=list(self(ds$v3))),
-                    list(group="G3", 
-                        entities=list(self(ds$v1), self(ds$v3), self(ds$v5))),
-                    list(group="G2", entities=list(self(ds$v6), self(ds$v2)))
+                expect_identical(cereal(vg), list(graph=list(
+                    list(`G1`=list(self(ds$v3))),
+                    list(`G3`=list(self(ds$v1), self(ds$v3), self(ds$v5))),
+                    list(`G2`=list(self(ds$v6), self(ds$v2)))
                 )))
             })
             
@@ -267,29 +256,31 @@ if (run.integration.tests) {
             test_that("Can set VariableOrder on dataset", {
                 expect_false(identical(starting.vg, original.order))
                 ordering(ds) <- starting.vg
-                expect_identical(grouped(ordering(ds))@value, starting.vg@value)
-                expect_identical(grouped(ordering(refresh(ds)))@value, starting.vg@value)
+                expect_identical(entities(grouped(ordering(ds))),
+                    entities(starting.vg))
+                expect_identical(entities(grouped(ordering(refresh(ds)))),
+                    entities(starting.vg))
                 expect_true(inherits(ungrouped(ordering(ds)), "VariableGroup"))
                 expect_true(inherits(ungrouped(ordering(refresh(ds))),
                     "VariableGroup"))
 
                 ds <- refresh(ds)
-                expect_false(identical(ordering(variables(ds))@value,
-                    original.order@value))
+                expect_false(identical(entities(ordering(variables(ds))),
+                    entities(original.order)))
                 ordering(variables(ds)) <- original.order
-                expect_identical(ordering(variables(ds))@value,
-                    original.order@value)
-                expect_identical(ordering(variables(refresh(ds)))@value,
-                    original.order@value)
+                expect_identical(entities(ordering(variables(ds))),
+                    entities(original.order))
+                expect_identical(entities(ordering(variables(refresh(ds)))),
+                    entities(original.order))
             })
             
             test_that("Can manipulate VariableOrder that's part of a dataset", {
                 ordering(ds) <- starting.vg
                 expect_identical(names(ordering(ds)), 
-                    c("Group 1", "Group 2.5", "Group 2", "ungrouped"))
+                    c("Group 1", "Group 2.5", "Group 2"))
                 names(ordering(ds))[3] <- "Three"
                 expect_identical(names(ordering(ds)), 
-                    c("Group 1", "Group 2.5", "Three", "ungrouped"))
+                    c("Group 1", "Group 2.5", "Three"))
                 expect_identical(names(grouped(ordering(ds))), 
                     c("Group 1", "Group 2.5", "Three"))
             })

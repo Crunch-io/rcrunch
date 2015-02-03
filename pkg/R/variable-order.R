@@ -96,7 +96,7 @@ as.list.VariableOrder <- function (x, ...) x@graph
 ##' @param x a VariableOrder
 ##' @return Integer: the number of VariableGroups in the VariableOrder
 ##' @export
-setMethod("length", "VariableOrder", function (x) length(x@value$groups))
+setMethod("length", "VariableOrder", function (x) length(entities(x)))
 
 ##' Extract and update in VariableOrder and VariableGroup
 ##'

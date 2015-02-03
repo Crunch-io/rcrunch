@@ -24,7 +24,8 @@ setMethod("entities", "VariableOrder", function (x, simplify=FALSE) {
     ## To get a flattened view
     entities(x@graph, simplify=simplify)
 })
-
+##' @rdname VariableOrder-slots
+##' @export
 setMethod("entities", "list", function (x, simplify=FALSE) {
     if (simplify) {
         nested.groups <- vapply(x, 
@@ -69,15 +70,17 @@ setMethod("name<-", "VariableGroup", function (x, value) {
 ##' @rdname VariableOrder-slots
 ##' @export
 setMethod("names", "VariableOrder", 
-    function (x) vapply(x, function (a) name(a) %||% NA_character_, character(1)))
+    function (x) vapply(x, function (a) {
+        ifelse(inherits(a, "VariableGroup"), name(a), NA_character_)
+    }, character(1)))
 ##' @rdname VariableOrder-slots
 ##' @export
 setMethod("names<-", "VariableOrder", 
     function (x, value) {
-        x@value$groups <- mapply(
+        x@graph <- mapply(
             function (y, v) {
-                y@group <- v
+                if (!is.na(v)) y@group <- v
                 return(y)
-            }, y=x@value$groups, v=value, SIMPLIFY=FALSE, USE.NAMES=FALSE)
+            }, y=x@graph, v=value, SIMPLIFY=FALSE, USE.NAMES=FALSE)
         return(x)
     })
