@@ -274,6 +274,27 @@ if (run.integration.tests) {
                     entities(original.order))
             })
             
+            test_that("A partial order results in 'ungrouped' variables", {
+                ordering(ds) <- starting.vg[1:2]
+                expect_true(inherits(grouped(ordering(ds)), "VariableOrder"))
+                expect_identical(entities(grouped(ordering(ds))),
+                    entities(starting.vg[1:2]))
+                expect_true(inherits(ungrouped(ordering(ds)), "VariableGroup"))
+                expect_true(setequal(unlist(entities(ungrouped(ordering(ds)))),
+                    c(self(ds$v6), self(ds$v2))))
+            })
+            
+            test_that("grouped and ungrouped within a group", {
+                nesting <- VariableGroup("Nest", self(ds$v3))
+                ordering(ds) <- starting.vg
+                ordering(ds)[["Group 1"]][[2]] <- nesting
+                print(str(ordering(ds)[["Group 1"]]))
+                expect_identical(grouped(ordering(ds)[["Group 1"]]), 
+                    VariableGroup("Group 1", list(nesting)))
+                expect_identical(ungrouped(ordering(ds)[["Group 1"]]),
+                    VariableGroup("ungrouped", list(self(ds$v1), self(ds$v5))))    
+            })
+            
             test_that("Can manipulate VariableOrder that's part of a dataset", {
                 ordering(ds) <- starting.vg
                 expect_identical(names(ordering(ds)), 
