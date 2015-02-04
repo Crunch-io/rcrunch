@@ -43,7 +43,6 @@ setMethod("unhide", "VariableCatalog", function (x) {
 hideVariables <- function (dataset, variables=NULL, pattern=NULL, key=namekey(dataset), ...) {
     var.urls <- findVariableURLs(dataset, refs=variables, pattern=pattern, key=key, ...)
     allVariables(dataset)[var.urls] <- hide(allVariables(dataset)[var.urls])
-    # dataset@variables[var.urls] <- hide(dataset@variables[var.urls])
     invisible(dataset)
 }
 

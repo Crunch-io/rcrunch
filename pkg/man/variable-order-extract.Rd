@@ -4,6 +4,8 @@
 \name{[,VariableOrder,ANY-method}
 \alias{$,VariableOrder-method}
 \alias{$<-,VariableOrder-method}
+\alias{[,VariableGroup,ANY-method}
+\alias{[,VariableGroup,character-method}
 \alias{[,VariableOrder,ANY-method}
 \alias{[,VariableOrder,character-method}
 \alias{[<-,VariableOrder,ANY,missing,VariableOrder-method}
@@ -47,6 +49,10 @@
 \S4method{$}{VariableOrder}(x, name)
 
 \S4method{$}{VariableOrder}(x, name) <- value
+
+\S4method{[}{VariableGroup,ANY}(x, i, j, ..., drop = TRUE)
+
+\S4method{[}{VariableGroup,character}(x, i, j, ..., drop = TRUE)
 
 \S4method{[[}{VariableGroup,ANY}(x, i, j, ...)
 

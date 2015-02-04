@@ -11,6 +11,7 @@
 \alias{\%in\%,NumericVariable,numeric-method}
 \alias{\%in\%,TextVariable,character-method}
 \alias{as.vector,CrunchExpr-method}
+\alias{bin}
 \alias{expressions}
 \alias{is.na,CrunchVariable-method}
 \title{Construct Crunch Expressions}
@@ -34,6 +35,8 @@
 \S4method{\%in\%}{CategoricalVariable,numeric}(x, table)
 
 \S4method{is.na}{CrunchVariable}(x)
+
+bin(x)
 }
 \arguments{
 \item{x}{an input}

@@ -93,3 +93,7 @@ setMethod("show", "Subvariables", function (object) {
     cat(out)
     invisible(out)
 })
+
+##' @rdname show-crunch
+##' @export
+setMethod("show", "CrunchCube", function (object) show(cubeToArray(object)))

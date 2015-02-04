@@ -10,17 +10,15 @@ grouped(var.order)
 ungrouped(var.order)
 }
 \arguments{
-\item{var.order}{an object of class VariableOrder}
+\item{var.order}{an object of class VariableOrder or VariableGroup}
 }
 \value{
-For grouped(), a VariableOrder with "ungrouped" omitted. For
-ungrouped(), a VariableGroup.
+For grouped(), a VariableOrder/Group, respectively, with "ungrouped"
+omitted. For ungrouped(), a VariableGroup.
 }
 \description{
 "ungrouped" is a magic VariableGroup that contains all variables not found
-in any of the other groups. Regardless of whether you create it, the server
-will return it. You can modify the order of the variables within it, but
-which variables are present in it is determined server-side.
+in groups at a given level of nesting.
 }
 \seealso{
 VariableOrder

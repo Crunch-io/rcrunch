@@ -5,8 +5,10 @@
 \alias{entities}
 \alias{entities,VariableGroup-method}
 \alias{entities,VariableOrder-method}
+\alias{entities,list-method}
 \alias{entities<-}
 \alias{entities<-,VariableGroup-method}
+\alias{entities<-,VariableOrder-method}
 \alias{name,VariableGroup-method}
 \alias{name<-,VariableGroup-method}
 \alias{names,VariableOrder-method}
@@ -17,7 +19,11 @@
 
 \S4method{entities}{VariableOrder}(x, simplify = FALSE)
 
+\S4method{entities}{list}(x, simplify = FALSE)
+
 \S4method{entities}{VariableGroup}(x) <- value
+
+\S4method{entities}{VariableOrder}(x) <- value
 
 \S4method{name}{VariableGroup}(x)
 

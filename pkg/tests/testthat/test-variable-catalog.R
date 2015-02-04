@@ -22,7 +22,7 @@ with(fake.HTTP, {
         expect_true(all(grepl("/api/datasets/dataset1/variables",
             urls(varcat))))
         expect_identical(self(varcat), variables.catalog.url)
-        expect_identical(ordering(varcat)@value, varorder@value)
+        expect_identical(entities(ordering(varcat)), entities(varorder))
     })
     
     test_that("active/hidden getters", {

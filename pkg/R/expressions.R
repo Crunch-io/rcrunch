@@ -174,3 +174,10 @@ setMethod("is.na", "CrunchVariable", function (x) {
     CrunchLogicalExpr(expression=zfunc("is_missing", x),
         dataset_url=datasetReference(x))
 })
+
+##' @rdname expressions
+##' @export
+bin <- function (x) {
+    CrunchExpr(expression=zfunc("bin", x),
+        dataset_url=datasetReference(x) %||% "")
+}

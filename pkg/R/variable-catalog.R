@@ -11,7 +11,7 @@ init.VariableCatalog <- function (.Object, ...) {
         }
         return(x)
     }, b=.Object@self)
-    h_url <- .Object@views$hierarchical_order
+    h_url <- .Object@orders$hier
     if (!is.null(h_url)) {
         o <- crGET(h_url, query=list(relative="on"))
         .Object@order <- VariableOrder(o)

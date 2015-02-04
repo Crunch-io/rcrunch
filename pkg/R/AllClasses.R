@@ -19,11 +19,12 @@ ShojiObject <- setClass("ShojiObject",
 
 ShojiCatalog <- setClass("ShojiCatalog", contains="ShojiObject", 
     representation(
-        index="list"
+        index="list",
+        orders="list"
     ))
 ShojiOrder <- setClass("ShojiOrder", contains="ShojiObject",
     representation(
-        value="list"
+        graph="list"
     ))
 
 IndexTuple <- setClass("IndexTuple", 
@@ -189,3 +190,7 @@ CrunchExpr <- setClass("CrunchExpr",
 
 CrunchLogicalExpr <- setClass("CrunchLogicalExpr",
     contains="CrunchExpr")
+
+CrunchCube <- setClass("CrunchCube", contains="list",
+    representation=representation(useNA="character"),
+    prototype=prototype(useNA="no"))
