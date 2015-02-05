@@ -272,6 +272,8 @@ if (run.integration.tests) {
                     entities(starting.vg[c(2,1,3)]))
                 expect_identical(names(ordering(ds)), 
                     c("Group 2.5", "Group 1", "Group 2"))
+                expect_identical(names(ordering(refresh(ds))), 
+                    c("Group 2.5", "Group 1", "Group 2"))
                 
                 ds <- refresh(ds)
                 expect_false(identical(entities(ordering(variables(ds))),
