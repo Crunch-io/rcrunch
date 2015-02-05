@@ -263,7 +263,16 @@ if (run.integration.tests) {
                 expect_true(inherits(ungrouped(ordering(ds)), "VariableGroup"))
                 expect_true(inherits(ungrouped(ordering(refresh(ds))),
                     "VariableGroup"))
-
+                expect_identical(names(ordering(ds)), 
+                    c("Group 1", "Group 2.5", "Group 2"))
+                
+                ## Test that can reorder groups
+                ordering(ds) <- starting.vg[c(2,1,3)]
+                expect_identical(entities(grouped(ordering(ds))),
+                    entities(starting.vg[c(2,1,3)]))
+                expect_identical(names(ordering(ds)), 
+                    c("Group 2.5", "Group 1", "Group 2"))
+                
                 ds <- refresh(ds)
                 expect_false(identical(entities(ordering(variables(ds))),
                     entities(original.order)))
@@ -288,7 +297,6 @@ if (run.integration.tests) {
                 nesting <- VariableGroup("Nest", self(ds$v3))
                 ordering(ds) <- starting.vg
                 ordering(ds)[["Group 1"]][[2]] <- nesting
-                print(str(ordering(ds)[["Group 1"]]))
                 expect_identical(grouped(ordering(ds)[["Group 1"]]), 
                     VariableGroup("Group 1", list(nesting)))
                 expect_identical(ungrouped(ordering(ds)[["Group 1"]]),
