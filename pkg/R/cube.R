@@ -47,8 +47,9 @@ varsToCubeDimensions <- function (vars) {
                 list(each=self(x))))
         } else if (is.CA(x)) {
             ## Categorical array gets the var reference and "each"
-            return(list(v,
-                list(each=self(x))))
+            ## Put "each" first so that the rows, not columns, are subvars
+            return(list(list(each=self(x)),
+                v))
         } else {
             ## Just the var ref, but nest in a list so we can unlist below to
             ## flatten
@@ -103,7 +104,7 @@ cubeDimnames <- function (cube) {
         vapply(cats, elementName, character(1))
     })
     names(dimnames) <- vapply(cube$result$dimensions, 
-        function (a) a$references$name, character(1))
+        function (a) a$references$alias, character(1))
     return(dimnames)
 }
 
