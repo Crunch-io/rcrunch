@@ -11,7 +11,8 @@
 ##' \code{\link[base]{table}}.
 ##' @return an object of class \code{CrunchCube}
 ##' @export
-getCube <- function (formula, data, useNA=c("no", "ifany", "always")) {
+getCube <- function (formula, data, weight=rcrunch::weight(data), 
+                     useNA=c("no", "ifany", "always")) {
     f <- terms(formula)
     f.vars <- attr(f, "variables")
     all.f.vars <- all.vars(f.vars)
@@ -28,9 +29,17 @@ getCube <- function (formula, data, useNA=c("no", "ifany", "always")) {
         measures <- list(count=zfunc("cube_count"))
     }
     
+    force(weight)
+    if (is.variable(weight)) {
+        weight <- self(weight)
+        ## Should confirm that weight is in weight_variables. Server 400s
+        ## if it isn't.
+    } else {
+        weight <- NULL
+    }
+    
     query <- list(dimensions=varsToCubeDimensions(vars),
-        measures=measures,
-        weight=NULL) ## Weight should be an argument
+        measures=measures, weight=weight)
     cube_url <- shojiURL(data, "views", "cube")
     return(CrunchCube(crGET(cube_url, query=list(query=toJSON(query))),
         useNA=match.arg(useNA)))

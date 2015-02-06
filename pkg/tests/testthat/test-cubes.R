@@ -182,6 +182,29 @@ if (run.integration.tests) {
                         dimnames=list(v1=c(df$v1[6:20], "<NA>"))))
             })
             
+            test_that("Weighted cubes", {
+                weight(ds) <- ds$v3
+                expect_equivalent(cubeToArray(getCube(~ v8 + v7, data=ds)),
+                    array(c(60, 65, 50, 75), dim=c(2L, 2L),
+                        dimnames=list(v8=c("1955-11-05", "1955-11-06"),
+                        v7=c("C", "E"))))
+                expect_equivalent(cubeToArray(getCube(~ v8 + v7, data=ds,
+                    weight=NULL)),
+                    array(c(5, 5, 2, 3), dim=c(2L, 2L),
+                        dimnames=list(v8=c("1955-11-05", "1955-11-06"),
+                        v7=c("C", "E"))))
+                weight(ds) <- NULL
+                expect_equivalent(cubeToArray(getCube(~ v8 + v7, data=ds)),
+                    array(c(5, 5, 2, 3), dim=c(2L, 2L),
+                        dimnames=list(v8=c("1955-11-05", "1955-11-06"),
+                        v7=c("C", "E"))))
+                expect_equivalent(cubeToArray(getCube(~ v8 + v7, data=ds,
+                    weight=ds$v3)),
+                    array(c(60, 65, 50, 75), dim=c(2L, 2L),
+                        dimnames=list(v8=c("1955-11-05", "1955-11-06"),
+                        v7=c("C", "E"))))
+            })
+            
             test_that("prop.table on CrunchCube", {
                 
             })
