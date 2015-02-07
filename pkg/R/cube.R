@@ -18,12 +18,14 @@ getCube <- function (formula, data, weight=rcrunch::weight(data),
     all.f.vars <- all.vars(f.vars)
     vars <- lapply(all.vars(f.vars), function (x) data[[x]])
     names(vars) <- all.f.vars
+    vars <- registerCubeFunctions(vars)
     v.call <- do.call(substitute, list(expr=f.vars, env=vars))
     vars <- eval(v.call)
     
     resp <- attr(f, "response")
     if (resp) {
         measures <- lapply(vars[resp], absolute.zcl)
+        names(measures) <- "count" ## HACK
         vars <- vars[-resp]
     } else {
         measures <- list(count=zfunc("cube_count"))
@@ -43,6 +45,31 @@ getCube <- function (formula, data, weight=rcrunch::weight(data),
     cube_url <- shojiURL(data, "views", "cube")
     return(CrunchCube(crGET(cube_url, query=list(query=toJSON(query))),
         useNA=match.arg(useNA)))
+}
+
+registerCubeFunctions <- function (vars) {
+    ## Given a list of variables, add to it "cube functions", to substitute()
+    ## in. A better approach, which would avoid potential name collisions, would
+    ## probably be to have vars be an environment inside of another environment
+    ## that has the cube functions.
+    
+    funcs <- list(
+        mean=function (x) zfunc("cube_mean", x),
+        min=function (x) zfunc("cube_min", x),
+        max=function (x) zfunc("cube_max", x),
+        # median=function (x) zfunc("cube_quantile", x, .5),
+        # quantile=function (x, q) zfunc("cube_quantile", x, q),
+        sd=function (x) zfunc("cube_stddev", x),
+        sum=function (x) zfunc("cube_sum", x)
+    )
+    
+    overlap <- intersect(names(vars), names(funcs))
+    if (length(overlap)) {
+        halt("Cannot evaluate a cube with reserved name", 
+            ifelse(length(overlap) > 1, "s", ""), ": ",
+            serialPaste(overlap))
+    }
+    return(c(vars, funcs))
 }
 
 varsToCubeDimensions <- function (vars) {
