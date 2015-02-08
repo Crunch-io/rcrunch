@@ -52,6 +52,7 @@ getCube <- function (formula, data, weight=rcrunch::weight(data),
     }
     vars <- registerCubeFunctions(vars)
     v.call <- do.call(substitute, list(expr=f.vars, env=vars))
+    print(v.call)
     vars <- eval(v.call)
     
     resp <- attr(f, "response")
@@ -74,6 +75,16 @@ getCube <- function (formula, data, weight=rcrunch::weight(data),
     
     query <- list(dimensions=varsToCubeDimensions(vars),
         measures=measures, weight=weight)
+    ## Final validations
+    badmeasures <- vapply(query$measures, Negate(isCubeAggregation), logical(1))
+    if (any(badmeasures)) {
+        halt("Left side of formula must be a valid aggregation")
+    }
+    baddimensions <- vapply(query$dimensions, isCubeAggregation, logical(1))
+    if (any(baddimensions)) {
+        halt("Right side of formula cannot contain aggregation functions")
+    }
+    ## Go GET it!
     cube_url <- shojiURL(data, "views", "cube")
     return(CrunchCube(crGET(cube_url, query=list(query=toJSON(query))),
         useNA=match.arg(useNA)))
@@ -108,6 +119,10 @@ registerCubeFunctions <- function (vars) {
             serialPaste(dQuote(overlap)))
     }
     return(c(vars, funcs))
+}
+
+isCubeAggregation <- function (x) {
+    "function" %in% names(x) && grepl("^cube_", x[["function"]])
 }
 
 varsToCubeDimensions <- function (vars) {

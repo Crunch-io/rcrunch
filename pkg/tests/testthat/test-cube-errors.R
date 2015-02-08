@@ -68,35 +68,38 @@ if (run.integration.tests) {
             })
             
             test_that("What happens if 'measures' are not aggregations?", {
-                
+                expect_error(getCube(v3 ~ v4, data=ds),
+                    "Left side of formula must be a valid aggregation")
+                expect_error(getCube(v4 ~ v3, data=ds),
+                    "Left side of formula must be a valid aggregation")
             })
             
-            test_that("What happens if there are more than one vars on LHS?", {
-                
-            })
-            
-            test_that("What happens if there are no RHS vars?", {
-                
-            })
+            skip(test_that("What happens if there are more than one vars on LHS?", {
+                print(getCube(mean(v3) + sd(v3) ~ v4, data=ds))
+                # non-numeric argument to binary operator
+            }), "Nice to have. API supports, but R formula doesn't naturally")
             
             test_that("What if there are aggregations on the RHS?", {
-                
+                expect_error(getCube(~ mean(v3), data=ds),
+                    "Right side of formula cannot contain aggregation functions")
             })
             
             test_that("'rollup' on non-Datetime", {
-                
-            })
-            
-            test_that("Invalid rollup resolution", {
-                
+                expect_error(getCube(~ rollup(v4), data=ds),
+                    paste0("Cannot rollup a variable of type ",
+                        dQuote("categorical")))
             })
             
             test_that("Unsupported aggregation functions", {
-                
+                expect_error(getCube(cumsum(v3) ~ v4, data=ds),
+                    "no method for coercing this S4 class to a vector")
+                ## This is standard R behavior, not special handling.
+                ## Just for illustration of what will happen.
             })
             
             test_that("Limit on number of dimension variables", {
-                
+                # print(getCube(~ v1 + v2 + v3 + v4, data=ds))
+                ## nope, 4 works
             })
         })
     })

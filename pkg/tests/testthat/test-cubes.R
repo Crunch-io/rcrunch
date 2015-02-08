@@ -50,6 +50,8 @@ test_that("rollup CrunchExpr from DatetimeVariable", {
 test_that("rollup resolution validation", {
     expect_error(rollup("a", resolution="Invalid"), 
         " is invalid. Valid values are NULL, ")
+    expect_error(rollup("a", resolution=42), 
+        " is invalid. Valid values are NULL, ")
 })
 
 if (run.integration.tests) {
@@ -221,6 +223,20 @@ if (run.integration.tests) {
                     array(c(8, 9, 24, 23), dim=c(2L, 2L),
                         dimnames=list(v8=c("1955-11-05", "1955-11-06"),
                         v7=c("C", "E"))))
+            })
+            
+            skip(test_that("Cube with variables and R objects", {
+                d4 <- cubedf$v4
+                expect_equivalent(cubeToArray(getCube(~ d4 + v7, data=ds)),
+                    array(c(5, 5, 2, 3), dim=c(2L, 2L),
+                        dimnames=list(v4=c("B", "C"), v7=c("C", "E"))))
+            }), "(400) Bad Request: No such category id: '1'.")
+            
+            test_that("Cube with transformations", {
+                expect_equivalent(cubeToArray(getCube(~ bin(v3 + 5), data=ds)),
+                    array(c(2, 5, 5, 5, 3), dim=c(5L),
+                        dimnames=list(v3=c("10-15", "15-20", "20-25",
+                        "25-30", "30-35"))))
             })
             
             test_that("prop.table on CrunchCube", {
