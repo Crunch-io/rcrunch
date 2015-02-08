@@ -7,17 +7,49 @@
 ##' cross-classifying variables, separated by '+', on the right hand side.
 ##' Compare to \code{\link[stats]{xtabs}}.
 ##' @param data an object of class \code{CrunchDataset}
+##' @param weight a CrunchVariable that has been designated as a potential
+##' weight variable for \code{data}, or \code{NULL} for unweighted results.
+##' Default is the currently applied weight, \code{\link{weight}(data)}.
 ##' @param useNA whether to include missing values in tabular results. See
 ##' \code{\link[base]{table}}.
 ##' @return an object of class \code{CrunchCube}
 ##' @export
 getCube <- function (formula, data, weight=rcrunch::weight(data), 
                      useNA=c("no", "ifany", "always")) {
-    f <- terms(formula)
+    if (missing(formula)) {
+        halt("Must provide a formula")
+    }
+    formula <- try(as.formula(formula), silent=TRUE)
+    if (is.error(formula)) {
+        halt(dQuote("formula"), " is not a valid formula")
+    }
+    
+    f <- terms(as.formula(formula), allowDotAsName=TRUE) ## To catch "."
     f.vars <- attr(f, "variables")
     all.f.vars <- all.vars(f.vars)
-    vars <- lapply(all.vars(f.vars), function (x) data[[x]])
+    if ("." %in% all.f.vars) {
+        halt("getCube does not support ", dQuote("."), " in formula")
+    }
+    if (!length(all.f.vars)) {
+        halt("Must supply one or more variables")
+    }
+    
+    if (missing(data) || !is.dataset(data)) {
+        halt(dQuote("data"), " must be a Dataset")
+    }
+    
+    where <- parent.frame()
+    ## Find variables either in 'data' or in the calling environment
+    vars <- lapply(all.f.vars, 
+        function (x) data[[x]] %||% safeGet(x, envir=where))
     names(vars) <- all.f.vars
+    notfound <- vapply(vars, is.null, logical(1))
+    if (any(notfound)) {
+        badvars <- all.f.vars[notfound]
+        halt(serialPaste(dQuote(badvars)), 
+            ifelse(length(badvars) > 1, " are", " is"),
+            " not found in ", dQuote("data"))
+    }
     vars <- registerCubeFunctions(vars)
     v.call <- do.call(substitute, list(expr=f.vars, env=vars))
     vars <- eval(v.call)
@@ -25,7 +57,7 @@ getCube <- function (formula, data, weight=rcrunch::weight(data),
     resp <- attr(f, "response")
     if (resp) {
         measures <- lapply(vars[resp], absolute.zcl)
-        names(measures) <- "count" ## HACK
+        names(measures) <- "count" ## HACK. Server provides margins iff "count"
         vars <- vars[-resp]
     } else {
         measures <- list(count=zfunc("cube_count"))
@@ -45,6 +77,12 @@ getCube <- function (formula, data, weight=rcrunch::weight(data),
     cube_url <- shojiURL(data, "views", "cube")
     return(CrunchCube(crGET(cube_url, query=list(query=toJSON(query))),
         useNA=match.arg(useNA)))
+}
+
+safeGet <- function (x, ..., ifnot=NULL) {
+    out <- try(get(x, ...), silent=TRUE)
+    if (is.error(out)) out <- ifnot
+    return(out)
 }
 
 registerCubeFunctions <- function (vars) {
@@ -67,7 +105,7 @@ registerCubeFunctions <- function (vars) {
     if (length(overlap)) {
         halt("Cannot evaluate a cube with reserved name", 
             ifelse(length(overlap) > 1, "s", ""), ": ",
-            serialPaste(overlap))
+            serialPaste(dQuote(overlap)))
     }
     return(c(vars, funcs))
 }
@@ -98,7 +136,8 @@ varsToCubeDimensions <- function (vars) {
 
 cubeToArray <- function (x, measure="count") {
     d <- unlist(x$result$measures[[measure]]$data)
-    d <- round(d) ## digits should be an argument
+    d <- round(d) ## TODO digits should be an argument
+    ## and rounding should also depend on whether you're looking at count or not
     dimnames <- cubeDimnames(x)
     ndims <- length(dimnames)
     if (ndims > 1) {
@@ -115,6 +154,7 @@ cubeToArray <- function (x, measure="count") {
         names(dimnames(out))[1:2] <- names(dimnames(out))[2:1]
         marginals <- lapply(x$result$margin[as.character(seq_len(ndims) - 1)],
             unlist)
+        ## TODO: make marginals from the cube, not the server's
     } else {
         ## Kind of a hack. We just want to know whether there are 0 values
         ## for pruning
@@ -145,6 +185,7 @@ cubeDimnames <- function (cube) {
 }
 
 elementName <- function (el) {
+    ## Given a category or element in a cube dim, what's its name?
     out <- el$value
     if (is.null(out)) {
         ## This is probably categorical. Try "name" instead of "value".
