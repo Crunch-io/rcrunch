@@ -4,7 +4,8 @@
 \alias{getCube}
 \title{Crosstab and otherwise aggregate variables in a dataset}
 \usage{
-getCube(formula, data, useNA = c("no", "ifany", "always"))
+getCube(formula, data, weight = rcrunch::weight(data), useNA = c("no",
+  "ifany", "always"))
 }
 \arguments{
 \item{formula}{an object of class 'formula' object with the
@@ -12,6 +13,10 @@ cross-classifying variables, separated by '+', on the right hand side.
 Compare to \code{\link[stats]{xtabs}}.}
 
 \item{data}{an object of class \code{CrunchDataset}}
+
+\item{weight}{a CrunchVariable that has been designated as a potential
+weight variable for \code{data}, or \code{NULL} for unweighted results.
+Default is the currently applied weight, \code{\link{weight}(data)}.}
 
 \item{useNA}{whether to include missing values in tabular results. See
 \code{\link[base]{table}}.}

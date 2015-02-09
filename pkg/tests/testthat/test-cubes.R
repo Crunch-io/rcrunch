@@ -60,7 +60,7 @@ if (run.integration.tests) {
             test_that("We can get a univariate categorical cube", {
                 kube <- try(getCube(~ v7, data=ds))
                 expect_true(inherits(kube, "CrunchCube"))
-                expect_equivalent(cubeToArray(kube),
+                expect_equivalent(as.array(kube),
                     array(c(10, 5, 5), dim=c(3L),
                         dimnames=list(v7=LETTERS[3:5])))
                 ## Not sure why not identical, str makes them look the same
@@ -69,33 +69,33 @@ if (run.integration.tests) {
             test_that("We can get a bivariate categorical cube", {
                 kube <- try(getCube(~ v4 + v7, data=ds))
                 expect_true(inherits(kube, "CrunchCube"))
-                expect_identical(cubeToArray(kube),
+                expect_identical(as.array(kube),
                     array(c(5, 5, 3, 2, 2, 3), dim=c(2L, 3L),
                         dimnames=list(v4=c("B", "C"), v7=LETTERS[3:5])))
             })
             
             is.na(categories(ds$v7)) <- "D"
             test_that("useNA on univariate cube", {
-                expect_equivalent(cubeToArray(getCube(~ v7, data=ds)),
+                expect_equivalent(as.array(getCube(~ v7, data=ds)),
                     array(c(10, 5), dim=2L, dimnames=list(v7=c("C", "E"))))
-                expect_equivalent(cubeToArray(getCube(~ v7, data=ds,
+                expect_equivalent(as.array(getCube(~ v7, data=ds,
                     useNA="ifany")),
                     array(c(10, 5, 5), dim=c(3L),
                         dimnames=list(v7=LETTERS[3:5])))
-                expect_equivalent(cubeToArray(getCube(~ v7, data=ds,
+                expect_equivalent(as.array(getCube(~ v7, data=ds,
                     useNA="always")),
                     array(c(10, 5, 5), dim=c(3L),
                         dimnames=list(v7=LETTERS[3:5])))
             })
             test_that("useNA on bivariate cube", {
-                expect_equivalent(cubeToArray(getCube(~ v4 + v7, data=ds)),
+                expect_equivalent(as.array(getCube(~ v4 + v7, data=ds)),
                     array(c(5, 5, 2, 3), dim=c(2L, 2L),
                         dimnames=list(v4=c("B", "C"), v7=c("C", "E"))))
-                expect_equivalent(cubeToArray(getCube(~ v4 + v7, data=ds,
+                expect_equivalent(as.array(getCube(~ v4 + v7, data=ds,
                     useNA="ifany")),
                     array(c(5, 5, 3, 2, 2, 3), dim=c(2L, 3L),
                         dimnames=list(v4=c("B", "C"), v7=LETTERS[3:5])))
-                expect_equivalent(cubeToArray(getCube(~ v4 + v7, data=ds,
+                expect_equivalent(as.array(getCube(~ v4 + v7, data=ds,
                     useNA="always")),
                     array(c(5, 5, 3, 2, 2, 3), dim=c(2L, 3L),
                         dimnames=list(v4=c("B", "C"), v7=LETTERS[3:5])))
@@ -104,21 +104,21 @@ if (run.integration.tests) {
             test_that("univariate datetime cube", {
                 kube <- try(getCube(~ v8, data=ds))
                 expect_true(inherits(kube, "CrunchCube"))
-                expect_equivalent(cubeToArray(kube),
+                expect_equivalent(as.array(kube),
                     array(c(10, 10), dim=c(2L),
                         dimnames=list(v8=c("1955-11-05", "1955-11-06"))))
             })
             test_that("bivariate cube with datetime", {
-                expect_equivalent(cubeToArray(getCube(~ v8 + v7, data=ds)),
+                expect_equivalent(as.array(getCube(~ v8 + v7, data=ds)),
                     array(c(5, 5, 2, 3), dim=c(2L, 2L),
                         dimnames=list(v8=c("1955-11-05", "1955-11-06"),
                         v7=c("C", "E"))))
-                expect_equivalent(cubeToArray(getCube(~ v8 + v7, data=ds,
+                expect_equivalent(as.array(getCube(~ v8 + v7, data=ds,
                     useNA="ifany")),
                     array(c(5, 5, 3, 2, 2, 3), dim=c(2L, 3L),
                         dimnames=list(v8=c("1955-11-05", "1955-11-06"), 
                         v7=LETTERS[3:5])))
-                expect_equivalent(cubeToArray(getCube(~ v8 + v7, data=ds,
+                expect_equivalent(as.array(getCube(~ v8 + v7, data=ds,
                     useNA="always")),
                     array(c(5, 5, 3, 2, 2, 3), dim=c(2L, 3L),
                         dimnames=list(v8=c("1955-11-05", "1955-11-06"), 
@@ -128,15 +128,15 @@ if (run.integration.tests) {
             test_that("datetime rollup cubes", {
                 ## Default rollup resolution for this should be same as
                 ## its resolution, given the date range
-                expect_equivalent(cubeToArray(getCube(~ rollup(v8) + v7,
+                expect_equivalent(as.array(getCube(~ rollup(v8) + v7,
                     data=ds)),
-                    cubeToArray(getCube(~ v8 + v7, data=ds))) 
-                expect_equivalent(cubeToArray(getCube(~ rollup(v8, "M") + v7,
+                    as.array(getCube(~ v8 + v7, data=ds))) 
+                expect_equivalent(as.array(getCube(~ rollup(v8, "M") + v7,
                     data=ds)),
                     array(c(10, 5), dim=c(1L, 2L),
                         dimnames=list(v8=c("1955-11"),
                         v7=c("C", "E"))))
-                expect_equivalent(cubeToArray(getCube(~ rollup(v8, "Y") + v7,
+                expect_equivalent(as.array(getCube(~ rollup(v8, "Y") + v7,
                     data=ds)),
                     array(c(10, 5), dim=c(1L, 2L),
                         dimnames=list(v8=c("1955"),
@@ -146,19 +146,19 @@ if (run.integration.tests) {
             test_that("univariate cube with binned numeric", {
                 kube <- try(getCube(~ bin(v3), data=ds))
                 expect_true(inherits(kube, "CrunchCube"))
-                expect_equivalent(cubeToArray(kube),
+                expect_equivalent(as.array(kube),
                     array(c(2, 5, 5, 5, 3), dim=c(5L),
                         dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25",
                         "25-30"))))
             })
             test_that("bivariate cube with binned numeric", {
-                expect_equivalent(cubeToArray(getCube(~ bin(v3) + v7, data=ds)),
+                expect_equivalent(as.array(getCube(~ bin(v3) + v7, data=ds)),
                     array(c(2, 5, 3, 0, 0,
                             0, 0, 0, 2, 3), dim=c(5L, 2L),
                         dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25",
                         "25-30"),
                         v7=c("C", "E"))))
-                expect_equivalent(cubeToArray(getCube(~ bin(v3) + v7, data=ds,
+                expect_equivalent(as.array(getCube(~ bin(v3) + v7, data=ds,
                     useNA="ifany")),
                     array(c(2, 5, 3, 0, 0,
                             0, 0, 2, 3, 0,
@@ -166,7 +166,7 @@ if (run.integration.tests) {
                         dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25",
                         "25-30"), 
                         v7=LETTERS[3:5])))
-                expect_equivalent(cubeToArray(getCube(~ bin(v3) + v7, data=ds,
+                expect_equivalent(as.array(getCube(~ bin(v3) + v7, data=ds,
                     useNA="always")),
                     array(c(2, 5, 3, 0, 0,
                             0, 0, 2, 3, 0,
@@ -176,9 +176,9 @@ if (run.integration.tests) {
                         v7=LETTERS[3:5])))
             })
             test_that("unbinned numeric", {
-                expect_equivalent(cubeToArray(getCube(~ v1, data=ds)),
+                expect_equivalent(as.array(getCube(~ v1, data=ds)),
                     array(rep(1, 15), dim=15L, dimnames=list(v1=df$v1[6:20])))
-                expect_equivalent(cubeToArray(getCube(~ v1, data=ds,
+                expect_equivalent(as.array(getCube(~ v1, data=ds,
                     useNA="ifany")),
                     array(c(rep(1, 15), 5), dim=16L,
                         dimnames=list(v1=c(df$v1[6:20], "<NA>"))))
@@ -186,21 +186,21 @@ if (run.integration.tests) {
             
             test_that("Weighted cubes", {
                 weight(ds) <- ds$v3
-                expect_equivalent(cubeToArray(getCube(~ v8 + v7, data=ds)),
+                expect_equivalent(as.array(getCube(~ v8 + v7, data=ds)),
                     array(c(60, 65, 50, 75), dim=c(2L, 2L),
                         dimnames=list(v8=c("1955-11-05", "1955-11-06"),
                         v7=c("C", "E"))))
-                expect_equivalent(cubeToArray(getCube(~ v8 + v7, data=ds,
+                expect_equivalent(as.array(getCube(~ v8 + v7, data=ds,
                     weight=NULL)),
                     array(c(5, 5, 2, 3), dim=c(2L, 2L),
                         dimnames=list(v8=c("1955-11-05", "1955-11-06"),
                         v7=c("C", "E"))))
                 weight(ds) <- NULL
-                expect_equivalent(cubeToArray(getCube(~ v8 + v7, data=ds)),
+                expect_equivalent(as.array(getCube(~ v8 + v7, data=ds)),
                     array(c(5, 5, 2, 3), dim=c(2L, 2L),
                         dimnames=list(v8=c("1955-11-05", "1955-11-06"),
                         v7=c("C", "E"))))
-                expect_equivalent(cubeToArray(getCube(~ v8 + v7, data=ds,
+                expect_equivalent(as.array(getCube(~ v8 + v7, data=ds,
                     weight=ds$v3)),
                     array(c(60, 65, 50, 75), dim=c(2L, 2L),
                         dimnames=list(v8=c("1955-11-05", "1955-11-06"),
@@ -208,17 +208,17 @@ if (run.integration.tests) {
             })
             
             test_that("Numeric aggregates", {
-                expect_equivalent(cubeToArray(getCube(mean(v3) ~ v8 + v7,
+                expect_equivalent(as.array(getCube(mean(v3) ~ v8 + v7,
                     data=ds)),
                     array(c(12, 13, 25, 25), dim=c(2L, 2L),
                         dimnames=list(v8=c("1955-11-05", "1955-11-06"),
                         v7=c("C", "E"))))
-                expect_equivalent(cubeToArray(getCube(sum(v3) ~ v8 + v7,
+                expect_equivalent(as.array(getCube(sum(v3) ~ v8 + v7,
                     data=ds)),
                     array(c(60, 65, 50, 75), dim=c(2L, 2L),
                         dimnames=list(v8=c("1955-11-05", "1955-11-06"),
                         v7=c("C", "E"))))
-                expect_equivalent(cubeToArray(getCube(min(v3) ~ v8 + v7,
+                expect_equivalent(as.array(getCube(min(v3) ~ v8 + v7,
                     data=ds)),
                     array(c(8, 9, 24, 23), dim=c(2L, 2L),
                         dimnames=list(v8=c("1955-11-05", "1955-11-06"),
@@ -227,13 +227,13 @@ if (run.integration.tests) {
             
             skip(test_that("Cube with variables and R objects", {
                 d4 <- cubedf$v4
-                expect_equivalent(cubeToArray(getCube(~ d4 + v7, data=ds)),
+                expect_equivalent(as.array(getCube(~ d4 + v7, data=ds)),
                     array(c(5, 5, 2, 3), dim=c(2L, 2L),
                         dimnames=list(v4=c("B", "C"), v7=c("C", "E"))))
             }), "(400) Bad Request: No such category id: '1'.")
             
             test_that("Cube with transformations", {
-                expect_equivalent(cubeToArray(getCube(~ bin(v3 + 5), data=ds)),
+                expect_equivalent(as.array(getCube(~ bin(v3 + 5), data=ds)),
                     array(c(2, 5, 5, 5, 3), dim=c(5L),
                         dimnames=list(v3=c("10-15", "15-20", "20-25",
                         "25-30", "30-35"))))

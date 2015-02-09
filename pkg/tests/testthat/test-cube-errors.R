@@ -40,7 +40,7 @@ if (run.integration.tests) {
                     " are not found in ", dQuote("data")))
                 ## But works if variable is in workspace
                 aaa <- ds$v4
-                expect_equivalent(cubeToArray(getCube(~ aaa + bin(v3),
+                expect_equivalent(as.array(getCube(~ aaa + bin(v3),
                     data=ds)),
                     array(c(1, 1, 3, 2, 2, 3, 3, 2, 1, 2), dim=c(2L, 5L),
                         dimnames=list(v4=c("B", "C"),
@@ -61,7 +61,7 @@ if (run.integration.tests) {
                     paste0("Cannot evaluate a cube with reserved names: ",
                     dQuote("mean"), " and ", dQuote("sd")))
                 ## But you can still get analyses with other variables
-                expect_equivalent(cubeToArray(getCube(~ bin(v3), data=dsb)),
+                expect_equivalent(as.array(getCube(~ bin(v3), data=dsb)),
                     array(c(2, 5, 5, 5, 3), dim=c(5L),
                         dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25",
                         "25-30"))))

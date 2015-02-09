@@ -16,6 +16,7 @@
 ##' @export
 getCube <- function (formula, data, weight=rcrunch::weight(data), 
                      useNA=c("no", "ifany", "always")) {
+    ## Validate "formula"
     if (missing(formula)) {
         halt("Must provide a formula")
     }
@@ -24,9 +25,12 @@ getCube <- function (formula, data, weight=rcrunch::weight(data),
         halt(dQuote("formula"), " is not a valid formula")
     }
     
+    ## Parse the formula
     f <- terms(as.formula(formula), allowDotAsName=TRUE) ## To catch "."
     f.vars <- attr(f, "variables")
     all.f.vars <- all.vars(f.vars)
+    
+    ## More input validation
     if ("." %in% all.f.vars) {
         halt("getCube does not support ", dQuote("."), " in formula")
     }
@@ -38,11 +42,13 @@ getCube <- function (formula, data, weight=rcrunch::weight(data),
         halt(dQuote("data"), " must be a Dataset")
     }
     
-    where <- parent.frame()
     ## Find variables either in 'data' or in the calling environment
+    where <- parent.frame()
     vars <- lapply(all.f.vars, 
         function (x) data[[x]] %||% safeGet(x, envir=where))
     names(vars) <- all.f.vars
+    
+    ## Validate what we got
     notfound <- vapply(vars, is.null, logical(1))
     if (any(notfound)) {
         badvars <- all.f.vars[notfound]
@@ -50,11 +56,13 @@ getCube <- function (formula, data, weight=rcrunch::weight(data),
             ifelse(length(badvars) > 1, " are", " is"),
             " not found in ", dQuote("data"))
     }
+    
+    ## Evaluate the formula's terms in order to catch derived expressions
     vars <- registerCubeFunctions(vars)
     v.call <- do.call(substitute, list(expr=f.vars, env=vars))
-    print(v.call)
     vars <- eval(v.call)
     
+    ## Construct the "measures", either from the formula or default "count"
     resp <- attr(f, "response")
     if (resp) {
         measures <- lapply(vars[resp], absolute.zcl)
@@ -64,6 +72,7 @@ getCube <- function (formula, data, weight=rcrunch::weight(data),
         measures <- list(count=zfunc("cube_count"))
     }
     
+    ## Handle "weight"
     force(weight)
     if (is.variable(weight)) {
         weight <- self(weight)
@@ -73,8 +82,10 @@ getCube <- function (formula, data, weight=rcrunch::weight(data),
         weight <- NULL
     }
     
+    ## Construct the ZCL query
     query <- list(dimensions=varsToCubeDimensions(vars),
         measures=measures, weight=weight)
+    
     ## Final validations
     badmeasures <- vapply(query$measures, Negate(isCubeAggregation), logical(1))
     if (any(badmeasures)) {
@@ -84,6 +95,7 @@ getCube <- function (formula, data, weight=rcrunch::weight(data),
     if (any(baddimensions)) {
         halt("Right side of formula cannot contain aggregation functions")
     }
+    
     ## Go GET it!
     cube_url <- shojiURL(data, "views", "cube")
     return(CrunchCube(crGET(cube_url, query=list(query=toJSON(query))),
@@ -91,6 +103,7 @@ getCube <- function (formula, data, weight=rcrunch::weight(data),
 }
 
 safeGet <- function (x, ..., ifnot=NULL) {
+    ## "get" with a default
     out <- try(get(x, ...), silent=TRUE)
     if (is.error(out)) out <- ifnot
     return(out)
@@ -187,6 +200,9 @@ cubeToArray <- function (x, measure="count") {
     return(out)
 }
 
+##' @export
+as.array.CrunchCube <- function (x, ...) cubeToArray(x, ...)
+
 cubeDimnames <- function (cube) {
     ## Grab the row/col/etc. labels from the cube
     dimnames <- lapply(cube$result$dimensions, function (a) {
@@ -248,4 +264,3 @@ pruneDimension <- function (dimension, marginal, useNA) {
 
     return(out) 
 }
-
