@@ -50,10 +50,11 @@ if (run.integration.tests) {
             
             test_that("Reserved function names cannot be variable aliases", {
                 dsb <- ds
-                al <- aliases(variables(dsb))
+                al <- aliases(dsb@variables)
                 dsb@variables@index[[which(al == "v1")]]$alias <- "mean"
                 dsb@variables@index[[which(al == "v2")]]$alias <- "sd"
-
+                
+                expect_identical(names(dsb), c("mean", "sd", "v3", "v4"))
                 expect_error(getCube(~ mean + bin(v3), data=dsb),
                     paste0("Cannot evaluate a cube with reserved name: ",
                     dQuote("mean")))
