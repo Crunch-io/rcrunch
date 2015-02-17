@@ -81,6 +81,9 @@ setGeneric("max")
 setGeneric("na.omit")
 ##' @export
 setGeneric("as.vector")
+setGeneric("dimnames")
+
+setGeneric("prop.table")
 
 ##' Generic method for converting objects to Crunch representations
 ##'

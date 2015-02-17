@@ -191,6 +191,11 @@ CrunchExpr <- setClass("CrunchExpr",
 CrunchLogicalExpr <- setClass("CrunchLogicalExpr",
     contains="CrunchExpr")
 
+CubeDims <- setClass("CubeDims", contains="namedList")
+
 CrunchCube <- setClass("CrunchCube", contains="list",
-    representation=representation(useNA="character"),
-    prototype=prototype(useNA="no"))
+    representation=representation(
+        useNA="character",
+        dims="CubeDims",
+        arrays="list"),
+    prototype=prototype(useNA="no", dims=CubeDims(), arrays=list()))

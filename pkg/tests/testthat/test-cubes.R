@@ -54,6 +54,32 @@ test_that("rollup resolution validation", {
         " is invalid. Valid values are NULL, ")
 })
 
+a1 <- array(c(5, 5, 3, 2, 2, 3), dim=c(2L, 3L),
+    dimnames=list(v4=c("B", "C"), v7=LETTERS[3:5]))
+test_that("simple cubeArrayMarginTable", {
+    expect_true(is.array(a1))
+    expect_identical(cubeArrayMarginTable(a1, 1), margin.table(a1, 1))
+    expect_identical(cubeArrayMarginTable(a1, 1),
+        array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
+    expect_identical(cubeArrayMarginTable(a1, 2), margin.table(a1, 2))    
+    expect_identical(cubeArrayMarginTable(a1, 2), 
+        array(c(10, 5, 5), dim=3L, dimnames=list(v7=LETTERS[3:5])))
+})
+
+a2 <- structure(array(c(6, 6, 3, 2, 2, 3), dim=c(2L, 3L),
+    dimnames=list(v4=c("B", "C"), v7=c("C", "D", "E"))),
+    meta=list(any.or.none=list(v4=c(), v7=1)))
+print(str(dimnames(a2)))
+print(cubeArrayMarginTable(a2, 1))
+test_that("cubeArrayMarginTable with any/none", {
+    expect_true(is.array(a2))
+    expect_identical(attr(a2, "meta")$any.or.none$v7, 1)
+    expect_identical(cubeArrayMarginTable(a2, 1),
+        array(c(6, 6), dim=2L, dimnames=list(v4=c("B", "C"))))
+    expect_identical(cubeArrayMarginTable(a2, 2), 
+        array(c(12, 5, 5), dim=3L, dimnames=list(v7=LETTERS[3:5])))
+})
+
 if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(cubedf), {
@@ -239,8 +265,34 @@ if (run.integration.tests) {
                         "25-30", "30-35"))))
             })
             
-            test_that("prop.table on CrunchCube", {
-                
+            test_that("prop.table on univariate cube", {
+                expect_equivalent(prop.table(getCube(~ bin(v3 + 5), data=ds)),
+                    array(c(2, 5, 5, 5, 3)/20, dim=c(5L),
+                        dimnames=list(v3=c("10-15", "15-20", "20-25",
+                        "25-30", "30-35"))))
+            })
+            
+            test_that("prop.table on crosstab", {
+                expect_equivalent(prop.table(getCube(~ bin(v3) + v7, data=ds)),
+                    array(c(2, 5, 3, 0, 0,
+                            0, 0, 0, 2, 3)/15, dim=c(5L, 2L),
+                        dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25",
+                        "25-30"),
+                        v7=c("C", "E"))))
+                expect_equivalent(prop.table(getCube(~ bin(v3) + v7, data=ds),
+                    margin=1),
+                    array(c(.2, .5, .3, 0, 0,
+                            0, 0, 0, .4, .6), dim=c(5L, 2L),
+                        dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25",
+                        "25-30"),
+                        v7=c("C", "E"))))
+                expect_equivalent(prop.table(getCube(~ bin(v3) + v7, data=ds),
+                    margin=2),
+                    array(c(1, 1, 1, 0, 0,
+                            0, 0, 0, 1, 1), dim=c(5L, 2L),
+                        dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25",
+                        "25-30"),
+                        v7=c("C", "E"))))
             })
         })
     })
