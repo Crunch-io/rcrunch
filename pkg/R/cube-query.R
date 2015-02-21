@@ -1,4 +1,4 @@
-##' Crosstab and otherwise aggregate variables in a dataset
+##' Crunch xtabs: Crosstab and otherwise aggregate variables in a Crunch Dataset
 ##'
 ##' Create a contingency table or other aggregation from cross-classifying
 ##' variables in a CrunchDataset.
@@ -14,7 +14,7 @@
 ##' \code{\link[base]{table}}.
 ##' @return an object of class \code{CrunchCube}
 ##' @export
-getCube <- function (formula, data, weight=rcrunch::weight(data), 
+crtabs <- function (formula, data, weight=rcrunch::weight(data), 
                      useNA=c("no", "ifany", "always")) {
     ## Validate "formula"
     if (missing(formula)) {
@@ -32,7 +32,7 @@ getCube <- function (formula, data, weight=rcrunch::weight(data),
     
     ## More input validation
     if ("." %in% all.f.vars) {
-        halt("getCube does not support ", dQuote("."), " in formula")
+        halt("crtabs does not support ", dQuote("."), " in formula")
     }
     if (!length(all.f.vars)) {
         halt("Must supply one or more variables")
@@ -66,7 +66,6 @@ getCube <- function (formula, data, weight=rcrunch::weight(data),
     resp <- attr(f, "response")
     if (resp) {
         measures <- lapply(vars[resp], absolute.zcl)
-        names(measures) <- "count" ## HACK. Server provides margins iff "count"
         vars <- vars[-resp]
     } else {
         measures <- list(count=zfunc("cube_count"))
@@ -95,6 +94,11 @@ getCube <- function (formula, data, weight=rcrunch::weight(data),
     if (any(baddimensions)) {
         halt("Right side of formula cannot contain aggregation functions")
     }
+    
+    ## One last munge
+    names(query$measures) <- vapply(query$measures, function (m) {
+        sub("^cube_", "", m[["function"]])
+    }, character(1))
     
     ## Go GET it!
     cube_url <- shojiURL(data, "views", "cube")

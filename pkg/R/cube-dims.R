@@ -5,13 +5,11 @@ cubeDims <- function (cube) {
         a$type$categories %||% a$type$elements
     })
     dimnames <- lapply(elements, function (d) {
-        lapply(d, function (el) {
-            list(
-                name=elementName(el),
-                any.or.none=elementIsAnyOrNone(el),
-                missing=isTRUE(el$missing)
-            )
-        })
+        list(
+            name=vapply(d, elementName, character(1)),
+            any.or.none=vapply(d, elementIsAnyOrNone, logical(1)),
+            missing=vapply(d, function (el) isTRUE(el$missing), logical(1))
+        )
     })
     names(dimnames) <- vapply(cube$result$dimensions, 
         function (a) a$references$alias, character(1))
@@ -50,8 +48,15 @@ elementIsAnyOrNone <- function (el) {
 }
 
 setMethod("dimnames", "CubeDims", function (x) {
-    lapply(x, function (a) {
-        vapply(a, function (el) el[["name"]], character(1))
-    })
+    lapply(x, function (a) a$name)
 })
+
+setMethod("dim", "CubeDims",
+    function (x) vapply(dimnames(x), length, integer(1)))
+
+setMethod("is.na", "CubeDims", function (x) lapply(x, function (a) a$missing))
+
+anyOrNone <- function (x) {
+    lapply(x, function (a) a$any.or.none)
+}
 

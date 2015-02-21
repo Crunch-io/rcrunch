@@ -82,6 +82,7 @@ setGeneric("na.omit")
 ##' @export
 setGeneric("as.vector")
 setGeneric("dimnames")
+setGeneric("margin.table")
 
 setGeneric("prop.table")
 

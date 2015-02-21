@@ -159,6 +159,15 @@ does_not_give_warning <- function () {
     }
 }
 
+does_not_show_message <- function () {
+    function (expr) {
+        warnings <- evaluate_promise(expr)$messages
+        expectation(length(messages) == 0, 
+                paste0(length(messages), " messages created"),
+                "no messages shown")
+    }
+}
+
 does_not_throw_error <- function () {
     function (expr) {
         res <- try(force(expr), TRUE)
