@@ -102,6 +102,12 @@ if (run.integration.tests) {
                 # print(crtabs(~ v1 + v2 + v3 + v4, data=ds))
                 ## nope, 4 works
             })
+            
+            test_that("prop.table cannot take margin greater than dim", {
+                expect_error(prop.table(crtabs(~ v4 + v3, data=ds), 
+                    margin=3),
+                    "Margin 3 exceeds Cube's number of dimensions \\(2\\)")
+            })
         })
     })
 }

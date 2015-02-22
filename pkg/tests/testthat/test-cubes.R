@@ -83,7 +83,7 @@ test_that("margin.table with any/none", {
     expect_identical(margin.table(a2, 1),
         array(c(8, 6), dim=2L, dimnames=list(v4=c("B", "C"))))
     expect_identical(margin.table(a2, 2), 
-        array(c(14, 5, 5), dim=3L, dimnames=list(v7=LETTERS[3:5])))
+        array(c(5, 5), dim=2L, dimnames=list(v7=LETTERS[4:5])))
     expect_identical(margin.table(a2), 14)
 })
 

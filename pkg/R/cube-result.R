@@ -91,22 +91,39 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     ## Given a CrunchCube, get the right margin table for percentaging
     data <- x@arrays[[measure]]
     dimnames(data) <- dimnames(x@dims)
-    
-    ## if mr, use __any__ | __none__
-    ## if ca, is there that on the other slice?
-    ## else, sweep
     aon <- anyOrNone(x@dims)
     missings <- is.na(x@dims)
+    
+    if (!is.null(margin) && max(margin) > length(dim(data))) {
+        ## Validate the input and give a useful error message.
+        ## base::margin.table says:
+        ## "Error in if (d2 == 0L) { : missing value where TRUE/FALSE needed"
+        ## which is terrible.
+        halt("Margin ", max(margin), " exceeds Cube's number of dimensions (",
+            length(dim(data)), ")")
+    }
+    
+    ## If multiple response, sum __any__ + __none__ (and missing, if included)
+    ## (if ca, is there that on the other slice?)
+    ## Else, sum all
     args <- lapply(seq_along(aon), function (i) {
         a <- aon[[i]]
-        if (!any(a) || i %in% margin) {
-            ## If there isn't "any" or "none", keep all
-            ## Also keep all if this is a margin we're sweeping
+        has.any.or.none <- any(a)
+        if (!has.any.or.none) {
+            ## If there isn't "any" or "none", keep all to sum over
             a <- rep(TRUE, length(a))
+        } else if (i %in% margin) {
+            ## If this does have any/none AND this is a margin we're sweeping,
+            ## keep everything *except* any/none because we want to match
+            ## the dimensions in "data"
+            a <- !a
         }
         if (x@useNA == "no") {
             ## Exclude missings if we're supposed to
             a <- a & !missings[[i]]
+        } else if (has.any.or.none) {
+            ## Re-include missings for multiple response vars
+            a <- a | missings[[i]]
         }
         return(a)
     })
