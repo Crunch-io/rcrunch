@@ -2,7 +2,7 @@
 % Please edit documentation in R/cube-query.R
 \name{crtabs}
 \alias{crtabs}
-\title{Crosstab and otherwise aggregate variables in a dataset}
+\title{Crunch xtabs: Crosstab and otherwise aggregate variables in a Crunch Dataset}
 \usage{
 crtabs(formula, data, weight = rcrunch::weight(data), useNA = c("no",
   "ifany", "always"))

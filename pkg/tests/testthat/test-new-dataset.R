@@ -96,14 +96,18 @@ if (run.integration.tests) {
         })
                 
         test_that("newDataset via CSV + JSON", {
-            ds <- newDataset2(df, name=uniqueDatasetName())
+            ds <- suppressMessages(newDataset2(df, name=uniqueDatasetName()))
                 expect_true(is.dataset(ds))
                 expect_identical(names(df), names(ds))
                 expect_identical(dim(ds), dim(df))
                 expect_true(is.Numeric(ds[["v1"]]))
                 expect_true(is.Text(ds[["v2"]]))
                 expect_true(is.Numeric(ds[["v3"]]))
+                expect_equivalent(as.array(crtabs(mean(v3) ~ v4, data=ds)),
+                    tapply(df$v3, df$v4, mean, na.rm=TRUE))
                 expect_true(is.Categorical(ds[["v4"]]))
+                expect_equivalent(as.array(crtabs(~ v4, data=ds)), 
+                    array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
                 expect_true(all(levels(df$v4) %in% names(categories(ds$v4))))
                 expect_identical(categories(ds$v4),
                     categories(refresh(ds$v4)))

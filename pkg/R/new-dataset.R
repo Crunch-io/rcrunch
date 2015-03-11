@@ -101,6 +101,20 @@ addSourceToDataset <- function (dataset, source_url, ...) {
     lapply(urls(datasetCatalog()), crDELETE)
 }
 
+##' Upload a data.frame to Crunch to make a new dataset
+##'
+##' This function uses the CSV+JSON import format, which may be faster or more
+##' effective for certain dataset sizes and shapes. 
+##'
+##' @param x a data.frame or other rectangular R object
+##' @param name character, the name to give the new Crunch dataset. Default is
+##' the name of the R object passed in \code{x}
+##' @param useAlias logical whether variable alias or name should be used as R
+##' variable names when the dataset is returned. Default is TRUE, meaning alias.
+##' @param ... additional arguments passed to \code{ \link{createDataset}}
+##' @return If successful, an object of class CrunchDataset.
+##' @seealso \code{\link{newDataset}}
+##' @export
 newDataset2 <- function (x, name=substitute(x),
                                 useAlias=default.useAlias(), ...) {
     
@@ -128,22 +142,47 @@ newDataset2 <- function (x, name=substitute(x),
         v[["values"]] <- NULL
         return(v)
     })
-    d <- list(element="shoji:entity", 
-                 body=list(name=name,
-                           ..., 
-                           table=list(element="crunch:table", metadata=vars)))
+    meta <- shojifyMetadata(vars, name=name, ...)
+    
     ## Send to Crunch
+    ds <- createWithMetadataAndFile(meta, filename)
+    ds@useAlias <- useAlias
+    invisible(ds)
+}
+
+##' Make a dataset with metadata and a CSV
+##'
+##' This function just takes what you give it and POSTs to Crunch. No
+##' validation, no automatic wrapping in the Shoji envelope, etc.
+##'
+##' @param metadata a list representation of the dataset's metadata, which
+##' will be JSON-serialized and POSTed.
+##' @param file a path to a CSV file, optionally zipped, that corresponds to
+##' the above metadata.
+##' @return On success, a new dataset.
+createWithMetadataAndFile <- function (metadata, file) {
     message("Uploading metadata")
-    dataset_url <- crPOST(sessionURL("datasets"), body=toJSON(d))
+    dataset_url <- crPOST(sessionURL("datasets"), body=toJSON(metadata))
     updateDatasetList()
     ds <- entity(datasetCatalog()[[dataset_url]])
-    ds@useAlias <- useAlias
     
     message("Uploading data")
     batches_url <- ds@catalogs$batches
     crPOST(batches_url,
-        body=list(file=upload_file(filename)), ...)
+        body=list(file=upload_file(file)))
     message("Done!")
-    invisible(refresh(ds))
+    return(refresh(ds))
+}
+
+##' Wrap variable metadata inside a dataset entity
+##'
+##' @param metadata list of variable metadata
+##' @param ... dataset entity metadata. "name" is required.
+##' @param return list suitiable for JSONing and POSTing to create a dataset
+shojifyMetadata <- function (metadata, ...) {
+    return(list(element="shoji:entity", 
+                 body=list(..., 
+                           table=list(element="crunch:table",
+                                      metadata=metadata))))
 }
 
