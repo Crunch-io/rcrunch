@@ -5,12 +5,12 @@
         "format": {
             "data": "%Y-%m-%d",
             "summary": "%Y-%m-%d"
-        }, 
+        },
+        "resolution": "D",
         "missing_reasons": {"No Data": -1},
-        "categories": [],
         "dataset_id": "a106fab0f7cb42a1b8a40f6d01d9c949",
         "view": {
-            "units": "s",
+            "rollup_resolution": "s",
             "column_width": null
         },
         "type": "datetime",

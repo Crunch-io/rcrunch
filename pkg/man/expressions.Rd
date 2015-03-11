@@ -14,6 +14,7 @@
 \alias{bin}
 \alias{expressions}
 \alias{is.na,CrunchVariable-method}
+\alias{rollup}
 \title{Construct Crunch Expressions}
 \usage{
 \S4method{as.vector}{CrunchExpr}(x, mode = "any")
@@ -37,6 +38,8 @@
 \S4method{is.na}{CrunchVariable}(x)
 
 bin(x)
+
+rollup(x, resolution = rollupResolution(x))
 }
 \arguments{
 \item{x}{an input}

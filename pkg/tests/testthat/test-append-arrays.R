@@ -8,7 +8,13 @@ if (run.integration.tests) {
                 part2 <- mrdf.setup(part2, selections="1.0")
                 test_that("set up MR for appending", {
                     expect_true(is.Multiple(part1$MR))
+                    expect_equivalent(as.array(crtabs(~ MR, data=part1)),
+                        array(c(2, 1, 1), dim=c(3L),
+                        dimnames=list(MR=c("mr_1", "mr_2", "mr_3"))))
                     expect_true(is.Multiple(part2$MR))
+                    expect_equivalent(as.array(crtabs(~ MR, data=part2)),
+                        array(c(2, 1, 1), dim=c(3L),
+                        dimnames=list(MR=c("mr_1", "mr_2", "mr_3"))))
                     expect_identical(length(batches(part1)), 1L)
                     expect_identical(length(batches(part2)), 1L)
                 })
@@ -19,6 +25,9 @@ if (run.integration.tests) {
                     expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
                     expect_true(is.Multiple(out$MR))
+                    expect_equivalent(as.array(crtabs(~ MR, data=out)),
+                        array(c(4, 2, 2), dim=c(3L),
+                        dimnames=list(MR=c("mr_1", "mr_2", "mr_3"))))
                     expect_true(is.dataset(refresh(part2)))
                 })
             })
@@ -29,8 +38,8 @@ if (run.integration.tests) {
             mr_cats <- categories(part1$MR)
             subvar_cats <- categories(part1$MR$mr_1)
             dichotomized_cats <- Categories(list(
-                list(id=1L, missing=FALSE, name="0.0", numeric_value=0, selected=FALSE), 
-                list(id=2L, missing=FALSE, name="1.0", numeric_value=1, selected=TRUE),
+                list(id=2L, missing=FALSE, name="0.0", numeric_value=0, selected=FALSE), 
+                list(id=1L, missing=FALSE, name="1.0", numeric_value=1, selected=TRUE),
                 list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL, selected=FALSE)))
             with(test.dataset(mrdf, "part2"), {
                 ## Dichotomize this way so that categories get aligned
@@ -39,11 +48,14 @@ if (run.integration.tests) {
                 unbind(part2$CA)
                 part2 <- refresh(part2)
                 undichotomized_cats <- Categories(list(
-                    list(id=1L, missing=FALSE, name="0.0", numeric_value=0),
-                    list(id=2L, missing=FALSE, name="1.0", numeric_value=1), 
+                    list(id=2L, missing=FALSE, name="0.0", numeric_value=0),
+                    list(id=1L, missing=FALSE, name="1.0", numeric_value=1), 
                     list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL)))
                 test_that("set up MR for appending", {
                     expect_true(is.Multiple(part1$MR))
+                    expect_equivalent(as.array(crtabs(~ MR, data=part1)),
+                        array(c(2, 1, 1), dim=c(3L),
+                        dimnames=list(MR=c("mr_1", "mr_2", "mr_3"))))
                     expect_true(is.null(part2$MR))
                     expect_identical(mr_cats, subvar_cats)
                     expect_identical(mr_cats, dichotomized_cats)
@@ -77,6 +89,9 @@ if (run.integration.tests) {
                     expect_true(is.Multiple(out$MR))
                     expect_identical(names(subvariables(out$MR)),
                         c("mr_1", "mr_2", "mr_3"))
+                    expect_equivalent(as.array(crtabs(~ MR, data=out)),
+                        array(c(4, 2, 2), dim=c(3L),
+                        dimnames=list(MR=c("mr_1", "mr_2", "mr_3"))))
                 })
             })
         })
@@ -85,8 +100,8 @@ if (run.integration.tests) {
             mr_cats <- categories(part1$MR)
             subvar_cats <- categories(part1$MR$mr_1)
             dichotomized_cats <- Categories(list(
-                list(id=1L, missing=FALSE, name="0.0", numeric_value=0, selected=FALSE), 
-                list(id=2L, missing=FALSE, name="1.0", numeric_value=1, selected=TRUE),
+                list(id=2L, missing=FALSE, name="0.0", numeric_value=0, selected=FALSE), 
+                list(id=1L, missing=FALSE, name="1.0", numeric_value=1, selected=TRUE),
                 list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL, selected=FALSE)))
             with(test.dataset(mrdf, "part2"), {                
                 cast.these <- grep("mr_", names(part2))
@@ -98,13 +113,14 @@ if (run.integration.tests) {
                     list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL)))
                 test_that("set up MR for appending", {
                     expect_true(is.Multiple(part1$MR))
+                    expect_equivalent(as.array(crtabs(~ MR, data=part1)),
+                        array(c(2, 1, 1), dim=c(3L),
+                        dimnames=list(MR=c("mr_1", "mr_2", "mr_3"))))
                     expect_true(is.null(part2$MR))
                     expect_identical(mr_cats, subvar_cats)
                     expect_identical(mr_cats, dichotomized_cats)
                     expect_identical(categories(part2$mr_1), 
                         undichotomized_cats)
-                    expect_false(identical(dichotomized_cats,
-                        undichotomized_cats)) ## Just being clear about that
                     expect_identical(as.vector(part1$MR$mr_1),
                         as.vector(part2$mr_1))
                     expect_identical(as.vector(part1$MR$mr_2),
@@ -119,7 +135,6 @@ if (run.integration.tests) {
                     expect_identical(length(batches(out)), 2L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
                     expect_true(is.variable(out$MR))
-                    # print(str(categories(out$MR)))
                     expect_identical(categories(out$MR), dichotomized_cats)
                     expect_identical(categories(out$MR$mr_1), dichotomized_cats)
                     expect_false(identical(categories(out$MR),
@@ -130,6 +145,9 @@ if (run.integration.tests) {
                     expect_true(is.Multiple(out$MR))
                     expect_identical(names(subvariables(out$MR)),
                         c("mr_1", "mr_2", "mr_3"))
+                    expect_equivalent(as.array(crtabs(~ MR, data=out)),
+                        array(c(4, 2, 2), dim=c(3L),
+                        dimnames=list(MR=c("mr_1", "mr_2", "mr_3"))))
                 })
             })
         })
@@ -142,9 +160,15 @@ if (run.integration.tests) {
                     expect_true(is.Multiple(part1$MR))
                     expect_identical(names(subvariables(part1$MR)),
                         c("mr_1", "mr_2"))
+                    expect_equivalent(as.array(crtabs(~ MR, data=part1)),
+                        array(c(2, 1), dim=c(2L),
+                        dimnames=list(MR=c("mr_1", "mr_2"))))
                     expect_true(is.Multiple(part2$MR))
                     expect_identical(names(subvariables(part2$MR)),
                         c("mr_2", "mr_3"))
+                    expect_equivalent(as.array(crtabs(~ MR, data=part2)),
+                        array(c(1, 1), dim=c(2L),
+                        dimnames=list(MR=c("mr_2", "mr_3"))))
                 })
                 out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("arrays with different subvariables can append", {
@@ -156,6 +180,9 @@ if (run.integration.tests) {
                     expect_true(is.Multiple(out$MR))
                     expect_identical(names(subvariables(out$MR)),
                         c("mr_1", "mr_2", "mr_3"))
+                    expect_equivalent(as.array(crtabs(~ MR, data=out)),
+                        array(c(2, 2, 1), dim=c(3L),
+                        dimnames=list(MR=c("mr_1", "mr_2", "mr_3"))))
                 })
             })
         })

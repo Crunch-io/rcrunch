@@ -181,3 +181,29 @@ bin <- function (x) {
     CrunchExpr(expression=zfunc("bin", x),
         dataset_url=datasetReference(x) %||% "")
 }
+
+
+##' @rdname expressions
+##' @export
+rollup <- function (x, resolution=rollupResolution(x)) {
+    valid_res <- c("Y", "Q", "M", "D", "h", "m", "s", "ms")
+    force(resolution)
+    if (!is.null(resolution) && !(resolution %in% valid_res)) {
+        halt(dQuote("resolution"), " is invalid. Valid values are NULL, ",
+            serialPaste(valid_res))
+    }
+    if (is.variable(x) && !is.Datetime(x)) {
+        halt("Cannot rollup a variable of type ", dQuote(type(x)))
+    }
+    CrunchExpr(expression=zfunc("rollup", x, list(value=resolution)), 
+        ## list() so that the resolution value won't get typed
+        dataset_url=datasetReference(x) %||% "")
+}
+
+rollupResolution <- function (x) {
+    if (is.Datetime(x)) {
+        return(x@body$view$rollup_resolution)
+    } else {
+        return(NULL)
+    }
+}
