@@ -100,3 +100,50 @@ addSourceToDataset <- function (dataset, source_url, ...) {
 .delete_all_my_datasets <- function () {
     lapply(urls(datasetCatalog()), crDELETE)
 }
+
+newDataset2 <- function (x, name=substitute(x),
+                                useAlias=default.useAlias(), ...) {
+    
+    is.2D <- !is.null(dim(x)) && length(dim(x)) %in% 2
+    if (!is.2D) {
+        halt("Can only make a Crunch dataset from a two-dimensional data ",
+            "structure")
+    }
+    
+    ## Get all the things
+    message("Processing the data")
+    vars <- lapply(names(x), 
+        function (i) toVariable(x[[i]], name=i, alias=i))
+    names(vars) <- names(x)
+    
+    ## Extract the data
+    cols <- lapply(vars, function (v) v[["values"]])
+    filename <- tempfile()
+    gf <- gzfile(filename, "w")
+    write.csv(cols, file=gf, na="", row.names=FALSE)
+    close(gf)
+    
+    ## Drop the columns from the metadata and compose the payload
+    vars <- lapply(vars, function (v) {
+        v[["values"]] <- NULL
+        return(v)
+    })
+    d <- list(element="shoji:entity", 
+                 body=list(name=name,
+                           ..., 
+                           table=list(element="crunch:table", metadata=vars)))
+    ## Send to Crunch
+    message("Uploading metadata")
+    dataset_url <- crPOST(sessionURL("datasets"), body=toJSON(d))
+    updateDatasetList()
+    ds <- entity(datasetCatalog()[[dataset_url]])
+    ds@useAlias <- useAlias
+    
+    message("Uploading data")
+    batches_url <- ds@catalogs$batches
+    crPOST(batches_url,
+        body=list(file=upload_file(filename)), ...)
+    message("Done!")
+    invisible(refresh(ds))
+}
+

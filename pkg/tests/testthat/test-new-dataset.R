@@ -94,6 +94,25 @@ if (run.integration.tests) {
                 })
             })
         })
+                
+        test_that("newDataset via CSV + JSON", {
+            ds <- newDataset2(df, name=uniqueDatasetName())
+                expect_true(is.dataset(ds))
+                expect_identical(names(df), names(ds))
+                expect_identical(dim(ds), dim(df))
+                expect_true(is.Numeric(ds[["v1"]]))
+                expect_true(is.Text(ds[["v2"]]))
+                expect_true(is.Numeric(ds[["v3"]]))
+                expect_true(is.Categorical(ds[["v4"]]))
+                expect_true(all(levels(df$v4) %in% names(categories(ds$v4))))
+                expect_identical(categories(ds$v4),
+                    categories(refresh(ds$v4)))
+                expect_identical(ds$v4, refresh(ds$v4))
+                expect_true(is.Datetime(ds$v5))
+                expect_true(is.Categorical(ds$v6))
+            delete(ds)
+        })
+        
         test_that("Datasets can be deleted", {
             dsname <- uniqueDatasetName()
             testdf <- newDataset(df, name=dsname)
