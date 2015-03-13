@@ -160,7 +160,7 @@ newDataset2 <- function (x, name=substitute(x),
 ##' @param file a path to a CSV file, optionally zipped, that corresponds to
 ##' the above metadata.
 ##' @return On success, a new dataset.
-createWithMetadataAndFile <- function (metadata, file) {
+createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
     message("Uploading metadata")
     dataset_url <- crPOST(sessionURL("datasets"), body=toJSON(metadata))
     updateDatasetList()
@@ -168,11 +168,29 @@ createWithMetadataAndFile <- function (metadata, file) {
     
     message("Uploading data")
     batches_url <- ds@catalogs$batches
-    crPOST(batches_url,
-        body=list(file=upload_file(file)))
+    if (!strict) {
+        batches_url <- paste0(batches_url, "?strict=0")
+    }
+    batch <- try(crPOST(batches_url,
+        body=list(file=httr::upload_file(file))))
+    if (is.error(batch)) {
+        delete(ds)
+        rethrow(batch)
+    }
     message("Done!")
     return(refresh(ds))
 }
+
+# createWithMetadataAndFile <- function (metadata, file) {
+#     ## Overwrite that and dump out the CSV and JSON, for debugging purposes
+#     message("Uploading metadata")
+#     cat(toJSON(metadata), file="example.json")
+#     
+#     message("Uploading data")
+#     file.copy(file, "example.csv.gz")
+#     message("Done!")
+#     return(c("example.json", "example.csv.gz"))
+# }
 
 ##' Wrap variable metadata inside a dataset entity
 ##'
