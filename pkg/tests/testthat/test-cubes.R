@@ -279,6 +279,16 @@ if (run.integration.tests) {
                         v7=c("C", "E"))))
             })
             
+            test_that("Missing values in cubes", {
+                expect_equivalent(round(as.array(crtabs(sd(v3) ~ bin(v3) + v7,
+                    data=ds)), 3),
+                    array(c(0.707, 1.581, 1, NaN, NaN,
+                            NaN, NaN, NaN, 0.707, 1), dim=c(5L, 2L),
+                        dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25",
+                        "25-30"),
+                        v7=c("C", "E"))))
+            })
+            
             skip(test_that("Cube with variables and R objects", {
                 d4 <- cubedf$v4
                 expect_equivalent(as.array(crtabs(~ d4 + v7, data=ds)),

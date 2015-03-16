@@ -14,7 +14,11 @@ cToA <- function (x, dims) {
     ## Just make an array from the cube "measure's" data. Nothing else
     
     d <- unlist(x$data)
-    d <- round(d) ## TODO digits should be an argument
+    ## Identify missing values
+    nas <- names(d) %in% "?"
+    d[nas & d == -8] <- NaN
+    d[nas & d != -8] <- NA
+    # d <- round(d) ## TODO digits should be an argument
     ## and rounding should also depend on whether you're looking at count or not
     
     dimsizes <- dim(dims)
