@@ -37,12 +37,13 @@ if (run.integration.tests) {
             })
         })
         test_that("newDatasetFromFile creates a dataset", {
-            ds <- newDatasetFromFile(testfile.csv, name=uniqueDatasetName())
+            with(test.dataset(newDatasetFromFile(testfile.csv,
+                                                name=uniqueDatasetName())), {
                 expect_true(is.dataset(ds))
                 expect_identical(nrow(ds), 20L)
                 expect_identical(ncol(ds), 6L)
                 expect_equivalent(mean(ds[[2]]), mean(testfile.df[[2]]))
-            delete(ds)
+            })
         })
 
         test_that("newDataset input validation", {
@@ -54,22 +55,24 @@ if (run.integration.tests) {
         
         test_that("newDataset by addVariables", {
             dsname <- uniqueDatasetName()
-            dx <- try(newDataset(df, name=dsname, description="a description"))
+            with(test.dataset(newDataset(df, name=dsname,
+                                        description="a description")), {
                 expect_true(dsname %in% listDatasets())
-                expect_true(is.dataset(dx))
-                expect_identical(description(dx), "a description")
-                expect_equivalent(mean(dx$v3), mean(df$v3))
-                expect_identical(dim(dx), dim(df))
-            try(delete(dx))
+                expect_true(is.dataset(ds))
+                expect_identical(description(ds), "a description")
+                expect_equivalent(mean(ds$v3), mean(df$v3))
+                expect_identical(dim(ds), dim(df))
+            })
         })
         
         test_that("newDataset passes useAlias", {
-            d1 <- newDataset(df, name=uniqueDatasetName())
-                expect_equal(d1@useAlias, default.useAlias())
-            delete(d1)
-            d1 <- newDataset(df, name=uniqueDatasetName(), useAlias=FALSE)
-                expect_false(d1@useAlias)
-            delete(d1)
+            with(test.dataset(newDataset(df, name=uniqueDatasetName())), 
+                expect_equal(ds@useAlias, default.useAlias())
+            )
+            with(test.dataset(newDataset(df, name=uniqueDatasetName(),
+                                        useAlias=FALSE)),
+                expect_false(ds@useAlias)
+            )
         })
         with(test.dataset(df), {
             test_that("Dataset variable types get set correctly", {
@@ -96,7 +99,8 @@ if (run.integration.tests) {
         })
                 
         test_that("newDataset via CSV + JSON", {
-            ds <- suppressMessages(newDataset2(df, name=uniqueDatasetName()))
+            with(test.dataset(suppressMessages(newDataset2(df,
+                                                name=uniqueDatasetName()))), {
                 expect_true(is.dataset(ds))
                 expect_identical(names(df), names(ds))
                 expect_identical(dim(ds), dim(df))
@@ -114,7 +118,7 @@ if (run.integration.tests) {
                 expect_identical(ds$v4, refresh(ds$v4))
                 expect_true(is.Datetime(ds$v5))
                 expect_true(is.Categorical(ds$v6))
-            delete(ds)
+            })
         })
         
         test_that("Datasets can be deleted", {

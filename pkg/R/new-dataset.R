@@ -183,24 +183,29 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
 
 # createWithMetadataAndFile <- function (metadata, file) {
 #     ## Overwrite that and dump out the CSV and JSON, for debugging purposes
-#     message("Uploading metadata")
+#     message("Writing metadata")
 #     cat(toJSON(metadata), file="example.json")
 #     
-#     message("Uploading data")
-#     file.copy(file, "example.csv.gz")
+#     message("Writing data")
+#     file.copy(file, "example.csv.gz", overwrite=TRUE)
 #     message("Done!")
-#     return(c("example.json", "example.csv.gz"))
+#     print(c("example.json", "example.csv.gz"))
+#     halt()
 # }
 
 ##' Wrap variable metadata inside a dataset entity
 ##'
 ##' @param metadata list of variable metadata
+##' @param order a valid "order" payload: list containing either aliases or 
+##' list(group, entities)
 ##' @param ... dataset entity metadata. "name" is required.
 ##' @param return list suitiable for JSONing and POSTing to create a dataset
-shojifyMetadata <- function (metadata, ...) {
+shojifyMetadata <- function (metadata, order=list(list(group="ungrouped",
+                            entities=I(names(metadata)))), ...) {
     return(list(element="shoji:entity", 
                  body=list(..., 
                            table=list(element="crunch:table",
-                                      metadata=metadata))))
+                                      metadata=metadata,
+                                      order=order))))
 }
 
