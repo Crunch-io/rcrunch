@@ -1,5 +1,25 @@
 context("Making a new dataset")
 
+validImport <- function (ds) {
+    ## Pull out common tests that "df" was imported correctly
+    expect_true(is.dataset(ds))
+    expect_identical(names(df), names(ds))
+    expect_identical(dim(ds), dim(df))
+    expect_true(is.Numeric(ds[["v1"]]))
+    expect_true(is.Text(ds[["v2"]]))
+    expect_true(is.Numeric(ds[["v3"]]))
+    expect_equivalent(as.array(crtabs(mean(v3) ~ v4, data=ds)),
+        tapply(df$v3, df$v4, mean, na.rm=TRUE))
+    expect_true(is.Categorical(ds[["v4"]]))
+    expect_equivalent(as.array(crtabs(~ v4, data=ds)), 
+        array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
+    expect_true(all(levels(df$v4) %in% names(categories(ds$v4))))
+    expect_identical(categories(ds$v4), categories(refresh(ds$v4)))
+    expect_identical(ds$v4, refresh(ds$v4))
+    expect_true(is.Datetime(ds$v5))
+    expect_true(is.Categorical(ds$v6))
+}
+
 test_that("fake.csv is what we expect", {
     expect_identical(dim(testfile.df), c(20L, 6L))
 })
@@ -37,12 +57,13 @@ if (run.integration.tests) {
             })
         })
         test_that("newDatasetFromFile creates a dataset", {
-            ds <- newDatasetFromFile(testfile.csv, name=uniqueDatasetName())
+            with(test.dataset(newDatasetFromFile(testfile.csv,
+                                                name=uniqueDatasetName())), {
                 expect_true(is.dataset(ds))
                 expect_identical(nrow(ds), 20L)
                 expect_identical(ncol(ds), 6L)
                 expect_equivalent(mean(ds[[2]]), mean(testfile.df[[2]]))
-            delete(ds)
+            })
         })
 
         test_that("newDataset input validation", {
@@ -54,36 +75,31 @@ if (run.integration.tests) {
         
         test_that("newDataset by addVariables", {
             dsname <- uniqueDatasetName()
-            dx <- try(newDataset(df, name=dsname, description="a description"))
+            with(test.dataset(newDatasetByColumn(df, name=dsname,
+                                        description="a description")), {
                 expect_true(dsname %in% listDatasets())
-                expect_true(is.dataset(dx))
-                expect_identical(description(dx), "a description")
-                expect_equivalent(mean(dx$v3), mean(df$v3))
-                expect_identical(dim(dx), dim(df))
-            try(delete(dx))
+                expect_true(is.dataset(ds))
+                expect_identical(description(ds), "a description")
+                expect_equivalent(mean(ds$v3), mean(df$v3))
+                expect_identical(dim(ds), dim(df))
+            })
         })
         
         test_that("newDataset passes useAlias", {
-            d1 <- newDataset(df, name=uniqueDatasetName())
-                expect_equal(d1@useAlias, default.useAlias())
-            delete(d1)
-            d1 <- newDataset(df, name=uniqueDatasetName(), useAlias=FALSE)
-                expect_false(d1@useAlias)
-            delete(d1)
+            with(test.dataset(suppressMessages(newDataset(df,
+                                                name=uniqueDatasetName()))), 
+                expect_equal(ds@useAlias, default.useAlias())
+            )
+            with(test.dataset(suppressMessages(newDataset(df,
+                                                name=uniqueDatasetName(),
+                                                useAlias=FALSE))),
+                expect_false(ds@useAlias)
+            )
         })
-        with(test.dataset(df), {
-            test_that("Dataset variable types get set correctly", {
-                expect_true(is.Numeric(ds[["v1"]]))
-                expect_true(is.Text(ds[["v2"]]))
-                expect_true(is.Numeric(ds[["v3"]]))
-                expect_true(is.Categorical(ds[["v4"]]))
-                expect_true(all(levels(df$v4) %in% names(categories(ds$v4))))
-                expect_identical(categories(ds$v4),
-                    categories(refresh(ds$v4)))
-                expect_identical(ds$v4, refresh(ds$v4))
-                expect_true(is.Datetime(ds$v5))
-                expect_true(is.Categorical(ds$v6))
-            })
+        with(test.dataset(newDatasetByColumn(df, name=uniqueDatasetName())), {
+            test_that("Dataset-by-column variable types get set correctly", 
+                validImport(ds)
+            )
             
             with(test.dataset(mrdf, "testmrdf"), {
                 test_that("names() are the same and in the right order", {
@@ -96,30 +112,15 @@ if (run.integration.tests) {
         })
                 
         test_that("newDataset via CSV + JSON", {
-            ds <- suppressMessages(newDataset2(df, name=uniqueDatasetName()))
-                expect_true(is.dataset(ds))
-                expect_identical(names(df), names(ds))
-                expect_identical(dim(ds), dim(df))
-                expect_true(is.Numeric(ds[["v1"]]))
-                expect_true(is.Text(ds[["v2"]]))
-                expect_true(is.Numeric(ds[["v3"]]))
-                expect_equivalent(as.array(crtabs(mean(v3) ~ v4, data=ds)),
-                    tapply(df$v3, df$v4, mean, na.rm=TRUE))
-                expect_true(is.Categorical(ds[["v4"]]))
-                expect_equivalent(as.array(crtabs(~ v4, data=ds)), 
-                    array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
-                expect_true(all(levels(df$v4) %in% names(categories(ds$v4))))
-                expect_identical(categories(ds$v4),
-                    categories(refresh(ds$v4)))
-                expect_identical(ds$v4, refresh(ds$v4))
-                expect_true(is.Datetime(ds$v5))
-                expect_true(is.Categorical(ds$v6))
-            delete(ds)
+            with(test.dataset(suppressMessages(newDatasetByCSV(df,
+                                                name=uniqueDatasetName()))), 
+                validImport(ds)
+            )
         })
         
         test_that("Datasets can be deleted", {
             dsname <- uniqueDatasetName()
-            testdf <- newDataset(df, name=dsname)
+            testdf <- suppressMessages(newDataset(df, name=dsname))
             expect_true(dsname %in% listDatasets())
             expect_true(crDELETE(self(testdf), 
                 response.handler=function (response) response$status_code==204))
@@ -127,7 +128,7 @@ if (run.integration.tests) {
             
             ## Do again but with the S4 method
             dsname <- uniqueDatasetName()
-            testdf <- newDataset(df, name=dsname)
+            testdf <- suppressMessages(newDataset(df, name=dsname))
             expect_true(dsname %in% listDatasets())
             delete(testdf)
             expect_false(dsname %in% listDatasets())

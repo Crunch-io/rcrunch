@@ -4,10 +4,14 @@
 \alias{shojifyMetadata}
 \title{Wrap variable metadata inside a dataset entity}
 \usage{
-shojifyMetadata(metadata, ...)
+shojifyMetadata(metadata, order = list(list(group = "ungrouped", entities =
+  I(names(metadata)))), ...)
 }
 \arguments{
 \item{metadata}{list of variable metadata}
+
+\item{order}{a valid "order" payload: list containing either aliases or
+list(group, entities)}
 
 \item{...}{dataset entity metadata. "name" is required.}
 

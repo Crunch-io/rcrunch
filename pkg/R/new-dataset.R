@@ -11,12 +11,40 @@
 newDataset <- function (x, name=substitute(x),
                                 useAlias=default.useAlias(), ...) {
 
+    Call <- match.call()
     is.2D <- !is.null(dim(x)) && length(dim(x)) %in% 2
     if (!is.2D) {
         halt("Can only make a Crunch dataset from a two-dimensional data ",
             "structure")
     }
     
+    if (is.data.frame(x) || nrow(x) > 1000000) {
+        Call[[1]] <- as.name("newDatasetByCSV")
+    } else {
+        Call[[1]] <- as.name("newDatasetByColumn")
+    }
+    ds <- eval.parent(Call)
+    invisible(ds)
+}
+
+
+##' Upload a data.frame column-by-column to make a new dataset
+##'
+##' Use this version if you have lots of variables, under 1M rows, perhaps
+##' backed by ff or other memory-mapped files, and time to kill.
+##'
+##' @param x a data.frame or other rectangular R object
+##' @param name character, the name to give the new Crunch dataset. Default is
+##' the name of the R object passed in \code{x}
+##' @param useAlias logical whether variable alias or name should be used as R
+##' variable names when the dataset is returned. Default is TRUE, meaning alias.
+##' @param ... additional arguments passed to \code{ \link{createDataset}}
+##' @return If successful, an object of class CrunchDataset.
+##' @seealso \code{\link{newDataset}} \code{\link{newDatasetByCSV}}
+##' @export
+newDatasetByColumn <- function (x, name=substitute(x),
+                                useAlias=default.useAlias(), ...) {
+
     ds <- createDataset(name=name, useAlias=useAlias, ...)
     ds <- addVariables(ds, x)
     invisible(ds)
@@ -113,16 +141,10 @@ addSourceToDataset <- function (dataset, source_url, ...) {
 ##' variable names when the dataset is returned. Default is TRUE, meaning alias.
 ##' @param ... additional arguments passed to \code{ \link{createDataset}}
 ##' @return If successful, an object of class CrunchDataset.
-##' @seealso \code{\link{newDataset}}
+##' @seealso \code{\link{newDataset}} \code{\link{newDatasetByColumn}}
 ##' @export
-newDataset2 <- function (x, name=substitute(x),
+newDatasetByCSV <- function (x, name=substitute(x),
                                 useAlias=default.useAlias(), ...) {
-    
-    is.2D <- !is.null(dim(x)) && length(dim(x)) %in% 2
-    if (!is.2D) {
-        halt("Can only make a Crunch dataset from a two-dimensional data ",
-            "structure")
-    }
     
     ## Get all the things
     message("Processing the data")
@@ -183,24 +205,29 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
 
 # createWithMetadataAndFile <- function (metadata, file) {
 #     ## Overwrite that and dump out the CSV and JSON, for debugging purposes
-#     message("Uploading metadata")
+#     message("Writing metadata")
 #     cat(toJSON(metadata), file="example.json")
 #     
-#     message("Uploading data")
-#     file.copy(file, "example.csv.gz")
+#     message("Writing data")
+#     file.copy(file, "example.csv.gz", overwrite=TRUE)
 #     message("Done!")
-#     return(c("example.json", "example.csv.gz"))
+#     print(c("example.json", "example.csv.gz"))
+#     halt()
 # }
 
 ##' Wrap variable metadata inside a dataset entity
 ##'
 ##' @param metadata list of variable metadata
+##' @param order a valid "order" payload: list containing either aliases or 
+##' list(group, entities)
 ##' @param ... dataset entity metadata. "name" is required.
 ##' @param return list suitiable for JSONing and POSTing to create a dataset
-shojifyMetadata <- function (metadata, ...) {
+shojifyMetadata <- function (metadata, order=list(list(group="ungrouped",
+                            entities=I(names(metadata)))), ...) {
     return(list(element="shoji:entity", 
                  body=list(..., 
                            table=list(element="crunch:table",
-                                      metadata=metadata))))
+                                      metadata=metadata,
+                                      order=order))))
 }
 
