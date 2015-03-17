@@ -130,7 +130,7 @@ new.dataset.with.setup <- function (df=NULL, ...) {
     } else if (is.null(df)) {
         out <- createDataset(name=unique.name, ...)
     } else {
-        out <- suppressMessages(newDataset2(df, name=unique.name, ...))
+        out <- suppressMessages(newDataset(df, name=unique.name, ...))
     }
     datasets_to_purge <<- c(datasets_to_purge, self(out))
     return(out)

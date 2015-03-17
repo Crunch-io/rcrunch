@@ -4,7 +4,7 @@
 \alias{createWithMetadataAndFile}
 \title{Make a dataset with metadata and a CSV}
 \usage{
-createWithMetadataAndFile(metadata, file)
+createWithMetadataAndFile(metadata, file, strict = TRUE)
 }
 \arguments{
 \item{metadata}{a list representation of the dataset's metadata, which
