@@ -20,4 +20,5 @@ list(group, entities)}
 \description{
 Wrap variable metadata inside a dataset entity
 }
+\keyword{internal}
 

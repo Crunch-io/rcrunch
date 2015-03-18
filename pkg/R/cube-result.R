@@ -136,6 +136,7 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     return(margin.table(data, margin))
 }
 
+##' @export
 setMethod("margin.table", "CrunchCube", function (x, margin=NULL) {
     cubeMarginTable(x, margin)
 })
@@ -143,6 +144,7 @@ setMethod("margin.table", "CrunchCube", function (x, margin=NULL) {
 ##' @export
 as.array.CrunchCube <- function (x, ...) cubeToArray(x, ...)
 
+##' @export
 setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
     out <- as.array(x)
     marg <- margin.table(x, margin)

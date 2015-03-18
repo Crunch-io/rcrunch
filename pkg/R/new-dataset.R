@@ -182,6 +182,8 @@ newDatasetByCSV <- function (x, name=substitute(x),
 ##' @param file a path to a CSV file, optionally zipped, that corresponds to
 ##' the above metadata.
 ##' @return On success, a new dataset.
+##' @export
+##' @keywords internal
 createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
     message("Uploading metadata")
     dataset_url <- crPOST(sessionURL("datasets"), body=toJSON(metadata))
@@ -222,6 +224,8 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
 ##' list(group, entities)
 ##' @param ... dataset entity metadata. "name" is required.
 ##' @param return list suitiable for JSONing and POSTing to create a dataset
+##' @export
+##' @keywords internal
 shojifyMetadata <- function (metadata, order=list(list(group="ungrouped",
                             entities=I(names(metadata)))), ...) {
     return(list(element="shoji:entity", 
