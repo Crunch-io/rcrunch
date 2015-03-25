@@ -14,7 +14,11 @@ cToA <- function (x, dims) {
     ## Just make an array from the cube "measure's" data. Nothing else
     
     d <- unlist(x$data)
-    d <- round(d) ## TODO digits should be an argument
+    ## Identify missing values
+    nas <- names(d) %in% "?"
+    d[nas & d == -8] <- NaN
+    d[nas & d != -8] <- NA
+    # d <- round(d) ## TODO digits should be an argument
     ## and rounding should also depend on whether you're looking at count or not
     
     dimsizes <- dim(dims)
@@ -132,6 +136,7 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     return(margin.table(data, margin))
 }
 
+##' @export
 setMethod("margin.table", "CrunchCube", function (x, margin=NULL) {
     cubeMarginTable(x, margin)
 })
@@ -139,6 +144,7 @@ setMethod("margin.table", "CrunchCube", function (x, margin=NULL) {
 ##' @export
 as.array.CrunchCube <- function (x, ...) cubeToArray(x, ...)
 
+##' @export
 setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
     out <- as.array(x)
     marg <- margin.table(x, margin)

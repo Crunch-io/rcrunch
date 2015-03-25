@@ -123,10 +123,14 @@ uniqueDatasetName <- now
 datasets_to_purge <- c()
 new.dataset.with.setup <- function (df=NULL, ...) {
     unique.name <- uniqueDatasetName()
-    if (is.null(df)) {
+    if (is.dataset(df)) {
+        ## Passing a dataset already made in, just to ensure its cleanup
+        ## Just return it
+        out <- df
+    } else if (is.null(df)) {
         out <- createDataset(name=unique.name, ...)
     } else {
-        out <- newDataset(df, name=unique.name, ...)
+        out <- suppressMessages(newDataset(df, name=unique.name, ...))
     }
     datasets_to_purge <<- c(datasets_to_purge, self(out))
     return(out)

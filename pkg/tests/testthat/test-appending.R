@@ -242,5 +242,41 @@ if (run.integration.tests) {
                 })
             })
         })
+        
+        lets <- LETTERS[1:5]
+        cat1 <- data.frame(A=1, B=1:5, C=factor(c(2, 3, 1, 5, 4), labels=lets))
+        cat2 <- data.frame(A=1, B=1:5, C=factor(c(2, 3, 1, 5, 4),
+            labels=rev(lets)))
+        with(test.dataset(cat1, "part1"), {
+            with(test.dataset(cat2, "part2"), {
+                test_that("Setup", {
+                    expect_identical(as.character(as.vector(part1$C)),
+                        c("B", "C", "A", "E", "D"))
+                    c1 <- categories(part1$C)
+                    print(str(c1))
+                    expect_identical(names(c1), lets)
+                    expect_equivalent(values(c1), 1:5)
+                    expect_equivalent(ids(c1), 1:5)
+                    expect_identical(as.character(as.vector(part2$C)),
+                        c("D", "C", "E", "A", "B"))
+                    c2 <- categories(part2$C)
+                    print(str(c2))
+                    expect_identical(names(c2), rev(lets))
+                    expect_equivalent(values(c2), 1:5)
+                    expect_equivalent(ids(c2), 1:5)
+                })
+                out <- suppressMessages(try(appendDataset(part1, part2)))
+                test_that("Categories with different ids and values line up by name", {
+                    expect_identical(as.character(as.vector(out$C)),
+                        c("B", "C", "A", "E", "D", "D", "C", "E", "A", "B"))
+                    cout <- categories(out$C)
+                    print(str(cout))
+                    ## Order comes from the "part1" dataset
+                    expect_identical(names(cout), lets)
+                    expect_equivalent(values(cout), 1:5)
+                    expect_equivalent(ids(cout), 1:5)
+                })
+            })
+        })
     })
 }
