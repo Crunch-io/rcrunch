@@ -1,5 +1,5 @@
 ## ----, message=FALSE-----------------------------------------------------
-library(rcrunch)
+library(crunch)
 
 ## ----, eval=FALSE--------------------------------------------------------
 #  login(email="xkcd@crunch.io", password="correct horse battery staple")

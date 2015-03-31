@@ -6,7 +6,7 @@
 [Previous: array variables](array-variables.html)
 
 ```{r, results='hide', echo=FALSE, message=FALSE, eval=FALSE}
-library(rcrunch)
+library(crunch)
 load("variable-order.RData")
 ```
 
@@ -16,7 +16,7 @@ In the web application, variables in a dataset are displayed in a list on the le
 
 <!-- screenshot -->
 
-Typically, when you import a dataset, the variable list is flat, but it can be organized into an accordion-like hierarchy. The variable organizer in the GUI allows you to perform this organization visually, but you can also manage this metadata from `rcrunch`.
+Typically, when you import a dataset, the variable list is flat, but it can be organized into an accordion-like hierarchy. The variable organizer in the GUI allows you to perform this organization visually, but you can also manage this metadata from `crunch`.
 
 ## Viewing the order
 

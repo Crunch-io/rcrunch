@@ -1,4 +1,4 @@
-library(rcrunch)
+library(crunch)
 options(crunch.api=getOption("test.api"), 
         crunch.debug=FALSE,
         crunch.email=getOption("test.user"),

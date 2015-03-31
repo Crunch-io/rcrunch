@@ -86,7 +86,7 @@ handleAPIresponse <- function (response, special.statuses=list()) {
         if (code == 410) {
             halt("The API resource at ",
                 response$url, 
-                " has moved permanently. Please upgrade rcrunch to the ",
+                " has moved permanently. Please upgrade crunch to the ",
                 "latest version.")
         }
         msg <- http_status(response)$message
@@ -127,7 +127,7 @@ crunchUserAgent <- function (x) {
         curl = RCurl::curlVersion()$version,
         Rcurl = as.character(packageVersion("RCurl")),
         httr = as.character(packageVersion("httr")),
-        rcrunch = as.character(packageVersion("rcrunch"))
+        rcrunch = as.character(packageVersion("crunch"))
     )
     ua <- paste0(names(versions), "/", versions, collapse = " ")
     if (!missing(x)) ua <- paste(ua, x)

@@ -72,9 +72,9 @@ table <- function (..., exclude, useNA, dnn, deparse.level) {
         if (!is.Categorical(dots[[1]])) {
             halt("Only CategoricalVariables currently supported for table()")
         }
-        m[[1]] <- get("CategoricalVariable.table", asNamespace("rcrunch"))
+        m[[1]] <- get("CategoricalVariable.table", asNamespace("crunch"))
         where <- parent.frame()
-        return(eval(m, envir=where, enclos=asNamespace("rcrunch")))
+        return(eval(m, envir=where, enclos=asNamespace("crunch")))
     } else if (any(are.vars)) {
         halt("Cannot currently tabulate Crunch variables with ", 
             "non-Crunch vectors")

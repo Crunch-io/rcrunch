@@ -1,11 +1,13 @@
-Package: rcrunch
+Package: crunch
 Type: Package
 Title: Crunch.io Data Tools
 Description: An interface for accessing and manipulating datasets in Crunch.io
-Version: 0.11.1
-Date: 2015-03-13
+Version: 1.0.0
+Date: 2015-03-31
 Authors@R: c(person("Neal", "Richardson", role = c("aut", "cre"),
     email = "neal@crunch.io"))
+Author: Neal Richardson [aut, cre]
+Maintainer: Neal Richardson <neal@crunch.io>
 URL: https://github.com/Crunch-io/rcrunch
 BugReports: https://github.com/Crunch-io/rcrunch/issues
 License: LGPL (>= 3)

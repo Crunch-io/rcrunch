@@ -18,3 +18,6 @@ clean:
 
 check:
 	R CMD CHECK --as-cran pkg
+
+vdata:
+	cd vignette-data && find *.R | xargs -n 1 R -f

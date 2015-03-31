@@ -4,7 +4,7 @@
 \alias{crtabs}
 \title{Crunch xtabs: Crosstab and otherwise aggregate variables in a Crunch Dataset}
 \usage{
-crtabs(formula, data, weight = rcrunch::weight(data), useNA = c("no",
+crtabs(formula, data, weight = crunch::weight(data), useNA = c("no",
   "ifany", "always"))
 }
 \arguments{

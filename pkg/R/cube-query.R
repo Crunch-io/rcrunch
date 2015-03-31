@@ -14,7 +14,7 @@
 ##' \code{\link[base]{table}}.
 ##' @return an object of class \code{CrunchCube}
 ##' @export
-crtabs <- function (formula, data, weight=rcrunch::weight(data), 
+crtabs <- function (formula, data, weight=crunch::weight(data), 
                      useNA=c("no", "ifany", "always")) {
     ## Validate "formula"
     if (missing(formula)) {

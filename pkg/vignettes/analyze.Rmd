@@ -1,6 +1,6 @@
 <!--
 %\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Analyzing data with rcrunch}
+%\VignetteIndexEntry{Analyzing data with crunch}
 -->
 
 [Previous: transform and derive](derive.html)
