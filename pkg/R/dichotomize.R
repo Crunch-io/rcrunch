@@ -14,7 +14,7 @@
 ##' "names". Note that unlike some other categorical variable methods, 
 ##' numeric indices are positional, not with reference to category ids.
 ##' @return Categories or the Variable, (un)dichotomized accoringly
-##' @rdname dichotomize
+##' @name dichotomize
 ##' @aliases dichotomize is.dichotomized undichotomize
 ##' @seealso describe-category
 ##' @export

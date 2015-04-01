@@ -9,7 +9,9 @@
 \alias{aliases<-,Subvariables-method}
 \alias{aliases<-,VariableCatalog-method}
 \alias{describe-catalog}
+\alias{descriptions}
 \alias{descriptions,VariableCatalog-method}
+\alias{descriptions<-}
 \alias{descriptions<-,VariableCatalog-method}
 \alias{names,CrunchDataset-method}
 \alias{names,DatasetCatalog-method}

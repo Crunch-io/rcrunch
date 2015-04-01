@@ -10,7 +10,7 @@
 ##' @param simplify logical: should variable URLs inside of groups be flattened 
 ##' or preserved in their nested lists? Default is \code{FALSE}.
 ##' @return Variable references, VariableGroups, or group names, as appropriate.
-##' @rdname VariableOrder-slots
+##' @name VariableOrder-slots
 ##' @seealso VariableOrder
 ##' @seealso grouped
 ##' @aliases entities entities<-

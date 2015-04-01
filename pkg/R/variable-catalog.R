@@ -107,7 +107,7 @@ setMethod("[<-", c("VariableCatalog", "VariableGroup", "missing", "VariableCatal
 ##' @return Getters return the character object in the specified slot; setters
 ##' return \code{x} duly modified.
 ##' @export
-##' @aliases describe-catalog aliases aliases<-
+##' @aliases describe-catalog aliases aliases<- descriptions descriptions<-
 ##' @seealso Subvariables Categories \code{\link[base]{names}}
 ##' @rdname describe-catalog
 setMethod("names", "VariableCatalog", function (x) {

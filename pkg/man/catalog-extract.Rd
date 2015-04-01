@@ -3,7 +3,6 @@
 \docType{methods}
 \name{[[,DatasetCatalog,character-method}
 \alias{[,ShojiCatalog,ANY-method}
-\alias{[,ShojiCatalog,character-method}
 \alias{[,ShojiCatalog,logical-method}
 \alias{[,ShojiCatalog,numeric-method}
 \alias{[,VariableCatalog,VariableGroup-method}
@@ -18,6 +17,7 @@
 \alias{[[,VariableCatalog,character-method}
 \alias{[[<-,VariableCatalog,character,missing,CrunchVariable-method}
 \alias{[[<-,VariableCatalog,character,missing,VariableTuple-method}
+\alias{catalog-extract}
 \title{Extract and modify subsets of Catalog-type objects}
 \usage{
 \S4method{[[}{DatasetCatalog,character}(x, i, j, ...)

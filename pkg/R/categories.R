@@ -126,7 +126,7 @@ setMethod("na.omit", "Categories", function (object, ...) {
 ##' remain missing.
 ##' @return Getters return logical, a named vector in the case of the Categories
 ##' method; setters return \code{x} duly modified.
-##' @rdname is-na-categories
+##' @name is-na-categories
 ##' @aliases is-na-categories
 ##' @export
 setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical(1), USE.NAMES=FALSE), .Names=names(x)))

@@ -1,9 +1,7 @@
-## Variable methods
-
 ##' Hide and Unhide Variables
 ##' @param x a Variable or subset of a VariableCatalog to hide or unhide
 ##' @return (invisibly) the Variable or VariableCatalog, hidden or unhidden
-##' @rdname hide
+##' @name hide
 ##' @aliases hide unhide
 ##' @export
 setMethod("hide", "CrunchVariable", function (x) {
@@ -25,8 +23,6 @@ setMethod("unhide", "CrunchVariable", function (x) {
 setMethod("unhide", "VariableCatalog", function (x) {
     invisible(setIndexSlot(x, "discarded", FALSE))
 })
-
-## Dataset methods
 
 ##' Hide and Unhide Variables Within a Dataset
 ##' @param dataset the Dataset to modify

@@ -53,7 +53,7 @@ dirtyElements <- function (x, y) {
 ##' @param value For updating, an object of the appropriate class and size to 
 ##' insert
 ##' @return A subset of \code{x} if extracting, otherwise \code{x} duly modified
-##' @rdname catalog-extract
+##' @name catalog-extract
 ##' @export
 setMethod("[", c("ShojiCatalog", "character"), function (x, i, ...) {
     w <- match(i, urls(x))
@@ -95,6 +95,7 @@ setMethod("[[", c("ShojiCatalog", "ANY"), function (x, i, ...) {
 ##' Length of Catalog
 ##' @param x a Catalog
 ##' @return Integer: the number of elements in the index list
+##' @name catalog-length
 ##' @export
 setMethod("length", "ShojiCatalog", function (x) length(index(x)))
 setMethod("lapply", "ShojiCatalog", function (X, FUN, ...) lapply(index(X), FUN, ...))
@@ -110,7 +111,7 @@ setMethod("lapply", "ShojiCatalog", function (X, FUN, ...) lapply(index(X), FUN,
 ##' return \code{x} duly modified.
 ##' @export
 ##' @aliases index index<-
-##' @rdname index
+##' @name index
 setMethod("index", "ShojiCatalog", function (x) x@index)
 ##' @rdname index
 ##' @export

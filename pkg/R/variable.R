@@ -126,6 +126,7 @@ setMethod("alias<-", "CrunchVariable",
 ##' @param x a Variable
 ##' @param value for the setters, an object of class Categories to set. 
 ##' @return Getters return Categories; setters return \code{x} duly modified.
+##' @name var-categories
 ##' @rdname var-categories
 ##' @aliases var-categories categories categories<-
 ##' @export

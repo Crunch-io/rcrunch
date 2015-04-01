@@ -78,7 +78,7 @@ as.dataset <- function (x, useAlias=default.useAlias(), tuple=DatasetTuple()) {
 ##' non-hidden variables in the dataset. Array subvariables are excluded from
 ##' the column count.
 ##' @seealso \code{\link[base]{dim}}
-##' @rdname dim-dataset
+##' @name dim-dataset
 ##' @export
 setMethod("dim", "CrunchDataset",
     function (x) c(x@.nrow, length(variables(x))))
@@ -160,6 +160,7 @@ setMethod("refresh", "CrunchDataset", function (x) {
 ##' interactive session.
 ##' @param ... additional arguments, in the generic
 ##' @seealso hide deleteDataset
+##' @name delete
 ##' @rdname delete
 ##' @aliases delete
 ##' @export

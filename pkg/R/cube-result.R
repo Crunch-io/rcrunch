@@ -136,6 +136,22 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     return(margin.table(data, margin))
 }
 
+##' Work with CrunchCubes
+##'
+##' Crunch.io supports more complex data types than base R does, such as
+##' multiple response and array types. If you want to compute margin or 
+##' proportion tables on an aggregation of these variable types, special methods
+##' are required. These functions provide an interface like
+##' \code{\link[base]{margin.table}} and \code{\link[base]{prop.table}} for 
+##' the CrunchCube object, handling those special data types.
+##' 
+##' @param x a CrunchCube
+##' @param margin index, or vector of indices to generate margin for. See
+##' \code{\link[base]{prop.table}}
+##' @return The appropriate margin.table or prop.table. 
+##' @rdname cube-computing
+##' @aliases cube-computing margin.table prop.table
+##' @seealso \code{\link[base]{margin.table}} \code{\link[base]{prop.table}}
 ##' @export
 setMethod("margin.table", "CrunchCube", function (x, margin=NULL) {
     cubeMarginTable(x, margin)
@@ -144,6 +160,7 @@ setMethod("margin.table", "CrunchCube", function (x, margin=NULL) {
 ##' @export
 as.array.CrunchCube <- function (x, ...) cubeToArray(x, ...)
 
+##' @rdname cube-computing
 ##' @export
 setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
     out <- as.array(x)

@@ -9,9 +9,15 @@
 ##' @param x an input
 ##' @param table For \code{\%in\%}. See \code{\link[base]{match}}
 ##' @param mode For \code{as.vector}. Ignored.
+##' @param resolution For \code{rollup}. Either \code{NULL} or a character in 
+##' c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms") indicating the unit of 
+##' time at which a Datetime variable should be aggregated. If \code{NULL}, 
+##' the server will determine an appropriate resolution based on the range of
+##' the data. 
 ##' @return Most functions return a CrunchExpr or CrunchLogicalExpr. 
 ##' \code{as.vector} returns an R vector.
 ##' @aliases expressions
+##' @name expressions
 ##' @rdname expressions
 ##' @export
 setMethod("as.vector", "CrunchExpr", function (x, mode) {
@@ -186,7 +192,7 @@ bin <- function (x) {
 ##' @rdname expressions
 ##' @export
 rollup <- function (x, resolution=rollupResolution(x)) {
-    valid_res <- c("Y", "Q", "M", "D", "h", "m", "s", "ms")
+    valid_res <- c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms")
     force(resolution)
     if (!is.null(resolution) && !(resolution %in% valid_res)) {
         halt(dQuote("resolution"), " is invalid. Valid values are NULL, ",

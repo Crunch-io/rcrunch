@@ -2,9 +2,9 @@ init.VariableOrder <- function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     dots <- list(...)
     if (length(dots) && !is.shoji(dots[[1]])) {
-        .Object@graph <- .initEntities(dots, u=NULL)
+        .Object@graph <- .initEntities(dots, url.base=NULL)
     } else {
-        .Object@graph <- .initEntities(.Object@graph, u=.Object@self)
+        .Object@graph <- .initEntities(.Object@graph, url.base=.Object@self)
     }
     return(.Object)
 }
@@ -98,6 +98,7 @@ as.list.VariableGroup <- function (x, ...) x@entities
 ##' Length of VariableOrder
 ##' @param x a VariableOrder
 ##' @return Integer: the number of VariableGroups in the VariableOrder
+##' @name VariableOrder-length
 ##' @export
 setMethod("length", "VariableOrder", function (x) length(entities(x)))
 
