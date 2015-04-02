@@ -54,7 +54,7 @@ is.shojiObject <- function (x) inherits(x, "ShojiObject")
 ##' @param x a Crunch object
 ##' @return the URL for \code{x}
 ##' @aliases self
-##' @rdname self
+##' @name self
 ##' @export
 setMethod("self", "ShojiObject", function (x) x@self)
 

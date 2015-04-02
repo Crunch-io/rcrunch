@@ -92,24 +92,8 @@ setMethod("[<-", c("VariableCatalog", "VariableGroup", "missing", "VariableCatal
     callNextMethod(x, i, value=value)
 })
 
-##' Get and set names, aliases on Catalog-type objects
-##' 
-##' These methods let you get and set names and aliases for variables in a
-##' Dataset's catalog, or within \code{\link{Subvariables}} in an array 
-##' variable. They work like the base R names methods.
-##'
-##' Note that the \code{names} method on a Dataset returns the aliases of its
-##' variables by default. See the vignette on variables for more information.
-##'
-##' @param x a VariableCatalog, Subvariables, or similar object
-##' @param value For the setters, an appropriate-length character vector to
-##' assign
-##' @return Getters return the character object in the specified slot; setters
-##' return \code{x} duly modified.
-##' @export
-##' @aliases describe-catalog aliases aliases<- descriptions descriptions<-
-##' @seealso Subvariables Categories \code{\link[base]{names}}
 ##' @rdname describe-catalog
+##' @export
 setMethod("names", "VariableCatalog", function (x) {
     vapply(index(x), function (a) a[["name"]], character(1), USE.NAMES=FALSE)
 })

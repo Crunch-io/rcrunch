@@ -11,7 +11,7 @@
 ##' Default is FALSE, and the TRUE option is in fact not implemented.
 ##' @param ... additional arguments
 ##' @return \code{[} yields a Dataset; \code{[[} and \$ return a Variable
-##' @rdname dataset-extract
+##' @name dataset-extract
 ##' @aliases dataset-extract
 ##' @export
 setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
@@ -148,7 +148,7 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 ##' or R vectors of the corresponding type
 ##' @return \code{x}, modified.
 ##' @aliases dataset-update
-##' @rdname dataset-update
+##' @name dataset-update
 ##' @export
 setMethod("[[<-", 
     c("CrunchDataset", "character", "missing", "CrunchVariable"), 

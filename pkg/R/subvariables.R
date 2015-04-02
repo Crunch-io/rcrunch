@@ -21,7 +21,7 @@
 ##' @param x A Variable or Subvariables object
 ##' @param value For the setters, the appropriate values to set
 ##'
-##' @rdname Subvariables
+##' @name Subvariables
 ##' @aliases Subvariables subvariables subvariables<-
 ##' @seealso subvars-extract describe-catalog
 ##' @export
@@ -99,7 +99,7 @@ setMethod("aliases<-", "Subvariables", function (x, value) {
 ##' @param ... additional arguments
 ##' @param value For updating, a CrunchExpr
 ##' @return A subset of \code{x} if extracting, otherwise \code{x} duly modified
-##' @rdname subvars-extract
+##' @name subvars-extract
 ##' @export
 setMethod("[[", c("Subvariables", "character"), function (x, i, ...) {
     i <- match(i, names(x))

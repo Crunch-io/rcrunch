@@ -10,7 +10,7 @@
 ##' @param value What to set in a given slot
 ##' @param confirm For \code{delete}, whether confirmation is required. See
 ##' \code{\link{delete}}.
-##' @rdname tuple-methods
+##' @name tuple-methods
 ##' @aliases entity
 ##' @export
 setMethod("refresh", "IndexTuple", function (x) {

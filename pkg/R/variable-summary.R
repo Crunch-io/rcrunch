@@ -96,7 +96,8 @@ table <- function (..., exclude, useNA, dnn, deparse.level) {
 ##' @return a summary response. Categorical variable summaries should work like
 ##' summary.factor; Numeric variables should be like summary.numeric. Other
 ##' Variable types are not yet supported.
-##' @rdname crunch-summary
+##' @name crunch-summary
+##' @keywords internal
 ##' @export
 summary.CategoricalVariable <- function (object, ...) {
     tab <- table(object)

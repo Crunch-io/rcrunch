@@ -149,7 +149,7 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
 ##' @param margin index, or vector of indices to generate margin for. See
 ##' \code{\link[base]{prop.table}}
 ##' @return The appropriate margin.table or prop.table. 
-##' @rdname cube-computing
+##' @name cube-computing
 ##' @aliases cube-computing margin.table prop.table
 ##' @seealso \code{\link[base]{margin.table}} \code{\link[base]{prop.table}}
 ##' @export

@@ -92,7 +92,7 @@ setMethod("ids<-", "Categories", function (x, value) {
 ##' @param .inf argument to the generic, not used
 ##' @param ... additional arguments argument to the generic, not used
 ##' @return JSON-serialized character object
-##' @rdname tojson-crunch
+##' @name tojson-crunch
 ##' @export
 setMethod("toJSON", "Categories", function (x, ...) toJSON(I(x@.Data)))
 
@@ -111,6 +111,7 @@ setMethod("toJSON", "Categories", function (x, ...) toJSON(I(x@.Data)))
 ##' @param object Categories
 ##' @param ... additional arguments, ignored
 ##' @return \code{object} with any categories that have missing: TRUE excluded
+##' @name na-omit-categories
 ##' @export
 setMethod("na.omit", "Categories", function (object, ...) {
     Categories(.na.omit.categories(object))

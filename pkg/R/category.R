@@ -53,7 +53,7 @@ setValue <- function (x, value) {
 ##' @return \code{\$} returns the value of the desired field. Setter
 ##' returns \code{x} duly modified.
 ##' @seealso describe-category
-##' @rdname category-extract
+##' @name category-extract
 ##' @export
 setMethod("$", "Category", function (x, name) x[[name]])
 ##' @rdname category-extract
@@ -71,7 +71,7 @@ setMethod("$<-", "Category", function (x, name, value) {
 ##' numeric; value but not id may be \code{NA}; \code{is.selected} returns
 ##' logical indicating whether this Category is a "selected" dichotomy. Setters
 ##' return \code{x} duly modified.
-##' @rdname describe-category
+##' @name describe-category
 ##' @aliases value value<- id is.selected describe-category
 ##' @seealso Categories dichotomize
 ##' @export
@@ -103,7 +103,13 @@ showCategory <- function (x) {
     return(out)
 }
 
-##' @rdname show-crunch
+##' Show methods for Crunch objects
+##'
+##' @param object the object
+##' @return invisibly
+##' @seealso \code{\link[methods]{show}}
+##' @importFrom methods show
+##' @name show-crunch
 ##' @export
 setMethod("show", "Category", function (object) {
     out <- showCategory(object)

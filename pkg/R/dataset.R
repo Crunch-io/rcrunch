@@ -49,7 +49,7 @@ setDatasetDescription <- function (x, value) {
 ##' @param value For the setters, a length-1 character vector to assign
 ##' @return Getters return the character object in the specified slot; setters
 ##' return \code{x} duly modified.
-##' @rdname describe
+##' @name describe
 ##' @aliases describe name name<- description description<- alias<-
 ##' @seealso describe-categories describe-catalog
 ##' @export
@@ -140,7 +140,7 @@ setMethod("tuple<-", "CrunchDataset", function (x, value) {
 ##' 
 ##' @param x pretty much any Crunch object
 ##' @return a new version of \code{x}
-##' @rdname refresh
+##' @name refresh
 ##' @aliases refresh
 ##' @export
 setMethod("refresh", "CrunchDataset", function (x) {
@@ -207,7 +207,7 @@ summaryURL <- function (x) shojiURL(x, "views", "summary")
 ##' @param value For the setters, a VariableCatalog to assign.
 ##' @return Getters return VariableCatalog; setters return \code{x} duly
 ##' modified.
-##' @rdname dataset-variables
+##' @name dataset-variables
 ##' @aliases dataset-variables variables variables<- allVariables allVariables<-
 ##' @export
 setMethod("variables", "CrunchDataset", function (x) active(allVariables(x)))

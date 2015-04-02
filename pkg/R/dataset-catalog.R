@@ -25,7 +25,17 @@ setMethod("archived", "DatasetCatalog", function (x) {
     return(x)
 })
 
-##' @rdname catalog-extract
+##' Extract and modify subsets of Catalog-type objects
+##'
+##' @param x a Catalog object
+##' @param i which catalog elements to extract
+##' @param j Invalid
+##' @param drop Invalid
+##' @param ... additional arguments
+##' @param value For updating, an object of the appropriate class and size to 
+##' insert
+##' @return A subset of \code{x} if extracting, otherwise \code{x} duly modified
+##' @name catalog-extract
 ##' @export
 setMethod("[[", c("DatasetCatalog", "character"), function (x, i, ...) {
     DatasetTuple(index_url=self(x), entity_url=i, body=index(x)[[i]])
@@ -37,7 +47,24 @@ setMethod("[[", c("DatasetCatalog", "ANY"), function (x, i, ...) {
         body=index(x)[[i]])
 })
 
-##' @rdname describe-catalog
+##' Get and set names, aliases on Catalog-type objects
+##' 
+##' These methods let you get and set names and aliases for variables in a
+##' Dataset's catalog, or within \code{\link{Subvariables}} in an array 
+##' variable. They work like the base R names methods.
+##'
+##' Note that the \code{names} method on a Dataset returns the aliases of its
+##' variables by default. See the vignette on variables for more information.
+##'
+##' @param x a VariableCatalog, Subvariables, or similar object
+##' @param value For the setters, an appropriate-length character vector to
+##' assign
+##' @return Getters return the character object in the specified slot; setters
+##' return \code{x} duly modified.
+##' @export
+##' @aliases describe-catalog aliases aliases<- descriptions descriptions<-
+##' @seealso Subvariables Categories \code{\link[base]{names}}
+##' @name describe-catalog
 ##' @export
 setMethod("names", "DatasetCatalog", function (x) {
     vapply(index(x), function (a) a$name, character(1), USE.NAMES=FALSE)

@@ -43,17 +43,7 @@ dirtyElements <- function (x, y) {
     !mapply(identical, x, y, USE.NAMES=FALSE, SIMPLIFY=TRUE)
 }
 
-##' Extract and modify subsets of Catalog-type objects
-##'
-##' @param x a Catalog object
-##' @param i which catalog elements to extract
-##' @param j Invalid
-##' @param drop Invalid
-##' @param ... additional arguments
-##' @param value For updating, an object of the appropriate class and size to 
-##' insert
-##' @return A subset of \code{x} if extracting, otherwise \code{x} duly modified
-##' @name catalog-extract
+##' @rdname catalog-extract
 ##' @export
 setMethod("[", c("ShojiCatalog", "character"), function (x, i, ...) {
     w <- match(i, urls(x))

@@ -11,12 +11,6 @@ getNameAndType <- function (x) {
     return(c(varname, vartype))
 }
 
-##' Show methods for Crunch objects
-##'
-##' @param object the object
-##' @return invisibly
-##' @seealso \code{\link[methods]{show}}
-##' @importFrom methods show
 ##' @rdname show-crunch
 ##' @export
 setMethod("show", "CrunchVariable", function (object) {

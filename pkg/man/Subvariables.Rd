@@ -5,7 +5,6 @@
 \alias{Subvariables}
 \alias{Subvariables-class}
 \alias{subvariables}
-\alias{subvariables,CategoricalArrayVariable-method}
 \alias{subvariables<-}
 \alias{subvariables<-,CategoricalArrayVariable,ANY-method}
 \alias{subvariables<-,CategoricalArrayVariable,Subvariables-method}
