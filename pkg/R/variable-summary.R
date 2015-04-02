@@ -41,7 +41,7 @@ makeCategoricalTable <- function (frequencies, add.na=FALSE) {
 
 CategoricalVariable.table <- function (..., 
                     exclude = if (useNA == "no") c(NA, NaN), 
-                    useNA = c("no", "ifany", "always"), dnn = list.names(...),
+                    useNA = c("no", "ifany", "always"), dnn,
                     deparse.level = 1) {
     var <- ..1
     summ <- getSummary(var)
