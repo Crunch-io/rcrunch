@@ -128,6 +128,9 @@ setMethod("alias<-", "CrunchVariable",
 ##' @return Getters return Categories; setters return \code{x} duly modified.
 ##' @name var-categories
 ##' @aliases var-categories categories categories<-
+NULL
+
+##' @rdname var-categories
 ##' @export
 setMethod("categories", "CrunchVariable", function (x) NULL)
 ##' @rdname var-categories
@@ -233,6 +236,9 @@ setMethod("delete", "CategoricalArrayVariable", function (x, ...) {
 ##' filter logic contained in \code{i}
 ##' @aliases variable-extract
 ##' @name variable-extract
+NULL
+
+##' @rdname variable-extract
 ##' @export
 setMethod("[", c("CrunchVariable", "CrunchExpr"), function (x, i, ...) {
     CrunchExpr(dataset_url=datasetReference(x), expression=zcl(x),

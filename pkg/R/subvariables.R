@@ -14,7 +14,7 @@
 ##' \code{names<-} method. 
 ##'
 ##' Finally, subvariables can be accessed as regular (categorical) variables
-##' with the \code{\$} and \code{[[} extract methods. 
+##' with the \code{$} and \code{[[} extract methods. 
 ##' 
 ##' See the vignette on array variables for further details and examples.
 ##'
@@ -23,7 +23,10 @@
 ##'
 ##' @name Subvariables
 ##' @aliases Subvariables subvariables subvariables<-
-##' @seealso subvars-extract describe-catalog
+##' @seealso \code{\link{subvars-extract}} \code{\link{describe-catalog}} \code{vignette("array-variables", package="crunch")}
+NULL
+
+##' @rdname Subvariables
 ##' @export
 setMethod("subvariables", "CategoricalArrayVariable", function (x) {
     tup <- tuple(x)
@@ -92,7 +95,7 @@ setMethod("aliases<-", "Subvariables", function (x, value) {
 ##'
 ##' @param x Subvariables or an array Variable (which contains subvariables)
 ##' @param i which subvariables to extract
-##' @param name For \code{\$}, the name (not alias) of the subvariable to
+##' @param name For \code{$}, the name (not alias) of the subvariable to
 ##' extract
 ##' @param j Invalid
 ##' @param drop Invalid
@@ -100,6 +103,9 @@ setMethod("aliases<-", "Subvariables", function (x, value) {
 ##' @param value For updating, a CrunchExpr
 ##' @return A subset of \code{x} if extracting, otherwise \code{x} duly modified
 ##' @name subvars-extract
+NULL
+
+##' @rdname subvars-extract
 ##' @export
 setMethod("[[", c("Subvariables", "character"), function (x, i, ...) {
     i <- match(i, names(x))

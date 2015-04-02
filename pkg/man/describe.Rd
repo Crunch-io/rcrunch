@@ -13,6 +13,7 @@
 \alias{description<-,CrunchDataset-method}
 \alias{description<-,CrunchVariable-method}
 \alias{name}
+\alias{name,CrunchDataset-method}
 \alias{name,CrunchVariable-method}
 \alias{name<-}
 \alias{name<-,CrunchDataset-method}
@@ -56,6 +57,6 @@ return \code{x} duly modified.
 Name, alias, and description for Crunch objects
 }
 \seealso{
-describe-categories describe-catalog
+\code{\link{Categories}} \code{\link{describe-catalog}}
 }
 

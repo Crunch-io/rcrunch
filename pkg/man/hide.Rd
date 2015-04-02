@@ -3,6 +3,7 @@
 \docType{methods}
 \name{hide}
 \alias{hide}
+\alias{hide,CrunchVariable-method}
 \alias{hide,VariableCatalog-method}
 \alias{unhide}
 \alias{unhide,CrunchVariable-method}

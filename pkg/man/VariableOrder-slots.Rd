@@ -4,6 +4,7 @@
 \name{VariableOrder-slots}
 \alias{VariableOrder-slots}
 \alias{entities}
+\alias{entities,VariableGroup-method}
 \alias{entities,VariableOrder-method}
 \alias{entities,list-method}
 \alias{entities<-}
@@ -53,8 +54,8 @@ Variable references, VariableGroups, or group names, as appropriate.
 Manipulate VariableGroup and VariableOrder
 }
 \seealso{
-VariableOrder
+\code{\link{VariableOrder}}
 
-grouped
+\code{\link{grouped}}
 }
 

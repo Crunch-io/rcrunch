@@ -52,14 +52,19 @@ newDatasetByColumn <- function (x, name=substitute(x),
 
 ##' Upload a file to Crunch to make a new dataset
 ##'
-##' @param file character, the path to a file to upload
+##' Use this import method if you have an SPSS data file. Reading such a file
+##' into R as a data.frame will result in lost metadata. You can just send it
+##' directly to Crunch and let the server process it.
+##'
+##' @param file character, the path to a file to upload. This should either be
+##' a .csv or .sav (SPSS) file.
 ##' @param name character, the name to give the new Crunch dataset. Default is
 ##' the file name
-##' @return If successful, an object of class crunchdf.
 ##' @param useAlias logical whether variable alias or name should be used as R
 ##' variable names when the dataset is returned. Default is TRUE, meaning alias.
 ##' They're more computer friendly.
 ##' @param ... additional arguments passed to \code{ \link{createDataset}}
+##' @return On success, an object of class \code{CrunchDataset}.
 ##' @export 
 newDatasetFromFile <- function (file, name=basename(file),
                                 useAlias=default.useAlias(), ...) {
@@ -92,7 +97,7 @@ createSource <- function (file, ...) {
 ##' @param ... additional arguments for the POST to create the dataset, such as
 ##' "description". 
 ##' @return An object of class CrunchDataset.
-##' @seealso newDataset
+##' @seealso \code{\link{newDataset}}
 ##' @keywords internal
 ##' @export
 createDataset <- function (name, useAlias=default.useAlias(), ...) {
@@ -131,8 +136,9 @@ addSourceToDataset <- function (dataset, source_url, ...) {
 
 ##' Upload a data.frame to Crunch to make a new dataset
 ##'
-##' This function uses the CSV+JSON import format, which may be faster or more
-##' effective for certain dataset sizes and shapes. 
+##' This function uses the CSV+JSON import format, which is faster and more
+##' effective for certain dataset sizes and shapes than 
+##' \code{\link{newDatasetByColumn}}. 
 ##'
 ##' @param x a data.frame or other rectangular R object
 ##' @param name character, the name to give the new Crunch dataset. Default is

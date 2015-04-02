@@ -3,6 +3,7 @@
 \docType{methods}
 \name{VariableOrder-length}
 \alias{VariableOrder-length}
+\alias{length,VariableOrder-method}
 \title{Length of VariableOrder}
 \usage{
 \S4method{length}{VariableOrder}(x)

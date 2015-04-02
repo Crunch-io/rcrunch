@@ -3,6 +3,7 @@
 \docType{methods}
 \name{refresh}
 \alias{refresh}
+\alias{refresh,CrunchDataset-method}
 \alias{refresh,CrunchVariable-method}
 \alias{refresh,ShojiObject-method}
 \title{Get a fresh copy from the server}

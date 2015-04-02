@@ -2,6 +2,7 @@
 % Please edit documentation in R/categories.R, R/variable-order.R
 \docType{methods}
 \name{tojson-crunch}
+\alias{toJSON,Categories-method}
 \alias{toJSON,VariableGroup-method}
 \alias{toJSON,VariableOrder-method}
 \alias{tojson-crunch}

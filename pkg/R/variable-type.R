@@ -14,6 +14,9 @@ CASTABLE_TYPES <- c("numeric", "text", "categorical") ## Add datetime when serve
 ##' @return Getter returns character; setter returns \code{x} duly modified.
 ##' @name type
 ##' @aliases type type<-
+NULL
+
+##' @rdname type
 ##' @export
 setMethod("type", "CrunchVariable", function (x) x@body$type)
 ## do type casting as type<-

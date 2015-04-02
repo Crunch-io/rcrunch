@@ -11,6 +11,9 @@
 ##' \code{ordering<-} sets the VariableOrder in \code{value} on \code{x}
 ##' @name ordering
 ##' @aliases ordering ordering<-
+NULL
+
+##' @rdname ordering
 ##' @export
 setMethod("ordering", "CrunchDataset", function (x) ordering(variables(x)))
 

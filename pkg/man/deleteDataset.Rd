@@ -29,6 +29,6 @@ The function also works on CrunchDataset objects, just like
 package that masks the \code{delete} method.
 }
 \seealso{
-delete
+\code{\link{delete}}
 }
 

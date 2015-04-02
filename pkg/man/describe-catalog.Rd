@@ -14,6 +14,7 @@
 \alias{descriptions<-}
 \alias{descriptions<-,VariableCatalog-method}
 \alias{names,CrunchDataset-method}
+\alias{names,DatasetCatalog-method}
 \alias{names,Subvariables-method}
 \alias{names,VariableCatalog-method}
 \alias{names<-,Subvariables-method}
@@ -64,6 +65,6 @@ Note that the \code{names} method on a Dataset returns the aliases of its
 variables by default. See the vignette on variables for more information.
 }
 \seealso{
-Subvariables Categories \code{\link[base]{names}}
+\code{\link{Subvariables}} \code{\link{Categories}} \code{\link[base]{names}} \code{vignette("variables", package="crunch")}
 }
 

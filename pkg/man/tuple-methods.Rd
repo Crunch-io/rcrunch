@@ -12,6 +12,7 @@
 \alias{entity,DatasetTuple-method}
 \alias{entity,VariableTuple-method}
 \alias{name,IndexTuple-method}
+\alias{refresh,IndexTuple-method}
 \alias{tuple-methods}
 \alias{type,IndexTuple-method}
 \title{Methods for IndexTuples}

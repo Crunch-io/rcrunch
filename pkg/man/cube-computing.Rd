@@ -4,6 +4,7 @@
 \name{cube-computing}
 \alias{cube-computing}
 \alias{margin.table}
+\alias{margin.table,CrunchCube-method}
 \alias{prop.table}
 \alias{prop.table,CrunchCube-method}
 \title{Work with CrunchCubes}

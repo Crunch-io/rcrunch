@@ -36,6 +36,9 @@ setMethod("archived", "DatasetCatalog", function (x) {
 ##' insert
 ##' @return A subset of \code{x} if extracting, otherwise \code{x} duly modified
 ##' @name catalog-extract
+NULL
+
+##' @rdname catalog-extract
 ##' @export
 setMethod("[[", c("DatasetCatalog", "character"), function (x, i, ...) {
     DatasetTuple(index_url=self(x), entity_url=i, body=index(x)[[i]])
@@ -61,10 +64,12 @@ setMethod("[[", c("DatasetCatalog", "ANY"), function (x, i, ...) {
 ##' assign
 ##' @return Getters return the character object in the specified slot; setters
 ##' return \code{x} duly modified.
-##' @export
 ##' @aliases describe-catalog aliases aliases<- descriptions descriptions<-
-##' @seealso Subvariables Categories \code{\link[base]{names}}
+##' @seealso \code{\link{Subvariables}} \code{\link{Categories}} \code{\link[base]{names}} \code{vignette("variables", package="crunch")}
 ##' @name describe-catalog
+NULL
+
+##' @rdname describe-catalog
 ##' @export
 setMethod("names", "DatasetCatalog", function (x) {
     vapply(index(x), function (a) a$name, character(1), USE.NAMES=FALSE)

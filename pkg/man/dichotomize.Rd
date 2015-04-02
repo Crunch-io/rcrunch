@@ -9,6 +9,7 @@
 \alias{dichotomize,Categories,logical-method}
 \alias{dichotomize,Categories,numeric-method}
 \alias{is.dichotomized}
+\alias{is.dichotomized,Categories-method}
 \alias{undichotomize}
 \alias{undichotomize,CategoricalArrayVariable-method}
 \alias{undichotomize,CategoricalVariable-method}
@@ -55,6 +56,6 @@ methods let you set that state.
 a Categorical Array to a Multiple Response, and undichotomize converts back.
 }
 \seealso{
-describe-category
+\code{\link{describe-category}}
 }
 

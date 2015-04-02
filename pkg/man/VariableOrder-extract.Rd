@@ -7,6 +7,7 @@
 \alias{VariableOrder-extract}
 \alias{[,VariableGroup,ANY-method}
 \alias{[,VariableGroup,character-method}
+\alias{[,VariableOrder,ANY-method}
 \alias{[,VariableOrder,character-method}
 \alias{[<-,VariableOrder,ANY,missing,VariableOrder-method}
 \alias{[<-,VariableOrder,character,missing,VariableOrder-method}
@@ -70,13 +71,13 @@ names}
 
 \item{drop}{Ignored}
 
-\item{name}{Same as i but for \code{\$}}
+\item{name}{Same as i but for \code{$}}
 
 \item{value}{For update methods, an object equivalent in class to what is
 being updated}
 }
 \value{
-\code{[[} and \code{\$} on a VariableOrder return the VariableGroup.
+\code{[[} and \code{$} on a VariableOrder return the VariableGroup.
 \code{[[} on VariableGroup returns the entity within, either a character
 (URL) or nested VariableGroup. \code{[} and assignment methods return
 objects of the same class as \code{x}

@@ -99,6 +99,9 @@ as.list.VariableGroup <- function (x, ...) x@entities
 ##' @param x a VariableOrder
 ##' @return Integer: the number of VariableGroups in the VariableOrder
 ##' @name VariableOrder-length
+NULL
+
+##' @rdname VariableOrder-length
 ##' @export
 setMethod("length", "VariableOrder", function (x) length(entities(x)))
 
@@ -108,18 +111,21 @@ setMethod("length", "VariableOrder", function (x) length(entities(x)))
 ##' @param i an index. Numeric and logical indexing supported for both classes;
 ##' character indexing supported for VariableOrder, matching on VariableGroup
 ##' names
-##' @param name Same as i but for \code{\$}
+##' @param name Same as i but for \code{$}
 ##' @param j Invalid
 ##' @param value For update methods, an object equivalent in class to what is
 ##' being updated
 ##' @param ... additional arguments
 ##' @param drop Ignored
-##' @return \code{[[} and \code{\$} on a VariableOrder return the VariableGroup.
+##' @return \code{[[} and \code{$} on a VariableOrder return the VariableGroup.
 ##' \code{[[} on VariableGroup returns the entity within, either a character
 ##' (URL) or nested VariableGroup. \code{[} and assignment methods return
 ##' objects of the same class as \code{x}
 ##' @name VariableOrder-extract
 ##' @aliases VariableOrder-extract
+NULL
+
+##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[", c("VariableOrder", "ANY"), function (x, i, ..., drop=FALSE) {
     x@graph <- x@graph[i]
@@ -298,7 +304,7 @@ setMethod("show", "VariableOrder", function (object) {
 ##' @param var.order an object of class VariableOrder or VariableGroup
 ##' @return For grouped(), a VariableOrder/Group, respectively, with "ungrouped" 
 ##' omitted. For ungrouped(), a VariableGroup.
-##' @seealso VariableOrder
+##' @seealso \code{\link{VariableOrder}}
 ##' @export
 grouped <- function (var.order) {
     Filter(Negate(is.character), var.order)

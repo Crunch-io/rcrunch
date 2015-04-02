@@ -53,10 +53,10 @@ CategoricalVariable.table <- function (...,
 ##' Table function for Crunch objects
 ##'
 ##' @param ... things to tabulate
-##' @param exclude see \code{link{base:table}}
-##' @param useNA see \code{link{base:table}}
-##' @param dnn see \code{link{base:table}}
-##' @param deparse.level see \code{link{base:table}}
+##' @param exclude see \code{\link[base]{table}}
+##' @param useNA see \code{\link[base]{table}}
+##' @param dnn see \code{\link[base]{table}}
+##' @param deparse.level see \code{\link[base]{table}}
 ##' @return a table object
 ##' @seealso \code{\link[base]{table}}
 ##' @export 

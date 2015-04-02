@@ -18,6 +18,8 @@
 ##' \code{as.vector} returns an R vector.
 ##' @aliases expressions
 ##' @name expressions
+NULL
+
 ##' @rdname expressions
 ##' @export
 setMethod("as.vector", "CrunchExpr", function (x, mode) {

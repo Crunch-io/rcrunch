@@ -3,6 +3,7 @@
 \docType{methods}
 \name{catalog-length}
 \alias{catalog-length}
+\alias{length,ShojiCatalog-method}
 \title{Length of Catalog}
 \usage{
 \S4method{length}{ShojiCatalog}(x)

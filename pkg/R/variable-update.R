@@ -46,6 +46,9 @@
 ##' @return \code{x} duly modified
 ##' @name variable-update
 ##' @aliases variable-update
+NULL
+
+##' @rdname variable-update
 ##' @export
 setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"),
     function (x, i, j, value) {

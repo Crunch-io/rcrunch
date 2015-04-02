@@ -7,6 +7,9 @@
 ##' @seealso \code{\link[base]{mean}} \code{\link[stats]{sd}} \code{\link[stats]{median}} \code{\link[base]{min}} \code{\link[base]{max}}
 ##' @name crunch-uni
 ##' @aliases mean sd median min max
+NULL
+
+##' @rdname crunch-uni
 ##' @export
 setMethod("mean", "CrunchVariable", function (x, ...) {
     halt(sQuote("mean"), " is not defined for ", class(x))

@@ -3,6 +3,7 @@
 \docType{methods}
 \name{dataset-extract}
 \alias{$,CrunchDataset-method}
+\alias{[,CrunchDataset,ANY-method}
 \alias{[,CrunchDataset,character-method}
 \alias{[,CrunchDataset,missing-method}
 \alias{[[,CrunchDataset,ANY-method}
@@ -37,10 +38,10 @@ extraction, columns of the dataset rather than rows.}
 \item{drop}{logical: autmatically simplify a 1-column Dataset to a Variable?
 Default is FALSE, and the TRUE option is in fact not implemented.}
 
-\item{name}{like \code{i} but for \code{\$}}
+\item{name}{like \code{i} but for \code{$}}
 }
 \value{
-\code{[} yields a Dataset; \code{[[} and \$ return a Variable
+\code{[} yields a Dataset; \code{[[} and \code{$} return a Variable
 }
 \description{
 Subset datasets and extract variables

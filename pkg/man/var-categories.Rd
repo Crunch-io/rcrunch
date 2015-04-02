@@ -5,6 +5,7 @@
 \alias{categories}
 \alias{categories,CategoricalArrayVariable-method}
 \alias{categories,CategoricalVariable-method}
+\alias{categories,CrunchVariable-method}
 \alias{categories<-}
 \alias{categories<-,CategoricalArrayVariable,ANY-method}
 \alias{categories<-,CategoricalArrayVariable,Categories-method}

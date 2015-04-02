@@ -13,6 +13,7 @@
 \alias{[<-,Subvariables,character,missing,Subvariables-method}
 \alias{[[,CategoricalArrayVariable,ANY-method}
 \alias{[[,Subvariables,ANY-method}
+\alias{[[,Subvariables,character-method}
 \alias{[[<-,Subvariables,ANY,missing,ANY-method}
 \alias{[[<-,Subvariables,ANY,missing,CrunchVariable-method}
 \alias{[[<-,Subvariables,ANY,missing,NULL-method}
@@ -61,7 +62,7 @@
 
 \item{...}{additional arguments}
 
-\item{name}{For \code{\$}, the name (not alias) of the subvariable to
+\item{name}{For \code{$}, the name (not alias) of the subvariable to
 extract}
 
 \item{drop}{Invalid}

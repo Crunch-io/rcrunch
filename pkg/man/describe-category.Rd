@@ -8,6 +8,7 @@
 \alias{id,list-method}
 \alias{is.selected}
 \alias{is.selected,Category-method}
+\alias{name,Category-method}
 \alias{name<-,Category-method}
 \alias{value}
 \alias{value,Category-method}
@@ -44,6 +45,6 @@ return \code{x} duly modified.
 Category attributes
 }
 \seealso{
-Categories dichotomize
+\code{\link{Categories}} \code{\link{dichotomize}}
 }
 

@@ -93,6 +93,9 @@ setMethod("ids<-", "Categories", function (x, value) {
 ##' @param ... additional arguments argument to the generic, not used
 ##' @return JSON-serialized character object
 ##' @name tojson-crunch
+NULL
+
+##' @rdname tojson-crunch
 ##' @export
 setMethod("toJSON", "Categories", function (x, ...) toJSON(I(x@.Data)))
 
@@ -112,6 +115,9 @@ setMethod("toJSON", "Categories", function (x, ...) toJSON(I(x@.Data)))
 ##' @param ... additional arguments, ignored
 ##' @return \code{object} with any categories that have missing: TRUE excluded
 ##' @name na-omit-categories
+NULL
+
+##' @rdname na-omit-categories
 ##' @export
 setMethod("na.omit", "Categories", function (object, ...) {
     Categories(.na.omit.categories(object))
@@ -128,6 +134,9 @@ setMethod("na.omit", "Categories", function (object, ...) {
 ##' @return Getters return logical, a named vector in the case of the Categories
 ##' method; setters return \code{x} duly modified.
 ##' @name is-na-categories
+NULL
+
+##' @rdname is-na-categories
 ##' @aliases is-na-categories
 ##' @export
 setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical(1), USE.NAMES=FALSE), .Names=names(x)))

@@ -86,6 +86,9 @@ setMethod("[[", c("ShojiCatalog", "ANY"), function (x, i, ...) {
 ##' @param x a Catalog
 ##' @return Integer: the number of elements in the index list
 ##' @name catalog-length
+NULL
+
+##' @rdname catalog-length
 ##' @export
 setMethod("length", "ShojiCatalog", function (x) length(index(x)))
 setMethod("lapply", "ShojiCatalog", function (X, FUN, ...) lapply(index(X), FUN, ...))
@@ -99,9 +102,12 @@ setMethod("lapply", "ShojiCatalog", function (X, FUN, ...) lapply(index(X), FUN,
 ##' assign
 ##' @return Getters return the list object in the "index" slot; setters
 ##' return \code{x} duly modified.
-##' @export
 ##' @aliases index index<-
 ##' @name index
+NULL
+
+##' @rdname index
+##' @export
 setMethod("index", "ShojiCatalog", function (x) x@index)
 ##' @rdname index
 ##' @export

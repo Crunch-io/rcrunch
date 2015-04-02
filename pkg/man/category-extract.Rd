@@ -2,6 +2,7 @@
 % Please edit documentation in R/category.R
 \docType{methods}
 \name{category-extract}
+\alias{$,Category-method}
 \alias{$<-,Category-method}
 \alias{category-extract}
 \title{Access Category fields directly}
@@ -18,13 +19,13 @@
 \item{value}{a value for that field to update}
 }
 \value{
-\code{\$} returns the value of the desired field. Setter
+\code{$} returns the value of the desired field. Setter
 returns \code{x} duly modified.
 }
 \description{
 Don't do this. Instead, use the category setters.
 }
 \seealso{
-describe-category
+\code{\link{describe-category}}
 }
 

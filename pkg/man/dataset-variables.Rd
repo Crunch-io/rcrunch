@@ -8,6 +8,7 @@
 \alias{allVariables<-,CrunchDataset,VariableCatalog-method}
 \alias{dataset-variables}
 \alias{variables}
+\alias{variables,CrunchDataset-method}
 \alias{variables<-}
 \alias{variables<-,CrunchDataset,VariableCatalog-method}
 \title{Access a Dataset's Variables Catalog}

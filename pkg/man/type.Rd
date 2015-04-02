@@ -3,6 +3,7 @@
 \docType{methods}
 \name{type}
 \alias{type}
+\alias{type,CrunchVariable-method}
 \alias{type<-}
 \alias{type<-,CrunchVariable-method}
 \title{Change the type of Crunch variables}

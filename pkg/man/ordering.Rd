@@ -3,6 +3,7 @@
 \docType{methods}
 \name{ordering}
 \alias{ordering}
+\alias{ordering,CrunchDataset-method}
 \alias{ordering,VariableCatalog-method}
 \alias{ordering<-}
 \alias{ordering<-,CrunchDataset-method}

@@ -86,7 +86,7 @@ selectDatasetFromCatalog <- function (dsname, catalog, strict=FALSE) {
 ##' @param ... additional parameters (such as \code{confirm}) passed to 
 ##' \code{delete}
 ##' @return (Invisibly) the API response from deleting the dataset
-##' @seealso delete
+##' @seealso \code{\link{delete}}
 ##' @export
 deleteDataset <- function (x, ...) {
     if (!is.dataset(x)) {

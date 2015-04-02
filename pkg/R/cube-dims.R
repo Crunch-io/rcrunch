@@ -58,8 +58,11 @@ elementIsAnyOrNone <- function (el) {
 ##' return when applied to an \code{array} object.
 ##' @name cube-methods
 ##' @aliases cube-methods
-##' @export
 ##' @seealso \code{\link{cube-computing}}
+NULL
+
+##' @rdname cube-methods
+##' @export
 setMethod("dimnames", "CubeDims", function (x) {
     lapply(x, function (a) a$name)
 })

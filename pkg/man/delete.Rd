@@ -5,6 +5,7 @@
 \alias{delete}
 \alias{delete,ANY-method}
 \alias{delete,CategoricalArrayVariable-method}
+\alias{delete,CrunchDataset-method}
 \alias{delete,ShojiObject-method}
 \title{Delete a Crunch object from the server}
 \usage{
@@ -33,6 +34,6 @@ should not be done lightly. Consider instead using \code{archive}
 for datasets and \code{\link{hide}} for variables
 }
 \seealso{
-hide deleteDataset
+\code{\link{hide}} \code{\link{deleteDataset}}
 }
 

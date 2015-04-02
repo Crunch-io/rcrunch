@@ -2,6 +2,7 @@
 % Please edit documentation in R/variable.R
 \docType{methods}
 \name{variable-extract}
+\alias{[,CrunchVariable,CrunchExpr-method}
 \alias{[,CrunchVariable,logical-method}
 \alias{[,CrunchVariable,numeric-method}
 \alias{variable-extract}

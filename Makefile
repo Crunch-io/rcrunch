@@ -1,3 +1,5 @@
+VERSION = $(shell grep ^Version pkg/DESCRIPTION | sed s/Version:\ //)
+
 doc:
 	R --slave -e 'library(roxygen2); roxygenise("pkg")'
 	git add --all pkg/man/*.Rd
@@ -16,8 +18,11 @@ test-ci:
 clean:
 	R --slave -e 'options(crunch.api=getOption("test.api"), crunch.email=getOption("test.user"), crunch.pw=getOption("test.pw")); library(crunch); login(); crunch:::.delete_all_my_datasets()'
 
-check:
-	R CMD CHECK --as-cran pkg
+build: doc
+	R CMD build pkg
+
+check: build
+	R CMD CHECK --as-cran crunch_$(VERSION).tar.gz
 
 vdata:
 	cd vignette-data && find *.R | xargs -n 1 R -f

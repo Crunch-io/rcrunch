@@ -8,6 +8,7 @@
 \alias{[<-,CategoricalVariable,ANY,missing,character-method}
 \alias{[<-,CategoricalVariable,ANY,missing,factor-method}
 \alias{[<-,CategoricalVariable,ANY,missing,numeric-method}
+\alias{[<-,CrunchVariable,ANY,missing,ANY-method}
 \alias{[<-,CrunchVariable,ANY,missing,CrunchExpr-method}
 \alias{[<-,CrunchVariable,CrunchExpr,missing,CrunchExpr-method}
 \alias{[<-,DatetimeVariable,ANY,missing,Date-method}

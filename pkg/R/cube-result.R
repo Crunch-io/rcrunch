@@ -152,6 +152,9 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
 ##' @name cube-computing
 ##' @aliases cube-computing margin.table prop.table
 ##' @seealso \code{\link[base]{margin.table}} \code{\link[base]{prop.table}}
+NULL
+
+##' @rdname cube-computing
 ##' @export
 setMethod("margin.table", "CrunchCube", function (x, margin=NULL) {
     cubeMarginTable(x, margin)

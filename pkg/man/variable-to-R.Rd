@@ -2,6 +2,7 @@
 % Please edit documentation in R/variable-to-R.R
 \docType{methods}
 \name{variable-to-R}
+\alias{as.vector,CrunchVariable-method}
 \alias{variable-to-R}
 \title{Convert Variables to local R objects}
 \usage{

@@ -16,7 +16,10 @@
 ##' @return Categories or the Variable, (un)dichotomized accoringly
 ##' @name dichotomize
 ##' @aliases dichotomize is.dichotomized undichotomize
-##' @seealso describe-category
+##' @seealso \code{\link{describe-category}}
+NULL
+
+##' @rdname dichotomize
 ##' @export
 setMethod("is.dichotomized", "Categories",
     function (x) any(vapply(x, is.selected, logical(1))))

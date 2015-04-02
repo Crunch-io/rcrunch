@@ -3,6 +3,7 @@
 \docType{methods}
 \name{self}
 \alias{self}
+\alias{self,ShojiObject-method}
 \title{Get the URL of this object}
 \usage{
 \S4method{self}{ShojiObject}(x)

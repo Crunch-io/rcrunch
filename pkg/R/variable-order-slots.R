@@ -11,9 +11,12 @@
 ##' or preserved in their nested lists? Default is \code{FALSE}.
 ##' @return Variable references, VariableGroups, or group names, as appropriate.
 ##' @name VariableOrder-slots
-##' @seealso VariableOrder
-##' @seealso grouped
+##' @seealso \code{\link{VariableOrder}}
+##' @seealso \code{\link{grouped}}
 ##' @aliases entities entities<-
+NULL
+
+##' @rdname VariableOrder-slots
 ##' @export
 setMethod("entities", "VariableGroup", function (x, simplify=FALSE) {
     entities(x@entities, simplify=simplify)

@@ -12,6 +12,9 @@
 ##' \code{\link{delete}}.
 ##' @name tuple-methods
 ##' @aliases entity
+NULL
+
+##' @rdname tuple-methods
 ##' @export
 setMethod("refresh", "IndexTuple", function (x) {
     catalog <- ShojiCatalog(crGET(x@index_url))

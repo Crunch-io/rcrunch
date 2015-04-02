@@ -9,13 +9,13 @@ table(..., exclude, useNA, dnn, deparse.level)
 \arguments{
 \item{...}{things to tabulate}
 
-\item{exclude}{see \code{link{base:table}}}
+\item{exclude}{see \code{\link[base]{table}}}
 
-\item{useNA}{see \code{link{base:table}}}
+\item{useNA}{see \code{\link[base]{table}}}
 
-\item{dnn}{see \code{link{base:table}}}
+\item{dnn}{see \code{\link[base]{table}}}
 
-\item{deparse.level}{see \code{link{base:table}}}
+\item{deparse.level}{see \code{\link[base]{table}}}
 }
 \value{
 a table object

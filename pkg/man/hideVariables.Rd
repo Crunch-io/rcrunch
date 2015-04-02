@@ -37,6 +37,6 @@ unhideVariables(dataset, variables = NULL, pattern = NULL,
 Hide and Unhide Variables Within a Dataset
 }
 \seealso{
-hide
+\code{\link{hide}}
 }
 

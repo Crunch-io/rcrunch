@@ -2,6 +2,7 @@
 % Please edit documentation in R/dataset.R
 \docType{methods}
 \name{dim-dataset}
+\alias{dim,CrunchDataset-method}
 \alias{dim-dataset}
 \title{Dataset dimensions}
 \usage{

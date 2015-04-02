@@ -4,6 +4,7 @@
 \name{cube-methods}
 \alias{cube-methods}
 \alias{dim,CubeDims-method}
+\alias{dimnames,CubeDims-method}
 \alias{is.na,CubeDims-method}
 \title{Methods on Cube objects}
 \usage{

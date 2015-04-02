@@ -10,6 +10,7 @@
 \alias{[[<-,CrunchDataset,character,missing,ANY-method}
 \alias{[[<-,CrunchDataset,character,missing,CrunchExpr-method}
 \alias{[[<-,CrunchDataset,character,missing,CrunchLogicalExpr-method}
+\alias{[[<-,CrunchDataset,character,missing,CrunchVariable-method}
 \alias{dataset-update}
 \title{Update a variable or variables in a dataset}
 \usage{
@@ -39,7 +40,7 @@
 \item{value}{replacement values to insert. These can be \code{crunchExpr}s
 or R vectors of the corresponding type}
 
-\item{name}{like \code{j} but for \code{\$}}
+\item{name}{like \code{j} but for \code{$}}
 
 \item{j}{if character, identifies variables to extract based on their
 aliases (by default, i.e. when x's \code{useAlias} is TRUE); if numeric or

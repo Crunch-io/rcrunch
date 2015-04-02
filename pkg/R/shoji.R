@@ -55,6 +55,9 @@ is.shojiObject <- function (x) inherits(x, "ShojiObject")
 ##' @return the URL for \code{x}
 ##' @aliases self
 ##' @name self
+NULL
+
+##' @rdname self
 ##' @export
 setMethod("self", "ShojiObject", function (x) x@self)
 

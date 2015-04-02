@@ -8,6 +8,7 @@
 \alias{max,DatetimeVariable-method}
 \alias{max,NumericVariable-method}
 \alias{mean}
+\alias{mean,CrunchVariable-method}
 \alias{mean,NumericVariable-method}
 \alias{median}
 \alias{median,CrunchVariable-method}

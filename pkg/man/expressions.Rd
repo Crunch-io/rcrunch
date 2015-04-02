@@ -10,6 +10,7 @@
 \alias{\%in\%,DatetimeVariable,POSIXt-method}
 \alias{\%in\%,NumericVariable,numeric-method}
 \alias{\%in\%,TextVariable,character-method}
+\alias{as.vector,CrunchExpr-method}
 \alias{bin}
 \alias{expressions}
 \alias{is.na,CrunchVariable-method}

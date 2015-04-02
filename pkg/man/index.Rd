@@ -3,6 +3,7 @@
 \docType{methods}
 \name{index}
 \alias{index}
+\alias{index,ShojiCatalog-method}
 \alias{index<-}
 \alias{index<-,ShojiCatalog-method}
 \title{Get the body of a Catalog}

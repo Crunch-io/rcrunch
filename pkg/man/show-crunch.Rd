@@ -4,6 +4,7 @@
 \name{show-crunch}
 \alias{show,CategoricalArrayVariable-method}
 \alias{show,Categories-method}
+\alias{show,Category-method}
 \alias{show,CrunchCube-method}
 \alias{show,CrunchDataset-method}
 \alias{show,CrunchVariable-method}

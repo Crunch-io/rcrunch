@@ -3,6 +3,7 @@
 \docType{methods}
 \name{na-omit-categories}
 \alias{na-omit-categories}
+\alias{na.omit,Categories-method}
 \title{Omit missing categories}
 \usage{
 \S4method{na.omit}{Categories}(object, ...)

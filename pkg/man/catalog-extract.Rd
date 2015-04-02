@@ -12,6 +12,7 @@
 \alias{[<-,VariableCatalog,VariableOrder,missing,VariableCatalog-method}
 \alias{[<-,VariableCatalog,character,missing,VariableCatalog-method}
 \alias{[[,DatasetCatalog,ANY-method}
+\alias{[[,DatasetCatalog,character-method}
 \alias{[[,ShojiCatalog,ANY-method}
 \alias{[[,VariableCatalog,ANY-method}
 \alias{[[,VariableCatalog,character-method}

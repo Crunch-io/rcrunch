@@ -5,14 +5,17 @@
 ##' aliases (by default, i.e. when x's \code{useAlias} is TRUE); if numeric or 
 ##' logical, extracts variables accordingly. Note that this is the as.list 
 ##' extraction, columns of the dataset rather than rows. 
-##' @param name like \code{i} but for \code{\$}
+##' @param name like \code{i} but for \code{$}
 ##' @param j column extraction, as described above
 ##' @param drop logical: autmatically simplify a 1-column Dataset to a Variable?
 ##' Default is FALSE, and the TRUE option is in fact not implemented.
 ##' @param ... additional arguments
-##' @return \code{[} yields a Dataset; \code{[[} and \$ return a Variable
+##' @return \code{[} yields a Dataset; \code{[[} and \code{$} return a Variable
 ##' @name dataset-extract
 ##' @aliases dataset-extract
+NULL
+
+##' @rdname dataset-extract
 ##' @export
 setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     x@variables <- variables(x)[i]
@@ -143,12 +146,15 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 ##' aliases (by default, i.e. when x's \code{useAlias} is TRUE); if numeric or 
 ##' logical, extracts variables accordingly. Note that this is the as.list 
 ##' extraction, columns of the dataset rather than rows. 
-##' @param name like \code{j} but for \code{\$}
+##' @param name like \code{j} but for \code{$}
 ##' @param value replacement values to insert. These can be \code{crunchExpr}s 
 ##' or R vectors of the corresponding type
 ##' @return \code{x}, modified.
 ##' @aliases dataset-update
 ##' @name dataset-update
+NULL
+
+##' @rdname dataset-update
 ##' @export
 setMethod("[[<-", 
     c("CrunchDataset", "character", "missing", "CrunchVariable"), 
