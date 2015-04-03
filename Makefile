@@ -22,7 +22,7 @@ build: doc
 	R CMD build pkg
 
 check: build
-	R CMD CHECK --as-cran crunch_$(VERSION).tar.gz
+	unset INTEGRATION && R CMD CHECK --as-cran crunch_$(VERSION).tar.gz
 
 vdata:
 	cd vignette-data && find *.R | xargs -n 1 R -f

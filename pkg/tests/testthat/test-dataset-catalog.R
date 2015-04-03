@@ -13,7 +13,9 @@ with(fake.HTTP, {
     
     test_that("DatasetCatalog has the right contents", {
         expect_identical(urls(datcat),
-            names(blob$index)[c(2,3,1)]) ## sorting
+            c("/api/datasets/dataset3.json",
+              "/api/datasets/dataset2.json",
+              "/api/datasets/dataset1.json")) ## C sorting on names
         expect_true(all(grepl("/api/dataset", urls(datcat))))
         expect_identical(self(datcat), dataset.catalog.url)
     })
@@ -24,7 +26,7 @@ with(fake.HTTP, {
         expect_true(inherits(archived(datcat), "DatasetCatalog"))
         expect_identical(index(active(datcat)), index(datcat))
         expect_equivalent(index(archived(datcat)), list())
-        index(datcat)[[1]]$archived <- TRUE
+        index(datcat)[[which(names(datcat) == "an archived dataset")]]$archived <- TRUE 
         expect_true(inherits(active(datcat), "DatasetCatalog"))
         expect_true(inherits(archived(datcat), "DatasetCatalog"))
         expect_identical(urls(active(datcat)), 
@@ -46,7 +48,7 @@ with(fake.HTTP, {
     })
     
     test_that("names", {
-        expect_identical(names(datcat), c("an archived dataset", "ECON.sav", "test ds"))
+        expect_identical(names(datcat), c("ECON.sav", "an archived dataset", "test ds"))
     })
     
     test_that("entity method for tuple", {

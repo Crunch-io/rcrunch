@@ -3,13 +3,13 @@ context("Retrieving dataset list and single datasets")
 with(fake.HTTP, {
     dataset.catalog.url <- "/api/datasets.json"
     datcat <- DatasetCatalog(crGET(dataset.catalog.url))
-    index(datcat)[[1]]$archived <- TRUE
+    index(datcat)[[which(names(datcat) == "an archived dataset")]]$archived <- TRUE
     session_store$datasets <- datcat ## as if we had done updateDatasetList
     
     test_that("listDatasets lists", {
         expect_identical(listDatasets(), c("ECON.sav", "test ds"))
         expect_identical(listDatasets("archived"), "an archived dataset")
-        expect_identical(listDatasets("all"), c("an archived dataset", "ECON.sav", "test ds"))
+        expect_identical(listDatasets("all"), c("ECON.sav", "an archived dataset", "test ds"))
     })
     
     test_that("loadDataset loads", {
