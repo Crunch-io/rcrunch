@@ -72,7 +72,8 @@ as.variable <- function (x, subtype=NULL, tuple=VariableTuple()) {
 ##' @rdname refresh
 ##' @export
 setMethod("refresh", "CrunchVariable", function (x) {
-    as.variable(crGET(self(x)), tuple=refresh(tuple(x)))
+    tup <- refresh(tuple(x))
+    as.variable(crGET(self(x)), tuple=tup)
 })
 
 as.Numeric <- function (x) as.variable(x, "numeric")

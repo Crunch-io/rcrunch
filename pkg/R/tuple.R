@@ -17,6 +17,7 @@ NULL
 ##' @rdname tuple-methods
 ##' @export
 setMethod("refresh", "IndexTuple", function (x) {
+    dropCache(x@index_url)
     catalog <- ShojiCatalog(crGET(x@index_url))
     x@body <- catalog[[x@entity_url]]
     return(x)

@@ -26,6 +26,7 @@ subsetDatasetCatalog <- function (kind, catalog=datasetCatalog()) {
 ##' variables.
 ##' @export 
 updateDatasetList <- function () {
+    dropOnly(sessionURL("datasets"))
     session_store$datasets <- do.call(DatasetCatalog,
         crGET(sessionURL("datasets")))
 }

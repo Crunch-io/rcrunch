@@ -153,7 +153,8 @@ NULL
 ##' @rdname refresh
 ##' @export
 setMethod("refresh", "CrunchDataset", function (x) {
-    as.dataset(crGET(self(x)), useAlias=x@useAlias, tuple=refresh(tuple(x)))
+    tup <- refresh(tuple(x))
+    as.dataset(crGET(self(x)), useAlias=x@useAlias, tuple=tup)
 })
 
 ##' Delete a Crunch object from the server
