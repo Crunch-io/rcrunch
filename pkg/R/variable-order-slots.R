@@ -10,10 +10,13 @@
 ##' @param simplify logical: should variable URLs inside of groups be flattened 
 ##' or preserved in their nested lists? Default is \code{FALSE}.
 ##' @return Variable references, VariableGroups, or group names, as appropriate.
-##' @rdname VariableOrder-slots
-##' @seealso VariableOrder
-##' @seealso grouped
+##' @name VariableOrder-slots
+##' @seealso \code{\link{VariableOrder}}
+##' @seealso \code{\link{grouped}}
 ##' @aliases entities entities<-
+NULL
+
+##' @rdname VariableOrder-slots
 ##' @export
 setMethod("entities", "VariableGroup", function (x, simplify=FALSE) {
     entities(x@entities, simplify=simplify)

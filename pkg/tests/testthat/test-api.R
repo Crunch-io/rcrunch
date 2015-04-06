@@ -30,6 +30,6 @@ if (run.integration.tests) {
     
     test_that("Deprecated endpoints tell user to upgrade", {
         expect_error(crGET("http://httpbin.org/status/410"), 
-            "The API resource at http://httpbin.org/status/410 has moved permanently. Please upgrade rcrunch to the latest version.")
+            "The API resource at http://httpbin.org/status/410 has moved permanently. Please upgrade crunch to the latest version.")
     })
 }

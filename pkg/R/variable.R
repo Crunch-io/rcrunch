@@ -126,8 +126,11 @@ setMethod("alias<-", "CrunchVariable",
 ##' @param x a Variable
 ##' @param value for the setters, an object of class Categories to set. 
 ##' @return Getters return Categories; setters return \code{x} duly modified.
-##' @rdname var-categories
+##' @name var-categories
 ##' @aliases var-categories categories categories<-
+NULL
+
+##' @rdname var-categories
 ##' @export
 setMethod("categories", "CrunchVariable", function (x) NULL)
 ##' @rdname var-categories
@@ -232,6 +235,9 @@ setMethod("delete", "CategoricalArrayVariable", function (x, ...) {
 ##' @return a CrunchExpr containing references to the variable \code{x} and the
 ##' filter logic contained in \code{i}
 ##' @aliases variable-extract
+##' @name variable-extract
+NULL
+
 ##' @rdname variable-extract
 ##' @export
 setMethod("[", c("CrunchVariable", "CrunchExpr"), function (x, i, ...) {

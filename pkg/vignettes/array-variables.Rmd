@@ -7,18 +7,18 @@
 
 
 ```{r, results='hide', echo=FALSE, message=FALSE}
-library(rcrunch)
+library(crunch)
 load("array-variables.RData")
 ```
 # Array Variables
 
 Crunch supports more types of variables than many of the data formats from which you can create datasets. Plain-text .csv files, for example, can't express that some columns are actually indicator matrices of multiple selections (Multiple Response Variables). Most SPSS .sav files do not indicate Categorical Arrays (otherwise known as "grids") as being part of a group---they are simply several categorical variables. The same is true for an R `data.frame`.
 
-You can use rcrunch to "bind" categorical variables into Multiple Response and Categorical Array variables.
+You can use `crunch` to "bind" categorical variables into Multiple Response and Categorical Array variables.
 
 ## Creating an array
 
-One of the reasons to use R with Crunch is to leverage the power of scripting for tasks that would be repetitive in a GUI. Many rcrunch functions operating on Crunch datasets have an optional `pattern` argument that lets you use regular expressions for these "bulk" operations. 
+One of the reasons to use R with Crunch is to leverage the power of scripting for tasks that would be repetitive in a GUI. Many crunch functions operating on Crunch datasets have an optional `pattern` argument that lets you use regular expressions for these "bulk" operations. 
 
 In our sample _Economist_ dataset, we have set of variables prefixed with "imiss":
 

@@ -44,8 +44,11 @@
 ##' @param j Invalid
 ##' @param value an R vector or a CrunchExpr with which to update
 ##' @return \code{x} duly modified
-##' @rdname variable-update
+##' @name variable-update
 ##' @aliases variable-update
+NULL
+
+##' @rdname variable-update
 ##' @export
 setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"),
     function (x, i, j, value) {

@@ -9,8 +9,8 @@
 ##' @param status.handlers named list of specific HTTP statuses and a response
 ##' function to call in the case where that status is returned. Passed to the
 ##' \code{response.handler} function.
+##' @keywords internal
 crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, config=list(), status.handlers=list(), ...) {
-    # print(sys.call(-3)) ## Investigate putting calling function in header
     url ## force lazy eval of url before inserting in try() below
     if (isTRUE(getOption("crunch.debug"))) message(paste(http.verb, url))
     FUN <- get(http.verb, envir=asNamespace("httr"))
@@ -45,7 +45,7 @@ addRealHTTPVerbs()
 ##' PATCH, and POST. 
 ##' @return Depends on the response status of the HTTP request and any custom
 ##' handlers.
-##' @rdname http-methods
+##' @name http-methods
 ##' @export
 crGET <- function (...) http_verbs$GET(...)
 ##' @rdname http-methods
@@ -86,7 +86,7 @@ handleAPIresponse <- function (response, special.statuses=list()) {
         if (code == 410) {
             halt("The API resource at ",
                 response$url, 
-                " has moved permanently. Please upgrade rcrunch to the ",
+                " has moved permanently. Please upgrade crunch to the ",
                 "latest version.")
         }
         msg <- http_status(response)$message
@@ -127,7 +127,7 @@ crunchUserAgent <- function (x) {
         curl = RCurl::curlVersion()$version,
         Rcurl = as.character(packageVersion("RCurl")),
         httr = as.character(packageVersion("httr")),
-        rcrunch = as.character(packageVersion("rcrunch"))
+        rcrunch = as.character(packageVersion("crunch"))
     )
     ua <- paste0(names(versions), "/", versions, collapse = " ")
     if (!missing(x)) ua <- paste(ua, x)

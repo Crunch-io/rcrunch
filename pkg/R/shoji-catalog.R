@@ -43,16 +43,6 @@ dirtyElements <- function (x, y) {
     !mapply(identical, x, y, USE.NAMES=FALSE, SIMPLIFY=TRUE)
 }
 
-##' Extract and modify subsets of Catalog-type objects
-##'
-##' @param x a Catalog object
-##' @param i which catalog elements to extract
-##' @param j Invalid
-##' @param drop Invalid
-##' @param ... additional arguments
-##' @param value For updating, an object of the appropriate class and size to 
-##' insert
-##' @return A subset of \code{x} if extracting, otherwise \code{x} duly modified
 ##' @rdname catalog-extract
 ##' @export
 setMethod("[", c("ShojiCatalog", "character"), function (x, i, ...) {
@@ -95,6 +85,10 @@ setMethod("[[", c("ShojiCatalog", "ANY"), function (x, i, ...) {
 ##' Length of Catalog
 ##' @param x a Catalog
 ##' @return Integer: the number of elements in the index list
+##' @name catalog-length
+NULL
+
+##' @rdname catalog-length
 ##' @export
 setMethod("length", "ShojiCatalog", function (x) length(index(x)))
 setMethod("lapply", "ShojiCatalog", function (X, FUN, ...) lapply(index(X), FUN, ...))
@@ -108,9 +102,12 @@ setMethod("lapply", "ShojiCatalog", function (X, FUN, ...) lapply(index(X), FUN,
 ##' assign
 ##' @return Getters return the list object in the "index" slot; setters
 ##' return \code{x} duly modified.
-##' @export
 ##' @aliases index index<-
+##' @name index
+NULL
+
 ##' @rdname index
+##' @export
 setMethod("index", "ShojiCatalog", function (x) x@index)
 ##' @rdname index
 ##' @export

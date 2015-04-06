@@ -59,6 +59,7 @@ makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key=nameke
 ##' @param ... additional arguments, which are ignored
 ##' @return a list with two elements: "dataset" and "variable_urls"
 ##' @export
+##' @keywords internal
 prepareBindInputs <- function (list_of_variables=NULL, dataset=NULL,
                                pattern=NULL, key=namekey(dataset), ...) {
 

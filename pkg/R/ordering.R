@@ -9,8 +9,11 @@
 ##' @param value a valid VariableOrder object
 ##' @return \code{ordering} returns a VariableOrder object, while
 ##' \code{ordering<-} sets the VariableOrder in \code{value} on \code{x}
-##' @rdname ordering
+##' @name ordering
 ##' @aliases ordering ordering<-
+NULL
+
+##' @rdname ordering
 ##' @export
 setMethod("ordering", "CrunchDataset", function (x) ordering(variables(x)))
 

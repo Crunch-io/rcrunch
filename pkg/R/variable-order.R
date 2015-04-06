@@ -2,9 +2,9 @@ init.VariableOrder <- function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     dots <- list(...)
     if (length(dots) && !is.shoji(dots[[1]])) {
-        .Object@graph <- .initEntities(dots, u=NULL)
+        .Object@graph <- .initEntities(dots, url.base=NULL)
     } else {
-        .Object@graph <- .initEntities(.Object@graph, u=.Object@self)
+        .Object@graph <- .initEntities(.Object@graph, url.base=.Object@self)
     }
     return(.Object)
 }
@@ -98,6 +98,10 @@ as.list.VariableGroup <- function (x, ...) x@entities
 ##' Length of VariableOrder
 ##' @param x a VariableOrder
 ##' @return Integer: the number of VariableGroups in the VariableOrder
+##' @name VariableOrder-length
+NULL
+
+##' @rdname VariableOrder-length
 ##' @export
 setMethod("length", "VariableOrder", function (x) length(entities(x)))
 
@@ -107,24 +111,27 @@ setMethod("length", "VariableOrder", function (x) length(entities(x)))
 ##' @param i an index. Numeric and logical indexing supported for both classes;
 ##' character indexing supported for VariableOrder, matching on VariableGroup
 ##' names
-##' @param name Same as i but for \code{\$}
+##' @param name Same as i but for \code{$}
 ##' @param j Invalid
 ##' @param value For update methods, an object equivalent in class to what is
 ##' being updated
 ##' @param ... additional arguments
 ##' @param drop Ignored
-##' @return \code{[[} and \code{\$} on a VariableOrder return the VariableGroup.
+##' @return \code{[[} and \code{$} on a VariableOrder return the VariableGroup.
 ##' \code{[[} on VariableGroup returns the entity within, either a character
 ##' (URL) or nested VariableGroup. \code{[} and assignment methods return
 ##' objects of the same class as \code{x}
-##' @rdname variable-order-extract
-##' @aliases variable-order-extract
+##' @name VariableOrder-extract
+##' @aliases VariableOrder-extract
+NULL
+
+##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[", c("VariableOrder", "ANY"), function (x, i, ..., drop=FALSE) {
     x@graph <- x@graph[i]
     return(x)
 })
-##' @rdname variable-order-extract
+##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[", c("VariableOrder", "character"), function (x, i, ..., drop=FALSE) {
     w <- match(i, names(x))
@@ -134,24 +141,24 @@ setMethod("[", c("VariableOrder", "character"), function (x, i, ..., drop=FALSE)
     callNextMethod(x, w, ..., drop=drop)
 })
 
-##' @rdname variable-order-extract
+##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[[", c("VariableOrder", "ANY"), function (x, i, ...) {
     x@graph[[i]]
 })
 
-##' @rdname variable-order-extract
+##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[[", c("VariableOrder", "character"), function (x, i, ...) {
     w <- match(i, names(x))
     callNextMethod(x, w, ..., drop=drop)
 })
 
-##' @rdname variable-order-extract
+##' @rdname VariableOrder-extract
 ##' @export
 setMethod("$", "VariableOrder", function (x, name) x[[name]])
 
-##' @rdname variable-order-extract
+##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[<-", c("VariableOrder", "character", "missing", "VariableOrder"), 
     function (x, i, j, value) {
@@ -161,14 +168,14 @@ setMethod("[<-", c("VariableOrder", "character", "missing", "VariableOrder"),
         }
         callNextMethod(x, w, value=value)
     })
-##' @rdname variable-order-extract
+##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[<-", c("VariableOrder", "ANY", "missing", "VariableOrder"), 
    function (x, i, j, value) {
        x@graph[i] <- value@graph
        return(x)
    })
-##' @rdname variable-order-extract
+##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[[<-", c("VariableOrder", "character", "missing", "VariableGroup"), 
     function (x, i, j, value) {
@@ -178,14 +185,14 @@ setMethod("[[<-", c("VariableOrder", "character", "missing", "VariableGroup"),
         }
         callNextMethod(x, w, value=value)
     })
-##' @rdname variable-order-extract
+##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[[<-", c("VariableOrder", "ANY", "missing", "VariableGroup"), 
     function (x, i, j, value) {
         x@graph[[i]] <- value
         return(x)
     })
-##' @rdname variable-order-extract
+##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[[<-", c("VariableOrder", "ANY", "missing", "ANY"), 
     function (x, i, j, value) {
@@ -193,14 +200,14 @@ setMethod("[[<-", c("VariableOrder", "ANY", "missing", "ANY"),
             " into a VariableOrder")
     })
 
-##' @rdname variable-order-extract
+##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[[<-", c("VariableOrder", "ANY", "missing", "NULL"), 
     function (x, i, j, value) {
         x@graph[[i]] <- value
         return(x)
     })
-##' @rdname variable-order-extract
+##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[[<-", c("VariableOrder", "character", "missing", "NULL"), 
     function (x, i, j, value) {
@@ -211,23 +218,23 @@ setMethod("[[<-", c("VariableOrder", "character", "missing", "NULL"),
         callNextMethod(x, w, value=value)
     })
 
-##' @rdname variable-order-extract
+##' @rdname VariableOrder-extract
 ##' @export
 setMethod("$", "VariableOrder", function (x, name) x[[name]])
-##' @rdname variable-order-extract
+##' @rdname VariableOrder-extract
 ##' @export
 setMethod("$<-", "VariableOrder", function (x, name, value) {
     x[[name]] <- value
     return(x)
 })
 
-##' @rdname variable-order-extract
+##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[", c("VariableGroup", "ANY"), function (x, i, ..., drop=FALSE) {
     x@entities <- x@entities[i]
     return(x)
 })
-##' @rdname variable-order-extract
+##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[", c("VariableGroup", "character"), function (x, i, ..., drop=FALSE) {
     w <- match(i, names(x))
@@ -237,12 +244,12 @@ setMethod("[", c("VariableGroup", "character"), function (x, i, ..., drop=FALSE)
     callNextMethod(x, w, ..., drop=drop)
 })
 
-##' @rdname variable-order-extract
+##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[[", "VariableGroup", function (x, i, ...) {
     entities(x)[[i]]
 })
-##' @rdname variable-order-extract
+##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[[<-", c("VariableGroup", "ANY", "missing", "VariableGroup"), function (x, i, j, value) {
     entities(x)[[i]] <- value
@@ -297,7 +304,7 @@ setMethod("show", "VariableOrder", function (object) {
 ##' @param var.order an object of class VariableOrder or VariableGroup
 ##' @return For grouped(), a VariableOrder/Group, respectively, with "ungrouped" 
 ##' omitted. For ungrouped(), a VariableGroup.
-##' @seealso VariableOrder
+##' @seealso \code{\link{VariableOrder}}
 ##' @export
 grouped <- function (var.order) {
     Filter(Negate(is.character), var.order)

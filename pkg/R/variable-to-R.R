@@ -53,6 +53,10 @@ getValues <- function (x, ...) {
 ##' signature
 ##' @return an R vector of the type corresponding to the Variable. E.g. 
 ##' CategoricalVariable yields type factor, NumericVariable yields numeric, etc.
+##' @name variable-to-R
+NULL
+
+##' @rdname variable-to-R
 ##' @export
 setMethod("as.vector", "CrunchVariable", function (x, mode) {
     columnParser(type(x))(getValues(x), x)
@@ -65,6 +69,9 @@ setMethod("as.vector", "CrunchVariable", function (x, mode) {
 ##' @param optional part of as.data.frame signature. Ignored.
 ##' @param ... additional arguments passed to as.data.frame.default
 ##' @return a data.frame
+##' @name dataset-to-R
+NULL
+
 ##' @rdname dataset-to-R
 ##' @export
 as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE, ...) {

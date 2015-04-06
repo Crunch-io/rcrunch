@@ -38,11 +38,11 @@ the display names of the subvariables. These can be set with the
 \code{names<-} method.
 
 Finally, subvariables can be accessed as regular (categorical) variables
-with the \code{\$} and \code{[[} extract methods.
+with the \code{$} and \code{[[} extract methods.
 
 See the vignette on array variables for further details and examples.
 }
 \seealso{
-subvars-extract describe-catalog
+\code{\link{subvars-extract}} \code{\link{describe-catalog}} \code{vignette("array-variables", package="crunch")}
 }
 

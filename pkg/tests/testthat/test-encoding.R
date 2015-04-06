@@ -1,24 +1,24 @@
 context("UTF-8 Encoding")
 
-test_that("encoding + JSON reads correctly", {
-    s <- iconv("aided_follow_grid:ElCorteInglés", to="UTF-8")
-    expect_identical(Encoding(s), "UTF-8")
-    expect_true(grepl("Inglés", s))
-    sj <- toJSON(s)
-    expect_true(grepl("Inglés", sj))
-    s2 <- fromJSON(sj)
-    expect_identical(s2, s)
-    expect_identical(fromJSON("utf-test.json"), "Budějovický Budvar")
-})
-
-with(fake.HTTP, {
-    ds <- loadDataset("test ds")
-    test_that("Reading UTF in tests", {
-        expect_identical(description(ds$mymrset), "Budějovický Budvar")
-    })
-})
-
 if (run.integration.tests) {
+    test_that("encoding + JSON reads correctly", {
+        s <- iconv("aided_follow_grid:ElCorteInglés", to="UTF-8")
+        expect_identical(Encoding(s), "UTF-8")
+        expect_true(grepl("Inglés", s))
+        sj <- toJSON(s)
+        expect_true(grepl("Inglés", sj))
+        s2 <- fromJSON(sj)
+        expect_identical(s2, s)
+        expect_identical(fromJSON("utf-test.json"), "Budějovický Budvar")
+    })
+
+    with(fake.HTTP, {
+        ds <- loadDataset("test ds")
+        test_that("Reading UTF in tests", {
+            expect_identical(description(ds$mymrset), "Budějovický Budvar")
+        })
+    })
+
     with(test.authentication, {
         with(test.dataset(df), {
             test_that("Properly encoded UTF is sent and received", {

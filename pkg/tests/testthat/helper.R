@@ -1,4 +1,6 @@
-run.integration.tests <- Sys.getenv("LOCALONLY") == "FALSE"
+run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
+Sys.setlocale("LC_COLLATE", "C") ## What CRAN does
+
 set.seed(666)
 
 fromJSON <- jsonlite::fromJSON

@@ -10,17 +10,17 @@
 ## we do all the work ahead of time and save a workspace, which we load here.
 ## We'll then reference saved objects in that as if we had just retrieved them
 ## from the server
-library(rcrunch)
+library(crunch)
 load("getting-started.RData")
 ```
 
-# Datasets in rcrunch
+# Datasets in `crunch`
 
 To get started working with Crunch datasets in R, we need to get a dataset in our local R session. This means we either need to create a new one or load an existing dataset. 
 
 ## Uploading datasets
 
-To create new datasets, multiple paths exist. In the web application, you can upload files to create datasets. From rcrunch, there are two methods for creating datasets: one for `data.frames` and one for files of other (non-R) formats. 
+To create new datasets, multiple paths exist. In the web application, you can upload files to create datasets. From `crunch`, there are two methods for creating datasets: one for `data.frames` and one for files of other (non-R) formats. 
 
 ### 1. newDataset
 
@@ -98,7 +98,7 @@ description(ds)
 
 Datasets that you don't need anymore can be either archived or deleted. Archiving removes the dataset from the primary listings of datasets, but it is not a permanently destructive action. You can archive and restore archived datasets in the web application.
 
-Datasets can also be deleted permanently. This action cannot be undone, so it should not be done lightly. rcrunch provides two ways to delete a dataset: a `delete` method on a dataset object, like
+Datasets can also be deleted permanently. This action cannot be undone, so it should not be done lightly. `crunch` provides two ways to delete a dataset: a `delete` method on a dataset object, like
 
 ```{r, eval=FALSE}
 ## Not run

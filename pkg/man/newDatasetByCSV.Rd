@@ -21,8 +21,9 @@ variable names when the dataset is returned. Default is TRUE, meaning alias.}
 If successful, an object of class CrunchDataset.
 }
 \description{
-This function uses the CSV+JSON import format, which may be faster or more
-effective for certain dataset sizes and shapes.
+This function uses the CSV+JSON import format, which is faster and more
+effective for certain dataset sizes and shapes than
+\code{\link{newDatasetByColumn}}.
 }
 \seealso{
 \code{\link{newDataset}} \code{\link{newDatasetByColumn}}

@@ -50,9 +50,12 @@ setValue <- function (x, value) {
 ##' @param x a Category
 ##' @param name a field within \code{x}
 ##' @param value a value for that field to update
-##' @return \code{\$} returns the value of the desired field. Setter
+##' @return \code{$} returns the value of the desired field. Setter
 ##' returns \code{x} duly modified.
-##' @seealso describe-category
+##' @seealso \code{\link{describe-category}}
+##' @name category-extract
+NULL
+
 ##' @rdname category-extract
 ##' @export
 setMethod("$", "Category", function (x, name) x[[name]])
@@ -71,9 +74,12 @@ setMethod("$<-", "Category", function (x, name, value) {
 ##' numeric; value but not id may be \code{NA}; \code{is.selected} returns
 ##' logical indicating whether this Category is a "selected" dichotomy. Setters
 ##' return \code{x} duly modified.
-##' @rdname describe-category
+##' @name describe-category
 ##' @aliases value value<- id is.selected describe-category
-##' @seealso Categories dichotomize
+##' @seealso \code{\link{Categories}} \code{\link{dichotomize}}
+NULL
+
+##' @rdname describe-category
 ##' @export
 setMethod("name", "Category", function (x) x[["name"]])
 ##' @rdname describe-category
@@ -102,6 +108,15 @@ showCategory <- function (x) {
     if (show.values(x)) out <- paste0("[ ", value(x), " ]  ", out)
     return(out)
 }
+
+##' Show methods for Crunch objects
+##'
+##' @param object the object
+##' @return invisibly
+##' @seealso \code{\link[methods]{show}}
+##' @importFrom methods show
+##' @name show-crunch
+NULL
 
 ##' @rdname show-crunch
 ##' @export

@@ -49,9 +49,12 @@ setDatasetDescription <- function (x, value) {
 ##' @param value For the setters, a length-1 character vector to assign
 ##' @return Getters return the character object in the specified slot; setters
 ##' return \code{x} duly modified.
-##' @rdname describe
+##' @name describe
 ##' @aliases describe name name<- description description<- alias<-
-##' @seealso describe-categories describe-catalog
+##' @seealso \code{\link{Categories}} \code{\link{describe-catalog}}
+NULL
+
+##' @rdname describe
 ##' @export
 setMethod("name", "CrunchDataset", function (x) tuple(x)$name)
 ##' @rdname describe
@@ -78,6 +81,9 @@ as.dataset <- function (x, useAlias=default.useAlias(), tuple=DatasetTuple()) {
 ##' non-hidden variables in the dataset. Array subvariables are excluded from
 ##' the column count.
 ##' @seealso \code{\link[base]{dim}}
+##' @name dim-dataset
+NULL
+
 ##' @rdname dim-dataset
 ##' @export
 setMethod("dim", "CrunchDataset",
@@ -140,8 +146,11 @@ setMethod("tuple<-", "CrunchDataset", function (x, value) {
 ##' 
 ##' @param x pretty much any Crunch object
 ##' @return a new version of \code{x}
-##' @rdname refresh
+##' @name refresh
 ##' @aliases refresh
+NULL
+
+##' @rdname refresh
 ##' @export
 setMethod("refresh", "CrunchDataset", function (x) {
     as.dataset(crGET(self(x)), useAlias=x@useAlias, tuple=refresh(tuple(x)))
@@ -159,9 +168,12 @@ setMethod("refresh", "CrunchDataset", function (x) {
 ##' Option available for datasets only. Default is \code{TRUE} if in an
 ##' interactive session.
 ##' @param ... additional arguments, in the generic
-##' @seealso hide deleteDataset
-##' @rdname delete
+##' @seealso \code{\link{hide}} \code{\link{deleteDataset}}
+##' @name delete
 ##' @aliases delete
+NULL
+
+##' @rdname delete
 ##' @export
 setMethod("delete", "CrunchDataset", 
     function (x, confirm=interactive() | is.readonly(x), ...) {
@@ -206,8 +218,11 @@ summaryURL <- function (x) shojiURL(x, "views", "summary")
 ##' @param value For the setters, a VariableCatalog to assign.
 ##' @return Getters return VariableCatalog; setters return \code{x} duly
 ##' modified.
-##' @rdname dataset-variables
+##' @name dataset-variables
 ##' @aliases dataset-variables variables variables<- allVariables allVariables<-
+NULL
+
+##' @rdname dataset-variables
 ##' @export
 setMethod("variables", "CrunchDataset", function (x) active(allVariables(x)))
 ##' @rdname dataset-variables

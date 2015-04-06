@@ -10,8 +10,11 @@
 ##' @param value What to set in a given slot
 ##' @param confirm For \code{delete}, whether confirmation is required. See
 ##' \code{\link{delete}}.
-##' @rdname tuple-methods
+##' @name tuple-methods
 ##' @aliases entity
+NULL
+
+##' @rdname tuple-methods
 ##' @export
 setMethod("refresh", "IndexTuple", function (x) {
     catalog <- ShojiCatalog(crGET(x@index_url))

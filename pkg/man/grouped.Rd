@@ -21,6 +21,6 @@ omitted. For ungrouped(), a VariableGroup.
 in groups at a given level of nesting.
 }
 \seealso{
-VariableOrder
+\code{\link{VariableOrder}}
 }
 

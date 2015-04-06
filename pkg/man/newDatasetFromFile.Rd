@@ -8,7 +8,8 @@ newDatasetFromFile(file, name = basename(file),
   useAlias = default.useAlias(), ...)
 }
 \arguments{
-\item{file}{character, the path to a file to upload}
+\item{file}{character, the path to a file to upload. This should either be
+a .csv or .sav (SPSS) file.}
 
 \item{name}{character, the name to give the new Crunch dataset. Default is
 the file name}
@@ -20,9 +21,11 @@ They're more computer friendly.}
 \item{...}{additional arguments passed to \code{ \link{createDataset}}}
 }
 \value{
-If successful, an object of class crunchdf.
+On success, an object of class \code{CrunchDataset}.
 }
 \description{
-Upload a file to Crunch to make a new dataset
+Use this import method if you have an SPSS data file. Reading such a file
+into R as a data.frame will result in lost metadata. You can just send it
+directly to Crunch and let the server process it.
 }
 
