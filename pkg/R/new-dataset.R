@@ -110,7 +110,7 @@ createDataset <- function (name, useAlias=default.useAlias(), ...) {
 }
 
 addSourceToDataset <- function (dataset, source_url, ...) {
-    batches_url <- dataset@catalogs$batches
+    batches_url <- shojiURL(dataset, "catalogs", "batches")
     body <- list(
         element="shoji:entity",
         body=list(
@@ -120,13 +120,12 @@ addSourceToDataset <- function (dataset, source_url, ...) {
         )
     )
     batch_url <- crPOST(batches_url, body=toJSON(body), ...)
-    status <- pollBatchStatus(batch_url, ShojiCatalog(crGET(batches_url)),
-        until="ready")
-    if (status != "ready") {
+    status <- try(pollBatchStatus(batch_url, batches(dataset), until="ready"))
+    if (is.error(status)) {
         halt("Error importing file")
     }
     crPATCH(batch_url, body=toJSON(list(status="importing")))
-    pollBatchStatus(batch_url, ShojiCatalog(crGET(batches_url)))
+    pollBatchStatus(batch_url, refresh(batches(dataset)))
     invisible(refresh(dataset))
 }
 

@@ -1,6 +1,9 @@
 is.error <- function (x) inherits(x, "try-error")
 
-halt <- function (...) stop(..., call.=FALSE)
+halt <- function (...) {
+    log("ERROR", ..1)
+    stop(..., call.=FALSE)
+}
 
 rethrow <- function (x) halt(attr(x, "condition")$message)
 
@@ -92,7 +95,7 @@ serialPaste <- function (x, collapse="and") {
 now <- function () strftime(Sys.time(), usetz=TRUE)
 
 ##' @importFrom httr parse_url build_url
-absolutizeURLs <- function (urls, base) {
+absoluteURL <- function (urls, base) {
     ## Detect if we have relative urls, and then concatenate if so
     if (length(urls) && ## if there is anything to munge
         !any(substr(urls, 1, 4) == "http")) { ## the urls don't start with http

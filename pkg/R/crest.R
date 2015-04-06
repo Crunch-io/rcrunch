@@ -4,19 +4,22 @@ initCache <- function () {
 }
 initCache()
 
-caching <- function () isTRUE(cache[["on"]])
+caching <- function () isTRUE(getOption("crest.cache"))
 
-cacheOn <- function () cache$on <- TRUE
-cacheOff <- function () rm(list=ls(all=TRUE), envir=cache)
+cacheOn <- function () options(crest.cache=TRUE)
+cacheOff <- function () {
+    options(crest.cache=FALSE)
+    clearCache()
+}
 clearCache <- function () {
-    cacheOff()
-    cacheOn()
+    log("CLEAR CACHE")
+    rm(list=ls(all.names=TRUE, envir=cache), envir=cache)
 }
 
 ## deal with query params? 
 dropCache <- function (x) {
     ## Drop x and anything below it in the tree
-    dropPattern(paste0("^", regexEscape(x)))
+    dropPattern(paste0("^", regexEscape(popQuery(x))))
 }
 dropOnly <- function (x) {
     log("DROP", x)
@@ -24,10 +27,10 @@ dropOnly <- function (x) {
 }
 dropBelow <- function (x) {
     ## Don't drop x, just those below it in the tree. hence ".+"
-    dropPattern(paste0("^", regexEscape(x), ".+")) 
+    dropPattern(paste0("^", regexEscape(popQuery(x)), ".+")) 
 }
 dropPattern <- function (x, escape=TRUE) {
-    log(paste0("DROP", x))
+    log("DROP", x)
     rm(list=ls(envir=cache, pattern=x), envir=cache)
 }
 
@@ -35,6 +38,11 @@ dropPattern <- function (x, escape=TRUE) {
 regexEscape <- function (x) {
     ## Escape all reserved characters with \\
     return(x)
+}
+
+popQuery <- function (x) {
+    ## Remove query parameters from a URL
+    return(sub(".*(\\?.*)$", "", x))
 }
 
 ##' @importFrom httr GET

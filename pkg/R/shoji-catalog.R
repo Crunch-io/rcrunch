@@ -1,6 +1,6 @@
 init.ShojiCatalog <- function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
-    names(.Object@index) <- absolutizeURLs(names(.Object@index), .Object@self)
+    names(.Object@index) <- absoluteURL(names(.Object@index), .Object@self)
     return(.Object)
 }
 setMethod("initialize", "ShojiCatalog", init.ShojiCatalog)

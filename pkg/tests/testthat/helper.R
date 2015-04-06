@@ -4,6 +4,7 @@ Sys.setlocale("LC_COLLATE", "C") ## What CRAN does
 set.seed(666)
 
 cacheOn()
+startLog("~/c/rcrunch/test.log")
 
 fromJSON <- jsonlite::fromJSON
 
@@ -12,7 +13,6 @@ options(crunch.api=getOption("test.api"),
         warn=1,
         crunch.debug=FALSE,
         digits.secs=3,
-        crunch.log="~/c/rcrunch/test.log",
         crunch.timeout=15,
         crunch.email=getOption("test.user"),
         crunch.pw=getOption("test.pw"))

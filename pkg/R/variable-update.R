@@ -3,9 +3,11 @@
     payload <- list(command="update", 
         variables=.updatePayload(variable, value))
     payload[["filter"]] <- zcl(filter)
-    update_url <- paste0(datasetReference(variable), "table/")
-    # cat(toJSON(payload))
-    invisible(crPOST(update_url, body=toJSON(payload)))
+    dref <- datasetReference(variable)
+    update_url <- paste0(dref, "table/")
+    out <- crPOST(update_url, body=toJSON(payload))
+    dropCache(dref)
+    invisible(out)
 }
 
 .updatePayload <- function (variable, value) {

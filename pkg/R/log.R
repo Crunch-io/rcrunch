@@ -5,3 +5,9 @@ log <- function (...) {
     }
 }
 
+startLog <- function (filename, append=FALSE) {
+    options(crunch.log=filename)
+    if (!append && file.exists(filename)) {
+        file.remove(filename)
+    }
+}

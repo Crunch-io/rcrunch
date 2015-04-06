@@ -68,7 +68,9 @@ setMethod("entity", "DatasetTuple", function (x) {
 
 ##' @rdname tuple-methods
 ##' @export
-setMethod("delete", "IndexTuple", function (x) crDELETE(x@entity_url))
+setMethod("delete", "IndexTuple", function (x) {
+    crDELETE(x@entity_url, drop=dropCache(x@index_url))
+})
 ##' @rdname tuple-methods
 ##' @export
 setMethod("delete", "DatasetTuple", function (x, confirm=interactive(), ...) {

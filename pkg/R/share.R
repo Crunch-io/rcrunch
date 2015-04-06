@@ -10,7 +10,7 @@ shareDataset <- function (x, emails, send_notification=TRUE) {
         x <- selectDatasetFromCatalog(x, dscat, strict=TRUE)
     }
     dsurls <- urls(dscat)[x]
-    perm_urls <- vapply(dsurls, function (x) absolutizeURLs("permissions/", x),
+    perm_urls <- vapply(dsurls, function (x) absoluteURL("permissions/", x),
         character(1))
     
     payload <- sapply(emails, 

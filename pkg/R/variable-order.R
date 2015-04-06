@@ -48,7 +48,7 @@ setMethod("initialize", "VariableOrder", init.VariableOrder)
         
         ## Absolutize if needed
         if (!is.null(url.base)) {
-            x[string.urls] <- lapply(x[string.urls], absolutizeURLs,
+            x[string.urls] <- lapply(x[string.urls], absoluteURL,
                 base=url.base)
         }
         return(x)

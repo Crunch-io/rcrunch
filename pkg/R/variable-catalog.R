@@ -3,11 +3,11 @@ init.VariableCatalog <- function (.Object, ...) {
     .Object@index <- lapply(.Object@index, function (x, b) {
         if ("subvariables" %in% names(x)) {
             ## Unlist, for jsonlite
-            x[["subvariables"]] <- absolutizeURLs(unlist(x[["subvariables"]]),
+            x[["subvariables"]] <- absoluteURL(unlist(x[["subvariables"]]),
                 b)
         }
         if ("subvariables_catalog" %in% names(x)) {
-            x[["subvariables_catalog"]] <- absolutizeURLs(x[["subvariables_catalog"]], b)
+            x[["subvariables_catalog"]] <- absoluteURL(x[["subvariables_catalog"]], b)
         }
         return(x)
     }, b=.Object@self)

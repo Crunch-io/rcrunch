@@ -187,9 +187,9 @@ as.list.CrunchDataset <- function (x, ...) {
     lapply(seq_along(variables(x)), function (i) x[[i]])
 }
 
-batches <- function (x) BatchCatalog(crGET(x@catalogs$batches))
+batches <- function (x) BatchCatalog(crGET(shojiURL(x, "catalogs", "batches")))
 
-joins <- function (x) ShojiCatalog(crGET(x@catalogs$joins))
+joins <- function (x) ShojiCatalog(crGET(shojiURL(x, "catalogs", "joins")))
 
 setDatasetVariables <- function (x, value) {
     v <- urls(value)

@@ -25,7 +25,9 @@ appendDataset <- function (dataset1, dataset2, confirm=interactive(),
         confirm=confirm), silent=TRUE)
     if (is.error(dataset)) {
         if (cleanup) {
-            d <- try(crDELETE(batch_url), silent=TRUE)
+            d <- try(crDELETE(batch_url, 
+                    drop=dropCache(shojiURL(dataset1, "catalogs", "batches"))),
+                silent=TRUE)
             if (is.error(d)) {
                 warning("Batch ", batch_url, 
                     " could not be deleted. It may still be processing.")
@@ -51,7 +53,7 @@ addBatchToDataset <- function (dataset1, dataset2) {
         halt("Cannot append dataset to itself")
     }
     
-    batches_url <- dataset1@catalogs$batches
+    batches_url <- shojiURL(dataset1, "catalogs", "batches")
     body <- list(
         element="shoji:entity",
         body=list(
@@ -71,7 +73,6 @@ acceptAppendResolutions <- function (batch_url, dataset,
     batch <- ShojiObject(crGET(batch_url))
     cflicts <- batch@body$conflicts
     resolutions <- formatConflicts(cflicts)
-    # dput(resolutions)
     ## Report on what was done/will be done
     for (i in resolutions) message(i)
     
@@ -96,7 +97,7 @@ acceptAppendResolutions <- function (batch_url, dataset,
     
     ## Proceed.
     batch <- setCrunchSlot(batch, "status", "importing") ## Async?
-    pollBatchStatus(batch_url, batches(dataset), until="imported")
+    pollBatchStatus(batch_url, refresh(batches(dataset)), until="imported")
     invisible(refresh(dataset))
 }
 
