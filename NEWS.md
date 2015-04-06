@@ -1,3 +1,6 @@
+# crunch 1.0.0
+* Rename package to `crunch`. Update all docs to reflect that. Make amendments to pass CRAN checks. 
+
 ## rcrunch 0.11.1
 * `newDataset2` renamed to `newDatasetByCSV` and made to be the default strategy in `newDataset`. The old `newDataset` has been moved to `newDatasetByColumn`.
 
