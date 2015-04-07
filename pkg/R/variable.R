@@ -64,7 +64,7 @@ as.variable <- function (x, subtype=NULL, tuple=VariableTuple()) {
     }
     ## For the jsonlite no-simplify deserializer
     if ("subvariables" %in% names(x@body)) {
-        x@body[["subvariables"]] <- absolutizeURLs(unlist(x@body[["subvariables"]]), self(x))
+        x@body[["subvariables"]] <- absoluteURL(unlist(x@body[["subvariables"]]), self(x))
     }
     return(x)
 }
@@ -72,7 +72,8 @@ as.variable <- function (x, subtype=NULL, tuple=VariableTuple()) {
 ##' @rdname refresh
 ##' @export
 setMethod("refresh", "CrunchVariable", function (x) {
-    as.variable(crGET(self(x)), tuple=refresh(tuple(x)))
+    tup <- refresh(tuple(x))
+    as.variable(crGET(self(x)), tuple=tup)
 })
 
 as.Numeric <- function (x) as.variable(x, "numeric")
@@ -144,11 +145,17 @@ setMethod("categories", "CategoricalArrayVariable",
 ##' @rdname var-categories
 ##' @export
 setMethod("categories<-", c("CategoricalVariable", "Categories"), 
-    function (x, value) setCrunchSlot(x, "categories", value))
+    function (x, value) {
+        dropCache(absoluteURL("../../cube/", self(x)))
+        return(setCrunchSlot(x, "categories", value))
+    })
 ##' @rdname var-categories
 ##' @export
 setMethod("categories<-", c("CategoricalArrayVariable", "Categories"), 
-    function (x, value) setCrunchSlot(x, "categories", value))
+    function (x, value) {
+        dropCache(absoluteURL("../../cube/", self(x)))
+        return(setCrunchSlot(x, "categories", value))
+    })
 ##' @rdname var-categories
 ##' @export
 setMethod("categories<-", c("CategoricalVariable", "numeric"), 
@@ -211,15 +218,21 @@ setMethod("datasetReference", "ANY", function (x) NULL)
 ##' @export
 unbind <- function (x) {
     stopifnot(inherits(x, "CategoricalArrayVariable"))
-    invisible(crDELETE(self(x)))
+    ## Delete self and drop cache for variable catalog (parent)
+    u <- self(x)
+    out <- crDELETE(u)
+    dropCache(absoluteURL("../", u))
+    invisible(out)
 }
 
 ##' @rdname delete
 ##' @export
 setMethod("delete", "CategoricalArrayVariable", function (x, ...) {
+    u <- self(x)
     subvars <- x@body$subvariables
-    out <- crDELETE(self(x))
+    out <- crDELETE(u)
     lapply(subvars, crDELETE)
+    dropCache(absoluteURL("../", u))
     invisible(out)
 })
 

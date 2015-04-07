@@ -64,6 +64,7 @@ setMethod("self", "ShojiObject", function (x) x@self)
 ##' @rdname refresh
 ##' @export
 setMethod("refresh", "ShojiObject", function (x) {
+    dropCache(self(x))
     Class <- class(x)  ## in case x is a subclass of ShojiObject
     return(do.call(Class, crGET(self(x))))
 })

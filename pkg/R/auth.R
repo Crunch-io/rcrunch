@@ -22,6 +22,7 @@ logout <- function () {
 
 deleteSessionInfo <- function () {
     rm(list=setdiff(ls(envir=session_store), ".globals"), envir=session_store)
+    clearCache()
 }
 
 ##' Authenticate with the Crunch API

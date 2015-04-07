@@ -3,6 +3,9 @@ Sys.setlocale("LC_COLLATE", "C") ## What CRAN does
 
 set.seed(666)
 
+cacheOn()
+startLog("~/c/rcrunch/test.log")
+
 fromJSON <- jsonlite::fromJSON
 
 ## .onAttach stuff, for testthat to work right
