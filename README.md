@@ -46,7 +46,7 @@ This installs dependencies and then runs the tests, which installs `rcrunch` in 
 
 `$ make test` is all you need. Requires the `testthat` package for R. You can also specify a specific test file or files to run by adding a "file=" argument, like `$ make test file=auth`. `test_package` will do a regular-expression pattern match within the file names. See its documentation in the `testthat` package.
 
-Testing has two options: unit tests only, and tests that communicate with an API server. This is governed by an environment variable, `LOCALONLY`. This is true by default, meaning that API integration tests are not run. To modify this and test against the Crunch API, you can run `$ export LOCALONLY=FALSE && make test`. 
+Testing has two options: unit tests only, and tests that communicate with an API server. This is governed by an environment variable, `INTEGRATION`. This is false by default, meaning that API integration tests are not run. To modify this and test against the Crunch API, you can run `$ export INTEGRATION=TRUE && make test`. 
 
 To run integration tests, you will need to specify a test user, password, and API server to communicate with, either by editing `pkg/inst/tests/helper.R` or by setting `test.user`, `test.pw`, and `test.api` in your `.Rprofile`, as in:
 
