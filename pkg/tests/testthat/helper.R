@@ -4,7 +4,7 @@ Sys.setlocale("LC_COLLATE", "C") ## What CRAN does
 set.seed(666)
 
 cacheOn()
-startLog("~/c/rcrunch/test.log")
+# startLog ("~/c/rcrunch/test.log")
 
 fromJSON <- jsonlite::fromJSON
 
