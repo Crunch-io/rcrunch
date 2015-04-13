@@ -62,27 +62,3 @@ setMethod("as.vector", "CrunchVariable", function (x, mode) {
     columnParser(type(x))(getValues(x), x)
 })
 
-##' as.data.frame method for CrunchDataset
-##'
-##' @param x a CrunchDataset
-##' @param row.names part of as.data.frame signature. Ignored.
-##' @param optional part of as.data.frame signature. Ignored.
-##' @param ... additional arguments passed to as.data.frame.default
-##' @return a data.frame
-##' @name dataset-to-R
-NULL
-
-##' @rdname dataset-to-R
-##' @export
-as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE, ...) {
-    default.stringsAsFactors <- function () FALSE
-    limit <- min(c(10000, getOption("crunch.data.frame.limit")))
-    if (nrow(x) * ncol(x) > limit) {
-        halt("Dataset too large to coerce to data.frame. ",
-            "Consider subsetting it first")
-    }
-    out <- lapply(x, as.vector)
-    names(out) <- names(x)
-    # return(as.data.frame(out, ...))
-    return(structure(out, class="data.frame", row.names=c(NA, -nrow(x))))
-}
