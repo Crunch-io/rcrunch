@@ -30,18 +30,26 @@ with(fake.HTTP, {
         expect_identical(as.vector(test.ds$catarray), ca.values)
     })
 
-    test_that("as.data.frame on CrunchDataset", {
-        expect_true(is.data.frame(as.data.frame(test.ds)))
+    test_that("as.data.frame on CrunchDataset yields CrunchDataFrame", {
+        expect_false(is.data.frame(as.data.frame(test.ds)))
+        expect_true(inherits(as.data.frame(test.ds), "CrunchDataFrame"))
         expect_identical(dim(as.data.frame(test.ds)), c(25L, ncol(test.ds)))
         expect_identical(names(as.data.frame(test.ds)), names(test.ds))
         expect_identical(as.data.frame(test.ds)$birthyr, as.vector(test.ds$birthyr))
+        expect_identical(evalq(gender, as.data.frame(test.ds)), 
+            as.vector(test.ds$gender))
+    })
+    
+    test_that("as.data.frame(as.data.frame())", {
+        expect_true(is.data.frame(as.data.frame(as.data.frame(test.ds))))
+        expect_true(is.data.frame(as.data.frame(test.ds, force=TRUE)))
     })
     
     test_that("as.data.frame size limit", {
         options(crunch.data.frame.limit=50)
-            expect_error(as.data.frame(test.ds), 
+            expect_error(as.data.frame(test.ds, force=TRUE), 
                 "Dataset too large to coerce")
-            expect_true(is.data.frame(as.data.frame(test.ds[,1:2])))
+            expect_true(is.data.frame(as.data.frame(test.ds[,1:2], force=TRUE)))
         options(crunch.data.frame.limit=10000)
     })
     
@@ -92,11 +100,26 @@ if (run.integration.tests) {
             })
         
             test_that("as.data.frame with API", {
-                expect_true(is.data.frame(as.data.frame(ds)))
+                expect_false(is.data.frame(as.data.frame(ds)))
+                expect_true(inherits(as.data.frame(ds), "CrunchDataFrame"))
                 expect_identical(dim(as.data.frame(ds)), dim(df))
                 expect_identical(names(as.data.frame(ds)), names(df))
                 expect_identical(as.data.frame(ds)$v1,
                     as.vector(ds$v1))
+            })
+            
+            test_that("as.data.frame(force) with API", {
+                expect_true(is.data.frame(as.data.frame(as.data.frame(ds))))
+                expect_true(is.data.frame(as.data.frame(ds, force=TRUE)))
+            })
+            
+            v2 <- ds$v2
+            delete(v2)
+            test_that("CrunchDataFrame lazily fetches columns", {
+                expect_true("v2" %in% names(ds)) ## ds is stale
+                expect_true(inherits(as.data.frame(ds), "CrunchDataFrame"))
+                ## This should error because it will try to get values for v2
+                expect_error(as.data.frame(ds, force=TRUE))
             })
         
             test_that("model.frame thus works on CrunchDataset over API", {
