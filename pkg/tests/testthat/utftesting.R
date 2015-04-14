@@ -30,5 +30,3 @@ with(test.authentication, {
         })
     })
 })
-
-(
