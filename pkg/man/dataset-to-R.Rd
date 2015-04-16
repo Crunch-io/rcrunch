@@ -7,7 +7,7 @@
 \title{as.data.frame method for CrunchDataset}
 \usage{
 \method{as.data.frame}{CrunchDataset}(x, row.names = NULL, optional = FALSE,
-  ...)
+  force = FALSE, ...)
 
 \method{as.data.frame}{CrunchDataFrame}(x, row.names = NULL,
   optional = FALSE, ...)
@@ -19,12 +19,25 @@
 
 \item{optional}{part of as.data.frame signature. Ignored.}
 
+\item{force}{logical: actually coerce the dataset to \code{data.frame}, or
+leave the columns as unevaluated promises. Default is \code{FALSE}.}
+
 \item{...}{additional arguments passed to as.data.frame.default}
 }
 \value{
-a data.frame
+an object of class \code{CrunchDataFrame} unless \code{force}, in
+which case the return is a \code{data.frame}.
 }
 \description{
-as.data.frame method for CrunchDataset
+This method is defined principally so that you can use a CrunchDataset as
+a \code{data} argument to other R functions (such as
+\code{\link[stats]{lm}}). Unless you give it the \code{force==TRUE}
+argument, this function does not in fact return a \code{data.frame}: it
+returns an object with an interface like a data.frame, such that you get
+R vectors when you access its columns (unlike a CrunchDataset, which
+returns CrunchVariable objects). This allows modeling functions that
+require select columns of a dataset to retrieve only those variables from
+the remote server, rather than pulling the entire dataset into local
+memory.
 }
 
