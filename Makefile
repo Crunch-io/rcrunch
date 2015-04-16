@@ -9,7 +9,7 @@ test:
 	R --slave -e 'library(testthat); setwd(file.path(.libPaths()[1], "crunch", "tests")); system.time(test_check("crunch", filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
 
 install-ci:
-	R --slave -e 'install.packages(c("jsonlite", "httr", "RJSONIO", "codetools", "testthat", "devtools"), repo="http://cran.at.r-project.org", lib=Sys.getenv("R_LIB"))'
+	R --slave -e 'install.packages(c("jsonlite", "httr", "codetools", "testthat", "devtools"), repo="http://cran.at.r-project.org", lib=Sys.getenv("R_LIB"))'
 	R CMD INSTALL --install-tests -l $(R_LIB) pkg
 
 test-ci:

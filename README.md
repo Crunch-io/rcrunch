@@ -6,7 +6,11 @@
 
 ## Installing
 
-You can install the latest package version from within R using the `devtools` package:
+`crunch` can be installed from CRAN with
+
+    install.packages("crunch")
+
+The pre-release version of the package can be pulled from GitHub using the `devtools` package:
 
     # install.packages("devtools")
     devtools::install_github("Crunch-io/rcrunch", subdir="pkg", build_vignettes=TRUE)
@@ -37,7 +41,7 @@ You can set several parameters in your .Rprofile to simplify your workflow:
 
 ### Installing from a local checkout
 
-    $ R --slave -e 'install.packages(c("httr", "RJSONIO", "codetools", "testthat"), repo="http://cran.at.r-project.org")'
+    $ R --slave -e 'install.packages(c("httr", "codetools", "testthat"), repo="http://cran.at.r-project.org")'
     $ make test
 
 This installs dependencies and then runs the tests, which installs `rcrunch` in the process.
