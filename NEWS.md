@@ -1,3 +1,10 @@
+## crunch 1.1.0
+* Add query cache, on by default. 
+
+* `as.data.frame` now does return an actual `data.frame` unless given the argument `force=TRUE`. Instead, it returns a `CrunchDataFrame`, and environment containing unevaluated promises. This allows R functions, particularly those of the form `function(formula, data)` to work with CrunchDatasets without copying the entire dataset from the server to local memory. Only the variables referenced in the formula fetch data when their promises evaluated.
+
+* Remove `RJSONIO` dependency in favor of `jsonlite` for `toJSON`.
+
 # crunch 1.0.0
 * Rename package to `crunch`. Update all docs to reflect that. Make amendments to pass CRAN checks. 
 
