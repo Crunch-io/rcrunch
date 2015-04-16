@@ -27,6 +27,9 @@ NULL
     if (is.null(getOption("crunch.timeout"))) {
         options(crunch.timeout=60)
     }
+    if (is.null(getOption("crest.cache"))) {
+        options(crest.cache=TRUE)
+    }
     options(warn=1)
     set_config(crunchConfig())
     invisible()
