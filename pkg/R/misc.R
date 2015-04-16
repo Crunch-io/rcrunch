@@ -148,10 +148,3 @@ joinPath <- function (base.path, relative.part) {
 ## Borrowed from Hadley
 "%||%" <- function (a, b) if (!is.null(a)) a else b
 
-## Copied from RJSONIO purely to make CHECK not complain. isContainer is 
-## referenced in the default argument for "container" in RJSONIO::toJSON.
-## Not used in the crunch package.
-isContainer <- function (x, asIs, .level) {
-    (is.na(asIs) && .level == 1) || (!is.na(asIs) && asIs) || .level == 
-        1L || length(x) > 1 || length(names(x)) > 0 || is.list(x)
-}

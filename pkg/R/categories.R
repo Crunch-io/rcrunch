@@ -78,27 +78,6 @@ setMethod("ids<-", "Categories", function (x, value) {
     return(x)
 })
 
-##' toJSON methods for Crunch objects
-##' 
-##' @param x the object
-##' @param container argument to the generic, not used
-##' @param collapse argument to the generic, not used
-##' @param .level argument to the generic, not used
-##' @param .withNames argument to the generic, not used
-##' @param .na argument to the generic, not used
-##' @param .escapeEscapes argument to the generic, not used
-##' @param pretty argument to the generic, not used
-##' @param asIs argument to the generic, not used
-##' @param .inf argument to the generic, not used
-##' @param ... additional arguments argument to the generic, not used
-##' @return JSON-serialized character object
-##' @name tojson-crunch
-NULL
-
-##' @rdname tojson-crunch
-##' @export
-setMethod("toJSON", "Categories", function (x, ...) toJSON(I(x@.Data)))
-
 .na.omit.categories <- function (object, ...) {
     missings <- vapply(object, function (x) isTRUE(x$missing), logical(1),
         USE.NAMES=FALSE)

@@ -66,29 +66,6 @@ init.VariableGroup <- function (.Object, group, entities, url.base=NULL, ...) {
 }
 setMethod("initialize", "VariableGroup", init.VariableGroup)
 
-##' @rdname tojson-crunch
-##' @export
-setMethod("toJSON", "VariableOrder",
-    function (x, ...) toJSON(list(graph=x@graph, ...)))
-
-.jsonprep.vargroup <- function (x) {
-    ents <- x@entities
-    if (length(ents) == 0) {
-        ## toJSON(character(0)) is [""], which is length 1 :(
-        ents <- list() ## but toJSON(list()) is []
-    } else if (is.list(ents)) {
-        nested.groups <- vapply(ents, inherits, logical(1),
-            what="VariableGroup")
-        ents[nested.groups] <- lapply(ents[nested.groups], .jsonprep.vargroup)
-    }
-    return(structure(list(I(ents)), .Names=x@group))
-}
-##' @rdname tojson-crunch
-##' @export
-setMethod("toJSON", "VariableGroup", function (x, ...) {
-    toJSON(.jsonprep.vargroup(x), ...)
-})
-
 ##' @export
 as.list.VariableOrder <- function (x, ...) x@graph
 
