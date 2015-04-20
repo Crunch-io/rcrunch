@@ -102,9 +102,9 @@ if (run.integration.tests) {
                     "Can only assign Variables into an object of class Subvariables")
             })
             test_that("can rename some subvariables", {
-                try(names(subvariables(var)[2:3]) <- c("Dois", "Três"))
+                try(names(subvariables(var)[2:3]) <- c("Dois", "Tres"))
                 expect_identical(names(subvariables(var)),
-                    c("mr_1", "Dois", "Três"))
+                    c("mr_1", "Dois", "Tres"))
                 sv <- subvariables(var)
                 try(names(sv[2:3]) <- c("M.R. Two", "mr_3"))
                 expect_identical(names(sv),

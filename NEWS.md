@@ -1,3 +1,6 @@
+### crunch 1.1.1
+* Remove all non-ASCII from test files so that tests will run on Solaris.
+
 ## crunch 1.1.0
 * Add query cache, on by default. 
 
