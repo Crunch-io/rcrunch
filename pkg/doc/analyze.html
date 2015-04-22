@@ -233,9 +233,9 @@ tab1
 ##                  111
 </code></pre>
 
-<p>Additional dimensions are added with <code>+</code>. For a two-way table of gender and education, </p>
+<p>Additional dimensions are added with <code>+</code>. For a two-way table of education and gender, </p>
 
-<pre><code class="r">tab2 &lt;- crtabs(~ gender + educ, data=ds)
+<pre><code class="r">tab2 &lt;- crtabs(~ educ + gender, data=ds)
 tab2
 </code></pre>
 
@@ -266,7 +266,7 @@ tab2
 
 <p>Now, if we request the same two-way table as before, we&#39;ll get weighted results:</p>
 
-<pre><code class="r">crtabs(~ gender + educ, data=ds)
+<pre><code class="r">crtabs(~ educ + gender, data=ds)
 </code></pre>
 
 <pre><code>##                       gender
@@ -281,7 +281,7 @@ tab2
 
 <p>If we want unweighted data, that&#39;s easy enough:</p>
 
-<pre><code class="r">crtabs(~ gender + educ, data=ds, weight=NULL)
+<pre><code class="r">crtabs(~ educ + gender, data=ds, weight=NULL)
 </code></pre>
 
 <pre><code>##                       gender
@@ -551,7 +551,7 @@ tab3mr
 ##   Post-grad            -0.26  -0.26
 </code></pre>
 
-<p>Looks like most people surveyed thought that the U.S. is on the wrong track.</p>
+<p>Looks like most people surveyed thought that the U.S. is on the wrong track, but that pessimism is less pronounced for those with higher levels of education.</p>
 
 <p>A few final observations about <code>crtabs</code>. First, all of these calculations have been weighted by the weight variable we set above. We set it and could then forget about it&ndash;we didn&#39;t have to litter all of our expressions with <code>ds$weight</code> and extra arithmetic to do the weighting. Crunch handles this for us.</p>
 

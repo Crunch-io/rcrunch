@@ -218,16 +218,303 @@ hr {
 
 <h2>Viewing the order</h2>
 
-<p>Picking up with the dataset we used in the Array Variables vignette, we can fetch the <code>ordering</code> property of the dataset to view the current organization:</p>
+<p>Picking up with the dataset we used in the <a href="array-variables.html">array variables vignette</a>, we can fetch the <code>ordering</code> property of the dataset to view the current organization:</p>
 
 <pre><code class="r">ordering(ds)
 </code></pre>
 
-<h2>Group names</h2>
+<pre><code>## starttime
+## endtime
+## perc_skipped
+## newsint2
+## Direction of country
+## snowdenfav
+## snowdenleakapp
+## snowdenpros
+## snowdenpenalty
+## manningknowledge
+## manningfavorability
+## manningguilt
+## manningpenalty
+## betterpartyissues
+## immigration
+## gay
+## education
+## healthcare
+## taxes
+## abortion
+## economy
+## jobs
+## betterpartygroups
+## gays
+## women
+## blacks
+## hispanics
+## families
+## smallbus
+## guns
+## christians
+## immig
+## gaymar2
+## congressdone
+## agendasetter
+## theaterfreq
+## moviepreference
+## seentopmovies
+## ironman3
+## despicableme2
+## manofsteel
+## monstersu
+## fastfurious6
+## startrek
+## worldwarz
+## loneranger
+## greatgatsby
+## wolverine
+## movierefreshments
+## butterpopcorn
+## bestmovies
+## Issue importance
+## imissf
+## imissf2
+## fav
+## fav_obam
+## fav_boeh
+## fav_mccon
+## fav_reid
+## fav_pelosi
+## fav_biden
+## fav_hclin
+## obamaapp
+## Approval of Obama on issues
+## congapp
+## ideo5
+## ideoobama
+## saysobama
+## likeobama
+## econtrend
+## stockpos
+## persfinretro
+## ownorrent
+## ownhomevalretro
+## areahomeval
+## homevalpro
+## mortworry
+## homebuypros
+## child18
+## voteregadd_rev
+## voteregadd2_rev
+## student2
+## job
+## employstat2
+## jobmult
+## wkhrs
+## jobworry
+## jobavail
+## jobavailsixmon
+## occupxhappywjob
+## hhincpros
+## exhaustsavings
+## birthyr
+## gender
+## pid3
+## pid7
+## pid7others
+## race
+## educ
+## marstat
+## pew_bornagain
+## pew_religimp
+## pew_churatd
+## pew_prayer
+## phone
+## faminc
+## faminc2
+## inputstate
+## comments
+## region
+## state
+## obamaGroup
+## obamaVote
+## weight
+## votereg_new
+## is_voter
+## votereg_old
+## votereg
+</code></pre>
+
+<p>It&#39;s flat. If you&#39;re importing data from a <code>data.frame</code> or a file, like an SPSS file, this is where you&#39;ll begin.</p>
 
 <h2>Creating groups</h2>
 
+<p>Since I know how this dataset is organized, I&#39;m going quickly toss the variables into one of a small number of groups, instantiated with <code>VariableGroup</code>, and collect them in a container object called <code>VariableOrder</code>.</p>
+
+<pre><code class="r">ordering(ds) &lt;- VariableOrder(
+        VariableGroup(&quot;Demos&quot;, ds[c(1:3, 93:118)]),
+        VariableGroup(&quot;Tracking questions&quot;, ds[c(4,5,52:92)]),
+        VariableGroup(&quot;This week&quot;, ds[6:51])
+    )
+</code></pre>
+
+<p>Now, our variable tree has some structure:</p>
+
+<pre><code class="r">ordering(ds)
+</code></pre>
+
+<pre><code>## [+] Demos
+##     starttime
+##     endtime
+##     perc_skipped
+##     birthyr
+##     gender
+##     pid3
+##     pid7
+##     pid7others
+##     race
+##     educ
+##     marstat
+##     pew_bornagain
+##     pew_religimp
+##     pew_churatd
+##     pew_prayer
+##     phone
+##     faminc
+##     faminc2
+##     inputstate
+##     comments
+##     region
+##     state
+##     obamaGroup
+##     obamaVote
+##     weight
+##     votereg_new
+##     is_voter
+##     votereg_old
+##     votereg
+## [+] Tracking questions
+##     newsint2
+##     Direction of country
+##     Issue importance
+##     imissf
+##     imissf2
+##     fav
+##     fav_obam
+##     fav_boeh
+##     fav_mccon
+##     fav_reid
+##     fav_pelosi
+##     fav_biden
+##     fav_hclin
+##     obamaapp
+##     Approval of Obama on issues
+##     congapp
+##     ideo5
+##     ideoobama
+##     saysobama
+##     likeobama
+##     econtrend
+##     stockpos
+##     persfinretro
+##     ownorrent
+##     ownhomevalretro
+##     areahomeval
+##     homevalpro
+##     mortworry
+##     homebuypros
+##     child18
+##     voteregadd_rev
+##     voteregadd2_rev
+##     student2
+##     job
+##     employstat2
+##     jobmult
+##     wkhrs
+##     jobworry
+##     jobavail
+##     jobavailsixmon
+##     occupxhappywjob
+##     hhincpros
+##     exhaustsavings
+## [+] This week
+##     snowdenfav
+##     snowdenleakapp
+##     snowdenpros
+##     snowdenpenalty
+##     manningknowledge
+##     manningfavorability
+##     manningguilt
+##     manningpenalty
+##     betterpartyissues
+##     immigration
+##     gay
+##     education
+##     healthcare
+##     taxes
+##     abortion
+##     economy
+##     jobs
+##     betterpartygroups
+##     gays
+##     women
+##     blacks
+##     hispanics
+##     families
+##     smallbus
+##     guns
+##     christians
+##     immig
+##     gaymar2
+##     congressdone
+##     agendasetter
+##     theaterfreq
+##     moviepreference
+##     seentopmovies
+##     ironman3
+##     despicableme2
+##     manofsteel
+##     monstersu
+##     fastfurious6
+##     startrek
+##     worldwarz
+##     loneranger
+##     greatgatsby
+##     wolverine
+##     movierefreshments
+##     butterpopcorn
+##     bestmovies
+</code></pre>
+
+<h2>Group names</h2>
+
+<p>We can use the <code>names</code> method to access and modify these group names:</p>
+
+<pre><code class="r">names(ordering(ds))
+</code></pre>
+
+<pre><code>## [1] &quot;Demos&quot;              &quot;Tracking questions&quot; &quot;This week&quot;
+</code></pre>
+
+<p>Let&#39;s rename the first group. No need to abbreviate &ldquo;Demographics&rdquo;.</p>
+
+<pre><code class="r">names(ordering(ds))[1] &lt;- &quot;Demographics&quot;
+names(ordering(ds))
+</code></pre>
+
+<pre><code>## [1] &quot;Demographics&quot;       &quot;Tracking questions&quot; &quot;This week&quot;
+</code></pre>
+
 <h2>Reordering groups and entities</h2>
+
+<p><code>VariableOrder</code> and <code>VariableGroup</code> support standard R forms of indexing for extracting and reordering. </p>
+
+<p>Let&#39;s move &ldquo;Demographics&rdquo; to the end:</p>
+
+<pre><code class="r">ordering(ds) &lt;- ordering(ds)[c(2, 3, 1)]
+names(ordering(ds))
+</code></pre>
+
+<pre><code>## [1] &quot;Tracking questions&quot; &quot;This week&quot;          &quot;Demographics&quot;
+</code></pre>
 
 <h2>Nested groups</h2>
 
