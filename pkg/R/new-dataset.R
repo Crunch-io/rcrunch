@@ -203,7 +203,7 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
     batch <- try(crPOST(batches_url,
         body=list(file=httr::upload_file(file))))
     if (is.error(batch)) {
-        delete(ds)
+        delete(ds, confirm=FALSE)
         rethrow(batch)
     }
     message("Done!")

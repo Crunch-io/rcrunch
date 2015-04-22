@@ -85,6 +85,7 @@ setGeneric("dimnames")
 setGeneric("margin.table")
 
 setGeneric("prop.table")
+setGeneric("round")
 
 ##' Generic method for converting objects to Crunch representations
 ##'

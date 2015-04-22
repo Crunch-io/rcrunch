@@ -7,17 +7,22 @@
 \alias{margin.table,CrunchCube-method}
 \alias{prop.table}
 \alias{prop.table,CrunchCube-method}
+\alias{round,CrunchCube-method}
 \title{Work with CrunchCubes}
 \usage{
 \S4method{margin.table}{CrunchCube}(x, margin = NULL)
 
 \S4method{prop.table}{CrunchCube}(x, margin = NULL)
+
+\S4method{round}{CrunchCube}(x, digits = 0)
 }
 \arguments{
 \item{x}{a CrunchCube}
 
 \item{margin}{index, or vector of indices to generate margin for. See
 \code{\link[base]{prop.table}}}
+
+\item{digits}{see \code{\link[base]{round}}}
 }
 \value{
 The appropriate margin.table or prop.table.

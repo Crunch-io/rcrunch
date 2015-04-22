@@ -29,3 +29,8 @@ vdata:
 
 man: doc
 	R CMD Rd2pdf pkg/man/ --force
+
+build-vignettes: build
+	R CMD INSTALL crunch_$(VERSION).tar.gz
+	cp -r ~/R/crunch/doc pkg
+	open pkg/doc/getting-started.html

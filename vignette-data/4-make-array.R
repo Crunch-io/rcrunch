@@ -5,8 +5,8 @@ options(crunch.api=getOption("test.api"),
         crunch.pw=getOption("test.pw"))
 login()
 
-load("../pkg/vignettes/economist.RData")
-start <- ds <- newDataset(df, name="Economist/YouGov Weekly Survey")
+load("../pkg/vignettes/variables.RData")
+start <- ds
 
 show_imiss_b <- crunch:::showCrunchVariable(ds$imiss_b)
 summary_imiss_b <- summary(ds$imiss_b)
@@ -44,6 +44,5 @@ ds$boap <- dichotomize(ds$boap, "Strongly approve")
 show_boap3 <- c(crunch:::showCrunchVariable(ds$boap),
     show_boap_subvars)
 
-rm(df)
 save.image(file="../pkg/vignettes/array-variables.RData")
 

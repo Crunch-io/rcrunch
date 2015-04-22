@@ -30,10 +30,10 @@ tab1
 tab1
 ```
 
-Additional dimensions are added with `+`. For a two-way table of education and gender, 
+Additional dimensions are added with `+`. For a two-way table of gender and education, 
 
 ```{r, eval=FALSE}
-tab2 <- crtabs(~ educ + gender, data=ds)
+tab2 <- crtabs(~ gender + educ, data=ds)
 tab2
 ```
 ```{r, echo=FALSE}
@@ -59,7 +59,7 @@ weight(ds) <- ds$weight
 Now, if we request the same two-way table as before, we'll get weighted results:
 
 ```{r, eval=FALSE}
-crtabs(~ educ + gender, data=ds)
+crtabs(~ gender + educ, data=ds)
 ```
 ```{r, echo=FALSE}
 tab2weighted
@@ -68,7 +68,7 @@ tab2weighted
 If we want unweighted data, that's easy enough:
 
 ```{r, eval=FALSE}
-crtabs(~ educ + gender, data=ds, weight=NULL)
+crtabs(~ gender + educ, data=ds, weight=NULL)
 ```
 ```{r, echo=FALSE}
 tab2
@@ -186,7 +186,7 @@ round(crtabs(mean(track) ~ educ + gender, data=ds), 2)
 round(tab7, 2)
 ```
 
-Looks like most people surveyed thought that the U.S. is on the wrong track, but that pessimism is less pronounced for those with higher levels of education.
+Looks like most people surveyed thought that the U.S. is on the wrong track.
 
 A few final observations about `crtabs`. First, all of these calculations have been weighted by the weight variable we set above. We set it and could then forget about it--we didn't have to litter all of our expressions with `ds$weight` and extra arithmetic to do the weighting. Crunch handles this for us.
 
