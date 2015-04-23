@@ -29,17 +29,44 @@ body {
   line-height: 1.3;
   font-weight: inherit; }
 
+@font-face{
+    font-family: 'AvenirLTStd';
+    src: url(/assets/AvenirLTPro-Heavy.ttf);
+    font-weight: font-weight-heavy;
+    font-style: normal;
+  }
+  @font-face{
+    font-family: 'AvenirLTStd';
+    src: url(/assets/AvenirLTPro-Roman.ttf);
+    font-weight: font-weight-normal;
+    font-style: normal;
+  }
+tt {
+  font-family: 'Source Sans Pro';
+}
+/*
+@font-face
+    font-family 'AvenirLTStd'
+    src url(/AvenirLTPro-Roman.ttf)
+    font-weight font-weight-normal
+    font-style normal
+
+@font-face
+    font-family 'AvenirLTStd'
+    src url(/AvenirLTPro-Roman.ttf)
+    font-weight font-weight-light
+    font-style normal
+*/
 /*********************************************
  * HEADERS
  *********************************************/
 .reveal h1, .reveal h2, .reveal h3, .reveal h4, .reveal h5, .reveal h6 {
   margin: 0 0 20px 0;
-  color: #222;
-  font-family: 'Source Sans Pro', Helvetica, sans-serif;
+  color: #565656;
+  font-family: 'AvenirLTStd','Source Sans Pro', Helvetica, sans-serif;
   font-weight: 600;
   line-height: 1.2;
   letter-spacing: normal;
-  text-transform: uppercase;
   text-shadow: none;
   word-wrap: break-word; }
 
@@ -202,8 +229,8 @@ body {
 .reveal section img {
   margin: 15px 0px;
   background: rgba(255, 255, 255, 0.12);
-  border: 4px solid #222;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.15); }
+  border: none;
+  }
 
 .reveal a img {
   -webkit-transition: all 0.15s linear;
