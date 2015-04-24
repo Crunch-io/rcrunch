@@ -31,13 +31,13 @@ body {
 
 @font-face{
     font-family: 'AvenirLTStd';
-    src: url(/assets/AvenirLTPro-Heavy.ttf);
+    src: url(../../assets/AvenirLTPro-Heavy.ttf);
     font-weight: font-weight-heavy;
     font-style: normal;
   }
 @font-face{
     font-family: 'AvenirLTStd';
-    src: url(/assets/AvenirLTPro-Roman.ttf);
+    src: url(../../assets/AvenirLTPro-Roman.ttf);
     font-weight: font-weight-normal;
     font-style: normal;
   }
