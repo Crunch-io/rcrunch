@@ -103,6 +103,54 @@ Leads to communication via export/import, copy/paste. Iteration is painful.</p>
 				<p class="fragment">How do we design interfaces that work for these different audiences?</p>
 			</section>
 			<section>
+				<section>
+				<img src="assets/crunch.png"/>
+					<h2>The <code>crunch</code> package</h2>
+					<p>Idiomatic R interface to cloud service</p>
+					<p><a href="https://github.com/Crunch-io/rcrunch/">https://github.com/Crunch-io/rcrunch/</a></p>
+					<pre><code>install.packages("crunch")</code></pre>
+					<pre><code>devtools::install_github("Crunch-io/rcrunch/pkg")</code></pre>
+				</section>
+				<section>
+					<h2>Idiomatic R</h2>
+					<div data-markdown>
+					- The `data.frame`
+					- Columnar, heterogeneous types
+					- Indexing with `$`, `[`, `[[`
+					- Formulas
+					- Vectorized and functional
+					- `*apply`
+					</div>
+				</section>
+				<section>
+				<img src="assets/crunch.png"/>
+				<h2>The <code>crunch</code> package</h2>
+				<div data-markdown>
+				- Uses same public HTTP API as web app
+				- (Almost) never need to know that
+				- Presents abstraction that datasets and variables are in local memory
+				- Design interface around what an R user needs to do, not what HTTP dictates
+				</div>
+				</section>
+			</section>
+			<section data-transition="fade">
+				<img src="assets/public-logo.png"/> [using rcrunch]
+			</section>
+			<section>
+				<section data-markdown>
+![](assets/crunch.png)
+## How?
+- Lots of S4 classes and methods
+- `[` sometimes GETs
+- `names<-` calls PATCH
+- `$<-` does POST or PATCH 
+- … except when I had to use S3
+- `as.data.frame.CrunchDataset`
+				</section>
+				<section>
+				<img src="assets/crunch.png"/>
+				<h2>How?</h2>
+				<p>Focus on interface by test-driving</p>
 				<pre>
 					<code>
 with(test.authentication, {
@@ -115,6 +163,55 @@ with(test.authentication, {
    })
 })
 </code></pre>
+			</section>
+			<section>
+				<img src="assets/crunch.png"/>
+				<h2>How?</h2>
+				<p>Focus on interface by test-driving</p>
+				<pre>
+					<code>
+setup.and.teardown <- function (setup, teardown, obj.name=".setup") {
+   structure(list(setup=setup, teardown=teardown, obj.name=obj.name),
+       class="SUTD")
+}
+
+with.SUTD <- function (data, expr, ...) {
+   env <- parent.frame()
+   on.exit(data$teardown())
+   assign(data$obj.name, data$setup(), envir=env)
+   try(eval(substitute(expr), envir=parent.frame()))
+}
+
+test.authentication <- setup.and.teardown(
+   function () suppressMessages(login()),
+   logout)
+</code></pre>
+			</section>
+			</section>
+			<section>
+			<img src="assets/crunch.png"/>
+				<h2>Collaboration: Crunch style</h2>
+				<div data-markdown>
+				- Make all more productive, less frustrated
+				- Everyone can work at own level and meet needs
+				- Less time for data analyst to do menial tasks, more time for what they’re good at
+				- Less latency in communication
+				- Deliver dynamic data, not static reports
+				</div>
+			</section>
+			<section>
+			<img src="assets/crunch.png"/>
+			<h2>Summary</h2>
+			<div data-markdown>
+			- Collaboration is hard, especially with diverse skills and domains
+			- Cloud can solve “single source of truth” but interface design problem remains
+			- Crunch.io provides cloud computing + intelligent interface design for both technical and non-technical audiences
+			</div></section>
+			<section>
+			<img src="assets/crunch.png"/><img style="padding-left:20px;" src="assets/public-logo.png"/>
+			<h3>Questions? Comments?</h3><ul>
+			<li><a href="mailto:neal@crunch.io">neal@crunch.io</a></li>
+			<li><a href="mailto:mike@crunch.io">mike@crunch.io</a></li>
 			</section>
 			</div>
 		</div>
