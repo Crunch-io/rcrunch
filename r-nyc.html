@@ -4,10 +4,9 @@
 	<head>
 		<meta charset="utf-8">
 
-		<title>reveal.js - The HTML Presentation Framework</title>
+		<title>Cloud Collaboration with Crunch.io</title>
 
-		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
-		<meta name="author" content="Hakim El Hattab">
+		<meta name="author" content="Crunch.io">
 
 		<meta name="apple-mobile-web-app-capable" content="yes" />
 		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
@@ -40,18 +39,70 @@
 
 			<!-- Any section element inside of this container is displayed as a slide -->
 			<div class="slides">
-			<section>
-				<img src="assets/public-logo.png"/>
+			<section data-transition="concave">
+				<img src="assets/crunch.png"/>
 				<h2>Cloud Collaboration with<br/>
-				Crunch and <tt>crunch</tt></h2>
+				Crunch and <code>crunch</code></h2>
+			</section>
+			<section data-markdown>
+				![](assets/public-logo.png)
+				<div>
+				- Instant, visual, collaborative data analysis
+				- Intuitive GUI for easy exploration — no programming required
+				- Public REST API, libraries for integration with other domains (R, Python, …) — for when you want to code
+				</div>
 			</section>
 			<section>
-				<h1><img src="assets/crunch.png"/>Crunch.io</h1>
-				<ul>
-				<li></li>
+				<section>
+					<img src="assets/crunch.png"/>
+					<h1>Why Crunch?</h1>
+				</section>
+				<section>
+					<img src="assets/crunch.png"/>
+					<h2>Why Crunch?</h2>
+					<div data-markdown>
+					- Interface design limitations of traditional software
+					- Technical skill required ≫ conceptual complexity of questions
+					</div>
+					<ul>
+					<li class="fragment">E.g. % of males 18–24 that like popcorn at the movies? <span class="fragment">Significantly different from females?</span></li>
+					</ul>
+				</section>
+				<section>
+					<img src="assets/crunch.png"/>
+					<h2>Why Crunch?</h2>
+					<h3>Because collaboration with data is hard.</h3>
+					<p>Even harder with…</p>
+					<div class="fragment" data-markdown>
+					- Different skill levels
+					- Different tools/software
+					- Different objectives
+					</div>
+					<p class="fragment">
+Leads to communication via export/import, copy/paste. Iteration is painful.</p>
+				</section>
+					<section>
+					<img src="http://wac.450f.edgecastcdn.net/80450F/thefw.com/files/2012/10/pourfail.gif" width=90% />
+					</section data-transition="fade">
+					<section data-transition="fade">
+					<img src="http://wac.450f.edgecastcdn.net/80450F/thefw.com/files/2012/10/breadishardtoo.gif" width=90% />
+					</section>
+			</section>
+			<section data-transition="fade">
+				<img src="assets/public-logo.png"/> [gui application]
+			</section>
+			<section>
+			<img src="assets/crunch.png"/>
+				<h3>Challenge: Interface Design</h3>
+				Single source of truth is great, but
+				<div data-markdown class="fragment">
+					- Different skill levels
+					- Different concepts 
+					- Different objectives
+				</div>
+				<p class="fragment">How do we design interfaces that work for these different audiences?</p>
 			</section>
 			</div>
-
 		</div>
 
 		<script src="lib/js/head.min.js"></script>

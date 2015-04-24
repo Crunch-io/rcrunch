@@ -15,10 +15,10 @@ body {
   background-color: #fff; }
 
 .reveal {
-  font-family: 'Source Sans Pro', Helvetica, sans-serif;
+  font-family: 'AvenirLTStd', 'Source Sans Pro', Helvetica, sans-serif;
   font-size: 38px;
   font-weight: normal;
-  color: #222; }
+  color: #bbbbbb; }
 
 ::selection {
   color: #fff;
@@ -35,15 +35,13 @@ body {
     font-weight: font-weight-heavy;
     font-style: normal;
   }
-  @font-face{
+@font-face{
     font-family: 'AvenirLTStd';
     src: url(/assets/AvenirLTPro-Roman.ttf);
     font-weight: font-weight-normal;
     font-style: normal;
   }
-tt {
-  font-family: 'Source Sans Pro';
-}
+
 /*
 @font-face
     font-family 'AvenirLTStd'
@@ -286,3 +284,16 @@ tt {
  *********************************************/
 .reveal .slide-number {
   color: #2a76dd; }
+
+code {
+  font-family: 'Source Sans Pro'; color: #bbbbbb;
+}
+strong {
+  font-weight: bold; color: #565656;
+}
+li:before {
+    list-style-type: none;
+    content: "• ";
+    color: #107f65;
+}
+li { list-style-type: none; color: #565656; text-indent: -1em; margin-left: 1em;}
