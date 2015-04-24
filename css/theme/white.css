@@ -1,5 +1,5 @@
 @import url(../../lib/font/source-sans-pro/source-sans-pro.css);
-@import url(http://fonts.googleapis.com/css?family=Source+Code+Pro);
+@import url(http://fonts.googleapis.com/css?family=Inconsolata:400,700);
 /**
  * White theme for reveal.js. This is the opposite of the 'black' theme.
  *
@@ -171,9 +171,10 @@ body {
   word-wrap: normal;
   background: #3F3F3F;
   color: #DCDCDC; 
-  font-family: 'Source Code Pro';
-  max-width: 100%;
+  font-family: 'Inconsolata';
+  font-size: 1.3em;
 }
+.reveal pre { width: 100% ;}
 
 .reveal table {
   margin: auto;
@@ -210,14 +211,14 @@ body {
  * LINKS
  *********************************************/
 .reveal a {
-  color: #2a76dd;
+  color: #0064a4;
   text-decoration: none;
   -webkit-transition: color 0.15s ease;
   -moz-transition: color 0.15s ease;
   transition: color 0.15s ease; }
 
 .reveal a:hover {
-  color: #6ca2e8;
+  color: #0064a4;
   text-shadow: none;
   border: none; }
 
@@ -289,10 +290,10 @@ body {
 .reveal .slide-number {
   color: #2a76dd; }
 
-code {
-  font-family: 'Source Code Pro'; color: #bbbbbb;
+.reveal code {
+  font-family: 'Inconsolata'; color: #bbbbbb;
 }
-strong {
+.reveal strong {
   font-weight: bold; color: #565656;
 }
 li:before {
