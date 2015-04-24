@@ -19,7 +19,7 @@ body {
   font-family: 'AvenirLTStd', 'Source Sans Pro', Helvetica, sans-serif;
   font-size: 38px;
   font-weight: normal;
-  color: #bbbbbb; }
+  color: #999; }
 
 ::selection {
   color: #fff;
@@ -291,7 +291,7 @@ body {
   color: #2a76dd; }
 
 .reveal code {
-  font-family: 'Inconsolata'; color: #bbbbbb;
+  font-family: 'Inconsolata'; color: #999;
 }
 .reveal strong {
   font-weight: bold; color: #565656;
