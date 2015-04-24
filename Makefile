@@ -35,4 +35,5 @@ build-vignettes:
 	R -e 'setwd("pkg/vignettes"); lapply(lapply(dir(pattern="Rmd"), knitr::knit), function(x) markdown::markdownToHTML(x, output=sub("\\\\.md", ".html", x)))'
 	mv pkg/vignettes/*.md pkg/doc/
 	mv pkg/vignettes/*.html pkg/doc/
+	cd pkg/doc && ls | grep .md | xargs -n 1 sed -i '' 's/.html)/.md)/g'
 	open pkg/doc/getting-started.html

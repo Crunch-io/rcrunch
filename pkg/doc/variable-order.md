@@ -3,7 +3,7 @@
 %\VignetteIndexEntry{Variable Order}
 -->
 
-[Previous: array variables](array-variables.html)
+[Previous: array variables](array-variables.md)
 
 
 
@@ -17,7 +17,7 @@ Typically, when you import a dataset, the variable list is flat, but it can be o
 
 ## Viewing the order
 
-Picking up with the dataset we used in the [array variables vignette](array-variables.html), we can fetch the `ordering` property of the dataset to view the current organization:
+Picking up with the dataset we used in the [array variables vignette](array-variables.md), we can fetch the `ordering` property of the dataset to view the current organization:
 
 
 ```r
@@ -332,4 +332,4 @@ names(ordering(ds))
 
 ## Nested groups
 
-[Next: transforming and deriving](derive.html)
+[Next: transforming and deriving](derive.md)

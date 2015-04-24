@@ -3,7 +3,7 @@
 %\VignetteIndexEntry{Analyzing data with crunch}
 -->
 
-[Previous: transform and derive](derive.html)
+[Previous: transform and derive](derive.md)
 
 
 # Computing with R and Crunch
@@ -141,7 +141,7 @@ round(100*prop.table(tab2, 2))
 ```
 
 ### Complex data types
-`crtabs` also comfortably handles the more complex data types that Crunch supports, including categorical array and multiple response variables. In the [array variables vignette](array-variables.html), we created a categorical array, "imiss", for "Important issues". We can crosstab with arrays just as we do non-arrays.
+`crtabs` also comfortably handles the more complex data types that Crunch supports, including categorical array and multiple response variables. In the [array variables vignette](array-variables.md), we created a categorical array, "imiss", for "Important issues". We can crosstab with arrays just as we do non-arrays.
 
 
 ```r
@@ -298,7 +298,7 @@ round(crtabs(~ imiss + educ + gender, data=ds))
 
 -->
 ### Numeric aggregations
-`crtabs` can also compute quantities other than counts. Using the left-hand side of the formula, we can specify other aggregations to put in the cells of the table. For example, in the [deriving variables vignette](derive.html), we created an "age" variable. We can easily compute the average age by gender and education:
+`crtabs` can also compute quantities other than counts. Using the left-hand side of the formula, we can specify other aggregations to put in the cells of the table. For example, in the [deriving variables vignette](derive.md), we created an "age" variable. We can easily compute the average age by gender and education:
 
 
 ```r
@@ -334,7 +334,7 @@ crtabs(min(age) ~ educ + gender, data=ds)
 ##   Post-grad              26     27
 ```
 
-Numeric aggregation functions also work with categorical variables that have numeric values defined for their categories; this is the reason why numeric values for categories are defined, in fact. In the [variables vignette](variables.html), we worked with the "On the right track" question and set some numeric values:
+Numeric aggregation functions also work with categorical variables that have numeric values defined for their categories; this is the reason why numeric values for categories are defined, in fact. In the [variables vignette](variables.md), we worked with the "On the right track" question and set some numeric values:
 
 
 ```r
