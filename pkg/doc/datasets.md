@@ -5,14 +5,7 @@
 
 [Previous: Getting started](getting-started.html) 
 
-```{r, results='hide', echo=FALSE, message=FALSE}
-## Because the vignette tasks require communicating with a remote host,
-## we do all the work ahead of time and save a workspace, which we load here.
-## We'll then reference saved objects in that as if we had just retrieved them
-## from the server
-library(crunch)
-load("getting-started.RData")
-```
+
 
 # Datasets in `crunch`
 
@@ -26,18 +19,30 @@ To create new datasets, multiple paths exist. In the web application, you can up
 
 You can create a dataset from any `data.frame` you have in your R session with `newDataset`:
 
-```{r, eval=FALSE}
+
+```r
 load("economist.RData")
 dim(df)
 ```
-```{r}
+
+```r
 dim(ds)
 ```
-```{r, eval=FALSE}
+
+```
+## [1] 1000  142
+```
+
+```r
 ds <- newDataset(df, name="Economist/YouGov Weekly Survey")
 ```
-```{r}
+
+```r
 dim(ds)
+```
+
+```
+## [1] 1000  142
 ```
 
 `newDataset` translates R data types into their analogous types in Crunch. 
@@ -55,31 +60,51 @@ Alternatively, `newDatasetFromFile` essentially does what you would do in the we
 
 Datasets already existing on the Crunch server can be loaded with `loadDataset`. The function takes either the dataset's name, or the position within the dataset list returned by `listDatasets`:
 
-```{r, eval=FALSE}
+
+```r
 listDatasets()
 ```
 ```
 ## [1] "Economist/YouGov Weekly Survey"
 ```
-```{r, eval=FALSE}
+
+```r
 ds <- loadDataset("Economist/YouGov Weekly Survey")
 ```
-```{r}
+
+```r
 is.dataset(ds)
+```
+
+```
+## [1] TRUE
 ```
 
 ## Dataset properties
 
 Dataset have metadata beyond what a `data.frame` has. Datasets have a human-readable `name`, which you specified when you created it, and a `description`.
 
-```{r}
+
+```r
 name(ds)
+```
+
+```
+## [1] "Economist/YouGov Weekly Survey"
+```
+
+```r
 description(ds)
+```
+
+```
+## [1] ""
 ```
 
 Both can be set with `<-` assignment. Let's give our dataset an informative description:
 
-```{r, eval=FALSE}
+
+```r
 description(ds) <- "U.S. nationally representative sample, 1000 respondents"
 description(ds)
 ```
@@ -89,7 +114,8 @@ description(ds)
 
 Note that this assignment doesn't just modify our local dataset object: it sends the new description to the server. If we pull a fresh copy of the dataset from the server, with `refresh`, we'll see the description is there:
 
-```{r, eval=FALSE}
+
+```r
 ds <- refresh(ds)
 description(ds)
 ```
@@ -103,7 +129,8 @@ Datasets that you don't need anymore can be either archived or deleted. Archivin
 
 Datasets can also be deleted permanently. This action cannot be undone, so it should not be done lightly. `crunch` provides two ways to delete a dataset: a `delete` method on a dataset object, like
 
-```{r, eval=FALSE}
+
+```r
 ## Not run
 delete(ds)
 ```

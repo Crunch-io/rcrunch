@@ -7,7 +7,8 @@
 
 [Crunch.io](http://crunch.io/) provides a cloud-based data store and analytic engine. It has a [web client](https://beta.crunch.io/) for interactive data exploration and visualization. The *crunch* package for R allows analysts to interact with and manipulate Crunch datasets from within R. Importantly, this allows technical researchers to collaborate naturally with team members, managers, and clients who prefer a point-and-click interface: because all connect to the same dataset in the cloud, there is no need to email files back and forth continually to share results. 
 
-```{r, message=FALSE}
+
+```r
 library(crunch)
 ```
 
@@ -16,7 +17,8 @@ Both *crunch* and the Crunch web application communicate with the same applicati
 ## Authentication
 
 All work with data in Crunch requires users to be authenticated. Thus, the first step after loading *crunch* is to log in:
-```{r, eval=FALSE}
+
+```r
 login(email="xkcd@crunch.io")
 ```
 ```

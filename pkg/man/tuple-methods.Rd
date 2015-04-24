@@ -31,7 +31,7 @@
 
 \S4method{entity}{DatasetTuple}(x)
 
-\S4method{delete}{IndexTuple}(x)
+\S4method{delete}{IndexTuple}(x, ...)
 
 \S4method{delete}{DatasetTuple}(x, confirm = interactive(), ...)
 
@@ -48,10 +48,10 @@
 
 \item{i}{In [[, a Tuple slot to get}
 
+\item{...}{additional arguments to [[, ignored}
+
 \item{confirm}{For \code{delete}, whether confirmation is required. See
 \code{\link{delete}}.}
-
-\item{...}{additional arguments to [[, ignored}
 }
 \description{
 IndexTuples are objects extracted from ShojiCatalogs. They are internally

@@ -5,14 +5,7 @@
 
 [Previous: create and load datasets](datasets.html)
 
-```{r, results='hide', echo=FALSE, message=FALSE}
-## Because the vignette tasks require communicating with a remote host,
-## we do all the work ahead of time and save a workspace, which we load here.
-## We'll then reference saved objects in that as if we had just retrieved them
-## from the server
-library(crunch)
-load("variables.RData")
-```
+
 
 # Manipulating variables within datasets
 
@@ -40,7 +33,8 @@ When dealing with variables within a dataset, the alias is used to identify vari
 
 Because the `names` attribute is used for indexing elements in R, if we want to extract variables based on alias, it means that the `names` attribute of dataset must actually expose aliases. This may be dissonant, but it has some nice properties. For one, comparing our Crunch dataset with the `data.frame` from which it was created, their `names` attribute have the same contents:
 
-```{r, eval=FALSE}
+
+```r
 identical(names(ds), names(df))
 ```
 ```
@@ -49,26 +43,42 @@ identical(names(ds), names(df))
 
 You can reference and extract variables from a dataset as if it were a `data.frame`, using the `$`, `[`, and `[[` methods. 
 
-```{r, eval=FALSE}
+
+```r
 track.var <- ds$track
 ```
-```{r}
+
+```r
 track.var
 ```
-```{r, echo=FALSE}
-print(summary.track.var)
+
+```
+## 
+##  track (categorical) 
+##  
+## 
+## 
+```
+
+```
+##                                         Count
+## Off on the wrong track                    576
+## Generally headed in the right direction   285
+## Not sure                                  139
 ```
 
 Like datasets, variables have various attributes like `name` and `description` that can be set naturally.
 
-```{r, eval=FALSE}
+
+```r
 name(track.var) <- "Direction of country"
 description(track.var) <- "In your opinon, is the country going in the right direction, or is it on the wrong track?"
 ```
 
 Two caveats. First, because we first extracted the variable from the dataset before making edits, the dataset object has stale metadata for this variable. 
 
-```{r, eval=FALSE}
+
+```r
 name(track.var) == name(ds$track)
 ```
 ```
@@ -77,7 +87,8 @@ name(track.var) == name(ds$track)
 
 If we had instead modified `track` within `ds`, like
 
-```{r, eval=FALSE}
+
+```r
 ## Not run
 name(ds$track) <- "Direction of country"
 ```
@@ -86,19 +97,22 @@ name(ds$track) <- "Direction of country"
 
 This can be remedied one of two ways. We could either assign `track.var` back to `ds`, as in
 
-```{r, eval=FALSE}
+
+```r
 ds$track <- track.var
 ```
 
 or we can just refresh the dataset and fetch data from the server again:
 
-```{r, eval=FALSE}
+
+```r
 ds <- refresh(ds)
 ```
 
 Now, `ds` has our edits:
 
-```{r, eval=FALSE}
+
+```r
 name(track.var) == name(ds$track)
 ```
 ```
@@ -110,42 +124,75 @@ name(track.var) == name(ds$track)
 
 It is not always convenient that the `names` attribute of the dataset actually yields *aliases*. Moreover, if we want to edit the Crunch names of many variables, we need a way of accessing the Crunch metadata more directly. It will be very slow to edit each variable in the dataset individually, referencing them with `$`, because each edit would send a request to the server. Instead, we'd rather bundle those into a single request. To do this, we can access the `variables` attribute of the dataset, which is a "variable catalog":
 
-```{r}
+
+```r
 class(variables(ds))
+```
+
+```
+## [1] "VariableCatalog"
+## attr(,"package")
+## [1] "crunch"
 ```
 
 In the variable catalog, Crunch names are names, and aliases are aliases. Hence,
 
-```{r}
+
+```r
 identical(names(ds), aliases(variables(ds)))
+```
+
+```
+## [1] TRUE
 ```
 
 but
 
-```{r}
+
+```r
 identical(names(ds), names(variables(ds)))
+```
+
+```
+## [1] FALSE
 ```
 
 because "Direction of country" is the name for `ds$track`
 
-```{r, eval=FALSE}
+
+```r
 head(names(variables(ds)), 10)
 ```
-```{r, echo=FALSE}
-head.of.variables
+
+```
+##  [1] "starttime"            "endtime"              "perc_skipped"        
+##  [4] "newsint2"             "Direction of country" "snowdenfav"          
+##  [7] "snowdenleakapp"       "snowdenpros"          "snowdenpenalty"      
+## [10] "manningknowledge"
 ```
 
 These attributes all allow assignment with `<-`. The methods `names` and `aliases` yield character vectors, and they take characters in assignment. Hence, you can use any vectorized string manipulation tools available in R, such as regular expressions, to edit variable names efficiently. You can also just supply a replacement vector, like
 
-```{r, eval=FALSE}
+
+```r
 names(variables(ds))[6:9] <- c("Favorability of Edward Snowden", 
                                "Approval of Snowden's Leak",
                                "Support for Prosecution of Snowden",
                                "Penalty for Snowden")
 head(names(variables(ds)), 10)
 ```
-```{r, echo=FALSE}
-head2
+
+```
+##  [1] "starttime"                         
+##  [2] "endtime"                           
+##  [3] "perc_skipped"                      
+##  [4] "newsint2"                          
+##  [5] "Direction of country"              
+##  [6] "Favorability of Edward Snowden"    
+##  [7] "Approval of Snowden's Leak"        
+##  [8] "Support for Prosecution of Snowden"
+##  [9] "Penalty for Snowden"               
+## [10] "manningknowledge"
 ```
 
 ## Categorical variables
@@ -154,35 +201,87 @@ Many variables in survey data are categorial: respondents have a finite set of a
 
 In Crunch, categorical variables' "categories" are objects with richer metadata. 
 
-```{r}
+
+```r
 is.Categorical(track.var)
+```
+
+```
+## [1] TRUE
+```
+
+```r
 categories(track.var)
+```
+
+```
+## [ 1 ]  Generally headed in the right direction
+## [ 2 ]  Off on the wrong track
+## [ 3 ]  Not sure
 ```
 
 ### Category attributes
 
 Categories have `names`, the factor's levels; numeric `values` which can be used when interpreting the categorical variable as numeric; and `ids`, which are analogous to the integer values that underly an R factor. Categories also have their own "missing" status. Indeed, because Crunch supports more complex missing value support than does R, multiple categories can be marked as missing: there's not a single "NA" value.
 
-```{r}
+
+```r
 names(categories(track.var))
+```
+
+```
+## [1] "Generally headed in the right direction"
+## [2] "Off on the wrong track"                 
+## [3] "Not sure"
+```
+
+```r
 values(categories(track.var))
+```
+
+```
+## [1] 1 2 3
+```
+
+```r
 ids(categories(track.var))
+```
+
+```
+## [1] 1 2 3
+```
+
+```r
 is.na(categories(track.var))
+```
+
+```
+## Generally headed in the right direction 
+##                                   FALSE 
+##                  Off on the wrong track 
+##                                   FALSE 
+##                                Not sure 
+##                                   FALSE
 ```
 
 Names and values can be assigned into categories, but ids cannot: they are immutable references to values within the column of data on the server. Missingness can be set with `is.na`. Character values assigned will mark those categories as missing, leaving other categories unchanged. Logical values assigned will set the missing TRUE/FALSE accordingly.
 
-```{r, eval=FALSE}
+
+```r
 names(categories(track.var))[1:2] <- c("Right track", "Wrong track")
 values(categories(track.var)) <- c(1, -1, 0)
 is.na(categories(track.var)) <- "Not sure"
 categories(track.var)
 ```
-```{r, echo=FALSE}
-track.cats
+
+```
+## [ 1 ]  Right track
+## [ -1 ]  Wrong track
+## [ 0 ]  Not sure
 ```
 <!-- MAKE THAT -->
-```{r, eval=FALSE}
+
+```r
 ids(categories(track.var)) <- sample(ids(categories(track.var)), replace=FALSE)
 ```
 ```
@@ -193,12 +292,16 @@ ids(categories(track.var)) <- sample(ids(categories(track.var)), replace=FALSE)
 
 Categories can also be reordered by index, like any list object
 
-```{r, eval=FALSE}
+
+```r
 categories(track.var) <- categories(track.var)[c(1,3,2)]
 categories(track.var)
 ```
-```{r, echo=FALSE}
-track.cats[c(1,3,2)]
+
+```
+## [ 1 ]  Right track
+## [ 0 ]  Not sure
+## [ -1 ]  Wrong track
 ```
 
 As with all other metadata edits discussed, updating with these methods automatically sends the changes to the server, so your local edits are reflected in the cloud.
@@ -209,7 +312,8 @@ Datasets often contain variables that you may want to use -- perhaps through a d
 
 As when working with a `data.frame`, you typically assign the return of a dataset-level function back to the variable representing the dataset in your R script or session. 
 
-```{r, eval=FALSE}
+
+```r
 ds <- hideVariables(ds, "comments")
 hiddenVariables(ds)
 ```
@@ -219,7 +323,8 @@ hiddenVariables(ds)
 
 As with the `is.na` function, you can update a variable by assigning it to the hidden variables list.
 
-```{r, eval=FALSE}
+
+```r
 hiddenVariables(ds) <- "pid7others"
 hiddenVariables(ds)
 ```
@@ -229,7 +334,8 @@ hiddenVariables(ds)
 
 These variables are now hidden, both locally in your R session and remotely on the server, which you can see in the web application. And, just as you could restore them there, you can also restore them from R:
 
-```{r unhide, eval=FALSE}
+
+```r
 ds <- unhideVariables(ds, "pid7others")
 hiddenVariables(ds)
 ```

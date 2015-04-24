@@ -30,7 +30,9 @@ vdata:
 man: doc
 	R CMD Rd2pdf pkg/man/ --force
 
-build-vignettes: build
-	R CMD INSTALL crunch_$(VERSION).tar.gz
-	cp -r ~/R/crunch/doc pkg
+build-vignettes:
+	mkdir -p pkg/doc
+	R -e 'setwd("pkg/vignettes"); lapply(lapply(dir(pattern="Rmd"), knitr::knit), function(x) markdown::markdownToHTML(x, output=sub("\\\\.md", ".html", x)))'
+	mv pkg/vignettes/*.md pkg/doc/
+	mv pkg/vignettes/*.html pkg/doc/
 	open pkg/doc/getting-started.html
