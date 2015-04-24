@@ -102,6 +102,20 @@ Leads to communication via export/import, copy/paste. Iteration is painful.</p>
 				</div>
 				<p class="fragment">How do we design interfaces that work for these different audiences?</p>
 			</section>
+			<section>
+				<pre>
+					<code>
+with(test.authentication, {
+   with(test.dataset(df), {
+       try(ds$v3a <- ds$v3 + 5)
+       test_that("A derived variable is created on the server", {
+           expect_true("v3a" %in% names(allVariables(refresh(ds))))
+       })
+       ...
+   })
+})
+</code></pre>
+			</section>
 			</div>
 		</div>
 
@@ -116,7 +130,7 @@ Leads to communication via export/import, copy/paste. Iteration is painful.</p>
 				controls: true,
 				progress: true,
 				history: true,
-				center: true,
+				center: false,
 
 				transition: 'slide', // none/fade/slide/convex/concave/zoom
 
