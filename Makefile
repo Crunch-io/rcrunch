@@ -37,6 +37,6 @@ md:
 	cd pkg/doc && ls | grep .md | xargs -n 1 sed -i '' 's/.html)/.md)/g'
 
 build-vignettes: md
-	R -e 'setwd("pkg/doc"); lapply(dir(pattern="md"), function(x) markdown::markdownToHTML(x, output=sub("\\\\.md", ".html", x))'
+	R -e 'setwd("pkg/doc"); lapply(dir(pattern="md"), function(x) markdown::markdownToHTML(x, output=sub("\\\\.md", ".html", x), stylesheet=normalizePath("../../css/crunch-rmarkdown.css")))'
 	cd pkg/doc && ls | grep .md | xargs -n 1 sed -i '' 's/.md)/.html)/g'
 	open pkg/doc/getting-started.html

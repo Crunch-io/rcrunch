@@ -254,41 +254,7 @@ round(crtabs(~ imiss + educ + gender, data=ds))
 ```
 
 ```
-## , , gender = Male
-## 
-##                         educ
-## imiss                    No HS High school graduate Some college 2-year 4-year Post-grad
-##   Abortion                  48                   41           83    113     86       116
-##   Education                 18                   29           43     61     19        29
-##   Gay rights                51                   51          114    135    101       132
-##   Health care               31                   32           68     79     34        32
-##   Immigration               29                   22           47     64     74        82
-##   Medicare                  10                   17           37     47     20        20
-##   Social security           57                   51          137    141    111       140
-##   Taxes                     31                   36           69     82     34        34
-##   Terrorism                 47                   38          106    115    105       115
-##   The budget deficit        33                   27           58     70     32        29
-##   The economy               56                   52          127    139     96       127
-##   The environment           28                   34           65     60     32        30
-##   The war in Afghanistan    57                   52          135    141     95       128
-## 
-## , , gender = Female
-## 
-##                         educ
-## imiss                    No HS High school graduate Some college 2-year 4-year Post-grad
-##   Abortion                  56                   41          112    135     94       120
-##   Education                 31                   32           59     62     28        29
-##   Gay rights                56                   45          110    132    104       124
-##   Health care               34                   34           59     69     30        29
-##   Immigration               58                   52          137    143    121       135
-##   Medicare                  32                   36           77     85     37        35
-##   Social security           55                   32          113    117     96       113
-##   Taxes                     27                   30           56     71     28        30
-##   Terrorism                 45                   50           84    115     91       120
-##   The budget deficit        24                   30           42     58     25        27
-##   The economy                0                    0            0      0      0         3
-##   The environment            0                    0            0      0      0         0
-##   The war in Afghanistan     0                    0            3      8      1         1
+## Error in round(tab4): non-numeric argument to mathematical function
 ```
 
 <!--
@@ -355,14 +321,7 @@ round(crtabs(mean(track) ~ educ + gender, data=ds), 2)
 ```
 
 ```
-##                       gender
-## educ                    Male Female
-##   No HS                -0.83  -0.74
-##   High school graduate -0.50  -0.45
-##   Some college         -0.31  -0.35
-##   2-year               -0.38  -0.35
-##   4-year               -0.30  -0.28
-##   Post-grad            -0.26  -0.26
+## Error in round(tab7, 2): non-numeric argument to mathematical function
 ```
 
 Looks like most people surveyed thought that the U.S. is on the wrong track, but that pessimism is less pronounced for those with higher levels of education.

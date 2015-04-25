@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Computing with R and Crunch</title>
+
+<script type="text/javascript">
+window.onload = function() {
+  var imgs = document.getElementsByTagName('img'), i, img;
+  for (i = 0; i < imgs.length; i++) {
+    img = imgs[i];
+    // center an image if it is the only element of its parent
+    if (img.parentElement.childElementCount === 1)
+      img.parentElement.style.textAlign = 'center';
+  }
+};
+</script>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: #990073
+   }
+
+   pre .number {
+     color: #099;
+   }
+
+   pre .comment {
+     color: #998;
+     font-style: italic
+   }
+
+   pre .keyword {
+     color: #900;
+     font-weight: bold
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: #d14;
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+
+
+<style type="text/css">
+@import url(../../lib/font/source-sans-pro/source-sans-pro.css);
+@import url(http://fonts.googleapis.com/css?family=Inconsolata:400,700);
+
+@font-face{
+    font-family: 'AvenirLTStd';
+    src: url(../../assets/AvenirLTPro-Heavy.ttf);
+    font-weight: font-weight-heavy;
+    font-style: normal;
+  }
+@font-face{
+    font-family: 'AvenirLTStd';
+    src: url(../../assets/AvenirLTPro-Roman.ttf);
+    font-weight: font-weight-normal;
+    font-style: normal;
+  }
+
+
+body, td {
+   font-family: 'AvenirLTStd', 'Source Sans Pro', Helvetica, sans-serif;
+   background-color: white;
+   font-size: 13px;
+}
+
+body {
+  color: #565656;
+  max-width: 800px;
+  margin: auto;
+  padding: 1em;
+  line-height: 20px;
+}
+
+tt, code, pre {
+   font-family: 'Inconsolata', 'Source Code Pro', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 {
+   font-size:2.2em;
+}
+
+h2 {
+   font-size:1.8em;
+}
+
+h3 {
+   font-size:1.4em;
+}
+
+h4 {
+   font-size:1.0em;
+}
+
+h5 {
+   font-size:0.9em;
+}
+
+h6 {
+   font-size:0.8em;
+}
+
+a:visited {
+  color: #0064a4;
+  text-decoration: none;
+}
+
+pre, img {
+  max-width: 100%;
+}
+pre {
+  overflow-x: auto;
+}
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code {
+  font-size: 92%;
+  border: 1px solid #ccc;
+}
+
+code[class] {
+  background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+em {
+  font-weight: bold;
+  font-style: normal;
+}
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * {
+      background: transparent !important;
+      color: black !important;
+      filter:none !important;
+      -ms-filter: none !important;
+   }
+
+   body {
+      font-size:12pt;
+      max-width:100%;
+   }
+
+   a, a:visited {
+      text-decoration: underline;
+   }
+
+   hr {
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote {
+      padding-right: 1em;
+      page-break-inside: avoid;
+   }
+
+   tr, img {
+      page-break-inside: avoid;
+   }
+
+   img {
+      max-width: 100% !important;
+   }
+
+   @page :left {
+      margin: 15mm 20mm 15mm 10mm;
+   }
+
+   @page :right {
+      margin: 15mm 10mm 15mm 20mm;
+   }
+
+   p, h2, h3 {
+      orphans: 3; widows: 3;
+   }
+
+   h2, h3 {
+      page-break-after: avoid;
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Analyzing data with crunch}
+-->
+
+<p><a href="derive.md">Previous: transform and derive</a></p>
+
+<h1>Computing with R and Crunch</h1>
+
+<p>With <code>crunch</code>, you can harness the power of R to do computations with your datasets in Crunch that would be difficult or impossible to accomplish in a graphical user interface. </p>
+
+<h2>Crosstabbing</h2>
+
+<p>While the web application certainly supports crosstabbing, you may want to do aggregations like this in R. Crosstabbing in R with <code>crunch</code> may allow you to easily do additional computations on the result, for example. </p>
+
+<p><code>crunch</code> contains the <code>crtabs</code> (Crunch-tabs) function, which largely emulates the design of the <code>xtabs</code> function in base R. In essence, you define a formula and provide data in which to evaluate it. In this case, we&#39;ll be providing a <code>CrunchDataset</code>.</p>
+
+<h3>Basic examples</h3>
+
+<p>Like <code>xtabs</code>, <code>crtabs</code> takes a formula and a data argument. Dimensions of your crosstab go on the right side of the <code>~</code>. For a univariate table of frequencies by education, we can do</p>
+
+<pre><code class="r">tab1 &lt;- crtabs(~ educ, data=ds)
+tab1
+</code></pre>
+
+<pre><code>## educ
+##                No HS High school graduate         Some college               2-year               4-year 
+##                   47                  278                  253                   83                  228 
+##            Post-grad 
+##                  111
+</code></pre>
+
+<p>Additional dimensions are added with <code>+</code>. For a two-way table of education and gender, </p>
+
+<pre><code class="r">tab2 &lt;- crtabs(~ educ + gender, data=ds)
+tab2
+</code></pre>
+
+<pre><code>##                       gender
+## educ                   Male Female
+##   No HS                  23     24
+##   High school graduate  124    154
+##   Some college          110    143
+##   2-year                 32     51
+##   4-year                115    113
+##   Post-grad              63     48
+</code></pre>
+
+<h3>Weighting</h3>
+
+<p><code>crtabs</code> takes advantage of several Crunch features that <code>xtabs</code> does not support. First, it respects weight variables that have been set on the server. This dataset is not currently weighted</p>
+
+<pre><code class="r">weight(ds)
+</code></pre>
+
+<pre><code>## NULL
+</code></pre>
+
+<p>but we can very easily change that. Let&#39;s use the &ldquo;weight&rdquo; variable that already exists in the dataset:</p>
+
+<pre><code class="r">weight(ds) &lt;- ds$weight
+</code></pre>
+
+<p>Now, if we request the same two-way table as before, we&#39;ll get weighted results:</p>
+
+<pre><code class="r">crtabs(~ educ + gender, data=ds)
+</code></pre>
+
+<pre><code>##                       gender
+## educ                        Male    Female
+##   No HS                 57.78851  51.70880
+##   High school graduate 152.08593 155.76219
+##   Some college         126.99383 143.98321
+##   2-year                35.00172  36.41431
+##   4-year                78.47811  88.75691
+##   Post-grad             37.43805  35.58841
+</code></pre>
+
+<p>If we want unweighted data, that&#39;s easy enough:</p>
+
+<pre><code class="r">crtabs(~ educ + gender, data=ds, weight=NULL)
+</code></pre>
+
+<pre><code>##                       gender
+## educ                   Male Female
+##   No HS                  23     24
+##   High school graduate  124    154
+##   Some college          110    143
+##   2-year                 32     51
+##   4-year                115    113
+##   Post-grad              63     48
+</code></pre>
+
+<h3>Proportion tables</h3>
+
+<p>As with any <code>array</code> data type, we can compute margin tables, and the <code>prop.table</code> function in R provides a convenient way for sweeping a table by a margin. These work on the output of <code>crtabs</code>, too:</p>
+
+<pre><code class="r">prop.table(tab1)
+</code></pre>
+
+<pre><code>## Error in sum(x): invalid &#39;type&#39; (list) of argument
+</code></pre>
+
+<p>For column proportions, specify margin=2 (by rows, margin=1):</p>
+
+<pre><code class="r">prop.table(tab2, 2)
+</code></pre>
+
+<pre><code>## Error in margin.table(x, margin): &#39;x&#39; is not an array
+</code></pre>
+
+<p>Let&#39;s make that more readable:</p>
+
+<pre><code class="r">round(100*prop.table(tab2, 2))
+</code></pre>
+
+<pre><code>## Error in margin.table(x, margin): &#39;x&#39; is not an array
+</code></pre>
+
+<h3>Complex data types</h3>
+
+<p><code>crtabs</code> also comfortably handles the more complex data types that Crunch supports, including categorical array and multiple response variables. In the <a href="array-variables.md">array variables vignette</a>, we created a categorical array, &ldquo;imiss&rdquo;, for &ldquo;Important issues&rdquo;. We can crosstab with arrays just as we do non-arrays.</p>
+
+<pre><code class="r">tab3 &lt;- crtabs(~ imiss + gender, data=ds)
+tab3
+</code></pre>
+
+<pre><code>## , , gender = Male
+## 
+##                         imiss
+## imiss                    Very Important Somewhat Important Not very Important Unimportant
+##   Abortion                    162.12515         208.097758          134.98884  181.001899
+##   Education                    77.84651          79.423438           39.36797    4.006600
+##   Gay rights                  249.27835         311.708125          149.97589  150.470363
+##   Health care                  29.86234          35.967181           15.59800    3.271685
+##   Immigration                  89.37703         110.794979          126.65609  141.614210
+##   Medicare                    123.07314         175.743469          130.67483    4.704833
+##   Social security             309.00483         371.862548          130.56316  113.506896
+##   Taxes                        10.10853           6.727795           11.12973    3.271685
+##   Terrorism                   195.29567         179.083744          185.41129  214.674821
+##   The budget deficit           76.60153          31.503505           30.59193    4.526322
+##   The economy                 232.66403         296.296347          171.90120  145.427479
+##   The environment              44.96075          22.518970           18.78344    1.000690
+##   The war in Afghanistan      262.64142         302.568826          154.10589  148.924851
+## 
+## , , gender = Female
+## 
+##                         imiss
+## imiss                    Very Important Somewhat Important Not very Important Unimportant
+##   Abortion                     42.93341           18.30873           13.99751    3.271685
+##   Education                   275.06635          300.65116          148.38230  153.512532
+##   Gay rights                   32.88000           15.36346           15.54603    4.240972
+##   Health care                 215.59557          256.47697          162.97001  161.794686
+##   Immigration                  55.87238           37.94964           27.87878    6.813457
+##   Medicare                    259.49040          264.82322          131.97080  168.177349
+##   Social security              47.21392           27.66070           24.26524    3.271685
+##   Taxes                       370.27981          391.28609           91.96340   94.927242
+##   Terrorism                    10.44768            1.32360           11.05645    3.271685
+##   The budget deficit          167.29844          217.23976          208.65971  175.483674
+##   The economy                  62.49252           40.63460           37.25290    4.849638
+##   The environment             112.47886          184.63920          198.88193  214.572442
+##   The war in Afghanistan       72.36317           44.99078           36.03780    7.629384
+</code></pre>
+
+<p>Note that even though we specified two variables in our formula, because &ldquo;imiss&rdquo; itself is two dimensional, our result is a three-dimensional array.</p>
+
+<p>To illustrate working with multiple response variables, let&#39;s convert &ldquo;imiss&rdquo; to multiple response, selecting its positive categories as indicating selection:</p>
+
+<pre><code class="r">ds$imiss &lt;- dichotomize(ds$imiss, c(&quot;Very Important&quot;, &quot;Somewhat Important&quot;))
+</code></pre>
+
+<p>Now, when we crosstab it, we&#39;ll get a two-dimensional table because multiple response variables present a one-dimensional interface:</p>
+
+<pre><code class="r">tab3mr &lt;- crtabs(~ imiss + gender, data=ds)
+tab3mr
+</code></pre>
+
+<pre><code>##                         gender
+## imiss                        Male   Female
+##   Abortion               297.1140 389.0997
+##   Education              399.2542 462.1785
+##   Gay rights             216.0331 252.4092
+##   Health care            439.5680 485.3694
+##   Immigration            380.7070 393.7586
+##   Medicare               404.5652 441.7238
+##   Social security        416.7473 451.4937
+##   Taxes                  423.4487 454.1637
+##   Terrorism              378.5656 418.2717
+##   The budget deficit     391.4612 433.0006
+##   The economy            462.2432 486.2133
+##   The environment        375.9582 392.7234
+##   The war in Afghanistan 311.3608 399.2116
+</code></pre>
+
+<p>It&#39;s worth noting here that the result of <code>crtabs</code> isn&#39;t an <code>array</code> object but a <code>CrunchCube</code> object.</p>
+
+<pre><code class="r">class(tab3mr)
+</code></pre>
+
+<pre><code>## [1] &quot;CrunchCube&quot;
+## attr(,&quot;package&quot;)
+## [1] &quot;crunch&quot;
+</code></pre>
+
+<p>This allows us to do the appropriate calculations on arrays and multiple response variables when <code>prop.table</code> is called. To compute a margin table over a multiple response variable, summing along the dimension would give an incorrect value because the responses in a multiple response are not mutually exclusive&ndash;they can&#39;t be assumed to sum to 100 percent. However, the <code>margin.table</code> method on <code>CrunchCubes</code> can compute the correct margin, so <code>prop.table</code> gives correct proportions:</p>
+
+<pre><code class="r">round(100*prop.table(tab3mr, 2))
+</code></pre>
+
+<pre><code>## Error in margin.table(x, margin): &#39;x&#39; is not an array
+</code></pre>
+
+<p>Finally, it&#39;s worth noting that we can extend the crosstabbing to higher dimensions, just by adding more terms on the right-hand side of the formula:</p>
+
+<pre><code class="r">round(crtabs(~ imiss + educ + gender, data=ds))
+</code></pre>
+
+<pre><code>## Error in round(tab4): non-numeric argument to mathematical function
+</code></pre>
+
+<!--
+### Special functions
+#### bin
+#### rollup
+
+-->
+
+<h3>Numeric aggregations</h3>
+
+<p><code>crtabs</code> can also compute quantities other than counts. Using the left-hand side of the formula, we can specify other aggregations to put in the cells of the table. For example, in the <a href="derive.md">deriving variables vignette</a>, we created an &ldquo;age&rdquo; variable. We can easily compute the average age by gender and education:</p>
+
+<pre><code class="r">crtabs(mean(age) ~ educ + gender, data=ds)
+</code></pre>
+
+<pre><code>##                       gender
+## educ                       Male   Female
+##   No HS                50.82525 44.68583
+##   High school graduate 52.15276 51.32068
+##   Some college         40.29562 41.17773
+##   2-year               46.40166 45.33917
+##   4-year               42.32709 39.58522
+##   Post-grad            49.87801 48.03841
+</code></pre>
+
+<p>Other supported aggregations include <code>min</code>, <code>max</code>, <code>sd</code>, and <code>sum</code>. For the minimum age by gender and education, </p>
+
+<pre><code class="r">crtabs(min(age) ~ educ + gender, data=ds)
+</code></pre>
+
+<pre><code>##                       gender
+## educ                   Male Female
+##   No HS                  25     24
+##   High school graduate   32     22
+##   Some college           22     21
+##   2-year                 25     25
+##   4-year                 24     24
+##   Post-grad              26     27
+</code></pre>
+
+<p>Numeric aggregation functions also work with categorical variables that have numeric values defined for their categories; this is the reason why numeric values for categories are defined, in fact. In the <a href="variables.md">variables vignette</a>, we worked with the &ldquo;On the right track&rdquo; question and set some numeric values:</p>
+
+<pre><code class="r">categories(ds$track)
+</code></pre>
+
+<pre><code>## [ 1 ]  Right track
+## [ 0 ]  Not sure
+## [ -1 ]  Wrong track
+</code></pre>
+
+<p>We can use these numeric values to compute an &ldquo;on the right track index&rdquo; by averaging them. If the index is greater than zero, more people thing things are going well, and if it is negative, more respondents are pessimistic. </p>
+
+<pre><code class="r">round(crtabs(mean(track) ~ educ + gender, data=ds), 2)
+</code></pre>
+
+<pre><code>## Error in round(tab7, 2): non-numeric argument to mathematical function
+</code></pre>
+
+<p>Looks like most people surveyed thought that the U.S. is on the wrong track, but that pessimism is less pronounced for those with higher levels of education.</p>
+
+<p>A few final observations about <code>crtabs</code>. First, all of these calculations have been weighted by the weight variable we set above. We set it and could then forget about it&ndash;we didn&#39;t have to litter all of our expressions with <code>ds$weight</code> and extra arithmetic to do the weighting. Crunch handles this for us.</p>
+
+<p>Second, none of these aggregations required pulling case-level data to your computer. <code>crtabs</code> sends Crunch expressions to the server and receives in return an <code>n</code>-D array of results. The only computations happening locally are the margin tables and sweeping in <code>prop.table</code>, computing on the aggregate results. Your computer would work exactly as hard with this example dataset of 1000 rows as it would with a dataset of 100 million rows.  </p>
+
+<h2>Statistical modeling</h2>
+
+<p>Any statistical modeling function that takes a <code>data</code> argument should happily accept a <code>CrunchDataset</code> and just do the right thing&ndash;no extra effort or thought required. </p>
+
+<p>Let&#39;s fit a basic Ordinary Least Squares (OLS) model. In our dataset, we have a few questions about Edward Snowden, such as:</p>
+
+<pre><code class="r">ds$snowdenleakapp
+</code></pre>
+
+<pre><code>## 
+##  snowdenleakapp (categorical) 
+##  
+## 
+## 
+</code></pre>
+
+<pre><code>##                     Count
+## Strongly disapprove   288
+## Somewhat approve      220
+## Not sure              200
+## Strongly approve      159
+## Somewhat disapprove   131
+</code></pre>
+
+<p>We can use <code>lm</code> to fit our model. Let&#39;s explore the relationship between approval of Snowden&#39;s leak and respondents&#39; interest in current events, party identification, gender, and age.</p>
+
+<pre><code class="r">ols1 &lt;- lm(I(snowdenleakapp == &quot;Strongly approve&quot;) ~ newsint2 + pid3 + gender + age, 
+    data=ds)
+summary(ols1)
+</code></pre>
+
+<pre><code>## 
+## Call:
+## lm(formula = I(snowdenleakapp == &quot;Strongly approve&quot;) ~ newsint2 + 
+##     pid3 + gender + age, data = ds)
+## 
+## Residuals:
+##      Min       1Q   Median       3Q      Max 
+## -0.51183 -0.19709 -0.13374 -0.08017  0.96392 
+## 
+## Coefficients:
+##                            Estimate Std. Error t value Pr(&gt;|t|)    
+## (Intercept)                0.248796   0.049545   5.022 6.08e-07 ***
+## newsint2Some of the time  -0.025779   0.027641  -0.933  0.35123    
+## newsint2Only now and then -0.034062   0.040342  -0.844  0.39869    
+## newsint2Hardly at all     -0.091411   0.052376  -1.745  0.08125 .  
+## pid3Republican            -0.031757   0.031030  -1.023  0.30636    
+## pid3Independent            0.091577   0.028140   3.254  0.00118 ** 
+## pid3Other                  0.313302   0.097186   3.224  0.00131 ** 
+## pid3Not sure               0.014837   0.065847   0.225  0.82177    
+## genderFemale              -0.042308   0.024297  -1.741  0.08194 .  
+## age                       -0.001436   0.000876  -1.640  0.10142    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.3683 on 989 degrees of freedom
+##   (1 observation deleted due to missingness)
+## Multiple R-squared:  0.04013,    Adjusted R-squared:  0.0314 
+## F-statistic: 4.595 on 9 and 989 DF,  p-value: 5.785e-06
+</code></pre>
+
+<p>Looks like partisanship is associated with approval of the NSA leak, but overall the model isn&#39;t a great fit, given our data. Nevertheless, this example illustrates how straightforward it is to do statistical analysis with data in Crunch. Even though your dataset lives on the server, you can think of it like a local <code>data.frame</code>. Note, for example, that our categorical variables (News Interest, Party ID, and Gender) expand their categories out as dichotomous indicators, just as if they were <code>factor</code> variables in a <code>data.frame</code>. </p>
+
+<p>Given that we&#39;re estimating a model with a dichotomous dependent variable, perhaps a logit would be more appropriate than a strict linear predictor. We can use <code>glm</code> instead:</p>
+
+<pre><code class="r">logit1 &lt;- glm(I(snowdenleakapp == &quot;Strongly approve&quot;) ~ newsint2 + pid3 + gender + age, 
+    family=binomial(link=&quot;logit&quot;), data=ds)
+summary(logit1)
+</code></pre>
+
+<pre><code>## 
+## Call:
+## glm(formula = I(snowdenleakapp == &quot;Strongly approve&quot;) ~ newsint2 + 
+##     pid3 + gender + age, family = binomial(link = &quot;logit&quot;), data = ds)
+## 
+## Deviance Residuals: 
+##     Min       1Q   Median       3Q      Max  
+## -1.2651  -0.6418  -0.5229  -0.4278   2.3800  
+## 
+## Coefficients:
+##                            Estimate Std. Error z value Pr(&gt;|z|)   
+## (Intercept)               -1.031957   0.361199  -2.857  0.00428 **
+## newsint2Some of the time  -0.190179   0.205651  -0.925  0.35509   
+## newsint2Only now and then -0.271006   0.315410  -0.859  0.39022   
+## newsint2Hardly at all     -0.843629   0.496533  -1.699  0.08931 . 
+## pid3Republican            -0.302909   0.263112  -1.151  0.24963   
+## pid3Independent            0.612542   0.200765   3.051  0.00228 **
+## pid3Other                  1.608627   0.546297   2.945  0.00323 **
+## pid3Not sure               0.144096   0.519991   0.277  0.78169   
+## genderFemale              -0.309956   0.179389  -1.728  0.08402 . 
+## age                       -0.010655   0.006548  -1.627  0.10368   
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 905.03  on 998  degrees of freedom
+## Residual deviance: 866.64  on 989  degrees of freedom
+##   (1 observation deleted due to missingness)
+## AIC: 886.64
+## 
+## Number of Fisher Scoring iterations: 5
+</code></pre>
+
+<p>As before, not a particularly interesting result, but this is just the beginning of the analysis process. Using <code>crunch</code>, you can keep exploring the data and perhaps find a better fit.</p>
+
+<p>Unlike the previous examples, these modeling functions do have to pull columns of data from the server to your local machine. However, only the columns of data you reference in your formula are copied, and because of the <code>crunch</code> package&#39;s query cache, subsequent models that incorporate any of those variables will not have to go to the server to get them. </p>
+
+</body>
+
+</html>
