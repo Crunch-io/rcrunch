@@ -1,3 +1,8 @@
+## crunch 1.2.0
+* New vignettes for [deriving variables](pkg/doc/derive.md) and [analyzing datasets](pkg/doc/analyze.md).
+
+* Update appending workflow to support new API.
+
 ### crunch 1.1.1
 * Remove all non-ASCII from test files so that tests will run on Solaris.
 

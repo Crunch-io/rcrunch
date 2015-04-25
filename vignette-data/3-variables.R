@@ -5,8 +5,7 @@ options(crunch.api=getOption("test.api"),
         crunch.pw=getOption("test.pw"))
 login()
 
-load("../pkg/vignettes/economist.RData")
-ds <- newDataset(df, name="Economist/YouGov Weekly Survey")
+load("../pkg/vignettes/getting-started.RData")
 
 track.var <- ds$track
 summary.track.var <- summary(track.var)
@@ -14,6 +13,8 @@ track.cats <- categories(track.var)
 names(track.cats)[1:2] <- c("Right track", "Wrong track")
 values(track.cats) <- c(1, -1, 0)
 is.na(track.cats) <- "Not sure"
+
+categories(ds$track) <- track.cats[c(1,3,2)]
 
 names(variables(ds))[aliases(variables(ds)) == "track"] <- "Direction of country"
 

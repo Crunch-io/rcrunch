@@ -148,6 +148,7 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
 ##' @param x a CrunchCube
 ##' @param margin index, or vector of indices to generate margin for. See
 ##' \code{\link[base]{prop.table}}
+##' @param digits see \code{\link[base]{round}}
 ##' @return The appropriate margin.table or prop.table. 
 ##' @name cube-computing
 ##' @aliases cube-computing margin.table prop.table
@@ -176,4 +177,10 @@ setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
         out <- out/marg
     }
     return(out)
+})
+
+##' @rdname cube-computing
+##' @export
+setMethod("round", "CrunchCube", function (x, digits=0) {
+    round(as.array(x), digits)
 })
