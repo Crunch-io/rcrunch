@@ -120,12 +120,15 @@ addSourceToDataset <- function (dataset, source_url, ...) {
         )
     )
     batch_url <- crPOST(batches_url, body=toJSON(body), ...)
-    status <- try(pollBatchStatus(batch_url, batches(dataset), until="ready"))
+    
+    status <- try(pollBatchStatus(batch_url, batches(dataset), until=c("ready", "imported")))
     if (is.error(status)) {
         halt("Error importing file")
+    } else if (status %in% "ready") {
+        crPATCH(batch_url, body=toJSON(list(status="importing")))
+        pollBatchStatus(batch_url, refresh(batches(dataset)))
     }
-    crPATCH(batch_url, body=toJSON(list(status="importing")))
-    pollBatchStatus(batch_url, refresh(batches(dataset)))
+    
     invisible(refresh(dataset))
 }
 

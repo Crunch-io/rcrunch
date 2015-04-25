@@ -68,7 +68,7 @@ addBatchToDataset <- function (dataset1, dataset2) {
 acceptAppendResolutions <- function (batch_url, dataset, 
                                     confirm=interactive(), ...) {
     
-    status <- pollBatchStatus(batch_url, batches(dataset), until="ready")
+    status <- pollBatchStatus(batch_url, batches(dataset), until=c("ready", "imported"))
     
     batch <- ShojiObject(crGET(batch_url))
     cflicts <- batch@body$conflicts
@@ -83,21 +83,23 @@ acceptAppendResolutions <- function (batch_url, dataset,
         halt(paste(err, collapse=" "))
     }
     
-    ## Else: On success ("ready"):
-    if (length(cflicts)) {
-        ## If there are any resolved conflicts, seek confirmation to proceed,
-        ## if required. Abort if authorization required and not obtained.
-        if (confirm && !askForPermission("Accept these resolutions?")) {
-            err <- c("Permission to automatically resolve conflicts not given.",
-                "Aborting. Please manually resolve conflicts, or set",
-                "confirm=FALSE, and try again.")
-            halt(paste(err, collapse=" "))
+    if (status == "ready") {
+        if (length(cflicts)) {
+            ## If there are any resolved conflicts, seek confirmation to proceed,
+            ## if required. Abort if authorization required and not obtained.
+            if (confirm && !askForPermission("Accept these resolutions?")) {
+                err <- c("Permission to automatically resolve conflicts not given.",
+                    "Aborting. Please manually resolve conflicts, or set",
+                    "confirm=FALSE, and try again.")
+                halt(paste(err, collapse=" "))
+            }
         }
+        
+        ## Proceed.
+        batch <- setCrunchSlot(batch, "status", "importing") ## Async?
+        pollBatchStatus(batch_url, refresh(batches(dataset)), until="imported")
     }
     
-    ## Proceed.
-    batch <- setCrunchSlot(batch, "status", "importing") ## Async?
-    pollBatchStatus(batch_url, refresh(batches(dataset)), until="imported")
     invisible(refresh(dataset))
 }
 
