@@ -1,6 +1,8 @@
-# rcrunch
+# crunch
 
-[Crunch.io](http://crunch.io/) provides a cloud-based data store and analytic engine. It has a [web client](https://beta.crunch.io/) for interactive data exploration and visualization. The **rcrunch** package for R allows analysts to interact with and manipulate Crunch datasets from within R. Importantly, this allows technical researchers to collaborate naturally with team members, managers, and clients who prefer a point-and-click interface: because all connect to the same dataset in the cloud, there is no need to email files back and forth continually to share results. 
+[Cloud Collaboration with Crunch](http://crunch-io.github.io/rcrunch/)
+
+[Crunch.io](http://crunch.io/) provides a cloud-based data store and analytic engine. It has a [web client](https://beta.crunch.io/) for interactive data exploration and visualization. The **crunch** package for R allows analysts to interact with and manipulate Crunch datasets from within R. Importantly, this allows technical researchers to collaborate naturally with team members, managers, and clients who prefer a point-and-click interface: because all connect to the same dataset in the cloud, there is no need to email files back and forth continually to share results. 
 
 [Subscribe to the mailing list](mailto:rcrunch+subscribe@crunch.io) to receive notification of releases and to ask general support questions.
 
@@ -20,7 +22,7 @@ The pre-release version of the package can be pulled from GitHub using the `devt
 Connecting to Crunch and working with datasets is simple:
 
     $ R
-    > library(rcrunch)
+    > library(crunch)
     > login("jane.r_user@crunch.io")
     Crunch password for jane.r_user@crunch.io: 
     
@@ -28,23 +30,23 @@ Connecting to Crunch and working with datasets is simple:
     [crunch] > 
     ...
 
-Check out `listDatasets()` to see the names of your existing datasets, which you can load like `ds <- loadDataset("The name of my dataset")`. New Crunch datasets can be made from a `data.frame` with `newDataset()`, or from a .csv or .sav file with `newDatasetFromFile()`. See the help for these functions or `vignette("getting-started", package="rcrunch")` for more information.
+Check out `listDatasets()` to see the names of your existing datasets, which you can load like `ds <- loadDataset("The name of my dataset")`. New Crunch datasets can be made from a `data.frame` with `newDataset()`, or from a .csv or .sav file with `newDatasetFromFile()`. See the help for these functions or [`vignette("getting-started", package="crunch")`](pkg/doc/getting-started.md) for more information.
 
 ## Additional configuration
 
 You can set several parameters in your .Rprofile to simplify your workflow:
 
 * `crunch.email` and `crunch.pw`: you can save your Crunch credentials so that you don't have to enter them each time. I.e., you can just `> login()`. Please be advised of the risks of storing your password like this. See `?login` for more information. Also, note that you can opt to store just your `crunch.email` and enter your password each time you log in--a mix of convenience and security.
-* `crunch.api`: if not defined, it defaults to "`https://beta.crunch.io/api/`", the production server. To specify a different location, either set it in your .Rprofile or after loading the `rcrunch` package, do `> options(crunch.api="https://otherapi.crunch.io/api/")`.
+* `crunch.api`: if not defined, it defaults to "`https://beta.crunch.io/api/`", the production server. To specify a different location, either set it in your .Rprofile or after loading the `crunch` package, do `> options(crunch.api="https://otherapi.crunch.io/api/")`.
 
 ## For developers
 
 ### Installing from a local checkout
 
-    $ R --slave -e 'install.packages(c("httr", "codetools", "testthat"), repo="http://cran.at.r-project.org")'
+    $ R --slave -e 'install.packages(c("crunch", "codetools", "testthat"), repo="http://cran.at.r-project.org")'
     $ make test
 
-This installs dependencies and then runs the tests, which installs `rcrunch` in the process.
+This installs dependencies and then runs the tests, which installs `crunch` from your local checkout in the process.
 
 ### Running tests
 
