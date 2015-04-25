@@ -32,9 +32,9 @@ This will log you in to the Crunch API. All of these parameters can be also be s
 
 The Crunch data store is built around datasets, which contain variables. Unlike R `data.frames` and atomic vectors, Crunch datasets and variables contain additional metadata. The following vignettes illustrate how you can create and work with datasets using *crunch*.
 
-* [Datasets](datasets.md): creating, loading, and manipulating datasets in Crunch
-* [Variables](variables.md): cleaning and defining variable metadata
-* [Array variables](array-variables.md): how to create and manipulate categorical-array and multiple-response variables
-* [Variable organization](variable-order.md): defining a hierarchy and arranging variables within it
-* [Transformations and derivations](derive.md): alter values within a dataset and create new variables as a function of others
-* [Computing on Crunch data](analyze.md): crosstabulation and more 
+* [Datasets](datasets.html): creating, loading, and manipulating datasets in Crunch
+* [Variables](variables.html): cleaning and defining variable metadata
+* [Array variables](array-variables.html): how to create and manipulate categorical-array and multiple-response variables
+* [Variable organization](variable-order.html): defining a hierarchy and arranging variables within it
+* [Transformations and derivations](derive.html): alter values within a dataset and create new variables as a function of others
+* [Computing on Crunch data](analyze.html): crosstabulation and more 

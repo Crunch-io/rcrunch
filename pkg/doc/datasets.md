@@ -3,7 +3,7 @@
 %\VignetteIndexEntry{Datasets: creating, loading, and manipulating}
 -->
 
-[Previous: Getting started](getting-started.md) 
+[Previous: Getting started](getting-started.html) 
 
 
 
@@ -139,4 +139,4 @@ The second way to delete is `deleteDataset`, which works like `loadDataset`: you
 
 For details on both, see their help pages. 
 
-[Next: Variable metadata](variables.md) 
+[Next: Variable metadata](variables.html) 

@@ -30,10 +30,13 @@ vdata:
 man: doc
 	R CMD Rd2pdf pkg/man/ --force
 
-build-vignettes:
+md:
 	mkdir -p pkg/doc
-	R -e 'setwd("pkg/vignettes"); lapply(lapply(dir(pattern="Rmd"), knitr::knit), function(x) markdown::markdownToHTML(x, output=sub("\\\\.md", ".html", x)))'
+	R -e 'setwd("pkg/vignettes"); lapply(dir(pattern="Rmd"), knitr::knit)'
 	mv pkg/vignettes/*.md pkg/doc/
-	mv pkg/vignettes/*.html pkg/doc/
 	cd pkg/doc && ls | grep .md | xargs -n 1 sed -i '' 's/.html)/.md)/g'
+
+build-vignettes: md
+	R -e 'setwd("pkg/doc"); lapply(dir(pattern="md"), function(x) markdown::markdownToHTML(x, output=sub("\\\\.md", ".html", x))'
+	cd pkg/doc && ls | grep .md | xargs -n 1 sed -i '' 's/.md)/.html)/g'
 	open pkg/doc/getting-started.html

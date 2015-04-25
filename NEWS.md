@@ -1,5 +1,5 @@
 ## crunch 1.2.0
-* New vignettes for deriving variables and analyzing datasets.
+* New vignettes for [deriving variables](pkg/doc/derive.md) and [analyzing datasets](pkg/doc/analyze.md).
 
 * Update appending workflow to support new API.
 
