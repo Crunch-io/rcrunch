@@ -3,7 +3,7 @@
 %\VignetteIndexEntry{Variables: cleaning and defining metadata}
 -->
 
-[Previous: create and load datasets](datasets.html)
+[Previous: create and load datasets](datasets.md)
 
 
 
@@ -21,7 +21,7 @@ At the same time, shorter, user-defined, unique identifiers for variables do hav
 
 So, Crunch stores two user-settable identifiers for variables. What you may have thought of as a variable "label", Crunch elevates to the status of "name". What you may be used to thinking of as a variable "name", Crunch calls "alias".
 
-Aliases and names have slightly different validation constraints. Aliases must be unique across the entire dataset, including among array [subvariables](array-variables.html). "Names", however, only must be unique within [variable order groups](variable-order.html). Any string is valid for either alias or name, though you may want more machine-friendly strings as aliases. In most cases, you probably won't even set aliases, though: they'll be set when you import your dataset and will be whatever the names were in your source data.
+Aliases and names have slightly different validation constraints. Aliases must be unique across the entire dataset, including among array [subvariables](array-variables.md). "Names", however, only must be unique within [variable order groups](variable-order.md). Any string is valid for either alias or name, though you may want more machine-friendly strings as aliases. In most cases, you probably won't even set aliases, though: they'll be set when you import your dataset and will be whatever the names were in your source data.
 
 In sum, name is crunch alias, label is crunch name.
 
@@ -343,4 +343,4 @@ hiddenVariables(ds)
 ## [1] "comments"
 ```
 
-[Next: create and manipulate array variables](array-variables.html)
+[Next: create and manipulate array variables](array-variables.md)

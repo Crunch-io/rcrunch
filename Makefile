@@ -38,5 +38,5 @@ md:
 
 build-vignettes: md
 	R -e 'setwd("pkg/doc"); lapply(dir(pattern="md"), function(x) markdown::markdownToHTML(x, output=sub("\\\\.md", ".html", x)))'
-	cd pkg/doc && ls | grep .md | xargs -n 1 sed -i '' 's/.md)/.html)/g'
+	cd pkg/doc && ls | grep .html | xargs -n 1 sed -i '' 's/.md)/.html)/g'
 	open pkg/doc/getting-started.html

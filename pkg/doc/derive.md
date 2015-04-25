@@ -3,7 +3,7 @@
 %\VignetteIndexEntry{Manipulating variables and deriving new ones}
 -->
 
-[Previous: variable organization](variable-order.html)
+[Previous: variable organization](variable-order.md)
 
 
 
@@ -99,4 +99,4 @@ class(ds$birthyr < 1945)
 
 The work gets done without having to pull data off of the server.
 
-[Next: analyzing data](analyze.html)
+[Next: analyzing data](analyze.md)

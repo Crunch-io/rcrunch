@@ -3,7 +3,7 @@
 %\VignetteIndexEntry{Array Variables}
 -->
 
-[Previous: variables](variables.html)
+[Previous: variables](variables.md)
 
 
 
@@ -138,7 +138,7 @@ ds$imiss$imiss_b
 
 The names `imiss_b` through `imiss_t` are unsatisfying from a human-readability perspective: you can't tell which political issues correspond to the variables. Unfortunately, we didn't have additional metadata on these survey questions in the `data.frame` we imported initially. However, we can rectify this.
 
-Subvariables have methods similar to those for [categories](variables.html). They have a names attribute that we can get:
+Subvariables have methods similar to those for [categories](variables.md). They have a names attribute that we can get:
 
 
 ```r
@@ -368,4 +368,4 @@ grep("boap", names(ds), value=TRUE)
 ##  [8] "boap_9"  "boap_10" "boap_11" "boap_12" "boap_13" "boap_14"
 ```
 
-[Next: variable organization](variable-order.html)
+[Next: variable organization](variable-order.md)
