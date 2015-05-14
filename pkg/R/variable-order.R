@@ -102,6 +102,10 @@ setMethod("length", "VariableOrder", function (x) length(entities(x)))
 ##' @aliases VariableOrder-extract
 NULL
 
+###############################
+# 1. Extract from VariableOrder
+###############################
+
 ##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[", c("VariableOrder", "ANY"), function (x, i, ..., drop=FALSE) {
@@ -135,6 +139,10 @@ setMethod("[[", c("VariableOrder", "character"), function (x, i, ...) {
 ##' @export
 setMethod("$", "VariableOrder", function (x, name) x[[name]])
 
+###############################
+# 2. Assign into VariableOrder
+###############################
+
 ##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[<-", c("VariableOrder", "character", "missing", "VariableOrder"), 
@@ -152,6 +160,8 @@ setMethod("[<-", c("VariableOrder", "ANY", "missing", "VariableOrder"),
        x@graph[i] <- value@graph
        return(x)
    })
+
+
 ##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[[<-", c("VariableOrder", "character", "missing", "VariableGroup"), 
@@ -160,15 +170,40 @@ setMethod("[[<-", c("VariableOrder", "character", "missing", "VariableGroup"),
         if (any(is.na(w))) {
             halt("Undefined group selected: ", serialPaste(i[is.na(w)]))
         }
+        ## NextMethod: c("VariableOrder", "ANY", "missing", "VariableGroup")
         callNextMethod(x, w, value=value)
     })
+    
+##' @rdname VariableOrder-extract
+##' @export
+setMethod("[[<-", c("VariableOrder", "character", "missing", "CrunchDataset"), 
+    function (x, i, j, value) {
+        w <- match(i, names(x))
+        value <- .initEntities(value)
+        if (!duplicates(x)) {
+            x <- setdiff_entities(x, value)
+        }
+        if (any(is.na(w))) {
+            ## New group. 
+            x@graph <- c(x@graph, VariableGroup(name=i, entities=value))
+        } else {
+            ## Existing group. Assign entities
+            entities(x[[w]]) <- value
+        }
+        return(removeNulls(x))
+    })
+
 ##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[[<-", c("VariableOrder", "ANY", "missing", "VariableGroup"), 
     function (x, i, j, value) {
+        if (!duplicates(x) && length(entities(value))) {
+            x <- setdiff_entities(x, value)
+        }
         x@graph[[i]] <- value
-        return(x)
+        return(removeNulls(x))
     })
+
 ##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[[<-", c("VariableOrder", "ANY", "missing", "ANY"), 
@@ -205,6 +240,10 @@ setMethod("$<-", "VariableOrder", function (x, name, value) {
     return(x)
 })
 
+###############################
+# 3. Extract from VariableGroup
+###############################
+
 ##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[", c("VariableGroup", "ANY"), function (x, i, ..., drop=FALSE) {
@@ -221,11 +260,64 @@ setMethod("[", c("VariableGroup", "character"), function (x, i, ..., drop=FALSE)
     callNextMethod(x, w, ..., drop=drop)
 })
 
+
 ##' @rdname VariableOrder-extract
 ##' @export
-setMethod("[[", "VariableGroup", function (x, i, ...) {
-    entities(x)[[i]]
+setMethod("[[", c("VariableGroup", "character"), function (x, i, ...) {
+    w <- match(i, names(x))
+    if (any(is.na(w))) {
+        halt("Undefined groups selected: ", serialPaste(i[is.na(w)]))
+    }
+    callNextMethod(x, w, ..., drop=drop)
 })
+
+##' @rdname VariableOrder-extract
+##' @export
+setMethod("[[", c("VariableGroup", "ANY"), function (x, i, ...) {
+    x@entities[[i]]
+})
+
+##' @rdname VariableOrder-extract
+##' @export
+setMethod("$", "VariableGroup", function (x, name) {
+    x[[name]]
+})
+
+###############################
+# 4. Assign into VariableGroup
+###############################
+
+.setNestedGroupByName <- function (x, i, j, value) {
+    w <- match(i, names(x))
+    value <- .initEntities(value)
+    if (!duplicates(x)) {
+        x <- setdiff_entities(x, value)
+    }
+    if (any(is.na(w))) {
+        ## New group. 
+        x@entities <- c(x@entities, VariableGroup(name=i, entities=value))
+    } else {
+        ## Existing group. Assign entities
+        x@entities[[w]] <- value
+    }
+    return(removeNulls(x))
+}
+
+##' @rdname VariableOrder-extract
+##' @export
+setMethod("[[<-", c("VariableGroup", "character", "missing", "CrunchDataset"), 
+    .setNestedGroupByName)
+
+##' @rdname VariableOrder-extract
+##' @export
+setMethod("[[<-", c("VariableGroup", "character", "missing", "list"), 
+    .setNestedGroupByName)
+
+##' @rdname VariableOrder-extract
+##' @export
+setMethod("[[<-", c("VariableGroup", "character", "missing", "character"), 
+    .setNestedGroupByName)
+
 ##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[[<-", c("VariableGroup", "ANY", "missing", "VariableGroup"), function (x, i, j, value) {
@@ -234,7 +326,6 @@ setMethod("[[<-", c("VariableGroup", "ANY", "missing", "VariableGroup"), functio
 })
 
 printVariableOrder <- function (x) {
-    ## VariableOrder should get a proper show method
     if (is.dataset(x)) {
         return(printVariableOrder(variables(x)))
     }
@@ -292,4 +383,81 @@ grouped <- function (var.order) {
 ungrouped <- function (var.order) {
     return(VariableGroup(name="ungrouped",
         entities=entities(Filter(is.character, var.order))))
+}
+
+# dedupeOrder <- function (x) {
+#     ## x is graph/entities list
+#     ## Find any duplicates. If there are any, keep the one at the deepest level
+#     ## of nesting. If >1 at same level of nesting, keep first.
+#     
+#     this.level <- data.frame(lev=counter, name="TOP")
+#     sep <- "_|_|_"
+#     
+#     gname <- "TOP"
+#     grps <- TRUE
+#     while(any(grps)) {
+#         grps <- vapply(x, inherits, logical(1), what="VariableGroup")
+#         x <- c(unlist(lapply(x[grps], function (a) a$entities),
+#             recursive=FALSE), lapply(x[!grps], function (a) {
+#                 if (is.data.frame(a) return(a)
+#                 data.frame(gname=gname, ents=a)
+#             })
+#     }
+#     x <- do.call(rbind, x)
+#     dups <- duplicated(x$ents)
+#     if (any(dups)) {
+#         
+#     }
+#     return(x)
+# }
+
+
+setdiff_entities <- function (x, ents, remove.nulls=FALSE) {
+    ## Remove "ents" anywhere they appear in x
+    if (!is.character(ents)) {
+        ## Get just the entity URLs
+        ents <- entities(ents, simplify=TRUE)
+    }
+    
+    if (inherits(x, "VariableOrder")) {
+        x@graph <- setdiff_entities(x@graph, ents)
+    } else if (inherits(x, "VariableGroup")) {
+        x@entities <- setdiff_entities(x@entities, ents)
+    } else if (is.list(x)) {
+        ## We're inside entities, which may have nested groups
+        grps <- vapply(x, inherits, logical(1), what="VariableGroup")
+        if (any(grps)) {
+            x[grps] <- lapply(x[grps], setdiff_entities, ents)
+        }
+        matches <- unlist(x[!grps]) %in% ents
+        if (any(matches)) {
+            # x <- x[-which(!grps)[matches]]
+            ## Put in NULLs so that any subsequent assignment into this object
+            ## assigns into the right position. Then strip NULLs after
+            x[!grps][matches] <- rep(list(NULL), sum(matches))
+        }
+    }
+    if (remove.nulls) {
+        x <- removeNulls(x)
+    }
+    return(x)
+}
+
+removeNulls <- function (x) {
+    if (inherits(x, "VariableOrder")) {
+        x@graph <- removeNulls(x@graph)
+    } else if (inherits(x, "VariableGroup")) {
+        x@entities <- removeNulls(x@entities)
+    } else if (is.list(x)) {
+        ## We're inside entities, which may have nested groups
+        grps <- vapply(x, inherits, logical(1), what="VariableGroup")
+        if (any(grps)) {
+            x[grps] <- lapply(x[grps], removeNulls)
+        }
+        drops <- vapply(x[!grps], is.null, logical(1))
+        if (any(drops)) {
+            x <- x[-which(!grps)[drops]]
+        }
+    }
+    return(x)
 }

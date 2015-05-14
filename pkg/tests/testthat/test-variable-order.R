@@ -32,9 +32,10 @@ with(fake.HTTP, {
     test.ord <- ordering(test.ds)
     ent.urls <- urls(test.ord)
     nested.ord <- try(VariableOrder(
-        VariableGroup(name="Group 1", entities=list(ent.urls[1], 
-            VariableGroup(name="Nested", entities=ent.urls[2:3]),
-            ent.urls[4])),
+        VariableGroup(name="Group 1", 
+            entities=list(ent.urls[1], 
+                        VariableGroup(name="Nested", entities=ent.urls[2:3]),
+                        ent.urls[4])),
         VariableGroup(name="Group 2", entities=ent.urls[5:6])))
     
     test_that("Can extract group(s) by name", {
@@ -116,7 +117,7 @@ with(fake.HTTP, {
                 VariableGroup(name="Nested", entities=ent.urls[2:3]),
                 ent.urls[4]))))
     })
-    test_that("can assign group into group", {
+    test_that("can assign group into group by index", {
         to <- test.ord
         try(to[[1]] <- VariableGroup(name="[[<-", entities=ng))
         expect_identical(to[[1]][[1]], ent.urls[1])
@@ -142,13 +143,76 @@ with(fake.HTTP, {
         expect_identical(name(to[[1]]), "Something better")
     })
     
-    test_that("Validation on Order/Group [[<-", {
+    test_that("Assignment by new group name", {
+        nested.o <- nested.ord
+        nested.o[["Group 3"]] <- test.ds["starttime"]
+        expect_identical(names(nested.o), c("Group 1", "Group 2", "Group 3"))
+        expect_identical(entities(nested.o[["Group 3"]]),
+            list(self(test.ds$starttime)))
+        ## Test the "duplicates option": starttime should have been removed from
+        ## Group 2
+        expect_identical(entities(nested.o[["Group 2"]]),
+            list(self(test.ds$catarray)))
+    })
+    
+    test_that("Assignment by new group name with duplicates", {
+        nested.o <- nested.ord
+        duplicates(nested.o) <- TRUE
+        expect_true(duplicates(nested.o))
+        nested.o[["Group 3"]] <- test.ds["starttime"]
+        expect_identical(names(nested.o), c("Group 1", "Group 2", "Group 3"))
+        expect_identical(entities(nested.o[["Group 3"]]),
+            list(self(test.ds$starttime)))
+        ## Test the "duplicates option": starttime should not have been removed 
+        ## from Group 2
+        expect_identical(entities(nested.o[["Group 2"]]),
+            list(self(test.ds$starttime), self(test.ds$catarray)))
+    })
+    
+    test_that("Update group with Dataset", {
+        nested.o <- nested.ord
+        nested.o[["Group 2"]] <- test.ds[c("gender", "starttime")]
+        expect_identical(entities(nested.o[["Group 2"]]),
+            lapply(test.ds[c("gender", "starttime")], self))
+    })
+    
+    test_that("Assignment by new nested group name", {
+        nested.o <- nested.ord
+        nested.o[["Group 1"]][[2]][["More nesting"]] <- self(test.ds$gender)
+        expect_identical(entities(nested.o[["Group 1"]]$Nested[["More nesting"]]),
+            list(self(test.ds$gender)))
+        ## Test duplicates option: gender should only be in "More nesting"
+        expect_identical(nested.o[["Group 1"]]$Nested[[1]], 
+            self(test.ds$mymrset))
+    })
+    
+    test_that("Assignment by new nested group name with duplicates", {
+        nested.o <- nested.ord
+        duplicates(nested.o) <- TRUE
+        expect_true(duplicates(nested.o[["Group 1"]]))
+        expect_true(duplicates(nested.o[["Group 1"]][[2]]))
+        nested.o[["Group 1"]][[2]][["More nesting"]] <- self(test.ds$gender)
+        expect_identical(entities(nested.o[["Group 1"]]$Nested[["More nesting"]]),
+            list(self(test.ds$gender)))
+        ## Test duplicates option: gender should still be in "More nesting"
+        expect_identical(nested.o[["Group 1"]]$Nested[[1]], 
+            self(test.ds$gender))
+    })
+    
+    skip(test_that("c() Order/Group", {
+
+    }), "TODO")
+    
+    skip(test_that("Update group with URLs", {
         to <- test.ord
         expect_true(inherits(to, "VariableOrder"))
-        skip(expect_error(to[[1]] <- ent.urls, 
-            "Cannot insert multiple variables. Perhaps you want to insert a nested group? Or maybe manipulate the entire entities vector?"),
-            "Not sure what this expectation should be")
-    })
+        expect_error(to[[1]] <- ent.urls, 
+            "Correct error expectation here")
+        ## Now try where [[1]] is a Group
+        nested.o <- nested.ord
+        try(nested.o[[1]] <- ent.urls)
+        expect_identical(entities(nested.o[[1]]), as.list(ent.urls))
+    }), "TODO")
     
     test_that("VariableOrder/Group show methods", {
         expect_identical(showVariableOrder(nested.ord, vars=variables(test.ds)),
@@ -175,6 +239,69 @@ with(fake.HTTP, {
               "    Cat Array",
               "[+] Group 3",
               "    (Empty group)"))
+    })
+    
+    test_that("Composing a VariableOrder step by step", {
+        ord <- test.ord
+        expect_identical(showVariableOrder(ord, vars=variables(test.ds)),
+            c("Birth Year",
+              "Gender",
+              "mymrset",
+              "Text variable ftw",
+              "starttime",
+              "Cat Array"))
+        ord$Demos <- test.ds[c("gender", "birthyr")]
+        expect_identical(showVariableOrder(ord, vars=variables(test.ds)),
+            c("mymrset",
+              "Text variable ftw",
+              "starttime",
+              "Cat Array",
+              "[+] Demos",
+              "    Gender",
+              "    Birth Year"))
+        ord$Arrays <- test.ds[c("mymrset", "catarray")]
+        expect_identical(showVariableOrder(ord, vars=variables(test.ds)),
+            c("Text variable ftw",
+              "starttime",
+              "[+] Demos",
+              "    Gender",
+              "    Birth Year",
+              "[+] Arrays",
+              "    mymrset",
+              "    Cat Array"))
+        ord$Demos[["Others"]] <- test.ds[c("birthyr", "textVar")]
+        expect_identical(showVariableOrder(ord, vars=variables(test.ds)),
+            c("starttime",
+              "[+] Demos",
+              "    Gender",
+              "    [+] Others",
+              "        Birth Year",
+              "        Text variable ftw",
+              "[+] Arrays",
+              "    mymrset",
+              "    Cat Array"))
+        ord$Demos <- ord$Demos[2:1]
+        expect_identical(showVariableOrder(ord, vars=variables(test.ds)),
+            c("starttime",
+              "[+] Demos",
+              "    [+] Others",
+              "        Birth Year",
+              "        Text variable ftw",
+              "    Gender",
+              "[+] Arrays",
+              "    mymrset",
+              "    Cat Array"))
+        ord <- ord[3:1]
+        expect_identical(showVariableOrder(ord, vars=variables(test.ds)),
+            c("[+] Arrays",
+              "    mymrset",
+              "    Cat Array",
+              "[+] Demos",
+              "    [+] Others",
+              "        Birth Year",
+              "        Text variable ftw",
+              "    Gender",
+              "starttime"))   
     })
 })
 

@@ -76,6 +76,14 @@ setMethod("names", "VariableOrder",
     function (x) vapply(x, function (a) {
         ifelse(inherits(a, "VariableGroup"), name(a), NA_character_)
     }, character(1)))
+    
+##' @rdname VariableOrder-slots
+##' @export
+setMethod("names", "VariableGroup", 
+    function (x) vapply(x, function (a) {
+        ifelse(inherits(a, "VariableGroup"), name(a), NA_character_)
+    }, character(1)))
+
 ##' @rdname VariableOrder-slots
 ##' @export
 setMethod("names<-", "VariableOrder", 
@@ -87,3 +95,18 @@ setMethod("names<-", "VariableOrder",
             }, y=x@graph, v=value, SIMPLIFY=FALSE, USE.NAMES=FALSE)
         return(x)
     })
+
+setMethod("duplicates", "VariableOrder", function (x) x@duplicates)
+setMethod("duplicates", "VariableGroup", function (x) x@duplicates)
+setMethod("duplicates<-", c("VariableOrder", "logical"), function (x, value) {
+     x@duplicates <- isTRUE(value) ## To purge NA_logical_
+     grps <- vapply(x@graph, inherits, logical(1), what="VariableGroup")
+     x@graph[grps] <- lapply(x@graph[grps], `duplicates<-`, value=value)
+     return(x)
+})
+setMethod("duplicates<-", c("VariableGroup", "logical"), function (x, value) {
+     x@duplicates <- isTRUE(value) ## To purge NA_logical_
+     grps <- vapply(x@entities, inherits, logical(1), what="VariableGroup")
+     x@entities[grps] <- lapply(x@entities[grps], `duplicates<-`, value=value)
+     return(x)
+})

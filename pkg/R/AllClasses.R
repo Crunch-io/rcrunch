@@ -97,19 +97,29 @@ MultipleResponseVariable <-setClass("MultipleResponseVariable",
 ##' @export VariableOrder
 VariableOrder <- setClass("VariableOrder", contains="ShojiOrder",
     representation=representation(
-        vars="ANY"
+        vars="ANY",
+        duplicates="logical"
     ),
     prototype=prototype(
-        vars=NULL
+        vars=NULL,
+        duplicates=FALSE
     )
 )
 
 ##' @rdname VariableOrder
 ##' @export VariableGroup
-VariableGroup <- setClass("VariableGroup", representation=representation(
-    group="character",
-    entities="list"
-))
+VariableGroup <- setClass("VariableGroup",
+    representation=representation(
+        group="character",
+        entities="list",
+        duplicates="logical"
+    ),
+    prototype=prototype(
+        group="",
+        entities=list(),
+        duplicates=FALSE
+    )
+)
 
 ##' Collection of Variables within a Dataset
 ##'
