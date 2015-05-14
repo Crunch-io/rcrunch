@@ -174,24 +174,26 @@ setMethod("[[<-", c("VariableOrder", "character", "missing", "VariableGroup"),
         callNextMethod(x, w, value=value)
     })
     
+
+.setNestedGroupByName <- function (x, i, j, value) {
+    w <- match(i, names(x))
+    value <- .initEntities(value)
+    if (!duplicates(x)) {
+        x <- setdiff_entities(x, value)
+    }
+    if (any(is.na(w))) {
+        ## New group. 
+        entities(x) <- c(entities(x), VariableGroup(name=i, entities=value))
+    } else {
+        ## Existing group. Assign entities
+        entities(x[[w]]) <- value
+    }
+    return(removeMissingEntities(x))
+}
 ##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[[<-", c("VariableOrder", "character", "missing", "CrunchDataset"), 
-    function (x, i, j, value) {
-        w <- match(i, names(x))
-        value <- .initEntities(value)
-        if (!duplicates(x)) {
-            x <- setdiff_entities(x, value)
-        }
-        if (any(is.na(w))) {
-            ## New group. 
-            x@graph <- c(x@graph, VariableGroup(name=i, entities=value))
-        } else {
-            ## Existing group. Assign entities
-            entities(x[[w]]) <- value
-        }
-        return(removeNulls(x))
-    })
+    .setNestedGroupByName)
 
 ##' @rdname VariableOrder-extract
 ##' @export
@@ -201,7 +203,7 @@ setMethod("[[<-", c("VariableOrder", "ANY", "missing", "VariableGroup"),
             x <- setdiff_entities(x, value)
         }
         x@graph[[i]] <- value
-        return(removeNulls(x))
+        return(removeMissingEntities(x))
     })
 
 ##' @rdname VariableOrder-extract
@@ -230,9 +232,6 @@ setMethod("[[<-", c("VariableOrder", "character", "missing", "NULL"),
         callNextMethod(x, w, value=value)
     })
 
-##' @rdname VariableOrder-extract
-##' @export
-setMethod("$", "VariableOrder", function (x, name) x[[name]])
 ##' @rdname VariableOrder-extract
 ##' @export
 setMethod("$<-", "VariableOrder", function (x, name, value) {
@@ -279,29 +278,11 @@ setMethod("[[", c("VariableGroup", "ANY"), function (x, i, ...) {
 
 ##' @rdname VariableOrder-extract
 ##' @export
-setMethod("$", "VariableGroup", function (x, name) {
-    x[[name]]
-})
+setMethod("$", "VariableGroup", function (x, name) x[[name]])
 
 ###############################
 # 4. Assign into VariableGroup
 ###############################
-
-.setNestedGroupByName <- function (x, i, j, value) {
-    w <- match(i, names(x))
-    value <- .initEntities(value)
-    if (!duplicates(x)) {
-        x <- setdiff_entities(x, value)
-    }
-    if (any(is.na(w))) {
-        ## New group. 
-        x@entities <- c(x@entities, VariableGroup(name=i, entities=value))
-    } else {
-        ## Existing group. Assign entities
-        x@entities[[w]] <- value
-    }
-    return(removeNulls(x))
-}
 
 ##' @rdname VariableOrder-extract
 ##' @export
@@ -385,76 +366,40 @@ ungrouped <- function (var.order) {
         entities=entities(Filter(is.character, var.order))))
 }
 
-# dedupeOrder <- function (x) {
-#     ## x is graph/entities list
-#     ## Find any duplicates. If there are any, keep the one at the deepest level
-#     ## of nesting. If >1 at same level of nesting, keep first.
-#     
-#     this.level <- data.frame(lev=counter, name="TOP")
-#     sep <- "_|_|_"
-#     
-#     gname <- "TOP"
-#     grps <- TRUE
-#     while(any(grps)) {
-#         grps <- vapply(x, inherits, logical(1), what="VariableGroup")
-#         x <- c(unlist(lapply(x[grps], function (a) a$entities),
-#             recursive=FALSE), lapply(x[!grps], function (a) {
-#                 if (is.data.frame(a) return(a)
-#                 data.frame(gname=gname, ents=a)
-#             })
-#     }
-#     x <- do.call(rbind, x)
-#     dups <- duplicated(x$ents)
-#     if (any(dups)) {
-#         
-#     }
-#     return(x)
-# }
-
-
-setdiff_entities <- function (x, ents, remove.nulls=FALSE) {
+setdiff_entities <- function (x, ents, remove.na=FALSE) {
     ## Remove "ents" anywhere they appear in x
     if (!is.character(ents)) {
         ## Get just the entity URLs
         ents <- entities(ents, simplify=TRUE)
     }
     
-    if (inherits(x, "VariableOrder")) {
-        x@graph <- setdiff_entities(x@graph, ents)
-    } else if (inherits(x, "VariableGroup")) {
-        x@entities <- setdiff_entities(x@entities, ents)
+    if (inherits(x, "VariableOrder") || inherits(x, "VariableGroup")) {
+        entities(x) <- setdiff_entities(entities(x), ents)
     } else if (is.list(x)) {
         ## We're inside entities, which may have nested groups
         grps <- vapply(x, inherits, logical(1), what="VariableGroup")
-        if (any(grps)) {
-            x[grps] <- lapply(x[grps], setdiff_entities, ents)
-        }
+        x[grps] <- lapply(x[grps], setdiff_entities, ents)
         matches <- unlist(x[!grps]) %in% ents
         if (any(matches)) {
-            # x <- x[-which(!grps)[matches]]
-            ## Put in NULLs so that any subsequent assignment into this object
-            ## assigns into the right position. Then strip NULLs after
-            x[!grps][matches] <- rep(list(NULL), sum(matches))
+            ## Put in NAs so that any subsequent assignment into this object
+            ## assigns into the right position. Then strip NAs after
+            x[!grps][matches] <- rep(list(NA_character_), sum(matches))
         }
     }
-    if (remove.nulls) {
-        x <- removeNulls(x)
+    if (remove.na) {
+        x <- removeMissingEntities(x)
     }
     return(x)
 }
 
-removeNulls <- function (x) {
-    if (inherits(x, "VariableOrder")) {
-        x@graph <- removeNulls(x@graph)
-    } else if (inherits(x, "VariableGroup")) {
-        x@entities <- removeNulls(x@entities)
+removeMissingEntities <- function (x) {
+    if (inherits(x, "VariableOrder") || inherits(x, "VariableGroup")) {
+        entities(x) <- removeMissingEntities(entities(x))
     } else if (is.list(x)) {
         ## We're inside entities, which may have nested groups
         grps <- vapply(x, inherits, logical(1), what="VariableGroup")
-        if (any(grps)) {
-            x[grps] <- lapply(x[grps], removeNulls)
-        }
-        drops <- vapply(x[!grps], is.null, logical(1))
+        x[grps] <- lapply(x[grps], removeMissingEntities)
+        drops <- vapply(x[!grps], is.na, logical(1))
         if (any(drops)) {
             x <- x[-which(!grps)[drops]]
         }
