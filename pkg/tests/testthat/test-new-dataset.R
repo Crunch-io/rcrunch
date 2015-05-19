@@ -73,10 +73,10 @@ if (run.integration.tests) {
                 "Can only make a Crunch dataset from a two-dimensional data")
         })
         
-        test_that("newDataset by addVariables", {
-            dsname <- uniqueDatasetName()
-            with(test.dataset(newDatasetByColumn(df, name=dsname,
-                                        description="a description")), {
+        dsname <- uniqueDatasetName()
+        with(test.dataset(newDatasetByColumn(df, name=dsname,
+                                    description="a description")), {
+            test_that("newDataset by addVariables", {
                 expect_true(dsname %in% listDatasets())
                 expect_true(is.dataset(ds))
                 expect_identical(description(ds), "a description")
@@ -110,12 +110,16 @@ if (run.integration.tests) {
                 })
             })
         })
-                
-        test_that("newDataset via CSV + JSON", {
-            with(test.dataset(suppressMessages(newDatasetByCSV(df,
-                                                name=uniqueDatasetName()))), 
-                validImport(ds)
-            )
+        
+        with(test.dataset(suppressMessages(newDatasetByCSV(df,
+                                            name=uniqueDatasetName()))), {
+            test_that("newDataset via CSV + JSON", validImport(ds))
+        })
+        
+        dsz <- try(suppressMessages(newDataset(df)))
+        test_that("newDataset without specifying name grabs object name", {
+            expect_true(is.dataset(dsz))
+            with(test.dataset(dsz), validImport(dsz))
         })
         
         test_that("Datasets can be deleted", {
