@@ -1,3 +1,6 @@
+## crunch 1.2.1
+* Additional methods for working with VariableOrder and VariableGroup. You can create new Groups by assigning into an Order or Group with a new name. And, with the new `duplicates` parameter, which is `FALSE` by default, adding new Groups to an Order "moves" the variable references to the new Group, rather than creating copies. See the [variable order vignette](pkg/doc/variable-order.md) for more details.
+
 ## crunch 1.2.0
 * New vignettes for [deriving variables](pkg/doc/derive.md) and [analyzing datasets](pkg/doc/analyze.md).
 
@@ -9,7 +12,7 @@
 ## crunch 1.1.0
 * Add query cache, on by default. 
 
-* `as.data.frame` now does return an actual `data.frame` unless given the argument `force=TRUE`. Instead, it returns a `CrunchDataFrame`, and environment containing unevaluated promises. This allows R functions, particularly those of the form `function(formula, data)` to work with CrunchDatasets without copying the entire dataset from the server to local memory. Only the variables referenced in the formula fetch data when their promises evaluated.
+* `as.data.frame` now does not return an actual `data.frame` unless given the argument `force=TRUE`. Instead, it returns a `CrunchDataFrame`, and environment containing unevaluated promises. This allows R functions, particularly those of the form `function(formula, data)` to work with CrunchDatasets without copying the entire dataset from the server to local memory. Only the variables referenced in the formula fetch data when their promises evaluated.
 
 * Remove `RJSONIO` dependency in favor of `jsonlite` for `toJSON`.
 
