@@ -1,4 +1,4 @@
-init.VariableOrder <- function (.Object, ...) {
+init.VariableOrder <- function (.Object, ..., duplicates=FALSE) {
     .Object <- callNextMethod(.Object, ...)
     dots <- list(...)
     if (length(dots) && !is.shoji(dots[[1]])) {
@@ -6,6 +6,7 @@ init.VariableOrder <- function (.Object, ...) {
     } else {
         .Object@graph <- .initEntities(.Object@graph, url.base=.Object@self)
     }
+    duplicates(.Object) <- duplicates
     return(.Object)
 }
 setMethod("initialize", "VariableOrder", init.VariableOrder)
@@ -56,12 +57,13 @@ setMethod("initialize", "VariableOrder", init.VariableOrder)
     halt(class(x), " is an invalid input for entities")
 }
 
-init.VariableGroup <- function (.Object, group, entities, url.base=NULL, ...) {
+init.VariableGroup <- function (.Object, group, entities, url.base=NULL, duplicates=FALSE, ...) {
     dots <- list(...)
     if ("variables" %in% names(dots)) entities <- dots$variables
     if ("name" %in% names(dots)) group <- dots$name
     .Object@group <- group
     .Object@entities <- .initEntities(entities, url.base)
+    duplicates(.Object) <- duplicates
     return(.Object)
 }
 setMethod("initialize", "VariableGroup", init.VariableGroup)
@@ -158,6 +160,8 @@ setMethod("[<-", c("VariableOrder", "character", "missing", "VariableOrder"),
 setMethod("[<-", c("VariableOrder", "ANY", "missing", "VariableOrder"), 
    function (x, i, j, value) {
        x@graph[i] <- value@graph
+       ## Ensure duplicates setting persists
+       duplicates(x) <- duplicates(x)
        return(x)
    })
 
@@ -188,12 +192,21 @@ setMethod("[[<-", c("VariableOrder", "character", "missing", "VariableGroup"),
         ## Existing group. Assign entities
         entities(x[[w]]) <- value
     }
+    ## Ensure duplicates setting persists
+    duplicates(x) <- duplicates(x)
     return(removeMissingEntities(x))
 }
 ##' @rdname VariableOrder-extract
 ##' @export
 setMethod("[[<-", c("VariableOrder", "character", "missing", "CrunchDataset"), 
     .setNestedGroupByName)
+    
+##' @rdname VariableOrder-extract
+##' @export
+setMethod("[[<-", c("VariableOrder", "character", "missing", "VariableOrder"), 
+    function (x, i, j, value) {
+        .setNestedGroupByName(x, i, j, entities(value))
+    })
 
 ##' @rdname VariableOrder-extract
 ##' @export
@@ -203,6 +216,8 @@ setMethod("[[<-", c("VariableOrder", "ANY", "missing", "VariableGroup"),
             x <- setdiff_entities(x, value)
         }
         x@graph[[i]] <- value
+        ## Ensure duplicates setting persists
+        duplicates(x) <- duplicates(x)
         return(removeMissingEntities(x))
     })
 
@@ -301,8 +316,30 @@ setMethod("[[<-", c("VariableGroup", "character", "missing", "character"),
 
 ##' @rdname VariableOrder-extract
 ##' @export
-setMethod("[[<-", c("VariableGroup", "ANY", "missing", "VariableGroup"), function (x, i, j, value) {
-    entities(x)[[i]] <- value
+setMethod("[[<-", c("VariableGroup", "character", "missing", "VariableOrder"), 
+    function (x, i, j, value) {
+        .setNestedGroupByName(x, i, j, entities(value))
+    })
+
+##' @rdname VariableOrder-extract
+##' @export
+setMethod("[[<-", c("VariableGroup", "character", "missing", "VariableGroup"), 
+    function (x, i, j, value) {
+        .setNestedGroupByName(x, i, j, entities(value))
+    })
+
+##' @rdname VariableOrder-extract
+##' @export
+setMethod("[[<-", c("VariableGroup", "ANY", "missing", "VariableGroup"),
+    function (x, i, j, value) {
+        entities(x)[[i]] <- value
+        return(x)
+    })
+
+##' @rdname VariableOrder-extract
+##' @export
+setMethod("$<-", "VariableGroup", function (x, name, value) {
+    x[[name]] <- value
     return(x)
 })
 
@@ -367,7 +404,7 @@ ungrouped <- function (var.order) {
 }
 
 setdiff_entities <- function (x, ents, remove.na=FALSE) {
-    ## Remove "ents" anywhere they appear in x
+    ## Remove "ents" (variable references) anywhere they appear in x (Order)
     if (!is.character(ents)) {
         ## Get just the entity URLs
         ents <- entities(ents, simplify=TRUE)
@@ -393,6 +430,7 @@ setdiff_entities <- function (x, ents, remove.na=FALSE) {
 }
 
 removeMissingEntities <- function (x) {
+    ## Remove NA entries, left by setdiff_entities, from @graph/entities
     if (inherits(x, "VariableOrder") || inherits(x, "VariableGroup")) {
         entities(x) <- removeMissingEntities(entities(x))
     } else if (is.list(x)) {

@@ -2,7 +2,9 @@
 % Please edit documentation in R/variable-order.R
 \docType{methods}
 \name{VariableOrder-extract}
+\alias{$,VariableGroup-method}
 \alias{$,VariableOrder-method}
+\alias{$<-,VariableGroup-method}
 \alias{$<-,VariableOrder-method}
 \alias{VariableOrder-extract}
 \alias{[,VariableGroup,ANY-method}
@@ -12,14 +14,22 @@
 \alias{[<-,VariableOrder,ANY,missing,VariableOrder-method}
 \alias{[<-,VariableOrder,character,missing,VariableOrder-method}
 \alias{[[,VariableGroup,ANY-method}
+\alias{[[,VariableGroup,character-method}
 \alias{[[,VariableOrder,ANY-method}
 \alias{[[,VariableOrder,character-method}
 \alias{[[<-,VariableGroup,ANY,missing,VariableGroup-method}
+\alias{[[<-,VariableGroup,character,missing,CrunchDataset-method}
+\alias{[[<-,VariableGroup,character,missing,VariableGroup-method}
+\alias{[[<-,VariableGroup,character,missing,VariableOrder-method}
+\alias{[[<-,VariableGroup,character,missing,character-method}
+\alias{[[<-,VariableGroup,character,missing,list-method}
 \alias{[[<-,VariableOrder,ANY,missing,ANY-method}
 \alias{[[<-,VariableOrder,ANY,missing,NULL-method}
 \alias{[[<-,VariableOrder,ANY,missing,VariableGroup-method}
+\alias{[[<-,VariableOrder,character,missing,CrunchDataset-method}
 \alias{[[<-,VariableOrder,character,missing,NULL-method}
 \alias{[[<-,VariableOrder,character,missing,VariableGroup-method}
+\alias{[[<-,VariableOrder,character,missing,VariableOrder-method}
 \title{Extract and update in VariableOrder and VariableGroup}
 \usage{
 \S4method{[}{VariableOrder,ANY}(x, i, j, ..., drop = TRUE)
@@ -38,6 +48,10 @@
 
 \S4method{[[}{VariableOrder,character,missing,VariableGroup}(x, i, j) <- value
 
+\S4method{[[}{VariableOrder,character,missing,CrunchDataset}(x, i, j) <- value
+
+\S4method{[[}{VariableOrder,character,missing,VariableOrder}(x, i, j) <- value
+
 \S4method{[[}{VariableOrder,ANY,missing,VariableGroup}(x, i, j) <- value
 
 \S4method{[[}{VariableOrder,ANY,missing,ANY}(x, i, j) <- value
@@ -46,17 +60,31 @@
 
 \S4method{[[}{VariableOrder,character,missing,`NULL`}(x, i, j) <- value
 
-\S4method{$}{VariableOrder}(x, name)
-
 \S4method{$}{VariableOrder}(x, name) <- value
 
 \S4method{[}{VariableGroup,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[}{VariableGroup,character}(x, i, j, ..., drop = TRUE)
 
+\S4method{[[}{VariableGroup,character}(x, i, j, ...)
+
 \S4method{[[}{VariableGroup,ANY}(x, i, j, ...)
 
+\S4method{$}{VariableGroup}(x, name)
+
+\S4method{[[}{VariableGroup,character,missing,CrunchDataset}(x, i, j) <- value
+
+\S4method{[[}{VariableGroup,character,missing,list}(x, i, j) <- value
+
+\S4method{[[}{VariableGroup,character,missing,character}(x, i, j) <- value
+
+\S4method{[[}{VariableGroup,character,missing,VariableOrder}(x, i, j) <- value
+
+\S4method{[[}{VariableGroup,character,missing,VariableGroup}(x, i, j) <- value
+
 \S4method{[[}{VariableGroup,ANY,missing,VariableGroup}(x, i, j) <- value
+
+\S4method{$}{VariableGroup}(x, name) <- value
 }
 \arguments{
 \item{x}{a VariableOrder or VariableGroup}

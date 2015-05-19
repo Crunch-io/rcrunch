@@ -1,15 +1,16 @@
 ##' Manipulate VariableGroup and VariableOrder
 ##'
 ##' @param x a VariableGroup or VariableOrder
-##' @param value For name, a character (length-1 vector); for names, a character
+##' @param value (1) For name, a character (length-1 vector); for names, a character
 ##' vector of equal length to the number of VariableGroups beind modified; for
 ##' entities, either a character vector of variable URLs or a list containing a
 ##' combination of variable URLs and VariableGroups. Note that group names must
 ##' be unique, should be greater than 0 characters long, and "ungrouped" is a
-##' reserved group name.
+##' reserved group name. (2) For duplicates, logical for whether duplicate
+##' variable entries should be allowed in the VariableOrder.
 ##' @param simplify logical: should variable URLs inside of groups be flattened 
 ##' or preserved in their nested lists? Default is \code{FALSE}.
-##' @return Variable references, VariableGroups, or group names, as appropriate.
+##' @return \code{entities} returns Variable references and VariableGroups; \code{names} returns group names; \code{duplicates} returns logical for whether duplicate variable entries should be allowed
 ##' @name VariableOrder-slots
 ##' @seealso \code{\link{VariableOrder}}
 ##' @seealso \code{\link{grouped}}
@@ -96,14 +97,22 @@ setMethod("names<-", "VariableOrder",
         return(x)
     })
 
+##' @rdname VariableOrder-slots
+##' @export
 setMethod("duplicates", "VariableOrder", function (x) x@duplicates)
+##' @rdname VariableOrder-slots
+##' @export
 setMethod("duplicates", "VariableGroup", function (x) x@duplicates)
+##' @rdname VariableOrder-slots
+##' @export
 setMethod("duplicates<-", c("VariableOrder", "logical"), function (x, value) {
      x@duplicates <- isTRUE(value) ## To purge NA_logical_
      grps <- vapply(x@graph, inherits, logical(1), what="VariableGroup")
      x@graph[grps] <- lapply(x@graph[grps], `duplicates<-`, value=value)
      return(x)
 })
+##' @rdname VariableOrder-slots
+##' @export
 setMethod("duplicates<-", c("VariableGroup", "logical"), function (x, value) {
      x@duplicates <- isTRUE(value) ## To purge NA_logical_
      grps <- vapply(x@entities, inherits, logical(1), what="VariableGroup")

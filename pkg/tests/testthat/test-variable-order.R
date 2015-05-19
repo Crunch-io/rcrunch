@@ -197,6 +197,8 @@ with(fake.HTTP, {
         ## Test duplicates option: gender should still be in "More nesting"
         expect_identical(nested.o[["Group 1"]]$Nested[[1]], 
             self(test.ds$gender))
+        ## Test that duplicates option passes to new group
+        expect_true(duplicates(nested.o[["Group 1"]][[2]][["More nesting"]]))
     })
     
     skip(test_that("c() Order/Group", {
@@ -241,8 +243,8 @@ with(fake.HTTP, {
               "    (Empty group)"))
     })
     
-    test_that("Composing a VariableOrder step by step", {
-        ord <- test.ord
+    ord <- test.ord
+    test_that("Composing a VariableOrder step by step: setup", {
         expect_identical(showVariableOrder(ord, vars=variables(test.ds)),
             c("Birth Year",
               "Gender",
@@ -250,7 +252,9 @@ with(fake.HTTP, {
               "Text variable ftw",
               "starttime",
               "Cat Array"))
-        ord$Demos <- test.ds[c("gender", "birthyr")]
+    })
+    test_that("Composing a VariableOrder step by step: group 1 by dataset", {
+        ord$Demos <<- test.ds[c("gender", "birthyr")]
         expect_identical(showVariableOrder(ord, vars=variables(test.ds)),
             c("mymrset",
               "Text variable ftw",
@@ -259,7 +263,9 @@ with(fake.HTTP, {
               "[+] Demos",
               "    Gender",
               "    Birth Year"))
-        ord$Arrays <- test.ds[c("mymrset", "catarray")]
+    })
+    test_that("Composing a VariableOrder step by step: group by Order subset", {
+        ord$Arrays <<- ord[c(1, 4)] #test.ds[c("mymrset", "catarray")]
         expect_identical(showVariableOrder(ord, vars=variables(test.ds)),
             c("Text variable ftw",
               "starttime",
@@ -269,7 +275,9 @@ with(fake.HTTP, {
               "[+] Arrays",
               "    mymrset",
               "    Cat Array"))
-        ord$Demos[["Others"]] <- test.ds[c("birthyr", "textVar")]
+    })
+    test_that("Composing a VariableOrder step by step: nested group by dataset", {
+        ord$Demos[["Others"]] <<- test.ds[c("birthyr", "textVar")]
         expect_identical(showVariableOrder(ord, vars=variables(test.ds)),
             c("starttime",
               "[+] Demos",
@@ -280,7 +288,9 @@ with(fake.HTTP, {
               "[+] Arrays",
               "    mymrset",
               "    Cat Array"))
-        ord$Demos <- ord$Demos[2:1]
+    })
+    test_that("Composing a VariableOrder step by step: reorder group", {
+        ord$Demos <<- ord$Demos[2:1]
         expect_identical(showVariableOrder(ord, vars=variables(test.ds)),
             c("starttime",
               "[+] Demos",
@@ -291,7 +301,9 @@ with(fake.HTTP, {
               "[+] Arrays",
               "    mymrset",
               "    Cat Array"))
-        ord <- ord[3:1]
+    })
+    test_that("Composing a VariableOrder step by step: reorder order", {
+        ord <<- ord[3:1]
         expect_identical(showVariableOrder(ord, vars=variables(test.ds)),
             c("[+] Arrays",
               "    mymrset",
@@ -301,7 +313,21 @@ with(fake.HTTP, {
               "        Birth Year",
               "        Text variable ftw",
               "    Gender",
-              "starttime"))   
+              "starttime"))
+    })
+    test_that("Composing a VariableOrder step by step: nested group by Group", {
+        ord$Arrays$MR <<- ord$Arrays[1]
+        expect_identical(showVariableOrder(ord, vars=variables(test.ds)),
+            c("[+] Arrays",
+              "    Cat Array",
+              "    [+] MR",
+              "        mymrset",
+              "[+] Demos",
+              "    [+] Others",
+              "        Birth Year",
+              "        Text variable ftw",
+              "    Gender",
+              "starttime"))
     })
 })
 
@@ -332,7 +358,8 @@ if (run.integration.tests) {
                     entities=ds[c("v1", "v3", "v5")]),
                 VariableGroup(name="Group 2.5", variables=ds["v4"]),
                 VariableGroup(name="Group 2", 
-                    entities=ds[c("v6", "v2")]))
+                    entities=ds[c("v6", "v2")]),
+                duplicates=TRUE)
                     
             test_that("Get urls from VariableOrder and Group", {
                 expect_identical(urls(vg[[1]]),
@@ -426,8 +453,11 @@ if (run.integration.tests) {
                 nesting <- VariableGroup("Nest", self(ds$v3))
                 ordering(ds) <- starting.vg
                 ordering(ds)[["Group 1"]][[2]] <- nesting
+                ## Update fixture with duplicates=TRUE, as it should be found
+                ## after setting on a duplicates=TRUE order
+                duplicates(nesting) <- TRUE
                 expect_identical(grouped(ordering(ds)[["Group 1"]]), 
-                    VariableGroup("Group 1", list(nesting)))
+                    VariableGroup("Group 1", list(nesting), duplicates=TRUE))
                 expect_identical(ungrouped(ordering(ds)[["Group 1"]]),
                     VariableGroup("ungrouped", list(self(ds$v1), self(ds$v5))))    
             })
@@ -441,6 +471,30 @@ if (run.integration.tests) {
                     c("Group 1", "Group 2.5", "Three"))
                 expect_identical(names(grouped(ordering(ds))), 
                     c("Group 1", "Group 2.5", "Three"))
+            })
+            
+            test_that("duplicates property: setup", {
+                expect_false(duplicates(ordering(ds)))
+            })
+            test_that("duplicates property set on order in dataset", {
+                duplicates(ordering(ds)) <<- TRUE
+                expect_true(duplicates(ordering(ds)))
+            })
+            test_that("duplicates property persists on refreshing dataset", {
+                expect_true(duplicates(ordering(refresh(ds))))
+            })
+            ord <- ordering(ds)
+            test_that("duplicates property persists on extracting order", {
+                expect_true(duplicates(ord))
+            })
+            skip(test_that("duplicates property persists on refreshing order", {
+                expect_true(duplicates(refresh(ord)))
+            }), "refresh method for VariableOrder not implemented")
+            test_that("duplicates property from order is set on assign to ds", {
+                duplicates(ordering(ds)) <<- FALSE
+                expect_false(duplicates(ordering(ds)))
+                ordering(ds) <<- ord
+                expect_true(duplicates(ordering(ds)))
             })
             
             test_that("ordering<- validation", {

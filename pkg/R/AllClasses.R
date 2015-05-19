@@ -93,6 +93,10 @@ MultipleResponseVariable <-setClass("MultipleResponseVariable",
 ##' more generally, this field can be referenced as "name" as well.
 ##' @slot entities a character vector of variable URLs, or a list containing a
 ##' combination of variable URLs and VariableGroup objects.
+##' @slot duplicates logical: should duplicate variable references be allowed in
+##' this object? Default is \code{FALSE}.
+##' @slot vars either \code{NULL} or a \code{\link{VariableCatalog}}. If not
+##' \code{NULL}, it will be used to look up variable names from the URLs.
 ##' @rdname VariableOrder
 ##' @export VariableOrder
 VariableOrder <- setClass("VariableOrder", contains="ShojiOrder",

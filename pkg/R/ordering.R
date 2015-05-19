@@ -46,6 +46,6 @@ setMethod("ordering<-", "VariableCatalog", function (x, value) {
     
     crPUT(x@orders$hier, body=toJSON(value))
     x@order <- VariableOrder(crGET(x@orders$hier))
-
+    duplicates(x@order) <- duplicates(value)
     return(x)
 })

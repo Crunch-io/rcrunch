@@ -3,6 +3,10 @@
 \docType{methods}
 \name{VariableOrder-slots}
 \alias{VariableOrder-slots}
+\alias{duplicates,VariableGroup-method}
+\alias{duplicates,VariableOrder-method}
+\alias{duplicates<-,VariableGroup,logical-method}
+\alias{duplicates<-,VariableOrder,logical-method}
 \alias{entities}
 \alias{entities,VariableGroup-method}
 \alias{entities,VariableOrder-method}
@@ -12,6 +16,7 @@
 \alias{entities<-,VariableOrder-method}
 \alias{name,VariableGroup-method}
 \alias{name<-,VariableGroup-method}
+\alias{names,VariableGroup-method}
 \alias{names,VariableOrder-method}
 \alias{names<-,VariableOrder-method}
 \title{Manipulate VariableGroup and VariableOrder}
@@ -32,7 +37,17 @@
 
 \S4method{names}{VariableOrder}(x)
 
+\S4method{names}{VariableGroup}(x)
+
 \S4method{names}{VariableOrder}(x) <- value
+
+\S4method{duplicates}{VariableOrder}(x)
+
+\S4method{duplicates}{VariableGroup}(x)
+
+\S4method{duplicates}{VariableOrder,logical}(x) <- value
+
+\S4method{duplicates}{VariableGroup,logical}(x) <- value
 }
 \arguments{
 \item{x}{a VariableGroup or VariableOrder}
@@ -40,15 +55,16 @@
 \item{simplify}{logical: should variable URLs inside of groups be flattened
 or preserved in their nested lists? Default is \code{FALSE}.}
 
-\item{value}{For name, a character (length-1 vector); for names, a character
+\item{value}{(1) For name, a character (length-1 vector); for names, a character
 vector of equal length to the number of VariableGroups beind modified; for
 entities, either a character vector of variable URLs or a list containing a
 combination of variable URLs and VariableGroups. Note that group names must
 be unique, should be greater than 0 characters long, and "ungrouped" is a
-reserved group name.}
+reserved group name. (2) For duplicates, logical for whether duplicate
+variable entries should be allowed in the VariableOrder.}
 }
 \value{
-Variable references, VariableGroups, or group names, as appropriate.
+\code{entities} returns Variable references and VariableGroups; \code{names} returns group names; \code{duplicates} returns logical for whether duplicate variable entries should be allowed
 }
 \description{
 Manipulate VariableGroup and VariableOrder
