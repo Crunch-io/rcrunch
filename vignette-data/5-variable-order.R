@@ -22,4 +22,7 @@ step2 <- ordering(ds)
 ordering(ds) <- ordering(ds)[c(2, 3, 1)]
 step3 <- ordering(ds)
 
+ordering(ds)[["This week"]][["Snowden"]] <- ordering(ds)[["This week"]][1:4]
+step4 <- ordering(ds)
+
 save.image(file="../pkg/vignettes/variable-order.RData")
