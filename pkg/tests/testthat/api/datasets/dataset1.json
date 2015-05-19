@@ -10,7 +10,8 @@
         "id": "dataset1"
     },
     "catalogs": {
-        "variables": "/api/datasets/dataset1/variables.json"
+        "variables": "/api/datasets/dataset1/variables.json",
+        "permissions": "/api/datasets/dataset1/permissions.json"
     },
     "views": {
         "summary": "/api/datasets/dataset1/summary.json"
