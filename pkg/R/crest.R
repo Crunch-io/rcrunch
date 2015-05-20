@@ -16,7 +16,7 @@ clearCache <- function () {
     rm(list=ls(all.names=TRUE, envir=cache), envir=cache)
 }
 
-## deal with query params? 
+## deal with query params?
 dropCache <- function (x) {
     ## Drop x and anything below it in the tree
     dropPattern(paste0("^", regexEscape(popQuery(x))))
