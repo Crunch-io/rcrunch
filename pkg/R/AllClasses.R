@@ -137,6 +137,7 @@ VariableCatalog <- setClass("VariableCatalog", contains="ShojiCatalog",
     representation(order="VariableOrder"))
 DatasetCatalog <- setClass("DatasetCatalog", contains="ShojiCatalog")
 BatchCatalog <- setClass("BatchCatalog", contains="ShojiCatalog")
+PermissionCatalog <- setClass("PermissionCatalog", contains="ShojiCatalog")
 
 default.useAlias <- function () {
     opt <- getOption("crunch.useAlias")

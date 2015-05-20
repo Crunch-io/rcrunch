@@ -8,7 +8,7 @@
 ##' @param ... additional arguments passed to \code{ \link{createDataset}}
 ##' @return If successful, an object of class CrunchDataset.
 ##' @export
-newDataset <- function (x, name=substitute(x),
+newDataset <- function (x, name=as.character(substitute(x)),
                                 useAlias=default.useAlias(), ...) {
 
     Call <- match.call()
@@ -42,7 +42,7 @@ newDataset <- function (x, name=substitute(x),
 ##' @return If successful, an object of class CrunchDataset.
 ##' @seealso \code{\link{newDataset}} \code{\link{newDatasetByCSV}}
 ##' @export
-newDatasetByColumn <- function (x, name=substitute(x),
+newDatasetByColumn <- function (x, name=as.character(substitute(x)),
                                 useAlias=default.useAlias(), ...) {
 
     ds <- createDataset(name=name, useAlias=useAlias, ...)
@@ -151,7 +151,7 @@ addSourceToDataset <- function (dataset, source_url, ...) {
 ##' @return If successful, an object of class CrunchDataset.
 ##' @seealso \code{\link{newDataset}} \code{\link{newDatasetByColumn}}
 ##' @export
-newDatasetByCSV <- function (x, name=substitute(x),
+newDatasetByCSV <- function (x, name=as.character(substitute(x)),
                                 useAlias=default.useAlias(), ...) {
     
     ## Get all the things
