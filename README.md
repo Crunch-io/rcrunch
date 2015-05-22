@@ -1,5 +1,8 @@
 # crunch
 
+[![Build Status](https://travis-ci.org/Crunch-io/rcrunch.png?branch=master)](https://travis-ci.org/Crunch-io/rcrunch)
+
+
 [Cloud Collaboration with Crunch](http://crunch-io.github.io/rcrunch/)
 
 [Crunch.io](http://crunch.io/) provides a cloud-based data store and analytic engine. It has a [web client](https://beta.crunch.io/) for interactive data exploration and visualization. The **crunch** package for R allows analysts to interact with and manipulate Crunch datasets from within R. Importantly, this allows technical researchers to collaborate naturally with team members, managers, and clients who prefer a point-and-click interface: because all connect to the same dataset in the cloud, there is no need to email files back and forth continually to share results. 
