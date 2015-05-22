@@ -6,9 +6,6 @@
 [Previous: array variables](array-variables.md)
 
 
-```
-## Error in library(crunch): there is no package called 'crunch'
-```
 
 # Variable Order and Organization
 
@@ -28,16 +25,124 @@ ordering(ds)
 ```
 
 ```
-## Loading required package: crunch
-```
-
-```
-## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
-## logical.return = TRUE, : there is no package called 'crunch'
-```
-
-```
-## Error in .requirePackage(package): unable to find required package 'crunch'
+## starttime
+## endtime
+## perc_skipped
+## newsint2
+## Direction of country
+## snowdenfav
+## snowdenleakapp
+## snowdenpros
+## snowdenpenalty
+## manningknowledge
+## manningfavorability
+## manningguilt
+## manningpenalty
+## betterpartyissues
+## immigration
+## gay
+## education
+## healthcare
+## taxes
+## abortion
+## economy
+## jobs
+## betterpartygroups
+## gays
+## women
+## blacks
+## hispanics
+## families
+## smallbus
+## guns
+## christians
+## immig
+## gaymar2
+## congressdone
+## agendasetter
+## theaterfreq
+## moviepreference
+## seentopmovies
+## ironman3
+## despicableme2
+## manofsteel
+## monstersu
+## fastfurious6
+## startrek
+## worldwarz
+## loneranger
+## greatgatsby
+## wolverine
+## movierefreshments
+## butterpopcorn
+## bestmovies
+## Issue importance
+## imissf
+## imissf2
+## fav
+## fav_obam
+## fav_boeh
+## fav_mccon
+## fav_reid
+## fav_pelosi
+## fav_biden
+## fav_hclin
+## obamaapp
+## Approval of Obama on issues
+## congapp
+## ideo5
+## ideoobama
+## saysobama
+## likeobama
+## econtrend
+## stockpos
+## persfinretro
+## ownorrent
+## ownhomevalretro
+## areahomeval
+## homevalpro
+## mortworry
+## homebuypros
+## child18
+## voteregadd_rev
+## voteregadd2_rev
+## student2
+## job
+## employstat2
+## jobmult
+## wkhrs
+## jobworry
+## jobavail
+## jobavailsixmon
+## occupxhappywjob
+## hhincpros
+## exhaustsavings
+## birthyr
+## gender
+## pid3
+## pid7
+## pid7others
+## race
+## educ
+## marstat
+## pew_bornagain
+## pew_religimp
+## pew_churatd
+## pew_prayer
+## phone
+## faminc
+## faminc2
+## inputstate
+## comments
+## region
+## state
+## obamaGroup
+## obamaVote
+## weight
+## votereg_new
+## is_voter
+## votereg_old
+## votereg
 ```
 
 It's flat. If you're importing data from a `data.frame` or a file, like an SPSS file, this is where you'll begin.
@@ -62,16 +167,127 @@ ordering(ds)
 ```
 
 ```
-## Loading required package: crunch
-```
-
-```
-## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
-## logical.return = TRUE, : there is no package called 'crunch'
-```
-
-```
-## Error in .requirePackage(package): unable to find required package 'crunch'
+## [+] Demos
+##     starttime
+##     endtime
+##     perc_skipped
+##     birthyr
+##     gender
+##     pid3
+##     pid7
+##     pid7others
+##     race
+##     educ
+##     marstat
+##     pew_bornagain
+##     pew_religimp
+##     pew_churatd
+##     pew_prayer
+##     phone
+##     faminc
+##     faminc2
+##     inputstate
+##     comments
+##     region
+##     state
+##     obamaGroup
+##     obamaVote
+##     weight
+##     votereg_new
+##     is_voter
+##     votereg_old
+##     votereg
+## [+] Tracking questions
+##     newsint2
+##     Direction of country
+##     Issue importance
+##     imissf
+##     imissf2
+##     fav
+##     fav_obam
+##     fav_boeh
+##     fav_mccon
+##     fav_reid
+##     fav_pelosi
+##     fav_biden
+##     fav_hclin
+##     obamaapp
+##     Approval of Obama on issues
+##     congapp
+##     ideo5
+##     ideoobama
+##     saysobama
+##     likeobama
+##     econtrend
+##     stockpos
+##     persfinretro
+##     ownorrent
+##     ownhomevalretro
+##     areahomeval
+##     homevalpro
+##     mortworry
+##     homebuypros
+##     child18
+##     voteregadd_rev
+##     voteregadd2_rev
+##     student2
+##     job
+##     employstat2
+##     jobmult
+##     wkhrs
+##     jobworry
+##     jobavail
+##     jobavailsixmon
+##     occupxhappywjob
+##     hhincpros
+##     exhaustsavings
+## [+] This week
+##     snowdenfav
+##     snowdenleakapp
+##     snowdenpros
+##     snowdenpenalty
+##     manningknowledge
+##     manningfavorability
+##     manningguilt
+##     manningpenalty
+##     betterpartyissues
+##     immigration
+##     gay
+##     education
+##     healthcare
+##     taxes
+##     abortion
+##     economy
+##     jobs
+##     betterpartygroups
+##     gays
+##     women
+##     blacks
+##     hispanics
+##     families
+##     smallbus
+##     guns
+##     christians
+##     immig
+##     gaymar2
+##     congressdone
+##     agendasetter
+##     theaterfreq
+##     moviepreference
+##     seentopmovies
+##     ironman3
+##     despicableme2
+##     manofsteel
+##     monstersu
+##     fastfurious6
+##     startrek
+##     worldwarz
+##     loneranger
+##     greatgatsby
+##     wolverine
+##     movierefreshments
+##     butterpopcorn
+##     bestmovies
 ```
 
 Groups can be created with several kinds of inputs. You can specify a vector or list of variable references (URLs), as returned from the `self` method of variables. That list of references may also contain `VariableGroup` objects as well, which will nest those Groups inside the Group you're creating (see "Nested Groups" below). You can also provide a list of variable entities or, as in this example, a subset of a dataset entity (which can be thought of as a list of variables). 
@@ -85,16 +301,7 @@ names(ordering(ds))
 ```
 
 ```
-## Loading required package: crunch
-```
-
-```
-## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
-## logical.return = TRUE, : there is no package called 'crunch'
-```
-
-```
-## Error in .requirePackage(package): unable to find required package 'crunch'
+## [1] "Demos"              "Tracking questions" "This week"
 ```
 
 Let's rename the first group. No need to abbreviate "Demographics".
@@ -106,16 +313,7 @@ names(ordering(ds))
 ```
 
 ```
-## Loading required package: crunch
-```
-
-```
-## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
-## logical.return = TRUE, : there is no package called 'crunch'
-```
-
-```
-## Error in .requirePackage(package): unable to find required package 'crunch'
+## [1] "Demographics"       "Tracking questions" "This week"
 ```
 
 ## Reordering groups and entities
@@ -131,16 +329,7 @@ names(ordering(ds))
 ```
 
 ```
-## Loading required package: crunch
-```
-
-```
-## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
-## logical.return = TRUE, : there is no package called 'crunch'
-```
-
-```
-## Error in .requirePackage(package): unable to find required package 'crunch'
+## [1] "Tracking questions" "This week"          "Demographics"
 ```
 
 ## Nested groups
@@ -154,16 +343,128 @@ ordering(ds)
 ```
 
 ```
-## Loading required package: crunch
-```
-
-```
-## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
-## logical.return = TRUE, : there is no package called 'crunch'
-```
-
-```
-## Error in .requirePackage(package): unable to find required package 'crunch'
+## [+] Tracking questions
+##     newsint2
+##     Direction of country
+##     Issue importance
+##     imissf
+##     imissf2
+##     fav
+##     fav_obam
+##     fav_boeh
+##     fav_mccon
+##     fav_reid
+##     fav_pelosi
+##     fav_biden
+##     fav_hclin
+##     obamaapp
+##     Approval of Obama on issues
+##     congapp
+##     ideo5
+##     ideoobama
+##     saysobama
+##     likeobama
+##     econtrend
+##     stockpos
+##     persfinretro
+##     ownorrent
+##     ownhomevalretro
+##     areahomeval
+##     homevalpro
+##     mortworry
+##     homebuypros
+##     child18
+##     voteregadd_rev
+##     voteregadd2_rev
+##     student2
+##     job
+##     employstat2
+##     jobmult
+##     wkhrs
+##     jobworry
+##     jobavail
+##     jobavailsixmon
+##     occupxhappywjob
+##     hhincpros
+##     exhaustsavings
+## [+] This week
+##     manningknowledge
+##     manningfavorability
+##     manningguilt
+##     manningpenalty
+##     betterpartyissues
+##     immigration
+##     gay
+##     education
+##     healthcare
+##     taxes
+##     abortion
+##     economy
+##     jobs
+##     betterpartygroups
+##     gays
+##     women
+##     blacks
+##     hispanics
+##     families
+##     smallbus
+##     guns
+##     christians
+##     immig
+##     gaymar2
+##     congressdone
+##     agendasetter
+##     theaterfreq
+##     moviepreference
+##     seentopmovies
+##     ironman3
+##     despicableme2
+##     manofsteel
+##     monstersu
+##     fastfurious6
+##     startrek
+##     worldwarz
+##     loneranger
+##     greatgatsby
+##     wolverine
+##     movierefreshments
+##     butterpopcorn
+##     bestmovies
+##     [+] Snowden
+##         snowdenfav
+##         snowdenleakapp
+##         snowdenpros
+##         snowdenpenalty
+## [+] Demographics
+##     starttime
+##     endtime
+##     perc_skipped
+##     birthyr
+##     gender
+##     pid3
+##     pid7
+##     pid7others
+##     race
+##     educ
+##     marstat
+##     pew_bornagain
+##     pew_religimp
+##     pew_churatd
+##     pew_prayer
+##     phone
+##     faminc
+##     faminc2
+##     inputstate
+##     comments
+##     region
+##     state
+##     obamaGroup
+##     obamaVote
+##     weight
+##     votereg_new
+##     is_voter
+##     votereg_old
+##     votereg
 ```
 
 Note a few things there. First, groups can be extracted by list-like indexing by name. `ordering(ds)[["This week"]]` gives us the `VariableGroup` named "This week".

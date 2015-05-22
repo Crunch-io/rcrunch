@@ -6,9 +6,6 @@
 [Previous: Getting started](getting-started.md) 
 
 
-```
-## Error in library(crunch): there is no package called 'crunch'
-```
 
 # Datasets in `crunch`
 
@@ -33,16 +30,7 @@ dim(ds)
 ```
 
 ```
-## Loading required package: crunch
-```
-
-```
-## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
-## logical.return = TRUE, : there is no package called 'crunch'
-```
-
-```
-## Error in .requirePackage(package): unable to find required package 'crunch'
+## [1] 1000  142
 ```
 
 ```r
@@ -54,16 +42,7 @@ dim(ds)
 ```
 
 ```
-## Loading required package: crunch
-```
-
-```
-## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
-## logical.return = TRUE, : there is no package called 'crunch'
-```
-
-```
-## Error in .requirePackage(package): unable to find required package 'crunch'
+## [1] 1000  142
 ```
 
 `newDataset` translates R data types into their analogous types in Crunch. 
@@ -98,7 +77,7 @@ is.dataset(ds)
 ```
 
 ```
-## Error in eval(expr, envir, enclos): could not find function "is.dataset"
+## [1] TRUE
 ```
 
 ## Dataset properties
@@ -111,7 +90,7 @@ name(ds)
 ```
 
 ```
-## Error in eval(expr, envir, enclos): could not find function "name"
+## [1] "Economist/YouGov Weekly Survey"
 ```
 
 ```r
@@ -119,7 +98,7 @@ description(ds)
 ```
 
 ```
-## Error in eval(expr, envir, enclos): could not find function "description"
+## [1] ""
 ```
 
 Both can be set with `<-` assignment. Let's give our dataset an informative description:

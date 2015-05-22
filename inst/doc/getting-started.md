@@ -12,10 +12,6 @@
 library(crunch)
 ```
 
-```
-## Error in library(crunch): there is no package called 'crunch'
-```
-
 Both *crunch* and the Crunch web application communicate with the same application programming interface (API), served over secure HTTP. Within an R script or interactive session, the *crunch* package allows you to interact with your data in Crunch with expressive, idiomatic R. Functions in crunch handle the translation between R objects and API requests and responses, so you can typically interact with your datasets as if they were local `data.frames` (with some additional metadata), not data on a remote server.
 
 ## Authentication

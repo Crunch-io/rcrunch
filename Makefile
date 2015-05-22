@@ -33,6 +33,7 @@ man: doc
 	R CMD Rd2pdf man/ --force
 
 md:
+	R CMD INSTALL --install-tests .
 	mkdir -p inst/doc
 	R -e 'setwd("vignettes"); lapply(dir(pattern="Rmd"), knitr::knit)'
 	mv vignettes/*.md inst/doc/

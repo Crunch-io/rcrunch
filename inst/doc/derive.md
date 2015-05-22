@@ -6,9 +6,6 @@
 [Previous: variable organization](variable-order.md)
 
 
-```
-## Error in library(crunch): there is no package called 'crunch'
-```
 
 # Transforming and deriving
 One of the powerful features of working with Crunch is that you and all of your collaborators work off of the same data, whether you use the web client or use R. Circumstances may arise in which you are working in R and want to add or modify variables in a Crunch dataset, and the `crunch` package facilitates that. It provides an idiomatic R interface to manipulating a Dataset, doing so efficiently, without copying data off of the server to transform it. In addition, when you create variables that are derived from other variables, they retain their functional connection on the server, such that changes to the input variables automatically propagate to the derived variable.

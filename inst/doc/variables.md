@@ -6,9 +6,6 @@
 [Previous: create and load datasets](datasets.md)
 
 
-```
-## Error in library(crunch): there is no package called 'crunch'
-```
 
 # Manipulating variables within datasets
 
@@ -56,30 +53,18 @@ track.var
 ```
 
 ```
-## Loading required package: crunch
-```
-
-```
-## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
-## logical.return = TRUE, : there is no package called 'crunch'
-```
-
-```
-## Error in .requirePackage(package): unable to find required package 'crunch'
-```
-
-```
 ## 
-##                  Off on the wrong track 
-##                                     576 
-## Generally headed in the right direction 
-##                                     285 
-##                                Not sure 
-##                                     139 
-## attr(,"class")
-## [1] "CategoricalVariableSummary" "array"                     
-## attr(,"varname")
-## [1] "track"         "(categorical)"
+##  track (categorical) 
+##  
+## 
+## 
+```
+
+```
+##                                         Count
+## Off on the wrong track                    576
+## Generally headed in the right direction   285
+## Not sure                                  139
 ```
 
 Like datasets, variables have various attributes like `name` and `description` that can be set naturally.
@@ -145,7 +130,9 @@ class(variables(ds))
 ```
 
 ```
-## Error in eval(expr, envir, enclos): could not find function "variables"
+## [1] "VariableCatalog"
+## attr(,"package")
+## [1] "crunch"
 ```
 
 In the variable catalog, Crunch names are names, and aliases are aliases. Hence,
@@ -156,16 +143,7 @@ identical(names(ds), aliases(variables(ds)))
 ```
 
 ```
-## Loading required package: crunch
-```
-
-```
-## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
-## logical.return = TRUE, : there is no package called 'crunch'
-```
-
-```
-## Error in .requirePackage(package): unable to find required package 'crunch'
+## [1] TRUE
 ```
 
 but
@@ -176,16 +154,7 @@ identical(names(ds), names(variables(ds)))
 ```
 
 ```
-## Loading required package: crunch
-```
-
-```
-## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
-## logical.return = TRUE, : there is no package called 'crunch'
-```
-
-```
-## Error in .requirePackage(package): unable to find required package 'crunch'
+## [1] FALSE
 ```
 
 because "Direction of country" is the name for `ds$track`
@@ -238,7 +207,7 @@ is.Categorical(track.var)
 ```
 
 ```
-## Error in eval(expr, envir, enclos): could not find function "is.Categorical"
+## [1] TRUE
 ```
 
 ```r
@@ -246,7 +215,9 @@ categories(track.var)
 ```
 
 ```
-## Error in eval(expr, envir, enclos): could not find function "categories"
+## [ 1 ]  Generally headed in the right direction
+## [ 2 ]  Off on the wrong track
+## [ 3 ]  Not sure
 ```
 
 ### Category attributes
@@ -259,7 +230,9 @@ names(categories(track.var))
 ```
 
 ```
-## Error in eval(expr, envir, enclos): could not find function "categories"
+## [1] "Generally headed in the right direction"
+## [2] "Off on the wrong track"                 
+## [3] "Not sure"
 ```
 
 ```r
@@ -267,7 +240,7 @@ values(categories(track.var))
 ```
 
 ```
-## Error in eval(expr, envir, enclos): could not find function "values"
+## [1] 1 2 3
 ```
 
 ```r
@@ -275,7 +248,7 @@ ids(categories(track.var))
 ```
 
 ```
-## Error in eval(expr, envir, enclos): could not find function "ids"
+## [1] 1 2 3
 ```
 
 ```r
@@ -283,7 +256,12 @@ is.na(categories(track.var))
 ```
 
 ```
-## Error in eval(expr, envir, enclos): could not find function "categories"
+## Generally headed in the right direction 
+##                                   FALSE 
+##                  Off on the wrong track 
+##                                   FALSE 
+##                                Not sure 
+##                                   FALSE
 ```
 
 Names and values can be assigned into categories, but ids cannot: they are immutable references to values within the column of data on the server. Missingness can be set with `is.na`. Character values assigned will mark those categories as missing, leaving other categories unchanged. Logical values assigned will set the missing TRUE/FALSE accordingly.
@@ -297,16 +275,9 @@ categories(track.var)
 ```
 
 ```
-## Loading required package: crunch
-```
-
-```
-## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
-## logical.return = TRUE, : there is no package called 'crunch'
-```
-
-```
-## Error in .requirePackage(package): unable to find required package 'crunch'
+## [ 1 ]  Right track
+## [ -1 ]  Wrong track
+## [ 0 ]  Not sure
 ```
 <!-- MAKE THAT -->
 
@@ -328,16 +299,9 @@ categories(track.var)
 ```
 
 ```
-## Loading required package: crunch
-```
-
-```
-## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
-## logical.return = TRUE, : there is no package called 'crunch'
-```
-
-```
-## Error in .requirePackage(package): unable to find required package 'crunch'
+## [ 1 ]  Right track
+## [ 0 ]  Not sure
+## [ -1 ]  Wrong track
 ```
 
 As with all other metadata edits discussed, updating with these methods automatically sends the changes to the server, so your local edits are reflected in the cloud.
