@@ -1,0 +1,20 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/dataset1.json",
+    "description": "Detail for a given dataset",
+    "body": {
+        "user_id": "user1",
+        "sources": [
+            "511a7c49778030653aab5962"
+        ],
+        "id": "dataset1"
+    },
+    "catalogs": {
+        "variables": "/api/datasets/dataset1/variables.json",
+        "permissions": "/api/datasets/dataset1/permissions.json"
+    },
+    "views": {
+        "summary": "/api/datasets/dataset1/summary.json"
+    },
+    "some_other_key": {}
+}

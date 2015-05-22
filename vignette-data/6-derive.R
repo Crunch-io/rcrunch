@@ -5,7 +5,7 @@ options(crunch.api=getOption("test.api"),
         crunch.pw=getOption("test.pw"))
 login()
 
-load("../pkg/vignettes/variable-order.RData")
+load("../vignettes/variable-order.RData")
 
 ds$age <- 2015 - ds$birthyr
 
@@ -24,4 +24,4 @@ print(age.summary.after)
 cr.expr <- 2015 - ds$birthyr
 cr.log.expr <- ds$birthyr < 1945
 
-save.image(file="../pkg/vignettes/derive.RData")
+save.image(file="../vignettes/derive.RData")

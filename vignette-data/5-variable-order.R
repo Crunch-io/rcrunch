@@ -5,7 +5,7 @@ options(crunch.api=getOption("test.api"),
         crunch.pw=getOption("test.pw"))
 login()
 
-load("../pkg/vignettes/array-variables.RData")
+load("../vignettes/array-variables.RData")
 
 step0 <- ordering(ds)
 
@@ -22,4 +22,7 @@ step2 <- ordering(ds)
 ordering(ds) <- ordering(ds)[c(2, 3, 1)]
 step3 <- ordering(ds)
 
-save.image(file="../pkg/vignettes/variable-order.RData")
+ordering(ds)[["This week"]][["Snowden"]] <- ordering(ds)[["This week"]][1:4]
+step4 <- ordering(ds)
+
+save.image(file="../vignettes/variable-order.RData")

@@ -5,7 +5,7 @@ options(crunch.api=getOption("test.api"),
         crunch.pw=getOption("test.pw"))
 login()
 
-load("../pkg/vignettes/getting-started.RData")
+load("../vignettes/getting-started.RData")
 
 track.var <- ds$track
 summary.track.var <- summary(track.var)
@@ -25,5 +25,5 @@ head2[6:9] <- c("Favorability of Edward Snowden",
                                "Penalty for Snowden")
                                
 save(ds, track.var, summary.track.var, track.cats, head.of.variables, head2,
-    file="../pkg/vignettes/variables.RData")
+    file="../vignettes/variables.RData")
                                

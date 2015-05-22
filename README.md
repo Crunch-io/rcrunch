@@ -15,7 +15,7 @@
 The pre-release version of the package can be pulled from GitHub using the `devtools` package:
 
     # install.packages("devtools")
-    devtools::install_github("Crunch-io/rcrunch", subdir="pkg", build_vignettes=TRUE)
+    devtools::install_github("Crunch-io/rcrunch", build_vignettes=TRUE)
 
 ## Getting started
 
@@ -30,7 +30,7 @@ Connecting to Crunch and working with datasets is simple:
     [crunch] > 
     ...
 
-Check out `listDatasets()` to see the names of your existing datasets, which you can load like `ds <- loadDataset("The name of my dataset")`. New Crunch datasets can be made from a `data.frame` with `newDataset()`, or from a .csv or .sav file with `newDatasetFromFile()`. See the help for these functions or [`vignette("getting-started", package="crunch")`](pkg/doc/getting-started.md) for more information.
+Check out `listDatasets()` to see the names of your existing datasets, which you can load like `ds <- loadDataset("The name of my dataset")`. New Crunch datasets can be made from a `data.frame` with `newDataset()`, or from a .csv or .sav file with `newDatasetFromFile()`. See the help for these functions or [`vignette("getting-started", package="crunch")`](inst/doc/getting-started.md) for more information.
 
 ## Additional configuration
 
@@ -54,7 +54,7 @@ This installs dependencies and then runs the tests, which installs `crunch` from
 
 Testing has two options: unit tests only, and tests that communicate with an API server. This is governed by an environment variable, `INTEGRATION`. This is false by default, meaning that API integration tests are not run. To modify this and test against the Crunch API, you can run `$ export INTEGRATION=TRUE && make test`. 
 
-To run integration tests, you will need to specify a test user, password, and API server to communicate with, either by editing `pkg/inst/tests/helper.R` or by setting `test.user`, `test.pw`, and `test.api` in your `.Rprofile`, as in:
+To run integration tests, you will need to specify a test user, password, and API server to communicate with, either by editing `tests/testthat/helper.R` or by setting `test.user`, `test.pw`, and `test.api` in your `.Rprofile`, as in:
 
     options(test.user="magic.testuser@crunch.io",
             test.pw="t0pSecretP@ssw0rD",

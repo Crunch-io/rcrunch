@@ -5,7 +5,7 @@ options(crunch.api=getOption("test.api"),
         crunch.pw=getOption("test.pw"))
 login()
 
-load("../pkg/vignettes/variables.RData")
+load("../vignettes/variables.RData")
 start <- ds
 
 show_imiss_b <- crunch:::showCrunchVariable(ds$imiss_b)
@@ -44,5 +44,5 @@ ds$boap <- dichotomize(ds$boap, "Strongly approve")
 show_boap3 <- c(crunch:::showCrunchVariable(ds$boap),
     show_boap_subvars)
 
-save.image(file="../pkg/vignettes/array-variables.RData")
+save.image(file="../vignettes/array-variables.RData")
 
