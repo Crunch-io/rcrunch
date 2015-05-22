@@ -20,8 +20,9 @@ the number of emails given. Currently, only one user may have
 \code{edit=TRUE} at any given time, so there may not be more than one
 \code{TRUE} value in the logical vector.}
 
-\item{notify:}{should users who are getting new privileges on this dataset
-be sent an email informing them of this fact? Default is \code{TRUE}.}
+\item{notify}{logical: should users who are getting new privileges on this
+dataset be sent an email informing them of this fact? Default is
+\code{TRUE}.}
 }
 \value{
 Invisibly, the dataset.

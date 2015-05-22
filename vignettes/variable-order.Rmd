@@ -5,7 +5,7 @@
 
 [Previous: array variables](array-variables.html)
 
-```{r, results='hide', echo=FALSE, message=FALSE, eval=FALSE}
+```{r, results='hide', echo=FALSE, message=FALSE}
 library(crunch)
 load("variable-order.RData")
 ```

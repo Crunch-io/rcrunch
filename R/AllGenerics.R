@@ -116,7 +116,7 @@ setGeneric("absolute.zcl", function (x) standardGeneric("absolute.zcl"))
 ##' toJSON methods for Crunch objects
 ##'
 ##' \code{crunch} uses the \code{jsonlite} package for (de)serialization of
-##' JSON. Unlike \code{\link[RJSONIO]{toJSON}}, \code{\link[jsonlite]{toJSON}}
+##' JSON. Unlike \code{RJSONIO}'s \code{toJSON}, \code{\link[jsonlite]{toJSON}}
 ##' does not allow for defining S4 methods for other object types. So,
 ##' \code{crunch::toJSON} wraps \code{jsonprep}, which exists to translate 
 ##' objects to base R objects, which \code{jsonlite::toJSON} can handle. 

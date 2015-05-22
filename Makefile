@@ -36,7 +36,7 @@ md:
 	mkdir -p inst/doc
 	R -e 'setwd("vignettes"); lapply(dir(pattern="Rmd"), knitr::knit)'
 	mv vignettes/*.md inst/doc/
-	cd doc && ls | grep .md | xargs -n 1 sed -i '' 's/.html)/.md)/g'
+	cd inst/doc && ls | grep .md | xargs -n 1 sed -i '' 's/.html)/.md)/g'
 
 build-vignettes: md
 	R -e 'setwd("inst/doc"); lapply(dir(pattern="md"), function(x) markdown::markdownToHTML(x, output=sub("\\\\.md", ".html", x)))'

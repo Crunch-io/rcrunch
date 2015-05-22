@@ -14,7 +14,7 @@
 ##' @name VariableOrder-slots
 ##' @seealso \code{\link{VariableOrder}}
 ##' @seealso \code{\link{grouped}}
-##' @aliases entities entities<-
+##' @aliases entities entities<- duplicates duplicates<-
 NULL
 
 ##' @rdname VariableOrder-slots

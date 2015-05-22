@@ -5,6 +5,9 @@
 
 [Previous: transform and derive](derive.md)
 
+```
+## Error in library(crunch): there is no package called 'crunch'
+```
 
 # Computing with R and Crunch
 With `crunch`, you can harness the power of R to do computations with your datasets in Crunch that would be difficult or impossible to accomplish in a graphical user interface. 
@@ -25,11 +28,16 @@ tab1
 ```
 
 ```
-## educ
-##                No HS High school graduate         Some college               2-year               4-year 
-##                   47                  278                  253                   83                  228 
-##            Post-grad 
-##                  111
+## Loading required package: crunch
+```
+
+```
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE, : there is no package
+## called 'crunch'
+```
+
+```
+## Error in .requirePackage(package): unable to find required package 'crunch'
 ```
 
 Additional dimensions are added with `+`. For a two-way table of education and gender, 
@@ -41,14 +49,16 @@ tab2
 ```
 
 ```
-##                       gender
-## educ                   Male Female
-##   No HS                  23     24
-##   High school graduate  124    154
-##   Some college          110    143
-##   2-year                 32     51
-##   4-year                115    113
-##   Post-grad              63     48
+## Loading required package: crunch
+```
+
+```
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE, : there is no package
+## called 'crunch'
+```
+
+```
+## Error in .requirePackage(package): unable to find required package 'crunch'
 ```
 
 ### Weighting
@@ -78,14 +88,16 @@ crtabs(~ educ + gender, data=ds)
 ```
 
 ```
-##                       gender
-## educ                        Male    Female
-##   No HS                 57.78851  51.70880
-##   High school graduate 152.08593 155.76219
-##   Some college         126.99383 143.98321
-##   2-year                35.00172  36.41431
-##   4-year                78.47811  88.75691
-##   Post-grad             37.43805  35.58841
+## Loading required package: crunch
+```
+
+```
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE, : there is no package
+## called 'crunch'
+```
+
+```
+## Error in .requirePackage(package): unable to find required package 'crunch'
 ```
 
 If we want unweighted data, that's easy enough:
@@ -96,14 +108,16 @@ crtabs(~ educ + gender, data=ds, weight=NULL)
 ```
 
 ```
-##                       gender
-## educ                   Male Female
-##   No HS                  23     24
-##   High school graduate  124    154
-##   Some college          110    143
-##   2-year                 32     51
-##   4-year                115    113
-##   Post-grad              63     48
+## Loading required package: crunch
+```
+
+```
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE, : there is no package
+## called 'crunch'
+```
+
+```
+## Error in .requirePackage(package): unable to find required package 'crunch'
 ```
 
 ### Proportion tables
@@ -115,7 +129,16 @@ prop.table(tab1)
 ```
 
 ```
-## Error in sum(x): invalid 'type' (list) of argument
+## Loading required package: crunch
+```
+
+```
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE, : there is no package
+## called 'crunch'
+```
+
+```
+## Error in .requirePackage(package): unable to find required package 'crunch'
 ```
 
 For column proportions, specify margin=2 (by rows, margin=1):
@@ -126,7 +149,16 @@ prop.table(tab2, 2)
 ```
 
 ```
-## Error in margin.table(x, margin): 'x' is not an array
+## Loading required package: crunch
+```
+
+```
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE, : there is no package
+## called 'crunch'
+```
+
+```
+## Error in .requirePackage(package): unable to find required package 'crunch'
 ```
 
 Let's make that more readable:
@@ -137,7 +169,16 @@ round(100*prop.table(tab2, 2))
 ```
 
 ```
-## Error in margin.table(x, margin): 'x' is not an array
+## Loading required package: crunch
+```
+
+```
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE, : there is no package
+## called 'crunch'
+```
+
+```
+## Error in .requirePackage(package): unable to find required package 'crunch'
 ```
 
 ### Complex data types
@@ -150,41 +191,16 @@ tab3
 ```
 
 ```
-## , , gender = Male
-## 
-##                         imiss
-## imiss                    Very Important Somewhat Important Not very Important Unimportant
-##   Abortion                    162.12515         208.097758          134.98884  181.001899
-##   Education                    77.84651          79.423438           39.36797    4.006600
-##   Gay rights                  249.27835         311.708125          149.97589  150.470363
-##   Health care                  29.86234          35.967181           15.59800    3.271685
-##   Immigration                  89.37703         110.794979          126.65609  141.614210
-##   Medicare                    123.07314         175.743469          130.67483    4.704833
-##   Social security             309.00483         371.862548          130.56316  113.506896
-##   Taxes                        10.10853           6.727795           11.12973    3.271685
-##   Terrorism                   195.29567         179.083744          185.41129  214.674821
-##   The budget deficit           76.60153          31.503505           30.59193    4.526322
-##   The economy                 232.66403         296.296347          171.90120  145.427479
-##   The environment              44.96075          22.518970           18.78344    1.000690
-##   The war in Afghanistan      262.64142         302.568826          154.10589  148.924851
-## 
-## , , gender = Female
-## 
-##                         imiss
-## imiss                    Very Important Somewhat Important Not very Important Unimportant
-##   Abortion                     42.93341           18.30873           13.99751    3.271685
-##   Education                   275.06635          300.65116          148.38230  153.512532
-##   Gay rights                   32.88000           15.36346           15.54603    4.240972
-##   Health care                 215.59557          256.47697          162.97001  161.794686
-##   Immigration                  55.87238           37.94964           27.87878    6.813457
-##   Medicare                    259.49040          264.82322          131.97080  168.177349
-##   Social security              47.21392           27.66070           24.26524    3.271685
-##   Taxes                       370.27981          391.28609           91.96340   94.927242
-##   Terrorism                    10.44768            1.32360           11.05645    3.271685
-##   The budget deficit          167.29844          217.23976          208.65971  175.483674
-##   The economy                  62.49252           40.63460           37.25290    4.849638
-##   The environment             112.47886          184.63920          198.88193  214.572442
-##   The war in Afghanistan       72.36317           44.99078           36.03780    7.629384
+## Loading required package: crunch
+```
+
+```
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE, : there is no package
+## called 'crunch'
+```
+
+```
+## Error in .requirePackage(package): unable to find required package 'crunch'
 ```
 
 Note that even though we specified two variables in our formula, because "imiss" itself is two dimensional, our result is a three-dimensional array.
@@ -205,21 +221,16 @@ tab3mr
 ```
 
 ```
-##                         gender
-## imiss                        Male   Female
-##   Abortion               297.1140 389.0997
-##   Education              399.2542 462.1785
-##   Gay rights             216.0331 252.4092
-##   Health care            439.5680 485.3694
-##   Immigration            380.7070 393.7586
-##   Medicare               404.5652 441.7238
-##   Social security        416.7473 451.4937
-##   Taxes                  423.4487 454.1637
-##   Terrorism              378.5656 418.2717
-##   The budget deficit     391.4612 433.0006
-##   The economy            462.2432 486.2133
-##   The environment        375.9582 392.7234
-##   The war in Afghanistan 311.3608 399.2116
+## Loading required package: crunch
+```
+
+```
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE, : there is no package
+## called 'crunch'
+```
+
+```
+## Error in .requirePackage(package): unable to find required package 'crunch'
 ```
 
 It's worth noting here that the result of `crtabs` isn't an `array` object but a `CrunchCube` object.
@@ -243,7 +254,16 @@ round(100*prop.table(tab3mr, 2))
 ```
 
 ```
-## Error in margin.table(x, margin): 'x' is not an array
+## Loading required package: crunch
+```
+
+```
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE, : there is no package
+## called 'crunch'
+```
+
+```
+## Error in .requirePackage(package): unable to find required package 'crunch'
 ```
 
 Finally, it's worth noting that we can extend the crosstabbing to higher dimensions, just by adding more terms on the right-hand side of the formula:
@@ -254,41 +274,16 @@ round(crtabs(~ imiss + educ + gender, data=ds))
 ```
 
 ```
-## , , gender = Male
-## 
-##                         educ
-## imiss                    No HS High school graduate Some college 2-year 4-year Post-grad
-##   Abortion                  48                   41           83    113     86       116
-##   Education                 18                   29           43     61     19        29
-##   Gay rights                51                   51          114    135    101       132
-##   Health care               31                   32           68     79     34        32
-##   Immigration               29                   22           47     64     74        82
-##   Medicare                  10                   17           37     47     20        20
-##   Social security           57                   51          137    141    111       140
-##   Taxes                     31                   36           69     82     34        34
-##   Terrorism                 47                   38          106    115    105       115
-##   The budget deficit        33                   27           58     70     32        29
-##   The economy               56                   52          127    139     96       127
-##   The environment           28                   34           65     60     32        30
-##   The war in Afghanistan    57                   52          135    141     95       128
-## 
-## , , gender = Female
-## 
-##                         educ
-## imiss                    No HS High school graduate Some college 2-year 4-year Post-grad
-##   Abortion                  56                   41          112    135     94       120
-##   Education                 31                   32           59     62     28        29
-##   Gay rights                56                   45          110    132    104       124
-##   Health care               34                   34           59     69     30        29
-##   Immigration               58                   52          137    143    121       135
-##   Medicare                  32                   36           77     85     37        35
-##   Social security           55                   32          113    117     96       113
-##   Taxes                     27                   30           56     71     28        30
-##   Terrorism                 45                   50           84    115     91       120
-##   The budget deficit        24                   30           42     58     25        27
-##   The economy                0                    0            0      0      0         3
-##   The environment            0                    0            0      0      0         0
-##   The war in Afghanistan     0                    0            3      8      1         1
+## Loading required package: crunch
+```
+
+```
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE, : there is no package
+## called 'crunch'
+```
+
+```
+## Error in .requirePackage(package): unable to find required package 'crunch'
 ```
 
 <!--
@@ -306,14 +301,16 @@ crtabs(mean(age) ~ educ + gender, data=ds)
 ```
 
 ```
-##                       gender
-## educ                       Male   Female
-##   No HS                50.82525 44.68583
-##   High school graduate 52.15276 51.32068
-##   Some college         40.29562 41.17773
-##   2-year               46.40166 45.33917
-##   4-year               42.32709 39.58522
-##   Post-grad            49.87801 48.03841
+## Loading required package: crunch
+```
+
+```
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE, : there is no package
+## called 'crunch'
+```
+
+```
+## Error in .requirePackage(package): unable to find required package 'crunch'
 ```
 
 Other supported aggregations include `min`, `max`, `sd`, and `sum`. For the minimum age by gender and education, 
@@ -324,14 +321,16 @@ crtabs(min(age) ~ educ + gender, data=ds)
 ```
 
 ```
-##                       gender
-## educ                   Male Female
-##   No HS                  25     24
-##   High school graduate   32     22
-##   Some college           22     21
-##   2-year                 25     25
-##   4-year                 24     24
-##   Post-grad              26     27
+## Loading required package: crunch
+```
+
+```
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE, : there is no package
+## called 'crunch'
+```
+
+```
+## Error in .requirePackage(package): unable to find required package 'crunch'
 ```
 
 Numeric aggregation functions also work with categorical variables that have numeric values defined for their categories; this is the reason why numeric values for categories are defined, in fact. In the [variables vignette](variables.md), we worked with the "On the right track" question and set some numeric values:
@@ -342,9 +341,16 @@ categories(ds$track)
 ```
 
 ```
-## [ 1 ]  Right track
-## [ 0 ]  Not sure
-## [ -1 ]  Wrong track
+## Loading required package: crunch
+```
+
+```
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE, : there is no package
+## called 'crunch'
+```
+
+```
+## Error in .requirePackage(package): unable to find required package 'crunch'
 ```
 
 We can use these numeric values to compute an "on the right track index" by averaging them. If the index is greater than zero, more people thing things are going well, and if it is negative, more respondents are pessimistic. 
@@ -355,14 +361,16 @@ round(crtabs(mean(track) ~ educ + gender, data=ds), 2)
 ```
 
 ```
-##                       gender
-## educ                    Male Female
-##   No HS                -0.83  -0.74
-##   High school graduate -0.50  -0.45
-##   Some college         -0.31  -0.35
-##   2-year               -0.38  -0.35
-##   4-year               -0.30  -0.28
-##   Post-grad            -0.26  -0.26
+## Loading required package: crunch
+```
+
+```
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE, : there is no package
+## called 'crunch'
+```
+
+```
+## Error in .requirePackage(package): unable to find required package 'crunch'
 ```
 
 Looks like most people surveyed thought that the U.S. is on the wrong track, but that pessimism is less pronounced for those with higher levels of education.
@@ -382,20 +390,26 @@ ds$snowdenleakapp
 ```
 
 ```
-## 
-##  snowdenleakapp (categorical) 
-##  
-## 
-## 
+## Loading required package: crunch
 ```
 
 ```
-##                     Count
-## Strongly disapprove   288
-## Somewhat approve      220
-## Not sure              200
-## Strongly approve      159
-## Somewhat disapprove   131
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE, logical.return = TRUE, : there is no package
+## called 'crunch'
+```
+
+```
+## Error in .requirePackage(package): unable to find required package 'crunch'
+```
+
+```
+## 
+## Strongly disapprove    Somewhat approve            Not sure    Strongly approve Somewhat disapprove 
+##                 288                 220                 200                 159                 131 
+## attr(,"class")
+## [1] "CategoricalVariableSummary" "array"                     
+## attr(,"varname")
+## [1] "snowdenleakapp" "(categorical)"
 ```
 
 We can use `lm` to fit our model. Let's explore the relationship between approval of Snowden's leak and respondents' interest in current events, party identification, gender, and age.

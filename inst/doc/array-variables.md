@@ -7,6 +7,9 @@
 
 
 
+```
+## Error in library(crunch): there is no package called 'crunch'
+```
 # Array Variables
 
 Crunch supports more types of variables than many of the data formats from which you can create datasets. Plain-text .csv files, for example, can't express that some columns are actually indicator matrices of multiple selections (Multiple Response Variables). Most SPSS .sav files do not indicate Categorical Arrays (otherwise known as "grids") as being part of a group---they are simply several categorical variables. The same is true for an R `data.frame`.
@@ -25,8 +28,16 @@ grep("^imiss_", names(ds), value=TRUE)
 ```
 
 ```
-##  [1] "imiss_b" "imiss_c" "imiss_d" "imiss_f" "imiss_g" "imiss_h" "imiss_j"
-##  [8] "imiss_m" "imiss_p" "imiss_q" "imiss_r" "imiss_s" "imiss_t"
+## Loading required package: crunch
+```
+
+```
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+## logical.return = TRUE, : there is no package called 'crunch'
+```
+
+```
+## Error in .requirePackage(package): unable to find required package 'crunch'
 ```
 
 These correspond to a survey grid question about how important respondents view a set of issues. Examining one of them, we see
@@ -45,11 +56,15 @@ ds$imiss_b
 ```
 
 ```
-##                    Count
-## Very Important       805
-## Somewhat Important   164
-## Not very Important    20
-## Unimportant            6
+## 
+##     Very Important Somewhat Important Not very Important 
+##                805                164                 20 
+##        Unimportant 
+##                  6 
+## attr(,"class")
+## [1] "CategoricalVariableSummary" "array"                     
+## attr(,"varname")
+## [1] "imiss_b"       "(categorical)"
 ```
 
 All of these "imiss" categorical variables have the same structure. We can combine them into a categorical array variable with `makeArray`:
@@ -127,11 +142,15 @@ ds$imiss$imiss_b
 ```
 
 ```
-##                    Count
-## Very Important       805
-## Somewhat Important   164
-## Not very Important    20
-## Unimportant            6
+## 
+##     Very Important Somewhat Important Not very Important 
+##                805                164                 20 
+##        Unimportant 
+##                  6 
+## attr(,"class")
+## [1] "CategoricalVariableSummary" "array"                     
+## attr(,"varname")
+## [1] "imiss_b"       "(categorical)"
 ```
 
 ## Manipulating subvariables
@@ -226,12 +245,15 @@ ds$boap_4
 ```
 
 ```
-##                     Count
-## Strongly disapprove   283
-## Somewhat approve      279
-## Somewhat disapprove   160
-## No opinion            157
-## Strongly approve      113
+## 
+## Strongly disapprove    Somewhat approve Somewhat disapprove 
+##                 283                 279                 160 
+##          No opinion    Strongly approve 
+##                 157                 113 
+## attr(,"class")
+## [1] "CategoricalVariableSummary" "array"                     
+## attr(,"varname")
+## [1] "boap_4"        "(categorical)"
 ```
 
 In the questionnaire that collected this data, "boap" appeared as a grid question, just as "imiss" did. But, for illustration purposes---and to show how you can convert between categorical array and multiple response---let's treat this as multiple response. 
@@ -342,7 +364,16 @@ grep("boap", names(ds), value=TRUE)
 ```
 
 ```
-## [1] "boap"
+## Loading required package: crunch
+```
+
+```
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+## logical.return = TRUE, : there is no package called 'crunch'
+```
+
+```
+## Error in .requirePackage(package): unable to find required package 'crunch'
 ```
 
 We can access the subvariables and do things with them directly via the `subvariables` method, but the case may arise in which we want to undo our binding of these subvariables into the array. The function `unbind` deletes the array variable and restores the subvariables as top-level variables.
@@ -364,8 +395,16 @@ grep("boap", names(ds), value=TRUE)
 ```
 
 ```
-##  [1] "boap_2"  "boap_3"  "boap_4"  "boap_5"  "boap_6"  "boap_7"  "boap_8" 
-##  [8] "boap_9"  "boap_10" "boap_11" "boap_12" "boap_13" "boap_14"
+## Loading required package: crunch
+```
+
+```
+## Warning in library(package, lib.loc = lib.loc, character.only = TRUE,
+## logical.return = TRUE, : there is no package called 'crunch'
+```
+
+```
+## Error in .requirePackage(package): unable to find required package 'crunch'
 ```
 
 [Next: variable organization](variable-order.md)

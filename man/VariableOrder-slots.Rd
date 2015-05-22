@@ -3,9 +3,11 @@
 \docType{methods}
 \name{VariableOrder-slots}
 \alias{VariableOrder-slots}
+\alias{duplicates}
 \alias{duplicates,VariableCatalog-method}
 \alias{duplicates,VariableGroup-method}
 \alias{duplicates,VariableOrder-method}
+\alias{duplicates<-}
 \alias{duplicates<-,VariableCatalog,logical-method}
 \alias{duplicates<-,VariableGroup,logical-method}
 \alias{duplicates<-,VariableOrder,logical-method}
