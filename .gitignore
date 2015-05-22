@@ -1,4 +1,7 @@
 *.pyc
-pkg.Rcheck/
+*.Rcheck/
 *.orig
-rcrunch*.tar.gz
+*crunch*.tar.gz
+.DS_Store
+Rd2.pdf
+assets/
