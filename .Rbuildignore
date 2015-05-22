@@ -1,0 +1,8 @@
+^.*\.md$
+^Rd2\.pdf$
+^Makefile$
+^assets$
+^vignette-data$
+^crunch.*\.tar\.gz$
+^crunch\.Rcheck$
+^\.travis\.yml$

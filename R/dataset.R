@@ -155,7 +155,7 @@ NULL
 setMethod("refresh", "CrunchDataset", function (x) {
     tup <- refresh(tuple(x))
     out <- as.dataset(crGET(self(x)), useAlias=x@useAlias, tuple=tup)
-    duplicates(ordering(out)) <- duplicates(ordering(x))
+    duplicates(allVariables(out)) <- duplicates(allVariables(x))
     return(out)
 })
 

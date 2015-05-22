@@ -5,7 +5,7 @@ options(crunch.api=getOption("test.api"),
         crunch.pw=getOption("test.pw"))
 login()
 
-load("../pkg/vignettes/derive.RData")
+load("../vignettes/derive.RData")
 
 tab1 <- crtabs(~ educ, data=ds)
 
@@ -44,6 +44,6 @@ ols1 <- lm(I(snowdenleakapp == "Strongly approve") ~ newsint2 + pid3 + gender + 
 
 logit1 <- glm(I(snowdenleakapp == "Strongly approve") ~ newsint2 + pid3 + gender + age, family=binomial(link="logit"), data=ds)
 
-save.image(file="../pkg/vignettes/analyze.RData")
+save.image(file="../vignettes/analyze.RData")
 
 delete(ds) ## cleanup

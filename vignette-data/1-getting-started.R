@@ -16,8 +16,8 @@ df$imiss <- NULL
 df$track[is.na(df$track)] <- "Not sure"
 # df <- df[1:100,]
 
-# load("../pkg/vignettes/economist.RData")
+# load("../vignettes/economist.RData")
 ds <- newDataset(df, name="Economist/YouGov Weekly Survey")
 
 .listDatasets <- "Economist/YouGov Weekly Survey"
-save(ds, .listDatasets, file="../pkg/vignettes/getting-started.RData")
+save(ds, .listDatasets, file="../vignettes/getting-started.RData")

@@ -17,7 +17,7 @@
 NULL
 
 ##' @importFrom httr set_config
-.onAttach <- function (lib, pkg="pkg") {
+.onAttach <- function (lib, pkgname="crunch") {
     if (is.null(getOption("crunch.api"))) {
         options(crunch.api="https://beta.crunch.io/api/")
     }

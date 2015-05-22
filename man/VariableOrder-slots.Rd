@@ -3,8 +3,10 @@
 \docType{methods}
 \name{VariableOrder-slots}
 \alias{VariableOrder-slots}
+\alias{duplicates,VariableCatalog-method}
 \alias{duplicates,VariableGroup-method}
 \alias{duplicates,VariableOrder-method}
+\alias{duplicates<-,VariableCatalog,logical-method}
 \alias{duplicates<-,VariableGroup,logical-method}
 \alias{duplicates<-,VariableOrder,logical-method}
 \alias{entities}
@@ -45,9 +47,13 @@
 
 \S4method{duplicates}{VariableGroup}(x)
 
+\S4method{duplicates}{VariableCatalog}(x)
+
 \S4method{duplicates}{VariableOrder,logical}(x) <- value
 
 \S4method{duplicates}{VariableGroup,logical}(x) <- value
+
+\S4method{duplicates}{VariableCatalog,logical}(x) <- value
 }
 \arguments{
 \item{x}{a VariableGroup or VariableOrder}
