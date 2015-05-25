@@ -40,8 +40,8 @@ if (run.integration.tests) {
             test_that("Logical expressions evaluate", {
                 e1 <- try(ds$v3 < 10)
                 expect_true(inherits(e1, "CrunchLogicalExpr"))
-                skip(expect_identical(as.vector(e1), as.vector(ds$v3) < 10),
-                    "select with logical expression not supported")
+                skip("select with logical expression not supported")
+                expect_identical(as.vector(e1), as.vector(ds$v3) < 10)
             })
             
             test_that("expressions on expresssions evaluate", {

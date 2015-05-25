@@ -73,7 +73,8 @@ with(fake.HTTP, {
         expect_true(is.readonly(test.ds[1]))
     })
 
-    skip(test_that("Name and description setters in read only mode", {
+    test_that("Name and description setters in read only mode", {
+        skip("Readonly mode for tuple updating not implemented")
         dataset <- test.ds
         readonly(dataset) <- TRUE
         name(dataset) <- "Bond. James Bond."
@@ -82,7 +83,7 @@ with(fake.HTTP, {
         description(dataset) <- "007"
         expect_false(identical(description(dataset), description(test.ds)))
         expect_identical(description(dataset), "007")
-    }), "Readonly mode for tuple updating not implemented")
+    })
     
     test_that("show method", {
         expect_identical(describeDatasetVariables(test.ds), 

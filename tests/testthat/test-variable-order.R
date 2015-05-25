@@ -201,11 +201,12 @@ with(fake.HTTP, {
         expect_true(duplicates(nested.o[["Group 1"]][[2]][["More nesting"]]))
     })
     
-    skip(test_that("c() Order/Group", {
-
-    }), "TODO")
+    test_that("c() Order/Group", {
+        skip("TODO")
+    })
     
-    skip(test_that("Update group with URLs", {
+    test_that("Update group with URLs", {
+        skip("TODO")
         to <- test.ord
         expect_true(inherits(to, "VariableOrder"))
         expect_error(to[[1]] <- ent.urls, 
@@ -214,7 +215,7 @@ with(fake.HTTP, {
         nested.o <- nested.ord
         try(nested.o[[1]] <- ent.urls)
         expect_identical(entities(nested.o[[1]]), as.list(ent.urls))
-    }), "TODO")
+    })
     
     test_that("VariableOrder/Group show methods", {
         expect_identical(showVariableOrder(nested.ord, vars=variables(test.ds)),
@@ -487,9 +488,10 @@ if (run.integration.tests) {
             test_that("duplicates property persists on extracting order", {
                 expect_true(duplicates(ord))
             })
-            skip(test_that("duplicates property persists on refreshing order", {
+            test_that("duplicates property persists on refreshing order", {
+                skip("refresh method for VariableOrder not implemented")
                 expect_true(duplicates(refresh(ord)))
-            }), "refresh method for VariableOrder not implemented")
+            })
             test_that("duplicates property from order is set on assign to ds", {
                 duplicates(ordering(ds)) <<- FALSE
                 expect_false(duplicates(ordering(ds)))

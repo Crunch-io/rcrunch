@@ -56,10 +56,10 @@ if (run.integration.tests) {
                     name="foo"), no.match)
                 expect_true(is.CA(makeArray(c("mr_1", "mr_2", "mr_3"),
                     dataset=ds, name="foo")))
-                skip(with(test.dataset(df, "notds"), {
+                with(test.dataset(df, "notds"), {
                     expect_error(makeArray(ds[1:3], dataset=notds,
                         name="arrayVar"), ds.mismatch)
-                }), "Errors, but does so unexpectedly")
+                })#, "Errors, but does so unexpectedly")
             })
         })
         
@@ -134,10 +134,10 @@ if (run.integration.tests) {
                     expect_error(makeMR(pattern="mr_[123]", dataset=ds,
                         name="arrayVar", selections="Not a Selection!"),
                         not.categorical)
-                    skip(with(test.dataset(df, "notds"), {
+                    with(test.dataset(df, "notds"), {
                         expect_error(makeMR(ds[1:3], dataset=notds,
                             name="arrayVar"), ds.mismatch)
-                    }), "userdataset problem?")
+                    })#, "userdataset problem?")
                     cast.these <- grep("mr_", names(ds))
                     ds[cast.these] <- lapply(ds[cast.these],
                         castVariable, "categorical")

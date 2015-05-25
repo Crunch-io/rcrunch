@@ -75,10 +75,12 @@ if (run.integration.tests) {
                     "Left side of formula must be a valid aggregation")
             })
             
-            skip(test_that("What happens if there are more than one vars on LHS?", {
+            test_that("What happens if there are more than one vars on LHS?", {
+                skip("Nice to have. API supports, but R formula doesn't naturally")
+                ## Actually, implement as c(mean(v3), sd(v3))
                 print(crtabs(mean(v3) + sd(v3) ~ v4, data=ds))
                 # non-numeric argument to binary operator
-            }), "Nice to have. API supports, but R formula doesn't naturally")
+            })
             
             test_that("What if there are aggregations on the RHS?", {
                 expect_error(crtabs(~ mean(v3), data=ds),

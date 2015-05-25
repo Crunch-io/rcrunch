@@ -24,7 +24,8 @@ with(fake.HTTP, {
         expect_false(userCanEdit("nobody@crunch.io", ds))
         expect_true(userCanView("nobody@crunch.io", ds))
         expect_false(userCanView("not.a.user@hotmail.com", ds))
-        skip(expect_true(iCanEdit(ds)), "TODO things with User entity")
+        skip("TODO things with User entity")
+        expect_true(iCanEdit(ds))
     })
 })
 
@@ -66,18 +67,18 @@ if (run.integration.tests) {
                 }
             })
             
-            skip({
             test_that("can transfer editor privileges", {
+                skip("Need to create full users in order to test passing ball")
                 try(share(ds, "foo@crunch.io", notify=FALSE, edit=TRUE))
                 expect_true(userCanEdit("foo@crunch.io", ds))
                 expect_false(userCanEdit(me, ds))
             })
             
             test_that("Cannot remove only editor", {
+                skip("Need to create full users in order to test passing ball")
                 expect_error(share(ds, "foo@crunch.io", notify=FALSE, edit=FALSE),
                     "Cannot remove editor from the dataset without specifying another")
             })
-            }, "Need to create full users in order to test passing ball")
             
             test_that("Cannot unmake myself editor without passing", {
                 try(share(ds, me, notify=FALSE, edit=TRUE))

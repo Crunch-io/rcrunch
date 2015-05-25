@@ -127,7 +127,6 @@ if (run.integration.tests) {
                         dimnames=list(v4=c("B", "C"), v7=LETTERS[3:5])))
             })
             
-# skip({
             is.na(categories(ds$v7)) <- "D"
             test_that("useNA on univariate cube", {
                 expect_equivalent(as.array(crtabs(~ v7, data=ds)),
@@ -299,12 +298,13 @@ if (run.integration.tests) {
                         v7=c("C", "E"))))
             })
             
-            skip(test_that("Cube with variables and R objects", {
+            test_that("Cube with variables and R objects", {
+                skip("(400) Bad Request: No such category id: '1'.")
                 d4 <- cubedf$v4
                 expect_equivalent(as.array(crtabs(~ d4 + v7, data=ds)),
                     array(c(5, 5, 2, 3), dim=c(2L, 2L),
                         dimnames=list(v4=c("B", "C"), v7=c("C", "E"))))
-            }), "(400) Bad Request: No such category id: '1'.")
+            })
             
             test_that("Cube with transformations", {
                 expect_equivalent(as.array(crtabs(~ bin(v3 + 5), data=ds)),

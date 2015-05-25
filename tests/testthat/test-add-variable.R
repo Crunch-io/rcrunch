@@ -87,14 +87,15 @@ if (run.integration.tests) {
                 expect_true(is.Datetime(nv))
                 expect_identical(as.vector(nv), as.vector(ds$v5))
             })
-            skip(test_that("addVariable creates datetime from POSIXct", {
+            test_that("addVariable creates datetime from POSIXct", {
+                skip("Can't support POSIXt until the app supports timezones")
                 ds <- addVariable(ds, as.POSIXct(df$v5),
                     name="New var 5", alias="newVar5")
                 expect_true("newVar5" %in% names(ds))
                 nv <- ds$newVar5
                 expect_true(is.Datetime(nv))
                 expect_identical(as.vector(nv), as.vector(ds$v5))
-            }), reason="Can't support POSIXt until the app supports timezones")
+            })
             test_that("adding variable with duplicate name fails", {
                 expect_error(addVariable(ds, df$v5, name="New var 4",
                     alias="newVar4"), 

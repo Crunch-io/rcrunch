@@ -53,10 +53,9 @@ with(fake.HTTP, {
             index(varcat)[[gender.url]])
         expect_identical(index(varcat[2:3]), index(varcat)[2:3])
         expect_error(varcat[[999]], "subscript out of bounds")
-        skip({
-            expect_error(varcat[["asdf"]], "subscript out of bounds")
-            expect_error(varcat[999:1000], "subscript out of bounds")
-        }, "Not implemented")
+        skip("Not implemented")
+        expect_error(varcat[["asdf"]], "subscript out of bounds")
+        expect_error(varcat[999:1000], "subscript out of bounds")
     })
     
     test_that("Extract methods: VariableOrder/Group", {

@@ -18,15 +18,6 @@ options(crunch.api=getOption("test.api"),
         crunch.pw=getOption("test.pw"))
 set_config(crunchConfig())
 
-is.tap.reporter <- grepl('reporter ?= ?"tap"', 
-    paste(deparse(sys.calls()[[1]]), collapse=""))
-if (is.tap.reporter) {
-    skip <- function (..., reason="") invisible() # cat("skip ", reason, "\n")
-} else {
-    ## for the test running...S.....
-    skip <- function (...) cat(colourise("S", "yellow"))
-}
-
 ## Test serialize and deserialize
 cereal <- function (x) fromJSON(toJSON(x), simplifyVector=FALSE)
 

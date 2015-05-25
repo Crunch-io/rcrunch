@@ -34,12 +34,11 @@ if (run.integration.tests) {
                 test_that("The join succeeded", {
                     expect_true(is.dataset(joined))
                     expect_identical(length(joins(joined)), 1L)
-                    skip({
-                        expect_identical(dim(joined), c(4L, 3L))
-                        expect_identical(names(joined), c("keyvar", "v1", "v2"))
-                        expect_identical(as.vector(joined$v2),
-                            factor(c("D", "B", "A", "C")))
-                    }, "TODO: fetch joined variable catalogs")
+                    skip("TODO: fetch joined variable catalogs")
+                    expect_identical(dim(joined), c(4L, 3L))
+                    expect_identical(names(joined), c("keyvar", "v1", "v2"))
+                    expect_identical(as.vector(joined$v2),
+                        factor(c("D", "B", "A", "C")))
                 })
             })
         })
