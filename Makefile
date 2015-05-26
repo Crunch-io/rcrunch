@@ -13,6 +13,7 @@ deps:
 
 install-ci: deps
 	R CMD INSTALL --install-tests -l $(R_LIB) .
+	R -e 'devtools::install_github("nealrichardson/testthat")'
 
 test-ci:
 	R --slave -e '.libPaths(Sys.getenv("R_LIB")); options(test.user=Sys.getenv("R_TEST_USER"), test.pw=Sys.getenv("R_TEST_PW"), test.api=Sys.getenv("R_TEST_API")); library(testthat); sink(file="rcrunch.tap"); setwd(file.path(.libPaths()[1], "crunch", "tests")); test_check("crunch", reporter="tap"); sink()'
