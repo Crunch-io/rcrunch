@@ -14,3 +14,7 @@ setMethod("pending", "BatchCatalog", function (x) {
     index(x) <- Filter(function (a) !isTRUE(a$status == "imported"), index(x))
     return(x)
 })
+
+setMethod("ids", "BatchCatalog", function (x) {
+    as.numeric(vapply(strsplit(urls(x), "/"), tail, character(1), n=1))
+})
