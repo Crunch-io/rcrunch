@@ -31,5 +31,30 @@ if (run.integration.tests) {
                 })
             })
         })
+        
+        df3 <- rbind(df, df[1:10,]) ## This one has more rows
+        with(test.dataset(df, "d1"), {
+            with(test.dataset(df3, "d2"), {
+                d1$derivedvar <- d1$v3 + 9 ## Add a derived var. 
+                d1$v3[d1$v3 <= 10] <- 11 ## Functionally modify some values
+                names(categories(d1$v4)) <- c("bee", "see") ## Rename cats
+                out <- try(replaceBatch(d1, d2))
+                ## ^ fails with Error : server error: (500) Internal Server Error: No variable with id '664d77c95fc84636bc5388fe5240ba91' (or whatever UUID)
+                test_that("Edits to the dataset persist when replacing data", {
+                    expect_true(is.dataset(out))
+                    if (is.dataset(out)) {
+                        ## No sense in running these if not
+                        expect_identical(ncol(out), ncol(d2) + 1L)
+                        expect_identical(nrow(out), nrow(d2))
+                        expect_identical(as.vector(out$derivedvar), 
+                            c(20, 20, 20, 20, 21, 22, 23, 24, 25, 26,
+                              27, 28, 29, 30, 31, 32, 33, 34, 35, 36,
+                              20, 20, 20, 20, 21, 22, 23, 24, 25, 26))
+                        expect_identical(names(categories(out)),
+                            names(categories(d1)))
+                    }
+                })
+            })
+        })
     })
 }
