@@ -19,6 +19,8 @@
 \alias{names,VariableCatalog-method}
 \alias{names<-,Subvariables-method}
 \alias{names<-,VariableCatalog-method}
+\alias{types}
+\alias{types,VariableCatalog-method}
 \title{Get and set names, aliases on Catalog-type objects}
 \usage{
 \S4method{names}{DatasetCatalog}(x)
@@ -44,6 +46,8 @@
 \S4method{descriptions}{VariableCatalog}(x)
 
 \S4method{descriptions}{VariableCatalog}(x) <- value
+
+\S4method{types}{VariableCatalog}(x)
 }
 \arguments{
 \item{x}{a VariableCatalog, Subvariables, or similar object}

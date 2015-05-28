@@ -1,5 +1,9 @@
-## crunch 1.2.1
+### crunch 1.2.2
+* Add `types` method to VariableCatalog.
+
+### crunch 1.2.1
 * Additional methods for working with VariableOrder and VariableGroup. You can create new Groups by assigning into an Order or Group with a new name. And, with the new `duplicates` parameter, which is `FALSE` by default, adding new Groups to an Order "moves" the variable references to the new Group, rather than creating copies. See the [variable order vignette](inst/doc/variable-order.md) for more details.
+* Add `share` function for sharing a dataset with other users.
 
 ## crunch 1.2.0
 * New vignettes for [deriving variables](inst/doc/derive.md) and [analyzing datasets](inst/doc/analyze.md).

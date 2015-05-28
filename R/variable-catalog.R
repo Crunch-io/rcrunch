@@ -123,3 +123,11 @@ setMethod("descriptions", "VariableCatalog", function (x) {
 setMethod("descriptions<-", "VariableCatalog", function (x, value) {
     mapSetIndexSlot(x, "description", value)
 })
+
+##' @export
+##' @rdname describe-catalog
+setMethod("types", "VariableCatalog", function (x) {
+    vapply(index(x), function (a) a[["type"]], character(1), USE.NAMES=FALSE)
+})
+
+## No setter for types<-

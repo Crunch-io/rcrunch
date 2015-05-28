@@ -28,6 +28,7 @@ setGeneric("descriptions", function (x) standardGeneric("descriptions"))
 setGeneric("descriptions<-", 
     function (x, value) standardGeneric("descriptions<-"), signature="x")
 setGeneric("emails", function (x) standardGeneric("emails"))
+setGeneric("types", function (x) standardGeneric("types"))
 
 setGeneric("type", function (x) standardGeneric("type"))
 setGeneric("type<-", function (x, value) standardGeneric("type<-"))
