@@ -100,7 +100,7 @@ setMethod("names", "VariableCatalog", function (x) {
 ##' @export
 ##' @rdname describe-catalog
 setMethod("names<-", "VariableCatalog", function (x, value) {
-    mapSetIndexSlot(x, "name", value)
+    setIndexSlot(x, "name", value)
 })
 ##' @export
 ##' @rdname describe-catalog
@@ -110,7 +110,7 @@ setMethod("aliases", "VariableCatalog", function (x) {
 ##' @export
 ##' @rdname describe-catalog
 setMethod("aliases<-", "VariableCatalog", function (x, value) {
-    mapSetIndexSlot(x, "alias", value)
+    setIndexSlot(x, "alias", value)
 })
 
 ##' @export
@@ -121,7 +121,7 @@ setMethod("descriptions", "VariableCatalog", function (x) {
 ##' @export
 ##' @rdname describe-catalog
 setMethod("descriptions<-", "VariableCatalog", function (x, value) {
-    mapSetIndexSlot(x, "description", value)
+    setIndexSlot(x, "description", value)
 })
 
 ##' @export

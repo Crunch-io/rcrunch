@@ -110,5 +110,15 @@ if (run.integration.tests) {
                 expect_false("MR" %in% names(ds))
             })
         })
+        
+        with(test.dataset(mrdf), {
+            ds <- mrdf.setup(ds, pattern="mr_1")
+            test_that("Can hide array variables even if they only have one subvar", {
+                expect_identical(names(ds), c("CA", "mr_2", "mr_3", "v4"))
+                expect_identical(length(subvariables(ds$CA)), 1L)
+                try(hiddenVariables(ds) <- "CA")
+                expect_false("CA" %in% names(ds))
+            })
+        })
     })
 }
