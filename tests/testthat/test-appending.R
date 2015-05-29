@@ -202,7 +202,8 @@ if (run.integration.tests) {
                     p1.batches <- batches(part1)
                     expect_true(inherits(p1.batches, "ShojiCatalog"))
                     expect_identical(length(p1.batches), 1L)
-                    expect_error(appendDataset(part1, part2))
+                    expect_error(appendDataset(part1, part2),
+                        "There are conflicts that cannot be resolved automatically.")
                     expect_identical(length(batches(part1)), 1L)
                 })
             })

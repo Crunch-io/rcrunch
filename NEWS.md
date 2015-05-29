@@ -1,3 +1,5 @@
+### crunch 1.2.3
+
 ### crunch 1.2.2
 * Add `types` method to VariableCatalog.
 

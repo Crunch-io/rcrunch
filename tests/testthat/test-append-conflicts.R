@@ -36,6 +36,13 @@ c3 <- list(
         )
     )
 )
+c4 <- c3
+c4$var3 <- list(
+    conflicts=list(list(
+        message="Type mismatch"
+    )),
+    metadata=list(name="Last")
+)
 
 test_that("Simple conflict messages are formatted correctly", {
     expect_equivalent(flattenConflicts(c3), 
@@ -45,6 +52,13 @@ test_that("Simple conflict messages are formatted correctly", {
             url=c("var2", "var1", "var1"),
             name=c("Second", "First", "First"),
             stringsAsFactors=FALSE))
+        expect_equivalent(flattenConflicts(c4), 
+            data.frame(
+                message=c("No good", "No good", "Oh, and there was another problem", "Type mismatch"),
+                resolution=c("But I fixed it already", "But I fixed it already", "But it's also cool", NA),
+                url=c("var2", "var1", "var1", "var3"),
+                name=c("Second", "First", "First", "Last"),
+                stringsAsFactors=FALSE))
     
     expect_identical(formatConflicts(c1), "No conflicts.")
     expect_identical(formatConflicts(c2), 
