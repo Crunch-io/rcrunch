@@ -15,14 +15,18 @@ if (run.integration.tests) {
                     expect_equivalent(as.array(crtabs(~ MR, data=part2)),
                         array(c(2, 1, 1), dim=c(3L),
                         dimnames=list(MR=c("mr_1", "mr_2", "mr_3"))))
-                    expect_identical(length(batches(part1)), 1L)
-                    expect_identical(length(batches(part2)), 1L)
+                    # 2 because there is always a "batch 0" which
+                    # is present for rows which were added directly
+                    # rather than through a batch append,
+                    # and another for "part1".
+                    expect_identical(length(batches(part1)), 2L)
+                    expect_identical(length(batches(part2)), 2L)
                 })
                 out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("identical datasets with arrays can append", {
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
-                    expect_identical(length(batches(out)), 2L)
+                    expect_identical(length(batches(out)), 3L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
                     expect_true(is.Multiple(out$MR))
                     expect_equivalent(as.array(crtabs(~ MR, data=out)),
@@ -77,7 +81,7 @@ if (run.integration.tests) {
                 test_that("unbound subvariables get lined up", {
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
-                    expect_identical(length(batches(out)), 2L)
+                    expect_identical(length(batches(out)), 3L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
                     expect_true(is.variable(out$MR))
                     expect_identical(categories(out$MR), dichotomized_cats)
@@ -132,7 +136,7 @@ if (run.integration.tests) {
                 test_that("unbound subvars with not identical cats", {
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
-                    expect_identical(length(batches(out)), 2L)
+                    expect_identical(length(batches(out)), 3L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
                     expect_true(is.variable(out$MR))
                     expect_identical(categories(out$MR), dichotomized_cats)
@@ -174,7 +178,7 @@ if (run.integration.tests) {
                 test_that("arrays with different subvariables can append", {
                     expect_false(is.error(out))
                     expect_true(is.dataset(out))
-                    expect_identical(length(batches(out)), 2L)
+                    expect_identical(length(batches(out)), 3L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
                     expect_true(is.variable(out$MR))
                     expect_true(is.Multiple(out$MR))
