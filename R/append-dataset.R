@@ -71,17 +71,19 @@ acceptAppendResolutions <- function (batch_url, dataset,
     status <- pollBatchStatus(batch_url, batches(dataset), until=c("ready", "imported"))
     
     batch <- ShojiObject(crGET(batch_url))
-    cflicts <- batch@body$conflicts
-    resolutions <- formatConflicts(cflicts)
-    ## Report on what was done/will be done
-    for (i in resolutions) message(i)
+    cflicts <- flattenConflicts(batch@body$conflicts)
     
     if (status == "conflict") {
-        ## message(the fatal conflicts)
+        failures <- formatFailures(cflicts)
+        for (i in failures) message(i)
         err <- c("There are conflicts that cannot be resolved automatically.",
             "Please manually address them and retry.")
         halt(paste(err, collapse=" "))
     }
+    
+    resolutions <- formatConflicts(cflicts)
+    ## Report on what was done/will be done
+    for (i in resolutions) message(i)
     
     if (status == "ready") {
         if (length(cflicts)) {
