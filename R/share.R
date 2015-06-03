@@ -3,9 +3,7 @@ setMethod("permissions", "CrunchDataset", function (x) {
     return(PermissionCatalog(crGET(perm_url)))
 })
 
-setMethod("emails", "PermissionCatalog", function (x) {
-    vapply(index(x), function (a) a[["email"]], character(1), USE.NAMES=FALSE)
-})
+setMethod("emails", "PermissionCatalog", function (x) getIndexSlot(x, "email"))
 
 is.editor <- function (x) {
     out <- vapply(index(x), function (a) a[["dataset_permissions"]][["edit"]], logical(1), USE.NAMES=FALSE)

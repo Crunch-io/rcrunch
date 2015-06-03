@@ -35,6 +35,10 @@ dirtyElements <- function (x, y) {
     !mapply(identical, x, y, USE.NAMES=FALSE, SIMPLIFY=TRUE)
 }
 
+getIndexSlot <- function (x, i, what=character(1)) {
+    vapply(index(x), function (a) a[[i]], what, USE.NAMES=FALSE)
+}
+
 ##' @rdname catalog-extract
 ##' @export
 setMethod("[", c("ShojiCatalog", "character"), function (x, i, ...) {
