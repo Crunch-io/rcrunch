@@ -214,75 +214,75 @@ if (run.integration.tests) {
         })
         
         datetime1 <- data.frame(
-                   cat=factor(c("A", "B")),
-                   wave=as.Date(rep(c("2014-04-15", "2014-06-15"), 4)))
-               datetime2 <- data.frame(
-                   cat=factor(c("B", "C")),
-                   wave=as.Date(rep("2014-08-15", 4)))
-               with(test.dataset(datetime1, "part1"), {
-                   with(test.dataset(datetime2, "part2"), {
-                       test_that("setup for datetime appending", {
-                           expect_true(is.Datetime(part1$wave))
-                           expect_true(is.Datetime(part2$wave))
-                       })
-                       out <- suppressMessages(try(appendDataset(part1, part2)))
-                       test_that("Datetimes are correctly appended", {
-                           expect_false(is.error(out))
-                           expect_true(is.dataset(out))
-                           expect_identical(length(batches(out)), 2L)
-                           expect_identical(nrow(out), 12L)
-                           expect_true(is.Datetime(out$wave))
-                           expect_equivalent(as.vector(out$wave),
-                               c(datetime1$wave, datetime2$wave))
-                       })
-                   })
+           cat=factor(c("A", "B")),
+           wave=as.Date(rep(c("2014-04-15", "2014-06-15"), 4)))
+        datetime2 <- data.frame(
+           cat=factor(c("B", "C")),
+           wave=as.Date(rep("2014-08-15", 4)))
+        with(test.dataset(datetime1, "part1"), {
+           with(test.dataset(datetime2, "part2"), {
+               test_that("setup for datetime appending", {
+                   expect_true(is.Datetime(part1$wave))
+                   expect_true(is.Datetime(part2$wave))
                })
-               
-               sparse1 <- data.frame(A=factor(c("A", "B")), B=1:1000)
-               sparse2 <- data.frame(B=1:1000, C=factor(c("C", "D")))
-               with(test.dataset(sparse1, "part1"), {
-                   with(test.dataset(sparse2, "part2"), {
-                       out <- suppressMessages(try(appendDataset(part1, part2)))
-                       test_that("Datasets with more rows append (sparseness test)", {
-                           expect_identical(mean(out$B), 1001/2)
-                           expect_identical(length(as.vector(out$C)), 2000L)
-                           expect_identical(as.vector(out$C), 
-                               factor(c(rep(NA, 1000), rep(c("C", "D"), 500))))
-                       })
-                   })
+               out <- suppressMessages(try(appendDataset(part1, part2)))
+               test_that("Datetimes are correctly appended", {
+                   expect_false(is.error(out))
+                   expect_true(is.dataset(out))
+                   expect_identical(length(batches(out)), 2L)
+                   expect_identical(nrow(out), 12L)
+                   expect_true(is.Datetime(out$wave))
+                   expect_equivalent(as.vector(out$wave),
+                       c(datetime1$wave, datetime2$wave))
                })
-               
-               lets <- LETTERS[1:5]
-               cat1 <- data.frame(A=1, B=1:5, C=factor(c(2, 3, 1, 5, 4), labels=lets))
-               cat2 <- data.frame(A=1, B=1:5, C=factor(c(2, 3, 1, 5, 4),
-                   labels=rev(lets)))
-               with(test.dataset(cat1, "part1"), {
-                   with(test.dataset(cat2, "part2"), {
-                       test_that("Setup", {
-                           expect_identical(as.character(as.vector(part1$C)),
-                               c("B", "C", "A", "E", "D"))
-                           c1 <- categories(part1$C)
-                           expect_identical(names(c1), lets)
-                           expect_equivalent(values(c1), 1:5)
-                           expect_equivalent(ids(c1), 1:5)
-                           expect_identical(as.character(as.vector(part2$C)),
-                               c("D", "C", "E", "A", "B"))
-                           c2 <- categories(part2$C)
-                           expect_identical(names(c2), rev(lets))
-                           expect_equivalent(values(c2), 1:5)
-                           expect_equivalent(ids(c2), 1:5)
-                       })
-                       out <- suppressMessages(try(appendDataset(part1, part2)))
-                       test_that("Categories with different ids and values line up by name", {
-                           expect_identical(as.character(as.vector(out$C)),
-                               c("B", "C", "A", "E", "D", "D", "C", "E", "A", "B"))
-                           cout <- categories(out$C)
-                           ## Order comes from the "part1" dataset
-                           expect_identical(names(cout), lets)
-                           expect_equivalent(values(cout), 1:5)
-                           expect_equivalent(ids(cout), 1:5)
-                       })
-                   })
+           })
+        })
+
+        sparse1 <- data.frame(A=factor(c("A", "B")), B=1:1000)
+        sparse2 <- data.frame(B=1:1000, C=factor(c("C", "D")))
+        with(test.dataset(sparse1, "part1"), {
+           with(test.dataset(sparse2, "part2"), {
+               out <- suppressMessages(try(appendDataset(part1, part2)))
+               test_that("Datasets with more rows append (sparseness test)", {
+                   expect_identical(mean(out$B), 1001/2)
+                   expect_identical(length(as.vector(out$C)), 2000L)
+                   expect_identical(as.vector(out$C), 
+                       factor(c(rep(NA, 1000), rep(c("C", "D"), 500))))
                })
+           })
+        })
+
+        lets <- LETTERS[1:5]
+        cat1 <- data.frame(A=1, B=1:5, C=factor(c(2, 3, 1, 5, 4), labels=lets))
+        cat2 <- data.frame(A=1, B=1:5, C=factor(c(2, 3, 1, 5, 4),
+           labels=rev(lets)))
+        with(test.dataset(cat1, "part1"), {
+           with(test.dataset(cat2, "part2"), {
+               test_that("Setup", {
+                   expect_identical(as.character(as.vector(part1$C)),
+                       c("B", "C", "A", "E", "D"))
+                   c1 <- categories(part1$C)
+                   expect_identical(names(c1), lets)
+                   expect_equivalent(values(c1), 1:5)
+                   expect_equivalent(ids(c1), 1:5)
+                   expect_identical(as.character(as.vector(part2$C)),
+                       c("D", "C", "E", "A", "B"))
+                   c2 <- categories(part2$C)
+                   expect_identical(names(c2), rev(lets))
+                   expect_equivalent(values(c2), 1:5)
+                   expect_equivalent(ids(c2), 1:5)
+               })
+               out <- suppressMessages(try(appendDataset(part1, part2)))
+               test_that("Categories with different ids and values line up by name", {
+                   expect_identical(as.character(as.vector(out$C)),
+                       c("B", "C", "A", "E", "D", "D", "C", "E", "A", "B"))
+                   cout <- categories(out$C)
+                   ## Order comes from the "part1" dataset
+                   expect_identical(names(cout), lets)
+                   expect_equivalent(values(cout), 1:5)
+                   expect_equivalent(ids(cout), 1:5)
+               })
+           })
+        })
     })
 }
