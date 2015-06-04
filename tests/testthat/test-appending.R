@@ -213,14 +213,6 @@ if (run.integration.tests) {
                 })
             })
         })
-
-                    # expect_message(try(appendDataset(part1, part2),
-                    #     silent=TRUE),
-                    #     paste("Critical conflict: Types do not match;", 
-                    #     "1 variable:", dQuote("v2")))
-                    # expect_error(appendDataset(part1, part2),
-                    #     "There are conflicts that cannot be resolved automatically.")
-                    # expect_identical(length(batches(part1)), 1L)
         
         datetime1 <- data.frame(
             cat=factor(c("A", "B")),
