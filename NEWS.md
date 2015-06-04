@@ -1,3 +1,6 @@
+### crunch 1.2.3
+* Fix bug in updating an array with only one subvariable.
+
 ### crunch 1.2.2
 * Add `types` method to VariableCatalog.
 

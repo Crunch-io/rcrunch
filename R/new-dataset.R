@@ -189,10 +189,14 @@ newDatasetByCSV <- function (x, name=as.character(substitute(x)),
 ##' will be JSON-serialized and POSTed.
 ##' @param file a path to a CSV file, optionally zipped, that corresponds to
 ##' the above metadata.
+##' @param strict logical: must the metadata exactly match the data? Default is
+##' TRUE.
+##' @param cleanup logical: if the file upload fails, delete the dataset? 
+##' Default is TRUE.
 ##' @return On success, a new dataset.
 ##' @export
 ##' @keywords internal
-createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
+createWithMetadataAndFile <- function (metadata, file, strict=TRUE, cleanup=TRUE) {
     message("Uploading metadata")
     dataset_url <- crPOST(sessionURL("datasets"), body=toJSON(metadata))
     updateDatasetList()
@@ -205,7 +209,7 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
     }
     batch <- try(crPOST(batches_url,
         body=list(file=httr::upload_file(file))))
-    if (is.error(batch)) {
+    if (is.error(batch) && cleanup) {
         delete(ds, confirm=FALSE)
         rethrow(batch)
     }

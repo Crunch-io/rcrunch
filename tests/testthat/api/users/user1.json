@@ -13,5 +13,8 @@
     "catalogs": {
         "datasets": "/api/datasets.json"
     },
+    "urls": {
+        "account_url": "/api/accounts/account1.json"
+    },
     "some_other_key": {}
 }

@@ -26,6 +26,7 @@ build: doc
 
 check: build
 	unset INTEGRATION && R CMD CHECK --as-cran crunch_$(VERSION).tar.gz
+	rm -rf crunch.Rcheck/
 
 vdata:
 	cd vignette-data && find *.R | xargs -n 1 R -f

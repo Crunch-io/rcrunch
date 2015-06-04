@@ -4,13 +4,13 @@
 ##' @param dataset2 another CrunchDataset, or possibly a data.frame. If 
 ##' \code{dataset2} is not a Crunch dataset, it will be uploaded as a new 
 ##' dataset before appending.
-##' @param confirm boolean: should the user be forced to review and accept
+##' @param confirm logical: should the user be forced to review and accept
 ##' any automatically resolved conflicts between \code{dataset1} and
 ##' \code{dataset2}? Defaults to \code{TRUE} when occurring in an interactive
 ##' R session, \code{FALSE} otherwise. If \code{TRUE} and not running 
 ##' interactively, the append operation will fail if there are any differences
 ##' in metadata.
-##' @param cleanup boolean: if the append operation fails or is aborted, should
+##' @param cleanup logical: if the append operation fails or is aborted, should
 ##' the intermediate batch created on \code{dataset1} be deleted? Default is
 ##' \code{TRUE}; \code{FALSE} may be useful if you want to review the append
 ##' conflicts in the web application.
@@ -71,17 +71,19 @@ acceptAppendResolutions <- function (batch_url, dataset,
     status <- pollBatchStatus(batch_url, batches(dataset), until=c("ready", "imported"))
     
     batch <- ShojiObject(crGET(batch_url))
-    cflicts <- batch@body$conflicts
-    resolutions <- formatConflicts(cflicts)
-    ## Report on what was done/will be done
-    for (i in resolutions) message(i)
+    cflicts <- flattenConflicts(batch@body$conflicts)
     
     if (status == "conflict") {
-        ## message(the fatal conflicts)
+        failures <- formatFailures(cflicts)
+        for (i in failures) message(i)
         err <- c("There are conflicts that cannot be resolved automatically.",
             "Please manually address them and retry.")
         halt(paste(err, collapse=" "))
     }
+    
+    resolutions <- formatConflicts(cflicts)
+    ## Report on what was done/will be done
+    for (i in resolutions) message(i)
     
     if (status == "ready") {
         if (length(cflicts)) {

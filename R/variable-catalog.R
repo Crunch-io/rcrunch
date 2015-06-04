@@ -94,40 +94,33 @@ setMethod("[<-", c("VariableCatalog", "VariableGroup", "missing", "VariableCatal
 
 ##' @rdname describe-catalog
 ##' @export
-setMethod("names", "VariableCatalog", function (x) {
-    vapply(index(x), function (a) a[["name"]], character(1), USE.NAMES=FALSE)
-})
+setMethod("names", "VariableCatalog", function (x) getIndexSlot(x, "name"))
 ##' @export
 ##' @rdname describe-catalog
 setMethod("names<-", "VariableCatalog", function (x, value) {
-    mapSetIndexSlot(x, "name", value)
+    setIndexSlot(x, "name", value)
 })
 ##' @export
 ##' @rdname describe-catalog
-setMethod("aliases", "VariableCatalog", function (x) {
-    vapply(index(x), function (a) a[["alias"]], character(1), USE.NAMES=FALSE)
-})
+setMethod("aliases", "VariableCatalog", function (x) getIndexSlot(x, "alias"))
 ##' @export
 ##' @rdname describe-catalog
 setMethod("aliases<-", "VariableCatalog", function (x, value) {
-    mapSetIndexSlot(x, "alias", value)
+    setIndexSlot(x, "alias", value)
 })
 
 ##' @export
 ##' @rdname describe-catalog
-setMethod("descriptions", "VariableCatalog", function (x) {
-    vapply(index(x), function (a) a[["description"]], character(1), USE.NAMES=FALSE)
-})
+setMethod("descriptions", "VariableCatalog",
+    function (x) getIndexSlot(x, "description"))
 ##' @export
 ##' @rdname describe-catalog
 setMethod("descriptions<-", "VariableCatalog", function (x, value) {
-    mapSetIndexSlot(x, "description", value)
+    setIndexSlot(x, "description", value)
 })
 
 ##' @export
 ##' @rdname describe-catalog
-setMethod("types", "VariableCatalog", function (x) {
-    vapply(index(x), function (a) a[["type"]], character(1), USE.NAMES=FALSE)
-})
+setMethod("types", "VariableCatalog", function (x) getIndexSlot(x, "type"))
 
 ## No setter for types<-

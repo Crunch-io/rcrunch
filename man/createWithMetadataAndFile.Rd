@@ -4,7 +4,7 @@
 \alias{createWithMetadataAndFile}
 \title{Make a dataset with metadata and a CSV}
 \usage{
-createWithMetadataAndFile(metadata, file, strict = TRUE)
+createWithMetadataAndFile(metadata, file, strict = TRUE, cleanup = TRUE)
 }
 \arguments{
 \item{metadata}{a list representation of the dataset's metadata, which
@@ -12,6 +12,12 @@ will be JSON-serialized and POSTed.}
 
 \item{file}{a path to a CSV file, optionally zipped, that corresponds to
 the above metadata.}
+
+\item{strict}{logical: must the metadata exactly match the data? Default is
+TRUE.}
+
+\item{cleanup}{logical: if the file upload fails, delete the dataset?
+Default is TRUE.}
 }
 \value{
 On success, a new dataset.

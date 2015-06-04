@@ -1,0 +1,64 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/accounts/account1/users.json",
+    "description": "List of users that belong to this account",
+    "index": {
+        "/api/users/user1.json": {
+            "id_method": "pwhash",
+            "first_name": "Fake",
+            "last_name": "User",
+            "full_name": "Fake User",
+            "dataset_permissions": {
+                "edit": true,
+                "change_permissions": true,
+                "add_users": true,
+                "change_weight": true,
+                "view": true
+            },
+            "id_provider": null,
+            "account_permissions": {
+                "alter_users": false,
+                "create_datasets": true
+            },
+            "email": "fake.user@example.com"
+        },
+        "/api/users/user3.json": {
+            "id_method": "pwhash",
+            "first_name": "Bill",
+            "last_name": "User",
+            "full_name": "Bill User",
+            "dataset_permissions": {
+                "edit": false,
+                "change_permissions": false,
+                "add_users": true,
+                "change_weight": true,
+                "view": true
+            },
+            "id_provider": null,
+            "account_permissions": {
+                "alter_users": false,
+                "create_datasets": false
+            },
+            "email": "william.user@example.io"
+        },
+        "/api/users/user2.json": {
+            "id_method": "pwhash",
+            "first_name": "Roger",
+            "last_name": "User",
+            "full_name": "Roger User",
+            "dataset_permissions": {
+                "edit": true,
+                "change_permissions": true,
+                "add_users": true,
+                "change_weight": true,
+                "view": true
+            },
+            "id_provider": null,
+            "account_permissions": {
+                "alter_users": false,
+                "create_datasets": true
+            },
+            "email": "ruser@crunch.io"
+        }
+    }
+}

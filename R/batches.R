@@ -18,6 +18,8 @@ pollBatchStatus <- function (batch.url, catalog, until="imported", wait=1) {
         halt("Append process failed to start on the server")
     } else if (status %in% c("analyzing", "importing")) {
         halt("Timed out. Check back later. Consider also increasing options(crunch.timeout)")
+    } else if (status == "error") {
+        halt("There was an error appending the datasets. Please contact support@crunch.io")
     } else if (status %in% c(until, "conflict")) {
         return(status)
     } else {
@@ -31,28 +33,18 @@ crunchTimeout <- function () {
     return(opt)
 }
 
-formatConflicts <- function (x) {
-    ## x is list, keys are variable URLs, objects are arrays of objects with keys "message" and "resolution" (in R-speak, s/array/list/, s/object/list/, s/keys/names/)
-    if (length(x)) {
-        x <- groupConflicts(x)
-        return(vapply(x, formatConflictMessage, character(1), USE.NAMES=FALSE))
-    } else {
-        return("No conflicts.")
-    }
-}
-
-groupConflicts <- function (x) {
-    ## reshape conflicts to be by conflict-resolution, not by variable
-    flat <- flattenConflicts(x)
-    ## split by message, then by resolution
-    return(unlist(lapply(split(flat, flat$message), 
-        function (x) split(x, x$resolution)), recursive=FALSE))
-}
-
 flattenConflicts <- function (x) {
+    ## x is list, keys are variable URLs, objects are arrays of objects with keys "message" and "resolution" (in R-speak, s/array/list/, s/object/list/, s/keys/names/)
     ## flatten object to data.frame with url, message, resolution
     dfconflicts <- function (clist) {
-        as.data.frame(clist[c("message", "resolution")], stringsAsFactors=FALSE)
+        data.frame(message=clist$message,
+            resolution=clist$resolution %||% NA_character_,
+            stringsAsFactors=FALSE)
+    }
+    
+    if (length(x) == 0) {
+        ## Bail, but return the right shape
+        return(data.frame(message=c(), resolution=c(), name=c(), url=c()))
     }
     out <- mapply(function (i, d) {
         df <- do.call(rbind, lapply(d$conflicts, dfconflicts))
@@ -63,16 +55,50 @@ flattenConflicts <- function (x) {
     return(do.call(rbind, out))
 }
 
+formatConflicts <- function (flat) {
+    ## flat is the output of flattenConflicts
+    if (nrow(flat)) {
+        x <- groupConflicts(flat)
+        return(vapply(x, formatConflictMessage, character(1), USE.NAMES=FALSE))
+    } else {
+        return("No conflicts.")
+    }
+}
+
+groupConflicts <- function (flat) {
+    ## reshape conflicts to be by conflict-resolution, not by variable
+    ## flat is the output of flattenConflicts
+    
+    ## split by message, then by resolution
+    return(unlist(lapply(split(flat, flat$message), 
+        function (x) split(x, x$resolution)), recursive=FALSE))
+}
+
 formatConflictMessage <- function (x) {
     ## receives a data.frame with variable URLs and common conflict and resolution
     conflict <- paste("Conflict:", unique(x$message))
     resolution <- paste("Resolution:", unique(x$resolution))
     ## those should be length 1 by construction
     
-    varnames <- x$name
-    if (is.null(varnames)) varnames <- x$url
+    varnames <- x$name %||% x$url
     vars <- paste0(nrow(x), " variable", ifelse(nrow(x) > 1, "s", ""), ": ", 
         serialPaste(dQuote(unique(varnames))))
     return(paste(conflict, resolution, vars, sep="; "))
 }
 
+formatFailures <- function (flat) {
+    ## Keep only the conflicts without resolution:
+    flat <- flat[is.na(flat$resolution),,drop=FALSE]
+    failures <- split(flat, flat$message)
+    return(vapply(failures, formatFailureMessage, character(1),
+        USE.NAMES=FALSE))
+}
+
+formatFailureMessage <- function (x) {
+    ## receives a data.frame with variable URLs and common conflict and resolution (which is NA)
+    conflict <- paste("Critical conflict:", unique(x$message))
+    varnames <- x$name %||% x$url
+    vars <- paste0(nrow(x), " variable", ifelse(nrow(x) > 1, "s", ""), ": ", 
+        serialPaste(dQuote(unique(varnames))))
+    return(paste(conflict, vars, sep="; "))
+}
