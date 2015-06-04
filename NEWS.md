@@ -1,4 +1,5 @@
 ### crunch 1.2.3
+* Improved messaging for failure modes in `appendDataset`.
 * Fix bug in updating an array with only one subvariable.
 
 ### crunch 1.2.2
