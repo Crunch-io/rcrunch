@@ -25,11 +25,48 @@ with(fake.HTTP, {
 })
 
 if (run.integration.tests) {
-    test_that("User can be fetched", {
-        with(test.authentication, {
+    with(test.authentication, {
+        test_that("User can be fetched", {
             user <- try(getUser())
             expect_false(is.error(user))
             expect_true(inherits(user, "ShojiObject"))
+        })
+        
+        u.email <- uniqueEmail()
+        u.name <- now()
+        u.url <- try(invite(u.email, name=u.name, notify=FALSE))
+
+        test_that("User can be invited", {
+            expect_false(is.error(u.url))
+            usercat <- getAccountUserCatalog()
+            expect_true(u.url %in% urls(usercat))
+            expect_true(u.email %in% emails(usercat))
+            expect_true(u.name %in% sub(" +$", "", names(usercat)))
+        })
+        
+        test_that("User can be deleted", {
+            deurl <- try(index(getAccountUserCatalog())[[u.url]]$membership_url)
+            try(crDELETE(deurl))
+            usercat <- refresh(getAccountUserCatalog())
+            expect_false(u.url %in% urls(usercat))
+            expect_false(u.email %in% emails(usercat))
+            expect_false(u.name %in% sub(" +$", "", names(usercat)))
+        })
+        
+        test_that("test.user() setup/teardown", {
+            u.email <- paste0("test+", as.numeric(Sys.time()), "@crunch.io")
+            u.name <- now()
+            usercat <- getAccountUserCatalog()
+            expect_false(u.email %in% emails(usercat))
+            expect_false(u.name %in% sub(" +$", "", names(usercat)))
+            with(test.user(u.email, u.name), {
+                usercat <- refresh(usercat)
+                expect_true(u.email %in% emails(usercat))
+                expect_true(u.name %in% sub(" +$", "", names(usercat)))
+            })
+            usercat <- refresh(usercat)
+            expect_false(u.email %in% emails(usercat))
+            expect_false(u.name %in% sub(" +$", "", names(usercat)))
         })
     })
 

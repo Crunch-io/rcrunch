@@ -133,7 +133,7 @@ new.dataset.with.setup <- function (df=NULL, ...) {
     return(out)
 }
 
-purge <- function () {
+purge.dataset <- function () {
     len <- length(datasets_to_purge)
     if (len) {
         try(crDELETE(datasets_to_purge[len]), silent=TRUE)
@@ -144,7 +144,33 @@ purge <- function () {
 test.dataset <- function (df=NULL, obj.name="ds", ...) {
     return(setup.and.teardown(
         function () new.dataset.with.setup(df, ...),
-        purge,
+        purge.dataset,
+        obj.name
+    ))
+}
+
+uniqueEmail <- function () paste0("test+", as.numeric(Sys.time()), "@crunch.io")
+users_to_purge <- c()
+new.user.with.setup <- function (email=uniqueEmail(), name=email, ...) {
+    u.url <- invite(email, name=name, notify=FALSE)
+    users_to_purge <<- c(users_to_purge, u.url)
+    return(u.url)
+}
+
+purge.user <- function () {
+    len <- length(users_to_purge)
+    if (len) {
+        u.url <- users_to_purge[len]
+        deurl <- try(index(getAccountUserCatalog())[[u.url]]$membership_url)
+        try(crDELETE(deurl))
+        users_to_purge <<- users_to_purge[-len]
+    }
+}
+
+test.user <- function (email, name, obj.name="u", ...) {
+    return(setup.and.teardown(
+        function () new.user.with.setup(email, name, ...),
+        purge.user,
         obj.name
     ))
 }
