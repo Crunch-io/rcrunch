@@ -139,6 +139,8 @@ DatasetCatalog <- setClass("DatasetCatalog", contains="ShojiCatalog")
 BatchCatalog <- setClass("BatchCatalog", contains="ShojiCatalog")
 PermissionCatalog <- setClass("PermissionCatalog", contains="ShojiCatalog")
 UserCatalog <- setClass("UserCatalog", contains="ShojiCatalog")
+TeamCatalog <- setClass("TeamCatalog", contains="ShojiCatalog")
+MemberCatalog <- setClass("MemberCatalog", contains="ShojiCatalog")
 
 default.useAlias <- function () {
     opt <- getOption("crunch.useAlias")
@@ -215,3 +217,5 @@ CrunchCube <- setClass("CrunchCube", contains="list",
         dims="CubeDims",
         arrays="list"),
     prototype=prototype(useNA="no", dims=CubeDims(), arrays=list()))
+
+CrunchTeam <- setClass("CrunchTeam", contains="ShojiObject")

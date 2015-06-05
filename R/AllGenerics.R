@@ -74,6 +74,7 @@ setGeneric("archived", function (x) standardGeneric("archived"))
 setGeneric("imported", function (x) standardGeneric("imported"))
 setGeneric("pending", function (x) standardGeneric("pending"))
 setGeneric("permissions", function (x) standardGeneric("permissions"))
+setGeneric("members", function (x) standardGeneric("members"))
 
 setGeneric("dim")
 setGeneric("ncol")

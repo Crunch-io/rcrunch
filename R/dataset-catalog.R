@@ -71,6 +71,4 @@ NULL
 
 ##' @rdname describe-catalog
 ##' @export
-setMethod("names", "DatasetCatalog", function (x) {
-    vapply(index(x), function (a) a$name, character(1), USE.NAMES=FALSE)
-})
+setMethod("names", "DatasetCatalog", function (x) getIndexSlot(x, "name"))

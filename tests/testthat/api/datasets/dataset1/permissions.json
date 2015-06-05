@@ -1,31 +1,31 @@
 {
-  "element": "shoji:catalog",
-  "self": "/api/datasets/dataset1/permissions.json",
-  "description": "Lists all the users that have access to this dataset",
-  "index": {
-    "/api/users/user1.json": {
-      "dataset_permissions": {
-        "edit": true,
-        "change_permissions": true,
-        "add_users": true,
-        "change_weight": true,
-        "view": true
-      },
-      "is_owner": true,
-      "name": "Fake User",
-      "email": "fake.user@example.com"
-    },
-    "/api/users/user2.json": {
-      "dataset_permissions": {
-        "edit": false,
-        "change_permissions": false,
-        "add_users": true,
-        "change_weight": true,
-        "view": true
-      },
-      "is_owner": false,
-      "name": "Nonexistent User",
-      "email": "nobody@crunch.io"
+    "element": "shoji:catalog",
+    "self": "/api/datasets/dataset1/permissions.json",
+    "description": "Lists all the users that have access to this dataset",
+    "index": {
+        "/api/users/user1.json": {
+            "dataset_permissions": {
+                "edit": true,
+                "change_permissions": true,
+                "add_users": true,
+                "change_weight": true,
+                "view": true
+            },
+            "is_owner": true,
+            "name": "Fake User",
+            "email": "fake.user@example.com"
+        },
+        "/api/users/user2.json": {
+            "dataset_permissions": {
+                "edit": false,
+                "change_permissions": false,
+                "add_users": true,
+                "change_weight": true,
+                "view": true
+            },
+            "is_owner": false,
+            "name": "Nonexistent User",
+            "email": "nobody@crunch.io"
+        }
     }
-  }
 }
