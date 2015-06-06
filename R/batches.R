@@ -49,7 +49,7 @@ flattenConflicts <- function (x) {
     out <- mapply(function (i, d) {
         df <- do.call(rbind, lapply(d$conflicts, dfconflicts))
         df$url <- i
-        df$name <- d$metadata$name
+        df$name <- d$metadata$name %||% d$metadata$references$name
         return(df)
     }, i=names(x), d=x, SIMPLIFY=FALSE)
     return(do.call(rbind, out))
