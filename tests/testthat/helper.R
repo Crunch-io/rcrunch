@@ -167,7 +167,7 @@ purge.user <- function () {
     }
 }
 
-test.user <- function (email, name, obj.name="u", ...) {
+test.user <- function (email=uniqueEmail(), name=email, obj.name="u", ...) {
     return(setup.and.teardown(
         function () new.user.with.setup(email, name, ...),
         purge.user,
