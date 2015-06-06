@@ -39,7 +39,6 @@ if (run.integration.tests) {
         t2 <- teams
         name.of.team1 <- now()
         test_that("Can create a team", {
-            skip("Jenkins user needs more permissions")
             expect_false(name.of.team1 %in% names(t2))
             t2[[name.of.team1]] <- list()
             expect_true(name.of.team1 %in% names(t2))
@@ -51,7 +50,6 @@ if (run.integration.tests) {
         })
         
         test_that("Can delete a team by URL", {
-            skip("Jenkins user needs more permissions")
             t2 <- refresh(t2)
             expect_true(name.of.team1 %in% names(t2))
             try(crDELETE(self(t2[[name.of.team1]])))
