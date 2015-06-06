@@ -7,7 +7,9 @@ c2 <- list(var1=list(
         resolution="But I fixed it already"
     )),
     metadata=list(
-        name="First"
+        references=list(
+            name="First"
+        )
     )
 ))
 c3 <- list(
@@ -17,7 +19,9 @@ c3 <- list(
             resolution="But I fixed it already"
         )),
         metadata=list(
-            name="Second"
+            references=list(
+                name="Second"
+            )
         )
     ),
     var1=list(
@@ -32,7 +36,9 @@ c3 <- list(
             )
         ),
         metadata=list(
-            name="First"
+            references=list(
+                name="First"
+            )
         )
     )
 )
@@ -41,7 +47,7 @@ c4$var3 <- list(
     conflicts=list(list(
         message="Type mismatch"
     )),
-    metadata=list(name="Last")
+    metadata=list(references=list(name="Last"))
 )
 
 test_that("Simple conflict messages are formatted correctly", {
