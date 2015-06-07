@@ -1,5 +1,7 @@
-### crunch 1.2.3
+## crunch 1.3.0
+* Provisional interface for managing users and teams.
 * Improved messaging for failure modes in `appendDataset`.
+* Adapt to minor updates in append API
 * Fix bug in updating an array with only one subvariable.
 
 ### crunch 1.2.2

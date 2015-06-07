@@ -8,12 +8,22 @@ getAccount <- function (x=rootURL("account", getUser())) {
     ShojiObject(crGET(x))
 }
 
+##' Find all users on your account
+##'
+##' @param x URL of the user catalog. Default is the right thing; you shouldn't
+##' specify one
+##' @return a \code{UserCatalog}
+##' @export
 getAccountUserCatalog <- function (x=rootURL("users", getAccount())) {
     UserCatalog(crGET(x))
 }
 
+##' @rdname describe-catalog
+##' @export
 setMethod("names", "UserCatalog", function (x) getIndexSlot(x, "full_name"))
 
+##' @rdname describe-catalog
+##' @export
 setMethod("emails", "UserCatalog", function (x) getIndexSlot(x, "email"))
 
 invite <- function (email, name=NULL, notify=TRUE, id_method="pwhash", ...) {

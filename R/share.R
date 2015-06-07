@@ -3,6 +3,8 @@ setMethod("permissions", "CrunchDataset", function (x) {
     return(PermissionCatalog(crGET(perm_url)))
 })
 
+##' @rdname describe-catalog
+##' @export
 setMethod("emails", "PermissionCatalog", function (x) getIndexSlot(x, "email"))
 
 is.editor <- function (x) {
