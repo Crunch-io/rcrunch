@@ -37,7 +37,7 @@ if (run.integration.tests) {
         u.url <- try(invite(u.email, name=u.name, notify=FALSE))
 
         test_that("User can be invited", {
-            skip("Jenkins user needs more permissions")
+            skip_on_jenkins("Jenkins user needs more permissions")
             expect_false(is.error(u.url))
             usercat <- getAccountUserCatalog()
             expect_true(u.url %in% urls(usercat))
@@ -46,7 +46,7 @@ if (run.integration.tests) {
         })
         
         test_that("User can be deleted", {
-            skip("Jenkins user needs more permissions")
+            skip_on_jenkins("Jenkins user needs more permissions")
             deurl <- try(index(getAccountUserCatalog())[[u.url]]$membership_url)
             try(crDELETE(deurl))
             usercat <- refresh(getAccountUserCatalog())
@@ -56,7 +56,7 @@ if (run.integration.tests) {
         })
         
         test_that("test.user() setup/teardown", {
-            skip("Jenkins user needs more permissions")
+            skip_on_jenkins("Jenkins user needs more permissions")
             u.email <- paste0("test+", as.numeric(Sys.time()), "@crunch.io")
             u.name <- now()
             usercat <- getAccountUserCatalog()

@@ -58,7 +58,7 @@ if (run.integration.tests) {
         })
         
         test_that("Can create a team with members", {
-            skip("Jenkins user needs more permissions")
+            skip_on_jenkins("Jenkins user needs more permissions")
             t2 <- refresh(t2)
             nteams.2 <- length(t2)
             name.of.team2 <- now()
@@ -78,7 +78,7 @@ if (run.integration.tests) {
         })
         
         test_that("Can add members to a team", {
-            skip("Jenkins user needs more permissions")
+            skip_on_jenkins("Jenkins user needs more permissions")
             t2 <- refresh(teams)
             name.of.team3 <- now()
             expect_false(name.of.team3 %in% names(t2))

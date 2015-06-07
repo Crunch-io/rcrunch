@@ -1,6 +1,12 @@
 run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
 Sys.setlocale("LC_COLLATE", "C") ## What CRAN does
 
+skip_on_jenkins <- function (...) {
+    if (nchar(Sys.getenv("JENKINS_HOME"))) {
+        skip(...)
+    }
+}
+
 set.seed(666)
 
 cacheOn()
