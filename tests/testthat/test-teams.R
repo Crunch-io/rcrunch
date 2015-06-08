@@ -29,6 +29,7 @@ if (run.integration.tests) {
     with(test.authentication, {
         ucat <- getAccountUserCatalog()
         my.name <- names(ucat)[urls(ucat) == userURL()]
+        my.email <- emails(ucat)[urls(ucat) == userURL()]
         
         teams <- try(getTeams())
         nteams.0 <- length(teams)
@@ -55,6 +56,26 @@ if (run.integration.tests) {
             try(crDELETE(self(t2[[name.of.team1]])))
             expect_false(name.of.team1 %in% names(refresh(t2)))
             ## TODO: add a delete() method for CrunchTeam, with a confirm arg.
+        })
+        
+        test_that("delete method for team (requires confirmation)", {
+            ## Setup
+            t2 <- refresh(t2)
+            nteams.2 <- length(t2)
+            name.of.team2 <- now()
+            expect_false(name.of.team2 %in% names(t2))
+            t2[[name.of.team2]] <- list()
+            expect_true(name.of.team2 %in% names(t2))
+            expect_true(length(t2) == nteams.2 + 1L)
+            
+            expect_error(delete(t2[[name.of.team2]], confirm=TRUE),
+                "Must confirm deleting team")
+            expect_true(name.of.team2 %in% names(t2))
+            expect_true(length(t2) == nteams.2 + 1L)
+            
+            ## Cleanup
+            try(delete(t2[[name.of.team2]]))
+            expect_false(name.of.team2 %in% names(getTeams()))
         })
         
         test_that("Can create a team with members", {
@@ -98,7 +119,26 @@ if (run.integration.tests) {
         })
         
         test_that("Can remove members from a team", {
-            
+            skip_on_jenkins("Jenkins user needs more permissions")
+            t2 <- refresh(teams)
+            name.of.team4 <- now()
+            expect_false(name.of.team4 %in% names(t2))
+            with(test.user(), {
+                ucat <- getAccountUserCatalog()
+                u.email <- emails(ucat)[urls(ucat) == u]
+                u.name <- names(ucat)[urls(ucat) == u]
+                t2[[name.of.team4]] <- list()
+                this.team <- t2[[name.of.team4]]
+                expect_identical(names(members(this.team)), 
+                    my.name)
+                members(this.team) <- u.email
+                expect_true(setequal(names(members(this.team)),
+                    c(u.name, my.name)))
+                try(members(this.team)[[u.email]] <- NULL)
+                expect_identical(names(members(this.team)), 
+                    my.name)
+            })
+            try(crDELETE(self(refresh(t2)[[name.of.team4]])))
         })
     })
 }

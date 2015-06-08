@@ -19,6 +19,8 @@
 \alias{[[,TeamCatalog,numeric-method}
 \alias{[[,VariableCatalog,ANY-method}
 \alias{[[,VariableCatalog,character-method}
+\alias{[[<-,MemberCatalog,ANY,missing,ANY-method}
+\alias{[[<-,MemberCatalog,character,missing,NULL-method}
 \alias{[[<-,TeamCatalog,character,missing,CrunchTeam-method}
 \alias{[[<-,TeamCatalog,character,missing,list-method}
 \alias{[[<-,VariableCatalog,character,missing,CrunchVariable-method}
@@ -49,6 +51,10 @@
 \S4method{[[}{TeamCatalog,character,missing,CrunchTeam}(x, i, j) <- value
 
 \S4method{$}{TeamCatalog}(x, name)
+
+\S4method{[[}{MemberCatalog,ANY,missing,ANY}(x, i, j) <- value
+
+\S4method{[[}{MemberCatalog,character,missing,`NULL`}(x, i, j) <- value
 
 \S4method{[[}{VariableCatalog,character}(x, i, j, ...)
 

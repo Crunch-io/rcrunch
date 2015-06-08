@@ -5,11 +5,14 @@
 \alias{members}
 \alias{members,CrunchTeam-method}
 \alias{members<-}
+\alias{members<-,CrunchTeam,MemberCatalog-method}
 \alias{members<-,CrunchTeam,character-method}
 \alias{teams}
 \title{Teams}
 \usage{
 \S4method{members}{CrunchTeam}(x)
+
+\S4method{members}{CrunchTeam,MemberCatalog}(x) <- value
 
 \S4method{members}{CrunchTeam,character}(x) <- value
 }

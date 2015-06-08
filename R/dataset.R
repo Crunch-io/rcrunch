@@ -168,8 +168,8 @@ setMethod("refresh", "CrunchDataset", function (x) {
 ##'
 ##' @param x a Crunch object
 ##' @param confirm logical: should the user be asked to confirm deletion. 
-##' Option available for datasets only. Default is \code{TRUE} if in an
-##' interactive session.
+##' Option available for datasets and teams only. Default is \code{TRUE} if in 
+##' an interactive session.
 ##' @param ... additional arguments, in the generic
 ##' @seealso \code{\link{hide}} \code{\link{deleteDataset}}
 ##' @name delete

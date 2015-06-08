@@ -52,11 +52,7 @@ NULL
 
 ##' @rdname variable-update
 ##' @export
-setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"),
-    function (x, i, j, value) {
-        ## Backstop error so you don't get "Object of class S4 is not subsettable"
-        halt(paste("Cannot update", class(x), "with type", class(value)))
-    })
+setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"), .backstopUpdate)
     
 .sigs <- list(
     c("TextVariable", "character"),

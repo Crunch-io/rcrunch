@@ -81,6 +81,8 @@ setMethod("[[<-", c("TeamCatalog", "character", "missing", "list"),
 setMethod("[[<-", c("TeamCatalog", "character", "missing", "CrunchTeam"),
     function (x, i, j, value) {
         ## TODO: something
+        ## For now, assuming that modifications have already been persisted
+        ## by other operations on the team entity (like members<-)
         return(x)
     })
 
@@ -102,27 +104,78 @@ setMethod("members", "CrunchTeam", function (x) {
 ##' @export
 setMethod("names", "MemberCatalog", function (x) getIndexSlot(x, "display_name"))
 
-##' @rdname teams
+
+.backstopUpdate <- function (x, i, j, value) {
+    ## Backstop error so you don't get "Object of class S4 is not subsettable"
+    halt(paste("Cannot update", class(x), "with type", class(value)))
+}
+
+##' @rdname catalog-extract
 ##' @export
-setMethod("members<-", c("CrunchTeam", "character"), function (x, value) {
-    ## value can be URL or email
-    are.emails <- grep("@", value)
-    ## look them up
+setMethod("[[<-", c("MemberCatalog", "ANY", "missing", "ANY"), .backstopUpdate)
+
+urlizeUserEmails <- function (x) {
+    ## Given a character vector that may contain either emails or URLs,
+    ## convert the emails to URLs so that all are URLs
+    
+    are.emails <- grep("@", x)
+    ## Look them up
     if (length(are.emails)) {
         ucat <- getAccountUserCatalog()
-        urls <- urls(ucat)[match(value[are.emails], emails(ucat))]
+        urls <- urls(ucat)[match(x[are.emails], emails(ucat))]
         if (any(is.na(urls))) {
             plural <- sum(is.na(urls)) > 1
             halt("Could not find user", ifelse(plural, "s", ""), 
                 " associated with ",
-                serialPaste(value[are.emails][is.na(urls)]))
+                serialPaste(x[are.emails][is.na(urls)]))
         }
-        value[are.emails] <- urls
+        x[are.emails] <- urls
     }
+    return(x)
+}
 
+##' @rdname catalog-extract
+##' @export
+setMethod("[[<-", c("MemberCatalog", "character", "missing", "NULL"),
+    function (x, i, j, value) {
+        ## Remove the specified user from the catalog
+        i <- urlizeUserEmails(i)
+        payload <- sapply(i, function (z) NULL, simplify=FALSE)
+        crPATCH(self(x), body=toJSON(payload))
+        return(refresh(x))
+    })
+
+##' @rdname teams
+##' @export
+setMethod("members<-", c("CrunchTeam", "MemberCatalog"), function (x, value) {
+    ## TODO: something
+    ## For now, assume action already done in other methods, like NULL 
+    ## assignment above.
+    return(x)
+})
+
+##' @rdname teams
+##' @export
+setMethod("members<-", c("CrunchTeam", "character"), function (x, value) {
+    ## value can be URL or email
+    value <- urlizeUserEmails(value)
     payload <- sapply(value, 
-        function (x) structure(list(), .Names=character(0)),
+        function (z) structure(list(), .Names=character(0)),
         simplify=FALSE)
     crPATCH(self(members(x)), body=toJSON(payload))
     return(refresh(x))
+})
+
+##' @rdname delete
+##' @export
+setMethod("delete", "CrunchTeam", function (x, confirm=interactive(), ...) {
+    prompt <- paste0("Really delete team ", dQuote(name(x)), "? ",
+        "This cannot be undone.")
+    if (confirm && !askForPermission(prompt)) {
+        halt("Must confirm deleting team")
+    }
+    u <- self(x)
+    out <- crDELETE(u)
+    dropCache(absoluteURL("../", u))
+    invisible(out)
 })
