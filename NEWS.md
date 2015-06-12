@@ -1,5 +1,6 @@
 ### crunch 1.3.1
 * More methods for managing teams
+* Prepare for httr 1.0
 
 ## crunch 1.3.0
 * Provisional interface for managing users and teams.

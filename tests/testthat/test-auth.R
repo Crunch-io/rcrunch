@@ -12,7 +12,7 @@ test_that("setToken saves a cookie in the session_store", {
 
 test_that("getToken can retrieve a token", {
     test.token <- getToken()
-    expect_identical(class(test.token), "config")
+    expect_true(class(test.token) %in% c("config", "request"))
 })
 
 test_that("session info can be deleted out deletes cookies", {
@@ -32,10 +32,10 @@ if (run.integration.tests) {
     test_that("login works if crunch is running", {
         deleteSessionInfo()
         suppressMessages(login())
-            expect_identical(class(getToken()), "config")
             expect_true("root" %in% ls(envir=session_store))
             expect_true(is.authenticated())
         logout()
+        expect_false(is.authenticated())
     })
 
     test_that("crunchAuth succeeds when it should and not when it shouldn't", {

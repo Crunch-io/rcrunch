@@ -129,15 +129,14 @@ if (run.integration.tests) {
             expect_true(crDELETE(self(testdf), 
                 response.handler=function (response) response$status_code==204))
             expect_false(dsname %in% listDatasets(refresh=TRUE))
-            
-            ## Do again but with the S4 method
+        })
+        test_that("Datasets can be deleted by S4 method", {
             dsname <- uniqueDatasetName()
             testdf <- suppressMessages(newDataset(df, name=dsname))
             expect_true(dsname %in% listDatasets())
             delete(testdf)
             expect_false(dsname %in% listDatasets())
         })
-        
     })
 }
 

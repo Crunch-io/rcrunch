@@ -2,14 +2,19 @@ context("API calling")
 
 if (run.integration.tests) {
     test_that("crunchConfig has right structure", {
-        expect_identical(getOption("httr_config")$encoding, "gzip")
+        skip("Not needed?")
         expect_identical(getOption("httr_config")$sslversion, "SSLVERSION_TLSv1_2")
+    })
+    
+    test_that("Request headers", {
+        r <- try(crGET("http://httpbin.org/gzip"))
+        expect_true(r$gzipped)
+        expect_true(grepl("gzip", r$headers[["Accept-Encoding"]]))
+        expect_true(grepl("rcrunch", r$headers[["User-Agent"]]))
     })
 
     test_that("crunchUserAgent", {
         expect_true(grepl("rcrunch", crunchUserAgent()))
-        expect_true(grepl("rcrunch",
-            getOption("httr_config")$httpheader["user-agent"]))
         expect_false(is.error(try(crunchUserAgent("anotherpackage/3.1.4"))))
         expect_true(grepl("anotherpackage", crunchUserAgent("anotherpackage")))
     })

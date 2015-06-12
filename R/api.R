@@ -113,12 +113,19 @@ handleAPIerror <- function (response) {
     return(response)    
 }
 
-##' @importFrom httr config
+##' @importFrom httr config add_headers
 crunchConfig <- function () {
-    config(verbose=isTRUE(getOption("crunch.debug")),
-        sslversion="SSLVERSION_TLSv1_2",
-        encoding="gzip", ## In httr default config, but to be sure
-        httpheader=c(`user-agent`=crunchUserAgent()))
+    new.httr <- unlist(packageVersion("httr"))[1] == 1
+    if (new.httr) {
+        return(c(config(verbose=isTRUE(getOption("crunch.debug"))),
+            add_headers(`user-agent`=crunchUserAgent())))
+    } else {
+        return(config(verbose=isTRUE(getOption("crunch.debug")),
+            sslversion="SSLVERSION_TLSv1_2",
+            encoding="gzip", ## In httr default config, but to be sure
+            httpheader=c(`user-agent`=crunchUserAgent(),
+                         `accept-encoding`="gzip")))
+    }
 }
 
 ##' @importFrom utils packageVersion
