@@ -8,7 +8,7 @@ Description: The Crunch.io service (http://crunch.io/) provides a cloud-based
     collaborate naturally with team members, managers, and clients who prefer a
     point-and-click interface.
 Version: 1.3.1
-Date: 2015-06-08
+Date: 2015-06-12
 Authors@R: c(person("Neal", "Richardson", role = c("aut", "cre"),
     email = "neal@crunch.io"))
 Author: Neal Richardson [aut, cre]
