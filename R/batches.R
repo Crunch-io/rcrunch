@@ -7,7 +7,7 @@ pollBatchStatus <- function (batch.url, catalog, until="imported", wait=1) {
     }
     status <- catalog[[batch.url]]$status
     # print(status)
-    while (status %in% c("idle", "importing", "analyzing") && timer(starttime) < timeout) {
+    while (status %in% c("idle", "importing", "analyzing", "appended") && timer(starttime) < timeout) {
         Sys.sleep(wait)
         catalog <- refresh(catalog)
         status <- catalog[[batch.url]]$status
@@ -16,7 +16,7 @@ pollBatchStatus <- function (batch.url, catalog, until="imported", wait=1) {
     
     if (status %in% "idle") {
         halt("Append process failed to start on the server")
-    } else if (status %in% c("analyzing", "importing")) {
+    } else if (status %in% c("analyzing", "importing", "appended")) {
         halt("Timed out. Check back later. Consider also increasing options(crunch.timeout)")
     } else if (status == "error") {
         halt("There was an error appending the datasets. Please contact support@crunch.io")
