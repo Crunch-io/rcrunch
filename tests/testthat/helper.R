@@ -158,7 +158,7 @@ test.dataset <- function (df=NULL, obj.name="ds", ...) {
 uniqueEmail <- function () paste0("test+", as.numeric(Sys.time()), "@crunch.io")
 users_to_purge <- c()
 new.user.with.setup <- function (email=uniqueEmail(), name=email, ...) {
-    u.url <- invite(email, name=name, notify=FALSE)
+    u.url <- invite(email, name=name, notify=FALSE, ...)
     users_to_purge <<- c(users_to_purge, u.url)
     return(u.url)
 }

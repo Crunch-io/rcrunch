@@ -56,7 +56,6 @@ if (run.integration.tests) {
         })
         
         test_that("test.user() setup/teardown", {
-            skip_on_jenkins("Jenkins user needs more permissions")
             u.email <- paste0("test+", as.numeric(Sys.time()), "@crunch.io")
             u.name <- now()
             usercat <- getAccountUserCatalog()
@@ -66,10 +65,32 @@ if (run.integration.tests) {
                 usercat <- refresh(usercat)
                 expect_true(u.email %in% emails(usercat))
                 expect_true(u.name %in% sub(" +$", "", names(usercat)))
+                user <- index(usercat)[[u]]
+                expect_false(user$account_permissions$create_datasets)
+                expect_false(user$account_permissions$alter_users)
             })
             usercat <- refresh(usercat)
             expect_false(u.email %in% emails(usercat))
             expect_false(u.name %in% sub(" +$", "", names(usercat)))
+        })
+        
+        test_that("User with permissions", {
+            skip_on_jenkins("Jenkins user needs more permissions")
+            with(test.user(advanced=TRUE), {
+                user <- index(getAccountUserCatalog())[[u]]
+                expect_true(user$account_permissions$create_datasets)
+                expect_false(user$account_permissions$alter_users)
+            })
+            with(test.user(admin=TRUE), {
+                user <- index(getAccountUserCatalog())[[u]]
+                expect_false(user$account_permissions$create_datasets)
+                expect_true(user$account_permissions$alter_users)
+            })
+            with(test.user(admin=TRUE, advanced=TRUE), {
+                user <- index(getAccountUserCatalog())[[u]]
+                expect_true(user$account_permissions$create_datasets)
+                expect_true(user$account_permissions$alter_users)
+            })
         })
     })
 
