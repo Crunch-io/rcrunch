@@ -1,3 +1,6 @@
+### crunch 1.3.2
+* New intermediate "appended" state for append operations.
+
 ### crunch 1.3.1
 * More methods for managing teams
 * Prepare for httr 1.0
