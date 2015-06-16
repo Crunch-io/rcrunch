@@ -56,6 +56,7 @@ if (run.integration.tests) {
         })
         
         test_that("test.user() setup/teardown", {
+            skip_on_jenkins("Jenkins user needs more permissions")
             u.email <- paste0("test+", as.numeric(Sys.time()), "@crunch.io")
             u.name <- now()
             usercat <- getAccountUserCatalog()
