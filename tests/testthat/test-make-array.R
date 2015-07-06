@@ -22,7 +22,7 @@ if (run.integration.tests) {
                 expect_equal(c("arrayVar", "v4"), names(ds))
                 ## delete array variable
                 u <- try(delete(ds$arrayVar))
-                expect_false(is.error(u))
+                expect_that(u, is_not_an_error())
                 ds <- refresh(ds)
                 expect_identical(names(ds), "v4")
                 expect_identical(ncol(ds), 1L)   
@@ -37,7 +37,7 @@ if (run.integration.tests) {
                 expect_equal(c("arrayVar", "v4"), names(ds))
                 ## unbind.
                 u <- try(unbind(ds$arrayVar))
-                expect_false(is.error(u))
+                expect_that(u, is_not_an_error())
                 ds <- refresh(ds)
                 expect_true(setequal(names(ds), names(mrdf)))
                 expect_identical(ncol(ds), 4L)
@@ -106,7 +106,7 @@ if (run.integration.tests) {
                 
                 ## unbind.
                 u <- try(unbind(var))
-                expect_false(is.error(u))
+                expect_that(u, is_not_an_error())
                 ds <- refresh(ds)
                 expect_true(setequal(names(ds), names(mrdf)))
                 expect_identical(ncol(ds), 4L)

@@ -36,7 +36,7 @@ invite <- function (email, name=NULL, notify=TRUE, id_method="pwhash",
             alter_users=isTRUE(admin),
             create_datasets=isTRUE(advanced)),
         ...)
-    if (nchar(name)) {
+    if (!is.null(name)) {
         payload$first_name <- name
     }
     if (id_method == "pwhash") {

@@ -15,13 +15,13 @@ if (run.integration.tests) {
 
     test_that("crunchUserAgent", {
         expect_true(grepl("rcrunch", crunchUserAgent()))
-        expect_false(is.error(try(crunchUserAgent("anotherpackage/3.1.4"))))
+        expect_that(try(crunchUserAgent("anotherpackage/3.1.4")), is_not_an_error())
         expect_true(grepl("anotherpackage", crunchUserAgent("anotherpackage")))
     })
     
     with(test.authentication, 
         test_that("API root can be fetched", {
-            expect_false(is.error(try(getAPIroot())))
+            expect_that(try(getAPIroot()), is_not_an_error())
             urls <- getAPIroot()
             expect_true(is.shojiObject(urls))
         }))

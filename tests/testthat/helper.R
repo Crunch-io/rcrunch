@@ -209,6 +209,15 @@ does_not_throw_error <- function () {
     }
 }
 
+is_not_an_error <- function () {
+    ## Like does_not_throw_error, but for an error already caught
+    function (expr) {
+        expectation(!is.error(expr), 
+            paste("is an error:", attr(expr, "condition")$message), 
+            "no error thrown")
+    }
+}
+
 ## Data frames to make datasets with
 df <- data.frame(v1=c(rep(NA_real_, 5), rnorm(15)), 
                  v2=c(letters[1:15], rep(NA_character_, 5)), 
@@ -240,3 +249,8 @@ mrdf.setup <- function (dataset, pattern="mr_", name=ifelse(is.null(selections),
     }
     return(refresh(dataset))
 }
+
+## Global teardown proof of concept
+# bye <- new.env()
+# reg.finalizer(bye, function (x) print("Cleaning..."), 
+#     onexit=TRUE)

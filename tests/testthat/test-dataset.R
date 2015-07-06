@@ -172,7 +172,7 @@ if (run.integration.tests) {
                 expect_error(delete(ds.sub), 
                     "Must confirm deleting dataset")
                 ## Then can delete
-                expect_false(is.error(delete(ds.sub, confirm=FALSE)))
+                expect_that(delete(ds.sub, confirm=FALSE), is_not_an_error())
             })
         })
     })

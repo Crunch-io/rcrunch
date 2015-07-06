@@ -15,15 +15,6 @@ getSummary <- function (x) {
     return(out)
 }
 
-getFrequencies <- function (x) {
-    url <- shojiURL(x, "views", "frequencies")
-    if (is.null(url)) {
-        halt("No frequencies available")
-    }
-    url <- crGET(url)
-    return(url)
-}
-
 makeCategoricalTable <- function (frequencies, add.na=FALSE) {
     freqs <- .na.omit.categories(frequencies)
     counts <- selectFrom("count", freqs)

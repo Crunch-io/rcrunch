@@ -48,7 +48,7 @@ if (run.integration.tests) {
                 status <- pollBatchStatus(out, batches(part1),
                     until="imported")
                 test_that("batch status can be polled while we wait", {
-                    expect_false(is.error(status))
+                    expect_that(status, is_not_an_error())
                     expect_identical(status, "imported")
                 })
             })
@@ -70,7 +70,7 @@ if (run.integration.tests) {
                 })
                 out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("append handles two identical Datasets", {
-                    expect_false(is.error(out))
+                    expect_that(out, is_not_an_error())
                     expect_true(is.dataset(out))
                     expect_identical(self(out), self(part1))
                     expect_identical(length(batches(out)), 3L)
@@ -116,7 +116,7 @@ if (run.integration.tests) {
                 })
                 out <- suppressMessages(try(appendDataset(file1, file2)))
                 test_that("append handles two identical Datasets from file", {
-                    expect_false(is.error(out))
+                    expect_that(out, is_not_an_error())
                     expect_true(is.dataset(out))
                     expect_identical(self(out), self(file1))
                     expect_identical(length(batches(out)), 3L)
@@ -144,7 +144,7 @@ if (run.integration.tests) {
                 # })
                 out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("append handles missing variables from each", {
-                    expect_false(is.error(out))
+                    expect_that(out, is_not_an_error())
                     expect_true(is.dataset(out))
                     expect_identical(length(refresh(p1.batches)), 3L)
                     expect_identical(ncol(out), 5L)
@@ -174,7 +174,7 @@ if (run.integration.tests) {
                 p1.batches <- batches(part1)
                 out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("append with missing variables the other way", {
-                    expect_false(is.error(out))
+                    expect_that(out, is_not_an_error())
                     expect_true(is.dataset(out))
                     expect_identical(length(refresh(p1.batches)), 3L)
                     expect_identical(ncol(out), 5L)
@@ -228,7 +228,7 @@ if (run.integration.tests) {
                 })
                 out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("Datetimes are correctly appended", {
-                    expect_false(is.error(out))
+                    expect_that(out, is_not_an_error())
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 3L)
                     expect_identical(nrow(out), 12L)

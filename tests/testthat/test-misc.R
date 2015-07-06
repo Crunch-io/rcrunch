@@ -1,11 +1,16 @@
 context("Various helper functions")
 
 test_that("is.error", {
-    expect_true(is.error(try(halt(""), silent=TRUE)))
+    e <- try(halt("error in a box"), silent=TRUE)
+    expect_true(is.error(e))
     expect_false(is.error("not an error"))
     expect_false(is.error(NULL))
     expect_false(is.error(NA))
+    expect_that("not an error", is_not_an_error())
+    expect_that(NULL, is_not_an_error())
+    expect_that(NA, is_not_an_error())
     expect_that("not an error", does_not_throw_error())
+    # expect_that(e, is_not_an_error()) ## Should fail: confirm fail message
 })
 
 test_that("update list", {
