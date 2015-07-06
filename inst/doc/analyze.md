@@ -115,7 +115,11 @@ prop.table(tab1)
 ```
 
 ```
-## Error in sum(x): invalid 'type' (list) of argument
+## educ
+##                No HS High school graduate         Some college               2-year               4-year 
+##                0.047                0.278                0.253                0.083                0.228 
+##            Post-grad 
+##                0.111
 ```
 
 For column proportions, specify margin=2 (by rows, margin=1):
@@ -126,7 +130,14 @@ prop.table(tab2, 2)
 ```
 
 ```
-## Error in margin.table(x, margin): 'x' is not an array
+##                       gender
+## educ                         Male     Female
+##   No HS                0.04925054 0.04502814
+##   High school graduate 0.26552463 0.28893058
+##   Some college         0.23554604 0.26829268
+##   2-year               0.06852248 0.09568480
+##   4-year               0.24625268 0.21200750
+##   Post-grad            0.13490364 0.09005629
 ```
 
 Let's make that more readable:
@@ -137,7 +148,14 @@ round(100*prop.table(tab2, 2))
 ```
 
 ```
-## Error in margin.table(x, margin): 'x' is not an array
+##                       gender
+## educ                   Male Female
+##   No HS                   5      5
+##   High school graduate   27     29
+##   Some college           24     27
+##   2-year                  7     10
+##   4-year                 25     21
+##   Post-grad              13      9
 ```
 
 ### Complex data types
@@ -243,7 +261,21 @@ round(100*prop.table(tab3mr, 2))
 ```
 
 ```
-## Error in margin.table(x, margin): 'x' is not an array
+##                         gender
+## imiss                    Male Female
+##   Abortion                 61     76
+##   Education                82     91
+##   Gay rights               44     50
+##   Health care              90     95
+##   Immigration              78     77
+##   Medicare                 83     87
+##   Social security          86     89
+##   Taxes                    87     89
+##   Terrorism                78     82
+##   The budget deficit       80     85
+##   The economy              95     95
+##   The environment          77     77
+##   The war in Afghanistan   64     78
 ```
 
 Finally, it's worth noting that we can extend the crosstabbing to higher dimensions, just by adding more terms on the right-hand side of the formula:

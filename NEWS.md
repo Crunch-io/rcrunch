@@ -2,7 +2,7 @@
 * More tools (not yet exported) for managing users
 
 ### crunch 1.3.2
-* Adapt to minor updates in append API
+* Adapt to minor updates in append API: new intermediate "appended" state for append operations.
 
 ### crunch 1.3.1
 * More methods for managing teams

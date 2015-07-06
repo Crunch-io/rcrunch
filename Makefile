@@ -26,6 +26,7 @@ build: doc
 
 check: build
 	unset INTEGRATION && R CMD CHECK --as-cran crunch_$(VERSION).tar.gz
+	cd crunch.Rcheck/crunch/doc/ && ls | grep .html | xargs -n 1 egrep "<pre><code>.. NULL"
 	rm -rf crunch.Rcheck/
 
 vdata:
@@ -37,9 +38,10 @@ man: doc
 md:
 	R CMD INSTALL --install-tests .
 	mkdir -p inst/doc
-	R -e 'setwd("vignettes"); lapply(dir(pattern="Rmd"), knitr::knit)'
+	R -e 'setwd("vignettes"); lapply(dir(pattern="Rmd"), knitr::knit, envir=globalenv())'
 	mv vignettes/*.md inst/doc/
 	cd inst/doc && ls | grep .md | xargs -n 1 sed -i '' 's/.html)/.md)/g'
+	cd inst/doc && ls | grep .md | xargs -n 1 egrep "^.. Error"
 
 build-vignettes: md
 	R -e 'setwd("inst/doc"); lapply(dir(pattern="md"), function(x) markdown::markdownToHTML(x, output=sub("\\\\.md", ".html", x)))'
