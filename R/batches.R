@@ -35,6 +35,15 @@ crunchTimeout <- function () {
 
 flattenConflicts <- function (x) {
     ## x is list, keys are variable URLs, objects are arrays of objects with keys "message" and "resolution" (in R-speak, s/array/list/, s/object/list/, s/keys/names/)
+    
+    ## Filter out variables that have empty conflicts, if any
+    x <- Filter(function (a) length(a$conflicts), x)
+    
+    if (length(x) == 0) {
+        ## Bail, but return the right shape
+        return(data.frame(message=c(), resolution=c(), name=c(), url=c()))
+    }
+    
     ## flatten object to data.frame with url, message, resolution
     dfconflicts <- function (clist) {
         data.frame(message=clist$message,
@@ -42,14 +51,10 @@ flattenConflicts <- function (x) {
             stringsAsFactors=FALSE)
     }
     
-    if (length(x) == 0) {
-        ## Bail, but return the right shape
-        return(data.frame(message=c(), resolution=c(), name=c(), url=c()))
-    }
     out <- mapply(function (i, d) {
         df <- do.call(rbind, lapply(d$conflicts, dfconflicts))
         df$url <- i
-        df$name <- d$metadata$name %||% d$metadata$references$name
+        df$name <- d$source_metadata$name %||% d$source_metadata$references$name %||% d$metadata$name %||% d$metadata$references$name
         return(df)
     }, i=names(x), d=x, SIMPLIFY=FALSE)
     return(do.call(rbind, out))

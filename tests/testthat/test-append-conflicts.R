@@ -1,17 +1,20 @@
 context("Displaying append conflicts")
 
 c1 <- list()
-c2 <- list(var1=list(
-    conflicts=list(list(
-        message="No good",
-        resolution="But I fixed it already"
-    )),
-    metadata=list(
-        references=list(
-            name="First"
+c2 <- list(
+    var1=list(
+        conflicts=list(list(
+            message="No good",
+            resolution="But I fixed it already"
+        )),
+        metadata=list(
+            references=list(
+                name="First"
+            )
         )
-    )
-))
+    ),
+    var4=list(conflicts=list())
+)
 c3 <- list(
     var2=list(
         conflicts=list(list(
@@ -24,6 +27,7 @@ c3 <- list(
             )
         )
     ),
+    var4=list(conflicts=list()),
     var1=list(
         conflicts=list(
             list(
