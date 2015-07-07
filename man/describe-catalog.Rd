@@ -27,6 +27,7 @@
 \alias{names,VersionCatalog-method}
 \alias{names<-,Subvariables-method}
 \alias{names<-,VariableCatalog-method}
+\alias{timestamps}
 \alias{timestamps,VersionCatalog-method}
 \alias{types}
 \alias{types,VariableCatalog-method}
