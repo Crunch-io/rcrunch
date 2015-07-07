@@ -26,8 +26,10 @@ build: doc
 
 check: build
 	unset INTEGRATION && R CMD CHECK --as-cran crunch_$(VERSION).tar.gz
-	cd crunch.Rcheck/crunch/doc/ && ls | grep .html | xargs -n 1 egrep "<pre><code>.. NULL"
+    # cd crunch.Rcheck/crunch/doc/ && ls | grep .html | xargs -n 1 egrep "<pre><code>.. NULL" >> ../../../vignette-errors.log
 	rm -rf crunch.Rcheck/
+    # cat vignette-errors.log
+    # rm vignette-errors.log
 
 vdata:
 	cd vignette-data && find *.R | xargs -n 1 R -f

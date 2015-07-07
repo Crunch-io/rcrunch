@@ -65,7 +65,7 @@ setMethod("[[", c("DatasetCatalog", "ANY"), function (x, i, ...) {
 ##' assign
 ##' @return Getters return the character object in the specified slot; setters
 ##' return \code{x} duly modified.
-##' @aliases describe-catalog aliases aliases<- descriptions descriptions<- types emails
+##' @aliases describe-catalog aliases aliases<- descriptions descriptions<- types emails timestamps
 ##' @seealso \code{\link{Subvariables}} \code{\link{Categories}} \code{\link[base]{names}} \code{vignette("variables", package="crunch")}
 ##' @name describe-catalog
 NULL

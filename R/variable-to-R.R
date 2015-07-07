@@ -27,9 +27,9 @@ parse_column <- list(
             ## return Date if resolution >= D
             return(as.Date(out))
         } else {
+            ## TODO: use from8601, defined below
             return(as.POSIXct(out))
         }
-        ## see http://stackoverflow.com/questions/12125886/parsing-iso8601-in-r to improve
     }
 )
 columnParser <- function (vartype) {
@@ -62,3 +62,14 @@ setMethod("as.vector", "CrunchVariable", function (x, mode) {
     columnParser(type(x))(getValues(x), x)
 })
 
+from8601 <- function (x) {
+    ## Crunch timestamps look like "2015-02-12T10:28:05.632000+00:00"
+    
+    ## TODO: pull out the ms, as.numeric them, and add to the parsed date
+    ## Important for the round trip of datetime data
+    
+    ## First, strip out ms and the : in the time zone
+    x <- sub("\\.[0-9]+", "", sub("^(.*[+-][0-9]{2}):([0-9]{2})$", "\\1\\2", x))
+    ## Then parse
+    return(strptime(x, "%Y-%m-%dT%H:%M:%S%z"))
+}
