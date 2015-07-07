@@ -1,3 +1,6 @@
+## crunch 1.4.0
+* Functions `saveVersion` and `restoreVersion` for dataset versioning
+
 ### crunch 1.3.3
 * More tools (not yet exported) for managing users
 
