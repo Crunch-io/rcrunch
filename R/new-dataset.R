@@ -196,23 +196,28 @@ newDatasetByCSV <- function (x, name=as.character(substitute(x)),
 ##' @return On success, a new dataset.
 ##' @export
 ##' @keywords internal
-createWithMetadataAndFile <- function (metadata, file, strict=TRUE, cleanup=TRUE) {
+createWithMetadataAndFile <- function (metadata, file, strict=NULL, cleanup=TRUE) {
     message("Uploading metadata")
     dataset_url <- crPOST(sessionURL("datasets"), body=toJSON(metadata))
     updateDatasetList()
     ds <- entity(datasetCatalog()[[dataset_url]])
     
     message("Uploading data")
-    batches_url <- ds@catalogs$batches
-    if (!strict) {
-        batches_url <- paste0(batches_url, "?strict=0")
+    source_url <- createSource(file)
+    if (!is.null(strict)) {
+        crPATCH(source_url, body=toJSON(list(settings=list(strict=strict))))
     }
-    batch <- try(crPOST(batches_url,
-        body=list(file=httr::upload_file(file))))
-    if (is.error(batch) && cleanup) {
-        delete(ds, confirm=FALSE)
-        rethrow(batch)
-    }
+
+    tryCatch(
+        addSourceToDataset(ds, source_url),
+        error = function(e) {
+            if (cleanup) {
+                delete(ds, confirm=FALSE)
+                rethrow(e)
+            }
+        }
+    )
+
     message("Done!")
     return(refresh(ds))
 }
