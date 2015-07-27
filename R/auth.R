@@ -89,7 +89,7 @@ crunchAuth <- function (email, password=NULL, ...) {
         }
     }
     
-    crPOST(file.path(getOption("crunch.api"), "public/login/"), 
+    crPOST(absoluteURL("public/login/", getOption("crunch.api")),
         body=toJSON(list(email=email, password=password, ...)), 
         status.handlers=list(`401`=function (response, user=email) {
             halt(paste("Unable to authenticate", user))

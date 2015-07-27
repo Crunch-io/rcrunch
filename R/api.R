@@ -117,7 +117,8 @@ handleAPIerror <- function (response) {
 crunchConfig <- function () {
     new.httr <- unlist(packageVersion("httr"))[1] == 1
     if (new.httr) {
-        return(c(config(verbose=isTRUE(getOption("crunch.debug"))),
+        return(c(config(verbose=isTRUE(getOption("crunch.debug")),
+                        postredir=3),
             add_headers(`user-agent`=crunchUserAgent())))
     } else {
         return(config(verbose=isTRUE(getOption("crunch.debug")),
