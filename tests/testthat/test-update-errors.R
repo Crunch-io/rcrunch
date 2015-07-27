@@ -11,12 +11,12 @@ if (run.integration.tests) {
             test_that("Trying to update with too many values fails", {
                 skip_on_jenkins("Silence the error emails")
                 expect_error(ds$v4[ds$v4 == "B"] <- rep(1, len + 5), 
-                    "Column length 15 does not match existing length 10")
+                    "length 15 does not match existing length 10")
             })
             test_that("Trying to update with too few values fails", {
                 skip_on_jenkins("Silence the error emails")
                 expect_error(ds$v4[ds$v4 == "B"] <- rep(1, len - 3), 
-                    "Column length 7 does not match existing length 10")
+                    "length 7 does not match existing length 10")
             })
             test_that("Trying to update with different filters fails", {
                 expect_error(ds$v4[ds$v4 == "B"] <- ds$v4[ds$v4 == "C"], 
