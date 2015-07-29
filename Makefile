@@ -11,12 +11,12 @@ test:
 deps:
 	R --slave -e 'install.packages(c("jsonlite", "curl", "httr", "codetools", "testthat", "devtools"), repo="http://cran.at.r-project.org", lib=ifelse(nchar(Sys.getenv("R_LIB")), Sys.getenv("R_LIB"), .libPaths()[1]))'
 
-install-ci: deps
+install-ci:
 	R CMD INSTALL --install-tests -l $(R_LIB) .
 	R -e '.libPaths(Sys.getenv("R_LIB")); devtools::install_github("nealrichardson/testthat")'
 
 test-ci:
-	R --slave -e '.libPaths(Sys.getenv("R_LIB")); options(crunch.debug=TRUE, test.user=Sys.getenv("R_TEST_USER"), test.pw=Sys.getenv("R_TEST_PW"), test.api=Sys.getenv("R_TEST_API")); library(testthat); setwd(file.path(.libPaths()[1], "crunch", "tests")); print(sessionInfo()); test_check("crunch", reporter="summary")'
+	R --slave -e '.libPaths(Sys.getenv("R_LIB")); options(test.user=Sys.getenv("R_TEST_USER"), test.pw=Sys.getenv("R_TEST_PW"), test.api=Sys.getenv("R_TEST_API")); library(testthat); setwd(file.path(.libPaths()[1], "crunch", "tests")); test_check("crunch", reporter="summary")'
 
 clean:
 	R --slave -e 'options(crunch.api=getOption("test.api"), crunch.email=getOption("test.user"), crunch.pw=getOption("test.pw")); library(crunch); login(); crunch:::.delete_all_my_datasets()'
