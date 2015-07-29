@@ -17,7 +17,7 @@ with(fake.HTTP, {
     })
     
     test_that("Version catalog print method", {
-        expect_identical(showVersionCatalog(versions(ds),
+        expect_identical(formatVersionCatalog(versions(ds),
                             from=strptime("2015-02-17", "%Y-%m-%d")),
             data.frame(Name=c("another version", "initial load"),
                 Timestamp=c("1 day ago", "4 days ago"),

@@ -70,16 +70,6 @@ selectFromWhere <- function (where=TRUE, xlist, key=NULL, ifnot=NA,
     }
 }
 
-doc <- function (x) {
-    ##' Collapse string vector for making docs
-    ##'
-    ##' Empty strings will be replaced with newlines. 
-    ##' @param x character
-    ##' @return character vector of length 1
-    x[nchar(x)==0] <- "\n"
-    return(paste0("\n ", paste(x, collapse=" "), "\n"))
-}
-
 serialPaste <- function (x, collapse="and") {
     ##' Make a prose list
     ##' Function to paste together a list of items, separated by commas (if more

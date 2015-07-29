@@ -16,7 +16,7 @@ joinDatasets <- function (x, y, by=intersect(names(x), names(y)), by.x=by,
         halt("Join key not found in first Dataset")
     }
     if (length(x_url) > 1) {
-        halt("Multiple variables matched ", sQuote(by.x), 
+        halt("Multiple variables matched ", dQuote(by.x), 
             " in ", namekey(x), " of first Dataset")
     }
     y_url <- findVariableURLs(y, by.y)
@@ -24,7 +24,7 @@ joinDatasets <- function (x, y, by=intersect(names(x), names(y)), by.x=by,
         halt("Join key not found in second Dataset")
     }
     if (length(y_url) > 1) {
-        halt("Multiple variables matched ", sQuote(by.y), 
+        halt("Multiple variables matched ", dQuote(by.y), 
             " in ", namekey(y), " of second Dataset")
     }
     ## Get join catalog url

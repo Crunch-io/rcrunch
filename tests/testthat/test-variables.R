@@ -68,6 +68,18 @@ with(fake.HTTP, {
     test_that("refresh", {
         expect_identical(ds$gender, refresh(ds$gender))
     })
+    
+    test_that("show methods", {
+        expect_identical(getShowContent(ds$gender), c(
+                "Gender (categorical)",
+                "Gender",
+                "",
+                "       Count",
+                "Female   534",
+                "Male     466"
+            ))
+        ## TODO: add other types
+    })
 })
 
 if (run.integration.tests) {

@@ -101,31 +101,6 @@ setMethod("id", "Category", function (x) as.integer(x[["id"]]))
 ##' @export
 setMethod("id", "list", function (x) as.integer(x[["id"]]))
 
-show.values <- function (x) TRUE ## make this actually do something? need to point at variable, not categories, or otherwise embed that attribute in the categories object.
-
-showCategory <- function (x) {
-    out <- name(x)
-    if (show.values(x)) out <- paste0("[ ", value(x), " ]  ", out)
-    return(out)
-}
-
-##' Show methods for Crunch objects
-##'
-##' @param object the object
-##' @return invisibly
-##' @seealso \code{\link[methods]{show}}
-##' @importFrom methods show
-##' @name show-crunch
-NULL
-
-##' @rdname show-crunch
-##' @export
-setMethod("show", "Category", function (object) {
-    out <- showCategory(object)
-    cat(out)
-    invisible(out)
-})
-
 ##' @rdname describe-category
 ##' @export
 setMethod("is.selected", "Category", function (x) isTRUE(x$selected))

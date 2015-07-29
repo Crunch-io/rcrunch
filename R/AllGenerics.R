@@ -33,10 +33,6 @@ setGeneric("timestamps", function (x) standardGeneric("timestamps"))
 
 setGeneric("type", function (x) standardGeneric("type"))
 setGeneric("type<-", function (x, value) standardGeneric("type<-"))
-setGeneric("preUpload", function (x) standardGeneric("preUpload"), signature="x")
-setGeneric("postUpload",
-    function (source.var, crunch.var) standardGeneric("postUpload"),
-    signature="source.var")
 
 setGeneric("categories", function (x) standardGeneric("categories"))
 setGeneric("categories<-", function (x, value) standardGeneric("categories<-"))
@@ -140,4 +136,6 @@ NULL
 ##' @export
 setGeneric("jsonprep", function (x, ...) standardGeneric("jsonprep"))
 
+setGeneric("getShowContent", 
+    function (x, ...) standardGeneric("getShowContent"))
 

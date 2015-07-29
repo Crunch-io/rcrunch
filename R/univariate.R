@@ -12,27 +12,27 @@ NULL
 ##' @rdname crunch-uni
 ##' @export
 setMethod("mean", "CrunchVariable", function (x, ...) {
-    halt(sQuote("mean"), " is not defined for ", class(x))
+    halt(dQuote("mean"), " is not defined for ", class(x))
 })
 ##' @rdname crunch-uni
 ##' @export
 setMethod("sd", "CrunchVariable", function (x, na.rm) {
-    halt(sQuote('sd'), " is not defined for ", class(x))
+    halt(dQuote('sd'), " is not defined for ", class(x))
 })
 ##' @rdname crunch-uni
 ##' @export
 setMethod("median", "CrunchVariable", function (x, na.rm) {
-    halt(sQuote('median'), " is not defined for ", class(x))
+    halt(dQuote('median'), " is not defined for ", class(x))
 })
 ##' @rdname crunch-uni
 ##' @export
 setMethod("min", "CrunchVariable", function (x, na.rm) {
-    halt(sQuote('min'), " is not defined for ", class(x))
+    halt(dQuote('min'), " is not defined for ", class(x))
 })
 ##' @rdname crunch-uni
 ##' @export
 setMethod("max", "CrunchVariable", function (x, na.rm) {
-    halt(sQuote('max'), " is not defined for ", class(x))
+    halt(dQuote('max'), " is not defined for ", class(x))
 })
 
 

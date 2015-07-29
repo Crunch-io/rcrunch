@@ -31,34 +31,6 @@ setMethod("descriptions", "VersionCatalog", function (x) getIndexSlot(x, "descri
 ##' @export
 setMethod("timestamps", "VersionCatalog", function (x) from8601(getIndexSlot(x, "last_update")))
 
-showVersionCatalog <- function (x, from=Sys.time()) {
-    ts <- timestamps(x)
-    if (!is.null(from)) {
-        ts <- vapply(seq_along(ts), function (a) {
-            ## Grab dates by sequence because POSIXt is a list internally
-            ## (i.e. lapply does the wrong thing)
-            this <- from - ts[a]
-            num <- as.integer(this)
-            un <- attr(this, "units")
-            if (num == 1) {
-                ## Make singular
-                un <- sub("s$", "", un)
-            }
-            out <- paste(num, un, "ago")
-            return(out)
-        }, character(1))
-    }
-    return(data.frame(Name=names(x), Timestamp=ts, stringsAsFactors=FALSE))
-}
-
-##' @rdname show-crunch
-##' @export
-setMethod("show", "VersionCatalog", function (object) {
-    out <- showVersionCatalog(object)
-    print(out)
-    invisible(out)
-})
-
 ##' Create a new saved version
 ##' 
 ##' @param dataset a \code{CrunchDataset}

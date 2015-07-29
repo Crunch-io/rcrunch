@@ -8,12 +8,12 @@ login()
 load("../vignettes/variables.RData")
 start <- ds
 
-show_imiss_b <- crunch:::showCrunchVariable(ds$imiss_b)
+show_imiss_b <- crunch:::showCrunchVariableTitle(ds$imiss_b)
 summary_imiss_b <- summary(ds$imiss_b)
 
 ds$imiss <- makeArray(pattern="^imiss_", dataset=ds, name="Issue importance")
 show_imiss_subvars <- crunch:::showSubvariables(subvariables(ds$imiss))
-show_imiss <- c(crunch:::showCrunchVariable(ds$imiss),
+show_imiss <- c(crunch:::showCrunchVariableTitle(ds$imiss),
     show_imiss_subvars)
 names_imiss_subvars <- names(subvariables(ds$imiss))
 
@@ -28,20 +28,20 @@ sorting <- order(names(subvariables(ds$imiss)))
 subvariables(ds$imiss) <- subvariables(ds$imiss)[sorting]
 show_imiss_subvars3 <- crunch:::showSubvariables(subvariables(ds$imiss))
 
-show_boap_4 <- crunch:::showCrunchVariable(ds$boap_4)
+show_boap_4 <- crunch:::showCrunchVariableTitle(ds$boap_4)
 summary_boap_4 <- summary(ds$boap_4)
 
 ds$boap <- makeMR(pattern="^boap_[0-9]+", dataset=ds, name="Approval of Obama on issues", selections=c("Strongly approve", "Somewhat approve"))
 show_boap_subvars <- crunch:::showSubvariables(subvariables(ds$boap))
-show_boap <- c(crunch:::showCrunchVariable(ds$boap),
+show_boap <- c(crunch:::showCrunchVariableTitle(ds$boap),
     show_boap_subvars)
 
 ds$boap <- undichotomize(ds$boap)
-show_boap2 <- c(crunch:::showCrunchVariable(ds$boap),
+show_boap2 <- c(crunch:::showCrunchVariableTitle(ds$boap),
     show_boap_subvars)
 
 ds$boap <- dichotomize(ds$boap, "Strongly approve")
-show_boap3 <- c(crunch:::showCrunchVariable(ds$boap),
+show_boap3 <- c(crunch:::showCrunchVariableTitle(ds$boap),
     show_boap_subvars)
 
 save.image(file="../vignettes/array-variables.RData")

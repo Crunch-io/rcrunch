@@ -44,7 +44,7 @@ addBatchToDataset <- function (dataset1, dataset2) {
     if (!is.dataset(dataset2)) {
         ## TODO: compose batch directly, not as dataset?
         temp.ds.name <- paste("Appending to", name(dataset1), now())
-        message("Creating ", sQuote(temp.ds.name), " as temporary dataset")
+        message("Creating ", dQuote(temp.ds.name), " as temporary dataset")
         dataset2 <- newDataset(dataset2, name=temp.ds.name)
     }
     

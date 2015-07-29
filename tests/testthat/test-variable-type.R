@@ -2,7 +2,7 @@ context("Variable types")
 
 test_that("Validation on type setting", {
     expect_error(castVariable(, "foo"), 
-        paste(sQuote("foo"), 
+        paste(dQuote("foo"), 
         "is not a Crunch variable type that can be assigned."))
 })
 

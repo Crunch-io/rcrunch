@@ -15,13 +15,13 @@ cacheOn()
 fromJSON <- jsonlite::fromJSON
 
 ## .onAttach stuff, for testthat to work right
-options(crunch.api=getOption("test.api"), 
+options(crunch.api="http://local.crunch.io:8080/api/",#getOption("test.api"), 
         warn=1,
         crunch.debug=FALSE,
         digits.secs=3,
         crunch.timeout=15,
-        crunch.email=getOption("test.user"),
-        crunch.pw=getOption("test.pw"))
+        crunch.email="captain@crunch.io",#getOption("test.user"),
+        crunch.pw="asdfasdf")#getOption("test.pw"))
 set_config(crunchConfig())
 
 ## Test serialize and deserialize
