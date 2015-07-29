@@ -4,13 +4,13 @@
     "description": "Catalog of users that belong to this team",
     "index": {
         "/api/users/user1.json": {
-            "display_name": "Fake User",
+            "name": "Fake User",
             "permissions": {
                 "manage_members": true
             }
         },
         "/api/users/user2.json": {
-            "display_name": "Roger User",
+            "name": "Roger User",
             "permissions": {
                 "manage_members": false
             }

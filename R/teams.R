@@ -102,7 +102,7 @@ setMethod("members", "CrunchTeam", function (x) {
 
 ##' @rdname describe-catalog
 ##' @export
-setMethod("names", "MemberCatalog", function (x) getIndexSlot(x, "display_name"))
+setMethod("names", "MemberCatalog", function (x) getIndexSlot(x, "name"))
 
 
 .backstopUpdate <- function (x, i, j, value) {

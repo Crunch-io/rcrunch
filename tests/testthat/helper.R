@@ -39,7 +39,10 @@ with.SUTD <- function (data, expr, ...) {
     env <- parent.frame()
     on.exit(data$teardown())
     assign(data$obj.name, data$setup(), envir=env) ## rm this after running?
-    try(eval(substitute(expr), envir=parent.frame()))
+    tryCatch(eval(substitute(expr), envir=parent.frame()),
+        error=function (e) {
+            expect_that(stop(e$message), does_not_throw_error())
+        })
 }
 
 ## note that this works because testthat evals within package namespace
@@ -51,9 +54,7 @@ addFakeHTTPVerbs <- function () {
         url <- unlist(strsplit(url, "?", fixed=TRUE))[1] ## remove query params
         url <- sub("\\/$", ".json", url)
         url <- sub("^\\/", "", url) ## relative to cwd
-        # print(url)
         out <- handleShoji(fromJSON(url, simplifyVector=FALSE))
-        # print(out)
         return(out)
     }
     http_verbs$PUT <- function (url, body, ...) {
@@ -167,8 +168,7 @@ purge.user <- function () {
     len <- length(users_to_purge)
     if (len) {
         u.url <- users_to_purge[len]
-        deurl <- try(index(getAccountUserCatalog())[[u.url]]$membership_url)
-        try(crDELETE(deurl))
+        try(crDELETE(u.url))
         users_to_purge <<- users_to_purge[-len]
     }
 }
@@ -205,11 +205,26 @@ does_not_throw_error <- function () {
     function (expr) {
         res <- try(force(expr), TRUE)
         error <- inherits(res, "try-error")
-        expectation(!error, "threw an error", "no error thrown")
+        failure.msg <- "threw an error"
+        if (error) {
+            ## Append the error message
+            failure.msg <- paste0(failure.msg, ": ", 
+                attr(res, "condition")$message)
+        }
+        expectation(!error, failure.msg, "no error thrown")
     }
 }
 
 is_not_an_error <- function () {
+    ## Like does_not_throw_error, but for an error already caught
+    function (expr) {
+        expectation(!is.error(expr), 
+            paste("is an error:", attr(expr, "condition")$message), 
+            "no error thrown")
+    }
+}
+
+failed <- function () {
     ## Like does_not_throw_error, but for an error already caught
     function (expr) {
         expectation(!is.error(expr), 

@@ -42,10 +42,7 @@ setMethod("[", c("CrunchDataset", "missing", "ANY"), function (x, i, j, ..., dro
 setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     out <- variables(x)[[i]]
     if (!is.null(out)) {
-        out <- try(entity(out), silent=TRUE)
-        if (is.error(out)) {
-            halt(attr(out, "condition")$message)
-        }
+        out <- entity(out)
     }
     return(out)
 })
@@ -65,10 +62,7 @@ setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE
             ## If so, return it with a warning
             out <- hidden(x)[[n]]
             if (!is.null(out)) {
-                out <- try(entity(out), silent=TRUE)
-                if (is.error(out)) {
-                    halt(attr(out, "condition")$message)
-                }
+                out <- entity(out)
             }
             warning("Variable ", i, " is hidden", call.=FALSE)
             return(out)

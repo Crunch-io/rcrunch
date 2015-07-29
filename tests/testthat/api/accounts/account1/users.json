@@ -5,9 +5,7 @@
     "index": {
         "/api/users/user1.json": {
             "id_method": "pwhash",
-            "first_name": "Fake",
-            "last_name": "User",
-            "full_name": "Fake User",
+            "name": "Fake User",
             "dataset_permissions": {
                 "edit": true,
                 "change_permissions": true,
@@ -24,9 +22,7 @@
         },
         "/api/users/user3.json": {
             "id_method": "pwhash",
-            "first_name": "Bill",
-            "last_name": "User",
-            "full_name": "Bill User",
+            "name": "Bill User",
             "dataset_permissions": {
                 "edit": false,
                 "change_permissions": false,
@@ -43,9 +39,7 @@
         },
         "/api/users/user2.json": {
             "id_method": "pwhash",
-            "first_name": "Roger",
-            "last_name": "User",
-            "full_name": "Roger User",
+            "name": "Roger User",
             "dataset_permissions": {
                 "edit": true,
                 "change_permissions": true,

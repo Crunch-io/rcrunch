@@ -30,7 +30,7 @@ if (run.integration.tests) {
         ucat <- getAccountUserCatalog()
         my.name <- names(ucat)[urls(ucat) == userURL()]
         my.email <- emails(ucat)[urls(ucat) == userURL()]
-        
+    
         teams <- try(getTeams())
         nteams.0 <- length(teams)
         test_that("Can get team catalog", {

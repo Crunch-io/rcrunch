@@ -20,7 +20,7 @@ getAccountUserCatalog <- function (x=rootURL("users", getAccount())) {
 
 ##' @rdname describe-catalog
 ##' @export
-setMethod("names", "UserCatalog", function (x) getIndexSlot(x, "full_name"))
+setMethod("names", "UserCatalog", function (x) getIndexSlot(x, "name"))
 
 ##' @rdname describe-catalog
 ##' @export

@@ -47,7 +47,6 @@ cubeToArray <- function (x, measure=1) {
 pruneCubeArray <- function (x, cube) {
     keep.these <- evalUseNA(x, cube@dims, cube@useNA)
     return(subsetCubeArray(x, keep.these))
-    return(x)
 }
 
 subsetCubeArray <- function (array, bools, drop=FALSE) {

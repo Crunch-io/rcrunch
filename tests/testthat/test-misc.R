@@ -47,14 +47,17 @@ test_that("SUTD", {
     })
     expect_true(a)
     
-    a <- NULL
-    expect_true(is.null(a))
-    with(tester, {
-        expect_false(is.null(a))
-        expect_false(a)
-        halt("Testing error handling, please ignore")
-    })
-    expect_true(a)
+    ## Test that even if the code in the with block throws an error, (1) the
+    ## teardown is run, and (2) it doesn't fail silently but turns into a
+    ## failed test expectation.
+    # a <- NULL
+    # expect_true(is.null(a))
+    # with(tester, {
+    #     expect_false(is.null(a))
+    #     expect_false(a)
+    #     halt("Testing error handling, please ignore")
+    # })
+    # expect_true(a)
 })
 
 test_that("rethrow a caught error", {

@@ -126,10 +126,6 @@ weight <- function (x) {
     return(x)
 }
 
-is.variable.tuple <- function (x) {
-    is.list(x) && all(c("name", "alias", "type", "id") %in% names(x))
-}
-
 setMethod("tuple", "CrunchDataset", function (x) x@tuple)
 setMethod("tuple<-", "CrunchDataset", function (x, value) {
     x@tuple <- value

@@ -47,8 +47,7 @@ if (run.integration.tests) {
         
         test_that("User can be deleted", {
             skip_on_jenkins("Jenkins user needs more permissions")
-            deurl <- try(index(getAccountUserCatalog())[[u.url]]$membership_url)
-            try(crDELETE(deurl))
+            try(crDELETE(u.url))
             usercat <- refresh(getAccountUserCatalog())
             expect_false(u.url %in% urls(usercat))
             expect_false(u.email %in% emails(usercat))
