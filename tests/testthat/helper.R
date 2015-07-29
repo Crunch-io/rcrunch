@@ -17,12 +17,14 @@ fromJSON <- jsonlite::fromJSON
 ## .onAttach stuff, for testthat to work right
 options(crunch.api="http://local.crunch.io:8080/api/",#getOption("test.api"), 
         warn=1,
-        crunch.debug=FALSE,
+        crunch.debug=TRUE,
         digits.secs=3,
         crunch.timeout=15,
         crunch.email="captain@crunch.io",#getOption("test.user"),
         crunch.pw="asdfasdf")#getOption("test.pw"))
 set_config(crunchConfig())
+
+print(sessionInfo())
 
 ## Test serialize and deserialize
 cereal <- function (x) fromJSON(toJSON(x), simplifyVector=FALSE)
