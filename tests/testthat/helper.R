@@ -224,15 +224,6 @@ is_not_an_error <- function () {
     }
 }
 
-failed <- function () {
-    ## Like does_not_throw_error, but for an error already caught
-    function (expr) {
-        expectation(!is.error(expr), 
-            paste("is an error:", attr(expr, "condition")$message), 
-            "no error thrown")
-    }
-}
-
 ## Data frames to make datasets with
 df <- data.frame(v1=c(rep(NA_real_, 5), rnorm(15)), 
                  v2=c(letters[1:15], rep(NA_character_, 5)), 
