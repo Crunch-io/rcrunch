@@ -63,6 +63,7 @@ To run integration tests, you will need to specify a test user, password, and AP
             test.pw="t0pSecretP@ssw0rD",
             test.api="http://local.crunch.io:8080/api/")
 
+or, if you prefer, you can set the environment variables `R_TEST_USER`, `R_TEST_PW`, and `R_TEST_API`.
 
 ### Updating documentation
 

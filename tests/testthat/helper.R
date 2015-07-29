@@ -15,16 +15,14 @@ cacheOn()
 fromJSON <- jsonlite::fromJSON
 
 ## .onAttach stuff, for testthat to work right
-options(crunch.api=getOption("test.api"), 
+options(crunch.api=getOption("test.api") %||% Sys.getenv("R_TEST_API"), 
         warn=1,
-        crunch.debug=TRUE,
+        crunch.debug=FALSE,
         digits.secs=3,
         crunch.timeout=15,
-        crunch.email=getOption("test.user"),
-        crunch.pw=getOption("test.pw"))
+        crunch.email=getOption("test.user") %||% Sys.getenv("R_TEST_USER"),
+        crunch.pw=getOption("test.pw") %||% Sys.getenv("R_TEST_PW"))
 set_config(crunchConfig())
-
-print(sessionInfo())
 
 ## Test serialize and deserialize
 cereal <- function (x) fromJSON(toJSON(x), simplifyVector=FALSE)

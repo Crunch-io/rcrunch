@@ -11,12 +11,12 @@ test:
 deps:
 	R --slave -e 'install.packages(c("jsonlite", "curl", "httr", "codetools", "testthat", "devtools"), repo="http://cran.at.r-project.org", lib=ifelse(nchar(Sys.getenv("R_LIB")), Sys.getenv("R_LIB"), .libPaths()[1]))'
 
-install-ci:
+install-ci: deps
 	R CMD INSTALL --install-tests -l $(R_LIB) .
 	R -e '.libPaths(Sys.getenv("R_LIB")); devtools::install_github("nealrichardson/testthat")'
 
 test-ci:
-	R --slave -e '.libPaths(Sys.getenv("R_LIB")); options(test.user=Sys.getenv("R_TEST_USER"), test.pw=Sys.getenv("R_TEST_PW"), test.api=Sys.getenv("R_TEST_API")); library(testthat); sink(file="rcrunch.tap"); setwd(file.path(.libPaths()[1], "crunch", "tests")); test_check("crunch", reporter="tap"); sink()'
+	R --slave -e '.libPaths(Sys.getenv("R_LIB")); library(testthat); sink(file="rcrunch.tap"); setwd(file.path(.libPaths()[1], "crunch", "tests")); test_check("crunch", reporter="tap"); sink()'
 
 clean:
 	R --slave -e 'options(crunch.api=getOption("test.api"), crunch.email=getOption("test.user"), crunch.pw=getOption("test.pw")); library(crunch); login(); crunch:::.delete_all_my_datasets()'
@@ -49,3 +49,6 @@ build-vignettes: md
 	R -e 'setwd("inst/doc"); lapply(dir(pattern="md"), function(x) markdown::markdownToHTML(x, output=sub("\\\\.md", ".html", x)))'
 	cd inst/doc && ls | grep .html | xargs -n 1 sed -i '' 's/.md)/.html)/g'
 	open inst/doc/getting-started.html
+
+covr:
+	R --slave -e 'Sys.setenv(R_TEST_USER=getOption("test.user"), R_TEST_PW=getOption("test.pw"), R_TEST_API=getOption("test.api")); library(covr); cv <- package_coverage(); df <- covr:::to_shiny_data(cv)[["file_stats"]]; cat("Line coverage:", round(100*sum(df[["Covered"]])/sum(df[["Relevant"]]), 1), "percent\n"); shine(cv)'
