@@ -115,27 +115,17 @@ handleAPIerror <- function (response) {
 
 ##' @importFrom httr config add_headers
 crunchConfig <- function () {
-    new.httr <- unlist(packageVersion("httr"))[1] == 1
-    if (new.httr) {
-        return(c(config(verbose=isTRUE(getOption("crunch.debug")),
-                        postredir=3),
-            add_headers(`user-agent`=crunchUserAgent())))
-    } else {
-        return(config(verbose=isTRUE(getOption("crunch.debug")),
-            sslversion="SSLVERSION_TLSv1_2",
-            encoding="gzip", ## In httr default config, but to be sure
-            httpheader=c(`user-agent`=crunchUserAgent(),
-                         `accept-encoding`="gzip")))
-    }
+    return(c(config(verbose=isTRUE(getOption("crunch.debug")), postredir=3),
+        add_headers(`user-agent`=crunchUserAgent())))
 }
 
 ##' @importFrom utils packageVersion
-##' @importFrom RCurl curlVersion
+##' @importFrom curl curl_version
 crunchUserAgent <- function (x) {
     ## Cf. httr:::default_ua
     versions <- c(
-        curl = RCurl::curlVersion()$version,
-        Rcurl = as.character(packageVersion("RCurl")),
+        libcurl = curl_version()$version,
+        curl = as.character(packageVersion("curl")),
         httr = as.character(packageVersion("httr")),
         rcrunch = as.character(packageVersion("crunch"))
     )
