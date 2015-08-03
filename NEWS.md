@@ -1,4 +1,5 @@
 ### crunch 1.4.1
+* Import functions from methods, stats, and utils, per change in CRAN policy.
 
 ## crunch 1.4.0
 * Functions `saveVersion` and `restoreVersion` for dataset versioning
