@@ -1,3 +1,5 @@
+### crunch 1.4.2
+
 ### crunch 1.4.1
 * Import functions from methods, stats, and utils, per change in CRAN policy.
 
