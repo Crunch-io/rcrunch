@@ -13,6 +13,7 @@
 ##' @param useNA whether to include missing values in tabular results. See
 ##' \code{\link[base]{table}}.
 ##' @return an object of class \code{CrunchCube}
+##' @importFrom stats as.formula terms
 ##' @export
 crtabs <- function (formula, data, weight=crunch::weight(data), 
                      useNA=c("no", "ifany", "always")) {

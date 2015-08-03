@@ -44,6 +44,7 @@ DatasetTuple <- setClass("DatasetTuple", contains="IndexTuple")
 ##' be persisted on the server? Default is \code{FALSE}
 ##' @slot tuple An object of class VariableTuple. These contain attributes, such
 ##' as name and description, that are found in the index of the \code{\link{VariableCatalog}}
+##' @importFrom methods as callNextMethod new slot slot<- slotNames validObject
 ##' @rdname CrunchVariable
 CrunchVariable <- setClass("CrunchVariable", contains="ShojiObject",
     representation= representation(

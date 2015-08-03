@@ -150,6 +150,7 @@ addSourceToDataset <- function (dataset, source_url, ...) {
 ##' @param ... additional arguments passed to \code{ \link{createDataset}}
 ##' @return If successful, an object of class CrunchDataset.
 ##' @seealso \code{\link{newDataset}} \code{\link{newDatasetByColumn}}
+##' @importFrom utils write.csv
 ##' @export
 newDatasetByCSV <- function (x, name=as.character(substitute(x)),
                                 useAlias=default.useAlias(), ...) {
