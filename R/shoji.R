@@ -84,11 +84,16 @@ setCrunchSlot <- function (x, i, value) {
     ##' @param value whatever the new value of that slot should be
     ##' @return x modified accordingly. If \code{x} isn't read-only, it will also
     ##' post the edit to the Crunch server.
-    slot(x, "body")[[i]] <- value
-    if (!is.readonly(x)) {
-        body <- structure(list(value), .Names=i)
-        payload <- toJSON(body)
-        crPATCH(self(x), body=payload)
+    
+    ## Check if we have actual changes to send. Wrap both sides in I()
+    ## in case "value" is already wrapped
+    if (!identical(I(slot(x, "body")[[i]]), I(value))) {
+        slot(x, "body")[[i]] <- value
+        if (!is.readonly(x)) {
+            body <- structure(list(value), .Names=i)
+            payload <- toJSON(body)
+            crPATCH(self(x), body=payload)
+        }
     }
     return(x)
 }

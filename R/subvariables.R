@@ -50,7 +50,7 @@ setMethod("subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
         if (!setequal(old, new)) {
             halt("Can only reorder, not change, subvariables")
         }
-        return(setCrunchSlot(x, "subvariables", new))
+        return(setCrunchSlot(x, "subvariables", I(new)))
     })
 
 ##' @rdname describe-catalog

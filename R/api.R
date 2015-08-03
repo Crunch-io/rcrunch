@@ -12,7 +12,10 @@
 ##' @keywords internal
 crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, config=list(), status.handlers=list(), ...) {
     url ## force lazy eval of url before inserting in try() below
-    if (isTRUE(getOption("crunch.debug"))) message(paste(http.verb, url))
+    if (isTRUE(getOption("crunch.debug"))) {
+        message(paste(http.verb, url))
+        try(cat("\n", list(...)$body, "\n"), silent=TRUE)
+    }
     FUN <- get(paste0("c", http.verb), envir=asNamespace("crunch"))
     # FUN <- get(http.verb, envir=asNamespace("httr"))
     x <- try(FUN(url, ..., config=config), silent=TRUE)
