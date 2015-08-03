@@ -1,5 +1,9 @@
 ## crunch 1.4.0
 * Functions `saveVersion` and `restoreVersion` for dataset versioning
+* Update requirement to `httr` 1.0; remove dependency on `RCurl` in favor of `curl`
+* Minor API updates
+* Fix for some issues authenticating on Windows
+* Fix bug in editing array variables with a single subvariable
 
 ### crunch 1.3.3
 * More tools (not yet exported) for managing users
