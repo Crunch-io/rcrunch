@@ -1,3 +1,5 @@
+### crunch 1.4.1
+
 ## crunch 1.4.0
 * Functions `saveVersion` and `restoreVersion` for dataset versioning
 * Update requirement to `httr` 1.0; remove dependency on `RCurl` in favor of `curl`
