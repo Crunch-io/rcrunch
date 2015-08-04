@@ -4,23 +4,6 @@ test_that("On package load, the session_store exists", {
     expect_true(is.environment(session_store))
 })
 
-test_that("setToken saves a cookie in the session_store", {
-    saveToken(list(token="fake.user@crunch.test"))
-    expect_true(exists("cookie", envir=session_store))
-    expect_true(is.list(session_store$cookie))
-})
-
-test_that("getToken can retrieve a token", {
-    test.token <- getToken()
-    expect_true(class(test.token) %in% c("config", "request"))
-})
-
-test_that("session info can be deleted out deletes cookies", {
-    expect_true("cookie" %in% ls(envir=session_store))
-    deleteSessionInfo()
-    expect_false("cookie" %in% ls(envir=session_store))
-})
-
 test_that("login checks for email and password before POSTing", {
     expect_error(crunchAuth(email=NULL), 
         "Must supply the email address associated with your crunch.io account")
