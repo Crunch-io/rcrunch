@@ -1,4 +1,6 @@
 ### crunch 1.4.2
+* Support for auto-login in Jupyter notebooks
+* One more CRANdated import
 
 ### crunch 1.4.1
 * Import functions from methods, stats, and utils, per change in CRAN policy.

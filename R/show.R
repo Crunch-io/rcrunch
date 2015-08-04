@@ -54,6 +54,7 @@ getNameAndType <- function (x) {
     return(c(varname, vartype))
 }
 
+##' @importFrom utils capture.output
 showCrunchVariable <- function (x) {
     out <- showCrunchVariableTitle(x)
     try(out <- c(out, "", capture.output(print(summary(x)))), silent=TRUE)

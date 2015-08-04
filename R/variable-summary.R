@@ -100,9 +100,7 @@ summary.CategoricalVariable <- function (object, ...) {
 
 ##' @export
 print.CategoricalVariableSummary <- function (x, ...) {
-    # class(x) <- class(x)[-1] ## uh, call next method
-    # attr(x, "varname") <- NULL
-    print(data.frame(Count=x))
+    print(data.frame(Count=as.numeric(x), row.names=names(x)))
 }
 
 ##' @rdname crunch-summary
