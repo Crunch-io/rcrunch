@@ -87,7 +87,9 @@ handleAPIresponse <- function (response, special.statuses=list()) {
             return(handleShoji(content(response)))            
         }
     } else {
-        if (code == 410) {
+        if (code == 401) {
+            halt("You are not authenticated. Please `login()` and try again.")
+        } else if (code == 410) {
             halt("The API resource at ",
                 response$url, 
                 " has moved permanently. Please upgrade crunch to the ",
@@ -107,8 +109,6 @@ handleAPIerror <- function (response) {
         if (attr(response, "condition")$message == "Empty reply from server"){
             halt("Server did not respond. Please check your local ",
                 "configuration and try again later.")
-        } else if (crunchIsDown(response)) {
-            halt("Cannot connect to Crunch API")
         } else {
             rethrow(response)
         }
@@ -169,13 +169,4 @@ rootURL <- function (x, obj=session_store$root) {
     } else {
         return(NULL)
     }
-}
-
-crunchAPIcanBeReached <- function () {
-    testing <- try(getAPIroot(), silent=TRUE)
-    return(!crunchIsDown(testing))
-}
-
-crunchIsDown <- function (response) {
-    is.error(response) && "COULDNT_CONNECT" %in% class(attr(response, "condition"))
 }

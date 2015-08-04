@@ -1,3 +1,5 @@
+### crunch 1.4.3
+
 ### crunch 1.4.2
 * Support for auto-login in Jupyter notebooks
 * One more CRANdated import
