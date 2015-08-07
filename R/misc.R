@@ -92,7 +92,13 @@ absoluteURL <- function (urls, base) {
             base.url <- parse_url(base)
             urls <- vapply(urls, function (x, b) {
                 b$path <- joinPath(b$path, x)
-                if (is.null(b$scheme)) return(b$path) ## If file path and not URL
+                if (is.null(b$scheme)) {
+                    ## If file path and not URL, as in for tests, 
+                    ## let's return it relative
+                    return(b$path)
+                }
+                ## Pop off any leading "/" because build_url will add it
+                b$path <- sub("^/", "", b$path)
                 b$query <- NULL ## Catalog query params aren't valid for entities
                 return(build_url(b))
             }, character(1), b=base.url, USE.NAMES=FALSE)

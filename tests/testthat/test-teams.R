@@ -85,7 +85,7 @@ if (run.integration.tests) {
             name.of.team2 <- now()
             expect_false(name.of.team2 %in% names(t2))
             with(test.user(), {
-                ucat <- getAccountUserCatalog()
+                ucat <- getUserCatalog()
                 u.email <- emails(ucat)[urls(ucat) == u]
                 u.name <- names(ucat)[urls(ucat) == u]
                 t2[[name.of.team2]] <- list(members=u.email)
@@ -104,7 +104,7 @@ if (run.integration.tests) {
             name.of.team3 <- now()
             expect_false(name.of.team3 %in% names(t2))
             with(test.user(), {
-                ucat <- getAccountUserCatalog()
+                ucat <- getUserCatalog()
                 u.email <- emails(ucat)[urls(ucat) == u]
                 u.name <- names(ucat)[urls(ucat) == u]
                 t2[[name.of.team3]] <- list()
@@ -124,7 +124,7 @@ if (run.integration.tests) {
             name.of.team4 <- now()
             expect_false(name.of.team4 %in% names(t2))
             with(test.user(), {
-                ucat <- getAccountUserCatalog()
+                ucat <- getUserCatalog()
                 u.email <- emails(ucat)[urls(ucat) == u]
                 u.name <- names(ucat)[urls(ucat) == u]
                 t2[[name.of.team4]] <- list()

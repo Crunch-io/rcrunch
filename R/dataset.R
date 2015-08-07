@@ -66,6 +66,9 @@ setMethod("description", "CrunchDataset", function (x) tuple(x)$description)
 ##' @rdname describe
 ##' @export
 setMethod("description<-", "CrunchDataset", setDatasetDescription)
+##' @rdname describe
+##' @export
+setMethod("id", "CrunchDataset", function (x) tuple(x)$id)
 
 as.dataset <- function (x, useAlias=default.useAlias(), tuple=DatasetTuple()) {
     out <- CrunchDataset(x)
@@ -237,4 +240,10 @@ setMethod("allVariables<-", c("CrunchDataset", "VariableCatalog"),
     setDatasetVariables)
     
 setMethod("hidden", "CrunchDataset", function (x) hidden(allVariables(x)))
-    
+
+
+webURL <- function (x) {
+    ##' URL to view this dataset in the web app
+    stopifnot(is.dataset(x))
+    return(paste0(absoluteURL("/", getOption("crunch.api")), "dataset/", id(x)))
+}

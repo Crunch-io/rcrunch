@@ -4,6 +4,10 @@ getUser <- function (x=userURL()) {
     ShojiObject(crGET(x))
 }
 
+getUserCatalog <- function (x=sessionURL("users")) {
+    UserCatalog(crGET(x))
+}
+
 getAccount <- function (x=rootURL("account", getUser())) {
     ShojiObject(crGET(x))
 }

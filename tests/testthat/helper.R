@@ -70,7 +70,6 @@ addFakeHTTPVerbs <- function () {
         stop("DELETE ", url, call.=FALSE)
     }
     session_store$root <- getAPIroot("/api/root.json")
-    session_store$cookie <- 12345 ## so it thinks we're authenticated
     try(updateDatasetList())
 }
 
@@ -153,6 +152,15 @@ test.dataset <- function (df=NULL, obj.name="ds", ...) {
         function () new.dataset.with.setup(df, ...),
         purge.dataset,
         obj.name
+    ))
+}
+
+test.option <- function (...) {
+    new <- list(...)
+    old <- sapply(names(new), getOption, simplify=FALSE)
+    return(setup.and.teardown(
+        function () do.call(options, new),
+        function () do.call(options, old)
     ))
 }
 

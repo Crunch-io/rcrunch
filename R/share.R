@@ -47,18 +47,24 @@ share <- function (dataset, email, edit=FALSE, notify=TRUE) {
     if (length(edit) != length(email)) {
         halt("Must supply `edit` permissions of equal length as the number of `emails` supplied")
     }
-    if (sum(edit) > 1) {
-        halt("Can only set one user as editor")
-    } else if (!any(edit) && emails(perms)[is.editor(perms)] %in% email) {
+    if (!any(edit) && all(emails(perms)[is.editor(perms)] %in% email)) {
         halt("Cannot remove editor from the dataset without specifying another")
     }
     payload <- lapply(edit,
         function (e) list(dataset_permissions=list(edit=e, view=TRUE)))
     names(payload) <- email
     payload$send_notification <- notify
+    if (notify) {
+        payload$url_base <- passwordSetURLTemplate()
+        payload$dataset_url <- webURL(dataset)
+    }
     payload <- toJSON(payload)
     crPATCH(self(perms), body=payload)
     invisible(dataset)
+}
+
+passwordSetURLTemplate <- function () {
+    absoluteURL("/password/change/${token}/", getOption("crunch.api"))
 }
 
 ## TODO: test and release this

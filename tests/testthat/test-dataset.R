@@ -7,6 +7,19 @@ with(fake.HTTP, {
         expect_true(is.dataset(test.ds))
     })
     
+    test_that("Dataset attributes", {
+        expect_identical(name(test.ds), "test ds")
+        expect_identical(description(test.ds), "")
+        expect_identical(id(test.ds), "511a7c49778030653aab5963")
+    })
+    
+    test_that("Dataset webURL", {
+        with(test.option(crunch.api="https://fake.crunch.io/api/v2/"), {
+            expect_identical(webURL(test.ds),
+                "https://fake.crunch.io/dataset/511a7c49778030653aab5963")
+        })
+    })
+    
     test_that("Dataset VariableCatalog index is sorted", {
         expect_identical(urls(allVariables(test.ds)), 
             c("/api/datasets/dataset1/variables/birthyr.json",

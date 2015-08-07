@@ -139,7 +139,6 @@ urlizeUserEmails <- function (x) {
 setMethod("[[<-", c("MemberCatalog", "character", "missing", "NULL"),
     function (x, i, j, value) {
         ## Remove the specified user from the catalog
-        i <- urlizeUserEmails(i)
         payload <- sapply(i, function (z) NULL, simplify=FALSE)
         crPATCH(self(x), body=toJSON(payload))
         return(refresh(x))
@@ -157,8 +156,6 @@ setMethod("members<-", c("CrunchTeam", "MemberCatalog"), function (x, value) {
 ##' @rdname teams
 ##' @export
 setMethod("members<-", c("CrunchTeam", "character"), function (x, value) {
-    ## value can be URL or email
-    value <- urlizeUserEmails(value)
     payload <- sapply(value, 
         function (z) structure(list(), .Names=character(0)),
         simplify=FALSE)

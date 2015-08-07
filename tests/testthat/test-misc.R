@@ -60,6 +60,19 @@ test_that("SUTD", {
     # expect_true(a)
 })
 
+test_that("with(test.option())", {
+    options(crunch.test.option.test="foo")
+    expect_identical(getOption("crunch.test.option.test"), "foo")
+    expect_identical(getOption("crunch.test.test.test.test"), NULL)
+    with(test.option(crunch.test.option.test="bar",
+                     crunch.test.test.test.test="test"), {
+        expect_identical(getOption("crunch.test.option.test"), "bar")
+        expect_identical(getOption("crunch.test.test.test.test"), "test")
+    })
+    expect_identical(getOption("crunch.test.option.test"), "foo")
+    expect_identical(getOption("crunch.test.test.test.test"), NULL)
+})
+
 test_that("rethrow a caught error", {
     e <- try(halt("error in a box"), silent=TRUE)
     expect_true(is.error(e))
@@ -97,4 +110,21 @@ test_that("joinPath", {
         "a/b/c/e/h/")
     expect_identical(joinPath("/api/datasets/", "/variables/"),
         "/variables/")
+    expect_identical(joinPath("/api/datasets/", "/"),
+        "/")
+})
+
+test_that("absoluteURL", {
+    base.url <- "https://fake.crunch.io/api/datasets/"
+    expect_identical(absoluteURL("../variables/", base.url),
+        "https://fake.crunch.io/api/variables/")
+    expect_identical(absoluteURL("4412es.json", base.url),
+        "https://fake.crunch.io/api/datasets/4412es.json")
+    expect_identical(absoluteURL("g/../../h/",
+        "https://fake.crunch.io/a/b/c/d/../e/f/"),
+        "https://fake.crunch.io/a/b/c/e/h/")
+    expect_identical(absoluteURL("/variables/", base.url),
+        "https://fake.crunch.io/variables/")
+    expect_identical(absoluteURL("/", base.url),
+        "https://fake.crunch.io/")
 })
