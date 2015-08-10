@@ -12,6 +12,7 @@
 \alias{description<-}
 \alias{description<-,CrunchDataset-method}
 \alias{description<-,CrunchVariable-method}
+\alias{id,CrunchDataset-method}
 \alias{name}
 \alias{name,CrunchDataset-method}
 \alias{name,CrunchTeam-method}
@@ -28,6 +29,8 @@
 \S4method{description}{CrunchDataset}(x)
 
 \S4method{description}{CrunchDataset}(x) <- value
+
+\S4method{id}{CrunchDataset}(x)
 
 \S4method{name}{CrunchTeam}(x)
 

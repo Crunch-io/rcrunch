@@ -50,9 +50,6 @@ setMethod("values", "Categories", function (x) vapply(x, value, numeric(1)))
 ##' @rdname Categories
 ##' @export
 setMethod("ids", "Categories", function (x) vapply(x, id, integer(1)))
-##' @rdname Categories
-##' @export
-setMethod("ids", "list", function (x) sapply(x, id)) ## for summaries
 
 setNames <- function (x, value) {
     x[] <- mapply(setName, x, value=value, SIMPLIFY=FALSE)

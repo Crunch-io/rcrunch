@@ -74,11 +74,11 @@ if (run.integration.tests) {
             ## Categorical
             try(ds$v4[is.na(ds$v2)] <- "B")
             test_that("Can update categorical variables with character", {
-                expect_identical(table(ds$v4)["B"], c(B=13L))
+                expect_equivalent(table(ds$v4)["B"], c(B=13L))
             })
             try(ds$v4[is.na(ds$v2)] <- factor("C"))
             test_that("Can update categorical with factor", {
-                expect_identical(table(ds$v4)["C"], c(C=12L))
+                expect_equivalent(table(ds$v4)["C"], c(C=12L))
             })
             try(ds$v4[is.na(ds$v2)] <- c(2,1,2,1,2))
             test_that("Can update categorical with numeric (ids)", {

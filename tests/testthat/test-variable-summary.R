@@ -3,70 +3,21 @@ context("Variable summaries")
 with(fake.HTTP, {
     ds <- loadDataset("test ds")
     gen <- ds$gender
-    tablecats <- categories(gen)
-    tablesums <- crGET(summaryURL(gen))$categories
-
-    test_that("ids getter for summaries", {
-        expect_equivalent(ids(tablesums), selectFrom("id", tablesums))
-        expect_true(setequal(ids(tablecats), ids(tablesums)))
-    })
-
-    test_that("makeCategoricalTable", {
-        testtable <- makeCategoricalTable(tablesums)
-        expect_true(is.table(testtable))
-        expect_identical(length(testtable), 2L)
-        expect_identical(names(testtable), names(na.omit(tablecats)))
-    })
-
-    
-    test_that("CategoricalVariable.table", {
-        expect_true(is.table(CategoricalVariable.table(gen)))
-        expect_identical(names(CategoricalVariable.table(gen)),
-            names(na.omit(categories(gen))))
-    })
-
-    test_that("options in CategoricalVariable.table", {
-        expect_identical(length(CategoricalVariable.table(gen, useNA="no")),
-            2L)
-        expect_identical(length(CategoricalVariable.table(gen, useNA="ifany")),
-            2L)
-        expect_identical(length(CategoricalVariable.table(gen, useNA="always")),
-            3L)
-        expect_true(is.table(CategoricalVariable.table(gen, useNA="always")))
-        ## Now see what happens if there are missing values
-        gen@views$summary <- sub("summary", "summary_with_missing",
-            gen@views$summary)
-        expect_identical(length(CategoricalVariable.table(gen, useNA="no")),
-            2L)
-        expect_identical(length(CategoricalVariable.table(gen, useNA="ifany")),
-            3L)
-        expect_identical(length(CategoricalVariable.table(gen, useNA="always")),
-            3L)
-    })
 
     test_that("table 'method' dispatch", {
-        testtable <- makeCategoricalTable(tablesums)
-        expect_identical(testtable, table(gen))
-        expect_identical(CategoricalVariable.table(gen, useNA="ifany"), 
-            table(gen, useNA="ifany"))
         expect_identical(table(1:5), base::table(1:5))
         expect_identical(table(useNA="ifany", 1:5), 
             base::table(useNA="ifany", 1:5))
         expect_identical(table(useNA="ifany", c(NA, 1:5)),
             base::table(useNA="ifany", c(NA, 1:5)))
-        expect_identical(testtable, table(useNA="no", gen))
     })
 
     test_that("unsupported table methods", {
-        expect_error(table(gen, gen), 
-            "Cannot currently tabulate more than one Crunch variable")
         expect_error(table(gen, 1:5), 
             "Cannot currently tabulate Crunch variables with non-Crunch vectors")
         expect_error(table(1:5, gen), 
             "Cannot currently tabulate Crunch variables with non-Crunch vectors")
         expect_error(table(), "nothing to tabulate")
-        expect_error(table(ds$birthyr),
-            "Only CategoricalVariables currently supported for table()")
     })
 })
 
@@ -91,7 +42,7 @@ if (run.integration.tests) {
                     median(testdf$v1, na.rm=TRUE))
             })
             test_that("table", {
-                expect_identical(table(testdf$v4), table(df$v4))
+                expect_equivalent(table(testdf$v4), table(df$v4))
             })
             test_that("summary", {
                 expect_equivalent(round(unclass(summary(testdf$v1)), 2),

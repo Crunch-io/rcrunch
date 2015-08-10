@@ -68,23 +68,28 @@ with(fake.HTTP, {
     test_that("refresh", {
         expect_identical(ds$gender, refresh(ds$gender))
     })
-    
-    test_that("show methods", {
-        expect_identical(getShowContent(ds$gender), c(
-                "Gender (categorical)",
-                "Gender",
-                "",
-                "       Count",
-                "Female   534",
-                "Male     466"
-            ))
-        ## TODO: add other types
-    })
 })
 
 if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
+            test_that("show methods", {
+                expect_identical(getShowContent(ds$v3), c(
+                    "v3 (numeric)",                                  
+                    "",                                           
+                    "   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. ",
+                    "   8.00   12.75   17.50   17.50   22.25   27.00 "
+                ))
+                expect_identical(getShowContent(ds$v4), c(
+                        "v4 (categorical)",
+                        "",
+                        "  Count",
+                        "B    10",
+                        "C    10" 
+                    ))
+                ## TODO: add other types
+            })
+            
             test_that("can delete variables", {
                 expect_true("v1" %in% names(ds))
                 d <- try(delete(ds$v1))

@@ -10,7 +10,6 @@
 \alias{[<-,Categories,ANY,ANY,ANY-method}
 \alias{ids}
 \alias{ids,Categories-method}
-\alias{ids,list-method}
 \alias{ids<-}
 \alias{ids<-,Categories-method}
 \alias{names,Categories-method}
@@ -30,8 +29,6 @@
 \S4method{values}{Categories}(x)
 
 \S4method{ids}{Categories}(x)
-
-\S4method{ids}{list}(x)
 
 \S4method{names}{Categories}(x) <- value
 
