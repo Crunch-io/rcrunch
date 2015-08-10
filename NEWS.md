@@ -1,4 +1,5 @@
 ### crunch 1.4.3
+* Send better emails when sharing datasets
 
 ### crunch 1.4.2
 * Support for auto-login in Jupyter notebooks
