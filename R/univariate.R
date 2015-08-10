@@ -52,15 +52,16 @@ setMethod("max", "CrunchVariable", function (x, na.rm) {
 setMethod("mean", "NumericVariable", 
     function (x, ...) .summary.stat(x, "mean", ...))
 
-for (i in c("median", "sd", "min", "max")) {
-    m <- ifelse(i == "sd", "stddev", i)
-    setMethod(i, "NumericVariable", 
-        function (x, na.rm=FALSE) .summary.stat(x, m, na.rm=na.rm))
-    if (i %in% c("min", "max")) {
-        setMethod(i, "DatetimeVariable", 
-            function (x, na.rm=FALSE) .summary.stat(x, m, na.rm=na.rm))
-    }
-}
+# for (i in c("median", "sd", "min", "max")) {
+#     m <- ifelse(i == "sd", "stddev", i)
+#     setMethod(i, "NumericVariable", 
+#         function (x, na.rm=FALSE) .summary.stat(x, m, na.rm=na.rm))
+#     if (i %in% c("min", "max")) {
+#         setMethod(i, "DatetimeVariable", 
+#             function (x, na.rm=FALSE) .summary.stat(x, m, na.rm=na.rm))
+#     }
+# }
+
 ##' @rdname crunch-uni
 ##' @export
 setMethod("median", "NumericVariable", 
