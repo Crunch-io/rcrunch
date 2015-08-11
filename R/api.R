@@ -100,6 +100,9 @@ handleAPIresponse <- function (response, special.statuses=list()) {
         if (!is.error(msg2)) {
             msg <- paste(msg, msg2, sep=": ")
         }
+        if (code == 409 && grepl("current editor", msg)) {
+            halt("You are not the current editor of this dataset. `unlock()` it and try again.")
+        }
         halt(msg)
     }
 }

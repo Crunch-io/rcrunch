@@ -1,4 +1,5 @@
 ### crunch 1.4.4
+* `(un)lock` datasets for editing when there are multiple editors
 
 ### crunch 1.4.3
 

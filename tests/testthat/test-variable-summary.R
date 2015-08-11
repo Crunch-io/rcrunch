@@ -47,7 +47,8 @@ if (run.integration.tests) {
             test_that("summary", {
                 expect_equivalent(round(unclass(summary(testdf$v1)), 2),
                     round(unclass(summary(df$v1)), 2))
-                expect_equivalent(as.numeric(summary(testdf$v4)), summary(df$v4))
+                expect_equivalent(as.numeric(summary(testdf$v4)),
+                    summary(df$v4))
             })
         })
     })

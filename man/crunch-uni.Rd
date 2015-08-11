@@ -24,25 +24,25 @@
 \usage{
 \S4method{mean}{CrunchVariable}(x, ...)
 
-\S4method{sd}{CrunchVariable}(x, na.rm = FALSE)
-
-\S4method{median}{CrunchVariable}(x, na.rm = FALSE)
-
-\S4method{min}{CrunchVariable}(x, na.rm)
-
-\S4method{max}{CrunchVariable}(x, na.rm)
-
 \S4method{mean}{NumericVariable}(x, ...)
 
-\S4method{median}{NumericVariable}(x, na.rm = FALSE)
+\S4method{sd}{CrunchVariable}(x, na.rm = FALSE)
 
 \S4method{sd}{NumericVariable}(x, na.rm = FALSE)
 
+\S4method{median}{CrunchVariable}(x, na.rm = FALSE)
+
+\S4method{median}{NumericVariable}(x, na.rm = FALSE)
+
+\S4method{min}{CrunchVariable}(x, na.rm)
+
 \S4method{min}{NumericVariable}(x, na.rm = FALSE)
 
-\S4method{max}{NumericVariable}(x, na.rm = FALSE)
-
 \S4method{min}{DatetimeVariable}(x, na.rm = FALSE)
+
+\S4method{max}{CrunchVariable}(x, na.rm)
+
+\S4method{max}{NumericVariable}(x, na.rm = FALSE)
 
 \S4method{max}{DatetimeVariable}(x, na.rm = FALSE)
 }
