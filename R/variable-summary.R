@@ -34,6 +34,7 @@ table <- function (..., exclude, useNA=c("no", "ifany", "always"), dnn, deparse.
         query <- list(dimensions=varsToCubeDimensions(dots),
             measures=list(count=zfunc("cube_count")))
         cube_url <- absoluteURL("./cube/", datasetReference(dots[[1]]))
+        print(cube_url)
         cube <- CrunchCube(crGET(cube_url, query=list(query=toJSON(query))),
             useNA=match.arg(useNA))
         return(as.table(as.array(cube)))
