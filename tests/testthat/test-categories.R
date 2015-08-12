@@ -68,6 +68,11 @@ with(fake.HTTP, {
         expect_equal(names(cats)[1:2], c("masculino", "donne"))
     })
     
+    test_that("validation on category setting", {
+        expect_error(cats[1] <- "new name",
+            "Invalid categories: 1 element is not a Crunch category object")
+    })
+    
     test_that("categories ids cannot be set", {
         expect_error(ids(cats) <- rev(ids(cats)), 
             "Cannot modify category ids")
