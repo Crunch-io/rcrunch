@@ -43,7 +43,7 @@ setMethod("timestamps", "VersionCatalog", function (x) from8601(getIndexSlot(x, 
 saveVersion <- function (dataset, description=NULL) {
     u <- shojiURL(dataset, "catalogs", "savepoints")
     out <- crPOST(u, body=toJSON(list(description=description)))
-    invisible(out)
+    invisible(dataset)
 }
 
 ##' Restore a dataset to a previously saved version

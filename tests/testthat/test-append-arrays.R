@@ -158,6 +158,7 @@ if (run.integration.tests) {
 
         with(test.dataset(mrdf[-3], "part1"), {
             part1 <- mrdf.setup(part1, selections="1.0")
+            part1 <- saveVersion(part1, "Before appending")
             with(test.dataset(mrdf[-1], "part2"), {
                 part2 <- mrdf.setup(part2, selections="1.0")
                 test_that("set up MR for appending", {
@@ -188,6 +189,17 @@ if (run.integration.tests) {
                         array(c(2, 2, 1), dim=c(3L),
                         dimnames=list(MR=c("mr_1", "mr_2", "mr_3"))))
                 })
+                
+                test_that("Rolling back to initial import reverts the append", {
+                    out <- restoreVersion(out, "Before appending")
+                    expect_true(is.Multiple(out$MR))
+                    expect_identical(names(subvariables(out$MR)),
+                        c("mr_1", "mr_2"))
+                    expect_equivalent(as.array(crtabs(~ MR, data=out)),
+                        array(c(2, 1), dim=c(2L),
+                        dimnames=list(MR=c("mr_1", "mr_2"))))
+                    expect_identical(length(batches(out)), 2L)
+                })
             })
         })
         
@@ -200,9 +212,16 @@ if (run.integration.tests) {
                 part2 <- mrdf.setup(part2)
                 out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("Sparse append with array", {
+                    expect_identical(length(batches(out)), 3L)
                     expect_identical(nrow(out), 2000L)
                     expect_identical(as.vector(out$CA$mr_2),
                         factor(c(rep(NA, 1995), "0.0", "1.0", "1.0", "1.0", "0.0")))
+                })
+                
+                test_that("Rolling back to initial import reverts the append", {
+                    out <- restoreVersion(out, length(versions(out))) ## Get the oldest
+                    expect_identical(nrow(out), 1000L)
+                    expect_identical(length(batches(out)), 2L)
                 })
             })
         })
