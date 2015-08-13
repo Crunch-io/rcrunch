@@ -69,12 +69,16 @@ addFakeHTTPVerbs <- function () {
     http_verbs$DELETE <- function (...) function (url, ...) {
         stop("DELETE ", url, call.=FALSE)
     }
-    session_store$root <- getAPIroot("/api/root.json")
-    try(updateDatasetList())
+    options(crunch.api="/api/root.json")
+    try(warmSessionCache())
 }
 
 ## Mock backend
-fake.HTTP <- setup.and.teardown(addFakeHTTPVerbs, addRealHTTPVerbs)
+fake.HTTP <- setup.and.teardown(addFakeHTTPVerbs, 
+    function () {
+        addRealHTTPVerbs()
+        options(crunch.api=getOption("test.api") %||% Sys.getenv("R_TEST_API"))
+    })
 
 timingTracer <- function (filename=tempfile(), append=FALSE) {
     return(function () {
