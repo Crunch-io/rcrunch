@@ -13,11 +13,13 @@ test_that("login checks for email and password before POSTing", {
 
 with(fake.HTTP, {
     test_that("Jupyter helper sets up env", {
-        jupyterLogin("test_token")
-        cfg <- getOption("httr_config")
-        expect_identical(cfg$options$cookie, "token=test_token")
-        expect_true(grepl("jupyter.crunch.io", cfg$headers[["user-agent"]]))
-        expect_true(grepl("rcrunch", cfg$headers[["user-agent"]]))
+        with(reset.option("httr_config"), {
+            jupyterLogin("test_token")
+            cfg <- getOption("httr_config")
+            expect_identical(cfg$options$cookie, "token=test_token")
+            expect_true(grepl("jupyter.crunch.io", cfg$headers[["user-agent"]]))
+            expect_true(grepl("rcrunch", cfg$headers[["user-agent"]]))
+        })
     })
 })
 

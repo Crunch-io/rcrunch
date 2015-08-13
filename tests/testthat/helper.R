@@ -69,15 +69,17 @@ addFakeHTTPVerbs <- function () {
     http_verbs$DELETE <- function (...) function (url, ...) {
         stop("DELETE ", url, call.=FALSE)
     }
-    options(crunch.api="/api/root.json")
+    options(crunch.api="/api/root.json", crunch.api.tmp=getOption("crunch.api"))
     try(warmSessionCache())
 }
 
 ## Mock backend
 fake.HTTP <- setup.and.teardown(addFakeHTTPVerbs, 
     function () {
+        logout()
         addRealHTTPVerbs()
-        options(crunch.api=getOption("test.api") %||% Sys.getenv("R_TEST_API"))
+        options(crunch.api=getOption("crunch.api.tmp"),
+            crunch.api.tmp=NULL)
     })
 
 timingTracer <- function (filename=tempfile(), append=FALSE) {
@@ -164,6 +166,15 @@ test.option <- function (...) {
     old <- sapply(names(new), getOption, simplify=FALSE)
     return(setup.and.teardown(
         function () do.call(options, new),
+        function () do.call(options, old)
+    ))
+}
+
+reset.option <- function (opts) {
+    ## Don't set any options in the setup, but reset specified options after
+    old <- sapply(opts, getOption, simplify=FALSE)
+    return(setup.and.teardown(
+        function () NULL,
         function () do.call(options, old)
     ))
 }
