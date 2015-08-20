@@ -8,6 +8,10 @@ setMethod("filters<-", "CrunchDataset", function (x, value) x)
 ##' @export
 setMethod("names", "FilterCatalog", function (x) getIndexSlot(x, "name"))
 
+##' @rdname describe
+##' @export
+setMethod("name", "CrunchFilter", function (x) x@body$name)
+
 ##' @rdname catalog-extract
 ##' @export
 setMethod("[[", c("FilterCatalog", "character"), function (x, i, ...) {
@@ -66,5 +70,28 @@ setMethod("activeFilter", "CrunchDataset", function (x) x@filter)
 setMethod("activeFilter<-", c("CrunchDataset", "CrunchLogicalExpr"), 
     function (x, value) {
         x@filter <- value
+        return(x)
+    })
+
+setMethod("activeFilter", "CrunchVariable", function (x) x@filter)
+
+setMethod("activeFilter<-", c("CrunchVariable", "CrunchLogicalExpr"), 
+    function (x, value) {
+        x@filter <- value
+        return(x)
+    })
+
+setMethod("activeFilter", "Subvariables", function (x) x@filter)
+
+setMethod("activeFilter<-", c("Subvariables", "CrunchLogicalExpr"), 
+    function (x, value) {
+        x@filter <- value
+        return(x)
+    })
+
+setMethod("activeFilter<-", c("ANY", "NULL"), 
+    function (x, value) {
+        ## Backstop method for refreshing a variable not extracted from a dataset. Variable may have NULL filter because object can't require CrunchLogicalExpr due to cyclic dependencies.
+        activeFilter(x) <- CrunchLogicalExpr()
         return(x)
     })

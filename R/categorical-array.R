@@ -114,7 +114,9 @@ bindVariables <- function (var_urls, dataset, name, ...) {
 
 returnNewVariable <- function (variable_url, dataset) {
     dataset <- refresh(dataset)
-    return(entity(allVariables(dataset)[[variable_url]]))
+    v <- entity(allVariables(dataset)[[variable_url]])
+    # activeFilter(v) <- activeFilter(dataset)
+    return(v)
 }
 
 POSTBindVariables <- function (catalog_url, variable_urls, ...) {

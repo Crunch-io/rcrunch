@@ -112,6 +112,7 @@ weight <- function (x) {
     w <- x@body$weight
     if (!is.null(w)) {
         w <- entity(allVariables(x)[[w]])
+        activeFilter(w) <- activeFilter(x)
     }
     return(w)
 }
@@ -155,6 +156,7 @@ setMethod("refresh", "CrunchDataset", function (x) {
     tup <- refresh(tuple(x))
     out <- as.dataset(crGET(self(x)), useAlias=x@useAlias, tuple=tup)
     duplicates(allVariables(out)) <- duplicates(allVariables(x))
+    activeFilter(out) <- activeFilter(x)
     return(out)
 })
 

@@ -53,9 +53,10 @@ DatasetTuple <- setClass("DatasetTuple", contains="IndexTuple")
 CrunchVariable <- setClass("CrunchVariable", contains="ShojiObject",
     representation= representation(
         readonly="logical",
+        filter="ANY", ## CrunchLogicalExpr, but cyclic dependencies
         tuple="VariableTuple"
     ), 
-    prototype=prototype(readonly=FALSE, tuple=VariableTuple()))
+    prototype=prototype(readonly=FALSE, filter=NULL, tuple=VariableTuple()))
 
 ##' @rdname CrunchVariable
 ##' @export NumericVariable
@@ -216,7 +217,13 @@ Category <- setClass("Category", contains="namedList")
 
 ##' @rdname Subvariables
 ##' @export
-Subvariables <- setClass("Subvariables", contains="ShojiCatalog")
+Subvariables <- setClass("Subvariables", contains="ShojiCatalog",
+    representation=representation(
+        filter="CrunchLogicalExpr"
+    ),
+    prototype=prototype(
+        filter=CrunchLogicalExpr()
+    ))
 
 CubeDims <- setClass("CubeDims", contains="namedList")
 

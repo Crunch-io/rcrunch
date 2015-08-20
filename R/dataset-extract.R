@@ -39,10 +39,34 @@ setMethod("[", c("CrunchDataset", "missing", "ANY"), function (x, i, j, ..., dro
 
 ##' @rdname dataset-extract
 ##' @export
+setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "missing"), function (x, i, j, ..., drop=FALSE) {
+    f <- activeFilter(x)
+    if (length(zcl(f))) {
+        i <- f & i
+    }
+    activeFilter(x) <- i
+    return(x)
+})
+
+##' @rdname dataset-extract
+##' @export
+setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "ANY"), function (x, i, j, ..., drop=FALSE) {
+    ## Do the filtering of rows, then cols
+    x <- x[i,]
+    return(x[j])
+})
+
+setMethod("subset", "CrunchDataset", function (x, ...) {
+    x[..1,]
+})
+
+##' @rdname dataset-extract
+##' @export
 setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     out <- variables(x)[[i]]
     if (!is.null(out)) {
         out <- entity(out)
+        activeFilter(out) <- activeFilter(x)
     }
     return(out)
 })
@@ -63,6 +87,7 @@ setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE
             out <- hidden(x)[[n]]
             if (!is.null(out)) {
                 out <- entity(out)
+                activeFilter(out) <- activeFilter(x)
             }
             warning("Variable ", i, " is hidden", call.=FALSE)
             return(out)

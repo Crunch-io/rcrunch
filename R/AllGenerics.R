@@ -99,6 +99,8 @@ setGeneric("margin.table")
 setGeneric("prop.table")
 setGeneric("round")
 
+setGeneric("subset")
+
 ##' Generic method for converting objects to Crunch representations
 ##'
 ##' If you have other object types you wish to convert to Crunch variables, 

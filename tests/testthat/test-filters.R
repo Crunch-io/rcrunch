@@ -16,7 +16,6 @@ if (run.integration.tests) {
                 filters(ds)[["Test filter"]] <- ds$v4 == "B"
                 expect_identical(length(filters(ds)), 1L)
                 expect_identical(names(filters(ds)), "Test filter")
-                skip("TODO implement entities")
                 expect_identical(name(filters(ds)[[1]]), "Test filter")
             })
             
