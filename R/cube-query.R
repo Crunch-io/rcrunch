@@ -101,9 +101,24 @@ crtabs <- function (formula, data, weight=crunch::weight(data),
         sub("^cube_", "", m[["function"]])
     }, character(1))
     
+    ## Get filter
+    f <- zcl(activeFilter(data))
+    if (!length(f)) {
+        ## No filter in the R session. So supply an "all" filter
+        ## TODO: make backend take a proper null
+        f <- zfunc("not", zfunc("==", zfunc("row"), -1))
+    }
+    
+    ## Convert to query params
+    query <- list(
+        query=toJSON(query),
+        ## TODO: shouldn't have to wrap in expression object and supply id
+        filter_syntax=toJSON(list(expression=f, id="dont_require_id"))
+    )
+    
     ## Go GET it!
     cube_url <- shojiURL(data, "views", "cube")
-    return(CrunchCube(crGET(cube_url, query=list(query=toJSON(query))),
+    return(CrunchCube(crGET(cube_url, query=query),
         useNA=match.arg(useNA)))
 }
 

@@ -26,6 +26,10 @@ ShojiOrder <- setClass("ShojiOrder", contains="ShojiObject",
     representation(
         graph="list"
     ))
+ShojiView <- setClass("ShojiView", contains="ShojiObject",
+    representation(
+        value="ANY"
+    ))
 
 IndexTuple <- setClass("IndexTuple", 
     representation(
@@ -143,6 +147,24 @@ UserCatalog <- setClass("UserCatalog", contains="ShojiCatalog")
 TeamCatalog <- setClass("TeamCatalog", contains="ShojiCatalog")
 MemberCatalog <- setClass("MemberCatalog", contains="ShojiCatalog")
 VersionCatalog <- setClass("VersionCatalog", contains="ShojiCatalog")
+FilterCatalog <- setClass("FilterCatalog", contains="ShojiCatalog")
+
+CrunchExpr <- setClass("CrunchExpr",
+    representation=representation(
+        dataset_url="character",
+        expression="list",
+        filter="list",
+        variables="VariableCatalog"
+    ),
+    prototype=prototype(
+        dataset_url="",
+        expression=list(),
+        filter=list(),
+        variables=VariableCatalog()
+    ))
+
+CrunchLogicalExpr <- setClass("CrunchLogicalExpr",
+    contains="CrunchExpr")
 
 default.useAlias <- function () {
     opt <- getOption("crunch.useAlias")
@@ -158,12 +180,14 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
         useAlias="logical",
         .nrow="numeric",
         variables="VariableCatalog",
+        filter="CrunchLogicalExpr",
         tuple="DatasetTuple"
     ), 
     prototype=prototype(
         useAlias=default.useAlias(),
         .nrow=numeric(1),
         variables=VariableCatalog(),
+        filter=CrunchLogicalExpr(),
         tuple=DatasetTuple()))
 
 ##' Categories in CategoricalVariables
@@ -194,23 +218,6 @@ Category <- setClass("Category", contains="namedList")
 ##' @export
 Subvariables <- setClass("Subvariables", contains="ShojiCatalog")
 
-CrunchExpr <- setClass("CrunchExpr",
-    representation=representation(
-        dataset_url="character",
-        expression="list",
-        filter="list",
-        variables="VariableCatalog"
-    ),
-    prototype=prototype(
-        dataset_url="",
-        expression=list(),
-        filter=list(),
-        variables=VariableCatalog()
-    ))
-
-CrunchLogicalExpr <- setClass("CrunchLogicalExpr",
-    contains="CrunchExpr")
-
 CubeDims <- setClass("CubeDims", contains="namedList")
 
 CrunchCube <- setClass("CrunchCube", contains="list",
@@ -221,3 +228,4 @@ CrunchCube <- setClass("CrunchCube", contains="list",
     prototype=prototype(useNA="no", dims=CubeDims(), arrays=list()))
 
 CrunchTeam <- setClass("CrunchTeam", contains="ShojiObject")
+CrunchFilter <- setClass("CrunchFilter", contains="ShojiObject")
