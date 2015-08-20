@@ -95,3 +95,18 @@ setMethod("activeFilter<-", c("ANY", "NULL"),
         activeFilter(x) <- CrunchLogicalExpr()
         return(x)
     })
+
+filterSyntax <- function (x) {
+    ## Wrapper to contain API complexity when sending filter_syntax as query parameter
+    
+    f <- zcl(x)
+    if (!length(f)) {
+        ## No filter in the R session. So supply an "all" filter to override any
+        ## "applied filter" on the server
+        ## TODO: make backend take a proper null
+        f <- zfunc("not", zfunc("==", zfunc("row"), -1))
+    }
+    ## Wrap and return
+    ## TODO: shouldn't have to wrap in expression object and supply id
+    return(list(expression=f, id="dont_require_id"))
+}

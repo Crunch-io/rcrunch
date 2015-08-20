@@ -3,7 +3,6 @@ init.CrunchDataset <- function (.Object, ...) {
     .Object@variables <- getDatasetVariables(.Object)
     ## So they test as identical, force order
     .Object@variables@index <- .Object@variables@index[order(names(.Object@variables@index))]
-    .Object@.nrow <- getNrow(.Object)
     return(.Object)
 }
 setMethod("initialize", "CrunchDataset", init.CrunchDataset)
@@ -20,7 +19,9 @@ getNrow <- function (dataset, filtered=TRUE) {
     ## use filtered by default because every other request will take the applied filter
     
     u <- summaryURL(dataset)
-    nrows <- as.integer(round(crGET(u)$unweighted[[which.count]]))
+    f <- filterSyntax(activeFilter(dataset))
+    q <- crGET(u, query=list(filter_syntax=toJSON(f)))
+    nrows <- as.integer(round(q$unweighted[[which.count]]))
     return(nrows)
 }
 
@@ -90,7 +91,7 @@ NULL
 ##' @rdname dim-dataset
 ##' @export
 setMethod("dim", "CrunchDataset",
-    function (x) c(x@.nrow, length(variables(x))))
+    function (x) c(getNrow(x), length(variables(x))))
 
 namekey <- function (dataset) ifelse(dataset@useAlias, "alias", "name")
 

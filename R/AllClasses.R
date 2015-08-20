@@ -179,14 +179,12 @@ default.useAlias <- function () {
 CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
     representation=representation(
         useAlias="logical",
-        .nrow="numeric",
         variables="VariableCatalog",
         filter="CrunchLogicalExpr",
         tuple="DatasetTuple"
     ), 
     prototype=prototype(
         useAlias=default.useAlias(),
-        .nrow=numeric(1),
         variables=VariableCatalog(),
         filter=CrunchLogicalExpr(),
         tuple=DatasetTuple()))

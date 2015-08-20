@@ -1,4 +1,6 @@
-### crunch 1.4.4
+## crunch 1.5.0
+* Subset rows of datasets and variables for analysis, using either `[` or `subset`
+* Fix some inconsistent handling in R of filters that are set on the server (i.e. for persistent viewing in the web application)
 * `(un)lock` datasets for editing when there are multiple editors
 
 ### crunch 1.4.3
