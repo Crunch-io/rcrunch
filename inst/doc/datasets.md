@@ -25,19 +25,12 @@ load("economist.RData")
 dim(df)
 ```
 
-```r
-dim(ds)
-```
-
 ```
 ## [1] 1000  142
 ```
 
 ```r
 ds <- newDataset(df, name="Economist/YouGov Weekly Survey")
-```
-
-```r
 dim(ds)
 ```
 

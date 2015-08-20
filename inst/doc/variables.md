@@ -46,21 +46,12 @@ You can reference and extract variables from a dataset as if it were a `data.fra
 
 ```r
 track.var <- ds$track
-```
-
-```r
 track.var
 ```
 
 ```
+## track (categorical)
 ## 
-##  track (categorical) 
-##  
-## 
-## 
-```
-
-```
 ##                                         Count
 ## Off on the wrong track                    576
 ## Generally headed in the right direction   285

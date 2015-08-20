@@ -1,12 +1,16 @@
 ##' Subset datasets and extract variables
 ##'
 ##' @param x a CrunchDataset
-##' @param i if character, identifies variables to extract based on their 
-##' aliases (by default, i.e. when x's \code{useAlias} is TRUE); if numeric or 
-##' logical, extracts variables accordingly. Note that this is the as.list 
-##' extraction, columns of the dataset rather than rows. 
+##' @param i As with a \code{data.frame}, there are two cases: (1) if no other
+##' arguments are supplied (i.e \code{x[i]}), \code{i} provides for
+##' \code{as.list} extraction: columns of the dataset rather than rows. If
+##' character, identifies variables to extract based on their aliases (by
+##' default, i.e. when x's \code{useAlias} is TRUE); if numeric orlogical,
+##' extracts variables accordingly. Alternatively, (2), if \code{j} is specified
+##' (either \code(x[i, j]) or \code{x[i,]}), \code{i} is an object of class
+##' \code{CrunchLogicalExpr} that will define a subset of rows.
 ##' @param name like \code{i} but for \code{$}
-##' @param j column extraction, as described above
+##' @param j columnar extraction, as described above
 ##' @param drop logical: autmatically simplify a 1-column Dataset to a Variable?
 ##' Default is FALSE, and the TRUE option is in fact not implemented.
 ##' @param ... additional arguments
@@ -56,6 +60,8 @@ setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "ANY"), function (x, i, j
     return(x[j])
 })
 
+##' @rdname dataset-extract
+##' @export
 setMethod("subset", "CrunchDataset", function (x, ...) {
     x[..1,]
 })

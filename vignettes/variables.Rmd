@@ -51,12 +51,10 @@ You can reference and extract variables from a dataset as if it were a `data.fra
 
 ```{r, eval=FALSE}
 track.var <- ds$track
-```
-```{r}
 track.var
 ```
 ```{r, echo=FALSE}
-print(summary.track.var)
+cat(summary.track.var, sep="\n")
 ```
 
 Like datasets, variables have various attributes like `name` and `description` that can be set naturally.

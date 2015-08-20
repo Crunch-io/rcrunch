@@ -3,19 +3,29 @@
 \docType{methods}
 \name{dataset-extract}
 \alias{$,CrunchDataset-method}
-\alias{[,CrunchDataset,ANY-method}
-\alias{[,CrunchDataset,character-method}
-\alias{[,CrunchDataset,missing-method}
+\alias{[,CrunchDataset,ANY,ANY-method}
+\alias{[,CrunchDataset,CrunchLogicalExpr,ANY-method}
+\alias{[,CrunchDataset,CrunchLogicalExpr,missing-method}
+\alias{[,CrunchDataset,character,ANY-method}
+\alias{[,CrunchDataset,missing,ANY-method}
 \alias{[[,CrunchDataset,ANY-method}
 \alias{[[,CrunchDataset,character-method}
 \alias{dataset-extract}
+\alias{subset,CrunchDataset-method}
 \title{Subset datasets and extract variables}
 \usage{
-\S4method{[}{CrunchDataset,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CrunchDataset,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{CrunchDataset,character}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CrunchDataset,character,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{CrunchDataset,missing}(x, i, j, ..., drop = FALSE)
+\S4method{[}{CrunchDataset,missing,ANY}(x, i, j, ..., drop = FALSE)
+
+\S4method{[}{CrunchDataset,CrunchLogicalExpr,missing}(x, i, j, ...,
+  drop = FALSE)
+
+\S4method{[}{CrunchDataset,CrunchLogicalExpr,ANY}(x, i, j, ..., drop = FALSE)
+
+\S4method{subset}{CrunchDataset}(x, ...)
 
 \S4method{[[}{CrunchDataset,ANY}(x, i, ..., drop = FALSE)
 
@@ -26,12 +36,16 @@
 \arguments{
 \item{x}{a CrunchDataset}
 
-\item{i}{if character, identifies variables to extract based on their
-aliases (by default, i.e. when x's \code{useAlias} is TRUE); if numeric or
-logical, extracts variables accordingly. Note that this is the as.list
-extraction, columns of the dataset rather than rows.}
+\item{i}{As with a \code{data.frame}, there are two cases: (1) if no other
+arguments are supplied (i.e \code{x[i]}), \code{i} provides for
+\code{as.list} extraction: columns of the dataset rather than rows. If
+character, identifies variables to extract based on their aliases (by
+default, i.e. when x's \code{useAlias} is TRUE); if numeric orlogical,
+extracts variables accordingly. Alternatively, (2), if \code{j} is specified
+(either \code(x[i, j]) or \code{x[i,]}), \code{i} is an object of class
+\code{CrunchLogicalExpr} that will define a subset of rows.}
 
-\item{j}{column extraction, as described above}
+\item{j}{columnar extraction, as described above}
 
 \item{...}{additional arguments}
 

@@ -33,9 +33,13 @@ tab5 <- crtabs(mean(age) ~ educ + gender, data=ds)
 
 tab6 <- crtabs(min(age) ~ educ + gender, data=ds)
 
+tab6a <- crtabs(min(age) ~ 1, data=ds)
+
 track.cats <- categories(ds$track)
 
 tab7 <- crtabs(mean(track) ~ educ + gender, data=ds)
+
+tab8 <- crtabs(mean(track) ~ educ + gender, data=ds[ds$pid3 == "Democrat",])
 
 snowdenleakapp.var <- ds$snowdenleakapp
 summary.snowdenleakapp.var <- summary(snowdenleakapp.var)
