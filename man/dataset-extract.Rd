@@ -41,8 +41,8 @@ arguments are supplied (i.e \code{x[i]}), \code{i} provides for
 \code{as.list} extraction: columns of the dataset rather than rows. If
 character, identifies variables to extract based on their aliases (by
 default, i.e. when x's \code{useAlias} is TRUE); if numeric orlogical,
-extracts variables accordingly. Alternatively, (2), if \code{j} is specified
-(either \code(x[i, j]) or \code{x[i,]}), \code{i} is an object of class
+extracts variables accordingly. Alternatively, (2) if \code{j} is specified
+(as either \code(x[i, j]) or \code{x[i,]}), \code{i} is an object of class
 \code{CrunchLogicalExpr} that will define a subset of rows.}
 
 \item{j}{columnar extraction, as described above}
@@ -52,7 +52,7 @@ extracts variables accordingly. Alternatively, (2), if \code{j} is specified
 \item{drop}{logical: autmatically simplify a 1-column Dataset to a Variable?
 Default is FALSE, and the TRUE option is in fact not implemented.}
 
-\item{name}{like \code{i} but for \code{$}}
+\item{name}{columnar extraction for \code{$}}
 }
 \value{
 \code{[} yields a Dataset; \code{[[} and \code{$} return a Variable

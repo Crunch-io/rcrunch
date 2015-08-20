@@ -6,11 +6,11 @@
 ##' \code{as.list} extraction: columns of the dataset rather than rows. If
 ##' character, identifies variables to extract based on their aliases (by
 ##' default, i.e. when x's \code{useAlias} is TRUE); if numeric orlogical,
-##' extracts variables accordingly. Alternatively, (2), if \code{j} is specified
-##' (either \code(x[i, j]) or \code{x[i,]}), \code{i} is an object of class
+##' extracts variables accordingly. Alternatively, (2) if \code{j} is specified
+##' (as either \code(x[i, j]) or \code{x[i,]}), \code{i} is an object of class
 ##' \code{CrunchLogicalExpr} that will define a subset of rows.
-##' @param name like \code{i} but for \code{$}
 ##' @param j columnar extraction, as described above
+##' @param name columnar extraction for \code{$}
 ##' @param drop logical: autmatically simplify a 1-column Dataset to a Variable?
 ##' Default is FALSE, and the TRUE option is in fact not implemented.
 ##' @param ... additional arguments
