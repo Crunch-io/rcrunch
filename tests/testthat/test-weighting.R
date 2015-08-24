@@ -35,6 +35,20 @@ if (run.integration.tests) {
                 ds <- refresh(ds)
                 expect_identical(nrow(ds), 20L)
             })
+            
+            test_that("Reverting to old version rolls back weight variables", {
+                weight <- NULL
+                expect_identical(weight(ds), NULL)
+                ds <- saveVersion(ds, "Before w")
+                ds$w <- 1:20
+                weight(ds) <- ds$w
+                expect_equivalent(weight(ds), ds$w)
+                ds <- restoreVersion(ds, "Before w")
+                expect_identical(weight(ds), NULL)
+                ds$w2 <- 2:21
+                weight(ds) <- ds$w2
+                expect_equivalent(weight(ds), ds$w2)
+            })
         })
     })
 }
