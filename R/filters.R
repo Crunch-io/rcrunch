@@ -110,3 +110,52 @@ filterSyntax <- function (x) {
     ## TODO: shouldn't have to wrap in expression object and supply id
     return(list(expression=f, id="dont_require_id"))
 }
+
+##' View and set exclusion filters
+##'
+##' Exclusion filters express logic that defines a set of rows that should be
+##' dropped from the dataset. The rows aren't permanently deleted---you can
+##' recover them at any time by removing the exclusion filter---but they are 
+##' omitted from all views and calculations, as if they had been deleted.
+##'
+##' Note that exclusion filters work opposite from how "normal" filters work.
+##' That is, a regular filter expression defines the subset of rows to operate
+##' on: it says "keep these rows." An exclusion filter defines which rows to
+##' omit. Applying a filter expression as a query filter will have the
+##' opposite effect if applied as an exclusion. Indeed, applying it as both 
+##' query filter and exclusion at the same time will result in 0 rows. 
+##'
+##' @param x a Dataset
+##' @param value an object of class \code{CrunchLogicalExpr}, or \code{NULL}
+##' @return \code{exclusion} returns a \code{CrunchFilter} if there is one,
+##' else \code{NULL}. The setter returns \code{x} with the filter set.
+##' @export
+exclusion <- function (x) {
+    stopifnot(is.dataset(x))
+    efcat <- FilterCatalog(crGET(shojiURL(x, "catalogs",
+        "applied_exclusion_filters")))
+    if (length(efcat)) {
+        return(CrunchFilter(crGET(urls(efcat)[1])))
+    }
+    return(NULL)
+}
+
+##' @rdname exclusion
+##' @export
+`exclusion<-` <- function (x, value) {
+    stopifnot(is.dataset(x))
+    if (inherits(value, "CrunchLogicalExpr")) {
+        u <- crPOST(shojiURL(x, "catalogs", "exclusion_filters"),
+            body=toJSON(list(name="exclusion", expression=zcl(value))))
+        crPUT(shojiURL(x, "catalogs", "applied_exclusion_filters"),
+            body=toJSON(I(u)))
+    } else if (is.null(value)) {
+        crPUT(shojiURL(x, "catalogs", "applied_exclusion_filters"),
+            body="[]")
+    } else {
+        halt(dQuote("value"), " must be a CrunchLogicalExpr or NULL, not ",
+            dQuote(class(value)))
+    }
+    dropCache(self(x))
+    return(x)
+}

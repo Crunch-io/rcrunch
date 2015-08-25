@@ -42,7 +42,7 @@ arguments are supplied (i.e \code{x[i]}), \code{i} provides for
 character, identifies variables to extract based on their aliases (by
 default, i.e. when x's \code{useAlias} is TRUE); if numeric orlogical,
 extracts variables accordingly. Alternatively, (2) if \code{j} is specified
-(as either \code(x[i, j]) or \code{x[i,]}), \code{i} is an object of class
+(as either \code{x[i, j]} or \code{x[i,]}), \code{i} is an object of class
 \code{CrunchLogicalExpr} that will define a subset of rows.}
 
 \item{j}{columnar extraction, as described above}

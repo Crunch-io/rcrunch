@@ -45,7 +45,7 @@ with(fake.HTTP, {
         ds4 <- ds2
         ds4@body$weight <- "/api/datasets/dataset1/variables/starttime.json"
         expect_identical(weight(ds4), ds4$starttime)
-        expect_identical(activeFilter(ds4$starttime), ds$gender == "Male")
+        expect_identical(activeFilter(weight(ds4)), ds$gender == "Male")
     })
 })
 
