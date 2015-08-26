@@ -113,6 +113,9 @@ joinPath <- function (base.path, relative.part) {
         return(relative.part)
     } 
     u <- c(strsplit(base.path, "/")[[1]], strsplit(relative.part, "/")[[1]])
+    ## Drop any references to current location (.)
+    u <- u[u != "."]
+    ## Walk the ..
     if (any(u == "..")) {
         ## If we're here, we must have some normalization to do
         i <- 1
@@ -127,18 +130,14 @@ joinPath <- function (base.path, relative.part) {
                 i <- i + 1
             }
         }
-    
-        out <- paste(u, collapse="/")
-        last.char <- substr(relative.part, nchar(relative.part),
-            nchar(relative.part))
-        if (last.char == "/") {
-            out <- paste0(out, "/")
-        }
-        return(out)
-    } else {
-        ## Assume this requires no path normalization
-        return(paste0(base.path, relative.part))
     }
+    out <- paste(u, collapse="/")
+    last.char <- substr(relative.part, nchar(relative.part),
+        nchar(relative.part))
+    if (last.char == "/") {
+        out <- paste0(out, "/")
+    }
+    return(out)
 }
 
 ## Borrowed from Hadley

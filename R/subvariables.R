@@ -32,7 +32,9 @@ setMethod("subvariables", "CategoricalArrayVariable", function (x) {
     tup <- tuple(x)
     catalog_url <- tup$subvariables_catalog %||% tup@index_url
     vars <- VariableCatalog(crGET(catalog_url))
-    return(Subvariables(vars[x@body$subvariables]))
+    out <- Subvariables(vars[x@body$subvariables])
+    activeFilter(out) <- activeFilter(x)
+    return(out)
 })
 
 ##' @rdname Subvariables
@@ -119,6 +121,7 @@ setMethod("[[", c("Subvariables", "ANY"), function (x, i, ...) {
         body=index(x)[[i]])
     if (!is.null(out)) {
         out <- entity(out)
+        activeFilter(out) <- activeFilter(x)
     }
     return(out)
 })

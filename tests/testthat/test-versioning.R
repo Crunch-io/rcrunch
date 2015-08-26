@@ -98,7 +98,7 @@ if (run.integration.tests) {
             ## ^ fails occasionally bc of https://www.pivotaltracker.com/story/show/98580938
             ds <- try(restoreVersion(ds, 2))
             test_that("Restoring restored correctly", {
-                expect_identical(length(versions(ds)), 1L)
+                expect_identical(length(versions(ds)), nversions)  ## 1L
                 validImport(ds)
             })
             test_that("Added variables are really removed by rolling back", {

@@ -112,6 +112,8 @@ test_that("joinPath", {
         "/variables/")
     expect_identical(joinPath("/api/datasets/", "/"),
         "/")
+    expect_identical(joinPath("/api/datasets/", "./id/"),
+        "/api/datasets/id/")
 })
 
 test_that("absoluteURL", {

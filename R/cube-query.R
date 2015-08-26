@@ -101,9 +101,18 @@ crtabs <- function (formula, data, weight=crunch::weight(data),
         sub("^cube_", "", m[["function"]])
     }, character(1))
     
+    ## Get filter
+    f <- filterSyntax(activeFilter(data))
+    
+    ## Convert to query params
+    query <- list(
+        query=toJSON(query),
+        filter_syntax=toJSON(f)
+    )
+    
     ## Go GET it!
     cube_url <- shojiURL(data, "views", "cube")
-    return(CrunchCube(crGET(cube_url, query=list(query=toJSON(query))),
+    return(CrunchCube(crGET(cube_url, query=query),
         useNA=match.arg(useNA)))
 }
 

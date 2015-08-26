@@ -18,6 +18,7 @@ df$track[is.na(df$track)] <- "Not sure"
 
 # load("../vignettes/economist.RData")
 ds <- newDataset(df, name="Economist/YouGov Weekly Survey")
+dim.ds <- dim(ds)
 
 .listDatasets <- "Economist/YouGov Weekly Survey"
-save(ds, .listDatasets, file="../vignettes/getting-started.RData")
+save(ds, .listDatasets, dim.ds, file="../vignettes/getting-started.RData")

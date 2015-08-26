@@ -73,6 +73,14 @@ setGeneric("pending", function (x) standardGeneric("pending"))
 setGeneric("permissions", function (x) standardGeneric("permissions"))
 setGeneric("members", function (x) standardGeneric("members"))
 setGeneric("members<-", function (x, value) standardGeneric("members<-"))
+setGeneric("filters", function (x) standardGeneric("filters"))
+setGeneric("filters<-", function (x, value) standardGeneric("filters<-"))
+setGeneric("appliedFilters", function (x) standardGeneric("appliedFilters"))
+setGeneric("appliedFilters<-", 
+    function (x, value) standardGeneric("appliedFilters<-"))
+setGeneric("activeFilter", function (x) standardGeneric("activeFilter"))
+setGeneric("activeFilter<-", 
+    function (x, value) standardGeneric("activeFilter<-"))
 
 setGeneric("dim")
 setGeneric("ncol")
@@ -90,6 +98,8 @@ setGeneric("margin.table")
 
 setGeneric("prop.table")
 setGeneric("round")
+
+setGeneric("subset")
 
 ##' Generic method for converting objects to Crunch representations
 ##'

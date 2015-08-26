@@ -6,11 +6,10 @@
 \alias{Categories-class}
 \alias{Category}
 \alias{Category-class}
-\alias{[,Categories,ANY-method}
+\alias{[,Categories,ANY,ANY-method}
 \alias{[<-,Categories,ANY,ANY,ANY-method}
 \alias{ids}
 \alias{ids,Categories-method}
-\alias{ids,list-method}
 \alias{ids<-}
 \alias{ids<-,Categories-method}
 \alias{names,Categories-method}
@@ -21,7 +20,7 @@
 \alias{values<-,Categories-method}
 \title{Categories in CategoricalVariables}
 \usage{
-\S4method{[}{Categories,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{Categories,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[}{Categories,ANY,ANY,ANY}(x, i, j, ...) <- value
 
@@ -30,8 +29,6 @@
 \S4method{values}{Categories}(x)
 
 \S4method{ids}{Categories}(x)
-
-\S4method{ids}{list}(x)
 
 \S4method{names}{Categories}(x) <- value
 

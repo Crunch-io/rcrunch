@@ -68,6 +68,11 @@ with(fake.HTTP, {
         expect_equal(names(cats)[1:2], c("masculino", "donne"))
     })
     
+    test_that("validation on category setting", {
+        expect_error(cats[1] <- "new name",
+            "Invalid categories: 1 element is not a Crunch category object")
+    })
+    
     test_that("categories ids cannot be set", {
         expect_error(ids(cats) <- rev(ids(cats)), 
             "Cannot modify category ids")
@@ -149,6 +154,7 @@ if (run.integration.tests) {
                 categories(ds$v4) <- categories(ds$v4)[2:1]
                 expect_equal(names(categories(ds$v4)), c("C", "V"))
             })
+            
             test_that("categories<- with invalid input gives helpful message", {
                 expect_error(categories(ds$v4) <- 1:3,
                     "`categories(x) <- value` only accepts Categories, not numeric. Did you mean `values(categories(x)) <- value`?",
@@ -161,6 +167,20 @@ if (run.integration.tests) {
                     fixed=TRUE)
                 expect_error(categories(ds$v1) <- 1:3,
                     "category assignment not defined for NumericVariable")
+            })
+        })
+        
+        with(test.dataset(mrdf), {
+            ds <- mrdf.setup(ds)
+            test_that("Can edit and reorder categories in categorical array", {
+                expect_identical(names(categories(ds$CA)), 
+                    c("0.0", "1.0", "No Data"))
+                names(categories(ds$CA))[1:2] <- c("First", "Second")
+                expect_identical(names(categories(ds$CA)), 
+                    c("First", "Second", "No Data"))
+                categories(ds$CA) <- rev(categories(ds$CA))
+                expect_identical(names(categories(ds$CA)), 
+                    c("No Data", "Second", "First"))
             })
         })
     })

@@ -35,8 +35,7 @@ These correspond to a survey grid question about how important respondents view 
 ds$imiss_b
 ```
 ```{r, echo=FALSE}
-cat(show_imiss_b, "\n")
-print(summary_imiss_b)
+cat(show_imiss_b, sep="\n")
 ```
 
 All of these "imiss" categorical variables have the same structure. We can combine them into a categorical array variable with `makeArray`:
@@ -46,7 +45,7 @@ ds$imiss <- makeArray(pattern="^imiss_", dataset=ds, name="Issue importance")
 ds$imiss
 ```
 ```{r, echo=FALSE}
-cat(show_imiss)
+cat(show_imiss, sep="\n")
 ```
 
 In the Crunch web application, the set of "important issue" variables have gone from thirteen separate categorical variable cards to just one, where the subvariables are shown as rows, and the common categories across all of them are shown as columns:
@@ -59,7 +58,7 @@ The categorical variables `imiss_*` are now not visible in the dataset directly,
 subvariables(ds$imiss)
 ```
 ```{r, echo=FALSE}
-cat(show_imiss_subvars)
+cat(show_imiss_subvars, sep="\n")
 ```
 
 We can also step into the subvariables and access the underlying categorical variables:
@@ -68,8 +67,7 @@ We can also step into the subvariables and access the underlying categorical var
 ds$imiss$imiss_b
 ```
 ```{r, echo=FALSE}
-cat(show_imiss_b, "\n")
-print(summary_imiss_b)
+cat(show_imiss_b, sep="\n")
 ```
 
 ## Manipulating subvariables
@@ -95,7 +93,7 @@ names(subvariables(ds$imiss)) <- c("The economy", "Immigration",
 subvariables(ds$imiss)
 ```
 ```{r, echo=FALSE}
-cat(show_imiss_subvars2)
+cat(show_imiss_subvars2, sep="\n")
 ```
 
 Another useful thing we can do with array subvariables is reorder them. Let's alphabetize the subvariables:
@@ -106,7 +104,7 @@ subvariables(ds$imiss) <- subvariables(ds$imiss)[sorting]
 subvariables(ds$imiss)
 ```
 ```{r, echo=FALSE}
-cat(show_imiss_subvars3)
+cat(show_imiss_subvars3, sep="\n")
 ```
 
 ## Creating multiple response variables
@@ -119,8 +117,7 @@ In the _Economist_ dataset, we have another set of parallel categorical variable
 ds$boap_4
 ```
 ```{r, echo=FALSE}
-cat(show_boap_4, "\n")
-print(summary_boap_4)
+cat(show_boap_4, sep="\n")
 ```
 
 In the questionnaire that collected this data, "boap" appeared as a grid question, just as "imiss" did. But, for illustration purposes---and to show how you can convert between categorical array and multiple response---let's treat this as multiple response. 
@@ -134,7 +131,7 @@ ds$boap <- makeMR(pattern="^boap_[0-9]+", dataset=ds,
 ds$boap
 ```
 ```{r, echo=FALSE}
-cat(show_boap)
+cat(show_boap, sep="\n")
 ```
 
 ## (un)dichotomize
@@ -148,7 +145,7 @@ ds$boap <- undichotomize(ds$boap)
 ds$boap
 ```
 ```{r, echo=FALSE}
-cat(show_boap2)
+cat(show_boap2, sep="\n")
 ```
 
 We can add that information with `dichotomize`. Taking our categorical array "boap," let's make it into a multiple response, but this time, let's only include the "Strongly approve" category:
@@ -158,7 +155,7 @@ ds$boap <- dichotomize(ds$boap, "Strongly approve")
 ds$boap
 ```
 ```{r, echo=FALSE}
-cat(show_boap3)
+cat(show_boap3, sep="\n")
 ```
 
 ## Splitting arrays back into categoricals

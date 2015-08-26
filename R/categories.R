@@ -18,7 +18,7 @@ validCategories <- function (object) {
 setValidity("Categories", validCategories)
 
 init.Categories <- function (.Object, ...) {
-    .Object@.Data <- lapply(..1, Category)
+    .Object@.Data <- lapply(..1, function (x) try(Category(x), silent=TRUE))
     validObject(.Object)
     return(.Object)
 }
@@ -35,7 +35,7 @@ setMethod("[", c("Categories", "ANY"), function (x, i, ...) {
 ##' @rdname Categories
 ##' @export
 setMethod("[<-", c("Categories", "ANY"), function (x, i, ..., value) {
-    x@.Data[i] <- value
+    x@.Data[i] <- Categories(value)
     return(x)
 })
 
@@ -50,9 +50,6 @@ setMethod("values", "Categories", function (x) vapply(x, value, numeric(1)))
 ##' @rdname Categories
 ##' @export
 setMethod("ids", "Categories", function (x) vapply(x, id, integer(1)))
-##' @rdname Categories
-##' @export
-setMethod("ids", "list", function (x) sapply(x, id)) ## for summaries
 
 setNames <- function (x, value) {
     x[] <- mapply(setName, x, value=value, SIMPLIFY=FALSE)

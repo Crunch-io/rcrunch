@@ -15,32 +15,6 @@ getSummary <- function (x) {
     return(out)
 }
 
-makeCategoricalTable <- function (frequencies, add.na=FALSE) {
-    freqs <- .na.omit.categories(frequencies)
-    counts <- selectFrom("count", freqs)
-    n <- selectFrom("name", freqs)
-    if (add.na) {
-        n <- c(n, "<NA>")
-        missings <- selectFromWhere(isTRUE(missing), frequencies, key="count")
-        counts <- c(counts, sum(missings))
-    }
-    return(structure(as.integer(counts), 
-        .Dim = length(counts),
-        .Dimnames = structure(list(n), .Names = ""), 
-        class = "table"))
-}
-
-CategoricalVariable.table <- function (..., 
-                    exclude = if (useNA == "no") c(NA, NaN), 
-                    useNA = c("no", "ifany", "always"), dnn,
-                    deparse.level = 1) {
-    var <- ..1
-    summ <- getSummary(var)
-    useNA <- match.arg(useNA)
-    add.na <- useNA=="always" || (useNA=="ifany" && summ$missing_count>0)
-    return(makeCategoricalTable(summ$categories, add.na))
-}
-
 ##' Table function for Crunch objects
 ##'
 ##' @param ... things to tabulate
@@ -51,21 +25,18 @@ CategoricalVariable.table <- function (...,
 ##' @return a table object
 ##' @seealso \code{\link[base]{table}}
 ##' @export 
-table <- function (..., exclude, useNA, dnn, deparse.level) {
+table <- function (..., exclude, useNA=c("no", "ifany", "always"), dnn, deparse.level) {
     m <- match.call()
     
     dots <- list(...)
     are.vars <- vapply(dots, is.variable, logical(1))
     if (length(are.vars) && all(are.vars)) {
-        if (length(are.vars)>1) {
-            halt("Cannot currently tabulate more than one Crunch variable")
-        }
-        if (!is.Categorical(dots[[1]])) {
-            halt("Only CategoricalVariables currently supported for table()")
-        }
-        m[[1]] <- get("CategoricalVariable.table", asNamespace("crunch"))
-        where <- parent.frame()
-        return(eval(m, envir=where, enclos=asNamespace("crunch")))
+        query <- list(dimensions=varsToCubeDimensions(dots),
+            measures=list(count=zfunc("cube_count")))
+        cube_url <- absoluteURL("./cube/", datasetReference(dots[[1]]))
+        cube <- CrunchCube(crGET(cube_url, query=list(query=toJSON(query))),
+            useNA=match.arg(useNA))
+        return(as.table(as.array(cube)))
     } else if (any(are.vars)) {
         halt("Cannot currently tabulate Crunch variables with ", 
             "non-Crunch vectors")

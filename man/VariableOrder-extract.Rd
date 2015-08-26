@@ -7,10 +7,10 @@
 \alias{$<-,VariableGroup-method}
 \alias{$<-,VariableOrder-method}
 \alias{VariableOrder-extract}
-\alias{[,VariableGroup,ANY-method}
-\alias{[,VariableGroup,character-method}
-\alias{[,VariableOrder,ANY-method}
-\alias{[,VariableOrder,character-method}
+\alias{[,VariableGroup,ANY,ANY-method}
+\alias{[,VariableGroup,character,ANY-method}
+\alias{[,VariableOrder,ANY,ANY-method}
+\alias{[,VariableOrder,character,ANY-method}
 \alias{[<-,VariableOrder,ANY,missing,VariableOrder-method}
 \alias{[<-,VariableOrder,character,missing,VariableOrder-method}
 \alias{[[,VariableGroup,ANY-method}
@@ -32,9 +32,9 @@
 \alias{[[<-,VariableOrder,character,missing,VariableOrder-method}
 \title{Extract and update in VariableOrder and VariableGroup}
 \usage{
-\S4method{[}{VariableOrder,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{VariableOrder,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{VariableOrder,character}(x, i, j, ..., drop = TRUE)
+\S4method{[}{VariableOrder,character,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[[}{VariableOrder,ANY}(x, i, j, ...)
 
@@ -62,9 +62,9 @@
 
 \S4method{$}{VariableOrder}(x, name) <- value
 
-\S4method{[}{VariableGroup,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{VariableGroup,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{VariableGroup,character}(x, i, j, ..., drop = TRUE)
+\S4method{[}{VariableGroup,character,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[[}{VariableGroup,character}(x, i, j, ...)
 

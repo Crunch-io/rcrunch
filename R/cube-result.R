@@ -23,7 +23,10 @@ cToA <- function (x, dims) {
     
     dimsizes <- dim(dims)
     ndims <- length(dims)
-    if (ndims > 1) {
+    if (ndims == 0) {
+        ## It's a scalar. Just return it
+        return(d)
+    } else if (ndims > 1) {
         ## Cube arrays come in row-col-etc. order, not column-major.
         ## Keep the labels right here, then aperm the array back to order
         dimsizes[1:2] <- dimsizes[c(2,1)]
@@ -39,8 +42,11 @@ cToA <- function (x, dims) {
 
 cubeToArray <- function (x, measure=1) {
     out <- x@arrays[[measure]]
-    dimnames(out) <- dimnames(x@dims)
-    out <- pruneCubeArray(out, x)
+    if (is.array(out)) {
+        ## If "out" is just a scalar, skip this
+        dimnames(out) <- dimnames(x@dims)
+        out <- pruneCubeArray(out, x)
+    }
     return(out)
 }
 

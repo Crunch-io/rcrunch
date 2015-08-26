@@ -37,14 +37,8 @@ ds$imiss_b
 ```
 
 ```
+## imiss_b (categorical)
 ## 
-##  imiss_b (categorical) 
-##  
-## 
-## 
-```
-
-```
 ##                    Count
 ## Very Important       805
 ## Somewhat Important   164
@@ -61,25 +55,7 @@ ds$imiss
 ```
 
 ```
-## 
-##  Issue importance (categorical_array) 
-##  
-## 
-##  
-##  Subvariables: 
-##    $`imiss_b`
-##    $`imiss_c`
-##    $`imiss_d`
-##    $`imiss_f`
-##    $`imiss_g`
-##    $`imiss_h`
-##    $`imiss_j`
-##    $`imiss_m`
-##    $`imiss_p`
-##    $`imiss_q`
-##    $`imiss_r`
-##    $`imiss_s`
-##    $`imiss_t`
+## NULL
 ```
 
 In the Crunch web application, the set of "important issue" variables have gone from thirteen separate categorical variable cards to just one, where the subvariables are shown as rows, and the common categories across all of them are shown as columns:
@@ -94,21 +70,20 @@ subvariables(ds$imiss)
 ```
 
 ```
-## 
-##  Subvariables: 
-##    $`imiss_b`
-##    $`imiss_c`
-##    $`imiss_d`
-##    $`imiss_f`
-##    $`imiss_g`
-##    $`imiss_h`
-##    $`imiss_j`
-##    $`imiss_m`
-##    $`imiss_p`
-##    $`imiss_q`
-##    $`imiss_r`
-##    $`imiss_s`
-##    $`imiss_t`
+## Subvariables:
+##   $`imiss_b`
+##   $`imiss_c`
+##   $`imiss_d`
+##   $`imiss_f`
+##   $`imiss_g`
+##   $`imiss_h`
+##   $`imiss_j`
+##   $`imiss_m`
+##   $`imiss_p`
+##   $`imiss_q`
+##   $`imiss_r`
+##   $`imiss_s`
+##   $`imiss_t`
 ```
 
 We can also step into the subvariables and access the underlying categorical variables:
@@ -119,14 +94,8 @@ ds$imiss$imiss_b
 ```
 
 ```
+## imiss_b (categorical)
 ## 
-##  imiss_b (categorical) 
-##  
-## 
-## 
-```
-
-```
 ##                    Count
 ## Very Important       805
 ## Somewhat Important   164
@@ -162,21 +131,20 @@ subvariables(ds$imiss)
 ```
 
 ```
-## 
-##  Subvariables: 
-##    $`The economy`
-##    $`Immigration`
-##    $`The environment`
-##    $`Terrorism`
-##    $`Gay rights`
-##    $`Education`
-##    $`Health care`
-##    $`Social security`
-##    $`The budget deficit`
-##    $`The war in Afghanistan`
-##    $`Taxes`
-##    $`Medicare`
-##    $`Abortion`
+## Subvariables:
+##   $`The economy`
+##   $`Immigration`
+##   $`The environment`
+##   $`Terrorism`
+##   $`Gay rights`
+##   $`Education`
+##   $`Health care`
+##   $`Social security`
+##   $`The budget deficit`
+##   $`The war in Afghanistan`
+##   $`Taxes`
+##   $`Medicare`
+##   $`Abortion`
 ```
 
 Another useful thing we can do with array subvariables is reorder them. Let's alphabetize the subvariables:
@@ -189,21 +157,20 @@ subvariables(ds$imiss)
 ```
 
 ```
-## 
-##  Subvariables: 
-##    $`Abortion`
-##    $`Education`
-##    $`Gay rights`
-##    $`Health care`
-##    $`Immigration`
-##    $`Medicare`
-##    $`Social security`
-##    $`Taxes`
-##    $`Terrorism`
-##    $`The budget deficit`
-##    $`The economy`
-##    $`The environment`
-##    $`The war in Afghanistan`
+## Subvariables:
+##   $`Abortion`
+##   $`Education`
+##   $`Gay rights`
+##   $`Health care`
+##   $`Immigration`
+##   $`Medicare`
+##   $`Social security`
+##   $`Taxes`
+##   $`Terrorism`
+##   $`The budget deficit`
+##   $`The economy`
+##   $`The environment`
+##   $`The war in Afghanistan`
 ```
 
 ## Creating multiple response variables
@@ -218,14 +185,8 @@ ds$boap_4
 ```
 
 ```
+## boap_4 (categorical)
 ## 
-##  boap_4 (categorical) 
-##  
-## 
-## 
-```
-
-```
 ##                     Count
 ## Strongly disapprove   283
 ## Somewhat approve      279
@@ -247,25 +208,21 @@ ds$boap
 ```
 
 ```
-## 
-##  Approval of Obama on issues (multiple_response) 
-##  
-## 
-##  
-##  Subvariables: 
-##    $`boap_2`
-##    $`boap_3`
-##    $`boap_4`
-##    $`boap_5`
-##    $`boap_6`
-##    $`boap_7`
-##    $`boap_8`
-##    $`boap_9`
-##    $`boap_10`
-##    $`boap_11`
-##    $`boap_12`
-##    $`boap_13`
-##    $`boap_14`
+## Approval of Obama on issues (multiple_response)
+## Subvariables:
+##   $`boap_2`
+##   $`boap_3`
+##   $`boap_4`
+##   $`boap_5`
+##   $`boap_6`
+##   $`boap_7`
+##   $`boap_8`
+##   $`boap_9`
+##   $`boap_10`
+##   $`boap_11`
+##   $`boap_12`
+##   $`boap_13`
+##   $`boap_14`
 ```
 
 ## (un)dichotomize
@@ -281,25 +238,21 @@ ds$boap
 ```
 
 ```
-## 
-##  Approval of Obama on issues (categorical_array) 
-##  
-## 
-##  
-##  Subvariables: 
-##    $`boap_2`
-##    $`boap_3`
-##    $`boap_4`
-##    $`boap_5`
-##    $`boap_6`
-##    $`boap_7`
-##    $`boap_8`
-##    $`boap_9`
-##    $`boap_10`
-##    $`boap_11`
-##    $`boap_12`
-##    $`boap_13`
-##    $`boap_14`
+## Approval of Obama on issues (categorical_array)
+## Subvariables:
+##   $`boap_2`
+##   $`boap_3`
+##   $`boap_4`
+##   $`boap_5`
+##   $`boap_6`
+##   $`boap_7`
+##   $`boap_8`
+##   $`boap_9`
+##   $`boap_10`
+##   $`boap_11`
+##   $`boap_12`
+##   $`boap_13`
+##   $`boap_14`
 ```
 
 We can add that information with `dichotomize`. Taking our categorical array "boap," let's make it into a multiple response, but this time, let's only include the "Strongly approve" category:
@@ -311,25 +264,21 @@ ds$boap
 ```
 
 ```
-## 
-##  Approval of Obama on issues (multiple_response) 
-##  
-## 
-##  
-##  Subvariables: 
-##    $`boap_2`
-##    $`boap_3`
-##    $`boap_4`
-##    $`boap_5`
-##    $`boap_6`
-##    $`boap_7`
-##    $`boap_8`
-##    $`boap_9`
-##    $`boap_10`
-##    $`boap_11`
-##    $`boap_12`
-##    $`boap_13`
-##    $`boap_14`
+## Approval of Obama on issues (multiple_response)
+## Subvariables:
+##   $`boap_2`
+##   $`boap_3`
+##   $`boap_4`
+##   $`boap_5`
+##   $`boap_6`
+##   $`boap_7`
+##   $`boap_8`
+##   $`boap_9`
+##   $`boap_10`
+##   $`boap_11`
+##   $`boap_12`
+##   $`boap_13`
+##   $`boap_14`
 ```
 
 ## Splitting arrays back into categoricals

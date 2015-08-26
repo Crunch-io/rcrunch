@@ -342,6 +342,11 @@ if (run.integration.tests) {
                         "25-30"),
                         v7=c("C", "E"))))
             })
+            
+            test_that("Univariate stats", {
+                expect_equivalent(as.array(crtabs(mean(v3) ~ 1, data=ds)),
+                    17.5)
+            })
         })
     })
 }

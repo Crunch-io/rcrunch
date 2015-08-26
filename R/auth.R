@@ -92,6 +92,15 @@ crunchAuth <- function (email, password=NULL, ...) {
         }))
 }
 
+jupyterLogin <- function (token) {
+    ## Add an auth token as a cookie manually, rather than from a Set-Cookie 
+    ## response header.
+    ## Also modify the user-agent to include "Jupyter"
+    set_config(c(config(cookie=paste0("token=", token)),
+        add_headers(`user-agent`=crunchUserAgent("jupyter.crunch.io"))))
+    warmSessionCache()
+}
+
 warmSessionCache <- function () {
     session_store$root <- getAPIroot()
     # session_store$user <- getUser()

@@ -19,7 +19,6 @@ with(fake.HTTP, {
         expect_false(userCanEdit("nobody@crunch.io", ds))
         expect_true(userCanView("nobody@crunch.io", ds))
         expect_false(userCanView("not.a.user@hotmail.com", ds))
-        skip("TODO things with User entity")
         expect_true(iCanEdit(ds))
     })
     

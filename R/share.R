@@ -18,6 +18,10 @@ userCanEdit <- function (email, dataset) {
     return(ifelse(email %in% names(e), e[email], FALSE))
 }
 
+iCanEdit <- function (dataset) {
+    is.editor(permissions(dataset)[userURL()])
+}
+
 userCanView <- function (email, dataset) {
     email %in% emails(permissions(dataset))
 }

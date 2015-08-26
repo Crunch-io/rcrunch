@@ -59,7 +59,8 @@ NULL
 ##' @rdname variable-to-R
 ##' @export
 setMethod("as.vector", "CrunchVariable", function (x, mode) {
-    columnParser(type(x))(getValues(x), x)
+    f <- filterSyntax(activeFilter(x))
+    columnParser(type(x))(getValues(x, filter_syntax=toJSON(f)), x)
 })
 
 from8601 <- function (x) {
