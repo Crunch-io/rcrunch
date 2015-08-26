@@ -41,8 +41,7 @@ tab7 <- crtabs(mean(track) ~ educ + gender, data=ds)
 
 tab8 <- crtabs(mean(track) ~ educ + gender, data=ds[ds$pid3 == "Democrat",])
 
-snowdenleakapp.var <- ds$snowdenleakapp
-summary.snowdenleakapp.var <- summary(snowdenleakapp.var)
+snowdenleakapp.var <- capture.output(print(ds$snowdenleakapp))
 
 ols1 <- lm(I(snowdenleakapp == "Strongly approve") ~ newsint2 + pid3 + gender + age, data=ds)
 
