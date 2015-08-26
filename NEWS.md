@@ -1,9 +1,8 @@
 ## crunch 1.5.0
 * Subset rows of datasets and variables for analysis, using either `[` or `subset`
+* Access and set `exclusion` filters on datasets to drop certain rows
 * Fix some inconsistent handling in R of filters that are set on the server (i.e. for persistent viewing in the web application)
 * `(un)lock` datasets for editing when there are multiple editors
-
-### crunch 1.4.3
 
 ### crunch 1.4.2
 * Support for auto-login in Jupyter notebooks

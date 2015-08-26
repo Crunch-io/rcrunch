@@ -96,9 +96,27 @@ if (run.integration.tests) {
             test_that("newDataset via CSV + JSON", validImport(ds))
         })
         
+        m <- fromJSON("dataset.json", simplifyVector=FALSE)
+        test_that("createWithMetadataAndFile using docs example", {
+            with(test.dataset(createWithMetadataAndFile(m, "dataset.csv")), {
+                expect_true(is.dataset(ds))
+                expect_identical(name(ds), "Example dataset")
+                expect_identical(names(categories(ds$q1)),
+                    c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
+            })
+        })
+        
+        test_that("Duplicate subvariables are forbidden", {
+            m2 <- m
+            ## Add a duplicate subvariable
+            m2$body$table$metadata$allpets$subvariables[[4]] <- list(name="Another", alias="allpets_1")
+            expect_error(createWithMetadataAndFile(m2, "dataset.csv"))
+        })
+        
         dsz <- try(suppressMessages(newDataset(df)))
         test_that("newDataset without specifying name grabs object name", {
             expect_true(is.dataset(dsz))
+            expect_identical(name(dsz), "df")
             with(test.dataset(dsz), validImport(dsz))
         })
         
