@@ -1,3 +1,5 @@
+### crunch 1.5.1
+
 ## crunch 1.5.0
 * Subset rows of datasets and variables for analysis, using either `[` or `subset`
 * Access and set `exclusion` filters on datasets to drop certain rows
