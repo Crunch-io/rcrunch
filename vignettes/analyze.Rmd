@@ -223,10 +223,7 @@ Let's fit a basic Ordinary Least Squares (OLS) model. In our dataset, we have a 
 ds$snowdenleakapp
 ```
 ```{r, echo=FALSE}
-snowdenleakapp.var
-```
-```{r, echo=FALSE}
-print(summary.snowdenleakapp.var)
+cat(snowdenleakapp.var, sep="\n")
 ```
 
 We can use `lm` to fit our model. Let's explore the relationship between approval of Snowden's leak and respondents' interest in current events, party identification, gender, and age.

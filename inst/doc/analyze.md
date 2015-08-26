@@ -448,9 +448,7 @@ ds$snowdenleakapp
 
 ```
 ## snowdenleakapp (categorical)
-```
-
-```
+## 
 ##                        Count
 ## Strongly disapprove 288.3561
 ## Somewhat approve    220.3593

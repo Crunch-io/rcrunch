@@ -11,7 +11,7 @@ start <- ds
 show_imiss_b <- capture.output(print(ds$imiss_b))
 ds$imiss <- makeArray(pattern="^imiss_", dataset=ds, name="Issue importance")
 show_imiss_subvars <- crunch:::showSubvariables(subvariables(ds$imiss))
-show_imiss <- capture.output(print(ds$imiss_b))
+show_imiss <- capture.output(print(ds$imiss))
 names_imiss_subvars <- names(subvariables(ds$imiss))
 
 newnames <- c("The economy", "Immigration", 

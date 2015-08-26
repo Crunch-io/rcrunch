@@ -55,7 +55,21 @@ ds$imiss
 ```
 
 ```
-## NULL
+## Issue importance (categorical_array)
+## Subvariables:
+##   $`imiss_b`
+##   $`imiss_c`
+##   $`imiss_d`
+##   $`imiss_f`
+##   $`imiss_g`
+##   $`imiss_h`
+##   $`imiss_j`
+##   $`imiss_m`
+##   $`imiss_p`
+##   $`imiss_q`
+##   $`imiss_r`
+##   $`imiss_s`
+##   $`imiss_t`
 ```
 
 In the Crunch web application, the set of "important issue" variables have gone from thirteen separate categorical variable cards to just one, where the subvariables are shown as rows, and the common categories across all of them are shown as columns:
