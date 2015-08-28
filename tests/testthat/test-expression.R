@@ -22,6 +22,15 @@ with(fake.HTTP, {
         e1 <- try(ds$birthyr < 0)
         expect_true(inherits(e1, "CrunchLogicalExpr"))
     })
+    
+    test_that("Referencing category names that don't exist errors", {
+        expect_true(inherits(ds$gender == "Male", "CrunchLogicalExpr"))
+        expect_error(ds$gender == "other",
+            paste("Category not found:", dQuote("other")))
+        expect_error(ds$gender %in% c("other", "Male", "another"),
+            paste("Categories not found:", dQuote("other"), "and",
+                dQuote("another")))
+    })
 })
 
 if (run.integration.tests) {

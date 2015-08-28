@@ -117,10 +117,17 @@ NULL
 ##' @export
 setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical(1), USE.NAMES=FALSE), .Names=names(x)))
 
-n2i <- function (x, cats) {
+n2i <- function (x, cats, strict=TRUE) {
     ## Convert x from category names to the corresponding category ids
-    if (is.variable(cats)) cats <- categories(cats)
-    return(ids(cats)[match(x, names(cats))])
+    if (is.variable(cats)) {
+        cats <- categories(cats)
+    }
+    out <- ids(cats)[match(x, names(cats))]
+    if (strict && any(is.na(out))) {
+        halt(ifelse(sum(is.na(out)) > 1, "Categories", "Category"), 
+            " not found: ", serialPaste(dQuote(x[is.na(out)])))
+    }
+    return(out)
 }
 
 ##' @rdname is-na-categories
