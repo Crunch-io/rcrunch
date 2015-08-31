@@ -48,42 +48,6 @@ if (run.integration.tests) {
                 expect_equivalent(as.array(crtabs(~ v4, data=ds)), 
                     array(c(0, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
             })
-            
-            test_that("We can set and unset an exclusion filter", {
-                ds <- refresh(ds)
-                expect_identical(zcl(activeFilter(ds)), list())
-                expect_identical(length(appliedFilters(ds)), 1L)
-                expect_identical(nrow(ds), 20L)
-                expect_equivalent(as.array(crtabs(~ v4, data=ds)), 
-                    array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
-                expect_identical(exclusion(ds), NULL)
-                
-                exclusion(ds) <- ds$v4 == "C"
-                ## Test that the filter is set correctly. Objects not identical
-                ## because JSON objects are unordered.
-                e <- zcl(exclusion(ds))
-                f <- zcl(ds$v4 == "C")
-                expect_identical(e[["function"]], f[["function"]])
-                expect_identical(e[["args"]][[1]], f[["args"]][[1]])
-                expect_identical(e[["args"]][[2]]$value, f[["args"]][[2]]$value)
-                
-                expect_identical(nrow(ds), 10L)
-                expect_equivalent(as.array(crtabs(~ v4, data=ds)), 
-                    array(c(10, 0), dim=2L, dimnames=list(v4=c("B", "C"))))
-                
-                exclusion(ds) <- NULL
-                expect_identical(nrow(ds), 20L)
-                expect_equivalent(as.array(crtabs(~ v4, data=ds)), 
-                    array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
-                expect_identical(exclusion(ds), NULL)
-            })
-            
-            test_that("Validation for setting exclusion", {
-                expect_error(exclusion(ds) <- "Not a filter", 
-                    paste(dQuote("value"), 
-                    "must be a CrunchLogicalExpr or NULL, not",
-                    dQuote("character")))
-            })
         })
     })
 }
