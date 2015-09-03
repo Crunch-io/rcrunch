@@ -37,7 +37,7 @@ if (run.integration.tests) {
             })
             
             test_that("Reverting to old version rolls back weight variables", {
-                skip("It doesn't. See #101935106 and #102272070")
+                # skip("It doesn't. See #101935106 and #102272070")
                 weight <- NULL
                 expect_identical(weight(ds), NULL)
                 ds <- saveVersion(ds, "Before w")
