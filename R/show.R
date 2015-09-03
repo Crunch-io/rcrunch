@@ -148,7 +148,8 @@ setMethod("getShowContent", "CrunchDataset", showCrunchDataset)
 setMethod("getShowContent", "Subvariables", showSubvariables)
 setMethod("getShowContent", "VariableOrder", showVariableOrder)
 setMethod("getShowContent", "VersionCatalog", showVersionCatalog)
-
+setMethod("getShowContent", "ShojiCatalog", function (x) capture.output(print(x@index)))
+setMethod("getShowContent", "ShojiObject", function (x) capture.output(print(x@body)))
 
 ##' @rdname show-crunch
 ##' @export

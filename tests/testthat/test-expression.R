@@ -31,6 +31,10 @@ with(fake.HTTP, {
             paste("Categories not found:", dQuote("other"), "and",
                 dQuote("another")))
     })
+    
+    test_that("show method exists", {
+        expect_true(is.character(capture.output(print(ds$birthyr + 5))))
+    })
 })
 
 if (run.integration.tests) {

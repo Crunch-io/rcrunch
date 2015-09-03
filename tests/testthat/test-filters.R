@@ -1,7 +1,9 @@
 context("Filters")
 
 with(fake.HTTP, {
-    
+    test_that("show method exists", {
+        expect_true(is.character(capture.output(print(CrunchFilter()))))
+    })
 })
 
 if (run.integration.tests) {
