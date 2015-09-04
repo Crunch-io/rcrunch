@@ -165,8 +165,8 @@ newDatasetFromFixture <- function (filename) {
     ## Grab csv and json from "dataset-fixtures" and make a dataset
     m <- fromJSON(file.path("dataset-fixtures", paste0(filename, ".json")),
         simplifyVector=FALSE)
-    return(createWithMetadataAndFile(m, 
-        file.path("dataset-fixtures", paste0(filename, ".csv"))))
+    return(suppressMessages(createWithMetadataAndFile(m, 
+        file.path("dataset-fixtures", paste0(filename, ".csv")))))
 }
 
 test.option <- function (...) {
