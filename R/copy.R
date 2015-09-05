@@ -17,10 +17,11 @@ copyVariable <- function (x, deep=FALSE, ...) {
     body$expr <- zcl(x)
     
     ## Validate that name and alias are unique
+    varcat <- VariableCatalog(crGET(varcat_url))
     
     out <- crPOST(varcat_url, body=toJSON(body))
-    
-    invisible(returnNewVariable(out, varcat))
+    newvar <- returnNewVariable(out, varcat)
+    invisible(newvar)
 }
 
 copy <- copyVariable
