@@ -4,25 +4,17 @@
 ##' @param dataset2 another CrunchDataset, or possibly a data.frame. If 
 ##' \code{dataset2} is not a Crunch dataset, it will be uploaded as a new 
 ##' dataset before appending.
-##' @param confirm logical: should the user be forced to review and accept
-##' any automatically resolved conflicts between \code{dataset1} and
-##' \code{dataset2}? Defaults to \code{TRUE} when occurring in an interactive
-##' R session, \code{FALSE} otherwise. If \code{TRUE} and not running 
-##' interactively, the append operation will fail if there are any differences
-##' in metadata.
 ##' @param cleanup logical: if the append operation fails or is aborted, should
 ##' the intermediate batch created on \code{dataset1} be deleted? Default is
 ##' \code{TRUE}; \code{FALSE} may be useful if you want to review the append
 ##' conflicts in the web application.
 ##' @return A CrunchDataset with \code{dataset2} appended to \code{dataset1}
 ##' @export
-appendDataset <- function (dataset1, dataset2, confirm=interactive(),
-                            cleanup=TRUE) {
+appendDataset <- function (dataset1, dataset2, cleanup=TRUE) {
     
     stopifnot(is.dataset(dataset1))
     batch_url <- addBatchToDataset(dataset1, dataset2)    
-    dataset <- try(acceptAppendResolutions(batch_url, dataset1,
-        confirm=confirm), silent=TRUE)
+    dataset <- try(acceptAppendResolutions(batch_url, dataset1), silent=TRUE)
     if (is.error(dataset)) {
         if (cleanup) {
             d <- try(crDELETE(batch_url, 
@@ -65,8 +57,7 @@ addBatchToDataset <- function (dataset1, dataset2) {
     invisible(crPOST(batches_url, body=toJSON(body)))
 }
 
-acceptAppendResolutions <- function (batch_url, dataset, 
-                                    confirm=interactive(), ...) {
+acceptAppendResolutions <- function (batch_url, dataset, ...) {
     
     status <- pollBatchStatus(batch_url, batches(dataset), until=c("ready", "imported"))
     
@@ -85,32 +76,5 @@ acceptAppendResolutions <- function (batch_url, dataset,
     ## Report on what was done/will be done
     for (i in resolutions) message(i)
     
-    if (status == "ready") {
-        if (length(cflicts)) {
-            ## If there are any resolved conflicts, seek confirmation to proceed,
-            ## if required. Abort if authorization required and not obtained.
-            if (confirm && !askForPermission("Accept these resolutions?")) {
-                err <- c("Permission to automatically resolve conflicts not given.",
-                    "Aborting. Please manually resolve conflicts, or set",
-                    "confirm=FALSE, and try again.")
-                halt(paste(err, collapse=" "))
-            }
-        }
-        
-        ## Proceed.
-        batch <- setCrunchSlot(batch, "status", "importing") ## Async?
-        pollBatchStatus(batch_url, refresh(batches(dataset)), until="imported")
-    }
-    
     invisible(refresh(dataset))
-}
-
-askForPermission <- function (prompt="") {
-    if (!interactive()) return(FALSE)
-    prompt <- paste(prompt, "(y/n) ")
-    proceed <- ""
-    while (!(proceed %in% c("y", "n"))) {
-        proceed <- tolower(readline(prompt))
-    }
-    return(proceed == "y")
 }

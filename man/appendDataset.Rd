@@ -4,7 +4,7 @@
 \alias{appendDataset}
 \title{Append one Crunch dataset to another}
 \usage{
-appendDataset(dataset1, dataset2, confirm = interactive(), cleanup = TRUE)
+appendDataset(dataset1, dataset2, cleanup = TRUE)
 }
 \arguments{
 \item{dataset1}{a CrunchDataset}
@@ -12,13 +12,6 @@ appendDataset(dataset1, dataset2, confirm = interactive(), cleanup = TRUE)
 \item{dataset2}{another CrunchDataset, or possibly a data.frame. If
 \code{dataset2} is not a Crunch dataset, it will be uploaded as a new
 dataset before appending.}
-
-\item{confirm}{logical: should the user be forced to review and accept
-any automatically resolved conflicts between \code{dataset1} and
-\code{dataset2}? Defaults to \code{TRUE} when occurring in an interactive
-R session, \code{FALSE} otherwise. If \code{TRUE} and not running
-interactively, the append operation will fail if there are any differences
-in metadata.}
 
 \item{cleanup}{logical: if the append operation fails or is aborted, should
 the intermediate batch created on \code{dataset1} be deleted? Default is

@@ -140,6 +140,16 @@ joinPath <- function (base.path, relative.part) {
     return(out)
 }
 
+askForPermission <- function (prompt="") {
+    if (!interactive()) return(FALSE)
+    prompt <- paste(prompt, "(y/n) ")
+    proceed <- ""
+    while (!(proceed %in% c("y", "n"))) {
+        proceed <- tolower(readline(prompt))
+    }
+    return(proceed == "y")
+}
+
 ## Borrowed from Hadley
 "%||%" <- function (a, b) if (!is.null(a)) a else b
 
