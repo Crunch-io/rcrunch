@@ -36,16 +36,21 @@ if (run.integration.tests) {
                 expect_identical(nrow(ds), 20L)
             })
             
-            test_that("Reverting to old version rolls back weight variables", {
-                skip("It doesn't. See #101935106 and #102272070")
-                weight <- NULL
+        })
+        with(test.dataset(df), {
+            test_that("We have a clean dataset", {
                 expect_identical(weight(ds), NULL)
+            })
+            test_that("Reverting to old version rolls back weight variables", {
                 ds <- saveVersion(ds, "Before w")
                 ds$w <- 1:20
                 weight(ds) <- ds$w
                 expect_equivalent(weight(ds), ds$w)
                 ds <- restoreVersion(ds, "Before w")
                 expect_identical(weight(ds), NULL)
+            })
+            test_that("And I can add new weights because weight_variables is valid", {
+                ds <- refresh(ds)
                 ds$w2 <- 2:21
                 weight(ds) <- ds$w2
                 expect_equivalent(weight(ds), ds$w2)
