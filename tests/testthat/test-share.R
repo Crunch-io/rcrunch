@@ -22,7 +22,7 @@ with(fake.HTTP, {
         expect_true(iCanEdit(ds))
     })
     
-    with(test.option(crunch.api="https://fake.crunch.io/api/v2/"), {
+    with(temp.options(crunch.api="https://fake.crunch.io/api/v2/"), {
         test_that("Share payload shape", {
             expect_identical(passwordSetURLTemplate(), 
                 "https://fake.crunch.io/password/change/${token}/")

@@ -141,6 +141,8 @@ joinPath <- function (base.path, relative.part) {
 }
 
 askForPermission <- function (prompt="") {
+    must.confirm <- getOption("crunch.require.confirmation") %||% TRUE
+    if (!must.confirm) return(TRUE)
     if (!interactive()) return(FALSE)
     prompt <- paste(prompt, "(y/n) ")
     proceed <- ""

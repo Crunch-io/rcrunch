@@ -30,19 +30,9 @@ cereal <- function (x) fromJSON(toJSON(x), simplifyVector=FALSE)
 #####################
 ## Test decorators ##
 #####################
-setup.and.teardown <- function (setup, teardown, obj.name=".setup") {
-    structure(list(setup=setup, teardown=teardown, obj.name=obj.name),
-        class="SUTD")
-}
-
-with.SUTD <- function (data, expr, ...) {
-    env <- parent.frame()
-    on.exit(data$teardown())
-    assign(data$obj.name, data$setup(), envir=env) ## rm this after running?
-    tryCatch(eval(substitute(expr), envir=parent.frame()),
-        error=function (e) {
-            expect_that(stop(e$message), does_not_throw_error())
-        })
+setup.and.teardown <- function (setup, teardown, obj.name=NULL) {
+    ContextManager(enter=setup, exit=teardown, as=obj.name,
+        error=function (e) expect_that(stop(e$message), does_not_throw_error()))
 }
 
 ## note that this works because testthat evals within package namespace
@@ -158,15 +148,6 @@ test.dataset <- function (df=NULL, obj.name="ds", ...) {
         function () new.dataset.with.setup(df, ...),
         purge.dataset,
         obj.name
-    ))
-}
-
-test.option <- function (...) {
-    new <- list(...)
-    old <- sapply(names(new), getOption, simplify=FALSE)
-    return(setup.and.teardown(
-        function () do.call(options, new),
-        function () do.call(options, old)
     ))
 }
 

@@ -60,19 +60,6 @@ test_that("SUTD", {
     # expect_true(a)
 })
 
-test_that("with(test.option())", {
-    options(crunch.test.option.test="foo")
-    expect_identical(getOption("crunch.test.option.test"), "foo")
-    expect_identical(getOption("crunch.test.test.test.test"), NULL)
-    with(test.option(crunch.test.option.test="bar",
-                     crunch.test.test.test.test="test"), {
-        expect_identical(getOption("crunch.test.option.test"), "bar")
-        expect_identical(getOption("crunch.test.test.test.test"), "test")
-    })
-    expect_identical(getOption("crunch.test.option.test"), "foo")
-    expect_identical(getOption("crunch.test.test.test.test"), NULL)
-})
-
 test_that("rethrow a caught error", {
     e <- try(halt("error in a box"), silent=TRUE)
     expect_true(is.error(e))

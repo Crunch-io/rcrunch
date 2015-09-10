@@ -82,3 +82,21 @@ hiddenVariables <- function (dataset, key="name") {
     }
 }
 
+deleteVariables <- function (dataset, variables=NULL, pattern=NULL, key=namekey(dataset), confirm=interactive(), ...) {
+    var.urls <- findVariableURLs(dataset, refs=variables, pattern=pattern, key=key, ...)
+    if (length(var.urls) == 1) {
+        varnames <- names(allVariables(dataset)[var.urls])
+        prompt <- paste0("Really delete ", dQuote(varnames), "?")
+    } else {
+        prompt <- paste0("Really delete these ", length(var.urls), 
+            " variables?")
+    }
+    if (confirm && !askForPermission(prompt)) {
+        halt("Must confirm deleting variable(s)")
+    }
+    out <- vapply(var.urls, function (x) try(crDELETE(x)))
+    print(out)
+    invisible(refresh(dataset))
+}
+
+deleteVariable <- deleteVariables

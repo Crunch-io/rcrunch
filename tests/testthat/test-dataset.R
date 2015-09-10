@@ -14,7 +14,7 @@ with(fake.HTTP, {
     })
     
     test_that("Dataset webURL", {
-        with(test.option(crunch.api="https://fake.crunch.io/api/v2/"), {
+        with(temp.options(crunch.api="https://fake.crunch.io/api/v2/"), {
             expect_identical(webURL(test.ds),
                 "https://fake.crunch.io/dataset/511a7c49778030653aab5963")
         })
@@ -189,6 +189,14 @@ if (run.integration.tests) {
                     "Must confirm deleting dataset")
                 ## Then can delete
                 expect_that(delete(ds.sub, confirm=FALSE), is_not_an_error())
+            })
+        })
+        
+        test_that("Can give consent to delete", {
+            with(test.dataset(df), {
+                with(consent(), {
+                    expect_that(delete(ds, confirm=TRUE), is_not_an_error())
+                })
             })
         })
     })
