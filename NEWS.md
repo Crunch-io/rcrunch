@@ -1,3 +1,5 @@
+### crunch 1.5.2
+
 ### crunch 1.5.1
 * Validate inputs on making filter expressions with categorical variables
 * Very basic print methods for all Crunch objects
