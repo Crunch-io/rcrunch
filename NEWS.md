@@ -1,4 +1,6 @@
 ### crunch 1.5.1
+* Validate inputs on making filter expressions with categorical variables
+* Very basic print methods for all Crunch objects
 
 ## crunch 1.5.0
 * Subset rows of datasets and variables for analysis, using either `[` or `subset`
