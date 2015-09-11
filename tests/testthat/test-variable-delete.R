@@ -12,7 +12,6 @@ if (run.integration.tests) {
                     "Variable not found. It may have been deleted.")
             })
         })
-        ## TODO: make deleteVariables fully delete arrays.
         
         with(test.dataset(df), {
             test_that("deleteVariables with consent", {
@@ -47,6 +46,16 @@ if (run.integration.tests) {
                         expect_true(is.null(refresh(ds)$v2))
                     })
                 })
+            })
+        })
+        
+        with(test.dataset(newDatasetFromFixture("apidocs")), {
+            test_that("Array variables are fully deleted", {
+                expect_true("allpets" %in% names(ds))
+                expect_false("allpets_1" %in% names(ds))
+                ds$allpets <- NULL
+                expect_false("allpets" %in% names(ds))
+                expect_false("allpets_1" %in% names(ds))
             })
         })
     })

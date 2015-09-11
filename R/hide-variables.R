@@ -105,7 +105,10 @@ deleteVariables <- function (dataset, variables=NULL, pattern=NULL, key=namekey(
         halt("Must confirm deleting variable(s)")
     }
     out <- lapply(var.urls, function (x) try(crDELETE(x)))
-    # print(out)
+    ## Now, delete subvariables. When deleting an array, the DELETE request
+    ## returns the subvariable URLs as a response body
+    subvar.urls <- unlist(Filter(Negate(is.error), out))
+    out2 <- lapply(subvar.urls, function (x) try(crDELETE(x)))
     invisible(refresh(dataset))
 }
 

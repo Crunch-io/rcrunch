@@ -134,8 +134,7 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
     ## Confirm that x[[i]] has the same URL as value
     v <- Filter(function (a) a[[namekey(x)]] == i,
         index(allVariables(x)))
-    i.matches.value <- length(v) == 1 && names(v) == self(value)
-    if (!i.matches.value) {
+    if (length(v) == 0) {
         ## We may have a new variable, and it's not
         ## yet in our variable catalog. Let's check.
         x <- refresh(x)
@@ -146,6 +145,9 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
         ## different. I.e. set the alias based on i if not otherwise
         ## specified. (setTupleSlot does the checking)
         tuple(value) <- setTupleSlot(tuple(value), namekey(x), i)
+    } else if (!identical(names(v), self(value))) {
+        ## x[[i]] exists but is a different variable than value
+        halt("Cannot overwrite one Variable with another")
     }
     allVariables(x)[[self(value)]] <- value
     return(x)

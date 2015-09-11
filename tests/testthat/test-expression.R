@@ -8,9 +8,13 @@ with(fake.HTTP, {
         expect_true(inherits(e1, "CrunchExpr"))
         zexp <- list(`function`="+",
             args=list(
-                list(variable="birthyr"),
-                list(value=5, type=list(`function`="typeof",
-                    args=list(list(variable="birthyr"))))
+                list(variable="f78ca47313144b57adfb495893968e70"),
+                list(value=5, type=list(
+                    `function`="typeof",
+                    args=list(
+                        list(variable="f78ca47313144b57adfb495893968e70")
+                    )
+                ))
             )
         )
         expect_identical(zcl(e1), zexp)
