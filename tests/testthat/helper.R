@@ -151,6 +151,14 @@ test.dataset <- function (df=NULL, obj.name="ds", ...) {
     ))
 }
 
+newDatasetFromFixture <- function (filename) {
+    ## Grab csv and json from "dataset-fixtures" and make a dataset
+    m <- fromJSON(file.path("dataset-fixtures", paste0(filename, ".json")),
+        simplifyVector=FALSE)
+    return(suppressMessages(createWithMetadataAndFile(m, 
+        file.path("dataset-fixtures", paste0(filename, ".csv")))))
+}
+
 reset.option <- function (opts) {
     ## Don't set any options in the setup, but reset specified options after
     old <- sapply(opts, getOption, simplify=FALSE)

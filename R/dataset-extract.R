@@ -136,20 +136,16 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
         index(allVariables(x)))
     i.matches.value <- length(v) == 1 && names(v) == self(value)
     if (!i.matches.value) {
-        ## We may have a variable created by makeArray/MR, and it's not
+        ## We may have a new variable, and it's not
         ## yet in our variable catalog. Let's check.
-        if (is.CA(value) || is.MR(value)) {
-            x <- refresh(x)
-            if (!(self(value) %in% urls(allVariables(x)))) {
-                halt("This variable does not belong to this dataset")
-            }
-            ## Finally, update value with `i` if it is
-            ## different. I.e. set the alias based on i if not otherwise
-            ## specified. (setTupleSlot does the checking)
-            tuple(value) <- setTupleSlot(tuple(value), namekey(x), i)
-        } else {
-            halt("Cannot overwrite one Variable with another")
+        x <- refresh(x)
+        if (!(self(value) %in% urls(allVariables(x)))) {
+            halt("This variable does not belong to this dataset")
         }
+        ## Update value with `i` if it is
+        ## different. I.e. set the alias based on i if not otherwise
+        ## specified. (setTupleSlot does the checking)
+        tuple(value) <- setTupleSlot(tuple(value), namekey(x), i)
     }
     allVariables(x)[[self(value)]] <- value
     return(x)
