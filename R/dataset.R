@@ -204,8 +204,15 @@ setDatasetVariables <- function (x, value) {
     return(x)
 }
 
+setMethod("datasetReference", "CrunchDataset", function (x) self(x))
+
 variableCatalogURL <- function (dataset) {
-    shojiURL(dataset, "catalogs", "variables")
+    ## Get the variable catalog URL that corresponds to an object
+    if (class(dataset) == "VariableCatalog") return(self(dataset))
+    if (!is.dataset(dataset)) {
+        dataset <- ShojiObject(crGET(datasetReference(dataset)))
+    }
+    return(shojiURL(dataset, "catalogs", "variables"))
 }
 
 summaryURL <- function (x) shojiURL(x, "views", "summary")

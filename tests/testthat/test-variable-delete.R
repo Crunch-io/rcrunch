@@ -51,11 +51,27 @@ if (run.integration.tests) {
         
         with(test.dataset(newDatasetFromFixture("apidocs")), {
             test_that("Array variables are fully deleted", {
+                expect_true("petloc" %in% names(ds))
+                expect_false("petloc_home" %in% names(ds))
+                ds$petloc <- NULL
+                expect_false("petloc" %in% names(ds))
+                expect_false("petloc_home" %in% names(ds))
+            })
+            
+            test_that("Deleting array subvariables", {
                 expect_true("allpets" %in% names(ds))
-                expect_false("allpets_1" %in% names(ds))
-                ds$allpets <- NULL
-                expect_false("allpets" %in% names(ds))
-                expect_false("allpets_1" %in% names(ds))
+                expect_true(is.MR(ds$allpets))
+                expect_false("allpets_2" %in% names(ds))
+                expect_true("allpets_2" %in% aliases(subvariables(ds$allpets)))
+                # ds$allpets <- deleteSubvariable(ds$allpets, "Dog") ## Cannot overwrite one Variable with another
+                deleteSubvariable(ds$allpets, "Dog")
+                ds <- refresh(ds)
+                expect_true("allpets" %in% names(ds))
+                expect_true(is.MR(ds$allpets))
+                expect_false("allpets_2" %in% names(ds))
+                expect_false("allpets_2" %in% aliases(subvariables(ds$allpets)))
+                expect_identical(names(subvariables(ds$allpets)), 
+                    c("Cat", "Bird"))
             })
         })
     })

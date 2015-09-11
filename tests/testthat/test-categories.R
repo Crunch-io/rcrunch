@@ -183,5 +183,30 @@ if (run.integration.tests) {
                     c("No Data", "Second", "First"))
             })
         })
+        
+        with(test.dataset(newDatasetFromFixture("apidocs")), {
+            test_that("dichotomizing dichotomizes the subvariables", {
+                expect_true(is.MR(ds$allpets))
+                expect_true(is.dichotomized(categories(ds$allpets)))
+                expect_true(is.dichotomized(categories(ds$allpets$Dog)))
+                ds$allpets <- undichotomize(ds$allpets)
+                expect_true(is.CA(ds$allpets))
+                expect_false(is.dichotomized(categories(ds$allpets)))
+                skip("Sadly, no. See #103237684")
+                expect_false(is.dichotomized(categories(ds$allpets$Dog)))
+            })
+            test_that("Editing array categories affects the subvariables too", {
+                expect_identical(names(categories(ds$petloc)), 
+                    c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
+                expect_identical(names(categories(ds$petloc$Home)), 
+                    c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
+                names(categories(ds$petloc))[2] <- "Canine"
+                expect_identical(names(categories(ds$petloc)), 
+                    c("Cat", "Canine", "Bird", "Skipped", "Not Asked"))
+                skip("Sadly, no. See #103237684")
+                expect_identical(names(categories(ds$petloc$Home)), 
+                    c("Cat", "Canine", "Bird", "Skipped", "Not Asked"))
+            })
+        })
     })
 }

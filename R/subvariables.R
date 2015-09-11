@@ -139,6 +139,51 @@ setMethod("[", c("Subvariables", "character"), function (x, i, ...) {
     return(x[w])
 })
 
+##' Delete subvariables from an array
+##'
+##' This function conceals the dirty work in making this happen. The array
+##' gets unbound, the subvariables deleted, and then the remaining subvariable
+##' are rebound into a new array.
+##' @param variable the array variable
+##' @param to.delete subvariable names to delete
+##' @return a new version of variable without the indicated subvariables
+##' @export
+deleteSubvariables <- function (variable, to.delete) {
+    ## HACK. Works around one bug by exploiting another
+    variable <- undichotomize(variable)
+    
+    ## Store some metadata up front
+    payload <- copyVariableReferences(variable)
+    subvars <- subvariables(variable)
+    # print(str(categories(subvars[[1]])))
+    subvar.urls <- urls(subvars)
+    subvar.names <- names(subvars)
+    
+    ## Identify subvariable URLs
+    delete.these <- findVariableURLs(subvariables(variable), to.delete, key="name")
+    ## Unbind
+    all.subvar.urls <- unlist(unbind(variable))
+    
+    ## Delete
+    dels <- lapply(delete.these, crDELETE)
+    
+    ## Setdiff those deleted from those returned from unbind
+    payload$var_urls <- setdiff(all.subvar.urls, delete.these)
+    
+    ## Rebind
+    payload$dataset <- VariableCatalog(crGET(variableCatalogURL(variable)))
+    payload$type <- "categorical_array"
+    variable <- do.call(bindVariables, payload)
+    
+    ## Prune subvariable name prefix, or otherwise reset the names
+    names(subvariables(variable)) <- subvar.names[match(urls(subvariables(variable)), subvar.urls)]
+    invisible(variable)
+}
+
+##' @rdname deleteSubvariables
+##' @export
+deleteSubvariable <- deleteSubvariables
+
 ##' @rdname subvars-extract
 ##' @export
 setMethod("[[<-", 
@@ -175,7 +220,12 @@ setMethod("[[<-",
     function (x, i, value) {
         halt("Can only assign Variables into an object of class Subvariables")
     })
-
+##' @rdname subvars-extract
+##' @export
+setMethod("$<-", c("Subvariables"), function (x, name, value) {
+    x[[name]] <- value
+    return(x)
+})
 ##' @rdname subvars-extract
 ##' @export
 setMethod("[<-", c("Subvariables", "character", "missing", "Subvariables"), 
@@ -230,6 +280,7 @@ setMethod("[", c("CategoricalArrayVariable", "logical"), function (x, i, ...) {
 setMethod("[[", "CategoricalArrayVariable", function (x, i, ...) {
     return(subvariables(x)[[i, ...]])
 })
+
 ##' @rdname subvars-extract
 ##' @export
 setMethod("$", "CategoricalArrayVariable", 
