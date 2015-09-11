@@ -53,10 +53,18 @@ temp.options <- function (...) {
     ))
 }
 
+##' @rdname temp.options
+##' @export
+temp.option <- temp.options
+
 ##' Give consent to do things that require permission
 ##' @return an S3 class "contextManager" object
 ##' @seealso \link{with-context-manager} \link{ContextManager}
 ##' @export
 consent <- function () {
     temp.options(crunch.require.confirmation=FALSE)
+}
+
+requireConsent <- function () {
+    getOption("crunch.require.confirmation") %||% interactive()
 }

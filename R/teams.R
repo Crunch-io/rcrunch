@@ -165,7 +165,7 @@ setMethod("members<-", c("CrunchTeam", "character"), function (x, value) {
 
 ##' @rdname delete
 ##' @export
-setMethod("delete", "CrunchTeam", function (x, confirm=interactive(), ...) {
+setMethod("delete", "CrunchTeam", function (x, confirm=requireConsent(), ...) {
     prompt <- paste0("Really delete team ", dQuote(name(x)), "? ",
         "This cannot be undone.")
     if (confirm && !askForPermission(prompt)) {

@@ -19,7 +19,14 @@ NULL
 setMethod("refresh", "IndexTuple", function (x) {
     dropCache(x@index_url)
     catalog <- ShojiCatalog(crGET(x@index_url))
-    x@body <- catalog[[x@entity_url]]
+    tup <- catalog[[x@entity_url]]
+    if (is.null(tup)) {
+        ## Get the object type from the (sub)class name
+        cls <- sub("Tuple$", "", class(x))
+        if (cls == "Index") cls <- "Object"
+        halt(cls, " not found. It may have been deleted.")
+    }
+    x@body <- tup
     return(x)
 })
 
@@ -73,7 +80,7 @@ setMethod("delete", "IndexTuple", function (x, ...) {
 })
 ##' @rdname tuple-methods
 ##' @export
-setMethod("delete", "DatasetTuple", function (x, confirm=interactive(), ...) {
+setMethod("delete", "DatasetTuple", function (x, confirm=requireConsent(), ...) {
     prompt <- paste0("Really delete dataset ", dQuote(name(x)), "?")
     if (confirm && !askForPermission(prompt)) {
         halt("Must confirm deleting dataset")

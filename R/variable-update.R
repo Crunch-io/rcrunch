@@ -53,7 +53,13 @@ NULL
 ##' @rdname variable-update
 ##' @export
 setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"), .backstopUpdate)
-    
+
+##' @rdname variable-update
+##' @export
+setMethod("[<-", c("CrunchVariable", "ANY", "missing", "NULL"), 
+    function (x, i, j, value) return(NULL))
+
+
 .sigs <- list(
     c("TextVariable", "character"),
     c("NumericVariable", "numeric"),

@@ -215,6 +215,16 @@ setMethod("[[<-",
     })
 ##' @rdname dataset-update
 ##' @export
+setMethod("[[<-", 
+    c("CrunchDataset", "character", "missing", "NULL"), 
+    function (x, i, value) deleteVariables(x, i))
+##' @rdname dataset-update
+##' @export
+setMethod("[[<-", 
+    c("CrunchDataset", "ANY", "missing", "NULL"), 
+    function (x, i, value) deleteVariables(x, names(x)[i]))
+##' @rdname dataset-update
+##' @export
 setMethod("$<-", c("CrunchDataset"), function (x, name, value) {
     x[[name]] <- value
     return(x)

@@ -82,7 +82,17 @@ hiddenVariables <- function (dataset, key="name") {
     }
 }
 
-deleteVariables <- function (dataset, variables=NULL, pattern=NULL, key=namekey(dataset), confirm=interactive(), ...) {
+##' Delete Variables Within a Dataset
+##' @param dataset the Dataset to modify
+##' @param variables names or indices of variables to delete
+##' @param pattern optional regular expression to identify Variables to delete
+##' @param key the Variable attribute to \code{\link{grep}} with the
+##' \code{pattern}. Default is "alias"
+##' @param ... optional additional arguments to \code{grep}
+##' @return (invisibly) \code{dataset} with the specified variables deleted
+##' @seealso \code{\link{hide}}
+##' @export
+deleteVariables <- function (dataset, variables=NULL, pattern=NULL, key=namekey(dataset), confirm=requireConsent(), ...) {
     var.urls <- findVariableURLs(dataset, refs=variables, pattern=pattern, key=key, ...)
     if (length(var.urls) == 1) {
         varnames <- names(allVariables(dataset)[var.urls])
@@ -94,9 +104,11 @@ deleteVariables <- function (dataset, variables=NULL, pattern=NULL, key=namekey(
     if (confirm && !askForPermission(prompt)) {
         halt("Must confirm deleting variable(s)")
     }
-    out <- vapply(var.urls, function (x) try(crDELETE(x)))
-    print(out)
+    out <- lapply(var.urls, function (x) try(crDELETE(x)))
+    # print(out)
     invisible(refresh(dataset))
 }
 
+##' @rdname deleteVariables
+##' @export
 deleteVariable <- deleteVariables

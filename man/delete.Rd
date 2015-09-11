@@ -10,14 +10,14 @@
 \alias{delete,ShojiObject-method}
 \title{Delete a Crunch object from the server}
 \usage{
-\S4method{delete}{CrunchDataset}(x, confirm = interactive() | is.readonly(x),
-  ...)
+\S4method{delete}{CrunchDataset}(x, confirm = requireConsent() |
+  is.readonly(x), ...)
 
 \S4method{delete}{ShojiObject}(x, ...)
 
 \S4method{delete}{ANY}(x, ...)
 
-\S4method{delete}{CrunchTeam}(x, confirm = interactive(), ...)
+\S4method{delete}{CrunchTeam}(x, confirm = requireConsent(), ...)
 
 \S4method{delete}{CategoricalArrayVariable}(x, ...)
 }

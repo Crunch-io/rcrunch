@@ -48,8 +48,10 @@ test_that("'as' argument for output of enter function", {
     expect_false(a)
     with(ctx, as="b", {
         expect_equivalent(sum(b), 10)
+        d <- sum(b)
     })
     expect_true(a)
+    expect_equivalent(d, 10)
 })
 
 test_that("'as' specified in the context manager itself", {

@@ -141,8 +141,12 @@ joinPath <- function (base.path, relative.part) {
 }
 
 askForPermission <- function (prompt="") {
+    ## If options explicitly say we don't need to ask, bail.
+    ## Have to check that it's FALSE and not NULL. Silence doesn't mean consent.
     must.confirm <- getOption("crunch.require.confirmation") %||% TRUE
-    if (!must.confirm) return(TRUE)
+    if (must.confirm == FALSE) return(TRUE)
+    
+    ## If we're here but not interactive, we can't give permission.
     if (!interactive()) return(FALSE)
     prompt <- paste(prompt, "(y/n) ")
     proceed <- ""

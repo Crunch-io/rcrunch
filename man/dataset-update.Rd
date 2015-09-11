@@ -7,10 +7,12 @@
 \alias{[<-,CrunchDataset,CrunchExpr,ANY,ANY-method}
 \alias{[[<-,CrunchDataset,ANY,ANY,ANY-method}
 \alias{[[<-,CrunchDataset,ANY,missing,CrunchVariable-method}
+\alias{[[<-,CrunchDataset,ANY,missing,NULL-method}
 \alias{[[<-,CrunchDataset,character,missing,ANY-method}
 \alias{[[<-,CrunchDataset,character,missing,CrunchExpr-method}
 \alias{[[<-,CrunchDataset,character,missing,CrunchLogicalExpr-method}
 \alias{[[<-,CrunchDataset,character,missing,CrunchVariable-method}
+\alias{[[<-,CrunchDataset,character,missing,NULL-method}
 \alias{dataset-update}
 \title{Update a variable or variables in a dataset}
 \usage{
@@ -25,6 +27,10 @@
 \S4method{[[}{CrunchDataset,character,missing,CrunchLogicalExpr}(x, i) <- value
 
 \S4method{[[}{CrunchDataset,ANY,ANY,ANY}(x, i) <- value
+
+\S4method{[[}{CrunchDataset,character,missing,`NULL`}(x, i) <- value
+
+\S4method{[[}{CrunchDataset,ANY,missing,`NULL`}(x, i) <- value
 
 \S4method{$}{CrunchDataset}(x, name) <- value
 
