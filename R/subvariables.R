@@ -155,7 +155,6 @@ deleteSubvariables <- function (variable, to.delete) {
     ## Store some metadata up front
     payload <- copyVariableReferences(variable)
     subvars <- subvariables(variable)
-    # print(str(categories(subvars[[1]])))
     subvar.urls <- urls(subvars)
     subvar.names <- names(subvars)
     
@@ -165,14 +164,14 @@ deleteSubvariables <- function (variable, to.delete) {
     all.subvar.urls <- unlist(unbind(variable))
     
     ## Delete
-    dels <- lapply(delete.these, crDELETE)
+    dels <- lapply(delete.these, function (x) try(crDELETE(x)))
     
     ## Setdiff those deleted from those returned from unbind
     payload$var_urls <- setdiff(all.subvar.urls, delete.these)
     
     ## Rebind
     payload$dataset <- VariableCatalog(crGET(variableCatalogURL(variable)))
-    payload$type <- "categorical_array"
+    payload$type <- "categorical_array" ## Also part of the hack?
     variable <- do.call(bindVariables, payload)
     
     ## Prune subvariable name prefix, or otherwise reset the names
