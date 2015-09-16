@@ -192,7 +192,6 @@ if (run.integration.tests) {
                 ds$allpets <- undichotomize(ds$allpets)
                 expect_true(is.CA(ds$allpets))
                 expect_false(is.dichotomized(categories(ds$allpets)))
-                skip("Sadly, no. See #103237684")
                 expect_false(is.dichotomized(categories(ds$allpets$Dog)))
             })
             test_that("Editing array categories affects the subvariables too", {
@@ -200,12 +199,28 @@ if (run.integration.tests) {
                     c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
                 expect_identical(names(categories(ds$petloc$Home)), 
                     c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
+                expect_identical(names(table(ds$petloc$Home)), 
+                    c("Cat", "Dog", "Bird"))
                 names(categories(ds$petloc))[2] <- "Canine"
                 expect_identical(names(categories(ds$petloc)), 
                     c("Cat", "Canine", "Bird", "Skipped", "Not Asked"))
-                skip("Sadly, no. See #103237684")
+                expect_identical(names(table(ds$petloc$Home)), 
+                    c("Cat", "Canine", "Bird"))
                 expect_identical(names(categories(ds$petloc$Home)), 
                     c("Cat", "Canine", "Bird", "Skipped", "Not Asked"))
+            })
+        })
+        
+        with(test.dataset(df), {
+            test_that("Cache invalidation when modifying categories", {
+                expect_equal(names(categories(ds$v4)), c("B", "C"))
+                expect_equivalent(as.array(crtabs(~ v4, data=ds)), 
+                    array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
+                
+                names(categories(ds$v4))[1] <- "V"
+                expect_equal(names(categories(ds$v4)), c("V", "C"))
+                expect_equivalent(as.array(crtabs(~ v4, data=ds)), 
+                    array(c(10, 10), dim=2L, dimnames=list(v4=c("V", "C"))))
             })
         })
     })

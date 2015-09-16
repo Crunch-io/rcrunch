@@ -156,6 +156,7 @@ setMethod("categories<-", c("CategoricalVariable", "Categories"),
 setMethod("categories<-", c("CategoricalArrayVariable", "Categories"), 
     function (x, value) {
         dropCache(absoluteURL("../../cube/", self(x)))
+        lapply(tuple(x)$subvariables, dropCache) ## Subvariables will update too
         return(setCrunchSlot(x, "categories", value))
     })
 ##' @rdname var-categories
