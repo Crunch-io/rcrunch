@@ -149,9 +149,6 @@ setMethod("[", c("Subvariables", "character"), function (x, i, ...) {
 ##' @return a new version of variable without the indicated subvariables
 ##' @export
 deleteSubvariables <- function (variable, to.delete) {
-    ## HACK. Works around one bug by exploiting another
-    variable <- undichotomize(variable)
-    
     ## Store some metadata up front
     payload <- copyVariableReferences(variable)
     subvars <- subvariables(variable)
@@ -171,7 +168,6 @@ deleteSubvariables <- function (variable, to.delete) {
     
     ## Rebind
     payload$dataset <- VariableCatalog(crGET(variableCatalogURL(variable)))
-    payload$type <- "categorical_array" ## Also part of the hack?
     variable <- do.call(bindVariables, payload)
     
     ## Prune subvariable name prefix, or otherwise reset the names

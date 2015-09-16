@@ -59,7 +59,6 @@ if (run.integration.tests) {
             })
             
             test_that("Deleting array subvariables", {
-                skip("Pending unhack")
                 expect_true("allpets" %in% names(ds))
                 expect_true(is.MR(ds$allpets))
                 expect_false("allpets_2" %in% names(ds))
