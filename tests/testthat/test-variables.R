@@ -54,7 +54,7 @@ with(fake.HTTP, {
     test_that("Variable setters (mock)", {
         tp <- tuple(ds$gender)@body
         tp$name <- "Sex"
-        mock.tuple <- structure(list(tp), .Names=self(ds$gender))
+        mock.tuple <- structure(list(tp["name"]), .Names=self(ds$gender))
         expect_error(name(ds$gender) <- "Sex",
             paste("PATCH", self(variables(ds)), toJSON(mock.tuple)),
             fixed=TRUE)
