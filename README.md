@@ -49,7 +49,7 @@ You can set several parameters in your .Rprofile to simplify your workflow:
     $ R --slave -e 'install.packages(c("crunch", "codetools", "testthat"), repo="http://cran.at.r-project.org")'
     $ make test
 
-This installs dependencies and then runs the tests, which installs `crunch` from your local checkout in the process.
+This installs dependencies and then runs the tests, which installs `crunch` from your local checkout in the process. If the dependencies fail to install, check the error message. You may need to install libcurl on your system before installing the R packages.
 
 ### Running tests
 

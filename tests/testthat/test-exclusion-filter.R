@@ -47,18 +47,19 @@ if (run.integration.tests) {
             })
             
             test_that("Add a variable", {
-                skip("(400) Bad Request: Problem with input: Cannot insert. Length of cd0bc321f8104743b0baa021f2c0c420 (10) does not match others (20)")
                 ds$newvar1 <- 1:10
-                expect_identical(as.vector(ds$newvar), 1:10)
+                expect_equivalent(as.vector(ds$newvar1), 1:10)
                 exclusion(ds) <- NULL
-                expect_identical(as.vector(ds$newvar),
+                expect_equivalent(as.vector(ds$newvar1),
                     c(1, NA, 2, NA, 3, NA, 4, NA, 5, NA, 6, NA, 7, NA, 8, NA,
                         9, NA, 10, NA))
             })
-            
+        })
+        with(test.dataset(df), {
             test_that("Update a variable", {
                 skip("(400) Bad Request: Column '40a5355a5d8a4241bd6fbb3b99586951' length 10 does not match existing length 20.")
-                exclusion(ds) <<- ds$v4 == "C"
+                exclusion(ds) <- ds$v4 == "C"
+                expect_identical(nrow(ds), 10L)
                 ds$v3 <- 10:1
                 expect_identical(as.vector(ds$v3), 10:1)
                 exclusion(ds) <- NULL
@@ -82,8 +83,8 @@ if (run.integration.tests) {
             })
             
             test_that("Append to a dataset", {
+                skip("All rows, not just excluded rows, are appended")
                 with(test.dataset(df, "part1"), {
-                    skip("All rows, not just excluded rows, are appended")
                     exclusion(ds) <<- ds$v4 == "C"
                     out <- appendDataset(part1, ds)
                     expect_identical(nrow(out), 30L)
@@ -91,11 +92,13 @@ if (run.integration.tests) {
                         as.factor(c(rep(LETTERS[2:3], 10), rep("B", 10))))
                 })
             })
+        })
             
-            test_that("Append another dataset to one with exclusion", {
+        test_that("Append another dataset to one with exclusion", {
+            with(test.dataset(df, "part1"), {
                 with(test.dataset(df, "part2"), {
-                    exclusion(ds) <<- ds$v4 == "C"
-                    out <- appendDataset(ds, part2)
+                    exclusion(part1) <- part1$v4 == "C"
+                    out <- appendDataset(part1, part2)
                     expect_identical(nrow(out), 20L)
                     expect_equivalent(as.array(crtabs(~ v4, 
                         data=out)), 
