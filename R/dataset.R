@@ -257,3 +257,10 @@ webURL <- function (x) {
     stopifnot(is.dataset(x))
     return(paste0(absoluteURL("/", getOption("crunch.api")), "dataset/", id(x)))
 }
+
+setMethod("as.environment", "CrunchDataset", function (x) {
+    out <- new.env()
+    out$.crunchDataset <- x
+    with(out, for (v in aliases(allVariables(x))) eval(parse(text=paste0("delayedAssign('", v, "', .crunchDataset[['", v, "']])"))))
+    return(out)
+})

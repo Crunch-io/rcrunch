@@ -44,24 +44,11 @@ crtabs <- function (formula, data, weight=crunch::weight(data),
     }
     
     ## Find variables either in 'data' or in the calling environment
-    where <- parent.frame()
-    vars <- lapply(all.f.vars, 
-        function (x) data[[x]] %||% safeGet(x, envir=where))
-    names(vars) <- all.f.vars
-    
-    ## Validate what we got
-    notfound <- vapply(vars, is.null, logical(1))
-    if (any(notfound)) {
-        badvars <- all.f.vars[notfound]
-        halt(serialPaste(dQuote(badvars)), 
-            ifelse(length(badvars) > 1, " are", " is"),
-            " not found in ", dQuote("data"))
-    }
-    
     ## Evaluate the formula's terms in order to catch derived expressions
-    vars <- registerCubeFunctions(vars)
-    v.call <- do.call(substitute, list(expr=f.vars, env=vars))
-    vars <- eval(v.call)
+    v.call <- do.call(substitute, 
+        list(expr=f.vars, env=registerCubeFunctions(all.f.vars)))
+    where <- environment(formula) #parent.frame()
+    vars <- eval(v.call, as.environment(data), environment(formula))
     
     ## Construct the "measures", either from the formula or default "count"
     resp <- attr(f, "response")
@@ -116,18 +103,12 @@ crtabs <- function (formula, data, weight=crunch::weight(data),
         useNA=match.arg(useNA)))
 }
 
-safeGet <- function (x, ..., ifnot=NULL) {
-    ## "get" with a default
-    out <- try(get(x, ...), silent=TRUE)
-    if (is.error(out)) out <- ifnot
-    return(out)
-}
-
-registerCubeFunctions <- function (vars) {
-    ## Given a list of variables, add to it "cube functions", to substitute()
+registerCubeFunctions <- function (varnames) {
+    ## Return a list of "cube functions" to substitute()
     ## in. A better approach, which would avoid potential name collisions, would
     ## probably be to have vars be an environment inside of another environment
-    ## that has the cube functions.
+    ## that has the cube functions. This version just checks for name collisions
+    ## and errors if there is one.
     
     funcs <- list(
         mean=function (x) zfunc("cube_mean", x),
@@ -139,13 +120,13 @@ registerCubeFunctions <- function (vars) {
         sum=function (x) zfunc("cube_sum", x)
     )
     
-    overlap <- intersect(names(vars), names(funcs))
+    overlap <- intersect(varnames, names(funcs))
     if (length(overlap)) {
         halt("Cannot evaluate a cube with reserved name", 
             ifelse(length(overlap) > 1, "s", ""), ": ",
             serialPaste(dQuote(overlap)))
     }
-    return(c(vars, funcs))
+    return(funcs)
 }
 
 isCubeAggregation <- function (x) {
