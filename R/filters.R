@@ -132,12 +132,13 @@ filterSyntax <- function (x) {
 ##' @export
 exclusion <- function (x) {
     stopifnot(is.dataset(x))
-    efcat <- FilterCatalog(crGET(shojiURL(x, "catalogs",
-        "applied_exclusion_filters")))
-    if (length(efcat)) {
-        return(CrunchFilter(crGET(urls(efcat)[1])))
-    }
-    return(NULL)
+    raw <- crGET(shojiURL(x, "fragment", "exclusion"))
+    sj <- ShojiObject(raw)
+    print(sj)
+    #if (is.null(sj$body$name)){
+    #    return(NULL)
+    #}
+    return (CrunchFilter(raw))
 }
 
 ##' @rdname exclusion
@@ -145,13 +146,11 @@ exclusion <- function (x) {
 `exclusion<-` <- function (x, value) {
     stopifnot(is.dataset(x))
     if (inherits(value, "CrunchLogicalExpr")) {
-        u <- crPOST(shojiURL(x, "catalogs", "exclusion_filters"),
+        crPUT(shojiURL(x, "fragment", "exclusion"),
             body=toJSON(list(name="exclusion", expression=zcl(value))))
-        crPUT(shojiURL(x, "catalogs", "applied_exclusion_filters"),
-            body=toJSON(I(u)))
-    } else if (is.null(value)) {
-        crPUT(shojiURL(x, "catalogs", "applied_exclusion_filters"),
-            body="[]")
+        }
+    else if (is.null(value)) {
+        crDELETE(shojiURL(x, "fragment", "exclusion"))
     } else {
         halt(dQuote("value"), " must be a CrunchLogicalExpr or NULL, not ",
             dQuote(class(value)))
