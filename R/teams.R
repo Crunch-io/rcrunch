@@ -157,7 +157,7 @@ setMethod("members<-", c("CrunchTeam", "MemberCatalog"), function (x, value) {
 ##' @export
 setMethod("members<-", c("CrunchTeam", "character"), function (x, value) {
     payload <- sapply(value, 
-        function (z) structure(list(), .Names=character(0)),
+        function (z) emptyObject(),
         simplify=FALSE)
     crPATCH(self(members(x)), body=toJSON(payload))
     return(refresh(x))

@@ -117,3 +117,7 @@ test_that("absoluteURL", {
     expect_identical(absoluteURL("/", base.url),
         "https://fake.crunch.io/")
 })
+
+test_that("emptyObject JSONifies correctly", {
+    expect_equivalent(unclass(toJSON(emptyObject())), "{}")
+})

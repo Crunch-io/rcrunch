@@ -156,6 +156,11 @@ askForPermission <- function (prompt="") {
     return(proceed == "y")
 }
 
+emptyObject <- function () {
+    ## toJSON(list()) is "[]". toJSON(emptyObject()) is "{}"
+    structure(list(), .Names=character(0))
+}
+
 ## Borrowed from Hadley
 "%||%" <- function (a, b) if (!is.null(a)) a else b
 

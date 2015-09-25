@@ -133,7 +133,7 @@ filterSyntax <- function (x) {
 exclusion <- function (x) {
     stopifnot(is.dataset(x))
     ef <- crGET(shojiURL(x, "fragment", "exclusion"))
-    if (length(ef$body)) {
+    if (length(ef$body$expression)) {
         ## We have a non-empty filter
         return(CrunchLogicalExpr(expression=ef$body$expression))
     } else {
@@ -146,15 +146,15 @@ exclusion <- function (x) {
 `exclusion<-` <- function (x, value) {
     stopifnot(is.dataset(x))
     if (inherits(value, "CrunchLogicalExpr")) {
-        crPUT(shojiURL(x, "fragment", "exclusion"),
-            body=toJSON(list(name="exclusion", expression=zcl(value))))
-        }
-    else if (is.null(value)) {
-        crDELETE(shojiURL(x, "fragment", "exclusion"))
+        payload <- zcl(value)
+    } else if (is.null(value)) {
+        payload <- emptyObject()
     } else {
         halt(dQuote("value"), " must be a CrunchLogicalExpr or NULL, not ",
             dQuote(class(value)))
     }
+    crPATCH(shojiURL(x, "fragment", "exclusion"),
+        body=toJSON(list(expression=payload)))
     dropCache(self(x))
     return(x)
 }
