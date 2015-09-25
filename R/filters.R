@@ -132,13 +132,13 @@ filterSyntax <- function (x) {
 ##' @export
 exclusion <- function (x) {
     stopifnot(is.dataset(x))
-    raw <- crGET(shojiURL(x, "fragment", "exclusion"))
-    sj <- ShojiObject(raw)
-    print(sj)
-    #if (is.null(sj$body$name)){
-    #    return(NULL)
-    #}
-    return (CrunchFilter(raw))
+    ef <- crGET(shojiURL(x, "fragment", "exclusion"))
+    if (length(ef$body)) {
+        ## We have a non-empty filter
+        return(CrunchLogicalExpr(expression=ef$body$expression))
+    } else {
+        return(NULL)
+    }
 }
 
 ##' @rdname exclusion

@@ -49,9 +49,9 @@ if (run.integration.tests) {
             test_that("Add a variable", {
                 skip("(400) Bad Request: Problem with input: Cannot insert. Length of cd0bc321f8104743b0baa021f2c0c420 (10) does not match others (20)")
                 ds$newvar1 <- 1:10
-                expect_identical(as.vector(ds$newvar), 1:10)
+                expect_equivalent(as.vector(ds$newvar1), 1:10)
                 exclusion(ds) <- NULL
-                expect_identical(as.vector(ds$newvar),
+                expect_identical(as.vector(ds$newvar1),
                     c(1, NA, 2, NA, 3, NA, 4, NA, 5, NA, 6, NA, 7, NA, 8, NA,
                         9, NA, 10, NA))
             })
