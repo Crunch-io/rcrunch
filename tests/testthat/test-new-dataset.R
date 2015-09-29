@@ -105,9 +105,18 @@ if (run.integration.tests) {
             })
         })
         
+        m <- fromJSON(file.path("dataset-fixtures", "apidocs.json"),
+            simplifyVector=FALSE)
+        
+        test_that("Can create dataset with data in S3", {
+            ds <- try(createWithMetadataAndFile(m2, 
+                file="s3://public.testing.crunch.io/example-dataset.csv"))
+            expect_true(is.dataset(ds))
+            delete(ds)
+        })
+        
         test_that("Duplicate subvariables are forbidden", {
-            m2 <- fromJSON(file.path("dataset-fixtures", "apidocs.json"),
-                simplifyVector=FALSE)
+            m2 <- m
             ## Add a duplicate subvariable
             m2$body$table$metadata$allpets$subvariables[[4]] <- list(name="Another", alias="allpets_1")
             expect_error(createWithMetadataAndFile(m2,
