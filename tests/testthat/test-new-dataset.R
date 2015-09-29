@@ -109,9 +109,16 @@ if (run.integration.tests) {
             simplifyVector=FALSE)
         
         test_that("Can create dataset with data in S3", {
-            ds <- try(createWithMetadataAndFile(m2, 
+            skip_locally("(400) Bad Request: No handler was ready to authenticate. 1 handlers were checked. ['HmacAuthV1Handler'] Check your credentials")
+            ds <- try(createWithMetadataAndFile(m, 
                 file="s3://public.testing.crunch.io/example-dataset.csv"))
             expect_true(is.dataset(ds))
+            with(test.dataset(newDatasetFromFixture("apidocs")), as="ds2", {
+                ## Compare to dataset imported from local file upload
+                expect_identical(dim(ds), dim(ds2))
+                expect_identical(as.vector(ds$q1), as.vector(ds2$q1))
+                ## Could add more assertions
+            })
             delete(ds)
         })
         

@@ -7,6 +7,12 @@ skip_on_jenkins <- function (...) {
     }
 }
 
+skip_locally <- function (...) {
+    if (nchar(Sys.getenv("JENKINS_HOME")) == 0) {
+        skip(...)
+    }
+}
+
 set.seed(666)
 
 cacheOn()
