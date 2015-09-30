@@ -57,13 +57,12 @@ if (run.integration.tests) {
         })
         with(test.dataset(df), {
             test_that("Update a variable", {
-                skip("(400) Bad Request: Column '40a5355a5d8a4241bd6fbb3b99586951' length 10 does not match existing length 20.")
                 exclusion(ds) <- ds$v4 == "C"
-                expect_identical(nrow(ds), 10L)
+                expect_equivalent(nrow(ds), 10L)
                 ds$v3 <- 10:1
-                expect_identical(as.vector(ds$v3), 10:1)
+                expect_equivalent(as.vector(ds$v3), 10:1)
                 exclusion(ds) <- NULL
-                expect_identical(as.vector(ds$v3),
+                expect_equivalent(as.vector(ds$v3),
                     c(10, 9, 9, 11, 8, 13, 7, 15, 6, 17, 5, 19, 4, 21, 3, 23,
                         2, 25, 1, 27))
             })
@@ -72,23 +71,21 @@ if (run.integration.tests) {
                 ## Setup: add a new numeric variable to mess with
                 exclusion(ds) <<- NULL
                 ds$v3x <- 4
-                expect_identical(as.vector(ds$v3x), rep(4, 20))
+                expect_equivalent(as.vector(ds$v3x), rep(4, 20))
                 
                 exclusion(ds) <<- ds$v4 == "C"
                 ds$v3x[2] <- 9
-                skip("Updates the second row of the un-excluded data, not the excluded data")
-                expect_identical(as.vector(ds$v3x), c(4, 9, rep(4, 8)))
+                expect_equivalent(as.vector(ds$v3x), c(4, 9, rep(4, 8)))
                 exclusion(ds) <<- NULL
-                expect_identical(as.vector(ds$v3x), c(rep(4, 3), 9, rep(4, 16)))
+                expect_equivalent(as.vector(ds$v3x), c(rep(4, 2), 9, rep(4, 17)))
             })
             
             test_that("Append to a dataset", {
-                skip("All rows, not just excluded rows, are appended")
                 with(test.dataset(df, "part1"), {
                     exclusion(ds) <<- ds$v4 == "C"
                     out <- appendDataset(part1, ds)
                     expect_identical(nrow(out), 30L)
-                    expect_identical(as.vector(out$v4),
+                    expect_equivalent(as.vector(out$v4),
                         as.factor(c(rep(LETTERS[2:3], 10), rep("B", 10))))
                 })
             })
