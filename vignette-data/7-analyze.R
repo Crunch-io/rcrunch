@@ -24,6 +24,7 @@ tab3 <- crtabs(~ imiss + gender, data=ds)
 
 ds$imiss <- dichotomize(ds$imiss, c("Very Important", "Somewhat Important"))
 tab3mr <- crtabs(~ imiss + gender, data=ds)
+tab3subvar <- crtabs(~ imiss$Education + gender, data=ds)
 
 tab4 <- crtabs(~ imiss + educ + gender, data=ds)
 

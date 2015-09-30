@@ -42,12 +42,13 @@ md:
 	mkdir -p inst/doc
 	R -e 'setwd("vignettes"); lapply(dir(pattern="Rmd"), knitr::knit, envir=globalenv())'
 	mv vignettes/*.md inst/doc/
-	cd inst/doc && ls | grep .md | xargs -n 1 sed -i '' 's/.html)/.md)/g'
-	cd inst/doc && ls | grep .md | xargs -n 1 egrep "^.. Error"
+	-cd inst/doc && ls | grep .md | xargs -n 1 sed -i '' 's/.html)/.md)/g'
+	-cd inst/doc && ls | grep .md | xargs -n 1 egrep "^.. Error"
 
 build-vignettes: md
 	R -e 'setwd("inst/doc"); lapply(dir(pattern="md"), function(x) markdown::markdownToHTML(x, output=sub("\\\\.md", ".html", x)))'
 	cd inst/doc && ls | grep .html | xargs -n 1 sed -i '' 's/.md)/.html)/g'
+	# That sed isn't working, fwiw
 	open inst/doc/getting-started.html
 
 covr:
