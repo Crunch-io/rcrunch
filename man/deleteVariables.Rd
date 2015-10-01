@@ -21,6 +21,11 @@ deleteVariable(dataset, variables = NULL, pattern = NULL,
 \item{key}{the Variable attribute to \code{\link{grep}} with the
 \code{pattern}. Default is "alias"}
 
+\item{confirm}{logical: should the user be asked to confirm deletion.
+Default is \code{TRUE} if in
+an interactive session. You can avoid the confirmation prompt if you delete
+\code{with(\link{consent})}.}
+
 \item{...}{optional additional arguments to \code{grep}}
 }
 \value{

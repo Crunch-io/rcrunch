@@ -171,7 +171,8 @@ setMethod("refresh", "CrunchDataset", function (x) {
 ##' @param x a Crunch object
 ##' @param confirm logical: should the user be asked to confirm deletion. 
 ##' Option available for datasets and teams only. Default is \code{TRUE} if in 
-##' an interactive session.
+##' an interactive session. You can avoid the confirmation prompt if you delete
+##' \code{with(\link{consent})}.
 ##' @param ... additional arguments, in the generic
 ##' @seealso \code{\link{hide}} \code{\link{deleteDataset}}
 ##' @name delete
@@ -258,6 +259,13 @@ webURL <- function (x) {
     return(paste0(absoluteURL("/", getOption("crunch.api")), "dataset/", id(x)))
 }
 
+##' as.environment method for CrunchDataset
+##'
+##' This method allows you to \code{eval} within a Dataset.
+##'
+##' @param x CrunchDataset
+##' @return an environment in which named objects are (promises that return) 
+##' CrunchVariables. 
 setMethod("as.environment", "CrunchDataset", function (x) {
     out <- new.env()
     out$.crunchDataset <- x

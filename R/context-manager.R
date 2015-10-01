@@ -6,6 +6,7 @@
 ##' @param as character optional way to specify a default name for assinging the return of the enter function. 
 ##' @return an S3 class "contextManager" object
 ##' @seealso \link{with-context-manager}
+##' @aliases contextManager
 ##' @export
 ContextManager <- function (enter=function (){}, exit=function (){}, error=NULL, as=NULL) {
     structure(list(enter=enter, exit=exit, error=error, as=as),
@@ -18,7 +19,7 @@ ContextManager <- function (enter=function (){}, exit=function (){}, error=NULL,
 ##' @param expr code to evaluate within that context
 ##' @param ... additional arguments. One additional supported argument is "as", which lets you assign the return of your "enter" function to an object you can access.
 ##' @return Nothing. 
-##' @rdname with-context-manager
+##' @name with-context-manager
 ##' @seealso \link{ContextManager}
 ##' @export
 with.contextManager <- function (data, expr, ...) {

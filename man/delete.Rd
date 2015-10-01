@@ -26,7 +26,8 @@
 
 \item{confirm}{logical: should the user be asked to confirm deletion.
 Option available for datasets and teams only. Default is \code{TRUE} if in
-an interactive session.}
+an interactive session. You can avoid the confirmation prompt if you delete
+\code{with(\link{consent})}.}
 
 \item{...}{additional arguments, in the generic}
 }
