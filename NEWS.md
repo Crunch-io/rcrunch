@@ -1,3 +1,5 @@
+### crunch 1.5.3
+
 ### crunch 1.5.2
 * Add Python-esque context manager for use in `with` statements. Use it to give `consent()` to delete things.
 * Delete variables by `<- NULL` into a dataset (like removing a column from a data.frame). Requires consent. Also create `deleteVariable(s)` functions that also return the dataset object. Use either method to prevent your dataset from getting out of sync with the server when you delete variables.
