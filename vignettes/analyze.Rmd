@@ -134,7 +134,18 @@ This allows us to do the appropriate calculations on arrays and multiple respons
 round(100*prop.table(tab3mr, 2))
 ```
 
-Finally, it's worth noting that we can extend the crosstabbing to higher dimensions, just by adding more terms on the right-hand side of the formula:
+Finally, just as we saw in the [array variables](array-variables.html) vignette, we can grab individual subvariables and crosstab with them:
+
+```{r, eval=FALSE}
+crtabs(~ imiss$Education + gender, data=ds)
+```
+```{r, echo=FALSE}
+tab3subvar
+```
+
+### N-way tables
+
+It's worth noting that we can extend the crosstabbing to higher dimensions, just by adding more terms on the right-hand side of the formula:
 
 ```{r, eval=FALSE}
 round(crtabs(~ imiss + educ + gender, data=ds))

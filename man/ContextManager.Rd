@@ -2,6 +2,7 @@
 % Please edit documentation in R/context-manager.R
 \name{ContextManager}
 \alias{ContextManager}
+\alias{contextManager}
 \title{Context managers}
 \usage{
 ContextManager(enter = function() { }, exit = function() { },

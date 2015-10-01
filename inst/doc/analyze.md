@@ -278,7 +278,25 @@ round(100*prop.table(tab3mr, 2))
 ##   The war in Afghanistan   64     78
 ```
 
-Finally, it's worth noting that we can extend the crosstabbing to higher dimensions, just by adding more terms on the right-hand side of the formula:
+Finally, just as we saw in the [array variables](array-variables.md) vignette, we can grab individual subvariables and crosstab with them:
+
+
+```r
+crtabs(~ imiss$Education + gender, data=ds)
+```
+
+```
+##                     gender
+## imiss_h                   Male    Female
+##   Very Important     249.27835 311.70813
+##   Somewhat Important 149.97589 150.47036
+##   Not very Important  49.29305  29.86234
+##   Unimportant         35.96718  15.59800
+```
+
+### N-way tables
+
+It's worth noting that we can extend the crosstabbing to higher dimensions, just by adding more terms on the right-hand side of the formula:
 
 
 ```r

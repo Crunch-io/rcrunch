@@ -20,14 +20,28 @@ cacheOn()
 
 fromJSON <- jsonlite::fromJSON
 
+envOrOption <- function (opt) {
+    ## .Rprofile options are like "test.api", while env vars are "R_TEST_API"
+    envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed=TRUE)))
+    envvar <- Sys.getenv(envvar.name)
+    if (nchar(envvar)) {
+        ## Let environment variable override .Rprofile, if defined
+        return(envvar)
+    } else {
+        return(getOption(opt))
+    }
+}
+
 ## .onAttach stuff, for testthat to work right
-options(crunch.api=getOption("test.api") %||% Sys.getenv("R_TEST_API"), 
-        warn=1,
-        crunch.debug=FALSE,
-        digits.secs=3,
-        crunch.timeout=15,
-        crunch.email=getOption("test.user") %||% Sys.getenv("R_TEST_USER"),
-        crunch.pw=getOption("test.pw") %||% Sys.getenv("R_TEST_PW"))
+options(
+    crunch.api=envOrOption("test.api"), 
+    warn=1,
+    crunch.debug=FALSE,
+    digits.secs=3,
+    crunch.timeout=15,
+    crunch.email=envOrOption("test.user"),
+    crunch.pw=envOrOption("test.pw")
+)
 set_config(crunchConfig())
 
 ## Test serialize and deserialize
