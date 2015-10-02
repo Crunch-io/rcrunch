@@ -145,14 +145,14 @@ if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
             test_that("categories setters persist to the server", {
-                expect_equal(names(categories(ds$v4)), c("B", "C"))
+                expect_equal(names(categories(ds$v4)), c("B", "C", "No Data"))
                 names(categories(ds$v4))[1] <- "V"
-                expect_equal(names(categories(ds$v4)), c("V", "C"))
+                expect_equal(names(categories(ds$v4)), c("V", "C", "No Data"))
                 expect_identical(names(categories(ds$v4)),
                     names(categories(refresh(ds)$v4)))
                 
-                categories(ds$v4) <- categories(ds$v4)[2:1]
-                expect_equal(names(categories(ds$v4)), c("C", "V"))
+                categories(ds$v4)[1:2] <- categories(ds$v4)[2:1]
+                expect_equal(names(categories(ds$v4)), c("C", "V", "No Data"))
             })
             
             test_that("categories<- with invalid input gives helpful message", {
@@ -213,12 +213,12 @@ if (run.integration.tests) {
         
         with(test.dataset(df), {
             test_that("Cache invalidation when modifying categories", {
-                expect_equal(names(categories(ds$v4)), c("B", "C"))
+                expect_equal(names(categories(ds$v4)), c("B", "C", "No Data"))
                 expect_equivalent(as.array(crtabs(~ v4, data=ds)), 
                     array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
                 
                 names(categories(ds$v4))[1] <- "V"
-                expect_equal(names(categories(ds$v4)), c("V", "C"))
+                expect_equal(names(categories(ds$v4)), c("V", "C", "No Data"))
                 expect_equivalent(as.array(crtabs(~ v4, data=ds)), 
                     array(c(10, 10), dim=2L, dimnames=list(v4=c("V", "C"))))
             })

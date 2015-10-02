@@ -54,7 +54,7 @@ if (run.integration.tests) {
 
             ## Make changes:
             # 1. Edit variable metadata
-            names(categories(ds$v4)) <- c("d", "e")
+            names(categories(ds$v4))[1:2] <- c("d", "e")
             name(ds$v2) <- "Variable Two"
             description(ds$v3) <- "The third variable in the dataset"
             
@@ -70,7 +70,7 @@ if (run.integration.tests) {
             
             ## Assert those things
             test_that("The edits are made", {
-                expect_identical(names(categories(ds$v4)),
+                expect_identical(names(na.omit(categories(ds$v4))),
                     c("d", "e"))
                 expect_identical(name(ds$v2), "Variable Two")
                 expect_identical(description(ds$v3),

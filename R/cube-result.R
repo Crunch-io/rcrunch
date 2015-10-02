@@ -87,12 +87,11 @@ keepWithNA <- function (dimension, marginal, useNA) {
         ## Means drop missing always, or only keep if there are any
         valid.cats <- !dimension$missing
         if (useNA == "ifany") {
-            valid.cats <- valid.cats | vapply(marginal, length, integer(1)) > 0
+            valid.cats <- valid.cats | marginal > 0
         }
         ## But still drop __any__ or __none__
         out <- valid.cats & out
     }
-
     return(out) 
 }
 
