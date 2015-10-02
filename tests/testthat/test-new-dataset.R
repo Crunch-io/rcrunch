@@ -109,7 +109,6 @@ if (run.integration.tests) {
             simplifyVector=FALSE)
         
         test_that("Can create dataset with data in S3", {
-            skip_locally("(400) Bad Request: No handler was ready to authenticate. 1 handlers were checked. ['HmacAuthV1Handler'] Check your credentials")
             ds <- try(createWithMetadataAndFile(m, 
                 file="s3://public.testing.crunch.io/example-dataset.csv"))
             expect_true(is.dataset(ds))
