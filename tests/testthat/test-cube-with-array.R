@@ -108,7 +108,6 @@ if (run.integration.tests) {
                         MR=c("mr_1", "mr_2", "mr_3", "<NA>"))))
             })
             test_that("prop.table on bivariate with MR, margin=1, useNA=ifany", {
-                skip("margin.table doesn't exclude ifany correctly if there are missing categories but with 0 values")
                 expect_equivalent(margin.table(c2, 1),
                     as.array(c(2, 2)))
                 expect_equivalent(prop.table(c2, margin=1),

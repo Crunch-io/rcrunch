@@ -57,20 +57,23 @@ test_that("rollup resolution validation", {
 adims <- CubeDims(list(
     v4=list(name=c("B", "C"), any.or.none=rep(FALSE, 2),
         missing=rep(FALSE, 2)),
-    v7=list(name=LETTERS[3:5], any.or.none=rep(FALSE, 3),
-        missing=rep(FALSE, 3))))
-a1 <- CrunchCube(arrays=list("count"=array(c(8, 6, 3, 2, 2, 3), dim=c(2L, 3L))),
+    v7=list(name=c("C", "D", "E", "No Data"), any.or.none=rep(FALSE, 4),
+        missing=c(rep(FALSE, 3), TRUE))))
+a1 <- CrunchCube(arrays=list("count"=array(c(
+        8, 6, 
+        3, 2, 
+        2, 3,
+        0, 0), dim=c(2L, 4L))),
     dims=adims)
 #    v7
-# v4  C D E
-#   B 8 3 2
-#   C 6 2 3
+# v4  C D E No Data
+#   B 8 3 2 0
+#   C 6 2 3 0
 
 test_that("simple margin.table", {
     expect_equivalent(margin.table(a1, 1), margin.table(a1@arrays[[1]], 1))
     expect_identical(margin.table(a1, 1),
         array(c(13, 11), dim=2L, dimnames=list(v4=c("B", "C"))))
-    expect_equivalent(margin.table(a1, 2), margin.table(a1@arrays[[1]], 2))    
     expect_identical(margin.table(a1, 2), 
         array(c(14, 5, 5), dim=3L, dimnames=list(v7=LETTERS[3:5])))
     expect_equivalent(margin.table(a1), margin.table(a1@arrays[[1]]))
@@ -105,6 +108,13 @@ test_that("margin.table with missing", {
         array(c(14, 5, 5), dim=3L, dimnames=list(v7=LETTERS[3:5])))
     expect_identical(margin.table(a2), 24)
     
+    a2@useNA <- "always"
+    expect_identical(margin.table(a2, 1),
+        array(c(13, 11), dim=2L, dimnames=list(v4=c("B", "C"))))
+    expect_identical(margin.table(a2, 2), 
+        array(c(14, 5, 5, 0), dim=4L, 
+            dimnames=list(v7=c(LETTERS[3:5], "No Data"))))
+    expect_identical(margin.table(a2), 24)
 })
 
 if (run.integration.tests) {
