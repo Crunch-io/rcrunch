@@ -32,6 +32,18 @@ setMethod("[", c("Categories", "ANY"), function (x, i, ...) {
     x@.Data <- x@.Data[i]
     return(x)
 })
+
+##' @rdname Categories
+##' @export
+setMethod("[", c("Categories", "numeric"), function (x, i, ...) {
+    invalid.indices <- setdiff(i, seq_along(x@.Data))
+    if (length(invalid.indices)) {
+        halt("subscript out of bounds: ", serialPaste(invalid.indices))
+    }
+    x@.Data <- x@.Data[i]
+    return(x)
+})
+
 ##' @rdname Categories
 ##' @export
 setMethod("[<-", c("Categories", "ANY"), function (x, i, ..., value) {

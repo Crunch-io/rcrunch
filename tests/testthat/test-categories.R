@@ -27,6 +27,10 @@ with(fake.HTTP, {
 
     test_that("category slicers", {
         expect_true(is.categories(cats[1]))
+        expect_error(cats[c(1, 2, 5)],
+            "subscript out of bounds: 5")
+        expect_error(cats[c(1, 2, 98, 99)],
+            "subscript out of bounds: 98 and 99")
     })
     
     test_that("categories to/fromJSON", {
@@ -167,6 +171,8 @@ if (run.integration.tests) {
                     fixed=TRUE)
                 expect_error(categories(ds$v1) <- 1:3,
                     "category assignment not defined for NumericVariable")
+                expect_error(categories(ds$v4) <- categories(ds$v4)[c(1, 2, 5)],
+                    "subscript out of bounds: 5")
             })
         })
         
