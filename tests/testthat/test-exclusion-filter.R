@@ -103,5 +103,106 @@ if (run.integration.tests) {
                 })
             })
         })
+        
+        with(test.dataset(newDatasetFromFixture("apidocs")), {
+            test_that("Assert what is in the test dataset", {
+                validApidocsImport(ds)
+            })
+            
+            ## Create a variable to update with rows to exclude
+            ds$keep <- TRUE
+            test_that("'keep' was created correctly, i.e. all 'True'", {
+                expect_identical(as.array(crtabs(~ keep, data=ds)), 
+                    array(c(20, 0), dim=2L,
+                    dimnames=list(keep=c("True", "False"))))
+            })
+            ## Set the exclusion filter
+            exclusion(ds) <- ds$keep == "False"
+            test_that("We still have nrow=20, i.e. all rows", {
+                expect_identical(nrow(ds), 20L)
+            })
+            ## Let's look at "allpets", a multiple response variable
+            test_that("allpets", {
+                expect_identical(as.array(crtabs(~ allpets, data=ds,
+                    useNA="ifany")), 
+                    array(c(4, 5, 5, 3), dim=4L, 
+                        dimnames=list(allpets=c("Cat", "Dog", "Bird", "<NA>"))))
+            })
+            ## Update "keep" as "False" (i.e. excluded) where "allpets" is
+            ## missing for all responses.
+            ds$keep[is.na(ds$allpets)] <- "False"
+            test_that("The exclusion filter drops those three rows", {
+                expect_identical(nrow(ds), 17L)
+                ## And we can confirm that those three rows are the ones
+                ## dropped:
+                expect_identical(as.array(crtabs(~ allpets, data=ds,
+                    useNA="always")), 
+                    array(c(4, 5, 5, 0), dim=4L, 
+                        dimnames=list(allpets=c("Cat", "Dog", "Bird", "<NA>"))))
+            })
+
+            ## We can do the same for categorical array. petloc has two
+            ## subvariables, Home and Work:
+            test_that("Home x Work", {
+                expect_identical(as.array(crtabs(~ petloc$Home + petloc$Work,
+                    data=ds, useNA="ifany")), 
+                    array(c(1, 0, 1, 3, 0,
+                            0, 0, 2, 0, 1,
+                            1, 2, 0, 0, 3,
+                            1, 1, 0, 0, 0,
+                            0, 0, 0, 1, 0), 
+                    dim=c(5L, 5L), 
+                    dimnames=list(
+                        petloc_home=c("Cat", "Dog", "Bird", "Skipped", 
+                            "Not Asked"),
+                        petloc_work=c("Cat", "Dog", "Bird", "Skipped", 
+                            "Not Asked")
+                )))
+            })
+            ## Notice there is one value that is missing for both (Skipped on
+            ## one, Not Asked on the other).
+            test_that("is.na on array is TRUE where all subvars are missing", {
+                expect_equivalent(as.array(crtabs(~ is.na(petloc), data=ds)), 1)
+            })
+            ## Update "keep" with that expression
+            ds$keep[is.na(ds$petloc)] <- "False"
+            test_that("The exclusion filter now drops that row too", {
+                expect_identical(nrow(ds), 16L)
+            })
+            
+            ## We can add more complex expressions too. Let's assume that we
+            ## know that it is not possible for anyone in Austria to have
+            ## a dog. Yet in our data, there are two people who live in
+            ## Austria yet have a dog (one has 2, the other has 3: this is the
+            ## third "row" in the array below (keeping in mind that R stores
+            ## arrays as stacked columns, so the third "row" below is the 
+            ## column of the table that corresponds to Austria))
+            test_that("ndogs by country", {
+                expect_identical(as.array(crtabs(~ ndogs + country,
+                    data=ds, useNA="no")), 
+                    array(c(0, 1, 2, 0, 0,
+                            0, 0, 1, 0, 0,
+                            1, 0, 1, 1, 0,
+                            0, 0, 1, 1, 0,
+                            0, 0, 2, 0, 1), 
+                    dim=c(5L, 5L), 
+                    dimnames=list(
+                        ndogs=c(0, 1, 2, 3, 6),
+                        country=c("Argentina", "Australia", "Austria",
+                            "Belgium", "Brazil")
+                )))
+                ## Or, perhaps more clear to view the frequencies of "ndogs" on
+                ## the dataset filtered to just "Argentina"
+                expect_identical(as.array(crtabs(~ ndogs, 
+                    data=ds[ds$country == "Austria",])),
+                    array(c(1, 1, 1), dim=3L, 
+                        dimnames=list(ndogs=c(0, 2, 3))))
+            })
+            ## So let's also drop rows corresponding to Austrians with >0 dogs:
+            ds$keep[ds$country == "Austria" & !(ds$ndogs == 0)] <- "False"
+            test_that("The excluded nrow goes down by 2", {
+                expect_identical(nrow(ds), 14L)
+            })
+        })
     })
 }

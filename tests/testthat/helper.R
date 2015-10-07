@@ -312,6 +312,15 @@ validImport <- function (ds) {
     expect_identical(showVariableOrder(ordering(ds)), names(variables(ds)))
 }
 
+validApidocsImport <- function (ds) {
+    expect_true(is.dataset(ds))
+    expect_identical(dim(ds), c(20L, 9L))
+    expect_identical(names(ds), 
+        c("allpets", "q1", "petloc", "ndogs", "ndogs_a", "ndogs_b", "q3",
+        "country", "wave"))
+    
+}
+
 ## Global teardown proof of concept
 # bye <- new.env()
 # reg.finalizer(bye, function (x) print("Cleaning..."), 
