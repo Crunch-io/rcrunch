@@ -1,4 +1,7 @@
 ### crunch 1.5.3
+* Always send No Data category when creating Categorical Variables.
+* Fixed minor bugs in `margin.table` on `CrunchCube` objects.
+* Better validation of category subsetting.
 
 ### crunch 1.5.2
 * Add Python-esque context manager for use in `with` statements. Use it to give `consent()` to delete things.

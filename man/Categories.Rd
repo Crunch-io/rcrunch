@@ -7,6 +7,7 @@
 \alias{Category}
 \alias{Category-class}
 \alias{[,Categories,ANY,ANY-method}
+\alias{[,Categories,numeric,ANY-method}
 \alias{[<-,Categories,ANY,ANY,ANY-method}
 \alias{ids}
 \alias{ids,Categories-method}
@@ -21,6 +22,8 @@
 \title{Categories in CategoricalVariables}
 \usage{
 \S4method{[}{Categories,ANY,ANY}(x, i, j, ..., drop = TRUE)
+
+\S4method{[}{Categories,numeric,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[}{Categories,ANY,ANY,ANY}(x, i, j, ...) <- value
 
