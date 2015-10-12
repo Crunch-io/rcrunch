@@ -1,17 +1,20 @@
 pollBatchStatus <- function (batch.url, catalog, until="imported", wait=1) {
     
+    ## Configure polling interval. Will increase by rate (>1) until reaches max
+    max.wait <- 30
+    increase.by <- 1.2
+    
     starttime <- Sys.time()
     timeout <- crunchTimeout()
     timer <- function (since, units="secs") {
         difftime(Sys.time(), since, units=units)
     }
     status <- catalog[[batch.url]]$status
-    # print(status)
     while (status %in% c("idle", "importing", "analyzing", "appended") && timer(starttime) < timeout) {
         Sys.sleep(wait)
         catalog <- refresh(catalog)
         status <- catalog[[batch.url]]$status
-        # print(status)
+        wait <- min(max.wait, wait * increase.by)
     }
     
     if (status %in% "idle") {
