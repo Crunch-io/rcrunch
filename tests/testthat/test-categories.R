@@ -13,16 +13,16 @@ with(fake.HTTP, {
     })
     
     test_that("Categories validation", {
-        expect_error(Categories(list(
+        expect_error(Categories(
             list(id=-1L, name="B", numeric_value=1L, missing=FALSE),
             list(id=2L, name="C", numeric_value=2L, missing=FALSE),
             list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
-        )), "Invalid category ids: must be unique")
-        expect_error(Categories(list(
+        ), "Invalid category ids: must be unique")
+        expect_error(Categories(
             list(id=1L, name="Name 1", numeric_value=1L, missing=FALSE),
             list(id=2L, name="Name 1", numeric_value=2L, missing=FALSE),
             list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
-        )), "Invalid category names: must be unique")
+        ), "Invalid category names: must be unique")
     })
 
     test_that("category slicers", {
@@ -35,8 +35,8 @@ with(fake.HTTP, {
     
     test_that("categories to/fromJSON", {
         ## cereal serializes to JSON and then deserializes
-        expect_identical(cats, Categories(cereal(cats)))
-        expect_identical(cats[1], Categories(cereal(cats[1])))
+        expect_identical(cats, Categories(data=cereal(cats)))
+        expect_identical(cats[1], Categories(data=cereal(cats[1])))
         expect_identical(cats[[1]], Category(data=cereal(cats[[1]])))
     })
     
@@ -142,14 +142,29 @@ with(fake.HTTP, {
         expect_true(all(vapply(na.omit(cats), is.category, logical(1))))
     })
     
-    test_that("c() method for Categories", {
+    newcat <- Category(name="Other", id=4)
+    newcat2 <- Category(name="Something else", id=5)
+    cats2 <- Categories(newcat, newcat2)
+    test_that("Category constructor with missing attributes", {
+        expect_false(is.na(newcat))
+        expect_true(is.na(value(newcat)))
+    })
+    test_that("c() method for Categories, setup", {
         expect_true(is.categories(cats))
-        newcat <- Category(name="Other", id=4)
+        expect_true(is.categories(cats2))
         expect_true(is.category(newcat))
-        allcats <- c(cats, newcat)
-        expect_true(is.categories(allcats))
-        print(str(allcats))
-        expect_true(is.categories(Categories(allcats)))
+    })
+    test_that("c(Categories, Category)", {
+        expect_true(is.categories(c(cats, newcat)))
+    })
+    test_that("c(Category, Categories)", {
+        expect_true(is.categories(c(newcat, cats)))
+    })
+    test_that("c(Category, Category)", {
+        expect_true(is.categories(c(newcat, newcat2)))
+    })
+    test_that("c(Categories, Categories)", {
+        expect_true(is.categories(c(cats, cats2)))
     })
 })
 
@@ -199,8 +214,8 @@ if (run.integration.tests) {
                 ds$v4b <- df$v4
                 expect_identical(names(categories(ds$v4b)), 
                     c("B", "C", "No Data"))
-                categories(ds$v4) <- c(categories(ds$v4b)[1:2],
-                    Category(name="D", id=4), categories(ds$v4b[3]))
+                categories(ds$v4b) <- c(categories(ds$v4b)[1:2],
+                    Category(name="D", id=4), categories(ds$v4b)[3])
                 expect_identical(names(categories(ds$v4b)), 
                     c("B", "C", "D", "No Data"))
             })
@@ -208,7 +223,7 @@ if (run.integration.tests) {
                 ds$v4c <- df$v4
                 expect_identical(names(categories(ds$v4c)), 
                     c("B", "C", "No Data"))
-                categories(ds$v4c)[4] <- Category(name="D", id=4)
+                categories(ds$v4c)[[4]] <- Category(name="D", id=4)
                 expect_identical(names(categories(ds$v4c)), 
                     c("B", "C", "No Data", "D"))
             })

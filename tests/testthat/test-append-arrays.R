@@ -41,20 +41,20 @@ if (run.integration.tests) {
             part1 <- mrdf.setup(part1, selections="1.0")
             mr_cats <- categories(part1$MR)
             subvar_cats <- categories(part1$MR$mr_1)
-            dichotomized_cats <- Categories(list(
+            dichotomized_cats <- Categories(
                 list(id=2L, missing=FALSE, name="0.0", numeric_value=0, selected=FALSE), 
                 list(id=1L, missing=FALSE, name="1.0", numeric_value=1, selected=TRUE),
-                list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL, selected=FALSE)))
+                list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL, selected=FALSE))
             with(test.dataset(mrdf, "part2"), {
                 ## Dichotomize this way so that categories get aligned
                 ## (via supertype)              
                 part2 <- mrdf.setup(part2)
                 unbind(part2$CA)
                 part2 <- refresh(part2)
-                undichotomized_cats <- Categories(list(
+                undichotomized_cats <- Categories(
                     list(id=2L, missing=FALSE, name="0.0", numeric_value=0),
                     list(id=1L, missing=FALSE, name="1.0", numeric_value=1), 
-                    list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL)))
+                    list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL))
                 test_that("set up MR for appending", {
                     expect_true(is.Multiple(part1$MR))
                     expect_equivalent(as.array(crtabs(~ MR, data=part1)),
@@ -103,18 +103,18 @@ if (run.integration.tests) {
             part1 <- mrdf.setup(part1, selections="1.0")
             mr_cats <- categories(part1$MR)
             subvar_cats <- categories(part1$MR$mr_1)
-            dichotomized_cats <- Categories(list(
+            dichotomized_cats <- Categories(
                 list(id=2L, missing=FALSE, name="0.0", numeric_value=0, selected=FALSE), 
                 list(id=1L, missing=FALSE, name="1.0", numeric_value=1, selected=TRUE),
-                list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL, selected=FALSE)))
+                list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL, selected=FALSE))
             with(test.dataset(mrdf, "part2"), {                
                 cast.these <- grep("mr_", names(part2))
                 part2[cast.these] <- lapply(part2[cast.these],
                     castVariable, "categorical")
-                undichotomized_cats <- Categories(list(
+                undichotomized_cats <- Categories(
                     list(id=2L, missing=FALSE, name="0.0", numeric_value=0),
                     list(id=1L, missing=FALSE, name="1.0", numeric_value=1), 
-                    list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL)))
+                    list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL))
                 test_that("set up MR for appending", {
                     expect_true(is.Multiple(part1$MR))
                     expect_equivalent(as.array(crtabs(~ MR, data=part1)),

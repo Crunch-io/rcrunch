@@ -207,7 +207,17 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
 ##' @rdname Categories
 ##' @aliases Categories ids ids<- values values<-
 ##' @export
-Categories <- setClass("Categories", contains="list")
+setClass("Categories", contains="list")
+
+##' @rdname Categories
+##' @export
+Categories <- function (..., data=NULL) {
+    if (!is.null(data)) {
+        return(new("Categories", data))
+    } else {
+        return(new("Categories", list(...)))
+    }
+}
 
 ##' @rdname Categories
 ##' @export
@@ -216,7 +226,7 @@ setClass("Category", contains="namedList")
 ##' @rdname Categories
 ##' @export
 Category <- function (..., data=NULL) {
-    if (is.list(data)) {
+    if (!is.null(data)) {
         return(new("Category", data))
     } else {
         return(new("Category", list(...)))
