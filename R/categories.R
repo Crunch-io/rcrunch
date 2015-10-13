@@ -39,8 +39,16 @@ concatenateCategories <- function (...) {
     return(Categories(data=do.call(c, dots)))
 }
 
+##' S3 method to concatenate Categories and Category objects
+##'
+##' @param ... see \code{\link[base]{c}}
+##' @return An object of class \code{\link{Categories}}
+##' @name c-categories
+##' @export
 c.Categories <- concatenateCategories
 
+##' @rdname c-categories
+##' @export
 c.Category <- concatenateCategories
 
 ##' @rdname Categories
