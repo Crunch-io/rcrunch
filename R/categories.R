@@ -18,13 +18,26 @@ validCategories <- function (object) {
 setValidity("Categories", validCategories)
 
 init.Categories <- function (.Object, ...) {
-    .Object@.Data <- lapply(..1, function (x) try(Category(x), silent=TRUE))
+    .Object@.Data <- lapply(..1, function (x) try(Category(data=x), silent=TRUE))
     validObject(.Object)
     return(.Object)
 }
 setMethod("initialize", "Categories", init.Categories)
 
 is.categories <- function (x) inherits(x, "Categories")
+
+c.Categories <- function (...) {
+    print("hi")
+    dots <- list(...)
+    iscat <- vapply(dots, is.category, logical(1))
+    iscats <- vapply(dots, is.categories, logical(1))
+    if (!all(iscat | iscats)) {
+        stop("Invalid categories")
+    }
+    dots[iscat] <- lapply(dots[iscat], function (x) list(x))
+    dots[iscats] <- lapply(dots[iscats], function (x) x@.Data)
+    return(Categories(c(dots)))
+}
 
 ##' @rdname Categories
 ##' @export

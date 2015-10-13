@@ -211,7 +211,17 @@ Categories <- setClass("Categories", contains="list")
 
 ##' @rdname Categories
 ##' @export
-Category <- setClass("Category", contains="namedList")
+setClass("Category", contains="namedList")
+
+##' @rdname Categories
+##' @export
+Category <- function (..., data=NULL) {
+    if (is.list(data)) {
+        return(new("Category", data))
+    } else {
+        return(new("Category", list(...)))
+    }
+}
 
 ##' @rdname Subvariables
 ##' @export

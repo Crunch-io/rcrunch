@@ -37,7 +37,7 @@ with(fake.HTTP, {
         ## cereal serializes to JSON and then deserializes
         expect_identical(cats, Categories(cereal(cats)))
         expect_identical(cats[1], Categories(cereal(cats[1])))
-        expect_identical(cats[[1]], Category(cereal(cats[[1]])))
+        expect_identical(cats[[1]], Category(data=cereal(cats[[1]])))
     })
     
     test_that("category getters", {
@@ -141,6 +141,16 @@ with(fake.HTTP, {
         expect_true(is.categories(na.omit(cats)))
         expect_true(all(vapply(na.omit(cats), is.category, logical(1))))
     })
+    
+    test_that("c() method for Categories", {
+        expect_true(is.categories(cats))
+        newcat <- Category(name="Other", id=4)
+        expect_true(is.category(newcat))
+        allcats <- c(cats, newcat)
+        expect_true(is.categories(allcats))
+        print(str(allcats))
+        expect_true(is.categories(Categories(allcats)))
+    })
 })
 
 
@@ -173,6 +183,41 @@ if (run.integration.tests) {
                     "category assignment not defined for NumericVariable")
                 expect_error(categories(ds$v4) <- categories(ds$v4)[c(1, 2, 5)],
                     "subscript out of bounds: 5")
+            })
+        })
+        
+        with(test.dataset(df), {
+            test_that("Can add categories with c()", {
+                expect_identical(names(categories(ds$v4)), 
+                    c("B", "C", "No Data"))
+                categories(ds$v4) <- c(categories(ds$v4), 
+                    Category(name="D", id=4))
+                expect_identical(names(categories(ds$v4)), 
+                    c("B", "C", "No Data", "D"))
+            })
+            test_that("Can insert a category in the middle", {
+                ds$v4b <- df$v4
+                expect_identical(names(categories(ds$v4b)), 
+                    c("B", "C", "No Data"))
+                categories(ds$v4) <- c(categories(ds$v4b)[1:2],
+                    Category(name="D", id=4), categories(ds$v4b[3]))
+                expect_identical(names(categories(ds$v4b)), 
+                    c("B", "C", "D", "No Data"))
+            })
+            test_that("Can add one to the end", {
+                ds$v4c <- df$v4
+                expect_identical(names(categories(ds$v4c)), 
+                    c("B", "C", "No Data"))
+                categories(ds$v4c)[4] <- Category(name="D", id=4)
+                expect_identical(names(categories(ds$v4c)), 
+                    c("B", "C", "No Data", "D"))
+            })
+            test_that("Can't duplicate categories", {
+                ds$v4d <- df$v4
+                expect_identical(names(categories(ds$v4d)), 
+                    c("B", "C", "No Data"))
+                expect_error(categories(ds$v4) <- c(categories(ds$v4d),
+                    categories(ds$v4d)))
             })
         })
         
