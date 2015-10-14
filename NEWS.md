@@ -1,3 +1,6 @@
+### crunch 1.5.4
+* Gradually slow the polling of `/batches/` while waiting for an append to complete. Improves the performance of the append operation.
+
 ### crunch 1.5.3
 * Always send No Data category when creating Categorical Variables.
 * Fixed minor bugs in `margin.table` on `CrunchCube` objects.
