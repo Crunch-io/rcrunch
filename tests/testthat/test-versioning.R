@@ -99,7 +99,7 @@ if (run.integration.tests) {
                 ## variables persisted, and by assigning an empty order, you can
                 ## recover them.
                 ordering(ds) <- VariableOrder()
-                expect_identical(names(ds), names(df))
+                expect_true(setequal(names(ds), names(df)))
             })
         })
     })
