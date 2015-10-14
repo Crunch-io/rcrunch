@@ -95,12 +95,11 @@ if (run.integration.tests) {
                 validImport(ds)
             })
             test_that("Added variables are really removed by rolling back", {
-                skip("Debugging the ordering of variables")
                 ## This was user-reported: Order was reverted but derived 
                 ## variables persisted, and by assigning an empty order, you can
                 ## recover them.
                 ordering(ds) <- VariableOrder()
-                expect_identical(names(ds), names(df))
+                expect_true(setequal(names(ds), names(df)))
             })
         })
     })
