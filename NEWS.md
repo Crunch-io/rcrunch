@@ -1,5 +1,6 @@
 ### crunch 1.5.4
 * Gradually slow the polling of `/batches/` while waiting for an append to complete. Improves the performance of the append operation.
+* New `c` method for Categories, plus support for creating and adding new categories to variables. See `?Categories` and `?"c-categories"`
 
 ### crunch 1.5.3
 * Always send No Data category when creating Categorical Variables.
