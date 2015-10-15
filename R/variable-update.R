@@ -137,7 +137,7 @@ setMethod("[<-", c("CrunchVariable", "CrunchExpr", "missing", "CrunchExpr"),
         }
         # if (add.no.data) {
         #     newcats <- categories(x)
-        #     newcats[[length(newcats) + 1]] <- Category(.no.data)
+        #     newcats[[length(newcats) + 1]] <- Category(data=.no.data)
         #     print(class(newcats))
         #     print(newcats)
         #     categories(x) <- newcats

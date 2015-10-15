@@ -18,13 +18,38 @@ validCategories <- function (object) {
 setValidity("Categories", validCategories)
 
 init.Categories <- function (.Object, ...) {
-    .Object@.Data <- lapply(..1, function (x) try(Category(x), silent=TRUE))
+    .Object@.Data <- lapply(..1, function (x) try(Category(data=x), silent=TRUE))
     validObject(.Object)
     return(.Object)
 }
 setMethod("initialize", "Categories", init.Categories)
 
 is.categories <- function (x) inherits(x, "Categories")
+
+concatenateCategories <- function (...) {
+    ## c() S3 method for categories. Dispatch is on ..1
+    dots <- list(...)
+    iscat <- vapply(dots, is.category, logical(1))
+    iscats <- vapply(dots, is.categories, logical(1))
+    if (!all(iscat | iscats)) {
+        stop("Invalid categories")
+    }
+    dots[iscat] <- lapply(dots[iscat], function (x) list(x))
+    dots[iscats] <- lapply(dots[iscats], function (x) x@.Data)
+    return(Categories(data=do.call(c, dots)))
+}
+
+##' S3 method to concatenate Categories and Category objects
+##'
+##' @param ... see \code{\link[base]{c}}
+##' @return An object of class \code{\link{Categories}}
+##' @name c-categories
+##' @export
+c.Categories <- concatenateCategories
+
+##' @rdname c-categories
+##' @export
+c.Category <- concatenateCategories
 
 ##' @rdname Categories
 ##' @export
@@ -47,7 +72,7 @@ setMethod("[", c("Categories", "numeric"), function (x, i, ...) {
 ##' @rdname Categories
 ##' @export
 setMethod("[<-", c("Categories", "ANY"), function (x, i, ..., value) {
-    x@.Data[i] <- Categories(value)
+    x@.Data[i] <- Categories(data=value)
     return(x)
 })
 
@@ -108,7 +133,7 @@ NULL
 ##' @rdname na-omit-categories
 ##' @export
 setMethod("na.omit", "Categories", function (object, ...) {
-    Categories(.na.omit.categories(object))
+    Categories(data=.na.omit.categories(object))
 })
 
 ##' is.na for Categories
