@@ -1,6 +1,6 @@
 init.CategoricalVariable <- function (.Object, ...) {
     .Object <- callNextMethod()
-    .Object@body$categories <- Categories(.Object@body$categories)
+    .Object@body$categories <- Categories(data=.Object@body$categories)
     return(.Object)
 }
 setMethod("initialize", "CategoricalVariable", init.CategoricalVariable)

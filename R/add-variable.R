@@ -38,7 +38,7 @@ POSTNewVariable <- function (catalog_url, variable) {
                 !any(vapply(variable$subvariables, is_catvardef, logical(1)))
             if (!is_arraydef) {
                 lapply(variable$subvariables, function (x) {
-                    Categories(x$categories) ## Will error if invalid
+                    Categories(data=x$categories) ## Will error if invalid
                 })
                 
                 ## Upload subvars, then bind
@@ -55,7 +55,7 @@ POSTNewVariable <- function (catalog_url, variable) {
             }
         }
         if ("categories" %in% names(variable)) {
-            Categories(variable$categories) ## Will error if cats are invalid
+            Categories(data=variable$categories) ## Will error if cats are invalid
         }
     }
     out <- do.POST(variable)

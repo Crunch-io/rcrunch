@@ -21,6 +21,10 @@
 \alias{values<-,Categories-method}
 \title{Categories in CategoricalVariables}
 \usage{
+Categories(..., data = NULL)
+
+Category(..., data = NULL)
+
 \S4method{[}{Categories,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[}{Categories,numeric,ANY}(x, i, j, ..., drop = TRUE)
@@ -40,14 +44,19 @@
 \S4method{ids}{Categories}(x) <- value
 }
 \arguments{
+\item{...}{additional arguments to [, ignored}
+
+\item{data}{For the constructor functions \code{Category} and
+\code{Categories}, you can either pass in attributes via \code{...} or you
+can create the objects with a fully defined \code{list} representation of
+the objects via the \code{data} argument. See the examples.}
+
 \item{x}{For the attribute getters and setters, an object of class
 Category or Categories}
 
 \item{i}{For the [ methods, just as with list extract methods}
 
 \item{j}{Invalid argument to [, but in the generic's signature}
-
-\item{...}{additional arguments to [, ignored}
 
 \item{drop}{Invalid argument to [, but in the generic's signature}
 
@@ -59,5 +68,14 @@ Categoricals, contain Categories. Categories are a subclass of list that
 contains only Category objects. Category objects themselves subclass list
 and contain the following fields: "name", "id", "numeric_value", "missing",
 and optionally "selected".
+}
+\examples{
+cat.a <- Category(name="First", id=1, numeric_value=1, missing=FALSE)
+cat.b <- Category(data=list(name="First", id=1, numeric_value=1, missing=FALSE))
+identical(cat.a, cat.b)
+cat.c <- Category(name="Second", id=2)
+cats.1 <- Categories(cat.a, cat.c)
+cats.2 <- Categories(data=list(cat.a, cat.c))
+identical(cats.1, cats.2)
 }
 

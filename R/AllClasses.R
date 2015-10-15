@@ -197,6 +197,10 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
 ##' and contain the following fields: "name", "id", "numeric_value", "missing",
 ##' and optionally "selected". 
 ##'
+##' @param data For the constructor functions \code{Category} and
+##' \code{Categories}, you can either pass in attributes via \code{...} or you
+##' can create the objects with a fully defined \code{list} representation of
+##' the objects via the \code{data} argument. See the examples.
 ##' @param x For the attribute getters and setters, an object of class
 ##' Category or Categories
 ##' @param i For the [ methods, just as with list extract methods
@@ -207,11 +211,39 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
 ##' @rdname Categories
 ##' @aliases Categories ids ids<- values values<-
 ##' @export
-Categories <- setClass("Categories", contains="list")
+##' @examples
+##' cat.a <- Category(name="First", id=1, numeric_value=1, missing=FALSE)
+##' cat.b <- Category(data=list(name="First", id=1, numeric_value=1, missing=FALSE))
+##' identical(cat.a, cat.b)
+##' cat.c <- Category(name="Second", id=2)
+##' cats.1 <- Categories(cat.a, cat.c)
+##' cats.2 <- Categories(data=list(cat.a, cat.c))
+##' identical(cats.1, cats.2)
+setClass("Categories", contains="list")
 
 ##' @rdname Categories
 ##' @export
-Category <- setClass("Category", contains="namedList")
+Categories <- function (..., data=NULL) {
+    if (!is.null(data)) {
+        return(new("Categories", data))
+    } else {
+        return(new("Categories", list(...)))
+    }
+}
+
+##' @rdname Categories
+##' @export
+setClass("Category", contains="namedList")
+
+##' @rdname Categories
+##' @export
+Category <- function (..., data=NULL) {
+    if (!is.null(data)) {
+        return(new("Category", data))
+    } else {
+        return(new("Category", list(...)))
+    }
+}
 
 ##' @rdname Subvariables
 ##' @export
