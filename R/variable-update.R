@@ -114,7 +114,7 @@ setMethod("[<-", c("CrunchVariable", "CrunchExpr", "missing", "CrunchExpr"),
         if (!identical(zcl(i), value@filter)) {
             halt("Cannot update a variable with a value that has a different filter")
         } else {
-            callNextMethod()
+            .var.updater(x, i, j, value)
         }
     })
 

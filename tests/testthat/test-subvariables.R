@@ -171,5 +171,17 @@ if (run.integration.tests) {
                 expect_identical(names(subvariables(ds$CA)), "MR_1")
             })
         })
+        
+        ## You can't.
+        # with(test.dataset(newDatasetFromFixture("apidocs")), {
+        #     test_that("Can hide subvariables within an array", {
+        #         expect_identical(names(subvariables(ds$petloc)), 
+        #             c("Home", "Work"))
+        #         hide(ds$petloc$Work)
+        #         ds <- refresh(ds)
+        #         expect_identical(names(subvariables(ds$petloc)), 
+        #             "Home")
+        #     })
+        # })
     })
 }

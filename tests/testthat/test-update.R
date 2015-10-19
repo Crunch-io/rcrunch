@@ -130,5 +130,46 @@ if (run.integration.tests) {
                 expect_identical(sum(is.na(as.vector(ds$v3))), 10L)
             })
         })
+        
+        with(test.dataset(df), {
+            ds$v4b <- as.factor(rep(c("B", NA, "C", NA), 5))
+            test_that("Can update categorical via expression with other categorical", {
+                expect_identical(as.array(crtabs(~ v4b, data=ds,
+                    useNA="ifany")),
+                    array(c(5, 5, 10), 
+                        dim=3L, 
+                        dimnames=list(v4b=c("B", "C", "No Data"))))
+                ds$v4b[is.na(ds$v4b)] <- ds$v4[is.na(ds$v4b)]
+                expect_identical(as.array(crtabs(~ v4b, data=ds,
+                    useNA="ifany")),
+                    array(c(5, 15), 
+                        dim=2L, 
+                        dimnames=list(v4b=c("B", "C"))))
+            })
+            
+            ds$v4c <- as.factor(rep(LETTERS[1:4], 5))
+            ds$v4d <- df$v4
+            test_that("Updating Categorical with Categorical just updates data, not metadata", {
+                expect_identical(as.array(crtabs(~ v4c, data=ds,
+                    useNA="ifany")),
+                    array(c(5, 5, 5, 5), 
+                        dim=4L, 
+                        dimnames=list(v4c=c("A", "B", "C", "D"))))
+                ds$v4c[ds$v4c == "C"] <- ds$v4d[ds$v4c == "C"]
+                ## This should update every third row with the ids from v4d, 
+                ## and that should be id 1. Even though that is "B" in v4d, it
+                ## is "A" in v4c. Either way, it should not truncate the 
+                ## alter of v4c
+                skip("Updating categorical values is altering the categories")
+                expect_identical(names(categories(ds$v4c)),
+                    c("A", "B", "C", "D", "No Data"))
+                expect_identical(as.array(crtabs(~ v4c, data=ds,
+                    useNA="ifany")),
+                    array(c(10, 5, 0, 5), 
+                        dim=4L, 
+                        dimnames=list(v4c=c("A", "B", "C", "D"))))
+            })
+            
+        })
     })
 }
