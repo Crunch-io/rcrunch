@@ -15,6 +15,17 @@ parse_column <- list(
         out <- factor(names(cats)[match(out, ids(cats))], levels=names(cats))
         return(out)
     },
+    categorical_ids=function (col, variable) {
+        missings <- vapply(col, is.list, logical(1)) ## for the {?:values}
+        col[missings] <- lapply(col[missings], function (x) x[["?"]])
+        return(as.numeric(unlist(col)))
+    },
+    categorical_numeric_values=function (col, variable) {
+        out <- columnParser("numeric")(col)
+        cats <- na.omit(categories(variable))
+        out <- values(cats)[match(out, ids(cats))]
+        return(out)
+    },
     categorical_array=function (col, variable) {
         out <- columnParser("categorical")(unlist(col), variable)
         ncols <- length(tuple(variable)$subvariables)
@@ -32,7 +43,17 @@ parse_column <- list(
         }
     }
 )
-columnParser <- function (vartype) {
+columnParser <- function (vartype, mode=NULL) {
+    if (vartype == "categorical") {
+        ## Deal with mode. Valid modes: factor (default), numeric, id
+        if (!is.null(mode)) {
+            if (mode == "numeric") {
+                vartype <- "categorical_numeric_values"
+            } else if (mode == "id") {
+                vartype <- "categorical_ids" ## The numeric parser will return ids, right?
+            }
+        }
+    }
     return(parse_column[[vartype]] %||% parse_column[["numeric"]])
 }
 
@@ -60,7 +81,7 @@ NULL
 ##' @export
 setMethod("as.vector", "CrunchVariable", function (x, mode) {
     f <- filterSyntax(activeFilter(x))
-    columnParser(type(x))(getValues(x, filter_syntax=toJSON(f)), x)
+    columnParser(type(x), mode)(getValues(x, filter_syntax=toJSON(f)), x)
 })
 
 from8601 <- function (x) {
