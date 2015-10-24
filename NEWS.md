@@ -1,6 +1,8 @@
 ### crunch 1.5.4
 * Gradually slow the polling of `/batches/` while waiting for an append to complete. Improves the performance of the append operation.
 * New `c` method for Categories, plus support for creating and adding new categories to variables. See `?Categories` and `?"c-categories"`
+* Get category ids or numeric values from `as.vector` by specifying a "mode" of "id" or "numeric", respectively. See `?"variable-to-R"`
+* Set values as missing by assigning `NA` into variables.
 
 ### crunch 1.5.3
 * Always send No Data category when creating Categorical Variables.
