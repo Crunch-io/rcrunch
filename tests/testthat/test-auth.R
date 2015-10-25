@@ -4,23 +4,6 @@ test_that("On package load, the session_store exists", {
     expect_true(is.environment(session_store))
 })
 
-test_that("setToken saves a cookie in the session_store", {
-    saveToken(list(token="fake.user@crunch.test"))
-    expect_true(exists("cookie", envir=session_store))
-    expect_true(is.list(session_store$cookie))
-})
-
-test_that("getToken can retrieve a token", {
-    test.token <- getToken()
-    expect_identical(class(test.token), "config")
-})
-
-test_that("session info can be deleted out deletes cookies", {
-    expect_true("cookie" %in% ls(envir=session_store))
-    deleteSessionInfo()
-    expect_false("cookie" %in% ls(envir=session_store))
-})
-
 test_that("login checks for email and password before POSTing", {
     expect_error(crunchAuth(email=NULL), 
         "Must supply the email address associated with your crunch.io account")
@@ -28,14 +11,26 @@ test_that("login checks for email and password before POSTing", {
         "Must supply a password")
 })
 
+with(fake.HTTP, {
+    test_that("Jupyter helper sets up env", {
+        with(reset.option("httr_config"), {
+            jupyterLogin("test_token")
+            cfg <- getOption("httr_config")
+            expect_identical(cfg$options$cookie, "token=test_token")
+            expect_true(grepl("jupyter.crunch.io", cfg$headers[["user-agent"]]))
+            expect_true(grepl("rcrunch", cfg$headers[["user-agent"]]))
+        })
+    })
+})
+
 if (run.integration.tests) {
     test_that("login works if crunch is running", {
         deleteSessionInfo()
         suppressMessages(login())
-            expect_identical(class(getToken()), "config")
             expect_true("root" %in% ls(envir=session_store))
             expect_true(is.authenticated())
         logout()
+        expect_false(is.authenticated())
     })
 
     test_that("crunchAuth succeeds when it should and not when it shouldn't", {

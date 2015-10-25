@@ -15,6 +15,17 @@ parse_column <- list(
         out <- factor(names(cats)[match(out, ids(cats))], levels=names(cats))
         return(out)
     },
+    categorical_ids=function (col, variable) {
+        missings <- vapply(col, is.list, logical(1)) ## for the {?:values}
+        col[missings] <- lapply(col[missings], function (x) x[["?"]])
+        return(as.numeric(unlist(col)))
+    },
+    categorical_numeric_values=function (col, variable) {
+        out <- columnParser("numeric")(col)
+        cats <- na.omit(categories(variable))
+        out <- values(cats)[match(out, ids(cats))]
+        return(out)
+    },
     categorical_array=function (col, variable) {
         out <- columnParser("categorical")(unlist(col), variable)
         ncols <- length(tuple(variable)$subvariables)
@@ -27,12 +38,22 @@ parse_column <- list(
             ## return Date if resolution >= D
             return(as.Date(out))
         } else {
+            ## TODO: use from8601, defined below
             return(as.POSIXct(out))
         }
-        ## see http://stackoverflow.com/questions/12125886/parsing-iso8601-in-r to improve
     }
 )
-columnParser <- function (vartype) {
+columnParser <- function (vartype, mode=NULL) {
+    if (vartype == "categorical") {
+        ## Deal with mode. Valid modes: factor (default), numeric, id
+        if (!is.null(mode)) {
+            if (mode == "numeric") {
+                vartype <- "categorical_numeric_values"
+            } else if (mode == "id") {
+                vartype <- "categorical_ids" ## The numeric parser will return ids, right?
+            }
+        }
+    }
     return(parse_column[[vartype]] %||% parse_column[["numeric"]])
 }
 
@@ -49,16 +70,34 @@ getValues <- function (x, ...) {
 ##' Convert Variables to local R objects
 ##'
 ##' @param x a CrunchVariable subclass
-##' @param mode argument not used: part of the generic \code{as.vector}
-##' signature
+##' @param mode for Categorical variables, one of either "factor" (default, 
+##' which returns the values as factor); "numeric" (which returns the numeric
+##' values); or "id" (which returns the category ids). If "id", values
+##' corresponding to missing categories will return as the underlying integer
+##' codes; i.e., the R representation will not have any \code{NA}s. Otherwise,
+##' missing categories will all be returned \code{NA}. For non-Categorical
+##' variables, the \code{mode} argument is ignored.
 ##' @return an R vector of the type corresponding to the Variable. E.g. 
-##' CategoricalVariable yields type factor, NumericVariable yields numeric, etc.
+##' CategoricalVariable yields type factor by default, NumericVariable yields
+##' numeric, etc.
 ##' @name variable-to-R
 NULL
 
 ##' @rdname variable-to-R
 ##' @export
 setMethod("as.vector", "CrunchVariable", function (x, mode) {
-    columnParser(type(x))(getValues(x), x)
+    f <- filterSyntax(activeFilter(x))
+    columnParser(type(x), mode)(getValues(x, filter_syntax=toJSON(f)), x)
 })
 
+from8601 <- function (x) {
+    ## Crunch timestamps look like "2015-02-12T10:28:05.632000+00:00"
+    
+    ## TODO: pull out the ms, as.numeric them, and add to the parsed date
+    ## Important for the round trip of datetime data
+    
+    ## First, strip out ms and the : in the time zone
+    x <- sub("\\.[0-9]+", "", sub("^(.*[+-][0-9]{2}):([0-9]{2})$", "\\1\\2", x))
+    ## Then parse
+    return(strptime(x, "%Y-%m-%dT%H:%M:%S%z"))
+}

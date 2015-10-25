@@ -2,17 +2,17 @@
 % Please edit documentation in R/variable.R
 \docType{methods}
 \name{variable-extract}
-\alias{[,CrunchVariable,CrunchExpr-method}
-\alias{[,CrunchVariable,logical-method}
-\alias{[,CrunchVariable,numeric-method}
+\alias{[,CrunchVariable,CrunchExpr,ANY-method}
+\alias{[,CrunchVariable,logical,ANY-method}
+\alias{[,CrunchVariable,numeric,ANY-method}
 \alias{variable-extract}
 \title{"Subset" a Variable}
 \usage{
-\S4method{[}{CrunchVariable,CrunchExpr}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CrunchVariable,CrunchExpr,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{CrunchVariable,numeric}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CrunchVariable,numeric,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{CrunchVariable,logical}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CrunchVariable,logical,ANY}(x, i, j, ..., drop = TRUE)
 }
 \arguments{
 \item{x}{a Variable}

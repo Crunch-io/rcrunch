@@ -1,10 +1,5 @@
 context("Sharing")
 
-## Permissions catalog
-## emails
-
-## Share one dataset with many
-## Share many datasets
 me <- "fake.user@example.com"
 
 with(fake.HTTP, {
@@ -24,8 +19,20 @@ with(fake.HTTP, {
         expect_false(userCanEdit("nobody@crunch.io", ds))
         expect_true(userCanView("nobody@crunch.io", ds))
         expect_false(userCanView("not.a.user@hotmail.com", ds))
-        skip("TODO things with User entity")
         expect_true(iCanEdit(ds))
+    })
+    
+    with(temp.options(crunch.api="https://fake.crunch.io/api/v2/"), {
+        test_that("Share payload shape", {
+            expect_identical(passwordSetURLTemplate(), 
+                "https://fake.crunch.io/password/change/${token}/")
+            expect_error(share(ds, "lauren.ipsum@crunch.io", edit=TRUE,
+                notify=FALSE),
+                'Error : PATCH /api/datasets/dataset1/permissions.json {"lauren.ipsum@crunch.io":{"dataset_permissions":{"edit":true,"view":true}},"send_notification":false}\n', fixed=TRUE)
+            expect_error(share(ds, "lauren.ipsum@crunch.io", edit=TRUE,
+                notify=TRUE),
+                'Error : PATCH /api/datasets/dataset1/permissions.json {"lauren.ipsum@crunch.io":{"dataset_permissions":{"edit":true,"view":true}},"send_notification":true,"url_base":"https://fake.crunch.io/password/change/${token}/","dataset_url":"https://fake.crunch.io/dataset/511a7c49778030653aab5963"}\n', fixed=TRUE)
+        })
     })
 })
 
@@ -64,20 +71,8 @@ if (run.integration.tests) {
                 expect_true(userCanEdit(me, ds))
                 for (user in others) {
                     expect_false(userCanEdit(user, ds), info=user)
+                    expect_true(userCanView(user, ds), info=user)
                 }
-            })
-            
-            test_that("can transfer editor privileges", {
-                skip("Need to create full users in order to test passing ball")
-                try(share(ds, "foo@crunch.io", notify=FALSE, edit=TRUE))
-                expect_true(userCanEdit("foo@crunch.io", ds))
-                expect_false(userCanEdit(me, ds))
-            })
-            
-            test_that("Cannot remove only editor", {
-                skip("Need to create full users in order to test passing ball")
-                expect_error(share(ds, "foo@crunch.io", notify=FALSE, edit=FALSE),
-                    "Cannot remove editor from the dataset without specifying another")
             })
             
             test_that("Cannot unmake myself editor without passing", {
@@ -87,10 +82,12 @@ if (run.integration.tests) {
                     "Cannot remove editor from the dataset without specifying another")
             })
             
-            test_that("Cannot make multiple people editors", {
-                expect_error(share(ds, c("a@crunch.io", "b@crunch.io"),
-                    notify=FALSE, edit=TRUE), 
-                    "Can only set one user as editor")
+            test_that("Can make multiple people editors", {
+                skip("TODO invite a and b as advanced users")
+                ds <- share(ds, c("a@crunch.io", "b@crunch.io"),
+                    notify=FALSE, edit=TRUE)
+                expect_true(userCanEdit("a@crunch.io", ds))
+                expect_true(userCanEdit("b@crunch.io", ds))
             })
         })
     })

@@ -12,7 +12,8 @@ test_that("toVariable parses factors", {
     expect_equivalent(toVariable(as.factor(rep(LETTERS[2:3], 3))), 
         list(values=rep(1:2, 3), type="categorical", categories=list(
             list(id=1L, name="B", numeric_value=1L, missing=FALSE),
-            list(id=2L, name="C", numeric_value=2L, missing=FALSE)
+            list(id=2L, name="C", numeric_value=2L, missing=FALSE),
+            list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
         ))) ## unclear why these aren't identical
     options(crunch.max.categories=4)
     expect_identical(getOption("crunch.max.categories"), 4)
@@ -119,6 +120,24 @@ if (run.integration.tests) {
                 ds[['ok']] <- 1
                 expect_identical(as.vector(ds$ok), rep(1, 20))
             })
-        })        
+        })
+        
+        with(test.dataset(df), {
+            test_that("Categorical to R and back", {
+                v4 <- as.vector(ds$v4)
+                expect_identical(levels(v4), c("B", "C"))
+                ds$v4a <- v4
+                expect_equivalent(as.vector(ds$v4), as.vector(ds$v4a))
+            })
+            
+            exclusion(ds) <- ds$v3 == 10
+            test_that("Categorical to R and back with an exclusion", {
+                v4b <- as.vector(ds$v4)
+                expect_identical(levels(v4b), c("B", "C"))
+                expect_identical(length(v4b), 19L)
+                ds$v4b <- v4b
+                expect_equivalent(as.vector(ds$v4b), as.vector(ds$v4a))
+            })
+        })
     })
 }

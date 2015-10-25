@@ -99,6 +99,5 @@ if (run.integration.tests) {
                 expect_true(is.MR(ds$multipleResponse))
             })
         })
-        
     })
 }

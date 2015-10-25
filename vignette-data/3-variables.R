@@ -8,7 +8,7 @@ login()
 load("../vignettes/getting-started.RData")
 
 track.var <- ds$track
-summary.track.var <- summary(track.var)
+summary.track.var <- capture.output(print(track.var))
 track.cats <- categories(track.var)
 names(track.cats)[1:2] <- c("Right track", "Wrong track")
 values(track.cats) <- c(1, -1, 0)

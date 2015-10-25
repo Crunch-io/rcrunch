@@ -115,7 +115,11 @@ prop.table(tab1)
 ```
 
 ```
-## Error in sum(x): invalid 'type' (list) of argument
+## educ
+##                No HS High school graduate         Some college               2-year               4-year 
+##                0.047                0.278                0.253                0.083                0.228 
+##            Post-grad 
+##                0.111
 ```
 
 For column proportions, specify margin=2 (by rows, margin=1):
@@ -126,7 +130,14 @@ prop.table(tab2, 2)
 ```
 
 ```
-## Error in margin.table(x, margin): 'x' is not an array
+##                       gender
+## educ                         Male     Female
+##   No HS                0.04925054 0.04502814
+##   High school graduate 0.26552463 0.28893058
+##   Some college         0.23554604 0.26829268
+##   2-year               0.06852248 0.09568480
+##   4-year               0.24625268 0.21200750
+##   Post-grad            0.13490364 0.09005629
 ```
 
 Let's make that more readable:
@@ -137,7 +148,14 @@ round(100*prop.table(tab2, 2))
 ```
 
 ```
-## Error in margin.table(x, margin): 'x' is not an array
+##                       gender
+## educ                   Male Female
+##   No HS                   5      5
+##   High school graduate   27     29
+##   Some college           24     27
+##   2-year                  7     10
+##   4-year                 25     21
+##   Post-grad              13      9
 ```
 
 ### Complex data types
@@ -243,10 +261,42 @@ round(100*prop.table(tab3mr, 2))
 ```
 
 ```
-## Error in margin.table(x, margin): 'x' is not an array
+##                         gender
+## imiss                    Male Female
+##   Abortion                 61     76
+##   Education                82     91
+##   Gay rights               44     50
+##   Health care              90     95
+##   Immigration              78     77
+##   Medicare                 83     87
+##   Social security          86     89
+##   Taxes                    87     89
+##   Terrorism                78     82
+##   The budget deficit       80     85
+##   The economy              95     95
+##   The environment          77     77
+##   The war in Afghanistan   64     78
 ```
 
-Finally, it's worth noting that we can extend the crosstabbing to higher dimensions, just by adding more terms on the right-hand side of the formula:
+Finally, just as we saw in the [array variables](array-variables.md) vignette, we can grab individual subvariables and crosstab with them:
+
+
+```r
+crtabs(~ imiss$Education + gender, data=ds)
+```
+
+```
+##                     gender
+## imiss_h                   Male    Female
+##   Very Important     249.27835 311.70813
+##   Somewhat Important 149.97589 150.47036
+##   Not very Important  49.29305  29.86234
+##   Unimportant         35.96718  15.59800
+```
+
+### N-way tables
+
+It's worth noting that we can extend the crosstabbing to higher dimensions, just by adding more terms on the right-hand side of the formula:
 
 
 ```r
@@ -334,6 +384,17 @@ crtabs(min(age) ~ educ + gender, data=ds)
 ##   Post-grad              26     27
 ```
 
+We can get unconditional (univariate) statistics by making the right-hand side of your formula be just the number `1`:
+
+
+```r
+crtabs(min(age) ~ 1, data=ds)
+```
+
+```
+## [1] 21
+```
+
 Numeric aggregation functions also work with categorical variables that have numeric values defined for their categories; this is the reason why numeric values for categories are defined, in fact. In the [variables vignette](variables.md), we worked with the "On the right track" question and set some numeric values:
 
 
@@ -367,6 +428,28 @@ round(crtabs(mean(track) ~ educ + gender, data=ds), 2)
 
 Looks like most people surveyed thought that the U.S. is on the wrong track, but that pessimism is less pronounced for those with higher levels of education.
 
+### Subsetting data
+
+We can also specify a subset of `ds` to analyze, just as if it were a data.frame. Let's do the same calculation for Democrats only:
+
+
+```r
+round(crtabs(mean(track) ~ educ + gender, data=ds[ds$pid3 == "Democrat",]), 2)
+```
+
+```
+##                       gender
+## educ                    Male Female
+##   No HS                -0.90   1.00
+##   High school graduate  0.22  -0.03
+##   Some college          0.55   0.20
+##   2-year               -0.35   0.32
+##   4-year                0.36   0.07
+##   Post-grad             0.42   0.02
+```
+
+Not surprisingly, Democrats were less pessimistic about the direction of the country than the general population.
+
 A few final observations about `crtabs`. First, all of these calculations have been weighted by the weight variable we set above. We set it and could then forget about it--we didn't have to litter all of our expressions with `ds$weight` and extra arithmetic to do the weighting. Crunch handles this for us.
 
 Second, none of these aggregations required pulling case-level data to your computer. `crtabs` sends Crunch expressions to the server and receives in return an `n`-D array of results. The only computations happening locally are the margin tables and sweeping in `prop.table`, computing on the aggregate results. Your computer would work exactly as hard with this example dataset of 1000 rows as it would with a dataset of 100 million rows.  
@@ -382,20 +465,14 @@ ds$snowdenleakapp
 ```
 
 ```
+## snowdenleakapp (categorical)
 ## 
-##  snowdenleakapp (categorical) 
-##  
-## 
-## 
-```
-
-```
-##                     Count
-## Strongly disapprove   288
-## Somewhat approve      220
-## Not sure              200
-## Strongly approve      159
-## Somewhat disapprove   131
+##                        Count
+## Strongly disapprove 288.3561
+## Somewhat approve    220.3593
+## Not sure            200.1591
+## Strongly approve    159.1486
+## Somewhat disapprove 131.4862
 ```
 
 We can use `lm` to fit our model. Let's explore the relationship between approval of Snowden's leak and respondents' interest in current events, party identification, gender, and age.
@@ -486,4 +563,4 @@ summary(logit1)
 
 As before, not a particularly interesting result, but this is just the beginning of the analysis process. Using `crunch`, you can keep exploring the data and perhaps find a better fit.
 
-Unlike the previous examples, these modeling functions do have to pull columns of data from the server to your local machine. However, only the columns of data you reference in your formula are copied, and because of the `crunch` package's query cache, subsequent models that incorporate any of those variables will not have to go to the server to get them. 
+Unlike the previous examples, these modeling functions do have to pull columns of data from the server to your local machine. However, only the columns of data you reference in your formula are copied, and if you specify a subset of the dataset to regress on (as we did above with `crtabs` when we looked at just Democrats), only those rows are retrieved. This helps minimize the time spent shipping data across the network. Moreover, because of the `crunch` package's query cache, subsequent models that incorporate any of those variables will not have to go to the server to get them. 

@@ -46,21 +46,12 @@ You can reference and extract variables from a dataset as if it were a `data.fra
 
 ```r
 track.var <- ds$track
-```
-
-```r
 track.var
 ```
 
 ```
+## track (categorical)
 ## 
-##  track (categorical) 
-##  
-## 
-## 
-```
-
-```
 ##                                         Count
 ## Off on the wrong track                    576
 ## Generally headed in the right direction   285
@@ -279,7 +270,7 @@ categories(track.var)
 ## [ -1 ]  Wrong track
 ## [ 0 ]  Not sure
 ```
-<!-- MAKE THAT -->
+
 
 ```r
 ids(categories(track.var)) <- sample(ids(categories(track.var)), replace=FALSE)
@@ -342,5 +333,32 @@ hiddenVariables(ds)
 ```
 ## [1] "comments"
 ```
+
+## Deleting variables
+
+Sometimes you do want to delete variables permanently. Doing so is easy, but we have some protections in place to keep you from accidentally deleting things from a dataset that may be shared with many people on the server.
+
+To delete, you can assign `NULL` in to the dataset for that variable, just like you were removing a column from a `data.frame`. In our example dataset, we have two copies of a voter-registration variable, "votereg_new" and "votereg_old". Let's kill the old one:
+
+
+```r
+ds$votereg_old <- NULL
+```
+```
+## Really delete "votereg_old"?
+```
+
+The delete function requires confirmation when you're running from an interactive session, just to make sure you aren't accidentally assigning something in that is NULL and deleting your variable. If you know that you want to delete the variable, you can give your approval in advance by wrapping it in a `with` statement, using the `consent` context manager:
+
+
+```r
+with(consent(), ds$votereg_old <- NULL)
+"votereg_old" %in% names(ds)
+```
+```
+## [1] FALSE
+```
+
+The `with(consent(), ...)` pattern works everywhere in `crunch` that requires confirmation to do an action, such as deleting datasets.
 
 [Next: create and manipulate array variables](array-variables.md)

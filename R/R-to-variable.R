@@ -18,7 +18,7 @@ setMethod("toVariable", "factor", function (x, ...) {
     } 
     out <- list(values=as.integer(x), type="categorical",
         categories=categoriesFromLevels(levels(x)), ...)
-    return(NAToCategory(out))
+    return(NAToCategory(out, useNA="always"))
 })
 ##' @rdname toVariable
 ##' @export
@@ -45,8 +45,9 @@ categoriesFromLevels <- function (x) {
     }))
 }
 
-NAToCategory <- function (var.metadata) {
-    if (any(is.na(var.metadata$values))) {
+NAToCategory <- function (var.metadata, useNA=c("ifany", "always")) {
+    useNA <- match.arg(useNA)
+    if (useNA == "always" || any(is.na(var.metadata$values))) {
         var.metadata$values[is.na(var.metadata$values)] <- -1L
         var.metadata$categories[[length(var.metadata$categories)+1]] <- .no.data
     }

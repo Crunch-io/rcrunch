@@ -29,6 +29,7 @@ setMethod("archived", "DatasetCatalog", function (x) {
 ##'
 ##' @param x a Catalog object
 ##' @param i which catalog elements to extract
+##' @param name for \code{$}, the same as \code{i} for \code{[[}
 ##' @param j Invalid
 ##' @param drop Invalid
 ##' @param ... additional arguments
@@ -64,13 +65,11 @@ setMethod("[[", c("DatasetCatalog", "ANY"), function (x, i, ...) {
 ##' assign
 ##' @return Getters return the character object in the specified slot; setters
 ##' return \code{x} duly modified.
-##' @aliases describe-catalog aliases aliases<- descriptions descriptions<-
+##' @aliases describe-catalog aliases aliases<- descriptions descriptions<- types emails timestamps
 ##' @seealso \code{\link{Subvariables}} \code{\link{Categories}} \code{\link[base]{names}} \code{vignette("variables", package="crunch")}
 ##' @name describe-catalog
 NULL
 
 ##' @rdname describe-catalog
 ##' @export
-setMethod("names", "DatasetCatalog", function (x) {
-    vapply(index(x), function (a) a$name, character(1), USE.NAMES=FALSE)
-})
+setMethod("names", "DatasetCatalog", function (x) getIndexSlot(x, "name"))

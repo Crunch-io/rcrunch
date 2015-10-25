@@ -28,13 +28,11 @@ setGeneric("descriptions", function (x) standardGeneric("descriptions"))
 setGeneric("descriptions<-", 
     function (x, value) standardGeneric("descriptions<-"), signature="x")
 setGeneric("emails", function (x) standardGeneric("emails"))
+setGeneric("types", function (x) standardGeneric("types"))
+setGeneric("timestamps", function (x) standardGeneric("timestamps"))
 
 setGeneric("type", function (x) standardGeneric("type"))
 setGeneric("type<-", function (x, value) standardGeneric("type<-"))
-setGeneric("preUpload", function (x) standardGeneric("preUpload"), signature="x")
-setGeneric("postUpload",
-    function (source.var, crunch.var) standardGeneric("postUpload"),
-    signature="source.var")
 
 setGeneric("categories", function (x) standardGeneric("categories"))
 setGeneric("categories<-", function (x, value) standardGeneric("categories<-"))
@@ -73,6 +71,16 @@ setGeneric("archived", function (x) standardGeneric("archived"))
 setGeneric("imported", function (x) standardGeneric("imported"))
 setGeneric("pending", function (x) standardGeneric("pending"))
 setGeneric("permissions", function (x) standardGeneric("permissions"))
+setGeneric("members", function (x) standardGeneric("members"))
+setGeneric("members<-", function (x, value) standardGeneric("members<-"))
+setGeneric("filters", function (x) standardGeneric("filters"))
+setGeneric("filters<-", function (x, value) standardGeneric("filters<-"))
+setGeneric("appliedFilters", function (x) standardGeneric("appliedFilters"))
+setGeneric("appliedFilters<-", 
+    function (x, value) standardGeneric("appliedFilters<-"))
+setGeneric("activeFilter", function (x) standardGeneric("activeFilter"))
+setGeneric("activeFilter<-", 
+    function (x, value) standardGeneric("activeFilter<-"))
 
 setGeneric("dim")
 setGeneric("ncol")
@@ -85,11 +93,14 @@ setGeneric("max")
 setGeneric("na.omit")
 ##' @export
 setGeneric("as.vector")
+setGeneric("as.environment")
 setGeneric("dimnames")
 setGeneric("margin.table")
 
 setGeneric("prop.table")
 setGeneric("round")
+
+setGeneric("subset")
 
 ##' Generic method for converting objects to Crunch representations
 ##'
@@ -136,4 +147,6 @@ NULL
 ##' @export
 setGeneric("jsonprep", function (x, ...) standardGeneric("jsonprep"))
 
+setGeneric("getShowContent", 
+    function (x, ...) standardGeneric("getShowContent"))
 

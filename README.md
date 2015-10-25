@@ -49,7 +49,7 @@ You can set several parameters in your .Rprofile to simplify your workflow:
     $ R --slave -e 'install.packages(c("crunch", "codetools", "testthat"), repo="http://cran.at.r-project.org")'
     $ make test
 
-This installs dependencies and then runs the tests, which installs `crunch` from your local checkout in the process.
+This installs dependencies and then runs the tests, which installs `crunch` from your local checkout in the process. If the dependencies fail to install, check the error message. You may need to install libcurl on your system before installing the R packages.
 
 ### Running tests
 
@@ -63,6 +63,7 @@ To run integration tests, you will need to specify a test user, password, and AP
             test.pw="t0pSecretP@ssw0rD",
             test.api="http://local.crunch.io:8080/api/")
 
+or, if you prefer, you can set the environment variables `R_TEST_USER`, `R_TEST_PW`, and `R_TEST_API`.
 
 ### Updating documentation
 

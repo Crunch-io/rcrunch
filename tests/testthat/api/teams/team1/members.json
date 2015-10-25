@@ -1,0 +1,19 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/teams/team1/members.json",
+    "description": "Catalog of users that belong to this team",
+    "index": {
+        "/api/users/user1.json": {
+            "name": "Fake User",
+            "permissions": {
+                "manage_members": true
+            }
+        },
+        "/api/users/user2.json": {
+            "name": "Roger User",
+            "permissions": {
+                "manage_members": false
+            }
+        }
+    }
+}

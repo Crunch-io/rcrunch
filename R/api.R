@@ -12,7 +12,10 @@
 ##' @keywords internal
 crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, config=list(), status.handlers=list(), ...) {
     url ## force lazy eval of url before inserting in try() below
-    if (isTRUE(getOption("crunch.debug"))) message(paste(http.verb, url))
+    if (isTRUE(getOption("crunch.debug"))) {
+        message(paste(http.verb, url))
+        try(cat("\n", list(...)$body, "\n"), silent=TRUE)
+    }
     FUN <- get(paste0("c", http.verb), envir=asNamespace("crunch"))
     # FUN <- get(http.verb, envir=asNamespace("httr"))
     x <- try(FUN(url, ..., config=config), silent=TRUE)
@@ -84,7 +87,9 @@ handleAPIresponse <- function (response, special.statuses=list()) {
             return(handleShoji(content(response)))            
         }
     } else {
-        if (code == 410) {
+        if (code == 401) {
+            halt("You are not authenticated. Please `login()` and try again.")
+        } else if (code == 410) {
             halt("The API resource at ",
                 response$url, 
                 " has moved permanently. Please upgrade crunch to the ",
@@ -95,6 +100,9 @@ handleAPIresponse <- function (response, special.statuses=list()) {
         if (!is.error(msg2)) {
             msg <- paste(msg, msg2, sep=": ")
         }
+        if (code == 409 && grepl("current editor", msg)) {
+            halt("You are not the current editor of this dataset. `unlock()` it and try again.")
+        }
         halt(msg)
     }
 }
@@ -104,8 +112,6 @@ handleAPIerror <- function (response) {
         if (attr(response, "condition")$message == "Empty reply from server"){
             halt("Server did not respond. Please check your local ",
                 "configuration and try again later.")
-        } else if (crunchIsDown(response)) {
-            halt("Cannot connect to Crunch API")
         } else {
             rethrow(response)
         }
@@ -113,21 +119,19 @@ handleAPIerror <- function (response) {
     return(response)    
 }
 
-##' @importFrom httr config
+##' @importFrom httr config add_headers
 crunchConfig <- function () {
-    config(verbose=isTRUE(getOption("crunch.debug")),
-        sslversion="SSLVERSION_TLSv1_2",
-        encoding="gzip", ## In httr default config, but to be sure
-        httpheader=c(`user-agent`=crunchUserAgent()))
+    return(c(config(verbose=isTRUE(getOption("crunch.debug")), postredir=3),
+        add_headers(`user-agent`=crunchUserAgent())))
 }
 
 ##' @importFrom utils packageVersion
-##' @importFrom RCurl curlVersion
+##' @importFrom curl curl_version
 crunchUserAgent <- function (x) {
     ## Cf. httr:::default_ua
     versions <- c(
-        curl = RCurl::curlVersion()$version,
-        Rcurl = as.character(packageVersion("RCurl")),
+        libcurl = curl_version()$version,
+        curl = as.character(packageVersion("curl")),
         httr = as.character(packageVersion("httr")),
         rcrunch = as.character(packageVersion("crunch"))
     )
@@ -168,13 +172,4 @@ rootURL <- function (x, obj=session_store$root) {
     } else {
         return(NULL)
     }
-}
-
-crunchAPIcanBeReached <- function () {
-    testing <- try(getAPIroot(), silent=TRUE)
-    return(!crunchIsDown(testing))
-}
-
-crunchIsDown <- function (response) {
-    is.error(response) && "COULDNT_CONNECT" %in% class(attr(response, "condition"))
 }

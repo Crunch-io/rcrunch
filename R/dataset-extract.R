@@ -1,12 +1,16 @@
 ##' Subset datasets and extract variables
 ##'
 ##' @param x a CrunchDataset
-##' @param i if character, identifies variables to extract based on their 
-##' aliases (by default, i.e. when x's \code{useAlias} is TRUE); if numeric or 
-##' logical, extracts variables accordingly. Note that this is the as.list 
-##' extraction, columns of the dataset rather than rows. 
-##' @param name like \code{i} but for \code{$}
-##' @param j column extraction, as described above
+##' @param i As with a \code{data.frame}, there are two cases: (1) if no other
+##' arguments are supplied (i.e \code{x[i]}), \code{i} provides for
+##' \code{as.list} extraction: columns of the dataset rather than rows. If
+##' character, identifies variables to extract based on their aliases (by
+##' default, i.e. when x's \code{useAlias} is TRUE); if numeric orlogical,
+##' extracts variables accordingly. Alternatively, (2) if \code{j} is specified
+##' (as either \code{x[i, j]} or \code{x[i,]}), \code{i} is an object of class
+##' \code{CrunchLogicalExpr} that will define a subset of rows.
+##' @param j columnar extraction, as described above
+##' @param name columnar extraction for \code{$}
 ##' @param drop logical: autmatically simplify a 1-column Dataset to a Variable?
 ##' Default is FALSE, and the TRUE option is in fact not implemented.
 ##' @param ... additional arguments
@@ -39,13 +43,36 @@ setMethod("[", c("CrunchDataset", "missing", "ANY"), function (x, i, j, ..., dro
 
 ##' @rdname dataset-extract
 ##' @export
+setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "missing"), function (x, i, j, ..., drop=FALSE) {
+    f <- activeFilter(x)
+    if (length(zcl(f))) {
+        i <- f & i
+    }
+    activeFilter(x) <- i
+    return(x)
+})
+
+##' @rdname dataset-extract
+##' @export
+setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "ANY"), function (x, i, j, ..., drop=FALSE) {
+    ## Do the filtering of rows, then cols
+    x <- x[i,]
+    return(x[j])
+})
+
+##' @rdname dataset-extract
+##' @export
+setMethod("subset", "CrunchDataset", function (x, ...) {
+    x[..1,]
+})
+
+##' @rdname dataset-extract
+##' @export
 setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     out <- variables(x)[[i]]
     if (!is.null(out)) {
-        out <- try(entity(out), silent=TRUE)
-        if (is.error(out)) {
-            halt(attr(out, "condition")$message)
-        }
+        out <- entity(out)
+        activeFilter(out) <- activeFilter(x)
     }
     return(out)
 })
@@ -65,10 +92,8 @@ setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE
             ## If so, return it with a warning
             out <- hidden(x)[[n]]
             if (!is.null(out)) {
-                out <- try(entity(out), silent=TRUE)
-                if (is.error(out)) {
-                    halt(attr(out, "condition")$message)
-                }
+                out <- entity(out)
+                activeFilter(out) <- activeFilter(x)
             }
             warning("Variable ", i, " is hidden", call.=FALSE)
             return(out)
@@ -109,22 +134,20 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
     ## Confirm that x[[i]] has the same URL as value
     v <- Filter(function (a) a[[namekey(x)]] == i,
         index(allVariables(x)))
-    i.matches.value <- length(v) == 1 && names(v) == self(value)
-    if (!i.matches.value) {
-        ## We may have a variable created by makeArray/MR, and it's not
+    if (length(v) == 0) {
+        ## We may have a new variable, and it's not
         ## yet in our variable catalog. Let's check.
-        if (is.CA(value) || is.MR(value)) {
-            x <- refresh(x)
-            if (!(self(value) %in% urls(allVariables(x)))) {
-                halt("This variable does not belong to this dataset")
-            }
-            ## Finally, update value with `i` if it is
-            ## different. I.e. set the alias based on i if not otherwise
-            ## specified. (setTupleSlot does the checking)
-            tuple(value) <- setTupleSlot(tuple(value), namekey(x), i)
-        } else {
-            halt("Cannot overwrite one Variable with another")
+        x <- refresh(x)
+        if (!(self(value) %in% urls(allVariables(x)))) {
+            halt("This variable does not belong to this dataset")
         }
+        ## Update value with `i` if it is
+        ## different. I.e. set the alias based on i if not otherwise
+        ## specified. (setTupleSlot does the checking)
+        tuple(value) <- setTupleSlot(tuple(value), namekey(x), i)
+    } else if (!identical(names(v), self(value))) {
+        ## x[[i]] exists but is a different variable than value
+        halt("Cannot overwrite one Variable with another")
     }
     allVariables(x)[[self(value)]] <- value
     return(x)
@@ -188,6 +211,16 @@ setMethod("[[<-",
     function (x, i, value) {
         halt("Only character (name) indexing supported for [[<-")
     })
+##' @rdname dataset-update
+##' @export
+setMethod("[[<-", 
+    c("CrunchDataset", "character", "missing", "NULL"), 
+    function (x, i, value) deleteVariables(x, i))
+##' @rdname dataset-update
+##' @export
+setMethod("[[<-", 
+    c("CrunchDataset", "ANY", "missing", "NULL"), 
+    function (x, i, value) deleteVariables(x, names(x)[i]))
 ##' @rdname dataset-update
 ##' @export
 setMethod("$<-", c("CrunchDataset"), function (x, name, value) {

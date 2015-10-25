@@ -1,6 +1,6 @@
 init.CategoricalVariable <- function (.Object, ...) {
     .Object <- callNextMethod()
-    .Object@body$categories <- Categories(.Object@body$categories)
+    .Object@body$categories <- Categories(data=.Object@body$categories)
     return(.Object)
 }
 setMethod("initialize", "CategoricalVariable", init.CategoricalVariable)
@@ -73,7 +73,9 @@ as.variable <- function (x, subtype=NULL, tuple=VariableTuple()) {
 ##' @export
 setMethod("refresh", "CrunchVariable", function (x) {
     tup <- refresh(tuple(x))
-    as.variable(crGET(self(x)), tuple=tup)
+    out <- as.variable(crGET(self(x)), tuple=tup)
+    activeFilter(out) <- activeFilter(x)
+    return(out)
 })
 
 as.Numeric <- function (x) as.variable(x, "numeric")
@@ -154,6 +156,7 @@ setMethod("categories<-", c("CategoricalVariable", "Categories"),
 setMethod("categories<-", c("CategoricalArrayVariable", "Categories"), 
     function (x, value) {
         dropCache(absoluteURL("../../cube/", self(x)))
+        lapply(tuple(x)$subvariables, dropCache) ## Subvariables will update too
         return(setCrunchSlot(x, "categories", value))
     })
 ##' @rdname var-categories

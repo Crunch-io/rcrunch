@@ -34,6 +34,11 @@ with(fake.HTTP, {
             "Can only reorder, not change, subvariables")
     })
     
+    test_that("Assinging in with no changes does not make PATCH request", {
+        expect_that(subvariables(mr) <- subvariables(mr),
+            does_not_throw_error())
+    })
+    
     test_that("can extract a subvariable as a Variable", {
         expect_true(inherits(subvariables(mr)[[1]], "CrunchVariable"))
         expect_true(is.Categorical(subvariables(mr)[[1]]))
@@ -62,8 +67,11 @@ with(fake.HTTP, {
     
     test_that("show method for Subvariables", {
         mr <- refresh(mr)
-        expect_identical(showSubvariables(subvariables(mr)), 
-            "\n Subvariables: \n   $`First`\n   $`Second`\n   $`Last`\n\n")
+        expect_identical(showSubvariables(subvariables(mr)), c(
+            "Subvariables:",
+            "  $`First`",
+            "  $`Second`",
+            "  $`Last`"))
     })
 })
 
@@ -140,6 +148,27 @@ if (run.integration.tests) {
                     expect_error(subvariables(var)[1:2] <- fake[1:2],
                         "Cannot add or remove subvariables")
                 })
+            })
+        })
+        with(test.dataset(mrdf["mr_1"]), {
+            ds <- mrdf.setup(ds)
+            
+            test_that("Setup for tests with array with one subvar", {
+                expect_identical(length(subvariables(ds$CA)), 1L)
+                expect_identical(names(subvariables(ds$CA)), "mr_1")
+                expect_identical(names(categories(ds$CA)), 
+                    c("0.0", "1.0", "No Data"))
+            })
+            
+            test_that("Can edit category names", {
+                names(categories(ds$CA))[1:2] <- c("False", "True")
+                expect_identical(names(categories(ds$CA)), 
+                    c("False", "True", "No Data"))
+            })
+            
+            test_that("Can edit name of single-subvar", {
+                names(subvariables(ds$CA)) <- "MR_1"
+                expect_identical(names(subvariables(ds$CA)), "MR_1")
             })
         })
     })

@@ -112,9 +112,12 @@ bindVariables <- function (var_urls, dataset, name, ...) {
     invisible(returnNewVariable(out, dataset))
 }
 
-returnNewVariable <- function (variable_url, dataset) {
-    dataset <- refresh(dataset)
-    return(entity(allVariables(dataset)[[variable_url]]))
+returnNewVariable <- function (variable_url, varcat) {
+    if (is.dataset(varcat)) {
+        varcat <- allVariables(varcat)
+    }
+    v <- entity(refresh(varcat)[[variable_url]])
+    return(v)
 }
 
 POSTBindVariables <- function (catalog_url, variable_urls, ...) {

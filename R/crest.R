@@ -94,11 +94,11 @@ cDELETE <- function (url, ..., drop=dropCache(url)) {
     return(x)
 }
 
-##' @importFrom RCurl curlEscape
+##' @importFrom curl curl_escape
 toQuery <- function (query) {
     if (is.list(query)) {
-        names <- curlEscape(names(query))
-        values <- curlEscape(query)
+        names <- curl_escape(names(query))
+        values <- curl_escape(query)
         query <- paste0(names, "=", values, collapse = "&")
     }
     return(query)

@@ -30,14 +30,15 @@ You can create a dataset from any `data.frame` you have in your R session with `
 load("economist.RData")
 dim(df)
 ```
-```{r}
-dim(ds)
+```{r, echo=FALSE}
+dim.ds
 ```
 ```{r, eval=FALSE}
 ds <- newDataset(df, name="Economist/YouGov Weekly Survey")
-```
-```{r}
 dim(ds)
+```
+```{r, echo=FALSE}
+dim.ds
 ```
 
 `newDataset` translates R data types into their analogous types in Crunch. 

@@ -76,6 +76,15 @@ with(fake.HTTP, {
             c("Gender", "Birth Year", "starttime"))
         expect_identical(aliases(varcat)[1:2], c("gender", "birthyr"))
     })
+    
+    test_that("types getter", {
+        expect_identical(types(varcat)[1:3],
+            c("categorical", "numeric", "datetime"))
+    })
+    
+    test_that("show method", {
+        expect_true(is.character(capture.output(print(varcat))))
+    })
 })
 
 if (run.integration.tests) {

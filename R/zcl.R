@@ -45,6 +45,7 @@ setMethod("zcl", "NULL", function (x) NULL)
 setOldClass("zcl")
 setMethod("zcl", "zcl", function (x) x)
 setMethod("zcl", "list", function (x) x) ## is this a good idea?
+setMethod("zcl", "CrunchFilter", function (x) x@body$expression)
 
 setMethod("absolute.zcl", "ANY", function (x) zcl(x))
 setMethod("absolute.zcl", "CrunchVariable", function (x) list(variable=self(x)))

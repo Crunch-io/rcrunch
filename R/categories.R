@@ -18,7 +18,7 @@ validCategories <- function (object) {
 setValidity("Categories", validCategories)
 
 init.Categories <- function (.Object, ...) {
-    .Object@.Data <- lapply(..1, Category)
+    .Object@.Data <- lapply(..1, function (x) try(Category(data=x), silent=TRUE))
     validObject(.Object)
     return(.Object)
 }
@@ -26,16 +26,60 @@ setMethod("initialize", "Categories", init.Categories)
 
 is.categories <- function (x) inherits(x, "Categories")
 
+concatenateCategories <- function (...) {
+    ## c() S3 method for categories. Dispatch is on ..1
+    dots <- list(...)
+    iscat <- vapply(dots, is.category, logical(1))
+    iscats <- vapply(dots, is.categories, logical(1))
+    if (!all(iscat | iscats)) {
+        stop("Invalid categories")
+    }
+    dots[iscat] <- lapply(dots[iscat], function (x) list(x))
+    dots[iscats] <- lapply(dots[iscats], function (x) x@.Data)
+    return(Categories(data=do.call(c, dots)))
+}
+
+##' S3 method to concatenate Categories and Category objects
+##'
+##' @param ... see \code{\link[base]{c}}
+##' @return An object of class \code{\link{Categories}}
+##' @name c-categories
+##' @export
+##' @examples
+##' cat.a <- Category(name="First", id=1, numeric_value=1, missing=FALSE)
+##' cat.b <- Category(name="Second", id=2)
+##' cat.c <- Category(name="Third", id=3, missing=TRUE)
+##' cats.1 <- Categories(cat.a, cat.b)
+##' identical(cats.1, c(cat.a, cat.b))
+##' identical(c(cats.1, cat.c), Categories(cat.a, cat.b, cat.c))
+c.Categories <- concatenateCategories
+
+##' @rdname c-categories
+##' @export
+c.Category <- concatenateCategories
+
 ##' @rdname Categories
 ##' @export
 setMethod("[", c("Categories", "ANY"), function (x, i, ...) {
     x@.Data <- x@.Data[i]
     return(x)
 })
+
+##' @rdname Categories
+##' @export
+setMethod("[", c("Categories", "numeric"), function (x, i, ...) {
+    invalid.indices <- setdiff(i, seq_along(x@.Data))
+    if (length(invalid.indices)) {
+        halt("subscript out of bounds: ", serialPaste(invalid.indices))
+    }
+    x@.Data <- x@.Data[i]
+    return(x)
+})
+
 ##' @rdname Categories
 ##' @export
 setMethod("[<-", c("Categories", "ANY"), function (x, i, ..., value) {
-    x@.Data[i] <- value
+    x@.Data[i] <- Categories(data=value)
     return(x)
 })
 
@@ -50,9 +94,6 @@ setMethod("values", "Categories", function (x) vapply(x, value, numeric(1)))
 ##' @rdname Categories
 ##' @export
 setMethod("ids", "Categories", function (x) vapply(x, id, integer(1)))
-##' @rdname Categories
-##' @export
-setMethod("ids", "list", function (x) sapply(x, id)) ## for summaries
 
 setNames <- function (x, value) {
     x[] <- mapply(setName, x, value=value, SIMPLIFY=FALSE)
@@ -99,7 +140,7 @@ NULL
 ##' @rdname na-omit-categories
 ##' @export
 setMethod("na.omit", "Categories", function (object, ...) {
-    Categories(.na.omit.categories(object))
+    Categories(data=.na.omit.categories(object))
 })
 
 ##' is.na for Categories
@@ -120,10 +161,17 @@ NULL
 ##' @export
 setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical(1), USE.NAMES=FALSE), .Names=names(x)))
 
-n2i <- function (x, cats) {
+n2i <- function (x, cats, strict=TRUE) {
     ## Convert x from category names to the corresponding category ids
-    if (is.variable(cats)) cats <- categories(cats)
-    return(ids(cats)[match(x, names(cats))])
+    if (is.variable(cats)) {
+        cats <- categories(cats)
+    }
+    out <- ids(cats)[match(x, names(cats))]
+    if (strict && any(is.na(out))) {
+        halt(ifelse(sum(is.na(out)) > 1, "Categories", "Category"), 
+            " not found: ", serialPaste(dQuote(x[is.na(out)])))
+    }
+    return(out)
 }
 
 ##' @rdname is-na-categories

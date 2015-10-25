@@ -52,12 +52,14 @@ NULL
 
 ##' @rdname variable-update
 ##' @export
-setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"),
-    function (x, i, j, value) {
-        ## Backstop error so you don't get "Object of class S4 is not subsettable"
-        halt(paste("Cannot update", class(x), "with type", class(value)))
-    })
-    
+setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"), .backstopUpdate)
+
+##' @rdname variable-update
+##' @export
+setMethod("[<-", c("CrunchVariable", "ANY", "missing", "NULL"), 
+    function (x, i, j, value) return(NULL))
+
+
 .sigs <- list(
     c("TextVariable", "character"),
     c("NumericVariable", "numeric"),
@@ -72,10 +74,10 @@ setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"),
     return(x)
 }
 
-for (i in seq_along(.sigs)) {
-    setMethod("[<-", c(.sigs[[i]][1], "ANY", "missing", .sigs[[i]][2]),
-        .var.updater)
-}
+# for (i in seq_along(.sigs)) {
+#     setMethod("[<-", c(.sigs[[i]][1], "ANY", "missing", .sigs[[i]][2]),
+#         .var.updater)
+# }
 
 # for (i in seq_along(.sigs)) {
 #         cat('
@@ -135,7 +137,7 @@ setMethod("[<-", c("CrunchVariable", "CrunchExpr", "missing", "CrunchExpr"),
         }
         # if (add.no.data) {
         #     newcats <- categories(x)
-        #     newcats[[length(newcats) + 1]] <- Category(.no.data)
+        #     newcats[[length(newcats) + 1]] <- Category(data=.no.data)
         #     print(class(newcats))
         #     print(newcats)
         #     categories(x) <- newcats
@@ -165,11 +167,11 @@ setMethod("[<-", c("CrunchVariable", "CrunchExpr", "missing", "CrunchExpr"),
     }
 )
 
-for (i in c("CategoricalVariable", "CategoricalArrayVariable")) {
-    for (j in c("numeric", "character", "factor")) {
-        setMethod("[<-", c(i, "ANY", "missing", j), .categorical.update[[j]])
-    }
-}
+# for (i in c("CategoricalVariable", "CategoricalArrayVariable")) {
+#     for (j in c("numeric", "character", "factor")) {
+#         setMethod("[<-", c(i, "ANY", "missing", j), .categorical.update[[j]])
+#     }
+# }
 
 # for (i in c("CategoricalVariable", "CategoricalArrayVariable")) {
 #     for (j in c("numeric", "character", "factor")) {
@@ -199,24 +201,34 @@ setMethod("[<-", c("CategoricalArrayVariable", "ANY", "missing", "character"), .
 ##' @export
 setMethod("[<-", c("CategoricalArrayVariable", "ANY", "missing", "factor"), .categorical.update[["factor"]])
 
-# setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
-#     function (x, i, j, value) {
-#           ## For assigning NA
-#         cal <- match.call()
-#         print(cal)
-#         if (all(is.na(value))) {
-#             value <- ifelse(is.Text(x), NA_character_, NA_integer_)
-#         } else {
-#             halt("Cannot update CrunchVariable with logical")
-#         }
-#         if (missing(i)) i <- NULL
-#         i <- zcl(.dispatchFilter(i))
-#         
-#         x@fragments$missing_rules
-#         
-#         x[i] <- value
-#         return(x)
-#     })
+##' @rdname variable-update
+##' @export
+setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
+    function (x, i, j, value) {
+        ## For assigning NA
+        if (all(is.na(value))) {
+            value <- .no.data.value(type(x))
+        } else {
+            ## halt()
+            .backstopUpdate(x, i, j, value)
+        }
+        if (missing(i)) i <- NULL
+        
+        ## Datetime not yet supported, apparently
+        if (is.Datetime(x)) {
+            .backstopUpdate(x, i, j, value)
+        }
+        out <- .updateVariable(x, value, filter=.dispatchFilter(i))
+        return(x)
+    })
+
+.no.data.value <- function (x) {
+    if (x %in% c("categorical", "multiple_response", "categorical_array")) {
+        return(-1L)
+    } else {
+        return(list(value=list(`?`=-1L), type=list(class=x)))
+    }
+}
 
 ##' @rdname variable-update
 ##' @export

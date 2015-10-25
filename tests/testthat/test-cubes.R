@@ -57,20 +57,23 @@ test_that("rollup resolution validation", {
 adims <- CubeDims(list(
     v4=list(name=c("B", "C"), any.or.none=rep(FALSE, 2),
         missing=rep(FALSE, 2)),
-    v7=list(name=LETTERS[3:5], any.or.none=rep(FALSE, 3),
-        missing=rep(FALSE, 3))))
-a1 <- CrunchCube(arrays=list("count"=array(c(8, 6, 3, 2, 2, 3), dim=c(2L, 3L))),
+    v7=list(name=c("C", "D", "E", "No Data"), any.or.none=rep(FALSE, 4),
+        missing=c(rep(FALSE, 3), TRUE))))
+a1 <- CrunchCube(arrays=list("count"=array(c(
+        8, 6, 
+        3, 2, 
+        2, 3,
+        0, 0), dim=c(2L, 4L))),
     dims=adims)
 #    v7
-# v4  C D E
-#   B 8 3 2
-#   C 6 2 3
+# v4  C D E No Data
+#   B 8 3 2 0
+#   C 6 2 3 0
 
 test_that("simple margin.table", {
     expect_equivalent(margin.table(a1, 1), margin.table(a1@arrays[[1]], 1))
     expect_identical(margin.table(a1, 1),
         array(c(13, 11), dim=2L, dimnames=list(v4=c("B", "C"))))
-    expect_equivalent(margin.table(a1, 2), margin.table(a1@arrays[[1]], 2))    
     expect_identical(margin.table(a1, 2), 
         array(c(14, 5, 5), dim=3L, dimnames=list(v7=LETTERS[3:5])))
     expect_equivalent(margin.table(a1), margin.table(a1@arrays[[1]]))
@@ -105,11 +108,22 @@ test_that("margin.table with missing", {
         array(c(14, 5, 5), dim=3L, dimnames=list(v7=LETTERS[3:5])))
     expect_identical(margin.table(a2), 24)
     
+    a2@useNA <- "always"
+    expect_identical(margin.table(a2, 1),
+        array(c(13, 11), dim=2L, dimnames=list(v4=c("B", "C"))))
+    expect_identical(margin.table(a2, 2), 
+        array(c(14, 5, 5, 0), dim=4L, 
+            dimnames=list(v7=c(LETTERS[3:5], "No Data"))))
+    expect_identical(margin.table(a2), 24)
 })
 
 if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(cubedf), {
+            test_that("cubedf setup", {
+                expect_identical(names(categories(ds$v7)), 
+                    c("C", "D", "E", "No Data"))
+            })
             test_that("We can get a univariate categorical cube", {
                 kube <- try(crtabs(~ v7, data=ds))
                 expect_true(inherits(kube, "CrunchCube"))
@@ -137,8 +151,8 @@ if (run.integration.tests) {
                         dimnames=list(v7=LETTERS[3:5])))
                 expect_equivalent(as.array(crtabs(~ v7, data=ds,
                     useNA="always")),
-                    array(c(10, 5, 5), dim=c(3L),
-                        dimnames=list(v7=LETTERS[3:5])))
+                    array(c(10, 5, 5, 0), dim=c(4L),
+                        dimnames=list(v7=c(LETTERS[3:5], "No Data"))))
             })
             test_that("useNA on bivariate cube", {
                 expect_equivalent(as.array(crtabs(~ v4 + v7, data=ds)),
@@ -150,8 +164,12 @@ if (run.integration.tests) {
                         dimnames=list(v4=c("B", "C"), v7=LETTERS[3:5])))
                 expect_equivalent(as.array(crtabs(~ v4 + v7, data=ds,
                     useNA="always")),
-                    array(c(5, 5, 3, 2, 2, 3), dim=c(2L, 3L),
-                        dimnames=list(v4=c("B", "C"), v7=LETTERS[3:5])))
+                    array(c(5, 5, 0, 
+                            3, 2, 0, 
+                            2, 3, 0, 
+                            0, 0, 0), dim=c(3L, 4L),
+                        dimnames=list(v4=c("B", "C", "No Data"),
+                                    v7=c(LETTERS[3:5], "No Data"))))
             })
             
             test_that("univariate datetime cube", {
@@ -173,9 +191,12 @@ if (run.integration.tests) {
                         v7=LETTERS[3:5])))
                 expect_equivalent(as.array(crtabs(~ v8 + v7, data=ds,
                     useNA="always")),
-                    array(c(5, 5, 3, 2, 2, 3), dim=c(2L, 3L),
+                    array(c(5, 5, 
+                            3, 2, 
+                            2, 3, 
+                            0, 0), dim=c(2L, 4L),
                         dimnames=list(v8=c("1955-11-05", "1955-11-06"), 
-                        v7=LETTERS[3:5])))
+                        v7=c(LETTERS[3:5], "No Data"))))
             })
             
             test_that("datetime rollup cubes", {
@@ -223,10 +244,11 @@ if (run.integration.tests) {
                     useNA="always")),
                     array(c(2, 5, 3, 0, 0,
                             0, 0, 2, 3, 0,
-                            0, 0, 0, 2, 3), dim=c(5L, 3L),
+                            0, 0, 0, 2, 3,
+                            0, 0, 0, 0, 0), dim=c(5L, 4L),
                         dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25",
                         "25-30"), 
-                        v7=LETTERS[3:5])))
+                        v7=c(LETTERS[3:5], "No Data"))))
             })
             test_that("unbinned numeric", {
                 expect_equivalent(as.array(crtabs(~ v1, data=ds)),
@@ -341,6 +363,11 @@ if (run.integration.tests) {
                         dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25",
                         "25-30"),
                         v7=c("C", "E"))))
+            })
+            
+            test_that("Univariate stats", {
+                expect_equivalent(as.array(crtabs(mean(v3) ~ 1, data=ds)),
+                    17.5)
             })
         })
     })

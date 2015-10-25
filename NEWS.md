@@ -1,5 +1,70 @@
-## crunch 1.2.1
+### crunch 1.5.4
+* Gradually slow the polling of `/batches/` while waiting for an append to complete. Improves the performance of the append operation.
+* New `c` method for Categories, plus support for creating and adding new categories to variables. See `?Categories` and `?"c-categories"`
+* Get category ids or numeric values from `as.vector` by specifying a "mode" of "id" or "numeric", respectively. See `?"variable-to-R"`
+* Set values as missing by assigning `NA` into variables.
+
+### crunch 1.5.3
+* Always send No Data category when creating Categorical Variables.
+* Fixed minor bugs in `margin.table` on `CrunchCube` objects.
+* Better validation of category subsetting.
+
+### crunch 1.5.2
+* Add Python-esque context manager for use in `with` statements. Use it to give `consent()` to delete things.
+* Delete variables by `<- NULL` into a dataset (like removing a column from a data.frame). Requires consent. Also create `deleteVariable(s)` functions that also return the dataset object. Use either method to prevent your dataset from getting out of sync with the server when you delete variables.
+* Delete subvariables from within array variables with `deleteSubvariable(s)`.
+* Better evaluation of formulas within `crtabs` to allow you to crosstab array subvariables.
+* Update to new exclusion API.
+
+### crunch 1.5.1
+* Validate inputs on making filter expressions with categorical variables
+* Very basic print methods for all Crunch objects
+
+## crunch 1.5.0
+* Subset rows of datasets and variables for analysis, using either `[` or `subset`
+* Access and set `exclusion` filters on datasets to drop certain rows
+* Fix some inconsistent handling in R of filters that are set on the server (i.e. for persistent viewing in the web application)
+* `(un)lock` datasets for editing when there are multiple editors
+
+### crunch 1.4.3
+* Send better emails when sharing datasets
+
+### crunch 1.4.2
+* Support for auto-login in Jupyter notebooks
+* One more CRANdated import
+
+### crunch 1.4.1
+* Import functions from methods, stats, and utils, per change in CRAN policy.
+
+## crunch 1.4.0
+* Functions `saveVersion` and `restoreVersion` for dataset versioning
+* Update requirement to `httr` 1.0; remove dependency on `RCurl` in favor of `curl`
+* Minor API updates
+* Fix for some issues authenticating on Windows
+* Fix bug in editing array variables with a single subvariable
+
+### crunch 1.3.3
+* More tools (not yet exported) for managing users
+
+### crunch 1.3.2
+* Adapt to minor updates in append API: new intermediate "appended" state for append operations.
+
+### crunch 1.3.1
+* More methods for managing teams
+* Prepare for httr 1.0
+
+## crunch 1.3.0
+* Provisional interface for managing users and teams.
+* Improved messaging for failure modes in `appendDataset`.
+* Adapt to minor updates in append API
+* Fix bug in updating an array with only one subvariable.
+
+### crunch 1.2.2
+* Add `types` method to VariableCatalog.
+
+### crunch 1.2.1
 * Additional methods for working with VariableOrder and VariableGroup. You can create new Groups by assigning into an Order or Group with a new name. And, with the new `duplicates` parameter, which is `FALSE` by default, adding new Groups to an Order "moves" the variable references to the new Group, rather than creating copies. See the [variable order vignette](inst/doc/variable-order.md) for more details.
+* Add `share` function for sharing a dataset with other users.
 
 ## crunch 1.2.0
 * New vignettes for [deriving variables](inst/doc/derive.md) and [analyzing datasets](inst/doc/analyze.md).

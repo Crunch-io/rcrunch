@@ -5,3 +5,4 @@
 .DS_Store
 Rd2.pdf
 assets/
+inst/doc/*.html

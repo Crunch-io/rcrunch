@@ -3,7 +3,6 @@ init.CrunchDataset <- function (.Object, ...) {
     .Object@variables <- getDatasetVariables(.Object)
     ## So they test as identical, force order
     .Object@variables@index <- .Object@variables@index[order(names(.Object@variables@index))]
-    .Object@.nrow <- getNrow(.Object)
     return(.Object)
 }
 setMethod("initialize", "CrunchDataset", init.CrunchDataset)
@@ -20,7 +19,9 @@ getNrow <- function (dataset, filtered=TRUE) {
     ## use filtered by default because every other request will take the applied filter
     
     u <- summaryURL(dataset)
-    nrows <- as.integer(round(crGET(u)$unweighted[[which.count]]))
+    f <- filterSyntax(activeFilter(dataset))
+    q <- crGET(u, query=list(filter_syntax=toJSON(f)))
+    nrows <- as.integer(round(q$unweighted[[which.count]]))
     return(nrows)
 }
 
@@ -66,6 +67,9 @@ setMethod("description", "CrunchDataset", function (x) tuple(x)$description)
 ##' @rdname describe
 ##' @export
 setMethod("description<-", "CrunchDataset", setDatasetDescription)
+##' @rdname describe
+##' @export
+setMethod("id", "CrunchDataset", function (x) tuple(x)$id)
 
 as.dataset <- function (x, useAlias=default.useAlias(), tuple=DatasetTuple()) {
     out <- CrunchDataset(x)
@@ -87,7 +91,7 @@ NULL
 ##' @rdname dim-dataset
 ##' @export
 setMethod("dim", "CrunchDataset",
-    function (x) c(x@.nrow, length(variables(x))))
+    function (x) c(getNrow(x), length(variables(x))))
 
 namekey <- function (dataset) ifelse(dataset@useAlias, "alias", "name")
 
@@ -109,6 +113,7 @@ weight <- function (x) {
     w <- x@body$weight
     if (!is.null(w)) {
         w <- entity(allVariables(x)[[w]])
+        activeFilter(w) <- activeFilter(x)
     }
     return(w)
 }
@@ -124,10 +129,6 @@ weight <- function (x) {
     }
     x <- setCrunchSlot(x, "weight", value)
     return(x)
-}
-
-is.variable.tuple <- function (x) {
-    is.list(x) && all(c("name", "alias", "type", "id") %in% names(x))
 }
 
 setMethod("tuple", "CrunchDataset", function (x) x@tuple)
@@ -156,6 +157,7 @@ setMethod("refresh", "CrunchDataset", function (x) {
     tup <- refresh(tuple(x))
     out <- as.dataset(crGET(self(x)), useAlias=x@useAlias, tuple=tup)
     duplicates(allVariables(out)) <- duplicates(allVariables(x))
+    activeFilter(out) <- activeFilter(x)
     return(out)
 })
 
@@ -168,8 +170,9 @@ setMethod("refresh", "CrunchDataset", function (x) {
 ##'
 ##' @param x a Crunch object
 ##' @param confirm logical: should the user be asked to confirm deletion. 
-##' Option available for datasets only. Default is \code{TRUE} if in an
-##' interactive session.
+##' Option available for datasets and teams only. Default is \code{TRUE} if in 
+##' an interactive session. You can avoid the confirmation prompt if you delete
+##' \code{with(\link{consent})}.
 ##' @param ... additional arguments, in the generic
 ##' @seealso \code{\link{hide}} \code{\link{deleteDataset}}
 ##' @name delete
@@ -179,7 +182,7 @@ NULL
 ##' @rdname delete
 ##' @export
 setMethod("delete", "CrunchDataset", 
-    function (x, confirm=interactive() | is.readonly(x), ...) {
+    function (x, confirm=requireConsent() | is.readonly(x), ...) {
         out <- delete(tuple(x), confirm=confirm)
         invisible(out)
     })
@@ -202,8 +205,15 @@ setDatasetVariables <- function (x, value) {
     return(x)
 }
 
+setMethod("datasetReference", "CrunchDataset", function (x) self(x))
+
 variableCatalogURL <- function (dataset) {
-    shojiURL(dataset, "catalogs", "variables")
+    ## Get the variable catalog URL that corresponds to an object
+    if (class(dataset) == "VariableCatalog") return(self(dataset))
+    if (!is.dataset(dataset)) {
+        dataset <- ShojiObject(crGET(datasetReference(dataset)))
+    }
+    return(shojiURL(dataset, "catalogs", "variables"))
 }
 
 summaryURL <- function (x) shojiURL(x, "views", "summary")
@@ -241,4 +251,24 @@ setMethod("allVariables<-", c("CrunchDataset", "VariableCatalog"),
     setDatasetVariables)
     
 setMethod("hidden", "CrunchDataset", function (x) hidden(allVariables(x)))
-    
+
+
+webURL <- function (x) {
+    ##' URL to view this dataset in the web app
+    stopifnot(is.dataset(x))
+    return(paste0(absoluteURL("/", getOption("crunch.api")), "dataset/", id(x)))
+}
+
+##' as.environment method for CrunchDataset
+##'
+##' This method allows you to \code{eval} within a Dataset.
+##'
+##' @param x CrunchDataset
+##' @return an environment in which named objects are (promises that return) 
+##' CrunchVariables. 
+setMethod("as.environment", "CrunchDataset", function (x) {
+    out <- new.env()
+    out$.crunchDataset <- x
+    with(out, for (v in aliases(allVariables(x))) eval(parse(text=paste0("delayedAssign('", v, "', .crunchDataset[['", v, "']])"))))
+    return(out)
+})

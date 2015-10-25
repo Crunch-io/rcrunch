@@ -8,9 +8,13 @@ with(fake.HTTP, {
         expect_true(inherits(e1, "CrunchExpr"))
         zexp <- list(`function`="+",
             args=list(
-                list(variable="birthyr"),
-                list(value=5, type=list(`function`="typeof",
-                    args=list(list(variable="birthyr"))))
+                list(variable="f78ca47313144b57adfb495893968e70"),
+                list(value=5, type=list(
+                    `function`="typeof",
+                    args=list(
+                        list(variable="f78ca47313144b57adfb495893968e70")
+                    )
+                ))
             )
         )
         expect_identical(zcl(e1), zexp)
@@ -21,6 +25,19 @@ with(fake.HTTP, {
     test_that("Logic generates expressions", {
         e1 <- try(ds$birthyr < 0)
         expect_true(inherits(e1, "CrunchLogicalExpr"))
+    })
+    
+    test_that("Referencing category names that don't exist errors", {
+        expect_true(inherits(ds$gender == "Male", "CrunchLogicalExpr"))
+        expect_error(ds$gender == "other",
+            paste("Category not found:", dQuote("other")))
+        expect_error(ds$gender %in% c("other", "Male", "another"),
+            paste("Categories not found:", dQuote("other"), "and",
+                dQuote("another")))
+    })
+    
+    test_that("show method exists", {
+        expect_true(is.character(capture.output(print(ds$birthyr + 5))))
     })
 })
 

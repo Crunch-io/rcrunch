@@ -93,5 +93,32 @@ if (run.integration.tests) {
                 expect_true(all(c("v2", "v5") %in% hiddenVariables(ds)))
             })
         })
+        
+        with(test.dataset(mrdf), {
+            ds <- mrdf.setup(ds)
+            test_that("Can hide array variables", {
+                expect_true("CA" %in% names(ds))
+                try(hiddenVariables(ds) <- c("CA", "v4"))
+                expect_false("CA" %in% names(ds))
+            })
+        })
+        with(test.dataset(mrdf), {
+            ds <- mrdf.setup(ds, selections="1.0")
+            test_that("Can hide MR variables", {
+                expect_true("MR" %in% names(ds))
+                try(hiddenVariables(ds) <- "MR")
+                expect_false("MR" %in% names(ds))
+            })
+        })
+        
+        with(test.dataset(mrdf), {
+            ds <- mrdf.setup(ds, pattern="mr_1")
+            test_that("Can hide array variables even if they only have one subvar", {
+                expect_identical(names(ds), c("CA", "mr_2", "mr_3", "v4"))
+                expect_identical(length(subvariables(ds$CA)), 1L)
+                try(hiddenVariables(ds) <- "CA")
+                expect_false("CA" %in% names(ds))
+            })
+        })
     })
 }

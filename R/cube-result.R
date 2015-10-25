@@ -23,7 +23,10 @@ cToA <- function (x, dims) {
     
     dimsizes <- dim(dims)
     ndims <- length(dims)
-    if (ndims > 1) {
+    if (ndims == 0) {
+        ## It's a scalar. Just return it
+        return(d)
+    } else if (ndims > 1) {
         ## Cube arrays come in row-col-etc. order, not column-major.
         ## Keep the labels right here, then aperm the array back to order
         dimsizes[1:2] <- dimsizes[c(2,1)]
@@ -39,15 +42,17 @@ cToA <- function (x, dims) {
 
 cubeToArray <- function (x, measure=1) {
     out <- x@arrays[[measure]]
-    dimnames(out) <- dimnames(x@dims)
-    out <- pruneCubeArray(out, x)
+    if (is.array(out)) {
+        ## If "out" is just a scalar, skip this
+        dimnames(out) <- dimnames(x@dims)
+        out <- pruneCubeArray(out, x)
+    }
     return(out)
 }
 
 pruneCubeArray <- function (x, cube) {
     keep.these <- evalUseNA(x, cube@dims, cube@useNA)
     return(subsetCubeArray(x, keep.these))
-    return(x)
 }
 
 subsetCubeArray <- function (array, bools, drop=FALSE) {
@@ -82,12 +87,11 @@ keepWithNA <- function (dimension, marginal, useNA) {
         ## Means drop missing always, or only keep if there are any
         valid.cats <- !dimension$missing
         if (useNA == "ifany") {
-            valid.cats <- valid.cats | vapply(marginal, length, integer(1)) > 0
+            valid.cats <- valid.cats | marginal > 0
         }
         ## But still drop __any__ or __none__
         out <- valid.cats & out
     }
-
     return(out) 
 }
 
@@ -112,28 +116,31 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     ## Else, sum all
     args <- lapply(seq_along(aon), function (i) {
         a <- aon[[i]]
-        has.any.or.none <- any(a)
-        if (!has.any.or.none) {
-            ## If there isn't "any" or "none", keep all to sum over
-            a <- rep(TRUE, length(a))
-        } else if (i %in% margin) {
-            ## If this does have any/none AND this is a margin we're sweeping,
-            ## keep everything *except* any/none because we want to match
-            ## the dimensions in "data"
-            a <- !a
+        out <- rep(TRUE, length(a))
+        if (!(i %in% margin)) {
+            ## Default is keep all. But if not sweeping this margin,
+            if (any(a)) {
+                ## Multiple response. 
+                out <- a
+                ## Add missings if not "no"
+                if (x@useNA != "no") {
+                    out <- out | missings[[i]]
+                }
+            } else if (x@useNA == "no") {
+                ## Not multiple response. Exclude missings if we should
+                out <- !missings[[i]]
+            }
         }
-        if (x@useNA == "no") {
-            ## Exclude missings if we're supposed to
-            a <- a & !missings[[i]]
-        } else if (has.any.or.none) {
-            ## Re-include missings for multiple response vars
-            a <- a | missings[[i]]
-        }
-        return(a)
+        return(out)
     })
     names(args) <- names(aon)
     data <- subsetCubeArray(data, args)
-    return(margin.table(data, margin))
+    ## Sweep that
+    mt <- margin.table(data, margin)
+    ## Now drop missings from the result
+    keep.these <- evalUseNA(mt, x@dims[margin], x@useNA)
+    out <- subsetCubeArray(mt, keep.these)
+    return(out)
 }
 
 ##' Work with CrunchCubes

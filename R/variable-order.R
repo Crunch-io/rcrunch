@@ -343,46 +343,6 @@ setMethod("$<-", "VariableGroup", function (x, name, value) {
     return(x)
 })
 
-printVariableOrder <- function (x) {
-    if (is.dataset(x)) {
-        return(printVariableOrder(variables(x)))
-    }
-    stopifnot(inherits(x, "VariableCatalog"))
-    out <- showVariableOrder(x@order, vars=index(x))
-    cat(out, sep="\n")
-    cat("\n")
-    invisible(out)
-}
-
-printVariableGroup <- function (x, index) {
-    if (inherits(x, "VariableGroup")) {
-        ents <- entities(x)
-        if (length(ents)) {
-            group <- unlist(lapply(ents, printVariableGroup, index=index))
-        } else {
-            group <- "(Empty group)"
-        }
-        out <- c(paste0("[+] ", name(x)), paste0("    ", group))
-    } else {
-        tup <- index[[x]] %||% list()
-        out <- tup[["name"]] %||% "(Hidden variable)"
-    }
-    return(out)
-}
-
-showVariableOrder <- function (x, vars=x@vars) {
-    return(unlist(lapply(x, printVariableGroup, index=vars)))
-}
-
-##' @rdname show-crunch
-##' @export
-setMethod("show", "VariableOrder", function (object) {
-    out <- showVariableOrder(object)
-    cat(out, sep="\n")
-    cat("\n")
-    invisible(out)
-})
-
 ##' Get un(grouped) VariableGroups
 ##'
 ##' "ungrouped" is a magic VariableGroup that contains all variables not found

@@ -1,25 +1,5 @@
 context("Making a new dataset")
 
-validImport <- function (ds) {
-    ## Pull out common tests that "df" was imported correctly
-    expect_true(is.dataset(ds))
-    expect_identical(names(df), names(ds))
-    expect_identical(dim(ds), dim(df))
-    expect_true(is.Numeric(ds[["v1"]]))
-    expect_true(is.Text(ds[["v2"]]))
-    expect_true(is.Numeric(ds[["v3"]]))
-    expect_equivalent(as.array(crtabs(mean(v3) ~ v4, data=ds)),
-        tapply(df$v3, df$v4, mean, na.rm=TRUE))
-    expect_true(is.Categorical(ds[["v4"]]))
-    expect_equivalent(as.array(crtabs(~ v4, data=ds)), 
-        array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
-    expect_true(all(levels(df$v4) %in% names(categories(ds$v4))))
-    expect_identical(categories(ds$v4), categories(refresh(ds$v4)))
-    expect_identical(ds$v4, refresh(ds$v4))
-    expect_true(is.Datetime(ds$v5))
-    expect_true(is.Categorical(ds$v6))
-}
-
 test_that("fake.csv is what we expect", {
     expect_identical(dim(testfile.df), c(20L, 6L))
 })
@@ -116,9 +96,43 @@ if (run.integration.tests) {
             test_that("newDataset via CSV + JSON", validImport(ds))
         })
         
+        test_that("createWithMetadataAndFile using docs example", {
+            with(test.dataset(newDatasetFromFixture("apidocs")), {
+                expect_true(is.dataset(ds))
+                expect_identical(name(ds), "Example dataset")
+                expect_identical(names(categories(ds$q1)),
+                    c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
+            })
+        })
+        
+        m <- fromJSON(file.path("dataset-fixtures", "apidocs.json"),
+            simplifyVector=FALSE)
+        
+        test_that("Can create dataset with data in S3", {
+            ds <- try(createWithMetadataAndFile(m, 
+                file="s3://public.testing.crunch.io/example-dataset.csv"))
+            expect_true(is.dataset(ds))
+            with(test.dataset(newDatasetFromFixture("apidocs")), as="ds2", {
+                ## Compare to dataset imported from local file upload
+                expect_identical(dim(ds), dim(ds2))
+                expect_identical(as.vector(ds$q1), as.vector(ds2$q1))
+                ## Could add more assertions
+            })
+            delete(ds)
+        })
+        
+        test_that("Duplicate subvariables are forbidden", {
+            m2 <- m
+            ## Add a duplicate subvariable
+            m2$body$table$metadata$allpets$subvariables[[4]] <- list(name="Another", alias="allpets_1")
+            expect_error(createWithMetadataAndFile(m2,
+                file.path("dataset-fixtures", "apidocs.csv")))
+        })
+        
         dsz <- try(suppressMessages(newDataset(df)))
         test_that("newDataset without specifying name grabs object name", {
             expect_true(is.dataset(dsz))
+            expect_identical(name(dsz), "df")
             with(test.dataset(dsz), validImport(dsz))
         })
         
@@ -129,15 +143,14 @@ if (run.integration.tests) {
             expect_true(crDELETE(self(testdf), 
                 response.handler=function (response) response$status_code==204))
             expect_false(dsname %in% listDatasets(refresh=TRUE))
-            
-            ## Do again but with the S4 method
+        })
+        test_that("Datasets can be deleted by S4 method", {
             dsname <- uniqueDatasetName()
             testdf <- suppressMessages(newDataset(df, name=dsname))
             expect_true(dsname %in% listDatasets())
             delete(testdf)
             expect_false(dsname %in% listDatasets())
         })
-        
     })
 }
 

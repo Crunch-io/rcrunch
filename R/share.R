@@ -3,9 +3,9 @@ setMethod("permissions", "CrunchDataset", function (x) {
     return(PermissionCatalog(crGET(perm_url)))
 })
 
-setMethod("emails", "PermissionCatalog", function (x) {
-    vapply(index(x), function (a) a[["email"]], character(1), USE.NAMES=FALSE)
-})
+##' @rdname describe-catalog
+##' @export
+setMethod("emails", "PermissionCatalog", function (x) getIndexSlot(x, "email"))
 
 is.editor <- function (x) {
     out <- vapply(index(x), function (a) a[["dataset_permissions"]][["edit"]], logical(1), USE.NAMES=FALSE)
@@ -16,6 +16,10 @@ is.editor <- function (x) {
 userCanEdit <- function (email, dataset) {
     e <- is.editor(permissions(dataset))
     return(ifelse(email %in% names(e), e[email], FALSE))
+}
+
+iCanEdit <- function (dataset) {
+    is.editor(permissions(dataset)[userURL()])
 }
 
 userCanView <- function (email, dataset) {
@@ -47,18 +51,24 @@ share <- function (dataset, email, edit=FALSE, notify=TRUE) {
     if (length(edit) != length(email)) {
         halt("Must supply `edit` permissions of equal length as the number of `emails` supplied")
     }
-    if (sum(edit) > 1) {
-        halt("Can only set one user as editor")
-    } else if (!any(edit) && emails(perms)[is.editor(perms)] %in% email) {
+    if (!any(edit) && all(emails(perms)[is.editor(perms)] %in% email)) {
         halt("Cannot remove editor from the dataset without specifying another")
     }
     payload <- lapply(edit,
         function (e) list(dataset_permissions=list(edit=e, view=TRUE)))
     names(payload) <- email
     payload$send_notification <- notify
+    if (notify) {
+        payload$url_base <- passwordSetURLTemplate()
+        payload$dataset_url <- webURL(dataset)
+    }
     payload <- toJSON(payload)
     crPATCH(self(perms), body=payload)
     invisible(dataset)
+}
+
+passwordSetURLTemplate <- function () {
+    absoluteURL("/password/change/${token}/", getOption("crunch.api"))
 }
 
 ## TODO: test and release this

@@ -70,16 +70,6 @@ selectFromWhere <- function (where=TRUE, xlist, key=NULL, ifnot=NA,
     }
 }
 
-doc <- function (x) {
-    ##' Collapse string vector for making docs
-    ##'
-    ##' Empty strings will be replaced with newlines. 
-    ##' @param x character
-    ##' @return character vector of length 1
-    x[nchar(x)==0] <- "\n"
-    return(paste0("\n ", paste(x, collapse=" "), "\n"))
-}
-
 serialPaste <- function (x, collapse="and") {
     ##' Make a prose list
     ##' Function to paste together a list of items, separated by commas (if more
@@ -102,7 +92,13 @@ absoluteURL <- function (urls, base) {
             base.url <- parse_url(base)
             urls <- vapply(urls, function (x, b) {
                 b$path <- joinPath(b$path, x)
-                if (is.null(b$scheme)) return(b$path) ## If file path and not URL
+                if (is.null(b$scheme)) {
+                    ## If file path and not URL, as in for tests, 
+                    ## let's return it relative
+                    return(b$path)
+                }
+                ## Pop off any leading "/" because build_url will add it
+                b$path <- sub("^/", "", b$path)
                 b$query <- NULL ## Catalog query params aren't valid for entities
                 return(build_url(b))
             }, character(1), b=base.url, USE.NAMES=FALSE)
@@ -117,6 +113,9 @@ joinPath <- function (base.path, relative.part) {
         return(relative.part)
     } 
     u <- c(strsplit(base.path, "/")[[1]], strsplit(relative.part, "/")[[1]])
+    ## Drop any references to current location (.)
+    u <- u[u != "."]
+    ## Walk the ..
     if (any(u == "..")) {
         ## If we're here, we must have some normalization to do
         i <- 1
@@ -131,20 +130,44 @@ joinPath <- function (base.path, relative.part) {
                 i <- i + 1
             }
         }
-    
-        out <- paste(u, collapse="/")
-        last.char <- substr(relative.part, nchar(relative.part),
-            nchar(relative.part))
-        if (last.char == "/") {
-            out <- paste0(out, "/")
-        }
-        return(out)
-    } else {
-        ## Assume this requires no path normalization
-        return(paste0(base.path, relative.part))
     }
+    out <- paste(u, collapse="/")
+    last.char <- substr(relative.part, nchar(relative.part),
+        nchar(relative.part))
+    if (last.char == "/") {
+        out <- paste0(out, "/")
+    }
+    return(out)
+}
+
+askForPermission <- function (prompt="") {
+    ## If options explicitly say we don't need to ask, bail.
+    ## Have to check that it's FALSE and not NULL. Silence doesn't mean consent.
+    must.confirm <- getOption("crunch.require.confirmation") %||% TRUE
+    if (must.confirm == FALSE) return(TRUE)
+    
+    ## If we're here but not interactive, we can't give permission.
+    if (!interactive()) return(FALSE)
+    prompt <- paste(prompt, "(y/n) ")
+    proceed <- ""
+    while (!(proceed %in% c("y", "n"))) {
+        proceed <- tolower(readline(prompt))
+    }
+    return(proceed == "y")
+}
+
+emptyObject <- function () {
+    ## toJSON(list()) is "[]". toJSON(emptyObject()) is "{}"
+    structure(list(), .Names=character(0))
 }
 
 ## Borrowed from Hadley
 "%||%" <- function (a, b) if (!is.null(a)) a else b
 
+## No longer used:
+# safeGet <- function (x, ..., ifnot=NULL) {
+#     ## "get" with a default
+#     out <- try(get(x, ...), silent=TRUE)
+#     if (is.error(out)) out <- ifnot
+#     return(out)
+# }

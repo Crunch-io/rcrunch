@@ -150,6 +150,7 @@ addSourceToDataset <- function (dataset, source_url, ...) {
 ##' @param ... additional arguments passed to \code{ \link{createDataset}}
 ##' @return If successful, an object of class CrunchDataset.
 ##' @seealso \code{\link{newDataset}} \code{\link{newDatasetByColumn}}
+##' @importFrom utils write.csv
 ##' @export
 newDatasetByCSV <- function (x, name=as.character(substitute(x)),
                                 useAlias=default.useAlias(), ...) {
@@ -189,10 +190,14 @@ newDatasetByCSV <- function (x, name=as.character(substitute(x)),
 ##' will be JSON-serialized and POSTed.
 ##' @param file a path to a CSV file, optionally zipped, that corresponds to
 ##' the above metadata.
+##' @param strict logical: must the metadata exactly match the data? Default is
+##' TRUE.
+##' @param cleanup logical: if the file upload fails, delete the dataset? 
+##' Default is TRUE.
 ##' @return On success, a new dataset.
 ##' @export
 ##' @keywords internal
-createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
+createWithMetadataAndFile <- function (metadata, file, strict=TRUE, cleanup=TRUE) {
     message("Uploading metadata")
     dataset_url <- crPOST(sessionURL("datasets"), body=toJSON(metadata))
     updateDatasetList()
@@ -203,9 +208,19 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
     if (!strict) {
         batches_url <- paste0(batches_url, "?strict=0")
     }
-    batch <- try(crPOST(batches_url,
-        body=list(file=httr::upload_file(file))))
-    if (is.error(batch)) {
+    if (substr(file, 1, 5) == "s3://") {
+        ## S3 upload
+        batch <- try(crPOST(batches_url, body=toJSON(list(
+            element="shoji:entity",
+            body=list(
+                url=file
+            )))))
+    } else {
+        ## Local file. Send it as file upload
+        batch <- try(crPOST(batches_url,
+            body=list(file=httr::upload_file(file))))
+    }
+    if (is.error(batch) && cleanup) {
         delete(ds, confirm=FALSE)
         rethrow(batch)
     }

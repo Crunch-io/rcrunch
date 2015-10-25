@@ -1,11 +1,16 @@
 context("Various helper functions")
 
 test_that("is.error", {
-    expect_true(is.error(try(halt(""), silent=TRUE)))
+    e <- try(halt("error in a box"), silent=TRUE)
+    expect_true(is.error(e))
     expect_false(is.error("not an error"))
     expect_false(is.error(NULL))
     expect_false(is.error(NA))
+    expect_that("not an error", is_not_an_error())
+    expect_that(NULL, is_not_an_error())
+    expect_that(NA, is_not_an_error())
     expect_that("not an error", does_not_throw_error())
+    # expect_that(e, is_not_an_error()) ## Should fail: confirm fail message
 })
 
 test_that("update list", {
@@ -42,14 +47,17 @@ test_that("SUTD", {
     })
     expect_true(a)
     
-    a <- NULL
-    expect_true(is.null(a))
-    with(tester, {
-        expect_false(is.null(a))
-        expect_false(a)
-        halt("Testing error handling, please ignore")
-    })
-    expect_true(a)
+    ## Test that even if the code in the with block throws an error, (1) the
+    ## teardown is run, and (2) it doesn't fail silently but turns into a
+    ## failed test expectation.
+    # a <- NULL
+    # expect_true(is.null(a))
+    # with(tester, {
+    #     expect_false(is.null(a))
+    #     expect_false(a)
+    #     halt("Testing error handling, please ignore")
+    # })
+    # expect_true(a)
 })
 
 test_that("rethrow a caught error", {
@@ -89,4 +97,27 @@ test_that("joinPath", {
         "a/b/c/e/h/")
     expect_identical(joinPath("/api/datasets/", "/variables/"),
         "/variables/")
+    expect_identical(joinPath("/api/datasets/", "/"),
+        "/")
+    expect_identical(joinPath("/api/datasets/", "./id/"),
+        "/api/datasets/id/")
+})
+
+test_that("absoluteURL", {
+    base.url <- "https://fake.crunch.io/api/datasets/"
+    expect_identical(absoluteURL("../variables/", base.url),
+        "https://fake.crunch.io/api/variables/")
+    expect_identical(absoluteURL("4412es.json", base.url),
+        "https://fake.crunch.io/api/datasets/4412es.json")
+    expect_identical(absoluteURL("g/../../h/",
+        "https://fake.crunch.io/a/b/c/d/../e/f/"),
+        "https://fake.crunch.io/a/b/c/e/h/")
+    expect_identical(absoluteURL("/variables/", base.url),
+        "https://fake.crunch.io/variables/")
+    expect_identical(absoluteURL("/", base.url),
+        "https://fake.crunch.io/")
+})
+
+test_that("emptyObject JSONifies correctly", {
+    expect_equivalent(unclass(toJSON(emptyObject())), "{}")
 })

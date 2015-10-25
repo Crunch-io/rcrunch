@@ -1,0 +1,13 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/teams/team1.json",
+    "catalogs": {
+        "datasets": "/api/teams/team1/datasets.json",
+        "members": "/api/teams/team1/members.json"
+    },
+    "description": "Details for a specific team",
+    "body": {
+        "owner": "/api/users/user1.json",
+        "name": "Alpha Team"
+    }
+}

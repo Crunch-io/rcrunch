@@ -134,7 +134,18 @@ This allows us to do the appropriate calculations on arrays and multiple respons
 round(100*prop.table(tab3mr, 2))
 ```
 
-Finally, it's worth noting that we can extend the crosstabbing to higher dimensions, just by adding more terms on the right-hand side of the formula:
+Finally, just as we saw in the [array variables](array-variables.html) vignette, we can grab individual subvariables and crosstab with them:
+
+```{r, eval=FALSE}
+crtabs(~ imiss$Education + gender, data=ds)
+```
+```{r, echo=FALSE}
+tab3subvar
+```
+
+### N-way tables
+
+It's worth noting that we can extend the crosstabbing to higher dimensions, just by adding more terms on the right-hand side of the formula:
 
 ```{r, eval=FALSE}
 round(crtabs(~ imiss + educ + gender, data=ds))
@@ -168,6 +179,15 @@ crtabs(min(age) ~ educ + gender, data=ds)
 tab6
 ```
 
+We can get unconditional (univariate) statistics by making the right-hand side of your formula be just the number `1`:
+
+```{r, eval=FALSE}
+crtabs(min(age) ~ 1, data=ds)
+```
+```{r, echo=FALSE}
+tab6a
+```
+
 Numeric aggregation functions also work with categorical variables that have numeric values defined for their categories; this is the reason why numeric values for categories are defined, in fact. In the [variables vignette](variables.html), we worked with the "On the right track" question and set some numeric values:
 
 ```{r, eval=FALSE}
@@ -188,6 +208,19 @@ round(tab7, 2)
 
 Looks like most people surveyed thought that the U.S. is on the wrong track, but that pessimism is less pronounced for those with higher levels of education.
 
+### Subsetting data
+
+We can also specify a subset of `ds` to analyze, just as if it were a data.frame. Let's do the same calculation for Democrats only:
+
+```{r, eval=FALSE}
+round(crtabs(mean(track) ~ educ + gender, data=ds[ds$pid3 == "Democrat",]), 2)
+```
+```{r, echo=FALSE}
+round(tab8, 2)
+```
+
+Not surprisingly, Democrats were less pessimistic about the direction of the country than the general population.
+
 A few final observations about `crtabs`. First, all of these calculations have been weighted by the weight variable we set above. We set it and could then forget about it--we didn't have to litter all of our expressions with `ds$weight` and extra arithmetic to do the weighting. Crunch handles this for us.
 
 Second, none of these aggregations required pulling case-level data to your computer. `crtabs` sends Crunch expressions to the server and receives in return an `n`-D array of results. The only computations happening locally are the margin tables and sweeping in `prop.table`, computing on the aggregate results. Your computer would work exactly as hard with this example dataset of 1000 rows as it would with a dataset of 100 million rows.  
@@ -201,10 +234,7 @@ Let's fit a basic Ordinary Least Squares (OLS) model. In our dataset, we have a 
 ds$snowdenleakapp
 ```
 ```{r, echo=FALSE}
-snowdenleakapp.var
-```
-```{r, echo=FALSE}
-print(summary.snowdenleakapp.var)
+cat(snowdenleakapp.var, sep="\n")
 ```
 
 We can use `lm` to fit our model. Let's explore the relationship between approval of Snowden's leak and respondents' interest in current events, party identification, gender, and age.
@@ -233,4 +263,4 @@ summary(logit1)
 
 As before, not a particularly interesting result, but this is just the beginning of the analysis process. Using `crunch`, you can keep exploring the data and perhaps find a better fit.
 
-Unlike the previous examples, these modeling functions do have to pull columns of data from the server to your local machine. However, only the columns of data you reference in your formula are copied, and because of the `crunch` package's query cache, subsequent models that incorporate any of those variables will not have to go to the server to get them. 
+Unlike the previous examples, these modeling functions do have to pull columns of data from the server to your local machine. However, only the columns of data you reference in your formula are copied, and if you specify a subset of the dataset to regress on (as we did above with `crtabs` when we looked at just Democrats), only those rows are retrieved. This helps minimize the time spent shipping data across the network. Moreover, because of the `crunch` package's query cache, subsequent models that incorporate any of those variables will not have to go to the server to get them. 

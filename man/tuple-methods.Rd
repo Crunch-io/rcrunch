@@ -33,7 +33,7 @@
 
 \S4method{delete}{IndexTuple}(x, ...)
 
-\S4method{delete}{DatasetTuple}(x, confirm = interactive(), ...)
+\S4method{delete}{DatasetTuple}(x, confirm = requireConsent(), ...)
 
 \S4method{name}{IndexTuple}(x)
 

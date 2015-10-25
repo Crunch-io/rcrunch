@@ -8,8 +8,8 @@
 ##' input for \code{\link{loadDataset}}
 ##' @export 
 listDatasets <- function (kind=c("active", "all", "archived"), refresh=FALSE) {
-    if (refresh && crunchAPIcanBeReached()) {
-        updateDatasetList()
+    if (refresh) {
+        try(updateDatasetList())
     }
     return(names(subsetDatasetCatalog(match.arg(kind))))
 }

@@ -26,6 +26,10 @@ ShojiOrder <- setClass("ShojiOrder", contains="ShojiObject",
     representation(
         graph="list"
     ))
+ShojiView <- setClass("ShojiView", contains="ShojiObject",
+    representation(
+        value="ANY"
+    ))
 
 IndexTuple <- setClass("IndexTuple", 
     representation(
@@ -44,13 +48,15 @@ DatasetTuple <- setClass("DatasetTuple", contains="IndexTuple")
 ##' be persisted on the server? Default is \code{FALSE}
 ##' @slot tuple An object of class VariableTuple. These contain attributes, such
 ##' as name and description, that are found in the index of the \code{\link{VariableCatalog}}
+##' @importFrom methods as callNextMethod new slot slot<- slotNames validObject
 ##' @rdname CrunchVariable
 CrunchVariable <- setClass("CrunchVariable", contains="ShojiObject",
     representation= representation(
         readonly="logical",
+        filter="ANY", ## CrunchLogicalExpr, but cyclic dependencies
         tuple="VariableTuple"
     ), 
-    prototype=prototype(readonly=FALSE, tuple=VariableTuple()))
+    prototype=prototype(readonly=FALSE, filter=NULL, tuple=VariableTuple()))
 
 ##' @rdname CrunchVariable
 ##' @export NumericVariable
@@ -138,56 +144,11 @@ VariableCatalog <- setClass("VariableCatalog", contains="ShojiCatalog",
 DatasetCatalog <- setClass("DatasetCatalog", contains="ShojiCatalog")
 BatchCatalog <- setClass("BatchCatalog", contains="ShojiCatalog")
 PermissionCatalog <- setClass("PermissionCatalog", contains="ShojiCatalog")
-
-default.useAlias <- function () {
-    opt <- getOption("crunch.useAlias")
-    return(is.null(opt) || isTRUE(opt))
-}
-
-##' Crunch Datasets
-##'
-##' @rdname CrunchDataset
-##' @export
-CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
-    representation=representation(
-        useAlias="logical",
-        .nrow="numeric",
-        variables="VariableCatalog",
-        tuple="DatasetTuple"
-    ), 
-    prototype=prototype(
-        useAlias=default.useAlias(),
-        .nrow=numeric(1),
-        variables=VariableCatalog(),
-        tuple=DatasetTuple()))
-
-##' Categories in CategoricalVariables
-##' 
-##' CategoricalVariables, as well as the array types composed from
-##' Categoricals, contain Categories. Categories are a subclass of list that
-##' contains only Category objects. Category objects themselves subclass list
-##' and contain the following fields: "name", "id", "numeric_value", "missing",
-##' and optionally "selected". 
-##'
-##' @param x For the attribute getters and setters, an object of class
-##' Category or Categories
-##' @param i For the [ methods, just as with list extract methods
-##' @param j Invalid argument to [, but in the generic's signature
-##' @param ... additional arguments to [, ignored
-##' @param drop Invalid argument to [, but in the generic's signature
-##' @param value For [<-, the replacement Category to insert 
-##' @rdname Categories
-##' @aliases Categories ids ids<- values values<-
-##' @export
-Categories <- setClass("Categories", contains="list")
-
-##' @rdname Categories
-##' @export
-Category <- setClass("Category", contains="namedList")
-
-##' @rdname Subvariables
-##' @export
-Subvariables <- setClass("Subvariables", contains="ShojiCatalog")
+UserCatalog <- setClass("UserCatalog", contains="ShojiCatalog")
+TeamCatalog <- setClass("TeamCatalog", contains="ShojiCatalog")
+MemberCatalog <- setClass("MemberCatalog", contains="ShojiCatalog")
+VersionCatalog <- setClass("VersionCatalog", contains="ShojiCatalog")
+FilterCatalog <- setClass("FilterCatalog", contains="ShojiCatalog")
 
 CrunchExpr <- setClass("CrunchExpr",
     representation=representation(
@@ -206,6 +167,94 @@ CrunchExpr <- setClass("CrunchExpr",
 CrunchLogicalExpr <- setClass("CrunchLogicalExpr",
     contains="CrunchExpr")
 
+default.useAlias <- function () {
+    opt <- getOption("crunch.useAlias")
+    return(is.null(opt) || isTRUE(opt))
+}
+
+##' Crunch Datasets
+##'
+##' @rdname CrunchDataset
+##' @export
+CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
+    representation=representation(
+        useAlias="logical",
+        variables="VariableCatalog",
+        filter="CrunchLogicalExpr",
+        tuple="DatasetTuple"
+    ), 
+    prototype=prototype(
+        useAlias=default.useAlias(),
+        variables=VariableCatalog(),
+        filter=CrunchLogicalExpr(),
+        tuple=DatasetTuple()))
+
+##' Categories in CategoricalVariables
+##' 
+##' CategoricalVariables, as well as the array types composed from
+##' Categoricals, contain Categories. Categories are a subclass of list that
+##' contains only Category objects. Category objects themselves subclass list
+##' and contain the following fields: "name", "id", "numeric_value", "missing",
+##' and optionally "selected". 
+##'
+##' @param data For the constructor functions \code{Category} and
+##' \code{Categories}, you can either pass in attributes via \code{...} or you
+##' can create the objects with a fully defined \code{list} representation of
+##' the objects via the \code{data} argument. See the examples.
+##' @param x For the attribute getters and setters, an object of class
+##' Category or Categories
+##' @param i For the [ methods, just as with list extract methods
+##' @param j Invalid argument to [, but in the generic's signature
+##' @param ... additional arguments to [, ignored
+##' @param drop Invalid argument to [, but in the generic's signature
+##' @param value For [<-, the replacement Category to insert 
+##' @rdname Categories
+##' @aliases Categories ids ids<- values values<-
+##' @export
+##' @examples
+##' cat.a <- Category(name="First", id=1, numeric_value=1, missing=FALSE)
+##' cat.b <- Category(data=list(name="First", id=1, numeric_value=1, missing=FALSE))
+##' identical(cat.a, cat.b)
+##' cat.c <- Category(name="Second", id=2)
+##' cats.1 <- Categories(cat.a, cat.c)
+##' cats.2 <- Categories(data=list(cat.a, cat.c))
+##' identical(cats.1, cats.2)
+setClass("Categories", contains="list")
+
+##' @rdname Categories
+##' @export
+Categories <- function (..., data=NULL) {
+    if (!is.null(data)) {
+        return(new("Categories", data))
+    } else {
+        return(new("Categories", list(...)))
+    }
+}
+
+##' @rdname Categories
+##' @export
+setClass("Category", contains="namedList")
+
+##' @rdname Categories
+##' @export
+Category <- function (..., data=NULL) {
+    if (!is.null(data)) {
+        return(new("Category", data))
+    } else {
+        return(new("Category", list(...)))
+    }
+}
+
+##' @rdname Subvariables
+##' @export
+Subvariables <- setClass("Subvariables", contains="ShojiCatalog",
+    representation=representation(
+        filter="CrunchLogicalExpr"
+    ),
+    prototype=prototype(
+        filter=CrunchLogicalExpr()
+    ))
+
 CubeDims <- setClass("CubeDims", contains="namedList")
 
 CrunchCube <- setClass("CrunchCube", contains="list",
@@ -214,3 +263,6 @@ CrunchCube <- setClass("CrunchCube", contains="list",
         dims="CubeDims",
         arrays="list"),
     prototype=prototype(useNA="no", dims=CubeDims(), arrays=list()))
+
+CrunchTeam <- setClass("CrunchTeam", contains="ShojiObject")
+CrunchFilter <- setClass("CrunchFilter", contains="ShojiObject")

@@ -54,7 +54,7 @@ with(fake.HTTP, {
     test_that("Variable setters (mock)", {
         tp <- tuple(ds$gender)@body
         tp$name <- "Sex"
-        mock.tuple <- structure(list(tp), .Names=self(ds$gender))
+        mock.tuple <- structure(list(tp["name"]), .Names=self(ds$gender))
         expect_error(name(ds$gender) <- "Sex",
             paste("PATCH", self(variables(ds)), toJSON(mock.tuple)),
             fixed=TRUE)
@@ -73,10 +73,27 @@ with(fake.HTTP, {
 if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
+            test_that("show methods", {
+                expect_identical(getShowContent(ds$v3), c(
+                    "v3 (numeric)",                                  
+                    "",                                           
+                    "   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. ",
+                    "   8.00   12.75   17.50   17.50   22.25   27.00 "
+                ))
+                expect_identical(getShowContent(ds$v4), c(
+                        "v4 (categorical)",
+                        "",
+                        "  Count",
+                        "B    10",
+                        "C    10" 
+                    ))
+                ## TODO: add other types
+            })
+            
             test_that("can delete variables", {
                 expect_true("v1" %in% names(ds))
                 d <- try(delete(ds$v1))
-                expect_false(is.error(d))
+                expect_that(d, is_not_an_error())
                 expect_false("v1" %in% names(refresh(ds)))
             })
         })

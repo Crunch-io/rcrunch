@@ -7,8 +7,8 @@ Description: The Crunch.io service (http://crunch.io/) provides a cloud-based
     datasets from within R. Importantly, this allows technical researchers to
     collaborate naturally with team members, managers, and clients who prefer a
     point-and-click interface.
-Version: 1.2.1
-Date: 2015-05-19
+Version: 1.5.4
+Date: 2015-10-23
 Authors@R: c(person("Neal", "Richardson", role = c("aut", "cre"),
     email = "neal@crunch.io"))
 Author: Neal Richardson [aut, cre]
@@ -20,10 +20,10 @@ LazyLoad: yes
 Depends:
     R (>= 3.0.0)
 Imports:
-    httr (>= 0.4),
+    httr (>= 1.0.0),
     jsonlite (>= 0.9.15),
     methods,
-    RCurl
+    curl
 Suggests:
     knitr,
     testthat

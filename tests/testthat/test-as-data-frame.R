@@ -74,27 +74,46 @@ with(fake.HTTP, {
 if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {        
-            test_that("as.vector methods correctly handle data from the API", {
+            test_that("Check the types of our imported data", {
                 expect_true(is.Numeric(ds[["v1"]]))
                 expect_true(is.Text(ds[["v2"]]))
                 expect_true(is.Numeric(ds[["v3"]]))
                 expect_true(is.Categorical(ds[["v4"]]))
                 expect_true(is.Datetime(ds$v5))
-        
+            })
+            test_that("as.vector on Numeric", {
                 expect_true(is.numeric(as.vector(ds$v1)))
                 expect_identical(sum(is.na(as.vector(ds$v1))), 5L)
                 expect_equivalent(as.vector(ds$v1), df$v1)
-        
+            })
+            test_that("as.vector on Text", {
                 expect_true(is.character(as.vector(ds$v2)))
                 expect_identical(sum(is.na(as.vector(ds$v2))), 5L)
                 expect_equivalent(as.vector(ds$v2), df$v2)
-        
+            })
+            test_that("as.vector on a different Numeric", {
                 expect_true(is.numeric(as.vector(ds$v3)))
                 expect_equivalent(as.vector(ds$v3), df$v3)
-                
-                expect_true(is.factor(as.vector(ds$v4)))
-                expect_equivalent(as.vector(ds$v4), df$v4)
-                
+            })
+            ## Test on a version with missings
+            ds$v4b <- df$v4
+            ds$v4b[3:5] <- "No Data"
+            values(categories(ds$v4b)[1:2]) <- c(5, 3)
+            test_that("as.vector on a Categorical", {
+                expect_true(is.factor(as.vector(ds$v4b)))
+                expect_equivalent(as.vector(ds$v4b)[-(3:5)], df$v4[-(3:5)])
+                expect_true(all(is.na(as.vector(ds$v4b)[3:5])))
+            })
+            test_that("as.vector with mode specified on Categorical", {
+                expect_identical(as.vector(ds$v4b, mode="id"),
+                    c(1, 2, -1, -1, -1, 2, rep(1:2, 7)))
+                expect_identical(as.vector(ds$v4b, mode="numeric"),
+                    c(5, 3, NA, NA, NA, 3, rep(c(5, 3), 7)))
+            })
+            ## Delete v4b for the later tests (should just make a fresh ds)
+            with(consent(), ds$v4b <- NULL)
+            
+            test_that("as.vector on Datetime", {
                 expect_true(inherits(as.vector(ds$v5), "Date"))
                 expect_equivalent(as.vector(ds$v5), df$v5)
             })
