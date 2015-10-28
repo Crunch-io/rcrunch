@@ -250,25 +250,43 @@ if (run.integration.tests) {
             })
         })
         
-        with(test.dataset(mrdf, "part1"), {
-            part1 <- mrdf.setup(part1, selections="1.0")
+        with(test.dataset(newDatasetFromFixture("apidocs")), as="part1", {
             test_that("Setup for testing references post append", {
-                expect_false(name(part1$MR) == "North West")
-                name(part1$MR) <- "North West"
-                expect_true(name(part1$MR) == "North West")
+                expect_true(name(part1$allpets) == "All pets owned")
+                name(part1$allpets) <- "Some of my pets"
+                expect_true(name(part1$allpets) == "Some of my pets")
             })
-            with(test.dataset(mrdf["v4"], "part2"), {
-                ## MR should get padded with NAs because MR doesn't exist in part2
+            
+            ## Release and re-lease
+            .releaseDataset(part1)
+            part1 <- refresh(part1)
+            
+            test_that("Check again", {
+                expect_true(name(part1$allpets) == "Some of my pets")
+            })
+            
+            with(test.dataset(newDatasetFromFixture("apidocs")), as="part2", {
                 out <- suppressMessages(try(appendDataset(part1, part2)))
-                test_that("Append pads NAs correctly (and doesn't revert metadata changes)", {
-                    expect_true(name(out$MR) == "North West")
+                test_that("Append doesn't revert metadata changes", {
+                    expect_false(name(out$allpets) == "All pets owned")
+                    expect_true(name(out$allpets) == "Some of my pets")
                 })
-                
+                                
                 ## Release and re-lease
                 .releaseDataset(out)
                 out <- refresh(out)
+                
                 test_that("Metadata sticks after releasing", {
-                    expect_true(name(out$MR) == "North West")
+                    expect_false(name(out$allpets) == "All pets owned")
+                    expect_true(name(out$allpets) == "Some of my pets")
+                })
+                
+                ## Change the name and release again
+                name(out$allpets) <- "Apple"
+                .releaseDataset(out)
+                out <- refresh(out)
+                test_that("Metadata sticks after releasing and not appending", {
+                    expect_true(name(out$allpets) == "Apple")
                 })
             })
         })
