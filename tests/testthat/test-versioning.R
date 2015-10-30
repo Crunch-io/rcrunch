@@ -115,6 +115,7 @@ if (run.integration.tests) {
                 expect_identical(names(versions(ds))[1], "My changes")
             })
             
+            skip("Temporarily skip this")
             ## Release and re-lease
             .releaseDataset(ds)
             ds <- refresh(ds)
