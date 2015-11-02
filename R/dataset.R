@@ -272,3 +272,8 @@ setMethod("as.environment", "CrunchDataset", function (x) {
     with(out, for (v in aliases(allVariables(x))) eval(parse(text=paste0("delayedAssign('", v, "', .crunchDataset[['", v, "']])"))))
     return(out)
 })
+
+.releaseDataset <- function (dataset) {
+    release_url <- absoluteURL("release/", self(dataset))
+    crPOST(release_url)
+}
