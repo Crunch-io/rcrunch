@@ -74,10 +74,10 @@ setMethod("[<-", c("CrunchVariable", "ANY", "missing", "NULL"),
     return(x)
 }
 
-for (i in seq_along(.sigs)) {
-    setMethod("[<-", c(.sigs[[i]][1], "ANY", "missing", .sigs[[i]][2]),
-        .var.updater)
-}
+# for (i in seq_along(.sigs)) {
+#     setMethod("[<-", c(.sigs[[i]][1], "ANY", "missing", .sigs[[i]][2]),
+#         .var.updater)
+# }
 
 # for (i in seq_along(.sigs)) {
 #         cat('
@@ -167,11 +167,11 @@ setMethod("[<-", c("CrunchVariable", "CrunchExpr", "missing", "CrunchExpr"),
     }
 )
 
-for (i in c("CategoricalVariable", "CategoricalArrayVariable")) {
-    for (j in c("numeric", "character", "factor")) {
-        setMethod("[<-", c(i, "ANY", "missing", j), .categorical.update[[j]])
-    }
-}
+# for (i in c("CategoricalVariable", "CategoricalArrayVariable")) {
+#     for (j in c("numeric", "character", "factor")) {
+#         setMethod("[<-", c(i, "ANY", "missing", j), .categorical.update[[j]])
+#     }
+# }
 
 # for (i in c("CategoricalVariable", "CategoricalArrayVariable")) {
 #     for (j in c("numeric", "character", "factor")) {
@@ -201,24 +201,34 @@ setMethod("[<-", c("CategoricalArrayVariable", "ANY", "missing", "character"), .
 ##' @export
 setMethod("[<-", c("CategoricalArrayVariable", "ANY", "missing", "factor"), .categorical.update[["factor"]])
 
-# setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
-#     function (x, i, j, value) {
-#           ## For assigning NA
-#         cal <- match.call()
-#         print(cal)
-#         if (all(is.na(value))) {
-#             value <- ifelse(is.Text(x), NA_character_, NA_integer_)
-#         } else {
-#             halt("Cannot update CrunchVariable with logical")
-#         }
-#         if (missing(i)) i <- NULL
-#         i <- zcl(.dispatchFilter(i))
-#         
-#         x@fragments$missing_rules
-#         
-#         x[i] <- value
-#         return(x)
-#     })
+##' @rdname variable-update
+##' @export
+setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
+    function (x, i, j, value) {
+        ## For assigning NA
+        if (all(is.na(value))) {
+            value <- .no.data.value(type(x))
+        } else {
+            ## halt()
+            .backstopUpdate(x, i, j, value)
+        }
+        if (missing(i)) i <- NULL
+        
+        ## Datetime not yet supported, apparently
+        if (is.Datetime(x)) {
+            .backstopUpdate(x, i, j, value)
+        }
+        out <- .updateVariable(x, value, filter=.dispatchFilter(i))
+        return(x)
+    })
+
+.no.data.value <- function (x) {
+    if (x %in% c("categorical", "multiple_response", "categorical_array")) {
+        return(-1L)
+    } else {
+        return(list(value=list(`?`=-1L), type=list(class=x)))
+    }
+}
 
 ##' @rdname variable-update
 ##' @export

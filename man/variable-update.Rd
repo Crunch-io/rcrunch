@@ -11,6 +11,7 @@
 \alias{[<-,CrunchVariable,ANY,missing,ANY-method}
 \alias{[<-,CrunchVariable,ANY,missing,CrunchExpr-method}
 \alias{[<-,CrunchVariable,ANY,missing,NULL-method}
+\alias{[<-,CrunchVariable,ANY,missing,logical-method}
 \alias{[<-,CrunchVariable,CrunchExpr,missing,CrunchExpr-method}
 \alias{[<-,DatetimeVariable,ANY,missing,Date-method}
 \alias{[<-,DatetimeVariable,ANY,missing,POSIXt-method}
@@ -47,6 +48,8 @@
 \S4method{[}{CategoricalArrayVariable,ANY,missing,character}(x, i, j) <- value
 
 \S4method{[}{CategoricalArrayVariable,ANY,missing,factor}(x, i, j) <- value
+
+\S4method{[}{CrunchVariable,ANY,missing,logical}(x, i, j) <- value
 
 \S4method{is.na}{CrunchVariable,ANY}(x) <- value
 }
