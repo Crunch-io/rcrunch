@@ -32,5 +32,6 @@ NULL
     }
     options(warn=1)
     set_config(crunchConfig())
+    notifyIfNewVersion()
     invisible()
 }
