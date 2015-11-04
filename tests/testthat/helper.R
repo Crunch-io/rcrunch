@@ -83,8 +83,37 @@ addFakeHTTPVerbs <- function () {
     try(warmSessionCache())
 }
 
+## note that this works because testthat evals within package namespace
+addNullHTTPVerbs <- function () {
+    http_verbs$GET <- function (url, ...) {
+        stop("GET ", url, " ", body, call.=FALSE)
+    }
+    http_verbs$PUT <- function (url, body, ...) {
+        stop("PUT ", url, " ", body, call.=FALSE)
+    }
+    http_verbs$PATCH <- function (url, body, ...) {
+        stop("PATCH ", url, " ", body, call.=FALSE)
+    }
+    http_verbs$POST <- function (url, body, ...) {
+        stop("POST ", url, " ", body, call.=FALSE)
+    }
+    http_verbs$DELETE <- function (...) function (url, ...) {
+        stop("DELETE ", url, call.=FALSE)
+    }
+    options(crunch.api="/api/root.json", crunch.api.tmp=getOption("crunch.api"))
+}
+
 ## Mock backend
 fake.HTTP <- setup.and.teardown(addFakeHTTPVerbs, 
+    function () {
+        logout()
+        addRealHTTPVerbs()
+        options(crunch.api=getOption("crunch.api.tmp"),
+            crunch.api.tmp=NULL)
+    })
+
+## Mock backend for no connectivity
+no.internet <- setup.and.teardown(addNullHTTPVerbs, 
     function () {
         logout()
         addRealHTTPVerbs()
