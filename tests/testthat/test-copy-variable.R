@@ -4,7 +4,7 @@ with(fake.HTTP, {
     ds <- loadDataset("test ds")
     
     expect_error(copy(ds$gender), 
-        'Error : POST /api/datasets/dataset1/variables.json {"name":"Gender (copy)","expr":{"variable":"66ae9881e3524f7db84970d556c34552"}}\n',
+        'Error : POST /api/datasets/dataset1/variables.json {"name":"Gender (copy)","expr":{"function":"copy_variable","args":[{"variable":"66ae9881e3524f7db84970d556c34552"}]}}\n',
         fixed=TRUE)
 })
 

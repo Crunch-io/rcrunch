@@ -13,7 +13,7 @@ copyVariable <- function (x, deep=FALSE, ...) {
     oldbody$alias <- paste0(oldbody$alias, "_copy")
     
     body <- updateList(oldbody["name"], newbody) ## dropping other body attrs for now; see copyVariableReferences
-    body$expr <- zcl(x)
+    body$expr <- zfunc("copy_variable", x)
     
     ## Validate that name and alias are unique
     varcat <- VariableCatalog(crGET(varcat_url))
