@@ -7,7 +7,8 @@
 ##' response) with the \code{subvariables} method. They can be assigned back
 ##' with the \code{subvariables<-} setter, but there are limitations to what
 ##' is supported. Specifically, you can reorder subvariables, but you cannot
-##' add or remove subvariables by \code{subvariables<-} assignment.
+##' add or remove subvariables by \code{subvariables<-} assignment. See
+##' \code{\link{deleteSubvariable}} to remove subvariables from an array.
 ##'
 ##' Subvariables have a \code{names} attribute that can be accessed, showing
 ##' the display names of the subvariables. These can be set with the 
@@ -23,7 +24,7 @@
 ##'
 ##' @name Subvariables
 ##' @aliases Subvariables subvariables subvariables<-
-##' @seealso \code{\link{subvars-extract}} \code{\link{describe-catalog}} \code{vignette("array-variables", package="crunch")}
+##' @seealso \code{\link{subvars-extract}} \code{\link{describe-catalog}} \code{\link{deleteSubvariable}} \code{vignette("array-variables", package="crunch")}
 NULL
 
 ##' @rdname Subvariables
