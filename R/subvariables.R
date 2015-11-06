@@ -189,7 +189,8 @@ setMethod("[[<-",
         if (is.na(i)) {
             halt("subscript out of bounds")
         }
-        callNextMethod(x, i, value)    
+        x[[i]] <- value ## "callNextMethod"
+        return(x)  
     })
 ##' @rdname subvars-extract
 ##' @export
@@ -282,6 +283,21 @@ setMethod("[[", "CategoricalArrayVariable", function (x, i, ...) {
 setMethod("$", "CategoricalArrayVariable", 
     function (x, name) subvariables(x)[[name]])
 
+
+##' @rdname subvars-extract
+##' @export
+setMethod("[[<-", 
+    c("CategoricalArrayVariable", "ANY", "missing", "ANY"),
+    function (x, i, value) {
+        subvariables(x)[[i]] <- value
+        return(x)
+    })
+##' @rdname subvars-extract
+##' @export
+setMethod("$<-", c("CategoricalArrayVariable"), function (x, name, value) {
+    subvariables(x)[[name]] <- value
+    return(x)
+})
 
 findParent <- function (subvar, dataset) {
     ## Utility to find the array parent, given a subvariable and its dataset

@@ -1,4 +1,6 @@
 ### crunch 1.5.5
+* Check for new version of the package on GitHub when the package is loaded.
+* Fix error in updating the values of a subvariable in an array.
 
 ### crunch 1.5.4
 * Gradually slow the polling of `/batches/` while waiting for an append to complete. Improves the performance of the append operation.
