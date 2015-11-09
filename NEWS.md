@@ -1,4 +1,7 @@
-### crunch 1.5.5
+### crunch 1.6.0
+* Check for new versions of the package on GitHub when the package loads.
+* Make a shallow `copy` of a variable. See `?copyVariable`. 
+* Correctly support `ds$var$subvar[filter] <- values`
 
 ### crunch 1.5.4
 * Gradually slow the polling of `/batches/` while waiting for an append to complete. Improves the performance of the append operation.

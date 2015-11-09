@@ -1,3 +1,18 @@
+##' Copy a variable
+##'
+##' Makes a copy of a Crunch variable on the server.
+##'
+##' @param x a CrunchVariable to copy
+##' @param deep logical: should this be a deep copy, in which there is no
+##' dependence on the original variable, or a shallow one, in which the copy
+##' is more of a symbolic link? Default is \code{FALSE}, meaning symlink, and
+##' in fact, deep copying is not yet supported.
+##' @param ... Additional metadata to give to the new variable. If not given,
+##' the new variable will have a name that is the same as the original but with
+##' " (copy)" appended, and its alias will be the old alias with "_copy"
+##' appended.
+##' @return the copy CrunchVariable
+##' @export
 copyVariable <- function (x, deep=FALSE, ...) {
     stopifnot(is.variable(x))
     if (deep) {
@@ -25,6 +40,8 @@ copyVariable <- function (x, deep=FALSE, ...) {
     invisible(newvar)
 }
 
+##' @rdname copyVariable
+##' @export
 copy <- copyVariable
 
 copyVariableReferences <- function (x, fields=c("name", "alias",
