@@ -1,5 +1,9 @@
 .updateVariable <- function (variable, value, filter=NULL) {
     ## Construct a ZCL update payload, then POST it
+    
+    ## First, handle missingness in "value"
+    value[is.na(value)] <- .no.data.value(type(variable))
+    
     payload <- list(command="update", 
         variables=.updatePayload(variable, value))
     payload[["filter"]] <- zcl(filter)
