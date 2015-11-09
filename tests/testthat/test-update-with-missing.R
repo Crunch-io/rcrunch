@@ -12,6 +12,7 @@ if (run.integration.tests) {
                     c(1, NA, 2, NA, 1))
             })
             test_that("Insert NA into categorical", {
+                skip("Needs a new category -1 in the metadata first")
                 expect_equivalent(as.character(as.vector(ds$q1[1:5])),
                     c(NA, "Cat", NA, "Dog", "Dog"))
                 ds$q1[4] <- NA
@@ -34,6 +35,7 @@ if (run.integration.tests) {
                     c("Jasmine", NA, "Geoffrey"))
             })
             test_that("Insert NA into multiple response", {
+                skip("Needs a new category -1 in the metadata first")
                 expect_equivalent(as.vector(ds$allpets$Cat, mode="id")[1:5],
                     c(1, 9, 1, 1, 9))
                 expect_equivalent(as.vector(ds$allpets$Dog, mode="id")[1:5],
@@ -49,6 +51,7 @@ if (run.integration.tests) {
                     c(8, -1, 8, 8, 8))
             })
             test_that("Insert NA into categorical array", {
+                skip("Needs a new category -1 in the metadata first")
                 expect_equivalent(as.vector(ds$petloc$Home, mode="id")[1:5],
                     c(8, 2, 9, 9, 1))
                 expect_equivalent(as.vector(ds$petloc$Work, mode="id")[1:5],
