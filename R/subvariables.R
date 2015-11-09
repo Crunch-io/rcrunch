@@ -7,7 +7,8 @@
 ##' response) with the \code{subvariables} method. They can be assigned back
 ##' with the \code{subvariables<-} setter, but there are limitations to what
 ##' is supported. Specifically, you can reorder subvariables, but you cannot
-##' add or remove subvariables by \code{subvariables<-} assignment.
+##' add or remove subvariables by \code{subvariables<-} assignment. See
+##' \code{\link{deleteSubvariable}} to remove subvariables from an array.
 ##'
 ##' Subvariables have a \code{names} attribute that can be accessed, showing
 ##' the display names of the subvariables. These can be set with the 
@@ -23,7 +24,7 @@
 ##'
 ##' @name Subvariables
 ##' @aliases Subvariables subvariables subvariables<-
-##' @seealso \code{\link{subvars-extract}} \code{\link{describe-catalog}} \code{vignette("array-variables", package="crunch")}
+##' @seealso \code{\link{subvars-extract}} \code{\link{describe-catalog}} \code{\link{deleteSubvariable}} \code{vignette("array-variables", package="crunch")}
 NULL
 
 ##' @rdname Subvariables
@@ -188,7 +189,8 @@ setMethod("[[<-",
         if (is.na(i)) {
             halt("subscript out of bounds")
         }
-        callNextMethod(x, i, value)    
+        x[[i]] <- value ## "callNextMethod"
+        return(x)  
     })
 ##' @rdname subvars-extract
 ##' @export
@@ -281,6 +283,21 @@ setMethod("[[", "CategoricalArrayVariable", function (x, i, ...) {
 setMethod("$", "CategoricalArrayVariable", 
     function (x, name) subvariables(x)[[name]])
 
+
+##' @rdname subvars-extract
+##' @export
+setMethod("[[<-", 
+    c("CategoricalArrayVariable", "ANY", "missing", "ANY"),
+    function (x, i, value) {
+        subvariables(x)[[i]] <- value
+        return(x)
+    })
+##' @rdname subvars-extract
+##' @export
+setMethod("$<-", c("CategoricalArrayVariable"), function (x, name, value) {
+    subvariables(x)[[name]] <- value
+    return(x)
+})
 
 findParent <- function (subvar, dataset) {
     ## Utility to find the array parent, given a subvariable and its dataset

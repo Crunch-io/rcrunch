@@ -116,39 +116,38 @@ if (run.integration.tests) {
             })
             
             ## Release and re-lease
-            ## Temporarily skipped
-            # .releaseDataset(ds)
-            # ds <- refresh(ds)
-            # 
-            # ## Revert to the first version
-            # ds <- try(restoreVersion(ds, "initial import"))
-            # test_that("Restoring restored correctly", {
-            #     expect_identical(length(versions(ds)), 1L)
-            #     validImport(ds)
-            # })
-            # 
-            # ## Release and re-lease
-            # .releaseDataset(ds)
-            # ds <- refresh(ds)
-            # 
-            # test_that("Added variables are really removed by rolling back", {
-            #     ## This was user-reported: Order was reverted but derived 
-            #     ## variables persisted, and by assigning an empty order, you can
-            #     ## recover them.
-            #     ordering(ds) <- VariableOrder()
-            #     expect_true(setequal(names(ds), names(df)))
-            # })
-            # 
-            # test_that("And now we can add variables again that we added and reverted", {
-            #     expect_true(is.null(ds$v7))
-            #     ## This would error if "v7" were still lurking somewhere
-            #     ds$v7 <- ds$v3 - 7
-            #     expect_identical(as.vector(ds$v7), df$v3 - 7)
-            #     
-            #     expect_true(is.null(ds$v8))
-            #     ds$v8 <- rep(6:10, 4)
-            #     expect_equivalent(as.vector(ds$v8), rep(6:10, 4))
-            # })
+            .releaseDataset(ds)
+            ds <- refresh(ds)
+            
+            ## Revert to the first version
+            ds <- try(restoreVersion(ds, "initial import"))
+            test_that("Restoring restored correctly", {
+                expect_identical(length(versions(ds)), 1L)
+                validImport(ds)
+            })
+            
+            ## Release and re-lease
+            .releaseDataset(ds)
+            ds <- refresh(ds)
+            
+            test_that("Added variables are really removed by rolling back", {
+                ## This was user-reported: Order was reverted but derived 
+                ## variables persisted, and by assigning an empty order, you can
+                ## recover them.
+                ordering(ds) <- VariableOrder()
+                expect_true(setequal(names(ds), names(df)))
+            })
+            
+            test_that("And now we can add variables again that we added and reverted", {
+                expect_true(is.null(ds$v7))
+                ## This would error if "v7" were still lurking somewhere
+                ds$v7 <- ds$v3 - 7
+                expect_identical(as.vector(ds$v7), df$v3 - 7)
+                
+                expect_true(is.null(ds$v8))
+                ds$v8 <- rep(6:10, 4)
+                expect_equivalent(as.vector(ds$v8), rep(6:10, 4))
+            })
         })
     })
 }
