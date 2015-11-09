@@ -4,7 +4,7 @@ with(fake.HTTP, {
     ds <- loadDataset("test ds")
     
     expect_error(copy(ds$gender), 
-        'Error : POST /api/datasets/dataset1/variables.json {"name":"Gender (copy)","expr":{"function":"copy_variable","args":[{"variable":"66ae9881e3524f7db84970d556c34552"}]}}\n',
+        'Error : POST /api/datasets/dataset1/variables.json {"format":{"summary":{"digits":2}},"view":{"include_missing":false,"show_counts":false,"show_codes":false,"column_width":null},"name":"Gender (copy)","discarded":false,"alias":"gender_copy","description":"Gender","expr":{"function":"copy_variable","args":[{"variable":"66ae9881e3524f7db84970d556c34552"}]}}\n',
         fixed=TRUE)
 })
 
@@ -83,7 +83,35 @@ if (run.integration.tests) {
             })
             
             test_that("Can make a new array using copies of other array's subvars", {
+                ## Let's make two copies of allpets, give them different names,
+                ## then unbind them and rebind their subvars by animal                
+                ds$allpets_adult <- copy(ds$allpets, name="Adult pets")
+                ds$allpets_juv <- copy(ds$allpets, name="Juvenile pets")
+                unbind(ds$allpets_adult)
+                unbind(ds$allpets_juv)
+                ds <- refresh(ds)
                 
+                ds$allcats <- makeMR(pattern="Cat$", data=ds,
+                    selections="selected", name="All cats", key="name")
+                ds$alldogs <- makeMR(pattern="Canine$", data=ds,
+                    selections="selected", name="All dogs", key="name")
+                ds$allbirds <- makeMR(pattern="Bird$", data=ds,
+                    selections="selected", name="All birds", key="name")
+                
+                expect_equivalent(as.array(crtabs(~ allcats, data=ds)),
+                    array(c(4, 4), dim=c(2L),
+                        dimnames=list(allcats=c("Adult pets | Cat", 
+                        "Juvenile pets | Cat"))))
+            })
+            
+            with(test.dataset(newDatasetFromFixture("apidocs"), "part2"), {
+                test_that("Copies get data when appending", {
+                    out <- appendDataset(ds, part2)
+                    expect_equivalent(as.array(crtabs(~ allcats, data=out)),
+                        array(c(8, 8), dim=c(2L),
+                            dimnames=list(allcats=c("Adult pets | Cat", 
+                            "Juvenile pets | Cat"))))
+                })
             })
         })
     })

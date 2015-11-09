@@ -8,11 +8,13 @@ copyVariable <- function (x, deep=FALSE, ...) {
     varcat_url <- variableCatalogURL(x)
     
     newbody <- list(...)
-    oldbody <- updateList(x@body, tuple(x)@body)
+    oldbody <- updateList(copyVariableReferences(x), tuple(x)@body)
     oldbody$name <- paste0(oldbody$name, " (copy)")
     oldbody$alias <- paste0(oldbody$alias, "_copy")
     
-    body <- updateList(oldbody["name"], newbody) ## dropping other body attrs for now; see copyVariableReferences
+    body <- updateList(oldbody, newbody)
+    body$type <- NULL
+    body$id <- NULL
     body$expr <- zfunc("copy_variable", x)
     
     ## Validate that name and alias are unique
