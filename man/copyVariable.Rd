@@ -28,4 +28,14 @@ the copy CrunchVariable
 \description{
 Makes a copy of a Crunch variable on the server.
 }
+\details{
+Note that only shallow (linked) copying is supported, which has some
+implications. When you append data to the original variable
+or otherwise alter its values, the values in the copy automatically update.
+This linking may be desirable, but it comes with some limitations. First,
+you cannot edit the values of the copy independently of the original.
+Second, some attributes of the copy are immutable: of note, properties of
+categories cannot be altered independely in the copy. Subvariable names and
+ordering within arrays, however, can.
+}
 
