@@ -1,5 +1,6 @@
-### crunch 1.5.5
+### crunch 1.6.0
 * Check for new version of the package on GitHub when the package is loaded.
+* Make a shallow `copy` of a variable. See `?copyVariable`.
 * Fix error in updating the values of a subvariable in an array.
 
 ### crunch 1.5.4
