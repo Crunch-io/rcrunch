@@ -21,6 +21,18 @@
         out <- structure(list(zcl(typeof(value, variable))),
             .Names=tuple(variable)$id)
     }
+    
+    ## Check for missingness and replace the NAs with special values
+    out <- lapply(out, function (x) {
+        if ("column" %in% names(x)) {
+            missings <- is.na(x$column)
+            if (any(missings)) {
+                x$column <- as.list(x$column)
+                x$column[missings] <- rep(list(.no.data.value(type(variable))), sum(missings))
+            }
+        }
+        return(x)
+    })
     return(out)
 }
 
@@ -135,13 +147,10 @@ setMethod("[<-", c("CrunchVariable", "CrunchExpr", "missing", "CrunchExpr"),
                 serialPaste(invalids), ifelse(plural, " are ", " is "),
                 "not present in the category ids of variable ", dQuote(name(x))))
         }
-        # if (add.no.data) {
-        #     newcats <- categories(x)
-        #     newcats[[length(newcats) + 1]] <- Category(data=.no.data)
-        #     print(class(newcats))
-        #     print(newcats)
-        #     categories(x) <- newcats
-        # }
+        if (add.no.data) {
+            halt("Sorry, we can't do this just yet")
+            categories(x)[[length(categories(x)) + 1]] <- Category(data=.no.data)
+        }
         out <- .updateVariable(x, value, filter=.dispatchFilter(i))
         return(x)
     },
@@ -149,12 +158,18 @@ setMethod("[<-", c("CrunchVariable", "CrunchExpr", "missing", "CrunchExpr"),
         if (missing(i)) i <- NULL
         value[is.na(value)] <- "No Data"
         invalids <- setdiff(value, names(categories(x)))
+        add.no.data <- "No Data" %in% invalids
+        invalids <- setdiff(invalids, "No Data")
         if (length(invalids)) {
             plural <- length(invalids) > 1
             halt(paste0("Input value", ifelse(plural, "s ", " "),
                 serialPaste(invalids), ifelse(plural, " are ", " is "),
                 "not present in the category names of variable ",
                 dQuote(name(x))))
+        }
+        if (add.no.data) {
+            halt("Sorry, we can't do this just yet")
+            categories(x)[[length(categories(x)) + 1]] <- Category(data=.no.data)
         }
         value <- n2i(value, categories(x))
         out <- .updateVariable(x, value, filter=.dispatchFilter(i))
@@ -207,26 +222,32 @@ setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
     function (x, i, j, value) {
         ## For assigning NA
         if (all(is.na(value))) {
-            value <- .no.data.value(type(x))
+            value <- .no.data.value(type(x), add.type=TRUE)
         } else {
             ## halt()
             .backstopUpdate(x, i, j, value)
         }
-        if (missing(i)) i <- NULL
         
         ## Datetime not yet supported, apparently
         if (is.Datetime(x)) {
             .backstopUpdate(x, i, j, value)
+        } else if (is.Categorical(x)) {
+            return(.categorical.update[["numeric"]](x, i, j, value))
         }
+        if (missing(i)) i <- NULL
         out <- .updateVariable(x, value, filter=.dispatchFilter(i))
         return(x)
     })
 
-.no.data.value <- function (x) {
+.no.data.value <- function (x, add.type=FALSE) {
     if (x %in% c("categorical", "multiple_response", "categorical_array")) {
         return(-1L)
     } else {
-        return(list(value=list(`?`=-1L), type=list(class=x)))
+        out <- list(`?`=-1L)
+        if (add.type) {
+            out <- list(value=out, type=list(class=x))
+        }
+        return(out)
     }
 }
 

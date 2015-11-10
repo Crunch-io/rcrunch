@@ -47,6 +47,11 @@ if (run.integration.tests) {
                     })
                 })
             })
+            
+            test_that("Assigning NULL doesn't ask you about deleting 0 variables", {
+                expect_message(ds$NOTAVARIABLE <- df$NOTAVARIABLE,
+                    paste(dQuote("NOTAVARIABLE"), "is not a variable; nothing to delete by assigning NULL"))
+            })
         })
         
         with(test.dataset(newDatasetFromFixture("apidocs")), {
