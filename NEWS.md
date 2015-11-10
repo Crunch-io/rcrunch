@@ -2,6 +2,8 @@
 * Check for new version of the package on GitHub when the package is loaded.
 * Make a shallow `copy` of a variable. See `?copyVariable`.
 * Fix error in updating the values of a subvariable in an array.
+* Handle case of assigning `NULL` into a dataset when the referenced variable (alias) does not exist.
+* More support for `NA` assignment into variables.
 
 ### crunch 1.5.4
 * Gradually slow the polling of `/batches/` while waiting for an append to complete. Improves the performance of the append operation.
