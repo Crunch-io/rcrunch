@@ -215,7 +215,13 @@ setMethod("[[<-",
 ##' @export
 setMethod("[[<-", 
     c("CrunchDataset", "character", "missing", "NULL"), 
-    function (x, i, value) deleteVariables(x, i))
+    function (x, i, value) {
+        if (!(i %in% names(x))) {
+            message(dQuote(i), " is not a variable; nothing to delete by assigning NULL")
+            return(x)
+        }
+        return(deleteVariables(x, i))
+    })
 ##' @rdname dataset-update
 ##' @export
 setMethod("[[<-", 
