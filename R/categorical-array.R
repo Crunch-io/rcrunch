@@ -19,9 +19,8 @@
 ##' categories to mark as the dichotomous selections. Required for 
 ##' \code{makeMR}; ignored in \code{makeArray}.
 ##' @param ... Optional additional attributes to set on the new variable.
-##' @return The object of class CategoricalArrayVariable or
-##' MultipleResponseVariable corresponding to the just-created variable on the
-##' server.
+##' @return A VariableDefinition that when added to a Dataset will create the
+##' categorical-array or multiple-response variable.
 ##' @export
 makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key=namekey(dataset), name, ...) {
     
@@ -34,9 +33,9 @@ makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key=nameke
     Call[[1L]] <- as.name("prepareBindInputs")
     x <- eval.parent(Call)
     
-    out <- bindVariables(x$variable_urls, x$dataset, name,
+    out <- VariableDefinition(subvariables=I(x$variable_urls), name=name, 
         type="categorical_array", ...)
-    invisible(out)
+    return(out)
 }
 
 ##' Internal function to gather variable URLs for binding
@@ -103,24 +102,4 @@ prepareBindInputs <- function (list_of_variables=NULL, dataset=NULL,
     }
     
     return(list(dataset=dataset, variable_urls=variable_urls))
-}
-
-bindVariables <- function (var_urls, dataset, name, ...) {
-    ## Take variables and their dataset and bind them into a new array variable
-    out <- POSTBindVariables(variableCatalogURL(dataset), var_urls, name=name,
-        ...)
-    invisible(returnNewVariable(out, dataset))
-}
-
-returnNewVariable <- function (variable_url, varcat) {
-    if (is.dataset(varcat)) {
-        varcat <- allVariables(varcat)
-    }
-    v <- entity(refresh(varcat)[[variable_url]])
-    return(v)
-}
-
-POSTBindVariables <- function (catalog_url, variable_urls, ...) {
-    payload <- list(subvariables=I(variable_urls), ...)
-    return(crPOST(catalog_url, body=toJSON(payload)))
 }

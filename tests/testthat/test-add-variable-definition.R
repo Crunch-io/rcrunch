@@ -37,10 +37,6 @@ test_that("VarDef(data=VarDef, ...)", {
         VarDef(data=as.factor(rep(LETTERS[2:3], 3)), name="x"))
 })
 
-test_that("copy, makeArray, etc. return VarDefs", {
-    
-})
-
 if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {

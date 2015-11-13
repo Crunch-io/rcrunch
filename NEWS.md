@@ -1,4 +1,6 @@
 ### crunch 1.6.1
+* `VariableDefinition` (or `VarDef`) function and class for creating variable definitions with more metadata (rather than assigning R vectors into a dataset and having to add metadata after).
+* Reworked various new variable functions, including `copy`, `makeArray`, and `makeMR`, to return `VariableDefinition`s rather than creating the new variables themselves. Creation happens on assignment into the dataset. 
 
 ## crunch 1.6.0
 * Check for new version of the package on GitHub when the package is loaded.

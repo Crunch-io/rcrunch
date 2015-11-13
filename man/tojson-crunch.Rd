@@ -8,7 +8,6 @@
 \alias{jsonprep,VariableGroup-method}
 \alias{jsonprep,VariableOrder-method}
 \alias{jsonprep,list-method}
-\alias{jsonprep,zcl-method}
 \alias{toJSON}
 \alias{tojson-crunch}
 \title{toJSON methods for Crunch objects}
@@ -18,8 +17,6 @@ jsonprep(x, ...)
 \S4method{jsonprep}{Categories}(x, ...)
 
 \S4method{jsonprep}{list}(x, ...)
-
-\S4method{jsonprep}{zcl}(x, ...)
 
 \S4method{jsonprep}{ANY}(x, ...)
 

@@ -5,9 +5,6 @@ setMethod("jsonprep", "Categories", function (x, ...) jsonprep(I(x@.Data)))
 ##' @rdname tojson-crunch
 ##' @export
 setMethod("jsonprep", "list", function (x, ...) lapply(x, jsonprep, ...))
-##' @rdname tojson-crunch
-##' @export
-setMethod("jsonprep", "zcl", function (x, ...) lapply(x, jsonprep, ...))
 
 ##' @rdname tojson-crunch
 ##' @export

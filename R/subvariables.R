@@ -157,7 +157,8 @@ deleteSubvariables <- function (variable, to.delete) {
     subvar.names <- names(subvars)
     
     ## Identify subvariable URLs
-    delete.these <- findVariableURLs(subvariables(variable), to.delete, key="name")
+    delete.these <- findVariableURLs(subvariables(variable), to.delete,
+        key="name")
     ## Unbind
     all.subvar.urls <- unlist(unbind(variable))
     
@@ -165,15 +166,18 @@ deleteSubvariables <- function (variable, to.delete) {
     dels <- lapply(delete.these, function (x) try(crDELETE(x)))
     
     ## Setdiff those deleted from those returned from unbind
-    payload$var_urls <- setdiff(all.subvar.urls, delete.these)
+    payload$subvariables <- I(setdiff(all.subvar.urls, delete.these))
+    class(payload) <- "VariableDefinition"
     
     ## Rebind
-    payload$dataset <- VariableCatalog(crGET(variableCatalogURL(variable)))
-    variable <- do.call(bindVariables, payload)
-    
+    new_url <- POSTNewVariable(variableCatalogURL(variable), payload)
+        
     ## Prune subvariable name prefix, or otherwise reset the names
-    names(subvariables(variable)) <- subvar.names[match(urls(subvariables(variable)), subvar.urls)]
-    invisible(variable)
+    subvars <- Subvariables(crGET(absoluteURL("subvariables/", new_url)))
+    names(subvars) <- subvar.names[match(urls(subvars), subvar.urls)]
+    
+    ## What to return? This function is kind of a hack.
+    invisible(new_url)
 }
 
 ##' @rdname deleteSubvariables

@@ -20,16 +20,14 @@
 ##' the new variable will have a name that is the same as the original but with
 ##' " (copy)" appended, and its alias will be the old alias with "_copy"
 ##' appended.
-##' @return the copy CrunchVariable
+##' @return a VariableDefinition for the copy expression. Assign into a Dataset
+##' to make the copy happen.
 ##' @export
 copyVariable <- function (x, deep=FALSE, ...) {
     stopifnot(is.variable(x))
     if (deep) {
         halt("Deep copying not implemented.")
     }
-    
-    ## Get the variable catalog's URL to POST to
-    varcat_url <- variableCatalogURL(x)
     
     newbody <- list(...)
     oldbody <- updateList(copyVariableReferences(x), tuple(x)@body)
@@ -41,12 +39,8 @@ copyVariable <- function (x, deep=FALSE, ...) {
     body$id <- NULL
     body$expr <- zfunc("copy_variable", x)
     
-    ## Validate that name and alias are unique
-    varcat <- VariableCatalog(crGET(varcat_url))
-    
-    out <- crPOST(varcat_url, body=toJSON(body))
-    newvar <- returnNewVariable(out, varcat)
-    invisible(newvar)
+    class(body) <- "VariableDefinition"
+    return(body)
 }
 
 ##' @rdname copyVariable
