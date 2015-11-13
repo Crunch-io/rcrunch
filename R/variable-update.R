@@ -148,7 +148,6 @@ setMethod("[<-", c("CrunchVariable", "CrunchExpr", "missing", "CrunchExpr"),
                 "not present in the category ids of variable ", dQuote(name(x))))
         }
         if (add.no.data) {
-            halt("Sorry, we can't do this just yet")
             categories(x)[[length(categories(x)) + 1]] <- Category(data=.no.data)
         }
         out <- .updateVariable(x, value, filter=.dispatchFilter(i))
@@ -168,7 +167,6 @@ setMethod("[<-", c("CrunchVariable", "CrunchExpr", "missing", "CrunchExpr"),
                 dQuote(name(x))))
         }
         if (add.no.data) {
-            halt("Sorry, we can't do this just yet")
             categories(x)[[length(categories(x)) + 1]] <- Category(data=.no.data)
         }
         value <- n2i(value, categories(x))
@@ -231,7 +229,7 @@ setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
         ## Datetime not yet supported, apparently
         if (is.Datetime(x)) {
             .backstopUpdate(x, i, j, value)
-        } else if (is.Categorical(x)) {
+        } else if (is.Categorical(x) || is.CA(x) || is.MR(x)) {
             return(.categorical.update[["numeric"]](x, i, j, value))
         }
         if (missing(i)) i <- NULL
