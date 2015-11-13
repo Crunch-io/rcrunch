@@ -113,7 +113,16 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
     if (i %in% names(x)) {
         return(.updateValues(x, i, value))
     } else {
-        addVariable(x, values=value, name=i, alias=i)
+        if (inherits(value, "VariableDefinition")) {
+            ## Just update its alias with the one we're setting
+            value$alias <- i
+            ## But also check to make sure it has a name, and use `i` if not
+            value$name <- value$name %||% i
+        } else {
+            ## Create a VarDef, and use `i` as name and alias
+            value <- VariableDefinition(value, name=i, alias=i)
+        }
+        addVariable(x, value)
     }
 }
 

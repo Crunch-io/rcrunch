@@ -1,15 +1,24 @@
-addVariable <- function (dataset, values, ...) {
-    new <- length(values)
+addVariable <- function (dataset, vardef, ...) {
+    ## Construct payload (if not already constructed)
+    ## TODO: deprecate this behavior? (Only used in tests)
+    if (!inherits(vardef, "VariableDefinition")) {
+        vardef <- VariableDefinition(vardef, ...)
+    }
+    
+    ## Validate that we're sending the right number of rows
+    new <- length(vardef$values)
     old <- getNrow(dataset, filtered=FALSE)
     if (new == 1 && old > 1) {
-        values <- rep(values, old)
+        vardef$values <- rep(vardef$values, old)
         new <- old
     }
-    if (old > 0 && new != old) {
+    if (new == 0) {
+        warning("Adding variable with no rows of data", call.=FALSE)
+    } else if (old > 0 && new != old) {
         halt("replacement has ", new, " rows, data has ", old)
     }
     var_url <- POSTNewVariable(shojiURL(dataset, "catalogs", "variables"), 
-        toVariable(values, ...))
+        vardef)
     dataset <- refresh(dataset)
     invisible(dataset)
 }

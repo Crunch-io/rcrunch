@@ -41,7 +41,7 @@ setMethod("jsonprep", "VariableGroup", .jsonprep.vargroup)
 ##' @rdname tojson-crunch
 ##' @export
 toJSON <- function (x, ...) {
-    out <- jsonlite::toJSON(jsonprep(x), auto_unbox=TRUE, null="null", na="null", ...)
+    out <- jsonlite::toJSON(jsonprep(x), auto_unbox=TRUE, null="null", na="null", force=TRUE, ...)
     # cat(out)
     return(out)
 }
