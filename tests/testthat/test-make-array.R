@@ -5,25 +5,24 @@ if (run.integration.tests) {
         test_that("can make Categorical Array with Dataset subset", {
             with(test.dataset(mrdf), {
                 var <- makeArray(ds[1:3], name="arrayVar")
-                expect_true(is.CA(var))
-                expect_false(any(unlist(lapply(tuple(var)$subvariables,
-                    is.null)))) ## API sanity check
-                ds <- refresh(ds)
+                expect_true(inherits(var, "VariableDefinition"))
+                ds$arrayVar <- var
                 expect_equal(c("arrayVar", "v4"), names(ds))
-                name(var) <- "TESTONE"
+                expect_true(is.CA(ds$arrayVar))
+                name(ds$arrayVar) <- "TESTONE"
                 ds <- refresh(ds)
                 expect_equal(c("TESTONE", "v4"), names(variables(ds)))
             })
+        })
+        test_that("Can make and then delete an array (and its subvars delete too)", {
             with(test.dataset(mrdf), {
-                var <- makeArray(ds[c("mr_1", "mr_2", "mr_3")],
+                ds$arrayVar <- makeArray(ds[c("mr_1", "mr_2", "mr_3")],
                     name="arrayVar")
-                expect_true(is.CA(var))
-                ds <- refresh(ds)
                 expect_equal(c("arrayVar", "v4"), names(ds))
-                ## delete array variable
-                u <- try(delete(ds$arrayVar))
-                expect_that(u, is_not_an_error())
-                ds <- refresh(ds)
+                with(consent(), {
+                    ## delete array variable
+                    ds$arrayVar <- NULL
+                })
                 expect_identical(names(ds), "v4")
                 expect_identical(ncol(ds), 1L)   
             })
@@ -32,8 +31,8 @@ if (run.integration.tests) {
             with(test.dataset(mrdf), {
                 var <- makeArray(pattern="mr_[123]", dataset=ds,
                     name="arrayVar")
-                expect_true(is.CA(var))
-                ds <- refresh(ds)
+                expect_true(inherits(var, "VariableDefinition"))
+                ds$arrayVar <- var
                 expect_equal(c("arrayVar", "v4"), names(ds))
                 ## unbind.
                 u <- try(unbind(ds$arrayVar))
@@ -54,7 +53,7 @@ if (run.integration.tests) {
                     no.name)
                 expect_error(makeArray(pattern="rm_", dataset=ds,
                     name="foo"), no.match)
-                expect_true(is.CA(makeArray(c("mr_1", "mr_2", "mr_3"),
+                expect_silent(ds$d <- is.CA(makeArray(c("mr_1", "mr_2", "mr_3"),
                     dataset=ds, name="foo")))
                 skip("Errors, but with wrong error condition")
                 with(test.dataset(df, "notds"), {
@@ -66,8 +65,9 @@ if (run.integration.tests) {
         
         test_that("can make MultipleResponse from CategoricalArray", {
             with(test.dataset(mrdf), {
-                var <- makeArray(pattern="mr_[123]", dataset=ds,
+                ds$arrayVar <- makeArray(pattern="mr_[123]", dataset=ds,
                     name="arrayVar")
+                var <- ds$arrayVar
                 expect_true(is.CA(var))
                 expect_true(is.categories(categories(var)))
                 
@@ -97,8 +97,9 @@ if (run.integration.tests) {
                 cast.these <- grep("mr_", names(ds))
                 ds[cast.these] <- lapply(ds[cast.these],
                     castVariable, "categorical")
-                var <- makeMR(pattern="mr_[123]", dataset=ds,
+                ds$arrayVar <- makeMR(pattern="mr_[123]", dataset=ds,
                     name="arrayVar", selections="1.0")
+                var <- ds$arrayVar
                 expect_true(is.Multiple(var))
                 
                 var <- undichotomize(var)

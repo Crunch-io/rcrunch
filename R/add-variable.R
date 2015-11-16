@@ -1,15 +1,26 @@
-addVariable <- function (dataset, values, ...) {
-    new <- length(values)
-    old <- getNrow(dataset, filtered=FALSE)
-    if (new == 1 && old > 1) {
-        values <- rep(values, old)
-        new <- old
+addVariable <- function (dataset, vardef, ...) {
+    ## Construct payload (if not already constructed)
+    ## TODO: deprecate this behavior? (Only used in tests)
+    if (!inherits(vardef, "VariableDefinition")) {
+        vardef <- VariableDefinition(vardef, ...)
     }
-    if (old > 0 && new != old) {
-        halt("replacement has ", new, " rows, data has ", old)
+    
+    if (!any(c("expr", "subvariables") %in% names(vardef))) {
+        ## Validate that we're sending the right number of rows
+        new <- length(vardef$values)
+        old <- getNrow(dataset, filtered=FALSE)
+        if (new == 1 && old > 1) {
+            vardef$values <- rep(vardef$values, old)
+            new <- old
+        }
+        if (new == 0) {
+            warning("Adding variable with no rows of data", call.=FALSE)
+        } else if (old > 0 && new != old) {
+            halt("replacement has ", new, " rows, data has ", old)
+        }
     }
     var_url <- POSTNewVariable(shojiURL(dataset, "catalogs", "variables"), 
-        toVariable(values, ...))
+        vardef)
     dataset <- refresh(dataset)
     invisible(dataset)
 }
@@ -22,21 +33,25 @@ POSTNewVariable <- function (catalog_url, variable) {
         ## If deriving a variable, skip this and go straight to POSTing
         if (variable$type %in% c("multiple_response", "categorical_array")) {
             ## Assumes: array of subvariables included, and if MR, at least one
-            ## category has selected: TRUE
+            ## category has selected: TRUE, or "selected_categories" given
             if (!("subvariables" %in% names(variable))) {
                 halt("Cannot create array variable without specifying",
                     " subvariables")
             }
-            ## Two options supported: 
-            ## (1) Create array from single array definition
-            ## (2) Create subvariables individually and then bind them
-            ## Sniff to see which case we have. If (1), proceed normally
+            ## Three options supported: 
+            ## (1) Bind together existing subvariables
+            ## (2) Create array from single array definition 
+            ## (3) Create subvariables individually and then bind them
+            ## Sniff to see which case we have. If (1) or (2), proceed normally
             is_catvardef <- function (x) {
                 all(c("categories", "values") %in% names(x))
             }
+            is_binddef <- is.character(variable$subvariables) && 
+                !("categories" %in% names(variable))
             is_arraydef <- is_catvardef(variable) &&
                 !any(vapply(variable$subvariables, is_catvardef, logical(1)))
-            if (!is_arraydef) {
+            case3 <- !(is_binddef | is_arraydef)
+            if (case3) {
                 lapply(variable$subvariables, function (x) {
                     Categories(data=x$categories) ## Will error if invalid
                 })

@@ -2,11 +2,14 @@ context("Add a variable to a dataset")
 
 test_that("toVariable parses R numerics", {
     expect_identical(toVariable(2L:4L, name="Numbers!", alias="num"),
+        structure(list(values=2L:4L, type="numeric", name="Numbers!", alias="num"), class="VariableDefinition"))
+    expect_equivalent(toVariable(2L:4L, name="Numbers!", alias="num"),
         list(values=2L:4L, type="numeric", name="Numbers!", alias="num"))
 })
 test_that("toVariable parses R characters", {
     expect_identical(toVariable(letters[1:3]),
-        list(values=c("a", "b", "c"), type="text"))
+        structure(list(values=c("a", "b", "c"), type="text"),
+        class="VariableDefinition"))
 })
 test_that("toVariable parses factors", {
     expect_equivalent(toVariable(as.factor(rep(LETTERS[2:3], 3))), 
@@ -15,17 +18,16 @@ test_that("toVariable parses factors", {
             list(id=2L, name="C", numeric_value=2L, missing=FALSE),
             list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
         ))) ## unclear why these aren't identical
-    options(crunch.max.categories=4)
-    expect_identical(getOption("crunch.max.categories"), 4)
-    expect_identical(toVariable(as.factor(letters[1:5])), 
-        list(values=c("a", "b", "c", "d", "e"), type="text"))
-    expect_identical(toVariable(as.factor(letters[1:5]), name="v1"), 
-        list(values=c("a", "b", "c", "d", "e"), type="text", name="v1"))
-    options(crunch.max.categories=256)
+    with(temp.options(crunch.max.categories=4), {
+        expect_equivalent(toVariable(as.factor(letters[1:5])), 
+            list(values=c("a", "b", "c", "d", "e"), type="text"))
+        expect_equivalent(toVariable(as.factor(letters[1:5]), name="v1"), 
+            list(values=c("a", "b", "c", "d", "e"), type="text", name="v1"))
+    })
 })
 
 test_that("toVariable parses R Date class", {
-    expect_identical(toVariable(as.Date(c("2014-12-16", "2014-12-17"))),
+    expect_equivalent(toVariable(as.Date(c("2014-12-16", "2014-12-17"))),
         list(values=c("2014-12-16", "2014-12-17"), type="datetime", 
             resolution="D"))
 })

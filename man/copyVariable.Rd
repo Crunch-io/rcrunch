@@ -23,7 +23,8 @@ the new variable will have a name that is the same as the original but with
 appended.}
 }
 \value{
-the copy CrunchVariable
+a VariableDefinition for the copy expression. Assign into a Dataset
+to make the copy happen.
 }
 \description{
 Makes a copy of a Crunch variable on the server.
