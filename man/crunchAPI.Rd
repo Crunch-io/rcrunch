@@ -8,7 +8,7 @@ crunchAPI(http.verb, url, response.handler = handleAPIresponse,
   config = list(), status.handlers = list(), ...)
 }
 \arguments{
-\item{http.verb}{character in GET, PUT, POST}
+\item{http.verb}{character in GET, PUT, POST, PATCH, DELETE}
 
 \item{url}{character URL to do the verb on}
 
@@ -21,8 +21,8 @@ something with it}
 function to call in the case where that status is returned. Passed to the
 \code{response.handler} function.}
 
-\item{...}{additional arguments passed to \code{GET}, \code{PUT}, or
-\code{POST}}
+\item{...}{additional arguments passed to \code{GET}, \code{PUT},
+\code{POST}, \code{PATCH}, or \code{DELETE}}
 }
 \description{
 Main Crunch API handling function

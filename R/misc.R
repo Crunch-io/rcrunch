@@ -1,7 +1,8 @@
 is.error <- function (x) inherits(x, "try-error")
 
 halt <- function (...) {
-    log("ERROR", ..1)
+    msg <- gsub("\n", " ", ..1)
+    logMessage("ERROR", msg)
     stop(..., call.=FALSE)
 }
 
