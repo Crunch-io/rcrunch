@@ -4,6 +4,7 @@
 \name{toVariable}
 \alias{toVariable}
 \alias{toVariable,Date-method}
+\alias{toVariable,VariableDefinition-method}
 \alias{toVariable,character-method}
 \alias{toVariable,factor-method}
 \alias{toVariable,logical-method}
@@ -19,6 +20,8 @@ toVariable(x, ...)
 \S4method{toVariable}{factor}(x, ...)
 
 \S4method{toVariable}{Date}(x, ...)
+
+\S4method{toVariable}{VariableDefinition}(x, ...)
 
 \S4method{toVariable}{logical}(x, ...)
 }

@@ -39,9 +39,8 @@ categories to mark as the dichotomous selections. Required for
 \code{makeMR}; ignored in \code{makeArray}.}
 }
 \value{
-The object of class CategoricalArrayVariable or
-MultipleResponseVariable corresponding to the just-created variable on the
-server.
+A VariableDefinition that when added to a Dataset will create the
+categorical-array or multiple-response variable.
 }
 \description{
 Make a Categorical Array or Multiple Response variable

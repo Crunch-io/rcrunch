@@ -2,8 +2,8 @@ context("Shallow copies of variables")
 
 with(fake.HTTP, {
     ds <- loadDataset("test ds")
-    
-    expect_error(copy(ds$gender), 
+    expect_true(inherits(copy(ds$gender), "VariableDefinition"))
+    expect_error(ds$gender_copy <- copy(ds$gender), 
         'Error : POST /api/datasets/dataset1/variables.json {"format":{"summary":{"digits":2}},"view":{"include_missing":false,"show_counts":false,"show_codes":false,"column_width":null},"name":"Gender (copy)","discarded":false,"alias":"gender_copy","description":"Gender","expr":{"function":"copy_variable","args":[{"variable":"66ae9881e3524f7db84970d556c34552"}]}}\n',
         fixed=TRUE)
 })
@@ -16,11 +16,11 @@ if (run.integration.tests) {
             test_that("Can copy and manipulate a categorical variable", {
                 expect_false("copy1" %in% names(ds))
                 expect_true("q1" %in% names(ds))
-                q1_copy <- copy(ds$q1, name="copy1", alias="copy1")
-                expect_identical(as.vector(q1_copy), as.vector(ds$q1))
-                expect_false(name(q1_copy) == name(ds$q1))
-                expect_false(alias(q1_copy) == alias(ds$q1))
-                expect_false(self(q1_copy) == self(ds$q1))
+                expect_silent(ds$copy1 <- copy(ds$q1, name="copy1"))
+                expect_identical(as.vector(ds$copy1), as.vector(ds$q1))
+                expect_false(name(ds$copy1) == name(ds$q1))
+                expect_false(alias(ds$copy1) == alias(ds$q1))
+                expect_false(self(ds$copy1) == self(ds$q1))
                 ds <- refresh(ds)
                 expect_true("copy1" %in% names(ds))
                 expect_true("q1" %in% names(ds))
@@ -39,19 +39,6 @@ if (run.integration.tests) {
                     c("Cat", "Canine", "Bird"))
                 expect_identical(names(categories(ds$q1))[1:3], 
                     c("Dog", "Cat", "Bird"))  
-            })
-            
-            test_that("Can copy and assign into dataset", {
-                expect_true("q1" %in% names(ds))
-                expect_true(is.Categorical(ds$q1))
-                ds$q1_copy <- copy(ds$q1, name="copy2", alias="copy2")
-                expect_true("q1_copy" %in% names(ds))
-                expect_true(is.Categorical(ds$q1_copy))
-                expect_true("q1" %in% names(ds))
-                expect_true(is.Categorical(ds$q1))
-                expect_identical(as.vector(ds$q1_copy), as.vector(ds$q1))
-                expect_false(name(ds$q1_copy) == name(ds$q1))
-                expect_false(alias(ds$q1_copy) == alias(ds$q1))
             })
             
             test_that("Can copy an array variable and manipulate it independently", {

@@ -309,12 +309,13 @@ mrdf.setup <- function (dataset, pattern="mr_", name=ifelse(is.null(selections),
     dataset[cast.these] <- lapply(dataset[cast.these],
         castVariable, "categorical")
     if (is.null(selections)) {
-        var <- makeArray(pattern=pattern, dataset=dataset, name=name)
+        dataset[[name]] <- makeArray(pattern=pattern, dataset=dataset,
+            name=name)
     } else {
-        var <- makeMR(pattern=pattern, dataset=dataset, name=name,
+        dataset[[name]] <- makeMR(pattern=pattern, dataset=dataset, name=name,
             selections=selections)
     }
-    return(refresh(dataset))
+    return(dataset)
 }
 
 validImport <- function (ds) {
