@@ -4,22 +4,18 @@
 \alias{crunchAPI}
 \title{Main Crunch API handling function}
 \usage{
-crunchAPI(http.verb, url, response.handler = handleAPIresponse,
-  config = list(), status.handlers = list(), ...)
+crunchAPI(http.verb, url, config = list(), status.handlers = list(), ...)
 }
 \arguments{
 \item{http.verb}{character in GET, PUT, POST, PATCH, DELETE}
 
 \item{url}{character URL to do the verb on}
 
-\item{response.handler}{function that takes a http response object and does
-something with it}
-
 \item{config}{list of config parameters. See httr documentation.}
 
 \item{status.handlers}{named list of specific HTTP statuses and a response
 function to call in the case where that status is returned. Passed to the
-\code{response.handler} function.}
+\code{\link{handleAPIresponse}} function.}
 
 \item{...}{additional arguments passed to \code{GET}, \code{PUT},
 \code{POST}, \code{PATCH}, or \code{DELETE}}

@@ -3,14 +3,12 @@
 ##' @param url character URL to do the verb on
 ##' @param ... additional arguments passed to \code{GET}, \code{PUT},
 ##' \code{POST}, \code{PATCH}, or \code{DELETE}
-##' @param response.handler function that takes a http response object and does
-##' something with it
 ##' @param config list of config parameters. See httr documentation.
 ##' @param status.handlers named list of specific HTTP statuses and a response
 ##' function to call in the case where that status is returned. Passed to the
-##' \code{response.handler} function.
+##' \code{\link{handleAPIresponse}} function.
 ##' @keywords internal
-crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, config=list(), status.handlers=list(), ...) {
+crunchAPI <- function (http.verb, url, config=list(), status.handlers=list(), ...) {
     url ## force lazy eval of url before inserting in try() below
     if (isTRUE(getOption("crunch.debug"))) {
         ## TODO: work this into crunch.log
@@ -18,7 +16,7 @@ crunchAPI <- function (http.verb, url, response.handler=handleAPIresponse, confi
     }
     FUN <- get(paste0("c", http.verb), envir=asNamespace("crunch"))
     x <- try(FUN(url, ..., config=config), silent=TRUE)
-    out <- response.handler(x, special.statuses=status.handlers)
+    out <- handleAPIresponse(x, special.statuses=status.handlers)
     return(out)
 }
 
@@ -60,13 +58,14 @@ crPOST <- function (...) http_verbs$POST(...)
 ##' @export
 crDELETE <- function (...) http_verbs$DELETE(...)
 
+##' Do the right thing with the HTTP response
+##' @param response an httr response object
+##' @param special.statuses an optional named list of functions by status code.
+##' @return The full HTTP response object, just the content, or any other
+##' status-specific action
 ##' @importFrom httr content http_status
+##' @keywords internal
 handleAPIresponse <- function (response, special.statuses=list()) {
-    ##' Do the right thing with the HTTP response
-    ##' @param response an httr response object
-    ##' @param special.statuses an optional named list of functions by status code.
-    ##' @return The full HTTP response object, just the content, or any other
-    ##' status-specific action 
     response <- handleAPIerror(response)
     logMessage(responseStatusLog(response))
     code <- response$status_code
