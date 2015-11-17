@@ -3,6 +3,7 @@
 * Reworked various new variable functions, including `copy`, `makeArray`, and `makeMR`, to return `VariableDefinition`s rather than creating the new variables themselves. Creation happens on assignment into the dataset. 
 * Support adding No Data (`NA` for categoricals) even if No Data doesn't already exist
 * Tools for logging and profiling HTTP requests and cache performance. See `?startLog` and `?logMessage`.
+* Support deep copying of non-array variables.
 
 ## crunch 1.6.0
 * Check for new version of the package on GitHub when the package is loaded.
