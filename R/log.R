@@ -27,6 +27,7 @@ startLog <- function (filename, append=FALSE) {
     }
 }
 
+##' @importFrom utils read.delim
 loadLogfile <- function (filename) {
     df <- read.delim(filename, sep=" ", header=FALSE,
         stringsAsFactors=FALSE)[,1:6]
@@ -45,6 +46,7 @@ cacheLogSummary <- function (logdf) {
         hit.rate=100*counts["HIT"]/sum(counts[c("HIT", "SET")])))
 }
 
+##' @importFrom utils head tail
 requestLogSummary <- function (logdf) {
     total.time <- as.numeric(difftime(tail(logdf$timestamp, 1), 
         head(logdf$timestamp, 1), units="secs"))

@@ -41,8 +41,7 @@ copyVariable <- function (x, deep=FALSE, ...) {
                 body$subvariables_catalog <- NULL
                 body$subvariables <- lapply(names(subvariables(x)),
                     function (n) list(name=n))
-                ## Format the values
-                print(str(body$values))
+                ## Format the values?
             }
         } else if (body$type == "datetime") {
             body$resolution <- x@body$resolution

@@ -7,7 +7,7 @@
 ##' send \code{values} if you know what you're doing. You may also omit both
 ##' \code{data} and \code{values} to create an empty variable on the server
 ##' (all values will be system missing "No Data").
-##' ... additional metadata attributes to send.
+##' @param ... additional metadata attributes to send.
 ##' @return a \code{VariableDefinition} object, ready to POST to Crunch.
 ##' @export
 ##' @examples

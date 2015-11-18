@@ -91,7 +91,6 @@ setGeneric("median")
 setGeneric("min")
 setGeneric("max")
 setGeneric("na.omit")
-##' @export
 setGeneric("as.vector")
 setGeneric("as.environment")
 setGeneric("dimnames")
