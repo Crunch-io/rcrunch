@@ -11,10 +11,10 @@ track.var <- ds$track
 summary.track.var <- capture.output(print(track.var))
 track.cats <- categories(track.var)
 names(track.cats)[1:2] <- c("Right track", "Wrong track")
-values(track.cats) <- c(1, -1, 0)
+values(track.cats)[1:3] <- c(1, -1, 0)
 is.na(track.cats) <- "Not sure"
 
-categories(ds$track) <- track.cats[c(1,3,2)]
+categories(ds$track)[2:3] <- track.cats[c(3,2)]
 
 names(variables(ds))[aliases(variables(ds)) == "track"] <- "Direction of country"
 
