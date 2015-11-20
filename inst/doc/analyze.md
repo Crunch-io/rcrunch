@@ -172,37 +172,37 @@ tab3
 ## 
 ##                         imiss
 ## imiss                    Very Important Somewhat Important Not very Important Unimportant
-##   Abortion                    162.12515         208.097758          134.98884  181.001899
-##   Education                    77.84651          79.423438           39.36797    4.006600
-##   Gay rights                  249.27835         311.708125          149.97589  150.470363
-##   Health care                  29.86234          35.967181           15.59800    3.271685
-##   Immigration                  89.37703         110.794979          126.65609  141.614210
-##   Medicare                    123.07314         175.743469          130.67483    4.704833
-##   Social security             309.00483         371.862548          130.56316  113.506896
-##   Taxes                        10.10853           6.727795           11.12973    3.271685
-##   Terrorism                   195.29567         179.083744          185.41129  214.674821
-##   The budget deficit           76.60153          31.503505           30.59193    4.526322
-##   The economy                 232.66403         296.296347          171.90120  145.427479
-##   The environment              44.96075          22.518970           18.78344    1.000690
-##   The war in Afghanistan      262.64142         302.568826          154.10589  148.924851
+##   Abortion                    162.12515          208.09776           0.000000  134.988838
+##   Education                     0.00000          107.24213          77.846505    0.000000
+##   Gay rights                   39.36797            0.00000           4.006600    5.899711
+##   Health care                 249.27835          311.70813           0.000000  149.975893
+##   Immigration                   0.00000           49.29305          29.862339    0.000000
+##   Medicare                     15.59800            0.00000           3.271685    4.575016
+##   Social security              89.37703          110.79498           0.000000  126.656090
+##   Taxes                         0.00000           91.30474         123.073140    0.000000
+##   Terrorism                   130.67483            0.00000           4.704833    6.056686
+##   The budget deficit          309.00483          371.86255           0.000000  130.563156
+##   The economy                   0.00000           38.21869          10.108529    0.000000
+##   The environment              11.12973            0.00000           3.271685    5.606140
+##   The war in Afghanistan      195.29567          179.08374           0.000000  185.411293
 ## 
 ## , , gender = Female
 ## 
 ##                         imiss
 ## imiss                    Very Important Somewhat Important Not very Important Unimportant
-##   Abortion                     42.93341           18.30873           13.99751    3.271685
-##   Education                   275.06635          300.65116          148.38230  153.512532
-##   Gay rights                   32.88000           15.36346           15.54603    4.240972
-##   Health care                 215.59557          256.47697          162.97001  161.794686
-##   Immigration                  55.87238           37.94964           27.87878    6.813457
-##   Medicare                    259.49040          264.82322          131.97080  168.177349
-##   Social security              47.21392           27.66070           24.26524    3.271685
-##   Taxes                       370.27981          391.28609           91.96340   94.927242
-##   Terrorism                    10.44768            1.32360           11.05645    3.271685
-##   The budget deficit          167.29844          217.23976          208.65971  175.483674
-##   The economy                  62.49252           40.63460           37.25290    4.849638
-##   The environment             112.47886          184.63920          198.88193  214.572442
-##   The war in Afghanistan       72.36317           44.99078           36.03780    7.629384
+##   Abortion                      0.00000           71.04937          76.601528    0.000000
+##   Education                    30.59193            0.00000           4.526322   11.261814
+##   Gay rights                  232.66403          296.29635           0.000000  171.901199
+##   Health care                   0.00000           59.70127          44.960749    0.000000
+##   Immigration                  18.78344            0.00000           1.000690    6.745825
+##   Medicare                    262.64142          302.56883           0.000000  154.105889
+##   Social security               0.00000           49.45844          42.933408    0.000000
+##   Taxes                        13.99751            0.00000           3.271685    3.789242
+##   Terrorism                   275.06635          300.65116           0.000000  148.382303
+##   The budget deficit            0.00000           44.73307          32.880000    0.000000
+##   The economy                  15.54603            0.00000           4.240972    9.624116
+##   The environment             215.59557          256.47697           0.000000  162.970011
+##   The war in Afghanistan        0.00000           64.45748          55.872378    0.000000
 ```
 
 Note that even though we specified two variables in our formula, because "imiss" itself is two dimensional, our result is a three-dimensional array.
@@ -308,37 +308,37 @@ round(crtabs(~ imiss + educ + gender, data=ds))
 ## 
 ##                         educ
 ## imiss                    No HS High school graduate Some college 2-year 4-year Post-grad
-##   Abortion                  48                   41           83    113     86       116
-##   Education                 18                   29           43     61     19        29
-##   Gay rights                51                   51          114    135    101       132
-##   Health care               31                   32           68     79     34        32
-##   Immigration               29                   22           47     64     74        82
-##   Medicare                  10                   17           37     47     20        20
-##   Social security           57                   51          137    141    111       140
-##   Taxes                     31                   36           69     82     34        34
-##   Terrorism                 47                   38          106    115    105       115
-##   The budget deficit        33                   27           58     70     32        29
-##   The economy               56                   52          127    139     96       127
-##   The environment           28                   34           65     60     32        30
-##   The war in Afghanistan    57                   52          135    141     95       128
+##   Abortion                  48                   41            0     83    113         0
+##   Education                116                    0           18     29      0        43
+##   Gay rights                 0                   19           29      0      0         0
+##   Health care               51                   51            0    114    135         0
+##   Immigration              132                    0           31     32      0        68
+##   Medicare                   0                   34           32      0      0         0
+##   Social security           29                   22            0     47     64         0
+##   Taxes                     82                    0           10     17      0        37
+##   Terrorism                  0                   20           20      0      0         0
+##   The budget deficit        57                   51            0    137    141         0
+##   The economy              140                    0           31     36      0        69
+##   The environment            0                   34           34      0      0         0
+##   The war in Afghanistan    47                   38            0    106    115         0
 ## 
 ## , , gender = Female
 ## 
 ##                         educ
 ## imiss                    No HS High school graduate Some college 2-year 4-year Post-grad
-##   Abortion                  56                   41          112    135     94       120
-##   Education                 31                   32           59     62     28        29
-##   Gay rights                56                   45          110    132    104       124
-##   Health care               34                   34           59     69     30        29
-##   Immigration               58                   52          137    143    121       135
-##   Medicare                  32                   36           77     85     37        35
-##   Social security           55                   32          113    117     96       113
-##   Taxes                     27                   30           56     71     28        30
-##   Terrorism                 45                   50           84    115     91       120
-##   The budget deficit        24                   30           42     58     25        27
-##   The economy                0                    0            0      0      0         3
-##   The environment            0                    0            0      0      0         0
-##   The war in Afghanistan     0                    0            3      8      1         1
+##   Abortion                 127                    0           28     34      0        65
+##   Education                  0                   32           30      0      0         0
+##   Gay rights                57                   52            0    135    141         0
+##   Health care              128                    0           30     33      0        66
+##   Immigration                0                   34           31      0      0         0
+##   Medicare                  50                   52            0    126    133         0
+##   Social security          122                    0           28     35      0        72
+##   Taxes                      0                   35           34      0      0         0
+##   Terrorism                 56                   41            0    112    135         0
+##   The budget deficit       120                    0           31     32      0        59
+##   The economy                0                   28           29      0      0         0
+##   The environment           56                   45            0    110    132         0
+##   The war in Afghanistan   124                    0           34     34      0        59
 ```
 
 <!--
@@ -403,9 +403,10 @@ categories(ds$track)
 ```
 
 ```
-## [ 1 ]  Right track
+## [ 1 ]  Generally headed in the right direction
 ## [ 0 ]  Not sure
 ## [ -1 ]  Wrong track
+## [ NA ]  No Data
 ```
 
 We can use these numeric values to compute an "on the right track index" by averaging them. If the index is greater than zero, more people thing things are going well, and if it is negative, more respondents are pessimistic. 

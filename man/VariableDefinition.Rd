@@ -16,8 +16,9 @@ is not supplied, you may instead supply \code{values}, which will not be
 converted in any way, nor will extra type information be supplied. Only
 send \code{values} if you know what you're doing. You may also omit both
 \code{data} and \code{values} to create an empty variable on the server
-(all values will be system missing "No Data").
-... additional metadata attributes to send.}
+(all values will be system missing "No Data").}
+
+\item{...}{additional metadata attributes to send.}
 }
 \value{
 a \code{VariableDefinition} object, ready to POST to Crunch.
