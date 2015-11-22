@@ -65,7 +65,8 @@ setTupleSlot <- function (x, name, value) {
 ##' @rdname tuple-methods
 ##' @export
 setMethod("entity", "VariableTuple", function (x) {
-    return(as.variable(crGET(x@entity_url), tuple=x))
+    # return(as.variable(crGET(x@entity_url), tuple=x))
+    return(as.variable(ShojiObject(), subtype=type(x), tuple=x))
 })
 ##' @rdname tuple-methods
 ##' @export

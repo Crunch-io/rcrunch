@@ -66,6 +66,7 @@ as.variable <- function (x, subtype=NULL, tuple=VariableTuple()) {
     if ("subvariables" %in% names(x@body)) {
         x@body[["subvariables"]] <- absoluteURL(unlist(x@body[["subvariables"]]), self(x))
     }
+    x@self <- tuple@entity_url
     return(x)
 }
 
@@ -73,7 +74,8 @@ as.variable <- function (x, subtype=NULL, tuple=VariableTuple()) {
 ##' @export
 setMethod("refresh", "CrunchVariable", function (x) {
     tup <- refresh(tuple(x))
-    out <- as.variable(crGET(self(x)), tuple=tup)
+    # out <- as.variable(crGET(self(x)), tuple=tup)
+    out <- as.variable(ShojiObject(), subtype=type(tup), tuple=tup)
     activeFilter(out) <- activeFilter(x)
     return(out)
 })
