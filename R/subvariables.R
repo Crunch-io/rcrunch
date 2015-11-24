@@ -33,7 +33,7 @@ setMethod("subvariables", "CategoricalArrayVariable", function (x) {
     tup <- tuple(x)
     catalog_url <- tup$subvariables_catalog %||% tup@index_url
     vars <- VariableCatalog(crGET(catalog_url))
-    out <- Subvariables(vars[x@body$subvariables])
+    out <- Subvariables(vars[unlist(tup$subvariables)])
     activeFilter(out) <- activeFilter(x)
     return(out)
 })
@@ -48,12 +48,19 @@ setMethod("subvariables<-", c("CategoricalArrayVariable", "ANY"),
 ##' @export
 setMethod("subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
     function (x, value) {
-        old <- x@body$subvariables
+        old <- tuple(x)$subvariables
         new <- urls(value)
         if (!setequal(old, new)) {
             halt("Can only reorder, not change, subvariables")
         }
-        return(setCrunchSlot(x, "subvariables", I(new)))
+        new <- I(new)
+        if (!is.readonly(x) && !identical(new, I(old))) {
+            body <- list(subvariables=new)
+            payload <- toJSON(body)
+            crPATCH(self(x), body=payload)
+            tuple(x)$subvariables <- new
+        }
+        return(x)
     })
 
 ##' @rdname describe-catalog
@@ -121,7 +128,7 @@ setMethod("[[", c("Subvariables", "ANY"), function (x, i, ...) {
     out <- VariableTuple(index_url=self(x), entity_url=urls(x)[i],
         body=index(x)[[i]])
     if (!is.null(out)) {
-        out <- entity(out)
+        out <- as.variable(out)
         activeFilter(out) <- activeFilter(x)
     }
     return(out)

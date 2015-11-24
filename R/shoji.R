@@ -107,9 +107,18 @@ setReadonly <- function (x, value) {
 setMethod("readonly<-", "ShojiObject", setReadonly)
 
 shojiURL <- function (x, collection=c("catalogs", "views", "fragments"), key) {
+    if (is.variable(x)) {
+        x <- entity(x) ## Get the VariableEntity
+        logMessage("INFO", "GET entity in shojiURL")
+    }
     if (!is.shojiObject(x)) {
         halt("Cannot get Shoji URL from object of class ", dQuote(class(x)))
     }
     collection <- match.arg(collection)
-    return(slot(x, collection)[[key]])
+    urls <- slot(x, collection)
+    if (length(urls) == 0 && is.variable(x)) {
+        ## Lazy entity fetching of variables
+        urls <- crGET(self(x))[[collection]]
+    }
+    return(urls[[key]])
 }

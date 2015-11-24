@@ -1,11 +1,3 @@
-init.CategoricalVariable <- function (.Object, ...) {
-    .Object <- callNextMethod()
-    .Object@body$categories <- Categories(data=.Object@body$categories)
-    return(.Object)
-}
-setMethod("initialize", "CategoricalVariable", init.CategoricalVariable)
-setMethod("initialize", "CategoricalArrayVariable", init.CategoricalVariable)
-
 setMethod("tuple", "CrunchVariable", function (x) x@tuple)
 setMethod("tuple<-", "CrunchVariable", function (x, value) {
     x@tuple <- value
@@ -56,33 +48,31 @@ is.Array <- function (x) inherits(x, "CategoricalArrayVariable")
 ##' @export
 is.CategoricalArray <- is.CA
     
-as.variable <- function (x, subtype=NULL, tuple=VariableTuple()) {
-    x <- CrunchVariable(x)
+as.variable <- function (tuple, subtype=NULL) {
+    x <- CrunchVariable(tuple=tuple)
     if (is.variable(x)) {
         x <- subclassVariable(x, to=subtype)
         tuple(x) <- tuple
     }
     ## For the jsonlite no-simplify deserializer
-    if ("subvariables" %in% names(x@body)) {
-        x@body[["subvariables"]] <- absoluteURL(unlist(x@body[["subvariables"]]), self(x))
-    }
-    x@self <- tuple@entity_url
+    # if ("subvariables" %in% names(x@body)) {
+    #     x@body[["subvariables"]] <- absoluteURL(unlist(x@body[["subvariables"]]), self(x))
+    # }
     return(x)
 }
+
+##' @rdname self
+##' @export
+setMethod("self", "CrunchVariable", function (x) tuple(x)@entity_url)
 
 ##' @rdname refresh
 ##' @export
 setMethod("refresh", "CrunchVariable", function (x) {
     tup <- refresh(tuple(x))
-    # out <- as.variable(crGET(self(x)), tuple=tup)
-    out <- as.variable(ShojiObject(), subtype=type(tup), tuple=tup)
+    out <- as.variable(tup)
     activeFilter(out) <- activeFilter(x)
     return(out)
 })
-
-as.Numeric <- function (x) as.variable(x, "numeric")
-as.Categorical <- function (x) as.variable(x, "categorical")
-as.Text <- function (x) as.variable(x, "text")
 
 subclassVariable <- function (x, to=NULL) {
     if (is.null(to)) to <- type(x)
@@ -140,18 +130,25 @@ NULL
 setMethod("categories", "CrunchVariable", function (x) NULL)
 ##' @rdname var-categories
 ##' @export
-setMethod("categories", "CategoricalVariable", function (x) x@body$categories)
+setMethod("categories", "CategoricalVariable", 
+    function (x) categories(entity(x)))
 ##' @rdname var-categories
 ##' @export
 setMethod("categories", "CategoricalArrayVariable",
-    function (x) x@body$categories)
+    function (x) categories(entity(x)))
+
+##' @rdname var-categories
+##' @export
+setMethod("categories", "VariableEntity", 
+    function (x) Categories(data=x@body$categories))
 
 ##' @rdname var-categories
 ##' @export
 setMethod("categories<-", c("CategoricalVariable", "Categories"), 
     function (x, value) {
         dropCache(absoluteURL("../../cube/", self(x)))
-        return(setCrunchSlot(x, "categories", value))
+        ent <- setCrunchSlot(entity(x), "categories", value)
+        return(x)
     })
 ##' @rdname var-categories
 ##' @export
@@ -159,7 +156,8 @@ setMethod("categories<-", c("CategoricalArrayVariable", "Categories"),
     function (x, value) {
         dropCache(absoluteURL("../../cube/", self(x)))
         lapply(tuple(x)$subvariables, dropCache) ## Subvariables will update too
-        return(setCrunchSlot(x, "categories", value))
+        ent <- setCrunchSlot(entity(x), "categories", value)
+        return(x)
     })
 ##' @rdname var-categories
 ##' @export
@@ -210,7 +208,11 @@ setMethod("categories<-", c("CrunchVariable", "ANY"),
         halt("category assignment not defined for ", class(x))
     })
 
-setMethod("datasetReference", "CrunchVariable", function (x) x@urls$dataset_url)
+setMethod("datasetReference", "CrunchVariable", function (x) {
+    # x@urls$dataset_url
+    ## Not HATEOAS
+    absoluteURL("../../", self(x))
+})
 setMethod("datasetReference", "ANY", function (x) NULL)
 
 ##' Split an array or multiple-response variable into its CategoricalVariables
@@ -232,9 +234,14 @@ unbind <- function (x) {
 
 ##' @rdname delete
 ##' @export
+setMethod("delete", "CrunchVariable", 
+    function (x, ...) invisible(crDELETE(self(x))))
+
+##' @rdname delete
+##' @export
 setMethod("delete", "CategoricalArrayVariable", function (x, ...) {
     u <- self(x)
-    subvars <- x@body$subvariables
+    subvars <- tuple(x)$subvariables
     out <- crDELETE(u)
     lapply(subvars, crDELETE)
     dropCache(absoluteURL("../", u))

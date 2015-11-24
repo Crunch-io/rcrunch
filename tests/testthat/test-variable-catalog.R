@@ -68,7 +68,7 @@ with(fake.HTTP, {
     })
     
     test_that("entity method for tuple", {
-        expect_true(is.Categorical(entity(varcat[[gender.url]])))
+        expect_true(is.Categorical(as.variable(varcat[[gender.url]])))
     })
     
     test_that("name and alias getters", {

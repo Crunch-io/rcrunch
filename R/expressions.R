@@ -30,7 +30,7 @@ setMethod("as.vector", "CrunchExpr", function (x, mode) {
     # cat(toJSON(payload))
     out <- crPOST(paste0(x@dataset_url, "table/"), body=toJSON(payload))
     ## pass in the variable metadata to the column parser
-    variable <- as.variable(structure(list(body=out$metadata$out),
+    variable <- VariableEntity(structure(list(body=out$metadata$out),
         class="shoji"))
     return(columnParser(out$metadata$out$type, mode)(out$data$out, variable))
 })
@@ -210,7 +210,7 @@ rollup <- function (x, resolution=rollupResolution(x)) {
 
 rollupResolution <- function (x) {
     if (is.Datetime(x)) {
-        return(x@body$view$rollup_resolution)
+        return(entity(x)@body$view$rollup_resolution)
     } else {
         return(NULL)
     }

@@ -6,7 +6,7 @@
 ##' be preferred unless a true hard copy is required, though keep in mind the
 ##' implications of shallow copying. When you append data to the original  
 ##' variable or otherwise alter its values, the values in the copy automatically 
-##' Tupdate.  his linking may be desirable, but it comes with some limitations. 
+##' update. This linking may be desirable, but it comes with some limitations. 
 ##' First, you cannot edit the values of the copy independently of the original. 
 ##' Second, some attributes of the copy are immutable: of note, properties of
 ##' categories cannot be altered independely in the copy. Subvariable names and
@@ -44,7 +44,7 @@ copyVariable <- function (x, deep=FALSE, ...) {
                 ## Format the values?
             }
         } else if (body$type == "datetime") {
-            body$resolution <- x@body$resolution
+            body$resolution <- entity(x)@body$resolution
         }
     } else {
         body$expr <- zfunc("copy_variable", x)
@@ -63,5 +63,9 @@ copy <- copyVariable
 copyVariableReferences <- function (x, fields=c("name", "alias",
                                     "description", "discarded", "format",
                                     "view", "type")) {
+    if (!inherits(x, "VariableEntity")) {
+        ## Get it.
+        x <- entity(x)
+    }
     return(x@body[intersect(fields, names(x@body))])
 }

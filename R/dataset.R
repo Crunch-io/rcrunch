@@ -112,7 +112,7 @@ weight <- function (x) {
     stopifnot(is.dataset(x))
     w <- x@body$weight
     if (!is.null(w)) {
-        w <- entity(allVariables(x)[[w]])
+        w <- as.variable(allVariables(x)[[w]])
         activeFilter(w) <- activeFilter(x)
     }
     return(w)
