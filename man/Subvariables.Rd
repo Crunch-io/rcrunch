@@ -6,12 +6,15 @@
 \alias{Subvariables-class}
 \alias{subvariables}
 \alias{subvariables,CategoricalArrayVariable-method}
+\alias{subvariables,VariableTuple-method}
 \alias{subvariables<-}
 \alias{subvariables<-,CategoricalArrayVariable,ANY-method}
 \alias{subvariables<-,CategoricalArrayVariable,Subvariables-method}
 \title{Subvariables in Array Variables}
 \usage{
 \S4method{subvariables}{CategoricalArrayVariable}(x)
+
+\S4method{subvariables}{VariableTuple}(x)
 
 \S4method{subvariables}{CategoricalArrayVariable,ANY}(x) <- value
 

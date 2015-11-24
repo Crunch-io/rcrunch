@@ -119,7 +119,7 @@ setMethod("categories<-", c("CategoricalVariable", "Categories"),
 setMethod("categories<-", c("CategoricalArrayVariable", "Categories"), 
     function (x, value) {
         dropCache(absoluteURL("../../cube/", self(x)))
-        lapply(tuple(x)$subvariables, dropCache) ## Subvariables will update too
+        lapply(subvariables(tuple(x)), dropCache) ## Subvariables will update too
         ent <- setEntitySlot(entity(x), "categories", value)
         return(x)
     })
@@ -205,7 +205,7 @@ setMethod("delete", "CrunchVariable",
 ##' @export
 setMethod("delete", "CategoricalArrayVariable", function (x, ...) {
     u <- self(x)
-    subvars <- tuple(x)$subvariables
+    subvars <- subvariables(tuple(x))
     out <- crDELETE(u)
     lapply(subvars, crDELETE)
     dropCache(absoluteURL("../", u))
