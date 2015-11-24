@@ -9,6 +9,7 @@
 \alias{delete,DatasetTuple-method}
 \alias{delete,IndexTuple-method}
 \alias{entity}
+\alias{entity,CrunchVariable-method}
 \alias{entity,DatasetTuple-method}
 \alias{entity,VariableTuple-method}
 \alias{name,IndexTuple-method}
@@ -28,6 +29,8 @@
 \S4method{[[}{IndexTuple,ANY,ANY,ANY}(x, i) <- value
 
 \S4method{entity}{VariableTuple}(x)
+
+\S4method{entity}{CrunchVariable}(x)
 
 \S4method{entity}{DatasetTuple}(x)
 

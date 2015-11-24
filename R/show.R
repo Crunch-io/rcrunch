@@ -22,6 +22,10 @@ setMethod("show", "ShojiObject", .showIt)
 
 ##' @rdname show-crunch
 ##' @export
+setMethod("show", "CrunchVariable", .showIt)
+
+##' @rdname show-crunch
+##' @export
 setMethod("show", "Category", .showIt)
 
 ##' @rdname show-crunch

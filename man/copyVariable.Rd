@@ -33,7 +33,7 @@ Copies can be shallow (linked) or deep. Shallow copying is faster and should
 be preferred unless a true hard copy is required, though keep in mind the
 implications of shallow copying. When you append data to the original
 variable or otherwise alter its values, the values in the copy automatically
-Tupdate.  his linking may be desirable, but it comes with some limitations.
+update. This linking may be desirable, but it comes with some limitations.
 First, you cannot edit the values of the copy independently of the original.
 Second, some attributes of the copy are immutable: of note, properties of
 categories cannot be altered independely in the copy. Subvariable names and

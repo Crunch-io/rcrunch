@@ -7,6 +7,7 @@
 \alias{delete,CategoricalArrayVariable-method}
 \alias{delete,CrunchDataset-method}
 \alias{delete,CrunchTeam-method}
+\alias{delete,CrunchVariable-method}
 \alias{delete,ShojiObject-method}
 \title{Delete a Crunch object from the server}
 \usage{
@@ -18,6 +19,8 @@
 \S4method{delete}{ANY}(x, ...)
 
 \S4method{delete}{CrunchTeam}(x, confirm = requireConsent(), ...)
+
+\S4method{delete}{CrunchVariable}(x, ...)
 
 \S4method{delete}{CategoricalArrayVariable}(x, ...)
 }
