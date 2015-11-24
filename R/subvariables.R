@@ -128,8 +128,7 @@ setMethod("[[", c("Subvariables", "ANY"), function (x, i, ...) {
     out <- VariableTuple(index_url=self(x), entity_url=urls(x)[i],
         body=index(x)[[i]])
     if (!is.null(out)) {
-        out <- as.variable(out)
-        activeFilter(out) <- activeFilter(x)
+        out <- CrunchVariable(out, filter=activeFilter(x))
     }
     return(out)
 })

@@ -17,7 +17,7 @@ makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key=namekey(d
     
     ## Get the actual variables so that we can validate
     vars <- lapply(x$variable_urls, 
-        function (u) as.variable(allVariables(x$dataset)[[u]]))
+        function (u) CrunchVariable(allVariables(x$dataset)[[u]]))
     are.categorical <- vapply(vars, is.Categorical, logical(1))
     if (!all(are.categorical)) {
         varnames <- vapply(vars[!are.categorical], 

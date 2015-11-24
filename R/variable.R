@@ -47,19 +47,6 @@ is.Array <- function (x) inherits(x, "CategoricalArrayVariable")
 ##' @rdname crunch-is
 ##' @export
 is.CategoricalArray <- is.CA
-    
-as.variable <- function (tuple, subtype=NULL) {
-    x <- CrunchVariable(tuple=tuple)
-    if (is.variable(x)) {
-        x <- subclassVariable(x, to=subtype)
-        tuple(x) <- tuple
-    }
-    ## For the jsonlite no-simplify deserializer
-    # if ("subvariables" %in% names(x@body)) {
-    #     x@body[["subvariables"]] <- absoluteURL(unlist(x@body[["subvariables"]]), self(x))
-    # }
-    return(x)
-}
 
 ##' @rdname self
 ##' @export
@@ -68,31 +55,8 @@ setMethod("self", "CrunchVariable", function (x) tuple(x)@entity_url)
 ##' @rdname refresh
 ##' @export
 setMethod("refresh", "CrunchVariable", function (x) {
-    tup <- refresh(tuple(x))
-    out <- as.variable(tup)
-    activeFilter(out) <- activeFilter(x)
-    return(out)
+    return(CrunchVariable(refresh(tuple(x)), filter=activeFilter(x)))
 })
-
-subclassVariable <- function (x, to=NULL) {
-    if (is.null(to)) to <- type(x)
-    Constructor <- pickSubclassConstructor(to)
-    return(Constructor(x))
-}
-
-pickSubclassConstructor <- function (x=NULL) {
-    constructors <- list(
-            categorical=CategoricalVariable,
-            numeric=NumericVariable,
-            text=TextVariable,
-            datetime=DatetimeVariable,
-            multiple_response=MultipleResponseVariable,
-            categorical_array=CategoricalArrayVariable
-        )
-    if (!is.null(x)) x <- constructors[[x]]
-    if (is.null(x)) x <- CrunchVariable
-    return(x)
-}
 
 ##' @rdname describe
 ##' @export
@@ -147,7 +111,7 @@ setMethod("categories", "VariableEntity",
 setMethod("categories<-", c("CategoricalVariable", "Categories"), 
     function (x, value) {
         dropCache(absoluteURL("../../cube/", self(x)))
-        ent <- setCrunchSlot(entity(x), "categories", value)
+        ent <- setEntitySlot(entity(x), "categories", value)
         return(x)
     })
 ##' @rdname var-categories
@@ -156,7 +120,7 @@ setMethod("categories<-", c("CategoricalArrayVariable", "Categories"),
     function (x, value) {
         dropCache(absoluteURL("../../cube/", self(x)))
         lapply(tuple(x)$subvariables, dropCache) ## Subvariables will update too
-        ent <- setCrunchSlot(entity(x), "categories", value)
+        ent <- setEntitySlot(entity(x), "categories", value)
         return(x)
     })
 ##' @rdname var-categories

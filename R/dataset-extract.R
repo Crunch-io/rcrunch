@@ -71,8 +71,7 @@ setMethod("subset", "CrunchDataset", function (x, ...) {
 setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     out <- variables(x)[[i]]
     if (!is.null(out)) {
-        out <- as.variable(out)
-        activeFilter(out) <- activeFilter(x)
+        out <- CrunchVariable(out, filter=activeFilter(x))
     }
     return(out)
 })
@@ -92,8 +91,7 @@ setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE
             ## If so, return it with a warning
             out <- hidden(x)[[n]]
             if (!is.null(out)) {
-                out <- as.variable(out)
-                activeFilter(out) <- activeFilter(x)
+                out <- CrunchVariable(out, filter=activeFilter(x))
             }
             warning("Variable ", i, " is hidden", call.=FALSE)
             return(out)

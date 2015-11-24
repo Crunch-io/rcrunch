@@ -112,8 +112,7 @@ weight <- function (x) {
     stopifnot(is.dataset(x))
     w <- x@body$weight
     if (!is.null(w)) {
-        w <- as.variable(allVariables(x)[[w]])
-        activeFilter(w) <- activeFilter(x)
+        w <- CrunchVariable(allVariables(x)[[w]], filter=activeFilter(x))
     }
     return(w)
 }
@@ -127,7 +126,7 @@ weight <- function (x) {
     } else if (!is.null(value)) {
         halt("Weight must be a Variable or NULL")
     }
-    x <- setCrunchSlot(x, "weight", value)
+    x <- setEntitySlot(x, "weight", value)
     return(x)
 }
 

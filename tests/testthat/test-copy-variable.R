@@ -41,7 +41,6 @@ if (run.integration.tests) {
                     c("Dog", "Cat", "Bird"))  
             })
             
-            # with(temp.options(crunch.debug=TRUE, crunch.log=""), {
             test_that("Can copy an array variable and manipulate it independently", {
                 ds$allpets2 <- copy(ds$allpets)
                 expect_true("allpets" %in% names(ds))
@@ -65,7 +64,6 @@ if (run.integration.tests) {
                 expect_identical(names(subvariables(ds$allpets)), 
                     c("Cat", "Canine", "Bird"))
             })
-            # })
             
             test_that("Can copy subvariables (as non-subvars)", {
                 

@@ -51,13 +51,29 @@ VariableEntity <- setClass("VariableEntity", contains="ShojiObject")
 ##' @slot filter either \code{NULL} or \code{CrunchLogicalExpr}
 ##' @importFrom methods as callNextMethod new slot slot<- slotNames validObject
 ##' @rdname CrunchVariable
-CrunchVariable <- setClass("CrunchVariable",
+setClass("CrunchVariable",
     representation= representation(
         readonly="logical",
         filter="ANY", ## CrunchLogicalExpr, but cyclic dependencies
         tuple="VariableTuple"
     ), 
     prototype=prototype(readonly=FALSE, filter=NULL, tuple=VariableTuple()))
+
+CrunchVariable <- function (tuple, ...) {
+    ## Slight cheat: this isn't the "CrunchVariable" constructor. Instead
+    ## returns a subclass of CrunchVariable
+    
+    classes <- list(
+        categorical="CategoricalVariable",
+        numeric="NumericVariable",
+        text="TextVariable",
+        datetime="DatetimeVariable",
+        multiple_response="MultipleResponseVariable",
+        categorical_array="CategoricalArrayVariable"
+    )
+    cls <- classes[[type(tuple)]] %||% "CrunchVariable"
+    return(new(cls, tuple=tuple, ...))
+}
 
 ##' @rdname CrunchVariable
 ##' @export NumericVariable

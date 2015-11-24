@@ -77,7 +77,7 @@ setMethod("delete", "ShojiObject", function (x, ...) invisible(crDELETE(self(x))
 ##' @export
 setMethod("delete", "ANY", function (x, ...) halt("'delete' only valid for Crunch objects"))
 
-setCrunchSlot <- function (x, i, value) {
+setEntitySlot <- function (x, i, value) {
     ##' Base setter for Crunch objects
     ##' @param x a ShojiObject or subclass thereof
     ##' @param i character the slot name to update
@@ -116,9 +116,5 @@ shojiURL <- function (x, collection=c("catalogs", "views", "fragments"), key) {
     }
     collection <- match.arg(collection)
     urls <- slot(x, collection)
-    if (length(urls) == 0 && is.variable(x)) {
-        ## Lazy entity fetching of variables
-        urls <- crGET(self(x))[[collection]]
-    }
     return(urls[[key]])
 }
