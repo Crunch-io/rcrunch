@@ -35,13 +35,7 @@ setMethod("show", "Categories", .showIt)
 
 # Actual show methods
 
-show.values <- function (x) TRUE ## make this actually do something? need to point at variable, not categories, or otherwise embed that attribute in the categories object.
-
-showCategory <- function (x) {
-    out <- name(x)
-    if (show.values(x)) out <- paste0("[ ", value(x), " ]  ", out)
-    return(out)
-}
+showCategory <- function (x) paste0("[ ", value(x), " ]  ", name(x))
 
 showCategories <- function (x) vapply(x, showCategory, character(1))
 
