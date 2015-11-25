@@ -1,4 +1,7 @@
-### crunch 1.6.2
+## crunch 1.7.0
+* Improve performance of many operations by more lazily loading variable entities from the server. Changes to several internal package APIs to make that happen, but the public package interface should be unchanged.
+* Also speed up loading of variable catalogs by deferring resolution of relative subvariable URLs until requested. Eliminates significant load time for datasets with lots of array variables.
+* Fix bug in results from `crtabs` when requesting a crosstab of three or more dimensions. 
 
 ### crunch 1.6.1
 * `VariableDefinition` (or `VarDef`) function and class for creating variable definitions with more metadata (rather than assigning R vectors into a dataset and having to add metadata after).
