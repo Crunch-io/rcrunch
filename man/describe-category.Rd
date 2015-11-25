@@ -5,7 +5,6 @@
 \alias{describe-category}
 \alias{id}
 \alias{id,Category-method}
-\alias{id,list-method}
 \alias{is.selected}
 \alias{is.selected,Category-method}
 \alias{name,Category-method}
@@ -25,8 +24,6 @@
 \S4method{value}{Category}(x) <- value
 
 \S4method{id}{Category}(x)
-
-\S4method{id}{list}(x)
 
 \S4method{is.selected}{Category}(x)
 }

@@ -1,19 +1,5 @@
 context("Variables")
 
-test_that("Subclass constructor selector", {
-    expect_equivalent(class(pickSubclassConstructor("numeric")), 
-        "classGeneratorFunction")
-    expect_identical(pickSubclassConstructor("numeric"), NumericVariable)
-    expect_identical(pickSubclassConstructor("categorical"),
-        CategoricalVariable)
-    expect_identical(pickSubclassConstructor("text"), TextVariable)
-    expect_identical(pickSubclassConstructor("datetime"), DatetimeVariable)
-    expect_identical(pickSubclassConstructor("multiple_response"),
-        MultipleResponseVariable)
-    expect_identical(pickSubclassConstructor(), CrunchVariable)
-    expect_identical(pickSubclassConstructor("foo"), CrunchVariable)
-})
-
 with(fake.HTTP, {
     ds <- loadDataset("test ds")
     

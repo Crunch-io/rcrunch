@@ -6,3 +6,4 @@
 Rd2.pdf
 assets/
 inst/doc/*.html
+*.log

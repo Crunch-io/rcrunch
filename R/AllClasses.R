@@ -40,23 +40,40 @@ IndexTuple <- setClass("IndexTuple",
 VariableTuple <- setClass("VariableTuple", contains="IndexTuple")
 DatasetTuple <- setClass("DatasetTuple", contains="IndexTuple")
 
+VariableEntity <- setClass("VariableEntity", contains="ShojiObject")
+
 ##' Variables in Crunch
 ##'
 ##' Variables are S4 objects. All inherit from the base class
 ##' \code{CrunchVariable}.
 ##' @slot readonly logical: should changes made to this variable object locally
 ##' be persisted on the server? Default is \code{FALSE}
-##' @slot tuple An object of class VariableTuple. These contain attributes, such
-##' as name and description, that are found in the index of the \code{\link{VariableCatalog}}
+##' @slot filter either \code{NULL} or \code{CrunchLogicalExpr}
 ##' @importFrom methods as callNextMethod new slot slot<- slotNames validObject
 ##' @rdname CrunchVariable
-CrunchVariable <- setClass("CrunchVariable", contains="ShojiObject",
+setClass("CrunchVariable",
     representation= representation(
         readonly="logical",
         filter="ANY", ## CrunchLogicalExpr, but cyclic dependencies
         tuple="VariableTuple"
     ), 
     prototype=prototype(readonly=FALSE, filter=NULL, tuple=VariableTuple()))
+
+CrunchVariable <- function (tuple, ...) {
+    ## Slight cheat: this isn't the "CrunchVariable" constructor. Instead
+    ## returns a subclass of CrunchVariable
+    
+    classes <- list(
+        categorical="CategoricalVariable",
+        numeric="NumericVariable",
+        text="TextVariable",
+        datetime="DatetimeVariable",
+        multiple_response="MultipleResponseVariable",
+        categorical_array="CategoricalArrayVariable"
+    )
+    cls <- classes[[type(tuple)]] %||% "CrunchVariable"
+    return(new(cls, tuple=tuple, ...))
+}
 
 ##' @rdname CrunchVariable
 ##' @export NumericVariable

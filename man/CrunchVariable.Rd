@@ -6,7 +6,6 @@
 \alias{CategoricalArrayVariable-class}
 \alias{CategoricalVariable}
 \alias{CategoricalVariable-class}
-\alias{CrunchVariable}
 \alias{CrunchVariable-class}
 \alias{DatetimeVariable}
 \alias{DatetimeVariable-class}
@@ -27,7 +26,6 @@ Variables are S4 objects. All inherit from the base class
 \item{\code{readonly}}{logical: should changes made to this variable object locally
 be persisted on the server? Default is \code{FALSE}}
 
-\item{\code{tuple}}{An object of class VariableTuple. These contain attributes, such
-as name and description, that are found in the index of the \code{\link{VariableCatalog}}}
+\item{\code{filter}}{either \code{NULL} or \code{CrunchLogicalExpr}}
 }}
 

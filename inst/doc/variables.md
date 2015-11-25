@@ -209,6 +209,7 @@ categories(track.var)
 ## [ 1 ]  Generally headed in the right direction
 ## [ 2 ]  Off on the wrong track
 ## [ 3 ]  Not sure
+## [ NA ]  No Data
 ```
 
 ### Category attributes
@@ -223,7 +224,8 @@ names(categories(track.var))
 ```
 ## [1] "Generally headed in the right direction"
 ## [2] "Off on the wrong track"                 
-## [3] "Not sure"
+## [3] "Not sure"                               
+## [4] "No Data"
 ```
 
 ```r
@@ -231,7 +233,7 @@ values(categories(track.var))
 ```
 
 ```
-## [1] 1 2 3
+## [1]  1  2  3 NA
 ```
 
 ```r
@@ -239,7 +241,7 @@ ids(categories(track.var))
 ```
 
 ```
-## [1] 1 2 3
+## [1]  1  2  3 -1
 ```
 
 ```r
@@ -252,7 +254,9 @@ is.na(categories(track.var))
 ##                  Off on the wrong track 
 ##                                   FALSE 
 ##                                Not sure 
-##                                   FALSE
+##                                   FALSE 
+##                                 No Data 
+##                                    TRUE
 ```
 
 Names and values can be assigned into categories, but ids cannot: they are immutable references to values within the column of data on the server. Missingness can be set with `is.na`. Character values assigned will mark those categories as missing, leaving other categories unchanged. Logical values assigned will set the missing TRUE/FALSE accordingly.
@@ -269,6 +273,7 @@ categories(track.var)
 ## [ 1 ]  Right track
 ## [ -1 ]  Wrong track
 ## [ 0 ]  Not sure
+## [ NA ]  No Data
 ```
 
 

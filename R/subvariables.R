@@ -7,7 +7,8 @@
 ##' response) with the \code{subvariables} method. They can be assigned back
 ##' with the \code{subvariables<-} setter, but there are limitations to what
 ##' is supported. Specifically, you can reorder subvariables, but you cannot
-##' add or remove subvariables by \code{subvariables<-} assignment.
+##' add or remove subvariables by \code{subvariables<-} assignment. See
+##' \code{\link{deleteSubvariable}} to remove subvariables from an array.
 ##'
 ##' Subvariables have a \code{names} attribute that can be accessed, showing
 ##' the display names of the subvariables. These can be set with the 
@@ -23,18 +24,25 @@
 ##'
 ##' @name Subvariables
 ##' @aliases Subvariables subvariables subvariables<-
-##' @seealso \code{\link{subvars-extract}} \code{\link{describe-catalog}} \code{vignette("array-variables", package="crunch")}
+##' @seealso \code{\link{subvars-extract}} \code{\link{describe-catalog}} \code{\link{deleteSubvariable}} \code{vignette("array-variables", package="crunch")}
 NULL
 
 ##' @rdname Subvariables
 ##' @export
 setMethod("subvariables", "CategoricalArrayVariable", function (x) {
     tup <- tuple(x)
-    catalog_url <- tup$subvariables_catalog %||% tup@index_url
+    catalog_url <- absoluteURL(tup$subvariables_catalog, base=tup@index_url)
     vars <- VariableCatalog(crGET(catalog_url))
-    out <- Subvariables(vars[x@body$subvariables])
+    out <- Subvariables(vars[subvariables(tup)])
     activeFilter(out) <- activeFilter(x)
     return(out)
+})
+
+##' @rdname Subvariables
+##' @export
+setMethod("subvariables", "VariableTuple", function (x) {
+    ## Return subvariable *urls* from a Tuple, properly formatted and absolute
+    return(absoluteURL(unlist(x$subvariables), base=x@index_url))
 })
 
 ##' @rdname Subvariables
@@ -47,12 +55,19 @@ setMethod("subvariables<-", c("CategoricalArrayVariable", "ANY"),
 ##' @export
 setMethod("subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
     function (x, value) {
-        old <- x@body$subvariables
+        old <- subvariables(tuple(x))
         new <- urls(value)
         if (!setequal(old, new)) {
             halt("Can only reorder, not change, subvariables")
         }
-        return(setCrunchSlot(x, "subvariables", I(new)))
+        new <- I(new)
+        if (!is.readonly(x) && !identical(new, I(old))) {
+            body <- list(subvariables=new)
+            payload <- toJSON(body)
+            crPATCH(self(x), body=payload)
+            tuple(x)$subvariables <- new
+        }
+        return(x)
     })
 
 ##' @rdname describe-catalog
@@ -120,8 +135,7 @@ setMethod("[[", c("Subvariables", "ANY"), function (x, i, ...) {
     out <- VariableTuple(index_url=self(x), entity_url=urls(x)[i],
         body=index(x)[[i]])
     if (!is.null(out)) {
-        out <- entity(out)
-        activeFilter(out) <- activeFilter(x)
+        out <- CrunchVariable(out, filter=activeFilter(x))
     }
     return(out)
 })
@@ -156,7 +170,8 @@ deleteSubvariables <- function (variable, to.delete) {
     subvar.names <- names(subvars)
     
     ## Identify subvariable URLs
-    delete.these <- findVariableURLs(subvariables(variable), to.delete, key="name")
+    delete.these <- findVariableURLs(subvariables(variable), to.delete,
+        key="name")
     ## Unbind
     all.subvar.urls <- unlist(unbind(variable))
     
@@ -164,15 +179,18 @@ deleteSubvariables <- function (variable, to.delete) {
     dels <- lapply(delete.these, function (x) try(crDELETE(x)))
     
     ## Setdiff those deleted from those returned from unbind
-    payload$var_urls <- setdiff(all.subvar.urls, delete.these)
+    payload$subvariables <- I(setdiff(all.subvar.urls, delete.these))
+    class(payload) <- "VariableDefinition"
     
     ## Rebind
-    payload$dataset <- VariableCatalog(crGET(variableCatalogURL(variable)))
-    variable <- do.call(bindVariables, payload)
-    
+    new_url <- POSTNewVariable(variableCatalogURL(variable), payload)
+        
     ## Prune subvariable name prefix, or otherwise reset the names
-    names(subvariables(variable)) <- subvar.names[match(urls(subvariables(variable)), subvar.urls)]
-    invisible(variable)
+    subvars <- Subvariables(crGET(absoluteURL("subvariables/", new_url)))
+    names(subvars) <- subvar.names[match(urls(subvars), subvar.urls)]
+    
+    ## What to return? This function is kind of a hack.
+    invisible(new_url)
 }
 
 ##' @rdname deleteSubvariables
@@ -188,7 +206,8 @@ setMethod("[[<-",
         if (is.na(i)) {
             halt("subscript out of bounds")
         }
-        callNextMethod(x, i, value)    
+        x[[i]] <- value ## "callNextMethod"
+        return(x)  
     })
 ##' @rdname subvars-extract
 ##' @export
@@ -281,6 +300,21 @@ setMethod("[[", "CategoricalArrayVariable", function (x, i, ...) {
 setMethod("$", "CategoricalArrayVariable", 
     function (x, name) subvariables(x)[[name]])
 
+
+##' @rdname subvars-extract
+##' @export
+setMethod("[[<-", 
+    c("CategoricalArrayVariable", "ANY", "missing", "ANY"),
+    function (x, i, value) {
+        subvariables(x)[[i]] <- value
+        return(x)
+    })
+##' @rdname subvars-extract
+##' @export
+setMethod("$<-", c("CategoricalArrayVariable"), function (x, name, value) {
+    subvariables(x)[[name]] <- value
+    return(x)
+})
 
 findParent <- function (subvar, dataset) {
     ## Utility to find the array parent, given a subvariable and its dataset

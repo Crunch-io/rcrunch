@@ -94,16 +94,8 @@ if (run.integration.tests) {
             })
         })
         
-        try({
-            file1 <- newDatasetFromFile(testfile.csv, name=now())
-            file2 <- newDatasetFromFile(testfile.csv, name=now())
-        })
-        test_that("setup", {
-            expect_true(is.dataset(file1))
-            expect_true(is.dataset(file2))
-        })
-        with(test.dataset(file1), {
-            with(test.dataset(file2), {
+        with(test.dataset(newDatasetFromFile(testfile.csv, name=now()), "file1"), {
+            with(test.dataset(newDatasetFromFile(testfile.csv, name=now()), "file2"), {
                 v3.1 <- as.vector(file1$V3)
                 v3.2 <- as.vector(file2$V3)
                 test_that("our assumptions about these datasets from file", {

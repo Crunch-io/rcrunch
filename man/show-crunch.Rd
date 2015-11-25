@@ -5,11 +5,14 @@
 \alias{show,Categories-method}
 \alias{show,Category-method}
 \alias{show,CrunchCube-method}
+\alias{show,CrunchVariable-method}
 \alias{show,ShojiObject-method}
 \alias{show-crunch}
 \title{Show methods for Crunch objects}
 \usage{
 \S4method{show}{ShojiObject}(object)
+
+\S4method{show}{CrunchVariable}(object)
 
 \S4method{show}{Category}(object)
 

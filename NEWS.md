@@ -1,3 +1,24 @@
+### crunch 1.7.1
+
+## crunch 1.7.0
+* Improve performance of many operations by more lazily loading variable entities from the server. Changes to several internal package APIs to make that happen, but the public package interface should be unchanged.
+* Also speed up loading of variable catalogs by deferring resolution of relative subvariable URLs until requested. Eliminates significant load time for datasets with lots of array variables.
+* Fix bug in results from `crtabs` when requesting a crosstab of three or more dimensions. 
+
+### crunch 1.6.1
+* `VariableDefinition` (or `VarDef`) function and class for creating variable definitions with more metadata (rather than assigning R vectors into a dataset and having to add metadata after).
+* Reworked various new variable functions, including `copy`, `makeArray`, and `makeMR`, to return `VariableDefinition`s rather than creating the new variables themselves. Creation happens on assignment into the dataset. 
+* Support adding No Data (`NA` for categoricals) even if No Data doesn't already exist
+* Tools for logging and profiling HTTP requests and cache performance. See `?startLog` and `?logMessage`.
+* Support deep copying of non-array variables.
+
+## crunch 1.6.0
+* Check for new version of the package on GitHub when the package is loaded.
+* Make a shallow `copy` of a variable. See `?copyVariable`.
+* Fix error in updating the values of a subvariable in an array.
+* Handle case of assigning `NULL` into a dataset when the referenced variable (alias) does not exist.
+* More support for `NA` assignment into variables.
+
 ### crunch 1.5.4
 * Gradually slow the polling of `/batches/` while waiting for an append to complete. Improves the performance of the append operation.
 * New `c` method for Categories, plus support for creating and adding new categories to variables. See `?Categories` and `?"c-categories"`

@@ -18,7 +18,7 @@ NULL
 
 ##' @rdname type
 ##' @export
-setMethod("type", "CrunchVariable", function (x) x@body$type)
+setMethod("type", "CrunchVariable", function (x) type(tuple(x)))
 ## do type casting as type<-
 
 castVariable <- function (x, to) {

@@ -12,7 +12,7 @@ cacheOff <- function () {
     clearCache()
 }
 clearCache <- function () {
-    log("CLEAR CACHE")
+    logMessage("CACHE CLEAR")
     rm(list=ls(all.names=TRUE, envir=cache), envir=cache)
 }
 
@@ -22,7 +22,7 @@ dropCache <- function (x) {
     dropPattern(paste0("^", regexEscape(popQuery(x))))
 }
 dropOnly <- function (x) {
-    log("DROP", x)
+    logMessage("CACHE DROP", x)
     suppressWarnings(rm(list=x, envir=cache))
 }
 dropBelow <- function (x) {
@@ -30,7 +30,7 @@ dropBelow <- function (x) {
     dropPattern(paste0("^", regexEscape(popQuery(x)), ".+")) 
 }
 dropPattern <- function (x, escape=TRUE) {
-    log("DROP", x)
+    logMessage("CACHE DROP", x)
     rm(list=ls(envir=cache, pattern=x), envir=cache)
 }
 
@@ -55,12 +55,12 @@ cGET <- function (url, ...) {
         cache.url <- paste0(url, "?", toQuery(eval.parent(Call$query)))
     }
     if (exists(cache.url, envir=cache)) {
-        log("HIT", cache.url)
+        logMessage("CACHE HIT", cache.url)
         return(get(cache.url, envir=cache))
     }
     x <- GET(url, ...)
     if (caching() && x$status_code == 200) {
-        log("SET", cache.url)
+        logMessage("CACHE SET", cache.url)
         assign(cache.url, x, envir=cache)
     }
     return(x)

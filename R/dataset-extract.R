@@ -71,8 +71,7 @@ setMethod("subset", "CrunchDataset", function (x, ...) {
 setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     out <- variables(x)[[i]]
     if (!is.null(out)) {
-        out <- entity(out)
-        activeFilter(out) <- activeFilter(x)
+        out <- CrunchVariable(out, filter=activeFilter(x))
     }
     return(out)
 })
@@ -92,8 +91,7 @@ setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE
             ## If so, return it with a warning
             out <- hidden(x)[[n]]
             if (!is.null(out)) {
-                out <- entity(out)
-                activeFilter(out) <- activeFilter(x)
+                out <- CrunchVariable(out, filter=activeFilter(x))
             }
             warning("Variable ", i, " is hidden", call.=FALSE)
             return(out)
@@ -113,7 +111,16 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
     if (i %in% names(x)) {
         return(.updateValues(x, i, value))
     } else {
-        addVariable(x, values=value, name=i, alias=i)
+        if (inherits(value, "VariableDefinition")) {
+            ## Just update its alias with the one we're setting
+            value$alias <- i
+            ## But also check to make sure it has a name, and use `i` if not
+            value$name <- value$name %||% i
+        } else {
+            ## Create a VarDef, and use `i` as name and alias
+            value <- VariableDefinition(value, name=i, alias=i)
+        }
+        addVariable(x, value)
     }
 }
 
@@ -215,7 +222,13 @@ setMethod("[[<-",
 ##' @export
 setMethod("[[<-", 
     c("CrunchDataset", "character", "missing", "NULL"), 
-    function (x, i, value) deleteVariables(x, i))
+    function (x, i, value) {
+        if (!(i %in% names(x))) {
+            message(dQuote(i), " is not a variable; nothing to delete by assigning NULL")
+            return(x)
+        }
+        return(deleteVariables(x, i))
+    })
 ##' @rdname dataset-update
 ##' @export
 setMethod("[[<-", 

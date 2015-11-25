@@ -6,6 +6,7 @@
 \alias{categories,CategoricalArrayVariable-method}
 \alias{categories,CategoricalVariable-method}
 \alias{categories,CrunchVariable-method}
+\alias{categories,VariableEntity-method}
 \alias{categories<-}
 \alias{categories<-,CategoricalArrayVariable,ANY-method}
 \alias{categories<-,CategoricalArrayVariable,Categories-method}
@@ -24,6 +25,8 @@
 \S4method{categories}{CategoricalVariable}(x)
 
 \S4method{categories}{CategoricalArrayVariable}(x)
+
+\S4method{categories}{VariableEntity}(x)
 
 \S4method{categories}{CategoricalVariable,Categories}(x) <- value
 
