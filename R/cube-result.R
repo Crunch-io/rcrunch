@@ -29,12 +29,12 @@ cToA <- function (x, dims) {
     } else if (ndims > 1) {
         ## Cube arrays come in row-col-etc. order, not column-major.
         ## Keep the labels right here, then aperm the array back to order
-        dimsizes[1:2] <- dimsizes[c(2,1)]
+        dimsizes <- rev(dimsizes)
     }
     out <- array(d, dim=dimsizes)
     if (ndims > 1) {
         ap <- seq_len(ndims)
-        ap[1:2] <- 2:1
+        ap <- rev(ap)
         out <- aperm(out, ap)
     }
     return(out)
