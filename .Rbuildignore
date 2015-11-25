@@ -6,3 +6,4 @@
 ^crunch.*\.tar\.gz$
 ^crunch\.Rcheck$
 ^\.travis\.yml$
+^.*\.log$

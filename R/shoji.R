@@ -77,7 +77,7 @@ setMethod("delete", "ShojiObject", function (x, ...) invisible(crDELETE(self(x))
 ##' @export
 setMethod("delete", "ANY", function (x, ...) halt("'delete' only valid for Crunch objects"))
 
-setCrunchSlot <- function (x, i, value) {
+setEntitySlot <- function (x, i, value) {
     ##' Base setter for Crunch objects
     ##' @param x a ShojiObject or subclass thereof
     ##' @param i character the slot name to update
@@ -107,9 +107,14 @@ setReadonly <- function (x, value) {
 setMethod("readonly<-", "ShojiObject", setReadonly)
 
 shojiURL <- function (x, collection=c("catalogs", "views", "fragments"), key) {
+    if (is.variable(x)) {
+        x <- entity(x) ## Get the VariableEntity
+        logMessage("INFO", "GET entity in shojiURL")
+    }
     if (!is.shojiObject(x)) {
         halt("Cannot get Shoji URL from object of class ", dQuote(class(x)))
     }
     collection <- match.arg(collection)
-    return(slot(x, collection)[[key]])
+    urls <- slot(x, collection)
+    return(urls[[key]])
 }

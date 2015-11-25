@@ -1,16 +1,5 @@
 init.VariableCatalog <- function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
-    .Object@index <- lapply(.Object@index, function (x, b) {
-        if ("subvariables" %in% names(x)) {
-            ## Unlist, for jsonlite
-            x[["subvariables"]] <- absoluteURL(unlist(x[["subvariables"]]),
-                b)
-        }
-        if ("subvariables_catalog" %in% names(x)) {
-            x[["subvariables_catalog"]] <- absoluteURL(x[["subvariables_catalog"]], b)
-        }
-        return(x)
-    }, b=.Object@self)
     h_url <- .Object@orders$hier
     if (!is.null(h_url)) {
         o <- crGET(h_url, query=list(relative="on"))

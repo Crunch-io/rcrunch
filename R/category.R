@@ -97,9 +97,6 @@ setMethod("value<-", "Category", setValue)
 ##' @rdname describe-category
 ##' @export
 setMethod("id", "Category", function (x) as.integer(x[["id"]]))
-##' @rdname describe-category
-##' @export
-setMethod("id", "list", function (x) as.integer(x[["id"]]))
 
 ##' @rdname describe-category
 ##' @export

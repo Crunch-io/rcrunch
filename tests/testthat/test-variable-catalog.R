@@ -67,8 +67,8 @@ with(fake.HTTP, {
         expect_identical(varcat[ord], varcat[ents])
     })
     
-    test_that("entity method for tuple", {
-        expect_true(is.Categorical(entity(varcat[[gender.url]])))
+    test_that("Construct Variable from Tuple", {
+        expect_true(is.Categorical(CrunchVariable(varcat[[gender.url]])))
     })
     
     test_that("name and alias getters", {

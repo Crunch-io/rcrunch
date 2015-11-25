@@ -56,5 +56,39 @@ if (run.integration.tests) {
                 expect_equivalent(weight(ds), ds$w2)
             })
         })
+        
+        with(test.dataset(df), {
+            test_that("I can delete my weight variable and add a new one", {
+                ds$w <- 1:20
+                weight(ds) <- ds$w
+                expect_equivalent(weight(ds), ds$w)
+                expect_true(is.Numeric(ds$w))
+                expect_equivalent(as.array(crtabs(~ v4, data=ds)),
+                    array(c(100, 110), dim=2L, dimnames=list(v4=c("B", "C"))))
+                ## Delete that variable. Confirm that it is gone and we are
+                ## unweighted
+                with(consent(), ds$w <- NULL)
+                expect_identical(weight(ds), NULL)
+                expect_identical(ds$w, NULL)
+                expect_equivalent(as.array(crtabs(~ v4, data=ds)),
+                    array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
+                ## Now add another weight and repeat. Confirm that we can
+                ## and that calculations are weighted
+                ds$w <- 20:1
+                weight(ds) <- ds$w
+                expect_equivalent(weight(ds), ds$w)
+                expect_true(is.Numeric(ds$w))
+                expect_equivalent(as.array(crtabs(~ v4, data=ds)),
+                    array(c(110, 100), dim=2L, dimnames=list(v4=c("B", "C"))))
+                ## Now force the dataset to drop on the server and reload it
+                ## to confirm that our changes were persisted correctly
+                .releaseDataset(ds)
+                ds <- refresh(ds)
+                expect_equivalent(weight(ds), ds$w)
+                expect_true(is.Numeric(ds$w))
+                expect_equivalent(as.array(crtabs(~ v4, data=ds)),
+                    array(c(110, 100), dim=2L, dimnames=list(v4=c("B", "C"))))
+            })
+        })
     })
 }

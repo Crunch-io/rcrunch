@@ -154,18 +154,41 @@ In Crunch, categorical variables' "categories" are objects with richer metadata.
 
 ```{r}
 is.Categorical(track.var)
+```
+```{r, eval=FALSE}
 categories(track.var)
+```
+```{r, echo=FALSE}
+track.cats.before
 ```
 
 ### Category attributes
 
 Categories have `names`, the factor's levels; numeric `values` which can be used when interpreting the categorical variable as numeric; and `ids`, which are analogous to the integer values that underly an R factor. Categories also have their own "missing" status. Indeed, because Crunch supports more complex missing value support than does R, multiple categories can be marked as missing: there's not a single "NA" value.
 
-```{r}
+```{r, eval=FALSE}
 names(categories(track.var))
+```
+```{r, echo=FALSE}
+names(track.cats.before)
+```
+```{r, eval=FALSE}
 values(categories(track.var))
+```
+```{r, echo=FALSE}
+values(track.cats.before)
+```
+```{r, eval=FALSE}
 ids(categories(track.var))
+```
+```{r, echo=FALSE}
+ids(track.cats.before)
+```
+```{r, eval=FALSE}
 is.na(categories(track.var))
+```
+```{r, echo=FALSE}
+is.na(track.cats.before)
 ```
 
 Names and values can be assigned into categories, but ids cannot: they are immutable references to values within the column of data on the server. Missingness can be set with `is.na`. Character values assigned will mark those categories as missing, leaving other categories unchanged. Logical values assigned will set the missing TRUE/FALSE accordingly.

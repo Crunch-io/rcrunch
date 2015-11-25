@@ -5,9 +5,6 @@ setMethod("jsonprep", "Categories", function (x, ...) jsonprep(I(x@.Data)))
 ##' @rdname tojson-crunch
 ##' @export
 setMethod("jsonprep", "list", function (x, ...) lapply(x, jsonprep, ...))
-##' @rdname tojson-crunch
-##' @export
-setMethod("jsonprep", "zcl", function (x, ...) lapply(x, jsonprep, ...))
 
 ##' @rdname tojson-crunch
 ##' @export
@@ -41,7 +38,7 @@ setMethod("jsonprep", "VariableGroup", .jsonprep.vargroup)
 ##' @rdname tojson-crunch
 ##' @export
 toJSON <- function (x, ...) {
-    out <- jsonlite::toJSON(jsonprep(x), auto_unbox=TRUE, null="null", na="null", ...)
+    out <- jsonlite::toJSON(jsonprep(x), auto_unbox=TRUE, null="null", na="null", force=TRUE, ...)
     # cat(out)
     return(out)
 }

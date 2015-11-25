@@ -24,27 +24,24 @@ test_that("rollup CrunchExpr from zcl variable", {
             list(value="Y"))))
 })
 
-test_that("rollup CrunchExpr from DatetimeVariable", {
-    v <- as.variable(structure(list(self="v/", 
-        body=list(name="V", type="datetime", 
-        resolution="D", view=list(rollup_resolution="M"))),
-        class="shoji"),
-        tuple=VariableTuple(body=list(id="v")))
-    expect_identical(tuple(v), VariableTuple(body=list(id="v")))
-    expect_identical(zcl(v), list(variable="v"))
-    
-    expect_true(inherits(rollup(v), "CrunchExpr"))
-    expect_identical(zcl(rollup(v)),
-        list(`function`="rollup", args=list(list(variable="v"),
-            list(value="M"))))
-    expect_true(inherits(rollup(v, resolution="Y"), "CrunchExpr"))
-    expect_identical(zcl(rollup(v, resolution="Y")),
-        list(`function`="rollup", args=list(list(variable="v"),
-            list(value="Y"))))
-    expect_true(inherits(rollup(v, resolution=NULL), "CrunchExpr"))
-    expect_identical(zcl(rollup(v, resolution=NULL)),
-        list(`function`="rollup", args=list(list(variable="v"),
-            list(value=NULL))))
+with(fake.HTTP, {
+    ds <- loadDataset("test ds")
+    v <- ds$starttime
+
+    test_that("rollup CrunchExpr from DatetimeVariable", {
+        expect_true(inherits(rollup(v), "CrunchExpr"))
+        expect_identical(zcl(rollup(v)),
+            list(`function`="rollup", args=list(list(variable="d7c21314ca9e453c93069168681a285c"),
+                list(value="s"))))
+        expect_true(inherits(rollup(v, resolution="Y"), "CrunchExpr"))
+        expect_identical(zcl(rollup(v, resolution="Y")),
+            list(`function`="rollup", args=list(list(variable="d7c21314ca9e453c93069168681a285c"),
+                list(value="Y"))))
+        expect_true(inherits(rollup(v, resolution=NULL), "CrunchExpr"))
+        expect_identical(zcl(rollup(v, resolution=NULL)),
+            list(`function`="rollup", args=list(list(variable="d7c21314ca9e453c93069168681a285c"),
+                list(value=NULL))))
+    })
 })
 
 test_that("rollup resolution validation", {

@@ -94,8 +94,8 @@ if (run.integration.tests) {
                     x$categories[[1]]$selected <- TRUE
                     return(x)
                 })
-                POSTNewVariable(variableCatalogURL(ds), newvar)
-                ds <- refresh(ds)
+                class(newvar) <- "VariableDefinition"
+                ds <- addVariable(ds, newvar)
                 expect_true(is.MR(ds$multipleResponse))
             })
         })

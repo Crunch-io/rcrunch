@@ -137,10 +137,6 @@ if (run.integration.tests) {
                         CA=c("0.0", "1.0", "<NA>"))))
             })
             
-            test_that("prop.table on univariate CA", {
-                
-            })
-            
             test_that("accessing array subvariables", {
                 kube <- crtabs(~ CA$mr_1 + CA$mr_2, data=mrds, useNA="ifany")
                 expect_equivalent(as.array(kube), 
