@@ -1,4 +1,5 @@
 ### crunch 1.7.1
+* Support aggregating with `CrunchExpr`s and filtered variables in `table`
 
 ## crunch 1.7.0
 * Improve performance of many operations by more lazily loading variable entities from the server. Changes to several internal package APIs to make that happen, but the public package interface should be unchanged.

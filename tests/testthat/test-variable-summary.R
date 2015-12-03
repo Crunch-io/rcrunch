@@ -23,31 +23,40 @@ with(fake.HTTP, {
 
 if (run.integration.tests) {
     with(test.authentication, {
-        with(test.dataset(df, "testdf"), {
+        with(test.dataset(df), {
             test_that("can fetch variable summaries", {
-                summ <- getSummary(testdf$v1)
+                summ <- getSummary(ds$v1)
                 expect_true(is.list(summ))
                 expect_equivalent(summ$mean, mean(df$v1, na.rm=TRUE))
                 expect_equivalent(summ$stddev, sd(df$v1, na.rm=TRUE))
             })
             test_that("method dispatch", {
-                expect_identical(mean(testdf$v1), mean(df$v1))
-                expect_equivalent(mean(testdf$v1, na.rm=TRUE), 
+                expect_identical(mean(ds$v1), mean(df$v1))
+                expect_equivalent(mean(ds$v1, na.rm=TRUE), 
                     mean(df$v1, na.rm=TRUE))
-                expect_identical(sd(testdf$v1), sd(testdf$v1))
-                expect_equivalent(sd(testdf$v1, na.rm=TRUE), 
-                    sd(testdf$v1, na.rm=TRUE))
-                expect_identical(median(testdf$v1), median(testdf$v1))
-                expect_identical(median(testdf$v1, na.rm=TRUE),
-                    median(testdf$v1, na.rm=TRUE))
+                expect_identical(sd(ds$v1), sd(ds$v1))
+                expect_equivalent(sd(ds$v1, na.rm=TRUE), 
+                    sd(ds$v1, na.rm=TRUE))
+                expect_identical(median(ds$v1), median(ds$v1))
+                expect_identical(median(ds$v1, na.rm=TRUE),
+                    median(ds$v1, na.rm=TRUE))
             })
             test_that("table", {
-                expect_equivalent(table(testdf$v4), table(df$v4))
+                expect_equivalent(table(ds$v4), table(df$v4))
+                expect_equivalent(table(ds$v4, ds$v3), table(df$v4, df$v3))
+            })
+            test_that("table works with CrunchExpr", {
+                expect_equivalent(table(ds$v4[ds$v3 < 10]), 
+                    table(df$v4[df$v3 < 10]))
+            })
+            test_that("table throws error if not equally filtered", {
+                expect_error(table(ds$v4, ds$v2[ds$v3 < 10]),
+                    "Filter expressions in variables must be identical")
             })
             test_that("summary", {
-                expect_equivalent(round(unclass(summary(testdf$v1)), 2),
+                expect_equivalent(round(unclass(summary(ds$v1)), 2),
                     round(unclass(summary(df$v1)), 2))
-                expect_equivalent(as.numeric(summary(testdf$v4)),
+                expect_equivalent(as.numeric(summary(ds$v4)),
                     summary(df$v4))
             })
         })

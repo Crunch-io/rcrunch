@@ -47,6 +47,12 @@ with(fake.HTTP, {
         expect_identical(weight(ds4), ds4$starttime)
         expect_identical(activeFilter(weight(ds4)), ds$gender == "Male")
     })
+    
+    test_that("activeFilter from CrunchExpr and CrunchVariable", {
+        ## TODO: @expression?
+        expect_identical(activeFilter(ds2$birthyr)@expression,
+            activeFilter(ds$birthyr[ds$gender == "Male"]))
+    })
 })
 
 if (run.integration.tests) {

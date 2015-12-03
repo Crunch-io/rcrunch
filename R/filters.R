@@ -89,6 +89,9 @@ setMethod("activeFilter<-", c("Subvariables", "CrunchLogicalExpr"),
         return(x)
     })
 
+setMethod("activeFilter", "CrunchExpr", function (x) x@filter)
+
+
 setMethod("activeFilter<-", c("ANY", "NULL"), 
     function (x, value) {
         ## Backstop method for refreshing a variable not extracted from a dataset. Variable may have NULL filter because object can't require CrunchLogicalExpr due to cyclic dependencies.
@@ -98,7 +101,6 @@ setMethod("activeFilter<-", c("ANY", "NULL"),
 
 filterSyntax <- function (x) {
     ## Wrapper to contain API complexity when sending filter_syntax as query parameter
-    
     f <- zcl(x)
     if (!length(f)) {
         ## No filter in the R session. So supply an "all" filter to override any
