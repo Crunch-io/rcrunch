@@ -88,13 +88,22 @@ if (run.integration.tests) {
                 var <- refresh(var) ## Refresh required if changing type by editing categories
                 expect_true(is.CA(var))
             })
-            test_that("can un(dichotomize) directly on the variable", {
+            test_that("can (un)dichotomize directly on the variable", {
                 var <- dichotomize(var, 1)
                 expect_true(is.Multiple(var))
                 expect_true(is.Multiple(refresh(var)))
                 var <- undichotomize(var)
                 expect_true(is.CA(var))
                 expect_true(is.CA(refresh(var)))
+            })
+            test_that("can (un)dichotomize on var in dataset", {
+                ds <- refresh(ds)
+                ds$arrayVar <- dichotomize(ds$arrayVar, 1)
+                expect_true(is.Multiple(ds$arrayVar))
+                expect_true(is.Multiple(refresh(ds)$arrayVar))
+                ds$arrayVar <- undichotomize(ds$arrayVar)
+                expect_true(is.CA(ds$arrayVar))
+                expect_true(is.CA(refresh(ds)$arrayVar))
             })
         })
         
