@@ -15,8 +15,9 @@ getDatasetVariables <- function (x) {
 }
 
 getNrow <- function (dataset, filtered=TRUE) {
+    ## Filtered is the UI "applied_filter". We don't usually want that in R.
+    ## TODO: change the default to FALSE
     which.count <- ifelse(isTRUE(filtered), "filtered", "total")
-    ## use filtered by default because every other request will take the applied filter
     
     u <- summaryURL(dataset)
     f <- filterSyntax(activeFilter(dataset))

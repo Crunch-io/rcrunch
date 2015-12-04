@@ -6,7 +6,9 @@ halt <- function (...) {
     stop(..., call.=FALSE)
 }
 
-rethrow <- function (x) halt(attr(x, "condition")$message)
+rethrow <- function (x) halt(errorMessage(x))
+
+errorMessage <- function (e) attr(e, "condition")$message
 
 updateList <- function (x, y) {
     x[names(y)] <- y

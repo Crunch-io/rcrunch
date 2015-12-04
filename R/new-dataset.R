@@ -46,7 +46,9 @@ newDatasetByColumn <- function (x, name=as.character(substitute(x)),
                                 useAlias=default.useAlias(), ...) {
 
     ds <- createDataset(name=name, useAlias=useAlias, ...)
-    ds <- addVariables(ds, x)
+    vardefs <- lapply(names(x),
+        function (v) toVariable(x[[v]], name=v, alias=v))
+    ds <- addVariables(ds, vardefs)
     invisible(ds)
 }
 
@@ -121,7 +123,8 @@ addSourceToDataset <- function (dataset, source_url, ...) {
     )
     batch_url <- crPOST(batches_url, body=toJSON(body), ...)
     
-    status <- try(pollBatchStatus(batch_url, batches(dataset), until=c("ready", "imported")))
+    status <- try(pollBatchStatus(batch_url, batches(dataset), 
+        until=c("ready", "imported")))
     if (is.error(status)) {
         halt("Error importing file")
     } else if (status %in% "ready") {

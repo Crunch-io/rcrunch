@@ -109,6 +109,7 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 
 .addVariableSetter <- function (x, i, value) {
     if (i %in% names(x)) {
+        ## We're not adding, we're updating.
         return(.updateValues(x, i, value))
     } else {
         if (inherits(value, "VariableDefinition")) {
@@ -116,8 +117,11 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
             value$alias <- i
             ## But also check to make sure it has a name, and use `i` if not
             value$name <- value$name %||% i
+        } else if (inherits(value, "CrunchExpr")) {
+            ## Create a VarDef with the expression and use `i` as name and alias
+            value <- VariableDefinition(expr=zcl(value), name=i, alias=i)
         } else {
-            ## Create a VarDef, and use `i` as name and alias
+            ## Create a VarDef and use `i` as name and alias
             value <- VariableDefinition(value, name=i, alias=i)
         }
         addVariable(x, value)
@@ -160,14 +164,6 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
     return(x)
 }
 
-.deriveVariableSetter <- function (x, i, value) {
-    if (i %in% names(x)) {
-        return(.updateValues(x, i, value))
-    } else {
-        return(deriveVariable(x, value, name=i, alias=i))
-    }
-}
-
 ##' Update a variable or variables in a dataset
 ##'
 ##' @param x a CrunchDataset
@@ -199,11 +195,6 @@ setMethod("[[<-",
 setMethod("[[<-", 
     c("CrunchDataset", "character", "missing", "ANY"),
     .addVariableSetter)
-##' @rdname dataset-update
-##' @export
-setMethod("[[<-", 
-    c("CrunchDataset", "character", "missing", "CrunchExpr"), 
-    .deriveVariableSetter)
 ##' @rdname dataset-update
 ##' @export
 setMethod("[[<-", 
