@@ -19,6 +19,19 @@ with(fake.HTTP, {
             "Cannot currently tabulate Crunch variables with non-Crunch vectors")
         expect_error(table(), "nothing to tabulate")
     })
+    
+    test_that("unsupported aggregation methods", {
+        expect_error(mean(ds$textVar), 
+            paste(dQuote("mean"), "is not defined for TextVariable"))
+        expect_error(sd(ds$textVar), 
+            paste(dQuote("sd"), "is not defined for TextVariable"))  
+        expect_error(median(ds$textVar), 
+            paste(dQuote("median"), "is not defined for TextVariable"))
+        expect_error(min(ds$textVar), 
+            paste(dQuote("min"), "is not defined for TextVariable"))
+        expect_error(max(ds$textVar), 
+            paste(dQuote("max"), "is not defined for TextVariable"))
+    })
 })
 
 if (run.integration.tests) {

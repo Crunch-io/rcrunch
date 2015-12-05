@@ -79,5 +79,23 @@ if (run.integration.tests) {
                     c("Cat", "Bird"))
             })
         })
+        
+        with(test.dataset(newDatasetFromFixture("apidocs")), {
+            test_that("delete method on variable", {
+                expect_true("q1" %in% names(ds))
+                d <- try(delete(ds$q1))
+                expect_that(d, is_not_an_error())
+                ds <- refresh(ds)
+                expect_false("q1" %in% names(ds))
+            })
+            test_that("delete deletes all subvariables too", {
+                expect_true("petloc" %in% names(ds))
+                d <- try(delete(ds$petloc))
+                expect_that(d, is_not_an_error())
+                ds <- refresh(ds)
+                expect_false("petloc" %in% names(ds))
+                expect_false("petloc_home" %in% names(ds))
+            })
+        })
     })
 }

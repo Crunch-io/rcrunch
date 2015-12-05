@@ -75,13 +75,6 @@ if (run.integration.tests) {
                     ))
                 ## TODO: add other types
             })
-            
-            test_that("can delete variables", {
-                expect_true("v1" %in% names(ds))
-                d <- try(delete(ds$v1))
-                expect_that(d, is_not_an_error())
-                expect_false("v1" %in% names(refresh(ds)))
-            })
         })
         
         with(test.dataset(df), {
