@@ -1,7 +1,33 @@
-addVariables <- function (dataset, vardefs) {
+##' Add multiple variables to a dataset
+##'
+##' This function lets you add more than one variable at a time to a dataset.
+##' If you have multiple variables to add, this function will be faster than
+##' doing \code{ds$var <- value} assignment because it doesn't refresh the
+##' dataset's state in between variable POST requests.
+##' @param dataset a CrunchDataset
+##' @param ... \code{\link{VariableDefinition}}s or a list of
+##' VariableDefinitions.
+##' @return \code{dataset} with the new variables added (invisibly)
+##' @export
+addVariables <- function (dataset, ...) {
     var_catalog_url <- shojiURL(dataset, "catalogs", "variables")
     
-    ## Validate all vardefs before uploading any
+    ## Get vardefs and validate
+    vardefs <- list(...)
+    ## Check for whether a list of vardefs passed
+    if (length(vardefs) == 1 && 
+        is.list(vardefs[[1]]) && 
+        !inherits(vardefs[[1]], "VariableDefinition")) {
+            
+        vardefs <- vardefs[[1]]
+    }
+    ## Check that all are VariableDefinitions
+    are.vardefs <- vapply(vardefs, inherits, logical(1),
+        what="VariableDefinition")
+    if (!all(are.vardefs)) {
+        halt("Must supply VariableDefinitions")
+    }
+    ## Check that if values specified, they have the right length
     vardefs <- lapply(vardefs, validateVarDefRows, 
         numrows=getNrow(dataset, filtered=FALSE))
     
@@ -19,7 +45,7 @@ addVariables <- function (dataset, vardefs) {
             rethrow(new_var_urls[[1]])
         }
         halt("The following variable definition(s) errored on upload: ", 
-            which(errs), "\n", 
+            paste(which(errs), collapse=", "), "\n", 
             paste(unlist(lapply(new_var_urls[errs], errorMessage)), sep="\n"))
         ## Could make better error message, return the URLs of the variables
         ## that errored so that user can delete them and start over, etc.
@@ -27,11 +53,6 @@ addVariables <- function (dataset, vardefs) {
     
     dataset <- refresh(dataset)
     invisible(dataset)
-}
-
-addVariable <- function (dataset, vardef) {
-    ## Shortcut to add a single variable, used internally. 
-    invisible(addVariables(dataset, list(vardef)))
 }
 
 validateVarDefRows <- function (vardef, numrows) {

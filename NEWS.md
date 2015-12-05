@@ -1,4 +1,5 @@
 ### crunch 1.7.1
+* `addVariables` function to add multiple variables to a dataset efficiently
 * Support aggregating with `CrunchExpr`s and filtered variables in `table`
 * Save a variable catalog refresh on (un)dichotomize. Slight speedup as a result.
 

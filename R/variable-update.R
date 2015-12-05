@@ -71,15 +71,6 @@ setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"), .backstopUpdate)
 setMethod("[<-", c("CrunchVariable", "ANY", "missing", "NULL"), 
     function (x, i, j, value) return(NULL))
 
-
-.sigs <- list(
-    c("TextVariable", "character"),
-    c("NumericVariable", "numeric"),
-    c("DatetimeVariable", "Date"),
-    c("DatetimeVariable", "POSIXt"),
-    c("CrunchVariable", "CrunchExpr")
-)
-
 .var.updater <- function (x, i, j, value) {
     if (missing(i)) i <- NULL
     out <- .updateVariable(x, value, filter=.dispatchFilter(i))

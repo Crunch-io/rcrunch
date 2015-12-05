@@ -117,14 +117,11 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
             value$alias <- i
             ## But also check to make sure it has a name, and use `i` if not
             value$name <- value$name %||% i
-        } else if (inherits(value, "CrunchExpr")) {
-            ## Create a VarDef with the expression and use `i` as name and alias
-            value <- VariableDefinition(expr=zcl(value), name=i, alias=i)
         } else {
             ## Create a VarDef and use `i` as name and alias
             value <- VariableDefinition(value, name=i, alias=i)
         }
-        addVariable(x, value)
+        addVariables(x, value)
     }
 }
 
