@@ -1,3 +1,5 @@
+### crunch 1.7.3
+
 ### crunch 1.7.2
 * `addVariables` function to add multiple variables to a dataset efficiently
 * Support aggregating with `CrunchExpr`s and filtered variables in `table`
