@@ -35,6 +35,8 @@ setMethod("as.vector", "CrunchExpr", function (x, mode) {
     return(columnParser(out$metadata$out$type, mode)(out$data$out, variable))
 })
 
+##' @rdname toVariable
+##' @export
 setMethod("toVariable", "CrunchExpr", function (x, ...) {
     structure(list(expr=zcl(x), ...), class="VariableDefinition")
 })
