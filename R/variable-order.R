@@ -52,6 +52,8 @@ setMethod("initialize", "VariableOrder", init.VariableOrder)
             x[string.urls] <- lapply(x[string.urls], absoluteURL,
                 base=url.base)
         }
+        ## Make sure there are no names on the list--will throw off toJSON
+        names(x) <- NULL
         return(x)
     } 
     halt(class(x), " is an invalid input for entities")
