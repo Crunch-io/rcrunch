@@ -8,7 +8,6 @@
 ##'
 ##' @param x an input
 ##' @param table For \code{\%in\%}. See \code{\link[base]{match}}
-##' @param mode For \code{as.vector}. Ignored.
 ##' @param resolution For \code{rollup}. Either \code{NULL} or a character in 
 ##' c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms") indicating the unit of 
 ##' time at which a Datetime variable should be aggregated. If \code{NULL}, 
@@ -20,7 +19,7 @@
 ##' @name expressions
 NULL
 
-##' @rdname expressions
+##' @rdname variable-to-R
 ##' @export
 setMethod("as.vector", "CrunchExpr", function (x, mode) {
     payload <- list(command="select", variables=list(out=zcl(x)))

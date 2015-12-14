@@ -10,15 +10,12 @@
 \alias{\%in\%,DatetimeVariable,POSIXt-method}
 \alias{\%in\%,NumericVariable,numeric-method}
 \alias{\%in\%,TextVariable,character-method}
-\alias{as.vector,CrunchExpr-method}
 \alias{bin}
 \alias{expressions}
 \alias{is.na,CrunchVariable-method}
 \alias{rollup}
 \title{Construct Crunch Expressions}
 \usage{
-\S4method{as.vector}{CrunchExpr}(x, mode = "any")
-
 \S4method{!}{CrunchExpr}(x)
 
 \S4method{\%in\%}{CategoricalVariable,character}(x, table)
@@ -43,8 +40,6 @@ rollup(x, resolution = rollupResolution(x))
 }
 \arguments{
 \item{x}{an input}
-
-\item{mode}{For \code{as.vector}. Ignored.}
 
 \item{table}{For \code{\%in\%}. See \code{\link[base]{match}}}
 
