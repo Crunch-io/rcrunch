@@ -145,6 +145,15 @@ if (run.integration.tests) {
                     dimnames=list(mr_1=c("0.0", "1.0", "No Data"),
                         mr_2=c("0.0", "1.0", "No Data"))))
             })
+            
+            test_that("can't request NULL as subvariable (bad subvar ref)", {
+                expect_error(crtabs(~ CA$mr_1 + CA$NOTAVAR, data=mrds),
+                    "Invalid cube dimension: CA$NOTAVAR cannot be NULL\n",
+                    fixed=TRUE)
+                expect_error(crtabs(~ CA$foo + CA$mr_1 + CA$NOTAVAR, data=mrds),
+                    "Invalid cube dimensions: CA$foo and CA$NOTAVAR cannot be NULL\n",
+                    fixed=TRUE)
+            })
         })
     })
 }

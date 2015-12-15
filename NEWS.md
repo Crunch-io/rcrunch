@@ -1,4 +1,6 @@
 ### crunch 1.7.3
+* Update docs to conform to R-devel changes to `as.vector`'s signature.
+* Catch `NULL` in cube dimension when referencing subvariable that does not exist (as when using alias instead of name) and return a useful message.
 
 ### crunch 1.7.2
 * `addVariables` function to add multiple variables to a dataset efficiently
