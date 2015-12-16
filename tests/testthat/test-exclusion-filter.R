@@ -54,6 +54,14 @@ if (run.integration.tests) {
                     c(1, NA, 2, NA, 3, NA, 4, NA, 5, NA, 6, NA, 7, NA, 8, NA,
                         9, NA, 10, NA))
             })
+            
+            test_that("Change a variable's type", {
+                exclusion(ds) <- ds$v4 == "C"
+                expect_identical(nrow(ds), 10L)
+                type(ds$v3) <- "text"
+                expect_equivalent(as.vector(ds$v3), 
+                    c("8.0", "10.0", "12.0", "14.0", "16.0", "18.0", "20.0", "22.0", "24.0", "26.0"))
+            })
         })
         with(test.dataset(df), {
             test_that("Update a variable", {
