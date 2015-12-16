@@ -29,12 +29,25 @@ table <- function (..., exclude, useNA=c("no", "ifany", "always"), dnn, deparse.
     m <- match.call()
     
     dots <- list(...)
-    are.vars <- vapply(dots, is.variable, logical(1))
+    are.vars <- vapply(dots, 
+        function (x) is.variable(x) || inherits(x, "CrunchExpr"), 
+        logical(1))
     if (length(are.vars) && all(are.vars)) {
         query <- list(dimensions=varsToCubeDimensions(dots),
             measures=list(count=zfunc("cube_count")))
+        ## Check for filters
+        filters <- vapply(dots, 
+            function (x) toJSON(filterSyntax(activeFilter(x))), 
+            character(1))
+        if (!all(filters == filters[1])) {
+            halt("Filter expressions in variables must be identical")
+        }
+        query <- list(
+            query=toJSON(query),
+            filter_syntax=filters[1]
+        )
         cube_url <- absoluteURL("./cube/", datasetReference(dots[[1]]))
-        cube <- CrunchCube(crGET(cube_url, query=list(query=toJSON(query))),
+        cube <- CrunchCube(crGET(cube_url, query=query),
             useNA=match.arg(useNA))
         return(as.table(as.array(cube)))
     } else if (any(are.vars)) {

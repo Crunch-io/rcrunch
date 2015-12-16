@@ -506,6 +506,18 @@ if (run.integration.tests) {
                 expect_error(ordering(ds) <- bad.vg, 
                     "Variable URL referenced in Order not present in catalog: /not/a/variable")
             })
+            
+            test_that("Creating VariableOrder with named list doesn't break", {
+                bad.vg <- do.call(VariableOrder, c(sapply(names(starting.vg),
+                    function (i) starting.vg[[i]], simplify=FALSE),
+                    duplicates=TRUE))
+                ## The list of entities is named because sapply default is 
+                ## USE.NAMES=TRUE, but the VariableOrder constructor should
+                ## handle this
+                ordering(ds) <- bad.vg
+                expect_identical(ordering(ds)@graph,
+                    starting.vg@graph)
+            })
         })
     })
 }

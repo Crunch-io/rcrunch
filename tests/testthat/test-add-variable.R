@@ -55,8 +55,8 @@ if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
             test_that("addVariable creates a new remote numeric variable", {
-                ds <- addVariable(ds, df$v3, name="New var",
-                    alias="newVar")
+                ds <- addVariables(ds, 
+                    VariableDefinition(df$v3, name="New var", alias="newVar"))
                 expect_true("newVar" %in% names(ds))
                 nv <- ds$newVar
                 expect_true(is.Numeric(nv))
@@ -64,8 +64,8 @@ if (run.integration.tests) {
                 expect_identical(as.vector(nv), as.vector(ds$v3))
             })
             test_that("addVariable creates text variables from character", {
-                ds <- addVariable(ds, df$v2, name="New var 2",
-                    alias="newVar2")
+                ds <- addVariables(ds, 
+                    VariableDefinition(df$v2, name="New var2", alias="newVar2"))
                 expect_true("newVar2" %in% names(ds))
                 nv <- ds$newVar2
                 expect_true(is.Text(nv))
@@ -75,16 +75,16 @@ if (run.integration.tests) {
                     ## anymore, but they're right in the addVariable method
             })
             test_that("addVariable creates categorical from factor", {
-                ds <- addVariable(ds, df$v4, name="New var 3",
-                    alias="newVar3")
+                ds <- addVariables(ds, 
+                    VariableDefinition(df$v4, name="New var3", alias="newVar3"))
                 expect_true("newVar3" %in% names(ds))
                 nv <- ds$newVar3
                 expect_true(is.Categorical(nv))
                 expect_identical(as.vector(nv), as.vector(ds$v4))
             })
             test_that("addVariable creates datetime from Date", {
-                ds <- addVariable(ds, df$v5, name="New var 4",
-                    alias="newVar4")
+                ds <- addVariables(ds, 
+                    VariableDefinition(df$v5, name="New var4", alias="newVar4"))
                 expect_true("newVar4" %in% names(ds))
                 nv <- ds$newVar4
                 expect_true(is.Datetime(nv))
@@ -92,17 +92,17 @@ if (run.integration.tests) {
             })
             test_that("addVariable creates datetime from POSIXct", {
                 skip("Can't support POSIXt until the app supports timezones")
-                ds <- addVariable(ds, as.POSIXct(df$v5),
-                    name="New var 5", alias="newVar5")
+                ds <- addVariables(ds, VariableDefinition(as.POSIXct(df$v5),
+                    name="New var 5", alias="newVar5"))
                 expect_true("newVar5" %in% names(ds))
                 nv <- ds$newVar5
                 expect_true(is.Datetime(nv))
                 expect_identical(as.vector(nv), as.vector(ds$v5))
             })
             test_that("adding variable with duplicate name fails", {
-                expect_error(addVariable(ds, df$v5, name="New var 4",
-                    alias="newVar4"), 
-                    "Variable with name: New var 4 already exists")
+                expect_error(addVariables(ds, VariableDefinition(df$v5, 
+                    name="New var4", alias="newVar4")), 
+                    "Variable with name: New var4 already exists")
             })
         })
         

@@ -60,12 +60,19 @@ setMethod("undichotomize", "Categories", function (x) {
 })
 
 .dichotomize.var <- function (x, i) {
-    categories(x) <- dichotomize(categories(x), i)
-    invisible(refresh(x))
+    newcats <- dichotomize(categories(x), i)
+    categories(x) <- newcats
+    if (is.dichotomized(newcats)) {
+        ## Do this to avoid needing to refresh the variable catalog
+        x@tuple@body$type <- "multiple_response"
+    }
+    invisible(CrunchVariable(tuple(x)))
 }
 .undichotomize.var <- function (x) {
     categories(x) <- undichotomize(categories(x))
-    invisible(refresh(x))
+    ## Do this to avoid needing to refresh the variable catalog
+    x@tuple@body$type <- "categorical_array"
+    invisible(CrunchVariable(tuple(x)))
 }
 
 ##' @rdname dichotomize

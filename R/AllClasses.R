@@ -42,6 +42,21 @@ DatasetTuple <- setClass("DatasetTuple", contains="IndexTuple")
 
 VariableEntity <- setClass("VariableEntity", contains="ShojiObject")
 
+CrunchExpr <- setClass("CrunchExpr",
+    representation=representation(
+        dataset_url="character",
+        expression="list",
+        filter="list"
+    ),
+    prototype=prototype(
+        dataset_url="",
+        expression=list(),
+        filter=list()
+    ))
+
+CrunchLogicalExpr <- setClass("CrunchLogicalExpr",
+    contains="CrunchExpr")
+
 ##' Variables in Crunch
 ##'
 ##' Variables are S4 objects. All inherit from the base class
@@ -54,10 +69,10 @@ VariableEntity <- setClass("VariableEntity", contains="ShojiObject")
 setClass("CrunchVariable",
     representation= representation(
         readonly="logical",
-        filter="ANY", ## CrunchLogicalExpr, but cyclic dependencies
+        filter="CrunchLogicalExpr",
         tuple="VariableTuple"
     ), 
-    prototype=prototype(readonly=FALSE, filter=NULL, tuple=VariableTuple()))
+    prototype=prototype(readonly=FALSE, filter=CrunchLogicalExpr(), tuple=VariableTuple()))
 
 CrunchVariable <- function (tuple, ...) {
     ## Slight cheat: this isn't the "CrunchVariable" constructor. Instead
@@ -166,23 +181,6 @@ TeamCatalog <- setClass("TeamCatalog", contains="ShojiCatalog")
 MemberCatalog <- setClass("MemberCatalog", contains="ShojiCatalog")
 VersionCatalog <- setClass("VersionCatalog", contains="ShojiCatalog")
 FilterCatalog <- setClass("FilterCatalog", contains="ShojiCatalog")
-
-CrunchExpr <- setClass("CrunchExpr",
-    representation=representation(
-        dataset_url="character",
-        expression="list",
-        filter="list",
-        variables="VariableCatalog"
-    ),
-    prototype=prototype(
-        dataset_url="",
-        expression=list(),
-        filter=list(),
-        variables=VariableCatalog()
-    ))
-
-CrunchLogicalExpr <- setClass("CrunchLogicalExpr",
-    contains="CrunchExpr")
 
 default.useAlias <- function () {
     opt <- getOption("crunch.useAlias")

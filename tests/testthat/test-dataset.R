@@ -73,6 +73,12 @@ with(fake.HTTP, {
         expect_error(test.ds[[999]], "subscript out of bounds")
     })
     
+    test_that("Dataset extract error handling", {
+        expect_error(test.ds[[999]], "subscript out of bounds")
+        expect_error(test.ds[c("gender", "NOTAVARIABLE")],
+            "Undefined columns selected: NOTAVARIABLE")
+    })
+    
     test_that("Extract from dataset by VariableOrder/Group", {
         ents <- c("/api/datasets/dataset1/variables/gender.json",
             "/api/datasets/dataset1/variables/mymrset.json")

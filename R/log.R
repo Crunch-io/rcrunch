@@ -28,11 +28,11 @@ startLog <- function (filename, append=FALSE) {
 }
 
 ##' @importFrom utils read.delim
-loadLogfile <- function (filename) {
+loadLogfile <- function (filename, scope=c("CACHE", "HTTP", "BLOCK")) {
     df <- read.delim(filename, sep=" ", header=FALSE,
         stringsAsFactors=FALSE)[,1:6]
     names(df) <- c("timestamp", "scope", "verb", "url", "status", "time")
-    df <- df[df$scope %in% c("CACHE", "HTTP"),] ## Prune the errors and other crap
+    df <- df[df$scope %in% scope,] ## Prune the errors and other crap
     df$timestamp <- strptime(df$timestamp, "%Y-%m-%dT%H:%M:%S")
     # df[c("scope", "verb")] <- lapply(df[c("scope", "verb")], as.factor)
     df[c("status", "time")] <- lapply(df[c("status", "time")], as.numeric)
@@ -50,16 +50,52 @@ cacheLogSummary <- function (logdf) {
 requestLogSummary <- function (logdf) {
     total.time <- as.numeric(difftime(tail(logdf$timestamp, 1), 
         head(logdf$timestamp, 1), units="secs"))
-    
-    ## Remove cache hits from the GET logs. They're the next record
-    hits <- which(logdf$verb == "HIT")
-    drophits <- intersect(hits + 1, which(logdf$verb == "GET"))
-    logdf <- logdf[-drophits,]
-    
-    df <- logdf[logdf$scope == "HTTP",]
+    df <- requestsFromLog(logdf)
     counts <- table(df$verb)
     req.time <- sum(df$time, na.rm=TRUE)
     pct.http.time <- 100*req.time/total.time
     return(list(counts=counts, req.time=req.time, total.time=total.time,
         pct.http.time=pct.http.time))
+}
+
+requestsFromLog <- function (logdf) {
+    ## Remove cache hits from the GET logs. They're the next record
+    hits <- which(logdf$verb == "HIT")
+    ## If there are hits, drop the requests that are returned from cache
+    if (length(hits)) {
+        drophits <- intersect(hits + 1, which(logdf$verb == "GET"))
+        logdf <- logdf[-drophits,]
+    }
+    df <- logdf[logdf$scope == "HTTP",]
+    return(df)
+}
+
+getLogBlock <- function (logdf, blockname) {
+    ## Extract the subset of the log between BLOCK blockname and the next BLOCK
+    blocks <- logdf$scope == "BLOCK"
+    blockstart <- blocks & logdf$verb == blockname
+    if (any(blockstart)) {
+        blockstart <- which(blockstart)[1] + 1## In case there are multiple matches
+        blocks <- which(blocks)
+        blockend <- blocks > blockstart
+        if (any(blockend)) {
+            blockend <- blocks[blockend][1] - 1
+        } else {
+            blockend <- nrow(logdf)
+        }
+        return(logdf[blockstart:blockend,])
+    } else {
+        stop("Block ", blockname, " not found", call.=FALSE)
+    }
+}
+
+blockTimings <- function (logdf) {
+    ## Calculate how long each "BLOCK" took
+    blocks <- logdf$scope == "BLOCK"
+    times <- logdf$timestamp[blocks]
+    blocknames <- c("(start)", logdf$verb[blocks])
+    
+    return(structure(as.numeric(difftime(c(times, logdf$timestamp[nrow(logdf)]),
+        c(logdf$timestamp[1], times), units="secs")),
+        .Names=blocknames))
 }

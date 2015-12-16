@@ -95,7 +95,7 @@ if (run.integration.tests) {
                     return(x)
                 })
                 class(newvar) <- "VariableDefinition"
-                ds <- addVariable(ds, newvar)
+                ds <- addVariables(ds, newvar)
                 expect_true(is.MR(ds$multipleResponse))
             })
         })

@@ -71,33 +71,11 @@ setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"), .backstopUpdate)
 setMethod("[<-", c("CrunchVariable", "ANY", "missing", "NULL"), 
     function (x, i, j, value) return(NULL))
 
-
-.sigs <- list(
-    c("TextVariable", "character"),
-    c("NumericVariable", "numeric"),
-    c("DatetimeVariable", "Date"),
-    c("DatetimeVariable", "POSIXt"),
-    c("CrunchVariable", "CrunchExpr")
-)
-
 .var.updater <- function (x, i, j, value) {
     if (missing(i)) i <- NULL
     out <- .updateVariable(x, value, filter=.dispatchFilter(i))
     return(x)
 }
-
-# for (i in seq_along(.sigs)) {
-#     setMethod("[<-", c(.sigs[[i]][1], "ANY", "missing", .sigs[[i]][2]),
-#         .var.updater)
-# }
-
-# for (i in seq_along(.sigs)) {
-#         cat('
-# ##\' @rdname variable-update
-# ##\' @export
-# setMethod("[<-", c("', .sigs[[i]][1], '", "ANY", "missing", "', .sigs[[i]][2], '"),
-#     .var.updater)', sep="")
-# }
 
 ##' @rdname variable-update
 ##' @export
@@ -179,21 +157,6 @@ setMethod("[<-", c("CrunchVariable", "CrunchExpr", "missing", "CrunchExpr"),
         return(x)
     }
 )
-
-# for (i in c("CategoricalVariable", "CategoricalArrayVariable")) {
-#     for (j in c("numeric", "character", "factor")) {
-#         setMethod("[<-", c(i, "ANY", "missing", j), .categorical.update[[j]])
-#     }
-# }
-
-# for (i in c("CategoricalVariable", "CategoricalArrayVariable")) {
-#     for (j in c("numeric", "character", "factor")) {
-#         cat('
-# ##\' @rdname variable-update
-# ##\' @export
-# setMethod("[<-", c("', i, '", "ANY", "missing", "', j, '"), .categorical.update[["', j, '"]])', sep="")
-#     }
-# }
 
 ##' @rdname variable-update
 ##' @export

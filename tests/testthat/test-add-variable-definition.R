@@ -62,6 +62,65 @@ if (run.integration.tests) {
                 expect_warning(ds$newvar3 <- VarDef(name="Empty", type="numeric"), "Adding variable with no rows of data")
                 expect_identical(as.vector(ds$newvar3), rep(NA_real_, 20L))
             })
+            
+            dropCache(self(ds)) ## Just so whether we have caching on doesn't affect the log we collect
+            unifs <- runif(20)
+            with(temp.option(crunch.log=""), {
+                avlog <- capture.output(ds <- addVariables(ds, list(
+                    VarDef(1, name="One", description="the loneliest"),
+                    VarDef(unifs, name="Some random stuff", alias="runif")
+                )))
+            })
+            logdf <- loadLogfile(textConnection(avlog))
+            test_that("token tests of log parsing while we're here", {
+                expect_true(is.list(cacheLogSummary(logdf)))
+                expect_true(is.list(requestLogSummary(logdf)))
+                expect_true(is.numeric(blockTimings(logdf)))
+                expect_error(getLogBlock(logdf, "NOBLOCK"),
+                    "Block NOBLOCK not found")
+            })
+            test_that("addVariables can add multiple VarDefs", {
+                expect_equivalent(as.vector(ds$One), rep(1, 20))
+                expect_equivalent(as.vector(ds$runif), unifs)
+            })
+            test_that("addVariables doesn't refresh between each POST", {
+                ## Parse avlog (and thus test the log parsing here)
+                reqdf <- requestsFromLog(logdf)
+                ## GET summary (nrows, to validate); POST var, POST var,
+                ## with no GETs between the POSTs
+                expect_identical(reqdf$verb[1:3], c("GET", "POST", "POST"))
+                expect_identical(reqdf$url[2:3], rep(variableCatalogURL(ds), 2))
+            })
+            
+            test_that("addVariables row validation happens before POSTing", {
+                expect_error(addVariables(ds,
+                    VarDef(2, name="Two"),
+                    VarDef(1:3, name="Wrong num rows", alias="whatever")
+                ), "replacement has 3 rows, data has 20")
+                ## Confirm that refresh(ds) is unchanged
+                expect_true(is.null(refresh(ds)$Two))
+            })
+            test_that("General input validation on addVariables", {
+                expect_error(addVariables(ds,
+                    VarDef(2, name="Two"),
+                    5 ## Not a variable
+                ), "Must supply VariableDefinitions")
+                ## Confirm that refresh(ds) is unchanged
+                expect_true(is.null(refresh(ds)$Two))
+            })
+            test_that("addVariables server error handling", {
+                with(no.internet, {
+                    ## Add two expr vars (no GET on rows first)
+                    expect_error(addVariables(ds,
+                        VarDef(ds$v3 + 4, name="v3plus4"),
+                        VarDef(ds$v3 + 5, name="v3plus5")
+                    ), "Error : The following variable definition\\(s\\) errored on upload: 1, 2")
+                })
+                ## Confirm that refresh(ds) is unchanged
+                ds <- refresh(ds)
+                expect_true(is.null(ds$v3plus4))
+                expect_true(is.null(ds$v3plus5))
+            })
         })
     })
 }

@@ -1,4 +1,12 @@
-### crunch 1.7.1
+### crunch 1.7.3
+* Update docs to conform to R-devel changes to `as.vector`'s signature.
+* Catch `NULL` in cube dimension when referencing subvariable that does not exist (as when using alias instead of name) and return a useful message.
+
+### crunch 1.7.2
+* `addVariables` function to add multiple variables to a dataset efficiently
+* Support aggregating with `CrunchExpr`s and filtered variables in `table`
+* Save a variable catalog refresh on (un)dichotomize. Slight speedup as a result.
+* Fix bug in creating VariableOrder with a named list.
 
 ## crunch 1.7.0
 * Improve performance of many operations by more lazily loading variable entities from the server. Changes to several internal package APIs to make that happen, but the public package interface should be unchanged.

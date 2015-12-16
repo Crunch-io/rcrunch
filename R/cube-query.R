@@ -50,6 +50,18 @@ crtabs <- function (formula, data, weight=crunch::weight(data),
     where <- environment(formula) #parent.frame()
     vars <- eval(v.call, as.environment(data), environment(formula))
     
+    ## Validate that vars are non-null
+    nullvars <- vapply(vars, is.null, logical(1))
+    if (any(nullvars)) {
+        ## Get the NULL expressions. 
+        ## Note the off-by-one problem:
+        ## If f.vars == language list(CA$mr_1, CA$NOTAVAR),
+        ## as.character(f.vars) == [1] "list"       "CA$mr_1"    "CA$NOTAVAR"
+        varexprs <- as.character(f.vars)[-1]
+        halt("Invalid cube dimension", ifelse(sum(nullvars) > 1, "s: ", ": "),
+            serialPaste(varexprs[nullvars]), " cannot be NULL")
+    }
+    
     ## Construct the "measures", either from the formula or default "count"
     resp <- attr(f, "response")
     if (resp) {

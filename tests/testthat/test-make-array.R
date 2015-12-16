@@ -63,32 +63,47 @@ if (run.integration.tests) {
             })
         })
         
-        test_that("can make MultipleResponse from CategoricalArray", {
-            with(test.dataset(mrdf), {
-                ds$arrayVar <- makeArray(pattern="mr_[123]", dataset=ds,
-                    name="arrayVar")
-                var <- ds$arrayVar
+        with(test.dataset(mrdf), {
+            ds$arrayVar <- makeArray(pattern="mr_[123]", dataset=ds,
+                name="arrayVar")
+            var <- ds$arrayVar
+            test_that("setup to make MultipleResponse from CategoricalArray", {
                 expect_true(is.CA(var))
-                expect_true(is.categories(categories(var)))
-                
+            })
+            
+            test_that("can make MultipleResponse from CategoricalArray by editing category$selected", {
                 categories(var)[[1]]$selected <- TRUE
-                var <- refresh(var)
+                var <- refresh(var) ## Refresh required if changing type by editing categories
                 expect_true(is.Multiple(var))
                 categories(var)[[1]]$selected <- FALSE
-                var <- refresh(var)
+                var <- refresh(var) ## Refresh required if changing type by editing categories
                 expect_true(is.CA(var))
-                
+            })
+            
+            test_that("can make MultipleResponse from CategoricalArray by dichotomizing categories (and back by undichotomize)", {
                 categories(var) <- dichotomize(categories(var), 1)
-                var <- refresh(var)
+                var <- refresh(var) ## Refresh required if changing type by editing categories
                 expect_true(is.Multiple(var))
                 categories(var) <- undichotomize(categories(var))
-                var <- refresh(var)
+                var <- refresh(var) ## Refresh required if changing type by editing categories
                 expect_true(is.CA(var))
-                
+            })
+            test_that("can (un)dichotomize directly on the variable", {
                 var <- dichotomize(var, 1)
                 expect_true(is.Multiple(var))
+                expect_true(is.Multiple(refresh(var)))
                 var <- undichotomize(var)
                 expect_true(is.CA(var))
+                expect_true(is.CA(refresh(var)))
+            })
+            test_that("can (un)dichotomize on var in dataset", {
+                ds <- refresh(ds)
+                ds$arrayVar <- dichotomize(ds$arrayVar, 1)
+                expect_true(is.Multiple(ds$arrayVar))
+                expect_true(is.Multiple(refresh(ds)$arrayVar))
+                ds$arrayVar <- undichotomize(ds$arrayVar)
+                expect_true(is.CA(ds$arrayVar))
+                expect_true(is.CA(refresh(ds)$arrayVar))
             })
         })
         

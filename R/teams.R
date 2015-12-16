@@ -114,26 +114,6 @@ setMethod("names", "MemberCatalog", function (x) getIndexSlot(x, "name"))
 ##' @export
 setMethod("[[<-", c("MemberCatalog", "ANY", "missing", "ANY"), .backstopUpdate)
 
-urlizeUserEmails <- function (x) {
-    ## Given a character vector that may contain either emails or URLs,
-    ## convert the emails to URLs so that all are URLs
-    
-    are.emails <- grep("@", x)
-    ## Look them up
-    if (length(are.emails)) {
-        ucat <- getAccountUserCatalog()
-        urls <- urls(ucat)[match(x[are.emails], emails(ucat))]
-        if (any(is.na(urls))) {
-            plural <- sum(is.na(urls)) > 1
-            halt("Could not find user", ifelse(plural, "s", ""), 
-                " associated with ",
-                serialPaste(x[are.emails][is.na(urls)]))
-        }
-        x[are.emails] <- urls
-    }
-    return(x)
-}
-
 ##' @rdname catalog-extract
 ##' @export
 setMethod("[[<-", c("MemberCatalog", "character", "missing", "NULL"),
