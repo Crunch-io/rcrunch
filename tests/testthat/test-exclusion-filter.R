@@ -60,8 +60,7 @@ if (run.integration.tests) {
                 expect_identical(nrow(ds), 10L)
                 type(ds$v3) <- "text"
                 expect_equivalent(as.vector(ds$v3), 
-                    c("8", "10", "12", "14", "16", "18", "20", "22", "24",
-                    "26"))
+                    c("8.0", "10.0", "12.0", "14.0", "16.0", "18.0", "20.0", "22.0", "24.0", "26.0"))
             })
         })
         with(test.dataset(df), {
