@@ -21,16 +21,16 @@ if (run.integration.tests) {
                     expect_identical(nrow(out), nrow(d2))
                 })
                 test_that("Variables with no data in the new batch still exist", {
-                    expect_identical(ncol(d1), ncol(df))
+                    expect_identical(ncol(out), ncol(df))
                     ## Equal because:
-                    expect_false(is.null(d1$v6))
+                    expect_false(is.null(out$v6))
                     ## Variable still exists bc defined in original metadata. 
-                    expect_true(all(is.na(as.vector(d1$v6))))
+                    expect_true(all(is.na(as.vector(out$v6))))
                     ## But it has no values bc it was excluded in new dataset
-                    expect_identical(as.vector(d1$v3), as.vector(d2$v3))
+                    expect_identical(as.vector(out$v3), as.vector(d2$v3))
                 })
                 test_that("If categories are added in the new data, the union of categories is kept", {
-                    expect_identical(sort(names(categories(d1$v4))), 
+                    expect_identical(sort(names(categories(out$v4))), 
                         c("B", "C", "D", "No Data")) 
                         ## Categories contain not just "C" and "D" from d2 but
                         ## "B" from the old d1. Add the sort() because No Data
