@@ -26,8 +26,10 @@ To create new datasets, multiple paths exist. In the web application, you can up
 
 You can create a dataset from any `data.frame` you have in your R session with `newDataset`:
 
-```{r, eval=FALSE}
-load("economist.RData")
+This package provides one as `economist` which loads a `data.frame` named `df` because old habits die hard.
+
+```{r}
+data("economist", package = "crunch")
 dim(df)
 ```
 ```{r, echo=FALSE}
