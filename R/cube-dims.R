@@ -70,7 +70,7 @@ setMethod("dimnames", "CubeDims", function (x) {
 ##' @rdname cube-methods
 ##' @export
 setMethod("dim", "CubeDims",
-    function (x) vapply(dimnames(x), length, integer(1)))
+    function (x) vapply(dimnames(x), length, integer(1), USE.NAMES=FALSE))
 
 ##' @rdname cube-methods
 ##' @export
