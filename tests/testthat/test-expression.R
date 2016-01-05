@@ -44,6 +44,7 @@ with(fake.HTTP, {
 if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
+            ds$q1 <- factor(rep(c("selected", "not selected"), 10))
             test_that("Arithmetic expressions evaluate", {
                 e1 <- try(ds$v3 + 5)
                 expect_true(inherits(e1, "CrunchExpr"))
@@ -84,6 +85,8 @@ if (run.integration.tests) {
                 for (i in varnames) {
                     expect_equivalent(as.vector(ds[[i]][ds$v3 %in% 10]),
                         df[[i]][3], info=i)
+                    expect_equivalent(as.vector(ds[[i]][ds$v3 %in% c(10, 12)]),
+                        df[[i]][c(3, 5)], info=i)
                 }
             })
             test_that("Select values with %in% on Categorical", {
@@ -92,6 +95,8 @@ if (run.integration.tests) {
                     expect_equivalent(as.vector(ds[[i]][ds$v4 %in% "B"]), 
                         df[[i]][df$v4 %in% "B"], info=i)
                 }
+                expect_identical(length(as.vector(ds$v3[ds$q1 %in% "selected"])), 10L)
+                
             })
             test_that("Select values with &ed filter", {
                 expect_equivalent(as.vector(ds$v3[ds$v3 >= 10 & ds$v3 < 13]),

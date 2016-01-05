@@ -49,7 +49,7 @@ math.exp <- function (e1, e2, operator) {
     ## Generic function that creates ZCL of `e1 %operator% e2`
     ex <- zfunc(operator, e1, e2)
     ds.url <- unique(unlist(lapply(list(e1, e2), datasetReference))) %||% ""
-    logics <- c("contains", "<", ">", ">=", "<=", "==", "!=", "and", "or")
+    logics <- c("in", "<", ">", ">=", "<=", "==", "!=", "and", "or")
     if (operator %in% logics) {
         Constructor <- CrunchLogicalExpr
     } else {
@@ -146,7 +146,9 @@ setMethod("!", c("CrunchExpr"),
     })
 
 
-.inCrunch <- function (x, table) math.exp(x, typeof(table, x), "contains")
+.inCrunch <- function (x, table) {
+    math.exp(x, typeof(table, x), ifelse(length(table) == 1L, "==", "in"))
+}
 
 ##' @rdname expressions
 ##' @export
