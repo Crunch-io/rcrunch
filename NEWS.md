@@ -1,7 +1,10 @@
-### crunch 1.7.3
-* Update docs to conform to R-devel changes to `as.vector`'s signature.
+### crunch 1.7.4
 * Catch `NULL` in cube dimension when referencing subvariable that does not exist (as when using alias instead of name) and return a useful message.
 * Fix for unintended substring matching in `%in%` expression translation.
+* Internal change to match user catalog API update
+
+### crunch 1.7.3
+* Update docs to conform to R-devel changes to `as.vector`'s signature.
 
 ### crunch 1.7.2
 * `addVariables` function to add multiple variables to a dataset efficiently
@@ -12,11 +15,11 @@
 ## crunch 1.7.0
 * Improve performance of many operations by more lazily loading variable entities from the server. Changes to several internal package APIs to make that happen, but the public package interface should be unchanged.
 * Also speed up loading of variable catalogs by deferring resolution of relative subvariable URLs until requested. Eliminates significant load time for datasets with lots of array variables.
-* Fix bug in results from `crtabs` when requesting a crosstab of three or more dimensions. 
+* Fix bug in results from `crtabs` when requesting a crosstab of three or more dimensions.
 
 ### crunch 1.6.1
 * `VariableDefinition` (or `VarDef`) function and class for creating variable definitions with more metadata (rather than assigning R vectors into a dataset and having to add metadata after).
-* Reworked various new variable functions, including `copy`, `makeArray`, and `makeMR`, to return `VariableDefinition`s rather than creating the new variables themselves. Creation happens on assignment into the dataset. 
+* Reworked various new variable functions, including `copy`, `makeArray`, and `makeMR`, to return `VariableDefinition`s rather than creating the new variables themselves. Creation happens on assignment into the dataset.
 * Support adding No Data (`NA` for categoricals) even if No Data doesn't already exist
 * Tools for logging and profiling HTTP requests and cache performance. See `?startLog` and `?logMessage`.
 * Support deep copying of non-array variables.
@@ -105,14 +108,14 @@
 * Remove all non-ASCII from test files so that tests will run on Solaris.
 
 ## crunch 1.1.0
-* Add query cache, on by default. 
+* Add query cache, on by default.
 
 * `as.data.frame` now does not return an actual `data.frame` unless given the argument `force=TRUE`. Instead, it returns a `CrunchDataFrame`, and environment containing unevaluated promises. This allows R functions, particularly those of the form `function(formula, data)` to work with CrunchDatasets without copying the entire dataset from the server to local memory. Only the variables referenced in the formula fetch data when their promises evaluated.
 
 * Remove `RJSONIO` dependency in favor of `jsonlite` for `toJSON`.
 
 # crunch 1.0.0
-* Rename package to `crunch`. Update all docs to reflect that. Make amendments to pass CRAN checks. 
+* Rename package to `crunch`. Update all docs to reflect that. Make amendments to pass CRAN checks.
 
 ## rcrunch 0.11.1
 * `newDataset2` renamed to `newDatasetByCSV` and made to be the default strategy in `newDataset`. The old `newDataset` has been moved to `newDatasetByColumn`.
@@ -128,4 +131,4 @@
 
 * Support for shoji:order document for hierarchical variable order. HTTP API change.
 
-* Initial, limited support for `xtabs`-like crosstabbing with a formula with the `getCube` function. 
+* Initial, limited support for `xtabs`-like crosstabbing with a formula with the `getCube` function.
