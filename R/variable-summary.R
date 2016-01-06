@@ -37,7 +37,7 @@ table <- function (..., exclude, useNA=c("no", "ifany", "always"), dnn, deparse.
             measures=list(count=zfunc("cube_count")))
         ## Check for filters
         filters <- vapply(dots, 
-            function (x) toJSON(filterSyntax(activeFilter(x))), 
+            function (x) toJSON(zcl(activeFilter(x))), 
             character(1))
         if (!all(filters == filters[1])) {
             halt("Filter expressions in variables must be identical")

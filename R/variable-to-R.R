@@ -86,7 +86,7 @@ NULL
 ##' @rdname variable-to-R
 ##' @export
 setMethod("as.vector", "CrunchVariable", function (x, mode) {
-    f <- filterSyntax(activeFilter(x))
+    f <- zcl(activeFilter(x))
     columnParser(type(x), mode)(getValues(x, filter_syntax=toJSON(f)), x)
 })
 

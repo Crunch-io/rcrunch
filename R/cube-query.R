@@ -15,7 +15,7 @@
 ##' @return an object of class \code{CrunchCube}
 ##' @importFrom stats as.formula terms
 ##' @export
-crtabs <- function (formula, data, weight=crunch::weight(data), 
+crtabs <- function (formula, data, weight=crunch::weight(data),
                      useNA=c("no", "ifany", "always")) {
     ## Validate "formula"
     if (missing(formula)) {
@@ -25,12 +25,12 @@ crtabs <- function (formula, data, weight=crunch::weight(data),
     if (is.error(formula)) {
         halt(dQuote("formula"), " is not a valid formula")
     }
-    
+
     ## Parse the formula
     f <- terms(as.formula(formula), allowDotAsName=TRUE) ## To catch "."
     f.vars <- attr(f, "variables")
     all.f.vars <- all.vars(f.vars)
-    
+
     ## More input validation
     if ("." %in% all.f.vars) {
         halt("crtabs does not support ", dQuote("."), " in formula")
@@ -38,22 +38,22 @@ crtabs <- function (formula, data, weight=crunch::weight(data),
     if (!length(all.f.vars)) {
         halt("Must supply one or more variables")
     }
-    
+
     if (missing(data) || !is.dataset(data)) {
         halt(dQuote("data"), " must be a Dataset")
     }
-    
+
     ## Find variables either in 'data' or in the calling environment
     ## Evaluate the formula's terms in order to catch derived expressions
-    v.call <- do.call(substitute, 
+    v.call <- do.call(substitute,
         list(expr=f.vars, env=registerCubeFunctions(all.f.vars)))
     where <- environment(formula) #parent.frame()
     vars <- eval(v.call, as.environment(data), environment(formula))
-    
+
     ## Validate that vars are non-null
     nullvars <- vapply(vars, is.null, logical(1))
     if (any(nullvars)) {
-        ## Get the NULL expressions. 
+        ## Get the NULL expressions.
         ## Note the off-by-one problem:
         ## If f.vars == language list(CA$mr_1, CA$NOTAVAR),
         ## as.character(f.vars) == [1] "list"       "CA$mr_1"    "CA$NOTAVAR"
@@ -61,7 +61,7 @@ crtabs <- function (formula, data, weight=crunch::weight(data),
         halt("Invalid cube dimension", ifelse(sum(nullvars) > 1, "s: ", ": "),
             serialPaste(varexprs[nullvars]), " cannot be NULL")
     }
-    
+
     ## Construct the "measures", either from the formula or default "count"
     resp <- attr(f, "response")
     if (resp) {
@@ -70,7 +70,7 @@ crtabs <- function (formula, data, weight=crunch::weight(data),
     } else {
         measures <- list(count=zfunc("cube_count"))
     }
-    
+
     ## Handle "weight"
     force(weight)
     if (is.variable(weight)) {
@@ -80,11 +80,11 @@ crtabs <- function (formula, data, weight=crunch::weight(data),
     } else {
         weight <- NULL
     }
-    
+
     ## Construct the ZCL query
     query <- list(dimensions=varsToCubeDimensions(vars),
         measures=measures, weight=weight)
-    
+
     ## Final validations
     badmeasures <- vapply(query$measures, Negate(isCubeAggregation), logical(1))
     if (any(badmeasures)) {
@@ -94,21 +94,21 @@ crtabs <- function (formula, data, weight=crunch::weight(data),
     if (any(baddimensions)) {
         halt("Right side of formula cannot contain aggregation functions")
     }
-    
+
     ## One last munge
     names(query$measures) <- vapply(query$measures, function (m) {
         sub("^cube_", "", m[["function"]])
     }, character(1))
-    
+
     ## Get filter
-    f <- filterSyntax(activeFilter(data))
-    
+    f <- zcl(activeFilter(data))
+
     ## Convert to query params
     query <- list(
         query=toJSON(query),
-        filter_syntax=toJSON(f)
+        filter=toJSON(f)
     )
-    
+
     ## Go GET it!
     cube_url <- shojiURL(data, "views", "cube")
     return(CrunchCube(crGET(cube_url, query=query),
@@ -121,7 +121,7 @@ registerCubeFunctions <- function (varnames) {
     ## probably be to have vars be an environment inside of another environment
     ## that has the cube functions. This version just checks for name collisions
     ## and errors if there is one.
-    
+
     funcs <- list(
         mean=function (x) zfunc("cube_mean", x),
         min=function (x) zfunc("cube_min", x),
@@ -131,10 +131,10 @@ registerCubeFunctions <- function (varnames) {
         sd=function (x) zfunc("cube_stddev", x),
         sum=function (x) zfunc("cube_sum", x)
     )
-    
+
     overlap <- intersect(varnames, names(funcs))
     if (length(overlap)) {
-        halt("Cannot evaluate a cube with reserved name", 
+        halt("Cannot evaluate a cube with reserved name",
             ifelse(length(overlap) > 1, "s", ""), ": ",
             serialPaste(dQuote(overlap)))
     }

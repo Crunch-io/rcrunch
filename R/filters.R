@@ -65,67 +65,54 @@ setMethod("appliedFilters<-", c("CrunchDataset", "CrunchFilter"),
         return(x)
     })
 
-setMethod("activeFilter", "CrunchDataset", function (x) x@filter)
-
-setMethod("activeFilter<-", c("CrunchDataset", "CrunchLogicalExpr"), 
-    function (x, value) {
-        x@filter <- value
-        return(x)
-    })
-
-setMethod("activeFilter", "CrunchVariable", function (x) x@filter)
-
-setMethod("activeFilter<-", c("CrunchVariable", "CrunchLogicalExpr"), 
-    function (x, value) {
-        x@filter <- value
-        return(x)
-    })
-
-setMethod("activeFilter", "Subvariables", function (x) x@filter)
-
-setMethod("activeFilter<-", c("Subvariables", "CrunchLogicalExpr"), 
-    function (x, value) {
-        x@filter <- value
-        return(x)
-    })
-
-setMethod("activeFilter", "CrunchExpr", function (x) x@filter)
-
-
-setMethod("activeFilter<-", c("ANY", "NULL"), 
-    function (x, value) {
-        ## Backstop method for refreshing a variable not extracted from a dataset. Variable may have NULL filter because object can't require CrunchLogicalExpr due to cyclic dependencies.
-        activeFilter(x) <- CrunchLogicalExpr()
-        return(x)
-    })
-
-filterSyntax <- function (x) {
-    ## Wrapper to contain API complexity when sending filter_syntax as query parameter
-    f <- zcl(x)
-    if (!length(f)) {
-        ## No filter in the R session. So supply an "all" filter to override any
-        ## "applied filter" on the server
-        ## TODO: make backend take a proper null
-        f <- zfunc("not", zfunc("==", zfunc("row"), -1))
+.getActiveFilter <- function (x) {
+    f <- expr <- x@filter
+    if (inherits(f, "CrunchLogicalExpr")) {
+        ## To check for an empty filter expression, get the @expression
+        ## Can't assume f is CrunchLogicalExpr because x could be CrunchExpr
+        expr <- f@expression
     }
-    ## Wrap and return
-    ## TODO: shouldn't have to wrap in expression object and supply id
-    return(list(expression=f, id="dont_require_id"))
+    if (!length(expr)) {
+        ## No active filter. Return NULL
+        f <- NULL
+    }
+    return(f)
 }
+
+.setActiveFilter <- function (x, value) {
+    if (is.null(value)) {
+        ## Set an empty CrunchLogicalExpr
+        value <- CrunchLogicalExpr()
+    }
+    x@filter <- value
+    return(x)
+}
+
+setMethod("activeFilter", "CrunchDataset", .getActiveFilter)
+setMethod("activeFilter<-", "CrunchDataset", .setActiveFilter)
+
+setMethod("activeFilter", "CrunchVariable", .getActiveFilter)
+setMethod("activeFilter<-", "CrunchVariable", .setActiveFilter)
+
+setMethod("activeFilter", "Subvariables", .getActiveFilter)
+setMethod("activeFilter<-", "Subvariables", .setActiveFilter)
+
+setMethod("activeFilter", "CrunchExpr", .getActiveFilter)
+
 
 ##' View and set exclusion filters
 ##'
 ##' Exclusion filters express logic that defines a set of rows that should be
 ##' dropped from the dataset. The rows aren't permanently deleted---you can
-##' recover them at any time by removing the exclusion filter---but they are 
+##' recover them at any time by removing the exclusion filter---but they are
 ##' omitted from all views and calculations, as if they had been deleted.
 ##'
 ##' Note that exclusion filters work opposite from how "normal" filters work.
 ##' That is, a regular filter expression defines the subset of rows to operate
 ##' on: it says "keep these rows." An exclusion filter defines which rows to
 ##' omit. Applying a filter expression as a query filter will have the
-##' opposite effect if applied as an exclusion. Indeed, applying it as both 
-##' query filter and exclusion at the same time will result in 0 rows. 
+##' opposite effect if applied as an exclusion. Indeed, applying it as both
+##' query filter and exclusion at the same time will result in 0 rows.
 ##'
 ##' @param x a Dataset
 ##' @param value an object of class \code{CrunchLogicalExpr}, or \code{NULL}
