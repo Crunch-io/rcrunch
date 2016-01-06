@@ -18,7 +18,7 @@ getAccount <- function (x=rootURL("account", getUser())) {
 ##' specify one
 ##' @return a \code{UserCatalog}
 ##' @export
-getAccountUserCatalog <- function (x=rootURL("users", getAccount())) {
+getAccountUserCatalog <- function (x=shojiURL(getAccount(), "catalogs", "users")) {
     UserCatalog(crGET(x))
 }
 
@@ -47,6 +47,6 @@ invite <- function (email, name=NULL, notify=TRUE, id_method="pwhash",
         payload$url_base <- "/password/change/${token}/"
     }
     
-    url <- rootURL("users", getAccount())
+    url <- shojiURL(getAccount(), "catalogs", "users")
     return(crPOST(url, body=toJSON(list(element="shoji:entity", body=payload))))
 }

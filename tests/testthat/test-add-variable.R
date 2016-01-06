@@ -119,7 +119,7 @@ if (run.integration.tests) {
             test_that("Variable lengths must match, in an R way", {
                 expect_error(ds[['not valid']] <- 1:7, 
                     "replacement has 7 rows, data has 20")
-                ds[['ok']] <- 1
+                ds$ok <- 1
                 expect_identical(as.vector(ds$ok), rep(1, 20))
             })
         })
