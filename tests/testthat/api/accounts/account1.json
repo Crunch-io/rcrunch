@@ -3,9 +3,8 @@
     "self": "/api/accounts/account1.json",
     "description": "Detail for a given Account",
     "body": {},
-    "catalogs": {},
-    "urls": {
-        "users_url": "/api/accounts/account1/users.json"
+    "catalogs": {
+        "users": "/api/accounts/account1/users.json"
     },
     "some_other_key": {}
 }
