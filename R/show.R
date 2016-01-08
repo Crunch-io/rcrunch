@@ -65,9 +65,9 @@ showCrunchDataset <- function (x) {
     if (!is.null(d) && nchar(d)) {
         out <- c(out, d)
     }
-    
-    out <- c(out, 
-            "", 
+
+    out <- c(out,
+            "",
             paste("Contains", nrow(x), "rows of", ncol(x), "variables:"),
             describeDatasetVariables(x))
     return(out)
@@ -146,7 +146,8 @@ setMethod("getShowContent", "CrunchDataset", showCrunchDataset)
 setMethod("getShowContent", "Subvariables", showSubvariables)
 setMethod("getShowContent", "VariableOrder", showVariableOrder)
 setMethod("getShowContent", "VersionCatalog", showVersionCatalog)
-setMethod("getShowContent", "ShojiCatalog", function (x) capture.output(print(x@index)))
+setMethod("getShowContent", "ShojiCatalog",
+    function (x) catalogToDataFrame(x, TRUE, row.names=NULL))
 setMethod("getShowContent", "ShojiObject", function (x) capture.output(print(x@body)))
 
 ##' @rdname show-crunch

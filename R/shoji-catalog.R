@@ -10,7 +10,7 @@ is.shojiCatalog <- function (x) inherits(x, "ShojiCatalog")
 setIndexSlot <- function (x, i, value) {
     if (length(value) == 1) value <- rep(value, length(x))
     stopifnot(length(x) == length(value))
-    
+
     old <- index(x)
     index(x) <- mapply(function (a, v) {
         a[[i]] <- v
@@ -92,7 +92,7 @@ setMethod("lapply", "ShojiCatalog", function (X, FUN, ...) lapply(index(X), FUN,
 ##' Get the body of a Catalog
 ##'
 ##' The core of Catalog data is in its "index". These methods get and set that
-##' slot. 
+##' slot.
 ##' @param x a Catalog (VariableCatalog, Subvariables, or similar object)
 ##' @param value For the setters, an appropriate-length list to
 ##' assign
@@ -127,3 +127,16 @@ setMethod("urls", "ShojiCatalog", function (x) names(index(x)))
 
 ##' @export
 as.list.ShojiCatalog <- function (x, ...) lapply(names(index(x)), function (i) x[[i]])
+
+##' Utility to get a more human-readable view of a Shoji Catalog
+##'
+##' @param x ShojiCatalog or subclass
+##' @param keys character vector of attribute names from each catalog tuple to
+##' include in the result. Default is TRUE, which means all.
+##' @param ... additional arguments passed to \code{data.frame}
+##' @return a \code{data.frame} view of the catalog
+catalogToDataFrame <- function (x, keys=TRUE, ...) {
+    out <- data.frame(do.call(rbind, lapply(index(x), function (a) a[keys])),
+        ...)
+    return(out)
+}
