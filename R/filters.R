@@ -48,18 +48,14 @@ setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchLogicalExpr"
 
 
 setMethod("appliedFilters", "CrunchDataset", function (x) {
-    ShojiView(crGET(shojiURL(x, "views", "applied_filters")))@value$groups[[1]]$entities
+    out <- ShojiOrder(crGET(shojiURL(x, "views", "applied_filters")))
+    return(out@graph)
 })
 
 setMethod("appliedFilters<-", c("CrunchDataset", "CrunchFilter"),
     function (x, value) {
         b <- toJSON(list(
-            groups=I(list(
-                list(
-                    group="default",
-                    entities=I(list(self(value)))
-                )
-            ))
+            graph=I(list(self(value)))
         ))
         crPUT(shojiURL(x, "views", "applied_filters"), body=b)
         return(x)

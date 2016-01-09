@@ -1,7 +1,7 @@
 init.Shoji <- function (.Object, ...) {
     slots <- slotNames(.Object)
     dots <- list(...)
-    ## Different cases are so you can call the class constructor directly 
+    ## Different cases are so you can call the class constructor directly
     ## with different inputs
     if (length(dots) && is.shojiObject(dots[[1]])) {
         ## Init from a parent class, e.g. CrunchObject(ShojiObject(x))
@@ -30,23 +30,10 @@ is.shoji.like <- function (x) {
     is.list(x) && "element" %in% names(x) && substr(as.character(x$element), 1, 5) == "shoji"
 }
 
-is.shoji.order.like <- function (x) {
-    ## Hack. But anticipating Order becoming not a shoji:view
-    is.shoji.like(x) && x$element == "shoji:view" && identical(names(x$value), "groups")
-}
-
 ##' @rdname crunch-is
 ##' @export
 ##' @importFrom methods is
 is.shoji <- function (x) inherits(x, "shoji")
-
-setOldClass("shoji")
-
-setAs("shoji", "ShojiObject", function (from) {
-    cl <- ifelse(from$element == "shoji:catalog", "ShojiCatalog", "ShojiObject")
-    return(do.call(cl, from))
-})
-as.shojiObject <- function (x) as(x, "ShojiObject")
 
 is.shojiObject <- function (x) inherits(x, "ShojiObject")
 
@@ -84,7 +71,7 @@ setEntitySlot <- function (x, i, value) {
     ##' @param value whatever the new value of that slot should be
     ##' @return x modified accordingly. If \code{x} isn't read-only, it will also
     ##' post the edit to the Crunch server.
-    
+
     ## Check if we have actual changes to send. Wrap both sides in I()
     ## in case "value" is already wrapped
     if (!identical(I(slot(x, "body")[[i]]), I(value))) {
