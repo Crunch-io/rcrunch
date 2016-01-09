@@ -4,7 +4,7 @@
 \alias{getAccountUserCatalog}
 \title{Find all users on your account}
 \usage{
-getAccountUserCatalog(x = rootURL("users", getAccount()))
+getAccountUserCatalog(x = shojiURL(getAccount(), "catalogs", "users"))
 }
 \arguments{
 \item{x}{URL of the user catalog. Default is the right thing; you shouldn't
