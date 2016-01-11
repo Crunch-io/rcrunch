@@ -10,7 +10,7 @@ setMethod("initialize", "CrunchDataset", init.CrunchDataset)
 getDatasetVariables <- function (x) {
     varcat_url <- variableCatalogURL(x)
     ## Add query params
-    return(VariableCatalog(crGET(varcat_url, 
+    return(VariableCatalog(crGET(varcat_url,
         query=list(nosubvars=1, relative="on"))))
 }
 
@@ -18,7 +18,7 @@ getNrow <- function (dataset, filtered=TRUE) {
     ## Filtered is the UI "applied_filter". We don't usually want that in R.
     ## TODO: change the default to FALSE
     which.count <- ifelse(isTRUE(filtered), "filtered", "total")
-    
+
     u <- summaryURL(dataset)
     f <- filterSyntax(activeFilter(dataset))
     q <- crGET(u, query=list(filter_syntax=toJSON(f)))
@@ -30,7 +30,7 @@ getNrow <- function (dataset, filtered=TRUE) {
 ##' @rdname crunch-is
 ##' @param x an object
 ##' @return logical
-##' @export 
+##' @export
 is.dataset <- function (x) inherits(x, "CrunchDataset")
 
 setDatasetName <- function (x, value) {
@@ -44,7 +44,7 @@ setDatasetDescription <- function (x, value) {
 
 ##' Name, alias, and description for Crunch objects
 ##'
-##' @param x a Dataset or Variable. 
+##' @param x a Dataset or Variable.
 ##' @param object Same as \code{x} but for the \code{alias} method, in order to
 ##' match the generic from another package. Note that \code{alias} is only
 ##' defined for Variables.
@@ -118,7 +118,7 @@ weight <- function (x) {
     return(w)
 }
 
-##' @rdname weight 
+##' @rdname weight
 ##' @export
 `weight<-` <- function (x, value) {
     stopifnot(is.dataset(x))
@@ -142,9 +142,9 @@ setMethod("tuple<-", "CrunchDataset", function (x, value) {
 ##' Crunch objects usually keep themselves in sync with the server when you
 ##' manipulate them, but sometimes they can drift. Maybe someone else has
 ##' modified the dataset you're working on, or maybe
-##' you have modified a variable outside of the context of its dataset. 
+##' you have modified a variable outside of the context of its dataset.
 ##' refresh() allows you to get back in sync.
-##' 
+##'
 ##' @param x pretty much any Crunch object
 ##' @return a new version of \code{x}
 ##' @name refresh
@@ -169,8 +169,8 @@ setMethod("refresh", "CrunchDataset", function (x) {
 ##' for datasets and \code{\link{hide}} for variables
 ##'
 ##' @param x a Crunch object
-##' @param confirm logical: should the user be asked to confirm deletion. 
-##' Option available for datasets and teams only. Default is \code{TRUE} if in 
+##' @param confirm logical: should the user be asked to confirm deletion.
+##' Option available for datasets and teams only. Default is \code{TRUE} if in
 ##' an interactive session. You can avoid the confirmation prompt if you delete
 ##' \code{with(\link{consent})}.
 ##' @param ... additional arguments, in the generic
@@ -181,7 +181,7 @@ NULL
 
 ##' @rdname delete
 ##' @export
-setMethod("delete", "CrunchDataset", 
+setMethod("delete", "CrunchDataset",
     function (x, confirm=requireConsent() | is.readonly(x), ...) {
         out <- delete(tuple(x), confirm=confirm)
         invisible(out)
@@ -192,6 +192,10 @@ as.list.CrunchDataset <- function (x, ...) {
     lapply(seq_along(variables(x)), function (i) x[[i]])
 }
 
+##' See the appended batches of this dataset
+##' @param x a \code{CrunchDataset}
+##' @return a \code{BatchCatalog}
+##' @export
 batches <- function (x) BatchCatalog(crGET(shojiURL(x, "catalogs", "batches")))
 
 joins <- function (x) ShojiCatalog(crGET(shojiURL(x, "catalogs", "joins")))
@@ -222,9 +226,9 @@ summaryURL <- function (x) shojiURL(x, "views", "summary")
 ##'
 ##' Datasets contain collections of variables. For a few purposes, such as
 ##' editing variables' metadata, it is helpful to access these variable catalogs
-##' more directly. 
+##' more directly.
 ##'
-##' \code{variables} gives just the active variables in the dataset, while 
+##' \code{variables} gives just the active variables in the dataset, while
 ##' \code{allVariables}, as the name suggests, yields all variables, including
 ##' hidden variables.
 ##' @param x a Dataset
@@ -247,9 +251,9 @@ setMethod("variables<-", c("CrunchDataset", "VariableCatalog"),
 setMethod("allVariables", "CrunchDataset", function (x) x@variables)
 ##' @rdname dataset-variables
 ##' @export
-setMethod("allVariables<-", c("CrunchDataset", "VariableCatalog"), 
+setMethod("allVariables<-", c("CrunchDataset", "VariableCatalog"),
     setDatasetVariables)
-    
+
 setMethod("hidden", "CrunchDataset", function (x) hidden(allVariables(x)))
 
 
@@ -264,8 +268,8 @@ webURL <- function (x) {
 ##' This method allows you to \code{eval} within a Dataset.
 ##'
 ##' @param x CrunchDataset
-##' @return an environment in which named objects are (promises that return) 
-##' CrunchVariables. 
+##' @return an environment in which named objects are (promises that return)
+##' CrunchVariables.
 setMethod("as.environment", "CrunchDataset", function (x) {
     out <- new.env()
     out$.crunchDataset <- x
