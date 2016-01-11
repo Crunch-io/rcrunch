@@ -11,7 +11,7 @@ with(fake.HTTP, {
         expect_true(is.categories(cats))
         expect_identical(length(cats), 3L)
     })
-    
+
     test_that("Categories validation", {
         expect_error(Categories(
             list(id=-1L, name="B", numeric_value=1L, missing=FALSE),
@@ -32,14 +32,20 @@ with(fake.HTTP, {
         expect_error(cats[c(1, 2, 98, 99)],
             "subscript out of bounds: 98 and 99")
     })
-    
+
+    test_that("can use negative subscripts on Categories", {
+        expect_true(is.categories(cats[-1]))
+        expect_error(cats[c(1, -1)],
+            "only 0's may be mixed with negative subscripts")
+    })
+
     test_that("categories to/fromJSON", {
         ## cereal serializes to JSON and then deserializes
         expect_identical(cats, Categories(data=cereal(cats)))
         expect_identical(cats[1], Categories(data=cereal(cats[1])))
         expect_identical(cats[[1]], Category(data=cereal(cats[[1]])))
     })
-    
+
     test_that("category getters", {
         male <- cats[[1]]
         expect_identical(name(male), "Male")
@@ -71,14 +77,14 @@ with(fake.HTTP, {
         expect_true(is.categories(cats))
         expect_equal(names(cats)[1:2], c("masculino", "donne"))
     })
-    
+
     test_that("validation on category setting", {
         expect_error(cats[1] <- "new name",
             "Invalid categories: 1 element is not a Crunch category object")
     })
-    
+
     test_that("categories ids cannot be set", {
-        expect_error(ids(cats) <- rev(ids(cats)), 
+        expect_error(ids(cats) <- rev(ids(cats)),
             "Cannot modify category ids")
     })
 
@@ -108,30 +114,30 @@ with(fake.HTTP, {
         expect_false(is.dichotomized(cats2))
         expect_false(is.selected(cats2[[1]]))
     })
-    
+
     test_that("is.na", {
-        expect_identical(is.na(cats), structure(c(FALSE, FALSE, TRUE), 
+        expect_identical(is.na(cats), structure(c(FALSE, FALSE, TRUE),
             .Names=c("Male", "Female", "No Data")))
         expect_true(is.na(cats[[3]]))
         expect_false(is.na(cats[[1]]))
     })
-    
+
     test_that("is.na<- by name", {
-        cats <- cats  
+        cats <- cats
         try(is.na(cats) <- "Female")
         expect_true(is.categories(cats))
-        expect_identical(is.na(cats), structure(c(FALSE, TRUE, TRUE), 
+        expect_identical(is.na(cats), structure(c(FALSE, TRUE, TRUE),
             .Names=c("Male", "Female", "No Data")))
         expect_error(is.na(cats) <- c("Male", "Prefer not to say"),
             paste0("Category not found: ", dQuote("Prefer not to say")))
-        expect_identical(is.na(cats), structure(c(FALSE, TRUE, TRUE), 
+        expect_identical(is.na(cats), structure(c(FALSE, TRUE, TRUE),
             .Names=c("Male", "Female", "No Data")))
     })
     test_that("is.na<- by logical", {
         cats <- cats
         try(is.na(cats) <- c(TRUE, FALSE, FALSE))
         expect_true(is.categories(cats))
-        expect_identical(is.na(cats), structure(c(TRUE, FALSE, FALSE), 
+        expect_identical(is.na(cats), structure(c(TRUE, FALSE, FALSE),
             .Names=c("Male", "Female", "No Data")))
     })
 
@@ -141,7 +147,7 @@ with(fake.HTTP, {
         expect_true(is.categories(na.omit(cats)))
         expect_true(all(vapply(na.omit(cats), is.category, logical(1))))
     })
-    
+
     newcat <- Category(name="Other", id=4)
     newcat2 <- Category(name="Something else", id=5)
     cats2 <- Categories(newcat, newcat2)
@@ -179,11 +185,11 @@ if (run.integration.tests) {
                 expect_equal(names(categories(ds$v4)), c("V", "C", "No Data"))
                 expect_identical(names(categories(ds$v4)),
                     names(categories(refresh(ds)$v4)))
-                
+
                 categories(ds$v4)[1:2] <- categories(ds$v4)[2:1]
                 expect_equal(names(categories(ds$v4)), c("C", "V", "No Data"))
             })
-            
+
             test_that("categories<- with invalid input gives helpful message", {
                 expect_error(categories(ds$v4) <- 1:3,
                     "`categories(x) <- value` only accepts Categories, not numeric. Did you mean `values(categories(x)) <- value`?",
@@ -200,56 +206,56 @@ if (run.integration.tests) {
                     "subscript out of bounds: 5")
             })
         })
-        
+
         with(test.dataset(df), {
             test_that("Can add categories with c()", {
-                expect_identical(names(categories(ds$v4)), 
+                expect_identical(names(categories(ds$v4)),
                     c("B", "C", "No Data"))
-                categories(ds$v4) <- c(categories(ds$v4), 
+                categories(ds$v4) <- c(categories(ds$v4),
                     Category(name="D", id=4))
-                expect_identical(names(categories(ds$v4)), 
+                expect_identical(names(categories(ds$v4)),
                     c("B", "C", "No Data", "D"))
             })
             test_that("Can insert a category in the middle", {
                 ds$v4b <- df$v4
-                expect_identical(names(categories(ds$v4b)), 
+                expect_identical(names(categories(ds$v4b)),
                     c("B", "C", "No Data"))
                 categories(ds$v4b) <- c(categories(ds$v4b)[1:2],
                     Category(name="D", id=4), categories(ds$v4b)[3])
-                expect_identical(names(categories(ds$v4b)), 
+                expect_identical(names(categories(ds$v4b)),
                     c("B", "C", "D", "No Data"))
             })
             test_that("Can add one to the end", {
                 ds$v4c <- df$v4
-                expect_identical(names(categories(ds$v4c)), 
+                expect_identical(names(categories(ds$v4c)),
                     c("B", "C", "No Data"))
                 categories(ds$v4c)[[4]] <- Category(name="D", id=4)
-                expect_identical(names(categories(ds$v4c)), 
+                expect_identical(names(categories(ds$v4c)),
                     c("B", "C", "No Data", "D"))
             })
             test_that("Can't duplicate categories", {
                 ds$v4d <- df$v4
-                expect_identical(names(categories(ds$v4d)), 
+                expect_identical(names(categories(ds$v4d)),
                     c("B", "C", "No Data"))
                 expect_error(categories(ds$v4) <- c(categories(ds$v4d),
                     categories(ds$v4d)))
             })
         })
-        
+
         with(test.dataset(mrdf), {
             ds <- mrdf.setup(ds)
             test_that("Can edit and reorder categories in categorical array", {
-                expect_identical(names(categories(ds$CA)), 
+                expect_identical(names(categories(ds$CA)),
                     c("0.0", "1.0", "No Data"))
                 names(categories(ds$CA))[1:2] <- c("First", "Second")
-                expect_identical(names(categories(ds$CA)), 
+                expect_identical(names(categories(ds$CA)),
                     c("First", "Second", "No Data"))
                 categories(ds$CA) <- rev(categories(ds$CA))
-                expect_identical(names(categories(ds$CA)), 
+                expect_identical(names(categories(ds$CA)),
                     c("No Data", "Second", "First"))
             })
         })
-        
+
         with(test.dataset(newDatasetFromFixture("apidocs")), {
             test_that("dichotomizing dichotomizes the subvariables", {
                 expect_true(is.MR(ds$allpets))
@@ -261,31 +267,31 @@ if (run.integration.tests) {
                 expect_false(is.dichotomized(categories(ds$allpets$Dog)))
             })
             test_that("Editing array categories affects the subvariables too", {
-                expect_identical(names(categories(ds$petloc)), 
+                expect_identical(names(categories(ds$petloc)),
                     c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
-                expect_identical(names(categories(ds$petloc$Home)), 
+                expect_identical(names(categories(ds$petloc$Home)),
                     c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
-                expect_identical(names(table(ds$petloc$Home)), 
+                expect_identical(names(table(ds$petloc$Home)),
                     c("Cat", "Dog", "Bird"))
                 names(categories(ds$petloc))[2] <- "Canine"
-                expect_identical(names(categories(ds$petloc)), 
+                expect_identical(names(categories(ds$petloc)),
                     c("Cat", "Canine", "Bird", "Skipped", "Not Asked"))
-                expect_identical(names(table(ds$petloc$Home)), 
+                expect_identical(names(table(ds$petloc$Home)),
                     c("Cat", "Canine", "Bird"))
-                expect_identical(names(categories(ds$petloc$Home)), 
+                expect_identical(names(categories(ds$petloc$Home)),
                     c("Cat", "Canine", "Bird", "Skipped", "Not Asked"))
             })
         })
-        
+
         with(test.dataset(df), {
             test_that("Cache invalidation when modifying categories", {
                 expect_equal(names(categories(ds$v4)), c("B", "C", "No Data"))
-                expect_equivalent(as.array(crtabs(~ v4, data=ds)), 
+                expect_equivalent(as.array(crtabs(~ v4, data=ds)),
                     array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
-                
+
                 names(categories(ds$v4))[1] <- "V"
                 expect_equal(names(categories(ds$v4)), c("V", "C", "No Data"))
-                expect_equivalent(as.array(crtabs(~ v4, data=ds)), 
+                expect_equivalent(as.array(crtabs(~ v4, data=ds)),
                     array(c(10, 10), dim=2L, dimnames=list(v4=c("V", "C"))))
             })
         })
