@@ -7,10 +7,10 @@ if (run.integration.tests) {
                 with(test.dataset(newDatasetFromFixture("apidocs"), "part2"), {
                     exclusion(part1) <- part1$q1 == "Dog"
                     exclusion(part2) <- part2$q1 == "Dog"
-                    part0 <- appendDataset(part0, part1)
-                    part0 <- appendDataset(part0, part2)
+                    part0 <- suppressMessages(appendDataset(part0, part1))
+                    part0 <- suppressMessages(appendDataset(part0, part2))
                     test_that("Appending happened, and rows were excluded", {
-                        expect_identical(dim(part0), 
+                        expect_identical(dim(part0),
                             c(nrow(part1)*2L, ncol(part1)))
                         expect_equivalent(table(part0$q1)["Dog"], 0)
                     })

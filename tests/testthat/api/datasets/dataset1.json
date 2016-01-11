@@ -12,6 +12,7 @@
     "catalogs": {
         "variables": "/api/datasets/dataset1/variables.json",
         "savepoints": "/api/datasets/dataset1/savepoints.json",
+        "batches": "/api/datasets/dataset1/batches.json",
         "permissions": "/api/datasets/dataset1/permissions.json"
     },
     "views": {

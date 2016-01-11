@@ -1,5 +1,7 @@
 ### crunch 1.7.5
-* `dropRows` to permanently delete rows from a dataset. 
+* `dropRows` to permanently delete rows from a dataset.
+* Better print method for catalog resources, using the new `catalogToDataFrame` function.
+* Export a few more functions (`shojiURL`, `batches`)
 
 ### crunch 1.7.4
 * Catch `NULL` in cube dimension when referencing subvariable that does not exist (as when using alias instead of name) and return a useful message.
