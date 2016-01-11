@@ -42,7 +42,7 @@ test_that("ShojiCatalog", {
     expect_true(is.shojiCatalog(sho[1]))
     expect_error(sho[2:3], "Subscript out of bounds: 3")
     expect_true(is.shojiCatalog(sho[c(TRUE, FALSE)]))
-    expect_error(sho[c(TRUE, FALSE, TRUE)], 
+    expect_error(sho[c(TRUE, FALSE, TRUE)],
         "Subscript out of bounds: got 3 logicals, need 2")
     expect_identical(sho[TRUE], sho)
     expect_identical(sho["/a"], sho[1])
@@ -52,7 +52,18 @@ test_that("ShojiCatalog", {
 with(fake.HTTP, {
     full.urls <- DatasetCatalog(crGET("/api/datasets.json"))
     rel.urls <- DatasetCatalog(crGET("/api/datasets-relative-urls.json"))
-    expect_identical(urls(full.urls), urls(rel.urls))
+    test_that("urls() method returns absolute URLs", {
+        expect_identical(urls(full.urls), urls(rel.urls))
+    })
+
+    test_that("shojiURL", {
+        ds <- loadDataset("test ds")
+        expect_identical(shojiURL(ds, "catalogs", "variables"),
+            "/api/datasets/dataset1/variables.json")
+        expect_error(shojiURL(ds, "catalogs", "NOTACATALOG"),
+            paste0("No URL ", dQuote("NOTACATALOG"), " in collection ",
+            dQuote("catalogs")))
+    })
 })
 
 if (run.integration.tests) {

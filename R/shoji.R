@@ -1,7 +1,7 @@
 init.Shoji <- function (.Object, ...) {
     slots <- slotNames(.Object)
     dots <- list(...)
-    ## Different cases are so you can call the class constructor directly 
+    ## Different cases are so you can call the class constructor directly
     ## with different inputs
     if (length(dots) && is.shojiObject(dots[[1]])) {
         ## Init from a parent class, e.g. CrunchObject(ShojiObject(x))
@@ -84,7 +84,7 @@ setEntitySlot <- function (x, i, value) {
     ##' @param value whatever the new value of that slot should be
     ##' @return x modified accordingly. If \code{x} isn't read-only, it will also
     ##' post the edit to the Crunch server.
-    
+
     ## Check if we have actual changes to send. Wrap both sides in I()
     ## in case "value" is already wrapped
     if (!identical(I(slot(x, "body")[[i]]), I(value))) {
@@ -116,5 +116,9 @@ shojiURL <- function (x, collection=c("catalogs", "views", "fragments"), key) {
     }
     collection <- match.arg(collection)
     urls <- slot(x, collection)
-    return(urls[[key]])
+    out <- urls[[key]]
+    if (is.null(out)) {
+        halt("No URL ", dQuote(key), " in collection ", dQuote(collection))
+    }
+    return(out)
 }
