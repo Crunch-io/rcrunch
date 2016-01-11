@@ -17,5 +17,8 @@
     "views": {
         "summary": "/api/datasets/dataset1/summary.json"
     },
+    "fragments": {
+        "table": "/api/datasets/dataset1/table.json"
+    },
     "some_other_key": {}
 }

@@ -1,3 +1,6 @@
+### crunch 1.7.5
+* `dropRows` to permanently delete rows from a dataset. 
+
 ### crunch 1.7.4
 * Catch `NULL` in cube dimension when referencing subvariable that does not exist (as when using alias instead of name) and return a useful message.
 * Fix for unintended substring matching in `%in%` expression translation.
