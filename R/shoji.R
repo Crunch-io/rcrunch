@@ -106,6 +106,13 @@ setReadonly <- function (x, value) {
 
 setMethod("readonly<-", "ShojiObject", setReadonly)
 
+##' Get a resource URL from a Shoji Object
+##' @param x a shojiObject
+##' @param collection one of c("catalogs", "views", "fragments")
+##' @param key character name of the URL to get from \code{collection}
+##' @return character URL
+##' @export
+##' @keywords internal
 shojiURL <- function (x, collection=c("catalogs", "views", "fragments"), key) {
     if (is.variable(x)) {
         x <- entity(x) ## Get the VariableEntity
