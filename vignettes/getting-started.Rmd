@@ -1,3 +1,6 @@
+---
+output: html_document
+---
 <!--
 %\VignetteEngine{knitr::knitr}
 %\VignetteIndexEntry{Getting started with crunch}
@@ -15,7 +18,7 @@ Both *crunch* and the Crunch web application communicate with the same applicati
 
 ## Authentication
 
-All work with data in Crunch requires users to be authenticated. Thus, the first step after loading *crunch* is to log in:
+All work with data in Crunch requires users to be authenticated. Thus, the first step after loading the *crunch* library in R is to log in:
 ```{r, eval=FALSE}
 login(email="xkcd@crunch.io")
 ```
@@ -24,7 +27,7 @@ Crunch.io password for xkcd@crunch.io: *enter your password here*
 ## Logged into crunch.io as xkcd@crunch.io
 ```
 
-This will log you in to the Crunch API. All of these parameters can be also be set as R `options` in your .Rprofile so that you can simply `login()`. See `?login` for details.
+This will log you in to the Crunch API. All of these parameters can be also be set as R `options` in your .Rprofile so that you can simply `login()`. See `?login` and then google "how to edit .RProfile for dummies" for details.
 
 ## Table of contents
 

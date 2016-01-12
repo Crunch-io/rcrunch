@@ -38,7 +38,7 @@ by.summary.before
 Age is now a derived variable, functionally linked to `birthyr` on the server. Note that in order to create `age`, we didn't pull any values off of the server; we just supplied the derivation expression.
 
 ```{r, eval=FALSE}
-class(2015 - ds$birthyr)
+class(2015 - ds$birthyr) # it persists as an expression linking the two
 ```
 ```{r, echo=FALSE}
 class(cr.expr)
@@ -78,6 +78,6 @@ class(ds$birthyr < 1945)
 class(cr.log.expr)
 ```
 
-The work gets done without having to pull data off of the server.
+The work gets done without having to pull data off of the server (and so is faster), and the expressions persists and so you do not have to always remember to do re-do it (and so is safer).
 
 [Next: analyzing data](analyze.html)

@@ -5,34 +5,34 @@
 
 [Previous: variables](variables.html)
 
-
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(crunch)
 load("array-variables.RData")
 ```
 # Array Variables
 
-Crunch supports more types of variables than many of the data formats from which you can create datasets. Plain-text .csv files, for example, can't express that some columns are actually indicator matrices of multiple selections (Multiple Response Variables). Most SPSS .sav files do not indicate Categorical Arrays (otherwise known as "grids") as being part of a group---they are simply several categorical variables. The same is true for an R `data.frame`.
+Crunch supports more different types of variables than many data formats do. For example, plain-text .csv files, can't express that some columns are actually indicator matrices of multiple selections (Multiple Response Variables). Most SPSS .sav files do not indicate Categorical Arrays (otherwise known as "grids") as being part of a group---they are simply several categorical variables. The same is true for an R `data.frame`.
 
-You can use `crunch` to "bind" categorical variables into Multiple Response and Categorical Array variables.
+You can use the `crunch` library in R to "bind" categorical variables into Multiple Response and Categorical Array variables. We discuss the similarities between Multiple Resonponse and Categorical Arrays further below.
 
 ## Creating an array
 
 One of the reasons to use R with Crunch is to leverage the power of scripting for tasks that would be repetitive in a GUI. Many crunch functions operating on Crunch datasets have an optional `pattern` argument that lets you use regular expressions for these "bulk" operations. 
 
-In our sample _Economist_ dataset, we have set of variables prefixed with "imiss":
+In our sample _Economist/YouGov Weekly Survey_ dataset, we have set of variables prefixed with "imiss":
 
 ```{r, eval=FALSE}
-grep("^imiss_", names(ds), value=TRUE)
+grep("^imiss_", names(ds), value=TRUE) # please don't run, just read output below
+# Also, see ?grep if this is new. This line says, search for the string that begins with 'imiss_', within names(economist), and then return the matches that you do find
 ```
 ```{r, echo=FALSE}
 grep("^imiss_", names(start), value=TRUE)
 ```
 
-These correspond to a survey grid question about how important respondents view a set of issues. Examining one of them, we see
+These correspond to a survey "grid" question about how important respondents view a set of issues. Examining one of them, we see
 
 ```{r, eval=FALSE}
-ds$imiss_b
+ds$imiss_b # please don't run, just read output below
 ```
 ```{r, echo=FALSE}
 cat(show_imiss_b, sep="\n")
@@ -41,21 +41,20 @@ cat(show_imiss_b, sep="\n")
 All of these "imiss" categorical variables have the same structure. We can combine them into a categorical array variable with `makeArray`:
 
 ```{r, eval=FALSE}
-ds$imiss <- makeArray(pattern="^imiss_", dataset=ds, name="Issue importance")
-ds$imiss
+ds$imiss <- makeArray(pattern="^imiss_", dataset=ds, name="Issue importance") # please don't run, just read output below
 ```
 ```{r, echo=FALSE}
 cat(show_imiss, sep="\n")
 ```
 
-In the Crunch web application, the set of "important issue" variables have gone from thirteen separate categorical variable cards to just one, where the subvariables are shown as rows, and the common categories across all of them are shown as columns:
+In the Crunch web application, the set of "important issue" variables have gone from thirteen separate categorical variable cards to just one. This is great because you save space by combining what were many individual questions' cards into one, and because this is likely the most intuitive way to present the information. The subvariables are shown as rows, and the common categories across all of them are shown as columns:
 
 ![Categorical Array variable card](array-card.png)
 
 The categorical variables `imiss_*` are now not visible in the dataset directly, but we can access them as "subvariables" of the array we just created.
 
 ```{r, eval=FALSE}
-subvariables(ds$imiss)
+subvariables(ds$imiss) # please don't run, just read output below
 ```
 ```{r, echo=FALSE}
 cat(show_imiss_subvars, sep="\n")
@@ -64,7 +63,7 @@ cat(show_imiss_subvars, sep="\n")
 We can also step into the subvariables and access the underlying categorical variables:
 
 ```{r, eval=FALSE}
-ds$imiss$imiss_b
+ds$imiss$imiss_b # please don't run, just read output below
 ```
 ```{r, echo=FALSE}
 cat(show_imiss_b, sep="\n")
@@ -77,7 +76,7 @@ The names `imiss_b` through `imiss_t` are unsatisfying from a human-readability 
 Subvariables have methods similar to those for [categories](variables.html). They have a names attribute that we can get:
 
 ```{r, eval=FALSE}
-names(subvariables(ds$imiss))
+names(subvariables(ds$imiss)) # please don't run, just read output below
 ```
 ```{r, echo=FALSE}
 names_imiss_subvars
@@ -89,8 +88,8 @@ We can set it, too:
 names(subvariables(ds$imiss)) <- c("The economy", "Immigration", 
     "The environment", "Terrorism", "Gay rights", "Education", 
     "Health care", "Social security", "The budget deficit", 
-    "The war in Afghanistan", "Taxes", "Medicare", "Abortion")
-subvariables(ds$imiss)
+    "The war in Afghanistan", "Taxes", "Medicare", "Abortion") # please don't run, just read output below
+subvariables(ds$imiss) # please don't run, just read output below
 ```
 ```{r, echo=FALSE}
 cat(show_imiss_subvars2, sep="\n")
@@ -99,9 +98,9 @@ cat(show_imiss_subvars2, sep="\n")
 Another useful thing we can do with array subvariables is reorder them. Let's alphabetize the subvariables:
 
 ```{r, eval=FALSE}
-sorting <- order(names(subvariables(ds$imiss)))
-subvariables(ds$imiss) <- subvariables(ds$imiss)[sorting]
-subvariables(ds$imiss)
+sorting <- order(names(subvariables(ds$imiss))) # please don't run
+subvariables(ds$imiss) <- subvariables(ds$imiss)[sorting] # please don't run
+subvariables(ds$imiss) # please don't run
 ```
 ```{r, echo=FALSE}
 cat(show_imiss_subvars3, sep="\n")
@@ -109,12 +108,12 @@ cat(show_imiss_subvars3, sep="\n")
 
 ## Creating multiple response variables
 
-Just as we created a categorical array, we can create a multiple response variable. Like categorical arrays, multiple responses contain a set of subvariables, categorical variables with a common list of categories. However, the subvariables in a multiple response are treated as dichotomous indicators. We specify one or more categories that indicate "selected" versus "not selected". Hence, when a multiple response appears in the web app, it looks like a single categorical variable, each subvariable shown like a category. Unlike a categorical variable, though, the multiple responses are not mutually exclusive, so tabulations with them may not sum to 100 percent. 
+Just as we created a categorical array, we can create a multiple response variable. Similar to categorical arrays, multiple responses variables contain a set of subvariables that are categorical variables with a common list of categories. However, the subvariables in a multiple response are treated as _dichotomous indicators_. We specify one or more categories that indicate "selected" versus "not selected". For example, we could change response categories of: "strongly approve" and "approve" to be the "selected" answers and then all other answers would be "not selected", and so the number shown will be "what percentage of people chose a 'selected' answer for this subvariable". That is why When a multiple response appears in the web app, it looks like a single categorical variable (that is, it's just one column of numbers), where each subvariable is shown like a category. Unlike a categorical variable, though, the multiple responses are not mutually exclusive, so tabulations with them may not sum to 100 percent. 
 
-In the _Economist_ dataset, we have another set of parallel categorical variables, "boap", which indicate approval of President Obama on a range of issues. 
+In the _Economist_ dataset, we have another set of parallel categorical variables, "boap", which indicate approval of President Obama on a range of political issues. 
 
 ```{r, eval=FALSE}
-ds$boap_4
+ds$boap_4 # please don't run
 ```
 ```{r, echo=FALSE}
 cat(show_boap_4, sep="\n")
@@ -127,8 +126,8 @@ The function `makeMR` works like `makeArray` but with an additional argument, "s
 ```{r, eval=FALSE}
 ds$boap <- makeMR(pattern="^boap_[0-9]+", dataset=ds, 
     name="Approval of Obama on issues", 
-    selections=c("Strongly approve", "Somewhat approve"))
-ds$boap
+    selections=c("Strongly approve", "Somewhat approve")) # please don't run
+ds$boap # please don't run
 ```
 ```{r, echo=FALSE}
 cat(show_boap, sep="\n")
@@ -136,13 +135,13 @@ cat(show_boap, sep="\n")
 
 ## (un)dichotomize
 
-Multiple response variables can be thought of as categorical arrays that have extra metadata indicating which categories are "selected". This metadata can be manipulated, and we can thus transform categorical arrays into multiple response and vice versa. 
+Multiple response variables can be thought of as categorical arrays that have extra metadata indicating which categories are "selected". This is a little counter-intuitive because the _extra_ metadata about which variables count as "selected" makes the multiple response variable show us _less_ information in a sense (just a single percentage for each subvariable). This metadata can be manipulated, and we can thus go back and forth and transform categorical arrays into multiple response and vice versa. 
 
 The function `undichotomize` removes the dichotomization metadata:
 
 ```{r, eval=FALSE}
-ds$boap <- undichotomize(ds$boap)
-ds$boap
+ds$boap <- undichotomize(ds$boap) # please don't run
+ds$boap # please don't run
 ```
 ```{r, echo=FALSE}
 cat(show_boap2, sep="\n")
@@ -163,10 +162,10 @@ cat(show_boap3, sep="\n")
 As noted above, when we make an array, its subvariables no longer appear in the dataset outside of the array.
 
 ```{r}
-grep("boap", names(ds), value=TRUE)
+grep("boap", names(ds), value=TRUE) # if the subvariable were here we would see 14 varibles not 1
 ```
 
-We can access the subvariables and do things with them directly via the `subvariables` method, but the case may arise in which we want to undo our binding of these subvariables into the array. The function `unbind` deletes the array variable and restores the subvariables as top-level variables.
+We can access the subvariables and do things with them directly via the `subvariables` method, but the case may arise in which we want to undo our binding of these subvariables into the array. The function `unbind` deletes the array variable and restores the subvariables as top-level variables. Note that you should not use unbind() lightly since the metadata will be somewhat different afterwards. If you can, try to keep things bound and edit the bound variable.
 
 ```{r, eval=FALSE}
 unbind(ds$boap)

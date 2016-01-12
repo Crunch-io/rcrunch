@@ -11,16 +11,12 @@ options(width=120)
 ```
 
 # Computing with R and Crunch
-With `crunch`, you can harness the power of R to do computations with your datasets in Crunch that would be difficult or impossible to accomplish in a graphical user interface. 
+With the `crunch` library, you can harness the power of R to do computations with your datasets in Crunch that would be difficult or impossible to accomplish in a graphical user interface. 
 
 ## Crosstabbing
-While the web application certainly supports crosstabbing, you may want to do aggregations like this in R. Crosstabbing in R with `crunch` may allow you to easily do additional computations on the result, for example. 
+While the web application certainly supports crosstabbing, crosstabbing in R with `crunch` allows you to easily do additional computations on the result. 
 
-`crunch` contains the `crtabs` (Crunch-tabs) function, which largely emulates the design of the `xtabs` function in base R. In essence, you define a formula and provide data in which to evaluate it. In this case, we'll be providing a `CrunchDataset`.
-
-### Basic examples
-
-Like `xtabs`, `crtabs` takes a formula and a data argument. Dimensions of your crosstab go on the right side of the `~`. For a univariate table of frequencies by education, we can do
+`crunch` contains the `crtabs` (Crunch-tabs) function, which largely emulates the design of the `xtabs` function in base R. In essence, you define a formula and provide data in which to evaluate it. In this case, we'll be providing a formula with some variables and a `CrunchDataset` as the data. Dimensions of your crosstab go on the right side of the `~`. For a univariate table of frequencies by education, we can do
 
 ```{r, eval=FALSE}
 tab1 <- crtabs(~ educ, data=ds)
@@ -44,7 +40,7 @@ tab2
 `crtabs` takes advantage of several Crunch features that `xtabs` does not support. First, it respects weight variables that have been set on the server. This dataset is not currently weighted
 
 ```{r, eval=FALSE}
-weight(ds)
+weight(ds) # Note that weight() is a function; not the variable called "weight"
 ```
 ```{r, echo=FALSE}
 print(NULL)
@@ -59,7 +55,7 @@ weight(ds) <- ds$weight
 Now, if we request the same two-way table as before, we'll get weighted results:
 
 ```{r, eval=FALSE}
-crtabs(~ educ + gender, data=ds)
+crtabs(~ educ + gender, data=ds) # table with weight on
 ```
 ```{r, echo=FALSE}
 tab2weighted
@@ -68,7 +64,7 @@ tab2weighted
 If we want unweighted data, that's easy enough:
 
 ```{r, eval=FALSE}
-crtabs(~ educ + gender, data=ds, weight=NULL)
+crtabs(~ educ + gender, data=ds, weight=NULL) # now weight off
 ```
 ```{r, echo=FALSE}
 tab2
@@ -81,16 +77,16 @@ As with any `array` data type, we can compute margin tables, and the `prop.table
 prop.table(tab1)
 ```
 
-For column proportions, specify margin=2 (by rows, margin=1):
+For column proportions, specify "margin=2"" (for by rows use "margin=1"):
 
 ```{r}
-prop.table(tab2, 2)
+prop.table(tab2, margin=2)
 ```
 
 Let's make that more readable:
 
 ```{r}
-round(100*prop.table(tab2, 2))
+round(100*prop.table(tab2, 2)) # Note "margin" is implicit here
 ```
 
 ### Complex data types
@@ -219,7 +215,7 @@ round(crtabs(mean(track) ~ educ + gender, data=ds[ds$pid3 == "Democrat",]), 2)
 round(tab8, 2)
 ```
 
-Not surprisingly, Democrats were less pessimistic about the direction of the country than the general population.
+Not surprisingly, Democrats were less pessimistic about the direction of the country than the general population (given this was during President Obama's tenure).
 
 A few final observations about `crtabs`. First, all of these calculations have been weighted by the weight variable we set above. We set it and could then forget about it--we didn't have to litter all of our expressions with `ds$weight` and extra arithmetic to do the weighting. Crunch handles this for us.
 
