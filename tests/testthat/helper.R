@@ -1,4 +1,5 @@
 run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
+add.empty.exclusion <- Sys.getenv("EXCLUSION") == "TRUE"
 Sys.setlocale("LC_COLLATE", "C") ## What CRAN does
 
 skip_on_jenkins <- function (...) {
@@ -34,7 +35,7 @@ envOrOption <- function (opt) {
 
 ## .onAttach stuff, for testthat to work right
 options(
-    crunch.api=envOrOption("test.api"), 
+    crunch.api=envOrOption("test.api"),
     warn=1,
     crunch.debug=FALSE,
     digits.secs=3,
@@ -104,7 +105,7 @@ addNullHTTPVerbs <- function () {
 }
 
 ## Mock backend
-fake.HTTP <- setup.and.teardown(addFakeHTTPVerbs, 
+fake.HTTP <- setup.and.teardown(addFakeHTTPVerbs,
     function () {
         logout()
         addRealHTTPVerbs()
@@ -113,7 +114,7 @@ fake.HTTP <- setup.and.teardown(addFakeHTTPVerbs,
     })
 
 ## Mock backend for no connectivity
-no.internet <- setup.and.teardown(addNullHTTPVerbs, 
+no.internet <- setup.and.teardown(addNullHTTPVerbs,
     function () {
         logout()
         addRealHTTPVerbs()
@@ -123,10 +124,10 @@ no.internet <- setup.and.teardown(addNullHTTPVerbs,
 
 timingTracer <- function (filename=tempfile(), append=FALSE) {
     return(function () {
-        suppressMessages(trace("crunchAPI", 
+        suppressMessages(trace("crunchAPI",
             exit=quote(cat(paste(c(http.verb, url, x$status_code,
-                ifelse(is.null(x$headers$`content-length`), 
-                NA, x$headers$`content-length`), 
+                ifelse(is.null(x$headers$`content-length`),
+                NA, x$headers$`content-length`),
                 format(x$times, scientific=FALSE)),
                 collapse="\t"), "\n")),
             print=FALSE, where=CrunchDataset))
@@ -162,7 +163,7 @@ silencer <- setup.and.teardown(function () {
 
 ## Auth setup-teardown
 test.authentication <- setup.and.teardown(
-    function () suppressMessages(login()), 
+    function () suppressMessages(login()),
     logout)
 
 uniqueDatasetName <- now
@@ -181,6 +182,11 @@ new.dataset.with.setup <- function (df=NULL, ...) {
         out <- suppressMessages(newDataset(df, name=unique.name, ...))
     }
     datasets_to_purge <<- c(datasets_to_purge, self(out))
+    if (add.empty.exclusion) {
+        ## Test that everything still works if there is an exclusion applied
+        crPATCH(shojiURL(out, "fragment", "exclusion"),
+            body=toJSON(list(expression=zfunc("==", zfunc("row"), -1))))
+    }
     return(out)
 }
 
@@ -204,7 +210,7 @@ newDatasetFromFixture <- function (filename) {
     ## Grab csv and json from "dataset-fixtures" and make a dataset
     m <- fromJSON(file.path("dataset-fixtures", paste0(filename, ".json")),
         simplifyVector=FALSE)
-    return(suppressMessages(createWithMetadataAndFile(m, 
+    return(suppressMessages(createWithMetadataAndFile(m,
         file.path("dataset-fixtures", paste0(filename, ".csv")))))
 }
 
@@ -247,7 +253,7 @@ test.user <- function (email=uniqueEmail(), name=email, obj.name="u", ...) {
 does_not_give_warning <- function () {
     function (expr) {
         warnings <- evaluate_promise(expr)$warnings
-        expectation(length(warnings) == 0, 
+        expectation(length(warnings) == 0,
                 paste0(length(warnings), " warnings created"),
                 "no warnings given")
     }
@@ -256,7 +262,7 @@ does_not_give_warning <- function () {
 does_not_show_message <- function () {
     function (expr) {
         warnings <- evaluate_promise(expr)$messages
-        expectation(length(messages) == 0, 
+        expectation(length(messages) == 0,
                 paste0(length(messages), " messages created"),
                 "no messages shown")
     }
@@ -269,7 +275,7 @@ does_not_throw_error <- function () {
         failure.msg <- "threw an error"
         if (error) {
             ## Append the error message
-            failure.msg <- paste0(failure.msg, ": ", 
+            failure.msg <- paste0(failure.msg, ": ",
                 attr(res, "condition")$message)
         }
         expectation(!error, failure.msg, "no error thrown")
@@ -279,15 +285,15 @@ does_not_throw_error <- function () {
 is_not_an_error <- function () {
     ## Like does_not_throw_error, but for an error already caught
     function (expr) {
-        expectation(!is.error(expr), 
-            paste("is an error:", attr(expr, "condition")$message), 
+        expectation(!is.error(expr),
+            paste("is an error:", attr(expr, "condition")$message),
             "no error thrown")
     }
 }
 
 ## Data frames to make datasets with
-df <- data.frame(v1=c(rep(NA_real_, 5), rnorm(15)), 
-                 v2=c(letters[1:15], rep(NA_character_, 5)), 
+df <- data.frame(v1=c(rep(NA_real_, 5), rnorm(15)),
+                 v2=c(letters[1:15], rep(NA_character_, 5)),
                  v3=8:27,
                  v4=as.factor(LETTERS[2:3]),
                  v5=as.Date(0:19, origin="1955-11-05"),
@@ -331,7 +337,7 @@ validImport <- function (ds) {
     expect_equivalent(as.array(crtabs(mean(v3) ~ v4, data=ds)),
         tapply(df$v3, df$v4, mean, na.rm=TRUE))
     expect_true(is.Categorical(ds[["v4"]]))
-    expect_equivalent(as.array(crtabs(~ v4, data=ds)), 
+    expect_equivalent(as.array(crtabs(~ v4, data=ds)),
         array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
     expect_true(all(levels(df$v4) %in% names(categories(ds$v4))))
     expect_identical(categories(ds$v4), categories(refresh(ds$v4)))
@@ -345,13 +351,13 @@ validImport <- function (ds) {
 validApidocsImport <- function (ds) {
     expect_true(is.dataset(ds))
     expect_identical(dim(ds), c(20L, 9L))
-    expect_identical(names(ds), 
+    expect_identical(names(ds),
         c("allpets", "q1", "petloc", "ndogs", "ndogs_a", "ndogs_b", "q3",
         "country", "wave"))
-    
+
 }
 
 ## Global teardown proof of concept
 # bye <- new.env()
-# reg.finalizer(bye, function (x) print("Cleaning..."), 
+# reg.finalizer(bye, function (x) print("Cleaning..."),
 #     onexit=TRUE)
