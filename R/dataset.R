@@ -192,6 +192,10 @@ as.list.CrunchDataset <- function (x, ...) {
     lapply(seq_along(variables(x)), function (i) x[[i]])
 }
 
+##' See the appended batches of this dataset
+##' @param x a \code{CrunchDataset}
+##' @return a \code{BatchCatalog}
+##' @export
 batches <- function (x) BatchCatalog(crGET(shojiURL(x, "catalogs", "batches")))
 
 joins <- function (x) ShojiCatalog(crGET(shojiURL(x, "catalogs", "joins")))

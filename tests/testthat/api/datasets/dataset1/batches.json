@@ -1,0 +1,22 @@
+{
+	"element": "shoji:catalog",
+	"self": "/api/datasets/dataset1/batches.json",
+	"description": "A collection of batches for this Dataset. Each batch is a set of rows which were inserted together.",
+	"index": {
+		"/api/datasets/dataset1/batches/2.json": {
+			"status": "imported",
+			"source_id": "0cfd27",
+			"id": 2
+		},
+		"/api/datasets/dataset1/batches/0.json": {
+			"status": "imported",
+			"source_id": null,
+			"id": 0
+		},
+        "/api/datasets/dataset1/batches/3.json": {
+            "status": "conflict",
+            "source_id": "387251",
+            "id": 3
+        }
+	}
+}

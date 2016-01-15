@@ -2,9 +2,9 @@ validCategories <- function (object) {
     are.cats <- vapply(object, is.category, logical(1))
     if (!all(are.cats)) {
         badcount <- sum(!are.cats)
-        return(paste0("Invalid categories: ", badcount, 
-            ifelse(badcount>1, 
-                " elements are not Crunch category objects.", 
+        return(paste0("Invalid categories: ", badcount,
+            ifelse(badcount>1,
+                " elements are not Crunch category objects.",
                 " element is not a Crunch category object.")))
     }
     if (any(duplicated(names(object)))) {
@@ -68,7 +68,7 @@ setMethod("[", c("Categories", "ANY"), function (x, i, ...) {
 ##' @rdname Categories
 ##' @export
 setMethod("[", c("Categories", "numeric"), function (x, i, ...) {
-    invalid.indices <- setdiff(i, seq_along(x@.Data))
+    invalid.indices <- setdiff(abs(i), seq_along(x@.Data))
     if (length(invalid.indices)) {
         halt("subscript out of bounds: ", serialPaste(invalid.indices))
     }
@@ -147,8 +147,8 @@ setMethod("na.omit", "Categories", function (object, ...) {
 ##'
 ##' @param x Categories or a single Category
 ##' @param value To change the missingness of categories, supply either (1)
-##' a logical vector of equal length of the categories (or length 1 for the 
-##' Category method), or (2) the names of the categories to mark as missing. 
+##' a logical vector of equal length of the categories (or length 1 for the
+##' Category method), or (2) the names of the categories to mark as missing.
 ##' If supplying the latter, any categories already indicated as missing will
 ##' remain missing.
 ##' @return Getters return logical, a named vector in the case of the Categories
@@ -165,7 +165,7 @@ n2i <- function (x, cats, strict=TRUE) {
     ## Convert x from category names to the corresponding category ids
     out <- ids(cats)[match(x, names(cats))]
     if (strict && any(is.na(out))) {
-        halt(ifelse(sum(is.na(out)) > 1, "Categories", "Category"), 
+        halt(ifelse(sum(is.na(out)) > 1, "Categories", "Category"),
             " not found: ", serialPaste(dQuote(x[is.na(out)])))
     }
     return(out)
@@ -176,7 +176,7 @@ n2i <- function (x, cats, strict=TRUE) {
 setMethod("is.na<-", c("Categories", "character"), function (x, value) {
     ix <- match(value, names(x))
     if (any(is.na(ix))) {
-        halt(ifelse(sum(is.na(ix)) > 1, "Categories", "Category"), 
+        halt(ifelse(sum(is.na(ix)) > 1, "Categories", "Category"),
             " not found: ", serialPaste(dQuote(value[is.na(ix)])))
     }
     x[ix] <- lapply(x[ix], `is.na<-`, value=TRUE)

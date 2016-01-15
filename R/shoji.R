@@ -93,6 +93,13 @@ setReadonly <- function (x, value) {
 
 setMethod("readonly<-", "ShojiObject", setReadonly)
 
+##' Get a resource URL from a Shoji Object
+##' @param x a shojiObject
+##' @param collection one of c("catalogs", "views", "fragments")
+##' @param key character name of the URL to get from \code{collection}
+##' @return character URL
+##' @export
+##' @keywords internal
 shojiURL <- function (x, collection=c("catalogs", "views", "fragments"), key) {
     if (is.variable(x)) {
         x <- entity(x) ## Get the VariableEntity
@@ -103,5 +110,9 @@ shojiURL <- function (x, collection=c("catalogs", "views", "fragments"), key) {
     }
     collection <- match.arg(collection)
     urls <- slot(x, collection)
-    return(urls[[key]])
+    out <- urls[[key]]
+    if (is.null(out)) {
+        halt("No URL ", dQuote(key), " in collection ", dQuote(collection))
+    }
+    return(out)
 }
