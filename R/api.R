@@ -38,8 +38,8 @@ addRealHTTPVerbs()
 ##' HTTP methods for communicating with the Crunch API
 ##'
 ##' @param ... see \code{\link{crunchAPI}} for details. \code{url} is the first
-##' named argument and is required; \code{body} is also required for PUT, 
-##' PATCH, and POST. 
+##' named argument and is required; \code{body} is also required for PUT,
+##' PATCH, and POST.
 ##' @return Depends on the response status of the HTTP request and any custom
 ##' handlers.
 ##' @name http-methods
@@ -78,14 +78,14 @@ handleAPIresponse <- function (response, special.statuses=list()) {
         } else if (code == 204 || length(response$content) == 0) {
             invisible(response)
         } else {
-            return(handleShoji(content(response)))            
+            return(handleShoji(content(response)))
         }
     } else {
         if (code == 401) {
             halt("You are not authenticated. Please `login()` and try again.")
         } else if (code == 410) {
             halt("The API resource at ",
-                response$url, 
+                response$url,
                 " has moved permanently. Please upgrade crunch to the ",
                 "latest version.")
         }
@@ -110,14 +110,14 @@ handleAPIerror <- function (response) {
             rethrow(response)
         }
     }
-    return(response)    
+    return(response)
 }
 
 responseStatusLog <- function (response) {
     req <- response$request
     return(paste("HTTP",
-        req$method, 
-        req$url, 
+        req$method,
+        req$url,
         response$status_code,
         # req$headers[["content-length"]] %||% 0,
         # response$headers[["content-length"]] %||% 0,
@@ -149,7 +149,7 @@ handleShoji <- function (x) {
     if (is.shoji.like(x)) {
         class(x) <- c("shoji", x$element)
     }
-    if ("shoji:view" %in% class(x) && !is.shoji.order.like(x)) {
+    if ("shoji:view" %in% class(x)) {
         x <- x$value
     }
     return(x)

@@ -21,22 +21,14 @@ test_that("ShojiObject init and is", {
     expect_identical(sh@self, 2)
 })
 
-test_that("shoji S3 to ShojiObject", {
-    fo <- list(element=1, self=2, description=3)
-    class(fo) <- "shoji"
-    expect_true(is.shojiObject(as.shojiObject(fo)))
-    expect_true(is.shojiObject(as.shojiObject(structure(list(element=1, self=2,
-        description=3, foo=4, junk=5), class="shoji"))))
-})
-
 test_that("ShojiCatalog", {
-    fo <- list(element=1, self=2, description=3, index=list(`/a`=4, `/b`=5))
-    class(fo) <- "shoji"
-    sho <- as.shojiObject(fo)
+    fo <- structure(list(element=1, self=2, description=3, index=list(`/a`=4, `/b`=5)),
+        class="shoji")
+    sho <- ShojiObject(fo)
     expect_false(is.shojiCatalog(sho))
     expect_error(index(sho))
-    fo$element <- "shoji:catalog"
-    sho <- as.shojiObject(fo)
+    fo$element <- "shoji:catalog" ## TODO: implement ShojiObject subclassing
+    sho <- ShojiCatalog(fo)
     expect_true(is.shojiCatalog(sho))
     expect_identical(index(sho), fo$index)
     expect_true(is.shojiCatalog(sho[1]))

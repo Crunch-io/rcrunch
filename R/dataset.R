@@ -20,8 +20,8 @@ getNrow <- function (dataset, filtered=TRUE) {
     which.count <- ifelse(isTRUE(filtered), "filtered", "total")
 
     u <- summaryURL(dataset)
-    f <- filterSyntax(activeFilter(dataset))
-    q <- crGET(u, query=list(filter_syntax=toJSON(f)))
+    f <- zcl(activeFilter(dataset))
+    q <- crGET(u, query=list(filter=toJSON(f)))
     nrows <- as.integer(round(q$unweighted[[which.count]]))
     return(nrows)
 }

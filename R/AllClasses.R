@@ -1,5 +1,5 @@
 ##' Mix-in class for multiple inheritance of variables and datasets.
-##' 
+##'
 ##' Exists for common methods in interacting with Crunch API only. Has no
 ##' Extract methods declared so as not to conflict with the
 ##' vector/list/data.frame methods jointly inherited in CrunchVariable and
@@ -17,7 +17,7 @@ ShojiObject <- setClass("ShojiObject",
     ),
     prototype=prototype(readonly=FALSE))
 
-ShojiCatalog <- setClass("ShojiCatalog", contains="ShojiObject", 
+ShojiCatalog <- setClass("ShojiCatalog", contains="ShojiObject",
     representation(
         index="list",
         orders="list"
@@ -31,7 +31,7 @@ ShojiView <- setClass("ShojiView", contains="ShojiObject",
         value="ANY"
     ))
 
-IndexTuple <- setClass("IndexTuple", 
+IndexTuple <- setClass("IndexTuple",
     representation(
         index_url="character",
         entity_url="character",
@@ -71,13 +71,13 @@ setClass("CrunchVariable",
         readonly="logical",
         filter="CrunchLogicalExpr",
         tuple="VariableTuple"
-    ), 
+    ),
     prototype=prototype(readonly=FALSE, filter=CrunchLogicalExpr(), tuple=VariableTuple()))
 
-CrunchVariable <- function (tuple, ...) {
+CrunchVariable <- function (tuple, filter=NULL, ...) {
     ## Slight cheat: this isn't the "CrunchVariable" constructor. Instead
     ## returns a subclass of CrunchVariable
-    
+
     classes <- list(
         categorical="CategoricalVariable",
         numeric="NumericVariable",
@@ -87,7 +87,10 @@ CrunchVariable <- function (tuple, ...) {
         categorical_array="CategoricalArrayVariable"
     )
     cls <- classes[[type(tuple)]] %||% "CrunchVariable"
-    return(new(cls, tuple=tuple, ...))
+    if (is.null(filter)) {
+        filter <- CrunchLogicalExpr()
+    }
+    return(new(cls, tuple=tuple, filter=filter, ...))
 }
 
 ##' @rdname CrunchVariable
@@ -98,7 +101,7 @@ NumericVariable <- setClass("NumericVariable", contains="CrunchVariable")
 ##' @export CategoricalVariable
 CategoricalVariable <- setClass("CategoricalVariable",
     contains="CrunchVariable")
-    
+
 ##' @rdname CrunchVariable
 ##' @export TextVariable
 TextVariable <- setClass("TextVariable", contains="CrunchVariable")
@@ -119,11 +122,11 @@ MultipleResponseVariable <-setClass("MultipleResponseVariable",
 
 ##' Organize Variables within a Dataset
 ##'
-##' Variables in the Crunch web application can be viewed in an ordered, 
+##' Variables in the Crunch web application can be viewed in an ordered,
 ##' hierarchical list. These objects and methods allow you to modify that order
 ##' from R.
 ##'
-##' A VariableOrder object is a subclass of \code{list} that contains 
+##' A VariableOrder object is a subclass of \code{list} that contains
 ##' VariableGroups. VariableGroup objects contain a group name and an set of
 ##' "entities", which can be variable references or other nested VariableGroups.
 ##'
@@ -197,7 +200,7 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
         variables="VariableCatalog",
         filter="CrunchLogicalExpr",
         tuple="DatasetTuple"
-    ), 
+    ),
     prototype=prototype(
         useAlias=default.useAlias(),
         variables=VariableCatalog(),
@@ -205,12 +208,12 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
         tuple=DatasetTuple()))
 
 ##' Categories in CategoricalVariables
-##' 
+##'
 ##' CategoricalVariables, as well as the array types composed from
 ##' Categoricals, contain Categories. Categories are a subclass of list that
 ##' contains only Category objects. Category objects themselves subclass list
 ##' and contain the following fields: "name", "id", "numeric_value", "missing",
-##' and optionally "selected". 
+##' and optionally "selected".
 ##'
 ##' @param data For the constructor functions \code{Category} and
 ##' \code{Categories}, you can either pass in attributes via \code{...} or you
@@ -222,7 +225,7 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
 ##' @param j Invalid argument to [, but in the generic's signature
 ##' @param ... additional arguments to [, ignored
 ##' @param drop Invalid argument to [, but in the generic's signature
-##' @param value For [<-, the replacement Category to insert 
+##' @param value For [<-, the replacement Category to insert
 ##' @rdname Categories
 ##' @aliases Categories ids ids<- values values<-
 ##' @export

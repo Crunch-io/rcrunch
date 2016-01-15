@@ -5,12 +5,12 @@ if (run.integration.tests) {
         with(test.dataset(df), {
             test_that("We can set and unset an exclusion filter", {
                 ds <- refresh(ds)
-                expect_identical(zcl(activeFilter(ds)), list())
+                expect_identical(activeFilter(ds), NULL)
                 expect_identical(nrow(ds), 20L)
-                expect_equivalent(as.array(crtabs(~ v4, data=ds)), 
+                expect_equivalent(as.array(crtabs(~ v4, data=ds)),
                     array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
                 expect_identical(exclusion(ds), NULL)
-                
+
                 exclusion(ds) <- ds$v4 == "C"
                 ## Test that the filter is set correctly. Objects not identical
                 ## because JSON objects are unordered.
@@ -19,33 +19,33 @@ if (run.integration.tests) {
                 expect_identical(e[["function"]], f[["function"]])
                 expect_identical(e[["args"]][[1]], f[["args"]][[1]])
                 expect_identical(e[["args"]][[2]]$value, f[["args"]][[2]]$value)
-                
+
                 expect_identical(nrow(ds), 10L)
-                expect_equivalent(as.array(crtabs(~ v4, data=ds)), 
+                expect_equivalent(as.array(crtabs(~ v4, data=ds)),
                     array(c(10, 0), dim=2L, dimnames=list(v4=c("B", "C"))))
-                
+
                 exclusion(ds) <- NULL
                 expect_identical(nrow(ds), 20L)
-                expect_equivalent(as.array(crtabs(~ v4, data=ds)), 
+                expect_equivalent(as.array(crtabs(~ v4, data=ds)),
                     array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
                 expect_identical(exclusion(ds), NULL)
             })
-            
+
             test_that("Validation for setting exclusion", {
-                expect_error(exclusion(ds) <- "Not a filter", 
-                    paste(dQuote("value"), 
+                expect_error(exclusion(ds) <- "Not a filter",
+                    paste(dQuote("value"),
                     "must be a CrunchLogicalExpr or NULL, not",
                     dQuote("character")))
             })
         })
-        
+
         with(test.dataset(df), {
             test_that("Exclusion setup", {
                 expect_identical(nrow(ds), 20L)
                 exclusion(ds) <<- ds$v4 == "C"
                 expect_identical(nrow(ds), 10L)
             })
-            
+
             test_that("Add a variable", {
                 ds$newvar1 <- 1:10
                 expect_equivalent(as.vector(ds$newvar1), 1:10)
@@ -54,12 +54,12 @@ if (run.integration.tests) {
                     c(1, NA, 2, NA, 3, NA, 4, NA, 5, NA, 6, NA, 7, NA, 8, NA,
                         9, NA, 10, NA))
             })
-            
+
             test_that("Change a variable's type", {
                 exclusion(ds) <- ds$v4 == "C"
                 expect_identical(nrow(ds), 10L)
                 type(ds$v3) <- "text"
-                expect_equivalent(as.vector(ds$v3), 
+                expect_equivalent(as.vector(ds$v3),
                     c("8.0", "10.0", "12.0", "14.0", "16.0", "18.0", "20.0", "22.0", "24.0", "26.0"))
             })
         })
@@ -74,20 +74,20 @@ if (run.integration.tests) {
                     c(10, 9, 9, 11, 8, 13, 7, 15, 6, 17, 5, 19, 4, 21, 3, 23,
                         2, 25, 1, 27))
             })
-            
+
             test_that("Update a variable by row index", {
                 ## Setup: add a new numeric variable to mess with
                 exclusion(ds) <<- NULL
                 ds$v3x <- 4
                 expect_equivalent(as.vector(ds$v3x), rep(4, 20))
-                
+
                 exclusion(ds) <<- ds$v4 == "C"
                 ds$v3x[2] <- 9
                 expect_equivalent(as.vector(ds$v3x), c(4, 9, rep(4, 8)))
                 exclusion(ds) <<- NULL
                 expect_equivalent(as.vector(ds$v3x), c(rep(4, 2), 9, rep(4, 17)))
             })
-            
+
             test_that("Append to a dataset", {
                 with(test.dataset(df, "part1"), {
                     exclusion(ds) <<- ds$v4 == "C"
@@ -98,29 +98,29 @@ if (run.integration.tests) {
                 })
             })
         })
-            
+
         test_that("Append another dataset to one with exclusion", {
             with(test.dataset(df, "part1"), {
                 with(test.dataset(df, "part2"), {
                     exclusion(part1) <- part1$v4 == "C"
                     out <- appendDataset(part1, part2)
                     expect_identical(nrow(out), 20L)
-                    expect_equivalent(as.array(crtabs(~ v4, 
-                        data=out)), 
+                    expect_equivalent(as.array(crtabs(~ v4,
+                        data=out)),
                         array(c(20, 0), dim=2L, dimnames=list(v4=c("B", "C"))))
                 })
             })
         })
-        
+
         with(test.dataset(newDatasetFromFixture("apidocs")), {
             test_that("Assert what is in the test dataset", {
                 validApidocsImport(ds)
             })
-            
+
             ## Create a variable to update with rows to exclude
             ds$keep <- TRUE
             test_that("'keep' was created correctly, i.e. all 'True'", {
-                expect_identical(as.array(crtabs(~ keep, data=ds)), 
+                expect_identical(as.array(crtabs(~ keep, data=ds)),
                     array(c(20, 0), dim=2L,
                     dimnames=list(keep=c("True", "False"))))
             })
@@ -132,8 +132,8 @@ if (run.integration.tests) {
             ## Let's look at "allpets", a multiple response variable
             test_that("allpets", {
                 expect_identical(as.array(crtabs(~ allpets, data=ds,
-                    useNA="ifany")), 
-                    array(c(4, 5, 5, 3), dim=4L, 
+                    useNA="ifany")),
+                    array(c(4, 5, 5, 3), dim=4L,
                         dimnames=list(allpets=c("Cat", "Dog", "Bird", "<NA>"))))
             })
             ## Update "keep" as "False" (i.e. excluded) where "allpets" is
@@ -144,8 +144,8 @@ if (run.integration.tests) {
                 ## And we can confirm that those three rows are the ones
                 ## dropped:
                 expect_identical(as.array(crtabs(~ allpets, data=ds,
-                    useNA="always")), 
-                    array(c(4, 5, 5, 0), dim=4L, 
+                    useNA="always")),
+                    array(c(4, 5, 5, 0), dim=4L,
                         dimnames=list(allpets=c("Cat", "Dog", "Bird", "<NA>"))))
             })
 
@@ -153,17 +153,17 @@ if (run.integration.tests) {
             ## subvariables, Home and Work:
             test_that("Home x Work", {
                 expect_identical(as.array(crtabs(~ petloc$Home + petloc$Work,
-                    data=ds, useNA="ifany")), 
+                    data=ds, useNA="ifany")),
                     array(c(1, 0, 1, 3, 0,
                             0, 0, 2, 0, 1,
                             1, 2, 0, 0, 3,
                             1, 1, 0, 0, 0,
-                            0, 0, 0, 1, 0), 
-                    dim=c(5L, 5L), 
+                            0, 0, 0, 1, 0),
+                    dim=c(5L, 5L),
                     dimnames=list(
-                        petloc_home=c("Cat", "Dog", "Bird", "Skipped", 
+                        petloc_home=c("Cat", "Dog", "Bird", "Skipped",
                             "Not Asked"),
-                        petloc_work=c("Cat", "Dog", "Bird", "Skipped", 
+                        petloc_work=c("Cat", "Dog", "Bird", "Skipped",
                             "Not Asked")
                 )))
             })
@@ -177,23 +177,23 @@ if (run.integration.tests) {
             test_that("The exclusion filter now drops that row too", {
                 expect_identical(nrow(ds), 16L)
             })
-            
+
             ## We can add more complex expressions too. Let's assume that we
             ## know that it is not possible for anyone in Austria to have
             ## a dog. Yet in our data, there are two people who live in
             ## Austria yet have a dog (one has 2, the other has 3: this is the
             ## third "row" in the array below (keeping in mind that R stores
-            ## arrays as stacked columns, so the third "row" below is the 
+            ## arrays as stacked columns, so the third "row" below is the
             ## column of the table that corresponds to Austria))
             test_that("ndogs by country", {
                 expect_identical(as.array(crtabs(~ ndogs + country,
-                    data=ds, useNA="no")), 
+                    data=ds, useNA="no")),
                     array(c(0, 1, 2, 0, 0,
                             0, 0, 1, 0, 0,
                             1, 0, 1, 1, 0,
                             0, 0, 1, 1, 0,
-                            0, 0, 2, 0, 1), 
-                    dim=c(5L, 5L), 
+                            0, 0, 2, 0, 1),
+                    dim=c(5L, 5L),
                     dimnames=list(
                         ndogs=c(0, 1, 2, 3, 6),
                         country=c("Argentina", "Australia", "Austria",
@@ -201,9 +201,9 @@ if (run.integration.tests) {
                 )))
                 ## Or, perhaps more clear to view the frequencies of "ndogs" on
                 ## the dataset filtered to just "Argentina"
-                expect_identical(as.array(crtabs(~ ndogs, 
+                expect_identical(as.array(crtabs(~ ndogs,
                     data=ds[ds$country == "Austria",])),
-                    array(c(1, 1, 1), dim=3L, 
+                    array(c(1, 1, 1), dim=3L,
                         dimnames=list(ndogs=c(0, 2, 3))))
             })
             ## So let's also drop rows corresponding to Austrians with >0 dogs:
