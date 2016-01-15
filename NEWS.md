@@ -1,4 +1,4 @@
-### crunch 1.7.5
+### crunch 1.7.6
 * `dropRows` to permanently delete rows from a dataset.
 * Better print method for catalog resources, using the new `catalogToDataFrame` function.
 * Export a few more functions (`shojiURL`, `batches`)
