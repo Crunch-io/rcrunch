@@ -1,3 +1,5 @@
+### crunch 1.7.9
+
 ### crunch 1.7.8
 * Update to match changes in filter API
 
