@@ -1,4 +1,5 @@
-### crunch 1.7.7
+### crunch 1.7.8
+* Update to match changes in filter API
 
 ### crunch 1.7.6
 * `dropRows` to permanently delete rows from a dataset.
