@@ -2,7 +2,7 @@ context("Expressions")
 
 with(fake.HTTP, {
     ds <- loadDataset("test ds")
-    
+
     test_that("Arithmetic generates expressions", {
         e1 <- try(ds$birthyr + 5)
         expect_true(inherits(e1, "CrunchExpr"))
@@ -21,12 +21,12 @@ with(fake.HTTP, {
         e2 <- try(5 + ds$birthyr)
         expect_true(inherits(e2, "CrunchExpr"))
     })
-    
+
     test_that("Logic generates expressions", {
         e1 <- try(ds$birthyr < 0)
         expect_true(inherits(e1, "CrunchLogicalExpr"))
     })
-    
+
     test_that("Referencing category names that don't exist errors", {
         expect_true(inherits(ds$gender == "Male", "CrunchLogicalExpr"))
         expect_error(ds$gender == "other",
@@ -35,9 +35,21 @@ with(fake.HTTP, {
             paste("Categories not found:", dQuote("other"), "and",
                 dQuote("another")))
     })
-    
+
     test_that("show method exists", {
         expect_true(is.character(capture.output(print(ds$birthyr + 5))))
+    })
+
+    test_that("Requesting a range of values yields 'between'", {
+        # skip("'between' not implemented because of server error")
+        expect_error(as.vector(ds$gender[3:14]),
+            paste0('Error : POST /api/datasets/dataset1/table/ ',
+            '{"command":"select","variables":{"out":{"variable":',
+            '"66ae9881e3524f7db84970d556c34552"}},',
+            '"filter":{"function":"between","args":[{"function":"row",',
+            '"args":[]},{"value":2,"type":{"value":{"class":"numeric"}}},',
+            '{"value":14,"type":{"value":{"class":"numeric"}}}]}}\n'),
+            fixed=TRUE)
     })
 })
 
@@ -61,7 +73,7 @@ if (run.integration.tests) {
                 skip("select with logical expression not supported")
                 expect_identical(as.vector(e1), as.vector(ds$v3) < 10)
             })
-            
+
             test_that("expressions on expresssions evaluate", {
                 e3 <- try(ds$v3 + ds$v3 + 10)
                 expect_true(inherits(e3, "CrunchExpr"))
@@ -70,7 +82,7 @@ if (run.integration.tests) {
                 expect_true(inherits(e4, "CrunchExpr"))
                 expect_identical(as.vector(e4), 3*df$v3)
             })
-            
+
             varnames <- names(df[-6])
             test_that("Select values with Numeric inequality filter", {
                 e5 <- try(ds$v3[ds$v3 < 10])
@@ -92,11 +104,11 @@ if (run.integration.tests) {
             test_that("Select values with %in% on Categorical", {
                 expect_identical(length(as.vector(ds$v3[ds$v4 %in% "B"])), 10L)
                 for (i in varnames) {
-                    expect_equivalent(as.vector(ds[[i]][ds$v4 %in% "B"]), 
+                    expect_equivalent(as.vector(ds[[i]][ds$v4 %in% "B"]),
                         df[[i]][df$v4 %in% "B"], info=i)
                 }
                 expect_identical(length(as.vector(ds$v3[ds$q1 %in% "selected"])), 10L)
-                
+
             })
             test_that("Select values with &ed filter", {
                 expect_equivalent(as.vector(ds$v3[ds$v3 >= 10 & ds$v3 < 13]),
@@ -104,28 +116,32 @@ if (run.integration.tests) {
                 f <- ds$v3 >= 10 & ds$v3 < 13
                 expect_true(inherits(f, "CrunchLogicalExpr"))
                 for (i in varnames) {
-                    expect_equivalent(as.vector(ds[[i]][f]), 
+                    expect_equivalent(as.vector(ds[[i]][f]),
                         df[[i]][3:5], info=i)
                 }
             })
             test_that("Select values with negated filter", {
-                expect_equivalent(as.vector(ds$v3[!(ds$v4 %in% "B")]), 
+                expect_equivalent(as.vector(ds$v3[!(ds$v4 %in% "B")]),
                     df$v3[df$v4 %in% "C"])
                 for (i in varnames) {
-                    expect_equivalent(as.vector(ds[[i]][!(ds$v4 %in% "B")]), 
+                    expect_equivalent(as.vector(ds[[i]][!(ds$v4 %in% "B")]),
                         df[[i]][df$v4 %in% "C"], info=i)
                 }
             })
-            
+
             test_that("R numeric filter evaluates", {
                 expect_equivalent(as.vector(ds$v3[6]), df$v3[6])
+            })
+            test_that("If R numeric filter is a range, 'between' is correct", {
+                ## NB: this doesn't use "between" yet
+                expect_equivalent(as.vector(ds$v3[3:18]), df$v3[3:18])
             })
             test_that("R logical filter evaluates", {
                 expect_identical(as.vector(ds$v3[df$v3 < 10]), c(8, 9))
             })
-            
+
             test_that("filtered categorical returns factor", {
-                expect_equivalent(as.vector(ds$v4[ds$v4 == "B"]), 
+                expect_equivalent(as.vector(ds$v4[ds$v4 == "B"]),
                     factor(rep("B", 10)))
             })
         })

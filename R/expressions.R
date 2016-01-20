@@ -8,12 +8,12 @@
 ##'
 ##' @param x an input
 ##' @param table For \code{\%in\%}. See \code{\link[base]{match}}
-##' @param resolution For \code{rollup}. Either \code{NULL} or a character in 
-##' c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms") indicating the unit of 
-##' time at which a Datetime variable should be aggregated. If \code{NULL}, 
+##' @param resolution For \code{rollup}. Either \code{NULL} or a character in
+##' c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms") indicating the unit of
+##' time at which a Datetime variable should be aggregated. If \code{NULL},
 ##' the server will determine an appropriate resolution based on the range of
-##' the data. 
-##' @return Most functions return a CrunchExpr or CrunchLogicalExpr. 
+##' the data.
+##' @return Most functions return a CrunchExpr or CrunchLogicalExpr.
 ##' \code{as.vector} returns an R vector.
 ##' @aliases expressions
 ##' @name expressions
@@ -46,7 +46,7 @@ setMethod("toVariable", "CrunchExpr", function (x, ...) {
 ## for the right combinations of multiple-dispatch signatures
 
 math.exp <- function (e1, e2, operator) {
-    ## Generic function that creates ZCL of `e1 %operator% e2`
+    ## Generic function that creates CrunchExpr of `e1 %operator% e2`
     ex <- zfunc(operator, e1, e2)
     ds.url <- unique(unlist(lapply(list(e1, e2), datasetReference))) %||% ""
     logics <- c("in", "<", ">", ">=", "<=", "==", "!=", "and", "or")
@@ -85,7 +85,7 @@ vxv <- function (i) {
 )
 
 .rtypes <- unique(vapply(.sigs, function (a) a[[2]], character(1)))
-.nomath <- which(!vapply(.sigs, 
+.nomath <- which(!vapply(.sigs,
     function (a) a[[1]] %in% c("TextVariable", "CategoricalVariable"),
     logical(1)))
 
@@ -97,7 +97,7 @@ for (i in c("+", "-", "*", "/", "<", ">", ">=", "<=")) {
     for (j in setdiff(.rtypes, "character")) {
         setMethod(i, c("CrunchExpr", j), vxv(i)) # no typeof?
         setMethod(i, c(j, "CrunchExpr"), vxv(i)) # no typeof?
-    }    
+    }
     setMethod(i, c("CrunchVariable", "CrunchVariable"), vxv(i))
     setMethod(i, c("CrunchExpr", "CrunchVariable"), vxv(i))
     setMethod(i, c("CrunchVariable", "CrunchExpr"), vxv(i))
@@ -139,27 +139,48 @@ setMethod("|", c("CrunchExpr", "CrunchExpr"), vxv("or"))
 
 ##' @rdname expressions
 ##' @export
-setMethod("!", c("CrunchExpr"), 
+setMethod("!", c("CrunchExpr"),
     function (x) {
         CrunchLogicalExpr(expression=zfunc("not", x),
             dataset_url=datasetReference(x))
     })
 
+.seqCrunch <- function (x, table) {
+    ## Given x %in% table, if table is numeric, see if we can/should collapse
+    ## it into a range query rather than sending lots of distinct values
+
+    if (is.numeric(table) &&
+        length(table) > 2 &&
+        identical(as.numeric(head(table, 1):tail(table, 1)), as.numeric(table))) {
+
+        return(zfunc("between",
+            x,
+            head(table, 1),
+            tail(table, 1) + 1))
+            ## Add 1 because "between" by default doesn't include the upper
+            ## bound and explicitly overriding that is failing. See #112089103.
+            ## When that is fixed, we can do the following:
+            #rep(TRUE, 2L))) ## Inclusive on both sides
+    } else {
+        return(zfunc(ifelse(length(table) == 1L, "==", "in"), x, table))
+    }
+}
 
 .inCrunch <- function (x, table) {
+    ## TODO: bring in .seqCrunch here, once it is working
     math.exp(x, typeof(table, x), ifelse(length(table) == 1L, "==", "in"))
 }
 
 ##' @rdname expressions
 ##' @export
-setMethod("%in%", c("CategoricalVariable", "character"), 
+setMethod("%in%", c("CategoricalVariable", "character"),
     function (x, table) .inCrunch(x, n2i(table, categories(x))))
 ##' @rdname expressions
 ##' @export
-setMethod("%in%", c("CategoricalVariable", "factor"), 
+setMethod("%in%", c("CategoricalVariable", "factor"),
     function (x, table) x %in% as.character(table))
 
-## Iterated version of below: 
+## Iterated version of below:
 for (i in seq_along(.sigs)) {
     setMethod("%in%", .sigs[[i]], .inCrunch)
 }
@@ -209,7 +230,7 @@ rollup <- function (x, resolution=rollupResolution(x)) {
     if (is.variable(x) && !is.Datetime(x)) {
         halt("Cannot rollup a variable of type ", dQuote(type(x)))
     }
-    CrunchExpr(expression=zfunc("rollup", x, list(value=resolution)), 
+    CrunchExpr(expression=zfunc("rollup", x, list(value=resolution)),
         ## list() so that the resolution value won't get typed
         dataset_url=datasetReference(x) %||% "")
 }
