@@ -21,6 +21,22 @@ if (run.integration.tests) {
                 expect_identical(name(filters(ds)[[1]]), "Test filter")
             })
 
+            test_that("We can make it public/private", {
+                expect_false(is.public(filters(ds)[["Test filter"]]))
+                is.public(filters(ds)[["Test filter"]]) <- TRUE
+                expect_true(is.public(filters(ds)[["Test filter"]]))
+                is.public(filters(ds)[["Test filter"]]) <- FALSE
+                expect_false(is.public(filters(ds)[["Test filter"]]))
+            })
+
+            test_that("Setter/getter by index", {
+                expect_false(is.public(filters(ds)[[1]]))
+                is.public(filters(ds)[[1]]) <- TRUE
+                expect_true(is.public(filters(ds)[[1]]))
+                is.public(filters(ds)[[1]]) <- FALSE
+                expect_false(is.public(filters(ds)[[1]]))
+            })
+
             test_that("We have an applied filters view", {
                 expect_identical(length(appliedFilters(ds)), 0L)
             })

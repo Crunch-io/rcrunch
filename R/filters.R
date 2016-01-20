@@ -1,3 +1,9 @@
+##' Filter entities for a dataset
+##'
+##' @param x a CrunchDataset
+##' @return an object of class FilterCatalog containing references to Filter
+##' entities usable in the web application.
+##' @export
 setMethod("filters", "CrunchDataset", function (x) {
     FilterCatalog(crGET(shojiURL(x, "catalogs", "filters")))
 })
@@ -11,6 +17,24 @@ setMethod("names", "FilterCatalog", function (x) getIndexSlot(x, "name"))
 ##' @rdname describe
 ##' @export
 setMethod("name", "CrunchFilter", function (x) x@body$name)
+
+##' View and modify Filter entity attributes
+##'
+##' @param x a CrunchFilter
+##' @param value an attribute to set
+##' @return For \code{is.public}, a logical value for whether the filter is
+##' flagged as shared with all dataset viewers. (Its setter thus takes a
+##' logical value as well.)
+##' @name filter-methods
+##' @export
+setMethod("is.public", "CrunchFilter", function (x) x@body$is_public)
+
+##' @rdname filter-methods
+##' @export
+setMethod("is.public<-", "CrunchFilter", function (x, value) {
+    setEntitySlot(x, "is_public", value)
+})
+
 
 ##' @rdname catalog-extract
 ##' @export
@@ -46,6 +70,36 @@ setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchLogicalExpr"
         }
     })
 
+##' @rdname catalog-extract
+##' @export
+setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchFilter"),
+    function (x, i, j, value) {
+        if (i %in% names(x)) {
+            ## Assume server update of the entity already happened in a
+            ## separate request. So just refresh.
+            return(refresh(x))
+        } else {
+            ## Unlikely to be here given current CrunchFilter implementation
+            ## (only comes from extracting from catalog)
+            halt("Unsupported")
+        }
+    })
+
+##' @rdname catalog-extract
+##' @export
+setMethod("[[<-", c("FilterCatalog", "numeric", "missing", "CrunchFilter"),
+    function (x, i, j, value) {
+        if (i %in% seq_len(length(x))) {
+            ## See above.
+            ## Assume server update of the entity already happened in a
+            ## separate request. So just refresh.
+            return(refresh(x))
+        } else {
+            ## Unlikely to be here given current CrunchFilter implementation
+            ## (only comes from extracting from catalog)
+            halt("Unsupported")
+        }
+    })
 
 setMethod("appliedFilters", "CrunchDataset", function (x) {
     out <- ShojiOrder(crGET(shojiURL(x, "views", "applied_filters")))

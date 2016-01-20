@@ -25,7 +25,7 @@ setGeneric("aliases", function (x) standardGeneric("aliases"))
 setGeneric("aliases<-", function (x, value) standardGeneric("aliases<-"),
     signature="x")
 setGeneric("descriptions", function (x) standardGeneric("descriptions"))
-setGeneric("descriptions<-", 
+setGeneric("descriptions<-",
     function (x, value) standardGeneric("descriptions<-"), signature="x")
 setGeneric("emails", function (x) standardGeneric("emails"))
 setGeneric("types", function (x) standardGeneric("types"))
@@ -42,7 +42,7 @@ setGeneric("allVariables", function (x) standardGeneric("allVariables"))
 setGeneric("allVariables<-",
     function (x, value) standardGeneric("allVariables<-"))
 setGeneric("subvariables", function (x) standardGeneric("subvariables"))
-setGeneric("subvariables<-", 
+setGeneric("subvariables<-",
     function (x, value) standardGeneric("subvariables<-"))
 setGeneric("datasetReference", function (x) standardGeneric("datasetReference"))
 setGeneric("hide", function (x) standardGeneric("hide"))
@@ -76,11 +76,13 @@ setGeneric("members<-", function (x, value) standardGeneric("members<-"))
 setGeneric("filters", function (x) standardGeneric("filters"))
 setGeneric("filters<-", function (x, value) standardGeneric("filters<-"))
 setGeneric("appliedFilters", function (x) standardGeneric("appliedFilters"))
-setGeneric("appliedFilters<-", 
+setGeneric("appliedFilters<-",
     function (x, value) standardGeneric("appliedFilters<-"))
 setGeneric("activeFilter", function (x) standardGeneric("activeFilter"))
-setGeneric("activeFilter<-", 
+setGeneric("activeFilter<-",
     function (x, value) standardGeneric("activeFilter<-"))
+setGeneric("is.public", function (x) standardGeneric("is.public"))
+setGeneric("is.public<-", function (x, value) standardGeneric("is.public<-"))
 
 setGeneric("dim")
 setGeneric("ncol")
@@ -103,12 +105,12 @@ setGeneric("subset")
 
 ##' Generic method for converting objects to Crunch representations
 ##'
-##' If you have other object types you wish to convert to Crunch variables, 
+##' If you have other object types you wish to convert to Crunch variables,
 ##' you can declare methods for \code{toVariable}
 ##' @param x the object
 ##' @param ... additional arguments
 ##' @return a list object suitable for POSTing to the Crunch API. See the API
-##' documentation for specifications. 
+##' documentation for specifications.
 ##' @rdname toVariable
 ##' @aliases toVariable
 ##' @export
@@ -128,12 +130,12 @@ setGeneric("absolute.zcl", function (x) standardGeneric("absolute.zcl"))
 ##' \code{crunch} uses the \code{jsonlite} package for (de)serialization of
 ##' JSON. Unlike \code{RJSONIO}'s \code{toJSON}, \code{\link[jsonlite]{toJSON}}
 ##' does not allow for defining S4 methods for other object types. So,
-##' \code{crunch::toJSON} wraps \code{jsonprep}, which exists to translate 
-##' objects to base R objects, which \code{jsonlite::toJSON} can handle. 
+##' \code{crunch::toJSON} wraps \code{jsonprep}, which exists to translate
+##' objects to base R objects, which \code{jsonlite::toJSON} can handle.
 ##' \code{jsonprep} is defined as an S4 generic, and it is exported (unlike
 ##' code{jsonlite::asJSON}), so you can define methods for it if you have other
 ##' objects that you want to successfully serialize to JSON.
-##' 
+##'
 ##' @param x the object
 ##' @param ... additional arguments
 ##' @return \code{jsonprep} returns a base R object that \code{jsonlite::toJSON}
@@ -146,6 +148,5 @@ NULL
 ##' @export
 setGeneric("jsonprep", function (x, ...) standardGeneric("jsonprep"))
 
-setGeneric("getShowContent", 
+setGeneric("getShowContent",
     function (x, ...) standardGeneric("getShowContent"))
-
