@@ -240,6 +240,23 @@ if (run.integration.tests) {
                 expect_error(categories(ds$v4) <- c(categories(ds$v4d),
                     categories(ds$v4d)))
             })
+            test_that("Can delete a category that has no data", {
+                ds$v4e <- df$v4
+                categories(ds$v4e) <- c(categories(ds$v4e)[1:2],
+                    Category(name="D", id=4), categories(ds$v4e)[3])
+                expect_identical(names(categories(ds$v4e)),
+                    c("B", "C", "D", "No Data"))
+                ## Reassign the data from C to D
+                ds$v4e[ds$v4e == "C"] <- "D"
+                expect_equivalent(as.array(crtabs(~ v4e, data=ds)),
+                    array(c(10, 0, 10), dim=3L, dimnames=list(v4=c("B", "C", "D"))))
+                ## Then delete B
+                categories(ds$v4e) <- categories(ds$v4e)[-2]
+                expect_identical(names(categories(ds$v4e)),
+                    c("B", "D", "No Data"))
+                expect_equivalent(as.array(crtabs(~ v4e, data=ds)),
+                    array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "D"))))
+            })
         })
 
         with(test.dataset(mrdf), {

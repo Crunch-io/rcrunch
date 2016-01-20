@@ -3,12 +3,14 @@
 ##' @param enter function to run before doing things
 ##' @param exit function to run after doing things
 ##' @param error optional function to run if an error is thrown
-##' @param as character optional way to specify a default name for assinging the return of the enter function. 
+##' @param as character optional way to specify a default name for assinging
+##' the return of the enter function.
 ##' @return an S3 class "contextManager" object
 ##' @seealso \link{with-context-manager}
 ##' @aliases contextManager
 ##' @export
-ContextManager <- function (enter=function (){}, exit=function (){}, error=NULL, as=NULL) {
+ContextManager <- function (enter=function (){}, exit=function (){},
+                            error=NULL, as=NULL) {
     structure(list(enter=enter, exit=exit, error=error, as=as),
         class="contextManager")
 }
@@ -17,8 +19,10 @@ ContextManager <- function (enter=function (){}, exit=function (){}, error=NULL,
 ##'
 ##' @param data \code{\link{contextManager}}
 ##' @param expr code to evaluate within that context
-##' @param ... additional arguments. One additional supported argument is "as", which lets you assign the return of your "enter" function to an object you can access.
-##' @return Nothing. 
+##' @param ... additional arguments. One additional supported argument is "as",
+##' which lets you assign the return of your "enter" function to an object you
+##' can access.
+##' @return Nothing.
 ##' @name with-context-manager
 ##' @seealso \link{ContextManager}
 ##' @export
