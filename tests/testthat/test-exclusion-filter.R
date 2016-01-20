@@ -62,6 +62,16 @@ if (run.integration.tests) {
                 expect_equivalent(as.vector(ds$v3),
                     c("8.0", "10.0", "12.0", "14.0", "16.0", "18.0", "20.0", "22.0", "24.0", "26.0"))
             })
+
+            test_that("Remove an exclusion and then update the variable we added", {
+                ds <- refresh(ds)
+                exclusion(ds) <- NULL
+                expect_identical(nrow(ds), 20L)
+                ds$newvar1[is.na(ds$newvar1)] <- 0
+                expect_equivalent(as.vector(ds$newvar1),
+                    c(1, 0, 2, 0, 3, 0, 4, 0, 5, 0, 6, 0, 7, 0, 8, 0,
+                        9, 0, 10, 0))
+            })
         })
         with(test.dataset(df), {
             test_that("Update a variable", {
