@@ -11,59 +11,71 @@
 ## We'll then reference saved objects in that as if we had just retrieved them
 ## from the server
 library(crunch)
-load("getting-started.RData")
+load("getting-started.RData") # Brian hid
+load("economist.RData") # Brian hid
 ```
 
-# Datasets in `crunch`
+# Datasets in Crunch
 
-To get started working with Crunch datasets in R, we need to get a dataset in our local R session. This means we either need to create a new one or load an existing dataset. 
+To get started working with Crunch datasets in R, we need to download a Crunch dataset into our local R session. This means we either need to create a new one or load an existing dataset. (Note, this can be a bit confusing but in general a data**set** will refer to data in Crunch and a data.**frame** refer to data in R.)
 
-## Uploading datasets
+## Uploading datasets to Crunch
 
-To create new datasets, multiple paths exist. In the web application, you can upload files to create datasets. From `crunch`, there are two methods for creating datasets: one for `data.frames` and one for files of other (non-R) formats. 
+To create new datasets, you can use the web application (aka GUI), or R. If you use R and the crunch library, there are two methods for creating datasets: one for `data.frames` that are in R, and one for other formats.
 
 ### 1. newDataset
 
-You can create a dataset from any `data.frame` you have in your R session with `newDataset`:
+You can create a dataset from any `data.frame` you have in your R session with the `newDataset` function in R:
 
-```{r, eval=FALSE}
-load("economist.RData")
-dim(df)
+The `crunch` package comes with a toy `data.frame` called `economist` that we will use to demonstrate `newDataset` and many other functions. So first, let's load the `economist` dataset into our working environment in R.
+
+```{r}
+data("economist", package = "crunch") # creates object named 'economist'
+dim(economist) # the hashtag symbol allows you to make comments like this. Type '? dim' for help about dim()
 ```
 ```{r, echo=FALSE}
-dim.ds
+#dim.ds
 ```
+A sidenote: this is not how R *usually* works; normally you need to assign things to an object using the '<-' symbol, which assigns whatever is on the right of that symbol to whatever is on the left side of that symbol and so adds it into the environment so you can call it later, like in this line below.
+
 ```{r, eval=FALSE}
-ds <- newDataset(df, name="Economist/YouGov Weekly Survey")
+ds <- newDataset(economist, name="A Toy, Economist/YouGov Weekly Survey") # customize this name
 dim(ds)
 ```
 ```{r, echo=FALSE}
 dim.ds
 ```
+Congratulations! You've just put your first dataset up on Crunch, and we can see that they have the same dimensions/are the same.
 
-`newDataset` translates R data types into their analogous types in Crunch. 
+`newDataset` translates R data types into their analogous types in Crunch as follows. 
 
+##### R data type --> Crunch Variable type
 * character --> Text Variable
 * numeric, integer --> Numeric Variable
 * factor --> Categorical Variable
 * Date --> Datetime Variable
+We will talk more about the different variable types soon in other vignettes.
 
 ### 2. newDatasetFromFile
 
-Alternatively, `newDatasetFromFile` essentially does what you would do in the web application: uploads your file and creates a dataset from it. If you have an SPSS or CSV file, you can upload it with that without first reading it into R.
+Alternatively, if you already have an SPSS or CSV file, you can upload to Crunch in one of two ways.
 
-## Loading existing Crunch datasets
+1. In the GUI, the `+` button is in the lower left hand corner of the `DATASETS` view.
+2. In R you can use `newDatasetFromFile`, which uploads your file (usually a .sav) and creates a dataset.
+Note that if the file you are uploading is >100Mb in size you will need to make special accomodations and so you should email support@crunch.io. 
 
-Datasets already existing on the Crunch server can be loaded with `loadDataset`. The function takes either the dataset's name, or the position within the dataset list returned by `listDatasets`:
+## Downloading existing Crunch datasets into R
+
+Datasets already existing on the Crunch server can be loaded into R with `loadDataset`. The function takes either the dataset's name, or the position within the dataset list returned by `listDatasets`:
 
 ```{r, eval=FALSE}
-listDatasets()
+listDatasets() # lists all the datasets shared with you, you can grep() this as well
 ```
 ```
-## [1] "Economist/YouGov Weekly Survey"
+## [1] "A Toy, Economist/YouGov Weekly Survey" # this will be whatever name you gave above
 ```
 ```{r, eval=FALSE}
-ds <- loadDataset("Economist/YouGov Weekly Survey")
+ds <- loadDataset("A Toy, Economist/YouGov Weekly Survey")
 ```
 ```{r}
 is.dataset(ds)
@@ -71,10 +83,10 @@ is.dataset(ds)
 
 ## Dataset properties
 
-Dataset have metadata beyond what a `data.frame` has. Datasets have a human-readable `name`, which you specified when you created it, and a `description`.
+Datasets (in Crunch) can have metadata beyond what is in a `data.frame` (in R). Datasets have a human-readable `name`, which you specified when you created it, and a `description`.
 
-```{r}
-name(ds)
+```{r, eval=FALSE}
+name(ds) # note this is name() singular! names() plural is different and discussed soon.
 description(ds)
 ```
 
@@ -82,7 +94,7 @@ Both can be set with `<-` assignment. Let's give our dataset an informative desc
 
 ```{r, eval=FALSE}
 description(ds) <- "U.S. nationally representative sample, 1000 respondents"
-description(ds)
+description(ds) 
 ```
 ```
 ## [1] "U.S. nationally representative sample, 1000 respondents"
@@ -91,7 +103,7 @@ description(ds)
 Note that this assignment doesn't just modify our local dataset object: it sends the new description to the server. If we pull a fresh copy of the dataset from the server, with `refresh`, we'll see the description is there:
 
 ```{r, eval=FALSE}
-ds <- refresh(ds)
+ds <- refresh(ds) # When you refresh, remember to assign it to the dataset, `ds` here.
 description(ds)
 ```
 ```
@@ -102,15 +114,15 @@ description(ds)
 
 Datasets that you don't need anymore can be either archived or deleted. Archiving removes the dataset from the primary listings of datasets, but it is not a permanently destructive action. You can archive and restore archived datasets in the web application.
 
-Datasets can also be deleted permanently. This action cannot be undone, so it should not be done lightly. `crunch` provides two ways to delete a dataset: a `delete` method on a dataset object, like
+Datasets can also be deleted permanently. This action cannot be undone, so it should not be done lightly. The `crunch` library provides two ways to delete a dataset: a `delete` method on a dataset object, like
 
 ```{r, eval=FALSE}
-## Not run
-delete(ds)
+## Do not run this, commented out on purpose
+# delete(ds)
 ```
 
-The second way to delete is `deleteDataset`, which works like `loadDataset`: you supply a dataset name. This way is faster if you have not already loaded the dataset object into your R session: no need to fetch something from the server just to then tell the server to delete it. 
+The second way to delete is the `deleteDataset` function, which works like `loadDataset`: you supply a dataset name. This way is faster if you have not already loaded the dataset object into your R session: no need to fetch something from the server just to then tell the server to delete it. 
 
-For details on both, see their help pages. 
+For details on both, see their help pages with `?deleteDataset` and `?delete`. 
 
 [Next: Variable metadata](variables.html) 

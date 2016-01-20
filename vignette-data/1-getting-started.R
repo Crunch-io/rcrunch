@@ -1,24 +1,25 @@
 library(crunch)
+library(foreign)
 options(crunch.api=getOption("test.api"), 
         crunch.debug=FALSE,
         crunch.email=getOption("test.user"),
         crunch.pw=getOption("test.pw"))
 login()
 
-library(foreign)
-df <- read.spss("ECON0003_WTS_W235.sav", to.data.frame=TRUE)
-df <- df[-grep("^pp", names(df))]
-df <- df[-setdiff(grep("_t$", names(df)), match("imiss_t", names(df)))]
-df <- df[-c(1:3, 7:40, grep("^qualityControl", names(df)), grep("religpew", names(df)))]
-df$econid <- NULL
-df$boap_issues <- NULL
-df$imiss <- NULL
-df$track[is.na(df$track)] <- "Not sure"
-# df <- df[1:100,]
+economist <- read.spss("ECON0003_WTS_W235.sav", to.data.frame=TRUE)
+economist <- economist[-grep("^pp", names(economist))]
+economist <- economist[-setdiff(grep("_t$", names(economist)), match("imiss_t", names(economist)))]
+economist <- economist[-c(1:3, 7:40, grep("^qualityControl", names(economist)), grep("religpew", names(economist)))]
+economist$econid <- NULL
+economist$boap_issues <- NULL
+economist$imiss <- NULL
+economist$track[is.na(economist$track)] <- "Not sure"
+# economist <- economist[1:100,]
 
 # load("../vignettes/economist.RData")
-ds <- newDataset(df, name="Economist/YouGov Weekly Survey")
+ds <- newDataset(economist, name="A Toy, Economist/YouGov Weekly Survey")
 dim.ds <- dim(ds)
 
-.listDatasets <- "Economist/YouGov Weekly Survey"
-save(ds, .listDatasets, dim.ds, file="../vignettes/getting-started.RData")
+.listDatasets <- "A Toy, Economist/YouGov Weekly Survey" # the dot avoids confusing with real fxn?
+#save(ds, .listDatasets, dim.ds, file="../vignettes/getting-started.RData")
+save(economist, file="../vignettes/economist.RData")

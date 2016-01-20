@@ -38,6 +38,5 @@ show_boap2 <- capture.output(print(ds$boap))
 ds$boap <- dichotomize(ds$boap, "Strongly approve")
 show_boap3 <- capture.output(print(ds$boap))
 
-
 save.image(file="../vignettes/array-variables.RData")
 

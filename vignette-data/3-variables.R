@@ -5,11 +5,12 @@ options(crunch.api=getOption("test.api"),
         crunch.pw=getOption("test.pw"))
 login()
 
-load("../vignettes/getting-started.RData")
+#load("../vignettes/getting-started.RData")
+load("../vignettes/economist.RData")
 
-track.var <- ds$track
-summary.track.var <- capture.output(print(track.var))
-track.cats <- track.cats.before <- categories(track.var)
+track.local <- ds$track
+summary.track.local <- capture.output(print(track.local))
+track.cats <- track.cats.before <- categories(track.local)
 names(track.cats)[1:2] <- c("Right track", "Wrong track")
 values(track.cats)[1:3] <- c(1, -1, 0)
 is.na(track.cats) <- "Not sure"
@@ -23,7 +24,6 @@ head2[6:9] <- c("Favorability of Edward Snowden",
                                "Approval of Snowden's Leak",
                                "Support for Prosecution of Snowden",
                                "Penalty for Snowden")
-                               
-save(ds, track.var, summary.track.var, track.cats, track.cats.before, head.of.variables, head2,
+
+save(ds, track.local, summary.track.local, track.cats, track.cats.before, head.of.variables, head2,
     file="../vignettes/variables.RData")
-                               

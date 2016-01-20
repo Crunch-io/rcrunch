@@ -18,7 +18,9 @@ load("variables.RData")
 
 Once you've uploaded data to Crunch, you'll likely want to spend some time cleaning up the metadata associated with your dataset. Legacy statistical programs offer only limited support for variable metadata, both in type and quality. Because Crunch facilitates data visualization, collaboration, and sharing results with others, making your dataset presentation-quality is worthwhile, and this often requires additional work after uploading a data file. 
 
-Most of the operations described below can also be accomplished in the web client. However, users comfortable with scripting may find it faster or easier to automate these actions with `crunch`. Such edits made within R are carried out on the remote Crunch dataset, thereby keeping data in sync across all client applications.
+To save yourself work later, strive to have the survey scripted in QSL so that the metadata is automatically included in Crunch via the uploader. This means to utilize `varlabels` and `topics` in QSL wherever possible. If you have questions about this contacts your survey scripter. 
+
+Most of the operations described below can also be accomplished in the web client (GUI). However, users comfortable with scripting may find it faster or easier to automate these actions with the `crunch` library in R. Such edits made within R are carried out on the remote Crunch dataset, thereby keeping data in sync across all client applications.
 
 ## A rose by any other moniker: "names" and "aliases"
 
@@ -41,7 +43,7 @@ When dealing with variables within a dataset, the alias is used to identify vari
 Because the `names` attribute is used for indexing elements in R, if we want to extract variables based on alias, it means that the `names` attribute of dataset must actually expose aliases. This may be dissonant, but it has some nice properties. For one, comparing our Crunch dataset with the `data.frame` from which it was created, their `names` attribute have the same contents:
 
 ```{r, eval=FALSE}
-identical(names(ds), names(df))
+identical(names(ds), names(economist))
 ```
 ```
 ## [1] TRUE
@@ -50,59 +52,36 @@ identical(names(ds), names(df))
 You can reference and extract variables from a dataset as if it were a `data.frame`, using the `$`, `[`, and `[[` methods. 
 
 ```{r, eval=FALSE}
-track.var <- ds$track
-track.var
-```
-```{r, echo=FALSE}
-cat(summary.track.var, sep="\n")
+track.local <- ds$track # remember that we called the dataSET up on Crunch 'ds'
+track.local
+track.local <- ds[['track']] # the same thing as using the '$'
+track.local
 ```
 
-Like datasets, variables have various attributes like `name` and `description` that can be set naturally.
+Note how the `track.local` prints a summary table of the variable, not a long vector of the responses themselves. If this was a data.frame in R, it would have printed to the screen a vector of the actual responses (which the code snippet below shows). Later on we will go over how to get the actual vector of responses for a single (or many) variable(s) in case you need them to do e.g. a recode.
+```{r, eval=FALSE}
+head(economist$track) # Note how this uses 'economist' not 'ds'. Try '? head' if that's new to you
+```
+
+Like datasets, variables have various attributes like `name` and `description` that can be set.
 
 ```{r, eval=FALSE}
-name(track.var) <- "Direction of country"
-description(track.var) <- "In your opinon, is the country going in the right direction, or is it on the wrong track?"
+name(track.local) <- "Direction of country"
+description(track.local) <- "In your opinon, is the country going in the right direction, or is it on the wrong track?"
 ```
 
-Two caveats. First, because we first extracted the variable from the dataset before making edits, the dataset object has stale metadata for this variable. 
-
-```{r, eval=FALSE}
-name(track.var) == name(ds$track)
-```
-```
-## [1] FALSE
-```
-
-If we had instead modified `track` within `ds`, like
+Two caveats. First, because we first extracted the variable 'track' from the Crunch dataset and saved it locally as 'track.local' before making edits, the Crunch dataset object does not have the new name and description for this variable ('track'). That is, the name and description we just gave 'track.local' are not up on the Crunch dataset yet. But we can easily fix that.
 
 ```{r, eval=FALSE}
-## Not run
+name(ds$track) <- name(track.local)
+name(ds$track)
+```
+
+Alternatively, instead of extracting the variable and making the changes locally, it is more efficient to directly modify `track` up on `ds`, and then `ds` would be up to date automatically.
+
+```{r, eval=FALSE}
 name(ds$track) <- "Direction of country"
 ```
-
-`ds` would be up to date. 
-
-This can be remedied one of two ways. We could either assign `track.var` back to `ds`, as in
-
-```{r, eval=FALSE}
-ds$track <- track.var
-```
-
-or we can just refresh the dataset and fetch data from the server again:
-
-```{r, eval=FALSE}
-ds <- refresh(ds)
-```
-
-Now, `ds` has our edits:
-
-```{r, eval=FALSE}
-name(track.var) == name(ds$track)
-```
-```
-## [1] TRUE
-```
-
 
 ### Addressing the variable catalog
 
@@ -124,13 +103,10 @@ but
 identical(names(ds), names(variables(ds)))
 ```
 
-because "Direction of country" is the name for `ds$track`
+because above we changed the name of `ds$track` to "Direction of country" (see the fifth element in the vector below).
 
 ```{r, eval=FALSE}
 head(names(variables(ds)), 10)
-```
-```{r, echo=FALSE}
-head.of.variables
 ```
 
 These attributes all allow assignment with `<-`. The methods `names` and `aliases` yield character vectors, and they take characters in assignment. Hence, you can use any vectorized string manipulation tools available in R, such as regular expressions, to edit variable names efficiently. You can also just supply a replacement vector, like
@@ -153,10 +129,10 @@ Many variables in survey data are categorial: respondents have a finite set of a
 In Crunch, categorical variables' "categories" are objects with richer metadata. 
 
 ```{r}
-is.Categorical(track.var)
+is.Categorical(track.local)
 ```
 ```{r, eval=FALSE}
-categories(track.var)
+categories(track.local)
 ```
 ```{r, echo=FALSE}
 track.cats.before
@@ -164,48 +140,36 @@ track.cats.before
 
 ### Category attributes
 
-Categories have `names`, the factor's levels; numeric `values` which can be used when interpreting the categorical variable as numeric; and `ids`, which are analogous to the integer values that underly an R factor. Categories also have their own "missing" status. Indeed, because Crunch supports more complex missing value support than does R, multiple categories can be marked as missing: there's not a single "NA" value.
+Categories have `names`, the levels in an R factor; numeric `values` which can be used when interpreting the categorical variable as numeric; and `ids`, which are analogous to the integer values that underly an R factor. 
 
 ```{r, eval=FALSE}
-names(categories(track.var))
-```
-```{r, echo=FALSE}
-names(track.cats.before)
+names(categories(track.local))
 ```
 ```{r, eval=FALSE}
-values(categories(track.var))
-```
-```{r, echo=FALSE}
-values(track.cats.before)
+values(categories(track.local))
 ```
 ```{r, eval=FALSE}
-ids(categories(track.var))
-```
-```{r, echo=FALSE}
-ids(track.cats.before)
-```
-```{r, eval=FALSE}
-is.na(categories(track.var))
-```
-```{r, echo=FALSE}
-is.na(track.cats.before)
+ids(categories(track.local))
 ```
 
-Names and values can be assigned into categories, but ids cannot: they are immutable references to values within the column of data on the server. Missingness can be set with `is.na`. Character values assigned will mark those categories as missing, leaving other categories unchanged. Logical values assigned will set the missing TRUE/FALSE accordingly.
+Categories also have their own "missing" status. Indeed, because Crunch supports more complex missing values than does R, multiple categories can be marked as missing: there's not a single "NA" value, which can be very handy. We can easily change which categories are marks as missing.
 
 ```{r, eval=FALSE}
-names(categories(track.var))[1:2] <- c("Right track", "Wrong track")
-values(categories(track.var)) <- c(1, -1, 0)
-is.na(categories(track.var)) <- "Not sure"
-categories(track.var)
-```
-```{r, echo=FALSE}
-track.cats
+is.na(categories(track.local)) # is.na() tells us which categories are currently 'missing'
+is.na(categories(track.local)) <- 'Not sure' # changes 'Not Sure' to be missing now
+is.na(categories(track.local))
+is.na(categories(track.local))['Not sure'] <- FALSE # reverses it. Another way to write this
+is.na(categories(track.local))
 ```
 
+You can change categories names and values, but ids cannot be changed: they are immutable references to values within the column of data on the server. 
+
 ```{r, eval=FALSE}
-ids(categories(track.var)) <- sample(ids(categories(track.var)), replace=FALSE)
+names(categories(track.local))[1] <- "Right track" # assigning a category name
+categories(track.local)
+ids(categories(track.local)) <- sample(ids(categories(track.local)), replace=FALSE)
 ```
+
 ```
 ## Error : Cannot modify category ids
 ```
@@ -215,47 +179,26 @@ ids(categories(track.var)) <- sample(ids(categories(track.var)), replace=FALSE)
 Categories can also be reordered by index, like any list object
 
 ```{r, eval=FALSE}
-categories(track.var) <- categories(track.var)[c(1,3,2)]
-categories(track.var)
-```
-```{r, echo=FALSE}
-track.cats[c(1,3,2)]
+categories(track.local) <- categories(track.local)[c(1,3,2)] # we left out 4 too
+categories(track.local)
 ```
 
 As with all other metadata edits discussed, updating with these methods automatically sends the changes to the server, so your local edits are reflected in the cloud.
 
 ## Hiding variables
 
-Datasets often contain variables that you may want to use -- perhaps through a derived variable, a transformation, or a recode -- or that may simply not be relevant for the analytic tasks at hand. In short, you want to hide them. They aren't deleted, so you can restore them if you need them later, but they no longer clutter the dataset "workspace".
+Datasets often contain variables that you may want to *use* -- as a derived variable, a transformation, or a recode -- but that may not be relevant for the analytic tasks at hand. In short, you want to hide them. They aren't deleted, so you can restore them if you need them later, but they no longer clutter the dataset "workspace" and they continue to exist as the seed for whatever dervied variable etc... that you originally wanted the variable for.
 
-As when working with a `data.frame`, you typically assign the return of a dataset-level function back to the variable representing the dataset in your R script or session. 
-
-```{r, eval=FALSE}
-ds <- hideVariables(ds, "comments")
-hiddenVariables(ds)
-```
-```
-## [1] "comments"
-```
-
-As with the `is.na` function, you can update a variable by assigning it to the hidden variables list.
+You use the `hideVariables` function to tell Crunch which variables you want to hide. You give it a vector of (one or many) characters. The `hiddenVariables` function returns the names (not aliases) of all the hidden variables. To return aliases of hidden variables see the example below.
 
 ```{r, eval=FALSE}
-hiddenVariables(ds) <- "pid7others"
 hiddenVariables(ds)
-```
-```
-## [1] "comments"  "pid7others"
-```
-
-These variables are now hidden, both locally in your R session and remotely on the server, which you can see in the web application. And, just as you could restore them there, you can also restore them from R:
-
-```{r unhide, eval=FALSE}
-ds <- unhideVariables(ds, "pid7others")
-hiddenVariables(ds)
-```
-```
-## [1] "comments"
+hideVariables(ds, "track")
+ds <- refresh(ds) # refresh to make sure the variable is hidden
+hiddenVariables(ds) # returns the variable *name* not alias
+hiddenVariables(ds, 'alias') # Note how returns the alias instead
+unhideVariables(ds, 'track')
+ds <- refresh(ds) # refresh to make sure the variable is hidden
 ```
 
 ## Deleting variables
@@ -265,7 +208,7 @@ Sometimes you do want to delete variables permanently. Doing so is easy, but we 
 To delete, you can assign `NULL` in to the dataset for that variable, just like you were removing a column from a `data.frame`. In our example dataset, we have two copies of a voter-registration variable, "votereg_new" and "votereg_old". Let's kill the old one:
 
 ```{r, eval=FALSE}
-ds$votereg_old <- NULL
+ds$votereg_old <- NULL # type 'n' (no) when it prompts you.
 ```
 ```
 ## Really delete "votereg_old"?
