@@ -16,7 +16,7 @@ skip_locally <- function (...) {
 set.seed(666)
 
 cacheOn()
-# startLog ("~/c/rcrunch/test.log")
+# startLog("") ## prints to stdout
 
 fromJSON <- jsonlite::fromJSON
 
