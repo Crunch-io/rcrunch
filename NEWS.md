@@ -1,4 +1,5 @@
 ### crunch 1.7.9
+* Make paginated requests to GET /values/ for greater reliability
 
 ### crunch 1.7.8
 * Update to match changes in filter API

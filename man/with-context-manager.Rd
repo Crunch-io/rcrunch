@@ -12,7 +12,9 @@
 
 \item{expr}{code to evaluate within that context}
 
-\item{...}{additional arguments. One additional supported argument is "as", which lets you assign the return of your "enter" function to an object you can access.}
+\item{...}{additional arguments. One additional supported argument is "as",
+which lets you assign the return of your "enter" function to an object you
+can access.}
 }
 \value{
 Nothing.

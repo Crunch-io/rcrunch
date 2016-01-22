@@ -15,7 +15,8 @@ ContextManager(enter = function() { }, exit = function() { },
 
 \item{error}{optional function to run if an error is thrown}
 
-\item{as}{character optional way to specify a default name for assinging the return of the enter function.}
+\item{as}{character optional way to specify a default name for assinging
+the return of the enter function.}
 }
 \value{
 an S3 class "contextManager" object

@@ -1,5 +1,22 @@
 context("Expressions")
 
+test_that(".dispatchFilter uses right numeric function", {
+    ## Use expect_output because toJSON returns class "json" but prints correctly
+    expect_output(toJSON(.dispatchFilter(5)),
+        paste0('{"function":"==","args":[{"function":"row",',
+        '"args":[]},{"value":4,"type":{"value":{"class":"numeric"}}}]}'),
+        fixed=TRUE)
+    expect_output(toJSON(.dispatchFilter(c(5, 7))),
+        paste0('{"function":"in","args":[{"function":"row",',
+        '"args":[]},{"column":[4,6],"type":{"value":{"class":"numeric"}}}]}'),
+        fixed=TRUE)
+    expect_output(toJSON(.dispatchFilter(5:7)),
+        paste0('{"function":"between","args":[{"function":"row",',
+        '"args":[]},{"value":4,"type":{"value":{"class":"numeric"}}},',
+        '{"value":7,"type":{"value":{"class":"numeric"}}}]}'),
+        fixed=TRUE)
+})
+
 with(fake.HTTP, {
     ds <- loadDataset("test ds")
 
@@ -38,17 +55,6 @@ with(fake.HTTP, {
 
     test_that("show method exists", {
         expect_true(is.character(capture.output(print(ds$birthyr + 5))))
-    })
-
-    test_that("Requesting a range of values yields 'between'", {
-        expect_error(as.vector(ds$gender[3:14]),
-            paste0('Error : POST /api/datasets/dataset1/table/ ',
-            '{"command":"select","variables":{"out":{"variable":',
-            '"66ae9881e3524f7db84970d556c34552"}},',
-            '"filter":{"function":"between","args":[{"function":"row",',
-            '"args":[]},{"value":2,"type":{"value":{"class":"numeric"}}},',
-            '{"value":14,"type":{"value":{"class":"numeric"}}}]}}\n'),
-            fixed=TRUE)
     })
 })
 
