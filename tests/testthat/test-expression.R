@@ -1,5 +1,22 @@
 context("Expressions")
 
+test_that(".dispatchFilter uses right numeric function", {
+    ## Use expect_output because toJSON returns class "json" but prints correctly
+    expect_output(toJSON(.dispatchFilter(5)),
+        paste0('{"function":"==","args":[{"function":"row",',
+        '"args":[]},{"value":4,"type":{"value":{"class":"numeric"}}}]}'),
+        fixed=TRUE)
+    expect_output(toJSON(.dispatchFilter(c(5, 7))),
+        paste0('{"function":"in","args":[{"function":"row",',
+        '"args":[]},{"column":[4,6],"type":{"value":{"class":"numeric"}}}]}'),
+        fixed=TRUE)
+    expect_output(toJSON(.dispatchFilter(5:7)),
+        paste0('{"function":"between","args":[{"function":"row",',
+        '"args":[]},{"value":4,"type":{"value":{"class":"numeric"}}},',
+        '{"value":7,"type":{"value":{"class":"numeric"}}}]}'),
+        fixed=TRUE)
+})
+
 with(fake.HTTP, {
     ds <- loadDataset("test ds")
 
@@ -39,18 +56,6 @@ with(fake.HTTP, {
     test_that("show method exists", {
         expect_true(is.character(capture.output(print(ds$birthyr + 5))))
     })
-
-    test_that("Requesting a range of values yields 'between'", {
-        # skip("'between' not implemented because of server error")
-        expect_error(as.vector(ds$gender[3:14]),
-            paste0('Error : POST /api/datasets/dataset1/table/ ',
-            '{"command":"select","variables":{"out":{"variable":',
-            '"66ae9881e3524f7db84970d556c34552"}},',
-            '"filter":{"function":"between","args":[{"function":"row",',
-            '"args":[]},{"value":2,"type":{"value":{"class":"numeric"}}},',
-            '{"value":14,"type":{"value":{"class":"numeric"}}}]}}\n'),
-            fixed=TRUE)
-    })
 })
 
 if (run.integration.tests) {
@@ -86,7 +91,7 @@ if (run.integration.tests) {
             varnames <- names(df[-6])
             test_that("Select values with Numeric inequality filter", {
                 e5 <- try(ds$v3[ds$v3 < 10])
-                expect_true(inherits(e5, "CrunchExpr"))
+                expect_true(inherits(e5, "CrunchVariable"))
                 expect_identical(as.vector(e5), c(8, 9))
                 for (i in varnames) {
                     expect_equivalent(as.vector(ds[[i]][ds$v3 < 10]),
@@ -108,7 +113,25 @@ if (run.integration.tests) {
                         df[[i]][df$v4 %in% "B"], info=i)
                 }
                 expect_identical(length(as.vector(ds$v3[ds$q1 %in% "selected"])), 10L)
+            })
 
+            with(no.cache(), {
+                clearCache() ## So we're totally fresh
+                with(temp.options(crunch.page.size=5, crunch.log=""), {
+                    avlog <- capture.output(v3.5 <- as.vector(ds$v3[ds$v4 %in% "B"]))
+                    test_that("Select values with %in% on Categorical, paginated", {
+                        logdf <- loadLogfile(textConnection(avlog))
+                        reqdf <- requestsFromLog(logdf)
+                        ## GET v3 entity to get /values/ URL,
+                        ## GET v3 entity to get categories to construct expr,
+                        ## GET /values/ 2x to get data,
+                        ## then a 3rd GET /values/ that returns 0
+                        ## values, which breaks the pagination loop
+                        expect_identical(reqdf$verb, rep("GET", 5))
+                        expect_identical(grep("values", reqdf$url), 3:5)
+                        expect_equivalent(v3.5, df$v3[df$v4 %in% "B"])
+                    })
+                })
             })
             test_that("Select values with &ed filter", {
                 expect_equivalent(as.vector(ds$v3[ds$v3 >= 10 & ds$v3 < 13]),
@@ -133,7 +156,6 @@ if (run.integration.tests) {
                 expect_equivalent(as.vector(ds$v3[6]), df$v3[6])
             })
             test_that("If R numeric filter is a range, 'between' is correct", {
-                ## NB: this doesn't use "between" yet
                 expect_equivalent(as.vector(ds$v3[3:18]), df$v3[3:18])
             })
             test_that("R logical filter evaluates", {
