@@ -41,7 +41,6 @@ with(fake.HTTP, {
     })
 
     test_that("Requesting a range of values yields 'between'", {
-        # skip("'between' not implemented because of server error")
         expect_error(as.vector(ds$gender[3:14]),
             paste0('Error : POST /api/datasets/dataset1/table/ ',
             '{"command":"select","variables":{"out":{"variable":',
@@ -86,7 +85,7 @@ if (run.integration.tests) {
             varnames <- names(df[-6])
             test_that("Select values with Numeric inequality filter", {
                 e5 <- try(ds$v3[ds$v3 < 10])
-                expect_true(inherits(e5, "CrunchExpr"))
+                expect_true(inherits(e5, "CrunchVariable"))
                 expect_identical(as.vector(e5), c(8, 9))
                 for (i in varnames) {
                     expect_equivalent(as.vector(ds[[i]][ds$v3 < 10]),
@@ -108,7 +107,25 @@ if (run.integration.tests) {
                         df[[i]][df$v4 %in% "B"], info=i)
                 }
                 expect_identical(length(as.vector(ds$v3[ds$q1 %in% "selected"])), 10L)
+            })
 
+            with(no.cache(), {
+                clearCache() ## So we're totally fresh
+                with(temp.options(crunch.page.size=5, crunch.log=""), {
+                    avlog <- capture.output(v3.5 <- as.vector(ds$v3[ds$v4 %in% "B"]))
+                    test_that("Select values with %in% on Categorical, paginated", {
+                        logdf <- loadLogfile(textConnection(avlog))
+                        reqdf <- requestsFromLog(logdf)
+                        ## GET v3 entity to get /values/ URL,
+                        ## GET v3 entity to get categories to construct expr,
+                        ## GET /values/ 2x to get data,
+                        ## then a 3rd GET /values/ that returns 0
+                        ## values, which breaks the pagination loop
+                        expect_identical(reqdf$verb, rep("GET", 5))
+                        expect_identical(grep("values", reqdf$url), 3:5)
+                        expect_equivalent(v3.5, df$v3[df$v4 %in% "B"])
+                    })
+                })
             })
             test_that("Select values with &ed filter", {
                 expect_equivalent(as.vector(ds$v3[ds$v3 >= 10 & ds$v3 < 13]),
@@ -133,7 +150,6 @@ if (run.integration.tests) {
                 expect_equivalent(as.vector(ds$v3[6]), df$v3[6])
             })
             test_that("If R numeric filter is a range, 'between' is correct", {
-                ## NB: this doesn't use "between" yet
                 expect_equivalent(as.vector(ds$v3[3:18]), df$v3[3:18])
             })
             test_that("R logical filter evaluates", {

@@ -63,27 +63,27 @@ setMethod("refresh", "CrunchVariable", function (x) {
 setMethod("name", "CrunchVariable", function (x) tuple(x)$name)
 ##' @rdname describe
 ##' @export
-setMethod("name<-", "CrunchVariable", 
+setMethod("name<-", "CrunchVariable",
     function (x, value) setTupleSlot(x, "name", value))
 ##' @rdname describe
 ##' @export
 setMethod("description", "CrunchVariable", function (x) tuple(x)$description)
 ##' @rdname describe
 ##' @export
-setMethod("description<-", "CrunchVariable", 
+setMethod("description<-", "CrunchVariable",
     function (x, value) setTupleSlot(x, "description", value))
 ##' @rdname describe
 ##' @export
 setMethod("alias", "CrunchVariable", function (object) tuple(object)$alias)
 ##' @rdname describe
 ##' @export
-setMethod("alias<-", "CrunchVariable", 
+setMethod("alias<-", "CrunchVariable",
     function (x, value) setTupleSlot(x, "alias", value))
 
 ##' Get and set Categories on Variables
 ##'
 ##' @param x a Variable
-##' @param value for the setters, an object of class Categories to set. 
+##' @param value for the setters, an object of class Categories to set.
 ##' @return Getters return Categories; setters return \code{x} duly modified.
 ##' @name var-categories
 ##' @aliases var-categories categories categories<-
@@ -94,7 +94,7 @@ NULL
 setMethod("categories", "CrunchVariable", function (x) NULL)
 ##' @rdname var-categories
 ##' @export
-setMethod("categories", "CategoricalVariable", 
+setMethod("categories", "CategoricalVariable",
     function (x) categories(entity(x)))
 ##' @rdname var-categories
 ##' @export
@@ -103,12 +103,12 @@ setMethod("categories", "CategoricalArrayVariable",
 
 ##' @rdname var-categories
 ##' @export
-setMethod("categories", "VariableEntity", 
+setMethod("categories", "VariableEntity",
     function (x) Categories(data=x@body$categories))
 
 ##' @rdname var-categories
 ##' @export
-setMethod("categories<-", c("CategoricalVariable", "Categories"), 
+setMethod("categories<-", c("CategoricalVariable", "Categories"),
     function (x, value) {
         dropCache(absoluteURL("../../cube/", self(x)))
         ent <- setEntitySlot(entity(x), "categories", value)
@@ -116,7 +116,7 @@ setMethod("categories<-", c("CategoricalVariable", "Categories"),
     })
 ##' @rdname var-categories
 ##' @export
-setMethod("categories<-", c("CategoricalArrayVariable", "Categories"), 
+setMethod("categories<-", c("CategoricalArrayVariable", "Categories"),
     function (x, value) {
         dropCache(absoluteURL("../../cube/", self(x)))
         lapply(subvariables(tuple(x)), dropCache) ## Subvariables will update too
@@ -125,49 +125,49 @@ setMethod("categories<-", c("CategoricalArrayVariable", "Categories"),
     })
 ##' @rdname var-categories
 ##' @export
-setMethod("categories<-", c("CategoricalVariable", "numeric"), 
+setMethod("categories<-", c("CategoricalVariable", "numeric"),
     function (x, value) {
         halt("`categories(x) <- value` only accepts Categories, not numeric. ",
             "Did you mean `values(categories(x)) <- value`?")
     })
 ##' @rdname var-categories
 ##' @export
-setMethod("categories<-", c("CategoricalVariable", "character"), 
+setMethod("categories<-", c("CategoricalVariable", "character"),
     function (x, value) {
         halt("`categories(x) <- value` only accepts Categories, not ",
             "character. Did you mean `names(categories(x)) <- value`?")
     })
 ##' @rdname var-categories
 ##' @export
-setMethod("categories<-", c("CategoricalVariable", "ANY"), 
+setMethod("categories<-", c("CategoricalVariable", "ANY"),
     function (x, value) {
-        halt("`categories(x) <- value` only accepts Categories, not ", 
+        halt("`categories(x) <- value` only accepts Categories, not ",
             class(value), ".")
     })
 ##' @rdname var-categories
 ##' @export
-setMethod("categories<-", c("CategoricalArrayVariable", "numeric"), 
+setMethod("categories<-", c("CategoricalArrayVariable", "numeric"),
     function (x, value) {
         halt("`categories(x) <- value` only accepts Categories, not numeric. ",
             "Did you mean `values(categories(x)) <- value`?")
     })
 ##' @rdname var-categories
 ##' @export
-setMethod("categories<-", c("CategoricalArrayVariable", "character"), 
+setMethod("categories<-", c("CategoricalArrayVariable", "character"),
     function (x, value) {
         halt("`categories(x) <- value` only accepts Categories, not ",
             "character. Did you mean `names(categories(x)) <- value`?")
     })
 ##' @rdname var-categories
 ##' @export
-setMethod("categories<-", c("CategoricalArrayVariable", "ANY"), 
+setMethod("categories<-", c("CategoricalArrayVariable", "ANY"),
     function (x, value) {
-        halt("`categories(x) <- value` only accepts Categories, not ", 
+        halt("`categories(x) <- value` only accepts Categories, not ",
             class(value), ".")
     })
 ##' @rdname var-categories
 ##' @export
-setMethod("categories<-", c("CrunchVariable", "ANY"), 
+setMethod("categories<-", c("CrunchVariable", "ANY"),
     function (x, value) {
         halt("category assignment not defined for ", class(x))
     })
@@ -198,7 +198,7 @@ unbind <- function (x) {
 
 ##' @rdname delete
 ##' @export
-setMethod("delete", "CrunchVariable", 
+setMethod("delete", "CrunchVariable",
     function (x, ...) invisible(crDELETE(self(x))))
 
 ##' @rdname delete
@@ -214,7 +214,7 @@ setMethod("delete", "CategoricalArrayVariable", function (x, ...) {
 
 ##' "Subset" a Variable
 ##'
-##' These methods subset variables by creating Expressions, which can be 
+##' These methods subset variables by creating Expressions, which can be
 ##' composed and evaluated as needed.
 ##' @param x a Variable
 ##' @param i a CrunchExpr, logical, or numeric
@@ -230,18 +230,24 @@ NULL
 ##' @rdname variable-extract
 ##' @export
 setMethod("[", c("CrunchVariable", "CrunchExpr"), function (x, i, ...) {
-    CrunchExpr(dataset_url=datasetReference(x), expression=zcl(x),
-        filter=zcl(i))
+    f <- activeFilter(x)
+    if (length(zcl(f))) {
+        i <- f & i
+    }
+    activeFilter(x) <- i
+    return(x)
 })
 ##' @rdname variable-extract
 ##' @export
 setMethod("[", c("CrunchVariable", "numeric"), function (x, i, ...) {
-    CrunchExpr(dataset_url=datasetReference(x), expression=zcl(x),
-        filter=.dispatchFilter(i))
+    i <- CrunchLogicalExpr(dataset_url=datasetReference(x),
+        expression=.dispatchFilter(i))
+    return(x[i])
 })
 ##' @rdname variable-extract
 ##' @export
 setMethod("[", c("CrunchVariable", "logical"), function (x, i, ...) {
-    CrunchExpr(dataset_url=datasetReference(x), expression=zcl(x),
-        filter=.dispatchFilter(i))
+    i <- CrunchLogicalExpr(dataset_url=datasetReference(x),
+        expression=.dispatchFilter(i))
+    return(x[i])
 })

@@ -56,8 +56,7 @@ with(fake.HTTP, {
     })
 
     test_that("activeFilter from CrunchExpr and CrunchVariable", {
-        ## TODO: @expression?
-        expect_identical(activeFilter(ds2$birthyr)@expression,
+        expect_identical(activeFilter(ds2$birthyr),
             activeFilter(ds$birthyr[ds$gender == "Male"]))
     })
 })
