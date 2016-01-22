@@ -20,6 +20,8 @@ NULL
 ##' @export
 setMethod("show", "ShojiObject", .showIt)
 
+##' @rdname show-crunch
+##' @export
 setMethod("show", "ShojiCatalog", function (object) {
     ## Catalog show content is a data.frame unless otherwise indicated.
     ## Print it, but capture the output so we can return the character output.

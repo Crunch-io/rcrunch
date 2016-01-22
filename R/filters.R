@@ -3,6 +3,11 @@
 ##' @param x a CrunchDataset
 ##' @return an object of class FilterCatalog containing references to Filter
 ##' entities usable in the web application.
+##' @name filter-catalog
+##' @aliases filters
+NULL
+
+##' @rdname filter-catalog
 ##' @export
 setMethod("filters", "CrunchDataset", function (x) {
     FilterCatalog(crGET(shojiURL(x, "catalogs", "filters")))
@@ -26,6 +31,10 @@ setMethod("name", "CrunchFilter", function (x) x@body$name)
 ##' flagged as shared with all dataset viewers. (Its setter thus takes a
 ##' logical value as well.)
 ##' @name filter-methods
+##' @aliases is.public<- is.public
+NULL
+
+##' @rdname filter-methods
 ##' @export
 setMethod("is.public", "CrunchFilter", function (x) x@body$is_public)
 
