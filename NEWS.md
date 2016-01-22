@@ -1,3 +1,5 @@
+### crunch 1.7.11
+
 ### crunch 1.7.10
 * `addSubvariable` function to add to array and multiple response variables (#7)
 * Make paginated requests to GET /values/ for greater reliability
