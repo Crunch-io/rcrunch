@@ -13,13 +13,18 @@
 .updatePayload <- function (variable, value) {
     ## Construct the "variables" key of a ZCL update payload
     if (is.Array(variable)) {
-        subvars <- index(subvariables(variable))
-        subids <- unlist(lapply(subvars, function (x) x$id))
-        out <- lapply(subids, function (x) zcl(typeof(value, structure(zfunc("typeof", structure(list(variable=x), class="zcl")), class="zcl"))))
-        names(out) <- subids
+        # subvars <- index(subvariables(variable))
+        # subids <- unlist(lapply(subvars, function (x) x$id))
+        out <- sapply(urls(subvariables(variable)), function (x) {
+            zcl(typeof(value,
+                structure(zfunc("typeof",
+                structure(list(variable=x), class="zcl")),
+                    class="zcl")))
+            }, simplify=FALSE)
+        # names(out) <- subids
     } else {
         out <- structure(list(zcl(typeof(value, variable))),
-            .Names=tuple(variable)$id)
+            .Names=self(variable))
     }
 
     ## Check for missingness and replace the NAs with special values

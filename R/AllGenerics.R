@@ -122,8 +122,6 @@ setGeneric("is.na<-")
 setGeneric("%in%")
 
 setGeneric("zcl", function (x) standardGeneric("zcl"))
-setGeneric("absolute.zcl", function (x) standardGeneric("absolute.zcl"))
-
 
 ##' toJSON methods for Crunch objects
 ##'
