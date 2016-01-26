@@ -7,7 +7,7 @@
 ##' @param subvariable subvariable to add
 ##' @return a new version of variable with the indicated subvariables
 ##' @export
-addSubvariable <- function(variable, subvariable){
+addSubvariable <- function(variable, subvariable, ds=NULL){
     ## Store some metadata up front
     payload <- copyVariableReferences(variable)
     subvars <- subvariables(variable)
@@ -15,10 +15,10 @@ addSubvariable <- function(variable, subvariable){
     subvar.names <- names(subvars)
     
     ## Identify subvariable URLs
-#     if (inherits(subvariable, 'VariableDefinition')) {
-#         ds <- addVariables(ds, subvariable)
-#         subvariable <- ds[[subvariable$alias]]
-#     }
+    if (inherits(subvariable, 'VariableDefinition')) {
+        ds <- addVariables(ds, subvariable)
+        subvariable <- ds[[subvariable$alias]]
+    }
     new_subvar.url <- self(subvariable)
     new_subvar.name <- name(subvariable)
     ## Unbind
@@ -30,11 +30,16 @@ addSubvariable <- function(variable, subvariable){
     
     ## Rebind
     new_url <- POSTNewVariable(variableCatalogURL(variable), payload)
-        
+
     ## Prune subvariable name prefix, or otherwise reset the names
     subvars <- Subvariables(crGET(absoluteURL("subvariables/", new_url)))
+    print(names(subvars))
+    print(urls(subvars))
+    print(c(subvar.urls, new_subvar.url))
+    subvars <- subvars[match(urls(subvars),c(subvar.urls, new_subvar.url))]
     names(subvars) <- c(subvar.names[na.omit(match(urls(subvars), subvar.urls))], new_subvar.name)
-
+    print(names(subvars))
+        
     ## What to return? This function is kind of a hack.
     invisible(new_url)
     
