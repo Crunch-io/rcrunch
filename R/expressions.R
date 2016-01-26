@@ -242,3 +242,51 @@ rollupResolution <- function (x) {
         return(NULL)
     }
 }
+
+.operators <- c("+", "-", "*", "/", "<", ">", ">=", "<=", "==", "!=", "&", "|")
+
+formatExpression <- function (expr) {
+    if ("function" %in% names(expr)) {
+        func <- expr[["function"]]
+        args <- vapply(expr[["args"]], formatExpression, character(1),
+            USE.NAMES=FALSE)
+        if (func %in% .operators) {
+            return(paste(args[1], func, args[2]))
+        } else {
+            return(paste0(func, "(", paste(args, collapse=", "), ")"))
+        }
+    } else if ("variable" %in% names(expr)) {
+        ## GET URL, get alias from that
+        return(crGET(expr[["variable"]])$body$alias)
+    } else if (length(intersect(c("column", "value"), names(expr)))) {
+        val <- expr$column %||% expr$value
+        if ("type" %in% names(expr) &&
+            "function" %in% names(expr$type) &&
+            expr$type[["function"]] == "typeof") {
+
+            ## GET variable, see if categorical
+            v <- crGET(expr$type$args[[1]]$variable)
+            if (v$body$type == "categorical") {
+                val <- i2n(val, categories(VariableEntity(v)))
+            }
+        }
+        
+        ## Else, iterate over, replace {?:-1} with NA
+        return(capture.output(dput(val)))
+    } else {
+        ## Dunno what this is
+        return("[Complex expression]")
+    }
+}
+
+setMethod("show", "CrunchExpr", function (object) {
+    cat("Crunch expression: ", formatExpression(object@expression), "\n",
+        sep="")
+    invisible(object)
+})
+
+setMethod("show", "CrunchLogicalExpr", function (object) {
+    cat("Crunch logical expression: ", formatExpression(object@expression), "\n",
+        sep="")
+    invisible(object)
+})

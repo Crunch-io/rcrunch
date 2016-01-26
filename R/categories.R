@@ -171,6 +171,16 @@ n2i <- function (x, cats, strict=TRUE) {
     return(out)
 }
 
+i2n <- function (x, cats, strict=TRUE) {
+    ## Convert x from category ids to the corresponding category names
+    out <- names(cats)[match(x, ids(cats))]
+    if (strict && any(is.na(out))) {
+        halt(ifelse(sum(is.na(out)) > 1, "Categories", "Category"),
+            " not found: ", serialPaste(dQuote(x[is.na(out)])))
+    }
+    return(out)
+}
+
 ##' @rdname is-na-categories
 ##' @export
 setMethod("is.na<-", c("Categories", "character"), function (x, value) {
