@@ -243,14 +243,23 @@ rollupResolution <- function (x) {
     }
 }
 
-.operators <- c("+", "-", "*", "/", "<", ">", ">=", "<=", "==", "!=", "&", "|")
+.operators <- c("+", "-", "*", "/", "<", ">", ">=", "<=", "==", "!=", "&", "|", "%in%")
+.funcs.z2r <- list(
+        and="&",
+        or="|",
+        is_missing="is.na",
+        `in`="%in%"
+    )
 
 formatExpression <- function (expr) {
     if ("function" %in% names(expr)) {
         func <- expr[["function"]]
+        func <- .funcs.z2r[[func]] %||% func ## Translate func name, if needed
         args <- vapply(expr[["args"]], formatExpression, character(1),
             USE.NAMES=FALSE)
-        if (func %in% .operators) {
+        if (func == "not") {
+            return(paste0("!", args[1]))
+        } else if (func %in% .operators) {
             return(paste(args[1], func, args[2]))
         } else {
             return(paste0(func, "(", paste(args, collapse=", "), ")"))
@@ -270,7 +279,7 @@ formatExpression <- function (expr) {
                 val <- i2n(val, categories(VariableEntity(v)))
             }
         }
-        
+
         ## Else, iterate over, replace {?:-1} with NA
         return(capture.output(dput(val)))
     } else {

@@ -58,8 +58,23 @@ with(fake.HTTP, {
                 dQuote("another")))
     })
 
-    test_that("Show method for expressions", {
-
+    test_that("Show method for logical expressions", {
+        expect_output(ds$gender %in% c("Male", "Female"),
+            'Crunch logical expression: gender %in% c("Male", "Female")',
+            fixed=TRUE)
+        expect_output(ds$birthyr == 1945 | ds$birthyr < 1941,
+            'birthyr == 1945 | birthyr < 1941',
+            fixed=TRUE)
+        expect_output(ds$gender %in% "Male" & !is.na(ds$birthyr),
+            'gender == "Male" & !is.na(birthyr)',
+            fixed=TRUE)
+        skip("TODO: implement datetime ops first")
+        print(ds$starttime > "2015-04-01")
+    })
+    test_that("Show method for expresssions", {
+        skip("TODO: something intelligent with parentheses and order of operations")
+        print(ds$birthyr * 3 + 5)
+        print(3 * (ds$birthyr + 5))
     })
 })
 
@@ -86,9 +101,11 @@ if (run.integration.tests) {
 
             test_that("expressions on expresssions evaluate", {
                 e3 <- try(ds$v3 + ds$v3 + 10)
+                expect_output(e3, "Crunch expression: v3 + v3 + 5", fixed=TRUE)
                 expect_true(inherits(e3, "CrunchExpr"))
                 expect_identical(as.vector(e3), 2*df$v3 + 10)
                 e4 <- try(ds$v3 + ds$v3 * 2)
+                expect_output(e4, "Crunch expression: v3 + v3 * 2", fixed=TRUE)
                 expect_true(inherits(e4, "CrunchExpr"))
                 expect_identical(as.vector(e4), 3*df$v3)
             })
