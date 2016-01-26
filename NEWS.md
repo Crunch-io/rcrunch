@@ -1,4 +1,5 @@
 ### crunch 1.7.11
+* Add method for R logical &/| Crunch expression
 
 ### crunch 1.7.10
 * `addSubvariable` function to add to array and multiple response variables (#7)
