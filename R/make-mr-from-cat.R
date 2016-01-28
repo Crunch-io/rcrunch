@@ -24,8 +24,8 @@ makeMRfromCat <- function(var1, var2, ..., useNAcats = FALSE){
 
     newbody$subvariables <- lapply(subs, function(sub){
         VarDef(data=factor(ifelse(rowSums(values == sub,na.rm = TRUE) > 0, 'selected', 
-            ifelse(rowSums(is.na(values)) == length(vars), NA, 'not selected'))), alias=paste0(newbody$alias, "_", gsub(" ", "_", tolower(sub))),
-            name=sub)
+            ifelse(rowSums(is.na(values)) == length(vars), NA, 'not selected'))), 
+            alias=paste0(newbody$alias, "_", gsub(" ", "_", gsub("[[:punct:]]", "", tolower(sub)))),name=sub)
     })
 
     class(newbody) <- 'VariableDefinition'
