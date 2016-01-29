@@ -22,7 +22,7 @@ combineArrays <- function(var1, var2, ..., useNAsubs = FALSE){
             if (is.na(alias))
             if (subvar %in% names(subvariables(var))) {
                 if (is.na(alias)) {alias <- alias(var[[subvar]]); var_first <- alias(var)}
-                tmp[is.na(tmp)] <- as.vector(var[[subvar]])[is.na(tmp)]
+                tmp[is.na(tmp)] <- as.vector(var[[subvar]][is.na(tmp)])
             }
         }
         return(list(data=tmp, alias=alias, var_first=var_first))
