@@ -1,4 +1,4 @@
-combineMRs <- function(var1, var2, ..., useNAsubs = FALSE){
+combineArrays <- function(var1, var2, ..., useNAsubs = FALSE){
     vars <- c(var1, var2, list(...)[sapply(1:length(list(...)), function(i) is.variable(list(...)[[i]]))])
     stopifnot(is.variable(var1) & is.variable(var2))
     stopifnot(any(sapply(vars, is.MultipleResponse)))
