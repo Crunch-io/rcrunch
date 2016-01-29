@@ -5,6 +5,16 @@
 ##' for the new variable that is being created. The final argument useNAcats
 ##' is given the defult value FALSE. If it is made TRUE, any categories that
 ##' are NA in the categorical variables will become subvariables.
+##' @param variable 1 to combine
+##' @param variable 2 to combine
+##' @param other desired attributes such as new variable alias, name, 
+##' description as well as any other variables you would like to combine
+##' @param a boolean describing whether categories that are NA in the
+##' original variables should be made into subvariables in the new
+##' variable
+##' @return a new multiple_response variable with subvariables
+##' that are the union of the categories of variables given
+##' @export
 
 makeMRfromCat <- function(var1, var2, ..., useNAcats = FALSE){
     vars <- c(var1, var2, list(...)[sapply(1:length(list(...)), function(i) is.variable(list(...)[[i]]))])

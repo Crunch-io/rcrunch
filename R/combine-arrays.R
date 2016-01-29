@@ -1,4 +1,18 @@
-combineArrays <- function(var1, var2, ..., useNAsubs = FALSE){
+##' Combine array variables into a new array
+##'
+##' This function lets you combine array variables into a new array
+##' Arguments include at least two array variables as well as any metadata
+##' for the new variable that is being created. This function uses the data from 
+##' the arrays in the order that they are given. If the first variable is NA for a given 
+##' row of a subvariable, it will use the data from the second variable and so on.
+##' @param variable 1 to combine
+##' @param variable 2 to combine
+##' @param other desired attributes such as new variable alias, name, 
+##' description as well as any other variables you would like to combine
+##' @return a new variable with combine values from the arrays
+##' @export
+
+combineArrays <- function(var1, var2, ...){
     vars <- c(var1, var2, list(...)[sapply(1:length(list(...)), function(i) is.variable(list(...)[[i]]))])
     stopifnot(is.variable(var1) & is.variable(var2))
     stopifnot(any(sapply(vars, is.MultipleResponse)))
@@ -10,28 +24,24 @@ combineArrays <- function(var1, var2, ..., useNAsubs = FALSE){
     
     newbody <- updateList(newbody, list(...)[!sapply(1:length(list(...)), function(i) is.variable(list(...)[[i]]))])
     
-    if (useNAcats) subs <- unique(unlist(lapply(vars, function(var) names(subvariables(var)))))
-    else subs <- unique(unlist(lapply(vars, function(var) names(subvariables(var))[!is.na(subvariables(var))])))
+    subs <- unique(unlist(lapply(vars, function(var) names(subvariables(var)))))
     
     nrows <- length(as.vector(var1[[1]]))
-    
     values <- sapply(subs, function(subvar) {
         tmp <- rep(NA, nrows)
-        alias <- NA
         for (var in vars){
             if (is.na(alias))
             if (subvar %in% names(subvariables(var))) {
-                if (is.na(alias)) {alias <- alias(var[[subvar]]); var_first <- alias(var)}
-                tmp[is.na(tmp)] <- as.vector(var[[subvar]][is.na(tmp)])
+                tmp[is.na(tmp)] <- as.character(as.vector(var[[subvar]][is.na(tmp)]))
             }
         }
-        return(list(data=tmp, alias=alias, var_first=var_first))
+        return(tmp)
     })    
     colnames(values) <- subs
     
     newbody$subvariables <- lapply(subs, function(sub){
-        VarDef(data=factor(values[[sub]]$data), 
-            alias=gsub(values[[sub]]$var_first, newbody$alias, values[[sub]]$alias),name=sub)
+        VarDef(data=factor(values[[sub]]), 
+            alias=paste0(newbody$alias, "_", gsub(" ", "_", gsub("[[:punct:]]", "", tolower(sub)))),name=sub)
     })
 
     class(newbody) <- 'VariableDefinition'
