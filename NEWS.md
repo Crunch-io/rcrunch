@@ -1,3 +1,5 @@
+### crunch 1.7.13
+
 ### crunch 1.7.12
 * Add method for R logical &/| Crunch expression
 * Upgrade for compatibility with httr 1.1
