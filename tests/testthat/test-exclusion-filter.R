@@ -217,9 +217,24 @@ if (run.integration.tests) {
                         dimnames=list(ndogs=c(0, 2, 3))))
             })
             ## So let's also drop rows corresponding to Austrians with >0 dogs:
-            ds$keep[ds$country == "Austria" & !(ds$ndogs == 0)] <- "False"
+            ds$keep[ds$country == "Austria" & ds$ndogs > 0] <- "False"
             test_that("The excluded nrow goes down by 2", {
                 expect_identical(nrow(ds), 14L)
+            })
+
+            test_that("If I delete a variable on which the exclusion depends, we're ok", {
+                with(consent(), ds$keep <- NULL)
+                expect_true(is.null(ds$keep))
+                expect_true(is.null(exclusion(ds)))
+                expect_identical(nrow(ds), 20L)
+            })
+            test_that("Exclude on is.na, then delete variable", {
+                exclusion(ds) <- is.na(ds$q1) | is.na(ds$q3)
+                expect_identical(nrow(ds), 10L)
+                with(consent(), ds$q1 <- NULL)
+                expect_true(is.null(ds$q1))
+                expect_true(is.null(exclusion(ds)))
+                expect_identical(nrow(ds), 20L)
             })
         })
     })
