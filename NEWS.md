@@ -1,4 +1,5 @@
 ### crunch 1.7.13
+* Fix bug in assigning `name(ds$var$subvar) <- value`
 
 ### crunch 1.7.12
 * Add method for R logical &/| Crunch expression

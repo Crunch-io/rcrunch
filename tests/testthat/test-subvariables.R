@@ -3,22 +3,22 @@ context("Subvariables")
 with(fake.HTTP, {
     test.ds <- loadDataset("test ds")
     mr <- test.ds$mymrset
-    
+
     test_that("setup", {
         expect_true(is.Multiple(mr))
     })
-    
+
     test_that("subvariables are what we think", {
         expect_true(inherits(subvariables(mr), "Subvariables"))
         expect_identical(names(subvariables(mr)), c("First", "Second", "Last"))
     })
-    
+
     test_that("subvariable name setter error checking", {
         expect_error(names(subvariables(mr)) <- 1:3)
         expect_error(names(subvariables(mr)) <- c("First", "Second"))
         expect_error(names(subvariables(mr)) <- c("First", "First", "First"))
     })
-    
+
     test_that("[.Subvariables", {
         expect_true(inherits(subvariables(mr)[1:2], "Subvariables"))
         expect_true(inherits(subvariables(mr)[c("First", "Last")],
@@ -26,19 +26,19 @@ with(fake.HTTP, {
         expect_error(subvariables(mr)[c("First", "Other")],
             "Undefined subvariables selected")
     })
-    
+
     test_that("subvariable setter validation", {
-        expect_error(subvariables(mr) <- Subvariables(), 
+        expect_error(subvariables(mr) <- Subvariables(),
             "Can only reorder, not change, subvariables")
-        expect_error(subvariables(mr) <- subvariables(mr)[1:2], 
+        expect_error(subvariables(mr) <- subvariables(mr)[1:2],
             "Can only reorder, not change, subvariables")
     })
-    
+
     test_that("Assinging in with no changes does not make PATCH request", {
         expect_that(subvariables(mr) <- subvariables(mr),
             does_not_throw_error())
     })
-    
+
     test_that("can extract a subvariable as a Variable", {
         expect_true(inherits(subvariables(mr)[[1]], "CrunchVariable"))
         expect_true(is.Categorical(subvariables(mr)[[1]]))
@@ -48,7 +48,7 @@ with(fake.HTTP, {
         expect_true(is.Categorical(subvariables(mr)$Second))
         expect_true(is.null(subvariables(mr)$Other))
     })
-    
+
     test_that("can extract directly from array variable", {
         expect_true(inherits(mr[[1]], "CrunchVariable"))
         expect_true(is.Categorical(mr[[1]]))
@@ -57,14 +57,14 @@ with(fake.HTTP, {
         expect_true(inherits(mr$Second, "CrunchVariable"))
         expect_true(is.Categorical(mr$Second))
         expect_true(is.null(mr$Other))
-        
+
         expect_true(inherits(mr[1:2], "Subvariables"))
         expect_true(inherits(mr[c("First", "Last")],
             "Subvariables"))
         expect_error(mr[c("First", "Other")],
             "Undefined subvariables selected")
     })
-    
+
     test_that("show method for Subvariables", {
         mr <- refresh(mr)
         expect_identical(showSubvariables(subvariables(mr)), c(
@@ -85,13 +85,13 @@ if (run.integration.tests) {
                 expect_identical(names(subvariables(var)),
                     c("mr_1", "mr_2", "mr_3"))
             })
-            
+
             test_that("can rename subvariables", {
                 try(names(subvariables(var))[2] <- "M.R. Two")
                 expect_identical(names(subvariables(var)),
                     c("mr_1", "M.R. Two", "mr_3"))
             })
-            
+
             test_that("can rename one subvariable", {
                 try(name(subvariables(var)[[2]]) <- "Due")
                 expect_identical(names(subvariables(var)),
@@ -106,7 +106,7 @@ if (run.integration.tests) {
                     "Cannot add or remove subvariables")
                 expect_error(sv[[2]] <- NULL,
                     "Cannot add or remove subvariables")
-                expect_error(sv[[2]] <- "not a variable", 
+                expect_error(sv[[2]] <- "not a variable",
                     "Can only assign Variables into an object of class Subvariables")
             })
             test_that("can rename some subvariables", {
@@ -119,7 +119,7 @@ if (run.integration.tests) {
                     c("mr_1", "M.R. Two", "mr_3"))
                 expect_error(names(sv[3:4]) <- c("3", "4"),
                     "Subscript out of bounds: 4")
-                expect_error(sv[2:3] <- c("not a variable", "nor this"), 
+                expect_error(sv[2:3] <- c("not a variable", "nor this"),
                     "Can only assign Variables into an object of class Subvariables")
             })
             test_that("subvariables aliases", {
@@ -129,7 +129,7 @@ if (run.integration.tests) {
                 expect_identical(aliases(subvariables(var)),
                     c("mr_5", "mr_6", "mr_7"))
             })
-            
+
             test_that("can reorder subvariables", {
                 try(subvariables(var) <- subvariables(var)[c(3,1,2)])
                 expect_identical(names(subvariables(var)),
@@ -152,23 +152,40 @@ if (run.integration.tests) {
         })
         with(test.dataset(mrdf["mr_1"]), {
             ds <- mrdf.setup(ds)
-            
+
             test_that("Setup for tests with array with one subvar", {
                 expect_identical(length(subvariables(ds$CA)), 1L)
                 expect_identical(names(subvariables(ds$CA)), "mr_1")
-                expect_identical(names(categories(ds$CA)), 
+                expect_identical(names(categories(ds$CA)),
                     c("0.0", "1.0", "No Data"))
             })
-            
+
             test_that("Can edit category names", {
                 names(categories(ds$CA))[1:2] <- c("False", "True")
-                expect_identical(names(categories(ds$CA)), 
+                expect_identical(names(categories(ds$CA)),
                     c("False", "True", "No Data"))
             })
-            
+
             test_that("Can edit name of single-subvar", {
                 names(subvariables(ds$CA)) <- "MR_1"
                 expect_identical(names(subvariables(ds$CA)), "MR_1")
+            })
+        })
+
+        with(test.dataset(newDatasetFromFixture("apidocs")), {
+            test_that("Can edit name of subvariable with variable setter", {
+                expect_identical(names(subvariables(ds$petloc)),
+                    c("Home", "Work"))
+                name(ds$petloc$Home) <- "En casa"
+                expect_identical(names(subvariables(ds$petloc)),
+                    c("En casa", "Work"))
+            })
+            test_that("Can edit alias of subvariable with variable setter", {
+                expect_identical(aliases(subvariables(ds$petloc)),
+                    c("petloc_home", "petloc_work"))
+                alias(ds$petloc$Work) <- "plw"
+                expect_identical(aliases(subvariables(ds$petloc)),
+                    c("petloc_home", "plw"))
             })
         })
     })

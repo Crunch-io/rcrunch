@@ -1,6 +1,6 @@
 ##' Subvariables in Array Variables
 ##'
-##' Multiple-response and categorical-array variables contain a set of 
+##' Multiple-response and categorical-array variables contain a set of
 ##' subvariables within them. The Subvariables class encapsulates them.
 ##'
 ##' Subvariables can be accessed from array variables (including multiple
@@ -11,12 +11,12 @@
 ##' \code{\link{deleteSubvariable}} to remove subvariables from an array.
 ##'
 ##' Subvariables have a \code{names} attribute that can be accessed, showing
-##' the display names of the subvariables. These can be set with the 
-##' \code{names<-} method. 
+##' the display names of the subvariables. These can be set with the
+##' \code{names<-} method.
 ##'
 ##' Finally, subvariables can be accessed as regular (categorical) variables
-##' with the \code{$} and \code{[[} extract methods. 
-##' 
+##' with the \code{$} and \code{[[} extract methods.
+##'
 ##' See the vignette on array variables for further details and examples.
 ##'
 ##' @param x A Variable or Subvariables object
@@ -127,7 +127,7 @@ NULL
 setMethod("[[", c("Subvariables", "character"), function (x, i, ...) {
     i <- match(i, names(x))
     if (is.na(i)) return(NULL)
-    callNextMethod(x, i, ...)    
+    callNextMethod(x, i, ...)
 })
 ##' @rdname subvars-extract
 ##' @export
@@ -168,27 +168,27 @@ deleteSubvariables <- function (variable, to.delete) {
     subvars <- subvariables(variable)
     subvar.urls <- urls(subvars)
     subvar.names <- names(subvars)
-    
+
     ## Identify subvariable URLs
     delete.these <- findVariableURLs(subvariables(variable), to.delete,
         key="name")
     ## Unbind
     all.subvar.urls <- unlist(unbind(variable))
-    
+
     ## Delete
     dels <- lapply(delete.these, function (x) try(crDELETE(x)))
-    
+
     ## Setdiff those deleted from those returned from unbind
     payload$subvariables <- I(setdiff(all.subvar.urls, delete.these))
     class(payload) <- "VariableDefinition"
-    
+
     ## Rebind
     new_url <- POSTNewVariable(variableCatalogURL(variable), payload)
-        
+
     ## Prune subvariable name prefix, or otherwise reset the names
     subvars <- Subvariables(crGET(absoluteURL("subvariables/", new_url)))
     names(subvars) <- subvar.names[match(urls(subvars), subvar.urls)]
-    
+
     ## What to return? This function is kind of a hack.
     invisible(new_url)
 }
@@ -199,20 +199,25 @@ deleteSubvariable <- deleteSubvariables
 
 ##' @rdname subvars-extract
 ##' @export
-setMethod("[[<-", 
-    c("Subvariables", "character", "missing", "CrunchVariable"), 
+setMethod("[[<-",
+    c("Subvariables", "character", "missing", "CrunchVariable"),
     function (x, i, value) {
         i <- match(i, names(x))
+        if (is.na(i)) {
+            ## Maybe we changed the name and that's what we're assigning back.
+            ## Check URLs instead.
+            i <- match(self(value), urls(x))
+        }
         if (is.na(i)) {
             halt("subscript out of bounds")
         }
         x[[i]] <- value ## "callNextMethod"
-        return(x)  
+        return(x)
     })
 ##' @rdname subvars-extract
 ##' @export
-setMethod("[[<-", 
-    c("Subvariables", "ANY", "missing", "CrunchVariable"), 
+setMethod("[[<-",
+    c("Subvariables", "ANY", "missing", "CrunchVariable"),
     function (x, i, value) {
         if (self(value) != urls(x)[i]) {
             halt("Cannot add or remove subvariables")
@@ -222,14 +227,14 @@ setMethod("[[<-",
     })
 ##' @rdname subvars-extract
 ##' @export
-setMethod("[[<-", 
+setMethod("[[<-",
     c("Subvariables", "ANY", "missing", "NULL"),
     function (x, i, value) {
         halt("Cannot add or remove subvariables")
     })
 ##' @rdname subvars-extract
 ##' @export
-setMethod("[[<-", 
+setMethod("[[<-",
     c("Subvariables", "ANY", "missing", "ANY"),
     function (x, i, value) {
         halt("Can only assign Variables into an object of class Subvariables")
@@ -242,7 +247,7 @@ setMethod("$<-", c("Subvariables"), function (x, name, value) {
 })
 ##' @rdname subvars-extract
 ##' @export
-setMethod("[<-", c("Subvariables", "character", "missing", "Subvariables"), 
+setMethod("[<-", c("Subvariables", "character", "missing", "Subvariables"),
     function (x, i, value) {
         w <- match(i, names(x))
         if (any(is.na(w))) {
@@ -252,7 +257,7 @@ setMethod("[<-", c("Subvariables", "character", "missing", "Subvariables"),
     })
 ##' @rdname subvars-extract
 ##' @export
-setMethod("[<-", c("Subvariables", "ANY", "missing", "Subvariables"), 
+setMethod("[<-", c("Subvariables", "ANY", "missing", "Subvariables"),
     function (x, i, value) {
         inbound <- vapply(value, function (a) self(a), character(1))
         if (!all(inbound %in% urls(x)[i])) {
@@ -264,7 +269,7 @@ setMethod("[<-", c("Subvariables", "ANY", "missing", "Subvariables"),
     })
 ##' @rdname subvars-extract
 ##' @export
-setMethod("[<-", c("Subvariables", "ANY", "missing", "ANY"), 
+setMethod("[<-", c("Subvariables", "ANY", "missing", "ANY"),
     function (x, i, value) {
         halt("Can only assign Variables into an object of class Subvariables")
     })
@@ -297,13 +302,13 @@ setMethod("[[", "CategoricalArrayVariable", function (x, i, ...) {
 
 ##' @rdname subvars-extract
 ##' @export
-setMethod("$", "CategoricalArrayVariable", 
+setMethod("$", "CategoricalArrayVariable",
     function (x, name) subvariables(x)[[name]])
 
 
 ##' @rdname subvars-extract
 ##' @export
-setMethod("[[<-", 
+setMethod("[[<-",
     c("CategoricalArrayVariable", "ANY", "missing", "ANY"),
     function (x, i, value) {
         subvariables(x)[[i]] <- value
