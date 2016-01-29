@@ -4,7 +4,7 @@
 \alias{addSubvariable}
 \title{Add subvariable to an array}
 \usage{
-addSubvariable(variable, subvariable)
+addSubvariable(variable, subvariable, ds = NULL)
 }
 \arguments{
 \item{variable}{the array variable}
