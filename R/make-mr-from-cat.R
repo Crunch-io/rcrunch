@@ -15,7 +15,6 @@
 ##' @return a new multiple_response variable with subvariables
 ##' that are the union of the categories of variables given
 ##' @export
-
 makeMRfromCat <- function(var1, var2, ..., useNAcats = FALSE){
     vars <- c(var1, var2, list(...)[sapply(1:length(list(...)), function(i) is.variable(list(...)[[i]]))])
     stopifnot(is.variable(var1) & is.variable(var2))

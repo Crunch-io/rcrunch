@@ -19,10 +19,9 @@
 ##' if false, 'not selected' will be given priority
 ##' @return a new variable with combined responses from the given variables
 ##' @export
-## NOTE THAT THIS IS ONLY GOING TO WORK FOR VARIABLES WHERE THE CATEGORIES ARE SELECTED AND NOT SELECTED. IF THE CATEGORIES ARE MADE BY SPSS, THIS WON'T WORK.
-## I've thought of a fix but it'll take more time (and is not currently useful to me).
-
 combineMRs <- function(var1, var2, ..., selectedFirst=TRUE){
+    ## NOTE THAT THIS IS ONLY GOING TO WORK FOR VARIABLES WHERE THE CATEGORIES ARE SELECTED AND NOT SELECTED. IF THE CATEGORIES ARE MADE BY SPSS, THIS WON'T WORK.
+    ## I've thought of a fix but it'll take more time (and is not currently useful to me).
     if (length(list(...)) > 0) vars <- c(var1, var2, list(...)[sapply(1:length(list(...)), function(i) is.variable(list(...)[[i]]))])
     else vars <- c(var1, var2)
     stopifnot(is.variable(var1) & is.variable(var2))

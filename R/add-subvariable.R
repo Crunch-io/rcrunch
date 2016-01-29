@@ -6,26 +6,20 @@
 ##' @param subvariable the subvariable to add
 ##' @return a new version of \code{variable} with the indicated subvariables
 ##' @export
-<<<<<<< HEAD
-addSubvariable <- function(variable, subvariable, ds=NULL){
-=======
-addSubvariable <- function (variable, subvariable){
->>>>>>> upstream/master
+addSubvariable <- function(variable, subvariable, dataset=NULL){
     ## Store some metadata up front
     payload <- copyVariableReferences(variable)
     subvars <- subvariables(variable)
     subvar.urls <- urls(subvars)
     subvar.names <- names(subvars)
-<<<<<<< HEAD
-    
+
     ## Identify subvariable URLs
     if (inherits(subvariable, 'VariableDefinition')) {
-        ds <- addVariables(ds, subvariable)
-        subvariable <- ds[[subvariable$alias]]
+        dataset <- addVariables(dataset, subvariable)
+        subvariable <- dataset[[subvariable$alias]]
     }
     new_subvar.url <- self(subvariable)
     new_subvar.name <- name(subvariable)
-=======
 
     # TODO: could support taking a VariableDefinition for subvariable
     # if (inherits(subvariable, 'VariableDefinition')) {
@@ -33,7 +27,6 @@ addSubvariable <- function (variable, subvariable){
     #     subvariable <- ds[[subvariable$alias]]
     # }
 
->>>>>>> upstream/master
     ## Unbind
     old.subvar.urls <- unlist(unbind(variable))
 
@@ -46,7 +39,6 @@ addSubvariable <- function (variable, subvariable){
 
     ## Prune subvariable name prefix, or otherwise reset the names
     subvars <- Subvariables(crGET(absoluteURL("subvariables/", new_url)))
-<<<<<<< HEAD
     print(names(subvars))
     print(urls(subvars))
     print(c(subvar.urls, new_subvar.url))
@@ -54,13 +46,12 @@ addSubvariable <- function (variable, subvariable){
     names(subvars) <- c(subvar.names[na.omit(match(urls(subvars), subvar.urls))], new_subvar.name)
     print(names(subvars))
         
-=======
     subvar.urls <- c(subvar.urls, self(subvariable))
     subvar.names <- c(subvar.names, name(subvariable))
     names(subvars) <- subvar.names[match(urls(subvars), subvar.urls)]
 
->>>>>>> upstream/master
     ## What to return? This function is kind of a hack.
+    ## maybe it should return a variable definition. so ds$var <- addSubvariable(ds$var, subvariable)
     invisible(new_url)
 }
 

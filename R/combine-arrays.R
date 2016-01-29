@@ -11,7 +11,6 @@
 ##' description as well as any other variables you would like to combine
 ##' @return a new variable with combine values from the arrays
 ##' @export
-
 combineArrays <- function(var1, var2, ...){
     vars <- c(var1, var2, list(...)[sapply(1:length(list(...)), function(i) is.variable(list(...)[[i]]))])
     stopifnot(is.variable(var1) & is.variable(var2))
