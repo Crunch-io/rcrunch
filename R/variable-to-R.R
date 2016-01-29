@@ -60,8 +60,28 @@ columnParser <- function (vartype, mode=NULL) {
 getValues <- function (x, ...) {
     url <- shojiURL(x, "views", "values")
     query <- list(...)
+    ## Paginate requests
+    query$start <- 0
+    query$total <- page.size <- getOption("crunch.page.size") %||% 1000
     if (length(query)) {
-        return(crGET(url, query=list(...)))
+        ## Because of the enforced pagination, we're always in here.
+        out <- list()
+        keep.going <- TRUE
+        i <- 1
+        with(temp.option(scipen=15), {
+            ## Mess with scipen so that the query string formatter doesn't
+            ## convert an offset like 100000 to '1+e05', which server rejects
+            while(keep.going) {
+                out[[i]] <- crGET(url, query=query)
+                if (length(out[[i]]) < page.size) {
+                    keep.going <- FALSE
+                } else {
+                    query$start <- query$start + page.size
+                    i <- i + 1
+                }
+            }
+        })
+        return(unlist(out, recursive=FALSE))
     } else {
         return(crGET(url))
     }

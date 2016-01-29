@@ -3,6 +3,9 @@
 \docType{methods}
 \name{filter-methods}
 \alias{filter-methods}
+\alias{is.public}
+\alias{is.public,CrunchFilter-method}
+\alias{is.public<-}
 \alias{is.public<-,CrunchFilter-method}
 \title{View and modify Filter entity attributes}
 \usage{

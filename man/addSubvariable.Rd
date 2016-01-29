@@ -7,16 +7,15 @@
 addSubvariable(variable, subvariable, ds = NULL)
 }
 \arguments{
-\item{variable}{the array variable}
+\item{variable}{the array variable to modify}
 
-\item{subvariable}{subvariable to add}
+\item{subvariable}{the subvariable to add}
 }
 \value{
-a new version of variable with the indicated subvariables
+a new version of \code{variable} with the indicated subvariables
 }
 \description{
 This function conceals the dirty work in making this happen. The array
-gets unbound, the subvariables added, and then the subvariables
-are rebound into a new array.
+gets unbound and rebound into a new array with the new variable added.
 }
 
