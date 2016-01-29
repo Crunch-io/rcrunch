@@ -9,7 +9,7 @@ with(fake.HTTP, {
         '"show_counts":false,"show_codes":false,"column_width":null},',
         '"name":"Gender (copy)","discarded":false,"alias":"gender_copy",',
         '"description":"Gender","expr":{"function":"copy_variable",',
-        '"args":[{"variable":"66ae9881e3524f7db84970d556c34552"}]}}\n'),
+        '"args":[{"variable":"/api/datasets/dataset1/variables/gender.json"}]}}\n'),
         fixed=TRUE)
 })
 

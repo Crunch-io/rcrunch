@@ -25,11 +25,11 @@ with(fake.HTTP, {
         expect_true(inherits(e1, "CrunchExpr"))
         zexp <- list(`function`="+",
             args=list(
-                list(variable="f78ca47313144b57adfb495893968e70"),
+                list(variable="/api/datasets/dataset1/variables/birthyr.json"),
                 list(value=5, type=list(
                     `function`="typeof",
                     args=list(
-                        list(variable="f78ca47313144b57adfb495893968e70")
+                        list(variable="/api/datasets/dataset1/variables/birthyr.json")
                     )
                 ))
             )
