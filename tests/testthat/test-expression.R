@@ -25,11 +25,11 @@ with(fake.HTTP, {
         expect_true(inherits(e1, "CrunchExpr"))
         zexp <- list(`function`="+",
             args=list(
-                list(variable="f78ca47313144b57adfb495893968e70"),
+                list(variable="/api/datasets/dataset1/variables/birthyr.json"),
                 list(value=5, type=list(
                     `function`="typeof",
                     args=list(
-                        list(variable="f78ca47313144b57adfb495893968e70")
+                        list(variable="/api/datasets/dataset1/variables/birthyr.json")
                     )
                 ))
             )
@@ -45,6 +45,17 @@ with(fake.HTTP, {
         e1 <- try(ds$birthyr < 0)
         expect_true(inherits(e1, "CrunchLogicalExpr"))
         expect_output(e1, "Crunch logical expression: birthyr < 0", fixed=TRUE)
+    })
+
+    test_that("R logical & CrunchLogicalExpr", {
+        e <- c(TRUE, FALSE, TRUE) & ds$gender == "Female"
+        expect_true(inherits(e, "CrunchLogicalExpr"))
+        e <- c(TRUE, FALSE, TRUE) | ds$gender == "Female"
+        expect_true(inherits(e, "CrunchLogicalExpr"))
+        e <- ds$gender == "Female" & c(TRUE, FALSE, TRUE)
+        expect_true(inherits(e, "CrunchLogicalExpr"))
+        e <- ds$gender == "Female" | c(TRUE, FALSE, TRUE)
+        expect_true(inherits(e, "CrunchLogicalExpr"))
     })
 
     test_that("Referencing category names that don't exist errors", {
@@ -97,6 +108,18 @@ if (run.integration.tests) {
                 expect_true(inherits(e1, "CrunchLogicalExpr"))
                 skip("select with logical expression not supported")
                 expect_identical(as.vector(e1), as.vector(ds$v3) < 10)
+            })
+
+            test_that("R & Crunch logical together", {
+                e1 <- ds$v3 < 10 | c(rep(FALSE, 15), rep(TRUE, 5))
+                expect_equivalent(as.vector(ds$v3[e1]),
+                    c(8, 9, 23, 24, 25, 26, 27))
+                e2 <- TRUE & is.na(ds$v2)
+                expect_equivalent(as.vector(ds$v3[e2]),
+                    23:27)
+                e3 <- df$v4 == "B" & is.na(ds$v1) ## Note df
+                expect_equivalent(as.vector(ds$v3[e3]),
+                    c(8, 10, 12))
             })
 
             test_that("expressions on expresssions evaluate", {

@@ -135,7 +135,11 @@ for (i in c("==", "!=")) {
 }
 
 setMethod("&", c("CrunchExpr", "CrunchExpr"), vxv("and"))
+setMethod("&", c("logical", "CrunchExpr"), vxv("and"))
+setMethod("&", c("CrunchExpr", "logical"), vxv("and"))
 setMethod("|", c("CrunchExpr", "CrunchExpr"), vxv("or"))
+setMethod("|", c("logical", "CrunchExpr"), vxv("or"))
+setMethod("|", c("CrunchExpr", "logical"), vxv("or"))
 
 ##' @rdname expressions
 ##' @export
