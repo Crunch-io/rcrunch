@@ -17,9 +17,6 @@
         },
         "/api/users/user2.json": {
             "dataset_permissions": {
-                "edit": false,
-                "change_permissions": false,
-                "add_users": true,
                 "change_weight": true,
                 "view": true
             },
