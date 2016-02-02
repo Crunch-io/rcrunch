@@ -12,6 +12,7 @@ if (run.integration.tests) {
             test_that("We have an empty filter catalog", {
                 expect_true(inherits(filters(ds), "FilterCatalog"))
                 expect_identical(length(filters(ds)), 0L)
+                expect_output(filters(ds), capture.output(print(data.frame())))
             })
 
             test_that("We can create a filter", {
@@ -19,6 +20,12 @@ if (run.integration.tests) {
                 expect_identical(length(filters(ds)), 1L)
                 expect_identical(names(filters(ds)), "Test filter")
                 expect_identical(name(filters(ds)[[1]]), "Test filter")
+                expect_output(filters(ds),
+                    paste(capture.output(print(data.frame(
+                            name="Test filter",
+                            id=filters(ds)[["Test filter"]]@body$id,
+                            is_public=FALSE
+                        ))), collapse="\n"), fixed=TRUE)
             })
 
             test_that("We can make it public/private", {

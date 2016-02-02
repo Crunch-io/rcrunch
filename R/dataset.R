@@ -258,7 +258,7 @@ setMethod("hidden", "CrunchDataset", function (x) hidden(allVariables(x)))
 
 
 webURL <- function (x) {
-    ##' URL to view this dataset in the web app
+    ## URL to view this dataset in the web app
     stopifnot(is.dataset(x))
     return(paste0(absoluteURL("/", getOption("crunch.api")), "dataset/", id(x)))
 }

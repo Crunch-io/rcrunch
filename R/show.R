@@ -158,6 +158,8 @@ setMethod("getShowContent", "BatchCatalog",
     function (x) catalogToDataFrame(x, c("id", "status"), rownames=NULL))
 setMethod("getShowContent", "VariableCatalog",
     function (x) catalogToDataFrame(x, c("alias", "name", "type"), rownames=NULL))
+setMethod("getShowContent", "FilterCatalog",
+    function (x) catalogToDataFrame(x, c("name", "id", "is_public"), rownames=NULL))
 setMethod("getShowContent", "VersionCatalog", formatVersionCatalog)
 setMethod("getShowContent", "ShojiObject",
     function (x) capture.output(print(x@body)))

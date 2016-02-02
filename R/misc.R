@@ -15,16 +15,17 @@ updateList <- function (x, y) {
     return(x)
 }
 
+##' Generic List Element Extractor
+##'
+##' @param key character naming the key(s) to extract. Can traverse list
+##' elements by separating them with \code{$}.
+##' @param xlist list containing other lists from which you want to extract
+##' @param ifnot what to return if the key is not found in a given xlist element
+##' @param simplify logical, passed to sapply internally
+##' @return the requested element(s). If length(key)>1, a named list of those
+##' elements
+##' @keywords internal
 selectFrom <- function (key, xlist, ifnot=NA, simplify=TRUE) {
-    ##' Generic List Element Extractor
-    ##'
-    ##' @param key character naming the key(s) to extract. Can traverse list
-    ##' elements by separating them with \code{$}.
-    ##' @param xlist list containing other lists from which you want to extract
-    ##' @param ifnot what to return if the key is not found in a given xlist element
-    ##' @param simplify logical, passed to sapply internally
-    ##' @return the requested element(s). If length(key)>1, a named list of those
-    ##' elements
     if (!is.list(xlist)) {
         halt("xlist must be a list object")
     }
@@ -45,13 +46,15 @@ selectFrom <- function (key, xlist, ifnot=NA, simplify=TRUE) {
     return(y)
 }
 
+##' Make a prose list
+##'
+##' Function to paste together a list of items, separated by commas (if more
+##' than 2), and with the last one having the collapse string.
+##'
+##' @param x vector or list
+##' @param collapse default="and"
+##' @keywords internal
 serialPaste <- function (x, collapse="and") {
-    ##' Make a prose list
-    ##' Function to paste together a list of items, separated by commas (if more
-    ##' than 2), and with the last one having the collapse string.
-    ##'
-    ##' @param x vector or list
-    ##' @param collapse default="and"
 	if (length(x)>1) x[length(x)] <- paste(collapse, x[length(x)])
 	join.with <- ifelse(length(x)>2, ", ", " ")
 	return(paste(x, collapse=join.with))
@@ -68,7 +71,7 @@ absoluteURL <- function (urls, base) {
             urls <- vapply(urls, function (x, b) {
                 b$path <- joinPath(b$path, x)
                 if (is.null(b$scheme)) {
-                    ## If file path and not URL, as in for tests, 
+                    ## If file path and not URL, as in for tests,
                     ## let's return it relative
                     return(b$path)
                 }
@@ -86,7 +89,7 @@ joinPath <- function (base.path, relative.part) {
     if (first.char == "/") {
         ## This is absolute, relative to the host
         return(relative.part)
-    } 
+    }
     u <- c(strsplit(base.path, "/")[[1]], strsplit(relative.part, "/")[[1]])
     ## Drop any references to current location (.)
     u <- u[u != "."]
@@ -120,7 +123,7 @@ askForPermission <- function (prompt="") {
     ## Have to check that it's FALSE and not NULL. Silence doesn't mean consent.
     must.confirm <- getOption("crunch.require.confirmation") %||% TRUE
     if (must.confirm == FALSE) return(TRUE)
-    
+
     ## If we're here but not interactive, we can't give permission.
     if (!interactive()) return(FALSE)
     prompt <- paste(prompt, "(y/n) ")

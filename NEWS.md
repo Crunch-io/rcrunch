@@ -1,6 +1,7 @@
 ### crunch 1.7.13
 * Fix bug in assigning `name(ds$var$subvar) <- value`
 * Fix overly rigid validation in `share`
+* More formal support for creating and managing UI filters
 
 ### crunch 1.7.12
 * Add method for R logical &/| Crunch expression
