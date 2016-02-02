@@ -17,7 +17,7 @@ newDataset <- function (x, name=as.character(substitute(x)),
         halt("Can only make a Crunch dataset from a two-dimensional data ",
             "structure")
     }
-    
+
     if (is.data.frame(x) || nrow(x) > 1000000) {
         Call[[1]] <- as.name("newDatasetByCSV")
     } else {
@@ -67,7 +67,7 @@ newDatasetByColumn <- function (x, name=as.character(substitute(x)),
 ##' They're more computer friendly.
 ##' @param ... additional arguments passed to \code{ \link{createDataset}}
 ##' @return On success, an object of class \code{CrunchDataset}.
-##' @export 
+##' @export
 newDatasetFromFile <- function (file, name=basename(file),
                                 useAlias=default.useAlias(), ...) {
     if (!file.exists(file)) {
@@ -97,7 +97,7 @@ createSource <- function (file, ...) {
 ##' This argument is only relevant for the dataset object that is returned;
 ##' it has no effect on the contents of the object created on the server.
 ##' @param ... additional arguments for the POST to create the dataset, such as
-##' "description". 
+##' "description".
 ##' @return An object of class CrunchDataset.
 ##' @seealso \code{\link{newDataset}}
 ##' @keywords internal
@@ -116,14 +116,12 @@ addSourceToDataset <- function (dataset, source_url, ...) {
     body <- list(
         element="shoji:entity",
         body=list(
-            source=source_url,
-            workflow=I(list()),
-            async=TRUE
+            source=source_url
         )
     )
     batch_url <- crPOST(batches_url, body=toJSON(body), ...)
-    
-    status <- try(pollBatchStatus(batch_url, batches(dataset), 
+
+    status <- try(pollBatchStatus(batch_url, batches(dataset),
         until=c("ready", "imported")))
     if (is.error(status)) {
         halt("Error importing file")
@@ -131,7 +129,7 @@ addSourceToDataset <- function (dataset, source_url, ...) {
         crPATCH(batch_url, body=toJSON(list(status="importing")))
         pollBatchStatus(batch_url, refresh(batches(dataset)))
     }
-    
+
     invisible(refresh(dataset))
 }
 
@@ -142,8 +140,8 @@ addSourceToDataset <- function (dataset, source_url, ...) {
 ##' Upload a data.frame to Crunch to make a new dataset
 ##'
 ##' This function uses the CSV+JSON import format, which is faster and more
-##' effective for certain dataset sizes and shapes than 
-##' \code{\link{newDatasetByColumn}}. 
+##' effective for certain dataset sizes and shapes than
+##' \code{\link{newDatasetByColumn}}.
 ##'
 ##' @param x a data.frame or other rectangular R object
 ##' @param name character, the name to give the new Crunch dataset. Default is
@@ -157,27 +155,27 @@ addSourceToDataset <- function (dataset, source_url, ...) {
 ##' @export
 newDatasetByCSV <- function (x, name=as.character(substitute(x)),
                                 useAlias=default.useAlias(), ...) {
-    
+
     ## Get all the things
     message("Processing the data")
-    vars <- lapply(names(x), 
+    vars <- lapply(names(x),
         function (i) toVariable(x[[i]], name=i, alias=i))
     names(vars) <- names(x)
-    
+
     ## Extract the data
     cols <- lapply(vars, function (v) v[["values"]])
     filename <- tempfile()
     gf <- gzfile(filename, "w")
     write.csv(cols, file=gf, na="", row.names=FALSE)
     close(gf)
-    
+
     ## Drop the columns from the metadata and compose the payload
     vars <- lapply(vars, function (v) {
         v[["values"]] <- NULL
         return(v)
     })
     meta <- shojifyMetadata(vars, name=name, ...)
-    
+
     ## Send to Crunch
     ds <- createWithMetadataAndFile(meta, filename)
     ds@useAlias <- useAlias
@@ -195,7 +193,7 @@ newDatasetByCSV <- function (x, name=as.character(substitute(x)),
 ##' the above metadata.
 ##' @param strict logical: must the metadata exactly match the data? Default is
 ##' TRUE.
-##' @param cleanup logical: if the file upload fails, delete the dataset? 
+##' @param cleanup logical: if the file upload fails, delete the dataset?
 ##' Default is TRUE.
 ##' @return On success, a new dataset.
 ##' @export
@@ -205,7 +203,7 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE, cleanup=TRUE
     dataset_url <- crPOST(sessionURL("datasets"), body=toJSON(metadata))
     updateDatasetList()
     ds <- entity(datasetCatalog()[[dataset_url]])
-    
+
     message("Uploading data")
     batches_url <- ds@catalogs$batches
     if (!strict) {
@@ -235,7 +233,7 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE, cleanup=TRUE
 #     ## Overwrite that and dump out the CSV and JSON, for debugging purposes
 #     message("Writing metadata")
 #     cat(toJSON(metadata), file="example.json")
-#     
+#
 #     message("Writing data")
 #     file.copy(file, "example.csv.gz", overwrite=TRUE)
 #     message("Done!")
@@ -246,7 +244,7 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE, cleanup=TRUE
 ##' Wrap variable metadata inside a dataset entity
 ##'
 ##' @param metadata list of variable metadata
-##' @param order a valid "order" payload: list containing either aliases or 
+##' @param order a valid "order" payload: list containing either aliases or
 ##' list(group, entities)
 ##' @param ... dataset entity metadata. "name" is required.
 ##' @param return list suitiable for JSONing and POSTing to create a dataset
@@ -254,10 +252,9 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE, cleanup=TRUE
 ##' @keywords internal
 shojifyMetadata <- function (metadata, order=list(list(group="ungrouped",
                             entities=I(names(metadata)))), ...) {
-    return(list(element="shoji:entity", 
-                 body=list(..., 
+    return(list(element="shoji:entity",
+                 body=list(...,
                            table=list(element="crunch:table",
                                       metadata=metadata,
                                       order=order))))
 }
-
