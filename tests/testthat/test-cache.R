@@ -19,6 +19,16 @@ test_that("cache gets set on GET", {
 })
 
 clearCache()
+with(no.cache(), {
+    with_mock_GET({
+        z <- cGET("https://beta.crunch.io/api/users/", query=list(query=rep("Q", 10000)))
+    })
+})
+test_that("Checking cache even with cache off doesn't fail on long query", {
+    expect_true(is.numeric(z$response))
+})
+
+clearCache()
 with_mock_GET({
     cGET("https://beta.crunch.io/api/users/", query=list(query=rep("Q", 10000)))
 })

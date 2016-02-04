@@ -10,7 +10,7 @@ shojifyMetadata(metadata, order = list(list(group = "ungrouped", entities =
 \arguments{
 \item{metadata}{list of variable metadata}
 
-\item{order}{a valid "order" payload: list containing either aliases or 
+\item{order}{a valid "order" payload: list containing either aliases or
 list(group, entities)}
 
 \item{...}{dataset entity metadata. "name" is required.}
