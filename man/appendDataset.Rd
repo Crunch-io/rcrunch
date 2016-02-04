@@ -9,8 +9,8 @@ appendDataset(dataset1, dataset2, cleanup = TRUE)
 \arguments{
 \item{dataset1}{a CrunchDataset}
 
-\item{dataset2}{another CrunchDataset, or possibly a data.frame. If 
-\code{dataset2} is not a Crunch dataset, it will be uploaded as a new 
+\item{dataset2}{another CrunchDataset, or possibly a data.frame. If
+\code{dataset2} is not a Crunch dataset, it will be uploaded as a new
 dataset before appending.}
 
 \item{cleanup}{logical: if the append operation fails or is aborted, should

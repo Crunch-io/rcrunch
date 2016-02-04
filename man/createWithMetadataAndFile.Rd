@@ -16,7 +16,7 @@ the above metadata.}
 \item{strict}{logical: must the metadata exactly match the data? Default is
 TRUE.}
 
-\item{cleanup}{logical: if the file upload fails, delete the dataset? 
+\item{cleanup}{logical: if the file upload fails, delete the dataset?
 Default is TRUE.}
 }
 \value{
