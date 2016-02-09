@@ -11,6 +11,8 @@ with(fake.HTTP, {
         expect_identical(name(test.ds), "test ds")
         expect_identical(description(test.ds), "")
         expect_identical(id(test.ds), "511a7c49778030653aab5963")
+        expect_identical(start_date(test.ds), "2016-01-01") 
+        expect_identical(end_date(test.ds), "2016-01-01")
     })
     
     test_that("Dataset webURL", {
