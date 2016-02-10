@@ -1,6 +1,22 @@
 context("Dataset object and methods") 
 
 with(fake.HTTP, {
+    test.ds <- loadDataset("an archived dataset")
+    test_that("Dataset attributes", {
+        expect_identical(start_date(test.ds), NULL) 
+        expect_identical(end_date(test.ds), NULL)
+    })
+    test_that("start_date makes right request", {
+        expect_error(start_date(ds, "Today"),
+        'POST /api/datasets/dataset2/start_date.json \\{"start_date":"Today"\\}')
+    })
+    test_that("end_date makes right request", {
+        expect_error(end_date(ds, "Today"),
+            'POST /api/datasets/dataset2/end_date.json \\{"end_date":"Today"\\}')
+    })
+})
+
+with(fake.HTTP, {
     test.ds <- loadDataset("test ds")
     
     test_that("Dataset can be created", {

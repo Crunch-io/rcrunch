@@ -18,6 +18,12 @@ setGeneric("name<-", function (x, value) standardGeneric("name<-"),
 setGeneric("description", function (x) standardGeneric("description"))
 setGeneric("description<-",
     function (x, value) standardGeneric("description<-"), signature="x")
+setGeneric("start_date", function (x) standardGeneric("start_date"))
+setGeneric("start_date<-",
+    function (x, value) standardGeneric("start_date<-"), signature="x")
+setGeneric("end_date", function (x) standardGeneric("end_date"))
+setGeneric("end_date<-",
+    function (x, value) standardGeneric("end_date<-"), signature="x")
 setGeneric("alias")
 setGeneric("alias<-", function (x, value) standardGeneric("alias<-"),
     signature="x")

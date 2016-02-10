@@ -77,16 +77,16 @@ setMethod("description<-", "CrunchDataset", setDatasetDescription)
 ##' @rdname describe
 ##' @export
 setMethod("start_date", "CrunchDataset", function (x) tuple(x)$start_date)
-##' @rdname start_date
+##' @rdname describe
 ##' @export
 setMethod("start_date<-", "CrunchDataset", setDatasetStartDate)
-##' @rdname start_date
+##' @rdname describe
 ##' @export
 setMethod("end_date", "CrunchDataset", function (x) tuple(x)$end_date)
-##' @rdname end_date
+##' @rdname describe
 ##' @export
 setMethod("end_date<-", "CrunchDataset", setDatasetEndDate)
-##' @rdname end_date
+##' @rdname describe
 ##' @export
 
 setMethod("id", "CrunchDataset", function (x) tuple(x)$id)

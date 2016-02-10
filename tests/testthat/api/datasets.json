@@ -20,6 +20,8 @@
             "description": "This dataset does not exist",
             "archived": false,
             "id": "aa80d2e969b34e6ea9ededaa528c6248",
+            "start_date": null,
+            "end_date": null,
             "owner_id": "/api/users/me.json"
         },
         "/api/datasets/dataset3.json": {
