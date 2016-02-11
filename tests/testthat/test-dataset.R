@@ -2,28 +2,9 @@ context("Dataset object and methods")
 
 with(fake.HTTP, {
     test.ds <- loadDataset("test ds")
+    test.ds2 <- loadDataset("ECON.sav") # assume it's OK to overwrite this below
     today <- Sys.Date()
-    test_that("Dataset attributes", {
-        expect_identical(start_date(test.ds), NULL)
-        expect_identical(end_date(test.ds), NULL)
-    })
-    test_that("start_date makes right request", {
-        expect_error(
-            start_date(test.ds) <- today,
-            paste0('PATCH /api/datasets.json \\{"/api/datasets/dataset1.json":\\{"start_date":"',today,'"\\}\\}')
-        )
-    })
-    test_that("end_date makes right request", {
-        expect_error(
-            end_date(test.ds) <- today,
-            paste0('PATCH /api/datasets.json \\{"/api/datasets/dataset1.json":\\{"end_date":"',today,'"\\}\\}')
-        )
-    })
-})
-
-with(fake.HTTP, {
-    test.ds <- loadDataset("test ds")
-
+    
     test_that("Dataset can be created", {
         expect_true(is.dataset(test.ds))
     })
@@ -34,8 +15,23 @@ with(fake.HTTP, {
         expect_identical(id(test.ds), "511a7c49778030653aab5963")
         expect_identical(start_date(test.ds), "2016-01-01")
         expect_identical(end_date(test.ds), "2016-01-01")
+        expect_identical(start_date(test.ds2), NULL)
+        expect_identical(end_date(test.ds2), NULL)
     })
 
+    test_that("start_date makes right request", {
+        expect_error(
+            start_date(test.ds2) <- today,
+            paste0('PATCH /api/datasets.json \\{"/api/datasets/dataset1.json":\\{"start_date":"',today,'"\\}\\}')
+        )
+    })
+    test_that("end_date makes right request", {
+        expect_error(
+            end_date(test.ds2) <- today,
+            paste0('PATCH /api/datasets.json \\{"/api/datasets/dataset1.json":\\{"end_date":"',today,'"\\}\\}')
+        )
+    })
+    
     test_that("Dataset webURL", {
         with(temp.options(crunch.api="https://fake.crunch.io/api/v2/"), {
             expect_identical(webURL(test.ds),
