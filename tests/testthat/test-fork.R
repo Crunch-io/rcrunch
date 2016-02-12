@@ -31,8 +31,12 @@ if (run.integration.tests) {
                 expect_true(setequal(names(forks(ds)),
                     c(f1.name, "Fork yeah!", f3.name)))
             })
+
             delete(f2)
             delete(f3)
+            test_that("If you delete a fork, it disappears from upstream forks catalog", {
+                expect_identical(names(refresh(forks(ds))), f1.name)
+            })
 
             ## Make edits to fork #1. cf. test-versioning.R:
             # 1. Edit variable metadata
@@ -72,11 +76,15 @@ if (run.integration.tests) {
             })
 
             ## So that f1 gets cleaned up even if merge fails
-            with(test.dataset(f1), {
+            with(test.dataset(f1, "f1"), {
                 ## Now merge f1 back to ds
-                skip("TODO: write mergeFork")
-                ds <- mergeFork(ds, f1)
                 test_that("The edits made to the fork are now upstream", {
+                    skip(paste("(409) Conflict: The given workflow could not be",
+                        "successfully run on this dataset. The dataset has been",
+                        "restored to the state before the attempted merge. Include",
+                        "a body.autorollback=false member in the future to allow",
+                        "analysis and repair instead."))
+                    ds <- mergeFork(ds, f1)
                     expect_identical(names(na.omit(categories(ds$v4))),
                         c("d", "e"))
                     expect_identical(name(ds$v2), "Variable Two")

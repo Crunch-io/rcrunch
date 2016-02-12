@@ -16,3 +16,11 @@ forkDataset <- function (dataset, forkname) {
     updateDatasetList()
     return(entity(datasetCatalog()[[fork_url]]))
 }
+
+mergeFork <- function (dataset, fork, autorollback=TRUE) {
+    m <- crPOST(shojiURL(dataset, "catalogs", "actions"), body=toJSON(list(
+        element="shoji:entity",
+        body=list(dataset=self(fork), autorollback=autorollback)
+    )))
+    return(refresh(dataset))
+}
