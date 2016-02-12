@@ -20,15 +20,13 @@ with(fake.HTTP, {
     })
 
     test_that("start_date makes right request", {
-        expect_error(
-            start_date(test.ds2) <- today,
-            paste0('PATCH /api/datasets.json \\{"/api/datasets/dataset1.json":\\{"start_date":"',today,'"\\}\\}')
+        expect_error(start_date(test.ds2) <- as.character(today),
+            paste0('PATCH /api/datasets.json \\{"/api/datasets/dataset3.json":\\{"start_date":"',as.character(today),'"\\}\\}')
         )
     })
     test_that("end_date makes right request", {
-        expect_error(
-            end_date(test.ds2) <- today,
-            paste0('PATCH /api/datasets.json \\{"/api/datasets/dataset1.json":\\{"end_date":"',today,'"\\}\\}')
+        expect_error(end_date(test.ds2) <- today,
+            paste0('PATCH /api/datasets.json \\{"/api/datasets/dataset3.json":\\{"end_date":"',today,'"\\}\\}')
         )
     })
     
