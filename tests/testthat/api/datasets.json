@@ -32,6 +32,5 @@
             "id": "95c0b45fe0af492594863f818cb913d2",
             "owner_id": "notme"
         }
-    },
-    "template": "{\"name\": \"Awesome Dataset\", \"description\": \"(optional) This dataset is awesome because I made it, and you can do it too.\"}"
+    }
 }
