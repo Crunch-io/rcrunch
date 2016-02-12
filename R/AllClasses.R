@@ -184,6 +184,7 @@ TeamCatalog <- setClass("TeamCatalog", contains="ShojiCatalog")
 MemberCatalog <- setClass("MemberCatalog", contains="ShojiCatalog")
 VersionCatalog <- setClass("VersionCatalog", contains="ShojiCatalog")
 FilterCatalog <- setClass("FilterCatalog", contains="ShojiCatalog")
+ForkCatalog <- setClass("ForkCatalog", contains="ShojiCatalog")
 
 default.useAlias <- function () {
     opt <- getOption("crunch.useAlias")
