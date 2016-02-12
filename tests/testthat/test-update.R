@@ -8,12 +8,12 @@ if (run.integration.tests) {
                 test <- as.vector(ds$v3) - df$v3
                 expect_true(all(test == 1))
             })
-            
+
             ds$v3 <- 1
             test_that("Value recycling on insert is consistent with R", {
                 expect_true(all(as.vector(ds$v3) == 1))
             })
-            
+
             ds$v3[1:10] <- 2
             test_that("Update numeric with R numeric filter and values", {
                 expect_equivalent(mean(ds$v3), 1.5)
@@ -30,33 +30,33 @@ if (run.integration.tests) {
             test_that("Just update the values", {
                 expect_equivalent(mean(ds$v3), 6)
             })
-            
+
             test_that("Can update numeric variable with expresssion", {
                 ds$v3 <- ds$v3 + 2
                 expect_equivalent(as.vector(ds$v3), c(rep(7, 10), rep(9, 10)))
             })
-            
+
             test_that("Can filter on is.na", {
                 ds$v3[is.na(ds$v2)] <- 0
-                expect_equivalent(as.vector(ds$v3), 
+                expect_equivalent(as.vector(ds$v3),
                     c(rep(7, 10), rep(9, 5), rep(0, 5)))
             })
-            
+
             test_that("Can update text", {
                 ds$v2[is.na(ds$v1)] <- "z"
-                expect_identical(as.vector(ds$v2)[1:8], 
+                expect_identical(as.vector(ds$v2)[1:8],
                     c(rep("z", 5), "f", "g", "h"))
                 ds[ds$v2 %in% "z", "v2"] <- "y"
-                expect_identical(as.vector(ds$v2)[1:8], 
+                expect_identical(as.vector(ds$v2)[1:8],
                     c(rep("y", 5), "f", "g", "h"))
             })
-            
+
             test_that("Can update datetime", {
                 newvals <- as.Date(0:12, origin="1985-10-26")
                 ds$v5[ds$v5 >= as.Date("1955-11-12")] <- newvals
                 expect_identical(max(ds$v5), as.Date("1985-11-07"))
             })
-            
+
             date.before <- rep(c("2014-04-15", "2014-08-15"), 2)
             date.after <- c("2014-04-15", "2014-09-15", "2014-04-15",
                 "2014-09-15")
@@ -70,7 +70,7 @@ if (run.integration.tests) {
                         as.Date(date.after))
                 })
             })
-            
+
             ## Categorical
             ds$v4[is.na(ds$v2)] <- "B"
             test_that("Can update categorical variables with character", {
