@@ -237,5 +237,21 @@ if (run.integration.tests) {
                 expect_identical(nrow(ds), 20L)
             })
         })
+
+        with(test.dataset(df), {
+            ds$keep <- rep(1:4, 5)
+            exclusion(ds) <- ds$keep == 2
+            test_that("Exclusion is set", {
+                expect_identical(nrow(ds), 15L)
+                expect_equivalent(as.vector(ds$v3),
+                    c(8, 10:12, 14:16, 18:20, 22:24, 26, 27))
+            })
+            ds <- restoreVersion(ds, 1)
+            test_that("No problem reverting to before exclusion var made", {
+                validImport(ds)
+                expect_true(is.null(ds$keep))
+                expect_true(is.null(exclusion(ds)))
+            })
+        })
     })
 }

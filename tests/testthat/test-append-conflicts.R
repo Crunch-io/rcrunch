@@ -33,7 +33,7 @@ c3 <- list(
             list(
                 message="No good",
                 resolution="But I fixed it already"
-            ), 
+            ),
             list(
                 message="Oh, and there was another problem",
                 resolution="But it's also cool"
@@ -55,25 +55,25 @@ c4$var3 <- list(
 )
 
 test_that("Simple conflict messages are formatted correctly", {
-    expect_equivalent(flattenConflicts(c3), 
+    expect_equivalent(flattenConflicts(c3),
         data.frame(
             message=c("No good", "No good", "Oh, and there was another problem"),
             resolution=c("But I fixed it already", "But I fixed it already", "But it's also cool"),
             url=c("var2", "var1", "var1"),
             name=c("Second", "First", "First"),
             stringsAsFactors=FALSE))
-        expect_equivalent(flattenConflicts(c4), 
+        expect_equivalent(flattenConflicts(c4),
             data.frame(
                 message=c("No good", "No good", "Oh, and there was another problem", "Type mismatch"),
                 resolution=c("But I fixed it already", "But I fixed it already", "But it's also cool", NA),
                 url=c("var2", "var1", "var1", "var3"),
                 name=c("Second", "First", "First", "Last"),
                 stringsAsFactors=FALSE))
-    
+
     expect_identical(formatConflicts(flattenConflicts(c1)), "No conflicts.")
-    expect_identical(formatConflicts(flattenConflicts(c2)), 
+    expect_identical(formatConflicts(flattenConflicts(c2)),
         paste("Conflict: No good; Resolution: But I fixed it already; 1 variable:", dQuote("First")))
-    expect_identical(formatConflicts(flattenConflicts(c3)), 
+    expect_identical(formatConflicts(flattenConflicts(c3)),
         c(paste("Conflict: No good; Resolution: But I fixed it already; 2 variables:", dQuote("Second"), "and", dQuote("First")),
         paste("Conflict: Oh, and there was another problem; Resolution: But it's also cool; 1 variable:", dQuote("First"))))
     expect_identical(formatFailures(flattenConflicts(c4)),
@@ -82,7 +82,7 @@ test_that("Simple conflict messages are formatted correctly", {
 
 source("conflicts.R")
 test_that("Complex conflicts are formatted", {
-    expect_identical(formatConflicts(flattenConflicts(mock.conflicts)), 
+    expect_identical(formatConflicts(flattenConflicts(mock.conflicts)),
         c(paste("Conflict: Only in existing dataset; Resolution: Additional rows will be marked missing.; 1 variable:", dQuote("mr_1")),
         paste("Conflict: Only in new dataset; Resolution: Variable will be added with existing rows marked missing.; 1 variable:", dQuote("mr_3")),
         paste("Conflict: Subvariables didn't match; Resolution: Union of subvariables will be used; 1 variable:", dQuote("MR"))))
@@ -107,7 +107,7 @@ if (run.integration.tests) {
                 test_that("append conflict on type mismatch", {
                     expect_message(try(appendDataset(part1, part2),
                         silent=TRUE),
-                        paste("Critical conflict: Variable is not array variable on both frames;", 
+                        paste("Critical conflict: Variable is not array variable on both frames;",
                         "1 variable:", dQuote("Bad var")))
                     expect_error(appendDataset(part1, part2),
                         "There are conflicts that cannot be resolved automatically.")
@@ -118,4 +118,3 @@ if (run.integration.tests) {
 
     })
 }
-

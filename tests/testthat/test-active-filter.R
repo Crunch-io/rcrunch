@@ -58,6 +58,16 @@ with(fake.HTTP, {
     test_that("activeFilter from CrunchExpr and CrunchVariable", {
         expect_identical(activeFilter(ds2$birthyr),
             activeFilter(ds$birthyr[ds$gender == "Male"]))
+        expect_identical(activeFilter(ds$birthyr[ds$gender == "Male"]),
+            ds$gender == "Male")
+    })
+
+    test_that("activeFilter from more complex CrunchExprs", {
+        skip("TODO: filtered variables/exprs should pass their filters along")
+        expect_identical(activeFilter(ds$birthyr[ds$gender == "Male"] - ds$starttime[ds$gender == "Male"]),
+            ds$gender == "Male")
+        expect_identical(activeFilter((ds$birthyr - ds$starttime)[ds$gender == "Male"]),
+            ds$gender == "Male")
     })
 })
 

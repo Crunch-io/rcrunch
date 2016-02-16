@@ -1,4 +1,6 @@
 ### crunch 1.7.13
+* More formal support for creating and managing UI filters
+* Fix error in reading/writing query cache with a very long querystring. Requires new dependency on the `digest` package.
 * Fix bug in assigning `name(ds$var$subvar) <- value`
 * Fix overly rigid validation in `share`
 

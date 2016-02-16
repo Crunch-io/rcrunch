@@ -1,0 +1,11 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/datasets/dataset3/variables.json",
+    "specification": "/api/specifications/variables/",
+    "description": "List of Variables of this dataset",
+    "index": {
+    },
+    "orders": {
+        "hier": "/api/datasets/dataset3/variables/hierarchical.json"
+    }
+}

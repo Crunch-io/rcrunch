@@ -23,8 +23,10 @@ Imports:
     httr (>= 1.0.0),
     jsonlite (>= 0.9.15),
     methods,
+    digest,
     curl
 Suggests:
     knitr,
     testthat
 VignetteBuilder: knitr
+RoxygenNote: 5.0.1
