@@ -124,12 +124,12 @@ if (run.integration.tests) {
 
             test_that("expressions on expresssions evaluate", {
                 e3 <- try(ds$v3 + ds$v3 + 10)
-                expect_output(e3, "Crunch expression: v3 + v3 + 5", fixed=TRUE)
                 expect_true(inherits(e3, "CrunchExpr"))
+                expect_output(e3, "Crunch expression: v3 + v3 + 10", fixed=TRUE)
                 expect_identical(as.vector(e3), 2*df$v3 + 10)
                 e4 <- try(ds$v3 + ds$v3 * 2)
-                expect_output(e4, "Crunch expression: v3 + v3 * 2", fixed=TRUE)
                 expect_true(inherits(e4, "CrunchExpr"))
+                expect_output(e4, "Crunch expression: v3 + v3 * 2", fixed=TRUE)
                 expect_identical(as.vector(e4), 3*df$v3)
             })
 
