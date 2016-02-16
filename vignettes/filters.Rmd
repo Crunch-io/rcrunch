@@ -1,0 +1,23 @@
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Working with filters}
+-->
+
+[Previous: analyze data](analyze.html)
+```{r, results='hide', echo=FALSE, message=FALSE}
+library(crunch)
+#load("filters.RData")
+options(width=120)
+```
+
+# Working with Filters
+
+Sometimes you only want to work with a subset of your data. With the `crunch` package, you can both filter the views of data you work with in your R session and manage the filters that you and your collaborators see in the web application.
+
+## Filtering and subsetting in R
+
+When you
+
+## Filter entities
+
+## Exclusion filters
