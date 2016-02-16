@@ -7,7 +7,7 @@ test_that("crunchTimeout", {
         options(crunch.timeout=NULL)
         expect_identical(crunchTimeout(), 60)
         options(crunch.timeout=list())
-        expect_identical(crunchTimeout(), 60)        
+        expect_identical(crunchTimeout(), 60)
     options(crunch.timeout=opt)
 })
 
@@ -38,7 +38,7 @@ if (run.integration.tests) {
                     expect_identical(length(p1.batches), 2L)
                     expect_identical(length(batches(part2)), 2L)
                 })
-                out <- suppressMessages(try(addBatchToDataset(part1, part2)))
+                out <- try(addBatchToDataset(part1, part2))
                 test_that("can add batches to dataset", {
                     expect_true(is.character(out))
                     expect_true(grepl("/batches/", out))
@@ -68,9 +68,10 @@ if (run.integration.tests) {
                     expect_identical(length(batches(part1)), 2L)
                     expect_identical(length(batches(part2)), 2L)
                 })
-                out <- suppressMessages(try(appendDataset(part1, part2)))
+                out <- NULL
                 test_that("append handles two identical Datasets", {
-                    expect_that(out, is_not_an_error())
+                    expect_message(out <<- appendDataset(part1, part2),
+                        "No conflicts")
                     expect_true(is.dataset(out))
                     expect_identical(self(out), self(part1))
                     expect_identical(length(batches(out)), 3L)
@@ -81,7 +82,7 @@ if (run.integration.tests) {
                     expect_equivalent(as.vector(out$v3), rep(df$v3, 2))
                     expect_identical(as.vector(out$v3), c(v3.1, v3.2))
                 })
-                
+
                 try(crDELETE(names(batches(out)@index)[2]))
                 out <- refresh(out)
                 test_that("deleting a batch drops its rows", {
@@ -93,7 +94,7 @@ if (run.integration.tests) {
                 })
             })
         })
-        
+
         with(test.dataset(newDatasetFromFile(testfile.csv, name=now()), "file1"), {
             with(test.dataset(newDatasetFromFile(testfile.csv, name=now()), "file2"), {
                 v3.1 <- as.vector(file1$V3)
@@ -106,10 +107,9 @@ if (run.integration.tests) {
                     expect_identical(length(batches(file1)), 2L)
                     expect_identical(length(batches(file2)), 2L)
                 })
-                out <- suppressMessages(try(appendDataset(file1, file2)))
                 test_that("append handles two identical Datasets from file", {
-                    expect_that(out, is_not_an_error())
-                    expect_true(is.dataset(out))
+                    expect_message(out <- appendDataset(file1, file2),
+                        "No conflicts")
                     expect_identical(self(out), self(file1))
                     expect_identical(length(batches(out)), 3L)
                     expect_identical(dim(out),
@@ -117,19 +117,18 @@ if (run.integration.tests) {
                     expect_identical(getNrow(out), nrow(testfile.df)*2L)
                     expect_identical(nrow(out), length(as.vector(out$V3)))
                     expect_equivalent(as.vector(out$V3), rep(testfile.df$V3, 2))
-                    expect_identical(as.vector(out$V3), c(v3.1, v3.2))  
+                    expect_identical(as.vector(out$V3), c(v3.1, v3.2))
                 })
             })
         })
-        
+
         with(test.dataset(df[,2:5], "part1"), {
             cats <- categories(part1$v4)
             with(test.dataset(df[,1:3], "part2"), {
                 p1.batches <- batches(part1)
-                out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("append handles missing variables from each", {
-                    expect_that(out, is_not_an_error())
-                    expect_true(is.dataset(out))
+                    expect_message(out <- appendDataset(part1, part2),
+                        "No conflicts")
                     expect_identical(length(refresh(p1.batches)), 3L)
                     expect_identical(ncol(out), 5L)
                     expect_identical(ncol(out), length(allVariables(out)))
@@ -137,28 +136,28 @@ if (run.integration.tests) {
                     expect_identical(nrow(out), nrow(df) * 2L)
                     expect_identical(categories(out$v4), cats)
                     expect_equivalent(as.vector(out$v3), rep(df$v3, 2))
-                    expect_equivalent(as.vector(out$v1), 
+                    expect_equivalent(as.vector(out$v1),
                         c(rep(NA, nrow(df)), df$v1))
                     expect_identical(length(as.vector(out$v5)), 40L)
                     expect_identical(length(as.vector(out$v4)), 40L)
                     expect_equivalent(as.vector(out$v4)[1:20], df$v4)
-                    expect_equivalent(as.vector(out$v4), 
-                        factor(levels(df$v4)[c(df$v4, 
+                    expect_equivalent(as.vector(out$v4),
+                        factor(levels(df$v4)[c(df$v4,
                             factor(rep(NA_character_, nrow(df))))]))
                     expect_equivalent(as.Date(as.vector(out$v5))[1:20], df$v5)
-                    expect_equivalent(as.Date(as.vector(out$v5)), 
+                    expect_equivalent(as.Date(as.vector(out$v5)),
                         c(df$v5, rep(NA, nrow(df))))
                 })
             })
         })
-        
+
         with(test.dataset(df[,1:3], "part1"), {
             with(test.dataset(df[,2:5], "part2"), {
                 cats <- categories(part2$v4)
                 p1.batches <- batches(part1)
-                out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("append with missing variables the other way", {
-                    expect_that(out, is_not_an_error())
+                    expect_message(out <- appendDataset(part1, part2),
+                        "No conflicts")
                     expect_true(is.dataset(out))
                     expect_identical(length(refresh(p1.batches)), 3L)
                     expect_identical(ncol(out), 5L)
@@ -167,21 +166,21 @@ if (run.integration.tests) {
                     expect_identical(nrow(out), nrow(df) * 2L)
                     expect_identical(categories(out$v4), cats)
                     expect_equivalent(as.vector(out$v3), rep(df$v3, 2))
-                    expect_equivalent(as.vector(out$v1), 
+                    expect_equivalent(as.vector(out$v1),
                         c(df$v1, rep(NA, nrow(df))))
                     expect_identical(length(as.vector(out$v5)), 40L)
                     expect_identical(length(as.vector(out$v4)), 40L)
                     expect_equivalent(as.vector(out$v4)[21:40], df$v4)
-                    expect_equivalent(as.vector(out$v4), 
+                    expect_equivalent(as.vector(out$v4),
                         factor(levels(df$v4)[c(
                             factor(rep(NA_character_, nrow(df))), df$v4)]))
                     expect_equivalent(as.Date(as.vector(out$v5))[21:40], df$v5)
-                    expect_equivalent(as.numeric(as.Date(as.vector(out$v5))), 
+                    expect_equivalent(as.numeric(as.Date(as.vector(out$v5))),
                         c(rep(NA, nrow(df)), df$v5))
                 })
             })
         })
-        
+
         with(test.dataset(df[,2:5], "part1"), {
             d2 <- df
             d2$v2 <- d2$v3 ## v2 was text, now is numeric
@@ -191,13 +190,15 @@ if (run.integration.tests) {
                     expect_true(inherits(p1.batches, "ShojiCatalog"))
                     expect_identical(length(p1.batches), 2L)
                 })
-                out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("append casts on type mismatch", {
+                    ## Wait--shouldn't this raise a conflict?
+                    expect_message(out <- appendDataset(part1, part2),
+                        "No conflicts")
                     expect_identical(length(batches(part1)), 3L)
                 })
             })
         })
-        
+
         datetime1 <- data.frame(
             cat=factor(c("A", "B")),
             wave=as.Date(rep(c("2014-04-15", "2014-06-15"), 4)))
@@ -210,10 +211,9 @@ if (run.integration.tests) {
                     expect_true(is.Datetime(part1$wave))
                     expect_true(is.Datetime(part2$wave))
                 })
-                out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("Datetimes are correctly appended", {
-                    expect_that(out, is_not_an_error())
-                    expect_true(is.dataset(out))
+                    expect_message(out <- appendDataset(part1, part2),
+                        "No conflicts")
                     expect_identical(length(batches(out)), 3L)
                     expect_identical(nrow(out), 12L)
                     expect_true(is.Datetime(out$wave))
@@ -222,21 +222,22 @@ if (run.integration.tests) {
                 })
             })
         })
-        
+
         sparse1 <- data.frame(A=factor(c("A", "B")), B=1:1000)
         sparse2 <- data.frame(B=1:1000, C=factor(c("C", "D")))
         with(test.dataset(sparse1, "part1"), {
             with(test.dataset(sparse2, "part2"), {
-                out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("Datasets with more rows append (sparseness test)", {
+                    expect_message(out <- appendDataset(part1, part2),
+                        "No conflicts")
                     expect_identical(mean(out$B), 1001/2)
                     expect_identical(length(as.vector(out$C)), 2000L)
-                    expect_identical(as.vector(out$C), 
+                    expect_identical(as.vector(out$C),
                         factor(c(rep(NA, 1000), rep(c("C", "D"), 500))))
                 })
             })
         })
-        
+
         lets <- LETTERS[1:5]
         cat1 <- data.frame(A=1, B=1:5, C=factor(c(2, 3, 1, 5, 4), labels=lets))
         cat2 <- data.frame(A=1, B=1:5, C=factor(c(2, 3, 1, 5, 4),
@@ -257,8 +258,9 @@ if (run.integration.tests) {
                     expect_equivalent(values(c2), 1:5)
                     expect_equivalent(ids(c2), 1:5)
                 })
-                out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("Categories with different ids and values line up by name", {
+                    expect_message(out <- appendDataset(part1, part2),
+                        "No conflicts")
                     expect_identical(as.character(as.vector(out$C)),
                         c("B", "C", "A", "E", "D", "D", "C", "E", "A", "B"))
                     cout <- na.omit(categories(out$C))

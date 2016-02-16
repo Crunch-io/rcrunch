@@ -5,13 +5,13 @@ with(fake.HTTP, {
     datcat <- DatasetCatalog(crGET(dataset.catalog.url))
     index(datcat)[[which(names(datcat) == "an archived dataset")]]$archived <- TRUE
     session_store$datasets <- datcat ## as if we had done updateDatasetList
-    
+
     test_that("listDatasets lists", {
         expect_identical(listDatasets(), c("ECON.sav", "test ds"))
         expect_identical(listDatasets("archived"), "an archived dataset")
         expect_identical(listDatasets("all"), c("ECON.sav", "an archived dataset", "test ds"))
     })
-    
+
     test_that("loadDataset loads", {
         ## NOTE: implementing the active dataset loading only first
         ds <- try(loadDataset("test ds"))
@@ -27,10 +27,10 @@ with(fake.HTTP, {
 if (run.integration.tests) {
     test_that("updateDatasetList requires authentication", {
         logout()
-        expect_error(updateDatasetList(), 
+        expect_error(updateDatasetList(),
             "You must authenticate before making this request")
     })
-    
+
     with(test.authentication, {
         test_that("datasetCatalog gets what we expect", {
             col0 <- datasetCatalog()
@@ -53,7 +53,7 @@ if (run.integration.tests) {
 
             test_that("A dataset object can be retrieved, if it exists", {
                 expect_true(is.dataset(loadDataset(dsname)))
-                expect_error(loadDataset("this is totally not a dataset"), 
+                expect_error(loadDataset("this is totally not a dataset"),
                     paste(dQuote("this is totally not a dataset"), "not found"))
                 dsnum <- which(listDatasets() %in% dsname)
                 expect_true(is.numeric(dsnum))
@@ -65,30 +65,30 @@ if (run.integration.tests) {
                     default.useAlias())
                 expect_false(loadDataset(dsname, useAlias=FALSE)@useAlias)
             })
-            
+
             test_that("deleteDataset by name", {
-                expect_error(deleteDataset("this is totally not a dataset", 
+                expect_error(deleteDataset("this is totally not a dataset",
                     paste(dQuote("this is totally not a dataset"), "not found")))
                 out <- try(deleteDataset(dsname))
                 expect_that(out, is_not_an_error())
                 expect_false(dsname %in% listDatasets())
             })
         })
-        
+
         with(test.dataset(df), {
             dsname <- name(ds)
             dsnum <- which(listDatasets() %in% dsname)
             test_that("deleteDataset by index", {
                 expect_true(dsname %in% listDatasets())
-                
-                expect_error(deleteDataset(dsnum + 9999), 
+
+                expect_error(deleteDataset(dsnum + 9999),
                     "subscript out of bounds")
                 out <- try(deleteDataset(dsnum))
                 expect_that(out, is_not_an_error())
                 expect_false(dsname %in% listDatasets())
             })
         })
-        
+
         with(test.dataset(df), {
             dsname <- name(ds)
             test_that("deleteDataset on Dataset object", {
@@ -98,18 +98,18 @@ if (run.integration.tests) {
                 expect_false(dsname %in% listDatasets())
             })
         })
-                
+
         with(test.dataset(df), {
             dsname <- name(ds)
             newname <- paste0("New name ", now())
-            
+
             test_that("renaming a dataset refreshes the dataset list", {
                 expect_true(dsname %in% listDatasets())
                 name(ds) <- newname
                 expect_false(dsname %in% listDatasets())
                 expect_true(newname %in% listDatasets())
             })
-            
+
             test_that("deleting a dataset refreshes the dataset list", {
                 delete(ds)
                 expect_false(dsname %in% listDatasets())

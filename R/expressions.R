@@ -55,6 +55,8 @@ math.exp <- function (e1, e2, operator) {
     } else {
         Constructor <- CrunchExpr
     }
+    ## TODO: if e1 and e2 have filters, pass them along, and if both do,
+    ## make sure that they're the same
     return(Constructor(expression=ex, dataset_url=ds.url))
 }
 
@@ -217,6 +219,7 @@ setMethod("is.na", "CrunchVariable", function (x) {
 ##' @rdname expressions
 ##' @export
 bin <- function (x) {
+    ## TODO: this should be filtered by x's filter
     CrunchExpr(expression=zfunc("bin", x),
         dataset_url=datasetReference(x) %||% "")
 }
@@ -234,6 +237,7 @@ rollup <- function (x, resolution=rollupResolution(x)) {
     if (is.variable(x) && !is.Datetime(x)) {
         halt("Cannot rollup a variable of type ", dQuote(type(x)))
     }
+    ## TODO: this should be filtered by x's filter
     CrunchExpr(expression=zfunc("rollup", x, list(value=resolution)),
         ## list() so that the resolution value won't get typed
         dataset_url=datasetReference(x) %||% "")

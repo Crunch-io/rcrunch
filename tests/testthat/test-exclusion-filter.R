@@ -14,11 +14,14 @@ if (run.integration.tests) {
                 exclusion(ds) <- ds$v4 == "C"
                 ## Test that the filter is set correctly. Objects not identical
                 ## because JSON objects are unordered.
-                e <- zcl(exclusion(ds))
-                f <- zcl(ds$v4 == "C")
-                expect_identical(e[["function"]], f[["function"]])
-                expect_identical(e[["args"]][[1]], f[["args"]][[1]])
-                expect_identical(e[["args"]][[2]]$value, f[["args"]][[2]]$value)
+                ## TODO: implement a expect_object_equal
+                ## and re-enable this when the server sends URLs instead of ids
+                ## in filters
+                # e <- zcl(exclusion(ds))
+                # f <- zcl(ds$v4 == "C")
+                # expect_identical(e[["function"]], f[["function"]])
+                # expect_identical(e[["args"]][[1]], f[["args"]][[1]])
+                # expect_identical(e[["args"]][[2]]$value, f[["args"]][[2]]$value)
 
                 expect_identical(nrow(ds), 10L)
                 expect_equivalent(as.array(crtabs(~ v4, data=ds)),
@@ -235,6 +238,22 @@ if (run.integration.tests) {
                 expect_true(is.null(ds$q1))
                 expect_true(is.null(exclusion(ds)))
                 expect_identical(nrow(ds), 20L)
+            })
+        })
+
+        with(test.dataset(df), {
+            ds$keep <- rep(1:4, 5)
+            exclusion(ds) <- ds$keep == 2
+            test_that("Exclusion is set", {
+                expect_identical(nrow(ds), 15L)
+                expect_equivalent(as.vector(ds$v3),
+                    c(8, 10:12, 14:16, 18:20, 22:24, 26, 27))
+            })
+            ds <- restoreVersion(ds, 1)
+            test_that("No problem reverting to before exclusion var made", {
+                validImport(ds)
+                expect_true(is.null(ds$keep))
+                expect_true(is.null(exclusion(ds)))
             })
         })
     })

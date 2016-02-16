@@ -65,6 +65,7 @@ addFakeHTTPVerbs <- function () {
         url <- sub("\\/$", ".json", url)
         url <- sub("^\\/", "", url) ## relative to cwd
         out <- handleShoji(fromJSON(url, simplifyVector=FALSE))
+        logMessage(paste("FAKE GET", url))
         return(out)
     }
     http_verbs$PUT <- function (url, body, ...) {
@@ -330,6 +331,7 @@ validImport <- function (ds) {
     expect_identical(description(ds$v3), "")
     expect_equivalent(as.array(crtabs(mean(v3) ~ v4, data=ds)),
         tapply(df$v3, df$v4, mean, na.rm=TRUE))
+    expect_equivalent(as.vector(ds$v3), df$v3)
     expect_true(is.Categorical(ds[["v4"]]))
     expect_equivalent(as.array(crtabs(~ v4, data=ds)),
         array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))

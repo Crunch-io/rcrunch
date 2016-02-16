@@ -1,10 +1,11 @@
 ##' Filter entities for a dataset
 ##'
 ##' @param x a CrunchDataset
+##' @param value for the assignment method, a FilterCatalog
 ##' @return an object of class FilterCatalog containing references to Filter
-##' entities usable in the web application.
+##' entities usable in the web application. (Setter returns the Dataset.)
 ##' @name filter-catalog
-##' @aliases filters
+##' @aliases filters filters<-
 NULL
 
 ##' @rdname filter-catalog
@@ -13,6 +14,8 @@ setMethod("filters", "CrunchDataset", function (x) {
     FilterCatalog(crGET(shojiURL(x, "catalogs", "filters")))
 })
 
+##' @rdname filter-catalog
+##' @export
 setMethod("filters<-", "CrunchDataset", function (x, value) x)
 
 ##' @rdname describe-catalog
