@@ -1,4 +1,4 @@
-validCategories <- function (object) {
+setValidity("Categories", function (object) {
     are.cats <- vapply(object, is.category, logical(1))
     if (!all(are.cats)) {
         badcount <- sum(!are.cats)
@@ -14,8 +14,7 @@ validCategories <- function (object) {
         return("Invalid category ids: must be unique")
     }
     return(TRUE)
-}
-setValidity("Categories", validCategories)
+})
 
 init.Categories <- function (.Object, ...) {
     .Object@.Data <- lapply(..1, function (x) try(Category(data=x), silent=TRUE))

@@ -11,21 +11,21 @@ if (run.integration.tests) {
                 ds <- refresh(ds)
                 expect_false(name(var1) %in% findVariables(ds, key="name",
                     value=TRUE))
-                
+
                 var1 <- unhide(var1)
                 ds <- refresh(ds)
                 expect_true(name(var1) %in% findVariables(ds, key="name",
                     value=TRUE))
             })
         })
-        
-        with(test.dataset(df), {            
+
+        with(test.dataset(df), {
             test_that("There are no hidden variables to start", {
                 expect_equivalent(index(hidden(ds)), list())
                 expect_identical(hiddenVariables(ds), c())
                 expect_identical(dim(ds), dim(df))
             })
-            
+
             try(ds <- hideVariables(ds, c("v2", "v3")))
             test_that("hideVariables hides by alias", {
                 expect_identical(names(ds)[1:2], c("v1", "v4"))
@@ -34,7 +34,7 @@ if (run.integration.tests) {
                 expect_identical(length(variables(ds)), ncol(df) - 2L)
                 expect_identical(dim(ds), c(nrow(df), ncol(df) - 2L))
             })
-            
+
             try(hiddenVariables(ds) <- "v3")
             ## work like is.na<-, i.e. adds but doesn't unhide by omitting
             test_that("hiddenVariables<- does nothing if already hidden", {
@@ -42,21 +42,21 @@ if (run.integration.tests) {
                 expect_identical(names(ds)[1:2], c("v1", "v4"))
                 expect_identical(dim(ds), c(nrow(df), ncol(df) - 2L))
             })
-            
+
             try(hiddenVariables(ds) <- "v4")
             test_that("hiddenVariables<- adds variables", {
                 expect_identical(names(ds)[1:2], c("v1", "v5"))
                 expect_identical(hiddenVariables(ds), c("v2", "v3", "v4"))
                 expect_identical(dim(ds), c(nrow(df), ncol(df)-3L))
             })
-            
+
             test_that("hidden variables can be accessed with $", {
                 expect_warning(ds$v2, "hidden")
                 expect_true(is.Text(suppressWarnings(ds$v2)))
             })
-            
+
             try(ds <- unhideVariables(ds, c("v2", "v3", "v4")))
-            
+
             test_that("unhideVariables by alias", {
                 expect_identical(hiddenVariables(ds), c())
                 expect_identical(dim(ds), dim(df))
@@ -64,23 +64,23 @@ if (run.integration.tests) {
                 expect_true(is.Text(ds$v2))
             })
         })
-        
+
         with(test.dataset(df), {
             test_that("hideVariables with grep (and by index)", {
                 ds <- hideVariables(ds, pattern="v[23]")
                 expect_identical(names(ds)[1:2], c("v1", "v4"))
-                
+
                 ds <- unhideVariables(ds, pattern="v[23]")
                 expect_identical(hiddenVariables(ds), c())
             })
-            
+
             test_that("Error handling", {
                 expect_identical(hiddenVariables(ds), c()) # To be clear
                 ## Need something better than subscript out of bounds, probably
-                
+
             })
         })
-        
+
         with(test.dataset(df), {
             test_that("can hide variables by group", {
                 ordering(ds) <- VariableOrder(
@@ -93,7 +93,7 @@ if (run.integration.tests) {
                 expect_true(all(c("v2", "v5") %in% hiddenVariables(ds)))
             })
         })
-        
+
         with(test.dataset(mrdf), {
             ds <- mrdf.setup(ds)
             test_that("Can hide array variables", {
@@ -110,7 +110,7 @@ if (run.integration.tests) {
                 expect_false("MR" %in% names(ds))
             })
         })
-        
+
         with(test.dataset(mrdf), {
             ds <- mrdf.setup(ds, pattern="mr_1")
             test_that("Can hide array variables even if they only have one subvar", {

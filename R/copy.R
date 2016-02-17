@@ -4,10 +4,10 @@
 ##'
 ##' Copies can be shallow (linked) or deep. Shallow copying is faster and should
 ##' be preferred unless a true hard copy is required, though keep in mind the
-##' implications of shallow copying. When you append data to the original  
-##' variable or otherwise alter its values, the values in the copy automatically 
-##' update. This linking may be desirable, but it comes with some limitations. 
-##' First, you cannot edit the values of the copy independently of the original. 
+##' implications of shallow copying. When you append data to the original
+##' variable or otherwise alter its values, the values in the copy automatically
+##' update. This linking may be desirable, but it comes with some limitations.
+##' First, you cannot edit the values of the copy independently of the original.
 ##' Second, some attributes of the copy are immutable: of note, properties of
 ##' categories cannot be altered independely in the copy. Subvariable names and
 ##' ordering within arrays, however, can.
@@ -25,12 +25,12 @@
 ##' @export
 copyVariable <- function (x, deep=FALSE, ...) {
     stopifnot(is.variable(x))
-    
+
     newbody <- list(...)
     oldbody <- updateList(copyVariableReferences(x), tuple(x)@body)
     oldbody$name <- paste0(oldbody$name, " (copy)")
     oldbody$alias <- paste0(oldbody$alias, "_copy")
-    
+
     body <- updateList(oldbody, newbody)
     body$id <- NULL
     if (deep) {
@@ -50,7 +50,7 @@ copyVariable <- function (x, deep=FALSE, ...) {
         body$expr <- zfunc("copy_variable", x)
         body$type <- NULL
     }
-    
+
     class(body) <- "VariableDefinition"
     # print(str(body))
     return(body)

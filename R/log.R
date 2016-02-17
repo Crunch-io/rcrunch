@@ -1,5 +1,5 @@
 ##' Log a message
-##' 
+##'
 ##' @param ... Strings to pass to \code{cat}
 ##' @return Nothing
 ##' @export
@@ -48,7 +48,7 @@ cacheLogSummary <- function (logdf) {
 
 ##' @importFrom utils head tail
 requestLogSummary <- function (logdf) {
-    total.time <- as.numeric(difftime(tail(logdf$timestamp, 1), 
+    total.time <- as.numeric(difftime(tail(logdf$timestamp, 1),
         head(logdf$timestamp, 1), units="secs"))
     df <- requestsFromLog(logdf)
     counts <- table(df$verb)
@@ -94,7 +94,7 @@ blockTimings <- function (logdf) {
     blocks <- logdf$scope == "BLOCK"
     times <- logdf$timestamp[blocks]
     blocknames <- c("(start)", logdf$verb[blocks])
-    
+
     return(structure(as.numeric(difftime(c(times, logdf$timestamp[nrow(logdf)]),
         c(logdf$timestamp[1], times), units="secs")),
         .Names=blocknames))

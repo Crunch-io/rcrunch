@@ -72,25 +72,25 @@ passwordSetURLTemplate <- function () {
 }
 
 ## TODO: test and release this
-shareDataset <- function (x, emails, notify=TRUE) {
-    ## Share one more more datasets without loading them
-    dscat <- active(datasetCatalog())
-    if (!is.numeric(x)) {
-        x <- selectDatasetFromCatalog(x, dscat, strict=TRUE)
-    }
-    dsurls <- urls(dscat)[x]
-    perm_urls <- vapply(dsurls, function (x) absoluteURL("permissions/", x),
-        character(1))
-
-    payload <- sapply(emails,
-            function (x) list(dataset_permissions=list(edit=FALSE, view=TRUE)),
-            simplify=FALSE)
-    payload$send_notification <- notify
-    payload <- toJSON(payload)
-
-    out <- lapply(perm_urls, function (x) {
-        message("Sharing ", x)
-        crPATCH(x, body=payload)
-    })
-    invisible(out)
-}
+# shareDataset <- function (x, emails, notify=TRUE) {
+#     ## Share one more more datasets without loading them
+#     dscat <- active(datasetCatalog())
+#     if (!is.numeric(x)) {
+#         x <- selectDatasetFromCatalog(x, dscat, strict=TRUE)
+#     }
+#     dsurls <- urls(dscat)[x]
+#     perm_urls <- vapply(dsurls, function (x) absoluteURL("permissions/", x),
+#         character(1))
+#
+#     payload <- sapply(emails,
+#             function (x) list(dataset_permissions=list(edit=FALSE, view=TRUE)),
+#             simplify=FALSE)
+#     payload$send_notification <- notify
+#     payload <- toJSON(payload)
+#
+#     out <- lapply(perm_urls, function (x) {
+#         message("Sharing ", x)
+#         crPATCH(x, body=payload)
+#     })
+#     invisible(out)
+# }

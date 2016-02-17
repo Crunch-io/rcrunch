@@ -7,7 +7,7 @@
 ##' R. Importantly, this allows technical researchers to collaborate naturally
 ##' with team members, managers, and clients who prefer a point-and-click
 ##' interface: because all connect to the same dataset in the cloud, there is no
-##' need to email files back and forth continually to share results. 
+##' need to email files back and forth continually to share results.
 ##'
 ##' @seealso To learn more about using the package, see
 ##' \code{vignette("getting-started", package="crunch")}. To sign up for a

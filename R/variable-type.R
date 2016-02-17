@@ -6,7 +6,7 @@ CASTABLE_TYPES <- c("numeric", "text", "categorical") ## Add datetime when serve
 ##' assigning them a new "type". This modifes the storage of the data on the
 ##' server and should only be done in narrow circumstances, as in when importing
 ##' data from a different file format has resulted in incorrect types being
-##' specified. 
+##' specified.
 ##'
 ##' @param x a Variable
 ##' @param value For the setter, a character value in c("numeric", "text",
@@ -35,5 +35,5 @@ castVariable <- function (x, to) {
 
 ##' @rdname type
 ##' @export
-setMethod("type<-", "CrunchVariable", 
+setMethod("type<-", "CrunchVariable",
     function (x, value) castVariable(x, value))

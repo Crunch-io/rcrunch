@@ -21,10 +21,9 @@ mockArrayDataset <- function (nvars, nsubvars=5, nrows=3) {
             name=i,
             type="categorical_array",
             subvariables=lapply(seq_len(nsubvars),
-                function (x) toVariable(as.factor(seq_len(nrows)), 
+                function (x) toVariable(as.factor(seq_len(nrows)),
                     name=paste(i, x, sep="_")))
         ))
     }
     invisible(refresh(ds))
 }
-

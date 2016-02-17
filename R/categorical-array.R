@@ -5,35 +5,35 @@
 ##' a Dataset), or values (e.g. names) of variables corresponding to \code{key}.
 ##' If omitted, must supply \code{dataset} and \code{pattern}. If specifying
 ##' values, must include \code{dataset}.
-##' @param dataset the Crunch Dataset to which the variables in 
+##' @param dataset the Crunch Dataset to which the variables in
 ##' \code{list_of_variables} belong, or in which to search for variables based
 ##' on \code{pattern}. If omitted, \code{list_of_variables} must exist and all
 ##' Variables in the list must belong to the same Dataset
-##' @param pattern An optional regular expression to search for variables to 
+##' @param pattern An optional regular expression to search for variables to
 ##' bind within \code{dataset}.
 ##' @param key character, the name of the Variable field in which to search
 ##' with \code{pattern}. Default is 'alias'.
 ##' @param name character, the name that the new Categorical Array variable
 ##' should have. Required.
-##' @param selections character, for \code{makeMR}, the names of the 
-##' categories to mark as the dichotomous selections. Required for 
+##' @param selections character, for \code{makeMR}, the names of the
+##' categories to mark as the dichotomous selections. Required for
 ##' \code{makeMR}; ignored in \code{makeArray}.
 ##' @param ... Optional additional attributes to set on the new variable.
 ##' @return A VariableDefinition that when added to a Dataset will create the
 ##' categorical-array or multiple-response variable.
 ##' @export
 makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key=namekey(dataset), name, ...) {
-    
+
     Call <- match.call(expand.dots=FALSE)
-    
+
     if (missing(name)) {
         halt("Must provide the name for the new variable")
     }
-    
+
     Call[[1L]] <- as.name("prepareBindInputs")
     x <- eval.parent(Call)
-    
-    out <- VariableDefinition(subvariables=I(x$variable_urls), name=name, 
+
+    out <- VariableDefinition(subvariables=I(x$variable_urls), name=name,
         type="categorical_array", ...)
     return(out)
 }
@@ -47,11 +47,11 @@ makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key=nameke
 ##' a Dataset), or values (e.g. names) of variables corresponding to \code{key}.
 ##' If omitted, must supply \code{dataset} and \code{pattern}. If specifying
 ##' values, must include \code{dataset}.
-##' @param dataset the Crunch Dataset to which the variables in 
+##' @param dataset the Crunch Dataset to which the variables in
 ##' \code{list_of_variables} belong, or in which to search for variables based
 ##' on \code{pattern}. If omitted, \code{list_of_variables} must exist and all
 ##' Variables in the list must belong to the same Dataset
-##' @param pattern An optional regular expression to search for variables to 
+##' @param pattern An optional regular expression to search for variables to
 ##' bind within \code{dataset}.
 ##' @param key character, the name of the Variable field in which to search
 ##' with \code{pattern}. Default is 'alias'.
@@ -74,7 +74,7 @@ prepareBindInputs <- function (list_of_variables=NULL, dataset=NULL,
         }
         return(ds_urls)
     }
-    
+
     variable_urls <- NULL
     if (is.null(dataset)) {
         if (is.dataset(list_of_variables)) {
@@ -93,13 +93,13 @@ prepareBindInputs <- function (list_of_variables=NULL, dataset=NULL,
     if (is.null(dataset)) {
         halt("Must supply a Crunch dataset in which to make the array variable")
     }
-    
+
     if (is.null(variable_urls)) {
         variable_urls <- findVariableURLs(dataset, refs=list_of_variables, pattern=pattern, key=key)
         if (!length(variable_urls)) {
             halt("Pattern did not match any variables")
         }
     }
-    
+
     return(list(dataset=dataset, variable_urls=variable_urls))
 }

@@ -32,7 +32,7 @@ setMethod("refresh", "IndexTuple", function (x) {
 
 ##' @rdname tuple-methods
 ##' @export
-setMethod("$", "IndexTuple", function (x, name) x@body[[name]]) 
+setMethod("$", "IndexTuple", function (x, name) x@body[[name]])
 ##' @rdname tuple-methods
 ##' @export
 setMethod("$<-", "IndexTuple", function (x, name, value) {

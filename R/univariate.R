@@ -27,7 +27,7 @@ setMethod("mean", "CrunchVariable", function (x, ...) {
 })
 ##' @rdname crunch-uni
 ##' @export
-setMethod("mean", "NumericVariable", 
+setMethod("mean", "NumericVariable",
     function (x, ...) .summary.stat(x, "mean", ...))
 
 
@@ -38,7 +38,7 @@ setMethod("sd", "CrunchVariable", function (x, na.rm) {
 })
 ##' @rdname crunch-uni
 ##' @export
-setMethod("sd", "NumericVariable", 
+setMethod("sd", "NumericVariable",
     function (x, na.rm=FALSE) .summary.stat(x, "stddev", na.rm=na.rm))
 
 ##' @rdname crunch-uni
@@ -48,7 +48,7 @@ setMethod("median", "CrunchVariable", function (x, na.rm) {
 })
 ##' @rdname crunch-uni
 ##' @export
-setMethod("median", "NumericVariable", 
+setMethod("median", "NumericVariable",
     function (x, na.rm=FALSE) .summary.stat(x, "median", na.rm=na.rm))
 
 
@@ -59,11 +59,11 @@ setMethod("min", "CrunchVariable", function (x, na.rm) {
 })
 ##' @rdname crunch-uni
 ##' @export
-setMethod("min", "NumericVariable", 
+setMethod("min", "NumericVariable",
     function (x, na.rm=FALSE) .summary.stat(x, "min", na.rm=na.rm))
 ##' @rdname crunch-uni
 ##' @export
-setMethod("min", "DatetimeVariable", 
+setMethod("min", "DatetimeVariable",
     function (x, na.rm=FALSE) .summary.stat(x, "min", na.rm=na.rm))
 
 ##' @rdname crunch-uni
@@ -73,9 +73,9 @@ setMethod("max", "CrunchVariable", function (x, na.rm) {
 })
 ##' @rdname crunch-uni
 ##' @export
-setMethod("max", "NumericVariable", 
+setMethod("max", "NumericVariable",
     function (x, na.rm=FALSE) .summary.stat(x, "max", na.rm=na.rm))
 ##' @rdname crunch-uni
 ##' @export
-setMethod("max", "DatetimeVariable", 
+setMethod("max", "DatetimeVariable",
     function (x, na.rm=FALSE) .summary.stat(x, "max", na.rm=na.rm))

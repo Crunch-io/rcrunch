@@ -4,11 +4,11 @@ notifyIfNewVersion <- function (
 
     mc <- match.call()
     mc[[1L]] <- quote(checkForNewVersion)
-    
+
     v <- try(eval.parent(mc), silent=TRUE)
     if (!is.error(v) && is.character(v)) {
         ## There's a new version. Message:
-        message("There's a new version of ", dQuote("crunch"), 
+        message("There's a new version of ", dQuote("crunch"),
             " available. You have ", installed.version, " but ",
             v, " is now available. You can install it with: \n\n",
             'devtools::install_github("Crunch-io/rcrunch", ref="', v, '")')
@@ -31,10 +31,10 @@ checkForNewVersion <- function (
     gh.tags <- vapply(crGET(github.url), function (x) x[["name"]], character(1))
     ## Filter to keep only those that match x.y.z
     version.tags <- grep("^[0-9]+\\.[0-9]+\\.[0-9]+$", gh.tags, value=TRUE)
-    
-    if (length(version.tags) && 
+
+    if (length(version.tags) &&
         versionIsGreaterThan(version.tags[1], installed.version) ) {
-        
+
         return(version.tags[1])
     }
     return(NULL)
@@ -54,4 +54,3 @@ versionIsGreaterThan <- function (x, y) {
         }
     }
 }
-

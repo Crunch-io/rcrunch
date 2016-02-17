@@ -16,7 +16,7 @@
 ##' @keywords internal
 ##' @export
 findVariables <- function (dataset, refs=NULL, pattern="", key=namekey(dataset), ...) {
-    
+
     if (is.dataset(dataset)) {
         dataset <- variables(dataset)
     }

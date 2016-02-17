@@ -7,7 +7,7 @@ setMethod("initialize", "DatasetCatalog", init.DatasetCatalog)
 
 setMethod("active", "DatasetCatalog", function (x) {
     index(x) <- Filter(function (a) !isTRUE(a$archived), index(x))
-    ## Not implementing user check now. 
+    ## Not implementing user check now.
     # me <- userURL()
     # if (!is.null(me)) {
     #     index(x) <- Filter(function (a) a$owner_id == me, index(x))
@@ -17,7 +17,7 @@ setMethod("active", "DatasetCatalog", function (x) {
 
 setMethod("archived", "DatasetCatalog", function (x) {
     index(x) <- Filter(function (a) isTRUE(a$archived), index(x))
-    ## Not implementing user check now. 
+    ## Not implementing user check now.
     # me <- userURL()
     # if (!is.null(me)) {
     #     index(x) <- Filter(function (a) a$owner_id == me, index(x))
@@ -33,7 +33,7 @@ setMethod("archived", "DatasetCatalog", function (x) {
 ##' @param j Invalid
 ##' @param drop Invalid
 ##' @param ... additional arguments
-##' @param value For updating, an object of the appropriate class and size to 
+##' @param value For updating, an object of the appropriate class and size to
 ##' insert
 ##' @return A subset of \code{x} if extracting, otherwise \code{x} duly modified
 ##' @name catalog-extract
@@ -52,9 +52,9 @@ setMethod("[[", c("DatasetCatalog", "ANY"), function (x, i, ...) {
 })
 
 ##' Get and set names, aliases on Catalog-type objects
-##' 
+##'
 ##' These methods let you get and set names and aliases for variables in a
-##' Dataset's catalog, or within \code{\link{Subvariables}} in an array 
+##' Dataset's catalog, or within \code{\link{Subvariables}} in an array
 ##' variable. They work like the base R names methods.
 ##'
 ##' Note that the \code{names} method on a Dataset returns the aliases of its

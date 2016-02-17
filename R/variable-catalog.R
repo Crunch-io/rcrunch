@@ -35,14 +35,14 @@ setMethod("[[", c("VariableCatalog", "ANY"), function (x, i, ...) {
 })
 ##' @rdname catalog-extract
 ##' @export
-setMethod("[[<-", c("VariableCatalog", "character", "missing", "VariableTuple"), 
+setMethod("[[<-", c("VariableCatalog", "character", "missing", "VariableTuple"),
     function (x, i, j, value) {
         index(x)[[i]] <- value@body
         return(x)
     })
 ##' @rdname catalog-extract
 ##' @export
-setMethod("[[<-", c("VariableCatalog", "character", "missing", "CrunchVariable"), 
+setMethod("[[<-", c("VariableCatalog", "character", "missing", "CrunchVariable"),
     function (x, i, j, value) {
         stopifnot(i == self(value))
         x[[i]] <- tuple(value)
@@ -65,7 +65,7 @@ setMethod("[", c("VariableCatalog", "VariableGroup"), function (x, i, ...) {
 setMethod("[<-", c("VariableCatalog", "character", "missing", "VariableCatalog"), function (x, i, j, value) {
     ## Validate!
     index(x)[i] <- index(value)[i]
-    ## No save, I don't think. PATCH outside this fn? 
+    ## No save, I don't think. PATCH outside this fn?
     return(x)
 })
 ##' @rdname catalog-extract

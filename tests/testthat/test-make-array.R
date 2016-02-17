@@ -24,7 +24,7 @@ if (run.integration.tests) {
                     ds$arrayVar <- NULL
                 })
                 expect_identical(names(ds), "v4")
-                expect_identical(ncol(ds), 1L)   
+                expect_identical(ncol(ds), 1L)
             })
         })
         test_that("can make Categorical Array with pattern", {
@@ -42,7 +42,7 @@ if (run.integration.tests) {
                 expect_identical(ncol(ds), 4L)
             })
         })
-        
+
         with(test.dataset(mrdf), {
             test_that("makeArray error conditions", {
                 no.name <- "Must provide the name for the new variable"
@@ -62,7 +62,7 @@ if (run.integration.tests) {
                 })
             })
         })
-        
+
         with(test.dataset(mrdf), {
             ds$arrayVar <- makeArray(pattern="mr_[123]", dataset=ds,
                 name="arrayVar")
@@ -70,7 +70,7 @@ if (run.integration.tests) {
             test_that("setup to make MultipleResponse from CategoricalArray", {
                 expect_true(is.CA(var))
             })
-            
+
             test_that("can make MultipleResponse from CategoricalArray by editing category$selected", {
                 categories(var)[[1]]$selected <- TRUE
                 var <- refresh(var) ## Refresh required if changing type by editing categories
@@ -79,7 +79,7 @@ if (run.integration.tests) {
                 var <- refresh(var) ## Refresh required if changing type by editing categories
                 expect_true(is.CA(var))
             })
-            
+
             test_that("can make MultipleResponse from CategoricalArray by dichotomizing categories (and back by undichotomize)", {
                 categories(var) <- dichotomize(categories(var), 1)
                 var <- refresh(var) ## Refresh required if changing type by editing categories
@@ -106,7 +106,7 @@ if (run.integration.tests) {
                 expect_true(is.CA(refresh(ds)$arrayVar))
             })
         })
-        
+
         test_that("can make MultipleResponse directly", {
             with(test.dataset(mrdf), {
                 cast.these <- grep("mr_", names(ds))
@@ -116,10 +116,10 @@ if (run.integration.tests) {
                     name="arrayVar", selections="1.0")
                 var <- ds$arrayVar
                 expect_true(is.Multiple(var))
-                
+
                 var <- undichotomize(var)
                 expect_true(is.CA(var))
-                
+
                 ## unbind.
                 u <- try(unbind(var))
                 expect_that(u, is_not_an_error())
@@ -127,14 +127,14 @@ if (run.integration.tests) {
                 expect_true(setequal(names(ds), names(mrdf)))
                 expect_identical(ncol(ds), 4L)
             })
-            
+
             with(test.dataset(mrdf), {
                 test_that("makeMR error conditions", {
                     no.name <- "Must provide the name for the new variable"
                     no.match <- "Pattern did not match any variables"
                     need.variables <- "Invalid list of Variables to combine"
                     ds.mismatch <- "`list_of_variables` must be from `dataset`"
-                    no.selections <- paste("Must provide the names of the", 
+                    no.selections <- paste("Must provide the names of the",
                         "category or categories that indicate the dichotomous",
                         "selection")
                     invalid.selection <- paste("not found in",

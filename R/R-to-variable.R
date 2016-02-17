@@ -17,7 +17,7 @@ setMethod("toVariable", "factor", function (x, ...) {
     max.categories <- getOption("crunch.max.categories")
     if (!is.null(max.categories) && nlevels > max.categories) {
         return(toVariable(as.character(x), ...))
-    } 
+    }
     out <- structure(list(values=as.integer(x), type="categorical",
         categories=categoriesFromLevels(levels(x)), ...),
         class="VariableDefinition")
@@ -43,7 +43,7 @@ setMethod("toVariable", "VariableDefinition", function (x, ...) {
 ##' @export
 setMethod("toVariable", "logical", function (x, ...) {
     ## Make it categorical
-    out <- structure(list(values=2L-as.integer(x), type="categorical", 
+    out <- structure(list(values=2L-as.integer(x), type="categorical",
         categories=categoriesFromLevels(c("True", "False")),
         ...),
         class="VariableDefinition")

@@ -8,7 +8,7 @@
 ##' be unique, should be greater than 0 characters long, and "ungrouped" is a
 ##' reserved group name. (2) For duplicates, logical for whether duplicate
 ##' variable entries should be allowed in the VariableOrder.
-##' @param simplify logical: should variable URLs inside of groups be flattened 
+##' @param simplify logical: should variable URLs inside of groups be flattened
 ##' or preserved in their nested lists? Default is \code{FALSE}.
 ##' @return \code{entities} returns Variable references and VariableGroups; \code{names} returns group names; \code{duplicates} returns logical for whether duplicate variable entries should be allowed
 ##' @name VariableOrder-slots
@@ -32,9 +32,9 @@ setMethod("entities", "VariableOrder", function (x, simplify=FALSE) {
 ##' @export
 setMethod("entities", "list", function (x, simplify=FALSE) {
     if (simplify) {
-        nested.groups <- vapply(x, 
+        nested.groups <- vapply(x,
             function (a) inherits(a, "VariableGroup"), logical(1))
-        x[nested.groups] <- lapply(x[nested.groups], 
+        x[nested.groups] <- lapply(x[nested.groups],
             function (a) entities(a, simplify=TRUE))
         x <- unique(unlist(x))
     }
@@ -73,21 +73,21 @@ setMethod("name<-", "VariableGroup", function (x, value) {
 
 ##' @rdname VariableOrder-slots
 ##' @export
-setMethod("names", "VariableOrder", 
-    function (x) vapply(x, function (a) {
-        ifelse(inherits(a, "VariableGroup"), name(a), NA_character_)
-    }, character(1)))
-    
-##' @rdname VariableOrder-slots
-##' @export
-setMethod("names", "VariableGroup", 
+setMethod("names", "VariableOrder",
     function (x) vapply(x, function (a) {
         ifelse(inherits(a, "VariableGroup"), name(a), NA_character_)
     }, character(1)))
 
 ##' @rdname VariableOrder-slots
 ##' @export
-setMethod("names<-", "VariableOrder", 
+setMethod("names", "VariableGroup",
+    function (x) vapply(x, function (a) {
+        ifelse(inherits(a, "VariableGroup"), name(a), NA_character_)
+    }, character(1)))
+
+##' @rdname VariableOrder-slots
+##' @export
+setMethod("names<-", "VariableOrder",
     function (x, value) {
         x@graph <- mapply(
             function (y, v) {

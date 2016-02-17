@@ -9,7 +9,7 @@ with(temp.option(foo.bar="no", foo.other="other"), {
         e2 <- envOrOption("foo.other"),
         e3 <- envOrOption("somethingelse")
     )
-    
+
     test_that("envOrOption gets the right thing", {
         expect_identical(e1, "yes") ## Env var trumps option
         expect_identical(envOrOption("foo.bar"), "no") ## Bc no more env var
@@ -17,4 +17,3 @@ with(temp.option(foo.bar="no", foo.other="other"), {
         expect_identical(e3, NULL) ## Null if neither
     })
 })
-

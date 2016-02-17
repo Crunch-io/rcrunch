@@ -31,7 +31,7 @@ if (run.integration.tests) {
                         as.array(crtabs(~ petloca, data=ds)))
                 })
             # })
-            
+
             with(test.dataset(newDatasetFromFixture("apidocs"), "part2"), {
                 test_that("Deep copies don't get data when appending", {
                     out <- appendDataset(ds, part2)
