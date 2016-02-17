@@ -296,12 +296,16 @@ formatExpression <- function (expr) {
     }
 }
 
+##' @rdname show-crunch
+##' @export
 setMethod("show", "CrunchExpr", function (object) {
     cat("Crunch expression: ", formatExpression(object@expression), "\n",
         sep="")
     invisible(object)
 })
 
+##' @rdname show-crunch
+##' @export
 setMethod("show", "CrunchLogicalExpr", function (object) {
     cat("Crunch logical expression: ", formatExpression(object@expression), "\n",
         sep="")
