@@ -107,8 +107,8 @@ if (run.integration.tests) {
             })
         })
 
-        test_that("can make MultipleResponse directly", {
-            with(test.dataset(mrdf), {
+        with(test.dataset(mrdf), {
+            test_that("can make MultipleResponse directly", {
                 cast.these <- grep("mr_", names(ds))
                 ds[cast.these] <- lapply(ds[cast.these],
                     castVariable, "categorical")
