@@ -184,11 +184,34 @@ setMethod("activeFilter", "CrunchExpr", .getActiveFilter)
 exclusion <- function (x) {
     stopifnot(is.dataset(x))
     ef <- crGET(shojiURL(x, "fragment", "exclusion"))
-    if (length(ef$body$expression)) {
+    e <- ef$body$expression
+    if (length(e)) {
         ## We have a non-empty filter
-        return(CrunchLogicalExpr(expression=ef$body$expression))
+        ## Server is returning variable IDs. Make them into URLs
+        ## TODO: remove this
+        e <- idsToURLs(e, variableCatalogURL(x))
+        return(CrunchLogicalExpr(expression=e))
     } else {
         return(NULL)
+    }
+}
+
+idsToURLs <- function (expr, base_url) {
+    ## Recurse, looking for every variable: id and make it variable: url
+    if (is.list(expr)) {
+        if (length(expr) == 1 &&
+            identical(names(expr), "variable") &&
+            substr(expr[["variable"]], nchar(expr[["variable"]]), nchar(expr[["variable"]])) != "/") {
+            ## This is a variable ref that is an id. Absolutize.
+            expr[["variable"]] <- absoluteURL(paste0("./", expr, "/"),
+                base_url)
+            return(expr)
+        } else {
+            ## Recurse.
+            return(lapply(expr, idsToURLs, base_url))
+        }
+    } else {
+        return(expr)
     }
 }
 
