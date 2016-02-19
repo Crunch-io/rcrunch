@@ -27,7 +27,7 @@ forkDataset <- function (dataset, forkname) {
     fork_url <- crPOST(shojiURL(dataset, "catalogs", "forks"),
         body=toJSON(list(element="shoji:entity", body=list(name=forkname))))
     updateDatasetList()
-    return(entity(datasetCatalog()[[fork_url]]))
+    invisible(entity(datasetCatalog()[[fork_url]]))
 }
 
 mergeFork <- function (dataset, fork, autorollback=TRUE) {
