@@ -3,6 +3,7 @@
 * Fix error in reading/writing query cache with a very long querystring. Requires new dependency on the `digest` package.
 * Fix bug in assigning `name(ds$var$subvar) <- value`
 * Fix overly rigid validation in `share`
+* `startDate` and `endDate` to set those attributes from within R
 
 ### crunch 1.7.12
 * Add method for R logical &/| Crunch expression
