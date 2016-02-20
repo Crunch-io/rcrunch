@@ -2,6 +2,17 @@ context("Appending datasets with arrays")
 
 if (run.integration.tests) {
     with(test.authentication, {
+
+        ## Append with a fork
+        appendDataset <- function (d1, d2, ...) {
+            f <- forkDataset(d1)
+            on.exit(delete(f))
+
+            fprime <- crunch::appendDataset(f, d2, ...)
+            d1 <- mergeFork(d1, fprime)
+            return(d1)
+        }
+        
         with(test.dataset(mrdf, "part1"), {
             part1 <- mrdf.setup(part1, selections="1.0")
             with(test.dataset(mrdf, "part2"), {

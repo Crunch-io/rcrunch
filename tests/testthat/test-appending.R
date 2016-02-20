@@ -95,6 +95,16 @@ if (run.integration.tests) {
             })
         })
 
+        ## Append with a fork
+        appendDataset <- function (d1, d2, ...) {
+            f <- forkDataset(d1)
+            on.exit(delete(f))
+
+            fprime <- crunch::appendDataset(f, d2, ...)
+            d1 <- mergeFork(d1, fprime)
+            return(d1)
+        }
+
         with(test.dataset(newDatasetFromFile(testfile.csv, name=now()), "file1"), {
             with(test.dataset(newDatasetFromFile(testfile.csv, name=now()), "file2"), {
                 v3.1 <- as.vector(file1$V3)
