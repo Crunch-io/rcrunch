@@ -1,3 +1,5 @@
+### crunch 1.8.1
+
 ## crunch 1.8.0
 * More formal support for creating and managing UI filters
 * Better print method for Crunch expressions (`CrunchExpr`): prints an R formula-like expression
