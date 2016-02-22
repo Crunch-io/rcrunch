@@ -60,7 +60,7 @@
 \arguments{
 \item{x}{a VariableGroup or VariableOrder}
 
-\item{simplify}{logical: should variable URLs inside of groups be flattened 
+\item{simplify}{logical: should variable URLs inside of groups be flattened
 or preserved in their nested lists? Default is \code{FALSE}.}
 
 \item{value}{(1) For name, a character (length-1 vector); for names, a character

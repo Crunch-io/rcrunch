@@ -13,7 +13,7 @@ ungrouped(var.order)
 \item{var.order}{an object of class VariableOrder or VariableGroup}
 }
 \value{
-For grouped(), a VariableOrder/Group, respectively, with "ungrouped" 
+For grouped(), a VariableOrder/Group, respectively, with "ungrouped"
 omitted. For ungrouped(), a VariableGroup.
 }
 \description{
