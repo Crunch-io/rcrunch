@@ -19,22 +19,22 @@ with(fake.HTTP, {
         expect_identical(endDate(test.ds2), NULL)
     })
 
-    test_that("startDate is type character", {
+    test_that("start_date is type character", {
         expect_identical(class(startDate(test.ds)), "character")
     })
 
-    test_that("endDate is type character", {
-        expect_identical(class(startDate(test.ds)), "character")
+    test_that("end_date is type character", {
+        expect_identical(class(endDate(test.ds)), "character")
     })
     
-    test_that("startDate makes right request", {
+    test_that("start_date makes right request", {
         expect_error(startDate(test.ds2) <- today,
-            paste0('PATCH /api/datasets.json \\{"/api/datasets/dataset3.json":\\{"startDate":"',today,'"\\}\\}')
+            paste0('PATCH /api/datasets.json \\{"/api/datasets/dataset3.json":\\{"start_date":"',today,'"\\}\\}')
         )
     })
-    test_that("endDate makes right request", {
+    test_that("end_date makes right request", {
         expect_error(endDate(test.ds2) <- today,
-            paste0('PATCH /api/datasets.json \\{"/api/datasets/dataset3.json":\\{"endDate":"',today,'"\\}\\}')
+            paste0('PATCH /api/datasets.json \\{"/api/datasets/dataset3.json":\\{"end_date":"',today,'"\\}\\}')
         )
     })
     

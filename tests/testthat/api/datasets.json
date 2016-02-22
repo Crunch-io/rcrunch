@@ -8,8 +8,8 @@
             "owner_display_name": "Jean-Luc",
             "name": "test ds",
             "description": "",
-            "startDate":"2016-01-01",
-            "endDate":"2016-01-01",
+            "start_date":"2016-01-01",
+            "end_date":"2016-01-01",
             "archived": false,
             "id": "511a7c49778030653aab5963",
             "owner_id": "/api/users/me.json"
@@ -20,8 +20,8 @@
             "description": "This dataset does not exist",
             "archived": false,
             "id": "aa80d2e969b34e6ea9ededaa528c6248",
-            "startDate": null,
-            "endDate": null,
+            "start_date": null,
+            "end_date": null,
             "owner_id": "/api/users/me.json"
         },
         "/api/datasets/dataset3.json": {
