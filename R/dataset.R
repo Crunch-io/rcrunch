@@ -41,6 +41,14 @@ setDatasetName <- function (x, value) {
 setDatasetDescription <- function (x, value) {
     setTupleSlot(x, "description", value)
 }
+setDatasetStartDate <- function (x, value) {
+    stopifnot(is.character(value))
+    setTupleSlot(x, "start_date", value)
+}
+setDatasetEndDate <- function (x, value) {
+    stopifnot(is.character(value))
+    setTupleSlot(x, "end_date", value)
+}
 
 ##' Name, alias, and description for Crunch objects
 ##'
@@ -70,6 +78,19 @@ setMethod("description", "CrunchDataset", function (x) tuple(x)$description)
 setMethod("description<-", "CrunchDataset", setDatasetDescription)
 ##' @rdname describe
 ##' @export
+setMethod("startDate", "CrunchDataset", function (x) tuple(x)$start_date)
+##' @rdname describe
+##' @export
+setMethod("startDate<-", "CrunchDataset", setDatasetStartDate)
+##' @rdname describe
+##' @export
+setMethod("endDate", "CrunchDataset", function (x) tuple(x)$end_date)
+##' @rdname describe
+##' @export
+setMethod("endDate<-", "CrunchDataset", setDatasetEndDate)
+##' @rdname describe
+##' @export
+
 setMethod("id", "CrunchDataset", function (x) tuple(x)$id)
 
 as.dataset <- function (x, useAlias=default.useAlias(), tuple=DatasetTuple()) {
