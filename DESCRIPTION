@@ -21,6 +21,7 @@ Depends:
     R (>= 3.0.0)
 Imports:
     httr (>= 1.0.0),
+    httpcache,
     jsonlite (>= 0.9.15),
     methods,
     digest,

@@ -41,7 +41,7 @@ test_that("ShojiCatalog", {
     expect_error(sho[c("/a", "c")], "Undefined elements selected: c")
 })
 
-with(fake.HTTP, {
+with_mock_HTTP({
     full.urls <- DatasetCatalog(crGET("/api/datasets.json"))
     rel.urls <- DatasetCatalog(crGET("/api/datasets-relative-urls.json"))
     test_that("urls() method returns absolute URLs", {

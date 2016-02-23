@@ -1,6 +1,6 @@
 context("Dataset object and methods")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     test.ds <- loadDataset("test ds")
 
     test_that("Dataset can be created", {

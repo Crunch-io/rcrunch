@@ -1,6 +1,6 @@
 context("Teams")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     test_that("Getting teams catalog", {
         teams <- try(getTeams())
         expect_true(inherits(teams, "TeamCatalog"))

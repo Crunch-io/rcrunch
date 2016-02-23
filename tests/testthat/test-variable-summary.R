@@ -1,6 +1,6 @@
 context("Variable summaries")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     ds <- loadDataset("test ds")
     gen <- ds$gender
 

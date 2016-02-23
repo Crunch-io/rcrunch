@@ -11,7 +11,7 @@ test_that("version number comparison is correct", {
     expect_false(versionIsGreaterThan("1.2.2", "2.0.0"))
 })
 
-with(fake.HTTP, {
+with_mock_HTTP({
     test_that("checkForNewVersion parses github json", {
         expect_identical(checkForNewVersion("github-versions.json", "1.5.3"),
             NULL)
@@ -30,7 +30,7 @@ with(fake.HTTP, {
     })
 })
 
-with(no.internet, {
+without_internet({
     test_that("notifyIfNewVersion doesn't hang if GitHub doesn't respond", {
         expect_silent(notifyIfNewVersion("github-versions.json", "1.5.1"))
     })

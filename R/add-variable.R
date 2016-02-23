@@ -9,6 +9,7 @@
 ##' VariableDefinitions.
 ##' @return \code{dataset} with the new variables added (invisibly)
 ##' @export
+##' @importFrom httpcache halt
 addVariables <- function (dataset, ...) {
     var_catalog_url <- shojiURL(dataset, "catalogs", "variables")
 

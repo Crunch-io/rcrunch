@@ -100,6 +100,7 @@ setMethod("readonly<-", "ShojiObject", setReadonly)
 ##' @return character URL
 ##' @export
 ##' @keywords internal
+##' @importFrom httpcache logMessage
 shojiURL <- function (x, collection=c("catalogs", "views", "fragments"), key) {
     if (is.variable(x)) {
         x <- entity(x) ## Get the VariableEntity

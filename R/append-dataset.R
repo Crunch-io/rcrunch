@@ -10,6 +10,7 @@
 ##' conflicts in the web application.
 ##' @return A CrunchDataset with \code{dataset2} appended to \code{dataset1}
 ##' @export
+##' @importFrom httpcache dropCache
 appendDataset <- function (dataset1, dataset2, cleanup=TRUE) {
 
     stopifnot(is.dataset(dataset1))

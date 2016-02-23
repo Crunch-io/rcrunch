@@ -1,6 +1,6 @@
 context("Batch catalog")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     ds <- loadDataset("test ds")
     test_that("batches method", {
         expect_true(inherits(batches(ds), "BatchCatalog"))

@@ -24,7 +24,7 @@ test_that("rollup CrunchExpr from zcl variable", {
             list(value="Y"))))
 })
 
-with(fake.HTTP, {
+with_mock_HTTP({
     ds <- loadDataset("test ds")
     v <- ds$starttime
 

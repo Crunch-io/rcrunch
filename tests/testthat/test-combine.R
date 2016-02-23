@@ -1,6 +1,6 @@
 context("Combine categories and responses")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     ds <- loadDataset("test ds")
 
     cat.payload <- 'Error: POST /api/datasets/variables.json {"name":"Gender 1 cat",}\n'

@@ -11,7 +11,7 @@ test_that("VariableGroup and Order objects can be made", {
         entities=""), vg1), "VariableOrder"))
 })
 
-with(fake.HTTP, {
+with_mock_HTTP({
     test.ds <- loadDataset("test ds")
     varcat <- allVariables(test.ds)
 

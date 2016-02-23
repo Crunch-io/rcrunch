@@ -1,6 +1,6 @@
 context("Subvariables")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     test.ds <- loadDataset("test ds")
     mr <- test.ds$mymrset
 
