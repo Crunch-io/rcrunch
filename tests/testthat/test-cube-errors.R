@@ -24,7 +24,7 @@ test_that("formula must have variables", {
 test_that("'data' must be a Dataset", {
     expect_error(crtabs(~ a), paste(dQuote("data"), "must be a Dataset"))
     ## Support a case of data=missing, i.e. eval formula as is?
-    expect_error(crtabs(~ a, data=NULL), 
+    expect_error(crtabs(~ a, data=NULL),
         paste(dQuote("data"), "must be a Dataset"))
 })
 
@@ -44,13 +44,13 @@ if (run.integration.tests) {
                             v3=c("5-10", "10-15", "15-20", "20-25", "25-30"))))
                 ## What about a combination of a Variable and a local R vector?
             })
-            
+
             test_that("Reserved function names cannot be variable aliases", {
                 dsb <- ds
                 al <- aliases(dsb@variables)
                 dsb@variables@index[[which(al == "v1")]]$alias <- "mean"
                 dsb@variables@index[[which(al == "v2")]]$alias <- "sd"
-                
+
                 expect_identical(names(dsb), c("mean", "sd", "v3", "v4"))
                 expect_error(crtabs(~ mean + bin(v3), data=dsb),
                     paste0("Cannot evaluate a cube with reserved name: ",
@@ -64,46 +64,46 @@ if (run.integration.tests) {
                         dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25",
                         "25-30"))))
             })
-            
+
             test_that("What happens if 'measures' are not aggregations?", {
                 expect_error(crtabs(v3 ~ v4, data=ds),
                     "Left side of formula must be a valid aggregation")
                 expect_error(crtabs(v4 ~ v3, data=ds),
                     "Left side of formula must be a valid aggregation")
             })
-            
+
             test_that("What happens if there are more than one vars on LHS?", {
                 skip("Nice to have. API supports, but R formula doesn't naturally")
                 ## Actually, implement as c(mean(v3), sd(v3))
                 print(crtabs(mean(v3) + sd(v3) ~ v4, data=ds))
                 # non-numeric argument to binary operator
             })
-            
+
             test_that("What if there are aggregations on the RHS?", {
                 expect_error(crtabs(~ mean(v3), data=ds),
                     "Right side of formula cannot contain aggregation functions")
             })
-            
+
             test_that("'rollup' on non-Datetime", {
                 expect_error(crtabs(~ rollup(v4), data=ds),
                     paste0("Cannot rollup a variable of type ",
                         dQuote("categorical")))
             })
-            
+
             test_that("Unsupported aggregation functions", {
                 expect_error(crtabs(cumsum(v3) ~ v4, data=ds),
                     "no method for coercing this S4 class to a vector")
                 ## This is standard R behavior, not special handling.
                 ## Just for illustration of what will happen.
             })
-            
+
             test_that("Limit on number of dimension variables", {
                 # print(crtabs(~ v1 + v2 + v3 + v4, data=ds))
                 ## nope, 4 works
             })
-            
+
             test_that("prop.table cannot take margin greater than dim", {
-                expect_error(prop.table(crtabs(~ v4 + v3, data=ds), 
+                expect_error(prop.table(crtabs(~ v4 + v3, data=ds),
                     margin=3),
                     "Margin 3 exceeds Cube's number of dimensions \\(2\\)")
             })

@@ -25,23 +25,26 @@ with(fake.HTTP, {
         expect_true(inherits(e1, "CrunchExpr"))
         zexp <- list(`function`="+",
             args=list(
-                list(variable="f78ca47313144b57adfb495893968e70"),
+                list(variable="/api/datasets/dataset1/variables/birthyr.json"),
                 list(value=5, type=list(
                     `function`="typeof",
                     args=list(
-                        list(variable="f78ca47313144b57adfb495893968e70")
+                        list(variable="/api/datasets/dataset1/variables/birthyr.json")
                     )
                 ))
             )
         )
         expect_identical(zcl(e1), zexp)
+        expect_output(e1, "Crunch expression: birthyr + 5", fixed=TRUE)
         e2 <- try(5 + ds$birthyr)
         expect_true(inherits(e2, "CrunchExpr"))
+        expect_output(e2, "Crunch expression: 5 + birthyr", fixed=TRUE)
     })
 
     test_that("Logic generates expressions", {
         e1 <- try(ds$birthyr < 0)
         expect_true(inherits(e1, "CrunchLogicalExpr"))
+        expect_output(e1, "Crunch logical expression: birthyr < 0", fixed=TRUE)
     })
 
     test_that("R logical & CrunchLogicalExpr", {
@@ -57,6 +60,8 @@ with(fake.HTTP, {
 
     test_that("Referencing category names that don't exist errors", {
         expect_true(inherits(ds$gender == "Male", "CrunchLogicalExpr"))
+        expect_output(ds$gender == "Male",
+            'Crunch logical expression: gender == "Male"', fixed=TRUE)
         expect_error(ds$gender == "other",
             paste("Category not found:", dQuote("other")))
         expect_error(ds$gender %in% c("other", "Male", "another"),
@@ -64,8 +69,23 @@ with(fake.HTTP, {
                 dQuote("another")))
     })
 
-    test_that("show method exists", {
-        expect_true(is.character(capture.output(print(ds$birthyr + 5))))
+    test_that("Show method for logical expressions", {
+        expect_output(ds$gender %in% c("Male", "Female"),
+            'Crunch logical expression: gender %in% c("Male", "Female")',
+            fixed=TRUE)
+        expect_output(ds$birthyr == 1945 | ds$birthyr < 1941,
+            'birthyr == 1945 | birthyr < 1941',
+            fixed=TRUE)
+        expect_output(ds$gender %in% "Male" & !is.na(ds$birthyr),
+            'gender == "Male" & !is.na(birthyr)',
+            fixed=TRUE)
+        skip("TODO: implement datetime ops first")
+        print(ds$starttime > "2015-04-01")
+    })
+    test_that("Show method for expresssions", {
+        skip("TODO: something intelligent with parentheses and order of operations")
+        print(ds$birthyr * 3 + 5)
+        print(3 * (ds$birthyr + 5))
     })
 })
 
@@ -105,9 +125,11 @@ if (run.integration.tests) {
             test_that("expressions on expresssions evaluate", {
                 e3 <- try(ds$v3 + ds$v3 + 10)
                 expect_true(inherits(e3, "CrunchExpr"))
+                expect_output(e3, "Crunch expression: v3 + v3 + 10", fixed=TRUE)
                 expect_identical(as.vector(e3), 2*df$v3 + 10)
                 e4 <- try(ds$v3 + ds$v3 * 2)
                 expect_true(inherits(e4, "CrunchExpr"))
+                expect_output(e4, "Crunch expression: v3 + v3 * 2", fixed=TRUE)
                 expect_identical(as.vector(e4), 3*df$v3)
             })
 

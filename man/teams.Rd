@@ -19,11 +19,11 @@
 \arguments{
 \item{x}{a \code{CrunchTeam}}
 
-\item{value}{for \code{members<-}, a character vector of emails or URLs of 
+\item{value}{for \code{members<-}, a character vector of emails or URLs of
 users to add to the team.}
 }
 \value{
-\code{members} returns a 
+\code{members} returns a
 \code{MemberCatalog}, which has references to the users that are members
 of the team. \code{members<-} returns \code{x} with the given users added
 to the members catalog.
@@ -35,7 +35,7 @@ datasets with a user all at once by adding them to a team that has those
 datasets.
 }
 \details{
-These methods allow you to work with teams. Find your teams with the 
+These methods allow you to work with teams. Find your teams with the
 \code{\link{getTeams}} function, which returns your \code{TeamCatalog}.
 Extract an individual team by name. Create a team by assigning in with a new
 name, with the assignment value a list, either empty (to just create a team

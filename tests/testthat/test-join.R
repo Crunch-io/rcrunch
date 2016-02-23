@@ -16,11 +16,11 @@ if (run.integration.tests) {
                     expect_identical(dim(right), dim(join2))
                     expect_identical(length(joins(left)), 0L)
                 })
-                
+
                 test_that("join validatation", {
-                    expect_error(joinDatasets(left, join2), 
+                    expect_error(joinDatasets(left, join2),
                         "y must be a Crunch Dataset")
-                    expect_error(joinDatasets(left, join2), 
+                    expect_error(joinDatasets(left, join2),
                         "y must be a Crunch Dataset")
                     expect_error(joinDatasets(left, right, by=c("v1", "v2")),
                         "Can only join 'by' a single key")
@@ -29,7 +29,7 @@ if (run.integration.tests) {
                     expect_error(joinDatasets(left, right, by="v2"),
                         "Join key not found in first Dataset")
                 })
-                
+
                 joined <- try(joinDatasets(left, right, by="keyvar"))
                 test_that("The join succeeded", {
                     expect_true(is.dataset(joined))

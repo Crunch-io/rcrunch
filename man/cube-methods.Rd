@@ -18,7 +18,7 @@
 \item{x}{a CrunchCube or its CubeDims component.}
 }
 \value{
-Generally, the same shape of result that each of these functions 
+Generally, the same shape of result that each of these functions
 return when applied to an \code{array} object.
 }
 \description{

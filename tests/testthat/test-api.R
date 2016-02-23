@@ -15,20 +15,20 @@ if (run.integration.tests) {
             is_not_an_error())
         expect_true(grepl("anotherpackage", crunchUserAgent("anotherpackage")))
     })
-    
-    with(test.authentication, 
+
+    with(test.authentication,
         test_that("API root can be fetched", {
             expect_true(is.shojiObject(getAPIroot()))
         }))
 
     test_that("API calls throw an error if user is not authenticated", {
         logout()
-        expect_error(getAPIroot(), 
+        expect_error(getAPIroot(),
             "You are not authenticated. Please `login\\(\\)` and try again.")
     })
-    
+
     test_that("Deprecated endpoints tell user to upgrade", {
-        expect_error(crGET("http://httpbin.org/status/410"), 
+        expect_error(crGET("http://httpbin.org/status/410"),
             "The API resource at http://httpbin.org/status/410 has moved permanently. Please upgrade crunch to the latest version.")
     })
 }

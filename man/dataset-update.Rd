@@ -40,14 +40,14 @@
 
 \item{i}{For \code{[}, a \code{CrunchLogicalExpr}, numeric, or logical vector defining a subset of the rows of \code{x}. For \code{[[}, see \code{j} for the as.list column subsetting.}
 
-\item{value}{replacement values to insert. These can be \code{crunchExpr}s 
+\item{value}{replacement values to insert. These can be \code{crunchExpr}s
 or R vectors of the corresponding type}
 
 \item{name}{like \code{j} but for \code{$}}
 
-\item{j}{if character, identifies variables to extract based on their 
-aliases (by default, i.e. when x's \code{useAlias} is TRUE); if numeric or 
-logical, extracts variables accordingly. Note that this is the as.list 
+\item{j}{if character, identifies variables to extract based on their
+aliases (by default, i.e. when x's \code{useAlias} is TRUE); if numeric or
+logical, extracts variables accordingly. Note that this is the as.list
 extraction, columns of the dataset rather than rows.}
 }
 \value{

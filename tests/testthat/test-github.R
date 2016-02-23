@@ -22,7 +22,7 @@ with(fake.HTTP, {
         ## Now that version is greater than 1.5.3:
         expect_identical(checkForNewVersion("github-versions.json"), NULL)
     })
-    
+
     test_that("notifyIfNewVersion messages correctly", {
         expect_message(notifyIfNewVersion("github-versions.json", "1.5.1"),
             "There's a new version")
@@ -37,5 +37,5 @@ with(no.internet, {
 })
 
 if (run.integration.tests) {
-    
+
 }

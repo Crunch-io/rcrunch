@@ -30,12 +30,12 @@ setMethod("names", "UserCatalog", function (x) getIndexSlot(x, "name"))
 ##' @export
 setMethod("emails", "UserCatalog", function (x) getIndexSlot(x, "email"))
 
-invite <- function (email, name=NULL, notify=TRUE, id_method="pwhash", 
+invite <- function (email, name=NULL, notify=TRUE, id_method="pwhash",
                     advanced=FALSE, admin=FALSE, ...) {
     payload <- list(
-        email=email, 
-        send_invite=notify, 
-        id_method=id_method, 
+        email=email,
+        send_invite=notify,
+        id_method=id_method,
         account_permissions=list(
             alter_users=isTRUE(admin),
             create_datasets=isTRUE(advanced)),
@@ -46,7 +46,7 @@ invite <- function (email, name=NULL, notify=TRUE, id_method="pwhash",
     if (id_method == "pwhash") {
         payload$url_base <- "/password/change/${token}/"
     }
-    
+
     url <- shojiURL(getAccount(), "catalogs", "users")
     return(crPOST(url, body=toJSON(list(element="shoji:entity", body=payload))))
 }

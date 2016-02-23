@@ -14,11 +14,14 @@ if (run.integration.tests) {
                 exclusion(ds) <- ds$v4 == "C"
                 ## Test that the filter is set correctly. Objects not identical
                 ## because JSON objects are unordered.
+                ## TODO: implement a expect_object_equal
                 e <- zcl(exclusion(ds))
                 f <- zcl(ds$v4 == "C")
                 expect_identical(e[["function"]], f[["function"]])
                 expect_identical(e[["args"]][[1]], f[["args"]][[1]])
                 expect_identical(e[["args"]][[2]]$value, f[["args"]][[2]]$value)
+                expect_output(exclusion(ds),
+                    'Crunch logical expression: v4 == "C"')
 
                 expect_identical(nrow(ds), 10L)
                 expect_equivalent(as.array(crtabs(~ v4, data=ds)),

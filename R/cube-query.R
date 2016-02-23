@@ -65,7 +65,7 @@ crtabs <- function (formula, data, weight=crunch::weight(data),
     ## Construct the "measures", either from the formula or default "count"
     resp <- attr(f, "response")
     if (resp) {
-        measures <- lapply(vars[resp], absolute.zcl)
+        measures <- lapply(vars[resp], zcl)
         vars <- vars[-resp]
     } else {
         measures <- list(count=zfunc("cube_count"))
@@ -149,7 +149,7 @@ varsToCubeDimensions <- function (vars) {
     ## Given variables, construct the appropriate ZCL to get a cube with them
     ## as dimensions
     dimensions <- unlist(lapply(vars, function (x) {
-        v <- absolute.zcl(x)
+        v <- zcl(x)
         if (is.MR(x)) {
             ## Multiple response gets "selected_array" and "each"
             return(list(zfunc("selected_array", v),

@@ -102,6 +102,7 @@ with(fake.HTTP, {
         expect_error(test.ds[[999]], "subscript out of bounds")
         expect_error(test.ds[c("gender", "NOTAVARIABLE")],
             "Undefined columns selected: NOTAVARIABLE")
+        expect_true(is.null(test.ds$name))
     })
 
     test_that("Extract from dataset by VariableOrder/Group", {
@@ -157,9 +158,13 @@ if (run.integration.tests) {
                 name(ds) <- "Bond. James Bond."
                 expect_identical(name(refresh(d2)), name(ds))
             })
-        })
-        test_that("Name and description setters don't push to server if readonly", {
 
+            test_that("A variable named/aliased 'name' can be accessed", {
+                ds$name <- 1
+                expect_true("name" %in% aliases(variables(ds)))
+                expect_true("name" %in% names(ds))
+                expect_true(is.Numeric(ds$name))
+            })
         })
 
         with(test.dataset(df), {

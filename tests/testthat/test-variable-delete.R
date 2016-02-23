@@ -12,7 +12,7 @@ if (run.integration.tests) {
                     "Variable not found. It may have been deleted.")
             })
         })
-        
+
         with(test.dataset(df), {
             test_that("deleteVariables with consent", {
                 with(temp.option(crunch.require.confirmation=TRUE), {
@@ -27,7 +27,7 @@ if (run.integration.tests) {
                 })
             })
         })
-        
+
         with(test.dataset(df), {
             test_that("Delete variable by assigning NULL", {
                 with(temp.option(crunch.require.confirmation=TRUE), {
@@ -47,13 +47,13 @@ if (run.integration.tests) {
                     })
                 })
             })
-            
+
             test_that("Assigning NULL doesn't ask you about deleting 0 variables", {
                 expect_message(ds$NOTAVARIABLE <- df$NOTAVARIABLE,
                     paste(dQuote("NOTAVARIABLE"), "is not a variable; nothing to delete by assigning NULL"))
             })
         })
-        
+
         with(test.dataset(newDatasetFromFixture("apidocs")), {
             test_that("Array variables are fully deleted", {
                 expect_true("petloc" %in% names(ds))
@@ -62,7 +62,7 @@ if (run.integration.tests) {
                 expect_false("petloc" %in% names(ds))
                 expect_false("petloc_home" %in% names(ds))
             })
-            
+
             test_that("Deleting array subvariables", {
                 expect_true("allpets" %in% names(ds))
                 expect_true(is.MR(ds$allpets))
@@ -75,11 +75,11 @@ if (run.integration.tests) {
                 expect_true(is.MR(ds$allpets))
                 expect_false("allpets_2" %in% names(ds))
                 expect_false("allpets_2" %in% aliases(subvariables(ds$allpets)))
-                expect_identical(names(subvariables(ds$allpets)), 
+                expect_identical(names(subvariables(ds$allpets)),
                     c("Cat", "Bird"))
             })
         })
-        
+
         with(test.dataset(newDatasetFromFixture("apidocs")), {
             test_that("delete method on variable", {
                 expect_true("q1" %in% names(ds))

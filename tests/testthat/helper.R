@@ -65,6 +65,7 @@ addFakeHTTPVerbs <- function () {
         url <- sub("\\/$", ".json", url)
         url <- sub("^\\/", "", url) ## relative to cwd
         out <- handleShoji(fromJSON(url, simplifyVector=FALSE))
+        logMessage(paste("FAKE GET", url))
         return(out)
     }
     http_verbs$PUT <- function (url, body, ...) {

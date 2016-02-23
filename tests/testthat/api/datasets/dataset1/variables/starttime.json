@@ -2,6 +2,7 @@
     "element": "shoji:entity",
     "self": "/api/datasets/dataset1/variables/starttime.json",
     "body": {
+        "alias": "starttime",
         "format": {
             "data": "%Y-%m-%d",
             "summary": "%Y-%m-%d"

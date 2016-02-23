@@ -15,17 +15,22 @@ if (run.integration.tests) {
                 expect_output(filters(ds), capture.output(print(data.frame())))
             })
 
+            filters(ds)[["Test filter"]] <- ds$v4 == "B"
             test_that("We can create a filter", {
-                filters(ds)[["Test filter"]] <- ds$v4 == "B"
                 expect_identical(length(filters(ds)), 1L)
                 expect_identical(names(filters(ds)), "Test filter")
                 expect_identical(name(filters(ds)[[1]]), "Test filter")
+            })
+            test_that("Show methods for filter and filter catalog", {
                 expect_output(filters(ds),
                     paste(capture.output(print(data.frame(
                             name="Test filter",
                             id=filters(ds)[["Test filter"]]@body$id,
                             is_public=FALSE
                         ))), collapse="\n"), fixed=TRUE)
+                expect_output(filters(ds)[["Test filter"]],
+                    paste0('Crunch filter ', dQuote("Test filter"),
+                        '\nExpression: v4 == "B"'))
             })
 
             test_that("We can make it public/private", {

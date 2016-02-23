@@ -1,11 +1,11 @@
 ##' Teams
-##' 
+##'
 ##' Teams contain users and datasets. You can share a dataset with a group of
 ##' users by sharing the dataset with a team. You can also share a bunch of
 ##' datasets with a user all at once by adding them to a team that has those
-##' datasets. 
-##' 
-##' These methods allow you to work with teams. Find your teams with the 
+##' datasets.
+##'
+##' These methods allow you to work with teams. Find your teams with the
 ##' \code{\link{getTeams}} function, which returns your \code{TeamCatalog}.
 ##' Extract an individual team by name. Create a team by assigning in with a new
 ##' name, with the assignment value a list, either empty (to just create a team
@@ -14,12 +14,12 @@
 ##' method.
 ##'
 ##' @param x a \code{CrunchTeam}
-##' @param value for \code{members<-}, a character vector of emails or URLs of 
+##' @param value for \code{members<-}, a character vector of emails or URLs of
 ##' users to add to the team.
-##' @return \code{members} returns a 
+##' @return \code{members} returns a
 ##' \code{MemberCatalog}, which has references to the users that are members
 ##' of the team. \code{members<-} returns \code{x} with the given users added
-##' to the members catalog. 
+##' to the members catalog.
 ##' @aliases members members<-
 ##' @seealso \link{getTeams}
 ##' @name teams
@@ -128,7 +128,7 @@ setMethod("[[<-", c("MemberCatalog", "character", "missing", "NULL"),
 ##' @export
 setMethod("members<-", c("CrunchTeam", "MemberCatalog"), function (x, value) {
     ## TODO: something
-    ## For now, assume action already done in other methods, like NULL 
+    ## For now, assume action already done in other methods, like NULL
     ## assignment above.
     return(x)
 })
@@ -136,7 +136,7 @@ setMethod("members<-", c("CrunchTeam", "MemberCatalog"), function (x, value) {
 ##' @rdname teams
 ##' @export
 setMethod("members<-", c("CrunchTeam", "character"), function (x, value) {
-    payload <- sapply(value, 
+    payload <- sapply(value,
         function (z) emptyObject(),
         simplify=FALSE)
     crPATCH(self(members(x)), body=toJSON(payload))
