@@ -24,7 +24,6 @@ Imports:
     httpcache,
     jsonlite (>= 0.9.15),
     methods,
-    digest,
     curl
 Suggests:
     knitr,

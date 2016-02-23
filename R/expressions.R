@@ -151,6 +151,7 @@ setMethod("!", c("CrunchExpr"),
             dataset_url=datasetReference(x))
     })
 
+##' @importFrom utils head tail
 .seqCrunch <- function (x, table) {
     ## Given x %in% table, if table is numeric, see if we can/should collapse
     ## it into a range query rather than sending lots of distinct values
