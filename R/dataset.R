@@ -33,15 +33,6 @@ getNrow <- function (dataset, filtered=TRUE) {
 ##' @export
 is.dataset <- function (x) inherits(x, "CrunchDataset")
 
-setDatasetName <- function (x, value) {
-    out <- setTupleSlot(x, "name", value)
-    updateDatasetList() ## could just modify rather than refresh
-    invisible(out)
-}
-setDatasetDescription <- function (x, value) {
-    setTupleSlot(x, "description", value)
-}
-
 ##' Name, alias, and description for Crunch objects
 ##'
 ##' @param x a Dataset or Variable.
@@ -61,16 +52,54 @@ NULL
 setMethod("name", "CrunchDataset", function (x) tuple(x)$name)
 ##' @rdname describe
 ##' @export
-setMethod("name<-", "CrunchDataset", setDatasetName)
+setMethod("name<-", "CrunchDataset", function (x, value) {
+    if (is.null(value)) {
+        halt("Cannot set a NULL dataset name")
+    }
+    out <- setTupleSlot(x, "name", value)
+    updateDatasetList() ## could just modify rather than refresh
+    invisible(out)
+})
 ##' @rdname describe
 ##' @export
 setMethod("description", "CrunchDataset", function (x) tuple(x)$description)
 ##' @rdname describe
 ##' @export
-setMethod("description<-", "CrunchDataset", setDatasetDescription)
+setMethod("description<-", "CrunchDataset", function (x, value) {
+    setTupleSlot(x, "description", value)
+})
+##' @rdname describe
+##' @export
+setMethod("startDate", "CrunchDataset",
+    function (x) trimISODate(tuple(x)$start_date))
+##' @rdname describe
+##' @export
+setMethod("startDate<-", "CrunchDataset", function (x, value) {
+    setTupleSlot(x, "start_date", value)
+})
+##' @rdname describe
+##' @export
+setMethod("endDate", "CrunchDataset",
+    function (x) trimISODate(tuple(x)$end_date))
+##' @rdname describe
+##' @export
+setMethod("endDate<-", "CrunchDataset", function (x, value) {
+    setTupleSlot(x, "end_date", value)
+})
 ##' @rdname describe
 ##' @export
 setMethod("id", "CrunchDataset", function (x) tuple(x)$id)
+
+trimISODate <- function (x) {
+    ## Drop time from datestring if it's only a date
+    if (is.character(x) &&
+        nchar(x) > 10 &&
+        substr(x, 11, nchar(x)) == "T00:00:00+00:00") {
+
+        x <- substr(x, 1, 10)
+    }
+    return(x)
+}
 
 as.dataset <- function (x, useAlias=default.useAlias(), tuple=DatasetTuple()) {
     out <- CrunchDataset(x)

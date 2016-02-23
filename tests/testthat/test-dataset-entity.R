@@ -2,6 +2,8 @@ context("Dataset object and methods")
 
 with_mock_HTTP({
     test.ds <- loadDataset("test ds")
+    test.ds2 <- loadDataset("ECON.sav")
+    today <- "2016-02-11"
 
     test_that("Dataset can be created", {
         expect_true(is.dataset(test.ds))
@@ -11,6 +13,35 @@ with_mock_HTTP({
         expect_identical(name(test.ds), "test ds")
         expect_identical(description(test.ds), "")
         expect_identical(id(test.ds), "511a7c49778030653aab5963")
+        expect_identical(startDate(test.ds), "2016-01-01")
+        expect_identical(endDate(test.ds), "2016-01-01")
+        expect_identical(startDate(test.ds2), NULL)
+        expect_identical(endDate(test.ds2), NULL)
+    })
+
+    test_that("startDate<- makes correct request", {
+        expect_error(startDate(test.ds2) <- today,
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
+                    '{"start_date":"2016-02-11"}}'),
+            fixed=TRUE
+        )
+        expect_error(startDate(test.ds) <- NULL,
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset1.json":',
+                    '{"start_date":null}}'),
+            fixed=TRUE
+        )
+    })
+    test_that("endDate<- makes correct request", {
+        expect_error(endDate(test.ds2) <- today,
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
+                    '{"end_date":"2016-02-11"}}'),
+            fixed=TRUE
+        )
+        expect_error(endDate(test.ds) <- NULL,
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset1.json":',
+                    '{"end_date":null}}'),
+            fixed=TRUE
+        )
     })
 
     test_that("Dataset webURL", {
@@ -132,6 +163,37 @@ if (run.integration.tests) {
                 d2 <- ds
                 name(ds) <- "Bond. James Bond."
                 expect_identical(name(refresh(d2)), name(ds))
+            })
+
+            test_that("Can set (and unset) startDate", {
+                startDate(ds) <- "1985-11-05"
+                expect_identical(startDate(ds), "1985-11-05")
+                expect_identical(startDate(refresh(ds)), "1985-11-05")
+                startDate(ds) <- NULL
+                expect_identical(startDate(ds), NULL)
+                expect_identical(startDate(refresh(ds)), NULL)
+            })
+            test_that("Can set (and unset) endDate", {
+                endDate(ds) <- "1985-11-05"
+                expect_identical(endDate(ds), "1985-11-05")
+                expect_identical(endDate(refresh(ds)), "1985-11-05")
+                endDate(ds) <- NULL
+                expect_identical(endDate(ds), NULL)
+                expect_identical(endDate(refresh(ds)), NULL)
+            })
+
+            test_that("Sending invalid dataset metadata errors usefully", {
+                expect_error(endDate(ds) <- list(foo=4),
+                    "must be a string")
+                expect_error(name(ds) <- 3.14,
+                    "must be a string")
+                expect_error(startDate(ds) <- 1985,
+                    "must be a string")
+                expect_error(name(ds) <- NULL,
+                    "Cannot set a NULL dataset name")
+                skip("Improve server-side validation")
+                expect_error(startDate(ds) <- "a string",
+                    "Useful error message here")
             })
 
             test_that("A variable named/aliased 'name' can be accessed", {
