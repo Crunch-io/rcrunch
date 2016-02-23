@@ -1,4 +1,5 @@
 ### crunch 1.8.1
+* `startDate` and `endDate` attributes and setters for dataset entities (#10, #11)
 
 ## crunch 1.8.0
 * More formal support for creating and managing UI filters
