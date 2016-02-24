@@ -16,12 +16,12 @@ setValidity("Categories", function (object) {
     return(TRUE)
 })
 
-init.Categories <- function (.Object, ...) {
-    .Object@.Data <- lapply(..1, function (x) try(Category(data=x), silent=TRUE))
+setMethod("initialize", "Categories", function (.Object, ...) {
+    .Object@.Data <- lapply(..1,
+        function (x) try(Category(data=x), silent=TRUE))
     validObject(.Object)
     return(.Object)
-}
-setMethod("initialize", "Categories", init.Categories)
+})
 
 is.categories <- function (x) inherits(x, "Categories")
 
@@ -95,6 +95,12 @@ setMethod("values", "Categories", function (x) vapply(x, value, numeric(1)))
 setMethod("ids", "Categories", function (x) vapply(x, id, integer(1)))
 
 setNames <- function (x, value) {
+    if (is.null(value) || !is.character(value)) {
+        halt('Names must be of class "character"')
+    }
+    if (!identical(length(x), length(value))) {
+        halt("Invalid names: supplied ", length(value), " names for ", length(x), " categories")
+    }
     x[] <- mapply(setName, x, value=value, SIMPLIFY=FALSE)
     return(x)
 }

@@ -43,7 +43,7 @@ is.dataset <- function (x) inherits(x, "CrunchDataset")
 ##' @return Getters return the character object in the specified slot; setters
 ##' return \code{x} duly modified.
 ##' @name describe
-##' @aliases describe name name<- description description<- alias<-
+##' @aliases describe name name<- description description<- alias<- startDate startDate<- endDate endDate<-
 ##' @seealso \code{\link{Categories}} \code{\link{describe-catalog}}
 NULL
 
@@ -52,10 +52,7 @@ NULL
 setMethod("name", "CrunchDataset", function (x) tuple(x)$name)
 ##' @rdname describe
 ##' @export
-setMethod("name<-", "CrunchDataset", function (x, value) {
-    if (is.null(value)) {
-        halt("Cannot set a NULL dataset name")
-    }
+setMethod("name<-", c("CrunchDataset", "character"), function (x, value) {
     out <- setTupleSlot(x, "name", value)
     updateDatasetList() ## could just modify rather than refresh
     invisible(out)

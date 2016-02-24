@@ -13,8 +13,7 @@ setGeneric("undichotomize", function (x) standardGeneric("undichotomize"))
 setGeneric("value", function (x) standardGeneric("value"))
 setGeneric("value<-", function (x, value) standardGeneric("value<-"))
 setGeneric("name", function (x) standardGeneric("name"))
-setGeneric("name<-", function (x, value) standardGeneric("name<-"),
-    signature="x")
+setGeneric("name<-", function (x, value) standardGeneric("name<-"))
 setGeneric("description", function (x) standardGeneric("description"))
 setGeneric("description<-",
     function (x, value) standardGeneric("description<-"), signature="x")

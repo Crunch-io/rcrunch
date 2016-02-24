@@ -63,7 +63,7 @@ setMethod("refresh", "CrunchVariable", function (x) {
 setMethod("name", "CrunchVariable", function (x) tuple(x)$name)
 ##' @rdname describe
 ##' @export
-setMethod("name<-", "CrunchVariable",
+setMethod("name<-", c("CrunchVariable", "character"),
     function (x, value) setTupleSlot(x, "name", value))
 ##' @rdname describe
 ##' @export

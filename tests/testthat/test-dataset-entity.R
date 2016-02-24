@@ -186,11 +186,11 @@ if (run.integration.tests) {
                 expect_error(endDate(ds) <- list(foo=4),
                     "must be a string")
                 expect_error(name(ds) <- 3.14,
-                    "must be a string")
+                    'Names must be of class "character"')
                 expect_error(startDate(ds) <- 1985,
                     "must be a string")
                 expect_error(name(ds) <- NULL,
-                    "Cannot set a NULL dataset name")
+                    'Names must be of class "character"')
                 skip("Improve server-side validation")
                 expect_error(startDate(ds) <- "a string",
                     "Useful error message here")
