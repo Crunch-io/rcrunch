@@ -9,11 +9,11 @@ test:
 	R --slave -e 'library(testthat); setwd(file.path(.libPaths()[1], "crunch", "tests")); system.time(test_check("crunch", filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
 
 deps:
-	R --slave -e 'install.packages(c("jsonlite", "curl", "httr", "codetools", "testthat", "devtools", "Rcpp"), repo="http://cran.at.r-project.org", lib=ifelse(nchar(Sys.getenv("R_LIB")), Sys.getenv("R_LIB"), .libPaths()[1]))'
+	R --slave -e 'install.packages(c("jsonlite", "curl", "httpcache", "codetools", "testthat", "devtools", "Rcpp"), repo="http://cran.at.r-project.org", lib=ifelse(nchar(Sys.getenv("R_LIB")), Sys.getenv("R_LIB"), .libPaths()[1]))'
 
 install-ci: deps
 	R CMD INSTALL --install-tests -l $(R_LIB) .
-	R -e '.libPaths(Sys.getenv("R_LIB")); devtools::install_github("nealrichardson/testthat")'
+	R -e '.libPaths(Sys.getenv("R_LIB")); devtools::install_github("nealrichardson/httpcache")'
 
 test-ci:
 	R --slave -e '.libPaths(Sys.getenv("R_LIB")); library(testthat); sink(file="rcrunch.tap"); setwd(file.path(.libPaths()[1], "crunch", "tests")); test_check("crunch", reporter="tap"); sink()'

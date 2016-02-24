@@ -20,6 +20,7 @@ logout <- function () {
     options(prompt = session_store$.globals$prompt)
 }
 
+##' @importFrom httpcache clearCache
 deleteSessionInfo <- function () {
     rm(list=setdiff(ls(envir=session_store), ".globals"), envir=session_store)
     clearCache()

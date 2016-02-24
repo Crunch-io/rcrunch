@@ -1,6 +1,6 @@
 context("Variable catalog")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     variables.catalog.url <- "/api/datasets/dataset1/variables.json"
     varblob <- crGET(variables.catalog.url)
 

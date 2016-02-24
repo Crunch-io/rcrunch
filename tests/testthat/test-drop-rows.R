@@ -1,6 +1,6 @@
 context("Deleting rows of a dataset")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     ds <- loadDataset("test ds")
     test_that("dropRows generates the right request", {
         expect_error(dropRows(ds, ds$gender == "Male"),

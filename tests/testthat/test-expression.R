@@ -17,7 +17,7 @@ test_that(".dispatchFilter uses right numeric function", {
         fixed=TRUE)
 })
 
-with(fake.HTTP, {
+with_mock_HTTP({
     ds <- loadDataset("test ds")
 
     test_that("Arithmetic generates expressions", {
@@ -160,20 +160,19 @@ if (run.integration.tests) {
                 expect_identical(length(as.vector(ds$v3[ds$q1 %in% "selected"])), 10L)
             })
 
-            with(no.cache(), {
+            uncached({
                 clearCache() ## So we're totally fresh
-                with(temp.options(crunch.page.size=5, crunch.log=""), {
+                with(temp.options(crunch.page.size=5, httpcache.log=""), {
                     avlog <- capture.output(v3.5 <- as.vector(ds$v3[ds$v4 %in% "B"]))
                     test_that("Select values with %in% on Categorical, paginated", {
                         logdf <- loadLogfile(textConnection(avlog))
-                        reqdf <- requestsFromLog(logdf)
                         ## GET v3 entity to get /values/ URL,
                         ## GET v3 entity to get categories to construct expr,
                         ## GET /values/ 2x to get data,
                         ## then a 3rd GET /values/ that returns 0
                         ## values, which breaks the pagination loop
-                        expect_identical(reqdf$verb, rep("GET", 5))
-                        expect_identical(grep("values", reqdf$url), 3:5)
+                        expect_identical(logdf$verb, rep("GET", 5))
+                        expect_identical(grep("values", logdf$url), 3:5)
                         expect_equivalent(v3.5, df$v3[df$v4 %in% "B"])
                     })
                 })

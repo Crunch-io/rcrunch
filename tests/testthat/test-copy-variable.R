@@ -1,6 +1,6 @@
 context("Shallow copies of variables")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     ds <- loadDataset("test ds")
     expect_true(inherits(copy(ds$gender), "VariableDefinition"))
     expect_error(ds$gender_copy <- copy(ds$gender),

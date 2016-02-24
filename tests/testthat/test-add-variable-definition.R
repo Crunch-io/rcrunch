@@ -65,7 +65,7 @@ if (run.integration.tests) {
 
             dropCache(self(ds)) ## Just so whether we have caching on doesn't affect the log we collect
             unifs <- runif(20)
-            with(temp.option(crunch.log=""), {
+            with(temp.option(httpcache.log=""), {
                 avlog <- capture.output(ds <- addVariables(ds, list(
                     VarDef(1, name="One", description="the loneliest"),
                     VarDef(unifs, name="Some random stuff", alias="runif")
@@ -85,7 +85,7 @@ if (run.integration.tests) {
             })
             test_that("addVariables doesn't refresh between each POST", {
                 ## Parse avlog (and thus test the log parsing here)
-                reqdf <- requestsFromLog(logdf)
+                reqdf <- logdf[logdf$scope == "HTTP",]
                 ## GET summary (nrows, to validate); POST var, POST var,
                 ## with no GETs between the POSTs
                 expect_identical(reqdf$verb[1:3], c("GET", "POST", "POST"))
@@ -109,7 +109,7 @@ if (run.integration.tests) {
                 expect_true(is.null(refresh(ds)$Two))
             })
             test_that("addVariables server error handling", {
-                with(no.internet, {
+                without_internet({
                     ## Add two expr vars (no GET on rows first)
                     expect_error(addVariables(ds,
                         VarDef(ds$v3 + 4, name="v3plus4"),

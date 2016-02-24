@@ -1,6 +1,6 @@
 context("Dataset catalog")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     dataset.catalog.url <- "/api/datasets.json"
     blob <- crGET(dataset.catalog.url)
 

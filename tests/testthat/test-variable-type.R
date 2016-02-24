@@ -6,7 +6,7 @@ test_that("Validation on type setting", {
         "is not a Crunch variable type that can be assigned."))
 })
 
-with(fake.HTTP, {
+with_mock_HTTP({
     test.ds <- loadDataset("test ds")
 
     test_that("Variable type method", {

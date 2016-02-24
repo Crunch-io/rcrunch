@@ -1,6 +1,6 @@
 context("Variables")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     ds <- loadDataset("test ds")
 
     test_that("Variable init, as, is", {

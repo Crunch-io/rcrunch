@@ -7,7 +7,7 @@ NA, 1L, NA, 1L, 2L, 1L, NA, 1L, 2L, NA, 1L, 2L, NA, 1L, NA, 2L,
 1L, 1L, 2L, 1L, 1L, 2L, 1L, NA, 1L, 2L, 1L, 1L, 1L, 2L), .Dim = c(25L,
 3L), levels=c("A", "B"), class="factor")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     test.ds <- loadDataset("test ds")
     test.ds@variables@index[["/api/datasets/dataset1/variables/mymrset.json"]]$discarded <- TRUE
     # hiddenVariables(test.ds) <- "mymrset" # Defer implementing MR as.vector
@@ -158,18 +158,17 @@ if (run.integration.tests) {
                 }
             })
 
-            with(no.cache(), {
+            uncached({
                 clearCache() ## So we're totally fresh
-                with(temp.options(crunch.page.size=5, crunch.log=""), {
+                with(temp.options(crunch.page.size=5, httpcache.log=""), {
                     avlog <- capture.output(v1 <- as.vector(ds$v1))
                     test_that("getValues can be paginated", {
                         logdf <- loadLogfile(textConnection(avlog))
-                        reqdf <- requestsFromLog(logdf)
                         ## GET entity to get /values/ URL, then GET /values/ 4x
                         ## to get data, then a 5th GET /values/ that returns 0
                         ## values, which breaks the pagination loop
-                        expect_identical(reqdf$verb, rep("GET", 6))
-                        expect_identical(grep("values", reqdf$url), 2:6)
+                        expect_identical(logdf$verb, rep("GET", 6))
+                        expect_identical(grep("values", logdf$url), 2:6)
                     })
                     test_that("getValues returns the same result when paginated", {
                         expect_equivalent(v1, df$v1)

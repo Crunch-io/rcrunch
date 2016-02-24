@@ -11,7 +11,7 @@ test_that("login checks for email and password before POSTing", {
         "Must supply a password")
 })
 
-with(fake.HTTP, {
+with_mock_HTTP({
     test_that("Jupyter helper sets up env", {
         with(reset.option("httr_config"), {
             jupyterLogin("test_token")

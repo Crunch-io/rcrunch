@@ -1,6 +1,6 @@
 context("Dataset object and methods")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     test.ds <- loadDataset("test ds")
     test.ds2 <- loadDataset("ECON.sav")
     today <- "2016-02-11"
