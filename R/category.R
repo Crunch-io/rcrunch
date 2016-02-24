@@ -83,7 +83,12 @@ NULL
 setMethod("name", "Category", function (x) x[["name"]])
 ##' @rdname describe-category
 ##' @export
-setMethod("name<-", "Category", setName)
+setMethod("name<-", c("Category", "character"), setName)
+##' @rdname describe-category
+##' @export
+setMethod("name<-", c("ANY", "ANY"), function (x, value) {
+    halt('Names must be of class "character"')
+})
 ##' @rdname describe-category
 ##' @export
 setMethod("value", "Category", function (x) {

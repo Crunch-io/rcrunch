@@ -66,7 +66,7 @@ setMethod("entities<-", "VariableOrder", function (x, value) {
 setMethod("name", "VariableGroup", function (x) x@group)
 ##' @rdname VariableOrder-slots
 ##' @export
-setMethod("name<-", "VariableGroup", function (x, value) {
+setMethod("name<-", c("VariableGroup", "character"), function (x, value) {
     x@group <- value ## Should check that we're not renaming "ungrouped"
     return(x)
 })

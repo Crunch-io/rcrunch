@@ -52,10 +52,7 @@ NULL
 setMethod("name", "CrunchDataset", function (x) tuple(x)$name)
 ##' @rdname describe
 ##' @export
-setMethod("name<-", "CrunchDataset", function (x, value) {
-    if (is.null(value)) {
-        halt("Cannot set a NULL dataset name")
-    }
+setMethod("name<-", c("CrunchDataset", "character"), function (x, value) {
     out <- setTupleSlot(x, "name", value)
     updateDatasetList() ## could just modify rather than refresh
     invisible(out)

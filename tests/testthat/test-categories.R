@@ -81,6 +81,20 @@ with(fake.HTTP, {
     test_that("validation on category setting", {
         expect_error(cats[1] <- "new name",
             "Invalid categories: 1 element is not a Crunch category object")
+        expect_error(name(cats[[1]]) <- NULL,
+            'Names must be of class "character"')
+    })
+
+    test_that("names(categories)<- input validation", {
+        expect_identical(names(categories(ds$gender)),
+            c("Male", "Female", "No Data"))
+        expect_error(names(categories(ds$gender))[2] <- NULL,
+            "replacement has length zero") ## R default, good enough
+        expect_error(names(categories(ds$gender))[2] <- list(foo="1"),
+            'Names must be of class "character"')
+        expect_error(names(categories(ds$gender))[23] <- "cat",
+            "Invalid names: supplied 23 names for 3 categories")
+            ## Not ideal error message, but best we can do here
     })
 
     test_that("categories ids cannot be set", {
@@ -192,10 +206,14 @@ if (run.integration.tests) {
 
             test_that("categories<- with invalid input gives helpful message", {
                 expect_error(categories(ds$v4) <- 1:3,
-                    "`categories(x) <- value` only accepts Categories, not numeric. Did you mean `values(categories(x)) <- value`?",
+                    paste("`categories(x) <- value` only accepts Categories,",
+                        "not numeric. Did you mean",
+                        "`values(categories(x)) <- value`?"),
                     fixed=TRUE)
                 expect_error(categories(ds$v4) <- c("A", "B", "C"),
-                    "`categories(x) <- value` only accepts Categories, not character. Did you mean `names(categories(x)) <- value`?",
+                    paste("`categories(x) <- value` only accepts Categories,",
+                        "not character. Did you mean",
+                        "`names(categories(x)) <- value`?"),
                     fixed=TRUE)
                 expect_error(categories(ds$v4) <- list(),
                     "`categories(x) <- value` only accepts Categories, not list.",
