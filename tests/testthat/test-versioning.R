@@ -57,9 +57,6 @@ if (run.integration.tests) {
                 expect_identical(length(versions(ds)), 1L)
             })
 
-            ## Slow down a beat because of #108354126
-            Sys.sleep(1)
-
             ## Make changes:
             # 1. Edit variable metadata
             names(categories(ds$v4))[1:2] <- c("d", "e")
