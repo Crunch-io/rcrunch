@@ -12,6 +12,10 @@
 \alias{description<-}
 \alias{description<-,CrunchDataset-method}
 \alias{description<-,CrunchVariable-method}
+\alias{endDate}
+\alias{endDate,CrunchDataset-method}
+\alias{endDate<-}
+\alias{endDate<-,CrunchDataset-method}
 \alias{id,CrunchDataset-method}
 \alias{name}
 \alias{name,CrunchDataset-method}
@@ -19,17 +23,29 @@
 \alias{name,CrunchTeam-method}
 \alias{name,CrunchVariable-method}
 \alias{name<-}
-\alias{name<-,CrunchDataset-method}
-\alias{name<-,CrunchVariable-method}
+\alias{name<-,CrunchDataset,character-method}
+\alias{name<-,CrunchVariable,character-method}
+\alias{startDate}
+\alias{startDate,CrunchDataset-method}
+\alias{startDate<-}
+\alias{startDate<-,CrunchDataset-method}
 \title{Name, alias, and description for Crunch objects}
 \usage{
 \S4method{name}{CrunchDataset}(x)
 
-\S4method{name}{CrunchDataset}(x) <- value
+\S4method{name}{CrunchDataset,character}(x) <- value
 
 \S4method{description}{CrunchDataset}(x)
 
 \S4method{description}{CrunchDataset}(x) <- value
+
+\S4method{startDate}{CrunchDataset}(x)
+
+\S4method{startDate}{CrunchDataset}(x) <- value
+
+\S4method{endDate}{CrunchDataset}(x)
+
+\S4method{endDate}{CrunchDataset}(x) <- value
 
 \S4method{id}{CrunchDataset}(x)
 
@@ -39,7 +55,7 @@
 
 \S4method{name}{CrunchVariable}(x)
 
-\S4method{name}{CrunchVariable}(x) <- value
+\S4method{name}{CrunchVariable,character}(x) <- value
 
 \S4method{description}{CrunchVariable}(x)
 

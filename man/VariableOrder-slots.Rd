@@ -19,7 +19,7 @@
 \alias{entities<-,VariableGroup-method}
 \alias{entities<-,VariableOrder-method}
 \alias{name,VariableGroup-method}
-\alias{name<-,VariableGroup-method}
+\alias{name<-,VariableGroup,character-method}
 \alias{names,VariableGroup-method}
 \alias{names,VariableOrder-method}
 \alias{names<-,VariableOrder-method}
@@ -37,7 +37,7 @@
 
 \S4method{name}{VariableGroup}(x)
 
-\S4method{name}{VariableGroup}(x) <- value
+\S4method{name}{VariableGroup,character}(x) <- value
 
 \S4method{names}{VariableOrder}(x)
 
