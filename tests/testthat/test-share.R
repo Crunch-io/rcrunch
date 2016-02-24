@@ -2,7 +2,7 @@ context("Sharing")
 
 me <- "fake.user@example.com"
 
-with(fake.HTTP, {
+with_mock_HTTP({
     ds <- loadDataset("test ds")
     test_that("Dataset has permissions catalog", {
         expect_true(inherits(permissions(ds), "PermissionCatalog"))

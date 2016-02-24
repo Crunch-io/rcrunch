@@ -1,6 +1,6 @@
 context("Filters")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     test_that("show method exists", {
         expect_true(is.character(capture.output(print(CrunchFilter()))))
     })

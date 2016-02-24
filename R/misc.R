@@ -1,11 +1,5 @@
 is.error <- function (x) inherits(x, "try-error")
 
-halt <- function (...) {
-    msg <- gsub("\n", " ", ..1)
-    logMessage("ERROR", msg)
-    stop(..., call.=FALSE)
-}
-
 rethrow <- function (x) halt(errorMessage(x))
 
 errorMessage <- function (e) attr(e, "condition")$message
@@ -141,11 +135,3 @@ emptyObject <- function () {
 
 ## Borrowed from Hadley
 "%||%" <- function (a, b) if (!is.null(a)) a else b
-
-## No longer used:
-# safeGet <- function (x, ..., ifnot=NULL) {
-#     ## "get" with a default
-#     out <- try(get(x, ...), silent=TRUE)
-#     if (is.error(out)) out <- ifnot
-#     return(out)
-# }

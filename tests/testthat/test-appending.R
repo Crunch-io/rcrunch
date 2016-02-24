@@ -15,7 +15,7 @@ test_that("askForPermission says no if not interactive", {
     expect_false(askForPermission())
 })
 
-with(fake.HTTP, {
+with_mock_HTTP({
     ds <- loadDataset("test ds")
     test_that("Cannot append dataset to itself", {
         expect_error(appendDataset(ds, ds),

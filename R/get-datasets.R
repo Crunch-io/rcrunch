@@ -25,6 +25,7 @@ subsetDatasetCatalog <- function (kind, catalog=datasetCatalog()) {
 ##' @return Nothing. Called for its side effects of setting local environment
 ##' variables.
 ##' @export
+##' @importFrom httpcache dropOnly
 updateDatasetList <- function () {
     dropOnly(sessionURL("datasets"))
     session_store$datasets <- do.call(DatasetCatalog,

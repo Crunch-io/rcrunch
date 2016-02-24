@@ -1,6 +1,6 @@
 context("Retrieving dataset list and single datasets")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     dataset.catalog.url <- "/api/datasets.json"
     datcat <- DatasetCatalog(crGET(dataset.catalog.url))
     index(datcat)[[which(names(datcat) == "an archived dataset")]]$archived <- TRUE

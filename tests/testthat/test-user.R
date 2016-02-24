@@ -1,6 +1,6 @@
 context("User stuff")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     test_that("Getting user object", {
         user <- getUser("/api/users/user1.json")
         expect_true(inherits(user, "ShojiObject"))

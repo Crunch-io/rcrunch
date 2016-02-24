@@ -1,6 +1,6 @@
 context("Filtering datasets and variables in the R session")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     ds <- loadDataset("test ds")
     ds2 <- ds[ds$gender == "Male", ]
     ds3 <- ds2[ds$birthyr > 1981, ]

@@ -1,6 +1,6 @@
 context("Categories")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     ds <- loadDataset("test ds")
     cats <- categories(ds$gender)
 
