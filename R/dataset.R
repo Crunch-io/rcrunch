@@ -118,7 +118,11 @@ NULL
 ##' @rdname dim-dataset
 ##' @export
 setMethod("dim", "CrunchDataset",
-    function (x) c(getNrow(x), length(variables(x))))
+    function (x) c(getNrow(x), ncol(x)))
+
+##' @rdname dim-dataset
+##' @export
+setMethod("ncol", "CrunchDataset", function (x) length(variables(x)))
 
 namekey <- function (dataset) ifelse(dataset@useAlias, "alias", "name")
 

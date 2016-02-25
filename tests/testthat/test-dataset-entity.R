@@ -88,6 +88,14 @@ with_mock_HTTP({
             useAlias=FALSE)@useAlias)
     })
 
+    test_that("Dataset ncol doesn't make any requests", {
+        with(temp.options(httpcache.log=""), {
+            logs <- capture.output(nc <- ncol(test.ds))
+        })
+        expect_identical(logs, character(0))
+        expect_identical(nc, 6L)
+    })
+
     test_that("Dataset has names() and extract methods work", {
         expect_false(is.null(names(test.ds)))
         expect_identical(names(test.ds), c("birthyr", "gender", "mymrset", "textVar", "starttime", "catarray"))
