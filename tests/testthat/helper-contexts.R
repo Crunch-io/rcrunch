@@ -17,7 +17,6 @@ with_mock_HTTP <- function (expr) {
                 url <- sub("\\/$", ".json", url)
                 url <- sub("^\\/", "", url) ## relative to cwd
                 out <- handleShoji(fromJSON(url, simplifyVector=FALSE))
-                logMessage(paste("FAKE GET", url))
                 return(list(
                     status_code=200,
                     times=structure(nchar(url), .Names="total"),

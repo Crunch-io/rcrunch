@@ -36,16 +36,21 @@ setMethod("ordering", "VariableCatalog", function (x) {
 ##' @export
 setMethod("ordering<-", "VariableCatalog", function (x, value) {
     stopifnot(inherits(value, "VariableOrder"))
-    ## Validate.
-    bad.entities <- setdiff(urls(value), urls(x))
-    if (length(bad.entities)) {
-        halt("Variable URL", ifelse(length(bad.entities) > 1, "s", ""),
-            " referenced in Order not present in catalog: ",
-            serialPaste(bad.entities))
-    }
 
-    crPUT(x@orders$hier, body=toJSON(value))
-    x@order <- VariableOrder(crGET(x@orders$hier))
+    if (!identical(ordering(x)@graph, value@graph)) {
+        ## Validate.
+        bad.entities <- setdiff(urls(value), urls(x))
+        if (length(bad.entities)) {
+            halt("Variable URL", ifelse(length(bad.entities) > 1, "s", ""),
+                " referenced in Order not present in catalog: ",
+                serialPaste(bad.entities))
+        }
+
+        ## Update on server
+        crPUT(x@orders$hier, body=toJSON(value))
+        ## Refresh
+        x@order <- VariableOrder(crGET(x@orders$hier))
+    }
     duplicates(x@order) <- duplicates(value)
     return(x)
 })

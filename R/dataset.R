@@ -233,9 +233,7 @@ joins <- function (x) ShojiCatalog(crGET(shojiURL(x, "catalogs", "joins")))
 setDatasetVariables <- function (x, value) {
     v <- urls(value)
     x@variables[v] <- value
-    if (!identical(ordering(x@variables), ordering(value))) {
-        ordering(x@variables) <- ordering(value)
-    }
+    ordering(x@variables) <- ordering(value)
     return(x)
 }
 

@@ -95,11 +95,15 @@ with_mock_HTTP({
 if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
-            test_that("Can set descriptions", {
-                expect_identical(descriptions(variables(ds)), rep("", ncol(ds)))
-                descriptions(variables(ds))[2:3] <- c("Des 1", "Des 2")
-                expect_identical(descriptions(variables(ds))[1:4],
-                    c("", "Des 1", "Des 2", ""))
+            test_that("Can set descriptions (and doing so doesn't PUT order)", {
+                with(temp.options(httpcache.log=""), {
+                    expect_identical(descriptions(variables(ds)),
+                        rep("", ncol(ds)))
+                    logs <- capture.output(descriptions(variables(ds))[2:3] <- c("Des 1", "Des 2"))
+                    expect_identical(descriptions(variables(ds))[1:4],
+                        c("", "Des 1", "Des 2", ""))
+                })
+                expect_identical(length(logs), 2L) ## PATCH, DROP
             })
             test_that("Can set names and aliases", {
                 n <- names(df)
