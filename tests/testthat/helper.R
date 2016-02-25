@@ -59,6 +59,11 @@ newDatasetFromFixture <- function (filename) {
         file.path("dataset-fixtures", paste0(filename, ".csv")))))
 }
 
+releaseAndReload <- function (dataset) {
+    .releaseDataset(dataset)
+    return(refresh(dataset))
+}
+
 ## Data frames to make datasets with
 df <- data.frame(v1=c(rep(NA_real_, 5), rnorm(15)),
                  v2=c(letters[1:15], rep(NA_character_, 5)),

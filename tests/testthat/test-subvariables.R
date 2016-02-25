@@ -129,27 +129,79 @@ if (run.integration.tests) {
                 expect_identical(aliases(subvariables(var)),
                     c("mr_5", "mr_6", "mr_7"))
             })
+        })
 
-            test_that("can reorder subvariables", {
-                try(subvariables(var) <- subvariables(var)[c(3,1,2)])
-                expect_identical(names(subvariables(var)),
-                    c("mr_3", "mr_1", "M.R. Two"))
-                try(subvariables(var)[1:2] <- subvariables(var)[c(2,1)])
-                expect_identical(names(subvariables(var)),
-                    c("mr_1", "mr_3", "M.R. Two"))
+        with(test.dataset(mrdf), {
+            ds <- mrdf.setup(ds, selections="1.0")
+
+            test_that("Initial subvariable order and counts", {
+                expect_identical(names(subvariables(ds$MR)),
+                    c("mr_1", "mr_2", "mr_3"))
+                expect_equivalent(table(ds$MR),
+                    structure(array(c(2, 1, 1),
+                        dimnames=list(MR=c("mr_1", "mr_2", "mr_3"))),
+                        class="table"))
+            })
+
+            ## Reorder them
+            subvariables(ds$MR) <- subvariables(ds$MR)[c(3,1,2)]
+
+            test_that("Can reorder subvariables", {
+                expect_identical(names(subvariables(ds$MR)),
+                    c("mr_3", "mr_1", "mr_2"))
+                expect_equivalent(table(ds$MR),
+                    structure(array(c(1, 2, 1),
+                        dimnames=list(MR=c("mr_3", "mr_1", "mr_2"))),
+                        class="table"))
+            })
+
+            ## Refresh the dataset and confirm the metadata change
+            ds <- refresh(ds)
+
+            test_that("Reordering of subvars persists on refresh", {
+                expect_identical(names(subvariables(ds$MR)),
+                    c("mr_3", "mr_1", "mr_2"))
+                expect_equivalent(table(ds$MR),
+                    structure(array(c(1, 2, 1),
+                        dimnames=list(MR=c("mr_3", "mr_1", "mr_2"))),
+                        class="table"))
+            })
+
+            ## Check that that persisted on release/reload
+            ds <- releaseAndReload(ds)
+
+            test_that("Reordering of subvars persists on release", {
+                expect_identical(names(subvariables(ds$MR)),
+                    c("mr_3", "mr_1", "mr_2"))
+                skip("Somehow this is back to the original order?!?")
+                # mr_1 mr_2 mr_3
+                #   2    1    1
+                expect_equivalent(as.array(crtabs(~ MR, data=ds)),
+                    structure(array(c(1, 2, 1),
+                        dimnames=list(MR=c("mr_3", "mr_1", "mr_2")))))
+            })
+        })
+
+        with(test.dataset(mrdf), {
+            ds <- mrdf.setup(ds, selections="1.0")
+            test_that("Can reorder a subset of subvariables", {
+                subvariables(ds$MR)[1:2] <- subvariables(ds$MR)[c(2,1)]
+                expect_identical(names(subvariables(ds$MR)),
+                    c("mr_2", "mr_1", "mr_3"))
             })
             test_that("can't (yet) otherwise modify subvariables", {
-                expect_error(subvariables(var) <- NULL,
+                expect_error(subvariables(ds$MR) <- NULL,
                     "Can only assign an object of class Subvariables")
                 with(test.dataset(df, "other.ds"), {
                     fake <- Subvariables(allVariables(other.ds)[1:3])
-                    expect_error(subvariables(var) <- fake,
+                    expect_error(subvariables(ds$MR) <- fake,
                         "Can only reorder, not change, subvariables")
-                    expect_error(subvariables(var)[1:2] <- fake[1:2],
+                    expect_error(subvariables(ds$MR)[1:2] <- fake[1:2],
                         "Cannot add or remove subvariables")
                 })
             })
         })
+
         with(test.dataset(mrdf["mr_1"]), {
             ds <- mrdf.setup(ds)
 

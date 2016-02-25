@@ -1,9 +1,10 @@
 ### crunch 1.8.1
 * Pull HTTP query cache out to the [httpcache](https://github.com/nealrichardson/httpcache) package and take dependency on that. Remove dependency on `digest` package (httpcache depends on it instead).
 * `startDate` and `endDate` attributes and setters for dataset entities (#10, #11)
-* Improved validation for "name" setting, especially for categories.
+* Improved validation for "name" setting, especially for categories
 * Speed up `ncol(ds)` by removing a server request
 * Speed up variable catalog editing by avoiding unnecessary updates to the variable order
+* Fix cache invalidation when reordering subvariables
 
 ## crunch 1.8.0
 * More formal support for creating and managing UI filters
