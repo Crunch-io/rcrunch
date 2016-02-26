@@ -86,6 +86,12 @@ if (run.integration.tests) {
                 expect_identical(dim(ds4), c(5L, 6L))
             })
 
+            test_that("activeFilter appears in print method for dataset", {
+                expect_output(ds3, "Filtered by v3 > 11")
+                expect_false(any(grepl("Filtered by",
+                    capture.output(print(ds)))))
+            })
+
             test_that("Filtered variables return filtered values from as.vector", {
                 expect_identical(as.vector(ds2$v3),
                     c(9, 11, 13, 15, 17, 19, 21, 23, 25, 27))
@@ -95,6 +101,10 @@ if (run.integration.tests) {
                     as.numeric(12:27))
                 expect_identical(as.vector(ds4$v3),
                     as.numeric(8:12))
+            })
+
+            test_that("activeFilter appears in print method for variables", {
+                expect_output(ds3$v3, "Filtered by v3 > 11")
             })
 
             test_that("as.data.frame when filtered", {
