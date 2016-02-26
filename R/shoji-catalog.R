@@ -53,7 +53,7 @@ setMethod("[", c("ShojiCatalog", "character"), function (x, i, ...) {
 setMethod("[", c("ShojiCatalog", "numeric"), function (x, i, ...) {
     bad <- abs(as.integer(i)) > length(x)
     if (any(bad)) {
-        halt("Subscript out of bounds: ", i[bad])
+        halt("Subscript out of bounds: ", capture.output(dput(i[bad])))
     }
     callNextMethod(x, i, value)
 })
