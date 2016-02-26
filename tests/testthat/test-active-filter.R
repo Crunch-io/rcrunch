@@ -55,18 +55,22 @@ with_mock_HTTP({
         expect_identical(activeFilter(weight(ds4)), ds$gender == "Male")
     })
 
-    test_that("activeFilter from CrunchExpr and CrunchVariable", {
+    test_that("activeFilter from filtered CrunchVariable", {
+        expect_identical(activeFilter(ds$birthyr), NULL)
         expect_identical(activeFilter(ds2$birthyr),
             activeFilter(ds$birthyr[ds$gender == "Male"]))
         expect_identical(activeFilter(ds$birthyr[ds$gender == "Male"]),
             ds$gender == "Male")
     })
 
-    test_that("activeFilter from more complex CrunchExprs", {
+    test_that("activeFilter from CrunchExpr", {
+        ## Need the @expression here because CrunchExpr@filter is list
+        expect_identical(activeFilter((ds$birthyr - ds$starttime)[ds$gender == "Male"]),
+            (ds$gender == "Male")@expression)
+    })
+    test_that("activeFilter passes across operations among vars/exprs", {
         skip("TODO: filtered variables/exprs should pass their filters along")
         expect_identical(activeFilter(ds$birthyr[ds$gender == "Male"] - ds$starttime[ds$gender == "Male"]),
-            ds$gender == "Male")
-        expect_identical(activeFilter((ds$birthyr - ds$starttime)[ds$gender == "Male"]),
             ds$gender == "Male")
     })
 })

@@ -160,6 +160,17 @@ setMethod("activeFilter", "Subvariables", .getActiveFilter)
 setMethod("activeFilter<-", "Subvariables", .setActiveFilter)
 
 setMethod("activeFilter", "CrunchExpr", .getActiveFilter)
+setMethod("activeFilter<-", "CrunchExpr", function (x, value) {
+    ## CrunchExpr @filter can't be CrunchLogicalExpr bc of cyclical deps
+    ## so it's the @expression of that (list)
+    if (is.null(value)) {
+        value <- list()
+    } else if (inherits(value, "CrunchLogicalExpr")) {
+        value <- value@expression
+    }
+    x@filter <- value
+    return(x)
+})
 
 
 ##' View and set exclusion filters

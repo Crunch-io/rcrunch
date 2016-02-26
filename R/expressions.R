@@ -251,3 +251,12 @@ rollupResolution <- function (x) {
         return(NULL)
     }
 }
+
+setMethod("[", c("CrunchExpr", "CrunchLogicalExpr"), function (x, i, ...) {
+    f <- activeFilter(x)
+    if (length(zcl(f))) {
+        i <- f & i
+    }
+    activeFilter(x) <- i
+    return(x)
+})
