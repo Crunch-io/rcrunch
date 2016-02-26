@@ -32,7 +32,7 @@ check: build
     # rm vignette-errors.log
 
 vdata:
-	cd vignette-data && find *.R | xargs -n 1 R -f
+	cd vignette-data && R -f make-vignette-rdata.R
 
 man: doc
 	R CMD Rd2pdf man/ --force

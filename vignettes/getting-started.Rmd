@@ -9,6 +9,7 @@
 
 ```{r, message=FALSE}
 library(crunch)
+options(width=120)
 ```
 
 Both *crunch* and the Crunch web application communicate with the same application programming interface (API), served over secure HTTP. Within an R script or interactive session, the *crunch* package allows you to interact with your data in Crunch with expressive, idiomatic R. Functions in crunch handle the translation between R objects and API requests and responses, so you can typically interact with your datasets as if they were local `data.frames` (with some additional metadata), not data on a remote server.
@@ -36,3 +37,4 @@ The Crunch data store is built around datasets, which contain variables. Unlike 
 * [Variable organization](variable-order.html): defining a hierarchy and arranging variables within it
 * [Transformations and derivations](derive.html): alter values within a dataset and create new variables as a function of others
 * [Computing on Crunch data](analyze.html): crosstabulation and more
+* [Filtering](filters.html): subsetting data, both in your R session and in the web interface

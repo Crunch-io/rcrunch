@@ -18,7 +18,7 @@ In our sample dataset, we don't have an "Age" variable, but we do have "Birth Ye
 ds$age <- 2015 - ds$birthyr
 ```
 
-Now, we have an age variable, and it looks like we'd expect it would relative to `birthyr`: 
+Now, we have an age variable, and it looks like we'd expect it would relative to `birthyr`:
 
 
 ```r
@@ -27,7 +27,7 @@ summary(ds$age)
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  21.000  37.000  46.000  49.223  60.000  93.000
+##  22.000  38.000  48.500  49.624  59.750  90.000
 ```
 
 ```r
@@ -36,7 +36,7 @@ summary(ds$birthyr)
 
 ```
 ##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## 1922.000 1955.000 1969.000 1965.777 1978.000 1994.000
+## 1925.000 1955.250 1966.500 1965.376 1977.000 1993.000
 ```
 
 Age is now a derived variable, functionally linked to `birthyr` on the server. Note that in order to create `age`, we didn't pull any values off of the server; we just supplied the derivation expression.
@@ -53,6 +53,7 @@ class(2015 - ds$birthyr)
 ```
 
 ## Updating values
+
 We can also use these expressions to update values. Suppose, just for demonstration purposes, that we want to truncate the range of the `birthyr` variable and set it to 1945 everywhere where it is less than 1945. We can once again write the R code we'd write if we were working with a `data.frame`, even though we're working with a Crunch dataset:
 
 
@@ -68,8 +69,8 @@ summary(ds$birthyr)
 ```
 
 ```
-##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## 1945.000 1955.000 1969.000 1966.529 1978.000 1994.000
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+## 1945.00 1955.25 1966.50 1966.02 1977.00 1993.00
 ```
 
 Not only that: since `age` is a function of `birthyr` on the server, its values also update now that we've modified `birthyr`. Max age is now 70, or 2015 - 1945.
@@ -81,7 +82,7 @@ summary(ds$age)
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  21.000  37.000  46.000  48.471  60.000  70.000
+##   22.00   38.00   48.50   48.98   59.75   70.00
 ```
 
 Once again, we've done this operation by turning idiomatic R expressions into Crunch expression syntax.

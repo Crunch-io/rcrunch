@@ -15,7 +15,7 @@ You can use `crunch` to "bind" categorical variables into Multiple Response and 
 
 ## Creating an array
 
-One of the reasons to use R with Crunch is to leverage the power of scripting for tasks that would be repetitive in a GUI. Many crunch functions operating on Crunch datasets have an optional `pattern` argument that lets you use regular expressions for these "bulk" operations. 
+One of the reasons to use R with Crunch is to leverage the power of scripting for tasks that would be repetitive in a GUI. Many crunch functions operating on Crunch datasets have an optional `pattern` argument that lets you use regular expressions for these "bulk" operations.
 
 In our sample _Economist_ dataset, we have set of variables prefixed with "imiss":
 
@@ -40,10 +40,10 @@ ds$imiss_b
 ## imiss_b (categorical)
 ## 
 ##                    Count
-## Very Important       805
-## Somewhat Important   164
-## Not very Important    20
-## Unimportant            6
+## Very Important       196
+## Somewhat Important    44
+## Not very Important     8
+## Unimportant            1
 ```
 
 All of these "imiss" categorical variables have the same structure. We can combine them into a categorical array variable with `makeArray`:
@@ -111,10 +111,10 @@ ds$imiss$imiss_b
 ## imiss_b (categorical)
 ## 
 ##                    Count
-## Very Important       805
-## Somewhat Important   164
-## Not very Important    20
-## Unimportant            6
+## Very Important       196
+## Somewhat Important    44
+## Not very Important     8
+## Unimportant            1
 ```
 
 ## Manipulating subvariables
@@ -137,9 +137,9 @@ We can set it, too:
 
 
 ```r
-names(subvariables(ds$imiss)) <- c("The economy", "Immigration", 
-    "The environment", "Terrorism", "Gay rights", "Education", 
-    "Health care", "Social security", "The budget deficit", 
+names(subvariables(ds$imiss)) <- c("The economy", "Immigration",
+    "The environment", "Terrorism", "Gay rights", "Education",
+    "Health care", "Social security", "The budget deficit",
     "The war in Afghanistan", "Taxes", "Medicare", "Abortion")
 subvariables(ds$imiss)
 ```
@@ -189,9 +189,9 @@ subvariables(ds$imiss)
 
 ## Creating multiple response variables
 
-Just as we created a categorical array, we can create a multiple response variable. Like categorical arrays, multiple responses contain a set of subvariables, categorical variables with a common list of categories. However, the subvariables in a multiple response are treated as dichotomous indicators. We specify one or more categories that indicate "selected" versus "not selected". Hence, when a multiple response appears in the web app, it looks like a single categorical variable, each subvariable shown like a category. Unlike a categorical variable, though, the multiple responses are not mutually exclusive, so tabulations with them may not sum to 100 percent. 
+Just as we created a categorical array, we can create a multiple response variable. Like categorical arrays, multiple responses contain a set of subvariables, categorical variables with a common list of categories. However, the subvariables in a multiple response are treated as dichotomous indicators. We specify one or more categories that indicate "selected" versus "not selected". Hence, when a multiple response appears in the web app, it looks like a single categorical variable, each subvariable shown like a category. Unlike a categorical variable, though, the multiple responses are not mutually exclusive, so tabulations with them may not sum to 100 percent.
 
-In the _Economist_ dataset, we have another set of parallel categorical variables, "boap", which indicate approval of President Obama on a range of issues. 
+In the _Economist_ dataset, we have another set of parallel categorical variables, "boap", which indicate approval of President Obama on a range of issues.
 
 
 ```r
@@ -202,21 +202,21 @@ ds$boap_4
 ## boap_4 (categorical)
 ## 
 ##                     Count
-## Strongly disapprove   283
-## Somewhat approve      279
-## Somewhat disapprove   160
-## No opinion            157
-## Strongly approve      113
+## Somewhat approve       68
+## Strongly disapprove    67
+## No opinion             46
+## Somewhat disapprove    43
+## Strongly approve       26
 ```
 
-In the questionnaire that collected this data, "boap" appeared as a grid question, just as "imiss" did. But, for illustration purposes---and to show how you can convert between categorical array and multiple response---let's treat this as multiple response. 
+In the questionnaire that collected this data, "boap" appeared as a grid question, just as "imiss" did. But, for illustration purposes---and to show how you can convert between categorical array and multiple response---let's treat this as multiple response.
 
 The function `makeMR` works like `makeArray` but with an additional argument, "selections", in which you specify the category name(s) that identify which category or categories should be the dichotomous indicator.
 
 
 ```r
-ds$boap <- makeMR(pattern="^boap_[0-9]+", dataset=ds, 
-    name="Approval of Obama on issues", 
+ds$boap <- makeMR(pattern="^boap_[0-9]+", dataset=ds,
+    name="Approval of Obama on issues",
     selections=c("Strongly approve", "Somewhat approve"))
 ds$boap
 ```
@@ -241,7 +241,7 @@ ds$boap
 
 ## (un)dichotomize
 
-Multiple response variables can be thought of as categorical arrays that have extra metadata indicating which categories are "selected". This metadata can be manipulated, and we can thus transform categorical arrays into multiple response and vice versa. 
+Multiple response variables can be thought of as categorical arrays that have extra metadata indicating which categories are "selected". This metadata can be manipulated, and we can thus transform categorical arrays into multiple response and vice versa.
 
 The function `undichotomize` removes the dichotomization metadata:
 

@@ -3,42 +3,45 @@
 %\VignetteIndexEntry{Datasets: creating, loading, and manipulating}
 -->
 
-[Previous: Getting started](getting-started.md) 
+[Previous: Getting started](getting-started.md)
 
 
 
 # Datasets in `crunch`
 
-To get started working with Crunch datasets in R, we need to get a dataset in our local R session. This means we either need to create a new one or load an existing dataset. 
+To get started working with Crunch datasets in R, we need to get a dataset in our local R session. This means we either need to create a new one or load an existing dataset.
 
 ## Uploading datasets
 
-To create new datasets, multiple paths exist. In the web application, you can upload files to create datasets. From `crunch`, there are two methods for creating datasets: one for `data.frames` and one for files of other (non-R) formats. 
+To create new datasets, multiple paths exist. In the web application, you can upload files to create datasets. From `crunch`, there are two methods for creating datasets: one for `data.frames` and one for files of other (non-R) formats.
 
 ### 1. newDataset
 
-You can create a dataset from any `data.frame` you have in your R session with `newDataset`:
+The `crunch` package contains a sample dataset that we'll use throughout the vignettes: a sample drawn from a political survey fielded by YouGov on behalf of the _Economist_.
 
 
 ```r
-load("economist.RData")
-dim(df)
+data(economist, package="crunch")
+dim(economist)
 ```
 
 ```
-## [1] 1000  142
+## [1] 250  61
 ```
+
+You can create a dataset from any `data.frame` you have in your R session with `newDataset`. Let's use that sample dataset:
+
 
 ```r
-ds <- newDataset(df, name="Economist/YouGov Weekly Survey")
+ds <- newDataset(economist, name="Economist/YouGov Weekly Survey")
 dim(ds)
 ```
 
 ```
-## [1] 1000  142
+## [1] 250  61
 ```
 
-`newDataset` translates R data types into their analogous types in Crunch. 
+`newDataset` translates R data types into their analogous types in Crunch.
 
 * character --> Text Variable
 * numeric, integer --> Numeric Variable
@@ -128,8 +131,8 @@ Datasets can also be deleted permanently. This action cannot be undone, so it sh
 delete(ds)
 ```
 
-The second way to delete is `deleteDataset`, which works like `loadDataset`: you supply a dataset name. This way is faster if you have not already loaded the dataset object into your R session: no need to fetch something from the server just to then tell the server to delete it. 
+The second way to delete is `deleteDataset`, which works like `loadDataset`: you supply a dataset name. This way is faster if you have not already loaded the dataset object into your R session: no need to fetch something from the server just to then tell the server to delete it.
 
-For details on both, see their help pages. 
+For details on both, see their help pages.
 
-[Next: Variable metadata](variables.md) 
+[Next: Variable metadata](variables.md)

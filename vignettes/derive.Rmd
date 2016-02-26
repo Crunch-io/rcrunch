@@ -7,7 +7,8 @@
 
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(crunch)
-load("derive.RData")
+load("vignettes.RData")
+options(width=120)
 ```
 
 # Transforming and deriving
@@ -45,6 +46,7 @@ class(cr.expr)
 ```
 
 ## Updating values
+
 We can also use these expressions to update values. Suppose, just for demonstration purposes, that we want to truncate the range of the `birthyr` variable and set it to 1945 everywhere where it is less than 1945. We can once again write the R code we'd write if we were working with a `data.frame`, even though we're working with a Crunch dataset:
 
 ```{r, eval=FALSE}

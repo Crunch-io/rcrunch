@@ -8,7 +8,7 @@
 
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(crunch)
-load("array-variables.RData")
+load("vignettes.RData")
 ```
 # Array Variables
 
@@ -26,7 +26,7 @@ In our sample _Economist_ dataset, we have set of variables prefixed with "imiss
 grep("^imiss_", names(ds), value=TRUE)
 ```
 ```{r, echo=FALSE}
-grep("^imiss_", names(start), value=TRUE)
+grep("^imiss_", names(start_make_array), value=TRUE)
 ```
 
 These correspond to a survey grid question about how important respondents view a set of issues. Examining one of them, we see
@@ -173,7 +173,7 @@ unbind(ds$boap)
 ds <- refresh(ds)
 ```
 ```{r, results='hide', echo=FALSE, message=FALSE}
-ds <- start
+ds <- start_make_array
 ```
 
 Note the use of `refresh`. Most functions that modify objects on the server refresh their local copies in our R session automatically; however, because `unbind` doesn't assign back into `ds`, the local dataset object doesn't get updated with the change, so we need to refresh it manually.

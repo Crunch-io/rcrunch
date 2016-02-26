@@ -6,7 +6,7 @@
 [Previous: analyze data](analyze.html)
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(crunch)
-#load("filters.RData")
+load("vignettes.RData")
 options(width=120)
 ```
 
@@ -16,8 +16,137 @@ Sometimes you only want to work with a subset of your data. With the `crunch` pa
 
 ## Filtering and subsetting in R
 
-When you
+As we've seen in previous vignettes, making logical expressions with Crunch datasets and variables is natural. We showed how to [update a selection of values](derive.html) on the server, as well as how to [crosstab in a subset of a dataset](analyze.html). Other applications work just as intuitively.
+
+<!-- Add links with anchors to "Updating values" and to "Subsetting data" -->
+
+Filtering like this works by creating a dataset or variable object that has the filter embedded in it:
+
+```{r, eval=FALSE}
+dems <- ds[ds$pid3 == "Democrat",]
+dems
+```
+```{r, echo=FALSE}
+cat(printdems, sep="\n")
+```
+
+```{r, eval=FALSE}
+round(crtabs(mean(track) ~ educ + gender, data=dems), 2)
+```
+```{r, echo=FALSE}
+round(tab8, 2)
+```
+
+When you extract a variable from a filtered dataset, it too is filtered. So
+
+```{r, eval=FALSE}
+table(dems$educ)
+```
+```{r, echo=FALSE}
+print(educ.dem.table)
+```
+
+is the same as
+
+```{r, eval=FALSE}
+table(ds$educ[ds$pid3 == "Democrat",])
+```
+```{r, echo=FALSE}
+print(educ.dem.table)
+```
+
+As an aside, if you prefer using the `subset` function, that works just the same as the `[` extract method on datasets:
+
+```{r, eval=FALSE}
+identical(subset(ds, ds$pid3 == "Democrat"), dems)
+```
+```{r, echo=FALSE}
+identical(dems2, dems)
+```
 
 ## Filter entities
 
+In the web application, you can save filter definitions with names for easy reuse. You can also share these filter definitions with other viewers of the dataset.
+
+To do so, we work with the dataset's filter catalog. To start, our filter catalog will be empty:
+
+```{r, eval=FALSE}
+filters(ds)
+```
+```{r, echo=FALSE}
+print(empty.filter.catalog)
+```
+
+Create a filter by assigning a Crunch logical expression to the catalog by the name we want to give it, using `$` or `[[`:
+
+```{r, eval=FALSE}
+filters(ds)[["Young males"]] <- ds$gender == "Male" & ds$age < 30
+filters(ds)[["Young males"]]
+```
+```{r, echo=FALSE}
+cat(print.young.males1, sep="\n")
+```
+
+This new filter now appears in our filter catalog.
+
+```{r, eval=FALSE}
+filters(ds)
+```
+```{r, echo=FALSE}
+print(filter.catalog.2)
+```
+
+This filter is now available for you to use in the web application. If you want to make the filter available to all viewers of the dataset, make it "public":
+
+```{r, eval=FALSE}
+is.public(filters(ds)[["Young males"]]) <- TRUE
+filters(ds)
+```
+```{r, echo=FALSE}
+print(filter.catalog.3)
+```
+
 ## Exclusion filters
+
+One other application for filtering is the dataset exclusion filter. The exclusion allows you to suppress from view rows that match a certain condition. Exclusions are set on the dataset with a Crunch logical expression:
+
+```{r, eval=FALSE}
+dim(ds)
+```
+```{r, echo=FALSE}
+print(dim.ds.filters)
+```
+
+```{r, eval=FALSE}
+exclusion(ds) <- ds$perc_skipped > 15
+exclusion(ds)
+```
+```{r, echo=FALSE}
+cat(high_perc_skipped, sep="\n")
+```
+
+```{r, eval=FALSE}
+dim(ds)
+```
+```{r, echo=FALSE}
+print(dim.ds.excluded)
+```
+
+All viewers of the dataset will see the dataset as if those rows do not exist; however, as the editor of the dataset, you can remove the exclusion filter to see them if you need:
+
+```{r, eval=FALSE}
+exclusion(ds) <- NULL
+dim(ds)
+```
+```{r, echo=FALSE}
+print(dim.ds.filters)
+```
+
+### Alternative: `dropRows`
+
+If you do know that you never want to see those rows again, you can permanently delete them with `dropRows`:
+
+```{r, eval=FALSE}
+## Not run
+ds <- dropRows(ds, ds$perc_skipped > 15)
+```

@@ -4,9 +4,12 @@
 \name{dim-dataset}
 \alias{dim,CrunchDataset-method}
 \alias{dim-dataset}
+\alias{ncol,CrunchDataset-method}
 \title{Dataset dimensions}
 \usage{
 \S4method{dim}{CrunchDataset}(x)
+
+\S4method{ncol}{CrunchDataset}(x)
 }
 \arguments{
 \item{x}{a Dataset}
