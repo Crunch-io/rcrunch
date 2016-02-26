@@ -5,13 +5,13 @@ test_that("On package load, the session_store exists", {
 })
 
 test_that("login checks for email and password before POSTing", {
-    expect_error(crunchAuth(email=NULL), 
+    expect_error(crunchAuth(email=NULL),
         "Must supply the email address associated with your crunch.io account")
-    expect_error(crunchAuth(email=1L, password=NULL), 
+    expect_error(crunchAuth(email=1L, password=NULL),
         "Must supply a password")
 })
 
-with(fake.HTTP, {
+with_mock_HTTP({
     test_that("Jupyter helper sets up env", {
         with(reset.option("httr_config"), {
             jupyterLogin("test_token")
@@ -42,7 +42,7 @@ if (run.integration.tests) {
         expect_true(is.list(crunchAuth(em, password=pw)))
         suppressMessages(login())
         logout()
-        expect_error(crunchAuth("lkjasdfksdfkjhl", password="w23nrnsod"), 
+        expect_error(crunchAuth("lkjasdfksdfkjhl", password="w23nrnsod"),
             "Unable to authenticate lkjasdfksdfkjhl")
     })
 
@@ -50,7 +50,7 @@ if (run.integration.tests) {
         suppressMessages(login())
             expect_true(is.character(sessionURL("datasets")))
         logout()
-        expect_error(sessionURL("datasets"), 
+        expect_error(sessionURL("datasets"),
             "You must authenticate before making this request")
     })
 }

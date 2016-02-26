@@ -29,8 +29,8 @@ r2zcl <- function (x) {
 
 ## Methods to convert various objects to ZCL
 setMethod("zcl", "CrunchExpr", function (x) x@expression)
-setMethod("zcl", "CrunchVariable", function (x) zcl(tuple(x)))
-setMethod("zcl", "VariableTuple", function (x) list(variable=x$id))
+setMethod("zcl", "CrunchVariable", function (x) list(variable=self(x)))
+setMethod("zcl", "VariableTuple", function (x) list(variable=self(x)))
 setMethod("zcl", "numeric", r2zcl)
 setMethod("zcl", "character", r2zcl)
 setMethod("zcl", "Date", r2zcl)
@@ -45,9 +45,6 @@ setOldClass("zcl")
 setMethod("zcl", "zcl", function (x) x)
 setMethod("zcl", "list", function (x) x) ## is this a good idea?
 setMethod("zcl", "CrunchFilter", function (x) x@body$expression)
-
-setMethod("absolute.zcl", "ANY", function (x) zcl(x))
-setMethod("absolute.zcl", "CrunchVariable", function (x) list(variable=self(x)))
 
 typeof <- function (x, variable) {
     ## Add ZCL metadata asserting that x is the same type as variable

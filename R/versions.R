@@ -32,7 +32,7 @@ setMethod("descriptions", "VersionCatalog", function (x) getIndexSlot(x, "descri
 setMethod("timestamps", "VersionCatalog", function (x) from8601(getIndexSlot(x, "last_update")))
 
 ##' Create a new saved version
-##' 
+##'
 ##' @param dataset a \code{CrunchDataset}
 ##' @param description character name to give the saved version, as in a
 ##' commit message. You are encouraged, though not strictly required, to give
@@ -47,7 +47,7 @@ saveVersion <- function (dataset, description=NULL) {
 }
 
 ##' Restore a dataset to a previously saved version
-##' 
+##'
 ##' @param dataset a \code{CrunchDataset}
 ##' @param version either the name ("description") of the version to restore to
 ##' or the integer index of the version, as given by \code{versions(dataset)}

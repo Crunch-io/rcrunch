@@ -13,20 +13,20 @@ if (run.integration.tests) {
                 expect_identical(weight(ds), NULL)
             })
             test_that("Errors are properly handled when setting weight", {
-                expect_error(weight(ds) <- "a", 
+                expect_error(weight(ds) <- "a",
                     "Weight must be a Variable or NULL")
                 ## test error handling when trying to set non-numeric
             })
-            
+
             test_that("If weight is set, computations are weighted", {
-                expect_equivalent(table(ds$v4), 
+                expect_equivalent(table(ds$v4),
                     structure(c(B=10, C=10), class="table"))
                 weight(ds) <- ds$v3
-                expect_equivalent(table(ds$v4), 
-                    structure(c(B=sum(seq(8, 26, 2)), C=sum(seq(9, 27, 2))), 
+                expect_equivalent(table(ds$v4),
+                    structure(c(B=sum(seq(8, 26, 2)), C=sum(seq(9, 27, 2))),
                     class="table"))
             })
-            
+
             test_that("If weight is set, dim() is still unweighted", {
                 weight(ds) <- NULL
                 expect_identical(nrow(ds), 20L)
@@ -35,7 +35,7 @@ if (run.integration.tests) {
                 ds <- refresh(ds)
                 expect_identical(nrow(ds), 20L)
             })
-            
+
         })
         with(test.dataset(df), {
             test_that("We have a clean dataset", {
@@ -56,7 +56,7 @@ if (run.integration.tests) {
                 expect_equivalent(weight(ds), ds$w2)
             })
         })
-        
+
         with(test.dataset(df), {
             test_that("I can delete my weight variable and add a new one", {
                 ds$w <- 1:20
@@ -82,8 +82,7 @@ if (run.integration.tests) {
                     array(c(110, 100), dim=2L, dimnames=list(v4=c("B", "C"))))
                 ## Now force the dataset to drop on the server and reload it
                 ## to confirm that our changes were persisted correctly
-                .releaseDataset(ds)
-                ds <- refresh(ds)
+                ds <- releaseAndReload(ds)
                 expect_equivalent(weight(ds), ds$w)
                 expect_true(is.Numeric(ds$w))
                 expect_equivalent(as.array(crtabs(~ v4, data=ds)),

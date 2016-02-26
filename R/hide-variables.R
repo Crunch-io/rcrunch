@@ -88,8 +88,8 @@ hiddenVariables <- function (dataset, key="name") {
 ##' @param pattern optional regular expression to identify Variables to delete
 ##' @param key the Variable attribute to \code{\link{grep}} with the
 ##' \code{pattern}. Default is "alias"
-##' @param confirm logical: should the user be asked to confirm deletion. 
-##' Default is \code{TRUE} if in 
+##' @param confirm logical: should the user be asked to confirm deletion.
+##' Default is \code{TRUE} if in
 ##' an interactive session. You can avoid the confirmation prompt if you delete
 ##' \code{with(\link{consent})}.
 ##' @param ... optional additional arguments to \code{grep}
@@ -102,7 +102,7 @@ deleteVariables <- function (dataset, variables=NULL, pattern=NULL, key=namekey(
         varnames <- names(allVariables(dataset)[var.urls])
         prompt <- paste0("Really delete ", dQuote(varnames), "?")
     } else {
-        prompt <- paste0("Really delete these ", length(var.urls), 
+        prompt <- paste0("Really delete these ", length(var.urls),
             " variables?")
     }
     if (confirm && !askForPermission(prompt)) {

@@ -163,6 +163,14 @@ setMethod("getShowContent", "FilterCatalog",
 setMethod("getShowContent", "VersionCatalog", formatVersionCatalog)
 setMethod("getShowContent", "ShojiObject",
     function (x) capture.output(print(x@body)))
+setMethod("getShowContent", "CrunchFilter",
+    function (x) {
+        ## TODO: remove this when server sends URLs instead of ids
+        e <- idsToURLs(x@body$expression,
+            absoluteURL("../../variables/", self(x)))
+        return(c(paste("Crunch filter", dQuote(name(x))),
+        paste("Expression:", formatExpression(e))))
+    })
 
 ##' @rdname show-crunch
 ##' @export

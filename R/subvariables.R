@@ -65,6 +65,7 @@ setMethod("subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
             body <- list(subvariables=new)
             payload <- toJSON(body)
             crPATCH(self(x), body=payload)
+            dropCache(absoluteURL("../../cube/", self(x)))
             tuple(x)$subvariables <- new
         }
         return(x)

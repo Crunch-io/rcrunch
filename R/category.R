@@ -1,15 +1,14 @@
 is.category <- function (x) inherits(x, "Category")
 
-validCategory <- function (object) {
+setValidity("Category", function (object) {
     is.cat <- all(c("id", "name") %in% names(object))
     if (!all(is.cat)) {
         val <- "Not a category"
     } else {
-        val <- TRUE  
+        val <- TRUE
     }
     return(val)
-}
-setValidity("Category", validCategory)
+})
 
 init.Category <- function (.Object, ...) {
     .Object <- callNextMethod()
@@ -44,7 +43,7 @@ setValue <- function (x, value) {
 }
 
 ##' Access Category fields directly
-##' 
+##'
 ##' Don't do this. Instead, use the category setters.
 ##'
 ##' @param x a Category
@@ -67,7 +66,7 @@ setMethod("$<-", "Category", function (x, name, value) {
 })
 
 ##' Category attributes
-##' 
+##'
 ##' @param x a Category
 ##' @param value For the setters, an appropriate value to set
 ##' @return \code{name} returns character; \code{value} and \code{id} return
@@ -84,7 +83,12 @@ NULL
 setMethod("name", "Category", function (x) x[["name"]])
 ##' @rdname describe-category
 ##' @export
-setMethod("name<-", "Category", setName)
+setMethod("name<-", c("Category", "character"), setName)
+##' @rdname describe-category
+##' @export
+setMethod("name<-", c("ANY", "ANY"), function (x, value) {
+    halt('Names must be of class "character"')
+})
 ##' @rdname describe-category
 ##' @export
 setMethod("value", "Category", function (x) {

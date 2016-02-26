@@ -25,10 +25,10 @@ names.CrunchDataFrame <- function (x) names(x$.crunchDataset)
 ##' argument, this function does not in fact return a \code{data.frame}: it
 ##' returns an object with an interface like a data.frame, such that you get
 ##' R vectors when you access its columns (unlike a CrunchDataset, which
-##' returns CrunchVariable objects). This allows modeling functions that 
+##' returns CrunchVariable objects). This allows modeling functions that
 ##' require select columns of a dataset to retrieve only those variables from
-##' the remote server, rather than pulling the entire dataset into local 
-##' memory. 
+##' the remote server, rather than pulling the entire dataset into local
+##' memory.
 ##'
 ##' @param x a CrunchDataset
 ##' @param row.names part of as.data.frame signature. Ignored.

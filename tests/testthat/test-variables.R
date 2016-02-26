@@ -1,15 +1,15 @@
 context("Variables")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     ds <- loadDataset("test ds")
-    
+
     test_that("Variable init, as, is", {
         expect_true(is.variable(ds[[1]]))
         expect_true(all(vapply(ds, is.variable, logical(1))))
         expect_false(is.variable(5))
         expect_false(is.variable(NULL))
     })
-    
+
     test_that("Variable subclass definitions, is", {
         expect_true(is.dataset(ds))
         expect_true(is.Categorical(ds$gender))
@@ -20,7 +20,7 @@ with(fake.HTTP, {
         expect_true(is.Array(ds$mymrset))
         expect_false(is.CA(ds$mymrset))
     })
-    
+
     test_that("Categories for categorical", {
         thisone <- categories(ds$gender)
         expect_true(is.categories(thisone))
@@ -30,13 +30,13 @@ with(fake.HTTP, {
     test_that("Categories for noncategorical", {
         expect_identical(categories(ds$birthyr), NULL)
     })
-    
+
     test_that("Variable metadata retrieved from tuples", {
         expect_identical(name(ds$gender), "Gender")
         expect_identical(description(ds$starttime), "Interview Start Time")
         expect_identical(alias(ds$gender), "gender")
     })
-    
+
     test_that("Variable setters (mock)", {
         tp <- tuple(ds$gender)@body
         tp$name <- "Sex"
@@ -45,12 +45,12 @@ with(fake.HTTP, {
             paste("PATCH", self(variables(ds)), toJSON(mock.tuple)),
             fixed=TRUE)
     })
-    
+
     test_that("Variable setters don't hit server if data not changed", {
         expect_that(name(ds$gender) <- "Gender",
             does_not_throw_error())
     })
-    
+
     test_that("refresh", {
         expect_identical(ds$gender, refresh(ds$gender))
     })
@@ -61,8 +61,8 @@ if (run.integration.tests) {
         with(test.dataset(df), {
             test_that("show methods", {
                 expect_identical(getShowContent(ds$v3), c(
-                    "v3 (numeric)",                                  
-                    "",                                           
+                    "v3 (numeric)",
+                    "",
                     "   Min. 1st Qu.  Median    Mean 3rd Qu.    Max. ",
                     "   8.00   12.75   17.50   17.50   22.25   27.00 "
                 ))
@@ -71,12 +71,12 @@ if (run.integration.tests) {
                         "",
                         "  Count",
                         "B    10",
-                        "C    10" 
+                        "C    10"
                     ))
                 ## TODO: add other types
             })
         })
-        
+
         with(test.dataset(df), {
             test_that("before modifying", {
                 expect_identical(name(ds$v1), "v1")
@@ -112,7 +112,7 @@ if (run.integration.tests) {
                 expect_identical(alias(v1), "Alias!")
             })
         })
-        
+
         with(test.dataset(mrdf), {
             ds <- mrdf.setup(ds)
             test_that("before modifying", {

@@ -20,7 +20,7 @@ In our sample dataset, we don't have an "Age" variable, but we do have "Birth Ye
 ds$age <- 2015 - ds$birthyr
 ```
 
-Now, we have an age variable, and it looks like we'd expect it would relative to `birthyr`: 
+Now, we have an age variable, and it looks like we'd expect it would relative to `birthyr`:
 
 ```{r, eval=FALSE}
 summary(ds$age)

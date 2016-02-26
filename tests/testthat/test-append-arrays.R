@@ -261,8 +261,7 @@ if (run.integration.tests) {
             })
 
             ## Release and re-lease
-            .releaseDataset(part1)
-            part1 <- refresh(part1)
+            part1 <- releaseAndReload(part1)
 
             test_that("Check again", {
                 expect_true(name(part1$allpets) == "Some of my pets")
@@ -276,8 +275,7 @@ if (run.integration.tests) {
                 })
 
                 ## Release and re-lease
-                .releaseDataset(out)
-                out <- refresh(out)
+                out <- releaseAndReload(out)
 
                 test_that("Metadata sticks after releasing", {
                     expect_false(name(out$allpets) == "All pets owned")
@@ -286,10 +284,8 @@ if (run.integration.tests) {
 
                 ## Change the name and release again
                 name(out$allpets) <- "Apple"
-                .releaseDataset(out)
-                out <- refresh(out)
+                out <- releaseAndReload(out)
                 test_that("Metadata sticks after releasing and not appending", {
-                    skip("Sometimes it doesn't. See https://www.pivotaltracker.com/story/show/108354126")
                     expect_true(name(out$allpets) == "Apple")
                 })
             })

@@ -93,7 +93,7 @@ return \code{x} duly modified.
 }
 \description{
 These methods let you get and set names and aliases for variables in a
-Dataset's catalog, or within \code{\link{Subvariables}} in an array 
+Dataset's catalog, or within \code{\link{Subvariables}} in an array
 variable. They work like the base R names methods.
 }
 \details{

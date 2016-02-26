@@ -1,6 +1,6 @@
 context("Versions")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     ds <- loadDataset("test ds")
     test_that("Version catalog exists", {
         expect_true(inherits(versions(ds), "VersionCatalog"))
@@ -49,16 +49,12 @@ if (run.integration.tests) {
             })
 
             ## Release and re-lease
-            .releaseDataset(ds)
-            ds <- refresh(ds)
+            ds <- releaseAndReload(ds)
 
             test_that("There is an initial version", {
                 expect_identical(names(versions(ds)), "initial import")
                 expect_identical(length(versions(ds)), 1L)
             })
-
-            ## Slow down a beat because of #108354126
-            Sys.sleep(1)
 
             ## Make changes:
             # 1. Edit variable metadata
@@ -94,8 +90,7 @@ if (run.integration.tests) {
             })
 
             ## Release and re-lease
-            .releaseDataset(ds)
-            ds <- refresh(ds)
+            ds <- releaseAndReload(ds)
 
             ## Assert those things again
             test_that("The edits made are still there after releasing", {
@@ -119,8 +114,7 @@ if (run.integration.tests) {
             })
 
             ## Release and re-lease
-            .releaseDataset(ds)
-            ds <- refresh(ds)
+            ds <- releaseAndReload(ds)
 
             ## Revert to the first version
             ds <- try(restoreVersion(ds, "initial import"))
@@ -130,8 +124,7 @@ if (run.integration.tests) {
             })
 
             ## Release and re-lease
-            .releaseDataset(ds)
-            ds <- refresh(ds)
+            ds <- releaseAndReload(ds)
 
             test_that("Added variables are really removed by rolling back", {
                 ## This was user-reported: Order was reverted but derived

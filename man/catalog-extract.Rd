@@ -103,7 +103,7 @@
 
 \item{...}{additional arguments}
 
-\item{value}{For updating, an object of the appropriate class and size to 
+\item{value}{For updating, an object of the appropriate class and size to
 insert}
 
 \item{drop}{Invalid}

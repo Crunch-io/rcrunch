@@ -2,6 +2,7 @@
     "element": "shoji:entity",
     "self": "/api/datasets/dataset1/variables/gender.json",
     "body": {
+        "alias": "gender",
         "format": {
             "summary": {
                 "digits": 2

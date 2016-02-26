@@ -1,4 +1,4 @@
-validCategories <- function (object) {
+setValidity("Categories", function (object) {
     are.cats <- vapply(object, is.category, logical(1))
     if (!all(are.cats)) {
         badcount <- sum(!are.cats)
@@ -14,15 +14,14 @@ validCategories <- function (object) {
         return("Invalid category ids: must be unique")
     }
     return(TRUE)
-}
-setValidity("Categories", validCategories)
+})
 
-init.Categories <- function (.Object, ...) {
-    .Object@.Data <- lapply(..1, function (x) try(Category(data=x), silent=TRUE))
+setMethod("initialize", "Categories", function (.Object, ...) {
+    .Object@.Data <- lapply(..1,
+        function (x) try(Category(data=x), silent=TRUE))
     validObject(.Object)
     return(.Object)
-}
-setMethod("initialize", "Categories", init.Categories)
+})
 
 is.categories <- function (x) inherits(x, "Categories")
 
@@ -96,6 +95,12 @@ setMethod("values", "Categories", function (x) vapply(x, value, numeric(1)))
 setMethod("ids", "Categories", function (x) vapply(x, id, integer(1)))
 
 setNames <- function (x, value) {
+    if (is.null(value) || !is.character(value)) {
+        halt('Names must be of class "character"')
+    }
+    if (!identical(length(x), length(value))) {
+        halt("Invalid names: supplied ", length(value), " names for ", length(x), " categories")
+    }
     x[] <- mapply(setName, x, value=value, SIMPLIFY=FALSE)
     return(x)
 }
@@ -164,6 +169,16 @@ setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical
 n2i <- function (x, cats, strict=TRUE) {
     ## Convert x from category names to the corresponding category ids
     out <- ids(cats)[match(x, names(cats))]
+    if (strict && any(is.na(out))) {
+        halt(ifelse(sum(is.na(out)) > 1, "Categories", "Category"),
+            " not found: ", serialPaste(dQuote(x[is.na(out)])))
+    }
+    return(out)
+}
+
+i2n <- function (x, cats, strict=TRUE) {
+    ## Convert x from category ids to the corresponding category names
+    out <- names(cats)[match(x, ids(cats))]
     if (strict && any(is.na(out))) {
         halt(ifelse(sum(is.na(out)) > 1, "Categories", "Category"),
             " not found: ", serialPaste(dQuote(x[is.na(out)])))

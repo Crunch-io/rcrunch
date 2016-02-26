@@ -18,12 +18,12 @@ a Dataset), or values (e.g. names) of variables corresponding to \code{key}.
 If omitted, must supply \code{dataset} and \code{pattern}. If specifying
 values, must include \code{dataset}.}
 
-\item{dataset}{the Crunch Dataset to which the variables in 
+\item{dataset}{the Crunch Dataset to which the variables in
 \code{list_of_variables} belong, or in which to search for variables based
 on \code{pattern}. If omitted, \code{list_of_variables} must exist and all
 Variables in the list must belong to the same Dataset}
 
-\item{pattern}{An optional regular expression to search for variables to 
+\item{pattern}{An optional regular expression to search for variables to
 bind within \code{dataset}.}
 
 \item{key}{character, the name of the Variable field in which to search
@@ -34,8 +34,8 @@ should have. Required.}
 
 \item{...}{Optional additional attributes to set on the new variable.}
 
-\item{selections}{character, for \code{makeMR}, the names of the 
-categories to mark as the dichotomous selections. Required for 
+\item{selections}{character, for \code{makeMR}, the names of the
+categories to mark as the dichotomous selections. Required for
 \code{makeMR}; ignored in \code{makeArray}.}
 }
 \value{

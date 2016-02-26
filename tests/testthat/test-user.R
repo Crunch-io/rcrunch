@@ -1,23 +1,23 @@
 context("User stuff")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     test_that("Getting user object", {
         user <- getUser("/api/users/user1.json")
         expect_true(inherits(user, "ShojiObject"))
         expect_identical(user@body$email, "fake.user@example.com")
     })
-    
+
     test_that("Getting account's user catalog", {
         usercat <- getAccountUserCatalog()
         expect_true(inherits(usercat, "UserCatalog"))
         expect_identical(length(usercat), 3L)
-        expect_identical(urls(usercat), 
-            c("/api/users/user1.json", 
-              "/api/users/user3.json", 
+        expect_identical(urls(usercat),
+            c("/api/users/user1.json",
+              "/api/users/user3.json",
               "/api/users/user2.json"))
-        expect_identical(names(usercat), 
+        expect_identical(names(usercat),
             c("Fake User", "Bill User", "Roger User"))
-        expect_identical(emails(usercat), 
+        expect_identical(emails(usercat),
             c("fake.user@example.com",
               "william.user@example.io",
               "ruser@crunch.io"))
@@ -31,7 +31,7 @@ if (run.integration.tests) {
             expect_that(user, is_not_an_error())
             expect_true(inherits(user, "ShojiObject"))
         })
-        
+
         u.email <- uniqueEmail()
         u.name <- now()
         u.url <- try(invite(u.email, name=u.name, notify=FALSE))
@@ -44,7 +44,7 @@ if (run.integration.tests) {
             expect_true(u.email %in% emails(usercat))
             expect_true(u.name %in% sub(" +$", "", names(usercat)))
         })
-        
+
         test_that("User can be deleted", {
             skip_on_jenkins("Jenkins user needs more permissions")
             try(crDELETE(u.url))
@@ -53,7 +53,7 @@ if (run.integration.tests) {
             expect_false(u.email %in% emails(usercat))
             expect_false(u.name %in% sub(" +$", "", names(usercat)))
         })
-        
+
         test_that("test.user() setup/teardown", {
             skip_on_jenkins("Jenkins user needs more permissions")
             u.email <- paste0("test+", as.numeric(Sys.time()), "@crunch.io")
@@ -73,7 +73,7 @@ if (run.integration.tests) {
             expect_false(u.email %in% emails(usercat))
             expect_false(u.name %in% sub(" +$", "", names(usercat)))
         })
-        
+
         test_that("User with permissions", {
             skip_on_jenkins("Jenkins user needs more permissions")
             with(test.user(advanced=TRUE), {
@@ -96,7 +96,7 @@ if (run.integration.tests) {
 
     test_that("User cannot be fetched if logged out", {
         logout()
-        expect_error(getUser(), 
+        expect_error(getUser(),
             "You must authenticate before making this request")
     })
 }
