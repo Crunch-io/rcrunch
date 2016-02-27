@@ -6,7 +6,7 @@ options(crunch.api=getOption("test.api"),
 login()
 
 ## 1. Getting started
-data(economist, package="crunch")
+load("../vignettes/economist.RData")
 ds <- newDataset(economist, name="Economist/YouGov Weekly Survey")
 rm(economist)
 dim.ds <- dim(ds)

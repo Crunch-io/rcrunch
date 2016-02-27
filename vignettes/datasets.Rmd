@@ -28,7 +28,7 @@ To create new datasets, multiple paths exist. In the web application, you can up
 The `crunch` package contains a sample dataset that we'll use throughout the vignettes: a sample drawn from a political survey fielded by YouGov on behalf of the _Economist_.
 
 ```{r, eval=FALSE}
-data(economist, package="crunch")
+load("../vignettes/economist.RData")
 dim(economist)
 ```
 ```{r, echo=FALSE}

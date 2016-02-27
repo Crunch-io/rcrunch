@@ -16,7 +16,6 @@ Maintainer: Neal Richardson <neal@crunch.io>
 URL: https://github.com/Crunch-io/rcrunch
 BugReports: https://github.com/Crunch-io/rcrunch/issues
 License: LGPL (>= 3)
-LazyLoad: yes
 Depends:
     R (>= 3.0.0)
 Imports:

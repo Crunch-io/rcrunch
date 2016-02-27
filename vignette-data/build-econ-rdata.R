@@ -19,4 +19,4 @@ economist$obamaVote <- NULL
 
 economist <- economist[sample(seq_len(nrow(economist)), 250, replace=FALSE),]
 economist$weight <- economist$weight/mean(economist$weight)
-save(economist, file="../data/economist.RData")
+save(economist, file="../vignettes/economist.RData")

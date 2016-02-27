@@ -149,6 +149,7 @@ with_mock_HTTP({
             c(paste("Dataset", dQuote("test ds")),
             "",
             "Contains 25 rows of 6 variables:",
+            "",
             "$birthyr: Birth Year (numeric)",
             "$gender: Gender (categorical)",
             "$mymrset: mymrset (multiple_response)",
