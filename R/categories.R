@@ -208,3 +208,8 @@ setMethod("is.na<-", c("Categories", "logical"), function (x, value) {
         }, x=x@.Data, value=value, USE.NAMES=FALSE, SIMPLIFY=FALSE)
     return(x)
 })
+
+setMethod("lapply", "Categories", function (X, FUN, ...) {
+    X@.Data <- lapply(X@.Data, FUN, ...)
+    return(X)
+})

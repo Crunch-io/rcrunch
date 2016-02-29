@@ -1,3 +1,45 @@
+object_sort <- function (x) {
+    if (is.list(x)) {
+        x <- as.list(x) ## For S4 subclasses
+        if (!is.null(names(x))) {
+            x <- x[sort(names(x))]
+        }
+        return(lapply(x, object_sort))
+    }
+    return(x)
+}
+
+json_equivalent <- function(expected, label = NULL, ...) {
+  if (is.null(label)) {
+    label <- testthat:::find_expr("expected")
+  } else if (!is.character(label) || length(label) != 1) {
+    label <- deparse(label)
+  }
+
+  function(actual) {
+    same <- compare(object_sort(actual), object_sort(expected),
+      check.attributes=FALSE, ...)
+
+    expectation(
+      same$equal,
+      paste0("not JSON-equivalent to ", label, "\n", same$message),
+      paste0("JSON-equals ", label)
+    )
+  }
+}
+
+expect_json_equivalent <- function(object, expected, ..., info = NULL, label = NULL,
+  expected.label = NULL) {
+  if (is.null(label)) {
+    label <- testthat:::find_expr("object")
+  }
+  if (is.null(expected.label)) {
+    expected.label <- testthat:::find_expr("expected")
+  }
+  expect_that(object, json_equivalent(expected, label = expected.label, ...),
+    info = info, label = label)
+}
+
 does_not_give_warning <- function () {
     function (expr) {
         warnings <- evaluate_promise(expr)$warnings
