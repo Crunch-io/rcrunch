@@ -18,7 +18,8 @@
 ##' @examples
 ##' \dontrun{
 ##' ds$fav_pet2 <- combine(ds$fav_pet, name="Pets (combined)",
-##'     combinations=list(list(name="Mammals", categories=c("Cat", "Dog"))))
+##'     combinations=list(list(name="Mammals", categories=c("Cat", "Dog")),
+##'                       list(name="Reptiles", categories=c("Snake", "Lizard"))))
 ##' ds$pets_owned2 <- combine(ds$allpets, name="Pets owned (collapsed)",
 ##'     combinations=list(list(name="Mammals", responses=c("Cat", "Dog"))))
 ##' }
