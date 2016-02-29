@@ -139,7 +139,15 @@ if (run.integration.tests) {
 
             test_that("combine() with no combinations is effectively a copy", {
                 ds$combined_pets2 <- combine(ds$q1)
-                expect_identical(as.vector(ds$combined_pets2), ds$q1)
+                expect_identical(as.vector(ds$combined_pets2), as.vector(ds$q1))
+            })
+
+            test_that("combine() with categorical array", {
+                ds$combined_petloc <- combine(ds$petloc,
+                    name="Pet locations (combined)",
+                    list(list(name="Mammals", categories=c("Cat", "Dog"))))
+                expect_identical(names(categories(ds$combined_petloc)),
+                    c("Mammals", "Bird", "Skipped", "Not Asked"))
             })
         })
     })

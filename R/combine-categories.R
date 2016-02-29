@@ -15,6 +15,13 @@
 ##' comined-category or -response derived variable. Categories/responses not
 ##' referenced in \code{combinations} will be appended to the end of the
 ##' combinations.
+##' @examples
+##' \dontrun{
+##' ds$fav_pet2 <- combine(ds$fav_pet, name="Pets (combined)",
+##'     combinations=list(list(name="Mammals", categories=c("Cat", "Dog"))))
+##' ds$pets_owned2 <- combine(ds$allpets, name="Pets owned (collapsed)",
+##'     combinations=list(list(name="Mammals", responses=c("Cat", "Dog"))))
+##' }
 ##' @export
 combine <- function (variable, combinations=list(), ...) {
     ## Validate inputs
@@ -25,12 +32,6 @@ combine <- function (variable, combinations=list(), ...) {
     if (!is.list(combinations) || !all(vapply(combinations, is.list, logical(1)))) {
         halt("'combinations' must be a list of combination specifications")
     }
-    if (!all(vapply(combinations,
-        function (x) all(c("name", "categories") %in% names(x)),
-        logical(1)))) {
-
-        halt("'combinations' must be a list of combination specifications")
-    }
 
     ## Get basic variable metadata
     newvar <- copyVariableReferences(variable)
@@ -39,20 +40,42 @@ combine <- function (variable, combinations=list(), ...) {
     newvar$type <- NULL ## Type is function of the derivation
 
     ## Construct expr
-    combs <- combCats(categories(variable), combinations)
-    newvar$expr <- zfunc("combine_categories", zcl(variable), list(value=combs))
-    ## Give default name based on number of categories
-    if (identical(newvar$name, name(variable))) {
-        nvalidcats <- length(Filter(Negate(function (x) isTRUE(x$missing)),
-            newvar$expr$args[[2]]$value))
-        newvar$name <- paste0(newvar$name, " (", nvalidcats,
-            ifelse(nvalidcats == 1, " category)", " categories)"))
+    if (type(variable) == "multiple_response") {
+        combs <- combResps(subvariables(variable), combinations)
+        newvar$expr <- zfunc("combine_responses",
+            zcl(variable), list(value=combs))
+        ## Give default name based on number of responses
+        if (identical(newvar$name, name(variable))) {
+            nvalidresps <- length(newvar$expr$args[[2]]$value)
+            newvar$name <- paste0(newvar$name, " (", nvalidresps,
+                ifelse(nvalidresps == 1, " response)", " responses)"))
+        }
+    } else {
+        combs <- combCats(categories(variable), combinations)
+        newvar$expr <- zfunc("combine_categories",
+            zcl(variable), list(value=combs))
+        ## Give default name based on number of categories
+        if (identical(newvar$name, name(variable))) {
+            nvalidcats <- length(Filter(Negate(function (x) isTRUE(x$missing)),
+                newvar$expr$args[[2]]$value))
+            newvar$name <- paste0(newvar$name, " (", nvalidcats,
+                ifelse(nvalidcats == 1, " category)", " categories)"))
+        }
     }
     class(newvar) <- "VariableDefinition"
     return(newvar)
 }
 
 combCats <- function (cats, combs) {
+    ## Validate combinations
+    if (!all(vapply(combs,
+        function (x) all(c("name", "categories") %in% names(x)),
+        logical(1)))) {
+
+        halt("'combinations' must be a list of combination specifications. ",
+            "See '?combine'.")
+    }
+
     defaultCat <- list(missing=FALSE, numeric_value=NULL)
     ## Convert category names to ids
     ## Update each comb with default
@@ -69,7 +92,7 @@ combCats <- function (cats, combs) {
     })
 
     ## Validate that they're all unique and nonmissing
-    idsToCombine <- unlist(lapply(combs, "[[", name="combined_ids"))
+    idsToCombine <- unlist(lapply(combs, vget("combined_ids")))
     badids <- setdiff(idsToCombine, ids(cats))
     if (length(badids)) {
         badnames <- vapply(
@@ -117,5 +140,57 @@ combCats <- function (cats, combs) {
         halt("Duplicate category name given: ",
             serialPaste(dQuote(unique(newnames[dupnames]))))
     }
+    return(combs)
+}
+
+combResps <- function (subvars, combs) {
+    ## Validate combinations
+    if (!all(vapply(combs,
+        function (x) all(c("name", "responses") %in% names(x)),
+        logical(1)))) {
+
+        halt("'combinations' must be a list of combination specifications. ",
+            "See '?combine'.")
+    }
+
+    ## Convert response names/aliases to urls
+    subnames <- names(subvars)
+    subaliases <- aliases(subvars)
+    suburls <- urls(subvars)
+    combs <- lapply(combs, function (x) {
+        if (!is.character(x$responses)) {
+            halt("Combinations must reference 'responses' by name or alias")
+        }
+        matches <- match(x$responses, subnames)
+        if (any(is.na(matches))) {
+            ## Try aliases instead
+            matches <- match(x$responses, subaliases)
+        }
+        if (any(is.na(matches))) {
+            halt("Response ", dQuote(x$name),
+                " does not reference valid subvariables")
+        }
+        x$combined_ids <- I(suburls[matches])
+        x$responses <- NULL
+        return(x)
+    })
+
+    ## Append unreferenced subvars to end
+    subvarsToCombine <- unlist(lapply(combs, vget("combined_ids")))
+    oldSubvars <- lapply(setdiff(suburls, subvarsToCombine),
+        function (u) {
+            return(list(name=index(subvars)[[u]]$name,
+                combined_ids=I(u)))
+        })
+    combs <- c(combs, oldSubvars)
+
+    ## One more validation
+    newnames <- vapply(combs, vget("name"), character(1))
+    dupnames <- duplicated(newnames)
+    if (any(dupnames)) {
+        halt("Duplicate response name given: ",
+            serialPaste(dQuote(unique(newnames[dupnames]))))
+    }
+
     return(combs)
 }

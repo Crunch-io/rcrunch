@@ -31,10 +31,10 @@
         "/api/datasets/dataset1/variables/mymrset.json": {
             "name": "mymrset",
             "discarded": false,
-            "alias": "mymrset", 
+            "alias": "mymrset",
             "type": "multiple_response",
             "id": "949d2dc7e7a24e6090cc88bb92e1d2fb",
-            "description": "Budějovický Budvar",
+            "description": "Please select all that apply",
             "subvariables": [
                 "/api/datasets/dataset1/variables/subvar2.json",
                 "/api/datasets/dataset1/variables/subvar1.json",
@@ -45,7 +45,7 @@
         "/api/datasets/dataset1/variables/catarray.json": {
             "name": "Cat Array",
             "discarded": false,
-            "alias": "catarray", 
+            "alias": "catarray",
             "type": "categorical_array",
             "id": "qwert",
             "description": "An array of cats",
@@ -62,7 +62,7 @@
             "alias": "textVar",
             "type": "text",
             "id": "text",
-            "description": "random hex characters"
+            "description": "Budějovický Budvar"
         }
     },
     "orders": {
