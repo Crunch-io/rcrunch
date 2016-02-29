@@ -40,6 +40,13 @@ selectFrom <- function (key, xlist, ifnot=NA, simplify=TRUE) {
     return(y)
 }
 
+vget <- function (name) {
+    ## Return a function you can lapply/vapply to select an attribute
+    ## Usage: lapply(list.of.stuff, vget("name"))
+    ## instead of: lapply(list.of.stuff, function (x) x$name)
+    return(function (x) x[[name]])
+}
+
 ##' Make a prose list
 ##'
 ##' Function to paste together a list of items, separated by commas (if more

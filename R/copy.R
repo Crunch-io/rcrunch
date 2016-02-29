@@ -63,9 +63,11 @@ copy <- copyVariable
 copyVariableReferences <- function (x, fields=c("name", "alias",
                                     "description", "discarded", "format",
                                     "view", "type")) {
-    if (!inherits(x, "VariableEntity")) {
-        ## Get it.
-        x <- entity(x)
+
+    if (inherits(x, "CrunchVariable")) {
+        return(updateList(copyVariableReferences(tuple(x)),
+            copyVariableReferences(entity(x))))
+    } else {
+        return(x@body[intersect(fields, names(x@body))])
     }
-    return(x@body[intersect(fields, names(x@body))])
 }
