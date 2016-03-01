@@ -79,18 +79,13 @@ if (run.integration.tests) {
             with(test.dataset(f1, "f1"), {
                 ## Now merge f1 back to ds
                 test_that("The edits made to the fork are now upstream", {
-                    skip(paste("(409) Conflict: The given workflow could not be",
-                        "successfully run on this dataset. The dataset has been",
-                        "restored to the state before the attempted merge. Include",
-                        "a body.autorollback=false member in the future to allow",
-                        "analysis and repair instead."))
                     ds <- mergeFork(ds, f1)
                     expect_identical(names(na.omit(categories(ds$v4))),
                         c("d", "e"))
                     expect_identical(name(ds$v2), "Variable Two")
                     expect_identical(description(ds$v3),
                         "The third variable in the dataset")
-                    expect_identical(description(ds), "A dataset for testing")
+                    # expect_identical(description(ds), "A dataset for testing")
                     expect_identical(as.vector(ds$v7), df$v3 - 6)
                     expect_equivalent(as.vector(ds$v8), rep(1:5, 4))
                     expect_identical(aliases(variables(ds)),
