@@ -46,6 +46,10 @@ with_mock_HTTP({
         expect_identical(cats[[1]], Category(data=cereal(cats[[1]])))
     })
 
+    test_that("lapply categories", {
+        expect_identical(lapply(cats, function (x) x), cats)
+    })
+
     test_that("category getters", {
         male <- cats[[1]]
         expect_identical(name(male), "Male")
