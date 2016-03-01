@@ -124,7 +124,10 @@ setMethod("dim", "CrunchDataset",
 ##' @export
 setMethod("ncol", "CrunchDataset", function (x) length(variables(x)))
 
-namekey <- function (dataset) ifelse(dataset@useAlias, "alias", "name")
+namekey <- function (x) {
+    ## TODO: switch on x for namekey.dataset, namekey.array
+    match.arg(getOption("crunch.namekey.dataset"), c("alias", "name"))
+}
 
 ##' @rdname describe-catalog
 ##' @export

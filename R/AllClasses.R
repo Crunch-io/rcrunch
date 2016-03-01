@@ -186,24 +186,17 @@ VersionCatalog <- setClass("VersionCatalog", contains="ShojiCatalog")
 FilterCatalog <- setClass("FilterCatalog", contains="ShojiCatalog")
 ForkCatalog <- setClass("ForkCatalog", contains="ShojiCatalog")
 
-default.useAlias <- function () {
-    opt <- getOption("crunch.useAlias")
-    return(is.null(opt) || isTRUE(opt))
-}
-
 ##' Crunch Datasets
 ##'
 ##' @rdname CrunchDataset
 ##' @export
 CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
     representation=representation(
-        useAlias="logical",
         variables="VariableCatalog",
         filter="CrunchLogicalExpr",
         tuple="DatasetTuple"
     ),
     prototype=prototype(
-        useAlias=default.useAlias(),
         variables=VariableCatalog(),
         filter=CrunchLogicalExpr(),
         tuple=DatasetTuple()))

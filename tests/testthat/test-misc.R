@@ -94,3 +94,15 @@ test_that("absoluteURL", {
 test_that("emptyObject JSONifies correctly", {
     expect_equivalent(unclass(toJSON(emptyObject())), "{}")
 })
+
+test_that("setIfNotAlready", {
+    with(temp.options(crunch.test.opt1="previous",
+                      crunch.test.opt2=NULL,
+                      crunch.test.opt3=4), {
+
+        old <- setIfNotAlready(crunch.test.opt1="value", crunch.test.opt2=5)
+        expect_identical(getOption("crunch.test.opt1"), "previous")
+        expect_identical(getOption("crunch.test.opt2"), 5)
+        expect_identical(getOption("crunch.test.opt3"), 4)
+    })
+})

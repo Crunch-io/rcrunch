@@ -5,7 +5,8 @@
 ##' arguments are supplied (i.e \code{x[i]}), \code{i} provides for
 ##' \code{as.list} extraction: columns of the dataset rather than rows. If
 ##' character, identifies variables to extract based on their aliases (by
-##' default, i.e. when x's \code{useAlias} is TRUE); if numeric orlogical,
+##' default: set \code{options(crunch.namekey.dataset="name")} to use variable
+##' names); if numeric or logical,
 ##' extracts variables accordingly. Alternatively, (2) if \code{j} is specified
 ##' (as either \code{x[i, j]} or \code{x[i,]}), \code{i} is an object of class
 ##' \code{CrunchLogicalExpr} that will define a subset of rows.
@@ -164,9 +165,12 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 ##' Update a variable or variables in a dataset
 ##'
 ##' @param x a CrunchDataset
-##' @param i For \code{[}, a \code{CrunchLogicalExpr}, numeric, or logical vector defining a subset of the rows of \code{x}. For \code{[[}, see \code{j} for the as.list column subsetting.
+##' @param i For \code{[}, a \code{CrunchLogicalExpr}, numeric, or logical
+##' vector defining a subset of the rows of \code{x}. For \code{[[}, see
+##' \code{j} for the as.list column subsetting.
 ##' @param j if character, identifies variables to extract based on their
-##' aliases (by default, i.e. when x's \code{useAlias} is TRUE); if numeric or
+##' aliases (by default: set \code{options(crunch.namekey.dataset="name")} 
+##' to use variable names); if numeric or
 ##' logical, extracts variables accordingly. Note that this is the as.list
 ##' extraction, columns of the dataset rather than rows.
 ##' @param name like \code{j} but for \code{$}

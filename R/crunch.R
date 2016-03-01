@@ -18,20 +18,24 @@ NULL
 
 ##' @importFrom httr set_config
 .onAttach <- function (lib, pkgname="crunch") {
-    if (is.null(getOption("crunch.api"))) {
-        options(crunch.api="https://beta.crunch.io/api/")
-    }
-    if (is.null(getOption("crunch.max.categories"))) {
-        options(crunch.max.categories=256)
-    }
-    if (is.null(getOption("crunch.timeout"))) {
-        options(crunch.timeout=60)
-    }
-    if (is.null(getOption("httpcache.on"))) {
-        options(httpcache.on=TRUE)
-    }
-    options(warn=1)
+    setIfNotAlready(
+        crunch.api="https://beta.crunch.io/api/",
+        crunch.max.categories=256,
+        crunch.timeout=60,
+        httpcache.on=TRUE,
+        crunch.namekey.dataset="alias",
+        crunch.namekey.array="alias"
+    )
     set_config(crunchConfig())
     notifyIfNewVersion()
     invisible()
+}
+
+setIfNotAlready <- function (...) {
+    newopts <- list(...)
+    oldopts <- options()
+    oldopts <- oldopts[intersect(names(newopts), names(oldopts))]
+    newopts <- updateList(newopts, oldopts)
+    do.call(options, newopts)
+    invisible(oldopts)
 }
