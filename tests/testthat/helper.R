@@ -100,6 +100,7 @@ mrdf.setup <- function (dataset, pattern="mr_", name=ifelse(is.null(selections),
 validImport <- function (ds) {
     ## Pull out common tests that "df" was imported correctly
     expect_true(is.dataset(ds))
+    expect_identical(description(ds), "")
     expect_identical(names(df), names(ds))
     expect_identical(dim(ds), dim(df))
     expect_true(is.Numeric(ds[["v1"]]))

@@ -78,18 +78,20 @@ if (run.integration.tests) {
             ## So that f1 gets cleaned up even if merge fails
             with(test.dataset(f1, "f1"), {
                 ## Now merge f1 back to ds
+                ds <- mergeFork(ds, f1)
                 test_that("The edits made to the fork are now upstream", {
-                    ds <- mergeFork(ds, f1)
                     expect_identical(names(na.omit(categories(ds$v4))),
                         c("d", "e"))
                     expect_identical(name(ds$v2), "Variable Two")
                     expect_identical(description(ds$v3),
                         "The third variable in the dataset")
-                    # expect_identical(description(ds), "A dataset for testing")
                     expect_identical(as.vector(ds$v7), df$v3 - 6)
                     expect_equivalent(as.vector(ds$v8), rep(1:5, 4))
                     expect_identical(aliases(variables(ds)),
                         paste0("v", c(2,4,6,1,3,5,7,8)))
+                })
+                test_that("Certain changes don't merge", {
+                    expect_identical(description(ds), "")
                 })
             })
         })
