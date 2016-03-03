@@ -67,7 +67,7 @@ showCrunchVariable <- function (x) {
     out <- showCrunchVariableTitle(x)
     if (!is.null(activeFilter(x))) {
         out <- c(out,
-            paste("Filtered by", formatExpression(activeFilter(x)@expression)))
+            paste("Filtered by", formatExpression(activeFilter(x))))
     }
     try(out <- c(out, "", capture.output(print(summary(x)))))
     invisible(out)
@@ -85,7 +85,7 @@ showCrunchDataset <- function (x) {
             paste("Contains", nrow(x), "rows of", ncol(x), "variables:"))
     if (!is.null(activeFilter(x))) {
         out <- c(out,
-            paste("Filtered by", formatExpression(activeFilter(x)@expression)))
+            paste("Filtered by", formatExpression(activeFilter(x))))
     }
     out <- c(out,
             "",
@@ -160,7 +160,9 @@ formatVersionCatalog <- function (x, from=Sys.time()) {
     )
 
 formatExpression <- function (expr) {
-    if ("function" %in% names(expr)) {
+    if (inherits(expr, "CrunchExpr")) {
+        return(formatExpression(expr@expression))
+    } else if ("function" %in% names(expr)) {
         func <- expr[["function"]]
         func <- .funcs.z2r[[func]] %||% func ## Translate func name, if needed
         args <- vapply(expr[["args"]], formatExpression, character(1),
@@ -199,7 +201,7 @@ formatExpression <- function (expr) {
 ##' @rdname show-crunch
 ##' @export
 setMethod("show", "CrunchExpr", function (object) {
-    cat("Crunch expression: ", formatExpression(object@expression), "\n",
+    cat("Crunch expression: ", formatExpression(object), "\n",
         sep="")
     invisible(object)
 })
@@ -207,7 +209,7 @@ setMethod("show", "CrunchExpr", function (object) {
 ##' @rdname show-crunch
 ##' @export
 setMethod("show", "CrunchLogicalExpr", function (object) {
-    cat("Crunch logical expression: ", formatExpression(object@expression), "\n",
+    cat("Crunch logical expression: ", formatExpression(object), "\n",
         sep="")
     invisible(object)
 })
@@ -235,11 +237,8 @@ setMethod("getShowContent", "ShojiObject",
     function (x) capture.output(print(x@body)))
 setMethod("getShowContent", "CrunchFilter",
     function (x) {
-        ## TODO: remove this when server sends URLs instead of ids
-        e <- idsToURLs(x@body$expression,
-            absoluteURL("../../variables/", self(x)))
         return(c(paste("Crunch filter", dQuote(name(x))),
-        paste("Expression:", formatExpression(e))))
+            paste("Expression:", formatExpression(expr(x)))))
     })
 
 ##' @rdname show-crunch

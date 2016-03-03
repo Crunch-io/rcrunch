@@ -1,8 +1,13 @@
-### crunch 1.8.1
+### crunch 1.8.1 (under development)
+
+#### Major changes
 * Pull HTTP query cache out to the [httpcache](https://github.com/nealrichardson/httpcache) package and take dependency on that. Remove dependency on `digest` package (httpcache depends on it instead).
 * New vignette on [filters and exclusions](inst/doc/filters.md)
 * `combine` categories of categorical and categorical-array variables, and responses of multiple-response variables, into new derived variables
 * `startDate` and `endDate` attributes and setters for dataset entities (#10, #11)
+* Allow editing of filter expressions in UI filter objects (`CrunchFilter`)
+
+#### Other changes
 * Improved validation for "name" setting, especially for categories
 * Speed up `ncol(ds)` by removing a server request
 * Speed up variable catalog editing by avoiding unnecessary updates to the variable order
