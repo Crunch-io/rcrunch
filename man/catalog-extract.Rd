@@ -24,6 +24,7 @@
 \alias{[[<-,FilterCatalog,character,missing,CrunchFilter-method}
 \alias{[[<-,FilterCatalog,character,missing,CrunchLogicalExpr-method}
 \alias{[[<-,FilterCatalog,numeric,missing,CrunchFilter-method}
+\alias{[[<-,FilterCatalog,numeric,missing,CrunchLogicalExpr-method}
 \alias{[[<-,MemberCatalog,ANY,missing,ANY-method}
 \alias{[[<-,MemberCatalog,character,missing,NULL-method}
 \alias{[[<-,TeamCatalog,character,missing,CrunchTeam-method}
@@ -43,6 +44,8 @@
 
 \S4method{[[}{FilterCatalog,character,missing,CrunchLogicalExpr}(x, i, j) <-
   value
+
+\S4method{[[}{FilterCatalog,numeric,missing,CrunchLogicalExpr}(x, i, j) <- value
 
 \S4method{[[}{FilterCatalog,character,missing,CrunchFilter}(x, i, j) <- value
 

@@ -21,7 +21,7 @@ The `crunch` package contains a sample dataset that we'll use throughout the vig
 
 
 ```r
-data(economist, package="crunch")
+load("../vignettes/economist.RData")
 dim(economist)
 ```
 
