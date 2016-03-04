@@ -89,6 +89,8 @@ if (run.integration.tests) {
                     expect_equivalent(as.vector(ds$v8), rep(1:5, 4))
                     expect_identical(aliases(variables(ds)),
                         paste0("v", c(2,4,6,1,3,5,7,8)))
+                    ## Extra checks for v7
+                    expect_true("v7" %in% aliases(allVariables(ds)))
                 })
                 test_that("Certain changes don't merge", {
                     expect_identical(description(ds), "")

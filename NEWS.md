@@ -1,4 +1,5 @@
 ### crunch 1.9.1 (under development)
+* `forkDataset` to make a fork (copy) of a dataset; `mergeFork` to merge changes from a fork back to its parent (or vice versa)
 
 ## crunch 1.9.0
 
@@ -6,7 +7,6 @@
 * Pull HTTP query cache out to the [httpcache](https://github.com/nealrichardson/httpcache) package and take dependency on that. Remove dependency on `digest` package (httpcache depends on it instead).
 * New vignette on [filters and exclusions](inst/doc/filters.md)
 * `combine` categories of categorical and categorical-array variables, and responses of multiple-response variables, into new derived variables
-* `forkDataset` to make a fork (copy) of a dataset; `mergeFork` to merge changes from a fork back to its parent (or vice versa)
 * `startDate` and `endDate` attributes and setters for dataset entities (#10, #11)
 * Allow editing of filter expressions in UI filter objects (`CrunchFilter`)
 
