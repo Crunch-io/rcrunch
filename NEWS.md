@@ -1,4 +1,6 @@
-### crunch 1.9.0
+### crunch 1.9.1 (under development)
+
+## crunch 1.9.0
 
 #### Major changes
 * Pull HTTP query cache out to the [httpcache](https://github.com/nealrichardson/httpcache) package and take dependency on that. Remove dependency on `digest` package (httpcache depends on it instead).
