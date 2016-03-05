@@ -20,7 +20,7 @@ setMethod("ordering", "CrunchDataset", function (x) ordering(variables(x)))
 ##' @rdname ordering
 ##' @export
 setMethod("ordering<-", "CrunchDataset", function (x, value) {
-    ordering(allVariables(x)) <- value
+    ordering(x@variables) <- value
     return(x)
 })
 
