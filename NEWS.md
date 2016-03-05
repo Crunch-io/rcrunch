@@ -1,4 +1,5 @@
 ### crunch 1.9.1 (under development)
+* Remove a duplicate request made when setting variable order
 
 ## crunch 1.9.0
 
