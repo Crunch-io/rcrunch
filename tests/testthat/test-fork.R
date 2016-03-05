@@ -51,11 +51,11 @@ if (run.integration.tests) {
             ordering(f1) <- VariableOrder(VariableGroup("Even", f1[c(2,4,6)]),
                 VariableGroup("Odd", f1[c(1,3,5)]))
 
-            # 4. Derive variable
-            f1$v7 <- f1$v3 - 6
-
             # 5. Add non-derived variable
             f1$v8 <- rep(1:5, 4)
+
+            # 4. Derive variable
+            f1$v7 <- f1$v3 - 6
 
             ## Assert those things
             test_that("The edits are made to the fork", {
@@ -68,7 +68,7 @@ if (run.integration.tests) {
                 expect_identical(as.vector(f1$v7), df$v3 - 6)
                 expect_equivalent(as.vector(f1$v8), rep(1:5, 4))
                 expect_identical(aliases(variables(f1)),
-                    paste0("v", c(2,4,6,1,3,5,7,8)))
+                    paste0("v", c(2,4,6,1,3,5,8,7)))
             })
 
             test_that("The upstream dataset is unaffected by edits to the fork", {
@@ -88,7 +88,7 @@ if (run.integration.tests) {
                     expect_identical(as.vector(ds$v7), df$v3 - 6)
                     expect_equivalent(as.vector(ds$v8), rep(1:5, 4))
                     expect_identical(aliases(variables(ds)),
-                        paste0("v", c(2,4,6,1,3,5,7,8)))
+                        paste0("v", c(2,4,6,1,3,5,8,7)))
                     ## Extra checks for v7
                     expect_true("v7" %in% aliases(allVariables(ds)))
                 })
