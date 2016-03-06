@@ -7,13 +7,13 @@
 forkDataset(dataset, forkname)
 }
 \arguments{
-\item{dataset}{The CrunchDataset to fork}
+\item{dataset}{The \code{CrunchDataset} to fork}
 
 \item{forkname}{character name to give the fork. If omitted, one will be
 provided for you}
 }
 \value{
-The new fork, a CrunchDataset.
+The new fork, a \code{CrunchDataset}.
 }
 \description{
 As with many other version control systems, in Crunch you can fork a
