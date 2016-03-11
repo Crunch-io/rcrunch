@@ -4,8 +4,8 @@ context("UTF-8 Encoding")
 test_that("All test- files are ASCII (for CHECK)", {
     testfiles <- dir(pattern="^test.*R$")
     for (i in testfiles) {
-        expect_that(scan(i, what=character(), fileEncoding="ascii", quiet=TRUE),
-            does_not_give_warning(), info=i)
+        expect_warning(scan(i, what=character(), fileEncoding="ascii", quiet=TRUE),
+            NA, info=i)
     }
 })
 

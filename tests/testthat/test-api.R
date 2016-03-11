@@ -11,8 +11,8 @@ if (run.integration.tests) {
     test_that("crunchUserAgent", {
         expect_true(grepl("rcrunch", crunchUserAgent()))
         expect_true(grepl("libcurl", crunchUserAgent()))
-        expect_that(try(crunchUserAgent("anotherpackage/3.1.4")),
-            is_not_an_error())
+        expect_error(crunchUserAgent("anotherpackage/3.1.4"),
+            NA)
         expect_true(grepl("anotherpackage", crunchUserAgent("anotherpackage")))
     })
 

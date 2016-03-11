@@ -50,6 +50,7 @@ test_that("JSON equivalence", {
     expect_json_equivalent(list(n=5, q=list(r=55, p=9)),
         list(q=list(p=9, r=55), n=5))
     expect_json_equivalent(list(1, 2), list(1, 2))
+    skip("Upgrade these tests after testthat version lands")
     exp <- json_equivalent(list(1, 2))(list(2, 1))
     expect_false(exp$passed)
     expect_match(exp$failure, "not JSON-equivalent to")

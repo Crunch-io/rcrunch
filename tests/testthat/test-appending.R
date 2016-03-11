@@ -48,7 +48,6 @@ if (run.integration.tests) {
                 status <- pollBatchStatus(out, batches(part1),
                     until="imported")
                 test_that("batch status can be polled while we wait", {
-                    expect_that(status, is_not_an_error())
                     expect_identical(status, "imported")
                 })
             })

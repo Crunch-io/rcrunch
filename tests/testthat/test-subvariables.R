@@ -35,8 +35,8 @@ with_mock_HTTP({
     })
 
     test_that("Assinging in with no changes does not make PATCH request", {
-        expect_that(subvariables(mr) <- subvariables(mr),
-            does_not_throw_error())
+        expect_error(subvariables(mr) <- subvariables(mr),
+            NA)
     })
 
     test_that("can extract a subvariable as a Variable", {

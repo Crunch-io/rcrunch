@@ -81,9 +81,9 @@ with_mock_HTTP({
         expect_error(combine(ds$gender,
             list(list(name="Male", categories=2))),
             paste("Duplicate category name given:", dQuote("Male")))
-        expect_that(combine(ds$gender,
+        expect_error(combine(ds$gender,
             list(list(name="Male", categories=1))),
-            does_not_throw_error()) ## "Male" is category in original but not result
+            NA) ## "Male" is category in original but not result
     })
 
     test_that("combinations reference unique categories", {

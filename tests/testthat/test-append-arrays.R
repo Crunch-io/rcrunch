@@ -25,7 +25,6 @@ if (run.integration.tests) {
                 test_that("identical datasets with arrays can append", {
                     expect_message(out <- appendDataset(part1, part2),
                         "No conflicts")
-                    expect_that(out, is_not_an_error())
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 3L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
@@ -80,7 +79,6 @@ if (run.integration.tests) {
                     expect_identical(refresh(part2), part2)
                 })
                 test_that("unbound subvariables get lined up", {
-                    expect_that(out, is_not_an_error())
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 3L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
@@ -136,7 +134,6 @@ if (run.integration.tests) {
                 test_that("unbound subvars with not identical cats", {
                     expect_message(out <- appendDataset(part1, part2),
                         "No conflicts")
-                    expect_that(out, is_not_an_error())
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 3L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
@@ -179,7 +176,6 @@ if (run.integration.tests) {
                 })
                 out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("arrays with different subvariables can append", {
-                    expect_that(out, is_not_an_error())
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 3L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
@@ -240,7 +236,6 @@ if (run.integration.tests) {
                 test_that("alias and name matching on appending arrays", {
                     expect_message(out <- appendDataset(part1, part2),
                         "No conflicts")
-                    expect_that(out, is_not_an_error())
                     expect_true(is.dataset(out))
                     expect_identical(length(batches(out)), 3L)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
