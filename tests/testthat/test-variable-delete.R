@@ -63,12 +63,31 @@ if (run.integration.tests) {
                 expect_false("petloc_home" %in% names(ds))
             })
 
-            test_that("Deleting array subvariables", {
+            test_that("Deleting array/MR subvariables", {
                 expect_true("allpets" %in% names(ds))
                 expect_true(is.MR(ds$allpets))
                 expect_false("allpets_2" %in% names(ds))
                 expect_true("allpets_2" %in% aliases(subvariables(ds$allpets)))
                 # ds$allpets <- deleteSubvariable(ds$allpets, "Dog") ## Cannot overwrite one Variable with another
+                deleteSubvariable(ds$allpets, "Dog")
+                ds <- refresh(ds)
+                expect_true("allpets" %in% names(ds))
+                expect_true(is.MR(ds$allpets))
+                expect_false("allpets_2" %in% names(ds))
+                expect_false("allpets_2" %in% aliases(subvariables(ds$allpets)))
+                expect_identical(names(subvariables(ds$allpets)),
+                    c("Cat", "Bird"))
+            })
+        })
+
+        with(test.dataset(newDatasetFromFixture("apidocs")), {
+            ## Attempt to reproduce @persephonet's error
+            cats <- categories(ds$allpets)
+            cats[[3]]$selected <- TRUE
+            categories(ds$allpets) <- cats
+            test_that("Delete MR subvar with multiple 'selected' attributes", {
+                expect_identical(names(Filter(is.selected, categories(ds$allpets))),
+                    c("selected", "not asked")) ## There are two selected
                 deleteSubvariable(ds$allpets, "Dog")
                 ds <- refresh(ds)
                 expect_true("allpets" %in% names(ds))
