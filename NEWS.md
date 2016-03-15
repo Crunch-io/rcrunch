@@ -1,3 +1,5 @@
+### crunch 1.9.3 (under development)
+
 ### crunch 1.9.2
 * `forkDataset` to make a fork (copy) of a dataset; `mergeFork` to merge changes from a fork back to its parent (or vice versa)
 * Remove a duplicate request made when setting variable order
