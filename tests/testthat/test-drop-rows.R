@@ -4,11 +4,11 @@ with_mock_HTTP({
     ds <- loadDataset("test ds")
     test_that("dropRows generates the right request", {
         expect_error(dropRows(ds, ds$gender == "Male"),
-            paste0('Error : POST /api/datasets/dataset1/table.json ',
+            paste0('POST /api/datasets/dataset1/table.json ',
             '{"command":"delete","filter":{"function":"==",',
             '"args":[{"variable":"/api/datasets/dataset1/variables/gender.json"},',
             '{"value":1,"type":{"function":"typeof","args":[',
-            '{"variable":"/api/datasets/dataset1/variables/gender.json"}]}}]}}\n'),
+            '{"variable":"/api/datasets/dataset1/variables/gender.json"}]}}]}}'),
             fixed=TRUE)
     })
 })
