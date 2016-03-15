@@ -1,6 +1,7 @@
-### crunch 1.9.1 (under development)
+### crunch 1.9.2
 * `forkDataset` to make a fork (copy) of a dataset; `mergeFork` to merge changes from a fork back to its parent (or vice versa)
 * Remove a duplicate request made when setting variable order
+* Update to new API to get a datetime variable's rollup resolution and save a request
 
 ## crunch 1.9.0
 
