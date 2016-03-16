@@ -17,6 +17,7 @@
 \alias{emails}
 \alias{emails,PermissionCatalog-method}
 \alias{emails,UserCatalog-method}
+\alias{names,CategoricalArrayVariable-method}
 \alias{names,CrunchDataset-method}
 \alias{names,DatasetCatalog-method}
 \alias{names,FilterCatalog-method}
@@ -52,6 +53,8 @@
 \S4method{aliases}{Subvariables}(x)
 
 \S4method{aliases}{Subvariables}(x) <- value
+
+\S4method{names}{CategoricalArrayVariable}(x)
 
 \S4method{names}{TeamCatalog}(x)
 

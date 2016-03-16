@@ -25,13 +25,21 @@ setMethod("hidden", "VariableCatalog", function (x) {
 ##' @rdname catalog-extract
 ##' @export
 setMethod("[[", c("VariableCatalog", "character"), function (x, i, ...) {
-    VariableTuple(index_url=self(x), entity_url=i, body=index(x)[[i]])
+    tup <- index(x)[[i]]
+    if (!is.list(tup)) {
+        halt("Subscript out of bounds: ", i)
+    }
+    return(VariableTuple(index_url=self(x), entity_url=i, body=tup))
 })
 ##' @rdname catalog-extract
 ##' @export
 setMethod("[[", c("VariableCatalog", "ANY"), function (x, i, ...) {
-    VariableTuple(index_url=self(x), entity_url=urls(x)[i],
-        body=index(x)[[i]])
+    tup <- index(x)[[i]]
+    if (!is.list(tup)) {
+        halt("Subscript out of bounds: ", i)
+    }
+    return(VariableTuple(index_url=self(x), entity_url=urls(x)[i],
+        body=index(x)[[i]]))
 })
 ##' @rdname catalog-extract
 ##' @export
@@ -62,24 +70,27 @@ setMethod("[", c("VariableCatalog", "VariableGroup"), function (x, i, ...) {
 })
 ##' @rdname catalog-extract
 ##' @export
-setMethod("[<-", c("VariableCatalog", "character", "missing", "VariableCatalog"), function (x, i, j, value) {
-    ## Validate!
-    index(x)[i] <- index(value)[i]
-    ## No save, I don't think. PATCH outside this fn?
-    return(x)
-})
+setMethod("[<-", c("VariableCatalog", "character", "missing", "VariableCatalog"),
+    function (x, i, j, value) {
+        ## Validate!
+        index(x)[i] <- index(value)[i]
+        ## No save, I don't think. PATCH outside this fn?
+        return(x)
+    })
 ##' @rdname catalog-extract
 ##' @export
-setMethod("[<-", c("VariableCatalog", "VariableOrder", "missing", "VariableCatalog"), function (x, i, j, value) {
-    i <- urls(i)
-    callNextMethod(x, i, value=value)
-})
+setMethod("[<-", c("VariableCatalog", "VariableOrder", "missing", "VariableCatalog"),
+    function (x, i, j, value) {
+        i <- urls(i)
+        callNextMethod(x, i, value=value)
+    })
 ##' @rdname catalog-extract
 ##' @export
-setMethod("[<-", c("VariableCatalog", "VariableGroup", "missing", "VariableCatalog"), function (x, i, j, value) {
-    i <- urls(i)
-    callNextMethod(x, i, value=value)
-})
+setMethod("[<-", c("VariableCatalog", "VariableGroup", "missing", "VariableCatalog"),
+    function (x, i, j, value) {
+        i <- urls(i)
+        callNextMethod(x, i, value=value)
+    })
 
 ##' @rdname describe-catalog
 ##' @export

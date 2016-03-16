@@ -128,13 +128,12 @@ NULL
 setMethod("[[", c("Subvariables", "character"), function (x, i, ...) {
     i <- match(i, names(x))
     if (is.na(i)) return(NULL)
-    callNextMethod(x, i, ...)
+    return(x[[i, ...]])
 })
 ##' @rdname subvars-extract
 ##' @export
 setMethod("[[", c("Subvariables", "ANY"), function (x, i, ...) {
-    out <- VariableTuple(index_url=self(x), entity_url=urls(x)[i],
-        body=index(x)[[i]])
+    out <- callNextMethod(x, i, ...)
     if (!is.null(out)) {
         out <- CrunchVariable(out, filter=activeFilter(x))
     }
@@ -278,33 +277,38 @@ setMethod("[<-", c("Subvariables", "ANY", "missing", "ANY"),
 ##' @export
 as.list.Subvariables <- function (x, ...) lapply(names(x), function (i) x[[i]])
 
-##' @rdname subvars-extract
+
+##' @rdname describe-catalog
 ##' @export
-setMethod("[", "CategoricalArrayVariable", function (x, i, ...) {
-    return(subvariables(x)[i, ...])
+setMethod("names", "CategoricalArrayVariable", function (x) {
+    findVariables(subvariables(x), key=namekey(x), value=TRUE)
 })
-## Special methods so as not to conflict with c("CrunchVariable", "numeric")
 
 ##' @rdname subvars-extract
 ##' @export
-setMethod("[", c("CategoricalArrayVariable", "numeric"), function (x, i, ...) {
-    return(subvariables(x)[i, ...])
+setMethod("[", c("CategoricalArrayVariable", "character"), function (x, i, ...) {
+    w <- match(i, names(x))
+    if (any(is.na(w))) {
+        halt("Undefined subvariables selected: ", serialPaste(i[is.na(w)]))
+    }
+    return(subvariables(x)[w, ...])
 })
 ##' @rdname subvars-extract
 ##' @export
-setMethod("[", c("CategoricalArrayVariable", "logical"), function (x, i, ...) {
-    return(subvariables(x)[i, ...])
-})
-##' @rdname subvars-extract
-##' @export
-setMethod("[[", "CategoricalArrayVariable", function (x, i, ...) {
+setMethod("[[", c("CategoricalArrayVariable", "ANY"), function (x, i, ...) {
     return(subvariables(x)[[i, ...]])
 })
+##' @rdname subvars-extract
+##' @export
+setMethod("[[", c("CategoricalArrayVariable", "character"), function (x, i, ...) {
+    i <- match(i, names(x))
+    if (is.na(i)) return(NULL)
+    return(x[[i, ...]])
+})
 
 ##' @rdname subvars-extract
 ##' @export
-setMethod("$", "CategoricalArrayVariable",
-    function (x, name) subvariables(x)[[name]])
+setMethod("$", "CategoricalArrayVariable", function (x, name) x[[name]])
 
 
 ##' @rdname subvars-extract
@@ -317,8 +321,25 @@ setMethod("[[<-",
     })
 ##' @rdname subvars-extract
 ##' @export
+setMethod("[[<-",
+    c("CategoricalArrayVariable", "character", "missing", "ANY"),
+    function (x, i, value) {
+        i <- match(i, names(x))
+        if (is.na(i)) {
+            ## Maybe we changed the name and that's what we're assigning back.
+            ## Check URLs instead.
+            i <- match(self(value), urls(subvariables(x)))
+        }
+        if (is.na(i)) {
+            halt("subscript out of bounds")
+        }
+        subvariables(x)[[i]] <- value ## "callNextMethod"
+        return(x)
+    })
+##' @rdname subvars-extract
+##' @export
 setMethod("$<-", c("CategoricalArrayVariable"), function (x, name, value) {
-    subvariables(x)[[name]] <- value
+    x[[name]] <- value
     return(x)
 })
 

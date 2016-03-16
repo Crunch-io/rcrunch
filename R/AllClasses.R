@@ -259,7 +259,7 @@ Category <- function (..., data=NULL) {
 
 ##' @rdname Subvariables
 ##' @export
-Subvariables <- setClass("Subvariables", contains="ShojiCatalog",
+Subvariables <- setClass("Subvariables", contains="VariableCatalog",
     representation=representation(
         filter="CrunchLogicalExpr"
     ),

@@ -52,10 +52,13 @@ with_mock_HTTP({
         expect_identical(varcat[[gender.url]]@body,
             index(varcat)[[gender.url]])
         expect_identical(index(varcat[2:3]), index(varcat)[2:3])
-        expect_error(varcat[[999]], "subscript out of bounds")
-        skip("Not implemented")
-        expect_error(varcat[["asdf"]], "subscript out of bounds")
-        expect_error(varcat[999:1000], "subscript out of bounds")
+    })
+
+    test_that("Extract methods: invalid input", {
+        expect_error(varcat[[999]], "subscript out of bounds") ## base R
+        expect_error(varcat[["asdf"]], "Subscript out of bounds: asdf")
+        expect_error(varcat[[NA]], "Subscript out of bounds: NA")
+        expect_error(varcat[999:1000], "Subscript out of bounds: 999:1000")
     })
 
     test_that("Extract methods: VariableOrder/Group", {

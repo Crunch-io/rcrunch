@@ -50,19 +50,31 @@ with_mock_HTTP({
     })
 
     test_that("can extract directly from array variable", {
-        expect_true(inherits(mr[[1]], "CrunchVariable"))
         expect_true(is.Categorical(mr[[1]]))
-        expect_true(inherits(mr[["Second"]], "CrunchVariable"))
         expect_true(is.Categorical(mr[["Second"]]))
-        expect_true(inherits(mr$Second, "CrunchVariable"))
         expect_true(is.Categorical(mr$Second))
         expect_true(is.null(mr$Other))
 
-        expect_true(inherits(mr[1:2], "Subvariables"))
         expect_true(inherits(mr[c("First", "Last")],
             "Subvariables"))
         expect_error(mr[c("First", "Other")],
-            "Undefined subvariables selected")
+            "Undefined subvariables selected: Other")
+        expect_error(mr[c("Different", "Other")],
+            "Undefined subvariables selected: Different and Other")
+    })
+
+    test_that("can extract directly from array variable with different namekey", {
+        with(temp.option(crunch.namekey.array="alias"), {
+            expect_true(is.Categorical(mr[[1]]))
+            expect_true(is.Categorical(mr[["subvar1"]]))
+            expect_true(is.Categorical(mr$subvar2))
+            expect_true(is.null(mr$Other))
+
+            expect_true(inherits(mr[c("subvar2", "subvar3")],
+                "Subvariables"))
+            expect_error(mr[c("subvar2", "Other")],
+                "Undefined subvariables selected: Other")
+        })
     })
 
     test_that("show method for Subvariables", {

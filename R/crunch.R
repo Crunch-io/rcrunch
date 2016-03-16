@@ -24,7 +24,7 @@ NULL
         crunch.timeout=60,
         httpcache.on=TRUE,
         crunch.namekey.dataset="alias",
-        crunch.namekey.array="alias"
+        crunch.namekey.array="name"
     )
     set_config(crunchConfig())
     notifyIfNewVersion()

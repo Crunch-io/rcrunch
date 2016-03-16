@@ -44,7 +44,7 @@ options(
     crunch.timeout=15,
     httpcache.on=TRUE,
     crunch.namekey.dataset="alias",
-    crunch.namekey.array="alias",
+    crunch.namekey.array="name",
     crunch.email=envOrOption("test.user"),
     crunch.pw=envOrOption("test.pw")
 )
