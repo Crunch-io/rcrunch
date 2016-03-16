@@ -117,6 +117,9 @@ print.young.males1 <- capture.output(print(filters(ds)[["Young males"]]))
 filter.catalog.2 <- filters(ds)
 is.public(filters(ds)[["Young males"]]) <- TRUE
 filter.catalog.3 <- filters(ds)
+filters(ds)[["Young males"]] <- ds$gender == "Male" & ds$age < 35
+print.young.males2 <- capture.output(print(filters(ds)[["Young males"]]))
+
 dim.ds.filters <- dim(ds)
 exclusion(ds) <- ds$perc_skipped > 15
 high_perc_skipped <- capture.output(print(exclusion(ds)))

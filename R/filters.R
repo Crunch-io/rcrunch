@@ -71,14 +71,32 @@ setMethod("[[", c("FilterCatalog", "numeric"), function (x, i, ...) {
 ##' @export
 setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchLogicalExpr"),
     function (x, i, j, value) {
+        stopifnot(length(i) == 1)
         if (i %in% names(x)) {
-            ## TODO: update filter with new expression
-            halt("Cannot (yet) modify filter")
+            crPATCH(urls(x)[match(i, names(x))],
+                body=toJSON(list(expression=zcl(value))))
+            ## Editing expression doesn't require invalidating the catalog
+            return(x)
         } else {
             ## Creating a new filter
             u <- crPOST(self(x), body=toJSON(list(name=i,
                 expression=zcl(value))))
             return(refresh(x))
+        }
+    })
+
+##' @rdname catalog-extract
+##' @export
+setMethod("[[<-", c("FilterCatalog", "numeric", "missing", "CrunchLogicalExpr"),
+    function (x, i, j, value) {
+        stopifnot(length(i) == 1)
+        if (i %in% seq_along(urls(x))) {
+            crPATCH(urls(x)[i],
+                body=toJSON(list(expression=zcl(value))))
+            ## Editing expression doesn't require invalidating the catalog
+            return(x)
+        } else {
+            halt("Subscript out of bounds: ", i)
         }
     })
 
@@ -243,3 +261,15 @@ idsToURLs <- function (expr, base_url) {
     dropCache(self(x))
     return(x)
 }
+
+setMethod("expr", "CrunchFilter",
+    function (x) {
+        ## TODO: remove this when server sends URLs instead of ids
+        e <- idsToURLs(x@body$expression,
+            absoluteURL("../../variables/", self(x)))
+        if (length(e)) {
+            return(CrunchLogicalExpr(expression=e))
+        } else {
+            return(NULL)
+        }
+    })

@@ -28,7 +28,6 @@ if (run.integration.tests) {
     with(test.authentication, {
         test_that("User can be fetched", {
             user <- try(getUser())
-            expect_that(user, is_not_an_error())
             expect_true(inherits(user, "ShojiObject"))
         })
 
@@ -38,7 +37,6 @@ if (run.integration.tests) {
 
         test_that("User can be invited", {
             skip_on_jenkins("Jenkins user needs more permissions")
-            expect_that(u.url, is_not_an_error())
             usercat <- getAccountUserCatalog()
             expect_true(u.url %in% urls(usercat))
             expect_true(u.email %in% emails(usercat))

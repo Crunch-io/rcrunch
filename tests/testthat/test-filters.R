@@ -1,9 +1,7 @@
 context("Filters")
 
-with_mock_HTTP({
-    test_that("show method exists", {
-        expect_true(is.character(capture.output(print(CrunchFilter()))))
-    })
+test_that("show method exists", {
+    expect_true(is.character(capture.output(print(CrunchFilter()))))
 })
 
 if (run.integration.tests) {
@@ -47,6 +45,25 @@ if (run.integration.tests) {
                 expect_true(is.public(filters(ds)[[1]]))
                 is.public(filters(ds)[[1]]) <- FALSE
                 expect_false(is.public(filters(ds)[[1]]))
+            })
+
+            test_that("Can update a filter's expression by name", {
+                expect_json_equivalent(zcl(expr(filters(ds)[[1]])),
+                    zcl(ds$v4 == "B"))
+                filters(ds)[["Test filter"]] <- ds$v4 == "C"
+                expect_json_equivalent(zcl(expr(filters(ds)[[1]])),
+                    zcl(ds$v4 == "C"))
+            })
+            test_that("Can update a filter's expression by index", {
+                expect_json_equivalent(zcl(expr(filters(ds)[[1]])),
+                    zcl(ds$v4 == "C"))
+                filters(ds)[[1]] <- ds$v4 == "B"
+                expect_json_equivalent(zcl(expr(filters(ds)[[1]])),
+                    zcl(ds$v4 == "B"))
+            })
+            test_that("Error handling for [[<-", {
+                expect_error(filters(ds)[[6]] <- ds$v4 == "B",
+                    "Subscript out of bounds: 6")
             })
 
             test_that("We have an applied filters view", {

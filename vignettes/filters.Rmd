@@ -106,6 +106,16 @@ filters(ds)
 print(filter.catalog.3)
 ```
 
+You can also edit the filter expressions by assigning a new one in, like:
+
+```{r, eval=FALSE}
+filters(ds)[["Young males"]] <- ds$gender == "Male" & ds$age < 35
+filters(ds)[["Young males"]]
+```
+```{r, echo=FALSE}
+cat(print.young.males2, sep="\n")
+```
+
 ## Exclusion filters
 
 One other application for filtering is the dataset exclusion filter. The exclusion allows you to suppress from view rows that match a certain condition. Exclusions are set on the dataset with a Crunch logical expression:

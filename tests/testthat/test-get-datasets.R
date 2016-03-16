@@ -70,7 +70,6 @@ if (run.integration.tests) {
                 expect_error(deleteDataset("this is totally not a dataset",
                     paste(dQuote("this is totally not a dataset"), "not found")))
                 out <- try(deleteDataset(dsname))
-                expect_that(out, is_not_an_error())
                 expect_false(dsname %in% listDatasets())
             })
         })
@@ -83,8 +82,7 @@ if (run.integration.tests) {
 
                 expect_error(deleteDataset(dsnum + 9999),
                     "subscript out of bounds")
-                out <- try(deleteDataset(dsnum))
-                expect_that(out, is_not_an_error())
+                out <- deleteDataset(dsnum)
                 expect_false(dsname %in% listDatasets())
             })
         })
@@ -93,8 +91,7 @@ if (run.integration.tests) {
             dsname <- name(ds)
             test_that("deleteDataset on Dataset object", {
                 expect_true(dsname %in% listDatasets())
-                out <- try(deleteDataset(ds))
-                expect_that(out, is_not_an_error())
+                out <- deleteDataset(ds)
                 expect_false(dsname %in% listDatasets())
             })
         })

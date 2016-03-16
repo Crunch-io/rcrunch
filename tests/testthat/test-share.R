@@ -28,17 +28,17 @@ with_mock_HTTP({
                 "https://fake.crunch.io/password/change/${token}/")
             expect_error(share(ds, "lauren.ipsum@crunch.io", edit=TRUE,
                 notify=FALSE),
-                paste0('Error : PATCH /api/datasets/dataset1/permissions.json ',
+                paste0('PATCH /api/datasets/dataset1/permissions.json ',
                 '{"lauren.ipsum@crunch.io":{"dataset_permissions":',
-                '{"edit":true,"view":true}},"send_notification":false}\n'),
+                '{"edit":true,"view":true}},"send_notification":false}'),
                 fixed=TRUE)
             expect_error(share(ds, "lauren.ipsum@crunch.io", edit=TRUE,
                 notify=TRUE),
-                paste0('Error : PATCH /api/datasets/dataset1/permissions.json ',
+                paste0('PATCH /api/datasets/dataset1/permissions.json ',
                 '{"lauren.ipsum@crunch.io":{"dataset_permissions":',
                 '{"edit":true,"view":true}},"send_notification":true,',
                 '"url_base":"https://fake.crunch.io/password/change/${token}/",',
-                '"dataset_url":"https://fake.crunch.io/dataset/511a7c49778030653aab5963"}\n'),
+                '"dataset_url":"https://fake.crunch.io/dataset/511a7c49778030653aab5963"}'),
                 fixed=TRUE)
         })
     })

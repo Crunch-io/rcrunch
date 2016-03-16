@@ -35,8 +35,7 @@ if (run.integration.tests) {
                 ds$arrayVar <- var
                 expect_equal(c("arrayVar", "v4"), names(ds))
                 ## unbind.
-                u <- try(unbind(ds$arrayVar))
-                expect_that(u, is_not_an_error())
+                u <- unbind(ds$arrayVar)
                 ds <- refresh(ds)
                 expect_true(setequal(names(ds), names(mrdf)))
                 expect_identical(ncol(ds), 4L)
@@ -121,8 +120,7 @@ if (run.integration.tests) {
                 expect_true(is.CA(var))
 
                 ## unbind.
-                u <- try(unbind(var))
-                expect_that(u, is_not_an_error())
+                u <- unbind(var)
                 ds <- refresh(ds)
                 expect_true(setequal(names(ds), names(mrdf)))
                 expect_identical(ncol(ds), 4L)

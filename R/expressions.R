@@ -246,7 +246,7 @@ rollup <- function (x, resolution=rollupResolution(x)) {
 
 rollupResolution <- function (x) {
     if (is.Datetime(x)) {
-        return(entity(x)@body$view$rollup_resolution)
+        return(tuple(x)$rollup_resolution)
     } else {
         return(NULL)
     }

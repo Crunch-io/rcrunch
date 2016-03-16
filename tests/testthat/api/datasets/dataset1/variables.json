@@ -26,7 +26,9 @@
             "alias": "starttime",
             "type": "datetime",
             "id": "d7c21314ca9e453c93069168681a285c",
-            "description": "Interview Start Time"
+            "description": "Interview Start Time",
+            "resolution": "D",
+            "rollup_resolution": "s"
         },
         "/api/datasets/dataset1/variables/mymrset.json": {
             "name": "mymrset",

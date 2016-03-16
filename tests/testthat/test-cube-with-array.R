@@ -148,10 +148,10 @@ if (run.integration.tests) {
 
             test_that("can't request NULL as subvariable (bad subvar ref)", {
                 expect_error(crtabs(~ CA$mr_1 + CA$NOTAVAR, data=mrds),
-                    "Invalid cube dimension: CA$NOTAVAR cannot be NULL\n",
+                    "Invalid cube dimension: CA$NOTAVAR cannot be NULL",
                     fixed=TRUE)
                 expect_error(crtabs(~ CA$foo + CA$mr_1 + CA$NOTAVAR, data=mrds),
-                    "Invalid cube dimensions: CA$foo and CA$NOTAVAR cannot be NULL\n",
+                    "Invalid cube dimensions: CA$foo and CA$NOTAVAR cannot be NULL",
                     fixed=TRUE)
             })
         })

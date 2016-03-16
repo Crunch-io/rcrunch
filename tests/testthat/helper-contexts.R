@@ -3,7 +3,7 @@
 #####################
 setup.and.teardown <- function (setup, teardown, obj.name=NULL) {
     ContextManager(enter=setup, exit=teardown, as=obj.name,
-        error=function (e) expect_that(stop(e$message), does_not_throw_error()))
+        error=function (e) expect_error(stop(e$message), NA))
 }
 
 with_mock_HTTP <- function (expr) {

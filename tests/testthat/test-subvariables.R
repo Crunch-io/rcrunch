@@ -35,8 +35,8 @@ with_mock_HTTP({
     })
 
     test_that("Assinging in with no changes does not make PATCH request", {
-        expect_that(subvariables(mr) <- subvariables(mr),
-            does_not_throw_error())
+        expect_error(subvariables(mr) <- subvariables(mr),
+            NA)
     })
 
     test_that("can extract a subvariable as a Variable", {
@@ -173,9 +173,6 @@ if (run.integration.tests) {
             test_that("Reordering of subvars persists on release", {
                 expect_identical(names(subvariables(ds$MR)),
                     c("mr_3", "mr_1", "mr_2"))
-                skip("Somehow this is back to the original order?!?")
-                # mr_1 mr_2 mr_3
-                #   2    1    1
                 expect_equivalent(as.array(crtabs(~ MR, data=ds)),
                     structure(array(c(1, 2, 1),
                         dimnames=list(MR=c("mr_3", "mr_1", "mr_2")))))

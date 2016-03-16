@@ -270,14 +270,16 @@ if (run.integration.tests) {
                 expect_error(delete(ds.sub),
                     "Must confirm deleting dataset")
                 ## Then can delete
-                expect_that(delete(ds.sub, confirm=FALSE), is_not_an_error())
+                expect_error(delete(ds.sub, confirm=FALSE),
+                    NA)
             })
         })
 
         test_that("Can give consent to delete", {
             with(test.dataset(df), {
                 with(consent(), {
-                    expect_that(delete(ds, confirm=TRUE), is_not_an_error())
+                    expect_error(delete(ds, confirm=TRUE),
+                        NA)
                 })
             })
         })

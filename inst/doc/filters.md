@@ -28,6 +28,8 @@ dems
 ## Dataset “Economist/YouGov Weekly Survey”
 ## 
 ## Contains 96 rows of 38 variables:
+## Filtered by pid3 == "Democrat"
+## 
 ## $newsint2: newsint2 (categorical)
 ## $track: Direction of country (categorical)
 ## $imiss: Issue importance (multiple_response)
@@ -162,7 +164,7 @@ filters(ds)
 
 ```
 ##          name                               id is_public
-## 1 Young males 1efb8332a78c46abaae7438091aa7eda     FALSE
+## 1 Young males 9742b1aef0134c4a883f2f461efe7b30     FALSE
 ```
 
 This filter is now available for you to use in the web application. If you want to make the filter available to all viewers of the dataset, make it "public":
@@ -175,7 +177,20 @@ filters(ds)
 
 ```
 ##          name                               id is_public
-## 1 Young males 1efb8332a78c46abaae7438091aa7eda      TRUE
+## 1 Young males 9742b1aef0134c4a883f2f461efe7b30      TRUE
+```
+
+You can also edit the filter expressions by assigning a new one in, like:
+
+
+```r
+filters(ds)[["Young males"]] <- ds$gender == "Male" & ds$age < 35
+filters(ds)[["Young males"]]
+```
+
+```
+## Crunch filter “Young males”
+## Expression: gender == "Male" & age < 35L
 ```
 
 ## Exclusion filters

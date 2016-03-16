@@ -60,7 +60,7 @@ if (run.integration.tests) {
             test_that("unhideVariables by alias", {
                 expect_identical(hiddenVariables(ds), c())
                 expect_identical(dim(ds), dim(df))
-                expect_that(ds$v2, does_not_give_warning())
+                expect_warning(ds$v2, NA)
                 expect_true(is.Text(ds$v2))
             })
         })
