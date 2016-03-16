@@ -3,13 +3,10 @@
 ##' @param x a data.frame or other rectangular R object
 ##' @param name character, the name to give the new Crunch dataset. Default is
 ##' the name of the R object passed in \code{x}
-##' @param useAlias logical whether variable alias or name should be used as R
-##' variable names when the dataset is returned. Default is TRUE, meaning alias.
 ##' @param ... additional arguments passed to \code{ \link{createDataset}}
 ##' @return If successful, an object of class CrunchDataset.
 ##' @export
-newDataset <- function (x, name=as.character(substitute(x)),
-                                useAlias=default.useAlias(), ...) {
+newDataset <- function (x, name=as.character(substitute(x)), ...) {
 
     Call <- match.call()
     is.2D <- !is.null(dim(x)) && length(dim(x)) %in% 2
@@ -36,16 +33,13 @@ newDataset <- function (x, name=as.character(substitute(x)),
 ##' @param x a data.frame or other rectangular R object
 ##' @param name character, the name to give the new Crunch dataset. Default is
 ##' the name of the R object passed in \code{x}
-##' @param useAlias logical whether variable alias or name should be used as R
-##' variable names when the dataset is returned. Default is TRUE, meaning alias.
 ##' @param ... additional arguments passed to \code{ \link{createDataset}}
 ##' @return If successful, an object of class CrunchDataset.
 ##' @seealso \code{\link{newDataset}} \code{\link{newDatasetByCSV}}
 ##' @export
-newDatasetByColumn <- function (x, name=as.character(substitute(x)),
-                                useAlias=default.useAlias(), ...) {
+newDatasetByColumn <- function (x, name=as.character(substitute(x)), ...) {
 
-    ds <- createDataset(name=name, useAlias=useAlias, ...)
+    ds <- createDataset(name=name, ...)
     vardefs <- lapply(names(x),
         function (v) toVariable(x[[v]], name=v, alias=v))
     ds <- addVariables(ds, vardefs)
@@ -62,18 +56,14 @@ newDatasetByColumn <- function (x, name=as.character(substitute(x)),
 ##' a .csv or .sav (SPSS) file.
 ##' @param name character, the name to give the new Crunch dataset. Default is
 ##' the file name
-##' @param useAlias logical whether variable alias or name should be used as R
-##' variable names when the dataset is returned. Default is TRUE, meaning alias.
-##' They're more computer friendly.
 ##' @param ... additional arguments passed to \code{ \link{createDataset}}
 ##' @return On success, an object of class \code{CrunchDataset}.
 ##' @export
-newDatasetFromFile <- function (file, name=basename(file),
-                                useAlias=default.useAlias(), ...) {
+newDatasetFromFile <- function (file, name=basename(file), ...) {
     if (!file.exists(file)) {
         halt("File not found")
     }
-    ds <- createDataset(name, useAlias=useAlias, ...)
+    ds <- createDataset(name, ...)
     ds <- addSourceToDataset(ds, createSource(file))
     invisible(ds)
 }
@@ -92,22 +82,17 @@ createSource <- function (file, ...) {
 ##'
 ##' @param name character, the name to give the new Crunch dataset. This is
 ##' required.
-##' @param useAlias logical whether variable alias or name should be used as R
-##' variable names when the dataset is returned. Default is TRUE, meaning alias.
-##' This argument is only relevant for the dataset object that is returned;
-##' it has no effect on the contents of the object created on the server.
 ##' @param ... additional arguments for the POST to create the dataset, such as
 ##' "description".
 ##' @return An object of class CrunchDataset.
 ##' @seealso \code{\link{newDataset}}
 ##' @keywords internal
 ##' @export
-createDataset <- function (name, useAlias=default.useAlias(), ...) {
+createDataset <- function (name, ...) {
     dataset_url <- crPOST(sessionURL("datasets"),
         body=toJSON(list(name=name, ...)))
     updateDatasetList()
     ds <- entity(datasetCatalog()[[dataset_url]])
-    ds@useAlias <- useAlias
     invisible(ds)
 }
 
@@ -146,15 +131,12 @@ addSourceToDataset <- function (dataset, source_url, ...) {
 ##' @param x a data.frame or other rectangular R object
 ##' @param name character, the name to give the new Crunch dataset. Default is
 ##' the name of the R object passed in \code{x}
-##' @param useAlias logical whether variable alias or name should be used as R
-##' variable names when the dataset is returned. Default is TRUE, meaning alias.
 ##' @param ... additional arguments passed to \code{ \link{createDataset}}
 ##' @return If successful, an object of class CrunchDataset.
 ##' @seealso \code{\link{newDataset}} \code{\link{newDatasetByColumn}}
 ##' @importFrom utils write.csv
 ##' @export
-newDatasetByCSV <- function (x, name=as.character(substitute(x)),
-                                useAlias=default.useAlias(), ...) {
+newDatasetByCSV <- function (x, name=as.character(substitute(x)), ...) {
 
     ## Get all the things
     message("Processing the data")
@@ -178,7 +160,6 @@ newDatasetByCSV <- function (x, name=as.character(substitute(x)),
 
     ## Send to Crunch
     ds <- createWithMetadataAndFile(meta, filename)
-    ds@useAlias <- useAlias
     invisible(ds)
 }
 

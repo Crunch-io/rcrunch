@@ -60,11 +60,6 @@ if (run.integration.tests) {
                 expect_true(is.dataset(loadDataset(dsnum)))
                 expect_error(loadDataset(9999))
             })
-            test_that("loadDataset respects useAlias", {
-                expect_equal(loadDataset(dsname)@useAlias,
-                    default.useAlias())
-                expect_false(loadDataset(dsname, useAlias=FALSE)@useAlias)
-            })
 
             test_that("deleteDataset by name", {
                 expect_error(deleteDataset("this is totally not a dataset",

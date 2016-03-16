@@ -65,17 +65,6 @@ if (run.integration.tests) {
             })
         })
 
-        test_that("newDataset passes useAlias", {
-            with(test.dataset(suppressMessages(newDataset(df,
-                                                name=uniqueDatasetName()))),
-                expect_equal(ds@useAlias, default.useAlias())
-            )
-            with(test.dataset(suppressMessages(newDataset(df,
-                                                name=uniqueDatasetName(),
-                                                useAlias=FALSE))),
-                expect_false(ds@useAlias)
-            )
-        })
         with(test.dataset(newDatasetByColumn(df, name=uniqueDatasetName())), {
             test_that("Dataset-by-column variable types get set correctly",
                 validImport(ds)

@@ -68,24 +68,14 @@ with_mock_HTTP({
             value=TRUE), "birthyr")
     })
 
-    test_that("useAlias exists and affects names()", {
-        thisds <- test.ds
-        expect_true(thisds@useAlias)
-        expect_identical(names(thisds),
-            findVariables(thisds, key="alias", value=TRUE))
-        thisds@useAlias <- FALSE
-        expect_false(thisds@useAlias)
-        expect_identical(names(thisds),
-            findVariables(thisds, key="name", value=TRUE))
-    })
-
-    test_that("useAlias is an argument to as.dataset", {
-        expect_equal(as.dataset(crGET("/api/datasets/dataset1.json"),
-            tuple=datasetCatalog()[["/api/datasets/dataset1.json"]])@useAlias,
-            default.useAlias())
-        expect_false(as.dataset(crGET("/api/datasets/dataset1.json"),
-            tuple=datasetCatalog()[["/api/datasets/dataset1.json"]],
-            useAlias=FALSE)@useAlias)
+    test_that("namekey function exists and affects names()", {
+        expect_identical(getOption("crunch.namekey.dataset"), "alias")
+        expect_identical(names(test.ds),
+            findVariables(test.ds, key="alias", value=TRUE))
+        with(temp.option(crunch.namekey.dataset="name"), {
+            expect_identical(names(test.ds),
+                findVariables(test.ds, key="name", value=TRUE))
+        })
     })
 
     test_that("Dataset ncol doesn't make any requests", {
@@ -218,14 +208,6 @@ if (run.integration.tests) {
                 expect_identical(dim(ds), dim(df))
                 expect_identical(nrow(ds), nrow(df))
                 expect_identical(ncol(ds), ncol(df))
-            })
-
-            test_that("refresh keeps useAlias setting", {
-                expect_true(ds@useAlias)
-                expect_true(refresh(ds)@useAlias)
-                ds@useAlias <- FALSE
-                expect_false(ds@useAlias)
-                expect_false(refresh(ds)@useAlias)
             })
 
             test_that("Dataset [[<-", {

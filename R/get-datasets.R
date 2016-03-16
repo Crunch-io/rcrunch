@@ -39,12 +39,9 @@ datasetCatalog <- function () session_store$datasets
 ##' to.
 ##' @param kind character specifying whether to look in active, archived, or all
 ##' datasets.
-##' @param useAlias logical whether variable alias or name should be used as R
-##' variable names when the dataset is returned. Default is TRUE, meaning alias.
-##' They're more computer friendly.
 ##' @return An object of class \code{CrunchDataset}
 ##' @export
-loadDataset <- function (dataset.name, kind=c("active", "all", "archived"), useAlias=default.useAlias()) {
+loadDataset <- function (dataset.name, kind=c("active", "all", "archived")) {
     dss <- subsetDatasetCatalog(match.arg(kind))
 
     if (!is.numeric(dataset.name)) {
@@ -53,7 +50,6 @@ loadDataset <- function (dataset.name, kind=c("active", "all", "archived"), useA
     stopifnot(length(dataset.name) == 1)
 
     dataset <- entity(dss[[dataset.name]])
-    dataset@useAlias <- useAlias
     return(dataset)
 }
 

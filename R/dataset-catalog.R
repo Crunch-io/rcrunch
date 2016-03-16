@@ -58,7 +58,10 @@ setMethod("[[", c("DatasetCatalog", "ANY"), function (x, i, ...) {
 ##' variable. They work like the base R names methods.
 ##'
 ##' Note that the \code{names} method on a Dataset returns the aliases of its
-##' variables by default. See the vignette on variables for more information.
+##' variables by default. This is controlled by
+##' \code{getOption("crunch.namekey.dataset")}, which is "alias" by default.
+##' Set \code{options(crunch.namekey.dataset="name")} if you wish to use
+##' variable names. See the vignette on variables for more information.
 ##'
 ##' @param x a VariableCatalog, Subvariables, or similar object
 ##' @param value For the setters, an appropriate-length character vector to

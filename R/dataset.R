@@ -98,9 +98,8 @@ trimISODate <- function (x) {
     return(x)
 }
 
-as.dataset <- function (x, useAlias=default.useAlias(), tuple=DatasetTuple()) {
+as.dataset <- function (x, tuple=DatasetTuple()) {
     out <- CrunchDataset(x)
-    out@useAlias <- useAlias
     tuple(out) <- tuple
     return(out)
 }
@@ -188,7 +187,7 @@ NULL
 ##' @export
 setMethod("refresh", "CrunchDataset", function (x) {
     tup <- refresh(tuple(x))
-    out <- as.dataset(crGET(self(x)), useAlias=x@useAlias, tuple=tup)
+    out <- as.dataset(crGET(self(x)), tuple=tup)
     duplicates(allVariables(out)) <- duplicates(allVariables(x))
     activeFilter(out) <- activeFilter(x)
     return(out)
