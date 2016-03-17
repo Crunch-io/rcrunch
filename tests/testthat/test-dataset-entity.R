@@ -51,14 +51,22 @@ with_mock_HTTP({
         })
     })
 
-    test_that("Dataset VariableCatalog index is sorted", {
-        expect_identical(urls(allVariables(test.ds)),
+    test_that("Dataset VariableCatalog index is ordered", {
+        expect_identical(urls(variables(test.ds)),
+            c("/api/datasets/dataset1/variables/birthyr.json",
+            "/api/datasets/dataset1/variables/gender.json",
+            "/api/datasets/dataset1/variables/mymrset.json",
+            "/api/datasets/dataset1/variables/textVar.json",
+            "/api/datasets/dataset1/variables/starttime.json",
+            "/api/datasets/dataset1/variables/catarray.json"))
+        ## But allVariables isn't ordered
+        expect_true(setequal(urls(allVariables(test.ds)),
             c("/api/datasets/dataset1/variables/birthyr.json",
             "/api/datasets/dataset1/variables/catarray.json",
             "/api/datasets/dataset1/variables/gender.json",
             "/api/datasets/dataset1/variables/mymrset.json",
             "/api/datasets/dataset1/variables/starttime.json",
-            "/api/datasets/dataset1/variables/textVar.json"))
+            "/api/datasets/dataset1/variables/textVar.json")))
     })
 
     test_that("findVariables", {
@@ -84,11 +92,13 @@ with_mock_HTTP({
         })
         expect_identical(logs, character(0))
         expect_identical(nc, 6L)
+        expect_identical(dim(test.ds), c(25L, 6L))
     })
 
     test_that("Dataset has names() and extract methods work", {
         expect_false(is.null(names(test.ds)))
-        expect_identical(names(test.ds), c("birthyr", "gender", "mymrset", "textVar", "starttime", "catarray"))
+        expect_identical(names(test.ds),
+            c("birthyr", "gender", "mymrset", "textVar", "starttime", "catarray"))
         expect_true(is.variable(test.ds[[1]]))
         expect_true("birthyr" %in% names(test.ds))
         expect_true(is.variable(test.ds$birthyr))
@@ -101,6 +111,19 @@ with_mock_HTTP({
         expect_identical(test.ds$not.a.var.name, NULL)
         expect_error(test.ds[[999]], "subscript out of bounds")
     })
+
+    ## This is a start on a test that getting variables doesn't hit server.
+    ## It doesn't now, but if variable catalogs are lazily fetched, assert that
+    ## we're hitting cache
+    # with(temp.option(httpcache.log=""), {
+    #     dlog <- capture.output({
+    #         v1 <- test.ds$birthyr
+    #         d2 <- test.ds[names(test.ds)=="gender"]
+    #     })
+    # })
+    # print(dlog)
+    # logdf <- loadLogfile(textConnection(dlog))
+    # print(logdf)
 
     test_that("Dataset extract error handling", {
         expect_error(test.ds[[999]], "subscript out of bounds")
