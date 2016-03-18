@@ -35,37 +35,22 @@ updateDatasetList <- function () {
 datasetCatalog <- function () session_store$datasets
 
 ##' Load a Crunch Dataset
-##' @param dataset.name character, the name of a Crunch dataset you have access
-##' to.
+##' @param dataset character, the name of a Crunch dataset you have access
+##' to. Or, a \code{DatasetTuple}.
 ##' @param kind character specifying whether to look in active, archived, or all
 ##' datasets.
 ##' @return An object of class \code{CrunchDataset}
 ##' @export
-loadDataset <- function (dataset.name, kind=c("active", "all", "archived")) {
-    dss <- subsetDatasetCatalog(match.arg(kind))
-
-    if (!is.numeric(dataset.name)) {
-        dataset.name <- selectDatasetFromCatalog(dataset.name, dss)
-    }
-    stopifnot(length(dataset.name) == 1)
-
-    dataset <- entity(dss[[dataset.name]])
-    return(dataset)
-}
-
-selectDatasetFromCatalog <- function (dsname, catalog, strict=FALSE) {
-    found <- which(names(catalog) %in% dsname)
-    if (length(found)==0) {
-        halt(paste(dQuote(dsname), "not found"))
-    } else if (length(found) > 1) {
-        if (strict) {
-            halt("Datasets with duplicate names found. Cannot select by name.")
-        } else {
-            warning(paste("Datasets with duplicate names found.",
-                "Returning first match."))
+loadDataset <- function (dataset, kind=c("active", "all", "archived")) {
+    if (!inherits(dataset, "DatasetTuple")) {
+        dss <- subsetDatasetCatalog(match.arg(kind))
+        dsname <- dataset
+        dataset <- dss[[dataset]]
+        if (is.null(dataset)) {
+            halt(dQuote(dsname), " not found")
         }
     }
-    return(found[1])
+    return(entity(dataset))
 }
 
 ##' Delete a dataset from the dataset list
@@ -88,11 +73,6 @@ selectDatasetFromCatalog <- function (dsname, catalog, strict=FALSE) {
 ##' @export
 deleteDataset <- function (x, ...) {
     if (!is.dataset(x)) {
-        if (!is.numeric(x)) {
-            x <- selectDatasetFromCatalog(x, datasetCatalog(), strict=TRUE)
-        }
-        stopifnot(length(x) == 1)
-
         x <- datasetCatalog()[[x]]
     }
     out <- delete(x, ...)

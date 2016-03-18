@@ -87,11 +87,41 @@ setMethod("[", c("ShojiCatalog", "ANY"), function (x, i, ...) {
 setMethod("[[", c("ShojiCatalog", "ANY"), function (x, i, ...) {
     index(x)[[i]]
 })
+
+##' @rdname catalog-extract
+##' @export
+setMethod("[[", c("ShojiCatalog", "character"), function (x, i, ...) {
+    stopifnot(length(i) == 1L)
+    w <- whichNameOrURL(x, i)
+    if (is.na(w)) {
+        return(NULL)
+    }
+    index(x)[[w]]
+})
 ##' Length of Catalog
 ##' @param x a Catalog
 ##' @return Integer: the number of elements in the index list
 ##' @name catalog-length
 NULL
+
+whichNameOrURL <- function (x, i) {
+    ns <- names(x)
+    w <- match(i, ns)
+    if (any(is.na(w))) {
+        w <- match(i, urls(x))
+    } else {
+        ## Warn if duplicated
+        dups <- i %in% ns[duplicated(ns)]
+        if (any(dups)) {
+            bads <- i[dups]
+            msg <- ifelse(length(bads) > 1,
+                " do not uniquely identify elements. Returning the first matches",
+                " does not uniquely identify elements. Returning the first match")
+            warning(i, msg, call.=FALSE)
+        }
+    }
+    return(w)
+}
 
 ##' @rdname catalog-length
 ##' @export

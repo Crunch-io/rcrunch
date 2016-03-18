@@ -14,3 +14,5 @@ setMethod("pending", "BatchCatalog", function (x) {
     index(x) <- Filter(function (a) !isTRUE(a$status == "imported"), index(x))
     return(x)
 })
+
+setMethod("names", "BatchCatalog", function (x) urls(x))
