@@ -82,10 +82,6 @@ setMethod("[[<-", c("TeamCatalog", "character", "missing", "CrunchTeam"),
         return(x)
     })
 
-##' @rdname catalog-extract
-##' @export
-setMethod("$", "TeamCatalog", function (x, name) x[[name]])
-
 ##' @rdname describe
 ##' @export
 setMethod("name", "CrunchTeam", function (x) x@body$name)

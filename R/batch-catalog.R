@@ -15,4 +15,6 @@ setMethod("pending", "BatchCatalog", function (x) {
     return(x)
 })
 
+##' @rdname describe-catalog
+##' @export
 setMethod("names", "BatchCatalog", function (x) urls(x))

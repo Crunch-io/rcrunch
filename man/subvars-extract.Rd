@@ -3,7 +3,6 @@
 \docType{methods}
 \name{subvars-extract}
 \alias{$,CategoricalArrayVariable-method}
-\alias{$,Subvariables-method}
 \alias{$<-,CategoricalArrayVariable-method}
 \alias{$<-,Subvariables-method}
 \alias{[,CategoricalArrayVariable,character,ANY-method}
@@ -27,8 +26,6 @@
 \S4method{[[}{Subvariables,character}(x, i, j, ...)
 
 \S4method{[[}{Subvariables,ANY}(x, i, j, ...)
-
-\S4method{$}{Subvariables}(x, name)
 
 \S4method{[}{Subvariables,character,ANY}(x, i, j, ..., drop = TRUE)
 
@@ -72,12 +69,12 @@
 
 \item{...}{additional arguments}
 
-\item{name}{For \code{$}, the name (not alias) of the subvariable to
-extract}
-
 \item{drop}{Invalid}
 
 \item{value}{For updating, a CrunchExpr}
+
+\item{name}{For \code{$}, the name (not alias) of the subvariable to
+extract}
 }
 \value{
 A subset of \code{x} if extracting, otherwise \code{x} duly modified

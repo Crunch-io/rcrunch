@@ -120,9 +120,6 @@ setMethod("[[", c("Subvariables", "ANY"), function (x, i, ...) {
     }
     return(out)
 })
-##' @rdname subvars-extract
-##' @export
-setMethod("$", "Subvariables", function (x, name) x[[name]])
 
 ##' @rdname subvars-extract
 ##' @export

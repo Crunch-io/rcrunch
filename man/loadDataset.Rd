@@ -4,11 +4,11 @@
 \alias{loadDataset}
 \title{Load a Crunch Dataset}
 \usage{
-loadDataset(dataset.name, kind = c("active", "all", "archived"))
+loadDataset(dataset, kind = c("active", "all", "archived"))
 }
 \arguments{
-\item{dataset.name}{character, the name of a Crunch dataset you have access
-to.}
+\item{dataset}{character, the name of a Crunch dataset you have access
+to. Or, a \code{DatasetTuple}.}
 
 \item{kind}{character specifying whether to look in active, archived, or all
 datasets.}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/dataset-catalog.R, R/filters.R, R/shoji-catalog.R, R/teams.R, R/variable-catalog.R
 \docType{methods}
 \name{catalog-extract}
-\alias{$,TeamCatalog-method}
+\alias{$,ShojiCatalog-method}
 \alias{[,ShojiCatalog,ANY,ANY-method}
 \alias{[,ShojiCatalog,character,ANY-method}
 \alias{[,ShojiCatalog,logical,ANY-method}
@@ -17,6 +17,7 @@
 \alias{[[,FilterCatalog,character-method}
 \alias{[[,FilterCatalog,numeric-method}
 \alias{[[,ShojiCatalog,ANY-method}
+\alias{[[,ShojiCatalog,character-method}
 \alias{[[,TeamCatalog,character-method}
 \alias{[[,TeamCatalog,numeric-method}
 \alias{[[,VariableCatalog,ANY-method}
@@ -61,6 +62,10 @@
 
 \S4method{[[}{ShojiCatalog,ANY}(x, i, j, ...)
 
+\S4method{[[}{ShojiCatalog,character}(x, i, j, ...)
+
+\S4method{$}{ShojiCatalog}(x, name)
+
 \S4method{[[}{TeamCatalog,character}(x, i, j, ...)
 
 \S4method{[[}{TeamCatalog,numeric}(x, i, j, ...)
@@ -68,8 +73,6 @@
 \S4method{[[}{TeamCatalog,character,missing,list}(x, i, j) <- value
 
 \S4method{[[}{TeamCatalog,character,missing,CrunchTeam}(x, i, j) <- value
-
-\S4method{$}{TeamCatalog}(x, name)
 
 \S4method{[[}{MemberCatalog,ANY,missing,ANY}(x, i, j) <- value
 

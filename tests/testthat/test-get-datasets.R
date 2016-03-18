@@ -30,6 +30,7 @@ with_mock_HTTP({
         ds <- loadDataset(cr$datasets[["test ds"]])
         expect_true(is.dataset(ds))
         expect_identical(name(ds), "test ds")
+        expect_true(is.dataset(loadDataset(cr$datasets$`test ds`)))
     })
 })
 
