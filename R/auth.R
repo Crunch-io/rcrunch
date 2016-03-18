@@ -56,7 +56,15 @@ login <- function (email=getOption("crunch.email"),
 
     message("Logged into crunch.io as ", email)
     options(prompt = paste("[crunch]", session_store$.globals$prompt))
-    invisible()
+    ## Return a Session object
+    invisible(session())
+}
+
+##' Get various catalogs for your Crunch session
+##' @return a list.
+##' @export
+session <- function () {
+    list(datasets=datasetCatalog())
 }
 
 crunchAuth <- function (email, password=NULL, ...) {

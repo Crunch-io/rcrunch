@@ -35,10 +35,6 @@ getTeams <- function () {
     TeamCatalog(crGET(sessionURL("teams")))
 }
 
-##' @rdname describe-catalog
-##' @export
-setMethod("names", "TeamCatalog", function (x) getIndexSlot(x, "name"))
-
 ##' @rdname catalog-extract
 ##' @export
 setMethod("[[", c("TeamCatalog", "character"), function (x, i, ...) {
@@ -99,11 +95,6 @@ setMethod("name", "CrunchTeam", function (x) x@body$name)
 setMethod("members", "CrunchTeam", function (x) {
     MemberCatalog(crGET(shojiURL(x, "catalogs", "members")))
 })
-
-##' @rdname describe-catalog
-##' @export
-setMethod("names", "MemberCatalog", function (x) getIndexSlot(x, "name"))
-
 
 .backstopUpdate <- function (x, i, j, value) {
     ## Backstop error so you don't get "Object of class S4 is not subsettable"

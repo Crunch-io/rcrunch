@@ -3,10 +3,6 @@ forks <- function (dataset) {
     return(ForkCatalog(crGET(shojiURL(dataset, "catalogs", "forks"))))
 }
 
-##' @rdname describe-catalog
-##' @export
-setMethod("names", "ForkCatalog",  function (x) getIndexSlot(x, "name"))
-
 ##' Create a fork of a dataset
 ##'
 ##' As with many other version control systems, in Crunch you can fork a

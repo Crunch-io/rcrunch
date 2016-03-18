@@ -72,7 +72,3 @@ setMethod("[[", c("DatasetCatalog", "ANY"), function (x, i, ...) {
 ##' @seealso \code{\link{Subvariables}} \code{\link{Categories}} \code{\link[base]{names}} \code{vignette("variables", package="crunch")}
 ##' @name describe-catalog
 NULL
-
-##' @rdname describe-catalog
-##' @export
-setMethod("names", "DatasetCatalog", function (x) getIndexSlot(x, "name"))

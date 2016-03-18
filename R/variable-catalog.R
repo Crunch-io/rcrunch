@@ -92,14 +92,6 @@ setMethod("[<-", c("VariableCatalog", "VariableGroup", "missing", "VariableCatal
         callNextMethod(x, i, value=value)
     })
 
-##' @rdname describe-catalog
-##' @export
-setMethod("names", "VariableCatalog", function (x) getIndexSlot(x, "name"))
-##' @export
-##' @rdname describe-catalog
-setMethod("names<-", "VariableCatalog", function (x, value) {
-    setIndexSlot(x, "name", value)
-})
 ##' @export
 ##' @rdname describe-catalog
 setMethod("aliases", "VariableCatalog", function (x) getIndexSlot(x, "alias"))

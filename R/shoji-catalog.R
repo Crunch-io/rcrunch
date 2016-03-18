@@ -7,7 +7,11 @@ setMethod("initialize", "ShojiCatalog", init.ShojiCatalog)
 
 is.shojiCatalog <- function (x) inherits(x, "ShojiCatalog")
 
-setIndexSlot <- function (x, i, value) {
+getIndexSlot <- function (x, i, what=character(1)) {
+    vapply(index(x), function (a) a[[i]], what, USE.NAMES=FALSE)
+}
+
+setIndexSlot <- function (x, i, value, unique=FALSE) {
     if (length(value) == 1) value <- rep(value, length(x))
     stopifnot(length(x) == length(value))
 
@@ -16,6 +20,15 @@ setIndexSlot <- function (x, i, value) {
         a[[i]] <- v
         return(a)
     }, a=index(x), v=value, SIMPLIFY=FALSE)
+    if (unique) {
+        ## Check to see if any of the value is duplicated after updating
+        newvals <- getIndexSlot(x, i) ## Assumes "character". Revisit if need unique for non-char
+        dups <- duplicated(newvals)
+        if (any(dups)) {
+            halt("Duplicate values not permitted: ",
+                serialPaste(unique(newvals[dups])))
+        }
+    }
     to.update <- dirtyElements(old, index(x))
     if (any(to.update)) {
         ## Make sure certain fields are [] in the JSON
@@ -33,10 +46,6 @@ setIndexSlot <- function (x, i, value) {
 
 dirtyElements <- function (x, y) {
     !mapply(identical, x, y, USE.NAMES=FALSE, SIMPLIFY=TRUE)
-}
-
-getIndexSlot <- function (x, i, what=character(1)) {
-    vapply(index(x), function (a) a[[i]], what, USE.NAMES=FALSE)
 }
 
 ##' @rdname catalog-extract
@@ -124,6 +133,15 @@ setMethod("index<-", "ShojiCatalog", function (x, value) {
 ##' @rdname urls
 ##' @export
 setMethod("urls", "ShojiCatalog", function (x) names(index(x)))
+
+##' @rdname describe-catalog
+##' @export
+setMethod("names", "ShojiCatalog", function (x) getIndexSlot(x, "name"))
+##' @export
+##' @rdname describe-catalog
+setMethod("names<-", "ShojiCatalog", function (x, value) {
+    setIndexSlot(x, "name", value, unique=TRUE)
+})
 
 ##' @export
 as.list.ShojiCatalog <- function (x, ...) lapply(names(index(x)), function (i) x[[i]])

@@ -5,7 +5,7 @@ with_mock_HTTP({
     test.ds2 <- loadDataset("ECON.sav")
     today <- "2016-02-11"
 
-    test_that("Dataset can be created", {
+    test_that("Dataset can be loaded", {
         expect_true(is.dataset(test.ds))
     })
 

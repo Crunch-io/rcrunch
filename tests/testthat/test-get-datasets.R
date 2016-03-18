@@ -22,6 +22,14 @@ with_mock_HTTP({
         expect_identical(name(ds), "test ds")
         expect_error(loadDataset(666), "subscript out of bounds")
     })
+
+    test_that("loadDataset loads with DatasetTuple", {
+        cr <- session()
+        print(names(cr$datasets))
+        ds <- loadDataset(cr$datasets[["test ds"]])
+        expect_true(is.dataset(ds))
+        expect_identical(name(ds), "test ds")
+    })
 })
 
 if (run.integration.tests) {

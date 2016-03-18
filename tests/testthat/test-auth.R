@@ -53,4 +53,12 @@ if (run.integration.tests) {
         expect_error(sessionURL("datasets"),
             "You must authenticate before making this request")
     })
+
+    test_that("login returns a session object", {
+        cr <- suppressMessages(login())
+            expect_true(is.list(cr))
+        logout()
+        expect_error(sessionURL("datasets"),
+            "You must authenticate before making this request")
+    })
 }

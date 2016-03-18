@@ -18,10 +18,6 @@ setMethod("filters", "CrunchDataset", function (x) {
 ##' @export
 setMethod("filters<-", "CrunchDataset", function (x, value) x)
 
-##' @rdname describe-catalog
-##' @export
-setMethod("names", "FilterCatalog", function (x) getIndexSlot(x, "name"))
-
 ##' @rdname describe
 ##' @export
 setMethod("name", "CrunchFilter", function (x) x@body$name)
