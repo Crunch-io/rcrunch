@@ -1,6 +1,8 @@
 context("Retrieving dataset list and single datasets")
 
 with_mock_HTTP({
+    cr <- session()
+
     dataset.catalog.url <- "/api/datasets.json"
     datcat <- DatasetCatalog(crGET(dataset.catalog.url))
     index(datcat)[[which(names(datcat) == "an archived dataset")]]$archived <- TRUE
@@ -26,11 +28,17 @@ with_mock_HTTP({
     })
 
     test_that("loadDataset loads with DatasetTuple", {
-        cr <- session()
         ds <- loadDataset(cr$datasets[["test ds"]])
         expect_true(is.dataset(ds))
         expect_identical(name(ds), "test ds")
         expect_true(is.dataset(loadDataset(cr$datasets$`test ds`)))
+    })
+
+    test_that("deleteDataset error handling", {
+        expect_error(deleteDataset("this is totally not a dataset",
+            paste(dQuote("this is totally not a dataset"), "not found")))
+        expect_error(deleteDataset(9999),
+            "subscript out of bounds")
     })
 })
 
@@ -63,17 +71,12 @@ if (run.integration.tests) {
 
             test_that("A dataset object can be retrieved, if it exists", {
                 expect_true(is.dataset(loadDataset(dsname)))
-                expect_error(loadDataset("this is totally not a dataset"),
-                    paste(dQuote("this is totally not a dataset"), "not found"))
                 dsnum <- which(listDatasets() %in% dsname)
                 expect_true(is.numeric(dsnum))
                 expect_true(is.dataset(loadDataset(dsnum)))
-                expect_error(loadDataset(9999))
             })
 
             test_that("deleteDataset by name", {
-                expect_error(deleteDataset("this is totally not a dataset",
-                    paste(dQuote("this is totally not a dataset"), "not found")))
                 out <- try(deleteDataset(dsname))
                 expect_false(dsname %in% listDatasets())
             })
@@ -84,9 +87,6 @@ if (run.integration.tests) {
             dsnum <- which(listDatasets() %in% dsname)
             test_that("deleteDataset by index", {
                 expect_true(dsname %in% listDatasets())
-
-                expect_error(deleteDataset(dsnum + 9999),
-                    "subscript out of bounds")
                 out <- deleteDataset(dsnum)
                 expect_false(dsname %in% listDatasets())
             })

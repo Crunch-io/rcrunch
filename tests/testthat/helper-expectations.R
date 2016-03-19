@@ -16,7 +16,3 @@ expect_json_equivalent <- function (object, expected, ...) {
 expect_output <- function (object, ...) {
     testthat::expect_output(print(object), ...)
 }
-
-# expect_error <- function (object, expected, ...) {
-#
-# }

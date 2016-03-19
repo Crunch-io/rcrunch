@@ -1,23 +1,20 @@
 context("Dataset catalog")
 
 with_mock_HTTP({
-    dataset.catalog.url <- "/api/datasets.json"
-    blob <- crGET(dataset.catalog.url)
+    cr <- session()
+    datcat <- cr$datasets
 
     test_that("DatasetCatalog instantiates from Shoji", {
-        expect_true(inherits(DatasetCatalog(blob),
-            "DatasetCatalog"))
+        expect_true(inherits(datcat, "DatasetCatalog"))
     })
-
-    datcat <- DatasetCatalog(blob)
 
     test_that("DatasetCatalog has the right contents", {
         expect_identical(urls(datcat),
             c("/api/datasets/dataset3.json",
               "/api/datasets/dataset2.json",
               "/api/datasets/dataset1.json")) ## C sorting on names
-        expect_true(all(grepl("/api/dataset", urls(datcat))))
-        expect_identical(self(datcat), dataset.catalog.url)
+        expect_identical(self(datcat),
+            "/api/datasets.json")
     })
 
     test_that("active/archived getters", {
@@ -40,7 +37,8 @@ with_mock_HTTP({
     })
 
     test_that("Extract methods", {
-        expect_true(inherits(datcat[["/api/datasets/dataset1.json"]], "DatasetTuple"))
+        expect_true(inherits(datcat[["/api/datasets/dataset1.json"]],
+            "DatasetTuple"))
         expect_identical(datcat[["/api/datasets/dataset1.json"]]@body,
             index(datcat)[["/api/datasets/dataset1.json"]])
         expect_identical(index(datcat[2:3]), index(datcat)[2:3])
@@ -48,7 +46,8 @@ with_mock_HTTP({
     })
 
     test_that("names", {
-        expect_identical(names(datcat), c("ECON.sav", "an archived dataset", "test ds"))
+        expect_identical(names(datcat),
+            c("ECON.sav", "an archived dataset", "test ds"))
     })
 
     test_that("entity method for tuple", {
