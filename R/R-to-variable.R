@@ -30,9 +30,14 @@ setMethod("toVariable", "Date", function (x, ...) {
         resolution="D", ...),
         class="VariableDefinition"))
 })
-# setMethod("toVariable", "POSIXt", function (x) {
-#     return(list(values=as.character(x), type="datetime", resolution="s", ...))
-# })
+##' @rdname toVariable
+##' @export
+setMethod("toVariable", "POSIXt", function (x, ...) {
+    return(structure(list(values=strftime(x, "%Y-%m-%dT%H:%M:%OS3"),
+        type="datetime",
+        resolution="ms", ...),
+        class="VariableDefinition"))
+})
 
 ##' @rdname toVariable
 ##' @export
