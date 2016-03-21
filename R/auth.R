@@ -64,7 +64,8 @@ login <- function (email=getOption("crunch.email"),
 ##' @return a list.
 ##' @export
 session <- function () {
-    list(datasets=datasetCatalog())
+    list(datasets=datasetCatalog(),
+        projects=ProjectCatalog(crGET(sessionURL("projects"))))
 }
 
 crunchAuth <- function (email, password=NULL, ...) {
