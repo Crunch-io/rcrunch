@@ -3,10 +3,7 @@
     "self": "/api/datasets/dataset1.json",
     "description": "Detail for a given dataset",
     "body": {
-        "user_id": "user1",
-        "sources": [
-            "511a7c49778030653aab5962"
-        ],
+        "owner": "/api/users/user1.json",
         "id": "dataset1"
     },
     "catalogs": {

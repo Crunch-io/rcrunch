@@ -2,7 +2,7 @@
 
 setup.and.teardown <- function (setup, teardown, obj.name=NULL) {
     ContextManager(enter=setup, exit=teardown, as=obj.name,
-        error=function (e) expect_error(stop(e$message), NA))
+        error=function (e) expect_error(stop(e$message), "NO ERRORS HERE!"))
 }
 
 with_mock_HTTP <- function (expr) {
@@ -59,7 +59,7 @@ test.authentication <- setup.and.teardown(
 uniqueDatasetName <- now
 
 ## Create a test dataset and then destroy it after tests
-datasets_to_purge <- c()
+objects_to_purge <- c()
 new.dataset.with.setup <- function (df=NULL, ...) {
     unique.name <- uniqueDatasetName()
     if (is.dataset(df)) {
@@ -71,22 +71,22 @@ new.dataset.with.setup <- function (df=NULL, ...) {
     } else {
         out <- suppressMessages(newDataset(df, name=unique.name, ...))
     }
-    datasets_to_purge <<- c(datasets_to_purge, self(out))
+    objects_to_purge <<- c(objects_to_purge, self(out))
     return(out)
 }
 
-purge.dataset <- function () {
-    len <- length(datasets_to_purge)
+purge.object <- function () {
+    len <- length(objects_to_purge)
     if (len) {
-        try(crDELETE(datasets_to_purge[len]), silent=TRUE)
-        datasets_to_purge <<- datasets_to_purge[-len]
+        try(crDELETE(objects_to_purge[len]), silent=TRUE)
+        objects_to_purge <<- objects_to_purge[-len]
     }
 }
 
 test.dataset <- function (df=NULL, obj.name="ds", ...) {
     return(setup.and.teardown(
         function () new.dataset.with.setup(df, ...),
-        purge.dataset,
+        purge.object,
         obj.name
     ))
 }
@@ -101,26 +101,41 @@ reset.option <- function (opts) {
 }
 
 uniqueEmail <- function () paste0("test+", as.numeric(Sys.time()), "@crunch.io")
-users_to_purge <- c()
+testUser <- function (email=uniqueEmail(), name=email, ...) {
+    u.url <- invite(email, name=name, notify=FALSE, ...)
+    return(ShojiObject(crGET(u.url)))
+}
 new.user.with.setup <- function (email=uniqueEmail(), name=email, ...) {
     u.url <- invite(email, name=name, notify=FALSE, ...)
-    users_to_purge <<- c(users_to_purge, u.url)
+    objects_to_purge <<- c(objects_to_purge, u.url)
     return(u.url)
-}
-
-purge.user <- function () {
-    len <- length(users_to_purge)
-    if (len) {
-        u.url <- users_to_purge[len]
-        try(crDELETE(u.url))
-        users_to_purge <<- users_to_purge[-len]
-    }
 }
 
 test.user <- function (email=uniqueEmail(), name=email, obj.name="u", ...) {
     return(setup.and.teardown(
         function () new.user.with.setup(email, name, ...),
-        purge.user,
+        purge.object,
         obj.name
     ))
+}
+
+markForCleanup <- function (x) {
+    objects_to_purge <<- c(objects_to_purge, self(x))
+    return(x)
+}
+
+cleanup <- function (obj, ...) {
+    return(setup.and.teardown(
+        function () markForCleanup(obj),
+        purge.object,
+        ...
+    ))
+}
+
+testProject <- function (name="", ...) {
+    name <- paste0(name, as.numeric(Sys.time()))
+    print(name)
+    p <- session()$projects
+    p[[name]] <- list(...)
+    return(refresh(p)[[name]])
 }
