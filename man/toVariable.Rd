@@ -5,6 +5,7 @@
 \alias{toVariable}
 \alias{toVariable,CrunchExpr-method}
 \alias{toVariable,Date-method}
+\alias{toVariable,POSIXt-method}
 \alias{toVariable,VariableDefinition-method}
 \alias{toVariable,character-method}
 \alias{toVariable,factor-method}
@@ -21,6 +22,8 @@ toVariable(x, ...)
 \S4method{toVariable}{factor}(x, ...)
 
 \S4method{toVariable}{Date}(x, ...)
+
+\S4method{toVariable}{POSIXt}(x, ...)
 
 \S4method{toVariable}{VariableDefinition}(x, ...)
 
