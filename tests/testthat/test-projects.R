@@ -125,48 +125,38 @@ if (run.integration.tests) {
         })
 
         test_that("Can add members to a project", {
-            skip("Backend isn't accepting emails for members")
             skip_on_jenkins("Jenkins user needs more permissions")
-            t2 <- refresh(projects)
-            name.of.project3 <- now()
-            expect_false(name.of.project3 %in% names(t2))
-            with(test.user(), {
-                ucat <- getUserCatalog()
-                u.email <- emails(ucat)[urls(ucat) == u]
-                u.name <- names(ucat)[urls(ucat) == u]
-                t2[[name.of.project3]] <- list()
-                this.project <- t2[[name.of.project3]]
-                expect_identical(names(members(this.project)),
-                    my.name)
-                members(this.project) <- u.email
-                expect_true(setequal(names(members(this.project)),
-                    c(u.name, my.name)))
+            with(cleanup(testProject()), as="tp", {
+                with(test.user(), {
+                    ucat <- getUserCatalog()
+                    u.email <- emails(ucat)[urls(ucat) == u]
+                    u.name <- names(ucat)[urls(ucat) == u]
+                    expect_identical(names(members(tp)),
+                        my.name)
+                    members(tp) <- u.email
+                    expect_true(setequal(names(members(tp)),
+                        c(u.name, my.name)))
+                })
             })
-            try(crDELETE(self(refresh(t2)[[name.of.project3]])))
         })
 
         test_that("Can remove members from a project", {
-            skip("Backend isn't accepting emails for members")
             skip_on_jenkins("Jenkins user needs more permissions")
-            t2 <- refresh(projects)
-            name.of.project4 <- now()
-            expect_false(name.of.project4 %in% names(t2))
-            with(test.user(), {
-                ucat <- getUserCatalog()
-                u.email <- emails(ucat)[urls(ucat) == u]
-                u.name <- names(ucat)[urls(ucat) == u]
-                t2[[name.of.project4]] <- list()
-                this.project <- t2[[name.of.project4]]
-                expect_identical(names(members(this.project)),
-                    my.name)
-                members(this.project) <- u.email
-                expect_true(setequal(names(members(this.project)),
-                    c(u.name, my.name)))
-                try(members(this.project)[[u.email]] <- NULL)
-                expect_identical(names(members(this.project)),
-                    my.name)
+            with(cleanup(testProject()), as="tp", {
+                with(test.user(), {
+                    ucat <- getUserCatalog()
+                    u.email <- emails(ucat)[urls(ucat) == u]
+                    u.name <- names(ucat)[urls(ucat) == u]
+                    expect_identical(names(members(tp)),
+                        my.name)
+                    members(tp) <- u.email
+                    expect_true(setequal(names(members(tp)),
+                        c(u.name, my.name)))
+                    try(members(tp)[[u.email]] <- NULL)
+                    expect_identical(names(members(tp)),
+                        my.name)
+                })
             })
-            try(crDELETE(self(refresh(t2)[[name.of.project4]])))
         })
 
         test_that("Can add datasets to projects", {

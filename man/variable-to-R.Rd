@@ -7,9 +7,9 @@
 \alias{variable-to-R}
 \title{Convert Variables to local R objects}
 \usage{
-\S4method{as.vector}{CrunchExpr}(x, mode)
+\S4method{as.vector}{CrunchExpr}(x, mode = "any")
 
-\S4method{as.vector}{CrunchVariable}(x, mode)
+\S4method{as.vector}{CrunchVariable}(x, mode = "any")
 }
 \arguments{
 \item{x}{a CrunchVariable subclass}

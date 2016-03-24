@@ -15,6 +15,7 @@
 \alias{entity,VariableTuple-method}
 \alias{name,IndexTuple-method}
 \alias{refresh,IndexTuple-method}
+\alias{self,IndexTuple-method}
 \alias{tuple-methods}
 \alias{type,IndexTuple-method}
 \title{Methods for IndexTuples}
@@ -30,6 +31,8 @@
 \S4method{[[}{IndexTuple,ANY}(x, i)
 
 \S4method{[[}{IndexTuple,ANY,ANY,ANY}(x, i) <- value
+
+\S4method{self}{IndexTuple}(x)
 
 \S4method{entity}{VariableTuple}(x)
 

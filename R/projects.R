@@ -90,6 +90,12 @@ setMethod("delete", "CrunchProject", function (x, confirm=requireConsent(), ...)
     invisible(out)
 })
 
+##' A project's datasets
+##' @param x a \code{CrunchProject}
+##' @param value \code{CrunchDataset} for the setter
+##' @return An obect of class \code{DatasetCatalog}. The setter returns the
+##' catalog with the given dataset added to it (via changing its owner to be
+##' the specified project, \code{x}).
 ##' @name project-datasets
 ##' @export
 datasets <- function (x) DatasetCatalog(crGET(shojiURL(x, "catalogs", "datasets")))

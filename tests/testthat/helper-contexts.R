@@ -134,7 +134,6 @@ cleanup <- function (obj, ...) {
 
 testProject <- function (name="", ...) {
     name <- paste0(name, as.numeric(Sys.time()))
-    print(name)
     p <- session()$projects
     p[[name]] <- list(...)
     return(refresh(p)[[name]])
