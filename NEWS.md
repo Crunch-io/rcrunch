@@ -5,6 +5,7 @@
 * `loadDataset` with a dataset catalog tuple, allowing some degree of tab completion by dataset name. (Example: `cr <- login(...); ds <- loadDataset(cr$datasets$My_Dataset_Name)`)
 * Update tests to pass with forthcoming release of `testthat`.
 * Remove `useAlias` attribute of datasets and move it to a global option, "crunch.namekey.dataset", defaulted to "alias". Implement the same for array variables, "crunch.namekey.array", and default to "name" for consistency with previous versions. This default will change in a future release.
+* New Progress API for checking status of pending, long-running server jobs.
 
 ### crunch 1.9.2
 * `forkDataset` to make a fork (copy) of a dataset; `mergeFork` to merge changes from a fork back to its parent (or vice versa)
