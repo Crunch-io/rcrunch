@@ -18,7 +18,8 @@ pollProgress <- function (progress_url, wait=1) {
     }
 
     if (status != 100) {
-        halt('Your process is still running on the server. Check `uncached(crGET("',
+        halt('Your process is still running on the server. It is currently ',
+            status, '% complete. Check `uncached(crGET("',
             progress_url, '"))` until it reports 100% complete')
     }
     return(status)
