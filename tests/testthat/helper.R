@@ -140,6 +140,8 @@ bye <- new.env()
 if (run.integration.tests) {
     with(test.authentication, {
         datasets.start <- urls(datasetCatalog())
+        users.start <- urls(getUserCatalog())
+        projects.start <- urls(session()$projects)
     })
 }
 reg.finalizer(bye,
@@ -152,6 +154,22 @@ reg.finalizer(bye,
                     stop(length(leftovers),
                         " dataset(s) created and not destroyed: ",
                         serialPaste(dQuote(names(datasetCatalog()[leftovers]))),
+                        call.=FALSE)
+                }
+                users.end <- urls(getUserCatalog())
+                leftovers <- setdiff(users.end, users.start)
+                if (length(leftovers)) {
+                    stop(length(leftovers),
+                        " users(s) created and not destroyed: ",
+                        serialPaste(dQuote(names(getUserCatalog()[leftovers]))),
+                        call.=FALSE)
+                }
+                projects.end <- urls(session()$projects)
+                leftovers <- setdiff(projects.end, projects.start)
+                if (length(leftovers)) {
+                    stop(length(leftovers),
+                        " projects(s) created and not destroyed: ",
+                        serialPaste(dQuote(names(session()$projects[leftovers]))),
                         call.=FALSE)
                 }
             })

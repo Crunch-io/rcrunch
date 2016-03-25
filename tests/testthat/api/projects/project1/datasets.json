@@ -1,0 +1,14 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/projects/project1/datasets.json",
+    "index": {
+        "/api/datasets/dataset3.json": {
+            "owner_display_name": "Project One",
+            "name": "ECON.sav",
+            "description": "",
+            "archived": false,
+            "id": "95c0b45fe0af492594863f818cb913d2",
+            "owner_id": "/api/projects/project1.json"
+        }
+    }
+}

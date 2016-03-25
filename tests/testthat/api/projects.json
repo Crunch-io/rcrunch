@@ -1,0 +1,11 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/projects.json",
+    "index": {
+        "/api/projects/project1.json": {
+            "name": "Project One",
+            "description": "Long description text",
+            "icon": ""
+        }
+    }
+}
