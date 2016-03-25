@@ -39,8 +39,10 @@ IndexTuple <- setClass("IndexTuple",
     ))
 VariableTuple <- setClass("VariableTuple", contains="IndexTuple")
 DatasetTuple <- setClass("DatasetTuple", contains="IndexTuple")
+CrunchProject <- setClass("CrunchProject", contains="IndexTuple")
 
 VariableEntity <- setClass("VariableEntity", contains="ShojiObject")
+ProjectEntity <- setClass("ProjectEntity", contains="ShojiObject")
 
 CrunchExpr <- setClass("CrunchExpr",
     representation=representation(
@@ -181,6 +183,7 @@ BatchCatalog <- setClass("BatchCatalog", contains="ShojiCatalog")
 PermissionCatalog <- setClass("PermissionCatalog", contains="ShojiCatalog")
 UserCatalog <- setClass("UserCatalog", contains="ShojiCatalog")
 TeamCatalog <- setClass("TeamCatalog", contains="ShojiCatalog")
+ProjectCatalog <- setClass("ProjectCatalog", contains="ShojiCatalog")
 MemberCatalog <- setClass("MemberCatalog", contains="ShojiCatalog")
 VersionCatalog <- setClass("VersionCatalog", contains="ShojiCatalog")
 FilterCatalog <- setClass("FilterCatalog", contains="ShojiCatalog")

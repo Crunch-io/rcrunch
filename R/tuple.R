@@ -65,6 +65,10 @@ setTupleSlot <- function (x, name, value) {
 
 ##' @rdname tuple-methods
 ##' @export
+setMethod("self", "IndexTuple", function (x) x@entity_url)
+
+##' @rdname tuple-methods
+##' @export
 setMethod("entity", "VariableTuple", function (x) {
     return(VariableEntity(crGET(x@entity_url)))
 })

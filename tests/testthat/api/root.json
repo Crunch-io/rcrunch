@@ -7,6 +7,7 @@
         "sources": "/api/sources.json",
         "accounts": "/api/accounts.json",
         "teams": "/api/teams.json",
+        "projects": "/api/projects.json",
         "public": "/api/public.json"
     },
     "views": {
