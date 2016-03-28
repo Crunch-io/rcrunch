@@ -193,6 +193,68 @@ if (run.integration.tests) {
 
         with(test.dataset(mrdf), {
             ds <- mrdf.setup(ds, selections="1.0")
+            ds$MRcopy <- copy(ds$MR)
+
+            test_that("Initial subvariable orders and counts", {
+                expect_identical(names(subvariables(ds$MR)),
+                    c("mr_1", "mr_2", "mr_3"))
+                expect_equivalent(as.array(crtabs(~ MR, data=ds)),
+                    structure(array(c(2, 1, 1),
+                        dimnames=list(MR=c("mr_1", "mr_2", "mr_3")))))
+                expect_equivalent(as.array(crtabs(~ MRcopy, data=ds)),
+                    structure(array(c(2, 1, 1),
+                        dimnames=list(MR=c("mr_1", "mr_2", "mr_3")))))
+            })
+
+            subvariables(ds$MRcopy) <- subvariables(ds$MRcopy)[c(2, 3, 1)]
+            test_that("Can reorder the copy", {
+                expect_equivalent(as.array(crtabs(~ MR, data=ds)),
+                    structure(array(c(2, 1, 1),
+                        dimnames=list(MR=c("mr_1", "mr_2", "mr_3")))))
+                expect_equivalent(as.array(crtabs(~ MRcopy, data=ds)),
+                    structure(array(c(1, 1, 2),
+                        dimnames=list(MR=c("mr_2", "mr_3", "mr_1")))))
+            })
+
+            ds <- releaseAndReload(ds)
+            test_that("Still reordered on release", {
+                expect_equivalent(as.array(crtabs(~ MR, data=ds)),
+                    structure(array(c(2, 1, 1),
+                        dimnames=list(MR=c("mr_1", "mr_2", "mr_3")))))
+                expect_equivalent(as.array(crtabs(~ MRcopy, data=ds)),
+                    structure(array(c(1, 1, 2),
+                        dimnames=list(MR=c("mr_2", "mr_3", "mr_1")))))
+            })
+
+            test_that("Can append after reordering", {
+                with(test.dataset(mrdf, "part2"), {
+                    part2 <- mrdf.setup(part2, selections="1.0")
+                    ds <- appendDataset(ds, part2)
+                    expect_equivalent(as.array(crtabs(~ MR, data=ds)),
+                        structure(array(c(4, 2, 2),
+                            dimnames=list(MR=c("mr_1", "mr_2", "mr_3")))))
+                    expect_equivalent(as.array(crtabs(~ MRcopy, data=ds)),
+                        structure(array(c(2, 2, 4),
+                            dimnames=list(MR=c("mr_2", "mr_3", "mr_1")))))
+                })
+            })
+
+            test_that("Can copy again after appending", {
+                ds$MRcopy2 <- copy(ds$MR, name="Mister copy two")
+                ds$MRcopy3 <- copy(ds$MRcopy, name="Mister copy three")
+                ds$v4copy <- copy(ds$v4)
+                expect_equivalent(as.array(crtabs(~ MRcopy2, data=ds)),
+                    structure(array(c(4, 2, 2),
+                        dimnames=list(MR=c("mr_1", "mr_2", "mr_3")))))
+                expect_equivalent(as.array(crtabs(~ MRcopy3, data=ds)),
+                    structure(array(c(2, 2, 4),
+                        dimnames=list(MR=c("mr_2", "mr_3", "mr_1")))))
+                expect_identical(as.vector(ds$v4copy), as.vector(ds$v4))
+            })
+        })
+
+        with(test.dataset(mrdf), {
+            ds <- mrdf.setup(ds, selections="1.0")
             test_that("Can reorder a subset of subvariables", {
                 subvariables(ds$MR)[1:2] <- subvariables(ds$MR)[c(2,1)]
                 expect_identical(names(subvariables(ds$MR)),
