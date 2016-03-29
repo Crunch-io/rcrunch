@@ -24,7 +24,6 @@ with_mock_HTTP <- function (expr) {
                 ))
             },
             `crunch::handleAPIresponse`=function (response, special.statuses=list()) {
-                response <- handleAPIerror(response)
                 return(response$response)
             },
             `httr::PUT`=function (url, body, ...) halt("PUT ", url, " ", body),

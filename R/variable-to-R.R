@@ -58,33 +58,34 @@ columnParser <- function (vartype, mode=NULL) {
 }
 
 getValues <- function (x, ...) {
-    url <- shojiURL(x, "views", "values")
-    query <- list(...)
-    ## Paginate requests
-    query$start <- 0
-    query$total <- page.size <- getOption("crunch.page.size") %||% 1000
-    if (length(query)) {
-        ## Because of the enforced pagination, we're always in here.
-        out <- list()
-        keep.going <- TRUE
-        i <- 1
-        with(temp.option(scipen=15), {
-            ## Mess with scipen so that the query string formatter doesn't
-            ## convert an offset like 100000 to '1+e05', which server rejects
-            while(keep.going) {
-                out[[i]] <- crGET(url, query=query)
-                if (length(out[[i]]) < page.size) {
-                    keep.going <- FALSE
-                } else {
-                    query$start <- query$start + page.size
-                    i <- i + 1
-                }
+    paginatedGET(shojiURL(x, "views", "values"), list(...))
+}
+
+paginatedGET <- function (url, query, offset=0,
+                          limit=getOption("crunch.page.size") %||% 1000) {
+    ## Paginate the GETting of values. Called both from getValues and in
+    ## the as.vector.CrunchExpr method in expressions.R
+
+    query$offset <- offset
+    query$limit <- limit
+
+    out <- list()
+    keep.going <- TRUE
+    i <- 1
+    with(temp.option(scipen=15), {
+        ## Mess with scipen so that the query string formatter doesn't
+        ## convert an offset like 100000 to '1+e05', which server rejects
+        while(keep.going) {
+            out[[i]] <- crGET(url, query=query)
+            if (length(out[[i]]) < limit) {
+                keep.going <- FALSE
+            } else {
+                query$offset <- query$offset + limit
+                i <- i + 1
             }
-        })
-        return(unlist(out, recursive=FALSE))
-    } else {
-        return(crGET(url))
-    }
+        }
+    })
+    return(unlist(out, recursive=FALSE))
 }
 
 ##' Convert Variables to local R objects

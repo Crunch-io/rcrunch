@@ -15,7 +15,7 @@ crunchAPI <- function (http.verb, url, config=list(), status.handlers=list(), ..
         try(cat("\n", list(...)$body, "\n"), silent=TRUE)
     }
     FUN <- get(http.verb, envir=asNamespace("httpcache"))
-    x <- try(FUN(url, ..., config=config), silent=TRUE)
+    x <- FUN(url, ..., config=config)
     out <- handleAPIresponse(x, special.statuses=status.handlers)
     return(out)
 }
@@ -52,7 +52,6 @@ crDELETE <- function (...) crunchAPI("DELETE", ...)
 ##' @importFrom httr content http_status
 ##' @keywords internal
 handleAPIresponse <- function (response, special.statuses=list()) {
-    response <- handleAPIerror(response)
     code <- response$status_code
     handler <- special.statuses[[as.character(code)]]
     if (is.function(handler)) {
@@ -84,18 +83,6 @@ handleAPIresponse <- function (response, special.statuses=list()) {
         }
         halt(msg)
     }
-}
-
-handleAPIerror <- function (response) {
-    if (is.error(response)) {
-        if (attr(response, "condition")$message == "Empty reply from server"){
-            halt("Server did not respond. Please check your local ",
-                "configuration and try again later.")
-        } else {
-            rethrow(response)
-        }
-    }
-    return(response)
 }
 
 ##' @importFrom httr config add_headers

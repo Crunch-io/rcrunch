@@ -103,6 +103,24 @@ if (run.integration.tests) {
                 expect_identical(as.vector(ds$v3 * ds$v3), df$v3^2)
             })
 
+            ## Skip
+            # uncached({
+            #     with(temp.options(crunch.page.size=5, httpcache.log=""), {
+            #         avlog <- capture.output(v35 <- as.vector(ds$v3 + 5))
+            #         test_that("as.vector with CrunchExpr is paginated", {
+            #             logdf <- loadLogfile(textConnection(avlog))
+            #             ## GET /values/ 4x
+            #             ## to get data, then a 5th GET /values/ that returns 0
+            #             ## values, which breaks the pagination loop
+            #             expect_identical(logdf$verb, rep("GET", 5))
+            #             expect_identical(grep("table", logdf$url), 1:5)
+            #         })
+            #         test_that("getValues returns the same result when paginated", {
+            #             expect_equivalent(v35, df$v3 + 5)
+            #         })
+            #     })
+            # })
+
             test_that("Logical expressions evaluate", {
                 e1 <- try(ds$v3 < 10)
                 expect_true(inherits(e1, "CrunchLogicalExpr"))

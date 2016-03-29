@@ -159,7 +159,6 @@ if (run.integration.tests) {
             })
 
             uncached({
-                clearCache() ## So we're totally fresh
                 with(temp.options(crunch.page.size=5, httpcache.log=""), {
                     avlog <- capture.output(v1 <- as.vector(ds$v1))
                     test_that("getValues can be paginated", {

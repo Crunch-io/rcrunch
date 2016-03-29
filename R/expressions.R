@@ -26,8 +26,9 @@ setMethod("as.vector", "CrunchExpr", function (x, mode) {
     if (length(x@filter)) {
         payload[["filter"]] <- x@filter
     }
-    # cat(toJSON(payload))
-    out <- crPOST(paste0(x@dataset_url, "table/"), body=toJSON(payload))
+    out <- paginatedGET(paste0(x@dataset_url, "table/"),
+        query=list(query=toJSON(payload)),
+        limit=10000000000) ## Because server doesn't accept pagination yet
     ## pass in the variable metadata to the column parser
     variable <- VariableEntity(structure(list(body=out$metadata$out),
         class="shoji"))
