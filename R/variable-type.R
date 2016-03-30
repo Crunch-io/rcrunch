@@ -19,15 +19,17 @@ NULL
 ##' @rdname type
 ##' @export
 setMethod("type", "CrunchVariable", function (x) type(tuple(x)))
-## do type casting as type<-
 
-castVariable <- function (x, to) {
-    if (!(to %in% CASTABLE_TYPES)) {
-        halt(dQuote(to), " is not a Crunch variable type that can be assigned.",
+castVariable <- function (x, value) {
+    if (!(type(x) %in% CASTABLE_TYPES)) {
+        halt("Cannot change the type of a ", class(x), " by type<-")
+    }
+    if (!(value %in% CASTABLE_TYPES)) {
+        halt(dQuote(value), " is not a Crunch variable type that can be assigned.",
             " Valid types are ", serialPaste(dQuote(CASTABLE_TYPES)))
     }
-    if (type(x) != to) { ## no-op if cast type is same as current type
-        crPOST(shojiURL(x, "views", "cast"), body=toJSON(list(cast_as=to)))
+    if (type(x) != value) { ## no-op if cast type is same as current type
+        crPOST(shojiURL(x, "views", "cast"), body=toJSON(list(cast_as=value)))
         x <- refresh(x)
     }
     invisible(x)
@@ -35,5 +37,4 @@ castVariable <- function (x, to) {
 
 ##' @rdname type
 ##' @export
-setMethod("type<-", "CrunchVariable",
-    function (x, value) castVariable(x, value))
+setMethod("type<-", "CrunchVariable", castVariable)

@@ -26,7 +26,8 @@
     },
     "views": {
         "summary": "/api/datasets/dataset1/variables/mymrset/summary.json",
-        "values": "/api/datasets/dataset1/variables/mymrset/values.json"
+        "values": "/api/datasets/dataset1/variables/mymrset/values.json",
+        "cast": "/api/datasets/dataset1/variables/mymrset/cast.json"
     },
     "urls": {
         "dataset_url": "/api/datasets/dataset1.json"

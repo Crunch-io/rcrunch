@@ -1,4 +1,5 @@
 ### crunch 1.9.5 (Under development)
+* Do more validation that `type<-` assignment is safe.
 
 ### crunch 1.9.4
 * Add a "session" object, retrievable by either `session()` or returned from `login()`, containing the various catalog resources (Datasets, etc.).
