@@ -62,7 +62,8 @@ getValues <- function (x, ...) {
 }
 
 paginatedGET <- function (url, query, offset=0,
-                          limit=getOption("crunch.page.size") %||% 1000) {
+                          limit=getOption("crunch.page.size") %||% 1000,
+                          table=FALSE) {
     ## Paginate the GETting of values. Called both from getValues and in
     ## the as.vector.CrunchExpr method in expressions.R
 
@@ -72,12 +73,22 @@ paginatedGET <- function (url, query, offset=0,
     out <- list()
     keep.going <- TRUE
     i <- 1
+
+    ## Function to determine number of values received, depending on whether
+    ## we have a crunch:table or shoji:view
+    if (table) {
+        len <- function (x) length(x$data$out)
+    } else {
+        len <- length
+    }
     with(temp.option(scipen=15), {
         ## Mess with scipen so that the query string formatter doesn't
         ## convert an offset like 100000 to '1+e05', which server rejects
         while(keep.going) {
+            ## Wrap the GET in a parser function, default no-op, so we can
+            ## get data out of a crunch:table
             out[[i]] <- crGET(url, query=query)
-            if (length(out[[i]]) < limit) {
+            if (len(out[[i]]) < limit) {
                 keep.going <- FALSE
             } else {
                 query$offset <- query$offset + limit
@@ -85,7 +96,16 @@ paginatedGET <- function (url, query, offset=0,
             }
         }
     })
-    return(unlist(out, recursive=FALSE))
+
+    ## Collect the result
+    if (table) {
+        out[[1]]$data$out <- unlist(lapply(out, function (x) x$data$out),
+            recursive=FALSE)
+        out <- out[[1]]
+    } else {
+        out <- unlist(out, recursive=FALSE)
+    }
+    return(out)
 }
 
 ##' Convert Variables to local R objects
