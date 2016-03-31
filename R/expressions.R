@@ -22,13 +22,15 @@ NULL
 ##' @rdname variable-to-R
 ##' @export
 setMethod("as.vector", "CrunchExpr", function (x, mode) {
-    payload <- list(command="select", variables=list(out=zcl(x)))
+    payload <- list(query=toJSON(list(variables=list(out=zcl(x)))))
     if (length(x@filter)) {
-        payload[["filter"]] <- x@filter
+        payload[["filter"]] <- toJSON(x@filter)
+    } else {
+        payload$filter <- "{}"
     }
     out <- paginatedGET(paste0(x@dataset_url, "table/"),
-        query=list(query=toJSON(payload)),
-        limit=10000000000) ## Because server doesn't accept pagination yet
+        query=payload, table=TRUE)
+        # limit=10000000000) ## Because server doesn't accept pagination yet
     ## pass in the variable metadata to the column parser
     variable <- VariableEntity(structure(list(body=out$metadata$out),
         class="shoji"))
