@@ -5,17 +5,14 @@ if (run.integration.tests) {
         with(test.dataset(df), {
             var1 <- ds[[1]]
             test_that("Hide and unhide method for variables", {
-                expect_true(name(var1) %in% findVariables(ds, key="name",
-                    value=TRUE))
+                expect_true(name(var1) %in% names(variables(ds)))
                 var1 <- hide(var1)
                 ds <- refresh(ds)
-                expect_false(name(var1) %in% findVariables(ds, key="name",
-                    value=TRUE))
+                expect_false(name(var1) %in% names(variables(ds)))
 
                 var1 <- unhide(var1)
                 ds <- refresh(ds)
-                expect_true(name(var1) %in% findVariables(ds, key="name",
-                    value=TRUE))
+                expect_true(name(var1) %in% names(variables(ds)))
             })
         })
 
@@ -47,12 +44,12 @@ if (run.integration.tests) {
             test_that("hiddenVariables<- adds variables", {
                 expect_identical(names(ds)[1:2], c("v1", "v5"))
                 expect_identical(hiddenVariables(ds), c("v2", "v3", "v4"))
-                expect_identical(dim(ds), c(nrow(df), ncol(df)-3L))
+                expect_identical(dim(ds), c(nrow(df), ncol(df) - 3L))
             })
 
             test_that("hidden variables can be accessed with $", {
-                expect_warning(ds$v2, "hidden")
-                expect_true(is.Text(suppressWarnings(ds$v2)))
+                expect_warning(z <- ds$v2, "hidden")
+                expect_true(is.Text(z))
             })
 
             try(ds <- unhideVariables(ds, c("v2", "v3", "v4")))
@@ -66,18 +63,18 @@ if (run.integration.tests) {
         })
 
         with(test.dataset(df), {
-            test_that("hideVariables with grep (and by index)", {
-                ds <- hideVariables(ds, pattern="v[23]")
+            test_that("hideVariables with grep is deprecated (and by index)", {
+                ds <- hideVariables(ds, c(2, 3))
                 expect_identical(names(ds)[1:2], c("v1", "v4"))
 
-                ds <- unhideVariables(ds, pattern="v[23]")
+                expect_warning(ds <- unhideVariables(ds, pattern="v[23]"),
+                    "Deprecation warning")
                 expect_identical(hiddenVariables(ds), c())
             })
 
             test_that("Error handling", {
                 expect_identical(hiddenVariables(ds), c()) # To be clear
                 ## Need something better than subscript out of bounds, probably
-
             })
         })
 

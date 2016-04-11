@@ -259,7 +259,7 @@ as.list.Subvariables <- function (x, ...) lapply(names(x), function (i) x[[i]])
 ##' @rdname describe-catalog
 ##' @export
 setMethod("names", "CategoricalArrayVariable", function (x) {
-    findVariables(subvariables(x), key=namekey(x), value=TRUE)
+    getIndexSlot(subvariables(x), namekey(x))
 })
 
 ##' @rdname subvars-extract

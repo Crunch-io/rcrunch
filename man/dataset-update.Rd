@@ -48,7 +48,7 @@ or R vectors of the corresponding type}
 \item{name}{like \code{j} but for \code{$}}
 
 \item{j}{if character, identifies variables to extract based on their
-aliases (by default: set \code{options(crunch.namekey.dataset="name")} 
+aliases (by default: set \code{options(crunch.namekey.dataset="name")}
 to use variable names); if numeric or
 logical, extracts variables accordingly. Note that this is the as.list
 extraction, columns of the dataset rather than rows.}

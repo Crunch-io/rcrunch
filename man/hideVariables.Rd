@@ -19,12 +19,15 @@ unhideVariables(dataset, variables = NULL, pattern = NULL,
 
 \item{variables}{names or indices of variables to (un)hide}
 
-\item{pattern}{optional regular expression to identify Variables to (un)hide}
+\item{pattern}{optional regular expression to identify Variables to (un)hide.
+Note that this argument is deprecated. If you wish to grep, you can
+\code{grep(pattern, aliases(variables(dataset)))} or similar outside this
+function.}
 
 \item{key}{the Variable attribute to \code{\link{grep}} with the
 \code{pattern}. Default is "alias"}
 
-\item{...}{optional additional arguments to \code{grep}}
+\item{...}{optional additional arguments to \code{grep}, likewise deprecated.}
 
 \item{x}{same as \code{dataset}, for `hiddenVariables<-`}
 

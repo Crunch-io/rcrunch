@@ -16,7 +16,10 @@ deleteVariable(dataset, variables = NULL, pattern = NULL,
 
 \item{variables}{names or indices of variables to delete}
 
-\item{pattern}{optional regular expression to identify Variables to delete}
+\item{pattern}{optional regular expression to identify Variables to delete.
+Note that this argument is deprecated. If you wish to grep, you can
+\code{grep(pattern, aliases(variables(dataset)))} or similar outside this
+function.}
 
 \item{key}{the Variable attribute to \code{\link{grep}} with the
 \code{pattern}. Default is "alias"}
@@ -26,7 +29,7 @@ Default is \code{TRUE} if in
 an interactive session. You can avoid the confirmation prompt if you delete
 \code{with(\link{consent})}.}
 
-\item{...}{optional additional arguments to \code{grep}}
+\item{...}{optional additional arguments to \code{grep}. Likewise deprecated.}
 }
 \value{
 (invisibly) \code{dataset} with the specified variables deleted

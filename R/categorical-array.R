@@ -1,16 +1,19 @@
 ##' Make a Categorical Array or Multiple Response variable
 ##'
-##' @param list_of_variables a list of Variable objects to bind together, or a
+##' @param subvariables a list of Variable objects to bind together, or a
 ##' Dataset object containing only the Variables to bind (as in from subsetting
 ##' a Dataset), or values (e.g. names) of variables corresponding to \code{key}.
 ##' If omitted, must supply \code{dataset} and \code{pattern}. If specifying
 ##' values, must include \code{dataset}.
 ##' @param dataset the Crunch Dataset to which the variables in
-##' \code{list_of_variables} belong, or in which to search for variables based
-##' on \code{pattern}. If omitted, \code{list_of_variables} must exist and all
+##' \code{subvariables} belong, or in which to search for variables based
+##' on \code{pattern}. If omitted, \code{subvariables} must exist and all
 ##' Variables in the list must belong to the same Dataset
 ##' @param pattern An optional regular expression to search for variables to
 ##' bind within \code{dataset}.
+##' Note that this argument is deprecated. If you wish to grep, you can
+##' \code{grep(pattern, aliases(variables(dataset)))} or similar outside this
+##' function.
 ##' @param key character, the name of the Variable field in which to search
 ##' with \code{pattern}. Default is 'alias'.
 ##' @param name character, the name that the new Categorical Array variable
@@ -22,7 +25,7 @@
 ##' @return A VariableDefinition that when added to a Dataset will create the
 ##' categorical-array or multiple-response variable.
 ##' @export
-makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key=namekey(dataset), name, ...) {
+makeArray <- function (subvariables, dataset=NULL, pattern=NULL, key=namekey(dataset), name, ...) {
 
     Call <- match.call(expand.dots=FALSE)
 
@@ -31,9 +34,9 @@ makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key=nameke
     }
 
     Call[[1L]] <- as.name("prepareBindInputs")
-    x <- eval.parent(Call)
+    subvar_urls <- eval.parent(Call)
 
-    out <- VariableDefinition(subvariables=I(x$variable_urls), name=name,
+    out <- VariableDefinition(subvariables=I(subvar_urls), name=name,
         type="categorical_array", ...)
     return(out)
 }
@@ -42,14 +45,14 @@ makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key=nameke
 ##'
 ##' Exported only for nonstandard evaluation in makeArray and makeMR
 ##'
-##' @param list_of_variables a list of Variable objects to bind together, or a
+##' @param subvariables a list of Variable objects to bind together, or a
 ##' Dataset object containing only the Variables to bind (as in from subsetting
 ##' a Dataset), or values (e.g. names) of variables corresponding to \code{key}.
 ##' If omitted, must supply \code{dataset} and \code{pattern}. If specifying
 ##' values, must include \code{dataset}.
 ##' @param dataset the Crunch Dataset to which the variables in
-##' \code{list_of_variables} belong, or in which to search for variables based
-##' on \code{pattern}. If omitted, \code{list_of_variables} must exist and all
+##' \code{subvariables} belong, or in which to search for variables based
+##' on \code{pattern}. If omitted, \code{subvariables} must exist and all
 ##' Variables in the list must belong to the same Dataset
 ##' @param pattern An optional regular expression to search for variables to
 ##' bind within \code{dataset}.
@@ -59,47 +62,41 @@ makeArray <- function (list_of_variables, dataset=NULL, pattern=NULL, key=nameke
 ##' @return a list with two elements: "dataset" and "variable_urls"
 ##' @export
 ##' @keywords internal
-prepareBindInputs <- function (list_of_variables=NULL, dataset=NULL,
+prepareBindInputs <- function (subvariables=NULL, dataset=NULL,
                                pattern=NULL, key=namekey(dataset), ...) {
 
     ## Given inputs to makeArray/makeMR, parse and validate
     listOfVariablesIsValid <- function (lov) {
         return(is.list(lov) && all(vapply(lov, is.variable, logical(1))))
     }
-    datasetURLfromVariables <- function (lov) {
-        ds_urls <- unique(vapply(lov, datasetReference, character(1)))
-        if (length(ds_urls) > 1) {
-            ## see if list of variables actually do belong to same dataset
-            halt("All variables to be bound together must be from the same dataset")
-        }
-        return(ds_urls)
-    }
+    ## Is this worth validating?
+    # datasetURLfromVariables <- function (lov) {
+    #     ds_urls <- unique(vapply(lov, datasetReference, character(1)))
+    #     if (length(ds_urls) > 1) {
+    #         ## see if list of variables actually do belong to same dataset
+    #         halt("All variables to be bound together must be from the same dataset")
+    #     }
+    #     return(ds_urls)
+    # }
 
-    variable_urls <- NULL
     if (is.null(dataset)) {
-        if (is.dataset(list_of_variables)) {
+        if (is.dataset(subvariables)) {
             ## as in, if the list of variables is a [ extraction from a Dataset
-            dataset <- list_of_variables
-            variable_urls <- urls(allVariables(dataset))
-        } else if (listOfVariablesIsValid(list_of_variables)) {
-            ds_url <- datasetURLfromVariables(list_of_variables)
-            dataset <- as.dataset(crGET(ds_url))
-            variable_urls <- vapply(list_of_variables,
-                function (x) self(x), character(1), USE.NAMES=FALSE)
+            return(urls(allVariables(subvariables)))
+        } else if (inherits(subvariables, "VariableCatalog")) {
+            return(urls(subvariables))
+        } else if (listOfVariablesIsValid(subvariables)) {
+            return(vapply(subvariables, self, character(1)))
         } else {
             halt("Must provide a Dataset and either a list of Variables to combine or a pattern to identify Variables within that Dataset")
         }
     }
-    if (is.null(dataset)) {
-        halt("Must supply a Crunch dataset in which to make the array variable")
+
+    ## Pattern match (deprecated)
+    variable_urls <- findVariableURLs(dataset, refs=subvariables, pattern=pattern, key=key)
+    if (!length(variable_urls)) {
+        halt("Pattern did not match any variables")
     }
 
-    if (is.null(variable_urls)) {
-        variable_urls <- findVariableURLs(dataset, refs=list_of_variables, pattern=pattern, key=key)
-        if (!length(variable_urls)) {
-            halt("Pattern did not match any variables")
-        }
-    }
-
-    return(list(dataset=dataset, variable_urls=variable_urls))
+    return(variable_urls)
 }

@@ -6,15 +6,14 @@
 ##' alternative to pattern matching. Default is \code{NULL}, which means to
 ##' use \code{grep} instead.
 ##' @param pattern regular expression, passed to \code{grep}. If "", returns
-##' all.
-##' @param key the field in the Crunch objects in which to grep
+##' all. Note: this argument is deprecated.
+##' @param key the field in the Crunch objects in which to grep. Likewise deprecated.
 ##' @param ... additional arguments passed to \code{grep}. If \code{value=TRUE},
 ##' returns the values of \code{key} where matches are found, not the variables
-##' themselves
+##' themselves. Again, deprecated.
 ##' @return indices of the Variables that match the pattern, or the matching
 ##' key values if value=TRUE is passed to \code{grep}
 ##' @keywords internal
-##' @export
 findVariables <- function (dataset, refs=NULL, pattern="", key=namekey(dataset), ...) {
 
     if (is.dataset(dataset)) {
@@ -22,6 +21,10 @@ findVariables <- function (dataset, refs=NULL, pattern="", key=namekey(dataset),
     }
     keys <- getIndexSlot(dataset, key)
     if (is.null(refs)) {
+        warning(paste("Deprecation warning: pattern matching in this function",
+            "will be removed in a future release. Please reference entities",
+            "directly. See the help page for this function for more."),
+            call.=FALSE)
         matches <- grep(pattern, keys, ...)
     } else {
         matches <- which(keys %in% refs)

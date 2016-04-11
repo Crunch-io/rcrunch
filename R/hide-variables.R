@@ -32,10 +32,13 @@ setMethod("unhide", "VariableCatalog", function (x) {
 ##' @param x same as \code{dataset}, for `hiddenVariables<-`
 ##' @param variables names or indices of variables to (un)hide
 ##' @param value same as \code{variables}, for `hiddenVariables<-`
-##' @param pattern optional regular expression to identify Variables to (un)hide
+##' @param pattern optional regular expression to identify Variables to (un)hide.
+##' Note that this argument is deprecated. If you wish to grep, you can
+##' \code{grep(pattern, aliases(variables(dataset)))} or similar outside this
+##' function.
 ##' @param key the Variable attribute to \code{\link{grep}} with the
 ##' \code{pattern}. Default is "alias"
-##' @param ... optional additional arguments to \code{grep}
+##' @param ... optional additional arguments to \code{grep}, likewise deprecated.
 ##' @return (invisibly) \code{dataset} with the specified variables (un)hidden
 ##' @seealso \code{\link{hide}}
 ##' @export
@@ -85,14 +88,17 @@ hiddenVariables <- function (dataset, key="name") {
 ##' Delete Variables Within a Dataset
 ##' @param dataset the Dataset to modify
 ##' @param variables names or indices of variables to delete
-##' @param pattern optional regular expression to identify Variables to delete
+##' @param pattern optional regular expression to identify Variables to delete.
+##' Note that this argument is deprecated. If you wish to grep, you can
+##' \code{grep(pattern, aliases(variables(dataset)))} or similar outside this
+##' function.
 ##' @param key the Variable attribute to \code{\link{grep}} with the
 ##' \code{pattern}. Default is "alias"
 ##' @param confirm logical: should the user be asked to confirm deletion.
 ##' Default is \code{TRUE} if in
 ##' an interactive session. You can avoid the confirmation prompt if you delete
 ##' \code{with(\link{consent})}.
-##' @param ... optional additional arguments to \code{grep}
+##' @param ... optional additional arguments to \code{grep}. Likewise deprecated.
 ##' @return (invisibly) \code{dataset} with the specified variables deleted
 ##' @seealso \code{\link{hide}}
 ##' @export

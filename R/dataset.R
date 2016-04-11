@@ -132,7 +132,7 @@ namekey <- function (x) {
 ##' @rdname describe-catalog
 ##' @export
 setMethod("names", "CrunchDataset", function (x) {
-    findVariables(x, key=namekey(x), value=TRUE)
+    getIndexSlot(variables(x), namekey(x))
 })
 
 ##' Dataset weights

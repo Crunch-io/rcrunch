@@ -15,13 +15,13 @@ alternative to pattern matching. Default is \code{NULL}, which means to
 use \code{grep} instead.}
 
 \item{pattern}{regular expression, passed to \code{grep}. If "", returns
-all.}
+all. Note: this argument is deprecated.}
 
-\item{key}{the field in the Crunch objects in which to grep}
+\item{key}{the field in the Crunch objects in which to grep. Likewise deprecated.}
 
 \item{...}{additional arguments passed to \code{grep}. If \code{value=TRUE},
 returns the values of \code{key} where matches are found, not the variables
-themselves}
+themselves. Again, deprecated.}
 }
 \value{
 indices of the Variables that match the pattern, or the matching

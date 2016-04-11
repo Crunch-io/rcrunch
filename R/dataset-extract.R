@@ -84,13 +84,13 @@ setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE
     if (is.na(n)) {
         ## See if the variable in question is hidden
         hvars <- hidden(x)
-        hnames <- findVariables(hvars, key=namekey(x), value=TRUE)
+        hnames <- getIndexSlot(hvars, namekey(x))
         n <- match(i, hnames)
         if (is.na(n)) {
             return(NULL)
         } else {
             ## If so, return it with a warning
-            out <- hidden(x)[[n]]
+            out <- hvars[[n]]
             if (!is.null(out)) {
                 out <- CrunchVariable(out, filter=activeFilter(x))
             }
@@ -169,7 +169,7 @@ setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 ##' vector defining a subset of the rows of \code{x}. For \code{[[}, see
 ##' \code{j} for the as.list column subsetting.
 ##' @param j if character, identifies variables to extract based on their
-##' aliases (by default: set \code{options(crunch.namekey.dataset="name")} 
+##' aliases (by default: set \code{options(crunch.namekey.dataset="name")}
 ##' to use variable names); if numeric or
 ##' logical, extracts variables accordingly. Note that this is the as.list
 ##' extraction, columns of the dataset rather than rows.
