@@ -18,7 +18,10 @@ with_mock_HTTP({
                         list(column=I(1:3)),
                         list(type=list(
                             value=list(
-                                
+                                class="categorical",
+                                categories=list(
+                                    list()
+                                    )
                                 )
                             )
                         ),
