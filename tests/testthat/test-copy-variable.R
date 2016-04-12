@@ -94,12 +94,12 @@ if (run.integration.tests) {
                 unbind(ds$allpets_juv)
                 ds <- refresh(ds)
 
-                ds$allcats <- makeMR(pattern="Cat$", data=ds,
-                    selections="selected", name="All cats", key="name")
-                ds$alldogs <- makeMR(pattern="Canine$", data=ds,
-                    selections="selected", name="All dogs", key="name")
-                ds$allbirds <- makeMR(pattern="Bird$", data=ds,
-                    selections="selected", name="All birds", key="name")
+                ds$allcats <- makeMR(ds[grep("Cat$", names(variables(ds)))],
+                    selections="selected", name="All cats")
+                ds$alldogs <- makeMR(ds[grep("Canine$", names(variables(ds)))],
+                    selections="selected", name="All dogs")
+                ds$allbirds <- makeMR(ds[grep("Bird$", names(variables(ds)))],
+                    selections="selected", name="All birds")
 
                 expect_equivalent(as.array(crtabs(~ allcats, data=ds)),
                     array(c(4, 4), dim=c(2L),

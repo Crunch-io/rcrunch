@@ -22,13 +22,15 @@ with_mock_HTTP({
 
     test_that("makeArray error conditions", {
         no.name <- "Must provide the name for the new variable"
-        no.match <- "Pattern did not match any variables"
+        no.match <- "No variables supplied"
         expect_error(makeArray(), no.name)
         expect_error(makeArray(ds[,"gender"]), no.name)
         expect_warning(
             expect_error(makeArray(pattern="rm_", dataset=ds, name="foo"),
                 no.match),
             "Deprecation")
+        expect_error(makeArray(ds[grep("NO variables", names(ds))], name="foo"),
+            no.match)
     })
 })
 
@@ -76,7 +78,7 @@ if (run.integration.tests) {
         })
 
         with(test.dataset(mrdf), {
-            ds$arrayVar <- makeArray(pattern="mr_[123]", dataset=ds,
+            ds$arrayVar <- makeArray(ds[c("mr_1", "mr_2", "mr_3")],
                 name="arrayVar")
             var <- ds$arrayVar
             test_that("setup to make MultipleResponse from CategoricalArray", {
@@ -142,7 +144,7 @@ if (run.integration.tests) {
             with(test.dataset(mrdf), {
                 test_that("makeMR error conditions", {
                     no.name <- "Must provide the name for the new variable"
-                    no.match <- "Pattern did not match any variables"
+                    no.match <- "No variables supplied"
                     need.variables <- "Invalid list of Variables to combine"
                     ds.mismatch <- "`subvariables` must be from `dataset`"
                     no.selections <- paste("Must provide the names of the",
@@ -154,21 +156,23 @@ if (run.integration.tests) {
                     expect_error(makeMR(), no.name)
                     expect_error(makeMR(pattern="mr_[123]", dataset=ds),
                         no.name)
-                    expect_error(makeMR(pattern="rm_", dataset=ds,
-                        name="foo", selections="foo"), no.match)
-                    expect_error(makeMR(c("mr_1", "mr_2", "mr_3"),
-                        dataset=ds, name="foo", selections="foo"),
+                    expect_warning(
+                        expect_error(makeMR(pattern="rm_", dataset=ds,
+                            name="foo", selections="foo"), no.match),
+                        "Deprecation")
+                    expect_error(makeMR(ds[c("mr_1", "mr_2", "mr_3")],
+                        name="foo", selections="foo"),
                         not.categorical)
-                    expect_error(makeMR(pattern="mr_[123]", dataset=ds,
+                    expect_error(makeMR(ds[c("mr_1", "mr_2", "mr_3")],
                         name="arrayVar", selections="Not a Selection!"),
                         not.categorical)
                     cast.these <- grep("mr_", names(ds))
                     ds[cast.these] <- lapply(ds[cast.these],
                         castVariable, "categorical")
-                    expect_error(makeMR(pattern="mr_[123]", dataset=ds,
+                    expect_error(makeMR(ds[cast.these],
                         name="arrayVar", selections="Not a Selection!"),
                         invalid.selection)
-                    expect_error(makeMR(pattern="mr_[123]", dataset=ds,
+                    expect_error(makeMR(ds[cast.these],
                         name="arrayVar"), no.selections)
                 })
             })

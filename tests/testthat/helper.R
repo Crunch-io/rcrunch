@@ -91,10 +91,9 @@ mrdf.setup <- function (dataset, pattern="mr_", name=ifelse(is.null(selections),
     dataset[cast.these] <- lapply(dataset[cast.these],
         castVariable, "categorical")
     if (is.null(selections)) {
-        dataset[[name]] <- makeArray(pattern=pattern, dataset=dataset,
-            name=name)
+        dataset[[name]] <- makeArray(dataset[cast.these], name=name)
     } else {
-        dataset[[name]] <- makeMR(pattern=pattern, dataset=dataset, name=name,
+        dataset[[name]] <- makeMR(dataset[cast.these], name=name,
             selections=selections)
     }
     return(dataset)

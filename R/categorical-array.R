@@ -82,20 +82,21 @@ prepareBindInputs <- function (subvariables=NULL, dataset=NULL,
     if (is.null(dataset)) {
         if (is.dataset(subvariables)) {
             ## as in, if the list of variables is a [ extraction from a Dataset
-            return(urls(allVariables(subvariables)))
+            variable_urls <- urls(allVariables(subvariables))
         } else if (inherits(subvariables, "VariableCatalog")) {
-            return(urls(subvariables))
+            variable_urls <- urls(subvariables)
         } else if (listOfVariablesIsValid(subvariables)) {
-            return(vapply(subvariables, self, character(1)))
+            variable_urls <- vapply(subvariables, self, character(1))
         } else {
             halt("Must provide a Dataset and either a list of Variables to combine or a pattern to identify Variables within that Dataset")
         }
+    } else {
+        ## Pattern match (deprecated)
+        variable_urls <- findVariableURLs(dataset, refs=subvariables, pattern=pattern, key=key)
     }
 
-    ## Pattern match (deprecated)
-    variable_urls <- findVariableURLs(dataset, refs=subvariables, pattern=pattern, key=key)
     if (!length(variable_urls)) {
-        halt("Pattern did not match any variables")
+        halt("No variables supplied")
     }
 
     return(variable_urls)

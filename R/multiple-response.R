@@ -39,6 +39,6 @@ makeMR <- function (subvariables, dataset=NULL, pattern=NULL, key=namekey(datase
         ## Could return more useful messaging here
     }
 
-    return(VariableDefinition(subvariables=I(x$variable_urls), name=name,
+    return(VariableDefinition(subvariables=I(subvar_urls), name=name,
         type="multiple_response", selected_categories=I(selections), ...))
 }
