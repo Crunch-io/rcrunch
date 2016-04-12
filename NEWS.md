@@ -1,4 +1,5 @@
 ### crunch 1.9.5 (Under development)
+* Add warning that the `pattern` argument for functions including `makeArray`, `makeMR`, `deleteVariables`, and `hideVariables` is being deprecated. The help pages for those functions advise you to grep for or otherwise identify your variables outside of these functions.
 * Do more validation that `type<-` assignment is safe.
 
 ### crunch 1.9.4
