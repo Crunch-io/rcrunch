@@ -4,11 +4,11 @@ with_mock_HTTP({
     projects <- session()$projects
     test_that("Getting projects catalog", {
         expect_true(inherits(projects, "ProjectCatalog"))
-        expect_identical(length(projects), 1L)
-        expect_identical(names(projects), "Project One")
+        expect_identical(length(projects), 2L)
+        expect_identical(names(projects), c("Project One", "Project Two"))
     })
 
-    aproject <- projects[[1]]
+    aproject <- projects[["Project One"]]
     test_that("Getting project from catalog", {
         expect_true(inherits(projects[[1]], "CrunchProject"))
         expect_true(inherits(projects$`Project One`, "CrunchProject"))
@@ -26,6 +26,17 @@ with_mock_HTTP({
             fixed=TRUE)
         expect_error(projects$`A new project` <- list(),
             'POST /api/projects.json {"name":"A new project"}',
+            fixed=TRUE)
+    })
+
+    test_that("Project editing", {
+        expect_error(names(projects)[2] <- "New name",
+            paste('PATCH /api/projects.json',
+            '{"/api/projects/project2.json":{"name":"New name"}}'),
+            fixed=TRUE)
+        expect_error(name(projects[[2]]) <- "New name",
+            paste('PATCH /api/projects.json',
+            '{"/api/projects/project2.json":{"name":"New name"}}'),
             fixed=TRUE)
     })
 
@@ -98,11 +109,34 @@ if (run.integration.tests) {
                 my.name)
         })
 
+        projects <- refresh(projects)
+        p_url <- self(projects[[name.of.project1]])
+        name2 <- paste(name.of.project1, "revised")
+        test_that("Can rename a project by name<-", {
+            expect_identical(self(projects[[name.of.project1]]),
+                p_url)
+            expect_identical(projects[[name2]], NULL)
+            skip("(405) Method Not Allowed")
+            name(projects[[name.of.project1]]) <- name2
+            expect_identical(projects[[name.of.project1]],
+                NULL)
+            expect_identical(self(projects[[name2]]), p_url)
+        })
+
+        name3 <- paste(name2, "FINAL")
+        test_that("Can rename a project with names<-", {
+            expect_false(name3 %in% names(projects))
+            skip("(405) Method Not Allowed")
+            names(projects)[urls(projects) == p_url] <- name3
+            expect_true(name3 %in% names(projects))
+            expect_identical(self(projects[[name3]]), p_url)
+        })
+
         test_that("Can delete a project by URL", {
             projects <- refresh(projects)
-            expect_true(name.of.project1 %in% names(projects))
-            try(crDELETE(self(projects[[name.of.project1]])))
-            expect_false(name.of.project1 %in% names(refresh(projects)))
+            expect_true(p_url %in% urls(projects))
+            try(crDELETE(p_url))
+            expect_false(p_url %in% urls(refresh(projects)))
         })
 
         test_that("Can create a project with members", {
