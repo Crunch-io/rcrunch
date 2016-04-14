@@ -3,6 +3,7 @@
 \docType{methods}
 \name{catalog-extract}
 \alias{$,ShojiCatalog-method}
+\alias{$<-,ShojiCatalog-method}
 \alias{[,ShojiCatalog,ANY,ANY-method}
 \alias{[,ShojiCatalog,character,ANY-method}
 \alias{[,ShojiCatalog,logical,ANY-method}
@@ -81,6 +82,8 @@
 \S4method{[[}{ShojiCatalog,character}(x, i, j, ...)
 
 \S4method{$}{ShojiCatalog}(x, name)
+
+\S4method{$}{ShojiCatalog}(x, name) <- value
 
 \S4method{[[}{TeamCatalog,character}(x, i, j, ...)
 

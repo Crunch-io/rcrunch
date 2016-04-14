@@ -217,12 +217,7 @@ setMethod("[[<-",
     function (x, i, value) {
         halt("Can only assign Variables into an object of class Subvariables")
     })
-##' @rdname subvars-extract
-##' @export
-setMethod("$<-", c("Subvariables"), function (x, name, value) {
-    x[[name]] <- value
-    return(x)
-})
+
 ##' @rdname subvars-extract
 ##' @export
 setMethod("[<-", c("Subvariables", "character", "missing", "Subvariables"),

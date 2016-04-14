@@ -103,6 +103,13 @@ setMethod("[[", c("ShojiCatalog", "character"), function (x, i, ...) {
 ##' @export
 setMethod("$", "ShojiCatalog", function (x, name) x[[name]])
 
+##' @rdname catalog-extract
+##' @export
+setMethod("$<-", "ShojiCatalog", function (x, name, value) {
+    x[[name]] <- value
+    return(x)
+})
+
 ##' Length of Catalog
 ##' @param x a Catalog
 ##' @return Integer: the number of elements in the index list

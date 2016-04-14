@@ -24,6 +24,9 @@ with_mock_HTTP({
         expect_error(projects[["A new project"]] <- list(),
             'POST /api/projects.json {"name":"A new project"}',
             fixed=TRUE)
+        expect_error(projects$`A new project` <- list(),
+            'POST /api/projects.json {"name":"A new project"}',
+            fixed=TRUE)
     })
 
     test_that("Project deletion", {
@@ -83,45 +86,44 @@ if (run.integration.tests) {
             expect_true(inherits(projects, "ProjectCatalog"))
         })
 
-        t2 <- projects
         name.of.project1 <- now()
         test_that("Can create a project", {
-            expect_false(name.of.project1 %in% names(t2))
-            t2[[name.of.project1]] <- list()
-            expect_true(name.of.project1 %in% names(t2))
-            expect_true(length(t2) == nprojects.0 + 1L)
-            expect_true(inherits(t2[[name.of.project1]], "CrunchProject"))
-            expect_identical(length(members(t2[[name.of.project1]])), 1L)
-            expect_identical(names(members(t2[[name.of.project1]])),
+            expect_false(name.of.project1 %in% names(projects))
+            projects[[name.of.project1]] <- list()
+            expect_true(name.of.project1 %in% names(projects))
+            expect_true(length(projects) == nprojects.0 + 1L)
+            expect_true(inherits(projects[[name.of.project1]], "CrunchProject"))
+            expect_identical(length(members(projects[[name.of.project1]])), 1L)
+            expect_identical(names(members(projects[[name.of.project1]])),
                 my.name)
         })
 
         test_that("Can delete a project by URL", {
-            t2 <- refresh(t2)
-            expect_true(name.of.project1 %in% names(t2))
-            try(crDELETE(self(t2[[name.of.project1]])))
-            expect_false(name.of.project1 %in% names(refresh(t2)))
+            projects <- refresh(projects)
+            expect_true(name.of.project1 %in% names(projects))
+            try(crDELETE(self(projects[[name.of.project1]])))
+            expect_false(name.of.project1 %in% names(refresh(projects)))
         })
 
         test_that("Can create a project with members", {
             skip("TODO")
             skip_on_jenkins("Jenkins user needs more permissions")
-            t2 <- refresh(t2)
-            nprojects.2 <- length(t2)
+            projects <- refresh(projects)
+            nprojects.2 <- length(projects)
             name.of.project2 <- now()
-            expect_false(name.of.project2 %in% names(t2))
+            expect_false(name.of.project2 %in% names(projects))
             with(test.user(), {
                 ucat <- getUserCatalog()
                 u.email <- emails(ucat)[urls(ucat) == u]
                 u.name <- names(ucat)[urls(ucat) == u]
-                t2[[name.of.project2]] <- list(members=u.email)
-                expect_true(name.of.project2 %in% names(t2))
-                expect_true(length(t2) == nprojects.2 + 1L)
-                this.project <- t2[[name.of.project2]]
-                expect_true(setequal(names(members(this.project)),
-                    c(u.name, my.name)))
+                projects[[name.of.project2]] <- list(members=u.email)
+                expect_true(name.of.project2 %in% names(projects))
+                with(cleanup(projects[[name.of.project2]]), as="tp", {
+                    expect_true(length(projects) == nprojects.2 + 1L)
+                    expect_true(setequal(names(members(tp)),
+                        c(u.name, my.name)))
+                })
             })
-            try(crDELETE(self(refresh(t2)[[name.of.project2]])))
         })
 
         test_that("Can add members to a project", {
