@@ -51,13 +51,13 @@ setMethod("urls", "VariableGroup", function (x) entities(x, simplify=TRUE))
 ##' @rdname VariableOrder-slots
 ##' @export
 setMethod("entities<-", "VariableGroup", function (x, value) {
-    x@entities <- .initEntities(value)
+    x@entities <- variableGroupEntities(value)
     return(x)
 })
 ##' @rdname VariableOrder-slots
 ##' @export
 setMethod("entities<-", "VariableOrder", function (x, value) {
-    x@graph <- .initEntities(value)
+    x@graph <- variableGroupEntities(value)
     return(x)
 })
 

@@ -1,11 +1,10 @@
-init.ShojiCatalog <- function (.Object, ...) {
+setMethod("initialize", "ShojiCatalog", function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     names(.Object@index) <- absoluteURL(names(.Object@index), .Object@self)
     return(.Object)
-}
-setMethod("initialize", "ShojiCatalog", init.ShojiCatalog)
+})
 
-is.shojiCatalog <- function (x) inherits(x, "ShojiCatalog")
+is.catalog <- function (x) inherits(x, "ShojiCatalog")
 
 getIndexSlot <- function (x, i, what=character(1), ifnot=NA_character_) {
     vapply(index(x), function (a) a[[i]] %||% ifnot, what, USE.NAMES=FALSE)

@@ -2,89 +2,33 @@ init.VariableOrder <- function (.Object, ..., duplicates=FALSE) {
     .Object <- callNextMethod(.Object, ...)
     dots <- list(...)
     if (length(dots) && !is.shoji(dots[[1]])) {
-        .Object@graph <- .initEntities(dots, url.base=NULL)
+        .Object@graph <- variableGroupEntities(dots, url.base=NULL)
     } else {
-        .Object@graph <- .initEntities(.Object@graph, url.base=.Object@self)
+        .Object@graph <- variableGroupEntities(.Object@graph, url.base=.Object@self)
     }
     duplicates(.Object) <- duplicates
     return(.Object)
 }
 setMethod("initialize", "VariableOrder", init.VariableOrder)
 
-.initEntities <- function (x, url.base=NULL) {
-    ## Sanitize the inputs in VariableGroup construction/updating
-    ## Result should be a list, each element being either a URL (character)
-    ## or VariableGroup
-
-    ## Valid inputs:
-    ## 1) A dataset: take all urls
-    ## 2) A character vector of urls
-    ## 3) A list of
-    ## a) variables: take self
-    ## b) mixed character and VariableGroups
-    ## c) mixed character and lists that should be VariableGroups (fromJSON)
-    if (is.dataset(x)) {
-        return(.initEntities(urls(allVariables(x)), url.base=url.base))
-    }
-    if (is.character(x)) {
-        return(.initEntities(as.list(x), url.base=url.base))
-    }
-    if (is.list(x)) {
-        ## Init raw (fromJSON) groups
-        raw.groups <- vapply(x, is.list, logical(1))
-        x[raw.groups] <- lapply(x[raw.groups],
-            function (a) VariableGroup(group=names(a), entities=a[[1]],
-                url.base=url.base)) ## The new shoji:order structure
-        ## Get self if any are Variables
-        vars <- vapply(x, is.variable, logical(1))
-        x[vars] <- lapply(x[vars], self)
-        ## Now everything should be valid
-        nested.groups <- vapply(x,
-            function (a) inherits(a, "VariableGroup"),
-            logical(1))
-        string.urls <- vapply(x,
-            function (a) is.character(a) && length(a) == 1,
-            logical(1))
-        stopifnot(all(string.urls | nested.groups))
-
-        ## Absolutize if needed
-        if (!is.null(url.base)) {
-            x[string.urls] <- lapply(x[string.urls], absoluteURL,
-                base=url.base)
-        }
-        ## Make sure there are no names on the list--will throw off toJSON
-        names(x) <- NULL
-        return(x)
-    }
-    halt(class(x), " is an invalid input for entities")
-}
-
 init.VariableGroup <- function (.Object, group, entities, url.base=NULL, duplicates=FALSE, ...) {
     dots <- list(...)
     if ("variables" %in% names(dots)) entities <- dots$variables
     if ("name" %in% names(dots)) group <- dots$name
     .Object@group <- group
-    .Object@entities <- .initEntities(entities, url.base)
+    .Object@entities <- variableGroupEntities(entities, url.base)
     duplicates(.Object) <- duplicates
     return(.Object)
 }
 setMethod("initialize", "VariableGroup", init.VariableGroup)
 
-##' @export
-as.list.VariableOrder <- function (x, ...) x@graph
-
-##' @export
-as.list.VariableGroup <- function (x, ...) x@entities
-
-##' Length of VariableOrder
-##' @param x a VariableOrder
-##' @return Integer: the number of VariableGroups in the VariableOrder
-##' @name VariableOrder-length
-NULL
-
-##' @rdname VariableOrder-length
-##' @export
-setMethod("length", "VariableOrder", function (x) length(entities(x)))
+variableGroupEntities <- function (entities, ...) {
+    if (is.dataset(entities)) {
+        return(variableGroupEntities(allVariables(entities), ...))
+    }
+    return(.initEntities(entities, ..., group.class="VariableGroup",
+        entity.class="CrunchVariable"))
+}
 
 ##' Extract and update in VariableOrder and VariableGroup
 ##'
@@ -183,7 +127,7 @@ setMethod("[[<-", c("VariableOrder", "character", "missing", "VariableGroup"),
 
 .setNestedGroupByName <- function (x, i, j, value) {
     w <- match(i, names(x))
-    value <- .initEntities(value)
+    value <- variableGroupEntities(value)
     if (!duplicates(x)) {
         x <- setdiff_entities(x, value)
     }

@@ -4,7 +4,7 @@
 \alias{shojiURL}
 \title{Get a resource URL from a Shoji Object}
 \usage{
-shojiURL(x, collection = c("catalogs", "views", "fragments"), key)
+shojiURL(x, collection = c("catalogs", "views", "fragments", "orders"), key)
 }
 \arguments{
 \item{x}{a shojiObject}

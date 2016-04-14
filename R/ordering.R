@@ -54,3 +54,9 @@ setMethod("ordering<-", "VariableCatalog", function (x, value) {
     duplicates(x@order) <- duplicates(value)
     return(x)
 })
+
+##' @rdname ordering
+##' @export
+setMethod("ordering", "DatasetCatalog", function (x) {
+    DatasetOrder(crGET(shojiURL(x, "orders", "order")))
+})

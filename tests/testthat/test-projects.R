@@ -77,6 +77,13 @@ with_mock_HTTP({
         expect_identical(names(d), "ECON.sav")
     })
 
+    do <- ordering(d)
+    test_that("Project datasets order", {
+        expect_true(inherits(do, "DatasetOrder"))
+        skip("WIP")
+        expect_identical(do@graph, list(DatasetGroup("Group 1", "/api/datasets/dataset3.json")))
+    })
+
     test_that("Add datasets to project by <- a dataset (which transfers ownership)", {
         ds <- loadDataset("test ds")
         expect_error(datasets(aproject) <- ds,
