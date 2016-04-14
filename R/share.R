@@ -42,6 +42,7 @@ userCanView <- function (email, dataset) {
 ##' dataset be sent an email informing them of this fact? Default is
 ##' \code{TRUE}.
 ##' @return Invisibly, the dataset.
+##' @seealso \code{\link{unshare}}
 ##' @export
 share <- function (dataset, users, edit=FALSE, notify=TRUE) {
     perms <- permissions(dataset)
@@ -69,6 +70,23 @@ share <- function (dataset, users, edit=FALSE, notify=TRUE) {
 
 passwordSetURLTemplate <- function () {
     absoluteURL("/password/change/${token}/", getOption("crunch.api"))
+}
+
+##' Revoke a user's access to a dataset
+##'
+##' @param dataset a CrunchDataset
+##' @param users character: email address(es) or URLs of the users or teams to
+##' unshare with.
+##' @return Invisibly, the dataset.
+##' @seealso \code{\link{share}}
+##' @export
+unshare <- function (dataset, users) {
+    stopifnot(is.character(users))
+    payload <- structure(rep(list(NULL), length(users)),
+        .Names=users)
+    payload <- toJSON(payload)
+    crPATCH(shojiURL(dataset, "catalogs", "permissions"), body=payload)
+    invisible(dataset)
 }
 
 ## TODO: test and release this

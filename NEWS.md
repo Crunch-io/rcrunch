@@ -1,7 +1,9 @@
 ### crunch 1.9.5 (Under development)
 * Add warning that the `pattern` argument for functions including `makeArray`, `makeMR`, `deleteVariables`, and `hideVariables` is being deprecated. The help pages for those functions advise you to grep for or otherwise identify your variables outside of these functions.
+* `unshare` to revoke access of a user or a team to a dataset.
 * Do more validation that `type<-` assignment is safe.
 * Make paginated requests to GET /table/ (for `CrunchExpr`s) for greater reliability
+* Finally fix bug that prevented sharing datasets with non-editors when the dataset had already been shared with a team.
 
 ### crunch 1.9.4
 * Add a "session" object, retrievable by either `session()` or returned from `login()`, containing the various catalog resources (Datasets, etc.).

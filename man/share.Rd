@@ -28,4 +28,7 @@ Invisibly, the dataset.
 \description{
 Share a dataset
 }
+\seealso{
+\code{\link{unshare}}
+}
 

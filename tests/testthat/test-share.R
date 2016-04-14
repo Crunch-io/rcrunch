@@ -67,10 +67,12 @@ if (run.integration.tests) {
                     structure(TRUE, .Names=me))
             })
 
-            test_that("share method for dataset", {
-                try(share(ds, "foo@crunch.io", notify=FALSE))
+            test_that("share and unshare methods for dataset", {
+                ds <- share(ds, "foo@crunch.io", notify=FALSE)
                 expect_true(setequal(emails(permissions(ds)),
                     c(me, "foo@crunch.io")))
+                ds <- unshare(ds, "foo@crunch.io")
+                expect_identical(emails(permissions(ds)), me)
             })
 
             test_that("re-sharing doesn't change the state", {
