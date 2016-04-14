@@ -4,6 +4,7 @@ me <- "fake.user@example.com"
 
 with_mock_HTTP({
     ds <- loadDataset("test ds")
+    ds2 <- loadDataset("ECON.sav")
     test_that("Dataset has permissions catalog", {
         expect_true(inherits(permissions(ds), "PermissionCatalog"))
         expect_identical(urls(permissions(ds)),
@@ -20,6 +21,13 @@ with_mock_HTTP({
         expect_true(userCanView("nobody@crunch.io", ds))
         expect_false(userCanView("not.a.user@hotmail.com", ds))
         expect_true(iCanEdit(ds))
+    })
+    test_that("Permissions with dataset shared with team", {
+        expect_identical(emails(permissions(ds2)),
+            c(NA_character_, "dos@example.io", "tres@example.com"))
+        expect_identical(is.editor(permissions(ds2)),
+            structure(c(TRUE, TRUE, TRUE),
+            .Names=c(NA_character_, "dos@example.io", "tres@example.com")))
     })
 
     with(temp.options(crunch.api="https://fake.crunch.io/api/v2/"), {

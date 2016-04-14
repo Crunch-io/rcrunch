@@ -7,8 +7,8 @@ setMethod("initialize", "ShojiCatalog", init.ShojiCatalog)
 
 is.shojiCatalog <- function (x) inherits(x, "ShojiCatalog")
 
-getIndexSlot <- function (x, i, what=character(1)) {
-    vapply(index(x), function (a) a[[i]], what, USE.NAMES=FALSE)
+getIndexSlot <- function (x, i, what=character(1), ifnot=NA_character_) {
+    vapply(index(x), function (a) a[[i]] %||% ifnot, what, USE.NAMES=FALSE)
 }
 
 setIndexSlot <- function (x, i, value, unique=FALSE) {

@@ -73,6 +73,9 @@ with_mock_HTTP({
         expect_output(ds$gender %in% c("Male", "Female"),
             'Crunch logical expression: gender %in% c("Male", "Female")',
             fixed=TRUE)
+        expect_output(ds$gender %in% 1:2,
+            'Crunch logical expression: gender %in% c("Male", "Female")',
+            fixed=TRUE)
         expect_output(ds$birthyr == 1945 | ds$birthyr < 1941,
             'birthyr == 1945 | birthyr < 1941',
             fixed=TRUE)
