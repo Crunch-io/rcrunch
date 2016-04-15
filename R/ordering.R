@@ -46,10 +46,11 @@ setMethod("ordering<-", "VariableCatalog", function (x, value) {
                 serialPaste(bad.entities))
         }
 
+        order_url <- shojiURL(x, "orders", "hier")
         ## Update on server
-        crPUT(x@orders$hier, body=toJSON(value))
+        crPUT(order_url, body=toJSON(value))
         ## Refresh
-        x@order <- VariableOrder(crGET(x@orders$hier))
+        x@order <- VariableOrder(crGET(order_url))
     }
     duplicates(x@order) <- duplicates(value)
     return(x)
@@ -59,4 +60,23 @@ setMethod("ordering<-", "VariableCatalog", function (x, value) {
 ##' @export
 setMethod("ordering", "DatasetCatalog", function (x) {
     DatasetOrder(crGET(shojiURL(x, "orders", "order")))
+})
+
+##' @rdname ordering
+##' @export
+setMethod("ordering<-", "DatasetCatalog", function (x, value) {
+    stopifnot(inherits(value, "DatasetOrder"))
+
+    if (!identical(ordering(x)@graph, value@graph)) {
+        ## Validate.
+        bad.entities <- setdiff(urls(value), urls(x))
+        if (length(bad.entities)) {
+            halt("Dataset URL", ifelse(length(bad.entities) > 1, "s", ""),
+                " referenced in Order not present in catalog: ",
+                serialPaste(bad.entities))
+        }
+        ## Update on server
+        crPUT(shojiURL(x, "orders", "order"), body=toJSON(value))
+    }
+    return(x)
 })

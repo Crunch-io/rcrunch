@@ -80,7 +80,6 @@ with_mock_HTTP({
     do <- ordering(d)
     test_that("Project datasets order", {
         expect_true(inherits(do, "DatasetOrder"))
-        skip("WIP")
         expect_identical(do@graph, list(DatasetGroup("Group 1", "/api/datasets/dataset3.json")))
     })
 
@@ -200,13 +199,20 @@ if (run.integration.tests) {
             })
         })
 
-        test_that("Can add datasets to projects", {
+        test_that("Can add datasets to project (and organize it)", {
             with(test.dataset(df), {
                 with(cleanup(testProject()), as="tp", {
                     expect_true(inherits(tp, "CrunchProject"))
                     expect_identical(length(datasets(tp)), 0L)
                     datasets(tp) <- ds
                     expect_identical(names(datasets(tp)), name(ds))
+
+                    expect_identical(as.list(urls(datasets(tp))),
+                        entities(ordering(datasets(tp))))
+                    ordering(datasets(tp)) <- DatasetOrder(DatasetGroup("A group of one",
+                        list(ds)))
+                    expect_identical(ordering(datasets(tp))@graph[[1]],
+                        DatasetGroup(name="A group of one", entities=self(ds)))
                 })
             })
         })
