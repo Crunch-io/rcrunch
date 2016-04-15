@@ -199,20 +199,34 @@ if (run.integration.tests) {
             })
         })
 
-        test_that("Can add datasets to project (and organize it)", {
-            with(test.dataset(df), {
-                with(cleanup(testProject()), as="tp", {
+        with(test.dataset(df), {
+            with(cleanup(testProject()), as="tp", {
+                test_that("Can add datasets to project", {
                     expect_true(inherits(tp, "CrunchProject"))
                     expect_identical(length(datasets(tp)), 0L)
                     datasets(tp) <- ds
                     expect_identical(names(datasets(tp)), name(ds))
-
+                })
+                ds2 <- loadDataset(datasets(tp)[[1]])
+                test_that("Can load a dataset from a project", {
+                    expect_true(is.dataset(ds2))
+                    expect_identical(self(ds2), self(ds))
+                })
+                test_that("Can organize datasets", {
                     expect_identical(as.list(urls(datasets(tp))),
                         entities(ordering(datasets(tp))))
                     ordering(datasets(tp)) <- DatasetOrder(DatasetGroup("A group of one",
                         list(ds)))
                     expect_identical(ordering(datasets(tp))@graph[[1]],
                         DatasetGroup(name="A group of one", entities=self(ds)))
+                })
+                test_that("Can rename a dataset in a project", {
+                    newname <- paste(name(ds2), "edited")
+                    name(ds2) <- newname
+                    expect_identical(name(ds2), newname)
+                    expect_identical(name(refresh(ds2)), newname)
+                    expect_identical(name(datasets(refresh(tp)))[[1]],
+                        newname)
                 })
             })
         })
