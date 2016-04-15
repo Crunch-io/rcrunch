@@ -28,7 +28,7 @@ setMethod("ordering<-", "CrunchDataset", function (x, value) {
 ##' @export
 setMethod("ordering", "VariableCatalog", function (x) {
     out <- x@order
-    out@vars <- index(x)
+    out@catalog_url <- self(x)
     return(out)
 })
 

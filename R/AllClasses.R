@@ -24,7 +24,14 @@ ShojiCatalog <- setClass("ShojiCatalog", contains="ShojiObject",
     ))
 ShojiOrder <- setClass("ShojiOrder", contains="ShojiObject",
     representation(
-        graph="list"
+        graph="list",
+        catalog_url="character",
+        duplicates="logical"
+    ),
+    prototype=prototype(
+        graph=list(),
+        catalog_url="",
+        duplicates=FALSE
     ))
 ShojiView <- setClass("ShojiView", contains="ShojiObject",
     representation(
@@ -142,38 +149,32 @@ MultipleResponseVariable <-setClass("MultipleResponseVariable",
 ##' \code{NULL}, it will be used to look up variable names from the URLs.
 ##' @rdname VariableOrder
 ##' @export VariableOrder
-VariableOrder <- setClass("VariableOrder", contains="ShojiOrder",
-    representation=representation(
-        vars="ANY",
-        duplicates="logical"
-    ),
-    prototype=prototype(
-        vars=NULL,
-        duplicates=FALSE
-    )
-)
+VariableOrder <- setClass("VariableOrder", contains="ShojiOrder")
 
 OrderGroup <- setClass("OrderGroup",
     representation=representation(
         group="character",
-        entities="list"
+        entities="list",
+        duplicates="logical",
+        entity.class="character"
     ),
     prototype=prototype(
         group="",
-        entities=list()
+        entities=list(),
+        duplicates=FALSE,
+        entity.class="ShojiObject"
     )
 )
 
 ##' @rdname VariableOrder
 ##' @export VariableGroup
 VariableGroup <- setClass("VariableGroup", contains="OrderGroup",
-    representation=representation(
-        duplicates="logical"
-    ),
     prototype=prototype(
-        duplicates=FALSE
-    )
-)
+        group="",
+        entities=list(),
+        duplicates=FALSE,
+        entity.class="CrunchVariable"
+    ))
 
 ##' Collection of Variables within a Dataset
 ##'
@@ -305,4 +306,10 @@ DatasetOrder <- setClass("DatasetOrder", contains="ShojiOrder")
 
 ##' @rdname DatasetOrder
 ##' @export DatasetGroup
-DatasetGroup <- setClass("DatasetGroup", contains="OrderGroup")
+DatasetGroup <- setClass("DatasetGroup", contains="OrderGroup",
+    prototype=prototype(
+        group="",
+        entities=list(),
+        duplicates=FALSE,
+        entity.class="CrunchDataset"
+    ))

@@ -1,4 +1,4 @@
-init.VariableOrder <- function (.Object, ..., duplicates=FALSE) {
+init.VariableOrder <- function (.Object, ..., duplicates=FALSE, catalog_url="") {
     .Object <- callNextMethod(.Object, ...)
     dots <- list(...)
     if (length(dots) && !is.shoji(dots[[1]])) {
@@ -7,6 +7,7 @@ init.VariableOrder <- function (.Object, ..., duplicates=FALSE) {
         .Object@graph <- variableGroupEntities(.Object@graph, url.base=.Object@self)
     }
     duplicates(.Object) <- duplicates
+    .Object@catalog_url <- catalog_url
     return(.Object)
 }
 setMethod("initialize", "VariableOrder", init.VariableOrder)
@@ -30,101 +31,6 @@ variableGroupEntities <- function (entities, ...) {
         entity.class="CrunchVariable"))
 }
 
-##' Extract and update in VariableOrder and VariableGroup
-##'
-##' @param x a VariableOrder or VariableGroup
-##' @param i an index. Numeric and logical indexing supported for both classes;
-##' character indexing supported for VariableOrder, matching on VariableGroup
-##' names
-##' @param name Same as i but for \code{$}
-##' @param j Invalid
-##' @param value For update methods, an object equivalent in class to what is
-##' being updated
-##' @param ... additional arguments
-##' @param drop Ignored
-##' @return \code{[[} and \code{$} on a VariableOrder return the VariableGroup.
-##' \code{[[} on VariableGroup returns the entity within, either a character
-##' (URL) or nested VariableGroup. \code{[} and assignment methods return
-##' objects of the same class as \code{x}
-##' @name VariableOrder-extract
-##' @aliases VariableOrder-extract
-NULL
-
-###############################
-# 1. Extract from VariableOrder
-###############################
-
-##' @rdname VariableOrder-extract
-##' @export
-setMethod("[", c("VariableOrder", "ANY"), function (x, i, ..., drop=FALSE) {
-    x@graph <- x@graph[i]
-    return(x)
-})
-##' @rdname VariableOrder-extract
-##' @export
-setMethod("[", c("VariableOrder", "character"), function (x, i, ..., drop=FALSE) {
-    w <- match(i, names(x))
-    if (any(is.na(w))) {
-        halt("Undefined groups selected: ", serialPaste(i[is.na(w)]))
-    }
-    callNextMethod(x, w, ..., drop=drop)
-})
-
-##' @rdname VariableOrder-extract
-##' @export
-setMethod("[[", c("VariableOrder", "ANY"), function (x, i, ...) {
-    x@graph[[i]]
-})
-
-##' @rdname VariableOrder-extract
-##' @export
-setMethod("[[", c("VariableOrder", "character"), function (x, i, ...) {
-    w <- match(i, names(x))
-    callNextMethod(x, w, ..., drop=drop)
-})
-
-##' @rdname VariableOrder-extract
-##' @export
-setMethod("$", "VariableOrder", function (x, name) x[[name]])
-
-###############################
-# 2. Assign into VariableOrder
-###############################
-
-##' @rdname VariableOrder-extract
-##' @export
-setMethod("[<-", c("VariableOrder", "character", "missing", "VariableOrder"),
-    function (x, i, j, value) {
-        w <- match(i, names(x))
-        if (any(is.na(w))) {
-            halt("Undefined groups selected: ", serialPaste(i[is.na(w)]))
-        }
-        callNextMethod(x, w, value=value)
-    })
-##' @rdname VariableOrder-extract
-##' @export
-setMethod("[<-", c("VariableOrder", "ANY", "missing", "VariableOrder"),
-   function (x, i, j, value) {
-       x@graph[i] <- value@graph
-       ## Ensure duplicates setting persists
-       duplicates(x) <- duplicates(x)
-       return(x)
-   })
-
-
-##' @rdname VariableOrder-extract
-##' @export
-setMethod("[[<-", c("VariableOrder", "character", "missing", "VariableGroup"),
-    function (x, i, j, value) {
-        w <- match(i, names(x))
-        if (any(is.na(w))) {
-            halt("Undefined group selected: ", serialPaste(i[is.na(w)]))
-        }
-        ## NextMethod: c("VariableOrder", "ANY", "missing", "VariableGroup")
-        callNextMethod(x, w, value=value)
-    })
-
-
 .setNestedGroupByName <- function (x, i, j, value) {
     w <- match(i, names(x))
     value <- variableGroupEntities(value)
@@ -142,19 +48,19 @@ setMethod("[[<-", c("VariableOrder", "character", "missing", "VariableGroup"),
     duplicates(x) <- duplicates(x)
     return(removeMissingEntities(x))
 }
-##' @rdname VariableOrder-extract
+##' @rdname ShojiOrder-extract
 ##' @export
 setMethod("[[<-", c("VariableOrder", "character", "missing", "CrunchDataset"),
     .setNestedGroupByName)
 
-##' @rdname VariableOrder-extract
+##' @rdname ShojiOrder-extract
 ##' @export
 setMethod("[[<-", c("VariableOrder", "character", "missing", "VariableOrder"),
     function (x, i, j, value) {
         .setNestedGroupByName(x, i, j, entities(value))
     })
 
-##' @rdname VariableOrder-extract
+##' @rdname ShojiOrder-extract
 ##' @export
 setMethod("[[<-", c("VariableOrder", "ANY", "missing", "VariableGroup"),
     function (x, i, j, value) {
@@ -167,127 +73,38 @@ setMethod("[[<-", c("VariableOrder", "ANY", "missing", "VariableGroup"),
         return(removeMissingEntities(x))
     })
 
-##' @rdname VariableOrder-extract
-##' @export
-setMethod("[[<-", c("VariableOrder", "ANY", "missing", "ANY"),
-    function (x, i, j, value) {
-        halt("Cannot assign an object of class ", dQuote(class(value)),
-            " into a VariableOrder")
-    })
-
-##' @rdname VariableOrder-extract
-##' @export
-setMethod("[[<-", c("VariableOrder", "ANY", "missing", "NULL"),
-    function (x, i, j, value) {
-        x@graph[[i]] <- value
-        return(x)
-    })
-##' @rdname VariableOrder-extract
-##' @export
-setMethod("[[<-", c("VariableOrder", "character", "missing", "NULL"),
-    function (x, i, j, value) {
-        w <- match(i, names(x))
-        if (any(is.na(w))) {
-            halt("Undefined group selected: ", serialPaste(i[is.na(w)]))
-        }
-        callNextMethod(x, w, value=value)
-    })
-
-##' @rdname VariableOrder-extract
-##' @export
-setMethod("$<-", "VariableOrder", function (x, name, value) {
-    x[[name]] <- value
-    return(x)
-})
-
-###############################
-# 3. Extract from VariableGroup
-###############################
-
-##' @rdname VariableOrder-extract
-##' @export
-setMethod("[", c("VariableGroup", "ANY"), function (x, i, ..., drop=FALSE) {
-    x@entities <- x@entities[i]
-    return(x)
-})
-##' @rdname VariableOrder-extract
-##' @export
-setMethod("[", c("VariableGroup", "character"), function (x, i, ..., drop=FALSE) {
-    w <- match(i, names(x))
-    if (any(is.na(w))) {
-        halt("Undefined groups selected: ", serialPaste(i[is.na(w)]))
-    }
-    callNextMethod(x, w, ..., drop=drop)
-})
-
-
-##' @rdname VariableOrder-extract
-##' @export
-setMethod("[[", c("VariableGroup", "character"), function (x, i, ...) {
-    w <- match(i, names(x))
-    if (any(is.na(w))) {
-        halt("Undefined groups selected: ", serialPaste(i[is.na(w)]))
-    }
-    callNextMethod(x, w, ..., drop=drop)
-})
-
-##' @rdname VariableOrder-extract
-##' @export
-setMethod("[[", c("VariableGroup", "ANY"), function (x, i, ...) {
-    x@entities[[i]]
-})
-
-##' @rdname VariableOrder-extract
-##' @export
-setMethod("$", "VariableGroup", function (x, name) x[[name]])
-
 ###############################
 # 4. Assign into VariableGroup
 ###############################
 
-##' @rdname VariableOrder-extract
+##' @rdname ShojiOrder-extract
 ##' @export
 setMethod("[[<-", c("VariableGroup", "character", "missing", "CrunchDataset"),
     .setNestedGroupByName)
 
-##' @rdname VariableOrder-extract
+##' @rdname ShojiOrder-extract
 ##' @export
 setMethod("[[<-", c("VariableGroup", "character", "missing", "list"),
     .setNestedGroupByName)
 
-##' @rdname VariableOrder-extract
+##' @rdname ShojiOrder-extract
 ##' @export
 setMethod("[[<-", c("VariableGroup", "character", "missing", "character"),
     .setNestedGroupByName)
 
-##' @rdname VariableOrder-extract
+##' @rdname ShojiOrder-extract
 ##' @export
 setMethod("[[<-", c("VariableGroup", "character", "missing", "VariableOrder"),
     function (x, i, j, value) {
         .setNestedGroupByName(x, i, j, entities(value))
     })
 
-##' @rdname VariableOrder-extract
+##' @rdname ShojiOrder-extract
 ##' @export
 setMethod("[[<-", c("VariableGroup", "character", "missing", "VariableGroup"),
     function (x, i, j, value) {
         .setNestedGroupByName(x, i, j, entities(value))
     })
-
-##' @rdname VariableOrder-extract
-##' @export
-setMethod("[[<-", c("VariableGroup", "ANY", "missing", "VariableGroup"),
-    function (x, i, j, value) {
-        entities(x)[[i]] <- value
-        return(x)
-    })
-
-##' @rdname VariableOrder-extract
-##' @export
-setMethod("$<-", "VariableGroup", function (x, name, value) {
-    x[[name]] <- value
-    return(x)
-})
 
 ##' Get un(grouped) VariableGroups
 ##'
@@ -307,46 +124,4 @@ grouped <- function (var.order) {
 ungrouped <- function (var.order) {
     return(VariableGroup(name="ungrouped",
         entities=entities(Filter(is.character, var.order))))
-}
-
-setdiff_entities <- function (x, ents, remove.na=FALSE) {
-    ## Remove "ents" (variable references) anywhere they appear in x (Order)
-    if (!is.character(ents)) {
-        ## Get just the entity URLs
-        ents <- entities(ents, simplify=TRUE)
-    }
-
-    if (inherits(x, "VariableOrder") || inherits(x, "VariableGroup")) {
-        entities(x) <- setdiff_entities(entities(x), ents)
-    } else if (is.list(x)) {
-        ## We're inside entities, which may have nested groups
-        grps <- vapply(x, inherits, logical(1), what="VariableGroup")
-        x[grps] <- lapply(x[grps], setdiff_entities, ents)
-        matches <- unlist(x[!grps]) %in% ents
-        if (any(matches)) {
-            ## Put in NAs so that any subsequent assignment into this object
-            ## assigns into the right position. Then strip NAs after
-            x[!grps][matches] <- rep(list(NA_character_), sum(matches))
-        }
-    }
-    if (remove.na) {
-        x <- removeMissingEntities(x)
-    }
-    return(x)
-}
-
-removeMissingEntities <- function (x) {
-    ## Remove NA entries, left by setdiff_entities, from @graph/entities
-    if (inherits(x, "VariableOrder") || inherits(x, "VariableGroup")) {
-        entities(x) <- removeMissingEntities(entities(x))
-    } else if (is.list(x)) {
-        ## We're inside entities, which may have nested groups
-        grps <- vapply(x, inherits, logical(1), what="VariableGroup")
-        x[grps] <- lapply(x[grps], removeMissingEntities)
-        drops <- vapply(x[!grps], is.na, logical(1))
-        if (any(drops)) {
-            x <- x[-which(!grps)[drops]]
-        }
-    }
-    return(x)
 }

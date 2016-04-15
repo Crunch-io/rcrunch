@@ -111,7 +111,12 @@ showSubvariables <- function (x) {
     return(out)
 }
 
-showVariableOrder <- function (x, vars=x@vars) {
+showVariableOrder <- function (x, vars=x@catalog_url) {
+    if (nchar(vars)) {
+        vars <- crGET(vars)$index
+    } else {
+        vars <- list()
+    }
     return(unlist(lapply(x, showVariableGroup, index=vars)))
 }
 
