@@ -17,19 +17,18 @@
 \alias{[[,OrderGroup,character-method}
 \alias{[[,ShojiOrder,ANY-method}
 \alias{[[,ShojiOrder,character-method}
-\alias{[[<-,DatasetOrder,ANY,missing,ANY-method}
 \alias{[[<-,OrderGroup,ANY,missing,OrderGroup-method}
 \alias{[[<-,OrderGroup,character,missing,OrderGroup-method}
 \alias{[[<-,OrderGroup,character,missing,ShojiOrder-method}
 \alias{[[<-,OrderGroup,character,missing,character-method}
 \alias{[[<-,OrderGroup,character,missing,list-method}
+\alias{[[<-,ShojiOrder,ANY,missing,ANY-method}
 \alias{[[<-,ShojiOrder,ANY,missing,NULL-method}
 \alias{[[<-,ShojiOrder,ANY,missing,OrderGroup-method}
 \alias{[[<-,ShojiOrder,character,missing,NULL-method}
 \alias{[[<-,ShojiOrder,character,missing,OrderGroup-method}
 \alias{[[<-,ShojiOrder,character,missing,ShojiOrder-method}
 \alias{[[<-,VariableGroup,character,missing,CrunchDataset-method}
-\alias{[[<-,VariableOrder,ANY,missing,ANY-method}
 \alias{[[<-,VariableOrder,character,missing,CrunchDataset-method}
 \title{Extract and update in VariableOrder and VariableGroup}
 \usage{
@@ -49,9 +48,7 @@
 
 \S4method{[[}{ShojiOrder,character,missing,OrderGroup}(x, i, j) <- value
 
-\S4method{[[}{VariableOrder,ANY,missing,ANY}(x, i, j) <- value
-
-\S4method{[[}{DatasetOrder,ANY,missing,ANY}(x, i, j) <- value
+\S4method{[[}{ShojiOrder,ANY,missing,ANY}(x, i, j) <- value
 
 \S4method{[[}{ShojiOrder,ANY,missing,`NULL`}(x, i, j) <- value
 
@@ -69,17 +66,9 @@
 
 \S4method{$}{OrderGroup}(x, name)
 
-\S4method{[[}{OrderGroup,ANY,missing,OrderGroup}(x, i, j) <- value
-
-\S4method{$}{OrderGroup}(x, name) <- value
-
-\S4method{[[}{VariableOrder,character,missing,CrunchDataset}(x, i, j) <- value
-
 \S4method{[[}{ShojiOrder,character,missing,ShojiOrder}(x, i, j) <- value
 
 \S4method{[[}{ShojiOrder,ANY,missing,OrderGroup}(x, i, j) <- value
-
-\S4method{[[}{VariableGroup,character,missing,CrunchDataset}(x, i, j) <- value
 
 \S4method{[[}{OrderGroup,character,missing,list}(x, i, j) <- value
 
@@ -88,6 +77,14 @@
 \S4method{[[}{OrderGroup,character,missing,ShojiOrder}(x, i, j) <- value
 
 \S4method{[[}{OrderGroup,character,missing,OrderGroup}(x, i, j) <- value
+
+\S4method{[[}{OrderGroup,ANY,missing,OrderGroup}(x, i, j) <- value
+
+\S4method{$}{OrderGroup}(x, name) <- value
+
+\S4method{[[}{VariableOrder,character,missing,CrunchDataset}(x, i, j) <- value
+
+\S4method{[[}{VariableGroup,character,missing,CrunchDataset}(x, i, j) <- value
 }
 \arguments{
 \item{x}{a VariableOrder or VariableGroup}

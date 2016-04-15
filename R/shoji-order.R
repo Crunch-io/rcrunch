@@ -1,3 +1,36 @@
+setMethod("initialize", "ShojiOrder", function (.Object, ..., duplicates=FALSE,
+                                                catalog_url="") {
+    .Object <- callNextMethod(.Object, ...)
+    dots <- list(...)
+    ents <- entitiesInitializer(.Object)
+    if (length(dots) && !is.shoji(dots[[1]])) {
+        .Object@graph <- ents(dots, url.base=NULL)
+    } else {
+        .Object@graph <- ents(.Object@graph, url.base=.Object@self)
+    }
+    duplicates(.Object) <- duplicates
+    .Object@catalog_url <- catalog_url
+    return(.Object)
+})
+
+setMethod("initialize", "OrderGroup", function (.Object, group, entities,
+                                                url.base=NULL, duplicates=FALSE,
+                                                ...) {
+    dots <- list(...)
+    ents <- entitiesInitializer(.Object)
+    if ("variables" %in% names(dots)) entities <- dots$variables
+    if ("name" %in% names(dots)) group <- dots$name
+    .Object@group <- group
+    .Object@entities <- ents(entities, url.base)
+    duplicates(.Object) <- duplicates
+    return(.Object)
+})
+
+setMethod("groupClass", "ShojiOrder", function (x) "OrderGroup")
+setMethod("groupClass", "OrderGroup", function (x) "OrderGroup")
+setMethod("entityClass", "ShojiOrder", function (x) "ShojiObject")
+setMethod("entityClass", "OrderGroup", function (x) "ShojiObject")
+
 .initEntities <- function (x, url.base=NULL, group.class="OrderGroup", entity.class="ShojiObject") {
     ## Sanitize the inputs in OrderGroup construction/updating
     ## Result should be a list, each element being either a URL (character)
@@ -48,6 +81,17 @@
     halt(class(x), " is an invalid input for entities")
 }
 
+orderEntitiesInit <- function (x) {
+    gc <- groupClass(x)
+    ec <- entityClass(x)
+    return(function (entities, ...) {
+        return(.initEntities(entities, ..., group.class=gc, entity.class=ec))
+    })
+}
+
+setMethod("entitiesInitializer", "ShojiOrder", orderEntitiesInit)
+setMethod("entitiesInitializer", "OrderGroup", orderEntitiesInit)
+
 ##' @export
 as.list.ShojiOrder <- function (x, ...) x@graph
 
@@ -86,7 +130,7 @@ setMethod("length", "ShojiOrder", function (x) length(entities(x)))
 NULL
 
 ###############################
-# 1. Extract from VariableOrder
+# 1. Extract from ShojiOrder
 ###############################
 
 ##' @rdname ShojiOrder-extract
@@ -123,7 +167,7 @@ setMethod("[[", c("ShojiOrder", "character"), function (x, i, ...) {
 setMethod("$", "ShojiOrder", function (x, name) x[[name]])
 
 ###############################
-# 2. Assign into VariableOrder
+# 2. Assign into ShojiOrder
 ###############################
 
 ##' @rdname ShojiOrder-extract
@@ -163,20 +207,10 @@ setMethod("[[<-", c("ShojiOrder", "character", "missing", "OrderGroup"),
 
 ##' @rdname ShojiOrder-extract
 ##' @export
-setMethod("[[<-", c("VariableOrder", "ANY", "missing", "ANY"),
+setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "ANY"),
     function (x, i, j, value) {
-        ## These have to be on the subclasses, otherwise dispatch is screwy
         halt("Cannot assign an object of class ", dQuote(class(value)),
-            " into a ShojiOrder")
-    })
-
-##' @rdname ShojiOrder-extract
-##' @export
-setMethod("[[<-", c("DatasetOrder", "ANY", "missing", "ANY"),
-    function (x, i, j, value) {
-        ## These have to be on the subclasses, otherwise dispatch is screwy
-        halt("Cannot assign an object of class ", dQuote(class(value)),
-            " into a ShojiOrder")
+            " into a ", class(x))
     })
 
 ##' @rdname ShojiOrder-extract
@@ -245,6 +279,74 @@ setMethod("[[", c("OrderGroup", "ANY"), function (x, i, ...) {
 ##' @export
 setMethod("$", "OrderGroup", function (x, name) x[[name]])
 
+.setNestedGroupByName <- function (x, i, j, value) {
+    ents <- entitiesInitializer(x)
+    w <- match(i, names(x))
+    value <- ents(value)
+    if (!duplicates(x)) {
+        x <- setdiff_entities(x, value)
+    }
+    if (any(is.na(w))) {
+        ## New group.
+        entities(x) <- c(entities(x), do.call(groupClass(x), list(name=i, entities=value)))
+    } else {
+        ## Existing group. Assign entities
+        entities(x[[w]]) <- value
+    }
+    ## Ensure duplicates setting persists
+    duplicates(x) <- duplicates(x)
+    return(removeMissingEntities(x))
+}
+
+
+##' @rdname ShojiOrder-extract
+##' @export
+setMethod("[[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
+    function (x, i, j, value) {
+        .setNestedGroupByName(x, i, j, entities(value))
+    })
+
+##' @rdname ShojiOrder-extract
+##' @export
+setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "OrderGroup"),
+    function (x, i, j, value) {
+        if (!duplicates(x) && length(entities(value))) {
+            x <- setdiff_entities(x, value)
+        }
+        x@graph[[i]] <- value
+        ## Ensure duplicates setting persists
+        duplicates(x) <- duplicates(x)
+        return(removeMissingEntities(x))
+    })
+
+###############################
+# 4. Assign into ShojiGroup
+###############################
+
+##' @rdname ShojiOrder-extract
+##' @export
+setMethod("[[<-", c("OrderGroup", "character", "missing", "list"),
+    .setNestedGroupByName)
+
+##' @rdname ShojiOrder-extract
+##' @export
+setMethod("[[<-", c("OrderGroup", "character", "missing", "character"),
+    .setNestedGroupByName)
+
+##' @rdname ShojiOrder-extract
+##' @export
+setMethod("[[<-", c("OrderGroup", "character", "missing", "ShojiOrder"),
+    function (x, i, j, value) {
+        .setNestedGroupByName(x, i, j, entities(value))
+    })
+
+##' @rdname ShojiOrder-extract
+##' @export
+setMethod("[[<-", c("OrderGroup", "character", "missing", "OrderGroup"),
+    function (x, i, j, value) {
+        .setNestedGroupByName(x, i, j, entities(value))
+    })
+
 ##' @rdname ShojiOrder-extract
 ##' @export
 setMethod("[[<-", c("OrderGroup", "ANY", "missing", "OrderGroup"),
@@ -301,4 +403,24 @@ removeMissingEntities <- function (x) {
         }
     }
     return(x)
+}
+
+##' Get un(grouped) OrderGroups
+##'
+##' "ungrouped" is a magic OrderGroup that contains all entities not found
+##' in groups at a given level of nesting.
+##' @param order.obj an subclass of ShojiOrder or OrderGroup
+##' @return For grouped(), an Order/Group, respectively, with "ungrouped"
+##' omitted. For ungrouped(), an OrderGroup subclass.
+##' @seealso \code{\link{VariableOrder}}
+##' @export
+grouped <- function (order.obj) {
+    Filter(Negate(is.character), order.obj)
+}
+
+##' @rdname grouped
+##' @export
+ungrouped <- function (order.obj) {
+    return(do.call(groupClass(order.obj), list(name="ungrouped",
+        entities=entities(Filter(is.character, order.obj)))))
 }
