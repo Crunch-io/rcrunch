@@ -155,14 +155,12 @@ OrderGroup <- setClass("OrderGroup",
     representation=representation(
         group="character",
         entities="list",
-        duplicates="logical",
-        entity.class="character"
+        duplicates="logical"
     ),
     prototype=prototype(
         group="",
         entities=list(),
-        duplicates=FALSE,
-        entity.class="ShojiObject"
+        duplicates=FALSE
     )
 )
 
@@ -172,8 +170,7 @@ VariableGroup <- setClass("VariableGroup", contains="OrderGroup",
     prototype=prototype(
         group="",
         entities=list(),
-        duplicates=FALSE,
-        entity.class="CrunchVariable"
+        duplicates=FALSE
     ))
 
 ##' Collection of Variables within a Dataset
@@ -310,6 +307,5 @@ DatasetGroup <- setClass("DatasetGroup", contains="OrderGroup",
     prototype=prototype(
         group="",
         entities=list(),
-        duplicates=FALSE,
-        entity.class="CrunchDataset"
+        duplicates=FALSE
     ))

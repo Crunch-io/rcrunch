@@ -1,45 +1,77 @@
-init.VariableOrder <- function (.Object, ..., duplicates=FALSE, catalog_url="") {
+setMethod("initialize", "ShojiOrder", function (.Object, ..., duplicates=FALSE,
+                                                catalog_url="") {
     .Object <- callNextMethod(.Object, ...)
     dots <- list(...)
+    ents <- entitiesInitializer(.Object)
     if (length(dots) && !is.shoji(dots[[1]])) {
-        .Object@graph <- variableGroupEntities(dots, url.base=NULL)
+        .Object@graph <- ents(dots, url.base=NULL)
     } else {
-        .Object@graph <- variableGroupEntities(.Object@graph, url.base=.Object@self)
+        .Object@graph <- ents(.Object@graph, url.base=.Object@self)
     }
     duplicates(.Object) <- duplicates
     .Object@catalog_url <- catalog_url
     return(.Object)
-}
-setMethod("initialize", "VariableOrder", init.VariableOrder)
+})
 
-init.VariableGroup <- function (.Object, group, entities, url.base=NULL, duplicates=FALSE, ...) {
+setMethod("initialize", "OrderGroup", function (.Object, group, entities,
+                                                url.base=NULL, duplicates=FALSE,
+                                                ...) {
     dots <- list(...)
+    ents <- entitiesInitializer(.Object)
     if ("variables" %in% names(dots)) entities <- dots$variables
     if ("name" %in% names(dots)) group <- dots$name
     .Object@group <- group
-    .Object@entities <- variableGroupEntities(entities, url.base)
+    .Object@entities <- ents(entities, url.base)
     duplicates(.Object) <- duplicates
     return(.Object)
-}
-setMethod("initialize", "VariableGroup", init.VariableGroup)
+})
 
-variableGroupEntities <- function (entities, ...) {
-    if (is.dataset(entities)) {
-        return(variableGroupEntities(allVariables(entities), ...))
-    }
-    return(.initEntities(entities, ..., group.class="VariableGroup",
-        entity.class="CrunchVariable"))
+setMethod("groupClass", "ShojiOrder", function (x) "OrderGroup")
+setMethod("groupClass", "OrderGroup", function (x) "OrderGroup")
+setMethod("groupClass", "VariableOrder", function (x) "VariableGroup")
+setMethod("groupClass", "VariableGroup", function (x) "VariableGroup")
+setMethod("groupClass", "DatasetOrder", function (x) "DatasetGroup")
+setMethod("groupClass", "DatasetGroup", function (x) "DatasetGroup")
+setMethod("groupClass", "ShojiOrder", function (x) "ShojiObject")
+setMethod("groupClass", "OrderGroup", function (x) "ShojiObject")
+setMethod("entityClass", "VariableOrder", function (x) "CrunchVariable")
+setMethod("entityClass", "VariableGroup", function (x) "CrunchVariable")
+setMethod("entityClass", "DatasetOrder", function (x) "CrunchDataset")
+setMethod("entityClass", "DatasetGroup", function (x) "CrunchDataset")
+
+variableGroupEntitiesInit <- function (x) {
+    return(function (entities, ...) {
+        if (is.dataset(entities)) {
+            entities <- allVariables(entities)
+        }
+        return(.initEntities(entities, ..., group.class="VariableGroup",
+            entity.class="CrunchVariable"))
+    })
 }
+
+orderEntitiesInit <- function (x) {
+    gc <- groupClass(x)
+    ec <- entityClass(x)
+    return(function (entities, ...) {
+        return(.initEntities(entities, ..., group.class=gc, entity.class=ec))
+    })
+}
+
+setMethod("entitiesInitializer", "VariableOrder", variableGroupEntitiesInit)
+setMethod("entitiesInitializer", "VariableGroup", variableGroupEntitiesInit)
+setMethod("entitiesInitializer", "ShojiOrder", orderEntitiesInit)
+setMethod("entitiesInitializer", "OrderGroup", orderEntitiesInit)
 
 .setNestedGroupByName <- function (x, i, j, value) {
+    ents <- entitiesInitializer(x)
     w <- match(i, names(x))
-    value <- variableGroupEntities(value)
+    value <- ents(value)
     if (!duplicates(x)) {
         x <- setdiff_entities(x, value)
     }
     if (any(is.na(w))) {
         ## New group.
-        entities(x) <- c(entities(x), VariableGroup(name=i, entities=value))
+        entities(x) <- c(entities(x), do.call(groupClass(x), list(name=i, entities=value)))
     } else {
         ## Existing group. Assign entities
         entities(x[[w]]) <- value
@@ -55,14 +87,14 @@ setMethod("[[<-", c("VariableOrder", "character", "missing", "CrunchDataset"),
 
 ##' @rdname ShojiOrder-extract
 ##' @export
-setMethod("[[<-", c("VariableOrder", "character", "missing", "VariableOrder"),
+setMethod("[[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
     function (x, i, j, value) {
         .setNestedGroupByName(x, i, j, entities(value))
     })
 
 ##' @rdname ShojiOrder-extract
 ##' @export
-setMethod("[[<-", c("VariableOrder", "ANY", "missing", "VariableGroup"),
+setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "OrderGroup"),
     function (x, i, j, value) {
         if (!duplicates(x) && length(entities(value))) {
             x <- setdiff_entities(x, value)
@@ -84,24 +116,24 @@ setMethod("[[<-", c("VariableGroup", "character", "missing", "CrunchDataset"),
 
 ##' @rdname ShojiOrder-extract
 ##' @export
-setMethod("[[<-", c("VariableGroup", "character", "missing", "list"),
+setMethod("[[<-", c("OrderGroup", "character", "missing", "list"),
     .setNestedGroupByName)
 
 ##' @rdname ShojiOrder-extract
 ##' @export
-setMethod("[[<-", c("VariableGroup", "character", "missing", "character"),
+setMethod("[[<-", c("OrderGroup", "character", "missing", "character"),
     .setNestedGroupByName)
 
 ##' @rdname ShojiOrder-extract
 ##' @export
-setMethod("[[<-", c("VariableGroup", "character", "missing", "VariableOrder"),
+setMethod("[[<-", c("OrderGroup", "character", "missing", "ShojiOrder"),
     function (x, i, j, value) {
         .setNestedGroupByName(x, i, j, entities(value))
     })
 
 ##' @rdname ShojiOrder-extract
 ##' @export
-setMethod("[[<-", c("VariableGroup", "character", "missing", "VariableGroup"),
+setMethod("[[<-", c("OrderGroup", "character", "missing", "OrderGroup"),
     function (x, i, j, value) {
         .setNestedGroupByName(x, i, j, entities(value))
     })
@@ -122,6 +154,6 @@ grouped <- function (var.order) {
 ##' @rdname grouped
 ##' @export
 ungrouped <- function (var.order) {
-    return(VariableGroup(name="ungrouped",
-        entities=entities(Filter(is.character, var.order))))
+    return(do.call(groupClass(var.order), list(name="ungrouped",
+        entities=entities(Filter(is.character, var.order)))))
 }
