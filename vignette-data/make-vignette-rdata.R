@@ -31,7 +31,7 @@ message("4. Make array")
 start_make_array <- ds
 
 show_imiss_b <- capture.output(print(ds$imiss_b))
-ds$imiss <- makeArray(pattern="^imiss_", dataset=ds, name="Issue importance")
+ds$imiss <- makeArray(ds[grep("^imiss_", names(ds))], name="Issue importance")
 show_imiss_subvars <- crunch:::showSubvariables(subvariables(ds$imiss))
 show_imiss <- capture.output(print(ds$imiss))
 names_imiss_subvars <- names(subvariables(ds$imiss))
@@ -46,7 +46,9 @@ sorting <- order(names(subvariables(ds$imiss)))
 subvariables(ds$imiss) <- subvariables(ds$imiss)[sorting]
 show_imiss_subvars3 <- crunch:::showSubvariables(subvariables(ds$imiss))
 show_boap_4 <- capture.output(print(ds$boap_4))
-ds$boap <- makeMR(pattern="^boap_[0-9]+", dataset=ds, name="Approval of Obama on issues", selections=c("Strongly approve", "Somewhat approve"))
+ds$boap <- makeMR(ds[grep("^boap_[0-9]+", names(ds))],
+    name="Approval of Obama on issues",
+    selections=c("Strongly approve", "Somewhat approve"))
 show_boap_subvars <- crunch:::showSubvariables(subvariables(ds$boap))
 show_boap <- c(crunch:::showCrunchVariableTitle(ds$boap),
     show_boap_subvars)
@@ -57,18 +59,21 @@ show_boap3 <- capture.output(print(ds$boap))
 
 message("5. Variable order")
 step0 <- ordering(ds)
+step0.print <- capture.output(print(step0))
 ordering(ds) <- VariableOrder(
         VariableGroup("Demos", ds[c(1, 21:37)]),
         VariableGroup("Tracking questions", ds[c(2,3, 11:20)]),
         VariableGroup("This week", ds[4:11])
     )
 step1 <- ordering(ds)
+step1.print <- capture.output(print(step1))
 names(ordering(ds))[1] <- "Demographics"
 step2 <- ordering(ds)
 ordering(ds) <- ordering(ds)[c(2, 3, 1)]
 step3 <- ordering(ds)
 ordering(ds)[["This week"]][["Snowden"]] <- ordering(ds)[["This week"]][1:4]
 step4 <- ordering(ds)
+step4.print <- capture.output(print(step4))
 
 message("6. Derive")
 ds$age <- 2015 - ds$birthyr
