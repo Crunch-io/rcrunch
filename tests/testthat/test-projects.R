@@ -123,7 +123,6 @@ if (run.integration.tests) {
             expect_identical(self(projects[[name.of.project1]]),
                 p_url)
             expect_identical(projects[[name2]], NULL)
-            skip("(405) Method Not Allowed")
             name(projects[[name.of.project1]]) <- name2
             expect_identical(projects[[name.of.project1]],
                 NULL)
@@ -133,7 +132,6 @@ if (run.integration.tests) {
         name3 <- paste(name2, "FINAL")
         test_that("Can rename a project with names<-", {
             expect_false(name3 %in% names(projects))
-            skip("(405) Method Not Allowed")
             names(projects)[urls(projects) == p_url] <- name3
             expect_true(name3 %in% names(projects))
             expect_identical(self(projects[[name3]]), p_url)

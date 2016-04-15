@@ -36,9 +36,9 @@ setMethod("[[<-", c("ProjectCatalog", "character", "missing", "list"),
 ##' @export
 setMethod("[[<-", c("ProjectCatalog", "character", "missing", "CrunchProject"),
     function (x, i, j, value) {
-        ## TODO: something
-        ## For now, assuming that modifications have already been persisted
+        ## Assumes that modifications have already been persisted
         ## by other operations on the team entity (like members<-)
+        index(x)[[value@entity_url]] <- value@body
         return(x)
     })
 

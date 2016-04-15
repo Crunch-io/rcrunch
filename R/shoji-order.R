@@ -364,7 +364,7 @@ setMethod("$<-", "OrderGroup", function (x, name, value) {
 })
 
 setdiff_entities <- function (x, ents, remove.na=FALSE) {
-    ## Remove "ents" (variable references) anywhere they appear in x (Order)
+    ## Remove "ents" (entity references) anywhere they appear in x (Order)
     if (!is.character(ents)) {
         ## Get just the entity URLs
         ents <- entities(ents, simplify=TRUE)
