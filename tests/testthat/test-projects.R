@@ -225,7 +225,7 @@ if (run.integration.tests) {
                     name(ds2) <- newname
                     expect_identical(name(ds2), newname)
                     expect_identical(name(refresh(ds2)), newname)
-                    expect_identical(name(datasets(refresh(tp)))[[1]],
+                    expect_identical(name(datasets(refresh(tp))[[1]]),
                         newname)
                 })
             })
