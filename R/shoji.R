@@ -101,7 +101,7 @@ setMethod("readonly<-", "ShojiObject", setReadonly)
 ##' @export
 ##' @keywords internal
 ##' @importFrom httpcache logMessage
-shojiURL <- function (x, collection=c("catalogs", "views", "fragments"), key) {
+shojiURL <- function (x, collection=c("catalogs", "views", "fragments", "orders"), key) {
     if (is.variable(x) || inherits(x, "IndexTuple")) {
         x <- entity(x) ## Get the *Entity (e.g. VariableEntity)
         logMessage("INFO", "GET entity in shojiURL")

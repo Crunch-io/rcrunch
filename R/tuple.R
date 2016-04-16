@@ -107,4 +107,9 @@ setMethod("name", "IndexTuple", function (x) x$name)
 
 ##' @rdname tuple-methods
 ##' @export
+setMethod("name<-", c("IndexTuple", "character"),
+    function (x, value) setTupleSlot(x, "name", value))
+
+##' @rdname tuple-methods
+##' @export
 setMethod("type", "IndexTuple", function (x) x$type)

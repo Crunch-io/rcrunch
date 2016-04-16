@@ -31,12 +31,14 @@ with_mock_HTTP({
 
     test.ord <- ordering(test.ds)
     ent.urls <- urls(test.ord)
+    varcat_url <- self(allVariables(test.ds))
     nested.ord <- try(VariableOrder(
         VariableGroup(name="Group 1",
             entities=list(ent.urls[1],
                         VariableGroup(name="Nested", entities=ent.urls[2:3]),
                         ent.urls[4])),
-        VariableGroup(name="Group 2", entities=ent.urls[5:6])))
+        VariableGroup(name="Group 2", entities=ent.urls[5:6]),
+        catalog_url=varcat_url))
 
     test_that("Can extract group(s) by name", {
         expect_identical(nested.ord[["Group 2"]],
@@ -45,7 +47,7 @@ with_mock_HTTP({
             VariableGroup(name="Group 2", entities=ent.urls[5:6]))
         expect_identical(nested.ord["Group 2"],
             VariableOrder(VariableGroup(name="Group 2",
-            entities=ent.urls[5:6])))
+            entities=ent.urls[5:6]), catalog_url=varcat_url))
     })
     test_that("Can create nested groups", {
         expect_true(inherits(nested.ord, "VariableOrder"))
@@ -105,17 +107,20 @@ with_mock_HTTP({
         expect_identical(no, VariableOrder(
             VariableGroup(name="Group 1", entities=list(ent.urls[1],
                 VariableGroup(name="Nested", entities=ent.urls[2:3]),
-                ent.urls[4]))))
+                ent.urls[4])),
+            catalog_url=varcat_url))
         no2[["Group 2"]] <- NULL
         expect_identical(no2, VariableOrder(
             VariableGroup(name="Group 1", entities=list(ent.urls[1],
                 VariableGroup(name="Nested", entities=ent.urls[2:3]),
-                ent.urls[4]))))
+                ent.urls[4])),
+            catalog_url=varcat_url))
         no3$`Group 2` <- NULL
         expect_identical(no3, VariableOrder(
             VariableGroup(name="Group 1", entities=list(ent.urls[1],
                 VariableGroup(name="Nested", entities=ent.urls[2:3]),
-                ent.urls[4]))))
+                ent.urls[4])),
+            catalog_url=varcat_url))
     })
     test_that("can assign group into group by index", {
         to <- test.ord
@@ -218,7 +223,7 @@ with_mock_HTTP({
     })
 
     test_that("VariableOrder/Group show methods", {
-        expect_identical(showVariableOrder(nested.ord, vars=variables(test.ds)),
+        expect_identical(showVariableOrder(nested.ord),
             c("[+] Group 1",
               "    Birth Year",
               "    [+] Nested",
@@ -230,7 +235,7 @@ with_mock_HTTP({
               "    Cat Array"))
         no <- nested.ord
         no[[3]] <- VariableGroup("Group 3", entities=list())
-        expect_identical(showVariableOrder(no, vars=variables(test.ds)),
+        expect_identical(showVariableOrder(no),
             c("[+] Group 1",
               "    Birth Year",
               "    [+] Nested",
@@ -246,7 +251,7 @@ with_mock_HTTP({
 
     ord <- test.ord
     test_that("Composing a VariableOrder step by step: setup", {
-        expect_identical(showVariableOrder(ord, vars=variables(test.ds)),
+        expect_identical(showVariableOrder(ord),
             c("Birth Year",
               "Gender",
               "mymrset",
@@ -256,7 +261,7 @@ with_mock_HTTP({
     })
     test_that("Composing a VariableOrder step by step: group 1 by dataset", {
         ord$Demos <<- test.ds[c("gender", "birthyr")]
-        expect_identical(showVariableOrder(ord, vars=variables(test.ds)),
+        expect_identical(showVariableOrder(ord),
             c("mymrset",
               "Text variable ftw",
               "starttime",
@@ -267,7 +272,7 @@ with_mock_HTTP({
     })
     test_that("Composing a VariableOrder step by step: group by Order subset", {
         ord$Arrays <<- ord[c(1, 4)] #test.ds[c("mymrset", "catarray")]
-        expect_identical(showVariableOrder(ord, vars=variables(test.ds)),
+        expect_identical(showVariableOrder(ord),
             c("Text variable ftw",
               "starttime",
               "[+] Demos",
@@ -279,7 +284,7 @@ with_mock_HTTP({
     })
     test_that("Composing a VariableOrder step by step: nested group by dataset", {
         ord$Demos[["Others"]] <<- test.ds[c("birthyr", "textVar")]
-        expect_identical(showVariableOrder(ord, vars=variables(test.ds)),
+        expect_identical(showVariableOrder(ord),
             c("starttime",
               "[+] Demos",
               "    Gender",
@@ -292,7 +297,7 @@ with_mock_HTTP({
     })
     test_that("Composing a VariableOrder step by step: reorder group", {
         ord$Demos <<- ord$Demos[2:1]
-        expect_identical(showVariableOrder(ord, vars=variables(test.ds)),
+        expect_identical(showVariableOrder(ord),
             c("starttime",
               "[+] Demos",
               "    [+] Others",
@@ -305,7 +310,7 @@ with_mock_HTTP({
     })
     test_that("Composing a VariableOrder step by step: reorder order", {
         ord <<- ord[3:1]
-        expect_identical(showVariableOrder(ord, vars=variables(test.ds)),
+        expect_identical(showVariableOrder(ord),
             c("[+] Arrays",
               "    mymrset",
               "    Cat Array",
@@ -318,7 +323,7 @@ with_mock_HTTP({
     })
     test_that("Composing a VariableOrder step by step: nested group by Group", {
         ord$Arrays$MR <<- ord$Arrays[1]
-        expect_identical(showVariableOrder(ord, vars=variables(test.ds)),
+        expect_identical(showVariableOrder(ord),
             c("[+] Arrays",
               "    Cat Array",
               "    [+] MR",

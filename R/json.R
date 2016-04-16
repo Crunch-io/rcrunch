@@ -26,12 +26,12 @@ setMethod("jsonprep", "ANY", function (x, ...) x)
 
 ##' @rdname tojson-crunch
 ##' @export
-setMethod("jsonprep", "VariableOrder",
+setMethod("jsonprep", "ShojiOrder",
     function (x, ...) jsonprep(list(graph=x@graph, ...)))
 
 ##' @rdname tojson-crunch
 ##' @export
-setMethod("jsonprep", "VariableGroup", .jsonprep.vargroup)
+setMethod("jsonprep", "OrderGroup", .jsonprep.vargroup)
 
 
 ##' @importFrom jsonlite toJSON

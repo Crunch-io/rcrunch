@@ -6,6 +6,11 @@
             "name": "Project One",
             "description": "Long description text",
             "icon": ""
+        },
+        "/api/projects/project2.json": {
+            "name": "Project Two",
+            "description": "Long description text here as well",
+            "icon": ""
         }
     }
 }

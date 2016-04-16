@@ -4,7 +4,6 @@
 \name{subvars-extract}
 \alias{$,CategoricalArrayVariable-method}
 \alias{$<-,CategoricalArrayVariable-method}
-\alias{$<-,Subvariables-method}
 \alias{[,CategoricalArrayVariable,character,ANY-method}
 \alias{[,Subvariables,character,ANY-method}
 \alias{[<-,Subvariables,ANY,missing,ANY-method}
@@ -36,8 +35,6 @@
 \S4method{[[}{Subvariables,ANY,missing,`NULL`}(x, i) <- value
 
 \S4method{[[}{Subvariables,ANY,missing,ANY}(x, i) <- value
-
-\S4method{$}{Subvariables}(x, name) <- value
 
 \S4method{[}{Subvariables,character,missing,Subvariables}(x, i) <- value
 

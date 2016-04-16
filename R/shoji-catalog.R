@@ -1,11 +1,10 @@
-init.ShojiCatalog <- function (.Object, ...) {
+setMethod("initialize", "ShojiCatalog", function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     names(.Object@index) <- absoluteURL(names(.Object@index), .Object@self)
     return(.Object)
-}
-setMethod("initialize", "ShojiCatalog", init.ShojiCatalog)
+})
 
-is.shojiCatalog <- function (x) inherits(x, "ShojiCatalog")
+is.catalog <- function (x) inherits(x, "ShojiCatalog")
 
 getIndexSlot <- function (x, i, what=character(1), ifnot=NA_character_) {
     vapply(index(x), function (a) a[[i]] %||% ifnot, what, USE.NAMES=FALSE)
@@ -102,6 +101,13 @@ setMethod("[[", c("ShojiCatalog", "character"), function (x, i, ...) {
 ##' @rdname catalog-extract
 ##' @export
 setMethod("$", "ShojiCatalog", function (x, name) x[[name]])
+
+##' @rdname catalog-extract
+##' @export
+setMethod("$<-", "ShojiCatalog", function (x, name, value) {
+    x[[name]] <- value
+    return(x)
+})
 
 ##' Length of Catalog
 ##' @param x a Catalog

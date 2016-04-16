@@ -92,6 +92,10 @@ setGeneric("activeFilter<-",
 setGeneric("is.public", function (x) standardGeneric("is.public"))
 setGeneric("is.public<-", function (x, value) standardGeneric("is.public<-"))
 
+setGeneric("groupClass", function (x) standardGeneric("groupClass"))
+setGeneric("entityClass", function (x) standardGeneric("entityClass"))
+setGeneric("entitiesInitializer", function (x) standardGeneric("entitiesInitializer"))
+
 setGeneric("dim")
 setGeneric("ncol")
 setGeneric("mean")
