@@ -24,7 +24,14 @@ ShojiCatalog <- setClass("ShojiCatalog", contains="ShojiObject",
     ))
 ShojiOrder <- setClass("ShojiOrder", contains="ShojiObject",
     representation(
-        graph="list"
+        graph="list",
+        catalog_url="character",
+        duplicates="logical"
+    ),
+    prototype=prototype(
+        graph=list(),
+        catalog_url="",
+        duplicates=FALSE
     ))
 ShojiView <- setClass("ShojiView", contains="ShojiObject",
     representation(
@@ -142,20 +149,9 @@ MultipleResponseVariable <-setClass("MultipleResponseVariable",
 ##' \code{NULL}, it will be used to look up variable names from the URLs.
 ##' @rdname VariableOrder
 ##' @export VariableOrder
-VariableOrder <- setClass("VariableOrder", contains="ShojiOrder",
-    representation=representation(
-        vars="ANY",
-        duplicates="logical"
-    ),
-    prototype=prototype(
-        vars=NULL,
-        duplicates=FALSE
-    )
-)
+VariableOrder <- setClass("VariableOrder", contains="ShojiOrder")
 
-##' @rdname VariableOrder
-##' @export VariableGroup
-VariableGroup <- setClass("VariableGroup",
+OrderGroup <- setClass("OrderGroup",
     representation=representation(
         group="character",
         entities="list",
@@ -167,6 +163,15 @@ VariableGroup <- setClass("VariableGroup",
         duplicates=FALSE
     )
 )
+
+##' @rdname VariableOrder
+##' @export VariableGroup
+VariableGroup <- setClass("VariableGroup", contains="OrderGroup",
+    prototype=prototype(
+        group="",
+        entities=list(),
+        duplicates=FALSE
+    ))
 
 ##' Collection of Variables within a Dataset
 ##'
@@ -281,3 +286,26 @@ CrunchCube <- setClass("CrunchCube", contains="list",
 
 CrunchTeam <- setClass("CrunchTeam", contains="ShojiObject")
 CrunchFilter <- setClass("CrunchFilter", contains="ShojiObject")
+
+##' Organize Datsets
+##'
+##' A DatasetOrder object is a subclass of \code{list} that contains
+##' DatasetGroups. DatasetGroup objects contain a group name and an set of
+##' "entities", which can be dataset references or other nested DatasetGroups.
+##'
+##' @slot group character, the name of the DatasetGroup. In the constructor and
+##' more generally, this field can be referenced as "name" as well.
+##' @slot entities a character vector of dataset URLs, or a list containing a
+##' combination of dataset URLs and DatasetGroup objects.
+##' @rdname DatasetOrder
+##' @export DatasetOrder
+DatasetOrder <- setClass("DatasetOrder", contains="ShojiOrder")
+
+##' @rdname DatasetOrder
+##' @export DatasetGroup
+DatasetGroup <- setClass("DatasetGroup", contains="OrderGroup",
+    prototype=prototype(
+        group="",
+        entities=list(),
+        duplicates=FALSE
+    ))

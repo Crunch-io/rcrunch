@@ -54,6 +54,14 @@ setMethod("[[", c("DatasetCatalog", "ANY"), function (x, i, ...) {
         body=b)
 })
 
+##' @rdname catalog-extract
+##' @export
+setMethod("[[<-", c("DatasetCatalog", "character", "missing", "DatasetTuple"),
+    function (x, i, j, value) {
+        index(x)[[i]] <- value@body
+        return(x)
+    })
+
 ##' Get and set names, aliases on Catalog-type objects
 ##'
 ##' These methods let you get and set names and aliases for variables in a

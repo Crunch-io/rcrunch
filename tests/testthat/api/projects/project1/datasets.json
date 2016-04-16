@@ -1,6 +1,9 @@
 {
     "element": "shoji:catalog",
     "self": "/api/projects/project1/datasets.json",
+    "orders": {
+        "order": "/api/projects/project1/datasets/order.json"
+    },
     "index": {
         "/api/datasets/dataset3.json": {
             "owner_display_name": "Project One",

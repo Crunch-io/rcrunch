@@ -14,6 +14,7 @@
 \alias{entity,DatasetTuple-method}
 \alias{entity,VariableTuple-method}
 \alias{name,IndexTuple-method}
+\alias{name<-,IndexTuple,character-method}
 \alias{refresh,IndexTuple-method}
 \alias{self,IndexTuple-method}
 \alias{tuple-methods}
@@ -45,6 +46,8 @@
 \S4method{delete}{DatasetTuple}(x, confirm = requireConsent(), ...)
 
 \S4method{name}{IndexTuple}(x)
+
+\S4method{name}{IndexTuple,character}(x) <- value
 
 \S4method{type}{IndexTuple}(x)
 }

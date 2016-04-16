@@ -164,7 +164,7 @@ filters(ds)
 
 ```
 ##          name                               id is_public
-## 1 Young males 9742b1aef0134c4a883f2f461efe7b30     FALSE
+## 1 Young males 9f2d50bbf2d24c7583d394bb8f52ac2e     FALSE
 ```
 
 This filter is now available for you to use in the web application. If you want to make the filter available to all viewers of the dataset, make it "public":
@@ -177,7 +177,7 @@ filters(ds)
 
 ```
 ##          name                               id is_public
-## 1 Young males 9742b1aef0134c4a883f2f461efe7b30      TRUE
+## 1 Young males 9f2d50bbf2d24c7583d394bb8f52ac2e      TRUE
 ```
 
 You can also edit the filter expressions by assigning a new one in, like:
