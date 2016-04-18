@@ -1,3 +1,5 @@
+### crunch 1.9.7 (under development)
+
 ### crunch 1.9.6
 * Add warning that the `pattern` argument for functions including `makeArray`, `makeMR`, `deleteVariables`, and `hideVariables` is being deprecated. The help pages for those functions advise you to grep for or otherwise identify your variables outside of these functions.
 * `unshare` to revoke access of a user or a team to a dataset.
