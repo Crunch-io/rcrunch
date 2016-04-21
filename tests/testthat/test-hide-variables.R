@@ -19,6 +19,7 @@ with_mock_HTTP({
                 expect_error(delete(ds$birthyr),
                     "DELETE /api/datasets/dataset3/variables/birthyr.json"),
                 "Variable birthyr is hidden")
+            ## Next: circumvent the try-catch inside deleteVariables
             with_mock(try=function (expr, silent) force(expr), eval.parent({
                 expect_message(
                     expect_error(ds$birthyr <- NULL,
