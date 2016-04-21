@@ -1,5 +1,38 @@
 context("Hiding variables")
 
+with_mock_HTTP({
+    ds <- loadDataset("ECON.sav")
+    test_that("hiddenVariables", {
+        expect_identical(hiddenVariables(ds), "Birth Year")
+        expect_identical(hiddenVariables(ds, "alias"), "birthyr")
+    })
+
+    test_that("Can subset dataset with hidden variable by name/alias", {
+        ds_sub <- ds[c("gender", "birthyr")]
+        expect_identical(names(ds_sub), "gender")
+        expect_identical(aliases(allVariables(ds_sub)), c("gender", "birthyr"))
+    })
+
+    test_that("Can delete a hidden variable", {
+        with(consent(), {
+            expect_warning(
+                expect_error(delete(ds$birthyr),
+                    "DELETE /api/datasets/dataset3/variables/birthyr.json"),
+                "Variable birthyr is hidden")
+            with_mock(try=function (expr, silent) force(expr), eval.parent({
+                expect_message(
+                    expect_error(ds$birthyr <- NULL,
+                        "DELETE /api/datasets/dataset3/variables/birthyr.json"),
+                    NA)
+                expect_message(
+                    expect_error(deleteVariables(ds, "birthyr"),
+                        "DELETE /api/datasets/dataset3/variables/birthyr.json"),
+                    NA)
+            }))
+        })
+    })
+})
+
 if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {

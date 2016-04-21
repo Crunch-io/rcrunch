@@ -69,14 +69,6 @@ with_mock_HTTP({
             "/api/datasets/dataset1/variables/textVar.json")))
     })
 
-    test_that("findVariables pattern matching is deprecated", {
-        expect_warning(f <- findVariables(test.ds, pattern="^gend", key="alias"),
-            paste("Deprecation warning: pattern matching in this function will",
-            "be removed in a future release. Please reference entities",
-            "directly. See the help page for this function for more."))
-        expect_identical(f, 2L)
-    })
-
     test_that("namekey function exists and affects names()", {
         expect_identical(getOption("crunch.namekey.dataset"), "alias")
         expect_identical(names(test.ds), aliases(variables(test.ds)))

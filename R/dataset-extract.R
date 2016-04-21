@@ -30,11 +30,14 @@ setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
 ##' @rdname dataset-extract
 ##' @export
 setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
-    w <- match(i, names(x))
+    allnames <- getIndexSlot(allVariables(x), namekey(x)) ## Include hidden
+    w <- match(i, allnames)
     if (any(is.na(w))) {
         halt("Undefined columns selected: ", serialPaste(i[is.na(w)]))
     }
-    callNextMethod(x, w, ..., drop=drop)
+    x@variables <- allVariables(x)[w]
+    readonly(x) <- TRUE ## we don't want to overwrite the big object accidentally
+    return(x)
 })
 ##' @rdname dataset-extract
 ##' @export
@@ -215,7 +218,8 @@ setMethod("[[<-",
 setMethod("[[<-",
     c("CrunchDataset", "character", "missing", "NULL"),
     function (x, i, value) {
-        if (!(i %in% names(x))) {
+        allnames <- getIndexSlot(allVariables(x), namekey(x)) ## Include hidden
+        if (!(i %in% allnames)) {
             message(dQuote(i), " is not a variable; nothing to delete by assigning NULL")
             return(x)
         }

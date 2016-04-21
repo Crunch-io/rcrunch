@@ -3,5 +3,8 @@
     "self": "/api/datasets/dataset3/variables/hierarchical.json",
     "description": "Hierarchical ordering of dataset variables",
     "graph": [
+        "../gender.json",
+        "../birthyr.json",
+        "../starttime.json"
     ]
 }
