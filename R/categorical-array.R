@@ -65,34 +65,20 @@ makeArray <- function (subvariables, dataset=NULL, pattern=NULL, key=namekey(dat
 prepareBindInputs <- function (subvariables=NULL, dataset=NULL,
                                pattern=NULL, key=namekey(dataset), ...) {
 
-    ## Given inputs to makeArray/makeMR, parse and validate
-    listOfVariablesIsValid <- function (lov) {
-        return(is.list(lov) && all(vapply(lov, is.variable, logical(1))))
-    }
-    ## Is this worth validating?
-    # datasetURLfromVariables <- function (lov) {
-    #     ds_urls <- unique(vapply(lov, datasetReference, character(1)))
-    #     if (length(ds_urls) > 1) {
-    #         ## see if list of variables actually do belong to same dataset
-    #         halt("All variables to be bound together must be from the same dataset")
-    #     }
-    #     return(ds_urls)
-    # }
-
-    if (is.null(dataset)) {
-        if (is.dataset(subvariables)) {
-            ## as in, if the list of variables is a [ extraction from a Dataset
-            variable_urls <- urls(allVariables(subvariables))
-        } else if (inherits(subvariables, "VariableCatalog")) {
-            variable_urls <- urls(subvariables)
-        } else if (listOfVariablesIsValid(subvariables)) {
-            variable_urls <- vapply(subvariables, self, character(1))
-        } else {
-            halt("Must provide a Dataset and either a list of Variables to combine or a pattern to identify Variables within that Dataset")
-        }
+    if (is.dataset(subvariables)) {
+        ## as in, if the list of variables is a [ extraction from a Dataset
+        variable_urls <- urls(allVariables(subvariables))
+    } else if (inherits(subvariables, "VariableCatalog")) {
+        variable_urls <- urls(subvariables)
+    } else if (is.list(subvariables) &&
+               all(vapply(subvariables, is.variable, logical(1)))) {
+        variable_urls <- vapply(subvariables, self, character(1))
+    } else if (is.null(dataset)) {
+        halt("Must provide a Dataset and either a list of Variables to combine or a pattern to identify Variables within that Dataset")
     } else {
         ## Pattern match (deprecated)
-        variable_urls <- findVariableURLs(dataset, refs=subvariables, pattern=pattern, key=key)
+        variable_urls <- findVariableURLs(dataset, refs=subvariables,
+            pattern=pattern, key=key)
     }
 
     if (!length(variable_urls)) {
