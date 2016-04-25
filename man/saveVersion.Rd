@@ -4,7 +4,8 @@
 \alias{saveVersion}
 \title{Create a new saved version}
 \usage{
-saveVersion(dataset, description = NULL)
+saveVersion(dataset, description = paste("Version", length(versions(dataset))
+  + 1))
 }
 \arguments{
 \item{dataset}{a \code{CrunchDataset}}
