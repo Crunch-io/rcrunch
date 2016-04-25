@@ -1,11 +1,10 @@
-init.VersionCatalog <- function (.Object, ...) {
+setMethod("initialize", "VersionCatalog", function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     ord <- order(from8601(getIndexSlot(.Object, "last_update")),
         decreasing=TRUE)
     .Object@index <- .Object@index[ord]
     return(.Object)
-}
-setMethod("initialize", "VersionCatalog", init.VersionCatalog)
+})
 
 ##' Access the saved versions of a dataset
 ##'
@@ -40,7 +39,11 @@ setMethod("timestamps", "VersionCatalog", function (x) from8601(getIndexSlot(x, 
 ##' @return invisibly, the URL of the newly created version
 ##' @seealso \code{\link{versions}} \code{\link{restoreVersion}}
 ##' @export
-saveVersion <- function (dataset, description=NULL) {
+saveVersion <- function (dataset, description=paste("Version",
+                                              length(versions(dataset)) + 1)) {
+    if (!is.character(description) || length(description) != 1) {
+        halt(dQuote("description"), " must be a length-1 character vector")
+    }
     u <- shojiURL(dataset, "catalogs", "savepoints")
     out <- crPOST(u, body=toJSON(list(description=description)))
     invisible(dataset)

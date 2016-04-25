@@ -29,6 +29,20 @@ with_mock_HTTP({
             'POST /api/datasets/dataset1/savepoints.json \\{"description":"Today"\\}')
     })
 
+    test_that("saveVersion with no description supplied", {
+        expect_error(saveVersion(ds),
+            'POST /api/datasets/dataset1/savepoints.json \\{"description":"Version 3"\\}')
+    })
+
+    test_that("saveVersion rejects invalid description", {
+        expect_error(saveVersion(ds, c("Today", "Tomorrow")),
+            paste(dQuote("description"), "must be a length-1 character vector"))
+        expect_error(saveVersion(ds, list()),
+            paste(dQuote("description"), "must be a length-1 character vector"))
+        expect_error(saveVersion(ds, character(0)),
+            paste(dQuote("description"), "must be a length-1 character vector"))
+    })
+
     test_that("restoreVersion makes the right request", {
         expect_error(restoreVersion(ds, "initial load"),
             'POST /api/datasets/dataset1/savepoints/v2/revert/')
