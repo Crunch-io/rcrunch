@@ -1,3 +1,5 @@
+### crunch 1.9.9 (under development)
+
 ### crunch 1.9.8
 * Better support for deleting hidden variables
 * Allow subsetting of datasets to include hidden variables
