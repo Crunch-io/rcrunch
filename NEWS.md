@@ -2,6 +2,7 @@
 * Better support for deleting hidden variables
 * Allow subsetting of datasets to include hidden variables
 * Require that version names must be a single string value
+* Fix bug in print method for VariableOrder that manifested when fixing the variable catalog's relative URL API
 
 ### crunch 1.9.6
 * Add warning that the `pattern` argument for functions including `makeArray`, `makeMR`, `deleteVariables`, and `hideVariables` is being deprecated. The help pages for those functions advise you to grep for or otherwise identify your variables outside of these functions.

@@ -335,6 +335,12 @@ with_mock_HTTP({
               "    Gender",
               "starttime"))
     })
+
+    test_that("Show method for VO handles relative URLs correctly", {
+        ds3 <- loadDataset("ECON.sav")
+        expect_identical(showVariableOrder(ordering(ds3)),
+            c("Gender", "Birth Year", "starttime"))
+    })
 })
 
 

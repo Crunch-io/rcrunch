@@ -32,6 +32,9 @@ addVariables <- function (dataset, ...) {
     vardefs <- lapply(vardefs, validateVarDefRows,
         numrows=getNrow(dataset, filtered=FALSE))
 
+    ## TODO: check array subvariable rows similarly. and/or pull out and cbind
+    ## to a single parent-level "values" column.
+
     ## Upload one at a time.
     ## TODO: Server should support bulk insert
     new_var_urls <- lapply(vardefs,

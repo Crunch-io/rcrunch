@@ -113,7 +113,7 @@ showSubvariables <- function (x) {
 
 showVariableOrder <- function (x, vars=x@catalog_url) {
     if (nchar(vars)) {
-        vars <- crGET(vars)$index
+        vars <- index(ShojiCatalog(crGET(vars)))
     } else {
         vars <- list()
     }
