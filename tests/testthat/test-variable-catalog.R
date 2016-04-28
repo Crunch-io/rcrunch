@@ -137,5 +137,19 @@ if (run.integration.tests) {
                     c("2", "3"))
             })
         })
+
+        with(test.dataset(newDatasetFromFixture("apidocs")), {
+            test_that("variableMetadata", {
+                vm <- variableMetadata(ds)
+                expect_true(inherits(vm, "VariableCatalog"))
+                i <- which(aliases(vm) == "allpets")
+                expect_identical(Categories(data=vm[[i]]$categories),
+                    categories(ds$allpets))
+                expect_identical(vm[[i]]$subvariables,
+                    absoluteURL(tuple(ds$allpets)$subvariables, self(vm)))
+                expect_true(all(grepl("^http", urls(vm))))
+                expect_true(!any(is.na(getIndexSlot(vm, "id"))))
+            })
+        })
     })
 }

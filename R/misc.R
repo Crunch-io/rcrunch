@@ -4,9 +4,18 @@ rethrow <- function (x) halt(errorMessage(x))
 
 errorMessage <- function (e) attr(e, "condition")$message
 
-updateList <- function (x, y) {
-    x[names(y)] <- y
-    return(x)
+updateList <- function (x, y, recursive=FALSE) {
+    if (recursive) {
+        if (!is.list(y)) return (y) ## End of recursion
+        common <- intersect(names(x), names(y))
+        x[common] <- mapply(updateList, x=x[common], y=y[common],
+            recursive=TRUE, SIMPLIFY=FALSE)
+        x <- c(x, y[setdiff(names(y), names(x))])
+        return(x)
+    } else {
+        x[names(y)] <- y
+        return(x)
+    }
 }
 
 ##' Generic List Element Extractor

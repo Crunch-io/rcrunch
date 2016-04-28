@@ -17,6 +17,15 @@ test_that("update list", {
     expect_identical(updateList(NULL, b), b)
 })
 
+test_that("update list recursively", {
+    a <- list(a=1, b=2)
+    b <- list(c=3, b=4)
+    c <- list(k=a, j=b)
+    d <- list(k=b, f=list(b=1), j=a)
+    expect_identical(updateList(c, d, recursive=TRUE),
+        list(k=list(a=1, b=4, c=3), j=list(c=3, b=2, a=1), f=list(b=1)))
+})
+
 test_that("selectFrom selects what it should", {
     l1 <- list(list(a=1, b=2), list(c=3, b=4))
     expect_identical(selectFrom("b", l1), c(2, 4))

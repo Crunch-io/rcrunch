@@ -1,4 +1,4 @@
-init.VariableCatalog <- function (.Object, ...) {
+setMethod("initialize", "VariableCatalog", function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     h_url <- .Object@orders$hier
     if (!is.null(h_url)) {
@@ -6,8 +6,7 @@ init.VariableCatalog <- function (.Object, ...) {
         .Object@order <- VariableOrder(o)
     }
     return(.Object)
-}
-setMethod("initialize", "VariableCatalog", init.VariableCatalog)
+})
 
 .discardedTuple <- function (x) isTRUE(x[["discarded"]])
 
@@ -116,3 +115,28 @@ setMethod("descriptions<-", "VariableCatalog", function (x, value) {
 setMethod("types", "VariableCatalog", function (x) getIndexSlot(x, "type"))
 
 ## No setter for types<-
+
+
+##' Get all variable metadata for a dataset
+##'
+##' @param dataset CrunchDataset
+##' @return A VariableCatalog that has things like categories embedded in each
+##' categorical variable, and all subvariables are represented
+##' @export
+variableMetadata <- function (dataset) {
+    varcat <- allVariables(dataset)
+    index(varcat) <- lapply(index(varcat), function (x) {
+        if ("subvariables" %in% names(x)) {
+            x$subvariables <- absoluteURL(x$subvariables, self(varcat))
+        }
+        return(x)
+    })
+    extra <- crGET(shojiURL(dataset, "fragments", "table"))$metadata
+    extra <- mapply(function (x, i) {
+            x$id <- i
+            return(x)
+        }, x=extra, i=names(extra), SIMPLIFY=FALSE)
+    names(extra) <- absoluteURL(paste0(names(extra), "/"), self(varcat))
+    index(varcat) <- updateList(extra, index(varcat), recursive=TRUE)
+    return(varcat)
+}

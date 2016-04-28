@@ -1,4 +1,5 @@
-### crunch 1.9.9 (under development)
+### crunch 1.9.10
+* `variableMetadata` function to export all variable metadata associated with the dataset
 
 ### crunch 1.9.8
 * Better support for deleting hidden variables
