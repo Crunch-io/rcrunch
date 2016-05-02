@@ -63,6 +63,7 @@ setMethod("[[<-", c("TeamCatalog", "character", "missing", "list"),
             halt("Cannot (yet) modify team attributes")
         } else {
             ## Creating a new team
+            warning("Teams are deprecated. Use projects instead. If you have any questions, email support@crunch.io.", call.=FALSE)
             u <- crPOST(self(x), body=toJSON(list(name=i)))
             x <- refresh(x)
             ## Add members to team, if given

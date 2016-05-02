@@ -41,7 +41,8 @@ if (run.integration.tests) {
         name.of.team1 <- now()
         test_that("Can create a team", {
             expect_false(name.of.team1 %in% names(t2))
-            t2[[name.of.team1]] <- list()
+            expect_warning(t2[[name.of.team1]] <- list(),
+                "Teams are deprecated. Use projects instead.")
             expect_true(name.of.team1 %in% names(t2))
             expect_true(length(t2) == nteams.0 + 1L)
             expect_true(inherits(t2[[name.of.team1]], "CrunchTeam"))
@@ -64,7 +65,8 @@ if (run.integration.tests) {
             nteams.2 <- length(t2)
             name.of.team2 <- now()
             expect_false(name.of.team2 %in% names(t2))
-            t2[[name.of.team2]] <- list()
+            expect_warning(t2[[name.of.team2]] <- list(),
+                "Teams are deprecated. Use projects instead.")
             expect_true(name.of.team2 %in% names(t2))
             expect_true(length(t2) == nteams.2 + 1L)
 
@@ -88,7 +90,8 @@ if (run.integration.tests) {
                 ucat <- getUserCatalog()
                 u.email <- emails(ucat)[urls(ucat) == u]
                 u.name <- names(ucat)[urls(ucat) == u]
-                t2[[name.of.team2]] <- list(members=u.email)
+                expect_warning(t2[[name.of.team2]] <- list(members=u.email),
+                    "Teams are deprecated. Use projects instead.")
                 expect_true(name.of.team2 %in% names(t2))
                 expect_true(length(t2) == nteams.2 + 1L)
                 this.team <- t2[[name.of.team2]]
@@ -107,7 +110,8 @@ if (run.integration.tests) {
                 ucat <- getUserCatalog()
                 u.email <- emails(ucat)[urls(ucat) == u]
                 u.name <- names(ucat)[urls(ucat) == u]
-                t2[[name.of.team3]] <- list()
+                expect_warning(t2[[name.of.team3]] <- list(),
+                    "Teams are deprecated. Use projects instead.")
                 this.team <- t2[[name.of.team3]]
                 expect_identical(names(members(this.team)),
                     my.name)
@@ -127,7 +131,8 @@ if (run.integration.tests) {
                 ucat <- getUserCatalog()
                 u.email <- emails(ucat)[urls(ucat) == u]
                 u.name <- names(ucat)[urls(ucat) == u]
-                t2[[name.of.team4]] <- list()
+                expect_warning(t2[[name.of.team4]] <- list(),
+                    "Teams are deprecated. Use projects instead.")
                 this.team <- t2[[name.of.team4]]
                 expect_identical(names(members(this.team)),
                     my.name)
