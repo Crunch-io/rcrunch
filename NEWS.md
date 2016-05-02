@@ -1,4 +1,5 @@
 ### crunch 1.9.11 (under development)
+* Generalize and update to new Progress API. Add a progress bar.
 * Remove deprecated query parameter on variable catalog
 
 ### crunch 1.9.10
