@@ -1,3 +1,6 @@
+### crunch 1.9.11 (under development)
+* Remove deprecated query parameter on variable catalog
+
 ### crunch 1.9.10
 * `variableMetadata` function to export all variable metadata associated with the dataset
 

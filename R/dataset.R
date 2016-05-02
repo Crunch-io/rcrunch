@@ -8,8 +8,7 @@ setMethod("initialize", "CrunchDataset", init.CrunchDataset)
 getDatasetVariables <- function (x) {
     varcat_url <- variableCatalogURL(x)
     ## Add query params
-    return(VariableCatalog(crGET(varcat_url,
-        query=list(nosubvars=1, relative="on"))))
+    return(VariableCatalog(crGET(varcat_url, query=list(relative="on"))))
 }
 
 getNrow <- function (dataset, filtered=TRUE) {
