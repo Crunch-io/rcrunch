@@ -5,9 +5,9 @@ test_that("crunchTimeout", {
         options(crunch.timeout=7)
         expect_identical(crunchTimeout(), 7)
         options(crunch.timeout=NULL)
-        expect_identical(crunchTimeout(), 60)
+        expect_identical(crunchTimeout(), 300)
         options(crunch.timeout=list())
-        expect_identical(crunchTimeout(), 60)
+        expect_identical(crunchTimeout(), 300)
     options(crunch.timeout=opt)
 })
 

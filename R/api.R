@@ -57,11 +57,32 @@ handleAPIresponse <- function (response, special.statuses=list()) {
     if (is.function(handler)) {
         invisible(handler(response))
     } else if (tolower(http_status(response)$category) == "success") {
-        if (code %in% c(201, 202) && length(response$headers$location)) {
+        if (code == 202) {
+            ## 202 Continue: a few cases:
+            ## 1) Legacy: POST /batches/ returns Batch entity in Location, no response content
+            ## 2) Progress body with Location
+            ## 3) Progress body without Location
+            ## So, if there's a shoji:value response, it's a Progress, so poll it.
+            ## Otherwise, return the location.
+            if (length(response$content) > 0) {
+                ## Progress URL comes in a shoji:value
+                progress_url <- handleShoji(content(response))
+                ## Quick validation
+                if (is.character(progress_url) && length(progress_url) == 1) {
+                    pollProgress(progress_url)
+                    ## TODO: handle timeout?
+                }
+            }
+            ## Return the location header, if it exists
+            invisible(response$headers$location)
+        } else if (code == 201) {
+            ## 201 Location: return the Location header
             return(response$headers$location)
         } else if (code == 204 || length(response$content) == 0) {
+            ## If No Content, invisibly return the `response` object
             invisible(response)
         } else {
+            ## Parse the content
             return(handleShoji(content(response)))
         }
     } else {

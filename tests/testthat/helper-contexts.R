@@ -3,6 +3,17 @@ setup.and.teardown <- function (setup, teardown, obj.name=NULL) {
         error=function (e) expect_error(stop(e$message), "NO ERRORS HERE!"))
 }
 
+fakeResponse <- function (url) {
+    ## Return something that looks enough like an httr 'response'
+    structure(list(
+        status_code=200,
+        times=structure(nchar(url), .Names="total"),
+        request=list(method="GET", url=url),
+        headers=list(`Content-Type`="application/json"),
+        content=readBin(url, "raw", 4096)
+    ), class="response")
+}
+
 with_mock_HTTP <- function (expr) {
     with(temp.option(crunch.api="/api/root.json"), {
         with_mock(
@@ -13,16 +24,7 @@ with_mock_HTTP <- function (expr) {
                 url <- unlist(strsplit(url, "?", fixed=TRUE))[1] ## remove query params
                 url <- sub("\\/$", ".json", url)
                 url <- sub("^\\/", "", url) ## relative to cwd
-                out <- handleShoji(fromJSON(url, simplifyVector=FALSE))
-                return(list(
-                    status_code=200,
-                    times=structure(nchar(url), .Names="total"),
-                    request=list(method="GET", url=url),
-                    response=out
-                ))
-            },
-            `crunch::handleAPIresponse`=function (response, special.statuses=list()) {
-                return(response$response)
+                return(fakeResponse(url))
             },
             `httr::PUT`=function (url, body, ...) halt("PUT ", url, " ", body),
             `httr::PATCH`=function (url, body, ...) halt("PATCH ", url, " ", body),
@@ -42,6 +44,14 @@ without_internet <- function (expr) {
         `httr::PATCH`=function (url, body, ...) halt("PATCH ", url, " ", body),
         `httr::POST`=function (url, body, ...) halt("POST ", url, " ", body),
         `httr::DELETE`=function (url, ...) halt("DELETE ", url),
+        eval.parent(expr)
+    )
+}
+
+with_silent_progress <- function (expr) {
+    with_mock(
+        `utils::txtProgressBar`=function (...) invisible(NULL),
+        `utils::setTxtProgressBar`=function (...) invisible(NULL),
         eval.parent(expr)
     )
 }
