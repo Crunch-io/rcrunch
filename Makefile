@@ -13,10 +13,10 @@ deps:
 
 install-ci: deps
 	R CMD INSTALL --install-tests -l $(R_LIB) .
-	#R -e '.libPaths(Sys.getenv("R_LIB")); devtools::install_github("nealrichardson/httpcache")'
+	R -e '.libPaths(Sys.getenv("R_LIB")); devtools::install_github("nealrichardson/testthat", ref="tap-file")'
 
 test-ci:
-	R --slave -e '.libPaths(Sys.getenv("R_LIB")); library(testthat); sink(file="rcrunch.tap"); setwd(file.path(.libPaths()[1], "crunch", "tests")); test_check("crunch", reporter="tap"); sink()'
+	R --slave -e '.libPaths(Sys.getenv("R_LIB")); library(testthat); cwd <- getwd(); setwd(file.path(.libPaths()[1], "crunch", "tests")); test_check("crunch", reporter=MultiReporter$$new(list(SummaryReporter$$new(), TapReporter$$new(file.path(cwd, "rcrunch.tap")))))'
 
 clean:
 	R --slave -e 'options(crunch.api=getOption("test.api"), crunch.email=getOption("test.user"), crunch.pw=getOption("test.pw")); library(crunch); login(); crunch:::.delete_all_my_datasets()'
