@@ -42,10 +42,5 @@ mergeFork <- function (dataset, fork, autorollback=TRUE) {
         element="shoji:entity",
         body=list(dataset=self(fork), autorollback=autorollback)
     )))
-    if (is.character(m)) {
-        ## Should only be character if the merge got Jobbed and returned
-        ## 202 Location with the progress URL
-        pollProgress(m)
-    }
     return(refresh(dataset))
 }
