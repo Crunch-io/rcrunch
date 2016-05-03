@@ -32,7 +32,7 @@ pollBatchStatus <- function (batch.url, catalog, until="imported", wait=1) {
 
 crunchTimeout <- function () {
     opt <- getOption("crunch.timeout")
-    if (is.null(opt) || !is.numeric(opt)) opt <- 60
+    if (is.null(opt) || !is.numeric(opt)) opt <- 300
     return(opt)
 }
 

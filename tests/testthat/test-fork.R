@@ -89,7 +89,10 @@ if (run.integration.tests) {
             ## So that f1 gets cleaned up even if merge fails
             with(test.dataset(f1, "f1"), {
                 ## Now merge f1 back to ds
-                ds <- mergeFork(ds, f1)
+                with_silent_progress({
+                    ## Don't print the progress bar so our test output is clean
+                    ds <- mergeFork(ds, f1)
+                })
                 test_that("The edits made to the fork are now upstream", {
                     expect_output(exclusion(ds), "v3 < 11")
                     expect_identical(dim(ds), c(17L, 8L))

@@ -32,10 +32,7 @@ with_mock_HTTP({
 
 without_internet({
     test_that("notifyIfNewVersion doesn't hang if GitHub doesn't respond", {
-        expect_silent(notifyIfNewVersion("github-versions.json", "1.5.1"))
+        expect_message(uncached(notifyIfNewVersion("github-versions.json", "1.5.1")),
+            NA)
     })
 })
-
-if (run.integration.tests) {
-
-}
