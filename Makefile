@@ -13,7 +13,7 @@ deps:
 
 install-ci: deps
 	R CMD INSTALL --install-tests -l $(R_LIB) .
-	R -e '.libPaths(Sys.getenv("R_LIB")); devtools::install_github("nealrichardson/httpcache")'
+	#R -e '.libPaths(Sys.getenv("R_LIB")); devtools::install_github("nealrichardson/httpcache")'
 
 test-ci:
 	R --slave -e '.libPaths(Sys.getenv("R_LIB")); library(testthat); sink(file="rcrunch.tap"); setwd(file.path(.libPaths()[1], "crunch", "tests")); test_check("crunch", reporter="tap"); sink()'

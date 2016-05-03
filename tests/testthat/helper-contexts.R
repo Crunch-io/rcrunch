@@ -48,6 +48,14 @@ without_internet <- function (expr) {
     )
 }
 
+with_silent_progress <- function (expr) {
+    with_mock(
+        `utils::txtProgressBar`=function (...) invisible(NULL),
+        `utils::setTxtProgressBar`=function (...) invisible(NULL),
+        eval.parent(expr)
+    )
+}
+
 silencer <- temp.option(show.error.messages=FALSE)
 
 ## Auth setup-teardown
