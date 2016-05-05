@@ -76,16 +76,9 @@ crunchAuth <- function (email, password=NULL, ...) {
     if (is.null(password)) {
         if (interactive()) {
             cat(paste0("Crunch.io password for ", email, ": "))
-            unix.alike <- .Platform$OS.type == "unix"
-            if (unix.alike) {
-                ## Don't print the password being typed
-                system("stty -echo")
-            }
-            password <- readline()
-            if (unix.alike) {
-                system("stty echo")
-                cat("\n")
-            }
+            without_echo({
+                password <- readline()
+            })
         } else {
             halt("Must supply a password")
         }
@@ -96,6 +89,20 @@ crunchAuth <- function (email, password=NULL, ...) {
         status.handlers=list(`401`=function (response, user=email) {
             halt(paste("Unable to authenticate", user))
         }))
+}
+
+without_echo <- function (expr) {
+    if (.Platform$OS.type == "unix") {
+        ## Don't print the password being typed
+        try(system("stty -echo", ignore.stdout=TRUE, ignore.stderr=TRUE),
+            silent=TRUE)
+        on.exit({
+            try(system("stty echo", ignore.stdout=TRUE, ignore.stderr=TRUE),
+                silent=TRUE)
+            cat("\n")
+        })
+    }
+    eval.parent(expr)
 }
 
 jupyterLogin <- function (token) {
