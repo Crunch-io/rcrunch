@@ -35,7 +35,7 @@ setIfNotAlready <- function (...) {
     newopts <- list(...)
     oldopts <- options()
     oldopts <- oldopts[intersect(names(newopts), names(oldopts))]
-    newopts <- updateList(newopts, oldopts)
+    newopts <- modifyList(newopts, oldopts)
     do.call(options, newopts)
     invisible(oldopts)
 }

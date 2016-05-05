@@ -27,11 +27,11 @@ copyVariable <- function (x, deep=FALSE, ...) {
     stopifnot(is.variable(x))
 
     newbody <- list(...)
-    oldbody <- updateList(copyVariableReferences(x), tuple(x)@body)
+    oldbody <- modifyList(copyVariableReferences(x), tuple(x)@body)
     oldbody$name <- paste0(oldbody$name, " (copy)")
     oldbody$alias <- paste0(oldbody$alias, "_copy")
 
-    body <- updateList(oldbody, newbody)
+    body <- modifyList(oldbody, newbody)
     body$id <- NULL
     if (deep) {
         body$values <- as.vector(x, mode="id")
@@ -65,7 +65,7 @@ copyVariableReferences <- function (x, fields=c("name", "alias",
                                     "view", "type")) {
 
     if (inherits(x, "CrunchVariable")) {
-        return(updateList(copyVariableReferences(tuple(x)),
+        return(modifyList(copyVariableReferences(tuple(x)),
             copyVariableReferences(entity(x))))
     } else {
         return(x@body[intersect(fields, names(x@body))])

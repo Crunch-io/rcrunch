@@ -42,7 +42,7 @@ setMethod("toVariable", "POSIXt", function (x, ...) {
 ##' @rdname toVariable
 ##' @export
 setMethod("toVariable", "VariableDefinition", function (x, ...) {
-    return(updateList(x, list(...)))
+    return(modifyList(x, list(...)))
 })
 ##' @rdname toVariable
 ##' @export
