@@ -206,6 +206,7 @@ if (run.integration.tests) {
                     expect_identical(length(datasets(tp)), 0L)
                     datasets(tp) <- ds
                     expect_identical(names(datasets(tp)), name(ds))
+                    expect_identical(owner(refresh(ds)), self(tp))
                 })
                 ds2 <- loadDataset(datasets(tp)[[1]])
                 test_that("Can load a dataset from a project", {
@@ -227,6 +228,12 @@ if (run.integration.tests) {
                     expect_identical(name(refresh(ds2)), newname)
                     expect_identical(name(datasets(refresh(tp))[[1]]),
                         newname)
+                })
+
+                test_that("Can privatize a dataset belonging to a project", {
+                    expect_identical(owner(ds2), self(tp))
+                    owner(ds2) <- getUser()
+                    expect_identical(owner(ds2), self(getUser()))
                 })
             })
         })

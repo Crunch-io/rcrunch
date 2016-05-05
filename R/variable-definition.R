@@ -20,7 +20,7 @@
 VariableDefinition <- function (data, ...) {
     out <- list(...)
     if (!missing(data)) {
-        out <- updateList(toVariable(data), out)
+        out <- modifyList(toVariable(data), out)
     }
     class(out) <- "VariableDefinition"
     return(out)

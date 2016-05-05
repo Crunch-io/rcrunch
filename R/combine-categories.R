@@ -24,6 +24,7 @@
 ##'     combinations=list(list(name="Mammals", responses=c("Cat", "Dog"))))
 ##' }
 ##' @export
+##' @importFrom utils modifyList
 combine <- function (variable, combinations=list(), ...) {
     ## Validate inputs
     if (!(type(variable) %in% c("categorical", "categorical_array", "multiple_response"))) {
@@ -37,7 +38,7 @@ combine <- function (variable, combinations=list(), ...) {
     ## Get basic variable metadata
     newvar <- copyVariableReferences(variable)
     newvar$alias <- NULL ## Let server specify, or specify in ..., or on <-
-    newvar <- updateList(newvar, list(...))
+    newvar <- modifyList(newvar, list(...))
     newvar$type <- NULL ## Type is function of the derivation
 
     ## Construct expr
@@ -89,7 +90,7 @@ combCats <- function (cats, combs) {
         }
         x$combined_ids <- I(x$categories)
         x$categories <- NULL
-        return(updateList(defaultCat, x))
+        return(modifyList(defaultCat, x))
     })
 
     ## Validate that they're all unique and nonmissing

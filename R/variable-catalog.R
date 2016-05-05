@@ -137,6 +137,6 @@ variableMetadata <- function (dataset) {
             return(x)
         }, x=extra, i=names(extra), SIMPLIFY=FALSE)
     names(extra) <- absoluteURL(paste0(names(extra), "/"), self(varcat))
-    index(varcat) <- updateList(extra, index(varcat), recursive=TRUE)
+    index(varcat) <- modifyList(extra, index(varcat))
     return(varcat)
 }

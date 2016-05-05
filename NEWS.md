@@ -1,4 +1,6 @@
 ### crunch 1.9.13 (under development)
+* Add `owner` and `owner<-` for datasets to read and modify the owner
+* Fix failure on interactive login in R.app on OS X
 
 ### crunch 1.9.12
 * Generalize and update to new Progress API. Add a progress bar.
