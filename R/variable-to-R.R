@@ -34,13 +34,7 @@ parse_column <- list(
     },
     datetime=function (col, variable) {
         out <- columnParser("text")(col)
-        if (all(grepl("[0-9]{4}-[0-9]{2}-[0-9]{2}", out))) {
-            ## return Date if resolution >= D
-            return(as.Date(out))
-        } else {
-            ## TODO: use from8601, defined below
-            return(as.POSIXct(out))
-        }
+        return(from8601(col))
     }
 )
 columnParser <- function (vartype, mode=NULL) {
@@ -134,11 +128,13 @@ setMethod("as.vector", "CrunchVariable", function (x, mode) {
 from8601 <- function (x) {
     ## Crunch timestamps look like "2015-02-12T10:28:05.632000+00:00"
 
-    ## TODO: pull out the ms, as.numeric them, and add to the parsed date
-    ## Important for the round trip of datetime data
+    if (all(grepl("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", x))) {
+        ## return Date if resolution == D
+        return(as.Date(x))
+    }
 
-    ## First, strip out ms and the : in the time zone
-    x <- sub("\\.[0-9]+", "", sub("^(.*[+-][0-9]{2}):([0-9]{2})$", "\\1\\2", x))
+    ## First, strip out the : in the time zone
+    x <- sub("^(.*[+-][0-9]{2}):([0-9]{2})$", "\\1\\2", x)
     ## Then parse
-    return(strptime(x, "%Y-%m-%dT%H:%M:%S%z"))
+    return(strptime(x, "%Y-%m-%dT%H:%M:%OS%z", tz="UTC"))
 }
