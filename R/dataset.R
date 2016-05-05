@@ -324,12 +324,15 @@ setMethod("as.environment", "CrunchDataset", function (x) {
 ##' with a \code{self} method. Users and Projects are valid objects to assign
 ##' as dataset owners.
 ##' @return The dataset.
+##' @name dataset-owner
+##' @aliases owner owner<-
+NULL
+
+##' @rdname dataset-owner
 ##' @export
-##' @name owner
-##' @aliases owner<-
 setMethod("owner", "CrunchDataset", function (x) x@body$owner) ## Or can get from catalog
 
-##' @rdname owner
+##' @rdname dataset-owner
 ##' @export
 setMethod("owner<-", "CrunchDataset", function (x, value) {
     if (!is.character(value)) {
