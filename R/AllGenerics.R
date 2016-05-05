@@ -96,6 +96,9 @@ setGeneric("groupClass", function (x) standardGeneric("groupClass"))
 setGeneric("entityClass", function (x) standardGeneric("entityClass"))
 setGeneric("entitiesInitializer", function (x) standardGeneric("entitiesInitializer"))
 
+setGeneric("owner", function (x) standardGeneric("owner"))
+setGeneric("owner<-", function (x, value) standardGeneric("owner<-"))
+
 setGeneric("dim")
 setGeneric("ncol")
 setGeneric("mean")

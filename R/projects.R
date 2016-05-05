@@ -105,8 +105,8 @@ datasets <- function (x) DatasetCatalog(crGET(shojiURL(x, "catalogs", "datasets"
 `datasets<-` <- function (x, value) {
     stopifnot(inherits(x, "CrunchProject"))
     if (is.dataset(value)) {
-        ## This is how we add a dataset to a project
-        value <- setEntitySlot(value, "owner", self(x))
+        ## This is how we add a dataset to a project: change its owner
+        owner(value) <- x
         x <- refresh(x)
     }
     ## Else, we're doing something like `ordering(datasets(proj)) <- `

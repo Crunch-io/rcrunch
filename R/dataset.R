@@ -303,11 +303,41 @@ webURL <- function (x) {
 setMethod("as.environment", "CrunchDataset", function (x) {
     out <- new.env()
     out$.crunchDataset <- x
-    with(out, for (v in aliases(allVariables(x))) eval(parse(text=paste0("delayedAssign('", v, "', .crunchDataset[['", v, "']])"))))
+    with(out, {
+        for (v in aliases(allVariables(x))) {
+            eval(parse(text=paste0("delayedAssign('", v,
+                "', .crunchDataset[['", v, "']])")))
+        }
+    })
     return(out)
 })
 
 .releaseDataset <- function (dataset) {
     release_url <- absoluteURL("release/", self(dataset))
-    crPOST(release_url)
+    crPOST(release_url, drop=dropCache(self(dataset)))
 }
+
+##' Change the owner of a dataset
+##'
+##' @param x CrunchDataset
+##' @param value For the setter, either a URL (character) or a Crunch object
+##' with a \code{self} method. Users and Projects are valid objects to assign
+##' as dataset owners.
+##' @return The dataset.
+##' @export
+##' @name owner
+##' @aliases owner<-
+setMethod("owner", "CrunchDataset", function (x) x@body$owner) ## Or can get from catalog
+
+##' @rdname owner
+##' @export
+setMethod("owner<-", "CrunchDataset", function (x, value) {
+    if (!is.character(value)) {
+        ## Assume we have a User or Project. Get self()
+        ## Will error if self isn't defined, and if a different entity type is
+        ## given, the PATCH below will 400.
+        value <- self(value)
+    }
+    x <- setEntitySlot(x, "owner", value)
+    return(x)
+})
