@@ -34,6 +34,9 @@ copyVariable <- function (x, deep=FALSE, ...) {
     body <- modifyList(oldbody, newbody)
     body$id <- NULL
     if (deep) {
+        if (body$type %in% c("categorical_array", "multiple_response")) {
+            halt("Deep copying of array variables is not implemented.")
+        }
         body$values <- as.vector(x, mode="id")
         if (body$type %in% c("categorical", "categorical_array", "multiple_response")) {
             body$categories <- jsonprep(categories(x))
@@ -52,7 +55,6 @@ copyVariable <- function (x, deep=FALSE, ...) {
     }
 
     class(body) <- "VariableDefinition"
-    # print(str(body))
     return(body)
 }
 
