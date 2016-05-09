@@ -1,6 +1,6 @@
-##' Methods for IndexTuples
+##' Methods for ShojiTuples
 ##'
-##' IndexTuples are objects extracted from ShojiCatalogs. They are internally
+##' ShojiTuples are objects extracted from ShojiCatalogs. They are internally
 ##' used.
 ##'
 ##' @param x a Tuple
@@ -16,14 +16,14 @@ NULL
 
 ##' @rdname tuple-methods
 ##' @export
-setMethod("refresh", "IndexTuple", function (x) {
+setMethod("refresh", "ShojiTuple", function (x) {
     dropCache(x@index_url)
     catalog <- ShojiCatalog(crGET(x@index_url))
     tup <- catalog[[x@entity_url]]
     if (is.null(tup)) {
         ## Get the object type from the (sub)class name
         cls <- sub("Tuple$", "", class(x))
-        if (cls == "Index") cls <- "Object"
+        if (cls == "Shoji") cls <- "Object"
         halt(cls, " not found. It may have been deleted.")
     }
     x@body <- tup
@@ -32,25 +32,25 @@ setMethod("refresh", "IndexTuple", function (x) {
 
 ##' @rdname tuple-methods
 ##' @export
-setMethod("$", "IndexTuple", function (x, name) x@body[[name]])
+setMethod("$", "ShojiTuple", function (x, name) x@body[[name]])
 ##' @rdname tuple-methods
 ##' @export
-setMethod("$<-", "IndexTuple", function (x, name, value) {
+setMethod("$<-", "ShojiTuple", function (x, name, value) {
     x@body[[name]] <- value
     return(x)
 })
 ##' @rdname tuple-methods
 ##' @export
-setMethod("[[", "IndexTuple", function (x, i) x@body[[i]])
+setMethod("[[", "ShojiTuple", function (x, i) x@body[[i]])
 ##' @rdname tuple-methods
 ##' @export
-setMethod("[[<-", "IndexTuple", function (x, i, value) {
+setMethod("[[<-", "ShojiTuple", function (x, i, value) {
     x@body[[i]] <- value
     return(x)
 })
 
 setTupleSlot <- function (x, name, value) {
-    if (!inherits(x, "IndexTuple")) {
+    if (!inherits(x, "ShojiTuple")) {
         tuple(x) <- setTupleSlot(tuple(x), name, value)
     } else if (!identical(x[[name]], value)) {
         ## Skip updating if not modified
@@ -65,7 +65,7 @@ setTupleSlot <- function (x, name, value) {
 
 ##' @rdname tuple-methods
 ##' @export
-setMethod("self", "IndexTuple", function (x) x@entity_url)
+setMethod("self", "ShojiTuple", function (x) x@entity_url)
 
 ##' @rdname tuple-methods
 ##' @export
@@ -86,7 +86,7 @@ setMethod("entity", "DatasetTuple", function (x) {
 
 ##' @rdname tuple-methods
 ##' @export
-setMethod("delete", "IndexTuple", function (x, ...) {
+setMethod("delete", "ShojiTuple", function (x, ...) {
     crDELETE(x@entity_url, drop=dropCache(x@index_url))
 })
 ##' @rdname tuple-methods
@@ -103,13 +103,13 @@ setMethod("delete", "DatasetTuple", function (x, confirm=requireConsent(), ...) 
 
 ##' @rdname tuple-methods
 ##' @export
-setMethod("name", "IndexTuple", function (x) x$name)
+setMethod("name", "ShojiTuple", function (x) x$name)
 
 ##' @rdname tuple-methods
 ##' @export
-setMethod("name<-", c("IndexTuple", "character"),
+setMethod("name<-", c("ShojiTuple", "character"),
     function (x, value) setTupleSlot(x, "name", value))
 
 ##' @rdname tuple-methods
 ##' @export
-setMethod("type", "IndexTuple", function (x) x$type)
+setMethod("type", "ShojiTuple", function (x) x$type)

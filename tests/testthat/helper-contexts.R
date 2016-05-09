@@ -112,19 +112,6 @@ testUser <- function (email=uniqueEmail(), name=email, ...) {
     u.url <- invite(email, name=name, notify=FALSE, ...)
     return(UserEntity(crGET(u.url)))
 }
-new.user.with.setup <- function (email=uniqueEmail(), name=email, ...) {
-    u.url <- invite(email, name=name, notify=FALSE, ...)
-    objects_to_purge <<- c(objects_to_purge, u.url)
-    return(u.url)
-}
-
-test.user <- function (email=uniqueEmail(), name=email, obj.name="u", ...) {
-    return(setup.and.teardown(
-        function () new.user.with.setup(email, name, ...),
-        purge.object,
-        obj.name
-    ))
-}
 
 markForCleanup <- function (x) {
     objects_to_purge <<- c(objects_to_purge, self(x))

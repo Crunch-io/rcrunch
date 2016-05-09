@@ -22,7 +22,8 @@ test_that("ShojiObject init and is", {
 })
 
 test_that("ShojiCatalog", {
-    fo <- structure(list(element=1, self=2, description=3, index=list(`/a`=4, `/b`=5)),
+    fo <- structure(list(element=1, self=2, description=3,
+        index=list(`/a`=list(4), `/b`=list(5))),
         class="shoji")
     sho <- ShojiObject(fo)
     expect_false(is.catalog(sho))

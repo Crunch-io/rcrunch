@@ -7,26 +7,40 @@ setMethod("permissions", "CrunchDataset", function (x) {
 ##' @export
 setMethod("emails", "PermissionCatalog", function (x) getIndexSlot(x, "email"))
 
-is.editor <- function (x) {
+##' @rdname catalog-extract
+##' @export
+setMethod("[[", c("PermissionCatalog", "character"), function (x, i, ...) {
+    stopifnot(length(i) == 1L)
+    w <- whichNameOrURL(x, i, emails(x))
+    if (is.na(w)) {
+        halt("Subscript out of bounds: ", i)
+    }
+    tup <- index(x)[[w]]
+    return(PermissionTuple(index_url=self(x), entity_url=urls(x)[w],
+        body=tup))
+})
+
+##' @rdname catalog-extract
+##' @export
+setMethod("[", c("PermissionCatalog", "character"), function (x, i, ...) {
+    w <- whichNameOrURL(x, i, emails(x))
+    if (any(is.na(w))) {
+        halt("Undefined elements selected: ", serialPaste(i[is.na(w)]))
+    }
+    return(x[w])
+})
+
+setMethod("is.editor", "PermissionCatalog", function (x) {
     out <- vapply(index(x), function (a) {
             isTRUE(a[["dataset_permissions"]][["edit"]])
         }, logical(1), USE.NAMES=FALSE)
     names(out) <- emails(x)
     structure(return(out))
-}
+})
 
-userCanEdit <- function (email, dataset) {
-    e <- is.editor(permissions(dataset))
-    return(ifelse(email %in% names(e), e[email], FALSE))
-}
-
-iCanEdit <- function (dataset) {
-    is.editor(permissions(dataset)[userURL()])
-}
-
-userCanView <- function (email, dataset) {
-    email %in% emails(permissions(dataset))
-}
+setMethod("is.editor", "PermissionTuple", function (x) {
+    isTRUE(x[["dataset_permissions"]][["edit"]])
+})
 
 ##' Share a dataset
 ##'

@@ -38,7 +38,7 @@ setMethod("[[", c("VariableCatalog", "ANY"), function (x, i, ...) {
         halt("Subscript out of bounds: ", i)
     }
     return(VariableTuple(index_url=self(x), entity_url=urls(x)[i],
-        body=index(x)[[i]]))
+        body=tup))
 })
 ##' @rdname catalog-extract
 ##' @export

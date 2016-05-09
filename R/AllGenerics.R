@@ -93,6 +93,8 @@ setGeneric("activeFilter<-",
     function (x, value) standardGeneric("activeFilter<-"))
 setGeneric("is.public", function (x) standardGeneric("is.public"))
 setGeneric("is.public<-", function (x, value) standardGeneric("is.public<-"))
+setGeneric("is.editor", function (x) standardGeneric("is.editor"))
+setGeneric("is.editor<-", function (x, value) standardGeneric("is.editor<-"))
 
 setGeneric("groupClass", function (x) standardGeneric("groupClass"))
 setGeneric("entityClass", function (x) standardGeneric("entityClass"))
