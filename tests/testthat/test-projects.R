@@ -238,11 +238,15 @@ if (run.integration.tests) {
                             DatasetGroup(name="A group of two",
                             entities=c(self(ds), self(ds3))))
                     })
+                    ord3 <- DatasetOrder(DatasetGroup("G1", self(ds3)),
+                        DatasetGroup("G2", self(ds)))
+                    ord3.list <- list(DatasetGroup("G1", self(ds3)),
+                        DatasetGroup("G2", self(ds)))
+                    ord3.alt <- DatasetOrder(
+                        DatasetGroup("G1", datasets(tp)[names(datasets(tp)) == name(ds3)]),
+                        DatasetGroup("G2", datasets(tp)[names(datasets(tp)) == name(ds)]))
                     test_that("Can re-reorganize", {
-                        ord3 <- DatasetOrder(DatasetGroup("G1", self(ds3)),
-                            DatasetGroup("G2", self(ds)))
-                        ord3.list <- list(DatasetGroup("G1", self(ds3)),
-                            DatasetGroup("G2", self(ds)))
+                        expect_identical(ord3, ord3.alt)
                         ordering(datasets(tp)) <- ord3
                         expect_identical(ordering(datasets(tp))@graph,
                             ord3.list)
