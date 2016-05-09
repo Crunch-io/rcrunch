@@ -48,6 +48,10 @@ NULL
 ##' @export
 setMethod("self", "ShojiObject", function (x) x@self)
 
+##' @rdname describe
+##' @export
+setMethod("name", "ShojiObject", function (x) x@body$name)
+
 ##' @rdname refresh
 ##' @export
 setMethod("refresh", "ShojiObject", function (x) {

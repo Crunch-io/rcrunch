@@ -150,16 +150,13 @@ if (run.integration.tests) {
             nprojects.2 <- length(projects)
             name.of.project2 <- now()
             expect_false(name.of.project2 %in% names(projects))
-            with(test.user(), {
-                ucat <- getUserCatalog()
-                u.email <- emails(ucat)[urls(ucat) == u]
-                u.name <- names(ucat)[urls(ucat) == u]
-                projects[[name.of.project2]] <- list(members=u.email)
+            with(cleanup(testUser()), as="u", {
+                projects[[name.of.project2]] <- list(members=email(u))
                 expect_true(name.of.project2 %in% names(projects))
                 with(cleanup(projects[[name.of.project2]]), as="tp", {
                     expect_true(length(projects) == nprojects.2 + 1L)
                     expect_true(setequal(names(members(tp)),
-                        c(u.name, my.name)))
+                        c(name(u), my.name)))
                 })
             })
         })
@@ -167,15 +164,12 @@ if (run.integration.tests) {
         test_that("Can add members to a project", {
             skip_on_jenkins("Jenkins user needs more permissions")
             with(cleanup(testProject()), as="tp", {
-                with(test.user(), {
-                    ucat <- getUserCatalog()
-                    u.email <- emails(ucat)[urls(ucat) == u]
-                    u.name <- names(ucat)[urls(ucat) == u]
+                with(cleanup(testUser()), as="u", {
                     expect_identical(names(members(tp)),
                         my.name)
-                    members(tp) <- u.email
+                    members(tp) <- email(u)
                     expect_true(setequal(names(members(tp)),
-                        c(u.name, my.name)))
+                        c(name(u), my.name)))
                 })
             })
         })
@@ -183,16 +177,13 @@ if (run.integration.tests) {
         test_that("Can remove members from a project", {
             skip_on_jenkins("Jenkins user needs more permissions")
             with(cleanup(testProject()), as="tp", {
-                with(test.user(), {
-                    ucat <- getUserCatalog()
-                    u.email <- emails(ucat)[urls(ucat) == u]
-                    u.name <- names(ucat)[urls(ucat) == u]
+                with(cleanup(testUser()), as="u", {
                     expect_identical(names(members(tp)),
                         my.name)
-                    members(tp) <- u.email
+                    members(tp) <- email(u)
                     expect_true(setequal(names(members(tp)),
-                        c(u.name, my.name)))
-                    try(members(tp)[[u.email]] <- NULL)
+                        c(name(u), my.name)))
+                    try(members(tp)[[email(u)]] <- NULL)
                     expect_identical(names(members(tp)),
                         my.name)
                 })

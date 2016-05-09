@@ -83,10 +83,6 @@ setMethod("[[<-", c("TeamCatalog", "character", "missing", "CrunchTeam"),
         return(x)
     })
 
-##' @rdname describe
-##' @export
-setMethod("name", "CrunchTeam", function (x) x@body$name)
-
 ##' @rdname teams
 ##' @export
 setMethod("members", "CrunchTeam", function (x) {

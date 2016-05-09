@@ -1,7 +1,7 @@
 userURL <- function () rootURL("user")
 
 getUser <- function (x=userURL()) {
-    ShojiObject(crGET(x))
+    UserEntity(crGET(x))
 }
 
 getUserCatalog <- function (x=sessionURL("users")) {
@@ -11,6 +11,8 @@ getUserCatalog <- function (x=sessionURL("users")) {
 getAccount <- function (x=rootURL("account", getUser())) {
     ShojiObject(crGET(x))
 }
+
+setMethod("email", "UserEntity", function (x) x@body$email)
 
 ##' Find all users on your account
 ##'

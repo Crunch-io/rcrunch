@@ -110,7 +110,7 @@ reset.option <- function (opts) {
 uniqueEmail <- function () paste0("test+", as.numeric(Sys.time()), "@crunch.io")
 testUser <- function (email=uniqueEmail(), name=email, ...) {
     u.url <- invite(email, name=name, notify=FALSE, ...)
-    return(ShojiObject(crGET(u.url)))
+    return(UserEntity(crGET(u.url)))
 }
 new.user.with.setup <- function (email=uniqueEmail(), name=email, ...) {
     u.url <- invite(email, name=name, notify=FALSE, ...)

@@ -18,10 +18,6 @@ setMethod("filters", "CrunchDataset", function (x) {
 ##' @export
 setMethod("filters<-", "CrunchDataset", function (x, value) x)
 
-##' @rdname describe
-##' @export
-setMethod("name", "CrunchFilter", function (x) x@body$name)
-
 ##' View and modify Filter entity attributes
 ##'
 ##' @param x a CrunchFilter

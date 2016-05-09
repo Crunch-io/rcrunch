@@ -50,6 +50,7 @@ CrunchProject <- setClass("CrunchProject", contains="IndexTuple")
 
 VariableEntity <- setClass("VariableEntity", contains="ShojiObject")
 ProjectEntity <- setClass("ProjectEntity", contains="ShojiObject")
+UserEntity <- setClass("UserEntity", contains="ShojiObject")
 
 CrunchExpr <- setClass("CrunchExpr",
     representation=representation(
