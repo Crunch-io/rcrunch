@@ -89,6 +89,15 @@ with_mock_HTTP({
             'PATCH /api/datasets/dataset1.json {"owner":"/api/projects/project1.json"}',
             fixed=TRUE)
     })
+
+    test_that("Organize datasets", {
+        expect_identical(DatasetOrder(DatasetGroup("new group", datasets(aproject))),
+            DatasetOrder(DatasetGroup("new group", "/api/datasets/dataset3.json")))
+        expect_error(ordering(datasets(aproject)) <- DatasetOrder(DatasetGroup("new group",
+            datasets(aproject))),
+            'PUT /api/projects/project1/datasets/order.json {"graph":[{"new group":["/api/datasets/dataset3.json"]}]}',
+            fixed=TRUE)
+    })
 })
 
 if (run.integration.tests) {
@@ -190,7 +199,7 @@ if (run.integration.tests) {
             })
         })
 
-        with(test.dataset(df), {
+        with(test.dataset(), {
             with(cleanup(testProject()), as="tp", {
                 test_that("Can add datasets to project", {
                     expect_true(inherits(tp, "CrunchProject"))
@@ -212,6 +221,36 @@ if (run.integration.tests) {
                     expect_identical(ordering(datasets(tp))@graph[[1]],
                         DatasetGroup(name="A group of one", entities=self(ds)))
                 })
+                with(test.dataset(), as="ds3", {
+                    ord2 <- DatasetOrder(DatasetGroup("A group of two",
+                        c(self(ds), self(ds3))))
+                    test_that("Have to add dataset to project before organizing it", {
+                        expect_error(ordering(datasets(tp)) <- ord2,
+                            "Dataset URL referenced in Order not present in catalog")
+                        expect_identical(ordering(datasets(tp))@graph[[1]],
+                            DatasetGroup(name="A group of one", entities=self(ds)))
+                    })
+                    owner(ds3) <- tp
+                    tp <- refresh(tp)
+                    test_that("Can reorganize datasets", {
+                        ordering(datasets(tp)) <- ord2
+                        expect_identical(ordering(datasets(tp))@graph[[1]],
+                            DatasetGroup(name="A group of two",
+                            entities=c(self(ds), self(ds3))))
+                    })
+                    test_that("Can re-reorganize", {
+                        ord3 <- DatasetOrder(DatasetGroup("G1", self(ds3)),
+                            DatasetGroup("G2", self(ds)))
+                        ord3.list <- list(DatasetGroup("G1", self(ds3)),
+                            DatasetGroup("G2", self(ds)))
+                        ordering(datasets(tp)) <- ord3
+                        expect_identical(ordering(datasets(tp))@graph,
+                            ord3.list)
+                        expect_identical(ordering(datasets(refresh(tp)))@graph,
+                            ord3.list)
+                    })
+                })
+
                 test_that("Can rename a dataset in a project", {
                     newname <- paste(name(ds2), "edited")
                     name(ds2) <- newname
