@@ -1,14 +1,18 @@
 userURL <- function () rootURL("user")
 
-getUser <- function (x=userURL()) {
-    UserEntity(crGET(x))
+##' My user entity
+##'
+##' @return A UserEntity that corresponds to you, the authenticated user
+##' @export
+me <- function () {
+    UserEntity(crGET(userURL()))
 }
 
 getUserCatalog <- function (x=sessionURL("users")) {
     UserCatalog(crGET(x))
 }
 
-getAccount <- function (x=rootURL("account", getUser())) {
+getAccount <- function (x=rootURL("account", me())) {
     ShojiObject(crGET(x))
 }
 

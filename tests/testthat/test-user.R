@@ -2,9 +2,8 @@ context("User stuff")
 
 with_mock_HTTP({
     test_that("Getting user object", {
-        user <- getUser("/api/users/user1.json")
-        expect_true(inherits(user, "UserEntity"))
-        expect_identical(user@body$email, "fake.user@example.com")
+        expect_true(inherits(me(), "UserEntity"))
+        expect_identical(email(me()), "fake.user@example.com")
     })
 
     test_that("Getting account's user catalog", {
@@ -27,8 +26,7 @@ with_mock_HTTP({
 if (run.integration.tests) {
     with(test.authentication, {
         test_that("User can be fetched", {
-            user <- try(getUser())
-            expect_true(inherits(user, "UserEntity"))
+            expect_true(inherits(me(), "UserEntity"))
         })
 
         test_that("Create and delete user; cleanup(testUser()) setup/teardown", {
@@ -73,7 +71,7 @@ if (run.integration.tests) {
 
     test_that("User cannot be fetched if logged out", {
         logout()
-        expect_error(getUser(),
+        expect_error(me(),
             "You must authenticate before making this request")
     })
 }

@@ -266,8 +266,8 @@ if (run.integration.tests) {
 
                 test_that("Can privatize a dataset belonging to a project", {
                     expect_identical(owner(ds2), self(tp))
-                    owner(ds2) <- getUser()
-                    expect_identical(owner(ds2), self(getUser()))
+                    owner(ds2) <- me()
+                    expect_identical(owner(ds2), self(me()))
                 })
             })
         })
