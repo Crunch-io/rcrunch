@@ -1,29 +1,35 @@
 init.DatasetCatalog <- function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
-    .Object@index <- .Object@index[order(selectFrom("name", .Object@index))]
+    .Object@index <- .Object@index[order(names(.Object))]
     return(.Object)
 }
 setMethod("initialize", "DatasetCatalog", init.DatasetCatalog)
 
 setMethod("active", "DatasetCatalog", function (x) {
     index(x) <- Filter(function (a) !isTRUE(a$archived), index(x))
-    ## Not implementing user check now.
-    # me <- userURL()
-    # if (!is.null(me)) {
-    #     index(x) <- Filter(function (a) a$owner_id == me, index(x))
-    # }
     return(x)
 })
 
 setMethod("archived", "DatasetCatalog", function (x) {
     index(x) <- Filter(function (a) isTRUE(a$archived), index(x))
-    ## Not implementing user check now.
-    # me <- userURL()
-    # if (!is.null(me)) {
-    #     index(x) <- Filter(function (a) a$owner_id == me, index(x))
-    # }
     return(x)
 })
+
+##' See who owns these datasets
+##'
+##' @param x DatasetCatalog
+##' @return For \code{owners}, the URLs of the users or projects that own
+##' these datasets. For \code{ownerNames}, their names.
+##' @export
+owners <- function (x) {
+    getIndexSlot(x, "owner_id")
+}
+
+##' @rdname owners
+##' @export
+ownerNames <- function (x) {
+    getIndexSlot(x, "owner_display_name")
+}
 
 ##' Extract and modify subsets of Catalog-type objects
 ##'
