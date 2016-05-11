@@ -7,14 +7,15 @@
             "name": "Fake User",
             "email": "fake.user@example.com",
             "permissions": {
-                "manage_members": true
+                "edit": true,
+                "view": true
             }
         },
         "/api/users/user2.json": {
             "name": "Roger User",
             "email": "roger.user@example.com",
             "permissions": {
-                "manage_members": false
+                "edit": false
             }
         }
     }

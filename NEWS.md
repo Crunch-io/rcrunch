@@ -1,6 +1,7 @@
 ### crunch 1.9.13 (under development)
 * Add `owner` and `owner<-` for datasets to read and modify the owner
 * Add `owners` and `ownerNames` for DatasetCatalog
+* `is.editor` and `is.editor<-` for project MemberCatalog
 * `me` function to get the user entity for yourself
 * Fix failure on interactive login in R.app on OS X
 

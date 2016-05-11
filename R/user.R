@@ -28,10 +28,6 @@ getAccountUserCatalog <- function (x=shojiURL(getAccount(), "catalogs", "users")
     UserCatalog(crGET(x))
 }
 
-##' @rdname describe-catalog
-##' @export
-setMethod("emails", "UserCatalog", function (x) getIndexSlot(x, "email"))
-
 invite <- function (email, name=NULL, notify=TRUE, id_method="pwhash",
                     advanced=FALSE, admin=FALSE, ...) {
     payload <- list(

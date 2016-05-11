@@ -71,6 +71,23 @@ with_mock_HTTP({
             fixed=TRUE)
     })
 
+    test_that("is.editor on member catalog", {
+        expect_identical(is.editor(m), c(TRUE, FALSE))
+    })
+
+    test_that("is.editor<- on member catalog", {
+        expect_error(is.editor(m) <- c(TRUE, TRUE),
+            paste('PATCH /api/projects/project1/members.json',
+                '{"/api/users/user2.json":{"permissions":{"edit":true}}}'),
+            fixed=TRUE)
+        expect_error(is.editor(m[2]) <- TRUE,
+            paste('PATCH /api/projects/project1/members.json',
+                '{"/api/users/user2.json":{"permissions":{"edit":true}}}'),
+            fixed=TRUE)
+        expect_error(is.editor(m[2]) <- FALSE,
+            NA) ## No change, so no PATCH request made
+    })
+
     d <- datasets(aproject)
     test_that("Project datasets catalog", {
         expect_true(inherits(d, "DatasetCatalog"))
@@ -170,7 +187,7 @@ if (run.integration.tests) {
             })
         })
 
-        test_that("Can add members to a project", {
+        test_that("Can add members to a project (and then set as an editor)", {
             skip_on_jenkins("Jenkins user needs more permissions")
             with(cleanup(testProject()), as="tp", {
                 with(cleanup(testUser()), as="u", {
@@ -179,6 +196,12 @@ if (run.integration.tests) {
                     members(tp) <- email(u)
                     expect_true(setequal(names(members(tp)),
                         c(name(u), my.name)))
+
+                    expect_identical(is.editor(members(tp)),
+                        c(TRUE, FALSE))
+                    is.editor(members(tp)[email(u)]) <- TRUE
+                    expect_identical(is.editor(members(tp)),
+                        c(TRUE, TRUE))
                 })
             })
         })

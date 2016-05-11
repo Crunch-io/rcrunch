@@ -3,39 +3,12 @@ setMethod("permissions", "CrunchDataset", function (x) {
     return(PermissionCatalog(crGET(perm_url)))
 })
 
-##' @rdname describe-catalog
-##' @export
-setMethod("emails", "PermissionCatalog", function (x) getIndexSlot(x, "email"))
-
-##' @rdname catalog-extract
-##' @export
-setMethod("[[", c("PermissionCatalog", "character"), function (x, i, ...) {
-    stopifnot(length(i) == 1L)
-    w <- whichNameOrURL(x, i, emails(x))
-    if (is.na(w)) {
-        halt("Subscript out of bounds: ", i)
-    }
-    tup <- index(x)[[w]]
-    return(PermissionTuple(index_url=self(x), entity_url=urls(x)[w],
-        body=tup))
-})
-
-##' @rdname catalog-extract
-##' @export
-setMethod("[", c("PermissionCatalog", "character"), function (x, i, ...) {
-    w <- whichNameOrURL(x, i, emails(x))
-    if (any(is.na(w))) {
-        halt("Undefined elements selected: ", serialPaste(i[is.na(w)]))
-    }
-    return(x[w])
-})
-
 setMethod("is.editor", "PermissionCatalog", function (x) {
     out <- vapply(index(x), function (a) {
             isTRUE(a[["dataset_permissions"]][["edit"]])
         }, logical(1), USE.NAMES=FALSE)
-    names(out) <- emails(x)
-    structure(return(out))
+    names(out) <- emails(x) ## Drop this
+    return(out)
 })
 
 setMethod("is.editor", "PermissionTuple", function (x) {
@@ -96,10 +69,8 @@ passwordSetURLTemplate <- function () {
 ##' @export
 unshare <- function (dataset, users) {
     stopifnot(is.character(users))
-    payload <- structure(rep(list(NULL), length(users)),
-        .Names=users)
-    payload <- toJSON(payload)
-    crPATCH(shojiURL(dataset, "catalogs", "permissions"), body=payload)
+    payload <- sapply(users, null, simplify=FALSE)
+    crPATCH(shojiURL(dataset, "catalogs", "permissions"), body=toJSON(payload))
     invisible(dataset)
 }
 

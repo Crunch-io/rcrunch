@@ -80,7 +80,14 @@ test_that("absoluteURL", {
 })
 
 test_that("emptyObject JSONifies correctly", {
-    expect_equivalent(unclass(toJSON(emptyObject())), "{}")
+    expect_equal(unclass(toJSON(emptyObject())), "{}")
+    expect_equal(unclass(toJSON(emptyObject(list(a=1), 1:4))), "{}")
+})
+
+test_that("null function always returns null", {
+    expect_true(is.null(null()))
+    expect_true(is.null(null(TRUE)))
+    expect_true(is.null(null(stop("yo!"))))
 })
 
 test_that("setIfNotAlready", {

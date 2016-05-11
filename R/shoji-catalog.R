@@ -109,6 +109,15 @@ setMethod("$<-", "ShojiCatalog", function (x, name, value) {
     return(x)
 })
 
+##' @rdname catalog-extract
+##' @export
+setMethod("[<-", c("ShojiCatalog", "ANY", "missing", "ShojiCatalog"),
+    function (x, i, j, value) {
+        index(x)[i] <- index(value)[i]
+        ## Assume that PATCHing has happened outside this function
+        return(x)
+    })
+
 ##' Length of Catalog
 ##' @param x a Catalog
 ##' @return Integer: the number of elements in the index list
@@ -182,6 +191,10 @@ setMethod("names", "ShojiCatalog", function (x) getIndexSlot(x, "name"))
 setMethod("names<-", "ShojiCatalog", function (x, value) {
     setIndexSlot(x, "name", value, unique=TRUE)
 })
+
+##' @rdname describe-catalog
+##' @export
+setMethod("emails", "ShojiCatalog", function (x) getIndexSlot(x, "email"))
 
 ##' @export
 as.list.ShojiCatalog <- function (x, ...) lapply(names(index(x)), function (i) x[[i]])

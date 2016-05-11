@@ -102,7 +102,7 @@ reset.option <- function (opts) {
     ## Don't set any options in the setup, but reset specified options after
     old <- sapply(opts, getOption, simplify=FALSE)
     return(setup.and.teardown(
-        function () NULL,
+        null,
         function () do.call(options, old)
     ))
 }

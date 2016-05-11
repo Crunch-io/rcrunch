@@ -67,15 +67,7 @@ setMethod("[", c("VariableCatalog", "VariableGroup"), function (x, i, ...) {
     index(x) <- index(x)[urls(i)]
     return(x)
 })
-##' @rdname catalog-extract
-##' @export
-setMethod("[<-", c("VariableCatalog", "character", "missing", "VariableCatalog"),
-    function (x, i, j, value) {
-        ## Validate!
-        index(x)[i] <- index(value)[i]
-        ## No save, I don't think. PATCH outside this fn?
-        return(x)
-    })
+
 ##' @rdname catalog-extract
 ##' @export
 setMethod("[<-", c("VariableCatalog", "VariableOrder", "missing", "VariableCatalog"),
