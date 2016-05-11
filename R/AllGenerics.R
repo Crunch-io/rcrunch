@@ -167,3 +167,8 @@ setGeneric("jsonprep", function (x, ...) standardGeneric("jsonprep"))
 
 setGeneric("getShowContent",
     function (x, ...) standardGeneric("getShowContent"))
+
+.backstopUpdate <- function (x, i, j, value) {
+    ## Backstop error so you don't get "Object of class S4 is not subsettable"
+    halt(paste("Cannot update", class(x), "with type", class(value)))
+}
