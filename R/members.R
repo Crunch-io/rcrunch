@@ -8,7 +8,7 @@ setMethod("[[", c("MemberCatalog", "character"), function (x, i, ...) {
         halt("Subscript out of bounds: ", i)
     }
     tup <- index(x)[[w]]
-    return(IndexTuple(index_url=self(x), entity_url=urls(x)[w],
+    return(ShojiTuple(index_url=self(x), entity_url=urls(x)[w],
         body=tup)) ## TODO: MemberTuple
 })
 

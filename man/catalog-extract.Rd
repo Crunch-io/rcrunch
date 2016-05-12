@@ -4,6 +4,7 @@
 \name{catalog-extract}
 \alias{$,ShojiCatalog-method}
 \alias{$<-,ShojiCatalog-method}
+\alias{[,MemberCatalog,character,ANY-method}
 \alias{[,PermissionCatalog,character,ANY-method}
 \alias{[,ShojiCatalog,ANY,ANY-method}
 \alias{[,ShojiCatalog,character,ANY-method}
@@ -18,6 +19,7 @@
 \alias{[[,DatasetCatalog,character-method}
 \alias{[[,FilterCatalog,character-method}
 \alias{[[,FilterCatalog,numeric-method}
+\alias{[[,MemberCatalog,character-method}
 \alias{[[,PermissionCatalog,character-method}
 \alias{[[,ProjectCatalog,ANY-method}
 \alias{[[,ProjectCatalog,character-method}
@@ -61,6 +63,10 @@
 \S4method{[[}{FilterCatalog,character,missing,CrunchFilter}(x, i, j) <- value
 
 \S4method{[[}{FilterCatalog,numeric,missing,CrunchFilter}(x, i, j) <- value
+
+\S4method{[[}{MemberCatalog,character}(x, i, j, ...)
+
+\S4method{[}{MemberCatalog,character,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[[}{MemberCatalog,ANY,missing,ANY}(x, i, j) <- value
 
