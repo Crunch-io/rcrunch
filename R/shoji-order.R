@@ -92,6 +92,25 @@ orderEntitiesInit <- function (x) {
 setMethod("entitiesInitializer", "ShojiOrder", orderEntitiesInit)
 setMethod("entitiesInitializer", "OrderGroup", orderEntitiesInit)
 
+.setNestedGroupByName <- function (x, i, j, value) {
+    ents <- entitiesInitializer(x)
+    w <- match(i, names(x))
+    value <- ents(value)
+    if (!duplicates(x)) {
+        x <- setdiff_entities(x, value)
+    }
+    if (any(is.na(w))) {
+        ## New group.
+        entities(x) <- c(entities(x), do.call(groupClass(x), list(name=i, entities=value)))
+    } else {
+        ## Existing group. Assign entities
+        entities(x[[w]]) <- value
+    }
+    ## Ensure duplicates setting persists
+    duplicates(x) <- duplicates(x)
+    return(removeMissingEntities(x))
+}
+
 ##' @export
 as.list.ShojiOrder <- function (x, ...) x@graph
 
@@ -192,6 +211,15 @@ setMethod("[<-", c("ShojiOrder", "ANY", "missing", "ShojiOrder"),
        return(x)
    })
 
+##' @rdname ShojiOrder-extract
+##' @export
+setMethod("[[<-", c("ShojiOrder", "character", "missing", "list"),
+   .setNestedGroupByName)
+
+##' @rdname ShojiOrder-extract
+##' @export
+setMethod("[[<-", c("ShojiOrder", "character", "missing", "character"),
+   .setNestedGroupByName)
 
 ##' @rdname ShojiOrder-extract
 ##' @export
@@ -203,6 +231,19 @@ setMethod("[[<-", c("ShojiOrder", "character", "missing", "OrderGroup"),
         }
         ## NextMethod: c("ShojiOrder", "ANY", "missing", "OrderGroup")
         callNextMethod(x, w, value=value)
+    })
+
+##' @rdname ShojiOrder-extract
+##' @export
+setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "OrderGroup"),
+    function (x, i, j, value) {
+        if (!duplicates(x) && length(entities(value))) {
+            x <- setdiff_entities(x, value)
+        }
+        x@graph[[i]] <- value
+        ## Ensure duplicates setting persists
+        duplicates(x) <- duplicates(x)
+        return(removeMissingEntities(x))
     })
 
 ##' @rdname ShojiOrder-extract
@@ -229,6 +270,13 @@ setMethod("[[<-", c("ShojiOrder", "character", "missing", "NULL"),
             halt("Undefined group selected: ", serialPaste(i[is.na(w)]))
         }
         callNextMethod(x, w, value=value)
+    })
+
+##' @rdname ShojiOrder-extract
+##' @export
+setMethod("[[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
+    function (x, i, j, value) {
+        .setNestedGroupByName(x, i, j, entities(value))
     })
 
 ##' @rdname ShojiOrder-extract
@@ -278,46 +326,6 @@ setMethod("[[", c("OrderGroup", "ANY"), function (x, i, ...) {
 ##' @rdname ShojiOrder-extract
 ##' @export
 setMethod("$", "OrderGroup", function (x, name) x[[name]])
-
-.setNestedGroupByName <- function (x, i, j, value) {
-    ents <- entitiesInitializer(x)
-    w <- match(i, names(x))
-    value <- ents(value)
-    if (!duplicates(x)) {
-        x <- setdiff_entities(x, value)
-    }
-    if (any(is.na(w))) {
-        ## New group.
-        entities(x) <- c(entities(x), do.call(groupClass(x), list(name=i, entities=value)))
-    } else {
-        ## Existing group. Assign entities
-        entities(x[[w]]) <- value
-    }
-    ## Ensure duplicates setting persists
-    duplicates(x) <- duplicates(x)
-    return(removeMissingEntities(x))
-}
-
-
-##' @rdname ShojiOrder-extract
-##' @export
-setMethod("[[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
-    function (x, i, j, value) {
-        .setNestedGroupByName(x, i, j, entities(value))
-    })
-
-##' @rdname ShojiOrder-extract
-##' @export
-setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "OrderGroup"),
-    function (x, i, j, value) {
-        if (!duplicates(x) && length(entities(value))) {
-            x <- setdiff_entities(x, value)
-        }
-        x@graph[[i]] <- value
-        ## Ensure duplicates setting persists
-        duplicates(x) <- duplicates(x)
-        return(removeMissingEntities(x))
-    })
 
 ###############################
 # 4. Assign into ShojiGroup

@@ -288,6 +288,19 @@ if (run.integration.tests) {
                         expect_identical(ordering(datasets(refresh(tp)))@graph,
                             ord3.list)
                     })
+
+                    test_that("Can create a Group by assigning by name", {
+                        ordering(datasets(tp))[["New group three"]] <- self(ds)
+                        expect_output(ordering(datasets(tp)),
+                            paste("[+] G1",
+                                  paste0("    ", name(ds3)),
+                                  "[+] G2",
+                                  "    (Empty group)",
+                                  "[+] New group three",
+                                  paste0("    ", name(ds)),
+                                  sep="\n"),
+                            fixed=TRUE)
+                    })
                 })
 
                 test_that("Can rename a dataset in a project", {

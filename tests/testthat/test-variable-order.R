@@ -160,6 +160,18 @@ with_mock_HTTP({
             list(self(test.ds$catarray)))
     })
 
+    test_that("Assignment by new group name with a URL", {
+        nested.o <- nested.ord
+        nested.o[["Group 3"]] <- self(test.ds$starttime)
+        expect_identical(names(nested.o), c("Group 1", "Group 2", "Group 3"))
+        expect_identical(entities(nested.o[["Group 3"]]),
+            list(self(test.ds$starttime)))
+        ## Test the "duplicates option": starttime should have been removed from
+        ## Group 2
+        expect_identical(entities(nested.o[["Group 2"]]),
+            list(self(test.ds$catarray)))
+    })
+
     test_that("Assignment by new group name with duplicates", {
         nested.o <- nested.ord
         duplicates(nested.o) <- TRUE
