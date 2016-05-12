@@ -3,6 +3,7 @@
 * Add `owners` and `ownerNames` for DatasetCatalog
 * `is.editor` and `is.editor<-` for project MemberCatalog
 * `me` function to get the user entity for yourself
+* Fix bug in setting nested groups inside DatasetOrder
 * Fix failure on interactive login in R.app on OS X
 
 ### crunch 1.9.12

@@ -114,6 +114,12 @@ with_mock_HTTP({
             datasets(aproject))),
             'PUT /api/projects/project1/datasets/order.json {"graph":[{"new group":["/api/datasets/dataset3.json"]}]}',
             fixed=TRUE)
+        nested.ord <- DatasetOrder("/api/datasets/dataset3.json",
+            DatasetGroup("new group",
+                list(DatasetGroup("nested", "/api/datasets/dataset3.json"))))
+        expect_error(ordering(datasets(aproject)) <- nested.ord,
+            'PUT /api/projects/project1/datasets/order.json {"graph":["/api/datasets/dataset3.json",{"new group":[{"nested":["/api/datasets/dataset3.json"]}]}]}',
+            fixed=TRUE)
     })
 })
 
