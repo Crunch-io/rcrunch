@@ -3,6 +3,8 @@
 * Add `owners` and `ownerNames` for DatasetCatalog
 * `is.editor` and `is.editor<-` for project MemberCatalog
 * `me` function to get the user entity for yourself
+* Add missing print method for DatasetOrder
+* Support creating OrderGroups (for both Datasets and Variables) by assigning URLs into a new group name
 * Fix bug in setting nested groups inside DatasetOrder
 * Fix failure on interactive login in R.app on OS X
 
