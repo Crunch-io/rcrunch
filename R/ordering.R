@@ -59,7 +59,9 @@ setMethod("ordering<-", "VariableCatalog", function (x, value) {
 ##' @rdname ordering
 ##' @export
 setMethod("ordering", "DatasetCatalog", function (x) {
-    DatasetOrder(crGET(shojiURL(x, "orders", "order")))
+    out <- DatasetOrder(crGET(shojiURL(x, "orders", "order")))
+    out@catalog_url <- self(x)
+    return(out)
 })
 
 ##' @rdname ordering

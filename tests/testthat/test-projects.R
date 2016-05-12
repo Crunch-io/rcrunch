@@ -266,6 +266,12 @@ if (run.integration.tests) {
                         expect_identical(ordering(datasets(tp))@graph[[1]],
                             DatasetGroup(name="A group of two",
                             entities=c(self(ds), self(ds3))))
+                        expect_output(ordering(datasets(tp)),
+                            paste("[+] A group of two",
+                                  paste0("    ", name(ds)),
+                                  paste0("    ", name(ds3)),
+                                  sep="\n"),
+                            fixed=TRUE)
                     })
                     ord3 <- DatasetOrder(DatasetGroup("G1", self(ds3)),
                         DatasetGroup("G2", self(ds)))
