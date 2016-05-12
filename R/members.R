@@ -29,6 +29,20 @@ setMethod("members<-", c("CrunchTeam", "character"), function (x, value) {
     return(refresh(x))
 })
 
+##' Read and set edit privileges
+##'
+##' @param x PermissionCatalog or MemberCatalog
+##' @param value For the setter, logical: should the indicated users be allowed
+##' to edit the associated object?
+##' @return \code{is.editor} returns a logical vector corresponding to whether
+##' the users in the catalog can edit or not. \code{is.editor<-} returns the
+##' catalog, modified.
+##' @name is.editor
+##' @aliases is.editor is.editor<-
+NULL
+
+##' @rdname is.editor
+##' @export
 setMethod("is.editor", "MemberCatalog", function (x) {
     ## N.B.: this is for projects; teams don't work this way.
     vapply(index(x), function (a) {
@@ -36,6 +50,8 @@ setMethod("is.editor", "MemberCatalog", function (x) {
         }, logical(1), USE.NAMES=FALSE)
 })
 
+##' @rdname is.editor
+##' @export
 setMethod("is.editor<-", c("MemberCatalog", "logical"), function (x, value) {
     stopifnot(length(x) == length(value))
     changed <- is.editor(x) != value

@@ -3,6 +3,8 @@ setMethod("permissions", "CrunchDataset", function (x) {
     return(PermissionCatalog(crGET(perm_url)))
 })
 
+##' @rdname is.editor
+##' @export
 setMethod("is.editor", "PermissionCatalog", function (x) {
     out <- vapply(index(x), function (a) {
             isTRUE(a[["dataset_permissions"]][["edit"]])
@@ -11,6 +13,8 @@ setMethod("is.editor", "PermissionCatalog", function (x) {
     return(out)
 })
 
+##' @rdname is.editor
+##' @export
 setMethod("is.editor", "PermissionTuple", function (x) {
     isTRUE(x[["dataset_permissions"]][["edit"]])
 })
