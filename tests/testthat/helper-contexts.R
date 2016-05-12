@@ -108,7 +108,7 @@ reset.option <- function (opts) {
 }
 
 uniqueEmail <- function () paste0("test+", as.numeric(Sys.time()), "@crunch.io")
-testUser <- function (email=uniqueEmail(), name=email, ...) {
+testUser <- function (email=uniqueEmail(), name=paste("Ms.", email, "User"), ...) {
     u.url <- invite(email, name=name, notify=FALSE, ...)
     return(UserEntity(crGET(u.url)))
 }
