@@ -116,7 +116,6 @@ jupyterLogin <- function (token) {
 
 warmSessionCache <- function () {
     session_store$root <- getAPIroot()
-    # session_store$user <- getUser()
     updateDatasetList()
 }
 

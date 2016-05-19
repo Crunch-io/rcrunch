@@ -130,10 +130,15 @@ askForPermission <- function (prompt="") {
     return(proceed == "y")
 }
 
-emptyObject <- function () {
+emptyObject <- function (...) {
     ## toJSON(list()) is "[]". toJSON(emptyObject()) is "{}"
+    ##
+    ## Make the function take ... so you can *apply over something and just
+    ## call the function
     structure(list(), .Names=character(0))
 }
+
+null <- function (...) NULL
 
 ## Borrowed from Hadley
 "%||%" <- function (a, b) if (!is.null(a)) a else b

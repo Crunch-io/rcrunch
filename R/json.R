@@ -11,15 +11,15 @@ setMethod("jsonprep", "list", function (x, ...) lapply(x, jsonprep, ...))
 setMethod("jsonprep", "ANY", function (x, ...) x)
 
 
-.jsonprep.vargroup <- function (x, ...) {
+.jsonprep.ordergroup <- function (x, ...) {
     ents <- x@entities
     if (length(ents) == 0) {
         ## toJSON(character(0)) is [""], which is length 1 :(
         ents <- list() ## but toJSON(list()) is []
     } else if (is.list(ents)) {
         nested.groups <- vapply(ents, inherits, logical(1),
-            what="VariableGroup")
-        ents[nested.groups] <- lapply(ents[nested.groups], .jsonprep.vargroup)
+            what="OrderGroup")
+        ents[nested.groups] <- lapply(ents[nested.groups], .jsonprep.ordergroup)
     }
     return(structure(list(I(ents)), .Names=x@group))
 }
@@ -31,7 +31,7 @@ setMethod("jsonprep", "ShojiOrder",
 
 ##' @rdname tojson-crunch
 ##' @export
-setMethod("jsonprep", "OrderGroup", .jsonprep.vargroup)
+setMethod("jsonprep", "OrderGroup", .jsonprep.ordergroup)
 
 
 ##' @importFrom jsonlite toJSON

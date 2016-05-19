@@ -28,6 +28,8 @@
 \alias{[[<-,ShojiOrder,character,missing,NULL-method}
 \alias{[[<-,ShojiOrder,character,missing,OrderGroup-method}
 \alias{[[<-,ShojiOrder,character,missing,ShojiOrder-method}
+\alias{[[<-,ShojiOrder,character,missing,character-method}
+\alias{[[<-,ShojiOrder,character,missing,list-method}
 \alias{[[<-,VariableGroup,character,missing,CrunchDataset-method}
 \alias{[[<-,VariableOrder,character,missing,CrunchDataset-method}
 \title{Extract and update in VariableOrder and VariableGroup}
@@ -46,13 +48,21 @@
 
 \S4method{[}{ShojiOrder,ANY,missing,ShojiOrder}(x, i, j) <- value
 
+\S4method{[[}{ShojiOrder,character,missing,list}(x, i, j) <- value
+
+\S4method{[[}{ShojiOrder,character,missing,character}(x, i, j) <- value
+
 \S4method{[[}{ShojiOrder,character,missing,OrderGroup}(x, i, j) <- value
+
+\S4method{[[}{ShojiOrder,ANY,missing,OrderGroup}(x, i, j) <- value
 
 \S4method{[[}{ShojiOrder,ANY,missing,ANY}(x, i, j) <- value
 
 \S4method{[[}{ShojiOrder,ANY,missing,`NULL`}(x, i, j) <- value
 
 \S4method{[[}{ShojiOrder,character,missing,`NULL`}(x, i, j) <- value
+
+\S4method{[[}{ShojiOrder,character,missing,ShojiOrder}(x, i, j) <- value
 
 \S4method{$}{ShojiOrder}(x, name) <- value
 
@@ -65,10 +75,6 @@
 \S4method{[[}{OrderGroup,ANY}(x, i, j, ...)
 
 \S4method{$}{OrderGroup}(x, name)
-
-\S4method{[[}{ShojiOrder,character,missing,ShojiOrder}(x, i, j) <- value
-
-\S4method{[[}{ShojiOrder,ANY,missing,OrderGroup}(x, i, j) <- value
 
 \S4method{[[}{OrderGroup,character,missing,list}(x, i, j) <- value
 

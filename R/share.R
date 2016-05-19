@@ -3,30 +3,21 @@ setMethod("permissions", "CrunchDataset", function (x) {
     return(PermissionCatalog(crGET(perm_url)))
 })
 
-##' @rdname describe-catalog
+##' @rdname is.editor
 ##' @export
-setMethod("emails", "PermissionCatalog", function (x) getIndexSlot(x, "email"))
-
-is.editor <- function (x) {
+setMethod("is.editor", "PermissionCatalog", function (x) {
     out <- vapply(index(x), function (a) {
             isTRUE(a[["dataset_permissions"]][["edit"]])
         }, logical(1), USE.NAMES=FALSE)
-    names(out) <- emails(x)
-    structure(return(out))
-}
+    names(out) <- emails(x) ## Drop this
+    return(out)
+})
 
-userCanEdit <- function (email, dataset) {
-    e <- is.editor(permissions(dataset))
-    return(ifelse(email %in% names(e), e[email], FALSE))
-}
-
-iCanEdit <- function (dataset) {
-    is.editor(permissions(dataset)[userURL()])
-}
-
-userCanView <- function (email, dataset) {
-    email %in% emails(permissions(dataset))
-}
+##' @rdname is.editor
+##' @export
+setMethod("is.editor", "PermissionTuple", function (x) {
+    isTRUE(x[["dataset_permissions"]][["edit"]])
+})
 
 ##' Share a dataset
 ##'
@@ -82,10 +73,8 @@ passwordSetURLTemplate <- function () {
 ##' @export
 unshare <- function (dataset, users) {
     stopifnot(is.character(users))
-    payload <- structure(rep(list(NULL), length(users)),
-        .Names=users)
-    payload <- toJSON(payload)
-    crPATCH(shojiURL(dataset, "catalogs", "permissions"), body=payload)
+    payload <- sapply(users, null, simplify=FALSE)
+    crPATCH(shojiURL(dataset, "catalogs", "permissions"), body=toJSON(payload))
     invisible(dataset)
 }
 

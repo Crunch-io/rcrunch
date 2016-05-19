@@ -48,6 +48,10 @@ NULL
 ##' @export
 setMethod("self", "ShojiObject", function (x) x@self)
 
+##' @rdname describe
+##' @export
+setMethod("name", "ShojiObject", function (x) x@body$name)
+
 ##' @rdname refresh
 ##' @export
 setMethod("refresh", "ShojiObject", function (x) {
@@ -102,7 +106,7 @@ setMethod("readonly<-", "ShojiObject", setReadonly)
 ##' @keywords internal
 ##' @importFrom httpcache logMessage
 shojiURL <- function (x, collection=c("catalogs", "views", "fragments", "orders"), key) {
-    if (is.variable(x) || inherits(x, "IndexTuple")) {
+    if (is.variable(x) || inherits(x, "ShojiTuple")) {
         x <- entity(x) ## Get the *Entity (e.g. VariableEntity)
         logMessage("INFO", "GET entity in shojiURL")
     }

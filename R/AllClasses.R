@@ -38,18 +38,20 @@ ShojiView <- setClass("ShojiView", contains="ShojiObject",
         value="ANY"
     ))
 
-IndexTuple <- setClass("IndexTuple",
+ShojiTuple <- setClass("ShojiTuple",
     representation(
         index_url="character",
         entity_url="character",
         body="list"
     ))
-VariableTuple <- setClass("VariableTuple", contains="IndexTuple")
-DatasetTuple <- setClass("DatasetTuple", contains="IndexTuple")
-CrunchProject <- setClass("CrunchProject", contains="IndexTuple")
+VariableTuple <- setClass("VariableTuple", contains="ShojiTuple")
+DatasetTuple <- setClass("DatasetTuple", contains="ShojiTuple")
+CrunchProject <- setClass("CrunchProject", contains="ShojiTuple")
+PermissionTuple <- setClass("PermissionTuple", contains="ShojiTuple")
 
 VariableEntity <- setClass("VariableEntity", contains="ShojiObject")
 ProjectEntity <- setClass("ProjectEntity", contains="ShojiObject")
+UserEntity <- setClass("UserEntity", contains="ShojiObject")
 
 CrunchExpr <- setClass("CrunchExpr",
     representation=representation(

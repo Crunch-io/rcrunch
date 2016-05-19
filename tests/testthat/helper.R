@@ -121,7 +121,7 @@ validImport <- function (ds) {
     expect_equivalent(as.vector(ds$v4), df$v4)
     expect_true(is.Datetime(ds$v5))
     expect_true(is.Categorical(ds$v6))
-    expect_identical(showVariableOrder(ordering(ds)), names(variables(ds)))
+    expect_identical(showShojiOrder(ordering(ds)), names(variables(ds)))
 }
 
 validApidocsImport <- function (ds) {

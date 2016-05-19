@@ -49,6 +49,14 @@ with_mock_HTTP({
         expect_identical(names(datcat),
             c("ECON.sav", "an archived dataset", "test ds"))
     })
+    test_that("owners", {
+        expect_identical(owners(datcat),
+            c("/api/users/notme.json", "/api/users/user1.json", "/api/users/user1.json"))
+    })
+    test_that("ownerNames", {
+        expect_identical(ownerNames(datcat),
+            c("George", "Fake User", "Fake User"))
+    })
 
     test_that("entity method for tuple", {
         expect_true(is.dataset(entity(datcat[["/api/datasets/dataset1.json"]])))

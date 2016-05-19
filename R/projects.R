@@ -62,9 +62,7 @@ setMethod("members<-", c("CrunchProject", "MemberCatalog"), function (x, value) 
 setMethod("members<-", c("CrunchProject", "character"), function (x, value) {
     value <- setdiff(value, emails(members(x)))
     if (length(value)) {
-        payload <- sapply(value,
-            function (z) emptyObject(),
-            simplify=FALSE)
+        payload <- sapply(value, emptyObject, simplify=FALSE)
         crPATCH(self(members(x)), body=toJSON(payload))
     }
     return(x)

@@ -102,28 +102,15 @@ reset.option <- function (opts) {
     ## Don't set any options in the setup, but reset specified options after
     old <- sapply(opts, getOption, simplify=FALSE)
     return(setup.and.teardown(
-        function () NULL,
+        null,
         function () do.call(options, old)
     ))
 }
 
 uniqueEmail <- function () paste0("test+", as.numeric(Sys.time()), "@crunch.io")
-testUser <- function (email=uniqueEmail(), name=email, ...) {
+testUser <- function (email=uniqueEmail(), name=paste("Ms.", email, "User"), ...) {
     u.url <- invite(email, name=name, notify=FALSE, ...)
-    return(ShojiObject(crGET(u.url)))
-}
-new.user.with.setup <- function (email=uniqueEmail(), name=email, ...) {
-    u.url <- invite(email, name=name, notify=FALSE, ...)
-    objects_to_purge <<- c(objects_to_purge, u.url)
-    return(u.url)
-}
-
-test.user <- function (email=uniqueEmail(), name=email, obj.name="u", ...) {
-    return(setup.and.teardown(
-        function () new.user.with.setup(email, name, ...),
-        purge.object,
-        obj.name
-    ))
+    return(UserEntity(crGET(u.url)))
 }
 
 markForCleanup <- function (x) {

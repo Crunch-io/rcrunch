@@ -36,6 +36,8 @@ setGeneric("descriptions", function (x) standardGeneric("descriptions"))
 setGeneric("descriptions<-",
     function (x, value) standardGeneric("descriptions<-"), signature="x")
 setGeneric("emails", function (x) standardGeneric("emails"))
+setGeneric("email", function (x) standardGeneric("email"))
+
 setGeneric("types", function (x) standardGeneric("types"))
 setGeneric("timestamps", function (x) standardGeneric("timestamps"))
 
@@ -91,6 +93,8 @@ setGeneric("activeFilter<-",
     function (x, value) standardGeneric("activeFilter<-"))
 setGeneric("is.public", function (x) standardGeneric("is.public"))
 setGeneric("is.public<-", function (x, value) standardGeneric("is.public<-"))
+setGeneric("is.editor", function (x) standardGeneric("is.editor"))
+setGeneric("is.editor<-", function (x, value) standardGeneric("is.editor<-"))
 
 setGeneric("groupClass", function (x) standardGeneric("groupClass"))
 setGeneric("entityClass", function (x) standardGeneric("entityClass"))
@@ -163,3 +167,8 @@ setGeneric("jsonprep", function (x, ...) standardGeneric("jsonprep"))
 
 setGeneric("getShowContent",
     function (x, ...) standardGeneric("getShowContent"))
+
+.backstopUpdate <- function (x, i, j, value) {
+    ## Backstop error so you don't get "Object of class S4 is not subsettable"
+    halt(paste("Cannot update", class(x), "with type", class(value)))
+}

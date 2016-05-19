@@ -111,20 +111,20 @@ showSubvariables <- function (x) {
     return(out)
 }
 
-showVariableOrder <- function (x, vars=x@catalog_url) {
-    if (nchar(vars)) {
-        vars <- index(ShojiCatalog(crGET(vars)))
+showShojiOrder <- function (x, catalog_url=x@catalog_url) {
+    if (nchar(catalog_url)) {
+        catalog <- index(ShojiCatalog(crGET(catalog_url)))
     } else {
-        vars <- list()
+        catalog <- list()
     }
-    return(unlist(lapply(x, showVariableGroup, index=vars)))
+    return(unlist(lapply(x, showOrderGroup, index=catalog)))
 }
 
-showVariableGroup <- function (x, index) {
-    if (inherits(x, "VariableGroup")) {
+showOrderGroup <- function (x, index) {
+    if (inherits(x, "OrderGroup")) {
         ents <- entities(x)
         if (length(ents)) {
-            group <- unlist(lapply(ents, showVariableGroup, index=index))
+            group <- unlist(lapply(ents, showOrderGroup, index=index))
         } else {
             group <- "(Empty group)"
         }
@@ -228,7 +228,7 @@ setMethod("getShowContent", "CategoricalArrayVariable",
     showCategoricalArrayVariable)
 setMethod("getShowContent", "CrunchDataset", showCrunchDataset)
 setMethod("getShowContent", "Subvariables", showSubvariables)
-setMethod("getShowContent", "VariableOrder", showVariableOrder)
+setMethod("getShowContent", "ShojiOrder", showShojiOrder)
 setMethod("getShowContent", "ShojiCatalog",
     function (x) catalogToDataFrame(x, TRUE))
 setMethod("getShowContent", "BatchCatalog",
