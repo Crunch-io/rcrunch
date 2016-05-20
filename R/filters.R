@@ -222,7 +222,7 @@ idsToURLs <- function (expr, base_url) {
     if (is.list(expr)) {
         if (length(expr) == 1 &&
             identical(names(expr), "variable") &&
-            substr(expr[["variable"]], nchar(expr[["variable"]]), nchar(expr[["variable"]])) != "/") {
+            !endsWith(expr[["variable"]], "/")) {
             ## This is a variable ref that is an id. Absolutize.
             expr[["variable"]] <- absoluteURL(paste0("./", expr, "/"),
                 base_url)

@@ -148,7 +148,8 @@ if (run.integration.tests) {
         })
 
         projects <- refresh(projects)
-        p_url <- self(projects[[name.of.project1]])
+        pj <- projects[[name.of.project1]]
+        p_url <- self(pj)
         name2 <- paste(name.of.project1, "revised")
         test_that("Can rename a project by name<-", {
             expect_identical(self(projects[[name.of.project1]]),
@@ -167,6 +168,17 @@ if (run.integration.tests) {
             expect_true(name3 %in% names(projects))
             expect_identical(self(projects[[name3]]), p_url)
         })
+
+        test_that("Get and set project icon", {
+            ico <- icon(pj)
+            # expect_true(nchar(ico) > 0) ## Unskip after #119305641 ships
+            icon(pj) <- "empty.png"
+            print(icon(pj))
+            expect_false(icon(pj) == "empty.png")
+            expect_true(endsWith(icon(pj), ".png"))
+            expect_false(identical(icon(pj), ico))
+        })
+
 
         test_that("Can delete a project by URL", {
             projects <- refresh(projects)

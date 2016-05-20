@@ -91,8 +91,8 @@ setMethod("delete", "CrunchProject", function (x, confirm=requireConsent(), ...)
 ##' A project's datasets
 ##' @param x a \code{CrunchProject}
 ##' @param value \code{CrunchDataset} for the setter
-##' @return An obect of class \code{DatasetCatalog}. The setter returns the
-##' catalog with the given dataset added to it (via changing its owner to be
+##' @return An object of class \code{DatasetCatalog}. The setter returns the
+##' project with the given dataset added to it (via changing its owner to be
 ##' the specified project, \code{x}).
 ##' @name project-datasets
 ##' @export
@@ -105,10 +105,31 @@ datasets <- function (x) DatasetCatalog(crGET(shojiURL(x, "catalogs", "datasets"
     if (is.dataset(value)) {
         ## This is how we add a dataset to a project: change its owner
         owner(value) <- x
-        x <- refresh(x)
+        dropCache(shojiURL(x, "catalogs", "datasets"))
     }
     ## Else, we're doing something like `ordering(datasets(proj)) <- `
     ## and no action is required.
     ## TODO: setmethods for this. This feels fragile.
     return(x)
+}
+
+##' A project's icon
+##' @param x a \code{CrunchProject}
+##' @param value charcter file path of the icon image file to set
+##' @return The URL of the project's icon. The setter returns the
+##' project after having uploaded the specified file as the new icon.
+##' @name project-icon
+##' @export
+icon <- function (x) {
+    stopifnot(inherits(x, "CrunchProject"))
+    return(x@body$icon)
+}
+
+##' @rdname project-icon
+##' @export
+`icon<-` <- function (x, value) {
+    crPUT(shojiURL(x, "views", "icon"),
+        body=list(icon=upload_file(value)))
+    dropOnly(absoluteURL("../", self(x))) ## Invalidate catalog
+    return(refresh(x))
 }

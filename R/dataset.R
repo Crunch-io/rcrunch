@@ -86,10 +86,7 @@ setMethod("id", "CrunchDataset", function (x) tuple(x)$id)
 
 trimISODate <- function (x) {
     ## Drop time from datestring if it's only a date
-    if (is.character(x) &&
-        nchar(x) > 10 &&
-        substr(x, 11, nchar(x)) == "T00:00:00+00:00") {
-
+    if (is.character(x) && nchar(x) > 10 && endsWith(x, "T00:00:00+00:00")) {
         x <- substr(x, 1, 10)
     }
     return(x)

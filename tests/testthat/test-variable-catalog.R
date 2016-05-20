@@ -146,7 +146,7 @@ if (run.integration.tests) {
                 expect_identical(Categories(data=vm[[i]]$categories),
                     categories(ds$allpets))
                 expect_identical(vm[[i]]$subvariables,
-                    absoluteURL(tuple(ds$allpets)$subvariables, self(vm)))
+                    subvariables(tuple(ds$allpets)))
                 expect_true(all(grepl("^http", urls(vm))))
                 expect_true(!any(is.na(getIndexSlot(vm, "id"))))
             })

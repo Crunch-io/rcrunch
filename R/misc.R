@@ -61,28 +61,26 @@ now <- function () strftime(Sys.time(), usetz=TRUE)
 ##' @importFrom httr parse_url build_url
 absoluteURL <- function (urls, base) {
     ## Detect if we have relative urls, and then concatenate if so
-    if (length(urls) && ## if there is anything to munge
-        !any(substr(urls, 1, 4) == "http")) { ## the urls don't start with http
-            base.url <- parse_url(base)
-            urls <- vapply(urls, function (x, b) {
-                b$path <- joinPath(b$path, x)
-                if (is.null(b$scheme)) {
-                    ## If file path and not URL, as in for tests,
-                    ## let's return it relative
-                    return(b$path)
-                }
-                ## Pop off any leading "/" because build_url will add it
-                b$path <- sub("^/", "", b$path)
-                b$query <- NULL ## Catalog query params aren't valid for entities
-                return(build_url(b))
-            }, character(1), b=base.url, USE.NAMES=FALSE)
-        }
+    if (length(urls) && !any(startsWith(urls, "http"))) {
+        base.url <- parse_url(base)
+        urls <- vapply(urls, function (x, b) {
+            b$path <- joinPath(b$path, x)
+            if (is.null(b$scheme)) {
+                ## If file path and not URL, as in for tests,
+                ## let's return it relative
+                return(b$path)
+            }
+            ## Pop off any leading "/" because build_url will add it
+            b$path <- sub("^/", "", b$path)
+            b$query <- NULL ## Catalog query params aren't valid for entities
+            return(build_url(b))
+        }, character(1), b=base.url, USE.NAMES=FALSE)
+    }
     return(urls)
 }
 
 joinPath <- function (base.path, relative.part) {
-    first.char <- substr(relative.part, 1, 1)
-    if (first.char == "/") {
+    if (startsWith(relative.part, "/")) {
         ## This is absolute, relative to the host
         return(relative.part)
     }
@@ -106,9 +104,7 @@ joinPath <- function (base.path, relative.part) {
         }
     }
     out <- paste(u, collapse="/")
-    last.char <- substr(relative.part, nchar(relative.part),
-        nchar(relative.part))
-    if (last.char == "/") {
+    if (endsWith(relative.part, "/")) {
         out <- paste0(out, "/")
     }
     return(out)

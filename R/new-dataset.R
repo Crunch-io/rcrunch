@@ -190,7 +190,7 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE, cleanup=TRUE
     if (!strict) {
         batches_url <- paste0(batches_url, "?strict=0")
     }
-    if (substr(file, 1, 5) == "s3://") {
+    if (startsWith(file, "s3://")) {
         ## S3 upload
         batch <- try(crPOST(batches_url, body=toJSON(list(
             element="shoji:entity",

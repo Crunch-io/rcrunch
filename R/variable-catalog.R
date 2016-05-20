@@ -119,7 +119,7 @@ variableMetadata <- function (dataset) {
     varcat <- allVariables(dataset)
     index(varcat) <- lapply(index(varcat), function (x) {
         if ("subvariables" %in% names(x)) {
-            x$subvariables <- absoluteURL(x$subvariables, self(varcat))
+            x$subvariables <- absoluteURL(unlist(x$subvariables), self(varcat))
         }
         return(x)
     })

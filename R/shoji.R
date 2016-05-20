@@ -27,7 +27,7 @@ init.Shoji <- function (.Object, ...) {
 setMethod("initialize", "ShojiObject", init.Shoji)
 
 is.shoji.like <- function (x) {
-    is.list(x) && "element" %in% names(x) && substr(as.character(x$element), 1, 5) == "shoji"
+    is.list(x) && "element" %in% names(x) && startsWith(as.character(x$element), "shoji")
 }
 
 ##' @rdname crunch-is

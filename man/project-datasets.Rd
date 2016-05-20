@@ -16,8 +16,8 @@ datasets(x) <- value
 \item{value}{\code{CrunchDataset} for the setter}
 }
 \value{
-An obect of class \code{DatasetCatalog}. The setter returns the
-catalog with the given dataset added to it (via changing its owner to be
+An object of class \code{DatasetCatalog}. The setter returns the
+project with the given dataset added to it (via changing its owner to be
 the specified project, \code{x}).
 }
 \description{
