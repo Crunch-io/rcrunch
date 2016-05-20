@@ -5,6 +5,7 @@
 * `me` function to get the user entity for yourself
 * Add missing print method for DatasetOrder
 * Support creating OrderGroups (for both Datasets and Variables) by assigning URLs into a new group name
+* Improve support for parsing datetime data values
 * Fix bug in setting nested groups inside DatasetOrder
 * Fix failure on interactive login in R.app on OS X
 
