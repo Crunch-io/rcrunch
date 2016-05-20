@@ -1,8 +1,14 @@
-### crunch 1.9.13 (under development)
+## crunch 1.10.0
+
+#### New support for working with users and their permissions on datasets and projects
+
 * Add `owner` and `owner<-` for datasets to read and modify the owner
 * Add `owners` and `ownerNames` for DatasetCatalog
 * `is.editor` and `is.editor<-` for project MemberCatalog
 * `me` function to get the user entity for yourself
+
+#### Other changes
+
 * Add missing print method for DatasetOrder
 * Support creating OrderGroups (for both Datasets and Variables) by assigning URLs into a new group name
 * Improve support for parsing datetime data values
