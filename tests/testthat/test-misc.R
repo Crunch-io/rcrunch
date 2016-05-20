@@ -101,3 +101,10 @@ test_that("setIfNotAlready", {
         expect_identical(getOption("crunch.test.opt3"), 4)
     })
 })
+
+test_that("startsWith/endsWith for old R", {
+    expect_true(alt.startsWith("http://", "http"))
+    expect_false(alt.startsWith("http://", "https"))
+    expect_true(alt.endsWith("http://", "//"))
+    expect_false(alt.endsWith("http://", "http"))
+})

@@ -138,3 +138,21 @@ null <- function (...) NULL
 
 ## Borrowed from Hadley
 "%||%" <- function (a, b) if (!is.null(a)) a else b
+
+
+## from future import ...
+basefuns <- ls(envir=asNamespace("base"))
+alt.startsWith <- function (x, prefix) {
+    substr(x, 1, nchar(prefix)) == prefix
+}
+if (!("startsWith" %in% basefuns)) {
+    startsWith <- alt.startsWith
+}
+
+alt.endsWith <- function (x, suffix) {
+    z <- nchar(x)
+    substr(x, z - nchar(suffix) + 1, z) == suffix
+}
+if (!("endsWith" %in% basefuns)) {
+    endsWith <- alt.endsWith
+}
