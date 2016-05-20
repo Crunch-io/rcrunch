@@ -97,8 +97,8 @@ if (run.integration.tests) {
                 name(part2$CA) <- "Bad var"
                 test_that("setup for append type mismatch", {
                     p1.batches <- batches(part1)
-                    expect_true(inherits(p1.batches, "ShojiCatalog"))
-                    expect_identical(length(p1.batches), 2L)
+                    expect_is(p1.batches, "ShojiCatalog")
+                    expect_length(p1.batches, 2)
                     expect_true("CA" %in% names(part1))
                     expect_true("CA" %in% names(part2))
                     expect_true(is.CA(part1$CA))
@@ -111,7 +111,7 @@ if (run.integration.tests) {
                         "1 variable:", dQuote("Bad var")))
                     expect_error(appendDataset(part1, part2),
                         "There are conflicts that cannot be resolved automatically.")
-                    expect_identical(length(batches(part1)), 2L)                })
+                    expect_length(batches(part1), 2)                })
             })
         })
 

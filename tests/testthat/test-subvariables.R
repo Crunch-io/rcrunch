@@ -9,7 +9,7 @@ with_mock_HTTP({
     })
 
     test_that("subvariables are what we think", {
-        expect_true(inherits(subvariables(mr), "Subvariables"))
+        expect_is(subvariables(mr), "Subvariables")
         expect_identical(names(subvariables(mr)), c("First", "Second", "Last"))
     })
 
@@ -20,7 +20,7 @@ with_mock_HTTP({
     })
 
     test_that("[.Subvariables", {
-        expect_true(inherits(subvariables(mr)[1:2], "Subvariables"))
+        expect_is(subvariables(mr)[1:2], "Subvariables")
         expect_true(inherits(subvariables(mr)[c("First", "Last")],
             "Subvariables"))
         expect_error(subvariables(mr)[c("First", "Other")],
@@ -40,20 +40,20 @@ with_mock_HTTP({
     })
 
     test_that("can extract a subvariable as a Variable", {
-        expect_true(inherits(subvariables(mr)[[1]], "CrunchVariable"))
+        expect_is(subvariables(mr)[[1]], "CrunchVariable")
         expect_true(is.Categorical(subvariables(mr)[[1]]))
-        expect_true(inherits(subvariables(mr)[["Second"]], "CrunchVariable"))
+        expect_is(subvariables(mr)[["Second"]], "CrunchVariable")
         expect_true(is.Categorical(subvariables(mr)[["Second"]]))
-        expect_true(inherits(subvariables(mr)$Second, "CrunchVariable"))
+        expect_is(subvariables(mr)$Second, "CrunchVariable")
         expect_true(is.Categorical(subvariables(mr)$Second))
-        expect_true(is.null(subvariables(mr)$Other))
+        expect_null(subvariables(mr)$Other)
     })
 
     test_that("can extract directly from array variable", {
         expect_true(is.Categorical(mr[[1]]))
         expect_true(is.Categorical(mr[["Second"]]))
         expect_true(is.Categorical(mr$Second))
-        expect_true(is.null(mr$Other))
+        expect_null(mr$Other)
 
         expect_true(inherits(mr[c("First", "Last")],
             "Subvariables"))
@@ -68,7 +68,7 @@ with_mock_HTTP({
             expect_true(is.Categorical(mr[[1]]))
             expect_true(is.Categorical(mr[["subvar1"]]))
             expect_true(is.Categorical(mr$subvar2))
-            expect_true(is.null(mr$Other))
+            expect_null(mr$Other)
 
             expect_true(inherits(mr[c("subvar2", "subvar3")],
                 "Subvariables"))
@@ -277,7 +277,7 @@ if (run.integration.tests) {
             ds <- mrdf.setup(ds)
 
             test_that("Setup for tests with array with one subvar", {
-                expect_identical(length(subvariables(ds$CA)), 1L)
+                expect_length(subvariables(ds$CA), 1)
                 expect_identical(names(subvariables(ds$CA)), "mr_1")
                 expect_identical(names(categories(ds$CA)),
                     c("0.0", "1.0", "No Data"))

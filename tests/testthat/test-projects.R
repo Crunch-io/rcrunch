@@ -3,17 +3,17 @@ context("Projects")
 with_mock_HTTP({
     projects <- session()$projects
     test_that("Getting projects catalog", {
-        expect_true(inherits(projects, "ProjectCatalog"))
-        expect_identical(length(projects), 2L)
+        expect_is(projects, "ProjectCatalog")
+        expect_length(projects, 2)
         expect_identical(names(projects), c("Project One", "Project Two"))
     })
 
     aproject <- projects[["Project One"]]
     test_that("Getting project from catalog", {
-        expect_true(inherits(projects[[1]], "CrunchProject"))
-        expect_true(inherits(projects$`Project One`, "CrunchProject"))
-        expect_true(inherits(projects[["Project One"]], "CrunchProject"))
-        expect_true(is.null(projects$`Beta Project`))
+        expect_is(projects[[1]], "CrunchProject")
+        expect_is(projects$`Project One`, "CrunchProject")
+        expect_is(projects[["Project One"]], "CrunchProject")
+        expect_null(projects$`Beta Project`)
     })
 
     test_that("Project attributes", {
@@ -49,7 +49,7 @@ with_mock_HTTP({
 
     m <- members(aproject)
     test_that("Project members catalog", {
-        expect_true(inherits(m, "MemberCatalog"))
+        expect_is(m, "MemberCatalog")
         expect_identical(names(m), c("Fake User", "Roger User"))
     })
 
@@ -90,13 +90,13 @@ with_mock_HTTP({
 
     d <- datasets(aproject)
     test_that("Project datasets catalog", {
-        expect_true(inherits(d, "DatasetCatalog"))
+        expect_is(d, "DatasetCatalog")
         expect_identical(names(d), "ECON.sav")
     })
 
     do <- ordering(d)
     test_that("Project datasets order", {
-        expect_true(inherits(do, "DatasetOrder"))
+        expect_is(do, "DatasetOrder")
         expect_identical(do@graph, list(DatasetGroup("Group 1", "/api/datasets/dataset3.json")))
     })
 
@@ -132,7 +132,7 @@ if (run.integration.tests) {
 
         nprojects.0 <- length(projects)
         test_that("Can get project catalog", {
-            expect_true(inherits(projects, "ProjectCatalog"))
+            expect_is(projects, "ProjectCatalog")
         })
 
         name.of.project1 <- now()
@@ -141,8 +141,8 @@ if (run.integration.tests) {
             projects[[name.of.project1]] <- list()
             expect_true(name.of.project1 %in% names(projects))
             expect_true(length(projects) == nprojects.0 + 1L)
-            expect_true(inherits(projects[[name.of.project1]], "CrunchProject"))
-            expect_identical(length(members(projects[[name.of.project1]])), 1L)
+            expect_is(projects[[name.of.project1]], "CrunchProject")
+            expect_length(members(projects[[name.of.project1]]), 1)
             expect_identical(names(members(projects[[name.of.project1]])),
                 my.name)
         })
@@ -154,7 +154,7 @@ if (run.integration.tests) {
         test_that("Can rename a project by name<-", {
             expect_identical(self(projects[[name.of.project1]]),
                 p_url)
-            expect_identical(projects[[name2]], NULL)
+            expect_null(projects[[name2]])
             name(projects[[name.of.project1]]) <- name2
             expect_identical(projects[[name.of.project1]],
                 NULL)
@@ -243,8 +243,8 @@ if (run.integration.tests) {
         with(test.dataset(), {
             with(cleanup(testProject()), as="tp", {
                 test_that("Can add datasets to project", {
-                    expect_true(inherits(tp, "CrunchProject"))
-                    expect_identical(length(datasets(tp)), 0L)
+                    expect_is(tp, "CrunchProject")
+                    expect_length(datasets(tp), 0)
                     datasets(tp) <- ds
                     expect_identical(names(datasets(tp)), name(ds))
                     expect_identical(owner(refresh(ds)), self(tp))

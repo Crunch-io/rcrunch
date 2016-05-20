@@ -85,9 +85,9 @@ test_that("emptyObject JSONifies correctly", {
 })
 
 test_that("null function always returns null", {
-    expect_true(is.null(null()))
-    expect_true(is.null(null(TRUE)))
-    expect_true(is.null(null(stop("yo!"))))
+    expect_null(null())
+    expect_null(null(TRUE))
+    expect_null(null(stop("yo!")))
 })
 
 test_that("setIfNotAlready", {

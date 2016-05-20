@@ -19,14 +19,14 @@ if (run.integration.tests) {
                     # is present for rows which were added directly
                     # rather than through a batch append,
                     # and another for "part1".
-                    expect_identical(length(batches(part1)), 2L)
-                    expect_identical(length(batches(part2)), 2L)
+                    expect_length(batches(part1), 2)
+                    expect_length(batches(part2), 2)
                 })
                 test_that("identical datasets with arrays can append", {
                     expect_message(out <- appendDataset(part1, part2),
                         "No conflicts")
                     expect_true(is.dataset(out))
-                    expect_identical(length(batches(out)), 3L)
+                    expect_length(batches(out), 3)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
                     expect_true(is.Multiple(out$MR))
                     expect_equivalent(as.array(crtabs(~ MR, data=out)),
@@ -60,7 +60,7 @@ if (run.integration.tests) {
                     expect_equivalent(as.array(crtabs(~ MR, data=part1)),
                         array(c(2, 1, 1), dim=c(3L),
                         dimnames=list(MR=c("mr_1", "mr_2", "mr_3"))))
-                    expect_true(is.null(part2$MR))
+                    expect_null(part2$MR)
                     expect_identical(mr_cats, subvar_cats)
                     expect_identical(mr_cats, dichotomized_cats)
                     expect_identical(categories(part2$mr_1),
@@ -80,7 +80,7 @@ if (run.integration.tests) {
                 })
                 test_that("unbound subvariables get lined up", {
                     expect_true(is.dataset(out))
-                    expect_identical(length(batches(out)), 3L)
+                    expect_length(batches(out), 3)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
                     expect_true(is.variable(out$MR))
                     expect_identical(categories(out$MR), dichotomized_cats)
@@ -119,7 +119,7 @@ if (run.integration.tests) {
                     expect_equivalent(as.array(crtabs(~ MR, data=part1)),
                         array(c(2, 1, 1), dim=c(3L),
                         dimnames=list(MR=c("mr_1", "mr_2", "mr_3"))))
-                    expect_true(is.null(part2$MR))
+                    expect_null(part2$MR)
                     expect_identical(mr_cats, subvar_cats)
                     expect_identical(mr_cats, dichotomized_cats)
                     expect_identical(categories(part2$mr_1),
@@ -135,7 +135,7 @@ if (run.integration.tests) {
                     expect_message(out <- appendDataset(part1, part2),
                         "No conflicts")
                     expect_true(is.dataset(out))
-                    expect_identical(length(batches(out)), 3L)
+                    expect_length(batches(out), 3)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
                     expect_true(is.variable(out$MR))
                     expect_identical(categories(out$MR), dichotomized_cats)
@@ -177,7 +177,7 @@ if (run.integration.tests) {
                 out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("arrays with different subvariables can append", {
                     expect_true(is.dataset(out))
-                    expect_identical(length(batches(out)), 3L)
+                    expect_length(batches(out), 3)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
                     expect_true(is.variable(out$MR))
                     expect_true(is.Multiple(out$MR))
@@ -196,7 +196,7 @@ if (run.integration.tests) {
                     expect_equivalent(as.array(crtabs(~ MR, data=out)),
                         array(c(2, 1), dim=c(2L),
                         dimnames=list(MR=c("mr_1", "mr_2"))))
-                    expect_identical(length(batches(out)), 2L)
+                    expect_length(batches(out), 2)
                 })
             })
         })
@@ -210,7 +210,7 @@ if (run.integration.tests) {
                 part2 <- mrdf.setup(part2)
                 out <- suppressMessages(try(appendDataset(part1, part2)))
                 test_that("Sparse append with array", {
-                    expect_identical(length(batches(out)), 3L)
+                    expect_length(batches(out), 3)
                     expect_identical(nrow(out), 2000L)
                     expect_identical(as.vector(out$CA$mr_2),
                         factor(c(rep(NA, 1995), "0.0", "1.0", "1.0", "1.0", "0.0")))
@@ -219,7 +219,7 @@ if (run.integration.tests) {
                 test_that("Rolling back to initial import reverts the append", {
                     out <- restoreVersion(out, length(versions(out))) ## Get the oldest
                     expect_identical(nrow(out), 1000L)
-                    expect_identical(length(batches(out)), 2L)
+                    expect_length(batches(out), 2)
                 })
             })
         })
@@ -237,7 +237,7 @@ if (run.integration.tests) {
                     expect_message(out <- appendDataset(part1, part2),
                         "No conflicts")
                     expect_true(is.dataset(out))
-                    expect_identical(length(batches(out)), 3L)
+                    expect_length(batches(out), 3)
                     expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
                     expect_true(is.Multiple(out$MR))
                     skip("We get 2 'Threes'")

@@ -4,13 +4,13 @@ if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
             test_that("Can set weight variable", {
-                expect_identical(weight(ds), NULL)
+                expect_null(weight(ds))
                 weight(ds) <- ds$v3
                 expect_equivalent(weight(ds), ds$v3)
                 ds <- refresh(ds)
                 expect_equivalent(weight(ds), ds$v3)
                 weight(ds) <- NULL
-                expect_identical(weight(ds), NULL)
+                expect_null(weight(ds))
             })
             test_that("Errors are properly handled when setting weight", {
                 expect_error(weight(ds) <- "a",
@@ -39,7 +39,7 @@ if (run.integration.tests) {
         })
         with(test.dataset(df), {
             test_that("We have a clean dataset", {
-                expect_identical(weight(ds), NULL)
+                expect_null(weight(ds))
             })
             test_that("Reverting to old version rolls back weight variables", {
                 ds <- saveVersion(ds, "Before w")
@@ -47,7 +47,7 @@ if (run.integration.tests) {
                 weight(ds) <- ds$w
                 expect_equivalent(weight(ds), ds$w)
                 ds <- restoreVersion(ds, "Before w")
-                expect_identical(weight(ds), NULL)
+                expect_null(weight(ds))
             })
             test_that("And I can add new weights because weight_variables is valid", {
                 ds <- refresh(ds)
@@ -68,8 +68,8 @@ if (run.integration.tests) {
                 ## Delete that variable. Confirm that it is gone and we are
                 ## unweighted
                 with(consent(), ds$w <- NULL)
-                expect_identical(weight(ds), NULL)
-                expect_identical(ds$w, NULL)
+                expect_null(weight(ds))
+                expect_null(ds$w)
                 expect_equivalent(as.array(crtabs(~ v4, data=ds)),
                     array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
                 ## Now add another weight and repeat. Confirm that we can

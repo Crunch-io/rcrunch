@@ -21,8 +21,8 @@ if (run.integration.tests) {
                         "Must confirm deleting variable")
                     with(consent(), {
                         ds <- deleteVariable(ds, "v3")
-                        expect_true(is.null(ds$v3))
-                        expect_true(is.null(refresh(ds)$v3))
+                        expect_null(ds$v3)
+                        expect_null(refresh(ds)$v3)
                     })
                 })
             })
@@ -39,11 +39,11 @@ if (run.integration.tests) {
                         "Must confirm deleting variable")
                     with(consent(), {
                         ds$v3 <- NULL
-                        expect_true(is.null(ds$v3))
-                        expect_true(is.null(refresh(ds)$v3))
+                        expect_null(ds$v3)
+                        expect_null(refresh(ds)$v3)
                         ds[[2]] <- NULL
-                        expect_true(is.null(ds$v2))
-                        expect_true(is.null(refresh(ds)$v2))
+                        expect_null(ds$v2)
+                        expect_null(refresh(ds)$v2)
                     })
                 })
             })

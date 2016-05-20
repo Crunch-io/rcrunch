@@ -60,8 +60,8 @@ if (run.integration.tests) {
             test_that("hideVariables hides by alias", {
                 expect_identical(names(ds)[1:2], c("v1", "v4"))
                 expect_identical(hiddenVariables(ds), c("v2", "v3"))
-                expect_identical(length(hidden(ds)), 2L)
-                expect_identical(length(variables(ds)), ncol(df) - 2L)
+                expect_length(hidden(ds), 2)
+                expect_length(variables(ds), ncol(df) - 2)
                 expect_identical(dim(ds), c(nrow(df), ncol(df) - 2L))
             })
 
@@ -117,9 +117,9 @@ if (run.integration.tests) {
                     VariableGroup(name="g1", variables=list(ds$v1)),
                     VariableGroup(name="group2", variables=ds[c("v3", "v4")])
                 )
-                expect_identical(length(grouped(ordering(ds))), 2L)
+                expect_length(grouped(ordering(ds)), 2)
                 ds <- hideVariables(ds, ungrouped(ordering(ds)))
-                expect_identical(length(hiddenVariables(ds)), ncol(df) - 3L)
+                expect_length(hiddenVariables(ds), ncol(df) - 3)
                 expect_true(all(c("v2", "v5") %in% hiddenVariables(ds)))
             })
         })
@@ -145,7 +145,7 @@ if (run.integration.tests) {
             ds <- mrdf.setup(ds, pattern="mr_1")
             test_that("Can hide array variables even if they only have one subvar", {
                 expect_identical(names(ds), c("CA", "mr_2", "mr_3", "v4"))
-                expect_identical(length(subvariables(ds$CA)), 1L)
+                expect_length(subvariables(ds$CA), 1)
                 try(hiddenVariables(ds) <- "CA")
                 expect_false("CA" %in% names(ds))
             })

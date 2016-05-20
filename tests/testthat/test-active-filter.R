@@ -6,10 +6,10 @@ with_mock_HTTP({
     ds3 <- ds2[ds$birthyr > 1981, ]
 
     test_that("A clean dataset has NULL activeFilter", {
-        expect_identical(activeFilter(ds), NULL)
+        expect_null(activeFilter(ds))
     })
     test_that("Getting a variable from a clean dataset has NULL activeFilter", {
-        expect_identical(activeFilter(ds$gender), NULL)
+        expect_null(activeFilter(ds$gender))
     })
 
     test_that("[ method on dataset adds an active filter", {
@@ -56,7 +56,7 @@ with_mock_HTTP({
     })
 
     test_that("activeFilter from filtered CrunchVariable", {
-        expect_identical(activeFilter(ds$birthyr), NULL)
+        expect_null(activeFilter(ds$birthyr))
         expect_identical(activeFilter(ds2$birthyr),
             activeFilter(ds$birthyr[ds$gender == "Male"]))
         expect_identical(activeFilter(ds$birthyr[ds$gender == "Male"]),

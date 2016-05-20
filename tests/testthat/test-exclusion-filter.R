@@ -5,11 +5,11 @@ if (run.integration.tests) {
         with(test.dataset(df), {
             test_that("We can set and unset an exclusion filter", {
                 ds <- refresh(ds)
-                expect_identical(activeFilter(ds), NULL)
+                expect_null(activeFilter(ds))
                 expect_identical(nrow(ds), 20L)
                 expect_equivalent(as.array(crtabs(~ v4, data=ds)),
                     array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
-                expect_identical(exclusion(ds), NULL)
+                expect_null(exclusion(ds))
 
                 exclusion(ds) <- ds$v4 == "C"
                 ## Test that the filter is set correctly. Objects not identical
@@ -31,7 +31,7 @@ if (run.integration.tests) {
                 expect_identical(nrow(ds), 20L)
                 expect_equivalent(as.array(crtabs(~ v4, data=ds)),
                     array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
-                expect_identical(exclusion(ds), NULL)
+                expect_null(exclusion(ds))
             })
 
             test_that("Validation for setting exclusion", {
@@ -227,16 +227,16 @@ if (run.integration.tests) {
 
             test_that("If I delete a variable on which the exclusion depends, we're ok", {
                 with(consent(), ds$keep <- NULL)
-                expect_true(is.null(ds$keep))
-                expect_true(is.null(exclusion(ds)))
+                expect_null(ds$keep)
+                expect_null(exclusion(ds))
                 expect_identical(nrow(ds), 20L)
             })
             test_that("Exclude on is.na, then delete variable", {
                 exclusion(ds) <- is.na(ds$q1) | is.na(ds$q3)
                 expect_identical(nrow(ds), 10L)
                 with(consent(), ds$q1 <- NULL)
-                expect_true(is.null(ds$q1))
-                expect_true(is.null(exclusion(ds)))
+                expect_null(ds$q1)
+                expect_null(exclusion(ds))
                 expect_identical(nrow(ds), 20L)
             })
         })
@@ -252,8 +252,8 @@ if (run.integration.tests) {
             ds <- restoreVersion(ds, 1)
             test_that("No problem reverting to before exclusion var made", {
                 validImport(ds)
-                expect_true(is.null(ds$keep))
-                expect_true(is.null(exclusion(ds)))
+                expect_null(ds$keep)
+                expect_null(exclusion(ds))
             })
         })
     })

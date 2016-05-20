@@ -2,14 +2,14 @@ context("User stuff")
 
 with_mock_HTTP({
     test_that("Getting user object", {
-        expect_true(inherits(me(), "UserEntity"))
+        expect_is(me(), "UserEntity")
         expect_identical(email(me()), "fake.user@example.com")
     })
 
     test_that("Getting account's user catalog", {
         usercat <- getAccountUserCatalog()
-        expect_true(inherits(usercat, "UserCatalog"))
-        expect_identical(length(usercat), 3L)
+        expect_is(usercat, "UserCatalog")
+        expect_length(usercat, 3)
         expect_identical(urls(usercat),
             c("/api/users/user1.json",
               "/api/users/user3.json",
@@ -26,7 +26,7 @@ with_mock_HTTP({
 if (run.integration.tests) {
     with(test.authentication, {
         test_that("User can be fetched", {
-            expect_true(inherits(me(), "UserEntity"))
+            expect_is(me(), "UserEntity")
         })
 
         test_that("Create and delete user; cleanup(testUser()) setup/teardown", {

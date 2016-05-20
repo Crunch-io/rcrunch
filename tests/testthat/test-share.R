@@ -6,7 +6,7 @@ with_mock_HTTP({
     ds <- loadDataset("test ds")
     ds2 <- loadDataset("ECON.sav")
     test_that("Dataset has permissions catalog", {
-        expect_true(inherits(permissions(ds), "PermissionCatalog"))
+        expect_is(permissions(ds), "PermissionCatalog")
         expect_identical(urls(permissions(ds)),
             c("/api/users/user1.json", "/api/users/user2.json"))
         expect_identical(emails(permissions(ds)),
@@ -56,7 +56,7 @@ if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
             test_that("PermissionsCatalog from real dataset", {
-                expect_true(inherits(permissions(ds), "PermissionCatalog"))
+                expect_is(permissions(ds), "PermissionCatalog")
                 expect_identical(urls(permissions(ds)),
                     userURL())
                 expect_identical(emails(permissions(ds)),

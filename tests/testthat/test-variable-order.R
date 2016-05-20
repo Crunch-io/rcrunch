@@ -6,7 +6,7 @@ test_that("VariableGroup and Order objects can be made", {
     expect_true(inherits(VariableGroup(name="group1", entities=""),
         "VariableGroup"))
     vg1 <- VariableGroup(name="group1", entities="")
-    expect_true(inherits(VariableOrder(vg1), "VariableOrder"))
+    expect_is(VariableOrder(vg1), "VariableOrder")
     expect_true(inherits(VariableOrder(list(name="group1",
         entities=""), vg1), "VariableOrder"))
 })
@@ -16,8 +16,8 @@ with_mock_HTTP({
     varcat <- allVariables(test.ds)
 
     test_that("ordering methods on variables catalog", {
-        expect_true(inherits(ordering(variables(test.ds)), "VariableOrder"))
-        expect_true(inherits(ordering(test.ds), "VariableOrder"))
+        expect_is(ordering(variables(test.ds)), "VariableOrder")
+        expect_is(ordering(test.ds), "VariableOrder")
         expect_identical(ordering(variables(test.ds)), ordering(test.ds))
     })
 
@@ -50,7 +50,7 @@ with_mock_HTTP({
             entities=ent.urls[5:6]), catalog_url=varcat_url))
     })
     test_that("Can create nested groups", {
-        expect_true(inherits(nested.ord, "VariableOrder"))
+        expect_is(nested.ord, "VariableOrder")
         expect_identical(urls(nested.ord), ent.urls)
     })
     test_that("Can read nested groups from the API", {
@@ -225,7 +225,7 @@ with_mock_HTTP({
     test_that("Update group with URLs", {
         skip("TODO")
         to <- test.ord
-        expect_true(inherits(to, "VariableOrder"))
+        expect_is(to, "VariableOrder")
         expect_error(to[[1]] <- ent.urls,
             "Correct error expectation here")
         ## Now try where [[1]] is a Group
@@ -456,7 +456,7 @@ if (run.integration.tests) {
                     entities(starting.vg))
                 expect_identical(entities(grouped(ordering(refresh(ds)))),
                     entities(starting.vg))
-                expect_true(inherits(ungrouped(ordering(ds)), "VariableGroup"))
+                expect_is(ungrouped(ordering(ds)), "VariableGroup")
                 expect_true(inherits(ungrouped(ordering(refresh(ds))),
                     "VariableGroup"))
                 expect_identical(names(ordering(ds)),
@@ -483,10 +483,10 @@ if (run.integration.tests) {
 
             test_that("A partial order results in 'ungrouped' variables", {
                 ordering(ds) <- starting.vg[1:2]
-                expect_true(inherits(grouped(ordering(ds)), "VariableOrder"))
+                expect_is(grouped(ordering(ds)), "VariableOrder")
                 expect_identical(entities(grouped(ordering(ds))),
                     entities(starting.vg[1:2]))
-                expect_true(inherits(ungrouped(ordering(ds)), "VariableGroup"))
+                expect_is(ungrouped(ordering(ds)), "VariableGroup")
                 expect_true(setequal(unlist(entities(ungrouped(ordering(ds)))),
                     c(self(ds$v6), self(ds$v2))))
             })

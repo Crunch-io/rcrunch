@@ -39,7 +39,7 @@ if (run.integration.tests) {
         test_that("can make Categorical Array with Dataset subset", {
             with(test.dataset(mrdf), {
                 var <- makeArray(ds[1:3], name="arrayVar")
-                expect_true(inherits(var, "VariableDefinition"))
+                expect_is(var, "VariableDefinition")
                 ds$arrayVar <- var
                 expect_equal(c("arrayVar", "v4"), names(ds))
                 expect_true(is.CA(ds$arrayVar))
@@ -66,7 +66,7 @@ if (run.integration.tests) {
                 expect_warning(var <- makeArray(pattern="mr_[123]", dataset=ds,
                     name="arrayVar"),
                     "Deprecation warning")
-                expect_true(inherits(var, "VariableDefinition"))
+                expect_is(var, "VariableDefinition")
                 ds$arrayVar <- var
                 expect_equal(c("arrayVar", "v4"), names(ds))
                 ## unbind.

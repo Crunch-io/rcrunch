@@ -16,3 +16,17 @@ expect_json_equivalent <- function (object, expected, ...) {
 expect_output <- function (object, ...) {
     testthat::expect_output(print(object), ...)
 }
+
+expect_length <- function(object, n) {
+  stopifnot(is.numeric(n), length(n) == 1)
+  lab <- testthat:::label(object)
+
+  len <- length(object)
+
+  expect(
+    len == n,
+    sprintf("%s has length %i, not length %i.", lab, length(object), n)
+  )
+
+  invisible(object)
+}

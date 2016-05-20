@@ -24,11 +24,11 @@ with_mock_HTTP({
     test_that("Categories for categorical", {
         thisone <- categories(ds$gender)
         expect_true(is.categories(thisone))
-        expect_identical(length(thisone), 3L)
+        expect_length(thisone, 3)
         expect_true(is.category(thisone[[1]]))
     })
     test_that("Categories for noncategorical", {
-        expect_identical(categories(ds$birthyr), NULL)
+        expect_null(categories(ds$birthyr))
     })
 
     test_that("Variable metadata retrieved from tuples", {
@@ -87,12 +87,12 @@ if (run.integration.tests) {
             description(ds$v2) <- "Description 2"
             alias(ds$v1) <- "var1"
             test_that("can modify name, description, alias on var in dataset", {
-                expect_true(is.null(ds$v1))
+                expect_null(ds$v1)
                 expect_identical(name(ds$var1), "Variable 1")
                 expect_identical(alias(ds$var1), "var1")
                 expect_identical(description(ds$v2), "Description 2")
                 ds <- refresh(ds)
-                expect_true(is.null(ds$v1))
+                expect_null(ds$v1)
                 expect_identical(name(ds$var1), "Variable 1")
                 expect_identical(description(ds$v2), "Description 2")
             })
@@ -124,12 +124,12 @@ if (run.integration.tests) {
             description(ds$CA) <- "Description 1"
             alias(ds$CA) <- "var1"
             test_that("can modify name, description, alias on var in dataset", {
-                expect_true(is.null(ds$CA))
+                expect_null(ds$CA)
                 expect_identical(name(ds$var1), "Variable 1")
                 expect_identical(alias(ds$var1), "var1")
                 expect_identical(description(ds$var1), "Description 1")
                 ds <- refresh(ds)
-                expect_true(is.null(ds$CA))
+                expect_null(ds$CA)
                 expect_identical(name(ds$var1), "Variable 1")
                 expect_identical(description(ds$var1), "Description 1")
             })

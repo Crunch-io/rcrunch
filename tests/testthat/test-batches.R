@@ -3,8 +3,8 @@ context("Batch catalog")
 with_mock_HTTP({
     ds <- loadDataset("test ds")
     test_that("batches method", {
-        expect_true(inherits(batches(ds), "BatchCatalog"))
-        expect_identical(length(batches(ds)), 3L)
+        expect_is(batches(ds), "BatchCatalog")
+        expect_length(batches(ds), 3)
         expect_identical(urls(batches(ds)),
             c("/api/datasets/dataset1/batches/0.json",
             "/api/datasets/dataset1/batches/2.json",

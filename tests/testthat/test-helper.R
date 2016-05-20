@@ -14,7 +14,7 @@ with(temp.option(foo.bar="no", foo.other="other"), {
         expect_identical(e1, "yes") ## Env var trumps option
         expect_identical(envOrOption("foo.bar"), "no") ## Bc no more env var
         expect_identical(e2, "other") ## Option if there is no env var
-        expect_identical(e3, NULL) ## Null if neither
+        expect_null(e3) ## Null if neither
     })
 })
 
@@ -23,7 +23,7 @@ test_that("SUTD", {
     tester <- setup.and.teardown(function () a <<- FALSE,
         function () a <<- TRUE)
 
-    expect_true(is.null(a))
+    expect_null(a)
     with(tester, {
         expect_false(is.null(a))
         expect_false(a)
@@ -36,7 +36,7 @@ test_that("SUTD", {
     ## teardown is run, and (2) it doesn't fail silently but turns into a
     ## failed test expectation.
     # a <- NULL
-    # expect_true(is.null(a))
+    # expect_null(a)
     # with(tester, {
     #     expect_false(is.null(a))
     #     expect_false(a)

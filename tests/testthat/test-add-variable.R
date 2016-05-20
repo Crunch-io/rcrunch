@@ -144,7 +144,7 @@ if (run.integration.tests) {
             test_that("Categorical to R and back with an exclusion", {
                 v4b <- as.vector(ds$v4)
                 expect_identical(levels(v4b), c("B", "C"))
-                expect_identical(length(v4b), 19L)
+                expect_length(v4b, 19)
                 ds$v4b <- v4b
                 expect_equivalent(as.vector(ds$v4b), as.vector(ds$v4a))
             })

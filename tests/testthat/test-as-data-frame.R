@@ -32,7 +32,7 @@ with_mock_HTTP({
 
     test_that("as.data.frame on CrunchDataset yields CrunchDataFrame", {
         expect_false(is.data.frame(as.data.frame(test.ds)))
-        expect_true(inherits(as.data.frame(test.ds), "CrunchDataFrame"))
+        expect_is(as.data.frame(test.ds), "CrunchDataFrame")
         expect_identical(dim(as.data.frame(test.ds)), c(25L, ncol(test.ds)))
         expect_identical(names(as.data.frame(test.ds)), names(test.ds))
         expect_identical(as.data.frame(test.ds)$birthyr, as.vector(test.ds$birthyr))
@@ -63,7 +63,7 @@ with_mock_HTTP({
     test_that("so lm() should work too", {
         test.lm <- lm(birthyr ~ gender, data=test.ds)
         expected <- lm(birthyr ~ gender, data=test.df)
-        expect_true(inherits(test.lm, "lm"))
+        expect_is(test.lm, "lm")
         expect_identical(names(test.lm), names(expected))
         for (i in setdiff(names(expected), "call")) {
             expect_identical(test.lm[[i]], expected[[i]])
@@ -114,13 +114,13 @@ if (run.integration.tests) {
             with(consent(), ds$v4b <- NULL)
 
             test_that("as.vector on Datetime", {
-                expect_true(inherits(as.vector(ds$v5), "Date"))
+                expect_is(as.vector(ds$v5), "Date")
                 expect_equivalent(as.vector(ds$v5), df$v5)
             })
 
             test_that("as.data.frame with API", {
                 expect_false(is.data.frame(as.data.frame(ds)))
-                expect_true(inherits(as.data.frame(ds), "CrunchDataFrame"))
+                expect_is(as.data.frame(ds), "CrunchDataFrame")
                 expect_identical(dim(as.data.frame(ds)), dim(df))
                 expect_identical(names(as.data.frame(ds)), names(df))
                 expect_identical(as.data.frame(ds)$v1,
@@ -136,7 +136,7 @@ if (run.integration.tests) {
             delete(v2)
             test_that("CrunchDataFrame lazily fetches columns", {
                 expect_true("v2" %in% names(ds)) ## ds is stale
-                expect_true(inherits(as.data.frame(ds), "CrunchDataFrame"))
+                expect_is(as.data.frame(ds), "CrunchDataFrame")
                 ## This should error because it will try to get values for v2
                 expect_error(as.data.frame(ds, force=TRUE))
             })
@@ -150,7 +150,7 @@ if (run.integration.tests) {
             test_that("so lm() should work too over the API", {
                 test.lm <- lm(v1 ~ v3, data=ds)
                 expected <- lm(v1 ~ v3, data=df)
-                expect_true(inherits(test.lm, "lm"))
+                expect_is(test.lm, "lm")
                 expect_identical(names(test.lm), names(expected))
                 ## would like this to be "identical" instead of "equivalent"
                 for (i in setdiff(names(expected), "call")) {

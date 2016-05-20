@@ -30,25 +30,25 @@ with_mock_HTTP({
             index(varcat)[urls(ordering(varcat))])
         expect_equivalent(index(hidden(varcat)), list())
         index(varcat)[[2]]$discarded <- TRUE
-        expect_true(inherits(active(varcat), "VariableCatalog"))
-        expect_true(inherits(hidden(varcat), "VariableCatalog"))
+        expect_is(active(varcat), "VariableCatalog")
+        expect_is(hidden(varcat), "VariableCatalog")
         expect_identical(urls(active(varcat)),
             c("/api/datasets/dataset1/variables/gender.json",
             "/api/datasets/dataset1/variables/mymrset.json",
             "/api/datasets/dataset1/variables/textVar.json",
             "/api/datasets/dataset1/variables/starttime.json",
             "/api/datasets/dataset1/variables/catarray.json"))
-        expect_identical(length(active(varcat)), 5L)
+        expect_length(active(varcat), 5)
         expect_identical(urls(hidden(varcat)),
             "/api/datasets/dataset1/variables/birthyr.json")
-        expect_identical(length(hidden(varcat)), 1L)
-        expect_identical(length(varcat), 6L)
+        expect_length(hidden(varcat), 1)
+        expect_length(varcat, 6)
         expect_identical(active(hidden(varcat)), hidden(active(varcat)))
     })
 
     gender.url <- "/api/datasets/dataset1/variables/gender.json"
     test_that("Extract methods: character and numeric", {
-        expect_true(inherits(varcat[[gender.url]], "VariableTuple"))
+        expect_is(varcat[[gender.url]], "VariableTuple")
         expect_identical(varcat[[gender.url]]@body,
             index(varcat)[[gender.url]])
         expect_identical(index(varcat[2:3]), index(varcat)[2:3])
@@ -106,7 +106,7 @@ if (run.integration.tests) {
                     expect_identical(descriptions(variables(ds))[1:4],
                         c("", "Des 1", "Des 2", ""))
                 })
-                expect_identical(length(logs), 2L) ## PATCH, DROP
+                expect_length(logs, 2) ## PATCH, DROP
             })
             test_that("Can set names and aliases", {
                 n <- names(df)
@@ -141,7 +141,7 @@ if (run.integration.tests) {
         with(test.dataset(newDatasetFromFixture("apidocs")), {
             test_that("variableMetadata", {
                 vm <- variableMetadata(ds)
-                expect_true(inherits(vm, "VariableCatalog"))
+                expect_is(vm, "VariableCatalog")
                 i <- which(aliases(vm) == "allpets")
                 expect_identical(Categories(data=vm[[i]]$categories),
                     categories(ds$allpets))

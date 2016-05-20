@@ -3,24 +3,24 @@ context("Teams")
 with_mock_HTTP({
     test_that("Getting teams catalog", {
         teams <- try(getTeams())
-        expect_true(inherits(teams, "TeamCatalog"))
-        expect_identical(length(teams), 1L)
+        expect_is(teams, "TeamCatalog")
+        expect_length(teams, 1)
         expect_identical(names(teams), "Alpha Team")
     })
 
     test_that("Getting team entity", {
         teams <- try(getTeams())
-        expect_true(inherits(teams[[1]], "CrunchTeam"))
-        expect_true(inherits(teams$`Alpha Team`, "CrunchTeam"))
-        expect_true(inherits(teams[["Alpha Team"]], "CrunchTeam"))
-        expect_true(is.null(teams$`Beta Team`))
+        expect_is(teams[[1]], "CrunchTeam")
+        expect_is(teams$`Alpha Team`, "CrunchTeam")
+        expect_is(teams[["Alpha Team"]], "CrunchTeam")
+        expect_null(teams$`Beta Team`)
     })
 
     test_that("Team entity attributes", {
         ateam <- try(getTeams()[[1]])
         expect_identical(name(ateam), "Alpha Team")
         m <- try(members(ateam))
-        expect_true(inherits(m, "MemberCatalog"))
+        expect_is(m, "MemberCatalog")
         expect_identical(names(m), c("Fake User", "Roger User"))
     })
 })
@@ -34,7 +34,7 @@ if (run.integration.tests) {
         teams <- try(getTeams())
         nteams.0 <- length(teams)
         test_that("Can get team catalog", {
-            expect_true(inherits(teams, "TeamCatalog"))
+            expect_is(teams, "TeamCatalog")
         })
 
         t2 <- teams
@@ -45,8 +45,8 @@ if (run.integration.tests) {
                 "Teams are deprecated. Use projects instead.")
             expect_true(name.of.team1 %in% names(t2))
             expect_true(length(t2) == nteams.0 + 1L)
-            expect_true(inherits(t2[[name.of.team1]], "CrunchTeam"))
-            expect_identical(length(members(t2[[name.of.team1]])), 1L)
+            expect_is(t2[[name.of.team1]], "CrunchTeam")
+            expect_length(members(t2[[name.of.team1]]), 1)
             expect_identical(names(members(t2[[name.of.team1]])),
                 my.name)
         })

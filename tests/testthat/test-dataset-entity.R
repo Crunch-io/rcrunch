@@ -15,8 +15,8 @@ with_mock_HTTP({
         expect_identical(id(test.ds), "511a7c49778030653aab5963")
         expect_identical(startDate(test.ds), "2016-01-01")
         expect_identical(endDate(test.ds), "2016-01-01")
-        expect_identical(startDate(test.ds2), NULL)
-        expect_identical(endDate(test.ds2), NULL)
+        expect_null(startDate(test.ds2))
+        expect_null(endDate(test.ds2))
     })
 
     test_that("startDate<- makes correct request", {
@@ -99,7 +99,7 @@ with_mock_HTTP({
         expect_identical(test.ds[names(test.ds)=="gender"], test.ds[2])
         expect_identical(names(test.ds[2]), c("gender"))
         expect_identical(dim(test.ds[2]), c(25L, 1L))
-        expect_identical(test.ds$not.a.var.name, NULL)
+        expect_null(test.ds$not.a.var.name)
         expect_error(test.ds[[999]], "subscript out of bounds")
     })
 
@@ -120,7 +120,7 @@ with_mock_HTTP({
         expect_error(test.ds[[999]], "subscript out of bounds")
         expect_error(test.ds[c("gender", "NOTAVARIABLE")],
             "Undefined columns selected: NOTAVARIABLE")
-        expect_true(is.null(test.ds$name))
+        expect_null(test.ds$name)
     })
 
     test_that("Extract from dataset by VariableOrder/Group", {
@@ -183,16 +183,16 @@ if (run.integration.tests) {
                 expect_identical(startDate(ds), "1985-11-05")
                 expect_identical(startDate(refresh(ds)), "1985-11-05")
                 startDate(ds) <- NULL
-                expect_identical(startDate(ds), NULL)
-                expect_identical(startDate(refresh(ds)), NULL)
+                expect_null(startDate(ds))
+                expect_null(startDate(refresh(ds)))
             })
             test_that("Can set (and unset) endDate", {
                 endDate(ds) <- "1985-11-05"
                 expect_identical(endDate(ds), "1985-11-05")
                 expect_identical(endDate(refresh(ds)), "1985-11-05")
                 endDate(ds) <- NULL
-                expect_identical(endDate(ds), NULL)
-                expect_identical(endDate(refresh(ds)), NULL)
+                expect_null(endDate(ds))
+                expect_null(endDate(refresh(ds)))
             })
 
             test_that("Sending invalid dataset metadata errors usefully", {

@@ -4,8 +4,8 @@ if (run.integration.tests) {
     with(test.authentication, {
         with(test.dataset(df), {
             test_that("Fork catalog exists", {
-                expect_true(inherits(forks(ds), "ForkCatalog"))
-                expect_identical(length(forks(ds)), 0L)
+                expect_is(forks(ds), "ForkCatalog")
+                expect_length(forks(ds), 0)
             })
 
             f1 <- forkDataset(ds)

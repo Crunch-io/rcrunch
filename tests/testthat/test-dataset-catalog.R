@@ -5,7 +5,7 @@ with_mock_HTTP({
     datcat <- cr$datasets
 
     test_that("DatasetCatalog instantiates from Shoji", {
-        expect_true(inherits(datcat, "DatasetCatalog"))
+        expect_is(datcat, "DatasetCatalog")
     })
 
     test_that("DatasetCatalog has the right contents", {
@@ -19,20 +19,20 @@ with_mock_HTTP({
 
     test_that("active/archived getters", {
         ## NOTE: deferring the "shared" collection
-        expect_true(inherits(active(datcat), "DatasetCatalog"))
-        expect_true(inherits(archived(datcat), "DatasetCatalog"))
+        expect_is(active(datcat), "DatasetCatalog")
+        expect_is(archived(datcat), "DatasetCatalog")
         expect_identical(index(active(datcat)), index(datcat))
         expect_equivalent(index(archived(datcat)), list())
         index(datcat)[[which(names(datcat) == "an archived dataset")]]$archived <- TRUE
-        expect_true(inherits(active(datcat), "DatasetCatalog"))
-        expect_true(inherits(archived(datcat), "DatasetCatalog"))
+        expect_is(active(datcat), "DatasetCatalog")
+        expect_is(archived(datcat), "DatasetCatalog")
         expect_identical(urls(active(datcat)),
             c("/api/datasets/dataset3.json", "/api/datasets/dataset1.json"))
-        expect_identical(length(active(datcat)), 2L)
+        expect_length(active(datcat), 2)
         expect_identical(urls(archived(datcat)),
             "/api/datasets/dataset2.json")
-        expect_identical(length(archived(datcat)), 1L)
-        expect_identical(length(datcat), 3L)
+        expect_length(archived(datcat), 1)
+        expect_length(datcat, 3)
         expect_identical(active(archived(datcat)), archived(active(datcat)))
     })
 
