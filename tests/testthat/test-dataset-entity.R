@@ -264,6 +264,9 @@ if (run.integration.tests) {
                 is.draft(ds) <- TRUE
                 expect_false(is.published(ds))
                 expect_true(is.draft(ds))
+                ds <- refresh(ds)
+                expect_false(is.published(ds))
+                expect_true(is.draft(ds))
                 is.published(ds) <- TRUE
                 expect_true(is.published(ds))
                 expect_false(is.draft(ds))
@@ -272,6 +275,8 @@ if (run.integration.tests) {
             test_that("Can archive/unarchive", {
                 expect_false(is.archived(ds))
                 is.archived(ds) <- TRUE
+                expect_true(is.archived(ds))
+                ds <- refresh(ds)
                 expect_true(is.archived(ds))
                 is.archived(ds) <- FALSE
                 expect_false(is.archived(ds))
