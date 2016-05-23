@@ -1,5 +1,6 @@
 ### crunch 1.10.1 (under development)
 * Add `icon` and `icon<-` methods for Projects to read the project's current icon URL and to set a new icon by supplying a local file name to upload.
+* Get and set "archived" and "published" status of a dataset with `is.archived`, `is.draft`, and `is.published` (the inverse of `is.draft`). See `?publish` for more.
 
 ## crunch 1.10.0
 

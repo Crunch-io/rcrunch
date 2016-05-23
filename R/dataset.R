@@ -341,3 +341,60 @@ setMethod("owner<-", "CrunchDataset", function (x, value) {
     x <- setEntitySlot(x, "owner", value)
     return(x)
 })
+
+
+##' Get and set "archived" and "published" status of a dataset
+##'
+##' "Archived" datasets are excluded from some views. "Draft" datasets are
+##' visible only to editors. "Published" is the inverse of "Draft", i.e.
+##' \code{is.draft(x)} entails \code{!is.published(x)}. These properties are
+##' accessed and set with the "is" methods. The verb functions \code{archive}
+##' and \code{publish} are alternate versions of the setters (at least in the
+##' \code{TRUE} direction).
+##'
+##' @param x CrunchDataset
+##' @param value logical
+##' @return For the getters, the logical value of whether the dataset is
+##' archived, in draft mode, or published, where draft and published are
+##' inverses. The setters return the dataset.
+##' @name archive-and-publish
+##' @aliases archive is.archived is.draft is.published is.archived<- is.draft<- is.published<- publish
+NULL
+
+##' @rdname archive-and-publish
+##' @export
+setMethod("is.archived", "CrunchDataset", function (x) tuple(x)$archived)
+##' @rdname archive-and-publish
+##' @export
+setMethod("is.draft", "CrunchDataset", function (x) !is.published(x))
+##' @rdname archive-and-publish
+##' @export
+setMethod("is.published", "CrunchDataset", function (x) tuple(x)$is_published %||% TRUE)
+
+##' @rdname archive-and-publish
+##' @export
+setMethod("is.archived<-", c("CrunchDataset", "logical"), function (x, value) {
+    setTupleSlot(x, "archived", value)
+})
+##' @rdname archive-and-publish
+##' @export
+archive <- function (x) {
+    is.archived(x) <- TRUE
+    return(x)
+}
+##' @rdname archive-and-publish
+##' @export
+setMethod("is.draft<-", c("CrunchDataset", "logical"), function (x, value) {
+    setTupleSlot(x, "is_published", !value)
+})
+##' @rdname archive-and-publish
+##' @export
+setMethod("is.published<-", c("CrunchDataset", "logical"), function (x, value) {
+    setTupleSlot(x, "is_published", value)
+})
+##' @rdname archive-and-publish
+##' @export
+publish <- function (x) {
+    is.published(x) <- TRUE
+    return(x)
+}
