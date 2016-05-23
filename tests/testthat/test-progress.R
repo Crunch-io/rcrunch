@@ -25,7 +25,16 @@ with_mock_HTTP({
                     value="/api/progress/"
                 )))),
         class="response")
-
+    fake_response <- structure(list(status_code=202,
+            headers=list(
+                `Content-Type`="application/json",
+                location="/api/datasets.json"
+            ),
+            content=charToRaw(toJSON(list(
+                    element="shoji:view",
+                    value="/api/progress2/"
+                )))),
+        class="response")
     counter <- 1
     with_mock(
         ## GET something slightly different each time through so we can
