@@ -133,8 +133,14 @@ from8601 <- function (x) {
         return(as.Date(x))
     }
 
-    ## First, strip out the : in the time zone
-    x <- sub("^(.*[+-][0-9]{2}):([0-9]{2})$", "\\1\\2", x)
+    ## Check for timezone
+    if (any(grepl("+", x, fixed=TRUE))) {
+        ## First, strip out the : in the time zone
+        x <- sub("^(.*[+-][0-9]{2}):([0-9]{2})$", "\\1\\2", x)
+        pattern <- "%Y-%m-%dT%H:%M:%OS%z"
+    } else {
+        pattern <- "%Y-%m-%dT%H:%M:%OS"
+    }
     ## Then parse
-    return(strptime(x, "%Y-%m-%dT%H:%M:%OS%z", tz="UTC"))
+    return(strptime(x, pattern, tz="UTC"))
 }
