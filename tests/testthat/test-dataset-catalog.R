@@ -57,6 +57,44 @@ with_mock_HTTP({
         expect_identical(ownerNames(datcat),
             c("George", "Fake User", "Fake User"))
     })
+    test_that("is.archived", {
+        expect_identical(is.archived(datcat), rep(FALSE, 3))
+    })
+    test_that("is.published/draft", {
+        expect_identical(is.published(datcat), c(FALSE, TRUE, TRUE))
+        expect_identical(is.draft(datcat), !is.published(datcat))
+    })
+    test_that("is.archived setter", {
+        expect_error(is.archived(datcat[1]) <- TRUE,
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
+                    '{"archived":true}}'),
+            fixed=TRUE
+        )
+        expect_error(archive(datcat[2:3]),
+            paste0('PATCH /api/datasets.json {',
+                    '"/api/datasets/dataset2.json":{"archived":true},',
+                    '"/api/datasets/dataset1.json":{"archived":true}}'),
+            fixed=TRUE
+        )
+    })
+    test_that("is.published setter", {
+        expect_error(is.published(datcat[c(1,3)]) <- TRUE,
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
+                    '{"is_published":true}}'),
+            fixed=TRUE
+        )
+        expect_error(publish(datcat[c(1,3)]),
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
+                    '{"is_published":true}}'),
+            fixed=TRUE
+        )
+        expect_error(is.draft(datcat) <- TRUE,
+            paste0('PATCH /api/datasets.json {',
+                    '"/api/datasets/dataset2.json":{"is_published":false},',
+                    '"/api/datasets/dataset1.json":{"is_published":false}}'),
+            fixed=TRUE
+        )
+    })
 
     test_that("entity method for tuple", {
         expect_true(is.dataset(entity(datcat[["/api/datasets/dataset1.json"]])))

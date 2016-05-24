@@ -3,6 +3,9 @@ context("Dataset object and methods")
 with_mock_HTTP({
     test.ds <- loadDataset("test ds")
     test.ds2 <- loadDataset("ECON.sav")
+    test.ds3 <- loadDataset("an archived dataset")
+    ## But it's not archived apparently. Reach around
+    test.ds3@tuple@body$archived <- TRUE
     today <- "2016-02-11"
 
     test_that("Dataset can be loaded", {
@@ -13,6 +16,66 @@ with_mock_HTTP({
         expect_identical(name(test.ds), "test ds")
         expect_identical(description(test.ds), "")
         expect_identical(id(test.ds), "511a7c49778030653aab5963")
+    })
+
+    test_that("archived", {
+        expect_false(is.archived(test.ds))
+        expect_false(is.archived(test.ds2))
+        expect_true(is.archived(test.ds3))
+    })
+
+    test_that("archive setting", {
+        expect_error(is.archived(test.ds2) <- TRUE,
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
+                    '{"archived":true}}'),
+            fixed=TRUE
+        )
+        expect_error(archive(test.ds2),
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
+                    '{"archived":true}}'),
+            fixed=TRUE
+        )
+    })
+
+    test_that("draft/published", {
+        expect_true(is.published(test.ds))
+        expect_false(is.published(test.ds2))
+        expect_false(is.draft(test.ds))
+        expect_true(is.draft(test.ds2))
+    })
+
+    test_that("draft/publish setting", {
+        expect_error(is.published(test.ds2) <- TRUE,
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
+                    '{"is_published":true}}'),
+            fixed=TRUE
+        )
+        expect_error(is.published(test.ds) <- FALSE,
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset1.json":',
+                    '{"is_published":false}}'),
+            fixed=TRUE
+        )
+        expect_error(is.draft(test.ds2) <- FALSE,
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
+                    '{"is_published":true}}'),
+            fixed=TRUE
+        )
+        expect_error(is.draft(test.ds) <- TRUE,
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset1.json":',
+                    '{"is_published":false}}'),
+            fixed=TRUE
+        )
+        expect_error(publish(test.ds2),
+            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
+                    '{"is_published":true}}'),
+            fixed=TRUE
+        )
+        expect_error(publish(test.ds), NA)
+        expect_error(is.draft(test.ds) <- FALSE, NA)
+        expect_error(is.published(test.ds) <- TRUE, NA)
+    })
+
+    test_that("start/endDate", {
         expect_identical(startDate(test.ds), "2016-01-01")
         expect_identical(endDate(test.ds), "2016-01-01")
         expect_null(startDate(test.ds2))
@@ -193,6 +256,30 @@ if (run.integration.tests) {
                 endDate(ds) <- NULL
                 expect_null(endDate(ds))
                 expect_null(endDate(refresh(ds)))
+            })
+
+            test_that("Can publish/unpublish a dataset", {
+                expect_true(is.published(ds))
+                expect_false(is.draft(ds))
+                is.draft(ds) <- TRUE
+                expect_false(is.published(ds))
+                expect_true(is.draft(ds))
+                ds <- refresh(ds)
+                expect_false(is.published(ds))
+                expect_true(is.draft(ds))
+                is.published(ds) <- TRUE
+                expect_true(is.published(ds))
+                expect_false(is.draft(ds))
+            })
+
+            test_that("Can archive/unarchive", {
+                expect_false(is.archived(ds))
+                is.archived(ds) <- TRUE
+                expect_true(is.archived(ds))
+                ds <- refresh(ds)
+                expect_true(is.archived(ds))
+                is.archived(ds) <- FALSE
+                expect_false(is.archived(ds))
             })
 
             test_that("Sending invalid dataset metadata errors usefully", {
