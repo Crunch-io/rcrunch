@@ -67,7 +67,6 @@ if (run.integration.tests) {
 
             test_that("There is an initial version", {
                 expect_identical(names(versions(ds)), "initial import")
-                expect_length(versions(ds), 1)
             })
 
             ## Make changes:
@@ -133,7 +132,6 @@ if (run.integration.tests) {
             ## Revert to the first version
             ds <- try(restoreVersion(ds, "initial import"))
             test_that("Restoring restored correctly", {
-                expect_length(versions(ds), 1)
                 validImport(ds)
             })
 

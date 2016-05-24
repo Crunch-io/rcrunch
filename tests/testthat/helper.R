@@ -122,6 +122,7 @@ validImport <- function (ds) {
     expect_true(is.Datetime(ds$v5))
     expect_true(is.Categorical(ds$v6))
     expect_identical(showShojiOrder(ordering(ds)), names(variables(ds)))
+    expect_identical(names(versions(ds)), "initial import")
 }
 
 validApidocsImport <- function (ds) {

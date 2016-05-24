@@ -43,6 +43,7 @@ newDatasetByColumn <- function (x, name=as.character(substitute(x)), ...) {
     vardefs <- lapply(names(x),
         function (v) toVariable(x[[v]], name=v, alias=v))
     ds <- addVariables(ds, vardefs)
+    saveVersion(ds, "initial import")
     invisible(ds)
 }
 
