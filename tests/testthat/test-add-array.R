@@ -55,7 +55,7 @@ if (run.integration.tests) {
             c2 <- ca.var
             c2$categories <- c2$subvariables[[1]]$categories
             c2$values <- matrix(unlist(lapply(c2$subvariables,
-                function (x) x$values)), ncol=3, nrow=4, byrow=FALSE)
+                vget("values"))), ncol=3, nrow=4, byrow=FALSE)
             c2$subvariables <- lapply(c2$subvariables, function (x) {
                 x[!(names(x) %in% c("type", "categories", "values"))]
             })

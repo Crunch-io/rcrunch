@@ -103,7 +103,7 @@ setMethod("delete", "DatasetTuple", function (x, confirm=requireConsent(), ...) 
 
 ##' @rdname tuple-methods
 ##' @export
-setMethod("name", "ShojiTuple", function (x) x$name)
+setMethod("name", "ShojiTuple", vget("name"))
 
 ##' @rdname tuple-methods
 ##' @export
@@ -112,4 +112,4 @@ setMethod("name<-", c("ShojiTuple", "character"),
 
 ##' @rdname tuple-methods
 ##' @export
-setMethod("type", "ShojiTuple", function (x) x$type)
+setMethod("type", "ShojiTuple", vget("type"))

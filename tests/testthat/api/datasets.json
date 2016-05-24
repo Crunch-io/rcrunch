@@ -12,7 +12,8 @@
             "end_date":"2016-01-01",
             "archived": false,
             "id": "511a7c49778030653aab5963",
-            "owner_id": "/api/users/user1.json"
+            "owner_id": "/api/users/user1.json",
+            "is_published": true
         },
         "/api/datasets/dataset2.json": {
             "owner_display_name": "Fake User",
@@ -30,7 +31,8 @@
             "description": "",
             "archived": false,
             "id": "95c0b45fe0af492594863f818cb913d2",
-            "owner_id": "/api/users/notme.json"
+            "owner_id": "/api/users/notme.json",
+            "is_published": false
         }
     }
 }

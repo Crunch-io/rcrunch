@@ -31,6 +31,34 @@ ownerNames <- function (x) {
     getIndexSlot(x, "owner_display_name")
 }
 
+##' @rdname archive-and-publish
+##' @export
+setMethod("is.archived", "DatasetCatalog",
+    function (x) getIndexSlot(x, "archived", logical(1)))
+##' @rdname archive-and-publish
+##' @export
+setMethod("is.draft", "DatasetCatalog", function (x) !is.published(x))
+##' @rdname archive-and-publish
+##' @export
+setMethod("is.published", "DatasetCatalog",
+    function (x) getIndexSlot(x, "is_published", logical(1), ifnot=TRUE))
+
+##' @rdname archive-and-publish
+##' @export
+setMethod("is.archived<-", c("DatasetCatalog", "logical"), function (x, value) {
+    setIndexSlot(x, "archived", value)
+})
+##' @rdname archive-and-publish
+##' @export
+setMethod("is.draft<-", c("DatasetCatalog", "logical"), function (x, value) {
+    setIndexSlot(x, "is_published", !value)
+})
+##' @rdname archive-and-publish
+##' @export
+setMethod("is.published<-", c("DatasetCatalog", "logical"), function (x, value) {
+    setIndexSlot(x, "is_published", value)
+})
+
 ##' Extract and modify subsets of Catalog-type objects
 ##'
 ##' @param x a Catalog object
