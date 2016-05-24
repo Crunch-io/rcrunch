@@ -25,7 +25,7 @@ with_mock_HTTP({
                     value="/api/progress/"
                 )))),
         class="response")
-    fake_response <- structure(list(status_code=202,
+    fake_response2 <- structure(list(status_code=202,
             headers=list(
                 `Content-Type`="application/json",
                 location="/api/datasets.json"
@@ -64,6 +64,23 @@ with_mock_HTTP({
             expect_identical(logs$verb, c("GET", "GET"))
             expect_identical(logs$url,
                 c("api/progress/1.json", "api/progress/2.json"))
+        }),
+        test_that("Auto-polling when progress reports failure", {
+            counter <<- 1
+            logfile <- tempfile()
+            with(temp.option(httpcache.log=logfile), {
+                expect_output(
+                    expect_error(
+                        expect_message(handleAPIresponse(fake_response2),
+                            "Result URL: /api/datasets.json"),
+                        paste("There was an error on the server.",
+                            "Please contact support@crunch.io"), fixed=TRUE),
+                    "|  23%", fixed=TRUE)
+            })
+            logs <- loadLogfile(logfile)
+            expect_identical(logs$verb, c("GET", "GET"))
+            expect_identical(logs$url,
+                c("api/progress2/1.json", "api/progress2/2.json"))
         })
     )
 })

@@ -1,6 +1,7 @@
 ### crunch 1.10.1 (under development)
 * Correctly parse datetimes that don't include timezone information.
 * Add `icon` and `icon<-` methods for Projects to read the project's current icon URL and to set a new icon by supplying a local file name to upload.
+* Support for future API to handle failed long-running jobs.
 
 ## crunch 1.10.0
 

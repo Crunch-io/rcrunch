@@ -173,7 +173,6 @@ if (run.integration.tests) {
             ico <- icon(pj)
             # expect_true(nchar(ico) > 0) ## Unskip after #119305641 ships
             icon(pj) <- "empty.png"
-            print(icon(pj))
             expect_false(icon(pj) == "empty.png")
             expect_true(endsWith(icon(pj), ".png"))
             expect_false(identical(icon(pj), ico))
