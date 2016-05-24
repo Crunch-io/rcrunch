@@ -3,14 +3,20 @@ setup.and.teardown <- function (setup, teardown, obj.name=NULL) {
         error=function (e) expect_error(stop(e$message), "NO ERRORS HERE!"))
 }
 
-fakeResponse <- function (url) {
+fakeResponse <- function (url="", status_code=200, headers=list(), json=NULL) {
     ## Return something that looks enough like an httr 'response'
+    if (!is.null(json)) {
+        cont <- charToRaw(toJSON(json))
+    } else {
+        cont <- readBin(url, "raw", 4096)
+    }
     structure(list(
-        status_code=200,
+        url=url,
+        status_code=status_code,
         times=structure(nchar(url), .Names="total"),
         request=list(method="GET", url=url),
-        headers=list(`Content-Type`="application/json"),
-        content=readBin(url, "raw", 4096)
+        headers=modifyList(list(`Content-Type`="application/json"), headers),
+        content=cont
     ), class="response")
 }
 

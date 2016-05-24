@@ -15,26 +15,12 @@ with_mock_HTTP({
     })
 
     ## Setup to test the auto-polling
-    fake_response <- structure(list(status_code=202,
-            headers=list(
-                `Content-Type`="application/json",
-                location="/api/datasets.json"
-            ),
-            content=charToRaw(toJSON(list(
-                    element="shoji:view",
-                    value="/api/progress/"
-                )))),
-        class="response")
-    fake_response2 <- structure(list(status_code=202,
-            headers=list(
-                `Content-Type`="application/json",
-                location="/api/datasets.json"
-            ),
-            content=charToRaw(toJSON(list(
-                    element="shoji:view",
-                    value="/api/progress2/"
-                )))),
-        class="response")
+    fakeProg <- function (progress_url) {
+        return(fakeResponse(status_code=202,
+            headers=list(location="/api/datasets.json"),
+            json=list(element="shoji:view", value=progress_url)))
+    }
+
     counter <- 1
     with_mock(
         ## GET something slightly different each time through so we can
@@ -56,7 +42,7 @@ with_mock_HTTP({
             logfile <- tempfile()
             with(temp.option(httpcache.log=logfile), {
                 expect_output(
-                    expect_identical(handleAPIresponse(fake_response),
+                    expect_identical(handleAPIresponse(fakeProg("/api/progress/")),
                         "/api/datasets.json"),
                     "=| 100%", fixed=TRUE)
             })
@@ -71,7 +57,7 @@ with_mock_HTTP({
             with(temp.option(httpcache.log=logfile), {
                 expect_output(
                     expect_error(
-                        expect_message(handleAPIresponse(fake_response2),
+                        expect_message(handleAPIresponse(fakeProg("/api/progress2/")),
                             "Result URL: /api/datasets.json"),
                         paste("There was an error on the server.",
                             "Please contact support@crunch.io"), fixed=TRUE),
