@@ -1,14 +1,12 @@
 context("Variable grouping and order setting")
 
 test_that("VariableGroup and Order objects can be made", {
-    expect_true(inherits(VariableGroup(group="group1", entities=""),
-        "VariableGroup"))
-    expect_true(inherits(VariableGroup(name="group1", entities=""),
-        "VariableGroup"))
+    expect_is(VariableGroup(group="group1", entities=""), "VariableGroup")
+    expect_is(VariableGroup(name="group1", entities=""), "VariableGroup")
     vg1 <- VariableGroup(name="group1", entities="")
     expect_is(VariableOrder(vg1), "VariableOrder")
-    expect_true(inherits(VariableOrder(list(name="group1",
-        entities=""), vg1), "VariableOrder"))
+    expect_is(VariableOrder(list(name="group1", entities=""), vg1),
+        "VariableOrder")
 })
 
 with_mock_HTTP({
@@ -457,8 +455,7 @@ if (run.integration.tests) {
                 expect_identical(entities(grouped(ordering(refresh(ds)))),
                     entities(starting.vg))
                 expect_is(ungrouped(ordering(ds)), "VariableGroup")
-                expect_true(inherits(ungrouped(ordering(refresh(ds))),
-                    "VariableGroup"))
+                expect_is(ungrouped(ordering(refresh(ds))), "VariableGroup")
                 expect_identical(names(ordering(ds)),
                     c("Group 1", "Group 2.5", "Group 2"))
 

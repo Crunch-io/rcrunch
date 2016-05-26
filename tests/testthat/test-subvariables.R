@@ -21,8 +21,7 @@ with_mock_HTTP({
 
     test_that("[.Subvariables", {
         expect_is(subvariables(mr)[1:2], "Subvariables")
-        expect_true(inherits(subvariables(mr)[c("First", "Last")],
-            "Subvariables"))
+        expect_is(subvariables(mr)[c("First", "Last")], "Subvariables")
         expect_error(subvariables(mr)[c("First", "Other")],
             "Undefined subvariables selected")
     })
@@ -55,8 +54,7 @@ with_mock_HTTP({
         expect_true(is.Categorical(mr$Second))
         expect_null(mr$Other)
 
-        expect_true(inherits(mr[c("First", "Last")],
-            "Subvariables"))
+        expect_is(mr[c("First", "Last")], "Subvariables")
         expect_error(mr[c("First", "Other")],
             "Undefined subvariables selected: Other")
         expect_error(mr[c("Different", "Other")],
@@ -70,8 +68,7 @@ with_mock_HTTP({
             expect_true(is.Categorical(mr$subvar2))
             expect_null(mr$Other)
 
-            expect_true(inherits(mr[c("subvar2", "subvar3")],
-                "Subvariables"))
+            expect_is(mr[c("subvar2", "subvar3")], "Subvariables")
             expect_error(mr[c("subvar2", "Other")],
                 "Undefined subvariables selected: Other")
         })

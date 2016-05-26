@@ -37,8 +37,7 @@ with_mock_HTTP({
     })
 
     test_that("Extract methods", {
-        expect_true(inherits(datcat[["/api/datasets/dataset1.json"]],
-            "DatasetTuple"))
+        expect_is(datcat[["/api/datasets/dataset1.json"]], "DatasetTuple")
         expect_identical(datcat[["/api/datasets/dataset1.json"]]@body,
             index(datcat)[["/api/datasets/dataset1.json"]])
         expect_identical(index(datcat[2:3]), index(datcat)[2:3])

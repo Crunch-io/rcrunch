@@ -5,8 +5,7 @@ with_mock_HTTP({
     varblob <- crGET(variables.catalog.url)
 
     test_that("VariableCatalog instantiates from Shoji", {
-        expect_true(inherits(VariableCatalog(varblob),
-            "VariableCatalog"))
+        expect_is(VariableCatalog(varblob), "VariableCatalog")
     })
 
     varcat <- VariableCatalog(varblob)
