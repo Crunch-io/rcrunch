@@ -14,14 +14,16 @@ if (run.integration.tests) {
                 expect_true(is.dataset(f1))
                 expect_identical(name(f1), f1.name)
                 expect_identical(names(forks(ds)), f1.name)
+                expect_true(is.published(f1))
             })
 
             exclusion(f1) <- f1$v3 < 11
-            f2 <- forkDataset(f1, "Fork yeah!")
+            f2 <- forkDataset(f1, "Fork yeah!", draft=TRUE)
             test_that("Can create a fork with a given name (forking from a fork)", {
                 expect_true(is.dataset(f2))
                 expect_identical(name(f2), "Fork yeah!")
                 expect_true("Fork yeah!" %in% names(forks(f1)))
+                expect_false(is.published(f2))
             })
 
             test_that("Forking preserves exclusion filters", {
@@ -31,13 +33,14 @@ if (run.integration.tests) {
                 expect_identical(dim(f1), dim(f2))
             })
 
-            f3 <- forkDataset(ds)
+            f3 <- forkDataset(ds, draft=FALSE)
             f3.name <- paste("Fork #2 of", name(ds))
             test_that("Creating forks autonames with a fork number", {
                 expect_true(is.dataset(f3))
                 expect_identical(name(f3), f3.name)
                 expect_true(setequal(names(forks(ds)),
                     c(f1.name, f3.name)))
+                expect_true(is.published(f3))
             })
 
             delete(f2)

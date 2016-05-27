@@ -10,20 +10,25 @@ forks <- function (dataset) {
 ##' independently of the original dataset. You can then merge those change back
 ##' to the original dataset or keep working independently.
 ##' @param dataset The \code{CrunchDataset} to fork
-##' @param forkname character name to give the fork. If omitted, one will be
+##' @param name character name to give the fork. If omitted, one will be
 ##' provided for you
+##' @param draft logical: Should the dataset be a draft, available only to
+##' editors? Default is \code{FALSE}.
+##' @param ... Additional dataset metadata
 ##' @return The new fork, a \code{CrunchDataset}.
 ##' @export
-forkDataset <- function (dataset, forkname) {
-    if (missing(forkname)) {
-        nforks <- length(forks(dataset))
-        prefix <- ifelse(nforks, paste0("Fork #", nforks + 1, " of"), "Fork of")
-        forkname <- paste(prefix, name(dataset))
-    }
+forkDataset <- function (dataset, name=defaultForkName(dataset), draft=FALSE, ...) {
     fork_url <- crPOST(shojiURL(dataset, "catalogs", "forks"),
-        body=toJSON(list(element="shoji:entity", body=list(name=forkname))))
+        body=toJSON(list(element="shoji:entity",
+                         body=list(name=name, is_published=!draft, ...))))
     updateDatasetList()
     invisible(entity(datasetCatalog()[[fork_url]]))
+}
+
+defaultForkName <- function (dataset) {
+    nforks <- length(forks(dataset))
+    prefix <- ifelse(nforks, paste0("Fork #", nforks + 1, " of"), "Fork of")
+    return(paste(prefix, name(dataset)))
 }
 
 ##' Merge changes to a dataset from a fork
