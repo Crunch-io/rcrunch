@@ -22,7 +22,6 @@ if (run.integration.tests) {
                 expect_identical(e[["args"]][[2]]$value, f[["args"]][[2]]$value)
                 expect_output(exclusion(ds),
                     'Crunch logical expression: v4 == 2L')
-                print("after")
 
                 expect_identical(nrow(ds), 10L)
                 expect_equivalent(as.array(crtabs(~ v4, data=ds)),
