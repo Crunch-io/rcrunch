@@ -14,13 +14,10 @@
     ## Construct the "variables" key of a ZCL update payload
     if (is.Array(variable)) {
         out <- sapply(urls(subvariables(variable)), function (x) {
-            zcl(typeof(value,
-                structure(zfunc("typeof",
-                structure(list(variable=x), class="zcl")),
-                    class="zcl")))
-            }, simplify=FALSE)
+            zcl(value)
+        }, simplify=FALSE)
     } else {
-        out <- structure(list(zcl(typeof(value, variable))),
+        out <- structure(list(zcl(value)),
             .Names=self(variable))
     }
 

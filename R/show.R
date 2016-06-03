@@ -184,17 +184,6 @@ formatExpression <- function (expr) {
         return(crGET(expr[["variable"]])$body$alias)
     } else if (length(intersect(c("column", "value"), names(expr)))) {
         val <- expr$column %||% expr$value
-        if ("type" %in% names(expr) &&
-            "function" %in% names(expr$type) &&
-            expr$type[["function"]] == "typeof") {
-
-            ## GET variable, see if categorical
-            v <- crGET(expr$type$args[[1]]$variable)
-            if (v$body$type == "categorical") {
-                val <- i2n(val, categories(VariableEntity(v)))
-            }
-        }
-
         ## Else, iterate over, replace {?:-1} with NA
         return(capture.output(dput(val)))
     } else {
