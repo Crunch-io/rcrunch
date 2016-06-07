@@ -7,8 +7,7 @@ with_mock_HTTP({
             paste0('POST /api/datasets/dataset1/table.json ',
             '{"command":"delete","filter":{"function":"==",',
             '"args":[{"variable":"/api/datasets/dataset1/variables/gender.json"},',
-            '{"value":1,"type":{"function":"typeof","args":[',
-            '{"variable":"/api/datasets/dataset1/variables/gender.json"}]}}]}}'),
+            '{"value":1}]}}'),
             fixed=TRUE)
     })
 })

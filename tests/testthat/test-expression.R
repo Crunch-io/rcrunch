@@ -4,16 +4,16 @@ test_that(".dispatchFilter uses right numeric function", {
     ## Use expect_output because toJSON returns class "json" but prints correctly
     expect_output(toJSON(.dispatchFilter(5)),
         paste0('{"function":"==","args":[{"function":"row",',
-        '"args":[]},{"value":4,"type":{"value":{"class":"numeric"}}}]}'),
+        '"args":[]},{"value":4}]}'),
         fixed=TRUE)
     expect_output(toJSON(.dispatchFilter(c(5, 7))),
         paste0('{"function":"in","args":[{"function":"row",',
-        '"args":[]},{"column":[4,6],"type":{"value":{"class":"numeric"}}}]}'),
+        '"args":[]},{"column":[4,6]}]}'),
         fixed=TRUE)
     expect_output(toJSON(.dispatchFilter(5:7)),
         paste0('{"function":"between","args":[{"function":"row",',
-        '"args":[]},{"value":4,"type":{"value":{"class":"numeric"}}},',
-        '{"value":7,"type":{"value":{"class":"numeric"}}}]}'),
+        '"args":[]},{"value":4},',
+        '{"value":7}]}'),
         fixed=TRUE)
 })
 
@@ -26,12 +26,7 @@ with_mock_HTTP({
         zexp <- list(`function`="+",
             args=list(
                 list(variable="/api/datasets/dataset1/variables/birthyr.json"),
-                list(value=5, type=list(
-                    `function`="typeof",
-                    args=list(
-                        list(variable="/api/datasets/dataset1/variables/birthyr.json")
-                    )
-                ))
+                list(value=5)
             )
         )
         expect_identical(zcl(e1), zexp)
@@ -61,7 +56,7 @@ with_mock_HTTP({
     test_that("Referencing category names that don't exist errors", {
         expect_is(ds$gender == "Male", "CrunchLogicalExpr")
         expect_output(ds$gender == "Male",
-            'Crunch logical expression: gender == "Male"', fixed=TRUE)
+            'Crunch logical expression: gender == 1L', fixed=TRUE)
         expect_error(ds$gender == "other",
             paste("Category not found:", dQuote("other")))
         expect_error(ds$gender %in% c("other", "Male", "another"),
@@ -71,16 +66,16 @@ with_mock_HTTP({
 
     test_that("Show method for logical expressions", {
         expect_output(ds$gender %in% c("Male", "Female"),
-            'Crunch logical expression: gender %in% c("Male", "Female")',
+            'Crunch logical expression: gender %in% 1:2',
             fixed=TRUE)
         expect_output(ds$gender %in% 1:2,
-            'Crunch logical expression: gender %in% c("Male", "Female")',
+            'Crunch logical expression: gender %in% 1:2',
             fixed=TRUE)
         expect_output(ds$birthyr == 1945 | ds$birthyr < 1941,
             'birthyr == 1945 | birthyr < 1941',
             fixed=TRUE)
         expect_output(ds$gender %in% "Male" & !is.na(ds$birthyr),
-            'gender == "Male" & !is.na(birthyr)',
+            'gender == 1L & !is.na(birthyr)',
             fixed=TRUE)
         skip("TODO: implement datetime ops first")
         print(ds$starttime > "2015-04-01")

@@ -66,13 +66,13 @@ math.exp <- function (e1, e2, operator) {
 vxr <- function (i) {
     ## Create math.exp of Variable x R.object
     force(i)
-    return(function (e1, e2) math.exp(e1, typeof(e2, e1), i))
+    return(function (e1, e2) math.exp(e1, e2, i))
 }
 
 rxv <- function (i) {
     ## Create math.exp of R.object x Variable
     force(i)
-    return(function (e1, e2) math.exp(typeof(e1, e2), e2, i))
+    return(function (e1, e2) math.exp(e1, e2, i))
 }
 
 vxv <- function (i) {
@@ -100,8 +100,8 @@ for (i in c("+", "-", "*", "/", "<", ">", ">=", "<=")) {
         setMethod(i, rev(.sigs[[j]]), rxv(i))
     }
     for (j in setdiff(.rtypes, "character")) {
-        setMethod(i, c("CrunchExpr", j), vxv(i)) # no typeof?
-        setMethod(i, c(j, "CrunchExpr"), vxv(i)) # no typeof?
+        setMethod(i, c("CrunchExpr", j), vxv(i))
+        setMethod(i, c(j, "CrunchExpr"), vxv(i))
     }
     setMethod(i, c("CrunchVariable", "CrunchVariable"), vxv(i))
     setMethod(i, c("CrunchExpr", "CrunchVariable"), vxv(i))
@@ -113,9 +113,9 @@ for (i in c("+", "-", "*", "/", "<", ">", ">=", "<=")) {
     force(Rarg)
     return(function (e1, e2) {
         if (Rarg == 1) {
-            e1 <- typeof(n2i(as.character(e1), categories(e2)), e2)
+            e1 <- n2i(as.character(e1), categories(e2))
         } else {
-            e2 <- typeof(n2i(as.character(e2), categories(e1)), e1)
+            e2 <- n2i(as.character(e2), categories(e1))
         }
         return(math.exp(e1, e2, i))
     })
@@ -131,8 +131,8 @@ for (i in c("==", "!=")) {
     setMethod(i, c("character", "CategoricalVariable"), .catmeth(i, 1))
     setMethod(i, c("factor", "CategoricalVariable"), .catmeth(i, i))
     for (j in .rtypes) {
-        setMethod(i, c("CrunchExpr", j), vxv(i)) # no typeof?
-        setMethod(i, c(j, "CrunchExpr"), vxv(i)) # no typeof?
+        setMethod(i, c("CrunchExpr", j), vxv(i))
+        setMethod(i, c(j, "CrunchExpr"), vxv(i))
     }
     setMethod(i, c("CrunchVariable", "CrunchVariable"), vxv(i))
     setMethod(i, c("CrunchExpr", "CrunchVariable"), vxv(i))
@@ -178,7 +178,7 @@ setMethod("!", c("CrunchExpr"),
 
 .inCrunch <- function (x, table) {
     ## TODO: bring in .seqCrunch here, once it is working
-    math.exp(x, typeof(table, x), ifelse(length(table) == 1L, "==", "in"))
+    math.exp(x, table, ifelse(length(table) == 1L, "==", "in"))
 }
 
 ##' @rdname expressions
