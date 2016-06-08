@@ -140,7 +140,7 @@ handleShoji <- function (x) {
         class(x) <- c("shoji", x$element)
     }
     if ("shoji:view" %in% class(x)) {
-        x <- x$value
+        x <- x$value %||% x$views ## Special-casing the dataset export :(
     }
     return(x)
 }

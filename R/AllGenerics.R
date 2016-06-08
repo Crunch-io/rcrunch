@@ -144,6 +144,7 @@ setGeneric("lapply")
 setGeneric("is.na")
 setGeneric("is.na<-")
 setGeneric("%in%")
+setGeneric("write.csv")
 
 setGeneric("zcl", function (x) standardGeneric("zcl"))
 
