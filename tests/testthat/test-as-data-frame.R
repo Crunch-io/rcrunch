@@ -40,6 +40,12 @@ with_mock_HTTP({
             as.vector(test.ds$gender))
     })
 
+    test_that("as.data.frame when a variable has an apostrophe in its alias", {
+        t2 <- test.ds
+        t2@variables@index[[2]]$alias <- "Quote 'unquote' alias"
+        expect_is(as.data.frame(t2), "CrunchDataFrame")
+    })
+
     test_that("as.data.frame(as.data.frame())", {
         expect_true(is.data.frame(as.data.frame(as.data.frame(test.ds))))
         expect_true(is.data.frame(as.data.frame(test.ds, force=TRUE)))

@@ -301,9 +301,9 @@ setMethod("as.environment", "CrunchDataset", function (x) {
     out <- new.env()
     out$.crunchDataset <- x
     with(out, {
-        for (v in aliases(allVariables(x))) {
-            eval(parse(text=paste0("delayedAssign('", v,
-                "', .crunchDataset[['", v, "']])")))
+        for (a in aliases(allVariables(x))) {
+            eval(substitute(delayedAssign(v, as.vector(.crunchDataset[[v]])),
+                list(v=a)))
         }
     })
     return(out)

@@ -2,9 +2,7 @@ CrunchDataFrame <- function (dataset) {
     ## S3 constructor method for CrunchDataFrame. terms.formula doesn't seem
     ## to like S4 subclass of environment
     stopifnot(is.dataset(dataset))
-    out <- new.env()
-    out$.crunchDataset <- dataset
-    with(out, for (v in aliases(allVariables(dataset))) eval(parse(text=paste0("delayedAssign('", v, "', as.vector(.crunchDataset[['", v, "']]))"))))
+    out <- as.environment(dataset)
     class(out) <- "CrunchDataFrame"
     return(out)
 }

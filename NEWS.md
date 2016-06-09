@@ -1,4 +1,5 @@
 ### crunch 1.10.3 (under development)
+* Fix `as.data.frame`/`as.environment` for `CrunchDataset` when a variable alias contained an apostrophe.
 
 ### crunch 1.10.2
 * `exportDataset` to download a CSV or SAV file of a dataset. `write.csv` convenience method for CSV export.
