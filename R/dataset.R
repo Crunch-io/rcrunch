@@ -301,9 +301,9 @@ setMethod("as.environment", "CrunchDataset", function (x) {
     out <- new.env()
     out$.crunchDataset <- x
     with(out, {
+        ## Note the difference from as.data.frame: not as.vector here
         for (a in aliases(allVariables(x))) {
-            eval(substitute(delayedAssign(v, as.vector(.crunchDataset[[v]])),
-                list(v=a)))
+            eval(substitute(delayedAssign(v, .crunchDataset[[v]]), list(v=a)))
         }
     })
     return(out)
