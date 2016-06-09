@@ -1,4 +1,4 @@
-### crunch 1.10.1 (under development)
+### crunch 1.10.2
 * `exportDataset` to download a CSV or SAV file of a dataset. `write.csv` convenience method for CSV export.
 * Correctly parse datetimes that don't include timezone information.
 * Add `icon` and `icon<-` methods for Projects to read the project's current icon URL and to set a new icon by supplying a local file name to upload.
