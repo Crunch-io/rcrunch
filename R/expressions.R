@@ -22,7 +22,7 @@ NULL
 ##' @rdname variable-to-R
 ##' @export
 setMethod("as.vector", "CrunchExpr", function (x, mode) {
-    payload <- list(query=toJSON(list(variables=list(out=zcl(x)))))
+    payload <- list(query=toJSON(list(out=zcl(x))))
     if (length(x@filter)) {
         payload[["filter"]] <- toJSON(x@filter)
     } else {

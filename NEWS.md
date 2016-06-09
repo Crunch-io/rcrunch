@@ -5,6 +5,7 @@
 * Get and set "archived" and "published" status of a dataset with `is.archived`, `is.draft`, and `is.published` (the inverse of `is.draft`). See `?publish` for more.
 * Add `draft` argument to `forkDataset`
 * Support for future API to handle failed long-running jobs.
+* Assorted updates to new API usage
 
 ## crunch 1.10.0
 
