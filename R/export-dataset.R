@@ -12,7 +12,8 @@ exportDataset <- function (dataset, file, format=c("csv", "spss"), ...) {
     exporters <- crGET(shojiURL(dataset, "views", "export"))
     format <- match.arg(format, choices=names(exporters))
     export_url <- exporters[[format]]
-    result <- crGET(export_url)
+    result <- crPOST(export_url,
+        body=toJSON(list(filter=zcl(activeFilter(dataset)))))
     download.file(result$url, file, quiet=TRUE) ## Note outside of auth. Ok because file is in s3 with token
     invisible(file)
 }

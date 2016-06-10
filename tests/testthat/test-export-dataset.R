@@ -26,11 +26,14 @@ if (run.integration.tests) {
 
             test_that("Can filter rows in export", {
                 filename <- tempfile()
-                skip("Implement on filtered-export-118062025")
+                write.csv(ds[ds$v4 == "C",], file=filename)
+                df2 <- read.csv(filename)
+                expect_identical(nrow(df2), 10L)
+                expect_identical(levels(df2$v4), "C")
             })
 
             test_that("Unsupported export format", {
-                expect_error(exportDataset(ds, format="ppt"),
+                expect_error(exportDataset(ds, format="exe"),
                     "'arg' should be one of ")
             })
         })
