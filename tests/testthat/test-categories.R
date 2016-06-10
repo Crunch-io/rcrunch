@@ -219,6 +219,14 @@ if (run.integration.tests) {
                         "not character. Did you mean",
                         "`names(categories(x)) <- value`?"),
                     fixed=TRUE)
+                expect_error(categories(ds$v4)[1] <- c("A", "B", "C"),
+                    paste("Invalid categories: 3 elements are not Crunch",
+                        "category objects"),
+                    fixed=TRUE)
+                expect_error(categories(ds$v4)[1] <- list("A", "B", "C"),
+                    paste("Invalid categories: 3 elements are not Crunch",
+                        "category objects"),
+                    fixed=TRUE)
                 expect_error(categories(ds$v4) <- list(),
                     "`categories(x) <- value` only accepts Categories, not list.",
                     fixed=TRUE)
