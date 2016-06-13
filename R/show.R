@@ -227,6 +227,13 @@ setMethod("getShowContent", "VariableCatalog",
 setMethod("getShowContent", "FilterCatalog",
     function (x) catalogToDataFrame(x, c("name", "id", "is_public"), rownames=NULL))
 setMethod("getShowContent", "VersionCatalog", formatVersionCatalog)
+setMethod("getShowContent", "MemberCatalog",
+    function (x) {
+        data.frame(name=names(x),
+                   email=emails(x),
+                   is.editor=is.editor(x),
+                   stringsAsFactors=FALSE)
+        })
 setMethod("getShowContent", "ShojiObject",
     function (x) capture.output(print(x@body)))
 setMethod("getShowContent", "CrunchFilter",

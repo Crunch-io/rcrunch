@@ -51,6 +51,7 @@ with_mock_HTTP({
     test_that("Project members catalog", {
         expect_is(m, "MemberCatalog")
         expect_identical(names(m), c("Fake User", "Roger User"))
+        expect_identical(emails(m), c("fake.user@example.com", "roger.user@example.com"))
     })
 
     test_that("Add members by members<-", {
@@ -86,6 +87,16 @@ with_mock_HTTP({
             fixed=TRUE)
         expect_error(is.editor(m[2]) <- FALSE,
             NA) ## No change, so no PATCH request made
+    })
+
+    test_that("Print method for MemberCatalog", {
+        expect_output(m,
+            paste(capture.output(print(data.frame(
+                name=c("Fake User", "Roger User"),
+                email=c("fake.user@example.com", "roger.user@example.com"),
+                is.editor=c(TRUE, FALSE)
+            ))), collapse="\n")
+        )
     })
 
     d <- datasets(aproject)
