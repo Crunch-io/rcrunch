@@ -64,10 +64,13 @@ with_silent_progress <- function (expr) {
 
 silencer <- temp.option(show.error.messages=FALSE)
 
-## Auth setup-teardown
-test.authentication <- setup.and.teardown(
-    function () suppressMessages(login()),
-    logout)
+with_test_authentication <- function (expr) {
+    if (run.integration.tests) {
+        suppressMessages(login())
+        on.exit(logout())
+        eval.parent(with_silent_progress(expr))
+    }
+}
 
 uniqueDatasetName <- now
 

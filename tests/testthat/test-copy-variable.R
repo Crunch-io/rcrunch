@@ -25,7 +25,7 @@ with_mock_HTTP({
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(newDatasetFromFixture("apidocs")), {
             q1_url <- self(ds$q1)
             varcat_url <- self(variables(ds))

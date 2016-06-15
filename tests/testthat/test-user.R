@@ -24,7 +24,7 @@ with_mock_HTTP({
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         test_that("User can be fetched", {
             expect_is(me(), "UserEntity")
         })

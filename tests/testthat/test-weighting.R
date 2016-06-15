@@ -1,7 +1,7 @@
 context("Weights")
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("Can set weight variable", {
                 expect_null(weight(ds))

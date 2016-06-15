@@ -53,7 +53,7 @@ with_mock_HTTP({
 me <- getOption("crunch.email")
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("PermissionsCatalog from real dataset", {
                 expect_is(permissions(ds), "PermissionCatalog")

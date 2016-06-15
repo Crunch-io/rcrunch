@@ -16,7 +16,7 @@ with_mock_HTTP({
     })
 })
 
-with(test.authentication, {
+with_test_authentication({
     with(test.dataset(df), {
         test_that("Properly encoded UTF is sent and received", {
             s <- iconv("aided_follow_grid:ElCorteInglés", to="UTF-8")

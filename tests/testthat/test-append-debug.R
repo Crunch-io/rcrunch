@@ -1,7 +1,7 @@
 context("Debugging append")
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(NULL, "part0"), {
             with(test.dataset(newDatasetFromFixture("apidocs"), "part1"), {
                 with(test.dataset(newDatasetFromFixture("apidocs"), "part2"), {
