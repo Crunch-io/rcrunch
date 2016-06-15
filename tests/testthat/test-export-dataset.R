@@ -32,6 +32,23 @@ if (run.integration.tests) {
                 expect_identical(levels(df2$v4), "C")
             })
 
+            test_that("Can filter columns in export", {
+                filename <- tempfile()
+                write.csv(ds[,c("v2", "v4")], file=filename)
+                df2 <- read.csv(filename)
+                expect_identical(dim(df2), c(20L, 2L))
+                expect_identical(names(df2), c("v2", "v4"))
+            })
+
+            test_that("Can filter rows and columns in export", {
+                filename <- tempfile()
+                write.csv(ds[ds$v4 == "C", c("v2", "v4")], file=filename)
+                df2 <- read.csv(filename)
+                expect_identical(dim(df2), c(10L, 2L))
+                expect_identical(names(df2), c("v2", "v4"))
+                expect_identical(levels(df2$v4), "C")
+            })
+
             test_that("Unsupported export format", {
                 expect_error(exportDataset(ds, format="exe"),
                     "'arg' should be one of ")
