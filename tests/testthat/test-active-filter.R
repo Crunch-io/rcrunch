@@ -8,6 +8,9 @@ with_mock_HTTP({
     test_that("A clean dataset has NULL activeFilter", {
         expect_null(activeFilter(ds))
     })
+    test_that("A null filter becomes valid JSON", {
+        expect_equal(unclass(toJSON(zcl(activeFilter(ds)))), "{}")
+    })
     test_that("Getting a variable from a clean dataset has NULL activeFilter", {
         expect_null(activeFilter(ds$gender))
     })
