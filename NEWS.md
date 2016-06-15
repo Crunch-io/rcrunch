@@ -1,6 +1,7 @@
 ### crunch 1.10.3 (under development)
 * Fix `as.data.frame`/`as.environment` for `CrunchDataset` when a variable alias contained an apostrophe.
 * Better print method for project `MemberCatalog`.
+* Fix for [change in 'jsonlite' API](https://github.com/jeroenooms/jsonlite/issues/130#issuecomment-225971209) in its v0.9.22
 
 ### crunch 1.10.2
 * `exportDataset` to download a CSV or SAV file of a dataset. `write.csv` convenience method for CSV export.

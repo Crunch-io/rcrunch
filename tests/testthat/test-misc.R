@@ -90,6 +90,11 @@ test_that("null function always returns null", {
     expect_null(null(stop("yo!")))
 })
 
+test_that("JSON behavior for NULL (handle jsonlite API change in 0.9.22)", {
+    expect_equal(unclass(toJSON(NULL)), "{}")
+    expect_equal(unclass(toJSON(list(x=NULL))), '{"x":null}')
+})
+
 test_that("setIfNotAlready", {
     with(temp.options(crunch.test.opt1="previous",
                       crunch.test.opt2=NULL,
