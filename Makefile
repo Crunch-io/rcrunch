@@ -14,7 +14,6 @@ deps:
 install-ci: deps
 	R CMD INSTALL --install-tests -l $(R_LIB) .
 	R -e '.libPaths(Sys.getenv("R_LIB")); devtools::install_github("nealrichardson/testthat", ref="tap-file")'
-	R -e '.libPaths(Sys.getenv("R_LIB")); devtools::install_github("jeroenooms/jsonlite", ref="v0.9.20")'
 
 test-ci:
 	R --slave -e '.libPaths(Sys.getenv("R_LIB")); library(testthat); cwd <- getwd(); setwd(file.path(.libPaths()[1], "crunch", "tests")); test_check("crunch", reporter=MultiReporter$$new(list(SummaryReporter$$new(), TapReporter$$new(file.path(cwd, "rcrunch.tap")))))'
