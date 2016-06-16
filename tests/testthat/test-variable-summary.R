@@ -43,7 +43,7 @@ with_mock_HTTP({
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("can fetch variable summaries", {
                 summ <- getSummary(ds$v1)

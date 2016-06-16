@@ -60,7 +60,7 @@ test_that("POSTNewVariable rejects invalid categories", {
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("addVariable creates a new remote numeric variable", {
                 ds <- addVariables(ds,

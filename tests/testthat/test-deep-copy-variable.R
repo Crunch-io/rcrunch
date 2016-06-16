@@ -1,7 +1,7 @@
 context("Deep copies of variables")
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(newDatasetFromFixture("apidocs")), {
             test_that("Can deep copy categorical", {
                 ds$q1a <- copy(ds$q1, deep=TRUE)

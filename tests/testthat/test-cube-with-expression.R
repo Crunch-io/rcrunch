@@ -1,7 +1,7 @@
 context("Cube queries with on-the-fly expressions")
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(newDatasetFromFixture("apidocs")), {
             test_that("<, <= on numeric", {
                 # ndogs

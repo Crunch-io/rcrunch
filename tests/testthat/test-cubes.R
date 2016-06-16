@@ -118,7 +118,7 @@ test_that("margin.table with missing", {
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(cubedf), {
             test_that("cubedf setup", {
                 expect_identical(names(categories(ds$v7)),

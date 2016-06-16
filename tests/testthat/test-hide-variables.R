@@ -34,7 +34,7 @@ with_mock_HTTP({
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             var1 <- ds[[1]]
             test_that("Hide and unhide method for variables", {

@@ -1,7 +1,7 @@
 context("Appending datasets with arrays")
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(mrdf, "part1"), {
             part1 <- mrdf.setup(part1, selections="1.0")
             with(test.dataset(mrdf, "part2"), {

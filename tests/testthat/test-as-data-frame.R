@@ -78,7 +78,7 @@ with_mock_HTTP({
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("Check the types of our imported data", {
                 expect_true(is.Numeric(ds[["v1"]]))

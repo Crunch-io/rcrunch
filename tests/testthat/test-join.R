@@ -8,7 +8,7 @@ test_that("join validatation", {
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(join1, "left"), {
             with(test.dataset(join2, "right"), {
                 test_that("Join test setup", {

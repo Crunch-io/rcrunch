@@ -1,7 +1,7 @@
 context("Update variables with NAs")
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(newDatasetFromFixture("apidocs")), {
             test_that("Insert NA into numeric", {
                 expect_equivalent(as.vector(ds$ndogs[1:5]),

@@ -88,7 +88,7 @@ with_mock_HTTP({
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             ds$q1 <- factor(rep(c("selected", "not selected"), 10))
             test_that("Arithmetic expressions evaluate", {

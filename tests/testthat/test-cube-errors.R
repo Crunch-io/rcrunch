@@ -29,7 +29,7 @@ test_that("'data' must be a Dataset", {
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df[,1:4]), {
             test_that("All variables must be present in data", {
                 expect_error(crtabs(~ aaa + v3, data=ds),

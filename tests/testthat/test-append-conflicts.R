@@ -89,7 +89,7 @@ test_that("Complex conflicts are formatted", {
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(mrdf, "part1"), {
             part1 <- mrdf.setup(part1)
             with(test.dataset(mrdf[c("mr_3", "v4")], "part2"), {
