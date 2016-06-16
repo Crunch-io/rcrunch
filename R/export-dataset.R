@@ -12,7 +12,13 @@ exportDataset <- function (dataset, file, format=c("csv", "spss"), ...) {
     exporters <- crGET(shojiURL(dataset, "views", "export"))
     format <- match.arg(format, choices=names(exporters))
     export_url <- exporters[[format]]
-    result <- crGET(export_url)
+    body <- list(filter=zcl(activeFilter(dataset)))
+    ## Check to see if we have a subset of variables in `dataset`
+    allvars <- allVariables(dataset)
+    if (length(allvars) != length(ShojiCatalog(crGET(self(allvars))))) {
+        body$where <- list(`function`="identify", args=list(list(id=urls(allvars))))
+    }
+    result <- crPOST(export_url, body=toJSON(body))
     download.file(result$url, file, quiet=TRUE) ## Note outside of auth. Ok because file is in s3 with token
     invisible(file)
 }
