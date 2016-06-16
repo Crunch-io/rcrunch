@@ -1,7 +1,7 @@
 context("Locking and unlocking edit privileges")
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("I can lock and unlock the dataset", {
                 lock(ds)

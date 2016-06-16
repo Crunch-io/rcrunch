@@ -1,7 +1,7 @@
 context("Cubes with categorical array and multiple response")
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         cubemrdf <- mrdf
         cubemrdf$v5 <- as.factor(c("A", "A", "B", "B"))
         with(test.dataset(cubemrdf, "mrds"), {

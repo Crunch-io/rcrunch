@@ -1,7 +1,7 @@
 context("Update a dataset")
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("Can update numeric variable with values", {
                 ds$v3 <- 9:28

@@ -35,7 +35,7 @@ with_mock_HTTP({
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         test_that("can make Categorical Array with Dataset subset", {
             with(test.dataset(mrdf), {
                 var <- makeArray(ds[1:3], name="arrayVar")

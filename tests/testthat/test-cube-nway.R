@@ -1,7 +1,7 @@
 context("Cubes with >2 dimensions")
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(newDatasetFromFixture("apidocs")), {
             names(categories(ds$q1)) <- LETTERS[1:5] ## To distinguish from other vars
             test_that("Cat x datetime x subvar", {

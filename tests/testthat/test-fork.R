@@ -1,7 +1,7 @@
 context("Fork and merge")
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("Fork catalog exists", {
                 expect_is(forks(ds), "ForkCatalog")

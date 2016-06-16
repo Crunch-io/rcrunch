@@ -135,7 +135,7 @@ with_mock_HTTP({
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         projects <- session()$projects
         ucat <- getAccountUserCatalog()
         my.name <- names(ucat)[urls(ucat) == userURL()]

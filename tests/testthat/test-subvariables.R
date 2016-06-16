@@ -85,7 +85,7 @@ with_mock_HTTP({
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(mrdf), {
             ds <- mrdf.setup(ds, selections="1.0")
             var <- ds$MR

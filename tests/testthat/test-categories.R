@@ -195,7 +195,7 @@ with_mock_HTTP({
 
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("categories setters persist to the server", {
                 expect_equal(names(categories(ds$v4)), c("B", "C", "No Data"))

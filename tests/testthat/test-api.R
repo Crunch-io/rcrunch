@@ -24,10 +24,11 @@ if (run.integration.tests) {
         expect_true(grepl("anotherpackage", crunchUserAgent("anotherpackage")))
     })
 
-    with(test.authentication,
+    with_test_authentication({
         test_that("API root can be fetched", {
             expect_true(is.shojiObject(getAPIroot()))
-        }))
+        })
+    })
 
     test_that("API calls throw an error if user is not authenticated", {
         logout()

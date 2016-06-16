@@ -137,7 +137,7 @@ validApidocsImport <- function (ds) {
 ## Global teardown
 bye <- new.env()
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         datasets.start <- urls(datasetCatalog())
         users.start <- urls(getUserCatalog())
         projects.start <- urls(session()$projects)
@@ -146,7 +146,7 @@ if (run.integration.tests) {
 reg.finalizer(bye,
     function (x) {
         if (run.integration.tests) {
-            with(test.authentication, {
+            with_test_authentication({
                 datasets.end <- urls(datasetCatalog())
                 leftovers <- setdiff(datasets.end, datasets.start)
                 if (length(leftovers)) {

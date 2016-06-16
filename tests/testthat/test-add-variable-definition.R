@@ -38,7 +38,7 @@ test_that("VarDef(data=VarDef, ...)", {
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("Wrapping VarDef has same result as just ds<-", {
                 ds$newvar <- VarDef(df$v4)

@@ -1,7 +1,7 @@
 context("Exclusion filters")
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("We can set and unset an exclusion filter", {
                 ds <- refresh(ds)

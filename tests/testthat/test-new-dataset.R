@@ -16,7 +16,7 @@ if (run.integration.tests) {
             "You must authenticate before making this request")
     })
 
-    with(test.authentication, {
+    with_test_authentication({
         ## New dataset by file upload method
         test_that("Source file can be uploaded if logged in", {
             expect_true(isTRUE(createSource(testfile.csv,

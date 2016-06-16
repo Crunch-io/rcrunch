@@ -2,7 +2,7 @@ context("Update error handling")
 
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             len <- try(length(as.vector(ds$v4[ds$v4 == "B"])))
             test_that("setup for update with wrong number of values", {

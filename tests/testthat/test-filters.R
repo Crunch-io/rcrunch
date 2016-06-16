@@ -5,7 +5,7 @@ test_that("show method exists", {
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("We have an empty filter catalog", {
                 expect_is(filters(ds), "FilterCatalog")

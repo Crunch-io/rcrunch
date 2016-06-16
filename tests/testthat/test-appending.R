@@ -24,7 +24,7 @@ with_mock_HTTP({
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df, "part1"), {
             cats <- categories(part1$v4)
             with(test.dataset(df, "part2"), {

@@ -26,7 +26,7 @@ with_mock_HTTP({
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         ucat <- getAccountUserCatalog()
         my.name <- names(ucat)[urls(ucat) == userURL()]
         my.email <- emails(ucat)[urls(ucat) == userURL()]
