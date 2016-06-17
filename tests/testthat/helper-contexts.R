@@ -64,11 +64,42 @@ with_silent_progress <- function (expr) {
 
 silencer <- temp.option(show.error.messages=FALSE)
 
+cD <- crunch:::createDataset
+
+assign("seen.things", c(), envir=globalenv())
 with_test_authentication <- function (expr) {
     if (run.integration.tests) {
+        ## Authenticate.
         suppressMessages(login())
-        on.exit(logout())
-        eval.parent(with_silent_progress(expr))
+        ## Any time an object is created (201 Location responts), store that URL
+        suppressMessages(trace("locationHeader",
+            exit=quote({
+                if (!is.null(loc)) {
+                    seen <- get("seen.things", envir=globalenv())
+                    assign("seen.things",
+                        c(seen, loc),
+                        envir=globalenv())
+                }
+            }),
+            where=crGET))
+        on.exit({
+            suppressMessages(untrace("locationHeader", where=crGET))
+            ## Delete our seen things
+            ## We could filter out variables, batches, anything under a dataset
+            ## since we're going to delete the datasets
+            seen <- get("seen.things", envir=globalenv())
+            for (u in seen) {
+                try(crDELETE(u), silent=TRUE)
+            }
+            logout()
+        })
+        with_mock(
+            `crunch:::createDataset`= function (name, ...) {
+                print("hi")
+                cD(name=now(), ...)
+                },
+            eval.parent(with_silent_progress(expr))
+        )
     }
 }
 
