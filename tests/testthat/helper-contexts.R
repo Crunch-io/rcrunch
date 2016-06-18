@@ -64,8 +64,6 @@ with_silent_progress <- function (expr) {
 
 silencer <- temp.option(show.error.messages=FALSE)
 
-cD <- crunch:::createDataset
-
 assign("seen.things", c(), envir=globalenv())
 with_test_authentication <- function (expr) {
     if (run.integration.tests) {
@@ -81,9 +79,18 @@ with_test_authentication <- function (expr) {
                         envir=globalenv())
                 }
             }),
+            print=FALSE,
+            where=crGET))
+        suppressMessages(trace("createDataset",
+            quote({
+                name <- now()
+            }),
+            at=1,
+            print=FALSE,
             where=crGET))
         on.exit({
             suppressMessages(untrace("locationHeader", where=crGET))
+            suppressMessages(untrace("createDataset", where=crGET))
             ## Delete our seen things
             ## We could filter out variables, batches, anything under a dataset
             ## since we're going to delete the datasets
@@ -93,13 +100,7 @@ with_test_authentication <- function (expr) {
             }
             logout()
         })
-        with_mock(
-            `crunch:::createDataset`= function (name, ...) {
-                print("hi")
-                cD(name=now(), ...)
-                },
-            eval.parent(with_silent_progress(expr))
-        )
+        eval.parent(with_silent_progress(expr))
     }
 }
 

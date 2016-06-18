@@ -7,7 +7,6 @@
 ##' @return If successful, an object of class CrunchDataset.
 ##' @export
 newDataset <- function (x, name=as.character(substitute(x)), ...) {
-
     Call <- match.call()
     is.2D <- !is.null(dim(x)) && length(dim(x)) %in% 2
     if (!is.2D) {
@@ -83,15 +82,19 @@ createSource <- function (file, ...) {
 ##'
 ##' @param name character, the name to give the new Crunch dataset. This is
 ##' required.
+##' @param body list correctly formatted metadata definition for a dataset. See
+##' docs.crunch.io.
 ##' @param ... additional arguments for the POST to create the dataset, such as
 ##' "description".
 ##' @return An object of class CrunchDataset.
 ##' @seealso \code{\link{newDataset}}
 ##' @keywords internal
 ##' @export
-createDataset <- function (name, ...) {
-    dataset_url <- crPOST(sessionURL("datasets"),
-        body=toJSON(list(name=name, ...)))
+createDataset <- function (name, body, ...) {
+    if (missing(body)) {
+        body <- list(name=name, ...)
+    }
+    dataset_url <- crPOST(sessionURL("datasets"), body=toJSON(body))
     updateDatasetList()
     ds <- entity(datasetCatalog()[[dataset_url]])
     invisible(ds)
@@ -182,12 +185,10 @@ newDatasetByCSV <- function (x, name=as.character(substitute(x)), ...) {
 ##' @keywords internal
 createWithMetadataAndFile <- function (metadata, file, strict=TRUE, cleanup=TRUE) {
     message("Uploading metadata")
-    dataset_url <- crPOST(sessionURL("datasets"), body=toJSON(metadata))
-    updateDatasetList()
-    ds <- entity(datasetCatalog()[[dataset_url]])
+    ds <- createDataset(body=metadata)
 
     message("Uploading data")
-    batches_url <- ds@catalogs$batches
+    batches_url <- shojiURL(ds, "catalogs", "batches")
     if (!strict) {
         batches_url <- paste0(batches_url, "?strict=0")
     }
