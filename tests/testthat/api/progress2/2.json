@@ -2,7 +2,7 @@
     "element": "shoji:view",
     "self": "/api/progress.json",
     "value": {
-        "progress": "-1",
+        "progress": -1,
         "message": "Education, Commerce, and, uh, oops."
     }
 }
