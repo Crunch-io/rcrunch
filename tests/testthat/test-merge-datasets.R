@@ -37,16 +37,53 @@ with_mock_HTTP({
     })
 })
 
+printed_order_apidocs2 <- c(
+    "[+] Key Pet Indicators",
+    "    All pets owned",
+    "    Pet",
+    "    Pets by location",
+    "[+] Dog Metrics",
+    "    Number of dogs",
+    "    [+] Number of dogs by type",
+    "        Number of dogs -- With papers",
+    "        Number of dogs -- Mutts",
+    "[+] Details",
+    "    Pet name",
+    "[+] Dimensions",
+    "    Country",
+    "    Wave",
+    "Weight",
+    "Person ID"
+)
+
 with(temp.option(crunch.debug=TRUE, httpcache.log=""), {
+
 with_test_authentication({
     with(test.dataset(newDatasetFromFixture("join-apidocs2-to-me"), "ds1"), {
         ds1$allpets_1 <- NULL
         with(test.dataset(newDatasetFromFixture("apidocs2"), "ds2"), {
+            test_that("Shape of apidocs2", {
+                expect_output(ordering(ds2),
+                    paste(printed_order_apidocs2, collapse="\n"))
+            })
+
             test_that("An uncomplicated merge on a text key", {
                 ds1 <- merge(ds1, ds2, by.x=ds1$id, by.y=ds2$stringid)
-                expect_id(ds1, "CrunchDataset")
+                expect_is(ds1, "CrunchDataset")
+                expect_identical(dim(ds1), c(14L, 13L))
+                expect_output(ordering(ds1),
+                    paste(
+                        "ID",
+                        "Join matches",
+                        "Another variable"
+                        paste0("[+] ", name(ds2)),
+                        paste("    ",
+                            printed_order_apidocs2[-length(printed_order_apidocs2)],
+                            sep="", collapse="\n")
+                        ), collapse="\n")
             })
         })
     })
 })
+
 })
