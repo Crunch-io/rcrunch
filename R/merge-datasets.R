@@ -49,7 +49,7 @@ extendDataset <- function (x, y, by.x, by.y,
             zcl(by.y),
             zcl(by.x)
         ))
-    crPATCH(shojiURL(x, "catalogs", "variables"), body=toJSON(payload))
+    crPOST(shojiURL(x, "catalogs", "variables"), body=toJSON(payload))
     invisible(refresh(x))
 }
 

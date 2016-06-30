@@ -24,4 +24,8 @@ with_mock_HTTP({
         expect_error(merge(ds1, ds2, by.x=ds1[[1]], by.y=ds2[[1]], all.y=TRUE),
             'Option "all.y" not supported.')
     })
+
+    test_that("Correct payload without filtering", {
+        
+    })
 })
