@@ -26,6 +26,13 @@ with_mock_HTTP({
     })
 
     test_that("Correct payload without filtering", {
-        
+        expect_warning(
+            expect_mock_request(merge(ds1, ds2, by.x=ds1$birthyr, ds2$birthyr),
+                'POST /api/datasets/dataset1/variables.json ',
+                '{"function":"adapt",',
+                '"args":[{"dataset":"/api/datasets/dataset3.json","filter":null},',
+                '{"variable":"/api/datasets/dataset3/variables/birthyr.json"},',
+                '{"variable":"/api/datasets/dataset1/variables/birthyr.json"}]}'),
+            "Variable birthyr is hidden")
     })
 })

@@ -44,11 +44,7 @@ extendDataset <- function (x, y, by.x, by.y,
         filter=zcl(activeFilter(y))
     )
     y_frame$select <- variablesFilter(y)
-    payload <- zfunc("adapt", list(
-            y_frame,
-            zcl(by.y),
-            zcl(by.x)
-        ))
+    payload <- zfunc("adapt", y_frame, zcl(by.y), zcl(by.x))
     crPOST(shojiURL(x, "catalogs", "variables"), body=toJSON(payload))
     invisible(refresh(x))
 }
