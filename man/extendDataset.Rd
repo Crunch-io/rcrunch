@@ -29,10 +29,10 @@ join? Only \code{FALSE} is currently supported.}
 \item{all.x}{logical: should all rows in x be kept, i.e. a "left outer"
 join? Only \code{TRUE} is currently supported.}
 
-\item{...}{additional arguments, ignored}
-
-\item{all.x}{logical: should all rows in y be kept, i.e. a "right outer"
+\item{all.y}{logical: should all rows in y be kept, i.e. a "right outer"
 join? Only \code{FALSE} is currently supported.}
+
+\item{...}{additional arguments, ignored}
 }
 \value{
 \code{x} extended by the columns of \code{y}, matched on the "by"
