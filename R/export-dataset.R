@@ -27,6 +27,7 @@ variablesFilter <- function (dataset) {
     if (length(allvars) != length(ShojiCatalog(crGET(self(allvars))))) {
         return(list(`function`="identify", args=list(list(id=urls(allvars)))))
     }
+    ## Else, return NULL
     return(NULL)
 }
 

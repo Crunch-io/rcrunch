@@ -36,3 +36,17 @@ with_mock_HTTP({
             "Variable birthyr is hidden")
     })
 })
+
+with(temp.option(crunch.debug=TRUE, httpcache.log=""), {
+with_test_authentication({
+    with(test.dataset(newDatasetFromFixture("join-apidocs2-to-me"), "ds1"), {
+        ds1$allpets_1 <- NULL
+        with(test.dataset(newDatasetFromFixture("apidocs2"), "ds2"), {
+            test_that("An uncomplicated merge on a text key", {
+                ds1 <- merge(ds1, ds2, by.x=ds1$id, by.y=ds2$stringid)
+                expect_id(ds1, "CrunchDataset")
+            })
+        })
+    })
+})
+})

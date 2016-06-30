@@ -1,0 +1,76 @@
+{
+    "element": "shoji:entity",
+    "body": {
+        "name": "Dataset to join to",
+        "description": "Match 'id' with 'stringid' in apidocs2",
+        "table": {
+            "element": "crunch:table",
+            "metadata": {
+                "id": {
+                    "name": "ID",
+                    "alias": "id",
+                    "description": "Match this with stringid in apidocs2",
+                    "type": "text"
+                },
+                "matches": {
+                    "name": "Join matches",
+                    "alias": "matches",
+                    "description": "Whether or not these rows should get joined data. This factors in an exclusion filter on `is_missing(q3)`",
+                    "type": "categorical",
+                    "categories": [
+                        {
+                            "name": "Yes",
+                            "id": 1,
+                            "numeric_value": 1,
+                            "missing": false
+                        },
+                        {
+                            "name": "No",
+                            "id": 2,
+                            "numeric_value": 0,
+                            "missing": false
+                        }
+                    ]
+                },
+                "allpets_1": {
+                    "name": "All pets (number)",
+                    "alias": "allpets_1",
+                    "description": "¡Cuidado! apidocs2 has a multiple response subvariable with this alias!",
+                    "type": "numeric"
+                },
+                "other_var": {
+                    "name": "Another variable",
+                    "alias": "other_var",
+                    "description": "Just another variable. Make sure it's not affected.",
+                    "type": "categorical",
+                    "categories": [
+                        {
+                            "name": "Apple",
+                            "id": 1,
+                            "numeric_value": null,
+                            "missing": false
+                        },
+                        {
+                            "name": "Orange",
+                            "id": 2,
+                            "numeric_value": null,
+                            "missing": false
+                        },
+                        {
+                            "name": "No Data",
+                            "id": -1,
+                            "numeric_value": null,
+                            "missing": true
+                        }
+                    ]
+                }
+            },
+            "order": [
+                "id",
+                "matches",
+                "allpets_1",
+                "other_var"
+            ]
+        }
+    }
+}
