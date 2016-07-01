@@ -63,20 +63,8 @@ math.exp <- function (e1, e2, operator) {
     return(Constructor(expression=ex, dataset_url=ds.url))
 }
 
-vxr <- function (i) {
-    ## Create math.exp of Variable x R.object
-    force(i)
-    return(function (e1, e2) math.exp(e1, e2, i))
-}
-
-rxv <- function (i) {
-    ## Create math.exp of R.object x Variable
-    force(i)
-    return(function (e1, e2) math.exp(e1, e2, i))
-}
-
-vxv <- function (i) {
-    ## Create math.exp of two non-R.objects
+crunch.ops <- function (i) {
+    ## Create math.exp of Variable x R.object, R.object x Variable, or V x V
     force(i)
     return(function (e1, e2) math.exp(e1, e2, i))
 }
@@ -96,16 +84,16 @@ vxv <- function (i) {
 
 for (i in c("+", "-", "*", "/", "<", ">", ">=", "<=")) {
     for (j in .nomath) {
-        setMethod(i, .sigs[[j]], vxr(i))
-        setMethod(i, rev(.sigs[[j]]), rxv(i))
+        setMethod(i, .sigs[[j]], crunch.ops(i))
+        setMethod(i, rev(.sigs[[j]]), crunch.ops(i))
     }
     for (j in setdiff(.rtypes, "character")) {
-        setMethod(i, c("CrunchExpr", j), vxv(i))
-        setMethod(i, c(j, "CrunchExpr"), vxv(i))
+        setMethod(i, c("CrunchExpr", j), crunch.ops(i))
+        setMethod(i, c(j, "CrunchExpr"), crunch.ops(i))
     }
-    setMethod(i, c("CrunchVariable", "CrunchVariable"), vxv(i))
-    setMethod(i, c("CrunchExpr", "CrunchVariable"), vxv(i))
-    setMethod(i, c("CrunchVariable", "CrunchExpr"), vxv(i))
+    setMethod(i, c("CrunchVariable", "CrunchVariable"), crunch.ops(i))
+    setMethod(i, c("CrunchExpr", "CrunchVariable"), crunch.ops(i))
+    setMethod(i, c("CrunchVariable", "CrunchExpr"), crunch.ops(i))
 }
 
 .catmeth <- function (i, Rarg=1) {
@@ -123,28 +111,28 @@ for (i in c("+", "-", "*", "/", "<", ">", ">=", "<=")) {
 
 for (i in c("==", "!=")) {
     for (j in seq_along(.sigs)) {
-        setMethod(i, .sigs[[j]], vxr(i))
-        setMethod(i, rev(.sigs[[j]]), rxv(i))
+        setMethod(i, .sigs[[j]], crunch.ops(i))
+        setMethod(i, rev(.sigs[[j]]), crunch.ops(i))
     }
     setMethod(i, c("CategoricalVariable", "character"), .catmeth(i, 2))
     setMethod(i, c("CategoricalVariable", "factor"), .catmeth(i, 2))
     setMethod(i, c("character", "CategoricalVariable"), .catmeth(i, 1))
     setMethod(i, c("factor", "CategoricalVariable"), .catmeth(i, i))
     for (j in .rtypes) {
-        setMethod(i, c("CrunchExpr", j), vxv(i))
-        setMethod(i, c(j, "CrunchExpr"), vxv(i))
+        setMethod(i, c("CrunchExpr", j), crunch.ops(i))
+        setMethod(i, c(j, "CrunchExpr"), crunch.ops(i))
     }
-    setMethod(i, c("CrunchVariable", "CrunchVariable"), vxv(i))
-    setMethod(i, c("CrunchExpr", "CrunchVariable"), vxv(i))
-    setMethod(i, c("CrunchVariable", "CrunchExpr"), vxv(i))
+    setMethod(i, c("CrunchVariable", "CrunchVariable"), crunch.ops(i))
+    setMethod(i, c("CrunchExpr", "CrunchVariable"), crunch.ops(i))
+    setMethod(i, c("CrunchVariable", "CrunchExpr"), crunch.ops(i))
 }
 
-setMethod("&", c("CrunchExpr", "CrunchExpr"), vxv("and"))
-setMethod("&", c("logical", "CrunchExpr"), vxv("and"))
-setMethod("&", c("CrunchExpr", "logical"), vxv("and"))
-setMethod("|", c("CrunchExpr", "CrunchExpr"), vxv("or"))
-setMethod("|", c("logical", "CrunchExpr"), vxv("or"))
-setMethod("|", c("CrunchExpr", "logical"), vxv("or"))
+setMethod("&", c("CrunchExpr", "CrunchExpr"), crunch.ops("and"))
+setMethod("&", c("logical", "CrunchExpr"), crunch.ops("and"))
+setMethod("&", c("CrunchExpr", "logical"), crunch.ops("and"))
+setMethod("|", c("CrunchExpr", "CrunchExpr"), crunch.ops("or"))
+setMethod("|", c("logical", "CrunchExpr"), crunch.ops("or"))
+setMethod("|", c("CrunchExpr", "logical"), crunch.ops("or"))
 
 ##' @rdname expressions
 ##' @export
