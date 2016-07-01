@@ -188,7 +188,7 @@ setMethod("refresh", "CrunchDataset", function (x) {
     url <- self(x)
     dropCache(url)
     ent <- crGET(self(x))
-    catalog_url <- ent$catalogs$parent
+    catalog_url <- ent$catalogs$parent %||% tuple(x)@index_url ## %||% for backwards comp.
     dropCache(catalog_url)
     catalog <- DatasetCatalog(crGET(catalog_url))
     out <- as.dataset(ent, tuple=catalog[[url]])
