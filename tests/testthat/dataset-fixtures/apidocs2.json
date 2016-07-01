@@ -187,7 +187,7 @@
                     "name": "Person ID",
                     "alias": "stringid",
                     "description": "String identifier for each row",
-                    "type": "text",
+                    "type": "text"
                 },
                 "country": {
                     "name": "Country",
