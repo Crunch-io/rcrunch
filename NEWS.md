@@ -1,4 +1,5 @@
 ### crunch 1.10.5 (under development)
+* Fix refresh method for Datasets that have been transferred to a Project.
 
 ### crunch 1.10.4
 * Fix `as.data.frame`/`as.environment` for `CrunchDataset` when a variable alias contained an apostrophe.
