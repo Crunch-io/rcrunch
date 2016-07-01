@@ -33,7 +33,7 @@ with_mock_HTTP({
         },
         test_that("Progress polling goes until 100", {
             expect_output(
-                expect_identical(pollProgress("/api/progress/", wait=.01),
+                expect_equal(pollProgress("/api/progress/", wait=.01),
                     100),
                 "=| 100%", fixed=TRUE)
         }),
@@ -59,8 +59,7 @@ with_mock_HTTP({
                     expect_error(
                         expect_message(handleAPIresponse(fakeProg("/api/progress2/")),
                             "Result URL: /api/datasets.json"),
-                        paste("There was an error on the server.",
-                            "Please contact support@crunch.io"), fixed=TRUE),
+                        paste("Education, Commerce, and, uh, oops."), fixed=TRUE),
                     "|  23%", fixed=TRUE)
             })
             logs <- loadLogfile(logfile)

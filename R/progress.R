@@ -13,17 +13,20 @@ pollProgress <- function (progress_url, wait=.5) {
     ## Set up the progress bar
     pb <- txtProgressBar(0, 100, style=3)
 
-    status <- uncached(as.numeric(crGET(progress_url)$progress))
+    prog <- uncached(crGET(progress_url))
+    status <- prog$progress
     setTxtProgressBar(pb, status)
     while (status >= 0 && status < 100 && timer(starttime) < timeout) {
         Sys.sleep(wait)
-        status <- uncached(as.numeric(crGET(progress_url)$progress))
+        prog <- uncached(crGET(progress_url))
+        status <- prog$progress
         setTxtProgressBar(pb, status)
         wait <- min(max.wait, wait * increase.by)
     }
 
     if (status < 0) {
-        halt("There was an error on the server. Please contact support@crunch.io")
+        msg <- prog$message %||% "There was an error on the server. Please contact support@crunch.io"
+        halt(msg)
     } else if (status != 100) {
         halt('Your process is still running on the server. It is currently ',
             round(status), '% complete. Check `httpcache::uncached(crGET("',
