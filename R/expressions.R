@@ -95,7 +95,8 @@ crunch.ops <- function (i) {
     c("NumericVariable", "numeric"),
     c("DatetimeVariable", "Date"),
     c("DatetimeVariable", "POSIXt"),
-    c("CategoricalVariable", "numeric")
+    c("DatetimeVariable", "character"), ## TODO: validate that the "character" is valid 8601?
+    c("CategoricalVariable", "numeric") ## TODO: add cast(x, "numeric") around var for this?
 )
 
 .rtypes <- unique(vapply(.sigs, function (a) a[[2]], character(1)))

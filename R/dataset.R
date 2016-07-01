@@ -193,6 +193,8 @@ setMethod("refresh", "CrunchDataset", function (x) {
     dropCache(catalog_url)
     catalog <- DatasetCatalog(crGET(catalog_url))
     out <- as.dataset(ent, tuple=catalog[[url]])
+    
+    ## Keep settings in sync
     duplicates(allVariables(out)) <- duplicates(allVariables(x))
     ## Make sure the activeFilter's dataset_url is also up to date
     filt <- activeFilter(x)
