@@ -75,7 +75,7 @@ with_test_authentication({
                     paste(
                         "ID",
                         "Join matches",
-                        "Another variable"
+                        "Another variable",
                         paste0("[+] ", name(ds2)),
                         paste("    ",
                             printed_order_apidocs2[-length(printed_order_apidocs2)],
