@@ -211,7 +211,7 @@ NULL
 ##' @rdname delete
 ##' @export
 setMethod("delete", "CrunchDataset",
-    function (x, confirm=requireConsent() | is.readonly(x), ...) {
+    function (x, confirm=requireConsent(), ...) {
         out <- delete(tuple(x), confirm=confirm)
         invisible(out)
     })

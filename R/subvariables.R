@@ -61,7 +61,7 @@ setMethod("subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
             halt("Can only reorder, not change, subvariables")
         }
         new <- I(new)
-        if (!is.readonly(x) && !identical(new, I(old))) {
+        if (!identical(new, I(old))) {
             body <- list(subvariables=new)
             payload <- toJSON(body)
             crPATCH(self(x), body=payload)

@@ -194,23 +194,6 @@ with_mock_HTTP({
         expect_identical(test.ds[ord], test.ds[c("gender", "mymrset")])
     })
 
-    test_that("Read only flag gets set appropriately", {
-        expect_false(is.readonly(test.ds))
-        expect_true(is.readonly(test.ds[1]))
-    })
-
-    test_that("Name and description setters in read only mode", {
-        skip("Readonly mode for tuple updating not implemented")
-        dataset <- test.ds
-        readonly(dataset) <- TRUE
-        name(dataset) <- "Bond. James Bond."
-        expect_false(identical(name(dataset), name(test.ds)))
-        expect_identical(name(dataset), "Bond. James Bond.")
-        description(dataset) <- "007"
-        expect_false(identical(description(dataset), description(test.ds)))
-        expect_identical(description(dataset), "007")
-    })
-
     test_that("show method", {
         expect_identical(getShowContent(test.ds),
             c(paste("Dataset", dQuote("test ds")),
@@ -347,13 +330,7 @@ if (run.integration.tests) {
             with(test.dataset(df), {
                 expect_error(delete(ds, confirm=TRUE),
                     "Must confirm deleting dataset")
-                ds.sub <- ds[1]
-                expect_true(is.dataset(ds.sub))
-                expect_true(is.readonly(ds.sub))
-                expect_error(delete(ds.sub),
-                    "Must confirm deleting dataset")
-                ## Then can delete
-                expect_error(delete(ds.sub, confirm=FALSE),
+                expect_error(delete(ds, confirm=FALSE),
                     NA)
             })
         })

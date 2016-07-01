@@ -80,22 +80,12 @@ setEntitySlot <- function (x, i, value) {
     ## in case "value" is already wrapped
     if (!identical(I(slot(x, "body")[[i]]), I(value))) {
         slot(x, "body")[[i]] <- value
-        if (!is.readonly(x)) {
-            body <- structure(list(value), .Names=i)
-            payload <- toJSON(body)
-            crPATCH(self(x), body=payload)
-        }
+        body <- structure(list(value), .Names=i)
+        payload <- toJSON(body)
+        crPATCH(self(x), body=payload)
     }
     return(x)
 }
-
-is.readonly <- function (x) isTRUE(x@readonly) && !is.null(self(x))
-setReadonly <- function (x, value) {
-    x@readonly <- as.logical(value)
-    x
-}
-
-setMethod("readonly<-", "ShojiObject", setReadonly)
 
 ##' Get a resource URL from a Shoji Object
 ##' @param x a shojiObject

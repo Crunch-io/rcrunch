@@ -55,7 +55,6 @@ setTupleSlot <- function (x, name, value) {
     } else if (!identical(x[[name]], value)) {
         ## Skip updating if not modified
         x[[name]] <- value
-        ## NB: no readonly mode. implement later if needed.
         payload <- toJSON(structure(list(structure(list(value), .Names=name)),
             .Names=x@entity_url))
         crPATCH(x@index_url, body=payload)
