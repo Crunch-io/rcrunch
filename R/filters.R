@@ -143,6 +143,10 @@ setMethod("appliedFilters<-", c("CrunchDataset", "CrunchFilter"),
         ## To check for an empty filter expression, get the @expression
         ## Can't assume f is CrunchLogicalExpr because x could be CrunchExpr
         expr <- f@expression
+    } else {
+        ## Pretend that the filter of a CrunchExpr can be CrunchLogicalExpr
+        f <- CrunchLogicalExpr(expression=expr,
+            dataset_url=datasetReference(x) %||% "")
     }
     if (!length(expr)) {
         ## No active filter. Return NULL
@@ -152,9 +156,9 @@ setMethod("appliedFilters<-", c("CrunchDataset", "CrunchFilter"),
 }
 
 .setActiveFilter <- function (x, value) {
-    if (is.null(value)) {
-        ## Set an empty CrunchLogicalExpr
-        value <- CrunchLogicalExpr()
+    if (!inherits(value, "CrunchLogicalExpr")) {
+        value <- CrunchLogicalExpr(expression=value %||% list(),
+            dataset_url=datasetReference(x) %||% "")
     }
     x@filter <- value
     return(x)
@@ -181,7 +185,6 @@ setMethod("activeFilter<-", "CrunchExpr", function (x, value) {
     x@filter <- value
     return(x)
 })
-
 
 ##' View and set exclusion filters
 ##'

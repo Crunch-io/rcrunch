@@ -58,9 +58,30 @@ math.exp <- function (e1, e2, operator) {
     } else {
         Constructor <- CrunchExpr
     }
-    ## TODO: if e1 and e2 have filters, pass them along, and if both do,
-    ## make sure that they're the same
-    return(Constructor(expression=ex, dataset_url=ds.url))
+
+    ## If either e1 or e2 are Crunch objects with filters, pass those along,
+    ## and if both do, make sure that they're the same
+    f1 <- try(activeFilter(e1), silent=TRUE)
+    f2 <- try(activeFilter(e2), silent=TRUE)
+    if (is.error(f1)) {
+        if (is.error(f2)) {
+            ## Neither object is a Crunch object? We shouldn't be here.
+            filt <- NULL
+        } else {
+            filt <- f2
+        }
+    } else if (is.error(f2)) {
+        filt <- f1
+    } else {
+        ## Ok: Both are Crunch objects. Reject if filters aren't identical.
+        if (!identical(f1, f2)) {
+            halt("Cannot combine expressions with different filters")
+        }
+        filt <- f1
+    }
+    out <- Constructor(expression=ex, dataset_url=ds.url)
+    activeFilter(out) <- filt
+    return(out)
 }
 
 crunch.ops <- function (i) {
@@ -94,6 +115,7 @@ for (i in c("+", "-", "*", "/", "<", ">", ">=", "<=")) {
     setMethod(i, c("CrunchVariable", "CrunchVariable"), crunch.ops(i))
     setMethod(i, c("CrunchExpr", "CrunchVariable"), crunch.ops(i))
     setMethod(i, c("CrunchVariable", "CrunchExpr"), crunch.ops(i))
+    setMethod(i, c("CrunchExpr", "CrunchExpr"), crunch.ops(i))
 }
 
 .catmeth <- function (i, Rarg=1) {

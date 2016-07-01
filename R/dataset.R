@@ -1,6 +1,7 @@
 init.CrunchDataset <- function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     .Object@variables <- getDatasetVariables(.Object)
+    activeFilter(.Object) <- NULL
     return(.Object)
 }
 setMethod("initialize", "CrunchDataset", init.CrunchDataset)
@@ -193,7 +194,12 @@ setMethod("refresh", "CrunchDataset", function (x) {
     catalog <- DatasetCatalog(crGET(catalog_url))
     out <- as.dataset(ent, tuple=catalog[[url]])
     duplicates(allVariables(out)) <- duplicates(allVariables(x))
-    activeFilter(out) <- activeFilter(x)
+    ## Make sure the activeFilter's dataset_url is also up to date
+    filt <- activeFilter(x)
+    if (!is.null(filt)) {
+        filt@dataset_url <- self(out)
+    }
+    activeFilter(out) <- filt
     return(out)
 })
 
