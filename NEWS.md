@@ -1,4 +1,5 @@
 ### crunch 1.10.5 (under development)
+* Fix refresh method for Datasets that have been transferred to a Project.
 * (Re-)improve print method for expressions involving categorical variables
 
 ### crunch 1.10.4
