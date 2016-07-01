@@ -32,8 +32,7 @@ with_mock_HTTP({
 
     test_that("Variables extracted from a filtered dataset are also filtered", {
         expect_identical(activeFilter(ds2$birthyr), ds$gender == "Male")
-        skip("Not really supporting this correctly")
-        expect_identical(ds[ds$gender == "Male", "birthyr"],
+        expect_identical(activeFilter(ds[ds$gender == "Male", "birthyr"]),
             ds$gender == "Male")
     })
 
