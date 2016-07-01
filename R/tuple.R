@@ -96,7 +96,6 @@ setMethod("delete", "DatasetTuple", function (x, confirm=requireConsent(), ...) 
         halt("Must confirm deleting dataset")
     }
     out <- callNextMethod()
-    updateDatasetList()
     invisible(out)
 })
 

@@ -14,7 +14,7 @@ if (run.integration.tests) {
                 exclusion(ds) <- ds$v4 == "C"
                 ## Test that the filter is set correctly. Objects not identical
                 ## because JSON objects are unordered.
-                ## TODO: implement a expect_object_equal
+                ## TODO: switch to expect_json_equivalent
                 e <- zcl(exclusion(ds))
                 f <- zcl(ds$v4 == "C")
                 expect_identical(e[["function"]], f[["function"]])

@@ -50,9 +50,7 @@ setMethod("name", "CrunchDataset", function (x) tuple(x)$name)
 ##' @rdname describe
 ##' @export
 setMethod("name<-", c("CrunchDataset", "character"), function (x, value) {
-    out <- setTupleSlot(x, "name", value)
-    updateDatasetList() ## could just modify rather than refresh
-    invisible(out)
+    invisible(setTupleSlot(x, "name", value))
 })
 ##' @rdname describe
 ##' @export

@@ -3,9 +3,8 @@ context("Dataset object and methods")
 with_mock_HTTP({
     test.ds <- loadDataset("test ds")
     test.ds2 <- loadDataset("ECON.sav")
-    test.ds3 <- loadDataset("an archived dataset")
-    ## But it's not archived apparently. Reach around
-    test.ds3@tuple@body$archived <- TRUE
+    test.ds3 <- loadDataset("an archived dataset", kind="archived")
+
     today <- "2016-02-11"
 
     test_that("Dataset can be loaded", {
