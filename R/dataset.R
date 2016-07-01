@@ -183,8 +183,15 @@ NULL
 ##' @rdname refresh
 ##' @export
 setMethod("refresh", "CrunchDataset", function (x) {
-    tup <- refresh(tuple(x))
-    out <- as.dataset(crGET(self(x)), tuple=tup)
+    ## Because dataset may have changed catalogs, get the entity url,
+    ## check for its parent catalog, get that, and then assemble.
+    url <- self(x)
+    dropCache(url)
+    ent <- crGET(self(x))
+    catalog_url <- ent$catalogs$parent
+    dropCache(catalog_url)
+    catalog <- DatasetCatalog(crGET(catalog_url))
+    out <- as.dataset(ent, tuple=catalog[[url]])
     duplicates(allVariables(out)) <- duplicates(allVariables(x))
     activeFilter(out) <- activeFilter(x)
     return(out)
