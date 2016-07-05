@@ -162,11 +162,13 @@ with_test_authentication({
         })
     })
 
-    source("mapcty.R")
-    with(test.dataset(data.frame(x=seq_along(mapcty))), {
-        ds <- releaseAndReload(ds)
-        ds$county <- factor(mapcty)
-        expect_identical(head(as.vector(ds$county)), head(mapcty))
+    test_that("Another debug test", {
+        source("mapcty.R")
+        with(test.dataset(data.frame(x=seq_along(mapcty))), {
+            ds <- releaseAndReload(ds)
+            ds$county <- factor(mapcty)
+            expect_identical(head(as.vector(ds$county)), head(mapcty))
+        })
     })
 
     with(test.dataset(df), {
