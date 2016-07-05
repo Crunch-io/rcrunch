@@ -1,6 +1,7 @@
 init.CrunchDataset <- function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     .Object@variables <- getDatasetVariables(.Object)
+    activeFilter(.Object) <- NULL
     return(.Object)
 }
 setMethod("initialize", "CrunchDataset", init.CrunchDataset)
@@ -11,15 +12,11 @@ getDatasetVariables <- function (x) {
     return(VariableCatalog(crGET(varcat_url, query=list(relative="on"))))
 }
 
-getNrow <- function (dataset, filtered=TRUE) {
-    ## Filtered is the UI "applied_filter". We don't usually want that in R.
-    ## TODO: change the default to FALSE
-    which.count <- ifelse(isTRUE(filtered), "filtered", "total")
-
+getNrow <- function (dataset) {
     u <- summaryURL(dataset)
     f <- zcl(activeFilter(dataset))
     q <- crGET(u, query=list(filter=toJSON(f)))
-    nrows <- as.integer(round(q$unweighted[[which.count]]))
+    nrows <- as.integer(round(q$unweighted[["filtered"]]))
     return(nrows)
 }
 
@@ -50,9 +47,7 @@ setMethod("name", "CrunchDataset", function (x) tuple(x)$name)
 ##' @rdname describe
 ##' @export
 setMethod("name<-", c("CrunchDataset", "character"), function (x, value) {
-    out <- setTupleSlot(x, "name", value)
-    updateDatasetList() ## could just modify rather than refresh
-    invisible(out)
+    invisible(setTupleSlot(x, "name", value))
 })
 ##' @rdname describe
 ##' @export
@@ -183,10 +178,24 @@ NULL
 ##' @rdname refresh
 ##' @export
 setMethod("refresh", "CrunchDataset", function (x) {
-    tup <- refresh(tuple(x))
-    out <- as.dataset(crGET(self(x)), tuple=tup)
+    ## Because dataset may have changed catalogs, get the entity url,
+    ## check for its parent catalog, get that, and then assemble.
+    url <- self(x)
+    dropCache(url)
+    ent <- crGET(self(x))
+    catalog_url <- ent$catalogs$parent %||% tuple(x)@index_url ## %||% for backwards comp.
+    dropCache(catalog_url)
+    catalog <- DatasetCatalog(crGET(catalog_url))
+    out <- as.dataset(ent, tuple=catalog[[url]])
+
+    ## Keep settings in sync
     duplicates(allVariables(out)) <- duplicates(allVariables(x))
-    activeFilter(out) <- activeFilter(x)
+    ## Make sure the activeFilter's dataset_url is also up to date
+    filt <- activeFilter(x)
+    if (!is.null(filt)) {
+        filt@dataset_url <- self(out)
+    }
+    activeFilter(out) <- filt
     return(out)
 })
 
@@ -211,7 +220,7 @@ NULL
 ##' @rdname delete
 ##' @export
 setMethod("delete", "CrunchDataset",
-    function (x, confirm=requireConsent() | is.readonly(x), ...) {
+    function (x, confirm=requireConsent(), ...) {
         out <- delete(tuple(x), confirm=confirm)
         invisible(out)
     })

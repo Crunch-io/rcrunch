@@ -21,11 +21,6 @@ with_mock_HTTP({
         ## NOTE: deferring the "shared" collection
         expect_is(active(datcat), "DatasetCatalog")
         expect_is(archived(datcat), "DatasetCatalog")
-        expect_identical(index(active(datcat)), index(datcat))
-        expect_equivalent(index(archived(datcat)), list())
-        index(datcat)[[which(names(datcat) == "an archived dataset")]]$archived <- TRUE
-        expect_is(active(datcat), "DatasetCatalog")
-        expect_is(archived(datcat), "DatasetCatalog")
         expect_identical(urls(active(datcat)),
             c("/api/datasets/dataset3.json", "/api/datasets/dataset1.json"))
         expect_length(active(datcat), 2)
@@ -57,7 +52,7 @@ with_mock_HTTP({
             c("George", "Fake User", "Fake User"))
     })
     test_that("is.archived", {
-        expect_identical(is.archived(datcat), rep(FALSE, 3))
+        expect_identical(is.archived(datcat), c(FALSE, TRUE, FALSE))
     })
     test_that("is.published/draft", {
         expect_identical(is.published(datcat), c(FALSE, TRUE, TRUE))
@@ -71,7 +66,6 @@ with_mock_HTTP({
         )
         expect_error(archive(datcat[2:3]),
             paste0('PATCH /api/datasets.json {',
-                    '"/api/datasets/dataset2.json":{"archived":true},',
                     '"/api/datasets/dataset1.json":{"archived":true}}'),
             fixed=TRUE
         )

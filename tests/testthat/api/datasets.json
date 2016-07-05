@@ -19,7 +19,7 @@
             "owner_display_name": "Fake User",
             "name": "an archived dataset",
             "description": "This dataset does not exist",
-            "archived": false,
+            "archived": true,
             "id": "aa80d2e969b34e6ea9ededaa528c6248",
             "start_date": null,
             "end_date": null,

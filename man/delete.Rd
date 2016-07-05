@@ -12,8 +12,7 @@
 \alias{delete,ShojiObject-method}
 \title{Delete a Crunch object from the server}
 \usage{
-\S4method{delete}{CrunchDataset}(x, confirm = requireConsent() |
-  is.readonly(x), ...)
+\S4method{delete}{CrunchDataset}(x, confirm = requireConsent(), ...)
 
 \S4method{delete}{CrunchProject}(x, confirm = requireConsent(), ...)
 
