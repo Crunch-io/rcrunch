@@ -3,7 +3,6 @@
 * (Re-)improve print method for expressions involving categorical variables
 * Improve handling of filters when composing complex expressions of `CrunchExpr`, Variable, and Dataset objects
 * Add expression support for operations involving a `DatetimeVariable` and a character vector, assumed to be ISO-8601 formatted.
-* `dim` and `nrow` on a Dataset ignore GUI "applied filters"
 
 ### crunch 1.10.4
 * Fix `as.data.frame`/`as.environment` for `CrunchDataset` when a variable alias contained an apostrophe.
