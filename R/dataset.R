@@ -12,15 +12,11 @@ getDatasetVariables <- function (x) {
     return(VariableCatalog(crGET(varcat_url, query=list(relative="on"))))
 }
 
-getNrow <- function (dataset, filtered=TRUE) {
-    ## Filtered is the UI "applied_filter". We don't usually want that in R.
-    ## TODO: change the default to FALSE
-    which.count <- ifelse(isTRUE(filtered), "filtered", "total")
-
+getNrow <- function (dataset) {
     u <- summaryURL(dataset)
     f <- zcl(activeFilter(dataset))
     q <- crGET(u, query=list(filter=toJSON(f)))
-    nrows <- as.integer(round(q$unweighted[[which.count]]))
+    nrows <- as.integer(round(q$unweighted[["filtered"]]))
     return(nrows)
 }
 
@@ -191,7 +187,7 @@ setMethod("refresh", "CrunchDataset", function (x) {
     dropCache(catalog_url)
     catalog <- DatasetCatalog(crGET(catalog_url))
     out <- as.dataset(ent, tuple=catalog[[url]])
-    
+
     ## Keep settings in sync
     duplicates(allVariables(out)) <- duplicates(allVariables(x))
     ## Make sure the activeFilter's dataset_url is also up to date
