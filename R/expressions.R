@@ -220,6 +220,9 @@ setMethod("%in%", c("DatetimeVariable", "Date"), .inCrunch)
 setMethod("%in%", c("DatetimeVariable", "POSIXt"), .inCrunch)
 ##' @rdname expressions
 ##' @export
+setMethod("%in%", c("DatetimeVariable", "character"), .inCrunch)
+##' @rdname expressions
+##' @export
 setMethod("%in%", c("CategoricalVariable", "numeric"), .inCrunch)
 
 setMethod("datasetReference", "CrunchExpr", function (x) x@dataset_url)
