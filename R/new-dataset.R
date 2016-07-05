@@ -92,7 +92,6 @@ createSource <- function (file, ...) {
 createDataset <- function (name, ...) {
     dataset_url <- crPOST(sessionURL("datasets"),
         body=toJSON(list(name=name, ...)))
-    updateDatasetList()
     ds <- entity(datasetCatalog()[[dataset_url]])
     invisible(ds)
 }
@@ -183,11 +182,10 @@ newDatasetByCSV <- function (x, name=as.character(substitute(x)), ...) {
 createWithMetadataAndFile <- function (metadata, file, strict=TRUE, cleanup=TRUE) {
     message("Uploading metadata")
     dataset_url <- crPOST(sessionURL("datasets"), body=toJSON(metadata))
-    updateDatasetList()
     ds <- entity(datasetCatalog()[[dataset_url]])
 
     message("Uploading data")
-    batches_url <- ds@catalogs$batches
+    batches_url <- shojiURL(ds, "catalogs", "batches")
     if (!strict) {
         batches_url <- paste0(batches_url, "?strict=0")
     }

@@ -1,4 +1,8 @@
 ### crunch 1.10.5 (under development)
+* Fix refresh method for Datasets that have been transferred to a Project.
+* (Re-)improve print method for expressions involving categorical variables
+* Improve handling of filters when composing complex expressions of `CrunchExpr`, Variable, and Dataset objects
+* Add expression support for operations involving a `DatetimeVariable` and a character vector, assumed to be ISO-8601 formatted.
 
 ### crunch 1.10.4
 * Fix `as.data.frame`/`as.environment` for `CrunchDataset` when a variable alias contained an apostrophe.

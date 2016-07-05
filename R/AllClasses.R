@@ -6,7 +6,6 @@
 ##' CrunchDataset.
 ShojiObject <- setClass("ShojiObject",
     representation(
-        readonly="logical",
         element="ANY",
         self="ANY",
         body="ANY",
@@ -14,8 +13,7 @@ ShojiObject <- setClass("ShojiObject",
         catalogs="ANY",
         views="ANY",
         fragments="ANY"
-    ),
-    prototype=prototype(readonly=FALSE))
+    ))
 
 ShojiCatalog <- setClass("ShojiCatalog", contains="ShojiObject",
     representation(
@@ -72,18 +70,16 @@ CrunchLogicalExpr <- setClass("CrunchLogicalExpr",
 ##'
 ##' Variables are S4 objects. All inherit from the base class
 ##' \code{CrunchVariable}.
-##' @slot readonly logical: should changes made to this variable object locally
 ##' be persisted on the server? Default is \code{FALSE}
 ##' @slot filter either \code{NULL} or \code{CrunchLogicalExpr}
 ##' @importFrom methods as callNextMethod new slot slot<- slotNames validObject
 ##' @rdname CrunchVariable
 setClass("CrunchVariable",
     representation= representation(
-        readonly="logical",
         filter="CrunchLogicalExpr",
         tuple="VariableTuple"
     ),
-    prototype=prototype(readonly=FALSE, filter=CrunchLogicalExpr(), tuple=VariableTuple()))
+    prototype=prototype(filter=CrunchLogicalExpr(), tuple=VariableTuple()))
 
 CrunchVariable <- function (tuple, filter=NULL, ...) {
     ## Slight cheat: this isn't the "CrunchVariable" constructor. Instead

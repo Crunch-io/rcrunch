@@ -170,8 +170,7 @@ formatExpression <- function (expr) {
     } else if ("function" %in% names(expr)) {
         func <- expr[["function"]]
         func <- .funcs.z2r[[func]] %||% func ## Translate func name, if needed
-        args <- vapply(expr[["args"]], formatExpression, character(1),
-            USE.NAMES=FALSE)
+        args <- formatExpressionArgs(expr[["args"]])
         if (func == "not") {
             return(paste0("!", args[1]))
         } else if (func %in% .operators) {
@@ -184,12 +183,45 @@ formatExpression <- function (expr) {
         return(crGET(expr[["variable"]])$body$alias)
     } else if (length(intersect(c("column", "value"), names(expr)))) {
         val <- expr$column %||% expr$value
-        ## Else, iterate over, replace {?:-1} with NA
-        return(capture.output(dput(val)))
+        return(deparse(val))
     } else {
         ## Dunno what this is
         return("[Complex expression]")
     }
+}
+
+formatExpressionArgs <- function (args) {
+    ## This is just to pretty-print category values as "names"
+    ## Look for "variables"
+    vars <- vapply(args,
+        function (x) identical(names(x), "variable"), logical(1))
+    if (sum(vars) == 1) {
+        ## Great, let's see if we have any values to format
+        vals <- vapply(args, function (x) {
+                length(names(x)) == 1 && names(x) %in% c("column", "value")
+            }, logical(1))
+        if (any(vals)) {
+            ## Get the var, see if it is categorical
+            var <- VariableEntity(crGET(args[[which(vars)]]$variable))
+            ## Well, we'll identify "categorical" by presence of cats
+            args[vals] <- lapply(args[vals], formatExpressionValue,
+                cats=categories(var))
+            args[!vals] <- lapply(args[!vals], formatExpression)
+            return(unlist(args))
+        }
+    }
+    ## Else:
+    return(vapply(args, formatExpression, character(1), USE.NAMES=FALSE))
+}
+
+formatExpressionValue <- function (val, cats=NULL) {
+    val <- val$column %||% val$value
+    if (length(cats)) {
+        val <- i2n(val, cats)
+    } else {
+        ## TODO: iterate over, replace {?:-1} with NA
+    }
+    return(deparse(val))
 }
 
 ##' @rdname show-crunch
