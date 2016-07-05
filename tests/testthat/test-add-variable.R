@@ -153,7 +153,6 @@ with_test_authentication({
                 array(1024L,
                     dim=1L,
                     dimnames=list(the_name=name(ds))))
-            print(crtabs(~ another, data=ds, useNA="always"))
             expect_equal(as.array(crtabs(~ another, data=ds, useNA="always")),
                 array(c(512L, 512L),
                     dim=2L,
@@ -167,7 +166,6 @@ with_test_authentication({
     with(test.dataset(data.frame(x=seq_along(mapcty))), {
         ds <- releaseAndReload(ds)
         ds$county <- factor(mapcty)
-        print(crtabs(~ county, data=ds))
         expect_identical(head(as.vector(ds$county)), head(mapcty))
     })
 
