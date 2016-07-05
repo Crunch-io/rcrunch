@@ -6,7 +6,8 @@
 \alias{write.csv,CrunchDataset-method}
 \title{Export a dataset to a file}
 \usage{
-exportDataset(dataset, file, format = c("csv", "spss"), ...)
+exportDataset(dataset, file, format = c("csv", "spss"),
+  categorical = c("name", "id"), ...)
 
 \S4method{write.csv}{CrunchDataset}(...)
 }
@@ -17,6 +18,9 @@ exportDataset(dataset, file, format = c("csv", "spss"), ...)
 
 \item{format}{character export format: currently supported values are "csv"
 and "spss".}
+
+\item{categorical}{character: export categorical values to CSV as category
+"name" (default) or "id". Ignored by the SPSS exporter.}
 
 \item{...}{additional arguments, currently ignored}
 }

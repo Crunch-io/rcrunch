@@ -13,7 +13,8 @@
         "permissions": "/api/datasets/dataset1/permissions.json"
     },
     "views": {
-        "summary": "/api/datasets/dataset1/summary.json"
+        "summary": "/api/datasets/dataset1/summary.json",
+        "export": "/api/datasets/dataset1/export.json"
     },
     "fragments": {
         "table": "/api/datasets/dataset1/table.json"
