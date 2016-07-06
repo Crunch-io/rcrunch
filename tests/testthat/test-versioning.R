@@ -156,6 +156,11 @@ if (run.integration.tests) {
                 ds$v8 <- rep(6:10, 4)
                 expect_equivalent(as.vector(ds$v8), rep(6:10, 4))
             })
+
+            ds <- try(restoreVersion(ds, "initial import"))
+            test_that("And if we revert again, it's all good", {
+                validImport(ds)
+            })
         })
     })
 }
