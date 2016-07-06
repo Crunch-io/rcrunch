@@ -1,3 +1,14 @@
+##' See who has access to this dataset
+##'
+##' @param x CrunchDataset
+##' @return A PermissionCatalog containing information on the users and teams
+##' that have access to this dataset.
+##' @name permissions
+##' @aliases permissions
+NULL
+
+##' @rdname permissions
+##' @export
 setMethod("permissions", "CrunchDataset", function (x) {
     perm_url <- shojiURL(x, "catalogs", "permissions")
     return(PermissionCatalog(crGET(perm_url)))
