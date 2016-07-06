@@ -129,7 +129,7 @@ with_test_authentication({
 
     test_that("Adding text variables (debugging)", {
         ds <- newDataset(data.frame(x=1:1024))
-        ds$a_text_var <- "Some text that is definitely >4 characters"
+        ds$a_text_var <- "12345 Some text that is definitely >4 characters"
         ds$a_factor <- factor("Different text")
         ds$the_name <- name(ds)
         ds$another <- factor(rep(c(NA, "Longer text"), 512))
@@ -140,7 +140,7 @@ with_test_authentication({
         expect_equal(as.array(crtabs(~ a_text_var, data=ds)),
             array(1024L,
                 dim=1L,
-                dimnames=list(a_text_var="Some text that is definitely >4 characters")))
+                dimnames=list(a_text_var="12345 Some text that is definitely >4 characters")))
         expect_equal(as.array(crtabs(~ a_factor, data=ds)),
             array(1024L,
                 dim=1L,

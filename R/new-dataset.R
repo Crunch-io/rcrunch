@@ -184,8 +184,7 @@ newDatasetByCSV <- function (x, name=as.character(substitute(x)), ...) {
 ##' @keywords internal
 createWithMetadataAndFile <- function (metadata, file, strict=TRUE, cleanup=TRUE) {
     message("Uploading metadata")
-    dataset_url <- crPOST(sessionURL("datasets"), body=toJSON(metadata))
-    ds <- entity(datasetCatalog()[[dataset_url]])
+    ds <- createDataset(body=metadata)
 
     message("Uploading data")
     batches_url <- shojiURL(ds, "catalogs", "batches")

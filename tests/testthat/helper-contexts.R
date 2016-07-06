@@ -83,7 +83,7 @@ with_test_authentication <- function (expr) {
             where=crGET))
         suppressMessages(trace("createDataset",
             quote({
-                name <- now()
+                if (missing(name)) name <- now()
             }),
             at=1,
             print=FALSE,
