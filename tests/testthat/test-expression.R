@@ -43,20 +43,31 @@ with_mock_HTTP({
     })
 
     test_that("R logical & CrunchLogicalExpr", {
-        e <- c(TRUE, FALSE, TRUE) & ds$gender == "Female"
-        expect_is(e, "CrunchLogicalExpr")
-        e <- c(TRUE, FALSE, TRUE) | ds$gender == "Female"
-        expect_is(e, "CrunchLogicalExpr")
-        e <- ds$gender == "Female" & c(TRUE, FALSE, TRUE)
-        expect_is(e, "CrunchLogicalExpr")
-        e <- ds$gender == "Female" | c(TRUE, FALSE, TRUE)
-        expect_is(e, "CrunchLogicalExpr")
+        expect_is(c(TRUE, FALSE, TRUE) & ds$gender == "Female",
+            "CrunchLogicalExpr")
+        expect_is(c(TRUE, FALSE, TRUE) | ds$gender == "Female",
+            "CrunchLogicalExpr")
+        expect_is(ds$gender == "Female" & c(TRUE, FALSE, TRUE),
+            "CrunchLogicalExpr")
+        expect_is(ds$gender == "Female" | c(TRUE, FALSE, TRUE),
+            "CrunchLogicalExpr")
+    })
+
+    test_that("Datetime operations: logical", {
+        expect_output(ds$starttime == "2015-01-01",
+            'Crunch logical expression: starttime == "2015-01-01"')
+        expect_output(ds$starttime > "2015-01-01",
+            'Crunch logical expression: starttime > "2015-01-01"')
+        expect_output(ds$starttime == as.Date("2015-01-01"),
+            'Crunch logical expression: starttime == "2015-01-01"')
+        expect_output(ds$starttime > as.Date("2015-01-01"),
+            'Crunch logical expression: starttime > "2015-01-01"')
     })
 
     test_that("Referencing category names that don't exist errors", {
         expect_is(ds$gender == "Male", "CrunchLogicalExpr")
         expect_output(ds$gender == "Male",
-            'Crunch logical expression: gender == 1L', fixed=TRUE)
+            'Crunch logical expression: gender == "Male"', fixed=TRUE)
         expect_error(ds$gender == "other",
             paste("Category not found:", dQuote("other")))
         expect_error(ds$gender %in% c("other", "Male", "another"),
@@ -66,19 +77,17 @@ with_mock_HTTP({
 
     test_that("Show method for logical expressions", {
         expect_output(ds$gender %in% c("Male", "Female"),
-            'Crunch logical expression: gender %in% 1:2',
+            'Crunch logical expression: gender %in% c("Male", "Female"',
             fixed=TRUE)
         expect_output(ds$gender %in% 1:2,
-            'Crunch logical expression: gender %in% 1:2',
+            'Crunch logical expression: gender %in% c("Male", "Female"',
             fixed=TRUE)
         expect_output(ds$birthyr == 1945 | ds$birthyr < 1941,
             'birthyr == 1945 | birthyr < 1941',
             fixed=TRUE)
         expect_output(ds$gender %in% "Male" & !is.na(ds$birthyr),
-            'gender == 1L & !is.na(birthyr)',
+            'gender == "Male" & !is.na(birthyr)',
             fixed=TRUE)
-        skip("TODO: implement datetime ops first")
-        print(ds$starttime > "2015-04-01")
     })
     test_that("Show method for expresssions", {
         skip("TODO: something intelligent with parentheses and order of operations")

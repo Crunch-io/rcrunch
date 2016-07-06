@@ -24,7 +24,6 @@ NULL
 ##' @export
 setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     x@variables <- variables(x)[i]
-    readonly(x) <- TRUE ## we don't want to overwrite the big object accidentally
     return(x)
 })
 ##' @rdname dataset-extract
@@ -36,7 +35,6 @@ setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE)
         halt("Undefined columns selected: ", serialPaste(i[is.na(w)]))
     }
     x@variables <- allVariables(x)[w]
-    readonly(x) <- TRUE ## we don't want to overwrite the big object accidentally
     return(x)
 })
 ##' @rdname dataset-extract

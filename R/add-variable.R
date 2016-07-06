@@ -29,8 +29,7 @@ addVariables <- function (dataset, ...) {
         halt("Must supply VariableDefinitions")
     }
     ## Check that if values specified, they have the right length
-    vardefs <- lapply(vardefs, validateVarDefRows,
-        numrows=getNrow(dataset, filtered=FALSE))
+    vardefs <- lapply(vardefs, validateVarDefRows, numrows=getNrow(dataset))
 
     ## TODO: check array subvariable rows similarly. and/or pull out and cbind
     ## to a single parent-level "values" column.

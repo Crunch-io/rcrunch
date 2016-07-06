@@ -129,13 +129,14 @@ with_test_authentication({
 
     test_that("Adding text variables (debugging)", {
         ds <- newDataset(data.frame(x=1:1024))
-        ds <- releaseAndReload(ds)
         ds$a_text_var <- "Some text that is definitely >4 characters"
         ds$a_factor <- factor("Different text")
         ds$the_name <- name(ds)
+        ds$another <- factor(rep(c(NA, "Longer text"), 512))
         expect_true(is.Text(ds$a_text_var))
         expect_true(is.Categorical(ds$a_factor))
         expect_true(is.Text(ds$the_name))
+        expect_true(is.Categorical(ds$another))
         expect_equal(as.array(crtabs(~ a_text_var, data=ds)),
             array(1024L,
                 dim=1L,
@@ -148,7 +149,6 @@ with_test_authentication({
             array(1024L,
                 dim=1L,
                 dimnames=list(the_name=name(ds))))
-        print(crtabs(~ another, data=ds, useNA="always"))
         expect_equal(as.array(crtabs(~ another, data=ds, useNA="always")),
             array(c(512L, 512L),
                 dim=2L,
@@ -162,7 +162,6 @@ with_test_authentication({
         ds <- newDataset(data.frame(x=seq_along(mapcty)))
         ds <- releaseAndReload(ds)
         ds$county <- factor(mapcty)
-        print(crtabs(~ county, data=ds))
         expect_identical(head(as.vector(ds$county)), head(mapcty))
     })
 

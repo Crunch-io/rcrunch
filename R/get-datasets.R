@@ -9,7 +9,7 @@
 ##' @export
 listDatasets <- function (kind=c("active", "all", "archived"), refresh=FALSE) {
     if (refresh) {
-        try(updateDatasetList())
+        dropOnly(sessionURL("datasets"))
     }
     return(names(subsetDatasetCatalog(match.arg(kind))))
 }
@@ -27,12 +27,12 @@ subsetDatasetCatalog <- function (kind, catalog=datasetCatalog()) {
 ##' @export
 ##' @importFrom httpcache dropOnly
 updateDatasetList <- function () {
+    warning("updateDatasetList is being deprecated.")
     dropOnly(sessionURL("datasets"))
-    session_store$datasets <- do.call(DatasetCatalog,
-        crGET(sessionURL("datasets")))
 }
 
-datasetCatalog <- function () session_store$datasets
+datasetCatalog <- function () DatasetCatalog(crGET(sessionURL("datasets")))
+## TODO: Generalize a `datasets` method, like started for projects
 
 ##' Load a Crunch Dataset
 ##' @param dataset character, the name of a Crunch dataset you have access

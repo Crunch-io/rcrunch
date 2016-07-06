@@ -116,7 +116,6 @@ jupyterLogin <- function (token) {
 
 warmSessionCache <- function () {
     session_store$root <- getAPIroot()
-    updateDatasetList()
 }
 
 is.authenticated <- function () !is.null(session_store$root)

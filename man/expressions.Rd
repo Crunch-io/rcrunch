@@ -8,6 +8,7 @@
 \alias{\%in\%,CategoricalVariable,numeric-method}
 \alias{\%in\%,DatetimeVariable,Date-method}
 \alias{\%in\%,DatetimeVariable,POSIXt-method}
+\alias{\%in\%,DatetimeVariable,character-method}
 \alias{\%in\%,NumericVariable,numeric-method}
 \alias{\%in\%,TextVariable,character-method}
 \alias{bin}
@@ -29,6 +30,8 @@
 \S4method{\%in\%}{DatetimeVariable,Date}(x, table)
 
 \S4method{\%in\%}{DatetimeVariable,POSIXt}(x, table)
+
+\S4method{\%in\%}{DatetimeVariable,character}(x, table)
 
 \S4method{\%in\%}{CategoricalVariable,numeric}(x, table)
 
