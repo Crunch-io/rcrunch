@@ -22,6 +22,7 @@ loadLogfile <- httpcache::loadLogfile
 cacheLogSummary <- httpcache::cacheLogSummary
 requestLogSummary <- httpcache::requestLogSummary
 uncached <- httpcache::uncached
+newDataset <- function (...) suppressMessages(crunch::newDataset(...))
 
 envOrOption <- function (opt) {
     ## .Rprofile options are like "test.api", while env vars are "R_TEST_API"

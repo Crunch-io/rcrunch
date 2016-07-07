@@ -41,13 +41,13 @@ if (run.integration.tests) {
         test_that("datasetCatalog gets what we expect", {
             col0 <- datasetCatalog()
             expect_is(col0, "DatasetCatalog")
-            with(test.dataset(df), {
+            with(test.dataset(), {
                 col1 <- datasetCatalog()
                 expect_is(col1, "DatasetCatalog")
                 expect_equal(length(col1), length(col0) + 1)
             })
         })
-        with(test.dataset(df), {
+        with(test.dataset(), {
             dsname <- name(ds)
             test_that("Dataset list can be retrieved if authenticated", {
                 expect_true(is.character(listDatasets()))
@@ -70,7 +70,7 @@ if (run.integration.tests) {
             })
         })
 
-        with(test.dataset(df), {
+        with(test.dataset(), {
             dsname <- name(ds)
             dsnum <- which(listDatasets() %in% dsname)
             test_that("deleteDataset by index", {
@@ -80,7 +80,7 @@ if (run.integration.tests) {
             })
         })
 
-        with(test.dataset(df), {
+        with(test.dataset(), {
             dsname <- name(ds)
             test_that("deleteDataset on Dataset object", {
                 expect_true(dsname %in% listDatasets())
@@ -89,7 +89,7 @@ if (run.integration.tests) {
             })
         })
 
-        with(test.dataset(df), {
+        with(test.dataset(), {
             dsname <- name(ds)
             newname <- paste0("New name ", now())
 

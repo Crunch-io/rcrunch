@@ -64,7 +64,7 @@ handleAPIresponse <- function (response, special.statuses=list()) {
             ## 3) Progress body without Location
             ## So, if there's a shoji:value response, it's a Progress, so poll it.
             ## Otherwise, return the location.
-            loc <- response$headers$location
+            loc <- locationHeader(response)
             if (length(response$content) > 0) {
                 ## Progress URL comes in a shoji:value
                 progress_url <- handleShoji(content(response))
@@ -85,7 +85,7 @@ handleAPIresponse <- function (response, special.statuses=list()) {
             invisible(loc)
         } else if (code == 201) {
             ## 201 Location: return the Location header
-            return(response$headers$location)
+            return(locationHeader(response))
         } else if (code == 204 || length(response$content) == 0) {
             ## If No Content, invisibly return the `response` object
             invisible(response)
@@ -112,6 +112,11 @@ handleAPIresponse <- function (response, special.statuses=list()) {
         }
         halt(msg)
     }
+}
+
+locationHeader <- function (response) {
+    loc <- response$headers$location
+    return(loc)
 }
 
 ##' @importFrom httr config add_headers
