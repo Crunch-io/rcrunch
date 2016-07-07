@@ -25,13 +25,15 @@ with_mock_HTTP({
     })
 
     test_that("saveVersion makes the right request", {
-        expect_error(saveVersion(ds, "Today"),
-            'POST /api/datasets/dataset1/savepoints.json \\{"description":"Today"\\}')
+        expect_mock_request(saveVersion(ds, "Today"),
+            'POST /api/datasets/dataset1/savepoints.json ',
+            '{"description":"Today"}')
     })
 
     test_that("saveVersion with no description supplied", {
-        expect_error(saveVersion(ds),
-            'POST /api/datasets/dataset1/savepoints.json \\{"description":"Version 3"\\}')
+        expect_mock_request(saveVersion(ds),
+            'POST /api/datasets/dataset1/savepoints.json ',
+            '{"description":"Version 3"}')
     })
 
     test_that("saveVersion rejects invalid description", {
@@ -44,9 +46,9 @@ with_mock_HTTP({
     })
 
     test_that("restoreVersion makes the right request", {
-        expect_error(restoreVersion(ds, "initial load"),
+        expect_mock_request(restoreVersion(ds, "initial load"),
             'POST /api/datasets/dataset1/savepoints/v2/revert/')
-        expect_error(restoreVersion(ds, 2),
+        expect_mock_request(restoreVersion(ds, 2),
             'POST /api/datasets/dataset1/savepoints/v2/revert/')
         expect_error(restoreVersion(ds, "not a version"),
             paste0(dQuote("not a version"),
@@ -155,11 +157,6 @@ if (run.integration.tests) {
                 expect_null(ds$v8)
                 ds$v8 <- rep(6:10, 4)
                 expect_equivalent(as.vector(ds$v8), rep(6:10, 4))
-            })
-
-            ds <- try(restoreVersion(ds, "initial import"))
-            test_that("And if we revert again, it's all good", {
-                validImport(ds)
             })
         })
     })
