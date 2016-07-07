@@ -3,8 +3,8 @@ context("Deleting rows of a dataset")
 with_mock_HTTP({
     ds <- loadDataset("test ds")
     test_that("dropRows generates the right request", {
-        expect_mock_request(dropRows(ds, ds$gender == "Male"),
-            'POST /api/datasets/dataset1/table.json ',
+        expect_POST(dropRows(ds, ds$gender == "Male"),
+            '/api/datasets/dataset1/table.json',
             '{"command":"delete","filter":{"function":"==",',
             '"args":[{"variable":"/api/datasets/dataset1/variables/gender.json"},',
             '{"value":1}]}}')
