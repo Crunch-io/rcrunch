@@ -24,16 +24,12 @@ with_mock_HTTP({
     })
 
     test_that("archive setting", {
-        expect_error(is.archived(test.ds2) <- TRUE,
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
-                    '{"archived":true}}'),
-            fixed=TRUE
-        )
-        expect_error(archive(test.ds2),
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
-                    '{"archived":true}}'),
-            fixed=TRUE
-        )
+        expect_PATCH(is.archived(test.ds2) <- TRUE,
+            '/api/datasets.json',
+            '{"/api/datasets/dataset3.json":{"archived":true}}')
+        expect_PATCH(archive(test.ds2),
+            '/api/datasets.json',
+            '{"/api/datasets/dataset3.json":{"archived":true}}')
     })
 
     test_that("draft/published", {
@@ -44,34 +40,24 @@ with_mock_HTTP({
     })
 
     test_that("draft/publish setting", {
-        expect_error(is.published(test.ds2) <- TRUE,
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
-                    '{"is_published":true}}'),
-            fixed=TRUE
-        )
-        expect_error(is.published(test.ds) <- FALSE,
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset1.json":',
-                    '{"is_published":false}}'),
-            fixed=TRUE
-        )
-        expect_error(is.draft(test.ds2) <- FALSE,
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
-                    '{"is_published":true}}'),
-            fixed=TRUE
-        )
-        expect_error(is.draft(test.ds) <- TRUE,
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset1.json":',
-                    '{"is_published":false}}'),
-            fixed=TRUE
-        )
-        expect_error(publish(test.ds2),
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
-                    '{"is_published":true}}'),
-            fixed=TRUE
-        )
-        expect_error(publish(test.ds), NA)
-        expect_error(is.draft(test.ds) <- FALSE, NA)
-        expect_error(is.published(test.ds) <- TRUE, NA)
+        expect_PATCH(is.published(test.ds2) <- TRUE,
+            '/api/datasets.json',
+            '{"/api/datasets/dataset3.json":{"is_published":true}}')
+        expect_PATCH(is.published(test.ds) <- FALSE,
+            '/api/datasets.json',
+            '{"/api/datasets/dataset1.json":{"is_published":false}}')
+        expect_PATCH(is.draft(test.ds2) <- FALSE,
+            '/api/datasets.json',
+            '{"/api/datasets/dataset3.json":{"is_published":true}}')
+        expect_PATCH(is.draft(test.ds) <- TRUE,
+            '/api/datasets.json',
+            '{"/api/datasets/dataset1.json":{"is_published":false}}')
+        expect_PATCH(publish(test.ds2),
+            '/api/datasets.json',
+            '{"/api/datasets/dataset3.json":{"is_published":true}}')
+        expect_no_request(publish(test.ds))
+        expect_no_request(is.draft(test.ds) <- FALSE)
+        expect_no_request(is.published(test.ds) <- TRUE)
     })
 
     test_that("start/endDate", {
@@ -82,28 +68,20 @@ with_mock_HTTP({
     })
 
     test_that("startDate<- makes correct request", {
-        expect_error(startDate(test.ds2) <- today,
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
-                    '{"start_date":"2016-02-11"}}'),
-            fixed=TRUE
-        )
-        expect_error(startDate(test.ds) <- NULL,
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset1.json":',
-                    '{"start_date":null}}'),
-            fixed=TRUE
-        )
+        expect_PATCH(startDate(test.ds2) <- today,
+            '/api/datasets.json',
+            '{"/api/datasets/dataset3.json":{"start_date":"2016-02-11"}}')
+        expect_PATCH(startDate(test.ds) <- NULL,
+            '/api/datasets.json',
+            '{"/api/datasets/dataset1.json":{"start_date":null}}')
     })
     test_that("endDate<- makes correct request", {
-        expect_error(endDate(test.ds2) <- today,
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
-                    '{"end_date":"2016-02-11"}}'),
-            fixed=TRUE
-        )
-        expect_error(endDate(test.ds) <- NULL,
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset1.json":',
-                    '{"end_date":null}}'),
-            fixed=TRUE
-        )
+        expect_PATCH(endDate(test.ds2) <- today,
+            '/api/datasets.json',
+            '{"/api/datasets/dataset3.json":{"end_date":"2016-02-11"}}')
+        expect_PATCH(endDate(test.ds) <- NULL,
+            '/api/datasets.json',
+            '{"/api/datasets/dataset1.json":{"end_date":null}}')
     })
 
     test_that("Dataset webURL", {

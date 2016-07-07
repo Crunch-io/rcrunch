@@ -3,27 +3,27 @@ context("Export dataset")
 with_mock_HTTP({
     ds <- loadDataset("test ds")
     test_that("Export POST request", {
-        expect_error(exportDataset(ds, file=""),
-            'POST /api/datasets/dataset1/export/csv/ {"filter":null,"options":{"use_category_ids":false}}',
-            fixed=TRUE)
-        expect_error(write.csv(ds, file=""),
-            'POST /api/datasets/dataset1/export/csv/ {"filter":null,"options":{"use_category_ids":false}}',
-            fixed=TRUE)
+        expect_POST(exportDataset(ds, file=""),
+            '/api/datasets/dataset1/export/csv/',
+            '{"filter":null,"options":{"use_category_ids":false}}')
+        expect_POST(write.csv(ds, file=""),
+            '/api/datasets/dataset1/export/csv/',
+            '{"filter":null,"options":{"use_category_ids":false}}')
     })
     test_that("with categorical='id'", {
-        expect_error(write.csv(ds, file="", categorical="id"),
-            'POST /api/datasets/dataset1/export/csv/ {"filter":null,"options":{"use_category_ids":true}}',
-            fixed=TRUE)
+        expect_POST(write.csv(ds, file="", categorical="id"),
+            '/api/datasets/dataset1/export/csv/',
+            '{"filter":null,"options":{"use_category_ids":true}}')
     })
     test_that("Export SPSS request", {
-        expect_error(exportDataset(ds, file="", format="spss"),
-            'POST /api/datasets/dataset1/export/spss/ {"filter":null}',
-            fixed=TRUE)
+        expect_POST(exportDataset(ds, file="", format="spss"),
+            '/api/datasets/dataset1/export/spss/',
+            '{"filter":null}')
     })
     test_that("Export SPSS ignores 'categorical' arg", {
-        expect_error(exportDataset(ds, file="", format="spss", categorical="zzzz"),
-            'POST /api/datasets/dataset1/export/spss/ {"filter":null}',
-            fixed=TRUE)
+        expect_POST(exportDataset(ds, file="", format="spss", categorical="zzzz"),
+            '/api/datasets/dataset1/export/spss/',
+            '{"filter":null}')
     })
     test_that("Unsupported export format", {
         expect_error(exportDataset(ds, format="exe"),

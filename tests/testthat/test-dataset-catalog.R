@@ -59,34 +59,24 @@ with_mock_HTTP({
         expect_identical(is.draft(datcat), !is.published(datcat))
     })
     test_that("is.archived setter", {
-        expect_error(is.archived(datcat[1]) <- TRUE,
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
-                    '{"archived":true}}'),
-            fixed=TRUE
-        )
-        expect_error(archive(datcat[2:3]),
-            paste0('PATCH /api/datasets.json {',
-                    '"/api/datasets/dataset1.json":{"archived":true}}'),
-            fixed=TRUE
-        )
+        expect_PATCH(is.archived(datcat[1]) <- TRUE,
+            '/api/datasets.json',
+            '{"/api/datasets/dataset3.json":{"archived":true}}')
+        expect_PATCH(archive(datcat[2:3]),
+            '/api/datasets.json',
+            '{"/api/datasets/dataset1.json":{"archived":true}}')
     })
     test_that("is.published setter", {
-        expect_error(is.published(datcat[c(1,3)]) <- TRUE,
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
-                    '{"is_published":true}}'),
-            fixed=TRUE
-        )
-        expect_error(publish(datcat[c(1,3)]),
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
-                    '{"is_published":true}}'),
-            fixed=TRUE
-        )
-        expect_error(is.draft(datcat) <- TRUE,
-            paste0('PATCH /api/datasets.json {',
-                    '"/api/datasets/dataset2.json":{"is_published":false},',
-                    '"/api/datasets/dataset1.json":{"is_published":false}}'),
-            fixed=TRUE
-        )
+        expect_PATCH(is.published(datcat[c(1,3)]) <- TRUE,
+            '/api/datasets.json',
+            '{"/api/datasets/dataset3.json":{"is_published":true}}')
+        expect_PATCH(publish(datcat[c(1,3)]),
+            '/api/datasets.json',
+            '{"/api/datasets/dataset3.json":{"is_published":true}}')
+        expect_PATCH(is.draft(datcat) <- TRUE,
+            '/api/datasets.json',
+            '{"/api/datasets/dataset2.json":{"is_published":false},',
+            '"/api/datasets/dataset1.json":{"is_published":false}}')
     })
 
     test_that("entity method for tuple", {

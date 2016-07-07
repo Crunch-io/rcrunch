@@ -41,14 +41,13 @@ with_mock_HTTP({
         tp <- tuple(ds$gender)@body
         tp$name <- "Sex"
         mock.tuple <- structure(list(tp["name"]), .Names=self(ds$gender))
-        expect_error(name(ds$gender) <- "Sex",
-            paste("PATCH", self(variables(ds)), toJSON(mock.tuple)),
-            fixed=TRUE)
+        expect_PATCH(name(ds$gender) <- "Sex",
+            self(variables(ds)),
+            toJSON(mock.tuple))
     })
 
     test_that("Variable setters don't hit server if data not changed", {
-        expect_error(name(ds$gender) <- "Gender",
-            NA)
+        expect_no_request(name(ds$gender) <- "Gender")
     })
 
     test_that("refresh", {

@@ -17,18 +17,18 @@ with_mock_HTTP({
         ## Circumvent the try-catch inside deleteVariables
         with_mock(try=function (expr, silent) force(expr), eval.parent({
             expect_message(
-                expect_error(ds$birthyr <- NULL,
-                    "DELETE /api/datasets/dataset3/variables/birthyr.json"),
+                expect_DELETE(ds$birthyr <- NULL,
+                    "/api/datasets/dataset3/variables/birthyr.json"),
                 NA)
             expect_message(
-                expect_error(deleteVariables(ds, "birthyr"),
-                    "DELETE /api/datasets/dataset3/variables/birthyr.json"),
+                expect_DELETE(deleteVariables(ds, "birthyr"),
+                    "/api/datasets/dataset3/variables/birthyr.json"),
                 NA)
         }))
         skip_on_jenkins("No idea why this fails to catch the warning on Jenkins but not on Travis or locally")
         expect_warning(
-            expect_error(delete(ds$birthyr),
-                "DELETE /api/datasets/dataset3/variables/birthyr.json"),
+            expect_DELETE(delete(ds$birthyr),
+                "/api/datasets/dataset3/variables/birthyr.json"),
             "Variable birthyr is hidden")
     })
 })
