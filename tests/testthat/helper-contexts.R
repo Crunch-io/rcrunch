@@ -87,7 +87,7 @@ with_test_authentication <- function (expr) {
             }),
             at=1,
             print=FALSE,
-            where=crGET))
+            where=createSource))
         on.exit({
             suppressMessages(untrace("locationHeader", where=crGET))
             suppressMessages(untrace("createDataset", where=crGET))
