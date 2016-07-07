@@ -154,19 +154,6 @@ testUser <- function (email=uniqueEmail(), name=paste("Ms.", email, "User"), ...
     return(UserEntity(crGET(u.url)))
 }
 
-markForCleanup <- function (x) {
-    objects_to_purge <<- c(objects_to_purge, self(x))
-    return(x)
-}
-
-cleanup <- function (obj, ...) {
-    return(setup.and.teardown(
-        function () markForCleanup(obj),
-        purge.object,
-        ...
-    ))
-}
-
 testProject <- function (name="", ...) {
     name <- paste0(name, as.numeric(Sys.time()))
     p <- session()$projects
