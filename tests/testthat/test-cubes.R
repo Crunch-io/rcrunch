@@ -300,6 +300,11 @@ if (run.integration.tests) {
                         v7=c("C", "E"))))
             })
 
+            test_that("Numeric aggregates on categoricals with numeric values", {
+                expect_equivalent(as.array(crtabs(mean(v4) ~ v4, data=ds)),
+                    array(c(1, 2), dim=2L, dimnames=list(v4=c("B", "C"))))
+            })
+
             test_that("Missing values in cubes", {
                 expect_equivalent(round(as.array(crtabs(sd(v3) ~ bin(v3) + v7,
                     data=ds)), 3),
