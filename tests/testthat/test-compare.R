@@ -12,7 +12,7 @@ cat2 <- Categories(
 )
 
 test_that("compareCategories", {
-    expect_equal(compareCategories(cat1, cat2),
+    expect_equivalent(compareCategories(cat1, cat2),
         data.frame(
             numeric_value.A=c(1L, 2L, NA, NA),
             id.A=c(1L, 2L, -1L, NA),
@@ -24,12 +24,28 @@ test_that("compareCategories", {
 })
 
 test_that("summarizeCompareCategories", {
-    expect_equal(summarizeCompareCategories(compareCategories(cat1, cat2)),
+    expect_equal(summary(compareCategories(cat1, cat2))$problems,
         list(mismatched.ids="B",
             unmatched.ids=c("C", "Name 1")))
-    expect_equal(summarizeCompareCategories(compareCategories(cat1, cat1)),
+    expect_equal(summary(compareCategories(cat1, cat1))$problems,
         list(mismatched.ids=character(0),
             unmatched.ids=character(0)))
+})
+
+test_that("print compareCategory summary", {
+    print(summary(compareCategories(cat1, cat2)))
+    expect_output(summary(compareCategories(cat1, cat2)),
+        NA)
+})
+
+test_that("print compareCategory summary when categories are equivalent", {
+    summary(compareCategories(cat1, cat1))
+    expect_output(summary(compareCategories(cat1, cat1)),
+        paste(
+            "Total categories: 3 ",
+            "All good :)",
+            sep="\n"
+            ))
 })
 
 with_mock_HTTP({
@@ -37,8 +53,38 @@ with_mock_HTTP({
     ds2 <- loadDataset("an archived dataset", "archived")
 
     test_that("compareVariables", {
-        expect_equal(summarizeCompareVariables(compareVariables(allVariables(ds1), allVariables(ds2))),
+        expect_equal(summarizeCompareVariables(compareVariables(allVariables(ds1), allVariables(ds2)))$problems,
             list(mismatched.type="birthyr",
                 mismatched.name=c("birthyr", "starttime", "birthyr2")))
+    })
+
+    test_that("print compareVariables", {
+        expect_output(summary(compareVariables(allVariables(ds1), allVariables(ds2))),
+            paste(
+                "Total variables: 7 ",
+                "",
+                "Type mismatch: 1 ",
+                "     name.A  type.A   alias   type.B    name.B",
+                " Birth Year numeric birthyr datetime starttime",
+                "",
+                "Name mismatch: 3 ",
+                "     name.A   type.A     alias   type.B     name.B",
+                " Birth Year  numeric   birthyr datetime  starttime",
+                "  starttime datetime starttime     <NA>       <NA>",
+                "       <NA>     <NA>  birthyr2  numeric Birth Year",
+                sep="\n"
+                ))
+    })
+    test_that("compareVariables when everything is ok", {
+        expect_output(summary(compareVariables(allVariables(ds1), allVariables(ds1))),
+            paste(
+                "Total variables: 6 ",
+                "All good :)",
+                sep="\n"
+                ))
+    })
+
+    test_that("compareDatasets", {
+
     })
 })

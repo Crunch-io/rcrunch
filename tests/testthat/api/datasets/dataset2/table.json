@@ -1,0 +1,51 @@
+{
+    "element": "crunch:table",
+    "self": "/api/datasets/dataset1/table/",
+    "metadata": {
+        "gender": {
+            "name": "Gender",
+            "alias": "gender",
+            "type": "categorical",
+            "description": "Gender",
+            "categories": [
+                {
+                    "numeric_value": 1,
+                    "missing": false,
+                    "id": 1,
+                    "name": "Male"
+                },
+                {
+                    "numeric_value": 2,
+                    "missing": false,
+                    "id": 2,
+                    "name": "Other"
+                },
+                {
+                    "numeric_value": null,
+                    "missing": false,
+                    "id": 3,
+                    "name": "Female"
+                },
+                {
+                    "numeric_value": null,
+                    "missing": true,
+                    "id": -1,
+                    "name": "No Data"
+                }
+            ]
+        },
+        "birthyr": {
+            "name": "Birth Year",
+            "alias": "birthyr2",
+            "type": "numeric",
+            "description": null
+        },
+        "starttime": {
+            "name": "starttime",
+            "alias": "birthyr",
+            "type": "datetime",
+            "description": "Interview Start Time",
+            "resolution": "D"
+        }
+    }
+}

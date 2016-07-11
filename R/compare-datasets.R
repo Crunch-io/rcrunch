@@ -1,68 +1,3 @@
-compareCategories <- function (A, B) {
-    ## Assumes matching on names (because that's what append does)
-    na <- names(A)
-    nb <- names(B)
-    allnames <- c(na, setdiff(nb, na))
-    match.a <- match(allnames, na)
-    match.b <- match(allnames, nb)
-    return(data.frame(
-        numeric_value.A=values(A)[match.a],
-        id.A=ids(A)[match.a],
-        name=allnames,
-        id.B=ids(B)[match.b],
-        numeric_value.B=values(B)[match.b],
-        stringsAsFactors=FALSE))
-}
-
-summarizeCompareCategories <- function (catdf) {
-    ## Check for mismatch of ids where names match
-    mismatched.names <- as.character(na.omit(catdf$name[catdf$id.A != catdf$id.B]))
-    unmatched.names <- with(catdf, {
-        ## Check for unmatched id from one that matches in other
-        unmatched.A <- intersect(id.A[is.na(id.B)], na.omit(id.B))
-        unmatched.B <- intersect(id.B[is.na(id.A)], na.omit(id.A))
-        name[id.A %in% unmatched.A | id.B %in% unmatched.B]
-    })
-
-    return(list(
-        mismatched.ids=mismatched.names,
-        unmatched.ids=unmatched.names
-    ))
-}
-
-compareVariables <- function (A, B) {
-    ## Match variable catalogs on alias
-    aa <- aliases(A)
-    ab <- aliases(B)
-    allaliases <- c(aa, setdiff(ab, aa))
-    match.a <- match(allaliases, aa)
-    match.b <- match(allaliases, ab)
-    return(data.frame(
-        name.A=names(A)[match.a],
-        type.A=types(A)[match.a],
-        alias=allaliases,
-        type.B=types(B)[match.b],
-        name.B=names(B)[match.b],
-        stringsAsFactors=FALSE))
-}
-
-summarizeCompareVariables <- function (compdf) {
-    ## Check for mismatch of types where aliases match
-    mismatched.type <- as.character(na.omit(compdf$alias[compdf$type.A != compdf$type.B]))
-    ## Check for name matches that aren't matched by alias
-    common.names <- na.omit(intersect(compdf$name.A, compdf$name.B))
-    in.A <- match(compdf$name.A, common.names)
-    in.A[is.na(in.A)] <- -1
-    in.B <- match(compdf$name.B, common.names)
-    in.B[is.na(in.B)] <- -1
-    mismatched.name <- as.character(na.omit(compdf$alias[in.A != in.B]))
-
-    return(list(
-        mismatched.type=mismatched.type,
-        mismatched.name=mismatched.name
-    ))
-}
-
 compareSubvariables <- function (A, B) {
     ## Match variable catalogs on alias
     aa <- aliases(A)
@@ -156,4 +91,5 @@ summarizeCompareDatasets <- function (comp) {
         logical(1))
     vars <- summarizeCompareVariables(comp$variables)
     ## Do stuff with that
+
 }
