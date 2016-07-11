@@ -6,30 +6,28 @@ compareCategories <- function (A, B) {
     match.a <- match(allnames, na)
     match.b <- match(allnames, nb)
     return(structure(data.frame(
-        numeric_value.A=values(A)[match.a],
+        # numeric_value.A=values(A)[match.a],
         id.A=ids(A)[match.a],
         name=allnames,
         id.B=ids(B)[match.b],
-        numeric_value.B=values(B)[match.b],
+        # numeric_value.B=values(B)[match.b],
         stringsAsFactors=FALSE),
         class=c("compareCategories", "data.frame")))
 }
 
-summarizeCompareCategories <- function (catdf) {
-    ## Check for mismatch of ids where names match
-    mismatched.names <- as.character(na.omit(catdf$name[catdf$id.A != catdf$id.B]))
-    unmatched.names <- with(catdf, {
-        ## Check for unmatched id from one that matches in other
-        unmatched.A <- intersect(id.A[is.na(id.B)], na.omit(id.B))
-        unmatched.B <- intersect(id.B[is.na(id.A)], na.omit(id.A))
-        name[id.A %in% unmatched.A | id.B %in% unmatched.B]
-    })
+summarizeCompareCategories <- function (compdf) {
+    ## Check for id matches that aren't matched by name
+    common.ids <- na.omit(intersect(compdf$id.A, compdf$id.B))
+    in.A <- match(compdf$id.A, common.ids)
+    in.A[is.na(in.A)] <- -1
+    in.B <- match(compdf$id.B, common.ids)
+    in.B[is.na(in.B)] <- -1
+    mismatched.ids <- as.character(na.omit(compdf$name[in.A != in.B]))
 
     return(structure(list(
-        categories=catdf,
+        categories=compdf,
         problems=list(
-            mismatched.ids=mismatched.names,
-            unmatched.ids=unmatched.names
+            mismatched.ids=mismatched.ids
         )),
         class="compareCategoriesSummary"))
 }
@@ -44,15 +42,7 @@ print.compareCategoriesSummary <- function (object, ...) {
         cat("Mismatched ids:", length(mismatched.ids), "\n")
         print(object$categories[object$categories$name %in% mismatched.ids,,drop=FALSE],
             row.names=FALSE)
-    }
-    unmatched.ids <- object$problems$unmatched.ids
-    if (length(unmatched.ids)) {
-        cat("\n")
-        cat("Unmatched ids:", length(unmatched.ids), "\n")
-        print(object$categories[object$categories$name %in% unmatched.ids,,drop=FALSE],
-            row.names=FALSE)
-    }
-    if (length(mismatched.ids) + length(unmatched.ids) == 0) {
+    } else {
         cat("All good :)\n")
     }
     invisible(object)

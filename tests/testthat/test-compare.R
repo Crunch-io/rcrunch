@@ -14,28 +14,33 @@ cat2 <- Categories(
 test_that("compareCategories", {
     expect_equivalent(compareCategories(cat1, cat2),
         data.frame(
-            numeric_value.A=c(1L, 2L, NA, NA),
+            # numeric_value.A=c(1L, 2L, NA, NA),
             id.A=c(1L, 2L, -1L, NA),
             name=c("B", "C", "No Data", "Name 1"),
             id.B=c(2L, NA, -1L, 1L),
-            numeric_value.B=c(4L, NA, NA, 3L),
+            # numeric_value.B=c(4L, NA, NA, 3L),
             stringsAsFactors=FALSE
         ))
 })
 
 test_that("summarizeCompareCategories", {
     expect_equal(summary(compareCategories(cat1, cat2))$problems,
-        list(mismatched.ids="B",
-            unmatched.ids=c("C", "Name 1")))
+        list(mismatched.ids=c("B", "C", "Name 1")))
     expect_equal(summary(compareCategories(cat1, cat1))$problems,
-        list(mismatched.ids=character(0),
-            unmatched.ids=character(0)))
+        list(mismatched.ids=character(0)))
 })
 
 test_that("print compareCategory summary", {
-    print(summary(compareCategories(cat1, cat2)))
     expect_output(summary(compareCategories(cat1, cat2)),
-        NA)
+        paste(
+            "Total categories: 4 ",
+            "",
+            "Mismatched ids: 3 ",
+            " id.A   name id.B",
+            "    1      B    2",
+            "    2      C   NA",
+            "   NA Name 1    1",
+            sep="\n"))
 })
 
 test_that("print compareCategory summary when categories are equivalent", {
