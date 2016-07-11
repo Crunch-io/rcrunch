@@ -89,6 +89,10 @@ with_mock_HTTP({
                 ))
     })
 
+    test_that("compareSubvariables", {
+        
+    })
+
     test_that("compareDatasets", {
 
     })

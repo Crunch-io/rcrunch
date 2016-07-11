@@ -17,17 +17,10 @@ compareCategories <- function (A, B) {
 
 summarizeCompareCategories <- function (compdf) {
     ## Check for id matches that aren't matched by name
-    common.ids <- na.omit(intersect(compdf$id.A, compdf$id.B))
-    in.A <- match(compdf$id.A, common.ids)
-    in.A[is.na(in.A)] <- -1
-    in.B <- match(compdf$id.B, common.ids)
-    in.B[is.na(in.B)] <- -1
-    mismatched.ids <- as.character(na.omit(compdf$name[in.A != in.B]))
-
     return(structure(list(
         categories=compdf,
         problems=list(
-            mismatched.ids=mismatched.ids
+            mismatched.ids=findMismatches(compdf, "name", "id")
         )),
         class="compareCategoriesSummary"))
 }

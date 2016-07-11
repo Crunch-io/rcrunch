@@ -1,38 +1,3 @@
-compareSubvariables <- function (A, B) {
-    ## Match variable catalogs on alias
-    aa <- aliases(A)
-    ab <- aliases(B)
-    allaliases <- c(aa, setdiff(ab, aa))
-    match.a <- match(allaliases, aa)
-    match.b <- match(allaliases, ab)
-    return(data.frame(
-        name.A=names(A)[match.a],
-        parent.A=vapply(A[match.a], vget("parent"), character(1), USE.NAMES=FALSE),
-        alias=allaliases,
-        parent.B=vapply(B[match.b], vget("parent"), character(1), USE.NAMES=FALSE),
-        name.B=names(B)[match.b],
-        stringsAsFactors=FALSE))
-}
-
-summarizeCompareSubariables <- function (compdf) {
-    ## Check for name matches that aren't matched by alias
-    common.names <- na.omit(intersect(compdf$name.A, compdf$name.B))
-    in.A <- match(compdf$name.A, common.names)
-    in.A[is.na(in.A)] <- -1 ## So that the NAs work out in the != below
-    in.B <- match(compdf$name.B, common.names)
-    in.B[is.na(in.B)] <- -1
-    mismatched.name <- as.character(na.omit(compdf$alias[in.A != in.B]))
-
-    ## Check for multiple parents too
-    return(list(
-        mismatched.name=mismatched.name,
-        parents=list(
-            A=unique(na.omit(compdf$parent.A)),
-            B=unique(na.omit(compdf$parent.B))
-        )
-    ))
-}
-
 compareDatasets <- function (A, B) {
     varsA <- variableMetadata(A)
     varsB <- variableMetadata(B)

@@ -20,19 +20,12 @@ compareVariables <- function (A, B) {
 summarizeCompareVariables <- function (compdf) {
     ## Check for mismatch of types where aliases match
     mismatched.type <- as.character(na.omit(compdf$alias[compdf$type.A != compdf$type.B]))
-    ## Check for name matches that aren't matched by alias
-    common.names <- na.omit(intersect(compdf$name.A, compdf$name.B))
-    in.A <- match(compdf$name.A, common.names)
-    in.A[is.na(in.A)] <- -1
-    in.B <- match(compdf$name.B, common.names)
-    in.B[is.na(in.B)] <- -1
-    mismatched.name <- as.character(na.omit(compdf$alias[in.A != in.B]))
 
     return(structure(list(
         variables=compdf,
         problems=list(
             mismatched.type=mismatched.type,
-            mismatched.name=mismatched.name
+            mismatched.name=findMismatches(compdf, "alias", "name")
         )),
         class="compareVariablesSummary"))
 }
