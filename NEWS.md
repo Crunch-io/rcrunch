@@ -1,4 +1,5 @@
 ### crunch 1.10.7 (under development)
+* Support computing numeric aggregates (mean, max, etc.) of categorical variables with numeric values in `crtabs`
 
 ### crunch 1.10.6
 * Fix refresh method for Datasets that have been transferred to a Project.

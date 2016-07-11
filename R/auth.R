@@ -105,14 +105,16 @@ without_echo <- function (expr) {
     eval.parent(expr)
 }
 
-jupyterLogin <- function (token) {
+tokenAuth <- function (token, ua="token") {
     ## Add an auth token as a cookie manually, rather than from a Set-Cookie
     ## response header.
-    ## Also modify the user-agent to include "Jupyter"
+    ## Also modify the user-agent to include the service this is coming from
     set_config(c(config(cookie=paste0("token=", token)),
-        add_headers(`user-agent`=crunchUserAgent("jupyter.crunch.io"))))
+        add_headers(`user-agent`=crunchUserAgent(ua))))
     warmSessionCache()
 }
+
+jupyterLogin <- function (token) tokenAuth(token, ua="jupyter.crunch.io")
 
 warmSessionCache <- function () {
     session_store$root <- getAPIroot()
