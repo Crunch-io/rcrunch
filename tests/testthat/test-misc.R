@@ -52,8 +52,8 @@ test_that("dirtyElements", {
 test_that("joinPath", {
     expect_identical(joinPath("/api/datasets/", "../variables/"),
         "/api/variables/")
-    expect_identical(joinPath("/api/variables/", "4412es.json"),
-        "/api/variables/4412es.json")
+    expect_identical(joinPath("/api/variables/", "4412es/"),
+        "/api/variables/4412es/")
     expect_identical(joinPath("a/b/c/d/../e/f/", "g/../../h/"),
         "a/b/c/e/h/")
     expect_identical(joinPath("/api/datasets/", "/variables/"),
@@ -68,8 +68,8 @@ test_that("absoluteURL", {
     base.url <- "https://fake.crunch.io/api/datasets/"
     expect_identical(absoluteURL("../variables/", base.url),
         "https://fake.crunch.io/api/variables/")
-    expect_identical(absoluteURL("4412es.json", base.url),
-        "https://fake.crunch.io/api/datasets/4412es.json")
+    expect_identical(absoluteURL("4412es/", base.url),
+        "https://fake.crunch.io/api/datasets/4412es/")
     expect_identical(absoluteURL("g/../../h/",
         "https://fake.crunch.io/a/b/c/d/../e/f/"),
         "https://fake.crunch.io/a/b/c/e/h/")

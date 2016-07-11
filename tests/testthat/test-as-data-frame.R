@@ -9,7 +9,7 @@ NA, 1L, NA, 1L, 2L, 1L, NA, 1L, 2L, NA, 1L, 2L, NA, 1L, NA, 2L,
 
 with_mock_HTTP({
     test.ds <- loadDataset("test ds")
-    test.ds@variables@index[["/api/datasets/dataset1/variables/mymrset.json"]]$discarded <- TRUE
+    test.ds@variables@index[["/api/datasets/dataset1/variables/mymrset/"]]$discarded <- TRUE
     # hiddenVariables(test.ds) <- "mymrset" # Defer implementing MR as.vector
     test_that("setup", {
         expect_identical(dim(test.ds), c(nrow(test.ds), ncol(test.ds)))

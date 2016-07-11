@@ -1,10 +1,10 @@
 {
     "element": "shoji:order",
-    "self": "/api/datasets/dataset2/variables/hierarchical.json",
+    "self": "/api/datasets/dataset2/variables/hierarchical/",
     "description": "Hierarchical ordering of dataset variables",
     "graph": [
-        "../gender.json",
-        "../birthyr.json",
-        "../starttime.json"
+        "../gender/",
+        "../birthyr/",
+        "../starttime/"
     ]
 }

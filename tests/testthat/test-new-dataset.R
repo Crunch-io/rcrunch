@@ -59,7 +59,7 @@ if (run.integration.tests) {
                 c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
         })
 
-        m <- fromJSON(file.path("dataset-fixtures", "apidocs.json"),
+        m <- fromJSON(file.path("dataset-fixtures", "apidocs/"),
             simplifyVector=FALSE)
 
         test_that("Can create dataset with data in S3", {

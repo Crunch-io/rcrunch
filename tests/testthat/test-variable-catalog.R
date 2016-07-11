@@ -1,7 +1,7 @@
 context("Variable catalog")
 
 with_mock_HTTP({
-    variables.catalog.url <- "/api/datasets/dataset1/variables.json"
+    variables.catalog.url <- "/api/datasets/dataset1/variables/"
     varblob <- crGET(variables.catalog.url)
 
     test_that("VariableCatalog instantiates from Shoji", {
@@ -9,7 +9,7 @@ with_mock_HTTP({
     })
 
     varcat <- VariableCatalog(varblob)
-    order.url <- "/api/datasets/dataset1/variables/hierarchical.json"
+    order.url <- "/api/datasets/dataset1/variables/hierarchical/"
     varorder <- VariableOrder(crGET(order.url))
 
     test_that("VariableCatalog index method", {
@@ -32,20 +32,20 @@ with_mock_HTTP({
         expect_is(active(varcat), "VariableCatalog")
         expect_is(hidden(varcat), "VariableCatalog")
         expect_identical(urls(active(varcat)),
-            c("/api/datasets/dataset1/variables/gender.json",
-            "/api/datasets/dataset1/variables/mymrset.json",
-            "/api/datasets/dataset1/variables/textVar.json",
-            "/api/datasets/dataset1/variables/starttime.json",
-            "/api/datasets/dataset1/variables/catarray.json"))
+            c("/api/datasets/dataset1/variables/gender/",
+            "/api/datasets/dataset1/variables/mymrset/",
+            "/api/datasets/dataset1/variables/textVar/",
+            "/api/datasets/dataset1/variables/starttime/",
+            "/api/datasets/dataset1/variables/catarray/"))
         expect_length(active(varcat), 5)
         expect_identical(urls(hidden(varcat)),
-            "/api/datasets/dataset1/variables/birthyr.json")
+            "/api/datasets/dataset1/variables/birthyr/")
         expect_length(hidden(varcat), 1)
         expect_length(varcat, 6)
         expect_identical(active(hidden(varcat)), hidden(active(varcat)))
     })
 
-    gender.url <- "/api/datasets/dataset1/variables/gender.json"
+    gender.url <- "/api/datasets/dataset1/variables/gender/"
     test_that("Extract methods: character and numeric", {
         expect_is(varcat[[gender.url]], "VariableTuple")
         expect_identical(varcat[[gender.url]]@body,
@@ -61,8 +61,8 @@ with_mock_HTTP({
     })
 
     test_that("Extract methods: VariableOrder/Group", {
-        ents <- c("/api/datasets/dataset1/variables/gender.json",
-            "/api/datasets/dataset1/variables/mymrset.json")
+        ents <- c("/api/datasets/dataset1/variables/gender/",
+            "/api/datasets/dataset1/variables/mymrset/")
         ord <- VariableOrder(VariableGroup("G1", entities=ents))
         expect_identical(names(varcat[ents]), c("Gender", "mymrset"))
         expect_identical(varcat[ord[[1]]], varcat[ents])
@@ -134,20 +134,6 @@ if (run.integration.tests) {
                 try(names(variables(ds)[ord]) <- c("2", "3"))
                 expect_identical(names(variables(ds)[ord]),
                     c("2", "3"))
-            })
-        })
-
-        with(test.dataset(newDatasetFromFixture("apidocs")), {
-            test_that("variableMetadata", {
-                vm <- variableMetadata(ds)
-                expect_is(vm, "VariableCatalog")
-                i <- which(aliases(vm) == "allpets")
-                expect_identical(Categories(data=vm[[i]]$categories),
-                    categories(ds$allpets))
-                expect_identical(vm[[i]]$subvariables,
-                    subvariables(tuple(ds$allpets)))
-                expect_true(all(grepl("^http", urls(vm))))
-                expect_true(!any(is.na(getIndexSlot(vm, "id"))))
             })
         })
     })

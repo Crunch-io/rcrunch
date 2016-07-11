@@ -22,3 +22,23 @@ test_that("compareCategories", {
             stringsAsFactors=FALSE
         ))
 })
+
+test_that("summarizeCompareCategories", {
+    expect_equal(summarizeCompareCategories(compareCategories(cat1, cat2)),
+        list(mismatched.ids="B",
+            unmatched.ids=c("C", "Name 1")))
+    expect_equal(summarizeCompareCategories(compareCategories(cat1, cat1)),
+        list(mismatched.ids=character(0),
+            unmatched.ids=character(0)))
+})
+
+with_mock_HTTP({
+    ds1 <- loadDataset("test ds")
+    ds2 <- loadDataset("an archived dataset", "archived")
+
+    test_that("compareVariables", {
+        expect_equal(summarizeCompareVariables(compareVariables(allVariables(ds1), allVariables(ds2))),
+            list(mismatched.type="birthyr",
+                mismatched.name=c("birthyr", "starttime", "birthyr2")))
+    })
+})

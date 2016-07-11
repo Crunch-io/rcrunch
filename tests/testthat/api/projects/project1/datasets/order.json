@@ -1,10 +1,10 @@
 {
     "element": "shoji:order",
-    "self": "/api/projects/project1/datasets/order.json",
+    "self": "/api/projects/project1/datasets/order/",
     "graph": [
         {
             "Group 1": [
-                "/api/datasets/dataset3.json"
+                "/api/datasets/dataset3/"
             ]
         }
     ]
