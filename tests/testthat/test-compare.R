@@ -94,6 +94,6 @@ with_mock_HTTP({
     })
 
     test_that("compareDatasets", {
-
+        print(summary(compareDatasets(ds1, ds2)))
     })
 })

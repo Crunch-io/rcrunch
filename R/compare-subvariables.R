@@ -14,7 +14,7 @@ compareSubvariables <- function (A, B) {
         stringsAsFactors=FALSE))
 }
 
-summarizeCompareSubariables <- function (compdf) {
+summarizeCompareSubvariables <- function (compdf) {
     ## Check for name matches that aren't matched by alias
     ## Check for multiple parents too
     return(list(

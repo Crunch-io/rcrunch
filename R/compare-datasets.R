@@ -6,8 +6,8 @@ compareDatasets <- function (A, B) {
     a2uA <- structure(urls(varsA), .Names=aliases(varsA))
     a2uB <- structure(urls(varsB), .Names=aliases(varsB))
 
-    comp.vars <- compareVariables(varsA[are.subvars(varsA)],
-        varsB[are.subvars(varsB)])
+    comp.vars <- compareVariables(varsA[!are.subvars(varsA)],
+        varsB[!are.subvars(varsB)])
 
     same.type <- comp.vars$type.A == comp.vars$type.B ## is NA if either is NA, i.e. not found
     ## How to address CA vs MR not a problem?
@@ -28,7 +28,7 @@ compareDatasets <- function (A, B) {
         categories=sapply(intersect.vars$alias[has.categories],
             function (x) {
                 compareCategories(Categories(data=varsA[[a2uA[x]]]$categories),
-                    Categories(data=varsB[[a2ub[x]]]$categories))
+                    Categories(data=varsB[[a2uB[x]]]$categories))
             },
             simplify=FALSE),
         subvariables=sapply(intersect.vars$alias[arrays],
@@ -74,19 +74,27 @@ print.compareDatasetsSummary <- function (object, ...) {
     ## Categories
     bad.cats <- !object$ok.cats
     bad.cat.count <- sum(bad.cats)
-    cat("Variables with categories:", length(object$cats), "\n")
+    cat("\nVariables with categories:", length(object$cats), "\n")
     if (bad.cat.count) {
-        cat("With issues:", bad.cat.count, "\n")
-        print(object$cats[bad.cats])
+        cat("With issues:", bad.cat.count, "\n\n")
+        for (i in names(object$cats[bad.cats])) {
+            cat("$", i, "\n", sep="")
+            print(object$cats[[i]])
+            cat("\n")
+        }
     }
 
     ## Subvariables
     bad.subs <- !object$ok.subs
     bad.sub.count <- sum(bad.subs)
-    cat("Array variables:", length(object$subs), "\n")
+    cat("\nArray variables:", length(object$subs), "\n")
     if (bad.sub.count) {
-        cat("With subvariable issues:", bad.sub.count, "\n")
-        print(object$subs[bad.subs])
+        cat("With subvariable issues:", bad.sub.count, "\n\n")
+        for (i in names(object$subs[bad.subs])) {
+            cat("$", i, "\n", sep="")
+            print(object$subs[[i]])
+            cat("\n")
+        }
     }
 
     ## Else:
