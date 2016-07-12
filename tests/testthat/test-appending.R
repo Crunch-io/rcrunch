@@ -180,24 +180,6 @@ if (run.integration.tests) {
             })
         })
 
-        with(test.dataset(df[,2:5], "part1"), {
-            d2 <- df
-            d2$v2 <- d2$v3 ## v2 was text, now is numeric
-            with(test.dataset(d2, "part2"), {
-                test_that("setup for append casts on type mismatch", {
-                    p1.batches <- batches(part1)
-                    expect_is(p1.batches, "ShojiCatalog")
-                    expect_length(p1.batches, 2)
-                })
-                test_that("append casts on type mismatch", {
-                    ## Wait--shouldn't this raise a conflict?
-                    expect_message(out <- appendDataset(part1, part2),
-                        "No conflicts")
-                    expect_length(batches(part1), 3)
-                })
-            })
-        })
-
         datetime1 <- data.frame(
             cat=factor(c("A", "B")),
             wave=as.Date(rep(c("2014-04-15", "2014-06-15"), 4)))
