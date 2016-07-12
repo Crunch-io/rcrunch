@@ -13,8 +13,11 @@ with_mock_HTTP({
             categories(ds$gender))
     })
 
-    test_that("are_subvars on variableMetadata", {
-
+    test_that("are.subvars on variableMetadata", {
+        expect_equal(are.subvars(variableMetadata(ds, parent=TRUE)),
+            c(rep(FALSE, 6), rep(TRUE, 3)))
+        ## And none found if we don't embed it
+        expect_false(any(are.subvars(variableMetadata(ds, parent=FALSE))))
     })
 })
 

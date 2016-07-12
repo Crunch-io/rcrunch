@@ -59,5 +59,5 @@ varTable <- function (dataset) {
 }
 
 are.subvars <- function (vars) {
-    vapply(index(vars), function (x) !is.null(x$parent), logical(1))
+    vapply(index(vars), function (x) !is.null(x$parent), logical(1), USE.NAMES=FALSE)
 }
