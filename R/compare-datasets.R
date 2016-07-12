@@ -1,6 +1,6 @@
 compareDatasets <- function (A, B) {
-    varsA <- variableMetadata(A)
-    varsB <- variableMetadata(B)
+    varsA <- variableMetadata(A, parent=TRUE)
+    varsB <- variableMetadata(B, parent=TRUE)
 
     ## Create alias to url maps for lookup below
     a2uA <- structure(urls(varsA), .Names=aliases(varsA))

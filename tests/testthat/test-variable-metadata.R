@@ -12,6 +12,10 @@ with_mock_HTTP({
         expect_identical(Categories(data=vm[[i]]$categories),
             categories(ds$gender))
     })
+
+    test_that("are_subvars on variableMetadata", {
+
+    })
 })
 
 with_test_authentication({
