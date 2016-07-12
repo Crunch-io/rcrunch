@@ -23,7 +23,7 @@ compareDatasets <- function (A, B) {
     ## 4) tests for the compare functions
     ## 5) print/summary methods for comparison results (as S3)
     ## 6) export metadata? use same shape here (bc keyed by alias)?
-    return(list(
+    return(structure(list(
         variables=comp.vars,
         categories=sapply(intersect.vars$alias[has.categories],
             function (x) {
@@ -37,6 +37,8 @@ compareDatasets <- function (A, B) {
                     varsB[varsB[[a2uB[x]]]$subvariables])
             },
             simplify=FALSE)
+        ),
+        class="compareDatasets"
     ))
 }
 
@@ -44,17 +46,52 @@ summarizeCompareDatasets <- function (comp) {
     ## summarize the summaries of each
     cats <- lapply(comp$categories, summarizeCompareCategories)
     ok.cats <- vapply(cats,
-        function (x) length(x$mismatched.ids) + length(x$unmatched.ids) == 0,
+        function (x) length(x$problems$mismatched.ids) == 0,
         logical(1))
     subs <- lapply(comp$subvariables, summarizeCompareSubvariables)
     ok.subs <- vapply(subs,
         function (x) {
-            length(x$mismatched.name) == 0 &
-            length(x$parents$A) <= 1 &
-            length(x$parents$B) <= 1
+            p <- x$problems
+            return(length(p$mismatched.name) == 0 &
+                    length(p$parents$A) <= 1 &
+                    length(p$parents$B) <= 1)
         },
         logical(1))
     vars <- summarizeCompareVariables(comp$variables)
-    ## Do stuff with that
+    return(structure(list(cats=cats, ok.cats=ok.cats, subs=subs,
+        ok.subs=ok.subs, vars=vars),
+        class="compareDatasetsSummary"))
+}
 
+summary.compareDatasets <- function (object, ...) summarizeCompareDatasets(object)
+
+print.compareDatasetsSummary <- function (object, ...) {
+    ## Variables
+    bad.var.count <- length(object$vars$problems$mismatched.type) +
+        length(object$vars$problems$mismatched.name)
+    print(object$vars)
+
+    ## Categories
+    bad.cats <- !object$ok.cats
+    bad.cat.count <- sum(bad.cats)
+    cat("Variables with categories:", length(object$cats), "\n")
+    if (bad.cat.count) {
+        cat("With issues:", bad.cat.count, "\n")
+        print(object$cats[bad.cats])
+    }
+
+    ## Subvariables
+    bad.subs <- !object$ok.subs
+    bad.sub.count <- sum(bad.subs)
+    cat("Array variables:", length(object$subs), "\n")
+    if (bad.sub.count) {
+        cat("With subvariable issues:", bad.sub.count, "\n")
+        print(object$subs[bad.subs])
+    }
+
+    ## Else:
+    if (bad.var.count + bad.cat.count + bad.sub.count == 0) {
+        cat("All good :)\n")
+    }
+    invisible(object)
 }

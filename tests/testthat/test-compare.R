@@ -84,13 +84,13 @@ with_mock_HTTP({
         expect_output(summary(compareVariables(allVariables(ds1), allVariables(ds1))),
             paste(
                 "Total variables: 6 ",
-                "All good :)",
+                "No type or name mismatches.",
                 sep="\n"
                 ))
     })
 
     test_that("compareSubvariables", {
-        
+
     })
 
     test_that("compareDatasets", {

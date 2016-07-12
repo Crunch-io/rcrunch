@@ -49,7 +49,7 @@ print.compareVariablesSummary <- function (object, ...) {
             row.names=FALSE)
     }
     if (length(mismatched.type) + length(mismatched.name) == 0) {
-        cat("All good :)\n")
+        cat("No type or name mismatches.\n")
     }
     invisible(object)
 }
