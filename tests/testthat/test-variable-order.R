@@ -120,6 +120,49 @@ with_mock_HTTP({
                 ent.urls[4])),
             catalog_url=varcat_url))
     })
+    test_that("Can assign NULL into a group to remove", {
+        no <- nested.ord
+        expect_identical(no,
+            VariableOrder(
+                VariableGroup(name="Group 1",
+                    entities=list(ent.urls[1],
+                        VariableGroup(name="Nested", entities=ent.urls[2:3]),
+                        ent.urls[4]),
+                ),
+                VariableGroup(name="Group 2", entities=ent.urls[5:6]),
+                catalog_url=varcat_url))
+        no[[1]][[3]] <- NULL
+        expect_identical(no,
+            VariableOrder(
+                VariableGroup(name="Group 1",
+                    entities=list(ent.urls[1],
+                        VariableGroup(name="Nested", entities=ent.urls[2:3])),
+                ),
+                VariableGroup(name="Group 2", entities=ent.urls[5:6]),
+                catalog_url=varcat_url))
+        no[[1]][["Nested"]][[2]] <- NULL
+        expect_identical(no,
+            VariableOrder(
+                VariableGroup(name="Group 1",
+                    entities=list(ent.urls[1],
+                        VariableGroup(name="Nested", entities=ent.urls[2])),
+                ),
+                VariableGroup(name="Group 2", entities=ent.urls[5:6]),
+                catalog_url=varcat_url))
+        no[[1]]$Nested <- NULL
+        expect_identical(no,
+            VariableOrder(
+                VariableGroup(name="Group 1",
+                    entities=list(ent.urls[1]),
+                ),
+                VariableGroup(name="Group 2", entities=ent.urls[5:6]),
+                catalog_url=varcat_url))
+        expect_error(nested.ord[[2]][[-1]] <- NULL,
+            "Illegal subscript")
+        expect_error(nested.ord[[2]][[c(1, 2)]] <- NULL,
+            "Illegal subscript")
+    })
+
     test_that("can assign group into group by index", {
         to <- test.ord
         try(to[[1]] <- VariableGroup(name="[[<-", entities=ng))

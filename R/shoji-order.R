@@ -366,6 +366,27 @@ setMethod("[[<-", c("OrderGroup", "ANY", "missing", "OrderGroup"),
 
 ##' @rdname ShojiOrder-extract
 ##' @export
+setMethod("[[<-", c("OrderGroup", "numeric", "missing", "NULL"),
+    function (x, i, j, value) {
+        if (length(i) > 1 || i < 0) {
+            halt("Illegal subscript")
+        }
+        entities(x) <- entities(x)[-i]
+        return(x)
+    })
+##' @rdname ShojiOrder-extract
+##' @export
+setMethod("[[<-", c("OrderGroup", "character", "missing", "NULL"),
+    function (x, i, j, value) {
+        w <- match(i, names(x))
+        if (any(is.na(w))) {
+            halt("Undefined group selected: ", serialPaste(i[is.na(w)]))
+        }
+        callNextMethod(x, w, value=value)
+    })
+
+##' @rdname ShojiOrder-extract
+##' @export
 setMethod("$<-", "OrderGroup", function (x, name, value) {
     x[[name]] <- value
     return(x)
