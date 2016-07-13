@@ -29,6 +29,20 @@
             "description": "Interview Start Time",
             "resolution": "D",
             "rollup_resolution": "s"
+        },
+        "mymrset/": {
+            "name": "mymrset",
+            "discarded": false,
+            "alias": "mymrset",
+            "type": "multiple_response",
+            "id": "949d2dc7e7a24e6090cc88bb92e1d2fb",
+            "description": "Please select all that apply",
+            "subvariables": [
+                "/api/datasets/dataset2/variables/subvar2/",
+                "/api/datasets/dataset2/variables/subvar4/",
+                "/api/datasets/dataset2/variables/subvar3/"
+            ],
+            "subvariables_catalog": "/api/datasets/dataset1/variables/mymrset/subvariables/"
         }
     },
     "orders": {

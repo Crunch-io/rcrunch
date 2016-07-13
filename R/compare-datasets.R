@@ -43,7 +43,6 @@ compareDatasets <- function (A, B) {
     arrays <- intersect.vars$type.A %in% c("categorical_array", "multiple_response")
     has.categories <- intersect.vars$type.A %in% c("categorical_array", "multiple_response", "categorical")
 
-    ## TODO: tests for compareSubvariables
     return(structure(list(
         variables=comp.vars,
         categories=sapply(intersect.vars$alias[has.categories],

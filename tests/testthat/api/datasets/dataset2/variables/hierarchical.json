@@ -5,6 +5,7 @@
     "graph": [
         "../gender/",
         "../birthyr/",
-        "../starttime/"
+        "../starttime/",
+        "../mymrset/"
     ]
 }

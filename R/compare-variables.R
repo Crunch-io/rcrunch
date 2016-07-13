@@ -47,7 +47,8 @@ print.compareVariablesSummary <- function (x, ...) {
     if (length(mismatched.name)) {
         cat("\n")
         cat("Name mismatch:", length(mismatched.name), "\n")
-        print(x$variables[x$variables$alias %in% mismatched.name,,drop=FALSE],
+        bad <- x$variables$alias %in% mismatched.name
+        print(x$variables[bad, c("name.A", "alias", "name.B"), drop=FALSE],
             row.names=FALSE)
     }
     if (length(mismatched.type) + length(mismatched.name) == 0) {

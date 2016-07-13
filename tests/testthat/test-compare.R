@@ -73,10 +73,10 @@ with_mock_HTTP({
                 " Birth Year numeric birthyr datetime starttime",
                 "",
                 "Name mismatch: 3 ",
-                "     name.A   type.A     alias   type.B     name.B",
-                " Birth Year  numeric   birthyr datetime  starttime",
-                "  starttime datetime starttime     <NA>       <NA>",
-                "       <NA>     <NA>  birthyr2  numeric Birth Year",
+                "     name.A     alias     name.B",
+                " Birth Year   birthyr  starttime",
+                "  starttime starttime       <NA>",
+                "       <NA>  birthyr2 Birth Year",
                 sep="\n"
                 ))
     })
