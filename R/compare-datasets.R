@@ -1,3 +1,29 @@
+##' Compare two datasets to see how they will append
+##'
+##' When one dataset is appended to another, variables and subvariables are
+##' matched on their aliases, and then categories for variables that have them
+##' are matched on category name. This function lines up the metadata between
+##' two datasets as the append operation will so that you can inspect how well
+##' the datasets will align before you do the append.
+##'
+##' Calling \code{summary} on the return of this function will print an
+##' overview of places where the matching on variable alias and category name
+##' may lead to undesired outcomes, enabling you to alter one or both datasets
+##' to result in better alignment.
+##' @param A CrunchDataset
+##' @param B CrunchDataset
+##' @return An object of class 'compareDatasets', a list of three elements: (1)
+##' 'variables', a data.frame of variable metadata joined on alias; (2)
+##' 'categories', a list of data.frames of category metadata joined on category
+##' name, one for each variable with categories; and (3) 'subvariables', a
+##' list of data.frames of subvariable metadata joined on alias, one for each
+##' array variable.
+##' @examples
+##' \dontrun{
+##'     comp <- compareDataset(ds1, ds2)
+##'     summary(comp)
+##' }
+##' @export
 compareDatasets <- function (A, B) {
     varsA <- variableMetadata(A, parent=TRUE)
     varsB <- variableMetadata(B, parent=TRUE)
@@ -17,12 +43,7 @@ compareDatasets <- function (A, B) {
     arrays <- intersect.vars$type.A %in% c("categorical_array", "multiple_response")
     has.categories <- intersect.vars$type.A %in% c("categorical_array", "multiple_response", "categorical")
 
-    ## TODO:
-    ## 2c) tests for variableMetadata shape
-    ## 3) analysis
-    ## 4) tests for the compare functions
-    ## 5) print/summary methods for comparison results (as S3)
-    ## 6) export metadata? use same shape here (bc keyed by alias)?
+    ## TODO: tests for compareSubvariables
     return(structure(list(
         variables=comp.vars,
         categories=sapply(intersect.vars$alias[has.categories],
@@ -63,8 +84,10 @@ summarizeCompareDatasets <- function (comp) {
         class="compareDatasetsSummary"))
 }
 
+##' @export
 summary.compareDatasets <- function (object, ...) summarizeCompareDatasets(object)
 
+##' @export
 print.compareDatasetsSummary <- function (object, ...) {
     ## Variables
     bad.var.count <- length(object$vars$problems$mismatched.type) +
