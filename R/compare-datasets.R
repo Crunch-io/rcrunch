@@ -88,34 +88,34 @@ summarizeCompareDatasets <- function (comp) {
 summary.compareDatasets <- function (object, ...) summarizeCompareDatasets(object)
 
 ##' @export
-print.compareDatasetsSummary <- function (object, ...) {
+print.compareDatasetsSummary <- function (x, ...) {
     ## Variables
-    bad.var.count <- length(object$vars$problems$mismatched.type) +
-        length(object$vars$problems$mismatched.name)
-    print(object$vars)
+    bad.var.count <- length(x$vars$problems$mismatched.type) +
+        length(x$vars$problems$mismatched.name)
+    print(x$vars)
 
     ## Categories
-    bad.cats <- !object$ok.cats
+    bad.cats <- !x$ok.cats
     bad.cat.count <- sum(bad.cats)
-    cat("\nVariables with categories:", length(object$cats), "\n")
+    cat("\nMatched variables with categories:", length(x$cats), "\n")
     if (bad.cat.count) {
         cat("With issues:", bad.cat.count, "\n\n")
-        for (i in names(object$cats[bad.cats])) {
+        for (i in names(x$cats[bad.cats])) {
             cat("$", i, "\n", sep="")
-            print(object$cats[[i]])
+            print(x$cats[[i]])
             cat("\n")
         }
     }
 
     ## Subvariables
-    bad.subs <- !object$ok.subs
+    bad.subs <- !x$ok.subs
     bad.sub.count <- sum(bad.subs)
-    cat("\nArray variables:", length(object$subs), "\n")
+    cat("\nMatched array variables:", length(x$subs), "\n")
     if (bad.sub.count) {
         cat("With subvariable issues:", bad.sub.count, "\n\n")
-        for (i in names(object$subs[bad.subs])) {
+        for (i in names(x$subs[bad.subs])) {
             cat("$", i, "\n", sep="")
-            print(object$subs[[i]])
+            print(x$subs[[i]])
             cat("\n")
         }
     }
@@ -124,5 +124,5 @@ print.compareDatasetsSummary <- function (object, ...) {
     if (bad.var.count + bad.cat.count + bad.sub.count == 0) {
         cat("All good :)\n")
     }
-    invisible(object)
+    invisible(x)
 }

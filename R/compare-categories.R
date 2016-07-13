@@ -29,16 +29,16 @@ summarizeCompareCategories <- function (compdf) {
 summary.compareCategories <- function (object, ...) summarizeCompareCategories(object)
 
 ##' @export
-print.compareCategoriesSummary <- function (object, ...) {
-    cat("Total categories:", nrow(object$categories), "\n")
-    mismatched.ids <- object$problems$mismatched.ids
+print.compareCategoriesSummary <- function (x, ...) {
+    cat("Total categories:", nrow(x$categories), "\n")
+    mismatched.ids <- x$problems$mismatched.ids
     if (length(mismatched.ids)) {
         cat("\n")
         cat("Mismatched ids:", length(mismatched.ids), "\n")
-        print(object$categories[object$categories$name %in% mismatched.ids,,drop=FALSE],
+        print(x$categories[x$categories$name %in% mismatched.ids,,drop=FALSE],
             row.names=FALSE)
     } else {
         cat("All good :)\n")
     }
-    invisible(object)
+    invisible(x)
 }

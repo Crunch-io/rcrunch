@@ -34,24 +34,24 @@ summarizeCompareVariables <- function (compdf) {
 summary.compareVariables <- function (object, ...) summarizeCompareVariables(object)
 
 ##' @export
-print.compareVariablesSummary <- function (object, ...) {
-    cat("Total variables:", nrow(object$variables), "\n")
-    mismatched.type <- object$problems$mismatched.type
+print.compareVariablesSummary <- function (x, ...) {
+    cat("Total variables:", nrow(x$variables), "\n")
+    mismatched.type <- x$problems$mismatched.type
     if (length(mismatched.type)) {
         cat("\n")
         cat("Type mismatch:", length(mismatched.type), "\n")
-        print(object$variables[object$variables$alias %in% mismatched.type,,drop=FALSE],
+        print(x$variables[x$variables$alias %in% mismatched.type,,drop=FALSE],
             row.names=FALSE)
     }
-    mismatched.name <- object$problems$mismatched.name
+    mismatched.name <- x$problems$mismatched.name
     if (length(mismatched.name)) {
         cat("\n")
         cat("Name mismatch:", length(mismatched.name), "\n")
-        print(object$variables[object$variables$alias %in% mismatched.name,,drop=FALSE],
+        print(x$variables[x$variables$alias %in% mismatched.name,,drop=FALSE],
             row.names=FALSE)
     }
     if (length(mismatched.type) + length(mismatched.name) == 0) {
         cat("No type or name mismatches.\n")
     }
-    invisible(object)
+    invisible(x)
 }
