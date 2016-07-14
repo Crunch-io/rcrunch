@@ -25,10 +25,10 @@ variableMetadata <- function (dataset, parent=FALSE) {
     extra <- crGET(shojiURL(dataset, "fragments", "table"))$metadata
     ## It is keyed by "id". Embed the id in the tuples, and then make the keys
     ## be URLs so that it lines up with the variables catalog
-    # extra <- mapply(function (x, i) {
-    #         x$id <- i
-    #         return(x)
-    #     }, x=extra, i=names(extra), SIMPLIFY=FALSE)
+    extra <- mapply(function (x, i) {
+            x$id <- i
+            return(x)
+        }, x=extra, i=names(extra), SIMPLIFY=FALSE)
     names(extra) <- absoluteURL(paste0(names(extra), "/"), self(varcat))
     ## Do a list update to merge the two objects
     extra <- modifyList(extra, index(varcat))

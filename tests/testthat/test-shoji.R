@@ -60,17 +60,15 @@ with_mock_HTTP({
     })
 })
 
-if (run.integration.tests) {
-    with_test_authentication({
-        with(test.dataset(df), {
-            test_that("refresh", {
-                expect_identical(ds, refresh(ds))
-                ds2 <- ds
-                ds2@body$name <- "something else"
-                expect_false(identical(ds2, ds))
-                expect_false(identical(ds2, refresh(ds2)))
-                expect_identical(refresh(ds2), ds)
-            })
+with_test_authentication({
+    with(test.dataset(df), {
+        test_that("refresh", {
+            expect_identical(ds, refresh(ds))
+            ds2 <- ds
+            ds2@body$name <- "something else"
+            expect_false(identical(ds2, ds))
+            expect_false(identical(ds2, refresh(ds2)))
+            expect_identical(refresh(ds2), ds)
         })
     })
-}
+})
