@@ -25,7 +25,7 @@ with_mock_HTTP({
         expect_is(e1, "CrunchExpr")
         zexp <- list(`function`="+",
             args=list(
-                list(variable="/api/datasets/dataset1/variables/birthyr.json"),
+                list(variable="/api/datasets/dataset1/variables/birthyr/"),
                 list(value=5)
             )
         )

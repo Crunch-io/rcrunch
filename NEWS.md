@@ -1,4 +1,5 @@
 ### crunch 1.10.7 (under development)
+* New function `compareDatasets` that shows how datasets will line up when appending. A `summary` method on its return value prints a report that highlights areas of possible mismatch.
 * Support computing numeric aggregates (mean, max, etc.) of categorical variables with numeric values in `crtabs`
 * Allow `NULL` assignment into Variable/DatasetGroups to remove elements
 

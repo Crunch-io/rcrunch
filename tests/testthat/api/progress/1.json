@@ -1,6 +1,6 @@
 {
     "element": "shoji:view",
-    "self": "/api/progress.json",
+    "self": "/api/progress/",
     "value": {
         "progress": 22.6,
         "message": "exported 2 variables"

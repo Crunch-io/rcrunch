@@ -26,13 +26,13 @@ with_mock_HTTP({
 
     test_that("saveVersion makes the right request", {
         expect_POST(saveVersion(ds, "Today"),
-            '/api/datasets/dataset1/savepoints.json',
+            '/api/datasets/dataset1/savepoints/',
             '{"description":"Today"}')
     })
 
     test_that("saveVersion with no description supplied", {
         expect_POST(saveVersion(ds),
-            '/api/datasets/dataset1/savepoints.json',
+            '/api/datasets/dataset1/savepoints/',
             '{"description":"Version 3"}')
     })
 

@@ -107,28 +107,3 @@ setMethod("descriptions<-", "VariableCatalog", function (x, value) {
 setMethod("types", "VariableCatalog", function (x) getIndexSlot(x, "type"))
 
 ## No setter for types<-
-
-
-##' Get all variable metadata for a dataset
-##'
-##' @param dataset CrunchDataset
-##' @return A VariableCatalog that has things like categories embedded in each
-##' categorical variable, and all subvariables are represented
-##' @export
-variableMetadata <- function (dataset) {
-    varcat <- allVariables(dataset)
-    index(varcat) <- lapply(index(varcat), function (x) {
-        if ("subvariables" %in% names(x)) {
-            x$subvariables <- absoluteURL(unlist(x$subvariables), self(varcat))
-        }
-        return(x)
-    })
-    extra <- crGET(shojiURL(dataset, "fragments", "table"))$metadata
-    extra <- mapply(function (x, i) {
-            x$id <- i
-            return(x)
-        }, x=extra, i=names(extra), SIMPLIFY=FALSE)
-    names(extra) <- absoluteURL(paste0(names(extra), "/"), self(varcat))
-    index(varcat) <- modifyList(extra, index(varcat))
-    return(varcat)
-}

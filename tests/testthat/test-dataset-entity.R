@@ -25,11 +25,11 @@ with_mock_HTTP({
 
     test_that("archive setting", {
         expect_PATCH(is.archived(test.ds2) <- TRUE,
-            '/api/datasets.json',
-            '{"/api/datasets/dataset3.json":{"archived":true}}')
+            '/api/datasets/',
+            '{"/api/datasets/dataset3/":{"archived":true}}')
         expect_PATCH(archive(test.ds2),
-            '/api/datasets.json',
-            '{"/api/datasets/dataset3.json":{"archived":true}}')
+            '/api/datasets/',
+            '{"/api/datasets/dataset3/":{"archived":true}}')
     })
 
     test_that("draft/published", {
@@ -41,20 +41,20 @@ with_mock_HTTP({
 
     test_that("draft/publish setting", {
         expect_PATCH(is.published(test.ds2) <- TRUE,
-            '/api/datasets.json',
-            '{"/api/datasets/dataset3.json":{"is_published":true}}')
+            '/api/datasets/',
+            '{"/api/datasets/dataset3/":{"is_published":true}}')
         expect_PATCH(is.published(test.ds) <- FALSE,
-            '/api/datasets.json',
-            '{"/api/datasets/dataset1.json":{"is_published":false}}')
+            '/api/datasets/',
+            '{"/api/datasets/dataset1/":{"is_published":false}}')
         expect_PATCH(is.draft(test.ds2) <- FALSE,
-            '/api/datasets.json',
-            '{"/api/datasets/dataset3.json":{"is_published":true}}')
+            '/api/datasets/',
+            '{"/api/datasets/dataset3/":{"is_published":true}}')
         expect_PATCH(is.draft(test.ds) <- TRUE,
-            '/api/datasets.json',
-            '{"/api/datasets/dataset1.json":{"is_published":false}}')
+            '/api/datasets/',
+            '{"/api/datasets/dataset1/":{"is_published":false}}')
         expect_PATCH(publish(test.ds2),
-            '/api/datasets.json',
-            '{"/api/datasets/dataset3.json":{"is_published":true}}')
+            '/api/datasets/',
+            '{"/api/datasets/dataset3/":{"is_published":true}}')
         expect_no_request(publish(test.ds))
         expect_no_request(is.draft(test.ds) <- FALSE)
         expect_no_request(is.published(test.ds) <- TRUE)
@@ -69,19 +69,19 @@ with_mock_HTTP({
 
     test_that("startDate<- makes correct request", {
         expect_PATCH(startDate(test.ds2) <- today,
-            '/api/datasets.json',
-            '{"/api/datasets/dataset3.json":{"start_date":"2016-02-11"}}')
+            '/api/datasets/',
+            '{"/api/datasets/dataset3/":{"start_date":"2016-02-11"}}')
         expect_PATCH(startDate(test.ds) <- NULL,
-            '/api/datasets.json',
-            '{"/api/datasets/dataset1.json":{"start_date":null}}')
+            '/api/datasets/',
+            '{"/api/datasets/dataset1/":{"start_date":null}}')
     })
     test_that("endDate<- makes correct request", {
         expect_PATCH(endDate(test.ds2) <- today,
-            '/api/datasets.json',
-            '{"/api/datasets/dataset3.json":{"end_date":"2016-02-11"}}')
+            '/api/datasets/',
+            '{"/api/datasets/dataset3/":{"end_date":"2016-02-11"}}')
         expect_PATCH(endDate(test.ds) <- NULL,
-            '/api/datasets.json',
-            '{"/api/datasets/dataset1.json":{"end_date":null}}')
+            '/api/datasets/',
+            '{"/api/datasets/dataset1/":{"end_date":null}}')
     })
 
     test_that("Dataset webURL", {
@@ -93,20 +93,20 @@ with_mock_HTTP({
 
     test_that("Dataset VariableCatalog index is ordered", {
         expect_identical(urls(variables(test.ds)),
-            c("/api/datasets/dataset1/variables/birthyr.json",
-            "/api/datasets/dataset1/variables/gender.json",
-            "/api/datasets/dataset1/variables/mymrset.json",
-            "/api/datasets/dataset1/variables/textVar.json",
-            "/api/datasets/dataset1/variables/starttime.json",
-            "/api/datasets/dataset1/variables/catarray.json"))
+            c("/api/datasets/dataset1/variables/birthyr/",
+            "/api/datasets/dataset1/variables/gender/",
+            "/api/datasets/dataset1/variables/mymrset/",
+            "/api/datasets/dataset1/variables/textVar/",
+            "/api/datasets/dataset1/variables/starttime/",
+            "/api/datasets/dataset1/variables/catarray/"))
         ## But allVariables isn't ordered
         expect_true(setequal(urls(allVariables(test.ds)),
-            c("/api/datasets/dataset1/variables/birthyr.json",
-            "/api/datasets/dataset1/variables/catarray.json",
-            "/api/datasets/dataset1/variables/gender.json",
-            "/api/datasets/dataset1/variables/mymrset.json",
-            "/api/datasets/dataset1/variables/starttime.json",
-            "/api/datasets/dataset1/variables/textVar.json")))
+            c("/api/datasets/dataset1/variables/birthyr/",
+            "/api/datasets/dataset1/variables/catarray/",
+            "/api/datasets/dataset1/variables/gender/",
+            "/api/datasets/dataset1/variables/mymrset/",
+            "/api/datasets/dataset1/variables/starttime/",
+            "/api/datasets/dataset1/variables/textVar/")))
     })
 
     test_that("namekey function exists and affects names()", {
@@ -164,8 +164,8 @@ with_mock_HTTP({
     })
 
     test_that("Extract from dataset by VariableOrder/Group", {
-        ents <- c("/api/datasets/dataset1/variables/gender.json",
-            "/api/datasets/dataset1/variables/mymrset.json")
+        ents <- c("/api/datasets/dataset1/variables/gender/",
+            "/api/datasets/dataset1/variables/mymrset/")
         ord <- VariableOrder(VariableGroup("G1", entities=ents))
         expect_identical(test.ds[ord[[1]]], test.ds[c("gender", "mymrset")])
         expect_identical(test.ds[ord], test.ds[c("gender", "mymrset")])

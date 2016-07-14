@@ -32,17 +32,17 @@ with_mock_HTTP({
         expect_is(rollup(v), "CrunchExpr")
         expect_identical(zcl(rollup(v)),
             list(`function`="rollup",
-                args=list(list(variable="/api/datasets/dataset1/variables/starttime.json"),
+                args=list(list(variable="/api/datasets/dataset1/variables/starttime/"),
                 list(value="s"))))
         expect_is(rollup(v, resolution="Y"), "CrunchExpr")
         expect_identical(zcl(rollup(v, resolution="Y")),
             list(`function`="rollup",
-                args=list(list(variable="/api/datasets/dataset1/variables/starttime.json"),
+                args=list(list(variable="/api/datasets/dataset1/variables/starttime/"),
                 list(value="Y"))))
         expect_is(rollup(v, resolution=NULL), "CrunchExpr")
         expect_identical(zcl(rollup(v, resolution=NULL)),
             list(`function`="rollup",
-                args=list(list(variable="/api/datasets/dataset1/variables/starttime.json"),
+                args=list(list(variable="/api/datasets/dataset1/variables/starttime/"),
                 list(value=NULL))))
     })
 })

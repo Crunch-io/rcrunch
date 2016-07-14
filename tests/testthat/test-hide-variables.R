@@ -18,17 +18,17 @@ with_mock_HTTP({
         with_mock(try=function (expr, silent) force(expr), eval.parent({
             expect_message(
                 expect_DELETE(ds$birthyr <- NULL,
-                    "/api/datasets/dataset3/variables/birthyr.json"),
+                    "/api/datasets/dataset3/variables/birthyr/"),
                 NA)
             expect_message(
                 expect_DELETE(deleteVariables(ds, "birthyr"),
-                    "/api/datasets/dataset3/variables/birthyr.json"),
+                    "/api/datasets/dataset3/variables/birthyr/"),
                 NA)
         }))
         skip_on_jenkins("No idea why this fails to catch the warning on Jenkins but not on Travis or locally")
         expect_warning(
             expect_DELETE(delete(ds$birthyr),
-                "/api/datasets/dataset3/variables/birthyr.json"),
+                "/api/datasets/dataset3/variables/birthyr/"),
             "Variable birthyr is hidden")
     })
 })
