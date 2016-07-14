@@ -36,14 +36,27 @@ summary.compareSubvariables <- function (object, ...) summarizeCompareSubvariabl
 ##' @export
 print.compareSubvariablesSummary <- function (x, ...) {
     cat("Total subvariables:", nrow(x$subvariables), "\n")
+    allgood <- TRUE
     mismatched.name <- x$problems$mismatched.name
     if (length(mismatched.name)) {
+        allgood <- FALSE
         cat("\n")
         cat("Mismatched names:", length(mismatched.name), "\n")
         bad <- x$subvariables$alias %in% mismatched.name
         print(x$subvariables[bad, c("name.A", "alias", "name.B"), drop=FALSE],
             row.names=FALSE)
-    } else {
+    }
+    if (length(x$problems$parents$A) > 1) {
+        allgood <- FALSE
+        cat("\nSubvariables in A have multiple parents:",
+            serialPaste(x$problems$parents$A), "\n")
+    }
+    if (length(x$problems$parents$B) > 1) {
+        allgood <- FALSE
+        cat("\nSubvariables in B have multiple parents:",
+            serialPaste(x$problems$parents$B), "\n")
+    }
+    if (allgood) {
         cat("All good :)\n")
     }
     ## TODO: also report on >1 parents

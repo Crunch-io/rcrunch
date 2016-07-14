@@ -18,6 +18,15 @@
 ##' name, one for each variable with categories; and (3) 'subvariables', a
 ##' list of data.frames of subvariable metadata joined on alias, one for each
 ##' array variable.
+##'
+##' Summary output reports on (1) variables that, when matched across datasets
+##' by alias, have different types; (2) variables that have the same name but
+##' don't match on alias; (3) for variables that match and have categories,
+##' any categories that have the same id but don't match on name; (4) for
+##' array variables that match, any subvariables that have the same name but
+##' don't match on alias; and (5) array variables that, after assembling the
+##' union of their subvariables, point to subvariables that belong to other
+##' arrays.
 ##' @examples
 ##' \dontrun{
 ##'     comp <- compareDataset(ds1, ds2)
@@ -53,8 +62,13 @@ compareDatasets <- function (A, B) {
             simplify=FALSE),
         subvariables=sapply(intersect.vars$alias[arrays],
             function (x) {
-                compareSubvariables(varsA[varsA[[a2uA[x]]]$subvariables],
-                    varsB[varsB[[a2uB[x]]]$subvariables])
+                ## Pull together the union of aliases
+                aa <- aliases(varsA[varsA[[a2uA[x]]]$subvariables])
+                ab <- aliases(varsB[varsB[[a2uB[x]]]$subvariables])
+                allaliases <- c(aa, setdiff(ab, aa))
+                ## Grab the subvariables with aliases that match for the union
+                compareSubvariables(varsA[na.omit(a2uA[allaliases])],
+                    varsB[na.omit(a2uB[allaliases])])
             },
             simplify=FALSE)
         ),
@@ -91,13 +105,17 @@ print.compareDatasetsSummary <- function (x, ...) {
     ## Variables
     bad.var.count <- length(x$vars$problems$mismatched.type) +
         length(x$vars$problems$mismatched.name)
-    print(x$vars)
+    if (bad.var.count) {
+        print(x$vars)
+    } else {
+        cat("Total variables:", nrow(x$vars$variables), "\n")
+    }
 
     ## Categories
     bad.cats <- !x$ok.cats
     bad.cat.count <- sum(bad.cats)
-    cat("\nMatched variables with categories:", length(x$cats), "\n")
     if (bad.cat.count) {
+        cat("\nMatched variables with categories:", length(x$cats), "\n")
         cat("With issues:", bad.cat.count, "\n\n")
         for (i in names(x$cats[bad.cats])) {
             cat("$", i, "\n", sep="")
@@ -109,8 +127,8 @@ print.compareDatasetsSummary <- function (x, ...) {
     ## Subvariables
     bad.subs <- !x$ok.subs
     bad.sub.count <- sum(bad.subs)
-    cat("\nMatched array variables:", length(x$subs), "\n")
     if (bad.sub.count) {
+        cat("\nMatched array variables:", length(x$subs), "\n")
         cat("With subvariable issues:", bad.sub.count, "\n\n")
         for (i in names(x$subs[bad.subs])) {
             cat("$", i, "\n", sep="")

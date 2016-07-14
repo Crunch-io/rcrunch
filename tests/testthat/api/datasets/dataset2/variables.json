@@ -39,10 +39,21 @@
             "description": "Please select all that apply",
             "subvariables": [
                 "/api/datasets/dataset2/variables/subvar2/",
-                "/api/datasets/dataset2/variables/subvar4/",
+                "/api/datasets/dataset2/variables/subvar4/"
+            ],
+            "subvariables_catalog": "/api/datasets/dataset2/variables/mymrset/subvariables/"
+        },
+        "mymrset2/": {
+            "name": "mymrset Combined",
+            "discarded": false,
+            "alias": "mymrset2",
+            "type": "categorical_array",
+            "id": "12345",
+            "description": "Please select all that apply",
+            "subvariables": [
                 "/api/datasets/dataset2/variables/subvar3/"
             ],
-            "subvariables_catalog": "/api/datasets/dataset1/variables/mymrset/subvariables/"
+            "subvariables_catalog": "/api/datasets/dataset2/variables/mymrset2/subvariables/"
         }
     },
     "orders": {

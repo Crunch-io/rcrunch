@@ -18,6 +18,15 @@ An object of class 'compareDatasets', a list of three elements: (1)
 name, one for each variable with categories; and (3) 'subvariables', a
 list of data.frames of subvariable metadata joined on alias, one for each
 array variable.
+
+Summary output reports on (1) variables that, when matched across datasets
+by alias, have different types; (2) variables that have the same name but
+don't match on alias; (3) for variables that match and have categories,
+any categories that have the same id but don't match on name; (4) for
+array variables that match, any subvariables that have the same name but
+don't match on alias; and (5) array variables that, after assembling the
+union of their subvariables, point to subvariables that belong to other
+arrays.
 }
 \description{
 When one dataset is appended to another, variables and subvariables are

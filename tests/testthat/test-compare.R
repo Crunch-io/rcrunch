@@ -66,7 +66,7 @@ with_mock_HTTP({
     test_that("print compareVariables", {
         expect_output(summary(compareVariables(allVariables(ds1), allVariables(ds2))),
             paste(
-                "Total variables: 7 ",
+                "Total variables: 8 ",
                 "",
                 "Type mismatch: 1 ",
                 "     name.A  type.A   alias   type.B    name.B",
@@ -94,6 +94,55 @@ with_mock_HTTP({
     })
 
     test_that("compareDatasets", {
-        print(summary(compareDatasets(ds1, ds2)))
+        expect_output(summary(compareDatasets(ds1, ds2)),
+            paste(
+                "Total variables: 8 ",
+                "",
+                "Type mismatch: 1 ",
+                "     name.A  type.A   alias   type.B    name.B",
+                " Birth Year numeric birthyr datetime starttime",
+                "",
+                "Name mismatch: 3 ",
+                "     name.A     alias     name.B",
+                " Birth Year   birthyr  starttime",
+                "  starttime starttime       <NA>",
+                "       <NA>  birthyr2 Birth Year",
+                "",
+                "Matched variables with categories: 2 ",
+                "With issues: 1 ",
+                "",
+                "$gender",
+                "Total categories: 4 ",
+                "",
+                "Mismatched ids: 2 ",
+                " id.A   name id.B",
+                "    2 Female    3",
+                "   NA  Other    2",
+                "",
+                "",
+                "Matched array variables: 1 ",
+                "With subvariable issues: 1 ",
+                "",
+                "$mymrset",
+                "Total subvariables: 4 ",
+                "",
+                "Mismatched names: 2 ",
+                " name.A   alias name.B",
+                " Second subvar1   <NA>",
+                "   <NA> subvar4 Second",
+                "",
+                "Subvariables in B have multiple parents: 949d2dc7e7a24e6090cc88bb92e1d2fb and 12345 ",
+                "",
+                sep="\n"),
+                fixed=TRUE)
+    })
+
+    test_that("compareDatasets when everything is ok", {
+        expect_output(summary(compareDatasets(ds1, ds1)),
+            paste(
+                "Total variables: 6 ",
+                "All good :)",
+                sep="\n"
+                ))
     })
 })
