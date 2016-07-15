@@ -95,7 +95,7 @@ createDataset <- function (name, body, ...) {
         body <- list(name=name, ...)
     }
     dataset_url <- crPOST(sessionURL("datasets"), body=toJSON(body))
-    ds <- entity(datasetCatalog()[[dataset_url]])
+    ds <- entity(datasets()[[dataset_url]])
     invisible(ds)
 }
 
@@ -122,7 +122,7 @@ addSourceToDataset <- function (dataset, source_url, ...) {
 }
 
 .delete_all_my_datasets <- function () {
-    lapply(urls(datasetCatalog()), crDELETE)
+    lapply(urls(datasets()), crDELETE)
 }
 
 ##' Upload a data.frame to Crunch to make a new dataset

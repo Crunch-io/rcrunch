@@ -139,7 +139,7 @@ validApidocsImport <- function (ds) {
 bye <- new.env()
 if (run.integration.tests) {
     with_test_authentication({
-        datasets.start <- urls(datasetCatalog())
+        datasets.start <- urls(datasets())
         users.start <- urls(getUserCatalog())
         projects.start <- urls(session()$projects)
     })
@@ -148,12 +148,12 @@ reg.finalizer(bye,
     function (x) {
         if (run.integration.tests) {
             with_test_authentication({
-                datasets.end <- urls(datasetCatalog())
+                datasets.end <- urls(datasets())
                 leftovers <- setdiff(datasets.end, datasets.start)
                 if (length(leftovers)) {
                     stop(length(leftovers),
                         " dataset(s) created and not destroyed: ",
-                        serialPaste(dQuote(names(datasetCatalog()[leftovers]))),
+                        serialPaste(dQuote(names(datasets()[leftovers]))),
                         call.=FALSE)
                 }
                 users.end <- urls(getUserCatalog())

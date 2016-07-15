@@ -150,7 +150,7 @@ handleShoji <- function (x) {
     return(x)
 }
 
-getAPIroot <- function (x=getOption("crunch.api")) {
+getAPIRoot <- function (x=getOption("crunch.api")) {
     ShojiObject(crGET(x))
 }
 

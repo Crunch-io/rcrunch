@@ -26,13 +26,13 @@ if (run.integration.tests) {
 
     with_test_authentication({
         test_that("API root can be fetched", {
-            expect_true(is.shojiObject(getAPIroot()))
+            expect_true(is.shojiObject(getAPIRoot()))
         })
     })
 
     test_that("API calls throw an error if user is not authenticated", {
         logout()
-        expect_error(getAPIroot(),
+        expect_error(getAPIRoot(),
             "You are not authenticated. Please `login\\(\\)` and try again.")
     })
 }

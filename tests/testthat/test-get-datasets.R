@@ -39,10 +39,10 @@ with_mock_HTTP({
 if (run.integration.tests) {
     with_test_authentication({
         test_that("datasetCatalog gets what we expect", {
-            col0 <- datasetCatalog()
+            col0 <- datasets()
             expect_is(col0, "DatasetCatalog")
             with(test.dataset(), {
-                col1 <- datasetCatalog()
+                col1 <- datasets()
                 expect_is(col1, "DatasetCatalog")
                 expect_equal(length(col1), length(col0) + 1)
             })

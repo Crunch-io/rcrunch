@@ -1,3 +1,20 @@
+##' Get the project catalog
+##'
+##' @param x a \code{ShojiObject} that has a project catalog associated. If omitted,
+##' the default value for \code{x} means that you will load the user's primary
+##' project catalog. (Currently, there are no other project catalogs to load.)
+##' @return An object of class \code{ProjectCatalog}.
+##' @name projects
+##' @export
+##' @examples
+##' \dontrun{
+##' myprojects <- projects()
+##' proj <- myprojects[["Project name"]]
+##' }
+projects <- function (x=getAPIRoot()) {
+    ProjectCatalog(crGET(shojiURL(x, "catalogs", "projects")))
+}
+
 ##' @rdname catalog-extract
 ##' @export
 setMethod("[[", c("ProjectCatalog", "character"), function (x, i, ...) {
@@ -88,17 +105,7 @@ setMethod("delete", "CrunchProject", function (x, confirm=requireConsent(), ...)
     invisible(out)
 })
 
-##' A project's datasets
-##' @param x a \code{CrunchProject}
-##' @param value \code{CrunchDataset} for the setter
-##' @return An object of class \code{DatasetCatalog}. The setter returns the
-##' project with the given dataset added to it (via changing its owner to be
-##' the specified project, \code{x}).
-##' @name project-datasets
-##' @export
-datasets <- function (x) DatasetCatalog(crGET(shojiURL(x, "catalogs", "datasets")))
-
-##' @rdname project-datasets
+##' @rdname datasets
 ##' @export
 `datasets<-` <- function (x, value) {
     stopifnot(inherits(x, "CrunchProject"))
