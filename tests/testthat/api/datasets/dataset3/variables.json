@@ -4,7 +4,7 @@
     "specification": "/api/specifications/variables/",
     "description": "List of Variables of this dataset",
     "index": {
-        "gender.json": {
+        "gender/": {
             "name": "Gender",
             "discarded": false,
             "alias": "gender",
@@ -12,7 +12,7 @@
             "id": "66ae9881e3524f7db84970d556c34552",
             "description": "Gender"
         },
-        "birthyr.json": {
+        "birthyr/": {
             "name": "Birth Year",
             "discarded": true,
             "alias": "birthyr",
@@ -20,7 +20,7 @@
             "id": "f78ca47313144b57adfb495893968e70",
             "description": null
         },
-        "starttime.json": {
+        "starttime/": {
             "name": "starttime",
             "discarded": false,
             "alias": "starttime",
@@ -32,6 +32,6 @@
         }
     },
     "orders": {
-        "hier": "/api/datasets/dataset3/variables/hierarchical.json"
+        "hier": "/api/datasets/dataset3/variables/hierarchical/"
     }
 }

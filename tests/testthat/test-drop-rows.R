@@ -4,9 +4,9 @@ with_mock_HTTP({
     ds <- loadDataset("test ds")
     test_that("dropRows generates the right request", {
         expect_POST(dropRows(ds, ds$gender == "Male"),
-            '/api/datasets/dataset1/table.json',
+            '/api/datasets/dataset1/table/',
             '{"command":"delete","filter":{"function":"==",',
-            '"args":[{"variable":"/api/datasets/dataset1/variables/gender.json"},',
+            '"args":[{"variable":"/api/datasets/dataset1/variables/gender/"},',
             '{"value":1}]}}')
     })
 })

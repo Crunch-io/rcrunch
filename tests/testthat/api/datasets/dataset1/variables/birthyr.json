@@ -1,6 +1,6 @@
 {
     "element": "shoji:entity",
-    "self": "/api/datasets/dataset1/variables/birthyr.json",
+    "self": "/api/datasets/dataset1/variables/birthyr/",
     "body": {
         "alias": "birthyr",
         "format": {
@@ -25,12 +25,12 @@
         "id": "f78ca47313144b57adfb495893968e70"
     },
     "views": {
-        "summary": "/api/datasets/dataset1/variables/birthyr/summary.json",
-        "values": "/api/datasets/dataset1/variables/birthyr/values.json",
-        "cast": "/api/datasets/dataset1/variables/birthyr/cast.json"
+        "summary": "/api/datasets/dataset1/variables/birthyr/summary/",
+        "values": "/api/datasets/dataset1/variables/birthyr/values/",
+        "cast": "/api/datasets/dataset1/variables/birthyr/cast/"
     },
     "urls": {
-        "dataset_url": "/api/datasets/dataset1.json"
+        "dataset_url": "/api/datasets/dataset1/"
     },
     "description": "Details for a given Variable"
 }

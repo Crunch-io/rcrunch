@@ -1,10 +1,10 @@
 {
     "element": "shoji:catalog",
-    "self": "/api/datasets.json",
+    "self": "/api/datasets/",
     "specification": "https://beta.crunch.io/api/specifications/datasets/",
     "description": "List of Datasets that belong to this user. POST a Dataset representation (serialized JSON) here to create a new one; a 201 response indicates success and returns the location of the new object. GET that URL to retrieve the object.",
     "index": {
-        "/api/datasets/dataset1.json": {
+        "/api/datasets/dataset1/": {
             "owner_display_name": "Fake User",
             "name": "test ds",
             "description": "",
@@ -12,10 +12,10 @@
             "end_date":"2016-01-01",
             "archived": false,
             "id": "511a7c49778030653aab5963",
-            "owner_id": "/api/users/user1.json",
+            "owner_id": "/api/users/user1/",
             "is_published": true
         },
-        "/api/datasets/dataset2.json": {
+        "/api/datasets/dataset2/": {
             "owner_display_name": "Fake User",
             "name": "an archived dataset",
             "description": "This dataset does not exist",
@@ -23,15 +23,15 @@
             "id": "aa80d2e969b34e6ea9ededaa528c6248",
             "start_date": null,
             "end_date": null,
-            "owner_id": "/api/users/user1.json"
+            "owner_id": "/api/users/user1/"
         },
-        "/api/datasets/dataset3.json": {
+        "/api/datasets/dataset3/": {
             "owner_display_name": "George",
             "name": "ECON.sav",
             "description": "",
             "archived": false,
             "id": "95c0b45fe0af492594863f818cb913d2",
-            "owner_id": "/api/users/notme.json",
+            "owner_id": "/api/users/notme/",
             "is_published": false
         }
     }

@@ -10,10 +10,10 @@ with_mock_HTTP({
 
     test_that("Changing numeric type by <- makes requests", {
         expect_POST(type(ds$birthyr) <- "categorical",
-            '/api/datasets/dataset1/variables/birthyr/cast.json',
+            '/api/datasets/dataset1/variables/birthyr/cast/',
             '{"cast_as":"categorical"}')
         expect_POST(type(ds$birthyr) <- "text",
-            '/api/datasets/dataset1/variables/birthyr/cast.json',
+            '/api/datasets/dataset1/variables/birthyr/cast/',
             '{"cast_as":"text"}')
     })
     test_that("Setting the same type is a no-op", {

@@ -7,7 +7,12 @@ setMethod("initialize", "ShojiCatalog", function (.Object, ...) {
 is.catalog <- function (x) inherits(x, "ShojiCatalog")
 
 getIndexSlot <- function (x, i, what=character(1), ifnot=NA_character_) {
-    vapply(index(x), function (a) a[[i]] %||% ifnot, what, USE.NAMES=FALSE)
+    getListSlot(index(x), i, what, ifnot)
+}
+
+getListSlot <- function (x, i, what=character(1), ifnot=NA_character_) {
+    ## Wrapper to vapply over a list data structure and select a value
+    vapply(x, function (a) a[[i]] %||% ifnot, what, USE.NAMES=FALSE)
 }
 
 setIndexSlot <- function (x, i, value, unique=FALSE) {

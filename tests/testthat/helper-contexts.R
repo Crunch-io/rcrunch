@@ -21,7 +21,7 @@ fakeResponse <- function (url="", status_code=200, headers=list(), json=NULL) {
 }
 
 with_mock_HTTP <- function (expr) {
-    with(temp.option(crunch.api="/api/root.json"), {
+    with(temp.option(crunch.api="/api/root/"), {
         with_mock(
             `httr::GET`=function (url, ...) {
                 if (is.null(url)) {

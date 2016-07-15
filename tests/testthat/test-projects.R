@@ -22,27 +22,27 @@ with_mock_HTTP({
 
     test_that("Simple project creation by assignment", {
         expect_POST(projects[["A new project"]] <- list(),
-            '/api/projects.json',
+            '/api/projects/',
             '{"name":"A new project"}')
         expect_POST(projects$`A new project` <- list(),
-            '/api/projects.json',
+            '/api/projects/',
             '{"name":"A new project"}')
     })
 
     test_that("Project editing", {
         expect_PATCH(names(projects)[2] <- "New name",
-            '/api/projects.json',
-            '{"/api/projects/project2.json":{"name":"New name"}}')
+            '/api/projects/',
+            '{"/api/projects/project2/":{"name":"New name"}}')
         expect_PATCH(name(projects[[2]]) <- "New name",
-            '/api/projects.json',
-            '{"/api/projects/project2.json":{"name":"New name"}}')
+            '/api/projects/',
+            '{"/api/projects/project2/":{"name":"New name"}}')
     })
 
     test_that("Project deletion", {
         expect_error(delete(projects[[1]], confirm=TRUE),
             "Must confirm deleting project")
         with(consent(), expect_DELETE(delete(projects[[1]], confirm=TRUE),
-            "/api/projects/project1.json"))
+            "/api/projects/project1/"))
     })
 
     m <- members(aproject)
@@ -54,19 +54,19 @@ with_mock_HTTP({
 
     test_that("Add members by members<-", {
         expect_PATCH(members(aproject) <- c("new.user@crunch.io", "foo@example.co"),
-            '/api/projects/project1/members.json',
+            '/api/projects/project1/members/',
             '{"new.user@crunch.io":{},"foo@example.co":{}}')
     })
 
     test_that("Add members doesn't re-add if already a member", {
         expect_PATCH(members(aproject) <- c("new.user@crunch.io", "roger.user@example.com"),
-            '/api/projects/project1/members.json',
+            '/api/projects/project1/members/',
             '{"new.user@crunch.io":{}}')
     })
 
     test_that("Remove members by <- NULL", {
         expect_PATCH(members(aproject)[["roger.user@example.com"]] <- NULL,
-            '/api/projects/project1/members.json',
+            '/api/projects/project1/members/',
             '{"roger.user@example.com":null}')
     })
 
@@ -76,11 +76,11 @@ with_mock_HTTP({
 
     test_that("is.editor<- on member catalog", {
         expect_PATCH(is.editor(m) <- c(TRUE, TRUE),
-            '/api/projects/project1/members.json',
-            '{"/api/users/user2.json":{"permissions":{"edit":true}}}')
+            '/api/projects/project1/members/',
+            '{"/api/users/user2/":{"permissions":{"edit":true}}}')
         expect_PATCH(is.editor(m[2]) <- TRUE,
-            '/api/projects/project1/members.json',
-            '{"/api/users/user2.json":{"permissions":{"edit":true}}}')
+            '/api/projects/project1/members/',
+            '{"/api/users/user2/":{"permissions":{"edit":true}}}')
         expect_no_request(is.editor(m[2]) <- FALSE) ## No change, so no PATCH request made
     })
 
@@ -103,30 +103,30 @@ with_mock_HTTP({
     do <- ordering(d)
     test_that("Project datasets order", {
         expect_is(do, "DatasetOrder")
-        expect_identical(do@graph, list(DatasetGroup("Group 1", "/api/datasets/dataset3.json")))
+        expect_identical(do@graph, list(DatasetGroup("Group 1", "/api/datasets/dataset3/")))
     })
 
     test_that("Add datasets to project by <- a dataset (which transfers ownership)", {
         ds <- loadDataset("test ds")
         expect_PATCH(datasets(aproject) <- ds,
-            '/api/datasets/dataset1.json',
-            '{"owner":"/api/projects/project1.json"}')
+            '/api/datasets/dataset1/',
+            '{"owner":"/api/projects/project1/"}')
     })
 
     test_that("Organize datasets", {
         expect_identical(DatasetOrder(DatasetGroup("new group", datasets(aproject))),
-            DatasetOrder(DatasetGroup("new group", "/api/datasets/dataset3.json")))
+            DatasetOrder(DatasetGroup("new group", "/api/datasets/dataset3/")))
         expect_PUT(ordering(datasets(aproject)) <- DatasetOrder(DatasetGroup("new group",
             datasets(aproject))),
-            '/api/projects/project1/datasets/order.json',
-            '{"graph":[{"new group":["/api/datasets/dataset3.json"]}]}')
-        nested.ord <- DatasetOrder("/api/datasets/dataset3.json",
+            '/api/projects/project1/datasets/order/',
+            '{"graph":[{"new group":["/api/datasets/dataset3/"]}]}')
+        nested.ord <- DatasetOrder("/api/datasets/dataset3/",
             DatasetGroup("new group",
-                list(DatasetGroup("nested", "/api/datasets/dataset3.json"))))
+                list(DatasetGroup("nested", "/api/datasets/dataset3/"))))
         expect_PUT(ordering(datasets(aproject)) <- nested.ord,
-            '/api/projects/project1/datasets/order.json',
-            '{"graph":["/api/datasets/dataset3.json",',
-            '{"new group":[{"nested":["/api/datasets/dataset3.json"]}]}]}')
+            '/api/projects/project1/datasets/order/',
+            '{"graph":["/api/datasets/dataset3/",',
+            '{"new group":[{"nested":["/api/datasets/dataset3/"]}]}]}')
     })
 })
 

@@ -1,6 +1,6 @@
 {
     "element": "shoji:catalog",
-    "self": "/api/datasets/dataset3/permissions.json",
+    "self": "/api/datasets/dataset3/permissions/",
     "index": {
         "/api/teams/1/": {
             "dataset_permissions": {
