@@ -92,7 +92,7 @@ unshare <- function (dataset, users) {
 ## TODO: test and release this
 # shareDataset <- function (x, emails, notify=TRUE) {
 #     ## Share one more more datasets without loading them
-#     dscat <- active(datasetCatalog())
+#     dscat <- active(datasets())
 #     if (!is.numeric(x)) {
 #         x <- selectDatasetFromCatalog(x, dscat, strict=TRUE)
 #     }

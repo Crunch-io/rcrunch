@@ -100,10 +100,24 @@ with_mock_HTTP({
         expect_identical(names(d), "ECON.sav")
     })
 
+    test_that("Can loadDataset from a project dataset catalog", {
+        ds <- loadDataset("ECON.sav", project=aproject)
+        expect_is(ds, "CrunchDataset")
+        expect_identical(name(ds), "ECON.sav")
+        expect_identical(loadDataset("ECON.sav", project="Project One"),
+            ds)
+    })
+
+    test_that("loadDataset project arg error handling", {
+        expect_error(loadDataset("foo", project=12),
+            paste("Cannot get Shoji URL from object of class", dQuote("numeric")))
+    })
+
     do <- ordering(d)
     test_that("Project datasets order", {
         expect_is(do, "DatasetOrder")
-        expect_identical(do@graph, list(DatasetGroup("Group 1", "/api/datasets/dataset3/")))
+        expect_identical(do@graph,
+            list(DatasetGroup("Group 1", "/api/datasets/dataset3/")))
     })
 
     test_that("Add datasets to project by <- a dataset (which transfers ownership)", {
@@ -131,46 +145,46 @@ with_mock_HTTP({
 })
 
 with_test_authentication({
-    projects <- session()$projects
+    myprojects <- projects()
     my.name <- name(me())
     my.email <- email(me())
 
-    nprojects.0 <- length(projects)
+    nprojects.0 <- length(myprojects)
     test_that("Can get project catalog", {
-        expect_is(projects, "ProjectCatalog")
+        expect_is(myprojects, "ProjectCatalog")
     })
 
     name.of.project1 <- now()
     test_that("Can create a project", {
-        expect_false(name.of.project1 %in% names(projects))
-        projects[[name.of.project1]] <- list()
-        expect_true(name.of.project1 %in% names(projects))
-        expect_true(length(projects) == nprojects.0 + 1L)
-        expect_is(projects[[name.of.project1]], "CrunchProject")
-        expect_length(members(projects[[name.of.project1]]), 1)
-        expect_identical(names(members(projects[[name.of.project1]])),
+        expect_false(name.of.project1 %in% names(myprojects))
+        myprojects[[name.of.project1]] <- list()
+        expect_true(name.of.project1 %in% names(myprojects))
+        expect_true(length(myprojects) == nprojects.0 + 1L)
+        expect_is(myprojects[[name.of.project1]], "CrunchProject")
+        expect_length(members(myprojects[[name.of.project1]]), 1)
+        expect_identical(names(members(myprojects[[name.of.project1]])),
             my.name)
     })
 
-    projects <- refresh(projects)
-    pj <- projects[[name.of.project1]]
+    myprojects <- refresh(myprojects)
+    pj <- myprojects[[name.of.project1]]
     p_url <- self(pj)
     name2 <- paste(name.of.project1, "revised")
     test_that("Can rename a project by name<-", {
-        expect_identical(self(projects[[name.of.project1]]),
+        expect_identical(self(myprojects[[name.of.project1]]),
             p_url)
-        expect_null(projects[[name2]])
-        name(projects[[name.of.project1]]) <- name2
-        expect_null(projects[[name.of.project1]])
-        expect_identical(self(projects[[name2]]), p_url)
+        expect_null(myprojects[[name2]])
+        name(myprojects[[name.of.project1]]) <- name2
+        expect_null(myprojects[[name.of.project1]])
+        expect_identical(self(myprojects[[name2]]), p_url)
     })
 
     name3 <- paste(name2, "FINAL")
     test_that("Can rename a project with names<-", {
-        expect_false(name3 %in% names(projects))
-        names(projects)[urls(projects) == p_url] <- name3
-        expect_true(name3 %in% names(projects))
-        expect_identical(self(projects[[name3]]), p_url)
+        expect_false(name3 %in% names(myprojects))
+        names(myprojects)[urls(myprojects) == p_url] <- name3
+        expect_true(name3 %in% names(myprojects))
+        expect_identical(self(myprojects[[name3]]), p_url)
     })
 
     test_that("Get and set project icon", {
@@ -184,24 +198,24 @@ with_test_authentication({
 
 
     test_that("Can delete a project by URL", {
-        projects <- refresh(projects)
-        expect_true(p_url %in% urls(projects))
+        myprojects <- refresh(myprojects)
+        expect_true(p_url %in% urls(myprojects))
         try(crDELETE(p_url))
-        expect_false(p_url %in% urls(refresh(projects)))
+        expect_false(p_url %in% urls(refresh(myprojects)))
     })
 
     test_that("Can create a project with members", {
         skip("TODO")
         skip_on_jenkins("Jenkins user needs more permissions")
-        projects <- refresh(projects)
-        nprojects.2 <- length(projects)
+        myprojects <- refresh(myprojects)
+        nprojects.2 <- length(myprojects)
         name.of.project2 <- now()
-        expect_false(name.of.project2 %in% names(projects))
+        expect_false(name.of.project2 %in% names(myprojects))
         u <- testUser()
-        projects[[name.of.project2]] <- list(members=email(u))
-        expect_true(name.of.project2 %in% names(projects))
-        expect_true(length(projects) == nprojects.2 + 1L)
-        expect_true(setequal(names(members(projects[[name.of.project2]])),
+        myprojects[[name.of.project2]] <- list(members=email(u))
+        expect_true(name.of.project2 %in% names(myprojects))
+        expect_true(length(myprojects) == nprojects.2 + 1L)
+        expect_true(setequal(names(members(myprojects[[name.of.project2]])),
             c(name(u), my.name)))
     })
 

@@ -64,8 +64,8 @@ login <- function (email=getOption("crunch.email"),
 ##' @return a list.
 ##' @export
 session <- function () {
-    list(datasets=datasetCatalog(),
-        projects=ProjectCatalog(crGET(sessionURL("projects"))))
+    list(datasets=datasets(),
+        projects=projects())
 }
 
 crunchAuth <- function (email, password=NULL, ...) {
@@ -117,7 +117,7 @@ tokenAuth <- function (token, ua="token") {
 jupyterLogin <- function (token) tokenAuth(token, ua="jupyter.crunch.io")
 
 warmSessionCache <- function () {
-    session_store$root <- getAPIroot()
+    session_store$root <- getAPIRoot()
 }
 
 is.authenticated <- function () !is.null(session_store$root)

@@ -22,7 +22,7 @@ forkDataset <- function (dataset, name=defaultForkName(dataset), draft=FALSE, ..
         body=toJSON(list(element="shoji:entity",
                          body=list(name=name, is_published=!draft, ...))))
     dropOnly(sessionURL("datasets"))
-    invisible(entity(datasetCatalog()[[fork_url]]))
+    invisible(entity(datasets()[[fork_url]]))
 }
 
 defaultForkName <- function (dataset) {

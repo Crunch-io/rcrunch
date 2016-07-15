@@ -1,21 +1,67 @@
+##' Get the dataset catalog
+##'
+##' @param x a \code{ShojiObject}, such as a \code{CrunchProject}. If omitted,
+##' the default value for \code{x} means that you will load the user's primary
+##' dataset catalog.
+##' @param value \code{CrunchDataset} for the setter
+##' @return An object of class \code{DatasetCatalog}. The setter returns the
+##' project (or other object that contains a dataset catalog with the given
+##' dataset added to it (via changing its owner to be
+##' the specified object, \code{x}).
+##' @name datasets
+##' @export
+##' @examples
+##' \dontrun{
+##' # Get the primary dataset catalog
+##' mydatasets <- datasets()
+##' # Can load a dataset from that
+##' ds <- loadDataset(mydatasets[["Dataset name"]])
+##' # Can use the same function to get the dataset catalog for a project
+##' proj <- projects()[["Project name"]]
+##' projdatasets <- datasets(proj)
+##' # The assignment method lets you move a dataset to a project
+##' datasets(proj) <- ds
+##' }
+datasets <- function (x=getAPIRoot()) {
+    DatasetCatalog(crGET(shojiURL(x, "catalogs", "datasets")))
+}
+
 ##' Show the names of all Crunch datasets
 ##'
 ##' @param kind character specifying whether to look in active, archived, or all
-##' datasets.
+##' datasets. Default is "active", i.e. non-archived.
+##' @param project \code{CrunchProject} entity, character name of a project, or
+##' NULL, the default. If a Project entity or reference is supplied, the
+##' function will display datasets from that Project's datasets. If NULL,
+##' the primary dataset catalog for the user will be used.
 ##' @param refresh logical: should the function check the Crunch API for new
 ##' datasets? Default is FALSE.
 ##' @return Character vector of dataset names, each of which would be a valid
 ##' input for \code{\link{loadDataset}}
 ##' @export
-listDatasets <- function (kind=c("active", "all", "archived"), refresh=FALSE) {
-    if (refresh) {
-        dropOnly(sessionURL("datasets"))
-    }
-    return(names(subsetDatasetCatalog(match.arg(kind))))
+listDatasets <- function (kind=c("active", "all", "archived"), project=NULL,
+                          refresh=FALSE) {
+    dscat <- selectDatasetCatalog(kind, project, refresh)
+    return(names(dscat))
 }
 
-subsetDatasetCatalog <- function (kind, catalog=datasetCatalog()) {
-    return(switch(kind,
+selectDatasetCatalog <- function (kind=c("active", "all", "archived"), project=NULL, refresh=FALSE) {
+    if (is.null(project)) {
+        ## Default: we'll get the dataset catalog from the API root
+        project <- getAPIRoot()
+    } else if (is.character(project)) {
+        ## Project name (or I guess URL could work)
+        project <- projects()[[project]]
+    }
+
+    if (refresh) {
+        ## drop cache for the ds catalog URL of the "project"
+        dropOnly(shojiURL(project, "catalogs", "datasets"))
+    }
+    ## Ok, get the catalog
+    catalog <- datasets(project)
+    ## Subset as indicated
+    return(switch(match.arg(kind),
         active=active(catalog),
         all=catalog,
         archived=archived(catalog)))
@@ -31,21 +77,24 @@ updateDatasetList <- function () {
     dropOnly(sessionURL("datasets"))
 }
 
-datasetCatalog <- function () DatasetCatalog(crGET(sessionURL("datasets")))
-## TODO: Generalize a `datasets` method, like started for projects
-
 ##' Load a Crunch Dataset
 ##' @param dataset character, the name of a Crunch dataset you have access
 ##' to. Or, a \code{DatasetTuple}.
 ##' @param kind character specifying whether to look in active, archived, or all
-##' datasets.
+##' datasets. Default is "active", i.e. non-archived.
+##' @param project \code{CrunchProject} entity, character name of a project, or
+##' NULL, the default. If a Project entity or reference is supplied, the
+##' function will display datasets from that Project's datasets. If NULL,
+##' the primary dataset catalog for the user will be used.
+##' @param refresh logical: should the function check the Crunch API for new
+##' datasets? Default is FALSE.
 ##' @return An object of class \code{CrunchDataset}
 ##' @export
-loadDataset <- function (dataset, kind=c("active", "all", "archived")) {
+loadDataset <- function (dataset, kind=c("active", "all", "archived"), project=NULL, refresh=FALSE) {
     if (!inherits(dataset, "DatasetTuple")) {
-        dss <- subsetDatasetCatalog(match.arg(kind))
+        dscat <- selectDatasetCatalog(kind, project, refresh)
         dsname <- dataset
-        dataset <- dss[[dataset]]
+        dataset <- dscat[[dataset]]
         if (is.null(dataset)) {
             halt(dQuote(dsname), " not found")
         }
@@ -73,7 +122,7 @@ loadDataset <- function (dataset, kind=c("active", "all", "archived")) {
 ##' @export
 deleteDataset <- function (x, ...) {
     if (!is.dataset(x)) {
-        x <- datasetCatalog()[[x]]
+        x <- datasets()[[x]]
     }
     out <- delete(x, ...)
     invisible(out)
