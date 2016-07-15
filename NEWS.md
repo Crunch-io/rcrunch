@@ -1,6 +1,6 @@
-### crunch 1.10.7 (under development)
+## crunch 1.11.0
 * Generic `datasets` and `projects` functions to get dataset and project catalogs. (`datasets` previously existed only as a method for Project entities.)
-* Add `project` argument to `listDatasets` and add `project` and `refresh` to `loadDatasets` to facilitate viewing and loading datasets that belong to projects. 
+* Add `project` argument to `listDatasets` and add `project` and `refresh` to `loadDatasets` to facilitate viewing and loading datasets that belong to projects.
 * New function `compareDatasets` that shows how datasets will line up when appending. A `summary` method on its return value prints a report that highlights areas of possible mismatch.
 * Support computing numeric aggregates (mean, max, etc.) of categorical variables with numeric values in `crtabs`
 * Allow `NULL` assignment into Variable/DatasetGroups to remove elements
