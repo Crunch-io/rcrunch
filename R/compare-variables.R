@@ -30,10 +30,10 @@ summarizeCompareVariables <- function (compdf) {
         class="compareVariablesSummary"))
 }
 
-##' @export
+#' @export
 summary.compareVariables <- function (object, ...) summarizeCompareVariables(object)
 
-##' @export
+#' @export
 print.compareVariablesSummary <- function (x, ...) {
     cat("Total variables:", nrow(x$variables), "\n")
     mismatched.type <- x$problems$mismatched.type

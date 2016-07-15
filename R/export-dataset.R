@@ -1,15 +1,15 @@
-##' Export a dataset to a file
-##'
-##' @param dataset CrunchDataset
-##' @param file character local filename to write to
-##' @param format character export format: currently supported values are "csv"
-##' and "spss".
-##' @param categorical character: export categorical values to CSV as category
-##' "name" (default) or "id". Ignored by the SPSS exporter.
-##' @param ... additional arguments, currently ignored
-##' @return Invisibly, \code{file}.
-##' @export
-##' @importFrom utils download.file
+#' Export a dataset to a file
+#'
+#' @param dataset CrunchDataset
+#' @param file character local filename to write to
+#' @param format character export format: currently supported values are "csv"
+#' and "spss".
+#' @param categorical character: export categorical values to CSV as category
+#' "name" (default) or "id". Ignored by the SPSS exporter.
+#' @param ... additional arguments, currently ignored
+#' @return Invisibly, \code{file}.
+#' @export
+#' @importFrom utils download.file
 exportDataset <- function (dataset, file, format=c("csv", "spss"),
                            categorical=c("name", "id"), ...) {
 
@@ -39,6 +39,6 @@ exportDataset <- function (dataset, file, format=c("csv", "spss"),
     invisible(file)
 }
 
-##' @rdname exportDataset
-##' @export
+#' @rdname exportDataset
+#' @export
 setMethod("write.csv", "CrunchDataset", function (...) exportDataset(..., format="csv"))

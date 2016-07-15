@@ -49,23 +49,23 @@
     return(f)
 }
 
-##' Updating variables with expressions or values
-##'
-##' @param x a Variable
-##' @param i a CrunchLogicalExpr or R index, optionally
-##' @param j Invalid
-##' @param value an R vector or a CrunchExpr with which to update
-##' @return \code{x} duly modified
-##' @name variable-update
-##' @aliases variable-update
+#' Updating variables with expressions or values
+#'
+#' @param x a Variable
+#' @param i a CrunchLogicalExpr or R index, optionally
+#' @param j Invalid
+#' @param value an R vector or a CrunchExpr with which to update
+#' @return \code{x} duly modified
+#' @name variable-update
+#' @aliases variable-update
 NULL
 
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"), .backstopUpdate)
 
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("CrunchVariable", "ANY", "missing", "NULL"),
     function (x, i, j, value) return(NULL))
 
@@ -75,28 +75,28 @@ setMethod("[<-", c("CrunchVariable", "ANY", "missing", "NULL"),
     return(x)
 }
 
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("TextVariable", "ANY", "missing", "character"),
     .var.updater)
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("NumericVariable", "ANY", "missing", "numeric"),
     .var.updater)
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("DatetimeVariable", "ANY", "missing", "Date"),
     .var.updater)
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("DatetimeVariable", "ANY", "missing", "POSIXt"),
     .var.updater)
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("CrunchVariable", "ANY", "missing", "CrunchExpr"),
     .var.updater)
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("CrunchVariable", "CrunchExpr", "missing", "CrunchExpr"),
     function (x, i, j, value) {
         if (!identical(zcl(i), value@filter)) {
@@ -156,33 +156,33 @@ setMethod("[<-", c("CrunchVariable", "CrunchExpr", "missing", "CrunchExpr"),
     }
 )
 
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "numeric"),
     .categorical.update[["numeric"]])
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "character"),
     .categorical.update[["character"]])
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "factor"),
     .categorical.update[["factor"]])
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("CategoricalArrayVariable", "ANY", "missing", "numeric"),
     .categorical.update[["numeric"]])
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("CategoricalArrayVariable", "ANY", "missing", "character"),
     .categorical.update[["character"]])
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("CategoricalArrayVariable", "ANY", "missing", "factor"),
     .categorical.update[["factor"]])
 
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
     function (x, i, j, value) {
         ## For assigning NA
@@ -216,8 +216,8 @@ setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
     }
 }
 
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("is.na<-", "CrunchVariable", function (x, value) {
     ## Temporarily kill this method until API supports correctly
     halt("is.na<- not yet supported for CrunchVariables")

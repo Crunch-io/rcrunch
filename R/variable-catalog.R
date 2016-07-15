@@ -21,8 +21,8 @@ setMethod("hidden", "VariableCatalog", function (x) {
     return(x)
 })
 
-##' @rdname catalog-extract
-##' @export
+#' @rdname catalog-extract
+#' @export
 setMethod("[[", c("VariableCatalog", "character"), function (x, i, ...) {
     tup <- index(x)[[i]]
     if (!is.list(tup)) {
@@ -30,8 +30,8 @@ setMethod("[[", c("VariableCatalog", "character"), function (x, i, ...) {
     }
     return(VariableTuple(index_url=self(x), entity_url=i, body=tup))
 })
-##' @rdname catalog-extract
-##' @export
+#' @rdname catalog-extract
+#' @export
 setMethod("[[", c("VariableCatalog", "ANY"), function (x, i, ...) {
     tup <- index(x)[[i]]
     if (!is.list(tup)) {
@@ -40,70 +40,70 @@ setMethod("[[", c("VariableCatalog", "ANY"), function (x, i, ...) {
     return(VariableTuple(index_url=self(x), entity_url=urls(x)[i],
         body=tup))
 })
-##' @rdname catalog-extract
-##' @export
+#' @rdname catalog-extract
+#' @export
 setMethod("[[<-", c("VariableCatalog", "character", "missing", "VariableTuple"),
     function (x, i, j, value) {
         index(x)[[i]] <- value@body
         return(x)
     })
-##' @rdname catalog-extract
-##' @export
+#' @rdname catalog-extract
+#' @export
 setMethod("[[<-", c("VariableCatalog", "character", "missing", "CrunchVariable"),
     function (x, i, j, value) {
         stopifnot(i == self(value))
         x[[i]] <- tuple(value)
         return(x)
     })
-##' @rdname catalog-extract
-##' @export
+#' @rdname catalog-extract
+#' @export
 setMethod("[", c("VariableCatalog", "VariableOrder"), function (x, i, ...) {
     index(x) <- index(x)[urls(i)]
     return(x)
 })
-##' @rdname catalog-extract
-##' @export
+#' @rdname catalog-extract
+#' @export
 setMethod("[", c("VariableCatalog", "VariableGroup"), function (x, i, ...) {
     index(x) <- index(x)[urls(i)]
     return(x)
 })
 
-##' @rdname catalog-extract
-##' @export
+#' @rdname catalog-extract
+#' @export
 setMethod("[<-", c("VariableCatalog", "VariableOrder", "missing", "VariableCatalog"),
     function (x, i, j, value) {
         i <- urls(i)
         callNextMethod(x, i, value=value)
     })
-##' @rdname catalog-extract
-##' @export
+#' @rdname catalog-extract
+#' @export
 setMethod("[<-", c("VariableCatalog", "VariableGroup", "missing", "VariableCatalog"),
     function (x, i, j, value) {
         i <- urls(i)
         callNextMethod(x, i, value=value)
     })
 
-##' @export
-##' @rdname describe-catalog
+#' @export
+#' @rdname describe-catalog
 setMethod("aliases", "VariableCatalog", function (x) getIndexSlot(x, "alias"))
-##' @export
-##' @rdname describe-catalog
+#' @export
+#' @rdname describe-catalog
 setMethod("aliases<-", "VariableCatalog", function (x, value) {
     setIndexSlot(x, "alias", value)
 })
 
-##' @export
-##' @rdname describe-catalog
+#' @export
+#' @rdname describe-catalog
 setMethod("descriptions", "VariableCatalog",
     function (x) getIndexSlot(x, "description"))
-##' @export
-##' @rdname describe-catalog
+#' @export
+#' @rdname describe-catalog
 setMethod("descriptions<-", "VariableCatalog", function (x, value) {
     setIndexSlot(x, "description", value)
 })
 
-##' @export
-##' @rdname describe-catalog
+#' @export
+#' @rdname describe-catalog
 setMethod("types", "VariableCatalog", function (x) getIndexSlot(x, "type"))
 
 ## No setter for types<-

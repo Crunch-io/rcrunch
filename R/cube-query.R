@@ -1,20 +1,20 @@
-##' Crunch xtabs: Crosstab and otherwise aggregate variables in a Crunch Dataset
-##'
-##' Create a contingency table or other aggregation from cross-classifying
-##' variables in a CrunchDataset.
-##'
-##' @param formula an object of class 'formula' object with the
-##' cross-classifying variables, separated by '+', on the right hand side.
-##' Compare to \code{\link[stats]{xtabs}}.
-##' @param data an object of class \code{CrunchDataset}
-##' @param weight a CrunchVariable that has been designated as a potential
-##' weight variable for \code{data}, or \code{NULL} for unweighted results.
-##' Default is the currently applied weight, \code{\link{weight}(data)}.
-##' @param useNA whether to include missing values in tabular results. See
-##' \code{\link[base]{table}}.
-##' @return an object of class \code{CrunchCube}
-##' @importFrom stats as.formula terms
-##' @export
+#' Crunch xtabs: Crosstab and otherwise aggregate variables in a Crunch Dataset
+#'
+#' Create a contingency table or other aggregation from cross-classifying
+#' variables in a CrunchDataset.
+#'
+#' @param formula an object of class 'formula' object with the
+#' cross-classifying variables, separated by '+', on the right hand side.
+#' Compare to \code{\link[stats]{xtabs}}.
+#' @param data an object of class \code{CrunchDataset}
+#' @param weight a CrunchVariable that has been designated as a potential
+#' weight variable for \code{data}, or \code{NULL} for unweighted results.
+#' Default is the currently applied weight, \code{\link{weight}(data)}.
+#' @param useNA whether to include missing values in tabular results. See
+#' \code{\link[base]{table}}.
+#' @return an object of class \code{CrunchCube}
+#' @importFrom stats as.formula terms
+#' @export
 crtabs <- function (formula, data, weight=crunch::weight(data),
                      useNA=c("no", "ifany", "always")) {
     ## Validate "formula"

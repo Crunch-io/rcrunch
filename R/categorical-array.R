@@ -1,30 +1,30 @@
-##' Make a Categorical Array or Multiple Response variable
-##'
-##' @param subvariables a list of Variable objects to bind together, or a
-##' Dataset object containing only the Variables to bind (as in from subsetting
-##' a Dataset), or values (e.g. names) of variables corresponding to \code{key}.
-##' If omitted, must supply \code{dataset} and \code{pattern}. If specifying
-##' values, must include \code{dataset}.
-##' @param dataset the Crunch Dataset to which the variables in
-##' \code{subvariables} belong, or in which to search for variables based
-##' on \code{pattern}. If omitted, \code{subvariables} must exist and all
-##' Variables in the list must belong to the same Dataset
-##' @param pattern An optional regular expression to search for variables to
-##' bind within \code{dataset}.
-##' Note that this argument is deprecated. If you wish to grep, you can
-##' \code{grep(pattern, aliases(variables(dataset)))} or similar outside this
-##' function.
-##' @param key character, the name of the Variable field in which to search
-##' with \code{pattern}. Default is 'alias'.
-##' @param name character, the name that the new Categorical Array variable
-##' should have. Required.
-##' @param selections character, for \code{makeMR}, the names of the
-##' categories to mark as the dichotomous selections. Required for
-##' \code{makeMR}; ignored in \code{makeArray}.
-##' @param ... Optional additional attributes to set on the new variable.
-##' @return A VariableDefinition that when added to a Dataset will create the
-##' categorical-array or multiple-response variable.
-##' @export
+#' Make a Categorical Array or Multiple Response variable
+#'
+#' @param subvariables a list of Variable objects to bind together, or a
+#' Dataset object containing only the Variables to bind (as in from subsetting
+#' a Dataset), or values (e.g. names) of variables corresponding to \code{key}.
+#' If omitted, must supply \code{dataset} and \code{pattern}. If specifying
+#' values, must include \code{dataset}.
+#' @param dataset the Crunch Dataset to which the variables in
+#' \code{subvariables} belong, or in which to search for variables based
+#' on \code{pattern}. If omitted, \code{subvariables} must exist and all
+#' Variables in the list must belong to the same Dataset
+#' @param pattern An optional regular expression to search for variables to
+#' bind within \code{dataset}.
+#' Note that this argument is deprecated. If you wish to grep, you can
+#' \code{grep(pattern, aliases(variables(dataset)))} or similar outside this
+#' function.
+#' @param key character, the name of the Variable field in which to search
+#' with \code{pattern}. Default is 'alias'.
+#' @param name character, the name that the new Categorical Array variable
+#' should have. Required.
+#' @param selections character, for \code{makeMR}, the names of the
+#' categories to mark as the dichotomous selections. Required for
+#' \code{makeMR}; ignored in \code{makeArray}.
+#' @param ... Optional additional attributes to set on the new variable.
+#' @return A VariableDefinition that when added to a Dataset will create the
+#' categorical-array or multiple-response variable.
+#' @export
 makeArray <- function (subvariables, dataset=NULL, pattern=NULL, key=namekey(dataset), name, ...) {
 
     Call <- match.call(expand.dots=FALSE)
@@ -41,27 +41,27 @@ makeArray <- function (subvariables, dataset=NULL, pattern=NULL, key=namekey(dat
     return(out)
 }
 
-##' Internal function to gather variable URLs for binding
-##'
-##' Exported only for nonstandard evaluation in makeArray and makeMR
-##'
-##' @param subvariables a list of Variable objects to bind together, or a
-##' Dataset object containing only the Variables to bind (as in from subsetting
-##' a Dataset), or values (e.g. names) of variables corresponding to \code{key}.
-##' If omitted, must supply \code{dataset} and \code{pattern}. If specifying
-##' values, must include \code{dataset}.
-##' @param dataset the Crunch Dataset to which the variables in
-##' \code{subvariables} belong, or in which to search for variables based
-##' on \code{pattern}. If omitted, \code{subvariables} must exist and all
-##' Variables in the list must belong to the same Dataset
-##' @param pattern An optional regular expression to search for variables to
-##' bind within \code{dataset}.
-##' @param key character, the name of the Variable field in which to search
-##' with \code{pattern}. Default is 'alias'.
-##' @param ... additional arguments, which are ignored
-##' @return a list with two elements: "dataset" and "variable_urls"
-##' @export
-##' @keywords internal
+#' Internal function to gather variable URLs for binding
+#'
+#' Exported only for nonstandard evaluation in makeArray and makeMR
+#'
+#' @param subvariables a list of Variable objects to bind together, or a
+#' Dataset object containing only the Variables to bind (as in from subsetting
+#' a Dataset), or values (e.g. names) of variables corresponding to \code{key}.
+#' If omitted, must supply \code{dataset} and \code{pattern}. If specifying
+#' values, must include \code{dataset}.
+#' @param dataset the Crunch Dataset to which the variables in
+#' \code{subvariables} belong, or in which to search for variables based
+#' on \code{pattern}. If omitted, \code{subvariables} must exist and all
+#' Variables in the list must belong to the same Dataset
+#' @param pattern An optional regular expression to search for variables to
+#' bind within \code{dataset}.
+#' @param key character, the name of the Variable field in which to search
+#' with \code{pattern}. Default is 'alias'.
+#' @param ... additional arguments, which are ignored
+#' @return a list with two elements: "dataset" and "variable_urls"
+#' @export
+#' @keywords internal
 prepareBindInputs <- function (subvariables=NULL, dataset=NULL,
                                pattern=NULL, key=namekey(dataset), ...) {
 

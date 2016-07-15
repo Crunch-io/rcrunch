@@ -111,55 +111,55 @@ setMethod("entitiesInitializer", "OrderGroup", orderEntitiesInit)
     return(removeMissingEntities(x))
 }
 
-##' @export
+#' @export
 as.list.ShojiOrder <- function (x, ...) x@graph
 
-##' @export
+#' @export
 as.list.OrderGroup <- function (x, ...) x@entities
 
-##' Length of an Order
-##' @param x a ShojiOrder
-##' @return Integer: the number of elements in the Order
-##' @name ShojiOrder-length
+#' Length of an Order
+#' @param x a ShojiOrder
+#' @return Integer: the number of elements in the Order
+#' @name ShojiOrder-length
 NULL
 
-##' @rdname ShojiOrder-length
-##' @export
+#' @rdname ShojiOrder-length
+#' @export
 setMethod("length", "ShojiOrder", function (x) length(entities(x)))
 
 
-##' Extract and update in VariableOrder and VariableGroup
-##'
-##' @param x a VariableOrder or VariableGroup
-##' @param i an index. Numeric and logical indexing supported for both classes;
-##' character indexing supported for VariableOrder, matching on VariableGroup
-##' names
-##' @param name Same as i but for \code{$}
-##' @param j Invalid
-##' @param value For update methods, an object equivalent in class to what is
-##' being updated
-##' @param ... additional arguments
-##' @param drop Ignored
-##' @return \code{[[} and \code{$} on a VariableOrder return the VariableGroup.
-##' \code{[[} on VariableGroup returns the entity within, either a character
-##' (URL) or nested VariableGroup. \code{[} and assignment methods return
-##' objects of the same class as \code{x}
-##' @name ShojiOrder-extract
-##' @aliases ShojiOrder-extract
+#' Extract and update in VariableOrder and VariableGroup
+#'
+#' @param x a VariableOrder or VariableGroup
+#' @param i an index. Numeric and logical indexing supported for both classes;
+#' character indexing supported for VariableOrder, matching on VariableGroup
+#' names
+#' @param name Same as i but for \code{$}
+#' @param j Invalid
+#' @param value For update methods, an object equivalent in class to what is
+#' being updated
+#' @param ... additional arguments
+#' @param drop Ignored
+#' @return \code{[[} and \code{$} on a VariableOrder return the VariableGroup.
+#' \code{[[} on VariableGroup returns the entity within, either a character
+#' (URL) or nested VariableGroup. \code{[} and assignment methods return
+#' objects of the same class as \code{x}
+#' @name ShojiOrder-extract
+#' @aliases ShojiOrder-extract
 NULL
 
 ###############################
 # 1. Extract from ShojiOrder
 ###############################
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[", c("ShojiOrder", "ANY"), function (x, i, ..., drop=FALSE) {
     x@graph <- x@graph[i]
     return(x)
 })
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[", c("ShojiOrder", "character"), function (x, i, ..., drop=FALSE) {
     w <- match(i, names(x))
     if (any(is.na(w))) {
@@ -168,29 +168,29 @@ setMethod("[", c("ShojiOrder", "character"), function (x, i, ..., drop=FALSE) {
     callNextMethod(x, w, ..., drop=drop)
 })
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[", c("ShojiOrder", "ANY"), function (x, i, ...) {
     x@graph[[i]]
 })
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[", c("ShojiOrder", "character"), function (x, i, ...) {
     w <- match(i, names(x))
     callNextMethod(x, w, ..., drop=drop)
 })
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("$", "ShojiOrder", function (x, name) x[[name]])
 
 ###############################
 # 2. Assign into ShojiOrder
 ###############################
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
     function (x, i, j, value) {
         stopifnot(class(x) == class(value)) ## So we don't cross subclasses
@@ -200,8 +200,8 @@ setMethod("[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
         }
         callNextMethod(x, w, value=value)
     })
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[<-", c("ShojiOrder", "ANY", "missing", "ShojiOrder"),
    function (x, i, j, value) {
        stopifnot(class(x) == class(value)) ## So we don't cross subclasses
@@ -211,18 +211,18 @@ setMethod("[<-", c("ShojiOrder", "ANY", "missing", "ShojiOrder"),
        return(x)
    })
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[<-", c("ShojiOrder", "character", "missing", "list"),
    .setNestedGroupByName)
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[<-", c("ShojiOrder", "character", "missing", "character"),
    .setNestedGroupByName)
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[<-", c("ShojiOrder", "character", "missing", "OrderGroup"),
     function (x, i, j, value) {
         w <- match(i, names(x))
@@ -233,8 +233,8 @@ setMethod("[[<-", c("ShojiOrder", "character", "missing", "OrderGroup"),
         callNextMethod(x, w, value=value)
     })
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "OrderGroup"),
     function (x, i, j, value) {
         if (!duplicates(x) && length(entities(value))) {
@@ -246,23 +246,23 @@ setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "OrderGroup"),
         return(removeMissingEntities(x))
     })
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "ANY"),
     function (x, i, j, value) {
         halt("Cannot assign an object of class ", dQuote(class(value)),
             " into a ", class(x))
     })
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[<-", c("ShojiOrder", "ANY", "missing", "NULL"),
     function (x, i, j, value) {
         x@graph[[i]] <- value
         return(x)
     })
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[<-", c("ShojiOrder", "character", "missing", "NULL"),
     function (x, i, j, value) {
         w <- match(i, names(x))
@@ -272,15 +272,15 @@ setMethod("[[<-", c("ShojiOrder", "character", "missing", "NULL"),
         callNextMethod(x, w, value=value)
     })
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[<-", c("ShojiOrder", "character", "missing", "ShojiOrder"),
     function (x, i, j, value) {
         .setNestedGroupByName(x, i, j, entities(value))
     })
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("$<-", "ShojiOrder", function (x, name, value) {
     x[[name]] <- value
     return(x)
@@ -291,14 +291,14 @@ setMethod("$<-", "ShojiOrder", function (x, name, value) {
 # 3. Extract from OrderGroup
 ###############################
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[", c("OrderGroup", "ANY"), function (x, i, ..., drop=FALSE) {
     x@entities <- x@entities[i]
     return(x)
 })
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[", c("OrderGroup", "character"), function (x, i, ..., drop=FALSE) {
     w <- match(i, names(x))
     if (any(is.na(w))) {
@@ -307,8 +307,8 @@ setMethod("[", c("OrderGroup", "character"), function (x, i, ..., drop=FALSE) {
     callNextMethod(x, w, ..., drop=drop)
 })
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[", c("OrderGroup", "character"), function (x, i, ...) {
     w <- match(i, names(x))
     if (any(is.na(w))) {
@@ -317,46 +317,46 @@ setMethod("[[", c("OrderGroup", "character"), function (x, i, ...) {
     callNextMethod(x, w, ..., drop=drop)
 })
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[", c("OrderGroup", "ANY"), function (x, i, ...) {
     x@entities[[i]]
 })
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("$", "OrderGroup", function (x, name) x[[name]])
 
 ###############################
 # 4. Assign into ShojiGroup
 ###############################
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[<-", c("OrderGroup", "character", "missing", "list"),
     .setNestedGroupByName)
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[<-", c("OrderGroup", "character", "missing", "character"),
     .setNestedGroupByName)
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[<-", c("OrderGroup", "character", "missing", "ShojiOrder"),
     function (x, i, j, value) {
         .setNestedGroupByName(x, i, j, entities(value))
     })
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[<-", c("OrderGroup", "character", "missing", "OrderGroup"),
     function (x, i, j, value) {
         .setNestedGroupByName(x, i, j, entities(value))
     })
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[<-", c("OrderGroup", "ANY", "missing", "OrderGroup"),
     function (x, i, j, value) {
         stopifnot(class(x) == class(value)) ## So we don't cross subclasses
@@ -364,8 +364,8 @@ setMethod("[[<-", c("OrderGroup", "ANY", "missing", "OrderGroup"),
         return(x)
     })
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[<-", c("OrderGroup", "numeric", "missing", "NULL"),
     function (x, i, j, value) {
         if (length(i) > 1 || i < 0) {
@@ -374,8 +374,8 @@ setMethod("[[<-", c("OrderGroup", "numeric", "missing", "NULL"),
         entities(x) <- entities(x)[-i]
         return(x)
     })
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[<-", c("OrderGroup", "character", "missing", "NULL"),
     function (x, i, j, value) {
         w <- match(i, names(x))
@@ -385,8 +385,8 @@ setMethod("[[<-", c("OrderGroup", "character", "missing", "NULL"),
         callNextMethod(x, w, value=value)
     })
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("$<-", "OrderGroup", function (x, name, value) {
     x[[name]] <- value
     return(x)
@@ -434,21 +434,21 @@ removeMissingEntities <- function (x) {
     return(x)
 }
 
-##' Get un(grouped) OrderGroups
-##'
-##' "ungrouped" is a magic OrderGroup that contains all entities not found
-##' in groups at a given level of nesting.
-##' @param order.obj an subclass of ShojiOrder or OrderGroup
-##' @return For grouped(), an Order/Group, respectively, with "ungrouped"
-##' omitted. For ungrouped(), an OrderGroup subclass.
-##' @seealso \code{\link{VariableOrder}}
-##' @export
+#' Get un(grouped) OrderGroups
+#'
+#' "ungrouped" is a magic OrderGroup that contains all entities not found
+#' in groups at a given level of nesting.
+#' @param order.obj an subclass of ShojiOrder or OrderGroup
+#' @return For grouped(), an Order/Group, respectively, with "ungrouped"
+#' omitted. For ungrouped(), an OrderGroup subclass.
+#' @seealso \code{\link{VariableOrder}}
+#' @export
 grouped <- function (order.obj) {
     Filter(Negate(is.character), order.obj)
 }
 
-##' @rdname grouped
-##' @export
+#' @rdname grouped
+#' @export
 ungrouped <- function (order.obj) {
     return(do.call(groupClass(order.obj), list(name="ungrouped",
         entities=entities(Filter(is.character, order.obj)))))

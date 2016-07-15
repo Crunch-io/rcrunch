@@ -30,10 +30,10 @@ summarizeCompareSubvariables <- function (compdf) {
     ), class="compareSubvariablesSummary"))
 }
 
-##' @export
+#' @export
 summary.compareSubvariables <- function (object, ...) summarizeCompareSubvariables(object)
 
-##' @export
+#' @export
 print.compareSubvariablesSummary <- function (x, ...) {
     cat("Total subvariables:", nrow(x$subvariables), "\n")
     allgood <- TRUE

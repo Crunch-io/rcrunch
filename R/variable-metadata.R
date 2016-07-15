@@ -1,11 +1,11 @@
-##' Get all variable metadata for a dataset
-##'
-##' @param dataset CrunchDataset
-##' @param parent logical: Embed in subvariables a reference to their array
-##' parent? Default is \code{FALSE}.
-##' @return A VariableCatalog that has things like categories embedded in each
-##' categorical variable, and all subvariables are represented
-##' @export
+#' Get all variable metadata for a dataset
+#'
+#' @param dataset CrunchDataset
+#' @param parent logical: Embed in subvariables a reference to their array
+#' parent? Default is \code{FALSE}.
+#' @return A VariableCatalog that has things like categories embedded in each
+#' categorical variable, and all subvariables are represented
+#' @export
 variableMetadata <- function (dataset, parent=FALSE) {
     ## TODO: make a nested vs. flat version. Current is flat.
 

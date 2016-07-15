@@ -38,34 +38,34 @@ concatenateCategories <- function (...) {
     return(Categories(data=do.call(c, dots)))
 }
 
-##' S3 method to concatenate Categories and Category objects
-##'
-##' @param ... see \code{\link[base]{c}}
-##' @return An object of class \code{\link{Categories}}
-##' @name c-categories
-##' @export
-##' @examples
-##' cat.a <- Category(name="First", id=1, numeric_value=1, missing=FALSE)
-##' cat.b <- Category(name="Second", id=2)
-##' cat.c <- Category(name="Third", id=3, missing=TRUE)
-##' cats.1 <- Categories(cat.a, cat.b)
-##' identical(cats.1, c(cat.a, cat.b))
-##' identical(c(cats.1, cat.c), Categories(cat.a, cat.b, cat.c))
+#' S3 method to concatenate Categories and Category objects
+#'
+#' @param ... see \code{\link[base]{c}}
+#' @return An object of class \code{\link{Categories}}
+#' @name c-categories
+#' @export
+#' @examples
+#' cat.a <- Category(name="First", id=1, numeric_value=1, missing=FALSE)
+#' cat.b <- Category(name="Second", id=2)
+#' cat.c <- Category(name="Third", id=3, missing=TRUE)
+#' cats.1 <- Categories(cat.a, cat.b)
+#' identical(cats.1, c(cat.a, cat.b))
+#' identical(c(cats.1, cat.c), Categories(cat.a, cat.b, cat.c))
 c.Categories <- concatenateCategories
 
-##' @rdname c-categories
-##' @export
+#' @rdname c-categories
+#' @export
 c.Category <- concatenateCategories
 
-##' @rdname Categories
-##' @export
+#' @rdname Categories
+#' @export
 setMethod("[", c("Categories", "ANY"), function (x, i, ...) {
     x@.Data <- x@.Data[i]
     return(x)
 })
 
-##' @rdname Categories
-##' @export
+#' @rdname Categories
+#' @export
 setMethod("[", c("Categories", "numeric"), function (x, i, ...) {
     invalid.indices <- setdiff(abs(i), seq_along(x@.Data))
     if (length(invalid.indices)) {
@@ -75,23 +75,23 @@ setMethod("[", c("Categories", "numeric"), function (x, i, ...) {
     return(x)
 })
 
-##' @rdname Categories
-##' @export
+#' @rdname Categories
+#' @export
 setMethod("[<-", c("Categories", "ANY"), function (x, i, ..., value) {
     x@.Data[i] <- Categories(data=value)
     return(x)
 })
 
-##' @rdname Categories
-##' @export
+#' @rdname Categories
+#' @export
 setMethod("names", "Categories", function (x) vapply(x, name, character(1)))
 
-##' @rdname Categories
-##' @export
+#' @rdname Categories
+#' @export
 setMethod("values", "Categories", function (x) vapply(x, value, numeric(1)))
 
-##' @rdname Categories
-##' @export
+#' @rdname Categories
+#' @export
 setMethod("ids", "Categories", function (x) vapply(x, id, integer(1)))
 
 setNames <- function (x, value) {
@@ -109,14 +109,14 @@ setValues <- function (x, value) {
     return(x)
 }
 
-##' @rdname Categories
-##' @export
+#' @rdname Categories
+#' @export
 setMethod("names<-", "Categories", setNames)
-##' @rdname Categories
-##' @export
+#' @rdname Categories
+#' @export
 setMethod("values<-", "Categories", setValues)
-##' @rdname Categories
-##' @export
+#' @rdname Categories
+#' @export
 setMethod("ids<-", "Categories", function (x, value) {
     if (!identical(ids(x), value)) {
         halt("Cannot modify category ids")
@@ -135,35 +135,35 @@ setMethod("ids<-", "Categories", function (x, value) {
     return(object)
 }
 
-##' Omit missing categories
-##' @param object Categories
-##' @param ... additional arguments, ignored
-##' @return \code{object} with any categories that have missing: TRUE excluded
-##' @name na-omit-categories
+#' Omit missing categories
+#' @param object Categories
+#' @param ... additional arguments, ignored
+#' @return \code{object} with any categories that have missing: TRUE excluded
+#' @name na-omit-categories
 NULL
 
-##' @rdname na-omit-categories
-##' @export
+#' @rdname na-omit-categories
+#' @export
 setMethod("na.omit", "Categories", function (object, ...) {
     Categories(data=.na.omit.categories(object))
 })
 
-##' is.na for Categories
-##'
-##' @param x Categories or a single Category
-##' @param value To change the missingness of categories, supply either (1)
-##' a logical vector of equal length of the categories (or length 1 for the
-##' Category method), or (2) the names of the categories to mark as missing.
-##' If supplying the latter, any categories already indicated as missing will
-##' remain missing.
-##' @return Getters return logical, a named vector in the case of the Categories
-##' method; setters return \code{x} duly modified.
-##' @name is-na-categories
+#' is.na for Categories
+#'
+#' @param x Categories or a single Category
+#' @param value To change the missingness of categories, supply either (1)
+#' a logical vector of equal length of the categories (or length 1 for the
+#' Category method), or (2) the names of the categories to mark as missing.
+#' If supplying the latter, any categories already indicated as missing will
+#' remain missing.
+#' @return Getters return logical, a named vector in the case of the Categories
+#' method; setters return \code{x} duly modified.
+#' @name is-na-categories
 NULL
 
-##' @rdname is-na-categories
-##' @aliases is-na-categories
-##' @export
+#' @rdname is-na-categories
+#' @aliases is-na-categories
+#' @export
 setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical(1), USE.NAMES=FALSE), .Names=names(x)))
 
 n2i <- function (x, cats, strict=TRUE) {
@@ -186,8 +186,8 @@ i2n <- function (x, cats, strict=TRUE) {
     return(out)
 }
 
-##' @rdname is-na-categories
-##' @export
+#' @rdname is-na-categories
+#' @export
 setMethod("is.na<-", c("Categories", "character"), function (x, value) {
     ix <- match(value, names(x))
     if (any(is.na(ix))) {
@@ -198,8 +198,8 @@ setMethod("is.na<-", c("Categories", "character"), function (x, value) {
     return(x)
 })
 
-##' @rdname is-na-categories
-##' @export
+#' @rdname is-na-categories
+#' @export
 setMethod("is.na<-", c("Categories", "logical"), function (x, value) {
     stopifnot(length(x) == length(value))
     x@.Data <- mapply(function (x, value) {

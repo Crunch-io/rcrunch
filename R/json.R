@@ -1,13 +1,13 @@
-##' @rdname tojson-crunch
-##' @export
+#' @rdname tojson-crunch
+#' @export
 setMethod("jsonprep", "Categories", function (x, ...) jsonprep(I(x@.Data)))
 
-##' @rdname tojson-crunch
-##' @export
+#' @rdname tojson-crunch
+#' @export
 setMethod("jsonprep", "list", function (x, ...) lapply(x, jsonprep, ...))
 
-##' @rdname tojson-crunch
-##' @export
+#' @rdname tojson-crunch
+#' @export
 setMethod("jsonprep", "ANY", function (x, ...) x)
 
 
@@ -24,19 +24,19 @@ setMethod("jsonprep", "ANY", function (x, ...) x)
     return(structure(list(I(ents)), .Names=x@group))
 }
 
-##' @rdname tojson-crunch
-##' @export
+#' @rdname tojson-crunch
+#' @export
 setMethod("jsonprep", "ShojiOrder",
     function (x, ...) jsonprep(list(graph=x@graph, ...)))
 
-##' @rdname tojson-crunch
-##' @export
+#' @rdname tojson-crunch
+#' @export
 setMethod("jsonprep", "OrderGroup", .jsonprep.ordergroup)
 
 
-##' @importFrom jsonlite toJSON
-##' @rdname tojson-crunch
-##' @export
+#' @importFrom jsonlite toJSON
+#' @rdname tojson-crunch
+#' @export
 toJSON <- function (x, ...) {
     if (is.null(x)) return(jsonlite::toJSON(emptyObject()))
     out <- jsonlite::toJSON(jsonprep(x), auto_unbox=TRUE, null="null", na="null", force=TRUE, ...)

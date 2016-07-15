@@ -20,63 +20,63 @@ getNrow <- function (dataset) {
     return(nrows)
 }
 
-##' Is it?
-##' @rdname crunch-is
-##' @param x an object
-##' @return logical
-##' @export
+#' Is it?
+#' @rdname crunch-is
+#' @param x an object
+#' @return logical
+#' @export
 is.dataset <- function (x) inherits(x, "CrunchDataset")
 
-##' Name, alias, and description for Crunch objects
-##'
-##' @param x a Dataset or Variable.
-##' @param object Same as \code{x} but for the \code{alias} method, in order to
-##' match the generic from another package. Note that \code{alias} is only
-##' defined for Variables.
-##' @param value For the setters, a length-1 character vector to assign
-##' @return Getters return the character object in the specified slot; setters
-##' return \code{x} duly modified.
-##' @name describe
-##' @aliases describe name name<- description description<- alias<- startDate startDate<- endDate endDate<-
-##' @seealso \code{\link{Categories}} \code{\link{describe-catalog}}
+#' Name, alias, and description for Crunch objects
+#'
+#' @param x a Dataset or Variable.
+#' @param object Same as \code{x} but for the \code{alias} method, in order to
+#' match the generic from another package. Note that \code{alias} is only
+#' defined for Variables.
+#' @param value For the setters, a length-1 character vector to assign
+#' @return Getters return the character object in the specified slot; setters
+#' return \code{x} duly modified.
+#' @name describe
+#' @aliases describe name name<- description description<- alias<- startDate startDate<- endDate endDate<-
+#' @seealso \code{\link{Categories}} \code{\link{describe-catalog}}
 NULL
 
-##' @rdname describe
-##' @export
+#' @rdname describe
+#' @export
 setMethod("name", "CrunchDataset", function (x) tuple(x)$name)
-##' @rdname describe
-##' @export
+#' @rdname describe
+#' @export
 setMethod("name<-", c("CrunchDataset", "character"), function (x, value) {
     invisible(setTupleSlot(x, "name", value))
 })
-##' @rdname describe
-##' @export
+#' @rdname describe
+#' @export
 setMethod("description", "CrunchDataset", function (x) tuple(x)$description)
-##' @rdname describe
-##' @export
+#' @rdname describe
+#' @export
 setMethod("description<-", "CrunchDataset", function (x, value) {
     setTupleSlot(x, "description", value)
 })
-##' @rdname describe
-##' @export
+#' @rdname describe
+#' @export
 setMethod("startDate", "CrunchDataset",
     function (x) trimISODate(tuple(x)$start_date))
-##' @rdname describe
-##' @export
+#' @rdname describe
+#' @export
 setMethod("startDate<-", "CrunchDataset", function (x, value) {
     setTupleSlot(x, "start_date", value)
 })
-##' @rdname describe
-##' @export
+#' @rdname describe
+#' @export
 setMethod("endDate", "CrunchDataset",
     function (x) trimISODate(tuple(x)$end_date))
-##' @rdname describe
-##' @export
+#' @rdname describe
+#' @export
 setMethod("endDate<-", "CrunchDataset", function (x, value) {
     setTupleSlot(x, "end_date", value)
 })
-##' @rdname describe
-##' @export
+#' @rdname describe
+#' @export
 setMethod("id", "CrunchDataset", function (x) tuple(x)$id)
 
 trimISODate <- function (x) {
@@ -93,23 +93,23 @@ as.dataset <- function (x, tuple=DatasetTuple()) {
     return(out)
 }
 
-##' Dataset dimensions
-##'
-##' @param x a Dataset
-##' @return integer vector of length 2, indicating the number of rows and
-##' non-hidden variables in the dataset. Array subvariables are excluded from
-##' the column count.
-##' @seealso \code{\link[base]{dim}}
-##' @name dim-dataset
+#' Dataset dimensions
+#'
+#' @param x a Dataset
+#' @return integer vector of length 2, indicating the number of rows and
+#' non-hidden variables in the dataset. Array subvariables are excluded from
+#' the column count.
+#' @seealso \code{\link[base]{dim}}
+#' @name dim-dataset
 NULL
 
-##' @rdname dim-dataset
-##' @export
+#' @rdname dim-dataset
+#' @export
 setMethod("dim", "CrunchDataset",
     function (x) c(getNrow(x), ncol(x)))
 
-##' @rdname dim-dataset
-##' @export
+#' @rdname dim-dataset
+#' @export
 setMethod("ncol", "CrunchDataset", function (x) length(variables(x)))
 
 namekey <- function (x) {
@@ -120,19 +120,19 @@ namekey <- function (x) {
     }
 }
 
-##' @rdname describe-catalog
-##' @export
+#' @rdname describe-catalog
+#' @export
 setMethod("names", "CrunchDataset", function (x) {
     getIndexSlot(variables(x), namekey(x))
 })
 
-##' Dataset weights
-##' @param x a Dataset
-##' @param value a Variable to set as weight, or NULL to remove the existing
-##' weight
-##' @return For the getter, a Variable if there is a weight, else NULL. For the
-##' setter, x, modified accordingly
-##' @export
+#' Dataset weights
+#' @param x a Dataset
+#' @param value a Variable to set as weight, or NULL to remove the existing
+#' weight
+#' @return For the getter, a Variable if there is a weight, else NULL. For the
+#' setter, x, modified accordingly
+#' @export
 weight <- function (x) {
     stopifnot(is.dataset(x))
     w <- x@body$weight
@@ -142,8 +142,8 @@ weight <- function (x) {
     return(w)
 }
 
-##' @rdname weight
-##' @export
+#' @rdname weight
+#' @export
 `weight<-` <- function (x, value) {
     stopifnot(is.dataset(x))
     if (is.variable(value)) {
@@ -161,22 +161,22 @@ setMethod("tuple<-", "CrunchDataset", function (x, value) {
     return(x)
 })
 
-##' Get a fresh copy from the server
-##'
-##' Crunch objects usually keep themselves in sync with the server when you
-##' manipulate them, but sometimes they can drift. Maybe someone else has
-##' modified the dataset you're working on, or maybe
-##' you have modified a variable outside of the context of its dataset.
-##' refresh() allows you to get back in sync.
-##'
-##' @param x pretty much any Crunch object
-##' @return a new version of \code{x}
-##' @name refresh
-##' @aliases refresh
+#' Get a fresh copy from the server
+#'
+#' Crunch objects usually keep themselves in sync with the server when you
+#' manipulate them, but sometimes they can drift. Maybe someone else has
+#' modified the dataset you're working on, or maybe
+#' you have modified a variable outside of the context of its dataset.
+#' refresh() allows you to get back in sync.
+#'
+#' @param x pretty much any Crunch object
+#' @return a new version of \code{x}
+#' @name refresh
+#' @aliases refresh
 NULL
 
-##' @rdname refresh
-##' @export
+#' @rdname refresh
+#' @export
 setMethod("refresh", "CrunchDataset", function (x) {
     ## Because dataset may have changed catalogs, get the entity url,
     ## check for its parent catalog, get that, and then assemble.
@@ -199,41 +199,41 @@ setMethod("refresh", "CrunchDataset", function (x) {
     return(out)
 })
 
-##' Delete a Crunch object from the server
-##'
-##' These methods delete entities, notably Datasets and Variables within them,
-##' from the server. This action is permanent and cannot be undone, so it
-##' should not be done lightly. Consider instead using \code{archive}
-##' for datasets and \code{\link{hide}} for variables
-##'
-##' @param x a Crunch object
-##' @param confirm logical: should the user be asked to confirm deletion.
-##' Option available for datasets and teams only. Default is \code{TRUE} if in
-##' an interactive session. You can avoid the confirmation prompt if you delete
-##' \code{with(\link{consent})}.
-##' @param ... additional arguments, in the generic
-##' @seealso \code{\link{hide}} \code{\link{deleteDataset}}
-##' @name delete
-##' @aliases delete
+#' Delete a Crunch object from the server
+#'
+#' These methods delete entities, notably Datasets and Variables within them,
+#' from the server. This action is permanent and cannot be undone, so it
+#' should not be done lightly. Consider instead using \code{archive}
+#' for datasets and \code{\link{hide}} for variables
+#'
+#' @param x a Crunch object
+#' @param confirm logical: should the user be asked to confirm deletion.
+#' Option available for datasets and teams only. Default is \code{TRUE} if in
+#' an interactive session. You can avoid the confirmation prompt if you delete
+#' \code{with(\link{consent})}.
+#' @param ... additional arguments, in the generic
+#' @seealso \code{\link{hide}} \code{\link{deleteDataset}}
+#' @name delete
+#' @aliases delete
 NULL
 
-##' @rdname delete
-##' @export
+#' @rdname delete
+#' @export
 setMethod("delete", "CrunchDataset",
     function (x, confirm=requireConsent(), ...) {
         out <- delete(tuple(x), confirm=confirm)
         invisible(out)
     })
 
-##' @export
+#' @export
 as.list.CrunchDataset <- function (x, ...) {
     lapply(seq_along(variables(x)), function (i) x[[i]])
 }
 
-##' See the appended batches of this dataset
-##' @param x a \code{CrunchDataset}
-##' @return a \code{BatchCatalog}
-##' @export
+#' See the appended batches of this dataset
+#' @param x a \code{CrunchDataset}
+#' @return a \code{BatchCatalog}
+#' @export
 batches <- function (x) BatchCatalog(crGET(shojiURL(x, "catalogs", "batches")))
 
 joins <- function (x) ShojiCatalog(crGET(shojiURL(x, "catalogs", "joins")))
@@ -258,35 +258,35 @@ variableCatalogURL <- function (dataset) {
 
 summaryURL <- function (x) shojiURL(x, "views", "summary")
 
-##' Access a Dataset's Variables Catalog
-##'
-##' Datasets contain collections of variables. For a few purposes, such as
-##' editing variables' metadata, it is helpful to access these variable catalogs
-##' more directly.
-##'
-##' \code{variables} gives just the active variables in the dataset, while
-##' \code{allVariables}, as the name suggests, yields all variables, including
-##' hidden variables.
-##' @param x a Dataset
-##' @param value For the setters, a VariableCatalog to assign.
-##' @return Getters return VariableCatalog; setters return \code{x} duly
-##' modified.
-##' @name dataset-variables
-##' @aliases dataset-variables variables variables<- allVariables allVariables<-
+#' Access a Dataset's Variables Catalog
+#'
+#' Datasets contain collections of variables. For a few purposes, such as
+#' editing variables' metadata, it is helpful to access these variable catalogs
+#' more directly.
+#'
+#' \code{variables} gives just the active variables in the dataset, while
+#' \code{allVariables}, as the name suggests, yields all variables, including
+#' hidden variables.
+#' @param x a Dataset
+#' @param value For the setters, a VariableCatalog to assign.
+#' @return Getters return VariableCatalog; setters return \code{x} duly
+#' modified.
+#' @name dataset-variables
+#' @aliases dataset-variables variables variables<- allVariables allVariables<-
 NULL
 
-##' @rdname dataset-variables
-##' @export
+#' @rdname dataset-variables
+#' @export
 setMethod("variables", "CrunchDataset", function (x) active(allVariables(x)))
-##' @rdname dataset-variables
-##' @export
+#' @rdname dataset-variables
+#' @export
 setMethod("variables<-", c("CrunchDataset", "VariableCatalog"),
     setDatasetVariables)
-##' @rdname dataset-variables
-##' @export
+#' @rdname dataset-variables
+#' @export
 setMethod("allVariables", "CrunchDataset", function (x) x@variables)
-##' @rdname dataset-variables
-##' @export
+#' @rdname dataset-variables
+#' @export
 setMethod("allVariables<-", c("CrunchDataset", "VariableCatalog"),
     setDatasetVariables)
 
@@ -299,13 +299,13 @@ webURL <- function (x) {
     return(paste0(absoluteURL("/", getOption("crunch.api")), "dataset/", id(x)))
 }
 
-##' as.environment method for CrunchDataset
-##'
-##' This method allows you to \code{eval} within a Dataset.
-##'
-##' @param x CrunchDataset
-##' @return an environment in which named objects are (promises that return)
-##' CrunchVariables.
+#' as.environment method for CrunchDataset
+#'
+#' This method allows you to \code{eval} within a Dataset.
+#'
+#' @param x CrunchDataset
+#' @return an environment in which named objects are (promises that return)
+#' CrunchVariables.
 setMethod("as.environment", "CrunchDataset", function (x) {
     out <- new.env()
     out$.crunchDataset <- x
@@ -323,23 +323,23 @@ setMethod("as.environment", "CrunchDataset", function (x) {
     crPOST(release_url, drop=dropCache(self(dataset)))
 }
 
-##' Change the owner of a dataset
-##'
-##' @param x CrunchDataset
-##' @param value For the setter, either a URL (character) or a Crunch object
-##' with a \code{self} method. Users and Projects are valid objects to assign
-##' as dataset owners.
-##' @return The dataset.
-##' @name dataset-owner
-##' @aliases owner owner<-
+#' Change the owner of a dataset
+#'
+#' @param x CrunchDataset
+#' @param value For the setter, either a URL (character) or a Crunch object
+#' with a \code{self} method. Users and Projects are valid objects to assign
+#' as dataset owners.
+#' @return The dataset.
+#' @name dataset-owner
+#' @aliases owner owner<-
 NULL
 
-##' @rdname dataset-owner
-##' @export
+#' @rdname dataset-owner
+#' @export
 setMethod("owner", "CrunchDataset", function (x) x@body$owner) ## Or can get from catalog
 
-##' @rdname dataset-owner
-##' @export
+#' @rdname dataset-owner
+#' @export
 setMethod("owner<-", "CrunchDataset", function (x, value) {
     if (!is.character(value)) {
         ## Assume we have a User or Project. Get self()
@@ -352,57 +352,57 @@ setMethod("owner<-", "CrunchDataset", function (x, value) {
 })
 
 
-##' Get and set "archived" and "published" status of a dataset
-##'
-##' "Archived" datasets are excluded from some views. "Draft" datasets are
-##' visible only to editors. "Published" is the inverse of "Draft", i.e.
-##' \code{is.draft(x)} entails \code{!is.published(x)}. These properties are
-##' accessed and set with the "is" methods. The verb functions \code{archive}
-##' and \code{publish} are alternate versions of the setters (at least in the
-##' \code{TRUE} direction).
-##'
-##' @param x CrunchDataset
-##' @param value logical
-##' @return For the getters, the logical value of whether the dataset is
-##' archived, in draft mode, or published, where draft and published are
-##' inverses. The setters return the dataset.
-##' @name archive-and-publish
-##' @aliases archive is.archived is.draft is.published is.archived<- is.draft<- is.published<- publish
+#' Get and set "archived" and "published" status of a dataset
+#'
+#' "Archived" datasets are excluded from some views. "Draft" datasets are
+#' visible only to editors. "Published" is the inverse of "Draft", i.e.
+#' \code{is.draft(x)} entails \code{!is.published(x)}. These properties are
+#' accessed and set with the "is" methods. The verb functions \code{archive}
+#' and \code{publish} are alternate versions of the setters (at least in the
+#' \code{TRUE} direction).
+#'
+#' @param x CrunchDataset
+#' @param value logical
+#' @return For the getters, the logical value of whether the dataset is
+#' archived, in draft mode, or published, where draft and published are
+#' inverses. The setters return the dataset.
+#' @name archive-and-publish
+#' @aliases archive is.archived is.draft is.published is.archived<- is.draft<- is.published<- publish
 NULL
 
-##' @rdname archive-and-publish
-##' @export
+#' @rdname archive-and-publish
+#' @export
 setMethod("is.archived", "CrunchDataset", function (x) tuple(x)$archived)
-##' @rdname archive-and-publish
-##' @export
+#' @rdname archive-and-publish
+#' @export
 setMethod("is.draft", "CrunchDataset", function (x) !is.published(x))
-##' @rdname archive-and-publish
-##' @export
+#' @rdname archive-and-publish
+#' @export
 setMethod("is.published", "CrunchDataset", function (x) tuple(x)$is_published %||% TRUE)
 
-##' @rdname archive-and-publish
-##' @export
+#' @rdname archive-and-publish
+#' @export
 setMethod("is.archived<-", c("CrunchDataset", "logical"), function (x, value) {
     setTupleSlot(x, "archived", value)
 })
-##' @rdname archive-and-publish
-##' @export
+#' @rdname archive-and-publish
+#' @export
 archive <- function (x) {
     is.archived(x) <- TRUE
     return(x)
 }
-##' @rdname archive-and-publish
-##' @export
+#' @rdname archive-and-publish
+#' @export
 setMethod("is.draft<-", c("CrunchDataset", "logical"), function (x, value) {
     setTupleSlot(x, "is_published", !value)
 })
-##' @rdname archive-and-publish
-##' @export
+#' @rdname archive-and-publish
+#' @export
 setMethod("is.published<-", c("CrunchDataset", "logical"), function (x, value) {
     setTupleSlot(x, "is_published", value)
 })
-##' @rdname archive-and-publish
-##' @export
+#' @rdname archive-and-publish
+#' @export
 publish <- function (x) {
     is.published(x) <- TRUE
     return(x)

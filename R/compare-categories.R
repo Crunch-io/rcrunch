@@ -25,10 +25,10 @@ summarizeCompareCategories <- function (compdf) {
         class="compareCategoriesSummary"))
 }
 
-##' @export
+#' @export
 summary.compareCategories <- function (object, ...) summarizeCompareCategories(object)
 
-##' @export
+#' @export
 print.compareCategoriesSummary <- function (x, ...) {
     cat("Total categories:", nrow(x$categories), "\n")
     mismatched.ids <- x$problems$mismatched.ids

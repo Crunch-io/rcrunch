@@ -1,10 +1,10 @@
-##' Show methods for Crunch objects
-##'
-##' @param object the object
-##' @return invisibly
-##' @seealso \code{\link[methods]{show}}
-##' @importFrom methods show
-##' @name show-crunch
+#' Show methods for Crunch objects
+#'
+#' @param object the object
+#' @return invisibly
+#' @seealso \code{\link[methods]{show}}
+#' @importFrom methods show
+#' @name show-crunch
 NULL
 
 
@@ -16,12 +16,12 @@ NULL
     invisible(out)
 }
 
-##' @rdname show-crunch
-##' @export
+#' @rdname show-crunch
+#' @export
 setMethod("show", "ShojiObject", .showIt)
 
-##' @rdname show-crunch
-##' @export
+#' @rdname show-crunch
+#' @export
 setMethod("show", "ShojiCatalog", function (object) {
     ## Catalog show content is a data.frame unless otherwise indicated.
     ## Print it, but capture the output so we can return the character output.
@@ -30,16 +30,16 @@ setMethod("show", "ShojiCatalog", function (object) {
     invisible(out)
 })
 
-##' @rdname show-crunch
-##' @export
+#' @rdname show-crunch
+#' @export
 setMethod("show", "CrunchVariable", .showIt)
 
-##' @rdname show-crunch
-##' @export
+#' @rdname show-crunch
+#' @export
 setMethod("show", "Category", .showIt)
 
-##' @rdname show-crunch
-##' @export
+#' @rdname show-crunch
+#' @export
 setMethod("show", "Categories", .showIt)
 
 
@@ -62,7 +62,7 @@ getNameAndType <- function (x) {
     return(c(varname, vartype))
 }
 
-##' @importFrom utils capture.output
+#' @importFrom utils capture.output
 showCrunchVariable <- function (x) {
     out <- showCrunchVariableTitle(x)
     if (!is.null(activeFilter(x))) {
@@ -224,16 +224,16 @@ formatExpressionValue <- function (val, cats=NULL) {
     return(deparse(val))
 }
 
-##' @rdname show-crunch
-##' @export
+#' @rdname show-crunch
+#' @export
 setMethod("show", "CrunchExpr", function (object) {
     cat("Crunch expression: ", formatExpression(object), "\n",
         sep="")
     invisible(object)
 })
 
-##' @rdname show-crunch
-##' @export
+#' @rdname show-crunch
+#' @export
 setMethod("show", "CrunchLogicalExpr", function (object) {
     cat("Crunch logical expression: ", formatExpression(object), "\n",
         sep="")
@@ -274,6 +274,6 @@ setMethod("getShowContent", "CrunchFilter",
             paste("Expression:", formatExpression(expr(x)))))
     })
 
-##' @rdname show-crunch
-##' @export
+#' @rdname show-crunch
+#' @export
 setMethod("show", "CrunchCube", function (object) show(cubeToArray(object)))

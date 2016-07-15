@@ -19,12 +19,12 @@ variableGroupEntitiesInit <- function (x) {
 setMethod("entitiesInitializer", "VariableOrder", variableGroupEntitiesInit)
 setMethod("entitiesInitializer", "VariableGroup", variableGroupEntitiesInit)
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[<-", c("VariableOrder", "character", "missing", "CrunchDataset"),
     .setNestedGroupByName)
 
-##' @rdname ShojiOrder-extract
-##' @export
+#' @rdname ShojiOrder-extract
+#' @export
 setMethod("[[<-", c("VariableGroup", "character", "missing", "CrunchDataset"),
     .setNestedGroupByName)

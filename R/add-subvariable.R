@@ -1,11 +1,11 @@
-##' Add subvariable to an array
-##'
-##' This function conceals the dirty work in making this happen. The array
-##' gets unbound and rebound into a new array with the new variable added.
-##' @param variable the array variable to modify
-##' @param subvariable the subvariable to add
-##' @return a new version of \code{variable} with the indicated subvariables
-##' @export
+#' Add subvariable to an array
+#'
+#' This function conceals the dirty work in making this happen. The array
+#' gets unbound and rebound into a new array with the new variable added.
+#' @param variable the array variable to modify
+#' @param subvariable the subvariable to add
+#' @return a new version of \code{variable} with the indicated subvariables
+#' @export
 addSubvariable <- function (variable, subvariable){
     ## Store some metadata up front
     payload <- copyVariableReferences(variable)

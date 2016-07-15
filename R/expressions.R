@@ -1,26 +1,26 @@
-##' Construct Crunch Expressions
-##'
-##' Crunch Expressions, i.e. \code{CrunchExpr} and \code{CrunchLogicalExpr},
-##' encapuslate derivations of Crunch variables, which are only evaluated when
-##' passed to a function like \code{as.vector}. They allow you to compose
-##' functional expressions of variables and evaluate them against the server
-##' only when appropriate.
-##'
-##' @param x an input
-##' @param table For \code{\%in\%}. See \code{\link[base]{match}}
-##' @param resolution For \code{rollup}. Either \code{NULL} or a character in
-##' c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms") indicating the unit of
-##' time at which a Datetime variable should be aggregated. If \code{NULL},
-##' the server will determine an appropriate resolution based on the range of
-##' the data.
-##' @return Most functions return a CrunchExpr or CrunchLogicalExpr.
-##' \code{as.vector} returns an R vector.
-##' @aliases expressions
-##' @name expressions
+#' Construct Crunch Expressions
+#'
+#' Crunch Expressions, i.e. \code{CrunchExpr} and \code{CrunchLogicalExpr},
+#' encapuslate derivations of Crunch variables, which are only evaluated when
+#' passed to a function like \code{as.vector}. They allow you to compose
+#' functional expressions of variables and evaluate them against the server
+#' only when appropriate.
+#'
+#' @param x an input
+#' @param table For \code{\%in\%}. See \code{\link[base]{match}}
+#' @param resolution For \code{rollup}. Either \code{NULL} or a character in
+#' c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms") indicating the unit of
+#' time at which a Datetime variable should be aggregated. If \code{NULL},
+#' the server will determine an appropriate resolution based on the range of
+#' the data.
+#' @return Most functions return a CrunchExpr or CrunchLogicalExpr.
+#' \code{as.vector} returns an R vector.
+#' @aliases expressions
+#' @name expressions
 NULL
 
-##' @rdname variable-to-R
-##' @export
+#' @rdname variable-to-R
+#' @export
 setMethod("as.vector", "CrunchExpr", function (x, mode) {
     payload <- list(query=toJSON(list(out=zcl(x))))
     if (length(x@filter)) {
@@ -37,8 +37,8 @@ setMethod("as.vector", "CrunchExpr", function (x, mode) {
     return(columnParser(out$metadata$out$type, mode)(out$data$out, variable))
 })
 
-##' @rdname toVariable
-##' @export
+#' @rdname toVariable
+#' @export
 setMethod("toVariable", "CrunchExpr", function (x, ...) {
     structure(list(expr=zcl(x), ...), class="VariableDefinition")
 })
@@ -157,15 +157,15 @@ setMethod("|", c("CrunchExpr", "CrunchExpr"), crunch.ops("or"))
 setMethod("|", c("logical", "CrunchExpr"), crunch.ops("or"))
 setMethod("|", c("CrunchExpr", "logical"), crunch.ops("or"))
 
-##' @rdname expressions
-##' @export
+#' @rdname expressions
+#' @export
 setMethod("!", c("CrunchExpr"),
     function (x) {
         CrunchLogicalExpr(expression=zfunc("not", x),
             dataset_url=datasetReference(x))
     })
 
-##' @importFrom utils head tail
+#' @importFrom utils head tail
 .seqCrunch <- function (x, table) {
     ## Given x %in% table, if table is numeric, see if we can/should collapse
     ## it into a range query rather than sending lots of distinct values
@@ -192,12 +192,12 @@ setMethod("!", c("CrunchExpr"),
     math.exp(x, table, ifelse(length(table) == 1L, "==", "in"))
 }
 
-##' @rdname expressions
-##' @export
+#' @rdname expressions
+#' @export
 setMethod("%in%", c("CategoricalVariable", "character"),
     function (x, table) .inCrunch(x, n2i(table, categories(x))))
-##' @rdname expressions
-##' @export
+#' @rdname expressions
+#' @export
 setMethod("%in%", c("CategoricalVariable", "factor"),
     function (x, table) x %in% as.character(table))
 
@@ -206,36 +206,36 @@ for (i in seq_along(.sigs)) {
     setMethod("%in%", .sigs[[i]], .inCrunch)
 }
 
-##' @rdname expressions
-##' @export
+#' @rdname expressions
+#' @export
 setMethod("%in%", c("TextVariable", "character"), .inCrunch)
-##' @rdname expressions
-##' @export
+#' @rdname expressions
+#' @export
 setMethod("%in%", c("NumericVariable", "numeric"), .inCrunch)
-##' @rdname expressions
-##' @export
+#' @rdname expressions
+#' @export
 setMethod("%in%", c("DatetimeVariable", "Date"), .inCrunch)
-##' @rdname expressions
-##' @export
+#' @rdname expressions
+#' @export
 setMethod("%in%", c("DatetimeVariable", "POSIXt"), .inCrunch)
-##' @rdname expressions
-##' @export
+#' @rdname expressions
+#' @export
 setMethod("%in%", c("DatetimeVariable", "character"), .inCrunch)
-##' @rdname expressions
-##' @export
+#' @rdname expressions
+#' @export
 setMethod("%in%", c("CategoricalVariable", "numeric"), .inCrunch)
 
 setMethod("datasetReference", "CrunchExpr", function (x) x@dataset_url)
 
-##' @rdname expressions
-##' @export
+#' @rdname expressions
+#' @export
 setMethod("is.na", "CrunchVariable", function (x) {
     CrunchLogicalExpr(expression=zfunc("is_missing", x),
         dataset_url=datasetReference(x))
 })
 
-##' @rdname expressions
-##' @export
+#' @rdname expressions
+#' @export
 bin <- function (x) {
     ## TODO: this should be filtered by x's filter
     CrunchExpr(expression=zfunc("bin", x),
@@ -243,8 +243,8 @@ bin <- function (x) {
 }
 
 
-##' @rdname expressions
-##' @export
+#' @rdname expressions
+#' @export
 rollup <- function (x, resolution=rollupResolution(x)) {
     valid_res <- c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms")
     force(resolution)
@@ -269,8 +269,8 @@ rollupResolution <- function (x) {
     }
 }
 
-##' @rdname variable-extract
-##' @export
+#' @rdname variable-extract
+#' @export
 setMethod("[", c("CrunchExpr", "CrunchLogicalExpr"), function (x, i, ...) {
     f <- activeFilter(x)
     if (length(zcl(f))) {
