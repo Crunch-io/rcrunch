@@ -287,7 +287,25 @@ if (run.integration.tests) {
                 expect_equivalent(as.array(crtabs(~ v4e, data=ds)),
                     array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "D"))))
             })
+            test_that("Can't drop categories that have data", {
+                ds <- refresh(ds)
+                expect_identical(names(categories(ds$v4e)),
+                    c("B", "D", "No Data"))
+                expect_equivalent(as.array(crtabs(~ v4e, data=ds)),
+                    array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "D"))))
+                expect_error(categories(ds$v4e) <- categories(ds$v4e)[-2],
+                    "Cannot delete categories: 4")
+                exclusion(ds) <- ds$v4e == "D"
+                expect_equivalent(as.array(crtabs(~ v4e, data=ds)),
+                    array(c(10, 0), dim=2L, dimnames=list(v4=c("B", "D"))))
+                expect_error(categories(ds$v4e) <- categories(ds$v4e)[-2],
+                    "Cannot delete categories: 4")
+                exclusion(ds) <- NULL
+                expect_equivalent(as.array(crtabs(~ v4e, data=ds)),
+                    array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "D"))))
+            })
         })
+
 
         with(test.dataset(mrdf), {
             ds <- mrdf.setup(ds)
