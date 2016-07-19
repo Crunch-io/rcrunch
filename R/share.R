@@ -54,9 +54,6 @@ share <- function (dataset, users, edit=FALSE, notify=TRUE) {
     if (length(edit) != length(users)) {
         halt("Must supply `edit` permissions of equal length as the number of `emails` supplied")
     }
-    if (!any(edit) && all(emails(perms)[is.editor(perms)] %in% users)) {
-        halt("Cannot remove editor from the dataset without specifying another")
-    }
     payload <- lapply(edit,
         function (e) list(dataset_permissions=list(edit=e, view=TRUE)))
     names(payload) <- users

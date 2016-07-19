@@ -46,62 +46,76 @@ with_mock_HTTP({
                 '"dataset_url":"https://fake.crunch.io/dataset/511a7c49778030653aab5963"}')
         })
     })
+
+    with_mock(
+        `crunch::PermissionCatalog`=function (...) {
+            out <- new("PermissionCatalog", ...)
+            out@index <- list()
+            return(out)
+        },
+        test_that("Sharing works even if the PermissionCatalog is empty (as with a project-owned dataset)", {
+            expect_length(permissions(ds), 0)
+            expect_PATCH(share(ds, "lauren.ipsum@crunch.io",
+                notify=FALSE),
+                '/api/datasets/dataset1/permissions/',
+                '{"lauren.ipsum@crunch.io":{"dataset_permissions":',
+                '{"edit":false,"view":true}},"send_notification":false}')
+        }))
 })
 
 me <- getOption("crunch.email")
 
-if (run.integration.tests) {
-    with_test_authentication({
-        with(test.dataset(df), {
-            test_that("PermissionsCatalog from real dataset", {
-                expect_is(permissions(ds), "PermissionCatalog")
-                expect_identical(urls(permissions(ds)),
-                    userURL())
-                expect_identical(emails(permissions(ds)),
-                    me)
-                expect_identical(is.editor(permissions(ds)),
-                    structure(TRUE, .Names=me))
-            })
+with_test_authentication({
+    with(test.dataset(NULL), {
+        test_that("PermissionsCatalog from real dataset", {
+            expect_is(permissions(ds), "PermissionCatalog")
+            expect_identical(urls(permissions(ds)),
+                userURL())
+            expect_identical(emails(permissions(ds)),
+                me)
+            expect_identical(is.editor(permissions(ds)),
+                structure(TRUE, .Names=me))
+        })
 
-            test_that("share and unshare methods for dataset", {
-                ds <- share(ds, "foo@crunch.io", notify=FALSE)
-                expect_true(setequal(emails(permissions(ds)),
-                    c(me, "foo@crunch.io")))
-                ds <- unshare(ds, "foo@crunch.io")
-                expect_identical(emails(permissions(ds)), me)
-            })
+        test_that("share and unshare methods for dataset", {
+            ds <- share(ds, "foo@crunch.io", notify=FALSE)
+            expect_true(setequal(emails(permissions(ds)),
+                c(me, "foo@crunch.io")))
+            ds <- unshare(ds, "foo@crunch.io")
+            expect_identical(emails(permissions(ds)), me)
+        })
 
-            test_that("re-sharing doesn't change the state", {
-                try(share(ds, "foo@crunch.io", notify=FALSE))
-                expect_true(setequal(emails(permissions(ds)),
-                    c(me, "foo@crunch.io")))
-            })
+        test_that("re-sharing doesn't change the state", {
+            try(share(ds, "foo@crunch.io", notify=FALSE))
+            expect_true(setequal(emails(permissions(ds)),
+                c(me, "foo@crunch.io")))
+        })
 
-            others <- c("foo@crunch.io", "a@crunch.io", "b@crunch.io")
-            test_that("can share dataset with multiple at same time", {
-                try(share(ds, c("a@crunch.io", "b@crunch.io"), notify=FALSE))
-                expect_true(setequal(emails(permissions(ds)),
-                    c(me, others)))
-                expect_true(is.editor(permissions(ds)[[me]]))
-                for (user in others) {
-                    expect_false(is.editor(permissions(ds)[[user]]), info=user)
-                }
-            })
+        others <- c("foo@crunch.io", "a@crunch.io", "b@crunch.io")
+        test_that("can share dataset with multiple at same time", {
+            try(share(ds, c("a@crunch.io", "b@crunch.io"), notify=FALSE))
+            expect_true(setequal(emails(permissions(ds)),
+                c(me, others)))
+            expect_true(is.editor(permissions(ds)[[me]]))
+            for (user in others) {
+                expect_false(is.editor(permissions(ds)[[user]]), info=user)
+            }
+        })
 
-            test_that("Cannot unmake myself editor without passing", {
-                try(share(ds, me, notify=FALSE, edit=TRUE))
-                expect_true(is.editor(permissions(ds)[[me]]))
-                expect_error(share(ds, me, notify=FALSE, edit=FALSE),
-                    "Cannot remove editor from the dataset without specifying another")
-            })
+        test_that("Cannot unmake myself editor without passing", {
+            try(share(ds, me, notify=FALSE, edit=TRUE))
+            expect_true(is.editor(permissions(ds)[[me]]))
+            expect_error(share(ds, me, notify=FALSE, edit=FALSE),
+                "Client error: (400) Bad Request: Cannot remove all editors from dataset",
+                fixed=TRUE)
+        })
 
-            test_that("Can make multiple people editors", {
-                skip("TODO invite a and b as advanced users")
-                ds <- share(ds, c("a@crunch.io", "b@crunch.io"),
-                    notify=FALSE, edit=TRUE)
-                expect_true(is.editor(permissions(ds)[["a@crunch.io"]]))
-                expect_true(is.editor(permissions(ds)[["b@crunch.io"]]))
-            })
+        test_that("Can make multiple people editors", {
+            skip("TODO invite a and b as advanced users")
+            ds <- share(ds, c("a@crunch.io", "b@crunch.io"),
+                notify=FALSE, edit=TRUE)
+            expect_true(is.editor(permissions(ds)[["a@crunch.io"]]))
+            expect_true(is.editor(permissions(ds)[["b@crunch.io"]]))
         })
     })
-}
+})

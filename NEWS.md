@@ -1,4 +1,5 @@
 ## crunch 1.11.1 (under development)
+* Fix issue with sharing datasets owned by a project.
 
 ## crunch 1.11.0
 * Generic `datasets` and `projects` functions to get dataset and project catalogs. (`datasets` previously existed only as a method for Project entities.)
