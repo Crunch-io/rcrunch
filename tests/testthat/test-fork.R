@@ -63,58 +63,48 @@ if (run.integration.tests) {
             ordering(f1) <- VariableOrder(VariableGroup("Even", f1[c(2,4,6)]),
                 VariableGroup("Odd", f1[c(1,3,5)]))
 
-            # 5. Add non-derived variable
+            # 4. Add non-derived variable
             f1$v8 <- rep(1:5, 4)[4:20]
 
-            # 4. Derive variable
+            # 5. Derive variable
             f1$v7 <- f1$v3 - 6
 
+            # 6. Conditionally edit values of categorical variable
+            f1$v4[f1$v8 == 5] <- "e"
+            f1$v4[f1$v8 == 4] <- "e"
+
             ## Assert those things
-            test_that("The edits are made to the fork", {
-                expect_output(exclusion(f1), "v3 < 11")
-                expect_identical(dim(f1), c(17L, 8L))
-                expect_identical(names(na.omit(categories(f1$v4))),
+            expect_fork_edits <- function (dataset) {
+                expect_output(exclusion(dataset), "v3 < 11")
+                expect_identical(dim(dataset), c(17L, 8L))
+                expect_identical(names(na.omit(categories(dataset$v4))),
                     c("d", "e"))
-                expect_identical(name(f1$v2), "Variable Two")
-                expect_identical(description(f1$v3),
+                expect_equivalent(as.array(crtabs(~ v4, data=dataset)),
+                    array(c(4, 13), dim=2L, dimnames=list(v4=c("d", "e"))))
+                expect_identical(name(dataset$v2), "Variable Two")
+                expect_identical(description(dataset$v3),
                     "The third variable in the dataset")
-                expect_identical(description(f1), "A dataset for testing")
-                expect_identical(as.vector(f1$v7), df$v3[4:20] - 6)
-                expect_equivalent(as.vector(f1$v8), rep(1:5, 4)[4:20])
-                expect_identical(aliases(variables(f1)),
+                expect_identical(as.vector(dataset$v7), df$v3[4:20] - 6)
+                expect_equivalent(as.vector(dataset$v8), rep(1:5, 4)[4:20])
+                expect_identical(aliases(variables(dataset)),
                     paste0("v", c(2,4,6,1,3,5,8,7)))
+            }
+            test_that("The edits are made to the fork", {
+                expect_fork_edits(f1)
+                expect_identical(description(f1), "A dataset for testing")
             })
 
             test_that("The upstream dataset is unaffected by edits to the fork", {
                 validImport(ds)
             })
 
-            ## So that f1 gets cleaned up even if merge fails
-            with(test.dataset(f1, "f1"), {
-                ## Now merge f1 back to ds
-                with_silent_progress({
-                    ## Don't print the progress bar so our test output is clean
-                    ds <- mergeFork(ds, f1)
-                })
-                test_that("The edits made to the fork are now upstream", {
-                    expect_output(exclusion(ds), "v3 < 11")
-                    expect_identical(dim(ds), c(17L, 8L))
-                    expect_identical(names(na.omit(categories(ds$v4))),
-                        c("d", "e"))
-                    expect_identical(name(ds$v2), "Variable Two")
-                    expect_identical(description(ds$v3),
-                        "The third variable in the dataset")
-                    expect_identical(as.vector(ds$v7), df$v3[4:20] - 6)
-                    expect_equivalent(as.vector(ds$v8), rep(1:5, 4)[4:20])
-                    expect_identical(aliases(variables(ds)),
-                        paste0("v", c(2,4,6,1,3,5,8,7)))
-                    ## Extra checks for v7 and v8
-                    expect_true("v7" %in% aliases(allVariables(ds)))
-                    expect_true("v8" %in% aliases(allVariables(ds)))
-                })
-                test_that("Certain changes don't merge", {
-                    expect_identical(description(ds), "")
-                })
+            ## Now merge f1 back to ds
+            ds <- mergeFork(ds, f1)
+            test_that("The edits made to the fork are now upstream", {
+                expect_fork_edits(ds)
+            })
+            test_that("Certain changes don't merge", {
+                expect_identical(description(ds), "")
             })
         })
     })
