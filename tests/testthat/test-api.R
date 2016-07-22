@@ -23,6 +23,9 @@ with_mock_HTTP({
                     fixed=TRUE),
                 "/api/",
                 '{"value":1}')
+            ## Use testthat:: so that it doesn't print ds. Check for log printing
+            testthat::expect_output(ds <- loadDataset("test ds"),
+                NA)
         })
     })
 })

@@ -12,7 +12,8 @@ crunchAPI <- function (http.verb, url, config=list(), status.handlers=list(), ..
     url ## force lazy eval of url before inserting in try() below
     if (isTRUE(getOption("crunch.debug"))) {
         ## TODO: work this into httpcache.log
-        try(cat("\n", list(...)$body, "\n"), silent=TRUE)
+        payload <- list(...)$body
+        if (!is.null(payload)) try(cat("\n", payload, "\n"), silent=TRUE)
     }
     FUN <- get(http.verb, envir=asNamespace("httpcache"))
     x <- FUN(url, ..., config=config)
