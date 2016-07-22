@@ -7,6 +7,26 @@ test_that("Deprecated endpoints tell user to upgrade", {
               "Please upgrade crunch to the latest version."))
 })
 
+with_mock_HTTP({
+    test_that("crunch.debug does not print if disabled", {
+        expect_POST(
+            expect_output(crPOST("/api/", body='{"value":1}'),
+                NA),
+            "/api/",
+            '{"value":1}')
+    })
+    test_that("crunch.debug logging if enabled", {
+        with(temp.option(crunch.debug=TRUE), {
+            expect_POST(
+                expect_output(crPOST("/api/", body='{"value":1}'),
+                    '\n {"value":1} \n',
+                    fixed=TRUE),
+                "/api/",
+                '{"value":1}')
+        })
+    })
+})
+
 if (run.integration.tests) {
     test_that("Request headers", {
         skip_on_jenkins("Don't fail the build if httpbin is down")
