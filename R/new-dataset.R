@@ -92,7 +92,8 @@ createSource <- function (file, ...) {
 #' @export
 createDataset <- function (name, body, ...) {
     if (missing(body)) {
-        body <- list(name=name, ...)
+        body <- list(element="shoji:entity",
+                     body=list(name=name, ...))
     }
     dataset_url <- crPOST(sessionURL("datasets"), body=toJSON(body))
     ds <- entity(datasets()[[dataset_url]])

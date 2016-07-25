@@ -77,7 +77,7 @@ if (run.integration.tests) {
 
             test_that("'applied filters' for the UI don't affect R", {
                 expect_length(appliedFilters(ds), 1)
-                validImport(ds)
+                expect_valid_df_import(ds)
             })
 
             test_that("We also have 'active filter' for the R object", {

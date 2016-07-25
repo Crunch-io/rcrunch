@@ -194,7 +194,7 @@ with_mock_HTTP({
 
 with_test_authentication({
     describe("When editing dataset metadata", {
-        ds <- crunch::createDataset()
+        ds <- createDataset()
         test_that("Name and description setters push to server", {
             d2 <- ds
             name(ds) <- "Bond. James Bond."
@@ -304,7 +304,7 @@ with_test_authentication({
     })
 
     test_that("Dataset deleting is safe", {
-        ds <- crunch::createDataset()
+        ds <- createDataset()
         expect_error(delete(ds, confirm=TRUE),
             "Must confirm deleting dataset")
         expect_error(delete(ds, confirm=FALSE),
@@ -312,7 +312,7 @@ with_test_authentication({
     })
 
     test_that("Can give consent to delete", {
-        ds <- crunch::createDataset()
+        ds <- createDataset()
         with(consent(), {
             expect_error(delete(ds, confirm=TRUE),
                 NA)

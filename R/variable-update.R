@@ -193,10 +193,7 @@ setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
             .backstopUpdate(x, i, j, value)
         }
 
-        ## Datetime not yet supported, apparently
-        if (is.Datetime(x)) {
-            .backstopUpdate(x, i, j, value)
-        } else if (is.Categorical(x) || is.CA(x) || is.MR(x)) {
+        if (is.Categorical(x) || is.CA(x) || is.MR(x)) {
             return(.categorical.update[["numeric"]](x, i, j, value))
         }
         if (missing(i)) i <- NULL

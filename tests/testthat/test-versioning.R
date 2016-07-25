@@ -61,7 +61,7 @@ if (run.integration.tests) {
     with_test_authentication({
         with(test.dataset(df), {
             test_that("Dataset imported correctly", {
-                validImport(ds)
+                expect_valid_df_import(ds)
             })
 
             ## Release and re-lease
@@ -134,7 +134,7 @@ if (run.integration.tests) {
             ## Revert to the first version
             ds <- try(restoreVersion(ds, "initial import"))
             test_that("Restoring restored correctly", {
-                validImport(ds)
+                expect_valid_df_import(ds)
             })
 
             ## Release and re-lease
@@ -161,7 +161,7 @@ if (run.integration.tests) {
 
             ds <- try(restoreVersion(ds, "initial import"))
             test_that("And if we revert again, it's all good", {
-                validImport(ds)
+                expect_valid_df_import(ds)
             })
         })
     })

@@ -95,7 +95,7 @@ if (run.integration.tests) {
             })
 
             test_that("The upstream dataset is unaffected by edits to the fork", {
-                validImport(ds)
+                expect_valid_df_import(ds)
             })
 
             ## Now merge f1 back to ds

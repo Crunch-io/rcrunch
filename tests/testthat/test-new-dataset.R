@@ -34,7 +34,7 @@ if (run.integration.tests) {
 
         test_that("Dataset-by-column variable types get set correctly", {
             ds <- newDatasetByColumn(df)
-            validImport(ds)
+            expect_valid_df_import(ds)
             expect_equivalent(mean(ds$v3), mean(df$v3))
             expect_true(setequal(names(df), names(ds)))
             expect_identical(names(df), names(ds))
@@ -48,7 +48,7 @@ if (run.integration.tests) {
 
         test_that("newDataset via CSV + JSON", {
             ds <- newDatasetByCSV(df)
-            validImport(ds)
+            expect_valid_df_import(ds)
         })
 
         test_that("createWithMetadataAndFile using docs example", {
@@ -65,7 +65,7 @@ if (run.integration.tests) {
         test_that("Can create dataset with data in S3", {
             ds <- createWithMetadataAndFile(m,
                 file="s3://public.testing.crunch.io/example-dataset.csv")
-            expect_true(is.dataset(ds))
+            expect_valid_apidocs_import(ds)
             ds2 <- newDatasetFromFixture("apidocs")
             ## Compare to dataset imported from local file upload
             expect_identical(dim(ds), dim(ds2))
@@ -85,7 +85,7 @@ if (run.integration.tests) {
             dsz <- suppressMessages(crunch::newDataset(df))
             expect_true(is.dataset(dsz))
             expect_identical(name(dsz), "df")
-            validImport(dsz)
+            expect_valid_df_import(dsz)
         })
 
         test_that("Datasets can be deleted", {

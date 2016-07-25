@@ -127,7 +127,7 @@ if (run.integration.tests) {
 
         with(test.dataset(newDatasetFromFixture("apidocs")), {
             test_that("Assert what is in the test dataset", {
-                validApidocsImport(ds)
+                expect_valid_apidocs_import(ds)
             })
 
             ## Create a variable to update with rows to exclude
@@ -251,7 +251,7 @@ if (run.integration.tests) {
             })
             ds <- restoreVersion(ds, 1)
             test_that("No problem reverting to before exclusion var made", {
-                validImport(ds)
+                expect_valid_df_import(ds)
                 expect_null(ds$keep)
                 expect_null(exclusion(ds))
             })

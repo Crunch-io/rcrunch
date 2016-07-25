@@ -81,16 +81,17 @@ with_test_authentication <- function (expr) {
             }),
             print=FALSE,
             where=crGET))
-        suppressMessages(trace("createDataset",
-            quote({
-                if (missing(name)) name <- now()
-            }),
-            at=1,
-            print=FALSE,
-            where=createSource))
+        # suppressMessages(trace("createDataset",
+        #     quote({
+        #         # If we care about making unique dataset names, do this:
+        #         # body$body$name <- paste(now(), body$body$name)
+        #     }),
+        #     at=3,
+        #     print=FALSE,
+        #     where=createSource))
         on.exit({
             suppressMessages(untrace("locationHeader", where=crGET))
-            suppressMessages(untrace("createDataset", where=crGET))
+            # suppressMessages(untrace("createDataset", where=crGET))
             ## Delete our seen things
             ## We could filter out variables, batches, anything under a dataset
             ## since we're going to delete the datasets

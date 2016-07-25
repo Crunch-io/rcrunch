@@ -245,7 +245,7 @@ with_test_authentication({
         expect_identical(names(members(tp)), my.name)
     })
 
-    ds <- crunch::createDataset()
+    ds <- createDataset()
     tp <- testProject()
     test_that("Can add datasets to project", {
         expect_is(tp, "CrunchProject")
@@ -267,7 +267,7 @@ with_test_authentication({
         expect_identical(ordering(datasets(tp))@graph[[1]],
             DatasetGroup(name="A group of one", entities=self(ds)))
     })
-    ds3 <- crunch::createDataset()
+    ds3 <- createDataset()
     ord2 <- DatasetOrder(DatasetGroup("A group of two",
         c(self(ds), self(ds3))))
     test_that("Have to add dataset to project before organizing it", {
