@@ -1,6 +1,6 @@
 {
     "element": "shoji:entity",
-    "self": "/api/datasets/dataset1/variables/catarray.json",
+    "self": "/api/datasets/dataset1/variables/catarray/",
     "body": {
         "alias": "catarray",
         "format": {
@@ -17,19 +17,19 @@
         "view": {"column_width": null},
         "type": "categorical_array",
         "subvariables": [
-            "/api/datasets/dataset1/variables/subvar2.json",
-            "/api/datasets/dataset1/variables/subvar1.json",
-            "/api/datasets/dataset1/variables/subvar3.json"
+            "/api/datasets/dataset1/variables/subvar2/",
+            "/api/datasets/dataset1/variables/subvar1/",
+            "/api/datasets/dataset1/variables/subvar3/"
         ],
-        "subvariables_catalog": "/api/datasets/dataset1/variables/mymrset/subvariables.json",
+        "subvariables_catalog": "/api/datasets/dataset1/variables/mymrset/subvariables/",
         "id": "qwert"
     },
     "views": {
-        "summary": "/api/datasets/dataset1/variables/mymrset/summary.json",
-        "values": "/api/datasets/dataset1/variables/mymrset/values.json"
+        "summary": "/api/datasets/dataset1/variables/mymrset/summary/",
+        "values": "/api/datasets/dataset1/variables/mymrset/values/"
     },
     "urls": {
-        "dataset_url": "/api/datasets/dataset1.json"
+        "dataset_url": "/api/datasets/dataset1/"
     },
     "description": "Details for a given Variable"
 }

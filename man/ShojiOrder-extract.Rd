@@ -18,10 +18,12 @@
 \alias{[[,ShojiOrder,ANY-method}
 \alias{[[,ShojiOrder,character-method}
 \alias{[[<-,OrderGroup,ANY,missing,OrderGroup-method}
+\alias{[[<-,OrderGroup,character,missing,NULL-method}
 \alias{[[<-,OrderGroup,character,missing,OrderGroup-method}
 \alias{[[<-,OrderGroup,character,missing,ShojiOrder-method}
 \alias{[[<-,OrderGroup,character,missing,character-method}
 \alias{[[<-,OrderGroup,character,missing,list-method}
+\alias{[[<-,OrderGroup,numeric,missing,NULL-method}
 \alias{[[<-,ShojiOrder,ANY,missing,ANY-method}
 \alias{[[<-,ShojiOrder,ANY,missing,NULL-method}
 \alias{[[<-,ShojiOrder,ANY,missing,OrderGroup-method}
@@ -85,6 +87,10 @@
 \S4method{[[}{OrderGroup,character,missing,OrderGroup}(x, i, j) <- value
 
 \S4method{[[}{OrderGroup,ANY,missing,OrderGroup}(x, i, j) <- value
+
+\S4method{[[}{OrderGroup,numeric,missing,`NULL`}(x, i, j) <- value
+
+\S4method{[[}{OrderGroup,character,missing,`NULL`}(x, i, j) <- value
 
 \S4method{$}{OrderGroup}(x, name) <- value
 

@@ -17,7 +17,7 @@ with_mock_HTTP({
         expr=list(
             `function`="copy_variable",
             args=list(
-                list(variable="/api/datasets/dataset1/variables/gender.json")
+                list(variable="/api/datasets/dataset1/variables/gender/")
             )
         )
     )

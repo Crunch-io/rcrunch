@@ -25,14 +25,14 @@ with_mock_HTTP({
     })
 
     test_that("saveVersion makes the right request", {
-        expect_mock_request(saveVersion(ds, "Today"),
-            'POST /api/datasets/dataset1/savepoints.json ',
+        expect_POST(saveVersion(ds, "Today"),
+            '/api/datasets/dataset1/savepoints/',
             '{"description":"Today"}')
     })
 
     test_that("saveVersion with no description supplied", {
-        expect_mock_request(saveVersion(ds),
-            'POST /api/datasets/dataset1/savepoints.json ',
+        expect_POST(saveVersion(ds),
+            '/api/datasets/dataset1/savepoints/',
             '{"description":"Version 3"}')
     })
 
@@ -46,10 +46,10 @@ with_mock_HTTP({
     })
 
     test_that("restoreVersion makes the right request", {
-        expect_mock_request(restoreVersion(ds, "initial load"),
-            'POST /api/datasets/dataset1/savepoints/v2/revert/')
-        expect_mock_request(restoreVersion(ds, 2),
-            'POST /api/datasets/dataset1/savepoints/v2/revert/')
+        expect_POST(restoreVersion(ds, "initial load"),
+            '/api/datasets/dataset1/savepoints/v2/revert/')
+        expect_POST(restoreVersion(ds, 2),
+            '/api/datasets/dataset1/savepoints/v2/revert/')
         expect_error(restoreVersion(ds, "not a version"),
             paste0(dQuote("not a version"),
             " does not match any available versions"))
@@ -61,7 +61,7 @@ if (run.integration.tests) {
     with_test_authentication({
         with(test.dataset(df), {
             test_that("Dataset imported correctly", {
-                validImport(ds)
+                expect_valid_df_import(ds)
             })
 
             ## Release and re-lease
@@ -134,7 +134,7 @@ if (run.integration.tests) {
             ## Revert to the first version
             ds <- try(restoreVersion(ds, "initial import"))
             test_that("Restoring restored correctly", {
-                validImport(ds)
+                expect_valid_df_import(ds)
             })
 
             ## Release and re-lease
@@ -157,6 +157,11 @@ if (run.integration.tests) {
                 expect_null(ds$v8)
                 ds$v8 <- rep(6:10, 4)
                 expect_equivalent(as.vector(ds$v8), rep(6:10, 4))
+            })
+
+            ds <- try(restoreVersion(ds, "initial import"))
+            test_that("And if we revert again, it's all good", {
+                expect_valid_df_import(ds)
             })
         })
     })

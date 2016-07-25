@@ -1,9 +1,9 @@
 userURL <- function () rootURL("user")
 
-##' My user entity
-##'
-##' @return A UserEntity that corresponds to you, the authenticated user
-##' @export
+#' My user entity
+#'
+#' @return A UserEntity that corresponds to you, the authenticated user
+#' @export
 me <- function () {
     UserEntity(crGET(userURL()))
 }
@@ -18,12 +18,12 @@ getAccount <- function (x=rootURL("account", me())) {
 
 setMethod("email", "UserEntity", function (x) x@body$email)
 
-##' Find all users on your account
-##'
-##' @param x URL of the user catalog. Default is the right thing; you shouldn't
-##' specify one
-##' @return a \code{UserCatalog}
-##' @export
+#' Find all users on your account
+#'
+#' @param x URL of the user catalog. Default is the right thing; you shouldn't
+#' specify one
+#' @return a \code{UserCatalog}
+#' @export
 getAccountUserCatalog <- function (x=shojiURL(getAccount(), "catalogs", "users")) {
     UserCatalog(crGET(x))
 }

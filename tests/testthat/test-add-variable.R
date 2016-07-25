@@ -60,132 +60,124 @@ test_that("POSTNewVariable rejects invalid categories", {
 })
 
 with_test_authentication({
-    with(test.dataset(df), {
-        test_that("addVariable creates a new remote numeric variable", {
-            ds <- addVariables(ds,
-                VariableDefinition(df$v3, name="New var", alias="newVar"))
-            expect_true("newVar" %in% names(ds))
-            nv <- ds$newVar
-            expect_true(is.Numeric(nv))
-            expect_true(is.Numeric(ds[['v3']]))
-            expect_identical(as.vector(nv), as.vector(ds$v3))
-        })
-        test_that("addVariable creates text variables from character", {
-            ds <- addVariables(ds,
-                VariableDefinition(df$v2, name="New var2", alias="newVar2"))
-            expect_true("newVar2" %in% names(ds))
-            nv <- ds$newVar2
-            expect_true(is.Text(nv))
-            expect_identical(as.vector(nv)[1:15],
-                as.vector(ds$v2)[1:15])
-                ## note that NAs aren't getting caught in the CSV importer
-                ## anymore, but they're right in the addVariable method
-        })
-        test_that("addVariable creates categorical from factor", {
-            ds <- addVariables(ds,
-                VariableDefinition(df$v4, name="New var3", alias="newVar3"))
-            expect_true("newVar3" %in% names(ds))
-            nv <- ds$newVar3
-            expect_true(is.Categorical(nv))
-            expect_identical(as.vector(nv), as.vector(ds$v4))
-        })
-        test_that("addVariable creates datetime from Date", {
-            ds <- addVariables(ds,
-                VariableDefinition(df$v5, name="New var4", alias="newVar4"))
-            expect_true("newVar4" %in% names(ds))
-            nv <- ds$newVar4
-            expect_true(is.Datetime(nv))
-            expect_identical(as.vector(nv), as.vector(ds$v5))
-        })
-        test_that("addVariable creates datetime from POSIXct", {
-            skip("Can't support POSIXt until the app supports timezones")
-            ds <- addVariables(ds, VariableDefinition(as.POSIXct(df$v5),
-                name="New var 5", alias="newVar5"))
-            expect_true("newVar5" %in% names(ds))
-            nv <- ds$newVar5
-            expect_true(is.Datetime(nv))
-            expect_identical(as.vector(nv), as.vector(ds$v5))
-        })
-        test_that("adding variable with duplicate name fails", {
-            expect_error(addVariables(ds, VariableDefinition(df$v5,
-                name="New var4", alias="newVar4")),
-                "Variable with name: New var4 already exists")
-        })
+    ds <- newDataset(df)
+    test_that("addVariable creates a new remote numeric variable", {
+        ds <- addVariables(ds,
+            VariableDefinition(df$v3, name="New var", alias="newVar"))
+        expect_true("newVar" %in% names(ds))
+        nv <- ds$newVar
+        expect_true(is.Numeric(nv))
+        expect_true(is.Numeric(ds[['v3']]))
+        expect_identical(as.vector(nv), as.vector(ds$v3))
+    })
+    test_that("addVariable creates text variables from character", {
+        ds <- addVariables(ds,
+            VariableDefinition(df$v2, name="New var2", alias="newVar2"))
+        expect_true("newVar2" %in% names(ds))
+        nv <- ds$newVar2
+        expect_true(is.Text(nv))
+        expect_identical(as.vector(nv)[1:15],
+            as.vector(ds$v2)[1:15])
+            ## note that NAs aren't getting caught in the CSV importer
+            ## anymore, but they're right in the addVariable method
+    })
+    test_that("addVariable creates categorical from factor", {
+        ds <- addVariables(ds,
+            VariableDefinition(df$v4, name="New var3", alias="newVar3"))
+        expect_true("newVar3" %in% names(ds))
+        nv <- ds$newVar3
+        expect_true(is.Categorical(nv))
+        expect_identical(as.vector(nv), as.vector(ds$v4))
+    })
+    test_that("addVariable creates datetime from Date", {
+        ds <- addVariables(ds,
+            VariableDefinition(df$v5, name="New var4", alias="newVar4"))
+        expect_true("newVar4" %in% names(ds))
+        nv <- ds$newVar4
+        expect_true(is.Datetime(nv))
+        expect_identical(as.vector(nv), as.vector(ds$v5))
+    })
+    test_that("addVariable creates datetime from POSIXct", {
+        skip("Can't support POSIXt until the app supports timezones")
+        ds <- addVariables(ds, VariableDefinition(as.POSIXct(df$v5),
+            name="New var 5", alias="newVar5"))
+        expect_true("newVar5" %in% names(ds))
+        nv <- ds$newVar5
+        expect_true(is.Datetime(nv))
+        expect_identical(as.vector(nv), as.vector(ds$v5))
+    })
+    test_that("adding variable with duplicate name fails", {
+        expect_error(addVariables(ds, VariableDefinition(df$v5,
+            name="New var4", alias="newVar4")),
+            "Variable with name: New var4 already exists")
+    })
+    test_that("assignment restrictions", {
+        expect_error(ds[[2]] <- 1:20,
+            "Only character \\(name\\) indexing supported")
+    })
+    test_that("[[<- adds variables", {
+        ds$newvariable <- 20:1
+        expect_true(is.Numeric(ds$newvariable))
+        expect_identical(mean(ds$newvariable), 10.5)
+    })
+    test_that("Variable lengths must match, in an R way", {
+        expect_error(ds[['not valid']] <- 1:7,
+            "replacement has 7 rows, data has 20")
+        ds$ok <- 1
+        expect_identical(as.vector(ds$ok), rep(1, 20))
     })
 
-    with(test.dataset(df), {
-        test_that("assignment restrictions", {
-            expect_error(ds[[2]] <- 1:20,
-                "Only character \\(name\\) indexing supported")
-        })
-        test_that("[[<- adds variables", {
-            ds$newvariable <- 20:1
-            expect_true(is.Numeric(ds$newvariable))
-            expect_identical(mean(ds$newvariable), 10.5)
-        })
-        test_that("Variable lengths must match, in an R way", {
-            expect_error(ds[['not valid']] <- 1:7,
-                "replacement has 7 rows, data has 20")
-            ds$ok <- 1
-            expect_identical(as.vector(ds$ok), rep(1, 20))
-        })
+    test_that("Adding text variables (debugging)", {
+        ds <- newDataset(data.frame(x=1:1024))
+        ds$a_text_var <- "12345 Some text that is definitely >4 characters"
+        ds$a_factor <- factor("Different text")
+        ds$the_name <- name(ds)
+        ds$another <- factor(rep(c(NA, "Longer text"), 512))
+        expect_true(is.Text(ds$a_text_var))
+        expect_true(is.Categorical(ds$a_factor))
+        expect_true(is.Text(ds$the_name))
+        expect_true(is.Categorical(ds$another))
+        expect_equal(as.array(crtabs(~ a_text_var, data=ds)),
+            array(1024L,
+                dim=1L,
+                dimnames=list(a_text_var="12345 Some text that is definitely >4 characters")))
+        expect_equal(as.array(crtabs(~ a_factor, data=ds)),
+            array(1024L,
+                dim=1L,
+                dimnames=list(a_factor="Different text")))
+        expect_equal(as.array(crtabs(~ the_name, data=ds)),
+            array(1024L,
+                dim=1L,
+                dimnames=list(the_name=name(ds))))
+        expect_equal(as.array(crtabs(~ another, data=ds, useNA="always")),
+            array(c(512L, 512L),
+                dim=2L,
+                dimnames=list(another=c("Longer text", "No Data"))))
+        expect_identical(head(as.vector(ds$a_text_var), 1),
+           "12345 Some text that is definitely >4 characters")
     })
 
-    with(test.dataset(data.frame(x=1:1024)), {
-        test_that("Adding text variables (debugging)", {
-            ds$a_text_var <- "12345 Some text that is definitely >4 characters"
-            ds$a_factor <- factor("Different text")
-            ds$the_name <- name(ds)
-            ds$another <- factor(rep(c(NA, "Longer text"), 512))
-            expect_true(is.Text(ds$a_text_var))
-            expect_true(is.Categorical(ds$a_factor))
-            expect_true(is.Text(ds$the_name))
-            expect_true(is.Categorical(ds$another))
-            expect_equal(as.array(crtabs(~ a_text_var, data=ds)),
-                array(1024L,
-                    dim=1L,
-                    dimnames=list(a_text_var="12345 Some text that is definitely >4 characters")))
-            expect_equal(as.array(crtabs(~ a_factor, data=ds)),
-                array(1024L,
-                    dim=1L,
-                    dimnames=list(a_factor="Different text")))
-            expect_equal(as.array(crtabs(~ the_name, data=ds)),
-                array(1024L,
-                    dim=1L,
-                    dimnames=list(the_name=name(ds))))
-            print(crtabs(~ another, data=ds, useNA="always"))
-            expect_equal(as.array(crtabs(~ another, data=ds, useNA="always")),
-                array(c(512L, 512L),
-                    dim=2L,
-                    dimnames=list(another=c("Longer text", "No Data"))))
-            expect_identical(head(as.vector(ds$a_text_var), 1),
-                "12345 Some text that is definitely >4 characters")
-        })
-    })
-
-    source("mapcty.R")
-    with(test.dataset(data.frame(x=seq_along(mapcty))), {
+    test_that("Another test for text truncation", {
+        source("mapcty.R")
+        ds <- newDataset(data.frame(x=seq_along(mapcty)))
         ds <- releaseAndReload(ds)
         ds$county <- factor(mapcty)
-        print(crtabs(~ county, data=ds))
         expect_identical(head(as.vector(ds$county)), head(mapcty))
     })
 
-    with(test.dataset(df), {
-        test_that("Categorical to R and back", {
-            v4 <- as.vector(ds$v4)
-            expect_identical(levels(v4), c("B", "C"))
-            ds$v4a <- v4
-            expect_equivalent(as.vector(ds$v4), as.vector(ds$v4a))
-        })
-
-        exclusion(ds) <- ds$v3 == 10
-        test_that("Categorical to R and back with an exclusion", {
-            v4b <- as.vector(ds$v4)
-            expect_identical(levels(v4b), c("B", "C"))
-            expect_length(v4b, 19)
-            ds$v4b <- v4b
-            expect_equivalent(as.vector(ds$v4b), as.vector(ds$v4a))
-        })
+    ds <- newDataset(df)
+    test_that("Categorical to R and back", {
+        v4 <- as.vector(ds$v4)
+        expect_identical(levels(v4), c("B", "C"))
+        ds$v4a <- v4
+        expect_equivalent(as.vector(ds$v4), as.vector(ds$v4a))
+    })
+    exclusion(ds) <- ds$v3 == 10
+    test_that("Categorical to R and back with an exclusion", {
+        v4b <- as.vector(ds$v4)
+        expect_identical(levels(v4b), c("B", "C"))
+        expect_length(v4b, 19)
+        ds$v4b <- v4b
+        expect_equivalent(as.vector(ds$v4b), as.vector(ds$v4a))
     })
 })

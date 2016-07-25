@@ -1,5 +1,5 @@
-##' @rdname makeArray
-##' @export
+#' @rdname makeArray
+#' @export
 makeMR <- function (subvariables, dataset=NULL, pattern=NULL, key=namekey(dataset), name, selections, ...) {
     Call <- match.call(expand.dots=FALSE)
 

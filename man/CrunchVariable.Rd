@@ -19,13 +19,11 @@
 \description{
 Variables are S4 objects. All inherit from the base class
 \code{CrunchVariable}.
+be persisted on the server? Default is \code{FALSE}
 }
 \section{Slots}{
 
 \describe{
-\item{\code{readonly}}{logical: should changes made to this variable object locally
-be persisted on the server? Default is \code{FALSE}}
-
 \item{\code{filter}}{either \code{NULL} or \code{CrunchLogicalExpr}}
 }}
 

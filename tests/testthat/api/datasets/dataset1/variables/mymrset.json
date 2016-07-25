@@ -1,6 +1,6 @@
 {
     "element": "shoji:entity",
-    "self": "/api/datasets/dataset1/variables/mymrset.json",
+    "self": "/api/datasets/dataset1/variables/mymrset/",
     "body": {
         "alias": "mymrset",
         "format": {
@@ -17,20 +17,20 @@
         "view": {"include_noneoftheabove": false, "column_width": null},
         "type": "multiple_response",
         "subvariables": [
-            "/api/datasets/dataset1/variables/subvar2.json",
-            "/api/datasets/dataset1/variables/subvar1.json",
-            "/api/datasets/dataset1/variables/subvar3.json"
+            "/api/datasets/dataset1/variables/subvar2/",
+            "/api/datasets/dataset1/variables/subvar1/",
+            "/api/datasets/dataset1/variables/subvar3/"
         ],
-        "subvariables_catalog": "/api/datasets/dataset1/variables/mymrset/subvariables.json",
+        "subvariables_catalog": "/api/datasets/dataset1/variables/mymrset/subvariables/",
         "id": "949d2dc7e7a24e6090cc88bb92e1d2fb"
     },
     "views": {
-        "summary": "/api/datasets/dataset1/variables/mymrset/summary.json",
-        "values": "/api/datasets/dataset1/variables/mymrset/values.json",
-        "cast": "/api/datasets/dataset1/variables/mymrset/cast.json"
+        "summary": "/api/datasets/dataset1/variables/mymrset/summary/",
+        "values": "/api/datasets/dataset1/variables/mymrset/values/",
+        "cast": "/api/datasets/dataset1/variables/mymrset/cast/"
     },
     "urls": {
-        "dataset_url": "/api/datasets/dataset1.json"
+        "dataset_url": "/api/datasets/dataset1/"
     },
     "description": "Details for a given Variable"
 }

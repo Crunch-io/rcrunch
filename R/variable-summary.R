@@ -15,16 +15,16 @@ getSummary <- function (x) {
     return(out)
 }
 
-##' Table function for Crunch objects
-##'
-##' @param ... things to tabulate
-##' @param exclude see \code{\link[base]{table}}
-##' @param useNA see \code{\link[base]{table}}
-##' @param dnn see \code{\link[base]{table}}
-##' @param deparse.level see \code{\link[base]{table}}
-##' @return a table object
-##' @seealso \code{\link[base]{table}}
-##' @export
+#' Table function for Crunch objects
+#'
+#' @param ... things to tabulate
+#' @param exclude see \code{\link[base]{table}}
+#' @param useNA see \code{\link[base]{table}}
+#' @param dnn see \code{\link[base]{table}}
+#' @param deparse.level see \code{\link[base]{table}}
+#' @return a table object
+#' @seealso \code{\link[base]{table}}
+#' @export
 table <- function (..., exclude, useNA=c("no", "ifany", "always"), dnn, deparse.level) {
     m <- match.call()
 
@@ -63,17 +63,17 @@ table <- function (..., exclude, useNA=c("no", "ifany", "always"), dnn, deparse.
 # ## @export
 #setMethod("table", "CategoricalVariable", CategoricalVariable.table)
 
-##' Summary methods for Crunch Variables
-##'
-##' @param object A Variable
-##' @param ... additional arguments, ignored (they're in the summary.default)
-##' signature
-##' @return a summary response. Categorical variable summaries should work like
-##' summary.factor; Numeric variables should be like summary.numeric. Other
-##' Variable types are not yet supported.
-##' @name crunch-summary
-##' @keywords internal
-##' @export
+#' Summary methods for Crunch Variables
+#'
+#' @param object A Variable
+#' @param ... additional arguments, ignored (they're in the summary.default)
+#' signature
+#' @return a summary response. Categorical variable summaries should work like
+#' summary.factor; Numeric variables should be like summary.numeric. Other
+#' Variable types are not yet supported.
+#' @name crunch-summary
+#' @keywords internal
+#' @export
 summary.CategoricalVariable <- function (object, ...) {
     tab <- table(object)
     tab <- tab[order(tab, decreasing=TRUE)]
@@ -82,13 +82,13 @@ summary.CategoricalVariable <- function (object, ...) {
     return(tab)
 }
 
-##' @export
+#' @export
 print.CategoricalVariableSummary <- function (x, ...) {
     print(data.frame(Count=as.numeric(x), row.names=names(x)))
 }
 
-##' @rdname crunch-summary
-##' @export
+#' @rdname crunch-summary
+#' @export
 summary.NumericVariable <- function (object, ...) {
     summ <- getSummary(object)
     fivenum <- sapply(summ$fivenum, function (x) x[[2]])

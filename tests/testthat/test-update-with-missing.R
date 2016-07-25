@@ -25,7 +25,6 @@ if (run.integration.tests) {
             test_that("Insert NA into datetime", {
                 expect_equivalent(as.vector(ds$wave[1:5]),
                     rep(as.Date("2014-12-01"), 5))
-                skip("See https://www.pivotaltracker.com/story/show/103531536")
                 ds$wave[4] <- NA
                 expect_equivalent(as.vector(ds$wave[1:5]),
                     c(rep(as.Date("2014-12-01"), 3), NA, as.Date("2014-12-01")))

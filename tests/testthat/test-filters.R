@@ -28,7 +28,7 @@ if (run.integration.tests) {
                         ))), collapse="\n"), fixed=TRUE)
                 expect_output(filters(ds)[["Test filter"]],
                     paste0('Crunch filter ', dQuote("Test filter"),
-                        '\nExpression: v4 == 1L'))
+                        '\nExpression: v4 == "B"'))
             })
 
             test_that("We can make it public/private", {
@@ -77,7 +77,7 @@ if (run.integration.tests) {
 
             test_that("'applied filters' for the UI don't affect R", {
                 expect_length(appliedFilters(ds), 1)
-                validImport(ds)
+                expect_valid_df_import(ds)
             })
 
             test_that("We also have 'active filter' for the R object", {

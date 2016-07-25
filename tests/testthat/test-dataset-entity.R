@@ -3,9 +3,8 @@ context("Dataset object and methods")
 with_mock_HTTP({
     test.ds <- loadDataset("test ds")
     test.ds2 <- loadDataset("ECON.sav")
-    test.ds3 <- loadDataset("an archived dataset")
-    ## But it's not archived apparently. Reach around
-    test.ds3@tuple@body$archived <- TRUE
+    test.ds3 <- loadDataset("an archived dataset", kind="archived")
+
     today <- "2016-02-11"
 
     test_that("Dataset can be loaded", {
@@ -25,16 +24,12 @@ with_mock_HTTP({
     })
 
     test_that("archive setting", {
-        expect_error(is.archived(test.ds2) <- TRUE,
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
-                    '{"archived":true}}'),
-            fixed=TRUE
-        )
-        expect_error(archive(test.ds2),
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
-                    '{"archived":true}}'),
-            fixed=TRUE
-        )
+        expect_PATCH(is.archived(test.ds2) <- TRUE,
+            '/api/datasets/',
+            '{"/api/datasets/dataset3/":{"archived":true}}')
+        expect_PATCH(archive(test.ds2),
+            '/api/datasets/',
+            '{"/api/datasets/dataset3/":{"archived":true}}')
     })
 
     test_that("draft/published", {
@@ -45,34 +40,24 @@ with_mock_HTTP({
     })
 
     test_that("draft/publish setting", {
-        expect_error(is.published(test.ds2) <- TRUE,
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
-                    '{"is_published":true}}'),
-            fixed=TRUE
-        )
-        expect_error(is.published(test.ds) <- FALSE,
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset1.json":',
-                    '{"is_published":false}}'),
-            fixed=TRUE
-        )
-        expect_error(is.draft(test.ds2) <- FALSE,
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
-                    '{"is_published":true}}'),
-            fixed=TRUE
-        )
-        expect_error(is.draft(test.ds) <- TRUE,
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset1.json":',
-                    '{"is_published":false}}'),
-            fixed=TRUE
-        )
-        expect_error(publish(test.ds2),
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
-                    '{"is_published":true}}'),
-            fixed=TRUE
-        )
-        expect_error(publish(test.ds), NA)
-        expect_error(is.draft(test.ds) <- FALSE, NA)
-        expect_error(is.published(test.ds) <- TRUE, NA)
+        expect_PATCH(is.published(test.ds2) <- TRUE,
+            '/api/datasets/',
+            '{"/api/datasets/dataset3/":{"is_published":true}}')
+        expect_PATCH(is.published(test.ds) <- FALSE,
+            '/api/datasets/',
+            '{"/api/datasets/dataset1/":{"is_published":false}}')
+        expect_PATCH(is.draft(test.ds2) <- FALSE,
+            '/api/datasets/',
+            '{"/api/datasets/dataset3/":{"is_published":true}}')
+        expect_PATCH(is.draft(test.ds) <- TRUE,
+            '/api/datasets/',
+            '{"/api/datasets/dataset1/":{"is_published":false}}')
+        expect_PATCH(publish(test.ds2),
+            '/api/datasets/',
+            '{"/api/datasets/dataset3/":{"is_published":true}}')
+        expect_no_request(publish(test.ds))
+        expect_no_request(is.draft(test.ds) <- FALSE)
+        expect_no_request(is.published(test.ds) <- TRUE)
     })
 
     test_that("start/endDate", {
@@ -83,28 +68,20 @@ with_mock_HTTP({
     })
 
     test_that("startDate<- makes correct request", {
-        expect_error(startDate(test.ds2) <- today,
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
-                    '{"start_date":"2016-02-11"}}'),
-            fixed=TRUE
-        )
-        expect_error(startDate(test.ds) <- NULL,
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset1.json":',
-                    '{"start_date":null}}'),
-            fixed=TRUE
-        )
+        expect_PATCH(startDate(test.ds2) <- today,
+            '/api/datasets/',
+            '{"/api/datasets/dataset3/":{"start_date":"2016-02-11"}}')
+        expect_PATCH(startDate(test.ds) <- NULL,
+            '/api/datasets/',
+            '{"/api/datasets/dataset1/":{"start_date":null}}')
     })
     test_that("endDate<- makes correct request", {
-        expect_error(endDate(test.ds2) <- today,
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset3.json":',
-                    '{"end_date":"2016-02-11"}}'),
-            fixed=TRUE
-        )
-        expect_error(endDate(test.ds) <- NULL,
-            paste0('PATCH /api/datasets.json {"/api/datasets/dataset1.json":',
-                    '{"end_date":null}}'),
-            fixed=TRUE
-        )
+        expect_PATCH(endDate(test.ds2) <- today,
+            '/api/datasets/',
+            '{"/api/datasets/dataset3/":{"end_date":"2016-02-11"}}')
+        expect_PATCH(endDate(test.ds) <- NULL,
+            '/api/datasets/',
+            '{"/api/datasets/dataset1/":{"end_date":null}}')
     })
 
     test_that("Dataset webURL", {
@@ -116,20 +93,20 @@ with_mock_HTTP({
 
     test_that("Dataset VariableCatalog index is ordered", {
         expect_identical(urls(variables(test.ds)),
-            c("/api/datasets/dataset1/variables/birthyr.json",
-            "/api/datasets/dataset1/variables/gender.json",
-            "/api/datasets/dataset1/variables/mymrset.json",
-            "/api/datasets/dataset1/variables/textVar.json",
-            "/api/datasets/dataset1/variables/starttime.json",
-            "/api/datasets/dataset1/variables/catarray.json"))
+            c("/api/datasets/dataset1/variables/birthyr/",
+            "/api/datasets/dataset1/variables/gender/",
+            "/api/datasets/dataset1/variables/mymrset/",
+            "/api/datasets/dataset1/variables/textVar/",
+            "/api/datasets/dataset1/variables/starttime/",
+            "/api/datasets/dataset1/variables/catarray/"))
         ## But allVariables isn't ordered
         expect_true(setequal(urls(allVariables(test.ds)),
-            c("/api/datasets/dataset1/variables/birthyr.json",
-            "/api/datasets/dataset1/variables/catarray.json",
-            "/api/datasets/dataset1/variables/gender.json",
-            "/api/datasets/dataset1/variables/mymrset.json",
-            "/api/datasets/dataset1/variables/starttime.json",
-            "/api/datasets/dataset1/variables/textVar.json")))
+            c("/api/datasets/dataset1/variables/birthyr/",
+            "/api/datasets/dataset1/variables/catarray/",
+            "/api/datasets/dataset1/variables/gender/",
+            "/api/datasets/dataset1/variables/mymrset/",
+            "/api/datasets/dataset1/variables/starttime/",
+            "/api/datasets/dataset1/variables/textVar/")))
     })
 
     test_that("namekey function exists and affects names()", {
@@ -187,28 +164,11 @@ with_mock_HTTP({
     })
 
     test_that("Extract from dataset by VariableOrder/Group", {
-        ents <- c("/api/datasets/dataset1/variables/gender.json",
-            "/api/datasets/dataset1/variables/mymrset.json")
+        ents <- c("/api/datasets/dataset1/variables/gender/",
+            "/api/datasets/dataset1/variables/mymrset/")
         ord <- VariableOrder(VariableGroup("G1", entities=ents))
         expect_identical(test.ds[ord[[1]]], test.ds[c("gender", "mymrset")])
         expect_identical(test.ds[ord], test.ds[c("gender", "mymrset")])
-    })
-
-    test_that("Read only flag gets set appropriately", {
-        expect_false(is.readonly(test.ds))
-        expect_true(is.readonly(test.ds[1]))
-    })
-
-    test_that("Name and description setters in read only mode", {
-        skip("Readonly mode for tuple updating not implemented")
-        dataset <- test.ds
-        readonly(dataset) <- TRUE
-        name(dataset) <- "Bond. James Bond."
-        expect_false(identical(name(dataset), name(test.ds)))
-        expect_identical(name(dataset), "Bond. James Bond.")
-        description(dataset) <- "007"
-        expect_false(identical(description(dataset), description(test.ds)))
-        expect_identical(description(dataset), "007")
     })
 
     test_that("show method", {
@@ -232,139 +192,130 @@ with_mock_HTTP({
     })
 })
 
-if (run.integration.tests) {
-    with_test_authentication({
-        with(test.dataset(df), {
-            test_that("Name and description setters push to server", {
-                d2 <- ds
-                name(ds) <- "Bond. James Bond."
-                expect_identical(name(refresh(d2)), name(ds))
-            })
-
-            test_that("Can set (and unset) startDate", {
-                startDate(ds) <- "1985-11-05"
-                expect_identical(startDate(ds), "1985-11-05")
-                expect_identical(startDate(refresh(ds)), "1985-11-05")
-                startDate(ds) <- NULL
-                expect_null(startDate(ds))
-                expect_null(startDate(refresh(ds)))
-            })
-            test_that("Can set (and unset) endDate", {
-                endDate(ds) <- "1985-11-05"
-                expect_identical(endDate(ds), "1985-11-05")
-                expect_identical(endDate(refresh(ds)), "1985-11-05")
-                endDate(ds) <- NULL
-                expect_null(endDate(ds))
-                expect_null(endDate(refresh(ds)))
-            })
-
-            test_that("Can publish/unpublish a dataset", {
-                expect_true(is.published(ds))
-                expect_false(is.draft(ds))
-                is.draft(ds) <- TRUE
-                expect_false(is.published(ds))
-                expect_true(is.draft(ds))
-                ds <- refresh(ds)
-                expect_false(is.published(ds))
-                expect_true(is.draft(ds))
-                is.published(ds) <- TRUE
-                expect_true(is.published(ds))
-                expect_false(is.draft(ds))
-            })
-
-            test_that("Can archive/unarchive", {
-                expect_false(is.archived(ds))
-                is.archived(ds) <- TRUE
-                expect_true(is.archived(ds))
-                ds <- refresh(ds)
-                expect_true(is.archived(ds))
-                is.archived(ds) <- FALSE
-                expect_false(is.archived(ds))
-            })
-
-            test_that("Sending invalid dataset metadata errors usefully", {
-                expect_error(endDate(ds) <- list(foo=4),
-                    "must be a string")
-                expect_error(name(ds) <- 3.14,
-                    'Names must be of class "character"')
-                expect_error(startDate(ds) <- 1985,
-                    "must be a string")
-                expect_error(name(ds) <- NULL,
-                    'Names must be of class "character"')
-                skip("Improve server-side validation")
-                expect_error(startDate(ds) <- "a string",
-                    "Useful error message here")
-            })
-
-            test_that("A variable named/aliased 'name' can be accessed", {
-                ds$name <- 1
-                expect_true("name" %in% aliases(variables(ds)))
-                expect_true("name" %in% names(ds))
-                expect_true(is.Numeric(ds$name))
-            })
+with_test_authentication({
+    describe("When editing dataset metadata", {
+        ds <- createDataset(name=now())
+        test_that("Name and description setters push to server", {
+            d2 <- ds
+            name(ds) <- "Bond. James Bond."
+            expect_identical(name(refresh(d2)), name(ds))
         })
 
-        with(test.dataset(df), {
-            test_that("dataset dim", {
-                expect_identical(dim(ds), dim(df))
-                expect_identical(nrow(ds), nrow(df))
-                expect_identical(ncol(ds), ncol(df))
-            })
-
-            test_that("Dataset [[<-", {
-                v1 <- ds$v1
-                name(v1) <- "Variable One"
-                ds$v1 <- v1
-                expect_identical(names(variables(ds))[1], "Variable One")
-                expect_error(ds$v2 <- v1,
-                    "Cannot overwrite one Variable")
-            })
+        test_that("Can set (and unset) startDate", {
+            startDate(ds) <- "1985-11-05"
+            expect_identical(startDate(ds), "1985-11-05")
+            expect_identical(startDate(refresh(ds)), "1985-11-05")
+            startDate(ds) <- NULL
+            expect_null(startDate(ds))
+            expect_null(startDate(refresh(ds)))
+        })
+        test_that("Can set (and unset) endDate", {
+            endDate(ds) <- "1985-11-05"
+            expect_identical(endDate(ds), "1985-11-05")
+            expect_identical(endDate(refresh(ds)), "1985-11-05")
+            endDate(ds) <- NULL
+            expect_null(endDate(ds))
+            expect_null(endDate(refresh(ds)))
         })
 
-        with(test.dataset(mrdf), {
-            cast.these <- grep("mr_", names(ds))
-            test_that("Dataset [<-", {
-                expect_true(all(vapply(variables(ds)[cast.these],
-                    function (x) x$type == "numeric", logical(1))))
-                expect_true(all(vapply(ds[cast.these],
-                    function (x) is.Numeric(x), logical(1))))
-                ds[cast.these] <- lapply(ds[cast.these],
-                    castVariable, "categorical")
-                expect_true(all(vapply(variables(ds)[cast.these],
-                    function (x) x$type == "categorical", logical(1))))
-                expect_true(all(vapply(ds[cast.these],
-                    function (x) is.Categorical(x), logical(1))))
-            })
-            test_that("Dataset [[<- on new array variable", {
-                try(ds$arrayVar <- makeArray(ds[cast.these],
-                    name="Array variable"))
-                expect_true(is.CA(ds$arrayVar))
-                expect_identical(name(ds$arrayVar), "Array variable")
-            })
+        test_that("Can publish/unpublish a dataset", {
+            expect_true(is.published(ds))
+            expect_false(is.draft(ds))
+            is.draft(ds) <- TRUE
+            expect_false(is.published(ds))
+            expect_true(is.draft(ds))
+            ds <- refresh(ds)
+            expect_false(is.published(ds))
+            expect_true(is.draft(ds))
+            is.published(ds) <- TRUE
+            expect_true(is.published(ds))
+            expect_false(is.draft(ds))
         })
 
-        test_that("Dataset deleting is safe", {
-            with(test.dataset(df), {
-                expect_error(delete(ds, confirm=TRUE),
-                    "Must confirm deleting dataset")
-                ds.sub <- ds[1]
-                expect_true(is.dataset(ds.sub))
-                expect_true(is.readonly(ds.sub))
-                expect_error(delete(ds.sub),
-                    "Must confirm deleting dataset")
-                ## Then can delete
-                expect_error(delete(ds.sub, confirm=FALSE),
-                    NA)
-            })
+        test_that("Can archive/unarchive", {
+            expect_false(is.archived(ds))
+            is.archived(ds) <- TRUE
+            expect_true(is.archived(ds))
+            ds <- refresh(ds)
+            expect_true(is.archived(ds))
+            is.archived(ds) <- FALSE
+            expect_false(is.archived(ds))
         })
 
-        test_that("Can give consent to delete", {
-            with(test.dataset(df), {
-                with(consent(), {
-                    expect_error(delete(ds, confirm=TRUE),
-                        NA)
-                })
-            })
+        test_that("Sending invalid dataset metadata errors usefully", {
+            expect_error(endDate(ds) <- list(foo=4),
+                "must be a string")
+            expect_error(name(ds) <- 3.14,
+                'Names must be of class "character"')
+            expect_error(startDate(ds) <- 1985,
+                "must be a string")
+            expect_error(name(ds) <- NULL,
+                'Names must be of class "character"')
+            skip("Improve server-side validation")
+            expect_error(startDate(ds) <- "a string",
+                "Useful error message here")
+        })
+
+        test_that("A variable named/aliased 'name' can be accessed", {
+            ds$name <- 1:2
+            expect_true("name" %in% aliases(variables(ds)))
+            expect_true("name" %in% names(ds))
+            expect_true(is.Numeric(ds$name))
         })
     })
-}
+
+    with(test.dataset(df), {
+        test_that("dataset dim", {
+            expect_identical(dim(ds), dim(df))
+            expect_identical(nrow(ds), nrow(df))
+            expect_identical(ncol(ds), ncol(df))
+        })
+
+        test_that("Dataset [[<-", {
+            v1 <- ds$v1
+            name(v1) <- "Variable One"
+            ds$v1 <- v1
+            expect_identical(names(variables(ds))[1], "Variable One")
+            expect_error(ds$v2 <- v1,
+                "Cannot overwrite one Variable")
+        })
+    })
+
+    with(test.dataset(mrdf), {
+        cast.these <- grep("mr_", names(ds))
+        test_that("Dataset [<-", {
+            expect_true(all(vapply(variables(ds)[cast.these],
+                function (x) x$type == "numeric", logical(1))))
+            expect_true(all(vapply(ds[cast.these],
+                function (x) is.Numeric(x), logical(1))))
+            ds[cast.these] <- lapply(ds[cast.these],
+                castVariable, "categorical")
+            expect_true(all(vapply(variables(ds)[cast.these],
+                function (x) x$type == "categorical", logical(1))))
+            expect_true(all(vapply(ds[cast.these],
+                function (x) is.Categorical(x), logical(1))))
+        })
+        test_that("Dataset [[<- on new array variable", {
+            try(ds$arrayVar <- makeArray(ds[cast.these],
+                name="Array variable"))
+            expect_true(is.CA(ds$arrayVar))
+            expect_identical(name(ds$arrayVar), "Array variable")
+        })
+    })
+
+    test_that("Dataset deleting is safe", {
+        ds <- createDataset(name=now())
+        expect_error(delete(ds, confirm=TRUE),
+            "Must confirm deleting dataset")
+        expect_error(delete(ds, confirm=FALSE),
+            NA)
+    })
+
+    test_that("Can give consent to delete", {
+        ds <- createDataset(name=now())
+        with(consent(), {
+            expect_error(delete(ds, confirm=TRUE),
+                NA)
+        })
+    })
+})

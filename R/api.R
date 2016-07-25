@@ -1,18 +1,19 @@
-##' Main Crunch API handling function
-##' @param http.verb character in GET, PUT, POST, PATCH, DELETE
-##' @param url character URL to do the verb on
-##' @param ... additional arguments passed to \code{GET}, \code{PUT},
-##' \code{POST}, \code{PATCH}, or \code{DELETE}
-##' @param config list of config parameters. See httr documentation.
-##' @param status.handlers named list of specific HTTP statuses and a response
-##' function to call in the case where that status is returned. Passed to the
-##' \code{\link{handleAPIresponse}} function.
-##' @keywords internal
+#' Main Crunch API handling function
+#' @param http.verb character in GET, PUT, POST, PATCH, DELETE
+#' @param url character URL to do the verb on
+#' @param ... additional arguments passed to \code{GET}, \code{PUT},
+#' \code{POST}, \code{PATCH}, or \code{DELETE}
+#' @param config list of config parameters. See httr documentation.
+#' @param status.handlers named list of specific HTTP statuses and a response
+#' function to call in the case where that status is returned. Passed to the
+#' \code{\link{handleAPIresponse}} function.
+#' @keywords internal
 crunchAPI <- function (http.verb, url, config=list(), status.handlers=list(), ...) {
     url ## force lazy eval of url before inserting in try() below
     if (isTRUE(getOption("crunch.debug"))) {
         ## TODO: work this into httpcache.log
-        try(cat("\n", list(...)$body, "\n"), silent=TRUE)
+        payload <- list(...)$body
+        if (!is.null(payload)) try(cat("\n", payload, "\n"), silent=TRUE)
     }
     FUN <- get(http.verb, envir=asNamespace("httpcache"))
     x <- FUN(url, ..., config=config)
@@ -20,37 +21,37 @@ crunchAPI <- function (http.verb, url, config=list(), status.handlers=list(), ..
     return(out)
 }
 
-##' HTTP methods for communicating with the Crunch API
-##'
-##' @param ... see \code{\link{crunchAPI}} for details. \code{url} is the first
-##' named argument and is required; \code{body} is also required for PUT,
-##' PATCH, and POST.
-##' @return Depends on the response status of the HTTP request and any custom
-##' handlers.
-##' @importFrom httpcache GET PUT PATCH POST DELETE
-##' @name http-methods
-##' @export
+#' HTTP methods for communicating with the Crunch API
+#'
+#' @param ... see \code{\link{crunchAPI}} for details. \code{url} is the first
+#' named argument and is required; \code{body} is also required for PUT,
+#' PATCH, and POST.
+#' @return Depends on the response status of the HTTP request and any custom
+#' handlers.
+#' @importFrom httpcache GET PUT PATCH POST DELETE
+#' @name http-methods
+#' @export
 crGET <- function (...) crunchAPI("GET", ...)
-##' @rdname http-methods
-##' @export
+#' @rdname http-methods
+#' @export
 crPUT <- function (...) crunchAPI("PUT", ...)
-##' @rdname http-methods
-##' @export
+#' @rdname http-methods
+#' @export
 crPATCH <- function (...) crunchAPI("PATCH", ...)
-##' @rdname http-methods
-##' @export
+#' @rdname http-methods
+#' @export
 crPOST <- function (...) crunchAPI("POST", ...)
-##' @rdname http-methods
-##' @export
+#' @rdname http-methods
+#' @export
 crDELETE <- function (...) crunchAPI("DELETE", ...)
 
-##' Do the right thing with the HTTP response
-##' @param response an httr response object
-##' @param special.statuses an optional named list of functions by status code.
-##' @return The full HTTP response object, just the content, or any other
-##' status-specific action
-##' @importFrom httr content http_status
-##' @keywords internal
+#' Do the right thing with the HTTP response
+#' @param response an httr response object
+#' @param special.statuses an optional named list of functions by status code.
+#' @return The full HTTP response object, just the content, or any other
+#' status-specific action
+#' @importFrom httr content http_status
+#' @keywords internal
 handleAPIresponse <- function (response, special.statuses=list()) {
     code <- response$status_code
     handler <- special.statuses[[as.character(code)]]
@@ -64,7 +65,7 @@ handleAPIresponse <- function (response, special.statuses=list()) {
             ## 3) Progress body without Location
             ## So, if there's a shoji:value response, it's a Progress, so poll it.
             ## Otherwise, return the location.
-            loc <- response$headers$location
+            loc <- locationHeader(response)
             if (length(response$content) > 0) {
                 ## Progress URL comes in a shoji:value
                 progress_url <- handleShoji(content(response))
@@ -85,7 +86,7 @@ handleAPIresponse <- function (response, special.statuses=list()) {
             invisible(loc)
         } else if (code == 201) {
             ## 201 Location: return the Location header
-            return(response$headers$location)
+            return(locationHeader(response))
         } else if (code == 204 || length(response$content) == 0) {
             ## If No Content, invisibly return the `response` object
             invisible(response)
@@ -114,14 +115,19 @@ handleAPIresponse <- function (response, special.statuses=list()) {
     }
 }
 
-##' @importFrom httr config add_headers
+locationHeader <- function (response) {
+    loc <- response$headers$location
+    return(loc)
+}
+
+#' @importFrom httr config add_headers
 crunchConfig <- function () {
     return(c(config(verbose=isTRUE(getOption("crunch.debug")), postredir=3),
         add_headers(`user-agent`=crunchUserAgent())))
 }
 
-##' @importFrom utils packageVersion
-##' @importFrom curl curl_version
+#' @importFrom utils packageVersion
+#' @importFrom curl curl_version
 crunchUserAgent <- function (x) {
     ## Cf. httr:::default_ua
     versions <- c(
@@ -145,7 +151,7 @@ handleShoji <- function (x) {
     return(x)
 }
 
-getAPIroot <- function (x=getOption("crunch.api")) {
+getAPIRoot <- function (x=getOption("crunch.api")) {
     ShojiObject(crGET(x))
 }
 

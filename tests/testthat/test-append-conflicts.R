@@ -1,4 +1,4 @@
-context("Displaying append conflicts")
+context("Handling append conflicts")
 
 c1 <- list()
 c2 <- list(
@@ -88,33 +88,35 @@ test_that("Complex conflicts are formatted", {
         paste("Conflict: Subvariables didn't match; Resolution: Union of subvariables will be used; 1 variable:", dQuote("MR"))))
 })
 
-if (run.integration.tests) {
-    with_test_authentication({
-        with(test.dataset(mrdf, "part1"), {
-            part1 <- mrdf.setup(part1)
-            with(test.dataset(mrdf[c("mr_3", "v4")], "part2"), {
-                alias(part2$mr_3) <- "CA"
-                name(part2$CA) <- "Bad var"
-                test_that("setup for append type mismatch", {
-                    p1.batches <- batches(part1)
-                    expect_is(p1.batches, "ShojiCatalog")
-                    expect_length(p1.batches, 2)
-                    expect_true("CA" %in% names(part1))
-                    expect_true("CA" %in% names(part2))
-                    expect_true(is.CA(part1$CA))
-                    expect_true(is.Numeric(part2$CA))
-                })
-                test_that("append conflict on type mismatch", {
-                    skip("Need to update failure messages")
-                    expect_message(try(appendDataset(part1, part2),
-                        silent=TRUE),
-                        paste("Critical conflict: Variable is not array variable on both frames;",
-                        "1 variable:", dQuote("Bad var")))
-                    expect_error(appendDataset(part1, part2),
-                        "There are conflicts that cannot be resolved automatically.")
-                    expect_length(batches(part1), 2) ## The prospective batch was deleted
-                })
-            })
+with_test_authentication({
+    describe("When attempting to append an array and a numeric", {
+        part1 <- mrdf.setup(newDataset(mrdf))
+        part2 <- newDataset(mrdf[c("mr_3", "v4")])
+        alias(part2$mr_3) <- "CA"
+        name(part2$CA) <- "Bad var"
+        test_that("setup for append array type mismatch", {
+            expect_length(batches(part1), 2)
+            expect_true("CA" %in% names(part1))
+            expect_true("CA" %in% names(part2))
+            expect_true(is.CA(part1$CA))
+            expect_true(is.Numeric(part2$CA))
+        })
+        test_that("The append fails and reports conflict on type mismatch", {
+            expect_error(
+                expect_message(appendDataset(part1, part2),
+                    "Result URL"),
+                "Variable is array in one dataset and not the other")
+            skip("2 != 3")
+            expect_length(batches(refresh(part1)), 2) ## The prospective batch was deleted
         })
     })
-}
+
+    test_that("Append detects text/numeric type mismatch", {
+        part1 <- newDataset(df[,2:5])
+        d2 <- df
+        d2$v2 <- d2$v3 ## v2 was text, now is numeric
+        part2 <- newDataset(d2)
+        expect_error(appendDataset(part1, part2),
+            "type text on current and of type numeric in incoming")
+    })
+})

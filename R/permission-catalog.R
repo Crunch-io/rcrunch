@@ -1,5 +1,5 @@
-##' @rdname catalog-extract
-##' @export
+#' @rdname catalog-extract
+#' @export
 setMethod("[[", c("PermissionCatalog", "character"), function (x, i, ...) {
     stopifnot(length(i) == 1L)
     w <- whichNameOrURL(x, i, emails(x))
@@ -11,8 +11,8 @@ setMethod("[[", c("PermissionCatalog", "character"), function (x, i, ...) {
         body=tup))
 })
 
-##' @rdname catalog-extract
-##' @export
+#' @rdname catalog-extract
+#' @export
 setMethod("[", c("PermissionCatalog", "character"), function (x, i, ...) {
     w <- whichNameOrURL(x, i, emails(x))
     if (any(is.na(w))) {

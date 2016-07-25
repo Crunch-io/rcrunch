@@ -4,16 +4,16 @@ rethrow <- function (x) halt(errorMessage(x))
 
 errorMessage <- function (e) attr(e, "condition")$message
 
-##' Generic List Element Extractor
-##'
-##' @param key character naming the key(s) to extract. Can traverse list
-##' elements by separating them with \code{$}.
-##' @param xlist list containing other lists from which you want to extract
-##' @param ifnot what to return if the key is not found in a given xlist element
-##' @param simplify logical, passed to sapply internally
-##' @return the requested element(s). If length(key)>1, a named list of those
-##' elements
-##' @keywords internal
+#' Generic List Element Extractor
+#'
+#' @param key character naming the key(s) to extract. Can traverse list
+#' elements by separating them with \code{$}.
+#' @param xlist list containing other lists from which you want to extract
+#' @param ifnot what to return if the key is not found in a given xlist element
+#' @param simplify logical, passed to sapply internally
+#' @return the requested element(s). If length(key)>1, a named list of those
+#' elements
+#' @keywords internal
 selectFrom <- function (key, xlist, ifnot=NA, simplify=TRUE) {
     if (!is.list(xlist)) {
         halt("xlist must be a list object")
@@ -42,14 +42,14 @@ vget <- function (name) {
     return(function (x) x[[name]])
 }
 
-##' Make a prose list
-##'
-##' Function to paste together a list of items, separated by commas (if more
-##' than 2), and with the last one having the collapse string.
-##'
-##' @param x vector or list
-##' @param collapse default="and"
-##' @keywords internal
+#' Make a prose list
+#'
+#' Function to paste together a list of items, separated by commas (if more
+#' than 2), and with the last one having the collapse string.
+#'
+#' @param x vector or list
+#' @param collapse default="and"
+#' @keywords internal
 serialPaste <- function (x, collapse="and") {
 	if (length(x)>1) x[length(x)] <- paste(collapse, x[length(x)])
 	join.with <- ifelse(length(x)>2, ", ", " ")
@@ -58,7 +58,7 @@ serialPaste <- function (x, collapse="and") {
 
 now <- function () strftime(Sys.time(), usetz=TRUE)
 
-##' @importFrom httr parse_url build_url
+#' @importFrom httr parse_url build_url
 absoluteURL <- function (urls, base) {
     ## Detect if we have relative urls, and then concatenate if so
     if (length(urls) && !any(startsWith(urls, "http"))) {

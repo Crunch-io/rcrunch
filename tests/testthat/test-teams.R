@@ -25,116 +25,102 @@ with_mock_HTTP({
     })
 })
 
-if (run.integration.tests) {
-    with_test_authentication({
-        ucat <- getAccountUserCatalog()
-        my.name <- names(ucat)[urls(ucat) == userURL()]
-        my.email <- emails(ucat)[urls(ucat) == userURL()]
+with_test_authentication({
+    ucat <- getAccountUserCatalog()
+    my.name <- names(ucat)[urls(ucat) == userURL()]
+    my.email <- emails(ucat)[urls(ucat) == userURL()]
 
-        teams <- try(getTeams())
-        nteams.0 <- length(teams)
-        test_that("Can get team catalog", {
-            expect_is(teams, "TeamCatalog")
-        })
-
-        t2 <- teams
-        name.of.team1 <- now()
-        test_that("Can create a team", {
-            expect_false(name.of.team1 %in% names(t2))
-            expect_warning(t2[[name.of.team1]] <- list(),
-                "Teams are deprecated. Use projects instead.")
-            expect_true(name.of.team1 %in% names(t2))
-            expect_true(length(t2) == nteams.0 + 1L)
-            expect_is(t2[[name.of.team1]], "CrunchTeam")
-            expect_length(members(t2[[name.of.team1]]), 1)
-            expect_identical(names(members(t2[[name.of.team1]])),
-                my.name)
-        })
-
-        test_that("Can delete a team by URL", {
-            t2 <- refresh(t2)
-            expect_true(name.of.team1 %in% names(t2))
-            try(crDELETE(self(t2[[name.of.team1]])))
-            expect_false(name.of.team1 %in% names(refresh(t2)))
-            ## TODO: add a delete() method for CrunchTeam, with a confirm arg.
-        })
-
-        test_that("delete method for team (requires confirmation)", {
-            ## Setup
-            t2 <- refresh(t2)
-            nteams.2 <- length(t2)
-            name.of.team2 <- now()
-            expect_false(name.of.team2 %in% names(t2))
-            expect_warning(t2[[name.of.team2]] <- list(),
-                "Teams are deprecated. Use projects instead.")
-            expect_true(name.of.team2 %in% names(t2))
-            expect_true(length(t2) == nteams.2 + 1L)
-
-            expect_error(delete(t2[[name.of.team2]], confirm=TRUE),
-                "Must confirm deleting team")
-            expect_true(name.of.team2 %in% names(t2))
-            expect_true(length(t2) == nteams.2 + 1L)
-
-            ## Cleanup
-            try(delete(t2[[name.of.team2]]))
-            expect_false(name.of.team2 %in% names(getTeams()))
-        })
-
-        test_that("Can create a team with members", {
-            skip_on_jenkins("Jenkins user needs more permissions")
-            t2 <- refresh(t2)
-            nteams.2 <- length(t2)
-            name.of.team2 <- now()
-            expect_false(name.of.team2 %in% names(t2))
-            with(cleanup(testUser()), as="u", {
-                expect_warning(t2[[name.of.team2]] <- list(members=email(u)),
-                    "Teams are deprecated. Use projects instead.")
-                expect_true(name.of.team2 %in% names(t2))
-                expect_true(length(t2) == nteams.2 + 1L)
-                this.team <- t2[[name.of.team2]]
-                expect_true(setequal(names(members(this.team)),
-                    c(name(u), my.name)))
-            })
-            try(crDELETE(self(refresh(t2)[[name.of.team2]])))
-        })
-
-        test_that("Can add members to a team", {
-            skip_on_jenkins("Jenkins user needs more permissions")
-            t2 <- refresh(teams)
-            name.of.team3 <- now()
-            expect_false(name.of.team3 %in% names(t2))
-            with(cleanup(testUser()), as="u", {
-                expect_warning(t2[[name.of.team3]] <- list(),
-                    "Teams are deprecated. Use projects instead.")
-                this.team <- t2[[name.of.team3]]
-                expect_identical(names(members(this.team)),
-                    my.name)
-                members(this.team) <- email(u)
-                expect_true(setequal(names(members(this.team)),
-                    c(name(u), my.name)))
-            })
-            try(crDELETE(self(refresh(t2)[[name.of.team3]])))
-        })
-
-        test_that("Can remove members from a team", {
-            skip_on_jenkins("Jenkins user needs more permissions")
-            t2 <- refresh(teams)
-            name.of.team4 <- now()
-            expect_false(name.of.team4 %in% names(t2))
-            with(cleanup(testUser()), as="u", {
-                expect_warning(t2[[name.of.team4]] <- list(),
-                    "Teams are deprecated. Use projects instead.")
-                this.team <- t2[[name.of.team4]]
-                expect_identical(names(members(this.team)),
-                    my.name)
-                members(this.team) <- email(u)
-                expect_true(setequal(names(members(this.team)),
-                    c(name(u), my.name)))
-                try(members(this.team)[[email(u)]] <- NULL)
-                expect_identical(names(members(this.team)),
-                    my.name)
-            })
-            try(crDELETE(self(refresh(t2)[[name.of.team4]])))
-        })
+    teams <- try(getTeams())
+    nteams.0 <- length(teams)
+    test_that("Can get team catalog", {
+        expect_is(teams, "TeamCatalog")
     })
-}
+
+    t2 <- teams
+    name.of.team1 <- now()
+    test_that("Can create a team", {
+        expect_false(name.of.team1 %in% names(t2))
+        expect_warning(t2[[name.of.team1]] <- list(),
+            "Teams are deprecated. Use projects instead.")
+        expect_true(name.of.team1 %in% names(t2))
+        expect_true(length(t2) == nteams.0 + 1L)
+        expect_is(t2[[name.of.team1]], "CrunchTeam")
+        expect_length(members(t2[[name.of.team1]]), 1)
+        expect_identical(names(members(t2[[name.of.team1]])), my.name)
+    })
+
+    test_that("Can delete a team by URL", {
+        t2 <- refresh(t2)
+        expect_true(name.of.team1 %in% names(t2))
+        try(crDELETE(self(t2[[name.of.team1]])))
+        expect_false(name.of.team1 %in% names(refresh(t2)))
+        ## TODO: add a delete() method for CrunchTeam, with a confirm arg.
+    })
+
+    test_that("delete method for team (requires confirmation)", {
+        ## Setup
+        t2 <- refresh(t2)
+        nteams.2 <- length(t2)
+        name.of.team2 <- now()
+        expect_false(name.of.team2 %in% names(t2))
+        expect_warning(t2[[name.of.team2]] <- list(),
+            "Teams are deprecated. Use projects instead.")
+        expect_true(name.of.team2 %in% names(t2))
+        expect_true(length(t2) == nteams.2 + 1L)
+
+        expect_error(delete(t2[[name.of.team2]], confirm=TRUE),
+            "Must confirm deleting team")
+        expect_true(name.of.team2 %in% names(t2))
+        expect_true(length(t2) == nteams.2 + 1L)
+
+        ## Cleanup
+        try(delete(t2[[name.of.team2]]))
+        expect_false(name.of.team2 %in% names(getTeams()))
+    })
+
+    test_that("Can create a team with members", {
+        skip_on_jenkins("Jenkins user needs more permissions")
+        t2 <- refresh(t2)
+        nteams.2 <- length(t2)
+        name.of.team2 <- now()
+        expect_false(name.of.team2 %in% names(t2))
+        u <- testUser()
+        expect_warning(t2[[name.of.team2]] <- list(members=email(u)),
+            "Teams are deprecated. Use projects instead.")
+        expect_true(name.of.team2 %in% names(t2))
+        expect_true(length(t2) == nteams.2 + 1L)
+        this.team <- t2[[name.of.team2]]
+        expect_true(setequal(names(members(this.team)), c(name(u), my.name)))
+        try(crDELETE(self(refresh(t2)[[name.of.team2]])))
+    })
+
+    test_that("Can add members to a team", {
+        skip_on_jenkins("Jenkins user needs more permissions")
+        t2 <- refresh(teams)
+        name.of.team3 <- now()
+        expect_false(name.of.team3 %in% names(t2))
+        u <- testUser()
+        expect_warning(t2[[name.of.team3]] <- list(),
+            "Teams are deprecated. Use projects instead.")
+        this.team <- t2[[name.of.team3]]
+        expect_identical(names(members(this.team)), my.name)
+        members(this.team) <- email(u)
+        expect_true(setequal(names(members(this.team)), c(name(u), my.name)))
+    })
+
+    test_that("Can remove members from a team", {
+        skip_on_jenkins("Jenkins user needs more permissions")
+        t2 <- refresh(teams)
+        name.of.team4 <- now()
+        expect_false(name.of.team4 %in% names(t2))
+        u <- testUser()
+        expect_warning(t2[[name.of.team4]] <- list(),
+            "Teams are deprecated. Use projects instead.")
+        this.team <- t2[[name.of.team4]]
+        expect_identical(names(members(this.team)), my.name)
+        members(this.team) <- email(u)
+        expect_true(setequal(names(members(this.team)), c(name(u), my.name)))
+        try(members(this.team)[[email(u)]] <- NULL)
+        expect_identical(names(members(this.team)), my.name)
+    })
+})

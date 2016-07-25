@@ -21,7 +21,7 @@ fakeResponse <- function (url="", status_code=200, headers=list(), json=NULL) {
 }
 
 with_mock_HTTP <- function (expr) {
-    with(temp.option(crunch.api="/api/root.json"), {
+    with(temp.option(crunch.api="/api/root/"), {
         with_mock(
             `httr::GET`=function (url, ...) {
                 if (is.null(url)) {
@@ -64,12 +64,58 @@ with_silent_progress <- function (expr) {
 
 silencer <- temp.option(show.error.messages=FALSE)
 
+assign("entities.created", c(), envir=globalenv())
 with_test_authentication <- function (expr) {
     if (run.integration.tests) {
+        ## Authenticate.
         suppressMessages(login())
-        on.exit(logout())
-        eval.parent(with_silent_progress(expr))
+        ## Any time an object is created (201 Location responts), store that URL
+        suppressMessages(trace("locationHeader",
+            exit=quote({
+                if (!is.null(loc)) {
+                    seen <- get("entities.created", envir=globalenv())
+                    assign("entities.created",
+                        c(seen, loc),
+                        envir=globalenv())
+                }
+            }),
+            print=FALSE,
+            where=crGET))
+        # suppressMessages(trace("createDataset",
+        #     quote({
+        #         # If we care about making unique dataset names, do this:
+        #         # body$body$name <- paste(now(), body$body$name)
+        #     }),
+        #     at=3,
+        #     print=FALSE,
+        #     where=createSource))
+        on.exit({
+            suppressMessages(untrace("locationHeader", where=crGET))
+            # suppressMessages(untrace("createDataset", where=crGET))
+            ## Delete our seen things
+            ## We could filter out variables, batches, anything under a dataset
+            ## since we're going to delete the datasets
+            purgeEntitiesCreated()
+            logout()
+        })
+        ## Wrap this so that we can generate a test failure if there's an error
+        ## rather than just halt the process
+        tryCatch(eval.parent(with_silent_progress(expr)),
+            error=function (e) {
+                test_that("There are no test code errors", {
+                    expect_error(stop(e$message), NA)
+                })
+            })
     }
+}
+
+purgeEntitiesCreated <- function () {
+    seen <- get("entities.created", envir=globalenv())
+    for (u in seen) {
+        try(crDELETE(u), silent=TRUE)
+    }
+    assign("entities.created", c(), envir=globalenv())
+    invisible()
 }
 
 uniqueDatasetName <- now
@@ -120,19 +166,6 @@ uniqueEmail <- function () paste0("test+", as.numeric(Sys.time()), "@crunch.io")
 testUser <- function (email=uniqueEmail(), name=paste("Ms.", email, "User"), ...) {
     u.url <- invite(email, name=name, notify=FALSE, ...)
     return(UserEntity(crGET(u.url)))
-}
-
-markForCleanup <- function (x) {
-    objects_to_purge <<- c(objects_to_purge, self(x))
-    return(x)
-}
-
-cleanup <- function (obj, ...) {
-    return(setup.and.teardown(
-        function () markForCleanup(obj),
-        purge.object,
-        ...
-    ))
 }
 
 testProject <- function (name="", ...) {

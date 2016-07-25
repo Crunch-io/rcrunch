@@ -4,11 +4,14 @@
 \alias{createDataset}
 \title{Create an empty dataset}
 \usage{
-createDataset(name, ...)
+createDataset(name, body, ...)
 }
 \arguments{
 \item{name}{character, the name to give the new Crunch dataset. This is
 required.}
+
+\item{body}{list correctly formatted metadata definition for a dataset. See
+docs.crunch.io.}
 
 \item{...}{additional arguments for the POST to create the dataset, such as
 "description".}

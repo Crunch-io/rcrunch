@@ -1,10 +1,10 @@
-##' Stay authenticated.
-##'
-##' The auth store keeps the session token after authentication so that all
-##' API calls can use it. We can also store other things in it.
-##'
-##' @format An environment.
-##' @keywords internal
+#' Stay authenticated.
+#'
+#' The auth store keeps the session token after authentication so that all
+#' API calls can use it. We can also store other things in it.
+#'
+#' @format An environment.
+#' @keywords internal
 session_store <- NULL
 makeSessionStore <- function () {
     session_store <<- new.env(hash = TRUE, parent = emptyenv())
@@ -12,41 +12,41 @@ makeSessionStore <- function () {
 }
 makeSessionStore()
 
-##' Kill the active Crunch session
-##' @export
+#' Kill the active Crunch session
+#' @export
 logout <- function () {
     if (is.authenticated()) try(crGET(rootURL("logout")), silent=TRUE)
     deleteSessionInfo()
     options(prompt = session_store$.globals$prompt)
 }
 
-##' @importFrom httpcache clearCache
+#' @importFrom httpcache clearCache
 deleteSessionInfo <- function () {
     rm(list=setdiff(ls(envir=session_store), ".globals"), envir=session_store)
     clearCache()
 }
 
-##' Authenticate with the Crunch API
-##'
-##' Note that you can store your Crunch account info in your .Rprofile under
-##' "crunch.email" and "crunch.pw" for convenience. If you do so, you can simply
-##' \code{login()} to authenticate. For running batch jobs, this could be
-##' particularly useful. However, be warned that storing your
-##' password in a plain text file such as .Rprofile is a security risk (though
-##' perhaps less so than in every .R script you write), and we
-##' cannot officially recommend that you do so.
-##'
-##' If a password is not supplied (or, if no arguments are supplied and only
-##' the \code{crunch.email} is specified in .Rprofile), and you are in an
-##' interactive session, you will be prompted to enter your password. At
-##' present, this is the most secure practice as your password is not stored
-##' locally.
-##'
-##' @param email the email address associated with the user's Crunch account
-##' @param password the password associated with the user's Crunch account
-##' @param ... additional parameters passed in the authentication. Not
-##' currently supported by the Crunch API.
-##' @export
+#' Authenticate with the Crunch API
+#'
+#' Note that you can store your Crunch account info in your .Rprofile under
+#' "crunch.email" and "crunch.pw" for convenience. If you do so, you can simply
+#' \code{login()} to authenticate. For running batch jobs, this could be
+#' particularly useful. However, be warned that storing your
+#' password in a plain text file such as .Rprofile is a security risk (though
+#' perhaps less so than in every .R script you write), and we
+#' cannot officially recommend that you do so.
+#'
+#' If a password is not supplied (or, if no arguments are supplied and only
+#' the \code{crunch.email} is specified in .Rprofile), and you are in an
+#' interactive session, you will be prompted to enter your password. At
+#' present, this is the most secure practice as your password is not stored
+#' locally.
+#'
+#' @param email the email address associated with the user's Crunch account
+#' @param password the password associated with the user's Crunch account
+#' @param ... additional parameters passed in the authentication. Not
+#' currently supported by the Crunch API.
+#' @export
 login <- function (email=getOption("crunch.email"),
                    password=getOption("crunch.pw"), ...) {
     logout()
@@ -60,12 +60,12 @@ login <- function (email=getOption("crunch.email"),
     invisible(session())
 }
 
-##' Get various catalogs for your Crunch session
-##' @return a list.
-##' @export
+#' Get various catalogs for your Crunch session
+#' @return a list.
+#' @export
 session <- function () {
-    list(datasets=datasetCatalog(),
-        projects=ProjectCatalog(crGET(sessionURL("projects"))))
+    list(datasets=datasets(),
+        projects=projects())
 }
 
 crunchAuth <- function (email, password=NULL, ...) {
@@ -105,18 +105,19 @@ without_echo <- function (expr) {
     eval.parent(expr)
 }
 
-jupyterLogin <- function (token) {
+tokenAuth <- function (token, ua="token") {
     ## Add an auth token as a cookie manually, rather than from a Set-Cookie
     ## response header.
-    ## Also modify the user-agent to include "Jupyter"
+    ## Also modify the user-agent to include the service this is coming from
     set_config(c(config(cookie=paste0("token=", token)),
-        add_headers(`user-agent`=crunchUserAgent("jupyter.crunch.io"))))
+        add_headers(`user-agent`=crunchUserAgent(ua))))
     warmSessionCache()
 }
 
+jupyterLogin <- function (token) tokenAuth(token, ua="jupyter.crunch.io")
+
 warmSessionCache <- function () {
-    session_store$root <- getAPIroot()
-    updateDatasetList()
+    session_store$root <- getAPIRoot()
 }
 
 is.authenticated <- function () !is.null(session_store$root)

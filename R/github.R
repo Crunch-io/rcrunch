@@ -16,13 +16,13 @@ notifyIfNewVersion <- function (
     invisible()
 }
 
-##' See if there's a new version of the package on GitHub
-##'
-##' @param github.url character where to GET the tagged versions of the package
-##' @param installed.version character the currently installed version string
-##' @return The version string if there is a new version, or NULL
-##' @export
-##' @keywords internal
+#' See if there's a new version of the package on GitHub
+#'
+#' @param github.url character where to GET the tagged versions of the package
+#' @param installed.version character the currently installed version string
+#' @return The version string if there is a new version, or NULL
+#' @export
+#' @keywords internal
 checkForNewVersion <- function (
     github.url="https://api.github.com/repos/Crunch-io/rcrunch/tags",
     installed.version=as.character(packageVersion("crunch"))) {

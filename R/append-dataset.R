@@ -1,16 +1,16 @@
-##' Append one Crunch dataset to another
-##'
-##' @param dataset1 a CrunchDataset
-##' @param dataset2 another CrunchDataset, or possibly a data.frame. If
-##' \code{dataset2} is not a Crunch dataset, it will be uploaded as a new
-##' dataset before appending.
-##' @param cleanup logical: if the append operation fails or is aborted, should
-##' the intermediate batch created on \code{dataset1} be deleted? Default is
-##' \code{TRUE}; \code{FALSE} may be useful if you want to review the append
-##' conflicts in the web application.
-##' @return A CrunchDataset with \code{dataset2} appended to \code{dataset1}
-##' @export
-##' @importFrom httpcache dropCache
+#' Append one Crunch dataset to another
+#'
+#' @param dataset1 a CrunchDataset
+#' @param dataset2 another CrunchDataset, or possibly a data.frame. If
+#' \code{dataset2} is not a Crunch dataset, it will be uploaded as a new
+#' dataset before appending.
+#' @param cleanup logical: if the append operation fails or is aborted, should
+#' the intermediate batch created on \code{dataset1} be deleted? Default is
+#' \code{TRUE}; \code{FALSE} may be useful if you want to review the append
+#' conflicts in the web application.
+#' @return A CrunchDataset with \code{dataset2} appended to \code{dataset1}
+#' @export
+#' @importFrom httpcache dropCache
 appendDataset <- function (dataset1, dataset2, cleanup=TRUE) {
 
     stopifnot(is.dataset(dataset1))
@@ -35,7 +35,6 @@ appendDataset <- function (dataset1, dataset2, cleanup=TRUE) {
 
 addBatchToDataset <- function (dataset1, dataset2) {
     if (!is.dataset(dataset2)) {
-        ## TODO: compose batch directly, not as dataset?
         temp.ds.name <- paste("Appending to", name(dataset1), now())
         message("Creating ", dQuote(temp.ds.name), " as temporary dataset")
         dataset2 <- newDataset(dataset2, name=temp.ds.name)

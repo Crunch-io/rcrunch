@@ -2,12 +2,6 @@ context("Retrieving dataset list and single datasets")
 
 with_mock_HTTP({
     cr <- session()
-
-    dataset.catalog.url <- "/api/datasets.json"
-    datcat <- DatasetCatalog(crGET(dataset.catalog.url))
-    index(datcat)[[which(names(datcat) == "an archived dataset")]]$archived <- TRUE
-    session_store$datasets <- datcat ## as if we had done updateDatasetList
-
     test_that("listDatasets lists", {
         expect_identical(listDatasets(), c("ECON.sav", "test ds"))
         expect_identical(listDatasets("archived"), "an archived dataset")
@@ -43,23 +37,17 @@ with_mock_HTTP({
 })
 
 if (run.integration.tests) {
-    test_that("updateDatasetList requires authentication", {
-        logout()
-        expect_error(updateDatasetList(),
-            "You must authenticate before making this request")
-    })
-
     with_test_authentication({
         test_that("datasetCatalog gets what we expect", {
-            col0 <- datasetCatalog()
+            col0 <- datasets()
             expect_is(col0, "DatasetCatalog")
-            with(test.dataset(df), {
-                col1 <- datasetCatalog()
+            with(test.dataset(), {
+                col1 <- datasets()
                 expect_is(col1, "DatasetCatalog")
                 expect_equal(length(col1), length(col0) + 1)
             })
         })
-        with(test.dataset(df), {
+        with(test.dataset(), {
             dsname <- name(ds)
             test_that("Dataset list can be retrieved if authenticated", {
                 expect_true(is.character(listDatasets()))
@@ -82,7 +70,7 @@ if (run.integration.tests) {
             })
         })
 
-        with(test.dataset(df), {
+        with(test.dataset(), {
             dsname <- name(ds)
             dsnum <- which(listDatasets() %in% dsname)
             test_that("deleteDataset by index", {
@@ -92,7 +80,7 @@ if (run.integration.tests) {
             })
         })
 
-        with(test.dataset(df), {
+        with(test.dataset(), {
             dsname <- name(ds)
             test_that("deleteDataset on Dataset object", {
                 expect_true(dsname %in% listDatasets())
@@ -101,7 +89,7 @@ if (run.integration.tests) {
             })
         })
 
-        with(test.dataset(df), {
+        with(test.dataset(), {
             dsname <- name(ds)
             newname <- paste0("New name ", now())
 

@@ -1,12 +1,29 @@
-##' @rdname catalog-extract
-##' @export
+#' Get the project catalog
+#'
+#' @param x a \code{ShojiObject} that has a project catalog associated. If omitted,
+#' the default value for \code{x} means that you will load the user's primary
+#' project catalog. (Currently, there are no other project catalogs to load.)
+#' @return An object of class \code{ProjectCatalog}.
+#' @name projects
+#' @export
+#' @examples
+#' \dontrun{
+#' myprojects <- projects()
+#' proj <- myprojects[["Project name"]]
+#' }
+projects <- function (x=getAPIRoot()) {
+    ProjectCatalog(crGET(shojiURL(x, "catalogs", "projects")))
+}
+
+#' @rdname catalog-extract
+#' @export
 setMethod("[[", c("ProjectCatalog", "character"), function (x, i, ...) {
     w <- whichNameOrURL(x, i)
     x[[w]]
 })
 
-##' @rdname catalog-extract
-##' @export
+#' @rdname catalog-extract
+#' @export
 setMethod("[[", c("ProjectCatalog", "ANY"), function (x, i, ...) {
     b <- callNextMethod(x, i, ...)
     if (is.null(b)) return(NULL)
@@ -14,8 +31,8 @@ setMethod("[[", c("ProjectCatalog", "ANY"), function (x, i, ...) {
         body=b)
 })
 
-##' @rdname catalog-extract
-##' @export
+#' @rdname catalog-extract
+#' @export
 setMethod("[[<-", c("ProjectCatalog", "character", "missing", "list"),
     function (x, i, j, value) {
         if (i %in% names(x)) {
@@ -32,8 +49,8 @@ setMethod("[[<-", c("ProjectCatalog", "character", "missing", "list"),
         }
     })
 
-##' @rdname catalog-extract
-##' @export
+#' @rdname catalog-extract
+#' @export
 setMethod("[[<-", c("ProjectCatalog", "character", "missing", "CrunchProject"),
     function (x, i, j, value) {
         ## Assumes that modifications have already been persisted
@@ -42,14 +59,14 @@ setMethod("[[<-", c("ProjectCatalog", "character", "missing", "CrunchProject"),
         return(x)
     })
 
-##' @rdname teams
-##' @export
+#' @rdname teams
+#' @export
 setMethod("members", "CrunchProject", function (x) {
     MemberCatalog(crGET(shojiURL(x, "catalogs", "members")))
 })
 
-##' @rdname teams
-##' @export
+#' @rdname teams
+#' @export
 setMethod("members<-", c("CrunchProject", "MemberCatalog"), function (x, value) {
     ## TODO: something
     ## For now, assume action already done in other methods, like NULL
@@ -57,8 +74,8 @@ setMethod("members<-", c("CrunchProject", "MemberCatalog"), function (x, value) 
     return(x)
 })
 
-##' @rdname teams
-##' @export
+#' @rdname teams
+#' @export
 setMethod("members<-", c("CrunchProject", "character"), function (x, value) {
     value <- setdiff(value, emails(members(x)))
     if (length(value)) {
@@ -68,14 +85,14 @@ setMethod("members<-", c("CrunchProject", "character"), function (x, value) {
     return(x)
 })
 
-##' @rdname tuple-methods
-##' @export
+#' @rdname tuple-methods
+#' @export
 setMethod("entity", "CrunchProject", function (x) {
     return(ProjectEntity(crGET(x@entity_url)))
 })
 
-##' @rdname delete
-##' @export
+#' @rdname delete
+#' @export
 setMethod("delete", "CrunchProject", function (x, confirm=requireConsent(), ...) {
     prompt <- paste0("Really delete project ", dQuote(name(x)), "? ",
         "This cannot be undone.")
@@ -88,18 +105,8 @@ setMethod("delete", "CrunchProject", function (x, confirm=requireConsent(), ...)
     invisible(out)
 })
 
-##' A project's datasets
-##' @param x a \code{CrunchProject}
-##' @param value \code{CrunchDataset} for the setter
-##' @return An object of class \code{DatasetCatalog}. The setter returns the
-##' project with the given dataset added to it (via changing its owner to be
-##' the specified project, \code{x}).
-##' @name project-datasets
-##' @export
-datasets <- function (x) DatasetCatalog(crGET(shojiURL(x, "catalogs", "datasets")))
-
-##' @rdname project-datasets
-##' @export
+#' @rdname datasets
+#' @export
 `datasets<-` <- function (x, value) {
     stopifnot(inherits(x, "CrunchProject"))
     if (is.dataset(value)) {
@@ -113,20 +120,20 @@ datasets <- function (x) DatasetCatalog(crGET(shojiURL(x, "catalogs", "datasets"
     return(x)
 }
 
-##' A project's icon
-##' @param x a \code{CrunchProject}
-##' @param value charcter file path of the icon image file to set
-##' @return The URL of the project's icon. The setter returns the
-##' project after having uploaded the specified file as the new icon.
-##' @name project-icon
-##' @export
+#' A project's icon
+#' @param x a \code{CrunchProject}
+#' @param value charcter file path of the icon image file to set
+#' @return The URL of the project's icon. The setter returns the
+#' project after having uploaded the specified file as the new icon.
+#' @name project-icon
+#' @export
 icon <- function (x) {
     stopifnot(inherits(x, "CrunchProject"))
     return(x@body$icon)
 }
 
-##' @rdname project-icon
-##' @export
+#' @rdname project-icon
+#' @export
 `icon<-` <- function (x, value) {
     crPUT(shojiURL(x, "views", "icon"),
         body=list(icon=upload_file(value)))

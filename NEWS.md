@@ -1,4 +1,19 @@
-### crunch 1.10.5 (under development)
+## crunch 1.11.1 (under development)
+* Fix issue with sharing datasets owned by a project.
+
+## crunch 1.11.0
+* Generic `datasets` and `projects` functions to get dataset and project catalogs. (`datasets` previously existed only as a method for Project entities.)
+* Add `project` argument to `listDatasets` and add `project` and `refresh` to `loadDatasets` to facilitate viewing and loading datasets that belong to projects.
+* New function `compareDatasets` that shows how datasets will line up when appending. A `summary` method on its return value prints a report that highlights areas of possible mismatch.
+* Support computing numeric aggregates (mean, max, etc.) of categorical variables with numeric values in `crtabs`
+* Allow `NULL` assignment into Variable/DatasetGroups to remove elements
+
+### crunch 1.10.6
+* Fix refresh method for Datasets that have been transferred to a Project.
+* (Re-)improve print method for expressions involving categorical variables
+* Improve handling of filters when composing complex expressions of `CrunchExpr`, Variable, and Dataset objects
+* Add expression support for operations involving a `DatetimeVariable` and a character vector, assumed to be ISO-8601 formatted.
+* Export a `permissions` method for Datasets to work directly with sharing privileges.
 
 ### crunch 1.10.4
 * Fix `as.data.frame`/`as.environment` for `CrunchDataset` when a variable alias contained an apostrophe.

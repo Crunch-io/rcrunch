@@ -1,28 +1,28 @@
-##' Copy a variable
-##'
-##' Makes a copy of a Crunch variable on the server.
-##'
-##' Copies can be shallow (linked) or deep. Shallow copying is faster and should
-##' be preferred unless a true hard copy is required, though keep in mind the
-##' implications of shallow copying. When you append data to the original
-##' variable or otherwise alter its values, the values in the copy automatically
-##' update. This linking may be desirable, but it comes with some limitations.
-##' First, you cannot edit the values of the copy independently of the original.
-##' Second, some attributes of the copy are immutable: of note, properties of
-##' categories cannot be altered independely in the copy. Subvariable names and
-##' ordering within arrays, however, can.
-##'
-##' @param x a CrunchVariable to copy
-##' @param deep logical: should this be a deep copy, in which there is no
-##' dependence on the original variable, or a shallow one, in which the copy
-##' is more of a symbolic link? Default is \code{FALSE}, meaning symlink.
-##' @param ... Additional metadata to give to the new variable. If not given,
-##' the new variable will have a name that is the same as the original but with
-##' " (copy)" appended, and its alias will be the old alias with "_copy"
-##' appended.
-##' @return a VariableDefinition for the copy expression. Assign into a Dataset
-##' to make the copy happen.
-##' @export
+#' Copy a variable
+#'
+#' Makes a copy of a Crunch variable on the server.
+#'
+#' Copies can be shallow (linked) or deep. Shallow copying is faster and should
+#' be preferred unless a true hard copy is required, though keep in mind the
+#' implications of shallow copying. When you append data to the original
+#' variable or otherwise alter its values, the values in the copy automatically
+#' update. This linking may be desirable, but it comes with some limitations.
+#' First, you cannot edit the values of the copy independently of the original.
+#' Second, some attributes of the copy are immutable: of note, properties of
+#' categories cannot be altered independely in the copy. Subvariable names and
+#' ordering within arrays, however, can.
+#'
+#' @param x a CrunchVariable to copy
+#' @param deep logical: should this be a deep copy, in which there is no
+#' dependence on the original variable, or a shallow one, in which the copy
+#' is more of a symbolic link? Default is \code{FALSE}, meaning symlink.
+#' @param ... Additional metadata to give to the new variable. If not given,
+#' the new variable will have a name that is the same as the original but with
+#' " (copy)" appended, and its alias will be the old alias with "_copy"
+#' appended.
+#' @return a VariableDefinition for the copy expression. Assign into a Dataset
+#' to make the copy happen.
+#' @export
 copyVariable <- function (x, deep=FALSE, ...) {
     stopifnot(is.variable(x))
 
@@ -58,8 +58,8 @@ copyVariable <- function (x, deep=FALSE, ...) {
     return(body)
 }
 
-##' @rdname copyVariable
-##' @export
+#' @rdname copyVariable
+#' @export
 copy <- copyVariable
 
 copyVariableReferences <- function (x, fields=c("name", "alias",

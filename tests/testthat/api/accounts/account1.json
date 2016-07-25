@@ -1,10 +1,10 @@
 {
     "element": "shoji:entity",
-    "self": "/api/accounts/account1.json",
+    "self": "/api/accounts/account1/",
     "description": "Detail for a given Account",
     "body": {},
     "catalogs": {
-        "users": "/api/accounts/account1/users.json"
+        "users": "/api/accounts/account1/users/"
     },
     "some_other_key": {}
 }

@@ -1,39 +1,39 @@
-##' Get and set VariableOrder
-##'
-##' The \code{ordering} methods allow you to get and set a
-##' \code{\link{VariableOrder}} on
-##' a \code{\link{CrunchDataset}} or on the \code{\link{VariableCatalog}} that
-##' the dataset contains.
-##'
-##' @param x a VariableCatalog or CrunchDataset
-##' @param value a valid VariableOrder object
-##' @return \code{ordering} returns a VariableOrder object, while
-##' \code{ordering<-} sets the VariableOrder in \code{value} on \code{x}
-##' @name ordering
-##' @aliases ordering ordering<-
+#' Get and set VariableOrder
+#'
+#' The \code{ordering} methods allow you to get and set a
+#' \code{\link{VariableOrder}} on
+#' a \code{\link{CrunchDataset}} or on the \code{\link{VariableCatalog}} that
+#' the dataset contains.
+#'
+#' @param x a VariableCatalog or CrunchDataset
+#' @param value a valid VariableOrder object
+#' @return \code{ordering} returns a VariableOrder object, while
+#' \code{ordering<-} sets the VariableOrder in \code{value} on \code{x}
+#' @name ordering
+#' @aliases ordering ordering<-
 NULL
 
-##' @rdname ordering
-##' @export
+#' @rdname ordering
+#' @export
 setMethod("ordering", "CrunchDataset", function (x) ordering(variables(x)))
 
-##' @rdname ordering
-##' @export
+#' @rdname ordering
+#' @export
 setMethod("ordering<-", "CrunchDataset", function (x, value) {
     ordering(x@variables) <- value
     return(x)
 })
 
-##' @rdname ordering
-##' @export
+#' @rdname ordering
+#' @export
 setMethod("ordering", "VariableCatalog", function (x) {
     out <- x@order
     out@catalog_url <- self(x)
     return(out)
 })
 
-##' @rdname ordering
-##' @export
+#' @rdname ordering
+#' @export
 setMethod("ordering<-", "VariableCatalog", function (x, value) {
     stopifnot(inherits(value, "VariableOrder"))
 
@@ -56,16 +56,16 @@ setMethod("ordering<-", "VariableCatalog", function (x, value) {
     return(x)
 })
 
-##' @rdname ordering
-##' @export
+#' @rdname ordering
+#' @export
 setMethod("ordering", "DatasetCatalog", function (x) {
     out <- DatasetOrder(crGET(shojiURL(x, "orders", "order")))
     out@catalog_url <- self(x)
     return(out)
 })
 
-##' @rdname ordering
-##' @export
+#' @rdname ordering
+#' @export
 setMethod("ordering<-", "DatasetCatalog", function (x, value) {
     stopifnot(inherits(value, "DatasetOrder"))
 

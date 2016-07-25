@@ -11,9 +11,9 @@ with_mock_HTTP({
         expect_is(usercat, "UserCatalog")
         expect_length(usercat, 3)
         expect_identical(urls(usercat),
-            c("/api/users/user1.json",
-              "/api/users/user3.json",
-              "/api/users/user2.json"))
+            c("/api/users/user1/",
+              "/api/users/user3/",
+              "/api/users/user2/"))
         expect_identical(names(usercat),
             c("Fake User", "Bill User", "Roger User"))
         expect_identical(emails(usercat),
@@ -23,55 +23,50 @@ with_mock_HTTP({
     })
 })
 
-if (run.integration.tests) {
-    with_test_authentication({
-        test_that("User can be fetched", {
-            expect_is(me(), "UserEntity")
-        })
-
-        test_that("Create and delete user; cleanup(testUser()) setup/teardown", {
-            skip_on_jenkins("Jenkins user needs more permissions")
-            u.email <- paste0("test+", as.numeric(Sys.time()), "@crunch.io")
-            u.name <- now()
-            usercat <- getAccountUserCatalog()
-            expect_false(u.email %in% emails(usercat))
-            expect_false(u.name %in% sub(" +$", "", names(usercat)))
-            with(cleanup(testUser(u.email, u.name)), as="u", {
-                usercat <- refresh(usercat)
-                expect_true(u.email %in% emails(usercat))
-                expect_true(u.name %in% sub(" +$", "", names(usercat)))
-                user <- index(usercat)[[self(u)]]
-                expect_false(user$account_permissions$create_datasets)
-                expect_false(user$account_permissions$alter_users)
-            })
-            usercat <- refresh(usercat)
-            expect_false(u.email %in% emails(usercat))
-            expect_false(u.name %in% sub(" +$", "", names(usercat)))
-        })
-
-        test_that("User with permissions", {
-            skip_on_jenkins("Jenkins user needs more permissions")
-            with(cleanup(testUser(advanced=TRUE)), as="u", {
-                user <- index(getAccountUserCatalog())[[self(u)]]
-                expect_true(user$account_permissions$create_datasets)
-                expect_false(user$account_permissions$alter_users)
-            })
-            with(cleanup(testUser(admin=TRUE)), as="u", {
-                user <- index(getAccountUserCatalog())[[self(u)]]
-                expect_false(user$account_permissions$create_datasets)
-                expect_true(user$account_permissions$alter_users)
-            })
-            with(cleanup(testUser(admin=TRUE, advanced=TRUE)), as="u", {
-                user <- index(getAccountUserCatalog())[[self(u)]]
-                expect_true(user$account_permissions$create_datasets)
-                expect_true(user$account_permissions$alter_users)
-            })
-        })
+with_test_authentication({
+    test_that("User can be fetched", {
+        expect_is(me(), "UserEntity")
     })
 
-    test_that("User cannot be fetched if logged out", {
-        logout()
-        expect_error(me(),
-            "You must authenticate before making this request")
+    test_that("Create and delete user", {
+        skip_on_jenkins("Jenkins user needs more permissions")
+        u.email <- paste0("test+", as.numeric(Sys.time()), "@crunch.io")
+        u.name <- now()
+        usercat <- getAccountUserCatalog()
+        expect_false(u.email %in% emails(usercat))
+        expect_false(u.name %in% sub(" +$", "", names(usercat)))
+        u <- testUser(u.email, u.name)
+        usercat <- refresh(usercat)
+        expect_true(u.email %in% emails(usercat))
+        expect_true(u.name %in% sub(" +$", "", names(usercat)))
+        user <- index(usercat)[[self(u)]]
+        expect_false(user$account_permissions$create_datasets)
+        expect_false(user$account_permissions$alter_users)
+        crDELETE(self(u))
+        usercat <- refresh(usercat)
+        expect_false(u.email %in% emails(usercat))
+        expect_false(u.name %in% sub(" +$", "", names(usercat)))
     })
-}
+
+    test_that("User with permissions", {
+        skip_on_jenkins("Jenkins user needs more permissions")
+        u1 <- testUser(advanced=TRUE)
+        user <- index(getAccountUserCatalog())[[self(u1)]]
+        expect_true(user$account_permissions$create_datasets)
+        expect_false(user$account_permissions$alter_users)
+        u2 <- testUser(admin=TRUE)
+        user <- index(getAccountUserCatalog())[[self(u2)]]
+        expect_false(user$account_permissions$create_datasets)
+        expect_true(user$account_permissions$alter_users)
+        u3 <- testUser(admin=TRUE, advanced=TRUE)
+        user <- index(getAccountUserCatalog())[[self(u3)]]
+        expect_true(user$account_permissions$create_datasets)
+        expect_true(user$account_permissions$alter_users)
+    })
+})
+
+test_that("User cannot be fetched if logged out", {
+    logout()
+    expect_error(me(),
+        "You must authenticate before making this request")
+})

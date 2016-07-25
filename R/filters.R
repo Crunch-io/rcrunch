@@ -1,47 +1,47 @@
-##' Filter entities for a dataset
-##'
-##' @param x a CrunchDataset
-##' @param value for the assignment method, a FilterCatalog
-##' @return an object of class FilterCatalog containing references to Filter
-##' entities usable in the web application. (Setter returns the Dataset.)
-##' @name filter-catalog
-##' @aliases filters filters<-
+#' Filter entities for a dataset
+#'
+#' @param x a CrunchDataset
+#' @param value for the assignment method, a FilterCatalog
+#' @return an object of class FilterCatalog containing references to Filter
+#' entities usable in the web application. (Setter returns the Dataset.)
+#' @name filter-catalog
+#' @aliases filters filters<-
 NULL
 
-##' @rdname filter-catalog
-##' @export
+#' @rdname filter-catalog
+#' @export
 setMethod("filters", "CrunchDataset", function (x) {
     FilterCatalog(crGET(shojiURL(x, "catalogs", "filters")))
 })
 
-##' @rdname filter-catalog
-##' @export
+#' @rdname filter-catalog
+#' @export
 setMethod("filters<-", "CrunchDataset", function (x, value) x)
 
-##' View and modify Filter entity attributes
-##'
-##' @param x a CrunchFilter
-##' @param value an attribute to set
-##' @return For \code{is.public}, a logical value for whether the filter is
-##' flagged as shared with all dataset viewers. (Its setter thus takes a
-##' logical value as well.)
-##' @name filter-methods
-##' @aliases is.public<- is.public
+#' View and modify Filter entity attributes
+#'
+#' @param x a CrunchFilter
+#' @param value an attribute to set
+#' @return For \code{is.public}, a logical value for whether the filter is
+#' flagged as shared with all dataset viewers. (Its setter thus takes a
+#' logical value as well.)
+#' @name filter-methods
+#' @aliases is.public<- is.public
 NULL
 
-##' @rdname filter-methods
-##' @export
+#' @rdname filter-methods
+#' @export
 setMethod("is.public", "CrunchFilter", function (x) x@body$is_public)
 
-##' @rdname filter-methods
-##' @export
+#' @rdname filter-methods
+#' @export
 setMethod("is.public<-", "CrunchFilter", function (x, value) {
     setEntitySlot(x, "is_public", value)
 })
 
 
-##' @rdname catalog-extract
-##' @export
+#' @rdname catalog-extract
+#' @export
 setMethod("[[", c("FilterCatalog", "character"), function (x, i, ...) {
     stopifnot(length(i) == 1)
     z <- match(i, names(x))
@@ -51,16 +51,16 @@ setMethod("[[", c("FilterCatalog", "character"), function (x, i, ...) {
     return(x[[z]])
 })
 
-##' @rdname catalog-extract
-##' @export
+#' @rdname catalog-extract
+#' @export
 setMethod("[[", c("FilterCatalog", "numeric"), function (x, i, ...) {
     stopifnot(length(i) == 1)
     url <- urls(x)[i]
     return(CrunchFilter(crGET(url)))
 })
 
-##' @rdname catalog-extract
-##' @export
+#' @rdname catalog-extract
+#' @export
 setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchLogicalExpr"),
     function (x, i, j, value) {
         stopifnot(length(i) == 1)
@@ -77,8 +77,8 @@ setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchLogicalExpr"
         }
     })
 
-##' @rdname catalog-extract
-##' @export
+#' @rdname catalog-extract
+#' @export
 setMethod("[[<-", c("FilterCatalog", "numeric", "missing", "CrunchLogicalExpr"),
     function (x, i, j, value) {
         stopifnot(length(i) == 1)
@@ -92,8 +92,8 @@ setMethod("[[<-", c("FilterCatalog", "numeric", "missing", "CrunchLogicalExpr"),
         }
     })
 
-##' @rdname catalog-extract
-##' @export
+#' @rdname catalog-extract
+#' @export
 setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchFilter"),
     function (x, i, j, value) {
         if (i %in% names(x)) {
@@ -107,8 +107,8 @@ setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchFilter"),
         }
     })
 
-##' @rdname catalog-extract
-##' @export
+#' @rdname catalog-extract
+#' @export
 setMethod("[[<-", c("FilterCatalog", "numeric", "missing", "CrunchFilter"),
     function (x, i, j, value) {
         if (i %in% seq_len(length(x))) {
@@ -143,6 +143,10 @@ setMethod("appliedFilters<-", c("CrunchDataset", "CrunchFilter"),
         ## To check for an empty filter expression, get the @expression
         ## Can't assume f is CrunchLogicalExpr because x could be CrunchExpr
         expr <- f@expression
+    } else {
+        ## Pretend that the filter of a CrunchExpr can be CrunchLogicalExpr
+        f <- CrunchLogicalExpr(expression=expr,
+            dataset_url=datasetReference(x) %||% "")
     }
     if (!length(expr)) {
         ## No active filter. Return NULL
@@ -152,9 +156,9 @@ setMethod("appliedFilters<-", c("CrunchDataset", "CrunchFilter"),
 }
 
 .setActiveFilter <- function (x, value) {
-    if (is.null(value)) {
-        ## Set an empty CrunchLogicalExpr
-        value <- CrunchLogicalExpr()
+    if (!inherits(value, "CrunchLogicalExpr")) {
+        value <- CrunchLogicalExpr(expression=value %||% list(),
+            dataset_url=datasetReference(x) %||% "")
     }
     x@filter <- value
     return(x)
@@ -182,26 +186,25 @@ setMethod("activeFilter<-", "CrunchExpr", function (x, value) {
     return(x)
 })
 
-
-##' View and set exclusion filters
-##'
-##' Exclusion filters express logic that defines a set of rows that should be
-##' dropped from the dataset. The rows aren't permanently deleted---you can
-##' recover them at any time by removing the exclusion filter---but they are
-##' omitted from all views and calculations, as if they had been deleted.
-##'
-##' Note that exclusion filters work opposite from how "normal" filters work.
-##' That is, a regular filter expression defines the subset of rows to operate
-##' on: it says "keep these rows." An exclusion filter defines which rows to
-##' omit. Applying a filter expression as a query filter will have the
-##' opposite effect if applied as an exclusion. Indeed, applying it as both
-##' query filter and exclusion at the same time will result in 0 rows.
-##'
-##' @param x a Dataset
-##' @param value an object of class \code{CrunchLogicalExpr}, or \code{NULL}
-##' @return \code{exclusion} returns a \code{CrunchFilter} if there is one,
-##' else \code{NULL}. The setter returns \code{x} with the filter set.
-##' @export
+#' View and set exclusion filters
+#'
+#' Exclusion filters express logic that defines a set of rows that should be
+#' dropped from the dataset. The rows aren't permanently deleted---you can
+#' recover them at any time by removing the exclusion filter---but they are
+#' omitted from all views and calculations, as if they had been deleted.
+#'
+#' Note that exclusion filters work opposite from how "normal" filters work.
+#' That is, a regular filter expression defines the subset of rows to operate
+#' on: it says "keep these rows." An exclusion filter defines which rows to
+#' omit. Applying a filter expression as a query filter will have the
+#' opposite effect if applied as an exclusion. Indeed, applying it as both
+#' query filter and exclusion at the same time will result in 0 rows.
+#'
+#' @param x a Dataset
+#' @param value an object of class \code{CrunchLogicalExpr}, or \code{NULL}
+#' @return \code{exclusion} returns a \code{CrunchFilter} if there is one,
+#' else \code{NULL}. The setter returns \code{x} with the filter set.
+#' @export
 exclusion <- function (x) {
     stopifnot(is.dataset(x))
     ef <- crGET(shojiURL(x, "fragment", "exclusion"))
@@ -236,8 +239,8 @@ idsToURLs <- function (expr, base_url) {
     }
 }
 
-##' @rdname exclusion
-##' @export
+#' @rdname exclusion
+#' @export
 `exclusion<-` <- function (x, value) {
     stopifnot(is.dataset(x))
     if (inherits(value, "CrunchLogicalExpr")) {

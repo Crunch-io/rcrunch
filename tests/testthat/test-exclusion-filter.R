@@ -14,14 +14,14 @@ if (run.integration.tests) {
                 exclusion(ds) <- ds$v4 == "C"
                 ## Test that the filter is set correctly. Objects not identical
                 ## because JSON objects are unordered.
-                ## TODO: implement a expect_object_equal
+                ## TODO: switch to expect_json_equivalent
                 e <- zcl(exclusion(ds))
                 f <- zcl(ds$v4 == "C")
                 expect_identical(e[["function"]], f[["function"]])
                 expect_identical(e[["args"]][[1]], f[["args"]][[1]])
                 expect_identical(e[["args"]][[2]]$value, f[["args"]][[2]]$value)
                 expect_output(exclusion(ds),
-                    'Crunch logical expression: v4 == 2L')
+                    'Crunch logical expression: v4 == "C"')
 
                 expect_identical(nrow(ds), 10L)
                 expect_equivalent(as.array(crtabs(~ v4, data=ds)),
@@ -127,7 +127,7 @@ if (run.integration.tests) {
 
         with(test.dataset(newDatasetFromFixture("apidocs")), {
             test_that("Assert what is in the test dataset", {
-                validApidocsImport(ds)
+                expect_valid_apidocs_import(ds)
             })
 
             ## Create a variable to update with rows to exclude
@@ -251,7 +251,7 @@ if (run.integration.tests) {
             })
             ds <- restoreVersion(ds, 1)
             test_that("No problem reverting to before exclusion var made", {
-                validImport(ds)
+                expect_valid_df_import(ds)
                 expect_null(ds$keep)
                 expect_null(exclusion(ds))
             })
