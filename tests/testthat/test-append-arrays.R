@@ -77,6 +77,7 @@ with_test_authentication({
             dimnames=list(MR=c("One", "Two", "Three"))))
     })
 
+    purgeEntitiesCreated() ## Temporary fix for local resource limitation
     describe("When appending and reverting and reloading", {
         part1 <- newDatasetFromFixture("apidocs")
         test_that("Setup for testing references post append", {

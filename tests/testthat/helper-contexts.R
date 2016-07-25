@@ -64,7 +64,7 @@ with_silent_progress <- function (expr) {
 
 silencer <- temp.option(show.error.messages=FALSE)
 
-assign("seen.things", c(), envir=globalenv())
+assign("entities.created", c(), envir=globalenv())
 with_test_authentication <- function (expr) {
     if (run.integration.tests) {
         ## Authenticate.
@@ -73,8 +73,8 @@ with_test_authentication <- function (expr) {
         suppressMessages(trace("locationHeader",
             exit=quote({
                 if (!is.null(loc)) {
-                    seen <- get("seen.things", envir=globalenv())
-                    assign("seen.things",
+                    seen <- get("entities.created", envir=globalenv())
+                    assign("entities.created",
                         c(seen, loc),
                         envir=globalenv())
                 }
@@ -95,14 +95,27 @@ with_test_authentication <- function (expr) {
             ## Delete our seen things
             ## We could filter out variables, batches, anything under a dataset
             ## since we're going to delete the datasets
-            seen <- get("seen.things", envir=globalenv())
-            for (u in seen) {
-                try(crDELETE(u), silent=TRUE)
-            }
+            purgeEntitiesCreated()
             logout()
         })
-        eval.parent(with_silent_progress(expr))
+        ## Wrap this so that we can generate a test failure if there's an error
+        ## rather than just halt the process
+        tryCatch(eval.parent(with_silent_progress(expr)),
+            error=function (e) {
+                test_that("There are no test code errors", {
+                    expect_error(stop(e$message), NA)
+                })
+            })
     }
+}
+
+purgeEntitiesCreated <- function () {
+    seen <- get("entities.created", envir=globalenv())
+    for (u in seen) {
+        try(crDELETE(u), silent=TRUE)
+    }
+    assign("entities.created", c(), envir=globalenv())
+    invisible()
 }
 
 uniqueDatasetName <- now
