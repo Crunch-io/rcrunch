@@ -50,11 +50,11 @@ compareDatasets <- function (A, B) {
     intersect.vars <- comp.vars[vars.in.both,]
 
     arrays <- intersect.vars$type.A %in% c("categorical_array", "multiple_response")
-    has.categories <- intersect.vars$type.A %in% c("categorical_array", "multiple_response", "categorical")
+    has.cats <- has.categories(intersect.vars$type.A)
 
     return(structure(list(
         variables=comp.vars,
-        categories=sapply(intersect.vars$alias[has.categories],
+        categories=sapply(intersect.vars$alias[has.cats],
             function (x) {
                 compareCategories(Categories(data=varsA[[a2uA[x]]]$categories),
                     Categories(data=varsB[[a2uB[x]]]$categories))

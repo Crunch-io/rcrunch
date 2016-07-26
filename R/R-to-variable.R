@@ -48,7 +48,7 @@ setMethod("toVariable", "logical", function (x, ...) {
         categories=categoriesFromLevels(c("True", "False")),
         ...),
         class="VariableDefinition")
-    return(NAToCategory(out))
+    return(NAToCategory(out, useNA="always"))
 })
 
 categoriesFromLevels <- function (x) {
