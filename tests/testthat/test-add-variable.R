@@ -18,12 +18,6 @@ test_that("toVariable parses factors", {
             list(id=2L, name="C", numeric_value=2L, missing=FALSE),
             list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
         ))) ## unclear why these aren't identical
-    with(temp.options(crunch.max.categories=4), {
-        expect_equivalent(toVariable(as.factor(letters[1:5])),
-            list(values=c("a", "b", "c", "d", "e"), type="text"))
-        expect_equivalent(toVariable(as.factor(letters[1:5]), name="v1"),
-            list(values=c("a", "b", "c", "d", "e"), type="text", name="v1"))
-    })
 })
 
 test_that("toVariable parses R Date class", {
