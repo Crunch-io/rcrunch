@@ -1,6 +1,7 @@
 ## crunch 1.11.1 (under development)
 * Fix issue with sharing datasets owned by a project.
 * Remove "crunch.max.categories" option to govern converting factors to Crunch categorical variables only if fewer than that threshold. Use `as.categorical` if you have a factor and want it to be imported as type Text.
+* Increase default "crunch.timeout" for long-running jobs to 15 minutes, after which point progress polling will give up.
 
 ## crunch 1.11.0
 * Generic `datasets` and `projects` functions to get dataset and project catalogs. (`datasets` previously existed only as a method for Project entities.)
