@@ -156,7 +156,8 @@ with_test_authentication({
         ds <- newDataset(data.frame(x=seq_along(mapcty)))
         ds <- releaseAndReload(ds)
         ds$county <- factor(mapcty)
-        expect_identical(head(as.vector(ds$county)), head(mapcty))
+        expect_identical(as.character(head(as.vector(ds$county))),
+            head(mapcty))
     })
 
     ds <- newDataset(df)
