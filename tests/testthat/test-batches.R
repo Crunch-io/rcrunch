@@ -20,8 +20,8 @@ with_mock_HTTP({
     })
 
     test_that("show method for batch catalog", {
-        expect_identical(capture.output(print(batches(ds))),
-            capture.output(print(data.frame(id=c(0, 2, 3),
-            status=c("imported", "imported", "conflict")))))
+        expect_output(batches(ds),
+            get_output(data.frame(id=c(0, 2, 3),
+            status=c("imported", "imported", "conflict"))))
     })
 })
