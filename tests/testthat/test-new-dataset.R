@@ -53,6 +53,8 @@ if (run.integration.tests) {
                 c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
         })
 
+        purgeEntitiesCreated()
+
         m <- fromJSON(file.path("dataset-fixtures", "apidocs.json"),
             simplifyVector=FALSE)
 

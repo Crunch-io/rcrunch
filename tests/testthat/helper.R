@@ -42,7 +42,6 @@ options(
     warn=1,
     crunch.debug=FALSE,
     digits.secs=3,
-    crunch.timeout=15,
     # httpcache.log="",
     crunch.namekey.dataset="alias",
     crunch.namekey.array="name",

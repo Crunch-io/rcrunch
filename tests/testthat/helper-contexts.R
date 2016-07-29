@@ -93,8 +93,6 @@ with_test_authentication <- function (expr) {
             suppressMessages(untrace("locationHeader", where=crGET))
             # suppressMessages(untrace("createDataset", where=crGET))
             ## Delete our seen things
-            ## We could filter out variables, batches, anything under a dataset
-            ## since we're going to delete the datasets
             purgeEntitiesCreated()
             logout()
         })
@@ -112,10 +110,8 @@ with_test_authentication <- function (expr) {
 purgeEntitiesCreated <- function () {
     seen <- get("entities.created", envir=globalenv())
     for (u in seen) {
-        # if (grepl(".*/datasets/[0-9a-f]+/$", u)) {
-        #     ## "release" the dataset so that the factory frees
-        #     crPOST(absoluteURL("release/", u))
-        # }
+        ## We could filter out variables, batches, anything under a dataset
+        ## since we're going to delete the datasets
         try(crDELETE(u), silent=TRUE)
     }
     assign("entities.created", c(), envir=globalenv())
