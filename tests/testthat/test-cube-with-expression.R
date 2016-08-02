@@ -23,7 +23,7 @@ if (run.integration.tests) {
                 # q1
                 #  Cat  Dog Bird
                 #    6    4    3
-                skip("(400) Bad Request: operands could not be broadcast together with shapes (20,) (2,) (20,)")
+                skip("(400) Bad Request: The truth value of an array with more than one element is ambiguous. Use a.any() or a.all()")
                 expect_equivalent(as.array(crtabs(~ q1 %in% c("Cat", "Dog"),
                     data=ds)), 10)
                 expect_equivalent(as.array(crtabs(~ !(q1 %in% c("Cat", "Dog")),
