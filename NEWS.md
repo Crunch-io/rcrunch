@@ -3,6 +3,7 @@
 * Support updating Categorical variables created from R logical-type vectors with logical values
 * Remove "crunch.max.categories" option to govern converting factors to Crunch categorical variables only if fewer than that threshold. Use `as.categorical` if you have a factor and want it to be imported as type Text.
 * Increase default "crunch.timeout" for long-running jobs to 15 minutes, after which point progress polling will give up.
+* Validation to prevent attempting to set NA category names.
 
 ## crunch 1.11.0
 * Generic `datasets` and `projects` functions to get dataset and project catalogs. (`datasets` previously existed only as a method for Project entities.)
