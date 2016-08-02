@@ -99,6 +99,11 @@ with_mock_HTTP({
         expect_error(names(categories(ds$gender))[23] <- "cat",
             "Invalid names: supplied 23 names for 3 categories")
             ## Not ideal error message, but best we can do here
+        expect_error(names(categories(ds$gender))[1] <- NA_character_,
+            "Category names must be non-missing")
+        ## Also for "No Data"
+        expect_error(names(categories(ds$gender))[3] <- NA_character_,
+            "Category names must be non-missing")
     })
 
     test_that("categories<- with invalid input gives helpful message", {
