@@ -326,7 +326,7 @@ if (run.integration.tests) {
             })
 
             test_that("Cube with variables and R objects", {
-                skip("(400) Bad Request: No such category id: '1'.")
+                skip("object 'd4' not found")
                 d4 <- cubedf$v4
                 expect_equivalent(as.array(crtabs(~ d4 + v7, data=ds)),
                     array(c(5, 5, 2, 3), dim=c(2L, 2L),
