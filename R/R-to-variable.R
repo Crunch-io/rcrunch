@@ -14,10 +14,6 @@ setMethod("toVariable", "numeric", function (x, ...) {
 #' @export
 setMethod("toVariable", "factor", function (x, ...) {
     nlevels <- length(levels(x))
-    max.categories <- getOption("crunch.max.categories")
-    if (!is.null(max.categories) && nlevels > max.categories) {
-        return(toVariable(as.character(x), ...))
-    }
     out <- structure(list(values=as.integer(x), type="categorical",
         categories=categoriesFromLevels(levels(x)), ...),
         class="VariableDefinition")
@@ -52,7 +48,7 @@ setMethod("toVariable", "logical", function (x, ...) {
         categories=categoriesFromLevels(c("True", "False")),
         ...),
         class="VariableDefinition")
-    return(NAToCategory(out))
+    return(NAToCategory(out, useNA="always"))
 })
 
 categoriesFromLevels <- function (x) {

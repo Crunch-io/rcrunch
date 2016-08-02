@@ -21,6 +21,16 @@ with_mock_HTTP({
         expect_false(is.CA(ds$mymrset))
     })
 
+    test_that("has.categories", {
+        expect_true(has.categories(ds$gender))
+        expect_true(has.categories(ds$mymrset))
+        expect_false(has.categories(ds$birthyr))
+        expect_true(has.categories("categorical_array"))
+        expect_identical(has.categories(c("categorical", "numeric", "text",
+            "datetime", "categorical_array", "multiple_response")),
+            c(TRUE, FALSE, FALSE, FALSE, TRUE, TRUE))
+    })
+
     test_that("Categories for categorical", {
         thisone <- categories(ds$gender)
         expect_true(is.categories(thisone))

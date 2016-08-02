@@ -185,24 +185,29 @@ setMethod("[<-", c("CategoricalArrayVariable", "ANY", "missing", "factor"),
 #' @export
 setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
     function (x, i, j, value) {
-        ## For assigning NA
         if (all(is.na(value))) {
+            ## For assigning NA
             value <- .no.data.value(type(x), add.type=TRUE)
+            if (has.categories(x)) {
+                return(.categorical.update[["numeric"]](x, i, j, value))
+            }
+            if (missing(i)) i <- NULL
+            out <- .updateVariable(x, value, filter=.dispatchFilter(i))
+            return(x)
+        } else if (has.categories(x) &&
+            all(names(categories(x)) %in% c("True", "False", "No Data"))) {
+
+            ## This is "logical-as-categorical", so we can take TRUE/FALSE values
+            value <- c("True", "False")[2L - as.integer(value)]
+            return(.categorical.update[["character"]](x, i, j, value))
         } else {
             ## halt()
             .backstopUpdate(x, i, j, value)
         }
-
-        if (is.Categorical(x) || is.CA(x) || is.MR(x)) {
-            return(.categorical.update[["numeric"]](x, i, j, value))
-        }
-        if (missing(i)) i <- NULL
-        out <- .updateVariable(x, value, filter=.dispatchFilter(i))
-        return(x)
     })
 
 .no.data.value <- function (x, add.type=FALSE) {
-    if (x %in% c("categorical", "multiple_response", "categorical_array")) {
+    if (has.categories(x)) {
         return(-1L)
     } else {
         out <- list(`?`=-1L)

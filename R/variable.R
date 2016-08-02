@@ -4,50 +4,6 @@ setMethod("tuple<-", "CrunchVariable", function (x, value) {
     return(x)
 })
 
-#' @rdname crunch-is
-#' @export
-is.variable <- function (x) inherits(x, "CrunchVariable")
-
-#' @rdname crunch-is
-#' @export
-is.Numeric <- function (x) inherits(x, "NumericVariable")
-
-#' @rdname crunch-is
-#' @export
-is.Categorical <- function (x) inherits(x, "CategoricalVariable")
-
-#' @rdname crunch-is
-#' @export
-is.Text <- function (x) inherits(x, "TextVariable")
-
-#' @rdname crunch-is
-#' @export
-is.Datetime <- function (x) inherits(x, "DatetimeVariable")
-
-#' @rdname crunch-is
-#' @export
-is.Multiple <- function (x) inherits(x, "MultipleResponseVariable")
-
-#' @rdname crunch-is
-#' @export
-is.MR <- is.Multiple
-
-#' @rdname crunch-is
-#' @export
-is.MultipleResponse <- is.Multiple
-
-#' @rdname crunch-is
-#' @export
-is.CA <- function (x) class(x) %in% "CategoricalArrayVariable" ## so it doesn't return true for MultipleResponse
-
-#' @rdname crunch-is
-#' @export
-is.Array <- function (x) inherits(x, "CategoricalArrayVariable")
-
-#' @rdname crunch-is
-#' @export
-is.CategoricalArray <- is.CA
-
 #' @rdname self
 #' @export
 setMethod("self", "CrunchVariable", function (x) tuple(x)@entity_url)

@@ -20,8 +20,7 @@ NULL
 .onAttach <- function (lib, pkgname="crunch") {
     setIfNotAlready(
         crunch.api="https://beta.crunch.io/api/",
-        crunch.max.categories=256,
-        crunch.timeout=60,
+        crunch.timeout=900,
         httpcache.on=TRUE,
         crunch.namekey.dataset="alias",
         crunch.namekey.array="name"

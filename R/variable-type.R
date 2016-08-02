@@ -1,3 +1,56 @@
+#' @rdname crunch-is
+#' @export
+is.variable <- function (x) inherits(x, "CrunchVariable")
+
+#' @rdname crunch-is
+#' @export
+is.Numeric <- function (x) inherits(x, "NumericVariable")
+
+#' @rdname crunch-is
+#' @export
+is.Categorical <- function (x) inherits(x, "CategoricalVariable")
+
+#' @rdname crunch-is
+#' @export
+is.Text <- function (x) inherits(x, "TextVariable")
+
+#' @rdname crunch-is
+#' @export
+is.Datetime <- function (x) inherits(x, "DatetimeVariable")
+
+#' @rdname crunch-is
+#' @export
+is.Multiple <- function (x) inherits(x, "MultipleResponseVariable")
+
+#' @rdname crunch-is
+#' @export
+is.MR <- is.Multiple
+
+#' @rdname crunch-is
+#' @export
+is.MultipleResponse <- is.Multiple
+
+#' @rdname crunch-is
+#' @export
+is.CA <- function (x) class(x) %in% "CategoricalArrayVariable" ## so it doesn't return true for MultipleResponse
+
+#' @rdname crunch-is
+#' @export
+is.Array <- function (x) inherits(x, "CategoricalArrayVariable")
+
+#' @rdname crunch-is
+#' @export
+is.CategoricalArray <- is.CA
+
+has.categories <- function (x) {
+    if (!is.character(x)) {
+        ## Let you pass in either a type name string or a variable. If variable,
+        ## get its type
+        x <- type(x)
+    }
+    return(x %in% c("categorical_array", "multiple_response", "categorical"))
+}
+
 CASTABLE_TYPES <- c("numeric", "text", "categorical") ## Add datetime when server supports
 
 #' Change the type of Crunch variables
