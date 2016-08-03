@@ -34,13 +34,7 @@ parse_column <- list(
     },
     datetime=function (col, variable) {
         out <- columnParser("text")(col)
-        if (all(grepl("[0-9]{4}-[0-9]{2}-[0-9]{2}", out))) {
-            ## return Date if resolution >= D
-            return(as.Date(out))
-        } else {
-            ## TODO: use from8601, defined below
-            return(as.POSIXct(out))
-        }
+        return(from8601(out))
     }
 )
 columnParser <- function (vartype, mode=NULL) {
@@ -58,46 +52,95 @@ columnParser <- function (vartype, mode=NULL) {
 }
 
 getValues <- function (x, ...) {
-    url <- shojiURL(x, "views", "values")
-    query <- list(...)
-    if (length(query)) {
-        return(crGET(url, query=list(...)))
-    } else {
-        return(crGET(url))
-    }
+    paginatedGET(shojiURL(x, "views", "values"), list(...))
 }
 
-##' Convert Variables to local R objects
-##'
-##' @param x a CrunchVariable subclass
-##' @param mode for Categorical variables, one of either "factor" (default, 
-##' which returns the values as factor); "numeric" (which returns the numeric
-##' values); or "id" (which returns the category ids). If "id", values
-##' corresponding to missing categories will return as the underlying integer
-##' codes; i.e., the R representation will not have any \code{NA}s. Otherwise,
-##' missing categories will all be returned \code{NA}. For non-Categorical
-##' variables, the \code{mode} argument is ignored.
-##' @return an R vector of the type corresponding to the Variable. E.g. 
-##' CategoricalVariable yields type factor by default, NumericVariable yields
-##' numeric, etc.
-##' @name variable-to-R
+paginatedGET <- function (url, query, offset=0,
+                          limit=getOption("crunch.page.size") %||% 1000,
+                          table=FALSE) {
+    ## Paginate the GETting of values. Called both from getValues and in
+    ## the as.vector.CrunchExpr method in expressions.R
+
+    query$offset <- offset
+    query$limit <- limit
+
+    out <- list()
+    keep.going <- TRUE
+    i <- 1
+
+    ## Function to determine number of values received, depending on whether
+    ## we have a crunch:table or shoji:view
+    if (table) {
+        len <- function (x) length(x$data$out)
+    } else {
+        len <- length
+    }
+    with(temp.option(scipen=15), {
+        ## Mess with scipen so that the query string formatter doesn't
+        ## convert an offset like 100000 to '1+e05', which server rejects
+        while(keep.going) {
+            ## Wrap the GET in a parser function, default no-op, so we can
+            ## get data out of a crunch:table
+            out[[i]] <- crGET(url, query=query)
+            if (len(out[[i]]) < limit) {
+                keep.going <- FALSE
+            } else {
+                query$offset <- query$offset + limit
+                i <- i + 1
+            }
+        }
+    })
+
+    ## Collect the result
+    if (table) {
+        out[[1]]$data$out <- unlist(lapply(out, function (x) x$data$out),
+            recursive=FALSE)
+        out <- out[[1]]
+    } else {
+        out <- unlist(out, recursive=FALSE)
+    }
+    return(out)
+}
+
+#' Convert Variables to local R objects
+#'
+#' @param x a CrunchVariable subclass
+#' @param mode for Categorical variables, one of either "factor" (default,
+#' which returns the values as factor); "numeric" (which returns the numeric
+#' values); or "id" (which returns the category ids). If "id", values
+#' corresponding to missing categories will return as the underlying integer
+#' codes; i.e., the R representation will not have any \code{NA}s. Otherwise,
+#' missing categories will all be returned \code{NA}. For non-Categorical
+#' variables, the \code{mode} argument is ignored.
+#' @return an R vector of the type corresponding to the Variable. E.g.
+#' CategoricalVariable yields type factor by default, NumericVariable yields
+#' numeric, etc.
+#' @name variable-to-R
 NULL
 
-##' @rdname variable-to-R
-##' @export
+#' @rdname variable-to-R
+#' @export
 setMethod("as.vector", "CrunchVariable", function (x, mode) {
-    f <- filterSyntax(activeFilter(x))
-    columnParser(type(x), mode)(getValues(x, filter_syntax=toJSON(f)), x)
+    f <- zcl(activeFilter(x))
+    columnParser(type(x), mode)(getValues(x, filter=toJSON(f)), x)
 })
 
 from8601 <- function (x) {
     ## Crunch timestamps look like "2015-02-12T10:28:05.632000+00:00"
-    
-    ## TODO: pull out the ms, as.numeric them, and add to the parsed date
-    ## Important for the round trip of datetime data
-    
-    ## First, strip out ms and the : in the time zone
-    x <- sub("\\.[0-9]+", "", sub("^(.*[+-][0-9]{2}):([0-9]{2})$", "\\1\\2", x))
+
+    if (all(grepl("^[0-9]{4}-[0-9]{2}-[0-9]{2}$", na.omit(x)))) {
+        ## return Date if resolution == D
+        return(as.Date(x))
+    }
+
+    ## Check for timezone
+    if (any(grepl("+", x, fixed=TRUE))) {
+        ## First, strip out the : in the time zone
+        x <- sub("^(.*[+-][0-9]{2}):([0-9]{2})$", "\\1\\2", x)
+        pattern <- "%Y-%m-%dT%H:%M:%OS%z"
+    } else {
+        pattern <- "%Y-%m-%dT%H:%M:%OS"
+    }
     ## Then parse
-    return(strptime(x, "%Y-%m-%dT%H:%M:%S%z"))
+    return(strptime(x, pattern, tz="UTC"))
 }

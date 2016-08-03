@@ -15,7 +15,7 @@
 
     install.packages("crunch")
 
-The pre-release version of the package can be pulled from GitHub using the `devtools` package:
+The pre-release version of the package can be pulled from GitHub using the [devtools](https://github.com/hadley/devtools) package:
 
     # install.packages("devtools")
     devtools::install_github("Crunch-io/rcrunch", build_vignettes=TRUE)

@@ -15,30 +15,43 @@ getSummary <- function (x) {
     return(out)
 }
 
-##' Table function for Crunch objects
-##'
-##' @param ... things to tabulate
-##' @param exclude see \code{\link[base]{table}}
-##' @param useNA see \code{\link[base]{table}}
-##' @param dnn see \code{\link[base]{table}}
-##' @param deparse.level see \code{\link[base]{table}}
-##' @return a table object
-##' @seealso \code{\link[base]{table}}
-##' @export 
+#' Table function for Crunch objects
+#'
+#' @param ... things to tabulate
+#' @param exclude see \code{\link[base]{table}}
+#' @param useNA see \code{\link[base]{table}}
+#' @param dnn see \code{\link[base]{table}}
+#' @param deparse.level see \code{\link[base]{table}}
+#' @return a table object
+#' @seealso \code{\link[base]{table}}
+#' @export
 table <- function (..., exclude, useNA=c("no", "ifany", "always"), dnn, deparse.level) {
     m <- match.call()
-    
+
     dots <- list(...)
-    are.vars <- vapply(dots, is.variable, logical(1))
+    are.vars <- vapply(dots,
+        function (x) is.variable(x) || inherits(x, "CrunchExpr"),
+        logical(1))
     if (length(are.vars) && all(are.vars)) {
         query <- list(dimensions=varsToCubeDimensions(dots),
             measures=list(count=zfunc("cube_count")))
+        ## Check for filters
+        filters <- vapply(dots,
+            function (x) toJSON(zcl(activeFilter(x))),
+            character(1))
+        if (!all(filters == filters[1])) {
+            halt("Filter expressions in variables must be identical")
+        }
+        query <- list(
+            query=toJSON(query),
+            filter=filters[1]
+        )
         cube_url <- absoluteURL("./cube/", datasetReference(dots[[1]]))
-        cube <- CrunchCube(crGET(cube_url, query=list(query=toJSON(query))),
+        cube <- CrunchCube(crGET(cube_url, query=query),
             useNA=match.arg(useNA))
         return(as.table(as.array(cube)))
     } else if (any(are.vars)) {
-        halt("Cannot currently tabulate Crunch variables with ", 
+        halt("Cannot currently tabulate Crunch variables with ",
             "non-Crunch vectors")
     } else {
         m[[1]] <- quote(base::table)
@@ -47,20 +60,20 @@ table <- function (..., exclude, useNA=c("no", "ifany", "always"), dnn, deparse.
 }
 
 #setGeneric("table", signature="...")
-# ## @export 
+# ## @export
 #setMethod("table", "CategoricalVariable", CategoricalVariable.table)
 
-##' Summary methods for Crunch Variables
-##' 
-##' @param object A Variable
-##' @param ... additional arguments, ignored (they're in the summary.default)
-##' signature
-##' @return a summary response. Categorical variable summaries should work like
-##' summary.factor; Numeric variables should be like summary.numeric. Other
-##' Variable types are not yet supported.
-##' @name crunch-summary
-##' @keywords internal
-##' @export
+#' Summary methods for Crunch Variables
+#'
+#' @param object A Variable
+#' @param ... additional arguments, ignored (they're in the summary.default)
+#' signature
+#' @return a summary response. Categorical variable summaries should work like
+#' summary.factor; Numeric variables should be like summary.numeric. Other
+#' Variable types are not yet supported.
+#' @name crunch-summary
+#' @keywords internal
+#' @export
 summary.CategoricalVariable <- function (object, ...) {
     tab <- table(object)
     tab <- tab[order(tab, decreasing=TRUE)]
@@ -69,13 +82,13 @@ summary.CategoricalVariable <- function (object, ...) {
     return(tab)
 }
 
-##' @export
+#' @export
 print.CategoricalVariableSummary <- function (x, ...) {
     print(data.frame(Count=as.numeric(x), row.names=names(x)))
 }
 
-##' @rdname crunch-summary
-##' @export
+#' @rdname crunch-summary
+#' @export
 summary.NumericVariable <- function (object, ...) {
     summ <- getSummary(object)
     fivenum <- sapply(summ$fivenum, function (x) x[[2]])
@@ -88,4 +101,3 @@ summary.NumericVariable <- function (object, ...) {
     attr(out, "varname") <- getNameAndType(object)
     return(out)
 }
-

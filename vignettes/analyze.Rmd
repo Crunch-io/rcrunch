@@ -6,15 +6,15 @@
 [Previous: transform and derive](derive.html)
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(crunch)
-load("analyze.RData")
+load("vignettes.RData")
 options(width=120)
 ```
 
 # Computing with R and Crunch
-With `crunch`, you can harness the power of R to do computations with your datasets in Crunch that would be difficult or impossible to accomplish in a graphical user interface. 
+With `crunch`, you can harness the power of R to do computations with your datasets in Crunch that would be difficult or impossible to accomplish in a graphical user interface.
 
 ## Crosstabbing
-While the web application certainly supports crosstabbing, you may want to do aggregations like this in R. Crosstabbing in R with `crunch` may allow you to easily do additional computations on the result, for example. 
+While the web application certainly supports crosstabbing, you may want to do aggregations like this in R. Crosstabbing in R with `crunch` may allow you to easily do additional computations on the result, for example.
 
 `crunch` contains the `crtabs` (Crunch-tabs) function, which largely emulates the design of the `xtabs` function in base R. In essence, you define a formula and provide data in which to evaluate it. In this case, we'll be providing a `CrunchDataset`.
 
@@ -30,7 +30,7 @@ tab1
 tab1
 ```
 
-Additional dimensions are added with `+`. For a two-way table of education and gender, 
+Additional dimensions are added with `+`. For a two-way table of education and gender,
 
 ```{r, eval=FALSE}
 tab2 <- crtabs(~ educ + gender, data=ds)
@@ -170,7 +170,7 @@ crtabs(mean(age) ~ educ + gender, data=ds)
 tab5
 ```
 
-Other supported aggregations include `min`, `max`, `sd`, and `sum`. For the minimum age by gender and education, 
+Other supported aggregations include `min`, `max`, `sd`, and `sum`. For the minimum age by gender and education,
 
 ```{r, eval=FALSE}
 crtabs(min(age) ~ educ + gender, data=ds)
@@ -197,7 +197,7 @@ categories(ds$track)
 print(track.cats)
 ```
 
-We can use these numeric values to compute an "on the right track index" by averaging them. If the index is greater than zero, more people thing things are going well, and if it is negative, more respondents are pessimistic. 
+We can use these numeric values to compute an "on the right track index" by averaging them. If the index is greater than zero, more people thing things are going well, and if it is negative, more respondents are pessimistic.
 
 ```{r, eval=FALSE}
 round(crtabs(mean(track) ~ educ + gender, data=ds), 2)
@@ -206,7 +206,7 @@ round(crtabs(mean(track) ~ educ + gender, data=ds), 2)
 round(tab7, 2)
 ```
 
-Looks like most people surveyed thought that the U.S. is on the wrong track, but that pessimism is less pronounced for those with higher levels of education.
+Looks like most people surveyed thought that the U.S. is on the wrong track, but that pessimism is less pronounced for women with higher levels of education.
 
 ### Subsetting data
 
@@ -226,7 +226,7 @@ A few final observations about `crtabs`. First, all of these calculations have b
 Second, none of these aggregations required pulling case-level data to your computer. `crtabs` sends Crunch expressions to the server and receives in return an `n`-D array of results. The only computations happening locally are the margin tables and sweeping in `prop.table`, computing on the aggregate results. Your computer would work exactly as hard with this example dataset of 1000 rows as it would with a dataset of 100 million rows.  
 
 ## Statistical modeling
-Any statistical modeling function that takes a `data` argument should happily accept a `CrunchDataset` and just do the right thing--no extra effort or thought required. 
+Any statistical modeling function that takes a `data` argument should happily accept a `CrunchDataset` and just do the right thing--no extra effort or thought required.
 
 Let's fit a basic Ordinary Least Squares (OLS) model. In our dataset, we have a few questions about Edward Snowden, such as:
 
@@ -240,7 +240,7 @@ cat(snowdenleakapp.var, sep="\n")
 We can use `lm` to fit our model. Let's explore the relationship between approval of Snowden's leak and respondents' interest in current events, party identification, gender, and age.
 
 ```{r, eval=FALSE}
-ols1 <- lm(I(snowdenleakapp == "Strongly approve") ~ newsint2 + pid3 + gender + age, 
+ols1 <- lm(I(snowdenleakapp == "Strongly approve") ~ newsint2 + pid3 + gender + age,
     data=ds)
 summary(ols1)
 ```
@@ -248,12 +248,12 @@ summary(ols1)
 summary(ols1)
 ```
 
-Looks like partisanship is associated with approval of the NSA leak, but overall the model isn't a great fit, given our data. Nevertheless, this example illustrates how straightforward it is to do statistical analysis with data in Crunch. Even though your dataset lives on the server, you can think of it like a local `data.frame`. Note, for example, that our categorical variables (News Interest, Party ID, and Gender) expand their categories out as dichotomous indicators, just as if they were `factor` variables in a `data.frame`. 
+Looks like partisanship is weakly associated with approval of the NSA leak, but overall the model isn't a great fit, given our data. (For what it's worth, we're working on a randomly drawn subset of the survey so that the size of data included with package is small. Results are more meaningful with the full dataset.) Nevertheless, this example illustrates how straightforward it is to do statistical analysis with data in Crunch. Even though your dataset lives on the server, you can think of it like a local `data.frame`. Note, for example, that our categorical variables (News Interest, Party ID, and Gender) expand their categories out as dichotomous indicators, just as if they were `factor` variables in a `data.frame`.
 
 Given that we're estimating a model with a dichotomous dependent variable, perhaps a logit would be more appropriate than a strict linear predictor. We can use `glm` instead:
 
 ```{r, eval=FALSE}
-logit1 <- glm(I(snowdenleakapp == "Strongly approve") ~ newsint2 + pid3 + gender + age, 
+logit1 <- glm(I(snowdenleakapp == "Strongly approve") ~ newsint2 + pid3 + gender + age,
     family=binomial(link="logit"), data=ds)
 summary(logit1)
 ```
@@ -263,4 +263,6 @@ summary(logit1)
 
 As before, not a particularly interesting result, but this is just the beginning of the analysis process. Using `crunch`, you can keep exploring the data and perhaps find a better fit.
 
-Unlike the previous examples, these modeling functions do have to pull columns of data from the server to your local machine. However, only the columns of data you reference in your formula are copied, and if you specify a subset of the dataset to regress on (as we did above with `crtabs` when we looked at just Democrats), only those rows are retrieved. This helps minimize the time spent shipping data across the network. Moreover, because of the `crunch` package's query cache, subsequent models that incorporate any of those variables will not have to go to the server to get them. 
+Unlike the previous examples, these modeling functions do have to pull columns of data from the server to your local machine. However, only the columns of data you reference in your formula are copied, and if you specify a subset of the dataset to regress on (as we did above with `crtabs` when we looked at just Democrats), only those rows are retrieved. This helps minimize the time spent shipping data across the network. Moreover, because of the `crunch` package's query cache, subsequent models that incorporate any of those variables will not have to go to the server to get them.
+
+[Next: filtering datasets](filters.html)

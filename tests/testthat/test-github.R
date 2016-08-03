@@ -11,31 +11,28 @@ test_that("version number comparison is correct", {
     expect_false(versionIsGreaterThan("1.2.2", "2.0.0"))
 })
 
-with(fake.HTTP, {
+with_mock_HTTP({
     test_that("checkForNewVersion parses github json", {
-        expect_identical(checkForNewVersion("github-versions.json", "1.5.3"),
+        expect_identical(checkForNewVersion("github-versions/", "1.5.3"),
             NULL)
-        expect_identical(checkForNewVersion("github-versions.json", "1.5.1"),
+        expect_identical(checkForNewVersion("github-versions/", "1.5.1"),
             "1.5.3")
-        expect_identical(checkForNewVersion("github-versions.json", "1.6.3"),
+        expect_identical(checkForNewVersion("github-versions/", "1.6.3"),
             NULL)
         ## Now that version is greater than 1.5.3:
-        expect_identical(checkForNewVersion("github-versions.json"), NULL)
+        expect_null(checkForNewVersion("github-versions/"))
     })
-    
+
     test_that("notifyIfNewVersion messages correctly", {
-        expect_message(notifyIfNewVersion("github-versions.json", "1.5.1"),
+        expect_message(notifyIfNewVersion("github-versions/", "1.5.1"),
             "There's a new version")
-        expect_silent(notifyIfNewVersion("github-versions.json"))
+        expect_silent(notifyIfNewVersion("github-versions/"))
     })
 })
 
-with(no.internet, {
+without_internet({
     test_that("notifyIfNewVersion doesn't hang if GitHub doesn't respond", {
-        expect_silent(notifyIfNewVersion("github-versions.json", "1.5.1"))
+        expect_message(uncached(notifyIfNewVersion("github-versions/", "1.5.1")),
+            NA)
     })
 })
-
-if (run.integration.tests) {
-    
-}

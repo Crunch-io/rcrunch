@@ -1,8 +1,7 @@
 context("Update variables with NAs")
 
-
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(newDatasetFromFixture("apidocs")), {
             test_that("Insert NA into numeric", {
                 expect_equivalent(as.vector(ds$ndogs[1:5]),
@@ -26,7 +25,6 @@ if (run.integration.tests) {
             test_that("Insert NA into datetime", {
                 expect_equivalent(as.vector(ds$wave[1:5]),
                     rep(as.Date("2014-12-01"), 5))
-                skip("See https://www.pivotaltracker.com/story/show/103531536")
                 ds$wave[4] <- NA
                 expect_equivalent(as.vector(ds$wave[1:5]),
                     c(rep(as.Date("2014-12-01"), 3), NA, as.Date("2014-12-01")))
@@ -95,13 +93,13 @@ if (run.integration.tests) {
                     c("Jasmine", NA, "Jeff"))
             })
             test_that("Insert values including NA into multiple response", {
-                
+
             })
             test_that("Insert values including NA into categorical array", {
-                
+
             })
         })
-        
+
         with(test.dataset(df), {
             test_that("Can set missing rules", {
                 expect_error(is.na(ds$v5) <- ds$v4 == "B",

@@ -7,7 +7,8 @@
 
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(crunch)
-load("derive.RData")
+load("vignettes.RData")
+options(width=120)
 ```
 
 # Transforming and deriving
@@ -20,7 +21,7 @@ In our sample dataset, we don't have an "Age" variable, but we do have "Birth Ye
 ds$age <- 2015 - ds$birthyr
 ```
 
-Now, we have an age variable, and it looks like we'd expect it would relative to `birthyr`: 
+Now, we have an age variable, and it looks like we'd expect it would relative to `birthyr`:
 
 ```{r, eval=FALSE}
 summary(ds$age)
@@ -45,6 +46,7 @@ class(cr.expr)
 ```
 
 ## Updating values
+
 We can also use these expressions to update values. Suppose, just for demonstration purposes, that we want to truncate the range of the `birthyr` variable and set it to 1945 everywhere where it is less than 1945. We can once again write the R code we'd write if we were working with a `data.frame`, even though we're working with a Crunch dataset:
 
 ```{r, eval=FALSE}

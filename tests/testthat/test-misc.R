@@ -6,19 +6,7 @@ test_that("is.error", {
     expect_false(is.error("not an error"))
     expect_false(is.error(NULL))
     expect_false(is.error(NA))
-    expect_that("not an error", is_not_an_error())
-    expect_that(NULL, is_not_an_error())
-    expect_that(NA, is_not_an_error())
-    expect_that("not an error", does_not_throw_error())
-    # expect_that(e, is_not_an_error()) ## Should fail: confirm fail message
-})
-
-test_that("update list", {
-    a <- list(a=1, b=2)
-    b <- list(c=3, b=4)
-    expect_identical(updateList(a, b), list(a=1, b=4, c=3))
-    expect_identical(updateList(list(), b), b)
-    expect_identical(updateList(NULL, b), b)
+    expect_error("not an error", NA)
 })
 
 test_that("selectFrom selects what it should", {
@@ -31,33 +19,6 @@ test_that("selectFrom selects what it should", {
     l2[[2]] <- 4
     expect_identical(selectFrom("b", l2), c(2, NA))
     expect_error(selectFrom("b", 5), "xlist must be a list object")
-})
-
-test_that("SUTD", {
-    a <- NULL
-    tester <- setup.and.teardown(function () a <<- FALSE,
-        function () a <<- TRUE)
-    
-    expect_true(is.null(a))
-    with(tester, {
-        expect_false(is.null(a))
-        expect_false(a)
-        ## Test that assertion failures are raised
-        # expect_false(TRUE)
-    })
-    expect_true(a)
-    
-    ## Test that even if the code in the with block throws an error, (1) the
-    ## teardown is run, and (2) it doesn't fail silently but turns into a
-    ## failed test expectation.
-    # a <- NULL
-    # expect_true(is.null(a))
-    # with(tester, {
-    #     expect_false(is.null(a))
-    #     expect_false(a)
-    #     halt("Testing error handling, please ignore")
-    # })
-    # expect_true(a)
 })
 
 test_that("rethrow a caught error", {
@@ -91,8 +52,8 @@ test_that("dirtyElements", {
 test_that("joinPath", {
     expect_identical(joinPath("/api/datasets/", "../variables/"),
         "/api/variables/")
-    expect_identical(joinPath("/api/variables/", "4412es.json"),
-        "/api/variables/4412es.json")
+    expect_identical(joinPath("/api/variables/", "4412es/"),
+        "/api/variables/4412es/")
     expect_identical(joinPath("a/b/c/d/../e/f/", "g/../../h/"),
         "a/b/c/e/h/")
     expect_identical(joinPath("/api/datasets/", "/variables/"),
@@ -107,8 +68,8 @@ test_that("absoluteURL", {
     base.url <- "https://fake.crunch.io/api/datasets/"
     expect_identical(absoluteURL("../variables/", base.url),
         "https://fake.crunch.io/api/variables/")
-    expect_identical(absoluteURL("4412es.json", base.url),
-        "https://fake.crunch.io/api/datasets/4412es.json")
+    expect_identical(absoluteURL("4412es/", base.url),
+        "https://fake.crunch.io/api/datasets/4412es/")
     expect_identical(absoluteURL("g/../../h/",
         "https://fake.crunch.io/a/b/c/d/../e/f/"),
         "https://fake.crunch.io/a/b/c/e/h/")
@@ -119,5 +80,36 @@ test_that("absoluteURL", {
 })
 
 test_that("emptyObject JSONifies correctly", {
-    expect_equivalent(unclass(toJSON(emptyObject())), "{}")
+    expect_equal(unclass(toJSON(emptyObject())), "{}")
+    expect_equal(unclass(toJSON(emptyObject(list(a=1), 1:4))), "{}")
+})
+
+test_that("null function always returns null", {
+    expect_null(null())
+    expect_null(null(TRUE))
+    expect_null(null(stop("yo!")))
+})
+
+test_that("JSON behavior for NULL (handle jsonlite API change in 0.9.22)", {
+    expect_equal(unclass(toJSON(NULL)), "{}")
+    expect_equal(unclass(toJSON(list(x=NULL))), '{"x":null}')
+})
+
+test_that("setIfNotAlready", {
+    with(temp.options(crunch.test.opt1="previous",
+                      crunch.test.opt2=NULL,
+                      crunch.test.opt3=4), {
+
+        old <- setIfNotAlready(crunch.test.opt1="value", crunch.test.opt2=5)
+        expect_identical(getOption("crunch.test.opt1"), "previous")
+        expect_identical(getOption("crunch.test.opt2"), 5)
+        expect_identical(getOption("crunch.test.opt3"), 4)
+    })
+})
+
+test_that("startsWith/endsWith for old R", {
+    expect_true(alt.startsWith("http://", "http"))
+    expect_false(alt.startsWith("http://", "https"))
+    expect_true(alt.endsWith("http://", "//"))
+    expect_false(alt.endsWith("http://", "http"))
 })

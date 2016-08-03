@@ -7,3 +7,6 @@
 ^crunch\.Rcheck$
 ^\.travis\.yml$
 ^.*\.log$
+^.*\.Rproj$
+^\.Rproj\.user$
+^.*\.orig$

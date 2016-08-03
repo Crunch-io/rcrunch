@@ -8,19 +8,19 @@ test_that("join validatation", {
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(join1, "left"), {
             with(test.dataset(join2, "right"), {
                 test_that("Join test setup", {
                     expect_identical(dim(left), dim(join1))
                     expect_identical(dim(right), dim(join2))
-                    expect_identical(length(joins(left)), 0L)
+                    expect_length(joins(left), 0)
                 })
-                
+
                 test_that("join validatation", {
-                    expect_error(joinDatasets(left, join2), 
+                    expect_error(joinDatasets(left, join2),
                         "y must be a Crunch Dataset")
-                    expect_error(joinDatasets(left, join2), 
+                    expect_error(joinDatasets(left, join2),
                         "y must be a Crunch Dataset")
                     expect_error(joinDatasets(left, right, by=c("v1", "v2")),
                         "Can only join 'by' a single key")
@@ -29,11 +29,11 @@ if (run.integration.tests) {
                     expect_error(joinDatasets(left, right, by="v2"),
                         "Join key not found in first Dataset")
                 })
-                
+
                 joined <- try(joinDatasets(left, right, by="keyvar"))
                 test_that("The join succeeded", {
                     expect_true(is.dataset(joined))
-                    expect_identical(length(joins(joined)), 1L)
+                    expect_length(joins(joined), 1)
                     skip("TODO: fetch joined variable catalogs")
                     expect_identical(dim(joined), c(4L, 3L))
                     expect_identical(names(joined), c("keyvar", "v1", "v2"))

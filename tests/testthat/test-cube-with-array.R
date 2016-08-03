@@ -1,41 +1,41 @@
 context("Cubes with categorical array and multiple response")
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         cubemrdf <- mrdf
         cubemrdf$v5 <- as.factor(c("A", "A", "B", "B"))
         with(test.dataset(cubemrdf, "mrds"), {
             mrds <- mrdf.setup(mrds, selections="1.0")
             test_that("univariate multiple response cube", {
                 kube <- try(crtabs(~ MR, data=mrds))
-                expect_true(inherits(kube, "CrunchCube"))
+                expect_is(kube, "CrunchCube")
                 expect_equivalent(as.array(kube),
                     array(c(2, 1, 1), dim=c(3L),
                         dimnames=list(MR=c("mr_1", "mr_2", "mr_3"))))
             })
-            
+
             test_that("bivariate cube with MR", {
                 kube <- try(crtabs(~ MR + v4, data=mrds))
-                expect_true(inherits(kube, "CrunchCube"))
+                expect_is(kube, "CrunchCube")
                 expect_equivalent(as.array(kube),
                     array(c(2, 1, 1, 0, 0, 0), dim=c(3L, 2L),
                         dimnames=list(MR=c("mr_1", "mr_2", "mr_3"),
                         v4=c("B", "C"))))
-                
+
                 kube <- try(crtabs(~ v4 + MR, data=mrds))
-                expect_true(inherits(kube, "CrunchCube"))
+                expect_is(kube, "CrunchCube")
                 expect_equivalent(as.array(kube),
                     array(c(2, 0, 1, 0, 1, 0), dim=c(2L, 3L),
                         dimnames=list(v4=c("B", "C"),
                         MR=c("mr_1", "mr_2", "mr_3"))))
-                
+
                 kube <- try(crtabs(~ v4 + MR, data=mrds, useNA="ifany"))
-                expect_true(inherits(kube, "CrunchCube"))
+                expect_is(kube, "CrunchCube")
                 expect_equivalent(as.array(kube),
                     array(c(2, 0, 1, 0, 1, 0, 0, 1), dim=c(2L, 4L),
                         dimnames=list(v4=c("B", "C"),
                         MR=c("mr_1", "mr_2", "mr_3", "<NA>"))))
-                
+
                 kube@useNA <- "always"
                 expect_equivalent(as.array(kube),
                     array(c(2, 0, 0,
@@ -45,7 +45,7 @@ if (run.integration.tests) {
                         dimnames=list(v4=c("B", "C", "No Data"),
                         MR=c("mr_1", "mr_2", "mr_3", "<NA>"))))
             })
-            
+
             c1 <- crtabs(~ MR, data=mrds)
             test_that("prop.table on univariate MR without NAs", {
                 expect_equivalent(prop.table(c1),
@@ -59,7 +59,7 @@ if (run.integration.tests) {
                     array(c(.5, .25, .25, .25), dim=c(4L),
                         dimnames=list(MR=c("mr_1", "mr_2", "mr_3", "<NA>"))))
             })
-            
+
             c1 <- crtabs(~ v5 + MR, data=mrds)
             #    MR
             # v5  mr_1 mr_2 mr_3
@@ -99,7 +99,7 @@ if (run.integration.tests) {
                     array(c(1, 1, 0, 1, 0, 1, 0, 1), dim=c(2L, 4L),
                         dimnames=list(v5=c("A", "B"),
                         MR=c("mr_1", "mr_2", "mr_3", "<NA>"))))
-                
+
                 ## Sweep the whole table
                 expect_equivalent(margin.table(c2), 4)
                 expect_equivalent(prop.table(c2),
@@ -123,27 +123,36 @@ if (run.integration.tests) {
                         dimnames=list(v5=c("A", "B"),
                         MR=c("mr_1", "mr_2", "mr_3", "<NA>"))))
             })
-            
+
             mrds$MR <- undichotomize(mrds$MR)
             alias(mrds$MR) <- "CA"
             name(mrds$CA) <- "Cat array"
             test_that("'univariate' categorical array cube", {
                 kube <- try(crtabs(~ CA, data=mrds, useNA="ifany"))
-                expect_true(inherits(kube, "CrunchCube"))
-                expect_equivalent(as.array(kube), 
+                expect_is(kube, "CrunchCube")
+                expect_equivalent(as.array(kube),
                     array(c(1, 2, 2, 2, 1, 1, 1, 1, 1),
                     dim=c(3L, 3L),
                     dimnames=list(CA=c("mr_1", "mr_2", "mr_3"),
                         CA=c("0.0", "1.0", "<NA>"))))
             })
-            
+
             test_that("accessing array subvariables", {
                 kube <- crtabs(~ CA$mr_1 + CA$mr_2, data=mrds, useNA="ifany")
-                expect_equivalent(as.array(kube), 
+                expect_equivalent(as.array(kube),
                     array(c(1, 1, 0, 0, 1, 0, 0, 0, 1),
                     dim=c(3L, 3L),
                     dimnames=list(mr_1=c("0.0", "1.0", "No Data"),
                         mr_2=c("0.0", "1.0", "No Data"))))
+            })
+
+            test_that("can't request NULL as subvariable (bad subvar ref)", {
+                expect_error(crtabs(~ CA$mr_1 + CA$NOTAVAR, data=mrds),
+                    "Invalid cube dimension: CA$NOTAVAR cannot be NULL",
+                    fixed=TRUE)
+                expect_error(crtabs(~ CA$foo + CA$mr_1 + CA$NOTAVAR, data=mrds),
+                    "Invalid cube dimensions: CA$foo and CA$NOTAVAR cannot be NULL",
+                    fixed=TRUE)
             })
         })
     })

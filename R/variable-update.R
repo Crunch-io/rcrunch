@@ -1,6 +1,6 @@
 .updateVariable <- function (variable, value, filter=NULL) {
     ## Construct a ZCL update payload, then POST it
-    payload <- list(command="update", 
+    payload <- list(command="update",
         variables=.updatePayload(variable, value))
     payload[["filter"]] <- zcl(filter)
     dref <- datasetReference(variable)
@@ -13,15 +13,14 @@
 .updatePayload <- function (variable, value) {
     ## Construct the "variables" key of a ZCL update payload
     if (is.Array(variable)) {
-        subvars <- index(subvariables(variable))
-        subids <- unlist(lapply(subvars, function (x) x$id))
-        out <- lapply(subids, function (x) zcl(typeof(value, structure(zfunc("typeof", structure(list(variable=x), class="zcl")), class="zcl"))))
-        names(out) <- subids
+        out <- sapply(urls(subvariables(variable)), function (x) {
+            zcl(value)
+        }, simplify=FALSE)
     } else {
-        out <- structure(list(zcl(typeof(value, variable))),
-            .Names=tuple(variable)$id)
+        out <- structure(list(zcl(value)),
+            .Names=self(variable))
     }
-    
+
     ## Check for missingness and replace the NAs with special values
     out <- lapply(out, function (x) {
         if ("column" %in% names(x)) {
@@ -44,41 +43,31 @@
     }
     if (is.numeric(f)) {
         ## Validate
-        
-        fun <- ifelse(length(f) == 1, "==", "in")
-        f <- zfunc(fun, zfunc("row"), f - 1)  ## 1-base to 0-base counting
+
+        f <- .seqCrunch(zfunc("row"), f - 1)
     }
     return(f)
 }
 
-##' Updating variables with expressions or values
-##'
-##' @param x a Variable
-##' @param i a CrunchLogicalExpr or R index, optionally
-##' @param j Invalid
-##' @param value an R vector or a CrunchExpr with which to update
-##' @return \code{x} duly modified
-##' @name variable-update
-##' @aliases variable-update
+#' Updating variables with expressions or values
+#'
+#' @param x a Variable
+#' @param i a CrunchLogicalExpr or R index, optionally
+#' @param j Invalid
+#' @param value an R vector or a CrunchExpr with which to update
+#' @return \code{x} duly modified
+#' @name variable-update
+#' @aliases variable-update
 NULL
 
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("CrunchVariable", "ANY", "missing", "ANY"), .backstopUpdate)
 
-##' @rdname variable-update
-##' @export
-setMethod("[<-", c("CrunchVariable", "ANY", "missing", "NULL"), 
+#' @rdname variable-update
+#' @export
+setMethod("[<-", c("CrunchVariable", "ANY", "missing", "NULL"),
     function (x, i, j, value) return(NULL))
-
-
-.sigs <- list(
-    c("TextVariable", "character"),
-    c("NumericVariable", "numeric"),
-    c("DatetimeVariable", "Date"),
-    c("DatetimeVariable", "POSIXt"),
-    c("CrunchVariable", "CrunchExpr")
-)
 
 .var.updater <- function (x, i, j, value) {
     if (missing(i)) i <- NULL
@@ -86,41 +75,28 @@ setMethod("[<-", c("CrunchVariable", "ANY", "missing", "NULL"),
     return(x)
 }
 
-# for (i in seq_along(.sigs)) {
-#     setMethod("[<-", c(.sigs[[i]][1], "ANY", "missing", .sigs[[i]][2]),
-#         .var.updater)
-# }
-
-# for (i in seq_along(.sigs)) {
-#         cat('
-# ##\' @rdname variable-update
-# ##\' @export
-# setMethod("[<-", c("', .sigs[[i]][1], '", "ANY", "missing", "', .sigs[[i]][2], '"),
-#     .var.updater)', sep="")
-# }
-
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("TextVariable", "ANY", "missing", "character"),
     .var.updater)
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("NumericVariable", "ANY", "missing", "numeric"),
     .var.updater)
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("DatetimeVariable", "ANY", "missing", "Date"),
     .var.updater)
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("DatetimeVariable", "ANY", "missing", "POSIXt"),
     .var.updater)
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("CrunchVariable", "ANY", "missing", "CrunchExpr"),
     .var.updater)
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("CrunchVariable", "CrunchExpr", "missing", "CrunchExpr"),
     function (x, i, j, value) {
         if (!identical(zcl(i), value@filter)) {
@@ -180,65 +156,58 @@ setMethod("[<-", c("CrunchVariable", "CrunchExpr", "missing", "CrunchExpr"),
     }
 )
 
-# for (i in c("CategoricalVariable", "CategoricalArrayVariable")) {
-#     for (j in c("numeric", "character", "factor")) {
-#         setMethod("[<-", c(i, "ANY", "missing", j), .categorical.update[[j]])
-#     }
-# }
+#' @rdname variable-update
+#' @export
+setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "numeric"),
+    .categorical.update[["numeric"]])
+#' @rdname variable-update
+#' @export
+setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "character"),
+    .categorical.update[["character"]])
+#' @rdname variable-update
+#' @export
+setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "factor"),
+    .categorical.update[["factor"]])
+#' @rdname variable-update
+#' @export
+setMethod("[<-", c("CategoricalArrayVariable", "ANY", "missing", "numeric"),
+    .categorical.update[["numeric"]])
+#' @rdname variable-update
+#' @export
+setMethod("[<-", c("CategoricalArrayVariable", "ANY", "missing", "character"),
+    .categorical.update[["character"]])
+#' @rdname variable-update
+#' @export
+setMethod("[<-", c("CategoricalArrayVariable", "ANY", "missing", "factor"),
+    .categorical.update[["factor"]])
 
-# for (i in c("CategoricalVariable", "CategoricalArrayVariable")) {
-#     for (j in c("numeric", "character", "factor")) {
-#         cat('
-# ##\' @rdname variable-update
-# ##\' @export
-# setMethod("[<-", c("', i, '", "ANY", "missing", "', j, '"), .categorical.update[["', j, '"]])', sep="")
-#     }
-# }
-
-##' @rdname variable-update
-##' @export
-setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "numeric"), .categorical.update[["numeric"]])
-##' @rdname variable-update
-##' @export
-setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "character"), .categorical.update[["character"]])
-##' @rdname variable-update
-##' @export
-setMethod("[<-", c("CategoricalVariable", "ANY", "missing", "factor"), .categorical.update[["factor"]])
-##' @rdname variable-update
-##' @export
-setMethod("[<-", c("CategoricalArrayVariable", "ANY", "missing", "numeric"), .categorical.update[["numeric"]])
-##' @rdname variable-update
-##' @export
-setMethod("[<-", c("CategoricalArrayVariable", "ANY", "missing", "character"), .categorical.update[["character"]])
-##' @rdname variable-update
-##' @export
-setMethod("[<-", c("CategoricalArrayVariable", "ANY", "missing", "factor"), .categorical.update[["factor"]])
-
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
     function (x, i, j, value) {
-        ## For assigning NA
         if (all(is.na(value))) {
+            ## For assigning NA
             value <- .no.data.value(type(x), add.type=TRUE)
+            if (has.categories(x)) {
+                return(.categorical.update[["numeric"]](x, i, j, value))
+            }
+            if (missing(i)) i <- NULL
+            out <- .updateVariable(x, value, filter=.dispatchFilter(i))
+            return(x)
+        } else if (has.categories(x) &&
+            all(names(categories(x)) %in% c("True", "False", "No Data"))) {
+
+            ## This is "logical-as-categorical", so we can take TRUE/FALSE values
+            value <- c("True", "False")[2L - as.integer(value)]
+            return(.categorical.update[["character"]](x, i, j, value))
         } else {
             ## halt()
             .backstopUpdate(x, i, j, value)
         }
-        
-        ## Datetime not yet supported, apparently
-        if (is.Datetime(x)) {
-            .backstopUpdate(x, i, j, value)
-        } else if (is.Categorical(x) || is.CA(x) || is.MR(x)) {
-            return(.categorical.update[["numeric"]](x, i, j, value))
-        }
-        if (missing(i)) i <- NULL
-        out <- .updateVariable(x, value, filter=.dispatchFilter(i))
-        return(x)
     })
 
 .no.data.value <- function (x, add.type=FALSE) {
-    if (x %in% c("categorical", "multiple_response", "categorical_array")) {
+    if (has.categories(x)) {
         return(-1L)
     } else {
         out <- list(`?`=-1L)
@@ -249,12 +218,12 @@ setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
     }
 }
 
-##' @rdname variable-update
-##' @export
+#' @rdname variable-update
+#' @export
 setMethod("is.na<-", "CrunchVariable", function (x, value) {
     ## Temporarily kill this method until API supports correctly
     halt("is.na<- not yet supported for CrunchVariables")
-    
+
     lab <- gsub('"', "", deparse(substitute(value)))
     value <- zcl(.dispatchFilter(value))
     payload <- structure(list(value), .Names=lab)

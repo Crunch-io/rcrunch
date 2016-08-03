@@ -1,6 +1,6 @@
 {
     "element": "shoji:view",
-    "self": "/api/datasets/dataset1/variables/mymrset/values.json", 
+    "self": "/api/datasets/dataset1/variables/mymrset/values/", 
     "value": [ [ 2, 1, 1 ],
         [ 2, 1, {"?": -1} ],
         [ 1, 2, 1 ],

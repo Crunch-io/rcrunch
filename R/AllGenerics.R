@@ -1,4 +1,4 @@
-##' @export
+#' @export
 setGeneric("values", function (x) standardGeneric("values"))
 setGeneric("values<-", function (x, value) standardGeneric("values<-"))
 
@@ -13,11 +13,19 @@ setGeneric("undichotomize", function (x) standardGeneric("undichotomize"))
 setGeneric("value", function (x) standardGeneric("value"))
 setGeneric("value<-", function (x, value) standardGeneric("value<-"))
 setGeneric("name", function (x) standardGeneric("name"))
-setGeneric("name<-", function (x, value) standardGeneric("name<-"),
+setGeneric("name<-", function (x, value) standardGeneric("name<-"))
+setGeneric("expr", function (x) standardGeneric("expr"))
+setGeneric("expr<-", function (x, value) standardGeneric("expr<-"),
     signature="x")
 setGeneric("description", function (x) standardGeneric("description"))
 setGeneric("description<-",
     function (x, value) standardGeneric("description<-"), signature="x")
+setGeneric("startDate", function (x) standardGeneric("startDate"))
+setGeneric("startDate<-",
+function (x, value) standardGeneric("startDate<-"), signature="x")
+setGeneric("endDate", function (x) standardGeneric("endDate"))
+setGeneric("endDate<-",
+    function (x, value) standardGeneric("endDate<-"), signature="x")
 setGeneric("alias")
 setGeneric("alias<-", function (x, value) standardGeneric("alias<-"),
     signature="x")
@@ -25,9 +33,11 @@ setGeneric("aliases", function (x) standardGeneric("aliases"))
 setGeneric("aliases<-", function (x, value) standardGeneric("aliases<-"),
     signature="x")
 setGeneric("descriptions", function (x) standardGeneric("descriptions"))
-setGeneric("descriptions<-", 
+setGeneric("descriptions<-",
     function (x, value) standardGeneric("descriptions<-"), signature="x")
 setGeneric("emails", function (x) standardGeneric("emails"))
+setGeneric("email", function (x) standardGeneric("email"))
+
 setGeneric("types", function (x) standardGeneric("types"))
 setGeneric("timestamps", function (x) standardGeneric("timestamps"))
 
@@ -42,7 +52,7 @@ setGeneric("allVariables", function (x) standardGeneric("allVariables"))
 setGeneric("allVariables<-",
     function (x, value) standardGeneric("allVariables<-"))
 setGeneric("subvariables", function (x) standardGeneric("subvariables"))
-setGeneric("subvariables<-", 
+setGeneric("subvariables<-",
     function (x, value) standardGeneric("subvariables<-"))
 setGeneric("datasetReference", function (x) standardGeneric("datasetReference"))
 setGeneric("hide", function (x) standardGeneric("hide"))
@@ -53,7 +63,6 @@ setGeneric("self", function (x) standardGeneric("self"))
 setGeneric("refresh", function (x) standardGeneric("refresh"))
 setGeneric("delete", function (x, ...) standardGeneric("delete"),
     signature="x")
-setGeneric("readonly<-", function (x, value) standardGeneric("readonly<-"))
 setGeneric("entities", function (x, ...) standardGeneric("entities"))
 setGeneric("entities<-", function (x, value) standardGeneric("entities<-"))
 setGeneric("tuple", function (x) standardGeneric("tuple"))
@@ -76,11 +85,27 @@ setGeneric("members<-", function (x, value) standardGeneric("members<-"))
 setGeneric("filters", function (x) standardGeneric("filters"))
 setGeneric("filters<-", function (x, value) standardGeneric("filters<-"))
 setGeneric("appliedFilters", function (x) standardGeneric("appliedFilters"))
-setGeneric("appliedFilters<-", 
+setGeneric("appliedFilters<-",
     function (x, value) standardGeneric("appliedFilters<-"))
 setGeneric("activeFilter", function (x) standardGeneric("activeFilter"))
-setGeneric("activeFilter<-", 
+setGeneric("activeFilter<-",
     function (x, value) standardGeneric("activeFilter<-"))
+setGeneric("is.public", function (x) standardGeneric("is.public"))
+setGeneric("is.public<-", function (x, value) standardGeneric("is.public<-"))
+setGeneric("is.editor", function (x) standardGeneric("is.editor"))
+setGeneric("is.editor<-", function (x, value) standardGeneric("is.editor<-"))
+setGeneric("is.archived", function (x) standardGeneric("is.archived"))
+setGeneric("is.archived<-", function (x, value) standardGeneric("is.archived<-"))
+setGeneric("is.draft", function (x) standardGeneric("is.draft"))
+setGeneric("is.draft<-", function (x, value) standardGeneric("is.draft<-"))
+setGeneric("is.published", function (x) standardGeneric("is.published"))
+setGeneric("is.published<-", function (x, value) standardGeneric("is.published<-"))
+setGeneric("groupClass", function (x) standardGeneric("groupClass"))
+setGeneric("entityClass", function (x) standardGeneric("entityClass"))
+setGeneric("entitiesInitializer", function (x) standardGeneric("entitiesInitializer"))
+
+setGeneric("owner", function (x) standardGeneric("owner"))
+setGeneric("owner<-", function (x, value) standardGeneric("owner<-"))
 
 setGeneric("dim")
 setGeneric("ncol")
@@ -101,51 +126,54 @@ setGeneric("round")
 
 setGeneric("subset")
 
-##' Generic method for converting objects to Crunch representations
-##'
-##' If you have other object types you wish to convert to Crunch variables, 
-##' you can declare methods for \code{toVariable}
-##' @param x the object
-##' @param ... additional arguments
-##' @return a list object suitable for POSTing to the Crunch API. See the API
-##' documentation for specifications. 
-##' @rdname toVariable
-##' @aliases toVariable
-##' @export
+#' Generic method for converting objects to Crunch representations
+#'
+#' If you have other object types you wish to convert to Crunch variables,
+#' you can declare methods for \code{toVariable}
+#' @param x the object
+#' @param ... additional arguments
+#' @return a list object suitable for POSTing to the Crunch API. See the API
+#' documentation for specifications.
+#' @rdname toVariable
+#' @aliases toVariable
+#' @export
 setGeneric("toVariable", function (x, ...) standardGeneric("toVariable"))
 
 setGeneric("lapply")
 setGeneric("is.na")
 setGeneric("is.na<-")
 setGeneric("%in%")
+setGeneric("write.csv")
 
 setGeneric("zcl", function (x) standardGeneric("zcl"))
-setGeneric("absolute.zcl", function (x) standardGeneric("absolute.zcl"))
 
-
-##' toJSON methods for Crunch objects
-##'
-##' \code{crunch} uses the \code{jsonlite} package for (de)serialization of
-##' JSON. Unlike \code{RJSONIO}'s \code{toJSON}, \code{\link[jsonlite]{toJSON}}
-##' does not allow for defining S4 methods for other object types. So,
-##' \code{crunch::toJSON} wraps \code{jsonprep}, which exists to translate 
-##' objects to base R objects, which \code{jsonlite::toJSON} can handle. 
-##' \code{jsonprep} is defined as an S4 generic, and it is exported (unlike
-##' code{jsonlite::asJSON}), so you can define methods for it if you have other
-##' objects that you want to successfully serialize to JSON.
-##' 
-##' @param x the object
-##' @param ... additional arguments
-##' @return \code{jsonprep} returns a base R object that \code{jsonlite::toJSON}
-##' can handle. \code{toJSON} returns the JSON-serialized character object.
-##' @name tojson-crunch
-##' @seealso \code{\link[jsonlite]{toJSON}}
+#' toJSON methods for Crunch objects
+#'
+#' \code{crunch} uses the \code{jsonlite} package for (de)serialization of
+#' JSON. Unlike \code{RJSONIO}'s \code{toJSON}, \code{\link[jsonlite]{toJSON}}
+#' does not allow for defining S4 methods for other object types. So,
+#' \code{crunch::toJSON} wraps \code{jsonprep}, which exists to translate
+#' objects to base R objects, which \code{jsonlite::toJSON} can handle.
+#' \code{jsonprep} is defined as an S4 generic, and it is exported (unlike
+#' code{jsonlite::asJSON}), so you can define methods for it if you have other
+#' objects that you want to successfully serialize to JSON.
+#'
+#' @param x the object
+#' @param ... additional arguments
+#' @return \code{jsonprep} returns a base R object that \code{jsonlite::toJSON}
+#' can handle. \code{toJSON} returns the JSON-serialized character object.
+#' @name tojson-crunch
+#' @seealso \code{\link[jsonlite]{toJSON}}
 NULL
 
-##' @rdname tojson-crunch
-##' @export
+#' @rdname tojson-crunch
+#' @export
 setGeneric("jsonprep", function (x, ...) standardGeneric("jsonprep"))
 
-setGeneric("getShowContent", 
+setGeneric("getShowContent",
     function (x, ...) standardGeneric("getShowContent"))
 
+.backstopUpdate <- function (x, i, j, value) {
+    ## Backstop error so you don't get "Object of class S4 is not subsettable"
+    halt(paste("Cannot update", class(x), "with type", class(value)))
+}

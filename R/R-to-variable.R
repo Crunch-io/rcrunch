@@ -1,53 +1,54 @@
-##' @rdname toVariable
-##' @export
+#' @rdname toVariable
+#' @export
 setMethod("toVariable", "character", function (x, ...) {
     return(structure(list(values=x, type="text", ...),
         class="VariableDefinition"))
 })
-##' @rdname toVariable
-##' @export
+#' @rdname toVariable
+#' @export
 setMethod("toVariable", "numeric", function (x, ...) {
     return(structure(list(values=x, type="numeric", ...),
         class="VariableDefinition"))
 })
-##' @rdname toVariable
-##' @export
+#' @rdname toVariable
+#' @export
 setMethod("toVariable", "factor", function (x, ...) {
     nlevels <- length(levels(x))
-    max.categories <- getOption("crunch.max.categories")
-    if (!is.null(max.categories) && nlevels > max.categories) {
-        return(toVariable(as.character(x), ...))
-    } 
     out <- structure(list(values=as.integer(x), type="categorical",
         categories=categoriesFromLevels(levels(x)), ...),
         class="VariableDefinition")
     return(NAToCategory(out, useNA="always"))
 })
-##' @rdname toVariable
-##' @export
+#' @rdname toVariable
+#' @export
 setMethod("toVariable", "Date", function (x, ...) {
     return(structure(list(values=as.character(x), type="datetime",
         resolution="D", ...),
         class="VariableDefinition"))
 })
-# setMethod("toVariable", "POSIXt", function (x) {
-#     return(list(values=as.character(x), type="datetime", resolution="s", ...))
-# })
-
-##' @rdname toVariable
-##' @export
-setMethod("toVariable", "VariableDefinition", function (x, ...) {
-    return(updateList(x, list(...)))
+#' @rdname toVariable
+#' @export
+setMethod("toVariable", "POSIXt", function (x, ...) {
+    return(structure(list(values=strftime(x, "%Y-%m-%dT%H:%M:%OS3"),
+        type="datetime",
+        resolution="ms", ...),
+        class="VariableDefinition"))
 })
-##' @rdname toVariable
-##' @export
+
+#' @rdname toVariable
+#' @export
+setMethod("toVariable", "VariableDefinition", function (x, ...) {
+    return(modifyList(x, list(...)))
+})
+#' @rdname toVariable
+#' @export
 setMethod("toVariable", "logical", function (x, ...) {
     ## Make it categorical
-    out <- structure(list(values=2L-as.integer(x), type="categorical", 
+    out <- structure(list(values=2L-as.integer(x), type="categorical",
         categories=categoriesFromLevels(c("True", "False")),
         ...),
         class="VariableDefinition")
-    return(NAToCategory(out))
+    return(NAToCategory(out, useNA="always"))
 })
 
 categoriesFromLevels <- function (x) {

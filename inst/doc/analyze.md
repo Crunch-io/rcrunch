@@ -7,10 +7,10 @@
 
 
 # Computing with R and Crunch
-With `crunch`, you can harness the power of R to do computations with your datasets in Crunch that would be difficult or impossible to accomplish in a graphical user interface. 
+With `crunch`, you can harness the power of R to do computations with your datasets in Crunch that would be difficult or impossible to accomplish in a graphical user interface.
 
 ## Crosstabbing
-While the web application certainly supports crosstabbing, you may want to do aggregations like this in R. Crosstabbing in R with `crunch` may allow you to easily do additional computations on the result, for example. 
+While the web application certainly supports crosstabbing, you may want to do aggregations like this in R. Crosstabbing in R with `crunch` may allow you to easily do additional computations on the result, for example.
 
 `crunch` contains the `crtabs` (Crunch-tabs) function, which largely emulates the design of the `xtabs` function in base R. In essence, you define a formula and provide data in which to evaluate it. In this case, we'll be providing a `CrunchDataset`.
 
@@ -27,12 +27,12 @@ tab1
 ```
 ## educ
 ##                No HS High school graduate         Some college               2-year               4-year 
-##                   47                  278                  253                   83                  228 
+##                   12                   71                   61                   24                   57 
 ##            Post-grad 
-##                  111
+##                   25
 ```
 
-Additional dimensions are added with `+`. For a two-way table of education and gender, 
+Additional dimensions are added with `+`. For a two-way table of education and gender,
 
 
 ```r
@@ -43,12 +43,12 @@ tab2
 ```
 ##                       gender
 ## educ                   Male Female
-##   No HS                  23     24
-##   High school graduate  124    154
-##   Some college          110    143
-##   2-year                 32     51
-##   4-year                115    113
-##   Post-grad              63     48
+##   No HS                   6      6
+##   High school graduate   33     38
+##   Some college           26     35
+##   2-year                  6     18
+##   4-year                 25     32
+##   Post-grad              15     10
 ```
 
 ### Weighting
@@ -80,12 +80,12 @@ crtabs(~ educ + gender, data=ds)
 ```
 ##                       gender
 ## educ                        Male    Female
-##   No HS                 57.78851  51.70880
-##   High school graduate 152.08593 155.76219
-##   Some college         126.99383 143.98321
-##   2-year                35.00172  36.41431
-##   4-year                78.47811  88.75691
-##   Post-grad             37.43805  35.58841
+##   No HS                12.628200  8.698227
+##   High school graduate 43.315170 43.297542
+##   Some college         31.612096 29.963579
+##   2-year                8.567314 15.260707
+##   4-year               16.492669 22.581293
+##   Post-grad             8.935983  8.647220
 ```
 
 If we want unweighted data, that's easy enough:
@@ -98,12 +98,12 @@ crtabs(~ educ + gender, data=ds, weight=NULL)
 ```
 ##                       gender
 ## educ                   Male Female
-##   No HS                  23     24
-##   High school graduate  124    154
-##   Some college          110    143
-##   2-year                 32     51
-##   4-year                115    113
-##   Post-grad              63     48
+##   No HS                   6      6
+##   High school graduate   33     38
+##   Some college           26     35
+##   2-year                  6     18
+##   4-year                 25     32
+##   Post-grad              15     10
 ```
 
 ### Proportion tables
@@ -117,9 +117,9 @@ prop.table(tab1)
 ```
 ## educ
 ##                No HS High school graduate         Some college               2-year               4-year 
-##                0.047                0.278                0.253                0.083                0.228 
+##                0.048                0.284                0.244                0.096                0.228 
 ##            Post-grad 
-##                0.111
+##                0.100
 ```
 
 For column proportions, specify margin=2 (by rows, margin=1):
@@ -132,12 +132,12 @@ prop.table(tab2, 2)
 ```
 ##                       gender
 ## educ                         Male     Female
-##   No HS                0.04925054 0.04502814
-##   High school graduate 0.26552463 0.28893058
-##   Some college         0.23554604 0.26829268
-##   2-year               0.06852248 0.09568480
-##   4-year               0.24625268 0.21200750
-##   Post-grad            0.13490364 0.09005629
+##   No HS                0.05405405 0.04316547
+##   High school graduate 0.29729730 0.27338129
+##   Some college         0.23423423 0.25179856
+##   2-year               0.05405405 0.12949640
+##   4-year               0.22522523 0.23021583
+##   Post-grad            0.13513514 0.07194245
 ```
 
 Let's make that more readable:
@@ -150,12 +150,12 @@ round(100*prop.table(tab2, 2))
 ```
 ##                       gender
 ## educ                   Male Female
-##   No HS                   5      5
-##   High school graduate   27     29
-##   Some college           24     27
-##   2-year                  7     10
-##   4-year                 25     21
-##   Post-grad              13      9
+##   No HS                   5      4
+##   High school graduate   30     27
+##   Some college           23     25
+##   2-year                  5     13
+##   4-year                 23     23
+##   Post-grad              14      7
 ```
 
 ### Complex data types
@@ -172,37 +172,37 @@ tab3
 ## 
 ##                         imiss
 ## imiss                    Very Important Somewhat Important Not very Important Unimportant
-##   Abortion                    162.12515           134.9888          107.24213   79.423438
-##   Education                   249.27835           149.9759           49.29305   35.967181
-##   Gay rights                   89.37703           126.6561           91.30474  175.743469
-##   Health care                 309.00483           130.5632           38.21869    6.727795
-##   Immigration                 195.29567           185.4113           71.04937   31.503505
-##   Medicare                    232.66403           171.9012           59.70127   22.518970
-##   Social security             262.64142           154.1059           49.45844   18.308729
-##   Taxes                       275.06635           148.3823           44.73307   15.363463
-##   Terrorism                   215.59557           162.9700           64.45748   37.949640
-##   The budget deficit          259.49040           131.9708           65.39257   27.660696
-##   The economy                 370.27981            91.9634           20.94766    1.323600
-##   The environment             167.29844           208.6597           66.34377   40.634601
-##   The war in Afghanistan      112.47886           198.8819          123.80520   44.990781
+##   Abortion                     31.11036           27.53957          30.125371   32.776132
+##   Education                    47.47270           46.51134          11.613407   15.953981
+##   Gay rights                   11.31668           28.19149          26.431299   55.117086
+##   Health care                  75.85298           39.27766           3.819861    2.600933
+##   Immigration                  49.31502           37.34169          17.139246   17.755480
+##   Medicare                     59.80997           47.99707           9.550301    4.194091
+##   Social security              68.15899           41.79910           6.273460    5.319881
+##   Taxes                        65.01490           41.59154           6.653878    7.761953
+##   Terrorism                    45.64391           42.62133          11.107822   19.924924
+##   The budget deficit           59.03394           30.34666          16.027038   16.143793
+##   The economy                  90.19129           18.19050          13.169648    0.000000
+##   The environment              30.96798           59.36010          19.180623   12.042728
+##   The war in Afghanistan       21.66667           51.95812          20.996176   25.220936
 ## 
 ## , , gender = Female
 ## 
 ##                         imiss
 ## imiss                    Very Important Somewhat Important Not very Important Unimportant
-##   Abortion                     208.0978          181.00190           77.84651    39.36797
-##   Education                    311.7081          150.47036           29.86234    15.59800
-##   Gay rights                   110.7950          141.61421          123.07314   130.67483
-##   Health care                  371.8625          113.50690           10.10853    11.12973
-##   Immigration                  179.0837          214.67482           76.60153    30.59193
-##   Medicare                     296.2963          145.42748           44.96075    18.78344
-##   Social security              302.5688          148.92485           42.93341    13.99751
-##   Taxes                        300.6512          153.51253           32.88000    15.54603
-##   Terrorism                    256.4770          161.79469           55.87238    27.87878
-##   The budget deficit           264.8232          168.17735           47.21392    24.26524
-##   The economy                  391.2861           94.92724           10.44768    11.05645
-##   The environment              217.2398          175.48367           62.49252    37.25290
-##   The war in Afghanistan       184.6392          214.57244           72.36317    36.03780
+##   Abortion                     52.59306           45.01694          17.535359   12.266433
+##   Education                    70.03272           45.04846           6.944584    6.422805
+##   Gay rights                   33.97914           34.23703          24.418990   35.813411
+##   Health care                  90.70215           29.57668           3.697671    3.856843
+##   Immigration                  48.19794           48.71002          17.758330   11.222931
+##   Medicare                     72.39412           38.22034          12.111045    4.282138
+##   Social security              73.35809           35.84414          13.522809    5.723524
+##   Taxes                        78.98925           29.93235          11.747300    7.779673
+##   Terrorism                    63.89258           37.68492          14.613920   12.257150
+##   The budget deficit           58.46827           45.55364          15.087550    9.339109
+##   The economy                  93.86900           25.30076           5.421963    3.084749
+##   The environment              53.05919           43.99564          15.071708   11.953823
+##   The war in Afghanistan       48.27161           48.41640          17.997678   13.762882
 ```
 
 Note that even though we specified two variables in our formula, because "imiss" itself is two dimensional, our result is a three-dimensional array.
@@ -224,20 +224,20 @@ tab3mr
 
 ```
 ##                         gender
-## imiss                        Male   Female
-##   Abortion               297.1140 389.0997
-##   Education              399.2542 462.1785
-##   Gay rights             216.0331 252.4092
-##   Health care            439.5680 485.3694
-##   Immigration            380.7070 393.7586
-##   Medicare               404.5652 441.7238
-##   Social security        416.7473 451.4937
-##   Taxes                  423.4487 454.1637
-##   Terrorism              378.5656 418.2717
-##   The budget deficit     391.4612 433.0006
-##   The economy            462.2432 486.2133
-##   The environment        375.9582 392.7234
-##   The war in Afghanistan 311.3608 399.2116
+## imiss                         Male    Female
+##   Abortion                58.64993  97.61001
+##   Education               93.98404 115.08118
+##   Gay rights              39.50817  68.21617
+##   Health care            115.13064 120.27883
+##   Immigration             86.65671  96.90796
+##   Medicare               107.80704 110.61446
+##   Social security        109.95809 109.20223
+##   Taxes                  106.60644 108.92159
+##   Terrorism               88.26523 101.57750
+##   The budget deficit      89.38060 104.02191
+##   The economy            108.38178 119.16976
+##   The environment         90.32808  97.05483
+##   The war in Afghanistan  73.62479  96.68801
 ```
 
 It's worth noting here that the result of `crtabs` isn't an `array` object but a `CrunchCube` object.
@@ -263,19 +263,19 @@ round(100*prop.table(tab3mr, 2))
 ```
 ##                         gender
 ## imiss                    Male Female
-##   Abortion                 61     76
-##   Education                82     91
-##   Gay rights               44     50
-##   Health care              90     95
-##   Immigration              78     77
-##   Medicare                 83     87
-##   Social security          86     89
-##   Taxes                    87     89
-##   Terrorism                78     82
-##   The budget deficit       80     85
-##   The economy              95     95
-##   The environment          77     77
-##   The war in Afghanistan   64     78
+##   Abortion                 48     76
+##   Education                77     90
+##   Gay rights               33     53
+##   Health care              95     94
+##   Immigration              71     75
+##   Medicare                 89     86
+##   Social security          90     85
+##   Taxes                    88     85
+##   Terrorism                73     79
+##   The budget deficit       74     81
+##   The economy              89     93
+##   The environment          74     76
+##   The war in Afghanistan   61     75
 ```
 
 Finally, just as we saw in the [array variables](array-variables.md) vignette, we can grab individual subvariables and crosstab with them:
@@ -287,11 +287,11 @@ crtabs(~ imiss$Education + gender, data=ds)
 
 ```
 ##                     gender
-## imiss_h                   Male    Female
-##   Very Important     249.27835 311.70813
-##   Somewhat Important 149.97589 150.47036
-##   Not very Important  49.29305  29.86234
-##   Unimportant         35.96718  15.59800
+## imiss_h                  Male    Female
+##   Very Important     47.47270 70.032722
+##   Somewhat Important 46.51134 45.048457
+##   Not very Important 11.61341  6.944584
+##   Unimportant        15.95398  6.422805
 ```
 
 ### N-way tables
@@ -308,37 +308,37 @@ round(crtabs(~ imiss + educ + gender, data=ds))
 ## 
 ##                         educ
 ## imiss                    No HS High school graduate Some college 2-year 4-year Post-grad
-##   Abortion                  48                   83           86     18     43        19
-##   Education                 51                  114          101     31     68        34
-##   Gay rights                29                   47           74     10     37        20
-##   Health care               57                  137          111     31     69        34
-##   Immigration               47                  106          105     33     58        32
-##   Medicare                  56                  127           96     28     65        32
-##   Social security           57                  135           95     30     66        34
-##   Taxes                     50                  126          112     28     72        35
-##   Terrorism                 56                  112           94     31     59        28
-##   The budget deficit        56                  110          104     34     59        30
-##   The economy               58                  137          121     32     77        37
-##   The environment           55                  113           96     27     56        28
-##   The war in Afghanistan    45                   84           91     24     42        25
+##   Abortion                   6                   17           21      1      9         5
+##   Education                 13                   25           27      9     13         8
+##   Gay rights                 1                   10           18      1      4         5
+##   Health care               12                   43           28      9     15         8
+##   Immigration               10                   25           23      9     12         8
+##   Medicare                  12                   39           27      8     14         7
+##   Social security           12                   41           25      9     14         9
+##   Taxes                     13                   31           31      9     15         8
+##   Terrorism                 12                   25           24      9     12         7
+##   The budget deficit        13                   24           24      8     13         7
+##   The economy               13                   32           31      9     16         9
+##   The environment           12                   31           24      7      9         8
+##   The war in Afghanistan    11                   17           24      2     13         6
 ## 
 ## , , gender = Female
 ## 
 ##                         educ
 ## imiss                    No HS High school graduate Some college 2-year 4-year Post-grad
-##   Abortion                  41                  113          116     29     61        29
-##   Education                 51                  135          132     32     79        32
-##   Gay rights                22                   64           82     17     47        20
-##   Health care               51                  141          140     36     82        34
-##   Immigration               38                  115          115     27     70        29
-##   Medicare                  52                  139          127     34     60        30
-##   Social security           52                  141          128     33     68        31
-##   Taxes                     52                  133          122     35     78        34
-##   Terrorism                 41                  135          120     32     62        29
-##   The budget deficit        45                  132          124     34     69        29
-##   The economy               52                  143          135     36     85        35
-##   The environment           32                  117          113     30     71        30
-##   The war in Afghanistan    50                  115          120     30     58        27
+##   Abortion                   5                   31           24     10     19         8
+##   Education                  9                   32           28     15     23         9
+##   Gay rights                 4                   17           21      5     15         6
+##   Health care                9                   38           29     15     21         9
+##   Immigration                6                   28           27     10     17         9
+##   Medicare                   9                   34           26     15     19         7
+##   Social security            9                   34           27     13     19         7
+##   Taxes                      9                   32           24     14     22         8
+##   Terrorism                  5                   35           22     14     18         7
+##   The budget deficit         6                   34           23     14     19         7
+##   The economy                9                   37           27     15     23         9
+##   The environment            6                   29           19     14     21         8
+##   The war in Afghanistan     8                   27           27     13     15         7
 ```
 
 <!--
@@ -358,15 +358,15 @@ crtabs(mean(age) ~ educ + gender, data=ds)
 ```
 ##                       gender
 ## educ                       Male   Female
-##   No HS                50.82525 44.68583
-##   High school graduate 52.15276 51.32068
-##   Some college         40.29562 41.17773
-##   2-year               46.40166 45.33917
-##   4-year               42.32709 39.58522
-##   Post-grad            49.87801 48.03841
+##   No HS                54.00829 56.02205
+##   High school graduate 50.31550 48.09241
+##   Some college         40.84733 43.06316
+##   2-year               55.25996 46.68702
+##   4-year               50.14993 40.75736
+##   Post-grad            50.85838 48.64874
 ```
 
-Other supported aggregations include `min`, `max`, `sd`, and `sum`. For the minimum age by gender and education, 
+Other supported aggregations include `min`, `max`, `sd`, and `sum`. For the minimum age by gender and education,
 
 
 ```r
@@ -376,11 +376,11 @@ crtabs(min(age) ~ educ + gender, data=ds)
 ```
 ##                       gender
 ## educ                   Male Female
-##   No HS                  25     24
-##   High school graduate   32     22
-##   Some college           22     21
-##   2-year                 25     25
-##   4-year                 24     24
+##   No HS                  42     45
+##   High school graduate   35     27
+##   Some college           22     24
+##   2-year                 35     26
+##   4-year                 32     24
 ##   Post-grad              26     27
 ```
 
@@ -392,7 +392,7 @@ crtabs(min(age) ~ 1, data=ds)
 ```
 
 ```
-## [1] 21
+## [1] 22
 ```
 
 Numeric aggregation functions also work with categorical variables that have numeric values defined for their categories; this is the reason why numeric values for categories are defined, in fact. In the [variables vignette](variables.md), we worked with the "On the right track" question and set some numeric values:
@@ -409,7 +409,7 @@ categories(ds$track)
 ## [ NA ]  No Data
 ```
 
-We can use these numeric values to compute an "on the right track index" by averaging them. If the index is greater than zero, more people thing things are going well, and if it is negative, more respondents are pessimistic. 
+We can use these numeric values to compute an "on the right track index" by averaging them. If the index is greater than zero, more people thing things are going well, and if it is negative, more respondents are pessimistic.
 
 
 ```r
@@ -419,15 +419,15 @@ round(crtabs(mean(track) ~ educ + gender, data=ds), 2)
 ```
 ##                       gender
 ## educ                    Male Female
-##   No HS                -0.83  -0.74
-##   High school graduate -0.50  -0.45
-##   Some college         -0.31  -0.35
-##   2-year               -0.38  -0.35
-##   4-year               -0.30  -0.28
-##   Post-grad            -0.26  -0.26
+##   No HS                -0.39  -0.05
+##   High school graduate -0.69  -0.22
+##   Some college         -0.05  -0.14
+##   2-year               -0.56  -0.40
+##   4-year               -0.57  -0.08
+##   Post-grad            -0.17   0.02
 ```
 
-Looks like most people surveyed thought that the U.S. is on the wrong track, but that pessimism is less pronounced for those with higher levels of education.
+Looks like most people surveyed thought that the U.S. is on the wrong track, but that pessimism is less pronounced for women with higher levels of education.
 
 ### Subsetting data
 
@@ -441,12 +441,12 @@ round(crtabs(mean(track) ~ educ + gender, data=ds[ds$pid3 == "Democrat",]), 2)
 ```
 ##                       gender
 ## educ                    Male Female
-##   No HS                -0.90   1.00
-##   High school graduate  0.22  -0.03
-##   Some college          0.55   0.20
-##   2-year               -0.35   0.32
-##   4-year                0.36   0.07
-##   Post-grad             0.42   0.02
+##   No HS                  NaN   1.00
+##   High school graduate  0.64  -0.08
+##   Some college          0.73   0.30
+##   2-year                1.00   0.00
+##   4-year               -0.12   0.40
+##   Post-grad             0.33   0.12
 ```
 
 Not surprisingly, Democrats were less pessimistic about the direction of the country than the general population.
@@ -456,7 +456,7 @@ A few final observations about `crtabs`. First, all of these calculations have b
 Second, none of these aggregations required pulling case-level data to your computer. `crtabs` sends Crunch expressions to the server and receives in return an `n`-D array of results. The only computations happening locally are the margin tables and sweeping in `prop.table`, computing on the aggregate results. Your computer would work exactly as hard with this example dataset of 1000 rows as it would with a dataset of 100 million rows.  
 
 ## Statistical modeling
-Any statistical modeling function that takes a `data` argument should happily accept a `CrunchDataset` and just do the right thing--no extra effort or thought required. 
+Any statistical modeling function that takes a `data` argument should happily accept a `CrunchDataset` and just do the right thing--no extra effort or thought required.
 
 Let's fit a basic Ordinary Least Squares (OLS) model. In our dataset, we have a few questions about Edward Snowden, such as:
 
@@ -466,21 +466,21 @@ ds$snowdenleakapp
 ```
 
 ```
-## snowdenleakapp (categorical)
+## Approval of Snowden's Leak (categorical)
 ## 
 ##                        Count
-## Strongly disapprove 288.3561
-## Somewhat approve    220.3593
-## Not sure            200.1591
-## Strongly approve    159.1486
-## Somewhat disapprove 131.4862
+## Strongly disapprove 86.00644
+## Not sure            55.82542
+## Somewhat approve    43.19385
+## Somewhat disapprove 40.26587
+## Strongly approve    24.70842
 ```
 
 We can use `lm` to fit our model. Let's explore the relationship between approval of Snowden's leak and respondents' interest in current events, party identification, gender, and age.
 
 
 ```r
-ols1 <- lm(I(snowdenleakapp == "Strongly approve") ~ newsint2 + pid3 + gender + age, 
+ols1 <- lm(I(snowdenleakapp == "Strongly approve") ~ newsint2 + pid3 + gender + age,
     data=ds)
 summary(ols1)
 ```
@@ -493,36 +493,33 @@ summary(ols1)
 ## 
 ## Residuals:
 ##      Min       1Q   Median       3Q      Max 
-## -0.51183 -0.19709 -0.13374 -0.08017  0.96392 
+## -0.33261 -0.15753 -0.12930 -0.06006  0.94924 
 ## 
 ## Coefficients:
-##                            Estimate Std. Error t value Pr(>|t|)    
-## (Intercept)                0.248796   0.049545   5.022 6.08e-07 ***
-## newsint2Some of the time  -0.025779   0.027641  -0.933  0.35123    
-## newsint2Only now and then -0.034062   0.040342  -0.844  0.39869    
-## newsint2Hardly at all     -0.091411   0.052376  -1.745  0.08125 .  
-## pid3Republican            -0.031757   0.031030  -1.023  0.30636    
-## pid3Independent            0.091577   0.028140   3.254  0.00118 ** 
-## pid3Other                  0.313302   0.097186   3.224  0.00131 ** 
-## pid3Not sure               0.014837   0.065847   0.225  0.82177    
-## genderFemale              -0.042308   0.024297  -1.741  0.08194 .  
-## age                       -0.001436   0.000876  -1.640  0.10142    
-## ---
-## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
+##                            Estimate Std. Error t value Pr(>|t|)
+## (Intercept)                0.133723   0.093700   1.427    0.155
+## newsint2Some of the time   0.016157   0.050750   0.318    0.750
+## newsint2Only now and then -0.007068   0.074048  -0.095    0.924
+## newsint2Hardly at all     -0.058744   0.091630  -0.641    0.522
+## pid3Republican            -0.088822   0.058002  -1.531    0.127
+## pid3Independent            0.022139   0.052650   0.420    0.675
+## pid3Other                  0.185892   0.198541   0.936    0.350
+## pid3Not sure              -0.049288   0.103442  -0.476    0.634
+## genderFemale              -0.019411   0.045856  -0.423    0.672
+## age                        0.000361   0.001651   0.219    0.827
 ## 
-## Residual standard error: 0.3683 on 989 degrees of freedom
-##   (1 observation deleted due to missingness)
-## Multiple R-squared:  0.04013,	Adjusted R-squared:  0.0314 
-## F-statistic: 4.595 on 9 and 989 DF,  p-value: 5.785e-06
+## Residual standard error: 0.3366 on 240 degrees of freedom
+## Multiple R-squared:  0.02533,	Adjusted R-squared:  -0.01122 
+## F-statistic: 0.6931 on 9 and 240 DF,  p-value: 0.7149
 ```
 
-Looks like partisanship is associated with approval of the NSA leak, but overall the model isn't a great fit, given our data. Nevertheless, this example illustrates how straightforward it is to do statistical analysis with data in Crunch. Even though your dataset lives on the server, you can think of it like a local `data.frame`. Note, for example, that our categorical variables (News Interest, Party ID, and Gender) expand their categories out as dichotomous indicators, just as if they were `factor` variables in a `data.frame`. 
+Looks like partisanship is weakly associated with approval of the NSA leak, but overall the model isn't a great fit, given our data. (For what it's worth, we're working on a randomly drawn subset of the survey so that the size of data included with package is small. Results are more meaningful with the full dataset.) Nevertheless, this example illustrates how straightforward it is to do statistical analysis with data in Crunch. Even though your dataset lives on the server, you can think of it like a local `data.frame`. Note, for example, that our categorical variables (News Interest, Party ID, and Gender) expand their categories out as dichotomous indicators, just as if they were `factor` variables in a `data.frame`.
 
 Given that we're estimating a model with a dichotomous dependent variable, perhaps a logit would be more appropriate than a strict linear predictor. We can use `glm` instead:
 
 
 ```r
-logit1 <- glm(I(snowdenleakapp == "Strongly approve") ~ newsint2 + pid3 + gender + age, 
+logit1 <- glm(I(snowdenleakapp == "Strongly approve") ~ newsint2 + pid3 + gender + age,
     family=binomial(link="logit"), data=ds)
 summary(logit1)
 ```
@@ -535,33 +532,34 @@ summary(logit1)
 ## 
 ## Deviance Residuals: 
 ##     Min       1Q   Median       3Q      Max  
-## -1.2651  -0.6418  -0.5229  -0.4278   2.3800  
+## -0.8982  -0.5873  -0.5249  -0.3413   2.4261  
 ## 
 ## Coefficients:
-##                            Estimate Std. Error z value Pr(>|z|)   
-## (Intercept)               -1.031957   0.361199  -2.857  0.00428 **
-## newsint2Some of the time  -0.190179   0.205651  -0.925  0.35509   
-## newsint2Only now and then -0.271006   0.315410  -0.859  0.39022   
-## newsint2Hardly at all     -0.843629   0.496533  -1.699  0.08931 . 
-## pid3Republican            -0.302909   0.263112  -1.151  0.24963   
-## pid3Independent            0.612542   0.200765   3.051  0.00228 **
-## pid3Other                  1.608627   0.546297   2.945  0.00323 **
-## pid3Not sure               0.144096   0.519991   0.277  0.78169   
-## genderFemale              -0.309956   0.179389  -1.728  0.08402 . 
-## age                       -0.010655   0.006548  -1.627  0.10368   
+##                            Estimate Std. Error z value Pr(>|z|)  
+## (Intercept)               -1.883494   0.847876  -2.221   0.0263 *
+## newsint2Some of the time   0.141215   0.439458   0.321   0.7480  
+## newsint2Only now and then -0.075103   0.700499  -0.107   0.9146  
+## newsint2Hardly at all     -0.734607   1.084190  -0.678   0.4980  
+## pid3Republican            -1.077062   0.673224  -1.600   0.1096  
+## pid3Independent            0.156299   0.439101   0.356   0.7219  
+## pid3Other                  1.056509   1.273998   0.829   0.4069  
+## pid3Not sure              -0.535621   1.119244  -0.479   0.6323  
+## genderFemale              -0.176401   0.410364  -0.430   0.6673  
+## age                        0.003547   0.015024   0.236   0.8134  
 ## ---
 ## Signif. codes:  0 '***' 0.001 '**' 0.01 '*' 0.05 '.' 0.1 ' ' 1
 ## 
 ## (Dispersion parameter for binomial family taken to be 1)
 ## 
-##     Null deviance: 905.03  on 998  degrees of freedom
-## Residual deviance: 866.64  on 989  degrees of freedom
-##   (1 observation deleted due to missingness)
-## AIC: 886.64
+##     Null deviance: 191.28  on 249  degrees of freedom
+## Residual deviance: 184.52  on 240  degrees of freedom
+## AIC: 204.52
 ## 
 ## Number of Fisher Scoring iterations: 5
 ```
 
 As before, not a particularly interesting result, but this is just the beginning of the analysis process. Using `crunch`, you can keep exploring the data and perhaps find a better fit.
 
-Unlike the previous examples, these modeling functions do have to pull columns of data from the server to your local machine. However, only the columns of data you reference in your formula are copied, and if you specify a subset of the dataset to regress on (as we did above with `crtabs` when we looked at just Democrats), only those rows are retrieved. This helps minimize the time spent shipping data across the network. Moreover, because of the `crunch` package's query cache, subsequent models that incorporate any of those variables will not have to go to the server to get them. 
+Unlike the previous examples, these modeling functions do have to pull columns of data from the server to your local machine. However, only the columns of data you reference in your formula are copied, and if you specify a subset of the dataset to regress on (as we did above with `crtabs` when we looked at just Democrats), only those rows are retrieved. This helps minimize the time spent shipping data across the network. Moreover, because of the `crunch` package's query cache, subsequent models that incorporate any of those variables will not have to go to the server to get them.
+
+[Next: filtering datasets](filters.md)

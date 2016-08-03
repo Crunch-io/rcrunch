@@ -1,7 +1,7 @@
 context("Deep copies of variables")
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(newDatasetFromFixture("apidocs")), {
             test_that("Can deep copy categorical", {
                 ds$q1a <- copy(ds$q1, deep=TRUE)
@@ -15,23 +15,25 @@ if (run.integration.tests) {
                 ds$wavea <- copy(ds$wave, deep=TRUE)
                 expect_identical(as.vector(ds$wave), as.vector(ds$wavea))
             })
-            # with(temp.option(crunch.debug=TRUE), {
-                test_that("Can deep copy multiple response", {
-                    skip("WIP")
-                    ds$allpetsa <- copy(ds$allpets, deep=TRUE)
-                    expect_identical(as.vector(ds$allpets), as.vector(ds$allpetsa))
-                    expect_equivalent(as.array(crtabs(~ allpets, data=ds)),
-                        as.array(crtabs(~ allpetsa, data=ds)))
-                })
-                test_that("Can deep copy categorical array", {
-                    skip("WIP")
-                    ds$petloca <- copy(ds$petloc, deep=TRUE)
-                    expect_identical(as.vector(ds$petloc), as.vector(ds$petloca))
-                    expect_equivalent(as.array(crtabs(~ petloc, data=ds)),
-                        as.array(crtabs(~ petloca, data=ds)))
-                })
-            # })
-            
+            test_that("Can deep copy multiple response", {
+                expect_error(copy(ds$allpets, deep=TRUE),
+                    "Deep copying of array variables is not implemented.")
+                skip("WIP")
+                ds$allpetsa <- copy(ds$allpets, deep=TRUE)
+                expect_identical(as.vector(ds$allpets), as.vector(ds$allpetsa))
+                expect_equivalent(as.array(crtabs(~ allpets, data=ds)),
+                    as.array(crtabs(~ allpetsa, data=ds)))
+            })
+            test_that("Can deep copy categorical array", {
+                expect_error(copy(ds$petloc, deep=TRUE),
+                    "Deep copying of array variables is not implemented.")
+                skip("WIP")
+                ds$petloca <- copy(ds$petloc, deep=TRUE)
+                expect_identical(as.vector(ds$petloc), as.vector(ds$petloca))
+                expect_equivalent(as.array(crtabs(~ petloc, data=ds)),
+                    as.array(crtabs(~ petloca, data=ds)))
+            })
+
             with(test.dataset(newDatasetFromFixture("apidocs"), "part2"), {
                 test_that("Deep copies don't get data when appending", {
                     out <- appendDataset(ds, part2)

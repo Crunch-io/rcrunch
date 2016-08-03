@@ -12,7 +12,7 @@ setMethod("initialize", "CrunchCube", .init.Cube)
 
 cToA <- function (x, dims) {
     ## Just make an array from the cube "measure's" data. Nothing else
-    
+
     d <- unlist(x$data)
     ## Identify missing values
     nas <- names(d) %in% "?"
@@ -20,7 +20,7 @@ cToA <- function (x, dims) {
     d[nas & d != -8] <- NA
     # d <- round(d) ## TODO digits should be an argument
     ## and rounding should also depend on whether you're looking at count or not
-    
+
     dimsizes <- dim(dims)
     ndims <- length(dims)
     if (ndims == 0) {
@@ -61,15 +61,15 @@ subsetCubeArray <- function (array, bools, drop=FALSE) {
 }
 
 evalUseNA <- function (data, dims, useNA) {
-    ## Return dimnames-shaped list of logical vectors indicating which 
+    ## Return dimnames-shaped list of logical vectors indicating which
     ## values should be kept, according to the @useNA parameter
-    
+
     ## Figure out which dims are non-zero
     margin.counts <- lapply(seq_along(dim(data)),
         function (i) margin.table(data, i))
     keep.these <- mapply(keepWithNA,
-        dimension=dims, 
-        marginal=margin.counts, 
+        dimension=dims,
+        marginal=margin.counts,
         MoreArgs=list(useNA=useNA),
         SIMPLIFY=FALSE,
         USE.NAMES=FALSE)
@@ -79,10 +79,10 @@ evalUseNA <- function (data, dims, useNA) {
 
 keepWithNA <- function (dimension, marginal, useNA) {
     ## Returns logicals of which rows/cols/etc. should be kept
-    
+
     ## Always drop __any__ and __none__, regardless of other missingness
     out <- !dimension$any.or.none
-    
+
     if (useNA != "always") {
         ## Means drop missing always, or only keep if there are any
         valid.cats <- !dimension$missing
@@ -92,7 +92,7 @@ keepWithNA <- function (dimension, marginal, useNA) {
         ## But still drop __any__ or __none__
         out <- valid.cats & out
     }
-    return(out) 
+    return(out)
 }
 
 cubeMarginTable <- function (x, margin=NULL, measure=1) {
@@ -101,7 +101,7 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     dimnames(data) <- dimnames(x@dims)
     aon <- anyOrNone(x@dims)
     missings <- is.na(x@dims)
-    
+
     if (!is.null(margin) && max(margin) > length(dim(data))) {
         ## Validate the input and give a useful error message.
         ## base::margin.table says:
@@ -110,7 +110,7 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
         halt("Margin ", max(margin), " exceeds Cube's number of dimensions (",
             length(dim(data)), ")")
     }
-    
+
     ## If multiple response, sum __any__ + __none__ (and missing, if included)
     ## (if ca, is there that on the other slice?)
     ## Else, sum all
@@ -120,7 +120,7 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
         if (!(i %in% margin)) {
             ## Default is keep all. But if not sweeping this margin,
             if (any(a)) {
-                ## Multiple response. 
+                ## Multiple response.
                 out <- a
                 ## Add missings if not "no"
                 if (x@useNA != "no") {
@@ -143,36 +143,36 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     return(out)
 }
 
-##' Work with CrunchCubes
-##'
-##' Crunch.io supports more complex data types than base R does, such as
-##' multiple response and array types. If you want to compute margin or 
-##' proportion tables on an aggregation of these variable types, special methods
-##' are required. These functions provide an interface like
-##' \code{\link[base]{margin.table}} and \code{\link[base]{prop.table}} for 
-##' the CrunchCube object, handling those special data types.
-##' 
-##' @param x a CrunchCube
-##' @param margin index, or vector of indices to generate margin for. See
-##' \code{\link[base]{prop.table}}
-##' @param digits see \code{\link[base]{round}}
-##' @return The appropriate margin.table or prop.table. 
-##' @name cube-computing
-##' @aliases cube-computing margin.table prop.table
-##' @seealso \code{\link[base]{margin.table}} \code{\link[base]{prop.table}}
+#' Work with CrunchCubes
+#'
+#' Crunch.io supports more complex data types than base R does, such as
+#' multiple response and array types. If you want to compute margin or
+#' proportion tables on an aggregation of these variable types, special methods
+#' are required. These functions provide an interface like
+#' \code{\link[base]{margin.table}} and \code{\link[base]{prop.table}} for
+#' the CrunchCube object, handling those special data types.
+#'
+#' @param x a CrunchCube
+#' @param margin index, or vector of indices to generate margin for. See
+#' \code{\link[base]{prop.table}}
+#' @param digits see \code{\link[base]{round}}
+#' @return The appropriate margin.table or prop.table.
+#' @name cube-computing
+#' @aliases cube-computing margin.table prop.table
+#' @seealso \code{\link[base]{margin.table}} \code{\link[base]{prop.table}}
 NULL
 
-##' @rdname cube-computing
-##' @export
+#' @rdname cube-computing
+#' @export
 setMethod("margin.table", "CrunchCube", function (x, margin=NULL) {
     cubeMarginTable(x, margin)
 })
 
-##' @export
+#' @export
 as.array.CrunchCube <- function (x, ...) cubeToArray(x, ...)
 
-##' @rdname cube-computing
-##' @export
+#' @rdname cube-computing
+#' @export
 setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
     out <- as.array(x)
     marg <- margin.table(x, margin)
@@ -186,8 +186,8 @@ setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
     return(out)
 })
 
-##' @rdname cube-computing
-##' @export
+#' @rdname cube-computing
+#' @export
 setMethod("round", "CrunchCube", function (x, digits=0) {
     round(as.array(x), digits)
 })

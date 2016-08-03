@@ -1,33 +1,54 @@
 context("Variable types")
 
-test_that("Validation on type setting", {
-    expect_error(castVariable(, "foo"), 
-        paste(dQuote("foo"), 
-        "is not a Crunch variable type that can be assigned."))
-})
+with_mock_HTTP({
+    ds <- loadDataset("test ds")
 
-with(fake.HTTP, {
-    test.ds <- loadDataset("test ds")
-    
     test_that("Variable type method", {
-        expect_identical(type(test.ds[["birthyr"]]), "numeric")
-        expect_identical(type(test.ds$gender), "categorical")
+        expect_identical(type(ds[["birthyr"]]), "numeric")
+        expect_identical(type(ds$gender), "categorical")
+    })
+
+    test_that("Changing numeric type by <- makes requests", {
+        expect_POST(type(ds$birthyr) <- "categorical",
+            '/api/datasets/dataset1/variables/birthyr/cast/',
+            '{"cast_as":"categorical"}')
+        expect_POST(type(ds$birthyr) <- "text",
+            '/api/datasets/dataset1/variables/birthyr/cast/',
+            '{"cast_as":"text"}')
+    })
+    test_that("Setting the same type is a no-op", {
+        expect_no_request(type(ds$birthyr) <- "numeric")
+    })
+    test_that("Attempting to set an unsupported type fails", {
+        for (i in c("multiple_response", "categorical_array", "datetime", "foo")) {
+            expect_error(type(ds$birthyr) <- i,
+                "is not a Crunch variable type that can be assigned",
+                info=i)
+        }
+    })
+
+    test_that("Changing multiple_response type by <- fails", {
+        for (i in c("categorical", "text", "numeric", "categorical_array", "datetime", "foo")) {
+            expect_error(type(ds$mymrset) <- i,
+                "Cannot change the type of a MultipleResponseVariable by type<-",
+                info=i)
+        }
     })
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
-            test_that("type casting and 'as'", {
+            test_that("Type changing alters data on the server", {
                 testvar <- ds$v1
+                expect_true(is.Numeric(testvar))
                 type(testvar) <- "text"
                 expect_true(is.Text(testvar))
-                expect_true(is.Numeric(castVariable(testvar, "numeric")))
-                expect_true(is.Text(castVariable(testvar, "text")))
-                
-                type(testvar) <- "numeric"
-                expect_true(is.Numeric(testvar))
-                expect_true(is.Numeric(ds$v1)) ## same remote object
+
+                ds <- refresh(ds)
+                expect_true(is.Text(ds$v1))
+                type(ds$v1) <- "numeric"
+                expect_true(is.Numeric(ds$v1))
             })
         })
     })

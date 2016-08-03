@@ -11,7 +11,7 @@ cubeDims <- function (cube) {
             missing=vapply(d, function (el) isTRUE(el$missing), logical(1))
         )
     })
-    names(dimnames) <- vapply(cube$result$dimensions, 
+    names(dimnames) <- vapply(cube$result$dimensions,
         function (a) a$references$alias, character(1))
     return(CubeDims(dimnames))
 }
@@ -33,7 +33,7 @@ elementName <- function (el) {
     }
     if (is.null(out)) {
         ## Damn. You may be here because you're hitting missing values in an
-        ## array or multiple response, or the __any__ or __none__ values. 
+        ## array or multiple response, or the __any__ or __none__ values.
         ## Bail out.
         out <- "<NA>"
     }
@@ -44,39 +44,38 @@ elementName <- function (el) {
 elementIsAnyOrNone <- function (el) {
     is.list(el$value) && ## Element has $value and value is a list
         "id" %in% names(el$value) && ## "value" has names (is not bin)
-        el$value$id %in% c("__any__", "__none__") 
+        el$value$id %in% c("__any__", "__none__")
 }
 
-##' Methods on Cube objects
-##' 
-##' These methods provide an \code{array}-like interface to the CrunchCube
-##' object.
-##'
-##' @param x a CrunchCube or its CubeDims component.
-##' 
-##' @return Generally, the same shape of result that each of these functions 
-##' return when applied to an \code{array} object.
-##' @name cube-methods
-##' @aliases cube-methods
-##' @seealso \code{\link{cube-computing}}
+#' Methods on Cube objects
+#'
+#' These methods provide an \code{array}-like interface to the CrunchCube
+#' object.
+#'
+#' @param x a CrunchCube or its CubeDims component.
+#'
+#' @return Generally, the same shape of result that each of these functions
+#' return when applied to an \code{array} object.
+#' @name cube-methods
+#' @aliases cube-methods
+#' @seealso \code{\link{cube-computing}}
 NULL
 
-##' @rdname cube-methods
-##' @export
+#' @rdname cube-methods
+#' @export
 setMethod("dimnames", "CubeDims", function (x) {
     lapply(x, function (a) a$name)
 })
 
-##' @rdname cube-methods
-##' @export
+#' @rdname cube-methods
+#' @export
 setMethod("dim", "CubeDims",
-    function (x) vapply(dimnames(x), length, integer(1)))
+    function (x) vapply(dimnames(x), length, integer(1), USE.NAMES=FALSE))
 
-##' @rdname cube-methods
-##' @export
+#' @rdname cube-methods
+#' @export
 setMethod("is.na", "CubeDims", function (x) lapply(x, function (a) a$missing))
 
 anyOrNone <- function (x) {
     lapply(x, function (a) a$any.or.none)
 }
-

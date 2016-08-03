@@ -1,14 +1,69 @@
-addVariable <- function (dataset, vardef, ...) {
-    ## Construct payload (if not already constructed)
-    ## TODO: deprecate this behavior? (Only used in tests)
-    if (!inherits(vardef, "VariableDefinition")) {
-        vardef <- VariableDefinition(vardef, ...)
+#' Add multiple variables to a dataset
+#'
+#' This function lets you add more than one variable at a time to a dataset.
+#' If you have multiple variables to add, this function will be faster than
+#' doing \code{ds$var <- value} assignment because it doesn't refresh the
+#' dataset's state in between variable POST requests.
+#' @param dataset a CrunchDataset
+#' @param ... \code{\link{VariableDefinition}}s or a list of
+#' VariableDefinitions.
+#' @return \code{dataset} with the new variables added (invisibly)
+#' @export
+#' @importFrom httpcache halt
+addVariables <- function (dataset, ...) {
+    var_catalog_url <- shojiURL(dataset, "catalogs", "variables")
+
+    ## Get vardefs and validate
+    vardefs <- list(...)
+    ## Check for whether a list of vardefs passed
+    if (length(vardefs) == 1 &&
+        is.list(vardefs[[1]]) &&
+        !inherits(vardefs[[1]], "VariableDefinition")) {
+
+        vardefs <- vardefs[[1]]
     }
-    
+    ## Check that all are VariableDefinitions
+    are.vardefs <- vapply(vardefs, inherits, logical(1),
+        what="VariableDefinition")
+    if (!all(are.vardefs)) {
+        halt("Must supply VariableDefinitions")
+    }
+    ## Check that if values specified, they have the right length
+    vardefs <- lapply(vardefs, validateVarDefRows, numrows=getNrow(dataset))
+
+    ## TODO: check array subvariable rows similarly. and/or pull out and cbind
+    ## to a single parent-level "values" column.
+
+    ## Upload one at a time.
+    ## TODO: Server should support bulk insert
+    new_var_urls <- lapply(vardefs,
+        function (x) try(POSTNewVariable(var_catalog_url, x), silent=TRUE))
+        ## Be silent so we can throw the errors together at the end
+
+    ## Check for errors
+    errs <- vapply(new_var_urls, is.error, logical(1))
+    if (any(errs)) {
+        if (length(errs) == 1) {
+            ## Just one variable added. Throw its error.
+            rethrow(new_var_urls[[1]])
+        }
+        halt("The following variable definition(s) errored on upload: ",
+            paste(which(errs), collapse=", "), "\n",
+            paste(unlist(lapply(new_var_urls[errs], errorMessage)), sep="\n"))
+        ## Could make better error message, return the URLs of the variables
+        ## that errored so that user can delete them and start over, etc.
+    }
+
+    dataset <- refresh(dataset)
+    invisible(dataset)
+}
+
+validateVarDefRows <- function (vardef, numrows) {
+    ## Pre-check the column length being sent to the server to confirm that
+    ## the number of rows matches what's already in the dataset
     if (!any(c("expr", "subvariables") %in% names(vardef))) {
-        ## Validate that we're sending the right number of rows
         new <- length(vardef$values)
-        old <- getNrow(dataset, filtered=FALSE)
+        old <- numrows ## Just for naming clarity
         if (new == 1 && old > 1) {
             vardef$values <- rep(vardef$values, old)
             new <- old
@@ -19,16 +74,13 @@ addVariable <- function (dataset, vardef, ...) {
             halt("replacement has ", new, " rows, data has ", old)
         }
     }
-    var_url <- POSTNewVariable(shojiURL(dataset, "catalogs", "variables"), 
-        vardef)
-    dataset <- refresh(dataset)
-    invisible(dataset)
+    return(vardef)
 }
 
 POSTNewVariable <- function (catalog_url, variable) {
-    
+
     do.POST <- function (x) crPOST(catalog_url, body=toJSON(x, digits=15))
-    
+
     if (!("expr" %in% names(variable))) {
         ## If deriving a variable, skip this and go straight to POSTing
         if (variable$type %in% c("multiple_response", "categorical_array")) {
@@ -38,15 +90,15 @@ POSTNewVariable <- function (catalog_url, variable) {
                 halt("Cannot create array variable without specifying",
                     " subvariables")
             }
-            ## Three options supported: 
+            ## Three options supported:
             ## (1) Bind together existing subvariables
-            ## (2) Create array from single array definition 
+            ## (2) Create array from single array definition
             ## (3) Create subvariables individually and then bind them
             ## Sniff to see which case we have. If (1) or (2), proceed normally
             is_catvardef <- function (x) {
                 all(c("categories", "values") %in% names(x))
             }
-            is_binddef <- is.character(variable$subvariables) && 
+            is_binddef <- is.character(variable$subvariables) &&
                 !("categories" %in% names(variable))
             is_arraydef <- is_catvardef(variable) &&
                 !any(vapply(variable$subvariables, is_catvardef, logical(1)))
@@ -55,7 +107,7 @@ POSTNewVariable <- function (catalog_url, variable) {
                 lapply(variable$subvariables, function (x) {
                     Categories(data=x$categories) ## Will error if invalid
                 })
-                
+
                 ## Upload subvars, then bind
                 var_urls <- lapply(variable$subvariables,
                     function (x) try(do.POST(x)))
@@ -75,23 +127,4 @@ POSTNewVariable <- function (catalog_url, variable) {
     }
     out <- do.POST(variable)
     invisible(out)
-}
-
-addVariables <- function (dataset, vars) {
-    ## assume data frame
-    nvars <- ncol(vars)
-    vars_url <- variableCatalogURL(dataset)
-    for (i in seq_len(nvars)) {
-        POSTNewVariable(vars_url,
-            toVariable(vars[[i]], name=names(vars)[i], alias=names(vars)[i]))
-    }
-    invisible(refresh(dataset))
-}
-
-deriveVariable <- function (dataset, expr, ...) {
-    derivation <- list(...)
-    derivation$expr <- zcl(expr)
-    var_url <- POSTNewVariable(variableCatalogURL(dataset), derivation)
-    dataset <- refresh(dataset)
-    invisible(dataset)
 }

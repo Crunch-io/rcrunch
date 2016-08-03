@@ -1,0 +1,8 @@
+{
+    "element": "shoji:view",
+    "self": "/api/progress/",
+    "value": {
+        "progress": -1,
+        "message": "Education, Commerce, and, uh, oops."
+    }
+}
