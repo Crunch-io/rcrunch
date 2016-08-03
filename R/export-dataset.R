@@ -35,7 +35,7 @@ exportDataset <- function (dataset, file, format=c("csv", "spss"),
     }
 
     result <- crPOST(export_url, body=toJSON(body))
-    download.file(result, file, quiet=TRUE) ## Note outside of auth. Ok because file is in s3 with token
+    download.file(result, file, quiet=TRUE, method="curl") ## Note outside of auth. Ok because file is in s3 with token
     invisible(file)
 }
 
