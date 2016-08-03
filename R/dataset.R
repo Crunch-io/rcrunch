@@ -46,8 +46,8 @@ NULL
 setMethod("name", "CrunchDataset", function (x) tuple(x)$name)
 #' @rdname describe
 #' @export
-setMethod("name<-", c("CrunchDataset", "character"), function (x, value) {
-    invisible(setTupleSlot(x, "name", value))
+setMethod("name<-", "CrunchDataset", function (x, value) {
+    invisible(setTupleSlot(x, "name", validateNewName(value)))
 })
 #' @rdname describe
 #' @export

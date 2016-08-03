@@ -12,7 +12,8 @@ deleteSubvariable(variable, to.delete)
 \arguments{
 \item{variable}{the array variable}
 
-\item{to.delete}{subvariable names to delete}
+\item{to.delete}{character alias(es) or name(s), depending on the value of
+\code{getOption("crunch.namekey.array")}, of the subvariables to delete.}
 }
 \value{
 a new version of variable without the indicated subvariables

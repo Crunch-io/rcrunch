@@ -165,7 +165,7 @@ if (run.integration.tests) {
             ## We can do the same for categorical array. petloc has two
             ## subvariables, Home and Work:
             test_that("Home x Work", {
-                expect_identical(as.array(crtabs(~ petloc$Home + petloc$Work,
+                expect_identical(as.array(crtabs(~ petloc$petloc_home + petloc$petloc_work,
                     data=ds, useNA="ifany")),
                     array(c(1, 0, 1, 3, 0,
                             0, 0, 2, 0, 1,

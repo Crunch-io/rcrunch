@@ -19,7 +19,7 @@
 \alias{entities<-,OrderGroup-method}
 \alias{entities<-,ShojiOrder-method}
 \alias{name,OrderGroup-method}
-\alias{name<-,OrderGroup,character-method}
+\alias{name<-,OrderGroup-method}
 \alias{names,OrderGroup-method}
 \alias{names,ShojiOrder-method}
 \alias{names<-,ShojiOrder-method}
@@ -37,7 +37,7 @@
 
 \S4method{name}{OrderGroup}(x)
 
-\S4method{name}{OrderGroup,character}(x) <- value
+\S4method{name}{OrderGroup}(x) <- value
 
 \S4method{names}{ShojiOrder}(x)
 
