@@ -14,7 +14,7 @@
 \alias{entity,DatasetTuple-method}
 \alias{entity,VariableTuple-method}
 \alias{name,ShojiTuple-method}
-\alias{name<-,ShojiTuple,character-method}
+\alias{name<-,ShojiTuple-method}
 \alias{refresh,ShojiTuple-method}
 \alias{self,ShojiTuple-method}
 \alias{tuple-methods}
@@ -47,7 +47,7 @@
 
 \S4method{name}{ShojiTuple}(x)
 
-\S4method{name}{ShojiTuple,character}(x) <- value
+\S4method{name}{ShojiTuple}(x) <- value
 
 \S4method{type}{ShojiTuple}(x)
 }

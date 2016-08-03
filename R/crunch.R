@@ -22,7 +22,7 @@ NULL
         crunch.api="https://beta.crunch.io/api/",
         httpcache.on=TRUE,
         crunch.namekey.dataset="alias",
-        crunch.namekey.array="name"
+        crunch.namekey.array="alias"
     )
     set_config(crunchConfig())
     notifyIfNewVersion()
