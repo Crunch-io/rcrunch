@@ -105,8 +105,8 @@ setMethod("name", "ShojiTuple", vget("name"))
 
 #' @rdname tuple-methods
 #' @export
-setMethod("name<-", c("ShojiTuple", "character"),
-    function (x, value) setTupleSlot(x, "name", value))
+setMethod("name<-", "ShojiTuple",
+    function (x, value) setTupleSlot(x, "name", validateNewName(value)))
 
 #' @rdname tuple-methods
 #' @export

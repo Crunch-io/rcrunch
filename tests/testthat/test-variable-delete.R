@@ -68,8 +68,8 @@ if (run.integration.tests) {
                 expect_true(is.MR(ds$allpets))
                 expect_false("allpets_2" %in% names(ds))
                 expect_true("allpets_2" %in% aliases(subvariables(ds$allpets)))
-                # ds$allpets <- deleteSubvariable(ds$allpets, "Dog") ## Cannot overwrite one Variable with another
-                deleteSubvariable(ds$allpets, "Dog")
+                # ds$allpets <- deleteSubvariable(ds$allpets, "allpets_2") ## Cannot overwrite one Variable with another
+                deleteSubvariable(ds$allpets, "allpets_2")
                 ds <- refresh(ds)
                 expect_true("allpets" %in% names(ds))
                 expect_true(is.MR(ds$allpets))
@@ -88,7 +88,7 @@ if (run.integration.tests) {
             test_that("Delete MR subvar with multiple 'selected' attributes", {
                 expect_identical(names(Filter(is.selected, categories(ds$allpets))),
                     c("selected", "not asked")) ## There are two selected
-                deleteSubvariable(ds$allpets, "Dog")
+                deleteSubvariable(ds$allpets, "allpets_2")
                 ds <- refresh(ds)
                 expect_true("allpets" %in% names(ds))
                 expect_true(is.MR(ds$allpets))

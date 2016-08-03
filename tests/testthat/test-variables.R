@@ -60,6 +60,18 @@ with_mock_HTTP({
         expect_no_request(name(ds$gender) <- "Gender")
     })
 
+    test_that("Name setter requires non-missing character input", {
+        expect_error(name(ds$gender) <- 45,
+            'Names must be of class "character"')
+        expect_error(name(ds$gender) <- NA_character_,
+            "Names must be non-missing")
+    })
+
+    test_that("Backstop method for if you try to set name on NULL", {
+        expect_error(name(ds$NOTAVARIABLE) <- "Not a variable",
+            "Cannot set name on NULL")
+    })
+
     test_that("refresh", {
         expect_identical(ds$gender, refresh(ds$gender))
     })

@@ -65,8 +65,8 @@ setMethod("entities<-", "ShojiOrder", function (x, value) {
 setMethod("name", "OrderGroup", function (x) x@group)
 #' @rdname ShojiOrder-slots
 #' @export
-setMethod("name<-", c("OrderGroup", "character"), function (x, value) {
-    x@group <- value ## Should check that we're not renaming "ungrouped"
+setMethod("name<-", "OrderGroup", function (x, value) {
+    x@group <- validateNewName(value)
     return(x)
 })
 

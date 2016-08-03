@@ -5,7 +5,7 @@ if (run.integration.tests) {
         with(test.dataset(newDatasetFromFixture("apidocs")), {
             names(categories(ds$q1)) <- LETTERS[1:5] ## To distinguish from other vars
             test_that("Cat x datetime x subvar", {
-                kube <- crtabs(~ q1 + wave + petloc$Home, data=ds)
+                kube <- crtabs(~ q1 + wave + petloc$petloc_home, data=ds)
                 expect_equivalent(as.array(kube)[,,"Cat"],
                     array(c(1, 1, 0,
                             2, 0, 0),

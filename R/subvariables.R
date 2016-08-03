@@ -137,7 +137,8 @@ setMethod("[", c("Subvariables", "character"), function (x, i, ...) {
 #' gets unbound, the subvariables deleted, and then the remaining subvariable
 #' are rebound into a new array.
 #' @param variable the array variable
-#' @param to.delete subvariable names to delete
+#' @param to.delete character alias(es) or name(s), depending on the value of
+#' \code{getOption("crunch.namekey.array")}, of the subvariables to delete.
 #' @return a new version of variable without the indicated subvariables
 #' @export
 deleteSubvariables <- function (variable, to.delete) {
@@ -149,7 +150,7 @@ deleteSubvariables <- function (variable, to.delete) {
 
     ## Identify subvariable URLs
     delete.these <- findVariableURLs(subvariables(variable), to.delete,
-        key="name")
+        key=namekey(variable))
     ## Unbind
     all.subvar.urls <- unlist(unbind(variable))
 

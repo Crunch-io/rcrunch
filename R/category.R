@@ -30,9 +30,20 @@ setMethod("initialize", "Category", init.Category)
 )
 
 setName <- function (x, value) {
-    x[["name"]] <- value
+    x[["name"]] <- validateNewName(value)
     return(x)
 }
+
+validateNewName <- function (val) {
+    if (!is.character(val)) {
+        halt('Names must be of class "character"')
+    }
+    if (any(is.na(val))) {
+        halt('Names must be non-missing')
+    }
+    invisible(val)
+}
+
 setValue <- function (x, value) {
     value_to_set <- suppressWarnings(as.numeric(value))
     if (is.na(value_to_set) && !is.na(value)) {
@@ -83,12 +94,13 @@ NULL
 setMethod("name", "Category", function (x) x[["name"]])
 #' @rdname describe-category
 #' @export
-setMethod("name<-", c("Category", "character"), setName)
+setMethod("name<-", "Category", setName)
 #' @rdname describe-category
 #' @export
-setMethod("name<-", c("ANY", "ANY"), function (x, value) {
-    halt('Names must be of class "character"')
+setMethod("name<-", "NULL", function (x, value) {
+    halt('Cannot set name on NULL')
 })
+
 #' @rdname describe-category
 #' @export
 setMethod("value", "Category", function (x) {
