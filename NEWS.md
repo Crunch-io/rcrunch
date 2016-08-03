@@ -1,3 +1,5 @@
+### crunch 1.11.99 (under development)
+
 ### crunch 1.11.2
 * Fix issue with sharing datasets owned by a project.
 * Support updating Categorical variables created from R logical-type vectors with logical values
