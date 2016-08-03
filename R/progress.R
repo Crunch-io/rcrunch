@@ -34,3 +34,9 @@ pollProgress <- function (progress_url, wait=.5) {
     }
     return(status)
 }
+
+crunchTimeout <- function () {
+    opt <- getOption("crunch.timeout")
+    if (!is.numeric(opt)) opt <- 900
+    return(opt)
+}

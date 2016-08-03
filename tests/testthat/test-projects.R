@@ -86,12 +86,11 @@ with_mock_HTTP({
 
     test_that("Print method for MemberCatalog", {
         expect_output(m,
-            paste(capture.output(print(data.frame(
+            get_output(data.frame(
                 name=c("Fake User", "Roger User"),
                 email=c("fake.user@example.com", "roger.user@example.com"),
                 is.editor=c(TRUE, FALSE)
-            ))), collapse="\n")
-        )
+            )))
     })
 
     d <- datasets(aproject)

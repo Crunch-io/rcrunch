@@ -4,8 +4,7 @@
 \alias{shojifyMetadata}
 \title{Wrap variable metadata inside a dataset entity}
 \usage{
-shojifyMetadata(metadata, order = list(list(group = "ungrouped", entities =
-  I(names(metadata)))), ...)
+shojifyMetadata(metadata, order = I(names(metadata)), ...)
 }
 \arguments{
 \item{metadata}{list of variable metadata}

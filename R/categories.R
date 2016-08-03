@@ -99,7 +99,11 @@ setNames <- function (x, value) {
         halt('Names must be of class "character"')
     }
     if (!identical(length(x), length(value))) {
-        halt("Invalid names: supplied ", length(value), " names for ", length(x), " categories")
+        halt("Invalid names: supplied ", length(value), " names for ",
+            length(x), " categories")
+    }
+    if (any(is.na(value))) {
+        halt("Category names must be non-missing")
     }
     x[] <- mapply(setName, x, value=value, SIMPLIFY=FALSE)
     return(x)

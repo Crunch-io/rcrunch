@@ -85,12 +85,12 @@ with_mock_HTTP({
     })
 
     test_that("show method", {
-        expect_identical(capture.output(print(varcat[1:3])),
-            capture.output(print(data.frame(
+        expect_output(varcat[1:3],
+            get_output(data.frame(
                 alias=c("gender", "birthyr", "starttime"),
                 name=c("Gender", "Birth Year", "starttime"),
                 type=c("categorical", "numeric", "datetime")
-            ))))
+            )))
     })
 })
 

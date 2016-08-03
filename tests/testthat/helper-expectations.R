@@ -28,6 +28,11 @@ expect_output <- function (object, ...) {
     testthat::expect_output(print(object), ...)
 }
 
+get_output <- function (x) {
+    ## For comparing print output in expect_output
+    paste(capture.output(print(x)), collapse="\n")
+}
+
 expect_length <- function(object, n) {
   stopifnot(is.numeric(n), length(n) == 1)
   lab <- testthat:::label(object)

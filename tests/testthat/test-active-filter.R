@@ -113,7 +113,7 @@ if (run.integration.tests) {
             test_that("activeFilter appears in print method for dataset", {
                 expect_output(ds3, "Filtered by v3 > 11")
                 expect_false(any(grepl("Filtered by",
-                    capture.output(print(ds)))))
+                    get_output(ds))))
             })
 
             test_that("Filtered variables return filtered values from as.vector", {
