@@ -21,8 +21,7 @@ with_test_authentication({
             expect_length(batches(part2), 2)
         })
         test_that("they append successfully", {
-            expect_message(out <- appendDataset(part1, part2),
-                "No conflicts")
+            out <- appendDataset(part1, part2)
             expect_true(is.dataset(out))
             expect_length(batches(out), 3)
             expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
@@ -65,8 +64,7 @@ with_test_authentication({
         aliases(subvariables(part2$MR))[3] <- "alt"
         ## Aliases are c("mr_1", "mr_2", "alt")
 
-        expect_message(out <- appendDataset(part1, part2),
-            "No conflicts")
+        out <- appendDataset(part1, part2)
         expect_true(is.dataset(out))
         expect_length(batches(out), 3)
         expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))

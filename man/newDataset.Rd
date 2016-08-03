@@ -4,7 +4,7 @@
 \alias{newDataset}
 \title{Upload a data.frame to Crunch to make a new dataset}
 \usage{
-newDataset(x, name = as.character(substitute(x)), ...)
+newDataset(x, name = deparse(substitute(x))[1], ...)
 }
 \arguments{
 \item{x}{a data.frame or other rectangular R object}

@@ -96,8 +96,7 @@ with_test_authentication({
                 as.vector(part2$mr_3))
         })
         test_that("the unbound subvars with not identical cats append", {
-            expect_message(out <- appendDataset(part1, part2),
-                "No conflicts")
+            out <- appendDataset(part1, part2)
             expect_true(is.dataset(out))
             expect_length(batches(out), 3)
             expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))
