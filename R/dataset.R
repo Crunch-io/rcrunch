@@ -173,6 +173,7 @@ setMethod("tuple<-", "CrunchDataset", function (x, value) {
 #' @return a new version of \code{x}
 #' @name refresh
 #' @aliases refresh
+#' @importFrom httpcache dropCache
 NULL
 
 #' @rdname refresh

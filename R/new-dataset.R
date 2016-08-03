@@ -6,7 +6,7 @@
 #' @param ... additional arguments passed to \code{ \link{createDataset}}
 #' @return If successful, an object of class CrunchDataset.
 #' @export
-newDataset <- function (x, name=as.character(substitute(x)), ...) {
+newDataset <- function (x, name=deparse(substitute(x))[1], ...) {
     Call <- match.call()
     is.2D <- !is.null(dim(x)) && length(dim(x)) %in% 2
     if (!is.2D) {
@@ -19,6 +19,7 @@ newDataset <- function (x, name=as.character(substitute(x)), ...) {
     } else {
         Call[[1]] <- as.name("newDatasetByColumn")
     }
+    Call$name <- force(name)
     ds <- eval.parent(Call)
     invisible(ds)
 }
@@ -36,7 +37,7 @@ newDataset <- function (x, name=as.character(substitute(x)), ...) {
 #' @return If successful, an object of class CrunchDataset.
 #' @seealso \code{\link{newDataset}} \code{\link{newDatasetByCSV}}
 #' @export
-newDatasetByColumn <- function (x, name=as.character(substitute(x)), ...) {
+newDatasetByColumn <- function (x, name=deparse(substitute(x))[1], ...) {
 
     ds <- createDataset(name=name, ...)
     vardefs <- lapply(names(x),
@@ -63,7 +64,7 @@ newDatasetFromFile <- function (file, name=basename(file), ...) {
     if (!file.exists(file)) {
         halt("File not found")
     }
-    ds <- createDataset(name, ...)
+    ds <- createDataset(name=name, ...)
     ds <- addSourceToDataset(ds, createSource(file))
     invisible(ds)
 }
@@ -100,25 +101,14 @@ createDataset <- function (name, body, ...) {
     invisible(ds)
 }
 
-addSourceToDataset <- function (dataset, source_url, ...) {
-    batches_url <- shojiURL(dataset, "catalogs", "batches")
+addSourceToDataset <- function (dataset, source_url) {
     body <- list(
         element="shoji:entity",
         body=list(
             source=source_url
         )
     )
-    batch_url <- crPOST(batches_url, body=toJSON(body), ...)
-
-    status <- try(pollBatchStatus(batch_url, batches(dataset),
-        until=c("ready", "imported")))
-    if (is.error(status)) {
-        halt("Error importing file")
-    } else if (status %in% "ready") {
-        crPATCH(batch_url, body=toJSON(list(status="importing")))
-        pollBatchStatus(batch_url, refresh(batches(dataset)))
-    }
-
+    crPOST(shojiURL(dataset, "catalogs", "batches"), body=toJSON(body))
     invisible(refresh(dataset))
 }
 
@@ -140,7 +130,7 @@ addSourceToDataset <- function (dataset, source_url, ...) {
 #' @seealso \code{\link{newDataset}} \code{\link{newDatasetByColumn}}
 #' @importFrom utils write.csv
 #' @export
-newDatasetByCSV <- function (x, name=as.character(substitute(x)), ...) {
+newDatasetByCSV <- function (x, name=deparse(substitute(x))[1], ...) {
 
     ## Get all the things
     message("Processing the data")
@@ -194,16 +184,13 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE, cleanup=TRUE
     }
     if (startsWith(file, "s3://")) {
         ## S3 upload
-        batch <- try(crPOST(batches_url, body=toJSON(list(
-            element="shoji:entity",
-            body=list(
-                url=file
-            )))))
+        payload <- toJSON(list(element="shoji:entity", body=list(url=file)))
     } else {
         ## Local file. Send it as file upload
-        batch <- try(crPOST(batches_url,
-            body=list(file=httr::upload_file(file))))
+        payload <- list(file=httr::upload_file(file))
     }
+    batch <- try(crPOST(batches_url, body=payload))
+
     if (is.error(batch) && cleanup) {
         delete(ds, confirm=FALSE)
         rethrow(batch)
@@ -233,8 +220,7 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE, cleanup=TRUE
 #' @param return list suitiable for JSONing and POSTing to create a dataset
 #' @export
 #' @keywords internal
-shojifyMetadata <- function (metadata, order=list(list(group="ungrouped",
-                            entities=I(names(metadata)))), ...) {
+shojifyMetadata <- function (metadata, order=I(names(metadata)), ...) {
     return(list(element="shoji:entity",
                  body=list(...,
                            table=list(element="crunch:table",
