@@ -11,7 +11,8 @@
 ## We'll then reference saved objects in that as if we had just retrieved them
 ## from the server
 library(crunch)
-load("getting-started.RData")
+load("vignettes.RData")
+options(width=120)
 ```
 
 # Datasets in `crunch`
@@ -24,17 +25,20 @@ To create new datasets, multiple paths exist. In the web application, you can up
 
 ### 1. newDataset
 
-You can create a dataset from any `data.frame` you have in your R session with `newDataset`:
+The `crunch` package contains a sample dataset that we'll use throughout the vignettes: a sample drawn from a political survey fielded by YouGov on behalf of the _Economist_.
 
 ```{r, eval=FALSE}
-load("economist.RData")
-dim(df)
+load("../vignettes/economist.RData")
+dim(economist)
 ```
 ```{r, echo=FALSE}
 dim.ds
 ```
+
+You can create a dataset from any `data.frame` you have in your R session with `newDataset`. Let's use that sample dataset:
+
 ```{r, eval=FALSE}
-ds <- newDataset(df, name="Economist/YouGov Weekly Survey")
+ds <- newDataset(economist, name="Economist/YouGov Weekly Survey")
 dim(ds)
 ```
 ```{r, echo=FALSE}

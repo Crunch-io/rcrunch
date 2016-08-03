@@ -8,7 +8,8 @@
 \alias{is.selected}
 \alias{is.selected,Category-method}
 \alias{name,Category-method}
-\alias{name<-,Category-method}
+\alias{name<-,ANY,ANY-method}
+\alias{name<-,Category,character-method}
 \alias{value}
 \alias{value,Category-method}
 \alias{value<-}
@@ -17,7 +18,9 @@
 \usage{
 \S4method{name}{Category}(x)
 
-\S4method{name}{Category}(x) <- value
+\S4method{name}{Category,character}(x) <- value
+
+\S4method{name}{ANY,ANY}(x) <- value
 
 \S4method{value}{Category}(x)
 

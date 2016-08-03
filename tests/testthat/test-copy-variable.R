@@ -1,20 +1,31 @@
 context("Shallow copies of variables")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     ds <- loadDataset("test ds")
-    expect_true(inherits(copy(ds$gender), "VariableDefinition"))
-    expect_error(ds$gender_copy <- copy(ds$gender),
-        paste0('Error : POST /api/datasets/dataset1/variables.json ',
-        '{"alias":"gender_copy","format":{"summary":{"digits":2}},',
-        '"view":{"include_missing":false,"show_counts":false,',
-        '"show_codes":false,"column_width":null},"name":"Gender (copy)",',
-        '"discarded":false,"description":"Gender","expr":{"function":"copy_variable",',
-        '"args":[{"variable":"/api/datasets/dataset1/variables/gender.json"}]}}\n'),
-        fixed=TRUE)
+    expect_is(copy(ds$gender), "VariableDefinition")
+    expected <- VariableDefinition(
+        name="Gender (copy)",
+        alias="gender_copy",
+        description="Gender",
+        discarded=FALSE,
+        format=list(summary=list(digits=2)),
+        view=list(include_missing=FALSE,
+            show_counts=FALSE,
+            show_codes=FALSE,
+            column_width=NULL
+        ),
+        expr=list(
+            `function`="copy_variable",
+            args=list(
+                list(variable="/api/datasets/dataset1/variables/gender/")
+            )
+        )
+    )
+    expect_json_equivalent(copy(ds$gender), expected)
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(newDatasetFromFixture("apidocs")), {
             q1_url <- self(ds$q1)
             varcat_url <- self(variables(ds))
@@ -83,12 +94,12 @@ if (run.integration.tests) {
                 unbind(ds$allpets_juv)
                 ds <- refresh(ds)
 
-                ds$allcats <- makeMR(pattern="Cat$", data=ds,
-                    selections="selected", name="All cats", key="name")
-                ds$alldogs <- makeMR(pattern="Canine$", data=ds,
-                    selections="selected", name="All dogs", key="name")
-                ds$allbirds <- makeMR(pattern="Bird$", data=ds,
-                    selections="selected", name="All birds", key="name")
+                ds$allcats <- makeMR(ds[grep("Cat$", names(variables(ds)))],
+                    selections="selected", name="All cats")
+                ds$alldogs <- makeMR(ds[grep("Canine$", names(variables(ds)))],
+                    selections="selected", name="All dogs")
+                ds$allbirds <- makeMR(ds[grep("Bird$", names(variables(ds)))],
+                    selections="selected", name="All birds")
 
                 expect_equivalent(as.array(crtabs(~ allcats, data=ds)),
                     array(c(4, 4), dim=c(2L),

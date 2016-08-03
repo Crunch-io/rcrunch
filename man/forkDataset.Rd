@@ -4,16 +4,21 @@
 \alias{forkDataset}
 \title{Create a fork of a dataset}
 \usage{
-forkDataset(dataset, forkname)
+forkDataset(dataset, name = defaultForkName(dataset), draft = FALSE, ...)
 }
 \arguments{
-\item{dataset}{The CrunchDataset to fork}
+\item{dataset}{The \code{CrunchDataset} to fork}
 
-\item{forkname}{character name to give the fork. If omitted, one will be
+\item{name}{character name to give the fork. If omitted, one will be
 provided for you}
+
+\item{draft}{logical: Should the dataset be a draft, available only to
+editors? Default is \code{FALSE}.}
+
+\item{...}{Additional dataset metadata}
 }
 \value{
-The new fork, a CrunchDataset.
+The new fork, a \code{CrunchDataset}.
 }
 \description{
 As with many other version control systems, in Crunch you can fork a

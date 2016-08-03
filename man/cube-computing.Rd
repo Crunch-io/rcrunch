@@ -29,10 +29,10 @@ The appropriate margin.table or prop.table.
 }
 \description{
 Crunch.io supports more complex data types than base R does, such as
-multiple response and array types. If you want to compute margin or 
+multiple response and array types. If you want to compute margin or
 proportion tables on an aggregation of these variable types, special methods
 are required. These functions provide an interface like
-\code{\link[base]{margin.table}} and \code{\link[base]{prop.table}} for 
+\code{\link[base]{margin.table}} and \code{\link[base]{prop.table}} for
 the CrunchCube object, handling those special data types.
 }
 \seealso{

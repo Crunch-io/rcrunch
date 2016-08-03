@@ -9,14 +9,14 @@ test_that("encoding + JSON reads correctly", {
     expect_identical(fromJSON("utf-test.json"), "Budějovický Budvar")
 })
 
-with(fake.HTTP, {
+with_mock_HTTP({
     ds <- loadDataset("test ds")
     test_that("Reading UTF in tests", {
-        expect_identical(description(ds$mymrset), "Budějovický Budvar")
+        expect_identical(description(ds$textVar), "Budějovický Budvar")
     })
 })
 
-with(test.authentication, {
+with_test_authentication({
     with(test.dataset(df), {
         test_that("Properly encoded UTF is sent and received", {
             s <- iconv("aided_follow_grid:ElCorteInglés", to="UTF-8")

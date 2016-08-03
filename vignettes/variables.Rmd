@@ -11,7 +11,8 @@
 ## We'll then reference saved objects in that as if we had just retrieved them
 ## from the server
 library(crunch)
-load("variables.RData")
+load("vignettes.RData")
+options(width=120)
 ```
 
 # Manipulating variables within datasets
@@ -41,7 +42,7 @@ When dealing with variables within a dataset, the alias is used to identify vari
 Because the `names` attribute is used for indexing elements in R, if we want to extract variables based on alias, it means that the `names` attribute of dataset must actually expose aliases. This may be dissonant, but it has some nice properties. For one, comparing our Crunch dataset with the `data.frame` from which it was created, their `names` attribute have the same contents:
 
 ```{r, eval=FALSE}
-identical(names(ds), names(df))
+identical(names(ds), names(economist))
 ```
 ```
 ## [1] TRUE
@@ -136,7 +137,7 @@ head.of.variables
 These attributes all allow assignment with `<-`. The methods `names` and `aliases` yield character vectors, and they take characters in assignment. Hence, you can use any vectorized string manipulation tools available in R, such as regular expressions, to edit variable names efficiently. You can also just supply a replacement vector, like
 
 ```{r, eval=FALSE}
-names(variables(ds))[6:9] <- c("Favorability of Edward Snowden",
+names(variables(ds))[4:7] <- c("Favorability of Edward Snowden",
                                "Approval of Snowden's Leak",
                                "Support for Prosecution of Snowden",
                                "Penalty for Snowden")
@@ -230,12 +231,14 @@ Datasets often contain variables that you may want to use -- perhaps through a d
 
 As when working with a `data.frame`, you typically assign the return of a dataset-level function back to the variable representing the dataset in your R script or session.
 
+In our example dataset, we have two copies of a voter-registration variable, "votereg_new" and "votereg_old". Let's hide the old version:
+
 ```{r, eval=FALSE}
-ds <- hideVariables(ds, "comments")
+ds <- hideVariables(ds, "votereg_old")
 hiddenVariables(ds)
 ```
 ```
-## [1] "comments"
+## [1] "votereg_old"
 ```
 
 As with the `is.na` function, you can update a variable by assigning it to the hidden variables list.
@@ -245,7 +248,7 @@ hiddenVariables(ds) <- "pid7others"
 hiddenVariables(ds)
 ```
 ```
-## [1] "comments"  "pid7others"
+## [1] "votereg_old"  "pid7others"
 ```
 
 These variables are now hidden, both locally in your R session and remotely on the server, which you can see in the web application. And, just as you could restore them there, you can also restore them from R:
@@ -255,14 +258,14 @@ ds <- unhideVariables(ds, "pid7others")
 hiddenVariables(ds)
 ```
 ```
-## [1] "comments"
+## [1] "votereg_old"
 ```
 
 ## Deleting variables
 
 Sometimes you do want to delete variables permanently. Doing so is easy, but we have some protections in place to keep you from accidentally deleting things from a dataset that may be shared with many people on the server.
 
-To delete, you can assign `NULL` in to the dataset for that variable, just like you were removing a column from a `data.frame`. In our example dataset, we have two copies of a voter-registration variable, "votereg_new" and "votereg_old". Let's kill the old one:
+To delete, you can assign `NULL` in to the dataset for that variable, just like you were removing a column from a `data.frame`. Let's kill the "votereg_old" variable permanently:
 
 ```{r, eval=FALSE}
 ds$votereg_old <- NULL

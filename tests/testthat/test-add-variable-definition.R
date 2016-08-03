@@ -1,11 +1,11 @@
 context("VariableDefinition")
 
 test_that("VariableDefinition constructs", {
-    expect_identical(class(VariableDefinition()), "VariableDefinition")
+    expect_is(VariableDefinition(), "VariableDefinition")
+    expect_is(VarDef(), "VariableDefinition")
     expect_identical(class(VarDef(name="foo")), "VariableDefinition")
     expect_equivalent(VarDef(name="Short", description="More verbose"),
         list(name="Short", description="More verbose"))
-    expect_true(inherits(VarDef(), "VariableDefinition"))
 })
 
 test_that("VarDef takes 'data' and does toVariable on it", {
@@ -38,7 +38,7 @@ test_that("VarDef(data=VarDef, ...)", {
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("Wrapping VarDef has same result as just ds<-", {
                 ds$newvar <- VarDef(df$v4)
@@ -59,13 +59,14 @@ if (run.integration.tests) {
             })
 
             test_that("Can insert VarDef with no values", {
-                expect_warning(ds$newvar3 <- VarDef(name="Empty", type="numeric"), "Adding variable with no rows of data")
+                expect_warning(ds$newvar3 <- VarDef(name="Empty", type="numeric"),
+                    "Adding variable with no rows of data")
                 expect_identical(as.vector(ds$newvar3), rep(NA_real_, 20L))
             })
 
             dropCache(self(ds)) ## Just so whether we have caching on doesn't affect the log we collect
             unifs <- runif(20)
-            with(temp.option(crunch.log=""), {
+            with(temp.option(httpcache.log=""), {
                 avlog <- capture.output(ds <- addVariables(ds, list(
                     VarDef(1, name="One", description="the loneliest"),
                     VarDef(unifs, name="Some random stuff", alias="runif")
@@ -85,7 +86,7 @@ if (run.integration.tests) {
             })
             test_that("addVariables doesn't refresh between each POST", {
                 ## Parse avlog (and thus test the log parsing here)
-                reqdf <- requestsFromLog(logdf)
+                reqdf <- logdf[logdf$scope == "HTTP",]
                 ## GET summary (nrows, to validate); POST var, POST var,
                 ## with no GETs between the POSTs
                 expect_identical(reqdf$verb[1:3], c("GET", "POST", "POST"))
@@ -98,7 +99,7 @@ if (run.integration.tests) {
                     VarDef(1:3, name="Wrong num rows", alias="whatever")
                 ), "replacement has 3 rows, data has 20")
                 ## Confirm that refresh(ds) is unchanged
-                expect_true(is.null(refresh(ds)$Two))
+                expect_null(refresh(ds)$Two)
             })
             test_that("General input validation on addVariables", {
                 expect_error(addVariables(ds,
@@ -106,20 +107,20 @@ if (run.integration.tests) {
                     5 ## Not a variable
                 ), "Must supply VariableDefinitions")
                 ## Confirm that refresh(ds) is unchanged
-                expect_true(is.null(refresh(ds)$Two))
+                expect_null(refresh(ds)$Two)
             })
             test_that("addVariables server error handling", {
-                with(no.internet, {
+                without_internet({
                     ## Add two expr vars (no GET on rows first)
                     expect_error(addVariables(ds,
                         VarDef(ds$v3 + 4, name="v3plus4"),
                         VarDef(ds$v3 + 5, name="v3plus5")
-                    ), "Error : The following variable definition\\(s\\) errored on upload: 1, 2")
+                    ), "The following variable definition\\(s\\) errored on upload: 1, 2")
                 })
                 ## Confirm that refresh(ds) is unchanged
                 ds <- refresh(ds)
-                expect_true(is.null(ds$v3plus4))
-                expect_true(is.null(ds$v3plus5))
+                expect_null(ds$v3plus4)
+                expect_null(ds$v3plus5)
             })
         })
     })

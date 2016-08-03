@@ -13,10 +13,7 @@ appendDataset(dataset1, dataset2, cleanup = TRUE)
 \code{dataset2} is not a Crunch dataset, it will be uploaded as a new
 dataset before appending.}
 
-\item{cleanup}{logical: if the append operation fails or is aborted, should
-the intermediate batch created on \code{dataset1} be deleted? Default is
-\code{TRUE}; \code{FALSE} may be useful if you want to review the append
-conflicts in the web application.}
+\item{cleanup}{Deprecated. See \code{\link{cleanseBatches}}.}
 }
 \value{
 A CrunchDataset with \code{dataset2} appended to \code{dataset1}

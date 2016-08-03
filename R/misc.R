@@ -1,30 +1,19 @@
 is.error <- function (x) inherits(x, "try-error")
 
-halt <- function (...) {
-    msg <- gsub("\n", " ", ..1)
-    logMessage("ERROR", msg)
-    stop(..., call.=FALSE)
-}
-
 rethrow <- function (x) halt(errorMessage(x))
 
 errorMessage <- function (e) attr(e, "condition")$message
 
-updateList <- function (x, y) {
-    x[names(y)] <- y
-    return(x)
-}
-
-##' Generic List Element Extractor
-##'
-##' @param key character naming the key(s) to extract. Can traverse list
-##' elements by separating them with \code{$}.
-##' @param xlist list containing other lists from which you want to extract
-##' @param ifnot what to return if the key is not found in a given xlist element
-##' @param simplify logical, passed to sapply internally
-##' @return the requested element(s). If length(key)>1, a named list of those
-##' elements
-##' @keywords internal
+#' Generic List Element Extractor
+#'
+#' @param key character naming the key(s) to extract. Can traverse list
+#' elements by separating them with \code{$}.
+#' @param xlist list containing other lists from which you want to extract
+#' @param ifnot what to return if the key is not found in a given xlist element
+#' @param simplify logical, passed to sapply internally
+#' @return the requested element(s). If length(key)>1, a named list of those
+#' elements
+#' @keywords internal
 selectFrom <- function (key, xlist, ifnot=NA, simplify=TRUE) {
     if (!is.list(xlist)) {
         halt("xlist must be a list object")
@@ -46,14 +35,21 @@ selectFrom <- function (key, xlist, ifnot=NA, simplify=TRUE) {
     return(y)
 }
 
-##' Make a prose list
-##'
-##' Function to paste together a list of items, separated by commas (if more
-##' than 2), and with the last one having the collapse string.
-##'
-##' @param x vector or list
-##' @param collapse default="and"
-##' @keywords internal
+vget <- function (name) {
+    ## Return a function you can lapply/vapply to select an attribute
+    ## Usage: lapply(list.of.stuff, vget("name"))
+    ## instead of: lapply(list.of.stuff, function (x) x$name)
+    return(function (x) x[[name]])
+}
+
+#' Make a prose list
+#'
+#' Function to paste together a list of items, separated by commas (if more
+#' than 2), and with the last one having the collapse string.
+#'
+#' @param x vector or list
+#' @param collapse default="and"
+#' @keywords internal
 serialPaste <- function (x, collapse="and") {
 	if (length(x)>1) x[length(x)] <- paste(collapse, x[length(x)])
 	join.with <- ifelse(length(x)>2, ", ", " ")
@@ -62,31 +58,29 @@ serialPaste <- function (x, collapse="and") {
 
 now <- function () strftime(Sys.time(), usetz=TRUE)
 
-##' @importFrom httr parse_url build_url
+#' @importFrom httr parse_url build_url
 absoluteURL <- function (urls, base) {
     ## Detect if we have relative urls, and then concatenate if so
-    if (length(urls) && ## if there is anything to munge
-        !any(substr(urls, 1, 4) == "http")) { ## the urls don't start with http
-            base.url <- parse_url(base)
-            urls <- vapply(urls, function (x, b) {
-                b$path <- joinPath(b$path, x)
-                if (is.null(b$scheme)) {
-                    ## If file path and not URL, as in for tests,
-                    ## let's return it relative
-                    return(b$path)
-                }
-                ## Pop off any leading "/" because build_url will add it
-                b$path <- sub("^/", "", b$path)
-                b$query <- NULL ## Catalog query params aren't valid for entities
-                return(build_url(b))
-            }, character(1), b=base.url, USE.NAMES=FALSE)
-        }
+    if (length(urls) && !any(startsWith(urls, "http"))) {
+        base.url <- parse_url(base)
+        urls <- vapply(urls, function (x, b) {
+            b$path <- joinPath(b$path, x)
+            if (is.null(b$scheme)) {
+                ## If file path and not URL, as in for tests,
+                ## let's return it relative
+                return(b$path)
+            }
+            ## Pop off any leading "/" because build_url will add it
+            b$path <- sub("^/", "", b$path)
+            b$query <- NULL ## Catalog query params aren't valid for entities
+            return(build_url(b))
+        }, character(1), b=base.url, USE.NAMES=FALSE)
+    }
     return(urls)
 }
 
 joinPath <- function (base.path, relative.part) {
-    first.char <- substr(relative.part, 1, 1)
-    if (first.char == "/") {
+    if (startsWith(relative.part, "/")) {
         ## This is absolute, relative to the host
         return(relative.part)
     }
@@ -110,9 +104,7 @@ joinPath <- function (base.path, relative.part) {
         }
     }
     out <- paste(u, collapse="/")
-    last.char <- substr(relative.part, nchar(relative.part),
-        nchar(relative.part))
-    if (last.char == "/") {
+    if (endsWith(relative.part, "/")) {
         out <- paste0(out, "/")
     }
     return(out)
@@ -134,18 +126,33 @@ askForPermission <- function (prompt="") {
     return(proceed == "y")
 }
 
-emptyObject <- function () {
+emptyObject <- function (...) {
     ## toJSON(list()) is "[]". toJSON(emptyObject()) is "{}"
+    ##
+    ## Make the function take ... so you can *apply over something and just
+    ## call the function
     structure(list(), .Names=character(0))
 }
+
+null <- function (...) NULL
 
 ## Borrowed from Hadley
 "%||%" <- function (a, b) if (!is.null(a)) a else b
 
-## No longer used:
-# safeGet <- function (x, ..., ifnot=NULL) {
-#     ## "get" with a default
-#     out <- try(get(x, ...), silent=TRUE)
-#     if (is.error(out)) out <- ifnot
-#     return(out)
-# }
+
+## from future import ...
+basefuns <- ls(envir=asNamespace("base"))
+alt.startsWith <- function (x, prefix) {
+    substr(x, 1, nchar(prefix)) == prefix
+}
+if (!("startsWith" %in% basefuns)) {
+    startsWith <- alt.startsWith
+}
+
+alt.endsWith <- function (x, suffix) {
+    z <- nchar(x)
+    substr(x, z - nchar(suffix) + 1, z) == suffix
+}
+if (!("endsWith" %in% basefuns)) {
+    endsWith <- alt.endsWith
+}

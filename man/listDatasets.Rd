@@ -4,11 +4,17 @@
 \alias{listDatasets}
 \title{Show the names of all Crunch datasets}
 \usage{
-listDatasets(kind = c("active", "all", "archived"), refresh = FALSE)
+listDatasets(kind = c("active", "all", "archived"), project = NULL,
+  refresh = FALSE)
 }
 \arguments{
 \item{kind}{character specifying whether to look in active, archived, or all
-datasets.}
+datasets. Default is "active", i.e. non-archived.}
+
+\item{project}{\code{CrunchProject} entity, character name of a project, or
+NULL, the default. If a Project entity or reference is supplied, the
+function will display datasets from that Project's datasets. If NULL,
+the primary dataset catalog for the user will be used.}
 
 \item{refresh}{logical: should the function check the Crunch API for new
 datasets? Default is FALSE.}

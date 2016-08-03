@@ -1,7 +1,7 @@
 context("Deleting variables")
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("deleteVariable(s)", {
                 v1 <- ds$v1
@@ -21,8 +21,8 @@ if (run.integration.tests) {
                         "Must confirm deleting variable")
                     with(consent(), {
                         ds <- deleteVariable(ds, "v3")
-                        expect_true(is.null(ds$v3))
-                        expect_true(is.null(refresh(ds)$v3))
+                        expect_null(ds$v3)
+                        expect_null(refresh(ds)$v3)
                     })
                 })
             })
@@ -39,11 +39,11 @@ if (run.integration.tests) {
                         "Must confirm deleting variable")
                     with(consent(), {
                         ds$v3 <- NULL
-                        expect_true(is.null(ds$v3))
-                        expect_true(is.null(refresh(ds)$v3))
+                        expect_null(ds$v3)
+                        expect_null(refresh(ds)$v3)
                         ds[[2]] <- NULL
-                        expect_true(is.null(ds$v2))
-                        expect_true(is.null(refresh(ds)$v2))
+                        expect_null(ds$v2)
+                        expect_null(refresh(ds)$v2)
                     })
                 })
             })
@@ -63,7 +63,7 @@ if (run.integration.tests) {
                 expect_false("petloc_home" %in% names(ds))
             })
 
-            test_that("Deleting array subvariables", {
+            test_that("Deleting array/MR subvariables", {
                 expect_true("allpets" %in% names(ds))
                 expect_true(is.MR(ds$allpets))
                 expect_false("allpets_2" %in% names(ds))
@@ -81,17 +81,34 @@ if (run.integration.tests) {
         })
 
         with(test.dataset(newDatasetFromFixture("apidocs")), {
+            ## Attempt to reproduce @persephonet's error
+            cats <- categories(ds$allpets)
+            cats[[3]]$selected <- TRUE
+            categories(ds$allpets) <- cats
+            test_that("Delete MR subvar with multiple 'selected' attributes", {
+                expect_identical(names(Filter(is.selected, categories(ds$allpets))),
+                    c("selected", "not asked")) ## There are two selected
+                deleteSubvariable(ds$allpets, "Dog")
+                ds <- refresh(ds)
+                expect_true("allpets" %in% names(ds))
+                expect_true(is.MR(ds$allpets))
+                expect_false("allpets_2" %in% names(ds))
+                expect_false("allpets_2" %in% aliases(subvariables(ds$allpets)))
+                expect_identical(names(subvariables(ds$allpets)),
+                    c("Cat", "Bird"))
+            })
+        })
+
+        with(test.dataset(newDatasetFromFixture("apidocs")), {
             test_that("delete method on variable", {
                 expect_true("q1" %in% names(ds))
                 d <- try(delete(ds$q1))
-                expect_that(d, is_not_an_error())
                 ds <- refresh(ds)
                 expect_false("q1" %in% names(ds))
             })
             test_that("delete deletes all subvariables too", {
                 expect_true("petloc" %in% names(ds))
                 d <- try(delete(ds$petloc))
-                expect_that(d, is_not_an_error())
                 ds <- refresh(ds)
                 expect_false("petloc" %in% names(ds))
                 expect_false("petloc_home" %in% names(ds))

@@ -1,0 +1,22 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/dataset2/",
+    "description": "Detail for a given dataset",
+    "body": {
+        "owner_id": "/api/users/user1/",
+        "id": "aa80d2e969b34e6ea9ededaa528c6248"
+    },
+    "catalogs": {
+        "variables": "/api/datasets/dataset2/variables/",
+        "savepoints": "/api/datasets/dataset2/savepoints/",
+        "batches": "/api/datasets/dataset2/batches/",
+        "permissions": "/api/datasets/dataset2/permissions/"
+    },
+    "views": {
+        "summary": "/api/datasets/dataset2/summary/"
+    },
+    "fragments": {
+        "table": "/api/datasets/dataset2/table/"
+    },
+    "some_other_key": {}
+}

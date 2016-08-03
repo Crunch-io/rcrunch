@@ -1,6 +1,6 @@
-##' @rdname makeArray
-##' @export
-makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key=namekey(dataset), name, selections, ...) {
+#' @rdname makeArray
+#' @export
+makeMR <- function (subvariables, dataset=NULL, pattern=NULL, key=namekey(dataset), name, selections, ...) {
     Call <- match.call(expand.dots=FALSE)
 
     if (missing(name)) {
@@ -13,15 +13,17 @@ makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key=namekey(d
     }
 
     Call[[1L]] <- as.name("prepareBindInputs")
-    x <- eval.parent(Call)
+    subvar_urls <- eval.parent(Call)
 
     ## Get the actual variables so that we can validate
-    vars <- lapply(x$variable_urls,
-        function (u) CrunchVariable(allVariables(x$dataset)[[u]]))
-    are.categorical <- vapply(vars, is.Categorical, logical(1))
+    vars <- lapply(subvar_urls,
+        function (u) VariableEntity(crGET(u)))
+    are.categorical <- vapply(vars,
+        function (x) isTRUE(x@body$type == "categorical"), ## Make a type method?
+        logical(1))
     if (!all(are.categorical)) {
         varnames <- vapply(vars[!are.categorical],
-            function (x) name(x),
+            function (x) x@body$name, ## Make a name() method for VariableEntity
             character(1))
         halt(serialPaste(varnames),
             " are not Categorical variables. Convert them to ",
@@ -37,6 +39,6 @@ makeMR <- function (list_of_variables, dataset=NULL, pattern=NULL, key=namekey(d
         ## Could return more useful messaging here
     }
 
-    return(VariableDefinition(subvariables=I(x$variable_urls), name=name,
+    return(VariableDefinition(subvariables=I(subvar_urls), name=name,
         type="multiple_response", selected_categories=I(selections), ...))
 }

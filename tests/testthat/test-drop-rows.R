@@ -1,20 +1,18 @@
 context("Deleting rows of a dataset")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     ds <- loadDataset("test ds")
     test_that("dropRows generates the right request", {
-        expect_error(dropRows(ds, ds$gender == "Male"),
-            paste0('Error : POST /api/datasets/dataset1/table.json ',
+        expect_POST(dropRows(ds, ds$gender == "Male"),
+            '/api/datasets/dataset1/table/',
             '{"command":"delete","filter":{"function":"==",',
-            '"args":[{"variable":"/api/datasets/dataset1/variables/gender.json"},',
-            '{"value":1,"type":{"function":"typeof","args":[',
-            '{"variable":"/api/datasets/dataset1/variables/gender.json"}]}}]}}\n'),
-            fixed=TRUE)
+            '"args":[{"variable":"/api/datasets/dataset1/variables/gender/"},',
+            '{"value":1}]}}')
     })
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("dropRows really removes rows", {
                 try(ds <- dropRows(ds, ds$v4 == "C"))

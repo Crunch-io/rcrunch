@@ -25,68 +25,19 @@ ordering(ds)
 ```
 
 ```
-## starttime
-## endtime
 ## perc_skipped
 ## newsint2
 ## Direction of country
-## snowdenfav
-## snowdenleakapp
-## snowdenpros
-## snowdenpenalty
+## Favorability of Edward Snowden
+## Approval of Snowden's Leak
+## Support for Prosecution of Snowden
+## Penalty for Snowden
 ## manningknowledge
 ## manningfavorability
 ## manningguilt
 ## manningpenalty
-## betterpartyissues
-## immigration
-## gay
-## education
-## healthcare
-## taxes
-## abortion
-## economy
-## jobs
-## betterpartygroups
-## gays
-## women
-## blacks
-## hispanics
-## families
-## smallbus
-## guns
-## christians
-## immig
-## gaymar2
-## congressdone
-## agendasetter
-## theaterfreq
-## moviepreference
-## seentopmovies
-## ironman3
-## despicableme2
-## manofsteel
-## monstersu
-## fastfurious6
-## startrek
-## worldwarz
-## loneranger
-## greatgatsby
-## wolverine
-## movierefreshments
-## butterpopcorn
-## bestmovies
 ## Issue importance
 ## imissf
-## imissf2
-## fav
-## fav_obam
-## fav_boeh
-## fav_mccon
-## fav_reid
-## fav_pelosi
-## fav_biden
-## fav_hclin
 ## obamaapp
 ## Approval of Obama on issues
 ## congapp
@@ -94,29 +45,6 @@ ordering(ds)
 ## ideoobama
 ## saysobama
 ## likeobama
-## econtrend
-## stockpos
-## persfinretro
-## ownorrent
-## ownhomevalretro
-## areahomeval
-## homevalpro
-## mortworry
-## homebuypros
-## child18
-## voteregadd_rev
-## voteregadd2_rev
-## student2
-## job
-## employstat2
-## jobmult
-## wkhrs
-## jobworry
-## jobavail
-## jobavailsixmon
-## occupxhappywjob
-## hhincpros
-## exhaustsavings
 ## birthyr
 ## gender
 ## pid3
@@ -125,19 +53,10 @@ ordering(ds)
 ## race
 ## educ
 ## marstat
-## pew_bornagain
-## pew_religimp
-## pew_churatd
-## pew_prayer
 ## phone
 ## faminc
-## faminc2
-## inputstate
-## comments
 ## region
 ## state
-## obamaGroup
-## obamaVote
 ## weight
 ## votereg_new
 ## is_voter
@@ -153,9 +72,9 @@ Since I know how this dataset is organized, I'm going quickly toss the variables
 
 ```r
 ordering(ds) <- VariableOrder(
-        VariableGroup("Demos", ds[c(1:3, 93:118)]),
-        VariableGroup("Tracking questions", ds[c(4,5,52:92)]),
-        VariableGroup("This week", ds[6:51])
+        VariableGroup("Demos", ds[c(1, 21:37)]),
+        VariableGroup("Tracking questions", ds[c(2,3, 11:20)]),
+        VariableGroup("This week", ds[4:11])
     )
 ```
 
@@ -168,8 +87,6 @@ ordering(ds)
 
 ```
 ## [+] Demos
-##     starttime
-##     endtime
 ##     perc_skipped
 ##     birthyr
 ##     gender
@@ -179,19 +96,10 @@ ordering(ds)
 ##     race
 ##     educ
 ##     marstat
-##     pew_bornagain
-##     pew_religimp
-##     pew_churatd
-##     pew_prayer
 ##     phone
 ##     faminc
-##     faminc2
-##     inputstate
-##     comments
 ##     region
 ##     state
-##     obamaGroup
-##     obamaVote
 ##     weight
 ##     votereg_new
 ##     is_voter
@@ -200,17 +108,9 @@ ordering(ds)
 ## [+] Tracking questions
 ##     newsint2
 ##     Direction of country
+##     manningpenalty
 ##     Issue importance
 ##     imissf
-##     imissf2
-##     fav
-##     fav_obam
-##     fav_boeh
-##     fav_mccon
-##     fav_reid
-##     fav_pelosi
-##     fav_biden
-##     fav_hclin
 ##     obamaapp
 ##     Approval of Obama on issues
 ##     congapp
@@ -218,79 +118,18 @@ ordering(ds)
 ##     ideoobama
 ##     saysobama
 ##     likeobama
-##     econtrend
-##     stockpos
-##     persfinretro
-##     ownorrent
-##     ownhomevalretro
-##     areahomeval
-##     homevalpro
-##     mortworry
-##     homebuypros
-##     child18
-##     voteregadd_rev
-##     voteregadd2_rev
-##     student2
-##     job
-##     employstat2
-##     jobmult
-##     wkhrs
-##     jobworry
-##     jobavail
-##     jobavailsixmon
-##     occupxhappywjob
-##     hhincpros
-##     exhaustsavings
 ## [+] This week
-##     snowdenfav
-##     snowdenleakapp
-##     snowdenpros
-##     snowdenpenalty
+##     Favorability of Edward Snowden
+##     Approval of Snowden's Leak
+##     Support for Prosecution of Snowden
+##     Penalty for Snowden
 ##     manningknowledge
 ##     manningfavorability
 ##     manningguilt
 ##     manningpenalty
-##     betterpartyissues
-##     immigration
-##     gay
-##     education
-##     healthcare
-##     taxes
-##     abortion
-##     economy
-##     jobs
-##     betterpartygroups
-##     gays
-##     women
-##     blacks
-##     hispanics
-##     families
-##     smallbus
-##     guns
-##     christians
-##     immig
-##     gaymar2
-##     congressdone
-##     agendasetter
-##     theaterfreq
-##     moviepreference
-##     seentopmovies
-##     ironman3
-##     despicableme2
-##     manofsteel
-##     monstersu
-##     fastfurious6
-##     startrek
-##     worldwarz
-##     loneranger
-##     greatgatsby
-##     wolverine
-##     movierefreshments
-##     butterpopcorn
-##     bestmovies
 ```
 
-Groups can be created with several kinds of inputs. You can specify a vector or list of variable references (URLs), as returned from the `self` method of variables. That list of references may also contain `VariableGroup` objects as well, which will nest those Groups inside the Group you're creating (see "Nested Groups" below). You can also provide a list of variable entities or, as in this example, a subset of a dataset entity (which can be thought of as a list of variables). 
+Groups can be created with several kinds of inputs. You can specify a vector or list of variable references (URLs), as returned from the `self` method of variables. That list of references may also contain `VariableGroup` objects as well, which will nest those Groups inside the Group you're creating (see "Nested Groups" below). You can also provide a list of variable entities or, as in this example, a subset of a dataset entity (which can be thought of as a list of variables).
 
 ## Group names
 We can use the `names` method to access and modify these group names:
@@ -318,7 +157,7 @@ names(ordering(ds))
 
 ## Reordering groups and entities
 
-`VariableOrder` and `VariableGroup` support standard R forms of indexing for extracting and reordering. 
+`VariableOrder` and `VariableGroup` support standard R forms of indexing for extracting and reordering.
 
 Let's move "Demographics" to the end:
 
@@ -348,15 +187,6 @@ ordering(ds)
 ##     Direction of country
 ##     Issue importance
 ##     imissf
-##     imissf2
-##     fav
-##     fav_obam
-##     fav_boeh
-##     fav_mccon
-##     fav_reid
-##     fav_pelosi
-##     fav_biden
-##     fav_hclin
 ##     obamaapp
 ##     Approval of Obama on issues
 ##     congapp
@@ -364,80 +194,17 @@ ordering(ds)
 ##     ideoobama
 ##     saysobama
 ##     likeobama
-##     econtrend
-##     stockpos
-##     persfinretro
-##     ownorrent
-##     ownhomevalretro
-##     areahomeval
-##     homevalpro
-##     mortworry
-##     homebuypros
-##     child18
-##     voteregadd_rev
-##     voteregadd2_rev
-##     student2
-##     job
-##     employstat2
-##     jobmult
-##     wkhrs
-##     jobworry
-##     jobavail
-##     jobavailsixmon
-##     occupxhappywjob
-##     hhincpros
-##     exhaustsavings
 ## [+] This week
 ##     manningknowledge
 ##     manningfavorability
 ##     manningguilt
 ##     manningpenalty
-##     betterpartyissues
-##     immigration
-##     gay
-##     education
-##     healthcare
-##     taxes
-##     abortion
-##     economy
-##     jobs
-##     betterpartygroups
-##     gays
-##     women
-##     blacks
-##     hispanics
-##     families
-##     smallbus
-##     guns
-##     christians
-##     immig
-##     gaymar2
-##     congressdone
-##     agendasetter
-##     theaterfreq
-##     moviepreference
-##     seentopmovies
-##     ironman3
-##     despicableme2
-##     manofsteel
-##     monstersu
-##     fastfurious6
-##     startrek
-##     worldwarz
-##     loneranger
-##     greatgatsby
-##     wolverine
-##     movierefreshments
-##     butterpopcorn
-##     bestmovies
 ##     [+] Snowden
-##         snowdenfav
-##         snowdenleakapp
-##         snowdenpros
-##         snowdenpenalty
+##         Favorability of Edward Snowden
+##         Approval of Snowden's Leak
+##         Support for Prosecution of Snowden
+##         Penalty for Snowden
 ## [+] Demographics
-##     starttime
-##     endtime
 ##     perc_skipped
 ##     birthyr
 ##     gender
@@ -447,19 +214,10 @@ ordering(ds)
 ##     race
 ##     educ
 ##     marstat
-##     pew_bornagain
-##     pew_religimp
-##     pew_churatd
-##     pew_prayer
 ##     phone
 ##     faminc
-##     faminc2
-##     inputstate
-##     comments
 ##     region
 ##     state
-##     obamaGroup
-##     obamaVote
 ##     weight
 ##     votereg_new
 ##     is_voter

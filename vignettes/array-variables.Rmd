@@ -8,7 +8,7 @@
 
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(crunch)
-load("array-variables.RData")
+load("vignettes.RData")
 ```
 # Array Variables
 
@@ -26,7 +26,7 @@ In our sample _Economist_ dataset, we have set of variables prefixed with "imiss
 grep("^imiss_", names(ds), value=TRUE)
 ```
 ```{r, echo=FALSE}
-grep("^imiss_", names(start), value=TRUE)
+grep("^imiss_", names(start_make_array), value=TRUE)
 ```
 
 These correspond to a survey grid question about how important respondents view a set of issues. Examining one of them, we see
@@ -41,7 +41,7 @@ cat(show_imiss_b, sep="\n")
 All of these "imiss" categorical variables have the same structure. We can combine them into a categorical array variable with `makeArray`:
 
 ```{r, eval=FALSE}
-ds$imiss <- makeArray(pattern="^imiss_", dataset=ds, name="Issue importance")
+ds$imiss <- makeArray(ds[grep("^imiss_", names(ds))], name="Issue importance")
 ds$imiss
 ```
 ```{r, echo=FALSE}
@@ -125,7 +125,7 @@ In the questionnaire that collected this data, "boap" appeared as a grid questio
 The function `makeMR` works like `makeArray` but with an additional argument, "selections", in which you specify the category name(s) that identify which category or categories should be the dichotomous indicator.
 
 ```{r, eval=FALSE}
-ds$boap <- makeMR(pattern="^boap_[0-9]+", dataset=ds,
+ds$boap <- makeMR(ds[grep("^boap_[0-9]+", names(ds))],
     name="Approval of Obama on issues",
     selections=c("Strongly approve", "Somewhat approve"))
 ds$boap
@@ -173,7 +173,7 @@ unbind(ds$boap)
 ds <- refresh(ds)
 ```
 ```{r, results='hide', echo=FALSE, message=FALSE}
-ds <- start
+ds <- start_make_array
 ```
 
 Note the use of `refresh`. Most functions that modify objects on the server refresh their local copies in our R session automatically; however, because `unbind` doesn't assign back into `ds`, the local dataset object doesn't get updated with the change, so we need to refresh it manually.

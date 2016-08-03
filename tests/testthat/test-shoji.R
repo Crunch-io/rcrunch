@@ -22,18 +22,20 @@ test_that("ShojiObject init and is", {
 })
 
 test_that("ShojiCatalog", {
-    fo <- structure(list(element=1, self=2, description=3, index=list(`/a`=4, `/b`=5)),
+    fo <- structure(list(element=1, self=2, description=3,
+        index=list(`/a`=list(4), `/b`=list(5))),
         class="shoji")
     sho <- ShojiObject(fo)
-    expect_false(is.shojiCatalog(sho))
+    expect_false(is.catalog(sho))
     expect_error(index(sho))
     fo$element <- "shoji:catalog" ## TODO: implement ShojiObject subclassing
     sho <- ShojiCatalog(fo)
-    expect_true(is.shojiCatalog(sho))
+    expect_true(is.catalog(sho))
     expect_identical(index(sho), fo$index)
-    expect_true(is.shojiCatalog(sho[1]))
+    expect_true(is.catalog(sho[1]))
     expect_error(sho[2:3], "Subscript out of bounds: 3")
-    expect_true(is.shojiCatalog(sho[c(TRUE, FALSE)]))
+    expect_error(sho[2:10], "Subscript out of bounds: 3:10")
+    expect_true(is.catalog(sho[c(TRUE, FALSE)]))
     expect_error(sho[c(TRUE, FALSE, TRUE)],
         "Subscript out of bounds: got 3 logicals, need 2")
     expect_identical(sho[TRUE], sho)
@@ -41,9 +43,9 @@ test_that("ShojiCatalog", {
     expect_error(sho[c("/a", "c")], "Undefined elements selected: c")
 })
 
-with(fake.HTTP, {
-    full.urls <- DatasetCatalog(crGET("/api/datasets.json"))
-    rel.urls <- DatasetCatalog(crGET("/api/datasets-relative-urls.json"))
+with_mock_HTTP({
+    full.urls <- DatasetCatalog(crGET("/api/datasets/"))
+    rel.urls <- DatasetCatalog(crGET("/api/datasets-relative-urls/"))
     test_that("urls() method returns absolute URLs", {
         expect_identical(urls(full.urls), urls(rel.urls))
     })
@@ -51,24 +53,22 @@ with(fake.HTTP, {
     test_that("shojiURL", {
         ds <- loadDataset("test ds")
         expect_identical(shojiURL(ds, "catalogs", "variables"),
-            "/api/datasets/dataset1/variables.json")
+            "/api/datasets/dataset1/variables/")
         expect_error(shojiURL(ds, "catalogs", "NOTACATALOG"),
             paste0("No URL ", dQuote("NOTACATALOG"), " in collection ",
             dQuote("catalogs")))
     })
 })
 
-if (run.integration.tests) {
-    with(test.authentication, {
-        with(test.dataset(df), {
-            test_that("refresh", {
-                expect_identical(ds, refresh(ds))
-                ds2 <- ds
-                ds2@body$name <- "something else"
-                expect_false(identical(ds2, ds))
-                expect_false(identical(ds2, refresh(ds2)))
-                expect_identical(refresh(ds2), ds)
-            })
+with_test_authentication({
+    with(test.dataset(df), {
+        test_that("refresh", {
+            expect_identical(ds, refresh(ds))
+            ds2 <- ds
+            ds2@body$name <- "something else"
+            expect_false(identical(ds2, ds))
+            expect_false(identical(ds2, refresh(ds2)))
+            expect_identical(refresh(ds2), ds)
         })
     })
-}
+})

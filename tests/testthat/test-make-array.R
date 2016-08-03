@@ -1,11 +1,45 @@
 context("Categorical Array")
 
+with_mock_HTTP({
+    ds <- loadDataset("test ds")
+    test_that("makeArray creates a VariableDefinition with dataset subset", {
+        expect_json_equivalent(makeArray(ds[,"gender"], name="Gender array"),
+            list(
+                name="Gender array",
+                subvariables=I("/api/datasets/dataset1/variables/gender/"),
+                type="categorical_array"
+            ))
+    })
+    test_that("makeArray creates a VariableDefinition with variables subset", {
+        expect_json_equivalent(makeArray(variables(ds)[names(ds) == "gender"],
+            name="Gender array 2"),
+            list(
+                name="Gender array 2",
+                subvariables=I("/api/datasets/dataset1/variables/gender/"),
+                type="categorical_array"
+            ))
+    })
+
+    test_that("makeArray error conditions", {
+        no.name <- "Must provide the name for the new variable"
+        no.match <- "No variables supplied"
+        expect_error(makeArray(), no.name)
+        expect_error(makeArray(ds[,"gender"]), no.name)
+        expect_warning(
+            expect_error(makeArray(pattern="rm_", dataset=ds, name="foo"),
+                no.match),
+            "Deprecation")
+        expect_error(makeArray(ds[grep("NO variables", names(ds))], name="foo"),
+            no.match)
+    })
+})
+
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         test_that("can make Categorical Array with Dataset subset", {
             with(test.dataset(mrdf), {
                 var <- makeArray(ds[1:3], name="arrayVar")
-                expect_true(inherits(var, "VariableDefinition"))
+                expect_is(var, "VariableDefinition")
                 ds$arrayVar <- var
                 expect_equal(c("arrayVar", "v4"), names(ds))
                 expect_true(is.CA(ds$arrayVar))
@@ -27,16 +61,16 @@ if (run.integration.tests) {
                 expect_identical(ncol(ds), 1L)
             })
         })
-        test_that("can make Categorical Array with pattern", {
+        test_that("Make Categorical Array with pattern works but is deprecated", {
             with(test.dataset(mrdf), {
-                var <- makeArray(pattern="mr_[123]", dataset=ds,
-                    name="arrayVar")
-                expect_true(inherits(var, "VariableDefinition"))
+                expect_warning(var <- makeArray(pattern="mr_[123]", dataset=ds,
+                    name="arrayVar"),
+                    "Deprecation warning")
+                expect_is(var, "VariableDefinition")
                 ds$arrayVar <- var
                 expect_equal(c("arrayVar", "v4"), names(ds))
                 ## unbind.
-                u <- try(unbind(ds$arrayVar))
-                expect_that(u, is_not_an_error())
+                u <- unbind(ds$arrayVar)
                 ds <- refresh(ds)
                 expect_true(setequal(names(ds), names(mrdf)))
                 expect_identical(ncol(ds), 4L)
@@ -44,27 +78,7 @@ if (run.integration.tests) {
         })
 
         with(test.dataset(mrdf), {
-            test_that("makeArray error conditions", {
-                no.name <- "Must provide the name for the new variable"
-                no.match <- "Pattern did not match any variables"
-                ds.mismatch <- "`list_of_variables` must be from `dataset`"
-                expect_error(makeArray(), no.name)
-                expect_error(makeArray(pattern="mr_[123]", dataset=ds),
-                    no.name)
-                expect_error(makeArray(pattern="rm_", dataset=ds,
-                    name="foo"), no.match)
-                expect_silent(ds$d <- is.CA(makeArray(c("mr_1", "mr_2", "mr_3"),
-                    dataset=ds, name="foo")))
-                skip("Errors, but with wrong error condition")
-                with(test.dataset(df, "notds"), {
-                    expect_error(makeArray(ds[1:3], dataset=notds,
-                        name="arrayVar"), ds.mismatch)
-                })
-            })
-        })
-
-        with(test.dataset(mrdf), {
-            ds$arrayVar <- makeArray(pattern="mr_[123]", dataset=ds,
+            ds$arrayVar <- makeArray(ds[c("mr_1", "mr_2", "mr_3")],
                 name="arrayVar")
             var <- ds$arrayVar
             test_that("setup to make MultipleResponse from CategoricalArray", {
@@ -112,8 +126,8 @@ if (run.integration.tests) {
                 cast.these <- grep("mr_", names(ds))
                 ds[cast.these] <- lapply(ds[cast.these],
                     castVariable, "categorical")
-                ds$arrayVar <- makeMR(pattern="mr_[123]", dataset=ds,
-                    name="arrayVar", selections="1.0")
+                ds$arrayVar <- makeMR(ds[cast.these], name="arrayVar",
+                    selections="1.0")
                 var <- ds$arrayVar
                 expect_true(is.Multiple(var))
 
@@ -121,8 +135,7 @@ if (run.integration.tests) {
                 expect_true(is.CA(var))
 
                 ## unbind.
-                u <- try(unbind(var))
-                expect_that(u, is_not_an_error())
+                u <- unbind(var)
                 ds <- refresh(ds)
                 expect_true(setequal(names(ds), names(mrdf)))
                 expect_identical(ncol(ds), 4L)
@@ -131,9 +144,9 @@ if (run.integration.tests) {
             with(test.dataset(mrdf), {
                 test_that("makeMR error conditions", {
                     no.name <- "Must provide the name for the new variable"
-                    no.match <- "Pattern did not match any variables"
+                    no.match <- "No variables supplied"
                     need.variables <- "Invalid list of Variables to combine"
-                    ds.mismatch <- "`list_of_variables` must be from `dataset`"
+                    ds.mismatch <- "`subvariables` must be from `dataset`"
                     no.selections <- paste("Must provide the names of the",
                         "category or categories that indicate the dichotomous",
                         "selection")
@@ -143,27 +156,24 @@ if (run.integration.tests) {
                     expect_error(makeMR(), no.name)
                     expect_error(makeMR(pattern="mr_[123]", dataset=ds),
                         no.name)
-                    expect_error(makeMR(pattern="rm_", dataset=ds,
-                        name="foo", selections="foo"), no.match)
-                    expect_error(makeMR(c("mr_1", "mr_2", "mr_3"),
-                        dataset=ds, name="foo", selections="foo"),
+                    expect_warning(
+                        expect_error(makeMR(pattern="rm_", dataset=ds,
+                            name="foo", selections="foo"), no.match),
+                        "Deprecation")
+                    expect_error(makeMR(ds[c("mr_1", "mr_2", "mr_3")],
+                        name="foo", selections="foo"),
                         not.categorical)
-                    expect_error(makeMR(pattern="mr_[123]", dataset=ds,
+                    expect_error(makeMR(ds[c("mr_1", "mr_2", "mr_3")],
                         name="arrayVar", selections="Not a Selection!"),
                         not.categorical)
                     cast.these <- grep("mr_", names(ds))
                     ds[cast.these] <- lapply(ds[cast.these],
                         castVariable, "categorical")
-                    expect_error(makeMR(pattern="mr_[123]", dataset=ds,
+                    expect_error(makeMR(ds[cast.these],
                         name="arrayVar", selections="Not a Selection!"),
                         invalid.selection)
-                    expect_error(makeMR(pattern="mr_[123]", dataset=ds,
+                    expect_error(makeMR(ds[cast.these],
                         name="arrayVar"), no.selections)
-                    skip("Errors, but with Error in match(x, table, nomatch = 0L) : \n  'match' requires vector arguments\n")
-                    with(test.dataset(df, "notds"), {
-                        expect_error(makeMR(ds[1:3], dataset=notds,
-                            name="arrayVar", selections="1.0"), ds.mismatch)
-                    })
                 })
             })
         })

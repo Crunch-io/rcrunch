@@ -11,7 +11,7 @@ test_that("login checks for email and password before POSTing", {
         "Must supply a password")
 })
 
-with(fake.HTTP, {
+with_mock_HTTP({
     test_that("Jupyter helper sets up env", {
         with(reset.option("httr_config"), {
             jupyterLogin("test_token")
@@ -49,6 +49,14 @@ if (run.integration.tests) {
     test_that("session URLs can be retrieved", {
         suppressMessages(login())
             expect_true(is.character(sessionURL("datasets")))
+        logout()
+        expect_error(sessionURL("datasets"),
+            "You must authenticate before making this request")
+    })
+
+    test_that("login returns a session object", {
+        cr <- suppressMessages(login())
+            expect_true(is.list(cr))
         logout()
         expect_error(sessionURL("datasets"),
             "You must authenticate before making this request")

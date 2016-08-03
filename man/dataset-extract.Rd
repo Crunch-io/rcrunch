@@ -40,7 +40,8 @@
 arguments are supplied (i.e \code{x[i]}), \code{i} provides for
 \code{as.list} extraction: columns of the dataset rather than rows. If
 character, identifies variables to extract based on their aliases (by
-default, i.e. when x's \code{useAlias} is TRUE); if numeric orlogical,
+default: set \code{options(crunch.namekey.dataset="name")} to use variable
+names); if numeric or logical,
 extracts variables accordingly. Alternatively, (2) if \code{j} is specified
 (as either \code{x[i, j]} or \code{x[i,]}), \code{i} is an object of class
 \code{CrunchLogicalExpr} that will define a subset of rows.}

@@ -4,8 +4,7 @@
 \alias{newDatasetFromFile}
 \title{Upload a file to Crunch to make a new dataset}
 \usage{
-newDatasetFromFile(file, name = basename(file),
-  useAlias = default.useAlias(), ...)
+newDatasetFromFile(file, name = basename(file), ...)
 }
 \arguments{
 \item{file}{character, the path to a file to upload. This should either be
@@ -13,10 +12,6 @@ a .csv or .sav (SPSS) file.}
 
 \item{name}{character, the name to give the new Crunch dataset. Default is
 the file name}
-
-\item{useAlias}{logical whether variable alias or name should be used as R
-variable names when the dataset is returned. Default is TRUE, meaning alias.
-They're more computer friendly.}
 
 \item{...}{additional arguments passed to \code{ \link{createDataset}}}
 }

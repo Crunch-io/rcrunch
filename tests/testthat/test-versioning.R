@@ -1,13 +1,13 @@
 context("Versions")
 
-with(fake.HTTP, {
+with_mock_HTTP({
     ds <- loadDataset("test ds")
     test_that("Version catalog exists", {
-        expect_true(inherits(versions(ds), "VersionCatalog"))
+        expect_is(versions(ds), "VersionCatalog")
     })
 
     test_that("Version catalog attributes (and sorting)", {
-        expect_identical(length(versions(ds)), 2L)
+        expect_length(versions(ds), 2)
         expect_identical(names(versions(ds)),
             c("another version", "initial load"))
         expect_identical(descriptions(versions(ds)),
@@ -25,15 +25,31 @@ with(fake.HTTP, {
     })
 
     test_that("saveVersion makes the right request", {
-        expect_error(saveVersion(ds, "Today"),
-            'POST /api/datasets/dataset1/savepoints.json \\{"description":"Today"\\}')
+        expect_POST(saveVersion(ds, "Today"),
+            '/api/datasets/dataset1/savepoints/',
+            '{"description":"Today"}')
+    })
+
+    test_that("saveVersion with no description supplied", {
+        expect_POST(saveVersion(ds),
+            '/api/datasets/dataset1/savepoints/',
+            '{"description":"Version 3"}')
+    })
+
+    test_that("saveVersion rejects invalid description", {
+        expect_error(saveVersion(ds, c("Today", "Tomorrow")),
+            paste(dQuote("description"), "must be a length-1 character vector"))
+        expect_error(saveVersion(ds, list()),
+            paste(dQuote("description"), "must be a length-1 character vector"))
+        expect_error(saveVersion(ds, character(0)),
+            paste(dQuote("description"), "must be a length-1 character vector"))
     })
 
     test_that("restoreVersion makes the right request", {
-        expect_error(restoreVersion(ds, "initial load"),
-            'POST /api/datasets/dataset1/savepoints/v2/revert/')
-        expect_error(restoreVersion(ds, 2),
-            'POST /api/datasets/dataset1/savepoints/v2/revert/')
+        expect_POST(restoreVersion(ds, "initial load"),
+            '/api/datasets/dataset1/savepoints/v2/revert/')
+        expect_POST(restoreVersion(ds, 2),
+            '/api/datasets/dataset1/savepoints/v2/revert/')
         expect_error(restoreVersion(ds, "not a version"),
             paste0(dQuote("not a version"),
             " does not match any available versions"))
@@ -42,23 +58,18 @@ with(fake.HTTP, {
 
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("Dataset imported correctly", {
-                validImport(ds)
+                expect_valid_df_import(ds)
             })
 
             ## Release and re-lease
-            .releaseDataset(ds)
-            ds <- refresh(ds)
+            ds <- releaseAndReload(ds)
 
             test_that("There is an initial version", {
                 expect_identical(names(versions(ds)), "initial import")
-                expect_identical(length(versions(ds)), 1L)
             })
-
-            ## Slow down a beat because of #108354126
-            Sys.sleep(1)
 
             ## Make changes:
             # 1. Edit variable metadata
@@ -94,8 +105,7 @@ if (run.integration.tests) {
             })
 
             ## Release and re-lease
-            .releaseDataset(ds)
-            ds <- refresh(ds)
+            ds <- releaseAndReload(ds)
 
             ## Assert those things again
             test_that("The edits made are still there after releasing", {
@@ -114,24 +124,21 @@ if (run.integration.tests) {
             ## Save a version
             try(saveVersion(ds, "My changes"))
             test_that("There are now two versions", {
-                expect_identical(length(versions(ds)), 2L)
+                expect_length(versions(ds), 2)
                 expect_identical(names(versions(ds))[1], "My changes")
             })
 
             ## Release and re-lease
-            .releaseDataset(ds)
-            ds <- refresh(ds)
+            ds <- releaseAndReload(ds)
 
             ## Revert to the first version
             ds <- try(restoreVersion(ds, "initial import"))
             test_that("Restoring restored correctly", {
-                expect_identical(length(versions(ds)), 1L)
-                validImport(ds)
+                expect_valid_df_import(ds)
             })
 
             ## Release and re-lease
-            .releaseDataset(ds)
-            ds <- refresh(ds)
+            ds <- releaseAndReload(ds)
 
             test_that("Added variables are really removed by rolling back", {
                 ## This was user-reported: Order was reverted but derived
@@ -142,14 +149,19 @@ if (run.integration.tests) {
             })
 
             test_that("And now we can add variables again that we added and reverted", {
-                expect_true(is.null(ds$v7))
+                expect_null(ds$v7)
                 ## This would error if "v7" were still lurking somewhere
                 ds$v7 <- ds$v3 - 7
                 expect_identical(as.vector(ds$v7), df$v3 - 7)
 
-                expect_true(is.null(ds$v8))
+                expect_null(ds$v8)
                 ds$v8 <- rep(6:10, 4)
                 expect_equivalent(as.vector(ds$v8), rep(6:10, 4))
+            })
+
+            ds <- try(restoreVersion(ds, "initial import"))
+            test_that("And if we revert again, it's all good", {
+                expect_valid_df_import(ds)
             })
         })
     })

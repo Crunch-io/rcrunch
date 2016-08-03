@@ -2,7 +2,7 @@ context("Update array variables")
 
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(mrdf), {
             ds <- mrdf.setup(ds)
             test_that("Subvariable values before trying to update", {

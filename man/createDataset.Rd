@@ -4,16 +4,14 @@
 \alias{createDataset}
 \title{Create an empty dataset}
 \usage{
-createDataset(name, useAlias = default.useAlias(), ...)
+createDataset(name, body, ...)
 }
 \arguments{
 \item{name}{character, the name to give the new Crunch dataset. This is
 required.}
 
-\item{useAlias}{logical whether variable alias or name should be used as R
-variable names when the dataset is returned. Default is TRUE, meaning alias.
-This argument is only relevant for the dataset object that is returned;
-it has no effect on the contents of the object created on the server.}
+\item{body}{list correctly formatted metadata definition for a dataset. See
+docs.crunch.io.}
 
 \item{...}{additional arguments for the POST to create the dataset, such as
 "description".}

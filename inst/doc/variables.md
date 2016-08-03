@@ -9,7 +9,7 @@
 
 # Manipulating variables within datasets
 
-Once you've uploaded data to Crunch, you'll likely want to spend some time cleaning up the metadata associated with your dataset. Legacy statistical programs offer only limited support for variable metadata, both in type and quality. Because Crunch facilitates data visualization, collaboration, and sharing results with others, making your dataset presentation-quality is worthwhile, and this often requires additional work after uploading a data file. 
+Once you've uploaded data to Crunch, you'll likely want to spend some time cleaning up the metadata associated with your dataset. Legacy statistical programs offer only limited support for variable metadata, both in type and quality. Because Crunch facilitates data visualization, collaboration, and sharing results with others, making your dataset presentation-quality is worthwhile, and this often requires additional work after uploading a data file.
 
 Most of the operations described below can also be accomplished in the web client. However, users comfortable with scripting may find it faster or easier to automate these actions with `crunch`. Such edits made within R are carried out on the remote Crunch dataset, thereby keeping data in sync across all client applications.
 
@@ -17,7 +17,7 @@ Most of the operations described below can also be accomplished in the web clien
 
 Crunch takes the principled stand that working with data in the 21st Century should not be constrained by legacies of the punch-card era. Variables should have "names" that are human-readable and searchable by their meaning---there is no reason to constrain variable names to be eight characters, all caps, etc. "Aided awareness: coffee roasters" is much nicer and more presentable than "Q2B_V1".
 
-At the same time, shorter, user-defined, unique identifiers for variables do have their uses. For one, it's what most any legacy statistical software uses for its identifiers, so retaining them on import will help us line up variables when appending a subsequent batch of imported data, for example. For another, when interacting with a dataset from the command line, it can be useful to have shorter, machine-friendlier references. 
+At the same time, shorter, user-defined, unique identifiers for variables do have their uses. For one, it's what most any legacy statistical software uses for its identifiers, so retaining them on import will help us line up variables when appending a subsequent batch of imported data, for example. For another, when interacting with a dataset from the command line, it can be useful to have shorter, machine-friendlier references.
 
 So, Crunch stores two user-settable identifiers for variables. What you may have thought of as a variable "label", Crunch elevates to the status of "name". What you may be used to thinking of as a variable "name", Crunch calls "alias".
 
@@ -35,13 +35,13 @@ Because the `names` attribute is used for indexing elements in R, if we want to 
 
 
 ```r
-identical(names(ds), names(df))
+identical(names(ds), names(economist))
 ```
 ```
 ## [1] TRUE
 ```
 
-You can reference and extract variables from a dataset as if it were a `data.frame`, using the `$`, `[`, and `[[` methods. 
+You can reference and extract variables from a dataset as if it were a `data.frame`, using the `$`, `[`, and `[[` methods.
 
 
 ```r
@@ -53,9 +53,9 @@ track.var
 ## track (categorical)
 ## 
 ##                                         Count
-## Off on the wrong track                    576
-## Generally headed in the right direction   285
-## Not sure                                  139
+## Off on the wrong track                    137
+## Generally headed in the right direction    80
+## Not sure                                   33
 ```
 
 Like datasets, variables have various attributes like `name` and `description` that can be set naturally.
@@ -66,7 +66,7 @@ name(track.var) <- "Direction of country"
 description(track.var) <- "In your opinon, is the country going in the right direction, or is it on the wrong track?"
 ```
 
-Two caveats. First, because we first extracted the variable from the dataset before making edits, the dataset object has stale metadata for this variable. 
+Two caveats. First, because we first extracted the variable from the dataset before making edits, the dataset object has stale metadata for this variable.
 
 
 ```r
@@ -84,7 +84,7 @@ If we had instead modified `track` within `ds`, like
 name(ds$track) <- "Direction of country"
 ```
 
-`ds` would be up to date. 
+`ds` would be up to date.
 
 This can be remedied one of two ways. We could either assign `track.var` back to `ds`, as in
 
@@ -156,17 +156,15 @@ head(names(variables(ds)), 10)
 ```
 
 ```
-##  [1] "starttime"            "endtime"              "perc_skipped"        
-##  [4] "newsint2"             "Direction of country" "snowdenfav"          
-##  [7] "snowdenleakapp"       "snowdenpros"          "snowdenpenalty"      
-## [10] "manningknowledge"
+##  [1] "perc_skipped"         "newsint2"             "Direction of country" "snowdenfav"           "snowdenleakapp"      
+##  [6] "snowdenpros"          "snowdenpenalty"       "manningknowledge"     "manningfavorability"  "manningguilt"
 ```
 
 These attributes all allow assignment with `<-`. The methods `names` and `aliases` yield character vectors, and they take characters in assignment. Hence, you can use any vectorized string manipulation tools available in R, such as regular expressions, to edit variable names efficiently. You can also just supply a replacement vector, like
 
 
 ```r
-names(variables(ds))[6:9] <- c("Favorability of Edward Snowden", 
+names(variables(ds))[4:7] <- c("Favorability of Edward Snowden",
                                "Approval of Snowden's Leak",
                                "Support for Prosecution of Snowden",
                                "Penalty for Snowden")
@@ -174,23 +172,17 @@ head(names(variables(ds)), 10)
 ```
 
 ```
-##  [1] "starttime"                         
-##  [2] "endtime"                           
-##  [3] "perc_skipped"                      
-##  [4] "newsint2"                          
-##  [5] "Direction of country"              
-##  [6] "Favorability of Edward Snowden"    
-##  [7] "Approval of Snowden's Leak"        
-##  [8] "Support for Prosecution of Snowden"
-##  [9] "Penalty for Snowden"               
-## [10] "manningknowledge"
+##  [1] "perc_skipped"                       "newsint2"                           "Direction of country"              
+##  [4] "Favorability of Edward Snowden"     "Approval of Snowden's Leak"         "Support for Prosecution of Snowden"
+##  [7] "Penalty for Snowden"                "manningknowledge"                   "manningfavorability"               
+## [10] "manningguilt"
 ```
 
 ## Categorical variables
 
 Many variables in survey data are categorial: respondents have a finite set of answers to the survey question, and the answers are first and foremost of a nominal, not quantitative nature. In R, this data type is represented as a `factor`. The response options, are contained in the factor's "levels" as a character vector. Manipulation of these levels is limited and often challenging.
 
-In Crunch, categorical variables' "categories" are objects with richer metadata. 
+In Crunch, categorical variables' "categories" are objects with richer metadata.
 
 
 ```r
@@ -222,10 +214,8 @@ names(categories(track.var))
 ```
 
 ```
-## [1] "Generally headed in the right direction"
-## [2] "Off on the wrong track"                 
-## [3] "Not sure"                               
-## [4] "No Data"
+## [1] "Generally headed in the right direction" "Off on the wrong track"                 
+## [3] "Not sure"                                "No Data"
 ```
 
 ```r
@@ -249,12 +239,8 @@ is.na(categories(track.var))
 ```
 
 ```
-## Generally headed in the right direction 
-##                                   FALSE 
-##                  Off on the wrong track 
-##                                   FALSE 
-##                                Not sure 
-##                                   FALSE 
+## Generally headed in the right direction                  Off on the wrong track                                Not sure 
+##                                   FALSE                                   FALSE                                   FALSE 
 ##                                 No Data 
 ##                                    TRUE
 ```
@@ -270,9 +256,9 @@ categories(track.var)
 ```
 
 ```
-## [ 1 ]  Right track
-## [ -1 ]  Wrong track
+## [ 1 ]  Generally headed in the right direction
 ## [ 0 ]  Not sure
+## [ -1 ]  Wrong track
 ## [ NA ]  No Data
 ```
 
@@ -295,9 +281,9 @@ categories(track.var)
 ```
 
 ```
-## [ 1 ]  Right track
-## [ 0 ]  Not sure
+## [ 1 ]  Generally headed in the right direction
 ## [ -1 ]  Wrong track
+## [ 0 ]  Not sure
 ```
 
 As with all other metadata edits discussed, updating with these methods automatically sends the changes to the server, so your local edits are reflected in the cloud.
@@ -306,15 +292,17 @@ As with all other metadata edits discussed, updating with these methods automati
 
 Datasets often contain variables that you may want to use -- perhaps through a derived variable, a transformation, or a recode -- or that may simply not be relevant for the analytic tasks at hand. In short, you want to hide them. They aren't deleted, so you can restore them if you need them later, but they no longer clutter the dataset "workspace".
 
-As when working with a `data.frame`, you typically assign the return of a dataset-level function back to the variable representing the dataset in your R script or session. 
+As when working with a `data.frame`, you typically assign the return of a dataset-level function back to the variable representing the dataset in your R script or session.
+
+In our example dataset, we have two copies of a voter-registration variable, "votereg_new" and "votereg_old". Let's hide the old version:
 
 
 ```r
-ds <- hideVariables(ds, "comments")
+ds <- hideVariables(ds, "votereg_old")
 hiddenVariables(ds)
 ```
 ```
-## [1] "comments"
+## [1] "votereg_old"
 ```
 
 As with the `is.na` function, you can update a variable by assigning it to the hidden variables list.
@@ -325,7 +313,7 @@ hiddenVariables(ds) <- "pid7others"
 hiddenVariables(ds)
 ```
 ```
-## [1] "comments"  "pid7others"
+## [1] "votereg_old"  "pid7others"
 ```
 
 These variables are now hidden, both locally in your R session and remotely on the server, which you can see in the web application. And, just as you could restore them there, you can also restore them from R:
@@ -336,14 +324,14 @@ ds <- unhideVariables(ds, "pid7others")
 hiddenVariables(ds)
 ```
 ```
-## [1] "comments"
+## [1] "votereg_old"
 ```
 
 ## Deleting variables
 
 Sometimes you do want to delete variables permanently. Doing so is easy, but we have some protections in place to keep you from accidentally deleting things from a dataset that may be shared with many people on the server.
 
-To delete, you can assign `NULL` in to the dataset for that variable, just like you were removing a column from a `data.frame`. In our example dataset, we have two copies of a voter-registration variable, "votereg_new" and "votereg_old". Let's kill the old one:
+To delete, you can assign `NULL` in to the dataset for that variable, just like you were removing a column from a `data.frame`. Let's kill the "votereg_old" variable permanently:
 
 
 ```r

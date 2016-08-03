@@ -1,25 +1,22 @@
 {
     "element": "shoji:entity",
-    "self": "/api/datasets/dataset3.json",
+    "self": "/api/datasets/dataset3/",
     "description": "Detail for a given dataset",
     "body": {
-        "user_id": "notme",
-        "sources": [
-            "fe4532"
-        ],
+        "owner_id": "/api/users/notme/",
         "id": "95c0b45fe0af492594863f818cb913d2"
     },
     "catalogs": {
-        "variables": "/api/datasets/dataset3/variables.json",
-        "savepoints": "/api/datasets/dataset3/savepoints.json",
-        "batches": "/api/datasets/dataset3/batches.json",
-        "permissions": "/api/datasets/dataset3/permissions.json"
+        "variables": "/api/datasets/dataset3/variables/",
+        "savepoints": "/api/datasets/dataset3/savepoints/",
+        "batches": "/api/datasets/dataset3/batches/",
+        "permissions": "/api/datasets/dataset3/permissions/"
     },
     "views": {
-        "summary": "/api/datasets/dataset3/summary.json"
+        "summary": "/api/datasets/dataset3/summary/"
     },
     "fragments": {
-        "table": "/api/datasets/dataset3/table.json"
+        "table": "/api/datasets/dataset3/table/"
     },
     "some_other_key": {}
 }
