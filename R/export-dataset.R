@@ -18,12 +18,8 @@ exportDataset <- function (dataset, file, format=c("csv", "spss"),
     export_url <- exporters[[format]]
 
     body <- list(filter=zcl(activeFilter(dataset)))
-
-    ## Check to see if we have a subset of variables in `dataset`
-    allvars <- allVariables(dataset)
-    if (length(allvars) != length(ShojiCatalog(crGET(self(allvars))))) {
-        body$where <- list(`function`="identify", args=list(list(id=urls(allvars))))
-    }
+    ## Add this after so that if it is NULL, the "where" key isn't present
+    body$where <- variablesFilter(dataset)
 
     ## Assemble options
     opts <- list()
@@ -39,6 +35,17 @@ exportDataset <- function (dataset, file, format=c("csv", "spss"),
     invisible(file)
 }
 
-#' @rdname exportDataset
-#' @export
+variablesFilter <- function (dataset) {
+    ## Check to see if we have a subset of variables in `dataset`.
+    ## If so, return a Crunch expression to filter them
+    allvars <- allVariables(dataset)
+    if (length(allvars) != length(ShojiCatalog(crGET(self(allvars))))) {
+        return(list(`function`="identify", args=list(list(id=urls(allvars)))))
+    }
+    ## Else, return NULL
+    return(NULL)
+}
+
+##' @rdname exportDataset
+##' @export
 setMethod("write.csv", "CrunchDataset", function (...) exportDataset(..., format="csv"))
