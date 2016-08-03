@@ -1,4 +1,4 @@
-## crunch 1.11.1 (under development)
+### crunch 1.11.2
 * Fix issue with sharing datasets owned by a project.
 * Support updating Categorical variables created from R logical-type vectors with logical values
 * Remove "crunch.max.categories" option to govern converting factors to Crunch categorical variables only if fewer than that threshold. Use `as.character` if you have a factor and want it to be imported as type Text.
