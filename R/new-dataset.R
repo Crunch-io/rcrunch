@@ -139,7 +139,11 @@ newDatasetByCSV <- function (x, name=deparse(substitute(x))[1], ...) {
     names(vars) <- names(x)
 
     ## Extract the data
-    cols <- lapply(vars, function (v) v[["values"]])
+    ## Do data.frame here because write.csv will internally if we don't, and
+    ## we need check.names=FALSE so that the names don't get mangled and changed
+    ## away from what the metadata has
+    cols <- data.frame(lapply(vars, function (v) v[["values"]]),
+        check.names=FALSE)
     filename <- tempfile()
     gf <- gzfile(filename, "w")
     write.csv(cols, file=gf, na="", row.names=FALSE)
@@ -151,7 +155,6 @@ newDatasetByCSV <- function (x, name=deparse(substitute(x))[1], ...) {
         return(v)
     })
     meta <- shojifyMetadata(vars, name=name, ...)
-
     ## Send to Crunch
     ds <- createWithMetadataAndFile(meta, filename)
     invisible(ds)

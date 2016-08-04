@@ -109,5 +109,7 @@ expect_valid_apidocs_import <- function (ds) {
     expect_identical(names(ds),
         c("allpets", "q1", "petloc", "ndogs", "ndogs_a", "ndogs_b", "q3",
         "country", "wave"))
-
+    expect_identical(name(ds), "Example dataset")
+    expect_identical(names(categories(ds$q1)),
+        c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
 }

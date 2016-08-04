@@ -47,10 +47,15 @@ if (run.integration.tests) {
 
         test_that("createWithMetadataAndFile using docs example", {
             ds <- newDatasetFromFixture("apidocs")
-            expect_true(is.dataset(ds))
-            expect_identical(name(ds), "Example dataset")
-            expect_identical(names(categories(ds$q1)),
-                c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
+            expect_valid_apidocs_import(ds)
+        })
+
+        test_that("data.frame with spaces in column names", {
+            input <- data.frame(a=factor("A"), b=4)
+            names(input) <- c("var one", "var two")
+            expect_identical(names(input), c("var one", "var two"))
+            ds <- newDataset(input)
+            expect_identical(names(ds), c("var one", "var two"))
         })
 
         purgeEntitiesCreated()
