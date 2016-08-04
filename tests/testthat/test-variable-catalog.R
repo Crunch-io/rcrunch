@@ -94,47 +94,44 @@ with_mock_HTTP({
     })
 })
 
-if (run.integration.tests) {
-    with_test_authentication({
-        with(test.dataset(df), {
-            test_that("Can set descriptions (and doing so doesn't PUT order)", {
-                with(temp.options(httpcache.log=""), {
-                    expect_identical(descriptions(variables(ds)),
-                        rep("", ncol(ds)))
-                    logs <- capture.output(descriptions(variables(ds))[2:3] <- c("Des 1", "Des 2"))
-                    expect_identical(descriptions(variables(ds))[1:4],
-                        c("", "Des 1", "Des 2", ""))
-                })
-                expect_length(logs, 2) ## PATCH, DROP
-            })
-            test_that("Can set names and aliases", {
-                n <- names(df)
-                expect_identical(names(variables(ds)), n)
-                expect_identical(aliases(variables(ds)), n)
-                names(variables(ds))[2:3] <- c("two", "three")
-                n2 <- n
-                n2[2:3] <- c("two", "three")
-                expect_identical(names(variables(ds)), n2)
-                expect_identical(names(variables(refresh(ds))), n2)
-                n3 <- n
-                n3[c(2,4)] <- c("due", "quattro")
-                aliases(variables(ds))[c(2,4)] <- c("due", "quattro")
-                expect_identical(aliases(variables(ds)), n3)
-                expect_identical(aliases(variables(refresh(ds))), n3)
-            })
-
-            test_that("Can [<- with VariableGroup/Order", {
-                names(variables(ds))[2:3] <- c("two", "three")
-                ord <- VariableOrder(VariableGroup("a group", entities=ds[2:3]))
-                expect_identical(names(variables(ds)[ord]),
-                    c("two", "three"))
-                try(names(variables(ds)[ord[[1]]]) <- c("TWO", "Three"))
-                expect_identical(names(variables(ds)[ord]),
-                    c("TWO", "Three"))
-                try(names(variables(ds)[ord]) <- c("2", "3"))
-                expect_identical(names(variables(ds)[ord]),
-                    c("2", "3"))
-            })
+with_test_authentication({
+    ds <- newDataset(df)
+    test_that("Can set descriptions (and doing so doesn't PUT order)", {
+        with(temp.options(httpcache.log=""), {
+            expect_identical(descriptions(variables(ds)),
+                rep("", ncol(ds)))
+            logs <- capture.output(descriptions(variables(ds))[2:3] <- c("Des 1", "Des 2"))
+            expect_identical(descriptions(variables(ds))[1:4],
+                c("", "Des 1", "Des 2", ""))
         })
+        expect_length(logs, 2) ## PATCH, DROP
     })
-}
+    test_that("Can set names and aliases", {
+        n <- names(df)
+        expect_identical(names(variables(ds)), n)
+        expect_identical(aliases(variables(ds)), n)
+        names(variables(ds))[2:3] <- c("two", "three")
+        n2 <- n
+        n2[2:3] <- c("two", "three")
+        expect_identical(names(variables(ds)), n2)
+        expect_identical(names(variables(refresh(ds))), n2)
+        n3 <- n
+        n3[c(2,4)] <- c("due", "quattro")
+        aliases(variables(ds))[c(2,4)] <- c("due", "quattro")
+        expect_identical(aliases(variables(ds)), n3)
+        expect_identical(aliases(variables(refresh(ds))), n3)
+    })
+
+    test_that("Can [<- with VariableGroup/Order", {
+        names(variables(ds))[2:3] <- c("two", "three")
+        ord <- VariableOrder(VariableGroup("a group", entities=ds[2:3]))
+        expect_identical(names(variables(ds)[ord]),
+            c("two", "three"))
+        try(names(variables(ds)[ord[[1]]]) <- c("TWO", "Three"))
+        expect_identical(names(variables(ds)[ord]),
+            c("TWO", "Three"))
+        try(names(variables(ds)[ord]) <- c("2", "3"))
+        expect_identical(names(variables(ds)[ord]),
+            c("2", "3"))
+    })
+})

@@ -1,5 +1,26 @@
 context("Update a dataset")
 
+with_mock_HTTP({
+    ds <- loadDataset("test ds")
+    test_that("Updating values makes a POST request to the table endpoint", {
+        ## TODO: assert the payload shape. This is mainly about exercising code
+        ## in the unit tests. We test the behavior in integration tests
+        expect_POST(ds$gender[ds$birthyr > 2020] <- "Male",
+            "/api/datasets/dataset1/table/")
+    })
+    test_that("Validation on categorical update", {
+        expect_error(ds$gender[is.na(ds$birthyr)] <- as.factor(c("Male", "Other", "Prefer not to say", "Female")),
+            "Input values Other and Prefer not to say are not present in the category names of variable")
+        expect_error(ds$gender[is.na(ds$birthyr)] <- 3,
+            "Input value 3 is not present in the category ids of variable")
+    })
+
+    test_that("Trying to update with the wrong data type fails", {
+        expect_error(ds$birthyr[is.na(ds$gender)] <- letters[3:7],
+            "Cannot update NumericVariable with type character")
+    })
+})
+
 with_test_authentication({
     ds <- newDataset(df)
     test_that("Can update numeric variable with values", {
@@ -82,10 +103,6 @@ with_test_authentication({
     ds$v4[is.na(ds$v2)] <- c(2,1,2,1,2)
     test_that("Can update categorical with numeric (ids)", {
         expect_equivalent(table(ds$v4), table(df$v4))
-    })
-    test_that("Validation on categorical update", {
-        expect_error(ds$v4[is.na(ds$v2)] <- as.factor(LETTERS[1:5]),
-            "Input values A, D, and E are not present in the category names of variable")
     })
 
     ## Logical -> Categorical
