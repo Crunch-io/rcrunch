@@ -15,6 +15,23 @@ with_mock_HTTP({
         expect_identical(name(test.ds), "test ds")
         expect_identical(description(test.ds), "")
         expect_identical(id(test.ds), "511a7c49778030653aab5963")
+        expect_null(notes(test.ds))
+    })
+
+    test_that("Dataset attribute setting", {
+        expect_PATCH(name(test.ds) <- "New name",
+            "/api/datasets/",
+            '{"/api/datasets/dataset1/":{"name":"New name"}}')
+        expect_PATCH(notes(test.ds) <- "Ancillary information",
+            "/api/datasets/dataset1/",
+            '{"notes":"Ancillary information"}')
+    })
+
+    test_that("Name setting validation", {
+        expect_error(name(test.ds) <- 3.14,
+            'Names must be of class "character"')
+        expect_error(name(test.ds) <- NULL,
+            'Names must be of class "character"')
     })
 
     test_that("archived", {
@@ -198,7 +215,25 @@ with_test_authentication({
         test_that("Name and description setters push to server", {
             d2 <- ds
             name(ds) <- "Bond. James Bond."
-            expect_identical(name(refresh(d2)), name(ds))
+            expect_identical(name(ds), "Bond. James Bond.")
+            expect_identical(name(refresh(d2)), "Bond. James Bond.")
+            description(ds) <- "007"
+            expect_identical(description(ds), "007")
+            expect_identical(description(refresh(d2)), "007")
+            notes(ds) <- "On Her Majesty's Secret Service"
+            expect_identical(notes(ds), "On Her Majesty's Secret Service")
+            expect_identical(notes(refresh(d2)),
+                "On Her Majesty's Secret Service")
+        })
+
+        test_that("Can unset notes and description", {
+            ds <- refresh(ds)
+            expect_identical(description(ds), "007")
+            description(ds) <- NULL
+            expect_null(description(ds))
+            expect_identical(notes(ds), "On Her Majesty's Secret Service")
+            notes(ds) <- NULL
+            expect_null(notes(ds))
         })
 
         test_that("Can set (and unset) startDate", {
@@ -245,12 +280,8 @@ with_test_authentication({
         test_that("Sending invalid dataset metadata errors usefully", {
             expect_error(endDate(ds) <- list(foo=4),
                 "must be a string")
-            expect_error(name(ds) <- 3.14,
-                'Names must be of class "character"')
             expect_error(startDate(ds) <- 1985,
                 "must be a string")
-            expect_error(name(ds) <- NULL,
-                'Names must be of class "character"')
             skip("Improve server-side validation")
             expect_error(startDate(ds) <- "a string",
                 "Useful error message here")

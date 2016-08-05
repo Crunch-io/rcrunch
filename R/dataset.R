@@ -79,6 +79,15 @@ setMethod("endDate<-", "CrunchDataset", function (x, value) {
 #' @export
 setMethod("id", "CrunchDataset", function (x) tuple(x)$id)
 
+#' @rdname describe
+#' @export
+setMethod("notes", "CrunchDataset", function (x) x@body$notes)
+#' @rdname describe
+#' @export
+setMethod("notes<-", "CrunchDataset", function (x, value) {
+    invisible(setEntitySlot(x, "notes", value))
+})
+
 trimISODate <- function (x) {
     ## Drop time from datestring if it's only a date
     if (is.character(x) && nchar(x) > 10 && endsWith(x, "T00:00:00+00:00")) {

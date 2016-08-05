@@ -22,6 +22,8 @@
 \alias{names,ShojiCatalog-method}
 \alias{names,VersionCatalog-method}
 \alias{names<-,ShojiCatalog-method}
+\alias{notes,VariableCatalog-method}
+\alias{notes<-,VariableCatalog-method}
 \alias{timestamps}
 \alias{timestamps,VersionCatalog-method}
 \alias{types}
@@ -47,6 +49,10 @@
 \S4method{aliases}{VariableCatalog}(x)
 
 \S4method{aliases}{VariableCatalog}(x) <- value
+
+\S4method{notes}{VariableCatalog}(x)
+
+\S4method{notes}{VariableCatalog}(x) <- value
 
 \S4method{descriptions}{VariableCatalog}(x)
 

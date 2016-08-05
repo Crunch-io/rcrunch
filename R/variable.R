@@ -27,14 +27,21 @@ setMethod("description", "CrunchVariable", function (x) tuple(x)$description)
 #' @rdname describe
 #' @export
 setMethod("description<-", "CrunchVariable",
-    function (x, value) setTupleSlot(x, "description", value))
+    function (x, value) setTupleSlot(x, "description", value %||% ""))
 #' @rdname describe
 #' @export
 setMethod("alias", "CrunchVariable", function (object) tuple(object)$alias)
 #' @rdname describe
 #' @export
 setMethod("alias<-", "CrunchVariable",
-    function (x, value) setTupleSlot(x, "alias", value))
+    function (x, value) setTupleSlot(x, "alias", validateNewName(value)))
+#' @rdname describe
+#' @export
+setMethod("notes", "CrunchVariable", function (x) tuple(x)$notes)
+#' @rdname describe
+#' @export
+setMethod("notes<-", "CrunchVariable",
+    function (x, value) setTupleSlot(x, "notes", value %||% ""))
 
 #' Get and set Categories on Variables
 #'
