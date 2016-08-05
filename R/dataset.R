@@ -37,7 +37,7 @@ is.dataset <- function (x) inherits(x, "CrunchDataset")
 #' @return Getters return the character object in the specified slot; setters
 #' return \code{x} duly modified.
 #' @name describe
-#' @aliases describe name name<- description description<- alias<- startDate startDate<- endDate endDate<-
+#' @aliases describe name name<- description description<- alias<- startDate startDate<- endDate endDate<- notes notes<-
 #' @seealso \code{\link{Categories}} \code{\link{describe-catalog}}
 NULL
 

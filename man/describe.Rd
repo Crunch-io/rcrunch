@@ -24,8 +24,10 @@
 \alias{name<-}
 \alias{name<-,CrunchDataset-method}
 \alias{name<-,CrunchVariable-method}
+\alias{notes}
 \alias{notes,CrunchDataset-method}
 \alias{notes,CrunchVariable-method}
+\alias{notes<-}
 \alias{notes<-,CrunchDataset-method}
 \alias{notes<-,CrunchVariable-method}
 \alias{startDate}
