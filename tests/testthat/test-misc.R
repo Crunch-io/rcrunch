@@ -113,3 +113,10 @@ test_that("startsWith/endsWith for old R", {
     expect_true(alt.endsWith("http://", "//"))
     expect_false(alt.endsWith("http://", "http"))
 })
+
+test_that("uniquify", {
+    expect_identical(uniquify(rep("a", 4)),
+        c("a", "a  (1)", "a  (2)", "a  (3)"))
+    expect_identical(uniquify(c("b", "a", "a", "abcd", "a")),
+        c("b", "a", "a  (1)", "abcd", "a  (2)"))
+})

@@ -52,6 +52,12 @@ setMethod("toVariable", "logical", function (x, ...) {
 })
 
 categoriesFromLevels <- function (x) {
+    ## TODO: uniquify and warn
+    if (anyDuplicated(x)) {
+        warning("Duplicate factor levels given: disambiguating them ",
+            "in translation to Categorical type")
+        x <- uniquify(x)
+    }
     return(lapply(seq_along(x), function (i) {
         list(id=i, name=x[i], numeric_value=i, missing=FALSE)
     }))
