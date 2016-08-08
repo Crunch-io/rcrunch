@@ -49,8 +49,11 @@ compareDatasets <- function (A, B) {
     vars.in.both <- same.type & !is.na(same.type)
     intersect.vars <- comp.vars[vars.in.both,]
 
-    arrays <- intersect.vars$type.A %in% c("categorical_array", "multiple_response")
     has.cats <- has.categories(intersect.vars$type.A)
+    ## Grab all array variables because we need to check subvars across arrays
+    ## even for those that don't match.
+    arrays <- comp.vars$type.A %in% c("categorical_array", "multiple_response") |
+        comp.vars$type.B %in% c("categorical_array", "multiple_response")
 
     return(structure(list(
         variables=comp.vars,
@@ -60,11 +63,19 @@ compareDatasets <- function (A, B) {
                     Categories(data=varsB[[a2uB[x]]]$categories))
             },
             simplify=FALSE),
-        subvariables=sapply(intersect.vars$alias[arrays],
+        subvariables=sapply(comp.vars$alias[arrays],
             function (x) {
                 ## Pull together the union of aliases
-                aa <- aliases(varsA[varsA[[a2uA[x]]]$subvariables])
-                ab <- aliases(varsB[varsB[[a2uB[x]]]$subvariables])
+                if (x %in% names(a2uA)) {
+                    aa <- aliases(varsA[varsA[[a2uA[x]]]$subvariables])
+                } else {
+                    aa <- c()
+                }
+                if (x %in% names(a2uB)) {
+                    ab <- aliases(varsB[varsB[[a2uB[x]]]$subvariables])
+                } else {
+                    ab <- c()
+                }
                 allaliases <- c(aa, setdiff(ab, aa))
                 ## Grab the subvariables with aliases that match for the union
                 compareSubvariables(varsA[na.omit(a2uA[allaliases])],
@@ -83,12 +94,21 @@ summarizeCompareDatasets <- function (comp) {
         function (x) length(x$problems$mismatched.ids) == 0,
         logical(1))
     subs <- lapply(comp$subvariables, summarizeCompareSubvariables)
+    ## Check for array overlap separately: requires comparing against all other
+    ## arrays. If any problems found, poke into the summary output.
+    overlap <- checkSubvariableParents(comp$subvariables)
+    if (length(overlap)) {
+        subs <- modifyList(subs, lapply(overlap, function (x) {
+            list(problems=list(overlap=x))
+        }))
+    }
     ok.subs <- vapply(subs,
         function (x) {
             p <- x$problems
             return(length(p$mismatched.name) == 0 &
                     length(p$parents$A) <= 1 &
-                    length(p$parents$B) <= 1)
+                    length(p$parents$B) <= 1 &
+                    is.null(p$overlap))
         },
         logical(1))
     vars <- summarizeCompareVariables(comp$variables)
@@ -128,7 +148,7 @@ print.compareDatasetsSummary <- function (x, ...) {
     bad.subs <- !x$ok.subs
     bad.sub.count <- sum(bad.subs)
     if (bad.sub.count) {
-        cat("\nMatched array variables:", length(x$subs), "\n")
+        cat("\nArray variables:", length(x$subs), "\n")
         cat("With subvariable issues:", bad.sub.count, "\n\n")
         for (i in names(x$subs[bad.subs])) {
             cat("$", i, "\n", sep="")

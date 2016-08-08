@@ -20,6 +20,10 @@ with_test_authentication({
             expect_length(batches(part1), 2)
             expect_length(batches(part2), 2)
         })
+        test_that("compareDatasets says they're all good", {
+            expect_output(summary(compareDatasets(part1, part2)),
+                "All good :)")
+        })
         test_that("they append successfully", {
             out <- appendDataset(part1, part2)
             expect_true(is.dataset(out))
@@ -40,6 +44,17 @@ with_test_authentication({
                             mr_1=c(1,0,1,1,0, rep(NA, 995)),
                             mr_2=c(rep(NA, 995), 0, 1, 1, 1, 0),
                             v4=as.factor(LETTERS[2:3]))))
+        test_that("compareDatasets identifies the category id mismatch", {
+            expect_output(summary(compareDatasets(part1, part2)),
+                paste(
+                    "Mismatched ids: 4 ",
+                    " id.A name id.B",
+                    "    1    a   NA",
+                    "    2    b   NA",
+                    "   NA    B    1",
+                    "   NA    C    2",
+                    sep="\n"))
+        })
         out <- suppressMessages(try(appendDataset(part1, part2)))
         test_that("the sparse arrays append", {
             expect_length(batches(out), 3)
@@ -63,6 +78,14 @@ with_test_authentication({
         names(subvariables(part2$MR)) <- c("Loneliest", "Two", "Three")
         aliases(subvariables(part2$MR))[3] <- "alt"
         ## Aliases are c("mr_1", "mr_2", "alt")
+
+        expect_output(summary(compareDatasets(part1, part2)),
+            paste(
+                "Mismatched names: 2 ",
+                " name.A alias name.B",
+                "  Three  mr_3   <NA>",
+                "   <NA>   alt  Three",
+                sep="\n"))
 
         out <- appendDataset(part1, part2)
         expect_true(is.dataset(out))

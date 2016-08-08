@@ -13,6 +13,10 @@ with_test_authentication({
             expect_true(is.CA(part1$CA))
             expect_true(is.Numeric(part2$CA))
         })
+        test_that("compareDatasets catches that", {
+            comp <- compareDatasets(part1, part2)
+            expect_output(summary(comp), "Type mismatch: 1")
+        })
         test_that("The append fails and reports conflict on type mismatch", {
             expect_error(
                 expect_message(appendDataset(part1, part2),
@@ -31,12 +35,20 @@ with_test_authentication({
         })
     })
 
-    test_that("Append detects text/numeric type mismatch", {
+    describe("When attempting to append text and numeric", {
         part1 <- newDataset(df[,2:5])
         d2 <- df
         d2$v2 <- d2$v3 ## v2 was text, now is numeric
         part2 <- newDataset(d2)
-        expect_error(appendDataset(part1, part2),
-            "type text on current and of type numeric in incoming")
+        test_that("compareDatasets catches that", {
+            comp <- compareDatasets(part1, part2)
+            expect_output(summary(comp), "Type mismatch: 1")
+        })
+        test_that("Append detects text/numeric type mismatch", {
+            expect_error(
+                expect_message(appendDataset(part1, part2),
+                    "Result URL"),
+                "type text on current and of type numeric in incoming")
+        })
     })
 })

@@ -42,7 +42,8 @@ variableMetadata <- function (dataset, parent=FALSE) {
                 ## If there are subvariables, poke a "parent" into their tuples
                 extra[this$subvariables] <- lapply(extra[this$subvariables],
                     function (v) {
-                        v$parent <- this$id
+                        v$parent <- this$id ## TODO: warning if v$parent is already set?
+                        v$parent_alias <- this$alias ## Useful for compareDatasets
                         return(v)
                     })
             }
