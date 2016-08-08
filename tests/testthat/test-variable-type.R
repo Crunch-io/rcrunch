@@ -36,20 +36,18 @@ with_mock_HTTP({
     })
 })
 
-if (run.integration.tests) {
-    with_test_authentication({
-        with(test.dataset(df), {
-            test_that("Type changing alters data on the server", {
-                testvar <- ds$v1
-                expect_true(is.Numeric(testvar))
-                type(testvar) <- "text"
-                expect_true(is.Text(testvar))
+with_test_authentication({
+    test_that("Type changing alters data on the server", {
+        ds <- newDataset(df[,1,drop=FALSE])
+        
+        testvar <- ds$v1
+        expect_true(is.Numeric(testvar))
+        type(testvar) <- "text"
+        expect_true(is.Text(testvar))
 
-                ds <- refresh(ds)
-                expect_true(is.Text(ds$v1))
-                type(ds$v1) <- "numeric"
-                expect_true(is.Numeric(ds$v1))
-            })
-        })
+        ds <- refresh(ds)
+        expect_true(is.Text(ds$v1))
+        type(ds$v1) <- "numeric"
+        expect_true(is.Numeric(ds$v1))
     })
-}
+})

@@ -11,6 +11,17 @@ test_that("newDataset input validation", {
         "Can only make a Crunch dataset from a two-dimensional data")
 })
 
+with_mock_HTTP({
+    test_that("Basic exercise of turning data.frame to Crunch payload", {
+        expect_POST(newDataset(data.frame(a=1), name="Testing"),
+            "/api/datasets/",
+            '{"element":"shoji:entity","body":{"name":"Testing",',
+            '"table":{"element":"crunch:table",',
+            '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"}},',
+            '"order":["a"]}}}')
+    })
+})
+
 if (run.integration.tests) {
     test_that("Source file cannot be uploaded if not logged in", {
         logout()

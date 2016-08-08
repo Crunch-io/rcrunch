@@ -37,7 +37,7 @@ is.dataset <- function (x) inherits(x, "CrunchDataset")
 #' @return Getters return the character object in the specified slot; setters
 #' return \code{x} duly modified.
 #' @name describe
-#' @aliases describe name name<- description description<- alias<- startDate startDate<- endDate endDate<-
+#' @aliases describe name name<- description description<- alias<- startDate startDate<- endDate endDate<- notes notes<-
 #' @seealso \code{\link{Categories}} \code{\link{describe-catalog}}
 NULL
 
@@ -78,6 +78,15 @@ setMethod("endDate<-", "CrunchDataset", function (x, value) {
 #' @rdname describe
 #' @export
 setMethod("id", "CrunchDataset", function (x) tuple(x)$id)
+
+#' @rdname describe
+#' @export
+setMethod("notes", "CrunchDataset", function (x) x@body$notes)
+#' @rdname describe
+#' @export
+setMethod("notes<-", "CrunchDataset", function (x, value) {
+    invisible(setEntitySlot(x, "notes", value))
+})
 
 trimISODate <- function (x) {
     ## Drop time from datestring if it's only a date

@@ -4,6 +4,7 @@
 * New `extendDataset` function, also aliased as a `merge` method, to allow you to add columns from one dataset to another, joining on a key variable from each.
 * Attempting to assign a `name<-` on `NULL` (i.e. when you reference a variable in a dataset using `$` and the variable does not exist) returns a helpful message.
 * Fix dataset import via `newDataset` when passing a `data.frame` or similar that has spaces in the column names.
+* `notes` and `notes<-` methods for datasets, variables, and variable catalogs to view and edit those new metadata fields.
 
 ### crunch 1.11.2
 * Fix issue with sharing datasets owned by a project.

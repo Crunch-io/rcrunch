@@ -45,15 +45,17 @@ with_mock_HTTP({
         expect_identical(name(ds$gender), "Gender")
         expect_identical(description(ds$starttime), "Interview Start Time")
         expect_identical(alias(ds$gender), "gender")
+        expect_identical(notes(ds$gender), "")
+        expect_identical(notes(ds$birthyr), "Asked instead of age")
     })
 
-    test_that("Variable setters (mock)", {
-        tp <- tuple(ds$gender)@body
-        tp$name <- "Sex"
-        mock.tuple <- structure(list(tp["name"]), .Names=self(ds$gender))
+    test_that("Variable setter requests", {
         expect_PATCH(name(ds$gender) <- "Sex",
-            self(variables(ds)),
-            toJSON(mock.tuple))
+            "/api/datasets/dataset1/variables/",
+            '{"/api/datasets/dataset1/variables/gender/":{"name":"Sex"}}')
+        expect_PATCH(notes(ds$gender) <- "extra info",
+            "/api/datasets/dataset1/variables/",
+            '{"/api/datasets/dataset1/variables/gender/":{"notes":"extra info"}}')
     })
 
     test_that("Variable setters don't hit server if data not changed", {
@@ -65,6 +67,13 @@ with_mock_HTTP({
             'Names must be of class "character"')
         expect_error(name(ds$gender) <- NA_character_,
             "Names must be non-missing")
+    })
+
+    test_that("Cannot unset name or alias", {
+        expect_error(name(ds$gender) <- NULL,
+            'Names must be of class "character"')
+        expect_error(alias(ds$gender) <- NULL,
+            'Names must be of class "character"')
     })
 
     test_that("Backstop method for if you try to set name on NULL", {
@@ -103,20 +112,31 @@ with_test_authentication({
         expect_identical(alias(ds$v1), "v1")
         expect_identical(name(ds$v3), "v3")
         expect_identical(alias(ds$v3), "v3")
+        expect_identical(notes(ds$v1), "")
     })
 
     name(ds$v1) <- "Variable 1"
     description(ds$v2) <- "Description 2"
+    notes(ds$v1) <- "Some additional information"
     alias(ds$v1) <- "var1"
-    test_that("can modify name, description, alias on var in dataset", {
+    test_that("can modify name, description, alias, notes on var in dataset", {
         expect_null(ds$v1)
         expect_identical(name(ds$var1), "Variable 1")
         expect_identical(alias(ds$var1), "var1")
         expect_identical(description(ds$v2), "Description 2")
+        expect_identical(notes(ds$var1), "Some additional information")
         ds <- refresh(ds)
         expect_null(ds$v1)
         expect_identical(name(ds$var1), "Variable 1")
+        expect_identical(notes(ds$var1), "Some additional information")
         expect_identical(description(ds$v2), "Description 2")
+    })
+
+    test_that("Can unset description and notes", {
+        description(ds$v2) <- NULL
+        expect_identical(description(ds$v2), "")
+        notes(ds$var1) <- NULL
+        expect_identical(notes(ds$var1), "")
     })
 
     v3 <- ds$v3

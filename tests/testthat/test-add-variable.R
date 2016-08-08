@@ -53,6 +53,18 @@ test_that("POSTNewVariable rejects invalid categories", {
         "Invalid category names: must be unique")
 })
 
+with_mock_HTTP({
+    ds <- loadDataset("test ds")
+    test_that("assignment restrictions", {
+        expect_error(ds[[2]] <- 1:25,
+            "Only character \\(name\\) indexing supported")
+    })
+    test_that("Input length validation", {
+        expect_error(ds$newvar <- 1:13,
+            "replacement has 13 rows, data has 25")
+    })
+})
+
 with_test_authentication({
     ds <- newDataset(df)
     test_that("addVariable creates a new remote numeric variable", {
@@ -100,19 +112,15 @@ with_test_authentication({
         expect_true(is.Datetime(nv))
         expect_identical(as.vector(nv), as.vector(ds$v5))
     })
-    test_that("adding variable with duplicate name fails", {
-        expect_error(addVariables(ds, VariableDefinition(df$v5,
-            name="New var4", alias="newVar4")),
-            "Variable with name: New var4 already exists")
-    })
-    test_that("assignment restrictions", {
-        expect_error(ds[[2]] <- 1:20,
-            "Only character \\(name\\) indexing supported")
-    })
     test_that("[[<- adds variables", {
         ds$newvariable <- 20:1
         expect_true(is.Numeric(ds$newvariable))
         expect_identical(mean(ds$newvariable), 10.5)
+    })
+    test_that("adding variable with duplicate name fails", {
+        expect_error(addVariables(ds, VariableDefinition(df$v5,
+            name="New var4", alias="newVar4")),
+            "Variable with name: New var4 already exists")
     })
     test_that("Variable lengths must match, in an R way", {
         expect_error(ds[['not valid']] <- 1:7,
