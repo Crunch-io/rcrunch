@@ -42,44 +42,36 @@ with_mock_HTTP({
     })
 })
 
-if (run.integration.tests) {
-    with_test_authentication({
-        with(test.dataset(df), {
-            test_that("can fetch variable summaries", {
-                summ <- getSummary(ds$v1)
-                expect_true(is.list(summ))
-                expect_equivalent(summ$mean, mean(df$v1, na.rm=TRUE))
-                expect_equivalent(summ$stddev, sd(df$v1, na.rm=TRUE))
-            })
-            test_that("method dispatch", {
-                expect_identical(mean(ds$v1), mean(df$v1))
-                expect_equivalent(mean(ds$v1, na.rm=TRUE),
-                    mean(df$v1, na.rm=TRUE))
-                expect_identical(sd(ds$v1), sd(ds$v1))
-                expect_equivalent(sd(ds$v1, na.rm=TRUE),
-                    sd(ds$v1, na.rm=TRUE))
-                expect_identical(median(ds$v1), median(ds$v1))
-                expect_identical(median(ds$v1, na.rm=TRUE),
-                    median(ds$v1, na.rm=TRUE))
-            })
-            test_that("table", {
-                expect_equivalent(table(ds$v4), table(df$v4))
-                expect_equivalent(table(ds$v4, ds$v3), table(df$v4, df$v3))
-            })
-            test_that("table works with CrunchExpr", {
-                expect_equivalent(table(ds$v4[ds$v3 < 10]),
-                    table(df$v4[df$v3 < 10]))
-            })
-            test_that("table throws error if not equally filtered", {
-                expect_error(table(ds$v4, ds$v2[ds$v3 < 10]),
-                    "Filter expressions in variables must be identical")
-            })
-            test_that("summary", {
-                expect_equivalent(round(unclass(summary(ds$v1)), 2),
-                    round(unclass(summary(df$v1)), 2))
-                expect_equivalent(as.numeric(summary(ds$v4)),
-                    summary(df$v4))
-            })
-        })
+with_test_authentication({
+    ds <- newDataset(df)
+    test_that("can fetch variable summaries", {
+        summ <- getSummary(ds$v1)
+        expect_true(is.list(summ))
+        expect_equivalent(summ$mean, mean(df$v1, na.rm=TRUE))
+        expect_equivalent(summ$stddev, sd(df$v1, na.rm=TRUE))
     })
-}
+    test_that("method dispatch", {
+        expect_identical(mean(ds$v1), mean(df$v1))
+        expect_equivalent(mean(ds$v1, na.rm=TRUE), mean(df$v1, na.rm=TRUE))
+        expect_identical(sd(ds$v1), sd(ds$v1))
+        expect_equivalent(sd(ds$v1, na.rm=TRUE), sd(ds$v1, na.rm=TRUE))
+        expect_identical(median(ds$v1), median(ds$v1))
+        expect_identical(median(ds$v1, na.rm=TRUE), median(ds$v1, na.rm=TRUE))
+    })
+    test_that("table", {
+        expect_equivalent(table(ds$v4), table(df$v4))
+        expect_equivalent(table(ds$v4, ds$v3), table(df$v4, df$v3))
+    })
+    test_that("table works with CrunchExpr", {
+        expect_equivalent(table(ds$v4[ds$v3 < 10]), table(df$v4[df$v3 < 10]))
+    })
+    test_that("table throws error if not equally filtered", {
+        expect_error(table(ds$v4, ds$v2[ds$v3 < 10]),
+            "Filter expressions in variables must be identical")
+    })
+    test_that("summary", {
+        expect_equivalent(round(unclass(summary(ds$v1)), 2),
+            round(unclass(summary(df$v1)), 2))
+        expect_equivalent(as.numeric(summary(ds$v4)), summary(df$v4))
+    })
+})

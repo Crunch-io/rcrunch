@@ -2,26 +2,29 @@ context("Shallow copies of variables")
 
 with_mock_HTTP({
     ds <- loadDataset("test ds")
-    expect_is(copy(ds$gender), "VariableDefinition")
-    expected <- VariableDefinition(
-        name="Gender (copy)",
-        alias="gender_copy",
-        description="Gender",
-        discarded=FALSE,
-        format=list(summary=list(digits=2)),
-        view=list(include_missing=FALSE,
-            show_counts=FALSE,
-            show_codes=FALSE,
-            column_width=NULL
-        ),
-        expr=list(
-            `function`="copy_variable",
-            args=list(
-                list(variable="/api/datasets/dataset1/variables/gender/")
+    test_that("copy creates a correct VariableDefinition", {
+        expect_is(copy(ds$gender), "VariableDefinition")
+        expected <- VariableDefinition(
+            name="Gender (copy)",
+            alias="gender_copy",
+            description="Gender",
+            notes="",
+            discarded=FALSE,
+            format=list(summary=list(digits=2)),
+            view=list(include_missing=FALSE,
+                show_counts=FALSE,
+                show_codes=FALSE,
+                column_width=NULL
+            ),
+            expr=list(
+                `function`="copy_variable",
+                args=list(
+                    list(variable="/api/datasets/dataset1/variables/gender/")
+                )
             )
         )
-    )
-    expect_json_equivalent(copy(ds$gender), expected)
+        expect_json_equivalent(copy(ds$gender), expected)
+    })
 })
 
 if (run.integration.tests) {

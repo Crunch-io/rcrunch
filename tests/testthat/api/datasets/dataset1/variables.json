@@ -10,6 +10,7 @@
             "alias": "gender",
             "type": "categorical",
             "id": "66ae9881e3524f7db84970d556c34552",
+            "notes": "",
             "description": "Gender"
         },
         "/api/datasets/dataset1/variables/birthyr/": {
@@ -18,7 +19,8 @@
             "alias": "birthyr",
             "type": "numeric",
             "id": "f78ca47313144b57adfb495893968e70",
-            "description": null
+            "description": null,
+            "notes": "Asked instead of age"
         },
         "/api/datasets/dataset1/variables/starttime/": {
             "name": "starttime",
@@ -27,6 +29,7 @@
             "type": "datetime",
             "id": "d7c21314ca9e453c93069168681a285c",
             "description": "Interview Start Time",
+            "notes": "",
             "resolution": "D",
             "rollup_resolution": "s"
         },
@@ -37,6 +40,7 @@
             "type": "multiple_response",
             "id": "949d2dc7e7a24e6090cc88bb92e1d2fb",
             "description": "Please select all that apply",
+            "notes": "",
             "subvariables": [
                 "/api/datasets/dataset1/variables/subvar2/",
                 "/api/datasets/dataset1/variables/subvar1/",
@@ -51,6 +55,7 @@
             "type": "categorical_array",
             "id": "qwert",
             "description": "An array of cats",
+            "notes": "",
             "subvariables": [
                 "/api/datasets/dataset1/variables/subvar2/",
                 "/api/datasets/dataset1/variables/subvar1/",
@@ -64,7 +69,8 @@
             "alias": "textVar",
             "type": "text",
             "id": "text",
-            "description": "Budějovický Budvar"
+            "description": "Budějovický Budvar",
+            "notes": ""
         }
     },
     "orders": {
