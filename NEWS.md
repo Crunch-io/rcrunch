@@ -5,7 +5,7 @@
 * `compareDatasets` now checks the subvariable matching across array variables in the datasets to identify additional conflicts.
 * Attempting to assign a `name<-` on `NULL` (i.e. when you reference a variable in a dataset using `$` and the variable does not exist) returns a helpful message.
 * Fix dataset import via `newDataset` when passing a `data.frame` or similar that has spaces in the column names.
-* Handle the (deprecated) case of duplicate factor levels when translating to categorical in `toVariable`
+* Handle the (deprecated in R) case of duplicate factor levels when translating to categorical in `toVariable`
 
 ### crunch 1.11.2
 * Fix issue with sharing datasets owned by a project.
