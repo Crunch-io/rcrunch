@@ -3,6 +3,10 @@
 \docType{methods}
 \name{expressions}
 \alias{!,CrunchExpr-method}
+\alias{!=,CategoricalVariable,character-method}
+\alias{!=,CategoricalVariable,factor-method}
+\alias{==,CategoricalVariable,character-method}
+\alias{==,CategoricalVariable,factor-method}
 \alias{\%in\%,CategoricalVariable,character-method}
 \alias{\%in\%,CategoricalVariable,factor-method}
 \alias{\%in\%,CategoricalVariable,numeric-method}
@@ -34,6 +38,14 @@
 \S4method{\%in\%}{DatetimeVariable,character}(x, table)
 
 \S4method{\%in\%}{CategoricalVariable,numeric}(x, table)
+
+\S4method{==}{CategoricalVariable,character}(e1, e2)
+
+\S4method{==}{CategoricalVariable,factor}(e1, e2)
+
+\S4method{!=}{CategoricalVariable,character}(e1, e2)
+
+\S4method{!=}{CategoricalVariable,factor}(e1, e2)
 
 \S4method{is.na}{CrunchVariable}(x)
 

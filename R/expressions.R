@@ -208,10 +208,17 @@ for (i in c("==", "!=")) {
 }
 
 ## Use %in% because it handles the possibility that e2 is not a valid category
+
+#' @rdname expressions
+#' @export
 setMethod("==", c("CategoricalVariable", "character"),
     function (e1, e2) e1 %in% e2)
+#' @rdname expressions
+#' @export
 setMethod("==", c("CategoricalVariable", "factor"),
     function (e1, e2) e1 %in% e2)
+#' @rdname expressions
+#' @export
 setMethod("!=", c("CategoricalVariable", "character"), function (e1, e2) {
     e2 <- n2i(e2, categories(e1), strict=FALSE)
     neq <- length(e2) == 1
@@ -222,6 +229,8 @@ setMethod("!=", c("CategoricalVariable", "character"), function (e1, e2) {
     }
     return(out)
 })
+#' @rdname expressions
+#' @export
 setMethod("!=", c("CategoricalVariable", "factor"),
     function (e1, e2) e1 != as.character(e2))
 
