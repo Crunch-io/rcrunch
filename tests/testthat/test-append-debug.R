@@ -25,14 +25,34 @@ with_test_authentication({
             factor(c(rep(NA, 1000), rep(c("C", "D"), 500))))
     })
 
-    test_that("Can re-alias array variables to make them line up (and old refs don't reappear)", {
+    describe("When appending different arrays containing the same subvars", {
         part1 <- mrdf.setup(newDataset(mrdf), name="CA1")
         part2 <- mrdf.setup(newDataset(mrdf), name="CA2")
-        expect_identical(aliases(subvariables(part1$CA1)),
-            aliases(subvariables(part2$CA2)))
-        alias(part2$CA2) <- "CA"
-        alias(part1$CA1) <- "CA"
-        out <- appendDataset(part1, part2)
-        expect_equal(dim(out), c(2*nrow(part2), ncol(part2)))
+        test_that("The arrays with different aliases have the same subvar aliases", {
+            expect_identical(aliases(subvariables(part1$CA1)),
+                aliases(subvariables(part2$CA2)))
+        })
+        test_that("compareDatasets catches that", {
+            comp <- compareDatasets(part1, part2)
+            expect_output(summary(comp),
+                "Contains subvariables found in other arrays after matching: CA2")
+        })
+        test_that("The append fails", {
+            expect_error(
+                expect_message(appendDataset(part1, part2),
+                    "Result URL"),
+                "common subvariables")
+        })
+        part1 <- cleanseBatches(part1)
+        part1 <- releaseAndReload(part1) ## Server bug holding onto part2 as subordinate
+
+        test_that("Can re-alias array variables to make them line up (and old refs don't reappear)", {
+            alias(part2$CA2) <- "CA"
+            alias(part1$CA1) <- "CA"
+            out <- appendDataset(part1, part2)
+            expect_equal(dim(out), c(2*nrow(part2), ncol(part2)))
+            expect_identical(aliases(subvariables(out$CA)),
+                aliases(subvariables(part2$CA)))
+        })
     })
 })

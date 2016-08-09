@@ -173,31 +173,40 @@ setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical
 n2i <- function (x, cats, strict=TRUE) {
     ## Convert x from category names to the corresponding category ids
     out <- ids(cats)[match(x, names(cats))]
-    if (strict && any(is.na(out))) {
-        halt(ifelse(sum(is.na(out)) > 1, "Categories", "Category"),
-            " not found: ", serialPaste(dQuote(x[is.na(out)])))
-    }
+    out <- handleMissingCategoryLookup(out, x, strict)
     return(out)
 }
 
 i2n <- function (x, cats, strict=TRUE) {
     ## Convert x from category ids to the corresponding category names
     out <- names(cats)[match(x, ids(cats))]
-    if (strict && any(is.na(out))) {
-        halt(ifelse(sum(is.na(out)) > 1, "Categories", "Category"),
-            " not found: ", serialPaste(dQuote(x[is.na(out)])))
-    }
+    out <- handleMissingCategoryLookup(out, x, strict)
     return(out)
+}
+
+handleMissingCategoryLookup <- function (result, original, strict=TRUE) {
+    bad <- is.na(result)
+    if (any(bad)) {
+        msg <- paste(ifelse(sum(bad) > 1, "Categories", "Category"),
+            "not found:", serialPaste(dQuote(original[bad])))
+        if (strict) {
+            ## Break
+            halt(msg)
+        } else {
+            ## Warn and drop
+            msg <- paste0(msg, ". Dropping.")
+            warning(msg, call.=FALSE)
+            result <- na.omit(result)
+        }
+    }
+    return(result)
 }
 
 #' @rdname is-na-categories
 #' @export
 setMethod("is.na<-", c("Categories", "character"), function (x, value) {
     ix <- match(value, names(x))
-    if (any(is.na(ix))) {
-        halt(ifelse(sum(is.na(ix)) > 1, "Categories", "Category"),
-            " not found: ", serialPaste(dQuote(value[is.na(ix)])))
-    }
+    out <- handleMissingCategoryLookup(ix, value, strict=TRUE)
     x[ix] <- lapply(x[ix], `is.na<-`, value=TRUE)
     return(x)
 })

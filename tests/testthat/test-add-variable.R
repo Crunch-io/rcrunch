@@ -20,6 +20,21 @@ test_that("toVariable parses factors", {
         ))) ## unclear why these aren't identical
 })
 
+test_that("toVariable handles duplicate factor levels", {
+    expect_warning(v <- factor(c(1, 2, 3, 4), labels=c("a", "b", "b", "c")),
+        "duplicated levels in factors are deprecated") ## And yet...
+    expect_warning(
+        expect_equivalent(toVariable(v),
+            list(values=1:4, type="categorical", categories=list(
+                list(id=1L, name="a", numeric_value=1L, missing=FALSE),
+                list(id=2L, name="b", numeric_value=2L, missing=FALSE),
+                list(id=3L, name="b  (1)", numeric_value=3L, missing=FALSE),
+                list(id=4L, name="c", numeric_value=4L, missing=FALSE),
+                list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+            ))),
+        "Duplicate factor levels given: disambiguating them in translation to Categorical type")
+})
+
 test_that("toVariable parses R Date class", {
     expect_equivalent(toVariable(as.Date(c("2014-12-16", "2014-12-17"))),
         list(values=c("2014-12-16", "2014-12-17"), type="datetime",
