@@ -56,6 +56,8 @@ if (run.integration.tests) {
             expect_valid_df_import(ds)
         })
 
+        purgeEntitiesCreated()
+
         test_that("createWithMetadataAndFile using docs example", {
             ds <- newDatasetFromFixture("apidocs")
             expect_valid_apidocs_import(ds)
@@ -68,8 +70,6 @@ if (run.integration.tests) {
             ds <- newDataset(input)
             expect_identical(names(ds), c("var one", "var two"))
         })
-
-        purgeEntitiesCreated()
 
         m <- fromJSON(file.path("dataset-fixtures", "apidocs.json"),
             simplifyVector=FALSE)
@@ -84,6 +84,8 @@ if (run.integration.tests) {
             expect_identical(as.vector(ds$q1), as.vector(ds2$q1))
             ## Could add more assertions
         })
+        
+        purgeEntitiesCreated()
 
         test_that("Duplicate subvariables are forbidden", {
             m2 <- m

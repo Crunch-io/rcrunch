@@ -3,6 +3,7 @@
 * `deleteSubvariable` now follows "crunch.namekey.array" and will take either subvariable names or aliases, depending on the value of the setting.
 * New `extendDataset` function, also aliased as `merge`, to allow you to add columns from one dataset to another, joining on a key variable from each.
 * `compareDatasets` now checks the subvariable matching across array variables in the datasets to identify additional conflicts.
+* Creating Crunch logical expressions that reference category names that do not exist for the given variable no longer errors; instead, a warning is given, and the unknown category names are dropped from the expression so that they evaluate as intended.
 * Attempting to assign a `name<-` on `NULL` (i.e. when you reference a variable in a dataset using `$` and the variable does not exist) returns a helpful message.
 * Fix dataset import via `newDataset` when passing a `data.frame` or similar that has spaces in the column names.
 * Handle the (deprecated in R) case of duplicate factor levels when translating to categorical in `toVariable`
