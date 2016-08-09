@@ -91,6 +91,14 @@ setMethod("aliases", "VariableCatalog", function (x) getIndexSlot(x, "alias"))
 setMethod("aliases<-", "VariableCatalog", function (x, value) {
     setIndexSlot(x, "alias", value)
 })
+#' @export
+#' @rdname describe-catalog
+setMethod("notes", "VariableCatalog", function (x) getIndexSlot(x, "notes"))
+#' @export
+#' @rdname describe-catalog
+setMethod("notes<-", "VariableCatalog", function (x, value) {
+    setIndexSlot(x, "notes", value)
+})
 
 #' @export
 #' @rdname describe-catalog
