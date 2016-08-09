@@ -73,15 +73,26 @@ with_mock_HTTP({
         expect_true(is.Categorical(CrunchVariable(varcat[[gender.url]])))
     })
 
-    test_that("name and alias getters", {
+    test_that("attribute getters", {
         expect_identical(names(varcat)[1:3],
             c("Gender", "Birth Year", "starttime"))
         expect_identical(aliases(varcat)[1:2], c("gender", "birthyr"))
-    })
-
-    test_that("types getter", {
         expect_identical(types(varcat)[1:3],
             c("categorical", "numeric", "datetime"))
+        expect_identical(descriptions(varcat[1:3]),
+            c("Gender", NA, "Interview Start Time"))
+        expect_identical(notes(varcat[1:3]),
+            c("", "Asked instead of age", ""))
+    })
+
+    test_that("attribute setters", {
+        expect_PATCH(names(varcat)[1:3] <- c("Gender", "Year of birth", "Start time"),
+            "/api/datasets/dataset1/variables/",
+            '{"/api/datasets/dataset1/variables/birthyr/":{"name":"Year of birth"},',
+            '"/api/datasets/dataset1/variables/starttime/":{"name":"Start time"}}')
+        expect_PATCH(notes(varcat)[1:3] <- c("", "Asked instead of age", "ms"),
+            "/api/datasets/dataset1/variables/",
+            '{"/api/datasets/dataset1/variables/starttime/":{"notes":"ms"}}')
     })
 
     test_that("show method", {
@@ -105,6 +116,14 @@ with_test_authentication({
                 c("", "Des 1", "Des 2", ""))
         })
         expect_length(logs, 2) ## PATCH, DROP
+    })
+    test_that("Get/set notes", {
+        expect_identical(notes(variables(ds)), rep("", ncol(ds)))
+        notes(variables(ds))[c(3,4)] <- c("The third variable", "Fourth")
+        expect_identical(notes(variables(ds)),
+            c("", "", "The third variable", "Fourth", "", ""))
+        expect_identical(notes(variables(refresh(ds))),
+            c("", "", "The third variable", "Fourth", "", ""))
     })
     test_that("Can set names and aliases", {
         n <- names(df)
