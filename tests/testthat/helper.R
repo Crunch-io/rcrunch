@@ -42,8 +42,8 @@ options(
     warn=1,
     crunch.debug=FALSE,
     digits.secs=3,
-    crunch.timeout=15,
-    #httpcache.log="",
+    crunch.timeout=15, ## In case an import fails to start, don't wait forever
+    # httpcache.log="",
     crunch.namekey.dataset="alias",
     crunch.namekey.array="alias",
     crunch.email=envOrOption("test.user"),
