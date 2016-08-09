@@ -52,7 +52,6 @@ setMethod("toVariable", "logical", function (x, ...) {
 })
 
 categoriesFromLevels <- function (x) {
-    ## TODO: uniquify and warn
     if (anyDuplicated(x)) {
         warning("Duplicate factor levels given: disambiguating them ",
             "in translation to Categorical type")
