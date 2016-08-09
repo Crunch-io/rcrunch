@@ -7,6 +7,8 @@
 #' only when appropriate.
 #'
 #' @param x an input
+#' @param e1 an input
+#' @param e2 an input
 #' @param table For \code{\%in\%}. See \code{\link[base]{match}}
 #' @param resolution For \code{rollup}. Either \code{NULL} or a character in
 #' c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms") indicating the unit of

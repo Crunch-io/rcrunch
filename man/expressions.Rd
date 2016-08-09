@@ -58,6 +58,10 @@ rollup(x, resolution = rollupResolution(x))
 
 \item{table}{For \code{\%in\%}. See \code{\link[base]{match}}}
 
+\item{e1}{an input}
+
+\item{e2}{an input}
+
 \item{resolution}{For \code{rollup}. Either \code{NULL} or a character in
 c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms") indicating the unit of
 time at which a Datetime variable should be aggregated. If \code{NULL},
