@@ -7,6 +7,8 @@
 #' only when appropriate.
 #'
 #' @param x an input
+#' @param e1 an input
+#' @param e2 an input
 #' @param table For \code{\%in\%}. See \code{\link[base]{match}}
 #' @param resolution For \code{rollup}. Either \code{NULL} or a character in
 #' c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms") indicating the unit of
@@ -118,37 +120,6 @@ for (i in c("+", "-", "*", "/", "<", ">", ">=", "<=")) {
     setMethod(i, c("CrunchExpr", "CrunchExpr"), crunch.ops(i))
 }
 
-.catmeth <- function (i, Rarg=1) {
-    force(i)
-    force(Rarg)
-    return(function (e1, e2) {
-        if (Rarg == 1) {
-            e1 <- n2i(as.character(e1), categories(e2))
-        } else {
-            e2 <- n2i(as.character(e2), categories(e1))
-        }
-        return(math.exp(e1, e2, i))
-    })
-}
-
-for (i in c("==", "!=")) {
-    for (j in seq_along(.sigs)) {
-        setMethod(i, .sigs[[j]], crunch.ops(i))
-        setMethod(i, rev(.sigs[[j]]), crunch.ops(i))
-    }
-    setMethod(i, c("CategoricalVariable", "character"), .catmeth(i, 2))
-    setMethod(i, c("CategoricalVariable", "factor"), .catmeth(i, 2))
-    setMethod(i, c("character", "CategoricalVariable"), .catmeth(i, 1))
-    setMethod(i, c("factor", "CategoricalVariable"), .catmeth(i, i))
-    for (j in .rtypes) {
-        setMethod(i, c("CrunchExpr", j), crunch.ops(i))
-        setMethod(i, c(j, "CrunchExpr"), crunch.ops(i))
-    }
-    setMethod(i, c("CrunchVariable", "CrunchVariable"), crunch.ops(i))
-    setMethod(i, c("CrunchExpr", "CrunchVariable"), crunch.ops(i))
-    setMethod(i, c("CrunchVariable", "CrunchExpr"), crunch.ops(i))
-}
-
 setMethod("&", c("CrunchExpr", "CrunchExpr"), crunch.ops("and"))
 setMethod("&", c("logical", "CrunchExpr"), crunch.ops("and"))
 setMethod("&", c("CrunchExpr", "logical"), crunch.ops("and"))
@@ -194,7 +165,7 @@ setMethod("!", c("CrunchExpr"),
 #' @rdname expressions
 #' @export
 setMethod("%in%", c("CategoricalVariable", "character"),
-    function (x, table) .inCrunch(x, n2i(table, categories(x))))
+    function (x, table) .inCrunch(x, n2i(table, categories(x), strict=FALSE)))
 #' @rdname expressions
 #' @export
 setMethod("%in%", c("CategoricalVariable", "factor"),
@@ -223,6 +194,47 @@ setMethod("%in%", c("DatetimeVariable", "character"), .inCrunch)
 #' @rdname expressions
 #' @export
 setMethod("%in%", c("CategoricalVariable", "numeric"), .inCrunch)
+
+for (i in c("==", "!=")) {
+    for (j in seq_along(.sigs)) {
+        setMethod(i, .sigs[[j]], crunch.ops(i))
+        setMethod(i, rev(.sigs[[j]]), crunch.ops(i)) ## is this right?
+    }
+    for (j in .rtypes) {
+        setMethod(i, c("CrunchExpr", j), crunch.ops(i))
+        setMethod(i, c(j, "CrunchExpr"), crunch.ops(i))
+    }
+    setMethod(i, c("CrunchVariable", "CrunchVariable"), crunch.ops(i))
+    setMethod(i, c("CrunchExpr", "CrunchVariable"), crunch.ops(i))
+    setMethod(i, c("CrunchVariable", "CrunchExpr"), crunch.ops(i))
+}
+
+## Use %in% because it handles the possibility that e2 is not a valid category
+
+#' @rdname expressions
+#' @export
+setMethod("==", c("CategoricalVariable", "character"),
+    function (e1, e2) e1 %in% e2)
+#' @rdname expressions
+#' @export
+setMethod("==", c("CategoricalVariable", "factor"),
+    function (e1, e2) e1 %in% e2)
+#' @rdname expressions
+#' @export
+setMethod("!=", c("CategoricalVariable", "character"), function (e1, e2) {
+    e2 <- n2i(e2, categories(e1), strict=FALSE)
+    neq <- length(e2) == 1
+    out <- math.exp(e1, e2, ifelse(neq, "!=", "in"))
+    if (!neq) {
+        ## We did "in" above, so make that "not in"
+        out <- !out
+    }
+    return(out)
+})
+#' @rdname expressions
+#' @export
+setMethod("!=", c("CategoricalVariable", "factor"),
+    function (e1, e2) e1 != as.character(e2))
 
 setMethod("datasetReference", "CrunchExpr", function (x) x@dataset_url)
 

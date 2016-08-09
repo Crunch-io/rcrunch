@@ -15,8 +15,6 @@ skip_locally <- function (...) {
 
 set.seed(666)
 
-# httpcache::startLog("") ## prints to stdout
-
 fromJSON <- jsonlite::fromJSON
 loadLogfile <- httpcache::loadLogfile
 cacheLogSummary <- httpcache::cacheLogSummary
@@ -42,6 +40,7 @@ options(
     warn=1,
     crunch.debug=FALSE,
     digits.secs=3,
+    crunch.timeout=15, ## In case an import fails to start, don't wait forever
     # httpcache.log="",
     crunch.namekey.dataset="alias",
     crunch.namekey.array="alias",
@@ -100,42 +99,38 @@ mrdf.setup <- function (dataset, pattern="mr_", name=ifelse(is.null(selections),
 
 ## Global teardown
 bye <- new.env()
-if (run.integration.tests) {
-    with_test_authentication({
-        datasets.start <- urls(datasets())
-        users.start <- urls(getUserCatalog())
-        projects.start <- urls(session()$projects)
-    })
-}
+with_test_authentication({
+    datasets.start <- urls(datasets())
+    users.start <- urls(getUserCatalog())
+    projects.start <- urls(session()$projects)
+})
 reg.finalizer(bye,
     function (x) {
-        if (run.integration.tests) {
-            with_test_authentication({
-                datasets.end <- urls(datasets())
-                leftovers <- setdiff(datasets.end, datasets.start)
-                if (length(leftovers)) {
-                    stop(length(leftovers),
-                        " dataset(s) created and not destroyed: ",
-                        serialPaste(dQuote(names(datasets()[leftovers]))),
-                        call.=FALSE)
-                }
-                users.end <- urls(getUserCatalog())
-                leftovers <- setdiff(users.end, users.start)
-                if (length(leftovers)) {
-                    stop(length(leftovers),
-                        " users(s) created and not destroyed: ",
-                        serialPaste(dQuote(names(getUserCatalog()[leftovers]))),
-                        call.=FALSE)
-                }
-                projects.end <- urls(session()$projects)
-                leftovers <- setdiff(projects.end, projects.start)
-                if (length(leftovers)) {
-                    stop(length(leftovers),
-                        " projects(s) created and not destroyed: ",
-                        serialPaste(dQuote(names(session()$projects[leftovers]))),
-                        call.=FALSE)
-                }
-            })
-        }
+        with_test_authentication({
+            datasets.end <- urls(datasets())
+            leftovers <- setdiff(datasets.end, datasets.start)
+            if (length(leftovers)) {
+                stop(length(leftovers),
+                    " dataset(s) created and not destroyed: ",
+                    serialPaste(dQuote(names(datasets()[leftovers]))),
+                    call.=FALSE)
+            }
+            users.end <- urls(getUserCatalog())
+            leftovers <- setdiff(users.end, users.start)
+            if (length(leftovers)) {
+                stop(length(leftovers),
+                    " users(s) created and not destroyed: ",
+                    serialPaste(dQuote(names(getUserCatalog()[leftovers]))),
+                    call.=FALSE)
+            }
+            projects.end <- urls(session()$projects)
+            leftovers <- setdiff(projects.end, projects.start)
+            if (length(leftovers)) {
+                stop(length(leftovers),
+                    " projects(s) created and not destroyed: ",
+                    serialPaste(dQuote(names(session()$projects[leftovers]))),
+                    call.=FALSE)
+            }
+        })
     },
     onexit=TRUE)

@@ -136,6 +136,27 @@ emptyObject <- function (...) {
 
 null <- function (...) NULL
 
+uniquify <- function (str) {
+    ## Append (#) to strings to make sure they are unique
+    dups <- duplicated(str)
+    while(any(dups)) {
+        str[dups] <- addUniqueSuffix(str[dups])
+        dups <- duplicated(str)
+    }
+    return(str)
+}
+
+addUniqueSuffix <- function (str) {
+    ## Add "  (1)" and increment that number if it's already been appended
+    already.has <- grepl("  \\([0-9]+\\)$", str)
+    suffix <- rep("  (1)", length(str))
+    suffix[already.has] <- paste0("  (",
+        as.numeric(sub("^(.*)  \\(([0-9]+)\\)$", "\\2", str[already.has])) + 1,
+        ")")
+    str[already.has] <- sub("^(.*)  \\(([0-9]+)\\)$", "\\1", str[already.has])
+    return(paste0(str, suffix))
+}
+
 ## Borrowed from Hadley
 "%||%" <- function (a, b) if (!is.null(a)) a else b
 

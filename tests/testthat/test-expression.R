@@ -64,15 +64,41 @@ with_mock_HTTP({
             'Crunch logical expression: starttime > "2015-01-01"')
     })
 
-    test_that("Referencing category names that don't exist errors", {
+    test_that("Logical expr with categoricals", {
         expect_is(ds$gender == "Male", "CrunchLogicalExpr")
         expect_output(ds$gender == "Male",
             'Crunch logical expression: gender == "Male"', fixed=TRUE)
-        expect_error(ds$gender == "other",
+        expect_output(ds$gender == as.factor("Male"),
+            'Crunch logical expression: gender == "Male"', fixed=TRUE)
+        expect_output(ds$gender %in% "Male",
+            'Crunch logical expression: gender == "Male"', fixed=TRUE)
+        expect_output(ds$gender %in% as.factor("Male"),
+            'Crunch logical expression: gender == "Male"', fixed=TRUE)
+        expect_output(ds$gender %in% c("Male", "Female"),
+            'Crunch logical expression: gender %in% c("Male", "Female")',
+            fixed=TRUE)
+        expect_output(ds$gender %in% as.factor(c("Male", "Female")),
+            'Crunch logical expression: gender %in% c("Male", "Female")',
+            fixed=TRUE)
+        expect_output(ds$gender != "Female",
+            'Crunch logical expression: gender != "Female"', fixed=TRUE)
+        expect_output(ds$gender != as.factor("Female"),
+            'Crunch logical expression: gender != "Female"', fixed=TRUE)
+    })
+    test_that("Referencing category names that don't exist warns and drops", {
+        expect_warning(
+            expect_output(ds$gender == "other",
+                'Crunch logical expression: gender %in% character(0)', fixed=TRUE),
             paste("Category not found:", dQuote("other")))
-        expect_error(ds$gender %in% c("other", "Male", "another"),
+        expect_warning(
+            expect_output(ds$gender %in% c("other", "Male", "another"),
+                'Crunch logical expression: gender == "Male"', fixed=TRUE),
             paste("Categories not found:", dQuote("other"), "and",
                 dQuote("another")))
+        expect_warning(
+            expect_output(ds$gender != "other",
+                'Crunch logical expression: !gender %in% character(0)', fixed=TRUE),
+            paste("Category not found:", dQuote("other")))
     })
 
     test_that("Show method for logical expressions", {
@@ -88,6 +114,9 @@ with_mock_HTTP({
         expect_output(ds$gender %in% "Male" & !is.na(ds$birthyr),
             'gender == "Male" & !is.na(birthyr)',
             fixed=TRUE)
+        expect_output(!(ds$gender == "Male"),
+            'Crunch logical expression: !gender == "Male"', fixed=TRUE)
+            ## TODO: better parentheses for ^^
     })
     test_that("Show method for expresssions", {
         skip("TODO: something intelligent with parentheses and order of operations")
@@ -182,6 +211,16 @@ if (run.integration.tests) {
                         df[[i]][df$v4 %in% "B"], info=i)
                 }
                 expect_length(as.vector(ds$v3[ds$q1 %in% "selected"]), 10)
+            })
+            test_that("Select values with %in% on nonexistent categories", {
+                expect_length(as.vector(ds$v3[ds$v4 %in% numeric(0)]), 0)
+                expect_length(as.vector(ds$v3[!(ds$v4 %in% numeric(0))]), 20)
+                expect_warning(
+                    expect_length(as.vector(ds$v3[ds$v4 == "other"]), 0),
+                    paste0("Category not found: ", dQuote("other"), ". Dropping."))
+                expect_warning(
+                    expect_length(as.vector(ds$v3[ds$v4 != "other"]), 20),
+                    paste0("Category not found: ", dQuote("other"), ". Dropping."))
             })
 
             uncached({

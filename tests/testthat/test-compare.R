@@ -90,7 +90,7 @@ with_mock_HTTP({
     })
 
     test_that("compareSubvariables", {
-
+        ## Tested below and in test-append-debug.R
     })
 
     test_that("compareDatasets", {
@@ -120,8 +120,8 @@ with_mock_HTTP({
                 "   NA  Other    2",
                 "",
                 "",
-                "Matched array variables: 1 ",
-                "With subvariable issues: 1 ",
+                "Array variables: 3 ",
+                "With subvariable issues: 2 ",
                 "",
                 "$mymrset",
                 "Total subvariables: 4 ",
@@ -131,16 +131,25 @@ with_mock_HTTP({
                 " Second subvar1   <NA>",
                 "   <NA> subvar4 Second",
                 "",
-                "Subvariables in B have multiple parents: 949d2dc7e7a24e6090cc88bb92e1d2fb and 12345 ",
+                "Subvariables in B have multiple parents: mymrset and mymrset2 ",
+                "",
+                "Contains subvariables found in other arrays after matching: catarray and mymrset2 ",
+                "",
+                "$catarray",
+                "Total subvariables: 3 ",
+                "",
+                "Subvariables in B have multiple parents: mymrset and mymrset2 ",
+                "",
+                "Contains subvariables found in other arrays after matching: mymrset2 ",
                 "",
                 sep="\n"),
                 fixed=TRUE)
     })
 
     test_that("compareDatasets when everything is ok", {
-        expect_output(summary(compareDatasets(ds1, ds1)),
+        expect_output(summary(compareDatasets(ds2, ds2)),
             paste(
-                "Total variables: 6 ",
+                "Total variables: 5 ",
                 "All good :)",
                 sep="\n"
                 ))
