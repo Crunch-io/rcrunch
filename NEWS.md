@@ -1,10 +1,11 @@
-### crunch 1.11.99 (under development)
+### crunch 1.12.0
 * **Breaking change**: Accessing subvariables from array variables is now done by alias, just as variables are extracted from a Dataset. The "crunch.namekey.dataset" and "crunch.namekey.array" options have existed for a while, but they've had different default values. Now both default to "alias", which should offer a more consistent interface. If you want to maintain the old behavior, you can set `options(crunch.namekey.array="name")` in your script or in your .Rprofile.
 * `deleteSubvariable` now follows "crunch.namekey.array" and will take either subvariable names or aliases, depending on the value of the setting.
 * New `extendDataset` function, also aliased as `merge`, to allow you to add columns from one dataset to another, joining on a key variable from each.
 * `compareDatasets` now checks the subvariable matching across array variables in the datasets to identify additional conflicts.
 * Creating Crunch logical expressions that reference category names that do not exist for the given variable no longer errors; instead, a warning is given, and the unknown category names are dropped from the expression so that they evaluate as intended.
 * `notes` and `notes<-` methods for datasets, variables, and variable catalogs to view and edit those new metadata fields.
+* Update for API change in dataset export.
 * Attempting to assign a `name<-` on `NULL` (i.e. when you reference a variable in a dataset using `$` and the variable does not exist) returns a helpful message.
 * Fix dataset import via `newDataset` when passing a `data.frame` or similar that has spaces in the column names.
 * Handle the (deprecated in R) case of duplicate factor levels when translating to categorical in `toVariable`
