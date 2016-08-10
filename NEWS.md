@@ -1,4 +1,6 @@
-### crunch 1.12.0
+### crunch 1.12.1
+
+## crunch 1.12.0
 * **Breaking change**: Accessing subvariables from array variables is now done by alias, just as variables are extracted from a Dataset. The "crunch.namekey.dataset" and "crunch.namekey.array" options have existed for a while, but they've had different default values. Now both default to "alias", which should offer a more consistent interface. If you want to maintain the old behavior, you can set `options(crunch.namekey.array="name")` in your script or in your .Rprofile.
 * `deleteSubvariable` now follows "crunch.namekey.array" and will take either subvariable names or aliases, depending on the value of the setting.
 * New `extendDataset` function, also aliased as `merge`, to allow you to add columns from one dataset to another, joining on a key variable from each.
