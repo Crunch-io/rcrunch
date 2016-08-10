@@ -21,8 +21,11 @@ test_that("toVariable parses factors", {
 })
 
 test_that("toVariable handles duplicate factor levels", {
-    expect_warning(v <- factor(c(1, 2, 3, 4), labels=c("a", "b", "b", "c")),
-        "duplicated levels in factors are deprecated") ## And yet...
+    ## Duplicate factor labels were deprecated and are forbidden in the `factor`
+    ## constructor function starting in R 3.4.0, but create one anyway in case
+    ## older versions are encountered, and because it apparently is still
+    ## technically possible to create one like this:
+    v <- structure(1:4, .Label = c("a", "b", "b", "c"), class = "factor")
     expect_warning(
         expect_equivalent(toVariable(v),
             list(values=1:4, type="categorical", categories=list(
