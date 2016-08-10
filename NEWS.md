@@ -1,4 +1,5 @@
-### crunch 1.12.1
+### crunch 1.12.2
+* Patch a test for handling duplicate factor levels, which is deprecated in current R releases but converted to an error in the upcoming release.
 
 ## crunch 1.12.0
 * **Breaking change**: Accessing subvariables from array variables is now done by alias, just as variables are extracted from a Dataset. The "crunch.namekey.dataset" and "crunch.namekey.array" options have existed for a while, but they've had different default values. Now both default to "alias", which should offer a more consistent interface. If you want to maintain the old behavior, you can set `options(crunch.namekey.array="name")` in your script or in your .Rprofile.
