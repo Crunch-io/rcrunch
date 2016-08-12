@@ -29,7 +29,12 @@ parse_column <- list(
     categorical_array=function (col, variable) {
         out <- columnParser("categorical")(unlist(col), variable)
         ncols <- length(tuple(variable)$subvariables)
-        out <- t(structure(out, .Dim=c(ncols, length(out)/ncols)))
+        out <- as.data.frame(t(matrix(out, nrow=ncols)))
+        if (namekey(variable) == "alias") {
+            names(out) <- aliases(subvariables(variable))
+        } else {
+            names(out) <- names(subvariables(variable))
+        }
         return(out)
     },
     datetime=function (col, variable) {
@@ -47,6 +52,8 @@ columnParser <- function (vartype, mode=NULL) {
                 vartype <- "categorical_ids" ## The numeric parser will return ids, right?
             }
         }
+    } else if (vartype == "multiple_response") {
+        vartype <- "categorical_array"
     }
     return(parse_column[[vartype]] %||% parse_column[["numeric"]])
 }

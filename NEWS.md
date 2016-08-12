@@ -1,4 +1,5 @@
 ### crunch 1.12.3 (under development)
+* `as.vector` on a categorical-array or multiple-response variable now returns a `data.frame`. While a `matrix` is a more accurate representation of the data type, using `data.frame` allows for more intuitive accessing of subvariables by `$`, just as they are from the Crunch dataset.
 
 ### crunch 1.12.2
 * Patch a test for handling duplicate factor levels, which is deprecated in current R releases but converted to an error in the upcoming release.

@@ -51,7 +51,6 @@ NULL
 #' @export
 as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE,
                                         force=FALSE, ...) {
-    # message("CrunchDataset to CrunchDataFrame")
     out <- CrunchDataFrame(x)
     if (force) {
         out <- as.data.frame(out)
@@ -62,16 +61,15 @@ as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE,
 #' @rdname dataset-to-R
 #' @export
 as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE, ...) {
-    # message("CrunchDataFrame to data.frame")
     x <- x$.crunchDataset
     default.stringsAsFactors <- function () FALSE
     limit <- min(c(10000, getOption("crunch.data.frame.limit")))
     if (nrow(x) * ncol(x) > limit) {
+        ## TODO: switch to downloading CSV and reading that?
         halt("Dataset too large to coerce to data.frame. ",
             "Consider subsetting it first")
     }
     out <- lapply(x, as.vector)
     names(out) <- names(x)
-    # return(as.data.frame(out, ...))
     return(structure(out, class="data.frame", row.names=c(NA, -nrow(x))))
 }
