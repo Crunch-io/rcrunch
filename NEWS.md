@@ -1,3 +1,5 @@
+### crunch 1.12.3 (under development)
+
 ### crunch 1.12.2
 * Patch a test for handling duplicate factor levels, which is deprecated in current R releases but converted to an error in the upcoming release.
 

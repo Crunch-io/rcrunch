@@ -46,6 +46,6 @@ variablesFilter <- function (dataset) {
     return(NULL)
 }
 
-##' @rdname exportDataset
-##' @export
+#' @rdname exportDataset
+#' @export
 setMethod("write.csv", "CrunchDataset", function (...) exportDataset(..., format="csv"))
