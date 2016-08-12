@@ -1,0 +1,127 @@
+<!--
+%\VignetteEngine{knitr::knitr}
+%\VignetteIndexEntry{Downloading and exporting data}
+-->
+
+[Previous: filtering data](filter.html)
+```{r, results='hide', echo=FALSE, message=FALSE}
+# library(crunch)
+# load("vignettes.RData")
+options(width=120)
+```
+
+# Downloading and exporting data
+
+Crunch is designed to facilitate collaboration on a common dataset, a single source of truth in the cloud. As the previous vignettes have shown, you can get a lot of work done in R without pulling the data itself off of the server. Indeed, whenever possible, you should strive to get your work done without pulling data across the network: shipping data across the wire can be slow and inefficient. However, in some cases, you may need to extract a subset of a dataset to do more extensive calculations or manipulations locally. This vignette shows you how to get a local `data.frame` from your Crunch dataset, as well as how to export a CSV or SPSS file of the dataset or subset of dataset.
+
+## as.data.frame and as.vector
+
+To get the local R representation of a Crunch variable, use `as.vector`:
+
+```{r, eval=FALSE}
+party_id <- as.vector(ds$pid3)
+```
+
+`as.vector` translates Crunch to R types in reverse of how they are mapped in translation from R to Crunch in `newDataset`: categoricals become factors, numerics are numeric, and so on. Array variables (categorical array and multiple response) return a `data.frame` of categoricals, despite the name of `as.vector`, because doing so allows natural indexing into the subvariables (like `ds$var$subvar`).
+
+While categorical variables by default are translated as factors, you can use the "mode" argument to `as.vector` to request either the category "id" or the "numeric" values of the categories.
+
+```{r, eval=FALSE}
+party_id <- as.vector(ds$pid3, mode="id")
+```
+
+Requesting `mode="id"` may be particularly useful when you want to work with data locally that most closely matches the representation of the data on the server; however, the category names are disconnected from the data, so proceed with caution.
+
+Similarly, `as.data.frame` on a `CrunchDataset` gives you access to the values in the dataset, yet there is an important distinction: `as.data.frame` doesn't itself pull data off the server. Rather, `as.data.frame` returns a `data.frame`-like object that lazily fetches columns only when requested.
+
+```{r, eval=FALSE}
+v1 <- as.vector(ds$var)
+
+df <- as.data.frame(ds)
+identical(v1, df$var)
+## TRUE
+```
+
+That way, you can call `as.data.frame` and get convenient access to the columns of data without having to download things you don't need up front.
+
+Of course, you can download all of the data at once if you want--even though it's discouraged!--by either calling `as.data.frame` a second time
+
+```{r, eval=FALSE}
+df <- as.data.frame(ds)
+is.data.frame(df)
+## FALSE
+df <- as.data.frame(df)
+is.data.frame(df)
+## TRUE
+```
+
+or by calling `as.data.frame` the first time with `force=TRUE`:
+
+```{r, eval=FALSE}
+df <- as.data.frame(ds, force=TRUE)
+is.data.frame(df)
+## TRUE
+```
+
+## Filtering and subsetting
+
+Given the cost in network traffic to shipping data from the servers to your local computer, you should be mindful of what you extract. One way you can do this is by taking advantage of the lazy evaluation of the `as.data.frame` method, which only pulls variables you explicitly reference in your subsequent code. Another way is to filter the rows and columns of your data of interest.
+
+Suppose I wanted to look at the specific values on a couple of demographic variables just for self-identified Democrats. I can filter the rows and columns of my dataset just as if I was working with a `data.frame`, and only pull that subset to my computer.
+
+```{r, eval=FALSE}
+df <- as.data.frame(ds[ds$pid3 == "Democrat", c("age", "educ", "gender")], force=TRUE)
+```
+
+This dataset filtering is much more efficient (and thus faster) than attempting to download the entire dataset and then subsetting the resulting `data.frame`.
+
+You can also use this subsetting for convenience when lazily accessing the data.
+
+```{r, eval=FALSE}
+dems <- ds[ds$pid3 == "Democrat", ]
+```
+
+gives a view of the dataset that is filtered by party identification.
+
+```{r, eval=FALSE}
+dem_age <- dems$age
+```
+
+thus gives you just the values of "age" for those rows where "pid3" is equal to "Democrat". This is equivalent to calling `as.vector` directly on a subsetted variable:
+
+```{r, eval=FALSE}
+identical(as.vector(ds$age[ds$pid3 == "Democrat"]), dem_age)
+## TRUE
+```
+
+## Expressions
+
+You can also get values for an on-the-fly derivation with `as.vector`:
+
+```{r, eval=FALSE}
+perc_completed <- as.vector(100 - ds$perc_skipped)
+```
+
+Even though `perc_completed` doesn't exist in the dataset, we can get values for it by expression.
+
+## Exporting
+
+If you want to download a file of the dataset or of a subset, use `exportDataset`:
+
+```{r, eval=FALSE}
+exportDataset(ds, file="econ.sav", format="spss")
+```
+
+`exportDataset` writes to SPSS (.sav) and CSV formats. Alternatively, to get a CSV, `write.csv` is short for `exportDataset(..., format="csv")` and works similar to how it does for regular `data.frame`s.
+
+```{r, eval=FALSE}
+write.csv(ds, file="econ.csv")
+```
+
+CSV export does have a "categories" option that governs whether categorical variables are exported as category names or ids. The latter is more concise and pairs well with the Crunch metadata export, but category names can be useful when taking the file without additional metadata.
+
+As with the `as.data.frame` methods, you can subset what you export by indexing the rows and columns. Following the previous example, we can get a CSV of that demographic subset by:
+
+```{r, eval=FALSE}
+write.csv(ds[ds$pid3 == "Democrat", c("age", "educ", "gender")], file="demo-demos.csv")
+```

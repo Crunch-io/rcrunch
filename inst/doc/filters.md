@@ -3,7 +3,7 @@
 %\VignetteIndexEntry{Working with filters}
 -->
 
-[Previous: analyze data](analyze.md)
+[Previous: analyzing data](analyze.md)
 
 
 # Working with Filters
@@ -246,3 +246,5 @@ If you do know that you never want to see those rows again, you can permanently 
 ## Not run
 ds <- dropRows(ds, ds$perc_skipped > 15)
 ```
+
+[Next: exporting data](export.md)
