@@ -22,6 +22,14 @@ mr.values <- data.frame(
         1L, 1L, 2L, 1L, NA, 1L, 2L, 1L, 1L, 1L, 2L),
         levels=c("0.0", "1.0"), class="factor"))
 
+mr.ids <- data.frame(
+    subvar2=c(2, 2, 1, -1, 1, 2, 1, 2, 2, 2, -1, 2, -1, -1,
+        1, 1, 2, 2, 2, 1, -1, 1, -1, -1, 1),
+    subvar1=c(1, 1, 2, -1, -1, -1, -1, 1, 2, -1, -1, 1, -1, -1,
+        -1, 1, 2, 1, 1, 1, -1, 1, -1, 1, 2),
+    subvar3=c(1, -1, 1, 2, -1, 1, 2, -1, 1, -1, 2, 1, 1, 2,
+        1, 1, 2, 1, -1, 1, 2, 1, 1, 1, 2))
+
 with_mock_HTTP({
     test.ds <- loadDataset("test ds")
     test_that("setup", {
@@ -51,6 +59,12 @@ with_mock_HTTP({
         ## is the same as just getting the subvar as.vector directly
         expect_identical(as.vector(test.ds$mymrset)$subvar1,
             as.vector(test.ds$mymrset$subvar1))
+    })
+
+    test_that("as.vector on Multiple Response with mode", {
+        expect_identical(as.vector(test.ds$mymrset, mode="id"), mr.ids)
+        expect_identical(as.vector(test.ds$mymrset, mode="id")$subvar1,
+            as.vector(test.ds$mymrset$subvar1, mode="id"))
     })
 
     test_that("as.data.frame on CrunchDataset yields CrunchDataFrame", {

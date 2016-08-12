@@ -35,7 +35,7 @@ setMethod("as.vector", "CrunchExpr", function (x, mode) {
     ## pass in the variable metadata to the column parser
     variable <- VariableEntity(structure(list(body=out$metadata$out),
         class="shoji"))
-    return(columnParser(out$metadata$out$type, mode)(out$data$out, variable))
+    return(columnParser(out$metadata$out$type)(out$data$out, variable, mode))
 })
 
 #' @rdname toVariable
