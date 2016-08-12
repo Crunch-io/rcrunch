@@ -30,16 +30,16 @@ test_that("POSTNewVariable validates that arrays have subvariables", {
 })
 
 with_test_authentication({
+    ca.values <- mrdf[c(2,1,3)]
+    ca.values[] <- lapply(ca.values, as.factor)
     ca.var <- list(
         name="Categorical array",
         alias="categoricalArray",
         description="Here are some variables. They go together.",
         type="categorical_array",
-        subvariables=lapply(names(mrdf)[1:3],
-            function (x) toVariable(as.factor(mrdf[[x]]), name=x))
+        subvariables=lapply(names(ca.values),
+            function (x) toVariable(ca.values[[x]], name=x, alias=x))
     )
-    ca.values <- unlist(lapply(mrdf[1:3], as.factor))
-    dim(ca.values) <- c(4L, 3L)
     test_that("addVariables that are categorical_array", {
         with(test.dataset(), {
             POSTNewVariable(variableCatalogURL(ds), ca.var)
@@ -48,6 +48,8 @@ with_test_authentication({
             expect_identical(description(ds$categoricalArray),
                 "Here are some variables. They go together.")
             expect_identical(as.vector(ds$categoricalArray), ca.values)
+            expect_identical(names(subvariables(ds$categoricalArray)),
+                c("mr_2", "mr_1", "mr_3"))
         })
     })
     test_that("Adding an array as a single definition", {

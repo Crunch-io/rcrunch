@@ -12,8 +12,9 @@ test_that("Basic join validatation (and warning)", {
 
 ## Alias and wrap joinDatasets to avoid repetition below
 join <- function (...) {
-    expect_warning(joinDatasets(..., copy=FALSE),
+    expect_warning(out <- joinDatasets(..., copy=FALSE),
         "Virtual joins are experimental. Use with extreme caution.")
+    invisible(out)
 }
 
 with_mock_HTTP({
@@ -94,7 +95,7 @@ with_test_authentication({
     })
 
     test_that("The join succeeds", {
-        joined <- joinDatasets(left, right, by="keyvar")
+        joined <- join(left, right, by="keyvar")
         expect_true(is.dataset(joined))
         expect_length(joins(joined), 1)
         skip("TODO: fetch joined variable catalogs")
