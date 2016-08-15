@@ -137,8 +137,10 @@ setMethod("categories<-", c("CrunchVariable", "ANY"),
 
 setMethod("datasetReference", "CrunchVariable", function (x) {
     # x@urls$dataset_url
-    ## Not HATEOAS
-    absoluteURL("../../", self(x))
+    rootURL(x, "dataset") %||% datasetReference(self(x))
+})
+setMethod("datasetReference", "character", function (x) {
+    sub("(.*/datasets/.*?/).*", "\\1", x)
 })
 setMethod("datasetReference", "ANY", function (x) NULL)
 
