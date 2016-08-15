@@ -3,6 +3,7 @@
 * Enhancements to merge/extendDataset: a "by" argument as a shortcut for "by.x" and "by.y"; referencing "by" variables by alias; and aliasing the function also through `joinDatasets` with its (new) default `copy=TRUE` argument.
 * POST new array variable definitions that are a series of subvariable definitions as a single request, rather than uploading each subvariable separately and then binding.
 * [New vignette](inst/doc/export.md) on downloading data to your local R session and exporting datasets to file formats.
+* Preparation for upcoming API changes.
 
 ### crunch 1.12.2
 * Patch a test for handling duplicate factor levels, which is deprecated in current R releases but converted to an error in the upcoming release.
