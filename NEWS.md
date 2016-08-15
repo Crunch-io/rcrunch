@@ -2,6 +2,7 @@
 * `as.vector` on a categorical-array or multiple-response variable now returns a `data.frame`. While a `matrix` is a more accurate representation of the data type, using `data.frame` allows for more intuitive accessing of subvariables by `$`, just as they are from the Crunch dataset.
 * Enhancements to merge/extendDataset: a "by" argument as a shortcut for "by.x" and "by.y"; referencing "by" variables by alias; and aliasing the function also through `joinDatasets` with its (new) default `copy=TRUE` argument.
 * POST new array variable definitions that are a series of subvariable definitions as a single request, rather than uploading each subvariable separately and then binding.
+* Improve `addSubvariable` to PATCH rather than unbind and rebind; also extend it to accept more than one (sub)variable to add to the array.
 * [New vignette](inst/doc/export.md) on downloading data to your local R session and exporting datasets to file formats.
 * Preparation for upcoming API changes.
 

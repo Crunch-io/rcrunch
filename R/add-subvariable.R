@@ -1,42 +1,40 @@
 #' Add subvariable to an array
 #'
-#' This function conceals the dirty work in making this happen. The array
-#' gets unbound and rebound into a new array with the new variable added.
 #' @param variable the array variable to modify
-#' @param subvariable the subvariable to add
-#' @return a new version of \code{variable} with the indicated subvariables
+#' @param subvariable the subvariable to add, or a list of those to add, or a
+#' dataset subset
+#' @return \code{variable} with the indicated subvariables added.
+#' @examples
+#' \dontrun{
+#' ds$allpets <- addSubvariable(ds$allpets, ds$allpets_4)
+#' ds$petloc <- addSubvariables(ds$petloc, ds[c("petloc_school", "petloc_daycare")])
+#'}
 #' @export
-addSubvariable <- function (variable, subvariable){
-    ## Store some metadata up front
-    payload <- copyVariableReferences(variable)
-    subvars <- subvariables(variable)
-    subvar.urls <- urls(subvars)
-    subvar.names <- names(subvars)
+addSubvariable <- function (variable, subvariable) {
+    ## Get subvariable URL or URLs, depending on how many supplied
+    if (is.dataset(subvariable)) {
+        new.urls <- urls(variables(subvariable))
+    } else if (is.list(subvariable)) {
+        new.urls <- vapply(subvariable, self, character(1))
+    } else {
+        new.urls <- self(subvariable)
+    }
+    ## Store these for post workaround
+    subvar.urls <- subvariables(tuple(variable))
 
-    # TODO: could support taking a VariableDefinition for subvariable
-    # if (inherits(subvariable, 'VariableDefinition')) {
-    #     ds <- addVariables(ds, subvariable)
-    #     subvariable <- ds[[subvariable$alias]]
-    # }
+    ## Do the adding
+    crPATCH(shojiURL(variable, "catalogs", "subvariables"),
+        body=toJSON(sapply(new.urls, emptyObject, simplify=FALSE)))
 
-    ## Unbind
-    old.subvar.urls <- unlist(unbind(variable))
+    ## Workaround because apparently bind/rebind isn't retaining the order
+    crPATCH(self(variable),
+        body=toJSON(list(subvariables=I(c(subvar.urls, new.urls)))))
 
-    ## Add the new variable URL to those we had before
-    payload$subvariables <- I(c(subvar.urls, self(subvariable)))
-    class(payload) <- "VariableDefinition"
-
-    ## Rebind
-    new_url <- POSTNewVariable(variableCatalogURL(variable), payload)
-
-    ## Prune subvariable name prefix, or otherwise reset the names
-    subvars <- Subvariables(crGET(absoluteURL("subvariables/", new_url)))
-    subvar.urls <- c(subvar.urls, self(subvariable))
-    subvar.names <- c(subvar.names, name(subvariable))
-    names(subvars) <- subvar.names[match(urls(subvars), subvar.urls)]
-
-    ## What to return? This function is kind of a hack.
-    invisible(new_url)
+    ## Refresh and return
+    dropCache(datasetReference(variable))
+    invisible(refresh(variable))
 }
 
-# addSubvariable <- addSubvariables
+#' @rdname addSubvariable
+#' @export
+addSubvariables <- addSubvariable
