@@ -3,7 +3,7 @@
 %\VignetteIndexEntry{Working with filters}
 -->
 
-[Previous: analyze data](analyze.html)
+[Previous: analyzing data](analyze.html)
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(crunch)
 load("vignettes.RData")
@@ -160,3 +160,5 @@ If you do know that you never want to see those rows again, you can permanently 
 ## Not run
 ds <- dropRows(ds, ds$perc_skipped > 15)
 ```
+
+[Next: exporting data](export.html)

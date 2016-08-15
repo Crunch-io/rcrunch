@@ -38,57 +38,60 @@ validExport <- function (df2) {
     ## assert more
 }
 
-if (run.integration.tests) {
-    with_test_authentication({
-        with(test.dataset(df), {
-            test_that("Can download a csv of a dataset", {
-                filename <- tempfile()
-                exportDataset(ds, file=filename)
-                df2 <- read.csv(filename)
-                validExport(df2)
-            })
-
-            test_that("write.csv alias", {
-                filename <- tempfile()
-                write.csv(ds, file=filename)
-                df2 <- read.csv(filename)
-                validExport(df2)
-            })
-
-            test_that("Can filter rows in export", {
-                filename <- tempfile()
-                write.csv(ds[ds$v4 == "C",], file=filename)
-                df2 <- read.csv(filename)
-                expect_identical(nrow(df2), 10L)
-                expect_identical(levels(df2$v4), "C")
-            })
-
-            test_that("Can filter columns in export", {
-                filename <- tempfile()
-                write.csv(ds[,c("v2", "v4")], file=filename)
-                df2 <- read.csv(filename)
-                expect_identical(dim(df2), c(20L, 2L))
-                expect_identical(names(df2), c("v2", "v4"))
-            })
-
-            test_that("Can filter rows and columns in export", {
-                filename <- tempfile()
-                write.csv(ds[ds$v4 == "C", c("v2", "v4")], file=filename)
-                df2 <- read.csv(filename)
-                expect_identical(dim(df2), c(10L, 2L))
-                expect_identical(names(df2), c("v2", "v4"))
-                expect_identical(levels(df2$v4), "C")
-            })
-
-            test_that("Can export category ids", {
-                filename <- tempfile()
-                write.csv(ds[, c("v2", "v4")], file=filename, categorical="id")
-                df2 <- read.csv(filename)
-                expect_identical(dim(df2), c(20L, 2L))
-                expect_equal(names(df2), c("v2", "v4"))
-                expect_is(df2$v4, "integer")
-                expect_equal(df2$v4, as.vector(ds$v4, mode="id"))
-            })
-        })
+with_test_authentication({
+    ds <- newDataset(df)
+    test_that("Can download a csv of a dataset", {
+        skip_locally("Vagrant host doesn't serve files correctly")
+        filename <- tempfile()
+        exportDataset(ds, file=filename)
+        df2 <- read.csv(filename)
+        validExport(df2)
     })
-}
+
+    test_that("write.csv alias", {
+        skip_locally("Vagrant host doesn't serve files correctly")
+        filename <- tempfile()
+        write.csv(ds, file=filename)
+        df2 <- read.csv(filename)
+        validExport(df2)
+    })
+
+    test_that("Can filter rows in export", {
+        skip_locally("Vagrant host doesn't serve files correctly")
+        filename <- tempfile()
+        write.csv(ds[ds$v4 == "C",], file=filename)
+        df2 <- read.csv(filename)
+        expect_identical(nrow(df2), 10L)
+        expect_identical(levels(df2$v4), "C")
+    })
+
+    test_that("Can filter columns in export", {
+        skip_locally("Vagrant host doesn't serve files correctly")
+        filename <- tempfile()
+        write.csv(ds[,c("v2", "v4")], file=filename)
+        df2 <- read.csv(filename)
+        expect_identical(dim(df2), c(20L, 2L))
+        expect_identical(names(df2), c("v2", "v4"))
+    })
+
+    test_that("Can filter rows and columns in export", {
+        skip_locally("Vagrant host doesn't serve files correctly")
+        filename <- tempfile()
+        write.csv(ds[ds$v4 == "C", c("v2", "v4")], file=filename)
+        df2 <- read.csv(filename)
+        expect_identical(dim(df2), c(10L, 2L))
+        expect_identical(names(df2), c("v2", "v4"))
+        expect_identical(levels(df2$v4), "C")
+    })
+
+    test_that("Can export category ids", {
+        skip_locally("Vagrant host doesn't serve files correctly")
+        filename <- tempfile()
+        write.csv(ds[, c("v2", "v4")], file=filename, categorical="id")
+        df2 <- read.csv(filename)
+        expect_identical(dim(df2), c(20L, 2L))
+        expect_equal(names(df2), c("v2", "v4"))
+        expect_is(df2$v4, "integer")
+        expect_equal(df2$v4, as.vector(ds$v4, mode="id"))
+    })
+})

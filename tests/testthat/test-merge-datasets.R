@@ -4,10 +4,43 @@ with_mock_HTTP({
     ds1 <- loadDataset("test ds")
     ds2 <- loadDataset("ECON.sav")
 
+    testPayload <- paste0('{"function":"adapt",',
+        '"args":[{"dataset":"/api/datasets/dataset3/","filter":null},',
+        '{"variable":"/api/datasets/dataset3/variables/birthyr/"},',
+        '{"variable":"/api/datasets/dataset1/variables/birthyr/"}]}')
+
+    test_that("Correct payload without filtering", {
+        expect_warning(
+            expect_POST(merge(ds1, ds2, by.x=ds1$birthyr, ds2$birthyr),
+                '/api/datasets/dataset1/variables/',
+                testPayload),
+            "Variable birthyr is hidden")
+    })
+
+    test_that("Can reference variables by alias", {
+        expect_warning(
+            expect_POST(merge(ds1, ds2, by.x="birthyr", by.y="birthyr"),
+                '/api/datasets/dataset1/variables/',
+                testPayload),
+            "Variable birthyr is hidden")
+        expect_warning(
+            expect_POST(merge(ds1, ds2, by="birthyr"),
+                '/api/datasets/dataset1/variables/',
+                testPayload),
+            "Variable birthyr is hidden")
+    })
+    test_that("joinDatasets with default copy=TRUE redirects here", {
+        expect_warning(
+            expect_POST(joinDatasets(ds1, ds2, by.x=ds1$birthyr, ds2$birthyr),
+                '/api/datasets/dataset1/variables/',
+                testPayload),
+            "Variable birthyr is hidden")
+    })
+
     test_that("Input validation for merge/extend (plus method dispatch)", {
         expect_error(extendDataset(1),
             "x must be a Crunch Dataset")
-        expect_error(merge(ds1, 1),
+        expect_error(merge(ds1, 1, by.x=ds1[[1]]),
             "y must be a Crunch Dataset")
         expect_error(merge(ds1, ds2, by.x=1),
             "by.x must be a Crunch Variable")
@@ -17,23 +50,40 @@ with_mock_HTTP({
             "by.y must be a Crunch Variable")
         expect_error(merge(ds1, ds2, by.x=ds1[[1]], by.y=ds1[[1]]),
             "by.y must be a variable in y")
-        expect_error(merge(ds1, ds2, by.x=ds1[[1]], by.y=ds2[[1]], all=TRUE),
-            'Option "all" not supported.')
-        expect_error(merge(ds1, ds2, by.x=ds1[[1]], by.y=ds2[[1]], all.x=FALSE),
-            'Option "all.x=FALSE" not supported.')
-        expect_error(merge(ds1, ds2, by.x=ds1[[1]], by.y=ds2[[1]], all.y=TRUE),
-            'Option "all.y" not supported.')
+        expect_warning(
+            expect_error(merge(ds1, ds2, by.x=ds1$birthyr, by.y=ds2$birthyr, all=TRUE),
+                'Option "all" not supported.'),
+            "Variable birthyr is hidden") ## In ds2
+        expect_warning(
+            expect_error(merge(ds1, ds2, by.x=ds1$birthyr, by.y=ds2$birthyr, all.x=FALSE),
+                'Option "all.x=FALSE" not supported.'),
+            "Variable birthyr is hidden") ## In ds2
+        expect_warning(
+            expect_error(merge(ds1, ds2, by.x=ds1$birthyr, by.y=ds2$birthyr, all.y=TRUE),
+                'Option "all.y" not supported.'),
+            "Variable birthyr is hidden") ## In ds2
     })
 
-    test_that("Correct payload without filtering", {
-        expect_warning(
-            expect_POST(merge(ds1, ds2, by.x=ds1$birthyr, ds2$birthyr),
-                '/api/datasets/dataset1/variables/',
-                '{"function":"adapt",',
-                '"args":[{"dataset":"/api/datasets/dataset3/","filter":null},',
-                '{"variable":"/api/datasets/dataset3/variables/birthyr/"},',
-                '{"variable":"/api/datasets/dataset1/variables/birthyr/"}]}'),
-            "Variable birthyr is hidden")
+    test_that("Categorical and array variables can't be used as keys", {
+        expect_error(merge(ds1, ds2, by.x=ds1$gender, by.y=ds2$birthyr),
+            "by.x must be type numeric or text")
+        expect_error(merge(ds1, ds2, by.x=ds1$birthyr, by.y=ds2$gender),
+            "by.y must be type numeric or text")
+    })
+
+    test_that("Providing != 1 alias gives useful error message", {
+        expect_error(merge(ds1, ds2),
+            "by.x must reference one and only one variable")
+            ## Default "by" is intersection of names
+        expect_error(merge(ds1, ds2, by.x=ds1$birthyr),
+            "by.y must reference one and only one variable")
+    })
+
+    test_that("An invalid alias gives a useful error message", {
+        expect_error(merge(ds1, ds2, by.x="NOTAVARIABLE"),
+            "NOTAVARIABLE does not reference a variable in x")
+        expect_error(merge(ds1, ds2, by.x=ds1$birthyr, by.y="NOTAVARIABLE"),
+            "NOTAVARIABLE does not reference a variable in y")
     })
 })
 

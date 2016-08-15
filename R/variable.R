@@ -73,7 +73,7 @@ setMethod("categories", "VariableEntity",
 #' @export
 setMethod("categories<-", c("CategoricalVariable", "Categories"),
     function (x, value) {
-        dropCache(absoluteURL("../../cube/", self(x)))
+        dropCache(absoluteURL("./cube/", datasetReference(x)))
         ent <- setEntitySlot(entity(x), "categories", value)
         return(x)
     })
@@ -81,7 +81,7 @@ setMethod("categories<-", c("CategoricalVariable", "Categories"),
 #' @export
 setMethod("categories<-", c("CategoricalArrayVariable", "Categories"),
     function (x, value) {
-        dropCache(absoluteURL("../../cube/", self(x)))
+        dropCache(absoluteURL("./cube/", datasetReference(x)))
         lapply(subvariables(tuple(x)), dropCache) ## Subvariables will update too
         ent <- setEntitySlot(entity(x), "categories", value)
         return(x)
@@ -137,8 +137,10 @@ setMethod("categories<-", c("CrunchVariable", "ANY"),
 
 setMethod("datasetReference", "CrunchVariable", function (x) {
     # x@urls$dataset_url
-    ## Not HATEOAS
-    absoluteURL("../../", self(x))
+    rootURL(x, "dataset") %||% datasetReference(self(x))
+})
+setMethod("datasetReference", "character", function (x) {
+    sub("(.*/datasets/.*?/).*", "\\1", x)
 })
 setMethod("datasetReference", "ANY", function (x) NULL)
 
@@ -154,8 +156,16 @@ unbind <- function (x) {
     stopifnot(inherits(x, "CategoricalArrayVariable"))
     ## Delete self and drop cache for variable catalog (parent)
     u <- self(x)
-    out <- crDELETE(u)
-    dropCache(absoluteURL("../", u))
+    out <- c()
+    tryCatch(out <- crPOST(u, body='{"unbind": {}}'), error=function (e) {
+        if (grepl("405", e$message)) {
+            ## The future isn't here yet.
+            out <<- crDELETE(u)
+        } else {
+            stop(e$message)
+        }
+    })
+    dropCache(datasetReference(u))
     invisible(out)
 }
 

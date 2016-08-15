@@ -104,21 +104,22 @@ POSTNewVariable <- function (catalog_url, variable) {
                 !any(vapply(variable$subvariables, is_catvardef, logical(1)))
             case3 <- !(is_binddef | is_arraydef)
             if (case3) {
-                lapply(variable$subvariables, function (x) {
-                    Categories(data=x$categories) ## Will error if invalid
-                })
+                ## Let's arrange the values so that we can make a single request
 
-                ## Upload subvars, then bind
-                var_urls <- lapply(variable$subvariables,
-                    function (x) try(do.POST(x)))
-                errs <- vapply(var_urls, is.error, logical(1))
-                if (any(errs)) {
-                    # Delete subvariables that were added, then raise
-                    lapply(var_urls[!errs], function (x) crDELETE(x))
-                    halt("Subvariables errored on upload")
+                ## First, get the categories
+                cats <- lapply(variable$subvariables, vget("categories"))
+                if (length(unique(vapply(cats, toJSON, character(1)))) > 1) {
+                    halt("All subvariables must have identical categories")
                 }
-                # Else prepare to POST array definition
-                variable$subvariables <- I(unlist(var_urls))
+                variable$categories <- cats[[1]]
+
+                ## Now get the values
+                variable$values <- matrix(unlist(lapply(variable$subvariables,
+                    vget("values"))), ncol=length(variable$subvariables), byrow=FALSE)
+                ## Now strip out the extraneous metadata from the subvars
+                variable$subvariables <- lapply(variable$subvariables, function (x) {
+                    x[!(names(x) %in% c("type", "categories", "values"))]
+                })
             }
         }
         if ("categories" %in% names(variable)) {

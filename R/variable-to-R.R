@@ -1,52 +1,63 @@
 parse_column <- list(
-    numeric=function (col, variable) {
+    numeric=function (col, variable, mode) {
         missings <- vapply(col, Negate(is.numeric), logical(1))
         col[missings] <- NA_real_
         return(as.numeric(unlist(col)))
     },
-    text=function (col, variable) {
+    text=function (col, variable, mode) {
         missings <- vapply(col, Negate(is.character), logical(1))
         col[missings] <- NA_character_
         return(as.character(unlist(col)))
     },
-    categorical=function (col, variable) {
-        out <- columnParser("numeric")(col)
-        cats <- na.omit(categories(variable))
-        out <- factor(names(cats)[match(out, ids(cats))], levels=names(cats))
-        return(out)
-    },
-    categorical_ids=function (col, variable) {
-        missings <- vapply(col, is.list, logical(1)) ## for the {?:values}
-        col[missings] <- lapply(col[missings], function (x) x[["?"]])
-        return(as.numeric(unlist(col)))
-    },
-    categorical_numeric_values=function (col, variable) {
-        out <- columnParser("numeric")(col)
-        cats <- na.omit(categories(variable))
-        out <- values(cats)[match(out, ids(cats))]
-        return(out)
-    },
-    categorical_array=function (col, variable) {
-        out <- columnParser("categorical")(unlist(col), variable)
-        ncols <- length(tuple(variable)$subvariables)
-        out <- t(structure(out, .Dim=c(ncols, length(out)/ncols)))
-        return(out)
-    },
-    datetime=function (col, variable) {
-        out <- columnParser("text")(col)
-        return(from8601(out))
-    }
-)
-columnParser <- function (vartype, mode=NULL) {
-    if (vartype == "categorical") {
+    categorical=function (col, variable, mode=NULL) {
         ## Deal with mode. Valid modes: factor (default), numeric, id
         if (!is.null(mode)) {
             if (mode == "numeric") {
                 vartype <- "categorical_numeric_values"
             } else if (mode == "id") {
                 vartype <- "categorical_ids" ## The numeric parser will return ids, right?
+            } else {
+                vartype <- "categorical_factor"
             }
         }
+        return(columnParser(vartype)(col, variable))
+    },
+    categorical_factor=function (col, variable, mode=NULL) {
+        out <- columnParser("numeric")(col)
+        cats <- na.omit(categories(variable))
+        out <- factor(names(cats)[match(out, ids(cats))], levels=names(cats))
+        return(out)
+    },
+    categorical_ids=function (col, variable, mode) {
+        missings <- vapply(col, is.list, logical(1)) ## for the {?:values}
+        col[missings] <- lapply(col[missings], function (x) x[["?"]])
+        return(as.numeric(unlist(col)))
+    },
+    categorical_numeric_values=function (col, variable, mode) {
+        out <- columnParser("numeric")(col)
+        cats <- na.omit(categories(variable))
+        out <- values(cats)[match(out, ids(cats))]
+        return(out)
+    },
+    categorical_array=function (col, variable, mode) {
+        out <- columnParser("categorical")(unlist(col), variable, mode)
+        out <- as.data.frame(matrix(out,
+            ncol=length(tuple(variable)$subvariables), byrow=TRUE))
+        if (namekey(variable) == "alias") {
+            names(out) <- aliases(subvariables(variable))
+        } else {
+            names(out) <- names(subvariables(variable))
+        }
+        return(out)
+    },
+    datetime=function (col, variable, mode) {
+        out <- columnParser("text")(col)
+        return(from8601(out))
+    }
+)
+columnParser <- function (vartype) {
+    if (vartype == "multiple_response") {
+        vartype <- "categorical_array"
     }
     return(parse_column[[vartype]] %||% parse_column[["numeric"]])
 }
@@ -122,7 +133,7 @@ NULL
 #' @export
 setMethod("as.vector", "CrunchVariable", function (x, mode) {
     f <- zcl(activeFilter(x))
-    columnParser(type(x), mode)(getValues(x, filter=toJSON(f)), x)
+    columnParser(type(x))(getValues(x, filter=toJSON(f)), x, mode)
 })
 
 from8601 <- function (x) {

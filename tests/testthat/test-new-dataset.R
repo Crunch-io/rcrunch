@@ -35,57 +35,57 @@ if (run.integration.tests) {
     })
 
     with_test_authentication({
-        test_that("newDatasetFromFile creates a dataset", {
-            ds <- newDatasetFromFile(testfile.csv)
-            expect_true(is.dataset(ds))
-            expect_identical(nrow(ds), 20L)
-            expect_identical(ncol(ds), 6L)
-            expect_equivalent(mean(ds[[2]]), mean(testfile.df[[2]]))
-        })
+        whereas("The three methods for sending data", {
+            test_that("newDatasetFromFile creates a dataset", {
+                ds <- newDatasetFromFile(testfile.csv)
+                expect_true(is.dataset(ds))
+                expect_identical(nrow(ds), 20L)
+                expect_identical(ncol(ds), 6L)
+                expect_equivalent(mean(ds[[2]]), mean(testfile.df[[2]]))
+            })
 
-        test_that("Dataset-by-column variable types get set correctly", {
-            ds <- newDatasetByColumn(df)
-            expect_valid_df_import(ds)
-            expect_equivalent(mean(ds$v3), mean(df$v3))
-            expect_true(setequal(names(df), names(ds)))
-            expect_identical(names(df), names(ds))
-        })
+            test_that("Dataset-by-column variable types get set correctly", {
+                ds <- newDatasetByColumn(df)
+                expect_valid_df_import(ds)
+                expect_equivalent(mean(ds$v3), mean(df$v3))
+                expect_true(setequal(names(df), names(ds)))
+                expect_identical(names(df), names(ds))
+            })
 
-        test_that("newDataset via CSV + JSON", {
-            ds <- newDatasetByCSV(df)
-            expect_valid_df_import(ds)
-        })
-
-        purgeEntitiesCreated()
-
-        test_that("createWithMetadataAndFile using docs example", {
-            ds <- newDatasetFromFixture("apidocs")
-            expect_valid_apidocs_import(ds)
-        })
-
-        test_that("data.frame with spaces in column names", {
-            input <- data.frame(a=factor("A"), b=4)
-            names(input) <- c("var one", "var two")
-            expect_identical(names(input), c("var one", "var two"))
-            ds <- newDataset(input)
-            expect_identical(names(ds), c("var one", "var two"))
+            test_that("newDataset via CSV + JSON", {
+                ds <- newDatasetByCSV(df)
+                expect_valid_df_import(ds)
+            })
         })
 
         m <- fromJSON(file.path("dataset-fixtures", "apidocs.json"),
             simplifyVector=FALSE)
-
-        test_that("Can create dataset with data in S3", {
-            ds <- createWithMetadataAndFile(m,
-                file="s3://public.testing.crunch.io/example-dataset.csv")
-            expect_valid_apidocs_import(ds)
-            ds2 <- newDatasetFromFixture("apidocs")
-            ## Compare to dataset imported from local file upload
-            expect_identical(dim(ds), dim(ds2))
-            expect_identical(as.vector(ds$q1), as.vector(ds2$q1))
-            ## Could add more assertions
-        })
         
-        purgeEntitiesCreated()
+        whereas("Creating with metadata and csv", {
+            test_that("createWithMetadataAndFile using docs example", {
+                ds <- newDatasetFromFixture("apidocs")
+                expect_valid_apidocs_import(ds)
+            })
+
+            test_that("data.frame with spaces in column names", {
+                input <- data.frame(a=factor("A"), b=4)
+                names(input) <- c("var one", "var two")
+                expect_identical(names(input), c("var one", "var two"))
+                ds <- newDataset(input)
+                expect_identical(names(ds), c("var one", "var two"))
+            })
+
+            test_that("Can create dataset with data in S3", {
+                ds <- createWithMetadataAndFile(m,
+                    file="s3://public.testing.crunch.io/example-dataset.csv")
+                expect_valid_apidocs_import(ds)
+                ds2 <- newDatasetFromFixture("apidocs")
+                ## Compare to dataset imported from local file upload
+                expect_identical(dim(ds), dim(ds2))
+                expect_identical(as.vector(ds$q1), as.vector(ds2$q1))
+                ## Could add more assertions
+            })
+        })
 
         test_that("Duplicate subvariables are forbidden", {
             m2 <- m

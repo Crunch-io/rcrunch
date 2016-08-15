@@ -1,7 +1,7 @@
 context("Debugging append")
 
 with_test_authentication({
-    test_that("Appending applies the exclusion filter of the incoming dataset", {
+    whereas("Appending with an exclusion on the incoming dataset", {
         part0 <- createDataset(name=now())
         part1 <- newDatasetFromFixture("apidocs")
         exclusion(part1) <- part1$q1 == "Dog"
@@ -10,10 +10,14 @@ with_test_authentication({
 
         part0 <- appendDataset(part0, part1)
         part0 <- appendDataset(part0, part2)
-        expect_identical(dim(part0),
-            c(nrow(part1)*2L, ncol(part1)))
-        expect_equivalent(table(part0$q1)["Dog"], 0)
+
+        test_that("Appending applies the exclusion filter of the incoming", {
+            expect_identical(dim(part0),
+                c(nrow(part1)*2L, ncol(part1)))
+            expect_equivalent(table(part0$q1)["Dog"], 0)
+        })
     })
+
 
     test_that("Datasets with more rows append (sparseness test)", {
         sparse1 <- newDataset(data.frame(A=factor(c("A", "B")), B=1:1000))
@@ -25,7 +29,7 @@ with_test_authentication({
             factor(c(rep(NA, 1000), rep(c("C", "D"), 500))))
     })
 
-    describe("When appending different arrays containing the same subvars", {
+    whereas("When appending different arrays containing the same subvars", {
         part1 <- mrdf.setup(newDataset(mrdf), name="CA1")
         part2 <- mrdf.setup(newDataset(mrdf), name="CA2")
         test_that("The arrays with different aliases have the same subvar aliases", {

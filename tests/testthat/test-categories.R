@@ -227,7 +227,7 @@ with_mock_HTTP({
 
 
 with_test_authentication({
-    describe("When editing categories", {
+    whereas("When editing categories", {
         ds <- newDataset(df[,4,drop=FALSE])
         test_that("categories setters persist to the server", {
             expect_equal(names(categories(ds$v4)), c("B", "C", "No Data"))
@@ -313,7 +313,7 @@ with_test_authentication({
         })
     })
 
-    describe("When manipulating categories of array variables", {
+    whereas("When manipulating categories of array variables", {
         ds <- newDatasetFromFixture("apidocs")
         test_that("dichotomizing dichotomizes the subvariables", {
             expect_true(is.MR(ds$allpets))

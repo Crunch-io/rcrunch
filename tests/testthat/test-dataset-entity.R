@@ -210,7 +210,7 @@ with_mock_HTTP({
 })
 
 with_test_authentication({
-    describe("When editing dataset metadata", {
+    whereas("When editing dataset metadata", {
         ds <- createDataset(name=now())
         test_that("Name and description setters push to server", {
             d2 <- ds

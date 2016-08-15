@@ -81,14 +81,6 @@ with_test_authentication <- function (expr) {
             }),
             print=FALSE,
             where=crGET))
-        # suppressMessages(trace("createDataset",
-        #     quote({
-        #         # If we care about making unique dataset names, do this:
-        #         # body$body$name <- paste(now(), body$body$name)
-        #     }),
-        #     at=3,
-        #     print=FALSE,
-        #     where=createSource))
         on.exit({
             suppressMessages(untrace("locationHeader", where=crGET))
             # suppressMessages(untrace("createDataset", where=crGET))
@@ -116,6 +108,13 @@ purgeEntitiesCreated <- function () {
     }
     assign("entities.created", c(), envir=globalenv())
     invisible()
+}
+
+## Substitute for testthat::describe or similar, just a wrapper around a context
+## to force deleting stuff it creates sooner
+whereas <- function (...) {
+    on.exit(purgeEntitiesCreated())
+    eval.parent(...)
 }
 
 uniqueDatasetName <- now
