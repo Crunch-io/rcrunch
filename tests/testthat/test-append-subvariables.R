@@ -1,7 +1,7 @@
 context("Appending datasets with unbound subvariables")
 
 with_test_authentication({
-    describe("When appending a dataset with unbound subvariables", {
+    whereas("When appending a dataset with unbound subvariables", {
         part1 <- mrdf.setup(newDataset(mrdf), selections="1.0")
         mr_cats <- categories(part1$MR)
         subvar_cats <- categories(part1$MR$mr_1)
@@ -62,7 +62,7 @@ with_test_authentication({
         })
     })
 
-    describe("When appending undichotomized subvariables to an MR", {
+    whereas("When appending undichotomized subvariables to an MR", {
         part1 <- mrdf.setup(newDataset(mrdf), selections="1.0")
         mr_cats <- categories(part1$MR)
         subvar_cats <- categories(part1$MR$mr_1)
@@ -117,7 +117,7 @@ with_test_authentication({
         })
     })
 
-    describe("When appending arrays with different subsets of subvariables", {
+    whereas("When appending arrays with different subsets of subvariables", {
         part1 <- mrdf.setup(newDataset(mrdf[-3]), selections="1.0")
         part1 <- saveVersion(part1, "Before appending")
         part2 <- mrdf.setup(newDataset(mrdf[-1]), selections="1.0")

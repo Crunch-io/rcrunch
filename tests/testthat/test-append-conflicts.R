@@ -1,7 +1,7 @@
 context("Handling append conflicts")
 
 with_test_authentication({
-    describe("When attempting to append an array and a numeric", {
+    whereas("When attempting to append an array and a numeric", {
         part1 <- mrdf.setup(newDataset(mrdf))
         part2 <- newDataset(mrdf[c("mr_3", "v4")])
         alias(part2$mr_3) <- "CA"
@@ -35,7 +35,7 @@ with_test_authentication({
         })
     })
 
-    describe("When attempting to append text and numeric", {
+    whereas("When attempting to append text and numeric", {
         part1 <- newDataset(df[,2:5])
         d2 <- df
         d2$v2 <- d2$v3 ## v2 was text, now is numeric
