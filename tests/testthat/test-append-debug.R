@@ -48,7 +48,6 @@ with_test_authentication({
                 "common subvariables")
         })
         part1 <- cleanseBatches(part1)
-        part1 <- releaseAndReload(part1) ## Server bug holding onto part2 as subordinate
 
         test_that("Can re-alias array variables to make them line up (and old refs don't reappear)", {
             alias(part2$CA2) <- "CA"
