@@ -131,51 +131,6 @@ setMethod("[", c("Subvariables", "character"), function (x, i, ...) {
     return(x[w])
 })
 
-#' Delete subvariables from an array
-#'
-#' This function conceals the dirty work in making this happen. The array
-#' gets unbound, the subvariables deleted, and then the remaining subvariable
-#' are rebound into a new array.
-#' @param variable the array variable
-#' @param to.delete character alias(es) or name(s), depending on the value of
-#' \code{getOption("crunch.namekey.array")}, of the subvariables to delete.
-#' @return a new version of variable without the indicated subvariables
-#' @export
-deleteSubvariables <- function (variable, to.delete) {
-    ## Store some metadata up front
-    payload <- copyVariableReferences(variable)
-    subvars <- subvariables(variable)
-    subvar.urls <- urls(subvars)
-    subvar.names <- names(subvars)
-
-    ## Identify subvariable URLs
-    delete.these <- findVariableURLs(subvariables(variable), to.delete,
-        key=namekey(variable))
-    ## Unbind
-    all.subvar.urls <- unlist(unbind(variable))
-
-    ## Delete
-    dels <- lapply(delete.these, function (x) try(crDELETE(x)))
-
-    ## Setdiff those deleted from those returned from unbind
-    payload$subvariables <- I(setdiff(all.subvar.urls, delete.these))
-    class(payload) <- "VariableDefinition"
-
-    ## Rebind
-    new_url <- POSTNewVariable(variableCatalogURL(variable), payload)
-
-    ## Prune subvariable name prefix, or otherwise reset the names
-    subvars <- Subvariables(crGET(absoluteURL("subvariables/", new_url)))
-    names(subvars) <- subvar.names[match(urls(subvars), subvar.urls)]
-
-    ## What to return? This function is kind of a hack.
-    invisible(new_url)
-}
-
-#' @rdname deleteSubvariables
-#' @export
-deleteSubvariable <- deleteSubvariables
-
 #' @rdname subvars-extract
 #' @export
 setMethod("[[<-",

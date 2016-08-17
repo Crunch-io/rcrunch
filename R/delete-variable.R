@@ -38,6 +38,8 @@ setMethod("delete", "CrunchVariable", function (x, confirm=requireConsent(), ...
     invisible(out)
 })
 
+#' @rdname delete
+#' @export
 setMethod("delete", "VariableTuple", function (x, confirm=requireConsent(), ...) {
     if (confirm && !askForPermission(paste0("Really delete ", name(x), "?"))) {
         halt("Must confirm deleting variable")
@@ -50,3 +52,60 @@ setMethod("delete", "VariableTuple", function (x, confirm=requireConsent(), ...)
     }
     invisible(out)
 })
+
+#' Delete subvariables from an array
+#'
+#' This function conceals the dirty work in making this happen. The array
+#' gets unbound, the subvariables deleted, and then the remaining subvariable
+#' are rebound into a new array.
+#' @param variable the array variable
+#' @param to.delete aliases (following \code{crunch.namekey.dataset}) or indices
+#' of variables to delete.
+#' @param confirm logical: should the user be asked to confirm deletion.
+#' Default is \code{TRUE} if in
+#' an interactive session. You can avoid the confirmation prompt if you delete
+#' \code{with(\link{consent})}.
+#' @return a new version of variable without the indicated subvariables
+#' @export
+deleteSubvariables <- function (variable, to.delete) {
+    ## Store some metadata up front
+    payload <- copyVariableReferences(variable)
+    subvars <- subvariables(variable)
+    subvar.urls <- urls(subvars)
+    subvar.names <- names(subvars)
+
+    ## Identify subvariable URLs
+    delete.these <- urls(variable[to.delete])
+    tryCatch(lapply(delete.these, crDELETE), error=function (e) {
+        if (grepl("Please delete the array variable first", e$message)) {
+            ## The future isn't here yet.
+
+            ## Unbind
+            all.subvar.urls <- unlist(unbind(variable))
+
+            ## Delete
+            dels <- lapply(delete.these, function (x) try(crDELETE(x)))
+
+            ## Setdiff those deleted from those returned from unbind
+            payload$subvariables <- I(setdiff(all.subvar.urls, delete.these))
+            class(payload) <- "VariableDefinition"
+
+            ## Rebind
+            new_url <- POSTNewVariable(variableCatalogURL(variable), payload)
+
+            ## Prune subvariable name prefix, or otherwise reset the names
+            subvars <- Subvariables(crGET(absoluteURL("subvariables/", new_url)))
+            names(subvars) <- subvar.names[match(urls(subvars), subvar.urls)]
+
+            ## Done.
+            variable <<- new_url
+        } else {
+            stop(e$message)
+        }
+    })
+    invisible(variable)
+}
+
+#' @rdname deleteSubvariables
+#' @export
+deleteSubvariable <- deleteSubvariables

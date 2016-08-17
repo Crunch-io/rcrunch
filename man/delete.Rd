@@ -9,11 +9,14 @@
 \alias{delete,CrunchTeam-method}
 \alias{delete,CrunchVariable-method}
 \alias{delete,ShojiObject-method}
+\alias{delete,VariableTuple-method}
 \title{Delete a Crunch object from the server}
 \usage{
 \S4method{delete}{CrunchDataset}(x, confirm = requireConsent(), ...)
 
 \S4method{delete}{CrunchVariable}(x, confirm = requireConsent(), ...)
+
+\S4method{delete}{VariableTuple}(x, confirm = requireConsent(), ...)
 
 \S4method{delete}{CrunchProject}(x, confirm = requireConsent(), ...)
 
