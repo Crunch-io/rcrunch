@@ -3,6 +3,7 @@
 * Enhancements to merge/extendDataset: a "by" argument as a shortcut for "by.x" and "by.y"; referencing "by" variables by alias; and aliasing the function also through `joinDatasets` with its (new) default `copy=TRUE` argument.
 * POST new array variable definitions that are a series of subvariable definitions as a single request, rather than uploading each subvariable separately and then binding.
 * Improve `addSubvariable` to PATCH rather than unbind and rebind; also extend it to accept more than one (sub)variable to add to the array.
+* Remove `pattern` matching argument from `makeArray`, `makeMR`, `deleteVariables`, and `hideVariables`, deprecated since 1.9.6.
 * [New vignette](inst/doc/export.md) on downloading data to your local R session and exporting datasets to file formats.
 * Preparation for upcoming API changes.
 

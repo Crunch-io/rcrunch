@@ -32,18 +32,11 @@ setMethod("unhide", "VariableCatalog", function (x) {
 #' @param x same as \code{dataset}, for `hiddenVariables<-`
 #' @param variables names or indices of variables to (un)hide
 #' @param value same as \code{variables}, for `hiddenVariables<-`
-#' @param pattern optional regular expression to identify Variables to (un)hide.
-#' Note that this argument is deprecated. If you wish to grep, you can
-#' \code{grep(pattern, aliases(variables(dataset)))} or similar outside this
-#' function.
-#' @param key the Variable attribute to \code{\link{grep}} with the
-#' \code{pattern}. Default is "alias"
-#' @param ... optional additional arguments to \code{grep}, likewise deprecated.
 #' @return (invisibly) \code{dataset} with the specified variables (un)hidden
 #' @seealso \code{\link{hide}}
 #' @export
-hideVariables <- function (dataset, variables=NULL, pattern=NULL, key=namekey(dataset), ...) {
-    var.urls <- findVariableURLs(dataset, refs=variables, pattern=pattern, key=key, ...)
+hideVariables <- function (dataset, variables) {
+    var.urls <- urls(allVariables(dataset[variables]))
     allVariables(dataset)[var.urls] <- hide(allVariables(dataset)[var.urls])
     invisible(dataset)
 }
@@ -63,9 +56,8 @@ hideVariables <- function (dataset, variables=NULL, pattern=NULL, key=namekey(da
 
 #' @rdname hideVariables
 #' @export
-unhideVariables <- function (dataset, variables=NULL, pattern=NULL,
-                            key=namekey(dataset), ...) {
-    var.urls <- findVariableURLs(hidden(dataset), refs=variables, pattern=pattern, key=key, ...)
+unhideVariables <- function (dataset, variables) {
+    var.urls <- suppressWarnings(urls(allVariables(dataset[variables])))
     allVariables(dataset)[var.urls] <- unhide(allVariables(dataset)[var.urls])
     invisible(dataset)
 }

@@ -6,28 +6,16 @@
 \alias{unhideVariables}
 \title{Hide and Unhide Variables Within a Dataset}
 \usage{
-hideVariables(dataset, variables = NULL, pattern = NULL,
-  key = namekey(dataset), ...)
+hideVariables(dataset, variables)
 
 hiddenVariables(x) <- value
 
-unhideVariables(dataset, variables = NULL, pattern = NULL,
-  key = namekey(dataset), ...)
+unhideVariables(dataset, variables)
 }
 \arguments{
 \item{dataset}{the Dataset to modify}
 
 \item{variables}{names or indices of variables to (un)hide}
-
-\item{pattern}{optional regular expression to identify Variables to (un)hide.
-Note that this argument is deprecated. If you wish to grep, you can
-\code{grep(pattern, aliases(variables(dataset)))} or similar outside this
-function.}
-
-\item{key}{the Variable attribute to \code{\link{grep}} with the
-\code{pattern}. Default is "alias"}
-
-\item{...}{optional additional arguments to \code{grep}, likewise deprecated.}
 
 \item{x}{same as \code{dataset}, for `hiddenVariables<-`}
 

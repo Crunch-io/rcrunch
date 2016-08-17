@@ -37,6 +37,23 @@ setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE)
     x@variables <- allVariables(x)[w]
     return(x)
 })
+
+#' @rdname dataset-extract
+#' @export
+setMethod("[", c("CrunchDataset", "VariableGroup"), function (x, i, ..., drop=FALSE) {
+    ## Do allVariables because Group/Order may contain refs to hidden vars
+    x@variables <- allVariables(x)[i]
+    return(x)
+})
+
+#' @rdname dataset-extract
+#' @export
+setMethod("[", c("CrunchDataset", "VariableOrder"), function (x, i, ..., drop=FALSE) {
+    x@variables <- allVariables(x)[i]
+    return(x)
+})
+
+
 #' @rdname dataset-extract
 #' @export
 setMethod("[", c("CrunchDataset", "missing", "ANY"), function (x, i, j, ..., drop=FALSE) {

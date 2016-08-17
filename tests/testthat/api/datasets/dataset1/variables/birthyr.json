@@ -3,6 +3,7 @@
     "self": "/api/datasets/dataset1/variables/birthyr/",
     "body": {
         "alias": "birthyr",
+        "name": "Birth Year",
         "format": {
             "data": {
                 "digits": 2
