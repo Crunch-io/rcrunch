@@ -88,8 +88,8 @@ handleAPIresponse <- function (response, special.statuses=list()) {
             ## 201 Location: return the Location header
             return(locationHeader(response))
         } else if (code == 204 || length(response$content) == 0) {
-            ## If No Content, invisibly return the `response` object
-            invisible(response)
+            ## If No Content, invisibly return NULL
+            invisible(NULL)
         } else {
             ## Parse the content
             return(handleShoji(content(response)))

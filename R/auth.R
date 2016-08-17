@@ -11,7 +11,7 @@ makeSessionStore <- function () {
     session_store$.globals <- list(prompt=getOption("prompt"))
 }
 makeSessionStore()
-
+ 
 #' Kill the active Crunch session
 #' @export
 logout <- function () {
