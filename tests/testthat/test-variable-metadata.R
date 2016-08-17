@@ -3,21 +3,21 @@ context("All variable metadata")
 with_mock_HTTP({
     ds <- loadDataset("test ds")
     test_that("variableMetadata", {
-        vm <- variableMetadata(ds, parent=TRUE)
+        vm <- variableMetadata(ds)
         expect_is(vm, "VariableCatalog")
         expect_identical(aliases(vm),
-            c("gender", "birthyr", "starttime", "mymrset", "catarray",
-            "textVar", "subvar2", "subvar1", "subvar3"))
-        i <- which(aliases(vm) == "gender")
-        expect_identical(Categories(data=vm[[i]]$categories),
+            c("gender", "birthyr", "starttime", "mymrset", "catarray", "textVar"))
+        expect_identical(Categories(data=vm[[1]]$categories),
             categories(ds$gender))
-    })
-
-    test_that("are.subvars on variableMetadata", {
-        expect_equal(are.subvars(variableMetadata(ds, parent=TRUE)),
-            c(rep(FALSE, 6), rep(TRUE, 3)))
-        ## And none found if we don't embed it
-        expect_false(any(are.subvars(variableMetadata(ds, parent=FALSE))))
+        mymr <- index(vm)[[4]]
+        expect_identical(mymr$subvariables,
+            c("/api/datasets/dataset1/variables/subvar2/",
+            "/api/datasets/dataset1/variables/subvar1/",
+            "/api/datasets/dataset1/variables/subvar3/"))
+        expect_identical(mymr$subreferences,
+            list(list(name="First", alias="subvar2", description=NULL),
+                list(name="Second", alias="subvar1", description=NULL),
+                list(name="Last", alias="subvar3", description=NULL)))
     })
 })
 

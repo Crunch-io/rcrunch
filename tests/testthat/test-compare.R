@@ -94,6 +94,7 @@ with_mock_HTTP({
     })
 
     test_that("compareDatasets", {
+        compareDatasets(ds1, ds2)
         expect_output(summary(compareDatasets(ds1, ds2)),
             paste(
                 "Total variables: 8 ",

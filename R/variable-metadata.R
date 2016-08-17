@@ -1,15 +1,11 @@
 #' Get all variable metadata for a dataset
 #'
 #' @param dataset CrunchDataset
-#' @param parent logical: Embed in subvariables a reference to their array
-#' parent? Default is \code{FALSE}.
 #' @return A VariableCatalog that has things like categories embedded in each
 #' categorical variable, and all subvariables are represented
 #' @export
-variableMetadata <- function (dataset, parent=FALSE) {
-    ## TODO: make a nested vs. flat version. Current is flat.
-
-    ## Start with the variables catalog
+variableMetadata <- function (dataset) {
+    ## 1) Start with the variables catalog
     varcat <- allVariables(dataset)
     ## Absolutize the subvariable URLs, which are only absolutized in normal
     ## use when accessed.
@@ -19,9 +15,10 @@ variableMetadata <- function (dataset, parent=FALSE) {
         }
         return(x)
     })
-    ## Now supplement that with the "table" metadata, which will give us
-    ## 1) categories
-    ## 2) entries for all subvariables
+
+    ## 2) Now supplement that with the "table" metadata, which will give us
+    ## a) categories
+    ## b) entries for all subvariables
     extra <- crGET(shojiURL(dataset, "fragments", "table"))$metadata
     ## It is keyed by "id". Embed the id in the tuples, and then make the keys
     ## be URLs so that it lines up with the variables catalog
@@ -30,35 +27,62 @@ variableMetadata <- function (dataset, parent=FALSE) {
             return(x)
         }, x=extra, i=names(extra), SIMPLIFY=FALSE)
     names(extra) <- absoluteURL(paste0(names(extra), "/"), self(varcat))
-    ## Do a list update to merge the two objects
-    extra <- modifyList(extra, index(varcat))
 
-    ## Optionally iterate and add a marker for subvariables' parent vars
-    if (parent) {
-        for (i in names(extra)) {
-            ## Iterate over variables and find arrays
-            this <- extra[[i]]
-            if (length(this$subvariables)) {
-                ## If there are subvariables, poke a "parent" into their tuples
-                extra[this$subvariables] <- lapply(extra[this$subvariables],
-                    function (v) {
-                        v$parent <- this$id ## TODO: warning if v$parent is already set?
-                        v$parent_alias <- this$alias ## Useful for compareDatasets
-                        return(v)
-                    })
+    ## 3) Check to see if `extra` has any subvariables at top level. If not,
+    ## either there are no array variables in the dataset, or we're in the
+    ## future.
+    subvar.urls <- setdiff(names(extra), urls(varcat))
+    if (length(subvar.urls)) {
+        ## Let's migrate the data to the future shape
+        ## Construct subreferences and drop subvars from top level
+        ind <- index(varcat)
+        extra <- sapply(urls(varcat), function (u) {
+            this <- ind[[u]]
+            these.subs <- this$subvariables
+            if (!is.null(these.subs)) {
+                ## Pull in subreferences
+                this$subreferences <- lapply(extra[these.subs],
+                    function (s) s[intersect(c("name", "alias", "description"), names(s))])
+                names(this$subreferences) <- NULL
             }
-        }
+            ## Merge the entries from the catalog and table
+            return(modifyList(extra[[u]], this))
+        }, simplify=FALSE)
+    } else {
+        ## Just merge the entries
+        extra <- modifyList(extra, index(varcat))
     }
+
     index(varcat) <- extra
     return(varcat)
 }
 
-varTable <- function (dataset) {
-    ## Make a data.frame from the variables catalog
-    return(catalogToDataFrame(variableMetadata(dataset, parent=TRUE),
-        c("name", "alias", "parent", "type", "id"), stringsAsFactors=FALSE))
-}
+flattenVariableMetadata <- function (vm) {
+    ## Put subvar entries at the top level, and inject in them a "parent"
+    ## indicator. Like how we used to represent metadata. Needed for
+    ## compareSubvariables within a dataset because we need to look across
+    ## the datasets for all variables that match on alias and could be pulled
+    ## into the array on append--we can't just rely on what's inside the current
+    ## array definition.
 
-are.subvars <- function (vars) {
-    vapply(index(vars), function (x) !is.null(x$parent), logical(1), USE.NAMES=FALSE)
+    ind <- index(vm)
+    extra <- lapply(urls(vm), function (u) {
+        this <- ind[[u]]
+        these.subs <- this$subvariables
+        if (!is.null(these.subs)) {
+            out <- structure(this$subreferences, .Names=these.subs)
+            out <- lapply(out, function (x) {
+                ## Add the parent ref
+                x$parent <- u
+                x$parent_alias <- this$alias
+                return(x)
+            })
+            return(out)
+        } else {
+            return(NULL)
+        }
+    })
+
+    index(vm) <- c(ind, unlist(extra, recursive=FALSE))
+    return(vm)
 }

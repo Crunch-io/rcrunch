@@ -34,15 +34,21 @@
 #' }
 #' @export
 compareDatasets <- function (A, B) {
-    varsA <- variableMetadata(A, parent=TRUE)
-    varsB <- variableMetadata(B, parent=TRUE)
+    varsA <- variableMetadata(A)
+    varsB <- variableMetadata(B)
 
     ## Create alias to url maps for lookup below
     a2uA <- structure(urls(varsA), .Names=aliases(varsA))
     a2uB <- structure(urls(varsB), .Names=aliases(varsB))
 
-    comp.vars <- compareVariables(varsA[!are.subvars(varsA)],
-        varsB[!are.subvars(varsB)])
+    ## Do the same but for the flattened metadata, for the subariables
+    fvarsA <- flattenVariableMetadata(varsA)
+    fvarsB <- flattenVariableMetadata(varsB)
+    a2uFA <- structure(urls(fvarsA), .Names=aliases(fvarsA))
+    a2uFB <- structure(urls(fvarsB), .Names=aliases(fvarsB))
+
+    ## Compare.
+    comp.vars <- compareVariables(varsA, varsB)
 
     same.type <- comp.vars$type.A == comp.vars$type.B ## is NA if either is NA, i.e. not found
     ## How to address CA vs MR not a problem?
@@ -67,19 +73,19 @@ compareDatasets <- function (A, B) {
             function (x) {
                 ## Pull together the union of aliases
                 if (x %in% names(a2uA)) {
-                    aa <- aliases(varsA[varsA[[a2uA[x]]]$subvariables])
+                    aa <- aliases(fvarsA[varsA[[a2uA[x]]]$subvariables])
                 } else {
                     aa <- c()
                 }
                 if (x %in% names(a2uB)) {
-                    ab <- aliases(varsB[varsB[[a2uB[x]]]$subvariables])
+                    ab <- aliases(fvarsB[varsB[[a2uB[x]]]$subvariables])
                 } else {
                     ab <- c()
                 }
                 allaliases <- c(aa, setdiff(ab, aa))
                 ## Grab the subvariables with aliases that match for the union
-                compareSubvariables(varsA[na.omit(a2uA[allaliases])],
-                    varsB[na.omit(a2uB[allaliases])])
+                compareSubvariables(fvarsA[na.omit(a2uFA[allaliases])],
+                    fvarsB[na.omit(a2uFB[allaliases])])
             },
             simplify=FALSE)
         ),
