@@ -169,22 +169,6 @@ unbind <- function (x) {
     invisible(out)
 }
 
-#' @rdname delete
-#' @export
-setMethod("delete", "CrunchVariable",
-    function (x, ...) invisible(crDELETE(self(x))))
-
-#' @rdname delete
-#' @export
-setMethod("delete", "CategoricalArrayVariable", function (x, ...) {
-    u <- self(x)
-    subvars <- subvariables(tuple(x))
-    out <- crDELETE(u)
-    lapply(subvars, crDELETE)
-    dropCache(absoluteURL("../", u))
-    invisible(out)
-})
-
 #' "Subset" a Variable
 #'
 #' These methods subset variables by creating Expressions, which can be

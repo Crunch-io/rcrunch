@@ -4,13 +4,10 @@
 \alias{variableMetadata}
 \title{Get all variable metadata for a dataset}
 \usage{
-variableMetadata(dataset, parent = FALSE)
+variableMetadata(dataset)
 }
 \arguments{
 \item{dataset}{CrunchDataset}
-
-\item{parent}{logical: Embed in subvariables a reference to their array
-parent? Default is \code{FALSE}.}
 }
 \value{
 A VariableCatalog that has things like categories embedded in each

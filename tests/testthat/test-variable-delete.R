@@ -1,118 +1,95 @@
 context("Deleting variables")
 
-if (run.integration.tests) {
-    with_test_authentication({
-        with(test.dataset(df), {
-            test_that("deleteVariable(s)", {
-                v1 <- ds$v1
-                expect_true(all(c("v1", "v4") %in% names(ds)))
-                ds <- deleteVariable(ds, c("v1", "v4"))
-                expect_true(!any(c("v1", "v4") %in% names(ds)))
-                expect_error(refresh(v1),
-                    "Variable not found. It may have been deleted.")
-            })
+with_mock_HTTP({
+    ds <- loadDataset("test ds")
+    test_that("Assigning NULL doesn't ask you about deleting 0 variables", {
+        expect_message(ds$NOTAVARIABLE <- df$NOTAVARIABLE,
+            paste(dQuote("NOTAVARIABLE"), "is not a variable; nothing to delete by assigning NULL"))
+    })
+    with(temp.option(crunch.require.confirmation=TRUE), {
+        test_that("Delete methods require consent", {
+            expect_error(delete(ds$gender),
+                "Must confirm deleting variable")
+            expect_error(ds$gender <- NULL,
+                "Must confirm deleting variable")
+            expect_error(ds[[1]] <- NULL,
+                "Must confirm deleting variable")
+            expect_error(ds$mymrset <- NULL,
+                "Must confirm deleting variable")
+            expect_error(deleteVariables(ds, "gender"),
+                "Must confirm deleting variable")
+            expect_error(deleteVariables(ds, c("gender", "birthyr")),
+                "Must confirm deleting variable")
         })
-
-        with(test.dataset(df), {
-            test_that("deleteVariables with consent", {
-                with(temp.option(crunch.require.confirmation=TRUE), {
-                    expect_true("v3" %in% names(ds))
-                    expect_error(ds <- deleteVariable(ds, "v3"),
-                        "Must confirm deleting variable")
-                    with(consent(), {
-                        ds <- deleteVariable(ds, "v3")
-                        expect_null(ds$v3)
-                        expect_null(refresh(ds)$v3)
-                    })
-                })
-            })
-        })
-
-        with(test.dataset(df), {
-            test_that("Delete variable by assigning NULL", {
-                with(temp.option(crunch.require.confirmation=TRUE), {
-                    expect_true("v3" %in% names(ds))
-                    expect_identical(names(ds)[2], "v2")
-                    expect_error(ds$v3 <- NULL,
-                        "Must confirm deleting variable")
-                    expect_error(ds[[2]] <- NULL,
-                        "Must confirm deleting variable")
-                    with(consent(), {
-                        ds$v3 <- NULL
-                        expect_null(ds$v3)
-                        expect_null(refresh(ds)$v3)
-                        ds[[2]] <- NULL
-                        expect_null(ds$v2)
-                        expect_null(refresh(ds)$v2)
-                    })
-                })
-            })
-
-            test_that("Assigning NULL doesn't ask you about deleting 0 variables", {
-                expect_message(ds$NOTAVARIABLE <- df$NOTAVARIABLE,
-                    paste(dQuote("NOTAVARIABLE"), "is not a variable; nothing to delete by assigning NULL"))
-            })
-        })
-
-        with(test.dataset(newDatasetFromFixture("apidocs")), {
-            test_that("Array variables are fully deleted", {
-                expect_true("petloc" %in% names(ds))
-                expect_false("petloc_home" %in% names(ds))
-                ds$petloc <- NULL
-                expect_false("petloc" %in% names(ds))
-                expect_false("petloc_home" %in% names(ds))
-            })
-
-            test_that("Deleting array/MR subvariables", {
-                expect_true("allpets" %in% names(ds))
-                expect_true(is.MR(ds$allpets))
-                expect_false("allpets_2" %in% names(ds))
-                expect_true("allpets_2" %in% aliases(subvariables(ds$allpets)))
-                # ds$allpets <- deleteSubvariable(ds$allpets, "allpets_2") ## Cannot overwrite one Variable with another
-                deleteSubvariable(ds$allpets, "allpets_2")
-                ds <- refresh(ds)
-                expect_true("allpets" %in% names(ds))
-                expect_true(is.MR(ds$allpets))
-                expect_false("allpets_2" %in% names(ds))
-                expect_false("allpets_2" %in% aliases(subvariables(ds$allpets)))
-                expect_identical(names(subvariables(ds$allpets)),
-                    c("Cat", "Bird"))
-            })
-        })
-
-        with(test.dataset(newDatasetFromFixture("apidocs")), {
-            ## Attempt to reproduce @persephonet's error
-            cats <- categories(ds$allpets)
-            cats[[3]]$selected <- TRUE
-            categories(ds$allpets) <- cats
-            test_that("Delete MR subvar with multiple 'selected' attributes", {
-                expect_identical(names(Filter(is.selected, categories(ds$allpets))),
-                    c("selected", "not asked")) ## There are two selected
-                deleteSubvariable(ds$allpets, "allpets_2")
-                ds <- refresh(ds)
-                expect_true("allpets" %in% names(ds))
-                expect_true(is.MR(ds$allpets))
-                expect_false("allpets_2" %in% names(ds))
-                expect_false("allpets_2" %in% aliases(subvariables(ds$allpets)))
-                expect_identical(names(subvariables(ds$allpets)),
-                    c("Cat", "Bird"))
-            })
-        })
-
-        with(test.dataset(newDatasetFromFixture("apidocs")), {
-            test_that("delete method on variable", {
-                expect_true("q1" %in% names(ds))
-                d <- try(delete(ds$q1))
-                ds <- refresh(ds)
-                expect_false("q1" %in% names(ds))
-            })
-            test_that("delete deletes all subvariables too", {
-                expect_true("petloc" %in% names(ds))
-                d <- try(delete(ds$petloc))
-                ds <- refresh(ds)
-                expect_false("petloc" %in% names(ds))
-                expect_false("petloc_home" %in% names(ds))
+        with(consent(), {
+            test_that("If consent given, all of these methods do DELETE", {
+                expect_DELETE(delete(ds$gender),
+                    "/api/datasets/dataset1/variables/gender/")
+                expect_DELETE(ds$gender <- NULL,
+                    "/api/datasets/dataset1/variables/gender/")
+                expect_DELETE(ds$mymrset <- NULL,
+                    "/api/datasets/dataset1/variables/mymrset/")
+                expect_DELETE(ds[[2]] <- NULL,
+                    "/api/datasets/dataset1/variables/gender/")
+                expect_DELETE(deleteVariables(ds, "gender"),
+                    "/api/datasets/dataset1/variables/gender/")
+                expect_DELETE(deleteVariables(ds, c("gender", "birthyr")),
+                    "/api/datasets/dataset1/variables/gender/")
             })
         })
     })
-}
+})
+
+with_test_authentication({
+    whereas("Attempting to delete variables by various means", {
+        ds <- newDataset(df)
+        v1 <- ds$v1
+        test_that("Setup", {
+            expect_valid_df_import(ds)
+        })
+
+        ds <- deleteVariable(ds, c("v1", "v4"))
+        test_that("deleteVariable(s) removes variables", {
+            expect_false(any(c("v1", "v4") %in% names(ds)))
+        })
+        test_that("Refreshing a deleted variable errors informatively", {
+            expect_error(refresh(v1),
+                "Variable not found. It may have been deleted.")
+        })
+
+        ds$v3 <- NULL
+        test_that("Assigning NULL removes variables", {
+            expect_null(ds$v3)
+            expect_null(refresh(ds)$v3)
+        })
+    })
+
+    whereas("Attepmting to delete arrays and subvariables", {
+        ds <- newDatasetFromFixture("apidocs")
+
+        test_that("Array variables are fully deleted", {
+            expect_true("petloc" %in% names(ds))
+            expect_false("petloc_home" %in% names(ds))
+            ds$petloc <- NULL
+            expect_false("petloc" %in% names(ds))
+            expect_false("petloc_home" %in% names(ds))
+        })
+
+        cats <- categories(ds$allpets)
+        cats[[3]]$selected <- TRUE
+        categories(ds$allpets) <- cats
+        test_that("Delete MR subvariable with multiple 'selected' attributes", {
+            expect_identical(names(Filter(is.selected, categories(ds$allpets))),
+                c("selected", "not asked")) ## There are two selected
+            ## TODO: when deleteSubvariable doesn't unbind/rebind, assign it back
+            deleteSubvariable(ds$allpets, "allpets_2")
+            ds <- refresh(ds)
+            expect_true("allpets" %in% names(ds))
+            expect_true(is.MR(ds$allpets))
+            expect_false("allpets_2" %in% names(ds))
+            expect_false("allpets_2" %in% aliases(subvariables(ds$allpets)))
+            expect_identical(names(subvariables(ds$allpets)),
+                c("Cat", "Bird"))
+        })
+    })
+})
