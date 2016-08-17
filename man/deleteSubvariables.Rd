@@ -5,9 +5,9 @@
 \alias{deleteSubvariables}
 \title{Delete subvariables from an array}
 \usage{
-deleteSubvariables(variable, to.delete)
+deleteSubvariables(variable, to.delete, confirm = requireConsent())
 
-deleteSubvariable(variable, to.delete)
+deleteSubvariable(variable, to.delete, confirm = requireConsent())
 }
 \arguments{
 \item{variable}{the array variable}

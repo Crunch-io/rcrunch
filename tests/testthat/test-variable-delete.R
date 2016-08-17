@@ -21,6 +21,10 @@ with_mock_HTTP({
             expect_error(deleteVariables(ds, c("gender", "birthyr")),
                 "Must confirm deleting variable")
         })
+        test_that("deleteSubvariable also requires consent", {
+            expect_error(deleteSubvariable(ds$mymrset, "subvar1"),
+                "Must confirm deleting subvariable")
+        })
         with(consent(), {
             test_that("If consent given, all of these methods do DELETE", {
                 expect_DELETE(delete(ds$gender),

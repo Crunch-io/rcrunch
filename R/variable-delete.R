@@ -67,7 +67,7 @@ setMethod("delete", "VariableTuple", function (x, confirm=requireConsent(), ...)
 #' \code{with(\link{consent})}.
 #' @return a new version of variable without the indicated subvariables
 #' @export
-deleteSubvariables <- function (variable, to.delete) {
+deleteSubvariables <- function (variable, to.delete, confirm=requireConsent()) {
     ## Store some metadata up front
     payload <- copyVariableReferences(variable)
     subvars <- subvariables(variable)
@@ -76,6 +76,18 @@ deleteSubvariables <- function (variable, to.delete) {
 
     ## Identify subvariable URLs
     delete.these <- urls(variable[to.delete])
+    ## Get confirmation
+    if (length(delete.these) == 1) {
+        prompt <- paste0("Really delete ",
+            dQuote(subvar.names[match(delete.these, subvar.urls)]), "?")
+    } else {
+        prompt <- paste0("Really delete these ", length(delete.these),
+            " variables?")
+    }
+    if (confirm && !askForPermission(prompt)) {
+        halt("Must confirm deleting subvariable(s)")
+    }
+
     tryCatch(lapply(delete.these, crDELETE), error=function (e) {
         if (grepl("Please delete the array variable first", e$message)) {
             ## The future isn't here yet.
