@@ -46,8 +46,18 @@ You can set several parameters in your .Rprofile to simplify your workflow:
 
 ### Installing from a local checkout
 
-    $ R --slave -e 'install.packages(c("crunch", "codetools", "testthat"), repo="http://cran.at.r-project.org")'
-    $ make test
+If you're on Ubuntu precise 12.04, to get the correct version of R installed:
+
+    # apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
+    # echo "deb http://cran.r-project.org/bin/linux/ubuntu precise/" >> /etc/apt/sources.list
+    # apt-get update
+    # apt-get install libcurl4-openssl-dev
+    # sudo apt-get install r-base r-base-dev
+
+Then run the tests in the rcrunch dir:
+
+    # R --slave -e 'install.packages(c("crunch", "codetools", "testthat"), repo="http://cran.at.r-project.org")'
+    # make test
 
 This installs dependencies and then runs the tests, which installs `crunch` from your local checkout in the process. If the dependencies fail to install, check the error message. You may need to install libcurl on your system before installing the R packages.
 
