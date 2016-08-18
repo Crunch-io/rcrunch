@@ -45,7 +45,7 @@ with_test_authentication({
             expect_error(
                 expect_message(appendDataset(part1, part2),
                     "Result URL"),
-                "common subvariables")
+                "Subvariable mr_1 cannot be bound to both arrays CA2 and CA1.")
         })
         part1 <- cleanseBatches(part1)
 
