@@ -5,7 +5,7 @@
 
 [Cloud Collaboration with Crunch](http://crunch-io.github.io/rcrunch/)
 
-[Crunch.io](http://crunch.io/) provides a cloud-based data store and analytic engine. It has a [web client](https://beta.crunch.io/) for interactive data exploration and visualization. The **crunch** package for R allows analysts to interact with and manipulate Crunch datasets from within R. Importantly, this allows technical researchers to collaborate naturally with team members, managers, and clients who prefer a point-and-click interface: because all connect to the same dataset in the cloud, there is no need to email files back and forth continually to share results. 
+[Crunch.io](http://crunch.io/) provides a cloud-based data store and analytic engine. It has a [web client](https://beta.crunch.io/) for interactive data exploration and visualization. The **crunch** package for R allows analysts to interact with and manipulate Crunch datasets from within R. Importantly, this allows technical researchers to collaborate naturally with team members, managers, and clients who prefer a point-and-click interface: because all connect to the same dataset in the cloud, there is no need to email files back and forth continually to share results.
 
 [Subscribe to the mailing list](mailto:rcrunch+subscribe@crunch.io) to receive notification of releases and to ask general support questions.
 
@@ -20,6 +20,16 @@ The pre-release version of the package can be pulled from GitHub using the [devt
     # install.packages("devtools")
     devtools::install_github("Crunch-io/rcrunch", build_vignettes=TRUE)
 
+`crunch` requires R version 3.0 or greater. Note that if you're on Ubuntu, particularly older versions, you'll need to add an alternative PPA before trying to `apt-get install` R. For 12.04 Precise, for example,
+
+    # apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
+    # echo "deb http://cran.r-project.org/bin/linux/ubuntu precise/" >> /etc/apt/sources.list
+    # apt-get update
+    # apt-get install libcurl4-openssl-dev
+    # sudo apt-get install r-base r-base-dev
+
+See https://cran.r-project.org/bin/linux/ubuntu/README for more details.
+
 ## Getting started
 
 Connecting to Crunch and working with datasets is simple:
@@ -27,10 +37,10 @@ Connecting to Crunch and working with datasets is simple:
     $ R
     > library(crunch)
     > login("jane.r_user@crunch.io")
-    Crunch password for jane.r_user@crunch.io: 
-    
+    Crunch password for jane.r_user@crunch.io:
+
     You are now logged into Crunch as jane.r_user@crunch.io
-    [crunch] > 
+    [crunch] >
     ...
 
 Check out `listDatasets()` to see the names of your existing datasets, which you can load like `ds <- loadDataset("The name of my dataset")`. New Crunch datasets can be made from a `data.frame` with `newDataset()`, or from a .csv or .sav file with `newDatasetFromFile()`. See the help for these functions or [`vignette("getting-started", package="crunch")`](inst/doc/getting-started.md) for more information.
@@ -46,17 +56,7 @@ You can set several parameters in your .Rprofile to simplify your workflow:
 
 ### Installing from a local checkout
 
-If you're on Ubuntu precise 12.04, to get the correct version of R installed:
-
-    # apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E084DAB9
-    # echo "deb http://cran.r-project.org/bin/linux/ubuntu precise/" >> /etc/apt/sources.list
-    # apt-get update
-    # apt-get install libcurl4-openssl-dev
-    # sudo apt-get install r-base r-base-dev
-
-Then run the tests in the rcrunch dir:
-
-    # R --slave -e 'install.packages(c("crunch", "codetools", "testthat"), repo="http://cran.at.r-project.org")'
+    # make deps
     # make test
 
 This installs dependencies and then runs the tests, which installs `crunch` from your local checkout in the process. If the dependencies fail to install, check the error message. You may need to install libcurl on your system before installing the R packages.
@@ -65,7 +65,7 @@ This installs dependencies and then runs the tests, which installs `crunch` from
 
 `$ make test` is all you need. Requires the `testthat` package for R. You can also specify a specific test file or files to run by adding a "file=" argument, like `$ make test file=auth`. `test_package` will do a regular-expression pattern match within the file names. See its documentation in the `testthat` package.
 
-Testing has two options: unit tests only, and tests that communicate with an API server. This is governed by an environment variable, `INTEGRATION`. This is false by default, meaning that API integration tests are not run. To modify this and test against the Crunch API, you can run `$ export INTEGRATION=TRUE && make test`. 
+Testing has two options: unit tests only, and tests that communicate with an API server. This is governed by an environment variable, `INTEGRATION`. This is false by default, meaning that API integration tests are not run. To modify this and test against the Crunch API, you can run `$ export INTEGRATION=TRUE && make test`.
 
 To run integration tests, you will need to specify a test user, password, and API server to communicate with, either by editing `tests/testthat/helper.R` or by setting `test.user`, `test.pw`, and `test.api` in your `.Rprofile`, as in:
 
