@@ -11,7 +11,7 @@ makeSessionStore <- function () {
     session_store$.globals <- list(prompt=getOption("prompt"))
 }
 makeSessionStore()
- 
+
 #' Kill the active Crunch session
 #' @export
 logout <- function () {
@@ -105,10 +105,16 @@ without_echo <- function (expr) {
     eval.parent(expr)
 }
 
+#' Add an auth token as a cookie manually
+#'
+#' Set the auth token rather than from a Set-Cookie response header. Also modify
+#' the user-agent to include the service this is coming from.
+#' @param token character auth token
+#' @param ua character optional string to add to the User-Agent request header
+#' @return Nothing; called for its side effects.
+#' @export
+#' @keywords internal
 tokenAuth <- function (token, ua="token") {
-    ## Add an auth token as a cookie manually, rather than from a Set-Cookie
-    ## response header.
-    ## Also modify the user-agent to include the service this is coming from
     set_config(c(config(cookie=paste0("token=", token)),
         add_headers(`user-agent`=crunchUserAgent(ua))))
     warmSessionCache()
