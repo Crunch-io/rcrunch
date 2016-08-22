@@ -1,3 +1,5 @@
+### crunch 1.13.1 (under development)
+
 ## crunch 1.13.0
 * `as.vector` on a categorical-array or multiple-response variable now returns a `data.frame`. While a `matrix` is a more accurate representation of the data type, using `data.frame` allows for more intuitive accessing of subvariables by `$`, just as they are from the Crunch dataset.
 * Enhancements to merge/extendDataset: a "by" argument as a shortcut for "by.x" and "by.y"; referencing "by" variables by alias; and aliasing the function also through `joinDatasets` with its (new) default `copy=TRUE` argument.
