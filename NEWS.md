@@ -1,4 +1,5 @@
 ### crunch 1.13.1 (under development)
+* Allow disabling of check for new package releases on load by setting `options(crunch.check.updates=FALSE)`.
 
 ## crunch 1.13.0
 * `as.vector` on a categorical-array or multiple-response variable now returns a `data.frame`. While a `matrix` is a more accurate representation of the data type, using `data.frame` allows for more intuitive accessing of subvariables by `$`, just as they are from the Crunch dataset.
