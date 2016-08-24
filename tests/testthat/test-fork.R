@@ -52,6 +52,9 @@ with_test_authentication({
     # 0. There's an exclusion, set above.
     # 1. Edit variable metadata
     names(categories(f1$v4))[1:2] <- c("d", "e")
+    ## Add a category
+    categories(f1$v4) <- c(categories(f1$v4),
+        Category(name="F", missing=FALSE, numeric_value=NULL, id=4))
     name(f1$v2) <- "Variable Two"
     description(f1$v3) <- "The third variable in the dataset"
 
@@ -69,8 +72,8 @@ with_test_authentication({
     f1$v7 <- f1$v3 - 6
 
     # 6. Conditionally edit values of categorical variable
-    f1$v4[f1$v8 == 5] <- "e"
-    f1$v4[f1$v8 == 4] <- "e"
+    f1$v4[f1$v8 == 5] <- "F"
+    f1$v4[f1$v8 == 4] <- "F"
 
     # 7. Delete a variable and replace it with one of the same name
     v1copy <- copy(f1$v1, name=name(f1$v1), alias=alias(f1$v1), deep=TRUE)
@@ -87,9 +90,9 @@ with_test_authentication({
         expect_output(exclusion(dataset), "v3 < 11")
         expect_identical(dim(dataset), c(17L, 8L))
         expect_identical(names(na.omit(categories(dataset$v4))),
-            c("d", "e"))
+            c("d", "e", "F"))
         expect_equivalent(as.array(crtabs(~ v4, data=dataset)),
-            array(c(4, 13), dim=2L, dimnames=list(v4=c("d", "e"))))
+            array(c(4, 5, 8), dim=3L, dimnames=list(v4=c("d", "e", "F"))))
         expect_identical(name(dataset$v2), "Variable Two")
         expect_identical(description(dataset$v3),
             "The third variable in the dataset")
