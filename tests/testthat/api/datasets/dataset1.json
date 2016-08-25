@@ -19,7 +19,8 @@
         "export": "/api/datasets/dataset1/export/"
     },
     "fragments": {
-        "table": "/api/datasets/dataset1/table/"
+        "table": "/api/datasets/dataset1/table/",
+        "preferences": "/api/datasets/dataset1/preferences/"
     },
     "some_other_key": {}
 }

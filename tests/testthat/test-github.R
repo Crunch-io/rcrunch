@@ -23,6 +23,12 @@ with_mock_HTTP({
         expect_null(checkForNewVersion("github-versions/"))
     })
 
+    with(temp.option(crunch.check.updates=FALSE), {
+        test_that("checkForNewVersion doesn't check if option is set", {
+            expect_null(checkForNewVersion("github-versions/", "1.5.1"))
+        })
+    })
+
     test_that("notifyIfNewVersion messages correctly", {
         expect_message(notifyIfNewVersion("github-versions/", "1.5.1"),
             "There's a new version")

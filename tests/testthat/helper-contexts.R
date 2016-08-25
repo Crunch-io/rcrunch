@@ -101,6 +101,13 @@ with_test_authentication <- function (expr) {
 
 purgeEntitiesCreated <- function () {
     seen <- get("entities.created", envir=globalenv())
+    ds.urls <- grep("/datasets/(.*?)/$", seen, value=TRUE)
+    if (length(ds.urls)) {
+        ignore <- Reduce("|", lapply(ds.urls, function (x) {
+            startsWith(seen, x) & seen != x
+        }))
+        seen <- seen[!ignore]
+    }
     for (u in seen) {
         ## We could filter out variables, batches, anything under a dataset
         ## since we're going to delete the datasets

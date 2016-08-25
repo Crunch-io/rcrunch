@@ -1,0 +1,7 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/dataset3/preferences/",
+    "body": {
+        "weight": "/api/datasets/dataset3/variables/birthyr/"
+    }
+}

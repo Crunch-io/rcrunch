@@ -135,35 +135,6 @@ setMethod("names", "CrunchDataset", function (x) {
     getIndexSlot(variables(x), namekey(x))
 })
 
-#' Dataset weights
-#' @param x a Dataset
-#' @param value a Variable to set as weight, or NULL to remove the existing
-#' weight
-#' @return For the getter, a Variable if there is a weight, else NULL. For the
-#' setter, x, modified accordingly
-#' @export
-weight <- function (x) {
-    stopifnot(is.dataset(x))
-    w <- x@body$weight
-    if (!is.null(w)) {
-        w <- CrunchVariable(allVariables(x)[[w]], filter=activeFilter(x))
-    }
-    return(w)
-}
-
-#' @rdname weight
-#' @export
-`weight<-` <- function (x, value) {
-    stopifnot(is.dataset(x))
-    if (is.variable(value)) {
-        value <- self(value)
-    } else if (!is.null(value)) {
-        halt("Weight must be a Variable or NULL")
-    }
-    x <- setEntitySlot(x, "weight", value)
-    return(x)
-}
-
 setMethod("tuple", "CrunchDataset", function (x) x@tuple)
 setMethod("tuple<-", "CrunchDataset", function (x, value) {
     x@tuple <- value
