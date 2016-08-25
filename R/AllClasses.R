@@ -307,3 +307,5 @@ DatasetGroup <- setClass("DatasetGroup", contains="OrderGroup",
         entities=list(),
         duplicates=FALSE
     ))
+
+setClass("Session", contains="list")

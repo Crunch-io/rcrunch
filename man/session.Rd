@@ -7,9 +7,16 @@
 session()
 }
 \value{
-a list.
+A Session object. Access dataset and project catalogs from it.
 }
 \description{
 Get various catalogs for your Crunch session
+}
+\examples{
+\dontrun{
+cr <- session()
+cr$datasets
+cr$projects
+}
 }
 

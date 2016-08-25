@@ -61,12 +61,15 @@ login <- function (email=getOption("crunch.email"),
 }
 
 #' Get various catalogs for your Crunch session
-#' @return a list.
+#' @return A Session object. Access dataset and project catalogs from it.
+#' @examples
+#' \dontrun{
+#' cr <- session()
+#' cr$datasets
+#' cr$projects
+#' }
 #' @export
-session <- function () {
-    list(datasets=datasets(),
-        projects=projects())
-}
+session <- function () new("Session")
 
 crunchAuth <- function (email, password=NULL, ...) {
     ## Validate authentication inputs and then POST to the API
