@@ -34,6 +34,8 @@ makeArray <- function (subvariables, dataset=NULL, name, ...) {
                all(vapply(subvariables, is.variable, logical(1)))) {
         subvariables <- vapply(subvariables, self, character(1))
     } else {
+        ## Note that you'll get this error if subvariables is list but one of
+        ## its elements is NULL instead of a variable
         halt(dQuote("subvariables"), " cannot be of class ", class(subvariables))
     }
 
