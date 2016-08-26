@@ -84,9 +84,9 @@ with_test_authentication({
         })
     })
 
-    with(test.dataset(mrdf), {
-        ds$arrayVar <- makeArray(ds[c("mr_1", "mr_2", "mr_3")],
-            name="arrayVar")
+    whereas("Testing dichotomizing and undichotomizing", {
+        ds <- newDataset(mrdf)
+        ds$arrayVar <- makeArray(ds[c("mr_1", "mr_2", "mr_3")], name="arrayVar")
         var <- ds$arrayVar
         test_that("setup to make MultipleResponse from CategoricalArray", {
             expect_true(is.CA(var))
@@ -128,24 +128,29 @@ with_test_authentication({
         })
     })
 
-    with(test.dataset(mrdf), {
-        test_that("can make MultipleResponse directly", {
-            cast.these <- grep("mr_", names(ds))
-            ds[cast.these] <- lapply(ds[cast.these],
-                castVariable, "categorical")
-            ds$arrayVar <- makeMR(ds[cast.these], name="arrayVar",
-                selections="1.0")
-            var <- ds$arrayVar
-            expect_true(is.Multiple(var))
+    test_that("can make MultipleResponse directly", {
+        ds <- newDataset(mrdf)
+        cast.these <- grep("mr_", names(ds))
+        ds[cast.these] <- lapply(ds[cast.these], castVariable, "categorical")
+        ds$arrayVar <- makeMR(ds[cast.these], name="arrayVar", selections="1.0")
+        var <- ds$arrayVar
+        expect_true(is.Multiple(var))
 
-            var <- undichotomize(var)
-            expect_true(is.CA(var))
+        var <- undichotomize(var)
+        expect_true(is.CA(var))
 
-            ## unbind.
-            u <- unbind(var)
-            ds <- refresh(ds)
-            expect_true(setequal(names(ds), names(mrdf)))
-            expect_identical(ncol(ds), 4L)
-        })
+        ## unbind.
+        u <- unbind(var)
+        ds <- refresh(ds)
+        expect_true(setequal(names(ds), names(mrdf)))
+        expect_identical(ncol(ds), 4L)
+    })
+
+    whereas("Making derived arrays", {
+        ds <- newDatasetFromFixture("apidocs")
+        vd <- deriveArray(list(ds$q1, ds$petloc$petloc_home), name="Derived pets")
+        expect_is(vd, "VariableDefinition")
+        ds$derivedarray <- vd
+        expect_true(is.CA(ds$derivedarray))
     })
 })

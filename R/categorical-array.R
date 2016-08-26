@@ -2,9 +2,7 @@
 #'
 #' @param subvariables a list of Variable objects to bind together, or a
 #' Dataset object containing only the Variables to bind (as in from subsetting
-#' a Dataset), or values (e.g. names) of variables corresponding to \code{key}.
-#' If omitted, must supply \code{dataset} and \code{pattern}. If specifying
-#' values, must include \code{dataset}.
+#' a Dataset)
 #' @param dataset Argument no longer supported
 #' @param name character, the name that the new Categorical Array variable
 #' should have. Required.
@@ -46,4 +44,29 @@ makeArray <- function (subvariables, dataset=NULL, name, ...) {
     out <- VariableDefinition(subvariables=I(subvariables), name=name,
         type="categorical_array", ...)
     return(out)
+}
+
+deriveArray <- function (subvariables, name, ...) {
+    ## Get subvariable URLs
+    ## TODO: factor this logic out of here, makeArray, and addSubvariable
+    if (is.dataset(subvariables)) {
+        ## as in, if the list of variables is a [ extraction from a Dataset
+        subvariables <- allVariables(subvariables)
+    }
+    if (inherits(subvariables, "VariableCatalog")) {
+        subvariables <- urls(subvariables)
+    } else if (is.list(subvariables) &&
+               all(vapply(subvariables, is.variable, logical(1)))) {
+        subvariables <- vapply(subvariables, self, character(1))
+    } else {
+        halt(dQuote("subvariables"), " cannot be of class ", class(subvariables))
+    }
+
+    subvarids <- as.character(seq_along(subvariables))
+    derivation <- zfunc("array", zfunc("select",
+        list(map=structure(lapply(subvariables, function (x) list(variable=x)),
+            .Names=subvarids)),
+        list(value=I(subvarids))))
+
+    return(VariableDefinition(expr=derivation, name=name, ...))
 }
