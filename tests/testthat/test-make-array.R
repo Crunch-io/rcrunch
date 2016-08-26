@@ -145,12 +145,4 @@ with_test_authentication({
         expect_true(setequal(names(ds), names(mrdf)))
         expect_identical(ncol(ds), 4L)
     })
-
-    whereas("Making derived arrays", {
-        ds <- newDatasetFromFixture("apidocs")
-        vd <- deriveArray(list(ds$q1, ds$petloc$petloc_home), name="Derived pets")
-        expect_is(vd, "VariableDefinition")
-        ds$derivedarray <- vd
-        expect_true(is.CA(ds$derivedarray))
-    })
 })
