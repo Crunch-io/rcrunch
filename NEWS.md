@@ -1,4 +1,5 @@
 ### crunch 1.13.1 (under development)
+* Support deep copying of categorical array variables.
 * Allow disabling of check for new package releases on load by setting `options(crunch.check.updates=FALSE)`.
 * Return a Session object from `session()` that lazily fetches catalogs rather than when instantiated.
 
