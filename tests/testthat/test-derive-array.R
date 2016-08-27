@@ -91,6 +91,23 @@ with_test_authentication({
         expect_identical(as.numeric(table(ds$metapetloc[[4]])), c(0, 0, 3, 5, 3))
     })
 
+    ds$metapet_combined <- combine(ds$metapetloc, name="Metapet combined",
+        combinations=list(list(name="Cat", categories=c("Cat", "one")),
+            list(name="Dog", categories=c("Dog", "two"))))
+    test_that("Combine categories of derived array", {
+        expect_identical(names(subvariables(ds$metapet_combined)),
+            c("Home", "Copy", "Copy", "Home"))
+        expect_identical(names(categories(ds$metapet_combined)),
+            c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
+
+        t1 <- table(ds$metapet_combined[[1]])
+        expect_identical(names(t1), c("Cat", "Dog", "Bird"))
+        expect_equal(as.numeric(t1), c(5, 3, 3))
+        expect_identical(as.numeric(table(ds$metapet_combined[[2]])), c(5, 3, 3))
+        expect_identical(as.numeric(table(ds$metapet_combined[[3]])), c(6, 4, 6))
+        ## Now these are combined back together
+        expect_identical(as.numeric(table(ds$metapet_combined[[4]])), c(5, 3, 3))
+    })
     ## Append to that dataset, make sure all arrays update appropriately
     part2 <- newDatasetFromFixture("apidocs")
     ds <- appendDataset(ds, part2)
@@ -118,6 +135,18 @@ with_test_authentication({
         expect_identical(as.numeric(table(ds$metapetloc[[4]])),
             2 * c(0, 0, 3, 5, 3))
     })
+    test_that("Combined categories on top of derived array also gets the right data", {
+        expect_identical(names(categories(ds$metapet_combined)),
+            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data"))
+        expect_identical(as.numeric(table(ds$metapet_combined[[1]])),
+            2 * c(5, 3, 3))
+        expect_identical(as.numeric(table(ds$metapet_combined[[2]])),
+            c(5, 3, 3))
+        expect_identical(as.numeric(table(ds$metapet_combined[[3]])),
+            c(6, 4, 6))
+        expect_identical(as.numeric(table(ds$metapet_combined[[4]])),
+            2 * c(5, 3, 3))
+    })
     test_that("The array we edited in the beginning still has its edits after appending", {
         expect_identical(aliases(subvariables(ds$derivedarray)),
             c("dsub1", "dsub2"))
@@ -128,6 +157,13 @@ with_test_authentication({
             structure(c(10, 6, 6), .Dim=3L,
             .Dimnames=list(dsub2=c("one", "two", "Bird")),
             class="table"))
+    })
+
+    part3 <- newDatasetFromFixture("apidocs")
+    names(categories(part3$petloc))[2] <- "Beaver"
+    ds <- appendDataset(ds, part3)
+    test_that("Mass hysteria does not result", {
+
     })
 
     ## TODO: more things (filter entities, drop rows, etc., append where cats aren't the same; edit values of derived array?)
