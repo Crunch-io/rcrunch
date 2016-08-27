@@ -41,6 +41,10 @@ with_test_authentication({
             c("dsub1", "dsub2"))
         expect_identical(names(categories(ds$derivedarray)),
             c("one", "two", "Bird", "Skipped", "Not Asked"))
+        expect_equivalent(table(ds$derivedarray$dsub2),
+            structure(c(5, 3, 3), .Dim=3L,
+            .Dimnames=list(dsub2=c("one", "two", "Bird")),
+            class="table"))
         ## Parent unaffected
         expect_true(is.Categorical(ds$q1))
         expect_identical(names(categories(ds$q1)),
@@ -105,17 +109,25 @@ with_test_authentication({
             c(6, 4, 6, 0, 0))
         ## 4 comes from derivedarray$dsub2, which comes from petloc$petloc_home,
         ## but with different category names
-        # print(as.vector(ds$metapetloc[[4]]))
+
         ## This assertion fails. The new data comes in as Cat Dog and not one two
+        # print(table(ds$metapetloc[[4]]))
+        # dsub2#
+        #  Cat  Dog Bird  one  two
+        #    5    3    6    5    3
         expect_identical(as.numeric(table(ds$metapetloc[[4]])),
             2 * c(0, 0, 3, 5, 3))
     })
-    test_that("The array we edited in the beginning still has its edits", {
+    test_that("The array we edited in the beginning still has its edits after appending", {
         expect_identical(aliases(subvariables(ds$derivedarray)),
             c("dsub1", "dsub2"))
         expect_identical(names(categories(ds$derivedarray)),
             c("one", "two", "Bird", "Skipped", "Not Asked"))
-        ## TODO: assert its values too
+        ## This is the data we should see in metapetloc[[4]]. It's correct here.
+        expect_equivalent(table(ds$derivedarray$dsub2),
+            structure(c(10, 6, 6), .Dim=3L,
+            .Dimnames=list(dsub2=c("one", "two", "Bird")),
+            class="table"))
     })
 
     ## TODO: more things (filter entities, drop rows, etc., append where cats aren't the same; edit values of derived array?)
