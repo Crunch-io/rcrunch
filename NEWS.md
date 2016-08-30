@@ -1,6 +1,7 @@
 ### crunch 1.13.1 (under development)
 * Support deep copying of categorical array variables.
 * Join (`merge`) a subset of variables of a dataset.
+* Change default key for printing `hiddenVariables` from "name" to "alias", governed by `options(crunch.namekey.dataset)` as elsewhere
 * Allow disabling of check for new package releases on load by setting `options(crunch.check.updates=FALSE)`.
 * Return a Session object from `session()` that lazily fetches catalogs rather than when instantiated.
 

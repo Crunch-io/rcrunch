@@ -3,8 +3,11 @@ context("Hiding variables")
 with_mock_HTTP({
     ds <- loadDataset("ECON.sav")
     test_that("hiddenVariables", {
-        expect_identical(hiddenVariables(ds), "Birth Year")
-        expect_identical(hiddenVariables(ds, "alias"), "birthyr")
+        expect_identical(hiddenVariables(ds, "name"), "Birth Year")
+        expect_identical(hiddenVariables(ds), "birthyr")
+        with(temp.option(crunch.namekey.dataset="name"), {
+            expect_identical(hiddenVariables(ds), "Birth Year")
+        })
     })
 
     test_that("Can subset dataset with hidden variable by name/alias", {
