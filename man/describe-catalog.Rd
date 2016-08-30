@@ -16,6 +16,7 @@
 \alias{descriptions<-,VariableCatalog-method}
 \alias{emails}
 \alias{emails,ShojiCatalog-method}
+\alias{ids,VariableCatalog-method}
 \alias{names,BatchCatalog-method}
 \alias{names,CategoricalArrayVariable-method}
 \alias{names,CrunchDataset-method}
@@ -59,6 +60,8 @@
 \S4method{descriptions}{VariableCatalog}(x) <- value
 
 \S4method{types}{VariableCatalog}(x)
+
+\S4method{ids}{VariableCatalog}(x)
 
 \S4method{names}{VersionCatalog}(x)
 

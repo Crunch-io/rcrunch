@@ -5,9 +5,10 @@ with_mock_HTTP({
     ds2 <- loadDataset("ECON.sav")
 
     testPayload <- paste0('{"function":"adapt",',
-        '"args":[{"dataset":"/api/datasets/dataset3/","filter":null},',
+        '"args":[{"dataset":"/api/datasets/dataset3/"},',
         '{"variable":"/api/datasets/dataset3/variables/birthyr/"},',
         '{"variable":"/api/datasets/dataset1/variables/birthyr/"}]}')
+    testSubsetPayload <- paste0('{"function":"select","args":[{"map":{"66ae9881e3524f7db84970d556c34552":{"variable":"/api/datasets/dataset3/variables/gender/"},"f78ca47313144b57adfb495893968e70":{"variable":"/api/datasets/dataset3/variables/birthyr/"}}}],"frame":', testPayload, '}')
 
     test_that("Correct payload without filtering", {
         expect_warning(
@@ -34,6 +35,14 @@ with_mock_HTTP({
             expect_POST(joinDatasets(ds1, ds2, by.x=ds1$birthyr, ds2$birthyr),
                 '/api/datasets/dataset1/variables/',
                 testPayload),
+            "Variable birthyr is hidden")
+    })
+
+    test_that("merge a subset of variables", {
+        expect_warning(
+            expect_POST(merge(ds1, ds2[c("gender", "birthyr")], by="birthyr"),
+                '/api/datasets/dataset1/variables/',
+                testSubsetPayload),
             "Variable birthyr is hidden")
     })
 
@@ -174,4 +183,13 @@ with_test_authentication({
     ## 2) weight_variables?
     ## 3) apply exclusion filter on either dataset
     ## 4) Next: filter rows/cols
+
+    test_that("Can select variables to join", {
+        ds1 <- newDatasetFromFixture("join-apidocs2-to-me")
+        ds1$allpets_1 <- NULL
+        ds1 <- merge(ds1, ds2[c("stringid", "q1", "petloc")],
+            by.x="id", by.y="stringid")
+        expect_identical(names(ds1),
+            c("id", "matches", "other_var", "q1", "petloc"))
+    })
 })
