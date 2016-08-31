@@ -110,6 +110,8 @@ setGeneric("entitiesInitializer", function (x) standardGeneric("entitiesInitiali
 setGeneric("owner", function (x) standardGeneric("owner"))
 setGeneric("owner<-", function (x, value) standardGeneric("owner<-"))
 
+setGeneric("head")
+setGeneric("tail")
 setGeneric("dim")
 setGeneric("ncol")
 setGeneric("mean")

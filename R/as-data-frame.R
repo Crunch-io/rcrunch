@@ -73,3 +73,36 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
     names(out) <- names(x)
     return(structure(out, class="data.frame", row.names=c(NA, -nrow(x))))
 }
+
+setMethod("head", "CrunchDataset", function (x, n=6L, ...) {
+    as.data.frame(x[head(seq_len(nrow(x)), n),], force=TRUE)
+})
+
+setMethod("head", "CrunchDataFrame", function (x, n=6L, ...) {
+    x$.crunchDataset <- x$.crunchDataset[head(seq_len(nrow(x)), n),]
+    as.data.frame(x)
+})
+
+setMethod("head", "CrunchVariable", function (x, n=6L, ...) {
+    as.vector(x[head(seq_len(length(x)), n)], ...)  ## Does variable have length?
+})
+
+setMethod("head", "CrunchExpr", function (x, n=6L, ...) {
+    as.vector(x[head(seq_len(length(x)), n)], ...)  ## Does expr have length?
+})
+
+setMethod("tail", "CrunchDataset", function (x, n=6L, ...) {
+    as.data.frame(x[tail(seq_len(nrow(x)), n),], force=TRUE)
+})
+
+setMethod("tail", "CrunchDataFrame", function (x, n=6L, ...) {
+    as.data.frame(x[tail(seq_len(nrow(x)), n),], force=TRUE)
+})
+
+setMethod("tail", "CrunchVariable", function (x, n=6L, ...) {
+    as.vector(x[tail(seq_len(length(x)), n)], ...)  ## Does variable have length?
+})
+
+setMethod("tail", "CrunchExpr", function (x, n=6L, ...) {
+    as.vector(x[tail(seq_len(length(x)), n)], ...)  ## Does expr have length?
+})

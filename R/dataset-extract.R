@@ -81,6 +81,25 @@ setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "ANY"), function (x, i, j
 
 #' @rdname dataset-extract
 #' @export
+setMethod("[", c("CrunchDataset", "numeric", "missing"), function (x, i, j, ..., drop=FALSE) {
+    f <- activeFilter(x) ## TODO: IMPLEMENT ME
+    if (length(zcl(f))) {
+        i <- f & i
+    }
+    activeFilter(x) <- i
+    return(x)
+})
+
+#' @rdname dataset-extract
+#' @export
+setMethod("[", c("CrunchDataset", "numeric", "ANY"), function (x, i, j, ..., drop=FALSE) {
+    ## Do the filtering of rows, then cols
+    x <- x[i,]
+    return(x[j])
+})
+
+#' @rdname dataset-extract
+#' @export
 setMethod("subset", "CrunchDataset", function (x, ...) {
     x[..1,]
 })
