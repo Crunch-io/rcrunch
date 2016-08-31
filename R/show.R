@@ -1,10 +1,10 @@
-##' Show methods for Crunch objects
-##'
-##' @param object the object
-##' @return invisibly
-##' @seealso \code{\link[methods]{show}}
-##' @importFrom methods show
-##' @name show-crunch
+#' Show methods for Crunch objects
+#'
+#' @param object the object
+#' @return invisibly
+#' @seealso \code{\link[methods]{show}}
+#' @importFrom methods show
+#' @name show-crunch
 NULL
 
 
@@ -16,12 +16,12 @@ NULL
     invisible(out)
 }
 
-##' @rdname show-crunch
-##' @export
+#' @rdname show-crunch
+#' @export
 setMethod("show", "ShojiObject", .showIt)
 
-##' @rdname show-crunch
-##' @export
+#' @rdname show-crunch
+#' @export
 setMethod("show", "ShojiCatalog", function (object) {
     ## Catalog show content is a data.frame unless otherwise indicated.
     ## Print it, but capture the output so we can return the character output.
@@ -30,16 +30,16 @@ setMethod("show", "ShojiCatalog", function (object) {
     invisible(out)
 })
 
-##' @rdname show-crunch
-##' @export
+#' @rdname show-crunch
+#' @export
 setMethod("show", "CrunchVariable", .showIt)
 
-##' @rdname show-crunch
-##' @export
+#' @rdname show-crunch
+#' @export
 setMethod("show", "Category", .showIt)
 
-##' @rdname show-crunch
-##' @export
+#' @rdname show-crunch
+#' @export
 setMethod("show", "Categories", .showIt)
 
 
@@ -62,7 +62,7 @@ getNameAndType <- function (x) {
     return(c(varname, vartype))
 }
 
-##' @importFrom utils capture.output
+#' @importFrom utils capture.output
 showCrunchVariable <- function (x) {
     out <- showCrunchVariableTitle(x)
     if (!is.null(activeFilter(x))) {
@@ -111,15 +111,20 @@ showSubvariables <- function (x) {
     return(out)
 }
 
-showVariableOrder <- function (x, vars=x@vars) {
-    return(unlist(lapply(x, showVariableGroup, index=vars)))
+showShojiOrder <- function (x, catalog_url=x@catalog_url) {
+    if (nchar(catalog_url)) {
+        catalog <- index(ShojiCatalog(crGET(catalog_url)))
+    } else {
+        catalog <- list()
+    }
+    return(unlist(lapply(x, showOrderGroup, index=catalog)))
 }
 
-showVariableGroup <- function (x, index) {
-    if (inherits(x, "VariableGroup")) {
+showOrderGroup <- function (x, index) {
+    if (inherits(x, "OrderGroup")) {
         ents <- entities(x)
         if (length(ents)) {
-            group <- unlist(lapply(ents, showVariableGroup, index=index))
+            group <- unlist(lapply(ents, showOrderGroup, index=index))
         } else {
             group <- "(Empty group)"
         }
@@ -165,8 +170,7 @@ formatExpression <- function (expr) {
     } else if ("function" %in% names(expr)) {
         func <- expr[["function"]]
         func <- .funcs.z2r[[func]] %||% func ## Translate func name, if needed
-        args <- vapply(expr[["args"]], formatExpression, character(1),
-            USE.NAMES=FALSE)
+        args <- formatExpressionArgs(expr[["args"]])
         if (func == "not") {
             return(paste0("!", args[1]))
         } else if (func %in% .operators) {
@@ -179,35 +183,57 @@ formatExpression <- function (expr) {
         return(crGET(expr[["variable"]])$body$alias)
     } else if (length(intersect(c("column", "value"), names(expr)))) {
         val <- expr$column %||% expr$value
-        if ("type" %in% names(expr) &&
-            "function" %in% names(expr$type) &&
-            expr$type[["function"]] == "typeof") {
-
-            ## GET variable, see if categorical
-            v <- crGET(expr$type$args[[1]]$variable)
-            if (v$body$type == "categorical") {
-                val <- i2n(val, categories(VariableEntity(v)))
-            }
-        }
-
-        ## Else, iterate over, replace {?:-1} with NA
-        return(capture.output(dput(val)))
+        return(deparse(val))
     } else {
         ## Dunno what this is
         return("[Complex expression]")
     }
 }
 
-##' @rdname show-crunch
-##' @export
+formatExpressionArgs <- function (args) {
+    ## This is just to pretty-print category values as "names"
+    ## Look for "variables"
+    vars <- vapply(args,
+        function (x) identical(names(x), "variable"), logical(1))
+    if (sum(vars) == 1) {
+        ## Great, let's see if we have any values to format
+        vals <- vapply(args, function (x) {
+                length(names(x)) == 1 && names(x) %in% c("column", "value")
+            }, logical(1))
+        if (any(vals)) {
+            ## Get the var, see if it is categorical
+            var <- VariableEntity(crGET(args[[which(vars)]]$variable))
+            ## Well, we'll identify "categorical" by presence of cats
+            args[vals] <- lapply(args[vals], formatExpressionValue,
+                cats=categories(var))
+            args[!vals] <- lapply(args[!vals], formatExpression)
+            return(unlist(args))
+        }
+    }
+    ## Else:
+    return(vapply(args, formatExpression, character(1), USE.NAMES=FALSE))
+}
+
+formatExpressionValue <- function (val, cats=NULL) {
+    val <- val$column %||% val$value
+    if (length(cats)) {
+        val <- i2n(val, cats)
+    } else {
+        ## TODO: iterate over, replace {?:-1} with NA
+    }
+    return(deparse(val))
+}
+
+#' @rdname show-crunch
+#' @export
 setMethod("show", "CrunchExpr", function (object) {
     cat("Crunch expression: ", formatExpression(object), "\n",
         sep="")
     invisible(object)
 })
 
-##' @rdname show-crunch
-##' @export
+#' @rdname show-crunch
+#' @export
 setMethod("show", "CrunchLogicalExpr", function (object) {
     cat("Crunch logical expression: ", formatExpression(object), "\n",
         sep="")
@@ -223,7 +249,7 @@ setMethod("getShowContent", "CategoricalArrayVariable",
     showCategoricalArrayVariable)
 setMethod("getShowContent", "CrunchDataset", showCrunchDataset)
 setMethod("getShowContent", "Subvariables", showSubvariables)
-setMethod("getShowContent", "VariableOrder", showVariableOrder)
+setMethod("getShowContent", "ShojiOrder", showShojiOrder)
 setMethod("getShowContent", "ShojiCatalog",
     function (x) catalogToDataFrame(x, TRUE))
 setMethod("getShowContent", "BatchCatalog",
@@ -233,6 +259,13 @@ setMethod("getShowContent", "VariableCatalog",
 setMethod("getShowContent", "FilterCatalog",
     function (x) catalogToDataFrame(x, c("name", "id", "is_public"), rownames=NULL))
 setMethod("getShowContent", "VersionCatalog", formatVersionCatalog)
+setMethod("getShowContent", "MemberCatalog",
+    function (x) {
+        data.frame(name=names(x),
+                   email=emails(x),
+                   is.editor=is.editor(x),
+                   stringsAsFactors=FALSE)
+        })
 setMethod("getShowContent", "ShojiObject",
     function (x) capture.output(print(x@body)))
 setMethod("getShowContent", "CrunchFilter",
@@ -241,6 +274,6 @@ setMethod("getShowContent", "CrunchFilter",
             paste("Expression:", formatExpression(expr(x)))))
     })
 
-##' @rdname show-crunch
-##' @export
+#' @rdname show-crunch
+#' @export
 setMethod("show", "CrunchCube", function (object) show(cubeToArray(object)))

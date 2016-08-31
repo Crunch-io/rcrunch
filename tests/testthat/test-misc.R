@@ -9,14 +9,6 @@ test_that("is.error", {
     expect_error("not an error", NA)
 })
 
-test_that("update list", {
-    a <- list(a=1, b=2)
-    b <- list(c=3, b=4)
-    expect_identical(updateList(a, b), list(a=1, b=4, c=3))
-    expect_identical(updateList(list(), b), b)
-    expect_identical(updateList(NULL, b), b)
-})
-
 test_that("selectFrom selects what it should", {
     l1 <- list(list(a=1, b=2), list(c=3, b=4))
     expect_identical(selectFrom("b", l1), c(2, 4))
@@ -60,8 +52,8 @@ test_that("dirtyElements", {
 test_that("joinPath", {
     expect_identical(joinPath("/api/datasets/", "../variables/"),
         "/api/variables/")
-    expect_identical(joinPath("/api/variables/", "4412es.json"),
-        "/api/variables/4412es.json")
+    expect_identical(joinPath("/api/variables/", "4412es/"),
+        "/api/variables/4412es/")
     expect_identical(joinPath("a/b/c/d/../e/f/", "g/../../h/"),
         "a/b/c/e/h/")
     expect_identical(joinPath("/api/datasets/", "/variables/"),
@@ -76,8 +68,8 @@ test_that("absoluteURL", {
     base.url <- "https://fake.crunch.io/api/datasets/"
     expect_identical(absoluteURL("../variables/", base.url),
         "https://fake.crunch.io/api/variables/")
-    expect_identical(absoluteURL("4412es.json", base.url),
-        "https://fake.crunch.io/api/datasets/4412es.json")
+    expect_identical(absoluteURL("4412es/", base.url),
+        "https://fake.crunch.io/api/datasets/4412es/")
     expect_identical(absoluteURL("g/../../h/",
         "https://fake.crunch.io/a/b/c/d/../e/f/"),
         "https://fake.crunch.io/a/b/c/e/h/")
@@ -88,7 +80,19 @@ test_that("absoluteURL", {
 })
 
 test_that("emptyObject JSONifies correctly", {
-    expect_equivalent(unclass(toJSON(emptyObject())), "{}")
+    expect_equal(unclass(toJSON(emptyObject())), "{}")
+    expect_equal(unclass(toJSON(emptyObject(list(a=1), 1:4))), "{}")
+})
+
+test_that("null function always returns null", {
+    expect_null(null())
+    expect_null(null(TRUE))
+    expect_null(null(stop("yo!")))
+})
+
+test_that("JSON behavior for NULL (handle jsonlite API change in 0.9.22)", {
+    expect_equal(unclass(toJSON(NULL)), "{}")
+    expect_equal(unclass(toJSON(list(x=NULL))), '{"x":null}')
 })
 
 test_that("setIfNotAlready", {
@@ -101,4 +105,18 @@ test_that("setIfNotAlready", {
         expect_identical(getOption("crunch.test.opt2"), 5)
         expect_identical(getOption("crunch.test.opt3"), 4)
     })
+})
+
+test_that("startsWith/endsWith for old R", {
+    expect_true(alt.startsWith("http://", "http"))
+    expect_false(alt.startsWith("http://", "https"))
+    expect_true(alt.endsWith("http://", "//"))
+    expect_false(alt.endsWith("http://", "http"))
+})
+
+test_that("uniquify", {
+    expect_identical(uniquify(rep("a", 4)),
+        c("a", "a  (1)", "a  (2)", "a  (3)"))
+    expect_identical(uniquify(c("b", "a", "a", "abcd", "a")),
+        c("b", "a", "a  (1)", "abcd", "a  (2)"))
 })

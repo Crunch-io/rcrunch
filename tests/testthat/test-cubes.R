@@ -6,19 +6,19 @@ cubedf$v8 <- as.Date(0:1, origin="1955-11-05")
 
 test_that("bin CrunchExpr", {
     x <- list(variable="test") ## "ZCL"
-    expect_true(inherits(bin(x), "CrunchExpr"))
+    expect_is(bin(x), "CrunchExpr")
     expect_identical(zcl(bin(x)),
         list(`function`="bin", args=list(list(variable="test"))))
 })
 
 test_that("rollup CrunchExpr from zcl variable", {
     x <- list(variable="test") ## "ZCL"
-    expect_true(inherits(rollup(x), "CrunchExpr"))
+    expect_is(rollup(x), "CrunchExpr")
     expect_identical(zcl(rollup(x)),
         list(`function`="rollup", args=list(list(variable="test"),
             list(value=NULL))))
 
-    expect_true(inherits(rollup(x, resolution="Y"), "CrunchExpr"))
+    expect_is(rollup(x, resolution="Y"), "CrunchExpr")
     expect_identical(zcl(rollup(x, resolution="Y")),
         list(`function`="rollup", args=list(list(variable="test"),
             list(value="Y"))))
@@ -29,20 +29,20 @@ with_mock_HTTP({
     v <- ds$starttime
 
     test_that("rollup CrunchExpr from DatetimeVariable", {
-        expect_true(inherits(rollup(v), "CrunchExpr"))
+        expect_is(rollup(v), "CrunchExpr")
         expect_identical(zcl(rollup(v)),
             list(`function`="rollup",
-                args=list(list(variable="/api/datasets/dataset1/variables/starttime.json"),
+                args=list(list(variable="/api/datasets/dataset1/variables/starttime/"),
                 list(value="s"))))
-        expect_true(inherits(rollup(v, resolution="Y"), "CrunchExpr"))
+        expect_is(rollup(v, resolution="Y"), "CrunchExpr")
         expect_identical(zcl(rollup(v, resolution="Y")),
             list(`function`="rollup",
-                args=list(list(variable="/api/datasets/dataset1/variables/starttime.json"),
+                args=list(list(variable="/api/datasets/dataset1/variables/starttime/"),
                 list(value="Y"))))
-        expect_true(inherits(rollup(v, resolution=NULL), "CrunchExpr"))
+        expect_is(rollup(v, resolution=NULL), "CrunchExpr")
         expect_identical(zcl(rollup(v, resolution=NULL)),
             list(`function`="rollup",
-                args=list(list(variable="/api/datasets/dataset1/variables/starttime.json"),
+                args=list(list(variable="/api/datasets/dataset1/variables/starttime/"),
                 list(value=NULL))))
     })
 })
@@ -118,7 +118,7 @@ test_that("margin.table with missing", {
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(cubedf), {
             test_that("cubedf setup", {
                 expect_identical(names(categories(ds$v7)),
@@ -126,7 +126,7 @@ if (run.integration.tests) {
             })
             test_that("We can get a univariate categorical cube", {
                 kube <- try(crtabs(~ v7, data=ds))
-                expect_true(inherits(kube, "CrunchCube"))
+                expect_is(kube, "CrunchCube")
                 expect_equivalent(as.array(kube),
                     array(c(10, 5, 5), dim=c(3L),
                         dimnames=list(v7=LETTERS[3:5])))
@@ -135,7 +135,7 @@ if (run.integration.tests) {
 
             test_that("We can get a bivariate categorical cube", {
                 kube <- try(crtabs(~ v4 + v7, data=ds))
-                expect_true(inherits(kube, "CrunchCube"))
+                expect_is(kube, "CrunchCube")
                 expect_identical(as.array(kube),
                     array(c(5, 5, 3, 2, 2, 3), dim=c(2L, 3L),
                         dimnames=list(v4=c("B", "C"), v7=LETTERS[3:5])))
@@ -174,7 +174,7 @@ if (run.integration.tests) {
 
             test_that("univariate datetime cube", {
                 kube <- try(crtabs(~ v8, data=ds))
-                expect_true(inherits(kube, "CrunchCube"))
+                expect_is(kube, "CrunchCube")
                 expect_equivalent(as.array(kube),
                     array(c(10, 10), dim=c(2L),
                         dimnames=list(v8=c("1955-11-05", "1955-11-06"))))
@@ -219,7 +219,7 @@ if (run.integration.tests) {
 
             test_that("univariate cube with binned numeric", {
                 kube <- try(crtabs(~ bin(v3), data=ds))
-                expect_true(inherits(kube, "CrunchCube"))
+                expect_is(kube, "CrunchCube")
                 expect_equivalent(as.array(kube),
                     array(c(2, 5, 5, 5, 3), dim=c(5L),
                         dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25",
@@ -300,6 +300,11 @@ if (run.integration.tests) {
                         v7=c("C", "E"))))
             })
 
+            test_that("Numeric aggregates on categoricals with numeric values", {
+                expect_equivalent(as.array(crtabs(mean(v4) ~ v4, data=ds)),
+                    array(c(1, 2), dim=2L, dimnames=list(v4=c("B", "C"))))
+            })
+
             test_that("Missing values in cubes", {
                 expect_equivalent(round(as.array(crtabs(sd(v3) ~ bin(v3) + v7,
                     data=ds)), 3),
@@ -321,7 +326,7 @@ if (run.integration.tests) {
             })
 
             test_that("Cube with variables and R objects", {
-                skip("(400) Bad Request: No such category id: '1'.")
+                skip("object 'd4' not found")
                 d4 <- cubedf$v4
                 expect_equivalent(as.array(crtabs(~ d4 + v7, data=ds)),
                     array(c(5, 5, 2, 3), dim=c(2L, 2L),

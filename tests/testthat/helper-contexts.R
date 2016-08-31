@@ -1,12 +1,27 @@
-
-
 setup.and.teardown <- function (setup, teardown, obj.name=NULL) {
     ContextManager(enter=setup, exit=teardown, as=obj.name,
         error=function (e) expect_error(stop(e$message), "NO ERRORS HERE!"))
 }
 
+fakeResponse <- function (url="", status_code=200, headers=list(), json=NULL) {
+    ## Return something that looks enough like an httr 'response'
+    if (!is.null(json)) {
+        cont <- charToRaw(toJSON(json))
+    } else {
+        cont <- readBin(url, "raw", 4096)
+    }
+    structure(list(
+        url=url,
+        status_code=status_code,
+        times=structure(nchar(url), .Names="total"),
+        request=list(method="GET", url=url),
+        headers=modifyList(list(`Content-Type`="application/json"), headers),
+        content=cont
+    ), class="response")
+}
+
 with_mock_HTTP <- function (expr) {
-    with(temp.option(crunch.api="/api/root.json"), {
+    with(temp.option(crunch.api="/api/root/"), {
         with_mock(
             `httr::GET`=function (url, ...) {
                 if (is.null(url)) {
@@ -15,16 +30,7 @@ with_mock_HTTP <- function (expr) {
                 url <- unlist(strsplit(url, "?", fixed=TRUE))[1] ## remove query params
                 url <- sub("\\/$", ".json", url)
                 url <- sub("^\\/", "", url) ## relative to cwd
-                out <- handleShoji(fromJSON(url, simplifyVector=FALSE))
-                return(list(
-                    status_code=200,
-                    times=structure(nchar(url), .Names="total"),
-                    request=list(method="GET", url=url),
-                    response=out
-                ))
-            },
-            `crunch::handleAPIresponse`=function (response, special.statuses=list()) {
-                return(response$response)
+                return(fakeResponse(url))
             },
             `httr::PUT`=function (url, body, ...) halt("PUT ", url, " ", body),
             `httr::PATCH`=function (url, body, ...) halt("PATCH ", url, " ", body),
@@ -48,12 +54,75 @@ without_internet <- function (expr) {
     )
 }
 
+with_silent_progress <- function (expr) {
+    with_mock(
+        `utils::txtProgressBar`=function (...) invisible(NULL),
+        `utils::setTxtProgressBar`=function (...) invisible(NULL),
+        eval.parent(expr)
+    )
+}
+
 silencer <- temp.option(show.error.messages=FALSE)
 
-## Auth setup-teardown
-test.authentication <- setup.and.teardown(
-    function () suppressMessages(login()),
-    logout)
+assign("entities.created", c(), envir=globalenv())
+with_test_authentication <- function (expr) {
+    if (run.integration.tests) {
+        ## Authenticate.
+        suppressMessages(login())
+        ## Any time an object is created (201 Location responts), store that URL
+        suppressMessages(trace("locationHeader",
+            exit=quote({
+                if (!is.null(loc)) {
+                    seen <- get("entities.created", envir=globalenv())
+                    assign("entities.created",
+                        c(seen, loc),
+                        envir=globalenv())
+                }
+            }),
+            print=FALSE,
+            where=crGET))
+        on.exit({
+            suppressMessages(untrace("locationHeader", where=crGET))
+            # suppressMessages(untrace("createDataset", where=crGET))
+            ## Delete our seen things
+            purgeEntitiesCreated()
+            logout()
+        })
+        ## Wrap this so that we can generate a test failure if there's an error
+        ## rather than just halt the process
+        tryCatch(eval.parent(with_silent_progress(expr)),
+            error=function (e) {
+                test_that("There are no test code errors", {
+                    expect_error(stop(e$message), NA)
+                })
+            })
+    }
+}
+
+purgeEntitiesCreated <- function () {
+    seen <- get("entities.created", envir=globalenv())
+    ds.urls <- grep("/datasets/(.*?)/$", seen, value=TRUE)
+    if (length(ds.urls)) {
+        ignore <- Reduce("|", lapply(ds.urls, function (x) {
+            startsWith(seen, x) & seen != x
+        }))
+        seen <- seen[!ignore]
+    }
+    for (u in seen) {
+        ## We could filter out variables, batches, anything under a dataset
+        ## since we're going to delete the datasets
+        try(crDELETE(u), silent=TRUE)
+    }
+    assign("entities.created", c(), envir=globalenv())
+    invisible()
+}
+
+## Substitute for testthat::describe or similar, just a wrapper around a context
+## to force deleting stuff it creates sooner
+whereas <- function (...) {
+    on.exit(purgeEntitiesCreated())
+    eval.parent(...)
+}
 
 uniqueDatasetName <- now
 
@@ -94,41 +163,15 @@ reset.option <- function (opts) {
     ## Don't set any options in the setup, but reset specified options after
     old <- sapply(opts, getOption, simplify=FALSE)
     return(setup.and.teardown(
-        function () NULL,
+        null,
         function () do.call(options, old)
     ))
 }
 
 uniqueEmail <- function () paste0("test+", as.numeric(Sys.time()), "@crunch.io")
-testUser <- function (email=uniqueEmail(), name=email, ...) {
+testUser <- function (email=uniqueEmail(), name=paste("Ms.", email, "User"), ...) {
     u.url <- invite(email, name=name, notify=FALSE, ...)
-    return(ShojiObject(crGET(u.url)))
-}
-new.user.with.setup <- function (email=uniqueEmail(), name=email, ...) {
-    u.url <- invite(email, name=name, notify=FALSE, ...)
-    objects_to_purge <<- c(objects_to_purge, u.url)
-    return(u.url)
-}
-
-test.user <- function (email=uniqueEmail(), name=email, obj.name="u", ...) {
-    return(setup.and.teardown(
-        function () new.user.with.setup(email, name, ...),
-        purge.object,
-        obj.name
-    ))
-}
-
-markForCleanup <- function (x) {
-    objects_to_purge <<- c(objects_to_purge, self(x))
-    return(x)
-}
-
-cleanup <- function (obj, ...) {
-    return(setup.and.teardown(
-        function () markForCleanup(obj),
-        purge.object,
-        ...
-    ))
+    return(UserEntity(crGET(u.url)))
 }
 
 testProject <- function (name="", ...) {

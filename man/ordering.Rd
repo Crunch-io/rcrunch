@@ -4,9 +4,11 @@
 \name{ordering}
 \alias{ordering}
 \alias{ordering,CrunchDataset-method}
+\alias{ordering,DatasetCatalog-method}
 \alias{ordering,VariableCatalog-method}
 \alias{ordering<-}
 \alias{ordering<-,CrunchDataset-method}
+\alias{ordering<-,DatasetCatalog-method}
 \alias{ordering<-,VariableCatalog-method}
 \title{Get and set VariableOrder}
 \usage{
@@ -17,6 +19,10 @@
 \S4method{ordering}{VariableCatalog}(x)
 
 \S4method{ordering}{VariableCatalog}(x) <- value
+
+\S4method{ordering}{DatasetCatalog}(x)
+
+\S4method{ordering}{DatasetCatalog}(x) <- value
 }
 \arguments{
 \item{x}{a VariableCatalog or CrunchDataset}

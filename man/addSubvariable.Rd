@@ -2,20 +2,29 @@
 % Please edit documentation in R/add-subvariable.R
 \name{addSubvariable}
 \alias{addSubvariable}
+\alias{addSubvariables}
 \title{Add subvariable to an array}
 \usage{
 addSubvariable(variable, subvariable)
+
+addSubvariables(variable, subvariable)
 }
 \arguments{
 \item{variable}{the array variable to modify}
 
-\item{subvariable}{the subvariable to add}
+\item{subvariable}{the subvariable to add, or a list of those to add, or a
+dataset subset}
 }
 \value{
-a new version of \code{variable} with the indicated subvariables
+\code{variable} with the indicated subvariables added.
 }
 \description{
-This function conceals the dirty work in making this happen. The array
-gets unbound and rebound into a new array with the new variable added.
+Add subvariable to an array
+}
+\examples{
+\dontrun{
+ds$allpets <- addSubvariable(ds$allpets, ds$allpets_4)
+ds$petloc <- addSubvariables(ds$petloc, ds[c("petloc_school", "petloc_daycare")])
+}
 }
 

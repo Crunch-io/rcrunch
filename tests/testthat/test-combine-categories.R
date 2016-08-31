@@ -16,7 +16,7 @@ with_mock_HTTP({
         expr=list(
             `function`="combine_categories",
             args=list(
-                list(variable="/api/datasets/dataset1/variables/gender.json"),
+                list(variable="/api/datasets/dataset1/variables/gender/"),
                 list(value=list(
                     list(
                         name="Both",
@@ -125,7 +125,7 @@ with_mock_HTTP({
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(newDatasetFromFixture("apidocs")), {
             test_that("We can create a new categorical by combining", {
                 ds$combined_pets <- combine(ds$q1, name="Pets (combined)",

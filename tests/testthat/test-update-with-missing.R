@@ -1,7 +1,7 @@
 context("Update variables with NAs")
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(newDatasetFromFixture("apidocs")), {
             test_that("Insert NA into numeric", {
                 expect_equivalent(as.vector(ds$ndogs[1:5]),
@@ -25,7 +25,6 @@ if (run.integration.tests) {
             test_that("Insert NA into datetime", {
                 expect_equivalent(as.vector(ds$wave[1:5]),
                     rep(as.Date("2014-12-01"), 5))
-                skip("See https://www.pivotaltracker.com/story/show/103531536")
                 ds$wave[4] <- NA
                 expect_equivalent(as.vector(ds$wave[1:5]),
                     c(rep(as.Date("2014-12-01"), 3), NA, as.Date("2014-12-01")))
@@ -38,29 +37,29 @@ if (run.integration.tests) {
                     c("Jasmine", NA, "Geoffrey"))
             })
             test_that("Insert NA into multiple response", {
-                expect_equivalent(as.vector(ds$allpets$Cat, mode="id")[1:5],
+                expect_equivalent(as.vector(ds$allpets$allpets_1, mode="id")[1:5],
                     c(1, 9, 1, 1, 9))
-                expect_equivalent(as.vector(ds$allpets$Dog, mode="id")[1:5],
+                expect_equivalent(as.vector(ds$allpets$allpets_2, mode="id")[1:5],
                     c(8, 1, 9, 9, 9))
-                expect_equivalent(as.vector(ds$allpets$Bird, mode="id")[1:5],
+                expect_equivalent(as.vector(ds$allpets$allpets_3, mode="id")[1:5],
                     c(8, 2, 8, 8, 8))
                 ds$allpets[2] <- NA
-                expect_equivalent(as.vector(ds$allpets$Cat, mode="id")[1:5],
+                expect_equivalent(as.vector(ds$allpets$allpets_1, mode="id")[1:5],
                     c(1, -1, 1, 1, 9))
-                expect_equivalent(as.vector(ds$allpets$Dog, mode="id")[1:5],
+                expect_equivalent(as.vector(ds$allpets$allpets_2, mode="id")[1:5],
                     c(8, -1, 9, 9, 9))
-                expect_equivalent(as.vector(ds$allpets$Bird, mode="id")[1:5],
+                expect_equivalent(as.vector(ds$allpets$allpets_3, mode="id")[1:5],
                     c(8, -1, 8, 8, 8))
             })
             test_that("Insert NA into categorical array", {
-                expect_equivalent(as.vector(ds$petloc$Home, mode="id")[1:5],
+                expect_equivalent(as.vector(ds$petloc$petloc_home, mode="id")[1:5],
                     c(8, 2, 9, 9, 1))
-                expect_equivalent(as.vector(ds$petloc$Work, mode="id")[1:5],
+                expect_equivalent(as.vector(ds$petloc$petloc_work, mode="id")[1:5],
                     c(9, 3, 3, 2, 2))
                 ds$petloc[3] <- NA
-                expect_equivalent(as.vector(ds$petloc$Home, mode="id")[1:5],
+                expect_equivalent(as.vector(ds$petloc$petloc_home, mode="id")[1:5],
                     c(8, 2, -1, 9, 1))
-                expect_equivalent(as.vector(ds$petloc$Work, mode="id")[1:5],
+                expect_equivalent(as.vector(ds$petloc$petloc_work, mode="id")[1:5],
                     c(9, 3, -1, 2, 2))
             })
         })

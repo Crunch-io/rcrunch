@@ -35,13 +35,6 @@ if (run.integration.tests) {
 
     test_that("crunchAuth succeeds when it should and not when it shouldn't", {
         logout()
-        em <- getOption("crunch.email")
-        pw <- getOption("crunch.pw")
-        expect_true(is.character(em))
-        expect_true(is.character(pw))
-        expect_true(is.list(crunchAuth(em, password=pw)))
-        suppressMessages(login())
-        logout()
         expect_error(crunchAuth("lkjasdfksdfkjhl", password="w23nrnsod"),
             "Unable to authenticate lkjasdfksdfkjhl")
     })

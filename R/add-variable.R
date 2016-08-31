@@ -1,15 +1,15 @@
-##' Add multiple variables to a dataset
-##'
-##' This function lets you add more than one variable at a time to a dataset.
-##' If you have multiple variables to add, this function will be faster than
-##' doing \code{ds$var <- value} assignment because it doesn't refresh the
-##' dataset's state in between variable POST requests.
-##' @param dataset a CrunchDataset
-##' @param ... \code{\link{VariableDefinition}}s or a list of
-##' VariableDefinitions.
-##' @return \code{dataset} with the new variables added (invisibly)
-##' @export
-##' @importFrom httpcache halt
+#' Add multiple variables to a dataset
+#'
+#' This function lets you add more than one variable at a time to a dataset.
+#' If you have multiple variables to add, this function will be faster than
+#' doing \code{ds$var <- value} assignment because it doesn't refresh the
+#' dataset's state in between variable POST requests.
+#' @param dataset a CrunchDataset
+#' @param ... \code{\link{VariableDefinition}}s or a list of
+#' VariableDefinitions.
+#' @return \code{dataset} with the new variables added (invisibly)
+#' @export
+#' @importFrom httpcache halt
 addVariables <- function (dataset, ...) {
     var_catalog_url <- shojiURL(dataset, "catalogs", "variables")
 
@@ -29,8 +29,10 @@ addVariables <- function (dataset, ...) {
         halt("Must supply VariableDefinitions")
     }
     ## Check that if values specified, they have the right length
-    vardefs <- lapply(vardefs, validateVarDefRows,
-        numrows=getNrow(dataset, filtered=FALSE))
+    vardefs <- lapply(vardefs, validateVarDefRows, numrows=getNrow(dataset))
+
+    ## TODO: check array subvariable rows similarly. and/or pull out and cbind
+    ## to a single parent-level "values" column.
 
     ## Upload one at a time.
     ## TODO: Server should support bulk insert
@@ -102,21 +104,22 @@ POSTNewVariable <- function (catalog_url, variable) {
                 !any(vapply(variable$subvariables, is_catvardef, logical(1)))
             case3 <- !(is_binddef | is_arraydef)
             if (case3) {
-                lapply(variable$subvariables, function (x) {
-                    Categories(data=x$categories) ## Will error if invalid
-                })
+                ## Let's arrange the values so that we can make a single request
 
-                ## Upload subvars, then bind
-                var_urls <- lapply(variable$subvariables,
-                    function (x) try(do.POST(x)))
-                errs <- vapply(var_urls, is.error, logical(1))
-                if (any(errs)) {
-                    # Delete subvariables that were added, then raise
-                    lapply(var_urls[!errs], function (x) crDELETE(x))
-                    halt("Subvariables errored on upload")
+                ## First, get the categories
+                cats <- lapply(variable$subvariables, vget("categories"))
+                if (length(unique(vapply(cats, toJSON, character(1)))) > 1) {
+                    halt("All subvariables must have identical categories")
                 }
-                # Else prepare to POST array definition
-                variable$subvariables <- I(unlist(var_urls))
+                variable$categories <- cats[[1]]
+
+                ## Now get the values
+                variable$values <- matrix(unlist(lapply(variable$subvariables,
+                    vget("values"))), ncol=length(variable$subvariables), byrow=FALSE)
+                ## Now strip out the extraneous metadata from the subvars
+                variable$subvariables <- lapply(variable$subvariables, function (x) {
+                    x[!(names(x) %in% c("type", "categories", "values"))]
+                })
             }
         }
         if ("categories" %in% names(variable)) {

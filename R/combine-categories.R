@@ -1,29 +1,30 @@
-##' Combine categories or responses
-##'
-##' @param variable Categorical, Categorical Array, or Multiple Response
-##' variable
-##' @param combinations list of named lists containing (1) "categories":
-##' category ids or names for categorical types, or for multiple response,
-##' "responses": subvariable names, aliases, or positional indices; (2) a
-##' "name" for the new category or response; and (3) optionally, other category
-##' ("missing", "numeric_value") or subvariable ("alias", "description")
-##' attributes. If \code{combinations} is omitted, the resulting variable will
-##' essentially be a copy (but see \code{link{copy}} for a more natural way to
-##' do that, if desired).
-##' @param ... Additional variable metadata for the new derived variable
-##' @return A \code{\link{VariableDefinition}} that will create the new
-##' comined-category or -response derived variable. Categories/responses not
-##' referenced in \code{combinations} will be appended to the end of the
-##' combinations.
-##' @examples
-##' \dontrun{
-##' ds$fav_pet2 <- combine(ds$fav_pet, name="Pets (combined)",
-##'     combinations=list(list(name="Mammals", categories=c("Cat", "Dog")),
-##'                       list(name="Reptiles", categories=c("Snake", "Lizard"))))
-##' ds$pets_owned2 <- combine(ds$allpets, name="Pets owned (collapsed)",
-##'     combinations=list(list(name="Mammals", responses=c("Cat", "Dog"))))
-##' }
-##' @export
+#' Combine categories or responses
+#'
+#' @param variable Categorical, Categorical Array, or Multiple Response
+#' variable
+#' @param combinations list of named lists containing (1) "categories":
+#' category ids or names for categorical types, or for multiple response,
+#' "responses": subvariable names, aliases, or positional indices; (2) a
+#' "name" for the new category or response; and (3) optionally, other category
+#' ("missing", "numeric_value") or subvariable ("alias", "description")
+#' attributes. If \code{combinations} is omitted, the resulting variable will
+#' essentially be a copy (but see \code{link{copy}} for a more natural way to
+#' do that, if desired).
+#' @param ... Additional variable metadata for the new derived variable
+#' @return A \code{\link{VariableDefinition}} that will create the new
+#' comined-category or -response derived variable. Categories/responses not
+#' referenced in \code{combinations} will be appended to the end of the
+#' combinations.
+#' @examples
+#' \dontrun{
+#' ds$fav_pet2 <- combine(ds$fav_pet, name="Pets (combined)",
+#'     combinations=list(list(name="Mammals", categories=c("Cat", "Dog")),
+#'                       list(name="Reptiles", categories=c("Snake", "Lizard"))))
+#' ds$pets_owned2 <- combine(ds$allpets, name="Pets owned (collapsed)",
+#'     combinations=list(list(name="Mammals", responses=c("Cat", "Dog"))))
+#' }
+#' @export
+#' @importFrom utils modifyList
 combine <- function (variable, combinations=list(), ...) {
     ## Validate inputs
     if (!(type(variable) %in% c("categorical", "categorical_array", "multiple_response"))) {
@@ -37,7 +38,7 @@ combine <- function (variable, combinations=list(), ...) {
     ## Get basic variable metadata
     newvar <- copyVariableReferences(variable)
     newvar$alias <- NULL ## Let server specify, or specify in ..., or on <-
-    newvar <- updateList(newvar, list(...))
+    newvar <- modifyList(newvar, list(...))
     newvar$type <- NULL ## Type is function of the derivation
 
     ## Construct expr
@@ -89,7 +90,7 @@ combCats <- function (cats, combs) {
         }
         x$combined_ids <- I(x$categories)
         x$categories <- NULL
-        return(updateList(defaultCat, x))
+        return(modifyList(defaultCat, x))
     })
 
     ## Validate that they're all unique and nonmissing

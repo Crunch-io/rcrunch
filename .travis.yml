@@ -1,3 +1,4 @@
 language: r
 cache: packages
-r: devel
+r:
+  - devel

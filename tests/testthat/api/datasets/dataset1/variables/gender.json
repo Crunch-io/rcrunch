@@ -1,6 +1,6 @@
 {
     "element": "shoji:entity",
-    "self": "/api/datasets/dataset1/variables/gender.json",
+    "self": "/api/datasets/dataset1/variables/gender/",
     "body": {
         "alias": "gender",
         "format": {
@@ -44,11 +44,11 @@
         "id": "66ae9881e3524f7db84970d556c34552"
     },
     "views": {
-        "summary": "/api/datasets/dataset1/variables/gender/summary.json",
-        "values": "/api/datasets/dataset1/variables/gender/values.json"
+        "summary": "/api/datasets/dataset1/variables/gender/summary/",
+        "values": "/api/datasets/dataset1/variables/gender/values/"
     },
     "urls": {
-        "dataset_url": "/api/datasets/dataset1.json"
+        "dataset_url": "/api/datasets/dataset1/"
     },
     "description": "Details for a given Variable",
     "future_shoji_attribute": {}

@@ -1,30 +1,32 @@
 userURL <- function () rootURL("user")
 
-getUser <- function (x=userURL()) {
-    ShojiObject(crGET(x))
+#' My user entity
+#'
+#' @return A UserEntity that corresponds to you, the authenticated user
+#' @export
+me <- function () {
+    UserEntity(crGET(userURL()))
 }
 
 getUserCatalog <- function (x=sessionURL("users")) {
     UserCatalog(crGET(x))
 }
 
-getAccount <- function (x=rootURL("account", getUser())) {
+getAccount <- function (x=rootURL("account", me())) {
     ShojiObject(crGET(x))
 }
 
-##' Find all users on your account
-##'
-##' @param x URL of the user catalog. Default is the right thing; you shouldn't
-##' specify one
-##' @return a \code{UserCatalog}
-##' @export
+setMethod("email", "UserEntity", function (x) x@body$email)
+
+#' Find all users on your account
+#'
+#' @param x URL of the user catalog. Default is the right thing; you shouldn't
+#' specify one
+#' @return a \code{UserCatalog}
+#' @export
 getAccountUserCatalog <- function (x=shojiURL(getAccount(), "catalogs", "users")) {
     UserCatalog(crGET(x))
 }
-
-##' @rdname describe-catalog
-##' @export
-setMethod("emails", "UserCatalog", function (x) getIndexSlot(x, "email"))
 
 invite <- function (email, name=NULL, notify=TRUE, id_method="pwhash",
                     advanced=FALSE, admin=FALSE, ...) {

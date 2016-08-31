@@ -5,12 +5,13 @@
 
 # Getting started with `crunch`
 
+
+
 [Crunch.io](http://crunch.io/) provides a cloud-based data store and analytic engine. It has a [web client](https://beta.crunch.io/) for interactive data exploration and visualization. The *crunch* package for R allows analysts to interact with and manipulate Crunch datasets from within R. Importantly, this allows technical researchers to collaborate naturally with team members, managers, and clients who prefer a point-and-click interface: because all connect to the same dataset in the cloud, there is no need to email files back and forth continually to share results.
 
 
 ```r
 library(crunch)
-options(width=120)
 ```
 
 Both *crunch* and the Crunch web application communicate with the same application programming interface (API), served over secure HTTP. Within an R script or interactive session, the *crunch* package allows you to interact with your data in Crunch with expressive, idiomatic R. Functions in crunch handle the translation between R objects and API requests and responses, so you can typically interact with your datasets as if they were local `data.frames` (with some additional metadata), not data on a remote server.
@@ -40,3 +41,4 @@ The Crunch data store is built around datasets, which contain variables. Unlike 
 * [Transformations and derivations](derive.md): alter values within a dataset and create new variables as a function of others
 * [Computing on Crunch data](analyze.md): crosstabulation and more
 * [Filtering](filters.md): subsetting data, both in your R session and in the web interface
+* [Downloading and exporting](export.md): how to pull data from the server, both for use in R and file export

@@ -4,7 +4,7 @@
 \alias{newDatasetByColumn}
 \title{Upload a data.frame column-by-column to make a new dataset}
 \usage{
-newDatasetByColumn(x, name = as.character(substitute(x)), ...)
+newDatasetByColumn(x, name = deparse(substitute(x))[1], ...)
 }
 \arguments{
 \item{x}{a data.frame or other rectangular R object}

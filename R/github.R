@@ -16,26 +16,27 @@ notifyIfNewVersion <- function (
     invisible()
 }
 
-##' See if there's a new version of the package on GitHub
-##'
-##' @param github.url character where to GET the tagged versions of the package
-##' @param installed.version character the currently installed version string
-##' @return The version string if there is a new version, or NULL
-##' @export
-##' @keywords internal
+#' See if there's a new version of the package on GitHub
+#'
+#' @param github.url character where to GET the tagged versions of the package
+#' @param installed.version character the currently installed version string
+#' @return The version string if there is a new version, or NULL
+#' @export
+#' @keywords internal
 checkForNewVersion <- function (
     github.url="https://api.github.com/repos/Crunch-io/rcrunch/tags",
     installed.version=as.character(packageVersion("crunch"))) {
 
-    ## Get the names of the tagged versions on GitHub
-    gh.tags <- vapply(crGET(github.url), function (x) x[["name"]], character(1))
-    ## Filter to keep only those that match x.y.z
-    version.tags <- grep("^[0-9]+\\.[0-9]+\\.[0-9]+$", gh.tags, value=TRUE)
+    if (getOption("crunch.check.updates") %||% TRUE) {
+        ## Get the names of the tagged versions on GitHub
+        gh.tags <- vapply(crGET(github.url), vget("name"), character(1))
+        ## Filter to keep only those that match x.y.z
+        version.tags <- grep("^[0-9]+\\.[0-9]+\\.[0-9]+$", gh.tags, value=TRUE)
+        if (length(version.tags) &&
+            versionIsGreaterThan(version.tags[1], installed.version) ) {
 
-    if (length(version.tags) &&
-        versionIsGreaterThan(version.tags[1], installed.version) ) {
-
-        return(version.tags[1])
+            return(version.tags[1])
+        }
     }
     return(NULL)
 }

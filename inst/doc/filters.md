@@ -3,7 +3,7 @@
 %\VignetteIndexEntry{Working with filters}
 -->
 
-[Previous: analyze data](analyze.md)
+[Previous: analyzing data](analyze.md)
 
 
 # Working with Filters
@@ -164,7 +164,7 @@ filters(ds)
 
 ```
 ##          name                               id is_public
-## 1 Young males 9742b1aef0134c4a883f2f461efe7b30     FALSE
+## 1 Young males b68e568c205d448c99120e2b72e7d585     FALSE
 ```
 
 This filter is now available for you to use in the web application. If you want to make the filter available to all viewers of the dataset, make it "public":
@@ -177,7 +177,7 @@ filters(ds)
 
 ```
 ##          name                               id is_public
-## 1 Young males 9742b1aef0134c4a883f2f461efe7b30      TRUE
+## 1 Young males b68e568c205d448c99120e2b72e7d585      TRUE
 ```
 
 You can also edit the filter expressions by assigning a new one in, like:
@@ -246,3 +246,5 @@ If you do know that you never want to see those rows again, you can permanently 
 ## Not run
 ds <- dropRows(ds, ds$perc_skipped > 15)
 ```
+
+[Next: exporting data](export.md)

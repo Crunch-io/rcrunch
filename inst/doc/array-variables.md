@@ -50,7 +50,7 @@ All of these "imiss" categorical variables have the same structure. We can combi
 
 
 ```r
-ds$imiss <- makeArray(pattern="^imiss_", dataset=ds, name="Issue importance")
+ds$imiss <- makeArray(ds[grep("^imiss_", names(ds))], name="Issue importance")
 ds$imiss
 ```
 
@@ -215,7 +215,7 @@ The function `makeMR` works like `makeArray` but with an additional argument, "s
 
 
 ```r
-ds$boap <- makeMR(pattern="^boap_[0-9]+", dataset=ds,
+ds$boap <- makeMR(ds[grep("^boap_[0-9]+", names(ds))],
     name="Approval of Obama on issues",
     selections=c("Strongly approve", "Somewhat approve"))
 ds$boap

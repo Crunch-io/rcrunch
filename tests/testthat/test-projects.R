@@ -3,17 +3,17 @@ context("Projects")
 with_mock_HTTP({
     projects <- session()$projects
     test_that("Getting projects catalog", {
-        expect_true(inherits(projects, "ProjectCatalog"))
-        expect_identical(length(projects), 1L)
-        expect_identical(names(projects), "Project One")
+        expect_is(projects, "ProjectCatalog")
+        expect_length(projects, 2)
+        expect_identical(names(projects), c("Project One", "Project Two"))
     })
 
-    aproject <- projects[[1]]
+    aproject <- projects[["Project One"]]
     test_that("Getting project from catalog", {
-        expect_true(inherits(projects[[1]], "CrunchProject"))
-        expect_true(inherits(projects$`Project One`, "CrunchProject"))
-        expect_true(inherits(projects[["Project One"]], "CrunchProject"))
-        expect_true(is.null(projects$`Beta Project`))
+        expect_is(projects[[1]], "CrunchProject")
+        expect_is(projects$`Project One`, "CrunchProject")
+        expect_is(projects[["Project One"]], "CrunchProject")
+        expect_null(projects$`Beta Project`)
     })
 
     test_that("Project attributes", {
@@ -21,153 +21,312 @@ with_mock_HTTP({
     })
 
     test_that("Simple project creation by assignment", {
-        expect_error(projects[["A new project"]] <- list(),
-            'POST /api/projects.json {"name":"A new project"}',
-            fixed=TRUE)
+        expect_POST(projects[["A new project"]] <- list(),
+            '/api/projects/',
+            '{"name":"A new project"}')
+        expect_POST(projects$`A new project` <- list(),
+            '/api/projects/',
+            '{"name":"A new project"}')
+    })
+
+    test_that("Project editing", {
+        expect_PATCH(names(projects)[2] <- "New name",
+            '/api/projects/',
+            '{"/api/projects/project2/":{"name":"New name"}}')
+        expect_PATCH(name(projects[[2]]) <- "New name",
+            '/api/projects/',
+            '{"/api/projects/project2/":{"name":"New name"}}')
     })
 
     test_that("Project deletion", {
         expect_error(delete(projects[[1]], confirm=TRUE),
             "Must confirm deleting project")
-        with(consent(), expect_error(delete(projects[[1]], confirm=TRUE),
-            "DELETE /api/projects/project1.json"))
+        with(consent(), expect_DELETE(delete(projects[[1]], confirm=TRUE),
+            "/api/projects/project1/"))
     })
 
     m <- members(aproject)
     test_that("Project members catalog", {
-        expect_true(inherits(m, "MemberCatalog"))
+        expect_is(m, "MemberCatalog")
         expect_identical(names(m), c("Fake User", "Roger User"))
+        expect_identical(emails(m), c("fake.user@example.com", "roger.user@example.com"))
     })
 
     test_that("Add members by members<-", {
-        expect_error(members(aproject) <- c("new.user@crunch.io", "foo@example.co"),
-            'PATCH /api/projects/project1/members.json {"new.user@crunch.io":{},"foo@example.co":{}}',
-            fixed=TRUE)
+        expect_PATCH(members(aproject) <- c("new.user@crunch.io", "foo@example.co"),
+            '/api/projects/project1/members/',
+            '{"new.user@crunch.io":{},"foo@example.co":{}}')
     })
 
     test_that("Add members doesn't re-add if already a member", {
-        expect_error(members(aproject) <- c("new.user@crunch.io", "roger.user@example.com"),
-            'PATCH /api/projects/project1/members.json {"new.user@crunch.io":{}}',
-            fixed=TRUE)
+        expect_PATCH(members(aproject) <- c("new.user@crunch.io", "roger.user@example.com"),
+            '/api/projects/project1/members/',
+            '{"new.user@crunch.io":{}}')
     })
 
     test_that("Remove members by <- NULL", {
-        expect_error(members(aproject)[["roger.user@example.com"]] <- NULL,
-            'PATCH /api/projects/project1/members.json {"roger.user@example.com":null}',
-            fixed=TRUE)
+        expect_PATCH(members(aproject)[["roger.user@example.com"]] <- NULL,
+            '/api/projects/project1/members/',
+            '{"roger.user@example.com":null}')
+    })
+
+    test_that("is.editor on member catalog", {
+        expect_identical(is.editor(m), c(TRUE, FALSE))
+    })
+
+    test_that("is.editor<- on member catalog", {
+        expect_PATCH(is.editor(m) <- c(TRUE, TRUE),
+            '/api/projects/project1/members/',
+            '{"/api/users/user2/":{"permissions":{"edit":true}}}')
+        expect_PATCH(is.editor(m[2]) <- TRUE,
+            '/api/projects/project1/members/',
+            '{"/api/users/user2/":{"permissions":{"edit":true}}}')
+        expect_no_request(is.editor(m[2]) <- FALSE) ## No change, so no PATCH request made
+    })
+
+    test_that("Print method for MemberCatalog", {
+        expect_output(m,
+            get_output(data.frame(
+                name=c("Fake User", "Roger User"),
+                email=c("fake.user@example.com", "roger.user@example.com"),
+                is.editor=c(TRUE, FALSE)
+            )))
     })
 
     d <- datasets(aproject)
     test_that("Project datasets catalog", {
-        expect_true(inherits(d, "DatasetCatalog"))
+        expect_is(d, "DatasetCatalog")
         expect_identical(names(d), "ECON.sav")
+    })
+
+    test_that("Can loadDataset from a project dataset catalog", {
+        ds <- loadDataset("ECON.sav", project=aproject)
+        expect_is(ds, "CrunchDataset")
+        expect_identical(name(ds), "ECON.sav")
+        expect_identical(loadDataset("ECON.sav", project="Project One"),
+            ds)
+    })
+
+    test_that("loadDataset project arg error handling", {
+        expect_error(loadDataset("foo", project=12),
+            paste("Cannot get Shoji URL from object of class", dQuote("numeric")))
+    })
+
+    do <- ordering(d)
+    test_that("Project datasets order", {
+        expect_is(do, "DatasetOrder")
+        expect_identical(do@graph,
+            list(DatasetGroup("Group 1", "/api/datasets/dataset3/")))
     })
 
     test_that("Add datasets to project by <- a dataset (which transfers ownership)", {
         ds <- loadDataset("test ds")
-        expect_error(datasets(aproject) <- ds,
-            'PATCH /api/datasets/dataset1.json {"owner":"/api/projects/project1.json"}',
-            fixed=TRUE)
+        expect_PATCH(datasets(aproject) <- ds,
+            '/api/datasets/dataset1/',
+            '{"owner":"/api/projects/project1/"}')
+    })
+
+    test_that("Organize datasets", {
+        expect_identical(DatasetOrder(DatasetGroup("new group", datasets(aproject))),
+            DatasetOrder(DatasetGroup("new group", "/api/datasets/dataset3/")))
+        expect_PUT(ordering(datasets(aproject)) <- DatasetOrder(DatasetGroup("new group",
+            datasets(aproject))),
+            '/api/projects/project1/datasets/order/',
+            '{"graph":[{"new group":["/api/datasets/dataset3/"]}]}')
+        nested.ord <- DatasetOrder("/api/datasets/dataset3/",
+            DatasetGroup("new group",
+                list(DatasetGroup("nested", "/api/datasets/dataset3/"))))
+        expect_PUT(ordering(datasets(aproject)) <- nested.ord,
+            '/api/projects/project1/datasets/order/',
+            '{"graph":["/api/datasets/dataset3/",',
+            '{"new group":[{"nested":["/api/datasets/dataset3/"]}]}]}')
     })
 })
 
-if (run.integration.tests) {
-    with(test.authentication, {
-        projects <- session()$projects
-        ucat <- getAccountUserCatalog()
-        my.name <- names(ucat)[urls(ucat) == userURL()]
-        my.email <- emails(ucat)[urls(ucat) == userURL()]
+with_test_authentication({
+    myprojects <- projects()
+    my.name <- name(me())
+    my.email <- email(me())
 
-        nprojects.0 <- length(projects)
-        test_that("Can get project catalog", {
-            expect_true(inherits(projects, "ProjectCatalog"))
-        })
-
-        t2 <- projects
-        name.of.project1 <- now()
-        test_that("Can create a project", {
-            expect_false(name.of.project1 %in% names(t2))
-            t2[[name.of.project1]] <- list()
-            expect_true(name.of.project1 %in% names(t2))
-            expect_true(length(t2) == nprojects.0 + 1L)
-            expect_true(inherits(t2[[name.of.project1]], "CrunchProject"))
-            expect_identical(length(members(t2[[name.of.project1]])), 1L)
-            expect_identical(names(members(t2[[name.of.project1]])),
-                my.name)
-        })
-
-        test_that("Can delete a project by URL", {
-            t2 <- refresh(t2)
-            expect_true(name.of.project1 %in% names(t2))
-            try(crDELETE(self(t2[[name.of.project1]])))
-            expect_false(name.of.project1 %in% names(refresh(t2)))
-        })
-
-        test_that("Can create a project with members", {
-            skip("TODO")
-            skip_on_jenkins("Jenkins user needs more permissions")
-            t2 <- refresh(t2)
-            nprojects.2 <- length(t2)
-            name.of.project2 <- now()
-            expect_false(name.of.project2 %in% names(t2))
-            with(test.user(), {
-                ucat <- getUserCatalog()
-                u.email <- emails(ucat)[urls(ucat) == u]
-                u.name <- names(ucat)[urls(ucat) == u]
-                t2[[name.of.project2]] <- list(members=u.email)
-                expect_true(name.of.project2 %in% names(t2))
-                expect_true(length(t2) == nprojects.2 + 1L)
-                this.project <- t2[[name.of.project2]]
-                expect_true(setequal(names(members(this.project)),
-                    c(u.name, my.name)))
-            })
-            try(crDELETE(self(refresh(t2)[[name.of.project2]])))
-        })
-
-        test_that("Can add members to a project", {
-            skip_on_jenkins("Jenkins user needs more permissions")
-            with(cleanup(testProject()), as="tp", {
-                with(test.user(), {
-                    ucat <- getUserCatalog()
-                    u.email <- emails(ucat)[urls(ucat) == u]
-                    u.name <- names(ucat)[urls(ucat) == u]
-                    expect_identical(names(members(tp)),
-                        my.name)
-                    members(tp) <- u.email
-                    expect_true(setequal(names(members(tp)),
-                        c(u.name, my.name)))
-                })
-            })
-        })
-
-        test_that("Can remove members from a project", {
-            skip_on_jenkins("Jenkins user needs more permissions")
-            with(cleanup(testProject()), as="tp", {
-                with(test.user(), {
-                    ucat <- getUserCatalog()
-                    u.email <- emails(ucat)[urls(ucat) == u]
-                    u.name <- names(ucat)[urls(ucat) == u]
-                    expect_identical(names(members(tp)),
-                        my.name)
-                    members(tp) <- u.email
-                    expect_true(setequal(names(members(tp)),
-                        c(u.name, my.name)))
-                    try(members(tp)[[u.email]] <- NULL)
-                    expect_identical(names(members(tp)),
-                        my.name)
-                })
-            })
-        })
-
-        test_that("Can add datasets to projects", {
-            with(test.dataset(df), {
-                with(cleanup(testProject()), as="tp", {
-                    expect_true(inherits(tp, "CrunchProject"))
-                    expect_identical(length(datasets(tp)), 0L)
-                    datasets(tp) <- ds
-                    expect_identical(names(datasets(tp)), name(ds))
-                })
-            })
-        })
+    nprojects.0 <- length(myprojects)
+    test_that("Can get project catalog", {
+        expect_is(myprojects, "ProjectCatalog")
     })
-}
+
+    name.of.project1 <- now()
+    test_that("Can create a project", {
+        expect_false(name.of.project1 %in% names(myprojects))
+        myprojects[[name.of.project1]] <- list()
+        expect_true(name.of.project1 %in% names(myprojects))
+        expect_true(length(myprojects) == nprojects.0 + 1L)
+        expect_is(myprojects[[name.of.project1]], "CrunchProject")
+        expect_length(members(myprojects[[name.of.project1]]), 1)
+        expect_identical(names(members(myprojects[[name.of.project1]])),
+            my.name)
+    })
+
+    myprojects <- refresh(myprojects)
+    pj <- myprojects[[name.of.project1]]
+    p_url <- self(pj)
+    name2 <- paste(name.of.project1, "revised")
+    test_that("Can rename a project by name<-", {
+        expect_identical(self(myprojects[[name.of.project1]]),
+            p_url)
+        expect_null(myprojects[[name2]])
+        name(myprojects[[name.of.project1]]) <- name2
+        expect_null(myprojects[[name.of.project1]])
+        expect_identical(self(myprojects[[name2]]), p_url)
+    })
+
+    name3 <- paste(name2, "FINAL")
+    test_that("Can rename a project with names<-", {
+        expect_false(name3 %in% names(myprojects))
+        names(myprojects)[urls(myprojects) == p_url] <- name3
+        expect_true(name3 %in% names(myprojects))
+        expect_identical(self(myprojects[[name3]]), p_url)
+    })
+
+    test_that("Get and set project icon", {
+        ico <- icon(pj)
+        # expect_true(nchar(ico) > 0) ## Unskip after #119305641 ships
+        icon(pj) <- "empty.png"
+        expect_false(icon(pj) == "empty.png")
+        expect_true(endsWith(icon(pj), ".png"))
+        expect_false(identical(icon(pj), ico))
+    })
+
+
+    test_that("Can delete a project by URL", {
+        myprojects <- refresh(myprojects)
+        expect_true(p_url %in% urls(myprojects))
+        try(crDELETE(p_url))
+        expect_false(p_url %in% urls(refresh(myprojects)))
+    })
+
+    test_that("Can create a project with members", {
+        skip("TODO")
+        skip_on_jenkins("Jenkins user needs more permissions")
+        myprojects <- refresh(myprojects)
+        nprojects.2 <- length(myprojects)
+        name.of.project2 <- now()
+        expect_false(name.of.project2 %in% names(myprojects))
+        u <- testUser()
+        myprojects[[name.of.project2]] <- list(members=email(u))
+        expect_true(name.of.project2 %in% names(myprojects))
+        expect_true(length(myprojects) == nprojects.2 + 1L)
+        expect_true(setequal(names(members(myprojects[[name.of.project2]])),
+            c(name(u), my.name)))
+    })
+
+    test_that("Can add members to a project (and then set as an editor)", {
+        skip_on_jenkins("Jenkins user needs more permissions")
+        tp <- testProject()
+        u <- testUser()
+        expect_identical(names(members(tp)), my.name)
+        members(tp) <- email(u)
+        expect_true(setequal(names(members(tp)),
+            c(name(u), my.name)))
+        expect_identical(is.editor(members(tp)),
+            c(TRUE, FALSE))
+        is.editor(members(tp)[email(u)]) <- TRUE
+        expect_identical(is.editor(members(tp)),
+            c(TRUE, TRUE))
+    })
+
+    test_that("Can remove members from a project", {
+        skip_on_jenkins("Jenkins user needs more permissions")
+        tp <- testProject()
+        u <- testUser()
+        expect_identical(names(members(tp)), my.name)
+        members(tp) <- email(u)
+        expect_true(setequal(names(members(tp)), c(name(u), my.name)))
+        try(members(tp)[[email(u)]] <- NULL)
+        expect_identical(names(members(tp)), my.name)
+    })
+
+    ds <- createDataset(name=now())
+    tp <- testProject()
+    test_that("Can add datasets to project", {
+        expect_is(tp, "CrunchProject")
+        expect_length(datasets(tp), 0)
+        datasets(tp) <- ds
+        expect_identical(names(datasets(tp)), name(ds))
+        expect_identical(owner(refresh(ds)), self(tp))
+    })
+    ds2 <- loadDataset(datasets(tp)[[1]])
+    test_that("Can load a dataset from a project", {
+        expect_true(is.dataset(ds2))
+        expect_identical(self(ds2), self(ds))
+    })
+    test_that("Can organize datasets", {
+        expect_identical(as.list(urls(datasets(tp))),
+            entities(ordering(datasets(tp))))
+        ordering(datasets(tp)) <- DatasetOrder(DatasetGroup("A group of one",
+            list(ds)))
+        expect_identical(ordering(datasets(tp))@graph[[1]],
+            DatasetGroup(name="A group of one", entities=self(ds)))
+    })
+    ds3 <- createDataset(name=now())
+    ord2 <- DatasetOrder(DatasetGroup("A group of two",
+        c(self(ds), self(ds3))))
+    test_that("Have to add dataset to project before organizing it", {
+        expect_error(ordering(datasets(tp)) <- ord2,
+            "Dataset URL referenced in Order not present in catalog")
+        expect_identical(ordering(datasets(tp))@graph[[1]],
+            DatasetGroup(name="A group of one", entities=self(ds)))
+    })
+    owner(ds3) <- tp
+    tp <- refresh(tp)
+    test_that("Can reorganize datasets", {
+        ordering(datasets(tp)) <- ord2
+        expect_identical(ordering(datasets(tp))@graph[[1]],
+            DatasetGroup(name="A group of two",
+            entities=c(self(ds), self(ds3))))
+        expect_output(ordering(datasets(tp)),
+            paste("[+] A group of two",
+                  paste0("    ", name(ds)),
+                  paste0("    ", name(ds3)),
+                  sep="\n"),
+            fixed=TRUE)
+    })
+    ord3 <- DatasetOrder(DatasetGroup("G1", self(ds3)),
+        DatasetGroup("G2", self(ds)))
+    ord3.list <- list(DatasetGroup("G1", self(ds3)),
+        DatasetGroup("G2", self(ds)))
+    ord3.alt <- DatasetOrder(
+        DatasetGroup("G1", datasets(tp)[names(datasets(tp)) == name(ds3)]),
+        DatasetGroup("G2", datasets(tp)[names(datasets(tp)) == name(ds)]))
+    test_that("Can re-reorganize", {
+        expect_identical(ord3, ord3.alt)
+        ordering(datasets(tp)) <- ord3
+        expect_identical(ordering(datasets(tp))@graph, ord3.list)
+        expect_identical(ordering(datasets(refresh(tp)))@graph, ord3.list)
+    })
+
+    test_that("Can create a Group by assigning by name", {
+        ordering(datasets(tp))[["New group three"]] <- self(ds)
+        expect_output(ordering(datasets(tp)),
+            paste("[+] G1",
+                  paste0("    ", name(ds3)),
+                  "[+] G2",
+                  "    (Empty group)",
+                  "[+] New group three",
+                  paste0("    ", name(ds)),
+                  sep="\n"),
+            fixed=TRUE)
+    })
+
+    test_that("Can rename a dataset in a project", {
+        newname <- paste(name(ds2), "edited")
+        name(ds2) <- newname
+        expect_identical(name(ds2), newname)
+        expect_identical(name(refresh(ds2)), newname)
+        expect_identical(name(datasets(refresh(tp))[[1]]), newname)
+    })
+
+    test_that("Can privatize a dataset belonging to a project", {
+        expect_identical(owner(ds2), self(tp))
+        owner(ds2) <- me()
+        expect_identical(owner(ds2), self(me()))
+    })
+})

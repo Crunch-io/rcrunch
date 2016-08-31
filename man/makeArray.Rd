@@ -5,11 +5,9 @@
 \alias{makeMR}
 \title{Make a Categorical Array or Multiple Response variable}
 \usage{
-makeArray(subvariables, dataset = NULL, pattern = NULL,
-  key = namekey(dataset), name, ...)
+makeArray(subvariables, dataset = NULL, name, ...)
 
-makeMR(subvariables, dataset = NULL, pattern = NULL,
-  key = namekey(dataset), name, selections, ...)
+makeMR(subvariables, dataset = NULL, name, selections, ...)
 }
 \arguments{
 \item{subvariables}{a list of Variable objects to bind together, or a
@@ -18,19 +16,7 @@ a Dataset), or values (e.g. names) of variables corresponding to \code{key}.
 If omitted, must supply \code{dataset} and \code{pattern}. If specifying
 values, must include \code{dataset}.}
 
-\item{dataset}{the Crunch Dataset to which the variables in
-\code{subvariables} belong, or in which to search for variables based
-on \code{pattern}. If omitted, \code{subvariables} must exist and all
-Variables in the list must belong to the same Dataset}
-
-\item{pattern}{An optional regular expression to search for variables to
-bind within \code{dataset}.
-Note that this argument is deprecated. If you wish to grep, you can
-\code{grep(pattern, aliases(variables(dataset)))} or similar outside this
-function.}
-
-\item{key}{character, the name of the Variable field in which to search
-with \code{pattern}. Default is 'alias'.}
+\item{dataset}{Argument no longer supported}
 
 \item{name}{character, the name that the new Categorical Array variable
 should have. Required.}

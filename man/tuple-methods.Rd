@@ -2,37 +2,38 @@
 % Please edit documentation in R/projects.R, R/tuple.R
 \docType{methods}
 \name{entity,CrunchProject-method}
-\alias{$,IndexTuple-method}
-\alias{$<-,IndexTuple-method}
-\alias{[[,IndexTuple,ANY-method}
-\alias{[[<-,IndexTuple,ANY,ANY,ANY-method}
+\alias{$,ShojiTuple-method}
+\alias{$<-,ShojiTuple-method}
+\alias{[[,ShojiTuple,ANY-method}
+\alias{[[<-,ShojiTuple,ANY,ANY,ANY-method}
 \alias{delete,DatasetTuple-method}
-\alias{delete,IndexTuple-method}
+\alias{delete,ShojiTuple-method}
 \alias{entity}
 \alias{entity,CrunchProject-method}
 \alias{entity,CrunchVariable-method}
 \alias{entity,DatasetTuple-method}
 \alias{entity,VariableTuple-method}
-\alias{name,IndexTuple-method}
-\alias{refresh,IndexTuple-method}
-\alias{self,IndexTuple-method}
+\alias{name,ShojiTuple-method}
+\alias{name<-,ShojiTuple-method}
+\alias{refresh,ShojiTuple-method}
+\alias{self,ShojiTuple-method}
 \alias{tuple-methods}
-\alias{type,IndexTuple-method}
-\title{Methods for IndexTuples}
+\alias{type,ShojiTuple-method}
+\title{Methods for ShojiTuples}
 \usage{
 \S4method{entity}{CrunchProject}(x)
 
-\S4method{refresh}{IndexTuple}(x)
+\S4method{refresh}{ShojiTuple}(x)
 
-\S4method{$}{IndexTuple}(x, name)
+\S4method{$}{ShojiTuple}(x, name)
 
-\S4method{$}{IndexTuple}(x, name) <- value
+\S4method{$}{ShojiTuple}(x, name) <- value
 
-\S4method{[[}{IndexTuple,ANY}(x, i)
+\S4method{[[}{ShojiTuple,ANY}(x, i)
 
-\S4method{[[}{IndexTuple,ANY,ANY,ANY}(x, i) <- value
+\S4method{[[}{ShojiTuple,ANY,ANY,ANY}(x, i) <- value
 
-\S4method{self}{IndexTuple}(x)
+\S4method{self}{ShojiTuple}(x)
 
 \S4method{entity}{VariableTuple}(x)
 
@@ -40,13 +41,15 @@
 
 \S4method{entity}{DatasetTuple}(x)
 
-\S4method{delete}{IndexTuple}(x, ...)
+\S4method{delete}{ShojiTuple}(x, ...)
 
 \S4method{delete}{DatasetTuple}(x, confirm = requireConsent(), ...)
 
-\S4method{name}{IndexTuple}(x)
+\S4method{name}{ShojiTuple}(x)
 
-\S4method{type}{IndexTuple}(x)
+\S4method{name}{ShojiTuple}(x) <- value
+
+\S4method{type}{ShojiTuple}(x)
 }
 \arguments{
 \item{x}{a Tuple}
@@ -63,7 +66,7 @@
 \code{\link{delete}}.}
 }
 \description{
-IndexTuples are objects extracted from ShojiCatalogs. They are internally
+ShojiTuples are objects extracted from ShojiCatalogs. They are internally
 used.
 }
 

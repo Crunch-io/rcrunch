@@ -3,11 +3,16 @@
 \docType{methods}
 \name{expressions}
 \alias{!,CrunchExpr-method}
+\alias{!=,CategoricalVariable,character-method}
+\alias{!=,CategoricalVariable,factor-method}
+\alias{==,CategoricalVariable,character-method}
+\alias{==,CategoricalVariable,factor-method}
 \alias{\%in\%,CategoricalVariable,character-method}
 \alias{\%in\%,CategoricalVariable,factor-method}
 \alias{\%in\%,CategoricalVariable,numeric-method}
 \alias{\%in\%,DatetimeVariable,Date-method}
 \alias{\%in\%,DatetimeVariable,POSIXt-method}
+\alias{\%in\%,DatetimeVariable,character-method}
 \alias{\%in\%,NumericVariable,numeric-method}
 \alias{\%in\%,TextVariable,character-method}
 \alias{bin}
@@ -30,7 +35,17 @@
 
 \S4method{\%in\%}{DatetimeVariable,POSIXt}(x, table)
 
+\S4method{\%in\%}{DatetimeVariable,character}(x, table)
+
 \S4method{\%in\%}{CategoricalVariable,numeric}(x, table)
+
+\S4method{==}{CategoricalVariable,character}(e1, e2)
+
+\S4method{==}{CategoricalVariable,factor}(e1, e2)
+
+\S4method{!=}{CategoricalVariable,character}(e1, e2)
+
+\S4method{!=}{CategoricalVariable,factor}(e1, e2)
 
 \S4method{is.na}{CrunchVariable}(x)
 
@@ -42,6 +57,10 @@ rollup(x, resolution = rollupResolution(x))
 \item{x}{an input}
 
 \item{table}{For \code{\%in\%}. See \code{\link[base]{match}}}
+
+\item{e1}{an input}
+
+\item{e2}{an input}
 
 \item{resolution}{For \code{rollup}. Either \code{NULL} or a character in
 c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms") indicating the unit of

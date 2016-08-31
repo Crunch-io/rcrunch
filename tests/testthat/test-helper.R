@@ -14,7 +14,7 @@ with(temp.option(foo.bar="no", foo.other="other"), {
         expect_identical(e1, "yes") ## Env var trumps option
         expect_identical(envOrOption("foo.bar"), "no") ## Bc no more env var
         expect_identical(e2, "other") ## Option if there is no env var
-        expect_identical(e3, NULL) ## Null if neither
+        expect_null(e3) ## Null if neither
     })
 })
 
@@ -23,7 +23,7 @@ test_that("SUTD", {
     tester <- setup.and.teardown(function () a <<- FALSE,
         function () a <<- TRUE)
 
-    expect_true(is.null(a))
+    expect_null(a)
     with(tester, {
         expect_false(is.null(a))
         expect_false(a)
@@ -36,7 +36,7 @@ test_that("SUTD", {
     ## teardown is run, and (2) it doesn't fail silently but turns into a
     ## failed test expectation.
     # a <- NULL
-    # expect_true(is.null(a))
+    # expect_null(a)
     # with(tester, {
     #     expect_false(is.null(a))
     #     expect_false(a)
@@ -50,15 +50,13 @@ test_that("JSON equivalence", {
     expect_json_equivalent(list(n=5, q=list(r=55, p=9)),
         list(q=list(p=9, r=55), n=5))
     expect_json_equivalent(list(1, 2), list(1, 2))
-    skip("Upgrade these tests after testthat version lands")
-    exp <- json_equivalent(list(1, 2))(list(2, 1))
-    expect_false(exp$passed)
-    expect_match(exp$failure, "not JSON-equivalent to")
 
+    expect_false(json_compare(list(1, 2), list(2, 1))$equal)
     obj <- list(c=1, b=list(list(2, 3), list(d=9, f=5)), a=5)
-    test <- json_equivalent(obj)
     expect_json_equivalent(list(b=list(list(2, 3), list(f=5, d=9)), c=1, a=5),
         obj)
-    expect_false(test(list(c=1, b=list(list(3, 2), list(d=9, f=5)), a=5))$passed)
-    expect_false(test(list(c=1, b=list(list(d=9, f=5), list(2, 3)), a=5))$passed)
+    expect_false(json_compare(obj,
+        list(c=1, b=list(list(3, 2), list(d=9, f=5)), a=5))$equal)
+    expect_false(json_compare(obj,
+        list(c=1, b=list(list(d=9, f=5), list(2, 3)), a=5))$equal)
 })

@@ -41,7 +41,7 @@ cat(show_imiss_b, sep="\n")
 All of these "imiss" categorical variables have the same structure. We can combine them into a categorical array variable with `makeArray`:
 
 ```{r, eval=FALSE}
-ds$imiss <- makeArray(pattern="^imiss_", dataset=ds, name="Issue importance")
+ds$imiss <- makeArray(ds[grep("^imiss_", names(ds))], name="Issue importance")
 ds$imiss
 ```
 ```{r, echo=FALSE}
@@ -125,7 +125,7 @@ In the questionnaire that collected this data, "boap" appeared as a grid questio
 The function `makeMR` works like `makeArray` but with an additional argument, "selections", in which you specify the category name(s) that identify which category or categories should be the dichotomous indicator.
 
 ```{r, eval=FALSE}
-ds$boap <- makeMR(pattern="^boap_[0-9]+", dataset=ds,
+ds$boap <- makeMR(ds[grep("^boap_[0-9]+", names(ds))],
     name="Approval of Obama on issues",
     selections=c("Strongly approve", "Somewhat approve"))
 ds$boap

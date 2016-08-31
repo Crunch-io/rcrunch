@@ -1,6 +1,6 @@
 {
     "element": "shoji:entity",
-    "self": "/api/datasets/dataset1/variables/starttime.json",
+    "self": "/api/datasets/dataset1/variables/starttime/",
     "body": {
         "alias": "starttime",
         "format": {
@@ -18,11 +18,11 @@
         "id": "d7c21314ca9e453c93069168681a285c"
     },
     "views": {
-        "summary": "/api/datasets/dataset1/variables/starttime/summary.json",
-        "values": "/api/datasets/dataset1/variables/starttime/values.json"
+        "summary": "/api/datasets/dataset1/variables/starttime/summary/",
+        "values": "/api/datasets/dataset1/variables/starttime/values/"
     },
     "urls": {
-        "dataset_url": "/api/datasets/dataset1.json"
+        "dataset_url": "/api/datasets/dataset1/"
     },
     "description": "Details for a given Variable"
 }

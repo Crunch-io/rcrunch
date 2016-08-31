@@ -3,44 +3,105 @@ context("Joining datasets")
 join1 <- data.frame(keyvar=c(2, 4, 5, 3), v1=factor(letters[c(2,4)]))
 join2 <- data.frame(keyvar=10:1, v2=factor(LETTERS[1:5]))
 
-test_that("join validatation", {
-    expect_error(joinDatasets(join1, join2), "x must be a Crunch Dataset")
+test_that("Basic join validatation (and warning)", {
+    expect_warning(
+        expect_error(joinDatasets(join1, join2, copy=FALSE),
+            "x must be a Crunch Dataset"),
+        "Virtual joins are experimental. Use with extreme caution.")
 })
 
-if (run.integration.tests) {
-    with(test.authentication, {
-        with(test.dataset(join1, "left"), {
-            with(test.dataset(join2, "right"), {
-                test_that("Join test setup", {
-                    expect_identical(dim(left), dim(join1))
-                    expect_identical(dim(right), dim(join2))
-                    expect_identical(length(joins(left)), 0L)
-                })
-
-                test_that("join validatation", {
-                    expect_error(joinDatasets(left, join2),
-                        "y must be a Crunch Dataset")
-                    expect_error(joinDatasets(left, join2),
-                        "y must be a Crunch Dataset")
-                    expect_error(joinDatasets(left, right, by=c("v1", "v2")),
-                        "Can only join 'by' a single key")
-                    expect_error(joinDatasets(left, right, by="v1"),
-                        "Join key not found in second Dataset")
-                    expect_error(joinDatasets(left, right, by="v2"),
-                        "Join key not found in first Dataset")
-                })
-
-                joined <- try(joinDatasets(left, right, by="keyvar"))
-                test_that("The join succeeded", {
-                    expect_true(is.dataset(joined))
-                    expect_identical(length(joins(joined)), 1L)
-                    skip("TODO: fetch joined variable catalogs")
-                    expect_identical(dim(joined), c(4L, 3L))
-                    expect_identical(names(joined), c("keyvar", "v1", "v2"))
-                    expect_identical(as.vector(joined$v2),
-                        factor(c("D", "B", "A", "C")))
-                })
-            })
-        })
-    })
+## Alias and wrap joinDatasets to avoid repetition below
+join <- function (...) {
+    expect_warning(out <- joinDatasets(..., copy=FALSE),
+        "Virtual joins are experimental. Use with extreme caution.")
+    invisible(out)
 }
+
+with_mock_HTTP({
+    ds1 <- loadDataset("test ds")
+    ds2 <- loadDataset("ECON.sav")
+
+    testPayload <- paste0(
+        '{"/api/datasets/dataset1/joins/95c0b45fe0af492594863f818cb913d2/":',
+        '{"left_key":"/api/datasets/dataset1/variables/birthyr/",',
+        '"right_key":"/api/datasets/dataset3/variables/birthyr/"}}')
+
+    test_that("Correct payload without filtering", {
+        expect_PATCH(join(ds1, ds2, by.x=ds1$birthyr, ds2$birthyr),
+            '/api/datasets/dataset1/joins/',
+            testPayload)
+    })
+
+    test_that("Can reference variables by alias", {
+        expect_PATCH(join(ds1, ds2, by.x="birthyr", by.y="birthyr"),
+            '/api/datasets/dataset1/joins/',
+            testPayload)
+        expect_PATCH(join(ds1, ds2, by="birthyr"),
+            '/api/datasets/dataset1/joins/',
+            testPayload)
+    })
+
+    test_that("Input validation for join", {
+        expect_error(join(1),
+            "x must be a Crunch Dataset")
+        expect_error(join(ds1, 1, by.x=ds1[[1]]),
+            "y must be a Crunch Dataset")
+        expect_error(join(ds1, ds2, by.x=1),
+            "by.x must be a Crunch Variable")
+        expect_error(join(ds1, ds2, by.x=ds2[[1]]),
+            "by.x must be a variable in x")
+        expect_error(join(ds1, ds2, by.x=ds1[[1]], by.y=1),
+            "by.y must be a Crunch Variable")
+        expect_error(join(ds1, ds2, by.x=ds1[[1]], by.y=ds1[[1]]),
+            "by.y must be a variable in y")
+        expect_error(join(ds1, ds2, by.x=ds1$birthyr, by.y=ds2$birthyr, all=TRUE),
+            'Option "all" not supported.')
+        expect_error(join(ds1, ds2, by.x=ds1$birthyr, by.y=ds2$birthyr, all.x=FALSE),
+            'Option "all.x=FALSE" not supported.')
+        expect_error(join(ds1, ds2, by.x=ds1$birthyr, by.y=ds2$birthyr, all.y=TRUE),
+            'Option "all.y" not supported.')
+    })
+
+    test_that("Categorical and array variables can't be used as keys", {
+        expect_error(join(ds1, ds2, by.x=ds1$gender, by.y=ds2$birthyr),
+            "by.x must be type numeric or text")
+        expect_error(join(ds1, ds2, by.x=ds1$birthyr, by.y=ds2$gender),
+            "by.y must be type numeric or text")
+    })
+
+    test_that("Providing != 1 alias gives useful error message", {
+        expect_error(join(ds1, ds2),
+            "by.x must reference one and only one variable")
+            ## Default "by" is intersection of names
+        expect_error(join(ds1, ds2, by.x=ds1$birthyr),
+            "by.y must reference one and only one variable")
+    })
+
+    test_that("An invalid alias gives a useful error message", {
+        expect_error(join(ds1, ds2, by.x="NOTAVARIABLE"),
+            "NOTAVARIABLE does not reference a variable in x")
+        expect_error(join(ds1, ds2, by.x=ds1$birthyr, by.y="NOTAVARIABLE"),
+            "NOTAVARIABLE does not reference a variable in y")
+    })
+})
+
+with_test_authentication({
+    left <- newDataset(join1)
+    right <- newDataset(join2)
+    test_that("Join test setup", {
+        expect_identical(dim(left), dim(join1))
+        expect_identical(dim(right), dim(join2))
+        expect_length(joins(left), 0)
+    })
+
+    test_that("The join succeeds", {
+        joined <- join(left, right, by="keyvar")
+        expect_true(is.dataset(joined))
+        expect_length(joins(joined), 1)
+        skip("TODO: fetch joined variable catalogs")
+        expect_identical(dim(joined), c(4L, 3L))
+        expect_identical(names(joined), c("keyvar", "v1", "v2"))
+        expect_identical(as.vector(joined$v2),
+            factor(c("D", "B", "A", "C")))
+    })
+})

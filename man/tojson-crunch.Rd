@@ -5,8 +5,8 @@
 \alias{jsonprep}
 \alias{jsonprep,ANY-method}
 \alias{jsonprep,Categories-method}
-\alias{jsonprep,VariableGroup-method}
-\alias{jsonprep,VariableOrder-method}
+\alias{jsonprep,OrderGroup-method}
+\alias{jsonprep,ShojiOrder-method}
 \alias{jsonprep,list-method}
 \alias{toJSON}
 \alias{tojson-crunch}
@@ -20,9 +20,9 @@ jsonprep(x, ...)
 
 \S4method{jsonprep}{ANY}(x, ...)
 
-\S4method{jsonprep}{VariableOrder}(x, ...)
+\S4method{jsonprep}{ShojiOrder}(x, ...)
 
-\S4method{jsonprep}{VariableGroup}(x, ...)
+\S4method{jsonprep}{OrderGroup}(x, ...)
 
 toJSON(x, ...)
 }

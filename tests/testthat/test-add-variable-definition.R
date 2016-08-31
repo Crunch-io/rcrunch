@@ -1,11 +1,11 @@
 context("VariableDefinition")
 
 test_that("VariableDefinition constructs", {
-    expect_identical(class(VariableDefinition()), "VariableDefinition")
+    expect_is(VariableDefinition(), "VariableDefinition")
+    expect_is(VarDef(), "VariableDefinition")
     expect_identical(class(VarDef(name="foo")), "VariableDefinition")
     expect_equivalent(VarDef(name="Short", description="More verbose"),
         list(name="Short", description="More verbose"))
-    expect_true(inherits(VarDef(), "VariableDefinition"))
 })
 
 test_that("VarDef takes 'data' and does toVariable on it", {
@@ -38,7 +38,7 @@ test_that("VarDef(data=VarDef, ...)", {
 })
 
 if (run.integration.tests) {
-    with(test.authentication, {
+    with_test_authentication({
         with(test.dataset(df), {
             test_that("Wrapping VarDef has same result as just ds<-", {
                 ds$newvar <- VarDef(df$v4)
@@ -99,7 +99,7 @@ if (run.integration.tests) {
                     VarDef(1:3, name="Wrong num rows", alias="whatever")
                 ), "replacement has 3 rows, data has 20")
                 ## Confirm that refresh(ds) is unchanged
-                expect_true(is.null(refresh(ds)$Two))
+                expect_null(refresh(ds)$Two)
             })
             test_that("General input validation on addVariables", {
                 expect_error(addVariables(ds,
@@ -107,7 +107,7 @@ if (run.integration.tests) {
                     5 ## Not a variable
                 ), "Must supply VariableDefinitions")
                 ## Confirm that refresh(ds) is unchanged
-                expect_true(is.null(refresh(ds)$Two))
+                expect_null(refresh(ds)$Two)
             })
             test_that("addVariables server error handling", {
                 without_internet({
@@ -119,8 +119,8 @@ if (run.integration.tests) {
                 })
                 ## Confirm that refresh(ds) is unchanged
                 ds <- refresh(ds)
-                expect_true(is.null(ds$v3plus4))
-                expect_true(is.null(ds$v3plus5))
+                expect_null(ds$v3plus4)
+                expect_null(ds$v3plus5)
             })
         })
     })

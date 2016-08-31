@@ -9,18 +9,15 @@ with_mock_HTTP({
     })
 
     test_that("Changing numeric type by <- makes requests", {
-        expect_error(type(ds$birthyr) <- "categorical",
-            paste('POST /api/datasets/dataset1/variables/birthyr/cast.json',
-                  '{"cast_as":"categorical"}'),
-            fixed=TRUE)
-        expect_error(type(ds$birthyr) <- "text",
-            paste('POST /api/datasets/dataset1/variables/birthyr/cast.json',
-                  '{"cast_as":"text"}'),
-            fixed=TRUE)
+        expect_POST(type(ds$birthyr) <- "categorical",
+            '/api/datasets/dataset1/variables/birthyr/cast/',
+            '{"cast_as":"categorical"}')
+        expect_POST(type(ds$birthyr) <- "text",
+            '/api/datasets/dataset1/variables/birthyr/cast/',
+            '{"cast_as":"text"}')
     })
     test_that("Setting the same type is a no-op", {
-        expect_error(type(ds$birthyr) <- "numeric",
-            NA)
+        expect_no_request(type(ds$birthyr) <- "numeric")
     })
     test_that("Attempting to set an unsupported type fails", {
         for (i in c("multiple_response", "categorical_array", "datetime", "foo")) {
@@ -39,20 +36,18 @@ with_mock_HTTP({
     })
 })
 
-if (run.integration.tests) {
-    with(test.authentication, {
-        with(test.dataset(df), {
-            test_that("Type changing alters data on the server", {
-                testvar <- ds$v1
-                expect_true(is.Numeric(testvar))
-                type(testvar) <- "text"
-                expect_true(is.Text(testvar))
+with_test_authentication({
+    test_that("Type changing alters data on the server", {
+        ds <- newDataset(df[,1,drop=FALSE])
+        
+        testvar <- ds$v1
+        expect_true(is.Numeric(testvar))
+        type(testvar) <- "text"
+        expect_true(is.Text(testvar))
 
-                ds <- refresh(ds)
-                expect_true(is.Text(ds$v1))
-                type(ds$v1) <- "numeric"
-                expect_true(is.Numeric(ds$v1))
-            })
-        })
+        ds <- refresh(ds)
+        expect_true(is.Text(ds$v1))
+        type(ds$v1) <- "numeric"
+        expect_true(is.Numeric(ds$v1))
     })
-}
+})
