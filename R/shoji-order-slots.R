@@ -46,6 +46,12 @@ setMethod("urls", "ShojiOrder", function (x) entities(x@graph, simplify=TRUE))
 #' @rdname urls
 #' @export
 setMethod("urls", "OrderGroup", function (x) entities(x, simplify=TRUE))
+#' @rdname urls
+#' @export
+setMethod("urls", "CrunchVariable", function (x) self(x))
+#' @rdname urls
+#' @export
+setMethod("urls", "CrunchDataset", function (x) urls(variables(x)))
 
 #' @rdname ShojiOrder-slots
 #' @export
