@@ -11,7 +11,10 @@
 #' \code{makeMR}; ignored in \code{makeArray}.
 #' @param ... Optional additional attributes to set on the new variable.
 #' @return A VariableDefinition that when added to a Dataset will create the
-#' categorical-array or multiple-response variable.
+#' categorical-array or multiple-response variable. \code{deriveArray} will
+#' make a derived array expression, while \code{makeArray} and \code{makeMR}
+#' return an expression that "binds" variables together, removing them from
+#' independent existence.
 #' @export
 makeArray <- function (subvariables, dataset=NULL, name, ...) {
 
@@ -48,6 +51,8 @@ makeArray <- function (subvariables, dataset=NULL, name, ...) {
     return(out)
 }
 
+#' @rdname makeArray
+#' @export
 deriveArray <- function (subvariables, name, ...) {
     ## Get subvariable URLs
     ## TODO: factor this logic out of here, makeArray, and addSubvariable
@@ -71,4 +76,26 @@ deriveArray <- function (subvariables, name, ...) {
         list(value=I(subvarids))))
 
     return(VariableDefinition(expr=derivation, name=name, ...))
+}
+
+flipArrays <- function (variables) {
+    ## Assume list of variables. TODO: accept dataset subset
+
+    ## TODO: validate that all variables are arrays
+    ## TODO: validate that they have the same categories? or too rigid?
+
+    ## Get the subvariable catalogs
+    subs <- lapply(variables, subvariables)
+    allnames <- unique(unlist(lapply(subs, names)))
+
+    with(temp.option(crunch.namekey.array="name"), {
+        ## Use this option so we can extract by name
+        newvars <- lapply(allnames, function (n) {
+            vars <- unlist(lapply(variables, function (x) x[[n]]))
+            deriveArray(subvariables=unlist(lapply(vars, self)), name=n,
+                subreferences=lapply(vars, function (v) list(name=name(v))))
+        })
+    })
+    ## Return the list of derivations. Can then pass that to addVariables
+    return(newvars)
 }
