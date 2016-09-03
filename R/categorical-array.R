@@ -89,7 +89,7 @@ flipArrays <- function (variables) {
     allnames <- unique(unlist(lapply(subs, names)))
 
     with(temp.option(crunch.namekey.array="name"), {
-        ## Use this option so we can extract by name
+        ## Use this option so we can extract subvariables by name
         newvars <- lapply(allnames, function (n) {
             vars <- unlist(lapply(variables, function (x) x[[n]]))
             deriveArray(subvariables=unlist(lapply(vars, self)), name=n,
