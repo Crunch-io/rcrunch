@@ -1,4 +1,4 @@
-### crunch 1.13.1 (under development)
+### crunch 1.13.2
 * Support deep copying of categorical array variables.
 * Join (`merge`) a subset of variables of a dataset.
 * `moveToGroup` function and setter for easier adding of variables to existing groups.
