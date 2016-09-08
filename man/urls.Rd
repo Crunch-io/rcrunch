@@ -3,6 +3,8 @@
 \docType{methods}
 \name{urls,ShojiCatalog-method}
 \alias{urls}
+\alias{urls,CrunchDataset-method}
+\alias{urls,CrunchVariable-method}
 \alias{urls,OrderGroup-method}
 \alias{urls,ShojiCatalog-method}
 \alias{urls,ShojiOrder-method}
@@ -13,6 +15,10 @@
 \S4method{urls}{ShojiOrder}(x)
 
 \S4method{urls}{OrderGroup}(x)
+
+\S4method{urls}{CrunchVariable}(x)
+
+\S4method{urls}{CrunchDataset}(x)
 }
 \arguments{
 \item{x}{a Catalog, Order, or Group object}

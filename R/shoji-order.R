@@ -453,3 +453,65 @@ ungrouped <- function (order.obj) {
     return(do.call(groupClass(order.obj), list(name="ungrouped",
         entities=entities(Filter(is.character, order.obj)))))
 }
+
+#' Move entities to a group
+#'
+#' The function has two versions: a regular function and a setter. They do the
+#' same thing, but the setter probably results in less verbose code for you.
+#'
+#' @param x VariableGroup
+#' @param value Variable, VariableCatalog subset, or Dataset subset
+#' @return \code{x} with the entities in \code{value} appended to it. If the
+#' containing order object has duplicates=FALSE, the entities will be "moved"
+#' to this group. Otherwise, their references will be copied to the group.
+#' @examples
+#' \dontrun{
+#' moveToGroup(ordering(ds)[["Demographics"]]) <- ds[c("gender", "age")]
+#'}
+#' @export
+moveToGroup <- function (x, value) {
+    if (!inherits(value, "ShojiGroup")) {
+        ## If it's a Group, let's move it as is. If not, get the URLs
+        ## TODO: this won't do the right thing for moving Dataset to DatasetGroup
+        value <- urls(value)
+    }
+    entities(x) <- c(entities(x), value)
+    return(x)
+}
+
+#' @rdname moveToGroup
+#' @export
+"moveToGroup<-" <- moveToGroup
+
+#' Find an entity in an order object
+#'
+#' @param x Variable or Dataset, depending on the type of order, or URL for it
+#' @param ord ShojiOrder (VariableOrder or DatasetOrder)
+#' @return If \code{x} is found in \code{ord}, a character vector of group names
+#' that provide the "path" to the entity. The length of the vector corresponds
+#' to the depth of nesting. If not found, \code{NA} is returned
+#' @export
+locateEntity <- function (x, ord) {
+    if (!is.character(x)) x <- self(x)
+    out <- character(0)
+
+    .locateInGroups <- function (x, ord) {
+        allurls <- urls(ord)
+        if (x %in% allurls) {
+            us <- vapply(grouped(ord), function (g) x %in% urls(g), logical(1))
+            if (any(us)) {
+                ## Only looks for first match
+                ind <- which(us)[1]
+                out <<- c(out, name(grouped(ord)[[ind]]))
+                .locateInGroups(x, grouped(ord)[[ind]])
+            }
+        } else if (inherits(ord, "ShojiOrder")) {
+            ## We're at the top level and it wasn't found at all
+            out <<- NA_character_
+        }
+        invisible()
+    }
+
+    .locateInGroups(x, ord)
+    return(out)
+}

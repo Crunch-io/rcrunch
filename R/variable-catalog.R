@@ -114,4 +114,8 @@ setMethod("descriptions<-", "VariableCatalog", function (x, value) {
 #' @rdname describe-catalog
 setMethod("types", "VariableCatalog", function (x) getIndexSlot(x, "type"))
 
-## No setter for types<-
+#' @export
+#' @rdname describe-catalog
+setMethod("ids", "VariableCatalog", function (x) getIndexSlot(x, "id"))
+
+## No setter for types<- or ids<-

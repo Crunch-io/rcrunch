@@ -64,10 +64,11 @@ unhideVariables <- function (dataset, variables) {
 
 #' Show the names of hidden variables within the dataset
 #' @param dataset the Dataset
-#' @param key the Variable attribute to return. Default is "alias"
+#' @param key the Variable attribute to return. Default is "alias", following
+#' \code{getOption("crunch.namekey.dataset")}.
 #' @return a vector of the names of Variables marked as hidden.
 #' @export
-hiddenVariables <- function (dataset, key="name") {
+hiddenVariables <- function (dataset, key=namekey(dataset)) {
     hv <- hidden(dataset)
     if (length(hv)) {
         return(sort(vapply(index(hv), function (x) x[[key]], character(1),
