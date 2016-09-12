@@ -19,7 +19,7 @@ with_test_authentication({
         })
         test_that("The append fails and reports conflict on type mismatch", {
             expect_error(
-                expect_message(appendDataset(part1, part2),
+                expect_message(appendDataset(part1, part2, autorollback=FALSE),
                     "Result URL"),
                 "Variable is array in one dataset and not the other")
         })

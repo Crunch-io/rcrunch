@@ -5,9 +5,10 @@
 #' \code{dataset2} is not a Crunch dataset, it will be uploaded as a new
 #' dataset before appending.
 #' @param cleanup Deprecated. See \code{\link{cleanseBatches}}.
+#' @param autorollback Rollback to state before append in case of failure.
 #' @return A CrunchDataset with \code{dataset2} appended to \code{dataset1}
 #' @export
-appendDataset <- function (dataset1, dataset2, cleanup=TRUE) {
+appendDataset <- function (dataset1, dataset2, cleanup=TRUE, autorollback=TRUE) {
     if (!missing(cleanup)) {
         warning('Argument "cleanup" is deprecated. See "?cleanseBatches".',
             call.=FALSE)
@@ -29,7 +30,8 @@ appendDataset <- function (dataset1, dataset2, cleanup=TRUE) {
         element="shoji:entity",
         body=list(
             dataset=self(dataset2)
-        )
+        ),
+        autorollback=autorollback
     )
     ## POST the batch. This will error with a useful message if it fails
     crPOST(shojiURL(dataset1, "catalogs", "batches"), body=toJSON(body))

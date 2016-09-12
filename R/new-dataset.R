@@ -65,7 +65,7 @@ newDatasetFromFile <- function (file, name=basename(file), ...) {
         halt("File not found")
     }
     ds <- createDataset(name=name, ...)
-    ds <- addSourceToDataset(ds, createSource(file))
+    ds <- addSourceToDataset(ds, createSource(file), savepoint=FALSE)
     invisible(ds)
 }
 
@@ -101,12 +101,13 @@ createDataset <- function (name, body, ...) {
     invisible(ds)
 }
 
-addSourceToDataset <- function (dataset, source_url) {
+addSourceToDataset <- function (dataset, source_url, ...) {
     body <- list(
         element="shoji:entity",
         body=list(
             source=source_url
-        )
+        ),
+        ...
     )
     crPOST(shojiURL(dataset, "catalogs", "batches"), body=toJSON(body))
     invisible(refresh(dataset))
@@ -187,10 +188,11 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE, cleanup=TRUE
     }
     if (startsWith(file, "s3://")) {
         ## S3 upload
-        payload <- toJSON(list(element="shoji:entity", body=list(url=file)))
+        payload <- toJSON(list(element="shoji:entity", body=list(url=file), savepoint=FALSE))
     } else {
         ## Local file. Send it as file upload
-        payload <- list(file=httr::upload_file(file))
+        source <- createSource(file)
+        payload <- toJSON(list(element="shoji:entity", body=list(source=source), savepoint=FALSE))
     }
     batch <- try(crPOST(batches_url, body=payload))
 
