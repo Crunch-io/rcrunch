@@ -5,7 +5,9 @@
 #' \code{dataset2} is not a Crunch dataset, it will be uploaded as a new
 #' dataset before appending.
 #' @param cleanup Deprecated. See \code{\link{cleanseBatches}}.
-#' @param autorollback Rollback to state before append in case of failure.
+#' @param autorollback logical: If the append fails, revert the dataset back
+#' to its state before attempting to append? Default is \code{TRUE}, and you
+#' probably won't want to change that.
 #' @return A CrunchDataset with \code{dataset2} appended to \code{dataset1}
 #' @export
 appendDataset <- function (dataset1, dataset2, cleanup=TRUE, autorollback=TRUE) {
