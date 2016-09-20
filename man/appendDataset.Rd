@@ -4,7 +4,8 @@
 \alias{appendDataset}
 \title{Append one Crunch dataset to another}
 \usage{
-appendDataset(dataset1, dataset2, cleanup = TRUE, autorollback = TRUE)
+appendDataset(dataset1, dataset2, autorollback = TRUE,
+  cleanup = autorollback)
 }
 \arguments{
 \item{dataset1}{a CrunchDataset}
@@ -13,11 +14,12 @@ appendDataset(dataset1, dataset2, cleanup = TRUE, autorollback = TRUE)
 \code{dataset2} is not a Crunch dataset, it will be uploaded as a new
 dataset before appending.}
 
-\item{cleanup}{Deprecated. See \code{\link{cleanseBatches}}.}
-
 \item{autorollback}{logical: If the append fails, revert the dataset back
 to its state before attempting to append? Default is \code{TRUE}, and you
 probably won't want to change that.}
+
+\item{cleanup}{Deprecated in favor of \code{autorollback}. See also
+\code{\link{cleanseBatches}}.}
 }
 \value{
 A CrunchDataset with \code{dataset2} appended to \code{dataset1}
