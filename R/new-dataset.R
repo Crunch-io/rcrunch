@@ -38,10 +38,9 @@ newDataset <- function (x, name=deparse(substitute(x))[1], ...) {
 #' @seealso \code{\link{newDataset}} \code{\link{newDatasetByCSV}}
 #' @export
 newDatasetByColumn <- function (x, name=deparse(substitute(x))[1], ...) {
-
-    ds <- createDataset(name=name, ...)
     vardefs <- lapply(names(x),
         function (v) toVariable(x[[v]], name=v, alias=v))
+    ds <- createDataset(name=name, ...)
     ds <- addVariables(ds, vardefs)
     saveVersion(ds, "initial import")
     invisible(ds)
@@ -65,7 +64,7 @@ newDatasetFromFile <- function (file, name=basename(file), ...) {
         halt("File not found")
     }
     ds <- createDataset(name=name, ...)
-    ds <- addSourceToDataset(ds, createSource(file), savepoint=FALSE)
+    ds <- addBatch(ds, source=createSource(file), savepoint=FALSE)
     invisible(ds)
 }
 
@@ -101,16 +100,20 @@ createDataset <- function (name, body, ...) {
     invisible(ds)
 }
 
-addSourceToDataset <- function (dataset, source_url, ...) {
+addBatch <- function (ds, ..., savepoint=TRUE, autorollback=savepoint, strict=TRUE) {
+    batches_url <- shojiURL(ds, "catalogs", "batches")
+    if (!strict) {
+        ## This is apparently deprecated in favor of passing in "strict" differently
+        batches_url <- paste0(batches_url, "?strict=0")
+    }
     body <- list(
         element="shoji:entity",
-        body=list(
-            source=source_url
-        ),
-        ...
+        body=list(...),
+        autorollback=autorollback,
+        savepoint=savepoint
     )
-    crPOST(shojiURL(dataset, "catalogs", "batches"), body=toJSON(body))
-    invisible(refresh(dataset))
+    crPOST(batches_url, body=toJSON(body))
+    invisible(refresh(ds))
 }
 
 .delete_all_my_datasets <- function () {
@@ -147,7 +150,7 @@ newDatasetByCSV <- function (x, name=deparse(substitute(x))[1], ...) {
         check.names=FALSE)
     filename <- tempfile()
     gf <- gzfile(filename, "w")
-    write.csv(cols, file=gf, na="", row.names=FALSE)
+        write.csv(cols, file=gf, na="", row.names=FALSE)
     close(gf)
 
     ## Drop the columns from the metadata and compose the payload
@@ -172,36 +175,30 @@ newDatasetByCSV <- function (x, name=deparse(substitute(x))[1], ...) {
 #' the above metadata.
 #' @param strict logical: must the metadata exactly match the data? Default is
 #' TRUE.
-#' @param cleanup logical: if the file upload fails, delete the dataset?
-#' Default is TRUE.
 #' @return On success, a new dataset.
 #' @export
 #' @keywords internal
-createWithMetadataAndFile <- function (metadata, file, strict=TRUE, cleanup=TRUE) {
+createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
     message("Uploading metadata")
     ds <- createDataset(body=metadata)
 
     message("Uploading data")
-    batches_url <- shojiURL(ds, "catalogs", "batches")
-    if (!strict) {
-        batches_url <- paste0(batches_url, "?strict=0")
-    }
     if (startsWith(file, "s3://")) {
         ## S3 upload
-        payload <- toJSON(list(element="shoji:entity", body=list(url=file), savepoint=FALSE))
+        out <- try(addBatch(ds, url=file, savepoint=FALSE, strict=strict),
+            silent=TRUE)
     } else {
         ## Local file. Send it as file upload
-        source <- createSource(file)
-        payload <- toJSON(list(element="shoji:entity", body=list(source=source), savepoint=FALSE))
+        out <- try(addBatch(ds, source=createSource(file), savepoint=FALSE,
+            strict=strict), silent=TRUE)
     }
-    batch <- try(crPOST(batches_url, body=payload))
 
-    if (is.error(batch) && cleanup) {
+    if (is.error(out)) {
         delete(ds, confirm=FALSE)
-        rethrow(batch)
+        rethrow(out)
     }
     message("Done!")
-    return(refresh(ds))
+    return(refresh(out))
 }
 
 # createWithMetadataAndFile <- function (metadata, file) {
