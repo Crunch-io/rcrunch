@@ -1,3 +1,6 @@
+### crunch 1.13.3 (under development)
+* Add "autorollback" argument to `appendDataset`, defaulted to `TRUE`, which ensures that a failed append leaves the dataset in a clean state.
+
 ### crunch 1.13.2
 * Support deep copying of categorical array variables.
 * Join (`merge`) a subset of variables and/or rows of a dataset.
