@@ -3,7 +3,7 @@
 
 ### crunch 1.13.2
 * Support deep copying of categorical array variables.
-* Join (`merge`) a subset of variables of a dataset.
+* Join (`merge`) a subset of variables and/or rows of a dataset.
 * `moveToGroup` function and setter for easier adding of variables to existing groups.
 * `locateEntity` function to find a variable or dataset within a potentially deeply nested order.
 * Change default key for printing `hiddenVariables` from "name" to "alias", governed by `options(crunch.namekey.dataset)` as elsewhere
