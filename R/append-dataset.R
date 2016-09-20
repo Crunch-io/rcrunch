@@ -4,12 +4,16 @@
 #' @param dataset2 another CrunchDataset, or possibly a data.frame. If
 #' \code{dataset2} is not a Crunch dataset, it will be uploaded as a new
 #' dataset before appending.
-#' @param cleanup Deprecated. See \code{\link{cleanseBatches}}.
+#' @param autorollback logical: If the append fails, revert the dataset back
+#' to its state before attempting to append? Default is \code{TRUE}, and you
+#' probably won't want to change that.
+#' @param cleanup Deprecated in favor of \code{autorollback}. See also
+#' \code{\link{cleanseBatches}}.
 #' @return A CrunchDataset with \code{dataset2} appended to \code{dataset1}
 #' @export
-appendDataset <- function (dataset1, dataset2, cleanup=TRUE) {
+appendDataset <- function (dataset1, dataset2, autorollback=TRUE, cleanup=autorollback) {
     if (!missing(cleanup)) {
-        warning('Argument "cleanup" is deprecated. See "?cleanseBatches".',
+        warning('Argument "cleanup" is deprecated. Use "autorollback" instead.',
             call.=FALSE)
     }
     stopifnot(is.dataset(dataset1))
@@ -25,13 +29,8 @@ appendDataset <- function (dataset1, dataset2, cleanup=TRUE) {
         halt("Cannot append dataset to itself")
     }
 
-    body <- list(
-        element="shoji:entity",
-        body=list(
-            dataset=self(dataset2)
-        )
-    )
     ## POST the batch. This will error with a useful message if it fails
-    crPOST(shojiURL(dataset1, "catalogs", "batches"), body=toJSON(body))
-    invisible(refresh(dataset1))
+    dataset1 <- addBatch(dataset1, dataset=self(dataset2),
+        autorollback=autorollback)
+    invisible(dataset1)
 }
