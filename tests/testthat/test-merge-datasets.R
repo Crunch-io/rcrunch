@@ -225,7 +225,7 @@ with_test_authentication({
     test_that("Can select variables and rows to join", {
         ds1 <- newDatasetFromFixture("join-apidocs2-to-me")
         ds1$allpets_1 <- NULL
-        ds1 <- merge(ds1, ds2[ds2$stringid == "67805248", c("stringid", "q1", "petloc")],
+        ds1 <- merge(ds1, ds2[ds2$stringid == "43805958", c("stringid", "q1", "petloc")],
             by.x="id", by.y="stringid")
         expect_identical(names(ds1),
             c("id", "matches", "other_var", "q1", "petloc"))
@@ -235,7 +235,7 @@ with_test_authentication({
     test_that("Can select rows to join", {
         ds1 <- newDatasetFromFixture("join-apidocs2-to-me")
         ds1$allpets_1 <- NULL
-        ds1 <- merge(ds1, ds2[ds2$stringid == "67805248",],
+        ds1 <- merge(ds1, ds2[ds2$stringid == "43805958",],
             by.x="id", by.y="stringid")
         expect_identical(names(ds1),
             c("id", "matches", "other_var", "allpets", "q1", "petloc", "ndogs",
