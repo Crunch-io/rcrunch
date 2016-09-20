@@ -4,11 +4,24 @@ with_mock_HTTP({
     ds1 <- loadDataset("test ds")
     ds2 <- loadDataset("ECON.sav")
 
-    testPayload <- paste0('{"function":"adapt",',
+    testPayloadNoFilterArg <- paste0('{"function":"adapt",',
         '"args":[{"dataset":"/api/datasets/dataset3/"},',
         '{"variable":"/api/datasets/dataset3/variables/birthyr/"},',
-        '{"variable":"/api/datasets/dataset1/variables/birthyr/"}]}')
-    testSubsetPayload <- paste0('{"function":"select","args":[{"map":{"66ae9881e3524f7db84970d556c34552":{"variable":"/api/datasets/dataset3/variables/gender/"},"f78ca47313144b57adfb495893968e70":{"variable":"/api/datasets/dataset3/variables/birthyr/"}}}],"frame":', testPayload, '}')
+        '{"variable":"/api/datasets/dataset1/variables/birthyr/"}]')
+    testPayload <- paste0(testPayloadNoFilterArg, '}')
+    genderFilter <- paste0('{"function":"==","args":[',
+        '{"variable":"/api/datasets/dataset3/variables/gender/"},{"value":1}]}')
+    testPayloadWithFilter <- paste0(testPayloadNoFilterArg, ',"filter":',
+        genderFilter, '}')
+    testSubsetPayloadPart1 <- paste0('{"function":"select","args":[{"map":{',
+        '"66ae9881e3524f7db84970d556c34552":',
+            '{"variable":"/api/datasets/dataset3/variables/gender/"},',
+        '"f78ca47313144b57adfb495893968e70":',
+            '{"variable":"/api/datasets/dataset3/variables/birthyr/"}}}],',
+        '"frame":')
+    testSubsetPayload <- paste0(testSubsetPayloadPart1, testPayload, '}')
+    testSubsetPayloadWithFilter <- paste0(testSubsetPayloadPart1, testPayload,
+        ',"filter":', genderFilter, '}')
 
     test_that("Correct payload without filtering", {
         expect_warning(
@@ -43,6 +56,23 @@ with_mock_HTTP({
             expect_POST(merge(ds1, ds2[c("gender", "birthyr")], by="birthyr"),
                 '/api/datasets/dataset1/variables/',
                 testSubsetPayload),
+            "Variable birthyr is hidden")
+    })
+
+    test_that("filter rows in merge", {
+        expect_warning(
+            expect_POST(merge(ds1, ds2[ds2$gender == "Male", ], by="birthyr"),
+                '/api/datasets/dataset1/variables/',
+                testPayloadWithFilter),
+            "Variable birthyr is hidden")
+    })
+
+    test_that("filter rows and variables in merge", {
+        expect_warning(
+            expect_POST(merge(ds1, ds2[ds2$gender == "Male", c("gender", "birthyr")],
+                                by="birthyr"),
+                '/api/datasets/dataset1/variables/',
+                testSubsetPayloadWithFilter),
             "Variable birthyr is hidden")
     })
 
@@ -178,11 +208,10 @@ with_test_authentication({
         expect_identical(hiddenVariables(ds1, "name"), "Weight")
     })
 
-    ## Tests to write:
+    ## More tests to write:
     ## 1) check for handling of the conflicted alias
     ## 2) weight_variables?
     ## 3) apply exclusion filter on either dataset
-    ## 4) Next: filter rows/cols
 
     test_that("Can select variables to join", {
         ds1 <- newDatasetFromFixture("join-apidocs2-to-me")
@@ -191,5 +220,26 @@ with_test_authentication({
             by.x="id", by.y="stringid")
         expect_identical(names(ds1),
             c("id", "matches", "other_var", "q1", "petloc"))
+    })
+
+    test_that("Can select variables and rows to join", {
+        ds1 <- newDatasetFromFixture("join-apidocs2-to-me")
+        ds1$allpets_1 <- NULL
+        ds1 <- merge(ds1, ds2[ds2$stringid == "67805248", c("stringid", "q1", "petloc")],
+            by.x="id", by.y="stringid")
+        expect_identical(names(ds1),
+            c("id", "matches", "other_var", "q1", "petloc"))
+        expect_equal(sum(table(ds1$q1)), 1)
+    })
+
+    test_that("Can select rows to join", {
+        ds1 <- newDatasetFromFixture("join-apidocs2-to-me")
+        ds1$allpets_1 <- NULL
+        ds1 <- merge(ds1, ds2[ds2$stringid == "67805248",],
+            by.x="id", by.y="stringid")
+        expect_identical(names(ds1),
+            c("id", "matches", "other_var", "allpets", "q1", "petloc", "ndogs",
+            "ndogs_a", "ndogs_b", "q3", "country", "wave"))
+        expect_equal(sum(table(ds1$q1)), 1)
     })
 })
