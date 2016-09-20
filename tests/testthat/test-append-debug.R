@@ -47,7 +47,7 @@ with_test_authentication({
             expect_error(
                 expect_message(appendDataset(part1, part2),
                     "Result URL"),
-                "common subvariables")
+                "Subvariable mr_1 cannot be bound to both arrays CA2 and CA1.")
         })
         part1 <- cleanseBatches(part1)
 
@@ -55,7 +55,6 @@ with_test_authentication({
             alias(part2$CA2) <- "CA1"
             ## This is the critical piece to trigger the error: delete rows after realiasing
             part2 <- dropRows(part2, seq_len(nrow(part2)) == 1)
-            skip("Append fails (Should be fixed by real-arrays branch)")
             out <- appendDataset(part1, part2)
             expect_equal(dim(out), c(2*nrow(part2) + 1, ncol(part2)))
             expect_identical(aliases(subvariables(out$CA1)),
@@ -87,13 +86,14 @@ with_test_authentication({
                 c("petloc_home", "petloc_work"))
             expect_null(ds2$comb)
         })
-        out <- appendDataset(ds1, ds2)
         test_that("These append successfully", {
+            ## This passes on master but fails here with:
+            ## Cannot append subvariables [u'000013', u'000012'] to [u'000012'].
+            out <- appendDataset(ds1, ds2)
             expect_true(is.dataset(out))
             expect_true(is.CA(out$comb))
             expect_equal(aliases(subvariables(out$petloc)),
                 c("petloc_home", "petloc_work"))
-            skip("aliases(subvariables(out$comb)) has length 1, not length 2. (Should be fixed by real-arrays branch)")
             expect_length(aliases(subvariables(out$comb)), 2)
         })
     })

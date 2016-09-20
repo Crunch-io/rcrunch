@@ -65,7 +65,7 @@ with_test_authentication({
             expect_error(
                 expect_message(appendDataset(part1, part2),
                     "Result URL"),
-                "type text on current and of type numeric in incoming")
+                "Type of 000001 does not match target 000000 and cannot be converted.")
         })
     })
 })
