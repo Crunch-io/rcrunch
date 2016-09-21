@@ -116,14 +116,14 @@ with_mock_HTTP({
             "/api/datasets/dataset1/variables/textVar/",
             "/api/datasets/dataset1/variables/starttime/",
             "/api/datasets/dataset1/variables/catarray/"))
-        ## But allVariables isn't ordered
-        expect_true(setequal(urls(allVariables(test.ds)),
+        ## allVariables is ordered too
+        expect_identical(urls(allVariables(test.ds)),
             c("/api/datasets/dataset1/variables/birthyr/",
-            "/api/datasets/dataset1/variables/catarray/",
             "/api/datasets/dataset1/variables/gender/",
             "/api/datasets/dataset1/variables/mymrset/",
+            "/api/datasets/dataset1/variables/textVar/",
             "/api/datasets/dataset1/variables/starttime/",
-            "/api/datasets/dataset1/variables/textVar/")))
+            "/api/datasets/dataset1/variables/catarray/"))
     })
 
     test_that("namekey function exists and affects names()", {
