@@ -45,11 +45,6 @@ setMethod("delete", "VariableTuple", function (x, confirm=requireConsent(), ...)
         halt("Must confirm deleting variable")
     }
     out <- crDELETE(self(x))
-    if (length(out)) {
-        ## Array defintion. Returned subvariables. Delete them
-        ## TODO: In future, remove this if block when API doesn't do this
-        lapply(out, crDELETE)
-    }
     invisible(out)
 })
 
@@ -68,54 +63,28 @@ setMethod("delete", "VariableTuple", function (x, confirm=requireConsent(), ...)
 #' @return a new version of variable without the indicated subvariables
 #' @export
 deleteSubvariables <- function (variable, to.delete, confirm=requireConsent()) {
-    ## Store some metadata up front
-    payload <- copyVariableReferences(variable)
-    subvars <- subvariables(variable)
-    subvar.urls <- urls(subvars)
-    subvar.names <- names(subvars)
-
     ## Identify subvariable URLs
     delete.these <- urls(variable[to.delete])
-    ## Get confirmation
-    if (length(delete.these) == 1) {
-        prompt <- paste0("Really delete ",
-            dQuote(subvar.names[match(delete.these, subvar.urls)]), "?")
-    } else {
-        prompt <- paste0("Really delete these ", length(delete.these),
-            " variables?")
-    }
-    if (confirm && !askForPermission(prompt)) {
-        halt("Must confirm deleting subvariable(s)")
-    }
 
-    tryCatch(lapply(delete.these, crDELETE), error=function (e) {
-        if (grepl("Please delete the array variable first", e$message)) {
-            ## The future isn't here yet.
-
-            ## Unbind
-            all.subvar.urls <- unlist(unbind(variable))
-
-            ## Delete
-            dels <- lapply(delete.these, function (x) try(crDELETE(x)))
-
-            ## Setdiff those deleted from those returned from unbind
-            payload$subvariables <- I(setdiff(all.subvar.urls, delete.these))
-            class(payload) <- "VariableDefinition"
-
-            ## Rebind
-            new_url <- POSTNewVariable(variableCatalogURL(variable), payload)
-
-            ## Prune subvariable name prefix, or otherwise reset the names
-            subvars <- Subvariables(crGET(absoluteURL("subvariables/", new_url)))
-            names(subvars) <- subvar.names[match(urls(subvars), subvar.urls)]
-
-            ## Done.
-            variable <<- new_url
+    if (confirm) {
+        ## Get confirmation
+        if (length(delete.these) == 1) {
+            subvars <- subvariables(variable)
+            subvar.urls <- urls(subvars)
+            subvar.names <- names(subvars)
+            prompt <- paste0("Really delete ",
+                dQuote(subvar.names[match(delete.these, subvar.urls)]), "?")
         } else {
-            stop(e$message)
+            prompt <- paste0("Really delete these ", length(delete.these),
+                " variables?")
         }
-    })
-    invisible(variable)
+        if (!askForPermission(prompt)) {
+            halt("Must confirm deleting subvariable(s)")
+        }
+    }
+
+    lapply(delete.these, crDELETE)
+    invisible(refresh(variable))
 }
 
 #' @rdname deleteSubvariables

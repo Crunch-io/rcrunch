@@ -28,30 +28,8 @@ variableMetadata <- function (dataset) {
         }, x=extra, i=names(extra), SIMPLIFY=FALSE)
     names(extra) <- absoluteURL(paste0(names(extra), "/"), self(varcat))
 
-    ## 3) Check to see if `extra` has any subvariables at top level. If not,
-    ## either there are no array variables in the dataset, or we're in the
-    ## future.
-    subvar.urls <- setdiff(names(extra), urls(varcat))
-    if (length(subvar.urls)) {
-        ## Let's migrate the data to the future shape
-        ## Construct subreferences and drop subvars from top level
-        ind <- index(varcat)
-        extra <- sapply(urls(varcat), function (u) {
-            this <- ind[[u]]
-            these.subs <- this$subvariables
-            if (!is.null(these.subs)) {
-                ## Pull in subreferences
-                this$subreferences <- lapply(extra[these.subs],
-                    function (s) s[intersect(c("name", "alias", "description"), names(s))])
-                names(this$subreferences) <- NULL
-            }
-            ## Merge the entries from the catalog and table
-            return(modifyList(extra[[u]], this))
-        }, simplify=FALSE)
-    } else {
-        ## Just merge the entries
-        extra <- modifyList(extra, index(varcat))
-    }
+    ## Merge the entries
+    extra <- modifyList(extra, index(varcat))
 
     index(varcat) <- extra
     return(varcat)

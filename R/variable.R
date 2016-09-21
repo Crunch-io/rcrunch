@@ -156,15 +156,7 @@ unbind <- function (x) {
     stopifnot(inherits(x, "CategoricalArrayVariable"))
     ## Delete self and drop cache for variable catalog (parent)
     u <- self(x)
-    out <- c()
-    tryCatch(out <- crPOST(u, body='{"unbind": {}}'), error=function (e) {
-        if (grepl("405", e$message)) {
-            ## The future isn't here yet.
-            out <<- crDELETE(u)
-        } else {
-            stop(e$message)
-        }
-    })
+    out <- crPOST(u, body='{"unbind": {}}')
     dropCache(datasetReference(u))
     invisible(out)
 }
