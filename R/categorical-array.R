@@ -78,24 +78,56 @@ deriveArray <- function (subvariables, name, ...) {
     return(VariableDefinition(expr=derivation, name=name, ...))
 }
 
-flipArrays <- function (variables) {
-    ## Assume list of variables. TODO: accept dataset subset
-
+#' Rearrange array subvariables into other configurations
+#'
+#' Sometimes it is useful to group subvariables across arrays in order to
+#' compare them more easily. This function generates a set of derived views of
+#' common subvariables across arrays. Because they are derived, they share data
+#' with the underlying array variables, and they are thus automatically updated
+#' when new data is appended.
+#'
+#' @param variables List of variables, variable catalog, or dataset subset
+#' containing the categorical array or multiple response variables you want to
+#' rearrange.
+#' @param suffix character string to append to the new variable names. Make it
+#' \code{""} if you don't want it to append anything.
+#' @return A list of derived VariableDefinitions, one per unique subvariable
+#' name across all \code{variables}. Each variable (in \code{variables}) that
+#' contains this subvariable will appear
+#' as a subvariable in these new derived array definitions. Use
+#' \code{addVariables} to add these to your dataset.
+#' @examples
+#' \dontrun{
+#' ds <- addVariables(ds, flipArrays(ds[c("petloc", "petloc2")], suffix=", rearranged"))
+#' }
+#' @export
+flipArrays <- function (variables, suffix=", flipped") {
     ## TODO: validate that all variables are arrays
     ## TODO: validate that they have the same categories? or too rigid?
-
     ## Get the subvariable catalogs
+    if (is.dataset(variables)) {
+       variables <- allVariables(variables)
+    }
+    if (inherits(variables, "VariableCatalog")) {
+        ## This feels wrong.
+        variables <- lapply(urls(variables),
+            function (u) CrunchVariable(variables[[u]]))
+    }
+    varnames <- vapply(variables, name, character(1))
     subs <- lapply(variables, subvariables)
-    allnames <- unique(unlist(lapply(subs, names)))
-
+    subnames <- lapply(subs, names)
+    allnames <- unique(unlist(subnames))
     with(temp.option(crunch.namekey.array="name"), {
-        ## Use this option so we can extract subvariables by name
-        newvars <- lapply(allnames, function (n) {
-            vars <- unlist(lapply(variables, function (x) x[[n]]))
-            deriveArray(subvariables=unlist(lapply(vars, self)), name=n,
-                subreferences=lapply(vars, function (v) list(name=name(v))))
-        })
+       ## Use this option so we can extract subvariables by name
+       newvars <- lapply(allnames, function (n) {
+           has_this_variable <- vapply(subnames, function (x) n %in% x, logical(1))
+           vars <- lapply(variables[has_this_variable], function (x) x[[n]])
+           deriveArray(subvariables=vars,
+               name=paste0(n, suffix),
+               subreferences=lapply(varnames[has_this_variable], function (x) list(name=x)))
+           })
     })
+
     ## Return the list of derivations. Can then pass that to addVariables
     return(newvars)
 }
