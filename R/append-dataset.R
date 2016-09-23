@@ -29,8 +29,15 @@ appendDataset <- function (dataset1, dataset2, autorollback=TRUE, cleanup=autoro
         halt("Cannot append dataset to itself")
     }
 
+    ## Assemble the payload
+    payload <- list(dataset=self(dataset2), autorollback=autorollback)
+    ## Include a variable map, if appropriate
+    vars <- variablesFilter(dataset2, map=TRUE)
+    if (!is.null(vars)) {
+        payload <- modifyList(payload, list(`function`="select", args=list(vars)))
+    }
+
     ## POST the batch. This will error with a useful message if it fails
-    dataset1 <- addBatch(dataset1, dataset=self(dataset2),
-        autorollback=autorollback)
+    dataset1 <- do.call("addBatch", c(dataset1, payload))
     invisible(dataset1)
 }

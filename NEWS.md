@@ -4,6 +4,7 @@
 * `allVariables` is now ordered by the variable catalog's order, just as `variables` has always been.
 * Add "force" argument to `mergeFork`.
 * Support an `as_array` (pseudo-)function in `crtabs` that allows crosstabbing a multiple-response variable as if it were a categorical array.
+* `appendDataset` can now append a subset of variables.
 
 ### crunch 1.13.2
 * Support deep copying of categorical array variables.
