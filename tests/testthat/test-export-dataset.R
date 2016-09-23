@@ -94,4 +94,14 @@ with_test_authentication({
         expect_is(df2$v4, "integer")
         expect_equal(df2$v4, as.vector(ds$v4, mode="id"))
     })
+
+    test_that("Exclusion is applied, even if it depends on column not selected", {
+        skip_locally("Vagrant host doesn't serve files correctly")
+        filename <- tempfile()
+        exclusion(ds) <- ds$v4 == "C"
+        write.csv(ds[, c("v2", "v3")], file=filename)
+        df2 <- read.csv(filename)
+        expect_identical(dim(df2), c(10L, 2L))
+        expect_identical(names(df2), c("v2", "v3"))
+    })
 })

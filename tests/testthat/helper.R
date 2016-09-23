@@ -8,7 +8,7 @@ skip_on_jenkins <- function (...) {
 }
 
 skip_locally <- function (...) {
-    if (nchar(Sys.getenv("JENKINS_HOME")) == 0) {
+    if (startsWith(getOption("crunch.api"), "http://local")) {
         skip(...)
     }
 }
