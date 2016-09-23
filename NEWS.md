@@ -3,6 +3,7 @@
 * Add "autorollback" argument to `appendDataset`, defaulted to `TRUE`, which ensures that a failed append leaves the dataset in a clean state.
 * `allVariables` is now ordered by the variable catalog's order, just as `variables` has always been.
 * Add "force" argument to `mergeFork`.
+* Support an `as_array` (pseudo-)function in `crtabs` that allows crosstabbing a multiple-response variable as if it were a categorical array.
 
 ### crunch 1.13.2
 * Support deep copying of categorical array variables.

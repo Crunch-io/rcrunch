@@ -57,6 +57,12 @@ with_mock_HTTP({
                 dQuote("categorical")))
     })
 
+    test_that("'as_array' on non-MR", {
+        expect_error(crtabs(~ as_array(gender), data=ds),
+            paste0("Cannot analyze a variable of type ",
+                dQuote("categorical"), " 'as_array'"))
+    })
+
     test_that("Unsupported aggregation functions", {
         expect_error(crtabs(cumsum(birthyr) ~ gender, data=ds),
             "no method for coercing this S4 class to a vector")

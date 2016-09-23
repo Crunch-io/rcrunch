@@ -138,7 +138,15 @@ registerCubeFunctions <- function (varnames) {
         min=numfunc("cube_min"),
         max=numfunc("cube_max"),
         sd=numfunc("cube_stddev"),
-        sum=numfunc("cube_sum")
+        sum=numfunc("cube_sum"),
+        as_array=function (x) {
+            ## Kinda hacky way to do a query of an MR as CA
+            if (!is.MR(x)) {
+                halt("Cannot analyze a variable of type ", dQuote(type(x)),
+                    " 'as_array'")
+            }
+            zfunc("as_array", x)
+        }
     )
 
     overlap <- intersect(varnames, names(funcs))
@@ -168,6 +176,11 @@ varsToCubeDimensions <- function (vars) {
             ## Put "each" first so that the rows, not columns, are subvars
             return(list(list(each=self(x)),
                 v))
+        } else if (is.list(x) && "function" %in% names(x) && x[["function"]] == "as_array") {
+            ## Pseudo-ZCL from registerCubeFunctions, used to treat an MR like a CA
+            ## x is thus list(`function`="as_array", args=list(list(variable=self)))
+            ## Return instead list(list(each=self), list(variable=self))
+            return(list(list(each=x$args[[1]]$variable), x$args[[1]]))
         } else {
             ## Just the var ref, but nest in a list so we can unlist below to
             ## flatten
