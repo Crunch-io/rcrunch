@@ -1,5 +1,28 @@
 context("Fork and merge")
 
+with_mock_HTTP({
+    ds1 <- loadDataset("test ds")
+    ds2 <- loadDataset("ECON.sav")
+
+    test_that("mergeFork requests", {
+        expect_POST(mergeFork(ds1, ds2),
+            "/api/datasets/dataset1/actions/",
+            '{"element":"shoji:entity",',
+            '"body":{"dataset":"/api/datasets/dataset3/",',
+            '"autorollback":true,"force":false}}')
+        expect_POST(mergeFork(ds1, ds2, autorollback=FALSE),
+            "/api/datasets/dataset1/actions/",
+            '{"element":"shoji:entity",',
+            '"body":{"dataset":"/api/datasets/dataset3/",',
+            '"autorollback":false,"force":false}}')
+        expect_POST(mergeFork(ds1, ds2, force=TRUE),
+            "/api/datasets/dataset1/actions/",
+            '{"element":"shoji:entity",',
+            '"body":{"dataset":"/api/datasets/dataset3/",',
+            '"autorollback":true,"force":true}}')
+    })
+})
+
 with_test_authentication({
     ds <- newDataset(df)
     test_that("Fork catalog exists", {

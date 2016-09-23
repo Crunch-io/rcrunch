@@ -4,7 +4,7 @@
 \alias{mergeFork}
 \title{Merge changes to a dataset from a fork}
 \usage{
-mergeFork(dataset, fork, autorollback = TRUE)
+mergeFork(dataset, fork, autorollback = TRUE, force = FALSE)
 }
 \arguments{
 \item{dataset}{The \code{CrunchDataset} to merge to}
@@ -16,6 +16,12 @@ that is to be merged in.}
 restored to its state prior to the merge, or should it be left in its
 partially merged state for debugging and manual fixing? Default is
 \code{TRUE}, i.e. the former.}
+
+\item{force}{logical Attempt to push through merge conflicts by dropping
+all changes to \code{dataset} since \code{fork} diverged from and take only
+the changes from \code{fork}? Default is \code{FALSE}, and it is recommended
+only to use force=TRUE after first attempting and failing to merge without
+forcing.}
 }
 \value{
 \code{dataset} with changes from \code{fork} merged to it.

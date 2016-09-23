@@ -12,7 +12,8 @@
         "batches": "/api/datasets/dataset1/batches/",
         "permissions": "/api/datasets/dataset1/permissions/",
         "parent": "/api/datasets/",
-        "joins": "/api/datasets/dataset1/joins/"
+        "joins": "/api/datasets/dataset1/joins/",
+        "actions": "/api/datasets/dataset1/actions/"
     },
     "views": {
         "summary": "/api/datasets/dataset1/summary/",

@@ -40,12 +40,17 @@ defaultForkName <- function (dataset) {
 #' restored to its state prior to the merge, or should it be left in its
 #' partially merged state for debugging and manual fixing? Default is
 #' \code{TRUE}, i.e. the former.
+#' @param force logical Attempt to push through merge conflicts by dropping
+#' all changes to \code{dataset} since \code{fork} diverged from and take only
+#' the changes from \code{fork}? Default is \code{FALSE}, and it is recommended
+#' only to use force=TRUE after first attempting and failing to merge without
+#' forcing.
 #' @return \code{dataset} with changes from \code{fork} merged to it.
 #' @export
-mergeFork <- function (dataset, fork, autorollback=TRUE) {
+mergeFork <- function (dataset, fork, autorollback=TRUE, force=FALSE) {
     m <- crPOST(shojiURL(dataset, "catalogs", "actions"), body=toJSON(list(
         element="shoji:entity",
-        body=list(dataset=self(fork), autorollback=autorollback)
+        body=list(dataset=self(fork), autorollback=autorollback, force=force)
     )))
     return(refresh(dataset))
 }

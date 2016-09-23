@@ -2,6 +2,7 @@
 * `flipArrays` function to generate derived views of array subvariables
 * Add "autorollback" argument to `appendDataset`, defaulted to `TRUE`, which ensures that a failed append leaves the dataset in a clean state.
 * `allVariables` is now ordered by the variable catalog's order, just as `variables` has always been.
+* Add "force" argument to `mergeFork`.
 
 ### crunch 1.13.2
 * Support deep copying of categorical array variables.
