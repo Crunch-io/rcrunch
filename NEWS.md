@@ -1,10 +1,13 @@
-### crunch 1.13.3 (under development)
+### crunch 1.13.5 (under development)
+* `appendDataset` can now append a subset of variables.
+
+### crunch 1.13.4
 * `flipArrays` function to generate derived views of array subvariables
 * Add "autorollback" argument to `appendDataset`, defaulted to `TRUE`, which ensures that a failed append leaves the dataset in a clean state.
 * `allVariables` is now ordered by the variable catalog's order, just as `variables` has always been.
 * Add "force" argument to `mergeFork`.
 * Support an `as_array` (pseudo-)function in `crtabs` that allows crosstabbing a multiple-response variable as if it were a categorical array.
-* `appendDataset` can now append a subset of variables.
+* Fix bug in dataset export when attempting to export a single variable
 
 ### crunch 1.13.2
 * Support deep copying of categorical array variables.
