@@ -46,7 +46,7 @@ variablesFilter <- function (dataset, map=FALSE) {
                 .Names=ids(allvars))))
         } else {
             ## Old
-            return(list(`function`="identify", args=list(list(id=urls(allvars)))))
+            return(list(`function`="identify", args=list(list(id=I(urls(allvars))))))
         }
     }
     ## Else, return NULL

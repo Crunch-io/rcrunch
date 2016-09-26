@@ -29,6 +29,14 @@ with_mock_HTTP({
         expect_error(exportDataset(ds, format="exe"),
             "'arg' should be one of ")
     })
+
+    test_that("Exporting only one variable", {
+        expect_POST(write.csv(ds["gender"], file=""),
+            '/api/datasets/dataset1/export/csv/',
+            '{"filter":null,"where":{"function":"identify",',
+            '"args":[{"id":["/api/datasets/dataset1/variables/gender/"]}]},',
+            '"options":{"use_category_ids":false}}')
+    })
 })
 
 validExport <- function (df2) {
