@@ -1,4 +1,4 @@
-### crunch 1.13.3 (under development)
+### crunch 1.13.4
 * `flipArrays` function to generate derived views of array subvariables
 * Add "autorollback" argument to `appendDataset`, defaulted to `TRUE`, which ensures that a failed append leaves the dataset in a clean state.
 * `allVariables` is now ordered by the variable catalog's order, just as `variables` has always been.
