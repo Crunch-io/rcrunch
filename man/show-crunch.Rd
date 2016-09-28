@@ -8,6 +8,7 @@
 \alias{show,CrunchExpr-method}
 \alias{show,CrunchLogicalExpr-method}
 \alias{show,CrunchVariable-method}
+\alias{show,OrderGroup-method}
 \alias{show,ShojiCatalog-method}
 \alias{show,ShojiObject-method}
 \alias{show-crunch}
@@ -28,6 +29,8 @@
 \S4method{show}{CrunchLogicalExpr}(object)
 
 \S4method{show}{CrunchCube}(object)
+
+\S4method{show}{OrderGroup}(object)
 }
 \arguments{
 \item{object}{the object}

@@ -10,13 +10,13 @@ test_that("VariableGroup and Order objects can be made", {
 })
 
 with_mock_HTTP({
-    test.ds <- loadDataset("test ds")
-    varcat <- allVariables(test.ds)
+    ds <- loadDataset("test ds")
+    varcat <- allVariables(ds)
 
     test_that("ordering methods on variables catalog", {
-        expect_is(ordering(variables(test.ds)), "VariableOrder")
-        expect_is(ordering(test.ds), "VariableOrder")
-        expect_identical(ordering(variables(test.ds)), ordering(test.ds))
+        expect_is(ordering(variables(ds)), "VariableOrder")
+        expect_is(ordering(ds), "VariableOrder")
+        expect_identical(ordering(variables(ds)), ordering(ds))
     })
 
     test_that("relative URLs in hierarchical order", {
@@ -27,9 +27,9 @@ with_mock_HTTP({
             entities(VariableOrder(crGET(vc@orders$hier))))
     })
 
-    test.ord <- ordering(test.ds)
+    test.ord <- ordering(ds)
     ent.urls <- urls(test.ord)
-    varcat_url <- self(allVariables(test.ds))
+    varcat_url <- self(allVariables(ds))
     nested.ord <- try(VariableOrder(
         VariableGroup(name="Group 1",
             entities=list(ent.urls[1],
@@ -191,57 +191,57 @@ with_mock_HTTP({
 
     test_that("Assignment by new group name", {
         nested.o <- nested.ord
-        nested.o[["Group 3"]] <- test.ds["starttime"]
+        nested.o[["Group 3"]] <- ds["starttime"]
         expect_identical(names(nested.o), c("Group 1", "Group 2", "Group 3"))
         expect_identical(entities(nested.o[["Group 3"]]),
-            list(self(test.ds$starttime)))
+            list(self(ds$starttime)))
         ## Test the "duplicates option": starttime should have been removed from
         ## Group 2
         expect_identical(entities(nested.o[["Group 2"]]),
-            list(self(test.ds$catarray)))
+            list(self(ds$catarray)))
     })
 
     test_that("Assignment by new group name with a URL", {
         nested.o <- nested.ord
-        nested.o[["Group 3"]] <- self(test.ds$starttime)
+        nested.o[["Group 3"]] <- self(ds$starttime)
         expect_identical(names(nested.o), c("Group 1", "Group 2", "Group 3"))
         expect_identical(entities(nested.o[["Group 3"]]),
-            list(self(test.ds$starttime)))
+            list(self(ds$starttime)))
         ## Test the "duplicates option": starttime should have been removed from
         ## Group 2
         expect_identical(entities(nested.o[["Group 2"]]),
-            list(self(test.ds$catarray)))
+            list(self(ds$catarray)))
     })
 
     test_that("Assignment by new group name with duplicates", {
         nested.o <- nested.ord
         duplicates(nested.o) <- TRUE
         expect_true(duplicates(nested.o))
-        nested.o[["Group 3"]] <- test.ds["starttime"]
+        nested.o[["Group 3"]] <- ds["starttime"]
         expect_identical(names(nested.o), c("Group 1", "Group 2", "Group 3"))
         expect_identical(entities(nested.o[["Group 3"]]),
-            list(self(test.ds$starttime)))
+            list(self(ds$starttime)))
         ## Test the "duplicates option": starttime should not have been removed
         ## from Group 2
         expect_identical(entities(nested.o[["Group 2"]]),
-            list(self(test.ds$starttime), self(test.ds$catarray)))
+            list(self(ds$starttime), self(ds$catarray)))
     })
 
     test_that("Update group with Dataset", {
         nested.o <- nested.ord
-        nested.o[["Group 2"]] <- test.ds[c("gender", "starttime")]
+        nested.o[["Group 2"]] <- ds[c("gender", "starttime")]
         expect_identical(entities(nested.o[["Group 2"]]),
-            lapply(test.ds[c("gender", "starttime")], self))
+            lapply(ds[c("gender", "starttime")], self))
     })
 
     test_that("Assignment by new nested group name", {
         nested.o <- nested.ord
-        nested.o[["Group 1"]][[2]][["More nesting"]] <- self(test.ds$gender)
+        nested.o[["Group 1"]][[2]][["More nesting"]] <- self(ds$gender)
         expect_identical(entities(nested.o[["Group 1"]]$Nested[["More nesting"]]),
-            list(self(test.ds$gender)))
+            list(self(ds$gender)))
         ## Test duplicates option: gender should only be in "More nesting"
         expect_identical(nested.o[["Group 1"]]$Nested[[1]],
-            self(test.ds$mymrset))
+            self(ds$mymrset))
     })
 
     test_that("Assignment by new nested group name with duplicates", {
@@ -249,12 +249,12 @@ with_mock_HTTP({
         duplicates(nested.o) <- TRUE
         expect_true(duplicates(nested.o[["Group 1"]]))
         expect_true(duplicates(nested.o[["Group 1"]][[2]]))
-        nested.o[["Group 1"]][[2]][["More nesting"]] <- self(test.ds$gender)
+        nested.o[["Group 1"]][[2]][["More nesting"]] <- self(ds$gender)
         expect_identical(entities(nested.o[["Group 1"]]$Nested[["More nesting"]]),
-            list(self(test.ds$gender)))
+            list(self(ds$gender)))
         ## Test duplicates option: gender should still be in "More nesting"
         expect_identical(nested.o[["Group 1"]]$Nested[[1]],
-            self(test.ds$gender))
+            self(ds$gender))
         ## Test that duplicates option passes to new group
         expect_true(duplicates(nested.o[["Group 1"]][[2]][["More nesting"]]))
     })
@@ -325,7 +325,7 @@ with_mock_HTTP({
             fixed=TRUE)
     })
     test_that("Composing a VariableOrder step by step: group 1 by dataset", {
-        ord$Demos <<- test.ds[c("gender", "birthyr")]
+        ord$Demos <<- ds[c("gender", "birthyr")]
         expect_output(ord,
             paste("mymrset",
                   "Text variable ftw",
@@ -338,7 +338,7 @@ with_mock_HTTP({
             fixed=TRUE)
     })
     test_that("Composing a VariableOrder step by step: group by Order subset", {
-        ord$Arrays <<- ord[c(1, 4)] #test.ds[c("mymrset", "catarray")]
+        ord$Arrays <<- ord[c(1, 4)] #ds[c("mymrset", "catarray")]
         expect_output(ord,
             paste("Text variable ftw",
                   "starttime",
@@ -352,7 +352,7 @@ with_mock_HTTP({
             fixed=TRUE)
     })
     test_that("Composing a VariableOrder step by step: nested group by dataset", {
-        ord$Demos[["Others"]] <<- test.ds[c("birthyr", "textVar")]
+        ord$Demos[["Others"]] <<- ds[c("birthyr", "textVar")]
         expect_output(ord,
             paste("starttime",
                   "[+] Demos",
@@ -414,16 +414,16 @@ with_mock_HTTP({
     })
 
     test_that("locateEntity", {
-        expect_identical(locateEntity(test.ds$mymrset, ord),
+        expect_identical(locateEntity(ds$mymrset, ord),
             c("Arrays", "MR"))
-        expect_identical(locateEntity(test.ds$gender, ord),
+        expect_identical(locateEntity(ds$gender, ord),
             "Demos")
-        expect_length(locateEntity(test.ds$starttime, ord), 0)
+        expect_length(locateEntity(ds$starttime, ord), 0)
         expect_true(is.na(locateEntity(ds3$gender, ord)))
     })
 
     test_that("Composing a VariableOrder step by step: moveToGroup", {
-        moveToGroup(ord$Demos$Others) <<- test.ds$starttime
+        moveToGroup(ord$Demos$Others) <<- ds$starttime
         expect_output(ord,
             paste("[+] Arrays",
                   "    Cat Array",
@@ -440,8 +440,8 @@ with_mock_HTTP({
     })
 
     test_that("moveToGroup with groups", {
-        skip("TODO: remove empty group")
         moveToGroup(ord$Demos) <<- ord$Arrays
+        ord <- removeEmptyGroups(ord)
         expect_output(ord,
             paste("[+] Demos",
                   "    [+] Others",
@@ -457,8 +457,8 @@ with_mock_HTTP({
             fixed=TRUE)
     })
     test_that("moveToGroup with dataset subset", {
-        skip("TODO: depends on previous test")
-        moveToGroup(ord$Demos$Arrays) <<- test.ds[c("birthyr", "gender")]
+        moveToGroup(ord$Demos$Arrays) <<- ds[c("birthyr", "gender")]
+        ord <- removeEmptyGroups(ord)
         expect_output(ord,
             paste("[+] Demos",
                   "    [+] Others",
@@ -470,6 +470,126 @@ with_mock_HTTP({
                   "            mymrset",
                   "        Birth Year",
                   "        Gender",
+                  sep="\n"),
+            fixed=TRUE)
+    })
+
+    ord <- VariableOrder(
+        VariableGroup("Alpha", list(
+            self(ds$gender),
+            VariableGroup("Bravo", list(
+                self(ds$gender),
+                VariableGroup("Charlie", ds[c("gender", "birthyr")]),
+                self(ds$mymrset))),
+            ds$birthyr)),
+        VariableGroup("Delta", list(
+            self(ds$gender),
+            self(ds$mymrset),
+            VariableGroup("Echo", list(
+                VariableGroup("Foxtrot", ds[c("birthyr", "catarray")]),
+                self(ds$starttime),
+                self(ds$starttime))),
+            self(ds$starttime))),
+        self(ds$gender),
+        self(ds$textVar),
+        self(ds$birthyr),
+        duplicates=TRUE,
+        catalog_url=varcat_url
+    )
+    test_that("Complex order with duplicates", {
+        expect_output(ord,
+            paste("[+] Alpha",
+                  "    Gender",
+                  "    [+] Bravo",
+                  "        Gender",
+                  "        [+] Charlie",
+                  "            Gender",
+                  "            Birth Year",
+                  "        mymrset",
+                  "    Birth Year",
+                  "[+] Delta",
+                  "    Gender",
+                  "    mymrset",
+                  "    [+] Echo",
+                  "        [+] Foxtrot",
+                  "            Birth Year",
+                  "            Cat Array",
+                  "        starttime",
+                  "        starttime",
+                  "    starttime",
+                  "Gender",
+                  "Text variable ftw",
+                  "Birth Year",
+                  sep="\n"),
+            fixed=TRUE)
+    })
+    test_that("dedupeOrder removes duplicate entries", {
+        expect_output(dedupeOrder(ord),
+            paste("[+] Alpha",
+                  "    [+] Bravo",
+                  "        [+] Charlie",
+                  "            Gender",
+                  "            Birth Year",
+                  "        mymrset",
+                  "[+] Delta",
+                  "    [+] Echo",
+                  "        [+] Foxtrot",
+                  "            Cat Array",
+                  "        starttime",
+                  "Text variable ftw",
+                  sep="\n"),
+            fixed=TRUE)
+    })
+    test_that("dedupeOrder doesn't mutate an order that's already deduped", {
+        expect_output(dedupeOrder(dedupeOrder(ord)),
+            paste("[+] Alpha",
+                  "    [+] Bravo",
+                  "        [+] Charlie",
+                  "            Gender",
+                  "            Birth Year",
+                  "        mymrset",
+                  "[+] Delta",
+                  "    [+] Echo",
+                  "        [+] Foxtrot",
+                  "            Cat Array",
+                  "        starttime",
+                  "Text variable ftw",
+                  sep="\n"),
+            fixed=TRUE)
+    })
+    test_that("Setting duplicates <- FALSE triggers dedupeOrder", {
+        duplicates(ord) <- FALSE
+        expect_output(ord,
+            paste("[+] Alpha",
+                  "    [+] Bravo",
+                  "        [+] Charlie",
+                  "            Gender",
+                  "            Birth Year",
+                  "        mymrset",
+                  "[+] Delta",
+                  "    [+] Echo",
+                  "        [+] Foxtrot",
+                  "            Cat Array",
+                  "        starttime",
+                  "Text variable ftw",
+                  sep="\n"),
+            fixed=TRUE)
+    })
+    test_that("intersect_entities", {
+        expect_output(intersect_entities(ord, ds[c("birthyr", "starttime")]),
+            paste("[+] Alpha",
+                  "    [+] Bravo",
+                  "        [+] Charlie",
+                  "            Birth Year",
+                  "    Birth Year",
+                  "[+] Delta",
+                  "    [+] Echo",
+                  "        [+] Foxtrot",
+                  "            Birth Year",
+                  "        starttime",
+                  "        starttime",
+                  "    starttime",
+                  "Birth Year",
                   sep="\n"),
             fixed=TRUE)
     })
