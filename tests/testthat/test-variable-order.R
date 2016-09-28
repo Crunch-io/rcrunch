@@ -474,29 +474,29 @@ with_mock_HTTP({
             fixed=TRUE)
     })
 
-    test_that("Deduping an order", {
-        ord <- VariableOrder(
-            VariableGroup("Alpha", list(
-                self(ds$gender),
-                VariableGroup("Bravo", list(
-                    self(ds$gender),
-                    VariableGroup("Charlie", ds[c("gender", "birthyr")]),
-                    self(ds$mymrset))),
-                ds$birthyr)),
-            VariableGroup("Delta", list(
-                self(ds$gender),
-                self(ds$mymrset),
-                VariableGroup("Echo", list(
-                    VariableGroup("Foxtrot", ds[c("birthyr", "catarray")]),
-                    self(ds$starttime),
-                    self(ds$starttime))),
-                self(ds$starttime))),
+    ord <- VariableOrder(
+        VariableGroup("Alpha", list(
             self(ds$gender),
-            self(ds$textVar),
-            self(ds$birthyr),
-            duplicates=TRUE,
-            catalog_url=varcat_url
-        )
+            VariableGroup("Bravo", list(
+                self(ds$gender),
+                VariableGroup("Charlie", ds[c("gender", "birthyr")]),
+                self(ds$mymrset))),
+            ds$birthyr)),
+        VariableGroup("Delta", list(
+            self(ds$gender),
+            self(ds$mymrset),
+            VariableGroup("Echo", list(
+                VariableGroup("Foxtrot", ds[c("birthyr", "catarray")]),
+                self(ds$starttime),
+                self(ds$starttime))),
+            self(ds$starttime))),
+        self(ds$gender),
+        self(ds$textVar),
+        self(ds$birthyr),
+        duplicates=TRUE,
+        catalog_url=varcat_url
+    )
+    test_that("Complex order with duplicates", {
         expect_output(ord,
             paste("[+] Alpha",
                   "    Gender",
@@ -522,7 +522,8 @@ with_mock_HTTP({
                   "Birth Year",
                   sep="\n"),
             fixed=TRUE)
-        dedupeOrder(ord)
+    })
+    test_that("dedupeOrder removes duplicate entries", {
         expect_output(dedupeOrder(ord),
             paste("[+] Alpha",
                   "    [+] Bravo",
@@ -536,6 +537,59 @@ with_mock_HTTP({
                   "            Cat Array",
                   "        starttime",
                   "Text variable ftw",
+                  sep="\n"),
+            fixed=TRUE)
+    })
+    test_that("dedupeOrder doesn't mutate an order that's already deduped", {
+        expect_output(dedupeOrder(dedupeOrder(ord)),
+            paste("[+] Alpha",
+                  "    [+] Bravo",
+                  "        [+] Charlie",
+                  "            Gender",
+                  "            Birth Year",
+                  "        mymrset",
+                  "[+] Delta",
+                  "    [+] Echo",
+                  "        [+] Foxtrot",
+                  "            Cat Array",
+                  "        starttime",
+                  "Text variable ftw",
+                  sep="\n"),
+            fixed=TRUE)
+    })
+    test_that("Setting duplicates <- FALSE triggers dedupeOrder", {
+        duplicates(ord) <- FALSE
+        expect_output(ord,
+            paste("[+] Alpha",
+                  "    [+] Bravo",
+                  "        [+] Charlie",
+                  "            Gender",
+                  "            Birth Year",
+                  "        mymrset",
+                  "[+] Delta",
+                  "    [+] Echo",
+                  "        [+] Foxtrot",
+                  "            Cat Array",
+                  "        starttime",
+                  "Text variable ftw",
+                  sep="\n"),
+            fixed=TRUE)
+    })
+    test_that("intersect_entities", {
+        expect_output(intersect_entities(ord, ds[c("birthyr", "starttime")]),
+            paste("[+] Alpha",
+                  "    [+] Bravo",
+                  "        [+] Charlie",
+                  "            Birth Year",
+                  "    Birth Year",
+                  "[+] Delta",
+                  "    [+] Echo",
+                  "        [+] Foxtrot",
+                  "            Birth Year",
+                  "        starttime",
+                  "        starttime",
+                  "    starttime",
+                  "Birth Year",
                   sep="\n"),
             fixed=TRUE)
     })

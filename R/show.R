@@ -278,4 +278,6 @@ setMethod("getShowContent", "CrunchFilter",
 #' @export
 setMethod("show", "CrunchCube", function (object) show(cubeToArray(object)))
 
+#' @rdname show-crunch
+#' @export
 setMethod("show", "OrderGroup", function (object) cat(showOrderGroup(object, index=structure(lapply(urls(object), function (x) list(name=x)), .Names=urls(object))), sep="\n"))

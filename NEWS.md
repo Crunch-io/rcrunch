@@ -1,4 +1,5 @@
 ### crunch 1.13.5 (under development)
+* More utility functions for working with order objects: `dedupeOrder`, `removeEmptyGroups`
 
 ### crunch 1.13.4
 * `flipArrays` function to generate derived views of array subvariables

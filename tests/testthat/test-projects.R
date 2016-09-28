@@ -135,7 +135,8 @@ with_mock_HTTP({
             '{"graph":[{"new group":["/api/datasets/dataset3/"]}]}')
         nested.ord <- DatasetOrder("/api/datasets/dataset3/",
             DatasetGroup("new group",
-                list(DatasetGroup("nested", "/api/datasets/dataset3/"))))
+                list(DatasetGroup("nested", "/api/datasets/dataset3/"))),
+            duplicates=TRUE)
         expect_PUT(ordering(datasets(aproject)) <- nested.ord,
             '/api/projects/project1/datasets/order/',
             '{"graph":["/api/datasets/dataset3/",',

@@ -418,11 +418,11 @@ setdiff_entities <- function (x, ents, remove.na=FALSE) {
     return(x)
 }
 
-intersect_entities <- function (x, ents, remove.na=FALSE) {
+intersect_entities <- function (x, ents, remove.na=TRUE) {
     ## Keep only the part of x (Order) containing "ents" (entity references)
     if (!is.character(ents)) {
         ## Get just the entity URLs
-        ents <- entities(ents, simplify=TRUE)
+        ents <- urls(ents)
     }
 
     if (inherits(x, "ShojiOrder") || inherits(x, "OrderGroup")) {
@@ -460,6 +460,14 @@ removeMissingEntities <- function (x) {
     return(x)
 }
 
+#' Remove OrderGroups with no entities
+#'
+#' This function recurses through a \code{ShojiOrder}/\code{OrderGroup} and
+#' removes any groups that contain no entities.
+#'
+#' @param x VariableOrder, DatasetOrder, VariableGroup, or DatasetGroup
+#' @return \code{x} with empty groups removed.
+#' @export
 removeEmptyGroups <- function (x) {
     if (inherits(x, "ShojiOrder") || inherits(x, "OrderGroup")) {
         entities(x) <- removeEmptyGroups(entities(x))
@@ -483,6 +491,24 @@ removeEmptyGroups <- function (x) {
     return(x)
 }
 
+#' Remove duplicated entites from an order/group
+#'
+#' This function recurses through a \code{ShojiOrder}/\code{OrderGroup} and
+#' removes any duplicate entities. As with the default of
+#' \code{\link[base]{duplicated}}, the first appearance of an entity is kept,
+#' and subsequent occurences are marked as duplicated and removed. (Unlike
+#' \code{duplicated}, however, there is no option to reverse that order.)
+#' "First" occurence of an entity is determined by the function's recursion:
+#' within each group, nested groups are processed first, in order, and
+#' recursively their nested groups are processed. See the test suite, in
+#' test-variable-order.R, for an example that illustrates which entities are
+#' dropped as duplicate.
+#'
+#' @param x VariableOrder, DatasetOrder, VariableGroup, or DatasetGroup
+#' @return \code{x} with duplicate entities removed.
+#' @seealso \code{\link{duplicates}}, which when set to \code{FALSE} also calls
+#' this function.
+#' @export
 dedupeOrder <- function (x) {
     ## Collect seen urls outside, diff out urls, recurse into groups, update seen urls
     seen <- c()
