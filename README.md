@@ -75,6 +75,8 @@ To run integration tests, you will need to specify a test user, password, and AP
 
 or, if you prefer, you can set the environment variables `R_TEST_USER`, `R_TEST_PW`, and `R_TEST_API`.
 
+Note: If INTEGRATION is TRUE, R_TEST_API/test.api hostname **must** be localhost or a crunch.io hostname, or login will fail during test-ci. It cannot, for example, be an IP address, but it can be foo.crunch.io.  Use your hosts file to assign the IP address to a crunch.io hostname and use that hostname in the R_TEST_API/test.api settings if you must.
+
 ### Updating documentation
 
 Run `$ make doc`. Requires the `roxygen2` package.
