@@ -388,3 +388,64 @@ publish <- function (x) {
     is.published(x) <- TRUE
     return(x)
 }
+
+#' View and modify dataset-level settings
+#'
+#' These methods allow access and control over dataset settings. Currently
+#' supported settings include 'viewers_can_export' and
+#' 'viewers_can_change_weight', which govern specific authorizations for users
+#' with view-only access to this datset; and 'weight', which is the default
+#' weight variable for the dataset, the one that will be set for newly shared
+#' users and the one that viewers will have always on if they are not authorized
+#' to change weights. Additional settings will be added in the future. See
+#' \url{http://docs.crunch.io/#fragments}, under 'Settings', for an up-to-date
+#' list of settings supported throughout the Crunch system. Clients may also
+#' provide and use custom settings if they choose.
+#' @param x CrunchDataset
+#' @param value A settings object (\code{ShojiEntity}), for the setter
+#' @return The getter returns a settings object (\code{ShojiEntity}). The setter
+#' returns the dataset (\code{x}).
+#' @examples
+#' \dontrun{
+#' settings(ds)
+#' settings(ds)$viewers_can_export <- TRUE
+#' }
+#' @export
+settings <- function (x) {
+    stopifnot(is.dataset(x))
+    return(ShojiEntity(crGET(shojiURL(x, "fragments", "settings"))))
+}
+
+#' @rdname settings
+#' @export
+"settings<-" <- function (x, value) {
+    stopifnot(is.dataset(x))
+    sets <- settings(x)
+
+    ## Find new attributes in new, things missing from new (were set as NULL),
+    ## and things changed
+    old <- sets@body
+    new <- value@body
+
+    ## Start with things missing from new
+    payload <- sapply(setdiff(names(old), names(new)), null, simplify=FALSE)
+    ## Look for new attributes
+    newattrs <- setdiff(names(new), names(old))
+    if (length(newattrs)) {
+        ## Warn that we're adding new attrs, in case it was accidental.
+        ## It probably is.
+        warning("Adding ", serialPaste(newattrs), " as new setting",
+            ifelse(length(newattrs) > 1, "s", ""), call.=FALSE)
+        payload <- c(payload, new[newattrs])
+    }
+    ## Now look for updates
+    common <- intersect(names(new), names(old))
+    changed <- dirtyElements(old[common], new[common])
+    payload <- c(payload, new[common[changed]])
+
+    ## Only send a request if any of those checks found something to send
+    if (length(payload)) {
+        crPATCH(self(sets), body=toJSON(payload))
+    }
+    return(x)
+}

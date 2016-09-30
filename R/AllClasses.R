@@ -14,7 +14,7 @@ ShojiObject <- setClass("ShojiObject",
         views="ANY",
         fragments="ANY"
     ))
-
+ShojiEntity <- setClass("ShojiEntity", contains="ShojiObject")
 ShojiCatalog <- setClass("ShojiCatalog", contains="ShojiObject",
     representation(
         index="list",
