@@ -340,11 +340,21 @@ with_test_authentication({
         test_that("Setting default weight", {
             settings(ds)$weight <- self(ds$name)
             expect_identical(settings(ds)$weight, self(ds$name))
+            ## And it should now be in the weight_variables catalog too right?
+            expect_identical(urls(ShojiCatalog(crGET(shojiURL(ds, "catalogs",
+                "weight_variables")))), self(ds$name))
+            ## Can also remove the setting
+            settings(ds)$weight <- NULL
+            expect_null(settings(ds)$weight)
         })
         test_that("Setting a new setting", {
             expect_warning(settings(ds)$SOMETHINGELSE <- "a string",
                 "Adding SOMETHINGELSE as new setting")
             expect_identical(settings(ds)$SOMETHINGELSE, "a string")
+        })
+        test_that("Junk input validation for settings", {
+            expect_error(settings(ds)$weight <- self(ds))
+            expect_error(settings(ds)$viewers_can_export <- list(foo="bar"))
         })
     })
 
