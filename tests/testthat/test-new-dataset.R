@@ -77,7 +77,7 @@ if (run.integration.tests) {
 
             test_that("Can create dataset with data in S3", {
                 ds <- createWithMetadataAndFile(m,
-                    file="s3://public.testing.crunch.io/example-dataset.csv")
+                    file="s3://testing.crunch.io/example-dataset.csv")
                 expect_valid_apidocs_import(ds)
                 ds2 <- newDatasetFromFixture("apidocs")
                 ## Compare to dataset imported from local file upload
