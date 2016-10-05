@@ -38,8 +38,8 @@
             "id": "949d2dc7e7a24e6090cc88bb92e1d2fb",
             "description": "Please select all that apply",
             "subvariables": [
-                "/api/datasets/dataset2/variables/subvar2/",
-                "/api/datasets/dataset2/variables/subvar4/"
+                "./mymrset/subvariables/subvar2/",
+                "./mymrset/subvariables/subvar4/"
             ],
             "subvariables_catalog": "/api/datasets/dataset2/variables/mymrset/subvariables/"
         },

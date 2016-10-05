@@ -124,7 +124,7 @@ setMethod("[<-", c("CrunchVariable", "CrunchExpr", "missing", "CrunchExpr"),
                 "not present in the category ids of variable ", dQuote(name(x))))
         }
         if (add.no.data) {
-            categories(x)[[length(categories(x)) + 1]] <- Category(data=.no.data)
+            x <- addNoDataCategory(x)
         }
         out <- .updateVariable(x, value, filter=.dispatchFilter(i))
         return(x)
@@ -143,7 +143,7 @@ setMethod("[<-", c("CrunchVariable", "CrunchExpr", "missing", "CrunchExpr"),
                 dQuote(name(x))))
         }
         if (add.no.data) {
-            categories(x)[[length(categories(x)) + 1]] <- Category(data=.no.data)
+            x <- addNoDataCategory(x)
         }
         value <- n2i(value, categories(x))
         out <- .updateVariable(x, value, filter=.dispatchFilter(i))

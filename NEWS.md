@@ -1,6 +1,7 @@
 ### crunch 1.13.5 (under development)
 * More utility functions for working with order objects: `dedupeOrder`, `removeEmptyGroups`
 * `appendDataset` can now append a subset of variables.
+* Fix bug in assigning NA to an array subvariable that didn't already have the "No Data" category
 
 ### crunch 1.13.4
 * `flipArrays` function to generate derived views of array subvariables

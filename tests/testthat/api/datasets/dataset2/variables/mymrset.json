@@ -1,0 +1,34 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/dataset2/variables/mymrset/",
+    "body": {
+        "alias": "mymrset",
+        "format": {
+            "data": {"digits": 2},
+            "summary": {"digits": 2}
+        },
+        "missing_reasons": {"No Data": -1},
+        "categories": [
+            {"numeric_value": 0.0, "name": "Zero", "missing": false, "selected": false, "id": 1},
+            {"numeric_value": 1.0, "name": "One", "missing": false, "selected": true, "id": 2}
+        ],
+        "dataset_id": "14715604be4d499fbe2445bca9f3eee0",
+        "view": {"include_noneoftheabove": false, "column_width": null},
+        "type": "multiple_response",
+        "subvariables": [
+            "./subvariables/subvar2/",
+            "./subvariables/subvar4/"
+        ],
+        "subvariables_catalog": "/api/datasets/dataset2/variables/mymrset/subvariables/",
+        "id": "949d2dc7e7a24e6090cc88bb92e1d2fb"
+    },
+    "views": {
+        "summary": "/api/datasets/dataset2/variables/mymrset/summary/",
+        "values": "/api/datasets/dataset2/variables/mymrset/values/",
+        "cast": "/api/datasets/dataset2/variables/mymrset/cast/"
+    },
+    "urls": {
+        "dataset_url": "/api/datasets/dataset2/"
+    },
+    "description": "Details for a given Variable"
+}
