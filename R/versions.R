@@ -1,6 +1,6 @@
 setMethod("initialize", "VersionCatalog", function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
-    ord <- order(from8601(getIndexSlot(.Object, "last_update")),
+    ord <- order(from8601(getIndexSlot(.Object, "creation_time")),
         decreasing=TRUE)
     .Object@index <- .Object@index[ord]
     return(.Object)
@@ -28,7 +28,7 @@ setMethod("descriptions", "VersionCatalog", function (x) getIndexSlot(x, "descri
 
 #' @rdname describe-catalog
 #' @export
-setMethod("timestamps", "VersionCatalog", function (x) from8601(getIndexSlot(x, "last_update")))
+setMethod("timestamps", "VersionCatalog", function (x) from8601(getIndexSlot(x, "creation_time")))
 
 #' Create a new saved version
 #'
