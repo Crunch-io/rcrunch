@@ -1,6 +1,7 @@
-### crunch 1.13.5 (under development)
+### crunch 1.13.6
 * More utility functions for working with order objects: `dedupeOrder`, `removeEmptyGroups`
-* `appendDataset` can now append a subset of variables.
+* `appendDataset` can now append a subset of variables
+* Update to changes in the dataset version API
 * Fix bug in assigning NA to an array subvariable that didn't already have the "No Data" category
 
 ### crunch 1.13.4
