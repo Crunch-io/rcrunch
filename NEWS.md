@@ -1,3 +1,5 @@
+### crunch 1.13.7 (under development)
+
 ### crunch 1.13.6
 * More utility functions for working with order objects: `dedupeOrder`, `removeEmptyGroups`
 * `appendDataset` can now append a subset of variables
