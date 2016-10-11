@@ -473,6 +473,17 @@ with_mock_HTTP({
                   sep="\n"),
             fixed=TRUE)
     })
+    test_that("flattenOrder on that composed order", {
+        expect_output(flattenOrder(ord),
+            paste("Text variable ftw",
+                  "starttime",
+                  "Cat Array",
+                  "mymrset",
+                  "Birth Year",
+                  "Gender",
+                  sep="\n"),
+            fixed=TRUE)
+    })
 
     ord <- VariableOrder(
         VariableGroup("Alpha", list(

@@ -538,6 +538,25 @@ dedupeOrder <- function (x) {
     return(.dedupe(x))
 }
 
+#' Remove nesting of groups within an order/group
+#'
+#' This function reduces a potentially nested order to its flattened
+#' representation, containing no nested groups. Entities are ordered in the
+#' result by their first appearance in the order object passed as input. 
+#'
+#' @param x VariableOrder, DatasetOrder, VariableGroup, or DatasetGroup; or a
+#' CrunchDataset or catalog that has an \code{ordering} property.
+#' @return \code{x}, or its order resource, flattened.
+#' @export
+flattenOrder <- function (x) {
+    if (!(inherits(x, "ShojiOrder") || inherits(x, "OrderGroup"))) {
+        ## Perhaps it's a dataset or catalog. Get its "ordering"
+        x <- ordering(x)
+    }
+    entities(x) <- urls(x)
+    return(x)
+}
+
 #' Get un(grouped) OrderGroups
 #'
 #' "ungrouped" is a magic OrderGroup that contains all entities not found

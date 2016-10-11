@@ -1,4 +1,5 @@
 ### crunch 1.13.7 (under development)
+* `flattenOrder` to strip out nested groups from an order
 
 ### crunch 1.13.6
 * More utility functions for working with order objects: `dedupeOrder`, `removeEmptyGroups`
