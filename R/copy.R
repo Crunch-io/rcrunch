@@ -27,7 +27,7 @@ copyVariable <- function (x, deep=FALSE, ...) {
     stopifnot(is.variable(x))
 
     newbody <- list(...)
-    oldbody <- modifyList(copyVariableReferences(x), tuple(x)@body)
+    oldbody <- modifyList(copyVariableReferences(x), copyVariableReferences(tuple(x)))
     oldbody$name <- paste0(oldbody$name, " (copy)")
     oldbody$alias <- paste0(oldbody$alias, "_copy")
 
