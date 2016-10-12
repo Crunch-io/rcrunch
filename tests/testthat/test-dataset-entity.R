@@ -227,15 +227,9 @@ with_mock_HTTP({
             "/api/datasets/dataset1/settings/",
             '{"viewers_can_export":null}')
     })
-    test_that("Can set a new setting, but you get a warning", {
-        expect_warning(
-            expect_PATCH(settings(ds)$NOTASETTING <- TRUE,
-                "/api/datasets/dataset1/settings/",
-                '{"NOTASETTING":true}'),
-            "Adding NOTASETTING as new setting")
-    })
-    test_that("No request made if setting NULL on a setting that doesn't exist", {
-        expect_no_request(settings(ds)$NOTASETTING <- NULL)
+    test_that("Can't add a setting that doesn't exist", {
+        expect_error(settings(ds)$NOTASETTING <- TRUE,
+            "Invalid attribute: NOTASETTING")
     })
 })
 
@@ -346,11 +340,6 @@ with_test_authentication({
             ## Can also remove the setting
             settings(ds)$weight <- NULL
             expect_null(settings(ds)$weight)
-        })
-        test_that("Setting a new setting", {
-            expect_warning(settings(ds)$SOMETHINGELSE <- "a string",
-                "Adding SOMETHINGELSE as new setting")
-            expect_identical(settings(ds)$SOMETHINGELSE, "a string")
         })
         test_that("Junk input validation for settings", {
             expect_error(settings(ds)$weight <- self(ds))

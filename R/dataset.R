@@ -420,32 +420,6 @@ settings <- function (x) {
 #' @export
 "settings<-" <- function (x, value) {
     stopifnot(is.dataset(x))
-    sets <- settings(x)
-
-    ## Find new attributes in new, things missing from new (were set as NULL),
-    ## and things changed
-    old <- sets@body
-    new <- value@body
-
-    ## Start with things missing from new
-    payload <- sapply(setdiff(names(old), names(new)), null, simplify=FALSE)
-    ## Look for new attributes
-    newattrs <- setdiff(names(new), names(old))
-    if (length(newattrs)) {
-        ## Warn that we're adding new attrs, in case it was accidental.
-        ## It probably is.
-        warning("Adding ", serialPaste(newattrs), " as new setting",
-            ifelse(length(newattrs) > 1, "s", ""), call.=FALSE)
-        payload <- c(payload, new[newattrs])
-    }
-    ## Now look for updates
-    common <- intersect(names(new), names(old))
-    changed <- dirtyElements(old[common], new[common])
-    payload <- c(payload, new[common[changed]])
-
-    ## Only send a request if any of those checks found something to send
-    if (length(payload)) {
-        crPATCH(self(sets), body=toJSON(payload))
-    }
+    updateEntity(settings(x), value)
     return(x)
 }
