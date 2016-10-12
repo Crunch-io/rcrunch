@@ -8,7 +8,6 @@ with_mock_HTTP({
             name="Gender (copy)",
             alias="gender_copy",
             description="Gender",
-            notes="",
             discarded=FALSE,
             format=list(summary=list(digits=2)),
             view=list(include_missing=FALSE,
