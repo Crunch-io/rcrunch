@@ -65,7 +65,7 @@ copyVariable <- function (x, deep=FALSE, ...) {
 copy <- copyVariable
 
 copyVariableReferences <- function (x, fields=c("name", "alias",
-                                    "description", "discarded", "format",
+                                    "description", "discarded", "format", "notes",
                                     "view", "type")) {
 
     if (inherits(x, "CrunchVariable")) {
