@@ -1,115 +1,115 @@
 context("Dataset object and methods")
 
 with_mock_HTTP({
-    test.ds <- loadDataset("test ds")
-    test.ds2 <- loadDataset("ECON.sav")
-    test.ds3 <- loadDataset("an archived dataset", kind="archived")
+    ds <- loadDataset("test ds")
+    ds2 <- loadDataset("ECON.sav")
+    ds3 <- loadDataset("an archived dataset", kind="archived")
 
     today <- "2016-02-11"
 
     test_that("Dataset can be loaded", {
-        expect_true(is.dataset(test.ds))
+        expect_true(is.dataset(ds))
     })
 
     test_that("Dataset attributes", {
-        expect_identical(name(test.ds), "test ds")
-        expect_identical(description(test.ds), "")
-        expect_identical(id(test.ds), "511a7c49778030653aab5963")
-        expect_null(notes(test.ds))
+        expect_identical(name(ds), "test ds")
+        expect_identical(description(ds), "")
+        expect_identical(id(ds), "511a7c49778030653aab5963")
+        expect_null(notes(ds))
     })
 
     test_that("Dataset attribute setting", {
-        expect_PATCH(name(test.ds) <- "New name",
+        expect_PATCH(name(ds) <- "New name",
             "/api/datasets/",
             '{"/api/datasets/dataset1/":{"name":"New name"}}')
-        expect_PATCH(notes(test.ds) <- "Ancillary information",
+        expect_PATCH(notes(ds) <- "Ancillary information",
             "/api/datasets/dataset1/",
             '{"notes":"Ancillary information"}')
     })
 
     test_that("Name setting validation", {
-        expect_error(name(test.ds) <- 3.14,
+        expect_error(name(ds) <- 3.14,
             'Names must be of class "character"')
-        expect_error(name(test.ds) <- NULL,
+        expect_error(name(ds) <- NULL,
             'Names must be of class "character"')
     })
 
     test_that("archived", {
-        expect_false(is.archived(test.ds))
-        expect_false(is.archived(test.ds2))
-        expect_true(is.archived(test.ds3))
+        expect_false(is.archived(ds))
+        expect_false(is.archived(ds2))
+        expect_true(is.archived(ds3))
     })
 
     test_that("archive setting", {
-        expect_PATCH(is.archived(test.ds2) <- TRUE,
+        expect_PATCH(is.archived(ds2) <- TRUE,
             '/api/datasets/',
             '{"/api/datasets/dataset3/":{"archived":true}}')
-        expect_PATCH(archive(test.ds2),
+        expect_PATCH(archive(ds2),
             '/api/datasets/',
             '{"/api/datasets/dataset3/":{"archived":true}}')
     })
 
     test_that("draft/published", {
-        expect_true(is.published(test.ds))
-        expect_false(is.published(test.ds2))
-        expect_false(is.draft(test.ds))
-        expect_true(is.draft(test.ds2))
+        expect_true(is.published(ds))
+        expect_false(is.published(ds2))
+        expect_false(is.draft(ds))
+        expect_true(is.draft(ds2))
     })
 
     test_that("draft/publish setting", {
-        expect_PATCH(is.published(test.ds2) <- TRUE,
+        expect_PATCH(is.published(ds2) <- TRUE,
             '/api/datasets/',
             '{"/api/datasets/dataset3/":{"is_published":true}}')
-        expect_PATCH(is.published(test.ds) <- FALSE,
+        expect_PATCH(is.published(ds) <- FALSE,
             '/api/datasets/',
             '{"/api/datasets/dataset1/":{"is_published":false}}')
-        expect_PATCH(is.draft(test.ds2) <- FALSE,
+        expect_PATCH(is.draft(ds2) <- FALSE,
             '/api/datasets/',
             '{"/api/datasets/dataset3/":{"is_published":true}}')
-        expect_PATCH(is.draft(test.ds) <- TRUE,
+        expect_PATCH(is.draft(ds) <- TRUE,
             '/api/datasets/',
             '{"/api/datasets/dataset1/":{"is_published":false}}')
-        expect_PATCH(publish(test.ds2),
+        expect_PATCH(publish(ds2),
             '/api/datasets/',
             '{"/api/datasets/dataset3/":{"is_published":true}}')
-        expect_no_request(publish(test.ds))
-        expect_no_request(is.draft(test.ds) <- FALSE)
-        expect_no_request(is.published(test.ds) <- TRUE)
+        expect_no_request(publish(ds))
+        expect_no_request(is.draft(ds) <- FALSE)
+        expect_no_request(is.published(ds) <- TRUE)
     })
 
     test_that("start/endDate", {
-        expect_identical(startDate(test.ds), "2016-01-01")
-        expect_identical(endDate(test.ds), "2016-01-01")
-        expect_null(startDate(test.ds2))
-        expect_null(endDate(test.ds2))
+        expect_identical(startDate(ds), "2016-01-01")
+        expect_identical(endDate(ds), "2016-01-01")
+        expect_null(startDate(ds2))
+        expect_null(endDate(ds2))
     })
 
     test_that("startDate<- makes correct request", {
-        expect_PATCH(startDate(test.ds2) <- today,
+        expect_PATCH(startDate(ds2) <- today,
             '/api/datasets/',
             '{"/api/datasets/dataset3/":{"start_date":"2016-02-11"}}')
-        expect_PATCH(startDate(test.ds) <- NULL,
+        expect_PATCH(startDate(ds) <- NULL,
             '/api/datasets/',
             '{"/api/datasets/dataset1/":{"start_date":null}}')
     })
     test_that("endDate<- makes correct request", {
-        expect_PATCH(endDate(test.ds2) <- today,
+        expect_PATCH(endDate(ds2) <- today,
             '/api/datasets/',
             '{"/api/datasets/dataset3/":{"end_date":"2016-02-11"}}')
-        expect_PATCH(endDate(test.ds) <- NULL,
+        expect_PATCH(endDate(ds) <- NULL,
             '/api/datasets/',
             '{"/api/datasets/dataset1/":{"end_date":null}}')
     })
 
     test_that("Dataset webURL", {
         with(temp.options(crunch.api="https://fake.crunch.io/api/v2/"), {
-            expect_identical(webURL(test.ds),
+            expect_identical(webURL(ds),
                 "https://fake.crunch.io/dataset/511a7c49778030653aab5963")
         })
     })
 
     test_that("Dataset VariableCatalog index is ordered", {
-        expect_identical(urls(variables(test.ds)),
+        expect_identical(urls(variables(ds)),
             c("/api/datasets/dataset1/variables/birthyr/",
             "/api/datasets/dataset1/variables/gender/",
             "/api/datasets/dataset1/variables/mymrset/",
@@ -117,7 +117,7 @@ with_mock_HTTP({
             "/api/datasets/dataset1/variables/starttime/",
             "/api/datasets/dataset1/variables/catarray/"))
         ## allVariables is ordered too
-        expect_identical(urls(allVariables(test.ds)),
+        expect_identical(urls(allVariables(ds)),
             c("/api/datasets/dataset1/variables/birthyr/",
             "/api/datasets/dataset1/variables/gender/",
             "/api/datasets/dataset1/variables/mymrset/",
@@ -128,36 +128,36 @@ with_mock_HTTP({
 
     test_that("namekey function exists and affects names()", {
         expect_identical(getOption("crunch.namekey.dataset"), "alias")
-        expect_identical(names(test.ds), aliases(variables(test.ds)))
+        expect_identical(names(ds), aliases(variables(ds)))
         with(temp.option(crunch.namekey.dataset="name"), {
-            expect_identical(names(test.ds), names(variables(test.ds)))
+            expect_identical(names(ds), names(variables(ds)))
         })
     })
 
     test_that("Dataset ncol doesn't make any requests", {
         with(temp.options(httpcache.log=""), {
-            logs <- capture.output(nc <- ncol(test.ds))
+            logs <- capture.output(nc <- ncol(ds))
         })
         expect_identical(logs, character(0))
         expect_identical(nc, 6L)
-        expect_identical(dim(test.ds), c(25L, 6L))
+        expect_identical(dim(ds), c(25L, 6L))
     })
 
     test_that("Dataset has names() and extract methods work", {
-        expect_false(is.null(names(test.ds)))
-        expect_identical(names(test.ds),
+        expect_false(is.null(names(ds)))
+        expect_identical(names(ds),
             c("birthyr", "gender", "mymrset", "textVar", "starttime", "catarray"))
-        expect_true(is.variable(test.ds[[1]]))
-        expect_true("birthyr" %in% names(test.ds))
-        expect_true(is.variable(test.ds$birthyr))
-        expect_true(is.dataset(test.ds[2]))
-        expect_identical(test.ds["gender"], test.ds[2])
-        expect_identical(test.ds[,2], test.ds[2])
-        expect_identical(test.ds[names(test.ds)=="gender"], test.ds[2])
-        expect_identical(names(test.ds[2]), c("gender"))
-        expect_identical(dim(test.ds[2]), c(25L, 1L))
-        expect_null(test.ds$not.a.var.name)
-        expect_error(test.ds[[999]], "subscript out of bounds")
+        expect_true(is.variable(ds[[1]]))
+        expect_true("birthyr" %in% names(ds))
+        expect_true(is.variable(ds$birthyr))
+        expect_true(is.dataset(ds[2]))
+        expect_identical(ds["gender"], ds[2])
+        expect_identical(ds[,2], ds[2])
+        expect_identical(ds[names(ds)=="gender"], ds[2])
+        expect_identical(names(ds[2]), c("gender"))
+        expect_identical(dim(ds[2]), c(25L, 1L))
+        expect_null(ds$not.a.var.name)
+        expect_error(ds[[999]], "subscript out of bounds")
     })
 
     ## This is a start on a test that getting variables doesn't hit server.
@@ -165,8 +165,8 @@ with_mock_HTTP({
     ## we're hitting cache
     # with(temp.option(httpcache.log=""), {
     #     dlog <- capture.output({
-    #         v1 <- test.ds$birthyr
-    #         d2 <- test.ds[names(test.ds)=="gender"]
+    #         v1 <- ds$birthyr
+    #         d2 <- ds[names(ds)=="gender"]
     #     })
     # })
     # print(dlog)
@@ -174,22 +174,22 @@ with_mock_HTTP({
     # print(logdf)
 
     test_that("Dataset extract error handling", {
-        expect_error(test.ds[[999]], "subscript out of bounds")
-        expect_error(test.ds[c("gender", "NOTAVARIABLE")],
+        expect_error(ds[[999]], "subscript out of bounds")
+        expect_error(ds[c("gender", "NOTAVARIABLE")],
             "Undefined columns selected: NOTAVARIABLE")
-        expect_null(test.ds$name)
+        expect_null(ds$name)
     })
 
     test_that("Extract from dataset by VariableOrder/Group", {
         ents <- c("/api/datasets/dataset1/variables/gender/",
             "/api/datasets/dataset1/variables/mymrset/")
         ord <- VariableOrder(VariableGroup("G1", entities=ents))
-        expect_identical(test.ds[ord[[1]]], test.ds[c("gender", "mymrset")])
-        expect_identical(test.ds[ord], test.ds[c("gender", "mymrset")])
+        expect_identical(ds[ord[[1]]], ds[c("gender", "mymrset")])
+        expect_identical(ds[ord], ds[c("gender", "mymrset")])
     })
 
     test_that("show method", {
-        expect_identical(getShowContent(test.ds),
+        expect_identical(getShowContent(ds),
             c(paste("Dataset", dQuote("test ds")),
             "",
             "Contains 25 rows of 6 variables:",
@@ -204,8 +204,32 @@ with_mock_HTTP({
     })
 
     test_that("dataset can refresh", {
-        ds <- loadDataset("test ds")
         expect_identical(ds, refresh(ds))
+    })
+
+    test_that("Dataset settings", {
+        expect_false(settings(ds)$viewers_can_export)
+        expect_true(settings(ds)$viewers_can_change_weight)
+        expect_identical(settings(ds)$weight, self(ds$birthyr))
+        expect_identical(self(settings(ds)), "/api/datasets/dataset1/settings/")
+    })
+
+    test_that("Changing dataset settings", {
+        expect_PATCH(settings(ds)$viewers_can_export <- TRUE,
+            "/api/datasets/dataset1/settings/",
+            '{"viewers_can_export":true}')
+    })
+    test_that("No request made if not altering a setting", {
+        expect_no_request(settings(ds)$viewers_can_export <- FALSE)
+    })
+    test_that("Can set a NULL setting", {
+        expect_PATCH(settings(ds)$viewers_can_export <- NULL,
+            "/api/datasets/dataset1/settings/",
+            '{"viewers_can_export":null}')
+    })
+    test_that("Can't add a setting that doesn't exist", {
+        expect_error(settings(ds)$NOTASETTING <- TRUE,
+            "Invalid attribute: NOTASETTING")
     })
 })
 
@@ -287,11 +311,40 @@ with_test_authentication({
                 "Useful error message here")
         })
 
+        ds$name <- 1:2
         test_that("A variable named/aliased 'name' can be accessed", {
-            ds$name <- 1:2
             expect_true("name" %in% aliases(variables(ds)))
             expect_true("name" %in% names(ds))
             expect_true(is.Numeric(ds$name))
+        })
+
+        test_that("Dataset settings (defaults)", {
+            # expect_true(settings(ds)$viewers_can_export) ## Isn't it?
+            expect_true(settings(ds)$viewers_can_change_weight)
+            expect_null(settings(ds)$weight)
+        })
+
+        test_that("Setting and unsetting dataset settings", {
+            settings(ds)$viewers_can_change_weight <- FALSE
+            expect_false(settings(ds)$viewers_can_change_weight)
+            skip("Can't set this setting to NULL to reset it to default")
+            settings(ds)$viewers_can_change_weight <- NULL
+            ## Go back to default
+            expect_true(settings(ds)$viewers_can_change_weight)
+        })
+        test_that("Setting default weight", {
+            settings(ds)$weight <- self(ds$name)
+            expect_identical(settings(ds)$weight, self(ds$name))
+            ## And it should now be in the weight_variables catalog too right?
+            expect_identical(urls(ShojiCatalog(crGET(shojiURL(ds, "catalogs",
+                "weight_variables")))), self(ds$name))
+            ## Can also remove the setting
+            settings(ds)$weight <- NULL
+            expect_null(settings(ds)$weight)
+        })
+        test_that("Junk input validation for settings", {
+            expect_error(settings(ds)$weight <- self(ds))
+            expect_error(settings(ds)$viewers_can_export <- list(foo="bar"))
         })
     })
 
@@ -327,8 +380,7 @@ with_test_authentication({
                 function (x) is.Categorical(x), logical(1))))
         })
         test_that("Dataset [[<- on new array variable", {
-            try(ds$arrayVar <- makeArray(ds[cast.these],
-                name="Array variable"))
+            ds$arrayVar <- makeArray(ds[cast.these], name="Array variable")
             expect_true(is.CA(ds$arrayVar))
             expect_identical(name(ds$arrayVar), "Array variable")
         })

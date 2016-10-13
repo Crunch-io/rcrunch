@@ -1,0 +1,9 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/dataset1/settings/",
+    "body": {
+        "viewers_can_export": false,
+        "viewers_can_change_weight": true,
+        "weight": "/api/datasets/dataset1/variables/birthyr/"
+    }
+}

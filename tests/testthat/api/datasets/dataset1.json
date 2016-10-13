@@ -21,7 +21,8 @@
     },
     "fragments": {
         "table": "/api/datasets/dataset1/table/",
-        "preferences": "/api/datasets/dataset1/preferences/"
+        "preferences": "/api/datasets/dataset1/preferences/",
+        "settings": "/api/datasets/dataset1/settings/"
     },
     "some_other_key": {}
 }
