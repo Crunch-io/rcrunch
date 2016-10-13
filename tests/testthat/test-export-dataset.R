@@ -33,8 +33,8 @@ with_mock_HTTP({
     test_that("Exporting only one variable", {
         expect_POST(write.csv(ds["gender"], file=""),
             '/api/datasets/dataset1/export/csv/',
-            '{"filter":null,"where":{"function":"identify",',
-            '"args":[{"id":["/api/datasets/dataset1/variables/gender/"]}]},',
+            '{"filter":null,"where":{"function":"select",',
+            '"args":[{"map":{"/api/datasets/dataset1/variables/gender/": {"variable": "/api/datasets/dataset1/variables/gender/"}}}]},',
             '"options":{"use_category_ids":false}}')
     })
 })
