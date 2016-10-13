@@ -10,6 +10,7 @@ with_mock_HTTP({
         name="MR combined",
         description="Please select all that apply",
         discarded=FALSE,
+        notes="",
         format=list(summary=list(digits=2), data=list(digits=2)),
         view=list(include_noneoftheabove=FALSE,
             column_width=NULL
