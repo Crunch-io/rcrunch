@@ -327,6 +327,7 @@ with_test_authentication({
         test_that("Setting and unsetting dataset settings", {
             settings(ds)$viewers_can_change_weight <- FALSE
             expect_false(settings(ds)$viewers_can_change_weight)
+            skip("Can't set this setting to NULL to reset it to default")
             settings(ds)$viewers_can_change_weight <- NULL
             ## Go back to default
             expect_true(settings(ds)$viewers_can_change_weight)
