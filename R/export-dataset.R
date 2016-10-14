@@ -35,20 +35,14 @@ exportDataset <- function (dataset, file, format=c("csv", "spss"),
     invisible(file)
 }
 
-variablesFilter <- function (dataset, map=FALSE) {
+variablesFilter <- function (dataset) {
     ## Check to see if we have a subset of variables in `dataset`.
     ## If so, return a Crunch expression to filter them
     allvars <- allVariables(dataset)
     if (length(allvars) != length(ShojiCatalog(crGET(self(allvars))))) {
-        if (map) {
-            ## New API approach
-            return(list(map=structure(lapply(urls(allvars), function (x) list(variable=x)),
-                .Names=ids(allvars))))
-        } else {
-            ## Old
-            return(list(`function`="select", args=list(list(map=structure(lapply(urls(allvars), function (x) list(variable=x)),
-                .Names=urls(allvars))))))
-        }
+        v <- structure(lapply(urls(allvars), function (x) list(variable=x)),
+            .Names=ids(allvars))
+        return(list(`function`="select", args=list(list(map=v))))
     }
     ## Else, return NULL
     return(NULL)
