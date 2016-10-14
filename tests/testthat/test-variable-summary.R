@@ -33,13 +33,13 @@ with_mock_HTTP({
             paste(dQuote("max"), "is not defined for TextVariable"))
     })
 
-    test_that("supported summary methods for numeric", {
-        expect_equivalent(min(ds$birthyr), 1920)
-        expect_equivalent(max(ds$birthyr), 1995)
-        expect_equivalent(mean(ds$birthyr), 1964.951)
-        expect_equivalent(median(ds$birthyr), 1968)
-        expect_identical(round(sd(ds$birthyr), 2), 15.17)
-    })
+    # test_that("supported summary methods for numeric", {
+    #     expect_equivalent(min(ds$birthyr), 1920)
+    #     expect_equivalent(max(ds$birthyr), 1995)
+    #     expect_equivalent(mean(ds$birthyr), 1964.951)
+    #     expect_equivalent(median(ds$birthyr), 1968)
+    #     expect_identical(round(sd(ds$birthyr), 2), 15.17)
+    # })
 })
 
 with_test_authentication({
@@ -50,13 +50,20 @@ with_test_authentication({
         expect_equivalent(summ$mean, mean(df$v1, na.rm=TRUE))
         expect_equivalent(summ$stddev, sd(df$v1, na.rm=TRUE))
     })
-    test_that("method dispatch", {
-        expect_identical(mean(ds$v1), mean(df$v1))
-        expect_equivalent(mean(ds$v1, na.rm=TRUE), mean(df$v1, na.rm=TRUE))
-        expect_identical(sd(ds$v1), sd(ds$v1))
-        expect_equivalent(sd(ds$v1, na.rm=TRUE), sd(ds$v1, na.rm=TRUE))
-        expect_identical(median(ds$v1), median(ds$v1))
-        expect_identical(median(ds$v1, na.rm=TRUE), median(ds$v1, na.rm=TRUE))
+    expect_stats_equal <- function (var, expected, stats=c("mean", "sd", "median", "min", "max")) {
+        for (stat in stats) {
+            fn <- get(stat)
+            expect_equal(fn(var), fn(expected), info=stat)
+            expect_equal(fn(var, na.rm=TRUE), fn(expected, na.rm=TRUE), info=stat)
+        }
+    }
+    test_that("Univariate statistics for numeric variable", {
+        expect_true(is.Numeric(ds$v1))
+        expect_stats_equal(ds$v1, df$v1)
+    })
+    test_that("Univariate statistics for datetime variable", {
+        expect_true(is.Datetime(ds$v5))
+        expect_stats_equal(ds$v5, df$v5, c("min", "max"))
     })
     test_that("table", {
         expect_equivalent(table(ds$v4), table(df$v4))
@@ -73,5 +80,12 @@ with_test_authentication({
         expect_equivalent(round(unclass(summary(ds$v1)), 2),
             round(unclass(summary(df$v1)), 2))
         expect_equivalent(as.numeric(summary(ds$v4)), summary(df$v4))
+    })
+    test_that("Filtering summary and univariate stats", {
+        expect_stats_equal(ds$v1[4:15], df$v1[4:15])
+        expect_stats_equal(ds$v5[4:15], df$v5[4:15], c("min", "max"))
+        expect_equivalent(round(unclass(summary(ds$v1[4:15])), 2),
+            round(unclass(summary(df$v1[4:15])), 2))
+        expect_equivalent(as.numeric(summary(ds$v4[4:15])), summary(df$v4[4:15]))
     })
 })

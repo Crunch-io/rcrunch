@@ -1,5 +1,9 @@
 ### crunch 1.13.7 (under development)
 * `flattenOrder` to strip out nested groups from an order
+* `settings` and `settings<-` to view and modify dataset-level controls, such as default "weight" and viewer permissions ("viewers_can_change_weight", "viewers_can_export")
+* Univariate statistics on variables, such as `mean`, `median`, and `sd`, now respect filter expressions, as does the `summary` method.
+* "median" can now be used in `crtabs`
+* Copying and deriving variables now bring in the "notes" attribute.
 
 ### crunch 1.13.6
 * More utility functions for working with order objects: `dedupeOrder`, `removeEmptyGroups`

@@ -7,6 +7,7 @@ with_mock_HTTP({
         name="Gender 1 cat",
         description="Gender",
         discarded=FALSE,
+        notes="",
         format=list(summary=list(digits=2)),
         view=list(include_missing=FALSE,
             show_counts=FALSE,
