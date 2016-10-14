@@ -298,6 +298,11 @@ if (run.integration.tests) {
                     array(c(8, 9, 24, 23), dim=c(2L, 2L),
                         dimnames=list(v8=c("1955-11-05", "1955-11-06"),
                         v7=c("C", "E"))))
+                expect_equivalent(as.array(crtabs(median(v3) ~ v8 + v7,
+                    data=ds)),
+                    array(c(12, 13, 25, 25), dim=c(2L, 2L),
+                        dimnames=list(v8=c("1955-11-05", "1955-11-06"),
+                        v7=c("C", "E"))))
             })
 
             test_that("Numeric aggregates on categoricals with numeric values", {

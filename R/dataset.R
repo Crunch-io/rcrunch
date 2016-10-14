@@ -239,6 +239,15 @@ variableCatalogURL <- function (dataset) {
 
 summaryURL <- function (x) shojiURL(x, "views", "summary")
 
+cubeURL <- function (x) {
+    if (is.dataset(x)) {
+        return(shojiURL(x, "views", "cube"))
+    } else {
+        ## :( Construct the URL
+        return(absoluteURL("./cube/", datasetReference(x)))
+    }
+}
+
 #' Access a Dataset's Variables Catalog
 #'
 #' Datasets contain collections of variables. For a few purposes, such as

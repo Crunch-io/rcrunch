@@ -99,7 +99,6 @@ crtabs <- function (formula, data, weight=crunch::weight(data),
     names(query$measures) <- vapply(query$measures, function (m) {
         sub("^cube_", "", m[["function"]])
     }, character(1))
-
     ## Get filter
     f <- zcl(activeFilter(data))
 
@@ -110,26 +109,27 @@ crtabs <- function (formula, data, weight=crunch::weight(data),
     )
 
     ## Go GET it!
-    cube_url <- shojiURL(data, "views", "cube")
-    return(CrunchCube(crGET(cube_url, query=query),
+    return(CrunchCube(crGET(cubeURL(data), query=query),
         useNA=match.arg(useNA)))
 }
 
-registerCubeFunctions <- function (varnames) {
+registerCubeFunctions <- function (varnames=c()) {
     ## Return a list of "cube functions" to substitute()
     ## in. A better approach, which would avoid potential name collisions, would
     ## probably be to have vars be an environment inside of another environment
     ## that has the cube functions. This version just checks for name collisions
     ## and errors if there is one.
 
-    numfunc <- function (func) {
+    numfunc <- function (func, ...) {
         force(func)
+        moreArgs <- list(...)
         return(function (x) {
             if (is.Categorical(x)) {
                 ## "Cast" it on the fly
-                x <- zfunc("cast", x, "numeric")
+                x <- list(zfunc("cast", x, "numeric"))
             }
-            zfunc(func, x)
+            do.call("zfunc", c(func, x, moreArgs))
+            # zfunc(func, x)
         })
     }
 
@@ -139,6 +139,7 @@ registerCubeFunctions <- function (varnames) {
         max=numfunc("cube_max"),
         sd=numfunc("cube_stddev"),
         sum=numfunc("cube_sum"),
+        median=numfunc("cube_quantile", list(value=I(.5))),
         as_array=function (x) {
             ## Kinda hacky way to do a query of an MR as CA
             if (!is.MR(x)) {
