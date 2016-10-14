@@ -11,12 +11,24 @@ NULL
 
 .summary.stat <- function (x, stat, na.rm=FALSE, ...) {
     ## Get a single stat from the summary object
-    summ <- getSummary(x)
-    m <- summ[[stat]]
-    if (!na.rm && summ[['missing_count']] > 0) {
-        m <- NA_real_
+    # summ <- getSummary(x)
+    # m <- summ[[stat]]
+    # if (!na.rm && summ[['missing_count']] > 0) {
+    #     m <- NA_real_
+    # }
+    # return(m)
+
+    query <- list(
+        query=toJSON(list(dimensions=list(),
+            measures=list(q=registerCubeFunctions()[[stat]](x)))),
+        filter=toJSON(zcl(activeFilter(x)))
+    )
+    cube <- CrunchCube(crGET(cubeURL(x), query=query))
+    if (!na.rm && cube$result$measures$q[['n_missing']] > 0) {
+        return(NA_real_)
+    } else {
+        return(as.array(cube))
     }
-    return(m)
 }
 
 
@@ -39,7 +51,7 @@ setMethod("sd", "CrunchVariable", function (x, na.rm) {
 #' @rdname crunch-uni
 #' @export
 setMethod("sd", "NumericVariable",
-    function (x, na.rm=FALSE) .summary.stat(x, "stddev", na.rm=na.rm))
+    function (x, na.rm=FALSE) .summary.stat(x, "sd", na.rm=na.rm))
 
 #' @rdname crunch-uni
 #' @export
@@ -51,6 +63,11 @@ setMethod("median", "CrunchVariable", function (x, na.rm) {
 setMethod("median", "NumericVariable",
     function (x, na.rm=FALSE) .summary.stat(x, "median", na.rm=na.rm))
 
+## Can't do datetime apparently:
+# (400) Bad Request: The 'cube_quantile' function requires argument 0 be of
+# type {'class': 'numeric'}. (for variable q)
+# setMethod("median", "DatetimeVariable",
+#     function (x, na.rm=FALSE) .summary.stat(x, "median", na.rm=na.rm))
 
 #' @rdname crunch-uni
 #' @export
@@ -64,7 +81,7 @@ setMethod("min", "NumericVariable",
 #' @rdname crunch-uni
 #' @export
 setMethod("min", "DatetimeVariable",
-    function (x, na.rm=FALSE) .summary.stat(x, "min", na.rm=na.rm))
+    function (x, na.rm=FALSE) from8601(.summary.stat(x, "min", na.rm=na.rm)))
 
 #' @rdname crunch-uni
 #' @export
@@ -78,4 +95,4 @@ setMethod("max", "NumericVariable",
 #' @rdname crunch-uni
 #' @export
 setMethod("max", "DatetimeVariable",
-    function (x, na.rm=FALSE) .summary.stat(x, "max", na.rm=na.rm))
+    function (x, na.rm=FALSE) from8601(.summary.stat(x, "max", na.rm=na.rm)))
