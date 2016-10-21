@@ -142,4 +142,27 @@ with_test_authentication({
     test_that("Certain changes don't merge", {
         expect_identical(description(ds), "")
     })
+
+    whereas("Merging from parent to fork", {
+        parent <- newDataset(df)
+        child <- forkDataset(parent)
+
+        names(categories(parent$v4))[1:2] <- c("d", "e")
+        parent$v5 <- NULL
+
+        test_that("Before merging from parent", {
+            expect_identical(names(categories(parent$v4))[1:2], c("d", "e"))
+            expect_identical(names(categories(child$v4))[1:2], c("B", "C"))
+            expect_null(parent$v5)
+            expect_true(is.Datetime(child$v5))
+        })
+
+        test_that("After merging from parent", {
+            child <- mergeFork(child, parent)
+            expect_identical(names(categories(parent$v4))[1:2], c("d", "e"))
+            expect_identical(names(categories(child$v4))[1:2], c("d", "e"))
+            expect_null(parent$v5)
+            expect_null(child$v5)
+        })
+    })
 })
