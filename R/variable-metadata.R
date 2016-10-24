@@ -7,14 +7,6 @@
 variableMetadata <- function (dataset) {
     ## 1) Start with the variables catalog
     varcat <- allVariables(dataset)
-    ## Absolutize the subvariable URLs, which are only absolutized in normal
-    ## use when accessed.
-    index(varcat) <- lapply(index(varcat), function (x) {
-        if ("subvariables" %in% names(x)) {
-            x$subvariables <- absoluteURL(unlist(x$subvariables), self(varcat))
-        }
-        return(x)
-    })
 
     ## 2) Now supplement that with the "table" metadata, which will give us
     ## a) categories
@@ -23,13 +15,18 @@ variableMetadata <- function (dataset) {
     ## It is keyed by "id". Embed the id in the tuples, and then make the keys
     ## be URLs so that it lines up with the variables catalog
     extra <- mapply(function (x, i) {
-            x$id <- i
-            return(x)
-        }, x=extra, i=names(extra), SIMPLIFY=FALSE)
+        x$id <- i
+        if (length(x$subvariables)) {
+            ## table/ returns ids, not relative URLs, so make them appear to be
+            x$subvariables <- absoluteURL(paste0(i, "/subvariables/", unlist(x$subvariables), "/"),
+                self(varcat))
+        }
+        return(x)
+    }, x=extra, i=names(extra), SIMPLIFY=FALSE)
     names(extra) <- absoluteURL(paste0(names(extra), "/"), self(varcat))
 
     ## Merge the entries
-    extra <- modifyList(extra, index(varcat))
+    extra <- modifyList(index(varcat), extra)
 
     index(varcat) <- extra
     return(varcat)

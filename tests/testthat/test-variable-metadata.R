@@ -5,15 +5,14 @@ with_mock_HTTP({
     test_that("variableMetadata", {
         vm <- variableMetadata(ds)
         expect_is(vm, "VariableCatalog")
-        expect_identical(aliases(vm),
-            c("gender", "birthyr", "starttime", "mymrset", "catarray", "textVar"))
-        expect_identical(Categories(data=vm[[1]]$categories),
+        expect_identical(aliases(vm), aliases(allVariables(ds)))
+        expect_identical(Categories(data=vm[[which(aliases(vm) == "gender")]]$categories),
             categories(ds$gender))
-        mymr <- index(vm)[[4]]
+        mymr <- index(vm)[[which(aliases(vm) == "mymrset")]]
         expect_identical(mymr$subvariables,
-            c("/api/datasets/dataset1/variables/subvar2/",
-            "/api/datasets/dataset1/variables/subvar1/",
-            "/api/datasets/dataset1/variables/subvar3/"))
+            c("/api/datasets/dataset1/variables/mymrset/subvariables/subvar2/",
+            "/api/datasets/dataset1/variables/mymrset/subvariables/subvar1/",
+            "/api/datasets/dataset1/variables/mymrset/subvariables/subvar3/"))
         expect_identical(mymr$subreferences,
             list(list(name="First", alias="subvar2", description=NULL),
                 list(name="Second", alias="subvar1", description=NULL),
