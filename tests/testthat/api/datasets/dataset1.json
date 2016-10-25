@@ -13,6 +13,8 @@
         "permissions": "/api/datasets/dataset1/permissions/",
         "parent": "/api/datasets/",
         "joins": "/api/datasets/dataset1/joins/",
+        "filters": "/api/datasets/dataset1/filters/",
+        "boxdata": "/api/datasets/dataset1/boxdata/",
         "actions": "/api/datasets/dataset1/actions/"
     },
     "views": {

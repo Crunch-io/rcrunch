@@ -10,6 +10,8 @@
         "variables": "/api/datasets/dataset3/variables/",
         "savepoints": "/api/datasets/dataset3/savepoints/",
         "batches": "/api/datasets/dataset3/batches/",
+        "filters": "/api/datasets/dataset3/filters/",
+        "boxdata": "/api/datasets/dataset3/boxdata/",
         "permissions": "/api/datasets/dataset3/permissions/"
     },
     "views": {
