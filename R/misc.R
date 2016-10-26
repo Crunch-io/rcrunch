@@ -4,37 +4,6 @@ rethrow <- function (x) halt(errorMessage(x))
 
 errorMessage <- function (e) attr(e, "condition")$message
 
-#' Generic List Element Extractor
-#'
-#' @param key character naming the key(s) to extract. Can traverse list
-#' elements by separating them with \code{$}.
-#' @param xlist list containing other lists from which you want to extract
-#' @param ifnot what to return if the key is not found in a given xlist element
-#' @param simplify logical, passed to sapply internally
-#' @return the requested element(s). If length(key)>1, a named list of those
-#' elements
-#' @keywords internal
-selectFrom <- function (key, xlist, ifnot=NA, simplify=TRUE) {
-    if (!is.list(xlist)) {
-        halt("xlist must be a list object")
-    }
-    if (length(key)>1) {
-        y <- sapply(key, selectFrom, xlist, ifnot, simplify=FALSE)
-    } else {
-    	y <- sapply(xlist,
-    	    function (x) {
-    	        key <- unlist(strsplit(key, "$", fixed=TRUE))
-    	        for (i in key) {
-    	            if (!is.list(x)) x <- NULL
-                    if (!is.null(x)) x <- x[[i]]
-                }
-                if (is.null(x)) x <- ifnot
-                return(x)
-    	    }, simplify=simplify)
-    }
-    return(y)
-}
-
 vget <- function (name) {
     ## Return a function you can lapply/vapply to select an attribute
     ## Usage: lapply(list.of.stuff, vget("name"))

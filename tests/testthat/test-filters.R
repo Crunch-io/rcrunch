@@ -4,12 +4,48 @@ test_that("show method exists", {
     expect_true(is.character(get_output(CrunchFilter())))
 })
 
+with_mock_HTTP({
+    ds <- loadDataset("test ds")
+    ds3 <- loadDataset("ECON.sav")
+
+    test_that("Test dataset has 2 filters", {
+        expect_is(filters(ds), "FilterCatalog")
+        expect_length(filters(ds), 2)
+        expect_output(filters(ds),
+            get_output(data.frame(
+                    name=c("Occasional Political Interest", "Public filter"),
+                    id=c("filter1", "filter2"),
+                    is_public=c(FALSE, TRUE)
+                )), fixed=TRUE)
+    })
+
+    test_that("Empty filter catalog", {
+        expect_is(filters(ds3), "FilterCatalog")
+        expect_length(filters(ds3), 0)
+        expect_output(filters(ds3), get_output(data.frame()))
+    })
+
+    test_that("Filter catalog methods", {
+        expect_identical(names(filters(ds)),
+            c("Occasional Political Interest", "Public filter"))
+        expect_identical(urls(filters(ds)),
+            c("/api/datasets/dataset1/filters/filter1/",
+              "/api/datasets/dataset1/filters/filter2/"))
+        expect_identical(names(filters(ds)[c(2, 1)]),
+           c("Public filter", "Occasional Political Interest"))
+    })
+
+    test_that("Assigning filters<- on a dataset doesn't itself modify anything", {
+        expect_no_request(filters(ds) <- filters(ds)[c(2, 1)])
+        expect_true(is.dataset(ds))
+    })
+})
+
 with_test_authentication({
     ds <- newDataset(df)
     test_that("We have an empty filter catalog", {
         expect_is(filters(ds), "FilterCatalog")
         expect_length(filters(ds), 0)
-        expect_output(filters(ds), get_output(data.frame()))
     })
 
     filters(ds)[["Test filter"]] <- ds$v4 == "B"
