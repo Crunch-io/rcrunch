@@ -109,7 +109,9 @@ with_mock_HTTP({
 
     test_that("loadDataset project arg error handling", {
         expect_error(loadDataset("foo", project=12),
-            paste("Cannot get Shoji URL from object of class", dQuote("numeric")))
+            "subscript out of bounds")
+        expect_error(loadDataset("foo", project="Not a project"),
+            'Project "Not a project" is not valid')
     })
 
     do <- ordering(d)

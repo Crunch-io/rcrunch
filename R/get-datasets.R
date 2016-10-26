@@ -45,21 +45,29 @@ listDatasets <- function (kind=c("active", "all", "archived"), project=NULL,
     return(names(dscat))
 }
 
-selectDatasetCatalog <- function (kind=c("active", "all", "archived"), project=NULL, refresh=FALSE) {
+selectDatasetCatalog <- function (kind=c("active", "all", "archived"),
+                                  project=NULL, refresh=FALSE) {
+
+    Call <- match.call()
     if (is.null(project)) {
         ## Default: we'll get the dataset catalog from the API root
         project <- getAPIRoot()
-    } else if (is.character(project)) {
-        ## Project name (or I guess URL could work)
+    } else if (!(is.shojiObject(project) || inherits(project, "ShojiTuple"))) {
+        ## Project name, URL, or index
         project <- projects()[[project]]
+    }
+    if (is.null(project)) {
+        ## Means a project was specified (like by name) but it didn't exist
+        halt("Project ", deparse(eval.parent(Call$project))[1], " is not valid")
     }
 
     if (refresh) {
         ## drop cache for the ds catalog URL of the "project"
         dropOnly(shojiURL(project, "catalogs", "datasets"))
     }
-    ## Ok, get the catalog
+    ## Ok, get the catalog.
     catalog <- datasets(project)
+
     ## Subset as indicated
     return(switch(match.arg(kind),
         active=active(catalog),

@@ -5,6 +5,7 @@
 * Univariate statistics on variables, such as `mean`, `median`, and `sd`, now respect filter expressions, as does the `summary` method.
 * "median" can now be used in `crtabs`
 * Copying and deriving variables now bring in the "notes" attribute.
+* Improve error handling when attempting to `loadDataset` from a nonexistent project.
 
 ### crunch 1.13.6
 * More utility functions for working with order objects: `dedupeOrder`, `removeEmptyGroups`
