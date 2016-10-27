@@ -1,0 +1,55 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/1/variables/gender/",
+    "body": {
+        "alias": "gender",
+        "format": {
+            "summary": {
+                "digits": 2
+            }
+        },
+        "missing_reasons": {
+            "No Data": -1,
+            "Skipped": 3,
+            "Not Asked": 4
+        },
+        "categories": [
+            {
+                "numeric_value": 1,
+                "missing": false,
+                "id": 1,
+                "name": "Male"
+            },
+            {
+                "numeric_value": 2,
+                "missing": false,
+                "id": 2,
+                "name": "Female"
+            },
+            {
+                "numeric_value": null,
+                "missing": true,
+                "id": -1,
+                "name": "No Data"
+            }
+        ],
+        "dataset_id": "a45d1b42dbca4b27a40c61f0e3c39723",
+        "view": {
+            "include_missing": false,
+            "show_counts": false,
+            "show_codes": false,
+            "column_width": null
+        },
+        "type": "categorical",
+        "id": "66ae9881e3524f7db84970d556c34552"
+    },
+    "views": {
+        "summary": "/api/datasets/1/variables/gender/summary/",
+        "values": "/api/datasets/1/variables/gender/values/"
+    },
+    "urls": {
+        "dataset_url": "/api/datasets/1/"
+    },
+    "description": "Details for a given Variable",
+    "future_shoji_attribute": {}
+}

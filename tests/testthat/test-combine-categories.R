@@ -17,7 +17,7 @@ with_mock_HTTP({
         expr=list(
             `function`="combine_categories",
             args=list(
-                list(variable="/api/datasets/dataset1/variables/gender/"),
+                list(variable="/api/datasets/1/variables/gender/"),
                 list(value=list(
                     list(
                         name="Both",

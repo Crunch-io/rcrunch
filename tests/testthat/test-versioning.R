@@ -26,13 +26,13 @@ with_mock_HTTP({
 
     test_that("saveVersion makes the right request", {
         expect_POST(saveVersion(ds, "Today"),
-            '/api/datasets/dataset1/savepoints/',
+            '/api/datasets/1/savepoints/',
             '{"description":"Today"}')
     })
 
     test_that("saveVersion with no description supplied", {
         expect_POST(saveVersion(ds),
-            '/api/datasets/dataset1/savepoints/',
+            '/api/datasets/1/savepoints/',
             '{"description":"Version 3"}')
     })
 
@@ -47,9 +47,9 @@ with_mock_HTTP({
 
     test_that("restoreVersion makes the right request", {
         expect_POST(restoreVersion(ds, "initial load"),
-            '/api/datasets/dataset1/savepoints/v2/revert/')
+            '/api/datasets/1/savepoints/v2/revert/')
         expect_POST(restoreVersion(ds, 2),
-            '/api/datasets/dataset1/savepoints/v2/revert/')
+            '/api/datasets/1/savepoints/v2/revert/')
         expect_error(restoreVersion(ds, "not a version"),
             paste0(dQuote("not a version"),
             " does not match any available versions"))

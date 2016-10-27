@@ -22,22 +22,22 @@ with_mock_HTTP({
     ds2 <- loadDataset("ECON.sav")
 
     testPayload <- paste0(
-        '{"/api/datasets/dataset1/joins/95c0b45fe0af492594863f818cb913d2/":',
-        '{"left_key":"/api/datasets/dataset1/variables/birthyr/",',
-        '"right_key":"/api/datasets/dataset3/variables/birthyr/"}}')
+        '{"/api/datasets/1/joins/95c0b45fe0af492594863f818cb913d2/":',
+        '{"left_key":"/api/datasets/1/variables/birthyr/",',
+        '"right_key":"/api/datasets/3/variables/birthyr/"}}')
 
     test_that("Correct payload without filtering", {
         expect_PATCH(join(ds1, ds2, by.x=ds1$birthyr, ds2$birthyr),
-            '/api/datasets/dataset1/joins/',
+            '/api/datasets/1/joins/',
             testPayload)
     })
 
     test_that("Can reference variables by alias", {
         expect_PATCH(join(ds1, ds2, by.x="birthyr", by.y="birthyr"),
-            '/api/datasets/dataset1/joins/',
+            '/api/datasets/1/joins/',
             testPayload)
         expect_PATCH(join(ds1, ds2, by="birthyr"),
-            '/api/datasets/dataset1/joins/',
+            '/api/datasets/1/joins/',
             testPayload)
     })
 

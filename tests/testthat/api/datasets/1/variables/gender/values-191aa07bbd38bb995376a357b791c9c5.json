@@ -1,0 +1,6 @@
+// 191aa07bbd38bb995376a357b791c9c5: list(filter=toJSON(NULL), offset=0, limit=1000)
+{
+    "element": "shoji:view",
+    "self": "/api/datasets/1/variables/gender/values/",
+    "value": [ 2, 2, {"?": -1}, 2, 2, 2, 1, {"?": -1}, {"?": -1}, 2, 1, 2, 1, {"?": -1}, {"?": -1}, {"?": -1}, 2, 2, 2, {"?": -1}, 1, 1, 1, {"?": -1}, 1 ]
+}

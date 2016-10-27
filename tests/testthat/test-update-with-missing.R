@@ -5,12 +5,12 @@ with_mock_HTTP({
 
     test_that("If an array gets NA assigned and it doesn't have No Data, we add that category", {
         expect_PATCH(ds2$mymrset[3] <- NA,
-            "/api/datasets/dataset2/variables/mymrset/",
+            "/api/datasets/2/variables/mymrset/",
             '{"categories":')
     })
     test_that("If an subvariables gets NA assigned and it doesn't have No Data, we add that category to its parent", {
         expect_PATCH(ds2$mymrset[[1]][3] <- NA,
-            "/api/datasets/dataset2/variables/mymrset/",
+            "/api/datasets/2/variables/mymrset/",
             '{"categories":')
     })
 })

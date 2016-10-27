@@ -1,0 +1,25 @@
+{
+    "element": "shoji:order",
+    "self": "/api/datasets/1/variables/nested-hierarchical/",
+    "description": "Hierarchical ordering of dataset variables",
+    "graph": [
+        {
+            "Group 1": [
+                "/api/datasets/1/variables/birthyr/",
+                {
+                    "Nested": [
+                        "/api/datasets/1/variables/gender/",
+                        "/api/datasets/1/variables/mymrset/"
+                    ]
+                },
+                "/api/datasets/1/variables/textVar/"
+            ]
+        },
+        {
+            "Group 2": [
+                "/api/datasets/1/variables/starttime/",
+                "/api/datasets/1/variables/catarray/"
+            ]
+        }
+    ]
+}

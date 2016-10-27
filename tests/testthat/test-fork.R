@@ -6,19 +6,19 @@ with_mock_HTTP({
 
     test_that("mergeFork requests", {
         expect_POST(mergeFork(ds1, ds2),
-            "/api/datasets/dataset1/actions/",
+            "/api/datasets/1/actions/",
             '{"element":"shoji:entity",',
-            '"body":{"dataset":"/api/datasets/dataset3/",',
+            '"body":{"dataset":"/api/datasets/3/",',
             '"autorollback":true,"force":false}}')
         expect_POST(mergeFork(ds1, ds2, autorollback=FALSE),
-            "/api/datasets/dataset1/actions/",
+            "/api/datasets/1/actions/",
             '{"element":"shoji:entity",',
-            '"body":{"dataset":"/api/datasets/dataset3/",',
+            '"body":{"dataset":"/api/datasets/3/",',
             '"autorollback":false,"force":false}}')
         expect_POST(mergeFork(ds1, ds2, force=TRUE),
-            "/api/datasets/dataset1/actions/",
+            "/api/datasets/1/actions/",
             '{"element":"shoji:entity",',
-            '"body":{"dataset":"/api/datasets/dataset3/",',
+            '"body":{"dataset":"/api/datasets/3/",',
             '"autorollback":true,"force":true}}')
     })
 })

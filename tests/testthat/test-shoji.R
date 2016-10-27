@@ -45,7 +45,7 @@ test_that("ShojiCatalog", {
 
 with_mock_HTTP({
     full.urls <- DatasetCatalog(crGET("/api/datasets/"))
-    rel.urls <- DatasetCatalog(crGET("/api/datasets-relative-urls/"))
+    rel.urls <- DatasetCatalog(crGET("/api/datasets/", query=list(relative="on")))
     test_that("urls() method returns absolute URLs", {
         expect_identical(urls(full.urls), urls(rel.urls))
     })
@@ -53,7 +53,7 @@ with_mock_HTTP({
     test_that("shojiURL", {
         ds <- loadDataset("test ds")
         expect_identical(shojiURL(ds, "catalogs", "variables"),
-            "/api/datasets/dataset1/variables/")
+            "/api/datasets/1/variables/")
         expect_error(shojiURL(ds, "catalogs", "NOTACATALOG"),
             paste0("No URL ", dQuote("NOTACATALOG"), " in collection ",
             dQuote("catalogs")))

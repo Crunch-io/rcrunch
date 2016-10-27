@@ -19,14 +19,6 @@ with_mock_HTTP({
         expect_identical(ordering(variables(ds)), ordering(ds))
     })
 
-    test_that("relative URLs in hierarchical order", {
-        vc <- varcat
-        vc@orders$hier <- sub("hierarchical",
-            "relative-hierarchical", vc@orders$hier)
-        expect_identical(entities(vc@order),
-            entities(VariableOrder(crGET(vc@orders$hier))))
-    })
-
     test.ord <- ordering(ds)
     ent.urls <- urls(test.ord)
     varcat_url <- self(allVariables(ds))
@@ -50,20 +42,6 @@ with_mock_HTTP({
     test_that("Can create nested groups", {
         expect_is(nested.ord, "VariableOrder")
         expect_identical(urls(nested.ord), ent.urls)
-    })
-    test_that("Can read nested groups from the API", {
-        vc <- varcat
-        vc@orders$hier <- sub("hierarchical",
-            "nested-hierarchical", vc@orders$hier)
-        expect_identical(entities(nested.ord),
-            entities(VariableOrder(crGET(vc@orders$hier))))
-    })
-    test_that("Nested groups can also have relative urls", {
-        vc <- varcat
-        vc@orders$hier <- sub("hierarchical",
-            "relative-and-nested-hierarchical", vc@orders$hier)
-        expect_identical(entities(nested.ord),
-            entities(VariableOrder(crGET(vc@orders$hier))))
     })
     test_that("Nested groups can serialize and deserialize", {
         vglist <- cereal(nested.ord)
@@ -312,8 +290,8 @@ with_mock_HTTP({
             fixed=TRUE)
     })
 
-    ord <- test.ord
-    test_that("Composing a VariableOrder step by step: setup", {
+    ord <- flattenOrder(test.ord)
+    test_that("Composing a VariableOrder step by step: setup (flattenOrder)", {
         expect_output(ord,
             paste("Birth Year",
                   "Gender",

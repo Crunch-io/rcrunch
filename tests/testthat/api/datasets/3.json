@@ -1,0 +1,25 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/3/",
+    "description": "Detail for a given dataset",
+    "body": {
+        "owner_id": "/api/users/notme/",
+        "id": "95c0b45fe0af492594863f818cb913d2"
+    },
+    "catalogs": {
+        "variables": "/api/datasets/3/variables/",
+        "savepoints": "/api/datasets/3/savepoints/",
+        "batches": "/api/datasets/3/batches/",
+        "filters": "/api/datasets/3/filters/",
+        "boxdata": "/api/datasets/3/boxdata/",
+        "permissions": "/api/datasets/3/permissions/"
+    },
+    "views": {
+        "summary": "/api/datasets/3/summary/"
+    },
+    "fragments": {
+        "table": "/api/datasets/3/table/",
+        "preferences": "/api/datasets/3/preferences/"
+    },
+    "some_other_key": {}
+}

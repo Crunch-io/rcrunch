@@ -1,0 +1,16 @@
+{
+    "element": "shoji:entity",
+    "self": "/api/datasets/1/variables/textVar/",
+    "body": {
+        "alias": "textVar",
+        "type": "text"
+    },
+    "views": {
+        "summary": "/api/datasets/1/variables/textVar/summary/",
+        "values": "/api/datasets/1/variables/textVar/values/"
+    },
+    "urls": {
+        "dataset_url": "/api/datasets/1/"
+    },
+    "description": "Details for a given Variable"
+}

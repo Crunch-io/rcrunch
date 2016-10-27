@@ -28,17 +28,17 @@ with_mock_HTTP({
         with(consent(), {
             test_that("If consent given, all of these methods do DELETE", {
                 expect_DELETE(delete(ds$gender),
-                    "/api/datasets/dataset1/variables/gender/")
+                    "/api/datasets/1/variables/gender/")
                 expect_DELETE(ds$gender <- NULL,
-                    "/api/datasets/dataset1/variables/gender/")
+                    "/api/datasets/1/variables/gender/")
                 expect_DELETE(ds$mymrset <- NULL,
-                    "/api/datasets/dataset1/variables/mymrset/")
+                    "/api/datasets/1/variables/mymrset/")
                 expect_DELETE(ds[[2]] <- NULL,
-                    "/api/datasets/dataset1/variables/gender/")
+                    "/api/datasets/1/variables/gender/")
                 expect_DELETE(deleteVariables(ds, "gender"),
-                    "/api/datasets/dataset1/variables/gender/")
+                    "/api/datasets/1/variables/gender/")
                 expect_DELETE(deleteVariables(ds, c("gender", "birthyr")),
-                    "/api/datasets/dataset1/variables/gender/")
+                    "/api/datasets/1/variables/gender/")
             })
         })
     })

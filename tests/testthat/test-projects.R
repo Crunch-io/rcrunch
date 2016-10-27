@@ -118,31 +118,31 @@ with_mock_HTTP({
     test_that("Project datasets order", {
         expect_is(do, "DatasetOrder")
         expect_identical(do@graph,
-            list(DatasetGroup("Group 1", "/api/datasets/dataset3/")))
+            list(DatasetGroup("Group 1", "/api/datasets/3/")))
     })
 
     test_that("Add datasets to project by <- a dataset (which transfers ownership)", {
         ds <- loadDataset("test ds")
         expect_PATCH(datasets(aproject) <- ds,
-            '/api/datasets/dataset1/',
+            '/api/datasets/1/',
             '{"owner":"/api/projects/project1/"}')
     })
 
     test_that("Organize datasets", {
         expect_identical(DatasetOrder(DatasetGroup("new group", datasets(aproject))),
-            DatasetOrder(DatasetGroup("new group", "/api/datasets/dataset3/")))
+            DatasetOrder(DatasetGroup("new group", "/api/datasets/3/")))
         expect_PUT(ordering(datasets(aproject)) <- DatasetOrder(DatasetGroup("new group",
             datasets(aproject))),
             '/api/projects/project1/datasets/order/',
-            '{"graph":[{"new group":["/api/datasets/dataset3/"]}]}')
-        nested.ord <- DatasetOrder("/api/datasets/dataset3/",
+            '{"graph":[{"new group":["/api/datasets/3/"]}]}')
+        nested.ord <- DatasetOrder("/api/datasets/3/",
             DatasetGroup("new group",
-                list(DatasetGroup("nested", "/api/datasets/dataset3/"))),
+                list(DatasetGroup("nested", "/api/datasets/3/"))),
             duplicates=TRUE)
         expect_PUT(ordering(datasets(aproject)) <- nested.ord,
             '/api/projects/project1/datasets/order/',
-            '{"graph":["/api/datasets/dataset3/",',
-            '{"new group":[{"nested":["/api/datasets/dataset3/"]}]}]}')
+            '{"graph":["/api/datasets/3/",',
+            '{"new group":[{"nested":["/api/datasets/3/"]}]}]}')
     })
 })
 

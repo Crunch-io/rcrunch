@@ -1,0 +1,22 @@
+{
+    "element": "shoji:catalog",
+    "self": "/api/datasets/1/savepoints/",
+    "index": {
+        "/api/datasets/1/savepoints/v2/": {
+            "creation_time": "2015-02-12T10:28:05.632000+00:00",
+            "last_update": "2015-02-12T10:28:05.632000+00:00",
+            "version": "master__153245e0bdf94f0ea750a9d2887ea114",
+            "revert": "/api/datasets/1/savepoints/v2/revert/",
+            "user_display_name": "Fake User",
+            "description": "initial load"
+        },
+        "/api/datasets/1/savepoints/v3/": {
+            "creation_time": "2015-02-15T10:28:05.632000+00:00",
+            "last_update": "2015-02-15T10:28:05.632000+00:00",
+            "version": "master__asdfgad2887ea114",
+            "revert": "/api/datasets/1/savepoints/v3/revert/",
+            "user_display_name": "Fake User",
+            "description": "another version"
+        }
+    }
+}

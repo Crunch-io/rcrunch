@@ -5,7 +5,7 @@
         "order": "/api/projects/project1/datasets/order/"
     },
     "index": {
-        "/api/datasets/dataset3/": {
+        "/api/datasets/3/": {
             "owner_display_name": "Project One",
             "name": "ECON.sav",
             "description": "",

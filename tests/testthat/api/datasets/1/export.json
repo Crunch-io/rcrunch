@@ -1,0 +1,8 @@
+{
+    "element": "shoji:view",
+    "self": "/api/datasets/1/export/",
+    "value": {
+        "csv": "/api/datasets/1/export/csv/",
+        "spss": "/api/datasets/1/export/spss/"
+    }
+}

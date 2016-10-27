@@ -1,0 +1,117 @@
+{
+    "element": "crunch:table",
+    "self": "/api/datasets/1/table/",
+    "metadata": {
+        "gender": {
+            "name": "Gender",
+            "alias": "gender",
+            "type": "categorical",
+            "description": "Gender",
+            "categories": [
+                {
+                    "numeric_value": 1,
+                    "missing": false,
+                    "id": 1,
+                    "name": "Male"
+                },
+                {
+                    "numeric_value": 2,
+                    "missing": false,
+                    "id": 2,
+                    "name": "Female"
+                },
+                {
+                    "numeric_value": null,
+                    "missing": true,
+                    "id": -1,
+                    "name": "No Data"
+                }
+            ]
+        },
+        "birthyr": {
+            "name": "Birth Year",
+            "alias": "birthyr",
+            "type": "numeric",
+            "description": null
+        },
+        "starttime": {
+            "name": "starttime",
+            "alias": "starttime",
+            "type": "datetime",
+            "description": "Interview Start Time",
+            "resolution": "D"
+        },
+        "mymrset": {
+            "name": "mymrset",
+            "alias": "mymrset",
+            "type": "multiple_response",
+            "categories": [
+                {"numeric_value": 0.0, "name": "0.0", "missing": false, "selected": false, "id": 1},
+                {"numeric_value": 1.0, "name": "1.0", "missing": false, "selected": true, "id": 2},
+                {"numeric_value": null, "name": "No Data", "missing": true, "selected": false, "id": -1}
+            ],
+            "description": "Please select all that apply",
+            "subreferences": [
+                {
+                    "name": "First",
+                    "alias": "subvar2",
+                    "description": null
+                },
+                {
+                    "name": "Second",
+                    "alias": "subvar1",
+                    "description": null
+                },
+                {
+                    "name": "Last",
+                    "alias": "subvar3",
+                    "description": null
+                }
+            ],
+            "subvariables": [
+                "subvar2",
+                "subvar1",
+                "subvar3"
+            ]
+        },
+        "catarray": {
+            "name": "Cat Array",
+            "alias": "catarray",
+            "type": "categorical_array",
+            "categories": [
+                {"numeric_value": 0.0, "name": "A", "missing": false, "id": 1},
+                {"numeric_value": 1.0, "name": "B", "missing": false, "id": 2},
+                {"numeric_value": null, "name": "No Data", "missing": true, "id": -1}
+            ],
+            "description": "An array of cats",
+            "subreferences": [
+                {
+                    "name": "First",
+                    "alias": "subvar2",
+                    "description": null
+                },
+                {
+                    "name": "Second",
+                    "alias": "subvar1",
+                    "description": null
+                },
+                {
+                    "name": "Last",
+                    "alias": "subvar3",
+                    "description": null
+                }
+            ],
+            "subvariables": [
+                "subvar2",
+                "subvar1",
+                "subvar3"
+            ]
+        },
+        "textVar": {
+            "name": "Text variable ftw",
+            "alias": "textVar",
+            "type": "text",
+            "description": "Budějovický Budvar"
+        }
+    }
+}

@@ -21,9 +21,9 @@ with_mock_HTTP({
     test_that("Dataset attribute setting", {
         expect_PATCH(name(ds) <- "New name",
             "/api/datasets/",
-            '{"/api/datasets/dataset1/":{"name":"New name"}}')
+            '{"/api/datasets/1/":{"name":"New name"}}')
         expect_PATCH(notes(ds) <- "Ancillary information",
-            "/api/datasets/dataset1/",
+            "/api/datasets/1/",
             '{"notes":"Ancillary information"}')
     })
 
@@ -43,10 +43,10 @@ with_mock_HTTP({
     test_that("archive setting", {
         expect_PATCH(is.archived(ds2) <- TRUE,
             '/api/datasets/',
-            '{"/api/datasets/dataset3/":{"archived":true}}')
+            '{"/api/datasets/3/":{"archived":true}}')
         expect_PATCH(archive(ds2),
             '/api/datasets/',
-            '{"/api/datasets/dataset3/":{"archived":true}}')
+            '{"/api/datasets/3/":{"archived":true}}')
     })
 
     test_that("draft/published", {
@@ -59,19 +59,19 @@ with_mock_HTTP({
     test_that("draft/publish setting", {
         expect_PATCH(is.published(ds2) <- TRUE,
             '/api/datasets/',
-            '{"/api/datasets/dataset3/":{"is_published":true}}')
+            '{"/api/datasets/3/":{"is_published":true}}')
         expect_PATCH(is.published(ds) <- FALSE,
             '/api/datasets/',
-            '{"/api/datasets/dataset1/":{"is_published":false}}')
+            '{"/api/datasets/1/":{"is_published":false}}')
         expect_PATCH(is.draft(ds2) <- FALSE,
             '/api/datasets/',
-            '{"/api/datasets/dataset3/":{"is_published":true}}')
+            '{"/api/datasets/3/":{"is_published":true}}')
         expect_PATCH(is.draft(ds) <- TRUE,
             '/api/datasets/',
-            '{"/api/datasets/dataset1/":{"is_published":false}}')
+            '{"/api/datasets/1/":{"is_published":false}}')
         expect_PATCH(publish(ds2),
             '/api/datasets/',
-            '{"/api/datasets/dataset3/":{"is_published":true}}')
+            '{"/api/datasets/3/":{"is_published":true}}')
         expect_no_request(publish(ds))
         expect_no_request(is.draft(ds) <- FALSE)
         expect_no_request(is.published(ds) <- TRUE)
@@ -87,18 +87,18 @@ with_mock_HTTP({
     test_that("startDate<- makes correct request", {
         expect_PATCH(startDate(ds2) <- today,
             '/api/datasets/',
-            '{"/api/datasets/dataset3/":{"start_date":"2016-02-11"}}')
+            '{"/api/datasets/3/":{"start_date":"2016-02-11"}}')
         expect_PATCH(startDate(ds) <- NULL,
             '/api/datasets/',
-            '{"/api/datasets/dataset1/":{"start_date":null}}')
+            '{"/api/datasets/1/":{"start_date":null}}')
     })
     test_that("endDate<- makes correct request", {
         expect_PATCH(endDate(ds2) <- today,
             '/api/datasets/',
-            '{"/api/datasets/dataset3/":{"end_date":"2016-02-11"}}')
+            '{"/api/datasets/3/":{"end_date":"2016-02-11"}}')
         expect_PATCH(endDate(ds) <- NULL,
             '/api/datasets/',
-            '{"/api/datasets/dataset1/":{"end_date":null}}')
+            '{"/api/datasets/1/":{"end_date":null}}')
     })
 
     test_that("Dataset webURL", {
@@ -110,20 +110,20 @@ with_mock_HTTP({
 
     test_that("Dataset VariableCatalog index is ordered", {
         expect_identical(urls(variables(ds)),
-            c("/api/datasets/dataset1/variables/birthyr/",
-            "/api/datasets/dataset1/variables/gender/",
-            "/api/datasets/dataset1/variables/mymrset/",
-            "/api/datasets/dataset1/variables/textVar/",
-            "/api/datasets/dataset1/variables/starttime/",
-            "/api/datasets/dataset1/variables/catarray/"))
+            c("/api/datasets/1/variables/birthyr/",
+            "/api/datasets/1/variables/gender/",
+            "/api/datasets/1/variables/mymrset/",
+            "/api/datasets/1/variables/textVar/",
+            "/api/datasets/1/variables/starttime/",
+            "/api/datasets/1/variables/catarray/"))
         ## allVariables is ordered too
         expect_identical(urls(allVariables(ds)),
-            c("/api/datasets/dataset1/variables/birthyr/",
-            "/api/datasets/dataset1/variables/gender/",
-            "/api/datasets/dataset1/variables/mymrset/",
-            "/api/datasets/dataset1/variables/textVar/",
-            "/api/datasets/dataset1/variables/starttime/",
-            "/api/datasets/dataset1/variables/catarray/"))
+            c("/api/datasets/1/variables/birthyr/",
+            "/api/datasets/1/variables/gender/",
+            "/api/datasets/1/variables/mymrset/",
+            "/api/datasets/1/variables/textVar/",
+            "/api/datasets/1/variables/starttime/",
+            "/api/datasets/1/variables/catarray/"))
     })
 
     test_that("namekey function exists and affects names()", {
@@ -181,8 +181,8 @@ with_mock_HTTP({
     })
 
     test_that("Extract from dataset by VariableOrder/Group", {
-        ents <- c("/api/datasets/dataset1/variables/gender/",
-            "/api/datasets/dataset1/variables/mymrset/")
+        ents <- c("/api/datasets/1/variables/gender/",
+            "/api/datasets/1/variables/mymrset/")
         ord <- VariableOrder(VariableGroup("G1", entities=ents))
         expect_identical(ds[ord[[1]]], ds[c("gender", "mymrset")])
         expect_identical(ds[ord], ds[c("gender", "mymrset")])
@@ -211,12 +211,12 @@ with_mock_HTTP({
         expect_false(settings(ds)$viewers_can_export)
         expect_true(settings(ds)$viewers_can_change_weight)
         expect_identical(settings(ds)$weight, self(ds$birthyr))
-        expect_identical(self(settings(ds)), "/api/datasets/dataset1/settings/")
+        expect_identical(self(settings(ds)), "/api/datasets/1/settings/")
     })
 
     test_that("Changing dataset settings", {
         expect_PATCH(settings(ds)$viewers_can_export <- TRUE,
-            "/api/datasets/dataset1/settings/",
+            "/api/datasets/1/settings/",
             '{"viewers_can_export":true}')
     })
     test_that("No request made if not altering a setting", {
@@ -224,7 +224,7 @@ with_mock_HTTP({
     })
     test_that("Can set a NULL setting", {
         expect_PATCH(settings(ds)$viewers_can_export <- NULL,
-            "/api/datasets/dataset1/settings/",
+            "/api/datasets/1/settings/",
             '{"viewers_can_export":null}')
     })
     test_that("Can't add a setting that doesn't exist", {

@@ -14,9 +14,9 @@ with_mock_HTTP({
     })
 
     test_that("VariableCatalog has the right contents", {
-        expect_true(all(grepl("/api/datasets/dataset1/variables",
+        expect_true(all(grepl("/api/datasets/1/variables",
             urls(varcat))))
-        expect_identical(self(varcat), "/api/datasets/dataset1/variables/")
+        expect_identical(self(varcat), "/api/datasets/1/variables/")
         expect_identical(entities(ordering(varcat)), entities(varorder))
     })
 
@@ -28,20 +28,20 @@ with_mock_HTTP({
         expect_is(active(varcat), "VariableCatalog")
         expect_is(hidden(varcat), "VariableCatalog")
         expect_identical(urls(active(varcat)),
-            c("/api/datasets/dataset1/variables/gender/",
-            "/api/datasets/dataset1/variables/mymrset/",
-            "/api/datasets/dataset1/variables/textVar/",
-            "/api/datasets/dataset1/variables/starttime/",
-            "/api/datasets/dataset1/variables/catarray/"))
+            c("/api/datasets/1/variables/gender/",
+            "/api/datasets/1/variables/mymrset/",
+            "/api/datasets/1/variables/textVar/",
+            "/api/datasets/1/variables/starttime/",
+            "/api/datasets/1/variables/catarray/"))
         expect_length(active(varcat), 5)
         expect_identical(urls(hidden(varcat)),
-            "/api/datasets/dataset1/variables/birthyr/")
+            "/api/datasets/1/variables/birthyr/")
         expect_length(hidden(varcat), 1)
         expect_length(varcat, 6)
         expect_identical(active(hidden(varcat)), hidden(active(varcat)))
     })
 
-    gender.url <- "/api/datasets/dataset1/variables/gender/"
+    gender.url <- "/api/datasets/1/variables/gender/"
     test_that("Extract methods: character and numeric", {
         expect_is(varcat[[gender.url]], "VariableTuple")
         expect_identical(varcat[[gender.url]]@body,
@@ -57,8 +57,8 @@ with_mock_HTTP({
     })
 
     test_that("Extract methods: VariableOrder/Group", {
-        ents <- c("/api/datasets/dataset1/variables/gender/",
-            "/api/datasets/dataset1/variables/mymrset/")
+        ents <- c("/api/datasets/1/variables/gender/",
+            "/api/datasets/1/variables/mymrset/")
         ord <- VariableOrder(VariableGroup("G1", entities=ents))
         expect_identical(names(varcat[ents]), c("Gender", "mymrset"))
         expect_identical(varcat[ord[[1]]], varcat[ents])
@@ -83,12 +83,12 @@ with_mock_HTTP({
 
     test_that("attribute setters", {
         expect_PATCH(names(varcat)[1:3] <- c("Year of birth", "Gender", "Start time"),
-            "/api/datasets/dataset1/variables/",
-            '{"/api/datasets/dataset1/variables/birthyr/":{"name":"Year of birth"},',
-            '"/api/datasets/dataset1/variables/mymrset/":{"name":"Start time"}}')
+            "/api/datasets/1/variables/",
+            '{"/api/datasets/1/variables/birthyr/":{"name":"Year of birth"},',
+            '"/api/datasets/1/variables/mymrset/":{"name":"Start time"}}')
         expect_PATCH(notes(varcat)[1:3] <- c("Asked instead of age", "", "ms"),
-            "/api/datasets/dataset1/variables/",
-            '{"/api/datasets/dataset1/variables/mymrset/":{"notes":"ms"}}')
+            "/api/datasets/1/variables/",
+            '{"/api/datasets/1/variables/mymrset/":{"notes":"ms"}}')
     })
 
     test_that("show method", {

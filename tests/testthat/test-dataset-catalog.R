@@ -10,9 +10,9 @@ with_mock_HTTP({
 
     test_that("DatasetCatalog has the right contents", {
         expect_identical(urls(datcat),
-            c("/api/datasets/dataset3/",
-              "/api/datasets/dataset2/",
-              "/api/datasets/dataset1/")) ## C sorting on names
+            c("/api/datasets/3/",
+              "/api/datasets/2/",
+              "/api/datasets/1/")) ## C sorting on names
         expect_identical(self(datcat),
             "/api/datasets/")
     })
@@ -22,19 +22,19 @@ with_mock_HTTP({
         expect_is(active(datcat), "DatasetCatalog")
         expect_is(archived(datcat), "DatasetCatalog")
         expect_identical(urls(active(datcat)),
-            c("/api/datasets/dataset3/", "/api/datasets/dataset1/"))
+            c("/api/datasets/3/", "/api/datasets/1/"))
         expect_length(active(datcat), 2)
         expect_identical(urls(archived(datcat)),
-            "/api/datasets/dataset2/")
+            "/api/datasets/2/")
         expect_length(archived(datcat), 1)
         expect_length(datcat, 3)
         expect_identical(active(archived(datcat)), archived(active(datcat)))
     })
 
     test_that("Extract methods", {
-        expect_is(datcat[["/api/datasets/dataset1/"]], "DatasetTuple")
-        expect_identical(datcat[["/api/datasets/dataset1/"]]@body,
-            index(datcat)[["/api/datasets/dataset1/"]])
+        expect_is(datcat[["/api/datasets/1/"]], "DatasetTuple")
+        expect_identical(datcat[["/api/datasets/1/"]]@body,
+            index(datcat)[["/api/datasets/1/"]])
         expect_identical(index(datcat[2:3]), index(datcat)[2:3])
         expect_error(datcat[[500]], "subscript out of bounds")
     })
@@ -61,25 +61,25 @@ with_mock_HTTP({
     test_that("is.archived setter", {
         expect_PATCH(is.archived(datcat[1]) <- TRUE,
             '/api/datasets/',
-            '{"/api/datasets/dataset3/":{"archived":true}}')
+            '{"/api/datasets/3/":{"archived":true}}')
         expect_PATCH(archive(datcat[2:3]),
             '/api/datasets/',
-            '{"/api/datasets/dataset1/":{"archived":true}}')
+            '{"/api/datasets/1/":{"archived":true}}')
     })
     test_that("is.published setter", {
         expect_PATCH(is.published(datcat[c(1,3)]) <- TRUE,
             '/api/datasets/',
-            '{"/api/datasets/dataset3/":{"is_published":true}}')
+            '{"/api/datasets/3/":{"is_published":true}}')
         expect_PATCH(publish(datcat[c(1,3)]),
             '/api/datasets/',
-            '{"/api/datasets/dataset3/":{"is_published":true}}')
+            '{"/api/datasets/3/":{"is_published":true}}')
         expect_PATCH(is.draft(datcat) <- TRUE,
             '/api/datasets/',
-            '{"/api/datasets/dataset2/":{"is_published":false},',
-            '"/api/datasets/dataset1/":{"is_published":false}}')
+            '{"/api/datasets/2/":{"is_published":false},',
+            '"/api/datasets/1/":{"is_published":false}}')
     })
 
     test_that("entity method for tuple", {
-        expect_true(is.dataset(entity(datcat[["/api/datasets/dataset1/"]])))
+        expect_true(is.dataset(entity(datcat[["/api/datasets/1/"]])))
     })
 })

@@ -18,16 +18,16 @@ with_mock_HTTP({
         expr=list(
             `function`="combine_responses",
             args=list(
-                list(variable="/api/datasets/dataset1/variables/mymrset/"),
+                list(variable="/api/datasets/1/variables/mymrset/"),
                 list(value=list(
                     list(
                         name="Extremes",
-                        combined_ids=I(c("/api/datasets/dataset1/variables/mymrset/subvariables/subvar2/",
-                            "/api/datasets/dataset1/variables/mymrset/subvariables/subvar3/"))
+                        combined_ids=I(c("/api/datasets/1/variables/mymrset/subvariables/subvar2/",
+                            "/api/datasets/1/variables/mymrset/subvariables/subvar3/"))
                     ),
                     list(
                         name="Second",
-                        combined_ids=I(c("/api/datasets/dataset1/variables/mymrset/subvariables/subvar1/"))
+                        combined_ids=I(c("/api/datasets/1/variables/mymrset/subvariables/subvar1/"))
                     )
                 ))
             )
