@@ -12,13 +12,8 @@
 #' @export
 addSubvariable <- function (variable, subvariable) {
     ## Get subvariable URL or URLs, depending on how many supplied
-    if (is.dataset(subvariable)) {
-        new.urls <- urls(variables(subvariable))
-    } else if (is.list(subvariable)) {
-        new.urls <- vapply(subvariable, self, character(1))
-    } else {
-        new.urls <- self(subvariable)
-    }
+    new.urls <- urls(subvariable)
+    
     ## Store these for post workaround
     subvar.urls <- subvariables(tuple(variable))
 

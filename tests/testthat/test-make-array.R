@@ -38,10 +38,6 @@ with_mock_HTTP({
     test_that("makeArray error conditions", {
         expect_error(makeArray(), no.name)
         expect_error(makeArray(ds[,"gender"]), no.name)
-        expect_warning(
-            expect_error(makeArray(pattern="rm_", dataset=ds, name="foo"),
-                'argument "subvariables" is missing, with no default'),
-            "argument to makeArray is no longer supported")
         expect_error(makeArray(ds[grep("NO variables", names(ds))], name="foo"),
             no.match)
     })
@@ -49,11 +45,6 @@ with_mock_HTTP({
         expect_error(makeMR(), no.selections)
         expect_error(makeMR(ds[,"gender"]), no.selections)
         expect_error(makeMR(ds[,"gender"], selections="Male"), no.name)
-        expect_warning(
-            expect_error(makeMR(pattern="rm_", dataset=ds, name="foo",
-                selections="X"),
-                'argument "subvariables" is missing, with no default'),
-            "argument to makeArray is no longer supported")
         expect_error(makeMR(ds[grep("NO variables", names(ds))], name="foo",
             selections="X"),
             no.match)

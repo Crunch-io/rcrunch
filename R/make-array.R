@@ -3,7 +3,6 @@
 #' @param subvariables a list of Variable objects to bind together, or a
 #' Dataset object containing only the Variables to bind (as in from subsetting
 #' a Dataset)
-#' @param dataset Argument no longer supported
 #' @param name character, the name that the new Categorical Array variable
 #' should have. Required.
 #' @param selections character, for \code{makeMR}, the names of the
@@ -16,14 +15,9 @@
 #' return an expression that "binds" variables together, removing them from
 #' independent existence.
 #' @export
-makeArray <- function (subvariables, dataset=NULL, name, ...) {
-
+makeArray <- function (subvariables, name, ...) {
     if (missing(name)) {
         halt("Must provide the name for the new variable")
-    }
-    if (!is.null(dataset)) {
-        warning(dQuote("dataset"), " argument to makeArray is no longer supported",
-            call.=FALSE)
     }
 
     ## Get subvariable URLs
@@ -31,17 +25,7 @@ makeArray <- function (subvariables, dataset=NULL, name, ...) {
         ## as in, if the list of variables is a [ extraction from a Dataset
         subvariables <- allVariables(subvariables)
     }
-    if (inherits(subvariables, "VariableCatalog")) {
-        subvariables <- urls(subvariables)
-    } else if (is.list(subvariables) &&
-               all(vapply(subvariables, is.variable, logical(1)))) {
-        subvariables <- vapply(subvariables, self, character(1))
-    } else {
-        ## Note that you'll get this error if subvariables is list but one of
-        ## its elements is NULL instead of a variable
-        halt(dQuote("subvariables"), " cannot be of class ", class(subvariables))
-    }
-
+    subvariables <- urls(subvariables)
     if (!length(subvariables)) {
         halt("No variables supplied")
     }
@@ -53,21 +37,52 @@ makeArray <- function (subvariables, dataset=NULL, name, ...) {
 
 #' @rdname makeArray
 #' @export
+makeMR <- function (subvariables, name, selections, ...) {
+    if (missing(selections)) {
+        halt("Must provide the names of the category or categories that ",
+            "indicate the dichotomous selection")
+    }
+
+    ## Do `makeArray` to build the definition.
+    vardef <- makeArray(subvariables=subvariables, name=name,
+        selected_categories=I(selections), ...)
+    vardef$type <- "multiple_response"
+    ## We're done. But let's do some validation first.
+
+    ## Get the actual variables so that we can validate
+    vars <- lapply(vardef$subvariables, function (u) VariableEntity(crGET(u)))
+    are.categorical <- vapply(vars,
+        function (x) isTRUE(x@body$type == "categorical"), ## Make a type method?
+        logical(1))
+    if (!all(are.categorical)) {
+        varnames <- vapply(vars[!are.categorical],
+            function (x) x@body$name, ## Make a name() method for VariableEntity
+            character(1))
+        halt(serialPaste(varnames),
+            " are not Categorical variables. Convert them to ",
+            "Categorical before combining to Multiple Response")
+    }
+
+    ## Validate selections before binding
+    catnames <- unique(unlist(lapply(vars, function (y) names(categories(y)))))
+    if (!all(selections %in% catnames)) {
+        halt("Selection(s) not found in variable's categories. ",
+            "Category names are: ", serialPaste(catnames))
+        ## Could return more useful messaging here
+    }
+
+    return(vardef)
+}
+
+#' @rdname makeArray
+#' @export
 deriveArray <- function (subvariables, name, ...) {
     ## Get subvariable URLs
-    ## TODO: factor this logic out of here, makeArray, and addSubvariable
     if (is.dataset(subvariables)) {
         ## as in, if the list of variables is a [ extraction from a Dataset
         subvariables <- allVariables(subvariables)
     }
-    if (inherits(subvariables, "VariableCatalog")) {
-        subvariables <- urls(subvariables)
-    } else if (is.list(subvariables) &&
-               all(vapply(subvariables, is.variable, logical(1)))) {
-        subvariables <- vapply(subvariables, self, character(1))
-    } else {
-        halt(dQuote("subvariables"), " cannot be of class ", class(subvariables))
-    }
+    subvariables <- urls(subvariables)
 
     subvarids <- as.character(seq_along(subvariables))
     derivation <- zfunc("array", zfunc("select",

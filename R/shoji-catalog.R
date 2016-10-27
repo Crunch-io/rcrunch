@@ -188,6 +188,14 @@ setMethod("index<-", "ShojiCatalog", function (x, value) {
 #' @export
 setMethod("urls", "ShojiCatalog", function (x) names(index(x)))
 
+#' @rdname urls
+#' @export
+setMethod("urls", "list", function (x) vapply(x, self, character(1))) ## Assumes list of entities
+
+#' @rdname urls
+#' @export
+setMethod("urls", "character", function (x) x) ## Assumes already are URLs
+
 #' @rdname describe-catalog
 #' @export
 setMethod("names", "ShojiCatalog", function (x) getIndexSlot(x, "name"))
