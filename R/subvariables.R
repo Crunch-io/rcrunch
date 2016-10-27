@@ -267,16 +267,7 @@ setMethod("[[<-",
     })
 #' @rdname subvars-extract
 #' @export
-setMethod("$<-", c("CategoricalArrayVariable"), function (x, name, value) {
+setMethod("$<-", "CategoricalArrayVariable", function (x, name, value) {
     x[[name]] <- value
     return(x)
 })
-
-findParent <- function (subvar, dataset) {
-    ## Utility to find the array parent, given a subvariable and its dataset
-    if (is.variable(subvar)) subvar <- self(subvar)
-
-    allvars <- index(allVariables(dataset))
-    parent <- Filter(function (x) subvar %in% x$subvariables %||% c(), allvars)
-    return(names(parent))
-}

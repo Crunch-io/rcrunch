@@ -20,4 +20,7 @@ The URL to the newly created box.
 \description{
 CrunchBoxes allow you to publish results to the world.
 }
+\seealso{
+\code{\link{preCrunchBoxCheck}} to provide guidance on what you're including in the CrunchBox
+}
 

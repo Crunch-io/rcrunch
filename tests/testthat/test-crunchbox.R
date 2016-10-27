@@ -11,6 +11,11 @@ with_mock_HTTP({
     ds <- loadDataset("test ds")
     ds3 <- loadDataset("ECON.sav")
 
+    test_that("preCrunchBoxCheck does not error", {
+        expect_output(preCrunchBoxCheck(ds),
+            "We recommend using only categorical and multiple_response variables. These 4 variables are not")
+    })
+
     test_that("Basic box", {
         expect_POST(crunchBox(ds, filters=NULL),
             '/api/datasets/dataset1/boxdata/',
