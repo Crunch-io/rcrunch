@@ -1,4 +1,5 @@
 ### crunch 1.13.9 (under development)
+* Prevent accidentally deleting all rows with a bad expression via `dropRows`
 
 ### crunch 1.13.8
 * `crunchBox` to make a public, embeddable analysis widget

@@ -9,27 +9,30 @@ with_mock_HTTP({
             '"args":[{"variable":"/api/datasets/dataset1/variables/gender/"},',
             '{"value":1}]}}')
     })
+    test_that("dropRows doesn't send invalid expressions", {
+        expect_error(dropRows(ds, ds$NOTAVARIABLE == "Male"),
+            'Invalid expression: ds$NOTAVARIABLE == "Male"', fixed=TRUE)
+        expect_error(dropRows(ds, NULL),
+            'Invalid expression: NULL')
+    })
 })
 
-if (run.integration.tests) {
-    with_test_authentication({
-        with(test.dataset(df), {
-            test_that("dropRows really removes rows", {
-                try(ds <- dropRows(ds, ds$v4 == "C"))
-                expect_identical(dim(ds), c(10L, ncol(df)))
-                expect_identical(as.vector(ds$v4, mode="id"), rep(1, 10))
-                expect_identical(as.vector(ds$v3), seq(8, 26, 2))
-            })
-        })
-        with(test.dataset(df), {
-            exclusion(ds) <- ds$v4 == "B"
-            test_that("dropRows correctly drops with an exclusion applied", {
-                expect_identical(nrow(ds), 10L)
-                try(ds <- dropRows(ds, ds$v3 > 10 & ds$v3 <= 15))
-                expect_identical(dim(ds), c(7L, ncol(df)))
-                exclusion(ds) <- NULL
-                expect_identical(nrow(ds), 15L)
-            })
-        })
+with_test_authentication({
+    test_that("dropRows really removes rows", {
+        ds1 <- newDataset(df)
+        ds1 <- dropRows(ds1, ds1$v4 == "C")
+        expect_identical(dim(ds1), c(10L, ncol(df)))
+        expect_identical(as.vector(ds1$v4, mode="id"), rep(1, 10))
+        expect_identical(as.vector(ds1$v3), seq(8, 26, 2))
     })
-}
+
+    test_that("dropRows correctly drops with an exclusion applied", {
+        ds2 <- newDataset(df)
+        exclusion(ds2) <- ds2$v4 == "B"
+        expect_identical(nrow(ds2), 10L)
+        ds2 <- dropRows(ds2, ds2$v3 > 10 & ds2$v3 <= 15)
+        expect_identical(dim(ds2), c(7L, ncol(df)))
+        exclusion(ds2) <- NULL
+        expect_identical(nrow(ds2), 15L)
+    })
+})
