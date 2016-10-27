@@ -1,4 +1,4 @@
-### crunch 1.13.7 (under development)
+### crunch 1.13.8
 * `crunchBox` to make a public, embeddable analysis widget
 * `settings` and `settings<-` to view and modify dataset-level controls, such as default "weight" and viewer permissions ("viewers_can_change_weight", "viewers_can_export")
 * `flattenOrder` to strip out nested groups from an order
