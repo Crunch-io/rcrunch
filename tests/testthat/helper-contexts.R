@@ -31,8 +31,9 @@ with_mock_HTTP <- function (expr) {
                 q <- list(...)$query
                 ext <- ".json"
                 if (!is.null(q)) {
-                    ## There's a query. Hash it and add to the filename
-                    ext <- paste0("-", digest::digest(q), ext)
+                    ## There's a query.
+                    ## Hash it, take the first 6 chars, and add to the filename
+                    ext <- paste0("-", substr(digest::digest(q), 1, 6), ext)
                 }
                 url <- sub("\\/$", ext, url)
                 url <- sub("^\\/", "", url) ## relative to cwd
