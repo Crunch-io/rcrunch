@@ -17,9 +17,9 @@
         "view": {"include_noneoftheabove": false, "column_width": null},
         "type": "multiple_response",
         "subvariables": [
-            "/api/datasets/dataset1/variables/subvar2/",
-            "/api/datasets/dataset1/variables/subvar1/",
-            "/api/datasets/dataset1/variables/subvar3/"
+            "/api/datasets/dataset1/variables/mymrset/subvariables/subvar2/",
+            "/api/datasets/dataset1/variables/mymrset/subvariables/subvar1/",
+            "/api/datasets/dataset1/variables/mymrset/subvariables/subvar3/"
         ],
         "subvariables_catalog": "/api/datasets/dataset1/variables/mymrset/subvariables/",
         "id": "949d2dc7e7a24e6090cc88bb92e1d2fb"

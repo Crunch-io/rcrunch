@@ -1,8 +1,10 @@
+// Test fixture used everywhere
 {
     "element": "shoji:entity",
     "self": "/api/datasets/dataset1/",
     "description": "Detail for a given dataset",
     "body": {
+        // In reality, body has attributes found in the tuple too
         "owner": "/api/users/user1/",
         "id": "dataset1"
     },

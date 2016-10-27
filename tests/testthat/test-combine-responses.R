@@ -22,12 +22,12 @@ with_mock_HTTP({
                 list(value=list(
                     list(
                         name="Extremes",
-                        combined_ids=I(c("/api/datasets/dataset1/variables/subvar2/",
-                            "/api/datasets/dataset1/variables/subvar3/"))
+                        combined_ids=I(c("/api/datasets/dataset1/variables/mymrset/subvariables/subvar2/",
+                            "/api/datasets/dataset1/variables/mymrset/subvariables/subvar3/"))
                     ),
                     list(
                         name="Second",
-                        combined_ids=I(c("/api/datasets/dataset1/variables/subvar1/"))
+                        combined_ids=I(c("/api/datasets/dataset1/variables/mymrset/subvariables/subvar1/"))
                     )
                 ))
             )

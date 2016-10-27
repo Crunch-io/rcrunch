@@ -27,8 +27,14 @@ with_mock_HTTP <- function (expr) {
                 if (is.null(url)) {
                     stop("No URL found", call.=FALSE)
                 }
-                url <- unlist(strsplit(url, "?", fixed=TRUE))[1] ## remove query params
-                url <- sub("\\/$", ".json", url)
+                url <- unlist(strsplit(url, "?", fixed=TRUE))[1] ## remove query params in the URL
+                q <- list(...)$query
+                ext <- ".json"
+                if (!is.null(q)) {
+                    ## There's a query. Hash it and add to the filename
+                    ext <- paste0("-", digest::digest(q), ext)
+                }
+                url <- sub("\\/$", ext, url)
                 url <- sub("^\\/", "", url) ## relative to cwd
                 return(fakeResponse(url))
             },

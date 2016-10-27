@@ -4,7 +4,7 @@
     "specification": "https://alpha.crunch.io/api/specifications/variables/",
     "description": "List of Subvariables of this Variable",
     "index": {
-        "/api/datasets/dataset1/variables/subvar1/": {
+        "subvar1/": {
             "name": "Second",
             "discarded": false,
             "alias": "subvar1",
@@ -12,7 +12,7 @@
             "id": "subvar1",
             "description": null
         },
-        "/api/datasets/dataset1/variables/subvar2/": {
+        "subvar2/": {
             "name": "First",
             "discarded": false,
             "alias": "subvar2",
@@ -20,7 +20,7 @@
             "id": "gender",
             "description": null
         },
-        "/api/datasets/dataset1/variables/subvar3/": {
+        "subvar3/": {
             "name": "Last",
             "discarded": false,
             "alias": "subvar3",

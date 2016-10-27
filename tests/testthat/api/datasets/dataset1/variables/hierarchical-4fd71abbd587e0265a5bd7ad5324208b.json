@@ -1,6 +1,7 @@
+// 4fd71abbd587e0265a5bd7ad5324208b: list(relative="on")
 {
     "element": "shoji:order",
-    "self": "/api/datasets/dataset1/variables/relative-and-nested-hierarchical/",
+    "self": "/api/datasets/dataset1/variables/hierarchical/",
     "description": "Hierarchical ordering of dataset variables",
     "graph": [
         {

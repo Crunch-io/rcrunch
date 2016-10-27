@@ -1,25 +1,25 @@
 {
     "element": "shoji:entity",
-    "self": "/api/datasets/dataset1/variables/subvar2/",
+    "self": "/api/datasets/dataset1/variables/mymrset/subvariables/subvar2/",
     "body": {
         "format": {
-            "data": {"digits": 2}, 
+            "data": {"digits": 2},
             "summary": {"digits": 2}
         },
-        "missing_reasons": {"No Data": -1}, 
+        "missing_reasons": {"No Data": -1},
         "categories": [
             {"numeric_value": 0.0, "name": "0.0", "missing": false, "selected": false, "id": 1},
             {"numeric_value": 1.0, "name": "1.0", "missing": false, "selected": true, "id": 2},
             {"numeric_value": null, "name": "No Data", "missing": true, "selected": false, "id": -1}
-        ], 
-        "dataset_id": "14715604be4d499fbe2445bca9f3eee0", 
+        ],
+        "dataset_id": "14715604be4d499fbe2445bca9f3eee0",
         "view": {
             "include_missing": false,
             "show_counts": false,
             "show_codes": false,
             "column_width": null
         },
-        "type": "categorical", 
+        "type": "categorical",
         "id": "fff"
     },
     "views": {
@@ -31,5 +31,3 @@
     },
     "description": "Details for a given Variable"
 }
-
-

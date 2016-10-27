@@ -1,10 +1,11 @@
+// 4fd71abbd587e0265a5bd7ad5324208b: list(relative="on")
 {
     "element": "shoji:catalog",
     "self": "/api/datasets/dataset1/variables/",
     "specification": "/api/specifications/variables/",
     "description": "List of Variables of this dataset",
     "index": {
-        "/api/datasets/dataset1/variables/gender/": {
+        "gender/": {
             "name": "Gender",
             "discarded": false,
             "alias": "gender",
@@ -13,7 +14,7 @@
             "notes": "",
             "description": "Gender"
         },
-        "/api/datasets/dataset1/variables/birthyr/": {
+        "birthyr/": {
             "name": "Birth Year",
             "discarded": false,
             "alias": "birthyr",
@@ -22,7 +23,7 @@
             "description": null,
             "notes": "Asked instead of age"
         },
-        "/api/datasets/dataset1/variables/starttime/": {
+        "starttime/": {
             "name": "starttime",
             "discarded": false,
             "alias": "starttime",
@@ -33,7 +34,7 @@
             "resolution": "D",
             "rollup_resolution": "s"
         },
-        "/api/datasets/dataset1/variables/mymrset/": {
+        "mymrset/": {
             "name": "mymrset",
             "discarded": false,
             "alias": "mymrset",
@@ -42,13 +43,13 @@
             "description": "Please select all that apply",
             "notes": "",
             "subvariables": [
-                "/api/datasets/dataset1/variables/mymrset/subvariables/subvar2/",
-                "/api/datasets/dataset1/variables/mymrset/subvariables/subvar1/",
-                "/api/datasets/dataset1/variables/mymrset/subvariables/subvar3/"
+                "mymrset/subvariables/subvar2/",
+                "mymrset/subvariables/subvar1/",
+                "mymrset/subvariables/subvar3/"
             ],
-            "subvariables_catalog": "/api/datasets/dataset1/variables/mymrset/subvariables/"
+            "subvariables_catalog": "mymrset/subvariables/"
         },
-        "/api/datasets/dataset1/variables/catarray/": {
+        "catarray/": {
             "name": "Cat Array",
             "discarded": false,
             "alias": "catarray",
@@ -57,13 +58,13 @@
             "description": "An array of cats",
             "notes": "",
             "subvariables": [
-                "/api/datasets/dataset1/variables/mymrset/subvariables/subvar2/",
-                "/api/datasets/dataset1/variables/mymrset/subvariables/subvar1/",
-                "/api/datasets/dataset1/variables/mymrset/subvariables/subvar3/"
+                "mymrset/subvariables/subvar2/",
+                "mymrset/subvariables/subvar1/",
+                "mymrset/subvariables/subvar3/"
             ],
-            "subvariables_catalog": "/api/datasets/dataset1/variables/mymrset/subvariables/"
+            "subvariables_catalog": "mymrset/subvariables/"
         },
-        "/api/datasets/dataset1/variables/textVar/": {
+        "textVar/": {
             "name": "Text variable ftw",
             "discarded": false,
             "alias": "textVar",

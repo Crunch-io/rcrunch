@@ -17,9 +17,9 @@
         "view": {"column_width": null},
         "type": "categorical_array",
         "subvariables": [
-            "/api/datasets/dataset1/variables/subvar2/",
-            "/api/datasets/dataset1/variables/subvar1/",
-            "/api/datasets/dataset1/variables/subvar3/"
+            "/api/datasets/dataset1/variables/mymrset/subvariables/subvar2/",
+            "/api/datasets/dataset1/variables/mymrset/subvariables/subvar1/",
+            "/api/datasets/dataset1/variables/mymrset/subvariables/subvar3/"
         ],
         "subvariables_catalog": "/api/datasets/dataset1/variables/mymrset/subvariables/",
         "id": "qwert"
