@@ -119,6 +119,8 @@ with_mock_HTTP({
         expect_is(do, "DatasetOrder")
         expect_identical(do@graph,
             list(DatasetGroup("Group 1", "/api/datasets/dataset3/")))
+        expect_output(do,
+            paste("[+] Group 1", "    ECON.sav", sep="\n"), fixed=TRUE)
     })
 
     test_that("Add datasets to project by <- a dataset (which transfers ownership)", {

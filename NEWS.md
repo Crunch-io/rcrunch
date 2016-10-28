@@ -1,6 +1,7 @@
 ### crunch 1.13.9 (under development)
 * Prevent accidentally deleting all rows with a bad expression via `dropRows`
 * Print methods for Category/ies now show category ids
+* Option "crunch.namekey.variableorder" to govern how VariableOrder is printed. Current default is "name", the status quo, but set it to "alias" to have `ordering` print aliases. 
 
 ### crunch 1.13.8
 * `crunchBox` to make a public, embeddable analysis widget

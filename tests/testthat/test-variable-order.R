@@ -413,6 +413,24 @@ with_mock_HTTP({
             fixed=TRUE)
     })
 
+    test_that("Order print method follows namekey", {
+        with(temp.option(crunch.namekey.variableorder="alias"), {
+            expect_output(ord,
+                paste("[+] Arrays",
+                      "    catarray",
+                      "    [+] MR",
+                      "        mymrset",
+                      "[+] Demos",
+                      "    [+] Others",
+                      "        birthyr",
+                      "        textVar",
+                      "    gender",
+                      "starttime",
+                      sep="\n"),
+                fixed=TRUE)
+        })
+    })
+
     test_that("locateEntity", {
         expect_identical(locateEntity(ds$mymrset, ord),
             c("Arrays", "MR"))

@@ -106,27 +106,27 @@ showSubvariables <- function (x) {
     return(out)
 }
 
-showShojiOrder <- function (x, catalog_url=x@catalog_url) {
+showShojiOrder <- function (x, catalog_url=x@catalog_url, key="name") {
     if (nchar(catalog_url)) {
         catalog <- index(ShojiCatalog(crGET(catalog_url)))
     } else {
         catalog <- list()
     }
-    return(unlist(lapply(x, showOrderGroup, index=catalog)))
+    return(unlist(lapply(x, showOrderGroup, index=catalog, key=key)))
 }
 
-showOrderGroup <- function (x, index) {
+showOrderGroup <- function (x, index, key="name") {
     if (inherits(x, "OrderGroup")) {
         ents <- entities(x)
         if (length(ents)) {
-            group <- unlist(lapply(ents, showOrderGroup, index=index))
+            group <- unlist(lapply(ents, showOrderGroup, index=index, key=key))
         } else {
             group <- "(Empty group)"
         }
         out <- c(paste0("[+] ", name(x)), paste0("    ", group))
     } else {
         tup <- index[[x]] %||% list()
-        out <- tup[["name"]] %||% "(Hidden variable)"
+        out <- tup[[key]] %||% "(Hidden variable)"
     }
     return(out)
 }
@@ -245,6 +245,8 @@ setMethod("getShowContent", "CategoricalArrayVariable",
 setMethod("getShowContent", "CrunchDataset", showCrunchDataset)
 setMethod("getShowContent", "Subvariables", showSubvariables)
 setMethod("getShowContent", "ShojiOrder", showShojiOrder)
+setMethod("getShowContent", "VariableOrder",
+    function (x) showShojiOrder(x, key=namekey(x)))
 setMethod("getShowContent", "ShojiCatalog",
     function (x) catalogToDataFrame(x, TRUE))
 setMethod("getShowContent", "BatchCatalog",
@@ -275,4 +277,4 @@ setMethod("show", "CrunchCube", function (object) show(cubeToArray(object)))
 
 #' @rdname show-crunch
 #' @export
-setMethod("show", "OrderGroup", function (object) cat(showOrderGroup(object, index=structure(lapply(urls(object), function (x) list(name=x)), .Names=urls(object))), sep="\n"))
+setMethod("show", "OrderGroup", function (object) cat(showOrderGroup(object, index=structure(lapply(urls(object), function (x) list(name=x)), .Names=urls(object)), key="name"), sep="\n"))
