@@ -12,6 +12,11 @@ NULL
 
 .showIt <- function (object) {
     out <- getShowContent(object)
+    if (!is.character(out)) {
+        ## Catalog show content is a data.frame unless otherwise indicated.
+        ## Print it, but capture the output so we can return the character output.
+        out <- capture.output(print(getShowContent(object)))
+    }
     cat(out, sep="\n")
     invisible(out)
 }
@@ -19,16 +24,6 @@ NULL
 #' @rdname show-crunch
 #' @export
 setMethod("show", "ShojiObject", .showIt)
-
-#' @rdname show-crunch
-#' @export
-setMethod("show", "ShojiCatalog", function (object) {
-    ## Catalog show content is a data.frame unless otherwise indicated.
-    ## Print it, but capture the output so we can return the character output.
-    out <- capture.output(print(getShowContent(object)))
-    cat(out, sep="\n")
-    invisible(out)
-})
 
 #' @rdname show-crunch
 #' @export
@@ -45,9 +40,9 @@ setMethod("show", "Categories", .showIt)
 
 # Actual show methods
 
-showCategory <- function (x) paste0("[ ", value(x), " ]  ", name(x))
+showCategory <- function (x) data.frame(id=id(x), name=name(x), value=value(x), missing=is.na(x))
 
-showCategories <- function (x) vapply(x, showCategory, character(1))
+showCategories <- function (x) do.call("rbind", lapply(x, showCategory))
 
 showCrunchVariableTitle <- function (x) {
     out <- paste(getNameAndType(x), collapse=" ")
