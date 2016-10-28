@@ -1,6 +1,7 @@
 context("Update variables with NAs")
 
 with_mock_HTTP({
+    ds <- loadDataset("test ds")
     ds2 <- loadDataset("an archived dataset", kind="archived")
 
     test_that("If an array gets NA assigned and it doesn't have No Data, we add that category", {
@@ -12,6 +13,14 @@ with_mock_HTTP({
         expect_PATCH(ds2$mymrset[[1]][3] <- NA,
             "/api/datasets/dataset2/variables/mymrset/",
             '{"categories":')
+    })
+    test_that("is.na<- sends an expression", {
+        expect_POST(is.na(ds$birthyr) <- ds$birthyr > 2016,
+            "/api/datasets/dataset1/table/", '{"command":"update","variables":',
+            '{"/api/datasets/dataset1/variables/birthyr/":{"value":{"?":-1},',
+            '"type":{"class":"numeric"}}},"filter":{"function":">","args":',
+            '[{"variable":"/api/datasets/dataset1/variables/birthyr/"},',
+            '{"value":2016}]}}')
     })
 })
 
@@ -139,10 +148,5 @@ with_test_authentication({
     })
     test_that("Insert values including NA into categorical array", {
 
-    })
-
-    test_that("Can set missing rules (someday)", {
-        expect_error(is.na(ds$ndogs) <- ds$ndogs < 0,
-            "is.na<- not yet supported")
     })
 })

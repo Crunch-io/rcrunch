@@ -72,7 +72,7 @@ preCrunchBoxCheck <- function (dataset) {
         not_recommended_types <- !suggested_types
         num_types <- sum(not_recommended_types)
         cat("We recommend using only categorical and multiple_response",
-            "variables.", demonstrativeCount(num_types), "are not:\n")
+            "variables.", demonstrativeCount(num_types), "an unsupported type:\n")
         print(data.frame(alias=keeps[!suggested_types],
             type=types(vm)[!suggested_types]))
     }
@@ -84,7 +84,7 @@ preCrunchBoxCheck <- function (dataset) {
     if (any(too_long_name)) {
         num_too_long <- sum(too_long_name)
         cat("Shorter variable names will display in the menus better.",
-            demonstrativeCount(num_too_long), "are longer than 40 characters:\n")
+            demonstrativeCount(num_too_long), "a name longer than 40 characters:\n")
         print(data.frame(alias=keeps[too_long_name],
             length=name_length[too_long_name],
             name=names(vm)[too_long_name]))
@@ -105,7 +105,7 @@ preCrunchBoxCheck <- function (dataset) {
         num_too_many <- sum(too_many_cats)
         cat("Too many categories won't plot well.",
             demonstrativeCount(num_too_many),
-            "have more than 7 non-missing categories:\n")
+            "more than 7 non-missing categories:\n")
         print(data.frame(alias=keeps[too_many_cats],
             num_categories=num_cats[too_many_cats]))
     }
@@ -125,7 +125,7 @@ preCrunchBoxCheck <- function (dataset) {
         num_too_long <- sum(too_long_cat)
         cat("Shorter category names will fit in the tables and graphs better.",
             demonstrativeCount(num_too_long),
-            "have at least one category longer than 40 characters:\n")
+            "at least one category longer than 40 characters:\n")
         print(data.frame(alias=keeps[too_long_cat],
             length=cat_length[too_long_cat],
             category=longest_cat[too_long_cat]))
@@ -139,7 +139,7 @@ preCrunchBoxCheck <- function (dataset) {
         num_too_many <- sum(too_many_subvars)
         cat("Too many subvariables won't plot well. ",
             demonstrativeCount(num_too_many),
-            " have more than 7 subvariables:\n")
+            "more than 7 subvariables:\n")
         print(data.frame(alias=keeps[too_many_subvars],
             num_subvariables=num_subvars[too_many_subvars]))
     }
@@ -156,7 +156,7 @@ preCrunchBoxCheck <- function (dataset) {
         num_too_long <- sum(too_long_subvar)
         cat("Shorter subvariable names will fit in the tables and graphs better.",
             demonstrativeCount(num_too_long),
-            "have at least one subvariable longer than 40 characters:\n")
+            "at least one subvariable longer than 40 characters:\n")
         print(data.frame(alias=keeps[too_long_subvar],
             length=subvar_length[too_long_subvar],
             subvariable=longest_subvar[too_long_subvar]))
@@ -166,5 +166,5 @@ preCrunchBoxCheck <- function (dataset) {
 }
 
 demonstrativeCount <- function (n, noun="variable") {
-    return(ifelse(n > 1, paste("These", n, "variables"), "This variable"))
+    return(ifelse(n > 1, paste("These", n, "variables have"), "This variable has"))
 }

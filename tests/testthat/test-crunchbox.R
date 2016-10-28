@@ -13,7 +13,7 @@ with_mock_HTTP({
 
     test_that("preCrunchBoxCheck does not error", {
         expect_output(preCrunchBoxCheck(ds),
-            "We recommend using only categorical and multiple_response variables. These 4 variables are not")
+            "We recommend using only categorical and multiple_response variables. These 4 variables have an unsupported type")
     })
 
     test_that("Basic box", {
@@ -77,5 +77,29 @@ with_mock_HTTP({
             expect_error(crunchBox(ds[2]),
                 "1 variable and 2 filters results in too many cubes")
         })
+    })
+})
+
+with_test_authentication({
+    testdf <- as.data.frame(sapply(letters[1:8], function (x) df$v4, simplify=FALSE))
+    testdf$cat <- as.factor(letters[1:10])
+    testdf$num <- 1
+    ds <- newDataset(testdf)
+    ds$mr <- makeMR(ds[letters[1:8]],
+        name="Excessively long variable name to trigger the check for length",
+        selections="B")
+    names(subvariables(ds$mr))[1] <- "Another really really long name to check for the same for subvariables"
+    names(categories(ds$cat))[2] <- "Extra long category name because we check those too"
+
+    test_that("check box catches the various cases", {
+        expect_output(preCrunchBoxCheck(ds),
+            "Shorter variable names will display in the menus better. This variable has a name longer than 40 characters")
+    })
+
+    weight(ds) <- ds$num
+    hiddenVariables(ds) <- "num"
+    filters(ds)[["A filter"]] <- ds$cat == "d"
+    test_that("We can make a box", {
+        expect_true(is.character(crunchBox(ds)))
     })
 })

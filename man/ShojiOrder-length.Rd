@@ -3,10 +3,13 @@
 \docType{methods}
 \name{ShojiOrder-length}
 \alias{ShojiOrder-length}
+\alias{length,OrderGroup-method}
 \alias{length,ShojiOrder-method}
 \title{Length of an Order}
 \usage{
 \S4method{length}{ShojiOrder}(x)
+
+\S4method{length}{OrderGroup}(x)
 }
 \arguments{
 \item{x}{a ShojiOrder}

@@ -73,13 +73,6 @@ if (run.integration.tests) {
                 )))
             })
             logdf <- loadLogfile(textConnection(avlog))
-            test_that("token tests of log parsing while we're here", {
-                expect_true(is.list(cacheLogSummary(logdf)))
-                expect_true(is.list(requestLogSummary(logdf)))
-                expect_true(is.numeric(blockTimings(logdf)))
-                expect_error(getLogBlock(logdf, "NOBLOCK"),
-                    "Block NOBLOCK not found")
-            })
             test_that("addVariables can add multiple VarDefs", {
                 expect_equivalent(as.vector(ds$One), rep(1, 20))
                 expect_equivalent(as.vector(ds$runif), unifs)
