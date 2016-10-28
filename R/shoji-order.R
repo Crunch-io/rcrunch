@@ -127,6 +127,9 @@ NULL
 #' @export
 setMethod("length", "ShojiOrder", function (x) length(entities(x)))
 
+#' @rdname ShojiOrder-length
+#' @export
+setMethod("length", "OrderGroup", function (x) length(entities(x)))
 
 #' Extract and update in VariableOrder and VariableGroup
 #'
@@ -542,7 +545,7 @@ dedupeOrder <- function (x) {
 #'
 #' This function reduces a potentially nested order to its flattened
 #' representation, containing no nested groups. Entities are ordered in the
-#' result by their first appearance in the order object passed as input. 
+#' result by their first appearance in the order object passed as input.
 #'
 #' @param x VariableOrder, DatasetOrder, VariableGroup, or DatasetGroup; or a
 #' CrunchDataset or catalog that has an \code{ordering} property.

@@ -38,15 +38,51 @@ with_mock_HTTP({
         VariableGroup(name="Group 2", entities=ent.urls[5:6]),
         catalog_url=varcat_url))
 
+    test_that("Validation on entities<-", {
+        expect_error(entities(ordering(ds)) <- NULL,
+            "NULL is an invalid input for entities")
+        expect_error(entities(nested.ord[[1]]) <- new.env(),
+            "environment is an invalid input for entities")
+    })
+
+    test_that("length methods", {
+        expect_length(nested.ord, 2)
+        expect_length(nested.ord[[1]], 3)
+        expect_length(nested.ord[[2]], 2)
+    })
+
     test_that("Can extract group(s) by name", {
         expect_identical(nested.ord[["Group 2"]],
             VariableGroup(name="Group 2", entities=ent.urls[5:6]))
         expect_identical(nested.ord$`Group 2`,
             VariableGroup(name="Group 2", entities=ent.urls[5:6]))
-        expect_identical(nested.ord["Group 2"],
-            VariableOrder(VariableGroup(name="Group 2",
-            entities=ent.urls[5:6]), catalog_url=varcat_url))
     })
+
+    test_that("Extract with [", {
+        expect_identical(nested.ord["Group 2"],
+            VariableOrder(
+                VariableGroup(name="Group 2", entities=ent.urls[5:6]),
+                catalog_url=varcat_url))
+        expect_error(nested.ord["NOT A GROUP"],
+            "Undefined groups selected: NOT A GROUP")
+    })
+
+    test_that("Extract with [[ from Group", {
+        expect_identical(nested.ord[["Group 1"]]$Nested,
+            VariableGroup(name="Nested", entities=ent.urls[2:3]))
+        expect_error(nested.ord[["Group 1"]][["NOT A GROUP"]],
+            "Undefined groups selected: NOT A GROUP")
+    })
+
+    test_that("Extract with [ from Group", {
+        expect_identical(nested.ord[["Group 1"]]["Nested"],
+            VariableGroup(name="Group 1",
+                entities=list(
+                    VariableGroup(name="Nested", entities=ent.urls[2:3]))))
+        expect_error(nested.ord[["Group 1"]]["NOT A GROUP"],
+            "Undefined groups selected: NOT A GROUP")
+    })
+
     test_that("Can create nested groups", {
         expect_is(nested.ord, "VariableOrder")
         expect_identical(urls(nested.ord), ent.urls)
