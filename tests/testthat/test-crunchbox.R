@@ -7,6 +7,36 @@ test_that("Box size limit check", {
     expect_true(boxTooBig(100, 6))
 })
 
+test_that("Embed URL", {
+    expect_identical(boxdataToWidgetURL("http://cf.example/d/stuff/1a1577c91fbb2c1cbd3800e181188508/dataset.json"),
+        "//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c1cbd3800e181188508/")
+    expect_identical(boxdataToWidgetURL("//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c1cbd3800e181188508/"),
+        "//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c1cbd3800e181188508/")
+})
+
+test_that("Iframe code (prints and returns invisibly)", {
+    ## Use the testthat version of expect_output because the crunch version
+    ## calls print explicitly
+    testthat::expect_output(
+        expect_identical(embedCrunchBox("http://cf.example/d/stuff/1a1577c91fbb2c1cbd3800e181188508/dataset.json"),
+            '<iframe src="//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c1cbd3800e181188508/" width="600" height="480" style="border: 1px solid #d3d3d3;"></iframe>'),
+        '<iframe src="//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c1cbd3800e181188508/" width="600" height="480" style="border: 1px solid #d3d3d3;"></iframe>',
+        fixed=TRUE)
+})
+
+iframe_with_logo <- '<figure style="text-align: left;" class="content-list-component image">
+    <img src="//s.crunch.io/public/branding/example.gif" style="height:auto; width:200px; margin-left:-4px"></img>
+    <iframe src="//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c1cbd3800e181188508/" width="600" height="480" style="border: 1px solid #d3d3d3;"></iframe>
+</figure>'
+
+test_that("Iframe code with logo", {
+    testthat::expect_output(
+        expect_identical(embedCrunchBox("http://cf.example/d/stuff/1a1577c91fbb2c1cbd3800e181188508/dataset.json", logo="//s.crunch.io/public/branding/example.gif"),
+            iframe_with_logo),
+        iframe_with_logo,
+        fixed=TRUE)
+})
+
 with_mock_HTTP({
     ds <- loadDataset("test ds")
     ds3 <- loadDataset("ECON.sav")

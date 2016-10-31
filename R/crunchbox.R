@@ -168,3 +168,48 @@ preCrunchBoxCheck <- function (dataset) {
 demonstrativeCount <- function (n, noun="variable") {
     return(ifelse(n > 1, paste("These", n, "variables have"), "This variable has"))
 }
+
+#' Get HTML for embedding a CrunchBox
+#'
+#' \code{\link{crunchBox}} returns a URL to the box data that it generates, but
+#' in order to view it in a CrunchBox or to embed it on a website, you'll need
+#' to translate that to the Box's public URL and wrap it in some HTML.
+#'
+#' @param box character URL of the box data, as returned by
+#' \code{crunchBox}
+#' @param title character title for the Box, to appear above the iframe. Default
+#' is \code{NULL}, meaning no title shown
+#' @param logo character URL of a logo to show instead of a title. Default is
+#' \code{NULL}, meaning no logo shown. If both logo and title are provided, only
+#' logo will be shown. Note also that logo must be a URL of an image hosted
+#' somewhere--it cannot be a path to a local file.
+#' @param ... Additional arguments, not currently used.
+#' @return Prints the HTML markup to the screen and also returns it invisibly.
+#' @seealso \code{\link{crunchBox}}
+#' @examples
+#' \dontrun{
+#' box <- crunchBox(ds)
+#' embedCrunchBox(box, logo="//myco.example/img/logo_200px.png")
+#' }
+#' @export
+embedCrunchBox <- function (box, title=NULL, logo=NULL, ...) {
+    iframe <- paste0('<iframe src="',
+        boxdataToWidgetURL(box),
+        '" width="600" height="480" style="border: 1px solid #d3d3d3;"></iframe>')
+    if (!is.null(logo)) {
+        iframe <- paste0(
+            '<figure style="text-align: left;" class="content-list-component image">\n',
+            '    <img src="', logo, '" style="height:auto; width:200px; margin-left:-4px"></img>\n',
+            '    ', iframe, '\n',
+            '</figure>')
+    } else if (!is.null(title)) {
+
+    }
+    cat(iframe, "\n")
+    invisible(iframe)
+}
+
+boxdataToWidgetURL <- function (box) {
+    ## Grab the box id hash from one URL and plug it into the public widget URL
+    sub(".*([0-9a-f]{32}).*", "//s.crunch.io/widget/index.html#/ds/\\1/", box)
+}
