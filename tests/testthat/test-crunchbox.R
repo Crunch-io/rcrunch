@@ -29,11 +29,27 @@ iframe_with_logo <- '<figure style="text-align: left;" class="content-list-compo
     <iframe src="//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c1cbd3800e181188508/" width="600" height="480" style="border: 1px solid #d3d3d3;"></iframe>
 </figure>'
 
+iframe_with_title <- '<figure style="text-align: left;" class="content-list-component image">
+    <div style="padding-bottom: 12px">
+        <span style="font-size: 18px; color: #444444; line-height: 1;">Example title here</span>
+    </div>
+    <iframe src="//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c1cbd3800e181188508/" width="600" height="480" style="border: 1px solid #d3d3d3;"></iframe>
+</figure>'
+
+
 test_that("Iframe code with logo", {
     testthat::expect_output(
         expect_identical(embedCrunchBox("http://cf.example/d/stuff/1a1577c91fbb2c1cbd3800e181188508/dataset.json", logo="//s.crunch.io/public/branding/example.gif"),
             iframe_with_logo),
         iframe_with_logo,
+        fixed=TRUE)
+})
+
+test_that("Iframe code with title", {
+    testthat::expect_output(
+        expect_identical(embedCrunchBox("http://cf.example/d/stuff/1a1577c91fbb2c1cbd3800e181188508/dataset.json", title="Example title here"),
+            iframe_with_title),
+        iframe_with_title,
         fixed=TRUE)
 })
 

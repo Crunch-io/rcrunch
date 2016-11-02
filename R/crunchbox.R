@@ -197,13 +197,16 @@ embedCrunchBox <- function (box, title=NULL, logo=NULL, ...) {
         boxdataToWidgetURL(box),
         '" width="600" height="480" style="border: 1px solid #d3d3d3;"></iframe>')
     if (!is.null(logo)) {
-        iframe <- paste0(
-            '<figure style="text-align: left;" class="content-list-component image">\n',
-            '    <img src="', logo, '" style="height:auto; width:200px; margin-left:-4px"></img>\n',
-            '    ', iframe, '\n',
-            '</figure>')
+        iframe <- boxfig(paste0('<img src="', logo,
+            '" style="height:auto; width:200px; margin-left:-4px"></img>'),
+            iframe)
     } else if (!is.null(title)) {
-
+        iframe <- boxfig(
+            '<div style="padding-bottom: 12px">',
+            paste0('    <span style="font-size: 18px; color: #444444; line-height: 1;">',
+                title, '</span>'),
+            '</div>',
+            iframe)
     }
     cat(iframe, "\n")
     invisible(iframe)
@@ -212,4 +215,13 @@ embedCrunchBox <- function (box, title=NULL, logo=NULL, ...) {
 boxdataToWidgetURL <- function (box) {
     ## Grab the box id hash from one URL and plug it into the public widget URL
     sub(".*([0-9a-f]{32}).*", "//s.crunch.io/widget/index.html#/ds/\\1/", box)
+}
+
+boxfig <- function (...) {
+    ## Wrap HTML in more HTML, a <figure> tag
+    paste0(
+        '<figure style="text-align: left;" class="content-list-component image">\n',
+        paste0("    ", c(...), "\n", collapse=""),
+        '</figure>'
+    )
 }
