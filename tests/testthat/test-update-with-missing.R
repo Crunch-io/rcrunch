@@ -16,10 +16,10 @@ with_mock_HTTP({
     })
     test_that("is.na<- sends an expression", {
         expect_POST(is.na(ds$birthyr) <- ds$birthyr > 2016,
-            "/api/datasets/dataset1/table/", '{"command":"update","variables":',
-            '{"/api/datasets/dataset1/variables/birthyr/":{"value":{"?":-1},',
+            "/api/datasets/1/table/", '{"command":"update","variables":',
+            '{"/api/datasets/1/variables/birthyr/":{"value":{"?":-1},',
             '"type":{"class":"numeric"}}},"filter":{"function":">","args":',
-            '[{"variable":"/api/datasets/dataset1/variables/birthyr/"},',
+            '[{"variable":"/api/datasets/1/variables/birthyr/"},',
             '{"value":2016}]}}')
     })
 })
