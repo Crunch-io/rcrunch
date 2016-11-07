@@ -72,7 +72,7 @@ preCrunchBoxCheck <- function (dataset) {
         not_recommended_types <- !suggested_types
         num_types <- sum(not_recommended_types)
         cat("We recommend using only categorical and multiple_response",
-            "variables.", demonstrativeCount(num_types), "are not:\n")
+            "variables.", demonstrativeCount(num_types), "an unsupported type:\n")
         print(data.frame(alias=keeps[!suggested_types],
             type=types(vm)[!suggested_types]))
     }
@@ -84,7 +84,7 @@ preCrunchBoxCheck <- function (dataset) {
     if (any(too_long_name)) {
         num_too_long <- sum(too_long_name)
         cat("Shorter variable names will display in the menus better.",
-            demonstrativeCount(num_too_long), "are longer than 40 characters:\n")
+            demonstrativeCount(num_too_long), "a name longer than 40 characters:\n")
         print(data.frame(alias=keeps[too_long_name],
             length=name_length[too_long_name],
             name=names(vm)[too_long_name]))
@@ -105,7 +105,7 @@ preCrunchBoxCheck <- function (dataset) {
         num_too_many <- sum(too_many_cats)
         cat("Too many categories won't plot well.",
             demonstrativeCount(num_too_many),
-            "have more than 7 non-missing categories:\n")
+            "more than 7 non-missing categories:\n")
         print(data.frame(alias=keeps[too_many_cats],
             num_categories=num_cats[too_many_cats]))
     }
@@ -125,7 +125,7 @@ preCrunchBoxCheck <- function (dataset) {
         num_too_long <- sum(too_long_cat)
         cat("Shorter category names will fit in the tables and graphs better.",
             demonstrativeCount(num_too_long),
-            "have at least one category longer than 40 characters:\n")
+            "at least one category longer than 40 characters:\n")
         print(data.frame(alias=keeps[too_long_cat],
             length=cat_length[too_long_cat],
             category=longest_cat[too_long_cat]))
@@ -139,7 +139,7 @@ preCrunchBoxCheck <- function (dataset) {
         num_too_many <- sum(too_many_subvars)
         cat("Too many subvariables won't plot well. ",
             demonstrativeCount(num_too_many),
-            " have more than 7 subvariables:\n")
+            "more than 7 subvariables:\n")
         print(data.frame(alias=keeps[too_many_subvars],
             num_subvariables=num_subvars[too_many_subvars]))
     }
@@ -156,7 +156,7 @@ preCrunchBoxCheck <- function (dataset) {
         num_too_long <- sum(too_long_subvar)
         cat("Shorter subvariable names will fit in the tables and graphs better.",
             demonstrativeCount(num_too_long),
-            "have at least one subvariable longer than 40 characters:\n")
+            "at least one subvariable longer than 40 characters:\n")
         print(data.frame(alias=keeps[too_long_subvar],
             length=subvar_length[too_long_subvar],
             subvariable=longest_subvar[too_long_subvar]))
@@ -166,5 +166,62 @@ preCrunchBoxCheck <- function (dataset) {
 }
 
 demonstrativeCount <- function (n, noun="variable") {
-    return(ifelse(n > 1, paste("These", n, "variables"), "This variable"))
+    return(ifelse(n > 1, paste("These", n, "variables have"), "This variable has"))
+}
+
+#' Get HTML for embedding a CrunchBox
+#'
+#' \code{\link{crunchBox}} returns a URL to the box data that it generates, but
+#' in order to view it in a CrunchBox or to embed it on a website, you'll need
+#' to translate that to the Box's public URL and wrap it in some HTML.
+#'
+#' @param box character URL of the box data, as returned by
+#' \code{crunchBox}
+#' @param title character title for the Box, to appear above the iframe. Default
+#' is \code{NULL}, meaning no title shown
+#' @param logo character URL of a logo to show instead of a title. Default is
+#' \code{NULL}, meaning no logo shown. If both logo and title are provided, only
+#' logo will be shown. Note also that logo must be a URL of an image hosted
+#' somewhere--it cannot be a path to a local file.
+#' @param ... Additional arguments, not currently used.
+#' @return Prints the HTML markup to the screen and also returns it invisibly.
+#' @seealso \code{\link{crunchBox}}
+#' @examples
+#' \dontrun{
+#' box <- crunchBox(ds)
+#' embedCrunchBox(box, logo="//myco.example/img/logo_200px.png")
+#' }
+#' @export
+embedCrunchBox <- function (box, title=NULL, logo=NULL, ...) {
+    iframe <- paste0('<iframe src="',
+        boxdataToWidgetURL(box),
+        '" width="600" height="480" style="border: 1px solid #d3d3d3;"></iframe>')
+    if (!is.null(logo)) {
+        iframe <- boxfig(paste0('<img src="', logo,
+            '" style="height:auto; width:200px; margin-left:-4px"></img>'),
+            iframe)
+    } else if (!is.null(title)) {
+        iframe <- boxfig(
+            '<div style="padding-bottom: 12px">',
+            paste0('    <span style="font-size: 18px; color: #444444; line-height: 1;">',
+                title, '</span>'),
+            '</div>',
+            iframe)
+    }
+    cat(iframe, "\n")
+    invisible(iframe)
+}
+
+boxdataToWidgetURL <- function (box) {
+    ## Grab the box id hash from one URL and plug it into the public widget URL
+    sub(".*([0-9a-f]{32}).*", "//s.crunch.io/widget/index.html#/ds/\\1/", box)
+}
+
+boxfig <- function (...) {
+    ## Wrap HTML in more HTML, a <figure> tag
+    paste0(
+        '<figure style="text-align: left;" class="content-list-component image">\n',
+        paste0("    ", c(...), "\n", collapse=""),
+        '</figure>'
+    )
 }

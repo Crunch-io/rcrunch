@@ -1,4 +1,11 @@
-### crunch 1.13.7 (under development)
+### crunch 1.13.9 (under development)
+* `embedCrunchBox` to generate embeddable HTML markup for CrunchBoxes
+* Prevent accidentally deleting all rows with a bad expression via `dropRows`
+* Print methods for Category/ies now show category ids
+* Option "crunch.namekey.variableorder" to govern how VariableOrder is printed. Current default is "name", the status quo, but set it to "alias" to have `ordering` print aliases.
+* Support for `is.na<-` to set missing values on a variable, equivalent to assigning `NA`
+
+### crunch 1.13.8
 * `crunchBox` to make a public, embeddable analysis widget
 * `settings` and `settings<-` to view and modify dataset-level controls, such as default "weight" and viewer permissions ("viewers_can_change_weight", "viewers_can_export")
 * `flattenOrder` to strip out nested groups from an order

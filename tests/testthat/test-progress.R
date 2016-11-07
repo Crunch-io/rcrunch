@@ -2,9 +2,9 @@ context("Polling progress")
 
 with_mock_HTTP({
     test_that("If progress polling gives up, it tells you what to do", {
-        with(temp.option(crunch.timeout=0.005), {
+        with(temp.option(crunch.timeout=0.0005), {
             expect_error(
-                expect_output(pollProgress("/api/progress/1/", wait=0.01),
+                expect_output(pollProgress("/api/progress/1/", wait=0.001),
                     "|================"),
                 paste('Your process is still running on the server. It is',
                     'currently 23% complete. Check',
@@ -33,7 +33,7 @@ with_mock_HTTP({
         },
         test_that("Progress polling goes until 100", {
             expect_output(
-                expect_equal(pollProgress("/api/progress/", wait=.01),
+                expect_equal(pollProgress("/api/progress/", wait=.001),
                     100),
                 "=| 100%", fixed=TRUE)
         }),

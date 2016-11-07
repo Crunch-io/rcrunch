@@ -121,9 +121,11 @@ setMethod("dim", "CrunchDataset",
 #' @export
 setMethod("ncol", "CrunchDataset", function (x) length(variables(x)))
 
-namekey <- function (x) {
+namekey <- function (x=NULL) {
     if (is.variable(x)) {
         return(match.arg(getOption("crunch.namekey.array"), c("alias", "name")))
+    } else if (inherits(x, "VariableOrder") || inherits(x, "VariableGroup")) {
+        return(match.arg(getOption("crunch.namekey.variableorder"), c("name", "alias")))
     } else {
         return(match.arg(getOption("crunch.namekey.dataset"), c("alias", "name")))
     }

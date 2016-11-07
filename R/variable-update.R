@@ -221,13 +221,5 @@ setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
 #' @rdname variable-update
 #' @export
 setMethod("is.na<-", "CrunchVariable", function (x, value) {
-    ## Temporarily kill this method until API supports correctly
-    halt("is.na<- not yet supported for CrunchVariables")
-
-    lab <- gsub('"', "", deparse(substitute(value)))
-    value <- zcl(.dispatchFilter(value))
-    payload <- structure(list(value), .Names=lab)
-    # cat(toJSON(payload))
-    out <- crPOST(x@fragments$missing_rules, body=toJSON(payload))
-    return(x)
+    x[value] <- NA
 })
