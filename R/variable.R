@@ -178,14 +178,7 @@ NULL
 
 #' @rdname variable-extract
 #' @export
-setMethod("[", c("CrunchVariable", "CrunchExpr"), function (x, i, ...) {
-    f <- activeFilter(x)
-    if (length(zcl(f))) {
-        i <- f & i
-    }
-    activeFilter(x) <- i
-    return(x)
-})
+setMethod("[", c("CrunchVariable", "CrunchExpr"), .updateActiveFilter)
 #' @rdname variable-extract
 #' @export
 setMethod("[", c("CrunchVariable", "numeric"), function (x, i, ...) {

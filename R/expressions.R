@@ -282,11 +282,4 @@ rollupResolution <- function (x) {
 
 #' @rdname variable-extract
 #' @export
-setMethod("[", c("CrunchExpr", "CrunchLogicalExpr"), function (x, i, ...) {
-    f <- activeFilter(x)
-    if (length(zcl(f))) {
-        i <- f & i
-    }
-    activeFilter(x) <- i
-    return(x)
-})
+setMethod("[", c("CrunchExpr", "CrunchLogicalExpr"), .updateActiveFilter)

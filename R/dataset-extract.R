@@ -60,16 +60,28 @@ setMethod("[", c("CrunchDataset", "missing", "ANY"), function (x, i, j, ..., dro
     x[j]
 })
 
-#' @rdname dataset-extract
-#' @export
-setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "missing"), function (x, i, j, ..., drop=FALSE) {
+.updateActiveFilter <- function (x, i, j, ..., drop=FALSE) {
+    ## x[i] where i is CrunchLogicalExpr and x may already have an active filter
     f <- activeFilter(x)
     if (length(zcl(f))) {
-        i <- f & i
+        ## & together the expressions, as long as i has the same active filter
+        ## as f is
+        if (identical(zcl(f), zcl(activeFilter(i)))) {
+            ## Ensure that they have the same filter on the objects, then & them
+            activeFilter(i) <- activeFilter(f)
+            i <- f & i
+        } else {
+            callstring <- deparse(tail(sys.calls(), 1)[[1]])[1]
+            halt("In ", callstring, ", object and subsetting expression have different filter expressions")
+        }
     }
     activeFilter(x) <- i
     return(x)
-})
+}
+
+#' @rdname dataset-extract
+#' @export
+setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "missing"), .updateActiveFilter)
 
 #' @rdname dataset-extract
 #' @export
