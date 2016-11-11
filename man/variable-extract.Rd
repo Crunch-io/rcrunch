@@ -9,9 +9,9 @@
 \alias{variable-extract}
 \title{"Subset" a Variable}
 \usage{
-\S4method{[}{CrunchExpr,CrunchLogicalExpr,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CrunchExpr,CrunchLogicalExpr,ANY}(x, i, j, ..., drop = FALSE)
 
-\S4method{[}{CrunchVariable,CrunchExpr,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CrunchVariable,CrunchExpr,ANY}(x, i, j, ..., drop = FALSE)
 
 \S4method{[}{CrunchVariable,numeric,ANY}(x, i, j, ..., drop = TRUE)
 
