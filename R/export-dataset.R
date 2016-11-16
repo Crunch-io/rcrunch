@@ -40,7 +40,7 @@ variablesFilter <- function (dataset) {
     ## If so, return a Crunch expression to filter them
     allvars <- allVariables(dataset)
     if (length(allvars) != length(ShojiCatalog(crGET(self(allvars))))) {
-        v <- structure(lapply(urls(allvars), function (x) list(variable=x)),
+        v <- structure(lapply(ids(allvars), function (x) list(variable=x)),
             .Names=ids(allvars))
         return(list(`function`="select", args=list(list(map=v))))
     }

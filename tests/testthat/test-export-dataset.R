@@ -35,7 +35,7 @@ with_mock_HTTP({
             '/api/datasets/1/export/csv/',
             '{"filter":null,"where":{"function":"select",',
             '"args":[{"map":{"66ae9881e3524f7db84970d556c34552":',
-            '{"variable":"/api/datasets/1/variables/gender/"}}}]},',
+            '{"variable":"66ae9881e3524f7db84970d556c34552"}}}]},',
             '"options":{"use_category_ids":false}}')
     })
 })
