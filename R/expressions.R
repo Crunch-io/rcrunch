@@ -301,7 +301,6 @@ setMethod("[", c("CrunchExpr", "CrunchLogicalExpr"), .updateActiveFilter)
 NULL
 
 #' @rdname which
-#' @export
 setMethod("which", "CrunchLogicalExpr", function (x, arr.ind, useNames) {
     as.integer(as.vector(CrunchExpr(expression=zfunc("row"),
         dataset_url=datasetReference(x) %||% "")[x])) + 1L

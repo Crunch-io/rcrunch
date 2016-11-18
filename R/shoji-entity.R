@@ -13,6 +13,11 @@ setMethod("[[", "ShojiEntity", function (x, i) x@body[[i]])
 #' @rdname tuple-methods
 #' @export
 setMethod("[[<-", "ShojiEntity", function (x, i, value) {
+    if (is.variable(value)) {
+        ## Setting a weight: get its URL
+        ## Generalize this `if` whenever needed
+        value <- self(value)
+    }
     ## Assign in with [ and wrap value in list() so that NULL can be set without
     ## removing the attribute from x@body
     x@body[i] <- list(value)

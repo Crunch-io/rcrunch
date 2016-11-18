@@ -227,6 +227,11 @@ with_mock_HTTP({
             "/api/datasets/1/settings/",
             '{"viewers_can_export":null}')
     })
+    test_that("Can set a variable as weight", {
+        expect_PATCH(settings(ds)$weight <- ds$gender, ## Silly; server would reject, but just checking request
+            "/api/datasets/1/settings/",
+            '{"weight":"/api/datasets/1/variables/gender/"}')
+    })
     test_that("Can't add a setting that doesn't exist", {
         expect_error(settings(ds)$NOTASETTING <- TRUE,
             "Invalid attribute: NOTASETTING")

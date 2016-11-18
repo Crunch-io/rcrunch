@@ -6,6 +6,7 @@
 * Option "crunch.namekey.variableorder" to govern how VariableOrder is printed. Current default is "name", the status quo, but set it to "alias" to have `ordering` print aliases.
 * Support for `is.na<-` to set missing values on a variable, equivalent to assigning `NA`
 * Fix behavior and validation for subsetting datasets/variables that are already subsetted by a Crunch expression object.
+* Allow setting a variable entity to `settings(ds)$weight` and not just its `self` URL.
 
 ### crunch 1.13.8
 * `crunchBox` to make a public, embeddable analysis widget
