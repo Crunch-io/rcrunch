@@ -53,12 +53,6 @@ math.exp <- function (e1, e2, operator) {
     ## Generic function that creates CrunchExpr of `e1 %operator% e2`
     ex <- zfunc(operator, e1, e2)
     ds.url <- unique(unlist(lapply(list(e1, e2), datasetReference))) %||% ""
-    logics <- c("in", "<", ">", ">=", "<=", "==", "!=", "and", "or")
-    if (operator %in% logics) {
-        Constructor <- CrunchLogicalExpr
-    } else {
-        Constructor <- CrunchExpr
-    }
 
     ## If either e1 or e2 are Crunch objects with filters, pass those along,
     ## and if both do, make sure that they're the same
@@ -80,9 +74,20 @@ math.exp <- function (e1, e2, operator) {
         }
         filt <- f1
     }
-    out <- Constructor(expression=ex, dataset_url=ds.url)
+    out <- ExprConstructor(operator)(expression=ex, dataset_url=ds.url)
     activeFilter(out) <- filt
     return(out)
+}
+
+ExprConstructor <- function (operator) {
+    ## Based on the operator function, make either CrunchExpr or CrunchLogicalExpr
+    logics <- c("in", "<", ">", ">=", "<=", "==", "!=", "and", "or", "not", "is_missing", "duplicates")
+    if (operator %in% logics) {
+        Constructor <- CrunchLogicalExpr
+    } else {
+        Constructor <- CrunchExpr
+    }
+    return(Constructor)
 }
 
 crunch.ops <- function (i) {
@@ -127,13 +132,20 @@ setMethod("|", c("CrunchExpr", "CrunchExpr"), crunch.ops("or"))
 setMethod("|", c("logical", "CrunchExpr"), crunch.ops("or"))
 setMethod("|", c("CrunchExpr", "logical"), crunch.ops("or"))
 
+
+zfuncExpr <- function (fun, x, ...) {
+    ## Wrap zfunc(fun, x) in a way that preserves x's active filter
+    ## Returns CrunchExpr instead of zcl/list
+    ## Currently only implemented for one arg with a filter (x)
+    out <- ExprConstructor(fun)(expression=zfunc(fun, x, ...),
+        dataset_url=datasetReference(x) %||% "")
+    activeFilter(out) <- activeFilter(x)
+    return(out)
+}
+
 #' @rdname expressions
 #' @export
-setMethod("!", c("CrunchExpr"),
-    function (x) {
-        CrunchLogicalExpr(expression=zfunc("not", x),
-            dataset_url=datasetReference(x))
-    })
+setMethod("!", "CrunchExpr", function (x) zfuncExpr("not", x))
 
 #' @importFrom utils head tail
 .seqCrunch <- function (x, table) {
@@ -240,18 +252,11 @@ setMethod("datasetReference", "CrunchExpr", function (x) x@dataset_url)
 
 #' @rdname expressions
 #' @export
-setMethod("is.na", "CrunchVariable", function (x) {
-    CrunchLogicalExpr(expression=zfunc("is_missing", x),
-        dataset_url=datasetReference(x))
-})
+setMethod("is.na", "CrunchVariable", function (x) zfuncExpr("is_missing", x))
 
 #' @rdname expressions
 #' @export
-bin <- function (x) {
-    ## TODO: this should be filtered by x's filter
-    CrunchExpr(expression=zfunc("bin", x),
-        dataset_url=datasetReference(x) %||% "")
-}
+bin <- function (x) zfuncExpr("bin", x)
 
 
 #' @rdname expressions
@@ -266,10 +271,7 @@ rollup <- function (x, resolution=rollupResolution(x)) {
     if (is.variable(x) && !is.Datetime(x)) {
         halt("Cannot rollup a variable of type ", dQuote(type(x)))
     }
-    ## TODO: this should be filtered by x's filter
-    CrunchExpr(expression=zfunc("rollup", x, list(value=resolution)),
-        ## list() so that the resolution value won't get typed
-        dataset_url=datasetReference(x) %||% "")
+    return(zfuncExpr("rollup", x, list(value=resolution)))
 }
 
 rollupResolution <- function (x) {
@@ -283,3 +285,49 @@ rollupResolution <- function (x) {
 #' @rdname variable-extract
 #' @export
 setMethod("[", c("CrunchExpr", "CrunchLogicalExpr"), .updateActiveFilter)
+
+#' "which" method for CrunchLogicalExpr
+#'
+#' NOTE: this isn't correct. Don't use it yet.
+#'
+#' @param x CrunchLogicalExpr
+#' @param arr.ind Ignored
+#' @param useNames Ignored
+#' @return Integer row indices where \code{x} is true. Note that this does not
+#' return a Crunch expression. Use this when you need to translate to R values.
+#' For filtering a Crunch expression by \code{x}, don't use \code{which}.
+#' @aliases which
+#' @name which
+NULL
+
+#' @rdname which
+#' @export
+setMethod("which", "CrunchLogicalExpr", function (x, arr.ind, useNames) {
+    as.integer(as.vector(CrunchExpr(expression=zfunc("row"),
+        dataset_url=datasetReference(x) %||% "")[x])) + 1L
+})
+
+#' "duplicated" method for Crunch objects
+#'
+#' @param x CrunchVariable or CrunchExpr
+#' @param incomparables Ignored
+#' @param ... Ignored
+#' @return A CrunchLogicalExpr that evaluates \code{TRUE} for all repeated
+#' entries after the first occurrence of a value.
+#' @name duplicated
+#' @seealso \code{\link[base]{duplicated}}
+#' @aliases duplicated
+#' @export
+NULL
+
+#' @rdname duplicated
+#' @export
+setMethod("duplicated", "CrunchVariable", function (x, incomparables=FALSE, ...) {
+    zfuncExpr("duplicates", x)
+})
+
+#' @rdname duplicated
+#' @export
+setMethod("duplicated", "CrunchExpr", function (x, incomparables=FALSE, ...) {
+    zfuncExpr("duplicates", x)
+})

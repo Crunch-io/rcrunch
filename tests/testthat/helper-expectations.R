@@ -28,6 +28,10 @@ expect_output <- function (object, ...) {
     testthat::expect_output(print(object), ...)
 }
 
+expect_fixed_output <- function (object, ...) {
+    expect_output(object, ..., fixed=TRUE)
+}
+
 get_output <- function (x) {
     ## For comparing print output in expect_output
     paste(capture.output(print(x)), collapse="\n")

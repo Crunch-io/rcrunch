@@ -133,6 +133,15 @@ with_mock_HTTP({
         expect_identical(activeFilter(2016 - ds$birthyr[ds$gender == "Male"]),
             ds$gender == "Male")
     })
+
+    test_that("Expression on filtered variable keeps its filter", {
+        expect_identical(activeFilter(bin(ds2$birthyr)),
+            ds$gender == "Male")
+        expect_identical(activeFilter(is.na(ds2$birthyr)),
+            ds$gender == "Male")
+        expect_identical(activeFilter(!is.na(ds2$birthyr)),
+            ds$gender == "Male")
+    })
 })
 
 with_test_authentication({

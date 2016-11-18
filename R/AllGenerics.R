@@ -128,6 +128,7 @@ setGeneric("prop.table")
 setGeneric("round")
 
 setGeneric("subset")
+setGeneric("which", signature="x")
 
 #' Generic method for converting objects to Crunch representations
 #'
@@ -147,6 +148,7 @@ setGeneric("is.na")
 setGeneric("is.na<-")
 setGeneric("%in%")
 setGeneric("write.csv")
+setGeneric("duplicated")
 
 setGeneric("zcl", function (x) standardGeneric("zcl"))
 

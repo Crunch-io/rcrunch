@@ -186,6 +186,9 @@ setMethod("activeFilter<-", "CrunchExpr", function (x, value) {
     return(x)
 })
 
+setMethod("activeFilter", "list", function (x) NULL)
+
+
 ## See dataset-extract.R for .updateActiveFilter
 
 #' View and set exclusion filters

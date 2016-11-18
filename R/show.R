@@ -156,7 +156,8 @@ formatVersionCatalog <- function (x, from=Sys.time()) {
         and="&",
         or="|",
         is_missing="is.na",
-        `in`="%in%"
+        `in`="%in%",
+        duplicates="duplicated"
     )
 
 formatExpression <- function (expr) {
