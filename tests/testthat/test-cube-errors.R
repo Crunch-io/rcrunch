@@ -69,6 +69,14 @@ with_mock_HTTP({
         ## This is standard R behavior, not special handling.
         ## Just for illustration of what will happen.
     })
+
+    test_that("Invalid filter argument in 'data'", {
+        expect_error(crtabs(~ gender, data=ds[ds$NOTAVARIABLE == 3,]),
+            "Invalid expression: ds$NOTAVARIABLE == 3",
+            fixed=TRUE)
+        expect_error(crtabs(~ gender, data=ds[ds$gender %in% "Male" | ds$NOTAVARIABLE == 3,]),
+            "Invalid expression. Probably a reference to a variable that doesn't exist.")
+    })
 })
 
 with_test_authentication({

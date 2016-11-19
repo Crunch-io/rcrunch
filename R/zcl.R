@@ -25,9 +25,16 @@ setMethod("zcl", "character", r2zcl)
 setMethod("zcl", "Date", r2zcl)
 setMethod("zcl", "POSIXt", r2zcl)
 setMethod("zcl", "logical", function (x) {
-    x[is.na(x)] <- FALSE
-    out <- list(column=I(x), type=list(class="boolean"))
-    return(out)
+    if (length(x)) {
+        x[is.na(x)] <- FALSE
+        out <- list(column=I(x), type=list(class="boolean"))
+        return(out)
+    } else {
+        ## If you reference a variable in a dataset that doesn't exist, you
+        ## get NULL, and e.g. NULL == something becomes logical(0).
+        ## That does awful things if you try to send to the server. So don't.
+        halt("Invalid expression. Probably a reference to a variable that doesn't exist.")
+    }
 })
 setMethod("zcl", "NULL", function (x) NULL)
 setOldClass("zcl")

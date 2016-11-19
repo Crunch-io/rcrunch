@@ -28,6 +28,39 @@ setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
 })
 #' @rdname dataset-extract
 #' @export
+setMethod("[", c("CrunchDataset", "logical", "missing"), function (x, i, j, ..., drop=FALSE) {
+    ## TODO: make this like how .updateActiveFilter works. Similar for "numeric" method
+    if (length(i)) {
+        ## TODO: test all of these exits; move to .dispatchFilter or similar common wrapper?
+        if (length(i) == 1) {
+            if (isTRUE(i)) {
+                ## Keep all rows, so no filter
+                return(x)
+            } else {
+                ## FALSE or NA. Reject it?
+                halt("invalid logical filter")
+            }
+        } else if (length(i) == nrow(x)) {
+            if (all(i)) {
+                ## Keep all rows, so no filter
+                return(x)
+            }
+            i <- CrunchLogicalExpr(dataset_url=datasetReference(x),
+                expression=.dispatchFilter(i))
+            return(x[i,])
+        } else {
+            halt("wrong length of logical input")
+        }
+    } else {
+        ## If you reference a variable in a dataset that doesn't exist, you
+        ## get NULL, and e.g. NULL == something becomes logical(0).
+        ## That does awful things if you try to send to the server. So don't.
+        halt("Invalid expression: ", deparse(match.call()$i)[1])
+    }
+    return(x)
+})
+#' @rdname dataset-extract
+#' @export
 setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
     allnames <- getIndexSlot(allVariables(x), namekey(x)) ## Include hidden
     w <- match(i, allnames)
