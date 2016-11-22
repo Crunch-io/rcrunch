@@ -1,7 +1,7 @@
 ### crunch 1.13.9 (under development)
 * `embedCrunchBox` to generate embeddable HTML markup for CrunchBoxes
 * `duplicated` method for Crunch variables and expressions
-* Prevent accidentally deleting all rows with a bad expression via `dropRows`
+* Prevent invalid expressions with incorrect variable references from making bad requests
 * Print methods for Category/ies now show category ids
 * Option "crunch.namekey.variableorder" to govern how VariableOrder is printed. Current default is "name", the status quo, but set it to "alias" to have `ordering` print aliases.
 * Support for `is.na<-` to set missing values on a variable, equivalent to assigning `NA`
