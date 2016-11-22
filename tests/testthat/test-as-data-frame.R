@@ -31,86 +31,96 @@ mr.ids <- data.frame(
         1, 1, 2, 1, -1, 1, 2, 1, 1, 1, 2))
 
 with_mock_HTTP({
-    test.ds <- loadDataset("test ds")
+    ds <- loadDataset("test ds")
     test_that("setup", {
-        expect_identical(dim(test.ds), c(nrow(test.ds), ncol(test.ds)))
-        expect_identical(dim(test.ds), c(25L, 6L))
-        expect_identical(names(test.ds),
+        expect_identical(dim(ds), c(nrow(ds), ncol(ds)))
+        expect_identical(dim(ds), c(25L, 6L))
+        expect_identical(names(ds),
             c("birthyr", "gender", "mymrset", "textVar", "starttime", "catarray"))
     })
 
     test_that("as.vector on Variables", {
-        expect_true(is.numeric(as.vector(test.ds$birthyr)))
-        expect_true(is.factor(as.vector(test.ds$gender)))
-        expect_true(all(levels(as.vector(test.ds$gender)) %in% names(categories(test.ds$gender))))
+        expect_true(is.numeric(as.vector(ds$birthyr)))
+        expect_true(is.factor(as.vector(ds$gender)))
+        expect_true(all(levels(as.vector(ds$gender)) %in% names(categories(ds$gender))))
     })
 
     test_that("as.vector on Categorical Array", {
-        expect_true(is.CA(test.ds$catarray))
-        expect_true(is.data.frame(as.vector(test.ds$catarray)))
-        expect_identical(as.vector(test.ds$catarray), ca.values)
+        expect_true(is.CA(ds$catarray))
+        expect_true(is.data.frame(as.vector(ds$catarray)))
+        expect_identical(as.vector(ds$catarray), ca.values)
     })
 
     test_that("as.vector on Multiple Response", {
-        expect_true(is.MR(test.ds$mymrset))
-        expect_true(is.data.frame(as.vector(test.ds$mymrset)))
-        expect_identical(as.vector(test.ds$mymrset), mr.values)
+        expect_true(is.MR(ds$mymrset))
+        expect_true(is.data.frame(as.vector(ds$mymrset)))
+        expect_identical(as.vector(ds$mymrset), mr.values)
         ## Check that getting subvar by $ from the as.vector of the array
         ## is the same as just getting the subvar as.vector directly
-        expect_identical(as.vector(test.ds$mymrset)$subvar1,
-            as.vector(test.ds$mymrset$subvar1))
+        expect_identical(as.vector(ds$mymrset)$subvar1,
+            as.vector(ds$mymrset$subvar1))
     })
 
     test_that("as.vector on Multiple Response with mode", {
-        expect_identical(as.vector(test.ds$mymrset, mode="id"), mr.ids)
-        expect_identical(as.vector(test.ds$mymrset, mode="id")$subvar1,
-            as.vector(test.ds$mymrset$subvar1, mode="id"))
+        expect_identical(as.vector(ds$mymrset, mode="id"), mr.ids)
+        expect_identical(as.vector(ds$mymrset, mode="id")$subvar1,
+            as.vector(ds$mymrset$subvar1, mode="id"))
     })
 
     test_that("as.data.frame on CrunchDataset yields CrunchDataFrame", {
-        expect_false(is.data.frame(as.data.frame(test.ds)))
-        expect_is(as.data.frame(test.ds), "CrunchDataFrame")
-        expect_identical(dim(as.data.frame(test.ds)), c(25L, ncol(test.ds)))
-        expect_identical(names(as.data.frame(test.ds)), names(test.ds))
-        expect_identical(as.data.frame(test.ds)$birthyr, as.vector(test.ds$birthyr))
-        expect_identical(evalq(gender, as.data.frame(test.ds)),
-            as.vector(test.ds$gender))
+        expect_false(is.data.frame(as.data.frame(ds)))
+        expect_is(as.data.frame(ds), "CrunchDataFrame")
+        expect_identical(dim(as.data.frame(ds)), c(25L, ncol(ds)))
+        expect_identical(names(as.data.frame(ds)), names(ds))
+        expect_identical(as.data.frame(ds)$birthyr, as.vector(ds$birthyr))
+        expect_identical(evalq(gender, as.data.frame(ds)),
+            as.vector(ds$gender))
     })
 
     test_that("as.data.frame when a variable has an apostrophe in its alias", {
-        t2 <- test.ds
+        t2 <- ds
         t2@variables@index[[2]]$alias <- "Quote 'unquote' alias"
         expect_is(as.data.frame(t2), "CrunchDataFrame")
     })
 
     test_that("as.data.frame(as.data.frame())", {
-        expect_true(is.data.frame(as.data.frame(as.data.frame(test.ds))))
-        expect_true(is.data.frame(as.data.frame(test.ds, force=TRUE)))
+        expect_true(is.data.frame(as.data.frame(as.data.frame(ds))))
+        expect_true(is.data.frame(as.data.frame(ds, force=TRUE)))
     })
 
     test_that("as.data.frame size limit", {
         with(temp.option(crunch.data.frame.limit=50), {
-            expect_error(as.data.frame(test.ds, force=TRUE),
+            expect_error(as.data.frame(ds, force=TRUE),
                 "Dataset too large to coerce")
-            expect_true(is.data.frame(as.data.frame(test.ds[,1:2], force=TRUE)))
+            expect_true(is.data.frame(as.data.frame(ds[,1:2], force=TRUE)))
         })
     })
 
-    test.df <- as.data.frame(test.ds)
+    test.df <- as.data.frame(ds)
 
     test_that("model.frame thus works on CrunchDataset", {
         expect_identical(model.frame(birthyr ~ gender, data=test.df),
-            model.frame(birthyr ~ gender, data=test.ds))
+            model.frame(birthyr ~ gender, data=ds))
     })
 
     test_that("so lm() should work too", {
-        test.lm <- lm(birthyr ~ gender, data=test.ds)
+        test.lm <- lm(birthyr ~ gender, data=ds)
         expected <- lm(birthyr ~ gender, data=test.df)
         expect_is(test.lm, "lm")
         expect_identical(names(test.lm), names(expected))
         for (i in setdiff(names(expected), "call")) {
             expect_identical(test.lm[[i]], expected[[i]])
         }
+    })
+
+    test_that(".crunchPageSize", {
+        expect_identical(.crunchPageSize(ds$birthyr), 100000L)
+        expect_identical(.crunchPageSize(ds$gender), 200000L)
+        expect_identical(.crunchPageSize(ds$textVar), 5000L)
+        expect_identical(.crunchPageSize(ds$mymrset), 66666L)
+        expect_identical(.crunchPageSize(ds$catarray), 66666L)
+        expect_identical(.crunchPageSize(ds$starttime), 100000L)
+        expect_identical(.crunchPageSize(2016 - ds$birthyr), 50000L)
     })
 })
 
@@ -200,8 +210,10 @@ with_test_authentication({
     })
 
     uncached({
-        with(temp.options(crunch.page.size=5, httpcache.log=""), {
-            avlog <- capture.output(v1 <- as.vector(ds$v1))
+        with_mock(`crunch::.crunchPageSize`=function (x) 5L, {
+            with(temp.option(httpcache.log=""), {
+                avlog <- capture.output(v1 <- as.vector(ds$v1))
+            })
             test_that("getValues can be paginated", {
                 logdf <- loadLogfile(textConnection(avlog))
                 ## GET entity to get /values/ URL, then GET /values/ 4x

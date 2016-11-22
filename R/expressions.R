@@ -31,7 +31,7 @@ setMethod("as.vector", "CrunchExpr", function (x, mode) {
         payload$filter <- "{}"
     }
     out <- paginatedGET(paste0(x@dataset_url, "table/"),
-        query=payload, table=TRUE)
+        query=payload, table=TRUE, limit=.crunchPageSize(x))
     ## pass in the variable metadata to the column parser
     variable <- VariableEntity(structure(list(body=out$metadata$out),
         class="shoji"))

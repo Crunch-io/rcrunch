@@ -148,8 +148,10 @@ with_test_authentication({
         })
 
         uncached({
-            with(temp.options(crunch.page.size=5, httpcache.log=""), {
-                avlog <- capture.output(v35 <- as.vector(ds$v3 + 5))
+            with_mock(`crunch::.crunchPageSize`=function (x) 5L, {
+                with(temp.option(httpcache.log=""), {
+                    avlog <- capture.output(v35 <- as.vector(ds$v3 + 5))
+                })
                 test_that("as.vector with CrunchExpr is paginated", {
                     logdf <- loadLogfile(textConnection(avlog))
                     ## GET /values/ 4x
@@ -234,9 +236,10 @@ with_test_authentication({
         })
 
         uncached({
-            clearCache() ## So we're totally fresh
-            with(temp.options(crunch.page.size=5, httpcache.log=""), {
-                avlog <- capture.output(v3.5 <- as.vector(ds$v3[ds$v4 %in% "B"]))
+            with_mock(`crunch::.crunchPageSize`=function (x) 5L, {
+                with(temp.option(httpcache.log=""), {
+                    avlog <- capture.output(v3.5 <- as.vector(ds$v3[ds$v4 %in% "B"]))
+                })
                 test_that("Select values with %in% on Categorical, paginated", {
                     logdf <- loadLogfile(textConnection(avlog))
                     ## GET v3 entity to get /values/ URL,

@@ -1,4 +1,4 @@
-// 191aa07bbd38bb995376a357b791c9c5: list(filter=toJSON(NULL), offset=0, limit=1000)
+// b72581c039aba9d858087b98dfb0813d: list(filter=toJSON(NULL), offset=0, limit=5000L)
 {
     "element": "shoji:view",
     "self": "/api/datasets/1/variables/textVar/values/",
