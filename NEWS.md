@@ -1,3 +1,5 @@
+### crunch 1.14.3 (under development)
+
 ### crunch 1.14.2
 * Trivial change to DESCRIPTION to meet new, hidden CRAN requirement
 
