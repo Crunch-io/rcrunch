@@ -38,16 +38,15 @@ setMethod("[", c("CrunchDataset", "logical", "missing"), function (x, i, j, ...,
         return(x)
     }
     ## else: x[i,]
-    ## TODO: make this like how .updateActiveFilter works. Similar for "numeric" method
+    ## TODO: generalize the logic and do similar for "numeric" method
     if (length(i)) {
-        ## TODO: test all of these exits; move to .dispatchFilter or similar common wrapper?
         if (length(i) == 1) {
             if (isTRUE(i)) {
                 ## Keep all rows, so no filter
                 return(x)
             } else {
                 ## FALSE or NA. Reject it?
-                halt("invalid logical filter")
+                halt("Invalid logical filter: ", i)
             }
         } else if (length(i) == nrow(x)) {
             if (all(i)) {
@@ -58,7 +57,8 @@ setMethod("[", c("CrunchDataset", "logical", "missing"), function (x, i, j, ...,
                 expression=.dispatchFilter(i))
             return(x[i,])
         } else {
-            halt("wrong length of logical input")
+            halt("Logical filter vector is length ", length(i),
+                ", but dataset has ", nrow(x), " rows")
         }
     } else {
         ## If you reference a variable in a dataset that doesn't exist, you

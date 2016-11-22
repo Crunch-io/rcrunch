@@ -180,6 +180,21 @@ with_mock_HTTP({
         expect_null(ds$name)
     })
 
+    test_that("Dataset logical extract cases", {
+        expect_null(activeFilter(ds[TRUE,]))
+        expect_error(ds[FALSE,],
+            "Invalid logical filter: FALSE")
+        expect_error(ds[NA,],
+            "Invalid logical filter: NA")
+        expect_null(activeFilter(ds[rep(TRUE, nrow(ds)),]))
+        expect_error(ds[c(TRUE, FALSE),],
+            "Logical filter vector is length 2, but dataset has 25 rows")
+        expect_fixed_output(toJSON(activeFilter(ds[c(rep(FALSE, 4), TRUE,
+            rep(FALSE, 20)),])),
+            paste0('{"function":"==","args":[{"function":"row",',
+            '"args":[]},{"value":4}]}'))
+    })
+
     test_that("Extract from dataset by VariableOrder/Group", {
         ents <- c("/api/datasets/1/variables/gender/",
             "/api/datasets/1/variables/mymrset/")
