@@ -1,4 +1,5 @@
-### crunch 1.14.1 (under development)
+### crunch 1.14.2
+* Trivial change to DESCRIPTION to meet new, hidden CRAN requirement
 
 ## crunch 1.14.0
 * `embedCrunchBox` to generate embeddable HTML markup for CrunchBoxes
