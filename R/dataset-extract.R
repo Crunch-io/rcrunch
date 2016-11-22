@@ -26,9 +26,18 @@ setMethod("[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
     x@variables <- variables(x)[i]
     return(x)
 })
+
 #' @rdname dataset-extract
 #' @export
 setMethod("[", c("CrunchDataset", "logical", "missing"), function (x, i, j, ..., drop=FALSE) {
+    ## See [.data.frame: this is similar to how it distinguishes x[i] from x[i,]
+    ## Ignoring the possibility of x[i, drop=TRUE]. x[i, drop=TRUE] should be x[[i]]
+    if (nargs() == 2L) {
+        ## x[i]. So subset the variables, list-wise
+        x@variables <- variables(x)[i]
+        return(x)
+    }
+    ## else: x[i,]
     ## TODO: make this like how .updateActiveFilter works. Similar for "numeric" method
     if (length(i)) {
         ## TODO: test all of these exits; move to .dispatchFilter or similar common wrapper?

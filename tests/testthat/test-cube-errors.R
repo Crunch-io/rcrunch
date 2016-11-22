@@ -72,8 +72,7 @@ with_mock_HTTP({
 
     test_that("Invalid filter argument in 'data'", {
         expect_error(crtabs(~ gender, data=ds[ds$NOTAVARIABLE == 3,]),
-            "Invalid expression: ds$NOTAVARIABLE == 3",
-            fixed=TRUE)
+            "Invalid expression: ds$NOTAVARIABLE == 3", fixed=TRUE)
         expect_error(crtabs(~ gender, data=ds[ds$gender %in% "Male" | ds$NOTAVARIABLE == 3,]),
             "Invalid expression. Probably a reference to a variable that doesn't exist.")
     })
@@ -87,8 +86,7 @@ with_test_authentication({
         ## But works if variable is in workspace
         aaa <- ds$v4
         skip("Appears not to work in the test at least. aaa is in the enclos environment but it doesn't find it")
-        expect_equivalent(as.array(crtabs(~ aaa + bin(v3),
-            data=ds)),
+        expect_equivalent(as.array(crtabs(~ aaa + bin(v3), data=ds)),
             array(c(1, 1, 3, 2, 2, 3, 3, 2, 1, 2), dim=c(2L, 5L),
                 dimnames=list(v4=c("B", "C"),
                     v3=c("5-10", "10-15", "15-20", "20-25", "25-30"))))
@@ -108,8 +106,7 @@ with_test_authentication({
         ## But you can still get analyses with other variables
         expect_equivalent(as.array(crtabs(~ bin(v3), data=dsb)),
             array(c(2, 5, 5, 5, 3), dim=c(5L),
-                dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25",
-                "25-30"))))
+                dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25", "25-30"))))
     })
 
     test_that("What happens if there are more than one vars on LHS?", {
@@ -123,8 +120,7 @@ with_test_authentication({
     })
 
     test_that("prop.table cannot take margin greater than dim", {
-        expect_error(prop.table(crtabs(~ v4 + v3, data=ds),
-            margin=3),
+        expect_error(prop.table(crtabs(~ v4 + v3, data=ds), margin=3),
             "Margin 3 exceeds Cube's number of dimensions \\(2\\)")
     })
 })
