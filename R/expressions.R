@@ -51,6 +51,16 @@ setMethod("toVariable", "CrunchExpr", function (x, ...) {
 
 math.exp <- function (e1, e2, operator) {
     ## Generic function that creates CrunchExpr of `e1 %operator% e2`
+    if (identical(e1, logical(0)) || identical(e2, logical(0))) {
+        ## If you reference a variable in a dataset that doesn't exist, you
+        ## get NULL, and e.g. NULL == something becomes logical(0).
+        ## That does awful things if you try to send to the server. So don't.
+        ##
+        ## Because of how this function is invoked, get the offending expression
+        ## from the call before this one
+        halt("Invalid expression (probably a reference to a variable that doesn't exist): ",
+            deparse(tail(sys.calls(), 2)[[1]]))
+    }
     ex <- zfunc(operator, e1, e2)
     ds.url <- unique(unlist(lapply(list(e1, e2), datasetReference))) %||% ""
 

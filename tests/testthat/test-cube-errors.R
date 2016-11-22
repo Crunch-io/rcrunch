@@ -74,7 +74,7 @@ with_mock_HTTP({
         expect_error(crtabs(~ gender, data=ds[ds$NOTAVARIABLE == 3,]),
             "Invalid expression: ds$NOTAVARIABLE == 3", fixed=TRUE)
         expect_error(crtabs(~ gender, data=ds[ds$gender %in% "Male" | ds$NOTAVARIABLE == 3,]),
-            "Invalid expression. Probably a reference to a variable that doesn't exist.")
+            "Invalid expression (probably a reference to a variable that doesn't exist): ds$gender %in% \"Male\" | ds$NOTAVARIABLE == 3", fixed=TRUE)
     })
 })
 
