@@ -188,8 +188,4 @@ setMethod("[", c("CrunchVariable", "numeric"), function (x, i, ...) {
 })
 #' @rdname variable-extract
 #' @export
-setMethod("[", c("CrunchVariable", "logical"), function (x, i, ...) {
-    i <- CrunchLogicalExpr(dataset_url=datasetReference(x),
-        expression=.dispatchFilter(i))
-    return(x[i])
-})
+setMethod("[", c("CrunchVariable", "logical"), .updateActiveFilterLogical)

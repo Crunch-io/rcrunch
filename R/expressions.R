@@ -296,6 +296,31 @@ rollupResolution <- function (x) {
 #' @export
 setMethod("[", c("CrunchExpr", "CrunchLogicalExpr"), .updateActiveFilter)
 
+.updateActiveFilterLogical <- function (x, i, ...) {
+    if (length(i)) {
+        i <- CrunchLogicalExpr(dataset_url=datasetReference(x),
+            expression=.dispatchFilter(i))
+        return(x[i])
+    } else {
+        ## If you reference a variable in a dataset that doesn't exist, you
+        ## get NULL, and e.g. NULL == something becomes logical(0).
+        ## That does awful things if you try to send to the server. So don't.
+        halt("Invalid expression: ", deparse(match.call()$i)[1])
+    }
+}
+
+#' @rdname variable-extract
+#' @export
+setMethod("[", c("CrunchExpr", "logical"), .updateActiveFilterLogical)
+
+#' @rdname variable-extract
+#' @export
+setMethod("[", c("CrunchExpr", "numeric"), function (x, i, ...) {
+    i <- CrunchLogicalExpr(dataset_url=datasetReference(x),
+        expression=.dispatchFilter(i))
+    return(x[i])
+})
+
 #' "which" method for CrunchLogicalExpr
 #'
 #' NOTE: this isn't correct. Don't use it yet.

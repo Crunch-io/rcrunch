@@ -3,6 +3,8 @@
 \docType{methods}
 \name{[,CrunchExpr,CrunchLogicalExpr,ANY-method}
 \alias{[,CrunchExpr,CrunchLogicalExpr,ANY-method}
+\alias{[,CrunchExpr,logical,ANY-method}
+\alias{[,CrunchExpr,numeric,ANY-method}
 \alias{[,CrunchVariable,CrunchExpr,ANY-method}
 \alias{[,CrunchVariable,logical,ANY-method}
 \alias{[,CrunchVariable,numeric,ANY-method}
@@ -10,6 +12,10 @@
 \title{"Subset" a Variable}
 \usage{
 \S4method{[}{CrunchExpr,CrunchLogicalExpr,ANY}(x, i, j, ..., drop = FALSE)
+
+\S4method{[}{CrunchExpr,logical,ANY}(x, i, j, ..., drop = TRUE)
+
+\S4method{[}{CrunchExpr,numeric,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[}{CrunchVariable,CrunchExpr,ANY}(x, i, j, ..., drop = FALSE)
 

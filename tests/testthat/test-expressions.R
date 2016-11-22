@@ -113,6 +113,20 @@ with_mock_HTTP({
         expect_fixed_output(duplicated(ds$gender == "Male"),
             'Crunch logical expression: duplicated(gender == "Male")')
     })
+
+    test_that("Can subset a CrunchExpr with R values", {
+        age <- 2016 - ds$birthyr
+        ## Note: no check for correct number of rows
+        expect_is(age[c(TRUE, FALSE, TRUE)], "CrunchExpr")
+        expect_fixed_output(toJSON(activeFilter(age[c(TRUE, FALSE, TRUE)])),
+            paste0('{"function":"in","args":[{"function":"row",',
+            '"args":[]},{"column":[0,2]}]}'))
+        expect_is(age[c(1, 3)], "CrunchExpr")
+        expect_fixed_output(toJSON(activeFilter(age[c(1, 3)])),
+            paste0('{"function":"in","args":[{"function":"row",',
+            '"args":[]},{"column":[0,2]}]}'))
+    })
+
     test_that("Show method for expresssions", {
         skip("TODO: something intelligent with parentheses and order of operations")
         print(ds$birthyr * 3 + 5)

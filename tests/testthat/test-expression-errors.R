@@ -3,6 +3,7 @@ context("Expression validation")
 with_mock_HTTP({
     ds <- loadDataset("test ds")
     badexpr <- ds$NOTAVARIABLE == 3
+    age <- 2016 - ds$birthyr
 
     test_that("Can't subset a dataset with an invalid expression", {
         expect_error(ds[ds$NOTAVARIABLE == 3,],
@@ -14,6 +15,32 @@ with_mock_HTTP({
                 "Invalid expression: !is.na(ds$NOTAVARIABLE)", fixed=TRUE),
             "is.na() applied to non-(list or vector) of type 'NULL'", fixed=TRUE)
         expect_error(ds[!duplicated(ds$NOTAVARIABLE),],
+            "Invalid expression: !duplicated(ds$NOTAVARIABLE)", fixed=TRUE)
+    })
+
+    test_that("Can't subset a variable with an invalid expression", {
+        expect_error(ds$gender[ds$NOTAVARIABLE == 3],
+            "Invalid expression: ds$NOTAVARIABLE == 3", fixed=TRUE)
+        expect_error(ds$gender[badexpr],
+            "Invalid expression: badexpr", fixed=TRUE)
+        expect_warning(
+            expect_error(ds$gender[!is.na(ds$NOTAVARIABLE)],
+                "Invalid expression: !is.na(ds$NOTAVARIABLE)", fixed=TRUE),
+            "is.na() applied to non-(list or vector) of type 'NULL'", fixed=TRUE)
+        expect_error(ds$gender[!duplicated(ds$NOTAVARIABLE)],
+            "Invalid expression: !duplicated(ds$NOTAVARIABLE)", fixed=TRUE)
+    })
+
+    test_that("Can't subset a CrunchExpr with an invalid expression", {
+        expect_error(age[ds$NOTAVARIABLE == 3],
+            "Invalid expression: ds$NOTAVARIABLE == 3", fixed=TRUE)
+        expect_error(age[badexpr],
+            "Invalid expression: badexpr", fixed=TRUE)
+        expect_warning(
+            expect_error(age[!is.na(ds$NOTAVARIABLE)],
+                "Invalid expression: !is.na(ds$NOTAVARIABLE)", fixed=TRUE),
+            "is.na() applied to non-(list or vector) of type 'NULL'", fixed=TRUE)
+        expect_error(age[!duplicated(ds$NOTAVARIABLE)],
             "Invalid expression: !duplicated(ds$NOTAVARIABLE)", fixed=TRUE)
     })
 
