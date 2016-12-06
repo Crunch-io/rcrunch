@@ -42,11 +42,13 @@ setMethod("is.editor", "PermissionTuple", function (x) {
 #' of the number of emails given.
 #' @param notify logical: should users who are getting new privileges on this
 #' dataset be sent an email informing them of this fact? Default is
+#' @param message character: what message should users who are getting notified
+#' about new permissions on this dataset receive?
 #' \code{TRUE}.
 #' @return Invisibly, the dataset.
 #' @seealso \code{\link{unshare}}
 #' @export
-share <- function (dataset, users, edit=FALSE, notify=TRUE) {
+share <- function (dataset, users, edit=FALSE, notify=TRUE, message=NA) {
     perms <- permissions(dataset)
     if (length(edit) == 1) {
         edit <- rep(edit, length(users))
@@ -54,10 +56,14 @@ share <- function (dataset, users, edit=FALSE, notify=TRUE) {
     if (length(edit) != length(users)) {
         halt("Must supply `edit` permissions of equal length as the number of `emails` supplied")
     }
+    if (!is.na(message) & !notify){
+        halt("Cannot send message if not notifying")
+    }
     payload <- lapply(edit,
         function (e) list(dataset_permissions=list(edit=e, view=TRUE)))
     names(payload) <- users
     payload$send_notification <- notify
+    if (!is.na(message)) payload$message <- message
     if (notify) {
         payload$url_base <- passwordSetURLTemplate()
         payload$dataset_url <- webURL(dataset)

@@ -44,6 +44,13 @@ with_mock_HTTP({
                 '{"edit":true,"view":true}},"send_notification":true,',
                 '"url_base":"https://fake.crunch.io/password/change/${token}/",',
                 '"dataset_url":"https://fake.crunch.io/dataset/511a7c49778030653aab5963"}')
+            expect_PATCH(share(ds, "lauren.ipsum@crunch.io", edit=TRUE,
+                notify=TRUE, message='testing'),
+                '/api/datasets/dataset1/permissions/',
+                '{"lauren.ipsum@crunch.io":{"dataset_permissions":',
+                '{"edit":true,"view":true}},"send_notification":true,"message":"testing",',
+                '"url_base":"https://fake.crunch.io/password/change/${token}/",',
+                '"dataset_url":"https://fake.crunch.io/dataset/511a7c49778030653aab5963"}')
         })
     })
 

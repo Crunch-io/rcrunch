@@ -44,3 +44,13 @@ weight <- function (x) {
     }
     return(x)
 }
+
+weightVariables <- function(x) {
+    stopifnot(is.dataset(x))
+    
+    return(tryCatch(VariableCatalog(crGET(shojiURL(x, "catalogs", "weight_variables"))),
+        error=function(e){
+            if (e$message == 'No URL “weight_variables” in collection “catalogs”') return(VariableCatalog(data.frame))
+            else print(e)
+        }))
+}
