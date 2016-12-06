@@ -192,7 +192,6 @@ with_test_authentication({
     })
 
     test_that("Get and set project icon", {
-        skip_on_jenkins("https://www.pivotaltracker.com/story/show/135467257")
         ico <- icon(pj)
         # expect_true(nchar(ico) > 0) ## Unskip after #119305641 ships
         icon(pj) <- "empty.png"
