@@ -1,8 +1,3 @@
-setup.and.teardown <- function (setup, teardown, obj.name=NULL) {
-    ContextManager(enter=setup, exit=teardown, as=obj.name,
-        error=function (e) expect_error(stop(e$message), "NO ERRORS HERE!"))
-}
-
 fakeResponse <- function (url="", status_code=200, headers=list(), json=NULL) {
     ## Return something that looks enough like an httr 'response'
     if (!is.null(json)) {
@@ -22,43 +17,29 @@ fakeResponse <- function (url="", status_code=200, headers=list(), json=NULL) {
 
 with_mock_HTTP <- function (expr) {
     with(temp.option(crunch.api="/api/root/"), {
-        with_mock(
-            `httr::GET`=function (url, ...) {
-                if (is.null(url)) {
-                    stop("No URL found", call.=FALSE)
-                }
-                url <- unlist(strsplit(url, "?", fixed=TRUE))[1] ## remove query params in the URL
-                q <- list(...)$query
-                ext <- ".json"
-                if (!is.null(q)) {
-                    ## There's a query.
-                    ## Hash it, take the first 6 chars, and add to the filename
-                    ext <- paste0("-", substr(digest::digest(q), 1, 6), ext)
-                }
-                url <- sub("\\/$", ext, url)
-                url <- sub("^\\/", "", url) ## relative to cwd
-                return(fakeResponse(url))
-            },
-            `httr::PUT`=function (url, body, ...) halt("PUT ", url, " ", body),
-            `httr::PATCH`=function (url, body, ...) halt("PATCH ", url, " ", body),
-            `httr::POST`=function (url, body, ...) halt("POST ", url, " ", body),
-            `httr::DELETE`=function (url, ...) halt("DELETE ", url),
-            eval.parent(try(warmSessionCache())),
-            eval.parent(expr)
-        )
+        without_internet({
+            with_mock(
+                `httr::GET`=function (url, ...) {
+                    if (is.null(url)) {
+                        stop("No URL found", call.=FALSE)
+                    }
+                    url <- unlist(strsplit(url, "?", fixed=TRUE))[1] ## remove query params in the URL
+                    q <- list(...)$query
+                    ext <- ".json"
+                    if (!is.null(q)) {
+                        ## There's a query.
+                        ## Hash it, take the first 6 chars, and add to the filename
+                        ext <- paste0("-", substr(digest::digest(q), 1, 6), ext)
+                    }
+                    url <- sub("\\/$", ext, url)
+                    url <- sub("^\\/", "", url) ## relative to cwd
+                    return(fakeResponse(url))
+                },
+                eval.parent(try(warmSessionCache())),
+                eval.parent(expr)
+            )
+        })
     })
-}
-
-## Mock backend for no connectivity
-without_internet <- function (expr) {
-    with_mock(
-        `httr::GET`=function (url, ...) halt("GET ", url),
-        `httr::PUT`=function (url, body, ...) halt("PUT ", url, " ", body),
-        `httr::PATCH`=function (url, body, ...) halt("PATCH ", url, " ", body),
-        `httr::POST`=function (url, body, ...) halt("POST ", url, " ", body),
-        `httr::DELETE`=function (url, ...) halt("DELETE ", url),
-        eval.parent(expr)
-    )
 }
 
 with_silent_progress <- function (expr) {
@@ -159,17 +140,17 @@ purge.object <- function () {
 }
 
 test.dataset <- function (df=NULL, obj.name="ds", ...) {
-    return(setup.and.teardown(
+    return(ContextManager(
         function () new.dataset.with.setup(df, ...),
         purge.object,
-        obj.name
+        as=obj.name
     ))
 }
 
 reset.option <- function (opts) {
     ## Don't set any options in the setup, but reset specified options after
     old <- sapply(opts, getOption, simplify=FALSE)
-    return(setup.and.teardown(
+    return(ContextManager(
         null,
         function () do.call(options, old)
     ))
