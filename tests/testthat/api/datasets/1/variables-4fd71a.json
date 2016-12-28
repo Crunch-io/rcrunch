@@ -1,8 +1,8 @@
 // 4fd71abbd587e0265a5bd7ad5324208b: list(relative="on")
 {
     "element": "shoji:catalog",
-    "self": "/api/datasets/1/variables/",
-    "specification": "/api/specifications/variables/",
+    "self": "api/datasets/1/variables/",
+    "specification": "api/specifications/variables/",
     "description": "List of Variables of this dataset",
     "index": {
         "gender/": {
@@ -75,6 +75,6 @@
         }
     },
     "orders": {
-        "hier": "/api/datasets/1/variables/hierarchical/"
+        "hier": "api/datasets/1/variables/hierarchical/"
     }
 }

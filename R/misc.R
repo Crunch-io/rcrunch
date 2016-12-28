@@ -27,24 +27,29 @@ serialPaste <- function (x, collapse="and") {
 
 now <- function () strftime(Sys.time(), usetz=TRUE)
 
-#' @importFrom httr parse_url build_url
 absoluteURL <- function (urls, base) {
     ## Detect if we have relative urls, and then concatenate if so
     if (length(urls) && !any(startsWith(urls, "http"))) {
-        base.url <- parse_url(base)
-        urls <- vapply(urls, function (x, b) {
-            b$path <- joinPath(b$path, x)
-            if (is.null(b$scheme)) {
-                ## If file path and not URL, as in for tests,
-                ## let's return it relative
-                return(b$path)
-            }
-            ## Pop off any leading "/" because build_url will add it
-            b$path <- sub("^/", "", b$path)
-            b$query <- NULL ## Catalog query params aren't valid for entities
-            return(build_url(b))
-        }, character(1), b=base.url, USE.NAMES=FALSE)
+        urls <- .abs.urls(urls, base)
     }
+    return(urls)
+}
+
+#' @importFrom httr parse_url build_url
+.abs.urls <- function (urls, base) {
+    base.url <- parse_url(base)
+    urls <- vapply(urls, function (x, b) {
+        b$path <- joinPath(b$path, x)
+        if (is.null(b$scheme)) {
+            ## If file path and not URL, as in for tests,
+            ## let's return it relative
+            return(b$path)
+        }
+        ## Pop off any leading "/" because build_url will add it
+        b$path <- sub("^/", "", b$path)
+        b$query <- NULL ## Catalog query params aren't valid for entities
+        return(build_url(b))
+    }, character(1), b=base.url, USE.NAMES=FALSE)
     return(urls)
 }
 

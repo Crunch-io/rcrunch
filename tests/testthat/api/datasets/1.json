@@ -1,32 +1,32 @@
 // Test fixture used everywhere
 {
     "element": "shoji:entity",
-    "self": "/api/datasets/1/",
+    "self": "api/datasets/1/",
     "description": "Detail for a given dataset",
     "body": {
         // In reality, body has attributes found in the tuple too
-        "owner": "/api/users/user1/",
+        "owner": "api/users/user1/",
         "id": "dataset1"
     },
     "catalogs": {
-        "variables": "/api/datasets/1/variables/",
-        "savepoints": "/api/datasets/1/savepoints/",
-        "batches": "/api/datasets/1/batches/",
-        "permissions": "/api/datasets/1/permissions/",
-        "parent": "/api/datasets/",
-        "joins": "/api/datasets/1/joins/",
-        "filters": "/api/datasets/1/filters/",
-        "boxdata": "/api/datasets/1/boxdata/",
-        "actions": "/api/datasets/1/actions/"
+        "variables": "api/datasets/1/variables/",
+        "savepoints": "api/datasets/1/savepoints/",
+        "batches": "api/datasets/1/batches/",
+        "permissions": "api/datasets/1/permissions/",
+        "parent": "api/datasets/",
+        "joins": "api/datasets/1/joins/",
+        "filters": "api/datasets/1/filters/",
+        "boxdata": "api/datasets/1/boxdata/",
+        "actions": "api/datasets/1/actions/"
     },
     "views": {
-        "summary": "/api/datasets/1/summary/",
-        "export": "/api/datasets/1/export/"
+        "summary": "api/datasets/1/summary/",
+        "export": "api/datasets/1/export/"
     },
     "fragments": {
-        "table": "/api/datasets/1/table/",
-        "preferences": "/api/datasets/1/preferences/",
-        "settings": "/api/datasets/1/settings/"
+        "table": "api/datasets/1/table/",
+        "preferences": "api/datasets/1/preferences/",
+        "settings": "api/datasets/1/settings/"
     },
     "some_other_key": {}
 }

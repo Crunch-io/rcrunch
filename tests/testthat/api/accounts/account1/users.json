@@ -1,9 +1,9 @@
 {
     "element": "shoji:catalog",
-    "self": "/api/accounts/account1/users/",
+    "self": "api/accounts/account1/users/",
     "description": "List of users that belong to this account",
     "index": {
-        "/api/users/user1/": {
+        "api/users/user1/": {
             "id_method": "pwhash",
             "name": "Fake User",
             "dataset_permissions": {
@@ -20,7 +20,7 @@
             },
             "email": "fake.user@example.com"
         },
-        "/api/users/user3/": {
+        "api/users/user3/": {
             "id_method": "pwhash",
             "name": "Bill User",
             "dataset_permissions": {
@@ -37,7 +37,7 @@
             },
             "email": "william.user@example.io"
         },
-        "/api/users/user2/": {
+        "api/users/user2/": {
             "id_method": "pwhash",
             "name": "Roger User",
             "dataset_permissions": {

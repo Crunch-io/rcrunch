@@ -6,7 +6,7 @@ with_mock_HTTP({
         expect_json_equivalent(makeArray(ds[,"gender"], name="Gender array"),
             list(
                 name="Gender array",
-                subvariables=I("/api/datasets/1/variables/gender/"),
+                subvariables=I("api/datasets/1/variables/gender/"),
                 type="categorical_array"
             ))
     })
@@ -15,7 +15,7 @@ with_mock_HTTP({
             name="Gender array 2"),
             list(
                 name="Gender array 2",
-                subvariables=I("/api/datasets/1/variables/gender/"),
+                subvariables=I("api/datasets/1/variables/gender/"),
                 type="categorical_array"
             ))
     })
@@ -23,7 +23,7 @@ with_mock_HTTP({
         expect_json_equivalent(makeMR(ds[,"gender"], name="Gender MR", selections="Male"),
             list(
                 name="Gender MR",
-                subvariables=I("/api/datasets/1/variables/gender/"),
+                subvariables=I("api/datasets/1/variables/gender/"),
                 type="multiple_response",
                 selected_categories=I("Male")
             ))

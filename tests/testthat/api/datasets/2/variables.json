@@ -1,8 +1,8 @@
 // 4fd71abbd587e0265a5bd7ad5324208b: list(relative="on")
 {
     "element": "shoji:catalog",
-    "self": "/api/datasets/2/variables/",
-    "specification": "/api/specifications/variables/",
+    "self": "api/datasets/2/variables/",
+    "specification": "api/specifications/variables/",
     "description": "List of Variables of this dataset",
     "index": {
         "gender/": {
@@ -42,7 +42,7 @@
                 "./mymrset/subvariables/subvar2/",
                 "./mymrset/subvariables/subvar4/"
             ],
-            "subvariables_catalog": "/api/datasets/2/variables/mymrset/subvariables/"
+            "subvariables_catalog": "api/datasets/2/variables/mymrset/subvariables/"
         },
         "mymrset2/": {
             "name": "mymrset Combined",
@@ -52,12 +52,12 @@
             "id": "12345",
             "description": "Please select all that apply",
             "subvariables": [
-                "/api/datasets/2/variables/subvar3/"
+                "api/datasets/2/variables/subvar3/"
             ],
-            "subvariables_catalog": "/api/datasets/2/variables/mymrset2/subvariables/"
+            "subvariables_catalog": "api/datasets/2/variables/mymrset2/subvariables/"
         }
     },
     "orders": {
-        "hier": "/api/datasets/2/variables/hierarchical/"
+        "hier": "api/datasets/2/variables/hierarchical/"
     }
 }

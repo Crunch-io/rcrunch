@@ -16,7 +16,7 @@ fakeResponse <- function (url="", status_code=200, headers=list(), json=NULL) {
 }
 
 with_mock_HTTP <- function (expr) {
-    with(temp.option(crunch.api="/api/root/"), {
+    with(temp.option(crunch.api="api/root/"), {
         without_internet({
             with_mock(
                 `httr::GET`=function (url, ...) {
@@ -32,8 +32,14 @@ with_mock_HTTP <- function (expr) {
                         ext <- paste0("-", substr(digest::digest(q), 1, 6), ext)
                     }
                     url <- sub("\\/$", ext, url)
-                    url <- sub("^\\/", "", url) ## relative to cwd
                     return(fakeResponse(url))
+                },
+                `crunch:::absoluteURL`=function (urls, base) {
+                    ## Absolute URLs with fake backend start with "api/..."
+                    if (length(urls) && !any(startsWith(urls, "api"))) {
+                        urls <- .abs.urls(urls, base)
+                    }
+                    return(urls)
                 },
                 eval.parent(try(warmSessionCache())),
                 eval.parent(expr)

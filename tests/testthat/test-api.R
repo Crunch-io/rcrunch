@@ -10,18 +10,18 @@ test_that("Deprecated endpoints tell user to upgrade", {
 with_mock_HTTP({
     test_that("crunch.debug does not print if disabled", {
         expect_POST(
-            expect_output(crPOST("/api/", body='{"value":1}'),
+            expect_output(crPOST("api/", body='{"value":1}'),
                 NA),
-            "/api/",
+            "api/",
             '{"value":1}')
     })
     test_that("crunch.debug logging if enabled", {
         with(temp.option(crunch.debug=TRUE), {
             expect_POST(
-                expect_output(crPOST("/api/", body='{"value":1}'),
+                expect_output(crPOST("api/", body='{"value":1}'),
                     '\n {"value":1} \n',
                     fixed=TRUE),
-                "/api/",
+                "api/",
                 '{"value":1}')
             ## Use testthat:: so that it doesn't print ds. Check for log printing
             testthat::expect_output(ds <- loadDataset("test ds"),

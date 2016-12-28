@@ -1,10 +1,10 @@
 {
     "element": "shoji:catalog",
-    "self": "/api/datasets/1/variables/",
-    "specification": "/api/specifications/variables/",
+    "self": "api/datasets/1/variables/",
+    "specification": "api/specifications/variables/",
     "description": "List of Variables of this dataset",
     "index": {
-        "/api/datasets/1/variables/gender/": {
+        "api/datasets/1/variables/gender/": {
             "name": "Gender",
             "discarded": false,
             "alias": "gender",
@@ -13,7 +13,7 @@
             "notes": "",
             "description": "Gender"
         },
-        "/api/datasets/1/variables/birthyr/": {
+        "api/datasets/1/variables/birthyr/": {
             "name": "Birth Year",
             "discarded": false,
             "alias": "birthyr",
@@ -22,7 +22,7 @@
             "description": null,
             "notes": "Asked instead of age"
         },
-        "/api/datasets/1/variables/starttime/": {
+        "api/datasets/1/variables/starttime/": {
             "name": "starttime",
             "discarded": false,
             "alias": "starttime",
@@ -33,7 +33,7 @@
             "resolution": "D",
             "rollup_resolution": "s"
         },
-        "/api/datasets/1/variables/mymrset/": {
+        "api/datasets/1/variables/mymrset/": {
             "name": "mymrset",
             "discarded": false,
             "alias": "mymrset",
@@ -42,13 +42,13 @@
             "description": "Please select all that apply",
             "notes": "",
             "subvariables": [
-                "/api/datasets/1/variables/mymrset/subvariables/subvar2/",
-                "/api/datasets/1/variables/mymrset/subvariables/subvar1/",
-                "/api/datasets/1/variables/mymrset/subvariables/subvar3/"
+                "api/datasets/1/variables/mymrset/subvariables/subvar2/",
+                "api/datasets/1/variables/mymrset/subvariables/subvar1/",
+                "api/datasets/1/variables/mymrset/subvariables/subvar3/"
             ],
-            "subvariables_catalog": "/api/datasets/1/variables/mymrset/subvariables/"
+            "subvariables_catalog": "api/datasets/1/variables/mymrset/subvariables/"
         },
-        "/api/datasets/1/variables/catarray/": {
+        "api/datasets/1/variables/catarray/": {
             "name": "Cat Array",
             "discarded": false,
             "alias": "catarray",
@@ -57,13 +57,13 @@
             "description": "An array of cats",
             "notes": "",
             "subvariables": [
-                "/api/datasets/1/variables/mymrset/subvariables/subvar2/",
-                "/api/datasets/1/variables/mymrset/subvariables/subvar1/",
-                "/api/datasets/1/variables/mymrset/subvariables/subvar3/"
+                "api/datasets/1/variables/mymrset/subvariables/subvar2/",
+                "api/datasets/1/variables/mymrset/subvariables/subvar1/",
+                "api/datasets/1/variables/mymrset/subvariables/subvar3/"
             ],
-            "subvariables_catalog": "/api/datasets/1/variables/mymrset/subvariables/"
+            "subvariables_catalog": "api/datasets/1/variables/mymrset/subvariables/"
         },
-        "/api/datasets/1/variables/textVar/": {
+        "api/datasets/1/variables/textVar/": {
             "name": "Text variable ftw",
             "discarded": false,
             "alias": "textVar",
@@ -74,6 +74,6 @@
         }
     },
     "orders": {
-        "hier": "/api/datasets/1/variables/hierarchical/"
+        "hier": "api/datasets/1/variables/hierarchical/"
     }
 }

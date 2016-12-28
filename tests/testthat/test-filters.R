@@ -29,8 +29,8 @@ with_mock_HTTP({
         expect_identical(names(filters(ds)),
             c("Occasional Political Interest", "Public filter"))
         expect_identical(urls(filters(ds)),
-            c("/api/datasets/1/filters/filter1/",
-              "/api/datasets/1/filters/filter2/"))
+            c("api/datasets/1/filters/filter1/",
+              "api/datasets/1/filters/filter2/"))
         expect_identical(names(filters(ds)[c(2, 1)]),
            c("Public filter", "Occasional Political Interest"))
     })

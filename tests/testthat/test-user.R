@@ -11,9 +11,9 @@ with_mock_HTTP({
         expect_is(usercat, "UserCatalog")
         expect_length(usercat, 3)
         expect_identical(urls(usercat),
-            c("/api/users/user1/",
-              "/api/users/user3/",
-              "/api/users/user2/"))
+            c("api/users/user1/",
+              "api/users/user3/",
+              "api/users/user2/"))
         expect_identical(names(usercat),
             c("Fake User", "Bill User", "Roger User"))
         expect_identical(emails(usercat),

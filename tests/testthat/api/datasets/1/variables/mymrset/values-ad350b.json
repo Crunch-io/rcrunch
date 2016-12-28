@@ -1,7 +1,7 @@
 // ad350b29ac5f2de86e8b5b24aa885361: list(filter=toJSON(NULL), offset=0, limit=66666L)
 {
     "element": "shoji:view",
-    "self": "/api/datasets/1/variables/mymrset/values/",
+    "self": "api/datasets/1/variables/mymrset/values/",
     "value": [ [ 2, 1, 1 ],
         [ 2, 1, {"?": -1} ],
         [ 1, 2, 1 ],

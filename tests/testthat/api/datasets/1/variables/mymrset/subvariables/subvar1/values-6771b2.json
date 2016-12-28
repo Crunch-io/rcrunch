@@ -1,6 +1,6 @@
 // 6771b210ace41ef17ceddc57b002c04c: list(filter=toJSON(NULL), offset=0, limit=200000L)
 {
     "element": "shoji:view",
-    "self": "/api/datasets/1/variables/mymrset/subvariables/subvar1/values/",
+    "self": "api/datasets/1/variables/mymrset/subvariables/subvar1/values/",
     "value": [1,1,2,{"?":-1},{"?":-1},{"?":-1},{"?":-1},1,2,{"?":-1},{"?":-1},1,{"?":-1},{"?":-1},{"?":-1},1,2,1,1,1,{"?":-1},1,{"?":-1},1,2]
 }

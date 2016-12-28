@@ -14,7 +14,7 @@ test_that("newDataset input validation", {
 with_mock_HTTP({
     test_that("Basic exercise of turning data.frame to Crunch payload", {
         expect_POST(newDataset(data.frame(a=1), name="Testing"),
-            "/api/datasets/",
+            "api/datasets/",
             '{"element":"shoji:entity","body":{"name":"Testing",',
             '"table":{"element":"crunch:table",',
             '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"}},',

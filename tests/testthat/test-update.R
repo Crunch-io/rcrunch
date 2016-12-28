@@ -6,7 +6,7 @@ with_mock_HTTP({
         ## TODO: assert the payload shape. This is mainly about exercising code
         ## in the unit tests. We test the behavior in integration tests
         expect_POST(ds$gender[ds$birthyr > 2020] <- "Male",
-            "/api/datasets/1/table/")
+            "api/datasets/1/table/")
     })
     test_that("Validation on categorical update", {
         expect_error(ds$gender[is.na(ds$birthyr)] <- as.factor(c("Male", "Other", "Prefer not to say", "Female")),

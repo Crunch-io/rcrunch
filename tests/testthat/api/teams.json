@@ -1,10 +1,10 @@
 {
     "element": "shoji:catalog",
-    "self": "/api/teams/",
+    "self": "api/teams/",
     "description": "List of all the teams where the current user is member",
     "index": {
-        "/api/teams/team1/": {
-            "owner": "/api/users/user1/",
+        "api/teams/team1/": {
+            "owner": "api/users/user1/",
             "name": "Alpha Team"
         }
     }
