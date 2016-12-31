@@ -28,7 +28,6 @@ with_mock_HTTP({
         `httr::GET`=function (url, ...) {
             url <- paste0(url, counter, ".json") ## Add counter
             counter <<- counter + 1 ## Increment
-            url <- sub("^\\/", "", url) ## relative to cwd
             return(fakeResponse(url))
         },
         test_that("Progress polling goes until 100", {
