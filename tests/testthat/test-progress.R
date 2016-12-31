@@ -17,8 +17,11 @@ with_mock_HTTP({
     ## Setup to test the auto-polling
     fakeProg <- function (progress_url) {
         return(fakeResponse(status_code=202,
-            headers=list(location="api/datasets/"),
-            json=list(element="shoji:view", value=progress_url)))
+            headers=list(
+                location="api/datasets/",
+                `Content-Type`="application/json"
+            ),
+            content=list(element="shoji:view", value=progress_url)))
     }
 
     counter <- 1
@@ -26,9 +29,11 @@ with_mock_HTTP({
         ## GET something slightly different each time through so we can
         ## approximate polling a changing resource
         `httr::GET`=function (url, ...) {
-            url <- paste0(url, counter, ".json") ## Add counter
+            url <- httptest::buildMockURL(paste0(url, counter)) ## Add counter
             counter <<- counter + 1 ## Increment
-            return(fakeResponse(url))
+            return(fakeResponse(url, "GET",
+                content=readBin(url, "raw", 4096), ## Assumes mock is under 4K
+                status_code=200, headers=list(`Content-Type`="application/json")))
         },
         test_that("Progress polling goes until 100", {
             expect_output(

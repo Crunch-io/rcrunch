@@ -1,39 +1,7 @@
-fakeResponse <- function (url="", status_code=200, headers=list(), json=NULL) {
-    ## Return something that looks enough like an httr 'response'
-    if (!is.null(json)) {
-        cont <- charToRaw(toJSON(json))
-    } else {
-        cont <- readBin(url, "raw", 4096)
-    }
-    structure(list(
-        url=url,
-        status_code=status_code,
-        times=structure(nchar(url), .Names="total"),
-        request=list(method="GET", url=url),
-        headers=modifyList(list(`Content-Type`="application/json"), headers),
-        content=cont
-    ), class="response")
-}
-
 with_mock_HTTP <- function (expr) {
     with(temp.option(crunch.api="api/root/"), {
-        without_internet({
+        with_mock_API({
             with_mock(
-                `httr::GET`=function (url, ...) {
-                    if (is.null(url)) {
-                        stop("No URL found", call.=FALSE)
-                    }
-                    url <- unlist(strsplit(url, "?", fixed=TRUE))[1] ## remove query params in the URL
-                    q <- list(...)$query
-                    ext <- ".json"
-                    if (!is.null(q)) {
-                        ## There's a query.
-                        ## Hash it, take the first 6 chars, and add to the filename
-                        ext <- paste0("-", substr(digest::digest(q), 1, 6), ext)
-                    }
-                    url <- sub("\\/$", ext, url)
-                    return(fakeResponse(url))
-                },
                 `crunch:::absoluteURL`=function (urls, base) {
                     ## Absolute URLs with fake backend start with "api/..."
                     if (length(urls) && !any(startsWith(urls, "api"))) {

@@ -1,7 +1,7 @@
-// 4fd71abbd587e0265a5bd7ad5324208b: list(relative="on")
+// Query: relative=on
 {
     "element": "shoji:catalog",
-    "self": "api/datasets/2/variables/",
+    "self": "api/datasets/1/variables/",
     "specification": "api/specifications/variables/",
     "description": "List of Variables of this dataset",
     "index": {
@@ -11,23 +11,26 @@
             "alias": "gender",
             "type": "categorical",
             "id": "66ae9881e3524f7db84970d556c34552",
+            "notes": "",
             "description": "Gender"
         },
         "birthyr/": {
             "name": "Birth Year",
-            "discarded": true,
-            "alias": "birthyr2",
+            "discarded": false,
+            "alias": "birthyr",
             "type": "numeric",
             "id": "f78ca47313144b57adfb495893968e70",
-            "description": null
+            "description": null,
+            "notes": "Asked instead of age"
         },
         "starttime/": {
             "name": "starttime",
             "discarded": false,
-            "alias": "birthyr",
+            "alias": "starttime",
             "type": "datetime",
             "id": "d7c21314ca9e453c93069168681a285c",
             "description": "Interview Start Time",
+            "notes": "",
             "resolution": "D",
             "rollup_resolution": "s"
         },
@@ -38,26 +41,40 @@
             "type": "multiple_response",
             "id": "949d2dc7e7a24e6090cc88bb92e1d2fb",
             "description": "Please select all that apply",
+            "notes": "",
             "subvariables": [
-                "./mymrset/subvariables/subvar2/",
-                "./mymrset/subvariables/subvar4/"
+                "mymrset/subvariables/subvar2/",
+                "mymrset/subvariables/subvar1/",
+                "mymrset/subvariables/subvar3/"
             ],
-            "subvariables_catalog": "api/datasets/2/variables/mymrset/subvariables/"
+            "subvariables_catalog": "mymrset/subvariables/"
         },
-        "mymrset2/": {
-            "name": "mymrset Combined",
+        "catarray/": {
+            "name": "Cat Array",
             "discarded": false,
-            "alias": "mymrset2",
+            "alias": "catarray",
             "type": "categorical_array",
-            "id": "12345",
-            "description": "Please select all that apply",
+            "id": "qwert",
+            "description": "An array of cats",
+            "notes": "",
             "subvariables": [
-                "api/datasets/2/variables/subvar3/"
+                "mymrset/subvariables/subvar2/",
+                "mymrset/subvariables/subvar1/",
+                "mymrset/subvariables/subvar3/"
             ],
-            "subvariables_catalog": "api/datasets/2/variables/mymrset2/subvariables/"
+            "subvariables_catalog": "mymrset/subvariables/"
+        },
+        "textVar/": {
+            "name": "Text variable ftw",
+            "discarded": false,
+            "alias": "textVar",
+            "type": "text",
+            "id": "text",
+            "description": "Budějovický Budvar",
+            "notes": ""
         }
     },
     "orders": {
-        "hier": "api/datasets/2/variables/hierarchical/"
+        "hier": "api/datasets/1/variables/hierarchical/"
     }
 }

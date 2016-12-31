@@ -1,4 +1,4 @@
-// dbf476579f479e48239530f3674ba3fa: list(filter=toJSON(NULL), offset=0, limit=100000L)
+// Query: filter=%7B%7D&offset=0&limit=100000
 {
     "element": "shoji:view",
     "self": "api/datasets/1/variables/starttime/values/",

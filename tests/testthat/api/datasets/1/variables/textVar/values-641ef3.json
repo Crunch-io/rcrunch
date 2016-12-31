@@ -1,4 +1,4 @@
-// b72581c039aba9d858087b98dfb0813d: list(filter=toJSON(NULL), offset=0, limit=5000L)
+// Query: filter=%7B%7D&offset=0&limit=5000
 {
     "element": "shoji:view",
     "self": "api/datasets/1/variables/textVar/values/",
