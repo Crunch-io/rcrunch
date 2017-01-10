@@ -1,4 +1,5 @@
 ### crunch 1.14.3 (under development)
+* Use [httptest](https://github.com/nealrichardson/httptest) for mocking HTTP and the Crunch API. 
 
 ### crunch 1.14.2
 * Trivial change to DESCRIPTION to meet new, hidden CRAN requirement
