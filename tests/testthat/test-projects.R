@@ -29,6 +29,22 @@ with_mock_HTTP({
             '{"name":"A new project"}')
     })
 
+    test_that("Project creation with newProject", {
+        expect_POST(newProject("A new project"),
+            'api/projects/',
+            '{"name":"A new project"}')
+        with_mock(`crunch::crPOST`=function (...) "api/projects/project1/", {
+            ## Mock the return of that creation
+            pro <- newProject("This is being ignored")
+            expect_is(pro, "CrunchProject")
+            expect_identical(name(pro), "Project One")
+            ## Now also check that the PATCH to add members happens
+            expect_PATCH(newProject("A new project", members="new.user@crunch.io"),
+                'api/projects/project1/members/',
+                '{"new.user@crunch.io":{}}')
+        })
+    })
+
     test_that("Project editing", {
         expect_PATCH(names(projects)[2] <- "New name",
             'api/projects/',
