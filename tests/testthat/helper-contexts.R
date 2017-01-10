@@ -135,10 +135,3 @@ testUser <- function (email=uniqueEmail(), name=paste("Ms.", email, "User"), ...
     u.url <- invite(email, name=name, notify=FALSE, ...)
     return(UserEntity(crGET(u.url)))
 }
-
-testProject <- function (name="", ...) {
-    name <- paste0(name, as.numeric(Sys.time()))
-    p <- session()$projects
-    p[[name]] <- list(...)
-    return(refresh(p)[[name]])
-}

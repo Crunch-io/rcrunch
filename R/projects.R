@@ -27,8 +27,7 @@ setMethod("[[", c("ProjectCatalog", "character"), function (x, i, ...) {
 setMethod("[[", c("ProjectCatalog", "ANY"), function (x, i, ...) {
     b <- callNextMethod(x, i, ...)
     if (is.null(b)) return(NULL)
-    CrunchProject(index_url=self(x), entity_url=urls(x)[i],
-        body=b)
+    CrunchProject(index_url=self(x), entity_url=urls(x)[i], body=b)
 })
 
 #' @rdname catalog-extract
@@ -39,15 +38,25 @@ setMethod("[[<-", c("ProjectCatalog", "character", "missing", "list"),
             ## TODO: update team attributes
             halt("Cannot (yet) modify project attributes")
         } else {
-            ## Creating a new team
-            u <- crPOST(self(x), body=toJSON(list(name=i)))
-            x <- refresh(x)
-            ## Add members to team, if given
-            if (!is.null(value[["members"]]))
-            members(x[[i]]) <- value[["members"]]
-            return(x)
+            ## Creating a new project
+            proj <- do.call(newProject,
+                modifyList(value, list(name=i, catalog=x)))
+            return(refresh(x))
         }
     })
+
+newProject <- function (name, members=NULL, catalog=projects(), ...) {
+    u <- crPOST(self(catalog), body=toJSON(list(name=name, ...)))
+    ## Fake a CrunchProject (tuple) by getting the entity
+    ## TODO: make this more robust and formal (useful elsewhere too?)
+    out <- CrunchProject(index_url=self(catalog), entity_url=u,
+        body=crGET(u)$body)
+    ## Add members to project, if given
+    if (!is.null(members)) {
+        members(out) <- members
+    }
+    return(out)
+}
 
 #' @rdname catalog-extract
 #' @export

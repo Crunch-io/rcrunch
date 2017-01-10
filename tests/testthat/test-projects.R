@@ -225,7 +225,7 @@ with_test_authentication({
 
     test_that("Can add members to a project (and then set as an editor)", {
         skip_on_jenkins("Jenkins user needs more permissions")
-        tp <- testProject()
+        tp <- newProject(name=now())
         u <- testUser()
         expect_identical(names(members(tp)), my.name)
         members(tp) <- email(u)
@@ -240,7 +240,7 @@ with_test_authentication({
 
     test_that("Can remove members from a project", {
         skip_on_jenkins("Jenkins user needs more permissions")
-        tp <- testProject()
+        tp <- newProject(name=now())
         u <- testUser()
         expect_identical(names(members(tp)), my.name)
         members(tp) <- email(u)
@@ -250,7 +250,7 @@ with_test_authentication({
     })
 
     ds <- createDataset(name=now())
-    tp <- testProject()
+    tp <- newProject(name=now())
     test_that("Can add datasets to project", {
         expect_is(tp, "CrunchProject")
         expect_length(datasets(tp), 0)
