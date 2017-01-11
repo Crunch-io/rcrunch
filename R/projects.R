@@ -83,7 +83,7 @@ newProject <- function (name, members=NULL, catalog=projects(), ...) {
     if (!is.null(members)) {
         members(out) <- members
     }
-    return(out)
+    invisible(out)
 }
 
 #' @rdname catalog-extract

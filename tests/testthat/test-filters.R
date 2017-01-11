@@ -35,9 +35,68 @@ with_mock_HTTP({
            c("Public filter", "Occasional Political Interest"))
     })
 
+    f <- filters(ds)[["Occasional Political Interest"]]
+    test_that("Filter catalog extract", {
+        expect_is(f, "CrunchFilter")
+        expect_identical(f, filters(ds)[[1]])
+        expect_identical(f, filters(ds)$`Occasional Political Interest`)
+    })
+
+    test_that("Filter entity is.public", {
+        expect_false(is.public(f))
+        expect_PATCH(is.public(f) <- TRUE,
+            "api/datasets/1/filters/filter1/",
+            '{"is_public":true}')
+        expect_no_request(is.public(f) <- FALSE)
+    })
+
     test_that("Assigning filters<- on a dataset doesn't itself modify anything", {
         expect_no_request(filters(ds) <- filters(ds)[c(2, 1)])
         expect_true(is.dataset(ds))
+    })
+
+    test_that("Create a filter by newFilter", {
+        expect_POST(newFilter("A filter", ds$gender=="Male", catalog=filters(ds)),
+            'api/datasets/1/filters/',
+            '{"name":"A filter","expression":',
+            '{"function":"==","args":[',
+            '{"variable":"api/datasets/1/variables/gender/"},',
+            '{"value":1}]}}')
+        with_mock(`crunch::crPOST`=function (...) "api/datasets/1/filters/filter1/", {
+            ## Mock the return of that creation
+            f <- newFilter("A filter", ds$gender=="Male", catalog=filters(ds))
+            expect_is(f, "CrunchFilter")
+            expect_false(is.public(f))
+        })
+    })
+
+    test_that("newFilter without explicitly setting 'catalog'", {
+        expect_POST(newFilter("A filter", ds$gender=="Male", catalog=ds),
+            'api/datasets/1/filters/',
+            '{"name":"A filter","expression":',
+            '{"function":"==","args":[',
+            '{"variable":"api/datasets/1/variables/gender/"},',
+            '{"value":1}]}}')
+        expect_POST(newFilter("A filter", ds$gender=="Male"),
+            'api/datasets/1/filters/',
+            '{"name":"A filter","expression":',
+            '{"function":"==","args":[',
+            '{"variable":"api/datasets/1/variables/gender/"},',
+            '{"value":1}]}}')
+    })
+
+    test_that("newFilter on an invalid 'catalog'", {
+        expect_error(newFilter("A filter", ds$gender=="Male", catalog="Foo!"),
+            "Cannot create a filter entity on an object of class character")
+    })
+
+    test_that("Create a filter by [[<-", {
+        expect_POST(filters(ds)[["A filter"]] <- ds$gender=="Male",
+            'api/datasets/1/filters/',
+            '{"name":"A filter","expression":',
+            '{"function":"==","args":[',
+            '{"variable":"api/datasets/1/variables/gender/"},',
+            '{"value":1}]}}')
     })
 })
 

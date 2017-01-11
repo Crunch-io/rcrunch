@@ -167,6 +167,13 @@ filters(ds)
 ## 1 Young males b68e568c205d448c99120e2b72e7d585     FALSE
 ```
 
+You could also have made the filter with the `newFilter` function:
+
+
+```r
+f <- newFilter("Young males", ds$gender == "Male" & ds$age < 30)
+```
+
 This filter is now available for you to use in the web application. If you want to make the filter available to all viewers of the dataset, make it "public":
 
 

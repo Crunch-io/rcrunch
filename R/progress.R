@@ -13,7 +13,6 @@ pollProgress <- function (progress_url, wait=.5) {
     ## Set up the progress bar
     pb <- txtProgressBar(0, 100, style=3)
 
-    print(progress_url)
     prog <- uncached(crGET(progress_url))
     status <- prog$progress
     setTxtProgressBar(pb, status)

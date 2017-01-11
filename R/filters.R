@@ -71,11 +71,46 @@ setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchLogicalExpr"
             return(x)
         } else {
             ## Creating a new filter
-            u <- crPOST(self(x), body=toJSON(list(name=i,
-                expression=zcl(value))))
+            f <- .newFilter(i, value, catalog_url=self(x))
             return(refresh(x))
         }
     })
+
+#' Create a new filter
+#'
+#' This function creates a new filter. You can achieve the same results by
+#' assigning into a dataset's filters catalog, but this may be a more natural
+#' way to think of the action, particularly when you want to do something with
+#' the filter entity after you create it.
+#' @param name character name for the filter
+#' @param expression CrunchLogicalExpr with which to make a filter entity
+#' @param catalog FilterCatalog in which to create the new filter. May also
+#' provide a dataset entity. If omitted, the function will attempt to infer the
+#' dataset (and thus its FilterCatalog) from the contents of \code{expression}.
+#' @param ... Additional filter attributes to set. Options include \code{is_public}.
+#' @return A \code{CrunchFilter} object.
+#' @export
+newFilter <- function (name, expression, catalog=NULL, ...) {
+    if (is.null(catalog)) {
+        obj <- ShojiEntity(crGET(datasetReference(expression)))
+        catalog_url <- shojiURL(obj, "catalogs", "filters")
+    } else if (is.dataset(catalog)) {
+        catalog_url <- shojiURL(catalog, "catalogs", "filters")
+    } else if (inherits(catalog, "FilterCatalog")) {
+        catalog_url <- self(catalog)
+    } else {
+        halt("Cannot create a filter entity on an object of class ",
+            class(catalog))
+    }
+    u <- .newFilter(name, expression, catalog_url, ...)
+    invisible(CrunchFilter(crGET(u)))
+}
+
+## Internal function to do the POSTing, both in [[ and in newFilter
+.newFilter <- function (name, expression, catalog_url, ...) {
+    crPOST(catalog_url, body=toJSON(list(name=name,
+        expression=zcl(expression), ...)))
+}
 
 #' @rdname catalog-extract
 #' @export
