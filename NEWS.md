@@ -1,5 +1,6 @@
 ### crunch 1.14.3 (under development)
-* Use [httptest](https://github.com/nealrichardson/httptest) for mocking HTTP and the Crunch API. 
+* Use [httptest](https://github.com/nealrichardson/httptest) for mocking HTTP and the Crunch API.
+* `newFilter` and `newProject` functions to create those objects more directly, rather than by assigning into their respective catalogs.
 
 ### crunch 1.14.2
 * Trivial change to DESCRIPTION to meet new, hidden CRAN requirement
