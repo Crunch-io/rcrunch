@@ -61,7 +61,7 @@ with_mock_HTTP({
 })
 
 with_test_authentication({
-    ds <- createDataset(name=now())
+    ds <- newDataset(df[1:2, 1:2])
     test_that("refresh", {
         expect_identical(ds, refresh(ds))
         ds2 <- ds
