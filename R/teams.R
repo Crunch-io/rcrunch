@@ -92,6 +92,10 @@ setMethod("members", "CrunchTeam", function (x) {
 #' @rdname delete
 #' @export
 setMethod("delete", "CrunchTeam", function (x, confirm=requireConsent(), ...) {
+    if (!missing(confirm)) {
+        warning("The 'confirm' argument is deprecated. See ?with_consent.",
+            call.=FALSE)
+    }
     prompt <- paste0("Really delete team ", dQuote(name(x)), "? ",
         "This cannot be undone.")
     if (confirm && !askForPermission(prompt)) {

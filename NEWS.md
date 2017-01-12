@@ -1,6 +1,10 @@
 ### crunch 1.14.3 (under development)
-* Use [httptest](https://github.com/nealrichardson/httptest) for mocking HTTP and the Crunch API.
 * `newFilter` and `newProject` functions to create those objects more directly, rather than by assigning into their respective catalogs.
+* Require confirmation before doing a "force" merge in `mergeFork`.
+* Add `with_consent` as an alternative to `with(consent(), ...)`
+* Deprecate the "confirm" argument to destructive functions and methods such as `delete` in favor of the `consent` context manager.
+* Add deprecation warning that destructive actions will soon also require consent when running in a non-interactive R session.
+* Use [httptest](https://github.com/nealrichardson/httptest) for mocking HTTP and the Crunch API.
 
 ### crunch 1.14.2
 * Trivial change to DESCRIPTION to meet new, hidden CRAN requirement

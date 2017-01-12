@@ -251,6 +251,14 @@ with_mock_HTTP({
         expect_error(settings(ds)$NOTASETTING <- TRUE,
             "Invalid attribute: NOTASETTING")
     })
+    test_that("Dataset deleting", {
+        expect_error(delete(ds), "Must confirm") ## New non-interactive behavior
+        expect_warning(
+            expect_error(delete(ds, confirm=TRUE), "Must confirm"),
+            "The 'confirm' argument is deprecated."
+        )
+        with_consent(expect_DELETE(delete(ds), self(ds)))  ## No warning
+    })
 })
 
 with_test_authentication({
@@ -403,22 +411,6 @@ with_test_authentication({
             ds$arrayVar <- makeArray(ds[cast.these], name="Array variable")
             expect_true(is.CA(ds$arrayVar))
             expect_identical(name(ds$arrayVar), "Array variable")
-        })
-    })
-
-    test_that("Dataset deleting is safe", {
-        ds <- createDataset(name=now())
-        expect_error(delete(ds, confirm=TRUE),
-            "Must confirm deleting dataset")
-        expect_error(delete(ds, confirm=FALSE),
-            NA)
-    })
-
-    test_that("Can give consent to delete", {
-        ds <- createDataset(name=now())
-        with(consent(), {
-            expect_error(delete(ds, confirm=TRUE),
-                NA)
         })
     })
 })

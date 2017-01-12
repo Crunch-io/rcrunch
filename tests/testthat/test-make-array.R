@@ -69,7 +69,7 @@ with_test_authentication({
             expect_true(is.CA(ds$arrayVar))
         })
         test_that("can delete the array we just bound", {
-            ds$arrayVar <- NULL
+            with_consent(ds$arrayVar <- NULL)
             expect_identical(names(ds), "v4")
             expect_identical(ncol(ds), 1L)
         })

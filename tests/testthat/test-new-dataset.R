@@ -60,7 +60,7 @@ if (run.integration.tests) {
 
         m <- fromJSON(file.path("dataset-fixtures", "apidocs.json"),
             simplifyVector=FALSE)
-        
+
         whereas("Creating with metadata and csv", {
             test_that("createWithMetadataAndFile using docs example", {
                 ds <- newDatasetFromFixture("apidocs")
@@ -100,22 +100,6 @@ if (run.integration.tests) {
             expect_true(is.dataset(dsz))
             expect_identical(name(dsz), "df")
             expect_valid_df_import(dsz)
-        })
-
-        test_that("Datasets can be deleted", {
-            dsname <- uniqueDatasetName()
-            testdf <- createDataset(name=dsname)
-            expect_true(dsname %in% listDatasets())
-            expect_true(isTRUE(crDELETE(self(testdf),
-                status.handlers=list(`204`=function (response) TRUE))))
-            expect_false(dsname %in% listDatasets(refresh=TRUE))
-        })
-        test_that("Datasets can be deleted by S4 method", {
-            dsname <- uniqueDatasetName()
-            testdf <- createDataset(name=dsname)
-            expect_true(dsname %in% listDatasets())
-            delete(testdf)
-            expect_false(dsname %in% listDatasets())
         })
     })
 }

@@ -149,16 +149,6 @@ with_test_authentication({
                 array(c(10, 10), dim=2,
                 dimnames=list(combined_pets=c("Mammals", "Bird"))))
             ds <- releaseAndReload(ds)
-            print(crtabs(~ q1, data=ds))
-            ## This looks like the combined data
-            # q1
-            #  Cat  Dog Bird
-            #   10    0   10
-            print(crtabs(~ combined_pets, data=ds))
-            ## This looks like the combined data before the data edit
-            # combined_pets
-            # Mammals    Bird 
-            #      10       3
             expect_equivalent(as.array(crtabs(~ q1, data=ds)),
                 array(c(6, 4, 10), dim=3,
                 dimnames=list(q1=c("Cat", "Dog", "Bird"))))

@@ -65,7 +65,7 @@ with_test_authentication({
     whereas("Appending arrays with different subvars and derived vars", {
         ds1 <- newDatasetFromFixture("apidocs")
         ds2 <- newDatasetFromFixture("apidocs")
-        deleteSubvariable(ds1$petloc, "petloc_work")
+        with_consent(deleteSubvariable(ds1$petloc, "petloc_work"))
         ds1 <- refresh(ds1)
         ds1$comb <- combine(ds1$petloc,
             name="Comb 1",

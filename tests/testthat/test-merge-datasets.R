@@ -147,7 +147,7 @@ printed_order_apidocs2 <- c(
 
 with_test_authentication({
     ds1 <- newDatasetFromFixture("join-apidocs2-to-me")
-    ds1$allpets_1 <- NULL
+    with_consent(ds1$allpets_1 <- NULL)
     ds2 <- newDatasetFromFixture("apidocs2")
     test_that("Shape of apidocs2", {
         expect_output(ordering(ds2),
@@ -184,7 +184,7 @@ with_test_authentication({
 
     test_that("Similarly uncomplicated merge, but numeric and hidden key", {
         ds1 <- newDatasetFromFixture("join-apidocs2-to-me")
-        ds1$allpets_1 <- NULL
+        with_consent(ds1$allpets_1 <- NULL)
         type(ds1$id) <- "numeric"
 
         expect_warning(ds1 <- merge(ds1, ds2, by.x=ds1$id, by.y=ds2$caseid),
@@ -215,7 +215,7 @@ with_test_authentication({
 
     test_that("Can select variables to join", {
         ds1 <- newDatasetFromFixture("join-apidocs2-to-me")
-        ds1$allpets_1 <- NULL
+        with_consent(ds1$allpets_1 <- NULL)
         ds1 <- merge(ds1, ds2[c("stringid", "q1", "petloc")],
             by.x="id", by.y="stringid")
         expect_identical(names(ds1),
@@ -224,7 +224,7 @@ with_test_authentication({
 
     test_that("Can select variables and rows to join", {
         ds1 <- newDatasetFromFixture("join-apidocs2-to-me")
-        ds1$allpets_1 <- NULL
+        with_consent(ds1$allpets_1 <- NULL)
         ds1 <- merge(ds1, ds2[ds2$stringid == "43805958", c("stringid", "q1", "petloc")],
             by.x="id", by.y="stringid")
         expect_identical(names(ds1),
@@ -234,7 +234,7 @@ with_test_authentication({
 
     test_that("Can select rows to join", {
         ds1 <- newDatasetFromFixture("join-apidocs2-to-me")
-        ds1$allpets_1 <- NULL
+        with_consent(ds1$allpets_1 <- NULL)
         ds1 <- merge(ds1, ds2[ds2$stringid == "43805958",],
             by.x="id", by.y="stringid")
         expect_identical(names(ds1),

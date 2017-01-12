@@ -194,7 +194,7 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
     }
 
     if (is.error(out)) {
-        delete(ds, confirm=FALSE)
+        with_consent(delete(ds))
         rethrow(out)
     }
     message("Done!")

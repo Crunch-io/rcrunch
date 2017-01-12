@@ -55,10 +55,13 @@ with_mock_HTTP({
     })
 
     test_that("Project deletion", {
-        expect_error(delete(projects[[1]], confirm=TRUE),
-            "Must confirm deleting project")
-        with(consent(), expect_DELETE(delete(projects[[1]], confirm=TRUE),
-            "api/projects/project1/"))
+        expect_warning(
+            expect_error(delete(projects[[1]], confirm=TRUE),
+                "Must confirm deleting project"),
+            "The 'confirm' argument is deprecated.")
+        with(consent(), {
+            expect_DELETE(delete(projects[[1]]), "api/projects/project1/")
+        })
     })
 
     m <- members(aproject)

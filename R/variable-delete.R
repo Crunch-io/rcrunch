@@ -10,6 +10,10 @@
 #' @seealso \code{\link{hide}}
 #' @export
 deleteVariables <- function (dataset, variables, confirm=requireConsent()) {
+    if (!missing(confirm)) {
+        warning("The 'confirm' argument is deprecated. See ?with_consent.",
+            call.=FALSE)
+    }
     to.delete <- allVariables(dataset[variables])
     if (length(to.delete) == 1) {
         prompt <- paste0("Really delete ", dQuote(names(to.delete)), "?")
@@ -20,8 +24,7 @@ deleteVariables <- function (dataset, variables, confirm=requireConsent()) {
     if (confirm && !askForPermission(prompt)) {
         halt("Must confirm deleting variable(s)")
     }
-    out <- lapply(urls(to.delete),
-        function (x) delete(to.delete[[x]], confirm=FALSE))
+    out <- lapply(urls(to.delete), crDELETE)
     dropCache(self(to.delete))
     invisible(refresh(dataset))
 }
@@ -32,8 +35,8 @@ deleteVariable <- deleteVariables
 
 #' @rdname delete
 #' @export
-setMethod("delete", "CrunchVariable", function (x, confirm=requireConsent(), ...) {
-    out <- delete(tuple(x), confirm=confirm)
+setMethod("delete", "CrunchVariable", function (x, ...) {
+    out <- delete(tuple(x), ...)
     dropCache(absoluteURL("../", self(x)))
     invisible(out)
 })
@@ -41,6 +44,10 @@ setMethod("delete", "CrunchVariable", function (x, confirm=requireConsent(), ...
 #' @rdname delete
 #' @export
 setMethod("delete", "VariableTuple", function (x, confirm=requireConsent(), ...) {
+    if (!missing(confirm)) {
+        warning("The 'confirm' argument is deprecated. See ?with_consent.",
+            call.=FALSE)
+    }
     if (confirm && !askForPermission(paste0("Really delete ", name(x), "?"))) {
         halt("Must confirm deleting variable")
     }
@@ -63,6 +70,10 @@ setMethod("delete", "VariableTuple", function (x, confirm=requireConsent(), ...)
 #' @return a new version of variable without the indicated subvariables
 #' @export
 deleteSubvariables <- function (variable, to.delete, confirm=requireConsent()) {
+    if (!missing(confirm)) {
+        warning("The 'confirm' argument is deprecated. See ?with_consent.",
+            call.=FALSE)
+    }
     ## Identify subvariable URLs
     delete.these <- urls(variable[to.delete])
 

@@ -77,7 +77,7 @@ crunchAuth <- function (email, password=NULL, ...) {
         halt("Must supply the email address associated with your crunch.io account")
     }
     if (is.null(password)) {
-        if (interactive()) {
+        if (is.interactive()) {
             cat(paste0("Crunch.io password for ", email, ": "))
             without_echo(password <- readline())
         } else {

@@ -24,6 +24,14 @@ with_silent_progress <- function (expr) {
     )
 }
 
+with_fake_input <- function (input, expr) {
+    with_mock(
+        `crunch:::is.interactive`=function () return(TRUE),
+        `base::readline`=function (...) input,
+        eval.parent(expr)
+    )
+}
+
 silencer <- temp.option(show.error.messages=FALSE)
 
 assign("entities.created", c(), envir=globalenv())

@@ -41,6 +41,20 @@ with_mock_HTTP({
                     "api/datasets/1/variables/gender/")
             })
         })
+        test_that("'confirm' deprecation warning on variable delete", {
+            expect_warning(
+                expect_error(delete(ds$gender, confirm=TRUE),
+                    "Must confirm deleting variable"),
+                "The 'confirm' argument is deprecated.")
+            expect_warning(
+                expect_error(deleteVariables(ds, c("gender", "birthyr"), confirm=TRUE),
+                    "Must confirm deleting variable"),
+                "The 'confirm' argument is deprecated.")
+            expect_warning(
+                expect_error(deleteSubvariable(ds$mymrset, "subvar1", confirm=TRUE),
+                    "Must confirm deleting subvariable"),
+                "The 'confirm' argument is deprecated.")
+        })
     })
 })
 
@@ -52,7 +66,7 @@ with_test_authentication({
             expect_valid_df_import(ds)
         })
 
-        ds <- deleteVariable(ds, c("v1", "v4"))
+        with_consent(ds <- deleteVariable(ds, c("v1", "v4")))
         test_that("deleteVariable(s) removes variables", {
             expect_false(any(c("v1", "v4") %in% names(ds)))
         })
@@ -61,7 +75,7 @@ with_test_authentication({
                 "Variable not found. It may have been deleted.")
         })
 
-        ds$v3 <- NULL
+        with_consent(ds$v3 <- NULL)
         test_that("Assigning NULL removes variables", {
             expect_null(ds$v3)
             expect_null(refresh(ds)$v3)
@@ -74,7 +88,7 @@ with_test_authentication({
         test_that("Array variables are fully deleted", {
             expect_true("petloc" %in% names(ds))
             expect_false("petloc_home" %in% names(ds))
-            ds$petloc <- NULL
+            with_consent(ds$petloc <- NULL)
             expect_false("petloc" %in% names(ds))
             expect_false("petloc_home" %in% names(ds))
         })
@@ -85,9 +99,7 @@ with_test_authentication({
         test_that("Delete MR subvariable with multiple 'selected' attributes", {
             expect_identical(names(Filter(is.selected, categories(ds$allpets))),
                 c("selected", "not asked")) ## There are two selected
-            ## TODO: when deleteSubvariable doesn't unbind/rebind, assign it back
-            deleteSubvariable(ds$allpets, "allpets_2")
-            ds <- refresh(ds)
+            with_consent(ds$allpets <- deleteSubvariable(ds$allpets, "allpets_2"))
             expect_true("allpets" %in% names(ds))
             expect_true(is.MR(ds$allpets))
             expect_false("allpets_2" %in% names(ds))

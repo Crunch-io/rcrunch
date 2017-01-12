@@ -24,10 +24,12 @@ with_mock_HTTP({
 
     test_that("Can delete a hidden variable", {
         skip_on_jenkins("No idea why this fails to catch the warning on Jenkins but not on Travis or locally")
-        expect_warning(
-            expect_DELETE(delete(ds$birthyr),
-                "api/datasets/3/variables/birthyr/"),
-            "Variable birthyr is hidden")
+        with_consent({
+            expect_warning(
+                expect_DELETE(delete(ds$birthyr),
+                    "api/datasets/3/variables/birthyr/"),
+                "Variable birthyr is hidden")
+        })
     })
 
     vg <- VariableGroup("A group", entities=ds[c("gender", "birthyr")])

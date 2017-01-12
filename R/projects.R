@@ -131,6 +131,10 @@ setMethod("entity", "CrunchProject", function (x) {
 #' @rdname delete
 #' @export
 setMethod("delete", "CrunchProject", function (x, confirm=requireConsent(), ...) {
+    if (!missing(confirm)) {
+        warning("The 'confirm' argument is deprecated. See ?with_consent.",
+            call.=FALSE)
+    }
     prompt <- paste0("Really delete project ", dQuote(name(x)), "? ",
         "This cannot be undone.")
     if (confirm && !askForPermission(prompt)) {
