@@ -37,6 +37,15 @@ test_that("VarDef(data=VarDef, ...)", {
         VarDef(data=as.factor(rep(LETTERS[2:3], 3)), name="x"))
 })
 
+test_that("Can make a VarDef with no values", {
+    expect_json_equivalent(VarDef(type="categorical",
+        categories=list(list(name="a", id=1, missing=FALSE)),
+        name="foo"),
+        list(type="categorical",
+            categories=list(list(name="a", id=1, missing=FALSE)),
+            name="foo"))
+})
+
 with_test_authentication({
     ds <- newDataset(df)
     test_that("Wrapping VarDef has same result as just ds<-", {
@@ -61,6 +70,13 @@ with_test_authentication({
         expect_warning(ds$newvar3 <- VarDef(name="Empty", type="numeric"),
             "Adding variable with no rows of data")
         expect_identical(as.vector(ds$newvar3), rep(NA_real_, 20L))
+    })
+    test_that("Can insert empty VarDef that's categorical and no-data is added", {
+        expect_warning(ds$newvar9 <- VarDef(name="Empty cats",
+            type="categorical", categories=list(list(name="a", id=1, missing=FALSE))),
+            "Adding variable with no rows of data")
+        expect_identical(names(categories(ds$newvar9)), c("a", "No Data"))
+        expect_identical(as.vector(ds$newvar9, "id"), rep(-1, 20L))
     })
 
     dropCache(self(ds)) ## Just so whether we have caching on doesn't affect the log we collect
