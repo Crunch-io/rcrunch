@@ -1,4 +1,5 @@
 ### crunch 1.14.5 (under development)
+* `multitables` method to access catalog from a Dataset. `newMultitable` to create one. See `?multitables` and `?newMultitable` for docs and examples.
 
 ### crunch 1.14.4
 * `newFilter` and `newProject` functions to create those objects more directly, rather than by assigning into their respective catalogs.

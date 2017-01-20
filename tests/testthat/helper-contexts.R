@@ -16,6 +16,12 @@ with_mock_HTTP <- function (expr) {
     })
 }
 
+with_POST <- function (resp, expr) {
+    ## Mock a POST that returns something, like a Location header pulled from 201
+    force(resp)
+    with_mock(`crunch::crPOST`=function (...) resp, eval.parent(expr))
+}
+
 with_silent_progress <- function (expr) {
     with_mock(
         `utils::txtProgressBar`=function (...) invisible(NULL),

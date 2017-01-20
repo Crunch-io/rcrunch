@@ -33,7 +33,7 @@ with_mock_HTTP({
         expect_POST(newProject("A new project"),
             'api/projects/',
             '{"name":"A new project"}')
-        with_mock(`crunch::crPOST`=function (...) "api/projects/project1/", {
+        with_POST("api/projects/project1/", {
             ## Mock the return of that creation
             pro <- newProject("This is being ignored")
             expect_is(pro, "CrunchProject")

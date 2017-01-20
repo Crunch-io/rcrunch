@@ -93,7 +93,7 @@ setMethod("[[", c("ShojiCatalog", "ANY"), function (x, i, ...) {
     index(x)[[i]]
 })
 
-getTuple <- function (x, i, Constructor=IndexTuple, ...) {
+getTuple <- function (x, i, Constructor=ShojiTuple, ...) {
     b <- index(x)[[i]]
     if (is.null(b)) return(NULL)
     Constructor(index_url=self(x), entity_url=urls(x)[i], body=b)

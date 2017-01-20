@@ -62,7 +62,7 @@ with_mock_HTTP({
             '{"function":"==","args":[',
             '{"variable":"api/datasets/1/variables/gender/"},',
             '{"value":1}]}}')
-        with_mock(`crunch::crPOST`=function (...) "api/datasets/1/filters/filter1/", {
+        with_POST("api/datasets/1/filters/filter1/", {
             ## Mock the return of that creation
             f <- newFilter("A filter", ds$gender=="Male", catalog=filters(ds))
             expect_is(f, "CrunchFilter")
