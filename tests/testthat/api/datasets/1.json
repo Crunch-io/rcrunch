@@ -17,6 +17,7 @@
         "joins": "api/datasets/1/joins/",
         "filters": "api/datasets/1/filters/",
         "boxdata": "api/datasets/1/boxdata/",
+        "multitables": "api/datasets/1/multitables/",
         "actions": "api/datasets/1/actions/"
     },
     "views": {

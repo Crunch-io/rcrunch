@@ -37,21 +37,8 @@ getTeams <- function () {
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[", c("TeamCatalog", "character"), function (x, i, ...) {
-    stopifnot(length(i) == 1)
-    z <- match(i, names(x))
-    if (is.na(z)) {
-        return(NULL)
-    }
-    return(x[[z]])
-})
-
-#' @rdname catalog-extract
-#' @export
 setMethod("[[", c("TeamCatalog", "numeric"), function (x, i, ...) {
-    stopifnot(length(i) == 1)
-    url <- urls(x)[i]
-    return(CrunchTeam(crGET(url)))
+    getEntity(x, i, CrunchTeam, ...)
 })
 
 #' @rdname catalog-extract

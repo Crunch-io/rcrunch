@@ -51,8 +51,8 @@ with_mock_HTTP({
 
     test_that("Extract methods: invalid input", {
         expect_error(varcat[[999]], "subscript out of bounds") ## base R
-        expect_error(varcat[["asdf"]], "Subscript out of bounds: asdf")
-        expect_error(varcat[[NA]], "Subscript out of bounds: NA")
+        expect_null(varcat[["asdf"]])
+        expect_null(varcat[[NA]])
         expect_error(varcat[999:1000], "Subscript out of bounds: 999:1000")
     })
 

@@ -17,17 +17,8 @@ projects <- function (x=getAPIRoot()) {
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[", c("ProjectCatalog", "character"), function (x, i, ...) {
-    w <- whichNameOrURL(x, i)
-    x[[w]]
-})
-
-#' @rdname catalog-extract
-#' @export
-setMethod("[[", c("ProjectCatalog", "ANY"), function (x, i, ...) {
-    b <- callNextMethod(x, i, ...)
-    if (is.null(b)) return(NULL)
-    CrunchProject(index_url=self(x), entity_url=urls(x)[i], body=b)
+setMethod("[[", c("ProjectCatalog", "numeric"), function (x, i, ...) {
+    getTuple(x, i, CrunchProject)
 })
 
 #' @rdname catalog-extract

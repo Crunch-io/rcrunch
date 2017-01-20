@@ -12,6 +12,7 @@
         "batches": "api/datasets/3/batches/",
         "filters": "api/datasets/3/filters/",
         "boxdata": "api/datasets/3/boxdata/",
+        "multitables": "api/datasets/3/multitables/",
         "permissions": "api/datasets/3/permissions/"
     },
     "views": {

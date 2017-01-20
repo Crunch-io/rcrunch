@@ -1,0 +1,7 @@
+{
+	"element": "shoji:catalog",
+	"self": "api/datasets/1/multitables/",
+	"specification": "https://app.crunch.io/api/specifications/multitables/",
+	"description": "List of multitable definitions for this dataset",
+	"index": {}
+}

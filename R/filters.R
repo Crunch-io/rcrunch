@@ -39,24 +39,10 @@ setMethod("is.public<-", "CrunchFilter", function (x, value) {
     setEntitySlot(x, "is_public", value)
 })
 
-
-#' @rdname catalog-extract
-#' @export
-setMethod("[[", c("FilterCatalog", "character"), function (x, i, ...) {
-    stopifnot(length(i) == 1)
-    z <- match(i, names(x))
-    if (is.na(z)) {
-        return(NULL)
-    }
-    return(x[[z]])
-})
-
 #' @rdname catalog-extract
 #' @export
 setMethod("[[", c("FilterCatalog", "numeric"), function (x, i, ...) {
-    stopifnot(length(i) == 1)
-    url <- urls(x)[i]
-    return(CrunchFilter(crGET(url)))
+    getEntity(x, i, CrunchFilter, ...)
 })
 
 #' @rdname catalog-extract

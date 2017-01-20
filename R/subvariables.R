@@ -107,13 +107,14 @@ NULL
 #' @rdname subvars-extract
 #' @export
 setMethod("[[", c("Subvariables", "character"), function (x, i, ...) {
+    ## TODO: drop this in favor of ShojiCatalog method (have to pass in namekey)
     i <- match(i, names(x))
     if (is.na(i)) return(NULL)
     return(x[[i, ...]])
 })
 #' @rdname subvars-extract
 #' @export
-setMethod("[[", c("Subvariables", "ANY"), function (x, i, ...) {
+setMethod("[[", c("Subvariables", "numeric"), function (x, i, ...) {
     out <- callNextMethod(x, i, ...)
     if (!is.null(out)) {
         out <- CrunchVariable(out, filter=activeFilter(x))

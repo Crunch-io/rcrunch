@@ -89,8 +89,24 @@ setMethod("[", c("ShojiCatalog", "ANY"), function (x, i, ...) {
 #' @rdname catalog-extract
 #' @export
 setMethod("[[", c("ShojiCatalog", "ANY"), function (x, i, ...) {
+    ## Note that this returns a bare list, not an IndexTuple
     index(x)[[i]]
 })
+
+getTuple <- function (x, i, Constructor=IndexTuple, ...) {
+    b <- index(x)[[i]]
+    if (is.null(b)) return(NULL)
+    Constructor(index_url=self(x), entity_url=urls(x)[i], body=b)
+}
+
+getEntity <- function (x, i, Constructor=ShojiEntity, ...) {
+    stopifnot(length(i) == 1)
+    url <- urls(x)[i]
+    if (is.na(url)) {
+        halt("subscript out of bounds: ", i)
+    }
+    return(Constructor(crGET(url)))
+}
 
 #' @rdname catalog-extract
 #' @export
@@ -100,7 +116,7 @@ setMethod("[[", c("ShojiCatalog", "character"), function (x, i, ...) {
     if (is.na(w)) {
         return(NULL)
     }
-    index(x)[[w]]
+    return(x[[w]])
 })
 
 #' @rdname catalog-extract
