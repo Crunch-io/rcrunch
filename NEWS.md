@@ -1,4 +1,4 @@
-### crunch 1.14.3 (under development)
+### crunch 1.14.4
 * `newFilter` and `newProject` functions to create those objects more directly, rather than by assigning into their respective catalogs.
 * Require confirmation before doing a "force" merge in `mergeFork`.
 * Add `with_consent` as an alternative to `with(consent(), ...)`
