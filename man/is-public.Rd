@@ -5,9 +5,11 @@
 \alias{is-public}
 \alias{is.public}
 \alias{is.public,CrunchFilter-method}
+\alias{is.public,Multitable-method}
 \alias{is.public,MultitableCatalog-method}
 \alias{is.public<-}
 \alias{is.public<-,CrunchFilter-method}
+\alias{is.public<-,Multitable-method}
 \alias{is.public<-,MultitableCatalog-method}
 \title{View and modify "public" attribute}
 \usage{
@@ -16,6 +18,10 @@
 \S4method{is.public}{CrunchFilter}(x) <- value
 
 \S4method{is.public}{MultitableCatalog}(x)
+
+\S4method{is.public}{Multitable}(x)
+
+\S4method{is.public}{Multitable}(x) <- value
 
 \S4method{is.public}{MultitableCatalog}(x) <- value
 }

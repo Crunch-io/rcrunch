@@ -32,16 +32,19 @@ with_mock_HTTP({
     })
     test_that("Multitable catalog is.public", {
         expect_identical(is.public(mults), c(FALSE, TRUE))
-        ## TODO: check that this PATCH is allowed or whether you have to patch the entity
         expect_PATCH(is.public(mults)[2] <- FALSE,
-            'api/datasets/1/multitables/',
-            '{"api/datasets/1/multitables/4de322/":{"is_public":false}}')
+            'api/datasets/1/multitables/4de322/',
+            '{"is_public":false}')
         expect_no_request(is.public(mults)[2] <- TRUE)
     })
 
     test_that("Multitable object methods", {
         m <- mults[[1]]
         expect_identical(name(m), "My banner")
+        expect_PATCH(is.public(m) <- TRUE,
+            'api/datasets/1/multitables/ed30c4/',
+            '{"is_public":true}')
+        expect_no_request(is.public(m) <- FALSE)
     })
 
     test_that("newMultitable", {
@@ -99,5 +102,22 @@ with_test_authentication({
     test_that("Can make a multitable", {
         m <- newMultitable(~ allpets + q1, data=ds)
         expect_identical(name(m), "allpets + q1")
+    })
+
+    test_that("Can make the multitable entity public/personal", {
+        mult <- multitables(ds)[["allpets + q1"]]
+        expect_false(is.public(mult))
+        is.public(mult) <- TRUE
+        expect_true(is.public(refresh(mult)))
+        is.public(mult) <- FALSE
+        expect_false(is.public(refresh(mult)))
+    })
+
+    test_that("Can make the multitable public/personal on the catalog", {
+        expect_false(is.public(multitables(ds))[1])
+        is.public(multitables(ds))[1] <- TRUE
+        expect_true(is.public(refresh(multitables(ds)))[1])
+        is.public(multitables(ds))[1] <- FALSE
+        expect_false(is.public(refresh(multitables(ds)))[1])
     })
 })
