@@ -44,9 +44,7 @@ with_test_authentication({
                 "Contains subvariables found in other arrays after matching: CA2")
         })
         test_that("The append fails", {
-            expect_error(
-                expect_message(appendDataset(part1, part2),
-                    "Result URL"),
+            expect_error(appendDataset(part1, part2),
                 "Subvariable mr_1 cannot be bound to both arrays 'CA2' and 'CA1'.")
         })
         part1 <- cleanseBatches(part1)

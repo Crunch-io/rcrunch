@@ -60,10 +60,10 @@ with_mock_HTTP({
             logfile <- tempfile()
             with(temp.option(httpcache.log=logfile), {
                 expect_output(
-                    expect_error(
-                        expect_message(handleAPIresponse(fakeProg("api/progress2/")),
-                            "Result URL: /api/datasets/"),
-                        paste("Education, Commerce, and, uh, oops."), fixed=TRUE),
+                    expect_message(
+                        expect_error(handleAPIresponse(fakeProg("api/progress2/")),
+                            paste("Education, Commerce, and, uh, oops."), fixed=TRUE),
+                        "Result URL: api/datasets/"),
                     "|  23%", fixed=TRUE)
             })
             logs <- loadLogfile(logfile)
