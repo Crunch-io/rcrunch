@@ -26,10 +26,28 @@ setMethod("[[", c("MultitableCatalog", "numeric"), function (x, i, ...) {
     getEntity(x, i, Multitable, ...)
 })
 
+#' @rdname describe
+#' @export
+setMethod("name<-", "Multitable", function (x, value) {
+    setEntitySlot(x, "name", value)
+})
+
+#' @export
+#' @rdname describe-catalog
+setMethod("names<-", "MultitableCatalog", function (x, value) {
+    setIndexSlotOnEntity(x, "name", value)
+})
+
 #' @rdname is-public
 #' @export
 setMethod("is.public", "MultitableCatalog", function (x) {
     getIndexSlot(x, "is_public", what=logical(1))
+})
+
+#' @rdname is-public
+#' @export
+setMethod("is.public<-", "MultitableCatalog", function (x, value) {
+    setIndexSlotOnEntity(x, "is_public", value, what=logical(1))
 })
 
 #' @rdname is-public
@@ -40,15 +58,6 @@ setMethod("is.public", "Multitable", function (x) x@body$is_public)
 #' @export
 setMethod("is.public<-", "Multitable", function (x, value) {
     setEntitySlot(x, "is_public", value)
-})
-
-#' @rdname is-public
-#' @export
-setMethod("is.public<-", "MultitableCatalog", function (x, value) {
-    changes <- dirtyElements(is.public(x), value)
-    mapply(function (m, v) setEntitySlot(m, "is_public", v),
-        m=x[changes], v=value[changes])
-    return(refresh(x))
 })
 
 #' Create a new Multitable

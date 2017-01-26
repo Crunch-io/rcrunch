@@ -26,12 +26,14 @@ with_mock_HTTP({
     mults <- multitables(ds)
     test_that("Multitable catalog names", {
         expect_identical(names(mults), c("My banner", "Shared multitable"))
+        ## Note that this PATCHes the entity, not the catalog
         expect_PATCH(names(mults)[2] <- "New name",
-            'api/datasets/1/multitables/',
-            '{"api/datasets/1/multitables/4de322/":{"name":"New name"}}')
+            'api/datasets/1/multitables/4de322/',
+            '{"name":"New name"}')
     })
     test_that("Multitable catalog is.public", {
         expect_identical(is.public(mults), c(FALSE, TRUE))
+        ## Note that this PATCHes the entity, not the catalog
         expect_PATCH(is.public(mults)[2] <- FALSE,
             'api/datasets/1/multitables/4de322/',
             '{"is_public":false}')
@@ -41,6 +43,9 @@ with_mock_HTTP({
     test_that("Multitable object methods", {
         m <- mults[[1]]
         expect_identical(name(m), "My banner")
+        expect_PATCH(name(m) <- "Another name",
+            'api/datasets/1/multitables/ed30c4/',
+            '{"name":"Another name"}')
         expect_PATCH(is.public(m) <- TRUE,
             'api/datasets/1/multitables/ed30c4/',
             '{"is_public":true}')
@@ -104,8 +109,8 @@ with_test_authentication({
         expect_identical(name(m), "allpets + q1")
     })
 
+    mult <- multitables(ds)[["allpets + q1"]]
     test_that("Can make the multitable entity public/personal", {
-        mult <- multitables(ds)[["allpets + q1"]]
         expect_false(is.public(mult))
         is.public(mult) <- TRUE
         expect_true(is.public(refresh(mult)))
@@ -119,5 +124,16 @@ with_test_authentication({
         expect_true(is.public(refresh(multitables(ds)))[1])
         is.public(multitables(ds))[1] <- FALSE
         expect_false(is.public(refresh(multitables(ds)))[1])
+    })
+
+    test_that("Can edit the multitable name", {
+        expect_identical(name(mult), "allpets + q1")
+        name(mult) <- "A new name"
+        expect_identical(name(mult), "A new name")
+        expect_identical(name(refresh(mult)), "A new name")
+        expect_identical(names(refresh(multitables(ds))), "A new name")
+        names(multitables(ds)) <- "Yet another name"
+        expect_identical(names(multitables(ds)), "Yet another name")
+        expect_identical(names(refresh(multitables(ds))), "Yet another name")
     })
 })

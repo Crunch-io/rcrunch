@@ -48,6 +48,15 @@ setIndexSlot <- function (x, i, value, unique=FALSE) {
     return(x)
 }
 
+setIndexSlotOnEntity <- function (x, i, value, ...) {
+    ## For catalog setters where you can't PATCH the catalog
+    old <- getIndexSlot(x, i, ...)
+    changes <- dirtyElements(old, value)
+    mapply(function (m, v) setEntitySlot(m, i, v),
+        m=x[changes], v=value[changes])
+    return(refresh(x))
+}
+
 dirtyElements <- function (x, y) {
     !mapply(identical, x, y, USE.NAMES=FALSE, SIMPLIFY=TRUE)
 }

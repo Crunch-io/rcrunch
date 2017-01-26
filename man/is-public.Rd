@@ -19,11 +19,11 @@
 
 \S4method{is.public}{MultitableCatalog}(x)
 
+\S4method{is.public}{MultitableCatalog}(x) <- value
+
 \S4method{is.public}{Multitable}(x)
 
 \S4method{is.public}{Multitable}(x) <- value
-
-\S4method{is.public}{MultitableCatalog}(x) <- value
 }
 \arguments{
 \item{x}{a Crunch object}
