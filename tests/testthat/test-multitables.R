@@ -136,4 +136,20 @@ with_test_authentication({
         expect_identical(names(multitables(ds)), "Yet another name")
         expect_identical(names(refresh(multitables(ds))), "Yet another name")
     })
+
+    test_that("We can get an xlsx tab book", {
+        skip_locally("Vagrant host doesn't serve files correctly")
+        f <- tempfile()
+        out <- tabBook(mult, data=ds, format="xlsx", file=f)
+        expect_true(file.exists(out))
+    })
+
+    test_that("We can get an json tab book", {
+        skip_locally("Vagrant host doesn't serve files correctly")
+        f <- tempfile()
+        out <- tabBook(mult, data=ds, format="json", file=f)
+        expect_true(file.exists(out))
+        tb <- fromJSON(out)
+        expect_true("sheets" %in% names(tb))
+    })
 })

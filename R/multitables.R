@@ -110,3 +110,33 @@ newMultitable <- function (formula, data, name, ...) {
     u <- crPOST(shojiURL(data, "catalogs", "multitables"), body=toJSON(payload))
     invisible(Multitable(crGET(u)))
 }
+
+tabBook <- function (multitable, dataset, weight=crunch::weight(dataset),
+                    format=c("json", "xlsx"), filename, ...) {
+
+    f <- match.arg(format)
+    accept <- list(
+        json="application/json",
+        xlsx="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+    )[[f]]
+    if (missing(filename)) {
+        filename <- paste(name(multitable), f, sep=".")
+    }
+
+    if (!is.null(weight)) {
+        weight <- self(weight)
+    }
+    body <- list(
+        filter=zcl(activeFilter(dataset)),
+        weight=weight,
+        options=list(...)
+    )
+    ## Add this after so that if it is NULL, the "where" key isn't present
+    body$where <- variablesFilter(dataset)
+
+    tabbook_url <- shojiURL(multitable, "views", "tabbook")
+    result <- crPOST(tabbook_url, config=add_headers(`Accept`=accept),
+        body=toJSON(body))
+    download.file(result, filename, quiet=TRUE, method="curl") ## Note outside of auth. Ok because file is in s3 with token
+    invisible(filename)
+}
