@@ -20,6 +20,11 @@ with_mock_HTTP({
             '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"}},',
             '"order":["a"]}}}')
     })
+    test_that("createWithMetadataAndFile when metadata is file too", {
+        expect_POST(newDatasetFromFixture("apidocs"),
+            "api/datasets/",
+            toJSON(fromJSON(file.path("dataset-fixtures", "apidocs.json"), simplifyVector=FALSE)))
+    })
 })
 
 if (run.integration.tests) {

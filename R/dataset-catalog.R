@@ -110,3 +110,7 @@ setMethod("[[<-", c("DatasetCatalog", "character", "missing", "DatasetTuple"),
 #' @seealso \code{\link{Subvariables}} \code{\link{Categories}} \code{\link[base]{names}} \code{vignette("variables", package="crunch")}
 #' @name describe-catalog
 NULL
+
+.delete_all_my_datasets <- function () {
+    lapply(urls(datasets()), crDELETE)
+}

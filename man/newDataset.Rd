@@ -2,9 +2,12 @@
 % Please edit documentation in R/new-dataset.R
 \name{newDataset}
 \alias{newDataset}
+\alias{newDatasetByCSV}
 \title{Upload a data.frame to Crunch to make a new dataset}
 \usage{
 newDataset(x, name = deparse(substitute(x))[1], ...)
+
+newDatasetByCSV(...)
 }
 \arguments{
 \item{x}{a data.frame or other rectangular R object}
@@ -18,6 +21,7 @@ the name of the R object passed in \code{x}}
 If successful, an object of class CrunchDataset.
 }
 \description{
-Upload a data.frame to Crunch to make a new dataset
+This function uses the CSV+JSON import format, which is generally faster and
+more effective than \code{\link{newDatasetByColumn}}.
 }
 

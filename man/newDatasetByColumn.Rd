@@ -22,6 +22,6 @@ Use this version if you have lots of variables, under 1M rows, perhaps
 backed by ff or other memory-mapped files, and time to kill.
 }
 \seealso{
-\code{\link{newDataset}} \code{\link{newDatasetByCSV}}
+\code{\link{newDataset}}
 }
 
