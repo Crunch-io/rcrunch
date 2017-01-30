@@ -43,7 +43,7 @@ crunchBox <- function (dataset, filters=crunch::filters(dataset), ...) {
 
     ## Send it
     out <- crPOST(shojiURL(dataset, "catalogs", "boxdata"),
-        body=toJSON(list(element="shoji:entity", body=payload)))
+        body=toJSON(do.call("wrapEntity", payload)))
     return(out)
     ## TODO: add function that maps the URL returned to the embed URL
 }

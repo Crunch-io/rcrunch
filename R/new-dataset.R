@@ -92,8 +92,7 @@ createSource <- function (file, ...) {
 #' @export
 createDataset <- function (name, body, ...) {
     if (missing(body)) {
-        body <- list(element="shoji:entity",
-                     body=list(name=name, ...))
+        body <- wrapEntity(name=name, ...)
     }
     dataset_url <- crPOST(sessionURL("datasets"), body=toJSON(body))
     ds <- entity(datasets()[[dataset_url]])
@@ -106,6 +105,7 @@ addBatch <- function (ds, ..., savepoint=TRUE, autorollback=savepoint, strict=TR
         ## This is apparently deprecated in favor of passing in "strict" differently
         batches_url <- paste0(batches_url, "?strict=0")
     }
+    ## Not using wrapEntity because there are elements outside of body.
     body <- list(
         element="shoji:entity",
         body=list(...),
@@ -144,34 +144,49 @@ addBatch <- function (ds, ..., savepoint=TRUE, autorollback=savepoint, strict=TR
 #' @importFrom utils write.csv
 #' @export
 newDatasetByCSV <- function (x, name=deparse(substitute(x))[1], ...) {
+    force(name)
+    d <- prepareDataForCrunch(x, name=name, ...)
 
+    filename <- tempfile()
+    gf <- gzfile(filename, "w")
+        write.csv(d, file=gf, na="", row.names=FALSE)
+    close(gf)
+
+    ## Send to Crunch
+    ds <- createWithMetadataAndFile(attr(d, "metadata"), filename)
+    invisible(ds)
+}
+
+prepareDataForCrunch <- function (data, ...) {
     ## Get all the things
     message("Processing the data")
-    vars <- lapply(names(x),
-        function (i) toVariable(x[[i]], name=i, alias=i))
-    names(vars) <- names(x)
+    vars <- lapply(names(data),
+        function (i) toVariable(data[[i]], name=i, alias=i))
+    names(vars) <- names(data)
 
     ## Extract the data
     ## Do data.frame here because write.csv will internally if we don't, and
     ## we need check.names=FALSE so that the names don't get mangled and changed
     ## away from what the metadata has
-    cols <- data.frame(lapply(vars, function (v) v[["values"]]),
-        check.names=FALSE)
-    filename <- tempfile()
-    gf <- gzfile(filename, "w")
-        write.csv(cols, file=gf, na="", row.names=FALSE)
-    close(gf)
+    cols <- data.frame(lapply(vars, vget("values")), check.names=FALSE)
 
     ## Drop the columns from the metadata and compose the payload
     vars <- lapply(vars, function (v) {
         v[["values"]] <- NULL
         return(v)
     })
-    meta <- shojifyMetadata(vars, name=name, ...)
-    ## Send to Crunch
-    ds <- createWithMetadataAndFile(meta, filename)
-    invisible(ds)
+    meta <- shojifyDatasetMetadata(vars, ...)
+
+    ## Return the data frame to write to csv to upload, with the metadata to
+    ## POST as an attribute on it.
+    return(structure(cols, metadata=meta))#, class="CrunchPreparedDataFrame"))
 }
+
+## TODO:
+# * Something that writes that object to disk
+# * In createWithMetadataAndFile, if metadata is string, fromJSON it
+# * If file ^[a-z]+:// add batch as URl
+# * Less awkward function than createWithMetadataAndFile
 
 #' Make a dataset with metadata and a CSV
 #'
@@ -203,6 +218,8 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
     }
 
     if (is.error(out)) {
+        ## We failed to add the batch successfully, so we don't really have a
+        ## useful dataset. So delete the entity that was created initially.
         with_consent(delete(ds))
         rethrow(out)
     }
@@ -231,10 +248,7 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
 #' @param return list suitiable for JSONing and POSTing to create a dataset
 #' @export
 #' @keywords internal
-shojifyMetadata <- function (metadata, order=I(names(metadata)), ...) {
-    return(list(element="shoji:entity",
-                 body=list(...,
-                           table=list(element="crunch:table",
-                                      metadata=metadata,
-                                      order=order))))
+shojifyDatasetMetadata <- function (metadata, order=I(names(metadata)), ...) {
+    tbl <- list(element="crunch:table", metadata=metadata, order=order)
+    return(wrapEntity(..., table=tbl))
 }

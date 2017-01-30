@@ -19,8 +19,7 @@ forks <- function (dataset) {
 #' @export
 forkDataset <- function (dataset, name=defaultForkName(dataset), draft=FALSE, ...) {
     fork_url <- crPOST(shojiURL(dataset, "catalogs", "forks"),
-        body=toJSON(list(element="shoji:entity",
-                         body=list(name=name, is_published=!draft, ...))))
+        body=toJSON(wrapEntity(name=name, is_published=!draft, ...)))
     dropOnly(sessionURL("datasets"))
     invisible(entity(datasets()[[fork_url]]))
 }
@@ -54,9 +53,8 @@ mergeFork <- function (dataset, fork, autorollback=TRUE, force=FALSE) {
     if (force && requireConsent() && !askForPermission(prompt)) {
         halt("Must confirm force merge")
     }
-    m <- crPOST(shojiURL(dataset, "catalogs", "actions"), body=toJSON(list(
-        element="shoji:entity",
-        body=list(dataset=self(fork), autorollback=autorollback, force=force)
-    )))
+    payload <- wrapEntity(dataset=self(fork), autorollback=autorollback,
+        force=force)
+    m <- crPOST(shojiURL(dataset, "catalogs", "actions"), body=toJSON(payload))
     return(refresh(dataset))
 }
