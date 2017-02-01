@@ -161,22 +161,9 @@ write.csv.gz <- function (x, file, na="", row.names=FALSE, ...) {
 #' @importFrom jsonlite fromJSON
 #' @keywords internal
 createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
-    message("Uploading metadata")
-    if (is.character(metadata)) {
-        ## File name. Read it in.
-        metadata <- fromJSON(metadata, simplifyVector=FALSE)
-    }
-    ds <- createDataset(body=metadata)
-
+    ds <- uploadMetadata(metadata)
     tryCatch({
-        message("Uploading data")
-        if (!is.character(file)) {
-            ## It's a data.frame. Write it out.
-            f <- tempfile()
-            write.csv.gz(file, f)
-            file <- f
-        }
-        out <- addBatchFile(ds, file, savepoint=FALSE, strict=strict)
+        out <- uploadData(ds, file, strict)
     }, error=function (e) {
         ## We failed to add the batch successfully, so we don't really have
         ## a useful dataset. So delete the entity that was created initially.
@@ -186,6 +173,26 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
 
     message("Done!")
     return(out)
+}
+
+uploadMetadata <- function (metadata) {
+    message("Uploading metadata")
+    if (is.character(metadata)) {
+        ## File name. Read it in.
+        metadata <- fromJSON(metadata, simplifyVector=FALSE)
+    }
+    return(createDataset(body=metadata))
+}
+
+uploadData <- function (dataset, data, strict=TRUE) {
+    message("Uploading data")
+    if (!is.character(data)) {
+        ## It's a data.frame. Write it out to a file.
+        f <- tempfile()
+        write.csv.gz(data, f)
+        data <- f
+    }
+    return(addBatchFile(dataset, data, savepoint=FALSE, strict=strict))
 }
 
 #' Wrap variable metadata inside a dataset entity
@@ -207,7 +214,6 @@ shojifyDatasetMetadata <- function (metadata, order=I(names(metadata)), ...) {
 newDatasetByCSV <- function (...) {
     Call <- match.call()
     Call[[1]] <- as.name("newDataset")
-    Call$name <- force(name)
     warning("newDatasetByCSV is deprecated. Use 'newDataset' (it's the same thing).")
     ds <- eval.parent(Call)
     invisible(ds)
