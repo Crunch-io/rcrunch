@@ -1,27 +1,37 @@
 context("Teams")
 
 with_mock_HTTP({
+    teams <- getTeams()
     test_that("Getting teams catalog", {
-        teams <- try(getTeams())
         expect_is(teams, "TeamCatalog")
         expect_length(teams, 1)
         expect_identical(names(teams), "Alpha Team")
     })
 
     test_that("Getting team entity", {
-        teams <- try(getTeams())
         expect_is(teams[[1]], "CrunchTeam")
         expect_is(teams$`Alpha Team`, "CrunchTeam")
         expect_is(teams[["Alpha Team"]], "CrunchTeam")
         expect_null(teams$`Beta Team`)
     })
 
+    ateam <- teams[[1]]
     test_that("Team entity attributes", {
-        ateam <- try(getTeams()[[1]])
+        expect_is(ateam, "CrunchTeam")
         expect_identical(name(ateam), "Alpha Team")
-        m <- try(members(ateam))
+    })
+    test_that("Team members", {
+        m <- members(ateam)
         expect_is(m, "MemberCatalog")
         expect_identical(names(m), c("Fake User", "Roger User"))
+    })
+
+    test_that("Team deletion", {
+        expect_warning(
+            expect_error(delete(ateam, confirm=TRUE), "Must confirm"),
+            "The 'confirm' argument is deprecated."
+        )
+        expect_DELETE(with_consent(delete(ateam)), self(ateam))
     })
 })
 
@@ -49,14 +59,6 @@ with_test_authentication({
         expect_identical(names(members(t2[[name.of.team1]])), my.name)
     })
 
-    test_that("Can delete a team by URL", {
-        t2 <- refresh(t2)
-        expect_true(name.of.team1 %in% names(t2))
-        try(crDELETE(self(t2[[name.of.team1]])))
-        expect_false(name.of.team1 %in% names(refresh(t2)))
-        ## TODO: add a delete() method for CrunchTeam, with a confirm arg.
-    })
-
     test_that("delete method for team (requires confirmation)", {
         ## Setup
         t2 <- refresh(t2)
@@ -68,13 +70,13 @@ with_test_authentication({
         expect_true(name.of.team2 %in% names(t2))
         expect_true(length(t2) == nteams.2 + 1L)
 
-        expect_error(delete(t2[[name.of.team2]], confirm=TRUE),
+        expect_error(delete(t2[[name.of.team2]]),
             "Must confirm deleting team")
         expect_true(name.of.team2 %in% names(t2))
         expect_true(length(t2) == nteams.2 + 1L)
 
         ## Cleanup
-        try(delete(t2[[name.of.team2]]))
+        with_consent(delete(t2[[name.of.team2]]))
         expect_false(name.of.team2 %in% names(getTeams()))
     })
 
@@ -91,7 +93,6 @@ with_test_authentication({
         expect_true(length(t2) == nteams.2 + 1L)
         this.team <- t2[[name.of.team2]]
         expect_true(setequal(names(members(this.team)), c(name(u), my.name)))
-        try(crDELETE(self(refresh(t2)[[name.of.team2]])))
     })
 
     test_that("Can add members to a team", {

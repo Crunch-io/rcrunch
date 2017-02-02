@@ -8,7 +8,7 @@ with_mock_HTTP({
     test_that("Dataset has permissions catalog", {
         expect_is(permissions(ds), "PermissionCatalog")
         expect_identical(urls(permissions(ds)),
-            c("/api/users/user1/", "/api/users/user2/"))
+            c("api/users/user1/", "api/users/user2/"))
         expect_identical(emails(permissions(ds)),
             c("fake.user@example.com", "nobody@crunch.io"))
     })
@@ -34,12 +34,12 @@ with_mock_HTTP({
                 "https://fake.crunch.io/password/change/${token}/")
             expect_PATCH(share(ds, "lauren.ipsum@crunch.io", edit=TRUE,
                 notify=FALSE),
-                '/api/datasets/1/permissions/',
+                'api/datasets/1/permissions/',
                 '{"lauren.ipsum@crunch.io":{"dataset_permissions":',
                 '{"edit":true,"view":true}},"send_notification":false}')
             expect_PATCH(share(ds, "lauren.ipsum@crunch.io", edit=TRUE,
                 notify=TRUE),
-                '/api/datasets/1/permissions/',
+                'api/datasets/1/permissions/',
                 '{"lauren.ipsum@crunch.io":{"dataset_permissions":',
                 '{"edit":true,"view":true}},"send_notification":true,',
                 '"url_base":"https://fake.crunch.io/password/change/${token}/",',
@@ -68,7 +68,7 @@ with_mock_HTTP({
             expect_length(permissions(ds), 0)
             expect_PATCH(share(ds, "lauren.ipsum@crunch.io",
                 notify=FALSE),
-                '/api/datasets/1/permissions/',
+                'api/datasets/1/permissions/',
                 '{"lauren.ipsum@crunch.io":{"dataset_permissions":',
                 '{"edit":false,"view":true}},"send_notification":false}')
         }))

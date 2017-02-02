@@ -14,10 +14,10 @@ with_mock_HTTP({
 
     test_that("Setting weights", {
         expect_PATCH(weight(oldds) <- oldds$birthyr,
-            "/api/datasets/1/",
-            '{"weight":"/api/datasets/1/variables/birthyr/"}')
+            "api/datasets/1/",
+            '{"weight":"api/datasets/1/variables/birthyr/"}')
         expect_PATCH(weight(newds) <- NULL,
-            "/api/datasets/3/preferences/",
+            "api/datasets/3/preferences/",
             '{"weight":null}')
     })
     

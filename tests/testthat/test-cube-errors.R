@@ -1,35 +1,36 @@
 context("Cube error handling")
 
-test_that("'formula' must be provided", {
-    expect_error(crtabs(), "Must provide a formula")
-})
-
-test_that("formula must be a valid formula", {
-    expect_error(crtabs("asdf"),
-        paste0(dQuote("formula"), " is not a valid formula"))
-})
-
-test_that("formula '.' argument is not permitted", {
-    expect_error(crtabs(~ ., data=ds),
-        paste("crtabs does not support", dQuote("."), "in formula"))
-})
-
-test_that("formula must have variables", {
-    expect_error(crtabs("~"),
-        paste0(dQuote("formula"), " is not a valid formula"))
-    expect_error(crtabs(~ 1),
-        "Must supply one or more variables")
-})
-
-test_that("'data' must be a Dataset", {
-    expect_error(crtabs(~ a), paste(dQuote("data"), "must be a Dataset"))
-    ## Support a case of data=missing, i.e. eval formula as is?
-    expect_error(crtabs(~ a, data=NULL),
-        paste(dQuote("data"), "must be a Dataset"))
-})
-
 with_mock_HTTP({
     ds <- loadDataset("test ds")
+
+    test_that("'formula' must be provided", {
+        expect_error(crtabs(), "Must provide a formula")
+    })
+
+    test_that("formula must be a valid formula", {
+        expect_error(crtabs("asdf", data=ds),
+            paste0(dQuote("formula"), " is not a valid formula"))
+    })
+
+    test_that("formula '.' argument is not permitted", {
+        expect_error(crtabs(~ ., data=ds),
+            paste("crtabs does not support", dQuote("."), "in formula"))
+    })
+
+    test_that("formula must have variables", {
+        expect_error(crtabs("~", data=ds),
+            paste0(dQuote("formula"), " is not a valid formula"))
+        expect_error(crtabs(~ 1, data=ds),
+            "Must supply one or more variables")
+    })
+
+    test_that("'data' must be a Dataset", {
+        expect_error(crtabs(~ a), paste(dQuote("data"), "must be a Dataset"))
+        ## Support a case of data=missing, i.e. eval formula as is?
+        expect_error(crtabs(~ a, data=NULL),
+            paste(dQuote("data"), "must be a Dataset"))
+    })
+
     test_that("Reserved function names cannot be variable aliases", {
         expect_error(crtabs(~ mean + bin(birthyr), data=ds),
             paste0("Cannot evaluate a cube with reserved name: ",

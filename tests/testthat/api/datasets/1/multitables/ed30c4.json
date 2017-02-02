@@ -1,0 +1,27 @@
+{
+	"element": "shoji:entity",
+	"self": "api/datasets/1/multitables/ed30c4/",
+	"views": {
+		"tabbook": "api/datasets/1/multitables/ed30c4/tabbook/"
+	},
+	"specification": "api/specifications/multitables/",
+	"description": "Detail information for one multitable definition",
+	"body": {
+		"name": "My banner",
+		"user": "api/users/me/",
+		"template": [{
+			"variable": "api/datasets/1/variables/000001/",
+			"query": [{
+				"variable": "api/datasets/1/variables/000001/"
+			}]
+		}, {
+			"variable": "api/datasets/1/variables/000002/",
+			"query": [{
+				"variable": "api/datasets/1/variables/000002/"
+			}]
+		}],
+		"is_public": false,
+		"display_settings": {},
+		"id": "ed30c4"
+	}
+}

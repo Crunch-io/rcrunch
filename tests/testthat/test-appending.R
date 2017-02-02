@@ -9,10 +9,6 @@ test_that("crunchTimeout", {
         expect_identical(crunchTimeout(), 900))
 })
 
-test_that("askForPermission says no if not interactive", {
-    expect_false(askForPermission())
-})
-
 with_mock_HTTP({
     ds <- loadDataset("test ds")
     test_that("Cannot append dataset to itself", {

@@ -79,11 +79,3 @@ test_that("temp.options", {
     expect_identical(getOption("crunch.test.option.test"), "foo")
     expect_null(getOption("crunch.test.test.test.test"))
 })
-
-test_that("consent", {
-    expect_false(askForPermission()) ## Because not interactive running
-    with(consent(), {
-        expect_true(askForPermission())
-    })
-    expect_false(askForPermission())
-})

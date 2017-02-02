@@ -28,11 +28,25 @@ with_mock_HTTP({
         expect_true(is.dataset(loadDataset(cr$datasets$`test ds`)))
     })
 
+    ds <- loadDataset("test ds")
+    with_consent({
+        test_that("deleteDataset by name", {
+            expect_DELETE(deleteDataset("test ds"), self(ds))
+        })
+        test_that("deleteDataset by index", {
+            expect_DELETE(deleteDataset(2), self(ds))
+        })
+        test_that("deleteDataset on Dataset object", {
+            expect_DELETE(deleteDataset(ds), self(ds))
+        })
+    })
+
     test_that("deleteDataset error handling", {
         expect_error(deleteDataset("this is totally not a dataset",
             paste(dQuote("this is totally not a dataset"), "not found")))
         expect_error(deleteDataset(9999),
             "subscript out of bounds")
+        expect_error(deleteDataset(ds), "Must confirm")
     })
 })
 
@@ -62,30 +76,6 @@ with_test_authentication({
             expect_true(is.numeric(dsnum))
             expect_true(is.dataset(loadDataset(dsnum)))
         })
-
-        test_that("deleteDataset by name", {
-            out <- try(deleteDataset(dsname))
-            expect_false(dsname %in% listDatasets())
-        })
-    })
-
-    with(test.dataset(), {
-        dsname <- name(ds)
-        dsnum <- which(listDatasets() %in% dsname)
-        test_that("deleteDataset by index", {
-            expect_true(dsname %in% listDatasets())
-            out <- deleteDataset(dsnum)
-            expect_false(dsname %in% listDatasets())
-        })
-    })
-
-    with(test.dataset(), {
-        dsname <- name(ds)
-        test_that("deleteDataset on Dataset object", {
-            expect_true(dsname %in% listDatasets())
-            out <- deleteDataset(ds)
-            expect_false(dsname %in% listDatasets())
-        })
     })
 
     with(test.dataset(), {
@@ -100,7 +90,7 @@ with_test_authentication({
         })
 
         test_that("deleting a dataset refreshes the dataset list", {
-            delete(ds)
+            with_consent(delete(ds))
             expect_false(dsname %in% listDatasets())
             expect_false(newname %in% listDatasets())
         })

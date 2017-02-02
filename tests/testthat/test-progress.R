@@ -4,11 +4,11 @@ with_mock_HTTP({
     test_that("If progress polling gives up, it tells you what to do", {
         with(temp.option(crunch.timeout=0.0005), {
             expect_error(
-                expect_output(pollProgress("/api/progress/1/", wait=0.001),
+                expect_output(pollProgress("api/progress/1/", wait=0.001),
                     "|================"),
                 paste('Your process is still running on the server. It is',
                     'currently 23% complete. Check',
-                    '`httpcache::uncached(crGET("/api/progress/1/"))`',
+                    '`httpcache::uncached(crGET("api/progress/1/"))`',
                     'until it reports 100% complete'),
                 fixed=TRUE)
         })
@@ -17,8 +17,11 @@ with_mock_HTTP({
     ## Setup to test the auto-polling
     fakeProg <- function (progress_url) {
         return(fakeResponse(status_code=202,
-            headers=list(location="/api/datasets/"),
-            json=list(element="shoji:view", value=progress_url)))
+            headers=list(
+                location="api/datasets/",
+                `Content-Type`="application/json"
+            ),
+            content=list(element="shoji:view", value=progress_url)))
     }
 
     counter <- 1
@@ -26,14 +29,15 @@ with_mock_HTTP({
         ## GET something slightly different each time through so we can
         ## approximate polling a changing resource
         `httr::GET`=function (url, ...) {
-            url <- paste0(url, counter, ".json") ## Add counter
+            url <- httptest::buildMockURL(paste0(url, counter)) ## Add counter
             counter <<- counter + 1 ## Increment
-            url <- sub("^\\/", "", url) ## relative to cwd
-            return(fakeResponse(url))
+            return(fakeResponse(url, "GET",
+                content=readBin(url, "raw", 4096), ## Assumes mock is under 4K
+                status_code=200, headers=list(`Content-Type`="application/json")))
         },
         test_that("Progress polling goes until 100", {
             expect_output(
-                expect_equal(pollProgress("/api/progress/", wait=.001),
+                expect_equal(pollProgress("api/progress/", wait=.001),
                     100),
                 "=| 100%", fixed=TRUE)
         }),
@@ -42,8 +46,8 @@ with_mock_HTTP({
             logfile <- tempfile()
             with(temp.option(httpcache.log=logfile), {
                 expect_output(
-                    expect_identical(handleAPIresponse(fakeProg("/api/progress/")),
-                        "/api/datasets/"),
+                    expect_identical(handleAPIresponse(fakeProg("api/progress/")),
+                        "api/datasets/"),
                     "=| 100%", fixed=TRUE)
             })
             logs <- loadLogfile(logfile)
@@ -56,10 +60,10 @@ with_mock_HTTP({
             logfile <- tempfile()
             with(temp.option(httpcache.log=logfile), {
                 expect_output(
-                    expect_error(
-                        expect_message(handleAPIresponse(fakeProg("/api/progress2/")),
-                            "Result URL: /api/datasets/"),
-                        paste("Education, Commerce, and, uh, oops."), fixed=TRUE),
+                    expect_message(
+                        expect_error(handleAPIresponse(fakeProg("api/progress2/")),
+                            paste("Education, Commerce, and, uh, oops."), fixed=TRUE),
+                        "Result URL: api/datasets/"),
                     "|  23%", fixed=TRUE)
             })
             logs <- loadLogfile(logfile)

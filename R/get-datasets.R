@@ -123,13 +123,18 @@ loadDataset <- function (dataset, kind=c("active", "all", "archived"), project=N
 #' return of \code{\link{listDatasets}}, or an object of class
 #' \code{CrunchDataset}. x can only be of length 1--this function is not
 #' vectorized (for your protection).
-#' @param ... additional parameters (such as \code{confirm}) passed to
-#' \code{delete}
+#' @param ... additional parameters passed to \code{delete}
 #' @return (Invisibly) the API response from deleting the dataset
 #' @seealso \code{\link{delete}}
 #' @export
 deleteDataset <- function (x, ...) {
     if (!is.dataset(x)) {
+        if (is.numeric(x)) {
+            x <- listDatasets()[x]
+            if (is.na(x)) {
+                halt("subscript out of bounds")
+            }
+        }
         x <- datasets()[[x]]
     }
     out <- delete(x, ...)

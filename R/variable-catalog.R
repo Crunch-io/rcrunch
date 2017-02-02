@@ -28,22 +28,8 @@ setMethod("hidden", "VariableCatalog", function (x) {
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[", c("VariableCatalog", "character"), function (x, i, ...) {
-    tup <- index(x)[[i]]
-    if (!is.list(tup)) {
-        halt("Subscript out of bounds: ", i)
-    }
-    return(VariableTuple(index_url=self(x), entity_url=i, body=tup))
-})
-#' @rdname catalog-extract
-#' @export
-setMethod("[[", c("VariableCatalog", "ANY"), function (x, i, ...) {
-    tup <- index(x)[[i]]
-    if (!is.list(tup)) {
-        halt("Subscript out of bounds: ", i)
-    }
-    return(VariableTuple(index_url=self(x), entity_url=urls(x)[i],
-        body=tup))
+setMethod("[[", c("VariableCatalog", "numeric"), function (x, i, ...) {
+    getTuple(x, i, VariableTuple)
 })
 #' @rdname catalog-extract
 #' @export
