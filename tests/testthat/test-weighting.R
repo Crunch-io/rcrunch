@@ -20,17 +20,12 @@ with_mock_HTTP({
             "api/datasets/3/preferences/",
             '{"weight":null}')
     })
-    
+
     test_that("Errors are properly handled when setting weight", {
         expect_error(weight(newds) <- "a",
             "Weight must be a Variable or NULL")
         ## test error handling when trying to set non-numeric (need backend?)
     })
-    
-    test_that("weightVariables function for dataset with no weight", {
-        expect_is(weightVariables(oldds), "VariableCatalog")
-    })
-
 })
 
 with_test_authentication({
@@ -82,10 +77,6 @@ with_test_authentication({
             weight(ds) <- ds$w2
             expect_equivalent(weight(ds), ds$w2)
         })
-
-        test_that("weightVariables function", {
-            expect_is(weightVariables(ds), "VariableCatalog")
-        })
     })
 
     with(test.dataset(df), {
@@ -120,5 +111,5 @@ with_test_authentication({
                 array(c(110, 100), dim=2L, dimnames=list(v4=c("B", "C"))))
         })
     })
-    
+
 })
