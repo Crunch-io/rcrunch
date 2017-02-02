@@ -21,4 +21,3 @@ the two datasets or other server-side issues. Failed appends can leave behind
 "error" status batch records, which can cause confusion. This function lets
 you delete batches that don't match the status or statuses you want to keep.
 }
-

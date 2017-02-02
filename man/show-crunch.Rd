@@ -2,15 +2,15 @@
 % Please edit documentation in R/show.R
 \docType{methods}
 \name{show-crunch}
-\alias{show,Categories-method}
+\alias{show-crunch}
+\alias{show,ShojiObject-method}
+\alias{show,CrunchVariable-method}
 \alias{show,Category-method}
-\alias{show,CrunchCube-method}
+\alias{show,Categories-method}
 \alias{show,CrunchExpr-method}
 \alias{show,CrunchLogicalExpr-method}
-\alias{show,CrunchVariable-method}
+\alias{show,CrunchCube-method}
 \alias{show,OrderGroup-method}
-\alias{show,ShojiObject-method}
-\alias{show-crunch}
 \title{Show methods for Crunch objects}
 \usage{
 \S4method{show}{ShojiObject}(object)
@@ -41,4 +41,3 @@ Show methods for Crunch objects
 \seealso{
 \code{\link[methods]{show}}
 }
-

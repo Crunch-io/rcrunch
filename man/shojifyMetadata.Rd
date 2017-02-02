@@ -20,4 +20,3 @@ list(group, entities)}
 Wrap variable metadata inside a dataset entity
 }
 \keyword{internal}
-

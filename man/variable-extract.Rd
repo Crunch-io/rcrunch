@@ -5,10 +5,10 @@
 \alias{[,CrunchExpr,CrunchLogicalExpr,ANY-method}
 \alias{[,CrunchExpr,logical,ANY-method}
 \alias{[,CrunchExpr,numeric,ANY-method}
-\alias{[,CrunchVariable,CrunchExpr,ANY-method}
-\alias{[,CrunchVariable,logical,ANY-method}
-\alias{[,CrunchVariable,numeric,ANY-method}
 \alias{variable-extract}
+\alias{[,CrunchVariable,CrunchExpr,ANY-method}
+\alias{[,CrunchVariable,numeric,ANY-method}
+\alias{[,CrunchVariable,logical,ANY-method}
 \title{"Subset" a Variable}
 \usage{
 \S4method{[}{CrunchExpr,CrunchLogicalExpr,ANY}(x, i, j, ..., drop = FALSE)
@@ -42,4 +42,3 @@ filter logic contained in \code{i}
 These methods subset variables by creating Expressions, which can be
 composed and evaluated as needed.
 }
-

@@ -26,4 +26,3 @@ a \code{data.frame} view of the catalog
 \description{
 Utility to get a more human-readable view of a Shoji Catalog
 }
-

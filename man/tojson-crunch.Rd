@@ -2,14 +2,14 @@
 % Please edit documentation in R/AllGenerics.R, R/json.R
 \docType{methods}
 \name{tojson-crunch}
-\alias{jsonprep}
-\alias{jsonprep,ANY-method}
-\alias{jsonprep,Categories-method}
-\alias{jsonprep,OrderGroup-method}
-\alias{jsonprep,ShojiOrder-method}
-\alias{jsonprep,list-method}
-\alias{toJSON}
 \alias{tojson-crunch}
+\alias{jsonprep}
+\alias{jsonprep,Categories-method}
+\alias{jsonprep,list-method}
+\alias{jsonprep,ANY-method}
+\alias{jsonprep,ShojiOrder-method}
+\alias{jsonprep,OrderGroup-method}
+\alias{toJSON}
 \title{toJSON methods for Crunch objects}
 \usage{
 jsonprep(x, ...)
@@ -48,4 +48,3 @@ objects that you want to successfully serialize to JSON.
 \seealso{
 \code{\link[jsonlite]{toJSON}}
 }
-

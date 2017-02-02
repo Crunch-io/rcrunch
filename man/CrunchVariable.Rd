@@ -2,19 +2,19 @@
 % Please edit documentation in R/AllClasses.R
 \docType{class}
 \name{CrunchVariable-class}
-\alias{CategoricalArrayVariable}
-\alias{CategoricalArrayVariable-class}
-\alias{CategoricalVariable}
-\alias{CategoricalVariable-class}
 \alias{CrunchVariable-class}
-\alias{DatetimeVariable}
-\alias{DatetimeVariable-class}
-\alias{MultipleResponseVariable}
-\alias{MultipleResponseVariable-class}
-\alias{NumericVariable}
 \alias{NumericVariable-class}
-\alias{TextVariable}
+\alias{NumericVariable}
+\alias{CategoricalVariable-class}
+\alias{CategoricalVariable}
 \alias{TextVariable-class}
+\alias{TextVariable}
+\alias{DatetimeVariable-class}
+\alias{DatetimeVariable}
+\alias{CategoricalArrayVariable-class}
+\alias{CategoricalArrayVariable}
+\alias{MultipleResponseVariable-class}
+\alias{MultipleResponseVariable}
 \title{Variables in Crunch}
 \description{
 Variables are S4 objects. All inherit from the base class

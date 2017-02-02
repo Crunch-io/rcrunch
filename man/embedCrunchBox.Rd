@@ -37,4 +37,3 @@ embedCrunchBox(box, logo="//myco.example/img/logo_200px.png")
 \seealso{
 \code{\link{crunchBox}}
 }
-

@@ -19,4 +19,3 @@ to the depth of nesting. If not found, \code{NA} is returned
 \description{
 Find an entity in an order object
 }
-

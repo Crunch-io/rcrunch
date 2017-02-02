@@ -19,4 +19,3 @@ status-specific action
 Do the right thing with the HTTP response
 }
 \keyword{internal}
-

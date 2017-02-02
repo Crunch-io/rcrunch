@@ -21,4 +21,3 @@ Restore a dataset to a previously saved version
 \seealso{
 \code{\link{versions}} \code{\link{saveVersion}}
 }
-

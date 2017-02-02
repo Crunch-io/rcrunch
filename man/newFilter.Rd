@@ -26,4 +26,3 @@ assigning into a dataset's filters catalog, but this may be a more natural
 way to think of the action, particularly when you want to do something with
 the filter entity after you create it.
 }
-

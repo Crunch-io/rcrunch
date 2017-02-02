@@ -25,4 +25,3 @@ Variable types are not yet supported.
 Summary methods for Crunch Variables
 }
 \keyword{internal}
-

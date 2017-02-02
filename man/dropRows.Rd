@@ -25,4 +25,3 @@ ds <- dropRows(ds, ds$gender == "Male")
 \seealso{
 \code{\link{exclusion}} for a non-destructive way to suppress rows
 }
-

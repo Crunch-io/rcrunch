@@ -3,8 +3,8 @@
 \docType{methods}
 \name{self}
 \alias{self}
-\alias{self,CrunchVariable-method}
 \alias{self,ShojiObject-method}
+\alias{self,CrunchVariable-method}
 \title{Get the URL of this object}
 \usage{
 \S4method{self}{ShojiObject}(x)
@@ -20,4 +20,3 @@ the URL for \code{x}
 \description{
 Get the URL of this object
 }
-

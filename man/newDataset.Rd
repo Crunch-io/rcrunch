@@ -20,4 +20,3 @@ If successful, an object of class CrunchDataset.
 \description{
 Upload a data.frame to Crunch to make a new dataset
 }
-

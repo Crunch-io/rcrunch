@@ -21,4 +21,3 @@ Revoke a user's access to a dataset
 \seealso{
 \code{\link{share}}
 }
-

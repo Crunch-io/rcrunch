@@ -2,8 +2,8 @@
 % Please edit documentation in R/dataset.R
 \docType{methods}
 \name{dim-dataset}
-\alias{dim,CrunchDataset-method}
 \alias{dim-dataset}
+\alias{dim,CrunchDataset-method}
 \alias{ncol,CrunchDataset-method}
 \title{Dataset dimensions}
 \usage{
@@ -25,4 +25,3 @@ Dataset dimensions
 \seealso{
 \code{\link[base]{dim}}
 }
-

@@ -31,4 +31,3 @@ Share a dataset
 \seealso{
 \code{\link{unshare}}
 }
-

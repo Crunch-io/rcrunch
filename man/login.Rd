@@ -31,4 +31,3 @@ interactive session, you will be prompted to enter your password. At
 present, this is the most secure practice as your password is not stored
 locally.
 }
-

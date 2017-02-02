@@ -23,4 +23,3 @@ Use this import method if you have an SPSS data file. Reading such a file
 into R as a data.frame will result in lost metadata. You can just send it
 directly to Crunch and let the server process it.
 }
-

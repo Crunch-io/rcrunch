@@ -27,4 +27,3 @@ A CrunchDataset with \code{dataset2} appended to \code{dataset1}
 \description{
 Append one Crunch dataset to another
 }
-

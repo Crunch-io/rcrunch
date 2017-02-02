@@ -3,14 +3,14 @@
 \docType{methods}
 \name{is-public}
 \alias{is-public}
+\alias{is.public<-}
 \alias{is.public}
 \alias{is.public,CrunchFilter-method}
-\alias{is.public,Multitable-method}
-\alias{is.public,MultitableCatalog-method}
-\alias{is.public<-}
 \alias{is.public<-,CrunchFilter-method}
-\alias{is.public<-,Multitable-method}
+\alias{is.public,MultitableCatalog-method}
 \alias{is.public<-,MultitableCatalog-method}
+\alias{is.public,Multitable-method}
+\alias{is.public<-,Multitable-method}
 \title{View and modify "public" attribute}
 \usage{
 \S4method{is.public}{CrunchFilter}(x)
@@ -39,4 +39,3 @@ to the length of the catalog, while entities return a single value.
 \description{
 View and modify "public" attribute
 }
-

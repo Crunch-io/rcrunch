@@ -25,4 +25,3 @@ Context manager's "with" method
 \seealso{
 \link{ContextManager}
 }
-

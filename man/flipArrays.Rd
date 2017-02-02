@@ -33,4 +33,3 @@ when new data is appended.
 ds <- addVariables(ds, flipArrays(ds[c("petloc", "petloc2")], suffix=", rearranged"))
 }
 }
-
