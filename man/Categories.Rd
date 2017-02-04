@@ -2,23 +2,24 @@
 % Please edit documentation in R/AllClasses.R, R/categories.R
 \docType{class}
 \name{Categories-class}
-\alias{Categories}
 \alias{Categories-class}
-\alias{Category}
+\alias{Categories}
+\alias{ids}
+\alias{ids<-}
+\alias{values}
+\alias{values<-}
+\alias{Categories}
 \alias{Category-class}
+\alias{Category}
 \alias{[,Categories,ANY,ANY-method}
 \alias{[,Categories,numeric,ANY-method}
 \alias{[<-,Categories,ANY,ANY,ANY-method}
-\alias{ids}
-\alias{ids,Categories-method}
-\alias{ids<-}
-\alias{ids<-,Categories-method}
 \alias{names,Categories-method}
-\alias{names<-,Categories-method}
-\alias{values}
 \alias{values,Categories-method}
-\alias{values<-}
+\alias{ids,Categories-method}
+\alias{names<-,Categories-method}
 \alias{values<-,Categories-method}
+\alias{ids<-,Categories-method}
 \title{Categories in CategoricalVariables}
 \usage{
 Categories(..., data = NULL)
@@ -78,4 +79,3 @@ cats.1 <- Categories(cat.a, cat.c)
 cats.2 <- Categories(data=list(cat.a, cat.c))
 identical(cats.1, cats.2)
 }
-

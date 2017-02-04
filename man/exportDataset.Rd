@@ -30,4 +30,3 @@ Invisibly, \code{file}.
 \description{
 Export a dataset to a file
 }
-

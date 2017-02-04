@@ -23,4 +23,3 @@ myprojects <- projects()
 proj <- myprojects[["Project name"]]
 }
 }
-

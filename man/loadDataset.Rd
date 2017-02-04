@@ -28,4 +28,3 @@ An object of class \code{CrunchDataset}
 \description{
 Load a Crunch Dataset
 }
-

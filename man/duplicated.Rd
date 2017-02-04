@@ -3,8 +3,8 @@
 \docType{methods}
 \name{duplicated}
 \alias{duplicated}
-\alias{duplicated,CrunchExpr-method}
 \alias{duplicated,CrunchVariable-method}
+\alias{duplicated,CrunchExpr-method}
 \title{"duplicated" method for Crunch objects}
 \usage{
 \S4method{duplicated}{CrunchVariable}(x, incomparables = FALSE, ...)
@@ -28,4 +28,3 @@ entries after the first occurrence of a value.
 \seealso{
 \code{\link[base]{duplicated}}
 }
-

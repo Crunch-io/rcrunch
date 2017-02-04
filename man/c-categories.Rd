@@ -27,4 +27,3 @@ cats.1 <- Categories(cat.a, cat.b)
 identical(cats.1, c(cat.a, cat.b))
 identical(c(cats.1, cat.c), Categories(cat.a, cat.b, cat.c))
 }
-

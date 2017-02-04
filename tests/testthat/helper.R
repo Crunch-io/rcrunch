@@ -48,7 +48,7 @@ options(
     crunch.email=envOrOption("test.user"),
     crunch.pw=envOrOption("test.pw")
 )
-set_config(crunchConfig())
+httr::set_config(crunchConfig())
 
 ## Test serialize and deserialize
 cereal <- function (x) fromJSON(toJSON(x), simplifyVector=FALSE)

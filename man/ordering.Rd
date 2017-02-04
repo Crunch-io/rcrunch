@@ -3,13 +3,13 @@
 \docType{methods}
 \name{ordering}
 \alias{ordering}
-\alias{ordering,CrunchDataset-method}
-\alias{ordering,DatasetCatalog-method}
-\alias{ordering,VariableCatalog-method}
 \alias{ordering<-}
+\alias{ordering,CrunchDataset-method}
 \alias{ordering<-,CrunchDataset-method}
-\alias{ordering<-,DatasetCatalog-method}
+\alias{ordering,VariableCatalog-method}
 \alias{ordering<-,VariableCatalog-method}
+\alias{ordering,DatasetCatalog-method}
+\alias{ordering<-,DatasetCatalog-method}
 \title{Get and set VariableOrder}
 \usage{
 \S4method{ordering}{CrunchDataset}(x)
@@ -39,4 +39,3 @@ The \code{ordering} methods allow you to get and set a
 a \code{\link{CrunchDataset}} or on the \code{\link{VariableCatalog}} that
 the dataset contains.
 }
-

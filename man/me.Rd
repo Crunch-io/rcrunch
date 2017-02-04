@@ -12,4 +12,3 @@ A UserEntity that corresponds to you, the authenticated user
 \description{
 My user entity
 }
-

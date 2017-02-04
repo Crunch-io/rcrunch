@@ -22,4 +22,3 @@ A CrunchDataset.
 \description{
 Upload a prepared data.frame with metadata to Crunch
 }
-

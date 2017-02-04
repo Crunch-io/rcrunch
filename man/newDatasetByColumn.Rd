@@ -24,4 +24,3 @@ backed by ff or other memory-mapped files, and time to kill.
 \seealso{
 \code{\link{newDataset}}
 }
-

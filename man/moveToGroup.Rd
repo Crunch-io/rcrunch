@@ -28,4 +28,3 @@ same thing, but the setter probably results in less verbose code for you.
 moveToGroup(ordering(ds)[["Demographics"]]) <- ds[c("gender", "age")]
 }
 }
-

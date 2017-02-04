@@ -15,4 +15,3 @@ a \code{BatchCatalog}
 \description{
 See the appended batches of this dataset
 }
-

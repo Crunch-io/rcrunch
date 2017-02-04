@@ -41,4 +41,3 @@ p[["Another project"]] <- list(members="you@yourco.com")
 proj <- p[["Another project"]]
 }
 }
-

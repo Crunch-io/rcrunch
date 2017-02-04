@@ -2,22 +2,22 @@
 % Please edit documentation in R/variable.R
 \docType{methods}
 \name{var-categories}
-\alias{categories}
-\alias{categories,CategoricalArrayVariable-method}
-\alias{categories,CategoricalVariable-method}
-\alias{categories,CrunchVariable-method}
-\alias{categories,VariableEntity-method}
-\alias{categories<-}
-\alias{categories<-,CategoricalArrayVariable,ANY-method}
-\alias{categories<-,CategoricalArrayVariable,Categories-method}
-\alias{categories<-,CategoricalArrayVariable,character-method}
-\alias{categories<-,CategoricalArrayVariable,numeric-method}
-\alias{categories<-,CategoricalVariable,ANY-method}
-\alias{categories<-,CategoricalVariable,Categories-method}
-\alias{categories<-,CategoricalVariable,character-method}
-\alias{categories<-,CategoricalVariable,numeric-method}
-\alias{categories<-,CrunchVariable,ANY-method}
 \alias{var-categories}
+\alias{categories}
+\alias{categories<-}
+\alias{categories,CrunchVariable-method}
+\alias{categories,CategoricalVariable-method}
+\alias{categories,CategoricalArrayVariable-method}
+\alias{categories,VariableEntity-method}
+\alias{categories<-,CategoricalVariable,Categories-method}
+\alias{categories<-,CategoricalArrayVariable,Categories-method}
+\alias{categories<-,CategoricalVariable,numeric-method}
+\alias{categories<-,CategoricalVariable,character-method}
+\alias{categories<-,CategoricalVariable,ANY-method}
+\alias{categories<-,CategoricalArrayVariable,numeric-method}
+\alias{categories<-,CategoricalArrayVariable,character-method}
+\alias{categories<-,CategoricalArrayVariable,ANY-method}
+\alias{categories<-,CrunchVariable,ANY-method}
 \title{Get and set Categories on Variables}
 \usage{
 \S4method{categories}{CrunchVariable}(x)
@@ -57,4 +57,3 @@ Getters return Categories; setters return \code{x} duly modified.
 \description{
 Get and set Categories on Variables
 }
-

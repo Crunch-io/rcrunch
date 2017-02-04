@@ -3,11 +3,11 @@
 \docType{methods}
 \name{is.editor}
 \alias{is.editor}
+\alias{is.editor<-}
 \alias{is.editor,MemberCatalog-method}
+\alias{is.editor<-,MemberCatalog,logical-method}
 \alias{is.editor,PermissionCatalog-method}
 \alias{is.editor,PermissionTuple-method}
-\alias{is.editor<-}
-\alias{is.editor<-,MemberCatalog,logical-method}
 \title{Read and set edit privileges}
 \usage{
 \S4method{is.editor}{MemberCatalog}(x)
@@ -32,4 +32,3 @@ catalog, modified.
 \description{
 Read and set edit privileges
 }
-

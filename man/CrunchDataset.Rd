@@ -2,10 +2,9 @@
 % Please edit documentation in R/AllClasses.R
 \docType{class}
 \name{CrunchDataset-class}
-\alias{CrunchDataset}
 \alias{CrunchDataset-class}
+\alias{CrunchDataset}
 \title{Crunch Datasets}
 \description{
 Crunch Datasets
 }
-

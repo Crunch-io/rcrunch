@@ -4,8 +4,8 @@
 \name{cube-computing}
 \alias{cube-computing}
 \alias{margin.table}
-\alias{margin.table,CrunchCube-method}
 \alias{prop.table}
+\alias{margin.table,CrunchCube-method}
 \alias{prop.table,CrunchCube-method}
 \alias{round,CrunchCube-method}
 \title{Work with CrunchCubes}
@@ -38,4 +38,3 @@ the CrunchCube object, handling those special data types.
 \seealso{
 \code{\link[base]{margin.table}} \code{\link[base]{prop.table}}
 }
-

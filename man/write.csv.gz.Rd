@@ -25,4 +25,3 @@ Whatever \code{write.csv} returns.
 \description{
 Write CSV to a compressed file
 }
-

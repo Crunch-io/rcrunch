@@ -3,17 +3,17 @@
 \docType{methods}
 \name{describe-category}
 \alias{describe-category}
+\alias{value}
+\alias{value<-}
 \alias{id}
-\alias{id,Category-method}
 \alias{is.selected}
-\alias{is.selected,Category-method}
 \alias{name,Category-method}
 \alias{name<-,Category-method}
 \alias{name<-,NULL-method}
-\alias{value}
 \alias{value,Category-method}
-\alias{value<-}
 \alias{value<-,Category-method}
+\alias{id,Category-method}
+\alias{is.selected,Category-method}
 \title{Category attributes}
 \usage{
 \S4method{name}{Category}(x)
@@ -47,4 +47,3 @@ Category attributes
 \seealso{
 \code{\link{Categories}} \code{\link{dichotomize}}
 }
-

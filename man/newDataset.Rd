@@ -24,4 +24,3 @@ If successful, an object of class CrunchDataset.
 This function uses the CSV+JSON import format, which is generally faster and
 more effective than \code{\link{newDatasetByColumn}}.
 }
-

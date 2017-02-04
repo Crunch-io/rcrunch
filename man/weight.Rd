@@ -22,4 +22,3 @@ setter, x, modified accordingly
 \description{
 Dataset weights
 }
-

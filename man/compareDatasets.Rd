@@ -47,4 +47,3 @@ to result in better alignment.
     summary(comp)
 }
 }
-

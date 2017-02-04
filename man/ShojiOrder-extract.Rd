@@ -2,38 +2,38 @@
 % Please edit documentation in R/shoji-order.R, R/variable-order.R
 \docType{methods}
 \name{ShojiOrder-extract}
-\alias{$,OrderGroup-method}
-\alias{$,ShojiOrder-method}
-\alias{$<-,OrderGroup-method}
-\alias{$<-,ShojiOrder-method}
 \alias{ShojiOrder-extract}
-\alias{[,OrderGroup,ANY,ANY-method}
-\alias{[,OrderGroup,character,ANY-method}
 \alias{[,ShojiOrder,ANY,ANY-method}
 \alias{[,ShojiOrder,character,ANY-method}
-\alias{[<-,ShojiOrder,ANY,missing,ShojiOrder-method}
-\alias{[<-,ShojiOrder,character,missing,ShojiOrder-method}
-\alias{[[,OrderGroup,ANY-method}
-\alias{[[,OrderGroup,character-method}
 \alias{[[,ShojiOrder,ANY-method}
 \alias{[[,ShojiOrder,character-method}
-\alias{[[<-,OrderGroup,ANY,missing,OrderGroup-method}
-\alias{[[<-,OrderGroup,character,missing,NULL-method}
-\alias{[[<-,OrderGroup,character,missing,OrderGroup-method}
-\alias{[[<-,OrderGroup,character,missing,ShojiOrder-method}
-\alias{[[<-,OrderGroup,character,missing,character-method}
-\alias{[[<-,OrderGroup,character,missing,list-method}
-\alias{[[<-,OrderGroup,numeric,missing,NULL-method}
+\alias{$,ShojiOrder-method}
+\alias{[<-,ShojiOrder,character,missing,ShojiOrder-method}
+\alias{[<-,ShojiOrder,ANY,missing,ShojiOrder-method}
+\alias{[[<-,ShojiOrder,character,missing,list-method}
+\alias{[[<-,ShojiOrder,character,missing,character-method}
+\alias{[[<-,ShojiOrder,character,missing,OrderGroup-method}
+\alias{[[<-,ShojiOrder,ANY,missing,OrderGroup-method}
 \alias{[[<-,ShojiOrder,ANY,missing,ANY-method}
 \alias{[[<-,ShojiOrder,ANY,missing,NULL-method}
-\alias{[[<-,ShojiOrder,ANY,missing,OrderGroup-method}
 \alias{[[<-,ShojiOrder,character,missing,NULL-method}
-\alias{[[<-,ShojiOrder,character,missing,OrderGroup-method}
 \alias{[[<-,ShojiOrder,character,missing,ShojiOrder-method}
-\alias{[[<-,ShojiOrder,character,missing,character-method}
-\alias{[[<-,ShojiOrder,character,missing,list-method}
-\alias{[[<-,VariableGroup,character,missing,CrunchDataset-method}
+\alias{$<-,ShojiOrder-method}
+\alias{[,OrderGroup,ANY,ANY-method}
+\alias{[,OrderGroup,character,ANY-method}
+\alias{[[,OrderGroup,character-method}
+\alias{[[,OrderGroup,ANY-method}
+\alias{$,OrderGroup-method}
+\alias{[[<-,OrderGroup,character,missing,list-method}
+\alias{[[<-,OrderGroup,character,missing,character-method}
+\alias{[[<-,OrderGroup,character,missing,ShojiOrder-method}
+\alias{[[<-,OrderGroup,character,missing,OrderGroup-method}
+\alias{[[<-,OrderGroup,ANY,missing,OrderGroup-method}
+\alias{[[<-,OrderGroup,numeric,missing,NULL-method}
+\alias{[[<-,OrderGroup,character,missing,NULL-method}
+\alias{$<-,OrderGroup-method}
 \alias{[[<-,VariableOrder,character,missing,CrunchDataset-method}
+\alias{[[<-,VariableGroup,character,missing,CrunchDataset-method}
 \title{Extract and update in VariableOrder and VariableGroup}
 \usage{
 \S4method{[}{ShojiOrder,ANY,ANY}(x, i, j, ..., drop = TRUE)
@@ -125,4 +125,3 @@ objects of the same class as \code{x}
 \description{
 Extract and update in VariableOrder and VariableGroup
 }
-

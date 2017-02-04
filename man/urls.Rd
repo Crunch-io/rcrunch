@@ -2,14 +2,14 @@
 % Please edit documentation in R/shoji-catalog.R, R/shoji-order-slots.R
 \docType{methods}
 \name{urls,ShojiCatalog-method}
-\alias{urls}
-\alias{urls,CrunchDataset-method}
-\alias{urls,CrunchVariable-method}
-\alias{urls,OrderGroup-method}
 \alias{urls,ShojiCatalog-method}
-\alias{urls,ShojiOrder-method}
-\alias{urls,character-method}
+\alias{urls}
 \alias{urls,list-method}
+\alias{urls,character-method}
+\alias{urls,ShojiOrder-method}
+\alias{urls,OrderGroup-method}
+\alias{urls,CrunchVariable-method}
+\alias{urls,CrunchDataset-method}
 \title{Get the URLs contained in a Catalog or Order object}
 \usage{
 \S4method{urls}{ShojiCatalog}(x)
@@ -37,4 +37,3 @@ Sometimes it is useful to extract flattened vector of URLs from more
 complex objects for purposes like subsetting or doing set comparisons.
 }
 \keyword{internal}
-

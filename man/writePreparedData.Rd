@@ -25,4 +25,3 @@ CSV and a JSON file to those locations.
 \description{
 Persist to disk a prepared data.frame and metadata
 }
-

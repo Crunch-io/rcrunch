@@ -28,4 +28,3 @@ custom data structure. If you have a data.frame, just call
 \code{\link{newDataset}}
 }
 \keyword{internal}
-

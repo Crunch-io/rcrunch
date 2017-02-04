@@ -28,4 +28,3 @@ dropped as duplicate.
 \code{\link{duplicates}}, which when set to \code{FALSE} also calls
 this function.
 }
-

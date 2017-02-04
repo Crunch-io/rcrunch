@@ -2,26 +2,26 @@
 % Please edit documentation in R/projects.R, R/shoji-entity.R, R/tuple.R
 \docType{methods}
 \name{entity,CrunchProject-method}
-\alias{$,ShojiEntity-method}
-\alias{$,ShojiTuple-method}
-\alias{$<-,ShojiEntity-method}
-\alias{$<-,ShojiTuple-method}
-\alias{[[,ShojiEntity,ANY-method}
-\alias{[[,ShojiTuple,ANY-method}
-\alias{[[<-,ShojiEntity,ANY,ANY,ANY-method}
-\alias{[[<-,ShojiTuple,ANY,ANY,ANY-method}
-\alias{delete,DatasetTuple-method}
-\alias{delete,ShojiTuple-method}
-\alias{entity}
 \alias{entity,CrunchProject-method}
+\alias{$,ShojiEntity-method}
+\alias{$<-,ShojiEntity-method}
+\alias{[[,ShojiEntity,ANY-method}
+\alias{[[<-,ShojiEntity,ANY,ANY,ANY-method}
+\alias{tuple-methods}
+\alias{entity}
+\alias{refresh,ShojiTuple-method}
+\alias{$,ShojiTuple-method}
+\alias{$<-,ShojiTuple-method}
+\alias{[[,ShojiTuple,ANY-method}
+\alias{[[<-,ShojiTuple,ANY,ANY,ANY-method}
+\alias{self,ShojiTuple-method}
+\alias{entity,VariableTuple-method}
 \alias{entity,CrunchVariable-method}
 \alias{entity,DatasetTuple-method}
-\alias{entity,VariableTuple-method}
+\alias{delete,ShojiTuple-method}
+\alias{delete,DatasetTuple-method}
 \alias{name,ShojiTuple-method}
 \alias{name<-,ShojiTuple-method}
-\alias{refresh,ShojiTuple-method}
-\alias{self,ShojiTuple-method}
-\alias{tuple-methods}
 \alias{type,ShojiTuple-method}
 \title{Methods for ShojiTuples}
 \usage{
@@ -81,4 +81,3 @@
 ShojiTuples are objects extracted from ShojiCatalogs. They are internally
 used.
 }
-

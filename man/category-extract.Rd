@@ -2,9 +2,9 @@
 % Please edit documentation in R/category.R
 \docType{methods}
 \name{category-extract}
+\alias{category-extract}
 \alias{$,Category-method}
 \alias{$<-,Category-method}
-\alias{category-extract}
 \title{Access Category fields directly}
 \usage{
 \S4method{$}{Category}(x, name)
@@ -28,4 +28,3 @@ Don't do this. Instead, use the category setters.
 \seealso{
 \code{\link{describe-category}}
 }
-

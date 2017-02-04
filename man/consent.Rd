@@ -32,4 +32,3 @@ with_consent(delete(ds))
 \seealso{
 \link{with-context-manager} \link{ContextManager}
 }
-

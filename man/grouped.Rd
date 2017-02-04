@@ -23,4 +23,3 @@ in groups at a given level of nesting.
 \seealso{
 \code{\link{VariableOrder}}
 }
-

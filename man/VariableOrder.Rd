@@ -2,10 +2,10 @@
 % Please edit documentation in R/AllClasses.R
 \docType{class}
 \name{VariableOrder-class}
-\alias{VariableGroup}
-\alias{VariableGroup-class}
-\alias{VariableOrder}
 \alias{VariableOrder-class}
+\alias{VariableOrder}
+\alias{VariableGroup-class}
+\alias{VariableGroup}
 \title{Organize Variables within a Dataset}
 \description{
 Variables in the Crunch web application can be viewed in an ordered,

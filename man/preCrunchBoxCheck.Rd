@@ -18,4 +18,3 @@ Summarize any characteristics of a dataset that could make for an awkward Crunch
 \seealso{
 \code{\link{crunchBox}}
 }
-
