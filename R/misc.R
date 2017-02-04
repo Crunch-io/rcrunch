@@ -92,6 +92,13 @@ emptyObject <- function (...) {
     structure(list(), .Names=character(0))
 }
 
+I <- function (x) {
+    ## Because of R deprecation warning:
+    ## Calling 'structure(NULL, *)' is deprecated, as NULL cannot have attributes.
+    if (!is.null(x)) x <- base::I(x)
+    return(x)
+}
+
 null <- function (...) NULL
 
 uniquify <- function (str) {
