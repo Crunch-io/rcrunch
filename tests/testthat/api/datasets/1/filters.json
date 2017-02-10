@@ -1,20 +1,20 @@
 {
     "element": "shoji:catalog",
-    "self": "/api/datasets/1/filters/",
+    "self": "api/datasets/1/filters/",
     "orders": {
-        "applied": "/api/datasets/1/filters/applied/"
+        "applied": "api/datasets/1/filters/applied/"
     },
     "description": "List of available filters for this dataset",
     "index": {
-        "/api/datasets/1/filters/filter1/": {
+        "api/datasets/1/filters/filter1/": {
             "is_public": false,
-            "owner_id": "/api/users/user1/",
+            "owner_id": "api/users/user1/",
             "name": "Occasional Political Interest",
             "id": "filter1"
         },
-        "/api/datasets/1/filters/filter2/": {
+        "api/datasets/1/filters/filter2/": {
             "is_public": true,
-            "owner_id": "/api/users/user1/",
+            "owner_id": "api/users/user1/",
             "name": "Public filter",
             "id": "filter2"
         }

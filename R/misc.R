@@ -27,24 +27,29 @@ serialPaste <- function (x, collapse="and") {
 
 now <- function () strftime(Sys.time(), usetz=TRUE)
 
-#' @importFrom httr parse_url build_url
 absoluteURL <- function (urls, base) {
     ## Detect if we have relative urls, and then concatenate if so
     if (length(urls) && !any(startsWith(urls, "http"))) {
-        base.url <- parse_url(base)
-        urls <- vapply(urls, function (x, b) {
-            b$path <- joinPath(b$path, x)
-            if (is.null(b$scheme)) {
-                ## If file path and not URL, as in for tests,
-                ## let's return it relative
-                return(b$path)
-            }
-            ## Pop off any leading "/" because build_url will add it
-            b$path <- sub("^/", "", b$path)
-            b$query <- NULL ## Catalog query params aren't valid for entities
-            return(build_url(b))
-        }, character(1), b=base.url, USE.NAMES=FALSE)
+        urls <- .abs.urls(urls, base)
     }
+    return(urls)
+}
+
+#' @importFrom httr parse_url build_url
+.abs.urls <- function (urls, base) {
+    base.url <- parse_url(base)
+    urls <- vapply(urls, function (x, b) {
+        b$path <- joinPath(b$path, x)
+        if (is.null(b$scheme)) {
+            ## If file path and not URL, as in for tests,
+            ## let's return it relative
+            return(b$path)
+        }
+        ## Pop off any leading "/" because build_url will add it
+        b$path <- sub("^/", "", b$path)
+        b$query <- NULL ## Catalog query params aren't valid for entities
+        return(build_url(b))
+    }, character(1), b=base.url, USE.NAMES=FALSE)
     return(urls)
 }
 
@@ -77,22 +82,6 @@ joinPath <- function (base.path, relative.part) {
         out <- paste0(out, "/")
     }
     return(out)
-}
-
-askForPermission <- function (prompt="") {
-    ## If options explicitly say we don't need to ask, bail.
-    ## Have to check that it's FALSE and not NULL. Silence doesn't mean consent.
-    must.confirm <- getOption("crunch.require.confirmation") %||% TRUE
-    if (must.confirm == FALSE) return(TRUE)
-
-    ## If we're here but not interactive, we can't give permission.
-    if (!interactive()) return(FALSE)
-    prompt <- paste(prompt, "(y/n) ")
-    proceed <- ""
-    while (!(proceed %in% c("y", "n"))) {
-        proceed <- tolower(readline(prompt))
-    }
-    return(proceed == "y")
 }
 
 emptyObject <- function (...) {

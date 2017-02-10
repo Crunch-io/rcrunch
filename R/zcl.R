@@ -46,3 +46,20 @@ zfunc <- function (func, ...) {
     ## Wrapper that creates ZCL function syntax
     return(list(`function`=func, args=lapply(list(...), zcl)))
 }
+
+findVariableReferences <- function (x) {
+    seen <- c()
+    .fvr <- function (x) {
+        if (is.list(x)) {
+            if (identical(names(x), "variable")) {
+                seen <<- c(seen, x$variable)
+            } else {
+                return(lapply(x, .fvr))
+            }
+        } else {
+            return(x)
+        }
+    }
+    .fvr(x)
+    return(unique(seen))
+}

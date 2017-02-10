@@ -6,6 +6,7 @@
 ^crunch.*\.tar\.gz$
 ^crunch\.Rcheck$
 ^\.travis\.yml$
+^appveyor.yml$
 ^.*\.log$
 ^.*\.Rproj$
 ^\.Rproj\.user$

@@ -1,6 +1,6 @@
 {
     "element": "crunch:table",
-    "self": "/api/datasets/1/table/",
+    "self": "api/datasets/1/table/",
     "metadata": {
         "gender": {
             "name": "Gender",

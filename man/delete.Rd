@@ -12,7 +12,7 @@
 \alias{delete,VariableTuple-method}
 \title{Delete a Crunch object from the server}
 \usage{
-\S4method{delete}{CrunchDataset}(x, confirm = requireConsent(), ...)
+\S4method{delete}{CrunchDataset}(x, ...)
 
 \S4method{delete}{CrunchProject}(x, confirm = requireConsent(), ...)
 
@@ -22,19 +22,19 @@
 
 \S4method{delete}{CrunchTeam}(x, confirm = requireConsent(), ...)
 
-\S4method{delete}{CrunchVariable}(x, confirm = requireConsent(), ...)
+\S4method{delete}{CrunchVariable}(x, ...)
 
 \S4method{delete}{VariableTuple}(x, confirm = requireConsent(), ...)
 }
 \arguments{
 \item{x}{a Crunch object}
 
+\item{...}{additional arguments, in the generic}
+
 \item{confirm}{logical: should the user be asked to confirm deletion.
 Option available for datasets and teams only. Default is \code{TRUE} if in
 an interactive session. You can avoid the confirmation prompt if you delete
 \code{with(\link{consent})}.}
-
-\item{...}{additional arguments, in the generic}
 }
 \description{
 These methods delete entities, notably Datasets and Variables within them,

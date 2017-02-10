@@ -60,7 +60,7 @@ with_mock_HTTP({
 
     test_that("Getting weight variable from filtered dataset is filtered", {
         ds4 <- ds2
-        ds4@body$weight <- "/api/datasets/1/variables/starttime/"
+        ds4@body$weight <- "api/datasets/1/variables/starttime/"
         expect_identical(weight(ds4), ds4$starttime)
         expect_identical(activeFilter(weight(ds4)), ds$gender == "Male")
     })

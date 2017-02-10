@@ -6,17 +6,17 @@ with_mock_HTTP({
         expect_is(batches(ds), "BatchCatalog")
         expect_length(batches(ds), 3)
         expect_identical(urls(batches(ds)),
-            c("/api/datasets/1/batches/0/",
-            "/api/datasets/1/batches/2/",
-            "/api/datasets/1/batches/3/"))
+            c("api/datasets/1/batches/0/",
+            "api/datasets/1/batches/2/",
+            "api/datasets/1/batches/3/"))
     })
 
     test_that("imported/pending", {
         expect_identical(urls(imported(batches(ds))),
-            c("/api/datasets/1/batches/0/",
-            "/api/datasets/1/batches/2/"))
+            c("api/datasets/1/batches/0/",
+            "api/datasets/1/batches/2/"))
         expect_identical(urls(pending(batches(ds))),
-            "/api/datasets/1/batches/3/")
+            "api/datasets/1/batches/3/")
     })
 
     test_that("show method for batch catalog", {

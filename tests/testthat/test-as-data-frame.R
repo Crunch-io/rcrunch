@@ -184,7 +184,7 @@ with_test_authentication({
     })
 
     v2 <- ds$v2
-    delete(v2)
+    with_consent(delete(v2))
     test_that("CrunchDataFrame lazily fetches columns", {
         expect_true("v2" %in% names(ds)) ## ds is stale
         expect_is(as.data.frame(ds), "CrunchDataFrame")

@@ -22,27 +22,46 @@ with_mock_HTTP({
 
     test_that("Simple project creation by assignment", {
         expect_POST(projects[["A new project"]] <- list(),
-            '/api/projects/',
+            'api/projects/',
             '{"name":"A new project"}')
         expect_POST(projects$`A new project` <- list(),
-            '/api/projects/',
+            'api/projects/',
             '{"name":"A new project"}')
+    })
+
+    test_that("Project creation with newProject", {
+        expect_POST(newProject("A new project"),
+            'api/projects/',
+            '{"name":"A new project"}')
+        with_POST("api/projects/project1/", {
+            ## Mock the return of that creation
+            pro <- newProject("This is being ignored")
+            expect_is(pro, "CrunchProject")
+            expect_identical(name(pro), "Project One")
+            ## Now also check that the PATCH to add members happens
+            expect_PATCH(newProject("A new project", members="new.user@crunch.io"),
+                'api/projects/project1/members/',
+                '{"new.user@crunch.io":{}}')
+        })
     })
 
     test_that("Project editing", {
         expect_PATCH(names(projects)[2] <- "New name",
-            '/api/projects/',
-            '{"/api/projects/project2/":{"name":"New name"}}')
+            'api/projects/',
+            '{"api/projects/project2/":{"name":"New name"}}')
         expect_PATCH(name(projects[[2]]) <- "New name",
-            '/api/projects/',
-            '{"/api/projects/project2/":{"name":"New name"}}')
+            'api/projects/',
+            '{"api/projects/project2/":{"name":"New name"}}')
     })
 
     test_that("Project deletion", {
-        expect_error(delete(projects[[1]], confirm=TRUE),
-            "Must confirm deleting project")
-        with(consent(), expect_DELETE(delete(projects[[1]], confirm=TRUE),
-            "/api/projects/project1/"))
+        expect_warning(
+            expect_error(delete(projects[[1]], confirm=TRUE),
+                "Must confirm deleting project"),
+            "The 'confirm' argument is deprecated.")
+        with(consent(), {
+            expect_DELETE(delete(projects[[1]]), "api/projects/project1/")
+        })
     })
 
     m <- members(aproject)
@@ -54,19 +73,19 @@ with_mock_HTTP({
 
     test_that("Add members by members<-", {
         expect_PATCH(members(aproject) <- c("new.user@crunch.io", "foo@example.co"),
-            '/api/projects/project1/members/',
+            'api/projects/project1/members/',
             '{"new.user@crunch.io":{},"foo@example.co":{}}')
     })
 
     test_that("Add members doesn't re-add if already a member", {
         expect_PATCH(members(aproject) <- c("new.user@crunch.io", "roger.user@example.com"),
-            '/api/projects/project1/members/',
+            'api/projects/project1/members/',
             '{"new.user@crunch.io":{}}')
     })
 
     test_that("Remove members by <- NULL", {
         expect_PATCH(members(aproject)[["roger.user@example.com"]] <- NULL,
-            '/api/projects/project1/members/',
+            'api/projects/project1/members/',
             '{"roger.user@example.com":null}')
     })
 
@@ -76,11 +95,11 @@ with_mock_HTTP({
 
     test_that("is.editor<- on member catalog", {
         expect_PATCH(is.editor(m) <- c(TRUE, TRUE),
-            '/api/projects/project1/members/',
-            '{"/api/users/user2/":{"permissions":{"edit":true}}}')
+            'api/projects/project1/members/',
+            '{"api/users/user2/":{"permissions":{"edit":true}}}')
         expect_PATCH(is.editor(m[2]) <- TRUE,
-            '/api/projects/project1/members/',
-            '{"/api/users/user2/":{"permissions":{"edit":true}}}')
+            'api/projects/project1/members/',
+            '{"api/users/user2/":{"permissions":{"edit":true}}}')
         expect_no_request(is.editor(m[2]) <- FALSE) ## No change, so no PATCH request made
     })
 
@@ -118,7 +137,7 @@ with_mock_HTTP({
     test_that("Project datasets order", {
         expect_is(do, "DatasetOrder")
         expect_identical(do@graph,
-            list(DatasetGroup("Group 1", "/api/datasets/3/")))
+            list(DatasetGroup("Group 1", "api/datasets/3/")))
         expect_output(do,
             paste("[+] Group 1", "    ECON.sav", sep="\n"), fixed=TRUE)
     })
@@ -126,25 +145,25 @@ with_mock_HTTP({
     test_that("Add datasets to project by <- a dataset (which transfers ownership)", {
         ds <- loadDataset("test ds")
         expect_PATCH(datasets(aproject) <- ds,
-            '/api/datasets/1/',
-            '{"owner":"/api/projects/project1/"}')
+            'api/datasets/1/',
+            '{"owner":"api/projects/project1/"}')
     })
 
     test_that("Organize datasets", {
         expect_identical(DatasetOrder(DatasetGroup("new group", datasets(aproject))),
-            DatasetOrder(DatasetGroup("new group", "/api/datasets/3/")))
+            DatasetOrder(DatasetGroup("new group", "api/datasets/3/")))
         expect_PUT(ordering(datasets(aproject)) <- DatasetOrder(DatasetGroup("new group",
             datasets(aproject))),
-            '/api/projects/project1/datasets/order/',
-            '{"graph":[{"new group":["/api/datasets/3/"]}]}')
-        nested.ord <- DatasetOrder("/api/datasets/3/",
+            'api/projects/project1/datasets/order/',
+            '{"graph":[{"new group":["api/datasets/3/"]}]}')
+        nested.ord <- DatasetOrder("api/datasets/3/",
             DatasetGroup("new group",
-                list(DatasetGroup("nested", "/api/datasets/3/"))),
+                list(DatasetGroup("nested", "api/datasets/3/"))),
             duplicates=TRUE)
         expect_PUT(ordering(datasets(aproject)) <- nested.ord,
-            '/api/projects/project1/datasets/order/',
-            '{"graph":["/api/datasets/3/",',
-            '{"new group":[{"nested":["/api/datasets/3/"]}]}]}')
+            'api/projects/project1/datasets/order/',
+            '{"graph":["api/datasets/3/",',
+            '{"new group":[{"nested":["api/datasets/3/"]}]}]}')
     })
 })
 
@@ -192,7 +211,6 @@ with_test_authentication({
     })
 
     test_that("Get and set project icon", {
-        skip_on_jenkins("https://www.pivotaltracker.com/story/show/135467257")
         ico <- icon(pj)
         # expect_true(nchar(ico) > 0) ## Unskip after #119305641 ships
         icon(pj) <- "empty.png"
@@ -226,7 +244,7 @@ with_test_authentication({
 
     test_that("Can add members to a project (and then set as an editor)", {
         skip_on_jenkins("Jenkins user needs more permissions")
-        tp <- testProject()
+        tp <- newProject(name=now())
         u <- testUser()
         expect_identical(names(members(tp)), my.name)
         members(tp) <- email(u)
@@ -241,7 +259,7 @@ with_test_authentication({
 
     test_that("Can remove members from a project", {
         skip_on_jenkins("Jenkins user needs more permissions")
-        tp <- testProject()
+        tp <- newProject(name=now())
         u <- testUser()
         expect_identical(names(members(tp)), my.name)
         members(tp) <- email(u)
@@ -251,7 +269,7 @@ with_test_authentication({
     })
 
     ds <- createDataset(name=now())
-    tp <- testProject()
+    tp <- newProject(name=now())
     test_that("Can add datasets to project", {
         expect_is(tp, "CrunchProject")
         expect_length(datasets(tp), 0)

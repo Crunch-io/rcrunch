@@ -6,20 +6,26 @@ with_mock_HTTP({
 
     test_that("mergeFork requests", {
         expect_POST(mergeFork(ds1, ds2),
-            "/api/datasets/1/actions/",
+            "api/datasets/1/actions/",
             '{"element":"shoji:entity",',
-            '"body":{"dataset":"/api/datasets/3/",',
+            '"body":{"dataset":"api/datasets/3/",',
             '"autorollback":true,"force":false}}')
         expect_POST(mergeFork(ds1, ds2, autorollback=FALSE),
-            "/api/datasets/1/actions/",
+            "api/datasets/1/actions/",
             '{"element":"shoji:entity",',
-            '"body":{"dataset":"/api/datasets/3/",',
+            '"body":{"dataset":"api/datasets/3/",',
             '"autorollback":false,"force":false}}')
-        expect_POST(mergeFork(ds1, ds2, force=TRUE),
-            "/api/datasets/1/actions/",
+        expect_POST(with(consent(), mergeFork(ds1, ds2, force=TRUE)),
+            "api/datasets/1/actions/",
             '{"element":"shoji:entity",',
-            '"body":{"dataset":"/api/datasets/3/",',
+            '"body":{"dataset":"api/datasets/3/",',
             '"autorollback":true,"force":true}}')
+    })
+
+
+    test_that('"Force" merge requires confirmation', {
+        expect_error(mergeFork(ds1, ds2, force=TRUE),
+            "Must confirm force merge")
     })
 })
 
@@ -41,6 +47,10 @@ with_test_authentication({
 
     exclusion(f1) <- f1$v3 < 11
     f2 <- forkDataset(f1, "Fork yeah!", draft=TRUE)
+    test_that("Editing values of data in a new fork doesn't fail", {
+        f2$v1[is.na(f2$v1)] <- 42
+        expect_equal(as.numeric(table(is.na(f2$v1))), 0)
+    })
     test_that("Can create a fork with a given name (forking from a fork)", {
         expect_true(is.dataset(f2))
         expect_identical(name(f2), "Fork yeah!")
@@ -65,8 +75,10 @@ with_test_authentication({
         expect_true(is.published(f3))
     })
 
-    delete(f2)
-    delete(f3)
+    with_consent({
+        delete(f2)
+        delete(f3)
+    })
     test_that("If you delete a fork, it disappears from upstream forks catalog", {
         expect_identical(names(refresh(forks(ds))), f1.name)
     })
@@ -105,7 +117,7 @@ with_test_authentication({
         expect_identical(name(f1$v1), v1copy$name)
         expect_identical(alias(f1$v1), v1copy$alias)
     })
-    f1$v1 <- NULL
+    with_consent(f1$v1 <- NULL)
     f1$v1 <- v1copy
 
     ## Assert those things
@@ -148,7 +160,7 @@ with_test_authentication({
         child <- forkDataset(parent)
 
         names(categories(parent$v4))[1:2] <- c("d", "e")
-        parent$v5 <- NULL
+        with_consent(parent$v5 <- NULL)
 
         test_that("Before merging from parent", {
             expect_identical(names(categories(parent$v4))[1:2], c("d", "e"))

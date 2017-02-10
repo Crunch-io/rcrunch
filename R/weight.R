@@ -31,7 +31,7 @@ weight <- function (x) {
     } else if (!is.null(value)) {
         halt("Weight must be a Variable or NULL")
     }
-    
+
     ## Future API: on "preferences"
     prefs <- crGET(shojiURL(x, "fragments", "preferences"))
     if ("weight" %in% names(prefs$body)) {
@@ -43,14 +43,4 @@ weight <- function (x) {
         x <- setEntitySlot(x, "weight", value)
     }
     return(x)
-}
-
-weightVariables <- function(x) {
-    stopifnot(is.dataset(x))
-    
-    return(tryCatch(VariableCatalog(crGET(shojiURL(x, "catalogs", "weight_variables"))),
-        error=function(e){
-            if (e$message == 'No URL “weight_variables” in collection “catalogs”') return(VariableCatalog(data.frame))
-            else print(e)
-        }))
 }

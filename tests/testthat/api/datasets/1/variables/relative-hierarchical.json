@@ -1,6 +1,6 @@
 {
     "element": "shoji:order",
-    "self": "/api/datasets/1/variables/relative-hierarchical/",
+    "self": "api/datasets/1/variables/relative-hierarchical/",
     "description": "Hierarchical ordering of dataset variables",
     "graph": [
         "../birthyr/",

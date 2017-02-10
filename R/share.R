@@ -56,7 +56,7 @@ share <- function (dataset, users, edit=FALSE, notify=TRUE, message=NULL) {
     if (length(edit) != length(users)) {
         halt("Must supply `edit` permissions of equal length as the number of `emails` supplied")
     }
-    if (!is.null(message) & !notify){
+    if (!is.null(message) && !notify) {
         halt("Cannot send message if not notifying")
     }
     payload <- lapply(edit,

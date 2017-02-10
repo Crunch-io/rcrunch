@@ -27,7 +27,7 @@ summary(ds$age)
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-##  22.000  38.000  48.500  49.624  59.750  90.000
+##   22.00   38.00   48.50   49.62   59.75   90.00
 ```
 
 ```r
@@ -35,8 +35,8 @@ summary(ds$birthyr)
 ```
 
 ```
-##     Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
-## 1925.000 1955.250 1966.500 1965.376 1977.000 1993.000
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    1925    1955    1966    1965    1977    1993
 ```
 
 Age is now a derived variable, functionally linked to `birthyr` on the server. Note that in order to create `age`, we didn't pull any values off of the server; we just supplied the derivation expression.
@@ -70,7 +70,7 @@ summary(ds$birthyr)
 
 ```
 ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-## 1945.00 1955.25 1966.50 1966.02 1977.00 1993.00
+##    1945    1955    1966    1966    1977    1993
 ```
 
 Not only that: since `age` is a function of `birthyr` on the server, its values also update now that we've modified `birthyr`. Max age is now 70, or 2015 - 1945.

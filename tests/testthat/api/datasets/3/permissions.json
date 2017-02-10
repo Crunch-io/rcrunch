@@ -1,8 +1,8 @@
 {
     "element": "shoji:catalog",
-    "self": "/api/datasets/3/permissions/",
+    "self": "api/datasets/3/permissions/",
     "index": {
-        "/api/teams/1/": {
+        "api/teams/1/": {
             "dataset_permissions": {
                 "edit": true,
                 "change_weight": true,
@@ -15,7 +15,7 @@
                 "view": true
             }
         },
-        "/api/users/2/": {
+        "api/users/2/": {
             "dataset_permissions": {
                 "edit": true,
                 "view": true
@@ -31,7 +31,7 @@
             "name": "Two",
             "email": "dos@example.io"
         },
-        "/api/users/3/": {
+        "api/users/3/": {
             "dataset_permissions": {
                 "edit": true,
                 "change_permissions": true,
