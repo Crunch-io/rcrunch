@@ -44,9 +44,7 @@ with_test_authentication({
                 "Contains subvariables found in other arrays after matching: CA2")
         })
         test_that("The append fails", {
-            expect_error(
-                expect_message(appendDataset(part1, part2),
-                    "Result URL"),
+            expect_error(appendDataset(part1, part2),
                 "Subvariable mr_1 cannot be bound to both arrays 'CA2' and 'CA1'.")
         })
         part1 <- cleanseBatches(part1)
@@ -65,7 +63,7 @@ with_test_authentication({
     whereas("Appending arrays with different subvars and derived vars", {
         ds1 <- newDatasetFromFixture("apidocs")
         ds2 <- newDatasetFromFixture("apidocs")
-        deleteSubvariable(ds1$petloc, "petloc_work")
+        with_consent(deleteSubvariable(ds1$petloc, "petloc_work"))
         ds1 <- refresh(ds1)
         ds1$comb <- combine(ds1$petloc,
             name="Comb 1",

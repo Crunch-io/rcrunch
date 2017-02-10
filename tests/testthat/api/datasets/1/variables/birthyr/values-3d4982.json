@@ -1,6 +1,6 @@
-// dbf476579f479e48239530f3674ba3fa: list(filter=toJSON(NULL), offset=0, limit=100000L)
+// Query: filter=%7B%7D&offset=0&limit=100000
 {
     "element": "shoji:view",
-    "self": "/api/datasets/1/variables/birthyr/values/",
+    "self": "api/datasets/1/variables/birthyr/values/",
     "value": [ 0.57753, -1.0201, -1.4967, -1.1101, 0.70392, 1.6662, -0.50294, 0.8415, 0.37829, -0.74401, -0.037001, 1.0487, 0.64628, -1.2774, -0.79363, -0.18147, 0.19587, 0.19104, 0.35474, -1.4009, -0.76175, -0.65557, 0.7368, -0.41492, -0.3103 ]
 }

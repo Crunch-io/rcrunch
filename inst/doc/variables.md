@@ -198,10 +198,11 @@ categories(track.var)
 ```
 
 ```
-## [ 1 ]  Generally headed in the right direction
-## [ 2 ]  Off on the wrong track
-## [ 3 ]  Not sure
-## [ NA ]  No Data
+##   id                                    name value missing
+## 1  1 Generally headed in the right direction     1   FALSE
+## 2  2                  Off on the wrong track     2   FALSE
+## 3  3                                Not sure     3   FALSE
+## 4 -1                                 No Data    NA    TRUE
 ```
 
 ### Category attributes
@@ -256,10 +257,11 @@ categories(track.var)
 ```
 
 ```
-## [ 1 ]  Generally headed in the right direction
-## [ 0 ]  Not sure
-## [ -1 ]  Wrong track
-## [ NA ]  No Data
+##   id                                    name value missing
+## 1  1 Generally headed in the right direction     1   FALSE
+## 2  3                                Not sure     0    TRUE
+## 3  2                             Wrong track    -1   FALSE
+## 4 -1                                 No Data    NA    TRUE
 ```
 
 
@@ -281,9 +283,10 @@ categories(track.var)
 ```
 
 ```
-## [ 1 ]  Generally headed in the right direction
-## [ -1 ]  Wrong track
-## [ 0 ]  Not sure
+##   id                                    name value missing
+## 1  1 Generally headed in the right direction     1   FALSE
+## 2  2                             Wrong track    -1   FALSE
+## 3  3                                Not sure     0    TRUE
 ```
 
 As with all other metadata edits discussed, updating with these methods automatically sends the changes to the server, so your local edits are reflected in the cloud.

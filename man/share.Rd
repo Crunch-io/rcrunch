@@ -4,7 +4,7 @@
 \alias{share}
 \title{Share a dataset}
 \usage{
-share(dataset, users, edit = FALSE, notify = TRUE)
+share(dataset, users, edit = FALSE, notify = TRUE, message = NULL)
 }
 \arguments{
 \item{dataset}{a CrunchDataset}
@@ -21,6 +21,9 @@ of the number of emails given.}
 \item{notify}{logical: should users who are getting new privileges on this
 dataset be sent an email informing them of this fact? Default is
 \code{TRUE}.}
+
+\item{message}{character: what message should users who are getting notified
+about new permissions on this dataset receive?}
 }
 \value{
 Invisibly, the dataset.

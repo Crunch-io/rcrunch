@@ -191,6 +191,7 @@ MemberCatalog <- setClass("MemberCatalog", contains="ShojiCatalog")
 VersionCatalog <- setClass("VersionCatalog", contains="ShojiCatalog")
 FilterCatalog <- setClass("FilterCatalog", contains="ShojiCatalog")
 ForkCatalog <- setClass("ForkCatalog", contains="ShojiCatalog")
+MultitableCatalog <- setClass("MultitableCatalog", contains="ShojiCatalog")
 
 #' Crunch Datasets
 #'
@@ -284,6 +285,7 @@ CrunchCube <- setClass("CrunchCube", contains="list",
 
 CrunchTeam <- setClass("CrunchTeam", contains="ShojiObject")
 CrunchFilter <- setClass("CrunchFilter", contains="ShojiObject")
+Multitable <- setClass("Multitable", contains="ShojiObject")
 
 #' Organize Datsets
 #'

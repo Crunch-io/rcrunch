@@ -29,7 +29,9 @@ table <- function (..., exclude, useNA=c("no", "ifany", "always"), dnn, deparse.
         function (x) is.variable(x) || inherits(x, "CrunchExpr"),
         logical(1))
     if (length(are.vars) && all(are.vars)) {
-        query <- list(dimensions=varsToCubeDimensions(dots),
+        dims <- unlist(lapply(dots, varToDim), recursive=FALSE)
+        names(dims) <- NULL
+        query <- list(dimensions=dims,
             measures=list(count=zfunc("cube_count")))
         ## Check for filters
         filters <- vapply(dots,

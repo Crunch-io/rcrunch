@@ -48,6 +48,12 @@ defaultForkName <- function (dataset) {
 #' @return \code{dataset} with changes from \code{fork} merged to it.
 #' @export
 mergeFork <- function (dataset, fork, autorollback=TRUE, force=FALSE) {
+    prompt <- paste("Force merge discards any additions or edits to the target",
+        "dataset that occurred after the point the fork was created. It cannot",
+        "be reverted or otherwise undone. Are you sure you want to continue?")
+    if (force && requireConsent() && !askForPermission(prompt)) {
+        halt("Must confirm force merge")
+    }
     m <- crPOST(shojiURL(dataset, "catalogs", "actions"), body=toJSON(list(
         element="shoji:entity",
         body=list(dataset=self(fork), autorollback=autorollback, force=force)

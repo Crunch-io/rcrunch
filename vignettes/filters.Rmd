@@ -96,6 +96,12 @@ filters(ds)
 print(filter.catalog.2)
 ```
 
+You could also have made the filter with the `newFilter` function:
+
+```{r, eval=FALSE}
+f <- newFilter("Young males", ds$gender == "Male" & ds$age < 30)
+```
+
 This filter is now available for you to use in the web application. If you want to make the filter available to all viewers of the dataset, make it "public":
 
 ```{r, eval=FALSE}

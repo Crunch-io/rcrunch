@@ -1,9 +1,9 @@
 {
     "element": "shoji:entity",
-    "self": "/api/projects/project1/",
+    "self": "api/projects/project1/",
     "catalogs": {
-        "datasets": "/api/projects/project1/datasets/",
-        "members": "/api/projects/project1/members/"
+        "datasets": "api/projects/project1/datasets/",
+        "members": "api/projects/project1/members/"
     },
     "description": "Details for a specific project",
     "body": {

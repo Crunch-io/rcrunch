@@ -1,9 +1,11 @@
-init.DatasetCatalog <- function (.Object, ...) {
+init.sortCatalog <- function (.Object, ...) {
+    ## Sort a ShojiCatalog by the object's "names" (as defined by its names method)
     .Object <- callNextMethod(.Object, ...)
     .Object@index <- .Object@index[order(names(.Object))]
     return(.Object)
 }
-setMethod("initialize", "DatasetCatalog", init.DatasetCatalog)
+
+setMethod("initialize", "DatasetCatalog", init.sortCatalog)
 
 setMethod("active", "DatasetCatalog", function (x) {
     index(x) <- Filter(function (a) !isTRUE(a$archived), index(x))
@@ -75,17 +77,8 @@ NULL
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[", c("DatasetCatalog", "character"), function (x, i, ...) {
-    w <- whichNameOrURL(x, i)
-    x[[w]]
-})
-#' @rdname catalog-extract
-#' @export
-setMethod("[[", c("DatasetCatalog", "ANY"), function (x, i, ...) {
-    b <- callNextMethod(x, i, ...)
-    if (is.null(b)) return(NULL)
-    DatasetTuple(index_url=self(x), entity_url=urls(x)[i],
-        body=b)
+setMethod("[[", c("DatasetCatalog", "numeric"), function (x, i, ...) {
+    getTuple(x, i, DatasetTuple)
 })
 
 #' @rdname catalog-extract

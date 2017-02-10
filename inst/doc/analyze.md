@@ -403,10 +403,11 @@ categories(ds$track)
 ```
 
 ```
-## [ 1 ]  Generally headed in the right direction
-## [ 0 ]  Not sure
-## [ -1 ]  Wrong track
-## [ NA ]  No Data
+##   id                                    name value missing
+## 1  1 Generally headed in the right direction     1   FALSE
+## 2  3                                Not sure     0    TRUE
+## 3  2                             Wrong track    -1   FALSE
+## 4 -1                                 No Data    NA    TRUE
 ```
 
 We can use these numeric values to compute an "on the right track index" by averaging them. If the index is greater than zero, more people thing things are going well, and if it is negative, more respondents are pessimistic.

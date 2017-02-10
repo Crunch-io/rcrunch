@@ -1,7 +1,7 @@
-// 4fd71abbd587e0265a5bd7ad5324208b: list(relative="on")
+// Query: relative=on
 {
     "element": "shoji:order",
-    "self": "/api/datasets/1/variables/hierarchical/",
+    "self": "api/datasets/1/variables/hierarchical/",
     "description": "Hierarchical ordering of dataset variables",
     "graph": [
         {

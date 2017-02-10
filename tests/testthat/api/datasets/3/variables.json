@@ -1,8 +1,8 @@
 // TODO: figure out how to deal with the query params better so that this isn't duplicated
 {
     "element": "shoji:catalog",
-    "self": "/api/datasets/3/variables/",
-    "specification": "/api/specifications/variables/",
+    "self": "api/datasets/3/variables/",
+    "specification": "api/specifications/variables/",
     "description": "List of Variables of this dataset",
     "index": {
         "gender/": {
@@ -33,6 +33,6 @@
         }
     },
     "orders": {
-        "hier": "/api/datasets/3/variables/hierarchical/"
+        "hier": "api/datasets/3/variables/hierarchical/"
     }
 }

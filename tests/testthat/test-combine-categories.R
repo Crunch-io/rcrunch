@@ -17,7 +17,7 @@ with_mock_HTTP({
         expr=list(
             `function`="combine_categories",
             args=list(
-                list(variable="/api/datasets/1/variables/gender/"),
+                list(variable="api/datasets/1/variables/gender/"),
                 list(value=list(
                     list(
                         name="Both",
@@ -125,31 +125,49 @@ with_mock_HTTP({
     })
 })
 
-if (run.integration.tests) {
-    with_test_authentication({
-        with(test.dataset(newDatasetFromFixture("apidocs")), {
-            test_that("We can create a new categorical by combining", {
-                ds$combined_pets <- combine(ds$q1, name="Pets (combined)",
-                    list(list(name="Mammals", categories=c("Cat", "Dog"))))
-                expect_identical(names(categories(ds$combined_pets)),
-                    c("Mammals", "Bird", "Skipped", "Not Asked"))
-                expect_equivalent(as.array(crtabs(~ combined_pets, data=ds)),
-                    array(c(10, 3), dim=2,
-                    dimnames=list(combined_pets=c("Mammals", "Bird"))))
-            })
+with_test_authentication({
+    with(test.dataset(newDatasetFromFixture("apidocs")), {
+        ds$combined_pets <- combine(ds$q1, name="Pets (combined)",
+            list(list(name="Mammals", categories=c("Cat", "Dog"))))
+        test_that("We can create a new categorical by combining", {
+            expect_identical(names(categories(ds$combined_pets)),
+                c("Mammals", "Bird", "Skipped", "Not Asked"))
+            expect_equivalent(as.array(crtabs(~ q1, data=ds)),
+                array(c(6, 4, 3), dim=3,
+                dimnames=list(q1=c("Cat", "Dog", "Bird"))))
+            expect_equivalent(as.array(crtabs(~ combined_pets, data=ds)),
+                array(c(10, 3), dim=2,
+                dimnames=list(combined_pets=c("Mammals", "Bird"))))
+        })
 
-            test_that("combine() with no combinations is effectively a copy", {
-                ds$combined_pets2 <- combine(ds$q1)
-                expect_identical(as.vector(ds$combined_pets2), as.vector(ds$q1))
-            })
+        test_that("Updating values in the parent variable updates in the derivation too", {
+            ds$q1[is.na(ds$q1)] <- "Bird"
+            expect_equivalent(as.array(crtabs(~ q1, data=ds)),
+                array(c(6, 4, 10), dim=3,
+                dimnames=list(q1=c("Cat", "Dog", "Bird"))))
+            expect_equivalent(as.array(crtabs(~ combined_pets, data=ds)),
+                array(c(10, 10), dim=2,
+                dimnames=list(combined_pets=c("Mammals", "Bird"))))
+            ds <- releaseAndReload(ds)
+            expect_equivalent(as.array(crtabs(~ q1, data=ds)),
+                array(c(6, 4, 10), dim=3,
+                dimnames=list(q1=c("Cat", "Dog", "Bird"))))
+            expect_equivalent(as.array(crtabs(~ combined_pets, data=ds)),
+                array(c(10, 10), dim=2,
+                dimnames=list(combined_pets=c("Mammals", "Bird"))))
+        })
 
-            test_that("combine() with categorical array", {
-                ds$combined_petloc <- combine(ds$petloc,
-                    name="Pet locations (combined)",
-                    list(list(name="Mammals", categories=c("Cat", "Dog"))))
-                expect_identical(names(categories(ds$combined_petloc)),
-                    c("Mammals", "Bird", "Skipped", "Not Asked"))
-            })
+        test_that("combine() with no combinations is effectively a copy", {
+            ds$combined_pets2 <- combine(ds$q1)
+            expect_identical(as.vector(ds$combined_pets2), as.vector(ds$q1))
+        })
+
+        test_that("combine() with categorical array", {
+            ds$combined_petloc <- combine(ds$petloc,
+                name="Pet locations (combined)",
+                list(list(name="Mammals", categories=c("Cat", "Dog"))))
+            expect_identical(names(categories(ds$combined_petloc)),
+                c("Mammals", "Bird", "Skipped", "Not Asked"))
         })
     })
-}
+})

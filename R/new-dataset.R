@@ -112,7 +112,16 @@ addBatch <- function (ds, ..., savepoint=TRUE, autorollback=savepoint, strict=TR
         autorollback=autorollback,
         savepoint=savepoint
     )
-    crPOST(batches_url, body=toJSON(body))
+
+    if (autorollback) {
+        ## Don't print "Result URL" if the job fails because the dataset will
+        ## be rolled back and that URL won't exist
+        do_it <- suppressMessages
+    } else {
+        ## Just execute and let the "Result URL" print if it fails
+        do_it <- force
+    }
+    do_it(crPOST(batches_url, body=toJSON(body)))
     invisible(refresh(ds))
 }
 
@@ -194,7 +203,7 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
     }
 
     if (is.error(out)) {
-        delete(ds, confirm=FALSE)
+        with_consent(delete(ds))
         rethrow(out)
     }
     message("Done!")
