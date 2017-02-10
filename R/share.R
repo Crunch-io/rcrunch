@@ -64,7 +64,7 @@ share <- function (dataset, users, edit=FALSE, notify=TRUE, message=NULL) {
     names(payload) <- users
     payload$send_notification <- notify
     if (notify) {
-        if (!is.null(message)) payload$message <- message
+        payload$message <- message
         payload$url_base <- passwordSetURLTemplate()
         payload$dataset_url <- webURL(dataset)
     }
