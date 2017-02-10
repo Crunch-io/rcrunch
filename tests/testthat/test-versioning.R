@@ -119,10 +119,16 @@ with_test_authentication({
     })
 
     ## Save a version
-    try(saveVersion(ds, "My changes"))
+    try(ds <- saveVersion(ds, "My changes"))
     test_that("There are now two versions", {
         expect_length(versions(ds), 2)
         expect_identical(names(versions(ds))[1], "My changes")
+    })
+
+    test_that("If I try to save version and there are no changes, no version is made", {
+        expect_message(ds <- saveVersion(ds, "Another"),
+            "No unsaved changes; no new version created.")
+        expect_length(versions(ds), 2)
     })
 
     ## Release and re-lease

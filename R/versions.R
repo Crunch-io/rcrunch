@@ -45,7 +45,10 @@ saveVersion <- function (dataset, description=paste("Version",
         halt(dQuote("description"), " must be a length-1 character vector")
     }
     u <- shojiURL(dataset, "catalogs", "savepoints")
-    out <- crPOST(u, body=toJSON(list(description=description)))
+    out <- crPOST(u, body=toJSON(list(description=description)),
+        status.handlers=list(`303`=function (response) {
+            message("No unsaved changes; no new version created.")
+        }))
     invisible(dataset)
 }
 
