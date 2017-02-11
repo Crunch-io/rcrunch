@@ -40,4 +40,3 @@ name(m) # [1] "gender + age4 + marstat"
 \seealso{
 \code{\link[stats]{formula}}
 }
-

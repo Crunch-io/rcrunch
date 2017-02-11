@@ -3,26 +3,26 @@
 \docType{methods}
 \name{ShojiOrder-slots}
 \alias{ShojiOrder-slots}
-\alias{duplicates}
-\alias{duplicates,OrderGroup-method}
-\alias{duplicates,ShojiOrder-method}
-\alias{duplicates,VariableCatalog-method}
-\alias{duplicates<-}
-\alias{duplicates<-,OrderGroup,logical-method}
-\alias{duplicates<-,ShojiOrder,logical-method}
-\alias{duplicates<-,VariableCatalog,logical-method}
 \alias{entities}
+\alias{entities<-}
+\alias{duplicates}
+\alias{duplicates<-}
 \alias{entities,OrderGroup-method}
 \alias{entities,ShojiOrder-method}
 \alias{entities,list-method}
-\alias{entities<-}
 \alias{entities<-,OrderGroup-method}
 \alias{entities<-,ShojiOrder-method}
 \alias{name,OrderGroup-method}
 \alias{name<-,OrderGroup-method}
-\alias{names,OrderGroup-method}
 \alias{names,ShojiOrder-method}
+\alias{names,OrderGroup-method}
 \alias{names<-,ShojiOrder-method}
+\alias{duplicates,ShojiOrder-method}
+\alias{duplicates,OrderGroup-method}
+\alias{duplicates,VariableCatalog-method}
+\alias{duplicates<-,ShojiOrder,logical-method}
+\alias{duplicates<-,OrderGroup,logical-method}
+\alias{duplicates<-,VariableCatalog,logical-method}
 \title{Manipulate VariableGroup and VariableOrder}
 \usage{
 \S4method{entities}{OrderGroup}(x, simplify = FALSE)
@@ -82,4 +82,3 @@ Manipulate VariableGroup and VariableOrder
 
 \code{\link{grouped}}
 }
-

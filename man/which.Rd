@@ -23,4 +23,3 @@ For filtering a Crunch expression by \code{x}, don't use \code{which}.
 \description{
 NOTE: this isn't correct. Don't use it yet.
 }
-

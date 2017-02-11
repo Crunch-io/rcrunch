@@ -2,19 +2,19 @@
 % Please edit documentation in R/dataset-extract.R
 \docType{methods}
 \name{dataset-extract}
-\alias{$,CrunchDataset-method}
+\alias{dataset-extract}
 \alias{[,CrunchDataset,ANY,ANY-method}
-\alias{[,CrunchDataset,CrunchLogicalExpr,ANY-method}
-\alias{[,CrunchDataset,CrunchLogicalExpr,missing-method}
+\alias{[,CrunchDataset,logical,missing-method}
+\alias{[,CrunchDataset,character,ANY-method}
 \alias{[,CrunchDataset,VariableGroup,ANY-method}
 \alias{[,CrunchDataset,VariableOrder,ANY-method}
-\alias{[,CrunchDataset,character,ANY-method}
-\alias{[,CrunchDataset,logical,missing-method}
 \alias{[,CrunchDataset,missing,ANY-method}
+\alias{[,CrunchDataset,CrunchLogicalExpr,missing-method}
+\alias{[,CrunchDataset,CrunchLogicalExpr,ANY-method}
+\alias{subset,CrunchDataset-method}
 \alias{[[,CrunchDataset,ANY-method}
 \alias{[[,CrunchDataset,character-method}
-\alias{dataset-extract}
-\alias{subset,CrunchDataset-method}
+\alias{$,CrunchDataset-method}
 \title{Subset datasets and extract variables}
 \usage{
 \S4method{[}{CrunchDataset,ANY,ANY}(x, i, j, ..., drop = TRUE)
@@ -70,4 +70,3 @@ Default is FALSE, and the TRUE option is in fact not implemented.}
 \description{
 Subset datasets and extract variables
 }
-

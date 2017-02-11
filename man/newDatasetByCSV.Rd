@@ -25,4 +25,3 @@ effective for certain dataset sizes and shapes than
 \seealso{
 \code{\link{newDataset}} \code{\link{newDatasetByColumn}}
 }
-

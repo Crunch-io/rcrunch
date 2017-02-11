@@ -4,8 +4,8 @@
 \name{multitable-catalog}
 \alias{multitable-catalog}
 \alias{multitables}
-\alias{multitables,CrunchDataset-method}
 \alias{multitables<-}
+\alias{multitables,CrunchDataset-method}
 \alias{multitables<-,CrunchDataset-method}
 \title{Multitable entities for a dataset}
 \usage{
@@ -25,4 +25,3 @@ Multitable entities. (Setter returns the Dataset.)
 \description{
 Multitable entities for a dataset
 }
-

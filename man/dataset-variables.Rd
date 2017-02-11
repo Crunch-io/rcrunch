@@ -2,15 +2,15 @@
 % Please edit documentation in R/dataset.R
 \docType{methods}
 \name{dataset-variables}
-\alias{allVariables}
-\alias{allVariables,CrunchDataset-method}
-\alias{allVariables<-}
-\alias{allVariables<-,CrunchDataset,VariableCatalog-method}
 \alias{dataset-variables}
 \alias{variables}
-\alias{variables,CrunchDataset-method}
 \alias{variables<-}
+\alias{allVariables}
+\alias{allVariables<-}
+\alias{variables,CrunchDataset-method}
 \alias{variables<-,CrunchDataset,VariableCatalog-method}
+\alias{allVariables,CrunchDataset-method}
+\alias{allVariables<-,CrunchDataset,VariableCatalog-method}
 \title{Access a Dataset's Variables Catalog}
 \usage{
 \S4method{variables}{CrunchDataset}(x)
@@ -40,4 +40,3 @@ more directly.
 \code{allVariables}, as the name suggests, yields all variables, including
 hidden variables.
 }
-

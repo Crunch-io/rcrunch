@@ -16,4 +16,3 @@ Retrive all teams you're a member of
 \seealso{
 \link{teams}
 }
-

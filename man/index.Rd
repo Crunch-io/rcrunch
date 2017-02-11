@@ -3,8 +3,8 @@
 \docType{methods}
 \name{index}
 \alias{index}
-\alias{index,ShojiCatalog-method}
 \alias{index<-}
+\alias{index,ShojiCatalog-method}
 \alias{index<-,ShojiCatalog-method}
 \title{Get the body of a Catalog}
 \usage{
@@ -26,4 +26,3 @@ return \code{x} duly modified.
 The core of Catalog data is in its "index". These methods get and set that
 slot.
 }
-

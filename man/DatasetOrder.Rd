@@ -2,10 +2,10 @@
 % Please edit documentation in R/AllClasses.R
 \docType{class}
 \name{DatasetOrder-class}
-\alias{DatasetGroup}
-\alias{DatasetGroup-class}
-\alias{DatasetOrder}
 \alias{DatasetOrder-class}
+\alias{DatasetOrder}
+\alias{DatasetGroup-class}
+\alias{DatasetGroup}
 \title{Organize Datsets}
 \description{
 A DatasetOrder object is a subclass of \code{list} that contains

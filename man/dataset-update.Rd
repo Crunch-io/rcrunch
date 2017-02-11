@@ -2,17 +2,17 @@
 % Please edit documentation in R/dataset-extract.R
 \docType{methods}
 \name{dataset-update}
+\alias{dataset-update}
+\alias{[[<-,CrunchDataset,character,missing,CrunchVariable-method}
+\alias{[[<-,CrunchDataset,ANY,missing,CrunchVariable-method}
+\alias{[[<-,CrunchDataset,character,missing,ANY-method}
+\alias{[[<-,CrunchDataset,character,missing,CrunchLogicalExpr-method}
+\alias{[[<-,CrunchDataset,ANY,ANY,ANY-method}
+\alias{[[<-,CrunchDataset,character,missing,NULL-method}
+\alias{[[<-,CrunchDataset,ANY,missing,NULL-method}
 \alias{$<-,CrunchDataset-method}
 \alias{[<-,CrunchDataset,ANY,missing,list-method}
 \alias{[<-,CrunchDataset,CrunchExpr,ANY,ANY-method}
-\alias{[[<-,CrunchDataset,ANY,ANY,ANY-method}
-\alias{[[<-,CrunchDataset,ANY,missing,CrunchVariable-method}
-\alias{[[<-,CrunchDataset,ANY,missing,NULL-method}
-\alias{[[<-,CrunchDataset,character,missing,ANY-method}
-\alias{[[<-,CrunchDataset,character,missing,CrunchLogicalExpr-method}
-\alias{[[<-,CrunchDataset,character,missing,CrunchVariable-method}
-\alias{[[<-,CrunchDataset,character,missing,NULL-method}
-\alias{dataset-update}
 \title{Update a variable or variables in a dataset}
 \usage{
 \S4method{[[}{CrunchDataset,character,missing,CrunchVariable}(x, i) <- value
@@ -21,7 +21,8 @@
 
 \S4method{[[}{CrunchDataset,character,missing,ANY}(x, i) <- value
 
-\S4method{[[}{CrunchDataset,character,missing,CrunchLogicalExpr}(x, i) <- value
+\S4method{[[}{CrunchDataset,character,missing,CrunchLogicalExpr}(x,
+  i) <- value
 
 \S4method{[[}{CrunchDataset,ANY,ANY,ANY}(x, i) <- value
 
@@ -59,4 +60,3 @@ extraction, columns of the dataset rather than rows.}
 \description{
 Update a variable or variables in a dataset
 }
-

@@ -30,4 +30,3 @@ an object of class \code{CrunchCube}
 Create a contingency table or other aggregation from cross-classifying
 variables in a CrunchDataset.
 }
-

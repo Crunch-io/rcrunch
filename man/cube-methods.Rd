@@ -3,8 +3,8 @@
 \docType{methods}
 \name{cube-methods}
 \alias{cube-methods}
-\alias{dim,CubeDims-method}
 \alias{dimnames,CubeDims-method}
+\alias{dim,CubeDims-method}
 \alias{is.na,CubeDims-method}
 \title{Methods on Cube objects}
 \usage{
@@ -28,4 +28,3 @@ object.
 \seealso{
 \code{\link{cube-computing}}
 }
-

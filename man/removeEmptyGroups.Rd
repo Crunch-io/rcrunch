@@ -16,4 +16,3 @@ removeEmptyGroups(x)
 This function recurses through a \code{ShojiOrder}/\code{OrderGroup} and
 removes any groups that contain no entities.
 }
-

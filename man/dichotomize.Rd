@@ -3,17 +3,17 @@
 \docType{methods}
 \name{dichotomize}
 \alias{dichotomize}
-\alias{dichotomize,CategoricalArrayVariable,ANY-method}
-\alias{dichotomize,CategoricalVariable,ANY-method}
-\alias{dichotomize,Categories,character-method}
-\alias{dichotomize,Categories,logical-method}
-\alias{dichotomize,Categories,numeric-method}
 \alias{is.dichotomized}
-\alias{is.dichotomized,Categories-method}
 \alias{undichotomize}
-\alias{undichotomize,CategoricalArrayVariable-method}
-\alias{undichotomize,CategoricalVariable-method}
+\alias{is.dichotomized,Categories-method}
+\alias{dichotomize,Categories,numeric-method}
+\alias{dichotomize,Categories,logical-method}
+\alias{dichotomize,Categories,character-method}
 \alias{undichotomize,Categories-method}
+\alias{dichotomize,CategoricalVariable,ANY-method}
+\alias{dichotomize,CategoricalArrayVariable,ANY-method}
+\alias{undichotomize,CategoricalVariable-method}
+\alias{undichotomize,CategoricalArrayVariable-method}
 \title{Indicate how categories represent a dichotomized value}
 \usage{
 \S4method{is.dichotomized}{Categories}(x)
@@ -58,4 +58,3 @@ a Categorical Array to a Multiple Response, and undichotomize converts back.
 \seealso{
 \code{\link{describe-category}}
 }
-

@@ -36,4 +36,3 @@ settings(ds)
 settings(ds)$viewers_can_export <- TRUE
 }
 }
-

@@ -21,4 +21,3 @@ post the edit to the Crunch server.
 Base setter for Crunch objects
 }
 \keyword{internal}
-

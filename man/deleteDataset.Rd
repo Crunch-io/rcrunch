@@ -30,4 +30,3 @@ package that masks the \code{delete} method.
 \seealso{
 \code{\link{delete}}
 }
-

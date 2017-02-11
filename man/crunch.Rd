@@ -20,4 +20,3 @@ To learn more about using the package, see
 \code{vignette("getting-started", package="crunch")}. To sign up for a
 Crunch.io account, visit \url{https://app.crunch.io/}.
 }
-

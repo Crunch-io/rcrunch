@@ -39,4 +39,3 @@ ds$pets_owned2 <- combine(ds$allpets, name="Pets owned (collapsed)",
     combinations=list(list(name="Mammals", responses=c("Cat", "Dog"))))
 }
 }
-
