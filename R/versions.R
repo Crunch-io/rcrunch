@@ -46,6 +46,7 @@ saveVersion <- function (dataset, description=paste("Version",
     }
     u <- shojiURL(dataset, "catalogs", "savepoints")
     out <- crPOST(u, body=toJSON(list(description=description)),
+        config=config(followlocation=0), ## Don't automatically GET the 303 Location
         status.handlers=list(`303`=function (response) {
             message("No unsaved changes; no new version created.")
         }))
