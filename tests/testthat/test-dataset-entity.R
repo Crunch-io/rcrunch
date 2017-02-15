@@ -363,9 +363,9 @@ with_test_authentication({
         test_that("Setting default weight", {
             settings(ds)$weight <- self(ds$name)
             expect_identical(settings(ds)$weight, self(ds$name))
-            ## And it should now be in the weight_variables catalog too right?
-            expect_identical(urls(ShojiCatalog(crGET(shojiURL(ds, "catalogs",
-                "weight_variables")))), self(ds$name))
+            ## And it should now be in the weight variables order too
+            expect_identical(urls(ShojiOrder(crGET(shojiURL(variables(ds),
+                "orders", "weights")))), self(ds$name))
             ## Can also remove the setting
             settings(ds)$weight <- NULL
             expect_null(settings(ds)$weight)
