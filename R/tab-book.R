@@ -139,3 +139,15 @@ setMethod("lapply", "MultitableResult", function (X, FUN, ...) {
 setMethod("show", "MultitableResult", function (object) {
     show(do.call("cbind", lapply(object, cubeToArray)))
 })
+
+#' @rdname cube-computing
+#' @export
+setMethod("prop.table", "MultitableResult", function (x, margin=NULL) {
+    lapply(x, prop.table, margin=margin)
+})
+
+#' @rdname cube-computing
+#' @export
+setMethod("prop.table", "TabBookResult", function (x, margin=NULL) {
+    lapply(x, prop.table, margin=margin)
+})

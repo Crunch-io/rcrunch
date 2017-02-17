@@ -146,7 +146,21 @@ with_mock_HTTP({
                     c("Admitted", "Rejected"),
                     c("", "A", "B", "C", "D", "E", "F", "Male", "Female")))
             expect_output(print(book[[1]]), get_output(out))
+
+            ## TODO: print method for TabBookResult
         })
+        test_that("prop.table methods", {
+            ## prop.table on a TabBookResult returns a list of lists of prop.tables
+            expect_identical(prop.table(book)[[2]][[2]],
+                prop.table(book[[2]][[2]]))
+            expect_identical(prop.table(book, 1)[[2]][[2]],
+                prop.table(book[[2]][[2]], 1))
+            skip("TODO: special treatment for the first (total?) column")
+            expect_identical(prop.table(book, 2)[[2]][[2]],
+                prop.table(book[[2]][[2]], 2))
+        })
+        ## TODO: something more with variable metadata? For cubes more generally?
+        ## --> are descriptions coming from backend if they exist?
     })
 })
 
@@ -199,10 +213,7 @@ with_test_authentication({
 
     test_that("We can get an json tab book", {
         skip_locally("Vagrant host doesn't serve files correctly")
-        f <- tempfile()
-        out <- tabBook(mult, data=ds, format="json", file=f)
-        expect_true(file.exists(out))
-        tb <- fromJSON(out)
-        expect_true("sheets" %in% names(tb))
+        book <- tabBook(mult, data=ds, format="json")
+        expect_is(book, "TabBookResult")
     })
 })
