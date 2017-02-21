@@ -24,6 +24,13 @@ test_that("rollup CrunchExpr from zcl variable", {
             list(value="Y"))))
 })
 
+test_that("rollup resolution validation", {
+    expect_error(rollup("a", resolution="Invalid"),
+        " is invalid. Valid values are NULL, ")
+    expect_error(rollup("a", resolution=42),
+        " is invalid. Valid values are NULL, ")
+})
+
 with_mock_HTTP({
     ds <- loadDataset("test ds")
     v <- ds$starttime
@@ -47,13 +54,6 @@ with_mock_HTTP({
     })
 })
 
-test_that("rollup resolution validation", {
-    expect_error(rollup("a", resolution="Invalid"),
-        " is invalid. Valid values are NULL, ")
-    expect_error(rollup("a", resolution=42),
-        " is invalid. Valid values are NULL, ")
-})
-
 adims <- CubeDims(list(
     v4=list(name=c("B", "C"), any.or.none=rep(FALSE, 2),
         missing=rep(FALSE, 2)),
@@ -70,6 +70,19 @@ a1 <- CrunchCube(arrays=list("count"=array(c(
 #   B 8 3 2 0
 #   C 6 2 3 0
 
+df.dims <- list(
+    v3=c("5-10", "10-15", "15-20", "20-25", "25-30"),
+    v4=c("B", "C"),
+    v7=LETTERS[3:5],
+    v8=c("1955-11-05", "1955-11-06")
+)
+
+arrayify <- function (data, dims) {
+    ## dims are names (aliases) of dims defined above
+    dn <- df.dims[dims]
+    array(data, dim=vapply(dn, length, integer(1), USE.NAMES=FALSE), dimnames=dn)
+}
+
 test_that("Cube print method", {
     expect_output(a1,
         paste("   v7",
@@ -81,9 +94,9 @@ test_that("Cube print method", {
 test_that("simple margin.table", {
     expect_equivalent(margin.table(a1, 1), margin.table(a1@arrays[[1]], 1))
     expect_identical(margin.table(a1, 1),
-        array(c(13, 11), dim=2L, dimnames=list(v4=c("B", "C"))))
+        arrayify(c(13, 11), "v4"))
     expect_identical(margin.table(a1, 2),
-        array(c(14, 5, 5), dim=3L, dimnames=list(v7=LETTERS[3:5])))
+        arrayify(c(14, 5, 5), "v7"))
     expect_equivalent(margin.table(a1), margin.table(a1@arrays[[1]]))
     expect_identical(margin.table(a1), 24)
 })
@@ -92,7 +105,7 @@ test_that("margin.table with any/none", {
     a2 <- a1
     a2@dims[[2]]$any.or.none[1] <- TRUE ## "C"
     expect_identical(margin.table(a2, 1),
-        array(c(8, 6), dim=2L, dimnames=list(v4=c("B", "C"))))
+        arrayify(c(8, 6), "v4"))
     expect_identical(margin.table(a2, 2),
         array(c(5, 5), dim=2L, dimnames=list(v7=LETTERS[4:5])))
     expect_identical(margin.table(a2), 14)
@@ -103,7 +116,7 @@ test_that("margin.table with missing", {
     a2@dims[[2]]$missing[2] <- TRUE ## "D"
     expect_identical(a2@useNA, "no") ## The default.
     expect_identical(margin.table(a2, 1),
-        array(c(10, 9), dim=2L, dimnames=list(v4=c("B", "C"))))
+        arrayify(c(10, 9), "v4"))
     expect_identical(margin.table(a2, 2),
         array(c(14, 5), dim=2L, dimnames=list(v7=c("C", "E"))))
     expect_identical(margin.table(a2), 19)
@@ -111,14 +124,14 @@ test_that("margin.table with missing", {
     a2@useNA <- "ifany"
     ## Should be the same as first tests
     expect_identical(margin.table(a2, 1),
-        array(c(13, 11), dim=2L, dimnames=list(v4=c("B", "C"))))
+        arrayify(c(13, 11), "v4"))
     expect_identical(margin.table(a2, 2),
-        array(c(14, 5, 5), dim=3L, dimnames=list(v7=LETTERS[3:5])))
+        arrayify(c(14, 5, 5), "v7"))
     expect_identical(margin.table(a2), 24)
 
     a2@useNA <- "always"
     expect_identical(margin.table(a2, 1),
-        array(c(13, 11), dim=2L, dimnames=list(v4=c("B", "C"))))
+        arrayify(c(13, 11), "v4"))
     expect_identical(margin.table(a2, 2),
         array(c(14, 5, 5, 0), dim=4L,
             dimnames=list(v7=c(LETTERS[3:5], "No Data"))))
@@ -132,78 +145,94 @@ with_test_authentication({
             c("C", "D", "E", "No Data"))
     })
     test_that("We can get a univariate categorical cube", {
-        kube <- try(crtabs(~ v7, data=ds))
+        kube <- crtabs(~ v7, data=ds)
         expect_is(kube, "CrunchCube")
-        expect_equivalent(as.array(kube),
-            array(c(10, 5, 5), dim=c(3L),
-                dimnames=list(v7=LETTERS[3:5])))
+        expect_equivalent(as.array(kube), arrayify(c(10, 5, 5), "v7"))
         ## Not sure why not identical, str makes them look the same
     })
 
     test_that("We can get a bivariate categorical cube", {
-        kube <- try(crtabs(~ v4 + v7, data=ds))
+        kube <- crtabs(~ v4 + v7, data=ds)
         expect_is(kube, "CrunchCube")
         expect_identical(as.array(kube),
-            array(c(5, 5, 3, 2, 2, 3), dim=c(2L, 3L),
-                dimnames=list(v4=c("B", "C"), v7=LETTERS[3:5])))
+            arrayify(c(5, 5, 3, 2, 2, 3), c("v4", "v7")))
     })
 
+    ## Make a category with data be missing
     is.na(categories(ds$v7)) <- "D"
+    ## Update it in the dimensions map
+    df.dims$v7 <- c("C", "E")
+
     test_that("useNA on univariate cube", {
         expect_equivalent(as.array(crtabs(~ v7, data=ds)),
-            array(c(10, 5), dim=2L, dimnames=list(v7=c("C", "E"))))
-        expect_equivalent(as.array(crtabs(~ v7, data=ds,
-            useNA="ifany")),
-            array(c(10, 5, 5), dim=c(3L),
-                dimnames=list(v7=LETTERS[3:5])))
+            array(c(10, 5),
+                dim=2L,
+                dimnames=list(
+                    v7=c("C", "E")
+                )))
+        expect_equivalent(as.array(crtabs(~ v7, data=ds)),
+            arrayify(c(10, 5), "v7"))
+        expect_equivalent(as.array(crtabs(~ v7, data=ds, useNA="ifany")),
+            array(c(10, 5, 5),
+                dim=3L,
+                dimnames=list(
+                    v7=c("C", "D", "E")
+                )))
         expect_equivalent(as.array(crtabs(~ v7, data=ds,
             useNA="always")),
-            array(c(10, 5, 5, 0), dim=c(4L),
-                dimnames=list(v7=c(LETTERS[3:5], "No Data"))))
+            array(c(10, 5, 5, 0),
+                dim=4L,
+                dimnames=list(
+                    v7=c(LETTERS[3:5], "No Data")
+                )))
     })
     test_that("useNA on bivariate cube", {
         expect_equivalent(as.array(crtabs(~ v4 + v7, data=ds)),
-            array(c(5, 5, 2, 3), dim=c(2L, 2L),
-                dimnames=list(v4=c("B", "C"), v7=c("C", "E"))))
-        expect_equivalent(as.array(crtabs(~ v4 + v7, data=ds,
-            useNA="ifany")),
-            array(c(5, 5, 3, 2, 2, 3), dim=c(2L, 3L),
-                dimnames=list(v4=c("B", "C"), v7=LETTERS[3:5])))
-        expect_equivalent(as.array(crtabs(~ v4 + v7, data=ds,
-            useNA="always")),
+            arrayify(c(5, 5, 2, 3), c("v4", "v7")))
+        expect_equivalent(as.array(crtabs(~ v4 + v7, data=ds, useNA="ifany")),
+            array(c(5, 5, 3, 2, 2, 3),
+                dim=c(2L, 3L),
+                dimnames=list(
+                    v4=c("B", "C"),
+                    v7=c(LETTERS[3:5])
+                )))
+        expect_equivalent(as.array(crtabs(~ v4 + v7, data=ds, useNA="always")),
             array(c(5, 5, 0,
                     3, 2, 0,
                     2, 3, 0,
-                    0, 0, 0), dim=c(3L, 4L),
-                dimnames=list(v4=c("B", "C", "No Data"),
-                            v7=c(LETTERS[3:5], "No Data"))))
+                    0, 0, 0),
+                dim=c(3L, 4L),
+                dimnames=list(
+                    v4=c("B", "C", "No Data"),
+                    v7=c(LETTERS[3:5], "No Data")
+                )))
     })
 
     test_that("univariate datetime cube", {
-        kube <- try(crtabs(~ v8, data=ds))
+        kube <- crtabs(~ v8, data=ds)
         expect_is(kube, "CrunchCube")
-        expect_equivalent(as.array(kube),
-            array(c(10, 10), dim=c(2L),
-                dimnames=list(v8=c("1955-11-05", "1955-11-06"))))
+        expect_equivalent(as.array(kube), arrayify(c(10, 10), "v8"))
     })
     test_that("bivariate cube with datetime", {
         expect_equivalent(as.array(crtabs(~ v8 + v7, data=ds)),
-            array(c(5, 5, 2, 3), dim=c(2L, 2L),
-                dimnames=list(v8=c("1955-11-05", "1955-11-06"),
-                v7=c("C", "E"))))
-        expect_equivalent(as.array(crtabs(~ v8 + v7, data=ds,
-            useNA="ifany")),
-            array(c(5, 5, 3, 2, 2, 3), dim=c(2L, 3L),
-                dimnames=list(v8=c("1955-11-05", "1955-11-06"),
-                v7=LETTERS[3:5])))
-        expect_equivalent(as.array(crtabs(~ v8 + v7, data=ds,
-            useNA="always")),
+            arrayify(c(5, 5, 2, 3), c("v8", "v7")))
+        expect_equivalent(as.array(crtabs(~ v8 + v7, data=ds, useNA="ifany")),
+            array(c(5, 5, 3, 2, 2, 3),
+                dim=c(2L, 3L),
+                dimnames=list(
+                    v8=c("1955-11-05", "1955-11-06"),
+                    v7=LETTERS[3:5]
+                )))
+        expect_equivalent(as.array(crtabs(~ v8 + v7, data=ds, useNA="always")),
             array(c(5, 5,
                     3, 2,
                     2, 3,
-                    0, 0), dim=c(2L, 4L),
-                dimnames=list(v8=c("1955-11-05", "1955-11-06"),
-                v7=c(LETTERS[3:5], "No Data"))))
+                    0, 0),
+                dim=c(2L, 4L),
+                dimnames=list(
+                    v8=c("1955-11-05", "1955-11-06"),
+                    v7=c(LETTERS[3:5], "No Data")
+                )))
     })
 
     test_that("datetime rollup cubes", {
@@ -212,43 +241,50 @@ with_test_authentication({
         expect_equivalent(as.array(crtabs(~ rollup(v8) + v7, data=ds)),
             as.array(crtabs(~ v8 + v7, data=ds)))
         expect_equivalent(as.array(crtabs(~ rollup(v8, "M") + v7, data=ds)),
-            array(c(10, 5), dim=c(1L, 2L),
-                dimnames=list(v8=c("1955-11"),
-                v7=c("C", "E"))))
+            array(c(10, 5),
+                dim=c(1L, 2L),
+                dimnames=list(
+                    v8="1955-11",
+                    v7=c("C", "E")
+                )))
         expect_equivalent(as.array(crtabs(~ rollup(v8, "Y") + v7, data=ds)),
-            array(c(10, 5), dim=c(1L, 2L),
-                dimnames=list(v8=c("1955"),
-                v7=c("C", "E"))))
+            array(c(10, 5),
+                dim=c(1L, 2L),
+                dimnames=list(
+                    v8="1955",
+                    v7=c("C", "E")
+                )))
     })
 
     test_that("univariate cube with binned numeric", {
-        kube <- try(crtabs(~ bin(v3), data=ds))
+        kube <- crtabs(~ bin(v3), data=ds)
         expect_is(kube, "CrunchCube")
         expect_equivalent(as.array(kube),
-            array(c(2, 5, 5, 5, 3), dim=c(5L),
-                dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25", "25-30"))))
+            arrayify(c(2, 5, 5, 5, 3), "v3"))
     })
     test_that("bivariate cube with binned numeric", {
         expect_equivalent(as.array(crtabs(~ bin(v3) + v7, data=ds)),
-            array(c(2, 5, 3, 0, 0,
-                    0, 0, 0, 2, 3), dim=c(5L, 2L),
-                dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25", "25-30"),
-                v7=c("C", "E"))))
-        expect_equivalent(as.array(crtabs(~ bin(v3) + v7, data=ds,
-            useNA="ifany")),
+            arrayify(c(2, 5, 3, 0, 0,
+                    0, 0, 0, 2, 3), c("v3", "v7")))
+        expect_equivalent(as.array(crtabs(~ bin(v3) + v7, data=ds, useNA="ifany")),
             array(c(2, 5, 3, 0, 0,
                     0, 0, 2, 3, 0,
-                    0, 0, 0, 2, 3), dim=c(5L, 3L),
-                dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25", "25-30"),
-                v7=LETTERS[3:5])))
-        expect_equivalent(as.array(crtabs(~ bin(v3) + v7, data=ds,
-            useNA="always")),
+                    0, 0, 0, 2, 3),
+                dim=c(5L, 3L),
+                dimnames=list(
+                    v3=c("5-10", "10-15", "15-20", "20-25", "25-30"),
+                    v7=c("C", "D", "E")
+                )))
+        expect_equivalent(as.array(crtabs(~ bin(v3) + v7, data=ds, useNA="always")),
             array(c(2, 5, 3, 0, 0,
                     0, 0, 2, 3, 0,
                     0, 0, 0, 2, 3,
-                    0, 0, 0, 0, 0), dim=c(5L, 4L),
-                dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25", "25-30"),
-                v7=c(LETTERS[3:5], "No Data"))))
+                    0, 0, 0, 0, 0),
+                dim=c(5L, 4L),
+                dimnames=list(
+                    v3=c("5-10", "10-15", "15-20", "20-25", "25-30"),
+                    v7=c(LETTERS[3:5], "No Data")
+                )))
     })
     test_that("unbinned numeric", {
         expect_equivalent(as.array(crtabs(~ v1, data=ds)),
@@ -261,99 +297,72 @@ with_test_authentication({
     test_that("Weighted cubes", {
         weight(ds) <- ds$v3
         expect_equivalent(as.array(crtabs(~ v8 + v7, data=ds)),
-            array(c(60, 65, 50, 75), dim=c(2L, 2L),
-                dimnames=list(v8=c("1955-11-05", "1955-11-06"), v7=c("C", "E"))))
+            arrayify(c(60, 65, 50, 75), c("v8", "v7")))
         expect_equivalent(as.array(crtabs(~ v8 + v7, data=ds, weight=NULL)),
-            array(c(5, 5, 2, 3), dim=c(2L, 2L),
-                dimnames=list(v8=c("1955-11-05", "1955-11-06"), v7=c("C", "E"))))
+            arrayify(c(5, 5, 2, 3), c("v8", "v7")))
         weight(ds) <- NULL
         expect_equivalent(as.array(crtabs(~ v8 + v7, data=ds)),
-            array(c(5, 5, 2, 3), dim=c(2L, 2L),
-                dimnames=list(v8=c("1955-11-05", "1955-11-06"), v7=c("C", "E"))))
+            arrayify(c(5, 5, 2, 3), c("v8", "v7")))
         expect_equivalent(as.array(crtabs(~ v8 + v7, data=ds, weight=ds$v3)),
-            array(c(60, 65, 50, 75), dim=c(2L, 2L),
-                dimnames=list(v8=c("1955-11-05", "1955-11-06"), v7=c("C", "E"))))
+            arrayify(c(60, 65, 50, 75), c("v8", "v7")))
     })
 
     test_that("Numeric aggregates", {
         expect_equivalent(as.array(crtabs(mean(v3) ~ v8 + v7, data=ds)),
-            array(c(12, 13, 25, 25), dim=c(2L, 2L),
-                dimnames=list(v8=c("1955-11-05", "1955-11-06"),
-                v7=c("C", "E"))))
+            arrayify(c(12, 13, 25, 25), c("v8", "v7")))
         expect_equivalent(as.array(crtabs(sum(v3) ~ v8 + v7, data=ds)),
-            array(c(60, 65, 50, 75), dim=c(2L, 2L),
-                dimnames=list(v8=c("1955-11-05", "1955-11-06"),
-                v7=c("C", "E"))))
+            arrayify(c(60, 65, 50, 75), c("v8", "v7")))
         expect_equivalent(as.array(crtabs(min(v3) ~ v8 + v7, data=ds)),
-            array(c(8, 9, 24, 23), dim=c(2L, 2L),
-                dimnames=list(v8=c("1955-11-05", "1955-11-06"),
-                v7=c("C", "E"))))
+            arrayify(c(8, 9, 24, 23), c("v8", "v7")))
         expect_equivalent(as.array(crtabs(median(v3) ~ v8 + v7, data=ds)),
-            array(c(12, 13, 25, 25), dim=c(2L, 2L),
-                dimnames=list(v8=c("1955-11-05", "1955-11-06"),
-                v7=c("C", "E"))))
+            arrayify(c(12, 13, 25, 25), c("v8", "v7")))
     })
 
     test_that("Numeric aggregates on categoricals with numeric values", {
         expect_equivalent(as.array(crtabs(mean(v4) ~ v4, data=ds)),
-            array(c(1, 2), dim=2L, dimnames=list(v4=c("B", "C"))))
+            arrayify(c(1, 2), "v4"))
     })
 
     test_that("Missing values in cubes", {
         expect_equivalent(round(as.array(crtabs(sd(v3) ~ bin(v3) + v7,
             data=ds)), 3),
-            array(c(0.707, 1.581, 1, NaN, NaN,
-                    NaN, NaN, NaN, 0.707, 1), dim=c(5L, 2L),
-                dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25", "25-30"),
-                v7=c("C", "E"))))
+            arrayify(c(0.707, 1.581, 1, NaN, NaN,
+                    NaN, NaN, NaN, 0.707, 1), c("v3", "v7")))
     })
 
     test_that("round cubes", {
         expect_equivalent(round(crtabs(sd(v3) ~ bin(v3) + v7, data=ds), 3),
-            array(c(0.707, 1.581, 1, NaN, NaN,
-                    NaN, NaN, NaN, 0.707, 1), dim=c(5L, 2L),
-                dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25", "25-30"),
-                v7=c("C", "E"))))
+            arrayify(c(0.707, 1.581, 1, NaN, NaN,
+                    NaN, NaN, NaN, 0.707, 1), c("v3", "v7")))
     })
 
     test_that("Cube with variables and R objects", {
         skip("object 'd4' not found")
         d4 <- cubedf$v4
         expect_equivalent(as.array(crtabs(~ d4 + v7, data=ds)),
-            array(c(5, 5, 2, 3), dim=c(2L, 2L),
-                dimnames=list(v4=c("B", "C"), v7=c("C", "E"))))
+            arrayify(c(5, 5, 2, 3), c("v4", "v7")))
     })
 
     test_that("Cube with transformations", {
         expect_equivalent(as.array(crtabs(~ bin(v3 + 5), data=ds)),
-            array(c(2, 5, 5, 5, 3), dim=c(5L),
-                dimnames=list(v3=c("10-15", "15-20", "20-25", "25-30", "30-35"))))
+            arrayify(c(2, 5, 5, 5, 3), "v3"))
     })
 
     test_that("prop.table on univariate cube", {
         expect_equivalent(prop.table(crtabs(~ bin(v3 + 5), data=ds)),
-            array(c(2, 5, 5, 5, 3)/20, dim=c(5L),
-                dimnames=list(v3=c("10-15", "15-20", "20-25", "25-30", "30-35"))))
+            arrayify(c(2, 5, 5, 5, 3)/20, "v3"))
     })
 
     test_that("prop.table on crosstab", {
         expect_equivalent(prop.table(crtabs(~ bin(v3) + v7, data=ds)),
-            array(c(2, 5, 3, 0, 0,
-                    0, 0, 0, 2, 3)/15, dim=c(5L, 2L),
-                dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25", "25-30"),
-                v7=c("C", "E"))))
+            arrayify(c(2, 5, 3, 0, 0,
+                    0, 0, 0, 2, 3)/15, c("v3", "v7")))
         expect_equivalent(prop.table(crtabs(~ bin(v3) + v7, data=ds), margin=1),
-            array(c(1, 1, 1, 0, 0,
-                    0, 0, 0, 1, 1), dim=c(5L, 2L),
-                dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25",
-                "25-30"),
-                v7=c("C", "E"))))
-        expect_equivalent(prop.table(crtabs(~ bin(v3) + v7, data=ds),
-            margin=2),
-            array(c(.2, .5, .3, 0, 0,
-                    0, 0, 0, .4, .6), dim=c(5L, 2L),
-                dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25", "25-30"),
-                v7=c("C", "E"))))
+            arrayify(c(1, 1, 1, 0, 0,
+                    0, 0, 0, 1, 1), c("v3", "v7")))
+        expect_equivalent(prop.table(crtabs(~ bin(v3) + v7, data=ds), margin=2),
+            arrayify(c(.2, .5, .3, 0, 0,
+                    0, 0, 0, .4, .6), c("v3", "v7")))
     })
 
     test_that("Univariate stats", {
