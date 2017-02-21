@@ -119,6 +119,20 @@ setMethod("lapply", "TabBookResult", function (X, FUN, ...) {
 
 setMethod("initialize", "MultitableResult", function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
+    ## The first cube in the results list is the "total" column. It's a 1-D
+    ## cube, so fake its dims so that it appears to be 2-D, n x 1
+    .Object$result[[1]]$result$dimensions[[2]] <- list(
+        type=list(
+            class="enum",
+            elements=list(
+                list(id=0, value="", missing=FALSE)
+            )
+        ),
+        references=list(
+            alias="total",
+            name="Total"
+        )
+    )
     .Object$result <- lapply(.Object$result, CrunchCube)
     return(.Object)
 })

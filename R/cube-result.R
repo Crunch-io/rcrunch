@@ -1,4 +1,4 @@
-.init.Cube <- function (.Object, ...) {
+setMethod("initialize", "CrunchCube", function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     ## Fill in these reshaped values if loading an API response
     if (!length(.Object@dims)) .Object@dims <- cubeDims(.Object)
@@ -7,8 +7,15 @@
             dims=.Object@dims)
     }
     return(.Object)
-}
-setMethod("initialize", "CrunchCube", .init.Cube)
+})
+
+#' @rdname cube-methods
+#' @export
+setMethod("dim", "CrunchCube", function (x) dim(x@dims))
+
+#' @rdname cube-methods
+#' @export
+setMethod("dimnames", "CrunchCube", function (x) dimnames(x@dims))
 
 cToA <- function (x, dims) {
     ## Just make an array from the cube "measure's" data. Nothing else
@@ -44,7 +51,7 @@ cubeToArray <- function (x, measure=1) {
     out <- x@arrays[[measure]]
     if (is.array(out)) {
         ## If "out" is just a scalar, skip this
-        dimnames(out) <- dimnames(x@dims)
+        dimnames(out) <- dimnames(x)
         out <- pruneCubeArray(out, x)
     }
     return(out)
@@ -98,7 +105,7 @@ keepWithNA <- function (dimension, marginal, useNA) {
 cubeMarginTable <- function (x, margin=NULL, measure=1) {
     ## Given a CrunchCube, get the right margin table for percentaging
     data <- x@arrays[[measure]]
-    dimnames(data) <- dimnames(x@dims)
+    dimnames(data) <- dimnames(x)
     aon <- anyOrNone(x@dims)
     missings <- is.na(x@dims)
 
@@ -143,7 +150,7 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     return(out)
 }
 
-#' Work with CrunchCubes
+#' Work with CrunchCubes, MultitableResults, and TabBookResults
 #'
 #' Crunch.io supports more complex data types than base R does, such as
 #' multiple response and array types. If you want to compute margin or
@@ -156,7 +163,10 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
 #' @param margin index, or vector of indices to generate margin for. See
 #' \code{\link[base]{prop.table}}
 #' @param digits see \code{\link[base]{round}}
-#' @return The appropriate margin.table or prop.table.
+#' @return The appropriate margin.table or prop.table. Calling prop.table on
+#' a MultitableResult returns a list of prop.tables of the CrunchCubes it
+#' contains. Likewise, prop.table on a TabBookResult returns a list of list of
+#' prop.tables.
 #' @name cube-computing
 #' @aliases cube-computing margin.table prop.table
 #' @seealso \code{\link[base]{margin.table}} \code{\link[base]{prop.table}}

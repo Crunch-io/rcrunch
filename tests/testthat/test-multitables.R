@@ -146,8 +146,10 @@ with_mock_HTTP({
                     c("Admitted", "Rejected"),
                     c("", "A", "B", "C", "D", "E", "F", "Male", "Female")))
             expect_output(print(book[[1]]), get_output(out))
-
             ## TODO: print method for TabBookResult
+        })
+        test_that("The first result in a MultitableResult has 2 dimensions", {
+            expect_identical(dim(book[[1]][[1]]), c(2L, 1L))
         })
         test_that("prop.table methods", {
             ## prop.table on a TabBookResult returns a list of lists of prop.tables
@@ -155,12 +157,23 @@ with_mock_HTTP({
                 prop.table(book[[2]][[2]]))
             expect_identical(prop.table(book, 1)[[2]][[2]],
                 prop.table(book[[2]][[2]], 1))
-            skip("TODO: special treatment for the first (total?) column")
             expect_identical(prop.table(book, 2)[[2]][[2]],
                 prop.table(book[[2]][[2]], 2))
         })
         ## TODO: something more with variable metadata? For cubes more generally?
         ## --> are descriptions coming from backend if they exist?
+    })
+
+    with_POST("api/datasets/1/multitables/tabbook-array-result.json", {
+        book <- tabBook(m, data=ds, format="json")
+        test_that("tabBook JSON with arrays returns TabBookResult", {
+            expect_is(book, "TabBookResult")
+            expect_identical(dim(book), c(3L, 3L))
+            expect_identical(names(book),
+                c("quarter", "categorical_array", "mymrset"))
+            expect_identical(prop.table(book, 2)[[2]][[2]],
+                prop.table(book[[2]][[2]], 2))
+        })
     })
 })
 
