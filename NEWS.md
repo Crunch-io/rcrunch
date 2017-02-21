@@ -1,5 +1,7 @@
 ### crunch 1.14.5 (under development)
 * `multitables` method to access catalog from a Dataset. `newMultitable` to create one. See `?multitables` and `?newMultitable` for docs and examples.
+* `tabBook` to compute a tab book with a multitable. If `format="json"`, returns a `TabBookResult` containing `CrunchCube` objects with which further analysis or formatting can be done.
+* `bases` method for cubes and tab book responses to access unweighted counts and margin tables.
 * Update to work with [roxygen2 6.0.0 release](https://github.com/klutometis/roxygen/issues/568)
 
 ### crunch 1.14.4

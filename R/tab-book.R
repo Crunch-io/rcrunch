@@ -165,3 +165,15 @@ setMethod("prop.table", "MultitableResult", function (x, margin=NULL) {
 setMethod("prop.table", "TabBookResult", function (x, margin=NULL) {
     lapply(x, prop.table, margin=margin)
 })
+
+#' @rdname cube-computing
+#' @export
+setMethod("bases", "TabBookResult", function (x, margin=NULL) {
+    lapply(x, bases, margin=margin)
+})
+
+#' @rdname cube-computing
+#' @export
+setMethod("bases", "MultitableResult", function (x, margin=NULL) {
+    lapply(x, bases, margin=margin)
+})

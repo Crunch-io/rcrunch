@@ -125,9 +125,10 @@ setGeneric("as.vector")
 setGeneric("as.environment")
 setGeneric("dimnames")
 setGeneric("margin.table")
-
 setGeneric("prop.table")
 setGeneric("round")
+
+setGeneric("bases", function (x, margin=NULL) standardGeneric("bases"))
 
 setGeneric("subset")
 setGeneric("which", signature="x")
