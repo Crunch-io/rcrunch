@@ -64,11 +64,11 @@ with_test_authentication({
             expect_null(weight(ds))
         })
         test_that("Reverting to old version rolls back weight variables", {
-            ds <- saveVersion(ds, "Before w")
             ds$w <- 1:20
             weight(ds) <- ds$w
             expect_equivalent(weight(ds), ds$w)
-            ds <- restoreVersion(ds, "Before w")
+            ds <- restoreVersion(ds, 1)
+            expect_null(ds$w)
             expect_null(weight(ds))
         })
         test_that("And I can add new weights because weight_variables is valid", {
