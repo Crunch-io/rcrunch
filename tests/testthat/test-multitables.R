@@ -40,8 +40,8 @@ with_mock_HTTP({
         expect_no_request(is.public(mults)[2] <- TRUE)
     })
 
+    m <- mults[[1]]
     test_that("Multitable object methods", {
-        m <- mults[[1]]
         expect_identical(name(m), "My banner")
         expect_PATCH(name(m) <- "Another name",
             'api/datasets/1/multitables/ed30c4/',
@@ -65,8 +65,8 @@ with_mock_HTTP({
             '"variable":"api/datasets/1/variables/mymrset/"}]',
             '}}')
         with_POST("api/datasets/1/multitables/4de322/", {
-            m <- newMultitable(~ gender + mymrset, data=ds, name="New multitable")
-            expect_is(m, "Multitable")
+            mtable <- newMultitable(~ gender + mymrset, data=ds, name="New multitable")
+            expect_is(mtable, "Multitable")
         })
     })
 
@@ -83,8 +83,8 @@ with_mock_HTTP({
             '"variable":"api/datasets/1/variables/mymrset/"}]',
             '}}')
         with_POST("api/datasets/1/multitables/4de322/", {
-            m <- newMultitable(~ gender + mymrset, data=ds, name="New multitable")
-            expect_is(m, "Multitable")
+            mtable <- newMultitable(~ gender + mymrset, data=ds, name="New multitable")
+            expect_is(mtable, "Multitable")
         })
     })
 
@@ -94,6 +94,86 @@ with_mock_HTTP({
             paste(dQuote("data"), "must be a Dataset"))
         expect_error(newMultitable(., data=""),
             paste(dQuote("data"), "must be a Dataset"))
+    })
+
+    test_that("cache priming (so that requests don't cloud tests below)", {
+        expect_null(weight(ds))
+    })
+    test_that("tabBook sets the right request header", {
+        expect_header(
+            expect_POST(tabBook(m, data=ds, format="xlsx"),
+                'api/datasets/1/multitables/ed30c4/tabbook/'),
+            "Accept: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+        expect_header(
+            expect_POST(tabBook(m, data=ds, format="json"),
+                'api/datasets/1/multitables/ed30c4/tabbook/'),
+            "Accept: application/json")
+    })
+
+    ## TODO: test the query shape
+
+    with_POST("api/datasets/1/multitables/tabbook-result.json", {
+        book <- tabBook(m, data=ds, format="json")
+        test_that("tabBook JSON returns TabBookResult", {
+            expect_is(book, "TabBookResult")
+        })
+        test_that("TabBookResult and MultitableResult size/extract methods", {
+            expect_length(book, 2)
+            expect_is(book[[1]], "MultitableResult")
+            expect_length(book[[1]], 3)
+            expect_identical(dim(book), c(2L, 3L))
+            expect_is(book[[1]][[1]], "CrunchCube")
+        })
+        test_that("tab book names", {
+            expect_identical(names(book), c("Admit", "Gender"))
+            expect_is(book[["Admit"]], "MultitableResult")
+            expect_null(book[["NOTVALID"]])
+        })
+        test_that("tab book print methods", {
+            ## Print method for MultitableResult cbinds together the Cubes
+            out <- structure(
+                c(1716.8015767569, 2735.1538620464,
+                  572.8103823945, 324.958269652,
+                  367.0225567043, 209.9176698914,
+                  318.2739139279, 586.5329524502,
+                  265.3917388913, 512.5016544579,
+                  151.0637898576, 433.6789928332,
+                  42.2391949812, 667.5643227616,
+                  1169.7863186983, 1473.8095477065,
+                  547.0152580586, 1261.3443143399),
+                .Dim=c(2L, 9L),
+                .Dimnames=list(
+                    c("Admitted", "Rejected"),
+                    c("", "A", "B", "C", "D", "E", "F", "Male", "Female")))
+            expect_output(print(book[[1]]), get_output(out))
+            ## TODO: print method for TabBookResult
+        })
+        test_that("The first result in a MultitableResult has 2 dimensions", {
+            expect_identical(dim(book[[1]][[1]]), c(2L, 1L))
+        })
+        test_that("prop.table methods", {
+            ## prop.table on a TabBookResult returns a list of lists of prop.tables
+            expect_identical(prop.table(book)[[2]][[2]],
+                prop.table(book[[2]][[2]]))
+            expect_identical(prop.table(book, 1)[[2]][[2]],
+                prop.table(book[[2]][[2]], 1))
+            expect_identical(prop.table(book, 2)[[2]][[2]],
+                prop.table(book[[2]][[2]], 2))
+        })
+        ## TODO: something more with variable metadata? For cubes more generally?
+        ## --> are descriptions coming from backend if they exist?
+    })
+
+    with_POST("api/datasets/1/multitables/tabbook-array-result.json", {
+        book <- tabBook(m, data=ds, format="json")
+        test_that("tabBook JSON with arrays returns TabBookResult", {
+            expect_is(book, "TabBookResult")
+            expect_identical(dim(book), c(3L, 3L))
+            expect_identical(names(book),
+                c("quarter", "categorical_array", "mymrset"))
+            expect_identical(prop.table(book, 2)[[2]][[2]],
+                prop.table(book[[2]][[2]], 2))
+        })
     })
 })
 
@@ -135,5 +215,18 @@ with_test_authentication({
         names(multitables(ds)) <- "Yet another name"
         expect_identical(names(multitables(ds)), "Yet another name")
         expect_identical(names(refresh(multitables(ds))), "Yet another name")
+    })
+
+    test_that("We can get an xlsx tab book", {
+        skip_locally("Vagrant host doesn't serve files correctly")
+        f <- tempfile()
+        out <- tabBook(mult, data=ds, format="xlsx", file=f)
+        expect_true(file.exists(out))
+    })
+
+    test_that("We can get an json tab book", {
+        skip_locally("Vagrant host doesn't serve files correctly")
+        book <- tabBook(mult, data=ds, format="json")
+        expect_is(book, "TabBookResult")
     })
 })

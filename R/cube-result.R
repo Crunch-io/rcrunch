@@ -1,14 +1,31 @@
-.init.Cube <- function (.Object, ...) {
+setMethod("initialize", "CrunchCube", function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     ## Fill in these reshaped values if loading an API response
     if (!length(.Object@dims)) .Object@dims <- cubeDims(.Object)
     if (!length(.Object@arrays)) {
-        .Object@arrays <- lapply(.Object$result$measures, cToA,
-            dims=.Object@dims)
+        m <- .Object$result$measures
+        m[[".unweighted_counts"]] <- list(data=.Object$result$counts)
+        # print(m)
+        ## Add in the "counts"
+        # print(names(.Object$result))
+        # print(.Object$result$counts)
+        .Object@arrays <- lapply(
+            m,
+            # c(.Object$result$measures, list(.unweighted_counts=.Object$result$counts)),
+            cToA, dims=.Object@dims)
+        # print(names(.Object@arrays))
+        # print(.Object@arrays$.unweighted_counts)
     }
     return(.Object)
-}
-setMethod("initialize", "CrunchCube", .init.Cube)
+})
+
+#' @rdname cube-methods
+#' @export
+setMethod("dim", "CrunchCube", function (x) dim(x@dims))
+
+#' @rdname cube-methods
+#' @export
+setMethod("dimnames", "CrunchCube", function (x) dimnames(x@dims))
 
 cToA <- function (x, dims) {
     ## Just make an array from the cube "measure's" data. Nothing else
@@ -44,7 +61,7 @@ cubeToArray <- function (x, measure=1) {
     out <- x@arrays[[measure]]
     if (is.array(out)) {
         ## If "out" is just a scalar, skip this
-        dimnames(out) <- dimnames(x@dims)
+        dimnames(out) <- dimnames(x)
         out <- pruneCubeArray(out, x)
     }
     return(out)
@@ -98,7 +115,7 @@ keepWithNA <- function (dimension, marginal, useNA) {
 cubeMarginTable <- function (x, margin=NULL, measure=1) {
     ## Given a CrunchCube, get the right margin table for percentaging
     data <- x@arrays[[measure]]
-    dimnames(data) <- dimnames(x@dims)
+    dimnames(data) <- dimnames(x)
     aon <- anyOrNone(x@dims)
     missings <- is.na(x@dims)
 
@@ -143,7 +160,7 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     return(out)
 }
 
-#' Work with CrunchCubes
+#' Work with CrunchCubes, MultitableResults, and TabBookResults
 #'
 #' Crunch.io supports more complex data types than base R does, such as
 #' multiple response and array types. If you want to compute margin or
@@ -152,13 +169,24 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
 #' \code{\link[base]{margin.table}} and \code{\link[base]{prop.table}} for
 #' the CrunchCube object, handling those special data types.
 #'
+#' \code{bases} is an additional method for CrunchCubes. When making weighted
+#' requests, \code{bases} allows you to access the unweighted counts for every
+#' cell in the resulting table (array). The \code{bases} function takes a
+#' "margin" argument to work like \code{margin.table}, or with \code{margin=0}
+#' gives all cell counts.
+#'
 #' @param x a CrunchCube
 #' @param margin index, or vector of indices to generate margin for. See
-#' \code{\link[base]{prop.table}}
+#' \code{\link[base]{prop.table}}. \code{bases} accepts an additional valid
+#' value for \code{margin}, \code{0}, which yields the unweighted counts for the
+#' query, without reducing dimension.
 #' @param digits see \code{\link[base]{round}}
-#' @return The appropriate margin.table or prop.table.
+#' @return The appropriate margin.table or prop.table. Calling prop.table on
+#' a MultitableResult returns a list of prop.tables of the CrunchCubes it
+#' contains. Likewise, prop.table on a TabBookResult returns a list of list of
+#' prop.tables.
 #' @name cube-computing
-#' @aliases cube-computing margin.table prop.table
+#' @aliases cube-computing margin.table prop.table bases
 #' @seealso \code{\link[base]{margin.table}} \code{\link[base]{prop.table}}
 NULL
 
@@ -190,4 +218,15 @@ setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
 #' @export
 setMethod("round", "CrunchCube", function (x, digits=0) {
     round(as.array(x), digits)
+})
+
+#' @rdname cube-computing
+#' @export
+setMethod("bases", "CrunchCube", function (x, margin=NULL) {
+    if (length(margin) == 1 && margin == 0) {
+        ## Unlike margin.table. This just returns the "bases", without reducing
+        return(cubeToArray(x, ".unweighted_counts"))
+    } else {
+        return(cubeMarginTable(x, margin, measure=".unweighted_counts"))
+    }
 })

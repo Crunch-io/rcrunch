@@ -8,6 +8,7 @@ vget <- function (name) {
     ## Return a function you can lapply/vapply to select an attribute
     ## Usage: lapply(list.of.stuff, vget("name"))
     ## instead of: lapply(list.of.stuff, function (x) x$name)
+    ## N.B.: don't use if you're doing lapply(x, FUN) (because the x's will clash)
     return(function (x) x[[name]])
 }
 
