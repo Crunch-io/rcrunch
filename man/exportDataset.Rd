@@ -12,7 +12,8 @@ exportDataset(dataset, file, format = c("csv", "spss"),
 \S4method{write.csv}{CrunchDataset}(...)
 }
 \arguments{
-\item{dataset}{CrunchDataset}
+\item{dataset}{CrunchDataset, which may have been subsetted with a filter
+expression on the rows and a selection of variables on the columns.}
 
 \item{file}{character local filename to write to}
 

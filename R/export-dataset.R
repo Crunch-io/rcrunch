@@ -1,6 +1,7 @@
 #' Export a dataset to a file
 #'
-#' @param dataset CrunchDataset
+#' @param dataset CrunchDataset, which may have been subsetted with a filter
+#' expression on the rows and a selection of variables on the columns.
 #' @param file character local filename to write to
 #' @param format character export format: currently supported values are "csv"
 #' and "spss".
@@ -39,7 +40,10 @@ variablesFilter <- function (dataset) {
     ## Check to see if we have a subset of variables in `dataset`.
     ## If so, return a Crunch expression to filter them
     allvars <- allVariables(dataset)
-    if (length(allvars) != length(ShojiCatalog(crGET(self(allvars))))) {
+    ## TODO: fix Variable catalog so that it doesn't pop off its "relative"
+    ## query from self. Adding it here so that we hit cache.
+    dsvars <- ShojiCatalog(crGET(self(allvars), query=list(relative="on")))
+    if (length(allvars) != length(dsvars)) {
         v <- structure(lapply(urls(allvars), function (x) list(variable=x)),
             .Names=ids(allvars))
         return(list(`function`="select", args=list(list(map=v))))
