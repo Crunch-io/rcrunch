@@ -18,11 +18,11 @@ weight variable for \code{dataset}, or \code{NULL} for unweighted results.
 Default is the currently applied weight, \code{\link{weight}(dataset)}.}
 
 \item{format}{character export format: currently supported values are "json"
-and "xlsx".}
+(default) and "xlsx".}
 
 \item{file}{character local filename to write to. A default filename will be
 generated from the \code{multitable}'s name if one is not supplied and the
-"xlsx" format is requested.}
+"xlsx" format is requested. Not required for "json" format export.}
 
 \item{...}{Additional "options" passed to the tab book POST request.}
 }
@@ -44,4 +44,12 @@ work with by subsetting the \code{dataset} you pass into the function.
 By specifying a "json" \code{format}, instead of generating an Excel
 workbook, you'll get a TabBookResult object, containing nested CrunchCube
 results. You can then further format these and construct custom tab reports.
+}
+\examples{
+\dontrun{
+m <- newMultitable(~ gender + age4 + marstat, data=ds)
+tabBook(m, ds[ds$income > 1000000,], format="xlsx", file="wealthy-tab-book.xlsx")
+book <- tabBook(m, ds) # Returns a TabBookResult
+tables <- prop.table(book, 2)
+}
 }
