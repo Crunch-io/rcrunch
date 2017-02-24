@@ -46,6 +46,9 @@ with_test_authentication({
                 dimnames=list(
                     allpets_3=c("not selected", "selected", "not asked", "skipped")
                 )))
+        expect_length(as.vector(ds$q1[ds$allpets$allpets_1 == ds$allpets$allpets_2]),
+            6)
+        
         ds$allpets$allpets_3[ds$allpets$allpets_1 == ds$allpets$allpets_2] <- "selected"
         expect_equal(as.array(crtabs(~ allpets$allpets_3,
             data=ds[ds$allpets$allpets_1 == ds$allpets$allpets_2], useNA="always")),
