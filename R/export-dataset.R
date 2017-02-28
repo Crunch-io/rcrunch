@@ -7,12 +7,29 @@
 #' and "spss".
 #' @param categorical character: export categorical values to CSV as category
 #' "name" (default) or "id". Ignored by the SPSS exporter.
-#' @param ... additional arguments, currently ignored
+#' @param na Similar to the argument in \code{\link[utils]{write.table}}, 'na'
+#' lets you control how missing values are written into the CSV file. Currently
+#' supported values are (1) \code{NULL}, the default, which means that
+#' categorical variables will have the category name or id as the value, and
+#' numeric, text, and datetime variables will have the missing reason string;
+#' (2) \code{""}, which means that empty cells will be written for missing
+#' values for all types; and (3) \code{"."}, which writes a period for all
+#' missings. Unlike in \code{write.table}, other string codes are not
+#' currently supported.
+#' @param varlabel For SPSS export, which Crunch metadata field should be used
+#' as variable labels? Default is "name", but "description" is another valid
+#' value.
+#' @param ... additional options. See the API documentation. Currently supported
+#' boolean options include 'include_personal' for personal variables (default:
+#' \code{FALSE}) and 'prefix_subvariables' for SPSS format: whether to include
+#' the array variable's name in each of its subvariables varlabels (default:
+#' \code{FALSE}).
 #' @return Invisibly, \code{file}.
 #' @export
 #' @importFrom utils download.file
 exportDataset <- function (dataset, file, format=c("csv", "spss"),
-                           categorical=c("name", "id"), ...) {
+                           categorical=c("name", "id"), na=NULL,
+                           varlabel=c("name", "description"), ...) {
 
     exporters <- crGET(shojiURL(dataset, "views", "export"))
     format <- match.arg(format, choices=names(exporters))
@@ -23,9 +40,16 @@ exportDataset <- function (dataset, file, format=c("csv", "spss"),
     body$where <- variablesFilter(dataset)
 
     ## Assemble options
-    opts <- list()
+    opts <- list(...)
     if (format == "csv") {
         opts$use_category_ids <- match.arg(categorical) == "id"
+        if (!is.null(na)) {
+            stopifnot(is.character(na), length(na) == 1, na %in% c("", "."))
+            ## match.arg fails if na="" because pmatch fails
+            opts$missing_values <- ifelse(na == "", "blank", "dot")
+        }
+    } else if (format == "spss") {
+        opts$var_label_field <- match.arg(varlabel)
     }
     if (length(opts)) {
         body$options <- opts

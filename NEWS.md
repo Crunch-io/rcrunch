@@ -1,4 +1,5 @@
 ### crunch 1.15.1 (under development)
+* Support for additional dataset export arguments
 
 ## crunch 1.15.0
 * `multitables` method to access catalog from a Dataset. `newMultitable` to create one. See `?multitables` and `?newMultitable` for docs and examples.

@@ -15,19 +15,45 @@ with_mock_HTTP({
             'api/datasets/1/export/csv/',
             '{"filter":null,"options":{"use_category_ids":true}}')
     })
+    test_that("with na", {
+        expect_POST(write.csv(ds, file="", na=""),
+            'api/datasets/1/export/csv/',
+            '{"filter":null,"options":{"use_category_ids":false,',
+            '"missing_values":"blank"}}')
+        expect_POST(write.csv(ds, file="", na="."),
+            'api/datasets/1/export/csv/',
+            '{"filter":null,"options":{"use_category_ids":false,',
+            '"missing_values":"dot"}}')
+    })
     test_that("Export SPSS request", {
         expect_POST(exportDataset(ds, file="", format="spss"),
             'api/datasets/1/export/spss/',
-            '{"filter":null}')
+            '{"filter":null,"options":{"var_label_field":"name"}}')
     })
     test_that("Export SPSS ignores 'categorical' arg", {
         expect_POST(exportDataset(ds, file="", format="spss", categorical="zzzz"),
             'api/datasets/1/export/spss/',
-            '{"filter":null}')
+            '{"filter":null,"options":{"var_label_field":"name"}}')
     })
-    test_that("Unsupported export format", {
+    test_that("Export SPSS request with varlabel", {
+        expect_POST(exportDataset(ds, file="", format="spss", varlabel="description"),
+            'api/datasets/1/export/spss/',
+            '{"filter":null,"options":{"var_label_field":"description"}}')
+    })
+    test_that("Export with additional options", {
+        expect_POST(exportDataset(ds, file="", format="spss", otheropt=TRUE),
+            'api/datasets/1/export/spss/',
+            '{"filter":null,"options":{"otheropt":true,"var_label_field":"name"}}')
+    })
+    test_that("Unsupported arg values", {
         expect_error(exportDataset(ds, format="exe"),
             "'arg' should be one of ")
+        expect_error(exportDataset(ds, format="spss", varlabel="NOTAVARLAB"),
+            "'arg' should be one of ")
+        expect_error(exportDataset(ds, categorical="NOT"),
+            "'arg' should be one of ")
+        expect_error(exportDataset(ds, na="NA"),
+            "is not TRUE") ## Uses stopifnot instead of match.arg
     })
 
     test_that("Exporting only one variable", {
