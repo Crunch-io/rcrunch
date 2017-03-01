@@ -25,14 +25,12 @@ and "spss".}
 "name" (default) or "id". Ignored by the SPSS exporter.}
 
 \item{na}{Similar to the argument in \code{\link[utils]{write.table}}, 'na'
-lets you control how missing values are written into the CSV file. Currently
-supported values are (1) \code{NULL}, the default, which means that
+lets you control how missing values are written into the CSV file.
+Supported values are (1) \code{NULL}, the default, which means that
 categorical variables will have the category name or id as the value, and
 numeric, text, and datetime variables will have the missing reason string;
-(2) \code{""}, which means that empty cells will be written for missing
-values for all types; and (3) \code{"."}, which writes a period for all
-missings. Unlike in \code{write.table}, other string codes are not
-currently supported.}
+(2) a string to use for missing values. \code{""} means that empty cells will
+be written for missing values for all types.}
 
 \item{varlabel}{For SPSS export, which Crunch metadata field should be used
 as variable labels? Default is "name", but "description" is another valid

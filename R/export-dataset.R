@@ -8,14 +8,12 @@
 #' @param categorical character: export categorical values to CSV as category
 #' "name" (default) or "id". Ignored by the SPSS exporter.
 #' @param na Similar to the argument in \code{\link[utils]{write.table}}, 'na'
-#' lets you control how missing values are written into the CSV file. Currently
-#' supported values are (1) \code{NULL}, the default, which means that
+#' lets you control how missing values are written into the CSV file.
+#' Supported values are (1) \code{NULL}, the default, which means that
 #' categorical variables will have the category name or id as the value, and
 #' numeric, text, and datetime variables will have the missing reason string;
-#' (2) \code{""}, which means that empty cells will be written for missing
-#' values for all types; and (3) \code{"."}, which writes a period for all
-#' missings. Unlike in \code{write.table}, other string codes are not
-#' currently supported.
+#' (2) a string to use for missing values. \code{""} means that empty cells will
+#' be written for missing values for all types.
 #' @param varlabel For SPSS export, which Crunch metadata field should be used
 #' as variable labels? Default is "name", but "description" is another valid
 #' value.
@@ -44,9 +42,9 @@ exportDataset <- function (dataset, file, format=c("csv", "spss"),
     if (format == "csv") {
         opts$use_category_ids <- match.arg(categorical) == "id"
         if (!is.null(na)) {
-            stopifnot(is.character(na), length(na) == 1, na %in% c("", "."))
+            stopifnot(is.character(na), length(na) == 1)
             ## match.arg fails if na="" because pmatch fails
-            opts$missing_values <- ifelse(na == "", "blank", "dot")
+            opts$missing_values <- na
         }
     } else if (format == "spss") {
         opts$var_label_field <- match.arg(varlabel)

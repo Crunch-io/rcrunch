@@ -19,11 +19,11 @@ with_mock_HTTP({
         expect_POST(write.csv(ds, file="", na=""),
             'api/datasets/1/export/csv/',
             '{"filter":null,"options":{"use_category_ids":false,',
-            '"missing_values":"blank"}}')
+            '"missing_values":""}}')
         expect_POST(write.csv(ds, file="", na="."),
             'api/datasets/1/export/csv/',
             '{"filter":null,"options":{"use_category_ids":false,',
-            '"missing_values":"dot"}}')
+            '"missing_values":"."}}')
     })
     test_that("Export SPSS request", {
         expect_POST(exportDataset(ds, file="", format="spss"),
@@ -52,8 +52,6 @@ with_mock_HTTP({
             "'arg' should be one of ")
         expect_error(exportDataset(ds, categorical="NOT"),
             "'arg' should be one of ")
-        expect_error(exportDataset(ds, na="NA"),
-            "is not TRUE") ## Uses stopifnot instead of match.arg
     })
 
     test_that("Exporting only one variable", {
