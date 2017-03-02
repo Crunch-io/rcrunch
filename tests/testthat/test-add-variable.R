@@ -81,6 +81,12 @@ with_mock_HTTP({
         expect_error(ds$newvar <- 1:13,
             "replacement has 13 rows, data has 25")
     })
+
+    test_that("Adding a variable with all the same values gets sent more concisely", {
+        expect_POST(ds$newvar <- rep(5, 20),
+            'api/datasets/1/variables/',
+            '{"values":5,"type":"numeric","name":"newvar","alias":"newvar"}')
+    })
 })
 
 with_test_authentication({
