@@ -62,18 +62,18 @@ validateVarDefRows <- function (vardef, numrows) {
     ## Pre-check the column length being sent to the server to confirm that
     ## the number of rows matches what's already in the dataset.
     if (!any(c("expr", "subvariables") %in% names(vardef))) {
+        new <- length(vardef$values)
+        if (new == 0) {
+            warning("Adding variable with no rows of data", call.=FALSE)
+        } else if (numrows > 0 && new > 1 && new != numrows) {
+            halt("replacement has ", new, " rows, data has ", numrows)
+        }
         uniques <- unique(vardef$values)
         if (numrows > 0 && length(uniques) == 1) {
             ## Just send the unique value to save bandwidth
             ## TODO: Move this somewhere else so that it's not a side effect
             ## of "validation"
             vardef$values <- uniques
-        }
-        new <- length(vardef$values)
-        if (new == 0) {
-            warning("Adding variable with no rows of data", call.=FALSE)
-        } else if (numrows > 0 && new > 1 && new != numrows) {
-            halt("replacement has ", new, " rows, data has ", numrows)
         }
     }
     return(vardef)
