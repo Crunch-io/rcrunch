@@ -12,8 +12,6 @@
 \alias{mean,NumericVariable-method}
 \alias{sd,CrunchVariable-method}
 \alias{sd,NumericVariable-method}
-\alias{median,CrunchVariable-method}
-\alias{median,NumericVariable-method}
 \alias{min,CrunchVariable-method}
 \alias{min,NumericVariable-method}
 \alias{min,DatetimeVariable-method}
@@ -29,10 +27,6 @@
 \S4method{sd}{CrunchVariable}(x, na.rm = FALSE)
 
 \S4method{sd}{NumericVariable}(x, na.rm = FALSE)
-
-\S4method{median}{CrunchVariable}(x, na.rm = FALSE)
-
-\S4method{median}{NumericVariable}(x, na.rm = FALSE)
 
 \S4method{min}{CrunchVariable}(x, na.rm)
 
