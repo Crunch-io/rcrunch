@@ -2,6 +2,7 @@ context("Variables")
 
 with_mock_HTTP({
     ds <- loadDataset("test ds")
+    ds2 <- loadDataset("an archived dataset", "archived")
 
     test_that("Variable init, as, is", {
         expect_true(is.variable(ds[[1]]))
@@ -19,6 +20,12 @@ with_mock_HTTP({
         expect_true(is.Multiple(ds$mymrset))
         expect_true(is.Array(ds$mymrset))
         expect_false(is.CA(ds$mymrset))
+    })
+
+    test_that("is.derived", {
+        expect_false(is.derived(ds2$gender))
+        expect_false(is.derived(ds2$birthyr))
+        expect_true(is.derived(ds2$mymrset2))
     })
 
     test_that("has.categories", {

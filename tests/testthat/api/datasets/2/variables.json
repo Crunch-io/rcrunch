@@ -16,6 +16,7 @@
         "birthyr/": {
             "name": "Birth Year",
             "discarded": true,
+            "derived": false,
             "alias": "birthyr2",
             "type": "numeric",
             "id": "f78ca47313144b57adfb495893968e70",
@@ -47,6 +48,7 @@
         "mymrset2/": {
             "name": "mymrset Combined",
             "discarded": false,
+            "derived": true,
             "alias": "mymrset2",
             "type": "categorical_array",
             "id": "12345",

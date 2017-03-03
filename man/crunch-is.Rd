@@ -14,6 +14,7 @@
 \alias{is.CA}
 \alias{is.Array}
 \alias{is.CategoricalArray}
+\alias{is.derived}
 \title{Is it?}
 \usage{
 is.dataset(x)
@@ -41,6 +42,8 @@ is.CA(x)
 is.Array(x)
 
 is.CategoricalArray(x)
+
+is.derived(x)
 }
 \arguments{
 \item{x}{an object}
