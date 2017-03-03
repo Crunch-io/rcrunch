@@ -80,6 +80,14 @@ with_mock_HTTP({
     test_that("Input length validation", {
         expect_error(ds$newvar <- 1:13,
             "replacement has 13 rows, data has 25")
+        expect_error(ds$newvar <- rep(6, 11),
+            "replacement has 11 rows, data has 25")
+    })
+
+    test_that("Adding a variable with all the same values gets sent more concisely", {
+        expect_POST(ds$newvar <- rep(5, 25),
+            'api/datasets/1/variables/',
+            '{"values":5,"type":"numeric","name":"newvar","alias":"newvar"}')
     })
 })
 
