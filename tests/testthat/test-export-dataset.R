@@ -145,7 +145,7 @@ with_test_authentication({
         ds$v4[8] <- NA
         write.csv(ds[, c("v1", "v2", "v4")], file=filename, na="NANANA")
         csvlines <- readLines(filename)
-        expect_equal(grepl("NANANA", csvlines), c(2:6, 9, 17:21))
+        expect_equal(grep("NANANA", csvlines), c(2:6, 9, 17:21))
         df2 <- read.csv(filename, na.strings="NANANA")
         expect_identical(dim(df2), c(20L, 3L))
         expect_identical(names(df2), c("v1", "v2", "v4"))
