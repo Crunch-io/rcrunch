@@ -61,7 +61,7 @@ addVariables <- function (dataset, ...) {
 validateVarDefRows <- function (vardef, numrows) {
     ## Pre-check the column length being sent to the server to confirm that
     ## the number of rows matches what's already in the dataset
-    if (!any(c("expr", "subvariables") %in% names(vardef))) {
+    if (!any(c("expr", "derivation", "subvariables") %in% names(vardef))) {
         new <- length(vardef$values)
         old <- numrows ## Just for naming clarity
         if (new == 1 && old > 1) {
@@ -81,7 +81,7 @@ POSTNewVariable <- function (catalog_url, variable) {
 
     do.POST <- function (x) crPOST(catalog_url, body=toJSON(x, digits=15))
 
-    if (!("expr" %in% names(variable))) {
+    if (!any(c("expr", "derivation") %in% names(variable))) {
         ## If deriving a variable, skip this and go straight to POSTing
         if (variable$type %in% c("multiple_response", "categorical_array")) {
             ## Assumes: array of subvariables included, and if MR, at least one
