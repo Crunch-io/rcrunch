@@ -53,15 +53,20 @@ setMethod("sd", "CrunchVariable", function (x, na.rm) {
 setMethod("sd", "NumericVariable",
     function (x, na.rm=FALSE) .summary.stat(x, "sd", na.rm=na.rm))
 
-#' @rdname crunch-uni
-#' @export
-setMethod("median", "CrunchVariable", function (x, na.rm) {
-    halt(dQuote('median'), " is not defined for ", class(x))
-})
-#' @rdname crunch-uni
-#' @export
-setMethod("median", "NumericVariable",
-    function (x, na.rm=FALSE) .summary.stat(x, "median", na.rm=na.rm))
+## Future-proofing for change to median signature in R >= 3.4
+is.R.3.4 <- "..." %in% names(formals(median))
+
+## Apparently these don't need to be exported?
+setMethod("median", "CrunchVariable", ifelse(is.R.3.4,
+    function (x, na.rm, ...) {
+        halt(dQuote('median'), " is not defined for ", class(x))
+    }, function (x, na.rm) {
+        halt(dQuote('median'), " is not defined for ", class(x))
+    }))
+
+setMethod("median", "NumericVariable", ifelse(is.R.3.4,
+    function (x, na.rm=FALSE, ...) .summary.stat(x, "median", na.rm=na.rm),
+    function (x, na.rm=FALSE) .summary.stat(x, "median", na.rm=na.rm)))
 
 ## Can't do datetime apparently:
 # (400) Bad Request: The 'cube_quantile' function requires argument 0 be of
