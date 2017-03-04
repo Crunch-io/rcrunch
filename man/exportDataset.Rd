@@ -7,7 +7,8 @@
 \title{Export a dataset to a file}
 \usage{
 exportDataset(dataset, file, format = c("csv", "spss"),
-  categorical = c("name", "id"), ...)
+  categorical = c("name", "id"), na = NULL, varlabel = c("name",
+  "description"), ...)
 
 \S4method{write.csv}{CrunchDataset}(...)
 }
@@ -23,7 +24,23 @@ and "spss".}
 \item{categorical}{character: export categorical values to CSV as category
 "name" (default) or "id". Ignored by the SPSS exporter.}
 
-\item{...}{additional arguments, currently ignored}
+\item{na}{Similar to the argument in \code{\link[utils]{write.table}}, 'na'
+lets you control how missing values are written into the CSV file.
+Supported values are (1) \code{NULL}, the default, which means that
+categorical variables will have the category name or id as the value, and
+numeric, text, and datetime variables will have the missing reason string;
+(2) a string to use for missing values. \code{""} means that empty cells will
+be written for missing values for all types.}
+
+\item{varlabel}{For SPSS export, which Crunch metadata field should be used
+as variable labels? Default is "name", but "description" is another valid
+value.}
+
+\item{...}{additional options. See the API documentation. Currently supported
+boolean options include 'include_personal' for personal variables (default:
+\code{FALSE}) and 'prefix_subvariables' for SPSS format: whether to include
+the array variable's name in each of its subvariables varlabels (default:
+\code{FALSE}).}
 }
 \value{
 Invisibly, \code{file}.

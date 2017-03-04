@@ -15,18 +15,42 @@ with_mock_HTTP({
             'api/datasets/1/export/csv/',
             '{"filter":null,"options":{"use_category_ids":true}}')
     })
+    test_that("with na", {
+        expect_POST(write.csv(ds, file="", na=""),
+            'api/datasets/1/export/csv/',
+            '{"filter":null,"options":{"use_category_ids":false,',
+            '"missing_values":""}}')
+        expect_POST(write.csv(ds, file="", na="."),
+            'api/datasets/1/export/csv/',
+            '{"filter":null,"options":{"use_category_ids":false,',
+            '"missing_values":"."}}')
+    })
     test_that("Export SPSS request", {
         expect_POST(exportDataset(ds, file="", format="spss"),
             'api/datasets/1/export/spss/',
-            '{"filter":null}')
+            '{"filter":null,"options":{"var_label_field":"name"}}')
     })
     test_that("Export SPSS ignores 'categorical' arg", {
         expect_POST(exportDataset(ds, file="", format="spss", categorical="zzzz"),
             'api/datasets/1/export/spss/',
-            '{"filter":null}')
+            '{"filter":null,"options":{"var_label_field":"name"}}')
     })
-    test_that("Unsupported export format", {
+    test_that("Export SPSS request with varlabel", {
+        expect_POST(exportDataset(ds, file="", format="spss", varlabel="description"),
+            'api/datasets/1/export/spss/',
+            '{"filter":null,"options":{"var_label_field":"description"}}')
+    })
+    test_that("Export with additional options", {
+        expect_POST(exportDataset(ds, file="", format="spss", otheropt=TRUE),
+            'api/datasets/1/export/spss/',
+            '{"filter":null,"options":{"otheropt":true,"var_label_field":"name"}}')
+    })
+    test_that("Unsupported arg values", {
         expect_error(exportDataset(ds, format="exe"),
+            "'arg' should be one of ")
+        expect_error(exportDataset(ds, format="spss", varlabel="NOTAVARLAB"),
+            "'arg' should be one of ")
+        expect_error(exportDataset(ds, categorical="NOT"),
             "'arg' should be one of ")
     })
 
@@ -112,5 +136,19 @@ with_test_authentication({
         df2 <- read.csv(filename)
         expect_identical(dim(df2), c(10L, 2L))
         expect_identical(names(df2), c("v2", "v3"))
+    })
+
+    test_that("Exclusion is applied, even if it depends on column not selected", {
+        skip_locally("Vagrant host doesn't serve files correctly")
+        filename <- tempfile()
+        exclusion(ds) <- NULL
+        ds$v4[8] <- NA
+        write.csv(ds[, c("v1", "v2", "v4")], file=filename, na="NANANA")
+        csvlines <- readLines(filename)
+        expect_equal(grep("NANANA", csvlines), c(2:6, 9, 17:21))
+        df2 <- read.csv(filename, na.strings="NANANA")
+        expect_identical(dim(df2), c(20L, 3L))
+        expect_identical(names(df2), c("v1", "v2", "v4"))
+        expect_identical(is.na(df2$v1), is.na(df$v1))
     })
 })
