@@ -15,7 +15,7 @@ with_mock_HTTP({
         view=list(include_noneoftheabove=FALSE,
             column_width=NULL
         ),
-        expr=list(
+        derivation=list(
             `function`="combine_responses",
             args=list(
                 list(variable="api/datasets/1/variables/mymrset/"),

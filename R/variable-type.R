@@ -56,6 +56,13 @@ is.subvariable <- function (x) {
     grepl("subvariables", self(x))
 }
 
+#' @rdname crunch-is
+#' @export
+is.derived <- function (x) {
+    stopifnot(is.variable(x))
+    isTRUE(tuple(x)$derived)
+}
+
 CASTABLE_TYPES <- c("numeric", "text", "categorical") ## Add datetime when server supports
 
 #' Change the type of Crunch variables
