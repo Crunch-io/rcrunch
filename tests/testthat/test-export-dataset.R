@@ -62,6 +62,13 @@ with_mock_HTTP({
             '{"variable":"api/datasets/1/variables/gender/"}}}]},',
             '"options":{"use_category_ids":false}}')
     })
+
+    test_that("Exporting duplicate variable references is prevented", {
+        expect_error(write.csv(ds[c("gender", "birthyr", "gender")], file=""),
+            "Duplicate variable reference: gender")
+        expect_error(write.csv(ds[c("gender", "birthyr", "gender", "gender", "birthyr")], file=""),
+            "Duplicate variable references: gender and birthyr")
+    })
 })
 
 validExport <- function (df2) {

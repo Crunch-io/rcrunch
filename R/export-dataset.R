@@ -68,6 +68,16 @@ variablesFilter <- function (dataset) {
     if (length(allvars) != length(dsvars)) {
         v <- structure(lapply(urls(allvars), function (x) list(variable=x)),
             .Names=ids(allvars))
+        ## Make sure that duplicate variables haven't been referenced (surely
+        ## by accident).
+        ## TODO: move this to a ShojiCatalog subset method?
+        dupes <- duplicated(names(v))
+        if (any(dupes)) {
+            dup.aliases <- unique(aliases(allvars[dupes]))
+            halt("Duplicate variable reference",
+                ifelse(length(dup.aliases) > 1, "s", ""), ": ",
+                serialPaste(dup.aliases))
+        }
         return(list(`function`="select", args=list(list(map=v))))
     }
     ## Else, return NULL

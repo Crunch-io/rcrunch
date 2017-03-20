@@ -1,6 +1,8 @@
 ### crunch 1.15.1 (under development)
 * Support for additional dataset export arguments
 * Add `is.derived` method for Variables
+* More validation for the input to the various export functions
+* Fix handling of "total" column in `TabBookResult`s when the row variable is a categorical array
 
 ## crunch 1.15.0
 * `multitables` method to access catalog from a Dataset. `newMultitable` to create one. See `?multitables` and `?newMultitable` for docs and examples.
