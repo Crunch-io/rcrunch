@@ -1,6 +1,7 @@
 ### crunch 1.15.1 (under development)
 * Support for additional dataset export arguments
 * Add `is.derived` method for Variables
+* Allow a 'message' when sharing a dataset (#27)
 * More validation for the input to the various export functions
 * Fix handling of "total" column in `TabBookResult`s when the row variable is a categorical array
 
