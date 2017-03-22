@@ -1,4 +1,4 @@
-### crunch 1.15.1 (under development)
+### crunch 1.15.2
 * Support for additional dataset export arguments
 * Add `is.derived` method for Variables
 * Allow a 'message' when sharing a dataset (#27)
