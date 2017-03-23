@@ -61,10 +61,6 @@ setMethod("delete", "VariableTuple", function (x, ...) {
 #' @param variable the array variable
 #' @param to.delete aliases (following \code{crunch.namekey.dataset}) or indices
 #' of variables to delete.
-#' @param confirm logical: should the user be asked to confirm deletion.
-#' Default is \code{TRUE} if in
-#' an interactive session. You can avoid the confirmation prompt if you delete
-#' \code{with(\link{consent})}.
 #' @return a new version of variable without the indicated subvariables
 #' @export
 deleteSubvariables <- function (variable, to.delete) {

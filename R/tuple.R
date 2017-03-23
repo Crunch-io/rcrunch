@@ -8,8 +8,6 @@
 #' @param i In [[, a Tuple slot to get
 #' @param ... additional arguments to [[, ignored
 #' @param value What to set in a given slot
-#' @param confirm For \code{delete}, whether confirmation is required. See
-#' \code{\link{delete}}.
 #' @name tuple-methods
 #' @aliases entity
 NULL

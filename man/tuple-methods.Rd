@@ -73,9 +73,6 @@
 \item{i}{In [[, a Tuple slot to get}
 
 \item{...}{additional arguments to [[, ignored}
-
-\item{confirm}{For \code{delete}, whether confirmation is required. See
-\code{\link{delete}}.}
 }
 \description{
 ShojiTuples are objects extracted from ShojiCatalogs. They are internally
