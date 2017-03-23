@@ -6,54 +6,38 @@ with_mock_HTTP({
         expect_message(ds$NOTAVARIABLE <- df$NOTAVARIABLE,
             paste(dQuote("NOTAVARIABLE"), "is not a variable; nothing to delete by assigning NULL"))
     })
-    with(temp.option(crunch.require.confirmation=TRUE), {
-        test_that("Delete methods require consent", {
-            expect_error(delete(ds$gender),
-                "Must confirm deleting variable")
-            expect_error(ds$gender <- NULL,
-                "Must confirm deleting variable")
-            expect_error(ds[[1]] <- NULL,
-                "Must confirm deleting variable")
-            expect_error(ds$mymrset <- NULL,
-                "Must confirm deleting variable")
-            expect_error(deleteVariables(ds, "gender"),
-                "Must confirm deleting variable")
-            expect_error(deleteVariables(ds, c("gender", "birthyr")),
-                "Must confirm deleting variable")
-        })
-        test_that("deleteSubvariable also requires consent", {
-            expect_error(deleteSubvariable(ds$mymrset, "subvar1"),
-                "Must confirm deleting subvariable")
-        })
-        with(consent(), {
-            test_that("If consent given, all of these methods do DELETE", {
-                expect_DELETE(delete(ds$gender),
-                    "api/datasets/1/variables/gender/")
-                expect_DELETE(ds$gender <- NULL,
-                    "api/datasets/1/variables/gender/")
-                expect_DELETE(ds$mymrset <- NULL,
-                    "api/datasets/1/variables/mymrset/")
-                expect_DELETE(ds[[2]] <- NULL,
-                    "api/datasets/1/variables/gender/")
-                expect_DELETE(deleteVariables(ds, "gender"),
-                    "api/datasets/1/variables/gender/")
-                expect_DELETE(deleteVariables(ds, c("gender", "birthyr")),
-                    "api/datasets/1/variables/gender/")
-            })
-        })
-        test_that("'confirm' deprecation warning on variable delete", {
-            expect_warning(
-                expect_error(delete(ds$gender, confirm=TRUE),
-                    "Must confirm deleting variable"),
-                "The 'confirm' argument is deprecated.")
-            expect_warning(
-                expect_error(deleteVariables(ds, c("gender", "birthyr"), confirm=TRUE),
-                    "Must confirm deleting variable"),
-                "The 'confirm' argument is deprecated.")
-            expect_warning(
-                expect_error(deleteSubvariable(ds$mymrset, "subvar1", confirm=TRUE),
-                    "Must confirm deleting subvariable"),
-                "The 'confirm' argument is deprecated.")
+    test_that("Delete methods require consent", {
+        expect_error(delete(ds$gender),
+            "Must confirm deleting variable")
+        expect_error(ds$gender <- NULL,
+            "Must confirm deleting variable")
+        expect_error(ds[[1]] <- NULL,
+            "Must confirm deleting variable")
+        expect_error(ds$mymrset <- NULL,
+            "Must confirm deleting variable")
+        expect_error(deleteVariables(ds, "gender"),
+            "Must confirm deleting variable")
+        expect_error(deleteVariables(ds, c("gender", "birthyr")),
+            "Must confirm deleting variable")
+    })
+    test_that("deleteSubvariable also requires consent", {
+        expect_error(deleteSubvariable(ds$mymrset, "subvar1"),
+            "Must confirm deleting subvariable")
+    })
+    with(consent(), {
+        test_that("If consent given, all of these methods do DELETE", {
+            expect_DELETE(delete(ds$gender),
+                "api/datasets/1/variables/gender/")
+            expect_DELETE(ds$gender <- NULL,
+                "api/datasets/1/variables/gender/")
+            expect_DELETE(ds$mymrset <- NULL,
+                "api/datasets/1/variables/mymrset/")
+            expect_DELETE(ds[[2]] <- NULL,
+                "api/datasets/1/variables/gender/")
+            expect_DELETE(deleteVariables(ds, "gender"),
+                "api/datasets/1/variables/gender/")
+            expect_DELETE(deleteVariables(ds, c("gender", "birthyr")),
+                "api/datasets/1/variables/gender/")
         })
     })
 })

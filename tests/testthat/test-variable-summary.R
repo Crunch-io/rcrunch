@@ -20,6 +20,10 @@ with_mock_HTTP({
         expect_error(table(), "nothing to tabulate")
     })
 
+    test_that("table makes a cube request", {
+        expect_GET(table(gen), "api/datasets/1/cube/")
+    })
+
     test_that("unsupported aggregation methods", {
         expect_error(mean(ds$textVar),
             paste(dQuote("mean"), "is not defined for TextVariable"))
@@ -33,13 +37,9 @@ with_mock_HTTP({
             paste(dQuote("max"), "is not defined for TextVariable"))
     })
 
-    # test_that("supported summary methods for numeric", {
-    #     expect_equivalent(min(ds$birthyr), 1920)
-    #     expect_equivalent(max(ds$birthyr), 1995)
-    #     expect_equivalent(mean(ds$birthyr), 1964.951)
-    #     expect_equivalent(median(ds$birthyr), 1968)
-    #     expect_identical(round(sd(ds$birthyr), 2), 15.17)
-    # })
+    test_that("Summary method for numeric", {
+        expect_is(summary(ds$birthyr), "NumericVariableSummary")
+    })
 })
 
 with_test_authentication({

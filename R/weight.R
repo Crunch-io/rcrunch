@@ -31,7 +31,7 @@ weight <- function (x) {
     } else if (!is.null(value)) {
         halt("Weight must be a Variable or NULL")
     }
-    
+
     ## Future API: on "preferences"
     prefs <- crGET(shojiURL(x, "fragments", "preferences"))
     if ("weight" %in% names(prefs$body)) {

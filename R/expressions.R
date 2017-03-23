@@ -41,7 +41,7 @@ setMethod("as.vector", "CrunchExpr", function (x, mode) {
 #' @rdname toVariable
 #' @export
 setMethod("toVariable", "CrunchExpr", function (x, ...) {
-    structure(list(expr=zcl(x), ...), class="VariableDefinition")
+    structure(list(derivation=zcl(x), ...), class="VariableDefinition")
 })
 
 ## "Ops" for Crunch Variables

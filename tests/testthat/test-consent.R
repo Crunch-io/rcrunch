@@ -22,12 +22,3 @@ test_that("with_consent", {
     with_consent(expect_true(askForPermission()))
     expect_false(askForPermission())
 })
-
-test_that("requireConsent (to be deprecated)", {
-    with(temp.option(crunch.require.confirmation=NULL), {
-        expect_warning(
-            expect_false(requireConsent()),
-            "You're running R in a non-interactive mode and performing a destructive action."
-        )
-    })
-})

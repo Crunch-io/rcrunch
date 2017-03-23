@@ -90,7 +90,7 @@ deriveArray <- function (subvariables, name, ...) {
             .Names=subvarids)),
         list(value=I(subvarids))))
 
-    return(VariableDefinition(expr=derivation, name=name, ...))
+    return(VariableDefinition(derivation=derivation, name=name, ...))
 }
 
 #' Rearrange array subvariables into other configurations

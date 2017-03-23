@@ -5,20 +5,15 @@
 \alias{deleteSubvariable}
 \title{Delete subvariables from an array}
 \usage{
-deleteSubvariables(variable, to.delete, confirm = requireConsent())
+deleteSubvariables(variable, to.delete)
 
-deleteSubvariable(variable, to.delete, confirm = requireConsent())
+deleteSubvariable(variable, to.delete)
 }
 \arguments{
 \item{variable}{the array variable}
 
 \item{to.delete}{aliases (following \code{crunch.namekey.dataset}) or indices
 of variables to delete.}
-
-\item{confirm}{logical: should the user be asked to confirm deletion.
-Default is \code{TRUE} if in
-an interactive session. You can avoid the confirmation prompt if you delete
-\code{with(\link{consent})}.}
 }
 \value{
 a new version of variable without the indicated subvariables
@@ -27,4 +22,10 @@ a new version of variable without the indicated subvariables
 This function conceals the dirty work in making this happen. The array
 gets unbound, the subvariables deleted, and then the remaining subvariable
 are rebound into a new array.
+}
+\details{
+Deleting requires confirmation. In an interactive session, you will be asked
+to confirm. To avoid that prompt, or to delete subvariables from a
+non-interactive session, wrap the call in \code{\link{with_consent}} to give
+your permission to delete.
 }

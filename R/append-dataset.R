@@ -7,15 +7,9 @@
 #' @param autorollback logical: If the append fails, revert the dataset back
 #' to its state before attempting to append? Default is \code{TRUE}, and you
 #' probably won't want to change that.
-#' @param cleanup Deprecated in favor of \code{autorollback}. See also
-#' \code{\link{cleanseBatches}}.
 #' @return A CrunchDataset with \code{dataset2} appended to \code{dataset1}
 #' @export
-appendDataset <- function (dataset1, dataset2, autorollback=TRUE, cleanup=autorollback) {
-    if (!missing(cleanup)) {
-        warning('Argument "cleanup" is deprecated. Use "autorollback" instead.',
-            call.=FALSE)
-    }
+appendDataset <- function (dataset1, dataset2, autorollback=TRUE) {
     stopifnot(is.dataset(dataset1))
     if (!is.dataset(dataset2)) {
         temp.ds.name <- paste("Appending to", name(dataset1), now())

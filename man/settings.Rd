@@ -20,7 +20,7 @@ returns the dataset (\code{x}).
 }
 \description{
 These methods allow access and control over dataset settings. Currently
-supported settings include 'viewers_can_export' and
+supported settings include 'viewers_can_export', 'viewers_can_share', and
 'viewers_can_change_weight', which govern specific authorizations for users
 with view-only access to this datset; and 'weight', which is the default
 weight variable for the dataset, the one that will be set for newly shared

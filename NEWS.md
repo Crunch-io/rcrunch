@@ -1,3 +1,14 @@
+### crunch 1.15.3 (under development)
+* Remove "confirm" argument from various delete functions (deprecated since 1.14.4) and the "cleanup" argument to append (deprecated since 1.13.4)
+* All destructive actions now require 'consent', even in non-interactive mode. See `?with_consent` for more details.
+
+### crunch 1.15.2
+* Support for additional dataset export arguments
+* Add `is.derived` method for Variables
+* Allow a 'message' when sharing a dataset (#27)
+* More validation for the input to the various export functions
+* Fix handling of "total" column in `TabBookResult`s when the row variable is a categorical array
+
 ## crunch 1.15.0
 * `multitables` method to access catalog from a Dataset. `newMultitable` to create one. See `?multitables` and `?newMultitable` for docs and examples.
 * `tabBook` to compute a tab book with a multitable. If `format="json"`, returns a `TabBookResult` containing `CrunchCube` objects with which further analysis or formatting can be done.

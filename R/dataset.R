@@ -187,13 +187,14 @@ setMethod("refresh", "CrunchDataset", function (x) {
 #' These methods delete entities, notably Datasets and Variables within them,
 #' from the server. This action is permanent and cannot be undone, so it
 #' should not be done lightly. Consider instead using \code{archive}
-#' for datasets and \code{\link{hide}} for variables
+#' for datasets and \code{\link{hide}} for variables.
+#'
+#' Deleting requires confirmation. In an interactive session, you will be asked
+#' to confirm. To avoid that prompt, or to delete objects from a 
+#' non-interactive session, wrap the call in \code{\link{with_consent}} to give
+#' your permission to delete.
 #'
 #' @param x a Crunch object
-#' @param confirm logical: should the user be asked to confirm deletion.
-#' Option available for datasets and teams only. Default is \code{TRUE} if in
-#' an interactive session. You can avoid the confirmation prompt if you delete
-#' \code{with(\link{consent})}.
 #' @param ... additional arguments, in the generic
 #' @seealso \code{\link{hide}} \code{\link{deleteDataset}}
 #' @name delete
@@ -403,7 +404,7 @@ publish <- function (x) {
 #' View and modify dataset-level settings
 #'
 #' These methods allow access and control over dataset settings. Currently
-#' supported settings include 'viewers_can_export' and
+#' supported settings include 'viewers_can_export', 'viewers_can_share', and
 #' 'viewers_can_change_weight', which govern specific authorizations for users
 #' with view-only access to this datset; and 'weight', which is the default
 #' weight variable for the dataset, the one that will be set for newly shared

@@ -52,7 +52,7 @@ copyVariable <- function (x, deep=FALSE, ...) {
             body$resolution <- entity(x)@body$resolution
         }
     } else {
-        body$expr <- zfunc("copy_variable", x)
+        body$derivation <- zfunc("copy_variable", x)
         body$type <- NULL
     }
 

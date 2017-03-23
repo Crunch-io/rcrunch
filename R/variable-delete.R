@@ -1,19 +1,16 @@
 #' Delete Variables Within a Dataset
+#'
+#' Deleting requires confirmation. In an interactive session, you will be asked
+#' to confirm. To avoid that prompt, or to delete variables from a
+#' non-interactive session, wrap the call in \code{\link{with_consent}} to give
+#' your permission to delete.
 #' @param dataset the Dataset to modify
 #' @param variables aliases (following \code{crunch.namekey.dataset}) or indices
 #' of variables to delete.
-#' @param confirm logical: should the user be asked to confirm deletion.
-#' Default is \code{TRUE} if in
-#' an interactive session. You can avoid the confirmation prompt if you delete
-#' \code{with(\link{consent})}.
 #' @return (invisibly) \code{dataset} with the specified variables deleted
 #' @seealso \code{\link{hide}}
 #' @export
-deleteVariables <- function (dataset, variables, confirm=requireConsent()) {
-    if (!missing(confirm)) {
-        warning("The 'confirm' argument is deprecated. See ?with_consent.",
-            call.=FALSE)
-    }
+deleteVariables <- function (dataset, variables) {
     to.delete <- allVariables(dataset[variables])
     if (length(to.delete) == 1) {
         prompt <- paste0("Really delete ", dQuote(names(to.delete)), "?")
@@ -21,7 +18,7 @@ deleteVariables <- function (dataset, variables, confirm=requireConsent()) {
         prompt <- paste0("Really delete these ", length(to.delete),
             " variables?")
     }
-    if (confirm && !askForPermission(prompt)) {
+    if (!askForPermission(prompt)) {
         halt("Must confirm deleting variable(s)")
     }
     out <- lapply(urls(to.delete), crDELETE)
@@ -43,12 +40,8 @@ setMethod("delete", "CrunchVariable", function (x, ...) {
 
 #' @rdname delete
 #' @export
-setMethod("delete", "VariableTuple", function (x, confirm=requireConsent(), ...) {
-    if (!missing(confirm)) {
-        warning("The 'confirm' argument is deprecated. See ?with_consent.",
-            call.=FALSE)
-    }
-    if (confirm && !askForPermission(paste0("Really delete ", name(x), "?"))) {
+setMethod("delete", "VariableTuple", function (x, ...) {
+    if (!askForPermission(paste0("Really delete ", name(x), "?"))) {
         halt("Must confirm deleting variable")
     }
     out <- crDELETE(self(x))
@@ -60,38 +53,32 @@ setMethod("delete", "VariableTuple", function (x, confirm=requireConsent(), ...)
 #' This function conceals the dirty work in making this happen. The array
 #' gets unbound, the subvariables deleted, and then the remaining subvariable
 #' are rebound into a new array.
+#'
+#' Deleting requires confirmation. In an interactive session, you will be asked
+#' to confirm. To avoid that prompt, or to delete subvariables from a
+#' non-interactive session, wrap the call in \code{\link{with_consent}} to give
+#' your permission to delete.
 #' @param variable the array variable
 #' @param to.delete aliases (following \code{crunch.namekey.dataset}) or indices
 #' of variables to delete.
-#' @param confirm logical: should the user be asked to confirm deletion.
-#' Default is \code{TRUE} if in
-#' an interactive session. You can avoid the confirmation prompt if you delete
-#' \code{with(\link{consent})}.
 #' @return a new version of variable without the indicated subvariables
 #' @export
-deleteSubvariables <- function (variable, to.delete, confirm=requireConsent()) {
-    if (!missing(confirm)) {
-        warning("The 'confirm' argument is deprecated. See ?with_consent.",
-            call.=FALSE)
-    }
+deleteSubvariables <- function (variable, to.delete) {
     ## Identify subvariable URLs
     delete.these <- urls(variable[to.delete])
 
-    if (confirm) {
-        ## Get confirmation
-        if (length(delete.these) == 1) {
-            subvars <- subvariables(variable)
-            subvar.urls <- urls(subvars)
-            subvar.names <- names(subvars)
-            prompt <- paste0("Really delete ",
-                dQuote(subvar.names[match(delete.these, subvar.urls)]), "?")
-        } else {
-            prompt <- paste0("Really delete these ", length(delete.these),
-                " variables?")
-        }
-        if (!askForPermission(prompt)) {
-            halt("Must confirm deleting subvariable(s)")
-        }
+    if (length(delete.these) == 1) {
+        subvars <- subvariables(variable)
+        subvar.urls <- urls(subvars)
+        subvar.names <- names(subvars)
+        prompt <- paste0("Really delete ",
+            dQuote(subvar.names[match(delete.these, subvar.urls)]), "?")
+    } else {
+        prompt <- paste0("Really delete these ", length(delete.these),
+            " variables?")
+    }
+    if (!askForPermission(prompt)) {
+        halt("Must confirm deleting subvariable(s)")
     }
 
     lapply(delete.these, crDELETE)

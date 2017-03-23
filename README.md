@@ -1,7 +1,6 @@
 # crunch
 
-[![Build Status](https://travis-ci.org/Crunch-io/rcrunch.png?branch=master)](https://travis-ci.org/Crunch-io/rcrunch)
-
+[![Build Status](https://travis-ci.org/Crunch-io/rcrunch.png?branch=master)](https://travis-ci.org/Crunch-io/rcrunch) [![Build status](https://ci.appveyor.com/api/projects/status/iaydo4y3dfrqnqqu?svg=true)](https://ci.appveyor.com/project/nealrichardson/rcrunch)
 
 [Cloud Collaboration with Crunch](http://crunch-io.github.io/rcrunch/)
 
@@ -75,7 +74,7 @@ To run integration tests, you will need to specify a test user, password, and AP
 
 or, if you prefer, you can set the environment variables `R_TEST_USER`, `R_TEST_PW`, and `R_TEST_API`.
 
-If you are a Crunch developer serving a version of the API/backend with Vagrant, you will have best results if your R_TEST_API/test.api (1) is `local.crunch.io`, thanks to a mapping of localhost to that in your hosts file, and (2) you use http rather than https in order to avoid certificate errors. You might point at "http://local.crunch.io:8080/api/", for example. Some tests that cannot run successfully in the Vagrant environment will be skipped when run against a local.crunch.io URL. 
+If you are a Crunch developer serving a version of the API/backend with Vagrant, you will have best results if your R_TEST_API/test.api (1) is `local.crunch.io`, thanks to a mapping of localhost to that in your hosts file, and (2) you use http rather than https in order to avoid certificate errors. You might point at "http://local.crunch.io:8080/api/", for example. Some tests that cannot run successfully in the Vagrant environment will be skipped when run against a local.crunch.io URL.
 
 ### Updating documentation
 

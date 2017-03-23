@@ -4,8 +4,7 @@
 \alias{appendDataset}
 \title{Append one Crunch dataset to another}
 \usage{
-appendDataset(dataset1, dataset2, autorollback = TRUE,
-  cleanup = autorollback)
+appendDataset(dataset1, dataset2, autorollback = TRUE)
 }
 \arguments{
 \item{dataset1}{a CrunchDataset}
@@ -17,9 +16,6 @@ dataset before appending.}
 \item{autorollback}{logical: If the append fails, revert the dataset back
 to its state before attempting to append? Default is \code{TRUE}, and you
 probably won't want to change that.}
-
-\item{cleanup}{Deprecated in favor of \code{autorollback}. See also
-\code{\link{cleanseBatches}}.}
 }
 \value{
 A CrunchDataset with \code{dataset2} appended to \code{dataset1}

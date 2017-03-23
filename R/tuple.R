@@ -8,8 +8,6 @@
 #' @param i In [[, a Tuple slot to get
 #' @param ... additional arguments to [[, ignored
 #' @param value What to set in a given slot
-#' @param confirm For \code{delete}, whether confirmation is required. See
-#' \code{\link{delete}}.
 #' @name tuple-methods
 #' @aliases entity
 NULL
@@ -90,13 +88,9 @@ setMethod("delete", "ShojiTuple", function (x, ...) {
 })
 #' @rdname tuple-methods
 #' @export
-setMethod("delete", "DatasetTuple", function (x, confirm=requireConsent(), ...) {
-    if (!missing(confirm)) {
-        warning("The 'confirm' argument is deprecated. See ?with_consent.",
-            call.=FALSE)
-    }
+setMethod("delete", "DatasetTuple", function (x, ...) {
     prompt <- paste0("Really delete dataset ", dQuote(name(x)), "?")
-    if (confirm && !askForPermission(prompt)) {
+    if (!askForPermission(prompt)) {
         halt("Must confirm deleting dataset")
     }
     out <- callNextMethod()
