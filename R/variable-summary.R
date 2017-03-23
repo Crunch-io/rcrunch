@@ -1,8 +1,5 @@
 getSummary <- function (x) {
     url <- shojiURL(x, "views", "summary")
-    if (is.null(url)) {
-        halt("No summary available")
-    }
     out <- crGET(url, query=list(filter=toJSON(zcl(activeFilter(x)))))
     if (is.Datetime(x)) {
         toR <- columnParser("datetime")
