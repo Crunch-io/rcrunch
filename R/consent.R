@@ -26,19 +26,6 @@ with_consent <- function (expr) {
     with(consent(), eval.parent(expr))
 }
 
-requireConsent <- function () {
-    cfc <- getOption("crunch.require.confirmation")
-    i <- is.interactive()
-    if (is.null(cfc) && !i) {
-        warning("You're running R in a non-interactive mode and performing a ",
-            "destructive action. This has been allowed in the past, but soon ",
-            "all destructive actions will always require 'consent', even in ",
-            "non-interactive mode. See `?with_consent` for more.",
-            call.=FALSE)
-    }
-    return(cfc %||% i)
-}
-
 askForPermission <- function (prompt="") {
     ## If options explicitly say we don't need to ask, bail.
     ## Have to check that it's FALSE and not NULL. Silence doesn't mean consent.

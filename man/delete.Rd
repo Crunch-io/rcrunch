@@ -15,33 +15,34 @@
 \usage{
 \S4method{delete}{CrunchDataset}(x, ...)
 
-\S4method{delete}{CrunchProject}(x, confirm = requireConsent(), ...)
+\S4method{delete}{CrunchProject}(x, ...)
 
 \S4method{delete}{ShojiObject}(x, ...)
 
 \S4method{delete}{ANY}(x, ...)
 
-\S4method{delete}{CrunchTeam}(x, confirm = requireConsent(), ...)
+\S4method{delete}{CrunchTeam}(x, ...)
 
 \S4method{delete}{CrunchVariable}(x, ...)
 
-\S4method{delete}{VariableTuple}(x, confirm = requireConsent(), ...)
+\S4method{delete}{VariableTuple}(x, ...)
 }
 \arguments{
 \item{x}{a Crunch object}
 
 \item{...}{additional arguments, in the generic}
-
-\item{confirm}{logical: should the user be asked to confirm deletion.
-Option available for datasets and teams only. Default is \code{TRUE} if in
-an interactive session. You can avoid the confirmation prompt if you delete
-\code{with(\link{consent})}.}
 }
 \description{
 These methods delete entities, notably Datasets and Variables within them,
 from the server. This action is permanent and cannot be undone, so it
 should not be done lightly. Consider instead using \code{archive}
-for datasets and \code{\link{hide}} for variables
+for datasets and \code{\link{hide}} for variables.
+}
+\details{
+Deleting requires confirmation. In an interactive session, you will be asked
+to confirm. To avoid that prompt, or to delete objects from a 
+non-interactive session, wrap the call in \code{\link{with_consent}} to give
+your permission to delete.
 }
 \seealso{
 \code{\link{hide}} \code{\link{deleteDataset}}

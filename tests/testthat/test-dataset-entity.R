@@ -253,10 +253,6 @@ with_mock_HTTP({
     })
     test_that("Dataset deleting", {
         expect_error(delete(ds), "Must confirm") ## New non-interactive behavior
-        expect_warning(
-            expect_error(delete(ds, confirm=TRUE), "Must confirm"),
-            "The 'confirm' argument is deprecated."
-        )
         with_consent(expect_DELETE(delete(ds), self(ds)))  ## No warning
     })
 })

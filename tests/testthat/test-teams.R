@@ -27,10 +27,7 @@ with_mock_HTTP({
     })
 
     test_that("Team deletion", {
-        expect_warning(
-            expect_error(delete(ateam, confirm=TRUE), "Must confirm"),
-            "The 'confirm' argument is deprecated."
-        )
+        expect_error(delete(ateam), "Must confirm")
         expect_DELETE(with_consent(delete(ateam)), self(ateam))
     })
 })

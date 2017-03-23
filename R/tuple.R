@@ -90,13 +90,9 @@ setMethod("delete", "ShojiTuple", function (x, ...) {
 })
 #' @rdname tuple-methods
 #' @export
-setMethod("delete", "DatasetTuple", function (x, confirm=requireConsent(), ...) {
-    if (!missing(confirm)) {
-        warning("The 'confirm' argument is deprecated. See ?with_consent.",
-            call.=FALSE)
-    }
+setMethod("delete", "DatasetTuple", function (x, ...) {
     prompt <- paste0("Really delete dataset ", dQuote(name(x)), "?")
-    if (confirm && !askForPermission(prompt)) {
+    if (!askForPermission(prompt)) {
         halt("Must confirm deleting dataset")
     }
     out <- callNextMethod()

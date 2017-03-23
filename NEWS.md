@@ -1,4 +1,6 @@
 ### crunch 1.15.3 (under development)
+* Remove "confirm" argument from various delete functions (deprecated since 1.14.4) and the "cleanup" argument to append (deprecated since 1.13.4)
+* All destructive actions now require 'consent', even in non-interactive mode. See `?with_consent` for more details.
 
 ### crunch 1.15.2
 * Support for additional dataset export arguments

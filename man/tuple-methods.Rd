@@ -55,7 +55,7 @@
 
 \S4method{delete}{ShojiTuple}(x, ...)
 
-\S4method{delete}{DatasetTuple}(x, confirm = requireConsent(), ...)
+\S4method{delete}{DatasetTuple}(x, ...)
 
 \S4method{name}{ShojiTuple}(x)
 
