@@ -141,7 +141,17 @@ setMethod("initialize", "MultitableResult", function (.Object, ...) {
                 name="Total"
             )
         )))
-    .Object$result <- lapply(.Object$result, CrunchCube)
+    .Object$result <- lapply(.Object$result, function (cube) {
+        cube <- CrunchCube(cube)
+        ## If cubes are 3D (categorical array x multitable), aperm the cubes so
+        ## that column is multitable var (3 -> 2), row is category of
+        ## array (2 -> 1), subvar is "tab" (1 -> 3)
+        if (length(dim(cube)) == 3L) {
+            cube@dims <- CubeDims(cube@dims[c(2, 3, 1)])
+            cube@arrays <- lapply(cube@arrays, aperm, perm=c(2, 3, 1))
+        }
+        return(cube)
+    })
     return(.Object)
 })
 #' @rdname tabbook-methods
@@ -161,6 +171,12 @@ setMethod("lapply", "MultitableResult", function (X, FUN, ...) {
 setMethod("show", "MultitableResult", function (object) {
     show(do.call("cbind", lapply(object, cubeToArray)))
 })
+
+#' @export
+as.array.TabBookResult <- function (x, ...) lapply(x, as.array)
+
+#' @export
+as.array.MultitableResult <- function (x, ...) lapply(x, as.array)
 
 #' @rdname cube-computing
 #' @export

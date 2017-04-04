@@ -5,16 +5,7 @@ setMethod("initialize", "CrunchCube", function (.Object, ...) {
     if (!length(.Object@arrays)) {
         m <- .Object$result$measures
         m[[".unweighted_counts"]] <- list(data=.Object$result$counts)
-        # print(m)
-        ## Add in the "counts"
-        # print(names(.Object$result))
-        # print(.Object$result$counts)
-        .Object@arrays <- lapply(
-            m,
-            # c(.Object$result$measures, list(.unweighted_counts=.Object$result$counts)),
-            cToA, dims=.Object@dims)
-        # print(names(.Object@arrays))
-        # print(.Object@arrays$.unweighted_counts)
+        .Object@arrays <- lapply(m, cToA, dims=.Object@dims)
     }
     return(.Object)
 })
