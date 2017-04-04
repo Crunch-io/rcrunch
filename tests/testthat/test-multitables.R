@@ -124,11 +124,6 @@ with_mock_HTTP({
             expect_identical(dim(book), c(2L, 3L))
             expect_is(book[[1]][[1]], "CrunchCube")
         })
-        test_that("tab book names", {
-            expect_identical(names(book), c("Admit", "Gender"))
-            expect_is(book[["Admit"]], "MultitableResult")
-            expect_null(book[["NOTVALID"]])
-        })
         test_that("tab book print methods", {
             ## Print method for MultitableResult cbinds together the Cubes
             out <- structure(
@@ -169,10 +164,25 @@ with_mock_HTTP({
         test_that("tabBook JSON with arrays returns TabBookResult", {
             expect_is(book, "TabBookResult")
             expect_identical(dim(book), c(3L, 3L))
-            expect_identical(names(book),
-                c("quarter", "categorical_array", "mymrset"))
             expect_identical(prop.table(book, 2)[[2]][[2]],
                 prop.table(book[[2]][[2]], 2))
+        })
+    })
+
+    with_POST("api/datasets/1/multitables/apidocs-tabbook.json", {
+        ## This mock was taken from the integration test below
+        book <- tabBook(m, data=ds)
+        test_that("tabBook from apidocs dataset (mock)", {
+            expect_is(book, "TabBookResult")
+            expect_identical(dim(book), c(9L, 3L))
+            expect_identical(prop.table(book, 2)[[2]][[2]],
+                prop.table(book[[2]][[2]], 2))
+        })
+        test_that("tab book names", {
+            expect_identical(names(book)[1:4],
+                c("All pets owned", "Pet", "Pets by location", "Number of dogs"))
+            expect_is(book[["Pet"]], "MultitableResult")
+            expect_null(book[["NOTVALID"]])
         })
     })
 })
@@ -228,5 +238,7 @@ with_test_authentication({
         skip_locally("Vagrant host doesn't serve files correctly")
         book <- tabBook(mult, data=ds, format="json")
         expect_is(book, "TabBookResult")
+        expect_identical(dim(book), c(ncol(ds), 3L))
+        expect_identical(names(book), names(variables(ds)))
     })
 })

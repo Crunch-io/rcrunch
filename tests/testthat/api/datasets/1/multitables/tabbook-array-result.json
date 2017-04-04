@@ -1,4 +1,5 @@
 // See cr-exporter/cr/exporter/tests/multitable-array-result.json
+// Note: this data structure no longer matches the API; see apidocs-tabbook.json instead
 {
     "template": [
         {

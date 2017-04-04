@@ -1,4 +1,6 @@
 ### crunch 1.15.3 (under development)
+* Reshape TabBookResults that contain categorical array variables so that `prop.table` computations line up with those not containing array variables (i.e. move subvariables to the third array dimension in the result).
+* Fix `names` method for TabBookResults following an API change.
 * Remove "confirm" argument from various delete functions (deprecated since 1.14.4) and the "cleanup" argument to append (deprecated since 1.13.4)
 * All destructive actions now require 'consent', even in non-interactive mode. See `?with_consent` for more details.
 

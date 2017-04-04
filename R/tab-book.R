@@ -118,7 +118,7 @@ setMethod("dim", "TabBookResult", function (x) {
 #' @rdname tabbook-methods
 #' @export
 setMethod("names", "TabBookResult", function (x) {
-    unlist(lapply(x, function (s) s$sheet_name))
+    unlist(lapply(x$meta$sheets, function (sheet) sheet$name))
 })
 setMethod("lapply", "TabBookResult", function (X, FUN, ...) {
     lapply(X$sheets, FUN, ...)
