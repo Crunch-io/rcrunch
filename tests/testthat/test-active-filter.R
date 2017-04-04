@@ -59,10 +59,15 @@ with_mock_HTTP({
     })
 
     test_that("Getting weight variable from filtered dataset is filtered", {
-        ds4 <- ds2
-        ds4@body$weight <- "api/datasets/1/variables/starttime/"
-        expect_identical(weight(ds4), ds4$starttime)
-        expect_identical(activeFilter(weight(ds4)), ds$gender == "Male")
+        otherds <- loadDataset("ECON.sav")
+        expect_warning(
+            expect_identical(weight(otherds), otherds$birthyr),
+            "Variable birthyr is hidden")
+        otherds2 <- otherds[otherds$gender == "Male",]
+        expect_warning(
+            expect_identical(weight(otherds2), otherds2$birthyr),
+            "Variable birthyr is hidden")
+        expect_identical(activeFilter(weight(otherds2)), otherds$gender == "Male")
     })
 
     test_that("activeFilter from filtered CrunchVariable", {

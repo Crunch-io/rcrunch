@@ -74,6 +74,7 @@
         }
     },
     "orders": {
-        "hier": "api/datasets/1/variables/hierarchical/"
+        "hier": "api/datasets/1/variables/hierarchical/",
+        "weights": "api/datasets/1/variables/weights/"
     }
 }

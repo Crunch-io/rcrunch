@@ -108,6 +108,7 @@ setGeneric("is.published<-", function (x, value) standardGeneric("is.published<-
 setGeneric("groupClass", function (x) standardGeneric("groupClass"))
 setGeneric("entityClass", function (x) standardGeneric("entityClass"))
 setGeneric("entitiesInitializer", function (x) standardGeneric("entitiesInitializer"))
+setGeneric("weightVariables", function (x) standardGeneric("weightVariables"))
 
 setGeneric("owner", function (x) standardGeneric("owner"))
 setGeneric("owner<-", function (x, value) standardGeneric("owner<-"))

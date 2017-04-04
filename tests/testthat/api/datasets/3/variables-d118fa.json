@@ -33,6 +33,7 @@
         }
     },
     "orders": {
-        "hier": "api/datasets/3/variables/hierarchical/"
+        "hier": "api/datasets/3/variables/hierarchical/",
+        "weights": "api/datasets/3/variables/weights/"
     }
 }

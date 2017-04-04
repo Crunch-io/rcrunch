@@ -71,7 +71,7 @@ unhideVariables <- function (dataset, variables) {
 hiddenVariables <- function (dataset, key=namekey(dataset)) {
     hv <- hidden(dataset)
     if (length(hv)) {
-        return(sort(vapply(index(hv), function (x) x[[key]], character(1),
+        return(sort(vapply(index(hv), vget(key), character(1),
             USE.NAMES=FALSE)))
     } else {
         return(c())

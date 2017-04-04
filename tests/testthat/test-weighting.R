@@ -1,7 +1,6 @@
 context("Weights")
 
 with_mock_HTTP({
-    ## Old and future API versions
     oldds <- loadDataset("test ds")
     newds <- loadDataset("ECON.sav")
 
@@ -14,17 +13,31 @@ with_mock_HTTP({
 
     test_that("Setting weights", {
         expect_PATCH(weight(oldds) <- oldds$birthyr,
-            "api/datasets/1/",
+            "api/datasets/1/preferences/",
             '{"weight":"api/datasets/1/variables/birthyr/"}')
         expect_PATCH(weight(newds) <- NULL,
             "api/datasets/3/preferences/",
             '{"weight":null}')
+    })
+    test_that("No request is made to set a weight that already is your weight", {
+        expect_no_request(weight(oldds) <- NULL)
+        expect_warning(
+            expect_no_request(weight(newds) <- newds$birthyr),
+            "Variable birthyr is hidden")
     })
 
     test_that("Errors are properly handled when setting weight", {
         expect_error(weight(newds) <- "a",
             "Weight must be a Variable or NULL")
         ## test error handling when trying to set non-numeric (need backend?)
+    })
+
+    test_that("weightVariables method", {
+        expect_identical(weightVariables(newds), "birthyr")
+        with(temp.option(crunch.namekey.dataset="name"), {
+            expect_identical(weightVariables(newds), "Birth Year")
+        })
+        expect_identical(weightVariables(oldds), c())
     })
 })
 

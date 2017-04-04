@@ -1,21 +1,21 @@
 #' Dataset weights
+#'
+#' "weight" lets you view and set your user's currently applied weight on the
+#' server. "weightVariables" lets you view all of the variables that have been
+#' designated as valid to use as weights.
 #' @param x a Dataset
 #' @param value a Variable to set as weight, or NULL to remove the existing
 #' weight
-#' @return For the getter, a Variable if there is a weight, else NULL. For the
-#' setter, x, modified accordingly
+#' @return For the \code{weight} getter, a Variable if there is a weight, else
+#' NULL. For the setter, x, modified accordingly. \code{weightVariables} returns
+#' the aliases (or names, according to \code{options(crunch.namekey.dataset)}),
+#' of the variables designated as weights.
+#' @aliases weightVariables
 #' @export
 weight <- function (x) {
     stopifnot(is.dataset(x))
-    ## Future API: on "preferences"
-    prefs <- crGET(shojiURL(x, "fragments", "preferences"))
-    if ("weight" %in% names(prefs$body)) {
-        ## The future is here
-        w <- prefs$body$weight
-    } else {
-        ## Old behavior
-        w <- x@body$weight
-    }
+    prefs <- ShojiEntity(crGET(shojiURL(x, "fragments", "preferences")))
+    w <- prefs$weight
     if (!is.null(w)) {
         w <- CrunchVariable(allVariables(x)[[w]], filter=activeFilter(x))
     }
@@ -31,16 +31,31 @@ weight <- function (x) {
     } else if (!is.null(value)) {
         halt("Weight must be a Variable or NULL")
     }
-
-    ## Future API: on "preferences"
-    prefs <- crGET(shojiURL(x, "fragments", "preferences"))
-    if ("weight" %in% names(prefs$body)) {
-        ## The future is here
+    currentWeight <- ShojiEntity(crGET(shojiURL(x, "fragments", "preferences")))$weight
+    if (!identical(value, currentWeight)) {
         crPATCH(shojiURL(x, "fragments", "preferences"), body=toJSON(list(weight=value)))
         x <- refresh(x)
-    } else {
-        ## Old behavior
-        x <- setEntitySlot(x, "weight", value)
     }
     return(x)
 }
+
+#' @rdname weight
+#' @export
+setMethod("weightVariables", "CrunchDataset",
+    function (x) weightVariables(allVariables(x)))
+
+#' @rdname weight
+#' @export
+setMethod("weightVariables", "VariableCatalog", function (x) {
+    ## Get weight variable order
+    ord <- VariableOrder(crGET(shojiURL(x, "orders", "weights")))
+    ## Subset weight variable catalog with it
+    vars <- x[ord]
+    ## Return the names/aliases
+    if (length(vars)) {
+        return(sort(vapply(index(vars), vget(namekey(x)), character(1),
+            USE.NAMES=FALSE)))
+    } else {
+        return(c())
+    }
+})
