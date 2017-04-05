@@ -1,5 +1,6 @@
 ### crunch 1.15.3 (under development)
 * Reshape TabBookResults that contain categorical array variables so that `prop.table` computations line up with those not containing array variables (i.e. move subvariables to the third array dimension in the result).
+* Add `names`, `aliases`, and `descriptions` methods to `CrunchCube` (corresponding to variables of the dimensions in the cube), `MultitableResult` (corresponding to the "column" variables of the cubes in the result), and `TabBookResult` (corresponding to the "row"/"sheet" variables in each multitable result).
 * Fix `names` method for TabBookResults following an API change.
 * `weightVariables` method to display the set of variables designated as valid weights. (Works like `hiddenVariables`.)
 * Remove "confirm" argument from various delete functions (deprecated since 1.14.4) and the "cleanup" argument to append (deprecated since 1.13.4)

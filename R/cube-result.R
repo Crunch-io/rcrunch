@@ -12,11 +12,11 @@ setMethod("initialize", "CrunchCube", function (.Object, ...) {
 
 #' @rdname cube-methods
 #' @export
-setMethod("dim", "CrunchCube", function (x) dim(x@dims))
+setMethod("dim", "CrunchCube", function (x) dim(dimensions(x)))
 
 #' @rdname cube-methods
 #' @export
-setMethod("dimnames", "CrunchCube", function (x) dimnames(x@dims))
+setMethod("dimnames", "CrunchCube", function (x) dimnames(dimensions(x)))
 
 cToA <- function (x, dims) {
     ## Just make an array from the cube "measure's" data. Nothing else
@@ -59,7 +59,7 @@ cubeToArray <- function (x, measure=1) {
 }
 
 pruneCubeArray <- function (x, cube) {
-    keep.these <- evalUseNA(x, cube@dims, cube@useNA)
+    keep.these <- evalUseNA(x, dimensions(cube), cube@useNA)
     return(subsetCubeArray(x, keep.these))
 }
 
@@ -107,8 +107,8 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     ## Given a CrunchCube, get the right margin table for percentaging
     data <- x@arrays[[measure]]
     dimnames(data) <- dimnames(x)
-    aon <- anyOrNone(x@dims)
-    missings <- is.na(x@dims)
+    aon <- anyOrNone(dimensions(x))
+    missings <- is.na(dimensions(x))
 
     if (!is.null(margin) && max(margin) > length(dim(data))) {
         ## Validate the input and give a useful error message.
@@ -146,7 +146,7 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     ## Sweep that
     mt <- margin.table(data, margin)
     ## Now drop missings from the result
-    keep.these <- evalUseNA(mt, x@dims[margin], x@useNA)
+    keep.these <- evalUseNA(mt, dimensions(x)[margin], x@useNA)
     out <- subsetCubeArray(mt, keep.these)
     return(out)
 }
@@ -221,3 +221,15 @@ setMethod("bases", "CrunchCube", function (x, margin=NULL) {
         return(cubeMarginTable(x, margin, measure=".unweighted_counts"))
     }
 })
+
+#' @rdname cube-methods
+#' @export
+setMethod("names", "CrunchCube", function (x) names(variables(x)))
+
+#' @rdname cube-methods
+#' @export
+setMethod("aliases", "CrunchCube", function (x) aliases(variables(x)))
+
+#' @rdname cube-methods
+#' @export
+setMethod("descriptions", "CrunchCube", function (x) descriptions(variables(x)))

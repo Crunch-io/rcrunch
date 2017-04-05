@@ -130,6 +130,7 @@ setGeneric("prop.table")
 setGeneric("round")
 
 setGeneric("bases", function (x, margin=NULL) standardGeneric("bases"))
+setGeneric("dimensions", function (x) standardGeneric("dimensions"))
 
 setGeneric("subset")
 setGeneric("which", signature="x")

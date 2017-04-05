@@ -8,8 +8,13 @@
 \alias{[[,TabBookResult,character-method}
 \alias{dim,TabBookResult-method}
 \alias{names,TabBookResult-method}
+\alias{aliases,TabBookResult-method}
+\alias{descriptions,TabBookResult-method}
 \alias{length,MultitableResult-method}
 \alias{[[,MultitableResult,ANY-method}
+\alias{names,MultitableResult-method}
+\alias{aliases,MultitableResult-method}
+\alias{descriptions,MultitableResult-method}
 \title{TabBookResult and MultitableResult methods}
 \usage{
 \S4method{length}{TabBookResult}(x)
@@ -22,9 +27,19 @@
 
 \S4method{names}{TabBookResult}(x)
 
+\S4method{aliases}{TabBookResult}(x)
+
+\S4method{descriptions}{TabBookResult}(x)
+
 \S4method{length}{MultitableResult}(x)
 
 \S4method{[[}{MultitableResult,ANY}(x, i, j, ...)
+
+\S4method{names}{MultitableResult}(x)
+
+\S4method{aliases}{MultitableResult}(x)
+
+\S4method{descriptions}{MultitableResult}(x)
 }
 \arguments{
 \item{x}{a TabBookResult or MultitableResult}

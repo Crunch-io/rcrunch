@@ -274,7 +274,9 @@ Subvariables <- setClass("Subvariables", contains="VariableCatalog",
         filter=CrunchLogicalExpr()
     ))
 
-CubeDims <- setClass("CubeDims", contains="namedList")
+CubeDims <- setClass("CubeDims", contains="namedList",
+    representation=representation(references="VariableCatalog"),
+    prototype=prototype(references=VariableCatalog()))
 
 CrunchCube <- setClass("CrunchCube", contains="list",
     representation=representation(
