@@ -1,8 +1,8 @@
 context("Subvariables")
 
 with_mock_HTTP({
-    test.ds <- loadDataset("test ds")
-    mr <- test.ds$mymrset
+    ds <- loadDataset("test ds")
+    mr <- ds$mymrset
 
     test_that("setup", {
         expect_true(is.Multiple(mr))
@@ -11,12 +11,22 @@ with_mock_HTTP({
     test_that("subvariables are what we think", {
         expect_is(subvariables(mr), "Subvariables")
         expect_identical(names(subvariables(mr)), c("First", "Second", "Last"))
+        expect_identical(aliases(subvariables(mr)),
+            c("subvar2", "subvar1", "subvar3"))
     })
 
     test_that("subvariable name setter error checking", {
         expect_error(names(subvariables(mr)) <- 1:3)
         expect_error(names(subvariables(mr)) <- c("First", "Second"))
         expect_error(names(subvariables(mr)) <- c("First", "First", "First"))
+    })
+    test_that("subvariable name/alias setting", {
+        expect_PATCH(names(subvariables(mr))[1:2] <- c("Uno", "Due"),
+            'api/datasets/1/variables/mymrset/subvariables/', '{"api/datasets/1/variables/mymrset/subvariables/subvar2/":{"name":"Uno"},',
+            '"api/datasets/1/variables/mymrset/subvariables/subvar1/":{"name":"Due"}}')
+        expect_PATCH(aliases(subvariables(mr))[1:2] <- c("uno", "due"),
+            'api/datasets/1/variables/mymrset/subvariables/', '{"api/datasets/1/variables/mymrset/subvariables/subvar2/":{"alias":"uno"},',
+            '"api/datasets/1/variables/mymrset/subvariables/subvar1/":{"alias":"due"}}')
     })
 
     test_that("[.Subvariables", {
@@ -31,6 +41,9 @@ with_mock_HTTP({
             "Can only reorder, not change, subvariables")
         expect_error(subvariables(mr) <- subvariables(mr)[1:2],
             "Can only reorder, not change, subvariables")
+        expect_PATCH(subvariables(mr) <- subvariables(mr)[c(3, 1, 2)])
+        expect_error(subvariables(mr) <- 42,
+            "Can only assign an object of class Subvariables")
     })
 
     test_that("Assinging in with no changes does not make PATCH request", {
@@ -45,6 +58,24 @@ with_mock_HTTP({
         expect_is(subvariables(mr)$Second, "CrunchVariable")
         expect_true(is.Categorical(subvariables(mr)$Second))
         expect_null(subvariables(mr)$Other)
+    })
+
+    test_that("Validation when setting on a subvariable", {
+        expect_error(name(subvariables(mr)[[4]]) <- "Four",
+            "subscript out of bounds")
+        expect_error(subvariables(mr)[[2]] <- ds$gender,
+            "Cannot add or remove subvariables")
+        expect_error(subvariables(mr)[[2]] <- NULL,
+            "Cannot add or remove subvariables")
+        expect_error(subvariables(mr)[[2]] <- "not a variable",
+            "Can only assign Variables into an object of class Subvariables")
+    })
+
+    test_that("Validation when setting on a [ subset of subvariables", {
+        expect_error(names(subvariables(mr)[3:4]) <- c("3", "4"),
+            "Subscript out of bounds: 4")
+        expect_error(subvariables(mr)[2:3] <- c("not a variable", "nor this"),
+            "Can only assign Variables into an object of class Subvariables")
     })
 
     test_that("can extract directly from array variable", {
@@ -94,46 +125,38 @@ with_test_authentication({
         })
 
         test_that("can rename subvariables", {
-            try(names(subvariables(var))[2] <- "M.R. Two")
+            names(subvariables(var))[2] <- "M.R. Two"
             expect_identical(names(subvariables(var)),
                 c("mr_1", "M.R. Two", "mr_3"))
         })
 
         test_that("can rename one subvariable", {
-            try(name(subvariables(var)[[2]]) <- "Due")
+            name(subvariables(var)[[2]]) <- "Due"
             expect_identical(names(subvariables(var)),
                 c("mr_1", "Due", "mr_3"))
+            expect_identical(names(subvariables(refresh(var))),
+                c("mr_1", "Due", "mr_3"))
             sv <- subvariables(var)
-            try(name(sv[[2]]) <- "M.R. Two")
+            name(sv[[2]]) <- "M.R. Two"
             expect_identical(names(sv),
                 c("mr_1", "M.R. Two", "mr_3"))
-            expect_error(name(sv[[4]]) <- "Four",
-                "subscript out of bounds")
-            expect_error(sv[[2]] <- ds$v4,
-                "Cannot add or remove subvariables")
-            expect_error(sv[[2]] <- NULL,
-                "Cannot add or remove subvariables")
-            expect_error(sv[[2]] <- "not a variable",
-                "Can only assign Variables into an object of class Subvariables")
         })
         test_that("can rename some subvariables", {
-            try(names(subvariables(var)[2:3]) <- c("Dois", "Tres"))
+            names(subvariables(var)[2:3]) <- c("Dois", "Tres")
             expect_identical(names(subvariables(var)),
                 c("mr_1", "Dois", "Tres"))
             sv <- subvariables(var)
-            try(names(sv[2:3]) <- c("M.R. Two", "mr_3"))
+            names(sv[2:3]) <- c("M.R. Two", "mr_3")
             expect_identical(names(sv),
                 c("mr_1", "M.R. Two", "mr_3"))
-            expect_error(names(sv[3:4]) <- c("3", "4"),
-                "Subscript out of bounds: 4")
-            expect_error(sv[2:3] <- c("not a variable", "nor this"),
-                "Can only assign Variables into an object of class Subvariables")
         })
         test_that("subvariables aliases", {
             expect_identical(aliases(subvariables(var)),
                 c("mr_1", "mr_2", "mr_3"))
             aliases(subvariables(var)) <- paste0("mr_", 5:7)
             expect_identical(aliases(subvariables(var)),
+                c("mr_5", "mr_6", "mr_7"))
+            expect_identical(aliases(subvariables(refresh(var))),
                 c("mr_5", "mr_6", "mr_7"))
         })
     })

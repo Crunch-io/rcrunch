@@ -71,25 +71,6 @@ setMethod("subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
         return(x)
     })
 
-#' @rdname describe-catalog
-#' @export
-setMethod("aliases", "Subvariables", function (x) {
-    vapply(index(x), function (a) a$alias, character(1), USE.NAMES=FALSE)
-})
-
-#' @rdname describe-catalog
-#' @export
-setMethod("aliases<-", "Subvariables", function (x, value) {
-    stopifnot(is.character(value), length(x) == length(value),
-        !any(duplicated(value)))
-    index(x) <- mapply(function (tuple, val) {
-            tuple[["alias"]] <- val
-            return(tuple)
-        }, tuple=index(x), val=value, SIMPLIFY=FALSE, USE.NAMES=TRUE)
-    crPATCH(self(x), body=toJSON(index(x)))
-    return(x)
-})
-
 #' Extract and modify subsets of subvariables
 #'
 #' @param x Subvariables or an array Variable (which contains subvariables)
