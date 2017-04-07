@@ -18,8 +18,6 @@
 \alias{names,ShojiCatalog-method}
 \alias{names<-,ShojiCatalog-method}
 \alias{emails,ShojiCatalog-method}
-\alias{aliases,Subvariables-method}
-\alias{aliases<-,Subvariables-method}
 \alias{names,CategoricalArrayVariable-method}
 \alias{aliases,VariableCatalog-method}
 \alias{aliases<-,VariableCatalog-method}
@@ -45,10 +43,6 @@
 \S4method{names}{ShojiCatalog}(x) <- value
 
 \S4method{emails}{ShojiCatalog}(x)
-
-\S4method{aliases}{Subvariables}(x)
-
-\S4method{aliases}{Subvariables}(x) <- value
 
 \S4method{names}{CategoricalArrayVariable}(x)
 

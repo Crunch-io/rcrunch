@@ -10,7 +10,8 @@
 \alias{[<-,DatetimeVariable,ANY,missing,Date-method}
 \alias{[<-,DatetimeVariable,ANY,missing,POSIXt-method}
 \alias{[<-,CrunchVariable,ANY,missing,CrunchExpr-method}
-\alias{[<-,CrunchVariable,CrunchExpr,missing,CrunchExpr-method}
+\alias{[<-,CrunchVariable,ANY,missing,CrunchVariable-method}
+\alias{[<-,CrunchVariable,ANY,missing,CrunchLogicalExpr-method}
 \alias{[<-,CategoricalVariable,ANY,missing,numeric-method}
 \alias{[<-,CategoricalVariable,ANY,missing,character-method}
 \alias{[<-,CategoricalVariable,ANY,missing,factor-method}
@@ -35,7 +36,9 @@
 
 \S4method{[}{CrunchVariable,ANY,missing,CrunchExpr}(x, i, j) <- value
 
-\S4method{[}{CrunchVariable,CrunchExpr,missing,CrunchExpr}(x, i, j) <- value
+\S4method{[}{CrunchVariable,ANY,missing,CrunchVariable}(x, i, j) <- value
+
+\S4method{[}{CrunchVariable,ANY,missing,CrunchLogicalExpr}(x, i, j) <- value
 
 \S4method{[}{CategoricalVariable,ANY,missing,numeric}(x, i, j) <- value
 
