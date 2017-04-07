@@ -27,6 +27,14 @@ with_mock_HTTP({
         expect_PATCH(aliases(subvariables(mr))[1:2] <- c("uno", "due"),
             'api/datasets/1/variables/mymrset/subvariables/', '{"api/datasets/1/variables/mymrset/subvariables/subvar2/":{"alias":"uno"},',
             '"api/datasets/1/variables/mymrset/subvariables/subvar1/":{"alias":"due"}}')
+        expect_error(aliases(subvariables(mr)[c("Second", "NOTASUBVAR")]) <- c("uno", "due"),
+            "Undefined subvariables selected: NOTASUBVAR")
+        expect_PATCH(names(subvariables(mr)[1:2]) <- c("Uno", "Due"),
+            'api/datasets/1/variables/mymrset/subvariables/', '{"api/datasets/1/variables/mymrset/subvariables/subvar2/":{"name":"Uno"},',
+            '"api/datasets/1/variables/mymrset/subvariables/subvar1/":{"name":"Due"}}')
+        expect_PATCH(names(subvariables(mr)[c("First", "Second")]) <- c("Uno", "Due"),
+            'api/datasets/1/variables/mymrset/subvariables/', '{"api/datasets/1/variables/mymrset/subvariables/subvar2/":{"name":"Uno"},',
+            '"api/datasets/1/variables/mymrset/subvariables/subvar1/":{"name":"Due"}}')
     })
 
     test_that("[.Subvariables", {
@@ -69,6 +77,9 @@ with_mock_HTTP({
             "Cannot add or remove subvariables")
         expect_error(subvariables(mr)[[2]] <- "not a variable",
             "Can only assign Variables into an object of class Subvariables")
+        expect_PATCH(name(subvariables(mr)$Second) <- "Due",
+            'api/datasets/1/variables/mymrset/subvariables/',
+            '{"api/datasets/1/variables/mymrset/subvariables/subvar1/":{"name":"Due"}}')
     })
 
     test_that("Validation when setting on a [ subset of subvariables", {

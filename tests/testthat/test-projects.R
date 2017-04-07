@@ -67,6 +67,14 @@ with_mock_HTTP({
         expect_is(m, "MemberCatalog")
         expect_identical(names(m), c("Fake User", "Roger User"))
         expect_identical(emails(m), c("fake.user@example.com", "roger.user@example.com"))
+        expect_identical(name(m[["roger.user@example.com"]]),
+            "Roger User")
+        expect_error(m[["NOTAUSER@example.com"]],
+            "Subscript out of bounds: NOTAUSER@example.com")
+        expect_identical(names(m["roger.user@example.com"]),
+            "Roger User")
+        expect_error(m["NOTAUSER@example.com"],
+            "Undefined elements selected: NOTAUSER@example.com")
     })
 
     test_that("Add members by members<-", {
