@@ -2,7 +2,7 @@ context("Update error handling")
 
 with_test_authentication({
     ds <- newDataset(df[,4,drop=FALSE])
-    len <- try(length(as.vector(ds$v4[ds$v4 == "B"])))
+    len <- length(as.vector(ds$v4[ds$v4 == "B"]))
     test_that("setup for update with wrong number of values", {
         expect_identical(len, 10L)
     })
@@ -15,13 +15,5 @@ with_test_authentication({
         skip_on_jenkins("Silence the error emails")
         expect_error(ds$v4[ds$v4 == "B"] <- rep(1, len - 3),
             "expected 10 values, got 7")
-    })
-    test_that("Trying to update with different filters fails", {
-        skip("Fails, but error message is different now")
-        expect_error(ds$v4[ds$v4 == "B"] <- ds$v4[ds$v4 == "C"],
-            "Cannot update a variable with a value that has a different filter")
-        expect_equivalent(as.numeric(table(ds$v4)), c(10, 10))
-        try(ds$v4[ds$v4 == "B"] <- as.vector(ds$v4[ds$v4 == "C"]))
-        expect_true(all(as.vector(ds$v4) == "C"))
     })
 })

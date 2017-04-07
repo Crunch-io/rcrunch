@@ -91,20 +91,29 @@ setMethod("[<-", c("DatetimeVariable", "ANY", "missing", "Date"),
 #' @export
 setMethod("[<-", c("DatetimeVariable", "ANY", "missing", "POSIXt"),
     .var.updater)
+
+.var.updater.crunchobj <- function (x, i, j, value) {
+    if (missing(i)) i <- NULL
+    if (!identical(zcl(i), zcl(activeFilter(value)))) {
+        halt("Cannot update a variable with an expression that has a different filter")
+    } else {
+        .var.updater(x, i, j, value)
+    }
+}
+
 #' @rdname variable-update
 #' @export
 setMethod("[<-", c("CrunchVariable", "ANY", "missing", "CrunchExpr"),
-    .var.updater)
+    .var.updater.crunchobj)
 #' @rdname variable-update
 #' @export
-setMethod("[<-", c("CrunchVariable", "CrunchExpr", "missing", "CrunchExpr"),
-    function (x, i, j, value) {
-        if (!identical(zcl(i), value@filter)) {
-            halt("Cannot update a variable with a value that has a different filter")
-        } else {
-            callNextMethod()
-        }
-    })
+setMethod("[<-", c("CrunchVariable", "ANY", "missing", "CrunchVariable"),
+    .var.updater.crunchobj)
+
+#' @rdname variable-update
+#' @export
+setMethod("[<-", c("CrunchVariable", "ANY", "missing", "CrunchLogicalExpr"),
+    .backstopUpdate)
 
 ## Set of functions to use in multiple dispatches
 .categorical.update <- list(

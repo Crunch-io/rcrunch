@@ -5,14 +5,62 @@ with_mock_HTTP({
     test_that("Updating values makes a POST request to the table endpoint", {
         ## TODO: assert the payload shape. This is mainly about exercising code
         ## in the unit tests. We test the behavior in integration tests
+        expect_POST(ds$gender <- "Male",
+            "api/datasets/1/table/")
+        expect_POST(ds$birthyr <- 1970,
+            "api/datasets/1/table/")
+        expect_POST(ds$mymrset <- rep(c(1, 2), 10),
+            "api/datasets/1/table/")
         expect_POST(ds$gender[ds$birthyr > 2020] <- "Male",
             "api/datasets/1/table/")
+        expect_POST(ds$birthyr[ds$birthyr > 2020] <- 1970,
+            "api/datasets/1/table/")
+        expect_POST(ds$mymrset[ds$birthyr > 2020] <- 1,
+            "api/datasets/1/table/")
     })
+
     test_that("Validation on categorical update", {
         expect_error(ds$gender[is.na(ds$birthyr)] <- as.factor(c("Male", "Other", "Prefer not to say", "Female")),
             "Input values Other and Prefer not to say are not present in the category names of variable")
         expect_error(ds$gender[is.na(ds$birthyr)] <- 3,
             "Input value 3 is not present in the category ids of variable")
+        expect_error(ds$gender[1:2] <- c(NA, -1),
+            "Cannot have both NA and -1 when specifying category ids")
+        expect_error(ds$gender[1:2] <- FALSE,
+            "Cannot update CategoricalVariable with type logical")
+        expect_error(ds$gender <- FALSE,
+            "Cannot update CategoricalVariable with type logical")
+    })
+
+    test_that("Validation on filtered updating", {
+        expect_error(ds$gender[ds$gender == "Male"] <- ds$gender[ds$birthyr == 1999],
+            "Cannot update a variable with an expression that has a different filter")
+        expect_error(ds$birthyr[ds$gender == "Male"] <- ds$birthyr[ds$gender == "Female"],
+            "Cannot update a variable with an expression that has a different filter")
+        expect_error(ds$birthyr[ds$gender == "Male"] <- ds$birthyr[ds$gender == "Female"] + 2,
+            "Cannot update a variable with an expression that has a different filter")
+
+        skip("TODO: distinguish this kind of attempted value updating from metadata updates")
+        expect_error(ds$gender <- ds$gender[ds$birthyr == 1999],
+            "Cannot update a variable with an expression that has a different filter")
+        ## Now add filter to dataset
+        ds2 <- ds[ds$gender == "Male",]
+        expect_error(ds2$gender <- ds$gender[ds$birthyr == 1999],
+            "Cannot update a variable with an expression that has a different filter")
+        expect_error(ds2$birthyr <- ds$birthyr[ds$gender == "Female"],
+            "Cannot update a variable with an expression that has a different filter")
+        expect_error(ds2$birthyr <- ds$birthyr[ds$gender == "Female"] + 2,
+            "Cannot update a variable with an expression that has a different filter")
+
+        ## TODO: further filter on filtered dataset/variable
+    })
+
+    test_that("Can't update variable with logical expression", {
+        expect_error(ds$gender[ds$gender == "Male"] <- is.na(ds$gender[ds$gender == "Male"]),
+            "Cannot update CategoricalVariable with type CrunchLogicalExpr")
+        skip("TODO: distinguish this kind of attempted value updating from metadata updates")
+        expect_error(ds$gender <- is.na(ds$gender),
+            "Cannot update CategoricalVariable with type CrunchLogicalExpr")
     })
 
     test_that("Trying to update with the wrong data type fails", {
