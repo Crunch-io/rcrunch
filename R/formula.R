@@ -1,3 +1,12 @@
+formulaToCubeQuery <- function (formula, data) {
+    query <- formulaToQuery(formula, data)
+    ## The formulaToQuery part is shared with newMultitable.
+    ## What follows is needed to prepare for a cube query
+    query$dimensions <- unlist(query$dimensions, recursive=FALSE)
+    names(query$dimensions) <- NULL
+    return(query)
+}
+
 formulaToQuery <- function (formula, data) {
     formula <- try(as.formula(formula), silent=TRUE)
     if (is.error(formula)) {
@@ -38,8 +47,14 @@ formulaToQuery <- function (formula, data) {
     ## Construct the "measures", either from the formula or default "count"
     resp <- attr(f, "response")
     if (resp) {
-        measures <- lapply(vars[resp], zcl)
+        ## Pop them off
+        measures <- vars[resp]
         vars <- vars[-resp]
+        ## Look for multiple measures, as passed by `list(f(x), g(x) ~ a + b)`
+        if (startsWith(as.character(f.vars[resp + 1]), "list(")) {
+            measures <- unlist(measures, recursive=FALSE)
+        }
+        measures <- lapply(measures, zcl)
     } else {
         measures <- list(count=zfunc("cube_count"))
     }
@@ -59,9 +74,11 @@ formulaToQuery <- function (formula, data) {
     }
 
     ## One last munge
-    names(measures) <- vapply(measures, function (m) {
-        sub("^cube_", "", m[["function"]])
-    }, character(1))
+    if (is.null(names(measures))) {
+        names(measures) <- vapply(measures, function (m) {
+            sub("^cube_", "", m[["function"]])
+        }, character(1))
+    }
 
     return(list(dimensions=dimensions, measures=measures))
 }
@@ -100,7 +117,8 @@ registerCubeFunctions <- function (varnames=c()) {
                     " 'as_array'")
             }
             zfunc("as_array", x)
-        }
+        },
+        n=function (...) zfunc("cube_count")
     )
 
     overlap <- intersect(varnames, names(funcs))
@@ -113,7 +131,9 @@ registerCubeFunctions <- function (varnames=c()) {
 }
 
 isCubeAggregation <- function (x) {
-    "function" %in% names(x) && grepl("^cube_", x[["function"]])
+    length(names(x)) == 2L &&
+        setequal(names(x), c("function", "args")) &&
+        grepl("^cube_", x[["function"]])
 }
 
 varToDim <- function (x) {

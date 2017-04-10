@@ -27,9 +27,7 @@ crtabs <- function (formula, data, weight=crunch::weight(data),
         halt(dQuote("data"), " must be a Dataset")
     }
 
-    query <- formulaToQuery(formula, data)
-    query$dimensions <- unlist(query$dimensions, recursive=FALSE)
-    names(query$dimensions) <- NULL
+    query <- formulaToCubeQuery(formula, data)
 
     ## Handle "weight"
     force(weight)

@@ -104,6 +104,7 @@ newMultitable <- function (formula, data, name, ...) {
         template=lapply(template$dimensions,
             function (x) list(query=x, variable=findVariableReferences(x)))
     )
+    ## TODO: remove "variable" from that--no longer required?
     u <- crPOST(shojiURL(data, "catalogs", "multitables"), body=toJSON(payload))
     invisible(Multitable(crGET(u)))
 }
