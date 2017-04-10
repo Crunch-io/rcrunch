@@ -53,7 +53,7 @@ with_mock_HTTP({
             logs <- loadLogfile(logfile)
             expect_identical(logs$verb, c("GET", "GET"))
             expect_identical(logs$url,
-                c("https://app.crunch.io/api/progress/1.json", "https://app.crunch.io/api/progress/2.json"))
+                c("app.crunch.io/api/progress/1.json", "app.crunch.io/api/progress/2.json"))
         }),
         test_that("Auto-polling when progress reports failure", {
             counter <<- 1
@@ -63,13 +63,13 @@ with_mock_HTTP({
                     expect_message(
                         expect_error(handleAPIresponse(fakeProg("https://app.crunch.io/api/progress2/")),
                             paste("Education, Commerce, and, uh, oops."), fixed=TRUE),
-                        "Result URL: api/datasets/"),
+                        "Result URL: https://app.crunch.io/api/datasets/"),
                     "|  23%", fixed=TRUE)
             })
             logs <- loadLogfile(logfile)
             expect_identical(logs$verb, c("GET", "GET"))
             expect_identical(logs$url,
-                c("https://app.crunch.io/api/progress2/1.json", "https://app.crunch.io/api/progress2/2.json"))
+                c("app.crunch.io/api/progress2/1.json", "app.crunch.io/api/progress2/2.json"))
         })
     )
 })

@@ -21,7 +21,6 @@ formulaToQuery <- function (formula, data) {
     ## Evaluate the formula's terms in order to catch derived expressions
     v.call <- do.call(substitute,
         list(expr=f.vars, env=registerCubeFunctions(all.f.vars)))
-    where <- environment(formula) #parent.frame()
     vars <- eval(v.call, as.environment(data), environment(formula))
 
     ## Validate that vars are non-null

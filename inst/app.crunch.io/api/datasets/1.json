@@ -22,6 +22,7 @@
     },
     "views": {
         "summary": "https://app.crunch.io/api/datasets/1/summary/",
+        "cube": "https://app.crunch.io/api/datasets/1/cube/",
         "export": "https://app.crunch.io/api/datasets/1/export/"
     },
     "fragments": {
