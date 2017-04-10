@@ -1,6 +1,6 @@
 {
     "element": "shoji:entity",
-    "self": "api/datasets/2/variables/mymrset/",
+    "self": "https://app.crunch.io/api/datasets/2/variables/mymrset/",
     "body": {
         "alias": "mymrset",
         "format": {
@@ -19,16 +19,16 @@
             "./subvariables/subvar2/",
             "./subvariables/subvar4/"
         ],
-        "subvariables_catalog": "api/datasets/2/variables/mymrset/subvariables/",
+        "subvariables_catalog": "https://app.crunch.io/api/datasets/2/variables/mymrset/subvariables/",
         "id": "949d2dc7e7a24e6090cc88bb92e1d2fb"
     },
     "views": {
-        "summary": "api/datasets/2/variables/mymrset/summary/",
-        "values": "api/datasets/2/variables/mymrset/values/",
-        "cast": "api/datasets/2/variables/mymrset/cast/"
+        "summary": "https://app.crunch.io/api/datasets/2/variables/mymrset/summary/",
+        "values": "https://app.crunch.io/api/datasets/2/variables/mymrset/values/",
+        "cast": "https://app.crunch.io/api/datasets/2/variables/mymrset/cast/"
     },
     "urls": {
-        "dataset_url": "api/datasets/2/"
+        "dataset_url": "https://app.crunch.io/api/datasets/2/"
     },
     "description": "Details for a given Variable"
 }

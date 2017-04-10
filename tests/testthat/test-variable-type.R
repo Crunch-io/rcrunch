@@ -10,10 +10,10 @@ with_mock_HTTP({
 
     test_that("Changing numeric type by <- makes requests", {
         expect_POST(type(ds$birthyr) <- "categorical",
-            'api/datasets/1/variables/birthyr/cast/',
+            'https://app.crunch.io/api/datasets/1/variables/birthyr/cast/',
             '{"cast_as":"categorical"}')
         expect_POST(type(ds$birthyr) <- "text",
-            'api/datasets/1/variables/birthyr/cast/',
+            'https://app.crunch.io/api/datasets/1/variables/birthyr/cast/',
             '{"cast_as":"text"}')
     })
     test_that("Setting the same type is a no-op", {

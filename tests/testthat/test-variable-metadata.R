@@ -10,9 +10,9 @@ with_mock_HTTP({
             categories(ds$gender))
         mymr <- index(vm)[[which(aliases(vm) == "mymrset")]]
         expect_identical(mymr$subvariables,
-            c("api/datasets/1/variables/mymrset/subvariables/subvar2/",
-            "api/datasets/1/variables/mymrset/subvariables/subvar1/",
-            "api/datasets/1/variables/mymrset/subvariables/subvar3/"))
+            c("https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar2/",
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/",
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar3/"))
         expect_identical(mymr$subreferences,
             list(list(name="First", alias="subvar2", description=NULL),
                 list(name="Second", alias="subvar1", description=NULL),

@@ -16,10 +16,10 @@ with_mock_HTTP({
     ## Load a ton of cube fixtures via the tab book feature
     ds <- loadDataset("test ds")
     m <- multitables(ds)[[1]]
-    with_POST("api/datasets/1/multitables/tabbook-result.json", {
+    with_POST("https://app.crunch.io/api/datasets/1/multitables/tabbook-result.json", {
         book1 <- tabBook(m, data=ds, format="json")
     })
-    with_POST("api/datasets/1/multitables/tabbook-array-result.json", {
+    with_POST("https://app.crunch.io/api/datasets/1/multitables/tabbook-array-result.json", {
         book2 <- tabBook(m, data=ds, format="json")
     })
 

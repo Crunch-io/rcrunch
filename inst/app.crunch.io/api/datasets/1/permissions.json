@@ -1,9 +1,9 @@
 {
     "element": "shoji:catalog",
-    "self": "api/datasets/1/permissions/",
+    "self": "https://app.crunch.io/api/datasets/1/permissions/",
     "description": "Lists all the users that have access to this dataset",
     "index": {
-        "api/users/user1/": {
+        "https://app.crunch.io/api/users/user1/": {
             "dataset_permissions": {
                 "edit": true,
                 "change_permissions": true,
@@ -15,7 +15,7 @@
             "name": "Fake User",
             "email": "fake.user@example.com"
         },
-        "api/users/user2/": {
+        "https://app.crunch.io/api/users/user2/": {
             "dataset_permissions": {
                 "change_weight": true,
                 "view": true

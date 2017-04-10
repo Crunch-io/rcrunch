@@ -1,13 +1,13 @@
 {
     "element": "shoji:entity",
-    "self": "api/teams/team1/",
+    "self": "https://app.crunch.io/api/teams/team1/",
     "catalogs": {
-        "datasets": "api/teams/team1/datasets/",
-        "members": "api/teams/team1/members/"
+        "datasets": "https://app.crunch.io/api/teams/team1/datasets/",
+        "members": "https://app.crunch.io/api/teams/team1/members/"
     },
     "description": "Details for a specific team",
     "body": {
-        "owner": "api/users/user1/",
+        "owner": "https://app.crunch.io/api/users/user1/",
         "name": "Alpha Team"
     }
 }

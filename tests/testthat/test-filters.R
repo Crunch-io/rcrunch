@@ -29,8 +29,8 @@ with_mock_HTTP({
         expect_identical(names(filters(ds)),
             c("Occasional Political Interest", "Public filter"))
         expect_identical(urls(filters(ds)),
-            c("api/datasets/1/filters/filter1/",
-              "api/datasets/1/filters/filter2/"))
+            c("https://app.crunch.io/api/datasets/1/filters/filter1/",
+              "https://app.crunch.io/api/datasets/1/filters/filter2/"))
         expect_identical(names(filters(ds)[c(2, 1)]),
            c("Public filter", "Occasional Political Interest"))
     })
@@ -45,7 +45,7 @@ with_mock_HTTP({
     test_that("Filter entity is.public", {
         expect_false(is.public(f))
         expect_PATCH(is.public(f) <- TRUE,
-            "api/datasets/1/filters/filter1/",
+            "https://app.crunch.io/api/datasets/1/filters/filter1/",
             '{"is_public":true}')
         expect_no_request(is.public(f) <- FALSE)
     })
@@ -57,12 +57,12 @@ with_mock_HTTP({
 
     test_that("Create a filter by newFilter", {
         expect_POST(newFilter("A filter", ds$gender=="Male", catalog=filters(ds)),
-            'api/datasets/1/filters/',
+            'https://app.crunch.io/api/datasets/1/filters/',
             '{"name":"A filter","expression":',
             '{"function":"==","args":[',
-            '{"variable":"api/datasets/1/variables/gender/"},',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
             '{"value":1}]}}')
-        with_POST("api/datasets/1/filters/filter1/", {
+        with_POST("https://app.crunch.io/api/datasets/1/filters/filter1/", {
             ## Mock the return of that creation
             f <- newFilter("A filter", ds$gender=="Male", catalog=filters(ds))
             expect_is(f, "CrunchFilter")
@@ -72,16 +72,16 @@ with_mock_HTTP({
 
     test_that("newFilter without explicitly setting 'catalog'", {
         expect_POST(newFilter("A filter", ds$gender=="Male", catalog=ds),
-            'api/datasets/1/filters/',
+            'https://app.crunch.io/api/datasets/1/filters/',
             '{"name":"A filter","expression":',
             '{"function":"==","args":[',
-            '{"variable":"api/datasets/1/variables/gender/"},',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
             '{"value":1}]}}')
         expect_POST(newFilter("A filter", ds$gender=="Male"),
-            'api/datasets/1/filters/',
+            'https://app.crunch.io/api/datasets/1/filters/',
             '{"name":"A filter","expression":',
             '{"function":"==","args":[',
-            '{"variable":"api/datasets/1/variables/gender/"},',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
             '{"value":1}]}}')
     })
 
@@ -92,10 +92,10 @@ with_mock_HTTP({
 
     test_that("Create a filter by [[<-", {
         expect_POST(filters(ds)[["A filter"]] <- ds$gender=="Male",
-            'api/datasets/1/filters/',
+            'https://app.crunch.io/api/datasets/1/filters/',
             '{"name":"A filter","expression":',
             '{"function":"==","args":[',
-            '{"variable":"api/datasets/1/variables/gender/"},',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
             '{"value":1}]}}')
     })
 })

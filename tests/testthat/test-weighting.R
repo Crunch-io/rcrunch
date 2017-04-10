@@ -13,10 +13,10 @@ with_mock_HTTP({
 
     test_that("Setting weights", {
         expect_PATCH(weight(oldds) <- oldds$birthyr,
-            "api/datasets/1/preferences/",
-            '{"weight":"api/datasets/1/variables/birthyr/"}')
+            "https://app.crunch.io/api/datasets/1/preferences/",
+            '{"weight":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}')
         expect_PATCH(weight(newds) <- NULL,
-            "api/datasets/3/preferences/",
+            "https://app.crunch.io/api/datasets/3/preferences/",
             '{"weight":null}')
     })
     test_that("No request is made to set a weight that already is your weight", {

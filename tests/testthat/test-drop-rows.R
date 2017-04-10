@@ -4,9 +4,9 @@ with_mock_HTTP({
     ds <- loadDataset("test ds")
     test_that("dropRows generates the right request", {
         expect_POST(dropRows(ds, ds$gender == "Male"),
-            'api/datasets/1/table/',
+            'https://app.crunch.io/api/datasets/1/table/',
             '{"command":"delete","filter":{"function":"==",',
-            '"args":[{"variable":"api/datasets/1/variables/gender/"},',
+            '"args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
             '{"value":1}]}}')
     })
     test_that("dropRows doesn't send invalid expressions", {

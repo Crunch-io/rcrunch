@@ -18,16 +18,16 @@ with_mock_HTTP({
         derivation=list(
             `function`="combine_responses",
             args=list(
-                list(variable="api/datasets/1/variables/mymrset/"),
+                list(variable="https://app.crunch.io/api/datasets/1/variables/mymrset/"),
                 list(value=list(
                     list(
                         name="Extremes",
-                        combined_ids=I(c("api/datasets/1/variables/mymrset/subvariables/subvar2/",
-                            "api/datasets/1/variables/mymrset/subvariables/subvar3/"))
+                        combined_ids=I(c("https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar2/",
+                            "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar3/"))
                     ),
                     list(
                         name="Second",
-                        combined_ids=I(c("api/datasets/1/variables/mymrset/subvariables/subvar1/"))
+                        combined_ids=I(c("https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/"))
                     )
                 ))
             )

@@ -1,6 +1,6 @@
 {
     "element": "shoji:catalog",
-    "self": "api/datasets/3/filters/",
+    "self": "https://app.crunch.io/api/datasets/3/filters/",
     "index": {
     }
 }

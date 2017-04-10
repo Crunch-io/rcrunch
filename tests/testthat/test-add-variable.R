@@ -86,7 +86,7 @@ with_mock_HTTP({
 
     test_that("Adding a variable with all the same values gets sent more concisely", {
         expect_POST(ds$newvar <- rep(5, 25),
-            'api/datasets/1/variables/',
+            'https://app.crunch.io/api/datasets/1/variables/',
             '{"values":5,"type":"numeric","name":"newvar","alias":"newvar"}')
     })
 })

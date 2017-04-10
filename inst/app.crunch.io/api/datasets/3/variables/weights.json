@@ -1,6 +1,6 @@
 {
 	"element": "shoji:order",
-	"self": "api/datasets/3/variables/weights/",
+	"self": "https://app.crunch.io/api/datasets/3/variables/weights/",
 	"description": "Order of the weight variables for this dataset",
-	"graph": ["api/datasets/3/variables/birthyr/"]
+	"graph": ["https://app.crunch.io/api/datasets/3/variables/birthyr/"]
 }

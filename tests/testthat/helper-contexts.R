@@ -1,17 +1,35 @@
 with_mock_HTTP <- function (expr) {
-    with(temp.option(crunch.api="api/root/"), {
+    with(temp.option(crunch.api="https://app.crunch.io/api/"), {
+        ## TODO: Move the test.api switch to with_test_authentication
+        suppressMessages(trace("mockRequest", quote({
+            if (!file.exists(f)) {
+                ## Look for mock in inst/
+                crunchfile <- system.file(f, package="crunch")
+                if (nchar(crunchfile)) {
+                    f <- crunchfile
+                }
+            }
+            }),
+            at=4,
+            print=FALSE,
+            where=without_internet))
+        on.exit(suppressMessages(untrace("mockRequest", where=without_internet)))
+        suppressMessages(trace("mockDownload", quote({
+            if (!file.exists(f)) {
+                ## Look for mock in inst/
+                crunchfile <- system.file(f, package="crunch")
+                if (nchar(crunchfile)) {
+                    f <- crunchfile
+                }
+            }
+            }),
+            at=3,
+            print=FALSE,
+            where=without_internet))
+        on.exit(suppressMessages(untrace("mockDownload", where=without_internet)))
         with_mock_API({
-            with_mock(
-                `crunch:::absoluteURL`=function (urls, base) {
-                    ## Absolute URLs with fake backend start with "api/..."
-                    if (length(urls) && !any(startsWith(urls, "api"))) {
-                        urls <- .abs.urls(urls, base)
-                    }
-                    return(urls)
-                },
-                eval.parent(try(warmSessionCache())),
-                eval.parent(expr)
-            )
+            warmSessionCache()
+            eval.parent(expr)
         })
     })
 }

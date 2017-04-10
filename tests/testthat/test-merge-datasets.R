@@ -5,19 +5,19 @@ with_mock_HTTP({
     ds2 <- loadDataset("ECON.sav")
 
     testPayloadNoFilterArg <- paste0('{"function":"adapt",',
-        '"args":[{"dataset":"api/datasets/3/"},',
-        '{"variable":"api/datasets/3/variables/birthyr/"},',
-        '{"variable":"api/datasets/1/variables/birthyr/"}]')
+        '"args":[{"dataset":"https://app.crunch.io/api/datasets/3/"},',
+        '{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"},',
+        '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]')
     testPayload <- paste0(testPayloadNoFilterArg, '}')
     genderFilter <- paste0('{"function":"==","args":[',
-        '{"variable":"api/datasets/3/variables/gender/"},{"value":1}]}')
+        '{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},{"value":1}]}')
     testPayloadWithFilter <- paste0(testPayloadNoFilterArg, ',"filter":',
         genderFilter, '}')
     testSubsetPayloadPart1 <- paste0('{"function":"select","args":[{"map":{',
         '"66ae9881e3524f7db84970d556c34552":',
-            '{"variable":"api/datasets/3/variables/gender/"},',
+            '{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},',
         '"f78ca47313144b57adfb495893968e70":',
-            '{"variable":"api/datasets/3/variables/birthyr/"}}}],',
+            '{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"}}}],',
         '"frame":')
     testSubsetPayload <- paste0(testSubsetPayloadPart1, testPayload, '}')
     testSubsetPayloadWithFilter <- paste0(testSubsetPayloadPart1, testPayload,
@@ -26,7 +26,7 @@ with_mock_HTTP({
     test_that("Correct payload without filtering", {
         expect_warning(
             expect_POST(merge(ds1, ds2, by.x=ds1$birthyr, ds2$birthyr),
-                'api/datasets/1/variables/',
+                'https://app.crunch.io/api/datasets/1/variables/',
                 testPayload),
             "Variable birthyr is hidden")
     })
@@ -34,19 +34,19 @@ with_mock_HTTP({
     test_that("Can reference variables by alias", {
         expect_warning(
             expect_POST(merge(ds1, ds2, by.x="birthyr", by.y="birthyr"),
-                'api/datasets/1/variables/',
+                'https://app.crunch.io/api/datasets/1/variables/',
                 testPayload),
             "Variable birthyr is hidden")
         expect_warning(
             expect_POST(merge(ds1, ds2, by="birthyr"),
-                'api/datasets/1/variables/',
+                'https://app.crunch.io/api/datasets/1/variables/',
                 testPayload),
             "Variable birthyr is hidden")
     })
     test_that("joinDatasets with default copy=TRUE redirects here", {
         expect_warning(
             expect_POST(joinDatasets(ds1, ds2, by.x=ds1$birthyr, ds2$birthyr),
-                'api/datasets/1/variables/',
+                'https://app.crunch.io/api/datasets/1/variables/',
                 testPayload),
             "Variable birthyr is hidden")
     })
@@ -54,7 +54,7 @@ with_mock_HTTP({
     test_that("merge a subset of variables", {
         expect_warning(
             expect_POST(merge(ds1, ds2[c("gender", "birthyr")], by="birthyr"),
-                'api/datasets/1/variables/',
+                'https://app.crunch.io/api/datasets/1/variables/',
                 testSubsetPayload),
             "Variable birthyr is hidden")
     })
@@ -62,7 +62,7 @@ with_mock_HTTP({
     test_that("filter rows in merge", {
         expect_warning(
             expect_POST(merge(ds1, ds2[ds2$gender == "Male", ], by="birthyr"),
-                'api/datasets/1/variables/',
+                'https://app.crunch.io/api/datasets/1/variables/',
                 testPayloadWithFilter),
             "Variable birthyr is hidden")
     })
@@ -71,7 +71,7 @@ with_mock_HTTP({
         expect_warning(
             expect_POST(merge(ds1, ds2[ds2$gender == "Male", c("gender", "birthyr")],
                                 by="birthyr"),
-                'api/datasets/1/variables/',
+                'https://app.crunch.io/api/datasets/1/variables/',
                 testSubsetPayloadWithFilter),
             "Variable birthyr is hidden")
     })

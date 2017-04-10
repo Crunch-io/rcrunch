@@ -4,45 +4,45 @@ with_mock_HTTP({
     ds <- loadDataset("test ds")
     test_that("Export POST request", {
         expect_POST(exportDataset(ds, file=""),
-            'api/datasets/1/export/csv/',
+            'https://app.crunch.io/api/datasets/1/export/csv/',
             '{"filter":null,"options":{"use_category_ids":false}}')
         expect_POST(write.csv(ds, file=""),
-            'api/datasets/1/export/csv/',
+            'https://app.crunch.io/api/datasets/1/export/csv/',
             '{"filter":null,"options":{"use_category_ids":false}}')
     })
     test_that("with categorical='id'", {
         expect_POST(write.csv(ds, file="", categorical="id"),
-            'api/datasets/1/export/csv/',
+            'https://app.crunch.io/api/datasets/1/export/csv/',
             '{"filter":null,"options":{"use_category_ids":true}}')
     })
     test_that("with na", {
         expect_POST(write.csv(ds, file="", na=""),
-            'api/datasets/1/export/csv/',
+            'https://app.crunch.io/api/datasets/1/export/csv/',
             '{"filter":null,"options":{"use_category_ids":false,',
             '"missing_values":""}}')
         expect_POST(write.csv(ds, file="", na="."),
-            'api/datasets/1/export/csv/',
+            'https://app.crunch.io/api/datasets/1/export/csv/',
             '{"filter":null,"options":{"use_category_ids":false,',
             '"missing_values":"."}}')
     })
     test_that("Export SPSS request", {
         expect_POST(exportDataset(ds, file="", format="spss"),
-            'api/datasets/1/export/spss/',
+            'https://app.crunch.io/api/datasets/1/export/spss/',
             '{"filter":null,"options":{"var_label_field":"name"}}')
     })
     test_that("Export SPSS ignores 'categorical' arg", {
         expect_POST(exportDataset(ds, file="", format="spss", categorical="zzzz"),
-            'api/datasets/1/export/spss/',
+            'https://app.crunch.io/api/datasets/1/export/spss/',
             '{"filter":null,"options":{"var_label_field":"name"}}')
     })
     test_that("Export SPSS request with varlabel", {
         expect_POST(exportDataset(ds, file="", format="spss", varlabel="description"),
-            'api/datasets/1/export/spss/',
+            'https://app.crunch.io/api/datasets/1/export/spss/',
             '{"filter":null,"options":{"var_label_field":"description"}}')
     })
     test_that("Export with additional options", {
         expect_POST(exportDataset(ds, file="", format="spss", otheropt=TRUE),
-            'api/datasets/1/export/spss/',
+            'https://app.crunch.io/api/datasets/1/export/spss/',
             '{"filter":null,"options":{"otheropt":true,"var_label_field":"name"}}')
     })
     test_that("Unsupported arg values", {
@@ -56,10 +56,10 @@ with_mock_HTTP({
 
     test_that("Exporting only one variable", {
         expect_POST(write.csv(ds["gender"], file=""),
-            'api/datasets/1/export/csv/',
+            'https://app.crunch.io/api/datasets/1/export/csv/',
             '{"filter":null,"where":{"function":"select",',
             '"args":[{"map":{"66ae9881e3524f7db84970d556c34552":',
-            '{"variable":"api/datasets/1/variables/gender/"}}}]},',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}}}]},',
             '"options":{"use_category_ids":false}}')
     })
 

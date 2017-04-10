@@ -1,6 +1,6 @@
 {
     "element": "shoji:view",
-    "self": "api/progress/",
+    "self": "https://app.crunch.io/api/progress/",
     "value": {
         "progress": 22.6,
         "message": "exported 2 variables"

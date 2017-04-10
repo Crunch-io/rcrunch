@@ -1,8 +1,8 @@
 // Query: relative=on
 {
     "element": "shoji:catalog",
-    "self": "api/datasets/1/variables/",
-    "specification": "api/specifications/variables/",
+    "self": "https://app.crunch.io/api/datasets/1/variables/",
+    "specification": "https://app.crunch.io/api/specifications/variables/",
     "description": "List of Variables of this dataset",
     "index": {
         "gender/": {
@@ -75,7 +75,7 @@
         }
     },
     "orders": {
-        "hier": "api/datasets/1/variables/hierarchical/",
-        "weights": "api/datasets/1/variables/weights/"
+        "hier": "https://app.crunch.io/api/datasets/1/variables/hierarchical/",
+        "weights": "https://app.crunch.io/api/datasets/1/variables/weights/"
     }
 }

@@ -38,18 +38,18 @@ test_that("dirtyElements", {
 
 
 test_that("joinPath", {
-    expect_identical(joinPath("api/datasets/", "../variables/"),
-        "api/variables/")
-    expect_identical(joinPath("api/variables/", "4412es/"),
-        "api/variables/4412es/")
+    expect_identical(joinPath("https://app.crunch.io/api/datasets/", "../variables/"),
+        "https://app.crunch.io/api/variables/")
+    expect_identical(joinPath("https://app.crunch.io/api/variables/", "4412es/"),
+        "https://app.crunch.io/api/variables/4412es/")
     expect_identical(joinPath("a/b/c/d/../e/f/", "g/../../h/"),
         "a/b/c/e/h/")
-    expect_identical(joinPath("api/datasets/", "/variables/"),
+    expect_identical(joinPath("https://app.crunch.io/api/datasets/", "/variables/"),
         "/variables/")
-    expect_identical(joinPath("api/datasets/", "/"),
+    expect_identical(joinPath("https://app.crunch.io/api/datasets/", "/"),
         "/")
-    expect_identical(joinPath("api/datasets/", "./id/"),
-        "api/datasets/id/")
+    expect_identical(joinPath("https://app.crunch.io/api/datasets/", "./id/"),
+        "https://app.crunch.io/api/datasets/id/")
 })
 
 test_that("absoluteURL", {

@@ -1,15 +1,15 @@
 {
     "element": "shoji:catalog",
-    "self": "api/teams/team1/members/",
+    "self": "https://app.crunch.io/api/teams/team1/members/",
     "description": "Catalog of users that belong to this team",
     "index": {
-        "api/users/user1/": {
+        "https://app.crunch.io/api/users/user1/": {
             "name": "Fake User",
             "permissions": {
                 "manage_members": true
             }
         },
-        "api/users/user2/": {
+        "https://app.crunch.io/api/users/user2/": {
             "name": "Roger User",
             "permissions": {
                 "manage_members": false

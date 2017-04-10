@@ -27,7 +27,7 @@ test_that("newDataset input validation", {
 with_mock_HTTP({
     test_that("Basic exercise of turning data.frame to Crunch payload", {
         expect_POST(newDataset(data.frame(a=1), name="Testing"),
-            "api/datasets/",
+            "https://app.crunch.io/api/datasets/",
             '{"element":"shoji:entity","body":{"name":"Testing",',
             '"table":{"element":"crunch:table",',
             '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"}},',
@@ -35,23 +35,23 @@ with_mock_HTTP({
     })
     test_that("createWithMetadataAndFile when metadata is file too", {
         expect_POST(newDatasetFromFixture("apidocs"),
-            "api/datasets/",
+            "https://app.crunch.io/api/datasets/",
             toJSON(fromJSON(file.path("dataset-fixtures", "apidocs.json"), simplifyVector=FALSE)))
     })
 
     test_that("createDataset with named args", {
         expect_POST(createDataset(name="Foo", description="Bar."),
-            "api/datasets/",
+            "https://app.crunch.io/api/datasets/",
             '{"element":"shoji:entity","body":{"name":"Foo",',
             '"description":"Bar."}}')
     })
     test_that("createDataset returns a dataset", {
-        with_POST("api/datasets/1/",
+        with_POST("https://app.crunch.io/api/datasets/1/",
             expect_true(is.dataset(createDataset(name="Foo"))))
     })
     test_that("newDatasetFromFile", {
         expect_POST(newDatasetFromFile("helper.R"),
-            "api/datasets/",
+            "https://app.crunch.io/api/datasets/",
             '{"element":"shoji:entity","body":{"name":"helper.R"}}')
         expect_error(newDatasetFromFile("NOTAFILE.exe"),
             "File not found")
@@ -60,7 +60,7 @@ with_mock_HTTP({
         expect_warning(
             expect_POST(
                 newDatasetByCSV(data.frame(a=1), name="Bam!"),
-                    "api/datasets/",
+                    "https://app.crunch.io/api/datasets/",
                     '{"element":"shoji:entity","body":{"name":"Bam!",',
                     '"table":{"element":"crunch:table",',
                     '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"}},',
@@ -71,7 +71,7 @@ with_mock_HTTP({
     })
     test_that("newDatasetByColumn", {
         expect_POST(newDatasetByColumn(data.frame(a=1), name="Bam!"),
-            "api/datasets/",
+            "https://app.crunch.io/api/datasets/",
             '{"element":"shoji:entity","body":{"name":"Bam!"}}')
     })
 })

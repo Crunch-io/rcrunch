@@ -1,7 +1,7 @@
 // Query: filter=%7B%7D&offset=0&limit=66666
 {
     "element": "shoji:view",
-    "self": "api/datasets/1/variables/mymrset/values/",
+    "self": "https://app.crunch.io/api/datasets/1/variables/mymrset/values/",
     "value": [ [ 2, 1, 1 ],
         [ 2, 1, {"?": -1} ],
         [ 1, 2, 1 ],

@@ -6,20 +6,20 @@ with_mock_HTTP({
 
     test_that("If an array gets NA assigned and it doesn't have No Data, we add that category", {
         expect_PATCH(ds2$mymrset[3] <- NA,
-            "api/datasets/2/variables/mymrset/",
+            "https://app.crunch.io/api/datasets/2/variables/mymrset/",
             '{"categories":')
     })
     test_that("If an subvariables gets NA assigned and it doesn't have No Data, we add that category to its parent", {
         expect_PATCH(ds2$mymrset[[1]][3] <- NA,
-            "api/datasets/2/variables/mymrset/",
+            "https://app.crunch.io/api/datasets/2/variables/mymrset/",
             '{"categories":')
     })
     test_that("is.na<- sends an expression", {
         expect_POST(is.na(ds$birthyr) <- ds$birthyr > 2016,
-            "api/datasets/1/table/", '{"command":"update","variables":',
-            '{"api/datasets/1/variables/birthyr/":{"value":{"?":-1},',
+            "https://app.crunch.io/api/datasets/1/table/", '{"command":"update","variables":',
+            '{"https://app.crunch.io/api/datasets/1/variables/birthyr/":{"value":{"?":-1},',
             '"type":{"class":"numeric"}}},"filter":{"function":">","args":',
-            '[{"variable":"api/datasets/1/variables/birthyr/"},',
+            '[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"},',
             '{"value":2016}]}}')
     })
 })

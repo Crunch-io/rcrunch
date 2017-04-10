@@ -1,9 +1,9 @@
 {
     "element": "shoji:entity",
-    "self": "api/datasets/1/settings/",
+    "self": "https://app.crunch.io/api/datasets/1/settings/",
     "body": {
         "viewers_can_export": false,
         "viewers_can_change_weight": true,
-        "weight": "api/datasets/1/variables/birthyr/"
+        "weight": "https://app.crunch.io/api/datasets/1/variables/birthyr/"
     }
 }

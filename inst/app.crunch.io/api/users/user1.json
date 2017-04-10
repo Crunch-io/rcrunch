@@ -1,6 +1,6 @@
 {
     "element": "shoji:entity",
-    "self": "api/users/user1/",
+    "self": "https://app.crunch.io/api/users/user1/",
     "description": "Detail for a given user",
     "body": {
         "id": "00002",
@@ -11,10 +11,10 @@
         "preferences": {}
     },
     "catalogs": {
-        "datasets": "api/datasets/"
+        "datasets": "https://app.crunch.io/api/datasets/"
     },
     "urls": {
-        "account_url": "api/accounts/account1/"
+        "account_url": "https://app.crunch.io/api/accounts/account1/"
     },
     "some_other_key": {}
 }

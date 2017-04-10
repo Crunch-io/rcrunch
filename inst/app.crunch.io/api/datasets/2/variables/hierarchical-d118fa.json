@@ -1,7 +1,7 @@
 // Query: relative=on
 {
     "element": "shoji:order",
-    "self": "api/datasets/2/variables/hierarchical/",
+    "self": "https://app.crunch.io/api/datasets/2/variables/hierarchical/",
     "description": "Hierarchical ordering of dataset variables",
     "graph": [
         "../gender/",

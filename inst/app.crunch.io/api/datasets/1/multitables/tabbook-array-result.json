@@ -5,7 +5,7 @@
         {
             "variable": "00000d",
             "query": [{
-                "each": "api/datasets/de620c/variables/00000d/"
+                "each": "https://app.crunch.io/api/datasets/de620c/variables/00000d/"
             }, {
                 "function": "selected_array",
                 "args": [{

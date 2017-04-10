@@ -21,7 +21,7 @@ with_mock_HTTP({
     })
 
     test_that("table makes a cube request", {
-        expect_GET(table(gen), "api/datasets/1/cube/")
+        expect_GET(table(gen), "https://app.crunch.io/api/datasets/1/cube/")
     })
 
     test_that("unsupported aggregation methods", {

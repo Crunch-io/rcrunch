@@ -1,6 +1,6 @@
 {
     "element": "shoji:entity",
-    "self": "api/datasets/1/variables/mymrset/subvariables/subvar3/",
+    "self": "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar3/",
     "body": {
         "format": {
             "data": {"digits": 2},
@@ -23,11 +23,11 @@
         "id": "fff"
     },
     "views": {
-        "summary": "api/datasets/1/variables/subvar3/summary/",
-        "values": "api/datasets/1/variables/subvar3/values/"
+        "summary": "https://app.crunch.io/api/datasets/1/variables/subvar3/summary/",
+        "values": "https://app.crunch.io/api/datasets/1/variables/subvar3/values/"
     },
     "urls": {
-        "dataset_url": "api/datasets/1/"
+        "dataset_url": "https://app.crunch.io/api/datasets/1/"
     },
     "description": "Details for a given Variable"
 }

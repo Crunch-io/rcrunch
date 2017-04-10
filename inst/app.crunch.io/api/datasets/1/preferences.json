@@ -1,5 +1,5 @@
 {
     "element": "shoji:entity",
-    "self": "api/datasets/1/preferences/",
+    "self": "https://app.crunch.io/api/datasets/1/preferences/",
     "body": {}
 }

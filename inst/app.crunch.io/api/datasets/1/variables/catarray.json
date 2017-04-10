@@ -1,6 +1,6 @@
 {
     "element": "shoji:entity",
-    "self": "api/datasets/1/variables/catarray/",
+    "self": "https://app.crunch.io/api/datasets/1/variables/catarray/",
     "body": {
         "alias": "catarray",
         "format": {
@@ -17,19 +17,19 @@
         "view": {"column_width": null},
         "type": "categorical_array",
         "subvariables": [
-            "api/datasets/1/variables/mymrset/subvariables/subvar2/",
-            "api/datasets/1/variables/mymrset/subvariables/subvar1/",
-            "api/datasets/1/variables/mymrset/subvariables/subvar3/"
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar2/",
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/",
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar3/"
         ],
-        "subvariables_catalog": "api/datasets/1/variables/mymrset/subvariables/",
+        "subvariables_catalog": "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/",
         "id": "qwert"
     },
     "views": {
-        "summary": "api/datasets/1/variables/mymrset/summary/",
-        "values": "api/datasets/1/variables/mymrset/values/"
+        "summary": "https://app.crunch.io/api/datasets/1/variables/mymrset/summary/",
+        "values": "https://app.crunch.io/api/datasets/1/variables/mymrset/values/"
     },
     "urls": {
-        "dataset_url": "api/datasets/1/"
+        "dataset_url": "https://app.crunch.io/api/datasets/1/"
     },
     "description": "Details for a given Variable"
 }
