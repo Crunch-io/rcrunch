@@ -111,7 +111,7 @@ with_test_authentication({
     })
 
     test_that("What happens if there are more than one vars on LHS?", {
-        out <- crtabs(c(mean(v3), sd(v3)) ~ v4, data=ds)
+        out <- crtabs(list(mean(v3), sd(v3)) ~ v4, data=ds)
         ## Actually, this works. Make some assertions to see that it's right
     })
 
