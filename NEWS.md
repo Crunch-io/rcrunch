@@ -4,6 +4,7 @@
 * Fix `names` method for TabBookResults following an API change.
 * Extend `crtabs` formula parsing to support multiple, potentially named, measures
 * `weightVariables` method to display the set of variables designated as valid weights. (Works like `hiddenVariables`.)
+* In `appendDataset`, allow specifying a subset of rows to append (in addition to the already supported selection of variables)
 * Remove "confirm" argument from various delete functions (deprecated since 1.14.4) and the "cleanup" argument to append (deprecated since 1.13.4)
 * All destructive actions now require 'consent', even in non-interactive mode. See `?with_consent` for more details.
 * Improvements to validation when updating values in a dataset.
