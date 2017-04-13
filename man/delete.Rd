@@ -40,7 +40,7 @@ for datasets and \code{\link{hide}} for variables.
 }
 \details{
 Deleting requires confirmation. In an interactive session, you will be asked
-to confirm. To avoid that prompt, or to delete objects from a 
+to confirm. To avoid that prompt, or to delete objects from a
 non-interactive session, wrap the call in \code{\link{with_consent}} to give
 your permission to delete.
 }
