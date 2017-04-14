@@ -112,4 +112,6 @@ shojiURL <- function (x, collection=c("catalogs", "views", "fragments", "orders"
     return(out)
 }
 
-wrapEntity <- function (...) list(element="shoji:entity", body=list(...))
+wrapEntity <- function (..., body=list(...)) {
+    list(element="shoji:entity", body=body)
+}

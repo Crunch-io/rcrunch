@@ -2,12 +2,14 @@
 #'
 #' @param dataset1 a CrunchDataset
 #' @param dataset2 another CrunchDataset, or possibly a data.frame. If
-#' \code{dataset2} is not a Crunch dataset, it will be uploaded as a new
-#' dataset before appending.
+#' `dataset2` is not a Crunch dataset, it will be uploaded as a new
+#' dataset before appending. If it is a CrunchDataset, it may be subsetted with
+#' a filter expression on the rows and a selection of variables on the columns.
 #' @param autorollback logical: If the append fails, revert the dataset back
 #' to its state before attempting to append? Default is \code{TRUE}, and you
 #' probably won't want to change that.
-#' @return A CrunchDataset with \code{dataset2} appended to \code{dataset1}
+#' @return `dataset1`, updated with `dataset2`, potentially filtered on rows and
+#' variables, appended to it.
 #' @export
 appendDataset <- function (dataset1, dataset2, autorollback=TRUE) {
     stopifnot(is.dataset(dataset1))
@@ -24,14 +26,13 @@ appendDataset <- function (dataset1, dataset2, autorollback=TRUE) {
     }
 
     ## Assemble the payload
-    payload <- list(dataset=self(dataset2), autorollback=autorollback)
+    payload <- list(dataset=self(dataset2))
     ## Include a variable map, if appropriate
-    vars <- variablesFilter(dataset2)
-    if (!is.null(vars)) {
-        payload <- modifyList(payload, vars)
-    }
+    payload$where <- variablesFilter(dataset2)
+    ## And filter the rows, if appropriate
+    payload$filter <- zcl(activeFilter(dataset2))
 
     ## POST the batch. This will error with a useful message if it fails
-    dataset1 <- do.call("addBatch", c(dataset1, payload))
+    dataset1 <- addBatch(dataset1, body=payload, autorollback=autorollback)
     invisible(dataset1)
 }

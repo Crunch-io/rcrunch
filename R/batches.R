@@ -1,16 +1,12 @@
-addBatch <- function (ds, ..., savepoint=TRUE, autorollback=savepoint, strict=TRUE) {
+addBatch <- function (ds, ..., savepoint=TRUE, autorollback=savepoint, strict=TRUE, body=list(...)) {
     batches_url <- shojiURL(ds, "catalogs", "batches")
     if (!strict) {
         ## This is apparently deprecated in favor of passing in "strict" differently
         batches_url <- paste0(batches_url, "?strict=0")
     }
-    ## Not using wrapEntity because there are elements outside of body.
-    body <- list(
-        element="shoji:entity",
-        body=list(...),
-        autorollback=autorollback,
-        savepoint=savepoint
-    )
+    body <- wrapEntity(body=body)
+    body$autorollback <- autorollback
+    body$savepoint <- savepoint
 
     if (autorollback) {
         ## Don't print "Result URL" if the job fails because the dataset will
