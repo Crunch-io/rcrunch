@@ -104,6 +104,14 @@ loadDataset <- function (dataset, kind=c("active", "all", "archived"), project=N
         dsname <- dataset
         dataset <- dscat[[dataset]]
         if (is.null(dataset)) {
+            ## Check to see if this is a URL, in which case, GET it
+            if (startsWith(dsname, "http")) {
+                dataset <- CrunchDataset(crGET(dsname))
+                tuple(dataset) <- DatasetTuple(entity_url=self(dataset),
+                    body=dataset@body,
+                    index_url=shojiURL(dataset, "catalogs", "parent"))
+                return(dataset)
+            }
             halt(dQuote(dsname), " not found")
         }
     }

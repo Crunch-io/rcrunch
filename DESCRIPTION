@@ -26,7 +26,7 @@ Imports:
     curl
 Suggests:
     covr,
-    httptest (>= 1.1.0),
+    httptest (>= 1.3.0),
     knitr
 VignetteBuilder: knitr
 RoxygenNote: 6.0.0

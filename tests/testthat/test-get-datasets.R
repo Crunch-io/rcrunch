@@ -28,6 +28,19 @@ with_mock_HTTP({
         expect_true(is.dataset(loadDataset(cr$datasets$`test ds`)))
     })
 
+    test_that("loadDataset by URL when in main catalog", {
+        ds <- loadDataset("test ds")
+        ## This URL is found in dataset <- dscat[[dataset]] because of getNameOrURL
+        expect_identical(ds, loadDataset(self(ds)))
+    })
+    test_that("loadDataset by URL when not in main catalog", {
+        ds2 <- loadDataset("https://app.crunch.io/api/datasets/four/")
+        expect_is(ds2, "CrunchDataset")
+        expect_identical(self(ds2),
+            "https://app.crunch.io/api/datasets/four/")
+        expect_identical(name(ds2), "mtcars from R")
+    })
+
     ds <- loadDataset("test ds")
     with_consent({
         test_that("deleteDataset by name", {
