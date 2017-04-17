@@ -195,7 +195,7 @@ MultitableCatalog <- setClass("MultitableCatalog", contains="ShojiCatalog")
 #' Crunch Datasets
 #'
 #' @rdname CrunchDataset
-#' @export
+#' @export CrunchDataset
 CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
     slots=c(
         variables="VariableCatalog",
