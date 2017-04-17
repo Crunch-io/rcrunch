@@ -1,1 +1,70 @@
-{"element": "shoji:entity", "self": "https://app.crunch.io/api/datasets/four/", "catalogs": {"batches": "https://app.crunch.io/api/datasets/four/batches/", "users": "https://app.crunch.io/api/datasets/four/users/", "variables": "https://app.crunch.io/api/datasets/four/variables/", "actions": "https://app.crunch.io/api/datasets/four/actions/", "savepoints": "https://app.crunch.io/api/datasets/four/savepoints/", "boxdata": "https://app.crunch.io/api/datasets/four/boxdata/", "filters": "https://app.crunch.io/api/datasets/four/filters/", "multitables": "https://app.crunch.io/api/datasets/four/multitables/", "comparisons": "https://app.crunch.io/api/datasets/four/comparisons/", "forks": "https://app.crunch.io/api/datasets/four/forks/", "permissions": "https://app.crunch.io/api/datasets/four/permissions/", "joins": "https://app.crunch.io/api/datasets/four/joins/", "decks": "https://app.crunch.io/api/datasets/four/decks/", "parent": "https://app.crunch.io/api/datasets/", "weight_variables": "https://app.crunch.io/api/datasets/four/weight_variables/"}, "fragments": {"preferences": "https://app.crunch.io/api/datasets/four/preferences/", "stream": "https://app.crunch.io/api/datasets/four/stream/", "settings": "https://app.crunch.io/api/datasets/four/settings/", "visit": "https://app.crunch.io/api/datasets/four/visit/", "state": "https://app.crunch.io/api/datasets/four/state/", "table": "https://app.crunch.io/api/datasets/four/table/", "pk": "https://app.crunch.io/api/datasets/four/pk/", "exclusion": "https://app.crunch.io/api/datasets/four/exclusion/"}, "views": {"cube": "https://app.crunch.io/api/datasets/four/cube/", "export": "https://app.crunch.io/api/datasets/four/export/", "summary": "https://app.crunch.io/api/datasets/four/summary/", "applied_filters": "https://app.crunch.io/api/datasets/four/filters/applied/"}, "urls": {"owner_url": "https://app.crunch.io/api/users/518278c707a7d8253b685722/", "editor_url": "https://app.crunch.io/api/users/518278c707a7d8253b685722/", "weight_variables_url": "https://app.crunch.io/api/datasets/four/weight_variables/", "user_url": "https://app.crunch.io/api/users/518278c707a7d8253b685722/"}, "specification": "https://app.crunch.io/api/specifications/datasets/", "description": "Detail for a given dataset", "body": {"size": {"rows": 32, "columns": 11}, "current_editor_name": "Neal Richardson", "owner_name": "Neal Richardson", "name": "mtcars from R", "end_date": null, "access_time": "2017-04-12T19:07:06.351000", "notes": "", "current_editor": "https://app.crunch.io/api/users/518278c707a7d8253b685722/", "creation_time": "2017-04-12T14:34:00.015000", "archived": false, "start_date": null, "modification_time": "2017-04-12T14:34:03.239000", "app_settings": {"crunch": {"deleted_rogue_vp": true}}, "owner": "https://app.crunch.io/api/users/518278c707a7d8253b685722/", "permissions": {"edit": true, "change_permissions": true, "view": true}, "is_published": true, "id": "four", "description": ""}}
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/four/",
+    "catalogs": {
+        "batches": "https://app.crunch.io/api/datasets/four/batches/",
+        "users": "https://app.crunch.io/api/datasets/four/users/",
+        "variables": "https://app.crunch.io/api/datasets/four/variables/",
+        "actions": "https://app.crunch.io/api/datasets/four/actions/",
+        "savepoints": "https://app.crunch.io/api/datasets/four/savepoints/",
+        "boxdata": "https://app.crunch.io/api/datasets/four/boxdata/",
+        "filters": "https://app.crunch.io/api/datasets/four/filters/",
+        "multitables": "https://app.crunch.io/api/datasets/four/multitables/",
+        "comparisons": "https://app.crunch.io/api/datasets/four/comparisons/",
+        "forks": "https://app.crunch.io/api/datasets/four/forks/",
+        "permissions": "https://app.crunch.io/api/datasets/four/permissions/",
+        "joins": "https://app.crunch.io/api/datasets/four/joins/",
+        "decks": "https://app.crunch.io/api/datasets/four/decks/",
+        "parent": "https://app.crunch.io/api/datasets/",
+        "weight_variables": "https://app.crunch.io/api/datasets/four/weight_variables/"
+    },
+    "fragments": {
+        "preferences": "https://app.crunch.io/api/datasets/four/preferences/",
+        "stream": "https://app.crunch.io/api/datasets/four/stream/",
+        "settings": "https://app.crunch.io/api/datasets/four/settings/",
+        "visit": "https://app.crunch.io/api/datasets/four/visit/",
+        "state": "https://app.crunch.io/api/datasets/four/state/",
+        "table": "https://app.crunch.io/api/datasets/four/table/",
+        "pk": "https://app.crunch.io/api/datasets/four/pk/",
+        "exclusion": "https://app.crunch.io/api/datasets/four/exclusion/"
+    },
+    "views": {
+        "cube": "https://app.crunch.io/api/datasets/four/cube/",
+        "export": "https://app.crunch.io/api/datasets/four/export/",
+        "summary": "https://app.crunch.io/api/datasets/four/summary/",
+        "applied_filters": "https://app.crunch.io/api/datasets/four/filters/applied/"
+    },
+    "specification": "https://app.crunch.io/api/specifications/datasets/",
+    "description": "Detail for a given dataset",
+    "body": {
+        "size": {
+            "rows": 32,
+            "columns": 11
+        },
+        "current_editor_name": "Me",
+        "owner_name": "Me",
+        "name": "mtcars from R",
+        "end_date": null,
+        "access_time": "2017-04-12T19:07:06.351000",
+        "notes": "",
+        "current_editor": "https://app.crunch.io/api/users/me/",
+        "creation_time": "2017-04-12T14:34:00.015000",
+        "archived": false,
+        "start_date": null,
+        "modification_time": "2017-04-12T14:34:03.239000",
+        "app_settings": {
+            "crunch": {
+                "deleted_rogue_vp": true
+            }
+        },
+        "owner": "https://app.crunch.io/api/users/me/",
+        "permissions": {
+            "edit": true,
+            "change_permissions": true,
+            "view": true
+        },
+        "is_published": true,
+        "id": "four",
+        "description": ""
+    }
+}

@@ -118,6 +118,14 @@ registerCubeFunctions <- function (varnames=c()) {
             }
             zfunc("as_array", x)
         },
+        as_selected=function (x) {
+            ## Another hacky solution
+            if (!is.MR(x)) {
+                halt("Cannot analyze a variable of type ", dQuote(type(x)),
+                    " 'as_selected'")
+            }
+            zfunc("as_selected", x)
+        },
         n=function (...) zfunc("cube_count")
     )
 
@@ -136,6 +144,14 @@ isCubeAggregation <- function (x) {
         grepl("^cube_", x[["function"]])
 }
 
+is.zfunc <- function (x, func) {
+    out <- is.list(x) && "function" %in% names(x)
+    if (out && !missing(func)) {
+        out <- x[["function"]] == func
+    }
+    return(out)
+}
+
 varToDim <- function (x) {
     ## Given variable, construct the appropriate ZCL to get a cube with them
     ## as dimensions
@@ -149,11 +165,15 @@ varToDim <- function (x) {
         ## Put "each" first so that the rows, not columns, are subvars
         return(list(list(each=self(x)),
             v))
-    } else if (is.list(x) && "function" %in% names(x) && x[["function"]] == "as_array") {
+    } else if (is.zfunc(x, "as_array")) {
         ## Pseudo-ZCL from registerCubeFunctions, used to treat an MR like a CA
         ## x is thus list(`function`="as_array", args=list(list(variable=self)))
         ## Return instead list(list(each=self), list(variable=self))
         return(list(list(each=x$args[[1]]$variable), x$args[[1]]))
+    } else if (is.zfunc(x, "as_selected")) {
+        ## Pseudo-ZCL from registerCubeFunctions, used to compute MR by subvar
+        ## x is thus list(`function`="as_selected", args=list(list(variable=self)))
+        return(list(list(each=x$args[[1]]$variable), zfunc("as_selected", x$args[[1]])))
     } else {
         ## Just the var ref, but nest in a list so we can unlist to flatten
         return(list(v))
