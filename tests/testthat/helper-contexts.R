@@ -1,35 +1,23 @@
 with_mock_HTTP <- function (expr) {
-    with(temp.option(crunch.api="https://app.crunch.io/api/"), {
-        ## TODO: Move the test.api switch to with_test_authentication
-        suppressMessages(trace("mockRequest", quote({
-            if (!file.exists(f)) {
-                ## Look for mock in inst/
-                crunchfile <- system.file(f, package="crunch")
-                if (nchar(crunchfile)) {
-                    f <- crunchfile
-                }
+    tracer <- quote({
+        if (!file.exists(f)) {
+            ## Look for mock in inst/
+            crunchfile <- system.file(f, package="crunch")
+            if (nchar(crunchfile)) {
+                f <- crunchfile
             }
-            }),
-            at=4,
-            print=FALSE,
-            where=without_internet))
-        on.exit(suppressMessages(untrace("mockRequest", where=without_internet)))
-        suppressMessages(trace("mockDownload", quote({
-            if (!file.exists(f)) {
-                ## Look for mock in inst/
-                crunchfile <- system.file(f, package="crunch")
-                if (nchar(crunchfile)) {
-                    f <- crunchfile
-                }
-            }
-            }),
-            at=3,
-            print=FALSE,
-            where=without_internet))
-        on.exit(suppressMessages(untrace("mockDownload", where=without_internet)))
-        with_mock_API({
-            warmSessionCache()
-            eval.parent(expr)
+        }
+    })
+    env <- parent.frame()
+    with_trace("mockRequest", tracer=tracer, at=4, where=without_internet, expr={
+        with_trace("mockDownload", tracer=tracer, at=3, where=without_internet, expr={
+            ## TODO: Move the test.api switch to with_test_authentication
+            with(temp.option(crunch.api="https://app.crunch.io/api/"), {
+                with_mock_API({
+                    try(warmSessionCache())
+                    eval(expr, envir=env)
+                })
+            })
         })
     })
 }
@@ -61,35 +49,33 @@ silencer <- temp.option(show.error.messages=FALSE)
 assign("entities.created", c(), envir=globalenv())
 with_test_authentication <- function (expr) {
     if (run.integration.tests) {
+        env <- parent.frame()
         ## Authenticate.
-        suppressMessages(login())
-        ## Any time an object is created (201 Location responts), store that URL
-        suppressMessages(trace("locationHeader",
-            exit=quote({
-                if (!is.null(loc)) {
-                    seen <- get("entities.created", envir=globalenv())
-                    assign("entities.created",
-                        c(seen, loc),
-                        envir=globalenv())
-                }
-            }),
-            print=FALSE,
-            where=crGET))
+        try(suppressMessages(login()))
         on.exit({
-            suppressMessages(untrace("locationHeader", where=crGET))
-            # suppressMessages(untrace("createDataset", where=crGET))
             ## Delete our seen things
             purgeEntitiesCreated()
             logout()
         })
-        ## Wrap this so that we can generate a test failure if there's an error
-        ## rather than just halt the process
-        tryCatch(eval.parent(with_silent_progress(expr)),
-            error=function (e) {
-                test_that("There are no test code errors", {
-                    expect_error(stop(e$message), NA)
+        ## Any time an object is created (201 Location responts), store that URL
+        tracer <- quote({
+            if (!is.null(loc)) {
+                seen <- get("entities.created", envir=globalenv())
+                assign("entities.created",
+                    c(seen, loc),
+                    envir=globalenv())
+            }
+        })
+        with_trace("locationHeader", exit=tracer, where=crGET, expr={
+            ## Wrap this so that we can generate a test failure if there's an error
+            ## rather than just halt the process
+            tryCatch(eval(with_silent_progress(expr), envir=env),
+                error=function (e) {
+                    test_that("There are no test code errors", {
+                        expect_error(stop(e$message), NA)
+                    })
                 })
-            })
+        })
     }
 }
 
