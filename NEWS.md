@@ -1,14 +1,24 @@
-### crunch 1.15.3 (under development)
+## crunch 1.16.0
+
+### Cube and tab book improvements
+
 * Reshape TabBookResults that contain categorical array variables so that `prop.table` computations line up with those not containing array variables (i.e. move subvariables to the third array dimension in the result).
 * Add `names`, `aliases`, and `descriptions` methods to `CrunchCube` (corresponding to variables of the dimensions in the cube), `MultitableResult` (corresponding to the "column" variables of the cubes in the result), and `TabBookResult` (corresponding to the "row"/"sheet" variables in each multitable result).
 * Fix `names` method for TabBookResults following an API change.
 * Extend `crtabs` formula parsing to support multiple, potentially named, measures
+
+### Other new features
+
 * `weightVariables` method to display the set of variables designated as valid weights. (Works like `hiddenVariables`.)
 * In `appendDataset`, allow specifying a subset of rows to append (in addition to the already supported selection of variables)
 * `loadDataset` can now load a dataset by its URL.
+
+### Housekeeping
+
 * Remove "confirm" argument from various delete functions (deprecated since 1.14.4) and the "cleanup" argument to append (deprecated since 1.13.4)
 * All destructive actions now require 'consent', even in non-interactive mode. See `?with_consent` for more details.
 * Improvements to validation when updating values in a dataset.
+* Move mock API fixtures to `inst/` so that other packages depending on this package can access them more easily.
 
 ### crunch 1.15.2
 * Support for additional dataset export arguments
@@ -19,7 +29,7 @@
 
 ## crunch 1.15.0
 * `multitables` method to access catalog from a Dataset. `newMultitable` to create one. See `?multitables` and `?newMultitable` for docs and examples.
-* `tabBook` to compute a tab book with a multitable. If `format="json"`, returns a `TabBookResult` containing `CrunchCube` objects with which further analysis or formatting can be done.
+* `tabBook` to compute a tab book with a multitable. If `format="json"` (the default), returns a `TabBookResult` containing `CrunchCube` objects with which further analysis or formatting can be done.
 * `bases` method for cubes and tab book responses to access unweighted counts and margin tables.
 * Handle case of attempting to `saveVersion` when there are no changes since the last saved version.
 * Update to work with [roxygen2 6.0.0 release](https://github.com/klutometis/roxygen/issues/568)
