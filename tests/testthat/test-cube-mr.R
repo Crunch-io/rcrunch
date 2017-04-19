@@ -7,7 +7,7 @@ with_test_authentication({
         expect_identical(dimnames(cub),
             list(
                 allpets=c("Cat", "Dog", "Bird"),
-                allpets=c("Selected", "Not Selected"
-            )))
+                allpets=c("Selected", "Not Selected")
+            ))
     })
 })
