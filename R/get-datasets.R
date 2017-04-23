@@ -58,7 +58,8 @@ selectDatasetCatalog <- function (kind=c("active", "all", "archived"),
     }
     if (is.null(project)) {
         ## Means a project was specified (like by name) but it didn't exist
-        halt("Project ", deparse(eval.parent(Call$project))[1], " is not valid")
+        halt("Project ", deparseAndTruncate(eval.parent(Call$project)),
+            " is not valid")
     }
 
     if (refresh) {

@@ -181,6 +181,8 @@ varToDim <- function (x) {
 }
 
 formulaRHS <- function (f) {
-    if (!is.character(f)) f <- deparse(f)
+    ## Return a string representation of the right-hand side of a formula
+    ## (the stuff to the right of the ~)
+    if (!is.character(f)) f <- paste(deparse(f), collapse=" ")
     sub("^ +", "", tail(unlist(strsplit(f, "~")), 1))
 }

@@ -178,12 +178,25 @@ formatExpression <- function (expr) {
         ## GET URL, get alias from that
         return(crGET(expr[["variable"]])$body$alias)
     } else if (length(intersect(c("column", "value"), names(expr)))) {
-        val <- expr$column %||% expr$value
-        return(deparse(val))
+        return(deparseAndTruncate(expressionValue(expr)))
     } else {
         ## Dunno what this is
         return("[Complex expression]")
     }
+}
+
+expressionValue <- function (expr) {
+    ## Could be under either "column" or "value". R doesn't distinguish length-1
+    ## from length-N values, but Crunch API does.
+    unlist(expr$column %||% expr$value)
+}
+
+deparseAndTruncate <- function (x, ...) {
+    out <- deparse(x, ...)
+    if (length(out) > 1) {
+        out <- paste0(out[1], "...")
+    }
+    return(out)
 }
 
 formatExpressionArgs <- function (args) {
@@ -194,7 +207,7 @@ formatExpressionArgs <- function (args) {
     if (sum(vars) == 1) {
         ## Great, let's see if we have any values to format
         vals <- vapply(args, function (x) {
-                length(names(x)) == 1 && names(x) %in% c("column", "value")
+                any(names(x) %in% c("column", "value"))
             }, logical(1))
         if (any(vals)) {
             ## Get the var, see if it is categorical
@@ -211,13 +224,13 @@ formatExpressionArgs <- function (args) {
 }
 
 formatExpressionValue <- function (val, cats=NULL) {
-    val <- val$column %||% val$value
+    val <- expressionValue(val)
     if (length(cats)) {
         val <- i2n(val, cats)
     } else {
         ## TODO: iterate over, replace {?:-1} with NA
     }
-    return(deparse(val))
+    return(deparseAndTruncate(val))
 }
 
 #' @rdname show-crunch

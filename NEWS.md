@@ -1,4 +1,5 @@
 ### crunch 1.16.1 (under development)
+* Fix issue in printing filter expressions with long value columns
 
 ## crunch 1.16.0
 
