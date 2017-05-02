@@ -34,5 +34,8 @@
             "owner_id": "https://app.crunch.io/api/users/notme/",
             "is_published": false
         }
+    },
+    "views": {
+        "search": "https://app.crunch.io/api/datasets/search/"
     }
 }

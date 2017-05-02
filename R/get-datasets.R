@@ -23,7 +23,13 @@
 #' datasets(proj) <- ds
 #' }
 datasets <- function (x=getAPIRoot()) {
-    DatasetCatalog(crGET(shojiURL(x, "catalogs", "datasets")))
+    if (inherits(x, "SearchResults")) {
+        ## This is close enough to a dataset catalog
+        out <- structure(list(index=x$datasets), class="shoji")
+    } else {
+        out <- crGET(shojiURL(x, "catalogs", "datasets"))
+    }
+    DatasetCatalog(out)
 }
 
 #' Show the names of all Crunch datasets

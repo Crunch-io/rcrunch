@@ -315,3 +315,5 @@ setClass("Session", contains="list")
 
 MultitableResult <- setClass("MultitableResult", contains="namedList")
 TabBookResult <- setClass("TabBookResult", contains="namedList")
+
+SearchResults <- setClass("SearchResults", contains="namedList")
