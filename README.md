@@ -1,9 +1,7 @@
 # crunch
 
 [![Build Status](https://travis-ci.org/Crunch-io/rcrunch.png?branch=master)](https://travis-ci.org/Crunch-io/rcrunch) [![Build status](https://ci.appveyor.com/api/projects/status/iaydo4y3dfrqnqqu/branch/master?svg=true)](https://ci.appveyor.com/project/nealrichardson/rcrunch/branch/master)
-
-* Unit test line coverage: [![codecov](https://codecov.io/gh/Crunch-io/rcrunch/branch/master/graph/badge.svg)](https://codecov.io/gh/Crunch-io/rcrunch)
-* Line coverage with integration tests: 96.6%
+[![cran](https://www.r-pkg.org/badges/version-last-release/crunch)](https://cran.r-project.org/package=crunch) [![codecov](https://codecov.io/gh/Crunch-io/rcrunch/branch/master/graph/badge.svg)](https://codecov.io/gh/Crunch-io/rcrunch) (unit tests); 96.6% coverage with integration tests
 
 [Cloud Collaboration with Crunch](http://crunch-io.github.io/rcrunch/)
 
