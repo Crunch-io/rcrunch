@@ -255,6 +255,14 @@ with_mock_HTTP({
         expect_error(delete(ds), "Must confirm") ## New non-interactive behavior
         with_consent(expect_DELETE(delete(ds), self(ds)))  ## No warning
     })
+
+    test_that("Dashboard URL", {
+        expect_null(dashboard(ds))
+        expect_PATCH(dashboard(ds) <- "https://shiny.crunch.io/example/",
+            "https://app.crunch.io/api/datasets/1/",
+            '{"app_settings":{"whaam":',
+            '{"dashboardUrl":"https://shiny.crunch.io/example/"}}}')
+    })
 })
 
 with_test_authentication({
