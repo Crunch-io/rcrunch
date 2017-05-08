@@ -85,25 +85,32 @@ setMethod("is.public<-", "Multitable", function (x, value) {
 #' name(m) # [1] "gender + age4 + marstat"
 #' }
 #' @export
-newMultitable <- function (formula, data, name, ...) {
-    ## Validate inputs
-    if (missing(formula)) {
-        halt("Must provide a formula")
-    }
-    if (missing(data) || !is.dataset(data)) {
-        halt(dQuote("data"), " must be a Dataset")
+newMultitable <- function (formula, data, name, multitable=NULL, ...) {
+
+    if (missing(multitable)){
+        ## Validate inputs
+        if (missing(formula)) {
+            halt("Must provide a formula")
+        }
+        if (missing(data) || !is.dataset(data)) {
+            halt(dQuote("data"), " must be a Dataset")
+        }
+
+        template <- formulaToQuery(formula, data)
+        if (missing(name)) {
+            name <- formulaRHS(formula)
+        }
+
+        payload <- wrapEntity(
+            name=name,
+            template=lapply(template$dimensions,
+                function (x) list(query=x, variable=findVariableReferences(x)))
+        )
+    } else {
+        payload = wrapEntity(name=name,
+                             multitable=self(multitable))
     }
 
-    template <- formulaToQuery(formula, data)
-    if (missing(name)) {
-        name <- formulaRHS(formula)
-    }
-
-    payload <- wrapEntity(
-        name=name,
-        template=lapply(template$dimensions,
-            function (x) list(query=x, variable=findVariableReferences(x)))
-    )
     ## TODO: remove "variable" from that--no longer required?
     u <- crPOST(shojiURL(data, "catalogs", "multitables"), body=toJSON(payload))
     invisible(Multitable(crGET(u)))

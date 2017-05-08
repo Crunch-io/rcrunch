@@ -190,6 +190,7 @@ with_mock_HTTP({
 
 with_test_authentication({
     ds <- newDatasetFromFixture("apidocs")
+    ds2 <- newDatasetFromFixture("apidocs")
     test_that("Multitable catalog", {
         expect_is(multitables(ds), "MultitableCatalog")
         expect_length(multitables(ds), 0)
@@ -201,6 +202,7 @@ with_test_authentication({
     })
 
     mult <- multitables(ds)[["allpets + q1"]]
+
     test_that("Can make the multitable entity public/personal", {
         expect_false(is.public(mult))
         is.public(mult) <- TRUE
@@ -226,6 +228,12 @@ with_test_authentication({
         names(multitables(ds)) <- "Yet another name"
         expect_identical(names(multitables(ds)), "Yet another name")
         expect_identical(names(refresh(multitables(ds))), "Yet another name")
+    })
+
+    test_that("Can copy the multitable to a new multitable", {
+        m <- newMultitable(name='copied_multitable', data=ds, multitable=mult)
+        expect_identical(name(m), "copied_multitable")
+        is.public(multitables(ds))[2] <- TRUE
     })
 
     test_that("We can get an xlsx tab book", {
