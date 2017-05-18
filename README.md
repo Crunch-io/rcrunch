@@ -56,14 +56,7 @@ You can set several parameters in your .Rprofile to simplify your workflow:
 
 ### Contributing
 
-1. Fork the repository and clone your fork locally :octocat:
-1. `git remote add upstream git@github.com:Crunch-io/rcrunch.git`
-1. Fetch and check out master from upstream: `git fetch && git checkout upstream/master`
-1. Check out a new branch to collect the commits that comprise your awesome new feature :tada:
-1. Do your work, commit, and push
-1. Click “pull request”
-1. Revise as needed from review comments — just push more commits on your branch :bookmark_tabs:
-1. Celebrate when it gets merged! :squirrel:
+See the [contribution guidelines](CONTRIBUTING.md).
 
 ### Installing from a local checkout
 
