@@ -30,7 +30,7 @@ with_POST <- function (resp, expr) {
 
 with_silent_progress <- function (expr) {
     with_mock(
-        `utils::txtProgressBar`=function (...) invisible(NULL),
+        `utils::txtProgressBar`=function (...) pipe(""),
         `utils::setTxtProgressBar`=function (...) invisible(NULL),
         eval.parent(expr)
     )
