@@ -23,7 +23,8 @@ pollProgress <- function (progress_url, wait=.5) {
         setTxtProgressBar(pb, status)
         wait <- min(max.wait, wait * increase.by)
     }
-
+    close(pb)
+    
     if (status < 0) {
         msg <- prog$message %||% "There was an error on the server. Please contact support@crunch.io"
         halt(msg)
