@@ -27,4 +27,3 @@ Context managers
 \seealso{
 \link{with-context-manager}
 }
-

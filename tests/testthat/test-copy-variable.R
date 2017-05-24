@@ -16,10 +16,10 @@ with_mock_HTTP({
                 show_codes=FALSE,
                 column_width=NULL
             ),
-            expr=list(
+            derivation=list(
                 `function`="copy_variable",
                 args=list(
-                    list(variable="/api/datasets/dataset1/variables/gender/")
+                    list(variable="https://app.crunch.io/api/datasets/1/variables/gender/")
                 )
             )
         )
@@ -44,7 +44,6 @@ if (run.integration.tests) {
                 expect_true("copy1" %in% names(ds))
                 expect_true("q1" %in% names(ds))
 
-                skip("Can't edit categories in copy")
                 ## Edit category in copy
                 names(categories(ds$copy1))[2] <- "Canine"
                 expect_identical(names(categories(ds$copy1))[1:3],
@@ -88,37 +87,6 @@ if (run.integration.tests) {
 
             })
 
-            test_that("Can make a new array using copies of other array's subvars", {
-                ## Let's make two copies of allpets, give them different names,
-                ## then unbind them and rebind their subvars by animal
-                ds$allpets_adult <- copy(ds$allpets, name="Adult pets")
-                ds$allpets_juv <- copy(ds$allpets, name="Juvenile pets")
-                unbind(ds$allpets_adult)
-                unbind(ds$allpets_juv)
-                ds <- refresh(ds)
-
-                ds$allcats <- makeMR(ds[grep("Cat$", names(variables(ds)))],
-                    selections="selected", name="All cats")
-                ds$alldogs <- makeMR(ds[grep("Canine$", names(variables(ds)))],
-                    selections="selected", name="All dogs")
-                ds$allbirds <- makeMR(ds[grep("Bird$", names(variables(ds)))],
-                    selections="selected", name="All birds")
-
-                expect_equivalent(as.array(crtabs(~ allcats, data=ds)),
-                    array(c(4, 4), dim=c(2L),
-                        dimnames=list(allcats=c("Adult pets | Cat",
-                        "Juvenile pets | Cat"))))
-            })
-
-            with(test.dataset(newDatasetFromFixture("apidocs"), "part2"), {
-                test_that("Copies get data when appending", {
-                    out <- appendDataset(ds, part2)
-                    expect_equivalent(as.array(crtabs(~ allcats, data=out)),
-                        array(c(8, 8), dim=c(2L),
-                            dimnames=list(allcats=c("Adult pets | Cat",
-                            "Juvenile pets | Cat"))))
-                })
-            })
         })
     })
 }

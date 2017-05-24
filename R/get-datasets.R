@@ -23,7 +23,13 @@
 #' datasets(proj) <- ds
 #' }
 datasets <- function (x=getAPIRoot()) {
-    DatasetCatalog(crGET(shojiURL(x, "catalogs", "datasets")))
+    if (inherits(x, "SearchResults")) {
+        ## This is close enough to a dataset catalog
+        out <- structure(list(index=x$datasets), class="shoji")
+    } else {
+        out <- crGET(shojiURL(x, "catalogs", "datasets"))
+    }
+    DatasetCatalog(out)
 }
 
 #' Show the names of all Crunch datasets
@@ -45,21 +51,30 @@ listDatasets <- function (kind=c("active", "all", "archived"), project=NULL,
     return(names(dscat))
 }
 
-selectDatasetCatalog <- function (kind=c("active", "all", "archived"), project=NULL, refresh=FALSE) {
+selectDatasetCatalog <- function (kind=c("active", "all", "archived"),
+                                  project=NULL, refresh=FALSE) {
+
+    Call <- match.call()
     if (is.null(project)) {
         ## Default: we'll get the dataset catalog from the API root
         project <- getAPIRoot()
-    } else if (is.character(project)) {
-        ## Project name (or I guess URL could work)
+    } else if (!(is.shojiObject(project) || inherits(project, "ShojiTuple"))) {
+        ## Project name, URL, or index
         project <- projects()[[project]]
+    }
+    if (is.null(project)) {
+        ## Means a project was specified (like by name) but it didn't exist
+        halt("Project ", deparseAndTruncate(eval.parent(Call$project)),
+            " is not valid")
     }
 
     if (refresh) {
         ## drop cache for the ds catalog URL of the "project"
         dropOnly(shojiURL(project, "catalogs", "datasets"))
     }
-    ## Ok, get the catalog
+    ## Ok, get the catalog.
     catalog <- datasets(project)
+
     ## Subset as indicated
     return(switch(match.arg(kind),
         active=active(catalog),
@@ -96,6 +111,14 @@ loadDataset <- function (dataset, kind=c("active", "all", "archived"), project=N
         dsname <- dataset
         dataset <- dscat[[dataset]]
         if (is.null(dataset)) {
+            ## Check to see if this is a URL, in which case, GET it
+            if (startsWith(dsname, "http")) {
+                dataset <- CrunchDataset(crGET(dsname))
+                tuple(dataset) <- DatasetTuple(entity_url=self(dataset),
+                    body=dataset@body,
+                    index_url=shojiURL(dataset, "catalogs", "parent"))
+                return(dataset)
+            }
             halt(dQuote(dsname), " not found")
         }
     }
@@ -115,13 +138,18 @@ loadDataset <- function (dataset, kind=c("active", "all", "archived"), project=N
 #' return of \code{\link{listDatasets}}, or an object of class
 #' \code{CrunchDataset}. x can only be of length 1--this function is not
 #' vectorized (for your protection).
-#' @param ... additional parameters (such as \code{confirm}) passed to
-#' \code{delete}
+#' @param ... additional parameters passed to \code{delete}
 #' @return (Invisibly) the API response from deleting the dataset
 #' @seealso \code{\link{delete}}
 #' @export
 deleteDataset <- function (x, ...) {
     if (!is.dataset(x)) {
+        if (is.numeric(x)) {
+            x <- listDatasets()[x]
+            if (is.na(x)) {
+                halt("subscript out of bounds")
+            }
+        }
         x <- datasets()[[x]]
     }
     out <- delete(x, ...)

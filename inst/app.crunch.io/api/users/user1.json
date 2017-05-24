@@ -1,0 +1,20 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/users/user1/",
+    "description": "Detail for a given user",
+    "body": {
+        "id": "00002",
+        "email": "fake.user@example.com",
+        "first_name": "Fake",
+        "last_name": "User",
+        "id_method": "pwhash",
+        "preferences": {}
+    },
+    "catalogs": {
+        "datasets": "https://app.crunch.io/api/datasets/"
+    },
+    "urls": {
+        "account_url": "https://app.crunch.io/api/accounts/account1/"
+    },
+    "some_other_key": {}
+}

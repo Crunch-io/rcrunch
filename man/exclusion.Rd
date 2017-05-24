@@ -32,4 +32,3 @@ omit. Applying a filter expression as a query filter will have the
 opposite effect if applied as an exclusion. Indeed, applying it as both
 query filter and exclusion at the same time will result in 0 rows.
 }
-

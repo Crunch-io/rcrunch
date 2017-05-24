@@ -20,4 +20,3 @@ The version string if there is a new version, or NULL
 See if there's a new version of the package on GitHub
 }
 \keyword{internal}
-

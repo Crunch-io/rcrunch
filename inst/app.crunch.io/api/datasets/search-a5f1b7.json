@@ -1,0 +1,83 @@
+{
+    "element": "shoji:view",
+    "self": "https://app.crunch.io/api/datasets/search/?q=gender&embedded_variables=TRUE",
+    "description": "Returns a view with relevant search information",
+    "value": {
+        "groups": [{
+            "datasets": {
+                "https://app.crunch.io/api/datasets/3d33f917443443889af84021bcb39679/": {
+                    "archived": false,
+                    "description": "ECON0003_WTS_W233.sav",
+                    "end_date": null,
+                    "variables": {
+                        "./variables/d5e746d3dd9147ac99a23b2c22786275/": {
+                            "alias": "gender",
+                            "category_names": ["Male", "Female", "Skipped", "Not Asked"],
+                            "description": "Gender",
+                            "name": "gender"
+                        },
+                        "./variables/44a0215ede5247deab0da4b165d67b6c/": {
+                            "alias": "pp_Gender",
+                            "category_names": ["Male", "Female", "Skipped", "Not Asked"],
+                            "description": "Gender",
+                            "name": "pp_gender"
+                        },
+                        "./variables/428a3dd9d7c744a8bd1366b41b09f6ea/": {
+                            "alias": "Weight (gender)",
+                            "description": "Gender",
+                            "name": "Weight (gender)"
+                        }
+                    },
+                    "labels": null,
+                    "creation_time": "2015-02-12T10:16:12.929000",
+                    "name": "Economist/YouGov survey, 13 Jul 2013",
+                    "modification_time": "2015-11-19T15:16:00.017000",
+                    "is_published": true,
+                    "start_date": null,
+                    "owner": "518278c707a7d8253b685722",
+                    "owner_type": "User",
+                    "teams": [],
+                    "id": "3d33f917443443889af84021bcb39679",
+                    "projects": [],
+                    "users": ["e3313b6a98f0450db8e484888b708d53", "086cfcd6d7f4439abb92f5afd026f91f", "dba117bd71ef4f1d982d6650dacea49d", "518278c707a7d8253b685722", "698ea473da4f49519904dc1a4d8caf9b"]
+                },
+                "https://app.crunch.io/api/datasets/b7a08edc44ff439481c552d91e5e97cf/": {
+                    "archived": false,
+                    "description": "from IPUMS",
+                    "end_date": null,
+                    "variables": {
+                        "./variables/00000b/": {
+                            "alias": "gender",
+                            "group_names": ["Core demographics"],
+                            "category_names": ["Male", "Female", "No Data"],
+                            "description": "sex",
+                            "name": "Sex"
+                        },
+                        "./variables/b17c2906be394c7593dceeb8981313b7/": {
+                            "alias": "Gender x Marstat",
+                            "category_names": ["Married men", "Married women", "Singles"],
+                            "name": "Gender x Marstat"
+                        }
+                    },
+                    "labels": null,
+                    "creation_time": "2015-04-19T14:49:20.558000",
+                    "name": "ACS 2012",
+                    "modification_time": "2016-04-21T16:41:23.631000",
+                    "is_published": true,
+                    "start_date": null,
+                    "owner": "5187f95407a7d83fe485396c",
+                    "owner_type": "User",
+                    "teams": [],
+                    "id": "b7a08edc44ff439481c552d91e5e97cf",
+                    "projects": [],
+                    "users": ["4f0fe6c60b6a44c1b985b1ef0a51b879", "e334eae3944d4a28ba315d12aee6097f", "5187f95407a7d83fe485396c", "ed6bbd4e73c54e769c3602b436d26ef8", "518278c707a7d8253b685722", "698ea473da4f49519904dc1a4d8caf9b"]
+                }
+            },
+            "group": "Search Results",
+            "order": ["https://app.crunch.io/api/datasets/3d33f917443443889af84021bcb39679/", "https://app.crunch.io/api/datasets/b7a08edc44ff439481c552d91e5e97cf/"],
+            "totals": {
+                "datasets": 2
+            }
+        }]
+    }
+}

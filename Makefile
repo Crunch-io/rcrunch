@@ -1,31 +1,31 @@
 VERSION = $(shell grep ^Version DESCRIPTION | sed s/Version:\ //)
 
 doc:
-	R --slave -e 'library(roxygen2); roxygenise()'
+	R --slave -e 'devtools::document()'
 	git add --all man/*.Rd
 
 test:
 	R CMD INSTALL --install-tests .
-	R --slave -e 'library(testthat); setwd(file.path(.libPaths()[1], "crunch", "tests")); system.time(test_check("crunch", filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
+	R --slave -e 'library(httptest); setwd(file.path(.libPaths()[1], "crunch", "tests")); options(crunch.check.updates=FALSE); system.time(test_check("crunch", filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
 
 deps:
-	R --slave -e 'install.packages(c("jsonlite", "curl", "httpcache", "codetools", "testthat", "devtools", "Rcpp"), repo="http://cran.at.r-project.org", lib=ifelse(nchar(Sys.getenv("R_LIB")), Sys.getenv("R_LIB"), .libPaths()[1]))'
+	R --slave -e 'install.packages(c("jsonlite", "curl", "httpcache", "codetools", "httptest", "devtools", "Rcpp"), repo="http://cran.at.r-project.org", lib=ifelse(nchar(Sys.getenv("R_LIB")), Sys.getenv("R_LIB"), .libPaths()[1]))'
 
 install-ci: deps
 	R CMD INSTALL --install-tests -l $(R_LIB) .
-	R -e '.libPaths(Sys.getenv("R_LIB")); devtools::install_github("nealrichardson/testthat", ref="tap-file")'
+	R -e '.libPaths(Sys.getenv("R_LIB")); devtools::install_github("nealrichardson/testthat", ref="tap-file"); devtools::install_github("nealrichardson/httptest")'
 
 test-ci:
-	R --slave -e '.libPaths(Sys.getenv("R_LIB")); library(testthat); cwd <- getwd(); setwd(file.path(.libPaths()[1], "crunch", "tests")); test_check("crunch", reporter=MultiReporter$$new(list(SummaryReporter$$new(), TapReporter$$new(file.path(cwd, "rcrunch.tap")))))'
+	R --slave -e '.libPaths(Sys.getenv("R_LIB")); library(httptest); cwd <- getwd(); setwd(file.path(.libPaths()[1], "crunch", "tests")); options(crunch.check.updates=FALSE); test_check("crunch", reporter=MultiReporter$$new(list(SummaryReporter$$new(), TapReporter$$new(file.path(cwd, "rcrunch.tap")))))'
 
 clean:
-	R --slave -e 'options(crunch.api=getOption("test.api"), crunch.email=getOption("test.user"), crunch.pw=getOption("test.pw")); library(crunch); login(); crunch:::.delete_all_my_datasets()'
+	R --slave -e 'options(crunch.api=getOption("test.api"), crunch.email=getOption("test.user"), crunch.pw=getOption("test.pw")); library(crunch); login(); lapply(urls(datasets()), crDELETE)'
 
 build: doc
 	R CMD build .
 
 check: build
-	-unset INTEGRATION && R CMD CHECK --as-cran crunch_$(VERSION).tar.gz
+	-unset INTEGRATION && export _R_CHECK_CRAN_INCOMING_REMOTE_=FALSE && R CMD CHECK --as-cran crunch_$(VERSION).tar.gz
     # cd crunch.Rcheck/crunch/doc/ && ls | grep .html | xargs -n 1 egrep "<pre><code>.. NULL" >> ../../../vignette-errors.log
 	rm -rf crunch.Rcheck/
     # cat vignette-errors.log

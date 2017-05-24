@@ -121,9 +121,11 @@ setMethod("dim", "CrunchDataset",
 #' @export
 setMethod("ncol", "CrunchDataset", function (x) length(variables(x)))
 
-namekey <- function (x) {
+namekey <- function (x=NULL) {
     if (is.variable(x)) {
         return(match.arg(getOption("crunch.namekey.array"), c("alias", "name")))
+    } else if (inherits(x, "VariableOrder") || inherits(x, "VariableGroup")) {
+        return(match.arg(getOption("crunch.namekey.variableorder"), c("name", "alias")))
     } else {
         return(match.arg(getOption("crunch.namekey.dataset"), c("alias", "name")))
     }
@@ -185,13 +187,14 @@ setMethod("refresh", "CrunchDataset", function (x) {
 #' These methods delete entities, notably Datasets and Variables within them,
 #' from the server. This action is permanent and cannot be undone, so it
 #' should not be done lightly. Consider instead using \code{archive}
-#' for datasets and \code{\link{hide}} for variables
+#' for datasets and \code{\link{hide}} for variables.
+#'
+#' Deleting requires confirmation. In an interactive session, you will be asked
+#' to confirm. To avoid that prompt, or to delete objects from a
+#' non-interactive session, wrap the call in \code{\link{with_consent}} to give
+#' your permission to delete.
 #'
 #' @param x a Crunch object
-#' @param confirm logical: should the user be asked to confirm deletion.
-#' Option available for datasets and teams only. Default is \code{TRUE} if in
-#' an interactive session. You can avoid the confirmation prompt if you delete
-#' \code{with(\link{consent})}.
 #' @param ... additional arguments, in the generic
 #' @seealso \code{\link{hide}} \code{\link{deleteDataset}}
 #' @name delete
@@ -201,8 +204,8 @@ NULL
 #' @rdname delete
 #' @export
 setMethod("delete", "CrunchDataset",
-    function (x, confirm=requireConsent(), ...) {
-        out <- delete(tuple(x), confirm=confirm)
+    function (x, ...) {
+        out <- delete(tuple(x), ...)
         invisible(out)
     })
 
@@ -238,6 +241,15 @@ variableCatalogURL <- function (dataset) {
 }
 
 summaryURL <- function (x) shojiURL(x, "views", "summary")
+
+cubeURL <- function (x) {
+    if (is.dataset(x)) {
+        return(shojiURL(x, "views", "cube"))
+    } else {
+        ## :( Construct the URL
+        return(absoluteURL("./cube/", datasetReference(x)))
+    }
+}
 
 #' Access a Dataset's Variables Catalog
 #'
@@ -388,3 +400,71 @@ publish <- function (x) {
     is.published(x) <- TRUE
     return(x)
 }
+
+#' View and modify dataset-level settings
+#'
+#' These methods allow access and control over dataset settings. Currently
+#' supported settings include 'viewers_can_export', 'viewers_can_share', and
+#' 'viewers_can_change_weight', which govern specific authorizations for users
+#' with view-only access to this datset; and 'weight', which is the default
+#' weight variable for the dataset, the one that will be set for newly shared
+#' users and the one that viewers will have always on if they are not authorized
+#' to change weights. Additional settings will be added in the future. See
+#' \url{http://docs.crunch.io/#fragments}, under 'Settings', for an up-to-date
+#' list of settings supported throughout the Crunch system. Clients may also
+#' provide and use custom settings if they choose.
+#' @param x CrunchDataset
+#' @param value A settings object (`ShojiEntity`), for the setter
+#' @return The getter returns a settings object (`ShojiEntity`). The setter
+#' returns the dataset (`x`).
+#' @examples
+#' \dontrun{
+#' settings(ds)
+#' settings(ds)$viewers_can_export <- TRUE
+#' }
+#' @export
+settings <- function (x) {
+    stopifnot(is.dataset(x))
+    return(ShojiEntity(crGET(shojiURL(x, "fragments", "settings"))))
+}
+
+#' @rdname settings
+#' @export
+"settings<-" <- function (x, value) {
+    stopifnot(is.dataset(x))
+    updateEntity(settings(x), value)
+    return(x)
+}
+
+#' View or set a dashboard URL
+#'
+#' You can designate a dashboard that will show when the dataset is loaded in
+#' the Crunch web app. This dashboard could be a Crunch Shiny ("Crunchy") app,
+#' a CrunchBox, or something else.
+#'
+#' @param x CrunchDataset
+#' @param value For the setter, a URL (character) or `NULL` to unset the
+#' dashboard.
+#' @return The getter returns a URL (character) or `NULL`. The setter
+#' returns the dataset (`x`).
+#' @examples
+#' \dontrun{
+#' dashboard(ds) <- "https://shiny.crunch.io/example/"
+#' }
+#' @export
+dashboard <- function (x) {
+    stopifnot(is.dataset(x))
+    app_settings <- x@body[["app_settings"]] %||% list()
+    whaam <- app_settings[["whaam"]] %||% list()
+    return(whaam[["dashboardUrl"]])
+}
+
+#' @rdname dashboard
+#' @export
+setDashboardURL <- function (x, value) {
+    setEntitySlot(x, "app_settings", list(whaam=list(dashboardUrl=value)))
+}
+
+#' @rdname dashboard
+#' @export
+"dashboard<-" <- setDashboardURL

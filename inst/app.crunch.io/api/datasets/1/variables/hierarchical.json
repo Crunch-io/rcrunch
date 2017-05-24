@@ -1,0 +1,13 @@
+{
+    "element": "shoji:order",
+    "self": "https://app.crunch.io/api/datasets/1/variables/hierarchical/",
+    "description": "Hierarchical ordering of dataset variables",
+    "graph": [
+        "https://app.crunch.io/api/datasets/1/variables/birthyr/",
+        "https://app.crunch.io/api/datasets/1/variables/gender/",
+        "https://app.crunch.io/api/datasets/1/variables/mymrset/",
+        "https://app.crunch.io/api/datasets/1/variables/textVar/",
+        "https://app.crunch.io/api/datasets/1/variables/starttime/",
+        "https://app.crunch.io/api/datasets/1/variables/catarray/"
+    ]
+}

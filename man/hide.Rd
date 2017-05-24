@@ -3,9 +3,9 @@
 \docType{methods}
 \name{hide}
 \alias{hide}
+\alias{unhide}
 \alias{hide,CrunchVariable-method}
 \alias{hide,VariableCatalog-method}
-\alias{unhide}
 \alias{unhide,CrunchVariable-method}
 \alias{unhide,VariableCatalog-method}
 \title{Hide and Unhide Variables}
@@ -27,4 +27,3 @@
 \description{
 Hide and Unhide Variables
 }
-

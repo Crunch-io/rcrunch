@@ -1,26 +1,22 @@
 context("Variable catalog")
 
 with_mock_HTTP({
-    variables.catalog.url <- "/api/datasets/dataset1/variables/"
-    varblob <- crGET(variables.catalog.url)
+    ds <- loadDataset("test ds")
+    varcat <- allVariables(ds)
+    varorder <- ordering(varcat)
 
     test_that("VariableCatalog instantiates from Shoji", {
-        expect_is(VariableCatalog(varblob), "VariableCatalog")
+        expect_is(varcat, "VariableCatalog")
     })
-
-    varcat <- VariableCatalog(varblob)
-    order.url <- "/api/datasets/dataset1/variables/hierarchical/"
-    varorder <- VariableOrder(crGET(order.url))
 
     test_that("VariableCatalog index method", {
         expect_identical(names(index(varcat)), names(varcat@index))
-        expect_identical(names(index(varcat)), names(varblob$index))
     })
 
     test_that("VariableCatalog has the right contents", {
-        expect_true(all(grepl("/api/datasets/dataset1/variables",
+        expect_true(all(grepl("https://app.crunch.io/api/datasets/1/variables",
             urls(varcat))))
-        expect_identical(self(varcat), variables.catalog.url)
+        expect_identical(self(varcat), "https://app.crunch.io/api/datasets/1/variables/")
         expect_identical(entities(ordering(varcat)), entities(varorder))
     })
 
@@ -28,24 +24,24 @@ with_mock_HTTP({
         expect_identical(index(active(varcat)),
             index(varcat)[urls(ordering(varcat))])
         expect_equivalent(index(hidden(varcat)), list())
-        index(varcat)[[2]]$discarded <- TRUE
+        index(varcat)[[1]]$discarded <- TRUE
         expect_is(active(varcat), "VariableCatalog")
         expect_is(hidden(varcat), "VariableCatalog")
         expect_identical(urls(active(varcat)),
-            c("/api/datasets/dataset1/variables/gender/",
-            "/api/datasets/dataset1/variables/mymrset/",
-            "/api/datasets/dataset1/variables/textVar/",
-            "/api/datasets/dataset1/variables/starttime/",
-            "/api/datasets/dataset1/variables/catarray/"))
+            c("https://app.crunch.io/api/datasets/1/variables/gender/",
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/",
+            "https://app.crunch.io/api/datasets/1/variables/textVar/",
+            "https://app.crunch.io/api/datasets/1/variables/starttime/",
+            "https://app.crunch.io/api/datasets/1/variables/catarray/"))
         expect_length(active(varcat), 5)
         expect_identical(urls(hidden(varcat)),
-            "/api/datasets/dataset1/variables/birthyr/")
+            "https://app.crunch.io/api/datasets/1/variables/birthyr/")
         expect_length(hidden(varcat), 1)
         expect_length(varcat, 6)
         expect_identical(active(hidden(varcat)), hidden(active(varcat)))
     })
 
-    gender.url <- "/api/datasets/dataset1/variables/gender/"
+    gender.url <- "https://app.crunch.io/api/datasets/1/variables/gender/"
     test_that("Extract methods: character and numeric", {
         expect_is(varcat[[gender.url]], "VariableTuple")
         expect_identical(varcat[[gender.url]]@body,
@@ -55,14 +51,14 @@ with_mock_HTTP({
 
     test_that("Extract methods: invalid input", {
         expect_error(varcat[[999]], "subscript out of bounds") ## base R
-        expect_error(varcat[["asdf"]], "Subscript out of bounds: asdf")
-        expect_error(varcat[[NA]], "Subscript out of bounds: NA")
+        expect_null(varcat[["asdf"]])
+        expect_null(varcat[[NA]])
         expect_error(varcat[999:1000], "Subscript out of bounds: 999:1000")
     })
 
     test_that("Extract methods: VariableOrder/Group", {
-        ents <- c("/api/datasets/dataset1/variables/gender/",
-            "/api/datasets/dataset1/variables/mymrset/")
+        ents <- c("https://app.crunch.io/api/datasets/1/variables/gender/",
+            "https://app.crunch.io/api/datasets/1/variables/mymrset/")
         ord <- VariableOrder(VariableGroup("G1", entities=ents))
         expect_identical(names(varcat[ents]), c("Gender", "mymrset"))
         expect_identical(varcat[ord[[1]]], varcat[ents])
@@ -75,32 +71,32 @@ with_mock_HTTP({
 
     test_that("attribute getters", {
         expect_identical(names(varcat)[1:3],
-            c("Gender", "Birth Year", "starttime"))
-        expect_identical(aliases(varcat)[1:2], c("gender", "birthyr"))
+            c("Birth Year", "Gender", "mymrset"))
+        expect_identical(aliases(varcat)[1:2], c("birthyr", "gender"))
         expect_identical(types(varcat)[1:3],
-            c("categorical", "numeric", "datetime"))
+            c("numeric", "categorical", "multiple_response"))
         expect_identical(descriptions(varcat[1:3]),
-            c("Gender", NA, "Interview Start Time"))
+            c(NA, "Gender", "Please select all that apply"))
         expect_identical(notes(varcat[1:3]),
-            c("", "Asked instead of age", ""))
+            c("Asked instead of age", "", ""))
     })
 
     test_that("attribute setters", {
-        expect_PATCH(names(varcat)[1:3] <- c("Gender", "Year of birth", "Start time"),
-            "/api/datasets/dataset1/variables/",
-            '{"/api/datasets/dataset1/variables/birthyr/":{"name":"Year of birth"},',
-            '"/api/datasets/dataset1/variables/starttime/":{"name":"Start time"}}')
-        expect_PATCH(notes(varcat)[1:3] <- c("", "Asked instead of age", "ms"),
-            "/api/datasets/dataset1/variables/",
-            '{"/api/datasets/dataset1/variables/starttime/":{"notes":"ms"}}')
+        expect_PATCH(names(varcat)[1:3] <- c("Year of birth", "Gender", "Start time"),
+            "https://app.crunch.io/api/datasets/1/variables/",
+            '{"https://app.crunch.io/api/datasets/1/variables/birthyr/":{"name":"Year of birth"},',
+            '"https://app.crunch.io/api/datasets/1/variables/mymrset/":{"name":"Start time"}}')
+        expect_PATCH(notes(varcat)[1:3] <- c("Asked instead of age", "", "ms"),
+            "https://app.crunch.io/api/datasets/1/variables/",
+            '{"https://app.crunch.io/api/datasets/1/variables/mymrset/":{"notes":"ms"}}')
     })
 
     test_that("show method", {
         expect_output(varcat[1:3],
             get_output(data.frame(
-                alias=c("gender", "birthyr", "starttime"),
-                name=c("Gender", "Birth Year", "starttime"),
-                type=c("categorical", "numeric", "datetime")
+                alias=c("birthyr", "gender", "mymrset"),
+                name=c("Birth Year", "Gender", "mymrset"),
+                type=c("numeric", "categorical", "multiple_response")
             )))
     })
 })

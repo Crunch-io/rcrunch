@@ -4,6 +4,12 @@ setMethod("initialize", "VariableCatalog", function (.Object, ...) {
     if (!is.null(h_url)) {
         o <- crGET(h_url, query=list(relative="on"))
         .Object@order <- VariableOrder(o)
+        ## Sort catalog based on the order, but be forgiving if the order isn't
+        ## 100% trustworthy
+        order_urls <- unique(urls(.Object@order))
+        index_urls <- names(.Object@index)
+        .Object@index <- .Object@index[c(intersect(order_urls, index_urls),
+            setdiff(index_urls, order_urls))]
     }
     return(.Object)
 })
@@ -11,8 +17,7 @@ setMethod("initialize", "VariableCatalog", function (.Object, ...) {
 .discardedTuple <- function (x) isTRUE(x[["discarded"]])
 
 setMethod("active", "VariableCatalog", function (x) {
-    index(x) <- Filter(Negate(.discardedTuple),
-        index(x)[intersect(urls(ordering(x)), urls(x))])
+    index(x) <- Filter(Negate(.discardedTuple), index(x))
     return(x)
 })
 
@@ -23,22 +28,8 @@ setMethod("hidden", "VariableCatalog", function (x) {
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[", c("VariableCatalog", "character"), function (x, i, ...) {
-    tup <- index(x)[[i]]
-    if (!is.list(tup)) {
-        halt("Subscript out of bounds: ", i)
-    }
-    return(VariableTuple(index_url=self(x), entity_url=i, body=tup))
-})
-#' @rdname catalog-extract
-#' @export
-setMethod("[[", c("VariableCatalog", "ANY"), function (x, i, ...) {
-    tup <- index(x)[[i]]
-    if (!is.list(tup)) {
-        halt("Subscript out of bounds: ", i)
-    }
-    return(VariableTuple(index_url=self(x), entity_url=urls(x)[i],
-        body=tup))
+setMethod("[[", c("VariableCatalog", "numeric"), function (x, i, ...) {
+    getTuple(x, i, VariableTuple)
 })
 #' @rdname catalog-extract
 #' @export

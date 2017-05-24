@@ -44,22 +44,22 @@ combine <- function (variable, combinations=list(), ...) {
     ## Construct expr
     if (type(variable) == "multiple_response") {
         combs <- combResps(subvariables(variable), combinations)
-        newvar$expr <- zfunc("combine_responses",
+        newvar$derivation <- zfunc("combine_responses",
             zcl(variable), list(value=combs))
         ## Give default name based on number of responses
         if (identical(newvar$name, name(variable))) {
-            nvalidresps <- length(newvar$expr$args[[2]]$value)
+            nvalidresps <- length(newvar$derivation$args[[2]]$value)
             newvar$name <- paste0(newvar$name, " (", nvalidresps,
                 ifelse(nvalidresps == 1, " response)", " responses)"))
         }
     } else {
         combs <- combCats(categories(variable), combinations)
-        newvar$expr <- zfunc("combine_categories",
+        newvar$derivation <- zfunc("combine_categories",
             zcl(variable), list(value=combs))
         ## Give default name based on number of categories
         if (identical(newvar$name, name(variable))) {
             nvalidcats <- length(Filter(Negate(function (x) isTRUE(x$missing)),
-                newvar$expr$args[[2]]$value))
+                newvar$derivation$args[[2]]$value))
             newvar$name <- paste0(newvar$name, " (", nvalidcats,
                 ifelse(nvalidcats == 1, " category)", " categories)"))
         }

@@ -26,4 +26,3 @@ Table function for Crunch objects
 \seealso{
 \code{\link[base]{table}}
 }
-

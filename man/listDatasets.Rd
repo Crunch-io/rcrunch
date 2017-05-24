@@ -26,4 +26,3 @@ input for \code{\link{loadDataset}}
 \description{
 Show the names of all Crunch datasets
 }
-

@@ -12,8 +12,7 @@ return of \code{\link{listDatasets}}, or an object of class
 \code{CrunchDataset}. x can only be of length 1--this function is not
 vectorized (for your protection).}
 
-\item{...}{additional parameters (such as \code{confirm}) passed to
-\code{delete}}
+\item{...}{additional parameters passed to \code{delete}}
 }
 \value{
 (Invisibly) the API response from deleting the dataset
@@ -31,4 +30,3 @@ package that masks the \code{delete} method.
 \seealso{
 \code{\link{delete}}
 }
-

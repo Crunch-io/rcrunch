@@ -1,0 +1,3926 @@
+{
+	"meta": {
+		"toc": false,
+		"layout": "many_sheets",
+		"template": [{
+			"query": [{
+				"function": "selected_array",
+				"args": [{
+					"variable": "000006"
+				}]
+			}, {
+				"each": "000006"
+			}]
+		}, {
+			"query": [{
+				"variable": "000000"
+			}]
+		}],
+		"sheets": [{
+			"display_settings": {
+				"percentageDirection": {
+					"value": "colPct"
+				},
+				"show_percents": true,
+				"countsOrPercents": {
+					"value": "percent"
+				}
+			},
+			"weight": null,
+			"name": "All pets owned",
+			"filters": null
+		}, {
+			"display_settings": {
+				"percentageDirection": {
+					"value": "colPct"
+				},
+				"show_percents": true,
+				"countsOrPercents": {
+					"value": "percent"
+				}
+			},
+			"weight": null,
+			"name": "Pet",
+			"filters": null
+		}, {
+			"display_settings": {
+				"percentageDirection": {
+					"value": "colPct"
+				},
+				"show_percents": true,
+				"countsOrPercents": {
+					"value": "percent"
+				}
+			},
+			"weight": null,
+			"name": "Pets by location",
+			"filters": null
+		}, {
+			"display_settings": {
+				"percentageDirection": {
+					"value": "colPct"
+				},
+				"show_percents": true,
+				"countsOrPercents": {
+					"value": "percent"
+				}
+			},
+			"weight": null,
+			"name": "Number of dogs",
+			"filters": null
+		}, {
+			"display_settings": {
+				"percentageDirection": {
+					"value": "colPct"
+				},
+				"show_percents": true,
+				"countsOrPercents": {
+					"value": "percent"
+				}
+			},
+			"weight": null,
+			"name": "Number of dogs -- With papers",
+			"filters": null
+		}, {
+			"display_settings": {
+				"percentageDirection": {
+					"value": "colPct"
+				},
+				"show_percents": true,
+				"countsOrPercents": {
+					"value": "percent"
+				}
+			},
+			"weight": null,
+			"name": "Number of dogs -- Mutts",
+			"filters": null
+		}, {
+			"display_settings": {
+				"percentageDirection": {
+					"value": "colPct"
+				},
+				"show_percents": true,
+				"countsOrPercents": {
+					"value": "percent"
+				}
+			},
+			"weight": null,
+			"name": "Pet name",
+			"filters": null
+		}, {
+			"display_settings": {
+				"percentageDirection": {
+					"value": "colPct"
+				},
+				"show_percents": true,
+				"countsOrPercents": {
+					"value": "percent"
+				}
+			},
+			"weight": null,
+			"name": "Country",
+			"filters": null
+		}, {
+			"display_settings": {
+				"percentageDirection": {
+					"value": "colPct"
+				},
+				"show_percents": true,
+				"countsOrPercents": {
+					"value": "percent"
+				}
+			},
+			"weight": null,
+			"name": "Wave",
+			"filters": null
+		}],
+		"dataset": {
+			"notes": "",
+			"name": "Example dataset"
+		}
+	},
+	"sheets": [{
+		"result": [{
+			"result": {
+				"counts": [4, 5, 5, 3, 7, 10],
+				"measures": {
+					"count": {
+						"data": [4, 5, 5, 3, 7, 10],
+						"n_missing": 3,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "allpets",
+						"subreferences": [{
+							"alias": "allpets_1",
+							"name": "Cat"
+						}, {
+							"alias": "allpets_2",
+							"name": "Dog"
+						}, {
+							"alias": "allpets_3",
+							"name": "Bird"
+						}, {}, {}, {}],
+						"description": "Do you have any of these animals as pets? Please select all that apply.",
+						"name": "All pets owned"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"class": "variable"
+						},
+						"elements": [{
+							"id": 1,
+							"value": {
+								"references": {
+									"alias": "allpets_1",
+									"name": "Cat"
+								},
+								"derived": false,
+								"id": "0001",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 2,
+							"value": {
+								"references": {
+									"alias": "allpets_2",
+									"name": "Dog"
+								},
+								"derived": false,
+								"id": "0002",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 3,
+							"value": {
+								"references": {
+									"alias": "allpets_3",
+									"name": "Bird"
+								},
+								"derived": false,
+								"id": "0003",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": -1,
+							"value": null,
+							"missing": true
+						}, {
+							"id": -127,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__none__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 0,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__any__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}],
+				"n": 20
+			}
+		}, {
+			"result": {
+				"counts": [4, 0, 1, 0, 0, 4, 0, 5, 3, 0, 0, 5, 1, 3, 5, 0, 0, 5, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 7, 0, 4, 5, 5, 0, 0, 10],
+				"measures": {
+					"count": {
+						"data": [4, 0, 1, 0, 0, 4, 0, 5, 3, 0, 0, 5, 1, 3, 5, 0, 0, 5, 0, 0, 0, 3, 0, 0, 0, 0, 0, 0, 7, 0, 4, 5, 5, 0, 0, 10],
+						"n_missing": 3,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "allpets",
+						"subreferences": [{
+							"alias": "allpets_1",
+							"name": "Cat"
+						}, {
+							"alias": "allpets_2",
+							"name": "Dog"
+						}, {
+							"alias": "allpets_3",
+							"name": "Bird"
+						}, {}, {}, {}],
+						"description": "Do you have any of these animals as pets? Please select all that apply.",
+						"name": "All pets owned"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"class": "variable"
+						},
+						"elements": [{
+							"id": 1,
+							"value": {
+								"references": {
+									"alias": "allpets_1",
+									"name": "Cat"
+								},
+								"derived": false,
+								"id": "0001",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 2,
+							"value": {
+								"references": {
+									"alias": "allpets_2",
+									"name": "Dog"
+								},
+								"derived": false,
+								"id": "0002",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 3,
+							"value": {
+								"references": {
+									"alias": "allpets_3",
+									"name": "Bird"
+								},
+								"derived": false,
+								"id": "0003",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": -1,
+							"value": null,
+							"missing": true
+						}, {
+							"id": -127,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__none__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 0,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__any__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}, {
+					"references": {
+						"alias": "allpets",
+						"subreferences": [{
+							"alias": "allpets_1",
+							"name": "Cat"
+						}, {
+							"alias": "allpets_2",
+							"name": "Dog"
+						}, {
+							"alias": "allpets_3",
+							"name": "Bird"
+						}, {}, {}, {}],
+						"description": "Do you have any of these animals as pets? Please select all that apply.",
+						"name": "All pets owned"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"class": "variable"
+						},
+						"elements": [{
+							"id": 1,
+							"value": {
+								"references": {
+									"alias": "allpets_1",
+									"name": "Cat"
+								},
+								"derived": false,
+								"id": "0001",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 2,
+							"value": {
+								"references": {
+									"alias": "allpets_2",
+									"name": "Dog"
+								},
+								"derived": false,
+								"id": "0002",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 3,
+							"value": {
+								"references": {
+									"alias": "allpets_3",
+									"name": "Bird"
+								},
+								"derived": false,
+								"id": "0003",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": -1,
+							"value": null,
+							"missing": true
+						}, {
+							"id": -127,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__none__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 0,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__any__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}],
+				"n": 20
+			}
+		}, {
+			"result": {
+				"counts": [0, 1, 1, 1, 1, 2, 1, 1, 0, 1, 2, 1, 1, 0, 1, 1, 1, 1, 0, 0, 2, 1, 0, 2, 2, 3, 2, 2, 1, 2],
+				"measures": {
+					"count": {
+						"data": [0, 1, 1, 1, 1, 2, 1, 1, 0, 1, 2, 1, 1, 0, 1, 1, 1, 1, 0, 0, 2, 1, 0, 2, 2, 3, 2, 2, 1, 2],
+						"n_missing": 10,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "allpets",
+						"subreferences": [{
+							"alias": "allpets_1",
+							"name": "Cat"
+						}, {
+							"alias": "allpets_2",
+							"name": "Dog"
+						}, {
+							"alias": "allpets_3",
+							"name": "Bird"
+						}, {}, {}, {}],
+						"description": "Do you have any of these animals as pets? Please select all that apply.",
+						"name": "All pets owned"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"class": "variable"
+						},
+						"elements": [{
+							"id": 1,
+							"value": {
+								"references": {
+									"alias": "allpets_1",
+									"name": "Cat"
+								},
+								"derived": false,
+								"id": "0001",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 2,
+							"value": {
+								"references": {
+									"alias": "allpets_2",
+									"name": "Dog"
+								},
+								"derived": false,
+								"id": "0002",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 3,
+							"value": {
+								"references": {
+									"alias": "allpets_3",
+									"name": "Bird"
+								},
+								"derived": false,
+								"id": "0003",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": -1,
+							"value": null,
+							"missing": true
+						}, {
+							"id": -127,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__none__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 0,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__any__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}, {
+					"references": {
+						"alias": "q1",
+						"name": "Pet",
+						"description": "What is your favorite pet?"
+					},
+					"derived": false,
+					"type": {
+						"ordinal": false,
+						"class": "categorical",
+						"categories": [{
+							"numeric_value": 1,
+							"missing": false,
+							"id": 1,
+							"name": "Cat"
+						}, {
+							"numeric_value": 2,
+							"missing": false,
+							"id": 2,
+							"name": "Dog"
+						}, {
+							"numeric_value": 3,
+							"missing": false,
+							"id": 3,
+							"name": "Bird"
+						}, {
+							"numeric_value": 8,
+							"missing": true,
+							"id": 8,
+							"name": "Skipped"
+						}, {
+							"numeric_value": 9,
+							"missing": true,
+							"id": 9,
+							"name": "Not Asked"
+						}]
+					}
+				}],
+				"n": 20
+			}
+		}]
+	}, {
+		"result": [{
+			"result": {
+				"counts": [6, 4, 3, 3, 4],
+				"measures": {
+					"count": {
+						"data": [6, 4, 3, 3, 4],
+						"n_missing": 7,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "q1",
+						"name": "Pet",
+						"description": "What is your favorite pet?"
+					},
+					"derived": false,
+					"type": {
+						"ordinal": false,
+						"class": "categorical",
+						"categories": [{
+							"numeric_value": 1,
+							"missing": false,
+							"id": 1,
+							"name": "Cat"
+						}, {
+							"numeric_value": 2,
+							"missing": false,
+							"id": 2,
+							"name": "Dog"
+						}, {
+							"numeric_value": 3,
+							"missing": false,
+							"id": 3,
+							"name": "Bird"
+						}, {
+							"numeric_value": 8,
+							"missing": true,
+							"id": 8,
+							"name": "Skipped"
+						}, {
+							"numeric_value": 9,
+							"missing": true,
+							"id": 9,
+							"name": "Not Asked"
+						}]
+					}
+				}],
+				"n": 20
+			}
+		}, {
+			"result": {
+				"counts": [0, 2, 2, 1, 2, 3, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 0, 2, 1, 0, 0, 0, 2, 1, 1, 1, 1, 0, 2, 2],
+				"measures": {
+					"count": {
+						"data": [0, 2, 2, 1, 2, 3, 1, 1, 1, 1, 1, 2, 1, 1, 1, 1, 0, 2, 1, 0, 0, 0, 2, 1, 1, 1, 1, 0, 2, 2],
+						"n_missing": 10,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "q1",
+						"name": "Pet",
+						"description": "What is your favorite pet?"
+					},
+					"derived": false,
+					"type": {
+						"ordinal": false,
+						"class": "categorical",
+						"categories": [{
+							"numeric_value": 1,
+							"missing": false,
+							"id": 1,
+							"name": "Cat"
+						}, {
+							"numeric_value": 2,
+							"missing": false,
+							"id": 2,
+							"name": "Dog"
+						}, {
+							"numeric_value": 3,
+							"missing": false,
+							"id": 3,
+							"name": "Bird"
+						}, {
+							"numeric_value": 8,
+							"missing": true,
+							"id": 8,
+							"name": "Skipped"
+						}, {
+							"numeric_value": 9,
+							"missing": true,
+							"id": 9,
+							"name": "Not Asked"
+						}]
+					}
+				}, {
+					"references": {
+						"alias": "allpets",
+						"subreferences": [{
+							"alias": "allpets_1",
+							"name": "Cat"
+						}, {
+							"alias": "allpets_2",
+							"name": "Dog"
+						}, {
+							"alias": "allpets_3",
+							"name": "Bird"
+						}, {}, {}, {}],
+						"description": "Do you have any of these animals as pets? Please select all that apply.",
+						"name": "All pets owned"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"class": "variable"
+						},
+						"elements": [{
+							"id": 1,
+							"value": {
+								"references": {
+									"alias": "allpets_1",
+									"name": "Cat"
+								},
+								"derived": false,
+								"id": "0001",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 2,
+							"value": {
+								"references": {
+									"alias": "allpets_2",
+									"name": "Dog"
+								},
+								"derived": false,
+								"id": "0002",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 3,
+							"value": {
+								"references": {
+									"alias": "allpets_3",
+									"name": "Bird"
+								},
+								"derived": false,
+								"id": "0003",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": -1,
+							"value": null,
+							"missing": true
+						}, {
+							"id": -127,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__none__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 0,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__any__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}],
+				"n": 20
+			}
+		}, {
+			"result": {
+				"counts": [6, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 4],
+				"measures": {
+					"count": {
+						"data": [6, 0, 0, 0, 0, 0, 4, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 3, 0, 0, 0, 0, 0, 4],
+						"n_missing": 7,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "q1",
+						"name": "Pet",
+						"description": "What is your favorite pet?"
+					},
+					"derived": false,
+					"type": {
+						"ordinal": false,
+						"class": "categorical",
+						"categories": [{
+							"numeric_value": 1,
+							"missing": false,
+							"id": 1,
+							"name": "Cat"
+						}, {
+							"numeric_value": 2,
+							"missing": false,
+							"id": 2,
+							"name": "Dog"
+						}, {
+							"numeric_value": 3,
+							"missing": false,
+							"id": 3,
+							"name": "Bird"
+						}, {
+							"numeric_value": 8,
+							"missing": true,
+							"id": 8,
+							"name": "Skipped"
+						}, {
+							"numeric_value": 9,
+							"missing": true,
+							"id": 9,
+							"name": "Not Asked"
+						}]
+					}
+				}, {
+					"references": {
+						"alias": "q1",
+						"name": "Pet",
+						"description": "What is your favorite pet?"
+					},
+					"derived": false,
+					"type": {
+						"ordinal": false,
+						"class": "categorical",
+						"categories": [{
+							"numeric_value": 1,
+							"missing": false,
+							"id": 1,
+							"name": "Cat"
+						}, {
+							"numeric_value": 2,
+							"missing": false,
+							"id": 2,
+							"name": "Dog"
+						}, {
+							"numeric_value": 3,
+							"missing": false,
+							"id": 3,
+							"name": "Bird"
+						}, {
+							"numeric_value": 8,
+							"missing": true,
+							"id": 8,
+							"name": "Skipped"
+						}, {
+							"numeric_value": 9,
+							"missing": true,
+							"id": 9,
+							"name": "Not Asked"
+						}]
+					}
+				}],
+				"n": 20
+			}
+		}]
+	}, {
+		"result": [{
+			"result": {
+				"counts": [5, 3, 3, 4, 5, 6, 4, 6, 3, 1],
+				"measures": {
+					"count": {
+						"data": [5, 3, 3, 4, 5, 6, 4, 6, 3, 1],
+						"n_missing": 2,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "petloc",
+						"description": "Name the kinds of pets you have at these locations.",
+						"name": "Pets by location",
+						"subreferences": [{
+							"alias": "petloc_home",
+							"name": "Home"
+						}, {
+							"alias": "petloc_work",
+							"name": "Work"
+						}]
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"class": "variable"
+						},
+						"elements": [{
+							"id": 1,
+							"value": {
+								"references": {
+									"alias": "petloc_home",
+									"name": "Home"
+								},
+								"derived": false,
+								"id": "0001",
+								"type": {
+									"ordinal": false,
+									"class": "categorical",
+									"categories": [{
+										"numeric_value": 1,
+										"missing": false,
+										"id": 1,
+										"name": "Cat"
+									}, {
+										"numeric_value": 2,
+										"missing": false,
+										"id": 2,
+										"name": "Dog"
+									}, {
+										"numeric_value": 3,
+										"missing": false,
+										"id": 3,
+										"name": "Bird"
+									}, {
+										"numeric_value": 8,
+										"missing": true,
+										"id": 8,
+										"name": "Skipped"
+									}, {
+										"numeric_value": 9,
+										"missing": true,
+										"id": 9,
+										"name": "Not Asked"
+									}]
+								}
+							},
+							"missing": false
+						}, {
+							"id": 2,
+							"value": {
+								"references": {
+									"alias": "petloc_work",
+									"name": "Work"
+								},
+								"derived": false,
+								"id": "0002",
+								"type": {
+									"ordinal": false,
+									"class": "categorical",
+									"categories": [{
+										"numeric_value": 1,
+										"missing": false,
+										"id": 1,
+										"name": "Cat"
+									}, {
+										"numeric_value": 2,
+										"missing": false,
+										"id": 2,
+										"name": "Dog"
+									}, {
+										"numeric_value": 3,
+										"missing": false,
+										"id": 3,
+										"name": "Bird"
+									}, {
+										"numeric_value": 8,
+										"missing": true,
+										"id": 8,
+										"name": "Skipped"
+									}, {
+										"numeric_value": 9,
+										"missing": true,
+										"id": 9,
+										"name": "Not Asked"
+									}]
+								}
+							},
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}, {
+					"references": {
+						"alias": "petloc",
+						"subreferences": [{
+							"alias": "petloc_home",
+							"name": "Home"
+						}, {
+							"alias": "petloc_work",
+							"name": "Work"
+						}],
+						"description": "Name the kinds of pets you have at these locations.",
+						"name": "Pets by location"
+					},
+					"derived": false,
+					"type": {
+						"ordinal": false,
+						"subvariables": ["0001", "0002"],
+						"class": "categorical",
+						"categories": [{
+							"numeric_value": 1,
+							"missing": false,
+							"id": 1,
+							"name": "Cat"
+						}, {
+							"numeric_value": 2,
+							"missing": false,
+							"id": 2,
+							"name": "Dog"
+						}, {
+							"numeric_value": 3,
+							"missing": false,
+							"id": 3,
+							"name": "Bird"
+						}, {
+							"numeric_value": 8,
+							"missing": true,
+							"id": 8,
+							"name": "Skipped"
+						}, {
+							"numeric_value": 9,
+							"missing": true,
+							"id": 9,
+							"name": "Not Asked"
+						}]
+					}
+				}],
+				"n": 20
+			}
+		}, {
+			"result": {
+				"counts": [0, 1, 2, 2, 1, 2, 0, 3, 1, 0, 0, 3, 0, 1, 1, 0, 2, 1, 2, 0, 1, 0, 2, 2, 2, 0, 0, 1, 2, 2, 1, 1, 2, 1, 3, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 3, 3, 0, 1, 1, 1, 0, 2, 1, 0, 0, 0, 0, 1],
+				"measures": {
+					"count": {
+						"data": [0, 1, 2, 2, 1, 2, 0, 3, 1, 0, 0, 3, 0, 1, 1, 0, 2, 1, 2, 0, 1, 0, 2, 2, 2, 0, 0, 1, 2, 2, 1, 1, 2, 1, 3, 2, 1, 1, 1, 1, 1, 2, 1, 2, 1, 0, 3, 3, 0, 1, 1, 1, 0, 2, 1, 0, 0, 0, 0, 1],
+						"n_missing": 4,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "petloc",
+						"description": "Name the kinds of pets you have at these locations.",
+						"name": "Pets by location",
+						"subreferences": [{
+							"alias": "petloc_home",
+							"name": "Home"
+						}, {
+							"alias": "petloc_work",
+							"name": "Work"
+						}]
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"class": "variable"
+						},
+						"elements": [{
+							"id": 1,
+							"value": {
+								"references": {
+									"alias": "petloc_home",
+									"name": "Home"
+								},
+								"derived": false,
+								"id": "0001",
+								"type": {
+									"ordinal": false,
+									"class": "categorical",
+									"categories": [{
+										"numeric_value": 1,
+										"missing": false,
+										"id": 1,
+										"name": "Cat"
+									}, {
+										"numeric_value": 2,
+										"missing": false,
+										"id": 2,
+										"name": "Dog"
+									}, {
+										"numeric_value": 3,
+										"missing": false,
+										"id": 3,
+										"name": "Bird"
+									}, {
+										"numeric_value": 8,
+										"missing": true,
+										"id": 8,
+										"name": "Skipped"
+									}, {
+										"numeric_value": 9,
+										"missing": true,
+										"id": 9,
+										"name": "Not Asked"
+									}]
+								}
+							},
+							"missing": false
+						}, {
+							"id": 2,
+							"value": {
+								"references": {
+									"alias": "petloc_work",
+									"name": "Work"
+								},
+								"derived": false,
+								"id": "0002",
+								"type": {
+									"ordinal": false,
+									"class": "categorical",
+									"categories": [{
+										"numeric_value": 1,
+										"missing": false,
+										"id": 1,
+										"name": "Cat"
+									}, {
+										"numeric_value": 2,
+										"missing": false,
+										"id": 2,
+										"name": "Dog"
+									}, {
+										"numeric_value": 3,
+										"missing": false,
+										"id": 3,
+										"name": "Bird"
+									}, {
+										"numeric_value": 8,
+										"missing": true,
+										"id": 8,
+										"name": "Skipped"
+									}, {
+										"numeric_value": 9,
+										"missing": true,
+										"id": 9,
+										"name": "Not Asked"
+									}]
+								}
+							},
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}, {
+					"references": {
+						"alias": "petloc",
+						"subreferences": [{
+							"alias": "petloc_home",
+							"name": "Home"
+						}, {
+							"alias": "petloc_work",
+							"name": "Work"
+						}],
+						"description": "Name the kinds of pets you have at these locations.",
+						"name": "Pets by location"
+					},
+					"derived": false,
+					"type": {
+						"ordinal": false,
+						"subvariables": ["0001", "0002"],
+						"class": "categorical",
+						"categories": [{
+							"numeric_value": 1,
+							"missing": false,
+							"id": 1,
+							"name": "Cat"
+						}, {
+							"numeric_value": 2,
+							"missing": false,
+							"id": 2,
+							"name": "Dog"
+						}, {
+							"numeric_value": 3,
+							"missing": false,
+							"id": 3,
+							"name": "Bird"
+						}, {
+							"numeric_value": 8,
+							"missing": true,
+							"id": 8,
+							"name": "Skipped"
+						}, {
+							"numeric_value": 9,
+							"missing": true,
+							"id": 9,
+							"name": "Not Asked"
+						}]
+					}
+				}, {
+					"references": {
+						"alias": "allpets",
+						"subreferences": [{
+							"alias": "allpets_1",
+							"name": "Cat"
+						}, {
+							"alias": "allpets_2",
+							"name": "Dog"
+						}, {
+							"alias": "allpets_3",
+							"name": "Bird"
+						}, {}, {}, {}],
+						"description": "Do you have any of these animals as pets? Please select all that apply.",
+						"name": "All pets owned"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"class": "variable"
+						},
+						"elements": [{
+							"id": 1,
+							"value": {
+								"references": {
+									"alias": "allpets_1",
+									"name": "Cat"
+								},
+								"derived": false,
+								"id": "0001",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 2,
+							"value": {
+								"references": {
+									"alias": "allpets_2",
+									"name": "Dog"
+								},
+								"derived": false,
+								"id": "0002",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 3,
+							"value": {
+								"references": {
+									"alias": "allpets_3",
+									"name": "Bird"
+								},
+								"derived": false,
+								"id": "0003",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": -1,
+							"value": null,
+							"missing": true
+						}, {
+							"id": -127,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__none__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 0,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__any__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}],
+				"n": 20
+			}
+		}, {
+			"result": {
+				"counts": [3, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 2, 3, 1, 1, 1, 0, 1, 2, 0, 0, 1, 1, 1, 0, 1, 3, 1, 0, 2, 0, 0, 0, 0, 0, 1, 0],
+				"measures": {
+					"count": {
+						"data": [3, 1, 0, 0, 1, 1, 1, 1, 0, 0, 1, 0, 0, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 2, 3, 1, 1, 1, 0, 1, 2, 0, 0, 1, 1, 1, 0, 1, 3, 1, 0, 2, 0, 0, 0, 0, 0, 1, 0],
+						"n_missing": 8,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "petloc",
+						"description": "Name the kinds of pets you have at these locations.",
+						"name": "Pets by location",
+						"subreferences": [{
+							"alias": "petloc_home",
+							"name": "Home"
+						}, {
+							"alias": "petloc_work",
+							"name": "Work"
+						}]
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"class": "variable"
+						},
+						"elements": [{
+							"id": 1,
+							"value": {
+								"references": {
+									"alias": "petloc_home",
+									"name": "Home"
+								},
+								"derived": false,
+								"id": "0001",
+								"type": {
+									"ordinal": false,
+									"class": "categorical",
+									"categories": [{
+										"numeric_value": 1,
+										"missing": false,
+										"id": 1,
+										"name": "Cat"
+									}, {
+										"numeric_value": 2,
+										"missing": false,
+										"id": 2,
+										"name": "Dog"
+									}, {
+										"numeric_value": 3,
+										"missing": false,
+										"id": 3,
+										"name": "Bird"
+									}, {
+										"numeric_value": 8,
+										"missing": true,
+										"id": 8,
+										"name": "Skipped"
+									}, {
+										"numeric_value": 9,
+										"missing": true,
+										"id": 9,
+										"name": "Not Asked"
+									}]
+								}
+							},
+							"missing": false
+						}, {
+							"id": 2,
+							"value": {
+								"references": {
+									"alias": "petloc_work",
+									"name": "Work"
+								},
+								"derived": false,
+								"id": "0002",
+								"type": {
+									"ordinal": false,
+									"class": "categorical",
+									"categories": [{
+										"numeric_value": 1,
+										"missing": false,
+										"id": 1,
+										"name": "Cat"
+									}, {
+										"numeric_value": 2,
+										"missing": false,
+										"id": 2,
+										"name": "Dog"
+									}, {
+										"numeric_value": 3,
+										"missing": false,
+										"id": 3,
+										"name": "Bird"
+									}, {
+										"numeric_value": 8,
+										"missing": true,
+										"id": 8,
+										"name": "Skipped"
+									}, {
+										"numeric_value": 9,
+										"missing": true,
+										"id": 9,
+										"name": "Not Asked"
+									}]
+								}
+							},
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}, {
+					"references": {
+						"alias": "petloc",
+						"subreferences": [{
+							"alias": "petloc_home",
+							"name": "Home"
+						}, {
+							"alias": "petloc_work",
+							"name": "Work"
+						}],
+						"description": "Name the kinds of pets you have at these locations.",
+						"name": "Pets by location"
+					},
+					"derived": false,
+					"type": {
+						"ordinal": false,
+						"subvariables": ["0001", "0002"],
+						"class": "categorical",
+						"categories": [{
+							"numeric_value": 1,
+							"missing": false,
+							"id": 1,
+							"name": "Cat"
+						}, {
+							"numeric_value": 2,
+							"missing": false,
+							"id": 2,
+							"name": "Dog"
+						}, {
+							"numeric_value": 3,
+							"missing": false,
+							"id": 3,
+							"name": "Bird"
+						}, {
+							"numeric_value": 8,
+							"missing": true,
+							"id": 8,
+							"name": "Skipped"
+						}, {
+							"numeric_value": 9,
+							"missing": true,
+							"id": 9,
+							"name": "Not Asked"
+						}]
+					}
+				}, {
+					"references": {
+						"alias": "q1",
+						"name": "Pet",
+						"description": "What is your favorite pet?"
+					},
+					"derived": false,
+					"type": {
+						"ordinal": false,
+						"class": "categorical",
+						"categories": [{
+							"numeric_value": 1,
+							"missing": false,
+							"id": 1,
+							"name": "Cat"
+						}, {
+							"numeric_value": 2,
+							"missing": false,
+							"id": 2,
+							"name": "Dog"
+						}, {
+							"numeric_value": 3,
+							"missing": false,
+							"id": 3,
+							"name": "Bird"
+						}, {
+							"numeric_value": 8,
+							"missing": true,
+							"id": 8,
+							"name": "Skipped"
+						}, {
+							"numeric_value": 9,
+							"missing": true,
+							"id": 9,
+							"name": "Not Asked"
+						}]
+					}
+				}],
+				"n": 20
+			}
+		}]
+	}, {
+		"result": [{
+			"result": {
+				"counts": [4, 2, 3, 7, 3, 0, 1],
+				"measures": {
+					"count": {
+						"data": [4, 2, 3, 7, 3, 0, 1],
+						"n_missing": 4,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "ndogs",
+						"name": "Number of dogs"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"missing_rules": {},
+							"missing_reasons": {
+								"No Data": -1
+							},
+							"class": "numeric"
+						},
+						"elements": [{
+							"id": -1,
+							"value": {
+								"?": -1
+							},
+							"missing": true
+						}, {
+							"id": 1,
+							"value": [0.0, 1.0],
+							"missing": false
+						}, {
+							"id": 2,
+							"value": [1.0, 2.0],
+							"missing": false
+						}, {
+							"id": 3,
+							"value": [2.0, 3.0],
+							"missing": false
+						}, {
+							"id": 4,
+							"value": [3.0, 4.0],
+							"missing": false
+						}, {
+							"id": 5,
+							"value": [4.0, 5.0],
+							"missing": false
+						}, {
+							"id": 6,
+							"value": [5.0, 6.0],
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}],
+				"n": 20
+			}
+		}, {
+			"result": {
+				"counts": [1, 2, 2, 0, 1, 3, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 2, 1, 1, 1, 0, 4, 3, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1],
+				"measures": {
+					"count": {
+						"data": [1, 2, 2, 0, 1, 3, 0, 0, 0, 1, 1, 0, 1, 1, 1, 1, 0, 2, 1, 1, 1, 0, 4, 3, 1, 0, 0, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 1],
+						"n_missing": 7,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "ndogs",
+						"name": "Number of dogs"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"missing_rules": {},
+							"missing_reasons": {
+								"No Data": -1
+							},
+							"class": "numeric"
+						},
+						"elements": [{
+							"id": -1,
+							"value": {
+								"?": -1
+							},
+							"missing": true
+						}, {
+							"id": 1,
+							"value": [0.0, 1.0],
+							"missing": false
+						}, {
+							"id": 2,
+							"value": [1.0, 2.0],
+							"missing": false
+						}, {
+							"id": 3,
+							"value": [2.0, 3.0],
+							"missing": false
+						}, {
+							"id": 4,
+							"value": [3.0, 4.0],
+							"missing": false
+						}, {
+							"id": 5,
+							"value": [4.0, 5.0],
+							"missing": false
+						}, {
+							"id": 6,
+							"value": [5.0, 6.0],
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}, {
+					"references": {
+						"alias": "allpets",
+						"subreferences": [{
+							"alias": "allpets_1",
+							"name": "Cat"
+						}, {
+							"alias": "allpets_2",
+							"name": "Dog"
+						}, {
+							"alias": "allpets_3",
+							"name": "Bird"
+						}, {}, {}, {}],
+						"description": "Do you have any of these animals as pets? Please select all that apply.",
+						"name": "All pets owned"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"class": "variable"
+						},
+						"elements": [{
+							"id": 1,
+							"value": {
+								"references": {
+									"alias": "allpets_1",
+									"name": "Cat"
+								},
+								"derived": false,
+								"id": "0001",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 2,
+							"value": {
+								"references": {
+									"alias": "allpets_2",
+									"name": "Dog"
+								},
+								"derived": false,
+								"id": "0002",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 3,
+							"value": {
+								"references": {
+									"alias": "allpets_3",
+									"name": "Bird"
+								},
+								"derived": false,
+								"id": "0003",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": -1,
+							"value": null,
+							"missing": true
+						}, {
+							"id": -127,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__none__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 0,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__any__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}],
+				"n": 20
+			}
+		}, {
+			"result": {
+				"counts": [3, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+				"measures": {
+					"count": {
+						"data": [3, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
+						"n_missing": 11,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "ndogs",
+						"name": "Number of dogs"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"missing_rules": {},
+							"missing_reasons": {
+								"No Data": -1
+							},
+							"class": "numeric"
+						},
+						"elements": [{
+							"id": -1,
+							"value": {
+								"?": -1
+							},
+							"missing": true
+						}, {
+							"id": 1,
+							"value": [0.0, 1.0],
+							"missing": false
+						}, {
+							"id": 2,
+							"value": [1.0, 2.0],
+							"missing": false
+						}, {
+							"id": 3,
+							"value": [2.0, 3.0],
+							"missing": false
+						}, {
+							"id": 4,
+							"value": [3.0, 4.0],
+							"missing": false
+						}, {
+							"id": 5,
+							"value": [4.0, 5.0],
+							"missing": false
+						}, {
+							"id": 6,
+							"value": [5.0, 6.0],
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}, {
+					"references": {
+						"alias": "q1",
+						"name": "Pet",
+						"description": "What is your favorite pet?"
+					},
+					"derived": false,
+					"type": {
+						"ordinal": false,
+						"class": "categorical",
+						"categories": [{
+							"numeric_value": 1,
+							"missing": false,
+							"id": 1,
+							"name": "Cat"
+						}, {
+							"numeric_value": 2,
+							"missing": false,
+							"id": 2,
+							"name": "Dog"
+						}, {
+							"numeric_value": 3,
+							"missing": false,
+							"id": 3,
+							"name": "Bird"
+						}, {
+							"numeric_value": 8,
+							"missing": true,
+							"id": 8,
+							"name": "Skipped"
+						}, {
+							"numeric_value": 9,
+							"missing": true,
+							"id": 9,
+							"name": "Not Asked"
+						}]
+					}
+				}],
+				"n": 20
+			}
+		}]
+	}, {
+		"result": [{
+			"result": {
+				"counts": [3, 6, 4, 4, 3],
+				"measures": {
+					"count": {
+						"data": [3, 6, 4, 4, 3],
+						"n_missing": 0,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "ndogs_a",
+						"name": "Number of dogs -- With papers",
+						"description": "How many dogs do you have?"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"missing_rules": {},
+							"missing_reasons": {
+								"No Data": -1
+							},
+							"class": "numeric"
+						},
+						"elements": [{
+							"id": 1,
+							"value": [0.0, 1.0],
+							"missing": false
+						}, {
+							"id": 2,
+							"value": [1.0, 2.0],
+							"missing": false
+						}, {
+							"id": 3,
+							"value": [2.0, 3.0],
+							"missing": false
+						}, {
+							"id": 4,
+							"value": [3.0, 4.0],
+							"missing": false
+						}, {
+							"id": 5,
+							"value": [4.0, 5.0],
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}],
+				"n": 20
+			}
+		}, {
+			"result": {
+				"counts": [1, 0, 0, 0, 2, 1, 2, 2, 2, 0, 1, 5, 0, 2, 1, 0, 2, 2, 0, 1, 1, 2, 1, 1, 1, 0, 1, 1, 1, 1],
+				"measures": {
+					"count": {
+						"data": [1, 0, 0, 0, 2, 1, 2, 2, 2, 0, 1, 5, 0, 2, 1, 0, 2, 2, 0, 1, 1, 2, 1, 1, 1, 0, 1, 1, 1, 1],
+						"n_missing": 3,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "ndogs_a",
+						"name": "Number of dogs -- With papers",
+						"description": "How many dogs do you have?"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"missing_rules": {},
+							"missing_reasons": {
+								"No Data": -1
+							},
+							"class": "numeric"
+						},
+						"elements": [{
+							"id": 1,
+							"value": [0.0, 1.0],
+							"missing": false
+						}, {
+							"id": 2,
+							"value": [1.0, 2.0],
+							"missing": false
+						}, {
+							"id": 3,
+							"value": [2.0, 3.0],
+							"missing": false
+						}, {
+							"id": 4,
+							"value": [3.0, 4.0],
+							"missing": false
+						}, {
+							"id": 5,
+							"value": [4.0, 5.0],
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}, {
+					"references": {
+						"alias": "allpets",
+						"subreferences": [{
+							"alias": "allpets_1",
+							"name": "Cat"
+						}, {
+							"alias": "allpets_2",
+							"name": "Dog"
+						}, {
+							"alias": "allpets_3",
+							"name": "Bird"
+						}, {}, {}, {}],
+						"description": "Do you have any of these animals as pets? Please select all that apply.",
+						"name": "All pets owned"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"class": "variable"
+						},
+						"elements": [{
+							"id": 1,
+							"value": {
+								"references": {
+									"alias": "allpets_1",
+									"name": "Cat"
+								},
+								"derived": false,
+								"id": "0001",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 2,
+							"value": {
+								"references": {
+									"alias": "allpets_2",
+									"name": "Dog"
+								},
+								"derived": false,
+								"id": "0002",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 3,
+							"value": {
+								"references": {
+									"alias": "allpets_3",
+									"name": "Bird"
+								},
+								"derived": false,
+								"id": "0003",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": -1,
+							"value": null,
+							"missing": true
+						}, {
+							"id": -127,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__none__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 0,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__any__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}],
+				"n": 20
+			}
+		}, {
+			"result": {
+				"counts": [0, 1, 0, 2, 0, 3, 0, 0, 1, 2, 2, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 2, 1, 0, 0],
+				"measures": {
+					"count": {
+						"data": [0, 1, 0, 2, 0, 3, 0, 0, 1, 2, 2, 0, 1, 0, 1, 1, 1, 1, 0, 1, 0, 2, 1, 0, 0],
+						"n_missing": 7,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "ndogs_a",
+						"name": "Number of dogs -- With papers",
+						"description": "How many dogs do you have?"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"missing_rules": {},
+							"missing_reasons": {
+								"No Data": -1
+							},
+							"class": "numeric"
+						},
+						"elements": [{
+							"id": 1,
+							"value": [0.0, 1.0],
+							"missing": false
+						}, {
+							"id": 2,
+							"value": [1.0, 2.0],
+							"missing": false
+						}, {
+							"id": 3,
+							"value": [2.0, 3.0],
+							"missing": false
+						}, {
+							"id": 4,
+							"value": [3.0, 4.0],
+							"missing": false
+						}, {
+							"id": 5,
+							"value": [4.0, 5.0],
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}, {
+					"references": {
+						"alias": "q1",
+						"name": "Pet",
+						"description": "What is your favorite pet?"
+					},
+					"derived": false,
+					"type": {
+						"ordinal": false,
+						"class": "categorical",
+						"categories": [{
+							"numeric_value": 1,
+							"missing": false,
+							"id": 1,
+							"name": "Cat"
+						}, {
+							"numeric_value": 2,
+							"missing": false,
+							"id": 2,
+							"name": "Dog"
+						}, {
+							"numeric_value": 3,
+							"missing": false,
+							"id": 3,
+							"name": "Bird"
+						}, {
+							"numeric_value": 8,
+							"missing": true,
+							"id": 8,
+							"name": "Skipped"
+						}, {
+							"numeric_value": 9,
+							"missing": true,
+							"id": 9,
+							"name": "Not Asked"
+						}]
+					}
+				}],
+				"n": 20
+			}
+		}]
+	}, {
+		"result": [{
+			"result": {
+				"counts": [8, 2, 0, 3, 0, 5, 2],
+				"measures": {
+					"count": {
+						"data": [8, 2, 0, 3, 0, 5, 2],
+						"n_missing": 8,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "ndogs_b",
+						"name": "Number of dogs -- Mutts",
+						"description": "How many dogs do you have?"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"missing_rules": {},
+							"missing_reasons": {
+								"No Data": -1
+							},
+							"class": "numeric"
+						},
+						"elements": [{
+							"id": -1,
+							"value": {
+								"?": -1
+							},
+							"missing": true
+						}, {
+							"id": 1,
+							"value": [0.0, 0.5],
+							"missing": false
+						}, {
+							"id": 2,
+							"value": [0.5, 1.0],
+							"missing": false
+						}, {
+							"id": 3,
+							"value": [1.0, 1.5],
+							"missing": false
+						}, {
+							"id": 4,
+							"value": [1.5, 2.0],
+							"missing": false
+						}, {
+							"id": 5,
+							"value": [2.0, 2.5],
+							"missing": false
+						}, {
+							"id": 6,
+							"value": [2.5, 3.0],
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}],
+				"n": 20
+			}
+		}, {
+			"result": {
+				"counts": [1, 1, 1, 3, 3, 2, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 1, 2, 0, 0, 0, 0, 0, 0, 2, 3, 2, 0, 0, 5, 0, 0, 0, 0, 2, 0],
+				"measures": {
+					"count": {
+						"data": [1, 1, 1, 3, 3, 2, 1, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 1, 2, 0, 1, 2, 0, 0, 0, 0, 0, 0, 2, 3, 2, 0, 0, 5, 0, 0, 0, 0, 2, 0],
+						"n_missing": 8,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "ndogs_b",
+						"name": "Number of dogs -- Mutts",
+						"description": "How many dogs do you have?"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"missing_rules": {},
+							"missing_reasons": {
+								"No Data": -1
+							},
+							"class": "numeric"
+						},
+						"elements": [{
+							"id": -1,
+							"value": {
+								"?": -1
+							},
+							"missing": true
+						}, {
+							"id": 1,
+							"value": [0.0, 0.5],
+							"missing": false
+						}, {
+							"id": 2,
+							"value": [0.5, 1.0],
+							"missing": false
+						}, {
+							"id": 3,
+							"value": [1.0, 1.5],
+							"missing": false
+						}, {
+							"id": 4,
+							"value": [1.5, 2.0],
+							"missing": false
+						}, {
+							"id": 5,
+							"value": [2.0, 2.5],
+							"missing": false
+						}, {
+							"id": 6,
+							"value": [2.5, 3.0],
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}, {
+					"references": {
+						"alias": "allpets",
+						"subreferences": [{
+							"alias": "allpets_1",
+							"name": "Cat"
+						}, {
+							"alias": "allpets_2",
+							"name": "Dog"
+						}, {
+							"alias": "allpets_3",
+							"name": "Bird"
+						}, {}, {}, {}],
+						"description": "Do you have any of these animals as pets? Please select all that apply.",
+						"name": "All pets owned"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"class": "variable"
+						},
+						"elements": [{
+							"id": 1,
+							"value": {
+								"references": {
+									"alias": "allpets_1",
+									"name": "Cat"
+								},
+								"derived": false,
+								"id": "0001",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 2,
+							"value": {
+								"references": {
+									"alias": "allpets_2",
+									"name": "Dog"
+								},
+								"derived": false,
+								"id": "0002",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 3,
+							"value": {
+								"references": {
+									"alias": "allpets_3",
+									"name": "Bird"
+								},
+								"derived": false,
+								"id": "0003",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": -1,
+							"value": null,
+							"missing": true
+						}, {
+							"id": -127,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__none__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 0,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__any__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}],
+				"n": 20
+			}
+		}, {
+			"result": {
+				"counts": [3, 3, 1, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 1, 2, 0, 1, 1, 0, 0, 1, 0],
+				"measures": {
+					"count": {
+						"data": [3, 3, 1, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 2, 0, 0, 0, 0, 0, 1, 1, 2, 0, 1, 1, 0, 0, 1, 0],
+						"n_missing": 14,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "ndogs_b",
+						"name": "Number of dogs -- Mutts",
+						"description": "How many dogs do you have?"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"missing_rules": {},
+							"missing_reasons": {
+								"No Data": -1
+							},
+							"class": "numeric"
+						},
+						"elements": [{
+							"id": -1,
+							"value": {
+								"?": -1
+							},
+							"missing": true
+						}, {
+							"id": 1,
+							"value": [0.0, 0.5],
+							"missing": false
+						}, {
+							"id": 2,
+							"value": [0.5, 1.0],
+							"missing": false
+						}, {
+							"id": 3,
+							"value": [1.0, 1.5],
+							"missing": false
+						}, {
+							"id": 4,
+							"value": [1.5, 2.0],
+							"missing": false
+						}, {
+							"id": 5,
+							"value": [2.0, 2.5],
+							"missing": false
+						}, {
+							"id": 6,
+							"value": [2.5, 3.0],
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}, {
+					"references": {
+						"alias": "q1",
+						"name": "Pet",
+						"description": "What is your favorite pet?"
+					},
+					"derived": false,
+					"type": {
+						"ordinal": false,
+						"class": "categorical",
+						"categories": [{
+							"numeric_value": 1,
+							"missing": false,
+							"id": 1,
+							"name": "Cat"
+						}, {
+							"numeric_value": 2,
+							"missing": false,
+							"id": 2,
+							"name": "Dog"
+						}, {
+							"numeric_value": 3,
+							"missing": false,
+							"id": 3,
+							"name": "Bird"
+						}, {
+							"numeric_value": 8,
+							"missing": true,
+							"id": 8,
+							"name": "Skipped"
+						}, {
+							"numeric_value": 9,
+							"missing": true,
+							"id": 9,
+							"name": "Not Asked"
+						}]
+					}
+				}],
+				"n": 20
+			}
+		}]
+	}, {
+		"result": [{
+			"result": {
+				"counts": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4],
+				"measures": {
+					"count": {
+						"data": [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 4],
+						"n_missing": 4,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "q3",
+						"name": "Pet name",
+						"description": "What is your favorite pet's maiden name?"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"missing_rules": {
+								"Not asked": {
+									"function": "==",
+									"args": [{
+										"variable": "000001"
+									}, {
+										"value": ""
+									}]
+								}
+							},
+							"missing_reasons": {
+								"No Data": -1,
+								"Not asked": 1
+							},
+							"class": "text"
+						},
+						"elements": [{
+							"id": 0,
+							"value": "Ali",
+							"missing": false
+						}, {
+							"id": 1,
+							"value": "Biscuit",
+							"missing": false
+						}, {
+							"id": 2,
+							"value": "Clyde",
+							"missing": false
+						}, {
+							"id": 3,
+							"value": "Daisy",
+							"missing": false
+						}, {
+							"id": 4,
+							"value": "Doug",
+							"missing": false
+						}, {
+							"id": 5,
+							"value": "Felix",
+							"missing": false
+						}, {
+							"id": 6,
+							"value": "Fluffy",
+							"missing": false
+						}, {
+							"id": 7,
+							"value": "Geoffrey",
+							"missing": false
+						}, {
+							"id": 8,
+							"value": "Hugo",
+							"missing": false
+						}, {
+							"id": 9,
+							"value": "Jasmine",
+							"missing": false
+						}, {
+							"id": 10,
+							"value": "Lady",
+							"missing": false
+						}, {
+							"id": 11,
+							"value": "Rocky",
+							"missing": false
+						}, {
+							"id": 12,
+							"value": "Snoopy",
+							"missing": false
+						}, {
+							"id": 13,
+							"value": "Spike",
+							"missing": false
+						}, {
+							"id": 14,
+							"value": "Teddy",
+							"missing": false
+						}, {
+							"id": 15,
+							"value": "Zeus",
+							"missing": false
+						}, {
+							"id": 16,
+							"value": {
+								"?": 1
+							},
+							"missing": true
+						}],
+						"class": "enum"
+					}
+				}],
+				"n": 20
+			}
+		}, {
+			"result": {
+				"counts": [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 2, 2, 0, 2, 2],
+				"measures": {
+					"count": {
+						"data": [0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 1, 0, 0, 1, 0, 1, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 1, 0, 0, 1, 0, 0, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 2, 2, 0, 2, 2],
+						"n_missing": 7,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "q3",
+						"name": "Pet name",
+						"description": "What is your favorite pet's maiden name?"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"missing_rules": {
+								"Not asked": {
+									"function": "==",
+									"args": [{
+										"variable": "000001"
+									}, {
+										"value": ""
+									}]
+								}
+							},
+							"missing_reasons": {
+								"No Data": -1,
+								"Not asked": 1
+							},
+							"class": "text"
+						},
+						"elements": [{
+							"id": 0,
+							"value": "Ali",
+							"missing": false
+						}, {
+							"id": 1,
+							"value": "Biscuit",
+							"missing": false
+						}, {
+							"id": 2,
+							"value": "Clyde",
+							"missing": false
+						}, {
+							"id": 3,
+							"value": "Daisy",
+							"missing": false
+						}, {
+							"id": 4,
+							"value": "Doug",
+							"missing": false
+						}, {
+							"id": 5,
+							"value": "Felix",
+							"missing": false
+						}, {
+							"id": 6,
+							"value": "Fluffy",
+							"missing": false
+						}, {
+							"id": 7,
+							"value": "Geoffrey",
+							"missing": false
+						}, {
+							"id": 8,
+							"value": "Hugo",
+							"missing": false
+						}, {
+							"id": 9,
+							"value": "Jasmine",
+							"missing": false
+						}, {
+							"id": 10,
+							"value": "Lady",
+							"missing": false
+						}, {
+							"id": 11,
+							"value": "Rocky",
+							"missing": false
+						}, {
+							"id": 12,
+							"value": "Snoopy",
+							"missing": false
+						}, {
+							"id": 13,
+							"value": "Spike",
+							"missing": false
+						}, {
+							"id": 14,
+							"value": "Teddy",
+							"missing": false
+						}, {
+							"id": 15,
+							"value": "Zeus",
+							"missing": false
+						}, {
+							"id": 16,
+							"value": {
+								"?": 1
+							},
+							"missing": true
+						}],
+						"class": "enum"
+					}
+				}, {
+					"references": {
+						"alias": "allpets",
+						"subreferences": [{
+							"alias": "allpets_1",
+							"name": "Cat"
+						}, {
+							"alias": "allpets_2",
+							"name": "Dog"
+						}, {
+							"alias": "allpets_3",
+							"name": "Bird"
+						}, {}, {}, {}],
+						"description": "Do you have any of these animals as pets? Please select all that apply.",
+						"name": "All pets owned"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"class": "variable"
+						},
+						"elements": [{
+							"id": 1,
+							"value": {
+								"references": {
+									"alias": "allpets_1",
+									"name": "Cat"
+								},
+								"derived": false,
+								"id": "0001",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 2,
+							"value": {
+								"references": {
+									"alias": "allpets_2",
+									"name": "Dog"
+								},
+								"derived": false,
+								"id": "0002",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 3,
+							"value": {
+								"references": {
+									"alias": "allpets_3",
+									"name": "Bird"
+								},
+								"derived": false,
+								"id": "0003",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": -1,
+							"value": null,
+							"missing": true
+						}, {
+							"id": -127,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__none__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 0,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__any__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}],
+				"n": 20
+			}
+		}, {
+			"result": {
+				"counts": [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 2, 1, 0, 0, 1],
+				"measures": {
+					"count": {
+						"data": [0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 1, 0, 0, 0, 2, 1, 0, 0, 1],
+						"n_missing": 10,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "q3",
+						"name": "Pet name",
+						"description": "What is your favorite pet's maiden name?"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"missing_rules": {
+								"Not asked": {
+									"function": "==",
+									"args": [{
+										"variable": "000001"
+									}, {
+										"value": ""
+									}]
+								}
+							},
+							"missing_reasons": {
+								"No Data": -1,
+								"Not asked": 1
+							},
+							"class": "text"
+						},
+						"elements": [{
+							"id": 0,
+							"value": "Ali",
+							"missing": false
+						}, {
+							"id": 1,
+							"value": "Biscuit",
+							"missing": false
+						}, {
+							"id": 2,
+							"value": "Clyde",
+							"missing": false
+						}, {
+							"id": 3,
+							"value": "Daisy",
+							"missing": false
+						}, {
+							"id": 4,
+							"value": "Doug",
+							"missing": false
+						}, {
+							"id": 5,
+							"value": "Felix",
+							"missing": false
+						}, {
+							"id": 6,
+							"value": "Fluffy",
+							"missing": false
+						}, {
+							"id": 7,
+							"value": "Geoffrey",
+							"missing": false
+						}, {
+							"id": 8,
+							"value": "Hugo",
+							"missing": false
+						}, {
+							"id": 9,
+							"value": "Jasmine",
+							"missing": false
+						}, {
+							"id": 10,
+							"value": "Lady",
+							"missing": false
+						}, {
+							"id": 11,
+							"value": "Rocky",
+							"missing": false
+						}, {
+							"id": 12,
+							"value": "Snoopy",
+							"missing": false
+						}, {
+							"id": 13,
+							"value": "Spike",
+							"missing": false
+						}, {
+							"id": 14,
+							"value": "Teddy",
+							"missing": false
+						}, {
+							"id": 15,
+							"value": "Zeus",
+							"missing": false
+						}, {
+							"id": 16,
+							"value": {
+								"?": 1
+							},
+							"missing": true
+						}],
+						"class": "enum"
+					}
+				}, {
+					"references": {
+						"alias": "q1",
+						"name": "Pet",
+						"description": "What is your favorite pet?"
+					},
+					"derived": false,
+					"type": {
+						"ordinal": false,
+						"class": "categorical",
+						"categories": [{
+							"numeric_value": 1,
+							"missing": false,
+							"id": 1,
+							"name": "Cat"
+						}, {
+							"numeric_value": 2,
+							"missing": false,
+							"id": 2,
+							"name": "Dog"
+						}, {
+							"numeric_value": 3,
+							"missing": false,
+							"id": 3,
+							"name": "Bird"
+						}, {
+							"numeric_value": 8,
+							"missing": true,
+							"id": 8,
+							"name": "Skipped"
+						}, {
+							"numeric_value": 9,
+							"missing": true,
+							"id": 9,
+							"name": "Not Asked"
+						}]
+					}
+				}],
+				"n": 20
+			}
+		}]
+	}, {
+		"result": [{
+			"result": {
+				"counts": [4, 4, 4, 4, 4],
+				"measures": {
+					"count": {
+						"data": [4, 4, 4, 4, 4],
+						"n_missing": 0,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "country",
+						"name": "Country",
+						"description": ""
+					},
+					"derived": false,
+					"type": {
+						"ordinal": false,
+						"class": "categorical",
+						"categories": [{
+							"numeric_value": null,
+							"missing": false,
+							"id": 1,
+							"name": "Argentina"
+						}, {
+							"numeric_value": null,
+							"missing": false,
+							"id": 2,
+							"name": "Australia"
+						}, {
+							"numeric_value": null,
+							"missing": false,
+							"id": 3,
+							"name": "Austria"
+						}, {
+							"numeric_value": null,
+							"missing": false,
+							"id": 4,
+							"name": "Belgium"
+						}, {
+							"numeric_value": null,
+							"missing": false,
+							"id": 5,
+							"name": "Brazil"
+						}]
+					}
+				}],
+				"n": 20
+			}
+		}, {
+			"result": {
+				"counts": [1, 1, 1, 0, 2, 2, 0, 2, 1, 0, 2, 2, 1, 0, 0, 1, 2, 1, 2, 0, 2, 1, 0, 3, 0, 2, 1, 1, 1, 2],
+				"measures": {
+					"count": {
+						"data": [1, 1, 1, 0, 2, 2, 0, 2, 1, 0, 2, 2, 1, 0, 0, 1, 2, 1, 2, 0, 2, 1, 0, 3, 0, 2, 1, 1, 1, 2],
+						"n_missing": 3,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "country",
+						"name": "Country",
+						"description": ""
+					},
+					"derived": false,
+					"type": {
+						"ordinal": false,
+						"class": "categorical",
+						"categories": [{
+							"numeric_value": null,
+							"missing": false,
+							"id": 1,
+							"name": "Argentina"
+						}, {
+							"numeric_value": null,
+							"missing": false,
+							"id": 2,
+							"name": "Australia"
+						}, {
+							"numeric_value": null,
+							"missing": false,
+							"id": 3,
+							"name": "Austria"
+						}, {
+							"numeric_value": null,
+							"missing": false,
+							"id": 4,
+							"name": "Belgium"
+						}, {
+							"numeric_value": null,
+							"missing": false,
+							"id": 5,
+							"name": "Brazil"
+						}]
+					}
+				}, {
+					"references": {
+						"alias": "allpets",
+						"subreferences": [{
+							"alias": "allpets_1",
+							"name": "Cat"
+						}, {
+							"alias": "allpets_2",
+							"name": "Dog"
+						}, {
+							"alias": "allpets_3",
+							"name": "Bird"
+						}, {}, {}, {}],
+						"description": "Do you have any of these animals as pets? Please select all that apply.",
+						"name": "All pets owned"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"class": "variable"
+						},
+						"elements": [{
+							"id": 1,
+							"value": {
+								"references": {
+									"alias": "allpets_1",
+									"name": "Cat"
+								},
+								"derived": false,
+								"id": "0001",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 2,
+							"value": {
+								"references": {
+									"alias": "allpets_2",
+									"name": "Dog"
+								},
+								"derived": false,
+								"id": "0002",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 3,
+							"value": {
+								"references": {
+									"alias": "allpets_3",
+									"name": "Bird"
+								},
+								"derived": false,
+								"id": "0003",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": -1,
+							"value": null,
+							"missing": true
+						}, {
+							"id": -127,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__none__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 0,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__any__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}],
+				"n": 20
+			}
+		}, {
+			"result": {
+				"counts": [0, 0, 0, 3, 1, 3, 0, 0, 0, 1, 1, 0, 1, 0, 2, 2, 1, 1, 0, 0, 0, 3, 1, 0, 0],
+				"measures": {
+					"count": {
+						"data": [0, 0, 0, 3, 1, 3, 0, 0, 0, 1, 1, 0, 1, 0, 2, 2, 1, 1, 0, 0, 0, 3, 1, 0, 0],
+						"n_missing": 7,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "country",
+						"name": "Country",
+						"description": ""
+					},
+					"derived": false,
+					"type": {
+						"ordinal": false,
+						"class": "categorical",
+						"categories": [{
+							"numeric_value": null,
+							"missing": false,
+							"id": 1,
+							"name": "Argentina"
+						}, {
+							"numeric_value": null,
+							"missing": false,
+							"id": 2,
+							"name": "Australia"
+						}, {
+							"numeric_value": null,
+							"missing": false,
+							"id": 3,
+							"name": "Austria"
+						}, {
+							"numeric_value": null,
+							"missing": false,
+							"id": 4,
+							"name": "Belgium"
+						}, {
+							"numeric_value": null,
+							"missing": false,
+							"id": 5,
+							"name": "Brazil"
+						}]
+					}
+				}, {
+					"references": {
+						"alias": "q1",
+						"name": "Pet",
+						"description": "What is your favorite pet?"
+					},
+					"derived": false,
+					"type": {
+						"ordinal": false,
+						"class": "categorical",
+						"categories": [{
+							"numeric_value": 1,
+							"missing": false,
+							"id": 1,
+							"name": "Cat"
+						}, {
+							"numeric_value": 2,
+							"missing": false,
+							"id": 2,
+							"name": "Dog"
+						}, {
+							"numeric_value": 3,
+							"missing": false,
+							"id": 3,
+							"name": "Bird"
+						}, {
+							"numeric_value": 8,
+							"missing": true,
+							"id": 8,
+							"name": "Skipped"
+						}, {
+							"numeric_value": 9,
+							"missing": true,
+							"id": 9,
+							"name": "Not Asked"
+						}]
+					}
+				}],
+				"n": 20
+			}
+		}]
+	}, {
+		"result": [{
+			"result": {
+				"counts": [10, 10],
+				"measures": {
+					"count": {
+						"data": [10, 10],
+						"n_missing": 0,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "wave",
+						"name": "Wave",
+						"description": ""
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"class": "datetime",
+							"resolution": "M",
+							"missing_rules": {},
+							"missing_reasons": {
+								"No Data": -1
+							}
+						},
+						"elements": [{
+							"id": 0,
+							"value": "2014-12",
+							"missing": false
+						}, {
+							"id": 1,
+							"value": "2015-01",
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}],
+				"n": 20
+			}
+		}, {
+			"result": {
+				"counts": [3, 1, 1, 2, 3, 5, 1, 4, 4, 1, 4, 5],
+				"measures": {
+					"count": {
+						"data": [3, 1, 1, 2, 3, 5, 1, 4, 4, 1, 4, 5],
+						"n_missing": 3,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "wave",
+						"name": "Wave",
+						"description": ""
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"class": "datetime",
+							"resolution": "M",
+							"missing_rules": {},
+							"missing_reasons": {
+								"No Data": -1
+							}
+						},
+						"elements": [{
+							"id": 0,
+							"value": "2014-12",
+							"missing": false
+						}, {
+							"id": 1,
+							"value": "2015-01",
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}, {
+					"references": {
+						"alias": "allpets",
+						"subreferences": [{
+							"alias": "allpets_1",
+							"name": "Cat"
+						}, {
+							"alias": "allpets_2",
+							"name": "Dog"
+						}, {
+							"alias": "allpets_3",
+							"name": "Bird"
+						}, {}, {}, {}],
+						"description": "Do you have any of these animals as pets? Please select all that apply.",
+						"name": "All pets owned"
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"class": "variable"
+						},
+						"elements": [{
+							"id": 1,
+							"value": {
+								"references": {
+									"alias": "allpets_1",
+									"name": "Cat"
+								},
+								"derived": false,
+								"id": "0001",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 2,
+							"value": {
+								"references": {
+									"alias": "allpets_2",
+									"name": "Dog"
+								},
+								"derived": false,
+								"id": "0002",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 3,
+							"value": {
+								"references": {
+									"alias": "allpets_3",
+									"name": "Bird"
+								},
+								"derived": false,
+								"id": "0003",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": -1,
+							"value": null,
+							"missing": true
+						}, {
+							"id": -127,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__none__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}, {
+							"id": 0,
+							"value": {
+								"references": {},
+								"derived": false,
+								"id": "__any__",
+								"type": {
+									"class": "boolean",
+									"missing_reasons": {
+										"No Data": -1
+									},
+									"missing_rules": {}
+								}
+							},
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}],
+				"n": 20
+			}
+		}, {
+			"result": {
+				"counts": [2, 3, 1, 2, 2, 4, 1, 2, 1, 2],
+				"measures": {
+					"count": {
+						"data": [2, 3, 1, 2, 2, 4, 1, 2, 1, 2],
+						"n_missing": 7,
+						"metadata": {
+							"references": {},
+							"derived": true,
+							"type": {
+								"integer": true,
+								"missing_rules": {},
+								"missing_reasons": {
+									"No Data": -1
+								},
+								"class": "numeric"
+							}
+						}
+					}
+				},
+				"dimensions": [{
+					"references": {
+						"alias": "wave",
+						"name": "Wave",
+						"description": ""
+					},
+					"derived": true,
+					"type": {
+						"subtype": {
+							"class": "datetime",
+							"resolution": "M",
+							"missing_rules": {},
+							"missing_reasons": {
+								"No Data": -1
+							}
+						},
+						"elements": [{
+							"id": 0,
+							"value": "2014-12",
+							"missing": false
+						}, {
+							"id": 1,
+							"value": "2015-01",
+							"missing": false
+						}],
+						"class": "enum"
+					}
+				}, {
+					"references": {
+						"alias": "q1",
+						"name": "Pet",
+						"description": "What is your favorite pet?"
+					},
+					"derived": false,
+					"type": {
+						"ordinal": false,
+						"class": "categorical",
+						"categories": [{
+							"numeric_value": 1,
+							"missing": false,
+							"id": 1,
+							"name": "Cat"
+						}, {
+							"numeric_value": 2,
+							"missing": false,
+							"id": 2,
+							"name": "Dog"
+						}, {
+							"numeric_value": 3,
+							"missing": false,
+							"id": 3,
+							"name": "Bird"
+						}, {
+							"numeric_value": 8,
+							"missing": true,
+							"id": 8,
+							"name": "Skipped"
+						}, {
+							"numeric_value": 9,
+							"missing": true,
+							"id": 9,
+							"name": "Not Asked"
+						}]
+					}
+				}],
+				"n": 20
+			}
+		}]
+	}]
+}

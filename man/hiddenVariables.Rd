@@ -4,12 +4,13 @@
 \alias{hiddenVariables}
 \title{Show the names of hidden variables within the dataset}
 \usage{
-hiddenVariables(dataset, key = "name")
+hiddenVariables(dataset, key = namekey(dataset))
 }
 \arguments{
 \item{dataset}{the Dataset}
 
-\item{key}{the Variable attribute to return. Default is "alias"}
+\item{key}{the Variable attribute to return. Default is "alias", following
+\code{getOption("crunch.namekey.dataset")}.}
 }
 \value{
 a vector of the names of Variables marked as hidden.
@@ -17,4 +18,3 @@ a vector of the names of Variables marked as hidden.
 \description{
 Show the names of hidden variables within the dataset
 }
-

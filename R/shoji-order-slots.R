@@ -46,6 +46,12 @@ setMethod("urls", "ShojiOrder", function (x) entities(x@graph, simplify=TRUE))
 #' @rdname urls
 #' @export
 setMethod("urls", "OrderGroup", function (x) entities(x, simplify=TRUE))
+#' @rdname urls
+#' @export
+setMethod("urls", "CrunchVariable", function (x) self(x))
+#' @rdname urls
+#' @export
+setMethod("urls", "CrunchDataset", function (x) urls(variables(x)))
 
 #' @rdname ShojiOrder-slots
 #' @export
@@ -112,6 +118,10 @@ setMethod("duplicates<-", c("ShojiOrder", "logical"), function (x, value) {
     x@duplicates <- value
     grps <- vapply(x@graph, inherits, logical(1), what="OrderGroup")
     x@graph[grps] <- lapply(x@graph[grps], `duplicates<-`, value=value)
+    if (!value) {
+        ## We're setting duplicates: FALSE, so dedupe
+        x <- dedupeOrder(x)
+    }
     return(x)
 })
 #' @rdname ShojiOrder-slots
@@ -121,6 +131,9 @@ setMethod("duplicates<-", c("OrderGroup", "logical"), function (x, value) {
     x@duplicates <- value
     grps <- vapply(x@entities, inherits, logical(1), what="OrderGroup")
     x@entities[grps] <- lapply(x@entities[grps], `duplicates<-`, value=value)
+    ## Note: not calling dedupeOrder here because it's most likely that this is
+    ## only called from within the duplicates<- method for ShojiOrder, which
+    ## does the deduping
     return(x)
 })
 #' @rdname ShojiOrder-slots

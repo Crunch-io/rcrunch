@@ -24,60 +24,62 @@ with_mock_HTTP({
 
     test_that("Can delete a hidden variable", {
         skip_on_jenkins("No idea why this fails to catch the warning on Jenkins but not on Travis or locally")
-        expect_warning(
-            expect_DELETE(delete(ds$birthyr),
-                "/api/datasets/dataset3/variables/birthyr/"),
-            "Variable birthyr is hidden")
+        with_consent({
+            expect_warning(
+                expect_DELETE(delete(ds$birthyr),
+                    "https://app.crunch.io/api/datasets/3/variables/birthyr/"),
+                "Variable birthyr is hidden")
+        })
     })
 
     vg <- VariableGroup("A group", entities=ds[c("gender", "birthyr")])
 
     test_that("hideVariables with various input types makes the right request", {
         expect_PATCH(ds <- hideVariables(ds, "gender"),
-            "/api/datasets/dataset3/variables/",
-            '{"/api/datasets/dataset3/variables/gender/":{"discarded":true}}')
+            "https://app.crunch.io/api/datasets/3/variables/",
+            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}')
         expect_PATCH(ds <- hideVariables(ds, c("gender", "birthyr")),
-            "/api/datasets/dataset3/variables/",
-            '{"/api/datasets/dataset3/variables/gender/":{"discarded":true}}') ## same
+            "https://app.crunch.io/api/datasets/3/variables/",
+            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}') ## same
         expect_PATCH(ds <- hideVariables(ds, vg),
-            "/api/datasets/dataset3/variables/",
-            '{"/api/datasets/dataset3/variables/gender/":{"discarded":true}}') ## same
+            "https://app.crunch.io/api/datasets/3/variables/",
+            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}') ## same
         expect_PATCH(ds <- hideVariables(ds, c("gender", "starttime")),
-            "/api/datasets/dataset3/variables/",
-            '{"/api/datasets/dataset3/variables/gender/":{"discarded":true},',
-            '"/api/datasets/dataset3/variables/starttime/":{"discarded":true}}')
+            "https://app.crunch.io/api/datasets/3/variables/",
+            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true},',
+            '"https://app.crunch.io/api/datasets/3/variables/starttime/":{"discarded":true}}')
         expect_PATCH(ds <- hideVariables(ds, 1:2),
-            "/api/datasets/dataset3/variables/",
-            '{"/api/datasets/dataset3/variables/gender/":{"discarded":true},',
-            '"/api/datasets/dataset3/variables/starttime/":{"discarded":true}}')
+            "https://app.crunch.io/api/datasets/3/variables/",
+            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true},',
+            '"https://app.crunch.io/api/datasets/3/variables/starttime/":{"discarded":true}}')
     })
 
     test_that("hiddenVariables<- request", {
         expect_PATCH(hiddenVariables(ds) <- "gender",
-            "/api/datasets/dataset3/variables/",
-            '{"/api/datasets/dataset3/variables/gender/":{"discarded":true}}')
+            "https://app.crunch.io/api/datasets/3/variables/",
+            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}')
         expect_PATCH(hiddenVariables(ds) <- c("gender", "birthyr"),
-            "/api/datasets/dataset3/variables/",
-            '{"/api/datasets/dataset3/variables/gender/":{"discarded":true}}') ## same
+            "https://app.crunch.io/api/datasets/3/variables/",
+            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}') ## same
     })
 
     test_that("unhideVariables with various input types makes the right request", {
         expect_PATCH(ds <- unhideVariables(ds, "birthyr"),
-            "/api/datasets/dataset3/variables/",
-            '{"/api/datasets/dataset3/variables/birthyr/":{"discarded":false}}')
+            "https://app.crunch.io/api/datasets/3/variables/",
+            '{"https://app.crunch.io/api/datasets/3/variables/birthyr/":{"discarded":false}}')
         expect_PATCH(ds <- unhideVariables(ds, c("gender", "birthyr")),
-            "/api/datasets/dataset3/variables/",
-            '{"/api/datasets/dataset3/variables/birthyr/":{"discarded":false}}') ## same
+            "https://app.crunch.io/api/datasets/3/variables/",
+            '{"https://app.crunch.io/api/datasets/3/variables/birthyr/":{"discarded":false}}') ## same
         expect_PATCH(ds <- unhideVariables(ds, vg),
-            "/api/datasets/dataset3/variables/",
-            '{"/api/datasets/dataset3/variables/birthyr/":{"discarded":false}}') ## same
+            "https://app.crunch.io/api/datasets/3/variables/",
+            '{"https://app.crunch.io/api/datasets/3/variables/birthyr/":{"discarded":false}}') ## same
         expect_no_request(ds <- unhideVariables(ds, c("gender", "starttime")))
     })
 
     test_that("hide method on variable makes right request", {
         expect_PATCH(hide(ds$gender),
-            "/api/datasets/dataset3/variables/",
-            '{"/api/datasets/dataset3/variables/gender/":{"discarded":true}}')
+            "https://app.crunch.io/api/datasets/3/variables/",
+            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}')
         expect_warning(
             expect_no_request(hide(ds$birthyr)),
             "Variable birthyr is hidden")
@@ -86,8 +88,8 @@ with_mock_HTTP({
     test_that("unhide method on variable makes right request", {
         expect_warning(
             expect_PATCH(unhide(ds$birthyr),
-            "/api/datasets/dataset3/variables/",
-            '{"/api/datasets/dataset3/variables/birthyr/":{"discarded":false}}'),
+            "https://app.crunch.io/api/datasets/3/variables/",
+            '{"https://app.crunch.io/api/datasets/3/variables/birthyr/":{"discarded":false}}'),
             "Variable birthyr is hidden")
         expect_no_request(unhide(ds$gender))
     })

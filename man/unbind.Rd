@@ -18,4 +18,3 @@ promoted to regular variables.
 \description{
 Split an array or multiple-response variable into its CategoricalVariables
 }
-

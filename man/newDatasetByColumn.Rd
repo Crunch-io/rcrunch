@@ -4,7 +4,7 @@
 \alias{newDatasetByColumn}
 \title{Upload a data.frame column-by-column to make a new dataset}
 \usage{
-newDatasetByColumn(x, name = deparse(substitute(x))[1], ...)
+newDatasetByColumn(x, name = deparseAndTruncate(substitute(x)), ...)
 }
 \arguments{
 \item{x}{a data.frame or other rectangular R object}
@@ -22,6 +22,5 @@ Use this version if you have lots of variables, under 1M rows, perhaps
 backed by ff or other memory-mapped files, and time to kill.
 }
 \seealso{
-\code{\link{newDataset}} \code{\link{newDatasetByCSV}}
+\code{\link{newDataset}}
 }
-

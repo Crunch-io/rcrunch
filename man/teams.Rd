@@ -2,15 +2,15 @@
 % Please edit documentation in R/members.R, R/projects.R, R/teams.R
 \docType{methods}
 \name{members<-,CrunchTeam,MemberCatalog-method}
-\alias{members}
-\alias{members,CrunchProject-method}
-\alias{members,CrunchTeam-method}
-\alias{members<-}
-\alias{members<-,CrunchProject,MemberCatalog-method}
-\alias{members<-,CrunchProject,character-method}
 \alias{members<-,CrunchTeam,MemberCatalog-method}
 \alias{members<-,CrunchTeam,character-method}
+\alias{members,CrunchProject-method}
+\alias{members<-,CrunchProject,MemberCatalog-method}
+\alias{members<-,CrunchProject,character-method}
 \alias{teams}
+\alias{members}
+\alias{members<-}
+\alias{members,CrunchTeam-method}
 \title{Teams}
 \usage{
 \S4method{members}{CrunchTeam,MemberCatalog}(x) <- value
@@ -55,4 +55,3 @@ method.
 \seealso{
 \link{getTeams}
 }
-

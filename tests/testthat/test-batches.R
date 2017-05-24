@@ -6,17 +6,17 @@ with_mock_HTTP({
         expect_is(batches(ds), "BatchCatalog")
         expect_length(batches(ds), 3)
         expect_identical(urls(batches(ds)),
-            c("/api/datasets/dataset1/batches/0/",
-            "/api/datasets/dataset1/batches/2/",
-            "/api/datasets/dataset1/batches/3/"))
+            c("https://app.crunch.io/api/datasets/1/batches/0/",
+            "https://app.crunch.io/api/datasets/1/batches/2/",
+            "https://app.crunch.io/api/datasets/1/batches/3/"))
     })
 
     test_that("imported/pending", {
         expect_identical(urls(imported(batches(ds))),
-            c("/api/datasets/dataset1/batches/0/",
-            "/api/datasets/dataset1/batches/2/"))
+            c("https://app.crunch.io/api/datasets/1/batches/0/",
+            "https://app.crunch.io/api/datasets/1/batches/2/"))
         expect_identical(urls(pending(batches(ds))),
-            "/api/datasets/dataset1/batches/3/")
+            "https://app.crunch.io/api/datasets/1/batches/3/")
     })
 
     test_that("show method for batch catalog", {

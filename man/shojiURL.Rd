@@ -20,4 +20,3 @@ character URL
 Get a resource URL from a Shoji Object
 }
 \keyword{internal}
-

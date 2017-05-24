@@ -2,23 +2,24 @@
 % Please edit documentation in R/variable-update.R
 \docType{methods}
 \name{variable-update}
-\alias{[<-,CategoricalArrayVariable,ANY,missing,character-method}
-\alias{[<-,CategoricalArrayVariable,ANY,missing,factor-method}
-\alias{[<-,CategoricalArrayVariable,ANY,missing,numeric-method}
-\alias{[<-,CategoricalVariable,ANY,missing,character-method}
-\alias{[<-,CategoricalVariable,ANY,missing,factor-method}
-\alias{[<-,CategoricalVariable,ANY,missing,numeric-method}
+\alias{variable-update}
 \alias{[<-,CrunchVariable,ANY,missing,ANY-method}
-\alias{[<-,CrunchVariable,ANY,missing,CrunchExpr-method}
 \alias{[<-,CrunchVariable,ANY,missing,NULL-method}
-\alias{[<-,CrunchVariable,ANY,missing,logical-method}
-\alias{[<-,CrunchVariable,CrunchExpr,missing,CrunchExpr-method}
+\alias{[<-,TextVariable,ANY,missing,character-method}
+\alias{[<-,NumericVariable,ANY,missing,numeric-method}
 \alias{[<-,DatetimeVariable,ANY,missing,Date-method}
 \alias{[<-,DatetimeVariable,ANY,missing,POSIXt-method}
-\alias{[<-,NumericVariable,ANY,missing,numeric-method}
-\alias{[<-,TextVariable,ANY,missing,character-method}
+\alias{[<-,CrunchVariable,ANY,missing,CrunchExpr-method}
+\alias{[<-,CrunchVariable,ANY,missing,CrunchVariable-method}
+\alias{[<-,CrunchVariable,ANY,missing,CrunchLogicalExpr-method}
+\alias{[<-,CategoricalVariable,ANY,missing,numeric-method}
+\alias{[<-,CategoricalVariable,ANY,missing,character-method}
+\alias{[<-,CategoricalVariable,ANY,missing,factor-method}
+\alias{[<-,CategoricalArrayVariable,ANY,missing,numeric-method}
+\alias{[<-,CategoricalArrayVariable,ANY,missing,character-method}
+\alias{[<-,CategoricalArrayVariable,ANY,missing,factor-method}
+\alias{[<-,CrunchVariable,ANY,missing,logical-method}
 \alias{is.na<-,CrunchVariable,ANY-method}
-\alias{variable-update}
 \title{Updating variables with expressions or values}
 \usage{
 \S4method{[}{CrunchVariable,ANY,missing,ANY}(x, i, j) <- value
@@ -35,7 +36,9 @@
 
 \S4method{[}{CrunchVariable,ANY,missing,CrunchExpr}(x, i, j) <- value
 
-\S4method{[}{CrunchVariable,CrunchExpr,missing,CrunchExpr}(x, i, j) <- value
+\S4method{[}{CrunchVariable,ANY,missing,CrunchVariable}(x, i, j) <- value
+
+\S4method{[}{CrunchVariable,ANY,missing,CrunchLogicalExpr}(x, i, j) <- value
 
 \S4method{[}{CategoricalVariable,ANY,missing,numeric}(x, i, j) <- value
 
@@ -68,4 +71,3 @@
 \description{
 Updating variables with expressions or values
 }
-

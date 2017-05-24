@@ -48,6 +48,15 @@ setIndexSlot <- function (x, i, value, unique=FALSE) {
     return(x)
 }
 
+setIndexSlotOnEntity <- function (x, i, value, ...) {
+    ## For catalog setters where you can't PATCH the catalog
+    old <- getIndexSlot(x, i, ...)
+    changes <- dirtyElements(old, value)
+    mapply(function (m, v) setEntitySlot(m, i, v),
+        m=x[changes], v=value[changes])
+    return(refresh(x))
+}
+
 dirtyElements <- function (x, y) {
     !mapply(identical, x, y, USE.NAMES=FALSE, SIMPLIFY=TRUE)
 }
@@ -89,8 +98,24 @@ setMethod("[", c("ShojiCatalog", "ANY"), function (x, i, ...) {
 #' @rdname catalog-extract
 #' @export
 setMethod("[[", c("ShojiCatalog", "ANY"), function (x, i, ...) {
+    ## Note that this returns a bare list, not an IndexTuple
     index(x)[[i]]
 })
+
+getTuple <- function (x, i, Constructor=ShojiTuple, ...) {
+    b <- index(x)[[i]]
+    if (is.null(b)) return(NULL)
+    Constructor(index_url=self(x), entity_url=urls(x)[i], body=b)
+}
+
+getEntity <- function (x, i, Constructor=ShojiEntity, ...) {
+    stopifnot(length(i) == 1)
+    url <- urls(x)[i]
+    if (is.na(url)) {
+        halt("subscript out of bounds: ", i)
+    }
+    return(Constructor(crGET(url)))
+}
 
 #' @rdname catalog-extract
 #' @export
@@ -100,7 +125,7 @@ setMethod("[[", c("ShojiCatalog", "character"), function (x, i, ...) {
     if (is.na(w)) {
         return(NULL)
     }
-    index(x)[[w]]
+    return(x[[w]])
 })
 
 #' @rdname catalog-extract
@@ -187,6 +212,14 @@ setMethod("index<-", "ShojiCatalog", function (x, value) {
 #' @rdname urls
 #' @export
 setMethod("urls", "ShojiCatalog", function (x) names(index(x)))
+
+#' @rdname urls
+#' @export
+setMethod("urls", "list", function (x) vapply(x, self, character(1))) ## Assumes list of entities
+
+#' @rdname urls
+#' @export
+setMethod("urls", "character", function (x) x) ## Assumes already are URLs
 
 #' @rdname describe-catalog
 #' @export

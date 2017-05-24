@@ -25,8 +25,8 @@ grep("^imiss_", names(ds), value=TRUE)
 ```
 
 ```
-##  [1] "imiss_b" "imiss_c" "imiss_d" "imiss_f" "imiss_g" "imiss_h" "imiss_j"
-##  [8] "imiss_m" "imiss_p" "imiss_q" "imiss_r" "imiss_s" "imiss_t"
+##  [1] "imiss_c" "imiss_q" "imiss_j" "imiss_r" "imiss_t" "imiss_m" "imiss_d"
+##  [8] "imiss_f" "imiss_p" "imiss_h" "imiss_s" "imiss_g" "imiss_b"
 ```
 
 These correspond to a survey grid question about how important respondents view a set of issues. Examining one of them, we see
@@ -72,11 +72,11 @@ ds$imiss
 ##   $`imiss_t`
 ```
 
-In the Crunch web application, the set of "important issue" variables have gone from thirteen separate categorical variable cards to just one, where the subvariables are shown as rows, and the common categories across all of them are shown as columns:
+The set of "important issue" variables have gone from thirteen separate categorical variable cards to just one, where the subvariables are shown as rows, and the common categories across all of them are shown as columns. Categorical array variables look something like this in the web application:
 
-![Categorical Array variable card](array-card.png)
+![Categorical Array variable card](http://support.crunch.io/crunch/images/VariableCardArray.png)
 
-The categorical variables `imiss_*` are now not visible in the dataset directly, but we can access them as "subvariables" of the array we just created.
+In our example dataset, the categorical variables `imiss_*` are now not visible in the dataset directly, but we can access them as "subvariables" of the array we just created.
 
 
 ```r
@@ -327,8 +327,8 @@ grep("boap", names(ds), value=TRUE)
 ```
 
 ```
-##  [1] "boap_2"  "boap_3"  "boap_4"  "boap_5"  "boap_6"  "boap_7"  "boap_8" 
-##  [8] "boap_9"  "boap_10" "boap_11" "boap_12" "boap_13" "boap_14"
+##  [1] "boap_3"  "boap_11" "boap_6"  "boap_2"  "boap_4"  "boap_14" "boap_9" 
+##  [8] "boap_5"  "boap_12" "boap_13" "boap_7"  "boap_10" "boap_8"
 ```
 
 [Next: variable organization](variable-order.md)

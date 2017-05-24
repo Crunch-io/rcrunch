@@ -1,0 +1,34 @@
+// Test fixture used everywhere
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/1/",
+    "description": "Detail for a given dataset",
+    "body": {
+        // In reality, body has attributes found in the tuple too
+        "owner": "https://app.crunch.io/api/users/user1/",
+        "id": "dataset1"
+    },
+    "catalogs": {
+        "variables": "https://app.crunch.io/api/datasets/1/variables/",
+        "savepoints": "https://app.crunch.io/api/datasets/1/savepoints/",
+        "batches": "https://app.crunch.io/api/datasets/1/batches/",
+        "permissions": "https://app.crunch.io/api/datasets/1/permissions/",
+        "parent": "https://app.crunch.io/api/datasets/",
+        "joins": "https://app.crunch.io/api/datasets/1/joins/",
+        "filters": "https://app.crunch.io/api/datasets/1/filters/",
+        "boxdata": "https://app.crunch.io/api/datasets/1/boxdata/",
+        "multitables": "https://app.crunch.io/api/datasets/1/multitables/",
+        "actions": "https://app.crunch.io/api/datasets/1/actions/"
+    },
+    "views": {
+        "summary": "https://app.crunch.io/api/datasets/1/summary/",
+        "cube": "https://app.crunch.io/api/datasets/1/cube/",
+        "export": "https://app.crunch.io/api/datasets/1/export/"
+    },
+    "fragments": {
+        "table": "https://app.crunch.io/api/datasets/1/table/",
+        "preferences": "https://app.crunch.io/api/datasets/1/preferences/",
+        "settings": "https://app.crunch.io/api/datasets/1/settings/"
+    },
+    "some_other_key": {}
+}

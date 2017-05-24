@@ -1,0 +1,10 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/accounts/account1/",
+    "description": "Detail for a given Account",
+    "body": {},
+    "catalogs": {
+        "users": "https://app.crunch.io/api/accounts/account1/users/"
+    },
+    "some_other_key": {}
+}

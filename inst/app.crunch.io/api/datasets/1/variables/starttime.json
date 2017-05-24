@@ -1,0 +1,28 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/1/variables/starttime/",
+    "body": {
+        "alias": "starttime",
+        "format": {
+            "data": "%Y-%m-%d",
+            "summary": "%Y-%m-%d"
+        },
+        "resolution": "D",
+        "missing_reasons": {"No Data": -1},
+        "dataset_id": "a106fab0f7cb42a1b8a40f6d01d9c949",
+        "view": {
+            "rollup_resolution": "s",
+            "column_width": null
+        },
+        "type": "datetime",
+        "id": "d7c21314ca9e453c93069168681a285c"
+    },
+    "views": {
+        "summary": "https://app.crunch.io/api/datasets/1/variables/starttime/summary/",
+        "values": "https://app.crunch.io/api/datasets/1/variables/starttime/values/"
+    },
+    "urls": {
+        "dataset_url": "https://app.crunch.io/api/datasets/1/"
+    },
+    "description": "Details for a given Variable"
+}

@@ -1,0 +1,45 @@
+{
+	"element": "shoji:entity",
+	"self": "https://app.crunch.io/api/datasets/1/filters/1/",
+	"body": {
+		"view": {
+			"parentheses": [1, 1]
+		},
+		"name": "April - June Monthly Platform",
+		"is_public": true,
+		"expression": {
+			"function": "and",
+			"args": [{
+				"function": "in",
+				"args": [{
+					"variable": "https://app.crunch.io/api/datasets/1/variables/starttime/"
+				}, {
+					"column": ["2016-04-06", "2016-04-15", "2016-04-25", "2016-05-06", "2016-05-13", "2016-05-27", "2016-06-06", "2016-06-14", "2016-06-29"],
+					"type": {
+						"function": "typeof",
+						"args": [{
+							"variable": "https://app.crunch.io/api/datasets/1/variables/starttime/"
+						}]
+					}
+				}]
+			}, {
+				"function": "in",
+				"args": [{
+					"variable": "https://app.crunch.io/api/datasets/1/variables/gender/"
+				}, {
+					"column": [1],
+					"type": {
+						"function": "typeof",
+						"args": [{
+							"variable": "https://app.crunch.io/api/datasets/1/variables/gender/"
+						}]
+					}
+				}]
+			}]
+		},
+		"owner_id": "https://app.crunch.io/api/users/me/",
+		"creation_time": "2016-09-16T21:57:12.732000+00:00",
+		"id": "1",
+		"last_update": "2016-10-21T18:41:50.012000+00:00"
+	}
+}

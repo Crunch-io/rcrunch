@@ -1,13 +1,6 @@
 getSummary <- function (x) {
     url <- shojiURL(x, "views", "summary")
-    if (is.null(url)) {
-        halt("No summary available")
-    }
-    out <- crGET(url)
-    ## Summaries don't return as shoji entities
-    # if (!is.shoji(url)) {
-    #     halt("Error in retrieving summary")
-    # }
+    out <- crGET(url, query=list(filter=toJSON(zcl(activeFilter(x)))))
     if (is.Datetime(x)) {
         toR <- columnParser("datetime")
         for (i in c("min", "max")) out[[i]] <- toR(out[[i]])
@@ -33,7 +26,9 @@ table <- function (..., exclude, useNA=c("no", "ifany", "always"), dnn, deparse.
         function (x) is.variable(x) || inherits(x, "CrunchExpr"),
         logical(1))
     if (length(are.vars) && all(are.vars)) {
-        query <- list(dimensions=varsToCubeDimensions(dots),
+        dims <- unlist(lapply(dots, varToDim), recursive=FALSE)
+        names(dims) <- NULL
+        query <- list(dimensions=dims,
             measures=list(count=zfunc("cube_count")))
         ## Check for filters
         filters <- vapply(dots,
@@ -46,9 +41,8 @@ table <- function (..., exclude, useNA=c("no", "ifany", "always"), dnn, deparse.
             query=toJSON(query),
             filter=filters[1]
         )
-        cube_url <- absoluteURL("./cube/", datasetReference(dots[[1]]))
-        cube <- CrunchCube(crGET(cube_url, query=query),
-            useNA=match.arg(useNA))
+        cube_url <- cubeURL(dots[[1]])
+        cube <- CrunchCube(crGET(cube_url, query=query), useNA=match.arg(useNA))
         return(as.table(as.array(cube)))
     } else if (any(are.vars)) {
         halt("Cannot currently tabulate Crunch variables with ",

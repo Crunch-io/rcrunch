@@ -1,0 +1,39 @@
+// TODO: figure out how to deal with the query params better so that this isn't duplicated
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/3/variables/",
+    "specification": "https://app.crunch.io/api/specifications/variables/",
+    "description": "List of Variables of this dataset",
+    "index": {
+        "gender/": {
+            "name": "Gender",
+            "discarded": false,
+            "alias": "gender",
+            "type": "categorical",
+            "id": "66ae9881e3524f7db84970d556c34552",
+            "description": "Gender"
+        },
+        "birthyr/": {
+            "name": "Birth Year",
+            "discarded": true,
+            "alias": "birthyr",
+            "type": "numeric",
+            "id": "f78ca47313144b57adfb495893968e70",
+            "description": null
+        },
+        "starttime/": {
+            "name": "starttime",
+            "discarded": false,
+            "alias": "starttime",
+            "type": "datetime",
+            "id": "d7c21314ca9e453c93069168681a285c",
+            "description": "Interview Start Time",
+            "resolution": "D",
+            "rollup_resolution": "s"
+        }
+    },
+    "orders": {
+        "hier": "https://app.crunch.io/api/datasets/3/variables/hierarchical/",
+        "weights": "https://app.crunch.io/api/datasets/3/variables/weights/"
+    }
+}

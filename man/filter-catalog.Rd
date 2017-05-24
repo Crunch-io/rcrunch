@@ -4,8 +4,8 @@
 \name{filter-catalog}
 \alias{filter-catalog}
 \alias{filters}
-\alias{filters,CrunchDataset-method}
 \alias{filters<-}
+\alias{filters,CrunchDataset-method}
 \alias{filters<-,CrunchDataset-method}
 \title{Filter entities for a dataset}
 \usage{
@@ -25,4 +25,3 @@ entities usable in the web application. (Setter returns the Dataset.)
 \description{
 Filter entities for a dataset
 }
-

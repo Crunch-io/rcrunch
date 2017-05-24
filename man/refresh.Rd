@@ -4,8 +4,8 @@
 \name{refresh}
 \alias{refresh}
 \alias{refresh,CrunchDataset-method}
-\alias{refresh,CrunchVariable-method}
 \alias{refresh,ShojiObject-method}
+\alias{refresh,CrunchVariable-method}
 \title{Get a fresh copy from the server}
 \usage{
 \S4method{refresh}{CrunchDataset}(x)
@@ -27,4 +27,3 @@ modified the dataset you're working on, or maybe
 you have modified a variable outside of the context of its dataset.
 refresh() allows you to get back in sync.
 }
-

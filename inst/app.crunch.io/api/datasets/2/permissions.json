@@ -1,0 +1,54 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/2/permissions/",
+    "index": {
+        "https://app.crunch.io/api/teams/1/": {
+            "dataset_permissions": {
+                "edit": true,
+                "change_weight": true,
+                "view": true
+            },
+            "name": "YouGov Global",
+            "coalesced_permissions": {
+                "edit": true,
+                "change_weight": true,
+                "view": true
+            }
+        },
+        "https://app.crunch.io/api/users/2/": {
+            "dataset_permissions": {
+                "edit": true,
+                "view": true
+            },
+            "coalesced_permissions": {
+                "change_permissions": true,
+                "edit": true,
+                "add_users": true,
+                "change_weight": true,
+                "view": true
+            },
+            "is_owner": false,
+            "name": "Two",
+            "email": "dos@example.io"
+        },
+        "https://app.crunch.io/api/users/3/": {
+            "dataset_permissions": {
+                "edit": true,
+                "change_permissions": true,
+                "add_users": true,
+                "change_weight": true,
+                "view": true
+            },
+            "coalesced_permissions": {
+                "edit": true,
+                "change_permissions": true,
+                "add_users": true,
+                "change_weight": true,
+                "view": true
+            },
+            "is_owner": true,
+            "name": "Three",
+            "email": "tres@example.com"
+        }
+    }
+}

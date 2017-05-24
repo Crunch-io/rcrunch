@@ -2,26 +2,28 @@
 % Please edit documentation in R/dataset-catalog.R, R/dataset.R
 \docType{methods}
 \name{is.archived,DatasetCatalog-method}
-\alias{archive}
-\alias{archive-and-publish}
-\alias{is.archived}
-\alias{is.archived,CrunchDataset-method}
 \alias{is.archived,DatasetCatalog-method}
-\alias{is.archived<-}
-\alias{is.archived<-,CrunchDataset,logical-method}
-\alias{is.archived<-,DatasetCatalog,logical-method}
-\alias{is.draft}
-\alias{is.draft,CrunchDataset-method}
 \alias{is.draft,DatasetCatalog-method}
-\alias{is.draft<-}
-\alias{is.draft<-,CrunchDataset,logical-method}
-\alias{is.draft<-,DatasetCatalog,logical-method}
-\alias{is.published}
-\alias{is.published,CrunchDataset-method}
 \alias{is.published,DatasetCatalog-method}
-\alias{is.published<-}
-\alias{is.published<-,CrunchDataset,logical-method}
+\alias{is.archived<-,DatasetCatalog,logical-method}
+\alias{is.draft<-,DatasetCatalog,logical-method}
 \alias{is.published<-,DatasetCatalog,logical-method}
+\alias{archive-and-publish}
+\alias{archive}
+\alias{is.archived}
+\alias{is.draft}
+\alias{is.published}
+\alias{is.archived<-}
+\alias{is.draft<-}
+\alias{is.published<-}
+\alias{publish}
+\alias{is.archived,CrunchDataset-method}
+\alias{is.draft,CrunchDataset-method}
+\alias{is.published,CrunchDataset-method}
+\alias{is.archived<-,CrunchDataset,logical-method}
+\alias{archive}
+\alias{is.draft<-,CrunchDataset,logical-method}
+\alias{is.published<-,CrunchDataset,logical-method}
 \alias{publish}
 \title{Get and set "archived" and "published" status of a dataset}
 \usage{
@@ -71,4 +73,3 @@ accessed and set with the "is" methods. The verb functions \code{archive}
 and \code{publish} are alternate versions of the setters (at least in the
 \code{TRUE} direction).
 }
-

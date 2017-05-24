@@ -69,15 +69,12 @@ extendDataset <- function (x, y, by=intersect(names(x), names(y)), by.x=by, by.y
     if (!all.x) halt('Option "all.x=FALSE" not supported.')
     if (all.y) halt('Option "all.y" not supported.')
 
-    y_frame <- list(
-        dataset=self(y)#,
-        #filter=zcl(activeFilter(y))
-    )
-    payload <- zfunc("adapt", y_frame, zcl(by.y), zcl(by.x))
-    vars <- variablesFilter(y, map=TRUE)
+    payload <- zfunc("adapt", list(dataset=self(y)), zcl(by.y), zcl(by.x))
+    vars <- variablesFilter(y)
     if (!is.null(vars)) {
-        payload <- list(`function`="select", args=list(vars), frame=payload)
+        payload <- modifyList(vars, list(frame=payload))
     }
+    payload$filter <- zcl(activeFilter(y)) ## Effectively not added if NULL
     crPOST(shojiURL(x, "catalogs", "variables"), body=toJSON(payload))
     invisible(refresh(x))
 }

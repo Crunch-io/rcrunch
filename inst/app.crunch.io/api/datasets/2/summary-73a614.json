@@ -1,0 +1,15 @@
+// Query: filter=%7B%7D (filter={})
+{
+    "rows": {
+        "filtered": 0,
+        "total": 0
+    },
+    "weighted": {
+        "filtered": 0,
+        "total": 0
+    },
+    "unweighted": {
+        "filtered": 0,
+        "total": 0
+    }
+}

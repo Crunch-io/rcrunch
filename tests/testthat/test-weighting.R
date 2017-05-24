@@ -1,7 +1,6 @@
 context("Weights")
 
 with_mock_HTTP({
-    ## Old and future API versions
     oldds <- loadDataset("test ds")
     newds <- loadDataset("ECON.sav")
 
@@ -14,17 +13,31 @@ with_mock_HTTP({
 
     test_that("Setting weights", {
         expect_PATCH(weight(oldds) <- oldds$birthyr,
-            "/api/datasets/dataset1/",
-            '{"weight":"/api/datasets/dataset1/variables/birthyr/"}')
+            "https://app.crunch.io/api/datasets/1/preferences/",
+            '{"weight":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}')
         expect_PATCH(weight(newds) <- NULL,
-            "/api/datasets/dataset3/preferences/",
+            "https://app.crunch.io/api/datasets/3/preferences/",
             '{"weight":null}')
+    })
+    test_that("No request is made to set a weight that already is your weight", {
+        expect_no_request(weight(oldds) <- NULL)
+        expect_warning(
+            expect_no_request(weight(newds) <- newds$birthyr),
+            "Variable birthyr is hidden")
     })
 
     test_that("Errors are properly handled when setting weight", {
         expect_error(weight(newds) <- "a",
             "Weight must be a Variable or NULL")
         ## test error handling when trying to set non-numeric (need backend?)
+    })
+
+    test_that("weightVariables method", {
+        expect_identical(weightVariables(newds), "birthyr")
+        with(temp.option(crunch.namekey.dataset="name"), {
+            expect_identical(weightVariables(newds), "Birth Year")
+        })
+        expect_identical(weightVariables(oldds), c())
     })
 })
 
@@ -64,11 +77,11 @@ with_test_authentication({
             expect_null(weight(ds))
         })
         test_that("Reverting to old version rolls back weight variables", {
-            ds <- saveVersion(ds, "Before w")
             ds$w <- 1:20
             weight(ds) <- ds$w
             expect_equivalent(weight(ds), ds$w)
-            ds <- restoreVersion(ds, "Before w")
+            ds <- restoreVersion(ds, 1)
+            expect_null(ds$w)
             expect_null(weight(ds))
         })
         test_that("And I can add new weights because weight_variables is valid", {
@@ -111,4 +124,5 @@ with_test_authentication({
                 array(c(110, 100), dim=2L, dimnames=list(v4=c("B", "C"))))
         })
     })
+
 })

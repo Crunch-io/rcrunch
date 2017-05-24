@@ -17,4 +17,3 @@ CrunchVariables.
 \description{
 This method allows you to \code{eval} within a Dataset.
 }
-

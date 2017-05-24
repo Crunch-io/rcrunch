@@ -13,7 +13,8 @@ cubeDims <- function (cube) {
     })
     names(dimnames) <- vapply(cube$result$dimensions,
         function (a) a$references$alias, character(1))
-    return(CubeDims(dimnames))
+    return(CubeDims(dimnames,
+        references=VariableCatalog(index=lapply(cube$result$dimensions, vget("references")))))
 }
 
 elementName <- function (el) {
@@ -57,7 +58,7 @@ elementIsAnyOrNone <- function (el) {
 #' @return Generally, the same shape of result that each of these functions
 #' return when applied to an \code{array} object.
 #' @name cube-methods
-#' @aliases cube-methods
+#' @aliases cube-methods dimensions
 #' @seealso \code{\link{cube-computing}}
 NULL
 
@@ -79,3 +80,15 @@ setMethod("is.na", "CubeDims", function (x) lapply(x, function (a) a$missing))
 anyOrNone <- function (x) {
     lapply(x, function (a) a$any.or.none)
 }
+
+#' @rdname cube-methods
+#' @export
+setMethod("dimensions", "CrunchCube", function (x) x@dims)
+
+#' @rdname cube-methods
+#' @export
+setMethod("variables", "CubeDims", function (x) x@references)
+
+#' @rdname cube-methods
+#' @export
+setMethod("variables", "CrunchCube", function (x) variables(dimensions(x)))

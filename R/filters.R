@@ -18,45 +18,32 @@ setMethod("filters", "CrunchDataset", function (x) {
 #' @export
 setMethod("filters<-", "CrunchDataset", function (x, value) x)
 
-#' View and modify Filter entity attributes
+#' View and modify "public" attribute
 #'
-#' @param x a CrunchFilter
+#' @param x a Crunch object
 #' @param value an attribute to set
-#' @return For \code{is.public}, a logical value for whether the filter is
+#' @return For \code{is.public}, a logical value for whether the object is
 #' flagged as shared with all dataset viewers. (Its setter thus takes a
-#' logical value as well.)
-#' @name filter-methods
+#' logical value as well.) Catalogs return a vector of logicals corresponding
+#' to the length of the catalog, while entities return a single value.
+#' @name is-public
 #' @aliases is.public<- is.public
 NULL
 
-#' @rdname filter-methods
+#' @rdname is-public
 #' @export
 setMethod("is.public", "CrunchFilter", function (x) x@body$is_public)
 
-#' @rdname filter-methods
+#' @rdname is-public
 #' @export
 setMethod("is.public<-", "CrunchFilter", function (x, value) {
     setEntitySlot(x, "is_public", value)
 })
 
-
-#' @rdname catalog-extract
-#' @export
-setMethod("[[", c("FilterCatalog", "character"), function (x, i, ...) {
-    stopifnot(length(i) == 1)
-    z <- match(i, names(x))
-    if (is.na(z)) {
-        return(NULL)
-    }
-    return(x[[z]])
-})
-
 #' @rdname catalog-extract
 #' @export
 setMethod("[[", c("FilterCatalog", "numeric"), function (x, i, ...) {
-    stopifnot(length(i) == 1)
-    url <- urls(x)[i]
-    return(CrunchFilter(crGET(url)))
+    getEntity(x, i, CrunchFilter, ...)
 })
 
 #' @rdname catalog-extract
@@ -71,11 +58,46 @@ setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchLogicalExpr"
             return(x)
         } else {
             ## Creating a new filter
-            u <- crPOST(self(x), body=toJSON(list(name=i,
-                expression=zcl(value))))
+            f <- .newFilter(i, value, catalog_url=self(x))
             return(refresh(x))
         }
     })
+
+#' Create a new filter
+#'
+#' This function creates a new filter. You can achieve the same results by
+#' assigning into a dataset's filters catalog, but this may be a more natural
+#' way to think of the action, particularly when you want to do something with
+#' the filter entity after you create it.
+#' @param name character name for the filter
+#' @param expression CrunchLogicalExpr with which to make a filter entity
+#' @param catalog FilterCatalog in which to create the new filter. May also
+#' provide a dataset entity. If omitted, the function will attempt to infer the
+#' dataset (and thus its FilterCatalog) from the contents of \code{expression}.
+#' @param ... Additional filter attributes to set. Options include \code{is_public}.
+#' @return A \code{CrunchFilter} object.
+#' @export
+newFilter <- function (name, expression, catalog=NULL, ...) {
+    if (is.null(catalog)) {
+        obj <- ShojiEntity(crGET(datasetReference(expression)))
+        catalog_url <- shojiURL(obj, "catalogs", "filters")
+    } else if (is.dataset(catalog)) {
+        catalog_url <- shojiURL(catalog, "catalogs", "filters")
+    } else if (inherits(catalog, "FilterCatalog")) {
+        catalog_url <- self(catalog)
+    } else {
+        halt("Cannot create a filter entity on an object of class ",
+            class(catalog))
+    }
+    u <- .newFilter(name, expression, catalog_url, ...)
+    invisible(CrunchFilter(crGET(u)))
+}
+
+## Internal function to do the POSTing, both in [[ and in newFilter
+.newFilter <- function (name, expression, catalog_url, ...) {
+    crPOST(catalog_url, body=toJSON(list(name=name,
+        expression=zcl(expression), ...)))
+}
 
 #' @rdname catalog-extract
 #' @export
@@ -185,6 +207,11 @@ setMethod("activeFilter<-", "CrunchExpr", function (x, value) {
     x@filter <- value
     return(x)
 })
+
+setMethod("activeFilter", "list", function (x) NULL)
+
+
+## See dataset-extract.R for .updateActiveFilter
 
 #' View and set exclusion filters
 #'

@@ -1,6 +1,6 @@
 setMethod("initialize", "VersionCatalog", function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
-    ord <- order(from8601(getIndexSlot(.Object, "last_update")),
+    ord <- order(from8601(getIndexSlot(.Object, "creation_time")),
         decreasing=TRUE)
     .Object@index <- .Object@index[ord]
     return(.Object)
@@ -28,7 +28,7 @@ setMethod("descriptions", "VersionCatalog", function (x) getIndexSlot(x, "descri
 
 #' @rdname describe-catalog
 #' @export
-setMethod("timestamps", "VersionCatalog", function (x) from8601(getIndexSlot(x, "last_update")))
+setMethod("timestamps", "VersionCatalog", function (x) from8601(getIndexSlot(x, "creation_time")))
 
 #' Create a new saved version
 #'
@@ -45,7 +45,11 @@ saveVersion <- function (dataset, description=paste("Version",
         halt(dQuote("description"), " must be a length-1 character vector")
     }
     u <- shojiURL(dataset, "catalogs", "savepoints")
-    out <- crPOST(u, body=toJSON(list(description=description)))
+    out <- crPOST(u, body=toJSON(list(description=description)),
+        config=config(followlocation=0), ## Don't automatically GET the 303 Location
+        status.handlers=list(`303`=function (response) {
+            message("No unsaved changes; no new version created.")
+        }))
     invisible(dataset)
 }
 

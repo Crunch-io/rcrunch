@@ -2,11 +2,11 @@
 % Please edit documentation in R/session.R
 \docType{methods}
 \name{session-extract}
-\alias{$,Session-method}
-\alias{$<-,Session-method}
-\alias{[[,Session,ANY-method}
-\alias{[[<-,Session,ANY,ANY,ANY-method}
 \alias{session-extract}
+\alias{[[,Session,ANY-method}
+\alias{$,Session-method}
+\alias{[[<-,Session,ANY,ANY,ANY-method}
+\alias{$<-,Session-method}
 \title{Extract catalogs from a Session object}
 \usage{
 \S4method{[[}{Session,ANY}(x, i, ..., drop = FALSE)
@@ -42,4 +42,3 @@ Extract catalogs from a Session object
 \seealso{
 \code{\link{session}}
 }
-

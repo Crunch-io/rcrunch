@@ -1,35 +1,36 @@
 context("Cube error handling")
 
-test_that("'formula' must be provided", {
-    expect_error(crtabs(), "Must provide a formula")
-})
-
-test_that("formula must be a valid formula", {
-    expect_error(crtabs("asdf"),
-        paste0(dQuote("formula"), " is not a valid formula"))
-})
-
-test_that("formula '.' argument is not permitted", {
-    expect_error(crtabs(~ ., data=ds),
-        paste("crtabs does not support", dQuote("."), "in formula"))
-})
-
-test_that("formula must have variables", {
-    expect_error(crtabs("~"),
-        paste0(dQuote("formula"), " is not a valid formula"))
-    expect_error(crtabs(~ 1),
-        "Must supply one or more variables")
-})
-
-test_that("'data' must be a Dataset", {
-    expect_error(crtabs(~ a), paste(dQuote("data"), "must be a Dataset"))
-    ## Support a case of data=missing, i.e. eval formula as is?
-    expect_error(crtabs(~ a, data=NULL),
-        paste(dQuote("data"), "must be a Dataset"))
-})
-
 with_mock_HTTP({
     ds <- loadDataset("test ds")
+
+    test_that("'formula' must be provided", {
+        expect_error(crtabs(), "Must provide a formula")
+    })
+
+    test_that("formula must be a valid formula", {
+        expect_error(crtabs("asdf", data=ds),
+            paste0(dQuote("formula"), " is not a valid formula"))
+    })
+
+    test_that("formula '.' argument is not permitted", {
+        expect_error(crtabs(~ ., data=ds),
+            paste("crtabs does not support", dQuote("."), "in formula"))
+    })
+
+    test_that("formula must have variables", {
+        expect_error(crtabs("~", data=ds),
+            paste0(dQuote("formula"), " is not a valid formula"))
+        expect_error(crtabs(~ 1, data=ds),
+            "Must supply one or more variables")
+    })
+
+    test_that("'data' must be a Dataset", {
+        expect_error(crtabs(~ a), paste(dQuote("data"), "must be a Dataset"))
+        ## Support a case of data=missing, i.e. eval formula as is?
+        expect_error(crtabs(~ a, data=NULL),
+            paste(dQuote("data"), "must be a Dataset"))
+    })
+
     test_that("Reserved function names cannot be variable aliases", {
         expect_error(crtabs(~ mean + bin(birthyr), data=ds),
             paste0("Cannot evaluate a cube with reserved name: ",
@@ -57,11 +58,24 @@ with_mock_HTTP({
                 dQuote("categorical")))
     })
 
+    test_that("'as_array' on non-MR", {
+        expect_error(crtabs(~ as_array(gender), data=ds),
+            paste0("Cannot analyze a variable of type ",
+                dQuote("categorical"), " 'as_array'"))
+    })
+
     test_that("Unsupported aggregation functions", {
         expect_error(crtabs(cumsum(birthyr) ~ gender, data=ds),
             "no method for coercing this S4 class to a vector")
         ## This is standard R behavior, not special handling.
         ## Just for illustration of what will happen.
+    })
+
+    test_that("Invalid filter argument in 'data'", {
+        expect_error(crtabs(~ gender, data=ds[ds$NOTAVARIABLE == 3,]),
+            "Invalid expression: ds$NOTAVARIABLE == 3", fixed=TRUE)
+        expect_error(crtabs(~ gender, data=ds[ds$gender %in% "Male" | ds$NOTAVARIABLE == 3,]),
+            "Invalid expression (probably a reference to a variable that doesn't exist): ds$gender %in% \"Male\" | ds$NOTAVARIABLE == 3", fixed=TRUE)
     })
 })
 
@@ -73,8 +87,7 @@ with_test_authentication({
         ## But works if variable is in workspace
         aaa <- ds$v4
         skip("Appears not to work in the test at least. aaa is in the enclos environment but it doesn't find it")
-        expect_equivalent(as.array(crtabs(~ aaa + bin(v3),
-            data=ds)),
+        expect_equivalent(as.array(crtabs(~ aaa + bin(v3), data=ds)),
             array(c(1, 1, 3, 2, 2, 3, 3, 2, 1, 2), dim=c(2L, 5L),
                 dimnames=list(v4=c("B", "C"),
                     v3=c("5-10", "10-15", "15-20", "20-25", "25-30"))))
@@ -94,12 +107,11 @@ with_test_authentication({
         ## But you can still get analyses with other variables
         expect_equivalent(as.array(crtabs(~ bin(v3), data=dsb)),
             array(c(2, 5, 5, 5, 3), dim=c(5L),
-                dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25",
-                "25-30"))))
+                dimnames=list(v3=c("5-10", "10-15", "15-20", "20-25", "25-30"))))
     })
 
     test_that("What happens if there are more than one vars on LHS?", {
-        out <- crtabs(c(mean(v3), sd(v3)) ~ v4, data=ds)
+        out <- crtabs(list(mean(v3), sd(v3)) ~ v4, data=ds)
         ## Actually, this works. Make some assertions to see that it's right
     })
 
@@ -109,8 +121,7 @@ with_test_authentication({
     })
 
     test_that("prop.table cannot take margin greater than dim", {
-        expect_error(prop.table(crtabs(~ v4 + v3, data=ds),
-            margin=3),
+        expect_error(prop.table(crtabs(~ v4 + v3, data=ds), margin=3),
             "Margin 3 exceeds Cube's number of dimensions \\(2\\)")
     })
 })
