@@ -32,6 +32,10 @@ appendDataset <- function (dataset1, dataset2, autorollback=TRUE) {
     ## And filter the rows, if appropriate
     payload$filter <- zcl(activeFilter(dataset2))
 
+    ## Preventatively, delete the primary key on dataset1 so that this appends
+    ## and not "upsert"
+    crDELETE(shojiURL(dataset1, "fragments", "pk"))
+    
     ## POST the batch. This will error with a useful message if it fails
     dataset1 <- addBatch(dataset1, body=payload, autorollback=autorollback)
     invisible(dataset1)
