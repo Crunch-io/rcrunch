@@ -1,0 +1,22 @@
+{
+	"element": "shoji:catalog",
+	"self": "https://app.crunch.io/api/datasets/1/batches/",
+	"description": "A collection of batches for this Dataset. Each batch is a set of rows which were inserted together.",
+	"index": {
+		"https://app.crunch.io/api/datasets/1/batches/2/": {
+			"status": "imported",
+			"source_id": "0cfd27",
+			"id": 2
+		},
+		"https://app.crunch.io/api/datasets/1/batches/0/": {
+			"status": "imported",
+			"source_id": null,
+			"id": 0
+		},
+        "https://app.crunch.io/api/datasets/1/batches/3/": {
+            "status": "conflict",
+            "source_id": "387251",
+            "id": 3
+        }
+	}
+}

@@ -19,8 +19,7 @@ forks <- function (dataset) {
 #' @export
 forkDataset <- function (dataset, name=defaultForkName(dataset), draft=FALSE, ...) {
     fork_url <- crPOST(shojiURL(dataset, "catalogs", "forks"),
-        body=toJSON(list(element="shoji:entity",
-                         body=list(name=name, is_published=!draft, ...))))
+        body=toJSON(wrapEntity(name=name, is_published=!draft, ...)))
     dropOnly(sessionURL("datasets"))
     invisible(entity(datasets()[[fork_url]]))
 }
@@ -40,12 +39,22 @@ defaultForkName <- function (dataset) {
 #' restored to its state prior to the merge, or should it be left in its
 #' partially merged state for debugging and manual fixing? Default is
 #' \code{TRUE}, i.e. the former.
+#' @param force logical Attempt to push through merge conflicts by dropping
+#' all changes to \code{dataset} since \code{fork} diverged from and take only
+#' the changes from \code{fork}? Default is \code{FALSE}, and it is recommended
+#' only to use force=TRUE after first attempting and failing to merge without
+#' forcing.
 #' @return \code{dataset} with changes from \code{fork} merged to it.
 #' @export
-mergeFork <- function (dataset, fork, autorollback=TRUE) {
-    m <- crPOST(shojiURL(dataset, "catalogs", "actions"), body=toJSON(list(
-        element="shoji:entity",
-        body=list(dataset=self(fork), autorollback=autorollback)
-    )))
+mergeFork <- function (dataset, fork, autorollback=TRUE, force=FALSE) {
+    prompt <- paste("Force merge discards any additions or edits to the target",
+        "dataset that occurred after the point the fork was created. It cannot",
+        "be reverted or otherwise undone. Are you sure you want to continue?")
+    if (force && !askForPermission(prompt)) {
+        halt("Must confirm force merge")
+    }
+    payload <- wrapEntity(dataset=self(fork), autorollback=autorollback,
+        force=force)
+    m <- crPOST(shojiURL(dataset, "catalogs", "actions"), body=toJSON(payload))
     return(refresh(dataset))
 }

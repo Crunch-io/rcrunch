@@ -8,7 +8,7 @@ skip_on_jenkins <- function (...) {
 }
 
 skip_locally <- function (...) {
-    if (nchar(Sys.getenv("JENKINS_HOME")) == 0) {
+    if (startsWith(getOption("crunch.api"), "http://local")) {
         skip(...)
     }
 }
@@ -42,12 +42,13 @@ options(
     digits.secs=3,
     crunch.timeout=15, ## In case an import fails to start, don't wait forever
     # httpcache.log="",
+    crunch.require.confirmation=TRUE,
     crunch.namekey.dataset="alias",
     crunch.namekey.array="alias",
     crunch.email=envOrOption("test.user"),
     crunch.pw=envOrOption("test.pw")
 )
-set_config(crunchConfig())
+httr::set_config(crunchConfig())
 
 ## Test serialize and deserialize
 cereal <- function (x) fromJSON(toJSON(x), simplifyVector=FALSE)

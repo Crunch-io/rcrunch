@@ -2,12 +2,13 @@
 % Please edit documentation in R/AllClasses.R, R/subvariables.R
 \docType{class}
 \name{Subvariables-class}
-\alias{Subvariables}
 \alias{Subvariables-class}
+\alias{Subvariables}
+\alias{Subvariables}
 \alias{subvariables}
+\alias{subvariables<-}
 \alias{subvariables,CategoricalArrayVariable-method}
 \alias{subvariables,VariableTuple-method}
-\alias{subvariables<-}
 \alias{subvariables<-,CategoricalArrayVariable,ANY-method}
 \alias{subvariables<-,CategoricalArrayVariable,Subvariables-method}
 \title{Subvariables in Array Variables}
@@ -49,4 +50,3 @@ See the vignette on array variables for further details and examples.
 \seealso{
 \code{\link{subvars-extract}} \code{\link{describe-catalog}} \code{\link{deleteSubvariable}} \code{vignette("array-variables", package="crunch")}
 }
-

@@ -3,15 +3,21 @@
 \docType{methods}
 \name{[,CrunchExpr,CrunchLogicalExpr,ANY-method}
 \alias{[,CrunchExpr,CrunchLogicalExpr,ANY-method}
-\alias{[,CrunchVariable,CrunchExpr,ANY-method}
-\alias{[,CrunchVariable,logical,ANY-method}
-\alias{[,CrunchVariable,numeric,ANY-method}
+\alias{[,CrunchExpr,logical,ANY-method}
+\alias{[,CrunchExpr,numeric,ANY-method}
 \alias{variable-extract}
+\alias{[,CrunchVariable,CrunchExpr,ANY-method}
+\alias{[,CrunchVariable,numeric,ANY-method}
+\alias{[,CrunchVariable,logical,ANY-method}
 \title{"Subset" a Variable}
 \usage{
-\S4method{[}{CrunchExpr,CrunchLogicalExpr,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CrunchExpr,CrunchLogicalExpr,ANY}(x, i, j, ..., drop = FALSE)
 
-\S4method{[}{CrunchVariable,CrunchExpr,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{CrunchExpr,logical,ANY}(x, i, j, ..., drop = TRUE)
+
+\S4method{[}{CrunchExpr,numeric,ANY}(x, i, j, ..., drop = TRUE)
+
+\S4method{[}{CrunchVariable,CrunchExpr,ANY}(x, i, j, ..., drop = FALSE)
 
 \S4method{[}{CrunchVariable,numeric,ANY}(x, i, j, ..., drop = TRUE)
 
@@ -36,4 +42,3 @@ filter logic contained in \code{i}
 These methods subset variables by creating Expressions, which can be
 composed and evaluated as needed.
 }
-

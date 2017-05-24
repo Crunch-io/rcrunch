@@ -1,6 +1,95 @@
-### crunch 1.13.1 (under development)
+### crunch 1.16.1 (under development)
+
+* `dashboard` and `dashboard<-` methods to view and set a dashboard URL on a dataset
+* Fix issue in printing filter expressions with long value columns
+* Progress bars now clean up after themselves and do not leave the prompt hanging out at the end of the line
+
+## crunch 1.16.0
+
+### Cube and tab book improvements
+
+* Reshape TabBookResults that contain categorical array variables so that `prop.table` computations line up with those not containing array variables (i.e. move subvariables to the third array dimension in the result).
+* Add `names`, `aliases`, and `descriptions` methods to `CrunchCube` (corresponding to variables of the dimensions in the cube), `MultitableResult` (corresponding to the "column" variables of the cubes in the result), and `TabBookResult` (corresponding to the "row"/"sheet" variables in each multitable result).
+* Fix `names` method for TabBookResults following an API change.
+* Extend `crtabs` formula parsing to support multiple, potentially named, measures
+
+### Other new features
+
+* `weightVariables` method to display the set of variables designated as valid weights. (Works like `hiddenVariables`.)
+* In `appendDataset`, allow specifying a subset of rows to append (in addition to the already supported selection of variables)
+* `loadDataset` can now load a dataset by its URL.
+
+### Housekeeping
+
+* Remove "confirm" argument from various delete functions (deprecated since 1.14.4) and the "cleanup" argument to append (deprecated since 1.13.4)
+* All destructive actions now require 'consent', even in non-interactive mode. See `?with_consent` for more details.
+* Improvements to validation when updating values in a dataset.
+* Move mock API fixtures to `inst/` so that other packages depending on this package can access them more easily.
+
+### crunch 1.15.2
+* Support for additional dataset export arguments
+* Add `is.derived` method for Variables
+* Allow a 'message' when sharing a dataset (#27)
+* More validation for the input to the various export functions
+* Fix handling of "total" column in `TabBookResult`s when the row variable is a categorical array
+
+## crunch 1.15.0
+* `multitables` method to access catalog from a Dataset. `newMultitable` to create one. See `?multitables` and `?newMultitable` for docs and examples.
+* `tabBook` to compute a tab book with a multitable. If `format="json"` (the default), returns a `TabBookResult` containing `CrunchCube` objects with which further analysis or formatting can be done.
+* `bases` method for cubes and tab book responses to access unweighted counts and margin tables.
+* Handle case of attempting to `saveVersion` when there are no changes since the last saved version.
+* Update to work with [roxygen2 6.0.0 release](https://github.com/klutometis/roxygen/issues/568)
+
+### crunch 1.14.4
+* `newFilter` and `newProject` functions to create those objects more directly, rather than by assigning into their respective catalogs.
+* Require confirmation before doing a "force" merge in `mergeFork`.
+* Add `with_consent` as an alternative to `with(consent(), ...)`
+* Deprecate the "confirm" argument to destructive functions and methods such as `delete` in favor of the `consent` context manager.
+* Add deprecation warning that destructive actions will soon also require consent when running in a non-interactive R session.
+* Use [httptest](https://github.com/nealrichardson/httptest) for mocking HTTP and the Crunch API.
+
+### crunch 1.14.2
+* Trivial change to DESCRIPTION to meet new, hidden CRAN requirement
+
+## crunch 1.14.0
+* `embedCrunchBox` to generate embeddable HTML markup for CrunchBoxes
+* `duplicated` method for Crunch variables and expressions
+* Prevent invalid expressions with incorrect variable references from making bad requests
+* Print methods for Category/ies now show category ids
+* Speed up `as.vector` and `as.data.frame` methods by smarter pagination of requests.
+* Option "crunch.namekey.variableorder" to govern how VariableOrder is printed. Current default is "name", the status quo, but set it to "alias" to have `ordering` print aliases.
+* Support for `is.na<-` to set missing values on a variable, equivalent to assigning `NA`
+* Fix behavior and validation for subsetting datasets/variables that are already subsetted by a Crunch expression object.
+* Allow setting a variable entity to `settings(ds)$weight` and not just its `self` URL.
+
+### crunch 1.13.8
+* `crunchBox` to make a public, embeddable analysis widget
+* `settings` and `settings<-` to view and modify dataset-level controls, such as default "weight" and viewer permissions ("viewers_can_change_weight", "viewers_can_export")
+* `flattenOrder` to strip out nested groups from an order
+* Univariate statistics on variables, such as `mean`, `median`, and `sd`, now respect filter expressions, as does the `summary` method.
+* "median" can now be used in `crtabs`
+* Copying and deriving variables now bring in the "notes" attribute.
+* Improve error handling when attempting to `loadDataset` from a nonexistent project.
+
+### crunch 1.13.6
+* More utility functions for working with order objects: `dedupeOrder`, `removeEmptyGroups`
+* `appendDataset` can now append a subset of variables
+* Update to changes in the dataset version API
+* Fix bug in assigning NA to an array subvariable that didn't already have the "No Data" category
+
+### crunch 1.13.4
+* `flipArrays` function to generate derived views of array subvariables
+* Add "autorollback" argument to `appendDataset`, defaulted to `TRUE`, which ensures that a failed append leaves the dataset in a clean state.
+* `allVariables` is now ordered by the variable catalog's order, just as `variables` has always been.
+* Add "force" argument to `mergeFork`.
+* Support an `as_array` (pseudo-)function in `crtabs` that allows crosstabbing a multiple-response variable as if it were a categorical array.
+* Fix bug in dataset export when attempting to export a single variable
+
+### crunch 1.13.2
 * Support deep copying of categorical array variables.
-* Join (`merge`) a subset of variables of a dataset.
+* Join (`merge`) a subset of variables and/or rows of a dataset.
+* `moveToGroup` function and setter for easier adding of variables to existing groups.
+* `locateEntity` function to find a variable or dataset within a potentially deeply nested order.
 * Change default key for printing `hiddenVariables` from "name" to "alias", governed by `options(crunch.namekey.dataset)` as elsewhere
 * Allow disabling of check for new package releases on load by setting `options(crunch.check.updates=FALSE)`.
 * Return a Session object from `session()` that lazily fetches catalogs rather than when instantiated.

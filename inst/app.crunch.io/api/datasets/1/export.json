@@ -1,0 +1,8 @@
+{
+    "element": "shoji:view",
+    "self": "https://app.crunch.io/api/datasets/1/export/",
+    "value": {
+        "csv": "https://app.crunch.io/api/datasets/1/export/csv/",
+        "spss": "https://app.crunch.io/api/datasets/1/export/spss/"
+    }
+}

@@ -25,9 +25,16 @@ setMethod("zcl", "character", r2zcl)
 setMethod("zcl", "Date", r2zcl)
 setMethod("zcl", "POSIXt", r2zcl)
 setMethod("zcl", "logical", function (x) {
-    x[is.na(x)] <- FALSE
-    out <- list(column=I(x), type=list(class="boolean"))
-    return(out)
+    if (length(x)) {
+        x[is.na(x)] <- FALSE
+        out <- list(column=I(x), type=list(class="boolean"))
+        return(out)
+    } else {
+        ## If you reference a variable in a dataset that doesn't exist, you
+        ## get NULL, and e.g. NULL == something becomes logical(0).
+        ## That does awful things if you try to send to the server. So don't.
+        halt("Invalid expression. Probably a reference to a variable that doesn't exist.")
+    }
 })
 setMethod("zcl", "NULL", function (x) NULL)
 setOldClass("zcl")
@@ -38,4 +45,21 @@ setMethod("zcl", "CrunchFilter", function (x) x@body$expression)
 zfunc <- function (func, ...) {
     ## Wrapper that creates ZCL function syntax
     return(list(`function`=func, args=lapply(list(...), zcl)))
+}
+
+findVariableReferences <- function (x) {
+    seen <- c()
+    .fvr <- function (x) {
+        if (is.list(x)) {
+            if (identical(names(x), "variable")) {
+                seen <<- c(seen, x$variable)
+            } else {
+                return(lapply(x, .fvr))
+            }
+        } else {
+            return(x)
+        }
+    }
+    .fvr(x)
+    return(unique(seen))
 }

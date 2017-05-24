@@ -1,0 +1,17 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/projects/project1/datasets/",
+    "orders": {
+        "order": "https://app.crunch.io/api/projects/project1/datasets/order/"
+    },
+    "index": {
+        "https://app.crunch.io/api/datasets/3/": {
+            "owner_display_name": "Project One",
+            "name": "ECON.sav",
+            "description": "",
+            "archived": false,
+            "id": "95c0b45fe0af492594863f818cb913d2",
+            "owner_id": "https://app.crunch.io/api/projects/project1/"
+        }
+    }
+}

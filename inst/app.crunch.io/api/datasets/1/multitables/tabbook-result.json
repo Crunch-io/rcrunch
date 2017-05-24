@@ -1,0 +1,596 @@
+// See cr-exporter/cr/exporter/tests/multitable-result.json
+// Note: this data structure no longer matches the API; see apidocs-tabbook.json instead
+{
+    "sheets": [
+        {
+            "applied_filters": {},
+            "filter_names": null,
+            "result": [
+                {
+                    "result": {
+                        "counts": [
+                            1755,
+                            2771
+                        ],
+                        "dimensions": [
+                            {
+                                "derived": false,
+                                "references": {
+                                    "alias": "Admit",
+                                    "discarded": false,
+                                    "header_order": 0,
+                                    "name": "Admit"
+                                },
+                                "type": {
+                                    "categories": [
+                                        {
+                                            "id": 1,
+                                            "missing": false,
+                                            "name": "Admitted",
+                                            "numeric_value": null
+                                        },
+                                        {
+                                            "id": 2,
+                                            "missing": false,
+                                            "name": "Rejected",
+                                            "numeric_value": null
+                                        }
+                                    ],
+                                    "class": "categorical",
+                                    "ordinal": false
+                                }
+                            }
+                        ],
+                        "measures": {
+                            "count": {
+                                "data": [
+                                    1716.8015767569,
+                                    2735.1538620464
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {},
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": false,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {}
+                                    }
+                                },
+                                "n_missing": 45
+                            }
+                        },
+                        "n": 4526
+                    }
+                },
+                {
+                    "result": {
+                        "counts": [
+                            601,
+                            370,
+                            322,
+                            269,
+                            147,
+                            46,
+                            332,
+                            215,
+                            596,
+                            523,
+                            437,
+                            668
+                        ],
+                        "dimensions": [
+                            {
+                                "derived": false,
+                                "references": {
+                                    "alias": "Admit",
+                                    "discarded": false,
+                                    "header_order": 0,
+                                    "name": "Admit"
+                                },
+                                "type": {
+                                    "categories": [
+                                        {
+                                            "id": 1,
+                                            "missing": false,
+                                            "name": "Admitted",
+                                            "numeric_value": null
+                                        },
+                                        {
+                                            "id": 2,
+                                            "missing": false,
+                                            "name": "Rejected",
+                                            "numeric_value": null
+                                        }
+                                    ],
+                                    "class": "categorical",
+                                    "ordinal": false
+                                }
+                            },
+                            {
+                                "derived": false,
+                                "references": {
+                                    "alias": "Dept",
+                                    "discarded": false,
+                                    "header_order": 2,
+                                    "name": "Dept"
+                                },
+                                "type": {
+                                    "categories": [
+                                        {
+                                            "id": 1,
+                                            "missing": false,
+                                            "name": "A",
+                                            "numeric_value": null
+                                        },
+                                        {
+                                            "id": 2,
+                                            "missing": false,
+                                            "name": "B",
+                                            "numeric_value": null
+                                        },
+                                        {
+                                            "id": 3,
+                                            "missing": false,
+                                            "name": "C",
+                                            "numeric_value": null
+                                        },
+                                        {
+                                            "id": 4,
+                                            "missing": false,
+                                            "name": "D",
+                                            "numeric_value": null
+                                        },
+                                        {
+                                            "id": 5,
+                                            "missing": false,
+                                            "name": "E",
+                                            "numeric_value": null
+                                        },
+                                        {
+                                            "id": 6,
+                                            "missing": false,
+                                            "name": "F",
+                                            "numeric_value": null
+                                        }
+                                    ],
+                                    "class": "categorical",
+                                    "ordinal": false
+                                }
+                            }
+                        ],
+                        "measures": {
+                            "count": {
+                                "data": [
+                                    572.8103823945,
+                                    367.0225567043,
+                                    318.2739139279,
+                                    265.3917388913,
+                                    151.0637898576,
+                                    42.2391949812,
+                                    324.958269652,
+                                    209.9176698914,
+                                    586.5329524502,
+                                    512.5016544579,
+                                    433.6789928332,
+                                    667.5643227616
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {},
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": false,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {}
+                                    }
+                                },
+                                "n_missing": 45
+                            }
+                        },
+                        "n": 4526
+                    }
+                },
+                {
+                    "result": {
+                        "counts": [
+                            1198,
+                            557,
+                            1493,
+                            1278
+                        ],
+                        "dimensions": [
+                            {
+                                "derived": false,
+                                "references": {
+                                    "alias": "Admit",
+                                    "discarded": false,
+                                    "header_order": 0,
+                                    "name": "Admit"
+                                },
+                                "type": {
+                                    "categories": [
+                                        {
+                                            "id": 1,
+                                            "missing": false,
+                                            "name": "Admitted",
+                                            "numeric_value": null
+                                        },
+                                        {
+                                            "id": 2,
+                                            "missing": false,
+                                            "name": "Rejected",
+                                            "numeric_value": null
+                                        }
+                                    ],
+                                    "class": "categorical",
+                                    "ordinal": false
+                                }
+                            },
+                            {
+                                "derived": false,
+                                "references": {
+                                    "alias": "Gender",
+                                    "discarded": false,
+                                    "header_order": 1,
+                                    "name": "Gender"
+                                },
+                                "type": {
+                                    "categories": [
+                                        {
+                                            "id": 1,
+                                            "missing": false,
+                                            "name": "Male",
+                                            "numeric_value": null
+                                        },
+                                        {
+                                            "id": 2,
+                                            "missing": false,
+                                            "name": "Female",
+                                            "numeric_value": null
+                                        }
+                                    ],
+                                    "class": "categorical",
+                                    "ordinal": false
+                                }
+                            }
+                        ],
+                        "measures": {
+                            "count": {
+                                "data": [
+                                    1169.7863186983,
+                                    547.0152580586,
+                                    1473.8095477065,
+                                    1261.3443143399
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {},
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": false,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {}
+                                    }
+                                },
+                                "n_missing": 45
+                            }
+                        },
+                        "n": 4526
+                    }
+                }
+            ],
+            "sheet_name": "Admit",
+            "weight_var": "weight"
+        },
+        {
+            "applied_filters": {},
+            "filter_names": null,
+            "result": [
+                {
+                    "result": {
+                        "counts": [
+                            2691,
+                            1835
+                        ],
+                        "dimensions": [
+                            {
+                                "derived": false,
+                                "references": {
+                                    "alias": "Gender",
+                                    "discarded": false,
+                                    "header_order": 1,
+                                    "name": "Gender"
+                                },
+                                "type": {
+                                    "categories": [
+                                        {
+                                            "id": 1,
+                                            "missing": false,
+                                            "name": "Male",
+                                            "numeric_value": null
+                                        },
+                                        {
+                                            "id": 2,
+                                            "missing": false,
+                                            "name": "Female",
+                                            "numeric_value": null
+                                        }
+                                    ],
+                                    "class": "categorical",
+                                    "ordinal": false
+                                }
+                            }
+                        ],
+                        "measures": {
+                            "count": {
+                                "data": [
+                                    2643.5958664048,
+                                    1808.3595723985
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {},
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": false,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {}
+                                    }
+                                },
+                                "n_missing": 45
+                            }
+                        },
+                        "n": 4526
+                    }
+                },
+                {
+                    "result": {
+                        "counts": [
+                            825,
+                            560,
+                            325,
+                            417,
+                            191,
+                            373,
+                            108,
+                            25,
+                            593,
+                            375,
+                            393,
+                            341
+                        ],
+                        "dimensions": [
+                            {
+                                "derived": false,
+                                "references": {
+                                    "alias": "Gender",
+                                    "discarded": false,
+                                    "header_order": 1,
+                                    "name": "Gender"
+                                },
+                                "type": {
+                                    "categories": [
+                                        {
+                                            "id": 1,
+                                            "missing": false,
+                                            "name": "Male",
+                                            "numeric_value": null
+                                        },
+                                        {
+                                            "id": 2,
+                                            "missing": false,
+                                            "name": "Female",
+                                            "numeric_value": null
+                                        }
+                                    ],
+                                    "class": "categorical",
+                                    "ordinal": false
+                                }
+                            },
+                            {
+                                "derived": false,
+                                "references": {
+                                    "alias": "Dept",
+                                    "discarded": false,
+                                    "header_order": 2,
+                                    "name": "Dept"
+                                },
+                                "type": {
+                                    "categories": [
+                                        {
+                                            "id": 1,
+                                            "missing": false,
+                                            "name": "A",
+                                            "numeric_value": null
+                                        },
+                                        {
+                                            "id": 2,
+                                            "missing": false,
+                                            "name": "B",
+                                            "numeric_value": null
+                                        },
+                                        {
+                                            "id": 3,
+                                            "missing": false,
+                                            "name": "C",
+                                            "numeric_value": null
+                                        },
+                                        {
+                                            "id": 4,
+                                            "missing": false,
+                                            "name": "D",
+                                            "numeric_value": null
+                                        },
+                                        {
+                                            "id": 5,
+                                            "missing": false,
+                                            "name": "E",
+                                            "numeric_value": null
+                                        },
+                                        {
+                                            "id": 6,
+                                            "missing": false,
+                                            "name": "F",
+                                            "numeric_value": null
+                                        }
+                                    ],
+                                    "class": "categorical",
+                                    "ordinal": false
+                                }
+                            }
+                        ],
+                        "measures": {
+                            "count": {
+                                "data": [
+                                    791.1018610044,
+                                    557.6057495839,
+                                    322.3014074879,
+                                    409.441852562,
+                                    190.8352068863,
+                                    372.3097888802,
+                                    106.6667910421,
+                                    19.3344770118,
+                                    582.5054588902,
+                                    368.4515407873,
+                                    393.9075758044,
+                                    337.4937288627
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {},
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": false,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {}
+                                    }
+                                },
+                                "n_missing": 45
+                            }
+                        },
+                        "n": 4526
+                    }
+                },
+                {
+                    "result": {
+                        "counts": [
+                            2691,
+                            0,
+                            0,
+                            1835
+                        ],
+                        "dimensions": [
+                            {
+                                "derived": false,
+                                "references": {
+                                    "alias": "Gender",
+                                    "discarded": false,
+                                    "header_order": 1,
+                                    "name": "Gender"
+                                },
+                                "type": {
+                                    "categories": [
+                                        {
+                                            "id": 1,
+                                            "missing": false,
+                                            "name": "Male",
+                                            "numeric_value": null
+                                        },
+                                        {
+                                            "id": 2,
+                                            "missing": false,
+                                            "name": "Female",
+                                            "numeric_value": null
+                                        }
+                                    ],
+                                    "class": "categorical",
+                                    "ordinal": false
+                                }
+                            },
+                            {
+                                "derived": false,
+                                "references": {
+                                    "alias": "Gender",
+                                    "discarded": false,
+                                    "header_order": 1,
+                                    "name": "Gender"
+                                },
+                                "type": {
+                                    "categories": [
+                                        {
+                                            "id": 1,
+                                            "missing": false,
+                                            "name": "Male",
+                                            "numeric_value": null
+                                        },
+                                        {
+                                            "id": 2,
+                                            "missing": false,
+                                            "name": "Female",
+                                            "numeric_value": null
+                                        }
+                                    ],
+                                    "class": "categorical",
+                                    "ordinal": false
+                                }
+                            }
+                        ],
+                        "measures": {
+                            "count": {
+                                "data": [
+                                    2643.5958664048,
+                                    0.0,
+                                    0.0,
+                                    1808.3595723985
+                                ],
+                                "metadata": {
+                                    "derived": true,
+                                    "references": {},
+                                    "type": {
+                                        "class": "numeric",
+                                        "integer": false,
+                                        "missing_reasons": {
+                                            "No Data": -1
+                                        },
+                                        "missing_rules": {}
+                                    }
+                                },
+                                "n_missing": 45
+                            }
+                        },
+                        "n": 4526
+                    }
+                }
+            ],
+            "sheet_name": "Gender",
+            "weight_var": "weight"
+        }
+    ],
+    "template": [
+        {
+            "query": [
+                {
+                    "variable": "210cd285a797400fb9d75d04db0173bd"
+                }
+            ]
+        },
+        {
+            "query": [
+                {
+                    "variable": "be5cde4e4f52419ebb4786a1311b1845"
+                }
+            ]
+        }
+    ]
+}

@@ -1,0 +1,24 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/2/variables/mymrset/subvariables/",
+    "specification": "https://alpha.crunch.io/api/specifications/variables/",
+    "description": "List of Subvariables of this Variable",
+    "index": {
+        "./subvar2/": {
+            "name": "First",
+            "discarded": false,
+            "alias": "subvar2",
+            "type": "categorical",
+            "id": "gender",
+            "description": null
+        },
+        "./subvar4/": {
+            "name": "Last",
+            "discarded": false,
+            "alias": "subvar4",
+            "type": "categorical",
+            "id": "subvar4",
+            "description": null
+        }
+    }
+}

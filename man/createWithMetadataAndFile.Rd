@@ -4,7 +4,7 @@
 \alias{createWithMetadataAndFile}
 \title{Make a dataset with metadata and a CSV}
 \usage{
-createWithMetadataAndFile(metadata, file, strict = TRUE, cleanup = TRUE)
+createWithMetadataAndFile(metadata, file, strict = TRUE)
 }
 \arguments{
 \item{metadata}{a list representation of the dataset's metadata, which
@@ -15,9 +15,6 @@ the above metadata.}
 
 \item{strict}{logical: must the metadata exactly match the data? Default is
 TRUE.}
-
-\item{cleanup}{logical: if the file upload fails, delete the dataset?
-Default is TRUE.}
 }
 \value{
 On success, a new dataset.
@@ -27,4 +24,3 @@ This function just takes what you give it and POSTs to Crunch. No
 validation, no automatic wrapping in the Shoji envelope, etc.
 }
 \keyword{internal}
-

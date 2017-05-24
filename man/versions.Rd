@@ -19,4 +19,3 @@ Access the saved versions of a dataset
 \seealso{
 \code{\link{saveVersion}} \code{\link{restoreVersion}}
 }
-

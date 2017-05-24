@@ -4,41 +4,11 @@ rethrow <- function (x) halt(errorMessage(x))
 
 errorMessage <- function (e) attr(e, "condition")$message
 
-#' Generic List Element Extractor
-#'
-#' @param key character naming the key(s) to extract. Can traverse list
-#' elements by separating them with \code{$}.
-#' @param xlist list containing other lists from which you want to extract
-#' @param ifnot what to return if the key is not found in a given xlist element
-#' @param simplify logical, passed to sapply internally
-#' @return the requested element(s). If length(key)>1, a named list of those
-#' elements
-#' @keywords internal
-selectFrom <- function (key, xlist, ifnot=NA, simplify=TRUE) {
-    if (!is.list(xlist)) {
-        halt("xlist must be a list object")
-    }
-    if (length(key)>1) {
-        y <- sapply(key, selectFrom, xlist, ifnot, simplify=FALSE)
-    } else {
-    	y <- sapply(xlist,
-    	    function (x) {
-    	        key <- unlist(strsplit(key, "$", fixed=TRUE))
-    	        for (i in key) {
-    	            if (!is.list(x)) x <- NULL
-                    if (!is.null(x)) x <- x[[i]]
-                }
-                if (is.null(x)) x <- ifnot
-                return(x)
-    	    }, simplify=simplify)
-    }
-    return(y)
-}
-
 vget <- function (name) {
     ## Return a function you can lapply/vapply to select an attribute
     ## Usage: lapply(list.of.stuff, vget("name"))
     ## instead of: lapply(list.of.stuff, function (x) x$name)
+    ## N.B.: don't use if you're doing lapply(x, FUN) (because the x's will clash)
     return(function (x) x[[name]])
 }
 
@@ -58,24 +28,29 @@ serialPaste <- function (x, collapse="and") {
 
 now <- function () strftime(Sys.time(), usetz=TRUE)
 
-#' @importFrom httr parse_url build_url
 absoluteURL <- function (urls, base) {
     ## Detect if we have relative urls, and then concatenate if so
     if (length(urls) && !any(startsWith(urls, "http"))) {
-        base.url <- parse_url(base)
-        urls <- vapply(urls, function (x, b) {
-            b$path <- joinPath(b$path, x)
-            if (is.null(b$scheme)) {
-                ## If file path and not URL, as in for tests,
-                ## let's return it relative
-                return(b$path)
-            }
-            ## Pop off any leading "/" because build_url will add it
-            b$path <- sub("^/", "", b$path)
-            b$query <- NULL ## Catalog query params aren't valid for entities
-            return(build_url(b))
-        }, character(1), b=base.url, USE.NAMES=FALSE)
+        urls <- .abs.urls(urls, base)
     }
+    return(urls)
+}
+
+#' @importFrom httr parse_url build_url
+.abs.urls <- function (urls, base) {
+    base.url <- parse_url(base)
+    urls <- vapply(urls, function (x, b) {
+        b$path <- joinPath(b$path, x)
+        if (is.null(b$scheme)) {
+            ## If file path and not URL, as in for tests,
+            ## let's return it relative
+            return(b$path)
+        }
+        ## Pop off any leading "/" because build_url will add it
+        b$path <- sub("^/", "", b$path)
+        b$query <- NULL ## Catalog query params aren't valid for entities
+        return(build_url(b))
+    }, character(1), b=base.url, USE.NAMES=FALSE)
     return(urls)
 }
 
@@ -110,28 +85,19 @@ joinPath <- function (base.path, relative.part) {
     return(out)
 }
 
-askForPermission <- function (prompt="") {
-    ## If options explicitly say we don't need to ask, bail.
-    ## Have to check that it's FALSE and not NULL. Silence doesn't mean consent.
-    must.confirm <- getOption("crunch.require.confirmation") %||% TRUE
-    if (must.confirm == FALSE) return(TRUE)
-
-    ## If we're here but not interactive, we can't give permission.
-    if (!interactive()) return(FALSE)
-    prompt <- paste(prompt, "(y/n) ")
-    proceed <- ""
-    while (!(proceed %in% c("y", "n"))) {
-        proceed <- tolower(readline(prompt))
-    }
-    return(proceed == "y")
-}
-
 emptyObject <- function (...) {
     ## toJSON(list()) is "[]". toJSON(emptyObject()) is "{}"
     ##
     ## Make the function take ... so you can *apply over something and just
     ## call the function
     structure(list(), .Names=character(0))
+}
+
+I <- function (x) {
+    ## Because of R deprecation warning:
+    ## Calling 'structure(NULL, *)' is deprecated, as NULL cannot have attributes.
+    if (!is.null(x)) x <- base::I(x)
+    return(x)
 }
 
 null <- function (...) NULL

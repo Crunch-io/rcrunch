@@ -6,7 +6,7 @@ with_mock_HTTP({
         expect_json_equivalent(makeArray(ds[,"gender"], name="Gender array"),
             list(
                 name="Gender array",
-                subvariables=I("/api/datasets/dataset1/variables/gender/"),
+                subvariables=I("https://app.crunch.io/api/datasets/1/variables/gender/"),
                 type="categorical_array"
             ))
     })
@@ -15,7 +15,7 @@ with_mock_HTTP({
             name="Gender array 2"),
             list(
                 name="Gender array 2",
-                subvariables=I("/api/datasets/dataset1/variables/gender/"),
+                subvariables=I("https://app.crunch.io/api/datasets/1/variables/gender/"),
                 type="categorical_array"
             ))
     })
@@ -23,7 +23,7 @@ with_mock_HTTP({
         expect_json_equivalent(makeMR(ds[,"gender"], name="Gender MR", selections="Male"),
             list(
                 name="Gender MR",
-                subvariables=I("/api/datasets/dataset1/variables/gender/"),
+                subvariables=I("https://app.crunch.io/api/datasets/1/variables/gender/"),
                 type="multiple_response",
                 selected_categories=I("Male")
             ))
@@ -38,10 +38,6 @@ with_mock_HTTP({
     test_that("makeArray error conditions", {
         expect_error(makeArray(), no.name)
         expect_error(makeArray(ds[,"gender"]), no.name)
-        expect_warning(
-            expect_error(makeArray(pattern="rm_", dataset=ds, name="foo"),
-                'argument "subvariables" is missing, with no default'),
-            "argument to makeArray is no longer supported")
         expect_error(makeArray(ds[grep("NO variables", names(ds))], name="foo"),
             no.match)
     })
@@ -49,11 +45,6 @@ with_mock_HTTP({
         expect_error(makeMR(), no.selections)
         expect_error(makeMR(ds[,"gender"]), no.selections)
         expect_error(makeMR(ds[,"gender"], selections="Male"), no.name)
-        expect_warning(
-            expect_error(makeMR(pattern="rm_", dataset=ds, name="foo",
-                selections="X"),
-                'argument "subvariables" is missing, with no default'),
-            "argument to makeArray is no longer supported")
         expect_error(makeMR(ds[grep("NO variables", names(ds))], name="foo",
             selections="X"),
             no.match)
@@ -78,15 +69,15 @@ with_test_authentication({
             expect_true(is.CA(ds$arrayVar))
         })
         test_that("can delete the array we just bound", {
-            ds$arrayVar <- NULL
+            with_consent(ds$arrayVar <- NULL)
             expect_identical(names(ds), "v4")
             expect_identical(ncol(ds), 1L)
         })
     })
 
-    with(test.dataset(mrdf), {
-        ds$arrayVar <- makeArray(ds[c("mr_1", "mr_2", "mr_3")],
-            name="arrayVar")
+    whereas("Testing dichotomizing and undichotomizing", {
+        ds <- newDataset(mrdf)
+        ds$arrayVar <- makeArray(ds[c("mr_1", "mr_2", "mr_3")], name="arrayVar")
         var <- ds$arrayVar
         test_that("setup to make MultipleResponse from CategoricalArray", {
             expect_true(is.CA(var))
@@ -128,24 +119,21 @@ with_test_authentication({
         })
     })
 
-    with(test.dataset(mrdf), {
-        test_that("can make MultipleResponse directly", {
-            cast.these <- grep("mr_", names(ds))
-            ds[cast.these] <- lapply(ds[cast.these],
-                castVariable, "categorical")
-            ds$arrayVar <- makeMR(ds[cast.these], name="arrayVar",
-                selections="1.0")
-            var <- ds$arrayVar
-            expect_true(is.Multiple(var))
+    test_that("can make MultipleResponse directly", {
+        ds <- newDataset(mrdf)
+        cast.these <- grep("mr_", names(ds))
+        ds[cast.these] <- lapply(ds[cast.these], castVariable, "categorical")
+        ds$arrayVar <- makeMR(ds[cast.these], name="arrayVar", selections="1.0")
+        var <- ds$arrayVar
+        expect_true(is.Multiple(var))
 
-            var <- undichotomize(var)
-            expect_true(is.CA(var))
+        var <- undichotomize(var)
+        expect_true(is.CA(var))
 
-            ## unbind.
-            u <- unbind(var)
-            ds <- refresh(ds)
-            expect_true(setequal(names(ds), names(mrdf)))
-            expect_identical(ncol(ds), 4L)
-        })
+        ## unbind.
+        u <- unbind(var)
+        ds <- refresh(ds)
+        expect_true(setequal(names(ds), names(mrdf)))
+        expect_identical(ncol(ds), 4L)
     })
 })

@@ -26,4 +26,3 @@ dataset's revision history, effectively making a copy on which you can work
 independently of the original dataset. You can then merge those change back
 to the original dataset or keep working independently.
 }
-

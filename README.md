@@ -1,11 +1,11 @@
 # crunch
 
-[![Build Status](https://travis-ci.org/Crunch-io/rcrunch.png?branch=master)](https://travis-ci.org/Crunch-io/rcrunch)
-
+[![Build Status](https://travis-ci.org/Crunch-io/rcrunch.png?branch=master)](https://travis-ci.org/Crunch-io/rcrunch) [![Build status](https://ci.appveyor.com/api/projects/status/iaydo4y3dfrqnqqu/branch/master?svg=true)](https://ci.appveyor.com/project/nealrichardson/rcrunch/branch/master)
+[![cran](https://www.r-pkg.org/badges/version-last-release/crunch)](https://cran.r-project.org/package=crunch) [![codecov](https://codecov.io/gh/Crunch-io/rcrunch/branch/master/graph/badge.svg)](https://codecov.io/gh/Crunch-io/rcrunch) (unit tests); 96.6% coverage with integration tests
 
 [Cloud Collaboration with Crunch](http://crunch-io.github.io/rcrunch/)
 
-[Crunch.io](http://crunch.io/) provides a cloud-based data store and analytic engine. It has a [web client](https://beta.crunch.io/) for interactive data exploration and visualization. The **crunch** package for R allows analysts to interact with and manipulate Crunch datasets from within R. Importantly, this allows technical researchers to collaborate naturally with team members, managers, and clients who prefer a point-and-click interface: because all connect to the same dataset in the cloud, there is no need to email files back and forth continually to share results.
+[Crunch.io](http://crunch.io/) provides a cloud-based data store and analytic engine. It has a [web client](https://app.crunch.io/) for interactive data exploration and visualization. The **crunch** package for R allows analysts to interact with and manipulate Crunch datasets from within R. Importantly, this allows technical researchers to collaborate naturally with team members, managers, and clients who prefer a point-and-click interface: because all connect to the same dataset in the cloud, there is no need to email files back and forth continually to share results.
 
 [Subscribe to the mailing list](mailto:rcrunch+subscribe@crunch.io) to receive notification of releases and to ask general support questions.
 
@@ -50,9 +50,13 @@ Check out `listDatasets()` to see the names of your existing datasets, which you
 You can set several parameters in your .Rprofile to simplify your workflow:
 
 * `crunch.email` and `crunch.pw`: you can save your Crunch credentials so that you don't have to enter them each time. I.e., you can just `> login()`. Please be advised of the risks of storing your password like this. See `?login` for more information. Also, note that you can opt to store just your `crunch.email` and enter your password each time you log in--a mix of convenience and security.
-* `crunch.api`: if not defined, it defaults to "`https://beta.crunch.io/api/`", the production server. To specify a different location, either set it in your .Rprofile or after loading the `crunch` package, do `> options(crunch.api="https://otherapi.crunch.io/api/")`.
+* `crunch.api`: if not defined, it defaults to "`https://app.crunch.io/api/`", the production server. To specify a different location, either set it in your .Rprofile or after loading the `crunch` package, do `> options(crunch.api="https://otherapi.crunch.io/api/")`.
 
 ## For developers
+
+### Contributing
+
+See the [contribution guidelines](CONTRIBUTING.md).
 
 ### Installing from a local checkout
 
@@ -71,9 +75,11 @@ To run integration tests, you will need to specify a test user, password, and AP
 
     options(test.user="magic.testuser@crunch.io",
             test.pw="t0pSecretP@ssw0rD",
-            test.api="http://local.crunch.io:8080/api/")
+            test.api="https://app.crunch.io/api/")
 
 or, if you prefer, you can set the environment variables `R_TEST_USER`, `R_TEST_PW`, and `R_TEST_API`.
+
+If you are a Crunch developer serving a version of the API/backend with Vagrant, you will have best results if your R_TEST_API/test.api (1) is `local.crunch.io`, thanks to a mapping of localhost to that in your hosts file, and (2) you use http rather than https in order to avoid certificate errors. You might point at "http://local.crunch.io:8080/api/", for example. Some tests that cannot run successfully in the Vagrant environment will be skipped when run against a local.crunch.io URL.
 
 ### Updating documentation
 

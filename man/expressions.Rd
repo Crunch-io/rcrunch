@@ -2,22 +2,22 @@
 % Please edit documentation in R/expressions.R
 \docType{methods}
 \name{expressions}
+\alias{expressions}
 \alias{!,CrunchExpr-method}
-\alias{!=,CategoricalVariable,character-method}
-\alias{!=,CategoricalVariable,factor-method}
-\alias{==,CategoricalVariable,character-method}
-\alias{==,CategoricalVariable,factor-method}
 \alias{\%in\%,CategoricalVariable,character-method}
 \alias{\%in\%,CategoricalVariable,factor-method}
-\alias{\%in\%,CategoricalVariable,numeric-method}
+\alias{\%in\%,TextVariable,character-method}
+\alias{\%in\%,NumericVariable,numeric-method}
 \alias{\%in\%,DatetimeVariable,Date-method}
 \alias{\%in\%,DatetimeVariable,POSIXt-method}
 \alias{\%in\%,DatetimeVariable,character-method}
-\alias{\%in\%,NumericVariable,numeric-method}
-\alias{\%in\%,TextVariable,character-method}
-\alias{bin}
-\alias{expressions}
+\alias{\%in\%,CategoricalVariable,numeric-method}
+\alias{==,CategoricalVariable,character-method}
+\alias{==,CategoricalVariable,factor-method}
+\alias{!=,CategoricalVariable,character-method}
+\alias{!=,CategoricalVariable,factor-method}
 \alias{is.na,CrunchVariable-method}
+\alias{bin}
 \alias{rollup}
 \title{Construct Crunch Expressions}
 \usage{
@@ -79,4 +79,3 @@ passed to a function like \code{as.vector}. They allow you to compose
 functional expressions of variables and evaluate them against the server
 only when appropriate.
 }
-

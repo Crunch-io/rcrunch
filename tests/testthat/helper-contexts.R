@@ -1,63 +1,45 @@
-setup.and.teardown <- function (setup, teardown, obj.name=NULL) {
-    ContextManager(enter=setup, exit=teardown, as=obj.name,
-        error=function (e) expect_error(stop(e$message), "NO ERRORS HERE!"))
-}
-
-fakeResponse <- function (url="", status_code=200, headers=list(), json=NULL) {
-    ## Return something that looks enough like an httr 'response'
-    if (!is.null(json)) {
-        cont <- charToRaw(toJSON(json))
-    } else {
-        cont <- readBin(url, "raw", 4096)
-    }
-    structure(list(
-        url=url,
-        status_code=status_code,
-        times=structure(nchar(url), .Names="total"),
-        request=list(method="GET", url=url),
-        headers=modifyList(list(`Content-Type`="application/json"), headers),
-        content=cont
-    ), class="response")
-}
-
 with_mock_HTTP <- function (expr) {
-    with(temp.option(crunch.api="/api/root/"), {
-        with_mock(
-            `httr::GET`=function (url, ...) {
-                if (is.null(url)) {
-                    stop("No URL found", call.=FALSE)
-                }
-                url <- unlist(strsplit(url, "?", fixed=TRUE))[1] ## remove query params
-                url <- sub("\\/$", ".json", url)
-                url <- sub("^\\/", "", url) ## relative to cwd
-                return(fakeResponse(url))
-            },
-            `httr::PUT`=function (url, body, ...) halt("PUT ", url, " ", body),
-            `httr::PATCH`=function (url, body, ...) halt("PATCH ", url, " ", body),
-            `httr::POST`=function (url, body, ...) halt("POST ", url, " ", body),
-            `httr::DELETE`=function (url, ...) halt("DELETE ", url),
-            eval.parent(try(warmSessionCache())),
-            eval.parent(expr)
-        )
+    tracer <- quote({
+        if (!file.exists(f)) {
+            ## Look for mock in inst/
+            crunchfile <- system.file(f, package="crunch")
+            if (nchar(crunchfile)) {
+                f <- crunchfile
+            }
+        }
+    })
+    env <- parent.frame()
+    with_trace("mockRequest", tracer=tracer, at=4, where=without_internet, expr={
+        with_trace("mockDownload", tracer=tracer, at=3, where=without_internet, expr={
+            ## TODO: Move the test.api switch to with_test_authentication
+            with(temp.option(crunch.api="https://app.crunch.io/api/"), {
+                with_mock_API({
+                    try(warmSessionCache())
+                    eval(expr, envir=env)
+                })
+            })
+        })
     })
 }
 
-## Mock backend for no connectivity
-without_internet <- function (expr) {
-    with_mock(
-        `httr::GET`=function (url, ...) halt("GET ", url),
-        `httr::PUT`=function (url, body, ...) halt("PUT ", url, " ", body),
-        `httr::PATCH`=function (url, body, ...) halt("PATCH ", url, " ", body),
-        `httr::POST`=function (url, body, ...) halt("POST ", url, " ", body),
-        `httr::DELETE`=function (url, ...) halt("DELETE ", url),
-        eval.parent(expr)
-    )
+with_POST <- function (resp, expr) {
+    ## Mock a POST that returns something, like a Location header pulled from 201
+    force(resp)
+    with_mock(`crunch::crPOST`=function (...) resp, eval.parent(expr))
 }
 
 with_silent_progress <- function (expr) {
     with_mock(
-        `utils::txtProgressBar`=function (...) invisible(NULL),
+        `utils::txtProgressBar`=function (...) pipe(""),
         `utils::setTxtProgressBar`=function (...) invisible(NULL),
+        eval.parent(expr)
+    )
+}
+
+with_fake_input <- function (input, expr) {
+    with_mock(
+        `crunch:::is.interactive`=function () return(TRUE),
+        `base::readline`=function (...) input,
         eval.parent(expr)
     )
 }
@@ -67,35 +49,33 @@ silencer <- temp.option(show.error.messages=FALSE)
 assign("entities.created", c(), envir=globalenv())
 with_test_authentication <- function (expr) {
     if (run.integration.tests) {
+        env <- parent.frame()
         ## Authenticate.
-        suppressMessages(login())
-        ## Any time an object is created (201 Location responts), store that URL
-        suppressMessages(trace("locationHeader",
-            exit=quote({
-                if (!is.null(loc)) {
-                    seen <- get("entities.created", envir=globalenv())
-                    assign("entities.created",
-                        c(seen, loc),
-                        envir=globalenv())
-                }
-            }),
-            print=FALSE,
-            where=crGET))
+        try(suppressMessages(login()))
         on.exit({
-            suppressMessages(untrace("locationHeader", where=crGET))
-            # suppressMessages(untrace("createDataset", where=crGET))
             ## Delete our seen things
             purgeEntitiesCreated()
             logout()
         })
-        ## Wrap this so that we can generate a test failure if there's an error
-        ## rather than just halt the process
-        tryCatch(eval.parent(with_silent_progress(expr)),
-            error=function (e) {
-                test_that("There are no test code errors", {
-                    expect_error(stop(e$message), NA)
+        ## Any time an object is created (201 Location responts), store that URL
+        tracer <- quote({
+            if (!is.null(loc)) {
+                seen <- get("entities.created", envir=globalenv())
+                assign("entities.created",
+                    c(seen, loc),
+                    envir=globalenv())
+            }
+        })
+        with_trace("locationHeader", exit=tracer, where=crGET, expr={
+            ## Wrap this so that we can generate a test failure if there's an error
+            ## rather than just halt the process
+            tryCatch(eval(with_silent_progress(expr), envir=env),
+                error=function (e) {
+                    test_that("There are no test code errors", {
+                        expect_error(stop(e$message), NA)
+                    })
                 })
-            })
+        })
     }
 }
 
@@ -152,17 +132,17 @@ purge.object <- function () {
 }
 
 test.dataset <- function (df=NULL, obj.name="ds", ...) {
-    return(setup.and.teardown(
+    return(ContextManager(
         function () new.dataset.with.setup(df, ...),
         purge.object,
-        obj.name
+        as=obj.name
     ))
 }
 
 reset.option <- function (opts) {
     ## Don't set any options in the setup, but reset specified options after
     old <- sapply(opts, getOption, simplify=FALSE)
-    return(setup.and.teardown(
+    return(ContextManager(
         null,
         function () do.call(options, old)
     ))
@@ -172,11 +152,4 @@ uniqueEmail <- function () paste0("test+", as.numeric(Sys.time()), "@crunch.io")
 testUser <- function (email=uniqueEmail(), name=paste("Ms.", email, "User"), ...) {
     u.url <- invite(email, name=name, notify=FALSE, ...)
     return(UserEntity(crGET(u.url)))
-}
-
-testProject <- function (name="", ...) {
-    name <- paste0(name, as.numeric(Sys.time()))
-    p <- session()$projects
-    p[[name]] <- list(...)
-    return(refresh(p)[[name]])
 }

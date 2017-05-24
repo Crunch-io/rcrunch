@@ -11,6 +11,12 @@ test_that("login checks for email and password before POSTing", {
         "Must supply a password")
 })
 
+test_that("without_echo doesn't crash on this OS", {
+    without_echo({
+        expect_true(TRUE)
+    })
+})
+
 with_mock_HTTP({
     test_that("Jupyter helper sets up env", {
         with(reset.option("httr_config"), {

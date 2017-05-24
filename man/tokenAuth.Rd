@@ -19,4 +19,3 @@ Set the auth token rather than from a Set-Cookie response header. Also modify
 the user-agent to include the service this is coming from.
 }
 \keyword{internal}
-

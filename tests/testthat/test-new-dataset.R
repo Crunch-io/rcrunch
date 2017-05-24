@@ -4,6 +4,19 @@ test_that("fake.csv is what we expect", {
     expect_identical(dim(testfile.df), c(20L, 6L))
 })
 
+test_that("write.csv.gz gzips a csv", {
+    df <- data.frame(a=1:1000)
+    f <- tempfile()
+    f2 <- tempfile()
+    write.csv.gz(df, file=f)
+    write.csv(df, file=f2, row.names=FALSE)
+    expect_true(file.exists(f))
+    expect_true(file.exists(f2))
+    expect_true(file.size(f) < file.size(f2)) ## bc compression
+    expect_equal(read.csv(f), df) ## It sniffs the conn type
+    expect_equal(read.csv(f2), df)
+})
+
 test_that("newDataset input validation", {
     expect_error(newDataset(NULL),
         "Can only make a Crunch dataset from a two-dimensional data")
@@ -14,11 +27,52 @@ test_that("newDataset input validation", {
 with_mock_HTTP({
     test_that("Basic exercise of turning data.frame to Crunch payload", {
         expect_POST(newDataset(data.frame(a=1), name="Testing"),
-            "/api/datasets/",
+            "https://app.crunch.io/api/datasets/",
             '{"element":"shoji:entity","body":{"name":"Testing",',
             '"table":{"element":"crunch:table",',
             '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"}},',
             '"order":["a"]}}}')
+    })
+    test_that("createWithMetadataAndFile when metadata is file too", {
+        expect_POST(newDatasetFromFixture("apidocs"),
+            "https://app.crunch.io/api/datasets/",
+            toJSON(fromJSON(file.path("dataset-fixtures", "apidocs.json"), simplifyVector=FALSE)))
+    })
+
+    test_that("createDataset with named args", {
+        expect_POST(createDataset(name="Foo", description="Bar."),
+            "https://app.crunch.io/api/datasets/",
+            '{"element":"shoji:entity","body":{"name":"Foo",',
+            '"description":"Bar."}}')
+    })
+    test_that("createDataset returns a dataset", {
+        with_POST("https://app.crunch.io/api/datasets/1/",
+            expect_true(is.dataset(createDataset(name="Foo"))))
+    })
+    test_that("newDatasetFromFile", {
+        expect_POST(newDatasetFromFile("helper.R"),
+            "https://app.crunch.io/api/datasets/",
+            '{"element":"shoji:entity","body":{"name":"helper.R"}}')
+        expect_error(newDatasetFromFile("NOTAFILE.exe"),
+            "File not found")
+    })
+    test_that("newDatasetByCSV is deprecated", {
+        expect_warning(
+            expect_POST(
+                newDatasetByCSV(data.frame(a=1), name="Bam!"),
+                    "https://app.crunch.io/api/datasets/",
+                    '{"element":"shoji:entity","body":{"name":"Bam!",',
+                    '"table":{"element":"crunch:table",',
+                    '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"}},',
+                    '"order":["a"]}}}'
+            ),
+            "newDatasetByCSV is deprecated"
+        )
+    })
+    test_that("newDatasetByColumn", {
+        expect_POST(newDatasetByColumn(data.frame(a=1), name="Bam!"),
+            "https://app.crunch.io/api/datasets/",
+            '{"element":"shoji:entity","body":{"name":"Bam!"}}')
     })
 })
 
@@ -53,14 +107,15 @@ if (run.integration.tests) {
             })
 
             test_that("newDataset via CSV + JSON", {
-                ds <- newDatasetByCSV(df)
+                expect_warning(ds <- newDatasetByCSV(df),
+                    "newDatasetByCSV is deprecated")
                 expect_valid_df_import(ds)
             })
         })
 
         m <- fromJSON(file.path("dataset-fixtures", "apidocs.json"),
             simplifyVector=FALSE)
-        
+
         whereas("Creating with metadata and csv", {
             test_that("createWithMetadataAndFile using docs example", {
                 ds <- newDatasetFromFixture("apidocs")
@@ -77,7 +132,7 @@ if (run.integration.tests) {
 
             test_that("Can create dataset with data in S3", {
                 ds <- createWithMetadataAndFile(m,
-                    file="s3://public.testing.crunch.io/example-dataset.csv")
+                    file="s3://testing-crunch-io/example-dataset.csv")
                 expect_valid_apidocs_import(ds)
                 ds2 <- newDatasetFromFixture("apidocs")
                 ## Compare to dataset imported from local file upload
@@ -100,22 +155,6 @@ if (run.integration.tests) {
             expect_true(is.dataset(dsz))
             expect_identical(name(dsz), "df")
             expect_valid_df_import(dsz)
-        })
-
-        test_that("Datasets can be deleted", {
-            dsname <- uniqueDatasetName()
-            testdf <- createDataset(name=dsname)
-            expect_true(dsname %in% listDatasets())
-            expect_true(isTRUE(crDELETE(self(testdf),
-                status.handlers=list(`204`=function (response) TRUE))))
-            expect_false(dsname %in% listDatasets(refresh=TRUE))
-        })
-        test_that("Datasets can be deleted by S4 method", {
-            dsname <- uniqueDatasetName()
-            testdf <- createDataset(name=dsname)
-            expect_true(dsname %in% listDatasets())
-            delete(testdf)
-            expect_false(dsname %in% listDatasets())
         })
     })
 }

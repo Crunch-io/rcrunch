@@ -4,8 +4,8 @@
 \name{dataset-owner}
 \alias{dataset-owner}
 \alias{owner}
-\alias{owner,CrunchDataset-method}
 \alias{owner<-}
+\alias{owner,CrunchDataset-method}
 \alias{owner<-,CrunchDataset-method}
 \title{Change the owner of a dataset}
 \usage{
@@ -26,4 +26,3 @@ The dataset.
 \description{
 Change the owner of a dataset
 }
-

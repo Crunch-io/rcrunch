@@ -9,18 +9,6 @@ test_that("is.error", {
     expect_error("not an error", NA)
 })
 
-test_that("selectFrom selects what it should", {
-    l1 <- list(list(a=1, b=2), list(c=3, b=4))
-    expect_identical(selectFrom("b", l1), c(2, 4))
-    expect_identical(selectFrom("a", l1), c(1, NA))
-    expect_identical(selectFrom("a", l1, ifnot=4), c(1, 4))
-    expect_identical(selectFrom("d", l1), c(NA, NA))
-    l2 <- l1
-    l2[[2]] <- 4
-    expect_identical(selectFrom("b", l2), c(2, NA))
-    expect_error(selectFrom("b", 5), "xlist must be a list object")
-})
-
 test_that("rethrow a caught error", {
     e <- try(halt("error in a box"), silent=TRUE)
     expect_true(is.error(e))
@@ -50,18 +38,18 @@ test_that("dirtyElements", {
 
 
 test_that("joinPath", {
-    expect_identical(joinPath("/api/datasets/", "../variables/"),
-        "/api/variables/")
-    expect_identical(joinPath("/api/variables/", "4412es/"),
-        "/api/variables/4412es/")
+    expect_identical(joinPath("https://app.crunch.io/api/datasets/", "../variables/"),
+        "https://app.crunch.io/api/variables/")
+    expect_identical(joinPath("https://app.crunch.io/api/variables/", "4412es/"),
+        "https://app.crunch.io/api/variables/4412es/")
     expect_identical(joinPath("a/b/c/d/../e/f/", "g/../../h/"),
         "a/b/c/e/h/")
-    expect_identical(joinPath("/api/datasets/", "/variables/"),
+    expect_identical(joinPath("https://app.crunch.io/api/datasets/", "/variables/"),
         "/variables/")
-    expect_identical(joinPath("/api/datasets/", "/"),
+    expect_identical(joinPath("https://app.crunch.io/api/datasets/", "/"),
         "/")
-    expect_identical(joinPath("/api/datasets/", "./id/"),
-        "/api/datasets/id/")
+    expect_identical(joinPath("https://app.crunch.io/api/datasets/", "./id/"),
+        "https://app.crunch.io/api/datasets/id/")
 })
 
 test_that("absoluteURL", {

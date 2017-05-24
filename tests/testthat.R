@@ -1,3 +1,2 @@
-library(testthat)
-# Sys.setlocale(locale="en_US.UTF-8")
+library(httptest)
 test_check("crunch")

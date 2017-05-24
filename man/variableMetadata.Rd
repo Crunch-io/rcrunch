@@ -16,4 +16,3 @@ categorical variable, and all subvariables are represented
 \description{
 Get all variable metadata for a dataset
 }
-

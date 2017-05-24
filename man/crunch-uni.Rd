@@ -3,23 +3,21 @@
 \docType{methods}
 \name{crunch-uni}
 \alias{crunch-uni}
-\alias{max}
-\alias{max,CrunchVariable-method}
-\alias{max,DatetimeVariable-method}
-\alias{max,NumericVariable-method}
 \alias{mean}
+\alias{sd}
+\alias{median}
+\alias{min}
+\alias{max}
 \alias{mean,CrunchVariable-method}
 \alias{mean,NumericVariable-method}
-\alias{median}
-\alias{median,CrunchVariable-method}
-\alias{median,NumericVariable-method}
-\alias{min}
-\alias{min,CrunchVariable-method}
-\alias{min,DatetimeVariable-method}
-\alias{min,NumericVariable-method}
-\alias{sd}
 \alias{sd,CrunchVariable-method}
 \alias{sd,NumericVariable-method}
+\alias{min,CrunchVariable-method}
+\alias{min,NumericVariable-method}
+\alias{min,DatetimeVariable-method}
+\alias{max,CrunchVariable-method}
+\alias{max,NumericVariable-method}
+\alias{max,DatetimeVariable-method}
 \title{Univariate statistics on Crunch objects}
 \usage{
 \S4method{mean}{CrunchVariable}(x, ...)
@@ -29,10 +27,6 @@
 \S4method{sd}{CrunchVariable}(x, na.rm = FALSE)
 
 \S4method{sd}{NumericVariable}(x, na.rm = FALSE)
-
-\S4method{median}{CrunchVariable}(x, na.rm = FALSE)
-
-\S4method{median}{NumericVariable}(x, na.rm = FALSE)
 
 \S4method{min}{CrunchVariable}(x, na.rm)
 
@@ -60,4 +54,3 @@ Univariate statistics on Crunch objects
 \seealso{
 \code{\link[base]{mean}} \code{\link[stats]{sd}} \code{\link[stats]{median}} \code{\link[base]{min}} \code{\link[base]{max}}
 }
-

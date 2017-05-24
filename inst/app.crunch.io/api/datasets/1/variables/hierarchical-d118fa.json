@@ -1,0 +1,26 @@
+// Query: relative=on
+{
+    "element": "shoji:order",
+    "self": "https://app.crunch.io/api/datasets/1/variables/hierarchical/",
+    "description": "Hierarchical ordering of dataset variables",
+    "graph": [
+        {
+            "Group 1": [
+                "../birthyr/",
+                {
+                    "Nested": [
+                        "../gender/",
+                        "../mymrset/"
+                    ]
+                },
+                "../textVar/"
+            ]
+        },
+        {
+            "Group 2": [
+                "../starttime/",
+                "../catarray/"
+            ]
+        }
+    ]
+}

@@ -4,30 +4,70 @@ with_mock_HTTP({
     ds <- loadDataset("test ds")
     test_that("Export POST request", {
         expect_POST(exportDataset(ds, file=""),
-            '/api/datasets/dataset1/export/csv/',
+            'https://app.crunch.io/api/datasets/1/export/csv/',
             '{"filter":null,"options":{"use_category_ids":false}}')
         expect_POST(write.csv(ds, file=""),
-            '/api/datasets/dataset1/export/csv/',
+            'https://app.crunch.io/api/datasets/1/export/csv/',
             '{"filter":null,"options":{"use_category_ids":false}}')
     })
     test_that("with categorical='id'", {
         expect_POST(write.csv(ds, file="", categorical="id"),
-            '/api/datasets/dataset1/export/csv/',
+            'https://app.crunch.io/api/datasets/1/export/csv/',
             '{"filter":null,"options":{"use_category_ids":true}}')
+    })
+    test_that("with na", {
+        expect_POST(write.csv(ds, file="", na=""),
+            'https://app.crunch.io/api/datasets/1/export/csv/',
+            '{"filter":null,"options":{"use_category_ids":false,',
+            '"missing_values":""}}')
+        expect_POST(write.csv(ds, file="", na="."),
+            'https://app.crunch.io/api/datasets/1/export/csv/',
+            '{"filter":null,"options":{"use_category_ids":false,',
+            '"missing_values":"."}}')
     })
     test_that("Export SPSS request", {
         expect_POST(exportDataset(ds, file="", format="spss"),
-            '/api/datasets/dataset1/export/spss/',
-            '{"filter":null}')
+            'https://app.crunch.io/api/datasets/1/export/spss/',
+            '{"filter":null,"options":{"var_label_field":"name"}}')
     })
     test_that("Export SPSS ignores 'categorical' arg", {
         expect_POST(exportDataset(ds, file="", format="spss", categorical="zzzz"),
-            '/api/datasets/dataset1/export/spss/',
-            '{"filter":null}')
+            'https://app.crunch.io/api/datasets/1/export/spss/',
+            '{"filter":null,"options":{"var_label_field":"name"}}')
     })
-    test_that("Unsupported export format", {
+    test_that("Export SPSS request with varlabel", {
+        expect_POST(exportDataset(ds, file="", format="spss", varlabel="description"),
+            'https://app.crunch.io/api/datasets/1/export/spss/',
+            '{"filter":null,"options":{"var_label_field":"description"}}')
+    })
+    test_that("Export with additional options", {
+        expect_POST(exportDataset(ds, file="", format="spss", otheropt=TRUE),
+            'https://app.crunch.io/api/datasets/1/export/spss/',
+            '{"filter":null,"options":{"otheropt":true,"var_label_field":"name"}}')
+    })
+    test_that("Unsupported arg values", {
         expect_error(exportDataset(ds, format="exe"),
             "'arg' should be one of ")
+        expect_error(exportDataset(ds, format="spss", varlabel="NOTAVARLAB"),
+            "'arg' should be one of ")
+        expect_error(exportDataset(ds, categorical="NOT"),
+            "'arg' should be one of ")
+    })
+
+    test_that("Exporting only one variable", {
+        expect_POST(write.csv(ds["gender"], file=""),
+            'https://app.crunch.io/api/datasets/1/export/csv/',
+            '{"filter":null,"where":{"function":"select",',
+            '"args":[{"map":{"66ae9881e3524f7db84970d556c34552":',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}}}]},',
+            '"options":{"use_category_ids":false}}')
+    })
+
+    test_that("Exporting duplicate variable references is prevented", {
+        expect_error(write.csv(ds[c("gender", "birthyr", "gender")], file=""),
+            "Duplicate variable reference: gender")
+        expect_error(write.csv(ds[c("gender", "birthyr", "gender", "gender", "birthyr")], file=""),
+            "Duplicate variable references: gender and birthyr")
     })
 })
 
@@ -93,5 +133,29 @@ with_test_authentication({
         expect_equal(names(df2), c("v2", "v4"))
         expect_is(df2$v4, "integer")
         expect_equal(df2$v4, as.vector(ds$v4, mode="id"))
+    })
+
+    test_that("Exclusion is applied, even if it depends on column not selected", {
+        skip_locally("Vagrant host doesn't serve files correctly")
+        filename <- tempfile()
+        exclusion(ds) <- ds$v4 == "C"
+        write.csv(ds[, c("v2", "v3")], file=filename)
+        df2 <- read.csv(filename)
+        expect_identical(dim(df2), c(10L, 2L))
+        expect_identical(names(df2), c("v2", "v3"))
+    })
+
+    test_that("Exclusion is applied, even if it depends on column not selected", {
+        skip_locally("Vagrant host doesn't serve files correctly")
+        filename <- tempfile()
+        exclusion(ds) <- NULL
+        ds$v4[8] <- NA
+        write.csv(ds[, c("v1", "v2", "v4")], file=filename, na="NANANA")
+        csvlines <- readLines(filename)
+        expect_equal(grep("NANANA", csvlines), c(2:6, 9, 17:21))
+        df2 <- read.csv(filename, na.strings="NANANA")
+        expect_identical(dim(df2), c(20L, 3L))
+        expect_identical(names(df2), c("v1", "v2", "v4"))
+        expect_identical(is.na(df2$v1), is.na(df$v1))
     })
 })

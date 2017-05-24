@@ -127,6 +127,9 @@ NULL
 #' @export
 setMethod("length", "ShojiOrder", function (x) length(entities(x)))
 
+#' @rdname ShojiOrder-length
+#' @export
+setMethod("length", "OrderGroup", function (x) length(entities(x)))
 
 #' Extract and update in VariableOrder and VariableGroup
 #'
@@ -418,6 +421,32 @@ setdiff_entities <- function (x, ents, remove.na=FALSE) {
     return(x)
 }
 
+intersect_entities <- function (x, ents, remove.na=TRUE) {
+    ## Keep only the part of x (Order) containing "ents" (entity references)
+    if (!is.character(ents)) {
+        ## Get just the entity URLs
+        ents <- urls(ents)
+    }
+
+    if (inherits(x, "ShojiOrder") || inherits(x, "OrderGroup")) {
+        entities(x) <- intersect_entities(entities(x), ents)
+    } else if (is.list(x)) {
+        ## We're inside entities, which may have nested groups
+        grps <- vapply(x, inherits, logical(1), what="OrderGroup")
+        x[grps] <- lapply(x[grps], intersect_entities, ents)
+        matches <- unlist(x[!grps]) %in% ents
+        if (any(!matches)) {
+            ## Put in NAs so that any subsequent assignment into this object
+            ## assigns into the right position. Then strip NAs after
+            x[!grps][!matches] <- rep(list(NA_character_), sum(!matches))
+        }
+    }
+    if (remove.na) {
+        x <- removeMissingEntities(x)
+    }
+    return(x)
+}
+
 removeMissingEntities <- function (x) {
     ## Remove NA entries, left by setdiff_entities, from @graph/entities
     if (inherits(x, "ShojiOrder") || inherits(x, "OrderGroup")) {
@@ -431,6 +460,103 @@ removeMissingEntities <- function (x) {
             x <- x[-which(!grps)[drops]]
         }
     }
+    return(x)
+}
+
+#' Remove OrderGroups with no entities
+#'
+#' This function recurses through a \code{ShojiOrder}/\code{OrderGroup} and
+#' removes any groups that contain no entities.
+#'
+#' @param x VariableOrder, DatasetOrder, VariableGroup, or DatasetGroup
+#' @return \code{x} with empty groups removed.
+#' @export
+removeEmptyGroups <- function (x) {
+    if (inherits(x, "ShojiOrder") || inherits(x, "OrderGroup")) {
+        entities(x) <- removeEmptyGroups(entities(x))
+    } else if (is.list(x)) {
+        ## We're inside entities, which may have nested groups
+        grps <- vapply(x, inherits, logical(1), what="OrderGroup")
+        if (any(grps)) {
+            empties <- vapply(x[grps], function (g) length(urls(g)) == 0,
+                logical(1))
+            ## Recurse through non-empty groups
+            if (any(!empties)) {
+                nonempty <- which(grps)[!empties]
+                x[nonempty] <- lapply(x[nonempty], removeEmptyGroups)
+            }
+            ## Drop empty groups
+            if (any(empties)) {
+                x <- x[-which(grps)[empties]]
+            }
+        }
+    }
+    return(x)
+}
+
+#' Remove duplicated entites from an order/group
+#'
+#' This function recurses through a \code{ShojiOrder}/\code{OrderGroup} and
+#' removes any duplicate entities. As with the default of
+#' \code{\link[base]{duplicated}}, the first appearance of an entity is kept,
+#' and subsequent occurences are marked as duplicated and removed. (Unlike
+#' \code{duplicated}, however, there is no option to reverse that order.)
+#' "First" occurence of an entity is determined by the function's recursion:
+#' within each group, nested groups are processed first, in order, and
+#' recursively their nested groups are processed. See the test suite, in
+#' test-variable-order.R, for an example that illustrates which entities are
+#' dropped as duplicate.
+#'
+#' @param x VariableOrder, DatasetOrder, VariableGroup, or DatasetGroup
+#' @return \code{x} with duplicate entities removed.
+#' @seealso \code{\link{duplicates}}, which when set to \code{FALSE} also calls
+#' this function.
+#' @export
+dedupeOrder <- function (x) {
+    ## Collect seen urls outside, diff out urls, recurse into groups, update seen urls
+    seen <- c()
+
+    .dedupe <- function (x) {
+        if (inherits(x, "ShojiOrder") || inherits(x, "OrderGroup")) {
+            entities(x) <- .dedupe(entities(x))
+        } else if (is.list(x)) {
+            ## We're inside entities, which may have nested groups
+            grps <- vapply(x, inherits, logical(1), what="OrderGroup")
+
+            ## First, recurse through groups:
+            x[grps] <- lapply(x[grps], .dedupe)
+
+            ## Then, dedupe URLs at this level, and drop any that we've already seen
+            ents <- unlist(x[!grps])
+            badents <- duplicated(ents) | ents %in% seen
+            if (any(badents)) {
+                x <- x[-which(!grps)[badents]]
+            }
+
+            ## Update "seen" with the URLs we didn't drop
+            seen <<- c(seen, ents[!badents])
+        }
+        return(x)
+    }
+    return(.dedupe(x))
+}
+
+#' Remove nesting of groups within an order/group
+#'
+#' This function reduces a potentially nested order to its flattened
+#' representation, containing no nested groups. Entities are ordered in the
+#' result by their first appearance in the order object passed as input.
+#'
+#' @param x VariableOrder, DatasetOrder, VariableGroup, or DatasetGroup; or a
+#' CrunchDataset or catalog that has an \code{ordering} property.
+#' @return \code{x}, or its order resource, flattened.
+#' @export
+flattenOrder <- function (x) {
+    if (!(inherits(x, "ShojiOrder") || inherits(x, "OrderGroup"))) {
+        ## Perhaps it's a dataset or catalog. Get its "ordering"
+        x <- ordering(x)
+    }
+    entities(x) <- urls(x)
     return(x)
 }
 
@@ -452,4 +578,66 @@ grouped <- function (order.obj) {
 ungrouped <- function (order.obj) {
     return(do.call(groupClass(order.obj), list(name="ungrouped",
         entities=entities(Filter(is.character, order.obj)))))
+}
+
+#' Move entities to a group
+#'
+#' The function has two versions: a regular function and a setter. They do the
+#' same thing, but the setter probably results in less verbose code for you.
+#'
+#' @param x VariableGroup
+#' @param value Variable, VariableCatalog subset, or Dataset subset
+#' @return \code{x} with the entities in \code{value} appended to it. If the
+#' containing order object has duplicates=FALSE, the entities will be "moved"
+#' to this group. Otherwise, their references will be copied to the group.
+#' @examples
+#' \dontrun{
+#' moveToGroup(ordering(ds)[["Demographics"]]) <- ds[c("gender", "age")]
+#'}
+#' @export
+moveToGroup <- function (x, value) {
+    if (!inherits(value, "OrderGroup")) {
+        ## If it's a Group, let's move it as is. If not, get the URLs
+        ## TODO: this won't do the right thing for moving Dataset to DatasetGroup
+        value <- urls(value)
+    }
+    entities(x) <- c(entities(x), value)
+    return(x)
+}
+
+#' @rdname moveToGroup
+#' @export
+"moveToGroup<-" <- moveToGroup
+
+#' Find an entity in an order object
+#'
+#' @param x Variable or Dataset, depending on the type of order, or URL for it
+#' @param ord ShojiOrder (VariableOrder or DatasetOrder)
+#' @return If \code{x} is found in \code{ord}, a character vector of group names
+#' that provide the "path" to the entity. The length of the vector corresponds
+#' to the depth of nesting. If not found, \code{NA} is returned
+#' @export
+locateEntity <- function (x, ord) {
+    if (!is.character(x)) x <- self(x)
+    out <- character(0)
+
+    .locateInGroups <- function (x, ord) {
+        allurls <- urls(ord)
+        if (x %in% allurls) {
+            us <- vapply(grouped(ord), function (g) x %in% urls(g), logical(1))
+            if (any(us)) {
+                ## Only looks for first match
+                ind <- which(us)[1]
+                out <<- c(out, name(grouped(ord)[[ind]]))
+                .locateInGroups(x, grouped(ord)[[ind]])
+            }
+        } else if (inherits(ord, "ShojiOrder")) {
+            ## We're at the top level and it wasn't found at all
+            out <<- NA_character_
+        }
+        invisible()
+    }
+
+    .locateInGroups(x, ord)
+    return(out)
 }

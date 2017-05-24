@@ -17,4 +17,3 @@ Integer: the number of elements in the index list
 \description{
 Length of Catalog
 }
-

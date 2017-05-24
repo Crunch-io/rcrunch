@@ -5,7 +5,7 @@
 #' vector/list/data.frame methods jointly inherited in CrunchVariable and
 #' CrunchDataset.
 ShojiObject <- setClass("ShojiObject",
-    representation(
+    slots=c(
         element="ANY",
         self="ANY",
         body="ANY",
@@ -14,14 +14,14 @@ ShojiObject <- setClass("ShojiObject",
         views="ANY",
         fragments="ANY"
     ))
-
+ShojiEntity <- setClass("ShojiEntity", contains="ShojiObject")
 ShojiCatalog <- setClass("ShojiCatalog", contains="ShojiObject",
-    representation(
+    slots=c(
         index="list",
         orders="list"
     ))
 ShojiOrder <- setClass("ShojiOrder", contains="ShojiObject",
-    representation(
+    slots=c(
         graph="list",
         catalog_url="character",
         duplicates="logical"
@@ -32,12 +32,12 @@ ShojiOrder <- setClass("ShojiOrder", contains="ShojiObject",
         duplicates=FALSE
     ))
 ShojiView <- setClass("ShojiView", contains="ShojiObject",
-    representation(
+    slots=c(
         value="ANY"
     ))
 
 ShojiTuple <- setClass("ShojiTuple",
-    representation(
+    slots=c(
         index_url="character",
         entity_url="character",
         body="list"
@@ -52,7 +52,7 @@ ProjectEntity <- setClass("ProjectEntity", contains="ShojiObject")
 UserEntity <- setClass("UserEntity", contains="ShojiObject")
 
 CrunchExpr <- setClass("CrunchExpr",
-    representation=representation(
+    slots=c(
         dataset_url="character",
         expression="list",
         filter="list"
@@ -63,8 +63,7 @@ CrunchExpr <- setClass("CrunchExpr",
         filter=list()
     ))
 
-CrunchLogicalExpr <- setClass("CrunchLogicalExpr",
-    contains="CrunchExpr")
+CrunchLogicalExpr <- setClass("CrunchLogicalExpr", contains="CrunchExpr")
 
 #' Variables in Crunch
 #'
@@ -75,7 +74,7 @@ CrunchLogicalExpr <- setClass("CrunchLogicalExpr",
 #' @importFrom methods as callNextMethod new slot slot<- slotNames validObject
 #' @rdname CrunchVariable
 setClass("CrunchVariable",
-    representation= representation(
+     slots=c(
         filter="CrunchLogicalExpr",
         tuple="VariableTuple"
     ),
@@ -150,7 +149,7 @@ MultipleResponseVariable <-setClass("MultipleResponseVariable",
 VariableOrder <- setClass("VariableOrder", contains="ShojiOrder")
 
 OrderGroup <- setClass("OrderGroup",
-    representation=representation(
+    slots=c(
         group="character",
         entities="list",
         duplicates="logical"
@@ -180,7 +179,7 @@ VariableGroup <- setClass("VariableGroup", contains="OrderGroup",
 #' @rdname VariableCatalog
 #' @aliases VariableCatalog
 VariableCatalog <- setClass("VariableCatalog", contains="ShojiCatalog",
-    representation(order="VariableOrder"))
+    slots=c(order="VariableOrder"))
 DatasetCatalog <- setClass("DatasetCatalog", contains="ShojiCatalog")
 BatchCatalog <- setClass("BatchCatalog", contains="ShojiCatalog")
 PermissionCatalog <- setClass("PermissionCatalog", contains="ShojiCatalog")
@@ -191,13 +190,14 @@ MemberCatalog <- setClass("MemberCatalog", contains="ShojiCatalog")
 VersionCatalog <- setClass("VersionCatalog", contains="ShojiCatalog")
 FilterCatalog <- setClass("FilterCatalog", contains="ShojiCatalog")
 ForkCatalog <- setClass("ForkCatalog", contains="ShojiCatalog")
+MultitableCatalog <- setClass("MultitableCatalog", contains="ShojiCatalog")
 
 #' Crunch Datasets
 #'
 #' @rdname CrunchDataset
-#' @export
+#' @export CrunchDataset
 CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
-    representation=representation(
+    slots=c(
         variables="VariableCatalog",
         filter="CrunchLogicalExpr",
         tuple="DatasetTuple"
@@ -266,17 +266,19 @@ Category <- function (..., data=NULL) {
 #' @rdname Subvariables
 #' @export
 Subvariables <- setClass("Subvariables", contains="VariableCatalog",
-    representation=representation(
+    slots=c(
         filter="CrunchLogicalExpr"
     ),
     prototype=prototype(
         filter=CrunchLogicalExpr()
     ))
 
-CubeDims <- setClass("CubeDims", contains="namedList")
+CubeDims <- setClass("CubeDims", contains="namedList",
+    slots=c(references="VariableCatalog"),
+    prototype=prototype(references=VariableCatalog()))
 
 CrunchCube <- setClass("CrunchCube", contains="list",
-    representation=representation(
+    slots=c(
         useNA="character",
         dims="CubeDims",
         arrays="list"),
@@ -284,6 +286,7 @@ CrunchCube <- setClass("CrunchCube", contains="list",
 
 CrunchTeam <- setClass("CrunchTeam", contains="ShojiObject")
 CrunchFilter <- setClass("CrunchFilter", contains="ShojiObject")
+Multitable <- setClass("Multitable", contains="ShojiObject")
 
 #' Organize Datsets
 #'
@@ -309,3 +312,8 @@ DatasetGroup <- setClass("DatasetGroup", contains="OrderGroup",
     ))
 
 setClass("Session", contains="list")
+
+MultitableResult <- setClass("MultitableResult", contains="namedList")
+TabBookResult <- setClass("TabBookResult", contains="namedList")
+
+SearchResults <- setClass("SearchResults", contains="namedList")

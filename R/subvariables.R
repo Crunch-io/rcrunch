@@ -65,30 +65,11 @@ setMethod("subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
             body <- list(subvariables=new)
             payload <- toJSON(body)
             crPATCH(self(x), body=payload)
-            dropCache(absoluteURL("./cube/", datasetReference(x)))
+            dropCache(cubeURL(x))
             tuple(x)$subvariables <- new
         }
         return(x)
     })
-
-#' @rdname describe-catalog
-#' @export
-setMethod("aliases", "Subvariables", function (x) {
-    vapply(index(x), function (a) a$alias, character(1), USE.NAMES=FALSE)
-})
-
-#' @rdname describe-catalog
-#' @export
-setMethod("aliases<-", "Subvariables", function (x, value) {
-    stopifnot(is.character(value), length(x) == length(value),
-        !any(duplicated(value)))
-    index(x) <- mapply(function (tuple, val) {
-            tuple[["alias"]] <- val
-            return(tuple)
-        }, tuple=index(x), val=value, SIMPLIFY=FALSE, USE.NAMES=TRUE)
-    crPATCH(self(x), body=toJSON(index(x)))
-    return(x)
-})
 
 #' Extract and modify subsets of subvariables
 #'
@@ -107,13 +88,14 @@ NULL
 #' @rdname subvars-extract
 #' @export
 setMethod("[[", c("Subvariables", "character"), function (x, i, ...) {
+    ## TODO: drop this in favor of ShojiCatalog method (have to pass in namekey)
     i <- match(i, names(x))
     if (is.na(i)) return(NULL)
     return(x[[i, ...]])
 })
 #' @rdname subvars-extract
 #' @export
-setMethod("[[", c("Subvariables", "ANY"), function (x, i, ...) {
+setMethod("[[", c("Subvariables", "numeric"), function (x, i, ...) {
     out <- callNextMethod(x, i, ...)
     if (!is.null(out)) {
         out <- CrunchVariable(out, filter=activeFilter(x))
@@ -267,16 +249,7 @@ setMethod("[[<-",
     })
 #' @rdname subvars-extract
 #' @export
-setMethod("$<-", c("CategoricalArrayVariable"), function (x, name, value) {
+setMethod("$<-", "CategoricalArrayVariable", function (x, name, value) {
     x[[name]] <- value
     return(x)
 })
-
-findParent <- function (subvar, dataset) {
-    ## Utility to find the array parent, given a subvariable and its dataset
-    if (is.variable(subvar)) subvar <- self(subvar)
-
-    allvars <- index(allVariables(dataset))
-    parent <- Filter(function (x) subvar %in% x$subvariables %||% c(), allvars)
-    return(names(parent))
-}

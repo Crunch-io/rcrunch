@@ -51,6 +51,18 @@ has.categories <- function (x) {
     return(x %in% c("categorical_array", "multiple_response", "categorical"))
 }
 
+is.subvariable <- function (x) {
+    ## TODO: server should support a better way of determining this
+    grepl("subvariables", self(x))
+}
+
+#' @rdname crunch-is
+#' @export
+is.derived <- function (x) {
+    stopifnot(is.variable(x))
+    isTRUE(tuple(x)$derived)
+}
+
 CASTABLE_TYPES <- c("numeric", "text", "categorical") ## Add datetime when server supports
 
 #' Change the type of Crunch variables

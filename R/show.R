@@ -12,6 +12,11 @@ NULL
 
 .showIt <- function (object) {
     out <- getShowContent(object)
+    if (!is.character(out)) {
+        ## Catalog show content is a data.frame unless otherwise indicated.
+        ## Print it, but capture the output so we can return the character output.
+        out <- capture.output(print(getShowContent(object)))
+    }
     cat(out, sep="\n")
     invisible(out)
 }
@@ -19,16 +24,6 @@ NULL
 #' @rdname show-crunch
 #' @export
 setMethod("show", "ShojiObject", .showIt)
-
-#' @rdname show-crunch
-#' @export
-setMethod("show", "ShojiCatalog", function (object) {
-    ## Catalog show content is a data.frame unless otherwise indicated.
-    ## Print it, but capture the output so we can return the character output.
-    out <- capture.output(print(getShowContent(object)))
-    cat(out, sep="\n")
-    invisible(out)
-})
 
 #' @rdname show-crunch
 #' @export
@@ -45,9 +40,9 @@ setMethod("show", "Categories", .showIt)
 
 # Actual show methods
 
-showCategory <- function (x) paste0("[ ", value(x), " ]  ", name(x))
+showCategory <- function (x) data.frame(id=id(x), name=name(x), value=value(x), missing=is.na(x))
 
-showCategories <- function (x) vapply(x, showCategory, character(1))
+showCategories <- function (x) do.call("rbind", lapply(x, showCategory))
 
 showCrunchVariableTitle <- function (x) {
     out <- paste(getNameAndType(x), collapse=" ")
@@ -111,27 +106,27 @@ showSubvariables <- function (x) {
     return(out)
 }
 
-showShojiOrder <- function (x, catalog_url=x@catalog_url) {
+showShojiOrder <- function (x, catalog_url=x@catalog_url, key="name") {
     if (nchar(catalog_url)) {
         catalog <- index(ShojiCatalog(crGET(catalog_url)))
     } else {
         catalog <- list()
     }
-    return(unlist(lapply(x, showOrderGroup, index=catalog)))
+    return(unlist(lapply(x, showOrderGroup, index=catalog, key=key)))
 }
 
-showOrderGroup <- function (x, index) {
+showOrderGroup <- function (x, index, key="name") {
     if (inherits(x, "OrderGroup")) {
         ents <- entities(x)
         if (length(ents)) {
-            group <- unlist(lapply(ents, showOrderGroup, index=index))
+            group <- unlist(lapply(ents, showOrderGroup, index=index, key=key))
         } else {
             group <- "(Empty group)"
         }
         out <- c(paste0("[+] ", name(x)), paste0("    ", group))
     } else {
         tup <- index[[x]] %||% list()
-        out <- tup[["name"]] %||% "(Hidden variable)"
+        out <- tup[[key]] %||% "(Hidden variable)"
     }
     return(out)
 }
@@ -161,7 +156,8 @@ formatVersionCatalog <- function (x, from=Sys.time()) {
         and="&",
         or="|",
         is_missing="is.na",
-        `in`="%in%"
+        `in`="%in%",
+        duplicates="duplicated"
     )
 
 formatExpression <- function (expr) {
@@ -182,12 +178,25 @@ formatExpression <- function (expr) {
         ## GET URL, get alias from that
         return(crGET(expr[["variable"]])$body$alias)
     } else if (length(intersect(c("column", "value"), names(expr)))) {
-        val <- expr$column %||% expr$value
-        return(deparse(val))
+        return(deparseAndTruncate(expressionValue(expr)))
     } else {
         ## Dunno what this is
         return("[Complex expression]")
     }
+}
+
+expressionValue <- function (expr) {
+    ## Could be under either "column" or "value". R doesn't distinguish length-1
+    ## from length-N values, but Crunch API does.
+    unlist(expr$column %||% expr$value)
+}
+
+deparseAndTruncate <- function (x, ...) {
+    out <- deparse(x, ...)
+    if (length(out) > 1) {
+        out <- paste0(out[1], "...")
+    }
+    return(out)
 }
 
 formatExpressionArgs <- function (args) {
@@ -198,7 +207,7 @@ formatExpressionArgs <- function (args) {
     if (sum(vars) == 1) {
         ## Great, let's see if we have any values to format
         vals <- vapply(args, function (x) {
-                length(names(x)) == 1 && names(x) %in% c("column", "value")
+                any(names(x) %in% c("column", "value"))
             }, logical(1))
         if (any(vals)) {
             ## Get the var, see if it is categorical
@@ -215,13 +224,13 @@ formatExpressionArgs <- function (args) {
 }
 
 formatExpressionValue <- function (val, cats=NULL) {
-    val <- val$column %||% val$value
+    val <- expressionValue(val)
     if (length(cats)) {
         val <- i2n(val, cats)
     } else {
         ## TODO: iterate over, replace {?:-1} with NA
     }
-    return(deparse(val))
+    return(deparseAndTruncate(val))
 }
 
 #' @rdname show-crunch
@@ -250,6 +259,8 @@ setMethod("getShowContent", "CategoricalArrayVariable",
 setMethod("getShowContent", "CrunchDataset", showCrunchDataset)
 setMethod("getShowContent", "Subvariables", showSubvariables)
 setMethod("getShowContent", "ShojiOrder", showShojiOrder)
+setMethod("getShowContent", "VariableOrder",
+    function (x) showShojiOrder(x, key=namekey(x)))
 setMethod("getShowContent", "ShojiCatalog",
     function (x) catalogToDataFrame(x, TRUE))
 setMethod("getShowContent", "BatchCatalog",
@@ -277,3 +288,7 @@ setMethod("getShowContent", "CrunchFilter",
 #' @rdname show-crunch
 #' @export
 setMethod("show", "CrunchCube", function (object) show(cubeToArray(object)))
+
+#' @rdname show-crunch
+#' @export
+setMethod("show", "OrderGroup", function (object) cat(showOrderGroup(object, index=structure(lapply(urls(object), function (x) list(name=x)), .Names=urls(object)), key="name"), sep="\n"))

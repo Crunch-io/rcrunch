@@ -46,5 +46,5 @@ invite <- function (email, name=NULL, notify=TRUE, id_method="pwhash",
     }
 
     url <- shojiURL(getAccount(), "catalogs", "users")
-    return(crPOST(url, body=toJSON(list(element="shoji:entity", body=payload))))
+    return(crPOST(url, body=toJSON(do.call("wrapEntity", payload))))
 }

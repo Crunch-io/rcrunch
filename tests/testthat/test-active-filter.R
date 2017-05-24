@@ -3,29 +3,35 @@ context("Filtering datasets and variables in the R session")
 with_mock_HTTP({
     ds <- loadDataset("test ds")
     ds2 <- ds[ds$gender == "Male", ]
-    ds3 <- ds2[ds$birthyr > 1981, ]
+    ds3 <- ds2[ds2$birthyr > 1981, ]
 
     test_that("A clean dataset has NULL activeFilter", {
         expect_null(activeFilter(ds))
     })
-    test_that("A null filter becomes valid JSON", {
-        expect_equal(unclass(toJSON(zcl(activeFilter(ds)))), "{}")
-    })
     test_that("Getting a variable from a clean dataset has NULL activeFilter", {
         expect_null(activeFilter(ds$gender))
+    })
+    test_that("A null filter becomes valid JSON", {
+        expect_equal(unclass(toJSON(zcl(activeFilter(ds)))), "{}")
     })
 
     test_that("[ method on dataset adds an active filter", {
         expect_identical(activeFilter(ds2), ds$gender == "Male")
     })
     test_that("Active filter persists on refreshing dataset", {
-        ## Compare @expressions because of a quirk of the mock backend
-        expect_identical(activeFilter(refresh(ds2))@expression,
-            (ds$gender == "Male")@expression)
+        expect_identical(activeFilter(refresh(ds2)), ds$gender == "Male")
     })
     test_that("Further [ on a filtered dataset ands the filters together", {
         expect_identical(activeFilter(ds3),
             ds$gender == "Male" & ds$birthyr > 1981)
+    })
+    test_that("But further [ on filtered dataset must match the dataset's filtering", {
+        expect_error(ds2b <- ds2[ds$birthyr > 1981, ],
+            "In ds2[ds$birthyr > 1981, ], object and subsetting expression have different filter expressions",
+            fixed=TRUE)
+        expect_error(ds2b <- ds2[ds3$birthyr > 1981, ],
+            "In ds2[ds3$birthyr > 1981, ], object and subsetting expression have different filter expressions",
+            fixed=TRUE)
     })
 
     test_that("subset method for dataset does the same", {
@@ -53,10 +59,15 @@ with_mock_HTTP({
     })
 
     test_that("Getting weight variable from filtered dataset is filtered", {
-        ds4 <- ds2
-        ds4@body$weight <- "/api/datasets/dataset1/variables/starttime/"
-        expect_identical(weight(ds4), ds4$starttime)
-        expect_identical(activeFilter(weight(ds4)), ds$gender == "Male")
+        otherds <- loadDataset("ECON.sav")
+        expect_warning(
+            expect_identical(weight(otherds), otherds$birthyr),
+            "Variable birthyr is hidden")
+        otherds2 <- otherds[otherds$gender == "Male",]
+        expect_warning(
+            expect_identical(weight(otherds2), otherds2$birthyr),
+            "Variable birthyr is hidden")
+        expect_identical(activeFilter(weight(otherds2)), otherds$gender == "Male")
     })
 
     test_that("activeFilter from filtered CrunchVariable", {
@@ -67,30 +78,73 @@ with_mock_HTTP({
             ds$gender == "Male")
     })
 
+    test_that("Further [ on a filtered variable ands the filters together", {
+        expect_identical(activeFilter(ds2$gender[ds2$birthyr > 1981]),
+            ds$gender == "Male" & ds$birthyr > 1981)
+    })
+    test_that("But further [ on filtered variable must match the variable's filtering", {
+        expect_error(ds2$gender[ds$birthyr > 1981],
+            "In ds2$gender[ds$birthyr > 1981], object and subsetting expression have different filter expressions",
+            fixed=TRUE)
+        expect_error(ds2$gender[ds3$birthyr > 1981],
+            "In ds2$gender[ds3$birthyr > 1981], object and subsetting expression have different filter expressions",
+            fixed=TRUE)
+    })
+
+    age <- ds$starttime - ds$birthyr
     test_that("activeFilter from CrunchExpr", {
-        expect_identical(activeFilter((ds$birthyr - ds$starttime)[ds$gender == "Male"]),
+        expect_identical(activeFilter(age[ds$gender == "Male"]),
             ds$gender == "Male")
     })
     test_that("activeFilter passes across operations among vars/exprs", {
         expect_identical(activeFilter(ds$birthyr[ds$gender == "Male"] - ds$starttime[ds$gender == "Male"]),
             ds$gender == "Male")
     })
+    age2 <- ds2$starttime - ds2$birthyr
+    test_that("activeFilter from CrunchExpr from filtered dataset", {
+        expect_identical(activeFilter(age2), ds$gender == "Male")
+    })
+    test_that("Further [ on a filtered expression ands the filters together", {
+        expect_identical(activeFilter(age2[ds2$birthyr > 1981]),
+            ds$gender == "Male" & ds$birthyr > 1981)
+    })
+    test_that("But further [ on filtered expression must match the expression's filtering", {
+        expect_error(age2[ds$birthyr > 1981],
+            "In age2[ds$birthyr > 1981], object and subsetting expression have different filter expressions",
+            fixed=TRUE)
+        expect_error(age2[ds3$birthyr > 1981],
+            "In age2[ds3$birthyr > 1981], object and subsetting expression have different filter expressions",
+            fixed=TRUE)
+    })
+
     test_that("Vars with different activeFilters can't combine", {
         expect_error(ds$birthyr[ds$gender == "Male"] - ds$starttime[ds$gender == "Female"],
             "Cannot combine expressions with different filters")
+        expect_error(ds$birthyr[ds$gender == "Male"] - ds3$starttime,
+            "Cannot combine expressions with different filters")
     })
     test_that("Exprs with different activeFilters can't combine", {
-        expect_error((ds$birthyr - ds$starttime)[ds$gender == "Male"] - (ds$birthyr - ds$starttime)[ds$gender == "Female"],
+        expect_error(age[ds$gender == "Male"] - age[ds$gender == "Female"],
             "Cannot combine expressions with different filters")
     })
     test_that("Vars/exprs together with different active filters can't combine", {
-        expect_error(ds$birthyr[ds$gender == "Male"] - (ds$birthyr - ds$starttime)[ds$gender == "Female"],
+        expect_error(ds$birthyr[ds$gender == "Male"] - age[ds$gender == "Female"],
             "Cannot combine expressions with different filters")
     })
+
     test_that("Can combine var with activeFilter with non-Crunch object", {
         expect_identical(activeFilter(ds$birthyr[ds$gender == "Male"] - 50),
             ds$gender == "Male")
         expect_identical(activeFilter(2016 - ds$birthyr[ds$gender == "Male"]),
+            ds$gender == "Male")
+    })
+
+    test_that("Expression on filtered variable keeps its filter", {
+        expect_identical(activeFilter(bin(ds2$birthyr)),
+            ds$gender == "Male")
+        expect_identical(activeFilter(is.na(ds2$birthyr)),
+            ds$gender == "Male")
+        expect_identical(activeFilter(!is.na(ds2$birthyr)),
             ds$gender == "Male")
     })
 })

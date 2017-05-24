@@ -1,0 +1,81 @@
+// Query: relative=on
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/1/variables/",
+    "specification": "https://app.crunch.io/api/specifications/variables/",
+    "description": "List of Variables of this dataset",
+    "index": {
+        "gender/": {
+            "name": "Gender",
+            "discarded": false,
+            "alias": "gender",
+            "type": "categorical",
+            "id": "66ae9881e3524f7db84970d556c34552",
+            "notes": "",
+            "description": "Gender"
+        },
+        "birthyr/": {
+            "name": "Birth Year",
+            "discarded": false,
+            "alias": "birthyr",
+            "type": "numeric",
+            "id": "f78ca47313144b57adfb495893968e70",
+            "description": null,
+            "notes": "Asked instead of age"
+        },
+        "starttime/": {
+            "name": "starttime",
+            "discarded": false,
+            "alias": "starttime",
+            "type": "datetime",
+            "id": "d7c21314ca9e453c93069168681a285c",
+            "description": "Interview Start Time",
+            "notes": "",
+            "resolution": "D",
+            "rollup_resolution": "s"
+        },
+        "mymrset/": {
+            "name": "mymrset",
+            "discarded": false,
+            "alias": "mymrset",
+            "type": "multiple_response",
+            "id": "949d2dc7e7a24e6090cc88bb92e1d2fb",
+            "description": "Please select all that apply",
+            "notes": "",
+            "subvariables": [
+                "mymrset/subvariables/subvar2/",
+                "mymrset/subvariables/subvar1/",
+                "mymrset/subvariables/subvar3/"
+            ],
+            "subvariables_catalog": "mymrset/subvariables/"
+        },
+        "catarray/": {
+            "name": "Cat Array",
+            "discarded": false,
+            "alias": "catarray",
+            "type": "categorical_array",
+            "id": "qwert",
+            "description": "An array of cats",
+            "notes": "",
+            "subvariables": [
+                "mymrset/subvariables/subvar2/",
+                "mymrset/subvariables/subvar1/",
+                "mymrset/subvariables/subvar3/"
+            ],
+            "subvariables_catalog": "mymrset/subvariables/"
+        },
+        "textVar/": {
+            "name": "Text variable ftw",
+            "discarded": false,
+            "alias": "textVar",
+            "type": "text",
+            "id": "text",
+            "description": "Budějovický Budvar",
+            "notes": ""
+        }
+    },
+    "orders": {
+        "hier": "https://app.crunch.io/api/datasets/1/variables/hierarchical/",
+        "weights": "https://app.crunch.io/api/datasets/1/variables/weights/"
+    }
+}

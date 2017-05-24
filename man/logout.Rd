@@ -9,4 +9,3 @@ logout()
 \description{
 Kill the active Crunch session
 }
-

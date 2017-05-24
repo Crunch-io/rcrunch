@@ -19,4 +19,3 @@
 \description{
 Omit missing categories
 }
-

@@ -2,16 +2,16 @@
 #'
 #' @param dataset1 a CrunchDataset
 #' @param dataset2 another CrunchDataset, or possibly a data.frame. If
-#' \code{dataset2} is not a Crunch dataset, it will be uploaded as a new
-#' dataset before appending.
-#' @param cleanup Deprecated. See \code{\link{cleanseBatches}}.
-#' @return A CrunchDataset with \code{dataset2} appended to \code{dataset1}
+#' `dataset2` is not a Crunch dataset, it will be uploaded as a new
+#' dataset before appending. If it is a CrunchDataset, it may be subsetted with
+#' a filter expression on the rows and a selection of variables on the columns.
+#' @param autorollback logical: If the append fails, revert the dataset back
+#' to its state before attempting to append? Default is \code{TRUE}, and you
+#' probably won't want to change that.
+#' @return `dataset1`, updated with `dataset2`, potentially filtered on rows and
+#' variables, appended to it.
 #' @export
-appendDataset <- function (dataset1, dataset2, cleanup=TRUE) {
-    if (!missing(cleanup)) {
-        warning('Argument "cleanup" is deprecated. See "?cleanseBatches".',
-            call.=FALSE)
-    }
+appendDataset <- function (dataset1, dataset2, autorollback=TRUE) {
     stopifnot(is.dataset(dataset1))
     if (!is.dataset(dataset2)) {
         temp.ds.name <- paste("Appending to", name(dataset1), now())
@@ -25,13 +25,14 @@ appendDataset <- function (dataset1, dataset2, cleanup=TRUE) {
         halt("Cannot append dataset to itself")
     }
 
-    body <- list(
-        element="shoji:entity",
-        body=list(
-            dataset=self(dataset2)
-        )
-    )
+    ## Assemble the payload
+    payload <- list(dataset=self(dataset2))
+    ## Include a variable map, if appropriate
+    payload$where <- variablesFilter(dataset2)
+    ## And filter the rows, if appropriate
+    payload$filter <- zcl(activeFilter(dataset2))
+
     ## POST the batch. This will error with a useful message if it fails
-    crPOST(shojiURL(dataset1, "catalogs", "batches"), body=toJSON(body))
-    invisible(refresh(dataset1))
+    dataset1 <- addBatch(dataset1, body=payload, autorollback=autorollback)
+    invisible(dataset1)
 }

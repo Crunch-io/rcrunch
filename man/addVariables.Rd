@@ -21,4 +21,3 @@ If you have multiple variables to add, this function will be faster than
 doing \code{ds$var <- value} assignment because it doesn't refresh the
 dataset's state in between variable POST requests.
 }
-

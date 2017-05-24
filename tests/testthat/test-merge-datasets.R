@@ -4,16 +4,29 @@ with_mock_HTTP({
     ds1 <- loadDataset("test ds")
     ds2 <- loadDataset("ECON.sav")
 
-    testPayload <- paste0('{"function":"adapt",',
-        '"args":[{"dataset":"/api/datasets/dataset3/"},',
-        '{"variable":"/api/datasets/dataset3/variables/birthyr/"},',
-        '{"variable":"/api/datasets/dataset1/variables/birthyr/"}]}')
-    testSubsetPayload <- paste0('{"function":"select","args":[{"map":{"66ae9881e3524f7db84970d556c34552":{"variable":"/api/datasets/dataset3/variables/gender/"},"f78ca47313144b57adfb495893968e70":{"variable":"/api/datasets/dataset3/variables/birthyr/"}}}],"frame":', testPayload, '}')
+    testPayloadNoFilterArg <- paste0('{"function":"adapt",',
+        '"args":[{"dataset":"https://app.crunch.io/api/datasets/3/"},',
+        '{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"},',
+        '{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]')
+    testPayload <- paste0(testPayloadNoFilterArg, '}')
+    genderFilter <- paste0('{"function":"==","args":[',
+        '{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},{"value":1}]}')
+    testPayloadWithFilter <- paste0(testPayloadNoFilterArg, ',"filter":',
+        genderFilter, '}')
+    testSubsetPayloadPart1 <- paste0('{"function":"select","args":[{"map":{',
+        '"66ae9881e3524f7db84970d556c34552":',
+            '{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},',
+        '"f78ca47313144b57adfb495893968e70":',
+            '{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"}}}],',
+        '"frame":')
+    testSubsetPayload <- paste0(testSubsetPayloadPart1, testPayload, '}')
+    testSubsetPayloadWithFilter <- paste0(testSubsetPayloadPart1, testPayload,
+        ',"filter":', genderFilter, '}')
 
     test_that("Correct payload without filtering", {
         expect_warning(
             expect_POST(merge(ds1, ds2, by.x=ds1$birthyr, ds2$birthyr),
-                '/api/datasets/dataset1/variables/',
+                'https://app.crunch.io/api/datasets/1/variables/',
                 testPayload),
             "Variable birthyr is hidden")
     })
@@ -21,19 +34,19 @@ with_mock_HTTP({
     test_that("Can reference variables by alias", {
         expect_warning(
             expect_POST(merge(ds1, ds2, by.x="birthyr", by.y="birthyr"),
-                '/api/datasets/dataset1/variables/',
+                'https://app.crunch.io/api/datasets/1/variables/',
                 testPayload),
             "Variable birthyr is hidden")
         expect_warning(
             expect_POST(merge(ds1, ds2, by="birthyr"),
-                '/api/datasets/dataset1/variables/',
+                'https://app.crunch.io/api/datasets/1/variables/',
                 testPayload),
             "Variable birthyr is hidden")
     })
     test_that("joinDatasets with default copy=TRUE redirects here", {
         expect_warning(
             expect_POST(joinDatasets(ds1, ds2, by.x=ds1$birthyr, ds2$birthyr),
-                '/api/datasets/dataset1/variables/',
+                'https://app.crunch.io/api/datasets/1/variables/',
                 testPayload),
             "Variable birthyr is hidden")
     })
@@ -41,8 +54,25 @@ with_mock_HTTP({
     test_that("merge a subset of variables", {
         expect_warning(
             expect_POST(merge(ds1, ds2[c("gender", "birthyr")], by="birthyr"),
-                '/api/datasets/dataset1/variables/',
+                'https://app.crunch.io/api/datasets/1/variables/',
                 testSubsetPayload),
+            "Variable birthyr is hidden")
+    })
+
+    test_that("filter rows in merge", {
+        expect_warning(
+            expect_POST(merge(ds1, ds2[ds2$gender == "Male", ], by="birthyr"),
+                'https://app.crunch.io/api/datasets/1/variables/',
+                testPayloadWithFilter),
+            "Variable birthyr is hidden")
+    })
+
+    test_that("filter rows and variables in merge", {
+        expect_warning(
+            expect_POST(merge(ds1, ds2[ds2$gender == "Male", c("gender", "birthyr")],
+                                by="birthyr"),
+                'https://app.crunch.io/api/datasets/1/variables/',
+                testSubsetPayloadWithFilter),
             "Variable birthyr is hidden")
     })
 
@@ -117,7 +147,7 @@ printed_order_apidocs2 <- c(
 
 with_test_authentication({
     ds1 <- newDatasetFromFixture("join-apidocs2-to-me")
-    ds1$allpets_1 <- NULL
+    with_consent(ds1$allpets_1 <- NULL)
     ds2 <- newDatasetFromFixture("apidocs2")
     test_that("Shape of apidocs2", {
         expect_output(ordering(ds2),
@@ -154,7 +184,7 @@ with_test_authentication({
 
     test_that("Similarly uncomplicated merge, but numeric and hidden key", {
         ds1 <- newDatasetFromFixture("join-apidocs2-to-me")
-        ds1$allpets_1 <- NULL
+        with_consent(ds1$allpets_1 <- NULL)
         type(ds1$id) <- "numeric"
 
         expect_warning(ds1 <- merge(ds1, ds2, by.x=ds1$id, by.y=ds2$caseid),
@@ -178,18 +208,38 @@ with_test_authentication({
         expect_identical(hiddenVariables(ds1, "name"), "Weight")
     })
 
-    ## Tests to write:
+    ## More tests to write:
     ## 1) check for handling of the conflicted alias
     ## 2) weight_variables?
     ## 3) apply exclusion filter on either dataset
-    ## 4) Next: filter rows/cols
 
     test_that("Can select variables to join", {
         ds1 <- newDatasetFromFixture("join-apidocs2-to-me")
-        ds1$allpets_1 <- NULL
+        with_consent(ds1$allpets_1 <- NULL)
         ds1 <- merge(ds1, ds2[c("stringid", "q1", "petloc")],
             by.x="id", by.y="stringid")
         expect_identical(names(ds1),
             c("id", "matches", "other_var", "q1", "petloc"))
+    })
+
+    test_that("Can select variables and rows to join", {
+        ds1 <- newDatasetFromFixture("join-apidocs2-to-me")
+        with_consent(ds1$allpets_1 <- NULL)
+        ds1 <- merge(ds1, ds2[ds2$stringid == "43805958", c("stringid", "q1", "petloc")],
+            by.x="id", by.y="stringid")
+        expect_identical(names(ds1),
+            c("id", "matches", "other_var", "q1", "petloc"))
+        expect_equal(sum(table(ds1$q1)), 1)
+    })
+
+    test_that("Can select rows to join", {
+        ds1 <- newDatasetFromFixture("join-apidocs2-to-me")
+        with_consent(ds1$allpets_1 <- NULL)
+        ds1 <- merge(ds1, ds2[ds2$stringid == "43805958",],
+            by.x="id", by.y="stringid")
+        expect_identical(names(ds1),
+            c("id", "matches", "other_var", "allpets", "q1", "petloc", "ndogs",
+            "ndogs_a", "ndogs_b", "q3", "country", "wave"))
+        expect_equal(sum(table(ds1$q1)), 1)
     })
 })

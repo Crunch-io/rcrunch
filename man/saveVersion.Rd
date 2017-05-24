@@ -23,4 +23,3 @@ Create a new saved version
 \seealso{
 \code{\link{versions}} \code{\link{restoreVersion}}
 }
-

@@ -222,6 +222,19 @@ setMethod("is.na<-", c("Categories", "logical"), function (x, value) {
     return(x)
 })
 
+addNoDataCategory <- function (variable) {
+    cats <- c(categories(variable), Category(data=.no.data))
+    if (is.subvariable(variable)) {
+        ## Have to point at parent
+        crPATCH(absoluteURL("../../", self(variable)),
+            body=toJSON(list(categories=cats)))
+        variable <- refresh(variable)
+    } else {
+        categories(variable) <- cats
+    }
+    return(variable)
+}
+
 setMethod("lapply", "Categories", function (X, FUN, ...) {
     X@.Data <- lapply(X@.Data, FUN, ...)
     return(X)

@@ -1,0 +1,6 @@
+// Query: filter=%7B%7D&offset=0&limit=200000
+{
+    "element": "shoji:view",
+    "self": "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/values/",
+    "value": [1,1,2,{"?":-1},{"?":-1},{"?":-1},{"?":-1},1,2,{"?":-1},{"?":-1},1,{"?":-1},{"?":-1},{"?":-1},1,2,1,1,1,{"?":-1},1,{"?":-1},1,2]
+}

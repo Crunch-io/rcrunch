@@ -2,29 +2,29 @@
 % Please edit documentation in R/subvariables.R
 \docType{methods}
 \name{subvars-extract}
-\alias{$,CategoricalArrayVariable-method}
-\alias{$<-,CategoricalArrayVariable-method}
-\alias{[,CategoricalArrayVariable,character,ANY-method}
-\alias{[,Subvariables,character,ANY-method}
-\alias{[<-,Subvariables,ANY,missing,ANY-method}
-\alias{[<-,Subvariables,ANY,missing,Subvariables-method}
-\alias{[<-,Subvariables,character,missing,Subvariables-method}
-\alias{[[,CategoricalArrayVariable,ANY-method}
-\alias{[[,CategoricalArrayVariable,character-method}
-\alias{[[,Subvariables,ANY-method}
+\alias{subvars-extract}
 \alias{[[,Subvariables,character-method}
-\alias{[[<-,CategoricalArrayVariable,ANY,missing,ANY-method}
-\alias{[[<-,CategoricalArrayVariable,character,missing,ANY-method}
-\alias{[[<-,Subvariables,ANY,missing,ANY-method}
+\alias{[[,Subvariables,numeric-method}
+\alias{[,Subvariables,character,ANY-method}
+\alias{[[<-,Subvariables,character,missing,CrunchVariable-method}
 \alias{[[<-,Subvariables,ANY,missing,CrunchVariable-method}
 \alias{[[<-,Subvariables,ANY,missing,NULL-method}
-\alias{[[<-,Subvariables,character,missing,CrunchVariable-method}
-\alias{subvars-extract}
+\alias{[[<-,Subvariables,ANY,missing,ANY-method}
+\alias{[<-,Subvariables,character,missing,Subvariables-method}
+\alias{[<-,Subvariables,ANY,missing,Subvariables-method}
+\alias{[<-,Subvariables,ANY,missing,ANY-method}
+\alias{[,CategoricalArrayVariable,character,ANY-method}
+\alias{[[,CategoricalArrayVariable,ANY-method}
+\alias{[[,CategoricalArrayVariable,character-method}
+\alias{$,CategoricalArrayVariable-method}
+\alias{[[<-,CategoricalArrayVariable,ANY,missing,ANY-method}
+\alias{[[<-,CategoricalArrayVariable,character,missing,ANY-method}
+\alias{$<-,CategoricalArrayVariable-method}
 \title{Extract and modify subsets of subvariables}
 \usage{
 \S4method{[[}{Subvariables,character}(x, i, j, ...)
 
-\S4method{[[}{Subvariables,ANY}(x, i, j, ...)
+\S4method{[[}{Subvariables,numeric}(x, i, j, ...)
 
 \S4method{[}{Subvariables,character,ANY}(x, i, j, ..., drop = TRUE)
 
@@ -79,4 +79,3 @@ A subset of \code{x} if extracting, otherwise \code{x} duly modified
 \description{
 Extract and modify subsets of subvariables
 }
-

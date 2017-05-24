@@ -17,16 +17,15 @@ with_mock_HTTP({
 })
 
 with_test_authentication({
-    with(test.dataset(df), {
-        test_that("Properly encoded UTF is sent and received", {
-            s <- iconv("aided_follow_grid:ElCorteInglés", to="UTF-8")
-            name(ds$v1) <- s
-            expect_identical(name(ds$v1), s)
-            expect_identical(name(refresh(ds)$v1), s)
-            s2 <- "Budějovický Budvar"
-            name(ds$v2) <- s2
-            expect_identical(name(ds$v2), s2)
-            expect_identical(name(refresh(ds)$v2), s2)
-        })
+    ds <- newDataset(df)
+    test_that("Properly encoded UTF is sent and received", {
+        s <- iconv("aided_follow_grid:ElCorteInglés", to="UTF-8")
+        name(ds$v1) <- s
+        expect_identical(name(ds$v1), s)
+        expect_identical(name(refresh(ds)$v1), s)
+        s2 <- "Budějovický Budvar"
+        name(ds$v2) <- s2
+        expect_identical(name(ds$v2), s2)
+        expect_identical(name(refresh(ds)$v2), s2)
     })
 })

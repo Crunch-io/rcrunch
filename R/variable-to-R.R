@@ -62,13 +62,38 @@ columnParser <- function (vartype) {
     return(parse_column[[vartype]] %||% parse_column[["numeric"]])
 }
 
-getValues <- function (x, ...) {
-    paginatedGET(shojiURL(x, "views", "values"), list(...))
+## Pulled to a function so that it can be mocked in tests
+.categoricalPageSize <- function () 200000L
+
+.crunchPageSize <- function (variable) {
+    ## Determine a safe page size for paginating GET values/
+    categorical.size <- .categoricalPageSize()
+    if (is.variable(variable)) {
+        vartype <- type(variable)
+        if (is.Array(variable)) {
+            ## It's effectively categorical, so let's just divide by number
+            ## of subvars
+            return(categorical.size %/% length(subvariables(tuple(variable))))
+        } else if (vartype == "categorical") {
+            return(categorical.size)
+        } else if (vartype %in% c("numeric", "datetime")) {
+            return(categorical.size %/% 2L)
+        } else if (vartype == "text") {
+            ## Throttle aggressively
+            return(categorical.size %/% 40L)
+        }
+    } else {
+        ## Crunch Expression. Probably fine, but let's throttle a bit to be safe
+        return(categorical.size %/% 4L)
+    }
 }
 
-paginatedGET <- function (url, query, offset=0,
-                          limit=getOption("crunch.page.size") %||% 1000,
-                          table=FALSE) {
+getValues <- function (x, ...) {
+    paginatedGET(shojiURL(x, "views", "values"), list(...),
+        limit=.crunchPageSize(x))
+}
+
+paginatedGET <- function (url, query, offset=0, limit=1000, table=FALSE) {
     ## Paginate the GETting of values. Called both from getValues and in
     ## the as.vector.CrunchExpr method in expressions.R
 

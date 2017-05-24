@@ -1,7 +1,7 @@
 #' Crunch.io: instant, visual, collaborative data analysis
 #'
 #' \href{http://crunch.io/}{Crunch.io} provides a cloud-based data store and
-#' analytic engine. It has a \href{https://beta.crunch.io/}{web client} for
+#' analytic engine. It has a \href{https://app.crunch.io/}{web client} for
 #' interactive data exploration and visualization. The crunch package for R
 #' allows analysts to interact with and manipulate Crunch datasets from within
 #' R. Importantly, this allows technical researchers to collaborate naturally
@@ -11,7 +11,7 @@
 #'
 #' @seealso To learn more about using the package, see
 #' \code{vignette("getting-started", package="crunch")}. To sign up for a
-#' Crunch.io account, visit \url{https://beta.crunch.io/}.
+#' Crunch.io account, visit \url{https://app.crunch.io/}.
 #' @docType package
 #' @name crunch
 NULL
@@ -19,7 +19,7 @@ NULL
 #' @importFrom httr set_config
 .onAttach <- function (lib, pkgname="crunch") {
     setIfNotAlready(
-        crunch.api="https://beta.crunch.io/api/",
+        crunch.api="https://app.crunch.io/api/",
         httpcache.on=TRUE,
         crunch.namekey.dataset="alias",
         crunch.namekey.array="alias"

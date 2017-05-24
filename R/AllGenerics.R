@@ -85,6 +85,8 @@ setGeneric("pending", function (x) standardGeneric("pending"))
 setGeneric("permissions", function (x) standardGeneric("permissions"))
 setGeneric("members", function (x) standardGeneric("members"))
 setGeneric("members<-", function (x, value) standardGeneric("members<-"))
+setGeneric("multitables", function (x) standardGeneric("multitables"))
+setGeneric("multitables<-", function (x, value) standardGeneric("multitables<-"))
 setGeneric("filters", function (x) standardGeneric("filters"))
 setGeneric("filters<-", function (x, value) standardGeneric("filters<-"))
 setGeneric("appliedFilters", function (x) standardGeneric("appliedFilters"))
@@ -106,6 +108,7 @@ setGeneric("is.published<-", function (x, value) standardGeneric("is.published<-
 setGeneric("groupClass", function (x) standardGeneric("groupClass"))
 setGeneric("entityClass", function (x) standardGeneric("entityClass"))
 setGeneric("entitiesInitializer", function (x) standardGeneric("entitiesInitializer"))
+setGeneric("weightVariables", function (x) standardGeneric("weightVariables"))
 
 setGeneric("owner", function (x) standardGeneric("owner"))
 setGeneric("owner<-", function (x, value) standardGeneric("owner<-"))
@@ -125,11 +128,14 @@ setGeneric("as.vector")
 setGeneric("as.environment")
 setGeneric("dimnames")
 setGeneric("margin.table")
-
 setGeneric("prop.table")
 setGeneric("round")
 
+setGeneric("bases", function (x, margin=NULL) standardGeneric("bases"))
+setGeneric("dimensions", function (x) standardGeneric("dimensions"))
+
 setGeneric("subset")
+setGeneric("which", signature="x")
 
 #' Generic method for converting objects to Crunch representations
 #'
@@ -149,6 +155,7 @@ setGeneric("is.na")
 setGeneric("is.na<-")
 setGeneric("%in%")
 setGeneric("write.csv")
+setGeneric("duplicated")
 
 setGeneric("zcl", function (x) standardGeneric("zcl"))
 

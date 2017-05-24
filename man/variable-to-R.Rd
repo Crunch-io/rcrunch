@@ -3,8 +3,8 @@
 \docType{methods}
 \name{as.vector,CrunchExpr-method}
 \alias{as.vector,CrunchExpr-method}
-\alias{as.vector,CrunchVariable-method}
 \alias{variable-to-R}
+\alias{as.vector,CrunchVariable-method}
 \title{Convert Variables to local R objects}
 \usage{
 \S4method{as.vector}{CrunchExpr}(x, mode = "any")
@@ -30,4 +30,3 @@ numeric, etc.
 \description{
 Convert Variables to local R objects
 }
-

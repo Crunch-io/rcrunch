@@ -3,8 +3,8 @@
 \docType{methods}
 \name{type}
 \alias{type}
-\alias{type,CrunchVariable-method}
 \alias{type<-}
+\alias{type,CrunchVariable-method}
 \alias{type<-,CrunchVariable-method}
 \title{Change the type of Crunch variables}
 \usage{
@@ -28,4 +28,3 @@ server and should only be done in narrow circumstances, as in when importing
 data from a different file format has resulted in incorrect types being
 specified.
 }
-
