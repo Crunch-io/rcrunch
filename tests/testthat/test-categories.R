@@ -318,6 +318,21 @@ with_test_authentication({
             expect_equivalent(as.array(crtabs(~ v4e, data=ds)),
                 array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "D"))))
         })
+
+        test_that("Can changeCategoryID", {
+            ds$v4f <- df$v4
+            expect_identical(names(categories(ds$v4f)),
+                c("B", "C", "No Data"))
+            expect_equal(ids(categories(ds$v4f)),
+                c(1, 2, -1))
+            ds$v4f <- changeCategoryID(ds$v4f, 2, 6)
+            expect_identical(names(categories(ds$v4f)),
+                c("B", "C", "No Data"))
+            expect_equal(ids(categories(ds$v4f)),
+                c(1, 6, -1))
+            expect_error(ds$v4f <- changeCategoryID(ds$v4f, 2, 7),
+                "No category with id 2")
+        })
     })
 
     whereas("When manipulating categories of array variables", {

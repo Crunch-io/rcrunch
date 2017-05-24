@@ -239,3 +239,31 @@ setMethod("lapply", "Categories", function (X, FUN, ...) {
     X@.Data <- lapply(X@.Data, FUN, ...)
     return(X)
 })
+
+## TODO:
+## 1) Document
+## 2) Export
+## 3) Add more input validation and tests of
+## 4) Add tests for working with array variables, and extend function if needed
+changeCategoryID <- function (variable, from, to) {
+    pos.from <- match(from, ids(categories(variable)))
+    if (is.na(pos.from)) {
+        stop("No category with id ", from)
+    }
+    ## Add new category
+    newcat <- categories(variable)[[pos.from]]
+    newcat$id <- to
+    names(categories(variable))[pos.from] <- "__TO_DELETE__"
+    categories(variable) <- c(categories(variable), newcat)
+
+    ## Move data to that new id
+    variable[variable == from] <- to
+
+    ## Delete old category
+    keep <- seq_along(categories(variable))
+    keep[pos.from] <- length(keep)
+    keep <- keep[-length(keep)]
+    categories(variable) <- categories(variable)[keep]
+
+    invisible(variable)
+}
