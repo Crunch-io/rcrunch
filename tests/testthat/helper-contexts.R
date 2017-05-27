@@ -1,23 +1,11 @@
 with_mock_HTTP <- function (expr) {
-    tracer <- quote({
-        if (!file.exists(f)) {
-            ## Look for mock in inst/
-            crunchfile <- system.file(f, package="crunch")
-            if (nchar(crunchfile)) {
-                f <- crunchfile
-            }
-        }
-    })
     env <- parent.frame()
-    with_trace("mockRequest", tracer=tracer, at=4, where=without_internet, expr={
-        with_trace("mockDownload", tracer=tracer, at=3, where=without_internet, expr={
-            ## TODO: Move the test.api switch to with_test_authentication
-            with(temp.option(crunch.api="https://app.crunch.io/api/"), {
-                with_mock_API({
-                    try(warmSessionCache())
-                    eval(expr, envir=env)
-                })
-            })
+    ## TODO: Move the test.api switch to with_test_authentication
+    with(temp.options(crunch.api="https://app.crunch.io/api/",
+                      httptest.mock.paths=c(".", system.file(package="crunch"))), {
+        with_mock_API({
+            try(warmSessionCache())
+            eval(expr, envir=env)
         })
     })
 }

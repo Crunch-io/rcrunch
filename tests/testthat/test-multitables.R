@@ -100,7 +100,6 @@ with_mock_HTTP({
         expect_null(weight(ds))
     })
     test_that("tabBook sets the right request header", {
-        skip("Too much mocking and tracing")
         expect_header(
             expect_POST(tabBook(m, data=ds, format="xlsx"),
                 'https://app.crunch.io/api/datasets/1/multitables/ed30c4/tabbook/'),
