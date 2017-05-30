@@ -13,7 +13,7 @@ deps:
 
 install-ci: deps
 	R CMD INSTALL --install-tests -l $(R_LIB) .
-	R -e '.libPaths(Sys.getenv("R_LIB")); devtools::install_github("nealrichardson/testthat", ref="tap-file"); devtools::install_github("nealrichardson/testthat", ref="1.3.0")'
+	R -e '.libPaths(Sys.getenv("R_LIB")); devtools::install_github("nealrichardson/testthat", ref="tap-file"); devtools::install_github("nealrichardson/httptest", ref="1.3.0")'
 
 test-ci:
 	R --slave -e '.libPaths(Sys.getenv("R_LIB")); library(httptest); cwd <- getwd(); setwd(file.path(.libPaths()[1], "crunch", "tests")); options(crunch.check.updates=FALSE); test_check("crunch", reporter=MultiReporter$$new(list(SummaryReporter$$new(), TapReporter$$new(file.path(cwd, "rcrunch.tap")))))'
