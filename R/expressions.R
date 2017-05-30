@@ -59,7 +59,7 @@ math.exp <- function (e1, e2, operator) {
         ## Because of how this function is invoked, get the offending expression
         ## from the call before this one
         halt("Invalid expression (probably a reference to a variable that doesn't exist): ",
-             deparseAndFlatten(tail(sys.calls(), 2)[[1]], max_length = NULL))
+             deparseAndFlatten(tail(sys.calls(), 2)[[1]]))
     }
     ex <- zfunc(operator, e1, e2)
     ds.url <- unique(unlist(lapply(list(e1, e2), datasetReference))) %||% ""

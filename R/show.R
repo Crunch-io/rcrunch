@@ -199,7 +199,7 @@ deparseAndFlatten <- function (x, max_length = NULL, ...) {
     # if max_length is null, do nothing
     # else return 1:max_length of out
     if (!is.null(max_length)) {
-        out <- substr(out,1,max_length)
+        out <- substr(out, 1, max_length)
     }
     return(out)
 }
