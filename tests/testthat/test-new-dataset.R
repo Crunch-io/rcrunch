@@ -33,6 +33,25 @@ with_mock_HTTP({
             '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"}},',
             '"order":["a"]}}}')
     })
+
+    test_that("Turning data.frame to Crunch payload without a name", {
+        expect_POST(newDataset(data.frame(a=1)),
+                    "https://app.crunch.io/api/datasets/",
+                    '{"element":"shoji:entity","body":{"name":"data.frame(a = 1)",',
+                    '"table":{"element":"crunch:table",',
+                    '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"}},',
+                    '"order":["a"]}}}')
+    })
+    
+    test_that("Turning data.frame to Crunch payload with a long name", {
+        expect_POST(newDataset(data.frame(a=1, really_really_long_name=2)),
+                    "https://app.crunch.io/api/datasets/",
+                    '{"element":"shoji:entity","body":{"name":"data.frame(a = 1, really_really_long_nam",',
+                    '"table":{"element":"crunch:table",',
+                    '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"},"really_really_long_name":{"type":"numeric","name":"really_really_long_name","alias":"really_really_long_name"}},',
+                    '"order":["a","really_really_long_name"]}}}')
+    })
+
     test_that("createWithMetadataAndFile when metadata is file too", {
         expect_POST(newDatasetFromFixture("apidocs"),
             "https://app.crunch.io/api/datasets/",

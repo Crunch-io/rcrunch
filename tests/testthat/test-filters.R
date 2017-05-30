@@ -103,7 +103,7 @@ with_mock_HTTP({
         f <- CrunchFilter(crGET("a-filter/"))
         expect_is(f, "CrunchFilter")
         expect_fixed_output(f,
-            'starttime %in% c("2016-04-06", "2016-04-15", "2016-04-25", "2016-05-06", "2016-05-13", ... & gender %in% "Male"')
+            'starttime %in% c("2016-04-06", "2016-04-15", "2016-04-25", "2016-05-06", "2016-05-13", "2016-05-27", "2016-06-06", "2016-06-14", "2016-06-29") & gender %in% "Male"')
     })
 })
 
