@@ -231,7 +231,7 @@ with_test_authentication({
     })
 
     test_that("Can copy the multitable to a new multitable", {
-        m <- newMultitable(name='copied_multitable', data=ds, multitable=mult)
+        m <- importMultitable(name='copied_multitable', data=ds, multitable=mult)
         expect_identical(name(m), "copied_multitable")
         is.public(multitables(ds))[2] <- TRUE
     })

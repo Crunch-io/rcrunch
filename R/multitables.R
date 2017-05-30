@@ -85,33 +85,53 @@ setMethod("is.public<-", "Multitable", function (x, value) {
 #' name(m) # [1] "gender + age4 + marstat"
 #' }
 #' @export
-newMultitable <- function (formula, data, name, multitable=NULL, ...) {
+newMultitable <- function (formula, data, name, ...) {
 
-    if (missing(multitable)){
-        ## Validate inputs
-        if (missing(formula)) {
-            halt("Must provide a formula")
-        }
-        if (missing(data) || !is.dataset(data)) {
-            halt(dQuote("data"), " must be a Dataset")
-        }
-
-        template <- formulaToQuery(formula, data)
-        if (missing(name)) {
-            name <- formulaRHS(formula)
-        }
-
-        payload <- wrapEntity(
-            name=name,
-            template=lapply(template$dimensions,
-                function (x) list(query=x, variable=findVariableReferences(x)))
-        )
-    } else {
-        payload = wrapEntity(name=name,
-                             multitable=self(multitable))
+    ## Validate inputs
+    if (missing(formula)) {
+        halt("Must provide a formula")
+    }
+    if (missing(data) || !is.dataset(data)) {
+        halt(dQuote("data"), " must be a Dataset")
     }
 
-    ## TODO: remove "variable" from that--no longer required?
+    template <- formulaToQuery(formula, data)
+    if (missing(name)) {
+        name <- formulaRHS(formula)
+    }
+
+    payload <- wrapEntity(
+        name=name,
+        template=lapply(template$dimensions,
+            function (x) list(query=x, variable=findVariableReferences(x)))
+    )
+
+    u <- crPOST(shojiURL(data, "catalogs", "multitables"), body=toJSON(payload))
+    invisible(Multitable(crGET(u)))
+}
+
+#' Import a Multitable
+#'
+#' Allows you to import a multitable from a different dataset
+#' @param data an object of class \code{CrunchDataset} in which to create the
+#' multitable
+#' @param multitable an object of class \code{Multitable} that you want copied
+#' to the new dataset
+#' @param name character name to give the new multitable object. If omitted,
+#' a default name will be derived from \code{formula}.
+#' @param ... Additional multitable attributes to set. Options include
+#' \code{is_public}.
+#' @return An object of class \code{Multitable}
+#' @examples
+#' \dontrun{
+#' m <- importMultitable(multitable, data=ds)
+#' name(m) # [1] "gender + age4 + marstat"
+#' }
+#' @export
+importMultitable <- function (data, name, multitable, ...) {
+
+    payload <- wrapEntity(name=name, multitable=self(multitable))
+
     u <- crPOST(shojiURL(data, "catalogs", "multitables"), body=toJSON(payload))
     invisible(Multitable(crGET(u)))
 }
