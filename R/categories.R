@@ -246,6 +246,11 @@ setMethod("lapply", "Categories", function (X, FUN, ...) {
 ## 3) Add more input validation and tests of
 ## 4) Add tests for working with array variables, and extend function if needed
 changeCategoryID <- function (variable, from, to) {
+    # check that variable is a category
+    if (!has.categories(variable)) {
+        stop("The variable ", name(variable), " doesn't have categories.")
+    }
+    
     pos.from <- match(from, ids(categories(variable)))
     if (is.na(pos.from)) {
         stop("No category with id ", from)
