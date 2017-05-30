@@ -332,6 +332,9 @@ with_test_authentication({
                 c(1, 6, -1))
             expect_error(ds$v4f <- changeCategoryID(ds$v4f, 2, 7),
                 "No category with id 2")
+            ds$v3f <- df$v3
+            expect_error(ds$v3f <- changeCategoryID(ds$v3f, 2, 7),
+                         "The variable v3f doesn't have categories.")
         })
     })
 
