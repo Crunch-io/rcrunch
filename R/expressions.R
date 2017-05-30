@@ -305,7 +305,7 @@ setMethod("[", c("CrunchExpr", "CrunchLogicalExpr"), .updateActiveFilter)
         ## If you reference a variable in a dataset that doesn't exist, you
         ## get NULL, and e.g. NULL == something becomes logical(0).
         ## That does awful things if you try to send to the server. So don't.
-        halt("Invalid expression: ", deparseAndFlatten(match.call()$i, max_length = NULL))
+        halt("Invalid expression: ", deparseAndFlatten(match.call()$i))
     }
 }
 

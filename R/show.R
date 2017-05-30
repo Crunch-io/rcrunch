@@ -178,7 +178,7 @@ formatExpression <- function (expr) {
         ## GET URL, get alias from that
         return(crGET(expr[["variable"]])$body$alias)
     } else if (length(intersect(c("column", "value"), names(expr)))) {
-        return(deparseAndFlatten(expressionValue(expr), max_length = NULL))
+        return(deparseAndFlatten(expressionValue(expr)))
     } else {
         ## Dunno what this is
         return("[Complex expression]")
@@ -191,7 +191,7 @@ expressionValue <- function (expr) {
     unlist(expr$column %||% expr$value)
 }
 
-deparseAndFlatten <- function (x, max_length = 40, ...) {
+deparseAndFlatten <- function (x, max_length = NULL, ...) {
     out <- deparse(x, ...)
     if (length(out) > 1) {
         out <- paste0(out, collapse="")
@@ -235,7 +235,7 @@ formatExpressionValue <- function (val, cats=NULL) {
     } else {
         ## TODO: iterate over, replace {?:-1} with NA
     }
-    return(deparseAndFlatten(val, max_length = NULL))
+    return(deparseAndFlatten(val))
 }
 
 #' @rdname show-crunch

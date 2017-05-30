@@ -64,7 +64,7 @@ setMethod("[", c("CrunchDataset", "logical", "missing"), function (x, i, j, ...,
         ## If you reference a variable in a dataset that doesn't exist, you
         ## get NULL, and e.g. NULL == something becomes logical(0).
         ## That does awful things if you try to send to the server. So don't.
-        halt("Invalid expression: ", deparseAndFlatten(match.call()$i, max_length = NULL))
+        halt("Invalid expression: ", deparseAndFlatten(match.call()$i))
     }
     return(x)
 })
@@ -113,7 +113,7 @@ setMethod("[", c("CrunchDataset", "missing", "ANY"), function (x, i, j, ..., dro
             activeFilter(i) <- activeFilter(f)
             i <- f & i
         } else {
-            callstring <- deparseAndFlatten(tail(sys.calls(), 1)[[1]], max_length = NULL)
+            callstring <- deparseAndFlatten(tail(sys.calls(), 1)[[1]])
             halt("In ", callstring, ", object and subsetting expression have different filter expressions")
         }
     }

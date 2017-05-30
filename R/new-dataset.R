@@ -9,7 +9,7 @@
 #' @param ... additional arguments passed to \code{ \link{createDataset}}
 #' @return If successful, an object of class CrunchDataset.
 #' @export
-newDataset <- function (x, name=deparseAndFlatten(substitute(x)), ...) {
+newDataset <- function (x, name=deparseAndFlatten(substitute(x), max_length = 40), ...) {
     is.2D <- !is.null(dim(x)) && length(dim(x)) %in% 2
     if (!is.2D) {
         halt("Can only make a Crunch dataset from a two-dimensional data ",
@@ -231,7 +231,7 @@ newDatasetByCSV <- function (...) {
 #' @return If successful, an object of class CrunchDataset.
 #' @seealso \code{\link{newDataset}}
 #' @export
-newDatasetByColumn <- function (x, name=deparseAndFlatten(substitute(x)), ...) {
+newDatasetByColumn <- function (x, name=deparseAndFlatten(substitute(x), max_length = 40), ...) {
     vardefs <- lapply(names(x),
         function (v) toVariable(x[[v]], name=v, alias=v))
     ds <- createDataset(name=name, ...)
