@@ -2,6 +2,7 @@
 
 * `dashboard` and `dashboard<-` methods to view and set a dashboard URL on a dataset
 * Fix issue in printing filter expressions with long value columns
+* Progress bars now clean up after themselves and do not leave the prompt hanging out at the end of the line
 
 ## crunch 1.16.0
 

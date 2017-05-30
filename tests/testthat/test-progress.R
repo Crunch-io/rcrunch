@@ -35,11 +35,16 @@ with_mock_HTTP({
                 content=readBin(url, "raw", 4096), ## Assumes mock is under 4K
                 status_code=200, headers=list(`Content-Type`="application/json")))
         },
-        test_that("Progress polling goes until 100", {
-            expect_output(
+        test_that("Progress polling goes until 100 and has a newline", {
+            ## Use capture.output rather than expect_output because the latter
+            ## concatenates things together and does not easily capture the effect
+            ## of closing the progress bar, which is another item on the buffer.
+            out <- capture.output(
                 expect_equal(pollProgress("https://app.crunch.io/api/progress/", wait=.001),
-                    100),
-                "=| 100%", fixed=TRUE)
+                             100), cat('command on next line'))
+            expect_equal(length(out), 2)
+            expect_match(out[1], "=| 100%", fixed=TRUE)
+            expect_match(out[2], "command on next line", fixed=TRUE)
         }),
         test_that("Auto-polling with a progress resource", {
             counter <<- 1

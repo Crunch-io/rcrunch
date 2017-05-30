@@ -54,6 +54,10 @@ You can set several parameters in your .Rprofile to simplify your workflow:
 
 ## For developers
 
+### Contributing
+
+See the [contribution guidelines](CONTRIBUTING.md).
+
 ### Installing from a local checkout
 
     # make deps

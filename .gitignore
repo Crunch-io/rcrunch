@@ -11,3 +11,4 @@ vignettes/*.html
 .Rproj.user
 *.Rproj
 *.Rhistory
+*.Rproj*
