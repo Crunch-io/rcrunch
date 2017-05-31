@@ -5,7 +5,7 @@
 \alias{newDatasetByCSV}
 \title{Upload a data.frame to Crunch to make a new dataset}
 \usage{
-newDataset(x, name = deparseAndTruncate(substitute(x)), ...)
+newDataset(x, name = deparseAndFlatten(substitute(x), max_length = 40), ...)
 
 newDatasetByCSV(...)
 }
