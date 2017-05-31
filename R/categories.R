@@ -242,40 +242,39 @@ setMethod("lapply", "Categories", function (X, FUN, ...) {
 
 #' Change the id of a category for a categorical variable
 #' 
-#' @param variable the variable in a crunch dataset that will be changed
+#' Changes the id of a category from an existing value to a new one.
+#' The variable can be a categorical, categorical array, or multiple response
+#' variable.
+#' 
+#' @param variable the variable in a crunch dataset that will be changed (note: the variable must be categorical, categorical array, or multiple response)
 #' @param from the (old) id identifying the category you want to change
 #' @param to the (new) id for the category
-#' @return \code{variable} with an the new category id
+#' @return `variable` with category `from` and all associated data values mapped to id `to`
 #' @examples
 #' \dontrun{
 #' ds$country <- changeCategoryID(ds$country, 2, 6)
-#' ds$petloc <- changeCategoryID(ds$petloc, 2, 6)
 #' }
 #' @export 
 changeCategoryID <- function (variable, from, to) {
-    # check that variable is a category
     if (!has.categories(variable)) {
-        stop("The variable ", name(variable), " doesn't have categories.")
+        halt("The variable ", name(variable), " doesn't have categories.")
     }
     
-    # check that from is a numeric
-    if (!is.numeric(from)) {
-        stop("The 'from' argument is not a numeric, please providee only the id number you want to change from.")
+    if (!is.numeric(from) & length(from) == 1) {
+        halt("from should be a single numeric")
     }
     
-    # check that to is a numeric
-    if (!is.numeric(to)) {
-        stop("The 'to' argument is not a numeric, please providee only the id number you want to change to")
+    if (!is.numeric(to) &  length(to) == 1) {
+        halt("to should be a single numeric")
     }
     
     pos.from <- match(from, ids(categories(variable)))
     if (is.na(pos.from)) {
-        stop("No category with id ", from)
+        halt("No category with id ", from)
     }
     
-    # check that the to id is not already a category id
     if (to %in% ids(categories(variable))) {
-        stop("Id ", to, " is already a category, please provide a new category id.")
+        halt("Id ", to, " is already a category, please provide a new category id.")
     }
     
     ## Add new category
@@ -291,8 +290,7 @@ changeCategoryID <- function (variable, from, to) {
         variable[variable == from] <- to
     } else if (is.CategoricalArray(variable)) {
         # If the variable is a categorical array, then lapply over the subvariables
-        # can't iterate over the variable directly because of how shojicatalogs
-        # have a slightly altered lapply method.
+        # TODO: change iteration over shojicatalogs to allow iterating over the variable directly 
         lapply(names(variable), function(subvarname) {
             variable[[subvarname]][variable[[subvarname]] == from] <- to
         })
