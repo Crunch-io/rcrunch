@@ -86,7 +86,6 @@ setMethod("is.public<-", "Multitable", function (x, value) {
 #' }
 #' @export
 newMultitable <- function (formula, data, name, ...) {
-
     ## Validate inputs
     if (missing(formula)) {
         halt("Must provide a formula")
@@ -105,7 +104,7 @@ newMultitable <- function (formula, data, name, ...) {
         template=lapply(template$dimensions,
             function (x) list(query=x, variable=findVariableReferences(x)))
     )
-
+    ## TODO: remove "variable" from that--no longer required?
     u <- crPOST(shojiURL(data, "catalogs", "multitables"), body=toJSON(payload))
     invisible(Multitable(crGET(u)))
 }
@@ -124,11 +123,16 @@ newMultitable <- function (formula, data, name, ...) {
 #' @return An object of class \code{Multitable}
 #' @examples
 #' \dontrun{
-#' m <- importMultitable(multitable, data=ds)
-#' name(m) # [1] "gender + age4 + marstat"
+#' m <- newMultitable(~ gender + age4 + marstat, data=ds)
+#' copied_m <- importMultitable(another_ds, m)
+#' name(copied_m) # [1] "gender + age4 + marstat"
 #' }
 #' @export
-importMultitable <- function (data, name, multitable, ...) {
+importMultitable <- function (data, multitable, name=NULL, ...) {
+
+    if (missing(name)) {
+        name <- multitable.name
+    }
 
     payload <- wrapEntity(name=name, multitable=self(multitable))
 
