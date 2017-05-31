@@ -230,6 +230,22 @@ with_mock_HTTP({
     test_that("c(Categories, Categories)", {
         expect_true(is.categories(c(cats, cats2)))
     })
+    
+    test_that("changeCategoryID errors with bad inputs", {
+        expect_error(ds$gender <- changeCategoryID(ds$gender, 1, -1),
+                     "Id -1 is already a category, please provide a new category id.")
+        expect_error(ds$gender <- changeCategoryID(ds$gender, "not a numeric", 1),
+                     "from should be a single numeric")
+        expect_error(ds$gender <- changeCategoryID(ds$gender, "not a numeric", c(1,-1)),
+                     "from should be a single numeric")
+        expect_error(ds$gender <- changeCategoryID(ds$gender, 1, "not a numeric"),
+                     "to should be a single numeric")
+        expect_error(ds$gender <- changeCategoryID(ds$gender, c(1,-1), "not a numeric"),
+                     "to should be a single numeric")
+        expect_PATCH(changeCategoryID(ds$gender, 2, 6), 
+                     'https://app.crunch.io/api/datasets/1/variables/gender/',
+                     '{"categories":[{"id":1,"missing":false,"name":"Male","numeric_value":1},{"id":2,"missing":false,"name":"__TO_DELETE__","numeric_value":2},{"id":-1,"missing":true,"name":"No Data","numeric_value":null}]} (app.crunch.io/api/datasets/1/variables/gender-1390e4-PATCH.json)')
+    })
 })
 
 
@@ -332,29 +348,29 @@ with_test_authentication({
                 c(1, 6, -1))
             expect_error(ds$v4f <- changeCategoryID(ds$v4f, 2, 7),
                 "No category with id 2")
-            expect_error(ds$v4f <- changeCategoryID(ds$v4f, 1, 6),
-                         "Id 6 is already a category, please provide a new category id.")
-            expect_error(ds$v4f <- changeCategoryID(ds$v4f, "not a numeric", 7),
-                         "The 'from' argument is not a numeric, please providee only the id number you want to change from")
-            expect_error(ds$v4f <- changeCategoryID(ds$v4f, 6, "not a numeric"),
-                         "The 'to' argument is not a numeric, please providee only the id number you want to change to")
-            ds$v3f <- df$v3
-            expect_error(ds$v3f <- changeCategoryID(ds$v3f, 2, 7),
-                         "The variable v3f doesn't have categories.")
         })
 
         test_that("Can changeCategoryID for array variables", {
             ds_apidocs <- newDatasetFromFixture("apidocs")
-            ds_apidocs$petloca <- ds_apidocs$petloc
-            expect_identical(names(categories(ds_apidocs$petloca)),
+            expect_identical(names(categories(ds_apidocs$petloc)),
                              c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
-            expect_equal(ids(categories(ds_apidocs$petloca)),
+            expect_equal(ids(categories(ds_apidocs$petloc)),
                          c(1, 2, 3, 8, 9))
-            ds_apidocs$petloca <- changeCategoryID(ds_apidocs$petloca, 2, 6)
-            expect_identical(names(categories(ds_apidocs$petloca)),
+            expect_equal(dim(as.vector(ds_apidocs$petloc)), c(20, 2))
+            expect_equal(as.vector(ds_apidocs$petloc[1:4]),
+                         data.frame(petloc_home=c(NA, "Dog", NA, NA),
+                                    petloc_work=c(NA, "Bird", "Bird", "Dog")))
+            
+            ds_apidocs$petloc <- changeCategoryID(ds_apidocs$petloc, 2, 6)
+            expect_identical(names(categories(ds_apidocs$petloc)),
                              c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
-            expect_equal(ids(categories(ds_apidocs$petloca)),
+            expect_equal(ids(categories(ds_apidocs$petloc)),
                          c(1, 6, 3, 8, 9))
+            expect_equal(dim(as.vector(ds_apidocs$petloc)), c(20, 2))
+            expect_equal(as.vector(ds_apidocs$petloc[1:4]),
+                         data.frame(petloc_home=c(NA, "Dog", NA, NA),
+                                    petloc_work=c(NA, "Bird", "Bird", "Dog")))
+            
         })
     })
 
