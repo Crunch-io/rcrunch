@@ -1,6 +1,7 @@
 ### crunch 1.16.1 (under development)
 
 * `dashboard` and `dashboard<-` methods to view and set a dashboard URL on a dataset
+* `changeCategoryID` function to map categorical data to a new "id" and value in the data (#38, #47)
 * Fix issue in printing filter expressions with long value columns
 * Progress bars now clean up after themselves and do not leave the prompt hanging out at the end of the line
 * Fix issue where long expressions were truncated. By default, long expressions are not truncated, although they can be when it is appropriate (ie when creating a new dataset without a name). (#39, #45)
