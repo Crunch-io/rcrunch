@@ -232,6 +232,8 @@ with_mock_HTTP({
     })
     
     test_that("changeCategoryID errors with bad inputs", {
+        expect_error(ds$birthyr <- changeCategoryID(ds$birthyr, 1, 6),
+                     "The variable Birth Year doesn't have categories.")
         expect_error(ds$gender <- changeCategoryID(ds$gender, 1, -1),
                      "Id -1 is already a category, please provide a new category id.")
         expect_error(ds$gender <- changeCategoryID(ds$gender, "not a numeric", 1),
@@ -242,6 +244,8 @@ with_mock_HTTP({
                      "to should be a single numeric")
         expect_error(ds$gender <- changeCategoryID(ds$gender, c(1,-1), "not a numeric"),
                      "to should be a single numeric")
+        expect_error(ds$gender <- changeCategoryID(ds$gender, 8, 9),
+                     "No category with id 8")
         expect_PATCH(changeCategoryID(ds$gender, 2, 6), 
                      'https://app.crunch.io/api/datasets/1/variables/gender/',
                      '{"categories":[{"id":1,"missing":false,"name":"Male","numeric_value":1},{"id":2,"missing":false,"name":"__TO_DELETE__","numeric_value":2},{"id":-1,"missing":true,"name":"No Data","numeric_value":null}]} (app.crunch.io/api/datasets/1/variables/gender-1390e4-PATCH.json)')
@@ -346,8 +350,6 @@ with_test_authentication({
                 c("B", "C", "No Data"))
             expect_equal(ids(categories(ds$v4f)),
                 c(1, 6, -1))
-            expect_error(ds$v4f <- changeCategoryID(ds$v4f, 2, 7),
-                "No category with id 2")
         })
 
         test_that("Can changeCategoryID for array variables", {
