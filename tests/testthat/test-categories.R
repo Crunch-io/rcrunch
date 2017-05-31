@@ -332,6 +332,12 @@ with_test_authentication({
                 c(1, 6, -1))
             expect_error(ds$v4f <- changeCategoryID(ds$v4f, 2, 7),
                 "No category with id 2")
+            expect_error(ds$v4f <- changeCategoryID(ds$v4f, 1, 6),
+                         "Id 6 is already a category, please provide a new category id.")
+            expect_error(ds$v4f <- changeCategoryID(ds$v4f, "not a numeric", 7),
+                         "The 'from' argument is not a numeric, please providee only the id number you want to change from")
+            expect_error(ds$v4f <- changeCategoryID(ds$v4f, 6, "not a numeric"),
+                         "The 'to' argument is not a numeric, please providee only the id number you want to change to")
             ds$v3f <- df$v3
             expect_error(ds$v3f <- changeCategoryID(ds$v3f, 2, 7),
                          "The variable v3f doesn't have categories.")
