@@ -246,7 +246,11 @@ setMethod("lapply", "Categories", function (X, FUN, ...) {
 #' @param from the (old) id identifying the category you want to change
 #' @param to the (new) id for the category
 #' @return \code{variable} with an the new category id
-#' 
+#' @examples
+#' \dontrun{
+#' ds$country <- changeCategoryID(ds$country, 2, 6)
+#' ds$petloc <- changeCategoryID(ds$petloc, 2, 6)
+#' }
 #' @export 
 changeCategoryID <- function (variable, from, to) {
     # check that variable is a category
