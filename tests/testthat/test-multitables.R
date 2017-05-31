@@ -235,6 +235,12 @@ with_test_authentication({
         expect_identical(name(m), "copied_multitable")
         is.public(multitables(ds))[2] <- TRUE
     })
+    
+    test_that("importMultitable works without a name", {
+        m <- importMultitable(ds, mult)
+        expect_identical(name(m), "allpets + q1")
+        is.public(multitables(ds))[2] <- TRUE
+    })
 
     test_that("We can get an xlsx tab book", {
         skip_locally("Vagrant host doesn't serve files correctly")

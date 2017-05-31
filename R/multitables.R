@@ -131,7 +131,7 @@ newMultitable <- function (formula, data, name, ...) {
 importMultitable <- function (data, multitable, name=NULL, ...) {
 
     if (missing(name)) {
-        name <- multitable.name
+        name <- name(multitable)
     }
 
     payload <- wrapEntity(name=name, multitable=self(multitable))
