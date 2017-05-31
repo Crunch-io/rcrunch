@@ -28,11 +28,16 @@ with_mock_HTTP({
                 NA)
         })
     })
+    test_that("503 on GET with Retry-After is handled", {
+        expect_message(resp <- crGET("https://app.crunch.io/503/"),
+            "This request is taking longer than expected. Please stand by...")
+        expect_identical(resp, crGET("https://app.crunch.io/api/"))
+    })
 })
 
 if (run.integration.tests) {
     test_that("Request headers", {
-        skip_on_jenkins("Don't fail the build if httpbin is down")
+        skip_if_disconnected()
         r <- try(crGET("http://httpbin.org/gzip"))
         expect_true(r$gzipped)
         expect_true(grepl("gzip", r$headers[["Accept-Encoding"]]))
