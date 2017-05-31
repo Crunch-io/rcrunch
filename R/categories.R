@@ -240,21 +240,40 @@ setMethod("lapply", "Categories", function (X, FUN, ...) {
     return(X)
 })
 
-## TODO:
-## 1) Document
-## 2) Export
-## 3) Add more input validation and tests of
-## 4) Add tests for working with array variables, and extend function if needed
+#' Change the id of a category for a categorical variable
+#' 
+#' @param variable the variable in a crunch dataset that will be changed
+#' @param from the (old) id identifying the category you want to change
+#' @param to the (new) id for the category
+#' @return \code{variable} with an the new category id
+#' 
+#' @export 
 changeCategoryID <- function (variable, from, to) {
     # check that variable is a category
     if (!has.categories(variable)) {
         stop("The variable ", name(variable), " doesn't have categories.")
     }
     
+    # check that from is a numeric
+    if (!is.numeric(from)) {
+        stop("The 'from' argument is not a numeric, please providee only the id number you want to change from.")
+    }
+    
+    # check that to is a numeric
+    if (!is.numeric(to)) {
+        stop("The 'to' argument is not a numeric, please providee only the id number you want to change to")
+    }
+    
     pos.from <- match(from, ids(categories(variable)))
     if (is.na(pos.from)) {
         stop("No category with id ", from)
     }
+    
+    # check that the to id is not already a category id
+    if (to %in% ids(categories(variable))) {
+        stop("Id ", to, " is already a category, please provide a new category id.")
+    }
+    
     ## Add new category
     newcat <- categories(variable)[[pos.from]]
     newcat$id <- to
