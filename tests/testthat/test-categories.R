@@ -230,6 +230,26 @@ with_mock_HTTP({
     test_that("c(Categories, Categories)", {
         expect_true(is.categories(c(cats, cats2)))
     })
+    
+    test_that("changeCategoryID errors with bad inputs", {
+        expect_error(ds$birthyr <- changeCategoryID(ds$birthyr, 1, 6),
+                     "The variable Birth Year doesn't have categories.")
+        expect_error(ds$gender <- changeCategoryID(ds$gender, 1, -1),
+                     "Id -1 is already a category, please provide a new category id.")
+        expect_error(ds$gender <- changeCategoryID(ds$gender, "not a numeric", 1),
+                     "from should be a single numeric")
+        expect_error(ds$gender <- changeCategoryID(ds$gender, "not a numeric", c(1,-1)),
+                     "from should be a single numeric")
+        expect_error(ds$gender <- changeCategoryID(ds$gender, 1, "not a numeric"),
+                     "to should be a single numeric")
+        expect_error(ds$gender <- changeCategoryID(ds$gender, c(1,-1), "not a numeric"),
+                     "to should be a single numeric")
+        expect_error(ds$gender <- changeCategoryID(ds$gender, 8, 9),
+                     "No category with id 8")
+        expect_PATCH(changeCategoryID(ds$gender, 2, 6), 
+                     'https://app.crunch.io/api/datasets/1/variables/gender/',
+                     '{"categories":[{"id":1,"missing":false,"name":"Male","numeric_value":1},{"id":2,"missing":false,"name":"__TO_DELETE__","numeric_value":2},{"id":-1,"missing":true,"name":"No Data","numeric_value":null}]}')
+    })
 })
 
 
@@ -317,6 +337,49 @@ with_test_authentication({
             exclusion(ds) <- NULL
             expect_equivalent(as.array(crtabs(~ v4e, data=ds)),
                 array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "D"))))
+        })
+
+        test_that("Can changeCategoryID", {
+            ds$v4f <- df$v4
+            expect_identical(names(categories(ds$v4f)),
+                c("B", "C", "No Data"))
+            expect_equal(ids(categories(ds$v4f)),
+                c(1, 2, -1))
+            orig_vector <- as.vector(ds$v4f)
+            expect_equal(as.vector(ds$v4f[1:4], mode="id"), c(1, 2, 1, 2))
+            
+            ds$v4f <- changeCategoryID(ds$v4f, 2, 6)
+            expect_identical(names(categories(ds$v4f)),
+                c("B", "C", "No Data"))
+            expect_equal(ids(categories(ds$v4f)),
+                c(1, 6, -1))
+            expect_equal(as.vector(ds$v4f), orig_vector)
+            expect_equal(as.vector(ds$v4f[1:4], mode="id"), c(1, 6, 1, 6))
+        })
+
+        test_that("Can changeCategoryID for array variables", {
+            ds_apidocs <- newDatasetFromFixture("apidocs")
+            expect_identical(names(categories(ds_apidocs$petloc)),
+                             c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
+            expect_equal(ids(categories(ds_apidocs$petloc)),
+                         c(1, 2, 3, 8, 9))
+            expect_equal(dim(as.vector(ds_apidocs$petloc)), c(20, 2))
+            orig_vector <- as.vector(ds_apidocs$petloc)
+            expect_equal(as.vector(ds_apidocs$petloc[1:4], mode="id"),
+                         data.frame(petloc_home=c(8, 2, 9, 9),
+                                    petloc_work=c(9, 3, 3, 2)))
+
+            
+            ds_apidocs$petloc <- changeCategoryID(ds_apidocs$petloc, 2, 6)
+            expect_identical(names(categories(ds_apidocs$petloc)),
+                             c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
+            expect_equal(ids(categories(ds_apidocs$petloc)),
+                         c(1, 6, 3, 8, 9))
+            expect_equal(dim(as.vector(ds_apidocs$petloc)), c(20, 2))
+            expect_equal(as.vector(ds_apidocs$petloc), orig_vector)
+            expect_equal(as.vector(ds_apidocs$petloc[1:4], mode="id"),
+                         data.frame(petloc_home=c(8, 6, 9, 9),
+                                    petloc_work=c(9, 3, 3, 6)))
         })
     })
 
