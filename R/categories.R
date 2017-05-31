@@ -277,12 +277,23 @@ changeCategoryID <- function (variable, from, to) {
     ## Add new category
     newcat <- categories(variable)[[pos.from]]
     newcat$id <- to
+    newcat$numeric_value <- to
+    
     names(categories(variable))[pos.from] <- "__TO_DELETE__"
     categories(variable) <- c(categories(variable), newcat)
 
     ## Move data to that new id
-    variable[variable == from] <- to
-
+    if (is.Categorical(variable)) {
+        variable[variable == from] <- to
+    } else if (is.CategoricalArray(variable)) {
+        # If the variable is a categorical array, then lapply over the subvariables
+        # can't iterate over the variable directly because of how shojicatalogs
+        # have a slightly altered lapply method.
+        lapply(names(variable), function(subvarname) {
+            variable[[subvarname]][variable[[subvarname]] == from] <- to
+        })
+    }
+    
     ## Delete old category
     keep <- seq_along(categories(variable))
     keep[pos.from] <- length(keep)
