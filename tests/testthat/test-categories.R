@@ -248,7 +248,7 @@ with_mock_HTTP({
                      "No category with id 8")
         expect_PATCH(changeCategoryID(ds$gender, 2, 6), 
                      'https://app.crunch.io/api/datasets/1/variables/gender/',
-                     '{"categories":[{"id":1,"missing":false,"name":"Male","numeric_value":1},{"id":2,"missing":false,"name":"__TO_DELETE__","numeric_value":2},{"id":-1,"missing":true,"name":"No Data","numeric_value":null}]} (app.crunch.io/api/datasets/1/variables/gender-1390e4-PATCH.json)')
+                     '{"categories":[{"id":1,"missing":false,"name":"Male","numeric_value":1},{"id":2,"missing":false,"name":"__TO_DELETE__","numeric_value":2},{"id":-1,"missing":true,"name":"No Data","numeric_value":null}]}')
     })
 })
 
@@ -345,11 +345,16 @@ with_test_authentication({
                 c("B", "C", "No Data"))
             expect_equal(ids(categories(ds$v4f)),
                 c(1, 2, -1))
+            orig_vector <- as.vector(ds$v4f)
+            expect_equal(as.vector(ds$v4f[1:4], mode="id"), c(1, 2, 1, 2))
+            
             ds$v4f <- changeCategoryID(ds$v4f, 2, 6)
             expect_identical(names(categories(ds$v4f)),
                 c("B", "C", "No Data"))
             expect_equal(ids(categories(ds$v4f)),
                 c(1, 6, -1))
+            expect_equal(as.vector(ds$v4f), orig_vector)
+            expect_equal(as.vector(ds$v4f[1:4], mode="id"), c(1, 6, 1, 6))
         })
 
         test_that("Can changeCategoryID for array variables", {
@@ -359,9 +364,11 @@ with_test_authentication({
             expect_equal(ids(categories(ds_apidocs$petloc)),
                          c(1, 2, 3, 8, 9))
             expect_equal(dim(as.vector(ds_apidocs$petloc)), c(20, 2))
-            expect_equal(as.vector(ds_apidocs$petloc[1:4]),
-                         data.frame(petloc_home=c(NA, "Dog", NA, NA),
-                                    petloc_work=c(NA, "Bird", "Bird", "Dog")))
+            orig_vector <- as.vector(ds_apidocs$petloc)
+            expect_equal(as.vector(ds_apidocs$petloc[1:4], mode="id"),
+                         data.frame(petloc_home=c(8, 2, 9, 9),
+                                    petloc_work=c(9, 3, 3, 2)))
+
             
             ds_apidocs$petloc <- changeCategoryID(ds_apidocs$petloc, 2, 6)
             expect_identical(names(categories(ds_apidocs$petloc)),
@@ -369,10 +376,10 @@ with_test_authentication({
             expect_equal(ids(categories(ds_apidocs$petloc)),
                          c(1, 6, 3, 8, 9))
             expect_equal(dim(as.vector(ds_apidocs$petloc)), c(20, 2))
-            expect_equal(as.vector(ds_apidocs$petloc[1:4]),
-                         data.frame(petloc_home=c(NA, "Dog", NA, NA),
-                                    petloc_work=c(NA, "Bird", "Bird", "Dog")))
-            
+            expect_equal(as.vector(ds_apidocs$petloc), orig_vector)
+            expect_equal(as.vector(ds_apidocs$petloc[1:4], mode="id"),
+                         data.frame(petloc_home=c(8, 6, 9, 9),
+                                    petloc_work=c(9, 3, 3, 6)))
         })
     })
 
