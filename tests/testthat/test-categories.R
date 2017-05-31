@@ -342,6 +342,20 @@ with_test_authentication({
             expect_error(ds$v3f <- changeCategoryID(ds$v3f, 2, 7),
                          "The variable v3f doesn't have categories.")
         })
+
+        test_that("Can changeCategoryID for array variables", {
+            ds_apidocs <- newDatasetFromFixture("apidocs")
+            ds_apidocs$petloca <- ds_apidocs$petloc
+            expect_identical(names(categories(ds_apidocs$petloca)),
+                             c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
+            expect_equal(ids(categories(ds_apidocs$petloca)),
+                         c(1, 2, 3, 8, 9))
+            ds_apidocs$petloca <- changeCategoryID(ds_apidocs$petloca, 2, 6)
+            expect_identical(names(categories(ds_apidocs$petloca)),
+                             c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
+            expect_equal(ids(categories(ds_apidocs$petloca)),
+                         c(1, 6, 3, 8, 9))
+        })
     })
 
     whereas("When manipulating categories of array variables", {
