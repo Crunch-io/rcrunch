@@ -87,6 +87,18 @@ with_mock_HTTP({
             expect_is(mtable, "Multitable")
         })
     })
+    
+    test_that("importMultitable", {
+        with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
+            mtable <- newMultitable(~ gender + mymrset, data=ds, name="New multitable")
+            expect_is(mtable, "Multitable")
+        })
+        expect_POST(m <- importMultitable(ds, mtable, name='copied_multitable'),
+                    'https://app.crunch.io/api/datasets/1/multitables/',
+                    '{"element":"shoji:entity","body":{',
+                    '"name":"copied_multitable",', 
+                    '"multitable":"https://app.crunch.io/api/datasets/1/multitables/4de322/"}}')
+    })
 
     test_that("newMultitable validation", {
         expect_error(newMultitable(), "Must provide a formula")
