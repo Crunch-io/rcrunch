@@ -33,25 +33,9 @@ checkForNewVersion <- function (
         ## Filter to keep only those that match x.y.z
         version.tags <- grep("^[0-9]+\\.[0-9]+\\.[0-9]+$", gh.tags, value=TRUE)
         if (length(version.tags) &&
-            versionIsGreaterThan(version.tags[1], installed.version) ) {
-
+            utils::compareVersion(version.tags[1], installed.version) == 1) {
             return(version.tags[1])
         }
     }
     return(NULL)
-}
-
-versionIsGreaterThan <- function (x, y) {
-    if (x == y) return(FALSE)
-    ## Split into major/minor/patch, and as.numeric. Then do the same for
-    ## installed.version. Confirm that latest on GitHub is indeed newer
-    x <- as.numeric(unlist(strsplit(x, ".", fixed=TRUE)))
-    y <- as.numeric(unlist(strsplit(y, ".", fixed=TRUE)))
-    for (i in seq_along(x)) {
-        if (x[i] > y[i]) {
-            return(TRUE)
-        } else if (x[i] < y[i]) {
-            return(FALSE)
-        }
-    }
 }
