@@ -112,13 +112,13 @@ newMultitable <- function (formula, data, name, ...) {
 #' Import a Multitable
 #'
 #' Allows you to import a multitable from a different dataset
-#' @param data an object of class \code{CrunchDataset} in which to create the
+#' @param data an object of class `CrunchDataset` in which to create the
 #' multitable
-#' @param multitable an object of class \code{Multitable} that you want copied
+#' @param multitable an object of class `Multitable` that you want copied
 #' to the new dataset
-#' @param ... Additional multitable attributes to set. Options include
-#' \code{is_public}.
-#' @return An object of class \code{Multitable}
+#' @param ... Additional multitable attributes to set. Options include `name` and
+#' `is_public`.
+#' @return An object of class `Multitable`
 #' @examples
 #' \dontrun{
 #' m <- newMultitable(~ gender + age4 + marstat, data=ds)

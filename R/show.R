@@ -257,10 +257,8 @@ setMethod("show", "CrunchLogicalExpr", function (object) {
 showMultitable <- function (x) {
     out <- paste("Multitable", dQuote(name(x)))
     
-    # TODO: check variable types to alert users as needed
-    # * check if numerics are binned
-    # * check for datetime rollup resolutions
-    # * remove selected_array()
+    # TODO: check variable types to alert users in a more friendly manner
+    # eg remove selected_array()
     out <- c(out, "Column variables:",
              vapply(x@body$template, function (expr) {
                  paste0("  ", formatExpression(expr$query[[1]]))

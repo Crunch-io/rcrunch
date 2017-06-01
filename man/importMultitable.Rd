@@ -13,7 +13,7 @@ multitable}
 \item{multitable}{an object of class \code{Multitable} that you want copied
 to the new dataset}
 
-\item{...}{Additional multitable attributes to set. Options include
+\item{...}{Additional multitable attributes to set. Options include \code{name} and
 \code{is_public}.}
 }
 \value{
