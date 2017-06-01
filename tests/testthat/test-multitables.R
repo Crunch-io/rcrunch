@@ -199,7 +199,7 @@ with_test_authentication({
     test_that("Can make a multitable", {
         m <- newMultitable(~ allpets + q1, data=ds)
         expect_identical(name(m), "allpets + q1")
-        expect_identical(getShowContent(m), c("Multitable “allpets + q1”",
+        expect_identical(getShowContent(m), c(paste0("Multitable ", dQuote("allpets + q1")),
                                               "Column variables:",
                                               "  selected_array(allpets)",
                                               "  q1"))
@@ -238,7 +238,7 @@ with_test_authentication({
         m <- importMultitable(ds, mult, name='copied_multitable')
         expect_identical(name(m), "copied_multitable")
         is.public(multitables(ds))[2] <- TRUE
-        expect_identical(getShowContent(m), c("Multitable “copied_multitable”",
+        expect_identical(getShowContent(m), c(paste0("Multitable ", dQuote("copied_multitable")),
                                               "Column variables:",
                                               "  selected_array(allpets)",
                                               "  q1"))
