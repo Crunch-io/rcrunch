@@ -1,16 +1,5 @@
 context("GitHub version check")
 
-test_that("version number comparison is correct", {
-    expect_true(versionIsGreaterThan("1.2.2", "1.2.1"))
-    expect_true(versionIsGreaterThan("1.2.2", "1.1.3"))
-    expect_true(versionIsGreaterThan("1.2.2", "0.3.3"))
-    expect_true(versionIsGreaterThan("2.0.0", "1.2.2"))
-    expect_false(versionIsGreaterThan("1.2.2", "1.2.2"))
-    expect_false(versionIsGreaterThan("1.2.1", "1.2.2"))
-    expect_false(versionIsGreaterThan("1.1.3", "1.2.2"))
-    expect_false(versionIsGreaterThan("1.2.2", "2.0.0"))
-})
-
 with(temp.option(crunch.check.updates=NULL), {
     with_mock_HTTP({
         test_that("checkForNewVersion parses github json", {
