@@ -4,6 +4,7 @@
 * Fix issue in printing filter expressions with long value columns
 * Progress bars now clean up after themselves and do not leave the prompt hanging out at the end of the line
 * Fix issue where long expressions were truncated. By default, long expressions are not truncated, although they can be when it is appropriate (ie when creating a new dataset without a name). (#39, #45)
+* Added `importMultitable()` to copy a multitable form one dataset to another. Additionally, `Multitable`s now have a show method showing its name and column variables.
 
 ## crunch 1.16.0
 
