@@ -53,7 +53,8 @@ with_mock_HTTP({
     })
 
     test_that("newMultitable", {
-        expect_POST(newMultitable(~ gender + mymrset, data=ds, name="New multitable"),
+        expect_POST(newMultitable(~ gender + mymrset, data=ds,
+                                  name="New multitable"),
             'https://app.crunch.io/api/datasets/1/multitables/',
             '{"element":"shoji:entity","body":{',
             '"name":"New multitable",',
@@ -65,7 +66,8 @@ with_mock_HTTP({
             '"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]',
             '}}')
         with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
-            mtable <- newMultitable(~ gender + mymrset, data=ds, name="New multitable")
+            mtable <- newMultitable(~ gender + mymrset, data=ds,
+                                    name="New multitable")
             expect_is(mtable, "Multitable")
         })
     })
@@ -83,17 +85,19 @@ with_mock_HTTP({
             '"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]',
             '}}')
         with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
-            mtable <- newMultitable(~ gender + mymrset, data=ds, name="New multitable")
+            mtable <- newMultitable(~ gender + mymrset, data=ds,
+                                    name="New multitable")
             expect_is(mtable, "Multitable")
         })
     })
     
     test_that("importMultitable", {
         with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
-            mtable <- newMultitable(~ gender + mymrset, data=ds, name="New multitable")
+            mtable <- newMultitable(~ gender + mymrset, data=ds,
+                                    name="New multitable")
             expect_is(mtable, "Multitable")
         })
-        expect_POST(m <- importMultitable(ds, mtable, name='copied_multitable'),
+        expect_POST(importMultitable(ds, mtable, name='copied_multitable'),
                     'https://app.crunch.io/api/datasets/1/multitables/',
                     '{"element":"shoji:entity","body":{', 
                     '"multitable":"https://app.crunch.io/api/datasets/1/multitables/4de322/",',
@@ -102,13 +106,15 @@ with_mock_HTTP({
     
     test_that("multitable show method", {
         with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
-            mtable <- newMultitable(~ gender + mymrset, data=ds, name="Shared multitable")
+            mtable <- newMultitable(~ gender + mymrset, data=ds,
+                                    name="Shared multitable")
             expect_is(mtable, "Multitable")
         })
-        expect_output(mtable, paste(paste0("Multitable ", dQuote("Shared multitable")),
-                                               "Column variables:",
-                                               "  gender",
-                                               "  mymrset", sep="\n"))
+        expect_output(mtable, 
+                      paste(paste0("Multitable ", dQuote("Shared multitable")),
+                                   "Column variables:",
+                                   "  gender",
+                                   "  mymrset", sep="\n"))
     })
 
     test_that("newMultitable validation", {
