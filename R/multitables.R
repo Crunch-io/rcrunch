@@ -116,8 +116,6 @@ newMultitable <- function (formula, data, name, ...) {
 #' multitable
 #' @param multitable an object of class \code{Multitable} that you want copied
 #' to the new dataset
-#' @param name character name to give the new multitable object. If omitted,
-#' a default name will be derived from \code{formula}.
 #' @param ... Additional multitable attributes to set. Options include
 #' \code{is_public}.
 #' @return An object of class \code{Multitable}

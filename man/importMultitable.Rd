@@ -15,9 +15,6 @@ to the new dataset}
 
 \item{...}{Additional multitable attributes to set. Options include
 \code{is_public}.}
-
-\item{name}{character name to give the new multitable object. If omitted,
-a default name will be derived from \code{formula}.}
 }
 \value{
 An object of class \code{Multitable}
