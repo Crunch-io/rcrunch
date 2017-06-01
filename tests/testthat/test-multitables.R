@@ -258,9 +258,10 @@ with_test_authentication({
     })
 
     test_that("Can copy the multitable to a new multitable", {
-        m <- importMultitable(ds, mult, name='copied_multitable')
+        m <- importMultitable(ds2, mult, name='copied_multitable')
         expect_identical(name(m), "copied_multitable")
-        is.public(multitables(ds))[2] <- TRUE
+        is.public(multitables(ds2))[1] <- TRUE
+        expect_true(is.public(refresh(m)))
         expect_identical(getShowContent(m), c(paste0("Multitable ", dQuote("copied_multitable")),
                                               "Column variables:",
                                               "  selected_array(allpets)",
@@ -268,9 +269,8 @@ with_test_authentication({
     })
     
     test_that("importMultitable works without a name", {
-        m <- importMultitable(ds, mult)
-        expect_identical(name(m), "Yet another name (1)")
-        is.public(multitables(ds))[2] <- TRUE
+        m <- importMultitable(ds2, mult)
+        expect_identical(name(m), "Yet another name")
     })
 
     test_that("We can get an xlsx tab book", {
