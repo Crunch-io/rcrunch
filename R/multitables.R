@@ -128,14 +128,9 @@ newMultitable <- function (formula, data, name, ...) {
 #' name(copied_m) # [1] "gender + age4 + marstat"
 #' }
 #' @export
-importMultitable <- function (data, multitable, name=NULL, ...) {
-
-    if (missing(name)) {
-        name <- name(multitable)
-    }
-
-    payload <- wrapEntity(name=name, multitable=self(multitable))
-
+importMultitable <- function (data, multitable, ...) {
+    payload <- wrapEntity(multitable=self(multitable), ...)
+    
     u <- crPOST(shojiURL(data, "catalogs", "multitables"), body=toJSON(payload))
     invisible(Multitable(crGET(u)))
 }

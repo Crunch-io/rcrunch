@@ -95,9 +95,9 @@ with_mock_HTTP({
         })
         expect_POST(m <- importMultitable(ds, mtable, name='copied_multitable'),
                     'https://app.crunch.io/api/datasets/1/multitables/',
-                    '{"element":"shoji:entity","body":{',
-                    '"name":"copied_multitable",', 
-                    '"multitable":"https://app.crunch.io/api/datasets/1/multitables/4de322/"}}')
+                    '{"element":"shoji:entity","body":{', 
+                    '"multitable":"https://app.crunch.io/api/datasets/1/multitables/4de322/",',
+                    '"name":"copied_multitable"}}')
     })
     
     test_that("multitable show method", {
@@ -269,7 +269,7 @@ with_test_authentication({
     
     test_that("importMultitable works without a name", {
         m <- importMultitable(ds, mult)
-        expect_identical(name(m), "allpets + q1")
+        expect_identical(name(m), "Yet another name (1)")
         is.public(multitables(ds))[2] <- TRUE
     })
 
