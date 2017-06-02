@@ -373,6 +373,12 @@ with_test_authentication({
             expect_true(is.Numeric(ds$name))
         })
 
+        test_that("PK methods work", {
+            expect_null(pk(ds))
+            expect_silent(pk(ds) <- ds$name)
+            expect_equal(pk(refresh(ds)), ds$name)
+        })
+        
         test_that("Dataset settings (defaults)", {
             # expect_true(settings(ds)$viewers_can_export) ## Isn't it?
             expect_true(settings(ds)$viewers_can_change_weight)
