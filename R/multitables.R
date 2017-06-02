@@ -108,3 +108,27 @@ newMultitable <- function (formula, data, name, ...) {
     u <- crPOST(shojiURL(data, "catalogs", "multitables"), body=toJSON(payload))
     invisible(Multitable(crGET(u)))
 }
+
+#' Import a Multitable
+#'
+#' Allows you to import a multitable from a different dataset
+#' @param data an object of class `CrunchDataset` in which to create the
+#' multitable
+#' @param multitable an object of class `Multitable` that you want copied
+#' to the new dataset
+#' @param ... Additional multitable attributes to set. Options include `name` and
+#' `is_public`.
+#' @return An object of class `Multitable`
+#' @examples
+#' \dontrun{
+#' m <- newMultitable(~ gender + age4 + marstat, data=ds)
+#' copied_m <- importMultitable(another_ds, m)
+#' name(copied_m) # [1] "gender + age4 + marstat"
+#' }
+#' @export
+importMultitable <- function (data, multitable, ...) {
+    payload <- wrapEntity(multitable=self(multitable), ...)
+    
+    u <- crPOST(shojiURL(data, "catalogs", "multitables"), body=toJSON(payload))
+    invisible(Multitable(crGET(u)))
+}
