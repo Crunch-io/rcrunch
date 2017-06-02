@@ -15,6 +15,13 @@ with_mock_HTTP({
         expect_error(appendDataset(ds, ds),
             "Cannot append dataset to itself")
     })
+
+    ds1 <- loadDataset("test ds")
+    ds2 <- loadDataset("ECON.sav")
+    test_that("append DELETEs the pk", {
+      expect_DELETE(appendDataset(ds2, ds1),
+                    "https://app.crunch.io/api/datasets/3/pk/")
+    })
 })
 
 with_test_authentication({
