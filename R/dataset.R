@@ -100,7 +100,7 @@ setMethod("notes<-", "CrunchDataset", function (x, value) {
 setMethod("pk", "CrunchDataset", function (x)  {
     pk <- ShojiEntity(crGET(shojiURL(x, "fragments", "pk")))$pk
     if (length(pk)) {
-        return(x[[pk[1]]])
+        return(x[[pk[[1]]]])
     } else {
         return(NULL)
     }
