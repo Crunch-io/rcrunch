@@ -62,6 +62,16 @@ with_test_authentication({
                 expect_identical(categories(out$v4), cats)
                 expect_equivalent(as.vector(out$v3), df$v3)
             })
+
+            test_that("append removes the primary key if there is one", {
+                expect_silent(pk(part2) <- part2$v3)
+                expect_equal(pk(refresh(part2)), part2$v3)
+                out <- appendDataset(part2, part1)
+                expect_null(pk(out))
+                expect_identical(dim(out), c(nrow(df)*2L, ncol(df)))
+                expect_identical(getNrow(out), nrow(df)*2L)
+                expect_identical(nrow(out), length(as.vector(out$v3)))
+            })              
         })
     })
 
