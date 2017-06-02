@@ -20,16 +20,6 @@ getNrow <- function (dataset) {
     return(nrows)
 }
 
-getPK <- function (x)  {
-    var <- crGET(shojiURL(x, "fragments", "pk"))
-    if (length(var$body$pk) == 0) {
-        message("There is no primary key for this dataset.")
-        invisible(NULL)
-    } else {
-        x[[crGET(var$body$pk[[1]])$body$alias]]
-    }
-}
-
 setFragment <- function (x, name, variable) {
     payload <- toJSON(structure(list(structure(list(self(variable)))),
                                 .Names=name))
@@ -107,7 +97,14 @@ setMethod("notes<-", "CrunchDataset", function (x, value) {
 })
 #' @rdname describe
 #' @export
-setMethod("pk", "CrunchDataset", getPK)
+setMethod("pk", "CrunchDataset", function (x)  {
+    pk <- ShojiEntity(crGET(shojiURL(x, "fragments", "pk")))$pk
+    if (length(pk)) {
+        return(x[[pk[1]]])
+    } else {
+        return(NULL)
+    }
+})
 #' @rdname describe
 #' @export
 setMethod("pk<-", "CrunchDataset", function (x, value) {
