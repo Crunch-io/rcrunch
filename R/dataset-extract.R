@@ -71,9 +71,15 @@ setMethod("[", c("CrunchDataset", "logical", "missing"), function (x, i, j, ...,
 #' @rdname dataset-extract
 #' @export
 setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
-    ## TODO: see recent changes to [[ to allow selecting vars by URL
-    allnames <- getIndexSlot(allVariables(x), namekey(x)) ## Include hidden
-    w <- match(i, allnames)
+    allvars <- allVariables(x)
+    ## Handle "namekey", which should be deprecated
+    if (getOption("crunch.namekey.dataset", "alias") == "name") {
+        alt <- names(allvars)
+    } else {
+        alt <- aliases(allvars)
+    }
+    
+    w <- whichNameOrURL(allvars, i, alt)
     if (any(is.na(w))) {
         halt("Undefined columns selected: ", serialPaste(i[is.na(w)]))
     }

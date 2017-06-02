@@ -155,9 +155,11 @@ setMethod("[<-", c("ShojiCatalog", "ANY", "missing", "ShojiCatalog"),
 NULL
 
 whichNameOrURL <- function (x, i, secondary=names(x)) {
-    w <- match(i, secondary)
-    if (any(is.na(w))) {
-        w <- match(i, urls(x))
+    var_matches <- match(i, secondary)
+    if (any(is.na(var_matches))) {
+        url_matches <- match(i, urls(x))
+        # replace NAs in matches with the contents of URL match (either a match or NA)
+        var_matches[is.na(var_matches)] <- url_matches[is.na(var_matches)]
     } else {
         ## Warn if duplicated
         dups <- i %in% secondary[duplicated(secondary)]
@@ -169,7 +171,8 @@ whichNameOrURL <- function (x, i, secondary=names(x)) {
             warning(i, msg, call.=FALSE)
         }
     }
-    return(w)
+    
+    return(var_matches)
 }
 
 #' @rdname catalog-length

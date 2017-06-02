@@ -167,6 +167,12 @@ with_mock_HTTP({
             expect_null(ds$birthyr)
         })
     })
+    
+    test_that("Variables can be extracted by url", {
+        url <- urls(variables(ds))[1]
+        expect_identical(ds[[url]], ds[['birthyr']])
+        expect_identical(ds[url], ds['birthyr'])
+    })
 
     ## This is a start on a test that getting variables doesn't hit server.
     ## It doesn't now, but if variable catalogs are lazily fetched, assert that
