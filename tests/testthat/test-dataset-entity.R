@@ -265,7 +265,7 @@ with_mock_HTTP({
     })
 
     test_that("Primary key methods", {
-        expect_NULL(pk(ds2))
+        expect_null(pk(ds2))
         expect_identical(pk(ds), ds$birthyr)
         expect_POST(pk(ds) <- ds$textVar,
             'https://app.crunch.io/api/datasets/1/pk/',
