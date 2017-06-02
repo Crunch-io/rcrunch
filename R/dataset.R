@@ -20,6 +20,24 @@ getNrow <- function (dataset) {
     return(nrows)
 }
 
+getPK <- function (x)  {
+    var <- crGET(shojiURL(x, "fragments", "pk"))
+    if (length(var$body$pk) == 0) {
+        message("There is no primary key for this dataset.")
+        invisible(NULL)
+    } else {
+        x[[crGET(var$body$pk[[1]])$body$alias]]
+    }
+}
+
+setFragment <- function (x, name, variable) {
+    payload <- toJSON(structure(list(structure(list(self(variable)))),
+                                .Names=name))
+    crPOST(shojiURL(x, "fragments", name), body=payload)
+
+    invisible(x)
+}
+
 #' Is it?
 #' @rdname crunch-is
 #' @param x an object
@@ -87,6 +105,15 @@ setMethod("notes", "CrunchDataset", function (x) x@body$notes)
 setMethod("notes<-", "CrunchDataset", function (x, value) {
     invisible(setEntitySlot(x, "notes", value))
 })
+#' @rdname describe
+#' @export
+setMethod("pk", "CrunchDataset", getPK)
+#' @rdname describe
+#' @export
+setMethod("pk<-", "CrunchDataset", function (x, value) {
+    invisible(setFragment(x, "pk", value))
+})
+
 
 trimISODate <- function (x) {
     ## Drop time from datestring if it's only a date

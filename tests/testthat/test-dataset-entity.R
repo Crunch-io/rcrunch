@@ -263,6 +263,15 @@ with_mock_HTTP({
             '{"app_settings":{"whaam":',
             '{"dashboardUrl":"https://shiny.crunch.io/example/"}}}')
     })
+    
+    test_that("Primary key methods", {
+        expect_message(pk(ds2), "There is no primary key for this dataset.")
+        expect_equivalent(pk(ds), ds$birthyr)
+        expect_POST(pk(ds) <- ds$textVar,
+                    'https://app.crunch.io/api/datasets/1/pk/', 
+                    '{"pk":["https://app.crunch.io/api/datasets/1/variables/textVar/"]}'
+                    )
+    })
 })
 
 with_test_authentication({
