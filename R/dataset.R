@@ -95,7 +95,16 @@ setMethod("notes", "CrunchDataset", function (x) x@body$notes)
 setMethod("notes<-", "CrunchDataset", function (x, value) {
     invisible(setEntitySlot(x, "notes", value))
 })
-#' @rdname describe
+
+
+#' Name, alias, and description for Crunch objects
+#'
+#' @param x a Dataset
+#' @param value For the setters, a single Variable to use as the primary key.
+#' @return Getters return the Variable object that is used as the primary key (`NULL` if there is no primary key); setters
+#' return \code{x} duly modified.
+#' @name pk
+#' @aliases pk pk<-
 #' @export
 setMethod("pk", "CrunchDataset", function (x)  {
     pk <- ShojiEntity(crGET(shojiURL(x, "fragments", "pk")))$pk
@@ -105,10 +114,14 @@ setMethod("pk", "CrunchDataset", function (x)  {
         return(NULL)
     }
 })
-#' @rdname describe
+#' @rdname pk
 #' @export
 setMethod("pk<-", "CrunchDataset", function (x, value) {
-    invisible(setFragment(x, "pk", value))
+    payload <- toJSON(structure(list(structure(list(self(value)))),
+                                .Names="pk"))
+    crPOST(shojiURL(x, "fragments", "pk"), body=payload)
+    
+    invisible(x)
 })
 
 
