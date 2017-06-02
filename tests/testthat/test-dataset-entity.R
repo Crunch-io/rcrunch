@@ -158,6 +158,14 @@ with_mock_HTTP({
         expect_identical(dim(ds[2]), c(25L, 1L))
         expect_null(ds$not.a.var.name)
         expect_error(ds[[999]], "subscript out of bounds")
+        expect_identical(ds[[self(ds$gender)]], ds$gender)
+    })
+
+    with(temp.option(crunch.namekey.dataset="name"), {
+        test_that("'namekey' feature (that should be deprecated) is respected", {
+            expect_true(is.Numeric(ds$`Birth Year`))
+            expect_null(ds$birthyr)
+        })
     })
 
     ## This is a start on a test that getting variables doesn't hit server.

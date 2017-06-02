@@ -151,27 +151,21 @@ setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
 #' @rdname dataset-extract
 #' @export
 setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
-    stopifnot(length(i) == 1)
-    n <- match(i, names(x))
-    if (is.na(n)) {
-        ## See if the variable in question is hidden
-        hvars <- hidden(x)
-        hnames <- getIndexSlot(hvars, namekey(x))
-        n <- match(i, hnames)
-        if (is.na(n)) {
-            return(NULL)
-        } else {
-            ## If so, return it with a warning
-            out <- hvars[[n]]
-            if (!is.null(out)) {
-                out <- CrunchVariable(out, filter=activeFilter(x))
-            }
-            warning("Variable ", i, " is hidden", call.=FALSE)
-            return(out)
-        }
+    allvars <- allVariables(x)
+    ## Handle "namekey", which should be deprecated
+    if (getOption("crunch.namekey.dataset", "alias") == "name") {
+        alt <- names(allvars)
     } else {
-        return(callNextMethod(x, n, ..., drop=drop))
+        alt <- aliases(allvars)
     }
+    out <- allvars[[whichNameOrURL(allvars, i, alt)]]
+    if (!is.null(out)) {
+        out <- CrunchVariable(out, filter=activeFilter(x))
+        if (tuple(out)$discarded) {
+            warning("Variable ", alias(out), " is hidden", call.=FALSE)
+        }
+    }
+    return(out)
 })
 #' @rdname dataset-extract
 #' @export
