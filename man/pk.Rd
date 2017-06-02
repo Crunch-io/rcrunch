@@ -4,6 +4,7 @@
 \name{pk}
 \alias{pk}
 \alias{pk<-}
+\alias{pk,CrunchDataset-method}
 \alias{pk<-,CrunchDataset-method}
 \title{Name, alias, and description for Crunch objects}
 \usage{

@@ -105,6 +105,9 @@ setMethod("notes<-", "CrunchDataset", function (x, value) {
 #' return \code{x} duly modified.
 #' @name pk
 #' @aliases pk pk<-
+NULL 
+
+#' @rdname pk
 #' @export
 setMethod("pk", "CrunchDataset", function (x)  {
     pk <- ShojiEntity(crGET(shojiURL(x, "fragments", "pk")))$pk
