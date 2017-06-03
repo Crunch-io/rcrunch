@@ -71,15 +71,7 @@ setMethod("[", c("CrunchDataset", "logical", "missing"), function (x, i, j, ...,
 #' @rdname dataset-extract
 #' @export
 setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
-    allvars <- allVariables(x)
-    ## Handle "namekey", which should be deprecated
-    if (getOption("crunch.namekey.dataset", "alias") == "name") {
-        alt <- names(allvars)
-    } else {
-        alt <- aliases(allvars)
-    }
-    
-    w <- whichNameOrURL(allvars, i, alt)
+    w <- reference_to_var(x, i)
     if (any(is.na(w))) {
         halt("Undefined columns selected: ", serialPaste(i[is.na(w)]))
     }
@@ -158,14 +150,7 @@ setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
 #' @rdname dataset-extract
 #' @export
 setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
-    allvars <- allVariables(x)
-    ## Handle "namekey", which should be deprecated
-    if (getOption("crunch.namekey.dataset", "alias") == "name") {
-        alt <- names(allvars)
-    } else {
-        alt <- aliases(allvars)
-    }
-    out <- allvars[[whichNameOrURL(allvars, i, alt)]]
+    out <- allVariables(x)[[reference_to_var(x, i)]]
     if (!is.null(out)) {
         out <- CrunchVariable(out, filter=activeFilter(x))
         if (tuple(out)$discarded) {
@@ -177,3 +162,16 @@ setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE
 #' @rdname dataset-extract
 #' @export
 setMethod("$", "CrunchDataset", function (x, name) x[[name]])
+
+
+reference_to_var <- function(x, i) {
+    allvars <- allVariables(x)
+    ## Handle "namekey", which should be deprecated
+    if (getOption("crunch.namekey.dataset", "alias") == "name") {
+        alt <- names(allvars)
+    } else {
+        alt <- aliases(allvars)
+    }
+    
+    return(whichNameOrURL(allvars, i, alt))
+}
