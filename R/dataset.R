@@ -20,14 +20,6 @@ getNrow <- function (dataset) {
     return(nrows)
 }
 
-setFragment <- function (x, name, variable) {
-    payload <- toJSON(structure(list(structure(list(self(variable)))),
-                                .Names=name))
-    crPOST(shojiURL(x, "fragments", name), body=payload)
-
-    invisible(x)
-}
-
 #' Is it?
 #' @rdname crunch-is
 #' @param x an object
@@ -120,10 +112,14 @@ setMethod("pk", "CrunchDataset", function (x)  {
 #' @rdname pk
 #' @export
 setMethod("pk<-", "CrunchDataset", function (x, value) {
-    payload <- toJSON(structure(list(structure(list(self(value)))),
-                                .Names="pk"))
-    crPOST(shojiURL(x, "fragments", "pk"), body=payload)
-    
+    if (is.null(value)) {
+        crDELETE(shojiURL(x, "fragments", "pk"))
+    } else {
+        payload <- toJSON(structure(list(structure(list(self(value)))),
+                                    .Names="pk"))
+        crPOST(shojiURL(x, "fragments", "pk"), body=payload)        
+    }
+
     invisible(x)
 })
 

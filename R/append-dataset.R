@@ -34,7 +34,7 @@ appendDataset <- function (dataset1, dataset2, autorollback=TRUE) {
 
     ## Preventatively, delete the primary key on dataset1 so that this appends
     ## and not "upsert"
-    crDELETE(shojiURL(dataset1, "fragments", "pk"))
+    pk(dataset1) <- NULL
     
     ## POST the batch. This will error with a useful message if it fails
     dataset1 <- addBatch(dataset1, body=payload, autorollback=autorollback)
