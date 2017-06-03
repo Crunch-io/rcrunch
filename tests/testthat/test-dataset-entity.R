@@ -285,6 +285,7 @@ with_mock_HTTP({
             'https://app.crunch.io/api/datasets/1/pk/',
             '{"pk":["https://app.crunch.io/api/datasets/1/variables/textVar/"]}'
         )
+        expect_DELETE(pk(ds2) <- NULL, 'https://app.crunch.io/api/datasets/3/pk/')
     })
 })
 
@@ -376,7 +377,9 @@ with_test_authentication({
         test_that("PK methods work", {
             expect_null(pk(ds))
             expect_silent(pk(ds) <- ds$name)
-            expect_equal(pk(refresh(ds)), ds$name)
+            expect_equal(pk(ds), ds$name)
+            expect_silent(pk(ds) <- NULL)
+            expect_null(pk(ds))
         })
         
         test_that("Dataset settings (defaults)", {
