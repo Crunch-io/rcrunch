@@ -88,6 +88,49 @@ setMethod("notes<-", "CrunchDataset", function (x, value) {
     invisible(setEntitySlot(x, "notes", value))
 })
 
+
+#' Get and set the primary key for a Crunch dataset
+#'
+#' A primary key is a variable in a dataset that has a unique value for every 
+#' row. A variable must be either numeric or text type and have no duplicate or
+#' missing values. A primary key on a dataset causes updates to that dataset
+#' that have the rows with the same primary key value(s) as the first dataset 
+#' to update the existing rows rather than inserting new ones.
+#'
+#' @param x a Dataset
+#' @param value For the setter, a single Variable to use as the primary key or `NULL` to remove the primary key.
+#' @return Getter returns the Variable object that is used as the primary key (`NULL` if there is no primary key); setter
+#' returns \code{x} duly modified.
+#' @name pk
+#' @aliases pk pk<-
+NULL 
+
+#' @rdname pk
+#' @export
+setMethod("pk", "CrunchDataset", function (x)  {
+    pk <- ShojiEntity(crGET(shojiURL(x, "fragments", "pk")))$pk
+    if (length(pk)) {
+        return(x[[pk[[1]]]])
+    } else {
+        return(NULL)
+    }
+})
+#' @rdname pk
+#' @export
+setMethod("pk<-", "CrunchDataset", function (x, value) {
+    if (is.null(value)) {
+        crDELETE(shojiURL(x, "fragments", "pk"))
+    } else {
+        # payload <- toJSON(structure(list(structure(list(self(value)))),
+                                    # .Names="pk"))
+        payload <- toJSON(list(pk=I(self(value))))
+        crPOST(shojiURL(x, "fragments", "pk"), body=payload)        
+    }
+
+    invisible(x)
+})
+
+
 trimISODate <- function (x) {
     ## Drop time from datestring if it's only a date
     if (is.character(x) && nchar(x) > 10 && endsWith(x, "T00:00:00+00:00")) {

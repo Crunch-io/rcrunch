@@ -40,6 +40,8 @@ setGeneric("email", function (x) standardGeneric("email"))
 setGeneric("notes", function (x) standardGeneric("notes"))
 setGeneric("notes<-", function (x, value) standardGeneric("notes<-"),
     signature="x")
+setGeneric("pk", function (x) standardGeneric("pk"))
+setGeneric("pk<-", function (x, value) standardGeneric("pk<-"))
 
 setGeneric("types", function (x) standardGeneric("types"))
 setGeneric("timestamps", function (x) standardGeneric("timestamps"))

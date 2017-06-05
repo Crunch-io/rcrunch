@@ -6,6 +6,9 @@
 * Progress bars now clean up after themselves and do not leave the prompt hanging out at the end of the line
 * Fix issue where long expressions were truncated. By default, long expressions are not truncated, although they can be when it is appropriate (ie when creating a new dataset without a name). (#39, #45)
 * Added `importMultitable()` to copy a multitable form one dataset to another. Additionally, `Multitable`s now have a show method showing its name and column variables.
+* Can now extract variables from a dataset by the variable URL
+* `appendDataset()` now truly appends a dataset and no longer upserts if there is a primary key set. This is accomplished by removing the primary key before appending. (#35)
+* Primary keys can now be viewed with `pk(dataset)` and set with `pk(dataset) <- variable`.
 
 ## crunch 1.16.0
 
