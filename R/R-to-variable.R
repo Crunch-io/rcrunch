@@ -1,3 +1,6 @@
+#' @include variable-definition.R
+NULL
+
 #' @rdname toVariable
 #' @export
 setMethod("toVariable", "character", function (x, ...) {
