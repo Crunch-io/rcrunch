@@ -1,3 +1,5 @@
+library(httptest)
+
 run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
 
 envOrOption <- function (opt) {
@@ -20,6 +22,12 @@ options(
 
 skip_locally <- function (...) {
     if (startsWith(getOption("crunch.api"), "http://local")) {
+        skip(...)
+    }
+}
+
+skip_if_devtools_loaded <- function (...) {
+    if (pkgload::is_dev_package('crunch')) {
         skip(...)
     }
 }
