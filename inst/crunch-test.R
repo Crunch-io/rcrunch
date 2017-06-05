@@ -21,7 +21,7 @@ options(
 )
 
 skip_locally <- function (...) {
-    if (startsWith(getOption("crunch.api"), "http://local")) {
+    if (substr(getOption("crunch.api"), 1, 12) == "http://local") {
         skip(...)
     }
 }
