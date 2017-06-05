@@ -7,7 +7,7 @@ test_that("Deprecated endpoints tell user to upgrade", {
               "Please upgrade crunch to the latest version."))
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     test_that("crunch.debug does not print if disabled", {
         expect_POST(
             expect_output(crPOST("https://app.crunch.io/api/", body='{"value":1}'),

@@ -1,6 +1,6 @@
 context("Dataset catalog")
 
-with_mock_HTTP({
+with_mock_crunch({
     cr <- session()
     datcat <- cr$datasets
 

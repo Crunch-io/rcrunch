@@ -53,7 +53,7 @@ test_that("Iframe code with title", {
         fixed=TRUE)
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     ds3 <- loadDataset("ECON.sav")
 

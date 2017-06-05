@@ -1,6 +1,6 @@
 context("Exclusion filters")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("Validation for setting exclusion", {
         expect_error(exclusion(ds) <- "Not a filter",

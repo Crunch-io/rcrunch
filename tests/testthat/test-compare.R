@@ -53,7 +53,7 @@ test_that("print compareCategory summary when categories are equivalent", {
             ))
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     ds1 <- loadDataset("test ds")
     ds2 <- loadDataset("an archived dataset", "archived")
 

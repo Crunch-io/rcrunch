@@ -1,19 +1,15 @@
-run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
 Sys.setlocale("LC_COLLATE", "C") ## What CRAN does
+set.seed(666)
+
+## Our "test package" common harness code
+## `try` added because of some devtools::document weirdness
+try(source(system.file("crunch-test.R", package="crunch")))
 
 skip_on_jenkins <- function (...) {
     if (nchar(Sys.getenv("JENKINS_HOME"))) {
         skip(...)
     }
 }
-
-skip_locally <- function (...) {
-    if (startsWith(getOption("crunch.api"), "http://local")) {
-        skip(...)
-    }
-}
-
-set.seed(666)
 
 fromJSON <- jsonlite::fromJSON
 loadLogfile <- httpcache::loadLogfile
@@ -22,21 +18,9 @@ requestLogSummary <- httpcache::requestLogSummary
 uncached <- httpcache::uncached
 newDataset <- function (...) suppressMessages(crunch::newDataset(...))
 
-envOrOption <- function (opt) {
-    ## .Rprofile options are like "test.api", while env vars are "R_TEST_API"
-    envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed=TRUE)))
-    envvar <- Sys.getenv(envvar.name)
-    if (nchar(envvar)) {
-        ## Let environment variable override .Rprofile, if defined
-        return(envvar)
-    } else {
-        return(getOption(opt))
-    }
-}
-
 ## .onAttach stuff, for testthat to work right
+## See other options in inst/crunch-test.R
 options(
-    crunch.api=envOrOption("test.api"),
     warn=1,
     crunch.debug=FALSE,
     digits.secs=3,
@@ -44,9 +28,7 @@ options(
     # httpcache.log="",
     crunch.require.confirmation=TRUE,
     crunch.namekey.dataset="alias",
-    crunch.namekey.array="alias",
-    crunch.email=envOrOption("test.user"),
-    crunch.pw=envOrOption("test.pw")
+    crunch.namekey.array="alias"
 )
 httr::set_config(crunchConfig())
 
@@ -97,41 +79,3 @@ mrdf.setup <- function (dataset, pattern="mr_", name=ifelse(is.null(selections),
     }
     return(dataset)
 }
-
-## Global teardown
-bye <- new.env()
-with_test_authentication({
-    datasets.start <- urls(datasets())
-    users.start <- urls(getUserCatalog())
-    projects.start <- urls(session()$projects)
-})
-reg.finalizer(bye,
-    function (x) {
-        with_test_authentication({
-            datasets.end <- urls(datasets())
-            leftovers <- setdiff(datasets.end, datasets.start)
-            if (length(leftovers)) {
-                stop(length(leftovers),
-                    " dataset(s) created and not destroyed: ",
-                    serialPaste(dQuote(names(datasets()[leftovers]))),
-                    call.=FALSE)
-            }
-            users.end <- urls(getUserCatalog())
-            leftovers <- setdiff(users.end, users.start)
-            if (length(leftovers)) {
-                stop(length(leftovers),
-                    " users(s) created and not destroyed: ",
-                    serialPaste(dQuote(names(getUserCatalog()[leftovers]))),
-                    call.=FALSE)
-            }
-            projects.end <- urls(session()$projects)
-            leftovers <- setdiff(projects.end, projects.start)
-            if (length(leftovers)) {
-                stop(length(leftovers),
-                    " projects(s) created and not destroyed: ",
-                    serialPaste(dQuote(names(session()$projects[leftovers]))),
-                    call.=FALSE)
-            }
-        })
-    },
-    onexit=TRUE)

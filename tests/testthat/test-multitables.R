@@ -5,7 +5,7 @@ test_that("default name for formula", {
     expect_identical(formulaRHS("a+b~c+d+rollup(e)"), "c+d+rollup(e)")
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")   ## Has 2 multitables
     ds2 <- loadDataset("ECON.sav") ## Has no multitables
 

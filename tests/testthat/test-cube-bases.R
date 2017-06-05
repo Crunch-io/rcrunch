@@ -12,7 +12,7 @@ arrayify <- function (data, dims) {
     array(data, dim=vapply(dn, length, integer(1), USE.NAMES=FALSE), dimnames=dn)
 }
 
-with_mock_HTTP({
+with_mock_crunch({
     ## Load a ton of cube fixtures via the tab book feature
     ds <- loadDataset("test ds")
     m <- multitables(ds)[[1]]

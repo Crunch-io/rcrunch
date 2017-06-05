@@ -1,6 +1,6 @@
 context("Hiding variables")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("ECON.sav")
     test_that("hiddenVariables", {
         expect_identical(hiddenVariables(ds, "name"), "Birth Year")

@@ -4,7 +4,7 @@ test_that("show method exists", {
     expect_true(is.character(get_output(CrunchFilter())))
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     ds3 <- loadDataset("ECON.sav")
 

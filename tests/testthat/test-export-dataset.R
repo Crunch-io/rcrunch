@@ -1,6 +1,6 @@
 context("Export dataset")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("Export POST request", {
         expect_POST(exportDataset(ds, file=""),

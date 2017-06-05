@@ -9,7 +9,7 @@ test_that("crunchTimeout", {
         expect_identical(crunchTimeout(), 900))
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("Cannot append dataset to itself", {
         expect_error(appendDataset(ds, ds),

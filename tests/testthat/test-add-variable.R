@@ -71,7 +71,7 @@ test_that("POSTNewVariable rejects invalid categories", {
         "Invalid category names: must be unique")
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("assignment restrictions", {
         expect_error(ds[[2]] <- 1:25,

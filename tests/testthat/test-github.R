@@ -1,7 +1,7 @@
 context("GitHub version check")
 
 with(temp.option(crunch.check.updates=NULL), {
-    with_mock_HTTP({
+    with_mock_crunch({
         test_that("checkForNewVersion parses github json", {
             expect_identical(checkForNewVersion("github-versions/", "1.5.3"),
                 NULL)

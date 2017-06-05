@@ -1,6 +1,6 @@
 context("Categorical Array")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("makeArray creates a VariableDefinition with dataset subset", {
         expect_json_equivalent(makeArray(ds[,"gender"], name="Gender array"),

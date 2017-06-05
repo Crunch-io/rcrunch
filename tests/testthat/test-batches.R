@@ -1,6 +1,6 @@
 context("Batch catalog")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("batches method", {
         expect_is(batches(ds), "BatchCatalog")

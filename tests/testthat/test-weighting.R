@@ -1,6 +1,6 @@
 context("Weights")
 
-with_mock_HTTP({
+with_mock_crunch({
     oldds <- loadDataset("test ds")
     newds <- loadDataset("ECON.sav")
 

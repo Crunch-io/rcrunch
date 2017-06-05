@@ -24,7 +24,7 @@ test_that("newDataset input validation", {
         "Can only make a Crunch dataset from a two-dimensional data")
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     test_that("Basic exercise of turning data.frame to Crunch payload", {
         expect_POST(newDataset(data.frame(a=1), name="Testing"),
             "https://app.crunch.io/api/datasets/",

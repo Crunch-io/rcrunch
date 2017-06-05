@@ -2,7 +2,7 @@ context("Sharing")
 
 me <- "fake.user@example.com"
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     ds2 <- loadDataset("ECON.sav")
     test_that("Dataset has permissions catalog", {
