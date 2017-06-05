@@ -9,6 +9,7 @@
 * Can now extract variables from a dataset by the variable URL
 * `appendDataset()` now truly appends a dataset and no longer upserts if there is a primary key set. This is accomplished by removing the primary key before appending. (#35)
 * Primary keys can now be viewed with `pk(dataset)` and set with `pk(dataset) <- variable`.
+* Test setup code moved to `inst/` so that other packages that depend on `crunch` can use the same setup.
 
 ## crunch 1.16.0
 

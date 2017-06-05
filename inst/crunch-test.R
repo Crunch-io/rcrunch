@@ -37,7 +37,7 @@ skip_if_devtools_loaded <- function (...) {
 with_mock_crunch <- function (expr) {
     env <- parent.frame()
     with(temp.options(crunch.api="https://app.crunch.io/api/",
-                      httptest.mock.paths=c(".", system.file(package="crunch"))), {
+                      httptest.mock.paths=c(".", "../inst/", system.file(package="crunch"))), {
         with_mock_API({
             try(crunch:::warmSessionCache())
             eval(expr, envir=env)
@@ -99,7 +99,7 @@ purgeEntitiesCreated <- function () {
     ds.urls <- grep("/datasets/(.*?)/$", seen, value=TRUE)
     if (length(ds.urls)) {
         ignore <- Reduce("|", lapply(ds.urls, function (x) {
-            startsWith(seen, x) & seen != x
+            substr(seen, 1, nchar(x)) == x & seen != x
         }))
         seen <- seen[!ignore]
     }
@@ -135,7 +135,7 @@ reg.finalizer(bye,
             if (length(leftovers)) {
                 stop(length(leftovers),
                     " dataset(s) created and not destroyed: ",
-                    serialPaste(dQuote(names(datasets()[leftovers]))),
+                    crunch:::serialPaste(dQuote(names(datasets()[leftovers]))),
                     call.=FALSE)
             }
             users.end <- urls(crunch:::getUserCatalog())
@@ -143,7 +143,7 @@ reg.finalizer(bye,
             if (length(leftovers)) {
                 stop(length(leftovers),
                     " users(s) created and not destroyed: ",
-                    serialPaste(dQuote(names(crunch:::getUserCatalog()[leftovers]))),
+                    crunch:::serialPaste(dQuote(names(crunch:::getUserCatalog()[leftovers]))),
                     call.=FALSE)
             }
             projects.end <- urls(session()$projects)
@@ -151,7 +151,7 @@ reg.finalizer(bye,
             if (length(leftovers)) {
                 stop(length(leftovers),
                     " projects(s) created and not destroyed: ",
-                    serialPaste(dQuote(names(projects()[leftovers]))),
+                    crunch:::serialPaste(dQuote(names(projects()[leftovers]))),
                     call.=FALSE)
             }
         })
