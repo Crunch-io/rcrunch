@@ -127,7 +127,7 @@ reg.finalizer(bye,
             if (length(leftovers)) {
                 stop(length(leftovers),
                     " dataset(s) created and not destroyed: ",
-                    serialPaste(dQuote(names(datasets()[leftovers]))),
+                    crunch:::serialPaste(dQuote(names(datasets()[leftovers]))),
                     call.=FALSE)
             }
             users.end <- urls(crunch:::getUserCatalog())
@@ -135,7 +135,7 @@ reg.finalizer(bye,
             if (length(leftovers)) {
                 stop(length(leftovers),
                     " users(s) created and not destroyed: ",
-                    serialPaste(dQuote(names(crunch:::getUserCatalog()[leftovers]))),
+                    crunch:::serialPaste(dQuote(names(crunch:::getUserCatalog()[leftovers]))),
                     call.=FALSE)
             }
             projects.end <- urls(session()$projects)
@@ -143,7 +143,7 @@ reg.finalizer(bye,
             if (length(leftovers)) {
                 stop(length(leftovers),
                     " projects(s) created and not destroyed: ",
-                    serialPaste(dQuote(names(projects()[leftovers]))),
+                    crunch:::serialPaste(dQuote(names(projects()[leftovers]))),
                     call.=FALSE)
             }
         })
