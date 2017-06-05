@@ -122,6 +122,23 @@ with_mock_HTTP({
                                    "  gender",
                                    "  mymrset", sep="\n"))
     })
+    
+    test_that("multitable list methods", {
+        with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
+            mtable <- newMultitable(~ gender + mymrset, data=ds,
+                                    name="Shared multitable")
+            expect_is(mtable, "Multitable")
+        })
+        print(ds)
+        expect_is(mtable[1], "CategoricalVariable")
+        expect_is(mtable[2], "MultipleResponseVariable")
+        expect_PATCH(mtable[1] <- ds$birthyr)
+        expect_output(mtable, 
+                      paste(paste0("Multitable ", dQuote("Shared multitable")),
+                            "Column variables:",
+                            "  birthyr",
+                            "  mymrset", sep="\n"))
+    })
 
     test_that("newMultitable validation", {
         expect_error(newMultitable(), "Must provide a formula")
