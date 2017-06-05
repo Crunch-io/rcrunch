@@ -21,6 +21,7 @@ notifyIfNewVersion <- function (
 #' @param github.url character where to GET the tagged versions of the package
 #' @param installed.version character the currently installed version string
 #' @return The version string if there is a new version, or NULL
+#' @importFrom utils compareVersion
 #' @export
 #' @keywords internal
 checkForNewVersion <- function (
@@ -33,25 +34,9 @@ checkForNewVersion <- function (
         ## Filter to keep only those that match x.y.z
         version.tags <- grep("^[0-9]+\\.[0-9]+\\.[0-9]+$", gh.tags, value=TRUE)
         if (length(version.tags) &&
-            versionIsGreaterThan(version.tags[1], installed.version) ) {
-
+            compareVersion(version.tags[1], installed.version) == 1) {
             return(version.tags[1])
         }
     }
     return(NULL)
-}
-
-versionIsGreaterThan <- function (x, y) {
-    if (x == y) return(FALSE)
-    ## Split into major/minor/patch, and as.numeric. Then do the same for
-    ## installed.version. Confirm that latest on GitHub is indeed newer
-    x <- as.numeric(unlist(strsplit(x, ".", fixed=TRUE)))
-    y <- as.numeric(unlist(strsplit(y, ".", fixed=TRUE)))
-    for (i in seq_along(x)) {
-        if (x[i] > y[i]) {
-            return(TRUE)
-        } else if (x[i] < y[i]) {
-            return(FALSE)
-        }
-    }
 }

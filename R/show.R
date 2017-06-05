@@ -254,6 +254,19 @@ setMethod("show", "CrunchLogicalExpr", function (object) {
     invisible(object)
 })
 
+showMultitable <- function (x) {
+    out <- paste("Multitable", dQuote(name(x)))
+    
+    # TODO: check variable types to alert users in a more friendly manner
+    # eg remove selected_array()
+    out <- c(out, "Column variables:",
+             vapply(x@body$template, function (expr) {
+                 paste0("  ", formatExpression(expr$query[[1]]))
+             }, character(1)))
+    
+    return(c(out))
+}
+
 # More boilerplate
 
 setMethod("getShowContent", "Category", showCategory)
@@ -263,6 +276,7 @@ setMethod("getShowContent", "CategoricalArrayVariable",
     showCategoricalArrayVariable)
 setMethod("getShowContent", "CrunchDataset", showCrunchDataset)
 setMethod("getShowContent", "Subvariables", showSubvariables)
+setMethod("getShowContent", "Multitable", showMultitable)
 setMethod("getShowContent", "ShojiOrder", showShojiOrder)
 setMethod("getShowContent", "VariableOrder",
     function (x) showShojiOrder(x, key=namekey(x)))
@@ -289,7 +303,6 @@ setMethod("getShowContent", "CrunchFilter",
         return(c(paste("Crunch filter", dQuote(name(x))),
             paste("Expression:", formatExpression(expr(x)))))
     })
-
 #' @rdname show-crunch
 #' @export
 setMethod("show", "CrunchCube", function (object) show(cubeToArray(object)))

@@ -28,7 +28,8 @@
     "fragments": {
         "table": "https://app.crunch.io/api/datasets/1/table/",
         "preferences": "https://app.crunch.io/api/datasets/1/preferences/",
-        "settings": "https://app.crunch.io/api/datasets/1/settings/"
+        "settings": "https://app.crunch.io/api/datasets/1/settings/",
+        "pk": "https://app.crunch.io/api/datasets/1/pk/"
     },
     "some_other_key": {}
 }
