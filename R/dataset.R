@@ -93,10 +93,12 @@ setMethod("notes<-", "CrunchDataset", function (x, value) {
 #'
 #' A primary key is a variable in a dataset that has a unique value for every 
 #' row. A variable must be either numeric or text type and have no duplicate or
-#' missing values.
+#' missing values. A primary key on a dataset causes updates to that dataset
+#' that have the rows with the same primary key value(s) as the first dataset 
+#' to update the existing rows rather than inserting new ones.
 #'
 #' @param x a Dataset
-#' @param value For the setter, a single Variable to use as the primary key.
+#' @param value For the setter, a single Variable to use as the primary key or `NULL` to remove the primary key.
 #' @return Getter returns the Variable object that is used as the primary key (`NULL` if there is no primary key); setter
 #' returns \code{x} duly modified.
 #' @name pk
