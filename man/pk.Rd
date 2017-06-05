@@ -6,7 +6,7 @@
 \alias{pk<-}
 \alias{pk,CrunchDataset-method}
 \alias{pk<-,CrunchDataset-method}
-\title{Name, alias, and description for Crunch objects}
+\title{Get and set the primary key for a Crunch dataset}
 \usage{
 \S4method{pk}{CrunchDataset}(x)
 
@@ -15,12 +15,14 @@
 \arguments{
 \item{x}{a Dataset}
 
-\item{value}{For the setters, a single Variable to use as the primary key.}
+\item{value}{For the setter, a single Variable to use as the primary key.}
 }
 \value{
-Getters return the Variable object that is used as the primary key (\code{NULL} if there is no primary key); setters
-return \code{x} duly modified.
+Getter returns the Variable object that is used as the primary key (\code{NULL} if there is no primary key); setter
+returns \code{x} duly modified.
 }
 \description{
-Name, alias, and description for Crunch objects
+A primary key is a variable in a dataset that has a unique value for every
+row. A variable must be either numeric or text type and have no duplicate or
+missing values.
 }

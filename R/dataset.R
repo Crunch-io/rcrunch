@@ -89,12 +89,16 @@ setMethod("notes<-", "CrunchDataset", function (x, value) {
 })
 
 
-#' Name, alias, and description for Crunch objects
+#' Get and set the primary key for a Crunch dataset
+#'
+#' A primary key is a variable in a dataset that has a unique value for every 
+#' row. A variable must be either numeric or text type and have no duplicate or
+#' missing values.
 #'
 #' @param x a Dataset
-#' @param value For the setters, a single Variable to use as the primary key.
-#' @return Getters return the Variable object that is used as the primary key (`NULL` if there is no primary key); setters
-#' return \code{x} duly modified.
+#' @param value For the setter, a single Variable to use as the primary key.
+#' @return Getter returns the Variable object that is used as the primary key (`NULL` if there is no primary key); setter
+#' returns \code{x} duly modified.
 #' @name pk
 #' @aliases pk pk<-
 NULL 
@@ -115,8 +119,9 @@ setMethod("pk<-", "CrunchDataset", function (x, value) {
     if (is.null(value)) {
         crDELETE(shojiURL(x, "fragments", "pk"))
     } else {
-        payload <- toJSON(structure(list(structure(list(self(value)))),
-                                    .Names="pk"))
+        # payload <- toJSON(structure(list(structure(list(self(value)))),
+                                    # .Names="pk"))
+        payload <- toJSON(list(pk=I(self(value))))
         crPOST(shojiURL(x, "fragments", "pk"), body=payload)        
     }
 
