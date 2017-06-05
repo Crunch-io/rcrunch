@@ -6,6 +6,5 @@ r:
   - devel
 r_github_packages:
   - nealrichardson/httptest
-  - r-pkgs/pkgload
 after_success:
   - Rscript -e 'covr::codecov()'
