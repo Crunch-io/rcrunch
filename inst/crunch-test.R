@@ -91,7 +91,7 @@ purgeEntitiesCreated <- function () {
     ds.urls <- grep("/datasets/(.*?)/$", seen, value=TRUE)
     if (length(ds.urls)) {
         ignore <- Reduce("|", lapply(ds.urls, function (x) {
-            startsWith(seen, x) & seen != x
+            substr(seen, 1, nchar(x)) == x & seen != x
         }))
         seen <- seen[!ignore]
     }
