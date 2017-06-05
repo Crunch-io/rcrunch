@@ -40,6 +40,12 @@ with_mock_HTTP({
         expect_no_request(is.public(mults)[2] <- TRUE)
     })
 
+    test_that("Multitable delete", {
+        ## Note that this PATCHes the entity, not the catalog
+        expect_DELETE(delete(mults[["Shared multitable"]]),
+                     'https://app.crunch.io/api/datasets/1/multitables/4de322/')
+    })
+    
     m <- mults[[1]]
     test_that("Multitable object methods", {
         expect_identical(name(m), "My banner")
@@ -277,6 +283,14 @@ with_test_authentication({
     test_that("importMultitable works without a name", {
         m <- importMultitable(ds2, mult)
         expect_identical(name(m), "Yet another name")
+    })
+    
+    test_that("Multitable delete", {
+        mults <- multitables(ds2)
+        delete(mults[["Yet another name"]])
+        expect_equal(length(multitables(refresh(ds2))), 1)
+        expect_true(!"Yet another name" %in% names(multitables(ds2)))
+        expect_equal(names(multitables(ds2)), "copied_multitable")
     })
 
     test_that("We can get an xlsx tab book", {
