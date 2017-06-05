@@ -27,7 +27,10 @@ skip_locally <- function (...) {
 }
 
 skip_if_devtools_loaded <- function (...) {
-    if (pkgload::is_dev_package('crunch')) {
+    # TODO: when package loading is separated from devtools, this will need
+    # to be replaced with:
+    # pkgload::is_dev_package('crunch')
+    if ('crunch' %in% devtools::dev_packages()) {
         skip(...)
     }
 }
