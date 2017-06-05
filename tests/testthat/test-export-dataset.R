@@ -6,16 +6,19 @@ with_mock_crunch({
         expect_POST(exportDataset(ds, file=""),
             'https://app.crunch.io/api/datasets/1/export/csv/',
             '{"filter":null,"options":{"use_category_ids":false}}')
+        skip_if_devtools_loaded("write.csv method dispatch is broken with devtools::load_all() https://github.com/hadley/devtools/issues/1522")
         expect_POST(write.csv(ds, file=""),
             'https://app.crunch.io/api/datasets/1/export/csv/',
             '{"filter":null,"options":{"use_category_ids":false}}')
     })
     test_that("with categorical='id'", {
+        skip_if_devtools_loaded("write.csv method dispatch is broken with load_all")
         expect_POST(write.csv(ds, file="", categorical="id"),
             'https://app.crunch.io/api/datasets/1/export/csv/',
             '{"filter":null,"options":{"use_category_ids":true}}')
     })
     test_that("with na", {
+        skip_if_devtools_loaded("write.csv method dispatch is broken with load_all")
         expect_POST(write.csv(ds, file="", na=""),
             'https://app.crunch.io/api/datasets/1/export/csv/',
             '{"filter":null,"options":{"use_category_ids":false,',
@@ -55,6 +58,7 @@ with_mock_crunch({
     })
 
     test_that("Exporting only one variable", {
+        skip_if_devtools_loaded("write.csv method dispatch is broken with load_all")
         expect_POST(write.csv(ds["gender"], file=""),
             'https://app.crunch.io/api/datasets/1/export/csv/',
             '{"filter":null,"where":{"function":"select",',
@@ -64,6 +68,7 @@ with_mock_crunch({
     })
 
     test_that("Exporting duplicate variable references is prevented", {
+        skip_if_devtools_loaded("write.csv method dispatch is broken with load_all")
         expect_error(write.csv(ds[c("gender", "birthyr", "gender")], file=""),
             "Duplicate variable reference: gender")
         expect_error(write.csv(ds[c("gender", "birthyr", "gender", "gender", "birthyr")], file=""),
