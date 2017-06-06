@@ -129,15 +129,28 @@ with_mock_crunch({
                                     name="Shared multitable")
             expect_is(mtable, "Multitable")
         })
-        print(ds)
-        expect_is(mtable[1], "CategoricalVariable")
-        expect_is(mtable[2], "MultipleResponseVariable")
-        expect_PATCH(mtable[1] <- ds$birthyr)
-        expect_output(mtable, 
-                      paste(paste0("Multitable ", dQuote("Shared multitable")),
-                            "Column variables:",
-                            "  birthyr",
-                            "  mymrset", sep="\n"))
+        expect_equal(multitables(ds)[["Shared multitable"]], mtable)
+        expect_POST(multitables(ds)[["mt again"]] <- ~ds$gender+ds$birthyr, 
+                    "https://app.crunch.io/api/datasets/1/multitables/",
+                    '{"element":"shoji:entity","body":',
+                    '{"name":"mt again",',
+                    '"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}],',
+                    '"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
+                    '{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}],',
+                    '"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]',
+                    '}}'
+                    )
+        expect_PATCH(multitables(ds)[["Shared multitable"]] <- ~ds$gender+ds$birthyr, 
+                    "https://app.crunch.io/api/datasets/1/multitables/4de322/",
+                    '{"element":"shoji:entity","body":',
+                    '{"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}],',
+                    '"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
+                    '{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}],',
+                    '"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]',
+                    '}}'
+        )
+        expect_DELETE(multitables(ds)[["Shared multitable"]] <- NULL, 
+                    "https://app.crunch.io/api/datasets/1/multitables/4de322/" )
     })
 
     test_that("newMultitable validation", {
@@ -254,6 +267,23 @@ with_test_authentication({
                                               "Column variables:",
                                               "  selected_array(allpets)",
                                               "  q1"))
+    })
+    
+    test_that("Can make a multitable with list methods", {
+        multitables(ds)[["new mt"]] <- ~ds$country+ds$q3
+        expect_identical(getShowContent(multitables(ds)[["new mt"]]),
+                         c(paste0("Multitable ", dQuote("new mt")),
+                                  "Column variables:",
+                                  "  country",
+                                  "  q3"))
+        multitables(ds)[["new mt"]] <- ~ds$country+ds$q1
+        expect_identical(getShowContent(multitables(ds)[["new mt"]]),
+                         c(paste0("Multitable ", dQuote("new mt")),
+                           "Column variables:",
+                           "  country",
+                           "  q1"))
+        multitables(ds)[["new mt"]] <- NULL
+        expect_false("new mt" %in% names(multitables(refresh(ds))))
     })
 
     mult <- multitables(ds)[["allpets + q1"]]

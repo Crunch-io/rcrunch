@@ -26,6 +26,41 @@ setMethod("[[", c("MultitableCatalog", "numeric"), function (x, i, ...) {
     getEntity(x, i, Multitable, ...)
 })
 
+#' @rdname catalog-extract
+#' @export
+setMethod("[[<-", c("MultitableCatalog", "character", "missing", "formula"),
+          function (x, i, j, value) {
+              stopifnot(length(i) == 1)
+              if (i %in% names(x)) {
+                  template <- formulaToQuery(value)
+                  payload <- wrapEntity(
+                      template=lapply(template$dimensions,
+                                      function (x) list(query=x, variable=findVariableReferences(x)))
+                  )
+                  
+                  crPATCH(urls(x)[match(i, names(x))], body=toJSON(payload))
+                  ## Editing expression doesn't require invalidating the catalog
+                  return(x)
+              } else {
+                  ## Creating a new filter
+                  f <- .newMultitable(formulaToQuery(value), self(x), name = i)
+                  return(refresh(x))
+              }
+          })
+
+#' @rdname catalog-extract
+#' @export
+setMethod("[[<-", c("MultitableCatalog", "character", "missing", "NULL"),
+          function (x, i, j, value) {
+              stopifnot(length(i) == 1)
+              if (i %in% names(x)) {
+                  if (is.null(value)) {
+                      delete(x[[i]])
+                      return(invisible(NULL))
+                  }}
+          })
+
+
 #' @rdname describe
 #' @export
 setMethod("name<-", "Multitable", function (x, value) {
@@ -99,14 +134,20 @@ newMultitable <- function (formula, data, name, ...) {
         name <- formulaRHS(formula)
     }
 
+    u <- .newMultitable(template, shojiURL(data, "catalogs", "multitables"), name, ...)
+    
+    invisible(Multitable(crGET(u)))
+}
+
+## Internal function to do the POSTing, both in [[ and in newMultitable
+.newMultitable <- function (template, multiable_url, name, ...) {
     payload <- wrapEntity(
         name=name,
         template=lapply(template$dimensions,
-            function (x) list(query=x, variable=findVariableReferences(x)))
+                        function (x) list(query=x, variable=findVariableReferences(x)))
     )
     ## TODO: remove "variable" from that--no longer required?
-    u <- crPOST(shojiURL(data, "catalogs", "multitables"), body=toJSON(payload))
-    invisible(Multitable(crGET(u)))
+    return(crPOST(multiable_url, body=toJSON(payload)))
 }
 
 #' Import a Multitable
