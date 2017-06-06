@@ -36,13 +36,8 @@ setMethod("[[<-", c("MultitableCatalog", "character", "missing", "formula"),
               template <- formulaToQuery(value, data = ds)
               
               if (i %in% names(x)) {
-                  payload <- wrapEntity(
-                      template=lapply(template$dimensions,
-                                      function (x) list(query=x, variable=findVariableReferences(x)))
-                  )
-
+                  payload <- makeMultitablePayload(template = template)
                   crPATCH(urls(x)[match(i, names(x))], body=toJSON(payload))
-                  ## Editing expression doesn't require invalidating the catalog
                   return(x)
               } else {
                   ## Creating a new filter
@@ -50,6 +45,17 @@ setMethod("[[<-", c("MultitableCatalog", "character", "missing", "formula"),
                   return(refresh(x))
               }
           })
+
+makeMultitablePayload <- function (template, name) {
+    template <- lapply(template$dimensions,
+                       function (x) list(query=x))
+
+    if (missing(name)) {
+        return(wrapEntity(template = template))
+    } else {
+        return(wrapEntity(name = name, template = template))
+    }
+}
 
 #' @rdname catalog-extract
 #' @export
@@ -162,12 +168,7 @@ newMultitable <- function (formula, data, name, ...) {
 
 ## Internal function to do the POSTing, both in [[ and in newMultitable
 .newMultitable <- function (template, multiable_url, name, ...) {
-    payload <- wrapEntity(
-        name=name,
-        template=lapply(template$dimensions,
-                        function (x) list(query=x, variable=findVariableReferences(x)))
-    )
-    ## TODO: remove "variable" from that--no longer required?
+    payload <- makeMultitablePayload(template = template, name = name)
     return(crPOST(multiable_url, body=toJSON(payload)))
 }
 
