@@ -1,6 +1,6 @@
 context("Dataset object and methods")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     ds2 <- loadDataset("ECON.sav")
     ds3 <- loadDataset("an archived dataset", kind="archived")
@@ -158,6 +158,20 @@ with_mock_HTTP({
         expect_identical(dim(ds[2]), c(25L, 1L))
         expect_null(ds$not.a.var.name)
         expect_error(ds[[999]], "subscript out of bounds")
+        expect_identical(ds[[self(ds$gender)]], ds$gender)
+    })
+
+    with(temp.option(crunch.namekey.dataset="name"), {
+        test_that("'namekey' feature (that should be deprecated) is respected", {
+            expect_true(is.Numeric(ds$`Birth Year`))
+            expect_null(ds$birthyr)
+        })
+    })
+    
+    test_that("Variables can be extracted by url", {
+        url <- urls(variables(ds))[1]
+        expect_identical(ds[[url]], ds[['birthyr']])
+        expect_identical(ds[url], ds['birthyr'])
     })
 
     ## This is a start on a test that getting variables doesn't hit server.
@@ -263,6 +277,16 @@ with_mock_HTTP({
             '{"app_settings":{"whaam":',
             '{"dashboardUrl":"https://shiny.crunch.io/example/"}}}')
     })
+
+    test_that("Primary key methods", {
+        expect_null(pk(ds2))
+        expect_identical(pk(ds), ds$birthyr)
+        expect_POST(pk(ds) <- ds$textVar,
+            'https://app.crunch.io/api/datasets/1/pk/',
+            '{"pk":["https://app.crunch.io/api/datasets/1/variables/textVar/"]}'
+        )
+        expect_DELETE(pk(ds2) <- NULL, 'https://app.crunch.io/api/datasets/3/pk/')
+    })
 })
 
 with_test_authentication({
@@ -350,6 +374,14 @@ with_test_authentication({
             expect_true(is.Numeric(ds$name))
         })
 
+        test_that("PK methods work", {
+            expect_null(pk(ds))
+            expect_silent(pk(ds) <- ds$name)
+            expect_equal(pk(ds), ds$name)
+            expect_silent(pk(ds) <- NULL)
+            expect_null(pk(ds))
+        })
+        
         test_that("Dataset settings (defaults)", {
             # expect_true(settings(ds)$viewers_can_export) ## Isn't it?
             expect_true(settings(ds)$viewers_can_change_weight)

@@ -71,8 +71,7 @@ setMethod("[", c("CrunchDataset", "logical", "missing"), function (x, i, j, ...,
 #' @rdname dataset-extract
 #' @export
 setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
-    allnames <- getIndexSlot(allVariables(x), namekey(x)) ## Include hidden
-    w <- match(i, allnames)
+    w <- findVariablesInDataset(x, i)
     if (any(is.na(w))) {
         halt("Undefined columns selected: ", serialPaste(i[is.na(w)]))
     }
@@ -151,28 +150,28 @@ setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
 #' @rdname dataset-extract
 #' @export
 setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
-    stopifnot(length(i) == 1)
-    n <- match(i, names(x))
-    if (is.na(n)) {
-        ## See if the variable in question is hidden
-        hvars <- hidden(x)
-        hnames <- getIndexSlot(hvars, namekey(x))
-        n <- match(i, hnames)
-        if (is.na(n)) {
-            return(NULL)
-        } else {
-            ## If so, return it with a warning
-            out <- hvars[[n]]
-            if (!is.null(out)) {
-                out <- CrunchVariable(out, filter=activeFilter(x))
-            }
-            warning("Variable ", i, " is hidden", call.=FALSE)
-            return(out)
+    out <- allVariables(x)[[findVariablesInDataset(x, i)]]
+    if (!is.null(out)) {
+        out <- CrunchVariable(out, filter=activeFilter(x))
+        if (tuple(out)$discarded) {
+            warning("Variable ", alias(out), " is hidden", call.=FALSE)
         }
-    } else {
-        return(callNextMethod(x, n, ..., drop=drop))
     }
+    return(out)
 })
 #' @rdname dataset-extract
 #' @export
 setMethod("$", "CrunchDataset", function (x, name) x[[name]])
+
+
+findVariablesInDataset <- function(x, i) {
+    allvars <- allVariables(x)
+    ## Handle "namekey", which should be deprecated
+    if (getOption("crunch.namekey.dataset", "alias") == "name") {
+        alt <- names(allvars)
+    } else {
+        alt <- aliases(allvars)
+    }
+    
+    return(whichNameOrURL(allvars, i, alt))
+}

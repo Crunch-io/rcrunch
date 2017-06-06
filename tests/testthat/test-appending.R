@@ -9,11 +9,18 @@ test_that("crunchTimeout", {
         expect_identical(crunchTimeout(), 900))
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("Cannot append dataset to itself", {
         expect_error(appendDataset(ds, ds),
             "Cannot append dataset to itself")
+    })
+
+    ds1 <- loadDataset("test ds")
+    ds2 <- loadDataset("ECON.sav")
+    test_that("append DELETEs the pk", {
+      expect_DELETE(appendDataset(ds2, ds1),
+                    "https://app.crunch.io/api/datasets/3/pk/")
     })
 })
 
@@ -55,6 +62,16 @@ with_test_authentication({
                 expect_identical(categories(out$v4), cats)
                 expect_equivalent(as.vector(out$v3), df$v3)
             })
+
+            test_that("append removes the primary key if there is one", {
+                expect_silent(pk(part2) <- part2$v3)
+                expect_equal(pk(part2), part2$v3)
+                out <- appendDataset(part2, part1)
+                expect_null(pk(out))
+                expect_identical(dim(out), c(nrow(df)*2L, ncol(df)))
+                expect_identical(nrow(out), nrow(df)*2L)
+                expect_identical(nrow(out), length(as.vector(out$v3)))
+            })              
         })
     })
 

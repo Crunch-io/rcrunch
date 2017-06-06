@@ -1,6 +1,6 @@
 context("Retrieving dataset list and single datasets")
 
-with_mock_HTTP({
+with_mock_crunch({
     cr <- session()
     test_that("listDatasets lists", {
         expect_identical(listDatasets(), c("ECON.sav", "test ds"))

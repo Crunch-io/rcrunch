@@ -9,7 +9,7 @@ test_that("encoding + JSON reads correctly", {
     expect_identical(fromJSON("utf-test.json"), "Budějovický Budvar")
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("Reading UTF in tests", {
         expect_identical(description(ds$textVar), "Budějovický Budvar")

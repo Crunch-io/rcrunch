@@ -1,6 +1,6 @@
 context("Categories")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     cats <- categories(ds$gender)
 

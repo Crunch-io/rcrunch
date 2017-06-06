@@ -1,6 +1,6 @@
 context("datasetReference")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     ds_url <- self(ds)
     test_that("datasetReference methods", {

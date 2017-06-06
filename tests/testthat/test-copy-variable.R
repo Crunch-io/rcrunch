@@ -1,6 +1,6 @@
 context("Shallow copies of variables")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("copy creates a correct VariableDefinition", {
         expect_is(copy(ds$gender), "VariableDefinition")

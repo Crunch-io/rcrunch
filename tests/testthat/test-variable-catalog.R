@@ -1,6 +1,6 @@
 context("Variable catalog")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     varcat <- allVariables(ds)
     varorder <- ordering(varcat)

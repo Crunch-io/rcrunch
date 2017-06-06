@@ -14,7 +14,7 @@ test_that(".dispatchFilter uses right numeric function", {
         '{"value":7}]}'))
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
 
     test_that("Arithmetic generates expressions", {

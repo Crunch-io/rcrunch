@@ -5,6 +5,6 @@ r:
   - release
   - devel
 r_github_packages:
-  - nealrichardson/httptest@1.3.0
+  - nealrichardson/httptest
 after_success:
   - Rscript -e 'covr::codecov()'

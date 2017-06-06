@@ -1,6 +1,6 @@
 context("Deleting variables")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("Assigning NULL doesn't ask you about deleting 0 variables", {
         expect_message(ds$NOTAVARIABLE <- df$NOTAVARIABLE,

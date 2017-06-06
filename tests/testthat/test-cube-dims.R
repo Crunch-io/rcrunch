@@ -1,6 +1,6 @@
 context("Cube dimensions")
 
-with_mock_HTTP({
+with_mock_crunch({
     ## Load a ton of cube fixtures via the tab book feature
     ds <- loadDataset("test ds")
     m <- multitables(ds)[[1]]

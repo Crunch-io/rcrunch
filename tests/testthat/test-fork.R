@@ -1,6 +1,6 @@
 context("Fork and merge")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds1 <- loadDataset("test ds")
     ds2 <- loadDataset("ECON.sav")
 

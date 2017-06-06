@@ -1,6 +1,6 @@
 context("Variable summaries")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     gen <- ds$gender
 
