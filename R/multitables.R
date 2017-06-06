@@ -46,38 +46,22 @@ setMethod("[[<-", c("MultitableCatalog", "character", "missing", "formula"),
               }
           })
 
-makeMultitablePayload <- function (template, name) {
-    template <- lapply(template$dimensions,
-                       function (x) list(query=x))
+makeMultitablePayload <- function (template, ...) {
+    template <- lapply(template$dimensions, function (x) list(query=x))
 
-    if (missing(name)) {
-        return(wrapEntity(template = template))
-    } else {
-        return(wrapEntity(name = name, template = template))
-    }
+    return(wrapEntity(template = template, ...))
 }
 
 #' @rdname catalog-extract
 #' @export
-setMethod("[[<-", c("MultitableCatalog", "character", "missing", "NULL"),
+setMethod("[[<-", c("MultitableCatalog", "ANY", "missing", "NULL"),
           function (x, i, j, value) {
               stopifnot(length(i) == 1)
-              if (i %in% names(x)) {
+              if (i %in% names(x) | is.numeric(i)) {
                   if (is.null(value)) {
                       delete(x[[i]])
                       return(invisible(NULL))
                   }}
-          })
-
-#' @rdname catalog-extract
-#' @export
-setMethod("[[<-", c("MultitableCatalog", "numeric", "missing", "NULL"),
-          function (x, i, j, value) {
-              stopifnot(length(i) == 1)
-              if (is.null(value)) {
-                  delete(x[[i]])
-                  return(invisible(NULL))
-              }
           })
 
 #' @rdname describe
