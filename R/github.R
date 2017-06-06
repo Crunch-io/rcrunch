@@ -11,7 +11,8 @@ notifyIfNewVersion <- function (
         message("There's a new version of ", dQuote("crunch"),
             " available. You have ", installed.version, " but ",
             v, " is now available. You can install it with: \n\n",
-            'devtools::install_github("Crunch-io/rcrunch", ref="', v, '")')
+            'devtools::install_github("Crunch-io/rcrunch", ref="', v, '")\n\n',
+            "You may need to restart R after upgrading.")
     }
     invisible()
 }
