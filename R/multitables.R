@@ -31,19 +31,22 @@ setMethod("[[", c("MultitableCatalog", "numeric"), function (x, i, ...) {
 setMethod("[[<-", c("MultitableCatalog", "character", "missing", "formula"),
           function (x, i, j, value) {
               stopifnot(length(i) == 1)
+              
+              ds <- loadDataset(datasetReference(x))
+              template <- formulaToQuery(value, data = ds)
+              
               if (i %in% names(x)) {
-                  template <- formulaToQuery(value)
                   payload <- wrapEntity(
                       template=lapply(template$dimensions,
                                       function (x) list(query=x, variable=findVariableReferences(x)))
                   )
-                  
+
                   crPATCH(urls(x)[match(i, names(x))], body=toJSON(payload))
                   ## Editing expression doesn't require invalidating the catalog
                   return(x)
               } else {
                   ## Creating a new filter
-                  f <- .newMultitable(formulaToQuery(value), self(x), name = i)
+                  f <- .newMultitable(template, self(x), name = i)
                   return(refresh(x))
               }
           })
@@ -103,6 +106,14 @@ setMethod("delete", "Multitable", function (x, ...) {
     }
     out <- crDELETE(self(x))
     invisible(out)
+})
+
+setMethod("datasetReference", "Multitable", function (x) {
+    datasetReference(self(x))
+})
+
+setMethod("datasetReference", "MultitableCatalog", function (x) {
+    datasetReference(self(x))
 })
 
 #' Create a new Multitable

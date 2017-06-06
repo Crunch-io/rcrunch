@@ -140,7 +140,7 @@ with_mock_crunch({
             expect_is(mtable, "Multitable")
         })
         expect_equal(multitables(ds)[["Shared multitable"]], mtable)
-        expect_POST(multitables(ds)[["mt again"]] <- ~ds$gender+ds$birthyr, 
+        expect_POST(multitables(ds)[["mt again"]] <- ~gender+birthyr, 
                     "https://app.crunch.io/api/datasets/1/multitables/",
                     '{"element":"shoji:entity","body":',
                     '{"name":"mt again",',
@@ -150,7 +150,7 @@ with_mock_crunch({
                     '"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]',
                     '}}'
                     )
-        expect_PATCH(multitables(ds)[["Shared multitable"]] <- ~ds$gender+ds$birthyr, 
+        expect_PATCH(multitables(ds)[["Shared multitable"]] <- ~gender+birthyr, 
                     "https://app.crunch.io/api/datasets/1/multitables/4de322/",
                     '{"element":"shoji:entity","body":',
                     '{"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}],',
@@ -278,13 +278,13 @@ with_test_authentication({
     })
     
     test_that("Can make a multitable with list methods", {
-        multitables(ds)[["new mt"]] <- ~ds$country+ds$q3
+        multitables(ds)[["new mt"]] <- ~country+q3
         expect_identical(getShowContent(multitables(ds)[["new mt"]]),
                          c(paste0("Multitable ", dQuote("new mt")),
                                   "Column variables:",
                                   "  country",
                                   "  q3"))
-        multitables(ds)[["new mt"]] <- ~ds$country+ds$q1
+        multitables(ds)[["new mt"]] <- ~country+q1
         expect_identical(getShowContent(multitables(ds)[["new mt"]]),
                          c(paste0("Multitable ", dQuote("new mt")),
                            "Column variables:",
