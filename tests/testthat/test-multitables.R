@@ -53,7 +53,7 @@ with_mock_crunch({
                           'https://app.crunch.io/api/datasets/1/multitables/4de322/')
             expect_DELETE(multitables(ds)[["Shared multitable"]] <- NULL, 
                           "https://app.crunch.io/api/datasets/1/multitables/4de322/" )
-            expect_DELETE(multitables(ds)[[1]] <- NULL, 
+            expect_DELETE(multitables(ds)[[2]] <- NULL, 
                           "https://app.crunch.io/api/datasets/1/multitables/4de322/" )
         })        
     })
