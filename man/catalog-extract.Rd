@@ -18,8 +18,7 @@
 \alias{[[<-,MemberCatalog,character,missing,NULL-method}
 \alias{[[,MultitableCatalog,numeric-method}
 \alias{[[<-,MultitableCatalog,character,missing,formula-method}
-\alias{[[<-,MultitableCatalog,character,missing,NULL-method}
-\alias{[[<-,MultitableCatalog,numeric,missing,NULL-method}
+\alias{[[<-,MultitableCatalog,ANY,missing,NULL-method}
 \alias{[[,PermissionCatalog,character-method}
 \alias{[,PermissionCatalog,character,ANY-method}
 \alias{[[,ProjectCatalog,numeric-method}
@@ -74,9 +73,7 @@
 
 \S4method{[[}{MultitableCatalog,character,missing,formula}(x, i, j) <- value
 
-\S4method{[[}{MultitableCatalog,character,missing,`NULL`}(x, i, j) <- value
-
-\S4method{[[}{MultitableCatalog,numeric,missing,`NULL`}(x, i, j) <- value
+\S4method{[[}{MultitableCatalog,ANY,missing,`NULL`}(x, i, j) <- value
 
 \S4method{[[}{PermissionCatalog,character}(x, i, j, ...)
 
