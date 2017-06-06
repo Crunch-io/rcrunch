@@ -69,6 +69,16 @@ setMethod("[[<-", c("MultitableCatalog", "character", "missing", "NULL"),
                   }}
           })
 
+#' @rdname catalog-extract
+#' @export
+setMethod("[[<-", c("MultitableCatalog", "numeric", "missing", "NULL"),
+          function (x, i, j, value) {
+              stopifnot(length(i) == 1)
+              if (is.null(value)) {
+                  delete(x[[i]])
+                  return(invisible(NULL))
+              }
+          })
 
 #' @rdname describe
 #' @export
