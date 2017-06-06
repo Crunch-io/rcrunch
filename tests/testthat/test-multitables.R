@@ -33,6 +33,8 @@ with_mock_crunch({
     })
     test_that("Multitable catalog is.public", {
         expect_identical(is.public(mults), c(FALSE, TRUE))
+        expect_identical(is.public(mults[[1]]), FALSE)
+        expect_identical(is.public(mults[[2]]), TRUE)
         ## Note that this PATCHes the entity, not the catalog
         expect_PATCH(is.public(mults)[2] <- FALSE,
             'https://app.crunch.io/api/datasets/1/multitables/4de322/',
