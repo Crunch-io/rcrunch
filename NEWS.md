@@ -1,4 +1,5 @@
 ### crunch 1.17.1 (under development)
+* `toVariable()` now accepts (and then strips) arguments of class `AsIs` (#44)
 
 ## crunch 1.17.0
 
