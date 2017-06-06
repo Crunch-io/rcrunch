@@ -40,12 +40,22 @@ with_mock_crunch({
         expect_no_request(is.public(mults)[2] <- TRUE)
     })
 
-    test_that("Multitable delete", {
-        ## Note that this PATCHes the entity, not the catalog
-        expect_DELETE(delete(mults[["Shared multitable"]]),
-                     'https://app.crunch.io/api/datasets/1/multitables/4de322/')
+    test_that("Multitable delete requires consent", {
+        expect_error(delete(mults[["Shared multitable"]]),
+                     "Must confirm deleting multitable")
+        expect_error(mults[["Shared multitable"]] <- NULL,
+                     "Must confirm deleting multitable")
     })
-    
+
+    with(consent(), {
+        test_that("Multitable delete", {
+            expect_DELETE(delete(mults[["Shared multitable"]]),
+                          'https://app.crunch.io/api/datasets/1/multitables/4de322/')
+            expect_DELETE(multitables(ds)[["Shared multitable"]] <- NULL, 
+                          "https://app.crunch.io/api/datasets/1/multitables/4de322/" )
+        })        
+    })
+
     m <- mults[[1]]
     test_that("Multitable object methods", {
         expect_identical(name(m), "My banner")
@@ -149,8 +159,6 @@ with_mock_crunch({
                     '"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]',
                     '}}'
         )
-        expect_DELETE(multitables(ds)[["Shared multitable"]] <- NULL, 
-                    "https://app.crunch.io/api/datasets/1/multitables/4de322/" )
     })
 
     test_that("newMultitable validation", {
@@ -282,7 +290,7 @@ with_test_authentication({
                            "Column variables:",
                            "  country",
                            "  q1"))
-        multitables(ds)[["new mt"]] <- NULL
+        with_consent(multitables(ds)[["new mt"]] <- NULL)
         expect_false("new mt" %in% names(multitables(refresh(ds))))
     })
 
@@ -331,12 +339,21 @@ with_test_authentication({
         expect_identical(name(m), "Yet another name")
     })
     
-    test_that("Multitable delete", {
-        mults <- multitables(ds2)
-        delete(mults[["Yet another name"]])
-        expect_equal(length(multitables(refresh(ds2))), 1)
-        expect_true(!"Yet another name" %in% names(multitables(ds2)))
-        expect_equal(names(multitables(ds2)), "copied_multitable")
+    mults <- multitables(ds2)
+    test_that("Multitable delete requires consent", {
+    expect_error(delete(mults[["Yet another name"]]),
+                 "Must confirm deleting multitable")
+    expect_error(mults[["Yet another name"]] <- NULL,
+                 "Must confirm deleting multitable")
+    })
+
+    with(consent(), {
+        test_that("Multitable delete", {
+            delete(mults[["Yet another name"]])
+            expect_equal(length(multitables(refresh(ds2))), 1)
+            expect_true(!"Yet another name" %in% names(multitables(ds2)))
+            expect_equal(names(multitables(ds2)), "copied_multitable")
+        })
     })
 
     test_that("We can get an xlsx tab book", {
