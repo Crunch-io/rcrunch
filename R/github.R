@@ -29,7 +29,7 @@ checkForNewVersion <- function (
     github.url="https://api.github.com/repos/Crunch-io/rcrunch/tags",
     installed.version=as.character(packageVersion("crunch"))) {
 
-    if (getOption("crunch.check.updates") %||% TRUE) {
+    if (getOption("crunch.check.updates", TRUE)) {
         ## Get the names of the tagged versions on GitHub
         gh.tags <- vapply(crGET(github.url), vget("name"), character(1))
         ## Filter to keep only those that match x.y.z
