@@ -75,12 +75,11 @@ with_mock_crunch({
                                   name="New multitable"),
             'https://app.crunch.io/api/datasets/1/multitables/',
             '{"element":"shoji:entity","body":{',
-            '"name":"New multitable",',
             '"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
             '{"query":[{"function":"selected_array",',
             '"args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]},',
             '{"each":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}]',
-            '}}')
+            ',"name":"New multitable"}}')
         with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
             mtable <- newMultitable(~ gender + mymrset, data=ds,
                                     name="New multitable")
@@ -92,12 +91,11 @@ with_mock_crunch({
         expect_POST(newMultitable(~ gender + mymrset, data=ds),
             'https://app.crunch.io/api/datasets/1/multitables/',
             '{"element":"shoji:entity","body":{',
-            '"name":"gender + mymrset",',
             '"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
             '{"query":[{"function":"selected_array",',
             '"args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]},',
             '{"each":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}]',
-            '}}')
+            ',"name":"gender + mymrset"}}')
         with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
             mtable <- newMultitable(~ gender + mymrset, data=ds,
                                     name="New multitable")
@@ -135,10 +133,9 @@ with_mock_crunch({
         expect_POST(multitables(ds)[["mt again"]] <- ~gender+birthyr, 
                     "https://app.crunch.io/api/datasets/1/multitables/",
                     '{"element":"shoji:entity","body":',
-                    '{"name":"mt again",',
-                    '"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
+                    '{"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
                     '{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]}]',
-                    '}}'
+                    ',"name":"mt again"}}'
                     )
         expect_PATCH(multitables(ds)[["Shared multitable"]] <- ~gender+birthyr, 
                     "https://app.crunch.io/api/datasets/1/multitables/4de322/",
