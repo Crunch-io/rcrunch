@@ -98,6 +98,15 @@ with_mock_crunch({
             '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
             '{"value":1}]}}')
     })
+    
+    test_that("Alter  a filter by [[<-", {
+        expect_PATCH(filters(ds)[["Occasional Political Interest"]] <- ds$gender=="Female",
+                    'https://app.crunch.io/api/datasets/1/filters/filter1/',
+                    '{"expression":',
+                    '{"function":"==","args":[',
+                    '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
+                    '{"value":2}]}}')
+    })
 
     test_that("Print method for filter entity (debug)", {
         f <- CrunchFilter(crGET("a-filter/"))
