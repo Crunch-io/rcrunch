@@ -1,5 +1,6 @@
 ### crunch 1.17.1 (under development)
 * `toVariable()` now accepts (and then strips) arguments of class `AsIs` (#44)
+* Multitables can now be updated with `multitables(ds)[["Multitable name"]] <- ~var1+var2` syntax. Similarly, multitables can be deleted with `multitables(ds)[["Multitable name"]] <- NULL`. Multitables also have new `name()` and `delete()` methods.
 
 ## crunch 1.17.0
 
