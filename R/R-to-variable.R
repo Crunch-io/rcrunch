@@ -40,6 +40,13 @@ setMethod("toVariable", "POSIXt", function (x, ...) {
 
 #' @rdname toVariable
 #' @export
+setMethod("toVariable", "AsIs", function (x, ...) {
+    class(x) <- class(x)[-match("AsIs", class(x))]
+    return(toVariable(x, ...))
+})
+
+#' @rdname toVariable
+#' @export
 setMethod("toVariable", "VariableDefinition", function (x, ...) {
     return(modifyList(x, list(...)))
 })
