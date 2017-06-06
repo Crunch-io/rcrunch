@@ -9,6 +9,7 @@
 \alias{toVariable,factor-method}
 \alias{toVariable,Date-method}
 \alias{toVariable,POSIXt-method}
+\alias{toVariable,AsIs-method}
 \alias{toVariable,VariableDefinition-method}
 \alias{toVariable,logical-method}
 \alias{toVariable,CrunchExpr-method}
@@ -25,6 +26,8 @@ toVariable(x, ...)
 \S4method{toVariable}{Date}(x, ...)
 
 \S4method{toVariable}{POSIXt}(x, ...)
+
+\S4method{toVariable}{AsIs}(x, ...)
 
 \S4method{toVariable}{VariableDefinition}(x, ...)
 
