@@ -1,4 +1,5 @@
 ### crunch 1.17.1 (under development)
+* `toVariable()` now accepts (and then strips) arguments of class `AsIs` (#44)
 
 ## crunch 1.17.0
 
@@ -11,7 +12,6 @@
 * Fix issue in printing filter expressions with long value columns (#39, #45)
 * Progress bars now clean up after themselves and do not leave the prompt hanging out at the end of the line
 * Test setup code moved to `inst/` so that other packages that depend on `crunch` can use the same setup.
-* `toVariable()` now accepts (and then strips) arguments of class `AsIs` (#44)
 
 ## crunch 1.16.0
 
