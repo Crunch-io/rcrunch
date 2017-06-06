@@ -130,12 +130,6 @@ with_mock_crunch({
     })
     
     test_that("multitable list methods", {
-        with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
-            mtable <- newMultitable(~ gender + mymrset, data=ds,
-                                    name="Shared multitable")
-            expect_is(mtable, "Multitable")
-        })
-        expect_equal(multitables(ds)[["Shared multitable"]], mtable)
         expect_POST(multitables(ds)[["mt again"]] <- ~gender+birthyr, 
                     "https://app.crunch.io/api/datasets/1/multitables/",
                     '{"element":"shoji:entity","body":',

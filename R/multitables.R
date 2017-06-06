@@ -167,9 +167,9 @@ newMultitable <- function (formula, data, name, ...) {
 }
 
 ## Internal function to do the POSTing, both in [[ and in newMultitable
-.newMultitable <- function (template, multiable_url, name, ...) {
+.newMultitable <- function (template, catalog_url, name, ...) {
     payload <- makeMultitablePayload(template = template, name = name)
-    return(crPOST(multiable_url, body=toJSON(payload)))
+    return(crPOST(catalog_url, body=toJSON(payload)))
 }
 
 #' Import a Multitable
