@@ -10,12 +10,10 @@
 		"name": "Shared multitable",
 		"user": "https://app.crunch.io/api/users/me/",
 		"template": [{
-			"variable": "https://app.crunch.io/api/datasets/1/variables/gender/",
 			"query": [{
 				"variable": "https://app.crunch.io/api/datasets/1/variables/gender/"
 			}]
 		}, {
-			"variable": "https://app.crunch.io/api/datasets/1/variables/mymrset/",
 			"query": [{
 				"variable": "https://app.crunch.io/api/datasets/1/variables/mymrset/"
 			}]
