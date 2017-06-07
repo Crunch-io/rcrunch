@@ -58,10 +58,9 @@ setMethod("[[<-", c("MultitableCatalog", "ANY", "missing", "NULL"),
           function (x, i, j, value) {
               stopifnot(length(i) == 1)
               if (i %in% names(x) | is.numeric(i)) {
-                  if (is.null(value)) {
-                      delete(x[[i]])
-                      return(invisible(NULL))
-                  }}
+                  delete(x[[i]])
+                  invisible(NULL)
+              }
           })
 
 #' @rdname describe

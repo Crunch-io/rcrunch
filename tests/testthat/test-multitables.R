@@ -132,14 +132,14 @@ with_mock_crunch({
     })
     
     test_that("multitable list methods", {
-        expect_POST(multitables(ds)[["mt again"]] <- ~gender+birthyr, 
+        expect_POST(multitables(ds)[["mt again"]] <- ~ gender + birthyr, 
                     "https://app.crunch.io/api/datasets/1/multitables/",
                     '{"element":"shoji:entity","body":',
                     '{"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
                     '{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]}]',
                     ',"name":"mt again"}}'
                     )
-        expect_PATCH(multitables(ds)[["Shared multitable"]] <- ~gender+birthyr, 
+        expect_PATCH(multitables(ds)[["Shared multitable"]] <- ~ gender + birthyr, 
                     "https://app.crunch.io/api/datasets/1/multitables/4de322/",
                     '{"element":"shoji:entity","body":',
                     '{"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
@@ -265,13 +265,13 @@ with_test_authentication({
     })
     
     test_that("Can make a multitable with list methods", {
-        multitables(ds)[["new mt"]] <- ~country+q3
+        multitables(ds)[["new mt"]] <- ~ country + q3
         expect_identical(getShowContent(multitables(ds)[["new mt"]]),
                          c(paste0("Multitable ", dQuote("new mt")),
                                   "Column variables:",
                                   "  country",
                                   "  q3"))
-        multitables(ds)[["new mt"]] <- ~country+q1
+        multitables(ds)[["new mt"]] <- ~ country + q1
         expect_identical(getShowContent(multitables(ds)[["new mt"]]),
                          c(paste0("Multitable ", dQuote("new mt")),
                            "Column variables:",
@@ -325,15 +325,8 @@ with_test_authentication({
         m <- importMultitable(ds2, mult)
         expect_identical(name(m), "Yet another name")
     })
-    
-    mults <- multitables(ds2)
-    test_that("Multitable delete requires consent", {
-    expect_error(delete(mults[["Yet another name"]]),
-                 "Must confirm deleting multitable")
-    expect_error(mults[["Yet another name"]] <- NULL,
-                 "Must confirm deleting multitable")
-    })
 
+    mults <- multitables(ds2)
     with(consent(), {
         test_that("Multitable delete", {
             delete(mults[["Yet another name"]])

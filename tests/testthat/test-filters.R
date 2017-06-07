@@ -56,7 +56,7 @@ with_mock_crunch({
     })
 
     test_that("Create a filter by newFilter", {
-        expect_POST(newFilter("A filter", ds$gender=="Male", catalog=filters(ds)),
+        expect_POST(newFilter("A filter", ds$gender == "Male", catalog = filters(ds)),
             'https://app.crunch.io/api/datasets/1/filters/',
             '{"name":"A filter","expression":',
             '{"function":"==","args":[',
@@ -64,20 +64,20 @@ with_mock_crunch({
             '{"value":1}]}}')
         with_POST("https://app.crunch.io/api/datasets/1/filters/filter1/", {
             ## Mock the return of that creation
-            f <- newFilter("A filter", ds$gender=="Male", catalog=filters(ds))
+            f <- newFilter("A filter", ds$gender == "Male", catalog = filters(ds))
             expect_is(f, "CrunchFilter")
             expect_false(is.public(f))
         })
     })
 
     test_that("newFilter without explicitly setting 'catalog'", {
-        expect_POST(newFilter("A filter", ds$gender=="Male", catalog=ds),
+        expect_POST(newFilter("A filter", ds$gender == "Male", catalog = ds),
             'https://app.crunch.io/api/datasets/1/filters/',
             '{"name":"A filter","expression":',
             '{"function":"==","args":[',
             '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
             '{"value":1}]}}')
-        expect_POST(newFilter("A filter", ds$gender=="Male"),
+        expect_POST(newFilter("A filter", ds$gender == "Male"),
             'https://app.crunch.io/api/datasets/1/filters/',
             '{"name":"A filter","expression":',
             '{"function":"==","args":[',
@@ -86,12 +86,12 @@ with_mock_crunch({
     })
 
     test_that("newFilter on an invalid 'catalog'", {
-        expect_error(newFilter("A filter", ds$gender=="Male", catalog="Foo!"),
+        expect_error(newFilter("A filter", ds$gender == "Male", catalog = "Foo!"),
             "Cannot create a filter entity on an object of class character")
     })
 
     test_that("Create a filter by [[<-", {
-        expect_POST(filters(ds)[["A filter"]] <- ds$gender=="Male",
+        expect_POST(filters(ds)[["A filter"]] <- ds$gender == "Male",
             'https://app.crunch.io/api/datasets/1/filters/',
             '{"name":"A filter","expression":',
             '{"function":"==","args":[',
@@ -100,7 +100,7 @@ with_mock_crunch({
     })
     
     test_that("Alter  a filter by [[<-", {
-        expect_PATCH(filters(ds)[["Occasional Political Interest"]] <- ds$gender=="Female",
+        expect_PATCH(filters(ds)[["Occasional Political Interest"]] <- ds$gender == "Female",
                     'https://app.crunch.io/api/datasets/1/filters/filter1/',
                     '{"expression":',
                     '{"function":"==","args":[',
