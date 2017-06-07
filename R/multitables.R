@@ -31,19 +31,15 @@ setMethod("[[", c("MultitableCatalog", "numeric"), function (x, i, ...) {
 setMethod("[[<-", c("MultitableCatalog", "character", "missing", "formula"),
           function (x, i, j, value) {
               stopifnot(length(i) == 1)
-              
-              ds <- loadDataset(datasetReference(x))
-              template <- formulaToQuery(value, data = ds)
-              
-              if (i %in% names(x)) {
-                  payload <- makeMultitablePayload(template = template)
-                  crPATCH(urls(x)[match(i, names(x))], body=toJSON(payload))
-                  return(x)
-              } else {
-                  ## Creating a new filter
-                  f <- .newMultitable(template, self(x), name = i)
+              w <- match(i, names(x))
+              ## Creating a new filter if there are no matching names
+              if (is.na(w)) {
+                  f <- newMultitable(formula = value,
+                                     data = loadDataset(datasetReference(x)),
+                                     name = i)
                   return(refresh(x))
-              }
+              } 
+              callNextMethod(x, w, value=value)
           })
 
 #' @rdname catalog-extract
@@ -175,15 +171,11 @@ newMultitable <- function (formula, data, name, ...) {
         name <- formulaRHS(formula)
     }
 
-    u <- .newMultitable(template, shojiURL(data, "catalogs", "multitables"), name, ...)
-    
-    invisible(Multitable(crGET(u)))
-}
-
-## Internal function to do the POSTing, both in [[ and in newMultitable
-.newMultitable <- function (template, catalog_url, name, ...) {
     payload <- makeMultitablePayload(template = template, name = name)
-    return(crPOST(catalog_url, body=toJSON(payload)))
+    u <- crPOST(shojiURL(data, "catalogs", "multitables"),
+                body=toJSON(payload))
+
+    invisible(Multitable(crGET(u)))
 }
 
 #' Import a Multitable
