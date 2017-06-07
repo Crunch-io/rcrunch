@@ -46,6 +46,24 @@ setMethod("[[<-", c("MultitableCatalog", "character", "missing", "formula"),
               }
           })
 
+#' @rdname catalog-extract
+#' @export
+setMethod("[[<-", c("MultitableCatalog", "numeric", "missing", "formula"),
+          function (x, i, j, value) {
+              stopifnot(length(i) == 1)
+
+              ds <- loadDataset(datasetReference(x))
+              template <- formulaToQuery(value, data = ds)
+
+              if (i %in% seq_along(urls(x))) {
+                  payload <- makeMultitablePayload(template = template)
+                  crPATCH(urls(x)[i], body=toJSON(payload))
+                  return(x)
+              } else {
+                  halt("subscript out of bounds: ", i)
+              }
+          })
+
 makeMultitablePayload <- function (template, ...) {
     template <- lapply(template$dimensions, function (x) list(query=x))
 
@@ -57,10 +75,13 @@ makeMultitablePayload <- function (template, ...) {
 setMethod("[[<-", c("MultitableCatalog", "ANY", "missing", "NULL"),
           function (x, i, j, value) {
               stopifnot(length(i) == 1)
-              if (i %in% names(x) | is.numeric(i)) {
-                  delete(x[[i]])
-                  invisible(NULL)
+              if (is.character(i) && !i %in% names(x)) {
+                  return()
+              } else if (is.numeric(i) && !i %in% seq_along(urls(x))) {
+                  return()
               }
+              delete(x[[i]])
+              invisible(NULL)
           })
 
 #' @rdname describe

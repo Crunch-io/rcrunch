@@ -57,6 +57,9 @@ with_mock_crunch({
                           "https://app.crunch.io/api/datasets/1/multitables/4de322/" )
             expect_DELETE(multitables(ds)[[2]] <- NULL, 
                           "https://app.crunch.io/api/datasets/1/multitables/4de322/" )
+            expect_silent(multitables(ds)[[999]] <- NULL)
+            expect_error(multitables(ds)[[list(1)]] <- NULL, "invalid subscript type 'list'")
+            expect_error(multitables(ds)[[2i]] <- NULL, "invalid subscript type 'complex'")
         })        
     })
 
@@ -146,6 +149,14 @@ with_mock_crunch({
                     '{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]}]',
                     '}}'
         )
+        expect_PATCH(multitables(ds)[[2]] <- ~ gender + birthyr, 
+                     "https://app.crunch.io/api/datasets/1/multitables/4de322/",
+                     '{"element":"shoji:entity","body":',
+                     '{"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
+                     '{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}]}]',
+                     '}}'
+        )
+        expect_error(multitables(ds)[[999]] <- ~ gender + birthyr, "subscript out of bounds: 999")
     })
 
     test_that("newMultitable validation", {
