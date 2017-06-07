@@ -26,6 +26,60 @@ setMethod("[[", c("MultitableCatalog", "numeric"), function (x, i, ...) {
     getEntity(x, i, Multitable, ...)
 })
 
+#' @rdname catalog-extract
+#' @export
+setMethod("[[<-", c("MultitableCatalog", "character", "missing", "formula"),
+          function (x, i, j, value) {
+              stopifnot(length(i) == 1)
+              w <- match(i, names(x))
+              ## Creating a new filter if there are no matching names
+              if (is.na(w)) {
+                  f <- newMultitable(formula = value,
+                                     data = loadDataset(datasetReference(x)),
+                                     name = i)
+                  return(refresh(x))
+              } 
+              callNextMethod(x, w, value=value)
+          })
+
+#' @rdname catalog-extract
+#' @export
+setMethod("[[<-", c("MultitableCatalog", "numeric", "missing", "formula"),
+          function (x, i, j, value) {
+              stopifnot(length(i) == 1)
+
+              ds <- loadDataset(datasetReference(x))
+              template <- formulaToQuery(value, data = ds)
+
+              if (i %in% seq_along(urls(x))) {
+                  payload <- makeMultitablePayload(template = template)
+                  crPATCH(urls(x)[i], body=toJSON(payload))
+                  return(x)
+              } else {
+                  halt("subscript out of bounds: ", i)
+              }
+          })
+
+makeMultitablePayload <- function (template, ...) {
+    template <- lapply(template$dimensions, function (x) list(query=x))
+
+    return(wrapEntity(template = template, ...))
+}
+
+#' @rdname catalog-extract
+#' @export
+setMethod("[[<-", c("MultitableCatalog", "ANY", "missing", "NULL"),
+          function (x, i, j, value) {
+              stopifnot(length(i) == 1)
+              if (is.character(i) && !i %in% names(x)) {
+                  return()
+              } else if (is.numeric(i) && !i %in% seq_along(urls(x))) {
+                  return()
+              }
+              delete(x[[i]])
+              invisible(NULL)
+          })
+
 #' @rdname describe
 #' @export
 setMethod("name<-", "Multitable", function (x, value) {
@@ -58,6 +112,24 @@ setMethod("is.public", "Multitable", function (x) x@body$is_public)
 #' @export
 setMethod("is.public<-", "Multitable", function (x, value) {
     setEntitySlot(x, "is_public", value)
+})
+
+#' @rdname delete
+#' @export
+setMethod("delete", "Multitable", function (x, ...) {
+    if (!askForPermission(paste0("Really delete multitable ", dQuote(name(x)), "?"))) {
+        halt("Must confirm deleting multitable")
+    }
+    out <- crDELETE(self(x))
+    invisible(out)
+})
+
+setMethod("datasetReference", "Multitable", function (x) {
+    datasetReference(self(x))
+})
+
+setMethod("datasetReference", "MultitableCatalog", function (x) {
+    datasetReference(self(x))
 })
 
 #' Create a new Multitable
@@ -99,13 +171,10 @@ newMultitable <- function (formula, data, name, ...) {
         name <- formulaRHS(formula)
     }
 
-    payload <- wrapEntity(
-        name=name,
-        template=lapply(template$dimensions,
-            function (x) list(query=x, variable=findVariableReferences(x)))
-    )
-    ## TODO: remove "variable" from that--no longer required?
-    u <- crPOST(shojiURL(data, "catalogs", "multitables"), body=toJSON(payload))
+    payload <- makeMultitablePayload(template = template, name = name)
+    u <- crPOST(shojiURL(data, "catalogs", "multitables"),
+                body=toJSON(payload))
+
     invisible(Multitable(crGET(u)))
 }
 

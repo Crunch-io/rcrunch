@@ -10,12 +10,10 @@
 		"name": "My banner",
 		"user": "https://app.crunch.io/api/users/me/",
 		"template": [{
-			"variable": "https://app.crunch.io/api/datasets/1/variables/000001/",
 			"query": [{
 				"variable": "https://app.crunch.io/api/datasets/1/variables/000001/"
 			}]
 		}, {
-			"variable": "https://app.crunch.io/api/datasets/1/variables/000002/",
 			"query": [{
 				"variable": "https://app.crunch.io/api/datasets/1/variables/000002/"
 			}]
