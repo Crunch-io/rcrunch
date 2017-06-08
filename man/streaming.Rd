@@ -3,13 +3,19 @@
 \docType{methods}
 \name{streaming}
 \alias{streaming}
+\alias{getPendingMessages}
+\alias{streamRows}
+\alias{appendStreamedRows}
 \alias{getPendingMessages,CrunchDataset-method}
 \alias{streamRows,CrunchDataset-method}
+\alias{appendStreamedRows,CrunchDataset-method}
 \title{Tools for working with streaming data}
 \usage{
 \S4method{getPendingMessages}{CrunchDataset}(x)
 
 \S4method{streamRows}{CrunchDataset}(x, data)
+
+\S4method{appendStreamedRows}{CrunchDataset}(x, messages)
 }
 \arguments{
 \item{x}{CrunchDataset}
@@ -18,7 +24,8 @@
 must be in the Crunch I/O format (for example, category ids instead of
 names or numeric_values)}
 
-\item{rows}{stuff}
+\item{messages}{the number of messages that are pending to be appended to
+the dataset (default: NULL, which will append all pending messages)}
 }
 \value{
 nothing?

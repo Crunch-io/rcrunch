@@ -6,12 +6,14 @@
 #' information. 
 #'
 #' @param x CrunchDataset
-#' @param rows stuff
+#' @param messages the number of messages that are pending to be appended to 
+#'  the dataset (default: NULL, which will append all pending messages)
 #' @param data a dataframe with data to send as a stream, The given data values
 #'  must be in the Crunch I/O format (for example, category ids instead of 
 #'  names or numeric_values)
 #' @return nothing?
 #' @name streaming
+#' @aliases streaming getPendingMessages streamRows appendStreamedRows
 #' @examples
 #' \dontrun{
 #' # need examples!
@@ -34,3 +36,10 @@ setMethod("streamRows", "CrunchDataset", function (x, data) {
     out <- crPOST(shojiURL(x, "fragments", "stream"), body=payload)
 })
 
+#' @rdname streaming
+#' @export
+setMethod("appendStreamedRows", "CrunchDataset", function (x, messages) {
+    n_msg <- getPendingMessages(x)
+    
+    # out <- crPOST(shojiURL(x, "fragments", "stream"), body=payload)
+})

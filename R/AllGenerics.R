@@ -64,6 +64,7 @@ setGeneric("hide", function (x) standardGeneric("hide"))
 setGeneric("unhide", function (x) standardGeneric("unhide"))
 setGeneric("getPendingMessages", function (x) standardGeneric("getPendingMessages"))
 setGeneric("streamRows", function (x, data) standardGeneric("streamRows"))
+setGeneric("appendStreamedRows", function (x, messages) standardGeneric("appendStreamedRows"))
 
 setGeneric("urls", function (x) standardGeneric("urls"))
 setGeneric("self", function (x) standardGeneric("self"))
