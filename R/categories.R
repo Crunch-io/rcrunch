@@ -289,7 +289,7 @@ changeCategoryID <- function (variable, from, to) {
     if (is.Categorical(variable)) {
         variable[variable == from] <- to
     } else if (is.Array(variable)) {
-        # If the variable is a categorical array, then lapply over the subvariables
+        # If the variable is an array, then lapply over the subvariables
         # TODO: change iteration over shojicatalogs to allow iterating over the variable directly 
         lapply(names(variable), function(subvarname) {
             variable[[subvarname]][variable[[subvarname]] == from] <- to
