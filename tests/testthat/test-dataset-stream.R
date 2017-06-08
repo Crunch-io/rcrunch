@@ -12,12 +12,12 @@ with_mock_crunch({
     ds <- loadDataset("test ds")   ## has 2 rows waiting, 4 rows received
     ds2 <- loadDataset("ECON.sav") ## Has no streams
     
-    test_that("getPendingMessages gets pending messages", {
-        expect_equal(getPendingMessages(ds), 2)
-        expect_GET(getPendingMessages(ds2), 'https://app.crunch.io/api/datasets/3/stream')        
+    test_that("pendingMessages gets pending messages", {
+        expect_equal(pendingMessages(ds), 2)
+        expect_GET(pendingMessages(ds2), 'https://app.crunch.io/api/datasets/3/stream')        
     })
     
-    test_that("getPendingMessages gets pending messages", {
+    test_that("pendingMessages gets pending messages", {
         expect_POST(streamRows(ds, data=mock_stream_rows),
                     'https://app.crunch.io/api/datasets/1/stream/',
                     '{"birthyr":0.5775,"gender":2,"mymrset.2":2,"mymrset.1":1,"mymrset.1.1":1,',
@@ -28,6 +28,13 @@ with_mock_crunch({
                     'https://app.crunch.io/api/datasets/1/stream/',
                     '{"birthyr":0.5775,"gender":2,"mymrset.2":2,"mymrset.1":1,"mymrset.1.1":1,',
                     '"textVar":"a","starttime":"1955-12-28"}')
+    })
+    
+    test_that("appendStreamedRows", {
+        expect_POST(appendStreamedRows(ds),
+                    'https://app.crunch.io/api/datasets/1/batches/',
+                    '{"element":"shoji:entity","body":{',
+                    '"stream":null,"type":"ldjson"}}')
     })
 })
 
@@ -43,8 +50,10 @@ stream_rows <- data.frame(
 with_test_authentication({
     ds <- newDataset(df)
     test_that("streamRows streams rows", {
-        expect_equal(getPendingMessages(ds), 0)
+        expect_equal(pendingMessages(ds), 0)
         streamRows(ds, data=stream_rows)
-        expect_equal(getPendingMessages(refresh(ds)), 1)      
+        expect_equal(pendingMessages(refresh(ds)), 1)
+        appendStreamedRows(ds)
+        expect_equal(nrow(refresh(ds)), 22)
     })
 })
