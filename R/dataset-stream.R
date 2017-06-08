@@ -29,7 +29,8 @@ setMethod("getPendingMessages", "CrunchDataset", function (x) {
 #' @rdname streaming
 #' @export
 setMethod("streamRows", "CrunchDataset", function (x, data) {
-    stream_cat <- ShojiEntity(crGET(shojiURL(x, "fragments", "stream")))
-    stream_cat$pending_messages
+    payload <- by(data, 1:nrow(data), function(row) toJSON(row) )
+    payload <- paste0(payload, collapse = "\n") 
+    out <- crPOST(shojiURL(x, "fragments", "stream"), body=payload)
 })
 

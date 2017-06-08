@@ -1,12 +1,12 @@
 context("Dataset stream")
 # 
-# mock_stream_rows <- data.frame(
-#     birthyr = c(0.577530, 0.577530) 
-#     gender = c(2, 1) # Female , Male
-#     mymrset = c(list(2, 1, 1))
-#     textVar = c("a", "b")
-#     starttime = c("1955-12-28", "1955-12-29")
-# )
+mock_stream_rows <- data.frame(
+    birthyr = c(0.577530, 0.577530),
+    gender = c(2, 1),# Female , Male
+    mymrset = c(list(2, 1, 1)),
+    textVar = c("a", "b"),
+    starttime = c("1955-12-28", "1955-12-29")
+)
 
 with_mock_crunch({
     ds <- loadDataset("test ds")   ## has 2 rows waiting, 4 rows received
@@ -15,6 +15,19 @@ with_mock_crunch({
     test_that("getPendingMessages gets pending messages", {
         expect_equal(getPendingMessages(ds), 2)
         expect_GET(getPendingMessages(ds2), 'https://app.crunch.io/api/datasets/3/stream')        
+    })
+    
+    test_that("getPendingMessages gets pending messages", {
+        expect_POST(streamRows(ds, data=mock_stream_rows),
+                    'https://app.crunch.io/api/datasets/1/stream/',
+                    '{"birthyr":0.5775,"gender":2,"mymrset.2":2,"mymrset.1":1,"mymrset.1.1":1,',
+                    '"textVar":"a","starttime":"1955-12-28"}\n',
+                    '{"birthyr":0.5775,"gender":1,"mymrset.2":2,"mymrset.1":1,"mymrset.1.1":1,',
+                    '"textVar":"b","starttime":"1955-12-29"}')
+        expect_POST(streamRows(ds[1,], data=mock_stream_rows),
+                    'https://app.crunch.io/api/datasets/1/stream/',
+                    '{"birthyr":0.5775,"gender":2,"mymrset.2":2,"mymrset.1":1,"mymrset.1.1":1,',
+                    '"textVar":"a","starttime":"1955-12-28"}')
     })
 })
 
@@ -32,6 +45,6 @@ with_test_authentication({
     test_that("streamRows streams rows", {
         expect_equal(getPendingMessages(ds), 0)
         streamRows(ds, data=stream_rows)
-        expect_equal(getPendingMessages(refresh(ds)), 2)      
+        expect_equal(getPendingMessages(refresh(ds)), 1)      
     })
 })
