@@ -56,7 +56,7 @@ streamRows <- function (ds, data) {
 appendStreamedRows <- function (ds, messages = NULL, ...) {
     n_msg <- pendingMessages(ds)
     if (n_msg < 1) {
-        message("There's pending stream data to be appended.")
+        message("There's no pending stream data to be appended.")
         return()
     }
     body <- wrapEntity(stream = messages, type = "ldjson", ...)
