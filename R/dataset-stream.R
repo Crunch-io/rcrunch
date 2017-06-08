@@ -5,13 +5,10 @@
 #' [the Crunch documentation](http://docs.crunch.io/#streaming-rows) for more)
 #' information. 
 #'
-#' @param x CrunchDataset
-#' @param data a dataframe with data to send as a stream, The given data values
-#'  must be in the Crunch I/O format (for example, category ids instead of 
-#'  names or numeric_values)
+#' @param x a CrunchDataset
 #' @return nothing?
 #' @name streaming
-#' @aliases streaming getPendingMessages streamRows appendStreamedRows
+#' @aliases streaming pendingMessages
 #' @examples
 #' \dontrun{
 #' # need examples!
@@ -26,6 +23,12 @@ setMethod("pendingMessages", "CrunchDataset", function (x) {
     stream_cat$pending_messages
 })
 
+#' Stream data to a Crunch dataset
+#' 
+#' @param ds a CrunchDataset
+#' @param data a dataframe with data to send as a stream, The given data values
+#'  must be in the Crunch I/O format (for example, category ids instead of 
+#'  names or numeric_values)
 streamRows <- function (ds, data) {
     payload <- by(data, 1:nrow(data), function(row) toJSON(row) )
     payload <- paste0(payload, collapse = "\n") 
@@ -39,13 +42,12 @@ streamRows <- function (ds, data) {
 #' [the Crunch documentation](http://docs.crunch.io/#streaming-rows) for more)
 #' information. 
 #'
-#' @param ds CrunchDataset
+#' @param ds a CrunchDataset
 #' @param messages the number of messages that are pending to be appended to 
 #'  the dataset (default: NULL, which will append all pending messages)
 #' @param ... Additional multitable attributes to set. Options include
 #' `name` and `description`.
 #' @return nothing?
-#' @aliases streaming getPendingMessages streamRows appendStreamedRows
 #' @examples
 #' \dontrun{
 #' # need examples!

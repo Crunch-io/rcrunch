@@ -3,20 +3,14 @@
 \docType{methods}
 \name{streaming}
 \alias{streaming}
-\alias{getPendingMessages}
-\alias{streamRows}
-\alias{appendStreamedRows}
+\alias{pendingMessages}
 \alias{pendingMessages,CrunchDataset-method}
 \title{Tools for working with streaming data}
 \usage{
 \S4method{pendingMessages}{CrunchDataset}(x)
 }
 \arguments{
-\item{x}{CrunchDataset}
-
-\item{data}{a dataframe with data to send as a stream, The given data values
-must be in the Crunch I/O format (for example, category ids instead of
-names or numeric_values)}
+\item{x}{a CrunchDataset}
 }
 \value{
 nothing?

@@ -2,15 +2,12 @@
 % Please edit documentation in R/dataset-stream.R
 \name{appendStreamedRows}
 \alias{appendStreamedRows}
-\alias{streaming}
-\alias{getPendingMessages}
-\alias{streamRows}
 \title{Append rows that have been streamed to a Crunch dataset}
 \usage{
 appendStreamedRows(ds, messages = NULL, ...)
 }
 \arguments{
-\item{ds}{CrunchDataset}
+\item{ds}{a CrunchDataset}
 
 \item{messages}{the number of messages that are pending to be appended to
 the dataset (default: NULL, which will append all pending messages)}
