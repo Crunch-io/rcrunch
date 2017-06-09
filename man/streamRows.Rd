@@ -16,3 +16,4 @@ names or numeric_values)}
 \description{
 Stream data to a Crunch dataset
 }
+\keyword{internal}

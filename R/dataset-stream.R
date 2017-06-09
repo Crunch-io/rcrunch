@@ -33,6 +33,7 @@ setMethod("pendingMessages", "CrunchDataset", function (x) {
 #' @param data a dataframe with data to send as a stream, The given data values
 #'  must be in the Crunch I/O format (for example, category ids instead of 
 #'  names or numeric_values)
+#' @keywords internal
 streamRows <- function (ds, data) {
     payload <- by(data, 1:nrow(data), function(row) toJSON(row) )
     payload <- paste0(payload, collapse = "\n") 
