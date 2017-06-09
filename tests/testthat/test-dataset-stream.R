@@ -10,14 +10,15 @@ mock_stream_rows <- data.frame(
 
 with_mock_crunch({
     ds <- loadDataset("test ds")   ## has 2 messages waiting, 4 rows received
-    ds2 <- loadDataset("an archived dataset", kind="archived") ## Has no streams
+    ds2 <- loadDataset("an archived dataset", kind="archived") ## Has no streams mock
     ds3 <- loadDataset("ECON.sav") ## has 0 messages waiting, 0 rows received
-    test_that("pendingMessages gets pending messages", {
-        expect_equal(pendingMessages(ds), 2)
-        expect_GET(pendingMessages(ds2), 'https://app.crunch.io/api/datasets/2/stream')        
+    test_that("pendingStream gets pending messages", {
+        expect_equal(pendingStream(ds), 2)
+        expect_GET(pendingStream(ds2), 'https://app.crunch.io/api/datasets/2/stream')        
     })
     
-    test_that("pendingMessages gets pending messages", {
+    test_that("streamRows streams rows", {
+        expect_equal(streamRows(ds, data=data.frame()), ds)
         expect_POST(streamRows(ds, data=mock_stream_rows),
                     'https://app.crunch.io/api/datasets/1/stream/',
                     '{"birthyr":0.5775,"gender":2,"mymrset.2":2,"mymrset.1":1,"mymrset.1.1":1,',
@@ -30,12 +31,13 @@ with_mock_crunch({
                     '"textVar":"a","starttime":"1955-12-28"}')
     })
     
-    test_that("appendStreamedRows", {
-        expect_POST(appendStreamedRows(ds),
+    test_that("appendStream", {
+        expect_POST(appendStream(ds),
                     'https://app.crunch.io/api/datasets/1/batches/',
                     '{"element":"shoji:entity","body":{',
-                    '"type":"ldjson","stream":null}}')
-        expect_message(appendStreamedRows(ds3), "There's no pending stream data to be appended.")
+                    '"type":"ldjson","stream":null},',
+                    '"autorollback":true,"savepoint":true}')
+        expect_message(appendStream(ds3), "There's no pending stream data to be appended.")
     })
 })
 
@@ -51,14 +53,14 @@ stream_rows <- data.frame(
 with_test_authentication({
     ds <- newDataset(df)
     test_that("streamRows streams rows", {
-        expect_equal(pendingMessages(ds), 0)
-        streamRows(ds, data=stream_rows)
-        expect_equal(pendingMessages(refresh(ds)), 1)
+        expect_equal(pendingStream(ds), 0)
+        ds <- streamRows(ds, data=stream_rows)
+        expect_equal(pendingStream(ds), 1)
     })
 
-    test_that("appendStreamedRows appends all pending rows", {
-        ds <- appendStreamedRows(ds)
+    test_that("appendStream appends all pending rows", {
+        ds <- appendStream(ds)
         expect_equal(nrow(ds), 22)
-        expect_equal(pendingMessages(ds), 0)
+        expect_equal(pendingStream(ds), 0)
     })
 })

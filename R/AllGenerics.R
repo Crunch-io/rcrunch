@@ -62,8 +62,6 @@ setGeneric("subvariables<-",
 setGeneric("datasetReference", function (x) standardGeneric("datasetReference"))
 setGeneric("hide", function (x) standardGeneric("hide"))
 setGeneric("unhide", function (x) standardGeneric("unhide"))
-setGeneric("pendingMessages", function (x) standardGeneric("pendingMessages"))
-setGeneric("appendStreamedRows", function (x, ...) standardGeneric("appendStreamedRows"))
 
 setGeneric("urls", function (x) standardGeneric("urls"))
 setGeneric("self", function (x) standardGeneric("self"))
