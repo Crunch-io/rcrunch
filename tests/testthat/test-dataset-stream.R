@@ -57,8 +57,8 @@ with_test_authentication({
     })
 
     test_that("appendStreamedRows appends all pending rows", {
-        appendStreamedRows(ds)
-        expect_equal(nrow(refresh(ds)), 22)
-        expect_equal(pendingMessages(refresh(ds)), 0)
+        ds <- appendStreamedRows(ds)
+        expect_equal(nrow(ds), 22)
+        expect_equal(pendingMessages(ds), 0)
     })
 })
