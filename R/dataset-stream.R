@@ -43,8 +43,6 @@ streamRows <- function (ds, data) {
 #' information. 
 #'
 #' @param ds a CrunchDataset
-#' @param messages the number of messages that are pending to be appended to 
-#'  the dataset (default: NULL, which will append all pending messages)
 #' @param ... Additional multitable attributes to set. Options include
 #' `name` and `description`.
 #' @return nothing?
@@ -53,13 +51,16 @@ streamRows <- function (ds, data) {
 #' # need examples!
 #' }
 #' @export
-appendStreamedRows <- function (ds, messages = NULL, ...) {
+appendStreamedRows <- function (ds, ...) {
     n_msg <- pendingMessages(ds)
     if (n_msg < 1) {
         message("There's no pending stream data to be appended.")
         return()
     }
-    body <- wrapEntity(stream = messages, type = "ldjson", ...)
+
+    # stream must be after all other arguments in case a user tries to pass 
+    # stream as an argument (like name)
+    body <- wrapEntity(type = "ldjson", ..., stream = NULL)
     batches_url <- shojiURL(ds, "catalogs", "batches")
     return(crPOST(batches_url, body = toJSON(body)))
 }

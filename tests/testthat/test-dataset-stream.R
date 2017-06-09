@@ -10,7 +10,7 @@ mock_stream_rows <- data.frame(
 
 with_mock_crunch({
     ds <- loadDataset("test ds")   ## has 2 messages waiting, 4 rows received
-    ds2 <- loadDataset("an archived dataset") ## Has no streams
+    ds2 <- loadDataset("an archived dataset", kind="archived") ## Has no streams
     ds3 <- loadDataset("ECON.sav") ## has 0 messages waiting, 0 rows received
     test_that("pendingMessages gets pending messages", {
         expect_equal(pendingMessages(ds), 2)
@@ -34,7 +34,7 @@ with_mock_crunch({
         expect_POST(appendStreamedRows(ds),
                     'https://app.crunch.io/api/datasets/1/batches/',
                     '{"element":"shoji:entity","body":{',
-                    '"stream":null,"type":"ldjson"}}')
+                    '"type":"ldjson", "stream":null}}')
         expect_message(appendStreamedRows(ds3), "There's no pending stream data to be appended.")
     })
 })
@@ -54,7 +54,11 @@ with_test_authentication({
         expect_equal(pendingMessages(ds), 0)
         streamRows(ds, data=stream_rows)
         expect_equal(pendingMessages(refresh(ds)), 1)
+    })
+
+    test_that("appendStreamedRows appends all pending rows", {
         appendStreamedRows(ds)
         expect_equal(nrow(refresh(ds)), 22)
+        expect_equal(pendingMessages(refresh(ds)), 0)
     })
 })

@@ -4,13 +4,10 @@
 \alias{appendStreamedRows}
 \title{Append rows that have been streamed to a Crunch dataset}
 \usage{
-appendStreamedRows(ds, messages = NULL, ...)
+appendStreamedRows(ds, ...)
 }
 \arguments{
 \item{ds}{a CrunchDataset}
-
-\item{messages}{the number of messages that are pending to be appended to
-the dataset (default: NULL, which will append all pending messages)}
 
 \item{...}{Additional multitable attributes to set. Options include
 \code{name} and \code{description}.}
