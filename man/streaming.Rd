@@ -4,22 +4,31 @@
 \name{streaming}
 \alias{streaming}
 \alias{pendingMessages}
+\alias{appendStreamedRows}
 \alias{pendingMessages,CrunchDataset-method}
+\alias{appendStreamedRows,CrunchDataset-method}
 \title{Tools for working with streaming data}
 \usage{
 \S4method{pendingMessages}{CrunchDataset}(x)
+
+\S4method{appendStreamedRows}{CrunchDataset}(x, ...)
 }
 \arguments{
 \item{x}{a CrunchDataset}
+
+\item{...}{Additional batch attributes to set when appending pending stream
+data. Options include
+\code{name} and \code{description}.}
 }
 \value{
-nothing?
+number of pending messages for \code{pendingMessages()} and the dataset
+with appended messages \code{appendStreamedRows()}
 }
 \description{
 Crunch allows you to stream data to a dataset. Streaming data is useful for
 datasets which have frequent updates (see
 \href{http://docs.crunch.io/#streaming-rows}{the Crunch documentation} for more)
-information.
+information. \code{pendingMessages()} retrieves the number of pending messages and \code{appendStreamedRows()} appends all pending streamed rows to the dataset.
 }
 \examples{
 \dontrun{

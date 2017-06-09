@@ -3,12 +3,16 @@
 #' Crunch allows you to stream data to a dataset. Streaming data is useful for
 #' datasets which have frequent updates (see 
 #' [the Crunch documentation](http://docs.crunch.io/#streaming-rows) for more)
-#' information. 
+#' information. `pendingMessages()` retrieves the number of pending messages and `appendStreamedRows()` appends all pending streamed rows to the dataset.
 #'
 #' @param x a CrunchDataset
-#' @return nothing?
+#' @param ... Additional batch attributes to set when appending pending stream 
+#' data. Options include
+#' `name` and `description`.
+#' @return number of pending messages for `pendingMessages()` and the dataset 
+#' with appended messages `appendStreamedRows()`
 #' @name streaming
-#' @aliases streaming pendingMessages
+#' @aliases streaming pendingMessages appendStreamedRows
 #' @examples
 #' \dontrun{
 #' # need examples!
@@ -35,24 +39,10 @@ streamRows <- function (ds, data) {
     out <- crPOST(shojiURL(ds, "fragments", "stream"), body=payload)
 }
 
-#' Append rows that have been streamed to a Crunch dataset
-#'
-#' Crunch allows you to stream data to a dataset. Streaming data is useful for
-#' datasets which have frequent updates (see 
-#' [the Crunch documentation](http://docs.crunch.io/#streaming-rows) for more)
-#' information. 
-#'
-#' @param ds a CrunchDataset
-#' @param ... Additional multitable attributes to set. Options include
-#' `name` and `description`.
-#' @return nothing?
-#' @examples
-#' \dontrun{
-#' # need examples!
-#' }
+#' @rdname streaming
 #' @export
-appendStreamedRows <- function (ds, ...) {
-    n_msg <- pendingMessages(ds)
+setMethod("appendStreamedRows", "CrunchDataset", function (x, ...) {
+    n_msg <- pendingMessages(x)
     if (n_msg < 1) {
         message("There's no pending stream data to be appended.")
         return()
@@ -61,6 +51,8 @@ appendStreamedRows <- function (ds, ...) {
     # stream must be after all other arguments in case a user tries to pass 
     # stream as an argument (like name)
     body <- wrapEntity(type = "ldjson", ..., stream = NULL)
-    batches_url <- shojiURL(ds, "catalogs", "batches")
-    return(crPOST(batches_url, body = toJSON(body)))
-}
+    batches_url <- shojiURL(x, "catalogs", "batches")
+    crPOST(batches_url, body = toJSON(body))
+    
+    return(refresh(x))
+})
