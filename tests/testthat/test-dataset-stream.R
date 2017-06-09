@@ -34,7 +34,7 @@ with_mock_crunch({
         expect_POST(appendStreamedRows(ds),
                     'https://app.crunch.io/api/datasets/1/batches/',
                     '{"element":"shoji:entity","body":{',
-                    '"type":"ldjson", "stream":null}}')
+                    '"type":"ldjson","stream":null}}')
         expect_message(appendStreamedRows(ds3), "There's no pending stream data to be appended.")
     })
 })
