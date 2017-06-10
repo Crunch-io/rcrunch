@@ -1,6 +1,6 @@
 #' Get the pending streams for a dataset
 #'
-#' retrieves the number of pending messages. Use [appendStream()] to 
+#' Retrieves the number of pending messages. Use [appendStream()] to 
 #' append all pending streamed rows to the dataset.
 #'
 #' @param ds a CrunchDataset
@@ -15,7 +15,7 @@ pendingStream <- function (ds) {
 #' Stream data to a Crunch dataset
 #' 
 #' @param ds a CrunchDataset
-#' @param data a dataframe with data to send as a stream, The given data values
+#' @param data a data.frame with data to send as a stream, The given data values
 #'  must be in the Crunch I/O format (for example, category ids instead of 
 #'  names or numeric_values)
 #' @keywords internal

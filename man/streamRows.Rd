@@ -9,7 +9,7 @@ streamRows(ds, data)
 \arguments{
 \item{ds}{a CrunchDataset}
 
-\item{data}{a dataframe with data to send as a stream, The given data values
+\item{data}{a data.frame with data to send as a stream, The given data values
 must be in the Crunch I/O format (for example, category ids instead of
 names or numeric_values)}
 }
