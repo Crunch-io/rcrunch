@@ -1,6 +1,6 @@
 #' Get the pending streams for a dataset
 #'
-#' retrieves the number of pending messages. Use [appendStreamedRows()] to 
+#' retrieves the number of pending messages. Use [appendStream()] to 
 #' append all pending streamed rows to the dataset.
 #'
 #' @param ds a CrunchDataset

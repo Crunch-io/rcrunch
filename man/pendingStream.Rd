@@ -13,6 +13,6 @@ pendingStream(ds)
 number of pending messages in the stream for the dataset
 }
 \description{
-retrieves the number of pending messages. Use \code{\link[=appendStreamedRows]{appendStreamedRows()}} to
+retrieves the number of pending messages. Use \code{\link[=appendStream]{appendStream()}} to
 append all pending streamed rows to the dataset.
 }
