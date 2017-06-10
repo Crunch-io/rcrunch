@@ -3,7 +3,9 @@ context("Dataset stream")
 mock_stream_rows <- data.frame(
     birthyr = c(0.577530, 0.577530),
     gender = c(2, 1),# Female , Male
-    mymrset = c(list(2, 1, 1)),
+    subvar1 = c(2, 2),
+    subvar2 = c(1, 1),
+    subvar3 = c(1, 1),
     textVar = c("a", "b"),
     starttime = c("1955-12-28", "1955-12-29")
 )
@@ -21,13 +23,13 @@ with_mock_crunch({
         expect_equal(streamRows(ds, data=data.frame()), ds)
         expect_POST(streamRows(ds, data=mock_stream_rows),
                     'https://app.crunch.io/api/datasets/1/stream/',
-                    '{"birthyr":0.5775,"gender":2,"mymrset.2":2,"mymrset.1":1,"mymrset.1.1":1,',
+                    '{"birthyr":0.5775,"gender":2,"subvar1":2,"subvar2":1,"subvar3":1,',
                     '"textVar":"a","starttime":"1955-12-28"}\n',
-                    '{"birthyr":0.5775,"gender":1,"mymrset.2":2,"mymrset.1":1,"mymrset.1.1":1,',
+                    '{"birthyr":0.5775,"gender":1,"subvar1":2,"subvar2":1,"subvar3":1,',
                     '"textVar":"b","starttime":"1955-12-29"}')
         expect_POST(streamRows(ds[1,], data=mock_stream_rows),
                     'https://app.crunch.io/api/datasets/1/stream/',
-                    '{"birthyr":0.5775,"gender":2,"mymrset.2":2,"mymrset.1":1,"mymrset.1.1":1,',
+                    '{"birthyr":0.5775,"gender":2,"subvar1":2,"subvar2":1,"subvar3":1,',
                     '"textVar":"a","starttime":"1955-12-28"}')
     })
     

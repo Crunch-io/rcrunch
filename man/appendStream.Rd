@@ -4,13 +4,10 @@
 \alias{appendStream}
 \title{Append data that has been streamed to a dataset}
 \usage{
-appendStream(ds, ...)
+appendStream(ds)
 }
 \arguments{
 \item{ds}{a CrunchDataset}
-
-\item{...}{Additional batch attributes to set when appending pending stream
-data. Options include: \code{name} and \code{description}.}
 }
 \value{
 the dataset with pending stream data appended.
@@ -19,7 +16,7 @@ the dataset with pending stream data appended.
 Crunch allows you to stream data to a dataset. Streaming data is useful for
 datasets which have frequent updates (see
 \href{http://docs.crunch.io/#streaming-rows}{the Crunch documentation} for more)
-information. Crunch automatically appends streamed data perioadically,
-however if you would like to trigger appending pending streamed data to a
+information. Crunch automatically appends streamed data periodically;
+however if, you would like to trigger appending pending streamed data to a
 dataset you can use \code{appendStream()}.
 }

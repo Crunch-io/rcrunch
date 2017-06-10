@@ -13,8 +13,6 @@ pendingStream(ds)
 number of pending messages in the stream for the dataset
 }
 \description{
-Crunch allows you to stream data to a dataset. Streaming data is useful for
-datasets which have frequent updates (see
-\href{http://docs.crunch.io/#streaming-rows}{the Crunch documentation} for more)
-information. \code{pendingMessages()} retrieves the number of pending messages and \code{appendStreamedRows()} appends all pending streamed rows to the dataset.
+retrieves the number of pending messages. Use \code{\link[=appendStreamedRows]{appendStreamedRows()}} to
+append all pending streamed rows to the dataset.
 }
