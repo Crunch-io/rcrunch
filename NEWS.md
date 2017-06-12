@@ -1,4 +1,5 @@
 ### crunch 1.17.1 (under development)
+* Support for streaming data: check for received data with `pendingStream()`; append that pending stream data to the dataset with `appendStream()` (#40)
 * `toVariable()` now accepts (and then strips) arguments of class `AsIs` (#44)
 
 ## crunch 1.17.0
