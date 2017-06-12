@@ -30,7 +30,7 @@ Suggests:
 VignetteBuilder: knitr
 RoxygenNote: 6.0.0
 Roxygen: list(markdown = TRUE)
-Collate:
+Collate: 
     'AllClasses.R'
     'AllGenerics.R'
     'variable-definition.R'
@@ -61,6 +61,7 @@ Collate:
     'dataset-catalog.R'
     'dataset-extract.R'
     'dataset-order.R'
+    'dataset-stream.R'
     'dataset-update.R'
     'dataset.R'
     'dichotomize.R'
