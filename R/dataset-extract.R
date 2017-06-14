@@ -64,15 +64,14 @@ setMethod("[", c("CrunchDataset", "logical", "missing"), function (x, i, j, ...,
         ## If you reference a variable in a dataset that doesn't exist, you
         ## get NULL, and e.g. NULL == something becomes logical(0).
         ## That does awful things if you try to send to the server. So don't.
-        halt("Invalid expression: ", deparseAndTruncate(match.call()$i))
+        halt("Invalid expression: ", deparseAndFlatten(match.call()$i))
     }
     return(x)
 })
 #' @rdname dataset-extract
 #' @export
 setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
-    allnames <- getIndexSlot(allVariables(x), namekey(x)) ## Include hidden
-    w <- match(i, allnames)
+    w <- findVariablesInDataset(x, i)
     if (any(is.na(w))) {
         halt("Undefined columns selected: ", serialPaste(i[is.na(w)]))
     }
@@ -113,7 +112,7 @@ setMethod("[", c("CrunchDataset", "missing", "ANY"), function (x, i, j, ..., dro
             activeFilter(i) <- activeFilter(f)
             i <- f & i
         } else {
-            callstring <- deparseAndTruncate(tail(sys.calls(), 1)[[1]])
+            callstring <- deparseAndFlatten(tail(sys.calls(), 1)[[1]])
             halt("In ", callstring, ", object and subsetting expression have different filter expressions")
         }
     }
@@ -151,28 +150,28 @@ setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
 #' @rdname dataset-extract
 #' @export
 setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
-    stopifnot(length(i) == 1)
-    n <- match(i, names(x))
-    if (is.na(n)) {
-        ## See if the variable in question is hidden
-        hvars <- hidden(x)
-        hnames <- getIndexSlot(hvars, namekey(x))
-        n <- match(i, hnames)
-        if (is.na(n)) {
-            return(NULL)
-        } else {
-            ## If so, return it with a warning
-            out <- hvars[[n]]
-            if (!is.null(out)) {
-                out <- CrunchVariable(out, filter=activeFilter(x))
-            }
-            warning("Variable ", i, " is hidden", call.=FALSE)
-            return(out)
+    out <- allVariables(x)[[findVariablesInDataset(x, i)]]
+    if (!is.null(out)) {
+        out <- CrunchVariable(out, filter=activeFilter(x))
+        if (tuple(out)$discarded) {
+            warning("Variable ", alias(out), " is hidden", call.=FALSE)
         }
-    } else {
-        return(callNextMethod(x, n, ..., drop=drop))
     }
+    return(out)
 })
 #' @rdname dataset-extract
 #' @export
 setMethod("$", "CrunchDataset", function (x, name) x[[name]])
+
+
+findVariablesInDataset <- function(x, i) {
+    allvars <- allVariables(x)
+    ## Handle "namekey", which should be deprecated
+    if (getOption("crunch.namekey.dataset", "alias") == "name") {
+        alt <- names(allvars)
+    } else {
+        alt <- aliases(allvars)
+    }
+    
+    return(whichNameOrURL(allvars, i, alt))
+}

@@ -20,7 +20,9 @@
     },
     "fragments": {
         "table": "https://app.crunch.io/api/datasets/3/table/",
-        "preferences": "https://app.crunch.io/api/datasets/3/preferences/"
+        "preferences": "https://app.crunch.io/api/datasets/3/preferences/",
+        "pk": "https://app.crunch.io/api/datasets/3/pk/",
+        "stream": "https://app.crunch.io/api/datasets/3/stream/"
     },
     "some_other_key": {}
 }

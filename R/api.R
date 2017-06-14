@@ -102,6 +102,17 @@ handleAPIresponse <- function (response, special.statuses=list()) {
                 response$url,
                 " has moved permanently. Please upgrade crunch to the ",
                 "latest version.")
+        } else if (code == 503 && response$request$method == "GET" &&
+                   "retry-after" %in% tolower(names(response$headers))) {
+            ## Server is busy and telling us to retry the request again after
+            ## some period.
+            wait <- response$headers[[which(tolower(names(response$headers)) == "retry-after")]]
+            message("This request is taking longer than expected. Please stand by...",
+                call.=FALSE)
+            Sys.sleep(as.numeric(wait))
+            ## TODO: resend request headers? Or, include the request to evaluate
+            ## inside this function, do match.call at the beginning, and re-eval?
+            return(crGET(response$url))
         }
         msg <- http_status(response)$message
         msg2 <- try(content(response)$message, silent=TRUE)

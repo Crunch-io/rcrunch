@@ -1,8 +1,22 @@
-### crunch 1.16.1 (under development)
+### crunch 1.17.3 (under development)
+
+### crunch 1.17.2
+* Support for streaming data: check for received data with `pendingStream()`; append that pending stream data to the dataset with `appendStream()` (#40)
+* Multitables can now be updated with `multitables(ds)[["Multitable name"]] <- ~ var1 + var2` syntax. Similarly, multitables can be deleted with `multitables(ds)[["Multitable name"]] <- NULL`. Multitables also have new `name()` and `delete()` methods.
+* `toVariable()` now accepts (and then strips) arguments of class `AsIs` (#44)
+* Fixed a bug where `changeCategoryID()` failed on multiple response variables.
+
+## crunch 1.17.0
 
 * `dashboard` and `dashboard<-` methods to view and set a dashboard URL on a dataset
-* Fix issue in printing filter expressions with long value columns
+* `changeCategoryID` function to map categorical data to a new "id" and value in the data (#38, #47)
+* Added `importMultitable()` to copy a multitable form one dataset to another. Additionally, `Multitable`s now have a show method showing its name and column variables.
+* Can now extract variables from a dataset by the variable URL
+* `appendDataset()` now truly appends a dataset and no longer upserts if there is a primary key set. This is accomplished by removing the primary key before appending. (#35)
+* Primary keys can now be viewed with `pk(dataset)` and set with `pk(dataset) <- variable`.
+* Fix issue in printing filter expressions with long value columns (#39, #45)
 * Progress bars now clean up after themselves and do not leave the prompt hanging out at the end of the line
+* Test setup code moved to `inst/` so that other packages that depend on `crunch` can use the same setup.
 
 ## crunch 1.16.0
 

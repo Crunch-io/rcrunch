@@ -9,7 +9,7 @@ test_that("VariableGroup and Order objects can be made", {
         "VariableOrder")
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     varcat <- allVariables(ds)
 

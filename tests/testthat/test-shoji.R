@@ -43,7 +43,7 @@ test_that("ShojiCatalog", {
     expect_error(sho[c("/a", "c")], "Undefined elements selected: c")
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     full.urls <- DatasetCatalog(crGET("https://app.crunch.io/api/datasets/"))
     rel.urls <- DatasetCatalog(crGET("https://app.crunch.io/api/datasets/", query=list(relative="on")))
     test_that("urls() method returns absolute URLs", {

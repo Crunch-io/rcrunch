@@ -1,6 +1,6 @@
 context("Variable types")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
 
     test_that("Variable type method", {

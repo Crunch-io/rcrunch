@@ -1,3 +1,6 @@
+#' @include variable-definition.R
+NULL
+
 #' @rdname toVariable
 #' @export
 setMethod("toVariable", "character", function (x, ...) {
@@ -33,6 +36,13 @@ setMethod("toVariable", "POSIXt", function (x, ...) {
         type="datetime",
         resolution="ms", ...),
         class="VariableDefinition"))
+})
+
+#' @rdname toVariable
+#' @export
+setMethod("toVariable", "AsIs", function (x, ...) {
+    class(x) <- class(x)[-match("AsIs", class(x))]
+    return(toVariable(x, ...))
 })
 
 #' @rdname toVariable

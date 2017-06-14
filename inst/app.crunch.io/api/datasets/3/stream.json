@@ -1,0 +1,1 @@
+{"element": "shoji:entity", "self": "https://app.crunch.io/api/datasets/3/stream/", "description": "A stream for this Dataset. Each stream acts as a write buffer, from which Sources are periodically made and appended as Batches to the owning Dataset.", "body": {"pending_messages": 0, "received_messages": 0}}

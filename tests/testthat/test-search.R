@@ -1,6 +1,6 @@
 context("Searching for datasets and variables")
 
-with_mock_HTTP({
+with_mock_crunch({
     results <- searchDatasets("gender")
 
     test_that("Search queries", {

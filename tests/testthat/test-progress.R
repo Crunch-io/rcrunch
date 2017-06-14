@@ -1,6 +1,6 @@
 context("Polling progress")
 
-with_mock_HTTP({
+with_mock_crunch({
     test_that("If progress polling gives up, it tells you what to do", {
         with(temp.option(crunch.timeout=0.0005), {
             expect_error(

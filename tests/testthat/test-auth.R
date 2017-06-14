@@ -17,7 +17,7 @@ test_that("without_echo doesn't crash on this OS", {
     })
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     test_that("Jupyter helper sets up env", {
         with(reset.option("httr_config"), {
             jupyterLogin("test_token")

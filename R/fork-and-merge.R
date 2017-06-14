@@ -18,6 +18,7 @@ forks <- function (dataset) {
 #' @return The new fork, a \code{CrunchDataset}.
 #' @export
 forkDataset <- function (dataset, name=defaultForkName(dataset), draft=FALSE, ...) {
+    ## TODO: add owner field, default to self(me())
     fork_url <- crPOST(shojiURL(dataset, "catalogs", "forks"),
         body=toJSON(wrapEntity(name=name, is_published=!draft, ...)))
     dropOnly(sessionURL("datasets"))

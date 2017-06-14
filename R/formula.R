@@ -30,7 +30,11 @@ formulaToQuery <- function (formula, data) {
     ## Evaluate the formula's terms in order to catch derived expressions
     v.call <- do.call(substitute,
         list(expr=f.vars, env=registerCubeFunctions(all.f.vars)))
-    vars <- eval(v.call, as.environment(data), environment(formula))
+    if (missing(data)) {
+        vars <- eval(v.call, NULL, environment(formula))
+    } else {
+        vars <- eval(v.call, as.environment(data), environment(formula))
+    }
 
     ## Validate that vars are non-null
     nullvars <- vapply(vars, is.null, logical(1))

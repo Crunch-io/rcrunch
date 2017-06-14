@@ -2,7 +2,8 @@ context("Add a variable to a dataset")
 
 test_that("toVariable parses R numerics", {
     expect_identical(toVariable(2L:4L, name="Numbers!", alias="num"),
-        structure(list(values=2L:4L, type="numeric", name="Numbers!", alias="num"), class="VariableDefinition"))
+        structure(list(values=2L:4L, type="numeric", name="Numbers!",
+                       alias="num"), class="VariableDefinition"))
     expect_equivalent(toVariable(2L:4L, name="Numbers!", alias="num"),
         list(values=2L:4L, type="numeric", name="Numbers!", alias="num"))
 })
@@ -18,6 +19,14 @@ test_that("toVariable parses factors", {
             list(id=2L, name="C", numeric_value=2L, missing=FALSE),
             list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
         ))) ## unclear why these aren't identical
+})
+test_that("toVariable parses AsIses", {
+    expect_identical(toVariable(I(1:5)),
+                     structure(list(values=1L:5L, type="numeric"),
+                               class="VariableDefinition"))
+    expect_identical(toVariable(I(letters[1:3])),
+                     structure(list(values=c("a", "b", "c"), type="text"),
+                               class="VariableDefinition"))
 })
 
 test_that("toVariable handles duplicate factor levels", {
@@ -71,7 +80,7 @@ test_that("POSTNewVariable rejects invalid categories", {
         "Invalid category names: must be unique")
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("assignment restrictions", {
         expect_error(ds[[2]] <- 1:25,

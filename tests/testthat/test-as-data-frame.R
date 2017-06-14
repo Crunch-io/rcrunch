@@ -30,7 +30,7 @@ mr.ids <- data.frame(
     subvar3=c(1, -1, 1, 2, -1, 1, 2, -1, 1, -1, 2, 1, 1, 2,
         1, 1, 2, 1, -1, 1, 2, 1, 1, 1, 2))
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("setup", {
         expect_identical(dim(ds), c(nrow(ds), ncol(ds)))

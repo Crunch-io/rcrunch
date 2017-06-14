@@ -1,6 +1,6 @@
 context("Expression validation")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     badexpr <- ds$NOTAVARIABLE == 3
     age <- 2016 - ds$birthyr

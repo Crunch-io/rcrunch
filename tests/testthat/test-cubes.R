@@ -31,7 +31,7 @@ test_that("rollup resolution validation", {
         " is invalid. Valid values are NULL, ")
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     v <- ds$starttime
 
