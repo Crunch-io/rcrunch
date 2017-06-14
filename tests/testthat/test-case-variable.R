@@ -49,6 +49,42 @@ with_mock_crunch({
                 )
                 ))
         
-
+        expect_json_equivalent(
+            makeCaseVariable(
+                list(
+                    Case(id=10L, case=ds$gender == "Male", name="Dudes"),
+                    Case(id=11L, case=ds$birthyr < 1950, name="Old women")
+                ),
+                name="Super clever segmentation"),
+            list(
+                name="Super clever segmentation",
+                derivation=list(
+                    `function`="case",
+                    args=list(
+                        list(column=I(1:2),
+                             type=list(
+                                 value=list(
+                                     class="categorical",
+                                     categories=list(
+                                         list(id=10, name="Dudes", numeric_value=NULL, missing=FALSE),
+                                         list(id=11, name="Old women", numeric_value=NULL, missing=FALSE)
+                                     )
+                                 )
+                             )
+                        ),
+                        list(
+                            `function`="==",
+                            args=list(
+                                list(variable="https://app.crunch.io/api/datasets/1/variables/gender/", value=1)
+                            )
+                        ), list(
+                            `function`="<",
+                            args=list(
+                                list(variable="https://app.crunch.io/api/datasets/1/variables/birthyr/", value=1950)
+                            )
+                        )
+                    )
+                )
+            ))
     })
 })
