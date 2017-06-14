@@ -28,9 +28,9 @@ Suggests:
     httptest (>= 2.0.0),
     knitr
 VignetteBuilder: knitr
-RoxygenNote: 6.0.0
+RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
-Collate:
+Collate: 
     'AllClasses.R'
     'AllGenerics.R'
     'variable-definition.R'
@@ -42,6 +42,7 @@ Collate:
     'as-data-frame.R'
     'auth.R'
     'batches.R'
+    'case-variables.R'
     'categories.R'
     'category.R'
     'combine-categories.R'

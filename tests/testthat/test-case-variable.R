@@ -1,6 +1,6 @@
 context("Case variables")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("Case variable definition", {
         expect_json_equivalent(
