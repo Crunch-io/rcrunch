@@ -273,6 +273,22 @@ Subvariables <- setClass("Subvariables", contains="VariableCatalog",
         filter=CrunchLogicalExpr()
     ))
 
+#' @rdname Case
+#' @export
+Case <- setClass("Case",
+                 slots=c(
+                     id="integer",
+                     name="character",
+                     case="CrunchLogicalExpr",
+                     numeric_value="numeric",
+                     missing="logical"
+                 ),
+                 prototype=prototype(
+                     id=integer(0),
+                     case=CrunchLogicalExpr(),
+                     missing=FALSE
+                 ))
+
 CubeDims <- setClass("CubeDims", contains="namedList",
     slots=c(references="VariableCatalog"),
     prototype=prototype(references=VariableCatalog()))
