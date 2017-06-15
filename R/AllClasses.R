@@ -279,7 +279,7 @@ Subvariables <- setClass("Subvariables", contains="VariableCatalog",
 #' @slot id an integer to use for this category when a case variable is made 
 #' (default: none, which will automatically be assigned)
 #' @slot name a charcater identifier for this case
-#' @slot case [`CrunchLogicalExpr`] which sets the conditions for the case
+#' @slot case `CrunchLogicalExpr` which sets the conditions for the case
 #' @slot numeric_value a numeric which is the value this case should take on 
 #' (useful when made into a case variable)
 #' @slot missing a logical indicating if this case should be treated as missing
