@@ -10,6 +10,36 @@ with_mock_crunch({
         expect_equal(name(case), "Cool Dudes")
     })
 
+    case_output <- list(
+        name="Super clever segmentation",
+        derivation=list(
+            `function`="case",
+            args=list(
+                list(column=I(1:2),
+                     type=list(
+                         value=list(
+                             class="categorical",
+                             categories=list(
+                                 list(id=1, name="Dudes", numeric_value=NULL, missing=FALSE),
+                                 list(id=2, name="Old women", numeric_value=NULL, missing=FALSE)
+                             )
+                         )
+                     )
+                ),
+                list(
+                    `function`="==",
+                    args=list(
+                        list(variable="https://app.crunch.io/api/datasets/1/variables/gender/", value=1)
+                    )
+                ), list(
+                    `function`="<",
+                    args=list(
+                        list(variable="https://app.crunch.io/api/datasets/1/variables/birthyr/", value=1950)
+                    )
+                )
+            )
+        )
+    )
     test_that("Case variable definition", {
         expect_json_equivalent(
             makeCaseVariable(
@@ -18,73 +48,20 @@ with_mock_crunch({
                     Case(case=ds$birthyr < 1950, name="Old women")
                 ),
                 name="Super clever segmentation"),
-            list(
-                name="Super clever segmentation",
-                derivation=list(
-                    `function`="case",
-                    args=list(
-                        list(column=I(1:2),
-                        type=list(
-                            value=list(
-                                class="categorical",
-                                categories=list(
-                                    list(id=1, name="Dudes", numeric_value=NULL, missing=FALSE),
-                                    list(id=2, name="Old women", numeric_value=NULL, missing=FALSE)
-                                )
-                                )
-                            )
-                        ),
-                        list(
-                            `function`="==",
-                            args=list(
-                                list(variable="https://app.crunch.io/api/datasets/1/variables/gender/", value=1)
-                            )
-                        ), list(
-                            `function`="<",
-                            args=list(
-                                list(variable="https://app.crunch.io/api/datasets/1/variables/birthyr/", value=1950)
-                            )
-                        )
-                    )
-                )
-                ))
+            case_output)
         
+        case_output$derivation$args[[1]]$column <- I(10:11)
+        case_output$derivation$args[[1]]$type$value$categories[[1]]$id <- 10L
+        case_output$derivation$args[[1]]$type$value$categories[[1]]$numeric_value <- 0
+        case_output$derivation$args[[1]]$type$value$categories[[2]]$id <- 11L
+        case_output$derivation$args[[1]]$type$value$categories[[2]]$missing <- TRUE
         expect_json_equivalent(
             makeCaseVariable(
                 list(
-                    Case(id=10L, case=ds$gender == "Male", name="Dudes"),
-                    Case(id=11L, case=ds$birthyr < 1950, name="Old women")
+                    Case(id=10L, case=ds$gender == "Male", name="Dudes", numeric_value=0),
+                    Case(id=11L, case=ds$birthyr < 1950, name="Old women", missing=TRUE)
                 ),
                 name="Super clever segmentation"),
-            list(
-                name="Super clever segmentation",
-                derivation=list(
-                    `function`="case",
-                    args=list(
-                        list(column=I(1:2),
-                             type=list(
-                                 value=list(
-                                     class="categorical",
-                                     categories=list(
-                                         list(id=10, name="Dudes", numeric_value=NULL, missing=FALSE),
-                                         list(id=11, name="Old women", numeric_value=NULL, missing=FALSE)
-                                     )
-                                 )
-                             )
-                        ),
-                        list(
-                            `function`="==",
-                            args=list(
-                                list(variable="https://app.crunch.io/api/datasets/1/variables/gender/", value=1)
-                            )
-                        ), list(
-                            `function`="<",
-                            args=list(
-                                list(variable="https://app.crunch.io/api/datasets/1/variables/birthyr/", value=1950)
-                            )
-                        )
-                    )
-                )
-            ))
+            case_output)
     })
 })

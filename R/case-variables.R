@@ -19,11 +19,19 @@ makeCaseVariable <- function (cases, name, ...) {
     #check if all cases are cases.
     
     # make ids if cases don't have ids.
-
+    need_ids <- sapply(cases, function(x) length(x@id) == 0)
+    cases[need_ids] <- lapply(seq_along(cases[need_ids]), function(i) {
+        cases[need_ids][[i]]@id <- i
+        return(cases[need_ids][[i]])
+    })
+    
     # create the new categorical variable
     new_cat_type <- list(value=list(class="categorical",
-                                    categories=lapply(seq_along(cases), function (i) {
-                                 list(id=i, name=name(cases[[i]]), numeric_value=NULL, missing=FALSE)
+                                    categories=lapply(cases, function (case) {
+                    num_value <- switch(length(case@numeric_value)>0,case@numeric_value)
+                                 list(id=case@id, name=name(case), 
+                                      numeric_value=num_value,
+                                      missing=case@missing)
                              })))
     new_cat_ids <- sapply(new_cat_type$value$categories, function(x) x$id)
     new_cat <- list(column=I(new_cat_ids), type=new_cat_type)

@@ -284,7 +284,6 @@ Case <- setClass("Case",
                      missing="logical"
                  ),
                  prototype=prototype(
-                     id=integer(0),
                      case=CrunchLogicalExpr(),
                      missing=FALSE
                  ))
