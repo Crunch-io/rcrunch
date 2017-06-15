@@ -1,4 +1,5 @@
 ### crunch 1.17.3 (under development)
+* Fixed a bug where curl might not work on windows. (Switched `method="curl"` to `method="libcurl` when using `download.file()`)
 
 ### crunch 1.17.2
 * Support for streaming data: check for received data with `pendingStream()`; append that pending stream data to the dataset with `appendStream()` (#40)
