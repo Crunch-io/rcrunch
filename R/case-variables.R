@@ -13,7 +13,7 @@ setMethod("name<-", "Case",
 #' 
 #' The `makeCaseVariable` function derives a variable using values from other 
 #' variables. These are evaluated in the order they are supplied in the list 
-#' as the `cases` argument (they proceed in an IF, ELSE IF, ELSE IF, …, ELSE 
+#' as the `cases` argument (they proceed in an IF, ELSE IF, ELSE IF, ..., ELSE 
 #' fashion); the first one that matches selects the corresponding value from 
 #' the [`Case`] object.
 #' 
