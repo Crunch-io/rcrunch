@@ -16,7 +16,7 @@ install-ci: deps
 	R -e '.libPaths(Sys.getenv("R_LIB")); devtools::install_github("nealrichardson/testthat", ref="tap-file"); devtools::install_github("nealrichardson/httptest")'
 
 test-ci:
-	R --slave -e '.libPaths(Sys.getenv("R_LIB")); library(httptest); cwd <- getwd(); setwd(file.path(.libPaths()[1], "crunch", "tests")); options(crunch.check.updates=FALSE); test_check("crunch", reporter=MultiReporter$$new(list(SummaryReporter$$new(), TapReporter$$new(file.path(cwd, "rcrunch.tap")))))'
+	R --slave -e '.libPaths(Sys.getenv("R_LIB")); library(httptest); cwd <- getwd(); setwd(file.path(.libPaths()[1], "crunch", "tests")); options(crunch.check.updates=FALSE, download.file.method="libcurl"); test_check("crunch", reporter=MultiReporter$$new(list(SummaryReporter$$new(), TapReporter$$new(file.path(cwd, "rcrunch.tap")))))'
 
 clean:
 	R --slave -e 'options(crunch.api=getOption("test.api"), crunch.email=getOption("test.user"), crunch.pw=getOption("test.pw")); library(crunch); login(); lapply(urls(datasets()), crDELETE)'
