@@ -85,4 +85,6 @@ with_test_authentication({
                  factor(c(NA, "Cats", NA, "Dogs", "Dogs", NA, NA, NA,
                           "Cats", "Dogs"), levels = (c("Cats", "Dogs"))))
     expect_equal(name(ds$catdog), "Cats or Dogs")
+    expect_equal(ids(categories(ds$catdog)), c(1,2,-1))
+    expect_equal(names(categories(ds$catdog)), c("Cats", "Dogs", "No Data"))
 })
