@@ -12,7 +12,8 @@ Case statement for case variables
 
 \describe{
 \item{\code{id}}{an integer to use for this category when a case variable is made
-(default: none, which will automatically be assigned)}
+(default: none, one will automatically be assigned when the case variable
+is made)}
 
 \item{\code{name}}{a charcater identifier for this case}
 

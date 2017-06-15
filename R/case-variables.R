@@ -19,6 +19,7 @@ setMethod("name<-", "Case",
 #' 
 #' @param cases A list of objects of class [`Case`]
 #' @param ... other properties to pass about the case variable (e.g. name)
+#' @export
 makeCaseVariable <- function (cases, ...) {
     # check if all cases are cases.
     if (any(sapply(cases, class) != "Case")) {
