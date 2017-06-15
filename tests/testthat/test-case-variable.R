@@ -29,17 +29,20 @@ with_mock_crunch({
                 list(
                     `function`="==",
                     args=list(
-                        list(variable="https://app.crunch.io/api/datasets/1/variables/gender/", value=1)
+                        list(variable="https://app.crunch.io/api/datasets/1/variables/gender/"), 
+                        list(value=1)
                     )
                 ), list(
                     `function`="<",
                     args=list(
-                        list(variable="https://app.crunch.io/api/datasets/1/variables/birthyr/", value=1950)
+                        list(variable="https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                        list(value=1950)
                     )
                 )
             )
         )
     )
+
     test_that("Case variable definition", {
         expect_json_equivalent(
             makeCaseVariable(
@@ -64,4 +67,22 @@ with_mock_crunch({
                 name="Super clever segmentation"),
             case_output)
     })
+    
+    test_that("makeCaseVariable errors gracefully", {
+        expect_error(makeCaseVariable(cases = list(
+            Case(case=ds$gender == "Male", name="Dudes"),
+            "not a Case object"), name = "foo"),
+            "All elements of the cases arugment must be of class Case")
+    })
+})
+
+with_test_authentication({
+    ds <- newDatasetFromFixture("apidocs")
+    ds$catdog <- makeCaseVariable(list(Case(case = ds$q1 == "Cat", name="Cats"),
+                                       Case(case = ds$q1 == "Dog", name="Dogs")),
+                                  name = "Cats or Dogs")
+    expect_equal(as.vector(ds$catdog)[1:10],
+                 factor(c(NA, "Cats", NA, "Dogs", "Dogs", NA, NA, NA,
+                          "Cats", "Dogs"), levels = (c("Cats", "Dogs"))))
+    expect_equal(name(ds$catdog), "Cats or Dogs")
 })
