@@ -6,17 +6,33 @@
 \alias{Case}
 \alias{Case}
 \alias{makeCaseVariable}
-\title{Case variables}
+\title{Case statement for case variables}
 \usage{
-makeCaseVariable(cases, name, ...)
+makeCaseVariable(cases, ...)
 }
 \arguments{
 \item{cases}{A list of objects of class \code{\link{Case}}}
 
-\item{name}{a name for the new case variable}
-
-\item{...}{other properties to pass about the case variable}
+\item{...}{other properties to pass about the case variable (e.g. name)}
 }
 \description{
+Case statement for case variables
+
 Case variables
 }
+\section{Slots}{
+
+\describe{
+\item{\code{id}}{an integer to use for this category when a case variable is made
+(default: none, which will automatically be assigned)}
+
+\item{\code{name}}{a charcater identifier for this case}
+
+\item{\code{case}}{\code{\link{CrunchLogicalExpr}} which sets the conditions for the case}
+
+\item{\code{numeric_value}}{a numeric which is the value this case should take on
+(useful when made into a case variable)}
+
+\item{\code{missing}}{a logical indicating if this case should be treated as missing}
+}}
+
