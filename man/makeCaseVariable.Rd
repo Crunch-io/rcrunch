@@ -12,5 +12,9 @@ makeCaseVariable(cases, ...)
 \item{...}{other properties to pass about the case variable (e.g. name)}
 }
 \description{
-Make a case variable
+The \code{makeCaseVariable} function derives a variable using values from other
+variables. These are evaluated in the order they are supplied in the list
+as the \code{cases} argument (they proceed in an IF, ELSE IF, ELSE IF, …, ELSE
+fashion); the first one that matches selects the corresponding value from
+the \code{\link{Case}} object.
 }
