@@ -4,17 +4,36 @@
 \alias{makeCaseVariable}
 \title{Make a case variable}
 \usage{
-makeCaseVariable(cases, ...)
+makeCaseVariable(..., cases, else_case, name)
 }
 \arguments{
-\item{cases}{A list of objects of class \code{\link{Case}}}
+\item{...}{a sequence of named expressions to use as cases as well as other
+properties to pass about the case variable (i.e. alias, description)}
 
-\item{...}{other properties to pass about the case variable (e.g. name)}
+\item{cases}{a list of lists with each case condition to use each must
+include at least a \code{name} and an \code{expression} element.}
+
+\item{else_case}{a single list that has at least a \code{name} to serve as the
+case when no others match (if not specified Crunch will use the system
+default "No data")}
+
+\item{name}{a character to use as the name of the case variable to create}
 }
 \description{
 The \code{makeCaseVariable} function derives a variable using values from other
 variables. These are evaluated in the order they are supplied in the list
 as the \code{cases} argument (they proceed in an IF, ELSE IF, ELSE IF, ..., ELSE
 fashion); the first one that matches selects the corresponding value from
-the \code{\link{Case}} object.
+the case list.
+}
+\details{
+There are two ways to specify cases, but you must pick only one (note these
+two will produce the same case variable):
+\enumerate{
+\item When you just want to specify conditions, you can use named conditions:
+\code{makeCaseVaraible(case1=ds$v1 == 1, case2=ds$v2 == 2, name="new case")}
+\item You can also use the \code{cases} argument, which is useful when you want to
+prespecify ids, or set numeric_values:
+\code{makeCaseVaraible(cases=list(list(expression=ds$v1 == 1, name="case1"), list(expression=ds$v2 == 2, name="case2")), name="new case")}
+}
 }
