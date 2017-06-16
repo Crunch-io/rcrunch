@@ -41,7 +41,6 @@ setOldClass("zcl")
 setMethod("zcl", "zcl", function (x) x)
 setMethod("zcl", "list", function (x) x) ## is this a good idea?
 setMethod("zcl", "CrunchFilter", function (x) x@body$expression)
-setMethod("zcl", "Case", function (x) zcl(x@case))
 
 zfunc <- function (func, ...) {
     ## Wrapper that creates ZCL function syntax
