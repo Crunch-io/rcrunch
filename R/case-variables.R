@@ -1,4 +1,4 @@
-#' Case statement for case variables
+#' Validate case statements for case variables
 #'
 #' List elements: 
 #' id an integer to use for this category when a case variable is made 
@@ -18,24 +18,30 @@ ensureValidCases <- function(case) {
     wrong_case_names <- setdiff(names(case), c("id", "name", "expression",
                                                "numeric_value", "missing"))
     if (length(wrong_case_names) > 0) {
-        halt("each case must have at most an id, name, expression, numeric_value, ", 
-             "and missing element")
+        halt("each case must have at most an id, name, expression, ",
+             "numeric_value, and missing element. The errant arguments were: ",
+             serialPaste(wrong_case_names))
     }
     if (!is.null(case$id) && !is.integer(case$id)) {
         halt("a case's id must be an integer")
     }
     if (!is.character(case$name)) {
-        halt("a case's name must be a character and must not be NULL")
+        halt("a case's name must be a character")
     }
     if (class(case$expression) != "CrunchLogicalExpr") {
-        halt("a case's expression must be a CrunchLogicalExpr and must not be NULL")
+        halt("a case's expression must be a CrunchLogicalExpr")
     }
-    if (!is.null(case$numeric_value) && !is.numeric(case$numeric_value)) {
+    if (is.null(case$numeric_value)) {
+        case['numeric_value'] <- list(NULL)
+    } else if (!is.numeric(case$numeric_value)) {
         halt("a case's numeric_value must be a numeric")
     }
-    if (!is.null(case$missing) && !is.logical(case$missing)) {
+    if (is.null(case$missing)) {
+        case['missing'] <- FALSE
+    } else if (!is.logical(case$missing)) {
         halt("a case's missing must be a logical")
     }
+    
     return(case)
 }
 
@@ -87,22 +93,21 @@ makeCaseVariable <- function (..., cases, else_case, name) {
     }
     
     # make ids if the cases don't have ids.
-    need_ids <- sapply(cases, function(x) is.null(x$id))
+    need_ids <- vapply(cases, function (x) is.null(x$id), logical(1))
+    supplied_ids <- vapply(cases[!need_ids], function (x) x$id, integer(1))
+    new_ids <- seq_along(cases) # generate too many ids
+    new_ids <- setdiff(new_ids, supplied_ids) # discard ids where there is overlap
     cases[need_ids] <- lapply(seq_along(cases[need_ids]), function(i) {
-        cases[need_ids][[i]]$id <- i
+        cases[need_ids][[i]]$id <- new_ids[i]
         return(cases[need_ids][[i]])
     })
     
-    # NULLify numeric_value and FALSE missing if they are empty
-    cases <- lapply(cases, function(x) {
-        if(is.null(x$numeric_value)) {
-            x['numeric_value'] <- list(NULL)
-        }
-        if(is.null(x$missing)) {
-            x['missing'] <- FALSE
-        }
-        return(x)
-    })
+    # check there are no duplicate ids
+    all_ids <- vapply(cases, function (x) x$id, integer(1))
+    if (anyDuplicated(all_ids) > 0) {
+        halt("there are duplicate ids provided: ", serialPaste(all_ids))
+    }
+    
     cases <- lapply(cases, ensureValidCases)
 
     if (!missing(else_case)) {

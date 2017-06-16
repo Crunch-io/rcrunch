@@ -5,12 +5,13 @@ with_mock_crunch({
     
     test_that("Case list validator", {
         case <- list(name="Dudes", expression=ds$gender == "Male")
-        expect_equal(ensureValidCases(case), case)
+        case_out <- list(name="Dudes", expression=ds$gender == "Male", numeric_value=NULL, missing=FALSE)
+        expect_equal(ensureValidCases(case), case_out)
         expect_error(ensureValidCases("case"), "A case must be a list")
         expect_error(ensureValidCases(list()),
-                     "a case's name must be a character and must not be NULL")
+                     "a case's name must be a character")
         expect_error(ensureValidCases(list(name="name")),
-                     "a case's expression must be a CrunchLogicalExpr and must not be NULL")
+                     "a case's expression must be a CrunchLogicalExpr")
         expect_error(ensureValidCases(list(name="name", expression=CrunchLogicalExpr(), id=0.8)),
                      "a case's id must be an integer")
         expect_error(ensureValidCases(list(name="name", expression=CrunchLogicalExpr(), numeric_value="nope")),
@@ -18,7 +19,7 @@ with_mock_crunch({
         expect_error(ensureValidCases(list(name="name", expression=CrunchLogicalExpr(), missing="nope")),
                      "a case's missing must be a logical")
         expect_error(ensureValidCases(list(not_right="not")),
-                     "each case must have at most an id, name, expression, numeric_value, and missing element")
+                     "each case must have at most an id, name, expression, numeric_value, and missing element. The errant arguments were: not_right")
     })
 
     case_output <- list(
@@ -72,6 +73,15 @@ with_mock_crunch({
             case_output)
     })
     test_that("makeCaseVariable works with ids pre-specified", {
+        expect_json_equivalent(
+            makeCaseVariable(
+                cases = list(
+                    list(id=1L, expression=ds$gender == "Male", name="Dudes"),
+                    list(expression=ds$birthyr < 1950, name="Old women")
+                ),
+                name="Super clever segmentation"),
+            case_output)
+
         case_output$derivation$args[[1]]$column <- I(10:11)
         case_output$derivation$args[[1]]$type$value$categories[[1]]$id <- 10L
         case_output$derivation$args[[1]]$type$value$categories[[1]]$numeric_value <- 0
@@ -122,6 +132,14 @@ with_mock_crunch({
             list(expression=ds$gender == "Male", name="Dudes")),
             else_case = list(name="name", id=0.8)),
             "id must be an integer")
+        expect_error(
+            makeCaseVariable(
+                cases = list(
+                    list(id=1L, expression=ds$gender == "Male", name="Dudes"),
+                    list(id=1L, expression=ds$birthyr < 1950, name="Old women")
+                ),
+                name="Super clever segmentation"),
+            "there are duplicate ids provided: 1 and 1")
     })
 })
 

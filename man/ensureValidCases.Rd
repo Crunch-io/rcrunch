@@ -2,7 +2,7 @@
 % Please edit documentation in R/case-variables.R
 \name{ensureValidCases}
 \alias{ensureValidCases}
-\title{Case statement for case variables}
+\title{Validate case statements for case variables}
 \usage{
 ensureValidCases(case)
 }
