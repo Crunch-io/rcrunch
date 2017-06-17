@@ -6,19 +6,19 @@ with_mock_crunch({
     test_that("Case list validator", {
         case <- list(name="Dudes", expression=ds$gender == "Male")
         case_out <- list(name="Dudes", expression=ds$gender == "Male", numeric_value=NULL, missing=FALSE)
-        expect_equal(ensureValidCases(case), case_out)
-        expect_error(ensureValidCases("case"), "A case must be a list")
-        expect_error(ensureValidCases(list()),
+        expect_equal(ensureValidCase(case), case_out)
+        expect_error(ensureValidCase("case"), "A case must be a list")
+        expect_error(ensureValidCase(list()),
                      "a case's name must be a character")
-        expect_error(ensureValidCases(list(name="name")),
+        expect_error(ensureValidCase(list(name="name")),
                      "a case's expression must be a CrunchLogicalExpr")
-        expect_error(ensureValidCases(list(name="name", expression=CrunchLogicalExpr(), id=0.8)),
+        expect_error(ensureValidCase(list(name="name", expression=CrunchLogicalExpr(), id=0.8)),
                      "a case's id must be an integer")
-        expect_error(ensureValidCases(list(name="name", expression=CrunchLogicalExpr(), numeric_value="nope")),
+        expect_error(ensureValidCase(list(name="name", expression=CrunchLogicalExpr(), numeric_value="nope")),
                      "a case's numeric_value must be a numeric")
-        expect_error(ensureValidCases(list(name="name", expression=CrunchLogicalExpr(), missing="nope")),
+        expect_error(ensureValidCase(list(name="name", expression=CrunchLogicalExpr(), missing="nope")),
                      "a case's missing must be a logical")
-        expect_error(ensureValidCases(list(not_right="not")),
+        expect_error(ensureValidCase(list(not_right="not")),
                      "each case must have at most an id, name, expression, numeric_value, and missing element. The errant arguments were: not_right")
     })
 
@@ -116,21 +116,21 @@ with_mock_crunch({
             list(expression=ds$gender == "Male", name="Dudes"))),
             'argument "name" is missing, with no default')
         expect_error(makeCaseVariable(`Old women`=ds$birthyr < 1950, cases=list(
-            list(expression=ds$gender == "Male", name="Dudes"))),
+            list(expression=ds$gender == "Male", name="Dudes")), name=""),
             "can't have case conditions both in ... as well as in the cases argument, please use one or the other.")
         expect_error(makeCaseVariable(name="Dudes"),
             "must supply case conditions in either ... or the cases argument, please use one or the other.")
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes")),
-            else_case = list(expression=ds$gender == "Female", name="Female")),
+            else_case = list(expression=ds$gender == "Female", name="Female"), name=""),
             "else_cases should not have any conditions expression")
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes")),
-            else_case = list(id=1L)),
+            else_case = list(id=1L), name=""),
             "else_cases must have a \\(character\\) name")
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes")),
-            else_case = list(name="name", id=0.8)),
+            else_case = list(name="name", id=0.8), name=""),
             "id must be an integer")
         expect_error(
             makeCaseVariable(
@@ -167,5 +167,17 @@ with_test_authentication({
                               "Cats", "Dogs"), levels=(c("Cats", "Dogs", "Other"))))
         expect_equal(ids(categories(ds$catdog2)), c(1,2,99))
         expect_equal(names(categories(ds$catdog2)), c("Cats", "Dogs", "Other"))
+        
+        # positive ids can be missing
+        ds$catdog3 <- makeCaseVariable(cases=list(list(expression=ds$q1 == "Cat", name="Cats"),
+                                                  list(id=99L, expression=ds$q1 == "Dog", name="Dogs", missing=TRUE)),
+                                      name="Cats or Dogs3",
+                                      description = "Describe cats and dogs")
+        expect_equal(as.vector(ds$catdog3)[1:10],
+                     factor(c(NA, "Cats", NA, NA, NA, NA, NA, NA,
+                              "Cats", NA), levels=(c("Cats"))))
+        expect_equal(description(ds$catdog3), "Describe cats and dogs")
+        expect_equal(ids(categories(ds$catdog3)), c(1,99,-1))
+        expect_equal(names(categories(ds$catdog3)), c("Cats", "Dogs", "No Data"))
     })
 })
