@@ -145,7 +145,7 @@ makeCaseVariable <- function (..., cases, else_case, name) {
     # add case_expressions, remove nulls (should only be from the else case)
     case_exprs <- lapply(cases, function(x) zcl(x$expression))
     case_exprs <- Filter(Negate(is.null), case_exprs)
-    casevar$derivation$args <- append(casevar$derivation$args, case_exprs)
+    casevar$derivation$args <- c(casevar$derivation$args, case_exprs)
 
     class(casevar) <- "VariableDefinition"
     return(casevar)
