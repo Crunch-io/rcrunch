@@ -29,13 +29,6 @@ crtabs <- function (formula, data, weight=crunch::weight(data),
 
     query <- formulaToCubeQuery(formula, data)
 
-    query$dimensions <- lapply(query$dimensions, function (x) {
-        if ("function" %in% names(x) && x[["function"]] != "as_selected" && x[["function"]] != "selected_array") {
-            x$references <- list(name=x[["function"]], alias=x[["function"]])
-        }
-        return(x)
-    })
-
     ## Handle "weight"
     force(weight)
     if (is.variable(weight)) {
