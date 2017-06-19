@@ -46,6 +46,25 @@ ensureValidCase <- function(case) {
 }
 
 ensureValidCases <- function(cases, else_case) {
+    cases <- lapply(cases, ensureValidCase)
+    
+    if (!missing(else_case)) {
+        # assign API default values if not given
+        defaults <- list(id=NULL, name=NULL, numeric_value=NULL, missing=FALSE)
+        else_case <- modifyList(defaults, else_case)
+        
+        if(!is.null(else_case$expression)) {
+            halt("else_cases should not have any conditions expression")
+        }
+        if(!is.character(else_case$name)) {
+            halt("else_cases must have a (character) name")
+        }
+        if(!is.null(else_case$id) & !is.integer(else_case$id)) {
+            halt("id must be an integer")
+        }
+        cases <- c(cases, list(else_case))
+    }
+    
     # make ids if the cases don't have ids.
     need_ids <- vapply(cases, function (x) is.null(x$id), logical(1))
     supplied_ids <- vapply(cases[!need_ids], function (x) x$id, integer(1))
@@ -56,30 +75,18 @@ ensureValidCases <- function(cases, else_case) {
         return(cases[need_ids][[i]])
     })
     
-    # check there are no duplicate ids
+    # check there are no duplicate ids and they are less than 2^15-1
     all_ids <- vapply(cases, function (x) x$id, integer(1))
     if (anyDuplicated(all_ids) > 0) {
         halt("there are duplicate ids provided: ", serialPaste(all_ids))
     }
-    
-    cases <- lapply(cases, ensureValidCase)
-    
-    if (!missing(else_case)) {
-        # assign API default values if not given
-        defaults <- list(id=-1L, name=NULL, numeric_value=NULL, missing=FALSE)
-        else_case <- modifyList(defaults, else_case)
-        
-        if(!is.null(else_case$expression)) {
-            halt("else_cases should not have any conditions expression")
-        }
-        if(!is.character(else_case$name)) {
-            halt("else_cases must have a (character) name")
-        }
-        if(!is.integer(else_case$id)) {
-            halt("id must be an integer")
-        }
-        cases <- c(cases, list(else_case))
+    if (any(all_ids > 2^15-1)) {
+        halt("id must be less than 32,768, this might be a result of too many cases being used.")
     }
+    if (any(all_ids < 1)) {
+        halt("id must not be less than 1")
+    }
+    
     return(cases)
 }
 
@@ -110,6 +117,10 @@ ensureValidCases <- function(cases, else_case) {
 #' case when no others match (if not specified Crunch will use the system 
 #' default "No data")
 #' @param name a character to use as the name of the case variable to create
+#' 
+#' @return A [`VariableDefinition`] that will create the new
+#' case variable. 
+#' 
 #' @export
 makeCaseVariable <- function (..., cases, else_case, name) {
     casevar <- list(..., name=name)

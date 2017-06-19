@@ -110,7 +110,22 @@ with_mock_crunch({
                 name="Super clever segmentation"),
             case_output)
     })
-    
+
+    test_that("makeCaseVariable works with an else pre-specified", {
+        case_output$derivation$args[[1]]$column[[3]] <- 3L
+        case_output$derivation$args[[1]]$type$value$categories[[3]] <- list(
+            id=3L, name="Other", numeric_value=NULL, missing=FALSE)
+        expect_json_equivalent(
+            makeCaseVariable(
+                cases = list(
+                    list(expression=ds$gender == "Male", name="Dudes"),
+                    list(expression=ds$birthyr < 1950, name="Old women")
+                ),
+                else_case = list(name="Other"),
+                name="Super clever segmentation"),
+            case_output)
+    })
+        
     test_that("makeCaseVariable errors gracefully", {
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes"))),
@@ -132,6 +147,14 @@ with_mock_crunch({
             list(expression=ds$gender == "Male", name="Dudes")),
             else_case = list(name="name", id=0.8), name=""),
             "id must be an integer")
+        expect_error(makeCaseVariable(cases=list(
+            list(expression=ds$gender == "Male", name="Dudes")),
+            else_case = list(name="name", id=as.integer(2^15)), name=""), # R can't represent an integer this high
+            "id must be less than 32,768, this might be a result of too many cases being used.")
+        expect_error(makeCaseVariable(cases=list(
+            list(expression=ds$gender == "Male", name="Dudes")),
+            else_case = list(name="name", id=-10L), name=""),
+            "id must not be less than 1")
         expect_error(
             makeCaseVariable(
                 cases = list(

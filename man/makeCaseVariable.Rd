@@ -19,6 +19,10 @@ default "No data")}
 
 \item{name}{a character to use as the name of the case variable to create}
 }
+\value{
+A \code{\link{VariableDefinition}} that will create the new
+case variable.
+}
 \description{
 The \code{makeCaseVariable} function derives a variable using values from other
 variables. These are evaluated in the order they are supplied in the list
