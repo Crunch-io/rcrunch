@@ -76,6 +76,7 @@ Collate:
     'get-datasets.R'
     'github.R'
     'hide-variables.R'
+    'interact.R'
     'join-dataset.R'
     'json.R'
     'make-array.R'
