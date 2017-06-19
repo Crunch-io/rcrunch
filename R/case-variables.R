@@ -45,6 +45,7 @@ ensureValidCase <- function(case) {
     return(case)
 }
 
+## Check for "integers" but don't require true integer storage
 is.whole <- function (x) is.numeric(x) && floor(x) == x
 
 ensureValidCases <- function(cases, else_case) {
@@ -148,8 +149,11 @@ makeCaseVariable <- function (..., cases, else_case, name) {
 
     # create the new categorical variable
     new_cat_type <- list(
-        value=list(class="categorical",
-        categories=lapply(cases, function (case) case[c("id", "name", "numeric_value", "missing")])))
+        value=list(
+            class="categorical",
+            categories=lapply(cases, function (case) {
+                case[c("id", "name", "numeric_value", "missing")]
+            })))
     new_cat_ids <- vapply(cases, vget("id"), integer(1))
     new_cat <- list(column=I(new_cat_ids), type=new_cat_type)
 
