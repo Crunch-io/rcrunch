@@ -49,7 +49,7 @@ with_test_authentication({
     f2 <- forkDataset(f1, "Fork yeah!", draft=TRUE)
     test_that("Editing values of data in a new fork doesn't fail", {
         f2$v1[is.na(f2$v1)] <- 42
-        expect_equal(as.numeric(table(is.na(f2$v1))), 0)
+        expect_equal(as.numeric(table(is.na(f2$v1))["TRUE"]), 0)
     })
     test_that("Can create a fork with a given name (forking from a fork)", {
         expect_true(is.dataset(f2))
