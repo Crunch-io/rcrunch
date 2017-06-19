@@ -5,13 +5,17 @@ with_mock_crunch({
 
     test_that("Case list validator", {
         case <- list(name="Dudes", expression=ds$gender == "Male")
-        case_out <- list(name="Dudes", expression=ds$gender == "Male", numeric_value=NULL, missing=FALSE)
+        case_out <- list(id = NULL, name="Dudes", expression=ds$gender == "Male", numeric_value=NULL, missing=FALSE)
         expect_equal(ensureValidCase(case), case_out)
         expect_error(ensureValidCase("case"), "A case must be a list")
         expect_error(ensureValidCase(list()),
                      "a case's name must be a character")
         expect_error(ensureValidCase(list(name="name")),
                      "a case's expression must be a CrunchLogicalExpr")
+        expect_error(ensureValidCase(list(name=c("name", "name2"), expression=CrunchLogicalExpr())),
+                     "There is more than one attribute for name")
+        expect_error(ensureValidCase(list(name="name", expression=c(CrunchLogicalExpr(), CrunchLogicalExpr()))),
+                     "There is more than one attribute for expression")
         expect_error(ensureValidCase(list(name="name", expression=CrunchLogicalExpr(), id=0.8)),
                      "a case's id must be an integer")
         expect_error(ensureValidCase(list(name="name", expression=CrunchLogicalExpr(), numeric_value="nope")),
@@ -20,6 +24,13 @@ with_mock_crunch({
                      "a case's missing must be a logical")
         expect_error(ensureValidCase(list(not_right="not")),
                      "each case must have at most an id, name, expression, numeric_value, and missing element. The errant arguments were: not_right")
+        
+        else_case <- list(name="Dudes")
+        else_case_out <- list(id = NULL, name="Dudes", numeric_value=NULL, missing=FALSE)
+        expect_equal(ensureValidCase(else_case, is_else = TRUE), else_case_out)
+        expect_error(ensureValidCase(list(name="Dudes", expression=ds$gender == "Male"),
+                                     is_else=TRUE),
+                     "else_cases should not have any conditions expression")
     })
 
     case_output <- list(
@@ -137,16 +148,12 @@ with_mock_crunch({
             "must supply case conditions in either ... or the cases argument, please use one or the other.")
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes")),
-            else_case = list(expression=ds$gender == "Female", name="Female"), name=""),
-            "else_cases should not have any conditions expression")
-        expect_error(makeCaseVariable(cases=list(
-            list(expression=ds$gender == "Male", name="Dudes")),
-            else_case = list(id=1), name=""),
-            "else_cases must have a \\(character\\) name")
-        expect_error(makeCaseVariable(cases=list(
-            list(expression=ds$gender == "Male", name="Dudes")),
             else_case = list(name="name", id=0.8), name=""),
             "id must be an integer")
+        expect_error(makeCaseVariable(cases=list(
+            list(expression=ds$gender == "Male", name="Dudes")),
+            else_case = list(list(name="else1"),list(name="else2")), name=""),
+            "there cannot be more than one else case")
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes")),
             else_case = list(name="name", id=99999999), name=""),
@@ -163,6 +170,29 @@ with_mock_crunch({
                 ),
                 name="Super clever segmentation"),
             "there are duplicate ids provided: 1 and 1")
+        expect_error(
+            makeCaseVariable(
+                cases = list(
+                    list(expression=ds$gender == "Male", name="Dudes"),
+                    list(expression=ds$birthyr < 1950, name="Dudes")
+                ),
+                name="Super clever segmentation"),
+            "there are duplicate names provided: Dudes and Dudes")
+        expect_error(
+            makeCaseVariable(
+                cases = list(
+                    list(expression=ds$gender == "Male", name="Dudes"),
+                    list(expression=ds$gender == "Male", name="Dudes again")
+                ),
+                name="Super clever segmentation"),
+            'there are duplicate condition expressions provided: gender == "Male" and gender == "Male"')
+        expect_error(
+            makeCaseVariable(
+                cases = list(
+                    list(expression=ds$gender == "Male", name="Dudes", missing=NA)
+                    ),
+                name="Super clever segmentation"),
+            "a case's missing must be a logical")
     })
 })
 
