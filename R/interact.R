@@ -41,9 +41,8 @@ makeInteractions <- function(..., drop = FALSE, sep = ":") {
 #' @export
 interactVariables <- function(..., name) {
     dots <- list(...)
-    is_expr <- function (x) inherits(x, "CrunchVariable")
-    vars <- Filter(is_expr, dots)
-    other_dots <- Filter(Negate(is_expr), dots)
+    vars <- Filter(is.variable, dots)
+    other_dots <- Filter(Negate(is.variable), dots)
     
     if (length(vars) < 2) {
         halt("must supply more than one variable to make an interaction")
