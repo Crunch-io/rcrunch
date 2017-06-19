@@ -1,15 +1,15 @@
 #' Validate case statements for case variables
 #'
-#' List elements: 
-#' id an integer to use for this category when a case variable is made 
-#' (default: none, one will automatically be assigned when the case variable 
+#' List elements:
+#' id an integer to use for this category when a case variable is made
+#' (default: none, one will automatically be assigned when the case variable
 #' is made)
 #' name a charcater identifier for this case
 #' expression `CrunchLogicalExpr` which sets the conditions for the case
-#' numeric_value a numeric which is the value this case should take on 
+#' numeric_value a numeric which is the value this case should take on
 #' (useful when made into a case variable)
 #' missing a logical indicating if this case should be treated as missing
-#' 
+#'
 #' @keywords internal
 ensureValidCase <- function(case) {
     if (!is.list(case)) {
@@ -22,7 +22,7 @@ ensureValidCase <- function(case) {
              "numeric_value, and missing element. The errant arguments were: ",
              serialPaste(wrong_case_names))
     }
-    if (!is.null(case$id) && !is.integer(case$id)) {
+    if (!is.null(case$id) && !is.whole(case$id)) {
         halt("a case's id must be an integer")
     }
     if (!is.character(case$name)) {
@@ -41,86 +41,88 @@ ensureValidCase <- function(case) {
     } else if (!is.logical(case$missing)) {
         halt("a case's missing must be a logical")
     }
-    
+
     return(case)
 }
 
+is.whole <- function (x) is.numeric(x) && floor(x) == x
+
 ensureValidCases <- function(cases, else_case) {
     cases <- lapply(cases, ensureValidCase)
-    
+
     if (!missing(else_case)) {
         # assign API default values if not given
         defaults <- list(id=NULL, name=NULL, numeric_value=NULL, missing=FALSE)
         else_case <- modifyList(defaults, else_case)
-        
+
         if(!is.null(else_case$expression)) {
             halt("else_cases should not have any conditions expression")
         }
         if(!is.character(else_case$name)) {
             halt("else_cases must have a (character) name")
         }
-        if(!is.null(else_case$id) & !is.integer(else_case$id)) {
+        if(!is.null(else_case$id) & !is.whole(else_case$id)) {
             halt("id must be an integer")
         }
         cases <- c(cases, list(else_case))
     }
-    
+
     # make ids if the cases don't have ids.
     need_ids <- vapply(cases, function (x) is.null(x$id), logical(1))
-    supplied_ids <- vapply(cases[!need_ids], function (x) x$id, integer(1))
+    supplied_ids <- vapply(cases[!need_ids], vget("id"), numeric(1))
     new_ids <- seq_along(cases) # generate too many ids
     new_ids <- setdiff(new_ids, supplied_ids) # discard ids where there is overlap
     cases[need_ids] <- lapply(seq_along(cases[need_ids]), function(i) {
         cases[need_ids][[i]]$id <- new_ids[i]
         return(cases[need_ids][[i]])
     })
-    
+
     # check there are no duplicate ids and they are less than 2^15-1
-    all_ids <- vapply(cases, function (x) x$id, integer(1))
+    all_ids <- vapply(cases, vget("id"), numeric(1))
     if (anyDuplicated(all_ids) > 0) {
         halt("there are duplicate ids provided: ", serialPaste(all_ids))
     }
-    if (any(all_ids > 2^15-1)) {
+    if (any(all_ids > 32767L)) {
         halt("id must be less than 32,768, this might be a result of too many cases being used.")
     }
-    if (any(all_ids < 1)) {
+    if (any(all_ids < 1L)) {
         halt("id must not be less than 1")
     }
-    
+
     return(cases)
 }
 
 
 #' Make a case variable
-#' 
-#' The `makeCaseVariable` function derives a variable using values from other 
-#' variables. These are evaluated in the order they are supplied in the list 
-#' as the `cases` argument (they proceed in an IF, ELSE IF, ELSE IF, ..., ELSE 
-#' fashion); the first one that matches selects the corresponding value from 
+#'
+#' The `makeCaseVariable` function derives a variable using values from other
+#' variables. These are evaluated in the order they are supplied in the list
+#' as the `cases` argument (they proceed in an IF, ELSE IF, ELSE IF, ..., ELSE
+#' fashion); the first one that matches selects the corresponding value from
 #' the case list.
-#' 
-#' There are two ways to specify cases, but you must pick only one (note these 
+#'
+#' There are two ways to specify cases, but you must pick only one (note these
 #' two will produce the same case variable):
-#' 
+#'
 #' 1. When you just want to specify conditions, you can use named conditions:
 #' `makeCaseVaraible(case1=ds$v1 == 1, case2=ds$v2 == 2, name="new case")`
-#' 
-#' 1. You can also use the `cases` argument, which is useful when you want to 
+#'
+#' 1. You can also use the `cases` argument, which is useful when you want to
 #' prespecify ids, or set numeric_values:
 #' `makeCaseVaraible(cases=list(list(expression=ds$v1 == 1, name="case1"), list(expression=ds$v2 == 2, name="case2")), name="new case")`
-#' 
-#' @param ... a sequence of named expressions to use as cases as well as other 
+#'
+#' @param ... a sequence of named expressions to use as cases as well as other
 #' properties to pass about the case variable (i.e. alias, description)
-#' @param cases a list of lists with each case condition to use each must 
+#' @param cases a list of lists with each case condition to use each must
 #' include at least a `name` and an `expression` element.
-#' @param else_case a single list that has at least a `name` to serve as the 
-#' case when no others match (if not specified Crunch will use the system 
+#' @param else_case a single list that has at least a `name` to serve as the
+#' case when no others match (if not specified Crunch will use the system
 #' default "No data")
 #' @param name a character to use as the name of the case variable to create
-#' 
+#'
 #' @return A [`VariableDefinition`] that will create the new
-#' case variable. 
-#' 
+#' case variable.
+#'
 #' @export
 makeCaseVariable <- function (..., cases, else_case, name) {
     casevar <- list(..., name=name)
@@ -141,16 +143,16 @@ makeCaseVariable <- function (..., cases, else_case, name) {
                         expr=exprs, name=names(exprs),
                         SIMPLIFY = FALSE, USE.NAMES = FALSE)
     }
-    
+
     cases <- ensureValidCases(cases, else_case)
-    
+
     # create the new categorical variable
     new_cat_type <- list(
         value=list(class="categorical",
         categories=lapply(cases, function (case) case[c("id", "name", "numeric_value", "missing")])))
     new_cat_ids <- vapply(cases, vget("id"), integer(1))
     new_cat <- list(column=I(new_cat_ids), type=new_cat_type)
-    
+
     casevar$derivation <- zfunc("case", new_cat)
 
     # add case_expressions, remove nulls (should only be from the else case)

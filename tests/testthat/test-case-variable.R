@@ -2,7 +2,7 @@ context("Case variables")
 
 with_mock_crunch({
     ds <- loadDataset("test ds")
-    
+
     test_that("Case list validator", {
         case <- list(name="Dudes", expression=ds$gender == "Male")
         case_out <- list(name="Dudes", expression=ds$gender == "Male", numeric_value=NULL, missing=FALSE)
@@ -41,7 +41,7 @@ with_mock_crunch({
                 list(
                     `function`="==",
                     args=list(
-                        list(variable="https://app.crunch.io/api/datasets/1/variables/gender/"), 
+                        list(variable="https://app.crunch.io/api/datasets/1/variables/gender/"),
                         list(value=1)
                     )
                 ), list(
@@ -125,7 +125,7 @@ with_mock_crunch({
                 name="Super clever segmentation"),
             case_output)
     })
-        
+
     test_that("makeCaseVariable errors gracefully", {
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes"))),
@@ -141,7 +141,7 @@ with_mock_crunch({
             "else_cases should not have any conditions expression")
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes")),
-            else_case = list(id=1L), name=""),
+            else_case = list(id=1), name=""),
             "else_cases must have a \\(character\\) name")
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes")),
@@ -149,17 +149,17 @@ with_mock_crunch({
             "id must be an integer")
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes")),
-            else_case = list(name="name", id=as.integer(2^15)), name=""), # R can't represent an integer this high
+            else_case = list(name="name", id=99999999), name=""),
             "id must be less than 32,768, this might be a result of too many cases being used.")
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes")),
-            else_case = list(name="name", id=-10L), name=""),
+            else_case = list(name="name", id=-10), name=""),
             "id must not be less than 1")
         expect_error(
             makeCaseVariable(
                 cases = list(
-                    list(id=1L, expression=ds$gender == "Male", name="Dudes"),
-                    list(id=1L, expression=ds$birthyr < 1950, name="Old women")
+                    list(id=1, expression=ds$gender == "Male", name="Dudes"),
+                    list(id=1, expression=ds$birthyr < 1950, name="Old women")
                 ),
                 name="Super clever segmentation"),
             "there are duplicate ids provided: 1 and 1")
@@ -180,7 +180,7 @@ with_test_authentication({
         expect_equal(description(ds$catdog), "Describe cats and dogs")
         expect_equal(ids(categories(ds$catdog)), c(1,2,-1))
         expect_equal(names(categories(ds$catdog)), c("Cats", "Dogs", "No Data"))
-        
+
         ds$catdog2 <- makeCaseVariable(cases=list(list(expression=ds$q1 == "Cat", name="Cats"),
                                                  list(expression=ds$q1 == "Dog", name="Dogs")),
                                        else_case=list(id=99L, name="Other", missing=FALSE),
@@ -190,7 +190,7 @@ with_test_authentication({
                               "Cats", "Dogs"), levels=(c("Cats", "Dogs", "Other"))))
         expect_equal(ids(categories(ds$catdog2)), c(1,2,99))
         expect_equal(names(categories(ds$catdog2)), c("Cats", "Dogs", "Other"))
-        
+
         # positive ids can be missing
         ds$catdog3 <- makeCaseVariable(cases=list(list(expression=ds$q1 == "Cat", name="Cats"),
                                                   list(id=99L, expression=ds$q1 == "Dog", name="Dogs", missing=TRUE)),

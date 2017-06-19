@@ -5,22 +5,24 @@ with_mock_crunch({
     test_that("makeInteractions", {
         test_cases <- makeInteractions(ds$gender, ds$gender)
         expect_equal(length(test_cases),
-                     length(categories(ds$gender))*length(categories(ds$gender)))
-        expect_json_equivalent(test_cases[[1]],list(expression = ds$gender == "Male" & ds$gender == "Male",
-                                                    name = "Male:Male",
-                                                    missing = FALSE))
-        expect_json_equivalent(test_cases[[3]],list(expression = ds$gender == "No Data" & ds$gender == "Male",
-                                                    name = "No Data:Male",
-                                                    missing = TRUE))
-        expect_error(makeInteractions(ds$gender, ds$textVar), 
+                     length(categories(ds$gender)) * length(categories(ds$gender)))
+        expect_json_equivalent(test_cases[[1]],
+            list(expression = ds$gender == "Male" & ds$gender == "Male",
+                 name = "Male:Male",
+                 missing = FALSE))
+        expect_json_equivalent(test_cases[[3]],
+            list(expression = ds$gender == "No Data" & ds$gender == "Male",
+                 name = "No Data:Male",
+                 missing = TRUE))
+        expect_error(makeInteractions(ds$gender, ds$textVar),
                      "makeInteractions can only take categorical variables")
-        expect_error(makeInteractions(ds$gender, ds$gender, drop = TRUE), 
+        expect_error(makeInteractions(ds$gender, ds$gender, drop = TRUE),
                      dQuote("drop"), "has not been implemented yet")
     })
 
     test_that("interactVariables", {
         interaction_var <- interactVariables(ds$gender, ds$gender, name="interaction!")
-        expect_equal(class(interaction_var), "VariableDefinition")
+        expect_is(interaction_var, "VariableDefinition")
         # There are 9 cases, plus variable definition
         expect_equal(length(interaction_var$derivation$arg), 10)
         expect_POST(ds$interaction <- interaction_var,
@@ -39,29 +41,31 @@ with_test_authentication({
     test_that("makeInteractions", {
         test_cases <- makeInteractions(ds$q1, ds$country)
         expect_equal(length(test_cases),
-                     length(categories(ds$q1))*length(categories(ds$country)))
-        expect_json_equivalent(test_cases[[1]],list(expression = ds$q1 == "Cat" & ds$country == "Argentina",
-                                     name = "Cat:Argentina",
-                                     missing = FALSE))
-        expect_json_equivalent(test_cases[[10]],list(expression = ds$q1 == "Not Asked" & ds$country == "Australia",
-                                                    name = "Not Asked:Australia",
-                                                    missing = TRUE))
-        
+                     length(categories(ds$q1)) * length(categories(ds$country)))
+        expect_json_equivalent(test_cases[[1]],
+            list(expression = ds$q1 == "Cat" & ds$country == "Argentina",
+                 name = "Cat:Argentina",
+                 missing = FALSE))
+        expect_json_equivalent(test_cases[[10]],
+            list(expression = ds$q1 == "Not Asked" & ds$country == "Australia",
+                 name = "Not Asked:Australia",
+                 missing = TRUE))
+
         ds$interaction <-  interactVariables(ds$q1, ds$country, name="Pet.Country")
-        expect_equal(names(categories(ds$interaction)), 
-                     apply(expand.grid(c("Cat", "Dog", "Bird", "Skipped", "Not Asked"),
-                                       c("Argentina", "Australia", "Austria", "Belgium", "Brazil")),
-                           1, paste, collapse=":"))
+        expect_equal(names(categories(ds$interaction)),
+             apply(expand.grid(c("Cat", "Dog", "Bird", "Skipped", "Not Asked"),
+                               c("Argentina", "Australia", "Austria", "Belgium", "Brazil")),
+                   1, paste, collapse=":"))
     })
-    
+
     test_that("makeInteractions accepts opeion arguments", {
         ds$interaction2 <-  interactVariables(ds$q1, ds$country,
                                               name="Pet.Country2",
                                               description="This is a description")
-        expect_equal(names(categories(ds$interaction)), 
-                     apply(expand.grid(c("Cat", "Dog", "Bird", "Skipped", "Not Asked"),
-                                       c("Argentina", "Australia", "Austria", "Belgium", "Brazil")),
-                           1, paste, collapse=":"))
+        expect_equal(names(categories(ds$interaction)),
+             apply(expand.grid(c("Cat", "Dog", "Bird", "Skipped", "Not Asked"),
+                               c("Argentina", "Australia", "Austria", "Belgium", "Brazil")),
+                   1, paste, collapse=":"))
         expect_equal(description(ds$interaction2), "This is a description")
     })
 })
