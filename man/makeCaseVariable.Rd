@@ -40,4 +40,12 @@ two will produce the same case variable):
 prespecify ids, or set numeric_values:
 \code{makeCaseVaraible(cases=list(list(expression=ds$v1 == 1, name="case1"), list(expression=ds$v2 == 2, name="case2")), name="new case")}
 }
+
+If no cases match any data then an else case is used. There are two ways
+to provide this final case:
+\enumerate{
+\item A single case specification to the \code{else_case} argument. This case must
+not have an \code{expression} in it
+\item As the last case in the \code{cases} argument its \code{expression} set to "else".
+}
 }

@@ -4,9 +4,14 @@
 \alias{ensureValidCase}
 \title{Validate case statements for case variables}
 \usage{
-ensureValidCase(case)
+ensureValidCase(case, is_else = FALSE)
 }
-\description{
+\arguments{
+\item{case}{a list for one case to test}
+
+\item{is_else}{is this case the final (else) case? If so, the expression
+must be missing.
+
 List elements:
 id an integer to use for this category when a case variable is made
 (default: none, one will automatically be assigned when the case variable
@@ -15,6 +20,9 @@ name a charcater identifier for this case
 expression \code{CrunchLogicalExpr} which sets the conditions for the case
 numeric_value a numeric which is the value this case should take on
 (useful when made into a case variable)
-missing a logical indicating if this case should be treated as missing
+missing a logical indicating if this case should be treated as missing}
+}
+\description{
+Validate case statements for case variables
 }
 \keyword{internal}

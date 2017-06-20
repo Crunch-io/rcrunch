@@ -8,7 +8,7 @@ with_mock_crunch({
         case_out <- list(id = NULL, name="Dudes", expression=ds$gender == "Male", numeric_value=NULL, missing=FALSE)
         expect_equal(ensureValidCase(case), case_out)
         expect_error(ensureValidCase("case"), "A case must be a list")
-        expect_error(ensureValidCase(list()),
+        expect_error(ensureValidCase(list(expression=CrunchLogicalExpr())),
                      "a case's name must be a character")
         expect_error(ensureValidCase(list(name="name")),
                      "a case's expression must be a CrunchLogicalExpr")
@@ -30,7 +30,7 @@ with_mock_crunch({
         expect_equal(ensureValidCase(else_case, is_else = TRUE), else_case_out)
         expect_error(ensureValidCase(list(name="Dudes", expression=ds$gender == "Male"),
                                      is_else=TRUE),
-                     "else_cases should not have any conditions expression")
+                     "an else_case should not have a conditions expression")
     })
 
     case_output <- list(
@@ -83,6 +83,28 @@ with_mock_crunch({
                              name="Super clever segmentation"),
             case_output)
     })
+    test_that("makeCaseVariable works with more than one CrunchLogicalExpr", {
+        case_output$derivation$args[[3]] <- list(`function`="and",
+                                                 "args"=list(
+            list(
+                `function`="<",
+                args=list(
+                    list(variable="https://app.crunch.io/api/datasets/1/variables/birthyr/"),
+                    list(value=1950)
+                )),
+            list(
+                `function`="==",
+                args=list(
+                    list(variable="https://app.crunch.io/api/datasets/1/variables/gender/"),
+                    list(value=2)
+                )
+            )))
+        expect_json_equivalent(
+            makeCaseVariable(`Dudes`=ds$gender == "Male",
+                             `Old women`=ds$birthyr < 1950 & ds$gender == "Female",
+                             name="Super clever segmentation"),
+            case_output)
+    })
     test_that("makeCaseVariable works with ids pre-specified", {
         expect_json_equivalent(
             makeCaseVariable(
@@ -122,7 +144,7 @@ with_mock_crunch({
             case_output)
     })
 
-    test_that("makeCaseVariable works with an else pre-specified", {
+    test_that("makeCaseVariable has a number of ways to specify else", {
         case_output$derivation$args[[1]]$column[[3]] <- 3L
         case_output$derivation$args[[1]]$type$value$categories[[3]] <- list(
             id=3L, name="Other", numeric_value=NULL, missing=FALSE)
@@ -134,6 +156,21 @@ with_mock_crunch({
                 ),
                 else_case = list(name="Other"),
                 name="Super clever segmentation"),
+            case_output)
+        expect_json_equivalent(
+            makeCaseVariable(
+                cases = list(
+                    list(expression=ds$gender == "Male", name="Dudes"),
+                    list(expression=ds$birthyr < 1950, name="Old women"),
+                    list(expression="else", name="Other")
+                ),
+                name="Super clever segmentation"),
+            case_output)
+        expect_json_equivalent(
+            makeCaseVariable(`Dudes`=ds$gender == "Male",
+                             `Old women`=ds$birthyr < 1950,
+                             `Other`="else",
+                             name="Super clever segmentation"),
             case_output)
     })
 
@@ -153,7 +190,23 @@ with_mock_crunch({
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes")),
             else_case = list(list(name="else1"),list(name="else2")), name=""),
-            "there cannot be more than one else case")
+            "could not find names for a case; this might be because the cases were embedded in too many lists.")
+        expect_error(makeCaseVariable(cases=list(list(
+            list(expression=ds$gender == "Male", name="Dudes"),
+            list(expression=ds$gender == "Female", name="Not Dudes"))),
+            else_case = list(name="else1"), name=""),
+            "could not find names for a case; this might be because the cases were embedded in too many lists.")
+        expect_error(makeCaseVariable(cases=list(
+            list(expression=ds$gender == "Male", name="Dudes"),
+            list(expression='else', name='other')),
+            else_case = list(name="else1"), name=""),
+            "you can only provide a single else case; you have one in the ")
+        expect_error(makeCaseVariable(cases=list(
+            list(expression=ds$gender == "Male", name="Dudes"),
+            list(expression='else', name='other'),
+            list(expression='else', name='other2')),
+            name=""),
+            "you can only provide a single else case; you have more than one in either")
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes")),
             else_case = list(name="name", id=99999999), name=""),

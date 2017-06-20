@@ -19,12 +19,20 @@ ensureValidCase <- function(case, is_else=FALSE) {
     if (!is.list(case)) {
         halt("A case must be a list")
     }
+
     wrong_case_names <- setdiff(names(case), c("id", "name", "expression",
                                                "numeric_value", "missing"))
     if (length(wrong_case_names) > 0) {
         halt("each case must have at most an id, name, expression, ",
              "numeric_value, and missing element. The errant arguments were: ",
              serialPaste(wrong_case_names))
+    } else if (is.null(wrong_case_names)) {
+        # if no names are found, some thing is wrong with the format of cases.
+        # one possibility is that someone is trying to embed the cases too 
+        # many times, or that else_cases has more than one case.
+        halt("could not find names for a case; this might be because the ",
+             "cases were embedded in too many lists. The first offending ",
+             "case is:\n", case)
     }
     
     # check if any of the elements of case have more than one element
@@ -50,7 +58,7 @@ ensureValidCase <- function(case, is_else=FALSE) {
     if (is_else) {
         # if this is an else case, expression must be NULL
         if (!is.null(case$expression)) {
-            halt("else_cases should not have any conditions expression")
+            halt("an else_case should not have a conditions expression")
         }
     } else if(class(case$expression) != "CrunchLogicalExpr") {
         # if this is not an else case, check that expression is an expression
@@ -122,6 +130,7 @@ ensureValidCases <- function(cases, else_case) {
     return(cases)
 }
 
+magic_else_string <- c("else")
 
 #' Make a case variable
 #'
@@ -141,6 +150,14 @@ ensureValidCases <- function(cases, else_case) {
 #' prespecify ids, or set numeric_values:
 #' `makeCaseVaraible(cases=list(list(expression=ds$v1 == 1, name="case1"), list(expression=ds$v2 == 2, name="case2")), name="new case")`
 #'
+#' If no cases match any data then an else case is used. There are two ways 
+#' to provide this final case: 
+#' 
+#' 1. A single case specification to the `else_case` argument. This case must 
+#' not have an `expression` in it
+#' 
+#' 1. As the last case in the `cases` argument its `expression` set to "else".
+#'
 #' @param ... a sequence of named expressions to use as cases as well as other
 #' properties to pass about the case variable (i.e. alias, description)
 #' @param cases a list of lists with each case condition to use each must
@@ -152,11 +169,20 @@ ensureValidCases <- function(cases, else_case) {
 #'
 #' @return A [`VariableDefinition`] that will create the new
 #' case variable.
-#'
+#' @examples
+#' \dontrun{
+#' makeCaseVaraible(case1=ds$v1 == 1, case2=ds$v2 == 2, name="new case")
+#' makeCaseVaraible(cases=list(list(expression=ds$v1 == 1, name="case1"), list(expression=ds$v2 == 2, name="case2")), name="new case")
+#' 
+#' # different ways to specify else cases
+#' makeCaseVaraible(cases=list(list(expression=ds$v1 == 1, name="case1"), list(expression=ds$v2 == 2, name="case2")), else_case=list(name="other"), name="new case")
+#' makeCaseVaraible(cases=list(list(expression=ds$v1 == 1, name="case1"), list(expression=ds$v2 == 2, name="case2"), list(expression="else", name="other)), name="new case")
+#' makeCaseVaraible(case1=ds$v1 == 1, case2=ds$v2 == 2, other="else", name="new case")
+#' }
 #' @export
 makeCaseVariable <- function (..., cases, else_case, name) {
     casevar <- list(..., name=name)
-    is_expr <- function (x) inherits(x, "CrunchLogicalExpr") || x == 'else'
+    is_expr <- function (x) inherits(x, "CrunchLogicalExpr") || x %in% magic_else_string
     exprs <- Filter(is_expr, casevar)
     if (!missing(cases) & length(exprs) > 0) {
         halt("can't have case conditions both in ... as well as in the cases ",
@@ -174,12 +200,28 @@ makeCaseVariable <- function (..., cases, else_case, name) {
                         SIMPLIFY = FALSE, USE.NAMES = FALSE)
     }
     
-    # find the magical expressoin='else' if it exists.
+    # find the magical expression='else' if it exists.
     is_else <- vapply(cases, function(case) {
-        is.character(case[['expression']]) && case[['expression']] == 'else'
+        is.character(case[['expression']]) &&
+            case[['expression']] %in% magic_else_string
         }, logical(1))
     if (any(is_else)) {
+        # fail if else_case is provided
+        if (!missing(else_case)) {
+            halt("you can only provide a single else case; you have one ", 
+                 "in the ", dQuote("else_case"), " argument as well as ", 
+                 "another in either ", dQuote("cases"), " or ", dQuote("..."))
+        }
+        
+        # fail if more than one else is detected
+        if (sum(is_else)>1) {
+            halt("you can only provide a single else case; you have more ",
+                 "than one in either ", dQuote("cases"), " or ", dQuote("..."))
+        }
+        
+        # split up the else and the other cases.
         else_case <- cases[[which(is_else)]]
+        else_case$expression <- NULL
         cases <- cases[!is_else]
     }
     
