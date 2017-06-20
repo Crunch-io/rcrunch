@@ -4,7 +4,7 @@
 \alias{makeCaseVariable}
 \title{Make a case variable}
 \usage{
-makeCaseVariable(..., cases, else_case, name)
+makeCaseVariable(..., cases, name)
 }
 \arguments{
 \item{...}{a sequence of named expressions to use as cases as well as other
@@ -12,10 +12,6 @@ properties to pass about the case variable (i.e. alias, description)}
 
 \item{cases}{a list of lists with each case condition to use each must
 include at least a \code{name} and an \code{expression} element.}
-
-\item{else_case}{a single list that has at least a \code{name} to serve as the
-case when no others match (if not specified Crunch will use the system
-default "No data")}
 
 \item{name}{a character to use as the name of the case variable to create}
 }
@@ -35,17 +31,29 @@ There are two ways to specify cases, but you must pick only one (note these
 two will produce the same case variable):
 \enumerate{
 \item When you just want to specify conditions, you can use named conditions:
-\code{makeCaseVaraible(case1=ds$v1 == 1, case2=ds$v2 == 2, name="new case")}
+\code{makeCaseVariable(case1=ds$v1 == 1, case2=ds$v2 == 2, name="new case")}
 \item You can also use the \code{cases} argument, which is useful when you want to
 prespecify ids, or set numeric_values:
-\code{makeCaseVaraible(cases=list(list(expression=ds$v1 == 1, name="case1"), list(expression=ds$v2 == 2, name="case2")), name="new case")}
+\code{makeCaseVariable(cases=list(list(expression=ds$v1 == 1, name="case1"), list(expression=ds$v2 == 2, name="case2")), name="new case")}
 }
 
-If no cases match any data then an else case is used. There are two ways
-to provide this final case:
-\enumerate{
-\item A single case specification to the \code{else_case} argument. This case must
-not have an \code{expression} in it
-\item As the last case in the \code{cases} argument its \code{expression} set to "else".
+If no cases match any data then an else case is used. To provide an else
+case include it as the last case in the \code{cases} argument its \code{expression}
+set to "else". If no else case is supplied Crunch will use the system
+default "No data".
+}
+\examples{
+\dontrun{
+makeCaseVariable(case1=ds$v1 == 1, case2=ds$v2 == 2, name="new case")
+makeCaseVariable(cases=list(list(expression=ds$v1 == 1, name="case1"),
+                            list(expression=ds$v2 == 2, name="case2")),
+                 name="new case")
+
+# different ways to specify else cases
+makeCaseVariable(cases=list(list(expression=ds$v1 == 1, name="case1"),
+                            list(expression=ds$v2 == 2, name="case2"),
+                            list(expression="else", name="other")),
+                 name="new case")
+makeCaseVariable(case1=ds$v1 == 1, case2=ds$v2 == 2, other="else", name="new case")
 }
 }

@@ -1,3 +1,138 @@
+#' Make a case variable
+#'
+#' The `makeCaseVariable` function derives a variable using values from other
+#' variables. These are evaluated in the order they are supplied in the list
+#' as the `cases` argument (they proceed in an IF, ELSE IF, ELSE IF, ..., ELSE
+#' fashion); the first one that matches selects the corresponding value from
+#' the case list.
+#'
+#' There are two ways to specify cases, but you must pick only one (note these
+#' two will produce the same case variable):
+#'
+#' 1. When you just want to specify conditions, you can use named conditions:
+#' `makeCaseVariable(case1=ds$v1 == 1, case2=ds$v2 == 2, name="new case")`
+#'
+#' 1. You can also use the `cases` argument, which is useful when you want to
+#' prespecify ids, or set numeric_values:
+#' `makeCaseVariable(cases=list(list(expression=ds$v1 == 1, name="case1"), list(expression=ds$v2 == 2, name="case2")), name="new case")`
+#'
+#' If no cases match any data then an else case is used. To provide an else 
+#' case include it as the last case in the `cases` argument its `expression` 
+#' set to "else". If no else case is supplied Crunch will use the system 
+#' default "No data".
+#'
+#' @param ... a sequence of named expressions to use as cases as well as other
+#' properties to pass about the case variable (i.e. alias, description)
+#' @param cases a list of lists with each case condition to use each must
+#' include at least a `name` and an `expression` element.
+#' @param name a character to use as the name of the case variable to create
+#'
+#' @return A [`VariableDefinition`] that will create the new
+#' case variable.
+#' @examples
+#' \dontrun{
+#' makeCaseVariable(case1=ds$v1 == 1, case2=ds$v2 == 2, name="new case")
+#' makeCaseVariable(cases=list(list(expression=ds$v1 == 1, name="case1"),
+#'                             list(expression=ds$v2 == 2, name="case2")),
+#'                  name="new case")
+#' 
+#' # different ways to specify else cases
+#' makeCaseVariable(cases=list(list(expression=ds$v1 == 1, name="case1"),
+#'                             list(expression=ds$v2 == 2, name="case2"),
+#'                             list(expression="else", name="other")),
+#'                  name="new case")
+#' makeCaseVariable(case1=ds$v1 == 1, case2=ds$v2 == 2, other="else", name="new case")
+#' }
+#' @export
+makeCaseVariable <- function (..., cases, name) {
+    casevar <- list(..., name=name)
+    is_expr <- function (x) inherits(x, "CrunchLogicalExpr") || x %in% magic_else_string
+    exprs <- Filter(is_expr, casevar)
+    if (length(exprs) > 0 & !missing(cases)) {
+        halt("can't have case conditions both in ", dQuote("..."),
+             " as well as in the ", dQuote("cases"), " argument, please use ",
+             "one or the other.")
+    }
+    if (length(exprs) == 0 & {missing(cases) || length(cases) == 0}) {
+        halt("must supply case conditions in either ", dQuote("..."), " or ", 
+             "the ", dQuote("cases"), " argument, please use one or the other.")
+    }
+    if (length(exprs) > 0 & missing(cases)) {
+        # save any member of casevar that isn't an expression for use later.
+        casevar <- Filter(Negate(is_expr), casevar)
+        cases <- mapply(function (expr, name) list(name=name, expression=expr),
+                        expr=exprs, name=names(exprs),
+                        SIMPLIFY = FALSE, USE.NAMES = FALSE)
+    }
+    
+    # find the magical expression='else' if it exists.
+    is_else <- vapply(cases, function(case) {
+        is.character(case[['expression']]) &&
+            case[['expression']] %in% magic_else_string
+    }, logical(1))
+    # check if there is more than one else case
+    if (sum(is_else)>1) {
+        halt("you can only provide a single else case; you have more ",
+             "than one in either ", dQuote("cases"), " or ", dQuote("..."))
+    }
+    # check that there are no else cases except for the last element of cases
+    if (any(is_else[seq_len(length(is_else)-1)])) {
+        halt("The else case must be the last element of ", dQuote("cases"), 
+             " or ", dQuote("..."))
+    }
+    
+    cases <- ensureValidCases(cases)
+    
+    # create the new categorical variable
+    new_cat_type <- list(
+        value=list(
+            class="categorical",
+            categories=lapply(cases, function (case) {
+                case[c("id", "name", "numeric_value", "missing")]
+            })))
+    new_cat_ids <- vapply(cases, vget("id"), integer(1))
+    new_cat <- list(column=I(new_cat_ids), type=new_cat_type)
+    
+    casevar$derivation <- zfunc("case", new_cat)
+    
+    # add case_expressions, remove nulls (should only be from the else case)
+    case_exprs <- lapply(cases, function(x) zcl(x$expression))
+    case_exprs <- Filter(Negate(is.null), case_exprs)
+    casevar$derivation$args <- c(casevar$derivation$args, case_exprs)
+    
+    class(casevar) <- "VariableDefinition"
+    return(casevar)
+}
+
+magic_else_string <- c("else")
+
+ensureValidCases <- function(cases) {
+    cases <- lapply(cases, function(case) {
+        if (is.character(case$expression) && case$expression %in% magic_else_string) {
+            is_else <- TRUE
+            case$expression <- NULL
+        } else {
+            is_else <- FALSE
+        } 
+        ensureValidCase(case, is_else=is_else)
+    })
+    
+    cases <- fillIds(cases)
+    
+    all_names <- vapply(cases, vget("name"), character(1))
+    if (anyDuplicated(all_names) > 0) {
+        halt("there are duplicate names provided: ", serialPaste(all_names))
+    }
+    
+    all_exprs <- lapply(cases, vget("expression"))
+    if (anyDuplicated(all_exprs) > 0) {
+        halt("there are duplicate condition expressions provided: ",
+             serialPaste(vapply(all_exprs, formatExpression, character(1))))
+    }
+    
+    return(cases)
+}
+
 #' Validate case statements for case variables
 #'
 #' @param case a list for one case to test
@@ -104,146 +239,4 @@ fillIds <- function(cases) {
     }
     
     return(cases)
-}
-
-ensureValidCases <- function(cases, else_case) {
-    cases <- lapply(cases, ensureValidCase)
-
-    if (!missing(else_case)) {
-        else_case <- ensureValidCase(else_case, is_else=TRUE)
-        cases <- c(cases, list(else_case))
-    }
-    
-    cases <- fillIds(cases)
-
-    all_names <- vapply(cases, vget("name"), character(1))
-    if (anyDuplicated(all_names) > 0) {
-        halt("there are duplicate names provided: ", serialPaste(all_names))
-    }
-    
-    all_exprs <- lapply(cases, vget("expression"))
-    if (anyDuplicated(all_exprs) > 0) {
-        halt("there are duplicate condition expressions provided: ",
-             serialPaste(vapply(all_exprs, formatExpression, character(1))))
-    }
-    
-    return(cases)
-}
-
-magic_else_string <- c("else")
-
-#' Make a case variable
-#'
-#' The `makeCaseVariable` function derives a variable using values from other
-#' variables. These are evaluated in the order they are supplied in the list
-#' as the `cases` argument (they proceed in an IF, ELSE IF, ELSE IF, ..., ELSE
-#' fashion); the first one that matches selects the corresponding value from
-#' the case list.
-#'
-#' There are two ways to specify cases, but you must pick only one (note these
-#' two will produce the same case variable):
-#'
-#' 1. When you just want to specify conditions, you can use named conditions:
-#' `makeCaseVaraible(case1=ds$v1 == 1, case2=ds$v2 == 2, name="new case")`
-#'
-#' 1. You can also use the `cases` argument, which is useful when you want to
-#' prespecify ids, or set numeric_values:
-#' `makeCaseVaraible(cases=list(list(expression=ds$v1 == 1, name="case1"), list(expression=ds$v2 == 2, name="case2")), name="new case")`
-#'
-#' If no cases match any data then an else case is used. There are two ways 
-#' to provide this final case: 
-#' 
-#' 1. A single case specification to the `else_case` argument. This case must 
-#' not have an `expression` in it
-#' 
-#' 1. As the last case in the `cases` argument its `expression` set to "else".
-#'
-#' @param ... a sequence of named expressions to use as cases as well as other
-#' properties to pass about the case variable (i.e. alias, description)
-#' @param cases a list of lists with each case condition to use each must
-#' include at least a `name` and an `expression` element.
-#' @param else_case a single list that has at least a `name` to serve as the
-#' case when no others match (if not specified Crunch will use the system
-#' default "No data")
-#' @param name a character to use as the name of the case variable to create
-#'
-#' @return A [`VariableDefinition`] that will create the new
-#' case variable.
-#' @examples
-#' \dontrun{
-#' makeCaseVaraible(case1=ds$v1 == 1, case2=ds$v2 == 2, name="new case")
-#' makeCaseVaraible(cases=list(list(expression=ds$v1 == 1, name="case1"), list(expression=ds$v2 == 2, name="case2")), name="new case")
-#' 
-#' # different ways to specify else cases
-#' makeCaseVaraible(cases=list(list(expression=ds$v1 == 1, name="case1"), list(expression=ds$v2 == 2, name="case2")), else_case=list(name="other"), name="new case")
-#' makeCaseVaraible(cases=list(list(expression=ds$v1 == 1, name="case1"), list(expression=ds$v2 == 2, name="case2"), list(expression="else", name="other)), name="new case")
-#' makeCaseVaraible(case1=ds$v1 == 1, case2=ds$v2 == 2, other="else", name="new case")
-#' }
-#' @export
-makeCaseVariable <- function (..., cases, else_case, name) {
-    casevar <- list(..., name=name)
-    is_expr <- function (x) inherits(x, "CrunchLogicalExpr") || x %in% magic_else_string
-    exprs <- Filter(is_expr, casevar)
-    if (!missing(cases) & length(exprs) > 0) {
-        halt("can't have case conditions both in ... as well as in the cases ",
-             "argument, please use one or the other.")
-    }
-    if (missing(cases) & length(exprs) == 0) {
-        halt("must supply case conditions in either ... or the cases ",
-             "argument, please use one or the other.")
-    }
-    if (missing(cases) & length(exprs) > 0) {
-        # save any member of casevar that isn't an expression for use later.
-        casevar <- Filter(Negate(is_expr), casevar)
-        cases <- mapply(function (expr, name) list(name=name, expression=expr),
-                        expr=exprs, name=names(exprs),
-                        SIMPLIFY = FALSE, USE.NAMES = FALSE)
-    }
-    
-    # find the magical expression='else' if it exists.
-    is_else <- vapply(cases, function(case) {
-        is.character(case[['expression']]) &&
-            case[['expression']] %in% magic_else_string
-        }, logical(1))
-    if (any(is_else)) {
-        # fail if else_case is provided
-        if (!missing(else_case)) {
-            halt("you can only provide a single else case; you have one ", 
-                 "in the ", dQuote("else_case"), " argument as well as ", 
-                 "another in either ", dQuote("cases"), " or ", dQuote("..."))
-        }
-        
-        # fail if more than one else is detected
-        if (sum(is_else)>1) {
-            halt("you can only provide a single else case; you have more ",
-                 "than one in either ", dQuote("cases"), " or ", dQuote("..."))
-        }
-        
-        # split up the else and the other cases.
-        else_case <- cases[[which(is_else)]]
-        else_case$expression <- NULL
-        cases <- cases[!is_else]
-    }
-    
-    cases <- ensureValidCases(cases, else_case)
-
-    # create the new categorical variable
-    new_cat_type <- list(
-        value=list(
-            class="categorical",
-            categories=lapply(cases, function (case) {
-                case[c("id", "name", "numeric_value", "missing")]
-            })))
-    new_cat_ids <- vapply(cases, vget("id"), integer(1))
-    new_cat <- list(column=I(new_cat_ids), type=new_cat_type)
-
-    casevar$derivation <- zfunc("case", new_cat)
-
-    # add case_expressions, remove nulls (should only be from the else case)
-    case_exprs <- lapply(cases, function(x) zcl(x$expression))
-    case_exprs <- Filter(Negate(is.null), case_exprs)
-    casevar$derivation$args <- c(casevar$derivation$args, case_exprs)
-
-    class(casevar) <- "VariableDefinition"
-    return(casevar)
 }
