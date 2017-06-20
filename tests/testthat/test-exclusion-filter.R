@@ -180,7 +180,7 @@ with_test_authentication({
         ## Notice there is one value that is missing for both (Skipped on
         ## one, Not Asked on the other).
         test_that("is.na on array is TRUE where all subvars are missing", {
-            expect_equivalent(as.array(crtabs(~ is.na(petloc), data=ds)), 1)
+            expect_equivalent(as.array(crtabs(~ is.na(petloc), data=ds))["TRUE"], 1)
         })
         ## Update "keep" with that expression
         ds$keep[is.na(ds$petloc)] <- "False"
