@@ -4,17 +4,29 @@
 \alias{interactVariables}
 \title{Make a variable that is the interaction of two or more other variables}
 \usage{
-interactVariables(..., name)
+interactVariables(..., name, sep = ":")
 }
 \arguments{
-\item{...}{A sequence of categorical variables to make an interaction of}
+\item{...}{a sequence of categorical variables to make an interaction from}
 
 \item{name}{a character to use as the name for the interaction variable}
+
+\item{sep}{a character to separate the values of the individual variables
+(default: \code{:})}
 }
 \value{
-A \code{\link{VariableDefinition}} that will create the new
-interaction variable.
+A \code{\link{VariableDefinition}} that creates the new interaction variable.
 }
 \description{
-Make a variable that is the interaction of two or more other variables
+\code{interactVariables} takes two or more variables and creates a new one that
+is the cartesian product expansion of their unique values. For example, if
+we cross ethnicity (with 2 categories) and race (with 4 categories), the new
+variable would have 8 valid categories (e.g. black:hispanic, white:hispanic,
+black:non-hispanic, etc.) and 7 categories where at least one of the
+variables is missing (e.g. white:No Data).
+}
+\examples{
+\dontrun{
+ds$ethn_race <- interactVariables(ds$ethnicity, ds$race, name="Interaction of ethnicity and race")
+}
 }

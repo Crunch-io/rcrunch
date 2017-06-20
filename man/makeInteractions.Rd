@@ -4,14 +4,12 @@
 \alias{makeInteractions}
 \title{Make case statments that define the interaction of two or more other variables}
 \usage{
-makeInteractions(..., drop = FALSE, sep = ":")
+makeInteractions(..., sep)
 }
 \arguments{
 \item{...}{A sequence of categorical variables to make an interaction of}
 
-\item{drop}{should unused levels be dropped? (currently not implemented, so \code{FALSE})}
-
-\item{sep}{a character to separate the values of the individual variables (default: \code{:})}
+\item{sep}{a character to separate the values of the individual variables}
 }
 \value{
 A list of cases that can be passed to \code{\link{makeCaseVariable}} to make
@@ -20,3 +18,4 @@ the interaction variable.
 \description{
 Make case statments that define the interaction of two or more other variables
 }
+\keyword{internal}

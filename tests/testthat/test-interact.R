@@ -3,21 +3,24 @@ context("Interact")
 with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("makeInteractions", {
-        test_cases <- makeInteractions(ds$gender, ds$gender)
+        test_cases <- makeInteractions(ds$gender, ds$mymrset[[1]], sep=":")
         expect_equal(length(test_cases),
-                     length(categories(ds$gender)) * length(categories(ds$gender)))
+                     length(categories(ds$gender)) * length(categories(ds$mymrset[[1]])))
         expect_json_equivalent(test_cases[[1]],
-            list(expression = ds$gender == "Male" & ds$gender == "Male",
-                 name = "Male:Male",
+            list(expression = ds$gender == "Male" & ds$mymrset[[1]] == "0.0",
+                 name = "Male:0.0",
                  missing = FALSE))
         expect_json_equivalent(test_cases[[3]],
-            list(expression = ds$gender == "No Data" & ds$gender == "Male",
-                 name = "No Data:Male",
+            list(expression = ds$gender == "No Data" & ds$mymrset[[1]] == "0.0",
+                 name = "No Data:0.0",
                  missing = TRUE))
-        expect_error(makeInteractions(ds$gender, ds$textVar),
+        test_cases <- makeInteractions(ds$gender, ds$mymrset[[1]], sep=".")
+        expect_json_equivalent(test_cases[[1]],
+                               list(expression = ds$gender == "Male" & ds$mymrset[[1]] == "0.0",
+                                    name = "Male.0.0",
+                                    missing = FALSE))
+        expect_error(makeInteractions(ds$gender, ds$textVar, sep=":"),
                      "makeInteractions can only take categorical variables")
-        expect_error(makeInteractions(ds$gender, ds$gender, drop = TRUE),
-                     dQuote("drop"), "has not been implemented yet")
     })
 
     test_that("interactVariables", {
@@ -39,7 +42,7 @@ with_mock_crunch({
 with_test_authentication({
     ds <- newDatasetFromFixture("apidocs")
     test_that("makeInteractions", {
-        test_cases <- makeInteractions(ds$q1, ds$country)
+        test_cases <- makeInteractions(ds$q1, ds$country, sep=":")
         expect_equal(length(test_cases),
                      length(categories(ds$q1)) * length(categories(ds$country)))
         expect_json_equivalent(test_cases[[1]],
