@@ -2,7 +2,7 @@
 % Please edit documentation in R/interact.R
 \name{interactVariables}
 \alias{interactVariables}
-\title{Make a varaible that is the interaction of two or more other variables}
+\title{Make a variable that is the interaction of two or more other variables}
 \usage{
 interactVariables(..., name)
 }
@@ -16,5 +16,5 @@ A \code{\link{VariableDefinition}} that will create the new
 interaction variable.
 }
 \description{
-Make a varaible that is the interaction of two or more other variables
+Make a variable that is the interaction of two or more other variables
 }

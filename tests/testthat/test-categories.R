@@ -359,7 +359,7 @@ with_test_authentication({
 
         test_that("Can changeCategoryID for array variables", {
             ds_apidocs <- newDatasetFromFixture("apidocs")
-            # categorical array varaibles
+            # categorical array variables
             expect_identical(names(categories(ds_apidocs$petloc)),
                              c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
             expect_equal(ids(categories(ds_apidocs$petloc)),
@@ -380,7 +380,7 @@ with_test_authentication({
             expect_equal(as.vector(ds_apidocs$petloc[1:4], mode="id"),
                          data.frame(petloc_home=c(8, 6, 9, 9),
                                     petloc_work=c(9, 3, 3, 6)))
-            # multiple response varaibles
+            # multiple response variables
             orig_vector <- as.vector(ds_apidocs$allpets[[1]])
             expect_equal(ids(categories(ds_apidocs$allpets)), c(2, 1, 9, 8))
             expect_equal(names(categories(ds_apidocs$allpets)),
