@@ -8,6 +8,8 @@
 #' variables is missing (e.g. white:No Data).
 #'
 #' @param ... a sequence of categorical variables to make an interaction from
+#' as well as other properties to pass about the case variable (i.e. alias,
+#'  description)
 #' @param name a character to use as the name for the interaction variable
 #' @param sep a character to separate the values of the individual variables
 #'  (default: `:`)

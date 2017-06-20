@@ -7,7 +7,9 @@
 interactVariables(..., name, sep = ":")
 }
 \arguments{
-\item{...}{a sequence of categorical variables to make an interaction from}
+\item{...}{a sequence of categorical variables to make an interaction from
+as well as other properties to pass about the case variable (i.e. alias,
+description)}
 
 \item{name}{a character to use as the name for the interaction variable}
 
