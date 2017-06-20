@@ -18,7 +18,7 @@ with_mock_crunch({
         expect_error(ensureValidCase(list(name=c("name", "name2"),
                                           expression=CrunchLogicalExpr())),
                      "There is more than one attribute for name")
-        expect_error(ensureValidCase(list(name="name", 
+        expect_error(ensureValidCase(list(name="name",
                                           expression=c(CrunchLogicalExpr(),
                                                        CrunchLogicalExpr()))),
                      "There is more than one attribute for expression")
@@ -35,18 +35,14 @@ with_mock_crunch({
                                           missing="nope")),
                      "a case's missing must be a logical")
         expect_error(ensureValidCase(list(not_right="not")),
-                     "each case must have at most an id, name, expression, ", 
-                     "numeric_value, and missing element. The errant ", 
+                     "each case must have at most an id, name, expression, ",
+                     "numeric_value, and missing element. The errant ",
                      "arguments were: not_right")
-        
-        else_case <- list(name="Dudes")
+
+        else_case <- list(name="Dudes", expression="else")
         else_case_out <- list(id = NULL, name="Dudes",
                               numeric_value=NULL, missing=FALSE)
-        expect_equal(ensureValidCase(else_case, is_else = TRUE), else_case_out)
-        expect_error(ensureValidCase(list(name="Dudes",
-                                          expression=ds$gender == "Male"),
-                                     is_else=TRUE),
-                     "an else_case should not have a conditions expression")
+        expect_equal(ensureValidCase(else_case), else_case_out)
     })
 
     case_output <- list(
@@ -212,14 +208,14 @@ with_mock_crunch({
             list(expression=ds$gender == "Male", name="Dudes"),
             list(expression=ds$gender == "Female", name="Not Dudes"),
             list(expression="else", name="else1"))), name=""),
-            "could not find names for a case; this might be because the cases", 
+            "could not find names for a case; this might be because the cases",
             " were embedded in too many lists.")
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes"),
             list(expression='else', name='other'),
             list(expression='else', name='other2')),
             name=""),
-            "you can only provide a single else case; you have more than one ", 
+            "you can only provide a single else case; you have more than one ",
             "in either")
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes"),
@@ -230,10 +226,10 @@ with_mock_crunch({
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes"),
             list(expression="else", name="name", id=99999999)), name=""),
-            "id must be less than 32,768, this might be a result of too many ", 
+            "id must be less than 32,768, this might be a result of too many ",
             "cases being used.")
         expect_error(makeCaseVariable(cases=list(
-            list(expression=ds$gender == "Male", name="Dudes"), 
+            list(expression=ds$gender == "Male", name="Dudes"),
             list(expression="else", name="name", id=-10)), name=""),
             "id must not be less than 1")
         expect_error(
@@ -259,7 +255,7 @@ with_mock_crunch({
                     list(expression=ds$gender == "Male", name="Dudes again")
                 ),
                 name="Super clever segmentation"),
-            'there are duplicate condition expressions provided: ', 
+            'there are duplicate condition expressions provided: ',
             'gender == "Male" and gender == "Male"')
         expect_error(
             makeCaseVariable(
@@ -293,7 +289,7 @@ with_test_authentication({
             list(expression="else", id=99L, name="Other", missing=FALSE)),
             name="Cats or Dogs2")
         expect_equal(as.vector(ds$catdog2)[1:10],
-                     factor(c("Other", "Cats", "Other", "Dogs", "Dogs", 
+                     factor(c("Other", "Cats", "Other", "Dogs", "Dogs",
                               "Other", "Other", "Other", "Cats", "Dogs"),
                             levels=(c("Cats", "Dogs", "Other"))))
         expect_equal(ids(categories(ds$catdog2)), c(1,2,99))

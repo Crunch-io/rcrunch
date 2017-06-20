@@ -11,13 +11,14 @@ makeCaseVariable(..., cases, name)
 properties to pass about the case variable (i.e. alias, description)}
 
 \item{cases}{a list of lists with each case condition to use each must
-include at least a \code{name} and an \code{expression} element.}
+include at least a \code{name} and an \code{expression} element. Cases may also include
+\code{missing} (logical) and \code{numeric_value} (numeric).}
 
 \item{name}{a character to use as the name of the case variable to create}
 }
 \value{
 A \code{\link{VariableDefinition}} that will create the new
-case variable.
+case variable when assigned into the Dataset.
 }
 \description{
 The \code{makeCaseVariable} function derives a variable using values from other
@@ -33,14 +34,16 @@ two will produce the same case variable):
 \item When you just want to specify conditions, you can use named conditions:
 \code{makeCaseVariable(case1=ds$v1 == 1, case2=ds$v2 == 2, name="new case")}
 \item You can also use the \code{cases} argument, which is useful when you want to
-prespecify ids, or set numeric_values:
+provide category ids, numeric values, or missingness:
 \code{makeCaseVariable(cases=list(list(expression=ds$v1 == 1, name="case1"), list(expression=ds$v2 == 2, name="case2")), name="new case")}
 }
 
-If no cases match any data then an else case is used. To provide an else
-case include it as the last case in the \code{cases} argument its \code{expression}
-set to "else". If no else case is supplied Crunch will use the system
-default "No data".
+Rows in the dataset that do not match any of the provided "cases" will
+be assigned to an "else" category. By default, Crunch will use the system
+missing "No Data" category. Alternatively, you can provide an else
+case definition for these rows by including as the last "case" you provide
+one with its \code{expression} set to the string "else". See the examples for
+details.
 }
 \examples{
 \dontrun{

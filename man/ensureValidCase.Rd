@@ -4,23 +4,22 @@
 \alias{ensureValidCase}
 \title{Validate case statements for case variables}
 \usage{
-ensureValidCase(case, is_else = FALSE)
+ensureValidCase(case)
 }
 \arguments{
-\item{case}{a list for one case to test}
-
-\item{is_else}{is this case the final (else) case? If so, the expression
-must be missing.
+\item{case}{a list for one case to test
 
 List elements:
-id an integer to use for this category when a case variable is made
+\enumerate{
+\item \code{id}: an integer to use for this category when a case variable is made
 (default: none, one will automatically be assigned when the case variable
 is made)
-name a charcater identifier for this case
-expression \code{CrunchLogicalExpr} which sets the conditions for the case
-numeric_value a numeric which is the value this case should take on
-(useful when made into a case variable)
-missing a logical indicating if this case should be treated as missing}
+\item \code{name}: a charcater identifier for this case
+\item \code{expression}: a \code{CrunchLogicalExpr} that sets the conditions for the case, or "else"
+\item \code{numeric_value}: a numeric that is the value this case should take on
+when analyzing the data numerically (mean, standard deviation, etc.)
+\item \code{missing} a logical indicating if this case should be treated as missing
+}}
 }
 \description{
 Validate case statements for case variables

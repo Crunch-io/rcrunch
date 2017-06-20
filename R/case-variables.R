@@ -13,29 +13,32 @@
 #' `makeCaseVariable(case1=ds$v1 == 1, case2=ds$v2 == 2, name="new case")`
 #'
 #' 1. You can also use the `cases` argument, which is useful when you want to
-#' prespecify ids, or set numeric_values:
+#' provide category ids, numeric values, or missingness:
 #' `makeCaseVariable(cases=list(list(expression=ds$v1 == 1, name="case1"), list(expression=ds$v2 == 2, name="case2")), name="new case")`
 #'
-#' If no cases match any data then an else case is used. To provide an else 
-#' case include it as the last case in the `cases` argument its `expression` 
-#' set to "else". If no else case is supplied Crunch will use the system 
-#' default "No data".
+#' Rows in the dataset that do not match any of the provided "cases" will
+#' be assigned to an "else" category. By default, Crunch will use the system
+#' missing "No Data" category. Alternatively, you can provide an else
+#' case definition for these rows by including as the last "case" you provide
+#' one with its `expression` set to the string "else". See the examples for
+#' details.
 #'
 #' @param ... a sequence of named expressions to use as cases as well as other
 #' properties to pass about the case variable (i.e. alias, description)
 #' @param cases a list of lists with each case condition to use each must
-#' include at least a `name` and an `expression` element.
+#' include at least a `name` and an `expression` element. Cases may also include
+#' `missing` (logical) and `numeric_value` (numeric).
 #' @param name a character to use as the name of the case variable to create
 #'
 #' @return A [`VariableDefinition`] that will create the new
-#' case variable.
+#' case variable when assigned into the Dataset.
 #' @examples
 #' \dontrun{
 #' makeCaseVariable(case1=ds$v1 == 1, case2=ds$v2 == 2, name="new case")
 #' makeCaseVariable(cases=list(list(expression=ds$v1 == 1, name="case1"),
 #'                             list(expression=ds$v2 == 2, name="case2")),
 #'                  name="new case")
-#' 
+#'
 #' # different ways to specify else cases
 #' makeCaseVariable(cases=list(list(expression=ds$v1 == 1, name="case1"),
 #'                             list(expression=ds$v2 == 2, name="case2"),
@@ -45,44 +48,31 @@
 #' }
 #' @export
 makeCaseVariable <- function (..., cases, name) {
+    ## Gather the new variable's metadata fields (and possibly expressions)
     casevar <- list(..., name=name)
-    is_expr <- function (x) inherits(x, "CrunchLogicalExpr") || x %in% magic_else_string
-    exprs <- Filter(is_expr, casevar)
-    if (length(exprs) > 0 & !missing(cases)) {
-        halt("can't have case conditions both in ", dQuote("..."),
-             " as well as in the ", dQuote("cases"), " argument, please use ",
-             "one or the other.")
+    is_expr <- function (x) {
+        inherits(x, "CrunchLogicalExpr") || x %in% magic_else_string
     }
-    if (length(exprs) == 0 & {missing(cases) || length(cases) == 0}) {
-        halt("must supply case conditions in either ", dQuote("..."), " or ", 
+    exprs <- Filter(is_expr, casevar)
+    if (length(exprs) > 0) {
+        if (missing(cases)) {
+            ## Remove the expressions from the variable definition
+            casevar <- Filter(Negate(is_expr), casevar)
+            cases <- mapply(function (e, n) list(name=n, expression=e),
+                            e=exprs, n=names(exprs),
+                            SIMPLIFY = FALSE, USE.NAMES = FALSE)
+        } else {
+            halt("can't have case conditions both in ", dQuote("..."),
+                 " as well as in the ", dQuote("cases"), " argument, please use ",
+                 "one or the other.")
+         }
+    } else if (missing(cases) || length(cases) == 0) {
+        halt("must supply case conditions in either ", dQuote("..."), " or ",
              "the ", dQuote("cases"), " argument, please use one or the other.")
     }
-    if (length(exprs) > 0 & missing(cases)) {
-        # save any member of casevar that isn't an expression for use later.
-        casevar <- Filter(Negate(is_expr), casevar)
-        cases <- mapply(function (expr, name) list(name=name, expression=expr),
-                        expr=exprs, name=names(exprs),
-                        SIMPLIFY = FALSE, USE.NAMES = FALSE)
-    }
-    
-    # find the magical expression='else' if it exists.
-    is_else <- vapply(cases, function(case) {
-        is.character(case[['expression']]) &&
-            case[['expression']] %in% magic_else_string
-    }, logical(1))
-    # check if there is more than one else case
-    if (sum(is_else)>1) {
-        halt("you can only provide a single else case; you have more ",
-             "than one in either ", dQuote("cases"), " or ", dQuote("..."))
-    }
-    # check that there are no else cases except for the last element of cases
-    if (any(is_else[seq_len(length(is_else)-1)])) {
-        halt("The else case must be the last element of ", dQuote("cases"), 
-             " or ", dQuote("..."))
-    }
-    
+
     cases <- ensureValidCases(cases)
-    
+
     # create the new categorical variable
     new_cat_type <- list(
         value=list(
@@ -92,84 +82,93 @@ makeCaseVariable <- function (..., cases, name) {
             })))
     new_cat_ids <- vapply(cases, vget("id"), integer(1))
     new_cat <- list(column=I(new_cat_ids), type=new_cat_type)
-    
+
     casevar$derivation <- zfunc("case", new_cat)
-    
+
     # add case_expressions, remove nulls (should only be from the else case)
     case_exprs <- lapply(cases, function(x) zcl(x$expression))
     case_exprs <- Filter(Negate(is.null), case_exprs)
     casevar$derivation$args <- c(casevar$derivation$args, case_exprs)
-    
+
     class(casevar) <- "VariableDefinition"
     return(casevar)
 }
 
-magic_else_string <- c("else")
+magic_else_string <- "else"
 
-ensureValidCases <- function(cases) {
-    cases <- lapply(cases, function(case) {
-        if (is.character(case$expression) && case$expression %in% magic_else_string) {
-            is_else <- TRUE
-            case$expression <- NULL
-        } else {
-            is_else <- FALSE
-        } 
-        ensureValidCase(case, is_else=is_else)
-    })
-    
+is_else_case <- function (case) {
+    identical(case[['expression']], magic_else_string)
+}
+
+ensureValidCases <- function (cases) {
+    # find the magical expression='else' if it exists.
+    is_else <- vapply(cases, is_else_case, logical(1))
+    # check if there is more than one else case
+    if (sum(is_else) > 1) {
+        halt("you can only provide a single else case; you have more ",
+             "than one in either ", dQuote("cases"), " or ", dQuote("..."))
+    }
+    # check that there are no else cases except for the last element of cases
+    if (any(is_else[-length(is_else)])) {
+        halt("The else case must be the last element of ", dQuote("cases"),
+             " or ", dQuote("..."))
+    }
+    cases <- lapply(cases, ensureValidCase)
+
     cases <- fillIds(cases)
-    
+
     all_names <- vapply(cases, vget("name"), character(1))
     if (anyDuplicated(all_names) > 0) {
         halt("there are duplicate names provided: ", serialPaste(all_names))
     }
-    
+
     all_exprs <- lapply(cases, vget("expression"))
     if (anyDuplicated(all_exprs) > 0) {
         halt("there are duplicate condition expressions provided: ",
              serialPaste(vapply(all_exprs, formatExpression, character(1))))
     }
-    
+
     return(cases)
 }
 
 #' Validate case statements for case variables
 #'
 #' @param case a list for one case to test
-#' @param is_else is this case the final (else) case? If so, the expression 
-#' must be missing.
 #'
 #' List elements:
-#' id an integer to use for this category when a case variable is made
+#' 1. `id`: an integer to use for this category when a case variable is made
 #' (default: none, one will automatically be assigned when the case variable
 #' is made)
-#' name a charcater identifier for this case
-#' expression `CrunchLogicalExpr` which sets the conditions for the case
-#' numeric_value a numeric which is the value this case should take on
-#' (useful when made into a case variable)
-#' missing a logical indicating if this case should be treated as missing
+#' 1. `name`: a charcater identifier for this case
+#' 1. `expression`: a `CrunchLogicalExpr` that sets the conditions for the case, or "else"
+#' 1. `numeric_value`: a numeric that is the value this case should take on
+#' when analyzing the data numerically (mean, standard deviation, etc.)
+#' 1. `missing` a logical indicating if this case should be treated as missing
 #'
 #' @keywords internal
-ensureValidCase <- function(case, is_else=FALSE) {
+ensureValidCase <- function (case) {
     if (!is.list(case)) {
         halt("A case must be a list")
     }
 
-    wrong_case_names <- setdiff(names(case), c("id", "name", "expression",
-                                               "numeric_value", "missing"))
+    defaults <- list(id=NULL, name=NULL, expression=NULL,
+                     numeric_value=NULL, missing=FALSE)
+    wrong_case_names <- setdiff(names(case), names(defaults))
     if (length(wrong_case_names) > 0) {
         halt("each case must have at most an id, name, expression, ",
              "numeric_value, and missing element. The errant arguments were: ",
              serialPaste(wrong_case_names))
     } else if (is.null(wrong_case_names)) {
         # if no names are found, some thing is wrong with the format of cases.
-        # one possibility is that someone is trying to embed the cases too 
+        # one possibility is that someone is trying to embed the cases too
         # many times, or that else_cases has more than one case.
         halt("could not find names for a case; this might be because the ",
              "cases were embedded in too many lists. The first offending ",
              "case is:\n", case)
     }
-    
+    # set defaults
+    case <- modifyList(defaults, case)
+
     # check if any of the elements of case have more than one element
     multi_elems <- vapply(case, length, integer(1)) > 1
     if (any(multi_elems)) {
@@ -177,25 +176,17 @@ ensureValidCase <- function(case, is_else=FALSE) {
              "There is more than one attribute for ",
              serialPaste(names(case[multi_elems])))
     }
-    
-    # set defaults
-    defaults <- list(id=NULL, name=NULL, expression=NULL,
-                     numeric_value=NULL, missing=FALSE)
-    case <- modifyList(defaults, case)
-    
+
     if (!is.null(case$id) & !is.whole(case$id)) {
         halt("a case's id must be an integer")
     }
     if (!is.character(case$name)) {
         halt("a case's name must be a character")
     }
-    
-    if (is_else) {
-        # if this is an else case, expression must be NULL
-        if (!is.null(case$expression)) {
-            halt("an else_case should not have a conditions expression")
-        }
-    } else if(class(case$expression) != "CrunchLogicalExpr") {
+
+    if (is_else_case(case)) {
+        case$expression <- NULL
+    } else if (!inherits(case$expression, "CrunchLogicalExpr")) {
         # if this is not an else case, check that expression is an expression
         halt("a case's expression must be a CrunchLogicalExpr")
     }
@@ -206,9 +197,6 @@ ensureValidCase <- function(case, is_else=FALSE) {
         halt("a case's missing must be a logical")
     }
 
-    # remove the expression if this is an else case
-    if (is_else) case$expression <- NULL
-    
     return(case)
 }
 
@@ -216,7 +204,7 @@ ensureValidCase <- function(case, is_else=FALSE) {
 is.whole <- function (x) is.numeric(x) && floor(x) == x
 
 # make ids if the cases don't have ids
-fillIds <- function(cases) {
+fillIds <- function (cases) {
     need_ids <- vapply(cases, function (x) is.null(x$id), logical(1))
     supplied_ids <- vapply(cases[!need_ids], vget("id"), numeric(1))
     new_ids <- seq_along(cases) # generate too many ids
@@ -225,7 +213,7 @@ fillIds <- function(cases) {
         cases[need_ids][[i]]$id <- new_ids[i]
         return(cases[need_ids][[i]])
     })
-    
+
     # check there are no duplicate ids and they are less than 2^15-1
     all_ids <- vapply(cases, vget("id"), numeric(1))
     if (anyDuplicated(all_ids) > 0) {
@@ -237,6 +225,6 @@ fillIds <- function(cases) {
     if (any(all_ids < 1L)) {
         halt("id must not be less than 1")
     }
-    
+
     return(cases)
 }
