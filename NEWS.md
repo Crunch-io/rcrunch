@@ -1,5 +1,7 @@
 ### crunch 1.17.3 (under development)
 * Fixed a bug where curl might not work on windows. (Removed `method="curl"` when using `download.file()`)
+* Added support for case variables (#36): `makeCaseVariable()` takes a sequence of case statemnts to derive a new variable based on the values from other variables. 
+* Added a function to create interactions of variables (#42): `interactVariables()` takes two or more categorical variables and derives a new variable with the combination of each.
 
 ### crunch 1.17.2
 * Support for streaming data: check for received data with `pendingStream()`; append that pending stream data to the dataset with `appendStream()` (#40)
