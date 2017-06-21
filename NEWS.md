@@ -1,3 +1,5 @@
+### crunch 1.17.5 (under development)
+
 ### crunch 1.17.4
 * Added support for case variables (#36): `makeCaseVariable()` takes a sequence of case statements to derive a new variable based on the values from other variables.
 * Added a function to create interactions of variables (#42): `interactVariables()` takes two or more categorical variables and derives a new variable with the combination of each.
