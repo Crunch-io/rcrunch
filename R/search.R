@@ -1,3 +1,8 @@
+#' Search Crunch for datasets.
+#'
+#' @param query the text to search for in datasets and their variables
+#' @param ... additional options provided to the search endpoint.
+#' @return If successful, an object of class SearchResults
 #' @export
 searchDatasets <- function (query, ...) {
     search_url <- sessionURL("search", "views")
