@@ -1,6 +1,7 @@
+#' @export
 searchDatasets <- function (query, ...) {
-    search_url <- shojiURL(datasets(), "views", "search")
-    results <- SearchResults(crGET(search_url, query=list(q=query, ...)))
+    search_url <- sessionURL("search", "views")
+    results <- SearchResults(crGET(search_url, query=list(q=query, grouping="datasets", ...)))
     ## Grab useful things out of the (odd) API response
     return(SearchResults(results[["groups"]][[1]]))
 }
