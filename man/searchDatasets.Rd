@@ -7,7 +7,8 @@
 searchDatasets(query, ...)
 }
 \arguments{
-\item{query}{the text to search for in datasets and their variables}
+\item{query}{the text to search for in datasets and their variables (note:
+only alpha characters will be used, numbers and other characters will be discarded.)}
 
 \item{...}{additional options provided to the search endpoint.}
 }
@@ -15,5 +16,8 @@ searchDatasets(query, ...)
 If successful, an object of class SearchResults
 }
 \description{
-Search Crunch for datasets.
+\code{searchDatasets} searches datasets' metadata for matches to the \code{query}
+argument. This search will include variable names, aliases, categories, etc.
+The content of text variables for example will not be searched, however. See
+\url{http://docs.crunch.io/#search} for more information about searching Crunch.
 }

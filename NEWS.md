@@ -1,4 +1,5 @@
 ### crunch 1.17.5 (under development)
+* Updated `seachDatasets()` to use the new search API endpoint.
 
 ### crunch 1.17.4
 * Added support for case variables (#36): `makeCaseVariable()` takes a sequence of case statements to derive a new variable based on the values from other variables.
