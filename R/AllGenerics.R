@@ -42,6 +42,8 @@ setGeneric("notes<-", function (x, value) standardGeneric("notes<-"),
     signature="x")
 setGeneric("pk", function (x) standardGeneric("pk"))
 setGeneric("pk<-", function (x, value) standardGeneric("pk<-"))
+setGeneric("digits", function (x) standardGeneric("digits"))
+setGeneric("digits<-", function (x, value) standardGeneric("digits<-"))
 
 setGeneric("types", function (x) standardGeneric("types"))
 setGeneric("timestamps", function (x) standardGeneric("timestamps"))

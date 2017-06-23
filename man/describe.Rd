@@ -15,6 +15,8 @@
 \alias{endDate<-}
 \alias{notes}
 \alias{notes<-}
+\alias{digits}
+\alias{digits<-}
 \alias{name,CrunchDataset-method}
 \alias{name<-,CrunchDataset-method}
 \alias{description,CrunchDataset-method}
@@ -36,6 +38,8 @@
 \alias{alias<-,CrunchVariable-method}
 \alias{notes,CrunchVariable-method}
 \alias{notes<-,CrunchVariable-method}
+\alias{digits,CrunchVariable-method}
+\alias{digits<-,CrunchVariable-method}
 \title{Name, alias, and description for Crunch objects}
 \usage{
 \S4method{name}{CrunchDataset}(x)
@@ -79,6 +83,10 @@
 \S4method{notes}{CrunchVariable}(x)
 
 \S4method{notes}{CrunchVariable}(x) <- value
+
+\S4method{digits}{CrunchVariable}(x)
+
+\S4method{digits}{CrunchVariable}(x) <- value
 }
 \arguments{
 \item{x}{a Dataset or Variable.}
@@ -86,7 +94,7 @@
 \item{value}{For the setters, a length-1 character vector to assign}
 
 \item{object}{Same as \code{x} but for the \code{alias} method, in order to
-match the generic from another package. Note that \code{alias} is only
+match the generic from another package. Note that \code{alias} and \code{digits} are only
 defined for Variables.}
 }
 \value{
