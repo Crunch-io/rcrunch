@@ -103,6 +103,7 @@ with_mock_crunch({
         expect_error(digits(ds$birthyr) <- 999, "digit specifications should be between 0 and 16")
         expect_error(digits(ds$birthyr) <- 0.7, "digit specifications should be an integer")
         expect_error(digits(ds$birthyr) <- "0.7", "digit specifications should be an integer")
+        expect_error(digits(ds$gender) <- 0, "digit specifications can only be set for numeric variables")
     })
 })
 

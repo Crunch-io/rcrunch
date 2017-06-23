@@ -47,7 +47,7 @@ setMethod("notes<-", "CrunchVariable",
 #' @export
 setMethod("digits", "CrunchVariable", function (x) {
     var_entity <- entity(x)
-    return(var_entity@body$format$data$digits %||% NULL)
+    return(var_entity@body$format$data$digits)
 })
 #' @rdname describe
 #' @export
@@ -57,6 +57,9 @@ setMethod("digits<-", "CrunchVariable", function (x, value) {
     }
     if (value < 0 | value > 16) {
         halt("digit specifications should be between 0 and 16")
+    }
+    if (!is.Numeric(x)) {
+        halt("digit specifications can only be set for numeric variables")
     }
 
     frmt <- wrapEntity("format" = list("data" = list("digits" = value)))
