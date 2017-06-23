@@ -63,6 +63,14 @@ with_mock_crunch({
                 ],
             "measures":{"count":{"function":"cube_count","args":[]}}}')
     })
+
+    test_that("Boolean cube dims", {
+        cube <- crtabs(~ birthyr > 1980, data=ds)
+        expect_identical(as.array(cube),
+            array(c(14, 6),
+                dim=2L,
+                dimnames=list(`birthyr > 1980`=c("FALSE", "TRUE"))))
+    })
 })
 
 with_test_authentication({
