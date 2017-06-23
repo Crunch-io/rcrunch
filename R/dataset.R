@@ -30,15 +30,15 @@ is.dataset <- function (x) inherits(x, "CrunchDataset")
 #' Name, alias, and description for Crunch objects
 #'
 #' @param x a Dataset or Variable.
-#' @param object Same as \code{x} but for the \code{alias} method, in order to
-#' match the generic from another package. Note that \code{alias} is only
+#' @param object Same as `x` but for the `alias` method, in order to
+#' match the generic from another package. Note that `alias` and `digits` are only
 #' defined for Variables.
 #' @param value For the setters, a length-1 character vector to assign
 #' @return Getters return the character object in the specified slot; setters
-#' return \code{x} duly modified.
+#' return `x` duly modified.
 #' @name describe
-#' @aliases describe name name<- description description<- alias<- startDate startDate<- endDate endDate<- notes notes<-
-#' @seealso \code{\link{Categories}} \code{\link{describe-catalog}}
+#' @aliases describe name name<- description description<- alias<- startDate startDate<- endDate endDate<- notes notes<- digits digits<-
+#' @seealso [`Categories`] [`describe-catalog`]
 NULL
 
 #' @rdname describe
@@ -91,10 +91,10 @@ setMethod("notes<-", "CrunchDataset", function (x, value) {
 
 #' Get and set the primary key for a Crunch dataset
 #'
-#' A primary key is a variable in a dataset that has a unique value for every 
+#' A primary key is a variable in a dataset that has a unique value for every
 #' row. A variable must be either numeric or text type and have no duplicate or
 #' missing values. A primary key on a dataset causes updates to that dataset
-#' that have the rows with the same primary key value(s) as the first dataset 
+#' that have the rows with the same primary key value(s) as the first dataset
 #' to update the existing rows rather than inserting new ones.
 #'
 #' @param x a Dataset
@@ -103,7 +103,7 @@ setMethod("notes<-", "CrunchDataset", function (x, value) {
 #' returns \code{x} duly modified.
 #' @name pk
 #' @aliases pk pk<-
-NULL 
+NULL
 
 #' @rdname pk
 #' @export
@@ -124,7 +124,7 @@ setMethod("pk<-", "CrunchDataset", function (x, value) {
         # payload <- toJSON(structure(list(structure(list(self(value)))),
                                     # .Names="pk"))
         payload <- toJSON(list(pk=I(self(value))))
-        crPOST(shojiURL(x, "fragments", "pk"), body=payload)        
+        crPOST(shojiURL(x, "fragments", "pk"), body=payload)
     }
 
     invisible(x)
