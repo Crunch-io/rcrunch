@@ -51,20 +51,22 @@ setMethod("digits", "CrunchVariable", function (x) {
 })
 #' @rdname describe
 #' @export
-setMethod("digits<-", "CrunchVariable", function (x, value) {
+setMethod("digits<-", "NumericVariable", function (x, value) {
     if (!is.numeric(value) || !is.whole(value)) {
         halt("digit specifications should be an integer")
     }
     if (value < 0 | value > 16) {
         halt("digit specifications should be between 0 and 16")
     }
-    if (!is.Numeric(x)) {
-        halt("digit specifications can only be set for numeric variables")
-    }
 
     frmt <- wrapEntity("format" = list("data" = list("digits" = value)))
     crPATCH(self(x), body=toJSON(frmt))
     invisible(x)
+})
+#' @rdname describe
+#' @export
+setMethod("digits<-", "CrunchVariable", function (x, value) {
+    halt("digit specifications can only be set for numeric variables")
 })
 
 #' Get and set Categories on Variables
