@@ -39,6 +39,7 @@
 \alias{notes,CrunchVariable-method}
 \alias{notes<-,CrunchVariable-method}
 \alias{digits,CrunchVariable-method}
+\alias{digits<-,NumericVariable-method}
 \alias{digits<-,CrunchVariable-method}
 \title{Name, alias, and description for Crunch objects}
 \usage{
@@ -85,6 +86,8 @@
 \S4method{notes}{CrunchVariable}(x) <- value
 
 \S4method{digits}{CrunchVariable}(x)
+
+\S4method{digits}{NumericVariable}(x) <- value
 
 \S4method{digits}{CrunchVariable}(x) <- value
 }
