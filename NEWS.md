@@ -1,5 +1,6 @@
 ### crunch 1.17.5 (under development)
 * `searchDatasets()` to use the Crunch search API.
+* Added support for viewing and changing the number of digits after the decimal place to be printed with `digits()` (useful when exporting to SPSS files).
 
 ### crunch 1.17.4
 * Added support for case variables (#36): `makeCaseVariable()` takes a sequence of case statements to derive a new variable based on the values from other variables.
