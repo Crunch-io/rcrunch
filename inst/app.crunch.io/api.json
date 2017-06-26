@@ -10,6 +10,9 @@
         "projects": "https://app.crunch.io/api/projects/",
         "public": "https://app.crunch.io/api/public/"
     },
+    "views": {
+        "search": "https://app.crunch.io/api/search/"
+    },
     "urls": {
         "user_url": "https://app.crunch.io/api/users/user1/",
         "logout_url": "https://app.crunch.io/api/logout/"
