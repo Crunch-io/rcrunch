@@ -1,7 +1,11 @@
-### crunch 1.17.3 (under development)
-* Fixed a bug where curl might not work on windows. (Removed `method="curl"` when using `download.file()`)
-* Added support for case variables (#36): `makeCaseVariable()` takes a sequence of case statemnts to derive a new variable based on the values from other variables. 
+### crunch 1.17.5 (under development)
+* `searchDatasets()` to use the Crunch search API.
+* Added support for viewing and changing the number of digits after the decimal place to be printed with `digits()` (useful when exporting to SPSS files).
+
+### crunch 1.17.4
+* Added support for case variables (#36): `makeCaseVariable()` takes a sequence of case statements to derive a new variable based on the values from other variables.
 * Added a function to create interactions of variables (#42): `interactVariables()` takes two or more categorical variables and derives a new variable with the combination of each.
+* Fixed a bug where exports (data and tab book) might not work on Windows. If you're using a version of R older than 3.3, and you *now* have problems downloading, and you're not on Windows, try `options(download.file.method="curl")`.
 
 ### crunch 1.17.2
 * Support for streaming data: check for received data with `pendingStream()`; append that pending stream data to the dataset with `appendStream()` (#40)
