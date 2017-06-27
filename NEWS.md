@@ -1,4 +1,4 @@
-### crunch 1.17.5 (under development)
+### crunch 1.17.6
 * `searchDatasets()` to use the Crunch search API.
 * Added support for viewing and changing the number of digits after the decimal place to be printed with `digits()` (useful when exporting to SPSS files).
 * `crtabs` and `table` where a dimension is a `CrunchLogicalExpr` now return a boolean dimension with names "FALSE" and "TRUE", rather than the previous behavior of dropping the dimension and only returning the `TRUE` value.
