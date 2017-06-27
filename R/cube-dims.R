@@ -1,15 +1,21 @@
 cubeDims <- function (cube) {
     ## Grab the row/col/etc. labels from the cube
-    elements <- lapply(cube$result$dimensions, function (a) {
+    dimnames <- lapply(cube$result$dimensions, function (a) {
+        if (a$type$class == "boolean") {
+            ## TODO: server should provide enumeration
+            return(list(
+                name=c("FALSE", "TRUE"),
+                any.or.none=c(FALSE, FALSE),
+                missing=c(FALSE, FALSE)
+            ))
+        }
         ## If enumerated, will be "elements", not "categories"
-        a$type$categories %||% a$type$elements
-    })
-    dimnames <- lapply(elements, function (d) {
-        list(
+        d <- a$type$categories %||% a$type$elements
+        return(list(
             name=vapply(d, elementName, character(1)),
             any.or.none=vapply(d, elementIsAnyOrNone, logical(1)),
             missing=vapply(d, function (el) isTRUE(el$missing), logical(1))
-        )
+        ))
     })
     names(dimnames) <- vapply(cube$result$dimensions,
         function (a) a$references$alias, character(1))
