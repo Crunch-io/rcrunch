@@ -317,3 +317,21 @@ MultitableResult <- setClass("MultitableResult", contains="namedList")
 TabBookResult <- setClass("TabBookResult", contains="namedList")
 
 SearchResults <- setClass("SearchResults", contains="namedList")
+
+
+#' Geographic data in Crunch
+#'
+#' Geographic data are S4 objects.
+#' @slot geodatum
+#' @slot feature_key the property in the geojson/topojson to match with the `match_field`
+#' @slot match_field the variable field to match with the `feature_key` (default: `name`)
+#' @rdname geo
+CrunchGeography <- setClass("CrunchGeography",
+         slots=c(
+             geodatum="CrunchGeodata",
+             feature_key="character",
+             match_field="character"
+         ),
+         prototype=prototype(match_field="name"))
+
+CrunchGeodata <- setClass("CrunchGeodata", contains="ShojiEntity")

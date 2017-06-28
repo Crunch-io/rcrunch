@@ -44,6 +44,8 @@ setGeneric("pk", function (x) standardGeneric("pk"))
 setGeneric("pk<-", function (x, value) standardGeneric("pk<-"))
 setGeneric("digits", function (x) standardGeneric("digits"))
 setGeneric("digits<-", function (x, value) standardGeneric("digits<-"))
+setGeneric("geo", function (x) standardGeneric("geo"))
+setGeneric("geo<-", function (x, value) standardGeneric("geo<-"))
 
 setGeneric("types", function (x) standardGeneric("types"))
 setGeneric("timestamps", function (x) standardGeneric("timestamps"))
