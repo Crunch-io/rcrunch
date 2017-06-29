@@ -46,6 +46,8 @@ setGeneric("digits", function (x) standardGeneric("digits"))
 setGeneric("digits<-", function (x, value) standardGeneric("digits<-"))
 setGeneric("geo", function (x) standardGeneric("geo"))
 setGeneric("geo<-", function (x, value) standardGeneric("geo<-"))
+setGeneric("fetchGeoFile", function (x) standardGeneric("fetchGeoFile"))
+
 
 setGeneric("types", function (x) standardGeneric("types"))
 setGeneric("timestamps", function (x) standardGeneric("timestamps"))

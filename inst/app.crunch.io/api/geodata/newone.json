@@ -1,0 +1,1 @@
+{"element": "shoji:entity", "self": "https://app.crunch.io/api/geodata/newone/", "description": "Details for a type of geodata", "body": {"name": "new one", "location": "https://s.crunch.io/some/wrong/path.geojson"}}

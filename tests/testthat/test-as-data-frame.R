@@ -34,9 +34,9 @@ with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("setup", {
         expect_identical(dim(ds), c(nrow(ds), ncol(ds)))
-        expect_identical(dim(ds), c(25L, 6L))
+        expect_identical(dim(ds), c(25L, 7L))
         expect_identical(names(ds),
-            c("birthyr", "gender", "mymrset", "textVar", "starttime", "catarray"))
+            c("birthyr", "gender", "location", "mymrset", "textVar", "starttime", "catarray"))
     })
 
     test_that("as.vector on Variables", {

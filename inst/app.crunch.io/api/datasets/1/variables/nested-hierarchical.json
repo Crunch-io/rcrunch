@@ -9,6 +9,7 @@
                 {
                     "Nested": [
                         "https://app.crunch.io/api/datasets/1/variables/gender/",
+                        "https://app.crunch.io/api/datasets/1/variables/location/",
                         "https://app.crunch.io/api/datasets/1/variables/mymrset/"
                     ]
                 },

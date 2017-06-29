@@ -26,7 +26,8 @@ Suggests:
     covr,
     devtools,
     httptest (>= 2.0.0),
-    knitr
+    knitr, 
+    geojsonio
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)

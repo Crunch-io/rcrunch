@@ -1,8 +1,21 @@
+#' Geography properties for crunch variables
+#'
+#' @param x a crunch variable
+#' @param value value of the geography property to set
+#'
+#' @name geo
+#' @aliases geo geo<- fetchGeoFile CrunchGeography, CrunchGeodata
+NULL
 
 #' @rdname geo
 #' @export
 setMethod("geo", "CrunchVariable", function (x) {
     var_geodata <- entity(x)@body$view$geodata[[1]]
+    if (is.null(var_geodata)) {
+        # if there's no geodata, return null.
+        return()
+    }
+
     geodatum <- CrunchGeodata(crGET(var_geodata$geodatum))
     geo_object <- CrunchGeography(
         geodatum = geodatum,
@@ -14,17 +27,44 @@ setMethod("geo", "CrunchVariable", function (x) {
 })
 #' @rdname geo
 #' @export
-setMethod("geo<-", "CrunchVariable", function (x, value) {
-    # if (!is.numeric(value) || !is.whole(value)) {
-    #     halt("digit specifications should be an integer")
-    # }
-    # if (value < 0 | value > 16) {
-    #     halt("digit specifications should be between 0 and 16")
-    # }
-    #
-    # frmt <- wrapEntity("format" = list("data" = list("digits" = value)))
-    # crPATCH(self(x), body=toJSON(frmt))
-    # invisible(x)
-})
+setMethod("geo<-", c("CrunchVariable", "CrunchGeography"),
+          function (x, value) {
+              # if geodatum is of class CrunchGeodata, extact url
+              if (is.Geodata(value$geodatum)) {
+                  value$geodatum <- self(value$geodatum)
+              } else {
+                  value$geodatum <- value$geodatum
+              }
 
-# [{"geodatum": <uri>, "feature_key": "properties.postal-code"}]
+              geodata <- list(geodata = list(value))
+
+              dropCache(cubeURL(x))
+              ent <- setEntitySlot(entity(x), "view", geodata)
+              return(x)
+          })
+
+#' @rdname crunch-is
+#' @export
+is.Geodata <- function (x) inherits(x, "CrunchGeodata")
+
+#' @rdname geo
+#' @importFrom tools file_ext
+#' @export
+setMethod("fetchGeoFile", "CrunchGeography", function(x){
+    if (!requireNamespace("geojsonio", quietly = TRUE)) {
+        stop("The package geojsonio is needed for this function to work. Please install it.",
+             call. = FALSE)
+    }
+
+    url <- x$geodatum$location
+    fileext <- file_ext(url)
+    if (fileext == "topojson") {
+        geo_data <- geojsonio::topojson_read(url)
+    } else if (fileext %in% c("geojson", "json")) {
+        geo_data <- geojsonio::geojson_read(url)
+    } else {
+        halt("Unknown filetype ", dQuote(fileext), " in geodata url: ", url)
+    }
+
+    return(geo_data)
+})

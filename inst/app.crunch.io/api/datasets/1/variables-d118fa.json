@@ -72,6 +72,15 @@
             "id": "text",
             "description": "Budějovický Budvar",
             "notes": ""
+        },
+        "location/": {
+            "name": "Categorical Location",
+            "discarded": false,
+            "alias": "location",
+            "type": "categorical",
+            "id": "loc",
+            "description": "Location test",
+            "notes": ""
         }
     },
     "orders": {
