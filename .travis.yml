@@ -11,6 +11,8 @@ addons:
     - libv8-dev
     - libgdal1-dev
     - libgdal-dev
+    - libgeos-c1
+    - libproj-dev
 r_github_packages:
   - nealrichardson/httptest
 after_success:
