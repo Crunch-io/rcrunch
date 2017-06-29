@@ -185,3 +185,31 @@ rootURL <- function (x, obj=session_store$root) {
         return(NULL)
     }
 }
+
+retry <- function (expr, wait=.1, max.tries=10) {
+    ## Retry (e.g. a request)
+    e <- substitute(expr)
+    tries <- 0
+    while (tries < max.tries) {
+        out <- try(eval.parent(e), silent=TRUE)
+        if (inherits(out, "try-error")) {
+            tries <- tries + 1
+            Sys.sleep(wait)
+        } else {
+            tries <- max.tries
+        }
+    }
+    if (is.error(out)) {
+        stop(out)
+    }
+    return(out)
+}
+
+#' @importFrom utils download.file
+crDownload <- function (url, file, ...) {
+    ## Retry is for delay in propagating the file to the CDN
+    ## TODO: consider only "retry" if `url` is in CDN (don't want to retry
+    ## necessarily on every url/server response)
+    retry(download.file(url, file, quiet=TRUE, ...))
+    return(file)
+}

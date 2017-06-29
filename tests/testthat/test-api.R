@@ -35,6 +35,19 @@ with_mock_crunch({
     })
 })
 
+test_that("retry", {
+    counter <- 0
+    f <- function () {
+        counter <<- counter + 1
+        stopifnot(counter == 3)
+        return(counter)
+    }
+    expect_identical(retry(f(), wait=.001), 3)
+    counter <- 0
+    expect_error(retry(f(), wait=.001, max.tries=2),
+        "counter == 3 is not TRUE")
+})
+
 if (run.integration.tests) {
     test_that("Request headers", {
         skip_if_disconnected()
