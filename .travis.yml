@@ -1,5 +1,6 @@
 language: r
 cache: packages
+dist: trusty
 r:
   - oldrel
   - release
@@ -8,7 +9,6 @@ addons:
   apt:
     packages:
     - libv8-dev
-    - libhdf5-dev
     - libgdal1-dev
     - libgdal-dev
 r_github_packages:
