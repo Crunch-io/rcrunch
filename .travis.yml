@@ -4,6 +4,9 @@ r:
   - oldrel
   - release
   - devel
+before_install:
+  - sudo apt-get -qq update
+  - sudo apt-get install -y libv8-dev libgdal1-dev libgdal-dev libgeos-c1 libproj-dev
 r_github_packages:
   - nealrichardson/httptest
 after_success:
