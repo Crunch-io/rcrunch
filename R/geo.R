@@ -68,3 +68,6 @@ setMethod("fetchGeoFile", "CrunchGeography", function(x){
 
     return(geo_data)
 })
+
+# TODO: make feature_key()<- match_field()<- geodatum()<- methods with more input checking
+# TODO: checking intersection of category names to values of the specified feature_key
