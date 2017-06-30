@@ -1,9 +1,32 @@
 #' Geography properties for crunch variables
 #'
+#' Crunch stores geographic data as variable metadata. There are a number of
+#' functions that help access and change this metadata.
+#'
+#' `geo` retrieves the geographic information associate with a variable. If there is geographic information it returns an object of class `CrunchGeography` otherwise it returns `NULL`.
+#'
+#' `fetchGeoFile` will download the (geo|topo)json file hosted by crunch.
+#'
+#' `CrunchGeography` objects store geography metadata from a variable. There are three slots:
+#' * `geodatum` an object of class CrunchGeodata which stores references to the Crunch-hosted (geo|topo)json to use
+#' * `feature_key` a character that is the feature inside of the (geo|topo)json to match `match_field` to (e.g. properties.name)
+#' * `match_field` a character that is the the variable metadata information to match to `feature_key` to (e.g. name)
+#'
 #' @param x a crunch variable
 #' @param value value of the geography property to set
+#' @return geographic information of class `CrunchGeography` (`NULL` if there is none)
 #'
 #' @name geo
+#'
+#' @examples
+#' \dontrun{
+#' geo(ds$location)
+#'
+#' geojson <- fetchGeoFile(geo(ds$location))
+#'
+#' geo(ds$location)$feature_key <- "properties.name"
+#' geo(ds$location)$match_field <- "name"
+#' }
 #' @aliases geo geo<- fetchGeoFile CrunchGeography, CrunchGeodata
 NULL
 

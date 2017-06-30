@@ -26,6 +26,32 @@
 
 \item{value}{value of the geography property to set}
 }
+\value{
+geographic information of class \code{CrunchGeography} (\code{NULL} if there is none)
+}
 \description{
-Geography properties for crunch variables
+Crunch stores geographic data as variable metadata. There are a number of
+functions that help access and change this metadata.
+}
+\details{
+\code{geo} retrieves the geographic information associate with a variable. If there is geographic information it returns an object of class \code{CrunchGeography} otherwise it returns \code{NULL}.
+
+\code{fetchGeoFile} will download the (geo|topo)json file hosted by crunch.
+
+\code{CrunchGeography} objects store geography metadata from a variable. There are three slots:
+\itemize{
+\item \code{geodatum} an object of class CrunchGeodata which stores references to the Crunch-hosted (geo|topo)json to use
+\item \code{feature_key} a character that is the feature inside of the (geo|topo)json to match \code{match_field} to (e.g. properties.name)
+\item \code{match_field} a character that is the the variable metadata information to match to \code{feature_key} to (e.g. name)
+}
+}
+\examples{
+\dontrun{
+geo(ds$location)
+
+geojson <- fetchGeoFile(geo(ds$location))
+
+geo(ds$location)$feature_key <- "properties.name"
+geo(ds$location)$match_field <- "name"
+}
 }
