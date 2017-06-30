@@ -68,8 +68,9 @@ tabBook <- function (multitable, dataset, weight=crunch::weight(dataset),
     ## POST the query, which (after progress polling) returns a URL to download
     result <- crPOST(tabbook_url, config=add_headers(`Accept`=accept),
         body=toJSON(body))
-    download.file(result, file, quiet=TRUE) ## Note outside of auth. Ok because file is in s3 with token
+    file <- crDownload(result, file)
     if (f == "json") {
+        ## TODO: instead of downloading a file, crGET?
         ## Read in the tab book content and turn it into useful objects
         return(TabBookResult(fromJSON(file, simplifyVector=FALSE)))
     } else {
