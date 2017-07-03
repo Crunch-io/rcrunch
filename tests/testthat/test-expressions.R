@@ -170,7 +170,6 @@ with_test_authentication({
         e1 <- try(ds$v3 > 10)
         expect_is(e1, "CrunchLogicalExpr")
         expect_identical(as.vector(e1), as.vector(ds$v3) > 10)
-        skip("which isn't implemented correctly yet")
         expect_identical(which(e1), which(df$v3 > 10))
     })
 
