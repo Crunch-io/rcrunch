@@ -30,7 +30,7 @@ Suggests:
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
-Collate:
+Collate: 
     'AllClasses.R'
     'AllGenerics.R'
     'variable-definition.R'
@@ -51,6 +51,7 @@ Collate:
     'compare-subvariables.R'
     'compare-variables.R'
     'compare.R'
+    'conditional-transform.R'
     'consent.R'
     'context-manager.R'
     'copy.R'
