@@ -1,10 +1,11 @@
 #' Conditional transformation
-#'
-conditionalTransform <- function (cases, values, name) {
+#' @param cases a list of cases to evaluate
+#' @param values a list of values to substitute when the corresponding case is true
+conditionalTransform <- function (cases, values) {
     # TODO: change to case formula ~ value format
 
     if (length(cases) != length(values)) {
-        halt(dQuote("cases"), " and ", dQuote("values"), "must be the same length")
+        halt(dQuote("cases"), " and ", dQuote("values"), " must be the same length")
     }
 
     n_rows <- nrow(CrunchDataset(crGET(datasetReference(cases[[1]]))))
