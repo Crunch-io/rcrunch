@@ -28,6 +28,13 @@ with_test_authentication({
 
         out <- conditionalTransform(ds$ndogs < 1 ~ ds$country,
                                     ds$ndogs == 1 ~ ds$q3,
+                                    ds$ndogs > 1 ~ ds$ndogs, default_value = "other")
+        expect_equal(out, factor(c("Jasmine", "other", "2", "3", "Zeus", "2", "2", "3",
+                                   "2", "2", "2", "other", "3", "Belgium", "6", "Fluffy",
+                                   "other", "Austria", "other", "2")))
+
+        out <- conditionalTransform(ds$ndogs < 1 ~ ds$country,
+                                    ds$ndogs == 1 ~ ds$q3,
                                     ds$ndogs > 1 ~ ds$ndogs, type = "text")
         expect_equal(out, c("Jasmine", NA, "2", "3", "Zeus", "2", "2", "3",
                                    "2", "2", "2", NA, "3", "Belgium", "6", "Fluffy",

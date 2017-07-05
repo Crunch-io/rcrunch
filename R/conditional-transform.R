@@ -78,7 +78,7 @@ conditionalTransform <- function (..., default_value=NA, type="categorical", cat
         result[case_indices[[i]]] <- vals
     }
 
-    # TODO: check categories, return factor if that is what we need.
+    # check categories, return factor type="categorical"
     if (type == "categorical") {
         uni_results <- unique(result)
         results_not_categories <- !uni_results %in% categories
