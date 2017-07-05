@@ -6,7 +6,7 @@
 #'
 #' @param ... a list of cases to evaluate
 #' @param default_value a default value to use if none of the conditions are true (default: `NA`)
-#' @param type a character that is either "categorical" or "text" what type of output should be returned?
+#' @param type a character that is either "categorical", "text", "numeric" what type of output should be returned?
 #' @param categories if `type="categorical"`, these are all of the categories that should be in the resulting variable
 #'
 #' @return either a factor (if `type="categorical"`) or character (if `type="text"`)
@@ -28,8 +28,8 @@ conditionalTransform <- function (..., default_value=NA, type="categorical", cat
     if (n == 0) {
         halt("no conditions have been supplied")
     }
-    if (!type %in% c("categorical", "text")){
-        halt("type must be either ", dQuote("categorical"), " or ", dQuote("text"))
+    if (!type %in% c("categorical", "text", "numeric")){
+        halt("type must be either ", dQuote("categorical"), dQuote("text"), " or ", dQuote("numeric"))
     }
     if (type != "categorical" & !is.null(categories)){
         halt("type is not ", dQuote("categorical"), " ignoring ", dQuote("categories"))
@@ -74,7 +74,9 @@ conditionalTransform <- function (..., default_value=NA, type="categorical", cat
     result <- rep(default_value, n_rows)
 
     for (i in seq_along(case_indices)) {
-        vals <- as.character(values_to_fill[[i]])
+        if (type == "numeric") trans <- as.numeric
+        else trans <- as.character
+        vals <- trans(values_to_fill[[i]])
         result[case_indices[[i]]] <- vals
     }
 
