@@ -328,5 +328,5 @@ CrunchGeography <- function (..., data=NULL) {
     }
 }
 
-#' @rdname geo
-CrunchGeodata <- setClass("CrunchGeodata", contains="ShojiEntity")
+Geodata <- setClass("Geodata", contains="ShojiEntity")
+GeoCatalog <- setClass("GeoCatalog", contains="ShojiCatalog")

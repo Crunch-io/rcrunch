@@ -27,7 +27,7 @@
 #' geo(ds$location)$feature_key <- "properties.name"
 #' geo(ds$location)$match_field <- "name"
 #' }
-#' @aliases geo geo<- fetchGeoFile CrunchGeography, CrunchGeodata
+#' @aliases geo geo<- fetchGeoFile CrunchGeography
 NULL
 
 #' @rdname geo
@@ -39,7 +39,7 @@ setMethod("geo", "CrunchVariable", function (x) {
         return()
     }
 
-    geodatum <- CrunchGeodata(crGET(var_geodata$geodatum))
+    geodatum <- Geodata(crGET(var_geodata$geodatum))
     geo_object <- CrunchGeography(
         geodatum = geodatum,
         feature_key = var_geodata$feature_key,
@@ -68,7 +68,7 @@ setMethod("geo<-", c("CrunchVariable", "CrunchGeography"),
 
 #' @rdname crunch-is
 #' @export
-is.Geodata <- function (x) inherits(x, "CrunchGeodata")
+is.Geodata <- function (x) inherits(x, "Geodata")
 
 #' @rdname geo
 #' @importFrom tools file_ext
@@ -91,6 +91,12 @@ setMethod("fetchGeoFile", "CrunchGeography", function(x){
 
     return(geo_data)
 })
+
+#' @rdname geo
+#' @export
+availableGeodata <- function(x = getAPIRoot()) {
+    return(GeoCatalog(crGET(shojiURL(x, "catalogs", "geodata"))))
+}
 
 # TODO: make feature_key()<- match_field()<- geodatum()<- methods with more input checking
 # TODO: checking intersection of category names to values of the specified feature_key

@@ -3,16 +3,14 @@
 \docType{class}
 \name{CrunchGeography-class}
 \alias{CrunchGeography-class}
-\alias{CrunchGeodata-class}
-\alias{CrunchGeodata}
 \alias{geo}
 \alias{geo<-}
 \alias{fetchGeoFile}
-\alias{CrunchGeography,}
-\alias{CrunchGeodata}
+\alias{CrunchGeography}
 \alias{geo,CrunchVariable-method}
 \alias{geo<-,CrunchVariable,CrunchGeography-method}
 \alias{fetchGeoFile,CrunchGeography-method}
+\alias{availableGeodata}
 \title{Geography properties for crunch variables}
 \usage{
 \S4method{geo}{CrunchVariable}(x)
@@ -20,6 +18,8 @@
 \S4method{geo}{CrunchVariable,CrunchGeography}(x) <- value
 
 \S4method{fetchGeoFile}{CrunchGeography}(x)
+
+availableGeodata(x = getAPIRoot())
 }
 \arguments{
 \item{x}{a crunch variable}
