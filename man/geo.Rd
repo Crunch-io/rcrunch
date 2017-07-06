@@ -5,19 +5,15 @@
 \alias{CrunchGeography-class}
 \alias{geo}
 \alias{geo<-}
-\alias{fetchGeoFile}
 \alias{CrunchGeography}
 \alias{geo,CrunchVariable-method}
 \alias{geo<-,CrunchVariable,CrunchGeography-method}
-\alias{fetchGeoFile,CrunchGeography-method}
 \alias{availableGeodata}
 \title{Geography properties for crunch variables}
 \usage{
 \S4method{geo}{CrunchVariable}(x)
 
 \S4method{geo}{CrunchVariable,CrunchGeography}(x) <- value
-
-\S4method{fetchGeoFile}{CrunchGeography}(x)
 
 availableGeodata(x = getAPIRoot())
 }
@@ -48,8 +44,6 @@ functions that help access and change this metadata.
 \examples{
 \dontrun{
 geo(ds$location)
-
-geojson <- fetchGeoFile(geo(ds$location))
 
 geo(ds$location)$feature_key <- "properties.name"
 geo(ds$location)$match_field <- "name"

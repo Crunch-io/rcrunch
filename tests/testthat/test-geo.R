@@ -32,15 +32,3 @@ with_mock_crunch({
         )
     })
 })
-
-with_test_authentication({
-    test_that("fetchGeoFile", {
-        expect_error(fetchGeoFile(geo_data),
-                   'Cannot open data source')
-        geo_data$geodatum$location <- "https://s.crunch.io/some/wrong/path.geojson"
-        expect_error(fetchGeoFile(geo_data),
-                     "Forbidden \\(HTTP 403\\).")
-        geo_data$geodatum$location <- "https://notajsonatall.nope"
-        expect_error(fetchGeoFile(geo_data), "Unknown filetype ", dQuote("nope"), " in geodata url: ", "https://notajsonatall.nope")
-    })
-})

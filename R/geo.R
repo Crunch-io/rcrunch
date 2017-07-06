@@ -22,12 +22,10 @@
 #' \dontrun{
 #' geo(ds$location)
 #'
-#' geojson <- fetchGeoFile(geo(ds$location))
-#'
 #' geo(ds$location)$feature_key <- "properties.name"
 #' geo(ds$location)$match_field <- "name"
 #' }
-#' @aliases geo geo<- fetchGeoFile CrunchGeography
+#' @aliases geo geo<- CrunchGeography
 NULL
 
 #' @rdname geo
@@ -70,27 +68,6 @@ setMethod("geo<-", c("CrunchVariable", "CrunchGeography"),
 #' @export
 is.Geodata <- function (x) inherits(x, "Geodata")
 
-#' @rdname geo
-#' @importFrom tools file_ext
-#' @export
-setMethod("fetchGeoFile", "CrunchGeography", function(x){
-    if (!requireNamespace("geojsonio", quietly = TRUE)) {
-        stop("The package geojsonio is needed for this function to work. Please install it.",
-             call. = FALSE)
-    }
-
-    url <- x$geodatum$location
-    fileext <- file_ext(url)
-    if (fileext == "topojson") {
-        geo_data <- geojsonio::topojson_read(url)
-    } else if (fileext %in% c("geojson", "json")) {
-        geo_data <- geojsonio::geojson_read(url)
-    } else {
-        halt("Unknown filetype ", dQuote(fileext), " in geodata url: ", url)
-    }
-
-    return(geo_data)
-})
 
 #' @rdname geo
 #' @export
@@ -99,4 +76,7 @@ availableGeodata <- function(x = getAPIRoot()) {
 }
 
 # TODO: make feature_key()<- match_field()<- geodatum()<- methods with more input checking
+# TODO: geodatum()<- method should attempt some matching based on what's already in match_field
+# TODO: expose available properties on the geodata entity in API so that we can:
 # TODO: checking intersection of category names to values of the specified feature_key
+# TODO: move fetchGeoFile() to separate geocrunch package
