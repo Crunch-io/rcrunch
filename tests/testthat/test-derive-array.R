@@ -29,6 +29,16 @@ with_test_authentication({
         expect_identical(as.vector(ds$derivedarray[[1]]), q1.values)
     })
 
+    mr_derivation <- deriveArray(list(ds$q1, ds$petloc$petloc_home), selections=c("Dog"), name="Derived pets MR") # cat dog has id 2
+    ds$derivedmr <- mr_derivation
+    test_that("deriveArray can also derive MRs", {
+        expect_true(is.MR(ds$derivedmr))
+        expect_identical(names(subvariables(ds$derivedmr)), c("Pet", "Home"))
+        expect_identical(names(categories(ds$derivedmr)),
+                         c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
+        expect_identical(as.vector(ds$derivedmr[[1]]), q1.values)
+    })
+
     test_that("Can edit metadata of the derived array, and parents are unaffected", {
         aliases(subvariables(ds$derivedarray)) <- c("dsub1", "dsub2")
         expect_identical(aliases(subvariables(ds$derivedarray)),

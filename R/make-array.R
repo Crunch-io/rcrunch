@@ -76,7 +76,7 @@ makeMR <- function (subvariables, name, selections, ...) {
 
 #' @rdname makeArray
 #' @export
-deriveArray <- function (subvariables, name, ...) {
+deriveArray <- function (subvariables, name, selections, ...) {
     ## Get subvariable URLs
     if (is.dataset(subvariables)) {
         ## as in, if the list of variables is a [ extraction from a Dataset
@@ -89,6 +89,10 @@ deriveArray <- function (subvariables, name, ...) {
         list(map=structure(lapply(subvariables, function (x) list(variable=x)),
             .Names=subvarids)),
         list(value=I(subvarids))))
+
+    if (!missing(selections)) {
+        derivation <- zfunc("select_categories", derivation, list(value=selections))
+    }
 
     return(VariableDefinition(derivation=derivation, name=name, ...))
 }
