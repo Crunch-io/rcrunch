@@ -169,7 +169,7 @@ with_test_authentication({
     test_that("Logical expressions evaluate", {
         e1 <- try(ds$v3 > 10)
         expect_is(e1, "CrunchLogicalExpr")
-        expect_identical(as.vector(e1), as.vector(ds$v3) > 10)
+        expect_identical(as.vector(e1), df$v3 > 10)
         expect_identical(which(e1), which(df$v3 > 10))
     })
 

@@ -1,0 +1,6 @@
+// Query: filter=%7B%22function%22%3A%22in%22%2C%22args%22%3A%5B%7B%22function%22%3A%22row%22%2C%22args%22%3A%5B%5D%7D%2C%7B%22column%22%3A%5B6%2C10%2C12%2C20%2C21%2C22%2C24%5D%7D%5D%7D&offset=0&limit=5000
+{
+    "element": "shoji:view",
+    "self": "https://app.crunch.io/api/datasets/1/variables/textVar/values/",
+    "value": [ "l", "m", "s", "h", "z", "m", "x" ]
+}
