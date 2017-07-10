@@ -70,7 +70,7 @@ tabBook <- function (multitable, dataset, weight=crunch::weight(dataset),
         body=toJSON(body))
     if (is.null(file)) {
         ## Read in the tab book content and turn it into useful objects
-        out <- crGET(result)
+        out <- retry(crGET(result))
         if (is.raw(out)) {
             ## TODO: fix the content-type header from the server
             ## See https://www.pivotaltracker.com/story/show/148554039
