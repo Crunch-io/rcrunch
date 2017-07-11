@@ -1,6 +1,7 @@
-### crunch 1.17.7 (under development)
+### crunch 1.17.8
+Two attempts to fix download issues introduced by 1.17.4:
 
-* Transitioned file downloads to `crGET` with `httr::write_disk()` to hopefully work around bugs caused by curl/libcurl.
+* Changed file downloads to `crGET` with `httr::write_disk()` to hopefully work around issues caused by `utils::download.file` with method "libcurl".
 * Add a `retry` for downloads to hopefully work around a delay in CDN population.
 
 ### crunch 1.17.6
