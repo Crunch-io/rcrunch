@@ -48,13 +48,13 @@
 #' # [1] "Strongly Agree" "Disagree" "Agree" "Strongly Disagree" ...
 #' # Levels: Agree  Disagree  Strongly Agree  Strongly Disagree
 #' 
-#' # When working with categories, we can specify what the categories are 
-#' explicitly with the `categories` argument. This will also order the 
-#' categories in the order that they are given. If no `categories` argument is
-#'  given, Crunch will make all of the category labels necesary for the 
-#'  resulting variable in the default order (note: this might not include all 
-#'  of the categories that are in variables Opinion1, Opinion2, or Opinion3, 
-#'  just those levels that are selected by the conditions specified).
+#' # When returning categories, we can specify what the categories should be 
+#' # explicitly with the `categories` argument. This will also order the 
+#' # categories in the order that they are given. If no `categories` argument is
+#' # given, Crunch will make all of the category labels necesary for the 
+#' # resulting variable in the default order (note: this might not include all 
+#' # of the categories that are in variables Opinion1, Opinion2, or Opinion3, 
+#' # just those levels that are selected by the conditions specified).
 #' 
 #' ds$days_with_dog <- conditionalTransform(pet1 == 'Cat' ~ Opinion1,
 #'                                          pet2 == 'Cat' ~ Opinion4,
@@ -82,14 +82,14 @@
 #' # [1] "Strongly Agree" "Disagree" "too early to tell" "Strongly Disagree"
 #' # Levels: Agree  Disagree  Strongly Agree  Strongly Disagree  too early to tell
 #'                                     
-#' # Further, we can also use conditional transform with numerics.
+#' # Further, we can also use conditional transform with numeric source variables.
 #' 
 #' ds$days_with_dog <- conditionalTransform(pet1 == 'Dog' ~ days_having_pet,
 #'                                          pet2 == 'Dog' ~ days_having_pet,
 #'                                          pet3 == 'Dog' ~ days_having_pet,
 #'                                          data = ds, type = "numeric")
 #' as.vector(ds$days_with_dog)
-#' # [1] 300 57 70 5
+#' # [1] 300 57 70 5 ...
 #' }
 #'
 #' @export
