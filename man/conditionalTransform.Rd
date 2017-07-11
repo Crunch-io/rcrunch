@@ -4,35 +4,87 @@
 \alias{conditionalTransform}
 \title{Conditional transformation}
 \usage{
-conditionalTransform(..., default_value = NA, type = "categorical",
+conditionalTransform(..., data, else_condition = NA, type = "categorical",
   categories = NULL)
 }
 \arguments{
-\item{...}{a list of cases to evaluate}
+\item{...}{a list of cases to evaluate as well as other
+properties to pass about the case variable (i.e. alias, description)}
 
-\item{default_value}{a default value to use if none of the conditions are true (default: \code{NA})}
+\item{data}{a Crunch dataset object to use}
 
-\item{type}{a character that is either "categorical" or "text" what type of output should be returned?}
+\item{else_condition}{a default value to use if none of the conditions are
+true (default: \code{NA})}
 
-\item{categories}{if \code{type="categorical"}, these are all of the categories that should be in the resulting variable}
+\item{type}{a character that is either "categorical", "text", "numeric" what
+type of output should be returned? The source variables will be converted
+to this type if necesary}
+
+\item{categories}{if \code{type="categorical"}, these are all of the categories
+that should be in the resulting variable, in the order they should be in the
+resulting variable}
 }
 \value{
-either a factor (if \code{type="categorical"}) or character (if \code{type="text"})
+a Crunch \code{VariableDefinition}
 }
 \description{
-Create a new variable that has values when specific conditions are met. Conditions are specified using a series of formulas: the righthand side is the condition that must be true (a \code{CrunchLogicalExpr}) and the lefthand side is where to get the value if the condition on the righthand side is true. This is commonly a crunch variable. Imagine that we have two sets of questions, one about what pets one has (Pet1, Pet2, Pet3) and then a second that asks about ones opinion of those pets that one gave in the Pet* series of questions (Opinion1, Opinion2, opinion3). What we ultimately want is what people's opinion of Cats or Dogs is, but because the value of Opinion1, Opinion2, and Opinion3 is dependent on the answer to Pet1, Pet2, and Pet3 respectively, we can't easily get the overall opinions about Cats. \code{conditionalTransform}  allows you to specify conditions like the following: if variable Pet1 is equal to 'Cat' then use the value from variable Opinion1, if variable Pet2 is equal to 'Cat' then use the value from variable Opinion2, etc. See examples below for how to write this.
+Create a new variable that has values when specific conditions are met.
+Conditions are specified using a series of formulas: the righthand side is
+the condition that must be true (a \code{CrunchLogicalExpr}) and the lefthand
+side is where to get the value if the condition on the righthand side is
+true. This is commonly a Crunch variable.
 }
 \details{
-\code{conditionalTransform} is similar to \code{makeCaseVariable} however \code{conditionalTransform} can use other crunch variables as a source of a variable, wehreas, whereas \code{makeCaseVariable} can only use characters. This additional power comes at a cost: \code{makeCaseVariable} can be executed entirely on Crunch servers, so no data needs to be downloaded or uploaded to/from the local R session. \code{conditionalTransform} on the other hand will download the data necesary to construct the new variable.
+\code{conditionalTransform} is similar to \code{makeCaseVariable} however
+\code{conditionalTransform} can use other Crunch variables as a source of a
+variable, whereas, whereas \code{makeCaseVariable} can only use characters. This
+additional power comes at a cost: \code{makeCaseVariable} can be executed
+entirely on Crunch servers, so no data needs to be downloaded or uploaded
+to/from the local R session. \code{conditionalTransform} on the other hand will
+download the data necessary to construct the new variable.
 }
 \examples{
 \dontrun{
-ds$cat_opinion <- conditionalTransform(ds$pet1 == 'Cat' ~ ds$Opinion1,
-                                       ds$pet2 == 'Cat' ~ ds$Opinion2,
-                                       ds$pet3 == 'Cat' ~ ds$Opinion3)
-ds$dot_opinion <- conditionalTransform(ds$pet1 == 'Dog' ~ ds$Opinion1,
-                                       ds$pet2 == 'Dog' ~ ds$Opinion2,
-                                       ds$pet3 == 'Dog' ~ ds$Opinion3)
+# Imagine that we have two sets of questions, one about what pets one has 
+# (Pet1, Pet2, Pet3) and then a second that asks about ones opinion of those
+#  pets that one gave in the Pet* series of questions (Opinion1, Opinion2, 
+# opinion3). What we ultimately want is what people's opinion of Cats or 
+# Dogs is, but because the value of Opinion1, Opinion2, and Opinion3 is 
+# dependent on the answer to Pet1, Pet2, and Pet3 respectively, we can't 
+# easily get the overall opinions about Cats. `conditionalTransform` allows 
+# you to specify conditions like the following: if variable Pet1 is equal to
+# 'Cat' then use the value from variable Opinion1, if variable Pet2 is 
+# equal to 'Cat' then use the value from variable Opinion2, etc.
+
+ds$cat_opinion <- conditionalTransform(pet1 == 'Cat' ~ Opinion1,
+                                       pet2 == 'Cat' ~ Opinion2,
+                                       pet3 == 'Cat' ~ Opinion3, 
+                                       data = ds)
+as.vector(ds$cat_opinion)
+# "Strongly Agree" "Disagree" "Agree" "Strongly Disagree"
+                                       
+# We can also use `conditionalTransform` to return a string as well as the
+# contents of other variables, if for example we want to separate out people
+# who have only had pets for less than a year, we can specify that as the
+# first condition (which will be used even if the subseqent conditions are
+# also true).
+
+ds$dog_opinion <- conditionalTransform(days_having_pet < 365 ~ "too early",
+                                       pet1 == 'Dog' ~ Opinion1,
+                                       pet2 == 'Dog' ~ Opinion2,
+                                       pet3 == 'Dog' ~ Opinion3,
+                                       data = ds)
+as.vector(ds$dog_opinion)
+# "Strongly Agree" "Disagree" "too early" "Strongly Disagree"
+                                    
+# Further, we can also use conditional transform
+
+ds$days_with_dog <- conditionalTransform(pet1 == 'Dog' ~ days_having_pet,
+                                         pet2 == 'Dog' ~ days_having_pet,
+                                         pet3 == 'Dog' ~ days_having_pet,
+                                         data = ds, type = numeric)
+as.vector(ds$days_with_dog)
+# 300 57 70 5
 }
 
 }
