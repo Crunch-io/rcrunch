@@ -14,16 +14,19 @@
 #' to/from the local R session. `conditionalTransform` on the other hand will 
 #' download the data necessary to construct the new variable.
 #'
-#' @param ... a list of cases to evaluate
+#' @param ... a list of cases to evaluate as well as other
+#' properties to pass about the case variable (i.e. alias, description)
 #' @param data a Crunch dataset object to use
 #' @param else_condition a default value to use if none of the conditions are 
 #' true (default: `NA`)
 #' @param type a character that is either "categorical", "text", "numeric" what
-#'  type of output should be returned?
+#'  type of output should be returned? The source variables will be converted 
+#'  to this type if necesary
 #' @param categories if `type="categorical"`, these are all of the categories 
-#' that should be in the resulting variable
+#' that should be in the resulting variable, in the order they should be in the
+#' resulting variable
 #'
-#' @return either a factor (if `type="categorical"`) or character (if `type="text"`)
+#' @return a Crunch `VariableDefinition`
 #' @examples
 #' \dontrun{
 #' # Imagine that we have two sets of questions, one about what pets one has 
@@ -37,9 +40,12 @@
 #' # 'Cat' then use the value from variable Opinion1, if variable Pet2 is 
 #' # equal to 'Cat' then use the value from variable Opinion2, etc.
 #' 
-#' ds$cat_opinion <- conditionalTransform(ds$pet1 == 'Cat' ~ ds$Opinion1,
-#'                                        ds$pet2 == 'Cat' ~ ds$Opinion2,
-#'                                        ds$pet3 == 'Cat' ~ ds$Opinion3)
+#' ds$cat_opinion <- conditionalTransform(pet1 == 'Cat' ~ Opinion1,
+#'                                        pet2 == 'Cat' ~ Opinion2,
+#'                                        pet3 == 'Cat' ~ Opinion3, 
+#'                                        data = ds)
+#' as.vector(ds$cat_opinion)
+#' # "Strongly Agree" "Disagree" "Agree" "Strongly Disagree"
 #'                                        
 #' # We can also use `conditionalTransform` to return a string as well as the
 #' # contents of other variables, if for example we want to separate out people
@@ -47,17 +53,22 @@
 #' # first condition (which will be used even if the subseqent conditions are
 #' # also true).
 #' 
-#' ds$dog_opinion <- conditionalTransform(ds$days_have_pet < 365 ~ "too early",
-#'                                        ds$pet1 == 'Dog' ~ ds$Opinion1,
-#'                                        ds$pet2 == 'Dog' ~ ds$Opinion2,
-#'                                        ds$pet3 == 'Dog' ~ ds$Opinion3)
-#' # We can 
+#' ds$dog_opinion <- conditionalTransform(days_having_pet < 365 ~ "too early",
+#'                                        pet1 == 'Dog' ~ Opinion1,
+#'                                        pet2 == 'Dog' ~ Opinion2,
+#'                                        pet3 == 'Dog' ~ Opinion3,
+#'                                        data = ds)
+#' as.vector(ds$dog_opinion)
+#' # "Strongly Agree" "Disagree" "too early" "Strongly Disagree"
+#'                                     
+#' # Further, we can also use conditional transform
 #' 
-#' ds$dog_opinion <- conditionalTransform(ds$days_have_pet < 365 ~ "too early",
-#'                                        ds$pet1 == 'Dog' ~ ds$Opinion1,
-#'                                        ds$pet2 == 'Dog' ~ ds$Opinion2,
-#'                                        ds$pet3 == 'Dog' ~ ds$Opinion3)                                        
-#'                                        
+#' ds$days_with_dog <- conditionalTransform(pet1 == 'Dog' ~ days_having_pet,
+#'                                          pet2 == 'Dog' ~ days_having_pet,
+#'                                          pet3 == 'Dog' ~ days_having_pet,
+#'                                          data = ds, type = numeric)
+#' as.vector(ds$days_with_dog)
+#' # 300 57 70 5
 #' }
 #'
 #' @export
@@ -69,7 +80,7 @@ conditionalTransform <- function (..., data, else_condition=NA, type="categorica
     n <- length(formulas)
     
     if (n == 0) {
-        halt("no conditions have been supplied")
+        halt("no conditions have been supplied; please supply formulas as conditions.")
     }
     if (!type %in% c("categorical", "text", "numeric")){
         halt("type must be either ", dQuote("categorical"), dQuote("text"), " or ", dQuote("numeric"))
@@ -77,7 +88,6 @@ conditionalTransform <- function (..., data, else_condition=NA, type="categorica
     if (type != "categorical" & !is.null(categories)){
         halt("type is not ", dQuote("categorical"), " ignoring ", dQuote("categories"))
     }
-    
     
     cases <- vector("list", n)
     values <- vector("list", n)
@@ -93,16 +103,14 @@ conditionalTransform <- function (..., data, else_condition=NA, type="categorica
         }
         values[[i]] <- evalRHS(formula, data)
     }
-    
-    n_rows <- nrow(CrunchDataset(crGET(datasetReference(cases[[1]]))))
-    
     case_indices <- lapply(cases, which)
     
-    # dedpulicate indices, favoring the first observation
+    # dedpulicate indices, favoring the first true condition
     case_indices <- lapply(seq_along(case_indices), function(i) {
         setdiff(case_indices[[i]], unlist(case_indices[seq_len(i-1)]))
     })
     
+    # grab the values needed from source variables
     values_to_fill <- Map(function(ind, var) {
         if (inherits(var, c("CrunchVariable", "CrunchExpr"))) {
             # grab the variable contents at inds
@@ -114,8 +122,10 @@ conditionalTransform <- function (..., data, else_condition=NA, type="categorica
     }, ind = case_indices, var = values)
     
     # setup NAs for as default
+    n_rows <- nrow(CrunchDataset(crGET(datasetReference(cases[[1]]))))
     result <- rep(else_condition, n_rows)
     
+    # fill values
     for (i in seq_along(case_indices)) {
         if (type == "numeric") {
             trans <- as.numeric
@@ -125,14 +135,13 @@ conditionalTransform <- function (..., data, else_condition=NA, type="categorica
         vals <- trans(values_to_fill[[i]])
         result[case_indices[[i]]] <- vals
     }
-    
-    # check categories, return factor type="categorical"
+ 
     if (type == "categorical") {
         # if categories are supplied and there are any
-        if (is.null(categories)) {
+        if (missing(categories)) {
             result <- factor(result)
         } else {
-            uni_results <- unique(result)
+            uni_results <- unique(result[!is.na(result)])
             results_not_categories <- !uni_results %in% categories
             if (any(results_not_categories)) {
                 halt("there were categories in the results (",
@@ -140,9 +149,11 @@ conditionalTransform <- function (..., data, else_condition=NA, type="categorica
                      ") that were not specified in categories")
             }
             result <- factor(result, levels = categories)
+            var_def$categories <- categoriesFromLevels(categories)
         }
     }
     
+    var_def$type <- type
     var_def$data <- result
     var_def <- do.call(VariableDefinition, var_def)
     
