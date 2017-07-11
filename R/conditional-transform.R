@@ -21,7 +21,7 @@
 #' true (default: `NA`)
 #' @param type a character that is either "categorical", "text", "numeric" what
 #'  type of output should be returned? The source variables will be converted 
-#'  to this type if necesary
+#'  to this type if necessary
 #' @param categories if `type="categorical"`, these are all of the categories 
 #' that should be in the resulting variable, in the order they should be in the
 #' resulting variable
@@ -50,7 +50,7 @@
 #' # We can also use `conditionalTransform` to return a string as well as the
 #' # contents of other variables, if for example we want to separate out people
 #' # who have only had pets for less than a year, we can specify that as the
-#' # first condition (which will be used even if the subseqent conditions are
+#' # first condition (which will be used even if the subsequent conditions are
 #' # also true).
 #' 
 #' ds$dog_opinion <- conditionalTransform(days_having_pet < 365 ~ "too early",
