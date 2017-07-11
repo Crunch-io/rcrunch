@@ -61,7 +61,27 @@ ds$cat_opinion <- conditionalTransform(pet1 == 'Cat' ~ Opinion1,
                                        pet3 == 'Cat' ~ Opinion3, 
                                        data = ds)
 as.vector(ds$cat_opinion)
-# "Strongly Agree" "Disagree" "Agree" "Strongly Disagree"
+# [1] "Strongly Agree" "Disagree" "Agree" "Strongly Disagree" ...
+# Levels: Agree  Disagree  Strongly Agree  Strongly Disagree
+
+# When working with categories, we can specify what the categories are 
+explicitly with the `categories` argument. This will also order the 
+categories in the order that they are given. If no `categories` argument is
+ given, Crunch will make all of the category labels necesary for the 
+ resulting variable in the default order (note: this might not include all 
+ of the categories that are in variables Opinion1, Opinion2, or Opinion3, 
+ just those levels that are selected by the conditions specified).
+
+ds$days_with_dog <- conditionalTransform(pet1 == 'Cat' ~ Opinion1,
+                                         pet2 == 'Cat' ~ Opinion4,
+                                         pet3 == 'Cat' ~ Opinion3,
+                                         data = ds, type = "categorical",
+         categories = c("Strongly Agree", "Agree", "Neither Agree Nor Disagree",
+         "Disagree", "Strongly Disagree"))
+
+as.vector(ds$cat_opinion)
+# [1] "Strongly Agree" "Disagree" "Agree" "Strongly Disagree" ...
+# Levels: Strongly Agree  Agree  Neither Agree Nor Disagree  Disagree  Strongly Disagree
                                        
 # We can also use `conditionalTransform` to return a string as well as the
 # contents of other variables, if for example we want to separate out people
@@ -69,22 +89,23 @@ as.vector(ds$cat_opinion)
 # first condition (which will be used even if the subsequent conditions are
 # also true).
 
-ds$dog_opinion <- conditionalTransform(days_having_pet < 365 ~ "too early",
+ds$dog_opinion <- conditionalTransform(days_having_pet < 365 ~ "too early to tell",
                                        pet1 == 'Dog' ~ Opinion1,
                                        pet2 == 'Dog' ~ Opinion2,
                                        pet3 == 'Dog' ~ Opinion3,
                                        data = ds)
 as.vector(ds$dog_opinion)
-# "Strongly Agree" "Disagree" "too early" "Strongly Disagree"
+# [1] "Strongly Agree" "Disagree" "too early to tell" "Strongly Disagree"
+# Levels: Agree  Disagree  Strongly Agree  Strongly Disagree  too early to tell
                                     
-# Further, we can also use conditional transform
+# Further, we can also use conditional transform with numerics.
 
 ds$days_with_dog <- conditionalTransform(pet1 == 'Dog' ~ days_having_pet,
                                          pet2 == 'Dog' ~ days_having_pet,
                                          pet3 == 'Dog' ~ days_having_pet,
-                                         data = ds, type = numeric)
+                                         data = ds, type = "numeric")
 as.vector(ds$days_with_dog)
-# 300 57 70 5
+# [1] 300 57 70 5
 }
 
 }
