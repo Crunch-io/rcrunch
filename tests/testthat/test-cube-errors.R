@@ -14,7 +14,7 @@ with_mock_crunch({
 
     test_that("formula '.' argument is not permitted", {
         expect_error(crtabs(~ ., data=ds),
-            paste("crtabs does not support", dQuote("."), "in formula"))
+            paste("Crunch formulae do not support", dQuote("."), "in formula"))
     })
 
     test_that("formula must have variables", {
