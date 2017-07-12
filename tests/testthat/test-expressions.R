@@ -165,7 +165,7 @@ with_test_authentication({
             })
         })
     })
-
+    
     test_that("Logical expressions evaluate", {
         e1 <- try(ds$v3 > 10)
         expect_is(e1, "CrunchLogicalExpr")
@@ -173,6 +173,14 @@ with_test_authentication({
         expect_identical(which(e1), which(df$v3 > 10))
     })
 
+    test_that("Logical expressions with text variables evaluate", {
+        e2 <- try(ds$v2 == "a")
+        expect_is(e2, "CrunchLogicalExpr")
+        na_filt <- !is.na(df$v2) # Crunch and R evaluate NA == "a" differently
+        expect_identical(as.vector(e2)[na_filt], df[na_filt,]$v2 == "a")
+        expect_identical(which(e2), which(df$v2 == "a"))
+    })
+    
     test_that("R & Crunch logical together", {
         e1 <- ds$v3 < 10 | c(rep(FALSE, 15), rep(TRUE, 5))
         expect_equivalent(as.vector(ds$v3[e1]),
