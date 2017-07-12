@@ -73,7 +73,8 @@ with_test_authentication({
                                               "2", "2", "3", "2", "2", "2", NA,
                                               "3", "Belgium", "6", "Fluffy",
                                               NA, "Austria", NA, "2")))
-
+    })
+    test_that("conditionalTransform with else_condition", {
         ds$new1 <- conditionalTransform(ndogs < 1 ~ country,
                                     ndogs == 1 ~ q3,
                                     ndogs > 1 ~ ndogs, 
@@ -81,7 +82,8 @@ with_test_authentication({
         expect_equal(as.vector(ds$new1), factor(c("Jasmine", "other", "2", "3", "Zeus", "2", "2", "3",
                                    "2", "2", "2", "other", "3", "Belgium", "6", "Fluffy",
                                    "other", "Austria", "other", "2")))
-
+    })
+    test_that("conditionalTransform with text", {
         ds$new2 <- conditionalTransform(ndogs < 1 ~ country,
                                     ndogs == 1 ~ q3,
                                     ndogs > 1 ~ ndogs, 
@@ -89,7 +91,8 @@ with_test_authentication({
         expect_equal(as.vector(ds$new2), c("Jasmine", NA, "2", "3", "Zeus", "2", "2", "3",
                                    "2", "2", "2", NA, "3", "Belgium", "6", "Fluffy",
                                    NA, "Austria", NA, "2"))
-
+    })
+    test_that("conditionalTransform with numeric", {
         ds$new3 <- conditionalTransform(ndogs < 1 ~ 200,
                                     ndogs == 1 ~ 400,
                                     ndogs > 1 ~ ndogs,
@@ -97,7 +100,8 @@ with_test_authentication({
         expect_equal(as.vector(ds$new3), c(400, NA, 2, 3, 400, 2, 2, 3,
                             2, 2, 2, NA, 3, 200, 6, 400,
                             NA, 200, NA, 2))
-
+    })
+    test_that("conditionalTransform with a sole string as source", {
         ds$new4 <- conditionalTransform(ndogs < 1 ~ "lonely",
                                     ndogs == 1 ~ q3,
                                     ndogs > 1 ~ ndogs,
@@ -105,5 +109,35 @@ with_test_authentication({
         expect_equal(as.vector(ds$new4), factor(c("Jasmine", NA, "2", "3", "Zeus", "2", "2", "3",
                             "2", "2", "2", NA, "3", "lonely", "6", "Fluffy",
                             NA, "lonely", NA, "2")))
+    })
+    test_that("conditionalTransform with categories", {
+        ds$new5 <- conditionalTransform(ndogs < 1 ~ "lonely",
+                                        ndogs == 1 ~ q3,
+                                        ndogs > 1 ~ ndogs,
+                                        data = ds,
+                                        categories = c("lonely", "Zeus",
+                                                       "Jasmine", "Fluffy",
+                                                       "2", "3", "6"))
+        expect_equal(as.vector(ds$new5), factor(c("Jasmine", NA, "2", "3", "Zeus", "2", "2", "3",
+                                                  "2", "2", "2", NA, "3", "lonely", "6", "Fluffy",
+                                                  NA, "lonely", NA, "2"),
+                     levels = c("lonely", "Zeus", "Jasmine", "Fluffy", "2", "3", "6")))
+    })
+    test_that("conditionalTransform with NAs", {
+        ds$new6 <- conditionalTransform(ndogs < 1 ~ "lonely",
+                                        ndogs == 1 ~ q3,
+                                        ndogs > 1 ~ ndogs,
+                                        is.na(ndogs) ~ "not applicable",
+                                        data = ds)
+        expect_equal(as.vector(ds$new6), factor(c("Jasmine", "not applicable", "2", "3", "Zeus", "2", "2", "3",
+                                                  "2", "2", "2", "not applicable", "3", "lonely", "6", "Fluffy",
+                                                  "not applicable", "lonely", "not applicable", "2")))
+        ds$new7 <- conditionalTransform(ndogs < 1 ~ NA,
+                                        ndogs == 1 ~ q3,
+                                        ndogs > 1 ~ ndogs,
+                                        data = ds)
+        expect_equal(as.vector(ds$new7), factor(c("Jasmine", NA, "2", "3", "Zeus", "2", "2", "3",
+                                                  "2", "2", "2", NA, "3", NA, "6", "Fluffy",
+                                                  NA, NA, NA, "2")))
     })
 })
