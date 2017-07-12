@@ -106,6 +106,39 @@ ds$days_with_dog <- conditionalTransform(pet1 == 'Dog' ~ days_having_pet,
                                          data = ds, type = "numeric")
 as.vector(ds$days_with_dog)
 # [1] 300 57 70 5 ...
+
+# conditionalTransform will evaluate is.na() or NA as conditoins or sources 
+# respectively
+
+ds$cat_opinion <- conditionalTransform(pet1 == 'Cat' ~ Opinion1,
+                                       pet2 == 'Cat' ~ Opinion2,
+                                       pet3 == 'Cat' ~ Opinion3, 
+                                       is.na(pet1) & is.na(pet2) & is.na(pet3) ~ "None",
+                                       data = ds)
+as.vector(ds$cat_opinion)
+# [1] "Strongly Agree" "Disagree" "Agree" "Strongly Disagree" "None" ...
+# Levels: Agree  Disagree None Strongly Agree  Strongly Disagree
+
+
+# Finally, when constructing conditionalTransforms, it is frequently helpful 
+# to automate some parts of the creation; `as.formula()` is helpful here. 
+# This lets us create a function that we can use to make many conditional 
+# variables with different questions, responses, and levels that the 
+# questions take on. 
+
+opinion_transformation <- function(question_base, response_base, level, dataset) {
+conditionalTransform(
+    as.formula(paste0(question_base, "1", " == level ~ ", response_base, "1")),
+    as.formula(paste0(question_base, "2", " == level ~ ", response_base, "2")),
+    as.formula(paste0(question_base, "3", " == level ~ ", response_base, "3")),
+    data = dataset, name = paste(level, response_base))
+}
+
+opinion_transformation(question_base = "pet", response_base = "Opinion", level = "Cat", ds)
+opinion_transformation(question_base = "pet", response_base = "Opinion", level = "Dog", ds)
+opinion_transformation(question_base = "pet", response_base = "Opinion", level = "Bird", ds)
+opinion_transformation(question_base = "pet", response_base = "Opinion", level = "Lizard", ds)
+
 }
 
 }
