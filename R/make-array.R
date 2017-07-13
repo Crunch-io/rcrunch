@@ -94,11 +94,7 @@ deriveArray <- function (subvariables, name, selections, ...) {
     if (!missing(selections)) {
         # if there are selections, wrap the array function inside of a
         # select_categories function
-        if(!is.list(selections)){
-            # if selections is not already a list convert it to one.
-            selections <- as.list(selections)
-        }
-        derivation <- zfunc("select_categories", derivation, list(value=selections))
+        derivation <- zfunc("select_categories", derivation, list(value=I(selections)))
     }
 
     return(VariableDefinition(derivation=derivation, name=name, ...))
