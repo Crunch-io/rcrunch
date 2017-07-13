@@ -9,14 +9,14 @@ test:
 	R --slave -e 'library(httptest); setwd(file.path(.libPaths()[1], "crunch", "tests")); options(crunch.check.updates=FALSE); system.time(test_check("crunch", filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
 
 deps:
-	R --slave -e 'install.packages(c("devtools", "Rcpp", "testthat", "jsonlite", "curl", "httpcache", "codetools", "httptest"), repo="http://cran.at.r-project.org", lib=ifelse(nchar(Sys.getenv("R_LIB")), Sys.getenv("R_LIB"), .libPaths()[1]))'
+	R --slave -e 'cran <- "http://cran.at.r-project.org"; pkgs <- c("devtools", "Rcpp", "testthat", "jsonlite", "curl", "httpcache", "codetools", "httptest", "covr", "xml2"); new <- setdiff(pkgs, dir(.libPaths()[1])); if (length(new)) install.packages(new, repo=cran); update.packages(pkgs, ask=FALSE, repo=cran)'
 
 install-ci: deps
-	R CMD INSTALL --install-tests -l $(R_LIB) .
-	R -e '.libPaths(Sys.getenv("R_LIB")); devtools::install_github("nealrichardson/testthat", ref="tap-file"); devtools::install_github("nealrichardson/httptest")'
+	R -e 'devtools::install_github("nealrichardson/testthat", ref="tap-file"); devtools::install_github("nealrichardson/httptest")'
+	R -e 'devtools::session_info(installed.packages()[, "Package"])'
 
 test-ci:
-	R --slave -e '.libPaths(Sys.getenv("R_LIB")); library(httptest); cwd <- getwd(); setwd(file.path(.libPaths()[1], "crunch", "tests")); options(crunch.check.updates=FALSE, download.file.method="curl"); test_check("crunch", reporter=MultiReporter$$new(list(SummaryReporter$$new(), TapReporter$$new(file.path(cwd, "rcrunch.tap")))))'
+	R --slave -e 'library(covr); to_cobertura(package_coverage(quiet=FALSE))'
 
 clean:
 	R --slave -e 'options(crunch.api=getOption("test.api"), crunch.email=getOption("test.user"), crunch.pw=getOption("test.pw")); library(crunch); login(); lapply(urls(datasets()), crDELETE)'
