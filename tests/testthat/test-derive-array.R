@@ -1,5 +1,21 @@
 context("Deriving array variables")
 
+with_mock_crunch({
+    ds <- loadDataset("test ds")
+    test_that("deriveArray works with MR", {
+    expect_POST(ds$derived_mr <- deriveArray(list(ds$gender),
+                                             selections=list("Female"),
+                                             name="derivedMR"),
+                "https://app.crunch.io/api/datasets/1/variables/",
+                '{"derivation":{"function":"select_categories","args":',
+                '[{"function":"array","args":[{"function":"select","args":',
+                '[{"map":{"1":{"variable":"https://app.crunch.io/api/datasets',
+                '/1/variables/gender/"}}},{"value":["1"]}]}]},{"value":',
+                '["Female"]}]},"name":"derivedMR","alias":"derived_mr"}')
+    })
+})
+
+
 with_test_authentication({
     ds <- newDatasetFromFixture("apidocs")
 
@@ -36,6 +52,7 @@ with_test_authentication({
         expect_identical(names(categories(ds$derivedmr)),
                          c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
         expect_identical(as.vector(ds$derivedmr[[1]]), q1.values)
+        expect_true(is.selected(categories(ds$derivedmr)[[2]]))
     })
 
     test_that("Can edit metadata of the derived array, and parents are unaffected", {
