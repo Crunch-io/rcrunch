@@ -83,7 +83,17 @@ setMethod("ordering<-", "DatasetCatalog", function (x, value) {
     return(x)
 })
 
-
+#' Move a variable to after another variable
+#'
+#' @param x the variable group that `after` is in
+#' @param value the variable or dataset subset you would like to move
+#' @param after the variable you want to precede `value`
+#' @return returns a variable group
+#' @examples
+#' \dontrun{
+#' ordering(ds)[['Demographics']] <- moveToAfter(ordering(ds)[['Group A']], ds[c('Age', 'gender')], ds$educ)
+#' }
+#' @export
 moveToAfter <- function(x, value, after){
     if (!inherits(after, "OrderGroup")) {
         after <- urls(after)
@@ -98,22 +108,35 @@ moveToAfter <- function(x, value, after){
     return(x)
 }
 
-
-copyOrder <- function(ds_old, ds_new, ord_old=NULL){
-    if (is.null(ord_old)) ord_old <- ordering(ds_old)
+#' Copy the order from one dataset to another.
+#'
+#' @param source the dataset you want to copy the order from
+#' @param target the dataset you want to copy the order to
+#' @param outer to make it recursive
+#' @return currently returns a vector for do.call(VariableOrder, )  but should return a reordered dataset
+#' @examples
+#' \dontrun{
+#' ord <- copyOrder(ds1, ds)
+#' ordering(ds) <- do.call(VariableOrder, ord)
+#' }
+#' @export
+copyOrder <- function(source, target, outer=NULL){
+    if (is.null(outer)) outer <- ordering(source)
     ents <- c()
-    print(name(ord_old))
-    if (class(unlist(entities(ord_old))) == 'character') {
-        als <- aliases(allVariables(ds_old))[match(unlist(entities(ord_old)), urls(allVariables(ds_old)))]
-        ents <- urls(allVariables(ds_new))[match(als[als %in% aliases(allVariables(ds_new))], aliases(allVariables(ds_new)))]
+    print(name(outer))
+    if (class(unlist(entities(outer))) == 'character') {
+        als <- aliases(allVariables(source))[match(unlist(entities(outer)), urls(allVariables(source)))]
+        ents <- urls(allVariables(target))[match(als[als %in% aliases(allVariables(target))], aliases(allVariables(target)))]
     } else{
-        for (gr in entities(ord_old)){
+        for (gr in entities(outer)){
             if (class(gr) == 'character'){
-                al <- aliases(allVariables(ds_old))[match(gr, urls(allVariables(ds_old)))]
-                if (al %in% aliases(allVariables(ds_new))) ents <- c(ents, self(ds_new[[al]]))
-            } else ents <- c(ents, steal_order(ds_old, ds_new, gr))
+                al <- aliases(allVariables(source))[match(gr, urls(allVariables(source)))]
+                if (al %in% aliases(allVariables(target))) {
+                    ents <- c(ents, self(target[[al]]))
+                }
+            } else ents <- c(ents, copyOrder(source, target, gr))
         }
     }
-    if (length(ents) > 0 & !is.null(name(ord_old))) return(VariableGroup(name(ord_old), ents))
-    if (length(ents) > 0) return(ents)
+    if (length(ents) > 0 & !is.null(name(outer))) { return(VariableGroup(name(outer), ents)) }
+    if (length(ents) > 0) { return(ents) }
 }
