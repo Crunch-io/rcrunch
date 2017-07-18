@@ -75,8 +75,13 @@ availableGeodata <- function(x = getAPIRoot()) {
     return(GeoCatalog(crGET(shojiURL(x, "catalogs", "geodata"))))
 }
 
-# TODO: make feature_key()<- match_field()<- geodatum()<- methods with more input checking
-# TODO: geodatum()<- method should attempt some matching based on what's already in match_field
+# TODO: make feature_key()<- match_field()<- geodatum()<- methods with more 
+#       input checking
+# TODO: geodatum()<- method should attempt some matching based on what's 
+#       already in match_field
 # TODO: expose available properties on the geodata entity in API so that we can:
-# TODO: checking intersection of category names to values of the specified feature_key
+# TODO: checking intersection of category names to values of the specified 
+#       feature_key
 # TODO: move fetchGeoFile() to separate geocrunch package
+# TODO: availableGeodata() should be subsettable by name, and be asignable into 
+#       geodatum(geo(ds$var)) or the like
