@@ -12,6 +12,7 @@
 \alias{Category-class}
 \alias{Category}
 \alias{[,Categories,ANY,ANY-method}
+\alias{[,Categories,character,ANY-method}
 \alias{[,Categories,numeric,ANY-method}
 \alias{[<-,Categories,ANY,ANY,ANY-method}
 \alias{names,Categories-method}
@@ -27,6 +28,8 @@ Categories(..., data = NULL)
 Category(..., data = NULL)
 
 \S4method{[}{Categories,ANY,ANY}(x, i, j, ..., drop = TRUE)
+
+\S4method{[}{Categories,character,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[}{Categories,numeric,ANY}(x, i, j, ..., drop = TRUE)
 
