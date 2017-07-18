@@ -39,6 +39,15 @@ with_mock_crunch({
             expect_DELETE(deleteVariables(ds, c("gender", "birthyr")),
                 "https://app.crunch.io/api/datasets/1/variables/gender/")
         })
+
+        test_that("deleteSubvariable deletes the subvariable", {
+            expect_DELETE(deleteSubvariable(ds$mymrset, "subvar1"),
+                "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/")
+            expect_DELETE(deleteSubvariable(ds$mymrset, 2),
+                "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/")
+            expect_DELETE(deleteSubvariables(ds$mymrset, 2),
+                "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/")
+        })
     })
 })
 
