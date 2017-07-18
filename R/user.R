@@ -48,3 +48,21 @@ invite <- function (email, name=NULL, notify=TRUE, id_method="pwhash",
     url <- shojiURL(getAccount(), "catalogs", "users")
     return(crPOST(url, body=toJSON(do.call("wrapEntity", payload))))
 }
+
+#' Reset your password
+#'
+#' @param email Your email
+#' @return NULL, invisibly.
+#' @export
+#' @examples
+#' \dontrun{
+#' resetPassword("me@example.com")
+#' }
+resetPassword <- function (email) {
+    app <- getOption("crunch.api")
+    invisible(crPOST(absoluteURL("public/password_reset/", app),
+        body=toJSON(list(
+            email=email,
+            url_base=absoluteURL("../password/change/${token}/", app)
+        ))))
+}
