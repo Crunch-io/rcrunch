@@ -1,4 +1,6 @@
 ### crunch 1.17.7 (under development)
+* added `resetPassword()` function, added tests for `invite()`
+* categories are now selectable with names as well as ids.
 
 ### crunch 1.17.6
 * `searchDatasets()` to use the Crunch search API.

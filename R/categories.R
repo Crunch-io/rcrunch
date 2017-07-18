@@ -67,8 +67,11 @@ setMethod("[", c("Categories", "ANY"), function (x, i, ...) {
 #' @rdname Categories
 #' @export
 setMethod("[", c("Categories", "character"), function (x, i, ...) {
-    indeces <- match(i, names(x))
-    callNextMethod(x, i=indeces)
+    indices <- match(i, names(x))
+    if (any(is.na(indices))) {
+        halt("subscript out of bounds: ", serialPaste(i[is.na(indices)]))
+    }
+    callNextMethod(x, i=indices)
 })
 
 #' @rdname Categories

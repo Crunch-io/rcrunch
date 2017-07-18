@@ -34,7 +34,9 @@ with_mock_crunch({
 
     test_that("category slicers", {
         expect_true(is.categories(cats[1]))
-        expect_equal(cats[c("Female","Male")], cats[c(2,1)])
+        expect_equal(cats[c("Female", "Male")], cats[c(2, 1)])
+        expect_error(cats[c("Female", "Male", "not a category")],
+                     "subscript out of bounds: not a category")
         expect_error(cats[c(1, 2, 5)],
             "subscript out of bounds: 5")
         expect_error(cats[c(1, 2, 98, 99)],
