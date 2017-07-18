@@ -34,6 +34,9 @@ with_mock_crunch({
 
     test_that("category slicers", {
         expect_true(is.categories(cats[1]))
+        expect_equal(cats[c("Female", "Male")], cats[c(2, 1)])
+        expect_error(cats[c("Female", "Male", "not a category")],
+                     "subscript out of bounds: not a category")
         expect_error(cats[c(1, 2, 5)],
             "subscript out of bounds: 5")
         expect_error(cats[c(1, 2, 98, 99)],
@@ -230,7 +233,7 @@ with_mock_crunch({
     test_that("c(Categories, Categories)", {
         expect_true(is.categories(c(cats, cats2)))
     })
-    
+
     test_that("changeCategoryID errors with bad inputs", {
         expect_error(ds$birthyr <- changeCategoryID(ds$birthyr, 1, 6),
                      "The variable Birth Year doesn't have categories.")
@@ -246,7 +249,7 @@ with_mock_crunch({
                      "to should be a single numeric")
         expect_error(ds$gender <- changeCategoryID(ds$gender, 8, 9),
                      "No category with id 8")
-        expect_PATCH(changeCategoryID(ds$gender, 2, 6), 
+        expect_PATCH(changeCategoryID(ds$gender, 2, 6),
                      'https://app.crunch.io/api/datasets/1/variables/gender/',
                      '{"categories":[{"id":1,"missing":false,"name":"Male","numeric_value":1},{"id":2,"missing":false,"name":"__TO_DELETE__","numeric_value":2},{"id":-1,"missing":true,"name":"No Data","numeric_value":null}]}')
     })
@@ -347,7 +350,7 @@ with_test_authentication({
                 c(1, 2, -1))
             orig_vector <- as.vector(ds$v4f)
             expect_equal(as.vector(ds$v4f[1:4], mode="id"), c(1, 2, 1, 2))
-            
+
             ds$v4f <- changeCategoryID(ds$v4f, 2, 6)
             expect_identical(names(categories(ds$v4f)),
                 c("B", "C", "No Data"))
@@ -385,7 +388,7 @@ with_test_authentication({
             expect_equal(ids(categories(ds_apidocs$allpets)), c(2, 1, 9, 8))
             expect_equal(names(categories(ds_apidocs$allpets)),
                          c("not selected", "selected", "not asked", "skipped"))
-            
+
             ds_apidocs$allpets <- changeCategoryID(ds_apidocs$allpets, 2, 6)
             ds_apidocs$allpets <- changeCategoryID(ds_apidocs$allpets, 9, 7)
             expect_equal(as.vector(ds_apidocs$allpets[[1]]), orig_vector)
