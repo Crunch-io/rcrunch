@@ -1,6 +1,7 @@
 ### crunch 1.17.9 (under development)
 * `resetPassword()` function
-* categories are now selectable with names as well as ids.
+* Categories are now selectable by names as well as ids
+* Fix issue where `deleteSubvariable()` by index instead deleted the parent variable 
 
 ### crunch 1.17.8
 Two attempts to fix download issues introduced by 1.17.4:

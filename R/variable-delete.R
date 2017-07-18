@@ -65,7 +65,7 @@ setMethod("delete", "VariableTuple", function (x, ...) {
 #' @export
 deleteSubvariables <- function (variable, to.delete) {
     ## Identify subvariable URLs
-    delete.these <- urls(variable[to.delete])
+    delete.these <- urls(variable[,to.delete])
 
     if (length(delete.these) == 1) {
         subvars <- subvariables(variable)
