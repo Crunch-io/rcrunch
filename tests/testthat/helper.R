@@ -3,7 +3,13 @@ set.seed(666)
 
 ## Our "test package" common harness code
 ## `try` added because of some devtools::document weirdness
-try(source(system.file("crunch-test.R", package="crunch")))
+try({
+    crunch_test_path <- system.file("crunch-test.R", package="crunch")
+    if (crunch_test_path == "") {
+        # hack for loadall
+        crunch_test_path <- "./inst/crunch-test.R"
+    }
+})
 
 skip_on_jenkins <- function (...) {
     if (nchar(Sys.getenv("JENKINS_HOME"))) {
