@@ -101,12 +101,24 @@ with_mock_crunch({
             '{"https://app.crunch.io/api/datasets/1/":{"end_date":null}}')
     })
 
-    test_that("Dataset webURL", {
+    test_that("Dataset URLs", {
         with(temp.options(crunch.api="https://fake.crunch.io/api/v2/"), {
-            expect_identical(webURL(ds),
+            expect_identical(APIToWebURL(ds),
                 "https://fake.crunch.io/dataset/511a7c49778030653aab5963")
         })
+        expect_identical(webToAPIURL("https://app.crunch.io/dataset/b6c2325a8de9438ebab5d9a42d376b90/browse/eyJhcHBTdGF0ZVN0b3JlIjp0cnVlLCJhbmFseXplIjp7fSwidmFyaWFibGVzTmF2aWdhdG9yIjp7Iml0ZW0iOiIvZWU2NTI0YWFjMzFiNDkyZjk4M2ZiYzM0MGJjODYzYzkvIn19"),
+            "https://app.crunch.io/api/datasets/b6c2325a8de9438ebab5d9a42d376b90/")
+        expect_error(webToAPIURL("Not actually a URL"),
+            "Not a valid web app URL")
     })
+
+    with_mock(
+        `base::system2`=function (command, args, ...) args,
+        test_that("Opening a dataset on the web", {
+            expect_identical(webApp(ds),
+                "https://app.crunch.io/dataset/511a7c49778030653aab5963")
+        })
+    )
 
     test_that("Dataset VariableCatalog index is ordered", {
         expect_identical(urls(variables(ds)),
@@ -167,7 +179,7 @@ with_mock_crunch({
             expect_null(ds$birthyr)
         })
     })
-    
+
     test_that("Variables can be extracted by url", {
         url <- urls(variables(ds))[1]
         expect_identical(ds[[url]], ds[['birthyr']])
@@ -381,7 +393,7 @@ with_test_authentication({
             expect_silent(pk(ds) <- NULL)
             expect_null(pk(ds))
         })
-        
+
         test_that("Dataset settings (defaults)", {
             # expect_true(settings(ds)$viewers_can_export) ## Isn't it?
             expect_true(settings(ds)$viewers_can_change_weight)
