@@ -9,6 +9,7 @@ try({
         # hack for loadall
         crunch_test_path <- "./inst/crunch-test.R"
     }
+    source(crunch_test_path)
 })
 
 skip_on_jenkins <- function (...) {
