@@ -1,7 +1,9 @@
 ### crunch 1.17.9 (under development)
 * `resetPassword()` function
 * Categories are now selectable by names as well as ids
-* Fix issue where `deleteSubvariable()` by index instead deleted the parent variable 
+* Fix issue where `deleteSubvariable()` by index instead deleted the parent variable
+* Pass a web app URL to `loadDataset()` and it will now load the same dataset in your R session.
+* `webApp()` function to go the other way: open the dataset from your R session in your web browser.
 
 ### crunch 1.17.8
 Two attempts to fix download issues introduced by 1.17.4:

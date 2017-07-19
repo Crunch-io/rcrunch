@@ -41,6 +41,12 @@ with_mock_crunch({
         expect_identical(name(ds2), "mtcars from R")
     })
 
+    test_that("loadDataset by web app URL", {
+        ds3 <- loadDataset("https://app.crunch.io/dataset/3/browse")
+        expect_is(ds3, "CrunchDataset")
+        expect_identical(name(ds3), "ECON.sav")
+    })
+
     ds <- loadDataset("test ds")
     with_consent({
         test_that("deleteDataset by name", {
