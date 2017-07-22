@@ -4,11 +4,14 @@ CrunchDataFrame <- function (dataset) {
     stopifnot(is.dataset(dataset))
     out <- new.env()
     out$.crunchDataset <- dataset
+    out$.names <- c()
+    out$.n_rows <- nrow(dataset)
     with(out, {
         ## Note the difference from as.environment: wrapped in as.vector
-        for (a in aliases(allVariables(dataset))) {
+        for (.a in aliases(allVariables(dataset))) {
             eval(substitute(delayedAssign(v, as.vector(.crunchDataset[[v]])),
-                list(v=a)))
+                list(v=.a)))
+            .names <- c(.names, .a)
         }
     })
     class(out) <- "CrunchDataFrame"
@@ -18,10 +21,12 @@ CrunchDataFrame <- function (dataset) {
 setOldClass("CrunchDataFrame")
 
 #' @export
-dim.CrunchDataFrame <- function (x) dim(x$.crunchDataset)
+dim.CrunchDataFrame <- function (x) {
+    return(c(x$.n_rows, length(ls(x))))
+}
 
 #' @export
-names.CrunchDataFrame <- function (x) names(x$.crunchDataset)
+names.CrunchDataFrame <- function (x) x$.names
 
 #' as.data.frame method for CrunchDataset
 #'
@@ -72,4 +77,42 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
     out <- lapply(x, as.vector)
     names(out) <- names(x)
     return(structure(out, class="data.frame", row.names=c(NA, -nrow(x))))
+}
+
+
+#' Merge a CrunchDataFrame
+#' 
+#' @param x a CrunchDataFrame
+#' @param y a standard data.frame
+#' @param by.x name of the variable to match
+#' @param by.y name of the variable to match
+#' 
+#' @export
+merge.CrunchDataFrame  <- function (x, y, by.x, by.y) {
+    if (missing(by.x) | missing(by.y)) {
+        halt("Must supply both a by.x and a by.y to match by.")
+    }
+    # TODO: find a better way to subset the columns needed
+    row_index <- as.data.frame(x[[by.x]])
+    colnames(row_index) <- by.x
+    
+    # Duplicate the enviornment (so we are not manipulating in place)
+    new_x <- new.env()
+    for(n in ls(x, all.names=TRUE)) assign(n, get(n, x), new_x)
+
+    new_cols <- merge(row_index, y, all.x=TRUE)
+
+    # TODO: check that nrows of the to-merge DF is the same as nrows of the dataset.
+    
+    for (col in colnames(new_cols)) {
+        if (!col %in% by.x) {
+            # only assign new columns
+            # todo: check names, do something intelligent if theey are already there.
+            assign(col, new_cols[,col], envir = new_x)
+            new_x$.names <- c(new_x$.names, col)   
+        }
+    }
+    
+    class(new_x) <- "CrunchDataFrame"
+    return(new_x)
 }

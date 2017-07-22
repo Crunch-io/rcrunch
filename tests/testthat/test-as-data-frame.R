@@ -82,7 +82,7 @@ with_mock_crunch({
         t2@variables@index[[2]]$alias <- "Quote 'unquote' alias"
         expect_is(as.data.frame(t2), "CrunchDataFrame")
     })
-
+    
     test_that("as.data.frame(as.data.frame())", {
         expect_true(is.data.frame(as.data.frame(as.data.frame(ds))))
         expect_true(is.data.frame(as.data.frame(ds, force=TRUE)))
@@ -121,6 +121,18 @@ with_mock_crunch({
         expect_identical(.crunchPageSize(ds$catarray), 66666L)
         expect_identical(.crunchPageSize(ds$starttime), 100000L)
         expect_identical(.crunchPageSize(2016 - ds$birthyr), 50000L)
+    })
+    
+    test_that("merge.CrunchDataFrame works", {
+        ds_df <- as.data.frame(ds)
+        expect_silent(merged_df <- merge(ds_df,
+                                         data.frame(gender=c("Male", "Femal"), new="new"),
+                                         by.x = "gender",
+                                         by.y = "gender"))
+        expect_identical(nrow(merged_df), nrow(ds_df))
+        expect_identical(ncol(merged_df), ncol(ds_df)+1L)
+        expect_identical(names(merged_df), c(names(ds_df), "new"))
+        expect_identical(merged_df$new, factor(c(rep("new", 7), rep(NA, 18))))
     })
 })
 
