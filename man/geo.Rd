@@ -32,8 +32,6 @@ functions that help access and change this metadata.
 \details{
 \code{geo} retrieves the geographic information associate with a variable. If there is geographic information it returns an object of class \code{CrunchGeography} otherwise it returns \code{NULL}.
 
-\code{fetchGeoFile} will download the (geo|topo)json file hosted by crunch.
-
 \code{CrunchGeography} objects store geography metadata from a variable. There are three slots:
 \itemize{
 \item \code{geodatum} an object of class CrunchGeodata which stores references to the Crunch-hosted (geo|topo)json to use

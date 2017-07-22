@@ -5,8 +5,6 @@
 #'
 #' `geo` retrieves the geographic information associate with a variable. If there is geographic information it returns an object of class `CrunchGeography` otherwise it returns `NULL`.
 #'
-#' `fetchGeoFile` will download the (geo|topo)json file hosted by crunch.
-#'
 #' `CrunchGeography` objects store geography metadata from a variable. There are three slots:
 #' * `geodatum` an object of class CrunchGeodata which stores references to the Crunch-hosted (geo|topo)json to use
 #' * `feature_key` a character that is the feature inside of the (geo|topo)json to match `match_field` to (e.g. properties.name)
@@ -82,6 +80,8 @@ availableGeodata <- function(x = getAPIRoot()) {
 # TODO: expose available properties on the geodata entity in API so that we can:
 # TODO: checking intersection of category names to values of the specified 
 #       feature_key
-# TODO: move fetchGeoFile() to separate geocrunch package
 # TODO: availableGeodata() should be subsettable by name, and be asignable into 
 #       geodatum(geo(ds$var)) or the like
+# TODO: make sure the full resolution jsons are available
+# TODO: GIS opertaions (contains, union, etc.)
+
