@@ -86,9 +86,10 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
 #' @param y a standard data.frame
 #' @param by.x name of the variable to match
 #' @param by.y name of the variable to match
+#' @param ... ignored for now
 #' 
 #' @export
-merge.CrunchDataFrame  <- function (x, y, by.x, by.y) {
+merge.CrunchDataFrame  <- function (x, y, by.x, by.y, ...) {
     if (missing(by.x) | missing(by.y)) {
         halt("Must supply both a by.x and a by.y to match by.")
     }

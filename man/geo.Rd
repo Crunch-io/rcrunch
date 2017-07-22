@@ -3,6 +3,8 @@
 \docType{class}
 \name{CrunchGeography-class}
 \alias{CrunchGeography-class}
+\alias{Geodata-class}
+\alias{Geodata}
 \alias{geo}
 \alias{geo<-}
 \alias{CrunchGeography}

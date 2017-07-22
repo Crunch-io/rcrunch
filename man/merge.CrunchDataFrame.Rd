@@ -4,7 +4,7 @@
 \alias{merge.CrunchDataFrame}
 \title{Merge a CrunchDataFrame}
 \usage{
-\method{merge}{CrunchDataFrame}(x, y, by.x, by.y)
+\method{merge}{CrunchDataFrame}(x, y, by.x, by.y, ...)
 }
 \arguments{
 \item{x}{a CrunchDataFrame}
@@ -14,6 +14,8 @@
 \item{by.x}{name of the variable to match}
 
 \item{by.y}{name of the variable to match}
+
+\item{...}{ignored for now}
 }
 \description{
 Merge a CrunchDataFrame
