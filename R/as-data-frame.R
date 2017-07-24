@@ -98,13 +98,22 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
 #' }
 #' 
 #' @rdname VariableCatalog-to-Data-Frame
-#' @importFrom purrr map_df
+#' @importFrom purrr map_df map_lgl
+#' @importFrom dplyr bind_cols
 #' @export
 as.data.frame.VariableCatalog <- function(varCat, 
                                           fields = c("alias", "name", "type")) {
-  browser()
   out <- catalogToDataFrame(varCat)
-  out <- purrr::map_df(out, unlist )
+  subvariable_names <- c("subvariables", "subvariables_catalog")
+  sub_variables <- out[, subvariable_names]
+  vectors <- out[, setdiff(names(out), subvariable_names)]
+  ## Null values in the description field cause the description column to be
+  ## shorter than the other columns. Recoding as a character value makes the data
+  ## rectangular. 
+  vectors$description[map_lgl(vectors$description, is.null)] <-  "NULL"
+  vectors <- map_df(vectors, unlist)
+  out <- bind_cols(vectors, sub_variables)
+
  if (all(fields == "all")) {
    return(out)
  }
