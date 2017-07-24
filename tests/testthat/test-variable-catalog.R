@@ -4,7 +4,6 @@ with_mock_crunch({
     ds <- loadDataset("test ds")
     varcat <- allVariables(ds)
     varorder <- ordering(varcat)
-
     test_that("VariableCatalog instantiates from Shoji", {
         expect_is(varcat, "VariableCatalog")
     })
@@ -98,6 +97,35 @@ with_mock_crunch({
                 name=c("Birth Year", "Gender", "mymrset"),
                 type=c("numeric", "categorical", "multiple_response")
             )))
+    })
+    
+    test_that("as.data.frame method", {
+      
+      var_df <- as.data.frame(varcat)
+      print(str(catalogToDataFrame(varCat)))
+      
+      # expect_equal(as.data.frame(varcat[1:3]),
+      #               data.frame(
+      #                 alias=c("birthyr", "gender", "mymrset"),
+      #                 name=c("Birth Year", "Gender", "mymrset"),
+      #                 type=c("numeric", "categorical", "multiple_response")
+      #               ))
+      # 
+     # print(as.data.frame(varcat[1:3], fields = "all"))
+      # expect_equal(as.data.frame(varcat[1:3], fields = "all"),
+      #              data.frame(
+      #                discarded=c(FALSE, FALSE, FALSE),
+      #                alias=c("birthyr", "gender", "mymrset"),
+      #                name=c("Birth Year", "Gender", "mymrset"),
+      #                type=c("numeric", "categorical", "multiple_response"),
+      #                notes=c("", "", ""),
+      #                derived=c(FALSE, FALSE, FALSE),
+      #                id=c("66ae9881e3524f7db84970d556c34552",
+      #                     "f78ca47313144b57adfb495893968e70",
+      #                     "949d2dc7e7a24e6090cc88bb92e1d2fb"),
+      #                description=c("Gender", "Asked instead of age", ""
+      #              )))
+      
     })
 })
 

@@ -73,3 +73,45 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
     names(out) <- names(x)
     return(structure(out, class="data.frame", row.names=c(NA, -nrow(x))))
 }
+
+
+#' as.data.frame method for VariableCatalog
+#'
+#' This method allows you to import the VariableCatalog into your R sessions in 
+#' order to facilliate interactive use. Modifying the dataframe produced by this
+#' method will not update the Crunch web app, for information about modifying 
+#' variables in the app see: \code{vingette("variables",
+#' package = "crunch")}  
+#' 
+#' @param varCat
+#' A VariableCatalog produced by \code{variables(ds)}.
+#' @param fields 
+#' A character vector of the fields from the variable catalog which you would like 
+#' included in the datafame. To include all fields or see which fields are available
+#' set fields to "all". 
+#' @return A data frame
+#' @examples 
+#' \dontrun{
+#' ds <- loadDataset("iris")
+#' vars <- variables(ds)
+#' var_df <- as.data.frame(vars, fields = "all")
+#' }
+#' 
+#' @rdname VariableCatalog-to-Data-Frame
+#' @importFrom purrr map_df
+#' @export
+as.data.frame.VariableCatalog <- function(varCat, 
+                                          fields = c("alias", "name", "type")) {
+  browser()
+  out <- catalogToDataFrame(varCat)
+  out <- purrr::map_df(out, unlist )
+ if (all(fields == "all")) {
+   return(out)
+ }
+ if (!all(fields %in% names(out))) {
+   stop("Field name not present in variable catalog, use fields = 'all' to see available fields.")
+ }
+   return(out[, fields]) 
+}
+
+

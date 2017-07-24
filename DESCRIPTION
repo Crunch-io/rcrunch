@@ -21,7 +21,8 @@ Imports:
     httpcache (>= 0.1.4),
     jsonlite (>= 0.9.15),
     methods,
-    curl
+    curl,
+    purrr
 Suggests:
     covr,
     devtools,
