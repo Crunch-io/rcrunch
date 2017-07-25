@@ -123,16 +123,36 @@ with_mock_crunch({
         expect_identical(.crunchPageSize(2016 - ds$birthyr), 50000L)
     })
     
+    test_that("can manipulate the order of a crunchDataFrame", {
+        ds_df <- as.data.frame(ds)
+        gndr <- ds_df$v1
+        new_order <- c(4,3,2,1)
+        ds_df$.order <- new_order
+        expect_equal(ds_df$v1, gndr[new_order])   })
+    
     test_that("merge.CrunchDataFrame works", {
         ds_df <- as.data.frame(ds)
         expect_silent(merged_df <- merge(ds_df,
-                                         data.frame(gender=c("Male", "Femal"), new="new"),
+                                         data.frame(gender=c("Male", "Female"), new="new"),
                                          by.x = "gender",
                                          by.y = "gender"))
         expect_identical(nrow(merged_df), nrow(ds_df))
         expect_identical(ncol(merged_df), ncol(ds_df)+1L)
         expect_identical(names(merged_df), c(names(ds_df), "new"))
-        expect_identical(merged_df$new, factor(c(rep("new", 7), rep(NA, 18))))
+        expect_error(merged_df <- merge(ds_df,
+                                         data.frame(gender=rep(c("Male", "Female"), 100),
+                                                    new="new"),
+                                         by.x = "gender",
+                                         by.y = "gender"),
+                     "The number of rows in x \\(25\\) and y \\(1708\\) must be the same.")
+        expect_error(merged_df <- merge(ds_df,
+                                        data.frame(),
+                                        by.x = "gender",
+                                        by.y = "gender",
+                                        sort = "not_an_input"),
+                     paste0("The sort argument must be either ", dQuote("x"), " or ",
+             dQuote("y"), ". Got ", dQuote("not_an_input"), " instead."))
+        
     })
 })
 
