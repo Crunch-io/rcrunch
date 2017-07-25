@@ -124,21 +124,49 @@ merge.CrunchDataFrame  <- function (x, y, by.x, by.y, sort = "x", ...) {
              dQuote("y"), ". Got ", dQuote(substitute(sort)), " instead.")
     }
     
-    # TODO: find a better way to subset the columns needed
-    row_index <- as.data.frame(x[[by.x]])
-    colnames(row_index) <- by.x
-    
     # Duplicate the enviornment (so we are not manipulating in place)
-    new_x <- new.env()
-    for(n in ls(x, all.names=TRUE)) assign(n, get(n, x), new_x)
+    # using `for(n in ls(x, all.names=TRUE)) assign(n, get(n, x), new_x)`
+    # will evaluate each column, which is not actually what we want
+    # pryr:::promise_code (which can be compiled from promise.cpp separately)
+    # includes a way to extract the promise code, which works, but should only
+    # be used on actual promises, so would need some safe-guarding.
+    # instead we are copying the enviornment which modifies the CrunchDataFrame
+    # that was given in place.
+    new_x <- x
 
-    new_cols <- merge(row_index, y, all.x=TRUE)
-
+    # TODO: find a better way to subset the columns needed
+    x_index <- as.data.frame(x[[by.x]])
+    x_index$x_index <- as.numeric(row.names(x_index))
+    colnames(x_index) <- c(by.x, "x_index")
     
+    y_index <- as.data.frame(y[[by.y]])
+    y_index$y_index <- as.numeric(row.names(y_index))
+    colnames(y_index) <- c(by.y, "y_index")
+    
+    new_cols_map <- merge(x_index, y_index, all=TRUE, sort=FALSE)
+    
+    if (sort == "x") {
+        new_cols_map <- new_cols_map[with(new_cols_map, order(x_index, y_index)), ]
+        if (!identical(new_cols_map$x_index, x_index$x_index)) {
+            # add ordering if theres more than one y for each x
+            new_x$.order <- new_cols_map$x_index
+            new_x[[by.x]] <- x[[by.x]][new_x$.order]
+            
+        }
+        # remove NAs from x_index?
+    } else if (sort == "y") {
+        new_cols_map <- new_cols_map[with(new_cols_map, order(y_index, x_index)), ]
+        new_cols_map <- new_cols_map[!is.na(new_cols_map$y_index),]
+        new_x$.order <- new_cols_map$x_index
+        # need to remap the by.x columns because new_x was evaluated already
+        new_x[[by.x]] <- x[[by.x]][new_x$.order]
+    }
+    
+    new_cols <- y[new_cols_map$y_index,]
     for (col in colnames(new_cols)) {
         if (!col %in% by.x) {
-            if (length(new_cols[,col]) != nrow(x)) {
-                halt("The number of rows in x (", nrow(x), ") and y (", length(new_cols[,col]),
+            if (length(new_cols[,col]) != nrow(new_x)) {
+                halt("The number of rows in x (", nrow(new_x), ") and y (", length(new_cols[,col]),
                      ") must be the same.")
             }
             # only assign new columns
@@ -148,6 +176,5 @@ merge.CrunchDataFrame  <- function (x, y, by.x, by.y, sort = "x", ...) {
         }
     }
     
-    class(new_x) <- "CrunchDataFrame"
     return(new_x)
 }
