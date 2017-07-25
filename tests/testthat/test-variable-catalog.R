@@ -102,18 +102,19 @@ with_mock_crunch({
     test_that("Variable Catagory as.data.frame method", {
       expect_equal(as.data.frame(varcat[1:3]),
                     data.frame(
-                      alias=c("birthyr", "gender", "mymrset"),
-                      name=c("Birth Year", "Gender", "mymrset"),
-                      type=c("numeric", "categorical", "multiple_response"),
+                      alias = c("birthyr", "gender", "mymrset"),
+                      name  = c("Birth Year", "Gender", "mymrset"),
+                      type  = c("numeric", "categorical", "multiple_response"),
                       stringsAsFactors = FALSE
                     ))
+      expect_error(as.data.frame(varcat[1:3], fields = "Not a field at all"))
          })
 })
 
 with_test_authentication({
     ds <- newDataset(df)
     test_that("Can set descriptions (and doing so doesn't PUT order)", {
-        with(temp.options(httpcache.log=""), {
+        with(temp.options(httpcache.log = ""), {
             expect_identical(descriptions(variables(ds)),
                 rep("", ncol(ds)))
             logs <- capture.output(descriptions(variables(ds))[2:3] <- c("Des 1", "Des 2"))

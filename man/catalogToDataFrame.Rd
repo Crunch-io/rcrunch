@@ -2,9 +2,10 @@
 % Please edit documentation in R/shoji-catalog.R
 \name{catalogToDataFrame}
 \alias{catalogToDataFrame}
-\title{Utility to get a more human-readable view of a Shoji Catalog}
+\title{A utility to retun a dataframe from a ShojiCatalog.}
 \usage{
-catalogToDataFrame(x, keys = TRUE, rownames, ...)
+catalogToDataFrame(x, keys = TRUE, rownames = "default",
+  list_columns = c("subvariables", "subvariables_catalog"), ...)
 }
 \arguments{
 \item{x}{ShojiCatalog or subclass}
@@ -12,11 +13,12 @@ catalogToDataFrame(x, keys = TRUE, rownames, ...)
 \item{keys}{character vector of attribute names from each catalog tuple to
 include in the result. Default is TRUE, which means all.}
 
-\item{rownames}{See \code{\link[base]{data.frame}}, the \code{row.names}
-argument, to which this is passed in \code{data.frame}. The difference here
-is that if \code{rownames} is explicitly set as \code{NULL}, the resulting
-object will not have row names set. By default, row names will be the URLs
-of the catalog tuples.}
+\item{rownames}{The rownames of the resulting dataframe. If set to NULL rownames
+will default to the resulting dataframe will not have row names. By default the row names
+will be the URLs of the catalog tuples.}
+
+\item{list_columns}{A character vector of the names of the attributes which should be stored
+in a list-column.}
 
 \item{...}{additional arguments passed to \code{data.frame}}
 }
@@ -24,5 +26,8 @@ of the catalog tuples.}
 a \code{data.frame} view of the catalog
 }
 \description{
-Utility to get a more human-readable view of a Shoji Catalog
+Some of the attributes of a ShojiCatalog will not naturally fit in
+a conventional dataframe. For instance a single variable might have multiple subvariables,
+and these subvariables will not fit in a single row of a dataframe. In this case the
+list of subvariables are stored in a list-column in the resulting dataframe.
 }

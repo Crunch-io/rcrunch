@@ -17,13 +17,14 @@ License: LGPL (>= 3)
 Depends:
     R (>= 3.0.0)
 Imports:
+    curl,
+    dplyr,
     httr (>= 1.0.0),
     httpcache (>= 0.1.4),
     jsonlite (>= 0.9.15),
     methods,
-    curl,
     purrr,
-    dplyr
+    tibble
 Suggests:
     covr,
     devtools,

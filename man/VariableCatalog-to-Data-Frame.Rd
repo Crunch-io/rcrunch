@@ -4,11 +4,17 @@
 \alias{as.data.frame.VariableCatalog}
 \title{as.data.frame method for VariableCatalog}
 \usage{
-\method{as.data.frame}{VariableCatalog}(varCat, fields = c("alias", "name",
-  "type"))
+\method{as.data.frame}{VariableCatalog}(x, row.names = NULL,
+  optional = FALSE, ..., fields = c("alias", "name", "type"))
 }
 \arguments{
-\item{varCat}{A VariableCatalog produced by \code{variables(ds)}.}
+\item{x}{A VariableCatalog produced by \code{variables(ds)}.}
+
+\item{row.names}{part of as.data.frame signature. Ignored.}
+
+\item{optional}{part of as.data.frame signature. Ignored.}
+
+\item{...}{Additional arguments passed to \code{data.frame}}
 
 \item{fields}{A character vector of the fields from the variable catalog which you would like
 included in the datafame. To include all fields or see which fields are available

@@ -240,28 +240,61 @@ setMethod("emails", "ShojiCatalog", function (x) getIndexSlot(x, "email"))
 #' @export
 as.list.ShojiCatalog <- function (x, ...) lapply(names(index(x)), function (i) x[[i]])
 
-#' Utility to get a more human-readable view of a Shoji Catalog
+#' A utility to retun a dataframe from a ShojiCatalog.
+#' 
+#' Some of the attributes of a ShojiCatalog will not naturally fit in
+#' a conventional dataframe. For instance a single variable might have multiple subvariables, 
+#' and these subvariables will not fit in a single row of a dataframe. In this case the
+#' list of subvariables are stored in a list-column in the resulting dataframe. 
 #'
 #' @param x ShojiCatalog or subclass
 #' @param keys character vector of attribute names from each catalog tuple to
 #' include in the result. Default is TRUE, which means all.
-#' @param rownames See \code{\link[base]{data.frame}}, the \code{row.names}
-#' argument, to which this is passed in \code{data.frame}. The difference here
-#' is that if \code{rownames} is explicitly set as \code{NULL}, the resulting
-#' object will not have row names set. By default, row names will be the URLs
-#' of the catalog tuples.
+#' @param rownames The rownames of the resulting dataframe. If set to NULL rownames 
+#' will default to the resulting dataframe will not have row names. By default the row names 
+#' will be the URLs of the catalog tuples.
+#' @param list_columns A character vector of the names of the attributes which should be stored
+#' in a list-column. 
 #' @param ... additional arguments passed to \code{data.frame}
 #' @return a \code{data.frame} view of the catalog
+#' @importFrom purrr map map_df map_lgl
+#' @importFrom tibble as_tibble
 #' @export
-catalogToDataFrame <- function (x, keys=TRUE, rownames, ...) {
+catalogToDataFrame <- function(x, keys=TRUE, 
+                                rownames = "default", 
+                                list_columns = c("subvariables", "subvariables_catalog"),
+                                ...) {
+    index <- map(index(x), function(a) a[keys])
+    
+    entry_to_df <- function(l, list_col_names = list_columns){
+      l[map_lgl(l, is.null)] <- NA
+      vect_col <- l[!(names(l) %in% list_col_names)]
+      entry_df <- tibble::as_tibble(vect_col)
+      
+      if (any(names(l) %in% list_col_names)) {
+        list_col <- l[list_col_names]
+        list_df <- data.frame(matrix(nrow = 1, ncol = length(list_col)))
+        names(list_df) <- names(list_col)
+        for (i  in seq_along(list_col)) {
+          list_df[[1, i]] <- list_col[i] 
+        }
+        entry_df <- cbind(entry_df, list_df)
+      }
+      entry_df
+    }
+    
+    out <- purrr::map_df(index, entry_to_df)
+    
     default.rownames <- missing(rownames)
     if (default.rownames) {
-        rownames <- NULL
+      rownames <- NULL
     }
-    out <- data.frame(do.call(rbind, lapply(index(x), function (a) a[keys])),
-        row.names=rownames, ...)
+    
+    out <- as.data.frame(out, rownames = rownames, ...)
+
     if (default.rownames) {
-        rownames(out) <- NULL
+      rownames(out) <- NULL
     }
-    return(out)
+    
+    out
 }
