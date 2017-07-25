@@ -257,19 +257,17 @@ as.list.ShojiCatalog <- function (x, ...) lapply(names(index(x)), function (i) x
 #' in a list-column. 
 #' @param ... additional arguments passed to \code{data.frame}
 #' @return a \code{data.frame} view of the catalog
-#' @importFrom purrr map map_df map_lgl
-#' @importFrom tibble as_tibble
 #' @export
 catalogToDataFrame <- function(x, keys=TRUE, 
                                 rownames = "default", 
                                 list_columns = c("subvariables", "subvariables_catalog"),
                                 ...) {
-    index <- map(index(x), function(a) a[keys])
-    
+    index <- lapply(index(x), function(a) a[keys])
+    browser()
     entry_to_df <- function(l, list_col_names = list_columns){
-      l[map_lgl(l, is.null)] <- NA
+      l[vapply(l, is.null, logical(1))] <- NA
       vect_col <- l[!(names(l) %in% list_col_names)]
-      entry_df <- tibble::as_tibble(vect_col)
+      entry_df <- as.data.frame(vect_col, stringsAsFactors = FALSE)
       
       if (any(names(l) %in% list_col_names)) {
         list_col <- l[list_col_names]
@@ -283,8 +281,23 @@ catalogToDataFrame <- function(x, keys=TRUE,
       entry_df
     }
     
-    out <- purrr::map_df(index, entry_to_df)
+    ### The following code is equivalent to out <- purrr::map_df(index, entry_to_df)
+    ### and can also be accomplished with dplyr::bind_rows() or plyr::rbind.fill()
+    ### Remove if any of these are ever added as dependencies.
+    ################
+    entry_list <- lapply(index, entry_to_df)
+    names <- unlist( lapply(entry_list, names))
+    classes <- unlist( lapply(entry_list, function(df) lapply(df, class)))
+    class_df <- unique(data.frame(name = names, class = classes))
+    out <- data.frame(matrix(nrow = length(entry_list), ncol = length(class_df$name)))
+    names(out) <- class_df$name
     
+    for (i in seq_along(entry_list)) {
+      for (j in  names(entry_list[[i]])) {
+        out[i, j] <- entry_list[[i]][1, j]
+      }
+    }
+   #################
     default.rownames <- missing(rownames)
     if (default.rownames) {
       rownames <- NULL
