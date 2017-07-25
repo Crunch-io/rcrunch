@@ -8,11 +8,9 @@ CrunchDataFrame <- function (dataset, order) {
     # set the order of the dataset based on order function, if no order is 
     # given return all rows in the dataset in the order they appear
     if (is.null(order)) {
-        out$.n_rows <- nrow(dataset)
         out$.order <- order
     } else {
         out$.order <- order
-        out$.n_rows <- length(order)
     }
     
     with(out, {
@@ -41,7 +39,14 @@ setOldClass("CrunchDataFrame")
 
 #' @export
 dim.CrunchDataFrame <- function (x) {
-    return(c(x$.n_rows, length(ls(x))))
+    if (is.null(x$.order)) {
+        # if there is no ordering, the num of rows is the same as dataset
+        n_rows <- nrow(x$.crunchDataset)
+    } else {
+        # if there is an ordering, the num of rows is the length of the ordering
+        n_rows <- length(x$.order)
+    }
+    return(c(n_rows, length(ls(x))))
 }
 
 #' @export

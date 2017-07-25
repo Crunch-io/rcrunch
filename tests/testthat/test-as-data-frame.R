@@ -128,7 +128,9 @@ with_mock_crunch({
         gndr <- ds_df$v1
         new_order <- c(4,3,2,1)
         ds_df$.order <- new_order
-        expect_equal(ds_df$v1, gndr[new_order])   })
+        expect_equal(ds_df$v1, gndr[new_order])
+        expect_equal(nrow(ds_df), length(new_order))
+    })
     
     test_that("merge.CrunchDataFrame works", {
         ds_df <- as.data.frame(ds)

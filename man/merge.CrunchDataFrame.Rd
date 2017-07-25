@@ -4,7 +4,7 @@
 \alias{merge.CrunchDataFrame}
 \title{Merge a CrunchDataFrame}
 \usage{
-\method{merge}{CrunchDataFrame}(x, y, by.x, by.y, ...)
+\method{merge}{CrunchDataFrame}(x, y, by.x, by.y, sort = "x", ...)
 }
 \arguments{
 \item{x}{a CrunchDataFrame}
@@ -14,6 +14,8 @@
 \item{by.x}{name of the variable to match}
 
 \item{by.y}{name of the variable to match}
+
+\item{sort}{character, either "x" or "y" (default: "x"). Which of the inputs should be used for the output order. Unlike merge.data.frame, merge.CrunchDataFrame will not re-sort the order of the output. It will use the order of either x or y.}
 
 \item{...}{ignored for now}
 }
