@@ -46,7 +46,17 @@ test_that("toVariable handles duplicate factor levels", {
             ))),
         "Duplicate factor levels given: disambiguating them in translation to Categorical type")
 })
-
+test_that("categoriesFromLevels parses levels correctly", {
+  expect_identical(
+    categoriesFromLevels(levels(iris$Species)),
+    list(structure(list(id = 1L, name = "setosa", numeric_value = 1L, missing = FALSE),     
+                   .Names = c("id", "name", "numeric_value", "missing")), 
+         structure(list(id = 2L, name = "versicolor", numeric_value = 2L, missing = FALSE), 
+                   .Names = c("id", "name", "numeric_value", "missing")), 
+         structure(list(id = 3L, name = "virginica", numeric_value = 3L, missing = FALSE),  
+                   .Names = c("id", "name", "numeric_value", "missing")))
+  )
+})
 test_that("toVariable parses R Date class", {
     expect_equivalent(toVariable(as.Date(c("2014-12-16", "2014-12-17"))),
         list(values=c("2014-12-16", "2014-12-17"), type="datetime",
