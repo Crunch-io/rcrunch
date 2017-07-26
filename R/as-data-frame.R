@@ -36,6 +36,7 @@ CrunchDataFrame <- function (dataset, order) {
 }
 
 setOldClass("CrunchDataFrame")
+setClass(Class = "CrunchDataFrame", contains = "data.frame")
 
 #' @export
 dim.CrunchDataFrame <- function (x) {
@@ -107,9 +108,18 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
 
 #' Merge a CrunchDataFrame
 #' 
-#' Merging a CrunchDataFrame with a local dataframe is experiemental and might result in unexpected results. One known issue is that using `merge` on a CrunchDataFrame will change the both the CrunchDataFrame used as input as well as ceate a new CrunchDataFrame. 
+#' Merging a CrunchDataFrame with a local dataframe is experiemental and might 
+#' result in unexpected results. One known issue is that using `merge` on a 
+#' CrunchDataFrame will change the both the CrunchDataFrame used as input as 
+#' well as create a new CrunchDataFrame. 
 #' 
-#' `merge`ing a CrunchDataFrame with a local dataframe is useful in situations where you have new information in your local R session that you want to connect with Crunch data. For example, this is especially usefull for making plots with crunch and non-crunch data. It produces a hybrid CrunchDataFrame that has the local data attached to it, but like normal CrunchDataFrames it is still judicious about downloading data from the server only when it is needed.
+#' `merge`ing a CrunchDataFrame with a local dataframe is useful in situations 
+#' where you have new information in your local R session that you want to 
+#' connect with Crunch data. For example, this is especially useful for making
+#' plots with crunch and non-crunch data. It produces a hybrid CrunchDataFrame
+#' that has the local data attached to it, but like normal CrunchDataFrames 
+#' it is still judicious about downloading data from the server only when it 
+#' is needed.
 #' 
 #' @param x a CrunchDataFrame
 #' @param y a standard data.frame
@@ -149,8 +159,11 @@ merge.CrunchDataFrame  <- function (x, y, by.x, by.y, sort = "x", ...) {
     y_index$y_index <- as.numeric(row.names(y_index))
     colnames(y_index) <- c(by.y, "y_index")
     
-    new_cols_map <- merge(x_index, y_index, all=TRUE, sort=FALSE)
+    new_cols_map <- merge(x_index, y_index, by.x=by.x, by.y=by.y, all=TRUE, sort=FALSE)
     
+    # TODO: split out into separate functions that deal with the 
+    # CrunchDataFrame and the data.frame independently, and then allow for 
+    # either to be x or y.
     if (sort == "x") {
         new_cols_map <- new_cols_map[with(new_cols_map, order(x_index, y_index)), ]
         if (!identical(new_cols_map$x_index, x_index$x_index)) {
@@ -167,16 +180,16 @@ merge.CrunchDataFrame  <- function (x, y, by.x, by.y, sort = "x", ...) {
         # need to remap the by.x columns because new_x was evaluated already
         new_x[[by.x]] <- x[[by.x]][new_x$.order]
     }
-    
+
     new_cols <- y[new_cols_map$y_index,]
     for (col in colnames(new_cols)) {
         if (!col %in% by.x) {
             if (length(new_cols[,col]) != nrow(new_x)) {
-                halt("The number of rows in x (", nrow(new_x), ") and y (", length(new_cols[,col]),
-                     ") must be the same.")
+                halt("The number of rows in x (", nrow(new_x), 
+                     ") and y (", length(new_cols[,col]), ") must be the same.")
             }
             # only assign new columns
-            # todo: check names, do something intelligent if theey are already there.
+            # todo: check names, do something intelligent if they are already there.
             assign(col, new_cols[,col], envir = new_x)
             new_x$.names <- c(new_x$.names, col)   
         }
