@@ -107,7 +107,8 @@ with_mock_crunch({
                       type  = c("numeric", "categorical", "multiple_response"),
                       stringsAsFactors = FALSE
                     ))
-      expect_error(as.data.frame(varcat[1:3], fields = "Not a field at all"))
+      expect_error(as.data.frame(varcat[1:3], fields = "Not a field at all"),
+                   "Field name not present in variable catalog, use fields = 'all' to see available fields.")
          })
 })
 
