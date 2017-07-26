@@ -107,12 +107,18 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
 
 #' Merge a CrunchDataFrame
 #' 
+#' Merging a CrunchDataFrame with a local dataframe is experiemental and might result in unexpected results. One known issue is that using `merge` on a CrunchDataFrame will change the both the CrunchDataFrame used as input as well as ceate a new CrunchDataFrame. 
+#' 
+#' `merge`ing a CrunchDataFrame with a local dataframe is useful in situations where you have new information in your local R session that you want to connect with Crunch data. For example, this is especially usefull for making plots with crunch and non-crunch data. It produces a hybrid CrunchDataFrame that has the local data attached to it, but like normal CrunchDataFrames it is still judicious about downloading data from the server only when it is needed.
+#' 
 #' @param x a CrunchDataFrame
 #' @param y a standard data.frame
 #' @param by.x name of the variable to match
 #' @param by.y name of the variable to match
-#' @param sort character, either "x" or "y" (default: "x"). Which of the inputs should be used for the output order. Unlike merge.data.frame, merge.CrunchDataFrame will not re-sort the order of the output. It will use the order of either x or y. 
+#' @param sort character, either "x" or "y" (default: "x"). Which of the inputs should be used for the output order. Unlike merge.data.frame, merge.CrunchDataFrame will not re-sort the order of the output. It will use the order of either `x` or `y`. 
 #' @param ... ignored for now
+#' 
+#' @return a CrunchDataFrame with columns from both `x` and `y`
 #' 
 #' @export
 merge.CrunchDataFrame  <- function (x, y, by.x, by.y, sort = "x", ...) {
