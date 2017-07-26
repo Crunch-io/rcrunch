@@ -68,8 +68,8 @@ setMethod("toVariable", "logical", function (x, ...) {
 #' a factor's levels which can then be further manipulated in R before being
 #' imported into Crunch.
 #'
-#' @param levels A character vector containing the levels of a factor. Usually
-#' obtained by running \code{levels()}
+#' @param level_vect A character vector containing the levels of a factor. Usually
+#' obtained by running [base::levels()]
 #'
 #' @return A list with each category levels id, name, numeric_value, and missingness. 
 #' @rdname categoriesFromLevels
@@ -77,16 +77,16 @@ setMethod("toVariable", "logical", function (x, ...) {
 #'
 #' @examples
 #' 
-#' categoriesFromLevels( levels(iris$Species))
+#' categoriesFromLevels(levels(iris$Species))
 #' 
-categoriesFromLevels <- function(levels) {
-    if (anyDuplicated(levels)) {
+categoriesFromLevels <- function(level_vect) {
+    if (anyDuplicated(level_vect)) {
         warning("Duplicate factor levels given: disambiguating them ",
             "in translation to Categorical type")
-        levels <- uniquify(levels)
+        level_vect <- uniquify(level_vect)
     }
-    return(lapply(seq_along(levels), function (i) {
-        list(id=i, name=levels[i], numeric_value=i, missing=FALSE)
+    return(lapply(seq_along(level_vect), function (i) {
+        list(id=i, name=level_vect[i], numeric_value=i, missing=FALSE)
     }))
 }
 

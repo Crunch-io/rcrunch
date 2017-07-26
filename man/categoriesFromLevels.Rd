@@ -4,11 +4,11 @@
 \alias{categoriesFromLevels}
 \title{Convert a factor's levels into Crunch categories.}
 \usage{
-categoriesFromLevels(levels)
+categoriesFromLevels(level_vect)
 }
 \arguments{
-\item{levels}{A character vector containing the levels of a factor. Usually
-obtained by running \code{levels()}}
+\item{level_vect}{A character vector containing the levels of a factor. Usually
+obtained by running \code{\link[base:levels]{base::levels()}}}
 }
 \value{
 A list with each category levels id, name, numeric_value, and missingness.
@@ -21,6 +21,6 @@ imported into Crunch.
 }
 \examples{
 
-categoriesFromLevels( levels(iris$Species))
+categoriesFromLevels(levels(iris$Species))
 
 }
