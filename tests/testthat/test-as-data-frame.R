@@ -34,9 +34,9 @@ with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("setup", {
         expect_identical(dim(ds), c(nrow(ds), ncol(ds)))
-        expect_identical(dim(ds), c(25L, 6L))
+        expect_identical(dim(ds), c(25L, 7L))
         expect_identical(names(ds),
-            c("birthyr", "gender", "mymrset", "textVar", "starttime", "catarray"))
+            c("birthyr", "gender", "location", "mymrset", "textVar", "starttime", "catarray"))
     })
 
     test_that("as.vector on Variables", {
@@ -82,7 +82,7 @@ with_mock_crunch({
         t2@variables@index[[2]]$alias <- "Quote 'unquote' alias"
         expect_is(as.data.frame(t2), "CrunchDataFrame")
     })
-
+    
     test_that("as.data.frame(as.data.frame())", {
         expect_true(is.data.frame(as.data.frame(as.data.frame(ds))))
         expect_true(is.data.frame(as.data.frame(ds, force=TRUE)))
@@ -121,6 +121,140 @@ with_mock_crunch({
         expect_identical(.crunchPageSize(ds$catarray), 66666L)
         expect_identical(.crunchPageSize(ds$starttime), 100000L)
         expect_identical(.crunchPageSize(2016 - ds$birthyr), 50000L)
+    })
+    
+    test_that("can manipulate the order of a crunchDataFrame", {
+        ds_df <- as.data.frame(ds)
+        gndr <- ds_df$v1
+        new_order <- c(4,3,2,1)
+        ds_df$.order <- new_order
+        expect_equal(ds_df$v1, gndr[new_order])
+        expect_equal(nrow(ds_df), length(new_order))
+        ds_df2 <- as.data.frame(ds, order = new_order)
+        expect_equal(ds_df2$v1, gndr[new_order])
+        expect_equal(nrow(ds_df2), length(new_order))
+    })
+    
+    test_that("merge.CrunchDataFrame works", {
+        ds_df <- as.data.frame(ds)
+        local_df <- data.frame(gender=c("Male", "Female"), new="new")
+        expect_silent(merged_df <- merge(ds_df,
+                                         local_df,
+                                         by.x = "gender",
+                                         by.y = "gender"))
+        expect_identical(nrow(merged_df), nrow(ds_df))
+        expect_identical(merged_df$new,
+                         factor(c("new", "new", NA, "new", "new", "new", "new",
+                                  NA, NA, "new", "new", "new", "new", NA, NA,
+                                  NA, "new", "new", "new", NA, "new", "new",
+                                  "new", NA, "new")))
+        expect_error(merged_df <- merge(ds_df,
+                                        data.frame(),
+                                        by.x = "gender",
+                                        by.y = "gender",
+                                        sort = "not_an_input"),
+                     paste0("The sort argument must be either ",
+                            dQuote("x"), " or ", dQuote("y"), ". Got ",
+                            dQuote("not_an_input"), " instead."))
+        expect_error(merged_df <- merge(ds_df,
+                                        data.frame(),
+                                        by.x = "gender",
+                                        sort = "not_an_input"),
+                     "Must supply both a by.x and a by.y to match by.")
+        expect_error(merged_df <- merge(ds_df,
+                                        data.frame(),
+                                        by.y = "gender",
+                                        sort = "not_an_input"),
+                     "Must supply both a by.x and a by.y to match by.")
+    })
+ 
+    test_that("Can't assign too many rows into a crunchdataframe", {
+        skip("TODO: Not trigged currently, but shoudl be factored to a new functions")
+        large_df <- data.frame(gender=rep(c("Male", "Female"), 100), new="new")
+        expect_error(merged_df <- merge(ds_df,
+                                        large_df,
+                                        by.x = "gender",
+                                        by.y = "gender"),
+                     "The number of rows in x \\(25\\) and y \\(1708\\) must", 
+                     "be the same.")
+    })
+       
+    test_that("merge.CrunchDataFrame works with sort=y", {
+        ds_df <- as.data.frame(ds)
+        df_local <- data.frame(textVar=c("w", "n"),
+                               new=factor(c("new1", "new2")),
+                               stringsAsFactors = FALSE)
+        expect_silent(merged_df <- merge(ds_df,
+                                         df_local,
+                                         by.x = "textVar",
+                                         by.y = "textVar",
+                                         sort = "y"))
+        expect_identical(nrow(merged_df), 4L)
+        expect_identical(merged_df$textVar, c("w", "w", "n", "n"))
+        expect_identical(merged_df$starttime, 
+                         from8601(c("1956-02-13", "1956-01-28", "1955-12-28",
+                                  "1955-12-30")))
+        expect_identical(merged_df$new,
+                         factor(c("new1", "new1", "new2", "new2")))
+    })
+
+    test_that("merge.CrunchDataFrame duplicates rows when needed", {
+        ds_df <- as.data.frame(ds)
+        df_local <- data.frame(textVar=c("w", "w"),
+                               new=factor(c("new1", "new2")),
+                               stringsAsFactors = FALSE)
+        expect_silent(merged_df <- merge(ds_df,
+                                         df_local,
+                                         by.x = "textVar",
+                                         by.y = "textVar",
+                                         sort = "y"))
+        expect_identical(nrow(merged_df), 4L)
+        expect_identical(merged_df$textVar, c("w", "w", "w", "w"))
+        expect_identical(merged_df$starttime, 
+                         from8601(c("1956-02-13", "1956-01-28", "1956-02-13",
+                                    "1956-01-28")))
+        expect_identical(merged_df$new,
+                         factor(c("new1", "new1", "new2", "new2")))
+        
+        ds_df <- as.data.frame(ds) # must over-write the CrunchDataFrame
+        expect_silent(merged_df <- merge(ds_df,
+                                         df_local,
+                                         by.x = "textVar",
+                                         by.y = "textVar",
+                                         sort = "x"))
+        expect_identical(nrow(merged_df), 27L)
+        expect_identical(merged_df$textVar, c("w", "w", "n", "x", "b", "q",
+                                              "s", "l", "v", "v", "y", "m",
+                                              "t", "s", "e", "z", "k", "n",
+                                              "w", "w", "v", "i", "h", "z",
+                                              "m", "c", "x"))
+        expect_identical(merged_df$starttime, 
+                         from8601(c("1956-02-13", "1956-02-13", "1955-12-28",
+                                    "1955-11-17", "1956-02-08", "1956-01-17",
+                                    "1956-01-21", "1956-02-07", "1955-12-25",
+                                    "1956-01-17", "1955-12-12", "1955-11-21",
+                                    "1955-12-06", "1956-01-19", "1955-12-15",
+                                    "1956-02-07", "1956-02-08", "1955-12-30",
+                                    "1956-01-28", "1956-01-28", "1956-01-01",
+                                    "1956-01-15", "1955-11-13", "1955-11-17",
+                                    "1955-11-09", "1955-12-22", "1955-12-20")))
+        expect_identical(merged_df$new,
+                         factor(c("new1", "new2", rep(NA, 16), "new1", "new2",
+                                  rep(NA, 7))))
+    })
+        
+    test_that("merge.CrunchDataFrame modifies in place", {
+        ds_df <- as.data.frame(ds)
+        expect_silent(merged_df <- merge(ds_df,
+                                         data.frame(gender=c("Male", "Female"), new="new"),
+                                         by.x = "gender",
+                                         by.y = "gender"))
+        expect_identical(ncol(merged_df), ncol(ds_df))
+        expect_identical(names(merged_df), names(ds_df))
+        skip("merge.CrunchDataFrame currently alters the CDF in place")
+        # if/when that is resolved, these should replace above.
+        expect_identical(ncol(merged_df), ncol(ds_df)+1L)
+        expect_identical(names(merged_df), c(names(ds_df), "new"))
     })
 })
 

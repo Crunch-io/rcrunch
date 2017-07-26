@@ -7,7 +7,7 @@
 \title{as.data.frame method for CrunchDataset}
 \usage{
 \method{as.data.frame}{CrunchDataset}(x, row.names = NULL, optional = FALSE,
-  force = FALSE, ...)
+  force = FALSE, order = NULL, ...)
 
 \method{as.data.frame}{CrunchDataFrame}(x, row.names = NULL,
   optional = FALSE, ...)
@@ -21,6 +21,8 @@
 
 \item{force}{logical: actually coerce the dataset to \code{data.frame}, or
 leave the columns as unevaluated promises. Default is \code{FALSE}.}
+
+\item{order}{vector of indeces. The order that the rows of the dataset should be presented as (default: \code{NULL}). If \code{NULL}, then the Crunch Dataset order will be used.}
 
 \item{...}{additional arguments passed to as.data.frame.default}
 }

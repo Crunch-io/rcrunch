@@ -317,3 +317,18 @@ MultitableResult <- setClass("MultitableResult", contains="namedList")
 TabBookResult <- setClass("TabBookResult", contains="namedList")
 
 SearchResults <- setClass("SearchResults", contains="namedList")
+
+#' @rdname geo
+setClass("CrunchGeography", contains="namedList")
+CrunchGeography <- function (..., data=NULL) {
+    if (!is.null(data)) {
+        return(new("CrunchGeography", data))
+    } else {
+        return(new("CrunchGeography", list(...)))
+    }
+}
+
+#' @rdname geo
+#' @export Geodata
+Geodata <- setClass("Geodata", contains="ShojiEntity")
+GeoCatalog <- setClass("GeoCatalog", contains="ShojiCatalog")

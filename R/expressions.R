@@ -166,10 +166,20 @@ setMethod("!", "CrunchExpr", function (x) zfuncExpr("not", x))
         length(table) > 2 &&
         identical(as.numeric(head(table, 1):tail(table, 1)), as.numeric(table))) {
 
+        # set beg(ining) and end appropriately in case we have been given a rev
+        # sequence (eg 20:1) ZCL returns nothing if asked for between 20 and 1
+        if (head(table, 1) < tail(table, 1)) {
+            beg <- head(table, 1)
+            end <- tail(table, 1)
+        } else {
+            beg <- tail(table, 1)
+            end <- head(table, 1)
+        }
+        
         return(zfunc("between",
             x,
-            head(table, 1),
-            tail(table, 1) + 1))
+            beg,
+            end + 1))
             ## Add 1 because "between" by default doesn't include the upper
             ## bound and explicitly overriding that is failing. See #112089103.
             ## When that is fixed, we can do the following:
