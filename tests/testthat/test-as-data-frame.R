@@ -130,7 +130,7 @@ with_mock_crunch({
         ds_df$.order <- new_order
         expect_equal(ds_df$v1, gndr[new_order])
         expect_equal(nrow(ds_df), length(new_order))
-        ds_df2 <- as.data.frame(ds, order = new_order)
+        ds_df2 <- as.data.frame(ds, selection = new_order)
         expect_equal(ds_df2$v1, gndr[new_order])
         expect_equal(nrow(ds_df2), length(new_order))
     })

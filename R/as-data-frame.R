@@ -1,33 +1,31 @@
-CrunchDataFrame <- function (dataset, order) {
+CrunchDataFrame <- function (dataset, selection = NULL) {
     ## S3 constructor method for CrunchDataFrame. terms.formula doesn't seem
     ## to like S4 subclass of environment
     stopifnot(is.dataset(dataset))
     out <- new.env()
     out$.crunchDataset <- dataset
-    out$.names <- c()
-    # set the order of the dataset based on order function, if no order is 
+    out$.names <- aliases(allVariables(dataset))
+    # set the order of the dataset based on selection, if no selection is 
     # given return all rows in the dataset in the order they appear
-    if (is.null(order)) {
-        out$.order <- order
-    } else {
-        out$.order <- order
-    }
+    out$.order <- selection
     
     with(out, {
         ## Note the difference from as.environment: wrapped in as.vector
-        for (.a in aliases(allVariables(dataset))) {
+        for (.a in out$.names) {
             eval(substitute(delayedAssign(v, {
                 if (is.null(.order)) {
                     as.vector(.crunchDataset[[v]])
                 } else {
-                    # as.numeric(factor(.order)) gets the dense ranking of the 
-                    # ordering so that the non-duplicated results returned in 
-                    # crunch order can be used in the order specified in .order.
-                    as.vector(.crunchDataset[[v]][.order])[as.numeric(factor(.order))]
+                    # The API response for selected rows is in the order of the
+                    # dataset, so we need to reorder it before we return it. 
+                    # `match(.order, sort(unique(.order)))`` gets the dense 
+                    # ranking of the ordering so that the non-duplicated 
+                    # results returned in crunch order can be used in the order
+                    # specified in .order.
+                    as.vector(.crunchDataset[[v]][.order])[match(.order, sort(unique(.order)))]
                 }
                 }),
                 list(v=.a)))
-            .names <- c(.names, .a)
         }
     })
     
@@ -57,7 +55,7 @@ names.CrunchDataFrame <- function (x) x$.names
 #'
 #' This method is defined principally so that you can use a CrunchDataset as
 #' a `data` argument to other R functions (such as
-#' `\link[stats]{lm}`). Unless you give it the `force==TRUE`
+#' `[stats::lm]`). Unless you give it the `force==TRUE`
 #' argument, this function does not in fact return a `data.frame`: it
 #' returns an object with an interface like a data.frame, such that you get
 #' R vectors when you access its columns (unlike a CrunchDataset, which
@@ -71,7 +69,7 @@ names.CrunchDataFrame <- function (x) x$.names
 #' @param optional part of as.data.frame signature. Ignored.
 #' @param force logical: actually coerce the dataset to `data.frame`, or
 #' leave the columns as unevaluated promises. Default is `FALSE`.
-#' @param order vector of indeces. The order that the rows of the dataset should be presented as (default: `NULL`). If `NULL`, then the Crunch Dataset order will be used.
+#' @param selection vector of indeces. Which, and their order, of the rows of the dataset should be presented as (default: `NULL`). If `NULL`, then the Crunch Dataset order will be used.
 #' @param ... additional arguments passed to as.data.frame.default
 #' @return an object of class `CrunchDataFrame` unless `force`, in
 #' which case the return is a `data.frame`.
@@ -81,8 +79,8 @@ NULL
 #' @rdname dataset-to-R
 #' @export
 as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE,
-                                        force=FALSE, order = NULL, ...) {
-    out <- CrunchDataFrame(x, order = order)
+                                        force=FALSE, selection = NULL, ...) {
+    out <- CrunchDataFrame(x, selection = selection)
     if (force) {
         out <- as.data.frame(out)
     }

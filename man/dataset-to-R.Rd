@@ -7,7 +7,7 @@
 \title{as.data.frame method for CrunchDataset}
 \usage{
 \method{as.data.frame}{CrunchDataset}(x, row.names = NULL, optional = FALSE,
-  force = FALSE, order = NULL, ...)
+  force = FALSE, selection = NULL, ...)
 
 \method{as.data.frame}{CrunchDataFrame}(x, row.names = NULL,
   optional = FALSE, ...)
@@ -22,7 +22,7 @@
 \item{force}{logical: actually coerce the dataset to \code{data.frame}, or
 leave the columns as unevaluated promises. Default is \code{FALSE}.}
 
-\item{order}{vector of indeces. The order that the rows of the dataset should be presented as (default: \code{NULL}). If \code{NULL}, then the Crunch Dataset order will be used.}
+\item{selection}{vector of indeces. Which, and their order, of the rows of the dataset should be presented as (default: \code{NULL}). If \code{NULL}, then the Crunch Dataset order will be used.}
 
 \item{...}{additional arguments passed to as.data.frame.default}
 }
@@ -33,7 +33,7 @@ which case the return is a \code{data.frame}.
 \description{
 This method is defined principally so that you can use a CrunchDataset as
 a \code{data} argument to other R functions (such as
-\code{\link[stats]{lm}}). Unless you give it the \code{force==TRUE}
+\code{[stats::lm]}). Unless you give it the \code{force==TRUE}
 argument, this function does not in fact return a \code{data.frame}: it
 returns an object with an interface like a data.frame, such that you get
 R vectors when you access its columns (unlike a CrunchDataset, which
