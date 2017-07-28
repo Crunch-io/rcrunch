@@ -11,9 +11,6 @@ matchCat2Feat(categories, all_features = availableFeatures())
 
 \item{all_features}{a dataframe of all available geodata features. (default:
 downloaded from Crunch servers)}
-
-\item{match_field}{a character for the field where the categories came from
-(default: "name:)}
 }
 \value{
 geodatum to associate with the variable that produced categories

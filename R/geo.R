@@ -133,8 +133,6 @@ scoreCat2Feat <- function(features, categories) {
 #' @param categories a vector of categories to match
 #' @param all_features a dataframe of all available geodata features. (default:
 #' downloaded from Crunch servers)
-#' @param match_field a character for the field where the categories came from
-#'  (default: "name:)
 #' 
 #' @return geodatum to associate with the variable that produced categories
 #' 
