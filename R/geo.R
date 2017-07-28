@@ -136,6 +136,8 @@ scoreCat2Feat <- function(features, categories) {
 #' 
 #' @return geodatum to associate with the variable that produced categories
 #' 
+#' @importFrom stats aggregate
+#' 
 #' @export
 matchCat2Feat <- function(categories, all_features = availableFeatures()) {
     scores <- aggregate(value~., data=all_features,

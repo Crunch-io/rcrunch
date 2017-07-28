@@ -32,8 +32,9 @@ with_mock_crunch({
         )
     })
     
+    avail_features <- availableFeatures()
+    guesses <- c("foo", "bar", "Scotland", "North", "Midlands", "London")
     test_that("availableFeatures", {
-        avail_features <- availableFeatures()
         expect_is(avail_features, "data.frame")
         expect_equal(dim(avail_features), c(14, 6))
         expect_equal(as.character(avail_features$value),
@@ -43,7 +44,14 @@ with_mock_crunch({
         
     })
     test_that("scoreCat2Feat", {
+        features <- subset(avail_features, property == "name")$value
+        expect_equal(scoreCat2Feat(features, guesses), 0.4)
     })
     test_that("matchCat2Feat", {
+        matches <- matchCat2Feat(guesses, all_features = avail_features)
+        expect_is(matches, "data.frame")
+        expect_equal(nrow(matches), 1)
+        expect_equal(matches$value, 0.4)
+        expect_equal(as.character(matches$property), "name")
     })
 })
