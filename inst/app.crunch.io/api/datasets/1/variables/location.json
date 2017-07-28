@@ -18,13 +18,13 @@
                 "numeric_value": 1,
                 "missing": false,
                 "id": 1,
-                "name": "UK"
+                "name": "London"
             },
             {
                 "numeric_value": 2,
                 "missing": false,
                 "id": 2,
-                "name": "US"
+                "name": "Scotland"
             },
             {
                 "numeric_value": null,

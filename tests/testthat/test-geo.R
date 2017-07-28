@@ -54,4 +54,31 @@ with_mock_crunch({
         expect_equal(matches$value, 0.4)
         expect_equal(as.character(matches$property), "name")
     })
+    
+    test_that("addGeoMetadata", {
+        geo_to_add <- addGeoMetadata("location", data=ds)
+        expect_is(geo_to_add, "CrunchGeography")
+        expect_equal(geo_to_add$feature_key, "properties.name")
+        expect_equal(geo_to_add$match_field, "name")
+        expect_equal(geo_to_add$geodatum,
+        "https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/")
+
+        
+        expect_error(addGeoMetadata("gender", data="not a ds"),
+                "The data argument \\(", dQuote("not a ds"), "\\) is not a Crunch dataset.")
+        expect_error(addGeoMetadata("not_a_var", data=ds),
+             "The variable object \\(", dQuote("not_a_var"), "\\) is not a",
+             " variable in the dataset provided.")
+        expect_error(addGeoMetadata("starttime", data=ds),
+             "The variable ", dQuote("starttime"),
+             " is neither a categorical or text variable.")
+        expect_error(addGeoMetadata("gender", data=ds), 
+             "None of the geographies match at all. Either the variable is",
+             " wrong, or Crunch doesn't yet have geodata for this variable.")
+    })
+})
+
+with_test_authentication({
+    # TODO: create a variable with will match more than one geo and test the error works.
+    # TODO: create a text variable that matches geo to ensure that works
 })
