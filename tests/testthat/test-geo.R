@@ -31,4 +31,19 @@ with_mock_crunch({
                      ',"feature_key":"properties.location","match_field":"name"}]}}'
         )
     })
+    
+    test_that("availableFeatures", {
+        avail_features <- availableFeatures()
+        expect_is(avail_features, "data.frame")
+        expect_equal(dim(avail_features), c(14, 6))
+        expect_equal(as.character(avail_features$value),
+                     c("UKH", "UKI", "UKL", "UKF", "UKJ", "UKC", "East",
+                       "London", "Wales", "Scotland", "Northern Ireland",
+                       "Midlands", "South", "North"))
+        
+    })
+    test_that("scoreCat2Feat", {
+    })
+    test_that("matchCat2Feat", {
+    })
 })

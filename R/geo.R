@@ -73,13 +73,84 @@ availableGeodata <- function(x = getAPIRoot()) {
     return(GeoCatalog(crGET(shojiURL(x, "catalogs", "geodata"))))
 }
 
+#' all available property features for all available geographies
+#' 
+#' @param x an API root address (default: the R-session default)
+#' @param geodatum_fields character, what peices of information about each 
+#' geodatum should be retained? (default: `c("name", "description", "location")``)
+#' 
+#' @return a (tidy) dataframe with all of the available features and 
+#' geographies for matching
+#' 
+#' @export
+availableFeatures <- function(x = getAPIRoot(), geodatum_fields=c("name", "description", "location")) {
+    geo_cat <- availableGeodata(x)
+    out <- lapply(geo_cat, function(geography) {
+        meta <- geography$metadata$properties
+        lapply(names(meta), function(x) {
+            # remove nulls
+            values <- unlist(meta[[x]])
+            values[is.null(values)] <-  NA_character_
+            data.frame(property=x, value=values)
+        })
+    })
+    
+    out <- lapply(names(out), function(x) {
+        dfs <- do.call("rbind", out[[x]])
+        dfs$geodatum <- x
+        dfs[paste0("geodatum_", geodatum_fields)] <- geo_cat[[x]][geodatum_fields]
+        return(dfs)
+    })
+    return(do.call("rbind", out))
+}
+
+
+#' Score similarity between a feature dataframe and categories
+#' 
+#' Implemented using the Jaccard index, where a number closer to 1 is 
+#' more similar.
+#' 
+#' @param features a vector of features to match (usually from a subset of the
+#' output `[availableFeatures]`) with a single property for a single geodatum.
+#' @param categories a vector of categories to match
+#' 
+#' @return the Jaccard index for the values of the property given in 
+#' feat_df and the vector of categories
+#' 
+#' @export
+scoreCat2Feat <- function(features, categories) {
+    feats <- unique(features)
+    cats <- unique(categories)
+    
+    intersection <- length(cats[cats %in% feats])
+    union <- length(union(cats, feats))
+    
+    return(intersection/union)
+}
+
+#' Match categories with features from geodata
+#' 
+#' @param categories a vector of categories to match
+#' @param all_features a dataframe of all available geodata features. (default:
+#' downloaded from Crunch servers)
+#' @param match_field a character for the field where the categories came from
+#'  (default: "name:)
+#' 
+#' @return geodatum to associate with the variable that produced categories
+#' 
+#' @export
+matchCat2Feat <- function(categories, all_features = availableFeatures()) {
+    scores <- aggregate(value~., data=all_features,
+                        scoreCat2Feat, categories = categories)
+    maxima <- which(scores$value == max(scores$value, na.rm = TRUE))
+    return(scores[maxima,])
+}
+
+# TODO: show geodatums prettier for selection.
 # TODO: make feature_key()<- match_field()<- geodatum()<- methods with more 
 #       input checking
 # TODO: geodatum()<- method should attempt some matching based on what's 
 #       already in match_field
-# TODO: expose available properties on the geodata entity in API so that we can:
-# TODO: checking intersection of category names to values of the specified 
-#       feature_key
 # TODO: availableGeodata() should be subsettable by name, and be asignable into 
 #       geodatum(geo(ds$var)) or the like
 # TODO: make sure the full resolution jsons are available

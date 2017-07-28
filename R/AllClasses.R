@@ -332,3 +332,4 @@ CrunchGeography <- function (..., data=NULL) {
 #' @export Geodata
 Geodata <- setClass("Geodata", contains="ShojiEntity")
 GeoCatalog <- setClass("GeoCatalog", contains="ShojiCatalog")
+
