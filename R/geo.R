@@ -62,14 +62,59 @@ setMethod("geo<-", c("CrunchVariable", "CrunchGeography"),
               return(x)
           })
 
+#' Add geodata metadata to a crunch variable
+#' 
+#' @param variable a character with the variable alias to use for matching.
+#' This must be either a text or a categorical variable.
+#' @param data a Crunch dataset to use
+#' @param match_field the field in the variable to use (default: "name")
+#' 
+#' @return a CrunchGeography object that can be assigned into `geo(variable)`
+addGeoMetadata <- function (variable, data, match_field = "name") {
+    if (!is.dataset(data)) {
+        halt("The data argument (", dQuote(substitute(data)),
+             ") is not a Crunch dataset." )
+    }
+    if (!variable %in% aliases(variables(data))) {
+            halt("The variable object (", dQuote(variable),
+                 ") is not a variable in the dataset provided.")
+    }
+    
+    var_to_match <- data[[variable]]
+    if (has.categories(var_to_match)) {
+        cats <- names(categories(var_to_match))
+    } else if (is.Text(var_to_match)) {
+        cats <- as.vector(var_to_match)
+    } else {
+        halt("The variable ", dQuote(variable),
+             " is neither a categorical or text variable.")
+    }
+    
+    match_scores <- matchCat2Feat(cats)
+    
+    if (max(match_scores$value, na.rm = TRUE) == 0) {
+        halt("None of the geographies match at all. Either the variable is",
+             " wrong, or Crunch doesn't yet have geodata for this variable.")
+    }
+    if (nrow(match_scores) > 1) {
+        halt("There is more than one possible match. Please specify the geography manually:\n",
+             paste0(capture.output(print(match_scores[,c("value", "geodatum_name", "geodatum")])), collapse = "\n"))
+    }
+    
+    match_geo <- new('CrunchGeography', 
+                     list(geodatum=match_scores$geodatum,
+                          feature_key=paste0('properties.',match_scores$property),
+                          match_field=match_field))
+    return(match_geo)
+}
+
 #' @rdname crunch-is
 #' @export
 is.Geodata <- function (x) inherits(x, "Geodata")
 
-
 #' @rdname geo
 #' @export
-availableGeodata <- function(x = getAPIRoot()) {
+availableGeodata <- function (x = getAPIRoot()) {
     return(GeoCatalog(crGET(shojiURL(x, "catalogs", "geodata"))))
 }
 
@@ -83,11 +128,15 @@ availableGeodata <- function(x = getAPIRoot()) {
 #' geographies for matching
 #' 
 #' @export
-availableFeatures <- function(x = getAPIRoot(), geodatum_fields=c("name", "description", "location")) {
+availableFeatures <- function (x = getAPIRoot(), geodatum_fields=c("name", "description", "location")) {
     geo_cat <- availableGeodata(x)
-    out <- lapply(geo_cat, function(geography) {
+    
+    geo_metadatas <- lapply(urls(geo_cat), function(x) Geodata(crGET(x)) )
+    names(geo_metadatas) <- urls(geo_cat)
+    
+    out <- lapply(geo_metadatas, function (geography) {
         meta <- geography$metadata$properties
-        lapply(names(meta), function(x) {
+        lapply(names(meta), function (x) {
             # remove nulls
             values <- unlist(meta[[x]])
             values[is.null(values)] <-  NA_character_
@@ -95,7 +144,7 @@ availableFeatures <- function(x = getAPIRoot(), geodatum_fields=c("name", "descr
         })
     })
     
-    out <- lapply(names(out), function(x) {
+    out <- lapply(names(out), function (x) {
         dfs <- do.call("rbind", out[[x]])
         dfs$geodatum <- x
         dfs[paste0("geodatum_", geodatum_fields)] <- geo_cat[[x]][geodatum_fields]
@@ -118,7 +167,7 @@ availableFeatures <- function(x = getAPIRoot(), geodatum_fields=c("name", "descr
 #' feat_df and the vector of categories
 #' 
 #' @export
-scoreCat2Feat <- function(features, categories) {
+scoreCat2Feat <- function (features, categories) {
     feats <- unique(features)
     cats <- unique(categories)
     
@@ -139,7 +188,7 @@ scoreCat2Feat <- function(features, categories) {
 #' @importFrom stats aggregate
 #' 
 #' @export
-matchCat2Feat <- function(categories, all_features = availableFeatures()) {
+matchCat2Feat <- function (categories, all_features = availableFeatures()) {
     scores <- aggregate(value~., data=all_features,
                         scoreCat2Feat, categories = categories)
     maxima <- which(scores$value == max(scores$value, na.rm = TRUE))
@@ -155,4 +204,5 @@ matchCat2Feat <- function(categories, all_features = availableFeatures()) {
 #       geodatum(geo(ds$var)) or the like
 # TODO: make sure the full resolution jsons are available
 # TODO: GIS opertaions (contains, union, etc.)
+# TODO: Add geo(ds$var) <- NULL method
 

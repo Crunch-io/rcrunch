@@ -11,31 +11,7 @@
             "location": "https://s.crunch.io/geodata/UK-GeoJSON-part/json/eurostat/simplified/regions.geojson",
             "owner_id": "8e01e9f7a8e944a7a2c88e50c2a2997d",
             "id": "d26302f34b174026abdf87f023ad35b0",
-            "metadata": {
-                "status": "success",
-                "properties": {
-                    "NUTS112CD": [
-                        "UKH",
-                        "UKI",
-                        "UKL",
-                        null,
-                        null,
-                        "UKF",
-                        "UKJ",
-                        "UKC"
-                    ],
-                    "name": [
-                        "East",
-                        "London",
-                        "Wales",
-                        "Scotland",
-                        "Northern Ireland",
-                        "Midlands",
-                        "South",
-                        "North"
-                    ]
-                }
-            }
+            "metadata": { }
         }
     },
     "template": "{\"body\": {\"tag\": \"<string>\", \"location\": \"<string>\", \"created\": \"<string>\", \"name\": \"<string>\", \"description\": \"<string>\"}, \"element\": \"shoji:entity\"}"
