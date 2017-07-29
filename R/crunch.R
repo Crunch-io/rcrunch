@@ -16,6 +16,7 @@
 #' @name crunch
 NULL
 
+#' @import methods
 #' @importFrom httr set_config
 .onAttach <- function (lib, pkgname="crunch") {
     setIfNotAlready(
