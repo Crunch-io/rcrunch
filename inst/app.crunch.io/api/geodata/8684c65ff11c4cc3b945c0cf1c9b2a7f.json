@@ -5,6 +5,7 @@
     "body": {
         "name": "GB Regions",
         "location": "https://s.crunch.io/some/wrong/gb_eer_doesnotexist.topojson",
+        "format": "geojson",
         "metadata": {
             "status": "success",
             "properties": {

@@ -70,6 +70,12 @@ setMethod("geo<-", c("CrunchVariable", "CrunchGeography"),
 #' @param match_field the field in the variable to use (default: "name")
 #' 
 #' @return a CrunchGeography object that can be assigned into `geo(variable)`
+#' 
+#' @examples 
+#' \dontrun{
+#' geo(ds$state) <- addGeoMetadata("state", data=ds)
+#' }
+#' @export
 addGeoMetadata <- function (variable, data, match_field = "name") {
     if (!is.dataset(data)) {
         halt("The data argument (", dQuote(substitute(data)),
@@ -131,6 +137,9 @@ availableGeodata <- function (x = getAPIRoot()) {
 availableFeatures <- function (x = getAPIRoot(), geodatum_fields=c("name", "description", "location")) {
     geo_cat <- availableGeodata(x)
     
+    # grab each geodatum in order to get metadata
+    # TODO: this should probably not be done through a series of GETs, 
+    # but the current API requires it.
     geo_metadatas <- lapply(urls(geo_cat), function(x) Geodata(crGET(x)) )
     names(geo_metadatas) <- urls(geo_cat)
     
