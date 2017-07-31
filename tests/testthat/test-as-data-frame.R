@@ -126,16 +126,17 @@ with_mock_crunch({
     test_that("can manipulate the order of a crunchDataFrame", {
         ds_df <- as.data.frame(ds)
         gndr <- ds_df$v1
-        new_order <- c(4,3,2,1)
+        new_order <- c(4,3,1,2)
         ds_df$.order <- new_order
         expect_equal(ds_df$v1, gndr[new_order])
         expect_equal(nrow(ds_df), length(new_order))
-        ds_df2 <- as.data.frame(ds, selection = new_order)
+        ds_df2 <- as.data.frame(ds, row.order = new_order)
         expect_equal(ds_df2$v1, gndr[new_order])
         expect_equal(nrow(ds_df2), length(new_order))
     })
     
-    test_that("merge.CrunchDataFrame works", {
+    test_that("merge.CrunchDataFrame", {
+        # test the most basic case of merging a CrunchDataFarme with a data.frame.
         ds_df <- as.data.frame(ds)
         local_df <- data.frame(gender=c("Male", "Female"), new="new")
         expect_silent(merged_df <- merge(ds_df,
@@ -148,6 +149,10 @@ with_mock_crunch({
                                   NA, NA, "new", "new", "new", "new", NA, NA,
                                   NA, "new", "new", "new", NA, "new", "new",
                                   "new", NA, "new")))
+    })
+    
+    test_that("merge.CrunchDataFrame input validation", {
+        # make sure that sort input is validated
         expect_error(merged_df <- merge(ds_df,
                                         data.frame(),
                                         by.x = "gender",
@@ -156,6 +161,7 @@ with_mock_crunch({
                      paste0("The sort argument must be either ",
                             dQuote("x"), " or ", dQuote("y"), ". Got ",
                             dQuote("not_an_input"), " instead."))
+        # make sure both by.x and by.y are supplied
         expect_error(merged_df <- merge(ds_df,
                                         data.frame(),
                                         by.x = "gender",
@@ -168,8 +174,10 @@ with_mock_crunch({
                      "Must supply both a by.x and a by.y to match by.")
     })
  
-    test_that("Can't assign too many rows into a crunchdataframe", {
-        skip("TODO: Not trigged currently, but shoudl be factored to a new functions")
+    test_that("Can't assign too many rows into a CrunchDataFrame", {
+        # CrunchDataFrames should not allow data.frames with fewer or more 
+        # rows than the CrunchDataset has.
+        skip("TODO: Not trigged currently, but should be factored to a new function")
         large_df <- data.frame(gender=rep(c("Male", "Female"), 100), new="new")
         expect_error(merged_df <- merge(ds_df,
                                         large_df,
@@ -180,6 +188,9 @@ with_mock_crunch({
     })
        
     test_that("merge.CrunchDataFrame works with sort=y", {
+        # when sort=y is specified, the resulting order of the CrunchDataFrame 
+        # should follow the ordering present in y, and include all of the data
+        # for each row in both the CrunchDataset and the data.frame 
         ds_df <- as.data.frame(ds)
         df_local <- data.frame(textVar=c("w", "n"),
                                new=factor(c("new1", "new2")),
@@ -199,6 +210,19 @@ with_mock_crunch({
     })
 
     test_that("merge.CrunchDataFrame duplicates rows when needed", {
+        # if the data.frame that is being merged with a CrunchDataFrame has 
+        # duplicates in the column that is used in the by argument, then the
+        # rows in the CrunchDataset should be 'duplicated'. This doesn't
+        # actually alter the number of rows on Crunch, it just adds more 
+        # than one instance of the row number in the row.order attribute of the
+        # CrunchDataFrame. More than on row number in row.order will return 
+        # that value multiple times (in the approriate locations) when 
+        # as.vector is called / the column is used.
+        
+        # If sort=y and y only has a subset of the elements in the by columns 
+        # that the CrunchDataset has, the rows from the dataset that are not in
+        # y will be removed from the CrunchDataFrame (again, removed here only
+        # means that their row indeces will not be in row.order)
         ds_df <- as.data.frame(ds)
         df_local <- data.frame(textVar=c("w", "w"),
                                new=factor(c("new1", "new2")),
@@ -216,6 +240,10 @@ with_mock_crunch({
         expect_identical(merged_df$new,
                          factor(c("new1", "new1", "new2", "new2")))
         
+        # Make sure the behavior for sort=x is the same when the CrunchDataset
+        # or data.frame don't have the same members: the elements from x are 
+        # always preserved (and used for ordering), but if there is more than 
+        # one element in the data.frame's by column, those rows are duplicated.
         ds_df <- as.data.frame(ds) # must over-write the CrunchDataFrame
         expect_silent(merged_df <- merge(ds_df,
                                          df_local,
@@ -244,6 +272,8 @@ with_mock_crunch({
     })
         
     test_that("merge.CrunchDataFrame modifies in place", {
+        # Currently merge.CrunchDataFrame modifies the CrunchDataFrame in
+        # place, this is a limitation of promises and copying environments. 
         ds_df <- as.data.frame(ds)
         expect_silent(merged_df <- merge(ds_df,
                                          data.frame(gender=c("Male", "Female"), new="new"),

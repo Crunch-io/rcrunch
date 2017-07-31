@@ -1,13 +1,13 @@
-CrunchDataFrame <- function (dataset, selection = NULL) {
+CrunchDataFrame <- function (dataset, row.order = NULL) {
     ## S3 constructor method for CrunchDataFrame. terms.formula doesn't seem
     ## to like S4 subclass of environment
     stopifnot(is.dataset(dataset))
     out <- new.env()
     out$.crunchDataset <- dataset
     out$.names <- aliases(allVariables(dataset))
-    # set the order of the dataset based on selection, if no selection is 
+    # set the order of the dataset based on row.order, if no row.order is 
     # given return all rows in the dataset in the order they appear
-    out$.order <- selection
+    out$.order <- row.order
     
     with(out, {
         ## Note the difference from as.environment: wrapped in as.vector
@@ -69,7 +69,7 @@ names.CrunchDataFrame <- function (x) x$.names
 #' @param optional part of as.data.frame signature. Ignored.
 #' @param force logical: actually coerce the dataset to `data.frame`, or
 #' leave the columns as unevaluated promises. Default is `FALSE`.
-#' @param selection vector of indeces. Which, and their order, of the rows of the dataset should be presented as (default: `NULL`). If `NULL`, then the Crunch Dataset order will be used.
+#' @param row.order vector of indeces. Which, and their order, of the rows of the dataset should be presented as (default: `NULL`). If `NULL`, then the Crunch Dataset order will be used.
 #' @param ... additional arguments passed to as.data.frame.default
 #' @return an object of class `CrunchDataFrame` unless `force`, in
 #' which case the return is a `data.frame`.
@@ -79,8 +79,8 @@ NULL
 #' @rdname dataset-to-R
 #' @export
 as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE,
-                                        force=FALSE, selection = NULL, ...) {
-    out <- CrunchDataFrame(x, selection = selection)
+                                        force=FALSE, row.order = NULL, ...) {
+    out <- CrunchDataFrame(x, row.order = row.order)
     if (force) {
         out <- as.data.frame(out)
     }
@@ -106,18 +106,18 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
 
 #' Merge a CrunchDataFrame
 #' 
+#' `merge`ing a CrunchDataFrame with a local dataframe is useful in situations 
+#' where you have new information in your local R session that you want to 
+#' connect with Crunch data. For example, for making
+#' plots with Crunch and non-Crunch data. It produces a hybrid CrunchDataFrame
+#' that has the local data attached to it, but like normal CrunchDataFrames 
+#' it is still judicious about downloading data from the server only when it 
+#' is needed.
+#' 
 #' Merging a CrunchDataFrame with a local dataframe is experiemental and might 
 #' result in unexpected results. One known issue is that using `merge` on a 
 #' CrunchDataFrame will change the both the CrunchDataFrame used as input as 
 #' well as create a new CrunchDataFrame. 
-#' 
-#' `merge`ing a CrunchDataFrame with a local dataframe is useful in situations 
-#' where you have new information in your local R session that you want to 
-#' connect with Crunch data. For example, this is especially useful for making
-#' plots with crunch and non-crunch data. It produces a hybrid CrunchDataFrame
-#' that has the local data attached to it, but like normal CrunchDataFrames 
-#' it is still judicious about downloading data from the server only when it 
-#' is needed.
 #' 
 #' @param x a CrunchDataFrame
 #' @param y a standard data.frame
@@ -129,7 +129,10 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
 #' @return a CrunchDataFrame with columns from both `x` and `y`
 #' 
 #' @export
-merge.CrunchDataFrame  <- function (x, y, by.x, by.y, sort = "x", ...) {
+merge.CrunchDataFrame  <- function (x, y, by=intersect(names(x), names(y)),
+                                    by.x=by, by.y=by, sort = "x", ...) {
+    by.x <- getJoinByVariable(x, by.x, "x")
+    by.y <- getJoinByVariable(y, by.y, "y")
     if (missing(by.x) | missing(by.y)) {
         halt("Must supply both a by.x and a by.y to match by.")
     }

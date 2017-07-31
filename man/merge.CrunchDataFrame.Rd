@@ -23,17 +23,17 @@
 a CrunchDataFrame with columns from both \code{x} and \code{y}
 }
 \description{
+\code{merge}ing a CrunchDataFrame with a local dataframe is useful in situations
+where you have new information in your local R session that you want to
+connect with Crunch data. For example, for making
+plots with Crunch and non-Crunch data. It produces a hybrid CrunchDataFrame
+that has the local data attached to it, but like normal CrunchDataFrames
+it is still judicious about downloading data from the server only when it
+is needed.
+}
+\details{
 Merging a CrunchDataFrame with a local dataframe is experiemental and might
 result in unexpected results. One known issue is that using \code{merge} on a
 CrunchDataFrame will change the both the CrunchDataFrame used as input as
 well as create a new CrunchDataFrame.
-}
-\details{
-\code{merge}ing a CrunchDataFrame with a local dataframe is useful in situations
-where you have new information in your local R session that you want to
-connect with Crunch data. For example, this is especially useful for making
-plots with crunch and non-crunch data. It produces a hybrid CrunchDataFrame
-that has the local data attached to it, but like normal CrunchDataFrames
-it is still judicious about downloading data from the server only when it
-is needed.
 }
