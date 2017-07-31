@@ -5,7 +5,6 @@
 #' x into intervals and codes the values in x according to which interval they fall. 
 #' The leftmost interval corresponds to level one, the next leftmost to level two and 
 #' so on.
-#'
 #' @param x A crunch variable of the class NumericVariable
 #' @param breaks Either a numeric vector of two or more unique cut points 
 #' or a single number (greater than or equal to 2) giving the number of intervals 
@@ -30,14 +29,15 @@
 #' @export
 #'
 #' @examples
-numericVariable.cut <- function(x, 
-                                breaks, 
-                                variableName, 
-                                labels = NULL,
-                                include.lowest = FALSE,
-                                right = TRUE,
-                                dig.lab = 3,
-                                ordered_result = FALSE, ...){
+#' 01] 
+setMethod("cut", "NumericVariable", function(x, 
+                                             breaks, 
+                                             variableName, 
+                                             labels = NULL,
+                                             include.lowest = FALSE,
+                                             right = TRUE,
+                                             dig.lab = 3,
+                                             ordered_result = FALSE, ...){
   env <- environment()
   if (is.na(breaks) || breaks < 2L) {
     halt("invalid number of intervals")
@@ -73,21 +73,34 @@ numericVariable.cut <- function(x,
         substring(labels[nb-1L],
                   nchar(labels[nb-1L], "c")) <- "]" # was ")"
     }
-  } else if (is.logical(labels) && !labels)
-  cases <- vector("character", length = length(breaks)-1)
+  } else if (is.logical(labels) && !labels) {
+    codes.only <- TRUE
+  }
+  else if (length(labels) != nb - 1L) {
+    stop("lengths of 'breaks' and 'labels' differ")
+  } 
+  if (right) {
+    comp_1 <- " <= "
+    comp_2 <- " < "
+  } else {
+    comp_1 <- " < "
+    comp_2 <- " <= "
+  }
+  cases <- vector("character", length = length(breaks) - 1)
   varname  <- deparse(substitute(x))
   for (i in 2:length(breaks)) {
     cases[i - 1] <- parse(
       text = paste0(breaks[i - 1], 
-                    " <= ", 
+                    comp_1, 
                     varname, 
                     " & ",  
                     varname,
-                    " < ",
-                    breaks[i]),
+                    comp_2,
+                    breaks[i])
     )
   }
   cases <- lapply(cases, function(x) eval(x, envir = env))
   case_list <- lapply(seq_along(cases), function(x) list(expression = cases[[x]], name = labels[x]))
   makeCaseVariable(cases = case_list, name = variableName)
 }
+)
