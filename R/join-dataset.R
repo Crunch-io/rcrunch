@@ -82,6 +82,26 @@ extendDataset <- function (x, y, by=intersect(names(x), names(y)), by.x=by, by.y
 getJoinByVariable <- function (dataset, by, name) {
     ## Do validations and return a proper, legal "by" variable, if possible
     if (!is.dataset(dataset)) halt(name, " must be a Crunch Dataset")
+    by <- findBy(dataset, by, name)
+    if (!is.variable(by)) halt("by.", name, " must be a Crunch Variable")
+    if (!(self(by) %in% urls(allVariables(dataset)))) {
+        halt("by.", name, " must be a variable in ", name)
+    }
+    if (!(type(by) %in% c("text", "numeric"))) {
+        halt("by.", name, " must be type numeric or text")
+    }
+    return(by)
+}
+
+getJoinByVariableFromDF <- function (dataset, by, name) {
+    ## Do validations and return a proper, legal "by" variable, if possible
+    if (!is.data.frame(dataset)) halt(name, " must be a data.frame")
+    by <- findBy(dataset, by, name)
+    return(by)
+}
+
+# find varaibles in either data.frames or CrunchDataSets
+findBy <- function (dataset, by, name) {
     if (is.character(by)) {
         if (length(by) != 1) {
             halt("by.", name, " must reference one and only one variable")
@@ -91,13 +111,6 @@ getJoinByVariable <- function (dataset, by, name) {
             halt(by, " does not reference a variable in ", name)
         }
         by <- byvar
-    }
-    if (!is.variable(by)) halt("by.", name, " must be a Crunch Variable")
-    if (!(self(by) %in% urls(allVariables(dataset)))) {
-        halt("by.", name, " must be a variable in ", name)
-    }
-    if (!(type(by) %in% c("text", "numeric"))) {
-        halt("by.", name, " must be type numeric or text")
     }
     return(by)
 }

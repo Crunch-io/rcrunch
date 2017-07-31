@@ -61,7 +61,24 @@ with_mock_crunch({
         expect_error(join(ds1, ds2, by.x=ds1$birthyr, by.y=ds2$birthyr, all.y=TRUE),
             'Option "all.y" not supported.')
     })
-
+    
+    
+    df <- data.frame(foo=c(1, 2, 3, 4), bar = c("a", "b", "c", "d"))
+    test_that("getJoinByVariableFromDF", {
+        expect_equal(getJoinByVariableFromDF(df, "foo", "df"),
+                     c(1, 2, 3, 4))
+        expect_equal(getJoinByVariableFromDF(df, df$foo, "df"),
+                     c(1, 2, 3, 4))
+    })
+    test_that("Input validation for getJoinByVariableFromDF", {
+        expect_error(getJoinByVariableFromDF(1, "foo", "1"),
+                     "1 must be a data.frame")
+        expect_error(getJoinByVariableFromDF(df, "baz", "df"),
+                     "baz does not reference a variable in df") 
+        expect_error(getJoinByVariableFromDF(df, c("foo", "bar"), "df"),
+                     "by.df must reference one and only one variable")
+    })
+    
     test_that("Categorical and array variables can't be used as keys", {
         expect_error(join(ds1, ds2, by.x=ds1$gender, by.y=ds2$birthyr),
             "by.x must be type numeric or text")
