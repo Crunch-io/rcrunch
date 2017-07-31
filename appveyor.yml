@@ -15,6 +15,7 @@ install:
 
 build_script:
   - travis-tool.sh install_deps
+  - travis-tool.sh install_github crunch-io/rcrunch@geo
 
 test_script:
   - travis-tool.sh run_tests
