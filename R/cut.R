@@ -39,10 +39,10 @@ setMethod("cut", "NumericVariable", function(x,
                                              dig.lab = 3,
                                              ordered_result = FALSE, ...){
   env <- environment()
-  if (is.na(breaks) || breaks < 2L) {
-    halt("invalid number of intervals")
-  }
   if (length(breaks) == 1L) {
+    if (is.na(breaks) || breaks < 2L) {
+      halt("invalid number of intervals")
+    }
     nb <- as.integer(breaks + 1) # one more than #{intervals}
     dx <- diff(rx <- c(min(x), max(x)))
     if(dx == 0) {
