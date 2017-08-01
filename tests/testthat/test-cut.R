@@ -176,16 +176,17 @@ with_mock_crunch({
 
 with_test_authentication({
   ds <- newDataset(df)
-  
+  #as.character(cut(...)) is used because as.vector(CrunchVariable) returns
+  # a character, while cut returns a factor by default. 
   test_that("cut returns the same thing for crunch variables and identical vectors", {
     expect_identical(
-      cut(df$v1, 3, label = c("one", "two", "three")),
-      as.vector(cut(ds$birthyr, 3, variableName = "new_var", label = c("one", "two", "three")))
+      as.character(cut(df$v1, 3, label = c("one", "two", "three"))),
+      as.vector(cut(df$v1, 3, variableName = "new_var", label = c("one", "two", "three")))
     )
     
     expect_identical(
-      cut(df$v1, 3, label = c("one", "two", "three"), right = FALSE),
-      as.vector( cut(ds$birthyr, 
+      as.character(cut(df$v1, 3, label = c("one", "two", "three"), right = FALSE)),
+      as.vector( cut(df$v1, 
           3, 
           variableName = "new_var", 
           label = c("one", "two", "three"),
@@ -193,16 +194,16 @@ with_test_authentication({
     )
    
     expect_identical(
-      cut(df$v1, c(-1.4967, 0, 1.6662), label = c("one", "two"), right = FALSE),
-      as.vector(cut(ds$birthyr,
+      as.character(cut(df$v1, c(-1.4967, 0, 1.6662), label = c("one", "two"), right = FALSE)),
+      as.vector(cut(df$v1,
                      c(-1.4967, 0, 1.6662),
                      variableName = "new_var",
                      label = c("one", "two"),
                      right = FALSE))
     )
     expect_identical(
-      cut(df$v1, 3, dig.lab = 2),
-      as.vector(cut(ds$birthyr,
+      as.character(cut(df$v1, 3, dig.lab = 2)),
+      as.vector(cut(df$v1,
                      3,
                      dig.lab = 2,
                      variableName = "new_var"))
