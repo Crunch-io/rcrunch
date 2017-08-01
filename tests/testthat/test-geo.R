@@ -10,11 +10,14 @@ with_mock_crunch({
         expect_equal(geo_data$geodatum$name, "GB Regions")
         expect_equal(geo_data$geodatum$location, "https://s.crunch.io/some/wrong/gb_eer_doesnotexist.topojson")
     })
+    
     test_that("geo error", {
+        # if there is no geography on a variable, geo() returns null.
         expect_null(geo(ds$gender))
     })
 
     test_that("geo setter", {
+        # we can update individual fiels of the geography with PATCHes
         expect_PATCH(geo(ds$location)$feature_key <- "properties.location2",
                      'https://app.crunch.io/api/datasets/1/variables/location/',
                      '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
@@ -44,10 +47,12 @@ with_mock_crunch({
         
     })
     test_that("scoreCatToFeat", {
+        # check the score for guesses and mock available features is accurate
         features <- subset(avail_features, property == "name")$value
         expect_equal(scoreCatToFeat(features, guesses), 0.4)
     })
     test_that("matchCatToFeat", {
+        # There should be only one match, and it should be on property.name
         matches <- matchCatToFeat(guesses, all_features = avail_features)
         expect_is(matches, "data.frame")
         expect_equal(nrow(matches), 1)
@@ -56,14 +61,16 @@ with_mock_crunch({
     })
     
     test_that("addGeoMetadata", {
+        # full run of adding geometadata including guessing the geodata to use
         geo_to_add <- addGeoMetadata(ds$location, data=ds)
         expect_is(geo_to_add, "CrunchGeography")
         expect_equal(geo_to_add$feature_key, "properties.name")
         expect_equal(geo_to_add$match_field, "name")
         expect_equal(geo_to_add$geodatum,
         "https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/")
-
-        
+    })
+    
+    test_that("addGeoMetadata input validation", {        
         expect_error(addGeoMetadata(ds$location, data="not a ds"),
                 "The data argument \\(", dQuote("not a ds"), "\\) is not a Crunch dataset.")
         expect_error(addGeoMetadata(ds$not_a_var, data=ds),
