@@ -7,8 +7,8 @@
 addGeoMetadata(variable, data, match_field = "name")
 }
 \arguments{
-\item{variable}{a character with the variable alias to use for matching.
-This must be either a text or a categorical variable.}
+\item{variable}{a Crunch variable to use for matching. This must be either
+a text or a categorical variable.}
 
 \item{data}{a Crunch dataset to use}
 

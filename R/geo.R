@@ -32,7 +32,7 @@ setMethod("geo", "CrunchVariable", function (x) {
     var_geodata <- entity(x)@body$view$geodata[[1]]
     if (is.null(var_geodata)) {
         # if there's no geodata, return null.
-        return()
+        return(NULL)
     }
 
     geodatum <- Geodata(crGET(var_geodata$geodatum))
@@ -57,15 +57,15 @@ setMethod("geo<-", c("CrunchVariable", "CrunchGeography"),
 
               geodata <- list(geodata = list(value))
 
-              dropCache(cubeURL(x))
               ent <- setEntitySlot(entity(x), "view", geodata)
+              dropCache(cubeURL(x))
               return(x)
           })
 
 #' Add geodata metadata to a crunch variable
 #' 
-#' @param variable a character with the variable alias to use for matching.
-#' This must be either a text or a categorical variable.
+#' @param variable a Crunch variable to use for matching. This must be either
+#' a text or a categorical variable.
 #' @param data a Crunch dataset to use
 #' @param match_field the field in the variable to use (default: "name")
 #' 
@@ -81,22 +81,21 @@ addGeoMetadata <- function (variable, data, match_field = "name") {
         halt("The data argument (", dQuote(substitute(data)),
              ") is not a Crunch dataset." )
     }
-    if (!variable %in% aliases(variables(data))) {
-            halt("The variable object (", dQuote(variable),
+    if (is.null(variable) || datasetReference(variable) != datasetReference(data)) {
+            halt("The variable object (", dQuote(substitute(variable)),
                  ") is not a variable in the dataset provided.")
     }
     
-    var_to_match <- data[[variable]]
-    if (has.categories(var_to_match)) {
-        cats <- names(categories(var_to_match))
-    } else if (is.Text(var_to_match)) {
-        cats <- as.vector(var_to_match)
+    if (has.categories(variable)) {
+        cats <- names(categories(variable))
+    } else if (is.Text(variable)) {
+        cats <- as.vector(variable)
     } else {
-        halt("The variable ", dQuote(variable),
+        halt("The variable ", dQuote(substitute(variable)),
              " is neither a categorical or text variable.")
     }
     
-    match_scores <- matchCat2Feat(cats)
+    match_scores <- matchCatToFeat(cats)
     
     if (max(match_scores$value, na.rm = TRUE) == 0) {
         halt("None of the geographies match at all. Either the variable is",
@@ -176,7 +175,7 @@ availableFeatures <- function (x = getAPIRoot(), geodatum_fields=c("name", "desc
 #' feat_df and the vector of categories
 #' 
 #' @export
-scoreCat2Feat <- function (features, categories) {
+scoreCatToFeat <- function (features, categories) {
     feats <- unique(features)
     cats <- unique(categories)
     
@@ -197,9 +196,9 @@ scoreCat2Feat <- function (features, categories) {
 #' @importFrom stats aggregate
 #' 
 #' @export
-matchCat2Feat <- function (categories, all_features = availableFeatures()) {
+matchCatToFeat <- function (categories, all_features = availableFeatures()) {
     scores <- aggregate(value~., data=all_features,
-                        scoreCat2Feat, categories = categories)
+                        scoreCatToFeat, categories = categories)
     maxima <- which(scores$value == max(scores$value, na.rm = TRUE))
     return(scores[maxima,])
 }
