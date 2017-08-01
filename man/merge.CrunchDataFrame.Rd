@@ -4,16 +4,19 @@
 \alias{merge.CrunchDataFrame}
 \title{Merge a CrunchDataFrame}
 \usage{
-\method{merge}{CrunchDataFrame}(x, y, by.x, by.y, sort = "x", ...)
+\method{merge}{CrunchDataFrame}(x, y, by = intersect(names(x), names(y)),
+  by.x = by, by.y = by, sort = c("x", "y"), ...)
 }
 \arguments{
 \item{x}{a CrunchDataFrame}
 
 \item{y}{a standard data.frame}
 
-\item{by.x}{name of the variable to match}
+\item{by}{name of the variable to match in both data sources (default: the intersection of the names of x and y)}
 
-\item{by.y}{name of the variable to match}
+\item{by.x}{name of the variable to match in x}
+
+\item{by.y}{name of the variable to match in y}
 
 \item{sort}{character, either "x" or "y" (default: "x"). Which of the inputs should be used for the output order. Unlike merge.data.frame, merge.CrunchDataFrame will not re-sort the order of the output. It will use the order of either \code{x} or \code{y}.}
 
