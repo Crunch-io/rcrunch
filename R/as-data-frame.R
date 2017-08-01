@@ -121,8 +121,9 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
 #' 
 #' @param x a CrunchDataFrame
 #' @param y a standard data.frame
-#' @param by.x name of the variable to match
-#' @param by.y name of the variable to match
+#' @param by name of the variable to match in both data sources (default: the intersection of the names of x and y)
+#' @param by.x name of the variable to match in x
+#' @param by.y name of the variable to match in y
 #' @param sort character, either "x" or "y" (default: "x"). Which of the inputs should be used for the output order. Unlike merge.data.frame, merge.CrunchDataFrame will not re-sort the order of the output. It will use the order of either `x` or `y`. 
 #' @param ... ignored for now
 #' 
@@ -130,16 +131,10 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
 #' 
 #' @export
 merge.CrunchDataFrame  <- function (x, y, by=intersect(names(x), names(y)),
-                                    by.x=by, by.y=by, sort = "x", ...) {
-    by.x <- getJoinByVariable(x, by.x, "x")
-    by.y <- getJoinByVariable(y, by.y, "y")
-    if (missing(by.x) | missing(by.y)) {
-        halt("Must supply both a by.x and a by.y to match by.")
-    }
-    if (!sort %in% c("x", "y")) {
-        halt("The sort argument must be either ", dQuote("x"), " or ", 
-             dQuote("y"), ". Got ", dQuote(substitute(sort)), " instead.")
-    }
+                                    by.x=by, by.y=by, sort = c("x", "y"), ...) {
+    by.x <- fix_bys(x, by.x)
+    by.y <- fix_bys(y, by.y)
+    sort <- match.arg(sort)
     
     # Duplicate the enviornment (so we are not manipulating in place)
     # using `for(n in ls(x, all.names=TRUE)) assign(n, get(n, x), new_x)`
@@ -197,4 +192,21 @@ merge.CrunchDataFrame  <- function (x, y, by=intersect(names(x), names(y)),
     }
     
     return(new_x)
+}
+
+
+fix_bys <- function (data, by) {
+    ## Do validations and return a proper, legal "by" variable, if possible
+    if (!is.data.frame(data) & class(data) != "CrunchDataFrame") {
+        halt(substitute(data), " must be a data.frame or CrunchDataFrame")
+    }
+    if (is.character(by)) {
+        if (length(by) != 1) {
+            halt("by.", substitute(by), " must reference one and only one variable")
+        }
+        if (!by %in% ls(data)) {
+            halt(by, " does not reference a variable in ", substitute(by))
+        }
+    }
+    return(by)
 }

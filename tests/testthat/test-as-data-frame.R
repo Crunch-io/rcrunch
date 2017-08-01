@@ -153,25 +153,13 @@ with_mock_crunch({
     
     test_that("merge.CrunchDataFrame input validation", {
         # make sure that sort input is validated
+        ds_df <- as.data.frame(ds)
+        local_df <- data.frame(gender=c("Male", "Female"), new="new")
         expect_error(merged_df <- merge(ds_df,
-                                        data.frame(),
-                                        by.x = "gender",
-                                        by.y = "gender",
+                                        local_df,
                                         sort = "not_an_input"),
-                     paste0("The sort argument must be either ",
-                            dQuote("x"), " or ", dQuote("y"), ". Got ",
-                            dQuote("not_an_input"), " instead."))
-        # make sure both by.x and by.y are supplied
-        expect_error(merged_df <- merge(ds_df,
-                                        data.frame(),
-                                        by.x = "gender",
-                                        sort = "not_an_input"),
-                     "Must supply both a by.x and a by.y to match by.")
-        expect_error(merged_df <- merge(ds_df,
-                                        data.frame(),
-                                        by.y = "gender",
-                                        sort = "not_an_input"),
-                     "Must supply both a by.x and a by.y to match by.")
+                     paste0("'arg' should be one of ", dQuote("x"), ", ", dQuote("y"))
+        )
     })
  
     test_that("Can't assign too many rows into a CrunchDataFrame", {
