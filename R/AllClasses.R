@@ -320,12 +320,12 @@ SearchResults <- setClass("SearchResults", contains="namedList")
 
 #' @rdname geo
 setClass("CrunchGeography", contains="namedList")
+
 CrunchGeography <- function (..., data=NULL) {
-    if (!is.null(data)) {
-        return(new("CrunchGeography", data))
-    } else {
-        return(new("CrunchGeography", list(...)))
+    if (is.null(data)) {
+        data <- list(...)
     }
+    return(new("CrunchGeography", data))
 }
 
 #' @rdname geo

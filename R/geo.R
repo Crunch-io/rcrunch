@@ -34,10 +34,8 @@ setMethod("geo", "CrunchVariable", function (x) {
         # if there's no geodata, return null.
         return(NULL)
     }
-
-    geodatum <- Geodata(crGET(var_geodata$geodatum))
     geo_object <- CrunchGeography(
-        geodatum = geodatum,
+        geodatum = var_geodata$geodatum,
         feature_key = var_geodata$feature_key,
         match_field = var_geodata$match_field
     )
@@ -48,13 +46,6 @@ setMethod("geo", "CrunchVariable", function (x) {
 #' @export
 setMethod("geo<-", c("CrunchVariable", "CrunchGeography"),
           function (x, value) {
-              # if geodatum is of class CrunchGeodata, extact url
-              if (is.Geodata(value$geodatum)) {
-                  value$geodatum <- self(value$geodatum)
-              } else {
-                  value$geodatum <- value$geodatum
-              }
-
               geodata <- list(geodata = list(value))
 
               ent <- setEntitySlot(entity(x), "view", geodata)
@@ -106,10 +97,9 @@ addGeoMetadata <- function (variable, data, match_field = "name") {
              paste0(capture.output(print(match_scores[,c("value", "geodatum_name", "geodatum")])), collapse = "\n"))
     }
     
-    match_geo <- new('CrunchGeography', 
-                     list(geodatum=match_scores$geodatum,
+    match_geo <- CrunchGeography(geodatum=match_scores$geodatum,
                           feature_key=paste0('properties.',match_scores$property),
-                          match_field=match_field))
+                          match_field=match_field)
     return(match_geo)
 }
 

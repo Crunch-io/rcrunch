@@ -6,9 +6,7 @@ with_mock_crunch({
     test_that("geo getter", {
         expect_equal(geo_data$feature_key, "properties.location")
         expect_equal(geo_data$match_field, "name")
-        expect_is(geo_data$geodatum, "Geodata")
-        expect_equal(geo_data$geodatum$name, "GB Regions")
-        expect_equal(geo_data$geodatum$location, "https://s.crunch.io/some/wrong/gb_eer_doesnotexist.topojson")
+        expect_equal(geo_data$geodatum, "https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/")
     })
     
     test_that("geo error", {
