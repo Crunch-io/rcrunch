@@ -11,25 +11,27 @@
 #' into which x is to be cut.
 #' @param variableName The name of the resulting case variable as a character string. 
 #' @param labels labels for the levels of the resulting category.
-#' By default, labels are constructed using "(a,b]" interval notation.
+#' By default, labels are constructed using interval notation.
 #' If labels = FALSE, simple integer codes are returned instead of a factor.
-#' @param include.lowest logical, indicating if an ‘x[i]’ equal to the lowest 
-#' (or highest, for right = FALSE) ‘breaks’ value should be included.
+#' @param include.lowest logical, indicating if an `x[i]` equal to the lowest 
+#' (or highest, for right = FALSE) `breaks` value should be included.
 #' @param right logical, indicating if the intervals should be closed on the right 
-#' (and open on the left) or vice versa.
-#' @param logical, indicating if the intervals should be closed on the right 
 #' (and open on the left) or vice versa.
 #' @param dig.lab	integer which is used when labels are not given. 
 #' It determines the number of digits used in formatting the break numbers.
-#' @param ordered_result	logical: should the result be an ordered factor?
+#' @param ordered_result	Ignored.
 #' @param ... further arguments passed to or from other methods.
 #'
 #'
-#' @return
+#' @return a Crunch VariableDefinition
 #' @export
 #'
 #' @examples
-#' 01] 
+#' \dontrun{
+#' ds <- loadDataset("mtcars")
+#' ds$cat_var <- cut(ds$mpg, 3, variableName = "new_var")
+#' }
+#'  
 setMethod("cut", "NumericVariable", function(x, 
                                              breaks, 
                                              variableName, 
@@ -44,7 +46,7 @@ setMethod("cut", "NumericVariable", function(x,
       halt("invalid number of intervals")
     }
     nb <- as.integer(breaks + 1) # one more than #{intervals}
-    dx <- diff(rx <- c(min(x), max(x)))
+    dx <- diff(rx <- c(min(x, na.rm = TRUE), max(x, na.rm = TRUE)))
     if(dx == 0) {
       dx <- abs(rx[1L])
       breaks <- seq.int(rx[1L] - dx/1000, rx[2L] + dx/1000,

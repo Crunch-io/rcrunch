@@ -43,66 +43,66 @@ with_mock_crunch({
 "args"))), .Names = c("name", "derivation"), class = "VariableDefinition")
     
      right_false <- structure(list(name = "new_var", derivation = structure(list(
-    `function` = "case", args = list(structure(list(column = structure(1:3, class = "AsIs"), 
-        type = structure(list(value = structure(list(class = "categorical", 
-            categories = list(structure(list(id = 1L, name = "one", 
-                numeric_value = NULL, missing = FALSE), .Names = c("id", 
-            "name", "numeric_value", "missing")), structure(list(
-                id = 2L, name = "two", numeric_value = NULL, 
-                missing = FALSE), .Names = c("id", "name", "numeric_value", 
-            "missing")), structure(list(id = 3L, name = "three", 
-                numeric_value = NULL, missing = FALSE), .Names = c("id", 
-            "name", "numeric_value", "missing")))), .Names = c("class", 
-        "categories"))), .Names = "value")), .Names = c("column", 
-    "type")), structure(list(`function` = "and", args = list(
-        structure(list(`function` = "<", args = list(structure(list(
-            value = -1.4998629), .Names = "value"), structure(list(
-            variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), .Names = "variable"))), .Names = c("function", 
-        "args")), structure(list(`function` = "<=", args = list(
-            structure(list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), .Names = "variable"), 
-            structure(list(value = -0.4424), .Names = "value"))), .Names = c("function", 
-        "args")))), .Names = c("function", "args")), structure(list(
-        `function` = "and", args = list(structure(list(`function` = "<", 
-            args = list(structure(list(value = -0.4424), .Names = "value"), 
-                structure(list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), .Names = "variable"))), .Names = c("function", 
-        "args")), structure(list(`function` = "<=", args = list(
-            structure(list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), .Names = "variable"), 
-            structure(list(value = 0.6119), .Names = "value"))), .Names = c("function", 
-        "args")))), .Names = c("function", "args")), structure(list(
-        `function` = "and", args = list(structure(list(`function` = "<", 
-            args = list(structure(list(value = 0.6119), .Names = "value"), 
-                structure(list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), .Names = "variable"))), .Names = c("function", 
-        "args")), structure(list(`function` = "<=", args = list(
-            structure(list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), .Names = "variable"), 
-            structure(list(value = 1.6693629), .Names = "value"))), .Names = c("function", 
-        "args")))), .Names = c("function", "args")))), .Names = c("function", 
-"args"))), .Names = c("name", "derivation"), class = "VariableDefinition")
+      `function` = "case", args = list(structure(list(column = structure(1:3, class = "AsIs"), 
+          type = structure(list(value = structure(list(class = "categorical", 
+              categories = list(structure(list(id = 1L, name = "one", 
+                  numeric_value = NULL, missing = FALSE), .Names = c("id", 
+              "name", "numeric_value", "missing")), structure(list(
+                  id = 2L, name = "two", numeric_value = NULL, 
+                  missing = FALSE), .Names = c("id", "name", "numeric_value", 
+              "missing")), structure(list(id = 3L, name = "three", 
+                  numeric_value = NULL, missing = FALSE), .Names = c("id", 
+              "name", "numeric_value", "missing")))), .Names = c("class", 
+          "categories"))), .Names = "value")), .Names = c("column", 
+      "type")), structure(list(`function` = "and", args = list(
+          structure(list(`function` = "<", args = list(structure(list(
+              value = -1.4998629), .Names = "value"), structure(list(
+              variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), .Names = "variable"))), .Names = c("function", 
+          "args")), structure(list(`function` = "<=", args = list(
+              structure(list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), .Names = "variable"), 
+              structure(list(value = -0.4424), .Names = "value"))), .Names = c("function", 
+          "args")))), .Names = c("function", "args")), structure(list(
+          `function` = "and", args = list(structure(list(`function` = "<", 
+              args = list(structure(list(value = -0.4424), .Names = "value"), 
+                  structure(list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), .Names = "variable"))), .Names = c("function", 
+          "args")), structure(list(`function` = "<=", args = list(
+              structure(list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), .Names = "variable"), 
+              structure(list(value = 0.6119), .Names = "value"))), .Names = c("function", 
+          "args")))), .Names = c("function", "args")), structure(list(
+          `function` = "and", args = list(structure(list(`function` = "<", 
+              args = list(structure(list(value = 0.6119), .Names = "value"), 
+                  structure(list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), .Names = "variable"))), .Names = c("function", 
+          "args")), structure(list(`function` = "<=", args = list(
+              structure(list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), .Names = "variable"), 
+              structure(list(value = 1.6693629), .Names = "value"))), .Names = c("function", 
+          "args")))), .Names = c("function", "args")))), .Names = c("function", 
+  "args"))), .Names = c("name", "derivation"), class = "VariableDefinition")
      
       set_breaks <- structure(list(name = "new_var", derivation = structure(list(
-    `function` = "case", args = list(structure(list(column = structure(1:2, class = "AsIs"), 
-        type = structure(list(value = structure(list(class = "categorical", 
-            categories = list(structure(list(id = 1L, name = "one", 
-                numeric_value = NULL, missing = FALSE), .Names = c("id", 
-            "name", "numeric_value", "missing")), structure(list(
-                id = 2L, name = "two", numeric_value = NULL, 
-                missing = FALSE), .Names = c("id", "name", "numeric_value", 
-            "missing")))), .Names = c("class", "categories"))), .Names = "value")), .Names = c("column", 
-    "type")), structure(list(`function` = "and", args = list(
-        structure(list(`function` = "<", args = list(structure(list(
-            value = -1.4967), .Names = "value"), structure(list(
-            variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), .Names = "variable"))), .Names = c("function", 
-        "args")), structure(list(`function` = "<=", args = list(
-            structure(list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), .Names = "variable"), 
-            structure(list(value = 0), .Names = "value"))), .Names = c("function", 
-        "args")))), .Names = c("function", "args")), structure(list(
-        `function` = "and", args = list(structure(list(`function` = "<", 
-            args = list(structure(list(value = 0), .Names = "value"), 
-                structure(list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), .Names = "variable"))), .Names = c("function", 
-        "args")), structure(list(`function` = "<=", args = list(
-            structure(list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), .Names = "variable"), 
-            structure(list(value = 1.6662), .Names = "value"))), .Names = c("function", 
-        "args")))), .Names = c("function", "args")))), .Names = c("function", 
-"args"))), .Names = c("name", "derivation"), class = "VariableDefinition")
+      `function` = "case", args = list(structure(list(column = structure(1:2, class = "AsIs"), 
+          type = structure(list(value = structure(list(class = "categorical", 
+              categories = list(structure(list(id = 1L, name = "one", 
+                  numeric_value = NULL, missing = FALSE), .Names = c("id", 
+              "name", "numeric_value", "missing")), structure(list(
+                  id = 2L, name = "two", numeric_value = NULL, 
+                  missing = FALSE), .Names = c("id", "name", "numeric_value", 
+              "missing")))), .Names = c("class", "categories"))), .Names = "value")), .Names = c("column", 
+      "type")), structure(list(`function` = "and", args = list(
+          structure(list(`function` = "<", args = list(structure(list(
+              value = -1.4967), .Names = "value"), structure(list(
+              variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), .Names = "variable"))), .Names = c("function", 
+          "args")), structure(list(`function` = "<=", args = list(
+              structure(list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), .Names = "variable"), 
+              structure(list(value = 0), .Names = "value"))), .Names = c("function", 
+          "args")))), .Names = c("function", "args")), structure(list(
+          `function` = "and", args = list(structure(list(`function` = "<", 
+              args = list(structure(list(value = 0), .Names = "value"), 
+                  structure(list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), .Names = "variable"))), .Names = c("function", 
+          "args")), structure(list(`function` = "<=", args = list(
+              structure(list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), .Names = "variable"), 
+              structure(list(value = 1.6662), .Names = "value"))), .Names = c("function", 
+          "args")))), .Names = c("function", "args")))), .Names = c("function", 
+  "args"))), .Names = c("name", "derivation"), class = "VariableDefinition")
     
    dig_lab <- structure(list(name = "new_var", derivation = structure(list(
     `function` = "case", args = list(structure(list(column = structure(1:3, class = "AsIs"), 
@@ -176,40 +176,49 @@ with_mock_crunch({
 
 with_test_authentication({
   ds <- newDataset(df)
-  #as.character(cut(...)) is used because as.vector(CrunchVariable) returns
-  # a character, while cut returns a factor by default. 
+
   test_that("cut returns the same thing for crunch variables and identical vectors", {
+    
+    ds$cat_var1 <- cut(ds$v1, 3, variableName = "new_var1", label = c("one", "two", "three"))
     expect_identical(
-      as.character(cut(df$v1, 3, label = c("one", "two", "three"))),
-      as.vector(cut(df$v1, 3, variableName = "new_var", label = c("one", "two", "three")))
+      cut(df$v1, 3, label = c("one", "two", "three")),
+      as.vector(ds$cat_var1)
     )
     
+    ds$cat_var2 <- cut(ds$v1, 3, variableName = "new_var2", label = c("one", "two", "three"),
+          right = FALSE)
     expect_identical(
-      as.character(cut(df$v1, 3, label = c("one", "two", "three"), right = FALSE)),
-      as.vector( cut(df$v1, 
-          3, 
-          variableName = "new_var", 
-          label = c("one", "two", "three"),
-          right = FALSE))
+      cut(df$v1, 3, label = c("one", "two", "three"), right = FALSE),
+      as.vector(ds$cat_var2)
     )
-   
-    expect_identical(
-      as.character(cut(df$v1, c(-1.4967, 0, 1.6662), label = c("one", "two"), right = FALSE)),
-      as.vector(cut(df$v1,
+    
+    ds$cat_var3 <- cut(ds$v1,
                      c(-1.4967, 0, 1.6662),
-                     variableName = "new_var",
+                     variableName = "new_var3",
                      label = c("one", "two"),
-                     right = FALSE))
-    )
+                     right = FALSE)
     expect_identical(
-      as.character(cut(df$v1, 3, dig.lab = 2)),
-      as.vector(cut(df$v1,
+      cut(df$v1, c(-1.4967, 0, 1.6662), label = c("one", "two"), right = FALSE),
+      as.vector(ds$cat_var3)
+    )
+    
+    ds$cat_var4 <- cut(ds$v1,
                      3,
                      dig.lab = 2,
-                     variableName = "new_var"))
+                     variableName = "new_var4")
+    expect_identical(
+      cut(df$v1, 3, dig.lab = 2),
+      as.vector(ds$cat_var4)
     )
-
+    
+    ds$cat_var5 <- cut(ds$v1,
+                     3,
+                     include.lowest = TRUE,
+                     variableName = "new_var5")
+    expect_identical(
+      cut(df$v1, 3, include.lowest = TRUE),
+      as.vector(ds$cat_var5)
+    )
   })
-  
 })
   

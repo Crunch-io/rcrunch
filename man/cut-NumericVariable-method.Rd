@@ -19,11 +19,11 @@ into which x is to be cut.}
 \item{variableName}{The name of the resulting case variable as a character string.}
 
 \item{labels}{labels for the levels of the resulting category.
-By default, labels are constructed using "(a,b]" interval notation.
+By default, labels are constructed using interval notation.
 If labels = FALSE, simple integer codes are returned instead of a factor.}
 
-\item{include.lowest}{logical, indicating if an ‘x\link{i}’ equal to the lowest
-(or highest, for right = FALSE) ‘breaks’ value should be included.}
+\item{include.lowest}{logical, indicating if an \code{x[i]} equal to the lowest
+(or highest, for right = FALSE) \code{breaks} value should be included.}
 
 \item{right}{logical, indicating if the intervals should be closed on the right
 (and open on the left) or vice versa.}
@@ -31,12 +31,12 @@ If labels = FALSE, simple integer codes are returned instead of a factor.}
 \item{dig.lab}{integer which is used when labels are not given.
 It determines the number of digits used in formatting the break numbers.}
 
-\item{ordered_result}{logical: should the result be an ordered factor?}
+\item{ordered_result}{Ignored.}
 
 \item{...}{further arguments passed to or from other methods.}
-
-\item{logical, }{indicating if the intervals should be closed on the right
-(and open on the left) or vice versa.}
+}
+\value{
+a Crunch VariableDefinition
 }
 \description{
 crunch::cut() is equivalent to base::cut() except that it operates on
@@ -46,5 +46,9 @@ The leftmost interval corresponds to level one, the next leftmost to level two a
 so on.
 }
 \examples{
-01] 
+\dontrun{
+ds <- loadDataset("mtcars")
+ds$cat_var <- cut(ds$mpg, 3, variableName = "new_var")
+}
+ 
 }
