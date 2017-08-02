@@ -46,7 +46,7 @@ with_mock_crunch({
   test_that("min", {
     expect_equal(min(ds$birthyr), -1.4967)
   })
-  })
+})
 
 with_test_authentication({
   ds <- newDataset(df)

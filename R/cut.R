@@ -47,7 +47,7 @@ setMethod("cut", "NumericVariable", function(x,
     }
     nb <- as.integer(breaks + 1) # one more than #{intervals}
     dx <- diff(rx <- c(min(x, na.rm = TRUE), max(x, na.rm = TRUE)))
-    if(dx == 0) {
+    if (dx == 0) {
       dx <- abs(rx[1L])
       breaks <- seq.int(rx[1L] - dx/1000, rx[2L] + dx/1000,
                         length.out = nb)
@@ -58,27 +58,24 @@ setMethod("cut", "NumericVariable", function(x,
   }else nb <- length(breaks <- sort.int(as.double(breaks)))
   if (anyDuplicated(breaks)) halt("'breaks' are not unique")
   if (is.null(labels)) {#- try to construct nice ones ..
-    for(dig in dig.lab:max(12L, dig.lab)) {
+    for (dig in dig.lab:max(12L, dig.lab)) {
       ## 0+ avoids printing signed zeros as "-0"
-      ch.br <- formatC(0+breaks, digits = dig, width = 1L)
-      if(ok <- all(ch.br[-1L] != ch.br[-nb])) break
+      ch.br <- formatC(0 + breaks, digits = dig, width = 1L)
+      if (ok <- all(ch.br[-1L] != ch.br[-nb])) break
     }
     labels <-
-      if(ok) paste0(if(right)"(" else "[",
+      if (ok) paste0(if (right) "(" else "[",
                     ch.br[-nb], ",", ch.br[-1L],
-                    if(right)"]" else ")")
-    else paste("Range", seq_len(nb - 1L), sep="_")
+                    if (right) "]" else ")")
+    else paste("Range", seq_len(nb - 1L), sep = "_")
     if (ok && include.lowest) {
       if (right)
         substr(labels[1L], 1L, 1L) <- "[" # was "("
       else
-        substring(labels[nb-1L],
-                  nchar(labels[nb-1L], "c")) <- "]" # was ")"
+        substring(labels[nb - 1L],
+                  nchar(labels[nb - 1L], "c")) <- "]" # was ")"
     }
-  } else if (is.logical(labels) && !labels) {
-    codes.only <- TRUE
-  }
-  else if (length(labels) != nb - 1L) {
+  } else if (length(labels) != nb - 1L) {
     stop("lengths of 'breaks' and 'labels' differ")
   } 
   if (right) {
