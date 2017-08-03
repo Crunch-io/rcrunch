@@ -9,7 +9,7 @@
 #' @param breaks Either a numeric vector of two or more unique cut points 
 #' or a single number (greater than or equal to 2) giving the number of intervals 
 #' into which x is to be cut.
-#' @param variableName The name of the resulting case variable as a character string. 
+#' @param variable.name The name of the resulting case variable as a character string. 
 #' @param labels labels for the levels of the resulting category.
 #' By default, labels are constructed using interval notation.
 #' If labels = FALSE, simple integer codes are returned instead of a factor.
@@ -34,7 +34,7 @@
 #'  
 setMethod("cut", "NumericVariable", function(x, 
                                              breaks, 
-                                             variableName, 
+                                             variable.name, 
                                              labels = NULL,
                                              include.lowest = FALSE,
                                              right = TRUE,
@@ -100,6 +100,6 @@ setMethod("cut", "NumericVariable", function(x,
   }
   cases <- lapply(cases, function(x) eval(x, envir = env))
   case_list <- lapply(seq_along(cases), function(x) list(expression = cases[[x]], name = labels[x]))
-  makeCaseVariable(cases = case_list, name = variableName)
+  makeCaseVariable(cases = case_list, name = variable.name)
 }
 )

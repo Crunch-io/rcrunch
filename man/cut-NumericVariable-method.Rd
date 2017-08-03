@@ -5,7 +5,7 @@
 \alias{cut,NumericVariable-method}
 \title{Cut a numeric Crunch variable}
 \usage{
-\S4method{cut}{NumericVariable}(x, breaks, variableName, labels = NULL,
+\S4method{cut}{NumericVariable}(x, breaks, variable.name, labels = NULL,
   include.lowest = FALSE, right = TRUE, dig.lab = 3,
   ordered_result = FALSE, ...)
 }
@@ -16,7 +16,7 @@
 or a single number (greater than or equal to 2) giving the number of intervals
 into which x is to be cut.}
 
-\item{variableName}{The name of the resulting case variable as a character string.}
+\item{variable.name}{The name of the resulting case variable as a character string.}
 
 \item{labels}{labels for the levels of the resulting category.
 By default, labels are constructed using interval notation.
