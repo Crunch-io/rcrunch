@@ -4,15 +4,11 @@
 \alias{addGeoMetadata}
 \title{Add geodata metadata to a crunch variable}
 \usage{
-addGeoMetadata(variable, data, match_field = "name")
+addGeoMetadata(variable)
 }
 \arguments{
 \item{variable}{a Crunch variable to use for matching. This must be either
 a text or a categorical variable.}
-
-\item{data}{a Crunch dataset to use}
-
-\item{match_field}{the field in the variable to use (default: "name")}
 }
 \value{
 a CrunchGeography object that can be assigned into \code{geo(variable)}

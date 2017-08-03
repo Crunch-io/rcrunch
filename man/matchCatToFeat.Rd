@@ -4,7 +4,7 @@
 \alias{matchCatToFeat}
 \title{Match categories with features from geodata}
 \usage{
-matchCatToFeat(categories, all_features = availableFeatures())
+matchCatToFeat(categories, all_features = availableGeodataFeatures())
 }
 \arguments{
 \item{categories}{a vector of categories to match}

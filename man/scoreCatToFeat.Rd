@@ -8,7 +8,7 @@ scoreCatToFeat(features, categories)
 }
 \arguments{
 \item{features}{a vector of features to match (usually from a subset of the
-output \code{[availableFeatures]}) with a single property for a single geodatum.}
+output \code{[availableGeodataFeatures]}) with a single property for a single geodatum.}
 
 \item{categories}{a vector of categories to match}
 }
