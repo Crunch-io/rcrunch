@@ -20,7 +20,7 @@
 
 \item{sort}{character, either "x" or "y" (default: "x"). Which of the inputs should be used for the output order. Unlike merge.data.frame, merge.CrunchDataFrame will not re-sort the order of the output. It will use the order of either \code{x} or \code{y}.}
 
-\item{...}{ignored for now}
+\item{...}{ignored}
 }
 \value{
 a CrunchDataFrame with columns from both \code{x} and \code{y}
@@ -35,6 +35,12 @@ it is still judicious about downloading data from the server only when it
 is needed.
 }
 \details{
+Merging a CrunchDataFrame with a local dataframe does not allow specifying
+all rows from both sources. Instead, the resulting CrunchDataFrame will
+include all of the rows in whichever source is used for sorting (x or y). So
+if you specify \code{sort="x"} (the default) all rows of x will be present but
+rows in y that do not match with rows in x will not be present.
+
 Merging a CrunchDataFrame with a local dataframe is experiemental and might
 result in unexpected results. One known issue is that using \code{merge} on a
 CrunchDataFrame will change the both the CrunchDataFrame used as input as

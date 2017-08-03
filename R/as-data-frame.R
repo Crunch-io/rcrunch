@@ -114,6 +114,12 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
 #' it is still judicious about downloading data from the server only when it 
 #' is needed.
 #' 
+#' Merging a CrunchDataFrame with a local dataframe does not allow specifying 
+#' all rows from both sources. Instead, the resulting CrunchDataFrame will 
+#' include all of the rows in whichever source is used for sorting (x or y). So
+#' if you specify `sort="x"` (the default) all rows of x will be present but
+#' rows in y that do not match with rows in x will not be present.
+#' 
 #' Merging a CrunchDataFrame with a local dataframe is experiemental and might 
 #' result in unexpected results. One known issue is that using `merge` on a 
 #' CrunchDataFrame will change the both the CrunchDataFrame used as input as 
@@ -125,7 +131,7 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
 #' @param by.x name of the variable to match in x
 #' @param by.y name of the variable to match in y
 #' @param sort character, either "x" or "y" (default: "x"). Which of the inputs should be used for the output order. Unlike merge.data.frame, merge.CrunchDataFrame will not re-sort the order of the output. It will use the order of either `x` or `y`. 
-#' @param ... ignored for now
+#' @param ... ignored
 #' 
 #' @return a CrunchDataFrame with columns from both `x` and `y`
 #' 
@@ -136,6 +142,7 @@ merge.CrunchDataFrame  <- function (x, y, by=intersect(names(x), names(y)),
     by.y <- fix_bys(y, by.y)
     sort <- match.arg(sort)
     
+    # TODO: instead of not allowing use of `all`, allow it and do the right thing.
     if (any(startsWith(ls(list(...)), "all"))) {
         warning("options ", serialPaste(dQuote(c("all", "all.x", "all.y"))),
                 " are not currently supported by merge.CrunchDataFrame. The results will include all rows from whichever argument (x or y) is used to sort.")
