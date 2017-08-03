@@ -46,7 +46,8 @@ setMethod("cut", "NumericVariable", function(x,
             halt("invalid number of intervals")
         }
         nb <- as.integer(breaks + 1) # one more than #{intervals}
-        dx <- diff(rx <- c(min(x, na.rm = TRUE), max(x, na.rm = TRUE)))
+        rx <- c(min(x, na.rm = TRUE), max(x, na.rm = TRUE))
+        dx <- diff(rx)
         if (dx == 0) {
             dx <- abs(rx[1L])
             breaks <- seq.int(rx[1L] - dx/1000, rx[2L] + dx/1000,
@@ -55,7 +56,10 @@ setMethod("cut", "NumericVariable", function(x,
             breaks <- seq.int(rx[1L], rx[2L], length.out = nb)
             breaks[c(1L, nb)] <- c(rx[1L] - dx/1000, rx[2L] + dx/1000)
         }
-    }else nb <- length(breaks <- sort.int(as.double(breaks)))
+    }else {
+        breaks <- sort.int(as.double(breaks))
+        nb <- length(breaks)
+    }
     if (anyDuplicated(breaks)) halt("'breaks' are not unique")
     if (is.null(labels)) {#- try to construct nice ones ..
         for (dig in dig.lab:max(12L, dig.lab)) {
@@ -64,16 +68,20 @@ setMethod("cut", "NumericVariable", function(x,
             if (ok <- all(ch.br[-1L] != ch.br[-nb])) break
         }
         labels <-
-            if (ok) paste0(if (right) "(" else "[",
+            if (ok) {
+                paste0(if (right) "(" else "[",
                            ch.br[-nb], ",", ch.br[-1L],
                            if (right) "]" else ")")
-        else paste("Range", seq_len(nb - 1L), sep = "_")
+            } else {
+                paste("Range", seq_len(nb - 1L), sep = "_")
+            }
         if (ok && include.lowest) {
-            if (right)
+            if (right) {
                 substr(labels[1L], 1L, 1L) <- "[" # was "("
-            else
+            } else {
                 substring(labels[nb - 1L],
                           nchar(labels[nb - 1L], "c")) <- "]" # was ")"
+            }
         }
     } else if (length(labels) != nb - 1L) {
         stop("lengths of 'breaks' and 'labels' differ")
@@ -100,6 +108,6 @@ setMethod("cut", "NumericVariable", function(x,
     }
     cases <- lapply(cases, function(x) eval(x, envir = env))
     case_list <- lapply(seq_along(cases), function(x) list(expression = cases[[x]], name = labels[x]))
-    makeCaseVariable(cases = case_list, name = variable.name)
+    makeCaseVariable(cases = case_list, name = variable.name, ...)
 }
 )
