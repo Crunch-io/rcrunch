@@ -186,6 +186,10 @@ matchCatToFeat <- function (categories, all_features = availableGeodataFeatures(
     return(scores[scores$value %in% max(scores$value, na.rm = TRUE),])
 }
 
+#' @rdname describe
+#' @export
+setMethod("description", "Geodata", function (x) x@body$description)
+
 # TODO: show geodatums prettier for selection.
 # TODO: make feature_key()<- match_field()<- geodatum()<- methods with more 
 #       input checking

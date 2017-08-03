@@ -86,6 +86,22 @@ with_mock_crunch({
              "None of the geographies match at all. Either the variable is",
              " wrong, or Crunch doesn't yet have geodata for this variable.")
     })
+    
+    test_that("CrunchGeography show methods", {
+        expect_output(geo_data,
+                     "geodatum name: 		GB Regions\n",
+                     "geodatum tdescription: 	These are the GB regions\n",
+                     "geodatum url: 		https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/\n",
+                     "feature_key: 		properties.location\n",
+                     "match_field: 		name")
+    })
+    
+    test_that("Geodata methods", {
+        gd <- Geodata(crGET(geo_data$geodatum))
+        expect_is(gd, "Geodata")
+        expect_equal(name(gd), "GB Regions")
+        expect_equal(description(gd), "These are the GB regions")
+    })
 })
 
 with_test_authentication({
