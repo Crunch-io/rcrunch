@@ -4,18 +4,18 @@ with_mock_crunch({
     ds <- loadDataset("test ds")
     geo_data <- geo(ds$location)
     test_that("geo getter", {
+        expect_is(geo_data, "CrunchGeography")
         expect_equal(geo_data$feature_key, "properties.location")
         expect_equal(geo_data$match_field, "name")
-        expect_equal(geo_data$geodatum, "https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/")
+        expect_equal(geo_data$geodatum, 
+            "https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/")
     })
     
-    test_that("geo error", {
-        # if there is no geography on a variable, geo() returns null.
+    test_that("if there is no geography on a variable, geo() returns null", {
         expect_null(geo(ds$gender))
     })
 
-    test_that("geo setter", {
-        # we can update individual fiels of the geography with PATCHes
+    test_that("we can update individual fiels of the geography", {
         expect_PATCH(geo(ds$location)$feature_key <- "properties.location2",
                      'https://app.crunch.io/api/datasets/1/variables/location/',
                      '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
@@ -31,9 +31,15 @@ with_mock_crunch({
                      '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/newone/"',
                      ',"feature_key":"properties.location","match_field":"name"}]}}'
         )
+        # geographies can also be set by assigning a CrunchGeography to a variable
+        expect_PATCH(ds$gender <- geo_data,
+                     'https://app.crunch.io/api/datasets/1/variables/gender/',
+                     '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
+                     ',"feature_key":"properties.location","match_field":"name"}]}}'
+        )
     })
     
-    avail_features <- availableFeatures()
+    avail_features <- availableGeodataFeatures()
     guesses <- c("foo", "bar", "Scotland", "North", "Midlands", "London")
     test_that("availableFeatures", {
         expect_is(avail_features, "data.frame")
@@ -60,24 +66,23 @@ with_mock_crunch({
     
     test_that("addGeoMetadata", {
         # full run of adding geometadata including guessing the geodata to use
-        geo_to_add <- addGeoMetadata(ds$location, data=ds)
+        geo_to_add <- addGeoMetadata(ds$location)
         expect_is(geo_to_add, "CrunchGeography")
         expect_equal(geo_to_add$feature_key, "properties.name")
         expect_equal(geo_to_add$match_field, "name")
         expect_equal(geo_to_add$geodatum,
         "https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/")
     })
-    
-    test_that("addGeoMetadata input validation", {        
-        expect_error(addGeoMetadata(ds$location, data="not a ds"),
-                "The data argument \\(", dQuote("not a ds"), "\\) is not a Crunch dataset.")
-        expect_error(addGeoMetadata(ds$not_a_var, data=ds),
-             "The variable object \\(", dQuote("ds$not_a_var"), "\\) is not a",
-             " variable in the dataset provided.")
-        expect_error(addGeoMetadata(ds$starttime, data=ds),
+
+    test_that("addGeoMetadata input validation", {
+        # adding dQuote("ds$not_a_var") to error string inexplicably doesn't
+        # match with testthat
+        expect_error(addGeoMetadata(ds$not_a_var),
+                     ".* must be a Crunch Variable.")
+        expect_error(addGeoMetadata(ds$starttime),
              "The variable ", dQuote("ds$starttime"),
              " is neither a categorical or text variable.")
-        expect_error(addGeoMetadata(ds$gender, data=ds), 
+        expect_error(addGeoMetadata(ds$gender), 
              "None of the geographies match at all. Either the variable is",
              " wrong, or Crunch doesn't yet have geodata for this variable.")
     })

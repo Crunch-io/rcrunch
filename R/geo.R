@@ -57,8 +57,6 @@ setMethod("geo<-", c("CrunchVariable", "CrunchGeography"),
 #' 
 #' @param variable a Crunch variable to use for matching. This must be either
 #' a text or a categorical variable.
-#' @param data a Crunch dataset to use
-#' @param match_field the field in the variable to use (default: "name")
 #' 
 #' @return a CrunchGeography object that can be assigned into `geo(variable)`
 #' 
@@ -67,16 +65,12 @@ setMethod("geo<-", c("CrunchVariable", "CrunchGeography"),
 #' geo(ds$state) <- addGeoMetadata("state", data=ds)
 #' }
 #' @export
-addGeoMetadata <- function (variable, data, match_field = "name") {
-    if (!is.dataset(data)) {
-        halt("The data argument (", dQuote(substitute(data)),
-             ") is not a Crunch dataset." )
+addGeoMetadata <- function (variable) {
+    match_field <- "name" ## TODO: should this be a param?
+    # Validate
+    if (!is.variable(variable)) {
+        halt(dQuote(deparse(substitute(variable))), " must be a Crunch Variable.")
     }
-    if (is.null(variable) || datasetReference(variable) != datasetReference(data)) {
-            halt("The variable object (", dQuote(substitute(variable)),
-                 ") is not a variable in the dataset provided.")
-    }
-    
     if (has.categories(variable)) {
         cats <- names(categories(variable))
     } else if (is.Text(variable)) {
@@ -123,7 +117,7 @@ availableGeodata <- function (x = getAPIRoot()) {
 #' geographies for matching
 #' 
 #' @export
-availableFeatures <- function (x = getAPIRoot(), geodatum_fields=c("name", "description", "location")) {
+availableGeodataFeatures <- function (x = getAPIRoot(), geodatum_fields=c("name", "description", "location")) {
     geo_cat <- availableGeodata(x)
     
     # grab each geodatum in order to get metadata
@@ -158,7 +152,7 @@ availableFeatures <- function (x = getAPIRoot(), geodatum_fields=c("name", "desc
 #' more similar.
 #' 
 #' @param features a vector of features to match (usually from a subset of the
-#' output `[availableFeatures]`) with a single property for a single geodatum.
+#' output `[availableGeodataFeatures]`) with a single property for a single geodatum.
 #' @param categories a vector of categories to match
 #' 
 #' @return the Jaccard index for the values of the property given in 
@@ -186,11 +180,10 @@ scoreCatToFeat <- function (features, categories) {
 #' @importFrom stats aggregate
 #' 
 #' @export
-matchCatToFeat <- function (categories, all_features = availableFeatures()) {
+matchCatToFeat <- function (categories, all_features = availableGeodataFeatures()) {
     scores <- aggregate(value~., data=all_features,
                         scoreCatToFeat, categories = categories)
-    maxima <- which(scores$value == max(scores$value, na.rm = TRUE))
-    return(scores[maxima,])
+    return(scores[scores$value %in% max(scores$value, na.rm = TRUE),])
 }
 
 # TODO: show geodatums prettier for selection.
