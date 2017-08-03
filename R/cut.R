@@ -40,66 +40,66 @@ setMethod("cut", "NumericVariable", function(x,
                                              right = TRUE,
                                              dig.lab = 3,
                                              ordered_result = FALSE, ...){
-  env <- environment()
-  if (length(breaks) == 1L) {
-    if (is.na(breaks) || breaks < 2L) {
-      halt("invalid number of intervals")
-    }
-    nb <- as.integer(breaks + 1) # one more than #{intervals}
-    dx <- diff(rx <- c(min(x, na.rm = TRUE), max(x, na.rm = TRUE)))
-    if (dx == 0) {
-      dx <- abs(rx[1L])
-      breaks <- seq.int(rx[1L] - dx/1000, rx[2L] + dx/1000,
-                        length.out = nb)
+    env <- environment()
+    if (length(breaks) == 1L) {
+        if (is.na(breaks) || breaks < 2L) {
+            halt("invalid number of intervals")
+        }
+        nb <- as.integer(breaks + 1) # one more than #{intervals}
+        dx <- diff(rx <- c(min(x, na.rm = TRUE), max(x, na.rm = TRUE)))
+        if (dx == 0) {
+            dx <- abs(rx[1L])
+            breaks <- seq.int(rx[1L] - dx/1000, rx[2L] + dx/1000,
+                              length.out = nb)
+        } else {
+            breaks <- seq.int(rx[1L], rx[2L], length.out = nb)
+            breaks[c(1L, nb)] <- c(rx[1L] - dx/1000, rx[2L] + dx/1000)
+        }
+    }else nb <- length(breaks <- sort.int(as.double(breaks)))
+    if (anyDuplicated(breaks)) halt("'breaks' are not unique")
+    if (is.null(labels)) {#- try to construct nice ones ..
+        for (dig in dig.lab:max(12L, dig.lab)) {
+            ## 0+ avoids printing signed zeros as "-0"
+            ch.br <- formatC(0 + breaks, digits = dig, width = 1L)
+            if (ok <- all(ch.br[-1L] != ch.br[-nb])) break
+        }
+        labels <-
+            if (ok) paste0(if (right) "(" else "[",
+                           ch.br[-nb], ",", ch.br[-1L],
+                           if (right) "]" else ")")
+        else paste("Range", seq_len(nb - 1L), sep = "_")
+        if (ok && include.lowest) {
+            if (right)
+                substr(labels[1L], 1L, 1L) <- "[" # was "("
+            else
+                substring(labels[nb - 1L],
+                          nchar(labels[nb - 1L], "c")) <- "]" # was ")"
+        }
+    } else if (length(labels) != nb - 1L) {
+        stop("lengths of 'breaks' and 'labels' differ")
+    } 
+    if (right) {
+        comp_1 <- " <= "
+        comp_2 <- " < "
     } else {
-      breaks <- seq.int(rx[1L], rx[2L], length.out = nb)
-      breaks[c(1L, nb)] <- c(rx[1L] - dx/1000, rx[2L] + dx/1000)
+        comp_1 <- " < "
+        comp_2 <- " <= "
     }
-  }else nb <- length(breaks <- sort.int(as.double(breaks)))
-  if (anyDuplicated(breaks)) halt("'breaks' are not unique")
-  if (is.null(labels)) {#- try to construct nice ones ..
-    for (dig in dig.lab:max(12L, dig.lab)) {
-      ## 0+ avoids printing signed zeros as "-0"
-      ch.br <- formatC(0 + breaks, digits = dig, width = 1L)
-      if (ok <- all(ch.br[-1L] != ch.br[-nb])) break
+    cases <- vector("character", length = length(breaks) - 1)
+    varname  <- deparse(substitute(x))
+    for (i in 2:length(breaks)) {
+        cases[i - 1] <- parse(
+            text = paste0(breaks[i - 1], 
+                          comp_1, 
+                          varname, 
+                          " & ",  
+                          varname,
+                          comp_2,
+                          breaks[i])
+        )
     }
-    labels <-
-      if (ok) paste0(if (right) "(" else "[",
-                    ch.br[-nb], ",", ch.br[-1L],
-                    if (right) "]" else ")")
-    else paste("Range", seq_len(nb - 1L), sep = "_")
-    if (ok && include.lowest) {
-      if (right)
-        substr(labels[1L], 1L, 1L) <- "[" # was "("
-      else
-        substring(labels[nb - 1L],
-                  nchar(labels[nb - 1L], "c")) <- "]" # was ")"
-    }
-  } else if (length(labels) != nb - 1L) {
-    stop("lengths of 'breaks' and 'labels' differ")
-  } 
-  if (right) {
-    comp_1 <- " <= "
-    comp_2 <- " < "
-  } else {
-    comp_1 <- " < "
-    comp_2 <- " <= "
-  }
-  cases <- vector("character", length = length(breaks) - 1)
-  varname  <- deparse(substitute(x))
-  for (i in 2:length(breaks)) {
-    cases[i - 1] <- parse(
-      text = paste0(breaks[i - 1], 
-                    comp_1, 
-                    varname, 
-                    " & ",  
-                    varname,
-                    comp_2,
-                    breaks[i])
-    )
-  }
-  cases <- lapply(cases, function(x) eval(x, envir = env))
-  case_list <- lapply(seq_along(cases), function(x) list(expression = cases[[x]], name = labels[x]))
-  makeCaseVariable(cases = case_list, name = variable.name)
+    cases <- lapply(cases, function(x) eval(x, envir = env))
+    case_list <- lapply(seq_along(cases), function(x) list(expression = cases[[x]], name = labels[x]))
+    makeCaseVariable(cases = case_list, name = variable.name)
 }
 )
