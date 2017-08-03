@@ -123,32 +123,40 @@ with_mock_crunch({
         expect_identical(.crunchPageSize(2016 - ds$birthyr), 50000L)
     })
     
-    test_that("can manipulate the order of a crunchDataFrame", {
+    test_that("can manipulate the row order of a crunchDataFrame", {
         ds_df <- as.data.frame(ds)
         gndr <- ds_df$v1
+        expect_equal(nrow(ds_df), 25)
+        # both reording and subsetting the dataset
         new_order <- c(4,3,1,2)
         ds_df$.order <- new_order
+        # TODO: [, [[, and $ methods
         expect_equal(ds_df$v1, gndr[new_order])
-        expect_equal(nrow(ds_df), length(new_order))
+        expect_equal(nrow(ds_df), 4)
         ds_df2 <- as.data.frame(ds, row.order = new_order)
         expect_equal(ds_df2$v1, gndr[new_order])
-        expect_equal(nrow(ds_df2), length(new_order))
+        expect_equal(nrow(ds_df2), 4)
     })
     
-    test_that("merge.CrunchDataFrame", {
-        # test the most basic case of merging a CrunchDataFarme with a data.frame.
+    test_that("the most basic case of merging a CrunchDataFarme with a data.frame", {
         ds_df <- as.data.frame(ds)
         local_df <- data.frame(gender=c("Male", "Female"), new="new")
         expect_silent(merged_df <- merge(ds_df,
                                          local_df,
                                          by.x = "gender",
                                          by.y = "gender"))
-        expect_identical(nrow(merged_df), nrow(ds_df))
+        expect_is(merged_df, "CrunchDataFrame")
+        expect_identical(nrow(merged_df), nrow(ds))
+        expect_identical(ncol(merged_df), ncol(ds) + 1L)
+        # ds$gender has Male, Female and NA rows, whenever gender is NA, the 
+        # new column should also be NA. When gender is Male or Female the new
+        # column should be new.
         expect_identical(merged_df$new,
                          factor(c("new", "new", NA, "new", "new", "new", "new",
                                   NA, NA, "new", "new", "new", "new", NA, NA,
                                   NA, "new", "new", "new", NA, "new", "new",
                                   "new", NA, "new")))
+        expect_identical(is.na(merged_df$new), is.na(merged_df$gender))
     })
     
     test_that("merge.CrunchDataFrame input validation", {
@@ -160,6 +168,12 @@ with_mock_crunch({
                                         sort = "not_an_input"),
                      paste0("'arg' should be one of ", dQuote("x"), ", ", dQuote("y"))
         )
+        # check that there is a warning if all is specified.
+        expect_warning(merge(ds_df, local_df, all = TRUE),
+                       "options ", serialPaste(dQuote(c("all", "all.x", "all.y"))),
+                       " are not currently supported by merge.CrunchDataFrame. ",
+                       "The results will include all rows from whichever argument ",
+                       "(x or y) is used to sort.")
     })
  
     test_that("Can't assign too many rows into a CrunchDataFrame", {
@@ -178,18 +192,21 @@ with_mock_crunch({
     test_that("merge.CrunchDataFrame works with sort=y", {
         # when sort=y is specified, the resulting order of the CrunchDataFrame 
         # should follow the ordering present in y, and include all of the data
-        # for each row in both the CrunchDataset and the data.frame 
+        # for each row in the data.frame and the subset of rows in the 
+        # CrunchDataset that match 
         ds_df <- as.data.frame(ds)
+        # Each letter appears twice in textVar
+        expect_equal(table(ds_df$textVar %in% c("w", "n"))[["TRUE"]], 4)
         df_local <- data.frame(textVar=c("w", "n"),
                                new=factor(c("new1", "new2")),
                                stringsAsFactors = FALSE)
         expect_silent(merged_df <- merge(ds_df,
                                          df_local,
-                                         by.x = "textVar",
-                                         by.y = "textVar",
+                                         by = "textVar",
                                          sort = "y"))
         expect_identical(nrow(merged_df), 4L)
         expect_identical(merged_df$textVar, c("w", "w", "n", "n"))
+        # Check another variable to see that the row order is correct (shifted)
         expect_identical(merged_df$starttime, 
                          from8601(c("1956-02-13", "1956-01-28", "1955-12-28",
                                   "1955-12-30")))

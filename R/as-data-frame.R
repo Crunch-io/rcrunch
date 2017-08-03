@@ -136,6 +136,11 @@ merge.CrunchDataFrame  <- function (x, y, by=intersect(names(x), names(y)),
     by.y <- fix_bys(y, by.y)
     sort <- match.arg(sort)
     
+    if (any(startsWith(ls(list(...)), "all"))) {
+        warning("options ", serialPaste(dQuote(c("all", "all.x", "all.y"))),
+                " are not currently supported by merge.CrunchDataFrame. The results will include all rows from whichever argument (x or y) is used to sort.")
+    }
+    
     # Duplicate the enviornment (so we are not manipulating in place)
     # using `for(n in ls(x, all.names=TRUE)) assign(n, get(n, x), new_x)`
     # will evaluate each column, which is not actually what we want
