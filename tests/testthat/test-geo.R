@@ -11,6 +11,10 @@ with_mock_crunch({
             "https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/")
     })
     
+    test_that("is.Geodata", {
+        expect_true(is.Geodata(Geodata(crGET("https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"))))
+    })
+    
     test_that("if there is no geography on a variable, geo() returns null", {
         expect_null(geo(ds$gender))
     })

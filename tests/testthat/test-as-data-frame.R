@@ -291,6 +291,19 @@ with_mock_crunch({
         expect_identical(ncol(merged_df), ncol(ds_df)+1L)
         expect_identical(names(merged_df), c(names(ds_df), "new"))
     })
+    
+    test_that("fix_bys returns the reference to be used for by", {
+        df <- data.frame(foo=c(1,2), bar=c(3,4))
+        expect_equal(fix_bys(df, "bar"), "bar")
+    })
+    
+    test_that("fix_bys input validation", {
+        expect_error(fix_bys("foo", "bar"),
+                     "foo must be a data.frame or CrunchDataFrame")
+        df <- data.frame(foo=c(1,2), bar=c(3,4))
+        expect_error(fix_bys(df, c("foo", "bar")), "by must reference one and only one variable")
+        expect_error(fix_bys(df, "baz"), "baz does not reference a variable in df")
+    })
 })
 
 with_test_authentication({

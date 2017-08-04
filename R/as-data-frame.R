@@ -214,10 +214,10 @@ fix_bys <- function (data, by) {
     }
     if (is.character(by)) {
         if (length(by) != 1) {
-            halt("by.", substitute(by), " must reference one and only one variable")
+            halt("by must reference one and only one variable")
         }
         if (!by %in% ls(data)) {
-            halt(by, " does not reference a variable in ", substitute(by))
+            halt(by, " does not reference a variable in ", substitute(data))
         }
     }
     return(by)
