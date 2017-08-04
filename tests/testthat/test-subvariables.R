@@ -96,6 +96,10 @@ with_mock_crunch({
         expect_null(mr$Other)
 
         expect_is(mr[c("subvar2", "subvar3")], "Subvariables")
+        expect_identical(aliases(mr[c("subvar2", "subvar3")]), c("subvar2", "subvar3"))
+        expect_identical(mr[,c("subvar2", "subvar3")], mr[c("subvar2", "subvar3")])
+        expect_identical(mr[,c(1,3)], mr[c("subvar2", "subvar3")])
+
         expect_error(mr[c("subvar2", "Other")],
             "Undefined subvariables selected: Other")
         expect_error(mr[c("Different", "Other")],

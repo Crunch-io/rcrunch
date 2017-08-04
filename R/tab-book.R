@@ -45,8 +45,8 @@ tabBook <- function (multitable, dataset, weight=crunch::weight(dataset),
     )[[f]]
     if (missing(file)) {
         if (f == "json") {
-            ## Just generate a tempfile. The user won't see the file.
-            file <- tempfile()
+            ## We don't need a file.
+            file <- NULL
         } else {
             ## Generate a reasonable filename in the current working dir
             file <- paste(name(multitable), f, sep=".")
@@ -68,12 +68,18 @@ tabBook <- function (multitable, dataset, weight=crunch::weight(dataset),
     ## POST the query, which (after progress polling) returns a URL to download
     result <- crPOST(tabbook_url, config=add_headers(`Accept`=accept),
         body=toJSON(body))
-    download.file(result, file, quiet=TRUE) ## Note outside of auth. Ok because file is in s3 with token
-    if (f == "json") {
+    if (is.null(file)) {
         ## Read in the tab book content and turn it into useful objects
-        return(TabBookResult(fromJSON(file, simplifyVector=FALSE)))
+        out <- retry(crGET(result))
+        if (is.raw(out)) {
+            ## TODO: fix the content-type header from the server
+            ## See https://www.pivotaltracker.com/story/show/148554039
+            out <- fromJSON(rawToChar(out), simplifyVector=FALSE)
+        }
+        return(TabBookResult(out))
     } else {
-        ## (invisibly) return the filename, which will have been provided (probably)
+        file <- crDownload(result, file)
+        ## (invisibly) return the filename
         invisible(file)
     }
 }

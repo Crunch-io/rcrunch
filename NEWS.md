@@ -1,4 +1,17 @@
-### crunch 1.17.7 (under development)
+### crunch 1.17.9 (under development)
+* `resetPassword()` function
+* Categories are now selectable by names as well as ids
+* Fix issue where `deleteSubvariable()` by index instead deleted the parent variable
+* Pass a web app URL to `loadDataset()` and it will now load the same dataset in your R session.
+* `webApp()` function to go the other way: open the dataset from your R session in your web browser.
+* `categoriesFromLevels()` is now exported (#77)
+* Add a missing import from the `methods` package so that `Rscript` works (#90)
+
+### crunch 1.17.8
+Two attempts to fix download issues introduced by 1.17.4:
+
+* Changed file downloads to `crGET` with `httr::write_disk()` to hopefully work around issues caused by `utils::download.file` with method "libcurl".
+* Add a `retry` for downloads to hopefully work around a delay in CDN population.
 
 ### crunch 1.17.6
 * `searchDatasets()` to use the Crunch search API.

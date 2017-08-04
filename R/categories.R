@@ -66,6 +66,16 @@ setMethod("[", c("Categories", "ANY"), function (x, i, ...) {
 
 #' @rdname Categories
 #' @export
+setMethod("[", c("Categories", "character"), function (x, i, ...) {
+    indices <- match(i, names(x))
+    if (any(is.na(indices))) {
+        halt("subscript out of bounds: ", serialPaste(i[is.na(indices)]))
+    }
+    callNextMethod(x, i=indices)
+})
+
+#' @rdname Categories
+#' @export
 setMethod("[", c("Categories", "numeric"), function (x, i, ...) {
     invalid.indices <- setdiff(abs(i), seq_along(x@.Data))
     if (length(invalid.indices)) {
@@ -241,11 +251,11 @@ setMethod("lapply", "Categories", function (X, FUN, ...) {
 })
 
 #' Change the id of a category for a categorical variable
-#' 
+#'
 #' Changes the id of a category from an existing value to a new one.
 #' The variable can be a categorical, categorical array, or multiple response
 #' variable.
-#' 
+#'
 #' @param variable the variable in a crunch dataset that will be changed (note: the variable must be categorical, categorical array, or multiple response)
 #' @param from the (old) id identifying the category you want to change
 #' @param to the (new) id for the category
@@ -254,34 +264,34 @@ setMethod("lapply", "Categories", function (X, FUN, ...) {
 #' \dontrun{
 #' ds$country <- changeCategoryID(ds$country, 2, 6)
 #' }
-#' @export 
+#' @export
 changeCategoryID <- function (variable, from, to) {
     if (!has.categories(variable)) {
         halt("The variable ", name(variable), " doesn't have categories.")
     }
-    
+
     if (!is.numeric(from) & length(from) == 1) {
         halt("from should be a single numeric")
     }
-    
+
     if (!is.numeric(to) &  length(to) == 1) {
         halt("to should be a single numeric")
     }
-    
+
     pos.from <- match(from, ids(categories(variable)))
     if (is.na(pos.from)) {
         halt("No category with id ", from)
     }
-    
+
     if (to %in% ids(categories(variable))) {
         halt("Id ", to, " is already a category, please provide a new category id.")
     }
-    
+
     ## Add new category
     newcat <- categories(variable)[[pos.from]]
     newcat$id <- to
     newcat$numeric_value <- to
-    
+
     names(categories(variable))[pos.from] <- "__TO_DELETE__"
     categories(variable) <- c(categories(variable), newcat)
 
@@ -290,12 +300,12 @@ changeCategoryID <- function (variable, from, to) {
         variable[variable == from] <- to
     } else if (is.Array(variable)) {
         # If the variable is an array, then lapply over the subvariables
-        # TODO: change iteration over shojicatalogs to allow iterating over the variable directly 
+        # TODO: change iteration over shojicatalogs to allow iterating over the variable directly
         lapply(names(variable), function(subvarname) {
             variable[[subvarname]][variable[[subvarname]] == from] <- to
         })
     }
-    
+
     ## Delete old category
     keep <- seq_along(categories(variable))
     keep[pos.from] <- length(keep)

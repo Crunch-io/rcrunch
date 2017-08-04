@@ -4,7 +4,7 @@ with_mock_crunch({
     ## Load a ton of cube fixtures via the tab book feature
     ds <- loadDataset("test ds")
     m <- multitables(ds)[[1]]
-    with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-tabbook.json", {
+    with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-tabbook/", {
         book <- tabBook(m, data=ds)
     })
     cube <- book[[2]][[2]]

@@ -56,17 +56,20 @@ setMethod("sd", "NumericVariable",
 ## Future-proofing for change to median signature in R >= 3.4
 is.R.3.4 <- "..." %in% names(formals(median))
 
-## Apparently these don't need to be exported?
-setMethod("median", "CrunchVariable", ifelse(is.R.3.4,
-    function (x, na.rm, ...) {
-        halt(dQuote('median'), " is not defined for ", class(x))
-    }, function (x, na.rm) {
-        halt(dQuote('median'), " is not defined for ", class(x))
-    }))
+no_median <- function (v) {
+    if (v) return(function (x, na.rm, ...) halt(dQuote('median'), " is not defined for ", class(x)))
+    return(function (x, na.rm) halt(dQuote('median'), " is not defined for ", class(x)))
+}
 
-setMethod("median", "NumericVariable", ifelse(is.R.3.4,
-    function (x, na.rm=FALSE, ...) .summary.stat(x, "median", na.rm=na.rm),
-    function (x, na.rm=FALSE) .summary.stat(x, "median", na.rm=na.rm)))
+yes_median <- function (v) {
+    if (v) return(function (x, na.rm=FALSE, ...) .summary.stat(x, "median", na.rm=na.rm))
+    return(function (x, na.rm=FALSE) .summary.stat(x, "median", na.rm=na.rm))
+}
+
+## Apparently these don't need to be exported?
+setMethod("median", "CrunchVariable", no_median(is.R.3.4))
+
+setMethod("median", "NumericVariable", yes_median(is.R.3.4))
 
 ## Can't do datetime apparently:
 # (400) Bad Request: The 'cube_quantile' function requires argument 0 be of

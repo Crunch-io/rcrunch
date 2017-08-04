@@ -195,15 +195,31 @@ setMethod("names", "CategoricalArrayVariable", function (x) {
     getIndexSlot(subvariables(x), namekey(x))
 })
 
+## NOTE:
+## (1) The [ method returns Subvariables, not a subsetted array variable
+## (2) As a result, you cannot filter and select subvariables
+## (e.g. ds$array[ds$gender == "Male", c("subvar1", "subvar3")])
+
 #' @rdname subvars-extract
 #' @export
 setMethod("[", c("CategoricalArrayVariable", "character"), function (x, i, ...) {
-    w <- match(i, names(x))
+    w <- match(i, names(x)) ## TODO: use whichNameOrURL
     if (any(is.na(w))) {
         halt("Undefined subvariables selected: ", serialPaste(i[is.na(w)]))
     }
     return(subvariables(x)[w, ...])
 })
+#' @rdname subvars-extract
+#' @export
+setMethod("[", c("CategoricalArrayVariable", "missing", "ANY"), function (x, i, j, ...) {
+    return(subvariables(x)[j, ...])
+})
+#' @rdname subvars-extract
+#' @export
+setMethod("[", c("CategoricalArrayVariable", "missing", "character"), function (x, i, j, ...) {
+    return(x[j])
+})
+
 #' @rdname subvars-extract
 #' @export
 setMethod("[[", c("CategoricalArrayVariable", "ANY"), function (x, i, ...) {

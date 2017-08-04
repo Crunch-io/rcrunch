@@ -195,3 +195,18 @@ setGeneric("getShowContent",
     ## Backstop error so you don't get "Object of class S4 is not subsettable"
     halt(paste("Cannot update", class(x), "with type", class(value)))
 }
+
+
+# for ggplot to not copmlain when given crunchdata
+#' Fortify crunch objects for use with ggplot
+#'
+#' @param model model or other R object to convert to data frame
+#' @param data original dataset, if needed
+#' @param ... other arguments passed to methods
+#' @name fortify
+#' @export
+fortify.CrunchDataFrame <- function(model, data, ...) model
+
+#' @rdname fortify
+#' @export
+fortify.CrunchDataset <- function(model, data, ...) model
