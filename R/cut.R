@@ -41,6 +41,9 @@ setMethod("cut", "NumericVariable", function(x,
                                              dig.lab = 3,
                                              ordered_result = FALSE, ...){
     env <- environment()
+      if (missing(variable.name)) {
+        halt("Must provide the name for the new variable")
+    }
     if (length(breaks) == 1L) {
         if (is.na(breaks) || breaks < 2L) {
             halt("invalid number of intervals")
@@ -61,28 +64,8 @@ setMethod("cut", "NumericVariable", function(x,
         nb <- length(breaks)
     }
     if (anyDuplicated(breaks)) halt("'breaks' are not unique")
-    if (is.null(labels)) {#- try to construct nice ones ..
-        for (dig in dig.lab:max(12L, dig.lab)) {
-            ## 0+ avoids printing signed zeros as "-0"
-            ch.br <- formatC(0 + breaks, digits = dig, width = 1L)
-            if (ok <- all(ch.br[-1L] != ch.br[-nb])) break
-        }
-        labels <-
-            if (ok) {
-                paste0(if (right) "(" else "[",
-                           ch.br[-nb], ",", ch.br[-1L],
-                           if (right) "]" else ")")
-            } else {
-                paste("Range", seq_len(nb - 1L), sep = "_")
-            }
-        if (ok && include.lowest) {
-            if (right) {
-                substr(labels[1L], 1L, 1L) <- "[" # was "("
-            } else {
-                substring(labels[nb - 1L],
-                          nchar(labels[nb - 1L], "c")) <- "]" # was ")"
-            }
-        }
+    if (is.null(labels)) { #Autogenerate labels if not supplied
+      labels <- crunch:::generateCutLabels(dig.lab, breaks, nb, right, include.lowest)
     } else if (length(labels) != nb - 1L) {
         stop("lengths of 'breaks' and 'labels' differ")
     } 
@@ -111,3 +94,47 @@ setMethod("cut", "NumericVariable", function(x,
     makeCaseVariable(cases = case_list, name = variable.name, ...)
 }
 )
+
+
+#' Generate Labels for the cut function
+#' 
+#' A convenience function to generate labels for the cut function. This
+#' function is extracted from base::cut() and is broken out to make it easier to 
+#' test. It is not meant to be called on its own. 
+#'
+#' @param dig.lab see `cut()`
+#' @param breaks see `cut()`
+#' @param nb The number of breaks, equal to the small of 2 or the number of breaks
+#' @param right  see `cut()`
+#' @param include.lowest see`cut()`
+#'
+#' @return
+#'
+#' @examples
+#' 
+#' crunch:::generateCutLabels(2, c(2, 3, 4, 5), 4, FALSE, FALSE)
+#' 
+generateCutLabels <- function(dig.lab, breaks, nb, right, include.lowest) {
+    for (dig in dig.lab:max(12L, dig.lab)) {
+        ## 0+ avoids printing signed zeros as "-0"
+        ch.br <- formatC(0 + breaks, digits = dig, width = 1L)
+        ok <- all(ch.br[-1L] != ch.br[-nb])
+        if (ok ) break
+    }
+    labels <- if (ok) {
+            paste0(if (right) "(" else "[",
+                   ch.br[-nb], ",", ch.br[-1L],
+                   if (right) "]" else ")")
+        } else {
+            paste("Range", seq_len(nb - 1L), sep = "_")
+        }
+    if (ok && include.lowest) {
+        if (right) {
+            substr(labels[1L], 1L, 1L) <- "[" # was "("
+        } else {
+            substring(labels[nb - 1L],
+                      nchar(labels[nb - 1L], "c")) <- "]" # was ")"
+        }
+    }
+    labels
+}

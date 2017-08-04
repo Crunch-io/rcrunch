@@ -86,6 +86,8 @@ with_mock_crunch({
        "VariableDefinition"
    ) 
    
+   expect_error( cut(ds$birthyr, 3), "Must provide the name for the new variable")
+   
    expect_equivalent(
        basic_output,
        basic_cut
@@ -114,6 +116,14 @@ with_mock_crunch({
            3,
            dig.lab = 2,
            variable.name = "new_var")
+   )
+   expect_identical(
+       crunch:::generateCutLabels(5, c(2.111111, 3, 4, 5), 4, FALSE, FALSE),
+       c("[2.1111,3)", "[3,4)", "[4,5)")
+   )
+   expect_identical(
+       crunch:::generateCutLabels(2, c(2.111111, 3, 4, 5), 4, FALSE, FALSE),
+       c("[2.1,3)", "[3,4)", "[4,5)")
    )
   })
 })
