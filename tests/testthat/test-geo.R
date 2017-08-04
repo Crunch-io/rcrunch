@@ -105,6 +105,65 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    # TODO: create a variable with will match more than one geo and test the error works.
-    # TODO: create a text variable that matches geo to ensure that works
+    # # setup a geography because one doesn't already exits locally
+    # # TODO: only trigger locally, but check to make sure they haven't already been created.
+    # # test01/stable already has these
+    # payload <- list("description" = "use properties.name or properties.postal-code",
+    #                 "format" = "geojson",
+    #                 "name" = "US States",
+    #                 "location" = "https://s.crunch.io/geodata/leafletjs/us-states.geojson",
+    #                 "owner_id" = "00002")
+    # crPOST("http://local.crunch.io:8080/api/geodata/", body=toJSON(payload))
+    # # setup a second geography to test erroring when multiple match
+    # payload <- list("description" = "properties.name or properties.postal-code",
+    #                 "format" = "topojson",
+    #                 "name" = "US States Topojson",
+    #                 "location" = "https://s.crunch.io/geodata/leafletjs/us-states.topojson",
+    #                 "owner_id" = "00002")
+    # crPOST("http://local.crunch.io:8080/api/geodata/", body=toJSON(payload))
+    # # setup a second geography to test erroring when multiple match
+    # payload <- list("description" = "Census regions",
+    #                 "format" = "topojson",
+    #                 "name" = "US Census Regions",
+    #                 "location" = "https://s.crunch.io/geodata/crunch-io/cb_2015_us_region_20m.topojson",
+    #                 "owner_id" = "00002")
+    # crPOST("http://local.crunch.io:8080/api/geodata/", body=toJSON(payload))
+        
+    geo_ds <- newDataset(df)
+    test_that("Can match and set geodata on a text variable", {
+        geo_ds$region <- rep(c("South", "West", "West", "South", "West"), 4)
+        expect_silent(geo_ds$region <- addGeoMetadata(geo_ds$region))
+        expect_output(geo(geo_ds$region),
+                      "geodatum name: 		US Census Regions\n",
+                      "geodatum description: 	Census regions\n",
+                      "geodatum url: 		.*\n", # the geodatum id will change, so the url will change.
+                      "feature_key: 		properties.name\n",
+                      "match_field: 		name")
+    })
+    
+    test_that("Can match and set geodata on a categorical variable", {
+        geo_ds$region2 <- factor(rep(c("South", "West", "West", "South", "West"), 4))
+        expect_silent(geo_ds$region2 <- addGeoMetadata(geo_ds$region2))
+        expect_output(geo(geo_ds$region2),
+                      "geodatum name: 		US Census Regions\n",
+                      "geodatum description: 	Census regions\n",
+                      "geodatum url: 		.*\n", # the geodatum id will change, so the url will change.
+                      "feature_key: 		properties.name\n",
+                      "match_field: 		name")
+    })
+    
+    geo_ds$state <- rep(c("Alabama", "Alaska", "Arizona", "Arkansas", "California"), 4)
+    test_that("There is an error if more than one geography matches", {
+        expect_error(geo_ds$state <- addGeoMetadata(geo_ds$state),
+                     "There is more than one possible match. Please specify the geography manually.*")
+    })
+    test_that("can manually set a geography after a failed match", {
+        avail_geo <- availableGeodata()
+        new_geo <- CrunchGeography(geodatum = urls(avail_geo)[1],
+                                        feature_key = "name",
+                                        match_field = "name")
+        geo_ds$state <- new_geo
+        expect_is(geo(geo_ds$state), "CrunchGeography")
+        expect_identical(geo(geo_ds$state), new_geo)
+    })
 })

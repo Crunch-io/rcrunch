@@ -88,7 +88,7 @@ addGeoMetadata <- function (variable) {
     }
     if (nrow(match_scores) > 1) {
         halt("There is more than one possible match. Please specify the geography manually:\n",
-             paste0(capture.output(print(match_scores[,c("value", "geodatum_name", "geodatum")])), collapse = "\n"))
+             paste0(capture.output(print(match_scores[,c("value", "geodatum_name", "geodatum", "property")])), collapse = "\n"))
     }
     
     match_geo <- CrunchGeography(geodatum=match_scores$geodatum,
