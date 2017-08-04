@@ -10,12 +10,15 @@
 \alias{CrunchGeography}
 \alias{geo,CrunchVariable-method}
 \alias{geo<-,CrunchVariable,CrunchGeography-method}
+\alias{geo<-,CrunchVariable,NULL-method}
 \alias{availableGeodata}
 \title{Geography properties for crunch variables}
 \usage{
 \S4method{geo}{CrunchVariable}(x)
 
 \S4method{geo}{CrunchVariable,CrunchGeography}(x) <- value
+
+\S4method{geo}{CrunchVariable,`NULL`}(x) <- value
 
 availableGeodata(x = getAPIRoot())
 }

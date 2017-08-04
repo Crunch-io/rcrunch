@@ -14,6 +14,12 @@ with_mock_crunch({
     test_that("if there is no geography on a variable, geo() returns null", {
         expect_null(geo(ds$gender))
     })
+    
+    test_that("can remove a geo association", {
+        expect_PATCH(geo(ds$location) <- NULL,
+                     'https://app.crunch.io/api/datasets/1/variables/location/',
+                     '{"element":"shoji:entity","body":{"view":{"geodata":[]}}}')
+    })
 
     test_that("we can update individual fiels of the geography", {
         expect_PATCH(geo(ds$location)$feature_key <- "properties.location2",
@@ -159,11 +165,16 @@ with_test_authentication({
     })
     test_that("can manually set a geography after a failed match", {
         avail_geo <- availableGeodata()
-        new_geo <- CrunchGeography(geodatum = urls(avail_geo)[1],
+        new_geo <- CrunchGeography(geodatum = urls(avail_geo["US States Topojson"]),
                                         feature_key = "name",
                                         match_field = "name")
         geo_ds$state <- new_geo
         expect_is(geo(geo_ds$state), "CrunchGeography")
         expect_identical(geo(geo_ds$state), new_geo)
+    })
+    
+    test_that("can remove a geo association", {
+        expect_silent(geo(geo_ds$state) <- NULL)
+        expect_null(geo(geo_ds$state))
     })
 })

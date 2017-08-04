@@ -52,7 +52,14 @@ setMethod("geo<-", c("CrunchVariable", "CrunchGeography"),
               dropCache(cubeURL(x))
               return(x)
           })
-
+#' @rdname geo
+#' @export
+setMethod("geo<-", c("CrunchVariable", "NULL"),
+          function (x, value) {
+              frmt <- wrapEntity("view" = list("geodata" = list()))
+              crPATCH(self(x), body=toJSON(frmt))
+              return(x)
+          })
 #' Add geodata metadata to a crunch variable
 #' 
 #' @param variable a Crunch variable to use for matching. This must be either
@@ -190,14 +197,8 @@ matchCatToFeat <- function (categories, all_features = availableGeodataFeatures(
 #' @export
 setMethod("description", "Geodata", function (x) x@body$description)
 
-# TODO: show geodatums prettier for selection.
 # TODO: make feature_key()<- match_field()<- geodatum()<- methods with more 
 #       input checking
-# TODO: geodatum()<- method should attempt some matching based on what's 
-#       already in match_field
-# TODO: availableGeodata() should be subsettable by name, and be asignable into 
-#       geodatum(geo(ds$var)) or the like
 # TODO: make sure the full resolution jsons are available
 # TODO: GIS opertaions (contains, union, etc.)
-# TODO: Add geo(ds$var) <- NULL method
 
