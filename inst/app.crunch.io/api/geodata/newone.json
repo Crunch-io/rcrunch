@@ -5,6 +5,6 @@
     "body": {
         "name": "new one",
         "location": "https://s.crunch.io/some/wrong/path.geojson",
-        "format": "geojson"
+        "format": "notjson"
     }
 }
