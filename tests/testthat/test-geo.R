@@ -48,16 +48,16 @@ with_mock_crunch({
                      ',"feature_key":"properties.location","match_field":"name"}]}}'
         )
     })
-    
+
     avail_features <- availableGeodataFeatures()
     guesses <- c("foo", "bar", "Scotland", "North", "Midlands", "London")
     test_that("availableFeatures", {
         expect_is(avail_features, "data.frame")
-        expect_equal(dim(avail_features), c(14, 6))
+        expect_equal(dim(avail_features), c(15, 6))
         expect_equal(as.character(avail_features$value),
                      c("UKH", "UKI", "UKL", "UKF", "UKJ", "UKC", "East",
                        "London", "Wales", "Scotland", "Northern Ireland",
-                       "Midlands", "South", "North"))
+                       "Midlands", "South", "North", "test"))
         
     })
     test_that("scoreCatToFeat", {

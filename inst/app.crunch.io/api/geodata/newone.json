@@ -5,6 +5,14 @@
     "body": {
         "name": "new one",
         "location": "https://s.crunch.io/some/wrong/path.geojson",
-        "format": "notjson"
+        "format": "notjson",
+        "metadata": {
+            "status": "success",
+            "properties": {
+                "test": [
+                    "test"
+                ]
+            }
+        }
     }
 }
