@@ -9,7 +9,7 @@
 #' @param breaks Either a numeric vector of two or more unique cut points 
 #' or a single number (greater than or equal to 2) giving the number of intervals 
 #' into which x is to be cut.
-#' @param variable.name The name of the resulting case variable as a character string. 
+#' @param name The name of the resulting case variable as a character string. 
 #' @param labels labels for the levels of the resulting category.
 #' By default, labels are constructed using interval notation.
 #' If labels = FALSE, simple integer codes are returned instead of a factor.
@@ -34,14 +34,14 @@
 #'  
 setMethod("cut", "NumericVariable", function(x, 
                                              breaks, 
-                                             variable.name, 
+                                             name, 
                                              labels = NULL,
                                              include.lowest = FALSE,
                                              right = TRUE,
                                              dig.lab = 3,
                                              ordered_result = FALSE, ...){
     env <- environment()
-      if (missing(variable.name)) {
+      if (missing(name)) {
         halt("Must provide the name for the new variable")
     }
     if (length(breaks) == 1L) {
@@ -65,33 +65,25 @@ setMethod("cut", "NumericVariable", function(x,
     }
     if (anyDuplicated(breaks)) halt("'breaks' are not unique")
     if (is.null(labels)) { #Autogenerate labels if not supplied
-      labels <- crunch:::generateCutLabels(dig.lab, breaks, nb, right, include.lowest)
+      labels <- generateCutLabels(dig.lab, breaks, nb, right, include.lowest)
     } else if (length(labels) != nb - 1L) {
         stop("lengths of 'breaks' and 'labels' differ")
     } 
     if (right) {
-        comp_1 <- " <= "
-        comp_2 <- " < "
+        `%c1%` <- function(x,y) x <= y
+        `%c2%` <- function(x,z) x > z
     } else {
-        comp_1 <- " < "
-        comp_2 <- " <= "
+        `%c1%` <- function(x,y) x < y
+        `%c2%` <- function(x,z) x >= z
     }
-    cases <- vector("character", length = length(breaks) - 1)
-    varname  <- deparse(substitute(x))
+
+    cases <- vector("list", length = length(breaks) - 1)
+    
     for (i in 2:length(breaks)) {
-        cases[i - 1] <- parse(
-            text = paste0(breaks[i - 1], 
-                          comp_1, 
-                          varname, 
-                          " & ",  
-                          varname,
-                          comp_2,
-                          breaks[i])
-        )
+        cases[[i - 1]] <- x %c2% breaks[i - 1] & x %c1% breaks[i]
     }
-    cases <- lapply(cases, function(x) eval(x, envir = env))
     case_list <- lapply(seq_along(cases), function(x) list(expression = cases[[x]], name = labels[x]))
-    makeCaseVariable(cases = case_list, name = variable.name, ...)
+    makeCaseVariable(cases = case_list, name = name, ...)
 }
 )
 
@@ -99,7 +91,7 @@ setMethod("cut", "NumericVariable", function(x,
 #' Generate Labels for the cut function
 #' 
 #' A convenience function to generate labels for the cut function. This
-#' function is extracted from base::cut() and is broken out to make it easier to 
+#' function is extracted from [base::cut()] and is broken out to make it easier to 
 #' test. It is not meant to be called on its own. 
 #'
 #' @param dig.lab see `cut()`
