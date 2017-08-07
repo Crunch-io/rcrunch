@@ -3,6 +3,7 @@
 \docType{class}
 \name{CrunchGeography-class}
 \alias{CrunchGeography-class}
+\alias{CrunchGeography}
 \alias{Geodata-class}
 \alias{Geodata}
 \alias{geo}
@@ -14,6 +15,8 @@
 \alias{availableGeodata}
 \title{Geography properties for crunch variables}
 \usage{
+CrunchGeography(..., data = NULL)
+
 \S4method{geo}{CrunchVariable}(x)
 
 \S4method{geo}{CrunchVariable,CrunchGeography}(x) <- value
