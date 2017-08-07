@@ -22,7 +22,7 @@ with_mock_crunch({
     test_that("cut returns expected output", {
         
         ##################### EXPECTED OUTPUT ######################################
-        basic_output <- basic_output <- list(
+        basic_output <- list(
             name = "new_var", 
             derivation = list(
                 `function` = "case", 
@@ -44,60 +44,43 @@ with_mock_crunch({
                                     list(id = 3L, 
                                         name = "three", 
                                         numeric_value = NULL, 
-                                        missing = FALSE)
-                                )
-                            )
-                        )
-                    ), 
+                                        missing = FALSE))))), 
                     list(
                         `function` = "and",
                         args = list(
                             list(
-                                `function` = "<=", 
-                                args = list(list(value = -1.4998629), 
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"))), 
-                            list(
-                                `function` = "<", 
-                                args = list(list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
-                                    list(value = -0.4424)
-                                )
-                            )
-                        )
-                    ), 
+                                `function` = ">", 
+                                args = list(
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
+                                    list(value = -1.4998629))), 
+                            list(`function` = "<=", 
+                                args = list(
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
+                                    list(value = -0.4424))))), 
                     list(`function` = "and", 
                         args = list(
                             list(
-                                `function` = "<=", 
+                                `function` = ">",
                                 args = list(
-                                    list(
-                                        value = -0.4424), 
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/")
-                                )
-                            ), 
-                            list(`function` = "<", 
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
+                                    list(value = -0.4424))), 
+                            list(`function` = "<=", 
                                 args = list(
-                                    list(
-                                        variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
                                     list(value = 0.6119)
                                 )
                             )
                         )
-                    ), 
+                    ),
                     list(`function` = "and", 
                         args = list(
-                            list(
-                                `function` = "<=",
+                            list(`function` = ">", 
                                 args = list(
-                                    list(
-                                        value = 0.6119), 
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/")
-                                )
-                            ), 
-                            list(
-                                `function` = "<", 
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
+                                    list(value = 0.6119))), 
+                            list(`function` = "<=", 
                                 args = list(
-                                    list(
-                                        variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
                                     list(value = 1.6693629)
                                 )
                             )
@@ -107,13 +90,13 @@ with_mock_crunch({
             )
         )
         
+        
         right_false <- list(
             name = "new_var", 
             derivation = list(
                 `function` = "case", 
                 args = list(
-                    list(
-                        column = I(1:3),
+                    list(column = I(1:3), 
                         type = list(
                             value = list(
                                 class = "categorical", 
@@ -134,35 +117,29 @@ with_mock_crunch({
                             )
                         )
                     ), 
-                    list(
-                        `function` = "and", 
+                    list(`function` = "and", 
                         args = list(
-                            list(`function` = "<", 
+                            list(
+                                `function` = ">=",
                                 args = list(
-                                    list(value = -1.4998629), 
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/")
-                                )
-                            ), 
-                            list(`function` = "<=", 
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
+                                    list(value = -1.4998629))), list(`function` = "<", 
+                                        args = list(
+                                            list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
+                                            list(value = -0.4424)
+                                        )
+                                    )
+                        )
+                    ), 
+                    list(`function` = "and", 
+                        args = list(
+                            list(`function` = ">=",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
                                     list(value = -0.4424)
                                 )
-                            )
-                        )
-                    ), 
-                    list(
-                        `function` = "and", 
-                        args = list(
-                            list(
-                                `function` = "<", 
-                                args = list(
-                                    list(value = -0.4424), 
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/")
-                                )
                             ), 
-                            list(
-                                `function` = "<=", 
+                            list(`function` = "<",
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
                                     list(value = 0.6119)
@@ -172,13 +149,12 @@ with_mock_crunch({
                     ), 
                     list(`function` = "and", 
                         args = list(
-                            list(`function` = "<", 
+                            list(`function` = ">=",
                                 args = list(
-                                    list(value = 0.6119), 
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/")
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
+                                    list(value = 0.6119)
                                 )
-                            ), 
-                            list(`function` = "<=", 
+                            ), list(`function` = "<", 
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
                                     list(value = 1.6693629)
@@ -195,34 +171,32 @@ with_mock_crunch({
             derivation = list(
                 `function` = "case", 
                 args = list(
-                    list(column = I(1:2), 
+                    list(
+                        column = I(1:2), 
                         type = list(
-                            value = list(
-                                class = "categorical", 
+                            value = list(class = "categorical", 
                                 categories = list(
                                     list(id = 1L, 
                                         name = "one", 
                                         numeric_value = NULL, 
                                         missing = FALSE), 
                                     list(id = 2L, 
-                                        name = "two", 
+                                        name = "two",
                                         numeric_value = NULL, 
                                         missing = FALSE)
                                 )
                             )
                         )
                     ), 
-                    list(
-                        `function` = "and", 
+                    list(`function` = "and", 
                         args = list(
-                            list(
-                                `function` = "<", 
+                            list(`function` = ">=", 
                                 args = list(
-                                    list(value = -1.4967), 
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/")
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
+                                    list(value = -1.4967)
                                 )
                             ), 
-                            list(`function` = "<=", 
+                            list(`function` = "<", 
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
                                     list(value = 0)
@@ -230,17 +204,15 @@ with_mock_crunch({
                             )
                         )
                     ), 
-                    list(
-                        `function` = "and", 
+                    list(`function` = "and", 
                         args = list(
-                            list(`function` = "<", 
+                            list(`function` = ">=", 
                                 args = list(
-                                    list(value = 0), 
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/")
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
+                                    list(value = 0)
                                 )
                             ), 
-                            list(
-                                `function` = "<=", 
+                            list(`function` = "<", 
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
                                     list(value = 1.6662)
@@ -252,12 +224,12 @@ with_mock_crunch({
             )
         )
         
-        dig_lab <- list(
-            name = "new_var", 
+        dig_lab <- list(name = "new_var", 
             derivation = list(
                 `function` = "case", 
                 args = list(
-                    list(column = I(1:3), 
+                    list(
+                        column = I(1:3), 
                         type = list(
                             value = list(
                                 class = "categorical", 
@@ -281,15 +253,12 @@ with_mock_crunch({
                     list(
                         `function` = "and", 
                         args = list(
-                            list(
-                                `function` = "<=", 
-                                args = list(
-                                    list(
-                                        value = -1.4998629), 
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/")
+                            list(`function` = ">",
+                                args = list(list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
+                                    list(value = -1.4998629)
                                 )
                             ), 
-                            list(`function` = "<", 
+                            list(`function` = "<=", 
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
                                     list(value = -0.4424)
@@ -297,16 +266,15 @@ with_mock_crunch({
                             )
                         )
                     ), 
-                    list(`function` = "and", 
-                        args = list(
+                    list(
+                        `function` = "and", 
+                        args = list(list(`function` = ">", 
+                            args = list(
+                                list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
+                                list(value = -0.4424)
+                            )
+                        ), 
                             list(`function` = "<=", 
-                                args = list(
-                                    list(value = -0.4424), 
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/")
-                                )
-                            ), 
-                            list(
-                                `function` = "<", 
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
                                     list(value = 0.6119)
@@ -317,14 +285,13 @@ with_mock_crunch({
                     list(`function` = "and", 
                         args = list(
                             list(
-                                `function` = "<=",
+                                `function` = ">", 
                                 args = list(
-                                    list(
-                                        value = 0.6119), 
-                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/")
+                                    list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
+                                    list(value = 0.6119)
                                 )
                             ), 
-                            list(`function` = "<", 
+                            list(`function` = "<=", 
                                 args = list(
                                     list(variable = "https://app.crunch.io/api/datasets/1/variables/birthyr/"), 
                                     list(value = 1.6693629)
