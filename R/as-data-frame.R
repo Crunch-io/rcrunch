@@ -1,18 +1,18 @@
 CrunchDataFrame <- function (dataset) {
-  ## S3 constructor method for CrunchDataFrame. terms.formula doesn't seem
-  ## to like S4 subclass of environment
-  stopifnot(is.dataset(dataset))
-  out <- new.env()
-  out$.crunchDataset <- dataset
-  with(out, {
-    ## Note the difference from as.environment: wrapped in as.vector
-    for (a in aliases(allVariables(dataset))) {
-      eval(substitute(delayedAssign(v, as.vector(.crunchDataset[[v]])),
-                      list(v=a)))
-    }
-  })
-  class(out) <- "CrunchDataFrame"
-  return(out)
+    ## S3 constructor method for CrunchDataFrame. terms.formula doesn't seem
+    ## to like S4 subclass of environment
+    stopifnot(is.dataset(dataset))
+    out <- new.env()
+    out$.crunchDataset <- dataset
+    with(out, {
+        ## Note the difference from as.environment: wrapped in as.vector
+        for (a in aliases(allVariables(dataset))) {
+            eval(substitute(delayedAssign(v, as.vector(.crunchDataset[[v]])),
+                list(v=a)))
+        }
+    })
+    class(out) <- "CrunchDataFrame"
+    return(out)
 }
 
 setOldClass("CrunchDataFrame")
@@ -50,28 +50,28 @@ NULL
 #' @rdname dataset-to-R
 #' @export
 as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE,
-                                         force=FALSE, ...) {
-  out <- CrunchDataFrame(x)
-  if (force) {
-    out <- as.data.frame(out)
-  }
-  return(out)
+    force=FALSE, ...) {
+    out <- CrunchDataFrame(x)
+    if (force) {
+        out <- as.data.frame(out)
+    }
+    return(out)
 }
 
 #' @rdname dataset-to-R
 #' @export
 as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE, ...) {
-  x <- x$.crunchDataset
-  default.stringsAsFactors <- function () FALSE
-  limit <- min(c(10000, getOption("crunch.data.frame.limit")))
-  if (nrow(x) * ncol(x) > limit) {
-    ## TODO: switch to downloading CSV and reading that?
-    halt("Dataset too large to coerce to data.frame. ",
-         "Consider subsetting it first")
-  }
-  out <- lapply(x, as.vector)
-  names(out) <- names(x)
-  return(structure(out, class="data.frame", row.names=c(NA, -nrow(x))))
+    x <- x$.crunchDataset
+    default.stringsAsFactors <- function () FALSE
+    limit <- min(c(10000, getOption("crunch.data.frame.limit")))
+    if (nrow(x) * ncol(x) > limit) {
+        ## TODO: switch to downloading CSV and reading that?
+        halt("Dataset too large to coerce to data.frame. ",
+            "Consider subsetting it first")
+    }
+    out <- lapply(x, as.vector)
+    names(out) <- names(x)
+    return(structure(out, class="data.frame", row.names=c(NA, -nrow(x))))
 }
 
 
@@ -103,19 +103,19 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
 #' @rdname VariableCatalog-to-Data-Frame
 #' @export
 as.data.frame.VariableCatalog <- function(x, 
-                                          row.names = NULL, 
-                                          optional = FALSE, 
-                                          ...,
-                                          fields = c("alias", "name", "type")) {
-  out <- catalogToDataFrame(x, rownames = NA)
-  out <- as.data.frame(out, ...)
-  if (all(fields == "all")) {
-    return(out)
-  }
-  if (!all(fields %in% names(out))) {
-    halt("Field name not present in variable catalog, use fields = 'all' to see available fields.")
-  }
-  return(out[, fields]) 
+    row.names = NULL, 
+    optional = FALSE, 
+    ...,
+    fields = c("alias", "name", "type")) {
+    out <- catalogToDataFrame(x, rownames = NA)
+    out <- as.data.frame(out, ...)
+    if (all(fields == "all")) {
+        return(out)
+    }
+    if (!all(fields %in% names(out))) {
+        halt("Field name not present in variable catalog, use fields = 'all' to see available fields.")
+    }
+    return(out[, fields]) 
 }
 
 
