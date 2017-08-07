@@ -12,6 +12,10 @@
 #'
 #' @param x a crunch variable
 #' @param value value of the geography property to set
+#' @param ... for `CrunchGeography`, named arugments to construct a 
+#' `CrunchGeography` from: `geodatum`, `feature_key`, and `match_field`
+#' @param data for `CrunchGeography`, list of named arugments to construct a
+#' `CrunchGeography` from: `geodatum`, `feature_key`, and `match_field`
 #' @return geographic information of class `CrunchGeography` (`NULL` if there is none)
 #'
 #' @name geo
