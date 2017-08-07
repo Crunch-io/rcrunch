@@ -3,6 +3,7 @@
 \docType{methods}
 \name{exportDataset}
 \alias{exportDataset}
+\alias{write.csv}
 \alias{write.csv,CrunchDataset-method}
 \title{Export a dataset to a file}
 \usage{
@@ -10,7 +11,7 @@ exportDataset(dataset, file, format = c("csv", "spss"),
   categorical = c("name", "id"), na = NULL, varlabel = c("name",
   "description"), ...)
 
-\S4method{write.csv}{CrunchDataset}(...)
+\S4method{write.csv}{CrunchDataset}(x, ...)
 }
 \arguments{
 \item{dataset}{CrunchDataset, which may have been subsetted with a filter
@@ -41,6 +42,9 @@ boolean options include 'include_personal' for personal variables (default:
 \code{FALSE}) and 'prefix_subvariables' for SPSS format: whether to include
 the array variable's name in each of its subvariables varlabels (default:
 \code{FALSE}).}
+
+\item{x}{(for write.csv) CrunchDataset, which may have been subsetted with a filter
+expression on the rows and a selection of variables on the columns.}
 }
 \value{
 Invisibly, \code{file}.
