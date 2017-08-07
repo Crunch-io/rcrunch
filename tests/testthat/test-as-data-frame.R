@@ -129,7 +129,7 @@ with_mock_crunch({
         expect_equal(nrow(ds_df), 25)
         # both reording and subsetting the dataset
         new_order <- c(4,3,1,2)
-        ds_df$.order <- new_order
+        assign(".order", new_order, ds_df)
         # TODO: [, [[, and $ methods
         expect_equal(ds_df$v1, gndr[new_order])
         expect_equal(nrow(ds_df), 4)

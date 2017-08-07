@@ -34,7 +34,6 @@ CrunchDataFrame <- function (dataset, row.order = NULL) {
 }
 
 setOldClass("CrunchDataFrame")
-setClass(Class = "CrunchDataFrame", contains = "data.frame")
 
 #' @export
 dim.CrunchDataFrame <- function (x) {
@@ -176,17 +175,16 @@ merge.CrunchDataFrame  <- function (x, y, by=intersect(names(x), names(y)),
         new_cols_map <- new_cols_map[with(new_cols_map, order(x_index, y_index)), ]
         if (!identical(new_cols_map$x_index, x_index$x_index)) {
             # add ordering if theres more than one y for each x
-            new_x$.order <- new_cols_map$x_index
-            new_x[[by.x]] <- x[[by.x]][new_x$.order]
-            
+            assign(".order", new_cols_map$x_index, new_x)
+            assign(by.x, x[[by.x]][new_x$.order], new_x)
         }
         # remove NAs from x_index?
     } else if (sort == "y") {
         new_cols_map <- new_cols_map[with(new_cols_map, order(y_index, x_index)), ]
         new_cols_map <- new_cols_map[!is.na(new_cols_map$y_index),]
-        new_x$.order <- new_cols_map$x_index
+        assign(".order", new_cols_map$x_index, new_x)
         # need to remap the by.x columns because new_x was evaluated already
-        new_x[[by.x]] <- x[[by.x]][new_x$.order]
+        assign(by.x, x[[by.x]][new_x$.order], new_x)
     }
 
     new_cols <- y[new_cols_map$y_index,]
@@ -199,7 +197,7 @@ merge.CrunchDataFrame  <- function (x, y, by=intersect(names(x), names(y)),
             # only assign new columns
             # todo: check names, do something intelligent if they are already there.
             assign(col, new_cols[,col], envir = new_x)
-            new_x$.names <- c(new_x$.names, col)   
+            assign(".names", c(new_x$.names, col), new_x )
         }
     }
     
@@ -209,7 +207,7 @@ merge.CrunchDataFrame  <- function (x, y, by=intersect(names(x), names(y)),
 
 fix_bys <- function (data, by) {
     ## Do validations and return a proper, legal "by" variable, if possible
-    if (!is.data.frame(data) & class(data) != "CrunchDataFrame") {
+    if (!is.data.frame(data) & all(!class(data) %in% "CrunchDataFrame")) {
         halt(substitute(data), " must be a data.frame or CrunchDataFrame")
     }
     if (is.character(by)) {
