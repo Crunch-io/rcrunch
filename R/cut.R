@@ -101,7 +101,7 @@ setMethod("cut", "NumericVariable", function(x,
 #' @param include.lowest see`cut()`
 #'
 #' @return
-#'
+#' A character vector of labels
 #' @examples
 #' 
 #' crunch:::generateCutLabels(2, c(2, 3, 4, 5), 4, FALSE, FALSE)
