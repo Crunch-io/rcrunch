@@ -121,15 +121,14 @@ moveToAfter <- function(x, value, after){
 #' }
 #' @export
 copyOrder <- function(source, target, outer=NULL){
-    if (is.null(outer)) outer <- ordering(source)
+    if (is.null(outer)) { outer <- ordering(source) }
     ents <- c()
-    print(name(outer))
-    if (class(unlist(entities(outer))) == 'character') {
+    if (is.character(unlist(entities(outer)))) {
         als <- aliases(allVariables(source))[match(unlist(entities(outer)), urls(allVariables(source)))]
         ents <- urls(allVariables(target))[match(als[als %in% aliases(allVariables(target))], aliases(allVariables(target)))]
-    } else{
+    } else {
         for (gr in entities(outer)){
-            if (class(gr) == 'character'){
+            if (is.character(gr)){
                 al <- aliases(allVariables(source))[match(gr, urls(allVariables(source)))]
                 if (al %in% aliases(allVariables(target))) {
                     ents <- c(ents, self(target[[al]]))
@@ -138,5 +137,11 @@ copyOrder <- function(source, target, outer=NULL){
         }
     }
     if (length(ents) > 0 & !is.null(name(outer))) { return(VariableGroup(name(outer), ents)) }
-    if (length(ents) > 0) { return(ents) }
+    if (length(ents) > 0) {
+        return(do.call(VariableOrder, ents))
+        }
+}
+
+copyVariableGroup <- function(source, target) {
+
 }
