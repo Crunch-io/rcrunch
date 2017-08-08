@@ -120,6 +120,10 @@ moveToAfter <- function(x, value, after){
 #' }
 #' @export
 copyOrder <- function(source, target){
+    if (!is.dataset(source) | !is.dataset(target)) {
+        halt("Both source and target must be Crunch datasets.")
+    }
+
     ord <- entities(ordering(source))
     new_ord <- lapply(ord, copyOrderGroup,  source = source, target = target)
 

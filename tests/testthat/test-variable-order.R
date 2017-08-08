@@ -636,6 +636,18 @@ with_mock_crunch({
                   sep="\n"),
             fixed=TRUE)
     })
+
+    test_that("copyOrder returns the order of target as a VariableOrder", {
+        ds_again <- loadDataset("test ds")
+        expect_silent(new_order <- copyOrder(ds, ds_again))
+        expect_is(new_order, "VariableOrder")
+        expect_identical(entities(ordering(ds)), entities(new_order))
+    })
+
+    test_that("copyOrder input validation", {
+        expect_error(copyOrder(ds, "foo"),
+        "Both source and target must be Crunch datasets.")
+    })
 })
 
 
@@ -899,9 +911,7 @@ with_test_authentication({
 
         # copy order, and check that ds_fork has the new order.
         expect_silent(copied_order <- copyOrder(ds, ds_fork))
-        print(ordering(ds_fork))
         ordering(ds_fork) <- copied_order
-        print(ordering(ds_fork))
         expect_identical(entities(ordering(ds_fork)), entities(new_order_fork))
     })
 })
