@@ -830,4 +830,24 @@ with_test_authentication({
         expect_identical(urls(ordering(ds)[["Group 2.5"]]),
             urls(variables(ds[c("v4", "v6")])))
     })
+
+    test_that("copyOrder copies across datasets", {
+        ds_fork <- forkDataset(ds)
+        old_order <-  ordering(ds_fork)
+        new_order <- VariableOrder(
+            VariableGroup("Group 1", list(self(ds$v1), self(ds$v2),
+                                          VariableGroup("Group 1.5", list(self(ds$v5), self(ds$v6))))),
+            VariableGroup("Group 2", list(self(ds$v4), self(ds$v2))))
+        new_order_fork <- VariableOrder(
+            VariableGroup("Group 1", list(self(ds_fork$v1), self(ds_fork$v2),
+                                               VariableGroup("Group 1.5", list(self(ds_fork$v5), self(ds_fork$v6))))),
+            VariableGroup("Group 2", list(self(ds_fork$v4), self(ds_fork$v2))))
+        ordering(ds) <- new_order
+
+        expect_identical(entities(grouped(ordering(ds))), entities(new_order))
+        expect_identical(entities(ordering(ds_fork)), entities(old_order))
+        copied_order <- copyOrder(ds, ds_fork)
+        ordering(ds_fork) <- copied_order
+        expect_identical(entities(grouped(ordering(ds_fork))), entities(new_order_fork))
+    })
 })
