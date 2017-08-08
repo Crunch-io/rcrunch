@@ -831,23 +831,77 @@ with_test_authentication({
             urls(variables(ds[c("v4", "v6")])))
     })
 
-    test_that("copyOrder copies across datasets", {
+    test_that("copyOrder copies across datasets with simple order", {
+        ds_fork <- forkDataset(ds)
+        old_order <-  ordering(ds_fork)
+        new_order <- VariableOrder(self(ds$v1), self(ds$v2), self(ds$v5),
+                                   self(ds$v6), self(ds$v3), self(ds$v4))
+        new_order_fork <- VariableOrder(self(ds_fork$v1), self(ds_fork$v2),
+                                        self(ds_fork$v5), self(ds_fork$v6),
+                                        self(ds_fork$v3), self(ds_fork$v4))
+        ordering(ds) <- new_order
+
+        # test that ds has the new order
+        expect_identical(entities(ordering(ds)), entities(new_order))
+        # test that ds_fork has the old order still
+        expect_identical(entities(ordering(ds_fork)), entities(old_order))
+        expect_false(identical(entities(ordering(ds_fork)), entities(new_order_fork)))
+
+        # copy order, and check that ds_fork has the new order.
+        expect_silent(copied_order <- copyOrder(ds, ds_fork))
+        ordering(ds_fork) <- copied_order
+        expect_identical(entities(ordering(ds_fork)), entities(new_order_fork))
+    })
+
+    test_that("copyOrder copies across datasets with simple(-ish) order (and one nesting)", {
+        ds_fork <- forkDataset(ds)
+        old_order <-  ordering(ds_fork)
+        new_order <- VariableOrder(self(ds$v1), self(ds$v2), self(ds$v5),
+                                   self(ds$v6), VariableGroup("Group A",
+                                                              list(self(ds$v4), self(ds$v3))))
+        new_order_fork <- VariableOrder(self(ds_fork$v1), self(ds_fork$v2),
+                                        self(ds_fork$v5), self(ds_fork$v6),
+                                        VariableGroup("Group A",
+                                                      list(self(ds_fork$v4), self(ds_fork$v3))))
+        ordering(ds) <- new_order
+
+        # test that ds has the new order
+        expect_identical(entities(ordering(ds)), entities(new_order))
+        # test that ds_fork has the old order still
+        expect_identical(entities(ordering(ds_fork)), entities(old_order))
+        expect_false(identical(entities(ordering(ds_fork)), entities(new_order_fork)))
+
+        # copy order, and check that ds_fork has the new order.
+        expect_silent(copied_order <- copyOrder(ds, ds_fork))
+        ordering(ds_fork) <- copied_order
+        expect_identical(entities(ordering(ds_fork)), entities(new_order_fork))
+    })
+
+
+    test_that("copyOrder copies across datasets with nested hierarchical order", {
         ds_fork <- forkDataset(ds)
         old_order <-  ordering(ds_fork)
         new_order <- VariableOrder(
             VariableGroup("Group 1", list(self(ds$v1), self(ds$v2),
                                           VariableGroup("Group 1.5", list(self(ds$v5), self(ds$v6))))),
-            VariableGroup("Group 2", list(self(ds$v4), self(ds$v2))))
+            VariableGroup("Group 2", list(self(ds$v4), self(ds$v3))))
         new_order_fork <- VariableOrder(
             VariableGroup("Group 1", list(self(ds_fork$v1), self(ds_fork$v2),
                                                VariableGroup("Group 1.5", list(self(ds_fork$v5), self(ds_fork$v6))))),
-            VariableGroup("Group 2", list(self(ds_fork$v4), self(ds_fork$v2))))
+            VariableGroup("Group 2", list(self(ds_fork$v4), self(ds_fork$v3))))
         ordering(ds) <- new_order
 
-        expect_identical(entities(grouped(ordering(ds))), entities(new_order))
+        # test that ds has the new order
+        expect_identical(entities(ordering(ds)), entities(new_order))
+        # test that ds_fork has the old order still
         expect_identical(entities(ordering(ds_fork)), entities(old_order))
-        copied_order <- copyOrder(ds, ds_fork)
+        expect_false(identical(entities(ordering(ds_fork)), entities(new_order_fork)))
+
+        # copy order, and check that ds_fork has the new order.
+        expect_silent(copied_order <- copyOrder(ds, ds_fork))
+        print(ordering(ds_fork))
         ordering(ds_fork) <- copied_order
-        expect_identical(entities(grouped(ordering(ds_fork))), entities(new_order_fork))
+        print(ordering(ds_fork))
+        expect_identical(entities(ordering(ds_fork)), entities(new_order_fork))
     })
 })

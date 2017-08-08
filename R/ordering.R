@@ -91,7 +91,7 @@ setMethod("ordering<-", "DatasetCatalog", function (x, value) {
 #' @return returns a variable group
 #' @examples
 #' \dontrun{
-#' ordering(ds)[['Demographics']] <- moveToAfter(ordering(ds)[['Group A']], ds[c('Age', 'gender')], ds$educ)
+#' ordering(ds)[['Demographics']] <- moveToAfter(ordering(ds)[['Grp A']], ds['age'], ds$educ)
 #' }
 #' @export
 moveToAfter <- function(x, value, after){
@@ -112,36 +112,57 @@ moveToAfter <- function(x, value, after){
 #'
 #' @param source the dataset you want to copy the order from
 #' @param target the dataset you want to copy the order to
-#' @param outer to make it recursive
-#' @return currently returns a vector for do.call(VariableOrder, )  but should return a reordered dataset
+#' @return returns an object of class [`VariableOrder`] (which can be assigned
+#' to a dataset with [`ordering`])
 #' @examples
 #' \dontrun{
-#' ord <- copyOrder(ds1, ds)
-#' ordering(ds) <- do.call(VariableOrder, ord)
+#' ordering(ds) <- copyOrder(ds1, ds)
 #' }
 #' @export
-copyOrder <- function(source, target, outer=NULL){
-    if (is.null(outer)) { outer <- ordering(source) }
-    ents <- c()
-    if (is.character(unlist(entities(outer)))) {
-        als <- aliases(allVariables(source))[match(unlist(entities(outer)), urls(allVariables(source)))]
-        ents <- urls(allVariables(target))[match(als[als %in% aliases(allVariables(target))], aliases(allVariables(target)))]
-    } else {
-        for (gr in entities(outer)){
-            if (is.character(gr)){
-                al <- aliases(allVariables(source))[match(gr, urls(allVariables(source)))]
-                if (al %in% aliases(allVariables(target))) {
-                    ents <- c(ents, self(target[[al]]))
-                }
-            } else ents <- c(ents, copyOrder(source, target, gr))
-        }
-    }
-    if (length(ents) > 0 & !is.null(name(outer))) { return(VariableGroup(name(outer), ents)) }
-    if (length(ents) > 0) {
-        return(do.call(VariableOrder, ents))
-        }
+copyOrder <- function(source, target){
+    ord <- entities(ordering(source))
+    new_ord <- lapply(ord, copyOrderGroup,  source = source, target = target)
+
+    # TODO: copy other VariableOrder features?
+
+    return(do.call(VariableOrder, new_ord))
 }
 
-copyVariableGroup <- function(source, target) {
+#' Copy the order of a `VariableGroup` (or individual variable url) from `VariableOrder`
+#'
+#' @param gr the group or variable url to be copied
+#' @param source the dataset you want to copy the order from
+#' @param target the dataset you want to copy the order to
+#' @return returns either a [`VariableGroup`] (if a group is supplied) or a url (if just a variable url is supplied)
+#' @examples
+#' \dontrun{
+#' ordering(ds) <- copyOrder(ds1, ds)
+#' }
+#' @keywords internal
+copyOrderGroup <- function(gr, source, target) {
+    # if there is a single element in gr, and it is a character,
+    # just return the URL in the target.
+    if (length(gr) == 1 & is.character(gr)) {
+        al <- aliasFromURL(gr, source)
+        return(urls(target[[al[al %in% aliases(allVariables(target))]]]))
+    }
 
+    # make mask of which elements of gr are groups and which are variables
+    groups <- vapply(gr, class, character(1)) == "VariableGroup"
+    # make an empty list the same length as gr
+    ents <- vector("list", length(gr))
+
+    # deal with non-groups (if there are no non-groups, nothing will happen here)
+    als <- aliasFromURL(entities(gr[!groups]), source)
+    ents[!groups] <- urls(target[als[als %in% aliases(allVariables(target))]])
+
+    # deal with groups (if there are no groups, nothing will happen here)
+    ents[groups] <- lapply(entities(gr[groups]), copyOrderGroup,  source = source, target = target)
+
+    return(VariableGroup(name(gr), ents))
+}
+
+# given a url, return the alias from the dataset.
+aliasFromURL <- function(url, ds) {
+    return(aliases(allVariables(ds))[match(url, urls(allVariables(ds)))])
 }
