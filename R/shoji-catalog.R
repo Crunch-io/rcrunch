@@ -263,47 +263,71 @@ catalogToDataFrame <- function(x, keys=TRUE,
     list_columns = c("subvariables", "subvariables_catalog"),
     ...) {
     index <- lapply(index(x), function(a) a[keys])
-    entry_to_df <- function(l, list_col_names = list_columns){
-        l[vapply(l, is.null, logical(1))] <- NA
-        vect_col <- l[!(names(l) %in% list_col_names)]
-        entry_df <- as.data.frame(vect_col, stringsAsFactors = FALSE)
-        
-        if (any(names(l) %in% list_col_names)) {
-            list_col <- l[list_col_names]
-            list_df <- data.frame(matrix(nrow = 1, ncol = length(list_col)))
-            names(list_df) <- names(list_col)
-            for (i  in seq_along(list_col)) {
-                list_df[[1, i]] <- list_col[i] 
+    ## Return an empty dataframe if the function is called on an empty catalog 
+    if (length(index) == 0){
+        message("Catalog is empty, returning an empty dataframe")
+        return(data.frame())
+    } else {
+        entry_to_df <- function(l, list_col_names = list_columns){
+            l[vapply(l, is.null, logical(1))] <- NA
+            vect_col <- l[!(names(l) %in% list_col_names)]
+            entry_df <- as.data.frame(vect_col, stringsAsFactors = FALSE)
+            
+            if (any(names(l) %in% list_col_names)) {
+                list_col <- l[list_col_names]
+                list_df <- data.frame(matrix(nrow = 1, ncol = length(list_col)))
+                names(list_df) <- names(list_col)
+                for (i  in seq_along(list_col)) {
+                    list_df[[1, i]] <- list_col[i] 
+                }
+                entry_df <- cbind(entry_df, list_df)
             }
-            entry_df <- cbind(entry_df, list_df)
+            entry_df
         }
-        entry_df
-    }
-    
-    ### The following code is equivalent to out <- purrr::map_df(index, entry_to_df)
-    ################
-    entry_list <- lapply(index, entry_to_df)
-    names   <- unique(unlist( lapply(entry_list, names)))
-    out <- data.frame(matrix(nrow = length(entry_list), ncol = length(names)))
-    names(out) <- names
-    
-    for (i in seq_along(entry_list)) {
-        for (j in  names(entry_list[[i]])) {
-            out[i, j] <- entry_list[[i]][1, j]
+        
+        ### The following code is equivalent to out <- purrr::map_df(index, entry_to_df)
+        ################
+        entry_list <- lapply(index, entry_to_df)
+        names   <- unique(unlist( lapply(entry_list, names)))
+        out <- data.frame(matrix(nrow = length(entry_list), ncol = length(names)))
+        names(out) <- names
+        
+        for (i in seq_along(entry_list)) {
+            for (j in  names(entry_list[[i]])) {
+                out[i, j] <- entry_list[[i]][1, j]
+            }
         }
+        #################
+        
+        default.rownames <- missing(rownames)
+        if (default.rownames) {
+            rownames <- NULL
+        }
+        out <- as.data.frame(out, rownames = rownames, ...)
+        if (default.rownames) {
+            rownames(out) <- NULL
+        }
+        
+        #When a bad key argument is passed to the the shoji index it returns a dataframe
+        # with an NA value. This exclude those columns.
+        exclude_cols <- grepl("^NA", names(out)) & 
+            vapply(out, function(x)all(is.na(x)), FUN.VALUE = logical(1))
+        out <- out[, !exclude_cols]
+        
+        missing_keys <- paste0("'", keys[!(keys %in% names(out))], "'")
+        if (any(!(keys %in% names(out)))) {
+            if (length(missing_keys) == 1) {
+                error_text <-  "is an invalid key for catalogs of class "
+            } else {
+                error_text <- "are invalid keys for catalogs of class "
+            }
+            halt(paste0(
+                paste(missing_keys, collapse = ", ")), 
+                error_text,
+                class(x),
+                ".")
+        }
+        
+        return(out)
     }
-    #################
-    
-    default.rownames <- missing(rownames)
-    if (default.rownames) {
-        rownames <- NULL
-    }
-    
-    out <- as.data.frame(out, rownames = rownames, ...)
-    
-    if (default.rownames) {
-        rownames(out) <- NULL
-    }
-    
-    out
 }

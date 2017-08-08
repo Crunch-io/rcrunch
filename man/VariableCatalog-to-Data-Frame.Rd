@@ -5,7 +5,7 @@
 \title{as.data.frame method for VariableCatalog}
 \usage{
 \method{as.data.frame}{VariableCatalog}(x, row.names = NULL,
-  optional = FALSE, ..., fields = c("alias", "name", "type"))
+  optional = FALSE, ..., keys = c("alias", "name", "type"))
 }
 \arguments{
 \item{x}{A VariableCatalog produced by \code{variables(ds)}.}
@@ -16,9 +16,9 @@
 
 \item{...}{Additional arguments passed to \code{data.frame}}
 
-\item{fields}{A character vector of the fields from the variable catalog which you would like
-included in the datafame. To include all fields or see which fields are available
-set fields to "all".}
+\item{keys}{A character vector of the variable catalog attributes which you would like
+included in the datafame. To include all attributes or see which ones are available
+set keys to "all".}
 }
 \value{
 A data frame
@@ -34,7 +34,7 @@ package = "crunch")}
 \dontrun{
 ds <- loadDataset("iris")
 vars <- variables(ds)
-var_df <- as.data.frame(vars, fields = "all")
-}
+var_df <- as.data.frame(vars, keys = "all")
+} 
 
 }

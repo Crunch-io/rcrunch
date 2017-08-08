@@ -88,17 +88,17 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
 #' @param ... Additional arguments passed to \code{data.frame}
 #' @param row.names part of as.data.frame signature. Ignored.
 #' @param optional part of as.data.frame signature. Ignored.
-#' @param fields 
-#' A character vector of the fields from the variable catalog which you would like 
-#' included in the datafame. To include all fields or see which fields are available
-#' set fields to "all". 
+#' @param keys 
+#' A character vector of the variable catalog attributes which you would like 
+#' included in the datafame. To include all attributes or see which ones are available
+#' set keys to "all". 
 #' @return A data frame
 #' @examples 
 #' \dontrun{
 #' ds <- loadDataset("iris")
 #' vars <- variables(ds)
-#' var_df <- as.data.frame(vars, fields = "all")
-#' }
+#' var_df <- as.data.frame(vars, keys = "all")
+#' } 
 #' 
 #' @rdname VariableCatalog-to-Data-Frame
 #' @export
@@ -106,16 +106,9 @@ as.data.frame.VariableCatalog <- function(x,
     row.names = NULL, 
     optional = FALSE, 
     ...,
-    fields = c("alias", "name", "type")) {
-    out <- catalogToDataFrame(x, rownames = NA)
-    out <- as.data.frame(out, ...)
-    if (all(fields == "all")) {
-        return(out)
-    }
-    if (!all(fields %in% names(out))) {
-        halt("Field name not present in variable catalog, use fields = 'all' to see available fields.")
-    }
-    return(out[, fields]) 
+    keys = c("alias", "name", "type")) {
+    
+    catalogToDataFrame(x, rownames = NA, keys = keys, ...)
 }
 
 

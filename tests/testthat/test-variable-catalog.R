@@ -7,18 +7,18 @@ with_mock_crunch({
     test_that("VariableCatalog instantiates from Shoji", {
         expect_is(varcat, "VariableCatalog")
     })
-
+    
     test_that("VariableCatalog index method", {
         expect_identical(names(index(varcat)), names(varcat@index))
     })
-
+    
     test_that("VariableCatalog has the right contents", {
         expect_true(all(grepl("https://app.crunch.io/api/datasets/1/variables",
             urls(varcat))))
         expect_identical(self(varcat), "https://app.crunch.io/api/datasets/1/variables/")
         expect_identical(entities(ordering(varcat)), entities(varorder))
     })
-
+    
     test_that("active/hidden getters", {
         expect_identical(index(active(varcat)),
             index(varcat)[urls(ordering(varcat))])
@@ -39,7 +39,7 @@ with_mock_crunch({
         expect_length(varcat, 6)
         expect_identical(active(hidden(varcat)), hidden(active(varcat)))
     })
-
+    
     gender.url <- "https://app.crunch.io/api/datasets/1/variables/gender/"
     test_that("Extract methods: character and numeric", {
         expect_is(varcat[[gender.url]], "VariableTuple")
@@ -47,14 +47,14 @@ with_mock_crunch({
             index(varcat)[[gender.url]])
         expect_identical(index(varcat[2:3]), index(varcat)[2:3])
     })
-
+    
     test_that("Extract methods: invalid input", {
         expect_error(varcat[[999]], "subscript out of bounds") ## base R
         expect_null(varcat[["asdf"]])
         expect_null(varcat[[NA]])
         expect_error(varcat[999:1000], "Subscript out of bounds: 999:1000")
     })
-
+    
     test_that("Extract methods: VariableOrder/Group", {
         ents <- c("https://app.crunch.io/api/datasets/1/variables/gender/",
             "https://app.crunch.io/api/datasets/1/variables/mymrset/")
@@ -63,11 +63,11 @@ with_mock_crunch({
         expect_identical(varcat[ord[[1]]], varcat[ents])
         expect_identical(varcat[ord], varcat[ents])
     })
-
+    
     test_that("Construct Variable from Tuple", {
         expect_true(is.Categorical(CrunchVariable(varcat[[gender.url]])))
     })
-
+    
     test_that("attribute getters", {
         expect_identical(names(varcat)[1:3],
             c("Birth Year", "Gender", "mymrset"))
@@ -79,7 +79,7 @@ with_mock_crunch({
         expect_identical(notes(varcat[1:3]),
             c("Asked instead of age", "", ""))
     })
-
+    
     test_that("attribute setters", {
         expect_PATCH(names(varcat)[1:3] <- c("Year of birth", "Gender", "Start time"),
             "https://app.crunch.io/api/datasets/1/variables/",
@@ -89,7 +89,7 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/",
             '{"https://app.crunch.io/api/datasets/1/variables/mymrset/":{"notes":"ms"}}')
     })
-
+    
     test_that("show method", {
         expect_output(varcat[1:3],
             get_output(data.frame(
@@ -100,16 +100,22 @@ with_mock_crunch({
     })
     
     test_that("Variable Catagory as.data.frame method", {
-      expect_equal(as.data.frame(varcat[1:3]),
-                    data.frame(
-                      alias = c("birthyr", "gender", "mymrset"),
-                      name  = c("Birth Year", "Gender", "mymrset"),
-                      type  = c("numeric", "categorical", "multiple_response"),
-                      stringsAsFactors = FALSE
-                    ))
-      expect_error(as.data.frame(varcat[1:3], fields = "Not a field at all"),
-                   "Field name not present in variable catalog, use fields = 'all' to see available fields.")
-         })
+        expect_equal(as.data.frame(varcat[1:3]),
+            data.frame(
+                alias = c("birthyr", "gender", "mymrset"),
+                name  = c("Birth Year", "Gender", "mymrset"),
+                type  = c("numeric", "categorical", "multiple_response"),
+                stringsAsFactors = FALSE
+            ))
+    })
+    test_that("As.data.frame method errors correctly", {
+        expect_error(as.data.frame(varcat[1:3], keys = "Not a field at all"),
+            "'Not a field at all'is an invalid key for catalogs of class VariableCatalog."
+        )
+        expect_error(as.data.frame(varcat[1:3], keys = c("banana", "fooey")),
+            "'banana', 'fooey'are invalid keys for catalogs of class VariableCatalog."
+        )
+    })
 })
 
 with_test_authentication({
@@ -147,7 +153,7 @@ with_test_authentication({
         expect_identical(aliases(variables(ds)), n3)
         expect_identical(aliases(variables(refresh(ds))), n3)
     })
-
+    
     test_that("Can [<- with VariableGroup/Order", {
         names(variables(ds))[2:3] <- c("two", "three")
         ord <- VariableOrder(VariableGroup("a group", entities=ds[2:3]))
