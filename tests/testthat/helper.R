@@ -31,7 +31,7 @@ options(
     warn=1,
     crunch.debug=FALSE,
     digits.secs=3,
-    crunch.timeout=15, ## In case an import fails to start, don't wait forever
+    crunch.timeout=20, ## In case an import fails to start, don't wait forever
     # httpcache.log="",
     crunch.require.confirmation=TRUE,
     crunch.namekey.dataset="alias",

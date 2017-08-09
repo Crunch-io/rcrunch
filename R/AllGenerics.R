@@ -156,7 +156,7 @@ setGeneric("lapply")
 setGeneric("is.na")
 setGeneric("is.na<-")
 setGeneric("%in%")
-setGeneric("write.csv")
+setGeneric("write.csv", function(x, ...) utils::write.csv(x, ...))
 setGeneric("duplicated")
 
 setGeneric("zcl", function (x) standardGeneric("zcl"))
