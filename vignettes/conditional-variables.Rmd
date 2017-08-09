@@ -1,0 +1,195 @@
+<!--
+    %\VignetteEngine{knitr::knitr}
+    %\VignetteIndexEntry{Datasets: creating, loading, and manipulating}
+-->
+    
+[Previous: exporting data](export.html)
+```{r, results='hide', echo=FALSE, message=FALSE}
+library(crunch)
+load("vignettes.RData")
+options(width=120)
+```
+
+Imagine that we have two sets of questions, one about what pets one has 
+(Pet1, Pet2, Pet3) and then a second that asks about ones opinion of those
+ pets that one gave in the Pet* series of questions (Opinion1, Opinion2, 
+opinion3). What we ultimately want is what people's opinion of Cats or 
+Dogs is, but because the value of Opinion1, Opinion2, and Opinion3 is 
+dependent on the answer to Pet1, Pet2, and Pet3 respectively, we can't 
+easily get the overall opinions about Cats. `conditionalTransform` allows 
+you to specify conditions like the following: if variable Pet1 is equal to
+'Cat' then use the value from variable Opinion1, if variable Pet2 is 
+equal to 'Cat' then use the value from variable Opinion2, etc.
+```{r, eval=FALSE}
+ds_pets$cat_opinion <- conditionalTransform(Pet1 == 'Cat' ~ Opinion1,
+                                       Pet2 == 'Cat' ~ Opinion2,
+                                       Pet3 == 'Cat' ~ Opinion3, 
+                                       data = ds_pets,
+                                       name = "Opinion of Cats")
+print(ds_pets$cat_opinion)
+```
+
+```
+Opinion of Cats (categorical)
+
+                           Count
+Strongly Agree                33
+Strongly Disagree             28
+Disagree                      27
+Neither Agree Nor Disagree    26
+Agree                         23
+```
+
+When returning categories, we can specify what the categories should be 
+explicitly with the `categories` argument. This will also order the 
+categories in the order that they are given. If no `categories` argument is
+given, Crunch will make all of the category labels necesary for the 
+resulting variable in the default order (note: this might not include all 
+of the categories that are in variables Opinion1, Opinion2, or Opinion3, 
+just those levels that are selected by the conditions specified).
+
+```{r, eval=FALSE}
+ds_pets$cat_opinion_ordered <- conditionalTransform(Pet1 == 'Cat' ~ Opinion1,
+                                         Pet2 == 'Cat' ~ Opinion2,
+                                         Pet3 == 'Cat' ~ Opinion3,
+                                         data = ds_pets, type = "categorical",
+         categories = c("Strongly Agree", "Agree", "Neither Agree Nor Disagree",
+         "Disagree", "Strongly Disagree"))
+
+categories(ds_pets$cat_opinion_ordered)
+```
+
+```
+  id                       name value missing
+1  1             Strongly Agree     1   FALSE
+2  2                      Agree     2   FALSE
+3  3 Neither Agree Nor Disagree     3   FALSE
+4  4                   Disagree     4   FALSE
+5  5          Strongly Disagree     5   FALSE
+6 -1                    No Data    NA    TRUE
+```
+
+We can also use `conditionalTransform` to return a string as well as the
+contents of other variables, if for example we want to separate out people
+who have only had pets for less than a year, we can specify that as the
+first condition (which will be used even if the subsequent conditions are
+also true).
+
+```{r, eval=FALSE}
+ds_pets$dog_opinion <- conditionalTransform(Days_having_Pet1 < 365 ~ "too early to tell",
+                                            Days_having_Pet2 < 365 ~ "too early to tell",
+                                            Days_having_Pet3 < 365 ~ "too early to tell",
+                                            Pet1 == 'Dog' ~ Opinion1,
+                                            Pet2 == 'Dog' ~ Opinion2,
+                                            Pet3 == 'Dog' ~ Opinion3,
+                                            data = ds_pets)
+print(ds_pets$dog_opinion)
+```
+
+```
+dog_opinion (categorical)
+
+                           Count
+too early to tell             57
+Agree                         20
+Strongly Agree                18
+Disagree                      14
+Strongly Disagree             13
+Neither Agree Nor Disagree    11
+```
+Further, we can also use conditional transform with numeric source variables.
+
+```{r, eval=FALSE}
+ds_pets$days_with_dog <- conditionalTransform(Pet1 == 'Dog' ~ Days_having_Pet1,
+                                         Pet2 == 'Dog' ~ Days_having_Pet2,
+                                         Pet3 == 'Dog' ~ Days_having_Pet3,
+                                         data = ds_pets, type = "numeric")
+print(ds_pets$days_with_dog)
+```
+```
+days_with_dog (numeric)
+
+   Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA's 
+  157.0   519.0   953.0   940.6  1350.0  1726.0     141 
+```
+
+conditionalTransform will evaluate is.na() or NA as conditions or sources 
+respectively. In fact, the conditions can be anything returns a `logical`.
+
+```{r, eval=FALSE}
+ds_pets$cat_opinion_with_none <- conditionalTransform(Pet1 == 'Cat' ~ Opinion1,
+                                                      Pet2 == 'Cat' ~ Opinion2,
+                                                      Pet3 == 'Cat' ~ Opinion3,
+                                                      is.na(Pet1) & is.na(Pet2) & is.na(Pet3) ~ "None",
+                                                      data = ds_pets)
+print(ds_pets$cat_opinion_with_none)
+```
+
+```
+cat_opinion_with_none (categorical)
+
+                           Count
+Strongly Agree                33
+Strongly Disagree             28
+Disagree                      27
+Neither Agree Nor Disagree    26
+Agree                         23
+None                          22
+```
+
+Finally, when constructing conditionalTransforms, it is frequently helpful 
+to automate some parts of the creation; `as.formula()` is helpful here. 
+This lets us create a function that we can use to make many conditional 
+variables with different questions, responses, and levels that the 
+questions take on. 
+
+```{r, eval=FALSE}
+opinion_transformation <- function(question_base, response_base, level, dataset) {
+    conditionalTransform(
+        as.formula(paste0(question_base, "1", " == '", level, "' ~ ", response_base, "1")),
+        as.formula(paste0(question_base, "2", " == '", level, "' ~ ", response_base, "2")),
+        as.formula(paste0(question_base, "3", " == '", level, "' ~ ", response_base, "3")),
+        data = dataset, name = paste(level, response_base)
+    )
+}
+
+ds_pets$cat_opin <- opinion_transformation(question_base = "Pet",
+                                           response_base = "Opinion",
+                                           level = "Cat", ds_pets)
+ds_pets$dog_opin <- opinion_transformation(question_base = "Pet",
+                                           response_base = "Opinion",
+                                           level = "Dog", ds_pets)
+ds_pets$bird_opin <- opinion_transformation(question_base = "Pet",
+                                            response_base = "Opinion",
+                                            level = "Bird", ds_pets)
+ds_pets$lizard_opin <- opinion_transformation(question_base = "Pet",
+                                              response_base = "Opinion",
+                                              level = "Lizard", ds_pets)
+
+print(ds_pets[c("cat_opin", "dog_opin", "bird_opin", "lizard_opin")])
+```
+
+```
+Dataset “Pet Survey”
+
+Contains 250 rows of 4 variables:
+
+$cat_opin: Cat Opinion (categorical)
+$dog_opin: Dog Opinion (categorical)
+$bird_opin: Bird Opinion (categorical)
+$lizard_opin: Lizard Opinion (categorical)
+```
+
+```{r, eval=FALSE}
+print(ds_pets$lizard_opin)
+```
+```
+Lizard Opinion (categorical)
+
+                           Count
+Disagree                      23
+Strongly Disagree             18
+Agree                         16
+Strongly Agree                16
+Neither Agree Nor Disagree    11
+```

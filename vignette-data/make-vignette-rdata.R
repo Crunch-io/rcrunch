@@ -97,7 +97,7 @@ tab2weighted <- crtabs(~ educ + gender, data=ds)
 tab3 <- crtabs(~ imiss + gender, data=ds)
 ds$imiss <- dichotomize(ds$imiss, c("Very Important", "Somewhat Important"))
 tab3mr <- crtabs(~ imiss + gender, data=ds)
-tab3subvar <- crtabs(~ imiss$Education + gender, data=ds)
+tab3subvar <- crtabs(~ imiss$imiss_h + gender, data=ds) # used to be imiss$Education, but that fails?
 tab4 <- crtabs(~ imiss + educ + gender, data=ds)
 
 ### Numeric aggregations
@@ -130,6 +130,17 @@ exclusion(ds) <- ds$perc_skipped > 15
 high_perc_skipped <- capture.output(print(exclusion(ds)))
 dim.ds.excluded <- dim(ds)
 
+
+message("9. Conditional variables")
+load("../vignettes/pets.RData")
+ds_pets <- newDataset(pets, name="Pet Survey")
+rm(pets)
+dim.ds_pets <- dim(ds_pets)
+
 save.image(file="../vignettes/vignettes.RData")
 
-delete(ds) ## cleanup
+## cleanup
+with_consent({
+    delete(ds_pets)
+    delete(ds)
+})
