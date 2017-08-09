@@ -315,7 +315,7 @@ catalogToDataFrame <- function(x, keys=TRUE,
         out <- out[, !exclude_cols]
         
         missing_keys <- paste0("'", keys[!(keys %in% names(out))], "'")
-        if (any(!(keys %in% names(out)))) {
+        if (any(!(keys %in% names(out))) && keys != TRUE) {
             if (length(missing_keys) == 1) {
                 error_text <-  "is an invalid key for catalogs of class "
             } else {

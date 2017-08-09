@@ -107,6 +107,9 @@ as.data.frame.VariableCatalog <- function(x,
     optional = FALSE, 
     ...,
     keys = c("alias", "name", "type")) {
+    if (all(keys == "all")){
+        keys <- TRUE
+    }
     
     catalogToDataFrame(x, rownames = NA, keys = keys, ...)
 }

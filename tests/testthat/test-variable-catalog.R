@@ -108,6 +108,14 @@ with_mock_crunch({
                 stringsAsFactors = FALSE
             ))
     })
+    test_that("as.data.frame method returns all fields when keys = 'all'", {
+        expect_identical(
+            names(as.data.frame(varcat, keys = "all")),
+            c("name", "discarded", "alias", "type", "id", "description", 
+                "notes", "subvariables", "subvariables_catalog", "resolution", 
+                "rollup_resolution")
+        )
+    })
     test_that("As.data.frame method errors correctly", {
         expect_error(as.data.frame(varcat[1:3], keys = "Not a field at all"),
             "'Not a field at all'is an invalid key for catalogs of class VariableCatalog."
