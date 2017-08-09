@@ -172,7 +172,7 @@ print(ds_pets[c("cat_opin", "dog_opin", "bird_opin", "lizard_opin")])
 ```
 
 ```
-Dataset “Pet Survey”
+Dataset "Pet Survey"
 
 Contains 250 rows of 4 variables:
 
