@@ -26,15 +26,6 @@ skip_locally <- function (...) {
     }
 }
 
-skip_if_devtools_loaded <- function (...) {
-    # TODO: this might be fragile with devtools being split up, might need
-    # to be migrated to the new pkgload (`is_dev_package()`) if
-    # `dev_packages()` is deprecated.
-    if ('crunch' %in% devtools::dev_packages()) {
-        skip(...)
-    }
-}
-
 ## Contexts
 
 with_mock_crunch <- function (expr) {
