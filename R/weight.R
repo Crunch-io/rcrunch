@@ -59,3 +59,78 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
         return(c())
     }
 })
+
+#' Title
+#'
+#' @param ... 
+#' @param ds 
+#' @param name 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+makeWeight <- function(..., name) {
+    expr_list <- list(...)
+    lapply(expr_list, validateExpression)
+    l <- lapply(expr_list, generateWeightEntry)
+    out <- list(
+        name = name,
+        derivation = list(
+            `function` = "rake",
+            args = lapply(expr_list, generateWeightEntry))
+        )
+    class(out) <- "VariableDefinition"
+    out
+}
+
+#' Title
+#'
+#' @param expr 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+validateExpression <- function(expr) {
+    if (length(expr) != 3) {
+        halt("Invalid expression, use the form ds$var ~ c(10, 20, 30)")
+    }
+    var     <- eval(expr[[2]])
+    varname <- deparse(expr[[2]])
+    targets <- eval(expr[[3]]) 
+    if (!is.Categorical(var)) {
+        halt(paste(varname, "is not a categorical crunch variable"))
+    }
+    n_categories <- length(categories(var))
+    if (length(targets) != n_categories) {
+        halt(paste("Number of targets does not match number of categories for", varname))
+    }
+    if (sum(targets) != 100) {
+        halt(paste("Targets do not add up to 100% for", varname))
+    }
+    invisible(expr)
+}
+
+#' Title
+#'
+#' @param expr 
+#'
+#' @return
+#' @export
+#'
+#' @examples
+generateWeightEntry <- function(expr) {
+    var <- eval(expr[[2]])
+    targets <- eval(expr[[3]]) / 100
+    id <- self(var)
+    
+    target_list <- vector("list", length(targets))
+    for (i in seq_along(targets)) {
+        target_list[[i]] <- c(i, targets[i])
+    }
+    list(
+        variable = self(var),
+        targets = target_list
+    )
+}
