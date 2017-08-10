@@ -93,7 +93,6 @@ setMethod("ordering<-", "DatasetCatalog", function (x, value) {
 #' \dontrun{
 #' ordering(ds)[['Demographics']] <- moveToAfter(ordering(ds)[['Grp A']], ds['age'], ds$educ)
 #' }
-#' @export
 moveToAfter <- function(x, value, after){
     if (!inherits(after, "OrderGroup")) {
         after <- urls(after)
