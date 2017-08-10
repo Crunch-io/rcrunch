@@ -6,6 +6,7 @@
 * `webApp()` function to go the other way: open the dataset from your R session in your web browser.
 * `categoriesFromLevels()` is now exported (#77)
 * Add a missing import from the `methods` package so that `Rscript` works (#90)
+* Allow deep copying of multiple-response type variables
 
 ### crunch 1.17.8
 Two attempts to fix download issues introduced by 1.17.4:
