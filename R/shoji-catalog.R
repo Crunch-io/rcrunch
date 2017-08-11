@@ -18,7 +18,7 @@ getListSlot <- function (x, i, what=character(1), ifnot=NA_character_) {
 setIndexSlot <- function (x, i, value, unique=FALSE) {
     if (length(value) == 1) value <- rep(value, length(x))
     stopifnot(length(x) == length(value))
-    
+
     old <- index(x)
     index(x) <- mapply(function (a, v) {
         a[[i]] <- v
@@ -171,7 +171,7 @@ whichNameOrURL <- function (x, i, secondary=names(x)) {
             warning(i, msg, call.=FALSE)
         }
     }
-    
+
     return(var_matches)
 }
 
@@ -241,93 +241,104 @@ setMethod("emails", "ShojiCatalog", function (x) getIndexSlot(x, "email"))
 as.list.ShojiCatalog <- function (x, ...) lapply(names(index(x)), function (i) x[[i]])
 
 #' A utility to retun a dataframe from a ShojiCatalog.
-#' 
+#'
 #' Some of the attributes of a ShojiCatalog will not naturally fit in
-#' a conventional dataframe. For instance a single variable might have multiple subvariables, 
+#' a conventional dataframe. For instance a single variable might have multiple subvariables,
 #' and these subvariables will not fit in a single row of a dataframe. In this case the
-#' list of subvariables are stored in a list-column in the resulting dataframe. 
+#' list of subvariables are stored in a list-column in the resulting dataframe.
 #'
 #' @param x ShojiCatalog or subclass
 #' @param keys character vector of attribute names from each catalog tuple to
 #' include in the result. Default is TRUE, which means all.
-#' @param rownames The rownames of the resulting dataframe. If set to NULL rownames 
-#' will default to the resulting dataframe will not have row names. By default the row names 
+#' @param rownames The rownames of the resulting dataframe. If set to NULL rownames
+#' will default to the resulting dataframe will not have row names. By default the row names
 #' will be the URLs of the catalog tuples.
 #' @param list_columns A character vector of the names of the attributes which should be stored
-#' in a list-column. 
+#' in a list-column.
 #' @param ... additional arguments passed to \code{data.frame}
 #' @return a \code{data.frame} view of the catalog
 #' @export
-catalogToDataFrame <- function(x, keys=TRUE, 
-    rownames = "default", 
+catalogToDataFrame <- function(x, keys=TRUE,
+    rownames = NULL,
     list_columns = c("subvariables", "subvariables_catalog"),
     ...) {
+
     index <- lapply(index(x), function(a) a[keys])
-    ## Return an empty dataframe if the function is called on an empty catalog 
-    if (length(index) == 0){
+    ## Return an empty dataframe if the function is called on an empty catalog
+    if (length(index) == 0) {
         message("Catalog is empty, returning an empty dataframe")
         return(data.frame())
     } else {
-        entry_to_df <- function(l, list_col_names = list_columns){
-            l[vapply(l, is.null, logical(1))] <- NA
-            vect_col <- l[!(names(l) %in% list_col_names)]
-            entry_df <- as.data.frame(vect_col, stringsAsFactors = FALSE)
-            
-            if (any(names(l) %in% list_col_names)) {
-                list_col <- l[list_col_names]
-                list_df <- data.frame(matrix(nrow = 1, ncol = length(list_col)))
-                names(list_df) <- names(list_col)
-                for (i  in seq_along(list_col)) {
-                    list_df[[1, i]] <- list_col[i] 
-                }
-                entry_df <- cbind(entry_df, list_df)
-            }
-            entry_df
-        }
-        
         ### The following code is equivalent to out <- purrr::map_df(index, entry_to_df)
         ################
-        entry_list <- lapply(index, entry_to_df)
+        entry_list <- lapply(index, entry_to_df, list_col_names = list_columns)
         names   <- unique(unlist( lapply(entry_list, names)))
         out <- data.frame(matrix(nrow = length(entry_list), ncol = length(names)))
         names(out) <- names
-        
+
         for (i in seq_along(entry_list)) {
             for (j in  names(entry_list[[i]])) {
                 out[i, j] <- entry_list[[i]][1, j]
             }
         }
         #################
-        
-        default.rownames <- missing(rownames)
-        if (default.rownames) {
-            rownames <- NULL
-        }
+
         out <- as.data.frame(out, rownames = rownames, ...)
-        if (default.rownames) {
-            rownames(out) <- NULL
-        }
-        
+
         #When a bad key argument is passed to the the shoji index it returns a dataframe
         # with an NA value. This exclude those columns.
-        exclude_cols <- grepl("^NA", names(out)) & 
+        exclude_cols <- grepl("^NA", names(out)) &
             vapply(out, function(x)all(is.na(x)), FUN.VALUE = logical(1))
-        out <- out[, !exclude_cols]
-        
-        missing_keys <- paste0("'", keys[!(keys %in% names(out))], "'")
+        out <- out[, !exclude_cols, drop = FALSE]
+        #reorder columns to match the order in which keys were supplied
+        if (keys == TRUE) {
+            ordered_names <- names(out)
+        } else {
+            ordered_names <- names(out)[names(out) %in% keys]
+        }
+        out <- out[, ordered_names, drop = FALSE]
+
+        missing_keys <- dQuote(keys[!(keys %in% names(out))])
+
         if (any(!(keys %in% names(out))) && keys != TRUE) {
             if (length(missing_keys) == 1) {
-                error_text <-  "is an invalid key for catalogs of class "
+                error_text <-  " is an invalid key for catalogs of class "
             } else {
-                error_text <- "are invalid keys for catalogs of class "
+                error_text <- " are invalid keys for catalogs of class "
             }
             halt(paste0(
-                paste(missing_keys, collapse = ", ")), 
+                paste(missing_keys, collapse = ", ")),
                 error_text,
                 class(x),
                 ".")
         }
-        
+
         return(out)
     }
 }
+
+#' entry_to_df
+#' Turns an entry in the catalog into
+#'
+#' @param entry
+#'
+#' @param list_col_names
+#'
+#' @return A one row data frame
+#'
+entry_to_df <- function(entry, list_col_names = list_columns){
+            entry[vapply(entry, is.null, logical(1))] <- NA
+            vect_col <- entry[!(names(entry) %in% list_col_names)]
+            entry_df <- as.data.frame(vect_col, stringsAsFactors = FALSE)
+
+            if (any(names(entry) %in% list_col_names)) {
+                list_col <- entry[list_col_names]
+                list_df <- data.frame(matrix(nrow = 1, ncol = length(list_col)))
+                names(list_df) <- names(list_col)
+                for (i  in seq_along(list_col)) {
+                    list_df[[1, i]] <- list_col[i]
+                }
+                entry_df <- cbind(entry_df, list_df)
+            }
+            entry_df
+        }

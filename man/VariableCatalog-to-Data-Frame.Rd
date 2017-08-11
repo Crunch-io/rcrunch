@@ -5,7 +5,7 @@
 \title{as.data.frame method for VariableCatalog}
 \usage{
 \method{as.data.frame}{VariableCatalog}(x, row.names = NULL,
-  optional = FALSE, ..., keys = c("alias", "name", "type"))
+  optional = FALSE, keys = c("alias", "name", "type"), ...)
 }
 \arguments{
 \item{x}{A VariableCatalog produced by \code{variables(ds)}.}
@@ -14,14 +14,15 @@
 
 \item{optional}{part of as.data.frame signature. Ignored.}
 
-\item{...}{Additional arguments passed to \code{data.frame}}
-
 \item{keys}{A character vector of the variable catalog attributes which you would like
 included in the datafame. To include all attributes or see which ones are available
 set keys to "all".}
+
+\item{...}{Additional arguments passed to \code{data.frame}}
 }
 \value{
-A data frame
+A data frame which includes information about each variable stored in the variable catelog.
+The fields in the dataframe match the keys argument provided to the function, and each row represents a variable.
 }
 \description{
 This method allows you to import the VariableCatalog into your R sessions in

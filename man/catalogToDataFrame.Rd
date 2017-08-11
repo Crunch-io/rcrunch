@@ -4,7 +4,7 @@
 \alias{catalogToDataFrame}
 \title{A utility to retun a dataframe from a ShojiCatalog.}
 \usage{
-catalogToDataFrame(x, keys = TRUE, rownames = "default",
+catalogToDataFrame(x, keys = TRUE, rownames,
   list_columns = c("subvariables", "subvariables_catalog"), ...)
 }
 \arguments{

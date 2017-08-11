@@ -80,8 +80,6 @@ NULL
 as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE,
                                         force=FALSE, row.order = NULL, ...) {
     out <- CrunchDataFrame(x, row.order = row.order)
-    force=FALSE, ...) {
-    out <- CrunchDataFrame(x)
     if (force) {
         out <- as.data.frame(out)
     }
@@ -241,7 +239,8 @@ fix_bys <- function (data, by) {
 #' A character vector of the variable catalog attributes which you would like 
 #' included in the datafame. To include all attributes or see which ones are available
 #' set keys to "all". 
-#' @return A data frame
+#' @return A data frame which includes information about each variable stored in the variable catelog. 
+#' The fields in the dataframe match the keys argument provided to the function, and each row represents a variable. 
 #' @examples 
 #' \dontrun{
 #' ds <- loadDataset("iris")
@@ -254,9 +253,9 @@ fix_bys <- function (data, by) {
 as.data.frame.VariableCatalog <- function(x, 
     row.names = NULL, 
     optional = FALSE, 
-    ...,
-    keys = c("alias", "name", "type")) {
-    if (all(keys == "all")){
+    keys = c("alias", "name", "type"),
+    ...) {
+    if (all(keys == "all")) {
         keys <- TRUE
     }
     
