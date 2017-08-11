@@ -1,0 +1,36 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/",
+    "description": "Details for a type of geodata",
+    "body": {
+        "name": "GB Regions",
+        "description": "These are the GB regions",
+        "location": "https://s.crunch.io/some/wrong/gb_eer_doesnotexist.topojson",
+        "format": "geojson",
+        "metadata": {
+            "status": "success",
+            "properties": {
+                "NUTS112CD": [
+                    "UKH",
+                    "UKI",
+                    "UKL",
+                    null,
+                    null,
+                    "UKF",
+                    "UKJ",
+                    "UKC"
+                ],
+                "name": [
+                    "East",
+                    "London",
+                    "Wales",
+                    "Scotland",
+                    "Northern Ireland",
+                    "Midlands",
+                    "South",
+                    "North"
+                ]
+            }
+        }
+    }
+}
