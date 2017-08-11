@@ -127,6 +127,23 @@ setMethod("$<-", c("CrunchDataset"), function (x, name, value) {
 
 #' @rdname dataset-update
 #' @export
+setMethod("[[<-",
+          c("CrunchDataset", "character", "missing", "CrunchGeography"),
+          function (x, i, value) {
+              geo(x[[i]]) <- value
+              return(x)
+          })
+#' @rdname dataset-update
+#' @export
+setMethod("[[<-",
+          c("CrunchDataset", "ANY", "missing", "CrunchGeography"),
+          function (x, i, value) {
+              geo(x[[i]]) <- value
+              return(x)
+          })
+
+#' @rdname dataset-update
+#' @export
 setMethod("[<-", c("CrunchDataset", "ANY", "missing", "list"),
     function (x, i, j, value) {
         ## For lapplying over variables to edit metadata

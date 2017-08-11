@@ -31,7 +31,7 @@ Suggests:
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
-Collate:
+Collate: 
     'AllClasses.R'
     'AllGenerics.R'
     'variable-definition.R'
@@ -74,6 +74,7 @@ Collate:
     'filters.R'
     'fork-and-merge.R'
     'formula.R'
+    'geo.R'
     'get-datasets.R'
     'github.R'
     'hide-variables.R'
