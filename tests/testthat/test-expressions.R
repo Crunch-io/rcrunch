@@ -277,6 +277,8 @@ with_test_authentication({
     })
     test_that("If R numeric filter is a range, 'between' is correct", {
         expect_equivalent(as.vector(ds$v3[3:18]), df$v3[3:18])
+        # even if the range is reversed
+        expect_equivalent(as.vector(ds$v3[18:3]), df$v3[3:18])
     })
     test_that("R logical filter evaluates", {
         expect_identical(as.vector(ds$v3[df$v3 < 10]), c(8, 9))

@@ -11,7 +11,8 @@ with_mock_crunch({
             notes="",
             discarded=FALSE,
             format=list(summary=list(digits=2)),
-            view=list(include_missing=FALSE,
+            view=list(
+                include_missing=FALSE,
                 show_counts=FALSE,
                 show_codes=FALSE,
                 column_width=NULL
