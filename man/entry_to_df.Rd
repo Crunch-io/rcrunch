@@ -5,12 +5,14 @@
 \title{entry_to_df
 Turns an entry in the catalog into}
 \usage{
-entry_to_df(entry, list_col_names = list_columns)
+entry_to_df(entry, list_col_names)
 }
 \arguments{
-\item{entry}{}
+\item{entry}{A single entry in a catalog}
 
-\item{list_col_names}{}
+\item{list_col_names}{Some entries in a catalog do not fit neatly into a traditional dataframe and are
+instead stored in a list-column. This is controlled by passing the attribute names
+as the \code{list_col_names} argument. `}
 }
 \value{
 A one row data frame

@@ -321,12 +321,16 @@ catalogToDataFrame <- function(x, keys=TRUE,
 #' Turns an entry in the catalog into
 #'
 #' @param entry
+#' A single entry in a catalog
 #'
 #' @param list_col_names
+#' Some entries in a catalog do not fit neatly into a traditional dataframe and are
+#' instead stored in a list-column. This is controlled by passing the attribute names
+#' as the `list_col_names` argument. `
 #'
 #' @return A one row data frame
 #'
-entry_to_df <- function(entry, list_col_names = list_columns){
+entry_to_df <- function(entry, list_col_names ){
             entry[vapply(entry, is.null, logical(1))] <- NA
             vect_col <- entry[!(names(entry) %in% list_col_names)]
             entry_df <- as.data.frame(vect_col, stringsAsFactors = FALSE)
