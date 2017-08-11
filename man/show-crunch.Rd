@@ -11,6 +11,7 @@
 \alias{show,CrunchLogicalExpr-method}
 \alias{show,CrunchCube-method}
 \alias{show,OrderGroup-method}
+\alias{show,CrunchGeography-method}
 \alias{show,MultitableResult-method}
 \title{Show methods for Crunch objects}
 \usage{
@@ -29,6 +30,8 @@
 \S4method{show}{CrunchCube}(object)
 
 \S4method{show}{OrderGroup}(object)
+
+\S4method{show}{CrunchGeography}(object)
 
 \S4method{show}{MultitableResult}(object)
 }

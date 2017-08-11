@@ -76,12 +76,14 @@ with_mock_crunch({
             '"title":"Test box"}}')
     })
     test_that("Select variables in box", {
-        expect_POST(crunchBox(ds[2:4], filters=NULL),
+        expect_POST(crunchBox(ds[2:5], filters=NULL),
             'https://app.crunch.io/api/datasets/1/boxdata/',
             '{"element":"shoji:entity","body":{"filters":[],',
             '"where":{"function":"select","args":[{"map":{',
             '"66ae9881e3524f7db84970d556c34552":',
             '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
+            '"loc":',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/location/"},',
             '"949d2dc7e7a24e6090cc88bb92e1d2fb":',
             '{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"},',
             '"text":{"variable":"https://app.crunch.io/api/datasets/1/variables/textVar/"}',
