@@ -7,18 +7,18 @@ with_mock_crunch({
         expect_is(geo_data, "CrunchGeography")
         expect_equal(geo_data$feature_key, "properties.location")
         expect_equal(geo_data$match_field, "name")
-        expect_equal(geo_data$geodatum, 
+        expect_equal(geo_data$geodatum,
             "https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/")
     })
-    
+
     test_that("is.Geodata", {
         expect_true(is.Geodata(Geodata(crGET("https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"))))
     })
-    
+
     test_that("if there is no geography on a variable, geo() returns null", {
         expect_null(geo(ds$gender))
     })
-    
+
     test_that("can remove a geo association", {
         expect_PATCH(geo(ds$location) <- NULL,
                      'https://app.crunch.io/api/datasets/1/variables/location/',
@@ -58,7 +58,7 @@ with_mock_crunch({
                      c("UKH", "UKI", "UKL", "UKF", "UKJ", "UKC", "East",
                        "London", "Wales", "Scotland", "Northern Ireland",
                        "Midlands", "South", "North", "test"))
-        
+
     })
     test_that("scoreCatToFeat", {
         # check the score for guesses and mock available features is accurate
@@ -73,7 +73,7 @@ with_mock_crunch({
         expect_equal(matches$value, 0.4)
         expect_equal(as.character(matches$property), "name")
     })
-    
+
     test_that("addGeoMetadata", {
         # full run of adding geometadata including guessing the geodata to use
         geo_to_add <- addGeoMetadata(ds$location)
@@ -90,22 +90,23 @@ with_mock_crunch({
         expect_error(addGeoMetadata(ds$not_a_var),
                      ".* must be a Crunch Variable.")
         expect_error(addGeoMetadata(ds$starttime),
-             "The variable ", dQuote("ds$starttime"),
-             " is neither a categorical or text variable.")
-        expect_error(addGeoMetadata(ds$gender), 
-             "None of the geographies match at all. Either the variable is",
-             " wrong, or Crunch doesn't yet have geodata for this variable.")
+             paste0("The variable .*",
+             " is neither a categorical or text variable."))
+        expect_error(addGeoMetadata(ds$gender),
+             paste0("None of the geographies match at all. Either the variable is",
+             " wrong, or Crunch doesn't yet have geodata for this variable."))
     })
-    
+
     test_that("CrunchGeography show methods", {
         expect_output(geo_data,
+                      paste0("CrunchGeography metadata for variable \n",
                      "geodatum name: 		GB Regions\n",
-                     "geodatum tdescription: 	These are the GB regions\n",
+                     "geodatum description: 	These are the GB regions\n",
                      "geodatum url: 		https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/\n",
                      "feature_key: 		properties.location\n",
-                     "match_field: 		name")
+                     "match_field: 		name"))
     })
-    
+
     test_that("Geodata methods", {
         gd <- Geodata(crGET(geo_data$geodatum))
         expect_is(gd, "Geodata")
@@ -138,30 +139,30 @@ with_test_authentication({
     #                 "location" = "https://s.crunch.io/geodata/crunch-io/cb_2015_us_region_20m.topojson",
     #                 "owner_id" = "00002")
     # crPOST("http://local.crunch.io:8080/api/geodata/", body=toJSON(payload))
-        
+
     geo_ds <- newDataset(df)
     test_that("Can match and set geodata on a text variable", {
         geo_ds$region <- rep(c("South", "West", "West", "South", "West"), 4)
         expect_silent(geo_ds$region <- addGeoMetadata(geo_ds$region))
         expect_output(geo(geo_ds$region),
-                      "geodatum name: 		US Census Regions\n",
+                      paste0("geodatum name: 		US Census Regions\n",
                       "geodatum description: 	Census regions\n",
                       "geodatum url: 		.*\n", # the geodatum id will change, so the url will change.
                       "feature_key: 		properties.name\n",
-                      "match_field: 		name")
+                      "match_field: 		name"))
     })
-    
+
     test_that("Can match and set geodata on a categorical variable", {
         geo_ds$region2 <- factor(rep(c("South", "West", "West", "South", "West"), 4))
         expect_silent(geo_ds$region2 <- addGeoMetadata(geo_ds$region2))
         expect_output(geo(geo_ds$region2),
-                      "geodatum name: 		US Census Regions\n",
+                      paste0("geodatum name: 		US Census Regions\n",
                       "geodatum description: 	Census regions\n",
                       "geodatum url: 		.*\n", # the geodatum id will change, so the url will change.
                       "feature_key: 		properties.name\n",
-                      "match_field: 		name")
+                      "match_field: 		name"))
     })
-    
+
     geo_ds$state <- rep(c("Alabama", "Alaska", "Arizona", "Arkansas", "California"), 4)
     test_that("There is an error if more than one geography matches", {
         expect_error(geo_ds$state <- addGeoMetadata(geo_ds$state),
@@ -176,7 +177,7 @@ with_test_authentication({
         expect_is(geo(geo_ds$state), "CrunchGeography")
         expect_identical(geo(geo_ds$state), new_geo)
     })
-    
+
     test_that("can remove a geo association", {
         expect_silent(geo(geo_ds$state) <- NULL)
         expect_null(geo(geo_ds$state))

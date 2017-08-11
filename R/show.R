@@ -256,14 +256,14 @@ setMethod("show", "CrunchLogicalExpr", function (object) {
 
 showMultitable <- function (x) {
     out <- paste("Multitable", dQuote(name(x)))
-    
+
     # TODO: check variable types to alert users in a more friendly manner
     # eg remove selected_array()
     out <- c(out, "Column variables:",
              vapply(x@body$template, function (expr) {
                  paste0("  ", formatExpression(expr$query[[1]]))
              }, character(1)))
-    
+
     return(c(out))
 }
 
@@ -318,7 +318,7 @@ setMethod("show", "OrderGroup", function (object) cat(showOrderGroup(object, ind
 #' @export
 setMethod("show", "CrunchGeography", function (object) {
     geo_datum <- Geodata(crGET(object$geodatum))
-    cat("CrunchGeography metadata for varaible \n", 
+    cat("CrunchGeography metadata for variable \n",
         "geodatum name: \t\t", name(geo_datum), "\n",
         "geodatum description: \t", description(geo_datum), "\n",
         "geodatum url: \t\t", object$geodatum, "\n",
