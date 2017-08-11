@@ -60,16 +60,35 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
     }
 })
 
-#' Title
-#'
+#' Generate a weight vecotr
+#' 
+#' This function allows you to generate a weight vector by supplying a set of 
+#' categorical variables and the target distribution for the variable's category. 
+#' For instance if you wanted to create a weight variable which equally weighted a 
+#' categorical variable called`ds$var` with four categories you would pass the expresstion
+#' call `makeWeight(ds$var ~ c(25, 25, 25, 25), name = weight)`. 
+#' 
 #' @param ... 
-#' @param ds 
+#' A series of expressions of the form `variable ~ target_weights`. The variable must
+#' be a categorical crunch variable, and the target weights must be a numeric vector whose
+#' length is equal to the number of categories contained in the variable, and whose sum is equal to 100. 
+#' 
 #' @param name 
-#'
+#' The name of the resulting variable
+#' @rdname makeWeight
 #' @return
+#' A crunch Variable Definiton of the weight variable
 #' @export
 #'
 #' @examples
+#' \dontrun{
+#' cars <- mtcars
+#' cars$cyl <- as.factor(cars$cyl)
+#' cars$gear <- as.factor(vars$gear)
+#' ds <- newDataset(cars, "cars_fact")
+#' makeWeight(ds$cyl ~ c(30, 30, 40, 0), ds$gear ~ c(20, 20, 60, 0), name = "weight" )
+#' as.vector(ds$weight)
+#' }
 makeWeight <- function(..., name) {
     expr_list <- list(...)
     lapply(expr_list, validateWeightExpression)
@@ -86,29 +105,29 @@ makeWeight <- function(..., name) {
 
 #' Validate an expression passed to makeWeight
 #' 
-#' Convenience function to catch formula errors passed to [makeWeight]
+#' Convenience function to catch formula errors passed to [makeWeight].
 #'
 #' @param expr 
-#'
+#' An expression which should be in the form `var ~ target_weights`
 #' @return
 #' NULL value
 #'
 #' @examples
-#' \dontrun(
+#' \dontrun{
 #' validateWeightExpression(ds$var ~ c(10, 30, 60))
-#' )
+#' }
 #' 
 validateWeightExpression <- function(expr) {
     if (length(expr) != 3) {
         halt(paste(expr, "is an invalid expression, use the form ds$var ~ c(10, 20, 30)"))
     }
-    var     <- eval(expr[[2]])
+    var     <- eval(expr[[2]], environment(expr))
     varname <- deparse(expr[[2]])
     targets <- eval(expr[[3]]) 
-    if (!is.Categorical(var)) {
+    n_categories <- length(categories(var))
+    if (n_categories == 0) {
         halt(paste(varname, "is not a categorical crunch variable"))
     }
-    n_categories <- length(categories(var))
     if (length(targets) != n_categories) {
         halt(paste("Number of targets does not match number of categories for", varname))
     }
@@ -118,16 +137,16 @@ validateWeightExpression <- function(expr) {
     invisible(expr)
 }
 
-#' Title
+#' Convenience function to generate entries for makeWeight
 #'
 #' @param expr 
-#'
+#' An expression
 #' @return
-#' @export
+#' A list with the variable id and the target weights. 
 #'
-#' @examples
+#' 
 generateWeightEntry <- function(expr) {
-    var <- eval(expr[[2]])
+    var <- eval(expr[[2]], environment(expr))
     targets <- eval(expr[[3]]) / 100
     id <- self(var)
     

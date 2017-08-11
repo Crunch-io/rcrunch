@@ -42,13 +42,13 @@ with_mock_crunch({
     
     test_that("validateWeightExpression errors correctly", {
         expect_error(validateWeightExpression("bad_formula"),
-            "bad_formula is an invalid expression, use the form ds$var ~ c(10, 20, 30)")
+            "bad_formula is an invalid expression, use the form ds$var ~ c(10, 20, 30)", fixed = TRUE)
         expect_error(validateWeightExpression(oldds$birthyr ~ c(1,2,3)),
-            "oldds$birthyr is not a categorical crunch variable")
+            "oldds$birthyr is not a categorical crunch variable", fixed = TRUE)
         expect_error(validateWeightExpression(oldds$gender ~ c(1,2)),
-            "Number of targets does not match number of categories for oldds$gender")
+            "Number of targets does not match number of categories for oldds$gender", fixed = TRUE)
         expect_error(validateWeightExpression(oldds$gender ~ c(30, 20, 30)),
-            "Number of targets does not match number of categories for oldds$gender")
+            "Targets do not add up to 100% for oldds$gender", fixed = TRUE)
     })
     expected_weight_definition <- list(
         name = "weight", 
@@ -62,7 +62,7 @@ with_mock_crunch({
         )
     )
     test_that("makeWeight generates the expected VariableDefinition", {
-        expect_identical(makeWeight(oldds$gender ~ c(20, 30, 50), name = "weight"),
+        expect_equivalent(makeWeight(oldds$gender ~ c(20, 30, 50), name = "weight"),
             expected_weight_definition)
     })
 })
@@ -150,5 +150,12 @@ with_test_authentication({
                 array(c(110, 100), dim=2L, dimnames=list(v4=c("B", "C"))))
         })
     })
-
+with(test.dataset(df), {
+        test_that("makeWeight returns the expected weights", {
+            ds$weight <- makeWeight(ds$v4 ~ c(30, 70, 0), name = "weight")
+            expected_weights <- c(0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 
+                                  0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4)
+            expect_identical(as.vector(ds$weight), expected_weights)
+        })
+    })
 })
