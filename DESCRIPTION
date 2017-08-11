@@ -107,6 +107,7 @@ Collate:
     'user.R'
     'variable-catalog.R'
     'variable-delete.R'
+    'variable-derivation.R'
     'variable-metadata.R'
     'variable-order.R'
     'variable-summary.R'

@@ -16,6 +16,15 @@ with_test_authentication({
         expect_identical(as.vector(ds$v3a), as.vector(ds$v3) + 5)
     })
 
+    test_that("derivation pulls the derivation", {
+        expect_is(derivation(ds$v3a), "CrunchExpr")
+        expect_fixed_output(derivation(ds$v3a), "Crunch expression: v3 + 5")
+    })
+
+    test_that("derivation returns NULL if the variable is not derived", {
+        expect_null(derivation(ds$v3))
+    })
+
     ## Now update v3's values and confirm that v3a is still linked
     try(ds$v3 <- df$v3 + 7)
     test_that("The source variable was in fact updated", {

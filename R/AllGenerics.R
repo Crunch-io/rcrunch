@@ -68,6 +68,8 @@ setGeneric("subvariables<-",
 setGeneric("datasetReference", function (x) standardGeneric("datasetReference"))
 setGeneric("hide", function (x) standardGeneric("hide"))
 setGeneric("unhide", function (x) standardGeneric("unhide"))
+setGeneric("derivation", function (x) standardGeneric("derivation"))
+
 
 setGeneric("urls", function (x) standardGeneric("urls"))
 setGeneric("self", function (x) standardGeneric("self"))

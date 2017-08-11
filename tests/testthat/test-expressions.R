@@ -134,7 +134,7 @@ with_mock_crunch({
     })
 
     test_that("Show method for expresssions", {
-        skip("TODO: something intelligent with parentheses and order of operations")
+        skip("TODO: something intelligent with parentheses and order of operations (GH issue #99)")
         print(ds$birthyr * 3 + 5)
         print(3 * (ds$birthyr + 5))
     })
