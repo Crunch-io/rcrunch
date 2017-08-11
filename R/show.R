@@ -178,7 +178,7 @@ formatExpression <- function (expr) {
         ## GET URL, get alias from that
         return(crGET(expr[["variable"]])$body$alias)
     } else if (length(intersect(c("column", "value"), names(expr)))) {
-        return(deparseAndFlatten(expressionValue(expr)))
+        return(deparseAndFlatten(expressionValue(expr), control=NULL))
     } else {
         ## Dunno what this is
         return("[Complex expression]")
@@ -219,7 +219,7 @@ formatExpressionArgs <- function (args) {
             var <- VariableEntity(crGET(args[[which(vars)]]$variable))
             ## Well, we'll identify "categorical" by presence of cats
             args[vals] <- lapply(args[vals], formatExpressionValue,
-                cats=categories(var))
+                cats=categories(var), control=NULL)
             args[!vals] <- lapply(args[!vals], formatExpression)
             return(unlist(args))
         }
@@ -228,14 +228,14 @@ formatExpressionArgs <- function (args) {
     return(vapply(args, formatExpression, character(1), USE.NAMES=FALSE))
 }
 
-formatExpressionValue <- function (val, cats=NULL) {
+formatExpressionValue <- function (val, cats=NULL, ...) {
     val <- expressionValue(val)
     if (length(cats)) {
         val <- i2n(val, cats)
     } else {
         ## TODO: iterate over, replace {?:-1} with NA
     }
-    return(deparseAndFlatten(val))
+    return(deparseAndFlatten(val, ...))
 }
 
 #' @rdname show-crunch

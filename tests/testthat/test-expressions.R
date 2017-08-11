@@ -33,6 +33,12 @@ with_mock_crunch({
         expect_fixed_output(e2, "Crunch expression: 5 + birthyr")
     })
 
+    test_that("Integer printing removes L", {
+        e1 <- try(ds$birthyr + 1L)
+        expect_is(e1, "CrunchExpr")
+        expect_fixed_output(e1, "Crunch expression: birthyr + 1")
+    })
+
     test_that("Logic generates expressions", {
         e1 <- try(ds$birthyr < 0)
         expect_is(e1, "CrunchLogicalExpr")
