@@ -161,7 +161,7 @@ formatVersionCatalog <- function (x, from=Sys.time()) {
     )
 
 formatExpression <- function (expr) {
-    if (inherits(expr, "CrunchExpr")) {
+    if (is.CrunchExpr(expr)) {
         return(formatExpression(expr@expression))
     } else if ("function" %in% names(expr)) {
         func <- expr[["function"]]
