@@ -34,10 +34,36 @@ with_mock_crunch({
 
     test_that("weightVariables method", {
         expect_identical(weightVariables(newds), "birthyr")
-        with(temp.option(crunch.namekey.dataset="name"), {
+        with(temp.option(crunch.namekey.dataset ="name"), {
             expect_identical(weightVariables(newds), "Birth Year")
         })
         expect_identical(weightVariables(oldds), c())
+    })
+    
+    test_that("validateWeightExpression errors correctly", {
+        expect_error(validateWeightExpression("bad_formula"),
+            "bad_formula is an invalid expression, use the form ds$var ~ c(10, 20, 30)")
+        expect_error(validateWeightExpression(oldds$birthyr ~ c(1,2,3)),
+            "oldds$birthyr is not a categorical crunch variable")
+        expect_error(validateWeightExpression(oldds$gender ~ c(1,2)),
+            "Number of targets does not match number of categories for oldds$gender")
+        expect_error(validateWeightExpression(oldds$gender ~ c(30, 20, 30)),
+            "Number of targets does not match number of categories for oldds$gender")
+    })
+    expected_weight_definition <- list(
+        name = "weight", 
+        derivation = list(`function` = "rake", 
+            args = list(
+                list(variable = "https://app.crunch.io/api/datasets/1/variables/gender/", 
+                    targets = list(c(1, 0.2), c(2, 0.3), c(3, 0.5)
+                    )
+                )
+            )
+        )
+    )
+    test_that("makeWeight generates the expected VariableDefinition", {
+        expect_identical(makeWeight(oldds$gender ~ c(20, 30, 50), name = "weight"),
+            expected_weight_definition)
     })
 })
 

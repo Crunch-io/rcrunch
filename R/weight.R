@@ -72,7 +72,7 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
 #' @examples
 makeWeight <- function(..., name) {
     expr_list <- list(...)
-    lapply(expr_list, validateExpression)
+    lapply(expr_list, validateWeightExpression)
     l <- lapply(expr_list, generateWeightEntry)
     out <- list(
         name = name,
@@ -84,17 +84,23 @@ makeWeight <- function(..., name) {
     out
 }
 
-#' Title
+#' Validate an expression passed to makeWeight
+#' 
+#' Convenience function to catch formula errors passed to [makeWeight]
 #'
 #' @param expr 
 #'
 #' @return
-#' @export
+#' NULL value
 #'
 #' @examples
-validateExpression <- function(expr) {
+#' \dontrun(
+#' validateWeightExpression(ds$var ~ c(10, 30, 60))
+#' )
+#' 
+validateWeightExpression <- function(expr) {
     if (length(expr) != 3) {
-        halt("Invalid expression, use the form ds$var ~ c(10, 20, 30)")
+        halt(paste(expr, "is an invalid expression, use the form ds$var ~ c(10, 20, 30)"))
     }
     var     <- eval(expr[[2]])
     varname <- deparse(expr[[2]])
