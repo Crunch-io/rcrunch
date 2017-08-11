@@ -1,6 +1,6 @@
 #' Get or set a derived variable's `CrunchExpr`
 #'
-#' Get a derived variable's derivation formula as a `CrunchExpr` with
+#' Get a derived variable's derivation formula as a (`CrunchExpr`)[expressions] with
 #' `derivation([variable])`. Set (change) a derived variable's derivation with
 #' `derivation([variable]) <- [expression]`
 #'

@@ -22,7 +22,7 @@
 a \code{CrunchExpr} of the derivation
 }
 \description{
-Get a derived variable's derivation formula as a \code{CrunchExpr} with
+Get a derived variable's derivation formula as a (\code{CrunchExpr})\link{expressions} with
 \code{derivation([variable])}. Set (change) a derived variable's derivation with
 \code{derivation([variable]) <- [expression]}
 }
