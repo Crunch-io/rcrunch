@@ -1,13 +1,13 @@
 #' Get or set a derived variable's `CrunchExpr`
 #'
-#' Get a derived variable's derivation formula as a [`CrunchExpr`] with
+#' Get a derived variable's derivation formula as a `CrunchExpr` with
 #' `derivation([variable])`. Set (change) a derived variable's derivation with
 #' `derivation([variable]) <- [expression]`
 #'
 #' @param x a variable
 #' @param value a `CrunchExpr` to be used as the derivation (for the setter only)
 #'
-#' @return a [`CrunchExpr`]
+#' @return a `CrunchExpr` of the derivation
 #'
 #' @examples
 #' \dontrun{
@@ -21,12 +21,12 @@
 #' derivation(ds$derived_v1)
 #' # Crunch expression: v1 + 10
 #' }
+#' @name derivations
 #' @aliases derivation derivation<-
-#' @name derivation
-
+NULL
 
 #' @export
-#' @rdname derivation
+#' @rdname derivations
 setMethod("derivation", "CrunchVariable", function(x) {
     if (!is.derived(x)) {
         return(NULL)
@@ -63,7 +63,7 @@ absolutifyExpressionArgs <- function (args, var) {
 }
 
 #' @export
-#' @rdname derivation
+#' @rdname derivations
 setMethod("derivation<-", "CrunchVariable", function(x, value) {
     if (!is.derived(x)) {
         halt("The variable ", dQuote(name(x)), " must already be a derived variable.")
