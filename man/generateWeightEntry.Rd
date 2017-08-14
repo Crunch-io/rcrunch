@@ -10,7 +10,7 @@ generateWeightEntry(expr)
 \item{expr}{An expression}
 }
 \value{
-A list with the variable id and the target weights.
+A list of the variable id and the target weights.
 }
 \description{
 Utility function to generate entries for makeWeight

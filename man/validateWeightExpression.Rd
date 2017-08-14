@@ -7,10 +7,10 @@
 validateWeightExpression(expr)
 }
 \arguments{
-\item{expr}{An expression which should be in the form \code{var ~ target_weights}}
+\item{expr}{An expression}
 }
 \value{
-NULL value
+NULL value, function is called for its side effects
 }
 \description{
 Utility function to catch formula errors passed to \link{makeWeight}.

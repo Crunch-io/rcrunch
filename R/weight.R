@@ -60,12 +60,12 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
     }
 })
 
-#' Generate a weight vecotr
+#' Generate a weight vector
 #'
 #' This function allows you to generate a weight vector by supplying a set of
-#' categorical variables and the target distribution for each variable's category.
-#' For instance if you wanted to create a weight variable which equally weighted a four categories of the
-#' categorical variable `ds$var` you would call `makeWeight(ds$var ~ c(25, 25, 25, 25), name = weight)`.
+#' categorical variables and the target distribution for each of the variable's categories.
+#' For instance if you wanted to create a weight variable which equally weighted four categories stored
+#' in `ds$var` you would call `makeWeight(ds$var ~ c(25, 25, 25, 25), name = weight)`.
 #'
 #' @param ...
 #' A series of expressions of the form `variable ~ target_weights`. The variable must
@@ -85,7 +85,7 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
 #' cars$cyl <- as.factor(cars$cyl)
 #' cars$gear <- as.factor(vars$gear)
 #' ds <- newDataset(cars, "cars_fact")
-#' makeWeight(ds$cyl ~ c(30, 30, 40, 0), ds$gear ~ c(20, 20, 60, 0), name = "weight" )
+#' ds$weight <- makeWeight(ds$cyl ~ c(30, 30, 40, 0), ds$gear ~ c(20, 20, 60, 0), name = "weight" )
 #' as.vector(ds$weight)
 #' }
 makeWeight <- function(..., name) {
@@ -106,9 +106,9 @@ makeWeight <- function(..., name) {
 #' Utility function to catch formula errors passed to [makeWeight].
 #'
 #' @param expr
-#' An expression which should be in the form `var ~ target_weights`
+#' An expression
 #' @return
-#' NULL value
+#' NULL value, function is called for its side effects
 #'
 #' @examples
 #' \dontrun{
@@ -143,13 +143,12 @@ validateWeightExpression <- function(expr) {
 #' @param expr
 #' An expression
 #' @return
-#' A list with the variable id and the target weights.
+#' A list of the variable id and the target weights.
 #'
 #'
 generateWeightEntry <- function(expr) {
     var <- eval(expr[[2]], environment(expr))
     targets <- eval(expr[[3]]) / 100
-    id <- self(var)
 
     target_list <- vector("list", length(targets))
     for (i in seq_along(targets)) {

@@ -2,7 +2,7 @@
 % Please edit documentation in R/weight.R
 \name{makeWeight}
 \alias{makeWeight}
-\title{Generate a weight vecotr}
+\title{Generate a weight vector}
 \usage{
 makeWeight(..., name)
 }
@@ -18,9 +18,9 @@ A crunch Variable Definiton of the weight variable
 }
 \description{
 This function allows you to generate a weight vector by supplying a set of
-categorical variables and the target distribution for each variable's category.
-For instance if you wanted to create a weight variable which equally weighted a four categories of the
-categorical variable \code{ds$var} you would call \code{makeWeight(ds$var ~ c(25, 25, 25, 25), name = weight)}.
+categorical variables and the target distribution for each of the variable's categories.
+For instance if you wanted to create a weight variable which equally weighted four categories stored
+in \code{ds$var} you would call \code{makeWeight(ds$var ~ c(25, 25, 25, 25), name = weight)}.
 }
 \examples{
 \dontrun{
@@ -28,7 +28,7 @@ cars <- mtcars
 cars$cyl <- as.factor(cars$cyl)
 cars$gear <- as.factor(vars$gear)
 ds <- newDataset(cars, "cars_fact")
-makeWeight(ds$cyl ~ c(30, 30, 40, 0), ds$gear ~ c(20, 20, 60, 0), name = "weight" )
+ds$weight <- makeWeight(ds$cyl ~ c(30, 30, 40, 0), ds$gear ~ c(20, 20, 60, 0), name = "weight" )
 as.vector(ds$weight)
 }
 }
