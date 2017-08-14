@@ -15,7 +15,7 @@ NULL
 
 #' @rdname ordering
 #' @export
-setMethod("ordering", "CrunchDataset", function (x) ordering(variables(x)))
+setMethod("ordering", "CrunchDataset", function (x) ordering(allVariables(x)))
 
 #' @rdname ordering
 #' @export
@@ -127,8 +127,8 @@ copyOrder <- function (source, target) {
     ord <- entities(ordering(source))
 
     # make url and alias maps
-    url_to_alias_source <- structure(aliases(variables(source)), .Names=urls(variables(source)))
-    alias_to_url_target <- structure(urls(variables(target)), .Names=aliases(variables(target)))
+    url_to_alias_source <- as.list(structure(aliases(allVariables(source)), .Names=urls(allVariables(source))))
+    alias_to_url_target <- as.list(structure(urls(allVariables(target)), .Names=aliases(allVariables(target))))
 
     new_ord <- lapply(ord, copyOrderGroup,
                       source_map = url_to_alias_source,
@@ -151,12 +151,7 @@ copyOrderGroup <- function (group, source_map, target_map) {
     # if there is a single element in group, and it is a character,
     # just return the URL in the target.
     if (length(group) == 1 & is.character(group)) {
-        al <- source_map[group]
-        if (al %in% names(target_map)) {
-            return(target_map[[al]])
-        } else {
-            return(NA)
-        }
+        return(target_map[[source_map[[group]]]] %||% NA)
     }
 
     # there are groups, so recurse
@@ -169,7 +164,3 @@ copyOrderGroup <- function (group, source_map, target_map) {
     return(VariableGroup(name(group), ents))
 }
 
-# given a URL, return the alias from the dataset.
-aliasFromURL <- function(url, ds) {
-    return(aliases(allVariables(ds))[match(url, urls(allVariables(ds)))])
-}
