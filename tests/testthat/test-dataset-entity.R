@@ -126,6 +126,7 @@ with_mock_crunch({
         expect_identical(urls(variables(ds)),
             c("https://app.crunch.io/api/datasets/1/variables/birthyr/",
             "https://app.crunch.io/api/datasets/1/variables/gender/",
+            "https://app.crunch.io/api/datasets/1/variables/location/",
             "https://app.crunch.io/api/datasets/1/variables/mymrset/",
             "https://app.crunch.io/api/datasets/1/variables/textVar/",
             "https://app.crunch.io/api/datasets/1/variables/starttime/",
@@ -134,6 +135,7 @@ with_mock_crunch({
         expect_identical(urls(allVariables(ds)),
             c("https://app.crunch.io/api/datasets/1/variables/birthyr/",
             "https://app.crunch.io/api/datasets/1/variables/gender/",
+            "https://app.crunch.io/api/datasets/1/variables/location/",
             "https://app.crunch.io/api/datasets/1/variables/mymrset/",
             "https://app.crunch.io/api/datasets/1/variables/textVar/",
             "https://app.crunch.io/api/datasets/1/variables/starttime/",
@@ -153,14 +155,14 @@ with_mock_crunch({
             logs <- capture.output(nc <- ncol(ds))
         })
         expect_identical(logs, character(0))
-        expect_identical(nc, 6L)
-        expect_identical(dim(ds), c(25L, 6L))
+        expect_identical(nc, 7L)
+        expect_identical(dim(ds), c(25L, 7L))
     })
 
     test_that("Dataset has names() and extract methods work", {
         expect_false(is.null(names(ds)))
         expect_identical(names(ds),
-            c("birthyr", "gender", "mymrset", "textVar", "starttime", "catarray"))
+            c("birthyr", "gender", "location", "mymrset", "textVar", "starttime", "catarray"))
         expect_true(is.variable(ds[[1]]))
         expect_true("birthyr" %in% names(ds))
         expect_true(is.variable(ds$birthyr))
@@ -235,10 +237,11 @@ with_mock_crunch({
         expect_identical(getShowContent(ds),
             c(paste("Dataset", dQuote("test ds")),
             "",
-            "Contains 25 rows of 6 variables:",
+            "Contains 25 rows of 7 variables:",
             "",
             "$birthyr: Birth Year (numeric)",
             "$gender: Gender (categorical)",
+            "$location: Categorical Location (categorical)",
             "$mymrset: mymrset (multiple_response)",
             "$textVar: Text variable ftw (text)",
             "$starttime: starttime (datetime)",

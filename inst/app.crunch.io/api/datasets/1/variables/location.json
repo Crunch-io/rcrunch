@@ -1,0 +1,62 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/1/variables/location/",
+    "body": {
+        "alias": "location",
+        "format": {
+            "summary": {
+                "digits": 2
+            }
+        },
+        "missing_reasons": {
+            "No Data": -1,
+            "Skipped": 3,
+            "Not Asked": 4
+        },
+        "categories": [
+            {
+                "numeric_value": 1,
+                "missing": false,
+                "id": 1,
+                "name": "London"
+            },
+            {
+                "numeric_value": 2,
+                "missing": false,
+                "id": 2,
+                "name": "Scotland"
+            },
+            {
+                "numeric_value": null,
+                "missing": true,
+                "id": -1,
+                "name": "No Data"
+            }
+        ],
+        "dataset_id": "a45d1b42dbca4b27a40c61f0e3c39723",
+        "view": {
+            "geodata": [{
+              "display_field": "name",
+              "variable_id": "loc",
+              "geodatum": "https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/",
+              "feature_key": "properties.location",
+              "match_field": "name"
+            }],
+            "include_missing": false,
+            "show_counts": false,
+            "show_codes": false,
+            "column_width": null
+        },
+        "type": "categorical",
+        "id": "loc"
+    },
+    "views": {
+        "summary": "https://app.crunch.io/api/datasets/1/variables/location/summary/",
+        "values": "https://app.crunch.io/api/datasets/1/variables/location/values/"
+    },
+    "urls": {
+        "dataset_url": "https://app.crunch.io/api/datasets/1/"
+    },
+    "description": "Details for a given Variable",
+    "future_shoji_attribute": {}
+}

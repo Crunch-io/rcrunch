@@ -75,6 +75,7 @@ Collate:
     'filters.R'
     'fork-and-merge.R'
     'formula.R'
+    'geo.R'
     'get-datasets.R'
     'github.R'
     'hide-variables.R'

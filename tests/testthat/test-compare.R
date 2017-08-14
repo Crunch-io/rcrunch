@@ -66,7 +66,7 @@ with_mock_crunch({
     test_that("print compareVariables", {
         expect_output(summary(compareVariables(allVariables(ds1), allVariables(ds2))),
             paste(
-                "Total variables: 8 ",
+                "Total variables: 9 ",
                 "",
                 "Type mismatch: 1 ",
                 "     name.A  type.A   alias   type.B    name.B",
@@ -83,7 +83,7 @@ with_mock_crunch({
     test_that("compareVariables when everything is ok", {
         expect_output(summary(compareVariables(allVariables(ds1), allVariables(ds1))),
             paste(
-                "Total variables: 6 ",
+                "Total variables: 7 ",
                 "No type or name mismatches.",
                 sep="\n"
                 ))
@@ -97,7 +97,7 @@ with_mock_crunch({
         compareDatasets(ds1, ds2)
         expect_output(summary(compareDatasets(ds1, ds2)),
             paste(
-                "Total variables: 8 ",
+                "Total variables: 9 ",
                 "",
                 "Type mismatch: 1 ",
                 "     name.A  type.A   alias   type.B    name.B",

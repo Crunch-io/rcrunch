@@ -15,9 +15,6 @@ with_test_authentication({
         expect_identical(as.vector(ds$wave), as.vector(ds$wavea))
     })
     test_that("Can deep copy multiple response", {
-        expect_error(copy(ds$allpets, deep=TRUE),
-            "Deep copying of multiple-response variables is not implemented.")
-        skip("Needs https://www.pivotaltracker.com/story/show/86161264")
         ds$allpetsa <- copy(ds$allpets, deep=TRUE)
         for (i in 1:2) {
             ## Whole thing isn't identical because the aliases are different
