@@ -914,4 +914,41 @@ with_test_authentication({
         ordering(ds_fork) <- copied_order
         expect_identical(entities(ordering(ds_fork)), entities(new_order_fork))
     })
+
+    test_that("copyOrder copies across disparate datasets", {
+        # setup an alternative dataset that has some overlap with ds
+        df_alt <- df
+        df_alt$v12 <- df_alt$v1
+        df_alt$v1 <- NULL
+        df_alt$v2 <- NULL
+        df_alt$new_var <- 1
+        df_alt$new_var2 <- letters[20:1]
+        ds_alt <- newDataset(df_alt)
+
+        old_order <-  ordering(ds_alt)
+        new_order <- VariableOrder(self(ds$v1), self(ds$v2), self(ds$v5),
+                                   self(ds$v6), VariableGroup("Group A",
+                                                              list(self(ds$v4), self(ds$v3))))
+        new_order_alt <- VariableOrder(self(ds_alt$v5), self(ds_alt$v6),
+                                        VariableGroup("Group A",
+                                                      list(self(ds_alt$v4), self(ds_alt$v3))),
+                                       # the following variables do not overlap with ds,
+                                       # and therefor will be appended to the end,
+                                       # but their order will not be garuanteed
+                                       self(ds_alt$v12), self(ds_alt$new_var), self(ds_alt$new_var2))
+        ordering(ds) <- new_order
+
+        # test that ds has the new order
+        expect_identical(entities(ordering(ds)), entities(new_order))
+        # test that ds_alt has the old order still
+        expect_identical(entities(ordering(ds_alt)), entities(old_order))
+        expect_false(identical(entities(ordering(ds_alt)), entities(new_order_alt)))
+
+        # copy order, and check that ds_alt has the new order.
+        expect_silent(copied_order <- copyOrder(ds, ds_alt))
+        ordering(ds_alt) <- copied_order
+        # ignore the last three variables because their order was not specified
+        expect_identical(entities(ordering(ds_alt))[-c(4, 5, 6)],
+                         entities(new_order_alt)[-c(4, 5, 6)])
+    })
 })

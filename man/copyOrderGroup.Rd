@@ -2,26 +2,21 @@
 % Please edit documentation in R/ordering.R
 \name{copyOrderGroup}
 \alias{copyOrderGroup}
-\title{Copy the order of a \code{VariableGroup} (or individual variable url) from \code{VariableOrder}}
+\title{Copy the order of a \code{VariableGroup} (or individual variable URL) from \code{VariableOrder}}
 \usage{
-copyOrderGroup(gr, source, target)
+copyOrderGroup(group, source_map, target_map)
 }
 \arguments{
-\item{gr}{the group or variable url to be copied}
+\item{group}{the group or variable URL to be copied}
 
-\item{source}{the dataset you want to copy the order from}
+\item{source_map}{url to alias map for source variables}
 
-\item{target}{the dataset you want to copy the order to}
+\item{target_map}{alias to url map for target variables}
 }
 \value{
-returns either a \code{\link{VariableGroup}} (if a group is supplied) or a url (if just a variable url is supplied)
+returns either a \code{\link{VariableGroup}} (if a group is supplied) or a URL (if just a variable URL is supplied)
 }
 \description{
-Copy the order of a \code{VariableGroup} (or individual variable url) from \code{VariableOrder}
-}
-\examples{
-\dontrun{
-ordering(ds) <- copyOrder(ds1, ds)
-}
+Copy the order of a \code{VariableGroup} (or individual variable URL) from \code{VariableOrder}
 }
 \keyword{internal}
