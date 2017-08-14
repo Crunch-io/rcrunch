@@ -39,7 +39,7 @@ with_mock_crunch({
         })
         expect_identical(weightVariables(oldds), c())
     })
-    
+
     test_that("validateWeightExpression errors correctly", {
         expect_error(validateWeightExpression("bad_formula"),
             "bad_formula is an invalid expression, use the form ds$var ~ c(10, 20, 30)", fixed = TRUE)
@@ -49,12 +49,14 @@ with_mock_crunch({
             "Number of targets does not match number of categories for oldds$gender", fixed = TRUE)
         expect_error(validateWeightExpression(oldds$gender ~ c(30, 20, 30)),
             "Targets do not add up to 100% for oldds$gender", fixed = TRUE)
+        expect_error(validateWeightExpression(oldds$gender ~ c("a", "b", "c")),
+            "Targets are not numeric for oldds$gender", fixed = TRUE)
     })
     expected_weight_definition <- list(
-        name = "weight", 
-        derivation = list(`function` = "rake", 
+        name = "weight",
+        derivation = list(`function` = "rake",
             args = list(
-                list(variable = "https://app.crunch.io/api/datasets/1/variables/gender/", 
+                list(variable = "https://app.crunch.io/api/datasets/1/variables/gender/",
                     targets = list(c(1, 0.2), c(2, 0.3), c(3, 0.5)
                     )
                 )
@@ -153,7 +155,7 @@ with_test_authentication({
 with(test.dataset(df), {
         test_that("makeWeight returns the expected weights", {
             ds$weight <- makeWeight(ds$v4 ~ c(30, 70, 0), name = "weight")
-            expected_weights <- c(0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 
+            expected_weights <- c(0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4,
                                   0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4)
             expect_identical(as.vector(ds$weight), expected_weights)
         })

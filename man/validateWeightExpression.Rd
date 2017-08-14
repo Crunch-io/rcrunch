@@ -13,7 +13,7 @@ validateWeightExpression(expr)
 NULL value
 }
 \description{
-Convenience function to catch formula errors passed to \link{makeWeight}.
+Utility function to catch formula errors passed to \link{makeWeight}.
 }
 \examples{
 \dontrun{

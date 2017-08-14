@@ -2,7 +2,7 @@
 % Please edit documentation in R/weight.R
 \name{generateWeightEntry}
 \alias{generateWeightEntry}
-\title{Convenience function to generate entries for makeWeight}
+\title{Utility function to generate entries for makeWeight}
 \usage{
 generateWeightEntry(expr)
 }
@@ -13,5 +13,5 @@ generateWeightEntry(expr)
 A list with the variable id and the target weights.
 }
 \description{
-Convenience function to generate entries for makeWeight
+Utility function to generate entries for makeWeight
 }
