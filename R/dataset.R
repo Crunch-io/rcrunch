@@ -23,6 +23,7 @@ getNrow <- function (dataset) {
 #' Is it?
 #' @rdname crunch-is
 #' @param x an object
+#' @param value a value to assign
 #' @return logical
 #' @export
 is.dataset <- function (x) inherits(x, "CrunchDataset")

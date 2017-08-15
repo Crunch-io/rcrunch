@@ -379,3 +379,7 @@ setMethod("duplicated", "CrunchExpr", function (x, incomparables=FALSE, ...) {
 #' @rdname crunch-is
 #' @export
 is.CrunchExpr <- function (x) inherits(x, "CrunchExpr")
+
+#' @rdname crunch-is
+#' @export
+is.Expr <- is.CrunchExpr

@@ -18,15 +18,13 @@ with_mock_crunch({
     ds <- loadDataset("test ds")
 
     test_that("is method works for both expressions and logical expressions", {
-        e1 <- try(ds$birthyr + 5)
-        expect_true(is.CrunchExpr(e1))
-        e2 <- try(ds$birthyr == 5)
-        expect_true(is.CrunchExpr(e2))
+        expect_true(is.CrunchExpr(ds$birthyr + 5))
+        expect_true(is.CrunchExpr(ds$birthyr == 5))
     })
 
 
     test_that("Arithmetic generates expressions", {
-        e1 <- try(ds$birthyr + 5)
+        e1 <- ds$birthyr + 5
         expect_is(e1, "CrunchExpr")
         zexp <- list(`function`="+",
             args=list(
@@ -36,19 +34,19 @@ with_mock_crunch({
         )
         expect_identical(zcl(e1), zexp)
         expect_fixed_output(e1, "Crunch expression: birthyr + 5")
-        e2 <- try(5 + ds$birthyr)
+        e2 <- 5 + ds$birthyr
         expect_is(e2, "CrunchExpr")
         expect_fixed_output(e2, "Crunch expression: 5 + birthyr")
     })
 
     test_that("Integer printing removes L", {
-        e1 <- try(ds$birthyr + 1L)
+        e1 <- ds$birthyr + 1L
         expect_is(e1, "CrunchExpr")
         expect_fixed_output(e1, "Crunch expression: birthyr + 1")
     })
 
     test_that("Logic generates expressions", {
-        e1 <- try(ds$birthyr < 0)
+        e1 <- ds$birthyr < 0
         expect_is(e1, "CrunchLogicalExpr")
         expect_fixed_output(e1, "Crunch logical expression: birthyr < 0")
     })
@@ -152,9 +150,9 @@ with_test_authentication({
     ds <- newDataset(df)
     ds$q1 <- factor(rep(c("selected", "not selected"), 10))
     test_that("Arithmetic expressions evaluate", {
-        e1 <- try(ds$v3 + 5)
+        e1 <- ds$v3 + 5
         expect_is(e1, "CrunchExpr")
-        e2 <- try(5 + ds$v3)
+        e2 <- 5 + ds$v3
         expect_is(e2, "CrunchExpr")
         expect_identical(as.vector(e1), as.vector(ds$v3) + 5)
         expect_identical(as.vector(e1), as.vector(e2))
@@ -181,7 +179,7 @@ with_test_authentication({
     })
 
     test_that("Logical expressions evaluate", {
-        e1 <- try(ds$v3 > 10)
+        e1 <- ds$v3 > 10
         expect_is(e1, "CrunchLogicalExpr")
         skip("which isn't implemented correctly yet")
         expect_identical(which(e1), which(df$v3 > 10))
@@ -202,11 +200,11 @@ with_test_authentication({
     })
 
     test_that("expressions on expresssions evaluate", {
-        e3 <- try(ds$v3 + ds$v3 + 10)
+        e3 <- ds$v3 + ds$v3 + 10
         expect_is(e3, "CrunchExpr")
         expect_fixed_output(e3, "Crunch expression: v3 + v3 + 10")
         expect_identical(as.vector(e3), 2*df$v3 + 10)
-        e4 <- try(ds$v3 + ds$v3 * 2)
+        e4 <- ds$v3 + ds$v3 * 2
         expect_is(e4, "CrunchExpr")
         expect_fixed_output(e4, "Crunch expression: v3 + v3 * 2")
         expect_identical(as.vector(e4), 3*df$v3)
@@ -214,7 +212,7 @@ with_test_authentication({
 
     varnames <- names(df[-6])
     test_that("Select values with Numeric inequality filter", {
-        e5 <- try(ds$v3[ds$v3 < 10])
+        e5 <- ds$v3[ds$v3 < 10]
         expect_is(e5, "CrunchVariable")
         expect_identical(as.vector(e5), c(8, 9))
         for (i in varnames) {

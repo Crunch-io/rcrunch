@@ -6,12 +6,15 @@
 \alias{derivation}
 \alias{derivation<-}
 \alias{derivation,CrunchVariable-method}
-\alias{derivation<-,CrunchVariable-method}
+\alias{derivation<-,CrunchVariable,ANY-method}
+\alias{derivation<-,CrunchVariable,NULL-method}
 \title{Get or set a derived variable's \code{CrunchExpr}}
 \usage{
 \S4method{derivation}{CrunchVariable}(x)
 
-\S4method{derivation}{CrunchVariable}(x) <- value
+\S4method{derivation}{CrunchVariable,ANY}(x) <- value
+
+\S4method{derivation}{CrunchVariable,`NULL`}(x) <- value
 }
 \arguments{
 \item{x}{a variable}
@@ -37,5 +40,9 @@ derivation(ds$derived_v1)
 derivation(ds$derived_v1) <- ds$v1 + 10
 derivation(ds$derived_v1)
 # Crunch expression: v1 + 10
+
+# to integrate or instantiate the variable in place (remove the link between
+# variable v1 and the derivation) you can:
+derivation(ds$derived_v1) <- NULL
 }
 }

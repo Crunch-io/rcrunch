@@ -192,7 +192,7 @@ expressionValue <- function (expr) {
 }
 
 deparseAndFlatten <- function (x, max_length = NULL, control=NULL, ...) {
-    out <- deparse(x, control=NULL, ...)
+    out <- deparse(x, control=control, ...)
     if (length(out) > 1) {
         out <- paste0(out, collapse="")
     }

@@ -20,6 +20,10 @@
 #' derivation(ds$derived_v1) <- ds$v1 + 10
 #' derivation(ds$derived_v1)
 #' # Crunch expression: v1 + 10
+#'
+#' # to integrate or instantiate the variable in place (remove the link between
+#' # variable v1 and the derivation) you can:
+#' derivation(ds$derived_v1) <- NULL
 #' }
 #' @name derivations
 #' @aliases derivation derivation<-
@@ -32,34 +36,28 @@ setMethod("derivation", "CrunchVariable", function(x) {
         return(NULL)
     }
     expr <- CrunchExpr(expression=entity(x)@body$derivation)
-    expr@expression <- absolutifyVariables(expr@expression, x)
+    # self(x) is needed and not variableCatalog because the variables are stored
+    # as '../varid/' and when absoluteURL concats them, the varid from self(x)
+    # is automatically removed.
+    expr@expression <- absolutifyVariables(expr@expression, self(x))
 
     return(expr)
 })
 
-absolutifyVariables <- function (expr, var) {
-    if ("function" %in% names(expr)) {
-        expr[["args"]] <- absolutifyExpressionArgs(expr[["args"]], var)
-        return(expr)
-    } else {
-        ## Dunno what this is
-        return("[Complex expression]")
-    }
-}
 
-absolutifyExpressionArgs <- function (args, var) {
-    args <- lapply(args, function (x, var) {
-        if ("variable" %in% names(x)) {
-            ## GET URL, get alias from that
-            x$variable <- absoluteURL(x$variable, self(var))
-            return(x)
-        } else if ("value" %in% names(x)) {
-            return(x)
-        } else if ("function" %in% names(x)) {
-            return(absolutifyVariables(x, var))
+absolutifyVariables <- function (expr, base.url) {
+    if (is.list(expr)) {
+        # Recurse.
+        lists <- vapply(expr, is.list, logical(1))
+        expr[lists] <- lapply(expr[lists], absolutifyVariables, base.url)
+        # For others, look for "variable" references
+        if (length(names(expr))) {
+            vars <- names(expr) %in% "variable"
+            expr[!lists & vars] <- lapply(expr[!lists & vars], absoluteURL, base.url)
+            return(expr)
         }
-    }, var)
-    return(args)
+    }
+    return(expr)
 }
 
 #' @export
@@ -79,4 +77,37 @@ setMethod("derivation<-", "CrunchVariable", function(x, value) {
     ## Refresh and return
     dropCache(datasetReference(x))
     invisible(refresh(x))
+})
+
+# sets derived to FALSE, which integrates / instantiates the variable's values
+integrateDerivedVar <- function (x) {
+    if (is.derived(x)) {
+        payload <- toJSON(list(derived=FALSE))
+        crPATCH(self(x), body=payload)
+
+        ## Refresh and return
+        dropCache(datasetReference(x))
+        invisible(refresh(x))
+    }
+}
+
+#' @export
+#' @rdname derivations
+setMethod("derivation<-", c("CrunchVariable", "NULL"), function(x, value) integrateDerivedVar(x))
+
+#' @rdname crunch-is
+#' @aliases is.derived
+#' @export
+setMethod("is.derived", "CrunchVariable", function (x) {
+    stopifnot(is.variable(x))
+    isTRUE(tuple(x)$derived)
+})
+
+#' @rdname crunch-is
+#' @aliases is.derived<-
+#' @export
+setMethod("is.derived<-", c("CrunchVariable", "logical"), function(x, value) {
+   if (!value) {
+       integrateDerivedVar(x)
+   }
 })
