@@ -15,7 +15,7 @@
 #' @param x a CrunchVariable to copy
 #' @param deep logical: should this be a deep copy, in which there is no
 #' dependence on the original variable, or a shallow one, in which the copy
-#' is more of a symbolic link? Default is \code{FALSE}, meaning symlink.
+#' is more of a symbolic link? Default is `FALSE`, meaning symlink.
 #' @param ... Additional metadata to give to the new variable. If not given,
 #' the new variable will have a name that is the same as the original but with
 #' " (copy)" appended, and its alias will be the old alias with "_copy"
@@ -34,9 +34,6 @@ copyVariable <- function (x, deep=FALSE, ...) {
     body <- modifyList(oldbody, newbody)
     body$id <- NULL
     if (deep) {
-        if (body$type == "multiple_response") {
-            halt("Deep copying of multiple-response variables is not implemented.")
-        }
         body$values <- as.vector(x, mode="id")
         if (body$type %in% c("categorical", "categorical_array", "multiple_response")) {
             body$categories <- jsonprep(categories(x))

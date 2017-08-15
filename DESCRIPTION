@@ -10,7 +10,8 @@ Description: The Crunch.io service <http://crunch.io/> provides a cloud-based
 Version: 1.17.9
 Authors@R: c(
     person("Neal", "Richardson", role=c("aut", "cre"), email="neal@crunch.io"),
-    person("Jonathan", "Keane", role="ctb", email="jon.keane@crunch.io"))
+    person("Jonathan", "Keane", role="ctb", email="jon.keane@crunch.io"),
+    person("Gordon", "Shotwell", role="ctb", email="gordon@crunch.io"))
 URL: https://github.com/Crunch-io/rcrunch
 BugReports: https://github.com/Crunch-io/rcrunch/issues
 License: LGPL (>= 3)
@@ -30,7 +31,7 @@ Suggests:
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
-Collate:
+Collate: 
     'AllClasses.R'
     'AllGenerics.R'
     'variable-definition.R'
@@ -73,6 +74,7 @@ Collate:
     'filters.R'
     'fork-and-merge.R'
     'formula.R'
+    'geo.R'
     'get-datasets.R'
     'github.R'
     'hide-variables.R'

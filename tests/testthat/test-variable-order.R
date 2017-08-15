@@ -25,9 +25,9 @@ with_mock_crunch({
     nested.ord <- try(VariableOrder(
         VariableGroup(name="Group 1",
             entities=list(ent.urls[1],
-                        VariableGroup(name="Nested", entities=ent.urls[2:3]),
-                        ent.urls[4])),
-        VariableGroup(name="Group 2", entities=ent.urls[5:6]),
+                        VariableGroup(name="Nested", entities=ent.urls[2:4]),
+                        ent.urls[5])),
+        VariableGroup(name="Group 2", entities=ent.urls[6:7]),
         catalog_url=varcat_url))
 
     test_that("Validation on entities<-", {
@@ -45,15 +45,15 @@ with_mock_crunch({
 
     test_that("Can extract group(s) by name", {
         expect_identical(nested.ord[["Group 2"]],
-            VariableGroup(name="Group 2", entities=ent.urls[5:6]))
+            VariableGroup(name="Group 2", entities=ent.urls[6:7]))
         expect_identical(nested.ord$`Group 2`,
-            VariableGroup(name="Group 2", entities=ent.urls[5:6]))
+            VariableGroup(name="Group 2", entities=ent.urls[6:7]))
     })
 
     test_that("Extract with [", {
         expect_identical(nested.ord["Group 2"],
             VariableOrder(
-                VariableGroup(name="Group 2", entities=ent.urls[5:6]),
+                VariableGroup(name="Group 2", entities=ent.urls[6:7]),
                 catalog_url=varcat_url))
         expect_error(nested.ord["NOT A GROUP"],
             "Undefined groups selected: NOT A GROUP")
@@ -61,7 +61,7 @@ with_mock_crunch({
 
     test_that("Extract with [[ from Group", {
         expect_identical(nested.ord[["Group 1"]]$Nested,
-            VariableGroup(name="Nested", entities=ent.urls[2:3]))
+            VariableGroup(name="Nested", entities=ent.urls[2:4]))
         expect_error(nested.ord[["Group 1"]][["NOT A GROUP"]],
             "Undefined groups selected: NOT A GROUP")
     })
@@ -70,7 +70,7 @@ with_mock_crunch({
         expect_identical(nested.ord[["Group 1"]]["Nested"],
             VariableGroup(name="Group 1",
                 entities=list(
-                    VariableGroup(name="Nested", entities=ent.urls[2:3]))))
+                    VariableGroup(name="Nested", entities=ent.urls[2:4]))))
         expect_error(nested.ord[["Group 1"]]["NOT A GROUP"],
             "Undefined groups selected: NOT A GROUP")
     })
@@ -84,54 +84,54 @@ with_mock_crunch({
         expect_identical(vglist, list(graph=list(
             list(`Group 1`=list(
                     ent.urls[1],
-                    list(`Nested`=as.list(ent.urls[2:3])),
-                    ent.urls[4]
+                    list(`Nested`=as.list(ent.urls[2:4])),
+                    ent.urls[5]
                     )
                 ),
-            list(`Group 2`=as.list(ent.urls[5:6]))
+            list(`Group 2`=as.list(ent.urls[6:7]))
         )))
     })
 
     ng <- list(ent.urls[1],
-                VariableGroup(name="Nested", entities=ent.urls[2:3]),
-                ent.urls[4])
+                VariableGroup(name="Nested", entities=ent.urls[2:4]),
+                ent.urls[5])
     test_that("can assign nested groups in entities", {
         to <- test.ord
         try(entities(to) <- ng)
         expect_identical(entities(to), entities(ng))
-        expect_identical(urls(to), ent.urls[1:4])
+        expect_identical(urls(to), ent.urls[1:5])
         expect_identical(to[[2]],
-            VariableGroup(name="Nested", entities=ent.urls[2:3]))
-        expect_identical(entities(to[[2]]), as.list(ent.urls[2:3]))
+            VariableGroup(name="Nested", entities=ent.urls[2:4]))
+        expect_identical(entities(to[[2]]), as.list(ent.urls[2:4]))
     })
     test_that("can assign group into order", {
         to <- test.ord
         try(to[[1]] <- VariableGroup(name="[[<-", entities=ng))
         expect_identical(entities(to[[1]]), ng)
         expect_identical(name(to[[1]]), "[[<-")
-        expect_identical(urls(to[[1]]), ent.urls[1:4])
+        expect_identical(urls(to[[1]]), ent.urls[1:5])
         expect_identical(to[[1]][[2]],
-            VariableGroup(name="Nested", entities=ent.urls[2:3]))
+            VariableGroup(name="Nested", entities=ent.urls[2:4]))
     })
     test_that("can assign NULL into order to remove a group", {
         no <- no2 <- no3 <- nested.ord
         no[[2]] <- NULL
         expect_identical(no, VariableOrder(
             VariableGroup(name="Group 1", entities=list(ent.urls[1],
-                VariableGroup(name="Nested", entities=ent.urls[2:3]),
-                ent.urls[4])),
+                VariableGroup(name="Nested", entities=ent.urls[2:4]),
+                ent.urls[5])),
             catalog_url=varcat_url))
         no2[["Group 2"]] <- NULL
         expect_identical(no2, VariableOrder(
             VariableGroup(name="Group 1", entities=list(ent.urls[1],
-                VariableGroup(name="Nested", entities=ent.urls[2:3]),
-                ent.urls[4])),
+                VariableGroup(name="Nested", entities=ent.urls[2:4]),
+                ent.urls[5])),
             catalog_url=varcat_url))
         no3$`Group 2` <- NULL
         expect_identical(no3, VariableOrder(
             VariableGroup(name="Group 1", entities=list(ent.urls[1],
-                VariableGroup(name="Nested", entities=ent.urls[2:3]),
-                ent.urls[4])),
+                VariableGroup(name="Nested", entities=ent.urls[2:4]),
+                ent.urls[5])),
             catalog_url=varcat_url))
     })
     test_that("Can assign NULL into a group to remove", {
@@ -140,28 +140,28 @@ with_mock_crunch({
             VariableOrder(
                 VariableGroup(name="Group 1",
                     entities=list(ent.urls[1],
-                        VariableGroup(name="Nested", entities=ent.urls[2:3]),
-                        ent.urls[4]),
+                        VariableGroup(name="Nested", entities=ent.urls[2:4]),
+                        ent.urls[5]),
                 ),
-                VariableGroup(name="Group 2", entities=ent.urls[5:6]),
+                VariableGroup(name="Group 2", entities=ent.urls[6:7]),
                 catalog_url=varcat_url))
         no[[1]][[3]] <- NULL
         expect_identical(no,
             VariableOrder(
                 VariableGroup(name="Group 1",
                     entities=list(ent.urls[1],
-                        VariableGroup(name="Nested", entities=ent.urls[2:3])),
+                        VariableGroup(name="Nested", entities=ent.urls[2:4])),
                 ),
-                VariableGroup(name="Group 2", entities=ent.urls[5:6]),
+                VariableGroup(name="Group 2", entities=ent.urls[6:7]),
                 catalog_url=varcat_url))
         no[[1]][["Nested"]][[2]] <- NULL
         expect_identical(no,
             VariableOrder(
                 VariableGroup(name="Group 1",
                     entities=list(ent.urls[1],
-                        VariableGroup(name="Nested", entities=ent.urls[2])),
+                        VariableGroup(name="Nested", entities=ent.urls[c(2,4)])),
                 ),
-                VariableGroup(name="Group 2", entities=ent.urls[5:6]),
+                VariableGroup(name="Group 2", entities=ent.urls[6:7]),
                 catalog_url=varcat_url))
         no[[1]]$Nested <- NULL
         expect_identical(no,
@@ -169,7 +169,7 @@ with_mock_crunch({
                 VariableGroup(name="Group 1",
                     entities=list(ent.urls[1]),
                 ),
-                VariableGroup(name="Group 2", entities=ent.urls[5:6]),
+                VariableGroup(name="Group 2", entities=ent.urls[6:7]),
                 catalog_url=varcat_url))
         expect_error(nested.ord[[2]][[-1]] <- NULL,
             "Illegal subscript")
@@ -185,9 +185,9 @@ with_mock_crunch({
             entities=to[[1]][[1]]))
         expect_identical(entities(to[[1]]),
             list(VariableGroup(name="Nest2", entities=ent.urls[1]),
-                VariableGroup(name="Nested", entities=ent.urls[2:3]),
-                ent.urls[4]))
-        expect_identical(urls(to[[1]]), ent.urls[1:4])
+                VariableGroup(name="Nested", entities=ent.urls[2:4]),
+                ent.urls[5]))
+        expect_identical(urls(to[[1]]), ent.urls[1:5])
     })
     test_that("can assign into a nested group", {
         to <- test.ord
@@ -195,9 +195,9 @@ with_mock_crunch({
         try(entities(to[[1]][[2]]) <- rev(entities(to[[1]][[2]])))
         expect_identical(entities(to[[1]]),
             list(ent.urls[1],
-                VariableGroup(name="Nested", entities=ent.urls[3:2]),
-                ent.urls[4]))
-        expect_identical(urls(to[[1]]), ent.urls[c(1,3,2,4)])
+                VariableGroup(name="Nested", entities=ent.urls[c(4,3,2)]),
+                ent.urls[5]))
+        expect_identical(urls(to[[1]]), ent.urls[c(1,4,3,2,5)])
         expect_identical(name(to[[1]]), "[[<-")
         try(name(to[[1]]) <- "Something better")
         expect_identical(name(to[[1]]), "Something better")
@@ -255,7 +255,8 @@ with_mock_crunch({
             list(self(ds$gender)))
         ## Test duplicates option: gender should only be in "More nesting"
         expect_identical(nested.o[["Group 1"]]$Nested[[1]],
-            self(ds$mymrset))
+                         self(ds$location),
+                         self(ds$mymrset))
     })
 
     test_that("Assignment by new nested group name with duplicates", {
@@ -301,6 +302,7 @@ with_mock_crunch({
                   "    Birth Year",
                   "    [+] Nested",
                   "        Gender",
+                  "        Categorical Location",
                   "        mymrset",
                   "    Text variable ftw",
                   "[+] Group 2",
@@ -315,6 +317,7 @@ with_mock_crunch({
                   "    Birth Year",
                   "    [+] Nested",
                   "        Gender",
+                  "        Categorical Location",
                   "        mymrset",
                   "    Text variable ftw",
                   "[+] Group 2",
@@ -331,6 +334,7 @@ with_mock_crunch({
         expect_output(ord,
             paste("Birth Year",
                   "Gender",
+                  "Categorical Location",
                   "mymrset",
                   "Text variable ftw",
                   "starttime",
@@ -341,7 +345,8 @@ with_mock_crunch({
     test_that("Composing a VariableOrder step by step: group 1 by dataset", {
         ord$Demos <<- ds[c("gender", "birthyr")]
         expect_output(ord,
-            paste("mymrset",
+            paste("Categorical Location",
+                  "mymrset",
                   "Text variable ftw",
                   "starttime",
                   "Cat Array",
@@ -352,9 +357,10 @@ with_mock_crunch({
             fixed=TRUE)
     })
     test_that("Composing a VariableOrder step by step: group by Order subset", {
-        ord$Arrays <<- ord[c(1, 4)] #ds[c("mymrset", "catarray")]
+        ord$Arrays <<- ord[c(2, 5)] #ds[c("mymrset", "catarray")]
         expect_output(ord,
-            paste("Text variable ftw",
+            paste("Categorical Location",
+                  "Text variable ftw",
                   "starttime",
                   "[+] Demos",
                   "    Gender",
@@ -368,7 +374,8 @@ with_mock_crunch({
     test_that("Composing a VariableOrder step by step: nested group by dataset", {
         ord$Demos[["Others"]] <<- ds[c("birthyr", "textVar")]
         expect_output(ord,
-            paste("starttime",
+            paste("Categorical Location",
+                  "starttime",
                   "[+] Demos",
                   "    Gender",
                   "    [+] Others",
@@ -383,7 +390,8 @@ with_mock_crunch({
     test_that("Composing a VariableOrder step by step: reorder group", {
         ord$Demos <<- ord$Demos[2:1]
         expect_output(ord,
-            paste("starttime",
+            paste("Categorical Location",
+                  "starttime",
                   "[+] Demos",
                   "    [+] Others",
                   "        Birth Year",
@@ -396,7 +404,7 @@ with_mock_crunch({
             fixed=TRUE)
     })
     test_that("Composing a VariableOrder step by step: reorder order", {
-        ord <<- ord[3:1]
+        ord <<- ord[4:1]
         expect_output(ord,
             paste("[+] Arrays",
                   "    mymrset",
@@ -407,6 +415,7 @@ with_mock_crunch({
                   "        Text variable ftw",
                   "    Gender",
                   "starttime",
+                  "Categorical Location",
                   sep="\n"),
             fixed=TRUE)
     })
@@ -423,6 +432,7 @@ with_mock_crunch({
                   "        Text variable ftw",
                   "    Gender",
                   "starttime",
+                  "Categorical Location",
                   sep="\n"),
             fixed=TRUE)
     })
@@ -440,6 +450,7 @@ with_mock_crunch({
                       "        textVar",
                       "    gender",
                       "starttime",
+                      "location",
                       sep="\n"),
                 fixed=TRUE)
         })
@@ -467,6 +478,7 @@ with_mock_crunch({
                   "        Text variable ftw",
                   "        starttime",
                   "    Gender",
+                  "Categorical Location",
                   sep="\n"),
             fixed=TRUE)
     })

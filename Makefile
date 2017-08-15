@@ -12,7 +12,7 @@ deps:
 	R --slave -e 'cran <- "http://cran.at.r-project.org"; pkgs <- c("devtools", "Rcpp", "testthat", "jsonlite", "curl", "httpcache", "codetools", "httptest", "covr", "xml2"); new <- setdiff(pkgs, dir(.libPaths()[1])); if (length(new)) install.packages(new, repo=cran); update.packages(.libPaths()[1], ask=FALSE, repo=cran)'
 
 install-ci: deps
-	R -e 'devtools::install_github("nealrichardson/testthat", ref="tap-file"); devtools::install_github("nealrichardson/httptest")'
+	R -e 'devtools::install_github("nealrichardson/testthat", ref="tap-file-option"); devtools::install_github("nealrichardson/httptest")'
 	R -e 'devtools::session_info(installed.packages()[, "Package"])'
 
 test-ci:

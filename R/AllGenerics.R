@@ -44,6 +44,10 @@ setGeneric("pk", function (x) standardGeneric("pk"))
 setGeneric("pk<-", function (x, value) standardGeneric("pk<-"))
 setGeneric("digits", function (x) standardGeneric("digits"))
 setGeneric("digits<-", function (x, value) standardGeneric("digits<-"))
+setGeneric("geo", function (x) standardGeneric("geo"))
+setGeneric("geo<-", function (x, value) standardGeneric("geo<-"))
+setGeneric("fetchGeoFile", function (x) standardGeneric("fetchGeoFile"))
+
 
 setGeneric("types", function (x) standardGeneric("types"))
 setGeneric("timestamps", function (x) standardGeneric("timestamps"))
@@ -156,7 +160,7 @@ setGeneric("lapply")
 setGeneric("is.na")
 setGeneric("is.na<-")
 setGeneric("%in%")
-setGeneric("write.csv")
+setGeneric("write.csv", function(x, ...) utils::write.csv(x, ...))
 setGeneric("duplicated")
 
 setGeneric("zcl", function (x) standardGeneric("zcl"))
@@ -191,3 +195,18 @@ setGeneric("getShowContent",
     ## Backstop error so you don't get "Object of class S4 is not subsettable"
     halt(paste("Cannot update", class(x), "with type", class(value)))
 }
+
+
+# for ggplot to not copmlain when given crunchdata
+#' Fortify crunch objects for use with ggplot
+#'
+#' @param model model or other R object to convert to data frame
+#' @param data original dataset, if needed
+#' @param ... other arguments passed to methods
+#' @name fortify
+#' @export
+fortify.CrunchDataFrame <- function(model, data, ...) model
+
+#' @rdname fortify
+#' @export
+fortify.CrunchDataset <- function(model, data, ...) model

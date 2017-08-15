@@ -108,6 +108,10 @@ updateDatasetList <- function () {
 loadDataset <- function (dataset, kind=c("active", "all", "archived"), project=NULL, refresh=FALSE) {
     if (!inherits(dataset, "DatasetTuple")) {
         dscat <- selectDatasetCatalog(kind, project, refresh)
+        if (is.character(dataset) && startsWith(dataset, "http") && !grepl("/api/", dataset)) {
+            ## It's a web app URL, probably. Turn it into an API URL
+            dataset <- webToAPIURL(dataset)
+        }
         dsname <- dataset
         dataset <- dscat[[dataset]]
         if (is.null(dataset)) {

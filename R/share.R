@@ -66,7 +66,7 @@ share <- function (dataset, users, edit=FALSE, notify=TRUE, message=NULL) {
     if (notify) {
         payload$message <- message
         payload$url_base <- passwordSetURLTemplate()
-        payload$dataset_url <- webURL(dataset)
+        payload$dataset_url <- APIToWebURL(dataset)
     }
     payload <- toJSON(payload)
     crPATCH(self(perms), body=payload)

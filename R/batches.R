@@ -36,6 +36,7 @@ createSource <- function (file, ...) {
         body=list(uploaded_file=upload_file(file)), ...)
 }
 
+#' @importFrom methods initialize
 setMethod("initialize", "BatchCatalog", function (.Object, ...) {
     .Object <- callNextMethod(.Object, ...)
     .Object@index <- .Object@index[order(names(.Object@index))]

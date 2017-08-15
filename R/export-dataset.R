@@ -22,6 +22,11 @@
 #' \code{FALSE}) and 'prefix_subvariables' for SPSS format: whether to include
 #' the array variable's name in each of its subvariables varlabels (default:
 #' \code{FALSE}).
+#' @param x (for write.csv) CrunchDataset, which may have been subsetted with a filter
+#' expression on the rows and a selection of variables on the columns.
+#' 
+#' @aliases write.csv
+#' 
 #' @return Invisibly, \code{file}.
 #' @export
 exportDataset <- function (dataset, file, format=c("csv", "spss"),
@@ -85,4 +90,4 @@ variablesFilter <- function (dataset) {
 
 #' @rdname exportDataset
 #' @export
-setMethod("write.csv", "CrunchDataset", function (...) exportDataset(..., format="csv"))
+setMethod("write.csv", "CrunchDataset", function (x, ...) exportDataset(x, ..., format="csv"))
