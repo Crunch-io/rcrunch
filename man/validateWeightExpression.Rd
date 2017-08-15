@@ -21,3 +21,4 @@ validateWeightExpression(ds$var ~ c(10, 30, 60))
 }
 
 }
+\keyword{internal}

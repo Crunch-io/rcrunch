@@ -15,3 +15,4 @@ A list of the variable id and the target weights.
 \description{
 Utility function to generate entries for makeWeight
 }
+\keyword{internal}
