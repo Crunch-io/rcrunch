@@ -83,7 +83,7 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
 #' \dontrun{
 #' mtcars$cyl <- as.factor(mtcars$cyl)
 #' mtcars$gear <- as.factor(mtcars$gear)
-#' ds <- newDataset(cars, "cars_fact")
+#' ds <- newDataset(mtcars, "mtcars")
 #' ds$weight <- makeWeight(ds$cyl ~ c(30, 30, 40, 0), ds$gear ~ c(20, 20, 60, 0), name = "weight" )
 #' as.vector(ds$weight)
 #' }
