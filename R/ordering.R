@@ -136,8 +136,12 @@ copyOrder <- function (source, target) {
 
     # drop any null entities, those that were not found in target but in source
     new_ord <- removeMissingEntities(new_ord)
+    new_ord <- do.call(VariableOrder, new_ord)
 
-    return(do.call(VariableOrder, new_ord))
+    # set catalog URL so show methods work on the new ordering
+    new_ord@catalog_url <- variableCatalogURL(target)
+
+    return(new_ord)
 }
 
 #' Copy the order of a `VariableGroup` (or individual variable URL) from `VariableOrder`
