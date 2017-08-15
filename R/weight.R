@@ -65,7 +65,7 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
 #' This function allows you to generate a weight vector by supplying a set of
 #' categorical variables and the target distribution for each of the variable's categories.
 #' For instance if you wanted to create a weight variable which equally weighted four categories stored
-#' in `ds$var` you would call `makeWeight(ds$var ~ c(25, 25, 25, 25), name = weight)`.
+#' in `ds$var` you would call `makeWeight(ds$var ~ c(25, 25, 25, 25), name = "weight")`.
 #'
 #' @param ...
 #' A series of expressions of the form `variable ~ target_weights`. The variable must
@@ -81,9 +81,8 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
 #'
 #' @examples
 #' \dontrun{
-#' cars <- mtcars
-#' cars$cyl <- as.factor(cars$cyl)
-#' cars$gear <- as.factor(vars$gear)
+#' mtcars$cyl <- as.factor(mtcars$cyl)
+#' mtcars$gear <- as.factor(mtcars$gear)
 #' ds <- newDataset(cars, "cars_fact")
 #' ds$weight <- makeWeight(ds$cyl ~ c(30, 30, 40, 0), ds$gear ~ c(20, 20, 60, 0), name = "weight" )
 #' as.vector(ds$weight)
@@ -110,6 +109,7 @@ makeWeight <- function(..., name) {
 #' @return
 #' NULL value, function is called for its side effects
 #'
+#' @keywords internal
 #' @examples
 #' \dontrun{
 #' validateWeightExpression(ds$var ~ c(10, 30, 60))
@@ -142,11 +142,13 @@ validateWeightExpression <- function(expr) {
 #'
 #' @param expr
 #' An expression
+#' @keywords internal
 #' @return
 #' A list of the variable id and the target weights.
 #'
 #'
 generateWeightEntry <- function(expr) {
+    #TODO use formula evaluation functions like evalLHS when PR #65 is merged
     var <- eval(expr[[2]], environment(expr))
     targets <- eval(expr[[3]]) / 100
 
