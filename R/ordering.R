@@ -155,15 +155,12 @@ copyOrderGroup <- function (group, source_map, target_map) {
     # if there is a single element in group, and it is a character,
     # just return the URL in the target.
     if (length(group) == 1 & is.character(group)) {
-        return(target_map[[source_map[[group]]]] %||% NA)
+        return(target_map[[source_map[[group]]]] %||% NA_character_)
     }
 
     # there are groups, so recurse
     ents <- lapply(entities(group), copyOrderGroup,
                            source_map = source_map, target_map = target_map)
-
-    # drop any na entities - those that were not found in target but in source
-    ents <- removeMissingEntities(ents)
 
     return(VariableGroup(name(group), ents))
 }
