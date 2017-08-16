@@ -2,10 +2,20 @@
 #'
 #' Get a derived variable's derivation formula as a (`CrunchExpr`)[expressions] with
 #' `derivation([variable])`. Set (change) a derived variable's derivation with
-#' `derivation([variable]) <- [expression]`
+#' `derivation([variable]) <- [expression]`.
+#'
+#' To integrate (aka realize or instantiate) a variable so that it is no longer
+#'  dependent on the variables the derivation relies on, use
+#'  `derivation([variable]) <- NULL`
+#'
+#' `is.derived` can be used to see if a variable is derived or not. Additionally
+#' setting a derived variable's `is.derived` to `FALSE` will integrate the
+#' derived variable.
 #'
 #' @param x a variable
-#' @param value a `CrunchExpr` to be used as the derivation (for the setter only)
+#' @param value a `CrunchExpr` to be used as the derivation (for the setter
+#' only) or `NULL` to integrate a derived variable. For `is.derived`, `FALSE`
+#' can be used to integrate a derived variable.
 #'
 #' @return a `CrunchExpr` of the derivation
 #'
@@ -80,7 +90,8 @@ setMethod("derivation<-", "CrunchVariable", function(x, value) {
 })
 
 # sets derived to FALSE, which integrates / instantiates the variable's values
-integrateDerivedVar <- function (x) {
+# silently takes and discards `value` to make method dispatch easier
+integrateDerivedVar <- function (x, value) {
     if (is.derived(x)) {
         payload <- toJSON(list(derived=FALSE))
         crPATCH(self(x), body=payload)
@@ -93,21 +104,21 @@ integrateDerivedVar <- function (x) {
 
 #' @export
 #' @rdname derivations
-setMethod("derivation<-", c("CrunchVariable", "NULL"), function(x, value) integrateDerivedVar(x))
+setMethod("derivation<-", c("CrunchVariable", "NULL"), integrateDerivedVar)
 
-#' @rdname crunch-is
+#' @rdname derivations
 #' @aliases is.derived
 #' @export
 setMethod("is.derived", "CrunchVariable", function (x) {
-    stopifnot(is.variable(x))
     isTRUE(tuple(x)$derived)
 })
 
-#' @rdname crunch-is
+#' @rdname derivations
 #' @aliases is.derived<-
 #' @export
 setMethod("is.derived<-", c("CrunchVariable", "logical"), function(x, value) {
-   if (!value) {
-       integrateDerivedVar(x)
-   }
+    if (!isTRUE(value)) {
+       x <- integrateDerivedVar(x, value)
+    }
+    return(x)
 })

@@ -8,6 +8,10 @@
 \alias{derivation,CrunchVariable-method}
 \alias{derivation<-,CrunchVariable,ANY-method}
 \alias{derivation<-,CrunchVariable,NULL-method}
+\alias{is.derived,CrunchVariable-method}
+\alias{is.derived}
+\alias{is.derived<-,CrunchVariable,logical-method}
+\alias{is.derived<-}
 \title{Get or set a derived variable's \code{CrunchExpr}}
 \usage{
 \S4method{derivation}{CrunchVariable}(x)
@@ -15,11 +19,17 @@
 \S4method{derivation}{CrunchVariable,ANY}(x) <- value
 
 \S4method{derivation}{CrunchVariable,`NULL`}(x) <- value
+
+\S4method{is.derived}{CrunchVariable}(x)
+
+\S4method{is.derived}{CrunchVariable,logical}(x) <- value
 }
 \arguments{
 \item{x}{a variable}
 
-\item{value}{a \code{CrunchExpr} to be used as the derivation (for the setter only)}
+\item{value}{a \code{CrunchExpr} to be used as the derivation (for the setter
+only) or \code{NULL} to integrate a derived variable. For \code{is.derived}, \code{FALSE}
+can be used to integrate a derived variable.}
 }
 \value{
 a \code{CrunchExpr} of the derivation
@@ -27,7 +37,16 @@ a \code{CrunchExpr} of the derivation
 \description{
 Get a derived variable's derivation formula as a (\code{CrunchExpr})\link{expressions} with
 \code{derivation([variable])}. Set (change) a derived variable's derivation with
-\code{derivation([variable]) <- [expression]}
+\code{derivation([variable]) <- [expression]}.
+}
+\details{
+To integrate (aka realize or instantiate) a variable so that it is no longer
+dependent on the variables the derivation relies on, use
+\code{derivation([variable]) <- NULL}
+
+\code{is.derived} can be used to see if a variable is derived or not. Additionally
+setting a derived variable's \code{is.derived} to \code{FALSE} will integrate the
+derived variable.
 }
 \examples{
 \dontrun{
