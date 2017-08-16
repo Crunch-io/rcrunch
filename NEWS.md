@@ -11,6 +11,8 @@
 * `addGeoMetadata()` function to match a text or categorical variable with available geodata based on the contents of the variable and metadata associated with Crunch-hosted geographic data.
 * Experimental support for merging `CrunchDataFrame`s with standard `data.frame`s
 * `copyOrder()` to copy the ordering of variables from one dataset to another.
+* Derivation expressions can now be retrieved from derived variables with `derivation()`
+* Derived variables can be integrated or instantiated by setting `derivation() <- NULL`
 
 ### crunch 1.17.8
 Two attempts to fix download issues introduced by 1.17.4:
