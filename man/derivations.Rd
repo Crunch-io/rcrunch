@@ -12,7 +12,7 @@
 \alias{is.derived}
 \alias{is.derived<-,CrunchVariable,logical-method}
 \alias{is.derived<-}
-\title{Get or set a derived variable's \code{CrunchExpr}}
+\title{Get or set a derived variable's expression}
 \usage{
 \S4method{derivation}{CrunchVariable}(x)
 
@@ -32,7 +32,7 @@ only) or \code{NULL} to integrate a derived variable. For \code{is.derived}, \co
 can be used to integrate a derived variable.}
 }
 \value{
-a \code{CrunchExpr} of the derivation
+a \code{CrunchExpr} of the derivation for \code{derivation}; a logical for \code{is.derived}; the variable given in \code{x} for \code{is.derived<-} returns
 }
 \description{
 Get a derived variable's derivation formula as a (\code{CrunchExpr})\link{expressions} with
@@ -60,8 +60,15 @@ derivation(ds$derived_v1) <- ds$v1 + 10
 derivation(ds$derived_v1)
 # Crunch expression: v1 + 10
 
+is.derived(ds$derived_v1)
+# TRUE
+
 # to integrate or instantiate the variable in place (remove the link between
 # variable v1 and the derivation) you can:
 derivation(ds$derived_v1) <- NULL
+
+# after integrating, the derived variable is no longer derived.
+is.derived(ds$derived_v1)
+# FALSE
 }
 }

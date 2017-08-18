@@ -41,6 +41,19 @@ with_mock_crunch({
         expect_PATCH(is.derived(birthyrPlus) <- FALSE,
                      'https://app.crunch.io/api/datasets/1/variables/birthyrPlus/',
                      '{"derived":false}')
+        expect_no_request(is.derived(birthyrPlus) <- TRUE)
+        expect_no_request(is.derived(ds$birthyr) <- FALSE)
+        expect_no_request(derivation(ds$birthyr) <- NULL)
+    })
+
+    test_that("derivation()<-NULL with a non-derived variable does not error.",{
+        expect_silent(derivation(ds$birthyr) <- NULL)
+    })
+
+    test_that("is.derived([not derived])<-TRUE errors.",{
+        expect_error(is.derived(ds$birthyr) <- TRUE,
+                     "can't change a non-derived variable into a derived one",
+                     " with is.derived().")
     })
 })
 

@@ -1,4 +1,4 @@
-#' Get or set a derived variable's `CrunchExpr`
+#' Get or set a derived variable's expression
 #'
 #' Get a derived variable's derivation formula as a (`CrunchExpr`)[expressions] with
 #' `derivation([variable])`. Set (change) a derived variable's derivation with
@@ -17,7 +17,7 @@
 #' only) or `NULL` to integrate a derived variable. For `is.derived`, `FALSE`
 #' can be used to integrate a derived variable.
 #'
-#' @return a `CrunchExpr` of the derivation
+#' @return a `CrunchExpr` of the derivation for `derivation`; a logical for `is.derived`; the variable given in `x` for `is.derived<-` returns
 #'
 #' @examples
 #' \dontrun{
@@ -31,9 +31,16 @@
 #' derivation(ds$derived_v1)
 #' # Crunch expression: v1 + 10
 #'
+#' is.derived(ds$derived_v1)
+#' # TRUE
+#'
 #' # to integrate or instantiate the variable in place (remove the link between
 #' # variable v1 and the derivation) you can:
 #' derivation(ds$derived_v1) <- NULL
+#'
+#' # after integrating, the derived variable is no longer derived.
+#' is.derived(ds$derived_v1)
+#' # FALSE
 #' }
 #' @name derivations
 #' @aliases derivation derivation<-
@@ -72,7 +79,7 @@ absolutifyVariables <- function (expr, base.url) {
 
 #' @export
 #' @rdname derivations
-setMethod("derivation<-", "CrunchVariable", function(x, value) {
+setMethod("derivation<-", c("CrunchVariable", "ANY"), function(x, value) {
     if (!is.derived(x)) {
         halt("The variable ", dQuote(name(x)), " must already be a derived variable.")
     }
@@ -98,8 +105,9 @@ integrateDerivedVar <- function (x, value) {
 
         ## Refresh and return
         dropCache(datasetReference(x))
-        invisible(refresh(x))
+        x <- refresh(x)
     }
+    return(invisible(x))
 }
 
 #' @export
@@ -119,6 +127,9 @@ setMethod("is.derived", "CrunchVariable", function (x) {
 setMethod("is.derived<-", c("CrunchVariable", "logical"), function(x, value) {
     if (!isTRUE(value)) {
        x <- integrateDerivedVar(x, value)
+    } else if (!is.derived(x)) {
+        halt("can't change a non-derived variable into a derived one with ",
+             "is.derived().")
     }
     return(x)
 })
