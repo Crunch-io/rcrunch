@@ -32,7 +32,8 @@ only) or \code{NULL} to integrate a derived variable. For \code{is.derived}, \co
 can be used to integrate a derived variable.}
 }
 \value{
-a \code{CrunchExpr} of the derivation for \code{derivation}; a logical for \code{is.derived}; the variable given in \code{x} for \code{is.derived<-} returns
+a \code{CrunchExpr} of the derivation for \code{derivation}; a logical for
+\code{is.derived}; the variable given in \code{x} for \code{is.derived<-} returns
 }
 \description{
 Get a derived variable's derivation formula as a (\code{CrunchExpr})\link{expressions} with

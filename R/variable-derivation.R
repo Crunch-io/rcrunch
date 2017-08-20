@@ -17,7 +17,8 @@
 #' only) or `NULL` to integrate a derived variable. For `is.derived`, `FALSE`
 #' can be used to integrate a derived variable.
 #'
-#' @return a `CrunchExpr` of the derivation for `derivation`; a logical for `is.derived`; the variable given in `x` for `is.derived<-` returns
+#' @return a `CrunchExpr` of the derivation for `derivation`; a logical for
+#' `is.derived`; the variable given in `x` for `is.derived<-` returns
 #'
 #' @examples
 #' \dontrun{
@@ -93,7 +94,7 @@ setMethod("derivation<-", c("CrunchVariable", "ANY"), function(x, value) {
 
     ## Refresh and return
     dropCache(datasetReference(x))
-    invisible(refresh(x))
+    return(invisible(refresh(x)))
 })
 
 # sets derived to FALSE, which integrates / instantiates the variable's values
