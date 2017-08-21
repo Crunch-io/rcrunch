@@ -161,7 +161,7 @@ formatVersionCatalog <- function (x, from=Sys.time()) {
     )
 
 formatExpression <- function (expr) {
-    if (inherits(expr, "CrunchExpr")) {
+    if (is.CrunchExpr(expr)) {
         return(formatExpression(expr@expression))
     } else if ("function" %in% names(expr)) {
         func <- expr[["function"]]
@@ -191,8 +191,8 @@ expressionValue <- function (expr) {
     unlist(expr$column %||% expr$value)
 }
 
-deparseAndFlatten <- function (x, max_length = NULL, ...) {
-    out <- deparse(x, ...)
+deparseAndFlatten <- function (x, max_length = NULL, control=NULL, ...) {
+    out <- deparse(x, control=control, ...)
     if (length(out) > 1) {
         out <- paste0(out, collapse="")
     }

@@ -23,7 +23,7 @@ table <- function (..., exclude, useNA=c("no", "ifany", "always"), dnn, deparse.
 
     dots <- list(...)
     are.vars <- vapply(dots,
-        function (x) is.variable(x) || inherits(x, "CrunchExpr"),
+        function (x) is.variable(x) || is.CrunchExpr(x),
         logical(1))
     if (length(are.vars) && all(are.vars)) {
         dims <- unlist(lapply(dots, varToDim), recursive=FALSE)
