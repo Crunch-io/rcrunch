@@ -40,16 +40,16 @@ with_mock_crunch({
         expect_identical(weightVariables(oldds), c())
     })
 
-    test_that("validateWeightExpression errors correctly", {
-        expect_error(validateWeightExpression("bad_formula"),
-            "bad_formula is an invalid expression, use the form ds$var ~ c(10, 20, 30)", fixed = TRUE)
-        expect_error(validateWeightExpression(oldds$birthyr ~ c(30, 30, 40)),
+    test_that("generateWeightEntry errors correctly", {
+        expect_error(generateWeightEntry("bad_formula"),
+            "bad_formula is not a valid formula, use the form ds$var ~ c(10, 20, 30)", fixed = TRUE)
+        expect_error(generateWeightEntry(oldds$birthyr ~ c(30, 30, 40)),
             "oldds$birthyr is not a categorical crunch variable", fixed = TRUE)
-        expect_error(validateWeightExpression(oldds$gender ~ c(50, 50)),
+        expect_error(generateWeightEntry(oldds$gender ~ c(10, 10, 10, 10, 10, 50)),
             "Number of targets does not match number of categories for oldds$gender", fixed = TRUE)
-        expect_error(validateWeightExpression(oldds$gender ~ c(30, 20, 30)),
+        expect_error(generateWeightEntry(oldds$gender ~ c(30, 20, 30)),
             "Targets do not add up to 100% for oldds$gender", fixed = TRUE)
-        expect_error(validateWeightExpression(oldds$gender ~ c("a", "b", "c")),
+        expect_error(generateWeightEntry(oldds$gender ~ c("a", "b", "c")),
             "Targets are not numeric for oldds$gender", fixed = TRUE)
     })
     expected_weight_definition <- list(
@@ -158,6 +158,8 @@ with(test.dataset(df), {
             expected_weights <- c(0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4,
                                   0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4)
             expect_identical(as.vector(ds$weight), expected_weights)
+            expect_identical(sum(ds$weight, nrow(ds))
+            )
         })
     })
 })

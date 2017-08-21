@@ -89,7 +89,6 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
 #' }
 makeWeight <- function(..., name) {
     expr_list <- list(...)
-    lapply(expr_list, validateWeightExpression)
     out <- list(
         name = name,
         derivation = list(
@@ -100,9 +99,10 @@ makeWeight <- function(..., name) {
     out
 }
 
-#' Validate an expression passed to makeWeight
+#' Generate entry for [makeWeight]
 #'
-#' Utility function to catch formula errors passed to [makeWeight].
+#' Utility function to catch formula errors passed to [makeWeight], and to generate
+#' the appropriate entry.
 #'
 #' @param expr
 #' An expression
@@ -115,10 +115,10 @@ makeWeight <- function(..., name) {
 #' validateWeightExpression(ds$var ~ c(10, 30, 60))
 #' }
 #'
-validateWeightExpression <- function(expr) {
-    expr <- try(as.formula(expr), silent = TRUE)
-    if (is.error(expr)) {
-        halt(dQuote("formula"), " is not a valid formula use the form ds$var ~ c(10, 20, 30)")
+generateWeightEntry <- function(expr) {
+    formula <- try(as.formula(expr), silent = TRUE)
+    if (is.error(formula)) {
+        halt(expr, " is not a valid formula, use the form ds$var ~ c(10, 20, 30)")
     }
     var     <- eval(expr[[2]], environment(expr))
     varname <- deparse(expr[[2]])
@@ -126,16 +126,16 @@ validateWeightExpression <- function(expr) {
     n_categories <- length(categories(var))
 
     if (!is.Categorical(var)) {
-        halt(varname, "is not a categorical crunch variable")
+        halt(varname, " is not a categorical crunch variable")
     }
     if (length(targets) > n_categories) {
-        halt("Number of targets does not match number of categories for", varname)
+        halt("Number of targets does not match number of categories for ", varname)
     }
     if (!all(is.numeric(targets))) {
-        halt("Targets are not numeric for", varname)
+        halt("Targets are not numeric for ", varname)
     }
     if (!(sum(targets) == 100 || sum(targets) == 1)) {
-        halt("Targets do not add up to 100% for", varname)
+        halt("Targets do not add up to 100% for ", varname)
     }
     if (sum(targets) != 1) {
       targets <- targets / 100
