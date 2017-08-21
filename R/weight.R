@@ -107,7 +107,7 @@ makeWeight <- function(..., name) {
 #' @param expr
 #' An expression
 #' @return
-#' NULL value, function is called for its side effects
+#' A list of the variable id and the target weights.
 #'
 #' @keywords internal
 #' @examples
@@ -116,41 +116,35 @@ makeWeight <- function(..., name) {
 #' }
 #'
 validateWeightExpression <- function(expr) {
-    if (length(expr) != 3) {
-        halt(paste(expr, "is an invalid expression, use the form ds$var ~ c(10, 20, 30)"))
+    expr <- try(as.formula(expr), silent = TRUE)
+    if (is.error(expr)) {
+        halt(dQuote("formula"), " is not a valid formula use the form ds$var ~ c(10, 20, 30)")
     }
     var     <- eval(expr[[2]], environment(expr))
     varname <- deparse(expr[[2]])
     targets <- eval(expr[[3]])
     n_categories <- length(categories(var))
-    if (n_categories == 0) {
-        halt(paste(varname, "is not a categorical crunch variable"))
+
+    if (!is.Categorical(var)) {
+        halt(varname, "is not a categorical crunch variable")
     }
-    if (length(targets) != n_categories) {
-        halt(paste("Number of targets does not match number of categories for", varname))
+    if (length(targets) > n_categories) {
+        halt("Number of targets does not match number of categories for", varname)
     }
     if (!all(is.numeric(targets))) {
-        halt(paste("Targets are not numeric for", varname))
+        halt("Targets are not numeric for", varname)
     }
-    if (sum(targets) != 100) {
-        halt(paste("Targets do not add up to 100% for", varname))
+    if (!(sum(targets) == 100 || sum(targets) == 1)) {
+        halt("Targets do not add up to 100% for", varname)
     }
-    invisible(expr)
-}
+    if (sum(targets) != 1) {
+      targets <- targets / 100
+    }
 
-#' Utility function to generate entries for makeWeight
-#'
-#' @param expr
-#' An expression
-#' @keywords internal
-#' @return
-#' A list of the variable id and the target weights.
-#'
-#'
-generateWeightEntry <- function(expr) {
-    #TODO use formula evaluation functions like evalLHS when PR #65 is merged
-    var <- eval(expr[[2]], environment(expr))
-    targets <- eval(expr[[3]]) / 100
+    #Pad with zeros if the user hasn't suppied enough categories
+    if (length(targets) < n_categories) {
+      targets <- c(targets, rep(0, n_categories - length(targets)))
+    }
 
     target_list <- vector("list", length(targets))
     for (i in seq_along(targets)) {
