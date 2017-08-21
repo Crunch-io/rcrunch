@@ -7,6 +7,10 @@
 * `categoriesFromLevels()` is now exported (#77)
 * Add a missing import from the `methods` package so that `Rscript` works (#90)
 * Allow deep copying of multiple-response type variables
+* Crunch-hosted geographic data can now be set and updated. Use `geo()` on a variable to see if there is already associated geographic data. 
+* `addGeoMetadata()` function to match a text or categorical variable with available geodata based on the contents of the variable and metadata associated with Crunch-hosted geographic data.
+* Experimental support for merging `CrunchDataFrame`s with standard `data.frame`s
+* `copyOrder()` to copy the ordering of variables from one dataset to another.
 
 ### crunch 1.17.8
 Two attempts to fix download issues introduced by 1.17.4:
