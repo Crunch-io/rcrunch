@@ -46,14 +46,13 @@ with_mock_crunch({
         expect_no_request(derivation(ds$birthyr) <- NULL)
     })
 
-    test_that("derivation()<-NULL with a non-derived variable does not error.",{
-        expect_silent(derivation(ds$birthyr) <- NULL)
+    test_that("derivation()<-NULL with a non-derived variable does not error.", {
+        expect_no_request(derivation(ds$birthyr) <- NULL)
     })
 
     test_that("is.derived([not derived])<-TRUE errors.",{
         expect_error(is.derived(ds$birthyr) <- TRUE,
-                     "can't change a non-derived variable into a derived one",
-                     " with is.derived().")
+            "can't change a non-derived variable into a derived one with is.derived().")
     })
 })
 
@@ -125,11 +124,13 @@ with_test_authentication({
         expect_silent(derivation(ds$v3a) <- NULL)
         expect_false(is.derived(ds$v3a))
         expect_null(derivation(ds$v3a))
-        expect_equal(as.vector(ds$v3a), c(20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39))
+        expect_equal(as.vector(ds$v3a),
+            c(20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39))
 
         expect_silent(is.derived(ds$v3d) <- FALSE)
         expect_false(is.derived(ds$v3d))
         expect_null(derivation(ds$v3d))
-        expect_equal(as.vector(ds$v3d), c(16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35))
+        expect_equal(as.vector(ds$v3d),
+            c(16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35))
     })
 })
