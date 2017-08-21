@@ -5,8 +5,8 @@
 #' `derivation([variable]) <- [expression]`.
 #'
 #' To integrate (aka realize or instantiate) a variable so that it is no longer
-#'  dependent on the variables the derivation relies on, use
-#'  `derivation([variable]) <- NULL`
+#' linked to the source variables that made up the derivation, use
+#' `derivation([variable]) <- NULL`
 #'
 #' `is.derived` can be used to see if a variable is derived or not. Additionally
 #' setting a derived variable's `is.derived` to `FALSE` will integrate the

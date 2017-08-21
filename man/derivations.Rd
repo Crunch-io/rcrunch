@@ -42,7 +42,7 @@ Get a derived variable's derivation formula as a (\code{CrunchExpr})\link{expres
 }
 \details{
 To integrate (aka realize or instantiate) a variable so that it is no longer
-dependent on the variables the derivation relies on, use
+linked to the source variables that made up the derivation, use
 \code{derivation([variable]) <- NULL}
 
 \code{is.derived} can be used to see if a variable is derived or not. Additionally
