@@ -3,7 +3,14 @@ set.seed(666)
 
 ## Our "test package" common harness code
 ## `try` added because of some devtools::document weirdness
-try(source(system.file("crunch-test.R", package="crunch")))
+try({
+    crunch_test_path <- system.file("crunch-test.R", package="crunch")
+    if (crunch_test_path == "") {
+        # hack for loadall
+        crunch_test_path <- "./inst/crunch-test.R"
+    }
+    source(crunch_test_path)
+})
 
 skip_on_jenkins <- function (...) {
     if (nchar(Sys.getenv("JENKINS_HOME"))) {
@@ -24,7 +31,7 @@ options(
     warn=1,
     crunch.debug=FALSE,
     digits.secs=3,
-    crunch.timeout=15, ## In case an import fails to start, don't wait forever
+    crunch.timeout=20, ## In case an import fails to start, don't wait forever
     # httpcache.log="",
     crunch.require.confirmation=TRUE,
     crunch.namekey.dataset="alias",

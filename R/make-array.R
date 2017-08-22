@@ -5,13 +5,14 @@
 #' a Dataset)
 #' @param name character, the name that the new Categorical Array variable
 #' should have. Required.
-#' @param selections character, for \code{makeMR}, the names of the
+#' @param selections character, for `makeMR` and `deriveArray` the names of the
 #' categories to mark as the dichotomous selections. Required for
-#' \code{makeMR}; ignored in \code{makeArray}.
+#' `makeMR`; optional for `deriveArray`; ignored in `makeArray`.
 #' @param ... Optional additional attributes to set on the new variable.
 #' @return A VariableDefinition that when added to a Dataset will create the
-#' categorical-array or multiple-response variable. \code{deriveArray} will
-#' make a derived array expression, while \code{makeArray} and \code{makeMR}
+#' categorical-array or multiple-response variable. `deriveArray` will
+#' make a derived array expression (or a derived multiple response expression
+#' if `selections` are supplied), while `makeArray` and `makeMR`
 #' return an expression that "binds" variables together, removing them from
 #' independent existence.
 #' @export
@@ -76,7 +77,7 @@ makeMR <- function (subvariables, name, selections, ...) {
 
 #' @rdname makeArray
 #' @export
-deriveArray <- function (subvariables, name, ...) {
+deriveArray <- function (subvariables, name, selections, ...) {
     ## Get subvariable URLs
     if (is.dataset(subvariables)) {
         ## as in, if the list of variables is a [ extraction from a Dataset
@@ -89,6 +90,12 @@ deriveArray <- function (subvariables, name, ...) {
         list(map=structure(lapply(subvariables, function (x) list(variable=x)),
             .Names=subvarids)),
         list(value=I(subvarids))))
+
+    if (!missing(selections)) {
+        # if there are selections, wrap the array function inside of a
+        # select_categories function
+        derivation <- zfunc("select_categories", derivation, list(value=I(selections)))
+    }
 
     return(VariableDefinition(derivation=derivation, name=name, ...))
 }

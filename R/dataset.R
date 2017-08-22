@@ -329,10 +329,37 @@ setMethod("allVariables<-", c("CrunchDataset", "VariableCatalog"),
 setMethod("hidden", "CrunchDataset", function (x) hidden(allVariables(x)))
 
 
-webURL <- function (x) {
+APIToWebURL <- function (x) {
     ## URL to view this dataset in the web app
     stopifnot(is.dataset(x))
     return(paste0(absoluteURL("/", getOption("crunch.api")), "dataset/", id(x)))
+}
+
+webToAPIURL <- function (url) {
+    id <- sub("^https.*?/dataset/([0-9a-f]+)/.*$", "\\1", url)
+    if (identical(id, url)) {
+        halt("Not a valid web app URL")
+    }
+    path <- paste0("datasets/", id, "/")
+    return(absoluteURL(path, getOption("crunch.api")))
+}
+
+#' View a Dataset in the Web Application
+#'
+#' Convenience function that will use your system's "open" command to open
+#' a dataset in our web application in your default browser.
+#'
+#' Note that this function does not do anything on Windows.
+#'
+#' @param dataset a CrunchDataset
+#' @return Nothing; called for side effect of opening your web browser.
+#' @export
+webApp <- function (dataset) {
+    if (.Platform$OS.type == "unix") {
+        cmd <- ifelse(grepl("apple", R.version$platform), "open", "xdg-open")
+        url <- APIToWebURL(dataset)
+        system2(cmd, url)
+    }
 }
 
 #' as.environment method for CrunchDataset

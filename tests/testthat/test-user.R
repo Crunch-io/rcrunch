@@ -21,6 +21,23 @@ with_mock_crunch({
               "william.user@example.io",
               "ruser@crunch.io"))
     })
+
+    test_that("Reset password", {
+        expect_POST(resetPassword("me@example.com"),
+            "https://app.crunch.io/api/public/password_reset/",
+            '{"email":"me@example.com",',
+            '"url_base":"https://app.crunch.io/password/change/${token}/"}')
+    })
+
+    test_that("invite (not currently exported)", {
+        expect_POST(invite("me@example.com", name="Me"),
+            "https://app.crunch.io/api/accounts/account1/users/",
+            '{"element":"shoji:entity","body":{"email":"me@example.com",',
+            '"send_invite":true,"id_method":"pwhash",',
+            '"account_permissions":{"alter_users":false,',
+            '"create_datasets":false},"first_name":"Me",',
+            '"url_base":"/password/change/${token}/"}}')
+    })
 })
 
 with_test_authentication({

@@ -14,6 +14,8 @@
 \alias{[<-,Subvariables,ANY,missing,Subvariables-method}
 \alias{[<-,Subvariables,ANY,missing,ANY-method}
 \alias{[,CategoricalArrayVariable,character,ANY-method}
+\alias{[,CategoricalArrayVariable,missing,ANY-method}
+\alias{[,CategoricalArrayVariable,missing,character-method}
 \alias{[[,CategoricalArrayVariable,ANY-method}
 \alias{[[,CategoricalArrayVariable,character-method}
 \alias{$,CategoricalArrayVariable-method}
@@ -43,6 +45,11 @@
 \S4method{[}{Subvariables,ANY,missing,ANY}(x, i) <- value
 
 \S4method{[}{CategoricalArrayVariable,character,ANY}(x, i, j, ...,
+  drop = TRUE)
+
+\S4method{[}{CategoricalArrayVariable,missing,ANY}(x, i, j, ..., drop = TRUE)
+
+\S4method{[}{CategoricalArrayVariable,missing,character}(x, i, j, ...,
   drop = TRUE)
 
 \S4method{[[}{CategoricalArrayVariable,ANY}(x, i, j, ...)
