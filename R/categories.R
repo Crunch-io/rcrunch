@@ -250,6 +250,17 @@ setMethod("lapply", "Categories", function (X, FUN, ...) {
     return(X)
 })
 
+listifyCategories <- function(categories) {
+    cat_list <- lapply(categories@.Data, function(x) {
+        out <- as.list(x@.Data)
+        names(out) <- x@names
+        return(out)
+    })
+    
+    return(cat_list)
+}
+
+
 #' Change the id of a category for a categorical variable
 #'
 #' Changes the id of a category from an existing value to a new one.
