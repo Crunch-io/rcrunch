@@ -68,6 +68,9 @@ setGeneric("subvariables<-",
 setGeneric("datasetReference", function (x) standardGeneric("datasetReference"))
 setGeneric("hide", function (x) standardGeneric("hide"))
 setGeneric("unhide", function (x) standardGeneric("unhide"))
+setGeneric("derivation", function (x) standardGeneric("derivation"))
+setGeneric("derivation<-", function (x, value) standardGeneric("derivation<-"))
+
 
 setGeneric("urls", function (x) standardGeneric("urls"))
 setGeneric("self", function (x) standardGeneric("self"))
@@ -113,6 +116,8 @@ setGeneric("is.draft", function (x) standardGeneric("is.draft"))
 setGeneric("is.draft<-", function (x, value) standardGeneric("is.draft<-"))
 setGeneric("is.published", function (x) standardGeneric("is.published"))
 setGeneric("is.published<-", function (x, value) standardGeneric("is.published<-"))
+setGeneric("is.derived", function (x) standardGeneric("is.derived"))
+setGeneric("is.derived<-", function (x, value) standardGeneric("is.derived<-"))
 setGeneric("groupClass", function (x) standardGeneric("groupClass"))
 setGeneric("entityClass", function (x) standardGeneric("entityClass"))
 setGeneric("entitiesInitializer", function (x) standardGeneric("entitiesInitializer"))
