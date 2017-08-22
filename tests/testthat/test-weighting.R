@@ -66,6 +66,8 @@ with_mock_crunch({
     test_that("makeWeight generates the expected VariableDefinition", {
         expect_equivalent(makeWeight(oldds$gender ~ c(20, 30, 50), name = "weight"),
             expected_weight_definition)
+        expect_equivalent(makeWeight(oldds$gender ~ c(.2, .3, .5), name = "weight"),
+            expected_weight_definition)
     })
 })
 

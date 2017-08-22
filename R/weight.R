@@ -123,11 +123,13 @@ generateWeightEntry <- function(expr) {
     var     <- eval(expr[[2]], environment(expr))
     varname <- deparse(expr[[2]])
     targets <- eval(expr[[3]])
-    n_categories <- length(categories(var))
 
     if (!is.Categorical(var)) {
         halt(varname, " is not a categorical crunch variable")
     }
+
+    n_categories <- length(categories(var))
+
     if (length(targets) > n_categories) {
         halt("Number of targets does not match number of categories for ", varname)
     }
@@ -138,12 +140,12 @@ generateWeightEntry <- function(expr) {
         halt("Targets do not add up to 100% for ", varname)
     }
     if (sum(targets) != 1) {
-      targets <- targets / 100
+        targets <- targets / 100
     }
 
     #Pad with zeros if the user hasn't suppied enough categories
     if (length(targets) < n_categories) {
-      targets <- c(targets, rep(0, n_categories - length(targets)))
+        targets <- c(targets, rep(0, n_categories - length(targets)))
     }
 
     target_list <- vector("list", length(targets))
