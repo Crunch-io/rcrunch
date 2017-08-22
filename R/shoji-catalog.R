@@ -306,8 +306,8 @@ catalogToDataFrame <- function(x, keys=TRUE,
             } else {
                 error_text <- " are invalid keys for catalogs of class "
             }
-            halt(paste0(
-                paste(missing_keys, collapse = ", ")),
+            halt(
+                serialPaste(missing_keys),
                 error_text,
                 class(x),
                 ".")
