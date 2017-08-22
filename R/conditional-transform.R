@@ -15,7 +15,7 @@
 #' to/from the local R session. `conditionalTransform` on the other hand will 
 #' download the data necessary to construct the new variable.
 #' 
-#' For more details see the [conditional-variables] vignette.
+#' For more details see the \code{vignette("conditional-variables", package="crunch")} vignette.
 #'
 #' @param ... a list of cases to evaluate as well as other
 #' properties to pass about the case variable (i.e. alias, description)
@@ -25,9 +25,9 @@
 #' @param type a character that is either "categorical", "text", "numeric" what
 #'  type of output should be returned? The source variables will be converted 
 #'  to this type if necessary
-#' @param categories a vector of characters if `type="categorical"`, these are all of the categories 
-#' that should be in the resulting variable, in the order they should be in the
-#' resulting variable
+#' @param categories a vector of characters if `type="categorical"`, these are 
+#' all of the categories that should be in the resulting variable, in the order
+#' they should be in the resulting variable or a set of Crunch categories.
 #'
 #' @return a Crunch `VariableDefinition`
 #' @examples
@@ -51,7 +51,7 @@ conditionalTransform <- function (..., data, else_condition=NA, type="categorica
         halt("no conditions have been supplied; please supply formulas as conditions.")
     }
     if (!type %in% c("categorical", "text", "numeric")){
-        halt("type must be either ", dQuote("categorical"), dQuote("text"), " or ", dQuote("numeric"))
+        halt("type must be either ", dQuote("categorical"), ", ", dQuote("text"), ", or ", dQuote("numeric"))
     }
     if (type != "categorical" & !is.null(categories)){
         halt("type is not ", dQuote("categorical"), " ignoring ", dQuote("categories"))
@@ -108,22 +108,43 @@ conditionalTransform <- function (..., data, else_condition=NA, type="categorica
         # if categories are supplied and there are any
         if (missing(categories)) {
             result <- factor(result)
+            # if categories aren't a Categories object,
+            # make categories from names
+            categories <- Categories(data = categoriesFromLevels(levels(result)))
+            categories <- c(categories, Category(data=.no.data))
         } else {
+            if (!is.categories(categories)) {
+                # if categories aren't a Categories object,
+                # make categories from names
+                categories <- Categories(data = categoriesFromLevels(categories))
+                categories <- c(categories, Category(data=.no.data))
+            } else if (is.null(categories[["No data"]])) {
+                categories <- c(categories, Category(data=.no.data))
+            }
+
             uni_results <- unique(result[!is.na(result)])
-            results_not_categories <- !uni_results %in% categories
+            results_not_categories <- !uni_results %in% names(categories)
             if (any(results_not_categories)) {
                 halt("there were categories in the results (",
                      serialPaste(uni_results[results_not_categories]),
                      ") that were not specified in categories")
             }
-            result <- factor(result, levels = categories)
-            var_def$categories <- categoriesFromLevels(categories)
+            result <- factor(result, levels = names(categories))
         }
     }
-    
+
     var_def$type <- type
-    var_def$data <- result
-    var_def <- do.call(VariableDefinition, var_def)
+    if (type == "categorical") {
+        # make a category list to send with VariableDefinition and then store that and convert values to ids values
+        category_list <- listifyCategories(categories)
+        var_def$categories <- category_list
+        vals <- as.character(result)
+        vals[is.na(vals)] <- "No Data" # na is system default
+        var_def$values <- ids(categories[vals])
+    } else {
+        var_def$values <- result 
+    }
     
+    class(var_def) <- "VariableDefinition"
     return(var_def)
 }

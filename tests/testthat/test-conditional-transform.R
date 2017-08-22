@@ -2,63 +2,111 @@ context("Conditional transform")
 
 with_mock_crunch({
     ds <- loadDataset("test ds")
-    test_that("conditionalTransform", {
+    test_that("conditionalTransform input validation", {
         expect_error(conditionalTransform("gender", data = ds),
                      'no conditions have been supplied; please supply formulas as conditions.')
         expect_error(conditionalTransform("bar"~"foo", data = ds),
                      'The LHS provided is not a CrunchLogicalExpr: "bar"')
         expect_error(conditionalTransform(gender~"foo", data = ds, type="unknown"),
-                     "type must be either ", dQuote("categorical"), " or ",
-                     dQuote("text"))
+                     paste0("type must be either ", dQuote("categorical"), ", ", dQuote("text"), ", or ", dQuote("numeric")))
         expect_error(conditionalTransform(gender~"foo", data = ds, type="text",
                                           categories=c("foo", "bar")),
-                     "type is not ", dQuote("categorical"), " ignoring ",
-                     dQuote("categories"))
-        new_var <- conditionalTransform(gender == "Male" ~ textVar, data = ds)
+                     paste0("type is not ", dQuote("categorical"), " ignoring ",
+                     dQuote("categories")))
+    })
+    
+    test_that("conditionalTransform works with categories", {
+        expect_silent(new_var <- conditionalTransform(gender == "Male" ~ textVar, data = ds))
         expect_equal(new_var$values, c(-1, -1, -1, -1, -1, -1, 2, -1, -1, -1,
                                        3, -1, 4, -1, -1, -1, -1, -1, -1, -1, 1,
                                        6, 3, -1, 5))
         expect_equal(new_var$type, "categorical")
         
-        new_var <- conditionalTransform(gender == "Male" ~ textVar, data = ds,
-                                        categories = c("l", "m", "s", "h", "z", "x"))
-        expect_equal(new_var$values, c(-1, -1, -1, -1, -1, -1, 1, -1, -1, -1,
-                                       2, -1, 3, -1, -1, -1, -1, -1, -1, -1, 4,
-                                       5, 2, -1, 6))
-        expect_equal(new_var$type, "categorical")
-                
-        new_var <- conditionalTransform(gender == "Male" ~ textVar, data = ds,
-                                        type = "text")
-        expect_equal(new_var$values, c(NA, NA, NA, NA, NA, NA, "l", NA, NA, NA, "m",
-                                NA, "s", NA, NA, NA, NA, NA, NA, NA, "h", "z",
-                                "m", NA, "x"))
-        expect_equal(new_var$type, "text")
-        
-        new_var <- conditionalTransform(ds$gender == "Male" ~ ds$textVar)
+        expect_silent(new_var <- conditionalTransform(ds$gender == "Male" ~ ds$textVar))
         expect_equal(new_var$values, c(-1, -1, -1, -1, -1, -1, 2, -1, -1, -1,
                                        3, -1, 4, -1, -1, -1, -1, -1, -1, -1, 1,
                                        6, 3, -1, 5))
         expect_equal(new_var$type, "categorical")
-        
-        new_var <- conditionalTransform(gender == "Male" ~ "guy", data = ds,
-                                        type = "text")
-        expect_equal(new_var$values, c(NA, NA, NA, NA, NA, NA, "guy", NA, NA, NA, "guy",
-                                       NA, "guy", NA, NA, NA, NA, NA, NA, NA, "guy", "guy",
-                                       "guy", NA, "guy"))
-        expect_equal(new_var$type, "text")
-        
-        new_var <- conditionalTransform(gender == "Male" ~ 1, data = ds,
-                                        type = "numeric")
-        expect_equal(new_var$values, c(NA, NA, NA, NA, NA, NA, 1, NA, NA, NA, 1,
-                                       NA, 1, NA, NA, NA, NA, NA, NA, NA, 1, 1,
-                                       1, NA, 1))
-        expect_equal(new_var$type, "numeric")
         
         expect_error(conditionalTransform(gender == "Male" ~ textVar,
                                           data = ds,categories = c("l", "m", 
                                                                    "s", "h", 
                                                                    "z")),
                      "there were categories in the results \\(x\\) that were not specified in categories")
+    })
+        
+    test_that("conditionalTransform works when specifying a categories as strings", {
+        expect_silent(new_var <- conditionalTransform(gender == "Male" ~ textVar, data = ds,
+                                        categories = c("l", "m", "s", "h", "z", "x")))
+        expect_equal(new_var$values, c(-1, -1, -1, -1, -1, -1, 1, -1, -1, -1,
+                                       2, -1, 3, -1, -1, -1, -1, -1, -1, -1, 4,
+                                       5, 2, -1, 6))
+        expect_equal(new_var$type, "categorical")
+    })
+        
+    test_that("conditionalTransform works when specifying a categories object", {
+        # use different numeric values and missingnesses to check that the categories object is being sent
+        textVarCatslist <- list(
+            list(id=1L, name="l", numeric_value=10L, missing=FALSE),
+            list(id=2L, name="m", numeric_value=20L, missing=TRUE),
+            list(id=3L, name="s", numeric_value=30L, missing=FALSE),
+            list(id=4L, name="h", numeric_value=40L, missing=TRUE),
+            list(id=5L, name="z", numeric_value=50L, missing=FALSE),
+            list(id=6L, name="x", numeric_value=60L, missing=TRUE))
+        no_data_cat <- list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+        textVarCats <- Categories(data = textVarCatslist)
+        expect_true(is.categories(textVarCats))
+        expect_silent(new_var <- conditionalTransform(gender == "Male" ~ textVar, data = ds,
+                                                      categories = textVarCats))
+        expect_equal(new_var$values, c(-1, -1, -1, -1, -1, -1, 1, -1, -1, -1,
+                                       2, -1, 3, -1, -1, -1, -1, -1, -1, -1, 4,
+                                       5, 2, -1, 6))
+        expect_equal(new_var$type, "categorical")
+        expect_json_equivalent(new_var$categories, c(textVarCatslist, list(no_data_cat)))
+        
+        # reverse the ids to make sure that the ids are not being over-written
+        textVarCatslist <- list(
+            list(id=6L, name="l", numeric_value=10L, missing=FALSE),
+            list(id=5L, name="m", numeric_value=20L, missing=FALSE),
+            list(id=4L, name="s", numeric_value=30L, missing=FALSE),
+            list(id=3L, name="h", numeric_value=40L, missing=FALSE),
+            list(id=2L, name="z", numeric_value=50L, missing=FALSE),
+            list(id=1L, name="x", numeric_value=60L, missing=FALSE))
+        textVarCats <- Categories(data = textVarCatslist)
+        expect_true(is.categories(textVarCats))
+        expect_silent(new_var <- conditionalTransform(gender == "Male" ~ textVar, data = ds,
+                                        categories = textVarCats))
+        # expect_equal(new_var$values, c(-1, -1, -1, -1, -1, -1, 1, -1, -1, -1,
+        #                                2, -1, 3, -1, -1, -1, -1, -1, -1, -1, 4,
+        #                                5, 2, -1, 6)) # for standard IDs
+        expect_equal(new_var$values, c(-1, -1, -1, -1, -1, -1, 6, -1, -1, -1,
+                                       5, -1, 4, -1, -1, -1, -1, -1, -1, -1, 3,
+                                       2, 5, -1, 1)) # for reversed IDs
+        expect_equal(new_var$type, "categorical")
+        expect_json_equivalent(new_var$categories, c(textVarCatslist, list(no_data_cat)))
+    })
+        
+    test_that("conditionalTransform works with other output types (text and numeric)", {
+        expect_silent(new_var <- conditionalTransform(gender == "Male" ~ textVar, data = ds,
+                                        type = "text"))
+        expect_equal(new_var$values, c(NA, NA, NA, NA, NA, NA, "l", NA, NA, NA, "m",
+                                NA, "s", NA, NA, NA, NA, NA, NA, NA, "h", "z",
+                                "m", NA, "x"))
+        expect_equal(new_var$type, "text")
+        
+        expect_silent(new_var <- conditionalTransform(gender == "Male" ~ "guy", data = ds,
+                                        type = "text"))
+        expect_equal(new_var$values, c(NA, NA, NA, NA, NA, NA, "guy", NA, NA, NA, "guy",
+                                       NA, "guy", NA, NA, NA, NA, NA, NA, NA, "guy", "guy",
+                                       "guy", NA, "guy"))
+        expect_equal(new_var$type, "text")
+        
+        expect_silent(new_var <- conditionalTransform(gender == "Male" ~ 1, data = ds,
+                                        type = "numeric"))
+        expect_equal(new_var$values, c(NA, NA, NA, NA, NA, NA, 1, NA, NA, NA, 1,
+                                       NA, 1, NA, NA, NA, NA, NA, NA, NA, 1, 1,
+                                       1, NA, 1))
+        expect_equal(new_var$type, "numeric")
     })
 })
 
