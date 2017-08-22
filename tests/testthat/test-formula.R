@@ -16,7 +16,7 @@ with_mock_crunch({
         expect_error(parseTerms(~1, data=ds, side = "LHS"),
                      "Must supply one or more variables")
         expect_error(parseTerms(.~gender, data=ds, side = "LHS"),
-                     "Crunch formulae do not support ", dQuote("."), " in formula")
+                     paste0("Crunch formulae do not support ", dQuote("."), " in formula"))
     })
     
     test_that("formulaToQuery can accept both data and calling env. references", {
