@@ -1,26 +1,26 @@
 #' Cut a numeric Crunch variable
-#' 
-#' crunch::cut() is equivalent to base::cut() except that it operates on 
-#' crunch variables instead of in-memory variables. The function divides the range of 
-#' x into intervals and codes the values in x according to which interval they fall. 
-#' The leftmost interval corresponds to level one, the next leftmost to level two and 
+#'
+#' `crunch::cut()` is equivalent to `base::cut()` except that it operates on
+#' crunch variables instead of in-memory variables. The function divides the range of
+#' x into intervals and codes the values in x according to which interval they fall.
+#' The leftmost interval corresponds to level one, the next leftmost to level two and
 #' so on.
 #' @param x A crunch variable of the class NumericVariable
-#' @param breaks Either a numeric vector of two or more unique cut points 
-#' or a single number (greater than or equal to 2) giving the number of intervals 
+#' @param breaks Either a numeric vector of two or more unique cut points
+#' or a single number (greater than or equal to 2) giving the number of intervals
 #' into which x is to be cut.
-#' @param name The name of the resulting case variable as a character string. 
+#' @param name The name of the resulting case variable as a character string.
 #' @param labels labels for the levels of the resulting category.
 #' By default, labels are constructed using interval notation.
 #' If labels = FALSE, simple integer codes are returned instead of a factor.
-#' @param include.lowest logical, indicating if an `x[i]` equal to the lowest 
+#' @param include.lowest logical, indicating if an `x[i]` equal to the lowest
 #' (or highest, for right = FALSE) `breaks` value should be included.
-#' @param right logical, indicating if the intervals should be closed on the right 
+#' @param right logical, indicating if the intervals should be closed on the right
 #' (and open on the left) or vice versa.
-#' @param dig.lab	integer which is used when labels are not given. 
+#' @param dig.lab	integer which is used when labels are not given.
 #' It determines the number of digits used in formatting the break numbers.
 #' @param ordered_result	Ignored.
-#' @param ... further arguments passed to or from other methods.
+#' @param ... further arguments passed to [makeCaseVariable]
 #'
 #'
 #' @return a Crunch VariableDefinition
@@ -31,19 +31,19 @@
 #' ds <- loadDataset("mtcars")
 #' ds$cat_var <- cut(ds$mpg, 3, variableName = "new_var")
 #' }
-#'  
-setMethod("cut", "NumericVariable", function(x, 
-                                             breaks, 
-                                             name, 
+#'
+setMethod("cut", "NumericVariable", function(x,
+                                             breaks,
+                                             name,
                                              labels = NULL,
                                              include.lowest = FALSE,
                                              right = TRUE,
                                              dig.lab = 3,
                                              ordered_result = FALSE, ...){
     env <- environment()
-      if (missing(name)) {
+    if (missing(name)) {
         halt("Must provide the name for the new variable")
-    }
+        }
     if (length(breaks) == 1L) {
         if (is.na(breaks) || breaks < 2L) {
             halt("invalid number of intervals")
@@ -59,7 +59,7 @@ setMethod("cut", "NumericVariable", function(x,
             breaks <- seq.int(rx[1L], rx[2L], length.out = nb)
             breaks[c(1L, nb)] <- c(rx[1L] - dx/1000, rx[2L] + dx/1000)
         }
-    }else {
+    } else {
         breaks <- sort.int(as.double(breaks))
         nb <- length(breaks)
     }
@@ -68,7 +68,7 @@ setMethod("cut", "NumericVariable", function(x,
       labels <- generateCutLabels(dig.lab, breaks, nb, right, include.lowest)
     } else if (length(labels) != nb - 1L) {
         stop("lengths of 'breaks' and 'labels' differ")
-    } 
+    }
     if (right) {
         `%c1%` <- function(x,y) x <= y
         `%c2%` <- function(x,z) x > z
@@ -78,7 +78,7 @@ setMethod("cut", "NumericVariable", function(x,
     }
 
     cases <- vector("list", length = length(breaks) - 1)
-    
+
     for (i in 2:length(breaks)) {
         cases[[i - 1]] <- x %c2% breaks[i - 1] & x %c1% breaks[i]
     }
@@ -89,10 +89,10 @@ setMethod("cut", "NumericVariable", function(x,
 
 
 #' Generate Labels for the cut function
-#' 
+#'
 #' A convenience function to generate labels for the cut function. This
-#' function is extracted from [base::cut()] and is broken out to make it easier to 
-#' test. It is not meant to be called on its own. 
+#' function is extracted from [base::cut()] and is broken out to make it easier to
+#' test. It is not meant to be called on its own.
 #'
 #' @param dig.lab see `cut()`
 #' @param breaks see `cut()`
@@ -102,16 +102,13 @@ setMethod("cut", "NumericVariable", function(x,
 #'
 #' @return
 #' A character vector of labels
-#' @examples
-#' 
-#' crunch:::generateCutLabels(2, c(2, 3, 4, 5), 4, FALSE, FALSE)
-#' 
+#'@keywords internal
 generateCutLabels <- function(dig.lab, breaks, nb, right, include.lowest) {
     for (dig in dig.lab:max(12L, dig.lab)) {
         ## 0+ avoids printing signed zeros as "-0"
         ch.br <- formatC(0 + breaks, digits = dig, width = 1L)
         ok <- all(ch.br[-1L] != ch.br[-nb])
-        if (ok ) break
+        if (ok) break
     }
     labels <- if (ok) {
             paste0(if (right) "(" else "[",

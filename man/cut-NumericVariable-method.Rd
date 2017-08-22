@@ -33,13 +33,13 @@ It determines the number of digits used in formatting the break numbers.}
 
 \item{ordered_result}{Ignored.}
 
-\item{...}{further arguments passed to or from other methods.}
+\item{...}{further arguments passed to \link{makeCaseVariable}}
 }
 \value{
 a Crunch VariableDefinition
 }
 \description{
-crunch::cut() is equivalent to base::cut() except that it operates on
+\code{crunch::cut()} is equivalent to \code{base::cut()} except that it operates on
 crunch variables instead of in-memory variables. The function divides the range of
 x into intervals and codes the values in x according to which interval they fall.
 The leftmost interval corresponds to level one, the next leftmost to level two and
@@ -50,5 +50,5 @@ so on.
 ds <- loadDataset("mtcars")
 ds$cat_var <- cut(ds$mpg, 3, variableName = "new_var")
 }
- 
+
 }

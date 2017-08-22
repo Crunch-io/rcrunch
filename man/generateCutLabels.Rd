@@ -25,8 +25,4 @@ A convenience function to generate labels for the cut function. This
 function is extracted from \code{\link[base:cut]{base::cut()}} and is broken out to make it easier to
 test. It is not meant to be called on its own.
 }
-\examples{
-
-crunch:::generateCutLabels(2, c(2, 3, 4, 5), 4, FALSE, FALSE)
-
-}
+\keyword{internal}
