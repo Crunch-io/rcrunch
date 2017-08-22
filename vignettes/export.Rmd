@@ -1,7 +1,7 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Downloading and exporting data}
--->
+---
+title: "Exporting Data"
+output: html_document
+---
 
 [Previous: filtering data](filter.html)
 ```{r, results='hide', echo=FALSE, message=FALSE}

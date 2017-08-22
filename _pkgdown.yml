@@ -1,0 +1,217 @@
+title: CRUNCH
+template:
+  params:
+    bootswatch: flatly
+reference:
+- title: "Upload"
+  contents:
+  - '`VariableDefinition`'
+  - '`addVariables`'
+  - '`appendStream`'
+  - '`createWithPreparedData`'
+  - '`newDataset`'
+  - '`newDatasetByColumn`'
+  - '`newDatasetFromFile`'
+  - '`pendingStream`'
+  - '`pk`'
+  - '`prepareDataForCrunch`'
+  - '`toVariable`'
+- title: "Load"
+  contents:
+  - '`listDatasets`'
+  - '`loadDataset`'
+  - '`updateDatasetList`'
+- title: "Dataset manipulation"
+  contents:
+  - '`as.environment,CrunchDataset-method`'
+  - '`batches`'
+  - '`cleanseBatches`'
+  - '`dataset-to-R`'
+  - '`datasets`'
+  - '`delete`'
+  - '`deleteDataset`'
+  - '`dim-dataset`'
+  - '`dropRows`'
+  - '`exclusion`'
+  - '`forkDataset`'
+  - '`ordering`'
+  - '`restoreVersion`'
+  - '`saveVersion`'
+  - '`versions`'
+  - '`weight`'
+- title: "Multiple datasets"
+  contents:
+  - '`appendDataset`'
+  - '`compareDatasets`'
+  - '`joinDatasets`'
+  - '`merge.CrunchDataFrame`'
+  - '`mergeFork`'
+  - '`searchDatasets`'
+- title: "Variable manipulation"
+  contents:
+  - '`c-categories`'
+  - '`categoriesFromLevels`'
+  - '`changeCategoryID`'
+  - '`combine`'
+  - '`copyVariable`'
+  - '`dataset-variables`'
+  - '`deleteVariables`'
+  - '`describe-category`'
+  - '`dichotomize`'
+  - '`hiddenVariables`'
+  - '`hide`'
+  - '`hideVariables`'
+  - '`interactVariables`'
+  - '`makeCaseVariable`'
+  - '`na-omit-categories`'
+  - '`type`'
+  - '`var-categories`'
+  - '`variableMetadata`'
+- title: "Array variables"
+  contents:
+  - '`Subvariables-class`'
+  - '`addSubvariable`'
+  - '`deleteSubvariables`'
+  - '`flipArrays`'
+  - '`importMultitable`'
+  - '`makeArray`'
+  - '`unbind`'
+- title: "Ordering"
+  contents:
+  - '`ShojiOrder-length`'
+  - '`ShojiOrder-slots`'
+  - '`copyOrder`'
+  - '`dedupeOrder`'
+  - '`flattenOrder`'
+  - '`grouped`'
+  - '`locateEntity`'
+  - '`moveToGroup`'
+  - '`removeEmptyGroups`'
+- title: "Analysis"
+  contents:
+  - '`crtabs`'
+  - '`crunch-uni`'
+  - '`cube-computing`'
+  - '`cube-methods`'
+  - '`dashboard`'
+  - '`duplicated`'
+  - '`filter-catalog`'
+  - '`fortify`'
+  - '`is-na-categories`'
+  - '`multitable-catalog`'
+  - '`newFilter`'
+  - '`newMultitable`'
+  - '`table`'
+  - '`as.vector,CrunchExpr-method`'
+- title: "Export"
+  contents:
+  - '`crunchBox`'
+  - '`embedCrunchBox`'
+  - '`exportDataset`'
+  - '`preCrunchBoxCheck`'
+  - '`tabBook`'
+  - '`write.csv.gz`'
+  - '`writePreparedData`'
+- title: "Geodata"
+  contents:
+  - '`addGeoMetadata`'
+  - '`availableGeodataFeatures`'
+  - '`CrunchGeography-class`'
+  - '`matchCatToFeat`'
+  - '`scoreCatToFeat`'
+- title: "Admin"
+  contents:
+  - '`is.archived,DatasetCatalog-method`'
+  - '`dataset-owner`'
+  - '`getAccountUserCatalog`'
+  - '`getTeams`'
+  - '`is-public`'
+  - '`is.editor`'
+  - '`lock`'
+  - '`login`'
+  - '`logout`'
+  - '`me`'
+  - '`newProject`'
+  - '`owners`'
+  - '`permissions`'
+  - '`project-icon`'
+  - '`projects`'
+  - '`resetPassword`'
+  - '`settings`'
+  - '`share`'
+  - '`members<-,CrunchTeam,MemberCatalog-method`'
+  - '`unshare`'
+- title: "Catalogs"
+  contents:
+  - '`catalog-length`'
+  - '`catalogToDataFrame`'
+  - '`names,BatchCatalog-method`'
+  - '`shoji-index`'
+- title: "Crunch options"
+  contents:
+  - '`consent`'
+- title: "Utility"
+  contents:
+  - '`is.dataset`'
+  - '`describe`'
+  - '`refresh`'
+  - '`webApp`'
+- title: "API"
+  contents:
+  - '`http-methods`'
+  - '`self`'
+  - '`session`'
+  - '`tojson-crunch`'
+- title: "Other"
+  contents:
+  - '`Categories-class`'
+  - '`CrunchDataset-class`'
+  - '`CrunchVariable-class`'
+  - '`DatasetOrder-class`'
+  - '`ShojiObject-class`'
+  - '`ShojiOrder-extract`'
+  - '`VariableCatalog-class`'
+  - '`VariableOrder-class`'
+  - '`catalog-extract`'
+  - '`category-extract`'
+  - '`crunch`'
+  - '`dataset-extract`'
+  - '`dataset-update`'
+  - '`expressions`'
+  - '`session-extract`'
+  - '`subvars-extract`'
+  - '`tabbook-methods`'
+  - '`entity,CrunchProject-method`'
+  - '`[,CrunchExpr,CrunchLogicalExpr,ANY-method`'
+  - '`variable-update`'
+- title: "Internal"
+  contents:
+  - '`ContextManager`'
+  - '`show-crunch`'
+  - '`temp.options`'
+  - '`which`'
+  - '`with-context-manager`'
+navbar:
+  left:
+    - text: Intro
+      href: articles/getting-started.html
+    - text: Reference
+      href: reference/index.html
+    - text: Articles
+      menu:
+      -  text: Getting Started
+         href: articles/getting-started.html
+      -  text: Datasets
+         href: articles/datasets.html
+      -  text: Variables
+         href: articles/vareiables.html
+      -  text: Array Variables
+         href: articles/array-variables.html
+      -  text: Reorder Variables
+         href: articles/variable-order.html
+      -  text: Derive Variables
+         href: articles/derive-variables.html
+      -  text: Filter Dataå
+         href: articles/filters.html
+      -  text: Export Data
+         href: articles/export.html

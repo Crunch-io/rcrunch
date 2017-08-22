@@ -1,7 +1,7 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Array Variables}
--->
+---
+title: "Array Variables"
+output: html_document
+---
 
 [Previous: variables](variables.html)
 

@@ -1,7 +1,7 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Getting started with crunch}
--->
+---
+title: "Getting Started"
+output: html_document
+---
 
 # Getting started with `crunch`
 

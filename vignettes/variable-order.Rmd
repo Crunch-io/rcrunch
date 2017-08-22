@@ -1,7 +1,7 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Variable Order}
--->
+---
+title: "Reordering Variables"
+output: html_document
+---
 
 [Previous: array variables](array-variables.html)
 

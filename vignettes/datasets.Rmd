@@ -1,7 +1,7 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Datasets: creating, loading, and manipulating}
--->
+---
+title: "Importing datasets"
+output: html_document
+---
 
 [Previous: Getting started](getting-started.html)
 

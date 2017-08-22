@@ -1,7 +1,7 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Analyzing data with crunch}
--->
+---
+title: "Analyzing Crunch Data"
+output: html_document
+---
 
 [Previous: transform and derive](derive.html)
 ```{r, results='hide', echo=FALSE, message=FALSE}
