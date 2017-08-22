@@ -20,9 +20,9 @@ true (default: \code{NA})}
 type of output should be returned? The source variables will be converted
 to this type if necessary}
 
-\item{categories}{if \code{type="categorical"}, these are all of the categories
-that should be in the resulting variable, in the order they should be in the
-resulting variable}
+\item{categories}{a vector of characters if \code{type="categorical"}, these are
+all of the categories that should be in the resulting variable, in the order
+they should be in the resulting variable or a set of Crunch categories.}
 }
 \value{
 a Crunch \code{VariableDefinition}
@@ -32,113 +32,27 @@ Create a new variable that has values when specific conditions are met.
 Conditions are specified using a series of formulas: the righthand side is
 the condition that must be true (a \code{CrunchLogicalExpr}) and the lefthand
 side is where to get the value if the condition on the righthand side is
-true. This is commonly a Crunch variable.
+true. This is commonly a Crunch variable but may be a string or numeric
+value, depending on the type of variable you're constructing.
 }
 \details{
-\code{conditionalTransform} is similar to \code{makeCaseVariable} however
+\code{conditionalTransform} is similar to \code{makeCaseVariable}; however,
 \code{conditionalTransform} can use other Crunch variables as a source of a
-variable, whereas, whereas \code{makeCaseVariable} can only use characters. This
+variable, whereas, \code{makeCaseVariable} can only use characters. This
 additional power comes at a cost: \code{makeCaseVariable} can be executed
 entirely on Crunch servers, so no data needs to be downloaded or uploaded
 to/from the local R session. \code{conditionalTransform} on the other hand will
 download the data necessary to construct the new variable.
+
+For more details see the \code{vignette("conditional-variables", package="crunch")} vignette.
 }
 \examples{
 \dontrun{
-# Imagine that we have two sets of questions, one about what pets one has 
-# (Pet1, Pet2, Pet3) and then a second that asks about ones opinion of those
-#  pets that one gave in the Pet* series of questions (Opinion1, Opinion2, 
-# opinion3). What we ultimately want is what people's opinion of Cats or 
-# Dogs is, but because the value of Opinion1, Opinion2, and Opinion3 is 
-# dependent on the answer to Pet1, Pet2, and Pet3 respectively, we can't 
-# easily get the overall opinions about Cats. `conditionalTransform` allows 
-# you to specify conditions like the following: if variable Pet1 is equal to
-# 'Cat' then use the value from variable Opinion1, if variable Pet2 is 
-# equal to 'Cat' then use the value from variable Opinion2, etc.
 
 ds$cat_opinion <- conditionalTransform(pet1 == 'Cat' ~ Opinion1,
                                        pet2 == 'Cat' ~ Opinion2,
                                        pet3 == 'Cat' ~ Opinion3, 
-                                       data = ds)
-as.vector(ds$cat_opinion)
-# [1] "Strongly Agree" "Disagree" "Agree" "Strongly Disagree" ...
-# Levels: Agree  Disagree  Strongly Agree  Strongly Disagree
-
-# When returning categories, we can specify what the categories should be 
-# explicitly with the `categories` argument. This will also order the 
-# categories in the order that they are given. If no `categories` argument is
-# given, Crunch will make all of the category labels necesary for the 
-# resulting variable in the default order (note: this might not include all 
-# of the categories that are in variables Opinion1, Opinion2, or Opinion3, 
-# just those levels that are selected by the conditions specified).
-
-ds$days_with_dog <- conditionalTransform(pet1 == 'Cat' ~ Opinion1,
-                                         pet2 == 'Cat' ~ Opinion4,
-                                         pet3 == 'Cat' ~ Opinion3,
-                                         data = ds, type = "categorical",
-         categories = c("Strongly Agree", "Agree", "Neither Agree Nor Disagree",
-         "Disagree", "Strongly Disagree"))
-
-as.vector(ds$cat_opinion)
-# [1] "Strongly Agree" "Disagree" "Agree" "Strongly Disagree" ...
-# Levels: Strongly Agree  Agree  Neither Agree Nor Disagree  Disagree  Strongly Disagree
-                                       
-# We can also use `conditionalTransform` to return a string as well as the
-# contents of other variables, if for example we want to separate out people
-# who have only had pets for less than a year, we can specify that as the
-# first condition (which will be used even if the subsequent conditions are
-# also true).
-
-ds$dog_opinion <- conditionalTransform(days_having_pet < 365 ~ "too early to tell",
-                                       pet1 == 'Dog' ~ Opinion1,
-                                       pet2 == 'Dog' ~ Opinion2,
-                                       pet3 == 'Dog' ~ Opinion3,
-                                       data = ds)
-as.vector(ds$dog_opinion)
-# [1] "Strongly Agree" "Disagree" "too early to tell" "Strongly Disagree"
-# Levels: Agree  Disagree  Strongly Agree  Strongly Disagree  too early to tell
-                                    
-# Further, we can also use conditional transform with numeric source variables.
-
-ds$days_with_dog <- conditionalTransform(pet1 == 'Dog' ~ days_having_pet,
-                                         pet2 == 'Dog' ~ days_having_pet,
-                                         pet3 == 'Dog' ~ days_having_pet,
-                                         data = ds, type = "numeric")
-as.vector(ds$days_with_dog)
-# [1] 300 57 70 5 ...
-
-# conditionalTransform will evaluate is.na() or NA as conditoins or sources 
-# respectively
-
-ds$cat_opinion <- conditionalTransform(pet1 == 'Cat' ~ Opinion1,
-                                       pet2 == 'Cat' ~ Opinion2,
-                                       pet3 == 'Cat' ~ Opinion3, 
-                                       is.na(pet1) & is.na(pet2) & is.na(pet3) ~ "None",
-                                       data = ds)
-as.vector(ds$cat_opinion)
-# [1] "Strongly Agree" "Disagree" "Agree" "Strongly Disagree" "None" ...
-# Levels: Agree  Disagree None Strongly Agree  Strongly Disagree
-
-
-# Finally, when constructing conditionalTransforms, it is frequently helpful 
-# to automate some parts of the creation; `as.formula()` is helpful here. 
-# This lets us create a function that we can use to make many conditional 
-# variables with different questions, responses, and levels that the 
-# questions take on. 
-
-opinion_transformation <- function(question_base, response_base, level, dataset) {
-conditionalTransform(
-    as.formula(paste0(question_base, "1", " == level ~ ", response_base, "1")),
-    as.formula(paste0(question_base, "2", " == level ~ ", response_base, "2")),
-    as.formula(paste0(question_base, "3", " == level ~ ", response_base, "3")),
-    data = dataset, name = paste(level, response_base))
+                                       data = ds,
+                                       name = "Opinoin of Cats")
 }
-
-opinion_transformation(question_base = "pet", response_base = "Opinion", level = "Cat", ds)
-opinion_transformation(question_base = "pet", response_base = "Opinion", level = "Dog", ds)
-opinion_transformation(question_base = "pet", response_base = "Opinion", level = "Bird", ds)
-opinion_transformation(question_base = "pet", response_base = "Opinion", level = "Lizard", ds)
-
-}
-
 }

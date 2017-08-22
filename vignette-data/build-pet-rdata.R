@@ -30,4 +30,13 @@ pets[!is.na(pets$Pet1), "Days_having_Pet1"]  <- sample(c(150:{365*5}), nrow(pets
 pets[!is.na(pets$Pet2), "Days_having_Pet2"] <- sample(c(150:{365*5}), nrow(pets[!is.na(pets$Pet2), ]), replace = TRUE)
 pets[!is.na(pets$Pet3), "Days_having_Pet3"] <- sample(c(150:{365*5}), nrow(pets[!is.na(pets$Pet3), ]), replace = TRUE)
 
+# add location
+location <- c("Inside", "Outside", "Both inside and outside")
+pets[!is.na(pets$Pet1), "Location1"]  <- factor(sample(location, nrow(pets[!is.na(pets$Pet1), ]), replace = TRUE))
+pets[!is.na(pets$Pet2), "Location2"] <- factor(sample(location, nrow(pets[!is.na(pets$Pet2), ]), replace = TRUE))
+pets[!is.na(pets$Pet3), "Location3"] <- factor(sample(location, nrow(pets[!is.na(pets$Pet3), ]), replace = TRUE))
+
+pets$ACME_aided <- sample(c(0:10), nrow(pets), replace = TRUE)
+pets$ACME_unaided <- sample(c(0:10), nrow(pets), replace = TRUE)
+
 save(pets, file="../vignettes/pets.RData")

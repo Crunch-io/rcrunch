@@ -126,7 +126,6 @@ ordering(ds)
 ##     manningknowledge
 ##     manningfavorability
 ##     manningguilt
-##     manningpenalty
 ```
 
 Groups can be created with several kinds of inputs. You can specify a vector or list of variable references (URLs), as returned from the `self` method of variables. That list of references may also contain `VariableGroup` objects as well, which will nest those Groups inside the Group you're creating (see "Nested Groups" below). You can also provide a list of variable entities or, as in this example, a subset of a dataset entity (which can be thought of as a list of variables).
@@ -185,6 +184,7 @@ ordering(ds)
 ## [+] Tracking questions
 ##     newsint2
 ##     Direction of country
+##     manningpenalty
 ##     Issue importance
 ##     imissf
 ##     obamaapp
@@ -198,7 +198,6 @@ ordering(ds)
 ##     manningknowledge
 ##     manningfavorability
 ##     manningguilt
-##     manningpenalty
 ##     [+] Snowden
 ##         Favorability of Edward Snowden
 ##         Approval of Snowden's Leak

@@ -134,3 +134,6 @@ As with the `as.data.frame` methods, you can subset what you export by indexing 
 ```r
 write.csv(ds[ds$pid3 == "Democrat", c("age", "educ", "gender")], file="demo-demos.csv")
 ```
+
+
+[Next: conditional variables](conditional-variables.md)

@@ -32,6 +32,7 @@ dems
 ## 
 ## $newsint2: newsint2 (categorical)
 ## $track: Direction of country (categorical)
+## $manningpenalty: manningpenalty (categorical)
 ## $imiss: Issue importance (multiple_response)
 ## $imissf: imissf (categorical)
 ## $obamaapp: obamaapp (categorical)
@@ -44,7 +45,6 @@ dems
 ## $manningknowledge: manningknowledge (categorical)
 ## $manningfavorability: manningfavorability (categorical)
 ## $manningguilt: manningguilt (categorical)
-## $manningpenalty: manningpenalty (categorical)
 ## $snowdenfav: Favorability of Edward Snowden (categorical)
 ## $snowdenleakapp: Approval of Snowden's Leak (categorical)
 ## $snowdenpros: Support for Prosecution of Snowden (categorical)
@@ -164,7 +164,7 @@ filters(ds)
 
 ```
 ##          name                               id is_public
-## 1 Young males b68e568c205d448c99120e2b72e7d585     FALSE
+## 1 Young males 4a334e5db369469fa78d6fe13c750c6b     FALSE
 ```
 
 You could also have made the filter with the `newFilter` function:
@@ -184,7 +184,7 @@ filters(ds)
 
 ```
 ##          name                               id is_public
-## 1 Young males b68e568c205d448c99120e2b72e7d585      TRUE
+## 1 Young males 4a334e5db369469fa78d6fe13c750c6b      TRUE
 ```
 
 You can also edit the filter expressions by assigning a new one in, like:
