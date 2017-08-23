@@ -291,6 +291,9 @@ changeCategoryID <- function (variable, from, to) {
 
     ## Add new category
     newcat <- categories(variable)[[pos.from]]
+    # if the old id matches the old numeric value, likely the user wants these 
+    # to be the same, so change the new numeric value to be the same as the 
+    # new id.
     if (newcat$id == newcat$numeric_value %||% FALSE) {
         newcat$numeric_value <- to
     }
