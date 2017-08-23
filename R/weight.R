@@ -118,7 +118,7 @@ makeWeight <- function(..., name) {
 generateWeightEntry <- function(expr) {
     formula <- try(as.formula(expr), silent = TRUE)
     if (is.error(formula)) {
-        halt(expr, " is not a valid formula, use the form ds$var ~ c(10, 20, 30)")
+        halt(dQuote(substitute(expr)), " is not a valid formula, use the form ds$var ~ c(10, 20, 30)")
     }
     var     <- eval(expr[[2]], environment(expr))
     varname <- deparse(expr[[2]])
@@ -153,8 +153,9 @@ generateWeightEntry <- function(expr) {
         target_list[[i]] <- c(i, targets[i])
     }
 
-    list(
+    out <- list(
         variable = self(var),
         targets = target_list
     )
+    out
 }

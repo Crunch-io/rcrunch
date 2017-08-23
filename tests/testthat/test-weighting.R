@@ -42,7 +42,11 @@ with_mock_crunch({
 
     test_that("generateWeightEntry errors correctly", {
         expect_error(generateWeightEntry("bad_formula"),
-            "bad_formula is not a valid formula, use the form ds$var ~ c(10, 20, 30)", fixed = TRUE)
+            paste0(dQuote("bad_formula"),
+                " is not a valid formula, use the form ds$var ~ c(10, 20, 30)"), fixed = TRUE)
+        expect_error(generateWeightEntry(object),
+            paste0(dQuote("object"),
+                " is not a valid formula, use the form ds$var ~ c(10, 20, 30)"), fixed = TRUE)
         expect_error(generateWeightEntry(oldds$birthyr ~ c(30, 30, 40)),
             "oldds$birthyr is not a categorical crunch variable", fixed = TRUE)
         expect_error(generateWeightEntry(oldds$gender ~ c(10, 10, 10, 10, 10, 50)),
@@ -68,6 +72,9 @@ with_mock_crunch({
             expected_weight_definition)
         expect_equivalent(makeWeight(oldds$gender ~ c(.2, .3, .5), name = "weight"),
             expected_weight_definition)
+        expect_equivalent(makeWeight(oldds$gender ~ c(50, 50), name = "weight"),
+            makeWeight(oldds$gender ~ c(.5, .5, 0), name = "weight")
+        )
     })
 })
 
