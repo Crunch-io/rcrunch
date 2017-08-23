@@ -254,7 +254,9 @@ setMethod("lapply", "Categories", function (X, FUN, ...) {
 #'
 #' Changes the id of a category from an existing value to a new one.
 #' The variable can be a categorical, categorical array, or multiple response
-#' variable.
+#' variable. The category changed will have the same numeric value and missing
+#' status as before. The one exception to this is if the numeric value is the 
+#' same as the id, then the new numeric value will be the same as the new id.
 #'
 #' @param variable the variable in a crunch dataset that will be changed (note: the variable must be categorical, categorical array, or multiple response)
 #' @param from the (old) id identifying the category you want to change
@@ -289,9 +291,11 @@ changeCategoryID <- function (variable, from, to) {
 
     ## Add new category
     newcat <- categories(variable)[[pos.from]]
+    if (newcat$id == newcat$numeric_value %||% FALSE) {
+        newcat$numeric_value <- to
+    }
     newcat$id <- to
-    newcat$numeric_value <- to
-
+    
     names(categories(variable))[pos.from] <- "__TO_DELETE__"
     categories(variable) <- c(categories(variable), newcat)
 
