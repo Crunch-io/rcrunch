@@ -290,16 +290,8 @@ catalogToDataFrame <- function(x, keys=TRUE,
         exclude_cols <- grepl("^NA", names(out)) &
             vapply(out, function(x)all(is.na(x)), FUN.VALUE = logical(1))
         out <- out[, !exclude_cols, drop = FALSE]
-        #reorder columns to match the order in which keys were supplied
-        if (keys == TRUE) {
-            ordered_names <- names(out)
-        } else {
-            ordered_names <- names(out)[names(out) %in% keys]
-        }
-        out <- out[, ordered_names, drop = FALSE]
 
         missing_keys <- dQuote(keys[!(keys %in% names(out))])
-
         if (any(!(keys %in% names(out))) && keys != TRUE) {
             if (length(missing_keys) == 1) {
                 error_text <-  " is an invalid key for catalogs of class "
@@ -313,6 +305,8 @@ catalogToDataFrame <- function(x, keys=TRUE,
                 ".")
         }
 
+        #reorder columns to match the order in which keys were supplied
+        out <- out[, keys, drop = FALSE]
         return(out)
     }
 }
