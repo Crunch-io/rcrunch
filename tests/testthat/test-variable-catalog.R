@@ -124,12 +124,44 @@ with_mock_crunch({
         )
         expect_error(as.data.frame(varcat[1:3], keys = c("banana", "fooey")),
             paste(
-                paste(dQuote(c("banana", "fooey")), collapse = ", "),
+                serialPaste(dQuote(c("banana", "fooey"))),
                 "are invalid keys for catalogs of class VariableCatalog.")
         )
         expect_error(as.data.frame(varcat[1:3], keys = c("name", "fooey")),
             paste(dQuote("fooey"), "is an invalid key for catalogs of class VariableCatalog.")
         )
+    })
+
+    test_that("entryToDF works", {
+      entry <- list(
+          alias = "birthyr",
+          name = "Birth Year",
+          type = "numeric")
+      list_entry <- list(
+          name = "mymrset",
+          discarded = FALSE,
+          alias = "mymrset",
+          type = "multiple_response",
+          id = "949d2dc7e7a24e6090cc88bb92e1d2fb",
+          description = "Please select all that apply", notes = "",
+          subvariables = list(
+              "mymrset/subvariables/subvar2/",
+              "mymrset/subvariables/subvar1/",
+              "mymrset/subvariables/subvar3/"
+              ),
+          subvariables_catalog = "mymrset/subvariables/"
+          )
+
+      expected_df <- data.frame(alias = "birthyr",
+                                name = "Birth Year",
+                                type = "numeric",
+                                stringsAsFactors = FALSE)
+      expect_identical(entryToDF(entry, c("subvariables", "subvariables_catalog")),
+        expected_df)
+      expect_identical(entryToDF(entry, c("subvariables", "not_a_variable")),
+        expected_df)
+      expect_error(entryToDF(list_entry, c("alias")),
+          paste0(dQuote(subvariables)), " contains more than one entry and are not included in list_col_names")
     })
 })
 

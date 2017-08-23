@@ -271,7 +271,7 @@ catalogToDataFrame <- function(x, keys=TRUE,
     } else {
         ### The following code is equivalent to out <- purrr::map_df(index, entry_to_df)
         ################
-        entry_list <- lapply(index, entry_to_df, list_col_names = list_columns)
+        entry_list <- lapply(index, entryToDF, list_col_names = list_columns)
         names   <- unique(unlist( lapply(entry_list, names)))
         out <- data.frame(matrix(nrow = length(entry_list), ncol = length(names)))
         names(out) <- names
@@ -317,8 +317,8 @@ catalogToDataFrame <- function(x, keys=TRUE,
     }
 }
 
-#' entry_to_df
-#' Turns an entry in the catalog into
+#' entryToDF
+#' Turns an entry in the catalog into a one-row dataframe
 #'
 #' @param entry
 #' A single entry in a catalog
@@ -330,9 +330,19 @@ catalogToDataFrame <- function(x, keys=TRUE,
 #'
 #' @return A one row data frame
 #'
-entry_to_df <- function(entry, list_col_names ){
+entryToDF <- function(entry, list_col_names ){
             entry[vapply(entry, is.null, logical(1))] <- NA
             vect_col <- entry[!(names(entry) %in% list_col_names)]
+            mislabled_list_cols <- lapply(vect_col, length) > 1
+
+            error_text <- " contain more than one entry and is not included in list_col_names"
+            if (sum(mislabled_list_cols) == 1) {
+                error_text <- " contains more than one entry and are not included in list_col_names"
+            }
+            if (any(mislabled_list_cols)) {
+                halt( serialPaste( dQuote(names(vect_col[mislabled_list_cols]))),
+                    error_text)
+            }
             entry_df <- as.data.frame(vect_col, stringsAsFactors = FALSE)
 
             if (any(names(entry) %in% list_col_names)) {
@@ -345,4 +355,5 @@ entry_to_df <- function(entry, list_col_names ){
                 entry_df <- cbind(entry_df, list_df)
             }
             entry_df
-        }
+
+}
