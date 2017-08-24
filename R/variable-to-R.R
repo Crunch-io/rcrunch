@@ -140,6 +140,12 @@ paginatedGET <- function (url, query, offset=0, limit=1000, table=FALSE) {
 
 #' Convert Variables to local R objects
 #'
+#' `as.vector` transfers data from Crunch to a local R session. Note: 
+#' `as.vector` returns the vector in the row order of the dataset. If filters 
+#' are set that specify an order that is different from the row order of the 
+#' dataset, the results will ignore that order. If you need the vector ordered 
+#' in that way, use syntax like `as.vector(ds$var)[c(10, 5, 2)]` instead.
+#'
 #' @param x a CrunchVariable subclass
 #' @param mode for Categorical variables, one of either "factor" (default,
 #' which returns the values as factor); "numeric" (which returns the numeric
@@ -150,7 +156,7 @@ paginatedGET <- function (url, query, offset=0, limit=1000, table=FALSE) {
 #' variables, the \code{mode} argument is ignored.
 #' @return an R vector of the type corresponding to the Variable. E.g.
 #' CategoricalVariable yields type factor by default, NumericVariable yields
-#' numeric, etc.
+#' numeric, etc. 
 #' @name variable-to-R
 NULL
 
@@ -158,6 +164,10 @@ NULL
 #' @export
 setMethod("as.vector", "CrunchVariable", function (x, mode) {
     f <- zcl(activeFilter(x))
+    # TODO: this will return in dataset order even if there is a filter is 
+    # specified that is not in the same order as rows 
+    # (eg as.vector(ds$v1[c(10:1)])) as.vector should re-order by default
+    # see CrunchDataFrame for one way this could be accomplished
     columnParser(type(x))(getValues(x, filter=toJSON(f)), x, mode)
 })
 

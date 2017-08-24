@@ -28,5 +28,9 @@ CategoricalVariable yields type factor by default, NumericVariable yields
 numeric, etc.
 }
 \description{
-Convert Variables to local R objects
+\code{as.vector} transfers data from Crunch to a local R session. Note:
+\code{as.vector} returns the vector in the row order of the dataset. If filters
+are set that specify an order that is different from the row order of the
+dataset, the results will ignore that order. If you need the vector ordered
+in that way, use syntax like \code{as.vector(ds$var)[c(10, 5, 2)]} instead.
 }
