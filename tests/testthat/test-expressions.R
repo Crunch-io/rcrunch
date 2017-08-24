@@ -296,6 +296,7 @@ with_test_authentication({
         expect_equivalent(as.vector(ds$v3[c(1, NA, 2)]), df$v3[c(1, 2)])
         # even if the NAs are at the beginning or end
         expect_equivalent(as.vector(ds$v3[c(1, 2, NA)]), df$v3[c(1, 2)])
+        expect_equivalent(as.vector(ds$v3[c(NA, 1, 2)]), df$v3[c(1, 2)])
     })
     test_that("R logical filter evaluates", {
         expect_identical(as.vector(ds$v3[df$v3 < 10]), c(8, 9))
