@@ -110,9 +110,10 @@ generateCutLabels <- function(dig.lab, breaks, nb, right, include.lowest) {
         if (ok) break
     }
     labels <- if (ok) {
-            paste0(if (right) "(" else "[",
+            paste0(ifelse(right, "(","["),
                    ch.br[-nb], ",", ch.br[-1L],
-                   if (right) "]" else ")")
+                   ifelse(right,"]",")")
+            )
         } else {
             paste("Range", seq_len(nb - 1L), sep = "_")
         }
