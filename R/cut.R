@@ -40,7 +40,6 @@ setMethod("cut", "NumericVariable", function(x,
                                              right = TRUE,
                                              dig.lab = 3,
                                              ordered_result = FALSE, ...){
-    env <- environment()
     if (missing(name)) {
         halt("Must provide the name for the new variable")
         }
