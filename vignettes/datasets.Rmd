@@ -1,6 +1,10 @@
 ---
 title: "Importing datasets"
-output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Importing datasets}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 [Previous: Getting started](getting-started.html)

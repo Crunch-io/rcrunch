@@ -1,6 +1,10 @@
 ---
 title: "Adding Variables"
-output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Adding Variables}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 [Previous: variable organization](variable-order.html)

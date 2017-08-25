@@ -1,6 +1,10 @@
 ---
 title: "Filtering Data"
-output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Filtering Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 [Previous: analyzing data](analyze.html)

@@ -1,6 +1,10 @@
 ---
 title: "Analyzing Crunch Data"
-output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Analyzing Crunch Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 [Previous: transform and derive](derive.html)
