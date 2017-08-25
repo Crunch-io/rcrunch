@@ -1,4 +1,5 @@
 ### crunch 1.18.1 (under development)
+* Changed the behavior of `changeCategoryID()` to only update numeric values of the category having its id changed when the id and the numeric value are the same.
 
 ## crunch 1.18.0
 
