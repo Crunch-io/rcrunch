@@ -211,7 +211,7 @@ navbar:
          href: articles/variable-order.html
       -  text: Derive Variables
          href: articles/derive-variables.html
-      -  text: Filter Dataå
+      -  text: Filter Data
          href: articles/filters.html
       -  text: Export Data
          href: articles/export.html
