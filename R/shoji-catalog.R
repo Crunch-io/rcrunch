@@ -329,12 +329,12 @@ entryToDF <- function(entry, list_col_names ){
             vect_col <- entry[!(names(entry) %in% list_col_names)]
             mislabled_list_cols <- lapply(vect_col, length) > 1
 
-            error_text <- " contain more than one entry and is not included in list_col_names"
+            error_text <- " contain more than one entry and are not included in list_col_names"
             if (sum(mislabled_list_cols) == 1) {
-                error_text <- " contains more than one entry and are not included in list_col_names"
+                error_text <- " contains more than one entry and is not included in list_col_names"
             }
             if (any(mislabled_list_cols)) {
-                halt( serialPaste( dQuote(names(vect_col[mislabled_list_cols]))),
+                halt(serialPaste(dQuote(names(vect_col[mislabled_list_cols]))),
                     error_text)
             }
             entry_df <- as.data.frame(vect_col, stringsAsFactors = FALSE)
