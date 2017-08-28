@@ -4,6 +4,8 @@ if [ "${TRAVIS_PULL_REQUEST}" = "false" ] &&
     [ "${TRAVIS_BRANCH}" = "pkgdown" ] &&
     [ "${TRAVIS_R_VERSION_STRING}" = "release" ]; then
 
+    ## Use TRAVIS_TAG != "" instead
+    R CMD INSTALL . ## Package needs to be installed, apparently
     R -e 'devtools::install_github("hadley/pkgdown"); pkgdown::build_site()'
     git clone --branch src https://${GH_TOKEN}@github.com/Crunch-io/ta-da.git ../ta-da
     rm -rf ../ta-da/static/R/crunch
