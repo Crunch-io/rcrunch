@@ -1,6 +1,10 @@
 ---
 title: "Crunch Variables"
-output: html_document
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Crunch Variables}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 [Previous: create and load datasets](datasets.html)
