@@ -6,12 +6,15 @@ with_mock_crunch({
 
     test_that("cut labels are generated correcty", {
         expect_identical(
-            crunch:::generateCutLabels(5, c(2.111111, 3, 4, 5), 4, FALSE, FALSE),
+            generateCutLabels(5, c(2.111111, 3, 4, 5), 4, FALSE, FALSE),
             c("[2.1111,3)", "[3,4)", "[4,5)")
         )
         expect_identical(
             generateCutLabels(2, c(2.111111, 3, 4, 5), 4, FALSE, FALSE),
             c("[2.1,3)", "[3,4)", "[4,5)")
+        )
+        expect_identical( generateCutLabels(2, c(2, 3, 4, 5), 4, FALSE, FALSE),
+            c("[2,3)", "[3,4)", "[4,5)")
         )
     })
 
@@ -19,11 +22,6 @@ with_mock_crunch({
         expect_error( cut(ds$birthyr, 3), "Must provide the name for the new variable")
     })
 
-    test_that("cut labels are generated correctly", {
-        expect_identical( c("[2,3)", "[3,4)", "[4,5)"),
-            generateCutLabels(2, c(2, 3, 4, 5), 4, FALSE, FALSE)
-        )
-    })
 
     test_that("cut returns expected output", {
 
