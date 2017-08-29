@@ -13,4 +13,5 @@
 ^.*\.orig$
 ^_pkgdown\.yml$
 ^docs$
+^pkgdown.sh$
 ^pkgdown$
