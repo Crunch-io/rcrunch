@@ -205,13 +205,13 @@ navbar:
       -  text: Datasets
          href: articles/datasets.html
       -  text: Variables
-         href: articles/vareiables.html
+         href: articles/variables.html
       -  text: Array Variables
          href: articles/array-variables.html
       -  text: Reorder Variables
          href: articles/variable-order.html
       -  text: Derive Variables
-         href: articles/derive-variables.html
+         href: articles/derive.html
       -  text: Filter Data
          href: articles/filters.html
       -  text: Export Data
