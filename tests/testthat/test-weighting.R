@@ -34,7 +34,7 @@ with_mock_crunch({
 
     test_that("weightVariables method", {
         expect_identical(weightVariables(newds), "birthyr")
-        with(temp.option(crunch.namekey.dataset ="name"), {
+        with(temp.option(crunch.namekey.dataset="name"), {
             expect_identical(weightVariables(newds), "Birth Year")
         })
         expect_identical(weightVariables(oldds), c())
@@ -43,10 +43,10 @@ with_mock_crunch({
     test_that("generateWeightEntry errors correctly", {
         expect_error(generateWeightEntry("bad_formula"),
             paste0(dQuote("bad_formula"),
-                " is not a valid formula, use the form ds$var ~ c(10, 20, 30)"), fixed = TRUE)
+                " is not a valid formula. Use the form ds$var ~ c(10, 20, 30)"), fixed = TRUE)
         expect_error(generateWeightEntry(object),
             paste0(dQuote("object"),
-                " is not a valid formula, use the form ds$var ~ c(10, 20, 30)"), fixed = TRUE)
+                " is not a valid formula. Use the form ds$var ~ c(10, 20, 30)"), fixed = TRUE)
         expect_error(generateWeightEntry(oldds$birthyr ~ c(30, 30, 40)),
             "oldds$birthyr is not a categorical crunch variable", fixed = TRUE)
         expect_error(generateWeightEntry(oldds$gender ~ c(10, 10, 10, 10, 10, 50)),
@@ -161,7 +161,7 @@ with_test_authentication({
                 array(c(110, 100), dim=2L, dimnames=list(v4=c("B", "C"))))
         })
     })
-with(test.dataset(df), {
+    with(test.dataset(df), {
         test_that("makeWeight returns the expected weights", {
             ds$weight <- makeWeight(ds$v4 ~ c(30, 70, 0), name = "weight")
             expected_weights <- c(0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4,

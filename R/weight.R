@@ -60,7 +60,7 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
     }
 })
 
-#' Generate a weight vector
+#' Generate a weight variable
 #'
 #' This function allows you to generate a weight vector by supplying a set of
 #' categorical variables and the target distribution for each of the variable's categories.
@@ -69,23 +69,24 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
 #'
 #' @param ...
 #' A series of expressions of the form `variable ~ target_weights`. The variable must
-#' be a categorical crunch variable, and the target weights must be a numeric vector whose
-#' length is equal to the number of categories contained in the variable, and whose sum is equal to 100.
+#' be a categorical Crunch variable, and the target weights must be a numeric vector whose
+#' length is equal to the number of categories contained in the variable, and whose sum is equal to 100 or 1. If
+#' you supply fewer target weights than there are categories `makeWeight` will pad the target weight vector with 0s.
 #'
 #' @param name
 #' The name of the resulting variable
 #' @rdname makeWeight
 #' @return
-#' A crunch Variable Definiton of the weight variable
+#' A crunch [VariableDefinition()] of the weight variable
 #' @export
 #'
 #' @examples
 #' \dontrun{
 #' mtcars$cyl <- as.factor(mtcars$cyl)
 #' mtcars$gear <- as.factor(mtcars$gear)
-#' ds <- newDataset(mtcars, "mtcars")
+#' ds <- newDataset(mtcars)
 #' ds$weight <- makeWeight(ds$cyl ~ c(30, 30, 40, 0), ds$gear ~ c(20, 20, 60, 0), name = "weight" )
-#' as.vector(ds$weight)
+#' summary(ds$weight)
 #' }
 makeWeight <- function(..., name) {
     expr_list <- list(...)
@@ -118,11 +119,11 @@ makeWeight <- function(..., name) {
 generateWeightEntry <- function(expr) {
     formula <- try(as.formula(expr), silent = TRUE)
     if (is.error(formula)) {
-        halt(dQuote(substitute(expr)), " is not a valid formula, use the form ds$var ~ c(10, 20, 30)")
+        halt(dQuote(substitute(expr)), " is not a valid formula. Use the form ds$var ~ c(10, 20, 30)")
     }
     var     <- eval(expr[[2]], environment(expr))
     varname <- deparse(expr[[2]])
-    targets <- eval(expr[[3]])
+    targets <- eval(expr[[3]], environment(expr))
 
     if (!is.Categorical(var)) {
         halt(varname, " is not a categorical crunch variable")
@@ -130,32 +131,32 @@ generateWeightEntry <- function(expr) {
 
     n_categories <- length(categories(var))
 
+    if (any(is.na(targets))) {
+        halt(dQuote(substitute(expr)), " contains NA values")
+    }
     if (length(targets) > n_categories) {
         halt("Number of targets does not match number of categories for ", varname)
+    }
+    #Pad with zeros if the user hasn't suppied enough categories
+    if (length(targets) < n_categories) {
+        targets <- c(targets, rep(0, n_categories - length(targets)))
     }
     if (!all(is.numeric(targets))) {
         halt("Targets are not numeric for ", varname)
     }
-    if (!(sum(targets) == 100 || sum(targets) == 1)) {
+    if (!(sum(targets, na.rm) == 100 || sum(targets) == 1)) {
         halt("Targets do not add up to 100% for ", varname)
     }
     if (sum(targets) != 1) {
         targets <- targets / 100
     }
 
-    #Pad with zeros if the user hasn't suppied enough categories
-    if (length(targets) < n_categories) {
-        targets <- c(targets, rep(0, n_categories - length(targets)))
-    }
 
-    target_list <- vector("list", length(targets))
-    for (i in seq_along(targets)) {
-        target_list[[i]] <- c(i, targets[i])
-    }
 
-    out <- list(
+    target_list <- lapply(seq_along(targets), function (i) c(i, targets[i]))
+
+    return(list(
         variable = self(var),
         targets = target_list
-    )
-    return(out)
+    ))
 }
