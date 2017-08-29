@@ -89,12 +89,13 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
 #' summary(ds$weight)
 #' }
 makeWeight <- function(..., name) {
-    expr_list <- list(...)
-    out <- list(
-        name = name,
-        derivation = list(
+    all_dots <- list(..., name = name)
+    named_entries <- names(all_dots) != ""
+    out       <- all_dots[named_entries]
+    expr_list <- all_dots[!named_entries]
+    out$derivation <- list(
             `function` = "rake",
-            args = lapply(expr_list, generateWeightEntry))
+            args = lapply(expr_list, generateWeightEntry)
         )
     class(out) <- "VariableDefinition"
     out
@@ -131,9 +132,6 @@ generateWeightEntry <- function(expr) {
 
     n_categories <- length(categories(var))
 
-    if (any(is.na(targets))) {
-        halt(dQuote(substitute(expr)), " contains NA values")
-    }
     if (length(targets) > n_categories) {
         halt("Number of targets does not match number of categories for ", varname)
     }
@@ -144,7 +142,10 @@ generateWeightEntry <- function(expr) {
     if (!all(is.numeric(targets))) {
         halt("Targets are not numeric for ", varname)
     }
-    if (!(sum(targets, na.rm) == 100 || sum(targets) == 1)) {
+    if (any(is.na(targets))) {
+        halt(dQuote(paste(expr[2], "~", expr[3])), " contains NA values.")
+    }
+    if (!(sum(targets) == 100 || sum(targets) == 1)) {
         halt("Targets do not add up to 100% for ", varname)
     }
     if (sum(targets) != 1) {

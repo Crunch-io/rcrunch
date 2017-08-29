@@ -55,6 +55,9 @@ with_mock_crunch({
             "Targets do not add up to 100% for oldds$gender", fixed = TRUE)
         expect_error(generateWeightEntry(oldds$gender ~ c("a", "b", "c")),
             "Targets are not numeric for oldds$gender", fixed = TRUE)
+        expect_error(generateWeightEntry(oldds$gender ~ c(50, 50, NA)),
+            paste0(dQuote("oldds$gender ~ c(50, 50, NA)"),
+                " contains NA values"), fixed = TRUE)
     })
     expected_weight_definition <- list(
         name = "weight",
@@ -67,6 +70,19 @@ with_mock_crunch({
             )
         )
     )
+    expected_attribute_definition <- list(
+        alias = "test_alias",
+        name = "weight",
+        derivation = list(`function` = "rake",
+            args = list(
+                list(variable = "https://app.crunch.io/api/datasets/1/variables/gender/",
+                    targets = list(c(1, 0.2), c(2, 0.3), c(3, 0.5)
+                    )
+                )
+            )
+        )
+    )
+
     test_that("makeWeight generates the expected VariableDefinition", {
         expect_equivalent(makeWeight(oldds$gender ~ c(20, 30, 50), name = "weight"),
             expected_weight_definition)
@@ -75,6 +91,10 @@ with_mock_crunch({
         expect_equivalent(makeWeight(oldds$gender ~ c(50, 50), name = "weight"),
             makeWeight(oldds$gender ~ c(.5, .5, 0), name = "weight")
         )
+    })
+    test_that("makeWeight allows user to specify variable definition attributes", {
+        expect_equivalent(makeWeight(oldds$gender ~ c(20, 30, 50), name = "weight", alias = "test_alias"),
+            expected_attribute_definition)
     })
 })
 
