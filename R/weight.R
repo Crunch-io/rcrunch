@@ -157,5 +157,5 @@ generateWeightEntry <- function(expr) {
         variable = self(var),
         targets = target_list
     )
-    out
+    return(out)
 }
