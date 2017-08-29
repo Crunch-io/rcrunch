@@ -86,8 +86,12 @@ with_mock_crunch({
     test_that("makeWeight generates the expected VariableDefinition", {
         expect_equivalent(makeWeight(oldds$gender ~ c(20, 30, 50), name = "weight"),
             expected_weight_definition)
+    })
+    test_that("makeWeight allows decimal target input",{
         expect_equivalent(makeWeight(oldds$gender ~ c(.2, .3, .5), name = "weight"),
             expected_weight_definition)
+    })
+    test_that("You can provide two targets to a variable with three categories", {
         expect_equivalent(makeWeight(oldds$gender ~ c(50, 50), name = "weight"),
             makeWeight(oldds$gender ~ c(.5, .5, 0), name = "weight")
         )
