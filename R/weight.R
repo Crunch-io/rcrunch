@@ -93,6 +93,9 @@ makeWeight <- function(..., name) {
     named_entries <- names(all_dots) != ""
     out       <- all_dots[named_entries]
     expr_list <- all_dots[!named_entries]
+
+    #args below must be an unnamed list, so we remove the names from expr_list
+    names(expr_list) <- NULL
     out$derivation <- list(
             `function` = "rake",
             args = lapply(expr_list, generateWeightEntry)
@@ -118,6 +121,7 @@ makeWeight <- function(..., name) {
 #' }
 #'
 generateWeightEntry <- function(expr) {
+
     formula <- try(as.formula(expr), silent = TRUE)
     if (is.error(formula)) {
         halt(dQuote(substitute(expr)), " is not a valid formula. Use the form ds$var ~ c(10, 20, 30)")
@@ -151,8 +155,6 @@ generateWeightEntry <- function(expr) {
     if (sum(targets) != 1) {
         targets <- targets / 100
     }
-
-
 
     target_list <- lapply(seq_along(targets), function (i) c(i, targets[i]))
 
