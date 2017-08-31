@@ -20,7 +20,7 @@ A crunch \code{\link[=VariableDefinition]{VariableDefinition()}} of the weight v
 \description{
 This function allows you to generate a weight vector by supplying a set of
 categorical variables and the target distribution for each of the variable's categories. Weights are
-computed by iteratively ‘raking’ conditional ‘cells’ to marginal population targets.
+computed by iteratively 'raking' conditional 'cells' to marginal population targets.
 For instance if you wanted to create a weight variable which equally weighted four categories stored
 in \code{ds$var} you would call \code{ds$weight1 <- makeWeight(ds$var ~ c(25, 25, 25, 25), name = "weight1")}. This would
 create a new variable which can then be set as the dataset weight with \link{weight}. You can also create
