@@ -186,13 +186,17 @@ with_test_authentication({
         })
     })
     with(test.dataset(df), {
+        expected_weights <- c(0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4,
+                                  0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4)
         test_that("makeWeight returns the expected weights", {
             ds$weight <- makeWeight(ds$v4 ~ c(30, 70, 0), name = "weight")
-            expected_weights <- c(0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4,
-                                  0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4)
             expect_identical(as.vector(ds$weight), expected_weights)
             expect_identical(sum(ds$weight, nrow(ds))
             )
+        })
+        test_that("Assigning a VariableDefinition to weight(ds) works", {
+            weight(ds) <-  makeWeight(ds$v4 ~ c(30, 70, 0), name = "weight2")
+            expect_identical( weight(ds), expected_weights)
         })
     })
 })

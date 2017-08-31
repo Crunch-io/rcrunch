@@ -2,19 +2,20 @@
 % Please edit documentation in R/weight.R
 \name{makeWeight}
 \alias{makeWeight}
-\title{Generate a weight vector}
+\title{Generate a weight variable}
 \usage{
 makeWeight(..., name)
 }
 \arguments{
 \item{...}{A series of expressions of the form \code{variable ~ target_weights}. The variable must
-be a categorical crunch variable, and the target weights must be a numeric vector whose
-length is equal to the number of categories contained in the variable, and whose sum is equal to 100.}
+be a categorical Crunch variable, and the target weights must be a numeric vector whose
+length is equal to the number of categories contained in the variable, and whose sum is equal to 100 or 1. If
+you supply fewer target weights than there are categories \code{makeWeight} will pad the target weight vector with 0s.}
 
 \item{name}{The name of the resulting variable}
 }
 \value{
-A crunch Variable Definiton of the weight variable
+A crunch \code{\link[=VariableDefinition]{VariableDefinition()}} of the weight variable
 }
 \description{
 This function allows you to generate a weight vector by supplying a set of
@@ -26,8 +27,8 @@ in \code{ds$var} you would call \code{makeWeight(ds$var ~ c(25, 25, 25, 25), nam
 \dontrun{
 mtcars$cyl <- as.factor(mtcars$cyl)
 mtcars$gear <- as.factor(mtcars$gear)
-ds <- newDataset(mtcars, "mtcars")
+ds <- newDataset(mtcars)
 ds$weight <- makeWeight(ds$cyl ~ c(30, 30, 40, 0), ds$gear ~ c(20, 20, 60, 0), name = "weight" )
-as.vector(ds$weight)
+summary(ds$weight)
 }
 }

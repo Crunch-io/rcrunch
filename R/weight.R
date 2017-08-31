@@ -4,8 +4,9 @@
 #' server. "weightVariables" lets you view all of the variables that have been
 #' designated as valid to use as weights.
 #' @param x a Dataset
-#' @param value a Variable to set as weight, or NULL to remove the existing
-#' weight
+#' @param value a Variable, VariableDefinition or NULL value. If a VariableDefinition
+#' is passed, the variable will first be created and then set as the datasets weight. Set to Null
+#' to remove existing weights from the dataset.
 #' @return For the \code{weight} getter, a Variable if there is a weight, else
 #' NULL. For the setter, x, modified accordingly. \code{weightVariables} returns
 #' the aliases (or names, according to \code{options(crunch.namekey.dataset)}),
@@ -24,7 +25,11 @@ weight <- function (x) {
 
 #' @rdname weight
 #' @export
-`weight<-` <- function (x, value) {
+`weight<-` <- function(x, value) {
+    if (class(value) == "VariableDefinition") {
+        x <- addVariables(x, value)
+        value <- x[[value$name]]
+    }
     stopifnot(is.dataset(x))
     if (is.variable(value)) {
         value <- self(value)
