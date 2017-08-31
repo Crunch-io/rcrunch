@@ -19,7 +19,9 @@ changeCategoryID(variable, from, to)
 \description{
 Changes the id of a category from an existing value to a new one.
 The variable can be a categorical, categorical array, or multiple response
-variable.
+variable. The category changed will have the same numeric value and missing
+status as before. The one exception to this is if the numeric value is the
+same as the id, then the new numeric value will be the same as the new id.
 }
 \examples{
 \dontrun{
