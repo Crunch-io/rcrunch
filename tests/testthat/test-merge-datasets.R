@@ -184,7 +184,7 @@ with_test_authentication({
 
     test_that("Similarly uncomplicated merge, but numeric and hidden key", {
         # When merging datasets during jenkins run tests, the order of the
-        # variables is *sometiems* not copied (usually Pet Name/q3 is missing),
+        # variables is *sometimes* not copied (usually Pet Name/q3 is missing),
         # which makes this test fail. The ordering should be fully copied
         # during the merge operation. Reproduction of the bug on production or
         # alpha did not yield errors with order. Repro. locally is possible
@@ -261,7 +261,7 @@ with_test_authentication({
 
     test_that("Can select rows to join", {
         # When merging datasets during jenkins run tests, the order of the
-        # variables is *sometiems* not copied (usually Pet Name/q3 is missing),
+        # variables is *sometimes* not copied (usually Pet Name/q3 is missing),
         # which makes this test fail. The ordering should be fully copied
         # during the merge operation. Reproduction of the bug on production or
         # alpha did not yield errors with order. Repro. locally is possible
