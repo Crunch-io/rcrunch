@@ -350,14 +350,51 @@ with_test_authentication({
                 c(1, 2, -1))
             orig_vector <- as.vector(ds$v4f)
             expect_equal(as.vector(ds$v4f[1:4], mode="id"), c(1, 2, 1, 2))
-
-            ds$v4f <- changeCategoryID(ds$v4f, 2, 6)
+            
+            expect_silent(ds$v4f <- changeCategoryID(ds$v4f, 2, 6))
             expect_identical(names(categories(ds$v4f)),
                 c("B", "C", "No Data"))
             expect_equal(ids(categories(ds$v4f)),
                 c(1, 6, -1))
             expect_equal(as.vector(ds$v4f), orig_vector)
             expect_equal(as.vector(ds$v4f[1:4], mode="id"), c(1, 6, 1, 6))
+            expect_equal(as.vector(ds$v4f[1:4], mode="numeric"), c(1, 6, 1, 6))
+        })
+        
+        test_that("Can changeCategoryID without changing values when value!=id", {
+            ds$v4g <- df$v4
+            values(categories(ds$v4g)) <- c(NA, 20, NA)
+            expect_identical(names(categories(ds$v4g)),
+                             c("B", "C", "No Data"))
+            expect_equal(ids(categories(ds$v4g)),
+                         c(1, 2, -1))
+            expect_equal(values(categories(ds$v4g)),
+                         c(NA, 20, NA))
+            orig_vector <- as.vector(ds$v4g)
+            expect_equal(as.vector(ds$v4g[1:4], mode="id"), c(1, 2, 1, 2))
+            
+            
+            expect_silent(ds$v4g <- changeCategoryID(ds$v4g, 2, 6))
+            expect_identical(names(categories(ds$v4g)),
+                             c("B", "C", "No Data"))
+            expect_equal(ids(categories(ds$v4g)),
+                         c(1, 6, -1))
+            expect_equal(values(categories(ds$v4g)),
+                         c(NA, 20, NA))
+            expect_equal(as.vector(ds$v4g), orig_vector)
+            expect_equal(as.vector(ds$v4g[1:4], mode="id"), c(1, 6, 1, 6))
+            expect_equal(as.vector(ds$v4g[1:4], mode="numeric"), c(NA, 20, NA, 20))
+            
+            # also try with an NA, make sure the NA is retained
+            expect_silent(ds$v4g <- changeCategoryID(ds$v4g, 1, 10))
+            expect_identical(names(categories(ds$v4g)),
+                             c("B", "C", "No Data"))
+            expect_equal(ids(categories(ds$v4g)),
+                         c(10, 6, -1))
+            expect_equal(values(categories(ds$v4g)),
+                         c(NA, 20, NA))
+            expect_equal(as.vector(ds$v4g[1:4], mode="id"), c(10, 6, 10, 6))
+            expect_equal(as.vector(ds$v4g[1:4], mode="numeric"), c(NA, 20, NA, 20))
         })
 
         test_that("Can changeCategoryID for array variables", {

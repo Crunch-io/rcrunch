@@ -1,18 +1,29 @@
-### crunch 1.17.9 (under development)
+### crunch 1.18.1 (under development)
+* Changed the behavior of `changeCategoryID()` to only update numeric values of the category having its id changed when the id and the numeric value are the same.
+
+## crunch 1.18.0
+
+### Support for mapping
+* Crunch-hosted geographic data can now be set and updated. Use `geo()` on a variable to see if there is already associated geographic data.
+* `addGeoMetadata()` function to match a text or categorical variable with available geodata based on the contents of the variable and metadata associated with Crunch-hosted geographic data.
+
+### Better derived variable support
+* Derivation expressions can now be retrieved from derived variables with `derivation()`
+* Derived variables can be integrated or instantiated by setting `derivation() <- NULL`
+
+### Other new functions
 * `resetPassword()` function
-* Categories are now selectable by names as well as ids
-* Fix issue where `deleteSubvariable()` by index instead deleted the parent variable
+* `copyOrder()` to copy the ordering of variables from one dataset to another.
 * Pass a web app URL to `loadDataset()` and it will now load the same dataset in your R session.
 * `webApp()` function to go the other way: open the dataset from your R session in your web browser.
 * `categoriesFromLevels()` is now exported (#77)
+
+### Fixes and adjustments
+* Categories are now selectable by names as well as ids
+* Fix issue where `deleteSubvariable()` by index instead deleted the parent variable
 * Add a missing import from the `methods` package so that `Rscript` works (#90)
 * Allow deep copying of multiple-response type variables
-* Crunch-hosted geographic data can now be set and updated. Use `geo()` on a variable to see if there is already associated geographic data. 
-* `addGeoMetadata()` function to match a text or categorical variable with available geodata based on the contents of the variable and metadata associated with Crunch-hosted geographic data.
 * Experimental support for merging `CrunchDataFrame`s with standard `data.frame`s
-* `copyOrder()` to copy the ordering of variables from one dataset to another.
-* Derivation expressions can now be retrieved from derived variables with `derivation()`
-* Derived variables can be integrated or instantiated by setting `derivation() <- NULL`
 
 ### crunch 1.17.8
 Two attempts to fix download issues introduced by 1.17.4:
