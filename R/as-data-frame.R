@@ -1,33 +1,28 @@
-CrunchDataFrame <- function (dataset, row.order = NULL) {
+CrunchDataFrame <- function (dataset, row.order = NULL, categorical.mode = "factor", include.hidden = FALSE) {
     ## S3 constructor method for CrunchDataFrame. terms.formula doesn't seem
     ## to like S4 subclass of environment
     stopifnot(is.dataset(dataset))
+    var_names <- aliases(allVariables(dataset))
     out <- new.env()
-    out$.crunchDataset <- dataset
-    out$.names <- aliases(allVariables(dataset))
-    # set the order of the dataset based on row.order, if no row.order is 
-    # given return all rows in the dataset in the order they appear
-    out$.order <- row.order
+    attr(out, "crunchDataset") <- dataset
+    attr(out, "col_names") <- var_names
+    attr(out, "crunchVars") <- var_names
+    attr(out, "mode") <- categorical.mode
+    attr(out, "include.hidden") <- include.hidden
     
     with(out, {
         ## Note the difference from as.environment: wrapped in as.vector
-        for (.a in out$.names) {
+        for (.a in var_names) {
             eval(substitute(delayedAssign(v, {
-                if (is.null(.order)) {
-                    as.vector(.crunchDataset[[v]])
-                } else {
-                    # The API response for selected rows is in the order of the
-                    # dataset, so we need to reorder it before we return it. 
-                    # `match(.order, sort(unique(.order)))`` gets the dense 
-                    # ranking of the ordering so that the non-duplicated 
-                    # results returned in crunch order can be used in the order
-                    # specified in .order.
-                    as.vector(.crunchDataset[[v]][.order])[match(.order, sort(unique(.order)))]
-                }
-                }),
-                list(v=.a)))
+                get_CDF_var(v, ds, mode)
+            }),
+            list(v=.a, ds=out, mode = attr(out, "mode"))))
         }
     })
+    
+    # set the order of the dataset based on row.order, if no row.order is 
+    # given return all rows in the dataset in the order they appear
+    attr(out, "order") <- row.order
     
     class(out) <- "CrunchDataFrame"
     return(out)
@@ -37,18 +32,18 @@ setOldClass("CrunchDataFrame")
 
 #' @export
 dim.CrunchDataFrame <- function (x) {
-    if (is.null(x$.order)) {
+    if (is.null(attr(x, "order"))) {
         # if there is no ordering, the num of rows is the same as dataset
-        n_rows <- nrow(x$.crunchDataset)
+        n_rows <- nrow(attr(x, "crunchDataset"))
     } else {
         # if there is an ordering, the num of rows is the length of the ordering
-        n_rows <- length(x$.order)
+        n_rows <- length(attr(x, "order"))
     }
     return(c(n_rows, length(ls(x))))
 }
 
 #' @export
-names.CrunchDataFrame <- function (x) x$.names
+names.CrunchDataFrame <- function (x) attr(x, "col_names")
 
 #' as.data.frame method for CrunchDataset
 #'
@@ -69,6 +64,7 @@ names.CrunchDataFrame <- function (x) x$.names
 #' @param force logical: actually coerce the dataset to `data.frame`, or
 #' leave the columns as unevaluated promises. Default is `FALSE`.
 #' @param row.order vector of indeces. Which, and their order, of the rows of the dataset should be presented as (default: `NULL`). If `NULL`, then the Crunch Dataset order will be used.
+#' @param categorical.mode what mode should categoricals be pulled as? One of factor, numeric, id (default: factor)
 #' @param ... additional arguments passed to as.data.frame.default
 #' @return an object of class `CrunchDataFrame` unless `force`, in
 #' which case the return is a `data.frame`.
@@ -78,8 +74,9 @@ NULL
 #' @rdname dataset-to-R
 #' @export
 as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE,
-                                        force=FALSE, row.order = NULL, ...) {
-    out <- CrunchDataFrame(x, row.order = row.order)
+                                        force=FALSE, categorical.mode = "factor",
+                                        row.order = NULL, ...) {
+    out <- CrunchDataFrame(x, row.order = row.order, categorical.mode = categorical.mode)
     if (force) {
         out <- as.data.frame(out)
     }
@@ -89,17 +86,25 @@ as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE,
 #' @rdname dataset-to-R
 #' @export
 as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE, ...) {
-    x <- x$.crunchDataset
+    ds <- attr(x, "crunchDataset")
     default.stringsAsFactors <- function () FALSE
     limit <- min(c(10000, getOption("crunch.data.frame.limit")))
-    if (nrow(x) * ncol(x) > limit) {
+    if (nrow(ds) * ncol(ds) > limit) {
         ## TODO: switch to downloading CSV and reading that?
         halt("Dataset too large to coerce to data.frame. ",
             "Consider subsetting it first")
     }
-    out <- lapply(x, as.vector)
-    names(out) <- names(x)
-    return(structure(out, class="data.frame", row.names=c(NA, -nrow(x))))
+    crunch_var_names <- attr(x, "crunchVars")
+    # todo: something intelligent with modes
+    out <- lapply(crunch_var_names, function(var) as.vector(ds[[var]]))
+
+    col_names <- attr(x, "col_names")
+    local_var_names <- col_names[!col_names %in% crunch_var_names]
+    if (length(local_var_names) > 0) {
+        out <- rbind(out, ds[,local_var_names])
+    }
+    names(out) <- col_names
+    return(structure(out, class="data.frame", row.names=c(NA, -nrow(ds))))
 }
 
 
@@ -175,35 +180,30 @@ merge.CrunchDataFrame  <- function (x, y, by=intersect(names(x), names(y)),
         new_cols_map <- new_cols_map[with(new_cols_map, order(x_index, y_index)), ]
         if (!identical(new_cols_map$x_index, x_index$x_index)) {
             # add ordering if theres more than one y for each x
-            assign(".order", new_cols_map$x_index, new_x)
-            assign(by.x, x[[by.x]][new_x$.order], new_x)
+            attr(new_x, "order") <- new_cols_map$x_index
+            # assign(by.x, x[[by.x]][attr(x, "order")], new_x) # not needed?
         }
         # remove NAs from x_index?
     } else if (sort == "y") {
         new_cols_map <- new_cols_map[with(new_cols_map, order(y_index, x_index)), ]
         new_cols_map <- new_cols_map[!is.na(new_cols_map$y_index),]
-        assign(".order", new_cols_map$x_index, new_x)
+        attr(new_x, "order") <- new_cols_map$x_index
         # need to remap the by.x columns because new_x was evaluated already
-        assign(by.x, x[[by.x]][new_x$.order], new_x)
+        # assign(by.x, x[[by.x]][attr(new_x, "order")], new_x) # not needed?
     }
 
     new_cols <- y[new_cols_map$y_index,]
     for (col in colnames(new_cols)) {
         if (!col %in% by.x) {
-            if (length(new_cols[,col]) != nrow(new_x)) {
-                halt("The number of rows in x (", nrow(new_x), 
-                     ") and y (", length(new_cols[,col]), ") must be the same.")
-            }
             # only assign new columns
             # todo: check names, do something intelligent if they are already there.
             assign(col, new_cols[,col], envir = new_x)
-            assign(".names", c(new_x$.names, col), new_x )
+            attr(new_x, "col_names") <- c(names(new_x), col)
         }
     }
     
     return(new_x)
 }
-
 
 fix_bys <- function (data, by) {
     ## Do validations and return a proper, legal "by" variable, if possible
@@ -219,4 +219,134 @@ fix_bys <- function (data, by) {
         }
     }
     return(by)
+}
+
+#' @export
+`[.CrunchDataFrame` <- function (x, i, j, drop = TRUE) {
+    if (missing(j)) {
+        # if there's no j, grab all rows
+        j <- names(x)
+    } else if (is.logical(j)) {
+        if (length(j) != ncol(x)) {
+            halt("when using a logical to subset columns, the logical vector ",
+                 "must have the same length as the number of columns.")
+        }
+        j <- names(x)[j]
+    }
+
+    if (missing(i)) {
+        # if there is no row specification, use all rows.
+        row_inds <- seq_len(nrow(x))
+    } else {
+        if (is.logical(i)) {
+            if (length(i) != nrow(x)) {
+                halt("when using a logical to subset rows, the logical vector ",
+                     "must have the same length as the number of rows")
+            }
+        } else if (!is.numeric(i)) {
+            halt("row subsetting must be done with either numeric or a logical.")
+        }
+        row_inds <- i
+    }
+
+    # grab the columns
+    out <- lapply(j, function(col) {
+        col_data <- x[[col]]
+        if (is.data.frame(col_data)) {
+            return(col_data[row_inds,])
+        } else {
+            return(col_data[row_inds])
+        }
+    })
+    
+    # set names, if j is a character use that, if not grab names from the CDF
+    if (is.character(j)) {
+        names(out) <- j
+    } else {
+        names(out) <- names(x)[j]
+    }
+    
+    if (length(out) == 1 & drop) {
+        # single column, so return vector
+        out <- out[[1]]
+    } else {
+        out <- structure(out, class="data.frame", row.names=seq_along(row_inds))
+    }
+    
+    return(out)
+}
+
+#' @export
+`[[.CrunchDataFrame` <- function (x, i) {
+    if (is.character(i)) {
+        col_name <- i
+        # check if any don't exist
+    } else if (is.numeric(i)) {
+        col_name <- names(x)[i]
+    } else {
+        halt("column subsetting must be done with either numeric or ",
+             "a character")
+    }
+    
+    return(get_CDF_var(col_name, x, mode = attr(x, "mode")))
+}
+
+#' @export
+`$.CrunchDataFrame` <- function (x, i) {
+    return(get_CDF_var(i, x, mode = attr(x, "mode")))
+}
+
+#' @export
+`$<-.CrunchDataFrame` <- function (x, i, value) {
+    x <- set_CDF_var(i, x, value)
+    return(x)
+}
+
+# TODO: [<- and [[<- methods
+
+get_CDF_var <- function (col_name, cdf, ...) {
+    if (!is(cdf, "CrunchDataFrame")) { 
+        halt("The cdf argument must be a CrunchDataFrame, got ", class(cdf), " instead.")
+    }
+    if (!col_name %in% names(cdf)) {
+        halt("The variable ", dQuote(col_name), " is not found in the CrunchDataFrame.")
+    }
+    
+    if (col_name %in% attr(cdf, "crunchVars")) {
+        ord <- attr(cdf, "order")
+        ds <- attr(cdf, "crunchDataset")
+        if (!is.null(ord)) {
+            return(as.vector(ds[[col_name]][ord], ...)[match(ord, sort(unique(ord)))])
+        } else {
+            # no reordering if order is null
+            return(as.vector(ds[[col_name]], ...))
+        }
+    } else {
+        return(get(col_name, cdf)) # need [ord] here?
+    }
+}
+
+set_CDF_var <- function (col_name, cdf, value) {
+    if (!is(cdf, "CrunchDataFrame")) { 
+        halt("The cdf argument must be a CrunchDataFrame, got ", class(cdf), " instead.")
+    }
+    if (col_name %in% names(cdf)) {
+        halt("The variable ", dQuote(col_name), " is already in the ",
+             "CrunchDataFrame, please choose another.")
+    }
+    
+    # validate row lengths
+    # todo: multiply single values?
+    if (length(value) != nrow(cdf)) {
+        halt("replacement has ", length(value),
+             " rows, the CrunchDataFrame has ", nrow(cdf))
+    }
+    
+    # add values
+    assign(col_name, value, cdf)
+    
+    # add to names
+    attr(cdf, "col_names") <- c(names(cdf), col_name)
+    
+    return(invisible(cdf))
 }

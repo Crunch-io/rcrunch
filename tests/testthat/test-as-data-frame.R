@@ -88,6 +88,18 @@ with_mock_crunch({
         expect_true(is.data.frame(as.data.frame(ds, force=TRUE)))
     })
 
+    test_that("as.data.frame() works with hidden variables", {
+        new_ds <- loadDataset("test ds")
+        new_ds$gender@tuple[["discarded"]] <- TRUE
+        expect_equivalent(hiddenVariables(new_ds), "gender")
+        new_ds_df <- as.data.frame(new_ds)
+        expect_equal(names(new_ds_df),
+                     aliases(allVariables(new_ds)))
+        expect_warning(expect_equal(names(as.data.frame(new_ds_df)),
+                                    aliases(allVariables(new_ds))),
+                       "Variable gender is hidden")
+    })
+    
     test_that("as.data.frame size limit", {
         with(temp.option(crunch.data.frame.limit=50), {
             expect_error(as.data.frame(ds, force=TRUE),
@@ -125,16 +137,15 @@ with_mock_crunch({
 
     test_that("can manipulate the row order of a crunchDataFrame", {
         ds_df <- as.data.frame(ds)
-        gndr <- ds_df$v1
+        gndr <- ds_df$gender
         expect_equal(nrow(ds_df), 25)
         # both reording and subsetting the dataset
         new_order <- c(4,3,1,2)
-        assign(".order", new_order, ds_df)
-        # TODO: [, [[, and $ methods
-        expect_equal(ds_df$v1, gndr[new_order])
+        attr(ds_df, "order") <- new_order
+        expect_equal(ds_df$gender, gndr[new_order])
         expect_equal(nrow(ds_df), 4)
         ds_df2 <- as.data.frame(ds, row.order = new_order)
-        expect_equal(ds_df2$v1, gndr[new_order])
+        expect_equal(ds_df2$gender, gndr[new_order])
         expect_equal(nrow(ds_df2), 4)
     })
 
@@ -176,19 +187,109 @@ with_mock_crunch({
                        "\\(x or y\\) is used to sort."))
     })
 
-    test_that("Can't assign too many rows into a CrunchDataFrame", {
-        # CrunchDataFrames should not allow data.frames with fewer or more
-        # rows than the CrunchDataset has.
-        skip("TODO: Not trigged currently, but should be factored to a new function")
-        large_df <- data.frame(gender=rep(c("Male", "Female"), 100), new="new")
-        expect_error(merged_df <- merge(ds_df,
-                                        large_df,
-                                        by.x = "gender",
-                                        by.y = "gender"),
-                     paste0("The number of rows in x \\(25\\) and y \\(1708\\) must",
-                     "be the same."))
-    })
+    test_that("Extract methods work with CrunchDataFrames like they do with data.frames", {
+        ds_df <- as.data.frame(ds)
+        true_df <- as.data.frame(ds, force = TRUE)
+        # single column/row extraction
+        expect_equivalent(ds_df[1,],true_df[1,])
+        expect_equivalent(ds_df[,1],true_df[,1])
+        
+        # multiple columns/rows
+        expect_equivalent(ds_df[c(1,2),],true_df[c(1,2),])
+        expect_equivalent(ds_df[,c(1,2)],true_df[,c(1,2)])
 
+        # single column extraction with characters
+        expect_equivalent(ds_df[,"location"],true_df[,"location"])
+        
+        # multiple columns with characters
+        expect_equivalent(ds_df[,c("mymrset","textVar")],true_df[,c("mymrset","textVar")])
+
+        # columns/rows with logicals
+        expect_equivalent(ds_df[,c(TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE)],
+                          true_df[,c(TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE)])
+        expect_equivalent(ds_df[c(TRUE, rep(FALSE, 23), TRUE),],
+                          true_df[c(TRUE, rep(FALSE, 23), TRUE),])
+        
+        # both rows and columns
+        expect_equivalent(ds_df[c(1,3,5),"location"],true_df[c(1,3,5),"location"])
+        
+                        
+        # $ methods
+        expect_equivalent(ds_df$starttime,true_df$starttime)
+        
+        # [[ methods
+        expect_equivalent(ds_df[[1]],true_df[[1]])
+        expect_equivalent(ds_df[["catarray"]],true_df[["catarray"]])
+        expect_equivalent(ds_df[[2]],true_df[[2]])
+        expect_equivalent(ds_df[["birthyr"]],true_df[["birthyr"]])
+    })
+    
+    test_that("Extract methods input checking", {
+        ds_df <- as.data.frame(ds)
+        
+        expect_error(ds_df["foo",],
+                     "row subsetting must be done with either numeric or a logical")
+        expect_error(ds_df[,list(list(1))], 
+                     "column subsetting must be done with either numeric or a character")
+        
+        expect_error(ds_df[c(TRUE),], 
+                     paste0("when using a logical to subset rows, the logical vector ",
+                     "must have the same length as the number of rows"))
+        expect_error(ds_df[,c(TRUE)],
+                     paste0("when using a logical to subset columns, the logical ",
+                     "vector must have the same length as the number of columns"))
+        
+        expect_error(`$`(ds_df,1),
+                     paste0("invalid subscript type 'double'"))
+        
+    })
+    
+    test_that("get_CDF_var works with variables, including different modes for factors", {
+        ds_df <- as.data.frame(ds)
+        true_df <- as.data.frame(ds, force = TRUE)
+
+        expect_equal(get_CDF_var("textVar", ds_df),
+                     true_df$textVar)
+        expect_equal(get_CDF_var("gender", ds_df, mode = 'factor'),
+                     true_df$gender)
+        expect_equal(get_CDF_var("gender", ds_df, mode = 'id'),
+                     ifelse(is.na(true_df$gender), -1,
+                            ifelse(true_df$gender == "Female", 2, 1)))
+        expect_equal(get_CDF_var("gender", ds_df, mode = 'numeric'),
+                     ifelse(true_df$gender == "Female", 2, 1))
+    })
+    
+    test_that("cdf column setters work", {
+        ds_df <- as.data.frame(ds)
+
+        expect_silent(ds_df$new_local_var <- c(25:1))
+        expect_true("new_local_var" %in% names(ds_df))
+        expect_equal(ds_df$new_local_var, c(25:1))
+    })
+    
+    test_that("cdf column validators work", {
+        ds_df <- as.data.frame(ds)
+        expect_error(ds_df$new_local_var <- c(5:1),
+                     "replacement has 5 rows, the CrunchDataFrame has 25")
+        
+        expect_error(ds_df$new_local_var <- 1,
+                     "replacement has 1 rows, the CrunchDataFrame has 25")
+        
+        expect_error(ds_df$new_local_var <- c(1:100),
+                     "replacement has 100 rows, the CrunchDataFrame has 25")
+    })
+    
+    test_that("get_CDF_var input validation", {
+        ds_df <- as.data.frame(ds)
+        
+        expect_error(get_CDF_var("textVar", data.frame(textVar = c(1,2))),
+                     paste("The cdf argument must be a CrunchDataFrame, got",
+                           "data.frame instead."))
+        expect_error(get_CDF_var("not_a_var", ds_df),
+                     paste("The variable", dQuote("not_a_var") ,
+                           "is not found in the CrunchDataFrame."))
+    })
+    
     test_that("merge.CrunchDataFrame works with sort=y", {
         # when sort=y is specified, the resulting order of the CrunchDataFrame
         # should follow the ordering present in y, and include all of the data
