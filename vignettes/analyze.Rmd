@@ -1,7 +1,11 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Analyzing data with crunch}
--->
+---
+title: "Analyzing Crunch Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Analyzing Crunch Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
 [Previous: transform and derive](derive.html)
 ```{r, results='hide', echo=FALSE, message=FALSE}
