@@ -15,8 +15,8 @@
 \item{optional}{part of as.data.frame signature. Ignored.}
 
 \item{keys}{A character vector of the variable catalog attributes which you would like
-included in the datafame. To include all attributes or see which ones are available
-set keys to "all".}
+included in the datafame. To include all attributes or see which ones are
+available set keys to "all".}
 
 \item{...}{Additional arguments passed to \code{data.frame}}
 }
@@ -36,6 +36,6 @@ package = "crunch")}
 ds <- loadDataset("iris")
 vars <- variables(ds)
 var_df <- as.data.frame(vars, keys = "all")
-} 
+}
 
 }

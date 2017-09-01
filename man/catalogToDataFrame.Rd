@@ -11,9 +11,9 @@ catalogToDataFrame(x, keys = TRUE, rownames = NULL,
 \item{x}{ShojiCatalog or subclass}
 
 \item{keys}{character vector of attribute names from each catalog tuple to
-include in the result. Default is TRUE, which means all.}
+include in the result. Default is \code{TRUE}, which means all.}
 
-\item{rownames}{The rownames of the resulting dataframe. If set to NULL rownames
+\item{rownames}{The rownames of the resulting dataframe. If set to \code{NULL} rownames
 will default to the resulting dataframe will not have row names. By default the row names
 will be the URLs of the catalog tuples.}
 
