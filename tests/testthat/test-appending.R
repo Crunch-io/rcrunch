@@ -22,6 +22,20 @@ with_mock_crunch({
       expect_DELETE(appendDataset(ds2, ds1),
                     "https://app.crunch.io/api/datasets/3/pk/")
     })
+
+    test_that("addBatch shows deprecation warnings", {
+        expect_warning(
+            expect_POST(addBatch(ds1, autorollback = TRUE),
+                        'https://app.crunch.io/api/datasets/1/batches/',
+                        '{"element":"shoji:entity","body":[]}'),
+            "autorollback has been deprecated. This option no longer does anything.")
+        expect_warning(
+            expect_POST(addBatch(ds1, savepoint = TRUE),
+                        'https://app.crunch.io/api/datasets/1/batches/',
+                        '{"element":"shoji:entity","body":[]}'),
+            "savepoint has been deprecated. This option no longer does anything.")
+
+    })
 })
 
 with_test_authentication({
@@ -71,7 +85,7 @@ with_test_authentication({
                 expect_identical(dim(out), c(nrow(df)*2L, ncol(df)))
                 expect_identical(nrow(out), nrow(df)*2L)
                 expect_identical(nrow(out), length(as.vector(out$v3)))
-            })              
+            })
         })
     })
 
