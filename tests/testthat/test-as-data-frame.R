@@ -293,6 +293,14 @@ with_mock_crunch({
                            "is not found in the CrunchDataFrame."))
     })
     
+    test_that("CrunchDataFrames respect order", {
+        ds_df <- as.data.frame(ds[c("gender", "birthyr", "location")])
+        expect_equal(names(ds_df), c("gender", "birthyr", "location"))
+        expect_equal(names(ds_df[,c("location", "gender", "birthyr")]),
+                     c("location", "gender", "birthyr"))
+        
+    })
+    
     test_that("cdf column setters work", {
         ds_df <- as.data.frame(ds)
         
