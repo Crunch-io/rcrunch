@@ -2,13 +2,21 @@ CrunchDataFrame <- function (dataset, row.order = NULL, categorical.mode = "fact
     ## S3 constructor method for CrunchDataFrame. terms.formula doesn't seem
     ## to like S4 subclass of environment
     stopifnot(is.dataset(dataset))
-    var_names <- aliases(allVariables(dataset))
+
+    if (include.hidden) {
+        var_names <- aliases(allVariables(dataset))
+    } else {
+        var_names <- aliases(variables(dataset))
+    }
+    
     out <- new.env()
+    
     attr(out, "crunchDataset") <- dataset
     attr(out, "col_names") <- var_names
     attr(out, "crunchVars") <- var_names
     attr(out, "mode") <- categorical.mode
-    attr(out, "include.hidden") <- include.hidden
+
+
     
     with(out, {
         ## Note the difference from as.environment: wrapped in as.vector
@@ -63,8 +71,12 @@ names.CrunchDataFrame <- function (x) attr(x, "col_names")
 #' @param optional part of as.data.frame signature. Ignored.
 #' @param force logical: actually coerce the dataset to `data.frame`, or
 #' leave the columns as unevaluated promises. Default is `FALSE`.
-#' @param row.order vector of indeces. Which, and their order, of the rows of the dataset should be presented as (default: `NULL`). If `NULL`, then the Crunch Dataset order will be used.
-#' @param categorical.mode what mode should categoricals be pulled as? One of factor, numeric, id (default: factor)
+#' @param row.order vector of indeces. Which, and their order, of the rows of 
+#'  the dataset should be presented as (default: `NULL`). If `NULL`, then the 
+#'  Crunch Dataset order will be used.
+#' @param categorical.mode what mode should categoricals be pulled as? One of 
+#' factor, numeric, id (default: factor)
+#' @param include.hidden should hidden variables be included? (default: `FALSE`)
 #' @param ... additional arguments passed to as.data.frame.default
 #' @return an object of class `CrunchDataFrame` unless `force`, in
 #' which case the return is a `data.frame`.
@@ -75,8 +87,11 @@ NULL
 #' @export
 as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE,
                                         force=FALSE, categorical.mode = "factor",
+                                        include.hidden = FALSE,
                                         row.order = NULL, ...) {
-    out <- CrunchDataFrame(x, row.order = row.order, categorical.mode = categorical.mode)
+    out <- CrunchDataFrame(x, row.order = row.order,
+                           categorical.mode = categorical.mode,
+                           include.hidden = include.hidden)
     if (force) {
         out <- as.data.frame(out)
     }
@@ -97,13 +112,13 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
     crunch_var_names <- attr(x, "crunchVars")
     # todo: something intelligent with modes
     out <- lapply(crunch_var_names, function(var) as.vector(ds[[var]]))
-
+    names(out) <- crunch_var_names
+    
     col_names <- attr(x, "col_names")
     local_var_names <- col_names[!col_names %in% crunch_var_names]
     if (length(local_var_names) > 0) {
-        out <- rbind(out, ds[,local_var_names])
+        out <- cbind(out, x[,local_var_names, drop = FALSE])
     }
-    names(out) <- col_names
     return(structure(out, class="data.frame", row.names=c(NA, -nrow(ds))))
 }
 

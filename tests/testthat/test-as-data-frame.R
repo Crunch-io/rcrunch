@@ -94,10 +94,21 @@ with_mock_crunch({
         expect_equivalent(hiddenVariables(new_ds), "gender")
         new_ds_df <- as.data.frame(new_ds)
         expect_equal(names(new_ds_df),
+                     aliases(variables(new_ds)))
+        expect_equal(ncol(new_ds_df), 6)
+        expect_silent(
+            expect_equal(names(as.data.frame(new_ds_df)),
+                         aliases(variables(new_ds))))
+        
+        # now we want the hidden vars to be includes
+        new_ds_df <- as.data.frame(new_ds, include.hidden = TRUE)
+        expect_equal(names(new_ds_df),
                      aliases(allVariables(new_ds)))
-        expect_warning(expect_equal(names(as.data.frame(new_ds_df)),
-                                    aliases(allVariables(new_ds))),
-                       "Variable gender is hidden")
+        expect_equal(ncol(new_ds_df), 7)
+        expect_warning(
+            expect_equal(names(as.data.frame(new_ds_df)),
+                         aliases(allVariables(new_ds))),
+            "Variable gender is hidden")
     })
     
     test_that("as.data.frame size limit", {
@@ -259,14 +270,6 @@ with_mock_crunch({
                      ifelse(true_df$gender == "Female", 2, 1))
     })
     
-    test_that("cdf column setters work", {
-        ds_df <- as.data.frame(ds)
-
-        expect_silent(ds_df$new_local_var <- c(25:1))
-        expect_true("new_local_var" %in% names(ds_df))
-        expect_equal(ds_df$new_local_var, c(25:1))
-    })
-    
     test_that("cdf column validators work", {
         ds_df <- as.data.frame(ds)
         expect_error(ds_df$new_local_var <- c(5:1),
@@ -288,6 +291,32 @@ with_mock_crunch({
         expect_error(get_CDF_var("not_a_var", ds_df),
                      paste("The variable", dQuote("not_a_var") ,
                            "is not found in the CrunchDataFrame."))
+    })
+    
+    test_that("cdf column setters work", {
+        ds_df <- as.data.frame(ds)
+        
+        expect_silent(ds_df$new_local_var <- c(25:1))
+        expect_true("new_local_var" %in% names(ds_df))
+        expect_equal(ds_df$new_local_var, c(25:1))
+
+        # and we can get a dataframe from this new one.
+        true_df <- as.data.frame(ds_df)
+
+        expect_equal(true_df$new_local_var, c(25:1))
+        # nothing funny has happened to the ordering
+        expect_equal(true_df$gender, as.vector(ds$gender)) 
+    })
+    
+    test_that("get_CDF_var input validation", {
+        ds_df <- as.data.frame(ds)
+        
+        expect_error(set_CDF_var("new_local_var", data.frame(textVar = c(1,2))),
+                     paste("The cdf argument must be a CrunchDataFrame, got",
+                           "data.frame instead."))
+        expect_error(set_CDF_var("textVar", ds_df),
+                     paste("The variable", dQuote("textVar"), "is already in the",
+                           "CrunchDataFrame, please choose another."))
     })
     
     test_that("merge.CrunchDataFrame works with sort=y", {
