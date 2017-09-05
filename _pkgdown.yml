@@ -2,6 +2,7 @@ title: Crunch
 template:
   params:
     bootswatch: flatly
+    ganalytics: UA-50332119-2
 reference:
 - title: Upload
   contents:
