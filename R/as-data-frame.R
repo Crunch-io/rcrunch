@@ -10,13 +10,10 @@ CrunchDataFrame <- function (dataset, row.order = NULL, categorical.mode = "fact
     }
     
     out <- new.env()
-    
     attr(out, "crunchDataset") <- dataset
     attr(out, "col_names") <- var_names
     attr(out, "crunchVars") <- var_names
     attr(out, "mode") <- categorical.mode
-
-
     
     with(out, {
         ## Note the difference from as.environment: wrapped in as.vector
@@ -124,49 +121,50 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
 
 
 #' Merge a CrunchDataFrame
-#' 
-#' `merge`ing a CrunchDataFrame with a local dataframe is useful in situations 
-#' where you have new information in your local R session that you want to 
+#'
+#' `merge`ing a CrunchDataFrame with a local dataframe is useful in situations
+#' where you have new information in your local R session that you want to
 #' connect with Crunch data. For example, for making
 #' plots with Crunch and non-Crunch data. It produces a hybrid CrunchDataFrame
-#' that has the local data attached to it, but like normal CrunchDataFrames 
-#' it is still judicious about downloading data from the server only when it 
+#' that has the local data attached to it, but like normal CrunchDataFrames
+#' it is still judicious about downloading data from the server only when it
 #' is needed.
-#' 
-#' Merging a CrunchDataFrame with a local dataframe does not allow specifying 
-#' all rows from both sources. Instead, the resulting CrunchDataFrame will 
+#'
+#' Merging a CrunchDataFrame with a local dataframe does not allow specifying
+#' all rows from both sources. Instead, the resulting CrunchDataFrame will
 #' include all of the rows in whichever source is used for sorting (x or y). So
 #' if you specify `sort="x"` (the default) all rows of x will be present but
 #' rows in y that do not match with rows in x will not be present.
-#' 
-#' Merging a CrunchDataFrame with a local dataframe is experiemental and might 
-#' result in unexpected results. One known issue is that using `merge` on a 
-#' CrunchDataFrame will change the both the CrunchDataFrame used as input as 
-#' well as create a new CrunchDataFrame. 
-#' 
+#'
+#' Merging a CrunchDataFrame with a local dataframe is experiemental and might
+#' result in unexpected results. One known issue is that using `merge` on a
+#' CrunchDataFrame will change the both the CrunchDataFrame used as input as
+#' well as create a new CrunchDataFrame.
+#'
 #' @param x a CrunchDataFrame
 #' @param y a standard data.frame
 #' @param by name of the variable to match in both data sources (default: the intersection of the names of x and y)
 #' @param by.x name of the variable to match in x
 #' @param by.y name of the variable to match in y
-#' @param sort character, either "x" or "y" (default: "x"). Which of the inputs should be used for the output order. Unlike merge.data.frame, merge.CrunchDataFrame will not re-sort the order of the output. It will use the order of either `x` or `y`. 
+#' @param sort character, either "x" or "y" (default: "x"). Which of the inputs should be used for the output order. Unlike merge.data.frame, merge.CrunchDataFrame will not re-sort the order of the output. It will use the order of either `x` or `y`.
 #' @param ... ignored
-#' 
+#' @name merge
+#'
 #' @return a CrunchDataFrame with columns from both `x` and `y`
-#' 
+#'
 #' @export
 merge.CrunchDataFrame  <- function (x, y, by=intersect(names(x), names(y)),
                                     by.x=by, by.y=by, sort = c("x", "y"), ...) {
     by.x <- fix_bys(x, by.x)
     by.y <- fix_bys(y, by.y)
     sort <- match.arg(sort)
-    
+
     # TODO: instead of not allowing use of `all`, allow it and do the right thing.
     if (any(startsWith(ls(list(...)), "all"))) {
         warning("options ", serialPaste(dQuote(c("all", "all.x", "all.y"))),
                 " are not currently supported by merge.CrunchDataFrame. The results will include all rows from whichever argument (x or y) is used to sort.")
     }
-    
+
     # Duplicate the enviornment (so we are not manipulating in place)
     # using `for(n in ls(x, all.names=TRUE)) assign(n, get(n, x), new_x)`
     # will evaluate each column, which is not actually what we want
@@ -181,15 +179,15 @@ merge.CrunchDataFrame  <- function (x, y, by=intersect(names(x), names(y)),
     x_index <- as.data.frame(x[[by.x]])
     x_index$x_index <- as.numeric(row.names(x_index))
     colnames(x_index) <- c(by.x, "x_index")
-    
+
     y_index <- as.data.frame(y[[by.y]])
     y_index$y_index <- as.numeric(row.names(y_index))
     colnames(y_index) <- c(by.y, "y_index")
-    
+
     new_cols_map <- merge(x_index, y_index, by.x=by.x, by.y=by.y, all=TRUE, sort=FALSE)
-    
-    # TODO: split out into separate functions that deal with the 
-    # CrunchDataFrame and the data.frame independently, and then allow for 
+
+    # TODO: split out into separate functions that deal with the
+    # CrunchDataFrame and the data.frame independently, and then allow for
     # either to be x or y.
     if (sort == "x") {
         new_cols_map <- new_cols_map[with(new_cols_map, order(x_index, y_index)), ]
@@ -216,7 +214,7 @@ merge.CrunchDataFrame  <- function (x, y, by=intersect(names(x), names(y)),
             attr(new_x, "col_names") <- c(names(new_x), col)
         }
     }
-    
+
     return(new_x)
 }
 

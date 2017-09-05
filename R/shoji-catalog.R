@@ -171,7 +171,7 @@ whichNameOrURL <- function (x, i, secondary=names(x)) {
             warning(i, msg, call.=FALSE)
         }
     }
-    
+
     return(var_matches)
 }
 
@@ -190,13 +190,13 @@ setMethod("lapply", "ShojiCatalog", function (X, FUN, ...) lapply(index(X), FUN,
 #' @return Getters return the list object in the "index" slot; setters
 #' return \code{x} duly modified.
 #' @aliases index index<-
-#' @name index
+#' @name shoji-index
 NULL
 
-#' @rdname index
+#' @rdname shoji-index
 #' @export
 setMethod("index", "ShojiCatalog", function (x) x@index)
-#' @rdname index
+#' @rdname shoji-index
 #' @export
 setMethod("index<-", "ShojiCatalog", function (x, value) {
     x@index <- value
