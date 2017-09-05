@@ -236,32 +236,9 @@ fix_bys <- function (data, by) {
 
 #' @export
 `[.CrunchDataFrame` <- function (x, i, j, drop = TRUE) {
-    if (missing(j)) {
-        # if there's no j, grab all rows
-        j <- names(x)
-    } else if (is.logical(j)) {
-        if (length(j) != ncol(x)) {
-            halt("when using a logical to subset columns, the logical vector ",
-                 "must have the same length as the number of columns.")
-        }
-        j <- names(x)[j]
-    }
-
-    if (missing(i)) {
-        # if there is no row specification, use all rows.
-        row_inds <- seq_len(nrow(x))
-    } else {
-        if (is.logical(i)) {
-            if (length(i) != nrow(x)) {
-                halt("when using a logical to subset rows, the logical vector ",
-                     "must have the same length as the number of rows")
-            }
-        } else if (!is.numeric(i)) {
-            halt("row subsetting must be done with either numeric or a logical.")
-        }
-        row_inds <- i
-    }
-
+    j <- grab_col_names(x, j)
+    row_inds <- grab_row_ind(x, i)
+    
     # grab the columns
     out <- lapply(j, function(col) {
         col_data <- x[[col]]
@@ -290,7 +267,70 @@ fix_bys <- function (data, by) {
 }
 
 #' @export
+`[<-.CrunchDataFrame` <- function (x, i, j, value) {
+    j <- grab_col_names(x, j)
+    row_inds <- grab_row_ind(x, i)
+    
+    # TODO: check value length
+    
+    # split value string by the length of row indicators
+    values <- split(value, ceiling(seq_along(value)/length(row_inds)))
+    for (i in seq_along(j)) {
+        col_name <- j[i]
+        x <- set_CDF_var(col_name = col_name, row_inds = row_inds,
+                         cdf = x, value = values[[i]])
+    }
+    return(x)
+}
+
+grab_col_names <- function (x, j) {
+    if (missing(j)) {
+        # if there's no j, grab all rows
+        j <- names(x)
+    } else if (is.logical(j)) {
+        if (length(j) != ncol(x)) {
+            halt("when using a logical to subset columns, the logical vector ",
+                 "must have the same length as the number of columns.")
+        }
+        j <- names(x)[j]
+    }
+    return(j)
+}
+
+grab_row_ind <- function (x, i) {
+    if (missing(i)) {
+        # if there is no row specification, use all rows.
+        row_inds <- seq_len(nrow(x))
+    } else {
+        if (is.logical(i)) {
+            if (length(i) != nrow(x)) {
+                halt("when using a logical to subset rows, the logical vector ",
+                     "must have the same length as the number of rows")
+            }
+        } else if (!is.numeric(i)) {
+            halt("row subsetting must be done with either numeric or a logical.")
+        }
+        row_inds <- i
+    }
+    return(row_inds)
+}
+
+#' @export
 `[[.CrunchDataFrame` <- function (x, i) {
+    col_name <- col_name_from_index(x, i)
+    
+    return(get_CDF_var(col_name, x, mode = attr(x, "mode")))
+}
+
+#' @export
+`[[<-.CrunchDataFrame` <- function (x, i, value) {
+    col_name <- col_name_from_index(x, i)
+    
+    x <- set_CDF_var(col_name = col_name, cdf = x, value = value)
+    return(x)
+}
+
+col_name_from_index <- function(x, i) {
     if (is.character(i)) {
         col_name <- i
         # check if any don't exist
@@ -300,8 +340,7 @@ fix_bys <- function (data, by) {
         halt("column subsetting must be done with either numeric or ",
              "a character")
     }
-    
-    return(get_CDF_var(col_name, x, mode = attr(x, "mode")))
+    return(col_name)
 }
 
 #' @export
@@ -311,11 +350,9 @@ fix_bys <- function (data, by) {
 
 #' @export
 `$<-.CrunchDataFrame` <- function (x, i, value) {
-    x <- set_CDF_var(i, x, value)
+    x <- set_CDF_var(col_name = i, cdf = x, value = value)
     return(x)
 }
-
-# TODO: [<- and [[<- methods
 
 get_CDF_var <- function (col_name, cdf, ...) {
     if (!is(cdf, "CrunchDataFrame")) { 
@@ -339,20 +376,42 @@ get_CDF_var <- function (col_name, cdf, ...) {
     }
 }
 
-set_CDF_var <- function (col_name, cdf, value) {
+set_CDF_var <- function (col_name, row_inds, cdf, value) {
     if (!is(cdf, "CrunchDataFrame")) { 
         halt("The cdf argument must be a CrunchDataFrame, got ", class(cdf), " instead.")
     }
-    if (col_name %in% names(cdf)) {
-        halt("The variable ", dQuote(col_name), " is already in the ",
-             "CrunchDataFrame, please choose another.")
+    
+    if (col_name %in% attr(cdf, "crunchVars")) {
+        halt("Cannot over-write data from a Crunch variable.")
+    }
+    
+    if (missing(row_inds)) {
+        row_inds <- seq_len(nrow(cdf))
     }
     
     # validate row lengths
-    # todo: multiply single values?
-    if (length(value) != nrow(cdf)) {
+    if (length(value) == 1 & length(row_inds) > 1) {
+        # if there is a single value, but more than one row, then we need to 
+        # repeat the value for as many times as there are rows. This is the 
+        # only exception to the rule that there must be the same number of 
+        # values as rows.
+        value <- rep(value, length(row_inds))
+    } else if (length(value) != length(row_inds)) {
         halt("replacement has ", length(value),
              " rows, the CrunchDataFrame has ", nrow(cdf))
+    }
+    
+    # if we are replacing some rows, fill in with NAs, or grab old vector
+    if (length(row_inds) != nrow(cdf)) {
+        if (!col_name %in% names(cdf)) {
+            empty_vector <- rep(NA, nrow(cdf))
+            empty_vector[row_inds] <- value
+            value <- empty_vector
+        } else {
+            old_vector <- get(col_name, cdf)
+            old_vector[row_inds] <- value
+            value <- old_vector 
+        }
     }
     
     # add values

@@ -275,8 +275,8 @@ with_mock_crunch({
         expect_error(ds_df$new_local_var <- c(5:1),
                      "replacement has 5 rows, the CrunchDataFrame has 25")
         
-        expect_error(ds_df$new_local_var <- 1,
-                     "replacement has 1 rows, the CrunchDataFrame has 25")
+        expect_error(ds_df$new_local_var <- c(1,2),
+                     "replacement has 2 rows, the CrunchDataFrame has 25")
         
         expect_error(ds_df$new_local_var <- c(1:100),
                      "replacement has 100 rows, the CrunchDataFrame has 25")
@@ -300,23 +300,46 @@ with_mock_crunch({
         expect_true("new_local_var" %in% names(ds_df))
         expect_equal(ds_df$new_local_var, c(25:1))
 
+        expect_silent(ds_df[["new_local_var2"]] <- c(1:25))
+        expect_true("new_local_var2" %in% names(ds_df))
+        expect_equal(ds_df$new_local_var2, c(1:25))
+        
         # and we can get a dataframe from this new one.
         true_df <- as.data.frame(ds_df)
 
         expect_equal(true_df$new_local_var, c(25:1))
+        expect_equal(true_df$new_local_var2, c(1:25))
         # nothing funny has happened to the ordering
-        expect_equal(true_df$gender, as.vector(ds$gender)) 
+        expect_equal(true_df$gender, as.vector(ds$gender))
+        
+        
+        # try overwritting with [<-
+        expect_silent(
+            ds_df[c(1, 25),c("new_local_var", "new_local_var2")] <- 
+                c(250, 10, 10, 250))
+        expect_equal(ds_df$new_local_var, c(250, 24:2, 10))
+        expect_equal(ds_df$new_local_var2, c(10, 2:24, 250))
+        
+        # can add a new column with row indices
+        expect_silent(
+            ds_df[c(1, 25),"new_local_var3"] <- 
+                c(1, 25))
+        expect_equal(ds_df$new_local_var3, c(1, rep(NA, 23), 25))
+        
+        # can add a single value
+        expect_silent(ds_df$new_local_var4 <- 1)
+        expect_equal(ds_df$new_local_var4, rep(1, 25))
     })
     
     test_that("get_CDF_var input validation", {
         ds_df <- as.data.frame(ds)
         
-        expect_error(set_CDF_var("new_local_var", data.frame(textVar = c(1,2))),
+        expect_error(set_CDF_var(col_name = "new_local_var",
+                                 cdf = data.frame(textVar = c(1,2))),
                      paste("The cdf argument must be a CrunchDataFrame, got",
                            "data.frame instead."))
-        expect_error(set_CDF_var("textVar", ds_df),
-                     paste("The variable", dQuote("textVar"), "is already in the",
-                           "CrunchDataFrame, please choose another."))
+        expect_error(set_CDF_var(col_name = "textVar", cdf = ds_df, value = c(1:25)),
+                     paste("Cannot over-write data from a Crunch variable."))
     })
     
     test_that("merge.CrunchDataFrame works with sort=y", {
