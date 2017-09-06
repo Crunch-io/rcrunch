@@ -1,4 +1,4 @@
-addBatch <- function (ds, ..., savepoint, autorollback, strict=TRUE, body=list(...)) {
+addBatch <- function (ds, ..., strict=TRUE, body=list(...)) {
     batches_url <- shojiURL(ds, "catalogs", "batches")
     if (!strict) {
         ## This is apparently deprecated in favor of passing in "strict" differently
@@ -6,13 +6,8 @@ addBatch <- function (ds, ..., savepoint, autorollback, strict=TRUE, body=list(.
     }
     body <- wrapEntity(body=body)
 
-    if (!missing(savepoint)) {
-        warning("savepoint has been deprecated. This option no longer does anything.")
-    }
-    if (!missing(autorollback)) {
-        warning("autorollback has been deprecated. This option no longer does anything.")
-    }
-
+    ## Don't print "Result URL" if the job fails because the dataset will
+    ## be rolled back and that URL won't exist
     suppressMessages(crPOST(batches_url, body=toJSON(body)))
     invisible(refresh(ds))
 }

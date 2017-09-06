@@ -23,18 +23,14 @@ with_mock_crunch({
                     "https://app.crunch.io/api/datasets/3/pk/")
     })
 
-    test_that("addBatch shows deprecation warnings", {
+    test_that("appendDataset shows deprecation warnings", {
         expect_warning(
-            expect_POST(addBatch(ds1, autorollback = TRUE),
+            expect_POST(appendDataset(ds1, ds2, autorollback = TRUE),
                         'https://app.crunch.io/api/datasets/1/batches/',
-                        '{"element":"shoji:entity","body":[]}'),
-            "autorollback has been deprecated. This option no longer does anything.")
-        expect_warning(
-            expect_POST(addBatch(ds1, savepoint = TRUE),
-                        'https://app.crunch.io/api/datasets/1/batches/',
-                        '{"element":"shoji:entity","body":[]}'),
-            "savepoint has been deprecated. This option no longer does anything.")
-
+                        '{"element":"shoji:entity","body":{"dataset":',
+                        '"https://app.crunch.io/api/datasets/3/"}}'),
+            paste("The", sQuote("autorollback"),
+                "argument is deprecated and has no effect"))
     })
 })
 

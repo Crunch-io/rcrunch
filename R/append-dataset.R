@@ -6,14 +6,16 @@
 #' dataset before appending. If it is a CrunchDataset, it may be subsetted with
 #' a filter expression on the rows and a selection of variables on the columns.
 #' @param autorollback Deprecated. This option no longer does anything.
-#' logical: If the append fails, revert the dataset back
-#' to its state before attempting to append? Default is \code{TRUE}, and you
-#' probably won't want to change that.
 #' @return `dataset1`, updated with `dataset2`, potentially filtered on rows and
 #' variables, appended to it.
 #' @export
 appendDataset <- function (dataset1, dataset2, autorollback) {
     stopifnot(is.dataset(dataset1))
+
+    if (!missing(autorollback)) {
+        warning("The ", sQuote("autorollback"),
+                " argument is deprecated and has no effect", call.=FALSE)
+    }
 
     if (!is.dataset(dataset2)) {
         temp.ds.name <- paste("Appending to", name(dataset1), now())
@@ -39,6 +41,6 @@ appendDataset <- function (dataset1, dataset2, autorollback) {
     pk(dataset1) <- NULL
 
     ## POST the batch. This will error with a useful message if it fails
-    dataset1 <- addBatch(dataset1, body=payload, autorollback=autorollback)
+    dataset1 <- addBatch(dataset1, body=payload)
     invisible(dataset1)
 }

@@ -14,10 +14,7 @@ appendDataset(dataset1, dataset2, autorollback)
 dataset before appending. If it is a CrunchDataset, it may be subsetted with
 a filter expression on the rows and a selection of variables on the columns.}
 
-\item{autorollback}{Deprecated. This option no longer does anything.
-logical: If the append fails, revert the dataset back
-to its state before attempting to append? Default is \code{TRUE}, and you
-probably won't want to change that.}
+\item{autorollback}{Deprecated. This option no longer does anything.}
 }
 \value{
 \code{dataset1}, updated with \code{dataset2}, potentially filtered on rows and
