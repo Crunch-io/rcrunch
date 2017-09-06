@@ -11,8 +11,7 @@ datasets(x) <- value
 }
 \arguments{
 \item{x}{a \code{ShojiObject}, such as a \code{CrunchProject}. If omitted,
-the default value for \code{x} means that you will load the user's primary
-dataset catalog.}
+the function will load the user's primary dataset catalog. #'}
 
 \item{value}{\code{CrunchDataset} for the setter}
 }
@@ -23,7 +22,9 @@ dataset added to it (via changing its owner to be
 the specified object, \code{x}).
 }
 \description{
-Get the dataset catalog
+Crunch datasets are associated with catalogs. For instance a project catalog will
+have a set of datasets associated with it, as will a user or team. This function
+allows you to get or set the datasets associated with a catalog.
 }
 \examples{
 \dontrun{

@@ -38,15 +38,14 @@
 \description{
 These methods delete entities, notably Datasets and Variables within them,
 from the server. This action is permanent and cannot be undone, so it
-should not be done lightly. Consider instead using \code{archive}
-for datasets and \code{\link{hide}} for variables.
+should not be done lightly. Consider instead using \code{archive`` for datasets and}hide` for variables.
 }
 \details{
 Deleting requires confirmation. In an interactive session, you will be asked
 to confirm. To avoid that prompt, or to delete objects from a
-non-interactive session, wrap the call in \code{\link{with_consent}} to give
+non-interactive session, wrap the call in \link{with_consent} to give
 your permission to delete.
 }
 \seealso{
-\code{\link{hide}} \code{\link{deleteDataset}}
+\link{hide} \link{deleteDataset}
 }

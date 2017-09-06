@@ -8,7 +8,7 @@ deleteDataset(x, ...)
 }
 \arguments{
 \item{x}{The name (character) of a dataset, its (numeric) position in the
-return of \code{\link{listDatasets}}, or an object of class
+return of \link{listDatasets}, or an object of class
 \code{CrunchDataset}. x can only be of length 1--this function is not
 vectorized (for your protection).}
 
@@ -24,9 +24,9 @@ this way.
 }
 \details{
 The function also works on CrunchDataset objects, just like
-\code{\link{delete}}, which may be useful if you have loaded another
-package that masks the \code{delete} method.
+\link{delete}, which may be useful if you have loaded another
+package that masks the \link{delete} method.
 }
 \seealso{
-\code{\link{delete}}
+\link{delete}
 }

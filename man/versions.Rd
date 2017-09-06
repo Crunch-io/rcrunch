@@ -14,8 +14,9 @@ an object of class \code{VersionCatalog}. Supported methods on the
 catalog include "names" and "timestamps".
 }
 \description{
-Access the saved versions of a dataset
+This function allows you to see a dataset's savepoints. These can then
+be passed to \link{restoreVersion} to load the previously saved version of a dataset.
 }
 \seealso{
-\code{\link{saveVersion}} \code{\link{restoreVersion}}
+\link{saveVersion} \link{restoreVersion}
 }

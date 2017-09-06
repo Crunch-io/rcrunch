@@ -1,13 +1,15 @@
 #' Get the dataset catalog
 #'
-#' @param x a \code{ShojiObject}, such as a \code{CrunchProject}. If omitted,
-#' the default value for \code{x} means that you will load the user's primary
-#' dataset catalog.
-#' @param value \code{CrunchDataset} for the setter
-#' @return An object of class \code{DatasetCatalog}. The setter returns the
+#' Crunch datasets are associated with catalogs. For instance a project catalog will
+#' have a set of datasets associated with it, as will a user or team. This function
+#' allows you to get or set the datasets associated with a catalog.
+#' @param x a `ShojiObject`, such as a `CrunchProject`. If omitted,
+#' the function will load the user's primary dataset catalog. #'
+#' @param value `CrunchDataset` for the setter
+#' @return An object of class `DatasetCatalog`. The setter returns the
 #' project (or other object that contains a dataset catalog with the given
 #' dataset added to it (via changing its owner to be
-#' the specified object, \code{x}).
+#' the specified object, `x`).
 #' @name datasets
 #' @export
 #' @examples
@@ -32,18 +34,18 @@ datasets <- function (x=getAPIRoot()) {
     DatasetCatalog(out)
 }
 
-#' Show the names of all Crunch datasets
+#' Show the names of all Crunch datasets associated with a catalog
 #'
 #' @param kind character specifying whether to look in active, archived, or all
 #' datasets. Default is "active", i.e. non-archived.
-#' @param project \code{CrunchProject} entity, character name of a project, or
+#' @param project `CrunchProject` entity, character name of a project, or
 #' NULL, the default. If a Project entity or reference is supplied, the
 #' function will display datasets from that Project's datasets. If NULL,
 #' the primary dataset catalog for the user will be used.
 #' @param refresh logical: should the function check the Crunch API for new
 #' datasets? Default is FALSE.
 #' @return Character vector of dataset names, each of which would be a valid
-#' input for \code{\link{loadDataset}}
+#' input for [loadDataset]
 #' @export
 listDatasets <- function (kind=c("active", "all", "archived"), project=NULL,
                           refresh=FALSE) {
@@ -83,29 +85,37 @@ selectDatasetCatalog <- function (kind=c("active", "all", "archived"),
 }
 
 #' Refresh the local list of Crunch datasets
+#'
+#' Refreshes the local environment list of Crunch datasets. This function is depracated
 #' @return Nothing. Called for its side effects of setting local environment
 #' variables.
 #' @export
 #' @importFrom httpcache dropOnly
-updateDatasetList <- function () {
+updateDatasetList <- function() {
     warning("updateDatasetList is being deprecated.")
     dropOnly(sessionURL("datasets"))
 }
 
 #' Load a Crunch Dataset
-#' @param dataset character, the name of a Crunch dataset you have access
-#' to. Or, a \code{DatasetTuple}.
+#' @param dataset character, the name of a Crunch dataset that you have access
+#' to, or a `DatasetTuple`.
 #' @param kind character specifying whether to look in active, archived, or all
 #' datasets. Default is "active", i.e. non-archived.
-#' @param project \code{CrunchProject} entity, character name of a project, or
+#' @param project `CrunchProject`` entity, character name of a project, or
 #' NULL, the default. If a Project entity or reference is supplied, the
 #' function will display datasets from that Project's datasets. If NULL,
 #' the primary dataset catalog for the user will be used.
 #' @param refresh logical: should the function check the Crunch API for new
 #' datasets? Default is FALSE.
-#' @return An object of class \code{CrunchDataset}
+#' @return An object of class `CrunchDataset`
+#'
+#'@examples
+#'\dontrun{
+#' dsName <- listDatasets()[1]
+#' ds <- loadDatasets(dsName)
+#'}
 #' @export
-loadDataset <- function (dataset, kind=c("active", "all", "archived"), project=NULL, refresh=FALSE) {
+loadDataset <- function(dataset, kind=c("active", "all", "archived"), project=NULL, refresh=FALSE) {
     if (!inherits(dataset, "DatasetTuple")) {
         dscat <- selectDatasetCatalog(kind, project, refresh)
         if (is.character(dataset) && startsWith(dataset, "http") && !grepl("/api/", dataset)) {
@@ -136,15 +146,15 @@ loadDataset <- function (dataset, kind=c("active", "all", "archived"), project=N
 #' this way.
 #'
 #' The function also works on CrunchDataset objects, just like
-#' \code{\link{delete}}, which may be useful if you have loaded another
-#' package that masks the \code{delete} method.
+#' [delete], which may be useful if you have loaded another
+#' package that masks the [delete] method.
 #' @param x The name (character) of a dataset, its (numeric) position in the
-#' return of \code{\link{listDatasets}}, or an object of class
-#' \code{CrunchDataset}. x can only be of length 1--this function is not
+#' return of [listDatasets], or an object of class
+#' `CrunchDataset`. x can only be of length 1--this function is not
 #' vectorized (for your protection).
-#' @param ... additional parameters passed to \code{delete}
+#' @param ... additional parameters passed to `delete`
 #' @return (Invisibly) the API response from deleting the dataset
-#' @seealso \code{\link{delete}}
+#' @seealso [delete]
 #' @export
 deleteDataset <- function (x, ...) {
     if (!is.dataset(x)) {

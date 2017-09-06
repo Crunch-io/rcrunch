@@ -16,8 +16,11 @@ or the integer index of the version, as given by \code{versions(dataset)}}
 \code{dataset}, rolled back to \code{version}.
 }
 \description{
-Restore a dataset to a previously saved version
+You can save a version of a dataset using \link{saveVersion} which will create a
+new savepoint for the dataset. Savepoints are also created automatically by
+certain Crunch functions which make major changes to the dataset. You can
+get the list of saved versions with the \link{versions} function.
 }
 \seealso{
-\code{\link{versions}} \code{\link{saveVersion}}
+\link{versions} \link{saveVersion}
 }

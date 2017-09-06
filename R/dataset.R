@@ -229,17 +229,17 @@ setMethod("refresh", "CrunchDataset", function (x) {
 #'
 #' These methods delete entities, notably Datasets and Variables within them,
 #' from the server. This action is permanent and cannot be undone, so it
-#' should not be done lightly. Consider instead using \code{archive}
-#' for datasets and \code{\link{hide}} for variables.
+#' should not be done lightly. Consider instead using `archive``
+#' for datasets and `hide` for variables.
 #'
 #' Deleting requires confirmation. In an interactive session, you will be asked
 #' to confirm. To avoid that prompt, or to delete objects from a
-#' non-interactive session, wrap the call in \code{\link{with_consent}} to give
+#' non-interactive session, wrap the call in [with_consent] to give
 #' your permission to delete.
 #'
 #' @param x a Crunch object
 #' @param ... additional arguments, in the generic
-#' @seealso \code{\link{hide}} \code{\link{deleteDataset}}
+#' @seealso [hide] [deleteDataset]
 #' @name delete
 #' @aliases delete
 NULL
@@ -258,8 +258,8 @@ as.list.CrunchDataset <- function (x, ...) {
 }
 
 #' See the appended batches of this dataset
-#' @param x a \code{CrunchDataset}
-#' @return a \code{BatchCatalog}
+#' @param x a `CrunchDataset`
+#' @return a `BatchCatalog`
 #' @export
 batches <- function (x) BatchCatalog(crGET(shojiURL(x, "catalogs", "batches")))
 
@@ -364,7 +364,7 @@ webApp <- function (dataset) {
 
 #' as.environment method for CrunchDataset
 #'
-#' This method allows you to \code{eval} within a Dataset.
+#' This method allows you to `eval` within a Dataset.
 #'
 #' @param x CrunchDataset
 #' @return an environment in which named objects are (promises that return)

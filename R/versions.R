@@ -8,10 +8,13 @@ setMethod("initialize", "VersionCatalog", function (.Object, ...) {
 
 #' Access the saved versions of a dataset
 #'
-#' @param x a \code{CrunchDataset}
-#' @return an object of class \code{VersionCatalog}. Supported methods on the
+#' This function allows you to see a dataset's savepoints. These can then
+#' be passed to [restoreVersion] to load the previously saved version of a dataset.
+#'
+#' @param x a `CrunchDataset`
+#' @return an object of class `VersionCatalog`. Supported methods on the
 #' catalog include "names" and "timestamps".
-#' @seealso \code{\link{saveVersion}} \code{\link{restoreVersion}}
+#' @seealso [saveVersion] [restoreVersion]
 #' @export
 versions <- function (x) {
     stopifnot(is.dataset(x))
@@ -32,12 +35,16 @@ setMethod("timestamps", "VersionCatalog", function (x) from8601(getIndexSlot(x, 
 
 #' Create a new saved version
 #'
-#' @param dataset a \code{CrunchDataset}
+#' Crunch datasets can be saved and restored using `saveVersion` and [restoreVersion].
+#' Some Crunch functions, such as [appendDataset] create new savepoints automatically. To
+#' see the list of savepoints use [versions()].
+#'
+#' @param dataset a `CrunchDataset`
 #' @param description character name to give the saved version, as in a
 #' commit message. You are encouraged, though not strictly required, to give
 #' versions unique descriptions.
 #' @return invisibly, the URL of the newly created version
-#' @seealso \code{\link{versions}} \code{\link{restoreVersion}}
+#' @seealso [versions] [restoreVersion]
 #' @export
 saveVersion <- function (dataset, description=paste("Version",
                                               length(versions(dataset)) + 1)) {
@@ -55,11 +62,16 @@ saveVersion <- function (dataset, description=paste("Version",
 
 #' Restore a dataset to a previously saved version
 #'
-#' @param dataset a \code{CrunchDataset}
+#' You can save a version of a dataset using [saveVersion] which will create a
+#' new savepoint for the dataset. Savepoints are also created automatically by
+#' certain Crunch functions which make major changes to the dataset. You can
+#' get the list of saved versions with the [versions] function.
+#'
+#' @param dataset a `CrunchDataset`
 #' @param version either the name ("description") of the version to restore to
-#' or the integer index of the version, as given by \code{versions(dataset)}
-#' @return \code{dataset}, rolled back to \code{version}.
-#' @seealso \code{\link{versions}} \code{\link{saveVersion}}
+#' or the integer index of the version, as given by `versions(dataset)`
+#' @return `dataset`, rolled back to `version`.
+#' @seealso [versions] [saveVersion]
 #' @export
 restoreVersion <- function (dataset, version) {
     vcat <- versions(dataset)

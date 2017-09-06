@@ -64,9 +64,9 @@ setMethod("names", "BatchCatalog", function (x) urls(x))
 #' "error" status batch records, which can cause confusion. This function lets
 #' you delete batches that don't match the status or statuses you want to keep.
 #' @param dataset CrunchDataset
-#' @param keep character batch status(es) you want to keep. By default, batches
+#' @param keep character the statuses that you want to keep. By default, batches
 #' that don't have either "imported" or "appended" status will be deleted.
-#' @return \code{dataset} with the undesired batches removed.
+#' @return `dataset` with the specified batches removed.
 #' @export
 cleanseBatches <- function (dataset, keep=c("imported", "appended")) {
     bat.cat <- batches(dataset)
