@@ -339,6 +339,14 @@ with_mock_crunch({
         expect_equal(ds_df$new_local_var4, rep(1, 25))
     })
     
+    test_that("setting a column to NULL works", {
+        ds_df <- as.data.frame(ds)
+        ds_df$new_local_var <- c(25:1)
+        expect_true("new_local_var" %in% names(ds_df))
+        expect_silent(ds_df$new_local_var <- NULL)
+        expect_false("new_local_var" %in% names(ds_df))
+    })
+    
     test_that("get_CDF_var input validation", {
         ds_df <- as.data.frame(ds)
         
@@ -347,7 +355,7 @@ with_mock_crunch({
                      paste("The cdf argument must be a CrunchDataFrame, got",
                            "data.frame instead."))
         expect_error(set_CDF_var(col_name = "textVar", cdf = ds_df, value = c(1:25)),
-                     paste("Cannot over-write data from a Crunch variable."))
+                     paste("Cannot manipulate data from a Crunch variable in a CrunchDataFrame."))
     })
     
     test_that("merge.CrunchDataFrame works with sort=y", {

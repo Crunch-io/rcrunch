@@ -382,7 +382,12 @@ set_CDF_var <- function (col_name, row_inds, cdf, value) {
     }
     
     if (col_name %in% attr(cdf, "crunchVars")) {
-        halt("Cannot over-write data from a Crunch variable.")
+        halt("Cannot manipulate data from a Crunch variable in a CrunchDataFrame.")
+    }
+    
+    # remove the variable if the value is NULL
+    if (is.null(value) & missing(row_inds)) {
+        return(invisible(rm_CDF_var(col_name = col_name, cdf = cdf)))
     }
     
     if (missing(row_inds)) {
@@ -420,5 +425,23 @@ set_CDF_var <- function (col_name, row_inds, cdf, value) {
     # add to names
     attr(cdf, "col_names") <- c(names(cdf), col_name)
     
+    return(invisible(cdf))
+}
+
+rm_CDF_var <- function (col_name, cdf) {
+    if (!is(cdf, "CrunchDataFrame")) { 
+        halt("The cdf argument must be a CrunchDataFrame, got ", class(cdf), " instead.")
+    }
+    
+    if (col_name %in% attr(cdf, "crunchVars")) {
+        halt("Cannot remove a Crunch variable.")
+    }
+    
+    # remove column
+    rm(list = col_name, envir = cdf)
+    
+    # remove from names
+    attr(cdf, "col_names") <- setdiff(names(cdf), col_name)
+
     return(invisible(cdf))
 }
