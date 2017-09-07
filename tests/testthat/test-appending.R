@@ -22,6 +22,16 @@ with_mock_crunch({
       expect_DELETE(appendDataset(ds2, ds1),
                     "https://app.crunch.io/api/datasets/3/pk/")
     })
+
+    test_that("appendDataset shows deprecation warnings", {
+        expect_warning(
+            expect_POST(appendDataset(ds1, ds2, autorollback = TRUE),
+                        'https://app.crunch.io/api/datasets/1/batches/',
+                        '{"element":"shoji:entity","body":{"dataset":',
+                        '"https://app.crunch.io/api/datasets/3/"}}'),
+            paste("The", sQuote("autorollback"),
+                "argument is deprecated and has no effect"))
+    })
 })
 
 with_test_authentication({
@@ -71,7 +81,7 @@ with_test_authentication({
                 expect_identical(dim(out), c(nrow(df)*2L, ncol(df)))
                 expect_identical(nrow(out), nrow(df)*2L)
                 expect_identical(nrow(out), length(as.vector(out$v3)))
-            })              
+            })
         })
     })
 
