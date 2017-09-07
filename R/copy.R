@@ -2,15 +2,15 @@
 #'
 #' Makes a copy of a Crunch variable on the server.
 #'
-#' Copies can be shallow (linked) or deep. Shallow copying is faster and should
-#' be preferred unless a true hard copy is required, though keep in mind the
-#' implications of shallow copying. When you append data to the original
+#' Copies can be shallow (linked) or deep. Shallow copying is faster and is preferable
+#' unless a true hard copy is required. Shallow copies are effectively pointers to the
+#' original variable, and 1hen you append data to the original
 #' variable or otherwise alter its values, the values in the copy automatically
 #' update. This linking may be desirable, but it comes with some limitations.
 #' First, you cannot edit the values of the copy independently of the original.
 #' Second, some attributes of the copy are immutable: of note, properties of
-#' categories cannot be altered independely in the copy. Subvariable names and
-#' ordering within arrays, however, can.
+#' categories cannot be altered independely in the copy, but you can alter Subvariable names and
+#' ordering within arrays.
 #'
 #' @param x a CrunchVariable to copy
 #' @param deep logical: should this be a deep copy, in which there is no
@@ -20,7 +20,7 @@
 #' the new variable will have a name that is the same as the original but with
 #' " (copy)" appended, and its alias will be the old alias with "_copy"
 #' appended.
-#' @return a VariableDefinition for the copy expression. Assign into a Dataset
+#' @return a VariableDefinition for the copied variable. Assign into a Dataset
 #' to make the copy happen.
 #' @export
 copyVariable <- function (x, deep=FALSE, ...) {

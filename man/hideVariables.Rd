@@ -4,7 +4,7 @@
 \alias{hideVariables}
 \alias{hiddenVariables<-}
 \alias{unhideVariables}
-\title{Hide and Unhide Variables Within a Dataset}
+\title{Hide and unhide variables within a dataset}
 \usage{
 hideVariables(dataset, variables)
 
@@ -25,7 +25,7 @@ unhideVariables(dataset, variables)
 (invisibly) \code{dataset} with the specified variables (un)hidden
 }
 \description{
-Hide and Unhide Variables Within a Dataset
+Hide and unhide variables within a dataset
 }
 \seealso{
 \code{\link{hide}}

@@ -10,25 +10,26 @@ combine(variable, combinations = list(), ...)
 \item{variable}{Categorical, Categorical Array, or Multiple Response
 variable}
 
-\item{combinations}{list of named lists containing (1) "categories":
-category ids or names for categorical types, or for multiple response,
-"responses": subvariable names, aliases, or positional indices; (2) a
-"name" for the new category or response; and (3) optionally, other category
-("missing", "numeric_value") or subvariable ("alias", "description")
+\item{combinations}{list of named lists containing
+1 "categories": category ids or names for categorical types, or for multiple response,
+"responses": subvariable names, aliases, or positional indices;
+1 a "name" for the new category or response; and
+1 optionally, other category ("missing", "numeric_value") or subvariable ("alias", "description")
 attributes. If \code{combinations} is omitted, the resulting variable will
-essentially be a copy (but see \code{link{copy}} for a more natural way to
-do that, if desired).}
+essentially be a copy (but see \link{copy} for a more natural way to copy variables.}
 
 \item{...}{Additional variable metadata for the new derived variable}
 }
 \value{
-A \code{\link{VariableDefinition}} that will create the new
-comined-category or -response derived variable. Categories/responses not
-referenced in \code{combinations} will be appended to the end of the
-combinations.
+A \link{VariableDefinition} that will create the new combined-category or
+-response derived variable. Categories/responses not referenced in \link{combinations} will be
+appended to the end of the combinations.
 }
 \description{
-Combine categories or responses
+Crunch allows you to create a new categorical variable by combining
+the categories of another variable. For instance, you might want to
+recode a categorical variable with three categories small, medium, and large
+to one that has just small and large.
 }
 \examples{
 \dontrun{

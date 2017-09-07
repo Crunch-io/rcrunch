@@ -6,9 +6,9 @@
 \alias{fortify.CrunchDataset}
 \title{Fortify crunch objects for use with ggplot}
 \usage{
-fortify.CrunchDataFrame(model, data, ...)
+\method{fortify}{CrunchDataFrame}(model, data, ...)
 
-fortify.CrunchDataset(model, data, ...)
+\method{fortify}{CrunchDataset}(model, data, ...)
 }
 \arguments{
 \item{model}{model or other R object to convert to data frame}

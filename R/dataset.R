@@ -300,12 +300,11 @@ cubeURL <- function (x) {
 #' editing variables' metadata, it is helpful to access these variable catalogs
 #' more directly.
 #'
-#' \code{variables} gives just the active variables in the dataset, while
-#' \code{allVariables}, as the name suggests, yields all variables, including
-#' hidden variables.
+#' `variables` gives just the active variables in the dataset, while
+#' `allVariables` returns all variables, including hidden variables.
 #' @param x a Dataset
 #' @param value For the setters, a VariableCatalog to assign.
-#' @return Getters return VariableCatalog; setters return \code{x} duly
+#' @return Getters return VariableCatalog; setters return `x` duly
 #' modified.
 #' @name dataset-variables
 #' @aliases dataset-variables variables variables<- allVariables allVariables<-

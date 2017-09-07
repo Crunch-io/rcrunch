@@ -46,14 +46,13 @@ numeric indices are positional, not with reference to category ids.}
 Categories or the Variable, (un)dichotomized accoringly
 }
 \description{
-Multiple Response variables are essentially Categorical Arrays that have
-had a category or categories indicated as the "selected" value. These
-methods let you set that state.
+Multiple Response variables are essentially Categorical Arrays in which one
+or more categories are set as "selected". These methods allow you set that state.
 }
 \details{
 \code{dichotomize} lets you specify which categories are "selected", while
 \code{undichotomize} strips that selection information. Dichotomize converts
-a Categorical Array to a Multiple Response, and undichotomize converts back.
+a Categorical Array to a Multiple Response, and undichotomize does the reverse.
 }
 \seealso{
 \code{\link{describe-category}}

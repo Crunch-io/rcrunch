@@ -216,3 +216,5 @@ navbar:
          href: articles/filters.html
       -  text: Export Data
          href: articles/export.html
+      -  text: Crunch Internals
+         href: articles/crunch-internals.html

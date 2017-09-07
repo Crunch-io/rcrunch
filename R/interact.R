@@ -1,4 +1,4 @@
-#' Make a variable that is the interaction of two or more other variables
+#' Create a variable by interacting categorical variables
 #'
 #' `interactVariables` takes two or more variables and creates a new one that
 #' is the cartesian product expansion of their unique values. For example, if

@@ -19,8 +19,12 @@ of variables to delete.}
 (invisibly) \code{dataset} with the specified variables deleted
 }
 \description{
-Deleting requires confirmation. In an interactive session, you will be asked
-to confirm. To avoid that prompt, or to delete variables from a
+This function permenantly deletes a variable from a dataset. For a non-destructive
+alternative see \code{\link{hide}}.
+}
+\details{
+In an interactive session, you will be prompted to confirm that you
+wish to delete the variable. To avoid that prompt, or to delete variables from a
 non-interactive session, wrap the call in \code{\link{with_consent}} to give
 your permission to delete.
 }

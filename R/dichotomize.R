@@ -1,22 +1,21 @@
 #' Indicate how categories represent a dichotomized value
 #'
-#' Multiple Response variables are essentially Categorical Arrays that have
-#' had a category or categories indicated as the "selected" value. These
-#' methods let you set that state.
+#' Multiple Response variables are essentially Categorical Arrays in which one
+#' or more categories are set as "selected". These methods allow you set that state.
 #'
-#' \code{dichotomize} lets you specify which categories are "selected", while
-#' \code{undichotomize} strips that selection information. Dichotomize converts
-#' a Categorical Array to a Multiple Response, and undichotomize converts back.
+#' `dichotomize` lets you specify which categories are "selected", while
+#' `undichotomize` strips that selection information. Dichotomize converts
+#' a Categorical Array to a Multiple Response, and undichotomize does the reverse.
 #'
 #' @param x Categories or a Variable subclass that has Categories
-#' @param i For the \code{dichotomize} methods, the numeric or logical indices
+#' @param i For the `dichotomize` methods, the numeric or logical indices
 #' of the categories to mark as "selected", or if character, the Category
 #' "names". Note that unlike some other categorical variable methods,
 #' numeric indices are positional, not with reference to category ids.
 #' @return Categories or the Variable, (un)dichotomized accoringly
 #' @name dichotomize
 #' @aliases dichotomize is.dichotomized undichotomize
-#' @seealso \code{\link{describe-category}}
+#' @seealso [`describe-category`]
 NULL
 
 #' @rdname dichotomize

@@ -218,9 +218,9 @@ setGeneric("getShowContent",
 #' @param data original dataset, if needed
 #' @param ... other arguments passed to methods
 #' @name fortify
-#' @export
+#' @export fortify.CrunchDataFrame
 fortify.CrunchDataFrame <- function(model, data, ...) model
 
 #' @rdname fortify
-#' @export
+#' @export fortify.CrunchDataset
 fortify.CrunchDataset <- function(model, data, ...) model
