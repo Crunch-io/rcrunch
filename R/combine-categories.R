@@ -16,7 +16,7 @@
 #' essentially be a copy (but see [copy] for a more natural way to copy variables.
 #' @param ... Additional variable metadata for the new derived variable
 #' @return A [VariableDefinition] that will create the new combined-category or
-#' -response derived variable. Categories/responses not referenced in [combinations] will be
+#' -response derived variable. Categories/responses not referenced in `combinations` will be
 #' appended to the end of the combinations.
 #' @examples
 #' \dontrun{

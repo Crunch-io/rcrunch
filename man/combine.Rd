@@ -22,7 +22,7 @@ essentially be a copy (but see \link{copy} for a more natural way to copy variab
 }
 \value{
 A \link{VariableDefinition} that will create the new combined-category or
--response derived variable. Categories/responses not referenced in \link{combinations} will be
+-response derived variable. Categories/responses not referenced in \code{combinations} will be
 appended to the end of the combinations.
 }
 \description{
