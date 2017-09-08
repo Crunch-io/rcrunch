@@ -66,7 +66,7 @@ setMethod("cut", "NumericVariable", function(x,
     if (is.null(labels)) { #Autogenerate labels if not supplied
       labels <- generateCutLabels(dig.lab, breaks, nb, right, include.lowest)
     } else if (length(labels) != nb - 1L) {
-        stop("lengths of 'breaks' and 'labels' differ")
+        halt(sQuote("lengths of 'breaks' and 'labels' differ"))
     }
     if (right) {
         `%c1%` <- function(x,y) x <= y
