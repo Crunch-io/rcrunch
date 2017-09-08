@@ -26,11 +26,11 @@ weight <- function (x) {
 #' @rdname weight
 #' @export
 `weight<-` <- function(x, value) {
-    if (class(value) == "VariableDefinition") {
+    stopifnot(is.dataset(x))
+        if (inherits(value, "VariableDefinition")) {
         x <- addVariables(x, value)
         value <- x[[value$name]]
     }
-    stopifnot(is.dataset(x))
     if (is.variable(value)) {
         value <- self(value)
     } else if (!is.null(value)) {
@@ -67,12 +67,12 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
 
 #' Generate a weight variable
 #'
-#' This function allows you to generate a weight vector by supplying a set of
+#' This function allows you to generate a weight variable by supplying a set of
 #' categorical variables and the target distribution for each of the variable's categories. Weights are
 #' computed by iteratively 'raking' conditional 'cells' to marginal population targets.
 #' For instance if you wanted to create a weight variable which equally weighted four categories stored
 #' in `ds$var` you would call `ds$weight1 <- makeWeight(ds$var ~ c(25, 25, 25, 25), name = "weight1")`. This would
-#' create a new variable which can then be set as the dataset weight with [weight]. You can also create
+#' create a new variable which can then be set as the dataset weight with [weight()]. You can also create
 #' the dataset weights in one step with `weight(ds) <- makeWeight(ds$var ~ c(25, 25, 25, 25), name = "weight1")`.
 #'
 #' @param ...
@@ -110,7 +110,7 @@ makeWeight <- function(..., name) {
             args = lapply(expr_list, generateWeightEntry)
         )
     class(out) <- "VariableDefinition"
-    out
+    return(out)
 }
 
 #' Generate entry for [makeWeight]
@@ -133,14 +133,14 @@ generateWeightEntry <- function(expr) {
 
     formula <- try(as.formula(expr), silent = TRUE)
     if (is.error(formula)) {
-        halt(dQuote(substitute(expr)), " is not a valid formula. Use the form ds$var ~ c(10, 20, 30)")
+        halt(dQuote(substitute(expr)), " is not a valid formula. Use the form ds$var ~ c(50, 20, 30)")
     }
     var     <- eval(expr[[2]], environment(expr))
     varname <- deparse(expr[[2]])
     targets <- eval(expr[[3]], environment(expr))
 
     if (!is.Categorical(var)) {
-        halt(varname, " is not a categorical crunch variable")
+        halt(varname, " is not a categorical Crunch variable")
     }
 
     n_categories <- length(categories(var))
@@ -156,7 +156,7 @@ generateWeightEntry <- function(expr) {
         halt("Targets are not numeric for ", varname)
     }
     if (any(is.na(targets))) {
-        halt(dQuote(paste(expr[2], "~", expr[3])), " contains NA values.")
+        halt(dQuote(deparse(expr)), " contains NA values.")
     }
     if (!(sum(targets) == 100 || sum(targets) == 1)) {
         halt("Targets do not add up to 100% for ", varname)

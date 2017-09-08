@@ -43,12 +43,12 @@ with_mock_crunch({
     test_that("generateWeightEntry errors correctly", {
         expect_error(generateWeightEntry("bad_formula"),
             paste0(dQuote("bad_formula"),
-                " is not a valid formula. Use the form ds$var ~ c(10, 20, 30)"), fixed = TRUE)
+                " is not a valid formula. Use the form ds$var ~ c(50, 20, 30)"), fixed = TRUE)
         expect_error(generateWeightEntry(object),
             paste0(dQuote("object"),
-                " is not a valid formula. Use the form ds$var ~ c(10, 20, 30)"), fixed = TRUE)
+                " is not a valid formula. Use the form ds$var ~ c(50, 20, 30)"), fixed = TRUE)
         expect_error(generateWeightEntry(oldds$birthyr ~ c(30, 30, 40)),
-            "oldds$birthyr is not a categorical crunch variable", fixed = TRUE)
+            "oldds$birthyr is not a categorical Crunch variable", fixed = TRUE)
         expect_error(generateWeightEntry(oldds$gender ~ c(10, 10, 10, 10, 10, 50)),
             "Number of targets does not match number of categories for oldds$gender", fixed = TRUE)
         expect_error(generateWeightEntry(oldds$gender ~ c(30, 20, 30)),
