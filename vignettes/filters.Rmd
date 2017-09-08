@@ -1,7 +1,11 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Working with filters}
--->
+---
+title: "Filtering Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Filtering Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
 [Previous: analyzing data](analyze.html)
 ```{r, results='hide', echo=FALSE, message=FALSE}
