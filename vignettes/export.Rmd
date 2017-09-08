@@ -1,7 +1,11 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Downloading and exporting data}
--->
+---
+title: "Exporting Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Exporting Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
 [Previous: filtering data](filter.html)
 ```{r, results='hide', echo=FALSE, message=FALSE}

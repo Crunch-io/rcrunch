@@ -12,5 +12,7 @@ vignettes/*.html
 *.Rproj
 *.Rhistory
 *.Rproj*
+docs/
+\.Rprofile
 
 \.Rprofile

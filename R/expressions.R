@@ -175,7 +175,7 @@ setMethod("!", "CrunchExpr", function (x) zfuncExpr("not", x))
             beg <- tail(table, 1)
             end <- head(table, 1)
         }
-        
+
         return(zfunc("between",
             x,
             beg,
@@ -375,3 +375,11 @@ setMethod("duplicated", "CrunchVariable", function (x, incomparables=FALSE, ...)
 setMethod("duplicated", "CrunchExpr", function (x, incomparables=FALSE, ...) {
     zfuncExpr("duplicates", x)
 })
+
+#' @rdname crunch-is
+#' @export
+is.CrunchExpr <- function (x) inherits(x, "CrunchExpr")
+
+#' @rdname crunch-is
+#' @export
+is.Expr <- is.CrunchExpr

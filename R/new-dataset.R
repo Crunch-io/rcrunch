@@ -192,7 +192,7 @@ uploadData <- function (dataset, data, strict=TRUE) {
         write.csv.gz(data, f)
         data <- f
     }
-    return(addBatchFile(dataset, data, savepoint=FALSE, strict=strict))
+    return(addBatchFile(dataset, data, strict=strict))
 }
 
 #' Wrap variable metadata inside a dataset entity
@@ -258,6 +258,6 @@ newDatasetFromFile <- function (file, name=basename(file), ...) {
         halt("File not found")
     }
     ds <- createDataset(name=name, ...)
-    ds <- addBatchFile(ds, file, savepoint=FALSE)
+    ds <- addBatchFile(ds, file)
     invisible(ds)
 }
