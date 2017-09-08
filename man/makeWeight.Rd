@@ -7,10 +7,12 @@
 makeWeight(..., name)
 }
 \arguments{
-\item{...}{A series of expressions of the form \code{variable ~ target_weights}. The variable must
-be a categorical Crunch variable, and the target weights must be a numeric vector whose
-length should be equal to the number of categories contained in the variable, and whose sum is equal to 100 or 1. If
-you supply fewer target weights than there are categories \code{makeWeight} will pad the target weight vector with 0s.}
+\item{...}{A series of expressions of the form \code{variable ~ target_weights}.
+The variable must be a categorical Crunch variable, and the target weights
+must be a numeric vector whose length should be equal to the number of
+categories contained in the variable, and whose sum is equal to 100 or 1. If
+you supply fewer target weights than there are categories \code{makeWeight} will
+pad the target weight vector with 0s.}
 
 \item{name}{The name of the resulting variable}
 }
@@ -19,20 +21,37 @@ A crunch \code{\link[=VariableDefinition]{VariableDefinition()}} of the weight v
 }
 \description{
 This function allows you to generate a weight variable by supplying a set of
-categorical variables and the target distribution for each of the variable's categories. Weights are
-computed by iteratively 'raking' conditional 'cells' to marginal population targets.
-For instance if you wanted to create a weight variable which equally weighted four categories stored
-in \code{ds$var} you would call \code{ds$weight1 <- makeWeight(ds$var ~ c(25, 25, 25, 25), name = "weight1")}. This would
-create a new variable which can then be set as the dataset weight with \code{\link[=weight]{weight()}}. You can also create
-the dataset weights in one step with \code{weight(ds) <- makeWeight(ds$var ~ c(25, 25, 25, 25), name = "weight1")}.
+categorical variables and the target distribution for each of the variables'
+categories. Weights are computed by iteratively 'raking' conditional 'cells'
+to the provided marginal targets.
+}
+\details{
+For instance, if you wanted to create a
+weight variable which equally weighted four categories stored in \code{ds$var}
+you would call \code{ds$weight1 <- makeWeight(ds$var ~ c(25, 25, 25, 25), name = "weight1")}.
+Note that \code{makeWeight} returns a \code{VariableDefinition}, an expression that
+when assigned into your Dataset becomes a derived variable. This does not on
+its own set the new variable as "the weight" for your dataset. To set that
+attribute, use \code{\link[=weight]{weight()}}. Alternatively, you can also create the variable
+and set the weight attribute in one step with
+\code{weight(ds) <- makeWeight(ds$var ~ c(25, 25, 25, 25), name = "weight1")}.
 }
 \examples{
 \dontrun{
 mtcars$cyl <- as.factor(mtcars$cyl)
 mtcars$gear <- as.factor(mtcars$gear)
 ds <- newDataset(mtcars)
-ds$weight <- makeWeight(ds$cyl ~ c(30, 30, 40, 0), ds$gear ~ c(20, 20, 60, 0), name = "weight" )
+# Create a new "raked" variable
+ds$weight <- makeWeight(ds$cyl ~ c(30, 30, 40, 0),
+    ds$gear ~ c(20, 20, 60, 0), name = "weight")
 summary(ds$weight)
+# ds$weight is not "the weight" for the dataset unless you set it:
+weight(ds) <- ds$weight
+# Or, you can create the variable and set as weight in one step:
 weight(ds) <-  makeWeight(ds$var ~ c(25, 25, 25, 25), name = "weight2")
 }
+}
+\seealso{
+\code{\link[=weight<-]{weight<-()}}; \code{\link[=settings]{settings()}} for the "default weight" for other
+dataset viewers.
 }

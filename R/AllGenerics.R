@@ -165,7 +165,7 @@ setGeneric("lapply")
 setGeneric("is.na")
 setGeneric("is.na<-")
 setGeneric("%in%")
-setGeneric("write.csv", function(x, ...) utils::write.csv(x, ...))
+setGeneric("write.csv", function (x, ...) utils::write.csv(x, ...))
 setGeneric("duplicated")
 
 setGeneric("zcl", function (x) standardGeneric("zcl"))
@@ -210,8 +210,8 @@ setGeneric("getShowContent",
 #' @param ... other arguments passed to methods
 #' @name fortify
 #' @export
-fortify.CrunchDataFrame <- function(model, data, ...) model
+fortify.CrunchDataFrame <- function (model, data, ...) model
 
 #' @rdname fortify
 #' @export
-fortify.CrunchDataset <- function(model, data, ...) model
+fortify.CrunchDataset <- function (model, data, ...) model

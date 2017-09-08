@@ -164,7 +164,7 @@ setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE
 setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 
 
-findVariablesInDataset <- function(x, i) {
+findVariablesInDataset <- function (x, i) {
     allvars <- allVariables(x)
     ## Handle "namekey", which should be deprecated
     if (getOption("crunch.namekey.dataset", "alias") == "name") {

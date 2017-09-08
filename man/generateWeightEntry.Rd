@@ -13,13 +13,12 @@ generateWeightEntry(expr)
 A list of the variable id and the target weights.
 }
 \description{
-Utility function to catch formula errors passed to \link{makeWeight}, and to generate
-the appropriate entry.
+Utility function to catch formula errors passed to \link{makeWeight}, and to
+generate the appropriate entry.
 }
 \examples{
 \dontrun{
 validateWeightExpression(ds$var ~ c(10, 30, 60))
 }
-
 }
 \keyword{internal}

@@ -61,27 +61,29 @@ with_mock_crunch({
     })
     expected_weight_definition <- list(
         name = "weight",
-        derivation = list(`function` = "rake",
+        derivation = list(
+            `function` = "rake",
             args = list(
-                list(variable = "https://app.crunch.io/api/datasets/1/variables/gender/",
+                list(
+                    variable = "https://app.crunch.io/api/datasets/1/variables/gender/",
                     targets = list(c(1, 0.2), c(2, 0.3), c(3, 0.5)
-                    )
                 )
             )
         )
-    )
+    ))
     expected_attribute_definition <- list(
         alias = "test_alias",
         name = "weight",
-        derivation = list(`function` = "rake",
+        derivation = list(
+            `function` = "rake",
             args = list(
-                list(variable = "https://app.crunch.io/api/datasets/1/variables/gender/",
+                list(
+                    variable = "https://app.crunch.io/api/datasets/1/variables/gender/",
                     targets = list(c(1, 0.2), c(2, 0.3), c(3, 0.5)
-                    )
                 )
             )
         )
-    )
+    ))
 
     test_that("makeWeight generates the expected VariableDefinition", {
         expect_equivalent(makeWeight(oldds$gender ~ c(20, 30, 50), name = "weight"),
@@ -97,7 +99,8 @@ with_mock_crunch({
         )
     })
     test_that("makeWeight allows user to specify variable definition attributes", {
-        expect_equivalent(makeWeight(oldds$gender ~ c(20, 30, 50), name = "weight", alias = "test_alias"),
+        expect_equivalent(makeWeight(oldds$gender ~ c(20, 30, 50),
+            name = "weight", alias = "test_alias"),
             expected_attribute_definition)
     })
 })
@@ -186,16 +189,16 @@ with_test_authentication({
         })
     })
     with(test.dataset(df), {
-        expected_weights <- c(0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4,
-                                  0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4)
+        expected_weights <- c(0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4,
+                              0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4)
         test_that("makeWeight returns the expected weights", {
             ds$weight <- makeWeight(ds$v4 ~ c(30, 70, 0), name = "weight")
             expect_identical(as.vector(ds$weight), expected_weights)
         })
         test_that("Assigning a VariableDefinition to weight(ds) works", {
-            weight(ds) <- NULL
-            weight(ds) <-  makeWeight(ds$v4 ~ c(30, 70, 0), name = "weight2")
-            expect_identical( as.vector(ds$weight2), expected_weights)
+            weight(ds) <- makeWeight(ds$v4 ~ c(30, 70, 0), name = "weight2")
+            expect_identical(weight(ds), ds$weight2)
+            expect_identical(as.vector(weight(ds)), expected_weights)
         })
     })
 })

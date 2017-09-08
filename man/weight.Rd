@@ -20,9 +20,10 @@ weight(x) <- value
 \arguments{
 \item{x}{a Dataset}
 
-\item{value}{a Variable, VariableDefinition or NULL value. If a VariableDefinition
-is passed, the variable will first be created and then set as the datasets weight. Set to NULL
-to remove existing weights from the dataset.}
+\item{value}{a Variable, VariableDefinition, or \code{NULL}. If a
+VariableDefinition is passed, the variable will first be created and then set
+as the datasets weight. Set to \code{NULL} to remove existing weights from the
+dataset.}
 }
 \value{
 For the \code{weight} getter, a Variable if there is a weight, else

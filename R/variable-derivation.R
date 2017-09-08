@@ -49,7 +49,7 @@ NULL
 
 #' @export
 #' @rdname derivations
-setMethod("derivation", "CrunchVariable", function(x) {
+setMethod("derivation", "CrunchVariable", function (x) {
     if (!is.derived(x)) {
         return(NULL)
     }
@@ -80,7 +80,7 @@ absolutifyVariables <- function (expr, base.url) {
 
 #' @export
 #' @rdname derivations
-setMethod("derivation<-", c("CrunchVariable", "ANY"), function(x, value) {
+setMethod("derivation<-", c("CrunchVariable", "ANY"), function (x, value) {
     if (!is.derived(x)) {
         halt("The variable ", dQuote(name(x)), " must already be a derived variable.")
     }
@@ -125,7 +125,7 @@ setMethod("is.derived", "CrunchVariable", function (x) {
 #' @rdname derivations
 #' @aliases is.derived<-
 #' @export
-setMethod("is.derived<-", c("CrunchVariable", "logical"), function(x, value) {
+setMethod("is.derived<-", c("CrunchVariable", "logical"), function (x, value) {
     if (!isTRUE(value)) {
        x <- integrateDerivedVar(x, value)
     } else if (!is.derived(x)) {
