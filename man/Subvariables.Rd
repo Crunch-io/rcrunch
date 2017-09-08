@@ -27,8 +27,9 @@
 \item{value}{For the setters, the appropriate values to set}
 }
 \description{
-Multiple-response and categorical-array variables contain a set of
-subvariables within them. The Subvariables class encapsulates them.
+Multiple-response and categorical-array variables are higher order variables which
+are made up of sets of subvariables. These methods allow you to retrieve and change
+the subvariables of a multiple-response or categorical-array variable.
 }
 \details{
 Subvariables can be accessed from array variables (including multiple
