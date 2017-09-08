@@ -86,7 +86,7 @@ makeCaseVariable <- function (..., cases, name) {
     casevar$derivation <- zfunc("case", new_cat)
 
     # add case_expressions, remove nulls (should only be from the else case)
-    case_exprs <- lapply(cases, function(x) zcl(x$expression))
+    case_exprs <- lapply(cases, function (x) zcl(x$expression))
     case_exprs <- Filter(Negate(is.null), case_exprs)
     casevar$derivation$args <- c(casevar$derivation$args, case_exprs)
 
@@ -209,7 +209,7 @@ fillIds <- function (cases) {
     supplied_ids <- vapply(cases[!need_ids], vget("id"), numeric(1))
     new_ids <- seq_along(cases) # generate too many ids
     new_ids <- setdiff(new_ids, supplied_ids) # discard ids where there is overlap
-    cases[need_ids] <- lapply(seq_along(cases[need_ids]), function(i) {
+    cases[need_ids] <- lapply(seq_along(cases[need_ids]), function (i) {
         cases[need_ids][[i]]$id <- new_ids[i]
         return(cases[need_ids][[i]])
     })
