@@ -17,7 +17,7 @@ formulaToQuery <- function (formula, data) {
     vars <- parseTerms(formula, data, side = "RHS")
     # all rhs variables in list
     measures <- parseTerms(formula, data, side = "LHS")
-    
+
     ## Construct the "measures", either from the formula or default "count"
     if (!length(measures)) {
         # if measures is an empty list, there are none.
@@ -29,7 +29,7 @@ formulaToQuery <- function (formula, data) {
         }
         measures <- lapply(measures, zcl)
     }
-    
+
     ## Make "dimensions".
     dimensions <- lapply(vars, varToDim)
 
@@ -58,7 +58,7 @@ parseTerms <- function(formula, data, side = "RHS") {
     terms <- terms(formula, allowDotAsName=TRUE)
     f.vars <- attr(terms, "variables")
     all.f.vars <- all.vars(f.vars)
-    
+
     ## More input validation
     if ("." %in% all.f.vars) {
         halt("Crunch formulae do not support ", dQuote("."), " in formula")
@@ -66,7 +66,7 @@ parseTerms <- function(formula, data, side = "RHS") {
     if (!length(all.f.vars)) {
         halt("Must supply one or more variables")
     }
-    
+
     ## Find variables either in 'data' or in the calling environment
     ## Evaluate the formula's terms in order to catch derived expressions
     v.call <- do.call(substitute,
@@ -76,7 +76,7 @@ parseTerms <- function(formula, data, side = "RHS") {
     } else {
         vars <- eval(v.call, as.environment(data), environment(formula))
     }
-    
+
     ## Validate that vars are non-null
     nullvars <- vapply(vars, is.null, logical(1))
     if (any(nullvars)) {
@@ -88,20 +88,19 @@ parseTerms <- function(formula, data, side = "RHS") {
         halt("Invalid cube dimension", ifelse(sum(nullvars) > 1, "s: ", ": "),
              serialPaste(varexprs[nullvars]), " cannot be NULL")
     }
-    
+
+    resp <- attr(terms, "response")
     if (side == "RHS") {
-        resp <- attr(terms, "response")
         if (resp > 0) {
             # remove response vars only if there are any
-            vars <- vars[-resp]       
+            vars <- vars[-resp]
         }
     } else if (side == "LHS") {
-        resp <- attr(terms, "response")
         vars <- vars[resp]
     } else {
         halt("unknown side specification for parsing formulae.")
     }
-    
+
     return(vars)
 }
 
@@ -212,24 +211,24 @@ evalLHS <- function(formula, data) {
 }
 
 evalRHS <- function(formula, data) {
-    evalSide(formula[[3]], data, environment(formula)) 
+    evalSide(formula[[3]], data, environment(formula))
 }
 
 evalSide <- function(formula_part, data, eval_env) {
-    if (missing(data)) {
+    if (missing(data) || is.null(data)) {
         return(eval(formula_part, NULL, eval_env))
     } else {
         return(eval(formula_part, as.environment(data), eval_env))
     }
 }
 
-formulaRHS <- function (f) {
+RHS_string <- function (f) {
     ## Return a string representation of the right-hand side of a formula
     ## (the stuff to the right of the ~)
     sub("^ +", "", tail(formulaSide(f), 1))
 }
 
-formulaLHS <- function (f) {
+LHS_string <- function (f) {
     ## Return a string representation of the left-hand side of a formula
     ## (the stuff to the left of the ~)
     sub(" +$", "", head(formulaSide(f), 1))

@@ -29,7 +29,7 @@
 #' include at least a `name` and an `expression` element. Cases may also include
 #' `missing` (logical) and `numeric_value` (numeric).
 #' @param data (optional) a crunch dataset to use. Specifying this means you
-#' don't have to put `dataset$` in front of each variable name.  
+#' don't have to put `dataset$` in front of each variable name.
 #' @param name a character to use as the name of the case variable to create
 #'
 #' @return A [`VariableDefinition`] that will create the new
@@ -47,7 +47,7 @@
 #'                             list(expression="else", name="other")),
 #'                  name="new case")
 #' makeCaseVariable(case1=ds$v1 == 1, case2=ds$v2 == 2, other="else", name="new case")
-#' 
+#'
 #' # the dataset can be specified with data=
 #' makeCaseVariable(case1=v1 == 1, case2=v2 == 2, data=ds, name="new case")
 #' }
@@ -56,7 +56,7 @@ makeCaseVariable <- function (..., cases, data = NULL, name) {
     ## Gather the new variable's metadata fields (and possibly expressions)
     # -1 to remove the list primative
     dots <- as.list(substitute(list(...)))[-1L]
-    casevar <- lapply(dots, evalWithData, dat = data, eval_env = parent.frame())
+    casevar <- lapply(dots, evalSide, dat = data, eval_env = parent.frame())
     casevar$name <- name
     is_expr <- function (x) {
         inherits(x, "CrunchLogicalExpr") || x %in% magic_else_string
@@ -81,8 +81,8 @@ makeCaseVariable <- function (..., cases, data = NULL, name) {
         halt("must supply case conditions in either ", dQuote("..."), " or ",
              "the ", dQuote("cases"), " argument, please use one or the other.")
     }
-    
-    cases <- evalWithData(substitute(cases), data, parent.frame())
+
+    cases <- evalSide(substitute(cases), data, parent.frame())
     cases <- ensureValidCases(cases)
 
     # create the new categorical variable
@@ -110,14 +110,6 @@ magic_else_string <- "else"
 
 is_else_case <- function (case) {
     identical(case[['expression']], magic_else_string)
-}
-
-evalWithData <- function (to_eval, dat = NULL, eval_env) {
-    if (is.null(dat)) {
-        return(eval(to_eval, NULL, eval_env))
-    } else {
-        return(eval(to_eval, envir = as.environment(dat), eval_env))
-    }
 }
 
 ensureValidCases <- function (cases) {

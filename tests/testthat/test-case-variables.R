@@ -80,12 +80,12 @@ with_mock_crunch({
         )
     )
 
-    test_that("evalWithData works with and without data", {
-        expect_equal(evalWithData(expression(birthyr), ds, eval_env = environment()),
+    test_that("evalSide works with and without data", {
+        expect_equal(evalSide(expression(birthyr), ds, eval_env = environment()),
                      ds$birthyr)
-        expect_equal(evalWithData(expression(ds$birthyr), eval_env = environment()), ds$birthyr)
+        expect_equal(evalSide(expression(ds$birthyr), eval_env = environment()), ds$birthyr)
     })
-    
+
     test_that("Case variable definition", {
         expect_json_equivalent(
             makeCaseVariable(

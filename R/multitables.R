@@ -38,7 +38,7 @@ setMethod("[[<-", c("MultitableCatalog", "character", "missing", "formula"),
                                      data = loadDataset(datasetReference(x)),
                                      name = i)
                   return(refresh(x))
-              } 
+              }
               callNextMethod(x, w, value=value)
           })
 
@@ -168,7 +168,7 @@ newMultitable <- function (formula, data, name, ...) {
 
     template <- formulaToQuery(formula, data)
     if (missing(name)) {
-        name <- formulaRHS(formula)
+        name <- RHS_string(formula)
     }
 
     payload <- makeMultitablePayload(template = template, name = name)
@@ -197,7 +197,7 @@ newMultitable <- function (formula, data, name, ...) {
 #' @export
 importMultitable <- function (data, multitable, ...) {
     payload <- wrapEntity(multitable=self(multitable), ...)
-    
+
     u <- crPOST(shojiURL(data, "catalogs", "multitables"), body=toJSON(payload))
     invisible(Multitable(crGET(u)))
 }
