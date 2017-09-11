@@ -55,7 +55,10 @@ createSource <- function (file, url, ...) {
             halt("File not found")
         }
     } else if (!missing(url)) {
-        u <- crPOST(sources_url, body=toJSON(wrapEntity(location=url, ...)))
+        u <- crPOST(sources_url, body=toJSON(wrapEntity(location=url, ...)),
+            ## TODO: all JSON POSTs/PATCHes/PUTs should declare their content-type
+            ## this is just the first place where the backend has rejected without it
+            config=add_headers(`Content-Type`="application/json"))
     } else {
         halt("Must provide a file or url to createSource")
     }
