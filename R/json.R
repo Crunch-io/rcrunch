@@ -8,6 +8,10 @@ setMethod("jsonprep", "list", function (x, ...) lapply(x, jsonprep, ...))
 
 #' @rdname tojson-crunch
 #' @export
+setMethod("jsonprep", "VariableDefinition", function (x, ...) lapply(x, jsonprep, ...))
+
+#' @rdname tojson-crunch
+#' @export
 setMethod("jsonprep", "ANY", function (x, ...) x)
 
 

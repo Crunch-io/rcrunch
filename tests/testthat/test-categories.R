@@ -60,13 +60,6 @@ with_mock_crunch({
         expect_identical(lapply(cats, function (x) x), cats)
     })
 
-    test_that("category listifier", {
-        expect_equal(listifyCategories(cats), 
-                     list(list(id=1L, missing=FALSE, name="Male", numeric_value=1L),
-                          list(id=2L, missing=FALSE, name="Female", numeric_value=2L),
-                          list(id=-1L, missing=TRUE, name="No Data", numeric_value=NULL)))
-    })
-    
     test_that("category getters", {
         male <- cats[[1]]
         expect_identical(name(male), "Male")

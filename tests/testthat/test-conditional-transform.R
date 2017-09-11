@@ -54,15 +54,15 @@ with_mock_crunch({
 
     test_that("conditionalTransform works when specifying a categories object", {
         # use different numeric values and missingnesses to check that the categories object is being sent
-        textVarCatslist <- list(
+        textVarCats <- Categories(
             list(id=1L, name="l", numeric_value=10L, missing=FALSE),
             list(id=2L, name="m", numeric_value=20L, missing=TRUE),
             list(id=3L, name="s", numeric_value=30L, missing=FALSE),
             list(id=4L, name="h", numeric_value=40L, missing=TRUE),
             list(id=5L, name="z", numeric_value=50L, missing=FALSE),
             list(id=6L, name="x", numeric_value=60L, missing=TRUE))
-        no_data_cat <- list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
-        textVarCats <- Categories(data = textVarCatslist)
+        no_data_cat <- Categories(list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE))
+        textVarCats <- Categories(data = textVarCats)
         expect_true(is.categories(textVarCats))
         expect_silent(new_var <- conditionalTransform(gender == "Male" ~ textVar, data = ds,
                                                       categories = textVarCats))
@@ -70,17 +70,17 @@ with_mock_crunch({
                                        2, -1, 3, -1, -1, -1, -1, -1, -1, -1, 4,
                                        5, 2, -1, 6))
         expect_equal(new_var$type, "categorical")
-        expect_json_equivalent(new_var$categories, c(textVarCatslist, list(no_data_cat)))
+        expect_json_equivalent(new_var$categories, c(textVarCats, no_data_cat))
 
         # reverse the ids to make sure that the ids are not being over-written
-        textVarCatslist <- list(
+        textVarCats <- Categories(
             list(id=6L, name="l", numeric_value=10L, missing=FALSE),
             list(id=5L, name="m", numeric_value=20L, missing=FALSE),
             list(id=4L, name="s", numeric_value=30L, missing=FALSE),
             list(id=3L, name="h", numeric_value=40L, missing=FALSE),
             list(id=2L, name="z", numeric_value=50L, missing=FALSE),
             list(id=1L, name="x", numeric_value=60L, missing=FALSE))
-        textVarCats <- Categories(data = textVarCatslist)
+        textVarCats <- Categories(data = textVarCats)
         expect_true(is.categories(textVarCats))
         expect_silent(new_var <- conditionalTransform(gender == "Male" ~ textVar, data = ds,
                                         categories = textVarCats))
@@ -91,7 +91,7 @@ with_mock_crunch({
                                        5, -1, 4, -1, -1, -1, -1, -1, -1, -1, 3,
                                        2, 5, -1, 1)) # for reversed IDs
         expect_equal(new_var$type, "categorical")
-        expect_json_equivalent(new_var$categories, c(textVarCatslist, list(no_data_cat)))
+        expect_json_equivalent(new_var$categories, c(textVarCats, no_data_cat))
     })
 
     test_that("conditionalTransform works with other output types (text and numeric)", {

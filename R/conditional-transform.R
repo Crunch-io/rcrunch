@@ -84,7 +84,7 @@ conditionalTransform <- function (..., data, else_condition=NA, type="categorica
         }
         categories <- ensureNoDataCategory(categories)
         # make a category list to send with VariableDefinition and then store that and convert values to ids values
-        category_list <- listifyCategories(categories)
+        category_list <- categories
         var_def$categories <- category_list
         vals <- as.character(result)
         vals[is.na(vals)] <- "No Data" # na is system default
@@ -115,18 +115,13 @@ make_conditional_values <- function (formulas, data, else_condition, type) {
     }
 
     # setup NAs for as default
-    if (!missing(data)) {
-        n_rows <- nrow(data)
-    } else {
-        # if there's no data argument, check all datasets are the same and get
-        # the reference from the unique one
-        ds_refs <- unlist(unique(lapply(cases, datasetReference)))
-        if (length(ds_refs) > 1) {
-            halt("There is more than one dataset referenced. Please ",
-                 "supply only one.")
-        }
-        n_rows <- nrow(CrunchDataset(crGET(ds_refs)))
+    # check all datasets are the same and get the reference from the unique one
+    ds_refs <- unlist(unique(lapply(cases, datasetReference)))
+    if (length(ds_refs) > 1) {
+        halt("There is more than one dataset referenced. Please ",
+             "supply only one.")
     }
+    n_rows <- nrow(CrunchDataset(crGET(ds_refs)))
 
     # grab booleans for cases
     case_indices <- lapply(cases, which)
