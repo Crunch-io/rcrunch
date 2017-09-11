@@ -31,7 +31,13 @@ addBatch <- function (ds, ..., strict=TRUE, first_batch=FALSE, body=list(...)) {
 addBatchFile <- function (dataset, file, ...) {
     if (grepl("^[a-z0-9]+://", file)) {
         ## S3, or other file on the web
-        return(addBatch(dataset, url=file, ...))
+        if (startsWith(file, "s3")) {
+            ## We can post s3 URLs directly
+            return(addBatch(dataset, url=file, ...))
+        } else {
+            ## We have to create a source first
+            return(addBatch(dataset, source=createSource(url=file), ...))
+        }
     } else {
         ## Local file. Send it as file upload
         return(addBatch(dataset, source=createSource(file), ...))
@@ -39,12 +45,21 @@ addBatchFile <- function (dataset, file, ...) {
 }
 
 #' @importFrom httr upload_file
-createSource <- function (file, ...) {
-    if (!file.exists(file)) {
-        halt("File not found")
+createSource <- function (file, url, ...) {
+    sources_url <- sessionURL("sources")
+    if (!missing(file)) {
+        if (file.exists(file)) {
+            u <- crPOST(sources_url,
+                body=list(uploaded_file=upload_file(file)), ...)
+        } else {
+            halt("File not found")
+        }
+    } else if (!missing(url)) {
+        u <- crPOST(sources_url, body=toJSON(wrapEntity(location=url, ...)))
+    } else {
+        halt("Must provide a file or url to createSource")
     }
-    crPOST(sessionURL("sources"),
-        body=list(uploaded_file=upload_file(file)), ...)
+    return(u)
 }
 
 #' @importFrom methods initialize

@@ -24,11 +24,6 @@ test_that("newDataset input validation", {
         "Can only make a Crunch dataset from a two-dimensional data")
 })
 
-test_that("createSource validation", {
-    expect_error(createSource("File not found"),
-        "File not found")
-})
-
 with_mock_crunch({
     test_that("Basic exercise of turning data.frame to Crunch payload", {
         expect_POST(newDataset(data.frame(a=1), name="Testing"),
@@ -89,12 +84,20 @@ with_mock_crunch({
             })
         })
     })
-    test_that("newDatasetFromFile can take a URL", {
+    test_that("newDatasetFromFile can take an s3 URL", {
         with_DELETE(NULL, {
-            expect_POST(newDatasetFromFile("https://httpbin.org/get"),
+            expect_POST(newDatasetFromFile("s3://httpbin.org/get"),
                 'https://app.crunch.io/api/datasets/1/batches/',
                 '{"element":"shoji:entity",',
-                '"body":{"url":"https://httpbin.org/get"}}')
+                '"body":{"url":"s3://httpbin.org/get"}}')
+        })
+    })
+    test_that("newDatasetFromFile can take an http(s) URL", {
+        with_DELETE(NULL, {
+            expect_POST(newDatasetFromFile("https://httpbin.org/get"),
+                'https://app.crunch.io/api/sources/',
+                '{"element":"shoji:entity",',
+                '"body":{"location":"https://httpbin.org/get"}}')
         })
     })
 
@@ -102,6 +105,13 @@ with_mock_crunch({
         expect_POST(newDatasetByColumn(data.frame(a=1), name="Bam!"),
             "https://app.crunch.io/api/datasets/",
             '{"element":"shoji:entity","body":{"name":"Bam!"}}')
+    })
+
+    test_that("createSource validation", {
+        expect_error(createSource("File not found"),
+            "File not found")
+        expect_error(createSource(name="x"),
+            "Must provide a file or url to createSource")
     })
 })
 
