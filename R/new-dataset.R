@@ -140,10 +140,6 @@ write.csv.gz <- function (x, file, na="", row.names=FALSE, ...) {
     invisible(write.csv(x, file=gf, na=na, row.names=row.names, ...))
 }
 
-## TODO:
-# * Test these new features
-# * Examples
-
 #' Make a dataset with metadata and a CSV
 #'
 #' This function just takes what you give it and POSTs to Crunch. No
@@ -157,7 +153,6 @@ write.csv.gz <- function (x, file, na="", row.names=FALSE, ...) {
 #' TRUE.
 #' @return On success, a new dataset.
 #' @export
-#' @importFrom jsonlite fromJSON
 #' @keywords internal
 createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
     ds <- uploadMetadata(metadata)
@@ -166,6 +161,7 @@ createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
     return(ds)
 }
 
+#' @importFrom jsonlite fromJSON
 uploadMetadata <- function (metadata) {
     message("Uploading metadata")
     if (is.character(metadata)) {

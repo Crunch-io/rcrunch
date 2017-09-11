@@ -57,6 +57,18 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/",
             toJSON(fromJSON(file.path("dataset-fixtures", "apidocs.json"), simplifyVector=FALSE)))
     })
+    test_that("uploadData writes out a gzipped file", {
+        ds <- loadDataset("test ds")
+        f <- tempfile()
+        with_mock(tempfile=function (...) f, {
+            expect_false(file.exists(f))
+            with_DELETE(NULL, {
+                ## with_DELETE to handle the cleanup so we can see the real error
+                expect_POST(uploadData(ds, data.frame(a=1)))
+            })
+            expect_true(file.exists(f))
+        })
+    })
 
     test_that("createDataset with named args", {
         expect_POST(createDataset(name="Foo", description="Bar."),
@@ -78,7 +90,6 @@ with_mock_crunch({
             expect_DELETE(newDatasetFromFile("NOTAFILE.exe"),
                 "https://app.crunch.io/api/datasets/1/")
             with_DELETE(NULL, {
-                ## with_DELETE to handle the cleanup so we can see the real error
                 expect_error(newDatasetFromFile("NOTAFILE.exe"),
                     "File not found")
             })
