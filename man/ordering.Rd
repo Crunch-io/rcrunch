@@ -34,6 +34,6 @@
 \code{ordering<-} sets the VariableOrder
 }
 \description{
-The \code{ordering} methods allow you to get and set a \link{1VariableOrder1} on a
+The \code{ordering} methods allow you to get and set a \code{\link{VariableOrder}} on a
 \code{\link{CrunchDataset}} or on the \code{\link{VariableCatalog}} that the dataset contains.
 }
