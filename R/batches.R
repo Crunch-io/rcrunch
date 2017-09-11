@@ -1,14 +1,30 @@
-addBatch <- function (ds, ..., strict=TRUE, body=list(...)) {
+addBatch <- function (ds, ..., strict=TRUE, first_batch=FALSE, body=list(...)) {
     batches_url <- shojiURL(ds, "catalogs", "batches")
     if (!strict) {
         ## This is apparently deprecated in favor of passing in "strict" differently
         batches_url <- paste0(batches_url, "?strict=0")
     }
-    body <- wrapEntity(body=body)
 
-    ## Don't print "Result URL" if the job fails because the dataset will
-    ## be rolled back and that URL won't exist
-    suppressMessages(crPOST(batches_url, body=toJSON(body)))
+    if (first_batch) {
+        ## If this is the first batch, it's an "import", so delete the dataset
+        ## if it fails--no need to keep a worthless dataset entity around
+        do_it <- function (expr) {
+            tryCatch(eval(expr), error=function (e) {
+                ## We failed to add the batch successfully, so we don't really have
+                ## a useful dataset. So delete the entity that was created initially
+                with_consent(delete(ds))
+                stop(e)
+            })
+        }
+    } else {
+        ## Don't print "Result URL" if the job fails because the dataset will
+        ## be rolled back and that URL won't exist
+        do_it <- suppressMessages
+    }
+    do_it({
+        body <- wrapEntity(body=body)
+        suppressMessages(crPOST(batches_url, body=toJSON(body)))
+    })
     invisible(refresh(ds))
 }
 
@@ -24,6 +40,9 @@ addBatchFile <- function (dataset, file, ...) {
 
 #' @importFrom httr upload_file
 createSource <- function (file, ...) {
+    if (!file.exists(file)) {
+        halt("File not found")
+    }
     crPOST(sessionURL("sources"),
         body=list(uploaded_file=upload_file(file)), ...)
 }

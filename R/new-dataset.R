@@ -44,8 +44,7 @@ createDataset <- function (name, body, ...) {
         body <- wrapEntity(name=name, ...)
     }
     dataset_url <- crPOST(sessionURL("datasets"), body=toJSON(body))
-    ds <- entity(datasets()[[dataset_url]])
-    invisible(ds)
+    invisible(loadDataset(dataset_url))
 }
 
 #' Translate a data.frame to Crunch format
@@ -162,17 +161,9 @@ write.csv.gz <- function (x, file, na="", row.names=FALSE, ...) {
 #' @keywords internal
 createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
     ds <- uploadMetadata(metadata)
-    tryCatch({
-        out <- uploadData(ds, file, strict)
-    }, error=function (e) {
-        ## We failed to add the batch successfully, so we don't really have
-        ## a useful dataset. So delete the entity that was created initially.
-        with_consent(delete(ds))
-        stop(e)
-    })
-
+    ds <- uploadData(ds, file, strict, first_batch=TRUE)
     message("Done!")
-    return(out)
+    return(ds)
 }
 
 uploadMetadata <- function (metadata) {
@@ -184,7 +175,7 @@ uploadMetadata <- function (metadata) {
     return(createDataset(body=metadata))
 }
 
-uploadData <- function (dataset, data, strict=TRUE) {
+uploadData <- function (dataset, data, strict=TRUE, first_batch=TRUE) {
     message("Uploading data")
     if (!is.character(data)) {
         ## It's a data.frame. Write it out to a file.
@@ -192,7 +183,7 @@ uploadData <- function (dataset, data, strict=TRUE) {
         write.csv.gz(data, f)
         data <- f
     }
-    return(addBatchFile(dataset, data, strict=strict))
+    return(addBatchFile(dataset, data, strict=strict, first_batch=TRUE))
 }
 
 #' Wrap variable metadata inside a dataset entity
@@ -207,16 +198,6 @@ uploadData <- function (dataset, data, strict=TRUE) {
 shojifyDatasetMetadata <- function (metadata, order=I(names(metadata)), ...) {
     tbl <- list(element="crunch:table", metadata=metadata, order=order)
     return(wrapEntity(..., table=tbl))
-}
-
-#' @rdname newDataset
-#' @export
-newDatasetByCSV <- function (...) {
-    Call <- match.call()
-    Call[[1]] <- as.name("newDataset")
-    warning("newDatasetByCSV is deprecated. Use 'newDataset' (it's the same thing).")
-    ds <- eval.parent(Call)
-    invisible(ds)
 }
 
 #' Upload a data.frame column-by-column to make a new dataset
@@ -236,7 +217,7 @@ newDatasetByColumn <- function (x, name=deparseAndFlatten(substitute(x), max_len
         function (v) toVariable(x[[v]], name=v, alias=v))
     ds <- createDataset(name=name, ...)
     ds <- addVariables(ds, vardefs)
-    saveVersion(ds, "initial import")
+    ds <- saveVersion(ds, "initial import")
     invisible(ds)
 }
 
@@ -246,18 +227,15 @@ newDatasetByColumn <- function (x, name=deparseAndFlatten(substitute(x), max_len
 #' into R as a data.frame will result in lost metadata. You can just send it
 #' directly to Crunch and let the server process it.
 #'
-#' @param file character, the path to a file to upload. This should either be
-#' a .csv or .sav (SPSS) file.
+#' @param file character, the path to a local file to upload, or a URL.
+#' This should either be a .csv or .sav (SPSS) file.
 #' @param name character, the name to give the new Crunch dataset. Default is
 #' the file name
 #' @param ... additional arguments passed to \code{ \link{createDataset}}
 #' @return On success, an object of class \code{CrunchDataset}.
 #' @export
 newDatasetFromFile <- function (file, name=basename(file), ...) {
-    if (!file.exists(file)) {
-        halt("File not found")
-    }
     ds <- createDataset(name=name, ...)
-    ds <- addBatchFile(ds, file)
+    ds <- addBatchFile(ds, file, first_batch=TRUE)
     invisible(ds)
 }

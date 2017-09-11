@@ -2,12 +2,9 @@
 % Please edit documentation in R/new-dataset.R
 \name{newDataset}
 \alias{newDataset}
-\alias{newDatasetByCSV}
 \title{Upload a data.frame to Crunch to make a new dataset}
 \usage{
 newDataset(x, name = deparseAndFlatten(substitute(x), max_length = 40), ...)
-
-newDatasetByCSV(...)
 }
 \arguments{
 \item{x}{a data.frame or other rectangular R object}

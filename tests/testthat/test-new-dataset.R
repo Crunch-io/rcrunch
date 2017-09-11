@@ -24,6 +24,11 @@ test_that("newDataset input validation", {
         "Can only make a Crunch dataset from a two-dimensional data")
 })
 
+test_that("createSource validation", {
+    expect_error(createSource("File not found"),
+        "File not found")
+})
+
 with_mock_crunch({
     test_that("Basic exercise of turning data.frame to Crunch payload", {
         expect_POST(newDataset(data.frame(a=1), name="Testing"),
@@ -42,7 +47,7 @@ with_mock_crunch({
                     '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"}},',
                     '"order":["a"]}}}')
     })
-    
+
     test_that("Turning data.frame to Crunch payload with a long name", {
         expect_POST(newDataset(data.frame(a=1, really_really_long_name=2)),
                     "https://app.crunch.io/api/datasets/",
@@ -72,22 +77,27 @@ with_mock_crunch({
         expect_POST(newDatasetFromFile("helper.R"),
             "https://app.crunch.io/api/datasets/",
             '{"element":"shoji:entity","body":{"name":"helper.R"}}')
-        expect_error(newDatasetFromFile("NOTAFILE.exe"),
-            "File not found")
     })
-    test_that("newDatasetByCSV is deprecated", {
-        expect_warning(
-            expect_POST(
-                newDatasetByCSV(data.frame(a=1), name="Bam!"),
-                    "https://app.crunch.io/api/datasets/",
-                    '{"element":"shoji:entity","body":{"name":"Bam!",',
-                    '"table":{"element":"crunch:table",',
-                    '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"}},',
-                    '"order":["a"]}}}'
-            ),
-            "newDatasetByCSV is deprecated"
-        )
+    test_that("newDatasetFromFile cleans up the dataset entity if the file is invalid", {
+        with_POST("https://app.crunch.io/api/datasets/1/", {
+            expect_DELETE(newDatasetFromFile("NOTAFILE.exe"),
+                "https://app.crunch.io/api/datasets/1/")
+            with_DELETE(NULL, {
+                ## with_DELETE to handle the cleanup so we can see the real error
+                expect_error(newDatasetFromFile("NOTAFILE.exe"),
+                    "File not found")
+            })
+        })
     })
+    test_that("newDatasetFromFile can take a URL", {
+        with_DELETE(NULL, {
+            expect_POST(newDatasetFromFile("https://httpbin.org/get"),
+                'https://app.crunch.io/api/datasets/1/batches/',
+                '{"element":"shoji:entity",',
+                '"body":{"url":"https://httpbin.org/get"}}')
+        })
+    })
+
     test_that("newDatasetByColumn", {
         expect_POST(newDatasetByColumn(data.frame(a=1), name="Bam!"),
             "https://app.crunch.io/api/datasets/",
@@ -108,7 +118,7 @@ if (run.integration.tests) {
     })
 
     with_test_authentication({
-        whereas("The three methods for sending data", {
+        whereas("The two methods for sending data", {
             test_that("newDatasetFromFile creates a dataset", {
                 ds <- newDatasetFromFile(testfile.csv)
                 expect_true(is.dataset(ds))
@@ -123,12 +133,6 @@ if (run.integration.tests) {
                 expect_equivalent(mean(ds$v3), mean(df$v3))
                 expect_true(setequal(names(df), names(ds)))
                 expect_identical(names(df), names(ds))
-            })
-
-            test_that("newDataset via CSV + JSON", {
-                expect_warning(ds <- newDatasetByCSV(df),
-                    "newDatasetByCSV is deprecated")
-                expect_valid_df_import(ds)
             })
         })
 
@@ -177,7 +181,3 @@ if (run.integration.tests) {
         })
     })
 }
-
-## TODO:
-## 1) Test "cleanup" path, and perhaps broaden to all newDataset methods
-## 2) Test "strict" option, and perhaps move it to batch payload instead of query param

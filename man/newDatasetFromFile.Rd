@@ -7,8 +7,8 @@
 newDatasetFromFile(file, name = basename(file), ...)
 }
 \arguments{
-\item{file}{character, the path to a file to upload. This should either be
-a .csv or .sav (SPSS) file.}
+\item{file}{character, the path to a local file to upload, or a URL.
+This should either be a .csv or .sav (SPSS) file.}
 
 \item{name}{character, the name to give the new Crunch dataset. Default is
 the file name}
