@@ -1,13 +1,13 @@
 ---
+title: "Crunch Internals"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Crunch Internals}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
 The Crunch web app and the Crucnh package are both built around a [REST API](http://docs.crunch.io/), this allows users to interact with very large survey datasets because most of the heavy computation is done on the Crunch servers, and not on the users computer. Most of the design patterns used in Crunch flow from this basic architecture. 
-
 ### Catalogs
 
 When you open a dataset in the Crunch web app, what happens is that the app sends an HTTP request to the Crunch server for information about that dataset. For instance it gets the dataset description, the and a list of variables contained within that dataset, but the actual data is store don the server and not sent to the app. The app only loads information about variables which are actually going to be displayed on the screen, which is why very large datasets load so quickly. For instance you might have a million entries in a numeric variable, but the web app only asks the server for the summary statistics it needs to display the variable card. 

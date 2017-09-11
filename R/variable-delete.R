@@ -1,11 +1,11 @@
 #' Delete Variables Within a Dataset
 #'
 #' This function permenantly deletes a variable from a dataset. For a non-destructive
-#' alternative see [`hide`].
+#' alternative see [hide()].
 #'
 #' In an interactive session, you will be prompted to confirm that you
 #' wish to delete the variable. To avoid that prompt, or to delete variables from a
-#' non-interactive session, wrap the call in [`with_consent`] to give
+#' non-interactive session, wrap the call in [with_consent()] to give
 #' your permission to delete.
 #' @param dataset the Dataset to modify
 #' @param variables aliases (following `crunch.namekey.dataset`) or indices

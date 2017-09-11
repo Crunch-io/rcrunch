@@ -43,7 +43,7 @@ should not be done lightly. Consider instead using \code{archive`` for datasets 
 \details{
 Deleting requires confirmation. In an interactive session, you will be asked
 to confirm. To avoid that prompt, or to delete objects from a
-non-interactive session, wrap the call in \link{with_consent} to give
+non-interactive session, wrap the call in \code{\link[=with_consent]{with_consent()}} to give
 your permission to delete.
 }
 \seealso{

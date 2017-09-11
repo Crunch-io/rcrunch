@@ -20,12 +20,12 @@ of variables to delete.}
 }
 \description{
 This function permenantly deletes a variable from a dataset. For a non-destructive
-alternative see \code{\link{hide}}.
+alternative see \code{\link[=hide]{hide()}}.
 }
 \details{
 In an interactive session, you will be prompted to confirm that you
 wish to delete the variable. To avoid that prompt, or to delete variables from a
-non-interactive session, wrap the call in \code{\link{with_consent}} to give
+non-interactive session, wrap the call in \code{\link[=with_consent]{with_consent()}} to give
 your permission to delete.
 }
 \seealso{

@@ -18,8 +18,8 @@ versions unique descriptions.}
 invisibly, the URL of the newly created version
 }
 \description{
-Crunch datasets can be saved and restored using \code{saveVersion} and \link{restoreVersion}.
-Some Crunch functions, such as \link{appendDataset} create new savepoints automatically. To
+Crunch datasets can be saved and restored using \code{saveVersion} and \code{\link[=restoreVersion]{restoreVersion()}}.
+Some Crunch functions, such as \code{\link[=appendDataset]{appendDataset()}} create new savepoints automatically. To
 see the list of savepoints use \code{\link[=versions]{versions()}}.
 }
 \seealso{

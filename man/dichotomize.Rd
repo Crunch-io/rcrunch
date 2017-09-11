@@ -43,7 +43,7 @@ of the categories to mark as "selected", or if character, the Category
 numeric indices are positional, not with reference to category ids.}
 }
 \value{
-Categories or the Variable, (un)dichotomized accoringly
+Categories or the Variable, (un)dichotomized accordingly
 }
 \description{
 Multiple Response variables are essentially Categorical Arrays in which one

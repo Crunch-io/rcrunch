@@ -53,7 +53,7 @@ names.CrunchDataFrame <- function (x) x$.names
 #' as.data.frame method for CrunchDataset
 #'
 #' This method is defined principally so that you can use a CrunchDataset as
-#' a `data` argument to other R functions (such as [stats::lm]). By default
+#' a `data` argument to other R functions (such as [stats::lm()]). By default
 #' the function does not return a dataframe, but instead an object which
 #' behaves similarly to a dataframe without bringing the whole dataset into memory.
 #' For instance when you access the variables of a `CrunchDataFrame`

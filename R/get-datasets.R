@@ -45,7 +45,7 @@ datasets <- function (x=getAPIRoot()) {
 #' @param refresh logical: should the function check the Crunch API for new
 #' datasets? Default is FALSE.
 #' @return Character vector of dataset names, each of which would be a valid
-#' input for [loadDataset]
+#' input for [loadDataset()]
 #' @export
 listDatasets <- function (kind=c("active", "all", "archived"), project=NULL,
                           refresh=FALSE) {
@@ -146,10 +146,10 @@ loadDataset <- function(dataset, kind=c("active", "all", "archived"), project=NU
 #' this way.
 #'
 #' The function also works on CrunchDataset objects, just like
-#' [delete], which may be useful if you have loaded another
-#' package that masks the [delete] method.
+#' [delete()], which may be useful if you have loaded another
+#' package that masks the [delete()] method.
 #' @param x The name (character) of a dataset, its (numeric) position in the
-#' return of [listDatasets], or an object of class
+#' return of [listDatasets()], or an object of class
 #' `CrunchDataset`. x can only be of length 1--this function is not
 #' vectorized (for your protection).
 #' @param ... additional parameters passed to `delete`

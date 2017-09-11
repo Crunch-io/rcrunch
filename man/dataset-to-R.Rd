@@ -33,7 +33,7 @@ which case the return is a \code{data.frame}.
 }
 \description{
 This method is defined principally so that you can use a CrunchDataset as
-a \code{data} argument to other R functions (such as \link[stats:lm]{stats::lm}). By default
+a \code{data} argument to other R functions (such as \code{\link[stats:lm]{stats::lm()}}). By default
 the function does not return a dataframe, but instead an object which
 behaves similarly to a dataframe without bringing the whole dataset into memory.
 For instance when you access the variables of a \code{CrunchDataFrame}

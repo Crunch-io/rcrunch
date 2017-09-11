@@ -12,7 +12,7 @@
 #' of the categories to mark as "selected", or if character, the Category
 #' "names". Note that unlike some other categorical variable methods,
 #' numeric indices are positional, not with reference to category ids.
-#' @return Categories or the Variable, (un)dichotomized accoringly
+#' @return Categories or the Variable, (un)dichotomized accordingly
 #' @name dichotomize
 #' @aliases dichotomize is.dichotomized undichotomize
 #' @seealso [`describe-category`]

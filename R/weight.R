@@ -8,9 +8,9 @@
 #' VariableDefinition is passed, the variable will first be created and then set
 #' as the datasets weight. Set to `NULL` to remove existing weights from the
 #' dataset.
-#' @return For the \code{weight} getter, a Variable if there is a weight, else
-#' NULL. For the setter, x, modified accordingly. \code{weightVariables} returns
-#' the aliases (or names, according to \code{options(crunch.namekey.dataset)}),
+#' @return For the `weight` getter, a Variable if there is a weight, else
+#' NULL. For the setter, x, modified accordingly. `weightVariables` returns
+#' the aliases (or names, according to `options(crunch.namekey.dataset)`),
 #' of the variables designated as weights.
 #' @aliases weightVariables
 #' @export

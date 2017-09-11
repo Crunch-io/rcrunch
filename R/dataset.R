@@ -234,7 +234,7 @@ setMethod("refresh", "CrunchDataset", function (x) {
 #'
 #' Deleting requires confirmation. In an interactive session, you will be asked
 #' to confirm. To avoid that prompt, or to delete objects from a
-#' non-interactive session, wrap the call in [with_consent] to give
+#' non-interactive session, wrap the call in [with_consent()] to give
 #' your permission to delete.
 #'
 #' @param x a Crunch object

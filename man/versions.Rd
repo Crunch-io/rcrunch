@@ -15,7 +15,7 @@ catalog include "names" and "timestamps".
 }
 \description{
 This function allows you to see a dataset's savepoints. These can then
-be passed to \link{restoreVersion} to load the previously saved version of a dataset.
+be passed to \code{\link[=restoreVersion]{restoreVersion()}} to load the previously saved version of a dataset.
 }
 \seealso{
 \link{saveVersion} \link{restoreVersion}

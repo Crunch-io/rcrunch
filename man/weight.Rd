@@ -26,9 +26,9 @@ as the datasets weight. Set to \code{NULL} to remove existing weights from the
 dataset.}
 }
 \value{
-For the \code{weight} getter, a Variable if there is a weight, otherwise the function
-returns \code{NULL}. For the setter, the dataset's weights are modified accordingly.
-\code{weightVariables} returns the aliases (or names, according to \code{options(crunch.namekey.dataset)}),
+For the \code{weight} getter, a Variable if there is a weight, else
+NULL. For the setter, x, modified accordingly. \code{weightVariables} returns
+the aliases (or names, according to \code{options(crunch.namekey.dataset)}),
 of the variables designated as weights.
 }
 \description{

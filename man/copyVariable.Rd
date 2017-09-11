@@ -31,7 +31,7 @@ Makes a copy of a Crunch variable on the server.
 \details{
 Copies can be shallow (linked) or deep. Shallow copying is faster and is preferable
 unless a true hard copy is required. Shallow copies are effectively pointers to the
-original variable, and 1hen you append data to the original
+original variable, and then you append data to the original
 variable or otherwise alter its values, the values in the copy automatically
 update. This linking may be desirable, but it comes with some limitations.
 First, you cannot edit the values of the copy independently of the original.

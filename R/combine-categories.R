@@ -13,9 +13,9 @@
 #' 1 a "name" for the new category or response; and
 #' 1 optionally, other category ("missing", "numeric_value") or subvariable ("alias", "description")
 #' attributes. If `combinations` is omitted, the resulting variable will
-#' essentially be a copy (but see [copy] for a more natural way to copy variables.
+#' essentially be a copy (but see [copy()] for a more natural way to copy variables.
 #' @param ... Additional variable metadata for the new derived variable
-#' @return A [VariableDefinition] that will create the new combined-category or
+#' @return A [`VariableDefinition`] that will create the new combined-category or
 #' -response derived variable. Categories/responses not referenced in `combinations` will be
 #' appended to the end of the combinations.
 #' @examples

@@ -1,7 +1,7 @@
 #' Get and set VariableOrder
 #'
-#' The `ordering` methods allow you to get and set a [VariableOrder] on a
-#' [CrunchDataset] or on the [VariableCatalog] that the dataset contains.
+#' The `ordering` methods allow you to get and set a [1VariableOrder1] on a
+#' [`CrunchDataset`] or on the [`VariableCatalog`] that the dataset contains.
 #'
 #' @param x a VariableCatalog or CrunchDataset
 #' @param value a valid VariableOrder object

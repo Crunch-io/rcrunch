@@ -139,7 +139,7 @@ ensureValidCases <- function (cases) {
 #' 1. `id`: an integer to use for this category when a case variable is made
 #' (default: none, one will automatically be assigned when the case variable
 #' is made)
-#' 1. `name`: a charcater identifier for this case
+#' 1. `name`: a character identifier for this case
 #' 1. `expression`: a `CrunchLogicalExpr` that sets the conditions for the case, or "else"
 #' 1. `numeric_value`: a numeric that is the value this case should take on
 #' when analyzing the data numerically (mean, standard deviation, etc.)

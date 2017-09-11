@@ -9,7 +9,7 @@ setMethod("initialize", "VersionCatalog", function (.Object, ...) {
 #' Access the saved versions of a dataset
 #'
 #' This function allows you to see a dataset's savepoints. These can then
-#' be passed to [restoreVersion] to load the previously saved version of a dataset.
+#' be passed to [restoreVersion()] to load the previously saved version of a dataset.
 #'
 #' @param x a `CrunchDataset`
 #' @return an object of class `VersionCatalog`. Supported methods on the
@@ -35,8 +35,8 @@ setMethod("timestamps", "VersionCatalog", function (x) from8601(getIndexSlot(x, 
 
 #' Create a new saved version
 #'
-#' Crunch datasets can be saved and restored using `saveVersion` and [restoreVersion].
-#' Some Crunch functions, such as [appendDataset] create new savepoints automatically. To
+#' Crunch datasets can be saved and restored using `saveVersion` and [restoreVersion()].
+#' Some Crunch functions, such as [appendDataset()] create new savepoints automatically. To
 #' see the list of savepoints use [versions()].
 #'
 #' @param dataset a `CrunchDataset`
@@ -62,10 +62,10 @@ saveVersion <- function (dataset, description=paste("Version",
 
 #' Restore a dataset to a previously saved version
 #'
-#' You can save a version of a dataset using [saveVersion] which will create a
+#' You can save a version of a dataset using [saveVersion()] which will create a
 #' new savepoint for the dataset. Savepoints are also created automatically by
 #' certain Crunch functions which make major changes to the dataset. You can
-#' get the list of saved versions with the [versions] function.
+#' get the list of saved versions with the [versions()] function.
 #'
 #' @param dataset a `CrunchDataset`
 #' @param version either the name ("description") of the version to restore to

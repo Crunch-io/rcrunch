@@ -21,7 +21,7 @@ datasets? Default is FALSE.}
 }
 \value{
 Character vector of dataset names, each of which would be a valid
-input for \link{loadDataset}
+input for \code{\link[=loadDataset]{loadDataset()}}
 }
 \description{
 Show the names of all Crunch datasets associated with a catalog
