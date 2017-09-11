@@ -250,8 +250,8 @@ newDatasetByColumn <- function (x, name=deparseAndFlatten(substitute(x), max_len
 #' a .csv or .sav (SPSS) file.
 #' @param name character, the name to give the new Crunch dataset. Default is
 #' the file name
-#' @param ... additional arguments passed to \code{ \link{createDataset}}
-#' @return On success, an object of class \code{CrunchDataset}.
+#' @param ... additional arguments passed to [createDataset()]
+#' @return On success, an object of class `CrunchDataset`.
 #' @export
 newDatasetFromFile <- function (file, name=basename(file), ...) {
     if (!file.exists(file)) {
@@ -260,4 +260,44 @@ newDatasetFromFile <- function (file, name=basename(file), ...) {
     ds <- createDataset(name=name, ...)
     ds <- addBatchFile(ds, file)
     invisible(ds)
+}
+
+checkDataAndMetadata <- function (data, metadata) {
+    tbl <- metadata$body$table$metadata
+    ord <- metadata$boty$table$order
+
+    tbl_aliases <- c(names(tbl), Reduce(c, lapply(tbl, function (v) {
+        subvars <- v$subreferences %||% list()
+        return(names(subvars))
+    })))
+    data_aliases <- names(data)
+    order_aliases <- unique(unlist(order))
+
+    # Make sure all (sub)variables in the table are in the dataset
+    vars_not_in_data <- setdiff(tbl_aliases, data_aliases)
+    # Make sure all columns in dataset are in table (including subvars)
+    vars_not_in_metadata <- setdiff(data_aliases, tbl_aliases)
+
+    # Make sure all variables in the order are in the table
+    in_order_not_table <- setdiff(order_aliases, tbl_aliases)
+    in_table_not_order <- setdiff(tbl_aliases, order_aliases)
+
+    # Make sure all categorical values in data are represented as categories
+    categorical <- vapply(tbl, function (v) v$type == "categorical", logical(1))
+    values_not_in_categories <- lapply(tbl[categorical], function (v) {
+        in_data <- unique(data[[v$alias]])
+        in_cats <- vapply(v$categories, function (ct) ct$id, numeric(1))
+        return(setdiff(in_data, in_cats))
+    })
+
+    # If weight is specified, make sure it's in the table
+    ## TODO: implement, and update apidocs example which looks wrong/incomplete
+    # weight_not_in_table <- setdiff()
+    return(list(
+        vars_not_in_data=vars_not_in_data,
+        vars_not_in_metadata=vars_not_in_metadata,
+        in_order_not_table=in_order_not_table,
+        in_table_not_order=in_table_not_order,
+        values_not_in_categories=values_not_in_categories
+    ))
 }
