@@ -1,22 +1,14 @@
-addBatch <- function (ds, ..., savepoint=TRUE, autorollback=savepoint, strict=TRUE, body=list(...)) {
+addBatch <- function (ds, ..., strict=TRUE, body=list(...)) {
     batches_url <- shojiURL(ds, "catalogs", "batches")
     if (!strict) {
         ## This is apparently deprecated in favor of passing in "strict" differently
         batches_url <- paste0(batches_url, "?strict=0")
     }
     body <- wrapEntity(body=body)
-    body$autorollback <- autorollback
-    body$savepoint <- savepoint
 
-    if (autorollback) {
-        ## Don't print "Result URL" if the job fails because the dataset will
-        ## be rolled back and that URL won't exist
-        do_it <- suppressMessages
-    } else {
-        ## Just execute and let the "Result URL" print if it fails
-        do_it <- force
-    }
-    do_it(crPOST(batches_url, body=toJSON(body)))
+    ## Don't print "Result URL" if the job fails because the dataset will
+    ## be rolled back and that URL won't exist
+    suppressMessages(crPOST(batches_url, body=toJSON(body)))
     invisible(refresh(ds))
 }
 

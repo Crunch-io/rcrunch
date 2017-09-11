@@ -25,7 +25,7 @@ with_test_authentication({
                 "All good :)")
         })
         test_that("they append successfully", {
-            out <- appendDataset(part1, part2, autorollback=FALSE)
+            out <- appendDataset(part1, part2)
             expect_true(is.dataset(out))
             expect_length(batches(out), 3)
             expect_identical(dim(out), c(nrow(mrdf)*2L, 2L))

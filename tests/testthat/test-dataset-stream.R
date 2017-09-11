@@ -1,5 +1,5 @@
 context("Dataset stream")
-# 
+#
 mock_stream_rows <- data.frame(
     birthyr = c(0.577530, 0.577530),
     gender = c(2, 1),# Female , Male
@@ -16,9 +16,9 @@ with_mock_crunch({
     ds3 <- loadDataset("ECON.sav") ## has 0 messages waiting, 0 rows received
     test_that("pendingStream gets pending messages", {
         expect_equal(pendingStream(ds), 2)
-        expect_GET(pendingStream(ds2), 'https://app.crunch.io/api/datasets/2/stream')        
+        expect_GET(pendingStream(ds2), 'https://app.crunch.io/api/datasets/2/stream')
     })
-    
+
     test_that("streamRows streams rows", {
         expect_equal(streamRows(ds, data=data.frame()), ds)
         expect_POST(streamRows(ds, data=mock_stream_rows),
@@ -32,13 +32,12 @@ with_mock_crunch({
                     '{"birthyr":0.5775,"gender":2,"subvar1":2,"subvar2":1,"subvar3":1,',
                     '"textVar":"a","starttime":"1955-12-28"}')
     })
-    
+
     test_that("appendStream", {
         expect_POST(appendStream(ds),
                     'https://app.crunch.io/api/datasets/1/batches/',
                     '{"element":"shoji:entity","body":{',
-                    '"type":"ldjson","stream":null},',
-                    '"autorollback":true,"savepoint":true}')
+                    '"type":"ldjson","stream":null}')
         expect_message(appendStream(ds3), "There's no pending stream data to be appended.")
     })
 })

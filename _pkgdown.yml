@@ -1,7 +1,8 @@
 title: Crunch
 template:
-  package: crunchdown
-  default_assets: false
+  params:
+    bootswatch: flatly
+    ganalytics: UA-50332119-2
 reference:
 - title: Upload
   contents:

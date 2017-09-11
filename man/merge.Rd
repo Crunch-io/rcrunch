@@ -13,13 +13,17 @@
 
 \item{y}{a standard data.frame}
 
-\item{by}{name of the variable to match in both data sources (default: the intersection of the names of x and y)}
+\item{by}{name of the variable to match in both data sources (default: the
+intersection of the names of x and y)}
 
 \item{by.x}{name of the variable to match in x}
 
 \item{by.y}{name of the variable to match in y}
 
-\item{sort}{character, either "x" or "y" (default: "x"). Which of the inputs should be used for the output order. Unlike merge.data.frame, merge.CrunchDataFrame will not re-sort the order of the output. It will use the order of either \code{x} or \code{y}.}
+\item{sort}{character, either "x" or "y" (default: "x"). Which of the inputs
+should be used for the output order. Unlike merge.data.frame,
+merge.CrunchDataFrame will not re-sort the order of the output. It will use
+the order of either \code{x} or \code{y}.}
 
 \item{...}{ignored}
 }

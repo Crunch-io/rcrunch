@@ -127,10 +127,14 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
 #'
 #' @param x a CrunchDataFrame
 #' @param y a standard data.frame
-#' @param by name of the variable to match in both data sources (default: the intersection of the names of x and y)
+#' @param by name of the variable to match in both data sources (default: the
+#' intersection of the names of x and y)
 #' @param by.x name of the variable to match in x
 #' @param by.y name of the variable to match in y
-#' @param sort character, either "x" or "y" (default: "x"). Which of the inputs should be used for the output order. Unlike merge.data.frame, merge.CrunchDataFrame will not re-sort the order of the output. It will use the order of either `x` or `y`.
+#' @param sort character, either "x" or "y" (default: "x"). Which of the inputs
+#' should be used for the output order. Unlike merge.data.frame,
+#' merge.CrunchDataFrame will not re-sort the order of the output. It will use
+#' the order of either `x` or `y`.
 #' @param ... ignored
 #' @name merge
 #'
@@ -199,7 +203,7 @@ merge.CrunchDataFrame  <- function (x, y, by=intersect(names(x), names(y)),
             # only assign new columns
             # todo: check names, do something intelligent if they are already there.
             assign(col, new_cols[,col], envir = new_x)
-            assign(".names", c(new_x$.names, col), new_x )
+            assign(".names", c(new_x$.names, col), new_x)
         }
     }
 

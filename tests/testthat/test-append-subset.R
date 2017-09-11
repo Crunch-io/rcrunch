@@ -7,24 +7,21 @@ with_mock_crunch({
         expect_POST(appendDataset(ds1, ds2),
             'https://app.crunch.io/api/datasets/1/batches/',
             '{"element":"shoji:entity","body":',
-            '{"dataset":"https://app.crunch.io/api/datasets/3/"},',
-            '"autorollback":true,"savepoint":true}')
+            '{"dataset":"https://app.crunch.io/api/datasets/3/"}}')
     })
     test_that("Append with filter", {
         expect_POST(appendDataset(ds1, ds2[ds2$gender == "Male",]),
             'https://app.crunch.io/api/datasets/1/batches/',
             '{"element":"shoji:entity","body":',
             '{"dataset":"https://app.crunch.io/api/datasets/3/",',
-            '"filter":{"function":"==","args":[{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},{"value":1}]}},',
-            '"autorollback":true,"savepoint":true}')
+            '"filter":{"function":"==","args":[{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},{"value":1}]}}}')
     })
     test_that("Append with variable selection", {
         expect_POST(appendDataset(ds1, ds2[c("gender", "birthyr")]),
             'https://app.crunch.io/api/datasets/1/batches/',
             '{"element":"shoji:entity","body":',
             '{"dataset":"https://app.crunch.io/api/datasets/3/",',
-            '"where":{"function":"select","args":[{"map":{"66ae9881e3524f7db84970d556c34552":{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},"f78ca47313144b57adfb495893968e70":{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"}}}]}},',
-            '"autorollback":true,"savepoint":true}')
+            '"where":{"function":"select","args":[{"map":{"66ae9881e3524f7db84970d556c34552":{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},"f78ca47313144b57adfb495893968e70":{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"}}}]}}}')
     })
     test_that("Append with variable selection and filter", {
         expect_POST(appendDataset(ds1, ds2[ds2$gender == "Male", c("gender", "birthyr")]),
@@ -32,8 +29,7 @@ with_mock_crunch({
             '{"element":"shoji:entity","body":',
             '{"dataset":"https://app.crunch.io/api/datasets/3/",',
             '"where":{"function":"select","args":[{"map":{"66ae9881e3524f7db84970d556c34552":{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},"f78ca47313144b57adfb495893968e70":{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"}}}]},',
-            '"filter":{"function":"==","args":[{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},{"value":1}]}},',
-            '"autorollback":true,"savepoint":true}')
+            '"filter":{"function":"==","args":[{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},{"value":1}]}}}')
     })
 })
 
