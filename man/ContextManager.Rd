@@ -15,7 +15,7 @@ ContextManager(enter = function() { }, exit = function() { },
 
 \item{error}{optional function to run if an error is thrown}
 
-\item{as}{character optional way to specify a default name for assinging
+\item{as}{character optional way to specify a default name for assigning
 the return of the enter function.}
 }
 \value{

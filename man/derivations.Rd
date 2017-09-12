@@ -36,18 +36,17 @@ a \code{CrunchExpr} of the derivation for \code{derivation}; a logical for
 \code{is.derived}; the variable given in \code{x} for \code{is.derived<-} returns
 }
 \description{
-Get a derived variable's derivation formula as a (\code{CrunchExpr})\link{expressions} with
-\code{derivation([variable])}. Set (change) a derived variable's derivation with
-\code{derivation([variable]) <- [expression]}.
+Get a derived variable's derivation formula as a \link[=expressions]{CrunchExpr} with
+\code{derivation(variable)}. Set (change) a derived variable's derivation with
+\code{derivation(variable) <- expression}.
 }
 \details{
-To integrate (aka realize or instantiate) a variable so that it is no longer
-linked to the source variables that made up the derivation, use
-\code{derivation([variable]) <- NULL}
+To break a derivation link between a derived variable and the originating variable, set
+the derivation value of the derived variable to \code{NULL} with \code{derivation(variable) <- NULL}
 
 \code{is.derived} can be used to see if a variable is derived or not. Additionally
-setting a derived variable's \code{is.derived} to \code{FALSE} will integrate the
-derived variable.
+setting a derived variable's \code{is.derived} to \code{FALSE} will break the derivation link between
+two variables.
 }
 \examples{
 \dontrun{

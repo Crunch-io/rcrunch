@@ -3,7 +3,7 @@
 #' @param enter function to run before doing things
 #' @param exit function to run after doing things
 #' @param error optional function to run if an error is thrown
-#' @param as character optional way to specify a default name for assinging
+#' @param as character optional way to specify a default name for assigning
 #' the return of the enter function.
 #' @return an S3 class "contextManager" object
 #' @seealso \link{with-context-manager}

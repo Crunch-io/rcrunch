@@ -2,7 +2,7 @@
 % Please edit documentation in R/get-datasets.R
 \name{listDatasets}
 \alias{listDatasets}
-\title{Show the names of all Crunch datasets}
+\title{Show the names of all Crunch datasets associated with a catalog}
 \usage{
 listDatasets(kind = c("active", "all", "archived"), project = NULL,
   refresh = FALSE)
@@ -21,8 +21,8 @@ datasets? Default is FALSE.}
 }
 \value{
 Character vector of dataset names, each of which would be a valid
-input for \code{\link{loadDataset}}
+input for \code{\link[=loadDataset]{loadDataset()}}
 }
 \description{
-Show the names of all Crunch datasets
+Show the names of all Crunch datasets associated with a catalog
 }

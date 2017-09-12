@@ -54,9 +54,9 @@ with_mock_crunch({
             expect_DELETE(delete(mults[["Shared multitable"]]),
                           'https://app.crunch.io/api/datasets/1/multitables/4de322/')
             expect_DELETE(multitables(ds)[["Shared multitable"]] <- NULL,
-                          "https://app.crunch.io/api/datasets/1/multitables/4de322/" )
+                          "https://app.crunch.io/api/datasets/1/multitables/4de322/")
             expect_DELETE(multitables(ds)[[2]] <- NULL,
-                          "https://app.crunch.io/api/datasets/1/multitables/4de322/" )
+                          "https://app.crunch.io/api/datasets/1/multitables/4de322/")
             expect_silent(multitables(ds)[[999]] <- NULL)
             expect_error(multitables(ds)[[list(1)]] <- NULL, "invalid subscript type 'list'")
             expect_error(multitables(ds)[[2i]] <- NULL, "invalid subscript type 'complex'")

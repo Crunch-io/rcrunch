@@ -1,9 +1,9 @@
 #' Permanently delete rows from a dataset
 #'
-#' @param dataset a \code{CrunchDataset}
-#' @param expr a \code{CrunchLogicalExpr}
-#' @return \code{dataset} without the rows indicated by \code{expr}
-#' @seealso \code{\link{exclusion}} for a non-destructive way to suppress rows
+#' @param dataset a `CrunchDataset`
+#' @param expr a `CrunchLogicalExpr`
+#' @return `dataset` without the rows indicated by `expr`
+#' @seealso [exclusion] for a non-destructive way to suppress rows
 #' @examples
 #' \dontrun{
 #' ds <- dropRows(ds, ds$gender == "Male")

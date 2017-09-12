@@ -1,16 +1,15 @@
 #' Get or set a derived variable's expression
 #'
-#' Get a derived variable's derivation formula as a (`CrunchExpr`)[expressions] with
-#' `derivation([variable])`. Set (change) a derived variable's derivation with
-#' `derivation([variable]) <- [expression]`.
+#' Get a derived variable's derivation formula as a [CrunchExpr][expressions] with
+#' `derivation(variable)`. Set (change) a derived variable's derivation with
+#' `derivation(variable) <- expression`.
 #'
-#' To integrate (aka realize or instantiate) a variable so that it is no longer
-#' linked to the source variables that made up the derivation, use
-#' `derivation([variable]) <- NULL`
+#' To break a derivation link between a derived variable and the originating variable, set
+#' the derivation value of the derived variable to `NULL` with `derivation(variable) <- NULL`
 #'
 #' `is.derived` can be used to see if a variable is derived or not. Additionally
-#' setting a derived variable's `is.derived` to `FALSE` will integrate the
-#' derived variable.
+#' setting a derived variable's `is.derived` to `FALSE` will break the derivation link between
+#' two variables.
 #'
 #' @param x a variable
 #' @param value a `CrunchExpr` to be used as the derivation (for the setter
@@ -49,7 +48,7 @@ NULL
 
 #' @export
 #' @rdname derivations
-setMethod("derivation", "CrunchVariable", function(x) {
+setMethod("derivation", "CrunchVariable", function (x) {
     if (!is.derived(x)) {
         return(NULL)
     }
@@ -80,7 +79,7 @@ absolutifyVariables <- function (expr, base.url) {
 
 #' @export
 #' @rdname derivations
-setMethod("derivation<-", c("CrunchVariable", "ANY"), function(x, value) {
+setMethod("derivation<-", c("CrunchVariable", "ANY"), function (x, value) {
     if (!is.derived(x)) {
         halt("The variable ", dQuote(name(x)), " must already be a derived variable.")
     }
@@ -125,7 +124,7 @@ setMethod("is.derived", "CrunchVariable", function (x) {
 #' @rdname derivations
 #' @aliases is.derived<-
 #' @export
-setMethod("is.derived<-", c("CrunchVariable", "logical"), function(x, value) {
+setMethod("is.derived<-", c("CrunchVariable", "logical"), function (x, value) {
     if (!isTRUE(value)) {
        x <- integrateDerivedVar(x, value)
     } else if (!is.derived(x)) {

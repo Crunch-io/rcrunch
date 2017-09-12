@@ -29,7 +29,7 @@ availableGeodata(x = getAPIRoot())
 \item{...}{for \code{CrunchGeography}, named arugments to construct a
 \code{CrunchGeography} from: \code{geodatum}, \code{feature_key}, and \code{match_field}}
 
-\item{data}{for \code{CrunchGeography}, list of named arugments to construct a
+\item{data}{for \code{CrunchGeography}, list of named arguments to construct a
 \code{CrunchGeography} from: \code{geodatum}, \code{feature_key}, and \code{match_field}}
 
 \item{x}{a crunch variable}

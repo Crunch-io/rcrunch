@@ -1,14 +1,17 @@
 #' Delete Variables Within a Dataset
 #'
-#' Deleting requires confirmation. In an interactive session, you will be asked
-#' to confirm. To avoid that prompt, or to delete variables from a
-#' non-interactive session, wrap the call in \code{\link{with_consent}} to give
+#' This function permenantly deletes a variable from a dataset. For a non-destructive
+#' alternative see [hide()].
+#'
+#' In an interactive session, you will be prompted to confirm that you
+#' wish to delete the variable. To avoid that prompt, or to delete variables from a
+#' non-interactive session, wrap the call in [with_consent()] to give
 #' your permission to delete.
 #' @param dataset the Dataset to modify
-#' @param variables aliases (following \code{crunch.namekey.dataset}) or indices
+#' @param variables aliases (following `crunch.namekey.dataset`) or indices
 #' of variables to delete.
-#' @return (invisibly) \code{dataset} with the specified variables deleted
-#' @seealso \code{\link{hide}}
+#' @return (invisibly) `dataset` with the specified variables deleted
+#' @seealso [`hide`]
 #' @export
 deleteVariables <- function (dataset, variables) {
     to.delete <- allVariables(dataset[variables])
