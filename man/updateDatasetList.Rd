@@ -7,9 +7,8 @@
 updateDatasetList()
 }
 \value{
-Nothing. Called for its side effects of setting local environment
-variables.
+Nothing. Called for its side effects of resetting the cache.
 }
 \description{
-Refreshes the local environment list of Crunch datasets. This function is depracated
+Refreshes the local environment list of Crunch datasets. This function is deprecated.
 }

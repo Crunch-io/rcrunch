@@ -19,7 +19,5 @@ will be the filename}
 On success, an object of class \link{CrunchDataset}
 }
 \description{
-This function allows you to upload a \code{.csv`` or}.sav`` file directly to Crunch
-without first reading it into R. This is useful both because it preserves SPSS
-metadata which is stripped by importing \code{.sav} files into R.
+This function allows you to upload a \code{.csv`` or}.sav\code{file directly to Crunch without first reading it into R. This is useful both because it preserves SPSS metadata which is stripped by importing}.sav` files into R.
 }

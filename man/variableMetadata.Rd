@@ -10,10 +10,11 @@ variableMetadata(dataset)
 \item{dataset}{CrunchDataset}
 }
 \value{
-A VariableCatalog
+A VariableCatalog with all variable properties, including categories
+and subvariables.
 }
 \description{
-Crunch stores variable information in VariableCatalogs which contain information
+Crunch stores variable information in several catalogs containing information
 abut the variable class, its missingness and subvariables. This function allows you
 to access that information.
 }

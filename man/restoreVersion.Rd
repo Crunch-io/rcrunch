@@ -16,9 +16,9 @@ or the integer index of the version, as given by \code{versions(dataset)}}
 \code{dataset}, rolled back to \code{version}.
 }
 \description{
-You can save a version of a dataset using \code{\link[=saveVersion]{saveVersion()}} which will create a
-new savepoint for the dataset. Savepoints are also created automatically by
-certain Crunch functions which make major changes to the dataset. You can
+You can save a version of a dataset using \code{\link[=saveVersion]{saveVersion()}}.
+Savepoints are also created automatically by
+certain Crunch functions that make major changes to the dataset. You can
 get the list of saved versions with the \code{\link[=versions]{versions()}} function.
 }
 \seealso{

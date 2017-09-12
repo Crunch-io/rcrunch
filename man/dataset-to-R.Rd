@@ -22,10 +22,11 @@
 \item{force}{logical: actually coerce the dataset to \code{data.frame}, or
 leave the columns as unevaluated promises. Default is \code{FALSE}.}
 
-\item{row.order}{vector of indeces containing the order in which the rows of the dataset should
-be presented. If \code{NULL}, the Crunch Dataset order will be used.}
+\item{row.order}{vector of indices containing the order in which the rows of
+the dataset should be presented. If \code{NULL}, the Crunch Dataset order will be
+used.}
 
-\item{...}{additional arguments passed to as.data.frame.}
+\item{...}{additional arguments passed to \code{as.data.frame}.}
 }
 \value{
 an object of class \code{CrunchDataFrame} unless \code{force}, in
@@ -33,13 +34,13 @@ which case the return is a \code{data.frame}.
 }
 \description{
 This method is defined principally so that you can use a CrunchDataset as
-a \code{data} argument to other R functions (such as \code{\link[stats:lm]{stats::lm()}}). By default
-the function does not return a dataframe, but instead an object which
-behaves similarly to a dataframe without bringing the whole dataset into memory.
-For instance when you access the variables of a \code{CrunchDataFrame}
+a \code{data} argument to other R functions (such as \code{\link[stats:lm]{stats::lm()}}). By default,
+the function does not return a \code{data.frame} but instead \code{CrunchDataFrame},  which
+behaves similarly to a \code{data.frame} without bringing the whole dataset into memory.
+When you access the variables of a \code{CrunchDataFrame},
 you get an R vector, rather than a \code{CrunchVariable}. This allows modeling functions
 that require select columns of a dataset to retrieve only those variables from
 the remote server, rather than pulling the entire dataset into local
-memory. You can override this behavior by passing \code{force = TRUE} which will
-cause the function to return a traditional R dataframe.
+memory. You can override this behavior by passing \code{force = TRUE}, which will
+cause the function to return a traditional \code{data.frame}.
 }

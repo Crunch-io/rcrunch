@@ -1,15 +1,15 @@
 #' Upload a data.frame to Crunch to make a new dataset
 #'
-#' This function uploads an R dataframe to Crunch. It uses the CSV+JSON import format,
+#' This function uploads an R `data.frame` to Crunch. It uses the CSV+JSON import format,
 #' which is generally faster and more effective than [newDatasetByColumn]. If you
 #' want to upload an SPSS file, it is better to use [newDatasetFromFile] to upload
 #' the file directly to the server rather than first reading it into R. Uploading
 #' SPSS files directly to Crunch will preserve metadata which is stripped by the R import.
 #'
-#' @param x a data.frame
+#' @param x a `data.frame`
 #' @param name the name to give the new Crunch dataset. By default the function uses the
 #' name of the R object.
-#' @param ... additional arguments passed to \code{ \link{createDataset}}
+#' @param ... additional arguments passed to [createDataset()]
 #' @return If successful, an object of class CrunchDataset.
 #' @examples
 #' \dontrun{
@@ -252,7 +252,7 @@ newDatasetByColumn <- function (x, name=deparseAndFlatten(substitute(x), max_len
 
 #' Upload a file to Crunch to make a new dataset
 #'
-#' This function allows you to upload a `.csv`` or `.sav`` file directly to Crunch
+#' This function allows you to upload a `.csv`` or `.sav` file directly to Crunch
 #' without first reading it into R. This is useful both because it preserves SPSS
 #' metadata which is stripped by importing `.sav` files into R.
 #'

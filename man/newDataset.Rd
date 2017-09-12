@@ -10,18 +10,18 @@ newDataset(x, name = deparseAndFlatten(substitute(x), max_length = 40), ...)
 newDatasetByCSV(...)
 }
 \arguments{
-\item{x}{a data.frame}
+\item{x}{a \code{data.frame}}
 
 \item{name}{the name to give the new Crunch dataset. By default the function uses the
 name of the R object.}
 
-\item{...}{additional arguments passed to \code{ \link{createDataset}}}
+\item{...}{additional arguments passed to \code{\link[=createDataset]{createDataset()}}}
 }
 \value{
 If successful, an object of class CrunchDataset.
 }
 \description{
-This function uploads an R dataframe to Crunch. It uses the CSV+JSON import format,
+This function uploads an R \code{data.frame} to Crunch. It uses the CSV+JSON import format,
 which is generally faster and more effective than \link{newDatasetByColumn}. If you
 want to upload an SPSS file, it is better to use \link{newDatasetFromFile} to upload
 the file directly to the server rather than first reading it into R. Uploading
