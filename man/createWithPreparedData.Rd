@@ -20,5 +20,6 @@ metadata has been written as JSON.}
 A CrunchDataset.
 }
 \description{
-Upload a prepared data.frame with metadata to Crunch
+If you have manually created a Crunch dataset object with \code{\link[=prepareDataForCrunch]{prepareDataForCrunch()}}
+this function allows you to upload it to the app.
 }

@@ -9,7 +9,7 @@ prepareDataForCrunch(data, ...)
 \arguments{
 \item{data}{A data.frame or other rectangular R object}
 
-\item{...}{additional arguments passed to \code{ \link{createDataset}}.
+\item{...}{additional arguments passed to \link{createDataset}.
 "name" will be required by the Crunch server but is not required by this
 function.}
 }

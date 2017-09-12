@@ -1,14 +1,20 @@
-#' Construct a variable definition with (optional) additional metadata
+#' Construct a variable definition
+#'
+#' Crunch variables are created by posting a `VariableDefinition` to the Crunch server.
+#' The `VariableDefinition` contains the information the server requires to
+#' calculate the variable. This can information can either be in the form
+#' of the actual data which you would like to include in the variable, or a derivation
+#' which tells the server how to derive the new variable from existing ones.
+#' This function converts an R vector or set of attributes into a variable definition which
+#' can be posted to the server.
 #'
 #' @param data an R vector of data to convert to the Crunch payload format.
-#' See code{\link{toVariable}} for how R types are converted. If \code{data}
-#' is not supplied, you may instead supply \code{values}, which will not be
-#' converted in any way, nor will extra type information be supplied. Only
-#' send \code{values} if you know what you're doing. You may also omit both
-#' \code{data} and \code{values} to create an empty variable on the server
-#' (all values will be system missing "No Data").
-#' @param ... additional metadata attributes to send.
-#' @return a \code{VariableDefinition} object, ready to POST to Crunch.
+#' See [toVariable] for how R data types are converted. This function can
+#' also be used to construct a `VariableDefinition` directly by passing
+#' attributes to `...`. This is only recommended for advanced users who are
+#' familliar with the Crunch API.
+#' @param ... additional attributes to be included in the `VariableDefinition`
+#' @return a `VariableDefinition` object, ready to POST to Crunch.
 #' @export
 #' @examples
 #' VariableDefinition(rnorm(5), name="Some numbers",
@@ -16,7 +22,7 @@
 #' VarDef(name="Integers", values=1:5, type="numeric",
 #'     description="When creating variable definitions with 'values', you must
 #'     specify 'type', and categorical variables will require 'categories'.")
-#' @seealso \code{\link{toVariable}}
+#' @seealso `toVariable`
 VariableDefinition <- function (data, ...) {
     out <- list(...)
     if (!missing(data)) {

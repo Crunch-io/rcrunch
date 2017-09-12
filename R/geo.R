@@ -14,7 +14,7 @@
 #' @param value value of the geography property to set
 #' @param ... for `CrunchGeography`, named arugments to construct a
 #' `CrunchGeography` from: `geodatum`, `feature_key`, and `match_field`
-#' @param data for `CrunchGeography`, list of named arugments to construct a
+#' @param data for `CrunchGeography`, list of named arguments to construct a
 #' `CrunchGeography` from: `geodatum`, `feature_key`, and `match_field`
 #' @return geographic information of class `CrunchGeography` (`NULL` if there is none)
 #'
@@ -130,7 +130,7 @@ availableGeodata <- function (x = getAPIRoot()) {
 #' @export
 availableGeodataFeatures <- function (x = getAPIRoot(),
         geodatum_fields=c("name", "description", "location")) {
-    
+
     geo_cat <- availableGeodata(x)
 
     # grab each geodatum in order to get metadata

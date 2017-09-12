@@ -7,17 +7,25 @@
 newDataset(x, name = deparseAndFlatten(substitute(x), max_length = 40), ...)
 }
 \arguments{
-\item{x}{a data.frame or other rectangular R object}
+\item{x}{a \code{data.frame} or other rectangular R data object}
 
-\item{name}{character, the name to give the new Crunch dataset. Default is
-the name of the R object passed in \code{x}}
+\item{name}{character name to give the new Crunch dataset. By default the function uses the
+name of the R object.}
 
-\item{...}{additional arguments passed to \code{ \link{createDataset}}}
+\item{...}{additional arguments passed to \code{\link[=createDataset]{createDataset()}}}
 }
 \value{
 If successful, an object of class CrunchDataset.
 }
 \description{
-This function uses the CSV+JSON import format, which is generally faster and
-more effective than \code{\link{newDatasetByColumn}}.
+This function uploads an R \code{data.frame} to Crunch. It uses the CSV+JSON import format,
+which is generally faster and more effective than \link{newDatasetByColumn}. If you
+want to upload an SPSS file, it is better to use \link{newDatasetFromFile} to upload
+the file directly to the server rather than first reading it into R. Uploading
+SPSS files directly to Crunch will preserve metadata which is stripped by the R import.
+}
+\examples{
+\dontrun{
+ds <- newDataset(mtcars, "cars")
+}
 }

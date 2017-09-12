@@ -32,7 +32,7 @@ the aliases (or names, according to \code{options(crunch.namekey.dataset)}),
 of the variables designated as weights.
 }
 \description{
-"weight" lets you view and set your user's currently applied weight on the
-server. "weightVariables" lets you view all of the variables that have been
+\code{weight} lets you view and set your user's currently applied weight on the
+server. \code{weightVariables} lets you view all of the variables that have been
 designated as valid to use as weights.
 }

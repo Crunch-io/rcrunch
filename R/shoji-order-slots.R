@@ -2,7 +2,7 @@
 #'
 #' @param x a VariableGroup or VariableOrder
 #' @param value (1) For name, a character (length-1 vector); for names, a character
-#' vector of equal length to the number of VariableGroups beind modified; for
+#' vector of equal length to the number of VariableGroups being modified; for
 #' entities, either a character vector of variable URLs or a list containing a
 #' combination of variable URLs and VariableGroups. Note that group names must
 #' be unique, should be greater than 0 characters long, and "ungrouped" is a

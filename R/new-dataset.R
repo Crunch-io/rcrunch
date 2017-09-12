@@ -1,13 +1,20 @@
 #' Upload a data.frame to Crunch to make a new dataset
 #'
-#' This function uses the CSV+JSON import format, which is generally faster and
-#' more effective than \code{\link{newDatasetByColumn}}.
+#' This function uploads an R `data.frame` to Crunch. It uses the CSV+JSON import format,
+#' which is generally faster and more effective than [newDatasetByColumn]. If you
+#' want to upload an SPSS file, it is better to use [newDatasetFromFile] to upload
+#' the file directly to the server rather than first reading it into R. Uploading
+#' SPSS files directly to Crunch will preserve metadata which is stripped by the R import.
 #'
-#' @param x a data.frame or other rectangular R object
-#' @param name character, the name to give the new Crunch dataset. Default is
-#' the name of the R object passed in \code{x}
-#' @param ... additional arguments passed to \code{ \link{createDataset}}
+#' @param x a `data.frame` or other rectangular R data object
+#' @param name character name to give the new Crunch dataset. By default the function uses the
+#' name of the R object.
+#' @param ... additional arguments passed to [createDataset()]
 #' @return If successful, an object of class CrunchDataset.
+#' @examples
+#' \dontrun{
+#' ds <- newDataset(mtcars, "cars")
+#' }
 #' @export
 newDataset <- function (x, name=deparseAndFlatten(substitute(x), max_length = 40), ...) {
     is.2D <- !is.null(dim(x)) && length(dim(x)) %in% 2
@@ -49,12 +56,12 @@ createDataset <- function (name, body, ...) {
 
 #' Translate a data.frame to Crunch format
 #'
-#' This is called within \code{newDataset(ByCsv)} to extract the Crunch metadata
+#' This is called within `newDataset(ByCsv)` to extract the Crunch metadata
 #' from the data and to transform the data to match the extracted metadata. You
 #' can call this directly in order to tailor the data import flow more finely.
 #'
 #' @param data A data.frame or other rectangular R object
-#' @param ... additional arguments passed to \code{ \link{createDataset}}.
+#' @param ... additional arguments passed to [createDataset].
 #' "name" will be required by the Crunch server but is not required by this
 #' function.
 #' @return A data.frame that is a transformation of \code{data} suitable for
@@ -88,6 +95,9 @@ prepareDataForCrunch <- function (data, ...) {
 }
 
 #' Upload a prepared data.frame with metadata to Crunch
+#'
+#' If you have manually created a Crunch dataset object with [prepareDataForCrunch()]
+#' this function allows you to upload it to the app.
 #'
 #' @param data a data.frame that meets the Crunch API specification, as returned
 #' by \code{\link{prepareDataForCrunch}}, or a character path to a file or URL
@@ -219,16 +229,17 @@ newDatasetByColumn <- function (x, name=deparseAndFlatten(substitute(x), max_len
 
 #' Upload a file to Crunch to make a new dataset
 #'
-#' Use this import method if you have an SPSS data file. Reading such a file
-#' into R as a data.frame will result in lost metadata. You can just send it
-#' directly to Crunch and let the server process it.
+#' This function allows you to upload a `.csv`` or `.sav` file directly to Crunch
+#' without first reading it into R. This is useful both because it preserves SPSS
+#' metadata that is lost when reading `.sav` files into R and because it is more
+#' efficient just to upload the file to the server.
 #'
-#' @param file character, the path to a local file to upload, or a URL.
-#' This should either be a .csv or .sav (SPSS) file.
-#' @param name character, the name to give the new Crunch dataset. Default is
-#' the file name
-#' @param ... additional arguments passed to \code{ \link{createDataset}}
-#' @return On success, an object of class \code{CrunchDataset}.
+#' @param file character, the path to a file to upload. This should either be
+#' a `.csv` or `.sav` (SPSS) file
+#' @param name character, the name to give the new Crunch dataset. By default the
+#' name of the dataset will be the filename
+#' @param ... additional arguments passed to [createDataset]
+#' @return On success, an object of class [CrunchDataset]
 #' @export
 newDatasetFromFile <- function (file, name=basename(file), ...) {
     ds <- createDataset(name=name, ...)

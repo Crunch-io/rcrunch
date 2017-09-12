@@ -7,19 +7,18 @@
 newDatasetFromFile(file, name = basename(file), ...)
 }
 \arguments{
-\item{file}{character, the path to a local file to upload, or a URL.
-This should either be a .csv or .sav (SPSS) file.}
+\item{file}{character, the path to a file to upload. This should either be
+a \code{.csv} or \code{.sav} (SPSS) file}
 
-\item{name}{character, the name to give the new Crunch dataset. Default is
-the file name}
+\item{name}{character, the name to give the new Crunch dataset. By default the
+name of the dataset will be the filename}
 
-\item{...}{additional arguments passed to \code{ \link{createDataset}}}
+\item{...}{additional arguments passed to \link{createDataset}}
 }
 \value{
-On success, an object of class \code{CrunchDataset}.
+On success, an object of class \link{CrunchDataset}
 }
 \description{
-Use this import method if you have an SPSS data file. Reading such a file
-into R as a data.frame will result in lost metadata. You can just send it
-directly to Crunch and let the server process it.
+This function allows you to upload a \code{.csv`` or}.sav\code{file directly to Crunch without first reading it into R. This is useful both because it preserves SPSS metadata that is lost when reading}.sav` files into R and because it is more
+efficient just to upload the file to the server.
 }

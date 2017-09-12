@@ -1,16 +1,15 @@
 #' Get or set a derived variable's expression
 #'
-#' Get a derived variable's derivation formula as a (`CrunchExpr`)[expressions] with
-#' `derivation([variable])`. Set (change) a derived variable's derivation with
-#' `derivation([variable]) <- [expression]`.
+#' Get a derived variable's derivation formula as a [CrunchExpr][expressions] with
+#' `derivation(variable)`. Set (change) a derived variable's derivation with
+#' `derivation(variable) <- expression`.
 #'
-#' To integrate (aka realize or instantiate) a variable so that it is no longer
-#' linked to the source variables that made up the derivation, use
-#' `derivation([variable]) <- NULL`
+#' To break a derivation link between a derived variable and the originating variable, set
+#' the derivation value of the derived variable to `NULL` with `derivation(variable) <- NULL`
 #'
 #' `is.derived` can be used to see if a variable is derived or not. Additionally
-#' setting a derived variable's `is.derived` to `FALSE` will integrate the
-#' derived variable.
+#' setting a derived variable's `is.derived` to `FALSE` will break the derivation link between
+#' two variables.
 #'
 #' @param x a variable
 #' @param value a `CrunchExpr` to be used as the derivation (for the setter

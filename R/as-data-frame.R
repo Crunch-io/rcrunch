@@ -53,23 +53,25 @@ names.CrunchDataFrame <- function (x) x$.names
 #' as.data.frame method for CrunchDataset
 #'
 #' This method is defined principally so that you can use a CrunchDataset as
-#' a `data` argument to other R functions (such as
-#' `[stats::lm]`). Unless you give it the `force==TRUE`
-#' argument, this function does not in fact return a `data.frame`: it
-#' returns an object with an interface like a data.frame, such that you get
-#' R vectors when you access its columns (unlike a CrunchDataset, which
-#' returns CrunchVariable objects). This allows modeling functions that
-#' require select columns of a dataset to retrieve only those variables from
+#' a `data` argument to other R functions (such as [stats::lm()]). By default,
+#' the function does not return a `data.frame` but instead `CrunchDataFrame`,  which
+#' behaves similarly to a `data.frame` without bringing the whole dataset into memory.
+#' When you access the variables of a `CrunchDataFrame`,
+#' you get an R vector, rather than a `CrunchVariable`. This allows modeling functions
+#' that require select columns of a dataset to retrieve only those variables from
 #' the remote server, rather than pulling the entire dataset into local
-#' memory.
+#' memory. You can override this behavior by passing `force = TRUE`, which will
+#' cause the function to return a traditional `data.frame`.
 #'
 #' @param x a CrunchDataset
 #' @param row.names part of as.data.frame signature. Ignored.
 #' @param optional part of as.data.frame signature. Ignored.
 #' @param force logical: actually coerce the dataset to `data.frame`, or
 #' leave the columns as unevaluated promises. Default is `FALSE`.
-#' @param row.order vector of indeces. Which, and their order, of the rows of the dataset should be presented as (default: `NULL`). If `NULL`, then the Crunch Dataset order will be used.
-#' @param ... additional arguments passed to as.data.frame.default
+#' @param row.order vector of indices containing the order in which the rows of
+#' the dataset should be presented. If `NULL`, the Crunch Dataset order will be
+#' used.
+#' @param ... additional arguments passed to `as.data.frame`.
 #' @return an object of class `CrunchDataFrame` unless `force`, in
 #' which case the return is a `data.frame`.
 #' @name dataset-to-R

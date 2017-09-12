@@ -58,7 +58,7 @@ is.subvariable <- function (x) {
 
 CASTABLE_TYPES <- c("numeric", "text", "categorical") ## Add datetime when server supports
 
-#' Change the type of Crunch variables
+#' Change Crunch variable types
 #'
 #' Numeric, text, and categorical variables can be cast to one another by
 #' assigning them a new "type". This modifes the storage of the data on the
@@ -69,7 +69,7 @@ CASTABLE_TYPES <- c("numeric", "text", "categorical") ## Add datetime when serve
 #' @param x a Variable
 #' @param value For the setter, a character value in c("numeric", "text",
 #' "categorical")
-#' @return Getter returns character; setter returns \code{x} duly modified.
+#' @return Getter returns character; setter returns `x` duly modified.
 #' @name type
 #' @aliases type type<-
 NULL
