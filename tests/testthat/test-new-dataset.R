@@ -80,32 +80,32 @@ with_mock_crunch({
         with_POST("https://app.crunch.io/api/datasets/1/",
             expect_true(is.dataset(createDataset(name="Foo"))))
     })
-    test_that("newDatasetFromFile", {
-        expect_POST(newDatasetFromFile("helper.R"),
+    test_that("newDataset calls newDatasetFromFile if given a string", {
+        expect_POST(newDataset("helper.R"),
             "https://app.crunch.io/api/datasets/",
             '{"element":"shoji:entity","body":{"name":"helper.R"}}')
     })
-    test_that("newDatasetFromFile cleans up the dataset entity if the file is invalid", {
+    test_that("newDataset(FromFile) cleans up the dataset entity if the file is invalid", {
         with_POST("https://app.crunch.io/api/datasets/1/", {
-            expect_DELETE(newDatasetFromFile("NOTAFILE.exe"),
+            expect_DELETE(newDataset("NOTAFILE.exe"),
                 "https://app.crunch.io/api/datasets/1/")
             with_DELETE(NULL, {
-                expect_error(newDatasetFromFile("NOTAFILE.exe"),
+                expect_error(newDataset("NOTAFILE.exe"),
                     "File not found")
             })
         })
     })
-    test_that("newDatasetFromFile can take an s3 URL", {
+    test_that("newDataset(FromFile) can take an s3 URL", {
         with_DELETE(NULL, {
-            expect_POST(newDatasetFromFile("s3://httpbin.org/get"),
+            expect_POST(newDataset("s3://httpbin.org/get"),
                 'https://app.crunch.io/api/datasets/1/batches/',
                 '{"element":"shoji:entity",',
                 '"body":{"url":"s3://httpbin.org/get"}}')
         })
     })
-    test_that("newDatasetFromFile can take an http(s) URL", {
+    test_that("newDataset(FromFile) can take an http(s) URL", {
         with_DELETE(NULL, {
-            expect_POST(newDatasetFromFile("https://httpbin.org/get"),
+            expect_POST(newDataset("https://httpbin.org/get"),
                 'https://app.crunch.io/api/sources/',
                 '{"element":"shoji:entity",',
                 '"body":{"location":"https://httpbin.org/get"}}')

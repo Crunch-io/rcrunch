@@ -8,11 +8,11 @@ writePreparedData(data, metadata = attr(data, "metadata"), file)
 }
 \arguments{
 \item{data}{a data.frame that meets the Crunch API specification, as returned
-by \code{\link{prepareDataForCrunch}}.}
+by \code{\link[=prepareDataForCrunch]{prepareDataForCrunch()}}.}
 
 \item{metadata}{list of Crunch metadata that corresponds to \code{data}.
 Default is the "metadata" attribute of \code{data}, as returned by
-\code{prepareDataForCrunch}.}
+\code{\link[=prepareDataForCrunch]{prepareDataForCrunch()}}.}
 
 \item{file}{character file path, without extension, to write to.}
 }

@@ -4,21 +4,32 @@
 \alias{newDatasetFromFile}
 \title{Upload a file to Crunch to make a new dataset}
 \usage{
-newDatasetFromFile(file, name = basename(file), ...)
+newDatasetFromFile(x, name = basename(x), ...)
 }
 \arguments{
-\item{file}{character, the path to a file to upload. This should either be
-a \code{.csv} or \code{.sav} (SPSS) file}
-
 \item{name}{character, the name to give the new Crunch dataset. By default the
 name of the dataset will be the filename}
 
 \item{...}{additional arguments passed to \link{createDataset}}
+
+\item{file}{character, the path to a local file to upload, or a URL. This
+should either be a \code{.csv} or \code{.sav} (SPSS) file}
 }
 \value{
 On success, an object of class \link{CrunchDataset}
 }
 \description{
-This function allows you to upload a \code{.csv`` or}.sav\code{file directly to Crunch without first reading it into R. This is useful both because it preserves SPSS metadata that is lost when reading}.sav` files into R and because it is more
+This function allows you to upload a \code{.csv} or \code{.sav} file directly to Crunch
+without first reading it into R. This is useful both because it preserves SPSS
+metadata that is lost when reading \code{.sav} files into R and because it is more
 efficient just to upload the file to the server.
 }
+\details{
+You no longer need to call this function directly: you can call
+\code{\link[=newDataset]{newDataset()}} and pass the filename or URL, and it will handle it for you,
+thereby saving you eight keystrokes.
+}
+\seealso{
+\code{\link[=newDataset]{newDataset()}}
+}
+\keyword{internal}

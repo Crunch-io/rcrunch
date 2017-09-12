@@ -1,14 +1,19 @@
-#' Upload a data.frame to Crunch to make a new dataset
+#' Upload data to Crunch to make a new dataset
 #'
-#' This function uploads an R `data.frame` to Crunch. It uses the CSV+JSON import format,
-#' which is generally faster and more effective than [newDatasetByColumn]. If you
-#' want to upload an SPSS file, it is better to use [newDatasetFromFile] to upload
-#' the file directly to the server rather than first reading it into R. Uploading
-#' SPSS files directly to Crunch will preserve metadata which is stripped by the R import.
+#' This function creates a new dataset on the Crunch server with either a
+#' data.frame or similar object in your R session, a file, or a URL to a file.
+#' It captures available metadata from your R object and translates it into
+#' Crunch types.
 #'
-#' @param x a `data.frame` or other rectangular R data object
-#' @param name character name to give the new Crunch dataset. By default the function uses the
-#' name of the R object.
+#' If you have an SPSS file, it is better specify the file name directly rather
+#' than first reading it into R. Uploading SPSS files directly to Crunch will
+#' preserve metadata that is stripped by the R import, regardless of the library
+#' used to read it into R.
+#'
+#' @param x a `data.frame` or other rectangular R data object, or a string
+#' file name or URL to upload to create a dataset.
+#' @param name character name to give the new Crunch dataset. By default the
+#' function uses the name of the R object, or, if passing a file, the file name.
 #' @param ... additional arguments passed to [createDataset()]
 #' @return If successful, an object of class CrunchDataset.
 #' @examples
@@ -16,15 +21,26 @@
 #' ds <- newDataset(mtcars, "cars")
 #' }
 #' @export
-newDataset <- function (x, name=deparseAndFlatten(substitute(x), max_length = 40), ...) {
+#' @seealso [newDatasetFromFile()]; [newDatasetByColumn()] for an alternate
+#' upload method.
+newDataset <- function (x, name=NULL, ...) {
+    Call <- match.call()
+    if (is.character(x)) {
+        ## Assume we have a file/URL
+        Call[[1]] <- as.name("newDatasetFromFile")
+        return(eval.parent(Call))
+    }
+
     is.2D <- !is.null(dim(x)) && length(dim(x)) %in% 2
     if (!is.2D) {
         halt("Can only make a Crunch dataset from a two-dimensional data ",
             "structure")
     }
 
+    if (is.null(name)) {
+        name <- deparseAndFlatten(substitute(x), max_length = 40)
+    }
     ## TODO: something with paginating the CSV batching if lots of data
-    force(name)
     d <- prepareDataForCrunch(x, name=name, ...)
     ds <- createWithPreparedData(d)
     invisible(ds)
@@ -33,17 +49,17 @@ newDataset <- function (x, name=deparseAndFlatten(substitute(x), max_length = 40
 #' Create an empty dataset
 #'
 #' Use only if you're writing a function to create a Crunch dataset from a
-#' custom data structure. If you have a data.frame, just call
-#' \code{\link{newDataset}} on it.
+#' custom data structure. If you have a `data.frame`, just call
+#' [newDataset()] on it.
 #'
 #' @param name character, the name to give the new Crunch dataset. This is
 #' required.
 #' @param body list correctly formatted metadata definition for a dataset. See
-#' docs.crunch.io.
+#' the [Crunch API documentation](http://docs.crunch.io).
 #' @param ... additional arguments for the POST to create the dataset, such as
 #' "description".
 #' @return An object of class CrunchDataset.
-#' @seealso \code{\link{newDataset}}
+#' @seealso [newDataset()]
 #' @keywords internal
 #' @export
 createDataset <- function (name, body, ...) {
@@ -56,11 +72,11 @@ createDataset <- function (name, body, ...) {
 
 #' Translate a data.frame to Crunch format
 #'
-#' This is called within `newDataset(ByCsv)` to extract the Crunch metadata
+#' This is called within `newDataset` to extract the Crunch metadata
 #' from the data and to transform the data to match the extracted metadata. You
 #' can call this directly in order to tailor the data import flow more finely.
 #'
-#' @param data A data.frame or other rectangular R object
+#' @param data A `data.frame` or other rectangular R object
 #' @param ... additional arguments passed to [createDataset].
 #' "name" will be required by the Crunch server but is not required by this
 #' function.
@@ -100,11 +116,11 @@ prepareDataForCrunch <- function (data, ...) {
 #' this function allows you to upload it to the app.
 #'
 #' @param data a data.frame that meets the Crunch API specification, as returned
-#' by \code{\link{prepareDataForCrunch}}, or a character path to a file or URL
+#' by [prepareDataForCrunch()], or a character path to a file or URL
 #' where such data has been written as CSV.
-#' @param metadata list of Crunch metadata that corresponds to \code{data}.
-#' Default is the "metadata" attribute of \code{data}, as returned by
-#' \code{prepareDataForCrunch}, or a character path to a file where such
+#' @param metadata list of Crunch metadata that corresponds to `data`.
+#' Default is the "metadata" attribute of `data`, as returned by
+#' `prepareDataForCrunch`, or a character path to a file where such
 #' metadata has been written as JSON.
 #' @return A CrunchDataset.
 #' @export
@@ -115,13 +131,13 @@ createWithPreparedData <- function (data, metadata=attr(data, "metadata")) {
 #' Persist to disk a prepared data.frame and metadata
 #'
 #' @param data a data.frame that meets the Crunch API specification, as returned
-#' by \code{\link{prepareDataForCrunch}}.
+#' by [prepareDataForCrunch()].
 #' @param metadata list of Crunch metadata that corresponds to \code{data}.
 #' Default is the "metadata" attribute of \code{data}, as returned by
-#' \code{prepareDataForCrunch}.
+#' [prepareDataForCrunch()].
 #' @param file character file path, without extension, to write to.
 #' @return A character vector of length 2: given a value of
-#' \code{file="example"}, it would return c("example.csv.gz", "example.json").
+#' `file="example"`, it would return c("example.csv.gz", "example.json").
 #' The function, of course, is called for its side effects of writing a gzipped
 #' CSV and a JSON file to those locations.
 #' @export
@@ -209,15 +225,17 @@ shojifyDatasetMetadata <- function (metadata, order=I(names(metadata)), ...) {
 #' Upload a data.frame column-by-column to make a new dataset
 #'
 #' Use this version if you have lots of variables, under 1M rows, perhaps
-#' backed by ff or other memory-mapped files, and time to kill.
+#' backed by `ff` or other memory-mapped files, and time to kill. You really
+#' probably want [newDataset()] instead.
 #'
 #' @param x a data.frame or other rectangular R object
 #' @param name character, the name to give the new Crunch dataset. Default is
-#' the name of the R object passed in \code{x}
-#' @param ... additional arguments passed to \code{ \link{createDataset}}
+#' the name of the R object passed in `x`
+#' @param ... additional arguments passed to [createDataset()]
 #' @return If successful, an object of class CrunchDataset.
-#' @seealso \code{\link{newDataset}}
+#' @seealso [newDataset()]
 #' @export
+#' @keywords internal
 newDatasetByColumn <- function (x, name=deparseAndFlatten(substitute(x), max_length = 40), ...) {
     vardefs <- lapply(names(x),
         function (v) toVariable(x[[v]], name=v, alias=v))
@@ -229,20 +247,26 @@ newDatasetByColumn <- function (x, name=deparseAndFlatten(substitute(x), max_len
 
 #' Upload a file to Crunch to make a new dataset
 #'
-#' This function allows you to upload a `.csv`` or `.sav` file directly to Crunch
+#' This function allows you to upload a `.csv` or `.sav` file directly to Crunch
 #' without first reading it into R. This is useful both because it preserves SPSS
 #' metadata that is lost when reading `.sav` files into R and because it is more
 #' efficient just to upload the file to the server.
 #'
-#' @param file character, the path to a file to upload. This should either be
-#' a `.csv` or `.sav` (SPSS) file
+#' You no longer need to call this function directly: you can call
+#' [newDataset()] and pass the filename or URL, and it will handle it for you,
+#' thereby saving you eight keystrokes.
+#'
+#' @param file character, the path to a local file to upload, or a URL. This
+#' should either be a `.csv` or `.sav` (SPSS) file
 #' @param name character, the name to give the new Crunch dataset. By default the
 #' name of the dataset will be the filename
 #' @param ... additional arguments passed to [createDataset]
 #' @return On success, an object of class [CrunchDataset]
 #' @export
-newDatasetFromFile <- function (file, name=basename(file), ...) {
+#' @seealso [newDataset()]
+#' @keywords internal
+newDatasetFromFile <- function (x, name=basename(x), ...) {
     ds <- createDataset(name=name, ...)
-    ds <- addBatchFile(ds, file, first_batch=TRUE)
+    ds <- addBatchFile(ds, x, first_batch=TRUE)
     invisible(ds)
 }
