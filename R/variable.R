@@ -172,9 +172,9 @@ setMethod("datasetReference", "ANY", function (x) NULL)
 
 #' Split an array or multiple-response variable into its CategoricalVariables
 #'
-#' @param x a CategoricalArrayVariable or MultipleResponseVariable
+#' @param x a `CategoricalArrayVariable` or `MultipleResponseVariable`
 #' @return invisibly, the API response from DELETEing the array variable
-#' definition. If you \code{\link{refresh}} the corresponding dataset after
+#' definition. If you [refresh()] the corresponding dataset after
 #' unbinding, you should see the array variable removed and its subvariables
 #' promoted to regular variables.
 #' @export
