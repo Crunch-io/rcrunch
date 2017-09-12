@@ -16,12 +16,17 @@ moveToGroup(x) <- value
 }
 \value{
 \code{x} with the entities in \code{value} appended to it. If the
-containing order object has duplicates=FALSE, the entities will be "moved"
+containing order object has \code{duplicates=FALSE}, the entities will be "moved"
 to this group. Otherwise, their references will be copied to the group.
 }
 \description{
+Shoji entities can be placed into groups, this is mostly used for grouping
+variable for display in the app, but is technically possible for any of the
+order catalogs. This function moves an entity to one of these groups.
+}
+\details{
 The function has two versions: a regular function and a setter. They do the
-same thing, but the setter probably results in less verbose code for you.
+same thing, but the setter is probably more succint.
 }
 \examples{
 \dontrun{

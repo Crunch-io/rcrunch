@@ -1,19 +1,23 @@
 #' Manipulate VariableGroup and VariableOrder
 #'
 #' @param x a VariableGroup or VariableOrder
-#' @param value (1) For name, a character (length-1 vector); for names, a character
+#' @param value
+#' 1. For name, a character (length-1 vector); for names, a character
 #' vector of equal length to the number of VariableGroups being modified; for
 #' entities, either a character vector of variable URLs or a list containing a
 #' combination of variable URLs and VariableGroups. Note that group names must
 #' be unique, should be greater than 0 characters long, and "ungrouped" is a
-#' reserved group name. (2) For duplicates, logical for whether duplicate
+#' reserved group name.
+#' 1. For duplicates, logical for whether duplicate
 #' variable entries should be allowed in the VariableOrder.
 #' @param simplify logical: should variable URLs inside of groups be flattened
-#' or preserved in their nested lists? Default is \code{FALSE}.
-#' @return \code{entities} returns Variable references and VariableGroups; \code{names} returns group names; \code{duplicates} returns logical for whether duplicate variable entries should be allowed
+#' or preserved in their nested lists? Default is`FALSE`.
+#' @return
+#' * `entities` returns Variable references and VariableGroups;
+#' * `names` returns group names;
+#' * `duplicates` returns logical for whether duplicate variable entries should be allowed
 #' @name ShojiOrder-slots
-#' @seealso \code{\link{VariableOrder}}
-#' @seealso \code{\link{grouped}}
+#' @seealso [`VariableOrder`] [`grouped`]
 #' @aliases entities entities<- duplicates duplicates<-
 NULL
 
