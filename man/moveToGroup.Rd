@@ -21,7 +21,7 @@ to this group. Otherwise, their references will be copied to the group.
 }
 \description{
 Shoji entities can be placed into groups, this is mostly used for grouping
-variable for display in the app, but is technically possible for any of the
+variables for display in the app, but is technically possible for any of the
 order catalogs. This function moves an entity to one of these groups.
 }
 \details{

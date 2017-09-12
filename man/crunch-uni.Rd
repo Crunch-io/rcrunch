@@ -41,10 +41,10 @@
 \S4method{max}{DatetimeVariable}(x, na.rm = FALSE)
 }
 \arguments{
-\item{x}{a NumericVariable, or for \code{min} and \code{max}, possibly a
+\item{x}{a NumericVariable, or for \code{min} and \code{max}, a NumericVariable or
 DatetimeVariable}
 
-\item{...}{additional arguments to \code{mean}}
+\item{...}{additional arguments to summary statistic function}
 
 \item{na.rm}{logical: exclude missings?}
 }
@@ -52,5 +52,5 @@ DatetimeVariable}
 Univariate statistics on Crunch objects
 }
 \seealso{
-\code{\link[base]{mean}} \code{\link[stats]{sd}} \code{\link[stats]{median}} \code{\link[base]{min}} \code{\link[base]{max}}
+\code{\link[base:mean]{base::mean}} \code{\link[stats:sd]{stats::sd}} \code{\link[stats:median]{stats::median}} \code{\link[base:min]{base::min}} \code{\link[base:max]{base::max}}
 }

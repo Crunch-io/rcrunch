@@ -7,15 +7,16 @@
 #' cross-classifying variables separated by '+' on the right side of the
 #' "~". If aggregating by functions other than counts, include the aggregation
 #' expression on the left-hand side.
-#' Compare to \code{\link[stats]{xtabs}}.
-#' @param data an object of class \code{CrunchDataset}
+#' Compare to [`base::xtabs`].
+#' @param data an object of class `CrunchDataset`
 #' @param weight a CrunchVariable that has been designated as a potential
-#' weight variable for \code{data}, or \code{NULL} for unweighted results.
-#' Default is the currently applied weight, \code{\link{weight}(data)}.
+#' weight variable for `data`, or `NULL` for unweighted results.
+#' Default is the currently applied [`weight`].
 #' @param useNA whether to include missing values in tabular results. See
-#' \code{\link[base]{table}}.
-#' @return an object of class \code{CrunchCube}
+#' [`base::table`].
+#' @return an object of class `CrunchCube`
 #' @importFrom stats as.formula terms
+#' @seealso [`weight`]
 #' @export
 crtabs <- function (formula, data, weight=crunch::weight(data),
                      useNA=c("no", "ifany", "always")) {

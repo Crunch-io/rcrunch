@@ -15,14 +15,14 @@ newFilter(name, expression, catalog = NULL, ...)
 provide a dataset entity. If omitted, the function will attempt to infer the
 dataset (and thus its FilterCatalog) from the contents of \code{expression}.}
 
-\item{...}{Additional filter attributes to set. Options include \code{is_public}.}
+\item{...}{Additional filter attributes to set for instance \code{is_public}.}
 }
 \value{
 A \code{CrunchFilter} object.
 }
 \description{
-This function creates a new filter. You can achieve the same results by
-assigning into a dataset's filters catalog, but this may be a more natural
+This function creates a new filter for a CrunchDataset. You can achieve the same results
+by assigning into a dataset's filters catalog using\code{\link[=filters]{filters()}}, but this may be a more natural
 way to think of the action, particularly when you want to do something with
 the filter entity after you create it.
 }

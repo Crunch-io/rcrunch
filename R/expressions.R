@@ -356,10 +356,10 @@ setMethod("which", "CrunchLogicalExpr", function (x, arr.ind, useNames) {
 #' @param x CrunchVariable or CrunchExpr
 #' @param incomparables Ignored
 #' @param ... Ignored
-#' @return A CrunchLogicalExpr that evaluates \code{TRUE} for all repeated
+#' @return A CrunchLogicalExpr that evaluates `TRUE` for all repeated
 #' entries after the first occurrence of a value.
 #' @name duplicated
-#' @seealso \code{\link[base]{duplicated}}
+#' @seealso [`base::duplicated`]
 #' @aliases duplicated
 #' @export
 NULL

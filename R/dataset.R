@@ -509,7 +509,7 @@ settings <- function (x) {
 #'
 #' You can designate a dashboard that will show when the dataset is loaded in
 #' the Crunch web app. This dashboard could be a Crunch Shiny ("Crunchy") app,
-#' a CrunchBox, or something else.
+#' a CrunchBox, an RMarkdown website or something else.
 #'
 #' @param x CrunchDataset
 #' @param value For the setter, a URL (character) or `NULL` to unset the

@@ -24,16 +24,23 @@
 \arguments{
 \item{x}{Categories or a single Category}
 
-\item{value}{To change the missingness of categories, supply either (1)
-a logical vector of equal length of the categories (or length 1 for the
-Category method), or (2) the names of the categories to mark as missing.
+\item{value}{To change the missingness of categories, supply either:
+\enumerate{
+\item a logical vector of equal length of the categories (or length 1 for the
+Category method); or
+`. the names of the categories to mark as missing.
 If supplying the latter, any categories already indicated as missing will
-remain missing.}
+remain missing.
+}}
 }
 \value{
 Getters return logical, a named vector in the case of the Categories
 method; setters return \code{x} duly modified.
 }
 \description{
-is.na for Categories
+Crunch catagorical variables allow you to set multiple categories as missing.
+For instance you might have "not answered" and "doesn't know" both coded as
+missing. This function returns a logical vector of all dataset entries that
+fall into any of the missing categories. It also allows you to append additional
+categories to the list of missing categories using the setter.
 }

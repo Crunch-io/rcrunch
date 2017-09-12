@@ -153,32 +153,29 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
 
 #' Work with CrunchCubes, MultitableResults, and TabBookResults
 #'
-#' Crunch.io supports more complex data types than base R does, such as
-#' multiple response and array types. If you want to compute margin or
-#' proportion tables on an aggregation of these variable types, special methods
-#' are required. These functions provide an interface like
-#' \code{\link[base]{margin.table}} and \code{\link[base]{prop.table}} for
-#' the CrunchCube object, handling those special data types.
+#' These functions provide an interface like [`base::margin.table`]
+#' and [`base::prop.table`] for the CrunchCube object This handles special data
+#' types like array variables or Multitableresults.
 #'
-#' \code{bases} is an additional method for CrunchCubes. When making weighted
-#' requests, \code{bases} allows you to access the unweighted counts for every
-#' cell in the resulting table (array). The \code{bases} function takes a
-#' "margin" argument to work like \code{margin.table}, or with \code{margin=0}
+#' `bases` is an additional method for CrunchCubes. When making weighted
+#' requests, `bases` allows you to access the unweighted counts for every
+#' cell in the resulting table (array). The `bases` function takes a
+#' "margin" argument to work like `margin.table`, or with `margin=0`
 #' gives all cell counts.
 #'
 #' @param x a CrunchCube
 #' @param margin index, or vector of indices to generate margin for. See
-#' \code{\link[base]{prop.table}}. \code{bases} accepts an additional valid
-#' value for \code{margin}, \code{0}, which yields the unweighted counts for the
-#' query, without reducing dimension.
-#' @param digits see \code{\link[base]{round}}
+#' [`base::prop.table`]. `bases` accepts `0` as an additional valid
+#' value for `margin` which yields the unweighted counts for the
+#' query, without reducing the dimensionality.
+#' @param digits see  [`base::round`]
 #' @return The appropriate margin.table or prop.table. Calling prop.table on
 #' a MultitableResult returns a list of prop.tables of the CrunchCubes it
-#' contains. Likewise, prop.table on a TabBookResult returns a list of list of
+#' contains. Likewise, prop.table on a TabBookResult returns a list of lists of
 #' prop.tables.
 #' @name cube-computing
 #' @aliases cube-computing margin.table prop.table bases
-#' @seealso \code{\link[base]{margin.table}} \code{\link[base]{prop.table}}
+#' @seealso [`base::margin.table`] [`base::prop.table`]
 NULL
 
 #' @rdname cube-computing

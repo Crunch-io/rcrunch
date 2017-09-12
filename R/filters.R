@@ -1,7 +1,11 @@
-#' Filter entities for a dataset
+#' Get or set a dataset's filters
+#'
+#' You can build and save filters in the Crunch web app, and these filters
+#' are stored in a `FilterCatalog`. This function allows you to retreive
+#' and modify those filters.
 #'
 #' @param x a CrunchDataset
-#' @param value for the assignment method, a FilterCatalog
+#' @param value for the setter, a FilterCatalog
 #' @return an object of class FilterCatalog containing references to Filter
 #' entities usable in the web application. (Setter returns the Dataset.)
 #' @name filter-catalog
@@ -65,17 +69,17 @@ setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchLogicalExpr"
 
 #' Create a new filter
 #'
-#' This function creates a new filter. You can achieve the same results by
-#' assigning into a dataset's filters catalog, but this may be a more natural
+#' This function creates a new filter for a CrunchDataset. You can achieve the same results
+#' by assigning into a dataset's filters catalog using[filters()], but this may be a more natural
 #' way to think of the action, particularly when you want to do something with
 #' the filter entity after you create it.
 #' @param name character name for the filter
 #' @param expression CrunchLogicalExpr with which to make a filter entity
 #' @param catalog FilterCatalog in which to create the new filter. May also
 #' provide a dataset entity. If omitted, the function will attempt to infer the
-#' dataset (and thus its FilterCatalog) from the contents of \code{expression}.
-#' @param ... Additional filter attributes to set. Options include \code{is_public}.
-#' @return A \code{CrunchFilter} object.
+#' dataset (and thus its FilterCatalog) from the contents of `expression`.
+#' @param ... Additional filter attributes to set for instance `is_public`.
+#' @return A `CrunchFilter` object.
 #' @export
 newFilter <- function (name, expression, catalog=NULL, ...) {
     if (is.null(catalog)) {

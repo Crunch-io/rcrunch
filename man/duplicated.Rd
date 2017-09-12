@@ -26,5 +26,5 @@ entries after the first occurrence of a value.
 "duplicated" method for Crunch objects
 }
 \seealso{
-\code{\link[base]{duplicated}}
+\code{\link[base:duplicated]{base::duplicated}}
 }

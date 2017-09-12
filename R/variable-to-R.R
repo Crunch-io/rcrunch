@@ -140,14 +140,21 @@ paginatedGET <- function (url, query, offset=0, limit=1000, table=FALSE) {
 
 #' Convert Variables to local R objects
 #'
-#' @param x a CrunchVariable subclass
+#' CrunchVariables reside on the server which allows you to work with
+#' variables which are too big to bring into memory. This structure limits
+#' what you can do with the variable to those functions which are implemented
+#' in Crunch. If you need to do something which isn't yet implemented you can
+#' bring the variable into R with `as.vector(ds$var)` and work with it like any
+#' other R vector.
+#'
+#' @param x a CrunchVariable
 #' @param mode for Categorical variables, one of either "factor" (default,
 #' which returns the values as factor); "numeric" (which returns the numeric
 #' values); or "id" (which returns the category ids). If "id", values
 #' corresponding to missing categories will return as the underlying integer
-#' codes; i.e., the R representation will not have any \code{NA}s. Otherwise,
-#' missing categories will all be returned \code{NA}. For non-Categorical
-#' variables, the \code{mode} argument is ignored.
+#' codes; i.e., the R representation will not have any `NA` elements Otherwise,
+#' missing categories will all be returned `NA`. For non-Categorical
+#' variables, the `mode` argument is ignored.
 #' @return an R vector of the type corresponding to the Variable. E.g.
 #' CategoricalVariable yields type factor by default, NumericVariable yields
 #' numeric, etc.
