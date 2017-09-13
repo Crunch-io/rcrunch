@@ -123,9 +123,14 @@ without_echo <- function (expr) {
 #' @return Nothing; called for its side effects.
 #' @export
 #' @keywords internal
+#' @importFrom httr set_cookies
 tokenAuth <- function (token, ua="token") {
-    set_config(c(config(cookie=paste0("token=", token)),
-        add_headers(`user-agent`=crunchUserAgent(ua))))
+    set_crunch_config(
+        c(
+            set_cookies(token=token),
+            add_headers(`user-agent`=crunchUserAgent(ua))
+        ),
+        update=TRUE)
     warmSessionCache()
 }
 

@@ -16,7 +16,7 @@ crunchAPI <- function (http.verb, url, config=list(), status.handlers=list(), ..
         if (!is.null(payload)) try(cat("\n", payload, "\n"), silent=TRUE)
     }
     FUN <- get(http.verb, envir=asNamespace("httpcache"))
-    x <- FUN(url, ..., config=config)
+    x <- FUN(url, ..., config=c(get_crunch_config(), config))
     out <- handleAPIresponse(x, special.statuses=status.handlers)
     return(out)
 }
@@ -131,9 +131,15 @@ locationHeader <- function (response) {
     return(loc)
 }
 
-#' @importFrom httr config add_headers
-crunchConfig <- function () {
-    return(c(config(postredir=3), add_headers(`user-agent`=crunchUserAgent())))
+get_crunch_config <- function () getOption("crunch.httr_config")
+
+set_crunch_config <- function (cfg=c(config(postredir=3),
+                                add_headers(`user-agent`=crunchUserAgent())),
+                               update=FALSE) {
+    if (update) {
+        cfg <- c(get_crunch_config(), cfg)
+    }
+    options(crunch.httr_config=cfg)
 }
 
 #' @importFrom utils packageVersion
