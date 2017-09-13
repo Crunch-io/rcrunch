@@ -1,5 +1,7 @@
 #' Export a dataset to a file
 #'
+#' This funciton allows you to Write a CrunchDataset to a csv or SPSS file.
+#'
 #' @param dataset CrunchDataset, which may have been subsetted with a filter
 #' expression on the rows and a selection of variables on the columns.
 #' @param file character local filename to write to
@@ -7,27 +9,28 @@
 #' and "spss".
 #' @param categorical character: export categorical values to CSV as category
 #' "name" (default) or "id". Ignored by the SPSS exporter.
-#' @param na Similar to the argument in \code{\link[utils]{write.table}}, 'na'
+#' @param na Similar to the argument in [`utils::write.table`], 'na'
 #' lets you control how missing values are written into the CSV file.
-#' Supported values are (1) \code{NULL}, the default, which means that
+#' Supported values are:
+#' 1. `NULL`, the default, which means that
 #' categorical variables will have the category name or id as the value, and
 #' numeric, text, and datetime variables will have the missing reason string;
-#' (2) a string to use for missing values. \code{""} means that empty cells will
-#' be written for missing values for all types.
+#' 1. A string to use for missing values.
+#' 1. `""` means that empty cells will be written for missing values for all types.
 #' @param varlabel For SPSS export, which Crunch metadata field should be used
 #' as variable labels? Default is "name", but "description" is another valid
 #' value.
 #' @param ... additional options. See the API documentation. Currently supported
 #' boolean options include 'include_personal' for personal variables (default:
-#' \code{FALSE}) and 'prefix_subvariables' for SPSS format: whether to include
+#' `FALSE`) and 'prefix_subvariables' for SPSS format: whether to include
 #' the array variable's name in each of its subvariables varlabels (default:
-#' \code{FALSE}).
+#' `FALSE`).
 #' @param x (for write.csv) CrunchDataset, which may have been subsetted with a filter
 #' expression on the rows and a selection of variables on the columns.
-#' 
+#'
 #' @aliases write.csv
-#' 
-#' @return Invisibly, \code{file}.
+#'
+#' @return Invisibly, `file`.
 #' @export
 exportDataset <- function (dataset, file, format=c("csv", "spss"),
                            categorical=c("name", "id"), na=NULL,

@@ -2,7 +2,7 @@
 % Please edit documentation in R/crunchbox.R
 \name{preCrunchBoxCheck}
 \alias{preCrunchBoxCheck}
-\title{Summarize any characteristics of a dataset that could make for an awkward CrunchBox}
+\title{Check if a dataset will make a good CrunchBox}
 \usage{
 preCrunchBoxCheck(dataset)
 }
@@ -13,7 +13,9 @@ preCrunchBoxCheck(dataset)
 Invisbly, the dataset. Called for side-effect of printing things.
 }
 \description{
-Summarize any characteristics of a dataset that could make for an awkward CrunchBox
+CrunchBoxes allows you to share data with the world in a simple, easy to embed format.
+However, not all datasets naturally translate to the CrunchBox format. This
+function checks your dataset to see if it
 }
 \seealso{
 \code{\link{crunchBox}}

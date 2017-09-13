@@ -25,13 +25,16 @@ and "spss".}
 \item{categorical}{character: export categorical values to CSV as category
 "name" (default) or "id". Ignored by the SPSS exporter.}
 
-\item{na}{Similar to the argument in \code{\link[utils]{write.table}}, 'na'
+\item{na}{Similar to the argument in \code{\link[utils:write.table]{utils::write.table}}, 'na'
 lets you control how missing values are written into the CSV file.
-Supported values are (1) \code{NULL}, the default, which means that
+Supported values are:
+\enumerate{
+\item \code{NULL}, the default, which means that
 categorical variables will have the category name or id as the value, and
 numeric, text, and datetime variables will have the missing reason string;
-(2) a string to use for missing values. \code{""} means that empty cells will
-be written for missing values for all types.}
+\item A string to use for missing values.
+\item \code{""} means that empty cells will be written for missing values for all types.
+}}
 
 \item{varlabel}{For SPSS export, which Crunch metadata field should be used
 as variable labels? Default is "name", but "description" is another valid
@@ -50,5 +53,5 @@ expression on the rows and a selection of variables on the columns.}
 Invisibly, \code{file}.
 }
 \description{
-Export a dataset to a file
+This funciton allows you to Write a CrunchDataset to a csv or SPSS file.
 }
