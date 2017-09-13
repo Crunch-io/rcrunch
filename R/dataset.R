@@ -229,7 +229,7 @@ setMethod("refresh", "CrunchDataset", function (x) {
 #'
 #' These methods delete entities, notably Datasets and Variables within them,
 #' from the server. This action is permanent and cannot be undone, so it
-#' should not be done lightly. Consider instead using `archive``
+#' should not be done lightly. Consider instead using `archive`
 #' for datasets and `hide` for variables.
 #'
 #' Deleting requires confirmation. In an interactive session, you will be asked

@@ -14,13 +14,13 @@ to, or a \code{DatasetTuple}.}
 \item{kind}{character specifying whether to look in active, archived, or all
 datasets. Default is "active", i.e. non-archived.}
 
-\item{project}{`CrunchProject`` entity, character name of a project, or
-NULL, the default. If a Project entity or reference is supplied, the
-function will display datasets from that Project's datasets. If NULL,
+\item{project}{\code{CrunchProject} entity, character name of a project, or
+\code{NULL}, the default. If a Project entity or reference is supplied, the
+function will display datasets from that Project's datasets. If \code{NULL},
 the primary dataset catalog for the user will be used.}
 
 \item{refresh}{logical: should the function check the Crunch API for new
-datasets? Default is FALSE.}
+datasets? Default is \code{FALSE}.}
 }
 \value{
 An object of class \code{CrunchDataset}

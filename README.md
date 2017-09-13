@@ -43,7 +43,7 @@ Connecting to Crunch and working with datasets is simple:
     [crunch] >
     ...
 
-Check out `listDatasets()` to see the names of your existing datasets, which you can load like `ds <- loadDataset("The name of my dataset")`. New Crunch datasets can be made from a `data.frame` with `newDataset()`, or from a .csv or .sav file with `newDatasetFromFile()`. See the help for these functions or [`vignette("getting-started", package="crunch")`](inst/doc/getting-started.md) for more information.
+Check out `listDatasets()` to see the names of your existing datasets, which you can load like `ds <- loadDataset("The name of my dataset")`. New Crunch datasets can be made from a `data.frame`, a .csv or .sav file, or a URL to a file with `newDataset()`. See the help for these functions or [`vignette("getting-started", package="crunch")`](inst/doc/getting-started.md) for more information.
 
 ## Additional configuration
 

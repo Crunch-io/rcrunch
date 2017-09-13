@@ -7,7 +7,7 @@
 prepareDataForCrunch(data, ...)
 }
 \arguments{
-\item{data}{A data.frame or other rectangular R object}
+\item{data}{A \code{data.frame} or other rectangular R object}
 
 \item{...}{additional arguments passed to \link{createDataset}.
 "name" will be required by the Crunch server but is not required by this
@@ -19,7 +19,7 @@ uploading to Crunch, also containing a "metadata" attribute that is
 the associated Crunch metadata.
 }
 \description{
-This is called within \code{newDataset(ByCsv)} to extract the Crunch metadata
+This is called within \code{newDataset} to extract the Crunch metadata
 from the data and to transform the data to match the extracted metadata. You
 can call this directly in order to tailor the data import flow more finely.
 }

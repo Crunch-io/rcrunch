@@ -2,33 +2,40 @@
 % Please edit documentation in R/new-dataset.R
 \name{newDataset}
 \alias{newDataset}
-\alias{newDatasetByCSV}
-\title{Upload a data.frame to Crunch to make a new dataset}
+\title{Upload data to Crunch to make a new dataset}
 \usage{
-newDataset(x, name = deparseAndFlatten(substitute(x), max_length = 40), ...)
-
-newDatasetByCSV(...)
+newDataset(x, name = NULL, ...)
 }
 \arguments{
-\item{x}{a data.frame}
+\item{x}{a \code{data.frame} or other rectangular R data object, or a string
+file name or URL to upload to create a dataset.}
 
-\item{name}{the name to give the new Crunch dataset. By default the function uses the
-name of the R object.}
+\item{name}{character name to give the new Crunch dataset. By default the
+function uses the name of the R object, or, if passing a file, the file name.}
 
-\item{...}{additional arguments passed to \code{ \link{createDataset}}}
+\item{...}{additional arguments passed to \code{\link[=createDataset]{createDataset()}}}
 }
 \value{
 If successful, an object of class CrunchDataset.
 }
 \description{
-This function uploads an R dataframe to Crunch. It uses the CSV+JSON import format,
-which is generally faster and more effective than \link{newDatasetByColumn}. If you
-want to upload an SPSS file, it is better to use \link{newDatasetFromFile} to upload
-the file directly to the server rather than first reading it into R. Uploading
-SPSS files directly to Crunch will preserve metadata which is stripped by the R import.
+This function creates a new dataset on the Crunch server with either a
+data.frame or similar object in your R session, a file, or a URL to a file.
+It captures available metadata from your R object and translates it into
+Crunch types.
+}
+\details{
+If you have an SPSS file, it is better specify the file name directly rather
+than first reading it into R. Uploading SPSS files directly to Crunch will
+preserve metadata that is stripped by the R import, regardless of the library
+used to read it into R.
 }
 \examples{
 \dontrun{
 ds <- newDataset(mtcars, "cars")
 }
+}
+\seealso{
+\code{\link[=newDatasetFromFile]{newDatasetFromFile()}}; \code{\link[=newDatasetByColumn]{newDatasetByColumn()}} for an alternate
+upload method.
 }

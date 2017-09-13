@@ -62,9 +62,9 @@ saveVersion <- function (dataset, description=paste("Version",
 
 #' Restore a dataset to a previously saved version
 #'
-#' You can save a version of a dataset using [saveVersion()] which will create a
-#' new savepoint for the dataset. Savepoints are also created automatically by
-#' certain Crunch functions which make major changes to the dataset. You can
+#' You can save a version of a dataset using [saveVersion()].
+#' Savepoints are also created automatically by
+#' certain Crunch functions that make major changes to the dataset. You can
 #' get the list of saved versions with the [versions()] function.
 #'
 #' @param dataset a `CrunchDataset`

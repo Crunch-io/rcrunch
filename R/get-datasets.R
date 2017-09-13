@@ -1,8 +1,8 @@
 #' Get the dataset catalog
 #'
-#' Crunch datasets are associated with catalogs. For instance a project catalog will
-#' have a set of datasets associated with it, as will a user or team. This function
-#' allows you to get or set the datasets associated with a catalog.
+#' Crunch datasets are associated with catalogs. A project catalog will
+#' have a set of datasets associated with it, as will a user or team. This
+#' function allows you to get or modify the datasets associated with a catalog.
 #' @param x a `ShojiObject`, such as a `CrunchProject`. If omitted,
 #' the function will load the user's primary dataset catalog. #'
 #' @param value `CrunchDataset` for the setter
@@ -86,12 +86,11 @@ selectDatasetCatalog <- function (kind=c("active", "all", "archived"),
 
 #' Refresh the local list of Crunch datasets
 #'
-#' Refreshes the local environment list of Crunch datasets. This function is depracated
-#' @return Nothing. Called for its side effects of setting local environment
-#' variables.
+#' Refreshes the local environment list of Crunch datasets. This function is deprecated.
+#' @return Nothing. Called for its side effects of resetting the cache.
 #' @export
 #' @importFrom httpcache dropOnly
-updateDatasetList <- function() {
+updateDatasetList <- function () {
     warning("updateDatasetList is being deprecated.")
     dropOnly(sessionURL("datasets"))
 }
@@ -101,12 +100,12 @@ updateDatasetList <- function() {
 #' to, or a `DatasetTuple`.
 #' @param kind character specifying whether to look in active, archived, or all
 #' datasets. Default is "active", i.e. non-archived.
-#' @param project `CrunchProject`` entity, character name of a project, or
-#' NULL, the default. If a Project entity or reference is supplied, the
-#' function will display datasets from that Project's datasets. If NULL,
+#' @param project `CrunchProject` entity, character name of a project, or
+#' `NULL`, the default. If a Project entity or reference is supplied, the
+#' function will display datasets from that Project's datasets. If `NULL`,
 #' the primary dataset catalog for the user will be used.
 #' @param refresh logical: should the function check the Crunch API for new
-#' datasets? Default is FALSE.
+#' datasets? Default is `FALSE`.
 #' @return An object of class `CrunchDataset`
 #'
 #'@examples
@@ -115,7 +114,7 @@ updateDatasetList <- function() {
 #' ds <- loadDatasets(dsName)
 #'}
 #' @export
-loadDataset <- function(dataset, kind=c("active", "all", "archived"), project=NULL, refresh=FALSE) {
+loadDataset <- function (dataset, kind=c("active", "all", "archived"), project=NULL, refresh=FALSE) {
     if (!inherits(dataset, "DatasetTuple")) {
         dscat <- selectDatasetCatalog(kind, project, refresh)
         if (is.character(dataset) && startsWith(dataset, "http") && !grepl("/api/", dataset)) {

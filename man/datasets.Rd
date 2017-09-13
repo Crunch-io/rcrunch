@@ -22,9 +22,9 @@ dataset added to it (via changing its owner to be
 the specified object, \code{x}).
 }
 \description{
-Crunch datasets are associated with catalogs. For instance a project catalog will
-have a set of datasets associated with it, as will a user or team. This function
-allows you to get or set the datasets associated with a catalog.
+Crunch datasets are associated with catalogs. A project catalog will
+have a set of datasets associated with it, as will a user or team. This
+function allows you to get or modify the datasets associated with a catalog.
 }
 \examples{
 \dontrun{

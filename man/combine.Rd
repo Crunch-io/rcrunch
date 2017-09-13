@@ -11,12 +11,14 @@ combine(variable, combinations = list(), ...)
 variable}
 
 \item{combinations}{list of named lists containing
-1 "categories": category ids or names for categorical types, or for multiple response,
+\enumerate{
+\item "categories": category ids or names for categorical types, or for multiple response,
 "responses": subvariable names, aliases, or positional indices;
-1 a "name" for the new category or response; and
-1 optionally, other category ("missing", "numeric_value") or subvariable ("alias", "description")
+\item a "name" for the new category or response; and
+\item optionally, other category ("missing", "numeric_value") or subvariable ("alias", "description")
 attributes. If \code{combinations} is omitted, the resulting variable will
-essentially be a copy (but see \code{\link[=copy]{copy()}} for a more natural way to copy variables.}
+essentially be a copy (but see \code{\link[=copy]{copy()}} for a more natural way to copy variables.
+}}
 
 \item{...}{Additional variable metadata for the new derived variable}
 }
