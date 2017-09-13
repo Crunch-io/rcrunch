@@ -1,4 +1,4 @@
-#' See who has access to this dataset
+#' See who has access to a dataset
 #'
 #' @param x CrunchDataset
 #' @return A PermissionCatalog containing information on the users and teams
@@ -37,16 +37,16 @@ setMethod("is.editor", "PermissionTuple", function (x) {
 #' whom to share the dataset. If there is no Crunch user associated with an
 #' email, an invitation will be sent.
 #' @param edit logical: should the specified user(s) be given edit privileges
-#' on the dataset? Default is \code{FALSE}. \code{edit} can be a single value
+#' on the dataset? Default is `FALSE`. `edit` can be a single value
 #' or, if inviting multiple users, a vector of logical values of equal length
 #' of the number of emails given.
 #' @param notify logical: should users who are getting new privileges on this
 #' dataset be sent an email informing them of this fact? Default is
-#' \code{TRUE}.
-#' @param message character: what message should users who are getting notified
-#' about new permissions on this dataset receive?
+#' `TRUE`.
+#' @param message character: a message to send to the users who are receiving new
+#' priveleges.
 #' @return Invisibly, the dataset.
-#' @seealso \code{\link{unshare}}
+#' @seealso [`unshare`]
 #' @export
 share <- function (dataset, users, edit=FALSE, notify=TRUE, message=NULL) {
     perms <- permissions(dataset)
@@ -83,7 +83,7 @@ passwordSetURLTemplate <- function () {
 #' @param users character: email address(es) or URLs of the users or teams to
 #' unshare with.
 #' @return Invisibly, the dataset.
-#' @seealso \code{\link{share}}
+#' @seealso [`share`]
 #' @export
 unshare <- function (dataset, users) {
     stopifnot(is.character(users))

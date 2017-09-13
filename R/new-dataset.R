@@ -140,6 +140,7 @@ createWithPreparedData <- function (data, metadata=attr(data, "metadata")) {
 #' `file="example"`, it would return c("example.csv.gz", "example.json").
 #' The function, of course, is called for its side effects of writing a gzipped
 #' CSV and a JSON file to those locations.
+#' @keywords internal
 #' @export
 writePreparedData <- function (data, metadata=attr(data, "metadata"), file) {
     filenames <- paste(file, c("csv.gz", "json"), sep=".")

@@ -20,8 +20,8 @@ setMethod("archived", "DatasetCatalog", function (x) {
 #' See who owns these datasets
 #'
 #' @param x DatasetCatalog
-#' @return For \code{owners}, the URLs of the users or projects that own
-#' these datasets. For \code{ownerNames}, their names.
+#' @return For `owners`, the URLs of the users or projects that own
+#' these datasets. For `ownerNames`, their names.
 #' @export
 owners <- function (x) {
     getIndexSlot(x, "owner_id")

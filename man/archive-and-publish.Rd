@@ -67,9 +67,9 @@ inverses. The setters return the dataset.
 }
 \description{
 "Archived" datasets are excluded from some views. "Draft" datasets are
-visible only to editors. "Published" is the inverse of "Draft", i.e.
-\code{is.draft(x)} entails \code{!is.published(x)}. These properties are
-accessed and set with the "is" methods. The verb functions \code{archive}
-and \code{publish} are alternate versions of the setters (at least in the
-\code{TRUE} direction).
+visible only to editors while published datasets are available to all viewers.
+A dataset can either be published or in draft, but not both.
+These properties are accessed and set with the "is" methods. You can also
+set the properties by assigning into the function. The verb functions
+\code{archive} and \code{publish} are alternate versions of the setters.
 }

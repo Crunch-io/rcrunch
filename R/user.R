@@ -2,7 +2,9 @@ userURL <- function () rootURL("user")
 
 #' My user entity
 #'
-#' @return A UserEntity that corresponds to you, the authenticated user
+#' Get the user entity of the currently authenticated user.
+#'
+#' @return A UserEntity
 #' @export
 me <- function () {
     UserEntity(crGET(userURL()))
@@ -20,9 +22,9 @@ setMethod("email", "UserEntity", function (x) x@body$email)
 
 #' Find all users on your account
 #'
-#' @param x URL of the user catalog. Default is the right thing; you shouldn't
-#' specify one
-#' @return a \code{UserCatalog}
+#' @param x URL of the user catalog. The default is your own user catalog and
+#' you should not need to change this default.
+#' @return a `UserCatalog`
 #' @export
 getAccountUserCatalog <- function (x=shojiURL(getAccount(), "catalogs", "users")) {
     UserCatalog(crGET(x))
@@ -50,6 +52,9 @@ invite <- function (email, name=NULL, notify=TRUE, id_method="pwhash",
 }
 
 #' Reset your password
+#'
+#' Trigger the password reset process, password reset
+#' instructions will be emialed to you.
 #'
 #' @param email Your email
 #' @return NULL, invisibly.

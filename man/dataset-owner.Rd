@@ -7,7 +7,7 @@
 \alias{owner<-}
 \alias{owner,CrunchDataset-method}
 \alias{owner<-,CrunchDataset-method}
-\title{Change the owner of a dataset}
+\title{Get and set the owner of a dataset}
 \usage{
 \S4method{owner}{CrunchDataset}(x)
 
@@ -24,5 +24,5 @@ as dataset owners.}
 The dataset.
 }
 \description{
-Change the owner of a dataset
+Get and set the owner of a dataset
 }

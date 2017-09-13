@@ -7,8 +7,8 @@
 getAccountUserCatalog(x = shojiURL(getAccount(), "catalogs", "users"))
 }
 \arguments{
-\item{x}{URL of the user catalog. Default is the right thing; you shouldn't
-specify one}
+\item{x}{URL of the user catalog. The default is your own user catalog and
+you should not need to change this default.}
 }
 \value{
 a \code{UserCatalog}

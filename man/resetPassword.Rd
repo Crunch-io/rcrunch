@@ -13,7 +13,8 @@ resetPassword(email)
 NULL, invisibly.
 }
 \description{
-Reset your password
+Trigger the password reset process, password reset
+instructions will be emialed to you.
 }
 \examples{
 \dontrun{

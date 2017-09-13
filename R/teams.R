@@ -1,35 +1,35 @@
 #' Teams
 #'
 #' Teams contain users and datasets. You can share a dataset with a group of
-#' users by sharing the dataset with a team. You can also share a bunch of
-#' datasets with a user all at once by adding them to a team that has those
+#' users by sharing the dataset with a team. You can also share a set of
+#' datasets with a user all at once by adding the user to a team that contains those
 #' datasets.
 #'
 #' These methods allow you to work with teams. Find your teams with the
-#' \code{\link{getTeams}} function, which returns your \code{TeamCatalog}.
-#' Extract an individual team by name. Create a team by assigning in with a new
-#' name, with the assignment value a list, either empty (to just create a team
-#' with that name), or with a "members" element, containing emails or URLs of
-#' users to add to the team. Users can be added later with the \code{members<-}
+#' [getTeams()] function, which returns your `TeamCatalog`. You can extract an individual team by name,
+#' or create a team by assigning into the function. To create a team by assigningment, assign a list
+#' to `teams("myteam") <- value_list`, the `value_list` can either empty (to just create a team
+#' with that name), or can contain a "members" element with the emails or URLs of
+#' users to add to the team. Users can be also be added later with the `members<-`
 #' method.
 #'
-#' @param x a \code{CrunchTeam}
-#' @param value for \code{members<-}, a character vector of emails or URLs of
+#' @param x a `CrunchTeam`
+#' @param value for `members<-`, a character vector of emails or URLs of
 #' users to add to the team.
-#' @return \code{members} returns a
-#' \code{MemberCatalog}, which has references to the users that are members
-#' of the team. \code{members<-} returns \code{x} with the given users added
+#' @return `members` returns a
+#' `MemberCatalog`, which has references to the users that are members
+#' of the team. `members<-` returns `x` with the given users added
 #' to the members catalog.
 #' @aliases members members<-
-#' @seealso \link{getTeams}
+#' @seealso [`getTeams`]
 #' @name teams
 NULL
 
-#' Retrive all teams you're a member of
+#' Retrive your teams
 #'
-#' @return A \code{TeamCatalog}. Extract an individual team by name. Create
+#' @return A `TeamCatalog`. Extract an individual team by name. Create
 #' a team by assigning in with a new name.
-#' @seealso \link{teams}
+#' @seealso [`teams`]
 #' @export
 getTeams <- function () {
     TeamCatalog(crGET(sessionURL("teams")))

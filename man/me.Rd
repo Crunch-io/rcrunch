@@ -7,8 +7,8 @@
 me()
 }
 \value{
-A UserEntity that corresponds to you, the authenticated user
+A UserEntity
 }
 \description{
-My user entity
+Get the user entity of the currently authenticated user.
 }

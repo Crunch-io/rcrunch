@@ -22,8 +22,8 @@ of the number of emails given.}
 dataset be sent an email informing them of this fact? Default is
 \code{TRUE}.}
 
-\item{message}{character: what message should users who are getting notified
-about new permissions on this dataset receive?}
+\item{message}{character: a message to send to the users who are receiving new
+priveleges.}
 }
 \value{
 Invisibly, the dataset.

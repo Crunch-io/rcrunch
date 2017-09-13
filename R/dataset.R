@@ -385,11 +385,11 @@ setMethod("as.environment", "CrunchDataset", function (x) {
     crPOST(release_url, drop=dropCache(self(dataset)))
 }
 
-#' Change the owner of a dataset
+#' Get and set the owner of a dataset
 #'
 #' @param x CrunchDataset
 #' @param value For the setter, either a URL (character) or a Crunch object
-#' with a \code{self} method. Users and Projects are valid objects to assign
+#' with a `self` method. Users and Projects are valid objects to assign
 #' as dataset owners.
 #' @return The dataset.
 #' @name dataset-owner
@@ -417,11 +417,11 @@ setMethod("owner<-", "CrunchDataset", function (x, value) {
 #' Get and set "archived" and "published" status of a dataset
 #'
 #' "Archived" datasets are excluded from some views. "Draft" datasets are
-#' visible only to editors. "Published" is the inverse of "Draft", i.e.
-#' \code{is.draft(x)} entails \code{!is.published(x)}. These properties are
-#' accessed and set with the "is" methods. The verb functions \code{archive}
-#' and \code{publish} are alternate versions of the setters (at least in the
-#' \code{TRUE} direction).
+#' visible only to editors while published datasets are available to all viewers.
+#' A dataset can either be published or in draft, but not both.
+#' These properties are accessed and set with the "is" methods. You can also
+#' set the properties by assigning into the function. The verb functions
+#' `archive` and `publish` are alternate versions of the setters.
 #'
 #' @param x CrunchDataset
 #' @param value logical
@@ -473,19 +473,18 @@ publish <- function (x) {
 #' View and modify dataset-level settings
 #'
 #' These methods allow access and control over dataset settings. Currently
-#' supported settings include 'viewers_can_export', 'viewers_can_share', and
-#' 'viewers_can_change_weight', which govern specific authorizations for users
-#' with view-only access to this datset; and 'weight', which is the default
-#' weight variable for the dataset, the one that will be set for newly shared
-#' users and the one that viewers will have always on if they are not authorized
-#' to change weights. Additional settings will be added in the future. See
-#' \url{http://docs.crunch.io/#fragments}, under 'Settings', for an up-to-date
+#' supported settings include:
+#' * User Authorizations for view-only users ('viewers_can_export', 'viewers_can_share', and
+#' 'viewers_can_change_weight'); and
+#' * 'weight' which determines the default weighting variable for the dataset
+#'  Additional settings will be added in the future. See
+#' http://docs.crunch.io/#fragments, under 'Settings', for an up-to-date
 #' list of settings supported throughout the Crunch system. Clients may also
 #' provide and use custom settings if they choose.
 #' @param x CrunchDataset
 #' @param value A settings object (`ShojiEntity`), for the setter
 #' @return The getter returns a settings object (`ShojiEntity`). The setter
-#' returns the dataset (`x`).
+#' returns the dataset (`x`), duly modified.
 #' @examples
 #' \dontrun{
 #' settings(ds)

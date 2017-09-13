@@ -24,12 +24,15 @@ setMethod("filters<-", "CrunchDataset", function (x, value) x)
 
 #' View and modify "public" attribute
 #'
+#' View and modify whether all dataset viewers have access to the dataset. This
+#' will return `FALSE` if the dataset is in draft.
+#'
 #' @param x a Crunch object
 #' @param value an attribute to set
-#' @return For \code{is.public}, a logical value for whether the object is
+#' @return For `is.public`, a logical value for whether the object is
 #' flagged as shared with all dataset viewers. (Its setter thus takes a
-#' logical value as well.) Catalogs return a vector of logicals corresponding
-#' to the length of the catalog, while entities return a single value.
+#' logical value as well.) Catalogs of datasets return a vector of logicals
+#' corresponding to the length of the catalog, while entities return a single value.
 #' @name is-public
 #' @aliases is.public<- is.public
 NULL
