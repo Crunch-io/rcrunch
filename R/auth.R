@@ -71,6 +71,7 @@ login <- function (email=getOption("crunch.email"),
 #' @export
 session <- function () new("Session")
 
+#' @importFrom utils installed.packages
 crunchAuth <- function (email, password=NULL, ...) {
     ## Validate authentication inputs and then POST to the API
     if (is.null(email)) {
@@ -78,8 +79,15 @@ crunchAuth <- function (email, password=NULL, ...) {
     }
     if (is.null(password)) {
         if (is.interactive()) {
-            cat(paste0("Crunch.io password for ", email, ": "))
-            without_echo(password <- readline())
+            prompt <- paste0("Crunch.io password for ", email, ": ")
+            if ("rstudioapi" %in% rownames(installed.packages()) &&
+                rstudioapi::hasFun("askForPassword")) {
+
+                password <- rstudioapi::askForPassword(prompt)
+            } else {
+                cat(prompt)
+                without_echo(password <- readline())
+            }
         } else {
             halt("Must supply a password")
         }
