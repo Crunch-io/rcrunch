@@ -9,7 +9,7 @@
 #' \code{\link{handleAPIresponse}} function.
 #' @keywords internal
 crunchAPI <- function (http.verb, url, config=list(), status.handlers=list(), ...) {
-    url ## force lazy eval of url before inserting in try() below
+    url ## force lazy eval of url
     if (isTRUE(getOption("crunch.debug"))) {
         ## TODO: work this into httpcache.log
         payload <- list(...)$body
@@ -133,8 +133,7 @@ locationHeader <- function (response) {
 
 #' @importFrom httr config add_headers
 crunchConfig <- function () {
-    return(c(config(verbose=isTRUE(getOption("crunch.debug")), postredir=3),
-        add_headers(`user-agent`=crunchUserAgent())))
+    return(c(config(postredir=3), add_headers(`user-agent`=crunchUserAgent())))
 }
 
 #' @importFrom utils packageVersion
