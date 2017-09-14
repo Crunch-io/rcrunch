@@ -52,7 +52,7 @@ stream_rows <- data.frame(
     v6 = c(1, 1)
 )
 with_test_authentication({
-    ds <- newDataset(df)
+    ds <- newDataset(df, streaming="streaming")
     test_that("streamRows streams rows", {
         expect_equal(pendingStream(ds), 0)
         ds <- streamRows(ds, data=stream_rows)
