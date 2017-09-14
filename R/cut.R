@@ -62,11 +62,11 @@ setMethod("cut", "NumericVariable", function(x,
         breaks <- sort.int(as.double(breaks))
         nb <- length(breaks)
     }
-    if (anyDuplicated(breaks)) halt("'breaks' are not unique")
+    if (anyDuplicated(breaks)) halt(sQuote("breaks"), " are not unique")
     if (is.null(labels)) { #Autogenerate labels if not supplied
       labels <- generateCutLabels(dig.lab, breaks, nb, right, include.lowest)
     } else if (length(labels) != nb - 1L) {
-        halt(sQuote("lengths of 'breaks' and 'labels' differ"))
+        halt("lengths of ", sQuote("breaks"), " and ", sQuote("labels"), " differ")
     }
     if (right) {
         `%c1%` <- function(x,y) x <= y

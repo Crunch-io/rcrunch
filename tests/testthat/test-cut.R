@@ -16,6 +16,23 @@ with_mock_crunch({
         expect_identical( generateCutLabels(2, c(2, 3, 4, 5), 4, FALSE, FALSE),
             c("[2,3)", "[3,4)", "[4,5)")
         )
+        expect_identical(
+            generateCutLabels(5, c(2.111111, 3, 4, 5), 4, TRUE, TRUE),
+            c("[2.1111,3]", "(3,4]", "(4,5]")
+        )
+        expect_identical(
+            generateCutLabels(5, c(2.111111, 3, 4, 5), 4, FALSE, TRUE),
+            c("[2.1111,3)", "[3,4)", "[4,5]")
+        )
+        # if the breaks are all the same at up to 12 decimal points
+        # generateCutLabels will use Range_n lagles.
+        expect_identical(
+            generateCutLabels(5,
+                              c(2.111111111111, 2.111111111112,
+                                2.111111111113, 2.111111111114),
+                              4, FALSE, FALSE),
+            c("Range_1", "Range_2", "Range_3")
+        )
     })
 
     test_that("cut throws error when no variable name supplies", {
@@ -343,6 +360,33 @@ with_mock_crunch({
                 3,
                 dig.lab = 2,
                 name = "new_var")
+        )
+    })
+
+    test_that("cut input validation", {
+        expect_error(
+            cut(ds$birthyr,
+                breaks = c(-1.4967),
+                name = "new_var",
+                right = TRUE),
+            "invalid number of intervals"
+        )
+
+        expect_error(
+            cut(ds$birthyr,
+                breaks = c(-1.4967, 0, 1.6662, 3),
+                name = "new_var",
+                label = c("one", "two"),
+                right = TRUE),
+            paste0("lengths of ", sQuote("breaks"), " and ", sQuote("labels"), " differ")
+        )
+        expect_error(
+            cut(ds$birthyr,
+                breaks = c(1, 1, 1),
+                name = "new_var",
+                label = c("one", "two"),
+                right = TRUE),
+            paste0(sQuote("breaks"), " are not unique")
         )
     })
 })
