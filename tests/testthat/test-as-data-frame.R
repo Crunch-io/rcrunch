@@ -148,7 +148,7 @@ with_mock_crunch({
 
     test_that("can manipulate the row order of a crunchDataFrame", {
         ds_df <- as.data.frame(ds)
-        gndr <- ds_df$gender
+        gndr <- as.vector(ds$gender)
         expect_equal(nrow(ds_df), 25)
         # both reording and subsetting the dataset
         new_order <- c(4,3,1,2)
@@ -255,18 +255,18 @@ with_mock_crunch({
         
     })
     
-    test_that("get_CDF_var works with variables, including different modes for factors", {
+    test_that("get_var_from_server works with variables, including different modes for factors", {
         ds_df <- as.data.frame(ds)
         true_df <- as.data.frame(ds, force = TRUE)
 
-        expect_equal(get_CDF_var("textVar", ds_df),
+        expect_equal(get_var_from_server("textVar", ds_df),
                      true_df$textVar)
-        expect_equal(get_CDF_var("gender", ds_df, mode = 'factor'),
+        expect_equal(get_var_from_server("gender", ds_df, mode = 'factor'),
                      true_df$gender)
-        expect_equal(get_CDF_var("gender", ds_df, mode = 'id'),
+        expect_equal(get_var_from_server("gender", ds_df, mode = 'id'),
                      ifelse(is.na(true_df$gender), -1,
                             ifelse(true_df$gender == "Female", 2, 1)))
-        expect_equal(get_CDF_var("gender", ds_df, mode = 'numeric'),
+        expect_equal(get_var_from_server("gender", ds_df, mode = 'numeric'),
                      ifelse(true_df$gender == "Female", 2, 1))
     })
     
@@ -337,6 +337,9 @@ with_mock_crunch({
         # can add a single value
         expect_silent(ds_df$new_local_var4 <- 1)
         expect_equal(ds_df$new_local_var4, rep(1, 25))
+        
+        expect_silent(ds_df$textVar <- c(1:25))
+        expect_equal(ds_df$textVar, c(1:25))
     })
     
     test_that("setting a column to NULL works", {
@@ -345,6 +348,9 @@ with_mock_crunch({
         expect_true("new_local_var" %in% names(ds_df))
         expect_silent(ds_df$new_local_var <- NULL)
         expect_false("new_local_var" %in% names(ds_df))
+        
+        expect_silent(ds_df$gender <- NULL)
+        expect_false("gender" %in% names(ds_df))
     })
     
     test_that("get_CDF_var input validation", {
@@ -354,8 +360,6 @@ with_mock_crunch({
                                  cdf = data.frame(textVar = c(1,2))),
                      paste("The cdf argument must be a CrunchDataFrame, got",
                            "data.frame instead."))
-        expect_error(set_CDF_var(col_name = "textVar", cdf = ds_df, value = c(1:25)),
-                     paste("Cannot manipulate data from a Crunch variable in a CrunchDataFrame."))
     })
     
     test_that("merge.CrunchDataFrame works with sort=y", {
@@ -445,20 +449,28 @@ with_mock_crunch({
                                   rep(NA, 7))))
     })
 
-    test_that("merge.CrunchDataFrame modifies in place", {
-        # Currently merge.CrunchDataFrame modifies the CrunchDataFrame in
-        # place, this is a limitation of promises and copying environments.
+    test_that("merge.CrunchDataFrame recreates even instantiated columns", {
         ds_df <- as.data.frame(ds)
+        brtyr <- ds_df$birthyr
+        loc <- ds_df$location
         expect_silent(merged_df <- merge(ds_df,
                                          data.frame(gender=c("Male", "Female"), new="new"),
                                          by.x = "gender",
                                          by.y = "gender"))
-        expect_identical(ncol(merged_df), ncol(ds_df))
-        expect_identical(names(merged_df), names(ds_df))
-        skip("merge.CrunchDataFrame currently alters the CDF in place")
-        # if/when that is resolved, these should replace above.
-        expect_identical(ncol(merged_df), ncol(ds_df)+1L)
-        expect_identical(names(merged_df), c(names(ds_df), "new"))
+        expect_identical(ncol(merged_df), ncol(ds)+1L)
+        expect_identical(names(merged_df), c(names(ds), "new"))
+    })
+    
+    test_that("merge.CrunchDataFrame can handle a locally modified crunchdataframe", {
+        ds_df <- as.data.frame(ds)
+        ds_df$local_var <- c(1:25)
+        expect_silent(merged_df <- merge(ds_df,
+                                         data.frame(gender=c("Male", "Female"), new="new"),
+                                         by.x = "gender",
+                                         by.y = "gender"))
+        expect_identical(ncol(merged_df), ncol(ds)+2L)
+        expect_identical(names(merged_df), c(names(ds), "local_var", "new"))
+        expect_identical(merged_df$local_var, ds_df$local_var)
     })
 
     test_that("fix_bys returns the reference to be used for by", {

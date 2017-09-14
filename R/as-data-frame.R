@@ -12,14 +12,13 @@ CrunchDataFrame <- function (dataset, row.order = NULL, categorical.mode = "fact
     out <- new.env()
     attr(out, "crunchDataset") <- dataset
     attr(out, "col_names") <- var_names
-    attr(out, "crunchVars") <- var_names
     attr(out, "mode") <- categorical.mode
     
     with(out, {
         ## Note the difference from as.environment: wrapped in as.vector
         for (.a in var_names) {
             eval(substitute(delayedAssign(v, {
-                get_CDF_var(v, ds, mode)
+                get_var_from_server(v, ds, mode)
             }),
             list(v=.a, ds=out, mode = attr(out, "mode"))))
         }
@@ -29,6 +28,7 @@ CrunchDataFrame <- function (dataset, row.order = NULL, categorical.mode = "fact
     # given return all rows in the dataset in the order they appear
     attr(out, "order") <- row.order
     
+    # TODO: add "data.frame" here too
     class(out) <- "CrunchDataFrame"
     return(out)
 }
@@ -106,16 +106,11 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
         halt("Dataset too large to coerce to data.frame. ",
             "Consider subsetting it first")
     }
-    crunch_var_names <- attr(x, "crunchVars")
+    var_names <- names(x)
     # todo: something intelligent with modes
-    out <- lapply(crunch_var_names, function(var) as.vector(ds[[var]]))
-    names(out) <- crunch_var_names
+    out <- lapply(var_names, function(var) x[[var]])
+    names(out) <- var_names
     
-    col_names <- attr(x, "col_names")
-    local_var_names <- col_names[!col_names %in% crunch_var_names]
-    if (length(local_var_names) > 0) {
-        out <- cbind(out, x[,local_var_names, drop = FALSE])
-    }
     return(structure(out, class="data.frame", row.names=c(NA, -nrow(ds))))
 }
 
@@ -165,16 +160,6 @@ merge.CrunchDataFrame  <- function (x, y, by=intersect(names(x), names(y)),
                 " are not currently supported by merge.CrunchDataFrame. The results will include all rows from whichever argument (x or y) is used to sort.")
     }
 
-    # Duplicate the enviornment (so we are not manipulating in place)
-    # using `for(n in ls(x, all.names=TRUE)) assign(n, get(n, x), new_x)`
-    # will evaluate each column, which is not actually what we want
-    # pryr:::promise_code (which can be compiled from promise.cpp separately)
-    # includes a way to extract the promise code, which works, but should only
-    # be used on actual promises, so would need some safe-guarding.
-    # instead we are copying the enviornment which modifies the CrunchDataFrame
-    # that was given in place.
-    new_x <- x
-
     # TODO: find a better way to subset the columns needed
     x_index <- as.data.frame(x[[by.x]])
     x_index$x_index <- as.numeric(row.names(x_index))
@@ -186,6 +171,17 @@ merge.CrunchDataFrame  <- function (x, y, by=intersect(names(x), names(y)),
 
     new_cols_map <- merge(x_index, y_index, by.x=by.x, by.y=by.y, all=TRUE, sort=FALSE)
 
+    # Re-create the crunchdataset. 
+    # TODO: make sure to check for local variables!
+    old_vars <- names(x)
+    new_x <- as.data.frame(attr(x, "crunchDataset"))
+    old_local_vars <- setdiff(old_vars, names(attr(x, "crunchDataset")))
+    if (length(old_local_vars) > 0) {
+        old_local_df <- x[,old_local_vars, drop=FALSE]
+    } else {
+        old_local_df <- NULL
+    }
+    
     # TODO: split out into separate functions that deal with the
     # CrunchDataFrame and the data.frame independently, and then allow for
     # either to be x or y.
@@ -204,12 +200,19 @@ merge.CrunchDataFrame  <- function (x, y, by=intersect(names(x), names(y)),
         # need to remap the by.x columns because new_x was evaluated already
         # assign(by.x, x[[by.x]][attr(new_x, "order")], new_x) # not needed?
     }
+    
+    # TODO: find a way to reorder the columns without touching them
+    # add back in the old local variables
+    if (!is.null(old_local_df)) {
+        ord <- attr(new_x, "order") %||% seq_len(nrow(new_x))
+        new_x[,old_local_vars] <- old_local_df[ord,]
+    }
 
     new_cols <- y[new_cols_map$y_index,]
     for (col in colnames(new_cols)) {
         if (!col %in% by.x) {
             # only assign new columns
-            # todo: check names, do something intelligent if they are already there.
+            # TODO: check names, do something intelligent if they are already there.
             assign(col, new_cols[,col], envir = new_x)
             attr(new_x, "col_names") <- c(names(new_x), col)
         }
@@ -362,27 +365,25 @@ get_CDF_var <- function (col_name, cdf, ...) {
         halt("The variable ", dQuote(col_name), " is not found in the CrunchDataFrame.")
     }
     
-    if (col_name %in% attr(cdf, "crunchVars")) {
-        ord <- attr(cdf, "order")
-        ds <- attr(cdf, "crunchDataset")
-        if (!is.null(ord)) {
-            return(as.vector(ds[[col_name]][ord], ...)[match(ord, sort(unique(ord)))])
-        } else {
-            # no reordering if order is null
-            return(as.vector(ds[[col_name]], ...))
-        }
+    return(get(col_name, cdf)) # need [ord] here?
+}
+
+get_var_from_server <- function (col_name, cdf, ...) {
+    ord <- attr(cdf, "order")
+    ds <- attr(cdf, "crunchDataset")
+    if (!is.null(ord)) {
+        return(
+            as.vector(ds[[col_name]][ord], ...)[match(ord, sort(unique(ord)))]
+                    )
     } else {
-        return(get(col_name, cdf)) # need [ord] here?
+        # no reordering if order is null
+        return(as.vector(ds[[col_name]], ...))
     }
 }
 
 set_CDF_var <- function (col_name, row_inds, cdf, value) {
     if (!is(cdf, "CrunchDataFrame")) { 
         halt("The cdf argument must be a CrunchDataFrame, got ", class(cdf), " instead.")
-    }
-    
-    if (col_name %in% attr(cdf, "crunchVars")) {
-        halt("Cannot manipulate data from a Crunch variable in a CrunchDataFrame.")
     }
     
     # remove the variable if the value is NULL
@@ -401,6 +402,14 @@ set_CDF_var <- function (col_name, row_inds, cdf, value) {
         # only exception to the rule that there must be the same number of 
         # values as rows.
         value <- rep(value, length(row_inds))
+    } else if (is.data.frame(value)) {
+        # we got a data.frame as values, likelythis is an array or MR varaible
+        # unclass does what data.frame(v1=data.frame(a=1, b=2)) would do
+        # value <- unlist(value, recursive = FALSE, use.names = FALSE)
+        # concat names
+        # vnames <- unlist(vnames[ncols > 0L])
+        # set multiple variables
+        value <- I(value)
     } else if (length(value) != length(row_inds)) {
         halt("replacement has ", length(value),
              " rows, the CrunchDataFrame has ", nrow(cdf))
@@ -432,11 +441,7 @@ rm_CDF_var <- function (col_name, cdf) {
     if (!is(cdf, "CrunchDataFrame")) { 
         halt("The cdf argument must be a CrunchDataFrame, got ", class(cdf), " instead.")
     }
-    
-    if (col_name %in% attr(cdf, "crunchVars")) {
-        halt("Cannot remove a Crunch variable.")
-    }
-    
+
     # remove column
     rm(list = col_name, envir = cdf)
     
