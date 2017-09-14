@@ -20,7 +20,7 @@ getNrow <- function (dataset) {
     return(nrows)
 }
 
-#' Is it?
+#' Test whether a Crunch object belongs to a class
 #' @rdname crunch-is
 #' @param x an object
 #' @return logical
@@ -189,13 +189,14 @@ setMethod("tuple<-", "CrunchDataset", function (x, value) {
 #' Get a fresh copy from the server
 #'
 #' Crunch objects usually keep themselves in sync with the server when you
-#' manipulate them, but sometimes they can drift. Maybe someone else has
+#' manipulate them, but some operations cause the local version to diverge from
+#' the version on the server. For instance someone else may have
 #' modified the dataset you're working on, or maybe
 #' you have modified a variable outside of the context of its dataset.
 #' refresh() allows you to get back in sync.
 #'
 #' @param x pretty much any Crunch object
-#' @return a new version of \code{x}
+#' @return a new version of `x`
 #' @name refresh
 #' @aliases refresh
 #' @importFrom httpcache dropCache

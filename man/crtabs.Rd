@@ -12,7 +12,7 @@ crtabs(formula, data, weight = crunch::weight(data), useNA = c("no",
 cross-classifying variables separated by '+' on the right side of the
 "~". If aggregating by functions other than counts, include the aggregation
 expression on the left-hand side.
-Compare to \code{\link[base:xtabs]{base::xtabs}}.}
+Compare to \code{\link[stats:xtabs]{stats::xtabs}}.}
 
 \item{data}{an object of class \code{CrunchDataset}}
 

@@ -18,6 +18,3 @@ an S3 class "contextManager" object
 \description{
 Set some global options temporarily
 }
-\seealso{
-\link{with-context-manager} \link{ContextManager}
-}

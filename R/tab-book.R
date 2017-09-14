@@ -87,8 +87,8 @@ tabBook <- function (multitable, dataset, weight=crunch::weight(dataset),
 #' TabBookResult and MultitableResult methods
 #'
 #' @param x a TabBookResult or MultitableResult
-#' @param i an index into \code{x}
-#' @param j an index into \code{x}, ignored
+#' @param i an index into `x`
+#' @param j an index into `x`, ignored
 #' @param ... also ignored
 #' @return Returns what you'd expect.
 #' @name tabbook-methods

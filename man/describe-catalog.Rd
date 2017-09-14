@@ -84,12 +84,12 @@ Dataset's catalog, or within \code{\link{Subvariables}} in an array
 variable. They work like the base R names methods.
 }
 \details{
-Note that the \code{names} method on a Dataset returns the aliases of its
+Note that the Dataset \code{names} method returns the aliases of its
 variables by default. This is controlled by
 \code{getOption("crunch.namekey.dataset")}, which is "alias" by default.
 Set \code{options(crunch.namekey.dataset="name")} if you wish to use
-variable names. See the vignette on variables for more information.
+variable names. See the variables vignette for more information.
 }
 \seealso{
-\code{\link{Subvariables}} \code{\link{Categories}} \code{\link[base]{names}} \code{vignette("variables", package="crunch")}
+\code{\link{Subvariables}} \code{\link{Categories}} \code{\link[base:names]{base::names}} \code{vignette("variables", package="crunch")}
 }

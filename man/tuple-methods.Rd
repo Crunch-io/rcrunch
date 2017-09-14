@@ -78,3 +78,4 @@
 ShojiTuples are objects extracted from ShojiCatalogs. They are internally
 used.
 }
+\keyword{internal}

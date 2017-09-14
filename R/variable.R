@@ -196,8 +196,8 @@ unbind <- function (x) {
 #' @param ... additional arguments, ignored
 #' @param j Invalid
 #' @param drop Invalid
-#' @return a CrunchExpr containing references to the variable \code{x} and the
-#' filter logic contained in \code{i}
+#' @return a CrunchExpr containing references to the variable `x` and the
+#' filter logic contained in `i`
 #' @aliases variable-extract
 #' @name variable-extract
 NULL

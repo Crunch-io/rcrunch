@@ -31,3 +31,6 @@ handlers.
 \description{
 HTTP methods for communicating with the Crunch API
 }
+\seealso{
+(Crunch Internals)\link{http://crunch.io/r/crunch/articles/crunch-internals.html}
+}

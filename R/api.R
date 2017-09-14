@@ -1,12 +1,13 @@
 #' Main Crunch API handling function
 #' @param http.verb character in GET, PUT, POST, PATCH, DELETE
 #' @param url character URL to do the verb on
-#' @param ... additional arguments passed to \code{GET}, \code{PUT},
-#' \code{POST}, \code{PATCH}, or \code{DELETE}
+#' @param ... additional arguments passed to `GET`, `PUT`,
+#' `POST`, `PATCH`, or `DELETE`
 #' @param config list of config parameters. See httr documentation.
 #' @param status.handlers named list of specific HTTP statuses and a response
 #' function to call in the case where that status is returned. Passed to the
-#' \code{\link{handleAPIresponse}} function.
+#' [handleAPIresponse()] function.
+#' @seealso
 #' @keywords internal
 crunchAPI <- function (http.verb, url, config=list(), status.handlers=list(), ...) {
     url ## force lazy eval of url before inserting in try() below
@@ -23,13 +24,14 @@ crunchAPI <- function (http.verb, url, config=list(), status.handlers=list(), ..
 
 #' HTTP methods for communicating with the Crunch API
 #'
-#' @param ... see \code{\link{crunchAPI}} for details. \code{url} is the first
-#' named argument and is required; \code{body} is also required for PUT,
+#' @param ... see [`crunchAPI`] for details. `url` is the first
+#' named argument and is required; `body` is also required for PUT,
 #' PATCH, and POST.
 #' @return Depends on the response status of the HTTP request and any custom
 #' handlers.
 #' @importFrom httpcache GET PUT PATCH POST DELETE
 #' @name http-methods
+#' @seealso (Crunch Internals)[http://crunch.io/r/crunch/articles/crunch-internals.html]
 #' @export
 crGET <- function (...) crunchAPI("GET", ...)
 #' @rdname http-methods

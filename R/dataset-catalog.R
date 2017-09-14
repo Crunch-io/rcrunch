@@ -65,13 +65,13 @@ setMethod("is.published<-", c("DatasetCatalog", "logical"), function (x, value) 
 #'
 #' @param x a Catalog object
 #' @param i which catalog elements to extract
-#' @param name for \code{$}, the same as \code{i} for \code{[[}
+#' @param name for `$`, the same as `i` for `[[`
 #' @param j Invalid
 #' @param drop Invalid
 #' @param ... additional arguments
 #' @param value For updating, an object of the appropriate class and size to
 #' insert
-#' @return A subset of \code{x} if extracting, otherwise \code{x} duly modified
+#' @return A subset of `x` if extracting, otherwise `x` duly modified
 #' @name catalog-extract
 NULL
 
@@ -92,21 +92,21 @@ setMethod("[[<-", c("DatasetCatalog", "character", "missing", "DatasetTuple"),
 #' Get and set names, aliases on Catalog-type objects
 #'
 #' These methods let you get and set names and aliases for variables in a
-#' Dataset's catalog, or within \code{\link{Subvariables}} in an array
+#' Dataset's catalog, or within [`Subvariables`] in an array
 #' variable. They work like the base R names methods.
 #'
-#' Note that the \code{names} method on a Dataset returns the aliases of its
+#' Note that the Dataset `names` method returns the aliases of its
 #' variables by default. This is controlled by
-#' \code{getOption("crunch.namekey.dataset")}, which is "alias" by default.
-#' Set \code{options(crunch.namekey.dataset="name")} if you wish to use
-#' variable names. See the vignette on variables for more information.
+#' `getOption("crunch.namekey.dataset")`, which is "alias" by default.
+#' Set `options(crunch.namekey.dataset="name")` if you wish to use
+#' variable names. See the variables vignette for more information.
 #'
 #' @param x a VariableCatalog, Subvariables, or similar object
 #' @param value For the setters, an appropriate-length character vector to
 #' assign
 #' @return Getters return the character object in the specified slot; setters
-#' return \code{x} duly modified.
+#' return `x` duly modified.
 #' @aliases describe-catalog aliases aliases<- descriptions descriptions<- types emails timestamps
-#' @seealso \code{\link{Subvariables}} \code{\link{Categories}} \code{\link[base]{names}} \code{vignette("variables", package="crunch")}
+#' @seealso [`Subvariables`] [`Categories`] [`base::names`] `vignette("variables", package="crunch")`
 #' @name describe-catalog
 NULL

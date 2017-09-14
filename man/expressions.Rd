@@ -56,7 +56,7 @@ rollup(x, resolution = rollupResolution(x))
 \arguments{
 \item{x}{an input}
 
-\item{table}{For \code{\%in\%}. See \code{\link[base]{match}}}
+\item{table}{For \code{\\%in\\%}. See \code{\link[base:match]{base::match}}}
 
 \item{e1}{an input}
 

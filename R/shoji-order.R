@@ -131,7 +131,7 @@ setMethod("length", "ShojiOrder", function (x) length(entities(x)))
 #' @export
 setMethod("length", "OrderGroup", function (x) length(entities(x)))
 
-#' Extract and update in VariableOrder and VariableGroup
+#' Extract and update in VariableOrders and VariableGroups
 #'
 #' @param x a VariableOrder or VariableGroup
 #' @param i an index. Numeric and logical indexing supported for both classes;
@@ -143,10 +143,10 @@ setMethod("length", "OrderGroup", function (x) length(entities(x)))
 #' being updated
 #' @param ... additional arguments
 #' @param drop Ignored
-#' @return \code{[[} and \code{$} on a VariableOrder return the VariableGroup.
-#' \code{[[} on VariableGroup returns the entity within, either a character
-#' (URL) or nested VariableGroup. \code{[} and assignment methods return
-#' objects of the same class as \code{x}
+#' @return `[[` and `$` on a VariableOrder return the VariableGroup.
+#' `[[` on VariableGroup returns the entity within, either a character
+#' (URL) or nested VariableGroup. `[` and assignment methods return
+#' objects of the same class as `x`
 #' @name ShojiOrder-extract
 #' @aliases ShojiOrder-extract
 NULL

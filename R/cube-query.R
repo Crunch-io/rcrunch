@@ -7,7 +7,7 @@
 #' cross-classifying variables separated by '+' on the right side of the
 #' "~". If aggregating by functions other than counts, include the aggregation
 #' expression on the left-hand side.
-#' Compare to [`base::xtabs`].
+#' Compare to [`stats::xtabs`].
 #' @param data an object of class `CrunchDataset`
 #' @param weight a CrunchVariable that has been designated as a potential
 #' weight variable for `data`, or `NULL` for unweighted results.

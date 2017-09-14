@@ -1,18 +1,18 @@
 #' Construct Crunch Expressions
 #'
-#' Crunch Expressions, i.e. \code{CrunchExpr} and \code{CrunchLogicalExpr},
+#' Crunch Expressions, i.e. `CrunchExpr` and `CrunchLogicalExpr`,
 #' encapuslate derivations of Crunch variables, which are only evaluated when
-#' passed to a function like \code{as.vector}. They allow you to compose
+#' passed to a function like `as.vector`. They allow you to compose
 #' functional expressions of variables and evaluate them against the server
 #' only when appropriate.
 #'
 #' @param x an input
 #' @param e1 an input
 #' @param e2 an input
-#' @param table For \code{\%in\%}. See \code{\link[base]{match}}
-#' @param resolution For \code{rollup}. Either \code{NULL} or a character in
+#' @param table For `\%in\%`. See [`base::match`]
+#' @param resolution For `rollup`. Either `NULL` or a character in
 #' c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms") indicating the unit of
-#' time at which a Datetime variable should be aggregated. If \code{NULL},
+#' time at which a Datetime variable should be aggregated. If `NULL`,
 #' the server will determine an appropriate resolution based on the range of
 #' the data.
 #' @return Most functions return a CrunchExpr or CrunchLogicalExpr.
