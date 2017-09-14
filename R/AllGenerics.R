@@ -183,7 +183,7 @@ setGeneric("zcl", function (x) standardGeneric("zcl"))
 #' toJSON methods for Crunch objects
 #'
 #' `crunch` uses the `jsonlite` package for JSON serialization and deserialization
-#'  Unlike `RJSONIO`'s `toJSON`, [`jsonlite::toJSon`]
+#'  Unlike `RJSONIO`'s `toJSON`, [`jsonlite::toJSON`]
 #' does not allow for defining S4 methods for other object types. So,
 #' `crunch::toJSON` wraps `jsonprep`, which exists to translate
 #' objects to base R objects, which `jsonlite::toJSON` can handle.

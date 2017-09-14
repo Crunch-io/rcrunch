@@ -7,7 +7,6 @@
 #' @param status.handlers named list of specific HTTP statuses and a response
 #' function to call in the case where that status is returned. Passed to the
 #' [handleAPIresponse()] function.
-#' @seealso
 #' @keywords internal
 crunchAPI <- function (http.verb, url, config=list(), status.handlers=list(), ...) {
     url ## force lazy eval of url before inserting in try() below
@@ -24,6 +23,9 @@ crunchAPI <- function (http.verb, url, config=list(), status.handlers=list(), ..
 
 #' HTTP methods for communicating with the Crunch API
 #'
+#' These methods let you communicate with the Crunch API, for more background
+#' see [Crunch Internals](http://crunch.io/r/crunch/articles/crunch-internals.html).
+#'
 #' @param ... see [`crunchAPI`] for details. `url` is the first
 #' named argument and is required; `body` is also required for PUT,
 #' PATCH, and POST.
@@ -31,7 +33,6 @@ crunchAPI <- function (http.verb, url, config=list(), status.handlers=list(), ..
 #' handlers.
 #' @importFrom httpcache GET PUT PATCH POST DELETE
 #' @name http-methods
-#' @seealso (Crunch Internals)[http://crunch.io/r/crunch/articles/crunch-internals.html]
 #' @export
 crGET <- function (...) crunchAPI("GET", ...)
 #' @rdname http-methods

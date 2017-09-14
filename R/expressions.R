@@ -5,18 +5,17 @@
 #' passed to a function like `as.vector`. They allow you to compose
 #' functional expressions of variables and evaluate them against the server
 #' only when appropriate.
-#'
 #' @param x an input
 #' @param e1 an input
 #' @param e2 an input
-#' @param table For `\%in\%`. See [`base::match`]
+#' @param table For \code{\%in\%}. See [`base::match`]
 #' @param resolution For `rollup`. Either `NULL` or a character in
 #' c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms") indicating the unit of
 #' time at which a Datetime variable should be aggregated. If `NULL`,
 #' the server will determine an appropriate resolution based on the range of
 #' the data.
 #' @return Most functions return a CrunchExpr or CrunchLogicalExpr.
-#' \code{as.vector} returns an R vector.
+#' `as.vector` returns an R vector.
 #' @aliases expressions
 #' @name expressions
 NULL

@@ -47,7 +47,7 @@ with.contextManager <- function (data, expr, ...) {
 #'
 #' @param ... named options to set
 #' @return an S3 class "contextManager" object
-#' @seealso [`with-context-manager`] [`ContextManage`]}
+#' @seealso [`with-context-manager`] [`ContextManager`]
 #' @export
 temp.options <- function (...) {
     new <- list(...)

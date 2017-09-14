@@ -245,7 +245,7 @@ as.list.ShojiCatalog <- function (x, ...) lapply(names(index(x)), function (i) x
 #' @param x ShojiCatalog or subclass
 #' @param keys character vector of attribute names from each catalog tuple to
 #' include in the result. Default is TRUE, which means all.
-#' @param rownames See ['base::data.frame'], the `row.names`
+#' @param rownames See [`base::data.frame`], the `row.names`
 #' argument, to which this is passed in `data.frame`. The difference here
 #' is that if `rownames` is explicitly set as `NULL`, the resulting
 #' object will not have row names set. By default, row names will be the URLs
