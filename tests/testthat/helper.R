@@ -37,7 +37,7 @@ options(
     crunch.namekey.dataset="alias",
     crunch.namekey.array="alias"
 )
-httr::set_config(crunchConfig())
+set_crunch_config()
 
 ## Test serialize and deserialize
 cereal <- function (x) fromJSON(toJSON(x), simplifyVector=FALSE)
