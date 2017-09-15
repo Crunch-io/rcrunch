@@ -31,7 +31,7 @@ Suggests:
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
-Collate:
+Collate: 
     'AllClasses.R'
     'AllGenerics.R'
     'variable-definition.R'
@@ -55,6 +55,7 @@ Collate:
     'consent.R'
     'context-manager.R'
     'copy.R'
+    'crunch-data-frame.R'
     'crunch.R'
     'crunchbox.R'
     'cube-dims.R'
@@ -83,6 +84,7 @@ Collate:
     'json.R'
     'make-array.R'
     'members.R'
+    'merge-crunch-data-frame.R'
     'misc.R'
     'multitables.R'
     'new-dataset.R'
