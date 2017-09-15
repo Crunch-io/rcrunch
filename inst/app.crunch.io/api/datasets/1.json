@@ -6,7 +6,8 @@
     "body": {
         // In reality, body has attributes found in the tuple too
         "owner": "https://app.crunch.io/api/users/user1/",
-        "id": "dataset1"
+        "id": "dataset1",
+        "streaming": "streaming"
     },
     "catalogs": {
         "variables": "https://app.crunch.io/api/datasets/1/variables/",

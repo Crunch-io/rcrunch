@@ -4,7 +4,8 @@
     "description": "Detail for a given dataset",
     "body": {
         "owner_id": "https://app.crunch.io/api/users/notme/",
-        "id": "95c0b45fe0af492594863f818cb913d2"
+        "id": "95c0b45fe0af492594863f818cb913d2",
+        "streaming": "streaming"
     },
     "catalogs": {
         "variables": "https://app.crunch.io/api/datasets/3/variables/",
