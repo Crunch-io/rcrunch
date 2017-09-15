@@ -150,8 +150,18 @@ setGeneric("which", signature="x")
 
 #' Generic method for converting objects to Crunch representations
 #'
+#' R objects are converted to crucnh objects using the following rules:
+#'
+#' - Character vectors are converted into Crunch text variables
+#' - Numeric vectors are converted into Crunch numeric variables
+#' - Factors are converted to categorical variables
+#' - Date and POSIXt vectors are converted into Crunch datetime variables
+#' - Logical vectors are converted to Crunch categorical variables
+#' - [VariableDefinition]s are not converted, but the function can still append
+#' additional metadata
+#'
 #' If you have other object types you wish to convert to Crunch variables,
-#' you can declare methods for \code{toVariable}
+#' you can declare methods for `toVariable`
 #' @param x the object
 #' @param ... additional arguments
 #' @return a list object suitable for POSTing to the Crunch API. See the API
@@ -165,7 +175,7 @@ setGeneric("lapply")
 setGeneric("is.na")
 setGeneric("is.na<-")
 setGeneric("%in%")
-setGeneric("write.csv", function(x, ...) utils::write.csv(x, ...))
+setGeneric("write.csv", function (x, ...) utils::write.csv(x, ...))
 setGeneric("duplicated")
 
 setGeneric("zcl", function (x) standardGeneric("zcl"))
@@ -209,9 +219,9 @@ setGeneric("getShowContent",
 #' @param data original dataset, if needed
 #' @param ... other arguments passed to methods
 #' @name fortify
-#' @export
+#' @export fortify.CrunchDataFrame
 fortify.CrunchDataFrame <- function(model, data, ...) model
 
 #' @rdname fortify
-#' @export
+#' @export fortify.CrunchDataset
 fortify.CrunchDataset <- function(model, data, ...) model

@@ -59,7 +59,7 @@ extracts variables accordingly. Alternatively, (2) if \code{j} is specified
 
 \item{...}{additional arguments}
 
-\item{drop}{logical: autmatically simplify a 1-column Dataset to a Variable?
+\item{drop}{logical: automatically simplify a 1-column Dataset to a Variable?
 Default is FALSE, and the TRUE option is in fact not implemented.}
 
 \item{name}{columnar extraction for \code{$}}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/dataset-stream.R
 \name{appendStream}
 \alias{appendStream}
-\title{Append data that has been streamed to a dataset}
+\title{Manually trigger a pending append to a datadet}
 \usage{
 appendStream(ds)
 }
@@ -18,5 +18,5 @@ datasets which have frequent updates (see the
 \href{http://docs.crunch.io/#streaming-rows}{Crunch API documentation} for more
 information). Crunch automatically appends streamed data periodically;
 however, if you would like to trigger appending pending streamed data to a
-dataset, you can use \code{appendStream()}.
+dataset, you can call \code{appendStream()}.
 }

@@ -59,7 +59,7 @@ with_mock_crunch({
                 dimensions=list(zcl(ds$gender)),
                 measures=list(mean=zfunc("cube_mean", ds$birthyr))
             ))
-        expect_identical(formulaToCubeQuery( ~ gender, data=ds),
+        expect_identical(formulaToCubeQuery(~ gender, data=ds),
             list(
                 dimensions=list(zcl(ds$gender)),
                 measures=list(count=zfunc("cube_count"))

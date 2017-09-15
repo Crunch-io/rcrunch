@@ -42,7 +42,7 @@ logical indicating whether this Category is a "selected" dichotomy. Setters
 return \code{x} duly modified.
 }
 \description{
-Category attributes
+Functions to access and set category attributes.
 }
 \seealso{
 \code{\link{Categories}} \code{\link{dichotomize}}

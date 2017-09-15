@@ -22,9 +22,11 @@
 \item{force}{logical: actually coerce the dataset to \code{data.frame}, or
 leave the columns as unevaluated promises. Default is \code{FALSE}.}
 
-\item{row.order}{vector of indeces. Which, and their order, of the rows of the dataset should be presented as (default: \code{NULL}). If \code{NULL}, then the Crunch Dataset order will be used.}
+\item{row.order}{vector of indices containing the order in which the rows of
+the dataset should be presented. If \code{NULL}, the Crunch Dataset order will be
+used.}
 
-\item{...}{additional arguments passed to as.data.frame.default}
+\item{...}{additional arguments passed to \code{as.data.frame}.}
 }
 \value{
 an object of class \code{CrunchDataFrame} unless \code{force}, in
@@ -32,13 +34,13 @@ which case the return is a \code{data.frame}.
 }
 \description{
 This method is defined principally so that you can use a CrunchDataset as
-a \code{data} argument to other R functions (such as
-\code{[stats::lm]}). Unless you give it the \code{force==TRUE}
-argument, this function does not in fact return a \code{data.frame}: it
-returns an object with an interface like a data.frame, such that you get
-R vectors when you access its columns (unlike a CrunchDataset, which
-returns CrunchVariable objects). This allows modeling functions that
-require select columns of a dataset to retrieve only those variables from
+a \code{data} argument to other R functions (such as \code{\link[stats:lm]{stats::lm()}}). By default,
+the function does not return a \code{data.frame} but instead \code{CrunchDataFrame},  which
+behaves similarly to a \code{data.frame} without bringing the whole dataset into memory.
+When you access the variables of a \code{CrunchDataFrame},
+you get an R vector, rather than a \code{CrunchVariable}. This allows modeling functions
+that require select columns of a dataset to retrieve only those variables from
 the remote server, rather than pulling the entire dataset into local
-memory.
+memory. You can override this behavior by passing \code{force = TRUE}, which will
+cause the function to return a traditional \code{data.frame}.
 }

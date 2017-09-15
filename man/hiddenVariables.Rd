@@ -2,7 +2,7 @@
 % Please edit documentation in R/hide-variables.R
 \name{hiddenVariables}
 \alias{hiddenVariables}
-\title{Show the names of hidden variables within the dataset}
+\title{Show the names of a dataset's hidden variables}
 \usage{
 hiddenVariables(dataset, key = namekey(dataset))
 }
@@ -16,5 +16,5 @@ hiddenVariables(dataset, key = namekey(dataset))
 a vector of the names of Variables marked as hidden.
 }
 \description{
-Show the names of hidden variables within the dataset
+Show the names of a dataset's hidden variables
 }

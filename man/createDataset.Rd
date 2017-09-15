@@ -11,7 +11,7 @@ createDataset(name, body, ...)
 required.}
 
 \item{body}{list correctly formatted metadata definition for a dataset. See
-docs.crunch.io.}
+the \href{http://docs.crunch.io}{Crunch API documentation}.}
 
 \item{...}{additional arguments for the POST to create the dataset, such as
 "description".}
@@ -21,10 +21,10 @@ An object of class CrunchDataset.
 }
 \description{
 Use only if you're writing a function to create a Crunch dataset from a
-custom data structure. If you have a data.frame, just call
-\code{\link{newDataset}} on it.
+custom data structure. If you have a \code{data.frame}, just call
+\code{\link[=newDataset]{newDataset()}} on it.
 }
 \seealso{
-\code{\link{newDataset}}
+\code{\link[=newDataset]{newDataset()}}
 }
 \keyword{internal}

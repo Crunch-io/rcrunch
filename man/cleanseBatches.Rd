@@ -9,11 +9,11 @@ cleanseBatches(dataset, keep = c("imported", "appended"))
 \arguments{
 \item{dataset}{CrunchDataset}
 
-\item{keep}{character batch status(es) you want to keep. By default, batches
+\item{keep}{character the statuses that you want to keep. By default, batches
 that don't have either "imported" or "appended" status will be deleted.}
 }
 \value{
-\code{dataset} with the undesired batches removed.
+\code{dataset} with the specified batches removed.
 }
 \description{
 Sometimes append operations do not succeed, whether due to conflicts between

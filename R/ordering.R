@@ -1,14 +1,12 @@
 #' Get and set VariableOrder
 #'
-#' The \code{ordering} methods allow you to get and set a
-#' \code{\link{VariableOrder}} on
-#' a \code{\link{CrunchDataset}} or on the \code{\link{VariableCatalog}} that
-#' the dataset contains.
+#' The `ordering` methods allow you to get and set a [`VariableOrder`] on a
+#' [`CrunchDataset`] or on the [`VariableCatalog`] that the dataset contains.
 #'
 #' @param x a VariableCatalog or CrunchDataset
 #' @param value a valid VariableOrder object
-#' @return \code{ordering} returns a VariableOrder object, while
-#' \code{ordering<-} sets the VariableOrder in \code{value} on \code{x}
+#' @return `ordering` returns a VariableOrder object, while
+#' `ordering<-` sets the VariableOrder
 #' @name ordering
 #' @aliases ordering ordering<-
 NULL

@@ -7,28 +7,25 @@ reference:
 - title: Upload
   contents:
   - newDataset
-  - newDatasetByColumn
-  - newDatasetFromFile
+  - toVariable
   - VariableDefinition
   - addVariables
   - appendStream
-  - createWithPreparedData
   - pendingStream
   - pk
   - prepareDataForCrunch
-  - toVariable
+  - createWithPreparedData
 - title: Load
   contents:
   - listDatasets
   - loadDataset
-  - updateDatasetList
+  - datasets
 - title: Dataset manipulation
   contents:
   - 'as.environment,CrunchDataset-method'
   - batches
   - cleanseBatches
   - dataset-to-R
-  - datasets
   - delete
   - deleteDataset
   - dim-dataset
@@ -217,3 +214,5 @@ navbar:
          href: articles/filters.html
       -  text: Export Data
          href: articles/export.html
+      -  text: Crunch Internals
+         href: articles/crunch-internals.html

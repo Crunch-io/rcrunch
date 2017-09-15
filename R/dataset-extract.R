@@ -12,7 +12,7 @@
 #' \code{CrunchLogicalExpr} that will define a subset of rows.
 #' @param j columnar extraction, as described above
 #' @param name columnar extraction for \code{$}
-#' @param drop logical: autmatically simplify a 1-column Dataset to a Variable?
+#' @param drop logical: automatically simplify a 1-column Dataset to a Variable?
 #' Default is FALSE, and the TRUE option is in fact not implemented.
 #' @param ... additional arguments
 #' @return \code{[} yields a Dataset; \code{[[} and \code{$} return a Variable
@@ -164,7 +164,7 @@ setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE
 setMethod("$", "CrunchDataset", function (x, name) x[[name]])
 
 
-findVariablesInDataset <- function(x, i) {
+findVariablesInDataset <- function (x, i) {
     allvars <- allVariables(x)
     ## Handle "namekey", which should be deprecated
     if (getOption("crunch.namekey.dataset", "alias") == "name") {
@@ -172,6 +172,6 @@ findVariablesInDataset <- function(x, i) {
     } else {
         alt <- aliases(allvars)
     }
-    
+
     return(whichNameOrURL(allvars, i, alt))
 }
