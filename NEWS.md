@@ -5,6 +5,7 @@
 * Changed the behavior of `changeCategoryID()` to only update numeric values of the category having its id changed when the id and the numeric value are the same.
 * The `autorollback` argument of `appendDataset()` has been deprecated. The option no longer has any effect and a warning will be printed to notify users about the deprecation.
 * Long-deprecated `newDatasetByCSV` was removed.
+* `cut` is the same as `base::cut` and allows you to generate a categorical variable based on a numeric variable. 
 
 ## crunch 1.18.0
 
