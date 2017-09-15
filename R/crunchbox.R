@@ -5,11 +5,16 @@
 #' @param dataset CrunchDataset
 #' @param filters FilterCatalog, or \code{NULL} for no filters. Default all
 #' filters in your catalog, \code{filters(dataset)}.
+#' @param brand_colors an optional list with colors (in hex format) named 'primary', 'secondary', and 'message'
+#' @param static_colors an optional list of static colors (in hex format) to use for categoricals (taken in order)
+#' @param category_color_lookup an optional list of category names to colors (in hex format) to use for that category (for fine grained tuning of category colors.)
 #' @param ... additional metadata for the box, such as "title", "header", etc.
 #' @return The URL to the newly created box.
 #' @seealso \code{\link{preCrunchBoxCheck}} to provide guidance on what you're including in the CrunchBox
 #' @export
-crunchBox <- function (dataset, filters=crunch::filters(dataset), ...) {
+crunchBox <- function (dataset, filters=crunch::filters(dataset),
+                       brand_colors, static_colors,
+                       category_color_lookup, ...) {
     ## Validate inputs
     if (missing(dataset) || !is.dataset(dataset)) {
         halt("'dataset' must be a CrunchDataset, potentially subsetted on variables")
@@ -40,6 +45,28 @@ crunchBox <- function (dataset, filters=crunch::filters(dataset), ...) {
         ...)
     ## Add "where" after so that it no-ops if variablesFilter returns NULL (i.e. no filter)
     payload$where <- variablesFilter(dataset)
+
+    ## Add colors if they exist to the payload
+    if (!missing(brand_colors)) {
+        if (!is.list(brand_colors) ||
+            any(!names(brand_colors) %in% c("primary", "secondary", "message"))) {
+            halt(sQuote("brand_colors"), " must be a named list with only ",
+                 serialPaste(dQuote(c("primary", "secondary", "message")), collapse = "or"))
+        }
+        payload$display_settings$palette$brand_colors <- brand_colors
+    }
+    if (!missing(static_colors)) {
+        if (!is.list(static_colors)) {
+            halt(sQuote("static_colors"), " must be a list of characters")
+        }
+        payload$display_settings$palette$static_colors <- static_colors
+    }
+    if (!missing(category_color_lookup)) {
+        if (!is.list(category_color_lookup) || is.null(names(category_color_lookup))) {
+            halt(sQuote("category_color_lookup"), " must be a named list")
+        }
+        payload$display_settings$palette$category_lookup <- category_color_lookup
+    }
 
     ## Send it
     out <- crPOST(shojiURL(dataset, "catalogs", "boxdata"),

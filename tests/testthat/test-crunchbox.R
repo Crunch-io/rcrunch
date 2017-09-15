@@ -111,12 +111,57 @@ with_mock_crunch({
             '{"element":"shoji:entity","body":{"filters":[',
             '{"filter":"https://app.crunch.io/api/datasets/1/filters/filter2/"}]}}')
     })
+    test_that("Boxes can have color palletes specified", {
+              expect_POST(crunchBox(ds, brand_colors = list("primary"="#7eb62f",
+                                                            "secondary"="#7eb62f",
+                                                            "message"="#7eb62f"),
+                                    filters = NULL),
+                          'https://app.crunch.io/api/datasets/1/boxdata/',
+                          '{"element":"shoji:entity","body":{"filters":[]',
+                          ',"display_settings":{"palette":{"brand_colors":',
+                          '{"primary":"#7eb62f","secondary":"#7eb62f",',
+                          '"message":"#7eb62f"}}}}}')
+              expect_POST(crunchBox(ds, static_colors = list("#7eb62f",
+                                                             "#7eb62f",
+                                                             "#7eb62f"),
+                                    filters = NULL),
+                          'https://app.crunch.io/api/datasets/1/boxdata/',
+                          '{"element":"shoji:entity","body":{"filters":[]',
+                          ',"display_settings":{"palette":{"static_colors":',
+                          '["#7eb62f","#7eb62f","#7eb62f"]}}}}')
+              expect_POST(crunchBox(ds, category_color_lookup =
+                                        list("cat1"="#7eb62f",
+                                             "cat2"="#7eb62f",
+                                             "cat3"="#7eb62f"),
+                                    filters = NULL),
+                          'https://app.crunch.io/api/datasets/1/boxdata/',
+                          '{"element":"shoji:entity","body":{"filters":[]',
+                          ',"display_settings":{"palette":{"category_lookup":',
+                          '{"cat1":"#7eb62f","cat2":"#7eb62f",',
+                          '"cat3":"#7eb62f"}}}}}')
+              })
+
     test_that("Input validation", {
         expect_error(crunchBox(), "'dataset' must be a CrunchDataset")
         expect_error(crunchBox(4), "'dataset' must be a CrunchDataset")
         expect_error(crunchBox(ds, 4),
             "'filters' should be a FilterCatalog or NULL")
-
+        expect_error(crunchBox(ds, brand_colors = "a"),
+                     paste0(
+                         sQuote("brand_colors"), " must be a named list with only ",
+                         serialPaste(dQuote(c("primary", "secondary", "message")),
+                                     collapse = "or")))
+        expect_error(crunchBox(ds, brand_colors = list(a = "foo")),
+                     paste0(
+                         sQuote("brand_colors"), " must be a named list with only ",
+                         serialPaste(dQuote(c("primary", "secondary", "message")),
+                                     collapse = "or")))
+        expect_error(crunchBox(ds, static_colors = "a"),
+                     paste0(sQuote("static_colors"), " must be a list of characters"))
+        expect_error(crunchBox(ds, category_color_lookup = "a"),
+                     paste0(sQuote("category_color_lookup"), " must be a named list"))
+        expect_error(crunchBox(ds, category_color_lookup = list("a")),
+                     paste0(sQuote("category_color_lookup"), " must be a named list"))
     })
     test_that("Box too big message", {
         with_mock(`crunch:::.boxlimit`=function () -1, {

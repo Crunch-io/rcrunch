@@ -4,13 +4,20 @@
 \alias{crunchBox}
 \title{Make a CrunchBox}
 \usage{
-crunchBox(dataset, filters = crunch::filters(dataset), ...)
+crunchBox(dataset, filters = crunch::filters(dataset), brand_colors,
+  static_colors, category_color_lookup, ...)
 }
 \arguments{
 \item{dataset}{CrunchDataset}
 
 \item{filters}{FilterCatalog, or \code{NULL} for no filters. Default all
 filters in your catalog, \code{filters(dataset)}.}
+
+\item{brand_colors}{an optional list with colors (in hex format) named 'primary', 'secondary', and 'message'}
+
+\item{static_colors}{an optional list of static colors (in hex format) to use for categoricals (taken in order)}
+
+\item{category_color_lookup}{an optional list of category names to colors (in hex format) to use for that category (for fine grained tuning of category colors.)}
 
 \item{...}{additional metadata for the box, such as "title", "header", etc.}
 }
