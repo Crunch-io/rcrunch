@@ -1,7 +1,7 @@
 #' Construct Crunch Expressions
 #'
 #' Crunch Expressions, i.e. `CrunchExpr` and `CrunchLogicalExpr`,
-#' encapuslate derivations of Crunch variables, which are only evaluated when
+#' encapsulate derivations of Crunch variables, which are only evaluated when
 #' passed to a function like `as.vector`. They allow you to compose
 #' functional expressions of variables and evaluate them against the server
 #' only when appropriate.

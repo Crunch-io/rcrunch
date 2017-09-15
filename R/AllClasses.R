@@ -288,7 +288,7 @@ CrunchTeam <- setClass("CrunchTeam", contains="ShojiObject")
 CrunchFilter <- setClass("CrunchFilter", contains="ShojiObject")
 Multitable <- setClass("Multitable", contains="ShojiObject")
 
-#' Organize Datsets
+#' Organize Datasets
 #'
 #' A DatasetOrder object is a subclass of `list` that contains
 #' DatasetGroups. DatasetGroup objects contain a group name and an set of

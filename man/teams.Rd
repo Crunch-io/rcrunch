@@ -46,7 +46,7 @@ datasets.
 \details{
 These methods allow you to work with teams. Find your teams with the
 \code{\link[=getTeams]{getTeams()}} function, which returns your \code{TeamCatalog}. You can extract an individual team by name,
-or create a team by assigning into the function. To create a team by assigningment, assign a list
+or create a team by assigning into the function. To create a team by assignment, assign a list
 to \code{teams("myteam") <- value_list}, the \code{value_list} can either empty (to just create a team
 with that name), or can contain a "members" element with the emails or URLs of
 users to add to the team. Users can be also be added later with the \code{members<-}

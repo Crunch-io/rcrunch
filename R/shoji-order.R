@@ -494,13 +494,13 @@ removeEmptyGroups <- function (x) {
     return(x)
 }
 
-#' Remove duplicated entites from an order/group
+#' Remove duplicated entities from an order/group
 #'
 #' This function recurses through a `ShojiOrder` or `OrderGroup` and
 #' removes any duplicate entities. As with [`base::duplicated`],
-#' the first appearance of an entity is kept, and subsequent occurences are marked as duplicated
+#' the first appearance of an entity is kept, and subsequent occurrences are marked as duplicated
 #' and removed. (Unlike `duplicated`, there is no option to reverse that order.)
-#' The first occurence of an entity is determined by the function's recursion:
+#' The first occurrence of an entity is determined by the function's recursion:
 #' within each group, nested groups are processed first, in order, and
 #' their nested groups are processed recursively. See the test suite, in
 #' test-variable-order.R, for an example that illustrates which entities are
@@ -585,7 +585,7 @@ ungrouped <- function (order.obj) {
 #' order catalogs. This function moves an entity to one of these groups.
 #'
 #' The function has two versions: a regular function and a setter. They do the
-#' same thing, but the setter is probably more succint.
+#' same thing, but the setter is probably more succinct.
 #'
 #' @param x VariableGroup
 #' @param value Variable, VariableCatalog subset, or Dataset subset

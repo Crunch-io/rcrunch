@@ -10,7 +10,7 @@ preCrunchBoxCheck(dataset)
 \item{dataset}{CrunchDataset, potentially subsetted on variables}
 }
 \value{
-Invisbly, the dataset. Called for side-effect of printing things.
+Invisibly, the dataset. Called for side-effect of printing things.
 }
 \description{
 CrunchBoxes allows you to share data with the world in a simple, easy to embed format.

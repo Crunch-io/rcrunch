@@ -23,7 +23,7 @@ dataset be sent an email informing them of this fact? Default is
 \code{TRUE}.}
 
 \item{message}{character: a message to send to the users who are receiving new
-priveleges.}
+privileges.}
 }
 \value{
 Invisibly, the dataset.

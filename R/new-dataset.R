@@ -214,7 +214,7 @@ uploadData <- function (dataset, data, strict=TRUE, first_batch=TRUE) {
 #' @param order a valid "order" payload: list containing either aliases or
 #' list(group, entities)
 #' @param ... dataset entity metadata. "name" is required.
-#' @param return list suitiable for JSONing and POSTing to create a dataset
+#' @param return list suitable for JSONing and POSTing to create a dataset
 #' @export
 #' @keywords internal
 shojifyDatasetMetadata <- function (metadata, order=I(names(metadata)), ...) {

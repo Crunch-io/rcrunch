@@ -1,6 +1,6 @@
 #' Export a dataset to a file
 #'
-#' This funciton allows you to Write a CrunchDataset to a csv or SPSS file.
+#' This function allows you to Write a CrunchDataset to a csv or SPSS file.
 #'
 #' @param dataset CrunchDataset, which may have been subsetted with a filter
 #' expression on the rows and a selection of variables on the columns.
@@ -23,7 +23,7 @@
 #' @param ... additional options. See the API documentation. Currently supported
 #' boolean options include 'include_personal' for personal variables (default:
 #' `FALSE`) and 'prefix_subvariables' for SPSS format: whether to include
-#' the array variable's name in each of its subvariables varlabels (default:
+#' the array variable's name in each of its subvariables variables (default:
 #' `FALSE`).
 #' @param x (for write.csv) CrunchDataset, which may have been subsetted with a filter
 #' expression on the rows and a selection of variables on the columns.

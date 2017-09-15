@@ -14,7 +14,7 @@ NULL, invisibly.
 }
 \description{
 Trigger the password reset process, password reset
-instructions will be emialed to you.
+instructions will be emailed to you.
 }
 \examples{
 \dontrun{

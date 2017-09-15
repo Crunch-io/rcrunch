@@ -51,7 +51,7 @@ prop.tables.
 \description{
 These functions provide an interface like \code{\link[base:margin.table]{base::margin.table}}
 and \code{\link[base:prop.table]{base::prop.table}} for the CrunchCube object This handles special data
-types like array variables or Multitableresults.
+types like array variables or MultitableResults.
 }
 \details{
 \code{bases} is an additional method for CrunchCubes. When making weighted

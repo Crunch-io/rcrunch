@@ -17,7 +17,7 @@
 #'
 #' @param x a crunch variable
 #' @param value value of the geography property to set
-#' @param ... for `CrunchGeography`, named arugments from which to construct a
+#' @param ... for `CrunchGeography`, named arguments from which to construct a
 #' `CrunchGeography`: `geodatum`, `feature_key`, and `match_field`
 #' @param data for `CrunchGeography`, list of named arguments from which to construct a
 #' `CrunchGeography`: `geodatum`, `feature_key`, and `match_field`
@@ -126,7 +126,7 @@ availableGeodata <- function (x = getAPIRoot()) {
 #' Get the property features for available geographies
 #'
 #' @param x an API root address (default: the R-session default)
-#' @param geodatum_fields character, what peices of information about each
+#' @param geodatum_fields character, what pieces of information about each
 #' geodatum should be retained? (default: `c("name", "description", "location")``)
 #'
 #' @return a dataframe with all of the available features and

@@ -63,7 +63,7 @@ boxTooBig <- function (nvars, nfilters) {
 #' function checks your dataset to see if it
 #'
 #' @param dataset CrunchDataset, potentially subsetted on variables
-#' @return Invisbly, the dataset. Called for side-effect of printing things.
+#' @return Invisibly, the dataset. Called for side-effect of printing things.
 #' @seealso \code{\link{crunchBox}}
 #' @export
 preCrunchBoxCheck <- function (dataset) {

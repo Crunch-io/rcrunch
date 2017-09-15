@@ -43,7 +43,7 @@ value.}
 \item{...}{additional options. See the API documentation. Currently supported
 boolean options include 'include_personal' for personal variables (default:
 \code{FALSE}) and 'prefix_subvariables' for SPSS format: whether to include
-the array variable's name in each of its subvariables varlabels (default:
+the array variable's name in each of its subvariables variables (default:
 \code{FALSE}).}
 
 \item{x}{(for write.csv) CrunchDataset, which may have been subsetted with a filter
@@ -53,5 +53,5 @@ expression on the rows and a selection of variables on the columns.}
 Invisibly, \code{file}.
 }
 \description{
-This funciton allows you to Write a CrunchDataset to a csv or SPSS file.
+This function allows you to Write a CrunchDataset to a csv or SPSS file.
 }

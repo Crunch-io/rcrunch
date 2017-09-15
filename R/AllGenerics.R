@@ -150,7 +150,7 @@ setGeneric("which", signature="x")
 
 #' Generic method for converting objects to Crunch representations
 #'
-#' R objects are converted to crucnh objects using the following rules:
+#' R objects are converted to Crunch objects using the following rules:
 #'
 #' - Character vectors are converted into Crunch text variables
 #' - Numeric vectors are converted into Crunch numeric variables

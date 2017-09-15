@@ -44,7 +44,7 @@ setMethod("is.editor", "PermissionTuple", function (x) {
 #' dataset be sent an email informing them of this fact? Default is
 #' `TRUE`.
 #' @param message character: a message to send to the users who are receiving new
-#' priveleges.
+#' privileges.
 #' @return Invisibly, the dataset.
 #' @seealso [`unshare`]
 #' @export

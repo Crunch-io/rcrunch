@@ -28,7 +28,7 @@ streamRows <- function (ds, data) {
     invisible(refresh(ds))
 }
 
-#' Manually trigger a pending append to a datadet
+#' Manually trigger a pending append to a dataset
 #'
 #' Crunch allows you to stream data to a dataset. Streaming data is useful for
 #' datasets which have frequent updates (see the

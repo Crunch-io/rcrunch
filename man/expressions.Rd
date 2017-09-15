@@ -74,7 +74,7 @@ Most functions return a CrunchExpr or CrunchLogicalExpr.
 }
 \description{
 Crunch Expressions, i.e. \code{CrunchExpr} and \code{CrunchLogicalExpr},
-encapuslate derivations of Crunch variables, which are only evaluated when
+encapsulate derivations of Crunch variables, which are only evaluated when
 passed to a function like \code{as.vector}. They allow you to compose
 functional expressions of variables and evaluate them against the server
 only when appropriate.

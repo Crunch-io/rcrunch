@@ -7,7 +7,7 @@
 #'
 #' These methods allow you to work with teams. Find your teams with the
 #' [getTeams()] function, which returns your `TeamCatalog`. You can extract an individual team by name,
-#' or create a team by assigning into the function. To create a team by assigningment, assign a list
+#' or create a team by assigning into the function. To create a team by assignment, assign a list
 #' to `teams("myteam") <- value_list`, the `value_list` can either empty (to just create a team
 #' with that name), or can contain a "members" element with the emails or URLs of
 #' users to add to the team. Users can be also be added later with the `members<-`
@@ -25,7 +25,7 @@
 #' @name teams
 NULL
 
-#' Retrive your teams
+#' Retrieve your teams
 #'
 #' @return A `TeamCatalog`. Extract an individual team by name. Create
 #' a team by assigning in with a new name.

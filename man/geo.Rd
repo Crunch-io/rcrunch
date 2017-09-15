@@ -26,7 +26,7 @@ CrunchGeography(..., data = NULL)
 availableGeodata(x = getAPIRoot())
 }
 \arguments{
-\item{...}{for \code{CrunchGeography}, named arugments from which to construct a
+\item{...}{for \code{CrunchGeography}, named arguments from which to construct a
 \code{CrunchGeography}: \code{geodatum}, \code{feature_key}, and \code{match_field}}
 
 \item{data}{for \code{CrunchGeography}, list of named arguments from which to construct a

@@ -1,7 +1,7 @@
 #' Get or set a dataset's filters
 #'
 #' You can build and save filters in the Crunch web app, and these filters
-#' are stored in a `FilterCatalog`. This function allows you to retreive
+#' are stored in a `FilterCatalog`. This function allows you to retrieve
 #' and modify those filters.
 #'
 #' @param x a CrunchDataset

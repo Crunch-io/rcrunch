@@ -13,7 +13,7 @@ icon(x) <- value
 \arguments{
 \item{x}{a \code{CrunchProject}}
 
-\item{value}{charcter file path of the icon image file to set}
+\item{value}{character file path of the icon image file to set}
 }
 \value{
 The URL of the project's icon. The setter returns the

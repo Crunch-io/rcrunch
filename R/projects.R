@@ -154,7 +154,7 @@ setMethod("delete", "CrunchProject", function (x, ...) {
 #' must first upload the icon to a website, as this function does not
 #' allow you to upload a local file.
 #' @param x a `CrunchProject`
-#' @param value charcter file path of the icon image file to set
+#' @param value character file path of the icon image file to set
 #' @return The URL of the project's icon. The setter returns the
 #' project after having uploaded the specified file as the new icon.
 #' @name project-icon

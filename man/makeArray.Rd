@@ -36,7 +36,7 @@ independent existence.
 \description{
 Array variables are composed of a set of subvariables which are bound
 together for display in the app. For instance you might have a set of
-survey questions which ask how the respondant would rate a tv show from
+survey questions which ask how the respondent would rate a tv show from
 1-5. Array variables allow you to display all of their ratings in a compact table
 rather than a set of distinct variables.
 }

@@ -155,7 +155,7 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
 #'
 #' These functions provide an interface like [`base::margin.table`]
 #' and [`base::prop.table`] for the CrunchCube object This handles special data
-#' types like array variables or Multitableresults.
+#' types like array variables or MultitableResults.
 #'
 #' `bases` is an additional method for CrunchCubes. When making weighted
 #' requests, `bases` allows you to access the unweighted counts for every

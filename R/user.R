@@ -54,7 +54,7 @@ invite <- function (email, name=NULL, notify=TRUE, id_method="pwhash",
 #' Reset your password
 #'
 #' Trigger the password reset process, password reset
-#' instructions will be emialed to you.
+#' instructions will be emailed to you.
 #'
 #' @param email Your email
 #' @return NULL, invisibly.

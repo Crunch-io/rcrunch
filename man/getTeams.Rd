@@ -2,7 +2,7 @@
 % Please edit documentation in R/teams.R
 \name{getTeams}
 \alias{getTeams}
-\title{Retrive your teams}
+\title{Retrieve your teams}
 \usage{
 getTeams()
 }
@@ -11,7 +11,7 @@ A \code{TeamCatalog}. Extract an individual team by name. Create
 a team by assigning in with a new name.
 }
 \description{
-Retrive your teams
+Retrieve your teams
 }
 \seealso{
 \code{\link{teams}}

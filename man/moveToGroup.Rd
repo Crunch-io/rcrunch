@@ -26,7 +26,7 @@ order catalogs. This function moves an entity to one of these groups.
 }
 \details{
 The function has two versions: a regular function and a setter. They do the
-same thing, but the setter is probably more succint.
+same thing, but the setter is probably more succinct.
 }
 \examples{
 \dontrun{

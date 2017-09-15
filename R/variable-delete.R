@@ -1,6 +1,6 @@
 #' Delete Variables Within a Dataset
 #'
-#' This function permenantly deletes a variable from a dataset. For a non-destructive
+#' This function permanently deletes a variable from a dataset. For a non-destructive
 #' alternative see [hide()].
 #'
 #' In an interactive session, you will be prompted to confirm that you

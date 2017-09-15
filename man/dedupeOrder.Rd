@@ -2,7 +2,7 @@
 % Please edit documentation in R/shoji-order.R
 \name{dedupeOrder}
 \alias{dedupeOrder}
-\title{Remove duplicated entites from an order/group}
+\title{Remove duplicated entities from an order/group}
 \usage{
 dedupeOrder(x)
 }
@@ -15,9 +15,9 @@ dedupeOrder(x)
 \description{
 This function recurses through a \code{ShojiOrder} or \code{OrderGroup} and
 removes any duplicate entities. As with \code{\link[base:duplicated]{base::duplicated}},
-the first appearance of an entity is kept, and subsequent occurences are marked as duplicated
+the first appearance of an entity is kept, and subsequent occurrences are marked as duplicated
 and removed. (Unlike \code{duplicated}, there is no option to reverse that order.)
-The first occurence of an entity is determined by the function's recursion:
+The first occurrence of an entity is determined by the function's recursion:
 within each group, nested groups are processed first, in order, and
 their nested groups are processed recursively. See the test suite, in
 test-variable-order.R, for an example that illustrates which entities are

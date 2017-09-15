@@ -24,6 +24,6 @@ entities usable in the web application. (Setter returns the Dataset.)
 }
 \description{
 You can build and save filters in the Crunch web app, and these filters
-are stored in a \code{FilterCatalog}. This function allows you to retreive
+are stored in a \code{FilterCatalog}. This function allows you to retrieve
 and modify those filters.
 }
