@@ -5,7 +5,7 @@
     "body": {
         "owner_id": "https://app.crunch.io/api/users/notme/",
         "id": "95c0b45fe0af492594863f818cb913d2",
-        "streaming": "streaming"
+        "streaming": "no"
     },
     "catalogs": {
         "variables": "https://app.crunch.io/api/datasets/3/variables/",
