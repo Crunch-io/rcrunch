@@ -90,8 +90,8 @@ with_mock_crunch({
         expect_error(addGeoMetadata(ds$not_a_var),
                      ".* must be a Crunch Variable.")
         expect_error(addGeoMetadata(ds$starttime),
-             paste0("The variable .*",
-             " is neither a categorical or text variable."))
+             paste0("The variable ", dQuote("ds\\$starttime"),
+             " is neither a categorical or text variable\\."))
         expect_error(addGeoMetadata(ds$gender),
              paste0("None of the geographies match at all. Either the variable is",
              " wrong, or Crunch doesn't yet have geodata for this variable."))

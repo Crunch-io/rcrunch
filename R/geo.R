@@ -87,7 +87,9 @@ addGeoMetadata <- function (variable) {
     } else if (is.Text(variable)) {
         cats <- as.vector(variable)
     } else {
-        halt("The variable ", dQuote(substitute(variable)),
+        # TODO: find a better way to substitute on a varaible.
+        # this returns the strings out of order if using `$`
+        halt("The variable ", dQuote(deparse(substitute(variable))),
              " is neither a categorical or text variable.")
     }
     
