@@ -1,8 +1,8 @@
 #' Cut a numeric Crunch variable
 #'
 #' `crunch::cut()` is equivalent to `base::cut()` except that it operates on
-#' crunch variables instead of in-memory variables. The function divides the range of
-#' x into intervals and codes the values in x according to which interval they fall.
+#' Crunch variables instead of in-memory variables. The function divides the range of
+#' `x` into intervals and codes the values in x according to which interval they fall.
 #' The leftmost interval corresponds to level one, the next leftmost to level two and
 #' so on.
 #' @param x A crunch variable of the class NumericVariable
@@ -21,11 +21,9 @@
 #' It determines the number of digits used in formatting the break numbers.
 #' @param ordered_result	Ignored.
 #' @param ... further arguments passed to [makeCaseVariable]
-#'
-#'
-#' @return a Crunch VariableDefinition
+#' @return a Crunch [`VariableDefinition`]. Assign it into the dataset to create
+#' it as a derived variable on the server.
 #' @export
-#'
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("mtcars")
@@ -42,7 +40,7 @@ setMethod("cut", "NumericVariable", function(x,
                                              ordered_result = FALSE, ...){
     if (missing(name)) {
         halt("Must provide the name for the new variable")
-        }
+    }
     if (length(breaks) == 1L) {
         if (is.na(breaks) || breaks < 2L) {
             halt("invalid number of intervals")
@@ -62,9 +60,11 @@ setMethod("cut", "NumericVariable", function(x,
         breaks <- sort.int(as.double(breaks))
         nb <- length(breaks)
     }
-    if (anyDuplicated(breaks)) halt(sQuote("breaks"), " are not unique")
-    if (is.null(labels)) { #Autogenerate labels if not supplied
-      labels <- generateCutLabels(dig.lab, breaks, nb, right, include.lowest)
+    if (anyDuplicated(breaks)) {
+        halt(sQuote("breaks"), " are not unique")
+    }
+    if (is.null(labels)) { # Autogenerate labels if not supplied
+        labels <- generateCutLabels(dig.lab, breaks, nb, right, include.lowest)
     } else if (length(labels) != nb - 1L) {
         halt("lengths of ", sQuote("breaks"), " and ", sQuote("labels"), " differ")
     }
@@ -81,10 +81,10 @@ setMethod("cut", "NumericVariable", function(x,
     for (i in 2:length(breaks)) {
         cases[[i - 1]] <- x %c2% breaks[i - 1] & x %c1% breaks[i]
     }
-    case_list <- lapply(seq_along(cases), function(x) list(expression = cases[[x]], name = labels[x]))
+    case_list <- lapply(seq_along(cases),
+        function (x) list(expression = cases[[x]], name = labels[x]))
     makeCaseVariable(cases = case_list, name = name, ...)
-}
-)
+})
 
 
 #' Generate Labels for the cut function
@@ -101,7 +101,7 @@ setMethod("cut", "NumericVariable", function(x,
 #'
 #' @return
 #' A character vector of labels
-#'@keywords internal
+#' @keywords internal
 generateCutLabels <- function(dig.lab, breaks, nb, right, include.lowest) {
     for (dig in dig.lab:max(12L, dig.lab)) {
         ## 0+ avoids printing signed zeros as "-0"
@@ -110,9 +110,9 @@ generateCutLabels <- function(dig.lab, breaks, nb, right, include.lowest) {
         if (ok) break
     }
     labels <- if (ok) {
-            paste0(ifelse(right, "(","["),
+            paste0(ifelse(right, "(", "["),
                    ch.br[-nb], ",", ch.br[-1L],
-                   ifelse(right,"]",")")
+                   ifelse(right, "]", ")")
             )
         } else {
             paste("Range", seq_len(nb - 1L), sep = "_")
@@ -125,5 +125,5 @@ generateCutLabels <- function(dig.lab, breaks, nb, right, include.lowest) {
                       nchar(labels[nb - 1L], "c")) <- "]" # was ")"
         }
     }
-    labels
+    return(labels)
 }
