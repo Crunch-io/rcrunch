@@ -12,7 +12,7 @@ crtabs(formula, data, weight = crunch::weight(data), useNA = c("no",
 cross-classifying variables separated by '+' on the right side of the
 "~". If aggregating by functions other than counts, include the aggregation
 expression on the left-hand side.
-Compare to \code{\link[stats:xtabs]{stats::xtabs}}.}
+Compare to \code{\link[stats:xtabs]{stats::xtabs()}}.}
 
 \item{data}{an object of class \code{CrunchDataset}}
 
@@ -21,7 +21,7 @@ weight variable for \code{data}, or \code{NULL} for unweighted results.
 Default is the currently applied \code{\link{weight}}.}
 
 \item{useNA}{whether to include missing values in tabular results. See
-\code{\link[base:table]{base::table}}.}
+\code{\link[base:table]{base::table()}}.}
 }
 \value{
 an object of class \code{CrunchCube}
@@ -31,5 +31,5 @@ Create a contingency table or other aggregation from cross-classifying
 variables in a CrunchDataset.
 }
 \seealso{
-\code{\link{weight}}
+\code{\link[=weight]{weight()}}
 }

@@ -164,17 +164,17 @@ setMethod("na.omit", "Categories", function (object, ...) {
 
 #' is.na for Categories
 #'
-#' Crunch catagorical variables allow you to set multiple categories as missing.
-#' For instance you might have "not answered" and "doesn't know" both coded as
+#' Crunch categorical variables allow you to set multiple categories as missing.
+#' For instance, you might have "not answered" and "doesn't know" both coded as
 #' missing. This function returns a logical vector of all dataset entries that
-#' fall into any of the missing categories. It also allows you to append additional
-#' categories to the list of missing categories using the setter.
+#' fall into any of the missing categories. It also allows you to append
+#' additional categories to the list of missing categories using the setter.
 #'
 #' @param x Categories or a single Category
 #' @param value To change the missingness of categories, supply either:
 #' 1. a logical vector of equal length of the categories (or length 1 for the
 #' Category method); or
-#' `. the names of the categories to mark as missing.
+#' 1. the names of the categories to mark as missing.
 #' If supplying the latter, any categories already indicated as missing will
 #' remain missing.
 #' @return Getters return logical, a named vector in the case of the Categories

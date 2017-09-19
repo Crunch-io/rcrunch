@@ -69,9 +69,9 @@ Category or Categories}
 \description{
 CategoricalVariables, as well as the array types composed from
 Categoricals, contain Categories. Categories are a subclass of list that
-contains only Category objects. Category objects are themselves subclass lists
-and contain the following fields: "name", "id", "numeric_value", "missing",
-and optionally "selected".
+contains only Category objects. Category objects are themselves subclasses of
+lists and contain the following fields: "name", "id", "numeric_value",
+"missing", and optionally "selected".
 }
 \examples{
 cat.a <- Category(name="First", id=1, numeric_value=1, missing=FALSE)

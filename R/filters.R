@@ -81,7 +81,7 @@ setMethod("[[<-", c("FilterCatalog", "character", "missing", "CrunchLogicalExpr"
 #' @param catalog FilterCatalog in which to create the new filter. May also
 #' provide a dataset entity. If omitted, the function will attempt to infer the
 #' dataset (and thus its FilterCatalog) from the contents of `expression`.
-#' @param ... Additional filter attributes to set for instance `is_public`.
+#' @param ... Additional filter attributes to set, such as `is_public`.
 #' @return A `CrunchFilter` object.
 #' @export
 newFilter <- function (name, expression, catalog=NULL, ...) {

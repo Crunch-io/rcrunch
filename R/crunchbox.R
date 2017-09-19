@@ -7,7 +7,8 @@
 #' filters in your catalog, `filters(dataset)`.
 #' @param ... additional metadata for the box, such as "title", "header", etc.
 #' @return The URL to the newly created box.
-#' @seealso [`preCrunchBoxCheck`] to provide guidance on what you're including in the CrunchBox
+#' @seealso [preCrunchBoxCheck()] to provide guidance on what you're including
+#' in the CrunchBox
 #' @export
 crunchBox <- function (dataset, filters=crunch::filters(dataset), ...) {
     ## Validate inputs
@@ -175,7 +176,7 @@ demonstrativeCount <- function (n, noun="variable") {
 
 #' Get HTML for embedding a CrunchBox
 #'
-#' [`crunchBox`] returns a URL to the box data that it generates, but
+#' [crunchBox()] returns a URL to the box data that it generates, but
 #' in order to view it in a CrunchBox or to embed it on a website, you'll need
 #' to translate that to the Box's public URL and wrap it in some HTML. This function
 #' takes a crunchBox and returns the HTLM which you can embed in a website.
@@ -186,11 +187,11 @@ demonstrativeCount <- function (n, noun="variable") {
 #' is `NULL`, meaning no title shown
 #' @param logo character URL of a logo to show instead of a title. Default is
 #' `NULL`, meaning no logo shown. If both logo and title are provided, only the
-#' logo will be shown. Note also that logo must be a URL of a hosted image, it cannot
-#' be a path to a local file.
+#' logo will be shown. Note also that logo must be a URL of a hosted image: it
+#' cannot be a path to a local file.
 #' @param ... Additional arguments, not currently used.
 #' @return Prints the HTML markup to the screen and also returns it invisibly.
-#' @seealso [`crunchBox`]
+#' @seealso [crunchBox()]
 #' @examples
 #' \dontrun{
 #' box <- crunchBox(ds)

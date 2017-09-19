@@ -36,11 +36,11 @@
 \item{x}{a CrunchCube}
 
 \item{margin}{index, or vector of indices to generate margin for. See
-\code{\link[base:prop.table]{base::prop.table}}. \code{bases} accepts \code{0} as an additional valid
+\code{\link[base:prop.table]{base::prop.table()}}. \code{bases} accepts \code{0} as an additional valid
 value for \code{margin} which yields the unweighted counts for the
 query, without reducing the dimensionality.}
 
-\item{digits}{see  \code{\link[base:round]{base::round}}}
+\item{digits}{see  \code{\link[base:round]{base::round()}}}
 }
 \value{
 The appropriate margin.table or prop.table. Calling prop.table on
@@ -49,8 +49,8 @@ contains. Likewise, prop.table on a TabBookResult returns a list of lists of
 prop.tables.
 }
 \description{
-These functions provide an interface like \code{\link[base:margin.table]{base::margin.table}}
-and \code{\link[base:prop.table]{base::prop.table}} for the CrunchCube object This handles special data
+These functions provide an interface like \code{\link[base:margin.table]{base::margin.table()}}
+and \code{\link[base:prop.table]{base::prop.table()}} for the CrunchCube object This handles special data
 types like array variables or MultitableResults.
 }
 \details{
@@ -61,5 +61,5 @@ cell in the resulting table (array). The \code{bases} function takes a
 gives all cell counts.
 }
 \seealso{
-\code{\link[base:margin.table]{base::margin.table}} \code{\link[base:prop.table]{base::prop.table}}
+\code{\link[base:margin.table]{base::margin.table()}} \code{\link[base:prop.table]{base::prop.table()}}
 }

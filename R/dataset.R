@@ -188,9 +188,9 @@ setMethod("tuple<-", "CrunchDataset", function (x, value) {
 
 #' Get a fresh copy from the server
 #'
-#' Crunch objects usually keep themselves in sync with the server when you
+#' Crunch objects generally keep themselves in sync with the server when you
 #' manipulate them, but some operations cause the local version to diverge from
-#' the version on the server. For instance someone else may have
+#' the version on the server. For instance, someone else may have
 #' modified the dataset you're working on, or maybe
 #' you have modified a variable outside of the context of its dataset.
 #' refresh() allows you to get back in sync.

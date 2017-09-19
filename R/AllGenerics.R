@@ -182,13 +182,13 @@ setGeneric("zcl", function (x) standardGeneric("zcl"))
 
 #' toJSON methods for Crunch objects
 #'
-#' `crunch` uses the `jsonlite` package for JSON serialization and deserialization
-#'  Unlike `RJSONIO`'s `toJSON`, [`jsonlite::toJSON`]
+#' `crunch` uses the `jsonlite` package for JSON serialization and
+#'  deserialization. Unfortunately, [jsonlite::toJSON()]
 #' does not allow for defining S4 methods for other object types. So,
 #' `crunch::toJSON` wraps `jsonprep`, which exists to translate
 #' objects to base R objects, which `jsonlite::toJSON` can handle.
-#' `jsonprep` is defined as an S4 generic, and it is exported (unlike
-#' `jsonlite::asJSON`, so you can define methods for it if you have other
+#' `jsonprep` is defined as an S4 generic, and it is exported, so you can define
+#' methods for it if you have other
 #' objects that you want to successfully serialize to JSON.
 #'
 #' @param x the object
@@ -196,7 +196,7 @@ setGeneric("zcl", function (x) standardGeneric("zcl"))
 #' @return `jsonprep` returns a base R object that `jsonlite::toJSON`
 #' can handle. `toJSON` returns the JSON-serialized character object.
 #' @name tojson-crunch
-#' @seealso [`jsonlite::toJSON`]
+#' @seealso [jsonlite::toJSON()]
 NULL
 
 #' @rdname tojson-crunch

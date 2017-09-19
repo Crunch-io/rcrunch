@@ -69,8 +69,8 @@ CrunchLogicalExpr <- setClass("CrunchLogicalExpr", contains="CrunchExpr")
 #'
 #' Variables are S4 objects. All inherit from the base class
 #' `CrunchVariable`.
-#' be persisted on the server? Default is \code{FALSE}
-#' @slot filter either \code{NULL} or \code{CrunchLogicalExpr}
+#' @slot filter either `NULL` or `CrunchLogicalExpr`
+#' @slot tuple `VariableTuple`
 #' @importFrom methods as callNextMethod new slot slot<- slotNames validObject
 #' @rdname CrunchVariable
 setClass("CrunchVariable",
@@ -211,9 +211,9 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
 #'
 #' CategoricalVariables, as well as the array types composed from
 #' Categoricals, contain Categories. Categories are a subclass of list that
-#' contains only Category objects. Category objects are themselves subclass lists
-#' and contain the following fields: "name", "id", "numeric_value", "missing",
-#' and optionally "selected".
+#' contains only Category objects. Category objects are themselves subclasses of
+#' lists and contain the following fields: "name", "id", "numeric_value",
+#' "missing", and optionally "selected".
 #'
 #' @param data For the constructor functions `Category` and
 #' `Categories`, you can either pass in attributes via `...` or you
@@ -333,4 +333,3 @@ CrunchGeography <- function (..., data=NULL) {
 #' @export Geodata
 Geodata <- setClass("Geodata", contains="ShojiEntity")
 GeoCatalog <- setClass("GeoCatalog", contains="ShojiCatalog")
-

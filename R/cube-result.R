@@ -153,8 +153,8 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
 
 #' Work with CrunchCubes, MultitableResults, and TabBookResults
 #'
-#' These functions provide an interface like [`base::margin.table`]
-#' and [`base::prop.table`] for the CrunchCube object This handles special data
+#' These functions provide an interface like [base::margin.table()]
+#' and [base::prop.table()] for the CrunchCube object This handles special data
 #' types like array variables or MultitableResults.
 #'
 #' `bases` is an additional method for CrunchCubes. When making weighted
@@ -165,17 +165,17 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
 #'
 #' @param x a CrunchCube
 #' @param margin index, or vector of indices to generate margin for. See
-#' [`base::prop.table`]. `bases` accepts `0` as an additional valid
+#' [base::prop.table()]. `bases` accepts `0` as an additional valid
 #' value for `margin` which yields the unweighted counts for the
 #' query, without reducing the dimensionality.
-#' @param digits see  [`base::round`]
+#' @param digits see  [base::round()]
 #' @return The appropriate margin.table or prop.table. Calling prop.table on
 #' a MultitableResult returns a list of prop.tables of the CrunchCubes it
 #' contains. Likewise, prop.table on a TabBookResult returns a list of lists of
 #' prop.tables.
 #' @name cube-computing
 #' @aliases cube-computing margin.table prop.table bases
-#' @seealso [`base::margin.table`] [`base::prop.table`]
+#' @seealso [base::margin.table()] [base::prop.table()]
 NULL
 
 #' @rdname cube-computing
