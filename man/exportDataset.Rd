@@ -25,7 +25,7 @@ and "spss".}
 \item{categorical}{character: export categorical values to CSV as category
 "name" (default) or "id". Ignored by the SPSS exporter.}
 
-\item{na}{Similar to the argument in \code{\link[utils:write.table]{utils::write.table}}, 'na'
+\item{na}{Similar to the argument in \code{\link[utils:write.table]{utils::write.table()}}, 'na'
 lets you control how missing values are written into the CSV file.
 Supported values are:
 \enumerate{
@@ -43,7 +43,7 @@ value.}
 \item{...}{additional options. See the API documentation. Currently supported
 boolean options include 'include_personal' for personal variables (default:
 \code{FALSE}) and 'prefix_subvariables' for SPSS format: whether to include
-the array variable's name in each of its subvariables variables (default:
+the array variable's name in each of its subvariables "varlabels" (default:
 \code{FALSE}).}
 
 \item{x}{(for write.csv) CrunchDataset, which may have been subsetted with a filter
@@ -53,5 +53,5 @@ expression on the rows and a selection of variables on the columns.}
 Invisibly, \code{file}.
 }
 \description{
-This function allows you to Write a CrunchDataset to a csv or SPSS file.
+This function allows you to write a CrunchDataset to a .csv or SPSS .sav file.
 }

@@ -140,11 +140,13 @@ paginatedGET <- function (url, query, offset=0, limit=1000, table=FALSE) {
 
 #' Convert Variables to local R objects
 #'
-#' CrunchVariables reside on the server which allows you to work with
-#' variables which are too big to bring into memory. This structure limits
-#' what you can do with the variable to those functions which are implemented
-#' in Crunch. If you need to do something which isn't yet implemented you can
-#' bring the variable into R with `as.vector(ds$var)` and work with it like any
+#' Crunch Variables reside on the server, allowing you to work with
+#' datasets that are too big to bring into memory on your machine. Many
+#' functions, such as `max`, `mean`, and [crtabs()], translate your commands
+#' into API queries and return only the result. But, not every operation you'll
+#' want to perform has been implemented on the Crunch servers. If you need to do
+#' something beyond what is currently supported, you can bring a variable's
+#' data into R with `as.vector(ds$var)` and work with it like any
 #' other R vector.
 #'
 #' @param x a CrunchVariable
@@ -152,12 +154,15 @@ paginatedGET <- function (url, query, offset=0, limit=1000, table=FALSE) {
 #' which returns the values as factor); "numeric" (which returns the numeric
 #' values); or "id" (which returns the category ids). If "id", values
 #' corresponding to missing categories will return as the underlying integer
-#' codes; i.e., the R representation will not have any `NA` elements Otherwise,
+#' codes; i.e., the R representation will not have any `NA` elements. Otherwise,
 #' missing categories will all be returned `NA`. For non-Categorical
 #' variables, the `mode` argument is ignored.
 #' @return an R vector of the type corresponding to the Variable. E.g.
 #' CategoricalVariable yields type factor by default, NumericVariable yields
 #' numeric, etc.
+#' @seealso [as.data.frame][as.data.frame.CrunchDataset] for another interface
+#' for (lazily) fetching data from the server as needed; [exportDataset()] for
+#' pulling all of the data from a dataset.
 #' @name variable-to-R
 NULL
 

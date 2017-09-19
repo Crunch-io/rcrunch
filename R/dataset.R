@@ -31,8 +31,8 @@ is.dataset <- function (x) inherits(x, "CrunchDataset")
 #'
 #' @param x a Dataset or Variable.
 #' @param object Same as `x` but for the `alias` method, in order to
-#' match the generic from another package. Note that `alias` and `digits` are only
-#' defined for Variables.
+#' match the generic from another package. Note that `alias` and `digits` are
+#' only defined for Variables.
 #' @param value For the setters, a length-1 character vector to assign
 #' @return Getters return the character object in the specified slot; setters
 #' return `x` duly modified.
@@ -98,9 +98,10 @@ setMethod("notes<-", "CrunchDataset", function (x, value) {
 #' to update the existing rows rather than inserting new ones.
 #'
 #' @param x a Dataset
-#' @param value For the setter, a single Variable to use as the primary key or `NULL` to remove the primary key.
-#' @return Getter returns the Variable object that is used as the primary key (`NULL` if there is no primary key); setter
-#' returns \code{x} duly modified.
+#' @param value For the setter, a single Variable to use as the primary key or
+#' `NULL` to remove the primary key.
+#' @return Getter returns the Variable object that is used as the primary key
+#' (`NULL` if there is no primary key); setter returns `x` duly modified.
 #' @name pk
 #' @aliases pk pk<-
 NULL
@@ -121,8 +122,6 @@ setMethod("pk<-", "CrunchDataset", function (x, value) {
     if (is.null(value)) {
         crDELETE(shojiURL(x, "fragments", "pk"))
     } else {
-        # payload <- toJSON(structure(list(structure(list(self(value)))),
-                                    # .Names="pk"))
         payload <- toJSON(list(pk=I(self(value))))
         crPOST(shojiURL(x, "fragments", "pk"), body=payload)
     }
@@ -151,7 +150,7 @@ as.dataset <- function (x, tuple=DatasetTuple()) {
 #' @return integer vector of length 2, indicating the number of rows and
 #' non-hidden variables in the dataset. Array subvariables are excluded from
 #' the column count.
-#' @seealso \code{\link[base]{dim}}
+#' @seealso [base::dim()]
 #' @name dim-dataset
 NULL
 
@@ -418,7 +417,7 @@ setMethod("owner<-", "CrunchDataset", function (x, value) {
 #' Get and set "archived" and "published" status of a dataset
 #'
 #' "Archived" datasets are excluded from some views. "Draft" datasets are
-#' visible only to editors while published datasets are available to all viewers.
+#' visible only to editors, while published datasets are available to all viewers.
 #' A dataset can either be published or in draft, but not both.
 #' These properties are accessed and set with the "is" methods. You can also
 #' set the properties by assigning into the function. The verb functions
@@ -431,6 +430,26 @@ setMethod("owner<-", "CrunchDataset", function (x, value) {
 #' inverses. The setters return the dataset.
 #' @name archive-and-publish
 #' @aliases archive is.archived is.draft is.published is.archived<- is.draft<- is.published<- publish
+#' @examples
+#' \dontrun{
+#' ds <- loadDataset("mtcars")
+#' is.draft(ds)     # FALSE
+#' is.published(ds) # TRUE
+#' identical(is.draft(ds), !is.published(ds))
+#' # Can make a dataset a "draft" by:
+#' is.draft(ds) <- TRUE
+#' is.published(ds) # FALSE
+#' # Could also have set is.published(ds) <- FALSE
+#' # Now, can go the other way by setting is.draft, is.published, or:
+#' ds <- publish(ds)
+#' is.published(ds) # TRUE
+#'
+#' is.archived(ds)  # FALSE
+#' is.archived(ds) <- TRUE
+#' is.archived(ds)  # TRUE
+#' # Could have achieved the same effect by:
+#' ds <- archive(ds)
+#' }
 NULL
 
 #' @rdname archive-and-publish
@@ -477,7 +496,7 @@ publish <- function (x) {
 #' supported settings include:
 #' * User Authorizations for view-only users ('viewers_can_export', 'viewers_can_share', and
 #' 'viewers_can_change_weight'); and
-#' * 'weight' which determines the default weighting variable for the dataset
+#' * 'weight', which determines the default weighting variable for the dataset
 #'  Additional settings will be added in the future. See
 #' http://docs.crunch.io/#fragments, under 'Settings', for an up-to-date
 #' list of settings supported throughout the Crunch system. Clients may also
@@ -490,6 +509,7 @@ publish <- function (x) {
 #' \dontrun{
 #' settings(ds)
 #' settings(ds)$viewers_can_export <- TRUE
+#' settings(ds)$weight <- ds$myWeightVariable
 #' }
 #' @export
 settings <- function (x) {

@@ -18,7 +18,7 @@
 which returns the values as factor); "numeric" (which returns the numeric
 values); or "id" (which returns the category ids). If "id", values
 corresponding to missing categories will return as the underlying integer
-codes; i.e., the R representation will not have any \code{NA} elements Otherwise,
+codes; i.e., the R representation will not have any \code{NA} elements. Otherwise,
 missing categories will all be returned \code{NA}. For non-Categorical
 variables, the \code{mode} argument is ignored.}
 }
@@ -28,10 +28,17 @@ CategoricalVariable yields type factor by default, NumericVariable yields
 numeric, etc.
 }
 \description{
-CrunchVariables reside on the server which allows you to work with
-variables which are too big to bring into memory. This structure limits
-what you can do with the variable to those functions which are implemented
-in Crunch. If you need to do something which isn't yet implemented you can
-bring the variable into R with \code{as.vector(ds$var)} and work with it like any
+Crunch Variables reside on the server, allowing you to work with
+datasets that are too big to bring into memory on your machine. Many
+functions, such as \code{max}, \code{mean}, and \code{\link[=crtabs]{crtabs()}}, translate your commands
+into API queries and return only the result. But, not every operation you'll
+want to perform has been implemented on the Crunch servers. If you need to do
+something beyond what is currently supported, you can bring a variable's
+data into R with \code{as.vector(ds$var)} and work with it like any
 other R vector.
+}
+\seealso{
+\link[=as.data.frame.CrunchDataset]{as.data.frame} for another interface
+for (lazily) fetching data from the server as needed; \code{\link[=exportDataset]{exportDataset()}} for
+pulling all of the data from a dataset.
 }

@@ -24,7 +24,7 @@ supported settings include:
 \itemize{
 \item User Authorizations for view-only users ('viewers_can_export', 'viewers_can_share', and
 'viewers_can_change_weight'); and
-\item 'weight' which determines the default weighting variable for the dataset
+\item 'weight', which determines the default weighting variable for the dataset
 Additional settings will be added in the future. See
 http://docs.crunch.io/#fragments, under 'Settings', for an up-to-date
 list of settings supported throughout the Crunch system. Clients may also
@@ -35,5 +35,6 @@ provide and use custom settings if they choose.
 \dontrun{
 settings(ds)
 settings(ds)$viewers_can_export <- TRUE
+settings(ds)$weight <- ds$myWeightVariable
 }
 }

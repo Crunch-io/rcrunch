@@ -26,6 +26,7 @@ setMethod("email", "UserEntity", function (x) x@body$email)
 #' you should not need to change this default.
 #' @return a `UserCatalog`
 #' @export
+#' @keywords internal
 getAccountUserCatalog <- function (x=shojiURL(getAccount(), "catalogs", "users")) {
     UserCatalog(crGET(x))
 }
@@ -53,11 +54,11 @@ invite <- function (email, name=NULL, notify=TRUE, id_method="pwhash",
 
 #' Reset your password
 #'
-#' Trigger the password reset process, password reset
+#' Trigger the password reset process. Password reset
 #' instructions will be emailed to you.
 #'
 #' @param email Your email
-#' @return NULL, invisibly.
+#' @return NULL, invisibly. Called for its side effects.
 #' @export
 #' @examples
 #' \dontrun{

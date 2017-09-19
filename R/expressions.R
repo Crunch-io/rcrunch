@@ -8,7 +8,7 @@
 #' @param x an input
 #' @param e1 an input
 #' @param e2 an input
-#' @param table For \code{\%in\%}. See [`base::match`]
+#' @param table For \code{\%in\%}. See [base::match()]
 #' @param resolution For `rollup`. Either `NULL` or a character in
 #' c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms") indicating the unit of
 #' time at which a Datetime variable should be aggregated. If `NULL`,
@@ -352,13 +352,13 @@ setMethod("which", "CrunchLogicalExpr", function (x, arr.ind, useNames) {
 
 #' "duplicated" method for Crunch objects
 #'
-#' @param x CrunchVariable or CrunchExpr
+#' @param x `CrunchVariable` or `CrunchExpr`
 #' @param incomparables Ignored
 #' @param ... Ignored
-#' @return A CrunchLogicalExpr that evaluates `TRUE` for all repeated
+#' @return A `CrunchLogicalExpr` that evaluates `TRUE` for all repeated
 #' entries after the first occurrence of a value.
 #' @name duplicated
-#' @seealso [`base::duplicated`]
+#' @seealso [base::duplicated()]
 #' @aliases duplicated
 #' @export
 NULL

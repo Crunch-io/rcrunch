@@ -96,17 +96,17 @@ setMethod("[[<-", c("DatasetCatalog", "character", "missing", "DatasetTuple"),
 #' variable. They work like the base R names methods.
 #'
 #' Note that the Dataset `names` method returns the aliases of its
-#' variables by default. This is controlled by
-#' `getOption("crunch.namekey.dataset")`, which is "alias" by default.
+#' variables by default. This behavior is controlled by
+#' `getOption("crunch.namekey.dataset")`.
 #' Set `options(crunch.namekey.dataset="name")` if you wish to use
 #' variable names. See the variables vignette for more information.
 #'
-#' @param x a VariableCatalog, Subvariables, or similar object
+#' @param x a `VariableCatalog`, `Subvariables`, or similar object
 #' @param value For the setters, an appropriate-length character vector to
 #' assign
 #' @return Getters return the character object in the specified slot; setters
 #' return `x` duly modified.
 #' @aliases describe-catalog aliases aliases<- descriptions descriptions<- types emails timestamps
-#' @seealso [`Subvariables`] [`Categories`] [`base::names`] `vignette("variables", package="crunch")`
+#' @seealso [`Subvariables`] [`Categories`] [base::names()] `vignette("variables", package="crunch")`
 #' @name describe-catalog
 NULL

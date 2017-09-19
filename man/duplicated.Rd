@@ -12,19 +12,19 @@
 \S4method{duplicated}{CrunchExpr}(x, incomparables = FALSE, ...)
 }
 \arguments{
-\item{x}{CrunchVariable or CrunchExpr}
+\item{x}{\code{CrunchVariable} or \code{CrunchExpr}}
 
 \item{incomparables}{Ignored}
 
 \item{...}{Ignored}
 }
 \value{
-A CrunchLogicalExpr that evaluates \code{TRUE} for all repeated
+A \code{CrunchLogicalExpr} that evaluates \code{TRUE} for all repeated
 entries after the first occurrence of a value.
 }
 \description{
 "duplicated" method for Crunch objects
 }
 \seealso{
-\code{\link[base:duplicated]{base::duplicated}}
+\code{\link[base:duplicated]{base::duplicated()}}
 }
