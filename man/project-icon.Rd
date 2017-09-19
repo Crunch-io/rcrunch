@@ -4,7 +4,7 @@
 \alias{project-icon}
 \alias{icon}
 \alias{icon<-}
-\title{A project's icon}
+\title{Get or set a project's icon}
 \usage{
 icon(x)
 
@@ -13,12 +13,14 @@ icon(x) <- value
 \arguments{
 \item{x}{a \code{CrunchProject}}
 
-\item{value}{charcter file path of the icon image file to set}
+\item{value}{character file path of the icon image file to set}
 }
 \value{
 The URL of the project's icon. The setter returns the
 project after having uploaded the specified file as the new icon.
 }
 \description{
-A project's icon
+This function allows you to change a project's icon. Note that you
+must first upload the icon to a website, as this function does not
+allow you to upload a local file.
 }

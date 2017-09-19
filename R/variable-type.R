@@ -61,7 +61,7 @@ CASTABLE_TYPES <- c("numeric", "text", "categorical") ## Add datetime when serve
 #' Change Crunch variable types
 #'
 #' Numeric, text, and categorical variables can be cast to one another by
-#' assigning them a new "type". This modifes the storage of the data on the
+#' assigning them a new "type". This modifies the storage of the data on the
 #' server and should only be done in narrow circumstances, as in when importing
 #' data from a different file format has resulted in incorrect types being
 #' specified.

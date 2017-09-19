@@ -28,7 +28,8 @@ Suggests:
     devtools,
     httptest (>= 2.0.0),
     knitr,
-    rstudioapi
+    rstudioapi,
+    spelling
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)

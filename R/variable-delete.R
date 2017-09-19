@@ -1,6 +1,6 @@
 #' Delete Variables Within a Dataset
 #'
-#' This function permenantly deletes a variable from a dataset. For a non-destructive
+#' This function permanently deletes a variable from a dataset. For a non-destructive
 #' alternative see [hide()].
 #'
 #' In an interactive session, you will be prompted to confirm that you
@@ -53,16 +53,15 @@ setMethod("delete", "VariableTuple", function (x, ...) {
 
 #' Delete subvariables from an array
 #'
-#' This function conceals the dirty work in making this happen. The array
-#' gets unbound, the subvariables deleted, and then the remaining subvariable
-#' are rebound into a new array.
-#'
-#' Deleting requires confirmation. In an interactive session, you will be asked
+#' Deleting variables requires confirmation. In an interactive session, you will be asked
 #' to confirm. To avoid that prompt, or to delete subvariables from a
-#' non-interactive session, wrap the call in \code{\link{with_consent}} to give
+#' non-interactive session, wrap the call in [with_consent()] to give
 #' your permission to delete.
+#'
+#' To delete the subvariables the function unbinds the array, deletes the subvariable, and
+#' then binds the remaining subvariables into a new array.
 #' @param variable the array variable
-#' @param to.delete aliases (following \code{crunch.namekey.dataset}) or indices
+#' @param to.delete aliases (following `crunch.namekey.dataset`) or indices
 #' of variables to delete.
 #' @return a new version of variable without the indicated subvariables
 #' @export

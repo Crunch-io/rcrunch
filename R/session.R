@@ -2,15 +2,15 @@
 #'
 #' @param x a Session object
 #' @param i which catalog to load. Supported values are "datasets" and "projects"
-#' @param name for \code{$}, the same as \code{i} for \code{[[}
+#' @param name for `$`, the same as `i` for `[`
 #' @param drop Invalid
 #' @param ... additional arguments, ignored.
 #' @param value For updating, an object of the appropriate class and size to
-#' insert. In practice \code{value} is ignored; Session objects hold no state
+#' insert. In practice `value` is ignored; Session objects hold no state
 #' and it is assumed that any state modification on the server happens in other
 #' methods.
 #' @return The requested catalog when extracting; a Session object if assigning.
-#' @seealso \code{\link{session}}
+#' @seealso `session`
 #' @name session-extract
 NULL
 

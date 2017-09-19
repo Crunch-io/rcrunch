@@ -26,7 +26,7 @@ to edit the associated object?}
 }
 \value{
 \code{is.editor} returns a logical vector corresponding to whether
-the users in the catalog can edit or not. \code{is.editor<-} returns the
+the users in the catalog can edit or not.\code{is.editor<-} returns the
 catalog, modified.
 }
 \description{

@@ -39,19 +39,19 @@ to the members catalog.
 }
 \description{
 Teams contain users and datasets. You can share a dataset with a group of
-users by sharing the dataset with a team. You can also share a bunch of
-datasets with a user all at once by adding them to a team that has those
+users by sharing the dataset with a team. You can also share a set of
+datasets with a user all at once by adding the user to a team that contains those
 datasets.
 }
 \details{
 These methods allow you to work with teams. Find your teams with the
-\code{\link{getTeams}} function, which returns your \code{TeamCatalog}.
-Extract an individual team by name. Create a team by assigning in with a new
-name, with the assignment value a list, either empty (to just create a team
-with that name), or with a "members" element, containing emails or URLs of
-users to add to the team. Users can be added later with the \code{members<-}
+\code{\link[=getTeams]{getTeams()}} function, which returns your \code{TeamCatalog}. You can extract an individual team by name,
+or create a team by assigning into the function. To create a team by assignment, assign a list
+to \code{teams("myteam") <- value_list}, the \code{value_list} can either empty (to just create a team
+with that name), or can contain a "members" element with the emails or URLs of
+users to add to the team. Users can be also be added later with the \code{members<-}
 method.
 }
 \seealso{
-\link{getTeams}
+\code{\link{getTeams}}
 }

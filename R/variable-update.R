@@ -49,13 +49,13 @@
     return(f)
 }
 
-#' Updating variables with expressions or values
+#' Update variables with expressions or values
 #'
 #' @param x a Variable
 #' @param i a CrunchLogicalExpr or R index, optionally
 #' @param j Invalid
 #' @param value an R vector or a CrunchExpr with which to update
-#' @return \code{x} duly modified
+#' @return `x` duly modified
 #' @name variable-update
 #' @aliases variable-update
 NULL

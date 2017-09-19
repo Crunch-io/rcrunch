@@ -20,7 +20,7 @@
 \alias{[<-,CategoricalArrayVariable,ANY,missing,factor-method}
 \alias{[<-,CrunchVariable,ANY,missing,logical-method}
 \alias{is.na<-,CrunchVariable,ANY-method}
-\title{Updating variables with expressions or values}
+\title{Update variables with expressions or values}
 \usage{
 \S4method{[}{CrunchVariable,ANY,missing,ANY}(x, i, j) <- value
 
@@ -69,5 +69,5 @@
 \code{x} duly modified
 }
 \description{
-Updating variables with expressions or values
+Update variables with expressions or values
 }
