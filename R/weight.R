@@ -68,6 +68,42 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
     }
 })
 
+
+#' Title
+#'
+#' @param x
+#' @param value
+#'
+#' @return
+#' @export
+#'
+#' @examples
+`weightVariables<-` <- function(x, value) {
+    browser()
+    stopifnot(is.dataset(x))
+    varCat <- allVariables(x)
+    if (!is.list(value)) {
+        value <- list(value)
+    }
+    all_var <- vapply(value, is.variable, logical(1))
+    if (!all(all_var)) {
+        err_text <- "is not a Crunch variable."
+        if ( sum(all_var) > 1) {
+            err_text <- "are not Crunch variables."
+        }
+        halt( serialPaste(value[all_var], err_text))
+    }
+    current <- crGET(shojiURL(varCat, "orders", "weights"))
+    new <- current
+    new$graph <- lapply(value, self)
+    if(!identical(current, new)){
+        crPATCH(shojiURL(varCat, "orders", "weights"),
+            body=toJSON(new))
+        x <- refresh(x)
+    }
+    return(x)
+}
+
 #' Generate a weight variable
 #'
 #' This function allows you to generate a weight variable by supplying a set of
