@@ -369,7 +369,7 @@ with_mock_crunch({
                 breaks = c(-1.4967),
                 name = "new_var",
                 right = TRUE),
-            "invalid number of intervals"
+            "invalid number of breaks"
         )
 
         expect_error(
@@ -378,7 +378,7 @@ with_mock_crunch({
                 name = "new_var",
                 label = c("one", "two"),
                 right = TRUE),
-            paste0("lengths of ", sQuote("breaks"), " and ", sQuote("labels"), " differ")
+            "There are 3 resulting categories but you only supplied 2 labels. Change number of breaks or the number of labels."
         )
         expect_error(
             cut(ds$birthyr,
@@ -386,7 +386,7 @@ with_mock_crunch({
                 name = "new_var",
                 label = c("one", "two"),
                 right = TRUE),
-            paste0(sQuote("breaks"), " are not unique")
+            paste0(sQuote("breaks"), " must be unique")
         )
     })
 })
@@ -434,6 +434,16 @@ with_test_authentication({
         expect_identical(
             cut(df$v1, 3, include.lowest = TRUE),
             as.vector(ds$cat_var5)
+        )
+
+        df$age <- sample(1:100, 20 )
+        ds$age <- df$age
+        ds$age4 <- cut(df$age, c(0, 30, 45, 65, 200),
+            c("youth", "adult", "middle-aged", "elderly"))
+        expect_identical(
+            cut(df$age, c(0, 30, 45, 65, 200),
+            c("youth", "adult", "middle-aged", "elderly")),
+            as.vector(ds$age4)
         )
     })
 })

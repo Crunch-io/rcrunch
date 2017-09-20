@@ -5,7 +5,7 @@
 \alias{cut,NumericVariable-method}
 \title{Cut a numeric Crunch variable}
 \usage{
-\S4method{cut}{NumericVariable}(x, breaks, name, labels = NULL,
+\S4method{cut}{NumericVariable}(x, breaks, labels = NULL, name,
   include.lowest = FALSE, right = TRUE, dig.lab = 3,
   ordered_result = FALSE, ...)
 }
@@ -13,14 +13,13 @@
 \item{x}{A crunch variable of the class NumericVariable}
 
 \item{breaks}{Either a numeric vector of two or more unique cut points
-or a single number (greater than or equal to 2) giving the number of intervals
-into which x is to be cut.}
-
-\item{name}{The name of the resulting case variable as a character string.}
+or a single number giving the number of intervals into which x is to be cut.}
 
 \item{labels}{labels for the levels of the resulting category.
 By default, labels are constructed using interval notation.
 If labels = FALSE, simple integer codes are returned instead of a factor.}
+
+\item{name}{The name of the resulting case variable as a character string.}
 
 \item{include.lowest}{logical, indicating if an \code{x[i]} equal to the lowest
 (or highest, for right = FALSE) \code{breaks} value should be included.}
@@ -36,19 +35,25 @@ It determines the number of digits used in formatting the break numbers.}
 \item{...}{further arguments passed to \link{makeCaseVariable}}
 }
 \value{
-a Crunch VariableDefinition
+a Crunch \code{\link{VariableDefinition}}. Assign it into the dataset to create
+it as a derived variable on the server.
 }
 \description{
 \code{crunch::cut()} is equivalent to \code{base::cut()} except that it operates on
-crunch variables instead of in-memory variables. The function divides the range of
-x into intervals and codes the values in x according to which interval they fall.
-The leftmost interval corresponds to level one, the next leftmost to level two and
-so on.
+Crunch variables instead of in-memory variables. The function takes a numeric variable
+and recodes it into a new categorical variable based on the breaks arugment. You can either
+break the variable into evenly spaced categories by specifying the number of breaks, or specify
+a numeric vector which identifies the start and end point of each category. For instance specifying
+\code{breaks = 5} will break the vector into five evenly spaced portions while \code{breaks = c(1, 5, 10)} will
+recode the data into two groups based on whether the numeric vector falls between 1 and 5 or 5 and 10.
 }
 \examples{
 \dontrun{
 ds <- loadDataset("mtcars")
-ds$cat_var <- cut(ds$mpg, 3, variableName = "new_var")
+ds$cat_var <- cut(ds$mpg, breaks = c(10, 15, 20), labels = c("small", "medium") name = "new_var")
+ds$age <- sample(1:100, 32)
+ds$age4 <- cut(df$age, c(0, 30, 45, 65, 200),
+           c("youth", "adult", "middle-aged", "elderly"))
 }
 
 }

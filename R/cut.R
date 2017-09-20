@@ -1,23 +1,24 @@
 #' Cut a numeric Crunch variable
 #'
 #' `crunch::cut()` is equivalent to `base::cut()` except that it operates on
-#' Crunch variables instead of in-memory variables. The function divides the range of
-#' `x` into intervals and codes the values in x according to which interval they fall.
-#' The leftmost interval corresponds to level one, the next leftmost to level two and
-#' so on.
+#' Crunch variables instead of in-memory variables. The function takes a numeric variable
+#' and recodes it into a new categorical variable based on the breaks arugment. You can either
+#' break the variable into evenly spaced categories by specifying the number of breaks, or specify
+#' a numeric vector which identifies the start and end point of each category. For instance specifying
+#' `breaks = 5` will break the vector into five evenly spaced portions while `breaks = c(1, 5, 10)` will
+#' recode the data into two groups based on whether the numeric vector falls between 1 and 5 or 5 and 10.
 #' @param x A crunch variable of the class NumericVariable
 #' @param breaks Either a numeric vector of two or more unique cut points
-#' or a single number (greater than or equal to 2) giving the number of intervals
-#' into which x is to be cut.
-#' @param name The name of the resulting case variable as a character string.
+#' or a single number giving the number of intervals into which x is to be cut.
 #' @param labels labels for the levels of the resulting category.
 #' By default, labels are constructed using interval notation.
 #' If labels = FALSE, simple integer codes are returned instead of a factor.
+#' @param name The name of the resulting case variable as a character string.
 #' @param include.lowest logical, indicating if an `x[i]` equal to the lowest
 #' (or highest, for right = FALSE) `breaks` value should be included.
 #' @param right logical, indicating if the intervals should be closed on the right
 #' (and open on the left) or vice versa.
-#' @param dig.lab	integer which is used when labels are not given.
+#' @param dig.lab integer which is used when labels are not given.
 #' It determines the number of digits used in formatting the break numbers.
 #' @param ordered_result	Ignored.
 #' @param ... further arguments passed to [makeCaseVariable]
@@ -27,13 +28,16 @@
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("mtcars")
-#' ds$cat_var <- cut(ds$mpg, 3, variableName = "new_var")
+#' ds$cat_var <- cut(ds$mpg, breaks = c(10, 15, 20), labels = c("small", "medium") name = "new_var")
+#' ds$age <- sample(1:100, 32)
+#' ds$age4 <- cut(df$age, c(0, 30, 45, 65, 200),
+#'            c("youth", "adult", "middle-aged", "elderly"))
 #' }
 #'
 setMethod("cut", "NumericVariable", function(x,
                                              breaks,
-                                             name,
                                              labels = NULL,
+                                             name,
                                              include.lowest = FALSE,
                                              right = TRUE,
                                              dig.lab = 3,
@@ -43,9 +47,9 @@ setMethod("cut", "NumericVariable", function(x,
     }
     if (length(breaks) == 1L) {
         if (is.na(breaks) || breaks < 2L) {
-            halt("invalid number of intervals")
+            halt("invalid number of breaks")
         }
-        nb <- as.integer(breaks + 1) # one more than #{intervals}
+        nb <- as.integer(breaks + 1) # one more than the number of breaks
         rx <- c(min(x, na.rm = TRUE), max(x, na.rm = TRUE))
         dx <- diff(rx)
         if (dx == 0) {
@@ -61,12 +65,16 @@ setMethod("cut", "NumericVariable", function(x,
         nb <- length(breaks)
     }
     if (anyDuplicated(breaks)) {
-        halt(sQuote("breaks"), " are not unique")
+        halt(sQuote("breaks"), " must be unique")
     }
     if (is.null(labels)) { # Autogenerate labels if not supplied
         labels <- generateCutLabels(dig.lab, breaks, nb, right, include.lowest)
     } else if (length(labels) != nb - 1L) {
-        halt("lengths of ", sQuote("breaks"), " and ", sQuote("labels"), " differ")
+        halt("There are ",
+            nb - 1,
+            " resulting categories but you only supplied ",
+            length(labels),
+            " labels. Change number of breaks or the number of labels.")
     }
     if (right) {
         `%c1%` <- function(x,y) x <= y
