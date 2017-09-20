@@ -2,7 +2,7 @@
 % Please edit documentation in R/interact.R
 \name{interactVariables}
 \alias{interactVariables}
-\title{Make a variable that is the interaction of two or more other variables}
+\title{Create a variable by interacting categorical variables}
 \usage{
 interactVariables(..., name, sep = ":")
 }

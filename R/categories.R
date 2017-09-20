@@ -164,14 +164,21 @@ setMethod("na.omit", "Categories", function (object, ...) {
 
 #' is.na for Categories
 #'
+#' Crunch categorical variables allow you to set multiple categories as missing.
+#' For instance, you might have "not answered" and "doesn't know" both coded as
+#' missing. This function returns a logical vector of all dataset entries that
+#' fall into any of the missing categories. It also allows you to append
+#' additional categories to the list of missing categories using the setter.
+#'
 #' @param x Categories or a single Category
-#' @param value To change the missingness of categories, supply either (1)
-#' a logical vector of equal length of the categories (or length 1 for the
-#' Category method), or (2) the names of the categories to mark as missing.
+#' @param value To change the missingness of categories, supply either:
+#' 1. a logical vector of equal length of the categories (or length 1 for the
+#' Category method); or
+#' 1. the names of the categories to mark as missing.
 #' If supplying the latter, any categories already indicated as missing will
 #' remain missing.
 #' @return Getters return logical, a named vector in the case of the Categories
-#' method; setters return \code{x} duly modified.
+#' method; setters return `x` duly modified.
 #' @name is-na-categories
 NULL
 
@@ -254,7 +261,9 @@ setMethod("lapply", "Categories", function (X, FUN, ...) {
 #'
 #' Changes the id of a category from an existing value to a new one.
 #' The variable can be a categorical, categorical array, or multiple response
-#' variable.
+#' variable. The category changed will have the same numeric value and missing
+#' status as before. The one exception to this is if the numeric value is the
+#' same as the id, then the new numeric value will be the same as the new id.
 #'
 #' @param variable the variable in a crunch dataset that will be changed (note: the variable must be categorical, categorical array, or multiple response)
 #' @param from the (old) id identifying the category you want to change
@@ -289,8 +298,13 @@ changeCategoryID <- function (variable, from, to) {
 
     ## Add new category
     newcat <- categories(variable)[[pos.from]]
+    # if the old id matches the old numeric value, likely the user wants these
+    # to be the same, so change the new numeric value to be the same as the
+    # new id.
+    if (newcat$id == newcat$numeric_value %||% FALSE) {
+        newcat$numeric_value <- to
+    }
     newcat$id <- to
-    newcat$numeric_value <- to
 
     names(categories(variable))[pos.from] <- "__TO_DELETE__"
     categories(variable) <- c(categories(variable), newcat)
@@ -301,7 +315,7 @@ changeCategoryID <- function (variable, from, to) {
     } else if (is.Array(variable)) {
         # If the variable is an array, then lapply over the subvariables
         # TODO: change iteration over shojicatalogs to allow iterating over the variable directly
-        lapply(names(variable), function(subvarname) {
+        lapply(names(variable), function (subvarname) {
             variable[[subvarname]][variable[[subvarname]] == from] <- to
         })
     }

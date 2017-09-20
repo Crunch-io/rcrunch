@@ -26,11 +26,11 @@ CrunchGeography(..., data = NULL)
 availableGeodata(x = getAPIRoot())
 }
 \arguments{
-\item{...}{for \code{CrunchGeography}, named arugments to construct a
-\code{CrunchGeography} from: \code{geodatum}, \code{feature_key}, and \code{match_field}}
+\item{...}{for \code{CrunchGeography}, named arguments from which to construct a
+\code{CrunchGeography}: \code{geodatum}, \code{feature_key}, and \code{match_field}}
 
-\item{data}{for \code{CrunchGeography}, list of named arugments to construct a
-\code{CrunchGeography} from: \code{geodatum}, \code{feature_key}, and \code{match_field}}
+\item{data}{for \code{CrunchGeography}, list of named arguments from which to construct a
+\code{CrunchGeography}: \code{geodatum}, \code{feature_key}, and \code{match_field}}
 
 \item{x}{a crunch variable}
 
@@ -44,13 +44,18 @@ Crunch stores geographic data as variable metadata. There are a number of
 functions that help access and change this metadata.
 }
 \details{
-\code{geo} retrieves the geographic information associate with a variable. If there is geographic information it returns an object of class \code{CrunchGeography} otherwise it returns \code{NULL}.
+\code{geo} retrieves the geographic information associate with a variable.
+If there is geographic information it returns an object of class
+\code{CrunchGeography} otherwise it returns \code{NULL}.
 
 \code{CrunchGeography} objects store geography metadata from a variable. There are three slots:
 \itemize{
-\item \code{geodatum} an object of class CrunchGeodata which stores references to the Crunch-hosted (geo|topo)json to use
-\item \code{feature_key} a character that is the feature inside of the (geo|topo)json to match \code{match_field} to (e.g. properties.name)
-\item \code{match_field} a character that is the the variable metadata information to match to \code{feature_key} to (e.g. name)
+\item \code{geodatum} an object of class CrunchGeodata which stores references
+to the Crunch-hosted (geo|topo)json to use
+\item \code{feature_key} a character string representing the feature inside of the
+(geo|topo)json which is used to match \code{match_field} (e.g. properties.name)
+\item \code{match_field} a character string representing the variable metadata information which is used
+to match \code{feature_key} to (e.g. name)
 }
 }
 \examples{

@@ -3,19 +3,24 @@
 #' Crunch stores geographic data as variable metadata. There are a number of
 #' functions that help access and change this metadata.
 #'
-#' `geo` retrieves the geographic information associate with a variable. If there is geographic information it returns an object of class `CrunchGeography` otherwise it returns `NULL`.
+#' `geo` retrieves the geographic information associate with a variable.
+#' If there is geographic information it returns an object of class
+#' `CrunchGeography` otherwise it returns `NULL`.
 #'
 #' `CrunchGeography` objects store geography metadata from a variable. There are three slots:
-#' * `geodatum` an object of class CrunchGeodata which stores references to the Crunch-hosted (geo|topo)json to use
-#' * `feature_key` a character that is the feature inside of the (geo|topo)json to match `match_field` to (e.g. properties.name)
-#' * `match_field` a character that is the the variable metadata information to match to `feature_key` to (e.g. name)
+#' * `geodatum` an object of class CrunchGeodata which stores references
+#' to the Crunch-hosted (geo|topo)json to use
+#' * `feature_key` a character string representing the feature inside of the
+#' (geo|topo)json which is used to match `match_field` (e.g. properties.name)
+#' * `match_field` a character string representing the variable metadata information which is used
+#' to match `feature_key` to (e.g. name)
 #'
 #' @param x a crunch variable
 #' @param value value of the geography property to set
-#' @param ... for `CrunchGeography`, named arugments to construct a 
-#' `CrunchGeography` from: `geodatum`, `feature_key`, and `match_field`
-#' @param data for `CrunchGeography`, list of named arugments to construct a
-#' `CrunchGeography` from: `geodatum`, `feature_key`, and `match_field`
+#' @param ... for `CrunchGeography`, named arguments from which to construct a
+#' `CrunchGeography`: `geodatum`, `feature_key`, and `match_field`
+#' @param data for `CrunchGeography`, list of named arguments from which to construct a
+#' `CrunchGeography`: `geodatum`, `feature_key`, and `match_field`
 #' @return geographic information of class `CrunchGeography` (`NULL` if there is none)
 #'
 #' @name geo
@@ -65,13 +70,13 @@ setMethod("geo<-", c("CrunchVariable", "NULL"),
               return(x)
           })
 #' Add geodata metadata to a crunch variable
-#' 
+#'
 #' @param variable a Crunch variable to use for matching. This must be either
 #' a text or a categorical variable.
-#' 
+#'
 #' @return a CrunchGeography object that can be assigned into `geo(variable)`
-#' 
-#' @examples 
+#'
+#' @examples
 #' \dontrun{
 #' geo(ds$state) <- addGeoMetadata("state", data=ds)
 #' }
@@ -90,9 +95,9 @@ addGeoMetadata <- function (variable) {
         halt("The variable ", dQuote(substitute(variable)),
              " is neither a categorical or text variable.")
     }
-    
+
     match_scores <- matchCatToFeat(cats)
-    
+
     if (max(match_scores$value, na.rm = TRUE) == 0) {
         halt("None of the geographies match at all. Either the variable is",
              " wrong, or Crunch doesn't yet have geodata for this variable.")
@@ -101,7 +106,7 @@ addGeoMetadata <- function (variable) {
         halt("There is more than one possible match. Please specify the geography manually:\n",
              paste0(capture.output(print(match_scores[,c("value", "geodatum_name", "geodatum", "property")])), collapse = "\n"))
     }
-    
+
     match_geo <- CrunchGeography(geodatum=match_scores$geodatum,
                           feature_key=paste0('properties.',match_scores$property),
                           match_field=match_field)
@@ -118,25 +123,27 @@ availableGeodata <- function (x = getAPIRoot()) {
     return(GeoCatalog(crGET(shojiURL(x, "catalogs", "geodata"))))
 }
 
-#' all available property features for all available geographies
-#' 
+#' Get the property features for available geographies
+#'
 #' @param x an API root address (default: the R-session default)
-#' @param geodatum_fields character, what peices of information about each 
+#' @param geodatum_fields character, what pieces of information about each
 #' geodatum should be retained? (default: `c("name", "description", "location")``)
-#' 
-#' @return a (tidy) dataframe with all of the available features and 
+#'
+#' @return a dataframe with all of the available features and
 #' geographies for matching
-#' 
+#'
 #' @export
-availableGeodataFeatures <- function (x = getAPIRoot(), geodatum_fields=c("name", "description", "location")) {
+availableGeodataFeatures <- function (x = getAPIRoot(),
+        geodatum_fields=c("name", "description", "location")) {
+
     geo_cat <- availableGeodata(x)
-    
+
     # grab each geodatum in order to get metadata
-    # TODO: this should probably not be done through a series of GETs, 
+    # TODO: this should probably not be done through a series of GETs,
     # but the current API requires it.
-    geo_metadatas <- lapply(urls(geo_cat), function(x) Geodata(crGET(x)) )
+    geo_metadatas <- lapply(urls(geo_cat), function (x) Geodata(crGET(x)))
     names(geo_metadatas) <- urls(geo_cat)
-    
+
     out <- lapply(geo_metadatas, function (geography) {
         meta <- geography$metadata$properties
         lapply(names(meta), function (x) {
@@ -146,7 +153,7 @@ availableGeodataFeatures <- function (x = getAPIRoot(), geodatum_fields=c("name"
             data.frame(property=x, value=values)
         })
     })
-    
+
     out <- lapply(names(out), function (x) {
         dfs <- do.call("rbind", out[[x]])
         dfs$geodatum <- x
@@ -158,38 +165,38 @@ availableGeodataFeatures <- function (x = getAPIRoot(), geodatum_fields=c("name"
 
 
 #' Score similarity between a feature dataframe and categories
-#' 
-#' Implemented using the Jaccard index, where a number closer to 1 is 
+#'
+#' Implemented using the Jaccard index, where a number closer to 1 is
 #' more similar.
-#' 
+#'
 #' @param features a vector of features to match (usually from a subset of the
 #' output `[availableGeodataFeatures]`) with a single property for a single geodatum.
 #' @param categories a vector of categories to match
-#' 
-#' @return the Jaccard index for the values of the property given in 
+#'
+#' @return the Jaccard index for the values of the property given in
 #' feat_df and the vector of categories
-#' 
+#'
 #' @export
 scoreCatToFeat <- function (features, categories) {
     feats <- unique(features)
     cats <- unique(categories)
-    
+
     intersection <- length(cats[cats %in% feats])
     union <- length(union(cats, feats))
-    
+
     return(intersection/union)
 }
 
 #' Match categories with features from geodata
-#' 
+#'
 #' @param categories a vector of categories to match
 #' @param all_features a dataframe of all available geodata features. (default:
 #' downloaded from Crunch servers)
-#' 
+#'
 #' @return geodatum to associate with the variable that produced categories
-#' 
+#'
 #' @importFrom stats aggregate
-#' 
+#'
 #' @export
 matchCatToFeat <- function (categories, all_features = availableGeodataFeatures()) {
     scores <- aggregate(value~., data=all_features,
@@ -201,8 +208,7 @@ matchCatToFeat <- function (categories, all_features = availableGeodataFeatures(
 #' @export
 setMethod("description", "Geodata", function (x) x@body$description)
 
-# TODO: make feature_key()<- match_field()<- geodatum()<- methods with more 
+# TODO: make feature_key()<- match_field()<- geodatum()<- methods with more
 #       input checking
 # TODO: make sure the full resolution jsons are available
 # TODO: GIS opertaions (contains, union, etc.)
-

@@ -172,9 +172,9 @@ setMethod("datasetReference", "ANY", function (x) NULL)
 
 #' Split an array or multiple-response variable into its CategoricalVariables
 #'
-#' @param x a CategoricalArrayVariable or MultipleResponseVariable
+#' @param x a `CategoricalArrayVariable` or `MultipleResponseVariable`
 #' @return invisibly, the API response from DELETEing the array variable
-#' definition. If you \code{\link{refresh}} the corresponding dataset after
+#' definition. If you [refresh()] the corresponding dataset after
 #' unbinding, you should see the array variable removed and its subvariables
 #' promoted to regular variables.
 #' @export
@@ -196,8 +196,8 @@ unbind <- function (x) {
 #' @param ... additional arguments, ignored
 #' @param j Invalid
 #' @param drop Invalid
-#' @return a CrunchExpr containing references to the variable \code{x} and the
-#' filter logic contained in \code{i}
+#' @return a CrunchExpr containing references to the variable `x` and the
+#' filter logic contained in `i`
 #' @aliases variable-extract
 #' @name variable-extract
 NULL

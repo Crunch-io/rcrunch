@@ -13,9 +13,11 @@ catalogToDataFrame(x, keys = TRUE, rownames = NULL,
 \item{keys}{character vector of attribute names from each catalog tuple to
 include in the result. Default is \code{TRUE}, which means all.}
 
-\item{rownames}{The rownames of the resulting dataframe. If set to \code{NULL} rownames
-will default to the resulting dataframe will not have row names. By default the row names
-will be the URLs of the catalog tuples.}
+\item{rownames}{See \code{\link[base:data.frame]{base::data.frame}}, the \code{row.names}
+argument, to which this is passed in \code{data.frame}. The difference here
+is that if \code{rownames} is explicitly set as \code{NULL}, the resulting
+object will not have row names set. By default, row names will be the URLs
+of the catalog tuples.}
 
 \item{list_columns}{A character vector of the names of the attributes which should be stored
 in a list-column.}

@@ -1,22 +1,21 @@
 #' Construct Crunch Expressions
 #'
-#' Crunch Expressions, i.e. \code{CrunchExpr} and \code{CrunchLogicalExpr},
-#' encapuslate derivations of Crunch variables, which are only evaluated when
-#' passed to a function like \code{as.vector}. They allow you to compose
+#' Crunch Expressions, i.e. `CrunchExpr` and `CrunchLogicalExpr`,
+#' encapsulate derivations of Crunch variables, which are only evaluated when
+#' passed to a function like `as.vector`. They allow you to compose
 #' functional expressions of variables and evaluate them against the server
 #' only when appropriate.
-#'
 #' @param x an input
 #' @param e1 an input
 #' @param e2 an input
-#' @param table For \code{\%in\%}. See \code{\link[base]{match}}
-#' @param resolution For \code{rollup}. Either \code{NULL} or a character in
+#' @param table For \code{\%in\%}. See [base::match()]
+#' @param resolution For `rollup`. Either `NULL` or a character in
 #' c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms") indicating the unit of
-#' time at which a Datetime variable should be aggregated. If \code{NULL},
+#' time at which a Datetime variable should be aggregated. If `NULL`,
 #' the server will determine an appropriate resolution based on the range of
 #' the data.
 #' @return Most functions return a CrunchExpr or CrunchLogicalExpr.
-#' \code{as.vector} returns an R vector.
+#' `as.vector` returns an R vector.
 #' @aliases expressions
 #' @name expressions
 NULL
@@ -353,13 +352,13 @@ setMethod("which", "CrunchLogicalExpr", function (x, arr.ind, useNames) {
 
 #' "duplicated" method for Crunch objects
 #'
-#' @param x CrunchVariable or CrunchExpr
+#' @param x `CrunchVariable` or `CrunchExpr`
 #' @param incomparables Ignored
 #' @param ... Ignored
-#' @return A CrunchLogicalExpr that evaluates \code{TRUE} for all repeated
+#' @return A `CrunchLogicalExpr` that evaluates `TRUE` for all repeated
 #' entries after the first occurrence of a value.
 #' @name duplicated
-#' @seealso \code{\link[base]{duplicated}}
+#' @seealso [base::duplicated()]
 #' @aliases duplicated
 #' @export
 NULL

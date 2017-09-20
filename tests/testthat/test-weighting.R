@@ -39,6 +39,70 @@ with_mock_crunch({
         })
         expect_identical(weightVariables(oldds), c())
     })
+
+    test_that("generateWeightEntry errors correctly", {
+        expect_error(generateWeightEntry("bad_formula"),
+            paste0(dQuote("bad_formula"),
+                " is not a valid formula. Use the form ds$var ~ c(50, 20, 30)"), fixed = TRUE)
+        expect_error(generateWeightEntry(object),
+            paste0(dQuote("object"),
+                " is not a valid formula. Use the form ds$var ~ c(50, 20, 30)"), fixed = TRUE)
+        expect_error(generateWeightEntry(oldds$birthyr ~ c(30, 30, 40)),
+            "oldds$birthyr is not a categorical Crunch variable", fixed = TRUE)
+        expect_error(generateWeightEntry(oldds$gender ~ c(10, 10, 10, 10, 10, 50)),
+            "Number of targets does not match number of categories for oldds$gender", fixed = TRUE)
+        expect_error(generateWeightEntry(oldds$gender ~ c(30, 20, 30)),
+            "Targets do not add up to 100% for oldds$gender", fixed = TRUE)
+        expect_error(generateWeightEntry(oldds$gender ~ c("a", "b", "c")),
+            "Targets are not numeric for oldds$gender", fixed = TRUE)
+        expect_error(generateWeightEntry(oldds$gender ~ c(50, 50, NA)),
+            paste0(dQuote("oldds$gender ~ c(50, 50, NA)"),
+                " contains NA values"), fixed = TRUE)
+    })
+    expected_weight_definition <- list(
+        name = "weight",
+        derivation = list(
+            `function` = "rake",
+            args = list(
+                list(
+                    variable = "https://app.crunch.io/api/datasets/1/variables/gender/",
+                    targets = list(c(1, 0.2), c(2, 0.3), c(3, 0.5)
+                )
+            )
+        )
+    ))
+    expected_attribute_definition <- list(
+        alias = "test_alias",
+        name = "weight",
+        derivation = list(
+            `function` = "rake",
+            args = list(
+                list(
+                    variable = "https://app.crunch.io/api/datasets/1/variables/gender/",
+                    targets = list(c(1, 0.2), c(2, 0.3), c(3, 0.5)
+                )
+            )
+        )
+    ))
+
+    test_that("makeWeight generates the expected VariableDefinition", {
+        expect_equivalent(makeWeight(oldds$gender ~ c(20, 30, 50), name = "weight"),
+            expected_weight_definition)
+    })
+    test_that("makeWeight allows decimal target input",{
+        expect_equivalent(makeWeight(oldds$gender ~ c(.2, .3, .5), name = "weight"),
+            expected_weight_definition)
+    })
+    test_that("You can provide two targets to a variable with three categories", {
+        expect_equivalent(makeWeight(oldds$gender ~ c(50, 50), name = "weight"),
+            makeWeight(oldds$gender ~ c(.5, .5, 0), name = "weight")
+        )
+    })
+    test_that("makeWeight allows user to specify variable definition attributes", {
+        expect_equivalent(makeWeight(oldds$gender ~ c(20, 30, 50),
+            name = "weight", alias = "test_alias"),
+            expected_attribute_definition)
+    })
 })
 
 with_test_authentication({
@@ -124,5 +188,17 @@ with_test_authentication({
                 array(c(110, 100), dim=2L, dimnames=list(v4=c("B", "C"))))
         })
     })
-
+    with(test.dataset(df), {
+        expected_weights <- c(0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4,
+                              0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4, 0.6, 1.4)
+        test_that("makeWeight returns the expected weights", {
+            ds$weight <- makeWeight(ds$v4 ~ c(30, 70, 0), name = "weight")
+            expect_identical(as.vector(ds$weight), expected_weights)
+        })
+        test_that("Assigning a VariableDefinition to weight(ds) works", {
+            weight(ds) <- makeWeight(ds$v4 ~ c(30, 70, 0), name = "weight2")
+            expect_identical(weight(ds), ds$weight2)
+            expect_identical(as.vector(weight(ds)), expected_weights)
+        })
+    })
 })

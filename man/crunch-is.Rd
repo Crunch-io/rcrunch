@@ -18,7 +18,7 @@
 \alias{is.CA}
 \alias{is.Array}
 \alias{is.CategoricalArray}
-\title{Is it?}
+\title{Test whether a Crunch object belongs to a class}
 \usage{
 is.dataset(x)
 
@@ -59,5 +59,5 @@ is.CategoricalArray(x)
 logical
 }
 \description{
-Is it?
+Test whether a Crunch object belongs to a class
 }

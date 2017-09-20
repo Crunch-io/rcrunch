@@ -1,10 +1,10 @@
 #' Univariate statistics on Crunch objects
 #'
-#' @param x a NumericVariable, or for \code{min} and \code{max}, possibly a
+#' @param x a NumericVariable, or for `min` and `max`, a NumericVariable or
 #' DatetimeVariable
-#' @param ... additional arguments to \code{mean}
+#' @param ... additional arguments to summary statistic function
 #' @param na.rm logical: exclude missings?
-#' @seealso \code{\link[base]{mean}} \code{\link[stats]{sd}} \code{\link[stats]{median}} \code{\link[base]{min}} \code{\link[base]{max}}
+#' @seealso [base::mean()] [stats::sd()] [stats::median()] [base::min()] [base::max()]
 #' @name crunch-uni
 #' @aliases mean sd median min max
 NULL

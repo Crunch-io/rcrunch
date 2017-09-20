@@ -19,5 +19,5 @@ an S3 class "contextManager" object
 Set some global options temporarily
 }
 \seealso{
-\link{with-context-manager} \link{ContextManager}
+\code{\link{with-context-manager}} \code{\link{ContextManager}}
 }

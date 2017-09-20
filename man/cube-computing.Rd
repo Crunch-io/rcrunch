@@ -36,25 +36,22 @@
 \item{x}{a CrunchCube}
 
 \item{margin}{index, or vector of indices to generate margin for. See
-\code{\link[base]{prop.table}}. \code{bases} accepts an additional valid
-value for \code{margin}, \code{0}, which yields the unweighted counts for the
-query, without reducing dimension.}
+\code{\link[base:prop.table]{base::prop.table()}}. \code{bases} accepts \code{0} as an additional valid
+value for \code{margin} which yields the unweighted counts for the
+query, without reducing the dimensionality.}
 
-\item{digits}{see \code{\link[base]{round}}}
+\item{digits}{see  \code{\link[base:round]{base::round()}}}
 }
 \value{
 The appropriate margin.table or prop.table. Calling prop.table on
 a MultitableResult returns a list of prop.tables of the CrunchCubes it
-contains. Likewise, prop.table on a TabBookResult returns a list of list of
+contains. Likewise, prop.table on a TabBookResult returns a list of lists of
 prop.tables.
 }
 \description{
-Crunch.io supports more complex data types than base R does, such as
-multiple response and array types. If you want to compute margin or
-proportion tables on an aggregation of these variable types, special methods
-are required. These functions provide an interface like
-\code{\link[base]{margin.table}} and \code{\link[base]{prop.table}} for
-the CrunchCube object, handling those special data types.
+These functions provide an interface like \code{\link[base:margin.table]{base::margin.table()}}
+and \code{\link[base:prop.table]{base::prop.table()}} for the CrunchCube object This handles special data
+types like array variables or MultitableResults.
 }
 \details{
 \code{bases} is an additional method for CrunchCubes. When making weighted
@@ -64,5 +61,5 @@ cell in the resulting table (array). The \code{bases} function takes a
 gives all cell counts.
 }
 \seealso{
-\code{\link[base]{margin.table}} \code{\link[base]{prop.table}}
+\code{\link[base:margin.table]{base::margin.table()}} \code{\link[base:prop.table]{base::prop.table()}}
 }

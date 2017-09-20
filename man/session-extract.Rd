@@ -26,7 +26,7 @@
 
 \item{drop}{Invalid}
 
-\item{name}{for \code{$}, the same as \code{i} for \code{[[}}
+\item{name}{for \code{$}, the same as \code{i} for \code{[}}
 
 \item{value}{For updating, an object of the appropriate class and size to
 insert. In practice \code{value} is ignored; Session objects hold no state
@@ -40,5 +40,5 @@ The requested catalog when extracting; a Session object if assigning.
 Extract catalogs from a Session object
 }
 \seealso{
-\code{\link{session}}
+\code{session}
 }
