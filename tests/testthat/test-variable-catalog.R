@@ -133,71 +133,69 @@ with_mock_crunch({
     })
 
     test_that("entryToDF works", {
-      entry <- list(
-          alias = "birthyr",
-          name = "Birth Year",
-          type = "numeric")
-      expected_df <- data.frame(alias = "birthyr",
-          name = "Birth Year",
-          type = "numeric",
-          stringsAsFactors = FALSE)
-      list_entry <- list(
-          name = "mymrset",
-          discarded = FALSE,
-          alias = "mymrset",
-          type = "multiple_response",
-          id = "949d2dc7e7a24e6090cc88bb92e1d2fb",
-          description = "Please select all that apply", notes = "",
-          subvariables = list(
-              "mymrset/subvariables/subvar2/",
-              "mymrset/subvariables/subvar1/",
-              "mymrset/subvariables/subvar3/"
-              ),
-          subvariables_catalog = "mymrset/subvariables/"
-          )
-      expected_list_df <-  structure(
-          list(
-              name = "mymrset",
-              discarded = FALSE,
-              alias = "mymrset",
-              type = "multiple_response",
-              id = "949d2dc7e7a24e6090cc88bb92e1d2fb",
-              description = "Please select all that apply", notes = "",
-              subvariables = list(
-                  structure(
-                      list(
-                          subvariables = list(
-                              "mymrset/subvariables/subvar2/",
-                              "mymrset/subvariables/subvar1/",
-                              "mymrset/subvariables/subvar3/")
-                          ),
-                      .Names = "subvariables")),
-              subvariables_catalog = list(
-                  structure(
-                      list(subvariables_catalog = "mymrset/subvariables/"),
-                      .Names = "subvariables_catalog")
-                  )
-              ),
-          .Names = c("name","discarded", "alias", "type", "id", "description", "notes", "subvariables", "subvariables_catalog"),
-          row.names = c(NA, -1L),
-          class = "data.frame")
+        entry <- list(
+            alias = "birthyr",
+            name = "Birth Year",
+            type = "numeric")
+        expected_df <- data.frame(alias = "birthyr",
+            name = "Birth Year",
+            type = "numeric",
+            stringsAsFactors = FALSE)
+        list_entry <- list(
+            name = "mymrset",
+            discarded = FALSE,
+            alias = "mymrset",
+            type = "multiple_response",
+            id = "949d2dc7e7a24e6090cc88bb92e1d2fb",
+            description = "Please select all that apply", notes = "",
+            subvariables = list(
+                "mymrset/subvariables/subvar2/",
+                "mymrset/subvariables/subvar1/",
+                "mymrset/subvariables/subvar3/"
+                ),
+            subvariables_catalog = "mymrset/subvariables/"
+            )
+        expected_list_df <- structure(
+            list(
+                name = "mymrset",
+                discarded = FALSE,
+                alias = "mymrset",
+                type = "multiple_response",
+                id = "949d2dc7e7a24e6090cc88bb92e1d2fb",
+                description = "Please select all that apply",
+                notes = "",
+                subvariables = list(
+                    list(
+                        subvariables = list(
+                            "mymrset/subvariables/subvar2/",
+                            "mymrset/subvariables/subvar1/",
+                            "mymrset/subvariables/subvar3/"
+                        )
+                    )
+                ),
+                subvariables_catalog = list(
+                    list(subvariables_catalog = "mymrset/subvariables/")
+                )
+            ),
+            row.names = c(NA, -1L),
+            class = "data.frame")
 
 
-      expect_identical(entryToDF(entry, c("subvariables", "not_a_variable")),
-        expected_df)
-      expect_identical(entryToDF(list_entry, c("subvariables", "subvariables_catalog")),
-          expected_list_df)
-      expect_error(entryToDF(list_entry, c("alias")),
-          paste0(dQuote("subvariables"),
-          " contains more than one entry and is not included in list_col_names")
-      )
+        expect_identical(entryToDF(entry, c("subvariables", "not_a_variable")),
+            expected_df)
+        expect_identical(entryToDF(list_entry, c("subvariables", "subvariables_catalog")),
+            expected_list_df)
+        expect_error(entryToDF(list_entry, c("alias")),
+            paste0(dQuote("subvariables"),
+            " contains more than one entry and is not included in list_col_names")
+        )
     })
 })
 
 with_test_authentication({
     ds <- newDataset(df)
     test_that("Can set descriptions (and doing so doesn't PUT order)", {
-        with(temp.options(httpcache.log = ""), {
+        with(temp.options(httpcache.log=""), {
             expect_identical(descriptions(variables(ds)),
                 rep("", ncol(ds)))
             logs <- capture.output(descriptions(variables(ds))[2:3] <- c("Des 1", "Des 2"))

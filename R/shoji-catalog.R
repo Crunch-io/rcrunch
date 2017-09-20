@@ -240,26 +240,25 @@ setMethod("emails", "ShojiCatalog", function (x) getIndexSlot(x, "email"))
 #' @export
 as.list.ShojiCatalog <- function (x, ...) lapply(names(index(x)), function (i) x[[i]])
 
-#' A utility to retun a dataframe from a ShojiCatalog.
+#' A utility to retun a data.frame from a ShojiCatalog.
 #'
-#' Some of the attributes of a ShojiCatalog will not naturally fit in
-#' a conventional dataframe. For instance a single variable might have multiple subvariables,
-#' and these subvariables will not fit in a single row of a dataframe. In this case the
-#' list of subvariables are stored in a list-column in the resulting dataframe.
+#' Some of the attributes of a `ShojiCatalog` will not naturally fit in
+#' a conventional data.frame. For example, an array variable contains a list of
+#' subvariables, and these subvariables will not easily fit in a single row of a
+#' data.frame. In this case, the list of subvariables are stored in a
+#' list-column in the resulting data.frame.
 #'
-#' @param x ShojiCatalog or subclass
+#' @param x `ShojiCatalog` or subclass
 #' @param keys character vector of attribute names from each catalog tuple to
 #' include in the result. Default is TRUE, which means all.
-#' @param rownames See [`base::data.frame`], the `row.names`
-#' argument, to which this is passed in `data.frame`. The difference here
-#' is that if `rownames` is explicitly set as `NULL`, the resulting
-#' object will not have row names set. By default, row names will be the URLs
-#' of the catalog tuples.
+#' @param rownames See [base::data.frame()] for the `row.names`
+#' argument. The difference here is that if `rownames` is explicitly set as
+#' `NULL`, the resulting object will not have row names set. By default, row
+#' names will be the URLs of the catalog tuples.
 #' @param ... additional arguments passed to `data.frame`
 #' @return a `data.frame` view of the catalog
 #' @export
-catalogToDataFrame <- function(x, keys=TRUE,
-    rownames = NULL,
+catalogToDataFrame <- function (x, keys=TRUE, rownames = NULL,
     list_columns = c("subvariables", "subvariables_catalog"),
     ...) {
 
@@ -285,8 +284,8 @@ catalogToDataFrame <- function(x, keys=TRUE,
 
         out <- as.data.frame(out, rownames = rownames, ...)
 
-        #When a bad key argument is passed to the the shoji index it returns a dataframe
-        # with an NA value. This exclude those columns.
+        # When a bad key argument is passed to the the shoji index it returns a
+        # data,frame with an NA value. This excludes those columns.
         exclude_cols <- grepl("^NA", names(out)) &
             vapply(out, function(x)all(is.na(x)), FUN.VALUE = logical(1))
         out <- out[, !exclude_cols, drop = FALSE]
@@ -298,56 +297,46 @@ catalogToDataFrame <- function(x, keys=TRUE,
             } else {
                 error_text <- " are invalid keys for catalogs of class "
             }
-            halt(
-                serialPaste(missing_keys),
-                error_text,
-                class(x),
-                ".")
+            halt(serialPaste(missing_keys), error_text, class(x), ".")
         }
 
-        #reorder columns to match the order in which keys were supplied
+        # Reorder columns to match the order in which keys were supplied
         out <- out[, keys, drop = FALSE]
         return(out)
     }
 }
 
-#' entryToDF
-#' Turns an entry in the catalog into a one-row dataframe
+#' Turn an entry in the catalog into a one-row data.frame
 #'
-#' @param entry
-#' A single entry in a catalog
-#'
-#' @param list_col_names
-#' Some entries in a catalog do not fit neatly into a traditional dataframe and are
-#' instead stored in a list-column. This is controlled by passing the attribute names
-#' as the `list_col_names` argument. `
-#'
+#' @param entry A single entry in a catalog
+#' @param list_col_names Some entries in a catalog do not fit neatly into a
+#' traditional data.frame and are instead stored in a list-column. This is
+#' controlled by passing the attribute names as the `list_col_names` argument.
 #' @return A one row data frame
-#'
-entryToDF <- function(entry, list_col_names ){
-            entry[vapply(entry, is.null, logical(1))] <- NA
-            vect_col <- entry[!(names(entry) %in% list_col_names)]
-            mislabled_list_cols <- lapply(vect_col, length) > 1
+#' @keywords internal
+entryToDF <- function (entry, list_col_names) {
+    entry[vapply(entry, is.null, logical(1))] <- NA
+    vect_col <- entry[!(names(entry) %in% list_col_names)]
+    mislabled_list_cols <- lapply(vect_col, length) > 1
 
-            error_text <- " contain more than one entry and are not included in list_col_names"
-            if (sum(mislabled_list_cols) == 1) {
-                error_text <- " contains more than one entry and is not included in list_col_names"
-            }
-            if (any(mislabled_list_cols)) {
-                halt(serialPaste(dQuote(names(vect_col[mislabled_list_cols]))),
-                    error_text)
-            }
-            entry_df <- as.data.frame(vect_col, stringsAsFactors = FALSE)
+    error_text <- " contain more than one entry and are not included in list_col_names"
+    if (sum(mislabled_list_cols) == 1) {
+        error_text <- " contains more than one entry and is not included in list_col_names"
+    }
+    if (any(mislabled_list_cols)) {
+        halt(serialPaste(dQuote(names(vect_col[mislabled_list_cols]))),
+            error_text)
+    }
+    entry_df <- as.data.frame(vect_col, stringsAsFactors = FALSE)
 
-            if (any(names(entry) %in% list_col_names)) {
-                list_col <- entry[list_col_names]
-                list_df <- data.frame(matrix(nrow = 1, ncol = length(list_col)))
-                names(list_df) <- names(list_col)
-                for (i  in seq_along(list_col)) {
-                    list_df[[1, i]] <- list_col[i]
-                }
-                entry_df <- cbind(entry_df, list_df)
-            }
-            entry_df
-
+    if (any(names(entry) %in% list_col_names)) {
+        list_col <- entry[list_col_names]
+        list_df <- data.frame(matrix(nrow = 1, ncol = length(list_col)))
+        names(list_df) <- names(list_col)
+        for (i in seq_along(list_col)) {
+            list_df[[1, i]] <- list_col[i]
+        }
+        entry_df <- cbind(entry_df, list_df)
+    }
+    return(entry_df)
 }

@@ -1,6 +1,7 @@
 ### crunch 1.18.1 (under development)
 * `makeWeight` allows you to generate new weighting variables based on categorical variables (#80).
 * Create a new Crunch dataset from a file by calling `newDataset` directly instead of `newDatasetFromFile`. Also, you can now create a dataset from a hosted file passing its URL to `newDataset(FromFile)`.
+* `as.data.frame()` method for `VariableCatalog` for a view of variable metadata (#75)
 * RStudio users will now be prompted for their password on `login` in a way that conceals the input.
 * Changed the behavior of `changeCategoryID()` to only update numeric values of the category having its id changed when the id and the numeric value are the same.
 * The `autorollback` argument of `appendDataset()` has been deprecated. The option no longer has any effect and a warning will be printed to notify users about the deprecation.
@@ -29,7 +30,6 @@
 * Add a missing import from the `methods` package so that `Rscript` works (#90)
 * Allow deep copying of multiple-response type variables
 * Experimental support for merging `CrunchDataFrame`s with standard `data.frame`s
-* Added `as.data.frame()` method to `VariableCatalog` (#75)
 
 ### crunch 1.17.8
 Two attempts to fix download issues introduced by 1.17.4:
