@@ -15,8 +15,11 @@
 \item{breaks}{Either a numeric vector of two or more unique cut points
 or a single number giving the number of intervals into which x is to be cut.}
 
-\item{labels}{labels for the levels of the resulting category.
-By default, labels are constructed using interval notation.
+\item{labels}{A character vector representing the labels for the levels of the resulting category.
+The length of the labels argument should be the same asd the number of categories, which is
+one fewer than the number of breaks. If not specified, labels are constructed using interval notation.
+For example \code{[1, 5)} indicates that the category goes from 1 to 5. The bracket shape indicates whether the
+number is included in the category. \code{[1,5)} indicates that the interval includes 1 but does not include 5.
 If labels = FALSE, simple integer codes are returned instead of a factor.}
 
 \item{name}{The name of the resulting case variable as a character string.}
