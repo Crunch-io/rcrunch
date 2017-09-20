@@ -13,7 +13,7 @@ with_mock_crunch({
             generateCutLabels(2, c(2.111111, 3, 4, 5), 4, FALSE, FALSE),
             c("[2.1,3)", "[3,4)", "[4,5)")
         )
-        expect_identical( generateCutLabels(2, c(2, 3, 4, 5), 4, FALSE, FALSE),
+        expect_identical(generateCutLabels(2, c(2, 3, 4, 5), 4, FALSE, FALSE),
             c("[2,3)", "[3,4)", "[4,5)")
         )
         expect_identical(
@@ -36,7 +36,8 @@ with_mock_crunch({
     })
 
     test_that("cut throws error when no variable name supplies", {
-        expect_error( cut(ds$birthyr, 3), "Must provide the name for the new variable")
+        expect_error(cut(ds$birthyr, 3),
+            "Must provide the name for the new variable")
     })
 
 
@@ -325,18 +326,11 @@ with_mock_crunch({
         )
 
 
-        ##############################################################################
-        basic_cut <- cut(ds$birthyr, 3, name = "new_var", label = c("one", "two", "three"))
-        expect_is(
-            basic_cut,
-            "VariableDefinition"
-        )
-
-        expect_equivalent(
-            basic_output,
-            basic_cut
-        )
-
+        ########################################################################
+        basic_cut <- cut(ds$birthyr, 3, name = "new_var",
+            label = c("one", "two", "three"))
+        expect_is(basic_cut, "VariableDefinition")
+        expect_equivalent(basic_cut, basic_output)
         expect_equivalent(
             right_false,
             cut(ds$birthyr,
@@ -394,15 +388,16 @@ with_mock_crunch({
 with_test_authentication({
     ds <- newDataset(df)
 
-    test_that("cut returns the same thing for crunch variables and identical vectors", {
-        ds$cat_var1 <- cut(ds$v1, 3, name = "new_var1", label = c("one", "two", "three"))
+    test_that("cut returns the same thing for Crunch variables and identical vectors", {
+        ds$cat_var1 <- cut(ds$v1, 3, name = "new_var1",
+            label = c("one", "two", "three"))
         expect_identical(
             cut(df$v1, 3, label = c("one", "two", "three")),
             as.vector(ds$cat_var1)
         )
 
-        ds$cat_var2 <- cut(ds$v1, 3, name = "new_var2", label = c("one", "two", "three"),
-            right = FALSE)
+        ds$cat_var2 <- cut(ds$v1, 3, name = "new_var2",
+            label = c("one", "two", "three"), right = FALSE)
         expect_identical(
             cut(df$v1, 3, label = c("one", "two", "three"), right = FALSE),
             as.vector(ds$cat_var2)
@@ -436,7 +431,7 @@ with_test_authentication({
             as.vector(ds$cat_var5)
         )
 
-        df$age <- sample(1:100, 20 )
+        df$age <- sample(1:100, 20)
         ds$age <- df$age
         ds$age4 <- cut(df$age, c(0, 30, 45, 65, 200),
             c("youth", "adult", "middle-aged", "elderly"))

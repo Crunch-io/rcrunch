@@ -10,25 +10,31 @@
   ordered_result = FALSE, ...)
 }
 \arguments{
-\item{x}{A crunch variable of the class NumericVariable}
+\item{x}{A Crunch \code{NumericVariable}}
 
 \item{breaks}{Either a numeric vector of two or more unique cut points
-or a single number giving the number of intervals into which x is to be cut.}
+or a single number giving the number of intervals into which \code{x} is to be
+cut. If specifying cut points, values that are less than the smallest value
+in \code{breaks} or greater than the largest value in \code{breaks} will be marked
+missing in the resulting categorical variable.}
 
-\item{labels}{A character vector representing the labels for the levels of the resulting category.
-The length of the labels argument should be the same asd the number of categories, which is
-one fewer than the number of breaks. If not specified, labels are constructed using interval notation.
-For example \code{[1, 5)} indicates that the category goes from 1 to 5. The bracket shape indicates whether the
-number is included in the category. \code{[1,5)} indicates that the interval includes 1 but does not include 5.
+\item{labels}{A character vector representing the labels for the levels of
+the resulting categories. The length of the labels argument should be the
+same as the number of categories, which is one fewer than the number of
+breaks. If not specified, labels are constructed using interval notation.
+For example, \code{[1, 5)} indicates that the category goes from 1 to 5. The
+bracket shape indicates whether the boundary value is included in the
+category, i.e. whether it is "closed". \code{[1, 5)} indicates that the interval
+includes (is closed on) 1 but does not include (is open on) 5.
 If labels = FALSE, simple integer codes are returned instead of a factor.}
 
-\item{name}{The name of the resulting case variable as a character string.}
+\item{name}{The name of the resulting Crunch variable as a character string.}
 
 \item{include.lowest}{logical, indicating if an \code{x[i]} equal to the lowest
 (or highest, for right = FALSE) \code{breaks} value should be included.}
 
-\item{right}{logical, indicating if the intervals should be closed on the right
-(and open on the left) or vice versa.}
+\item{right}{logical, indicating if the intervals should be closed on the
+right (and open on the left) or vice versa.}
 
 \item{dig.lab}{integer which is used when labels are not given.
 It determines the number of digits used in formatting the break numbers.}
@@ -43,20 +49,23 @@ it as a derived variable on the server.
 }
 \description{
 \code{crunch::cut()} is equivalent to \code{base::cut()} except that it operates on
-Crunch variables instead of in-memory variables. The function takes a numeric variable
-and recodes it into a new categorical variable based on the breaks arugment. You can either
-break the variable into evenly spaced categories by specifying the number of breaks, or specify
-a numeric vector which identifies the start and end point of each category. For instance specifying
-\code{breaks = 5} will break the vector into five evenly spaced portions while \code{breaks = c(1, 5, 10)} will
-recode the data into two groups based on whether the numeric vector falls between 1 and 5 or 5 and 10.
+Crunch variables instead of in-memory R objects. The function takes a numeric
+variable and derives a new categorical variable from it based on the \code{breaks}
+argument. You can either break the variable into evenly spaced categories by
+specifying the number of breaks, or specify a numeric vector identifying
+the start and end point of each category. For example, specifying
+\code{breaks = 5} will break the numeric data into five evenly spaced portions
+while \code{breaks = c(1, 5, 10)} will recode the data into two groups based on
+whether the numeric vector falls between 1 and 5 or 5 and 10.
 }
 \examples{
 \dontrun{
 ds <- loadDataset("mtcars")
-ds$cat_var <- cut(ds$mpg, breaks = c(10, 15, 20), labels = c("small", "medium") name = "new_var")
+ds$cat_var <- cut(ds$mpg, breaks = c(10, 15, 20),
+    labels = c("small", "medium"), name = "Fuel efficiency")
 ds$age <- sample(1:100, 32)
 ds$age4 <- cut(df$age, c(0, 30, 45, 65, 200),
-           c("youth", "adult", "middle-aged", "elderly"))
+           c("Youth", "Adult", "Middle-aged", "Elderly"),
+           name = "Age (4 category)")
 }
-
 }

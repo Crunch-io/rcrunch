@@ -22,7 +22,7 @@ A character vector of labels
 }
 \description{
 A convenience function to generate labels for the cut function. This
-function is extracted from \code{\link[base:cut]{base::cut()}} and is broken out to make it easier to
-test. It is not meant to be called on its own.
+function is extracted from \code{\link[base:cut]{base::cut()}} and is broken out to make it easier
+to test. It is not meant to be called on its own.
 }
 \keyword{internal}

@@ -1,26 +1,34 @@
 #' Cut a numeric Crunch variable
 #'
 #' `crunch::cut()` is equivalent to `base::cut()` except that it operates on
-#' Crunch variables instead of in-memory variables. The function takes a numeric variable
-#' and recodes it into a new categorical variable based on the breaks arugment. You can either
-#' break the variable into evenly spaced categories by specifying the number of breaks, or specify
-#' a numeric vector which identifies the start and end point of each category. For instance specifying
-#' `breaks = 5` will break the vector into five evenly spaced portions while `breaks = c(1, 5, 10)` will
-#' recode the data into two groups based on whether the numeric vector falls between 1 and 5 or 5 and 10.
-#' @param x A crunch variable of the class NumericVariable
+#' Crunch variables instead of in-memory R objects. The function takes a numeric
+#' variable and derives a new categorical variable from it based on the `breaks`
+#' argument. You can either break the variable into evenly spaced categories by
+#' specifying the number of breaks, or specify a numeric vector identifying
+#' the start and end point of each category. For example, specifying
+#' `breaks = 5` will break the numeric data into five evenly spaced portions
+#' while `breaks = c(1, 5, 10)` will recode the data into two groups based on
+#' whether the numeric vector falls between 1 and 5 or 5 and 10.
+#' @param x A Crunch `NumericVariable`
 #' @param breaks Either a numeric vector of two or more unique cut points
-#' or a single number giving the number of intervals into which x is to be cut.
-#' @param labels A character vector representing the labels for the levels of the resulting category.
-#' The length of the labels argument should be the same asd the number of categories, which is
-#' one fewer than the number of breaks. If not specified, labels are constructed using interval notation.
-#' For example `[1, 5)` indicates that the category goes from 1 to 5. The bracket shape indicates whether the
-#' number is included in the category. `[1,5)` indicates that the interval includes 1 but does not include 5.
+#' or a single number giving the number of intervals into which `x` is to be
+#' cut. If specifying cut points, values that are less than the smallest value
+#' in `breaks` or greater than the largest value in `breaks` will be marked
+#' missing in the resulting categorical variable.
+#' @param labels A character vector representing the labels for the levels of
+#' the resulting categories. The length of the labels argument should be the
+#' same as the number of categories, which is one fewer than the number of
+#' breaks. If not specified, labels are constructed using interval notation.
+#' For example, `[1, 5)` indicates that the category goes from 1 to 5. The
+#' bracket shape indicates whether the boundary value is included in the
+#' category, i.e. whether it is "closed". `[1, 5)` indicates that the interval
+#' includes (is closed on) 1 but does not include (is open on) 5.
 #' If labels = FALSE, simple integer codes are returned instead of a factor.
-#' @param name The name of the resulting case variable as a character string.
+#' @param name The name of the resulting Crunch variable as a character string.
 #' @param include.lowest logical, indicating if an `x[i]` equal to the lowest
 #' (or highest, for right = FALSE) `breaks` value should be included.
-#' @param right logical, indicating if the intervals should be closed on the right
-#' (and open on the left) or vice versa.
+#' @param right logical, indicating if the intervals should be closed on the
+#' right (and open on the left) or vice versa.
 #' @param dig.lab integer which is used when labels are not given.
 #' It determines the number of digits used in formatting the break numbers.
 #' @param ordered_result	Ignored.
@@ -31,12 +39,13 @@
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("mtcars")
-#' ds$cat_var <- cut(ds$mpg, breaks = c(10, 15, 20), labels = c("small", "medium") name = "new_var")
+#' ds$cat_var <- cut(ds$mpg, breaks = c(10, 15, 20),
+#'     labels = c("small", "medium"), name = "Fuel efficiency")
 #' ds$age <- sample(1:100, 32)
 #' ds$age4 <- cut(df$age, c(0, 30, 45, 65, 200),
-#'            c("youth", "adult", "middle-aged", "elderly"))
+#'            c("Youth", "Adult", "Middle-aged", "Elderly"),
+#'            name = "Age (4 category)")
 #' }
-#'
 setMethod("cut", "NumericVariable", function(x,
                                              breaks,
                                              labels = NULL,
@@ -80,11 +89,11 @@ setMethod("cut", "NumericVariable", function(x,
             " labels. Change number of breaks or the number of labels.")
     }
     if (right) {
-        `%c1%` <- function(x,y) x <= y
-        `%c2%` <- function(x,z) x > z
+        `%c1%` <- function (x,y) x <= y
+        `%c2%` <- function (x,z) x > z
     } else {
-        `%c1%` <- function(x,y) x < y
-        `%c2%` <- function(x,z) x >= z
+        `%c1%` <- function (x,y) x < y
+        `%c2%` <- function (x,z) x >= z
     }
 
     cases <- vector("list", length = length(breaks) - 1)
@@ -101,8 +110,8 @@ setMethod("cut", "NumericVariable", function(x,
 #' Generate Labels for the cut function
 #'
 #' A convenience function to generate labels for the cut function. This
-#' function is extracted from [base::cut()] and is broken out to make it easier to
-#' test. It is not meant to be called on its own.
+#' function is extracted from [base::cut()] and is broken out to make it easier
+#' to test. It is not meant to be called on its own.
 #'
 #' @param dig.lab see `cut()`
 #' @param breaks see `cut()`
