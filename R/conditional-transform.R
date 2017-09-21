@@ -15,8 +15,6 @@
 #' to/from the local R session. `conditionalTransform` on the other hand will
 #' download the data necessary to construct the new variable.
 #'
-#' For more details see the \code{vignette("conditional-variables", package="crunch")} vignette.
-#'
 #' @param ... a list of cases to evaluate as well as other
 #' properties to pass about the case variable (i.e. alias, description)
 #' @param data a Crunch dataset object to use

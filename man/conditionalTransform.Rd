@@ -43,8 +43,6 @@ additional power comes at a cost: \code{makeCaseVariable} can be executed
 entirely on Crunch servers, so no data needs to be downloaded or uploaded
 to/from the local R session. \code{conditionalTransform} on the other hand will
 download the data necessary to construct the new variable.
-
-For more details see the \code{vignette("conditional-variables", package="crunch")} vignette.
 }
 \examples{
 \dontrun{
