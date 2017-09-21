@@ -255,6 +255,8 @@ as.list.ShojiCatalog <- function (x, ...) lapply(names(index(x)), function (i) x
 #' argument. The difference here is that if `rownames` is explicitly set as
 #' `NULL`, the resulting object will not have row names set. By default, row
 #' names will be the URLs of the catalog tuples.
+#' @param list_columns A character vector of the names of the attributes that
+#' should be stored in a list-column.
 #' @param ... additional arguments passed to `data.frame`
 #' @return a `data.frame` view of the catalog
 #' @export

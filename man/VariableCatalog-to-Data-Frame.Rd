@@ -28,7 +28,7 @@ provided to the function, and each row represents a variable.
 }
 \description{
 This method gives you a view of a \code{VariableCatalog} as a \code{data.frame} in
-order to facilliate further exploration.
+order to facilitate further exploration.
 }
 \details{
 Modifying the \code{data.frame} produced by this function will not update the

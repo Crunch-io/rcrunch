@@ -2,7 +2,7 @@
 % Please edit documentation in R/shoji-catalog.R
 \name{catalogToDataFrame}
 \alias{catalogToDataFrame}
-\title{A utility to retun a data.frame from a ShojiCatalog.}
+\title{A utility to return a data.frame from a ShojiCatalog.}
 \usage{
 catalogToDataFrame(x, keys = TRUE, rownames = NULL,
   list_columns = c("subvariables", "subvariables_catalog"), ...)
@@ -17,6 +17,9 @@ include in the result. Default is TRUE, which means all.}
 argument. The difference here is that if \code{rownames} is explicitly set as
 \code{NULL}, the resulting object will not have row names set. By default, row
 names will be the URLs of the catalog tuples.}
+
+\item{list_columns}{A character vector of the names of the attributes that
+should be stored in a list-column.}
 
 \item{...}{additional arguments passed to \code{data.frame}}
 }
