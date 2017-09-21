@@ -1,7 +1,11 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Datasets: creating, loading, and manipulating}
--->
+---
+title: "Importing datasets"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Importing datasets}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
 [Previous: Getting started](getting-started.html)
 

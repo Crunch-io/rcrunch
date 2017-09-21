@@ -140,17 +140,17 @@ setMethod("datasetReference", "MultitableCatalog", function (x) {
 #' of a tab book.
 #' @param formula an object of class 'formula' object with the
 #' cross-classifying variables separated by '+' on the right-hand side.
-#' Following how \code{\link[stats]{formula}} works in R, it should start
+#' Following how [stats::formula()] works in R, it should start
 #' with "~". Variables on left-hand side of the formula have no meaning in this
 #' function.
-#' @param data an object of class \code{CrunchDataset} in which to create the
-#' multitable, and to which the variables referenced in \code{formula} belong.
+#' @param data an object of class `CrunchDataset` in which to create the
+#' multitable, and to which the variables referenced in `formula` belong.
 #' @param name character name to give the new multitable object. If omitted,
-#' a default name will be derived from \code{formula}.
+#' a default name will be derived from `formula`.
 #' @param ... Additional multitable attributes to set. Options include
-#' \code{is_public}.
-#' @return An object of class \code{Multitable}
-#' @seealso \code{\link[stats]{formula}}
+#' `is_public`.
+#' @return An object of class `Multitable`
+#' @seealso [`stats::formula`]
 #' @examples
 #' \dontrun{
 #' m <- newMultitable(~ gender + age4 + marstat, data=ds)
@@ -181,8 +181,7 @@ newMultitable <- function (formula, data, name, ...) {
 #' Import a Multitable
 #'
 #' Allows you to import a multitable from a different dataset
-#' @param data an object of class `CrunchDataset` in which to create the
-#' multitable
+#' @param data a `CrunchDataset` in which to create the multitable
 #' @param multitable an object of class `Multitable` that you want copied
 #' to the new dataset
 #' @param ... Additional multitable attributes to set. Options include `name` and

@@ -1,30 +1,33 @@
 #' Main Crunch API handling function
 #' @param http.verb character in GET, PUT, POST, PATCH, DELETE
 #' @param url character URL to do the verb on
-#' @param ... additional arguments passed to \code{GET}, \code{PUT},
-#' \code{POST}, \code{PATCH}, or \code{DELETE}
+#' @param ... additional arguments passed to `GET`, `PUT`,
+#' `POST`, `PATCH`, or `DELETE`
 #' @param config list of config parameters. See httr documentation.
 #' @param status.handlers named list of specific HTTP statuses and a response
 #' function to call in the case where that status is returned. Passed to the
-#' \code{\link{handleAPIresponse}} function.
+#' [handleAPIresponse()] function.
 #' @keywords internal
 crunchAPI <- function (http.verb, url, config=list(), status.handlers=list(), ...) {
-    url ## force lazy eval of url before inserting in try() below
+    url ## force lazy eval of url
     if (isTRUE(getOption("crunch.debug"))) {
         ## TODO: work this into httpcache.log
         payload <- list(...)$body
         if (!is.null(payload)) try(cat("\n", payload, "\n"), silent=TRUE)
     }
     FUN <- get(http.verb, envir=asNamespace("httpcache"))
-    x <- FUN(url, ..., config=config)
+    x <- FUN(url, ..., config=c(get_crunch_config(), config))
     out <- handleAPIresponse(x, special.statuses=status.handlers)
     return(out)
 }
 
 #' HTTP methods for communicating with the Crunch API
 #'
-#' @param ... see \code{\link{crunchAPI}} for details. \code{url} is the first
-#' named argument and is required; \code{body} is also required for PUT,
+#' These methods let you communicate with the Crunch API, for more background
+#' see [Crunch Internals](http://crunch.io/r/crunch/articles/crunch-internals.html).
+#'
+#' @param ... see [`crunchAPI`] for details. `url` is the first
+#' named argument and is required; `body` is also required for PUT,
 #' PATCH, and POST.
 #' @return Depends on the response status of the HTTP request and any custom
 #' handlers.
@@ -131,10 +134,15 @@ locationHeader <- function (response) {
     return(loc)
 }
 
-#' @importFrom httr config add_headers
-crunchConfig <- function () {
-    return(c(config(verbose=isTRUE(getOption("crunch.debug")), postredir=3),
-        add_headers(`user-agent`=crunchUserAgent())))
+get_crunch_config <- function () getOption("crunch.httr_config")
+
+set_crunch_config <- function (cfg=c(config(postredir=3),
+                                add_headers(`user-agent`=crunchUserAgent())),
+                               update=FALSE) {
+    if (update) {
+        cfg <- c(get_crunch_config(), cfg)
+    }
+    options(crunch.httr_config=cfg)
 }
 
 #' @importFrom utils packageVersion

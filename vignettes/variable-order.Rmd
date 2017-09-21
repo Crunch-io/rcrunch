@@ -1,7 +1,11 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Variable Order}
--->
+---
+title: "Reordering Variables"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Reordering Variables}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
 [Previous: array variables](array-variables.html)
 

@@ -51,5 +51,5 @@ These methods provide an \code{array}-like interface to the CrunchCube
 object.
 }
 \seealso{
-\code{\link{cube-computing}}
+\code{\link{cube-computing}} \code{\link[base:array]{base::array}}
 }

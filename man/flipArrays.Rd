@@ -2,24 +2,23 @@
 % Please edit documentation in R/make-array.R
 \name{flipArrays}
 \alias{flipArrays}
-\title{Rearrange array subvariables into other configurations}
+\title{Rearrange array subvariables}
 \usage{
 flipArrays(variables, suffix = ", flipped")
 }
 \arguments{
-\item{variables}{List of variables, variable catalog, or dataset subset
+\item{variables}{List of variables, a variable catalog, or a dataset subset
 containing the categorical array or multiple response variables you want to
 rearrange.}
 
-\item{suffix}{character string to append to the new variable names. Make it
+\item{suffix}{character string to append to the new variable names. Pass
 \code{""} if you don't want it to append anything.}
 }
 \value{
 A list of derived VariableDefinitions, one per unique subvariable
-name across all \code{variables}. Each variable (in \code{variables}) that
-contains this subvariable will appear
-as a subvariable in these new derived array definitions. Use
-\code{addVariables} to add these to your dataset.
+name across all \code{variables}. Each variable in \code{variables} that
+contains this subvariable will appear as a subvariable in these new derived
+array definitions. Use \code{\link{addVariables}} to add these to your dataset.
 }
 \description{
 Sometimes it is useful to group subvariables across arrays in order to

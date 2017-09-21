@@ -1,7 +1,11 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Variables: cleaning and defining metadata}
--->
+---
+title: "Crunch Variables"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Crunch Variables}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
 [Previous: create and load datasets](datasets.html)
 
@@ -165,7 +169,7 @@ track.cats.before
 
 ### Category attributes
 
-Categories have `names`, the factor's levels; numeric `values` which can be used when interpreting the categorical variable as numeric; and `ids`, which are analogous to the integer values that underly an R factor. Categories also have their own "missing" status. Indeed, because Crunch supports more complex missing value support than does R, multiple categories can be marked as missing: there's not a single "NA" value.
+Categories have `names`, the factor's levels; numeric `values` which can be used when interpreting the categorical variable as numeric; and `ids`, which are analogous to the integer values that underlie an R factor. Categories also have their own "missing" status. Indeed, because Crunch supports more complex missing value support than does R, multiple categories can be marked as missing: there's not a single "NA" value.
 
 ```{r, eval=FALSE}
 names(categories(track.var))

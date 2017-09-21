@@ -8,7 +8,7 @@ createWithPreparedData(data, metadata = attr(data, "metadata"))
 }
 \arguments{
 \item{data}{a data.frame that meets the Crunch API specification, as returned
-by \code{\link{prepareDataForCrunch}}, or a character path to a file or URL
+by \code{\link[=prepareDataForCrunch]{prepareDataForCrunch()}}, or a character path to a file or URL
 where such data has been written as CSV.}
 
 \item{metadata}{list of Crunch metadata that corresponds to \code{data}.
@@ -20,5 +20,6 @@ metadata has been written as JSON.}
 A CrunchDataset.
 }
 \description{
-Upload a prepared data.frame with metadata to Crunch
+If you have manually created a Crunch dataset object with \code{\link[=prepareDataForCrunch]{prepareDataForCrunch()}}
+this function allows you to upload it to the app.
 }

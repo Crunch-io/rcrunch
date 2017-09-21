@@ -16,5 +16,5 @@ CrunchDataset or catalog that has an \code{ordering} property.}
 \description{
 This function reduces a potentially nested order to its flattened
 representation, containing no nested groups. Entities are ordered in the
-result by their first appearance in the order object passed as input.
+result by their first appearance in the order object.
 }

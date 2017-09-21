@@ -1,11 +1,35 @@
-### crunch 1.17.9 (under development)
+### crunch 1.18.1 (under development)
+* `makeWeight` allows you to generate new weighting variables based on categorical variables (#80).
+* `cut`, equivalent to `base::cut`, allows you to generate a derived categorical variable based on a numeric variable (#93). 
+* Create a new Crunch dataset from a file by calling `newDataset` directly instead of `newDatasetFromFile`. Also, you can now create a dataset from a hosted file passing its URL to `newDataset(FromFile)`.
+* RStudio users will now be prompted for their password on `login` in a way that conceals the input.
+* Changed the behavior of `changeCategoryID()` to only update numeric values of the category having its id changed when the id and the numeric value are the same.
+* The `autorollback` argument of `appendDataset()` has been deprecated. The option no longer has any effect and a warning will be printed to notify users about the deprecation.
+* Long-deprecated `newDatasetByCSV` was removed.
+
+## crunch 1.18.0
+
+### Support for mapping
+* Crunch-hosted geographic data can now be set and updated. Use `geo()` on a variable to see if there is already associated geographic data.
+* `addGeoMetadata()` function to match a text or categorical variable with available geodata based on the contents of the variable and metadata associated with Crunch-hosted geographic data.
+
+### Better derived variable support
+* Derivation expressions can now be retrieved from derived variables with `derivation()`
+* Derived variables can be integrated or instantiated by setting `derivation() <- NULL`
+
+### Other new functions
 * `resetPassword()` function
-* Categories are now selectable by names as well as ids
-* Fix issue where `deleteSubvariable()` by index instead deleted the parent variable
+* `copyOrder()` to copy the ordering of variables from one dataset to another.
 * Pass a web app URL to `loadDataset()` and it will now load the same dataset in your R session.
 * `webApp()` function to go the other way: open the dataset from your R session in your web browser.
 * `categoriesFromLevels()` is now exported (#77)
+
+### Fixes and adjustments
+* Categories are now selectable by names as well as ids
+* Fix issue where `deleteSubvariable()` by index instead deleted the parent variable
 * Add a missing import from the `methods` package so that `Rscript` works (#90)
+* Allow deep copying of multiple-response type variables
+* Experimental support for merging `CrunchDataFrame`s with standard `data.frame`s
 
 ### crunch 1.17.8
 Two attempts to fix download issues introduced by 1.17.4:

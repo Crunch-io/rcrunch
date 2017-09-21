@@ -1,7 +1,7 @@
 # crunch
 
 [![Build Status](https://travis-ci.org/Crunch-io/rcrunch.png?branch=master)](https://travis-ci.org/Crunch-io/rcrunch) [![Build status](https://ci.appveyor.com/api/projects/status/iaydo4y3dfrqnqqu/branch/master?svg=true)](https://ci.appveyor.com/project/nealrichardson/rcrunch/branch/master)
-[![cran](https://www.r-pkg.org/badges/version-last-release/crunch)](https://cran.r-project.org/package=crunch) [![codecov](https://codecov.io/gh/Crunch-io/rcrunch/branch/master/graph/badge.svg)](https://codecov.io/gh/Crunch-io/rcrunch) (unit tests); 96.6% coverage with integration tests
+[![cran](https://www.r-pkg.org/badges/version-last-release/crunch)](https://cran.r-project.org/package=crunch) [![codecov](https://codecov.io/gh/Crunch-io/rcrunch/branch/master/graph/badge.svg)](https://codecov.io/gh/Crunch-io/rcrunch) (unit tests); 97% coverage with integration tests
 
 [Cloud Collaboration with Crunch](http://crunch-io.github.io/rcrunch/)
 
@@ -43,7 +43,7 @@ Connecting to Crunch and working with datasets is simple:
     [crunch] >
     ...
 
-Check out `listDatasets()` to see the names of your existing datasets, which you can load like `ds <- loadDataset("The name of my dataset")`. New Crunch datasets can be made from a `data.frame` with `newDataset()`, or from a .csv or .sav file with `newDatasetFromFile()`. See the help for these functions or [`vignette("getting-started", package="crunch")`](inst/doc/getting-started.md) for more information.
+Check out `listDatasets()` to see the names of your existing datasets, which you can load like `ds <- loadDataset("The name of my dataset")`. New Crunch datasets can be made from a `data.frame`, a .csv or .sav file, or a URL to a file with `newDataset()`. See the help for these functions or [`vignette("getting-started", package="crunch")`](inst/doc/getting-started.md) for more information.
 
 ## Additional configuration
 

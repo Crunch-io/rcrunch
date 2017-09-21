@@ -2,7 +2,7 @@
 #'
 #' @param object the object
 #' @return invisibly
-#' @seealso \code{\link[methods]{show}}
+#' @seealso [`methods::show`]
 #' @importFrom methods show
 #' @name show-crunch
 NULL
@@ -161,7 +161,7 @@ formatVersionCatalog <- function (x, from=Sys.time()) {
     )
 
 formatExpression <- function (expr) {
-    if (inherits(expr, "CrunchExpr")) {
+    if (is.CrunchExpr(expr)) {
         return(formatExpression(expr@expression))
     } else if ("function" %in% names(expr)) {
         func <- expr[["function"]]
@@ -191,8 +191,8 @@ expressionValue <- function (expr) {
     unlist(expr$column %||% expr$value)
 }
 
-deparseAndFlatten <- function (x, max_length = NULL, ...) {
-    out <- deparse(x, ...)
+deparseAndFlatten <- function (x, max_length = NULL, control=NULL, ...) {
+    out <- deparse(x, control=control, ...)
     if (length(out) > 1) {
         out <- paste0(out, collapse="")
     }
@@ -256,14 +256,14 @@ setMethod("show", "CrunchLogicalExpr", function (object) {
 
 showMultitable <- function (x) {
     out <- paste("Multitable", dQuote(name(x)))
-    
+
     # TODO: check variable types to alert users in a more friendly manner
     # eg remove selected_array()
     out <- c(out, "Column variables:",
              vapply(x@body$template, function (expr) {
                  paste0("  ", formatExpression(expr$query[[1]]))
              }, character(1)))
-    
+
     return(c(out))
 }
 
@@ -310,3 +310,20 @@ setMethod("show", "CrunchCube", function (object) show(cubeToArray(object)))
 #' @rdname show-crunch
 #' @export
 setMethod("show", "OrderGroup", function (object) cat(showOrderGroup(object, index=structure(lapply(urls(object), function (x) list(name=x)), .Names=urls(object)), key="name"), sep="\n"))
+
+
+
+
+#' @rdname show-crunch
+#' @export
+setMethod("show", "CrunchGeography", function (object) {
+    geo_datum <- Geodata(crGET(object$geodatum))
+    cat("CrunchGeography metadata for variable \n",
+        "geodatum name: \t\t", name(geo_datum), "\n",
+        "geodatum description: \t", description(geo_datum), "\n",
+        "geodatum url: \t\t", object$geodatum, "\n",
+        "feature_key: \t\t", object$feature_key, "\n",
+        "match_field: \t\t", object$match_field, "\n",
+        sep="")
+    invisible(object)
+})

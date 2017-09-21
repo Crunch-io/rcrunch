@@ -65,7 +65,7 @@
 \S4method{$}{CategoricalArrayVariable}(x, name) <- value
 }
 \arguments{
-\item{x}{Subvariables or an array Variable (which contains subvariables)}
+\item{x}{Subvariables or an array Variable which contains subvariables}
 
 \item{i}{which subvariables to extract}
 

@@ -16,7 +16,8 @@ with_mock_crunch({
 
     ## Setup to test the auto-polling
     fakeProg <- function (progress_url) {
-        return(fakeResponse(status_code=202,
+        return(fakeResponse(progress_url,
+            status_code=202,
             headers=list(
                 location="https://app.crunch.io/api/datasets/",
                 `Content-Type`="application/json"

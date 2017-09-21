@@ -1,18 +1,18 @@
 #' Update a variable or variables in a dataset
 #'
 #' @param x a CrunchDataset
-#' @param i For \code{[}, a \code{CrunchLogicalExpr}, numeric, or logical
-#' vector defining a subset of the rows of \code{x}. For \code{[[}, see
-#' \code{j} for the as.list column subsetting.
+#' @param i For `[`, a `CrunchLogicalExpr`, numeric, or logical
+#' vector defining a subset of the rows of `x`. For `[[`, see
+#' `j` for the as.list column subsetting.
 #' @param j if character, identifies variables to extract based on their
-#' aliases (by default: set \code{options(crunch.namekey.dataset="name")}
+#' aliases (by default: set `options(crunch.namekey.dataset="name")`
 #' to use variable names); if numeric or
 #' logical, extracts variables accordingly. Note that this is the as.list
 #' extraction, columns of the dataset rather than rows.
-#' @param name like \code{j} but for \code{$}
-#' @param value replacement values to insert. These can be \code{crunchExpr}s
+#' @param name like `j` but for `$`
+#' @param value replacement values to insert. These can be `crunchExpr`s
 #' or R vectors of the corresponding type
-#' @return \code{x}, modified.
+#' @return `x`, modified.
 #' @aliases dataset-update
 #' @name dataset-update
 NULL
@@ -124,6 +124,23 @@ setMethod("$<-", c("CrunchDataset"), function (x, name, value) {
     x[[name]] <- value
     return(x)
 })
+
+#' @rdname dataset-update
+#' @export
+setMethod("[[<-",
+          c("CrunchDataset", "character", "missing", "CrunchGeography"),
+          function (x, i, value) {
+              geo(x[[i]]) <- value
+              return(x)
+          })
+#' @rdname dataset-update
+#' @export
+setMethod("[[<-",
+          c("CrunchDataset", "ANY", "missing", "CrunchGeography"),
+          function (x, i, value) {
+              geo(x[[i]]) <- value
+              return(x)
+          })
 
 #' @rdname dataset-update
 #' @export

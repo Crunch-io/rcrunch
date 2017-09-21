@@ -78,8 +78,8 @@ setMethod("toVariable", "logical", function (x, ...) {
 #' @examples
 #'
 #' categoriesFromLevels(levels(iris$Species))
-#'
-categoriesFromLevels <- function(level_vect) {
+#' 
+categoriesFromLevels <- function (level_vect) {
     if (anyDuplicated(level_vect)) {
         warning("Duplicate factor levels given: disambiguating them ",
             "in translation to Categorical type")

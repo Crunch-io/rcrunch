@@ -45,21 +45,22 @@
 \arguments{
 \item{x}{a CrunchDataset}
 
-\item{i}{As with a \code{data.frame}, there are two cases: (1) if no other
-arguments are supplied (i.e \code{x[i]}), \code{i} provides for
+\item{i}{As with a \code{data.frame}, there are two cases:
+\enumerate{
+\item if no other arguments are supplied (i.e \code{x[i]}, \code{i} provides for
 \code{as.list} extraction: columns of the dataset rather than rows. If
 character, identifies variables to extract based on their aliases (by
 default: set \code{options(crunch.namekey.dataset="name")} to use variable
-names); if numeric or logical,
-extracts variables accordingly. Alternatively, (2) if \code{j} is specified
-(as either \code{x[i, j]} or \code{x[i,]}), \code{i} is an object of class
-\code{CrunchLogicalExpr} that will define a subset of rows.}
+names); if numeric or logical, extracts variables accordingly.
+\item If \code{j} is specified as either \code{x[i, j]} or \code{x[i,]}), \code{i} is an object of class
+\code{CrunchLogicalExpr} that will define a subset of rows.
+}}
 
 \item{j}{columnar extraction, as described above}
 
 \item{...}{additional arguments}
 
-\item{drop}{logical: autmatically simplify a 1-column Dataset to a Variable?
+\item{drop}{logical: automatically simplify a 1-column Dataset to a Variable?
 Default is FALSE, and the TRUE option is in fact not implemented.}
 
 \item{name}{columnar extraction for \code{$}}

@@ -98,7 +98,7 @@ makeCaseVariable <- function (..., cases, data = NULL, name) {
     casevar$derivation <- zfunc("case", new_cat)
 
     # add case_expressions, remove nulls (should only be from the else case)
-    case_exprs <- lapply(cases, function(x) zcl(x$expression))
+    case_exprs <- lapply(cases, function (x) zcl(x$expression))
     case_exprs <- Filter(Negate(is.null), case_exprs)
     casevar$derivation$args <- c(casevar$derivation$args, case_exprs)
 
@@ -151,7 +151,7 @@ ensureValidCases <- function (cases) {
 #' 1. `id`: an integer to use for this category when a case variable is made
 #' (default: none, one will automatically be assigned when the case variable
 #' is made)
-#' 1. `name`: a charcater identifier for this case
+#' 1. `name`: a character identifier for this case
 #' 1. `expression`: a `CrunchLogicalExpr` that sets the conditions for the case, or "else"
 #' 1. `numeric_value`: a numeric that is the value this case should take on
 #' when analyzing the data numerically (mean, standard deviation, etc.)
@@ -221,7 +221,7 @@ fillIds <- function (cases) {
     supplied_ids <- vapply(cases[!need_ids], vget("id"), numeric(1))
     new_ids <- seq_along(cases) # generate too many ids
     new_ids <- setdiff(new_ids, supplied_ids) # discard ids where there is overlap
-    cases[need_ids] <- lapply(seq_along(cases[need_ids]), function(i) {
+    cases[need_ids] <- lapply(seq_along(cases[need_ids]), function (i) {
         cases[need_ids][[i]]$id <- new_ids[i]
         return(cases[need_ids][[i]])
     })

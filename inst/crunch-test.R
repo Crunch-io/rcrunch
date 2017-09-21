@@ -26,15 +26,6 @@ skip_locally <- function (...) {
     }
 }
 
-skip_if_devtools_loaded <- function (...) {
-    # TODO: this might be fragile with devtools being split up, might need
-    # to be migrated to the new pkgload (`is_dev_package()`) if
-    # `dev_packages()` is deprecated.
-    if ('crunch' %in% devtools::dev_packages()) {
-        skip(...)
-    }
-}
-
 ## Contexts
 
 with_mock_crunch <- function (expr) {
@@ -52,6 +43,12 @@ with_POST <- function (resp, expr) {
     ## Mock a POST that returns something, like a Location header pulled from 201
     force(resp)
     with_mock(`crunch::crPOST`=function (...) resp, eval.parent(expr))
+}
+
+with_DELETE <- function (resp, expr) {
+    ## Mock a DELETE that returns something, or nothing
+    force(resp)
+    with_mock(`crunch::crDELETE`=function (...) resp, eval.parent(expr))
 }
 
 with_silent_progress <- function (expr) {

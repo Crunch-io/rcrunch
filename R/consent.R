@@ -2,13 +2,13 @@
 #'
 #' Potentially destructive actions require that you confirm that you really
 #' want to do them. If you're running a script and you know that you want to
-#' perform those actions, you can preemptively provide \code{consent}.
+#' perform those actions, you can preemptively provide `consent`.
 #'
 #' @param expr Code to evaluate with consent
-#' @return \code{consent} returns an S3 class "contextManager" object, which
-#' you can use with \code{with}. \code{with_consent} evaluates its arguments
-#' inside the \code{consent} context.
-#' @seealso \link{with-context-manager} \link{ContextManager}
+#' @return `consent` returns an S3 class "contextManager" object, which
+#' you can use with `with`. `with_consent` evaluates its arguments
+#' inside the `consent` context.
+#' @seealso [`with-context-manager`] [`ContextManager`]
 #' @examples
 #' \dontrun{
 #' with(consent(), delete(ds))
