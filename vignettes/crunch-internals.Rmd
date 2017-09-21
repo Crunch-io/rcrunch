@@ -7,6 +7,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+[Previous: conditional variables](conditional-variables.html)
+
 The Crunch web app and the `crunch` package are both built on a [REST API](http://docs.crunch.io/). Users can interact with very large datasets because most of the heavy computation is done on the Crunch servers and not on the users computer. In most cases, you don't need to know how the API works---the R package handles the HTTP requests and responses and presents meaningful objects and methods to you. To go beyond the basics, though, it can be useful to understand how the API works so that you can make more complex or more efficient (read: faster) operations.
 
 ### Catalogs
