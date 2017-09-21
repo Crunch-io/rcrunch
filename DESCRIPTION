@@ -33,7 +33,7 @@ Suggests:
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
-Collate:
+Collate: 
     'AllClasses.R'
     'AllGenerics.R'
     'variable-definition.R'
@@ -114,6 +114,7 @@ Collate:
     'variable-order.R'
     'variable-summary.R'
     'variable-to-R.R'
+    'variable-transform.R'
     'variable-type.R'
     'variable-update.R'
     'variable.R'
