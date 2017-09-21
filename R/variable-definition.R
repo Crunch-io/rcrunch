@@ -12,7 +12,7 @@
 #' See [toVariable] for how R data types are converted. This function can
 #' also be used to construct a `VariableDefinition` directly by passing
 #' attributes to `...`. This is only recommended for advanced users who are
-#' familliar with the Crunch API.
+#' familiar with the Crunch API.
 #' @param ... additional attributes to be included in the `VariableDefinition`
 #' @return a `VariableDefinition` object, ready to POST to Crunch.
 #' @export

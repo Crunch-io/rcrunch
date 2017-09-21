@@ -37,7 +37,7 @@ interactVariables <- function (..., name, sep = ":") {
     return(interactionVar)
 }
 
-#' Make case statments that define the interaction of two or more other variables
+#' Make case statements that define the interaction of two or more other variables
 #'
 #' @param ... A sequence of categorical variables to make an interaction of
 #' @param sep a character to separate the values of the individual variables

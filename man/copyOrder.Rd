@@ -2,7 +2,7 @@
 % Please edit documentation in R/ordering.R
 \name{copyOrder}
 \alias{copyOrder}
-\title{Copy the order from one dataset to another.}
+\title{Copy the variable order from one dataset to another.}
 \usage{
 copyOrder(source, target)
 }
@@ -16,7 +16,7 @@ returns an object of class \code{\link{VariableOrder}} (which can be assigned
 to a dataset with \code{\link{ordering}})
 }
 \description{
-Copy the order from one dataset to another.
+Copy the variable order from one dataset to another.
 }
 \examples{
 \dontrun{

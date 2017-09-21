@@ -3,19 +3,24 @@
 #' Crunch stores geographic data as variable metadata. There are a number of
 #' functions that help access and change this metadata.
 #'
-#' `geo` retrieves the geographic information associate with a variable. If there is geographic information it returns an object of class `CrunchGeography` otherwise it returns `NULL`.
+#' `geo` retrieves the geographic information associate with a variable.
+#' If there is geographic information it returns an object of class
+#' `CrunchGeography` otherwise it returns `NULL`.
 #'
 #' `CrunchGeography` objects store geography metadata from a variable. There are three slots:
-#' * `geodatum` an object of class CrunchGeodata which stores references to the Crunch-hosted (geo|topo)json to use
-#' * `feature_key` a character that is the feature inside of the (geo|topo)json to match `match_field` to (e.g. properties.name)
-#' * `match_field` a character that is the the variable metadata information to match to `feature_key` to (e.g. name)
+#' * `geodatum` an object of class CrunchGeodata which stores references
+#' to the Crunch-hosted (geo|topo)json to use
+#' * `feature_key` a character string representing the feature inside of the
+#' (geo|topo)json which is used to match `match_field` (e.g. properties.name)
+#' * `match_field` a character string representing the variable metadata information which is used
+#' to match `feature_key` to (e.g. name)
 #'
 #' @param x a crunch variable
 #' @param value value of the geography property to set
-#' @param ... for `CrunchGeography`, named arugments to construct a
-#' `CrunchGeography` from: `geodatum`, `feature_key`, and `match_field`
-#' @param data for `CrunchGeography`, list of named arguments to construct a
-#' `CrunchGeography` from: `geodatum`, `feature_key`, and `match_field`
+#' @param ... for `CrunchGeography`, named arguments from which to construct a
+#' `CrunchGeography`: `geodatum`, `feature_key`, and `match_field`
+#' @param data for `CrunchGeography`, list of named arguments from which to construct a
+#' `CrunchGeography`: `geodatum`, `feature_key`, and `match_field`
 #' @return geographic information of class `CrunchGeography` (`NULL` if there is none)
 #'
 #' @name geo
@@ -118,13 +123,13 @@ availableGeodata <- function (x = getAPIRoot()) {
     return(GeoCatalog(crGET(shojiURL(x, "catalogs", "geodata"))))
 }
 
-#' all available property features for all available geographies
+#' Get the property features for available geographies
 #'
 #' @param x an API root address (default: the R-session default)
-#' @param geodatum_fields character, what peices of information about each
+#' @param geodatum_fields character, what pieces of information about each
 #' geodatum should be retained? (default: `c("name", "description", "location")``)
 #'
-#' @return a (tidy) dataframe with all of the available features and
+#' @return a dataframe with all of the available features and
 #' geographies for matching
 #'
 #' @export

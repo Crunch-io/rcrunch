@@ -9,7 +9,7 @@ newMultitable(formula, data, name, ...)
 \arguments{
 \item{formula}{an object of class 'formula' object with the
 cross-classifying variables separated by '+' on the right-hand side.
-Following how \code{\link[stats]{formula}} works in R, it should start
+Following how \code{\link[stats:formula]{stats::formula()}} works in R, it should start
 with "~". Variables on left-hand side of the formula have no meaning in this
 function.}
 
@@ -38,5 +38,5 @@ name(m) # [1] "gender + age4 + marstat"
 }
 }
 \seealso{
-\code{\link[stats]{formula}}
+\code{\link[stats:formula]{stats::formula}}
 }

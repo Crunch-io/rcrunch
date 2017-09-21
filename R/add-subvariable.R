@@ -3,7 +3,8 @@
 #' @param variable the array variable to modify
 #' @param subvariable the subvariable to add, or a list of those to add, or a
 #' dataset subset
-#' @return \code{variable} with the indicated subvariables added.
+#' @return `variable` with the indicated subvariables added.
+#' @seealso [`subvariables`]
 #' @examples
 #' \dontrun{
 #' ds$allpets <- addSubvariable(ds$allpets, ds$allpets_4)

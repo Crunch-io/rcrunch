@@ -10,13 +10,13 @@ getSummary <- function (x) {
 
 #' Table function for Crunch objects
 #'
-#' @param ... things to tabulate
-#' @param exclude see \code{\link[base]{table}}
-#' @param useNA see \code{\link[base]{table}}
-#' @param dnn see \code{\link[base]{table}}
-#' @param deparse.level see \code{\link[base]{table}}
+#' @param ... CrunchVariables to tabulate
+#' @param exclude see [`base::table`]
+#' @param useNA see [`base::table`]
+#' @param dnn see [`base::table`]
+#' @param deparse.level see [`base::table`]
 #' @return a table object
-#' @seealso \code{\link[base]{table}}
+#' @seealso [`base::table`]
 #' @export
 table <- function (..., exclude, useNA=c("no", "ifany", "always"), dnn, deparse.level) {
     m <- match.call()

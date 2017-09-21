@@ -67,9 +67,30 @@ inverses. The setters return the dataset.
 }
 \description{
 "Archived" datasets are excluded from some views. "Draft" datasets are
-visible only to editors. "Published" is the inverse of "Draft", i.e.
-\code{is.draft(x)} entails \code{!is.published(x)}. These properties are
-accessed and set with the "is" methods. The verb functions \code{archive}
-and \code{publish} are alternate versions of the setters (at least in the
-\code{TRUE} direction).
+visible only to editors, while published datasets are available to all viewers.
+A dataset can either be published or in draft, but not both.
+These properties are accessed and set with the "is" methods. You can also
+set the properties by assigning into the function. The verb functions
+\code{archive} and \code{publish} are alternate versions of the setters.
+}
+\examples{
+\dontrun{
+ds <- loadDataset("mtcars")
+is.draft(ds)     # FALSE
+is.published(ds) # TRUE
+identical(is.draft(ds), !is.published(ds))
+# Can make a dataset a "draft" by:
+is.draft(ds) <- TRUE
+is.published(ds) # FALSE
+# Could also have set is.published(ds) <- FALSE
+# Now, can go the other way by setting is.draft, is.published, or:
+ds <- publish(ds)
+is.published(ds) # TRUE
+
+is.archived(ds)  # FALSE
+is.archived(ds) <- TRUE
+is.archived(ds)  # TRUE
+# Could have achieved the same effect by:
+ds <- archive(ds)
+}
 }

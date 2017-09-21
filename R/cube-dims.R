@@ -56,16 +56,16 @@ elementIsAnyOrNone <- function (el) {
 
 #' Methods on Cube objects
 #'
-#' These methods provide an \code{array}-like interface to the CrunchCube
+#' These methods provide an `array`-like interface to the CrunchCube
 #' object.
 #'
 #' @param x a CrunchCube or its CubeDims component.
 #'
 #' @return Generally, the same shape of result that each of these functions
-#' return when applied to an \code{array} object.
+#' return when applied to an `array` object.
 #' @name cube-methods
 #' @aliases cube-methods dimensions
-#' @seealso \code{\link{cube-computing}}
+#' @seealso [`cube-computing`] [`base::array`]
 NULL
 
 #' @rdname cube-methods

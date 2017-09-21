@@ -61,24 +61,29 @@
 \item{x}{a VariableGroup or VariableOrder}
 
 \item{simplify}{logical: should variable URLs inside of groups be flattened
-or preserved in their nested lists? Default is \code{FALSE}.}
+or preserved in their nested lists? Default is\code{FALSE}.}
 
-\item{value}{(1) For name, a character (length-1 vector); for names, a character
+\item{value}{\enumerate{
+\item For name, a character (length-1 vector); for names, a character
 vector of equal length to the number of VariableGroups being modified; for
 entities, either a character vector of variable URLs or a list containing a
 combination of variable URLs and VariableGroups. Note that group names must
 be unique, should be greater than 0 characters long, and "ungrouped" is a
-reserved group name. (2) For duplicates, logical for whether duplicate
-variable entries should be allowed in the VariableOrder.}
+reserved group name.
+\item For duplicates, logical for whether duplicate
+variable entries should be allowed in the VariableOrder.
+}}
 }
 \value{
-\code{entities} returns Variable references and VariableGroups; \code{names} returns group names; \code{duplicates} returns logical for whether duplicate variable entries should be allowed
+\itemize{
+\item \code{entities} returns Variable references and VariableGroups;
+\item \code{names} returns group names;
+\item \code{duplicates} returns logical for whether duplicate variable entries should be allowed
+}
 }
 \description{
 Manipulate VariableGroup and VariableOrder
 }
 \seealso{
-\code{\link{VariableOrder}}
-
-\code{\link{grouped}}
+\code{\link{VariableOrder}} \code{\link{grouped}}
 }

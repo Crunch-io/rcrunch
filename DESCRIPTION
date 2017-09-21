@@ -28,7 +28,8 @@ Suggests:
     devtools,
     httptest (>= 2.0.0),
     knitr,
-    rstudioapi
+    rstudioapi,
+    spelling
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
@@ -61,6 +62,7 @@ Collate:
     'cube-dims.R'
     'cube-query.R'
     'cube-result.R'
+    'cut.R'
     'dataset-catalog.R'
     'dataset-extract.R'
     'dataset-order.R'

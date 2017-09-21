@@ -74,15 +74,15 @@ setMethod("subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
 
 #' Extract and modify subsets of subvariables
 #'
-#' @param x Subvariables or an array Variable (which contains subvariables)
+#' @param x Subvariables or an array Variable which contains subvariables
 #' @param i which subvariables to extract
-#' @param name For \code{$}, the name (not alias) of the subvariable to
+#' @param name For `$`, the name (not alias) of the subvariable to
 #' extract
 #' @param j Invalid
 #' @param drop Invalid
 #' @param ... additional arguments
 #' @param value For updating, a CrunchExpr
-#' @return A subset of \code{x} if extracting, otherwise \code{x} duly modified
+#' @return A subset of `x` if extracting, otherwise `x` duly modified
 #' @name subvars-extract
 NULL
 
