@@ -264,22 +264,19 @@ catalogToDataFrame <- function (x, keys=TRUE, rownames = NULL,
     list_columns = c("subvariables", "subvariables_catalog"),
     ...) {
 
-    index <- lapply(index(x), function(a) a[keys])
-    ## Return an empty dataframe if the function is called on an empty catalog
-    if (length(index) == 0) {
-        message("Catalog is empty, returning an empty dataframe")
+    if (length(x) == 0) {
+        ## If catalog is empty, bail
         return(data.frame())
     } else {
+        index <- lapply(index(x), function (a) a[keys])
         ### The following code is equivalent to out <- purrr::map_df(index, entry_to_df)
         ################
         entry_list <- lapply(index, entryToDF, list_col_names = list_columns)
-        names   <- unique(unlist( lapply(entry_list, names)))
+        names <- unique(unlist(lapply(entry_list, names)))
         out <- data.frame(matrix(nrow = length(entry_list), ncol = length(names)))
         names(out) <- names
         for (i in seq_along(entry_list)) {
-            for (j in  names(entry_list[[i]])) {
-                # Overwriting a entry in a dataframe with a longer list
-                # can trigger a warning, which needs to be suppressed.
+            for (j in names(entry_list[[i]])) {
                 out[[j]][i] <- entry_list[[i]][1, j]
             }
         }
@@ -288,19 +285,21 @@ catalogToDataFrame <- function (x, keys=TRUE, rownames = NULL,
         out <- as.data.frame(out, rownames = rownames, ...)
 
         # When a bad key argument is passed to the the shoji index it returns a
-        # data,frame with an NA value. This excludes those columns.
+        # data.frame with an NA value. This excludes those columns.
         exclude_cols <- grepl("^NA", names(out)) &
-            vapply(out, function(x)all(is.na(x)), FUN.VALUE = logical(1))
+            vapply(out, function (x) all(is.na(x)), logical(1))
         out <- out[, !exclude_cols, drop = FALSE]
 
-        missing_keys <- dQuote(keys[!(keys %in% names(out))])
-        if (any(!(keys %in% names(out))) && keys != TRUE) {
-            if (length(missing_keys) == 1) {
-                error_text <-  " is an invalid key for catalogs of class "
-            } else {
-                error_text <- " are invalid keys for catalogs of class "
+        if (!isTRUE(keys)) {
+            missing_keys <- setdiff(keys, names(out))
+            if (length(missing_keys)) {
+                if (length(missing_keys) == 1) {
+                    error_text <-  " is an invalid key for catalogs of class "
+                } else {
+                    error_text <- " are invalid keys for catalogs of class "
+                }
+                halt(serialPaste(dQuote(missing_keys)), error_text, class(x), ".")
             }
-            halt(serialPaste(missing_keys), error_text, class(x), ".")
         }
 
         # Reorder columns to match the order in which keys were supplied
@@ -320,29 +319,21 @@ catalogToDataFrame <- function (x, keys=TRUE, rownames = NULL,
 entryToDF <- function (entry, list_col_names) {
     entry[vapply(entry, is.null, logical(1))] <- NA
     vect_col <- entry[!(names(entry) %in% list_col_names)]
-    mislabled_list_cols <- lapply(vect_col, length) > 1
+    mislabled_list_cols <- vapply(vect_col, length, integer(1)) > 1
 
-    error_text <- " contain more than one entry and are not included in list_col_names"
-    if (sum(mislabled_list_cols) == 1) {
-        error_text <- " contains more than one entry and is not included in list_col_names"
-    }
     if (any(mislabled_list_cols)) {
+        error_text <- " contain more than one entry and are not included in list_col_names"
+        if (sum(mislabled_list_cols) == 1) {
+            error_text <- " contains more than one entry and is not included in list_col_names"
+        }
         halt(serialPaste(dQuote(names(vect_col[mislabled_list_cols]))),
             error_text)
     }
     entry_df <- as.data.frame(vect_col, stringsAsFactors = FALSE)
 
     if (any(names(entry) %in% list_col_names)) {
-        list_col <- entry[list_col_names]
-        list_df <- data.frame(matrix(nrow = 1, ncol = length(list_col)))
-        names(list_df) <- names(list_col)
-        for (i in seq_along(list_col)) {
-            # The column needs to corerced to a list before you
-            # can assign a list into it. This can be removed if
-            # we add a tibble dependency.
-            list_df[[1, i]] <- as.list(list_df[[1, i]])
-            list_df[[1, i]] <- list_col[[i]]
-        }
+        list_df <- structure(lapply(entry[list_col_names], list),
+            class="data.frame", row.names=c(NA, -1L))
         entry_df <- cbind(entry_df, list_df)
     }
     return(entry_df)

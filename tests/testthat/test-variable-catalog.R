@@ -195,7 +195,7 @@ with_mock_crunch({
             expected_df)
         expect_identical(entryToDF(list_entry, c("subvariables", "subvariables_catalog")),
             expected_list_df)
-        expect_error(entryToDF(list_entry, c("alias")),
+        expect_error(entryToDF(list_entry, "alias"),
             paste0(dQuote("subvariables"),
             " contains more than one entry and is not included in list_col_names")
         )
