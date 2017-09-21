@@ -271,19 +271,32 @@ catalogToDataFrame <- function (x, keys=TRUE, rownames = NULL,
         index <- lapply(index(x), function (a) a[keys])
         ### The following code is equivalent to out <- purrr::map_df(index, entry_to_df)
         ################
-        entry_list <- lapply(index, entryToDF, list_col_names = list_columns)
+        entry_list <- lapply(index, prepareCatalogEntry)
         names <- unique(unlist(lapply(entry_list, names)))
         out <- data.frame(matrix(nrow = length(entry_list), ncol = length(names)))
         names(out) <- names
         for (i in seq_along(entry_list)) {
             for (j in names(entry_list[[i]])) {
-                out[[j]][i] <- entry_list[[i]][1, j]
+                out[[j]][i] <- entry_list[[i]][[j]]
             }
         }
         #################
 
         out <- as.data.frame(out, rownames = rownames, ...)
 
+        ## TODO: ensure something about the elements of a "list column".
+        ## i.e. do better than:
+        # $ subvariables        :List of 5
+        # ..$ : chr NA
+        # ..$ : chr NA
+        # ..$ : chr "just/one/subvar"
+        # ..$ :List of 3
+        # .. ..$ : chr "mymrset/subvariables/subvar2/"
+        # .. ..$ : chr "mymrset/subvariables/subvar1/"
+        # .. ..$ : chr "mymrset/subvariables/subvar3/"
+        # ..$ : chr NA
+        # Note that the "list_columns" argument is no longer used
+        
         # When a bad key argument is passed to the the shoji index it returns a
         # data.frame with an NA value. This excludes those columns.
         exclude_cols <- grepl("^NA", names(out)) &
@@ -308,33 +321,10 @@ catalogToDataFrame <- function (x, keys=TRUE, rownames = NULL,
     }
 }
 
-#' Turn an entry in the catalog into a one-row data.frame
-#'
-#' @param entry A single entry in a catalog
-#' @param list_col_names Some entries in a catalog do not fit neatly into a
-#' traditional data.frame and are instead stored in a list-column. This is
-#' controlled by passing the attribute names as the `list_col_names` argument.
-#' @return A one row data frame
-#' @keywords internal
-entryToDF <- function (entry, list_col_names) {
+prepareCatalogEntry <- function (entry) {
+    ## Do some standardization so that we can stack up catalog tuples
     entry[vapply(entry, is.null, logical(1))] <- NA
-    vect_col <- entry[!(names(entry) %in% list_col_names)]
-    mislabled_list_cols <- vapply(vect_col, length, integer(1)) > 1
-
-    if (any(mislabled_list_cols)) {
-        error_text <- " contain more than one entry and are not included in list_col_names"
-        if (sum(mislabled_list_cols) == 1) {
-            error_text <- " contains more than one entry and is not included in list_col_names"
-        }
-        halt(serialPaste(dQuote(names(vect_col[mislabled_list_cols]))),
-            error_text)
-    }
-    entry_df <- as.data.frame(vect_col, stringsAsFactors = FALSE)
-
-    if (any(names(entry) %in% list_col_names)) {
-        list_df <- structure(lapply(entry[list_col_names], list),
-            class="data.frame", row.names=c(NA, -1L))
-        entry_df <- cbind(entry_df, list_df)
-    }
-    return(entry_df)
+    list_cols <- vapply(entry, length, integer(1)) > 1
+    entry[list_cols] <- lapply(entry[list_cols], list)
+    return(entry)
 }

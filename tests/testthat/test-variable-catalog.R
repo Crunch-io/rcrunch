@@ -129,6 +129,22 @@ with_mock_crunch({
                     "mymrset/subvariables/subvar3/"))
         )
     })
+    test_that("list columns are homogeneous type", {
+        skip("TODO: ensure something about the elements of a 'list column'")
+        vc2 <- varcat
+        vc2@index[[3]]$subvariables <- "just/one/subvar"
+        vc2DF <- as.data.frame(vc2, keys = "all")
+        expect_identical(
+            vc2DF$subvariables[c(3,4,7)],
+            list(list("just/one/subvar"),
+                list("mymrset/subvariables/subvar2/",
+                    "mymrset/subvariables/subvar1/",
+                    "mymrset/subvariables/subvar3/"),
+                list("mymrset/subvariables/subvar2/",
+                    "mymrset/subvariables/subvar1/",
+                    "mymrset/subvariables/subvar3/"))
+        )
+    })
 
     test_that("As.data.frame method errors correctly", {
         expect_error(as.data.frame(varcat[1:3], keys = "Not a field at all"),
@@ -141,63 +157,6 @@ with_mock_crunch({
         )
         expect_error(as.data.frame(varcat[1:3], keys = c("name", "fooey")),
             paste(dQuote("fooey"), "is an invalid key for catalogs of class VariableCatalog.")
-        )
-    })
-
-    test_that("entryToDF works", {
-        entry <- list(
-            alias = "birthyr",
-            name = "Birth Year",
-            type = "numeric")
-        expected_df <- data.frame(alias = "birthyr",
-            name = "Birth Year",
-            type = "numeric",
-            stringsAsFactors = FALSE)
-        list_entry <- list(
-            name = "mymrset",
-            discarded = FALSE,
-            alias = "mymrset",
-            type = "multiple_response",
-            id = "949d2dc7e7a24e6090cc88bb92e1d2fb",
-            description = "Please select all that apply", notes = "",
-            subvariables = list(
-                "mymrset/subvariables/subvar2/",
-                "mymrset/subvariables/subvar1/",
-                "mymrset/subvariables/subvar3/"
-                ),
-            subvariables_catalog = "mymrset/subvariables/"
-            )
-        expected_list_df <- structure(
-            list(
-                name = "mymrset",
-                discarded = FALSE,
-                alias = "mymrset",
-                type = "multiple_response",
-                id = "949d2dc7e7a24e6090cc88bb92e1d2fb",
-                description = "Please select all that apply",
-                notes = "",
-                subvariables  = list(
-                    list(
-                        "mymrset/subvariables/subvar2/",
-                        "mymrset/subvariables/subvar1/",
-                        "mymrset/subvariables/subvar3/"
-                )
-                ),
-                subvariables_catalog = list(
-                    "mymrset/subvariables/"
-                )
-            ),
-            row.names = c(NA, -1L),
-            class = "data.frame")
-
-
-        expect_identical(entryToDF(entry, c("subvariables", "not_a_variable")),
-            expected_df)
-        expect_identical(entryToDF(list_entry, c("subvariables", "subvariables_catalog")),
-            expected_list_df)
-        expect_error(entryToDF(list_entry, "alias"),
-            paste0(dQuote("subvariables"),
-            " contains more than one entry and is not included in list_col_names")
         )
     })
 })
