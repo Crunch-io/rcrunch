@@ -6,7 +6,7 @@
 \alias{DatasetOrder}
 \alias{DatasetGroup-class}
 \alias{DatasetGroup}
-\title{Organize Datsets}
+\title{Organize Datasets}
 \description{
 A DatasetOrder object is a subclass of \code{list} that contains
 DatasetGroups. DatasetGroup objects contain a group name and an set of

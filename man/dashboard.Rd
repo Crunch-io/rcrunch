@@ -25,7 +25,7 @@ returns the dataset (\code{x}).
 \description{
 You can designate a dashboard that will show when the dataset is loaded in
 the Crunch web app. This dashboard could be a Crunch Shiny ("Crunchy") app,
-a CrunchBox, or something else.
+a CrunchBox, an RMarkdown website or something else.
 }
 \examples{
 \dontrun{

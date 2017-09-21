@@ -14,7 +14,7 @@ VarDef(data, ...)
 See \link{toVariable} for how R data types are converted. This function can
 also be used to construct a \code{VariableDefinition} directly by passing
 attributes to \code{...}. This is only recommended for advanced users who are
-familliar with the Crunch API.}
+familiar with the Crunch API.}
 
 \item{...}{additional attributes to be included in the \code{VariableDefinition}}
 }

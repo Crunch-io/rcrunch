@@ -10,10 +10,11 @@ resetPassword(email)
 \item{email}{Your email}
 }
 \value{
-NULL, invisibly.
+NULL, invisibly. Called for its side effects.
 }
 \description{
-Reset your password
+Trigger the password reset process. Password reset
+instructions will be emailed to you.
 }
 \examples{
 \dontrun{

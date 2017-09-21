@@ -15,7 +15,7 @@ crunchAPI(http.verb, url, config = list(), status.handlers = list(), ...)
 
 \item{status.handlers}{named list of specific HTTP statuses and a response
 function to call in the case where that status is returned. Passed to the
-\code{\link{handleAPIresponse}} function.}
+\code{\link[=handleAPIresponse]{handleAPIresponse()}} function.}
 
 \item{...}{additional arguments passed to \code{GET}, \code{PUT},
 \code{POST}, \code{PATCH}, or \code{DELETE}}

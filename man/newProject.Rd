@@ -13,7 +13,7 @@ newProject(name, members = NULL, catalog = projects(), ...)
 project members.}
 
 \item{catalog}{ProjectCatalog in which to create the new project. There is
-only one project catalog currently, \code{projects()}, but this is left here
+only one project catalog currently, \code{\link[=projects]{projects()}}, but this is left here
 so that all \code{new*} functions follow the same pattern.}
 
 \item{...}{Additional project attributes to set}

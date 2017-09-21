@@ -4,7 +4,7 @@
 \name{permissions}
 \alias{permissions}
 \alias{permissions,CrunchDataset-method}
-\title{See who has access to this dataset}
+\title{See who has access to a dataset}
 \usage{
 \S4method{permissions}{CrunchDataset}(x)
 }
@@ -16,5 +16,5 @@ A PermissionCatalog containing information on the users and teams
 that have access to this dataset.
 }
 \description{
-See who has access to this dataset
+See who has access to a dataset
 }

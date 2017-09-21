@@ -7,7 +7,7 @@
 \alias{filters<-}
 \alias{filters,CrunchDataset-method}
 \alias{filters<-,CrunchDataset-method}
-\title{Filter entities for a dataset}
+\title{Get or set a dataset's filters}
 \usage{
 \S4method{filters}{CrunchDataset}(x)
 
@@ -16,12 +16,14 @@
 \arguments{
 \item{x}{a CrunchDataset}
 
-\item{value}{for the assignment method, a FilterCatalog}
+\item{value}{for the setter, a FilterCatalog}
 }
 \value{
 an object of class FilterCatalog containing references to Filter
 entities usable in the web application. (Setter returns the Dataset.)
 }
 \description{
-Filter entities for a dataset
+You can build and save filters in the Crunch web app, and these filters
+are stored in a \code{FilterCatalog}. This function allows you to retrieve
+and modify those filters.
 }

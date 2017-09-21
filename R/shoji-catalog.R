@@ -188,7 +188,7 @@ setMethod("lapply", "ShojiCatalog", function (X, FUN, ...) lapply(index(X), FUN,
 #' @param value For the setters, an appropriate-length list to
 #' assign
 #' @return Getters return the list object in the "index" slot; setters
-#' return \code{x} duly modified.
+#' return `x` duly modified.
 #' @aliases index index<-
 #' @name shoji-index
 NULL
@@ -245,13 +245,13 @@ as.list.ShojiCatalog <- function (x, ...) lapply(names(index(x)), function (i) x
 #' @param x ShojiCatalog or subclass
 #' @param keys character vector of attribute names from each catalog tuple to
 #' include in the result. Default is TRUE, which means all.
-#' @param rownames See \code{\link[base]{data.frame}}, the \code{row.names}
-#' argument, to which this is passed in \code{data.frame}. The difference here
-#' is that if \code{rownames} is explicitly set as \code{NULL}, the resulting
+#' @param rownames See [`base::data.frame`], the `row.names`
+#' argument, to which this is passed in `data.frame`. The difference here
+#' is that if `rownames` is explicitly set as `NULL`, the resulting
 #' object will not have row names set. By default, row names will be the URLs
 #' of the catalog tuples.
-#' @param ... additional arguments passed to \code{data.frame}
-#' @return a \code{data.frame} view of the catalog
+#' @param ... additional arguments passed to `data.frame`
+#' @return a `data.frame` view of the catalog
 #' @export
 catalogToDataFrame <- function (x, keys=TRUE, rownames, ...) {
     default.rownames <- missing(rownames)

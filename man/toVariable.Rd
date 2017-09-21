@@ -45,7 +45,7 @@ a list object suitable for POSTing to the Crunch API. See the API
 documentation for specifications.
 }
 \description{
-R objects are converted to crucnh objects using the following rules:
+R objects are converted to Crunch objects using the following rules:
 }
 \details{
 \itemize{

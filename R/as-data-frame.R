@@ -121,7 +121,7 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
 #' if you specify `sort="x"` (the default) all rows of x will be present but
 #' rows in y that do not match with rows in x will not be present.
 #'
-#' Merging a CrunchDataFrame with a local dataframe is experiemental and might
+#' Merging a CrunchDataFrame with a local dataframe is experimental and might
 #' result in unexpected results. One known issue is that using `merge` on a
 #' CrunchDataFrame will change the both the CrunchDataFrame used as input as
 #' well as create a new CrunchDataFrame.
