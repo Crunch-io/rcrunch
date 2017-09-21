@@ -164,17 +164,15 @@ with_mock_crunch({
                 id = "949d2dc7e7a24e6090cc88bb92e1d2fb",
                 description = "Please select all that apply",
                 notes = "",
-                subvariables = list(
+                subvariables  = list(
                     list(
-                        subvariables = list(
-                            "mymrset/subvariables/subvar2/",
-                            "mymrset/subvariables/subvar1/",
-                            "mymrset/subvariables/subvar3/"
-                        )
-                    )
+                        "mymrset/subvariables/subvar2/",
+                        "mymrset/subvariables/subvar1/",
+                        "mymrset/subvariables/subvar3/"
+                )
                 ),
                 subvariables_catalog = list(
-                    list(subvariables_catalog = "mymrset/subvariables/")
+                    "mymrset/subvariables/"
                 )
             ),
             row.names = c(NA, -1L),

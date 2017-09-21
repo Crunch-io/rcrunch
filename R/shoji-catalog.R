@@ -279,7 +279,9 @@ catalogToDataFrame <- function (x, keys=TRUE, rownames = NULL,
 
         for (i in seq_along(entry_list)) {
             for (j in  names(entry_list[[i]])) {
-                out[i, j] <- entry_list[[i]][1, j]
+                # Overwriting a entry in a dataframe with a longer list
+                # can trigger a warning, which needs to be suppressed.
+                suppressWarnings(out[i, j] <- entry_list[[i]][1, j])
             }
         }
         #################
@@ -336,7 +338,11 @@ entryToDF <- function (entry, list_col_names) {
         list_df <- data.frame(matrix(nrow = 1, ncol = length(list_col)))
         names(list_df) <- names(list_col)
         for (i in seq_along(list_col)) {
-            list_df[[1, i]] <- list_col[i]
+            # The column needs to corerced to a list before you
+            # can assign a list into it. This can be removed if
+            # we add a tibble dependency.
+            list_df[[1, i]] <- as.list(list_df[[1, i]])
+            list_df[[1, i]] <- list_col[[i]]
         }
         entry_df <- cbind(entry_df, list_df)
     }
