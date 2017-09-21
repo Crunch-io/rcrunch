@@ -276,12 +276,11 @@ catalogToDataFrame <- function (x, keys=TRUE, rownames = NULL,
         names   <- unique(unlist( lapply(entry_list, names)))
         out <- data.frame(matrix(nrow = length(entry_list), ncol = length(names)))
         names(out) <- names
-
         for (i in seq_along(entry_list)) {
             for (j in  names(entry_list[[i]])) {
                 # Overwriting a entry in a dataframe with a longer list
                 # can trigger a warning, which needs to be suppressed.
-                suppressWarnings(out[i, j] <- entry_list[[i]][1, j])
+                out[[j]][i] <- entry_list[[i]][1, j]
             }
         }
         #################

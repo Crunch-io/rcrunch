@@ -111,13 +111,25 @@ with_mock_crunch({
             ))
     })
     test_that("as.data.frame method returns all fields when keys = 'all'", {
+        varDF <- as.data.frame(varcat, keys = "all")
         expect_identical(
-            names(as.data.frame(varcat, keys = "all")),
+            names(varDF),
             c("name", "discarded", "alias", "type", "id", "description",
                 "notes", "subvariables", "subvariables_catalog", "resolution",
                 "rollup_resolution")
         )
+        expect_identical(
+            varDF$subvariables[c(3,4,7)],
+            list(NA,
+                list("mymrset/subvariables/subvar2/",
+                    "mymrset/subvariables/subvar1/",
+                    "mymrset/subvariables/subvar3/"),
+                list("mymrset/subvariables/subvar2/",
+                    "mymrset/subvariables/subvar1/",
+                    "mymrset/subvariables/subvar3/"))
+        )
     })
+
     test_that("As.data.frame method errors correctly", {
         expect_error(as.data.frame(varcat[1:3], keys = "Not a field at all"),
             paste(dQuote("Not a field at all"), "is an invalid key for catalogs of class VariableCatalog.")
