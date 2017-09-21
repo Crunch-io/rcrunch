@@ -75,8 +75,8 @@ makeCaseVariable <- function (..., cases, data = NULL, name) {
                  " as well as in the ", dQuote("cases"), " argument, please use ",
                  "one or the other.")
          }
-    } else if (missing(cases) || length(substitute(cases)) == 1) {
-        # check length(substitute(cases)) == 1 in case the cases need to be
+    } else if (missing(cases) || substitute(cases) == "") {
+        # check substitute(cases) == "" in case the cases need to be
         # evaluated, length 1 means no cases are present.
         halt("must supply case conditions in either ", dQuote("..."), " or ",
              "the ", dQuote("cases"), " argument, please use one or the other.")

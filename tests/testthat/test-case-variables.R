@@ -218,7 +218,7 @@ with_mock_crunch({
             paste0("must supply case conditions in either ", dQuote("..."),
             " or the ", dQuote("cases"),
             " argument, please use one or the other."))
-        expect_error(makeCaseVariable(cases=list(), name="Dudes"),
+        expect_error(makeCaseVariable(name="Dudes"),
                      paste0("must supply case conditions in either ", dQuote("..."),
                      " or the ", dQuote("cases"),
                      " argument, please use one or the other."))
