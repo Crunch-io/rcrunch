@@ -232,7 +232,7 @@ fix_bys <- function (data, by) {
 #' as.data.frame method for VariableCatalog
 #'
 #' This method gives you a view of a `VariableCatalog` as a `data.frame` in
-#' order to facilliate further exploration.
+#' order to facilitate further exploration.
 #'
 #' Modifying the `data.frame` produced by this function will not update the
 #' dataset on the Crunch server. Other methods exist for updating the metadata

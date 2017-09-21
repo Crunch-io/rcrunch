@@ -2,22 +2,21 @@
 % Please edit documentation in R/shoji-catalog.R
 \name{entryToDF}
 \alias{entryToDF}
-\title{entryToDF
-Turns an entry in the catalog into a one-row dataframe}
+\title{Turn an entry in the catalog into a one-row data.frame}
 \usage{
 entryToDF(entry, list_col_names)
 }
 \arguments{
 \item{entry}{A single entry in a catalog}
 
-\item{list_col_names}{Some entries in a catalog do not fit neatly into a traditional dataframe and are
-instead stored in a list-column. This is controlled by passing the attribute names
-as the \code{list_col_names} argument. `}
+\item{list_col_names}{Some entries in a catalog do not fit neatly into a
+traditional data.frame and are instead stored in a list-column. This is
+controlled by passing the attribute names as the \code{list_col_names} argument.}
 }
 \value{
 A one row data frame
 }
 \description{
-entryToDF
-Turns an entry in the catalog into a one-row dataframe
+Turn an entry in the catalog into a one-row data.frame
 }
+\keyword{internal}

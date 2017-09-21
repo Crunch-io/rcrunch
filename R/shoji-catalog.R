@@ -240,7 +240,7 @@ setMethod("emails", "ShojiCatalog", function (x) getIndexSlot(x, "email"))
 #' @export
 as.list.ShojiCatalog <- function (x, ...) lapply(names(index(x)), function (i) x[[i]])
 
-#' A utility to retun a data.frame from a ShojiCatalog.
+#' A utility to return a data.frame from a ShojiCatalog.
 #'
 #' Some of the attributes of a `ShojiCatalog` will not naturally fit in
 #' a conventional data.frame. For example, an array variable contains a list of

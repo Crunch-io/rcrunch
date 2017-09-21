@@ -2,25 +2,21 @@
 % Please edit documentation in R/shoji-catalog.R
 \name{catalogToDataFrame}
 \alias{catalogToDataFrame}
-\title{A utility to retun a dataframe from a ShojiCatalog.}
+\title{A utility to retun a data.frame from a ShojiCatalog.}
 \usage{
 catalogToDataFrame(x, keys = TRUE, rownames = NULL,
   list_columns = c("subvariables", "subvariables_catalog"), ...)
 }
 \arguments{
-\item{x}{ShojiCatalog or subclass}
+\item{x}{\code{ShojiCatalog} or subclass}
 
 \item{keys}{character vector of attribute names from each catalog tuple to
-include in the result. Default is \code{TRUE}, which means all.}
+include in the result. Default is TRUE, which means all.}
 
-\item{rownames}{See \code{\link[base:data.frame]{base::data.frame}}, the \code{row.names}
-argument, to which this is passed in \code{data.frame}. The difference here
-is that if \code{rownames} is explicitly set as \code{NULL}, the resulting
-object will not have row names set. By default, row names will be the URLs
-of the catalog tuples.}
-
-\item{list_columns}{A character vector of the names of the attributes which should be stored
-in a list-column.}
+\item{rownames}{See \code{\link[base:data.frame]{base::data.frame()}} for the \code{row.names}
+argument. The difference here is that if \code{rownames} is explicitly set as
+\code{NULL}, the resulting object will not have row names set. By default, row
+names will be the URLs of the catalog tuples.}
 
 \item{...}{additional arguments passed to \code{data.frame}}
 }
@@ -28,8 +24,9 @@ in a list-column.}
 a \code{data.frame} view of the catalog
 }
 \description{
-Some of the attributes of a ShojiCatalog will not naturally fit in
-a conventional dataframe. For instance a single variable might have multiple subvariables,
-and these subvariables will not fit in a single row of a dataframe. In this case the
-list of subvariables are stored in a list-column in the resulting dataframe.
+Some of the attributes of a \code{ShojiCatalog} will not naturally fit in
+a conventional data.frame. For example, an array variable contains a list of
+subvariables, and these subvariables will not easily fit in a single row of a
+data.frame. In this case, the list of subvariables are stored in a
+list-column in the resulting data.frame.
 }

@@ -8,28 +8,32 @@
   optional = FALSE, keys = c("alias", "name", "type"), ...)
 }
 \arguments{
-\item{x}{A VariableCatalog produced by \code{variables(ds)}.}
+\item{x}{A \code{VariableCatalog}, as produced by \code{variables(ds)}.}
 
-\item{row.names}{part of as.data.frame signature. Ignored.}
+\item{row.names}{part of \code{as.data.frame} signature. Ignored.}
 
-\item{optional}{part of as.data.frame signature. Ignored.}
+\item{optional}{part of \code{as.data.frame} signature. Ignored.}
 
-\item{keys}{A character vector of the variable catalog attributes which you would like
-included in the datafame. To include all attributes or see which ones are
-available set keys to "all".}
+\item{keys}{A character vector of the variable catalog attributes which you
+would like included in the data.frame. To include all attributes or see
+which ones are available, set keys to "all". By default, the function will
+return three fields: \code{c("alias", "name", "type")}.}
 
 \item{...}{Additional arguments passed to \code{data.frame}}
 }
 \value{
-A data frame which includes information about each variable stored in the variable catelog.
-The fields in the dataframe match the keys argument provided to the function, and each row represents a variable.
+A \code{data.frame} including metadata about each variable stored in the
+variable catalog. The fields in the data.frame match the \code{keys} argument
+provided to the function, and each row represents a variable.
 }
 \description{
-This method allows you to import the VariableCatalog into your R sessions in
-order to facilliate interactive use. Modifying the dataframe produced by this
-method will not update the Crunch web app, for information about modifying
-variables in the app see: \code{vingette("variables",
-package = "crunch")}
+This method gives you a view of a \code{VariableCatalog} as a \code{data.frame} in
+order to facilliate further exploration.
+}
+\details{
+Modifying the \code{data.frame} produced by this function will not update the
+dataset on the Crunch server. Other methods exist for updating the metadata
+in the variable catalog. See \code{vingette("variables", package = "crunch")}.
 }
 \examples{
 \dontrun{
