@@ -5,11 +5,31 @@
 #' @param dataset CrunchDataset
 #' @param filters FilterCatalog, or \code{NULL} for no filters. Default all
 #' filters in your catalog, \code{filters(dataset)}.
-#' @param brand_colors an optional list with colors (in hex format) named 'primary', 'secondary', and 'message'
-#' @param static_colors an optional list of static colors (in hex format) to use for categoricals (taken in order)
+#' @param brand_colors an optional vector with colors (in hex format) (or a named list with names 'primary', 'secondary', and 'message')
+#' @param static_colors an optional vector of static colors (in hex format) to use for categoricals (taken in order)
 #' @param category_color_lookup an optional list of category names to colors (in hex format) to use for that category (for fine grained tuning of category colors.)
 #' @param ... additional metadata for the box, such as "title", "header", etc.
 #' @return The URL to the newly created box.
+#'
+#' @examples
+#'
+#' \dontrun{
+#' # Creating a CrunchBox with three variables
+#' crunchBox(ds[c("var1", "var2", "var3")], title="New CrunchBox")
+#'
+#' # Creating a CrunchBox changing primary, secondary, and message brand colors
+#' crunchBox(ds[c("var1", "var2", "var3")],
+#'           title="Branded CrunchBox",
+#'           brand_colors = c("#ff0aa4", "#af17ff", "#260aff"))
+#'
+#' # Creating a CrunchBox changing category-specific colors
+#' crunchBox(ds[c("var1", "var2", "var3")],
+#'           title="CrunchBox with category colors",
+#'           category_color_lookup = list("agree" = "#ff0aa4",
+#'                                        "disagree" = "#af17ff",
+#'                                        "don't know" = "#260aff"))
+#' }
+#'
 #' @seealso \code{\link{preCrunchBoxCheck}} to provide guidance on what you're including in the CrunchBox
 #' @export
 crunchBox <- function (dataset, filters=crunch::filters(dataset),
@@ -47,24 +67,47 @@ crunchBox <- function (dataset, filters=crunch::filters(dataset),
     payload$where <- variablesFilter(dataset)
 
     ## Add colors if they exist to the payload
+    brand_labels <- c("primary", "secondary", "message")
     if (!missing(brand_colors)) {
-        if (!is.list(brand_colors) ||
-            any(!names(brand_colors) %in% c("primary", "secondary", "message"))) {
-            halt(sQuote("brand_colors"), " must be a named list with only ",
-                 serialPaste(dQuote(c("primary", "secondary", "message")), collapse = "or"))
+        if (!vectorOrList(brand_colors, "character")) {
+            halt(sQuote("brand_colors"), " must be character vector or list",
+                 " of characters")
         }
+        if (length(brand_colors) > 3) {
+            halt(sQuote("brand_colors"), " must be at most 3 elements long")
+        }
+
+        # ensure is a list of valid colors
+        brand_colors <- lapply(brand_colors, validHexColor)
+
+        # if there are no names, name them according to position
+        # if there are names, check that they are the right ones.
+        if (is.null(names(brand_colors))) {
+            names(brand_colors) <- brand_labels[seq_len(length(brand_colors))]
+        } else if (any(!names(brand_colors) %in% brand_labels)) {
+            halt("If ", sQuote("brand_colors"), " is a named list, it must",
+                 " contain only ",
+                 serialPaste(dQuote(brand_labels), collapse = "and"))
+        }
+
         payload$display_settings$palette$brand_colors <- brand_colors
     }
     if (!missing(static_colors)) {
-        if (!is.list(static_colors)) {
-            halt(sQuote("static_colors"), " must be a list of characters")
+        if (!vectorOrList(static_colors, "character")) {
+            halt(sQuote("static_colors"), " must be a vector or list of characters")
         }
+        static_colors <- lapply(static_colors, validHexColor)
+
         payload$display_settings$palette$static_colors <- static_colors
     }
     if (!missing(category_color_lookup)) {
         if (!is.list(category_color_lookup) || is.null(names(category_color_lookup))) {
             halt(sQuote("category_color_lookup"), " must be a named list")
         }
+        # ensure colors are valid and then make a list
+        category_color_lookup <- vapply(category_color_lookup, validHexColor, character(1))
+        category_color_lookup <- as.list(category_color_lookup)
+
         payload$display_settings$palette$category_lookup <- category_color_lookup
     }
 
@@ -121,6 +164,7 @@ preCrunchBoxCheck <- function (dataset) {
     ## a. Too many categories won't plot well as bars. (Unless they define
     ## regions on a map.)
     ## Check threshold: 7 categories
+    ## TODO: add checking for category color specifications?
     num_cats <- vapply(vm, function (x) {
         cats <- x$categories
         if (is.null(cats)) return(0)
@@ -251,4 +295,29 @@ boxfig <- function (...) {
         paste0("    ", c(...), "\n", collapse=""),
         '</figure>'
     )
+}
+
+validHexColor <- function (color) {
+    if (!is.character(color)) {
+        halt("A color must be a character, got ", class(color)," instead")
+    }
+
+    # validate length and add hash if needed  and remove the last two chars if
+    # given 8 digit version
+    if (nchar(color) == 6 ) {
+        color <- paste0("#", color)
+    } else if (nchar(color) == 8) {
+        color <- paste0("#", substr(color, 1, 6))
+    } else if (nchar(color) == 9) {
+        color <- substr(color, 1, 7)
+    } else if (nchar(color) != 7) {
+        halt("A color must be a 6 digit hex code (with or without the #).",
+             " If an 8 digit hex code the last two characters are discarded.")
+    }
+
+    if (!grepl("^[[:xdigit:]]+$", gsub("#", "", color))) {
+        halt(dQuote(color), " is not a valid hex color.")
+    }
+
+    return(color)
 }

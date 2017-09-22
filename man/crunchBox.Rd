@@ -13,9 +13,9 @@ crunchBox(dataset, filters = crunch::filters(dataset), brand_colors,
 \item{filters}{FilterCatalog, or \code{NULL} for no filters. Default all
 filters in your catalog, \code{filters(dataset)}.}
 
-\item{brand_colors}{an optional list with colors (in hex format) named 'primary', 'secondary', and 'message'}
+\item{brand_colors}{an optional vector with colors (in hex format) (or a named list with names 'primary', 'secondary', and 'message')}
 
-\item{static_colors}{an optional list of static colors (in hex format) to use for categoricals (taken in order)}
+\item{static_colors}{an optional vector of static colors (in hex format) to use for categoricals (taken in order)}
 
 \item{category_color_lookup}{an optional list of category names to colors (in hex format) to use for that category (for fine grained tuning of category colors.)}
 
@@ -26,6 +26,26 @@ The URL to the newly created box.
 }
 \description{
 CrunchBoxes allow you to publish results to the world.
+}
+\examples{
+
+\dontrun{
+# Creating a CrunchBox with three variables
+crunchBox(ds[c("var1", "var2", "var3")], title="New CrunchBox")
+
+# Creating a CrunchBox changing primary, secondary, and message brand colors
+crunchBox(ds[c("var1", "var2", "var3")],
+          title="Branded CrunchBox",
+          brand_colors = c("#ff0aa4", "#af17ff", "#260aff"))
+
+# Creating a CrunchBox changing category-specific colors
+crunchBox(ds[c("var1", "var2", "var3")],
+          title="CrunchBox with category colors",
+          category_color_lookup = list("agree" = "#ff0aa4",
+                                       "disagree" = "#af17ff",
+                                       "don't know" = "#260aff"))
+}
+
 }
 \seealso{
 \code{\link{preCrunchBoxCheck}} to provide guidance on what you're including in the CrunchBox
