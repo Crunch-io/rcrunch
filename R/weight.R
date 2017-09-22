@@ -79,23 +79,33 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
 #'
 #' @examples
 `weightVariables<-` <- function(x, value) {
-    browser()
     stopifnot(is.dataset(x))
     varCat <- allVariables(x)
-    if (!is.list(value)) {
-        value <- list(value)
-    }
-    all_var <- vapply(value, is.variable, logical(1))
-    if (!all(all_var)) {
-        err_text <- "is not a Crunch variable."
-        if ( sum(all_var) > 1) {
-            err_text <- "are not Crunch variables."
-        }
-        halt( serialPaste(value[all_var], err_text))
-    }
     current <- crGET(shojiURL(varCat, "orders", "weights"))
     new <- current
-    new$graph <- lapply(value, self)
+    if(is.null(value)){
+        new$graph <- NULL
+    } else {
+        if (is.variable(value) || length(value) == 1) {
+            value <- list(value)
+        }
+        var_names <- vapply(value, function(x){
+            if (is.variable(x)){
+                return(name(x))
+            } else {
+                return(as.character(x))
+            }
+            }, character(1))
+        all_var <- vapply(value, is.Numeric, logical(1))
+        if (!all(all_var)) {
+            err_text <- " is not a numeric Crunch variable."
+            if ( sum(!all_var) > 1) {
+                err_text <- " are not a numeric Crunch variables."
+            }
+            halt( paste0(serialPaste(var_names[!all_var]), err_text))
+        }
+        new$graph <- lapply(value, self)
+    }
     if(!identical(current, new)){
         crPATCH(shojiURL(varCat, "orders", "weights"),
             body=toJSON(new))
