@@ -7,7 +7,7 @@ try({
     crunch_test_path <- system.file("crunch-test.R", package="crunch")
     if (crunch_test_path == "") {
         # hack for loadall
-        crunch_test_path <- "./inst/crunch-test.R"
+        crunch_test_path <- "../../inst/crunch-test.R"
     }
     source(crunch_test_path)
 })

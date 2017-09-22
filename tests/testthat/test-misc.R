@@ -108,3 +108,12 @@ test_that("uniquify", {
     expect_identical(uniquify(c("b", "a", "a", "abcd", "a")),
         c("b", "a", "a  (1)", "abcd", "a  (2)"))
 })
+
+test_that("vectorOrList", {
+    expect_true(vectorOrList(c("a", "b", "c"), "character"))
+    expect_true(vectorOrList(list("a", "b", "c"), "character"))
+    expect_false(vectorOrList(c(1, 2, 3), "character"))
+    expect_false(vectorOrList(list("a", 1, "c"), "character"))
+    expect_true(vectorOrList(c(1, 2, 3), "numeric"))
+    expect_false(vectorOrList(list("a", 1, "c"), "numeric"))
+})
