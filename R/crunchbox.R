@@ -83,7 +83,7 @@ crunchBox <- function (dataset, filters=crunch::filters(dataset),
         # if there are no names, name them according to position
         # if there are names, check that they are the right ones.
         if (is.null(names(brand_colors))) {
-            names(brand_colors) <- brand_labels[seq_len(length(brand_colors))]
+            names(brand_colors) <- brand_labels[seq_along(brand_colors)]
         } else if (any(!names(brand_colors) %in% brand_labels)) {
             halt("If ", sQuote("brand_colors"), " is a named list, it must",
                  " contain only ",
@@ -97,17 +97,13 @@ crunchBox <- function (dataset, filters=crunch::filters(dataset),
             halt(sQuote("static_colors"), " must be a vector or list of characters")
         }
         static_colors <- lapply(static_colors, validHexColor)
-
         payload$display_settings$palette$static_colors <- static_colors
     }
     if (!missing(category_color_lookup)) {
         if (!is.list(category_color_lookup) || is.null(names(category_color_lookup))) {
             halt(sQuote("category_color_lookup"), " must be a named list")
         }
-        # ensure colors are valid and then make a list
-        category_color_lookup <- vapply(category_color_lookup, validHexColor, character(1))
-        category_color_lookup <- as.list(category_color_lookup)
-
+        category_color_lookup <- lapply(category_color_lookup, validHexColor)
         payload$display_settings$palette$category_lookup <- category_color_lookup
     }
 
@@ -115,7 +111,6 @@ crunchBox <- function (dataset, filters=crunch::filters(dataset),
     out <- crPOST(shojiURL(dataset, "catalogs", "boxdata"),
         body=toJSON(do.call("wrapEntity", payload)))
     return(out)
-    ## TODO: add function that maps the URL returned to the embed URL
 }
 
 ## Make this a function so tests can mock it
@@ -298,6 +293,8 @@ boxfig <- function (...) {
 }
 
 validHexColor <- function (color) {
+    ## Given a color string, possibly an R color name, validate it and
+    ## standardize its formatting like `#AABBCC`
     if (!is.character(color)) {
         halt("A color must be a character, got ", class(color)," instead")
     }
@@ -305,24 +302,14 @@ validHexColor <- function (color) {
     # if color is an R color name like "aliceblue" convert to hex
     if (color %in% colors()) {
         color <- rgb(t(col2rgb(color)/255))
+    } else {
+        if (!startsWith(color, "#")) {
+            color <- paste0("#", color)
+        }
+        if (!grepl("^#[[:xdigit:]]{6,8}$", color)) {
+            halt(dQuote(color), " is not a valid hex color.")
+        }
     }
-
-    # validate length and add hash if needed  and remove the last two chars if
-    # given 8 digit version
-    if (nchar(color) == 6 ) {
-        color <- paste0("#", color)
-    } else if (nchar(color) == 8) {
-        color <- paste0("#", substr(color, 1, 6))
-    } else if (nchar(color) == 9) {
-        color <- substr(color, 1, 7)
-    } else if (nchar(color) != 7) {
-        halt("A color must be a 6 digit hex code (with or without the #).",
-             " If an 8 digit hex code the last two characters are discarded.")
-    }
-
-    if (!grepl("^[[:xdigit:]]+$", gsub("#", "", color))) {
-        halt(dQuote(color), " is not a valid hex color.")
-    }
-
-    return(color)
+    # remove the last two chars if given 8 digit version
+    return(substr(color, 1, 7))
 }

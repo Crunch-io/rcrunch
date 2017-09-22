@@ -54,12 +54,14 @@ test_that("Iframe code with title", {
 })
 
 test_that("color validator validates", {
-    expect_error(validHexColor(1), "A color must be a character, got numeric instead")
+    expect_error(validHexColor(1),
+                 "A color must be a character, got numeric instead")
     expect_error(validHexColor("#ffeeaaffeeaa"),
-                 paste0("A color must be a 6 digit hex code \\(with or without the #\\)\\.",
-                        " If an 8 digit hex code the last two characters are discarded\\."))
+                 "is not a valid hex color")
     expect_error(validHexColor("#zzzzzz"),
                  paste0(dQuote("#zzzzzz"), " is not a valid hex color"))
+    expect_error(validHexColor("#aabbc"),
+                 paste0(dQuote("#aabbc"), " is not a valid hex color"))
     expect_equal(validHexColor("#d3d3d3"), "#d3d3d3")
     expect_equal(validHexColor("d3d3d3"), "#d3d3d3")
     expect_equal(validHexColor("#d3d3d3ff"), "#d3d3d3")
