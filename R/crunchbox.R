@@ -2,12 +2,23 @@
 #'
 #' CrunchBoxes allow you to publish results to the world.
 #'
-#' @param dataset CrunchDataset
-#' @param filters FilterCatalog, or \code{NULL} for no filters. Default all
-#' filters in your catalog, \code{filters(dataset)}.
-#' @param brand_colors an optional vector with colors (in hex format) (or a named list with names 'primary', 'secondary', and 'message')
-#' @param static_colors an optional vector of static colors (in hex format) to use for categoricals (taken in order)
-#' @param category_color_lookup an optional list of category names to colors (in hex format) to use for that category (for fine grained tuning of category colors.)
+#' In addition to specifying the variables and filters to include in your
+#' CrunchBox, you can provide custom color palettes. The arguments
+#' `brand_colors`, `static_colors`, and `category_color_lookup` allow you to
+#' provide color lists to use. Colors should be either a valid hexidecimal
+#' string representation, like "#fa1af1", or they may also be an R named color,
+#' such as "darkgreen".
+#'
+#' @param dataset A CrunchDataset, potentially a selection of variables from it
+#' @param filters FilterCatalog, or `NULL` for no filters. Default all
+#' filters in your catalog, `filters(dataset)`.
+#' @param brand_colors an optional color vector of length 3 or less, or a named
+#' list with names 'primary', 'secondary', and 'message'.
+#' @param static_colors an optional vector of colors to use for categorical
+#' plots. Bars and lines are colored in the order of `static_colors`
+#' @param category_color_lookup an optional list of category names to colors
+#' to use for that category, wherever it appears in the data. This allows you
+#' to always see a category displayed in a specific color.
 #' @param ... additional metadata for the box, such as "title", "header", etc.
 #' @return The URL to the newly created box.
 #'

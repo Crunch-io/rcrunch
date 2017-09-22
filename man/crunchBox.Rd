@@ -8,16 +8,20 @@ crunchBox(dataset, filters = crunch::filters(dataset), brand_colors,
   static_colors, category_color_lookup, ...)
 }
 \arguments{
-\item{dataset}{CrunchDataset}
+\item{dataset}{A CrunchDataset, potentially a selection of variables from it}
 
 \item{filters}{FilterCatalog, or \code{NULL} for no filters. Default all
 filters in your catalog, \code{filters(dataset)}.}
 
-\item{brand_colors}{an optional vector with colors (in hex format) (or a named list with names 'primary', 'secondary', and 'message')}
+\item{brand_colors}{an optional color vector of length 3 or less, or a named
+list with names 'primary', 'secondary', and 'message'.}
 
-\item{static_colors}{an optional vector of static colors (in hex format) to use for categoricals (taken in order)}
+\item{static_colors}{an optional vector of colors to use for categorical
+plots. Bars and lines are colored in the order of \code{static_colors}}
 
-\item{category_color_lookup}{an optional list of category names to colors (in hex format) to use for that category (for fine grained tuning of category colors.)}
+\item{category_color_lookup}{an optional list of category names to colors
+to use for that category, wherever it appears in the data. This allows you
+to always see a category displayed in a specific color.}
 
 \item{...}{additional metadata for the box, such as "title", "header", etc.}
 }
@@ -26,6 +30,14 @@ The URL to the newly created box.
 }
 \description{
 CrunchBoxes allow you to publish results to the world.
+}
+\details{
+In addition to specifying the variables and filters to include in your
+CrunchBox, you can provide custom color palettes. The arguments
+\code{brand_colors}, \code{static_colors}, and \code{category_color_lookup} allow you to
+provide color lists to use. Colors should be either a valid hexidecimal
+string representation, like "#fa1af1", or they may also be an R named color,
+such as "darkgreen".
 }
 \examples{
 
