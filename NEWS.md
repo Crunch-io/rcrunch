@@ -1,4 +1,5 @@
 ### crunch 1.18.1 (under development)
+* `crunchbox` now allows you to specify colors for branding or even category-specific coloring.
 * `makeWeight` allows you to generate new weighting variables based on categorical variables (#80).
 * Create a new Crunch dataset from a file by calling `newDataset` directly instead of `newDatasetFromFile`. Also, you can now create a dataset from a hosted file passing its URL to `newDataset(FromFile)`.
 * RStudio users will now be prompted for their password on `login` in a way that conceals the input.
