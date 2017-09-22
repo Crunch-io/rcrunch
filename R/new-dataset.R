@@ -140,6 +140,7 @@ createWithPreparedData <- function (data, metadata=attr(data, "metadata")) {
 #' `file="example"`, it would return c("example.csv.gz", "example.json").
 #' The function, of course, is called for its side effects of writing a gzipped
 #' CSV and a JSON file to those locations.
+#' @keywords internal
 #' @export
 writePreparedData <- function (data, metadata=attr(data, "metadata"), file) {
     filenames <- paste(file, c("csv.gz", "json"), sep=".")
@@ -152,12 +153,11 @@ writePreparedData <- function (data, metadata=attr(data, "metadata"), file) {
 #'
 #' @param x A data.frame or similar CSV-writeable object
 #' @param file character destination to write the gzipped CSV to
-#' @param na See \code{\link[utils]{write.csv}}. This just changes the default
+#' @param na See [`utils::write.csv`]. This just changes the default
 #' to a Crunch-friendly empty string.
-#' @param row.names logical: write out row names? See \code{write.csv}. This
-#' just sets a default of \code{FALSE}.
-#' @param ... Additional arguments passed to \code{write.csv}.
-#' @return Whatever \code{write.csv} returns.
+#' @param row.names logical: write out row names? See [`utils::write.csv`].
+#' @param ... Additional arguments passed to `write.csv`.
+#' @return A csv file written to dist
 #' @importFrom utils write.csv
 #' @export
 write.csv.gz <- function (x, file, na="", row.names=FALSE, ...) {
@@ -214,7 +214,7 @@ uploadData <- function (dataset, data, strict=TRUE, first_batch=TRUE) {
 #' @param order a valid "order" payload: list containing either aliases or
 #' list(group, entities)
 #' @param ... dataset entity metadata. "name" is required.
-#' @param return list suitiable for JSONing and POSTing to create a dataset
+#' @param return list suitable for JSONing and POSTing to create a dataset
 #' @export
 #' @keywords internal
 shojifyDatasetMetadata <- function (metadata, order=I(names(metadata)), ...) {

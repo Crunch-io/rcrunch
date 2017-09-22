@@ -19,7 +19,7 @@ of variables to delete.}
 (invisibly) \code{dataset} with the specified variables deleted
 }
 \description{
-This function permenantly deletes a variable from a dataset. For a non-destructive
+This function permanently deletes a variable from a dataset. For a non-destructive
 alternative see \code{\link[=hide]{hide()}}.
 }
 \details{

@@ -44,7 +44,7 @@
 #'                                        "don't know" = "#260aff"))
 #' }
 #'
-#' @seealso \code{\link{preCrunchBoxCheck}} to provide guidance on what you're including in the CrunchBox
+#' @seealso \code{\link{preCrunchBoxCheck}} to provide guidance on what you're including in the
 #' @export
 crunchBox <- function (dataset, filters=crunch::filters(dataset),
                        brand_colors, static_colors,
@@ -135,10 +135,14 @@ boxTooBig <- function (nvars, nfilters) {
     nvars * (nvars - 1) * (nfilters + 1) > .boxlimit()
 }
 
-#' Summarize any characteristics of a dataset that could make for an awkward CrunchBox
+#' Check if a dataset will make a good CrunchBox
+#'
+#' CrunchBoxes allows you to share data with the world in a simple, easy to embed format.
+#' However, not all datasets naturally translate to the CrunchBox format. This
+#' function checks your dataset to see if it
 #'
 #' @param dataset CrunchDataset, potentially subsetted on variables
-#' @return Invisbly, the dataset. Called for side-effect of printing things.
+#' @return Invisibly, the dataset. Called for side-effect of printing things.
 #' @seealso \code{\link{crunchBox}}
 #' @export
 preCrunchBoxCheck <- function (dataset) {
@@ -251,21 +255,22 @@ demonstrativeCount <- function (n, noun="variable") {
 
 #' Get HTML for embedding a CrunchBox
 #'
-#' \code{\link{crunchBox}} returns a URL to the box data that it generates, but
+#' [crunchBox()] returns a URL to the box data that it generates, but
 #' in order to view it in a CrunchBox or to embed it on a website, you'll need
-#' to translate that to the Box's public URL and wrap it in some HTML.
+#' to translate that to the Box's public URL and wrap it in some HTML. This function
+#' takes a crunchBox and returns the HTLM which you can embed in a website.
 #'
 #' @param box character URL of the box data, as returned by
-#' \code{crunchBox}
+#' `crunchBox`
 #' @param title character title for the Box, to appear above the iframe. Default
-#' is \code{NULL}, meaning no title shown
+#' is `NULL`, meaning no title shown
 #' @param logo character URL of a logo to show instead of a title. Default is
-#' \code{NULL}, meaning no logo shown. If both logo and title are provided, only
-#' logo will be shown. Note also that logo must be a URL of an image hosted
-#' somewhere--it cannot be a path to a local file.
+#' `NULL`, meaning no logo shown. If both logo and title are provided, only the
+#' logo will be shown. Note also that logo must be a URL of a hosted image: it
+#' cannot be a path to a local file.
 #' @param ... Additional arguments, not currently used.
 #' @return Prints the HTML markup to the screen and also returns it invisibly.
-#' @seealso \code{\link{crunchBox}}
+#' @seealso [crunchBox()]
 #' @examples
 #' \dontrun{
 #' box <- crunchBox(ds)

@@ -36,6 +36,6 @@ variable or otherwise alter its values, the values in the copy automatically
 update. This linking may be desirable, but it comes with some limitations.
 First, you cannot edit the values of the copy independently of the original.
 Second, some attributes of the copy are immutable: of note, properties of
-categories cannot be altered independely in the copy, but you can alter Subvariable names and
+categories cannot be altered independently in the copy, but you can alter Subvariable names and
 ordering within arrays.
 }

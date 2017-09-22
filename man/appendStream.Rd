@@ -2,7 +2,7 @@
 % Please edit documentation in R/dataset-stream.R
 \name{appendStream}
 \alias{appendStream}
-\title{Manually trigger a pending append to a datadet}
+\title{Manually trigger a pending append to a dataset}
 \usage{
 appendStream(ds)
 }

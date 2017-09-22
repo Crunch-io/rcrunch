@@ -27,3 +27,6 @@ ds$allpets <- addSubvariable(ds$allpets, ds$allpets_4)
 ds$petloc <- addSubvariables(ds$petloc, ds[c("petloc_school", "petloc_daycare")])
 }
 }
+\seealso{
+\code{\link{subvariables}}
+}

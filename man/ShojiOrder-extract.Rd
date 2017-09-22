@@ -34,7 +34,7 @@
 \alias{$<-,OrderGroup-method}
 \alias{[[<-,VariableOrder,character,missing,CrunchDataset-method}
 \alias{[[<-,VariableGroup,character,missing,CrunchDataset-method}
-\title{Extract and update in VariableOrder and VariableGroup}
+\title{Extract and update in VariableOrders and VariableGroups}
 \usage{
 \S4method{[}{ShojiOrder,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
@@ -123,5 +123,5 @@ being updated}
 objects of the same class as \code{x}
 }
 \description{
-Extract and update in VariableOrder and VariableGroup
+Extract and update in VariableOrders and VariableGroups
 }

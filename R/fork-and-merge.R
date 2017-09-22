@@ -41,7 +41,7 @@ defaultForkName <- function (dataset) {
 #' partially merged state for debugging and manual fixing? Default is
 #'`TRUE`.
 #' @param force logical Attempt to push through merge conflicts by dropping
-#' all changes to `dataset` that occured after `fork` diverged from and take only
+#' all changes to `dataset` that occurred after `fork` diverged from and take only
 #' the changes from `fork`? Default is `FALSE`. You should only use force=TRUE after
 #' first attempting and failing to merge without forcing.
 #' @return `dataset` with changes from `fork` merged to it.

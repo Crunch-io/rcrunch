@@ -15,11 +15,12 @@
 \arguments{
 \item{x}{a Dataset}
 
-\item{value}{For the setter, a single Variable to use as the primary key or \code{NULL} to remove the primary key.}
+\item{value}{For the setter, a single Variable to use as the primary key or
+\code{NULL} to remove the primary key.}
 }
 \value{
-Getter returns the Variable object that is used as the primary key (\code{NULL} if there is no primary key); setter
-returns \code{x} duly modified.
+Getter returns the Variable object that is used as the primary key
+(\code{NULL} if there is no primary key); setter returns \code{x} duly modified.
 }
 \description{
 A primary key is a variable in a dataset that has a unique value for every

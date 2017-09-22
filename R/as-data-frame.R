@@ -71,7 +71,7 @@ names.CrunchDataFrame <- function (x) x$.names
 #' @param row.order vector of indices containing the order in which the rows of
 #' the dataset should be presented. If `NULL`, the Crunch Dataset order will be
 #' used.
-#' @param ... additional arguments passed to `as.data.frame`.
+#' @param ... additional arguments passed to `as.data.frame` (default method).
 #' @return an object of class `CrunchDataFrame` unless `force`, in
 #' which case the return is a `data.frame`.
 #' @name dataset-to-R
@@ -121,7 +121,7 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
 #' if you specify `sort="x"` (the default) all rows of x will be present but
 #' rows in y that do not match with rows in x will not be present.
 #'
-#' Merging a CrunchDataFrame with a local dataframe is experiemental and might
+#' Merging a CrunchDataFrame with a local dataframe is experimental and might
 #' result in unexpected results. One known issue is that using `merge` on a
 #' CrunchDataFrame will change the both the CrunchDataFrame used as input as
 #' well as create a new CrunchDataFrame.
@@ -226,4 +226,45 @@ fix_bys <- function (data, by) {
         }
     }
     return(by)
+}
+
+
+#' as.data.frame method for VariableCatalog
+#'
+#' This method gives you a view of a `VariableCatalog` as a `data.frame` in
+#' order to facilitate further exploration.
+#'
+#' Modifying the `data.frame` produced by this function will not update the
+#' dataset on the Crunch server. Other methods exist for updating the metadata
+#' in the variable catalog. See `vingette("variables", package = "crunch")`.
+#'
+#' @param x A `VariableCatalog`, as produced by `variables(ds)`.
+#' @param row.names part of `as.data.frame` signature. Ignored.
+#' @param optional part of `as.data.frame` signature. Ignored.
+#' @param keys A character vector of the variable catalog attributes which you
+#' would like included in the data.frame. To include all attributes or see
+#' which ones are available, set keys to "all". By default, the function will
+#' return three fields: `c("alias", "name", "type")`.
+#' @param ... Additional arguments passed to `data.frame`
+#' @return A `data.frame` including metadata about each variable stored in the
+#' variable catalog. The fields in the data.frame match the `keys` argument
+#' provided to the function, and each row represents a variable.
+#' @examples
+#' \dontrun{
+#' ds <- loadDataset("iris")
+#' vars <- variables(ds)
+#' var_df <- as.data.frame(vars, keys = "all")
+#' }
+#'
+#' @rdname VariableCatalog-to-Data-Frame
+#' @export
+as.data.frame.VariableCatalog <- function (x, row.names = NULL,
+                                           optional = FALSE,
+                                           keys = c("alias", "name", "type"),
+                                           ...) {
+    if (identical(keys, "all")) {
+        keys <- TRUE
+    }
+
+    catalogToDataFrame(x, rownames = NA, keys = keys, ...)
 }

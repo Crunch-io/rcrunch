@@ -18,7 +18,7 @@ partially merged state for debugging and manual fixing? Default is
 \code{TRUE}.}
 
 \item{force}{logical Attempt to push through merge conflicts by dropping
-all changes to \code{dataset} that occured after \code{fork} diverged from and take only
+all changes to \code{dataset} that occurred after \code{fork} diverged from and take only
 the changes from \code{fork}? Default is \code{FALSE}. You should only use force=TRUE after
 first attempting and failing to merge without forcing.}
 }

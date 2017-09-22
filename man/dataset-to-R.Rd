@@ -26,7 +26,7 @@ leave the columns as unevaluated promises. Default is \code{FALSE}.}
 the dataset should be presented. If \code{NULL}, the Crunch Dataset order will be
 used.}
 
-\item{...}{additional arguments passed to \code{as.data.frame}.}
+\item{...}{additional arguments passed to \code{as.data.frame} (default method).}
 }
 \value{
 an object of class \code{CrunchDataFrame} unless \code{force}, in

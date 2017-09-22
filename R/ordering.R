@@ -106,7 +106,7 @@ setMethod("ordering<-", "DatasetCatalog", function (x, value) {
 #     return(x)
 # }
 
-#' Copy the order from one dataset to another.
+#' Copy the variable order from one dataset to another.
 #'
 #' @param source the dataset you want to copy the order from
 #' @param target the dataset you want to copy the order to

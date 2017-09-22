@@ -23,5 +23,5 @@ Nothing.
 Context manager's "with" method
 }
 \seealso{
-\link{ContextManager}
+\code{\link{ContextManager}}
 }

@@ -2,7 +2,7 @@
 % Please edit documentation in R/geo.R
 \name{availableGeodataFeatures}
 \alias{availableGeodataFeatures}
-\title{all available property features for all available geographies}
+\title{Get the property features for available geographies}
 \usage{
 availableGeodataFeatures(x = getAPIRoot(), geodatum_fields = c("name",
   "description", "location"))
@@ -10,13 +10,13 @@ availableGeodataFeatures(x = getAPIRoot(), geodatum_fields = c("name",
 \arguments{
 \item{x}{an API root address (default: the R-session default)}
 
-\item{geodatum_fields}{character, what peices of information about each
+\item{geodatum_fields}{character, what pieces of information about each
 geodatum should be retained? (default: `c("name", "description", "location")``)}
 }
 \value{
-a (tidy) dataframe with all of the available features and
+a dataframe with all of the available features and
 geographies for matching
 }
 \description{
-all available property features for all available geographies
+Get the property features for available geographies
 }
