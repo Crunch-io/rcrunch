@@ -13,12 +13,15 @@
 #' @param filters FilterCatalog, or `NULL` for no filters. Default all
 #' filters in your catalog, `filters(dataset)`.
 #' @param brand_colors an optional color vector of length 3 or less, or a named
-#' list with names 'primary', 'secondary', and 'message'.
+#' list with names 'primary', 'secondary', and 'message'. See "Details" for more
+#' about color specification.
 #' @param static_colors an optional vector of colors to use for categorical
-#' plots. Bars and lines are colored in the order of `static_colors`
+#' plots. Bars and lines are colored in the order of `static_colors`. See
+#' "Details" for more about color specification.
 #' @param category_color_lookup an optional list of category names to colors
 #' to use for that category, wherever it appears in the data. This allows you
-#' to always see a category displayed in a specific color.
+#' to always see a category displayed in a specific color. See
+#' "Details" for more about color specification.
 #' @param ... additional metadata for the box, such as "title", "header", etc.
 #' @return The URL to the newly created box.
 #'

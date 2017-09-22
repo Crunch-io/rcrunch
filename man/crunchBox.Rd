@@ -14,14 +14,17 @@ crunchBox(dataset, filters = crunch::filters(dataset), brand_colors,
 filters in your catalog, \code{filters(dataset)}.}
 
 \item{brand_colors}{an optional color vector of length 3 or less, or a named
-list with names 'primary', 'secondary', and 'message'.}
+list with names 'primary', 'secondary', and 'message'. See "Details" for more
+about color specification.}
 
 \item{static_colors}{an optional vector of colors to use for categorical
-plots. Bars and lines are colored in the order of \code{static_colors}}
+plots. Bars and lines are colored in the order of \code{static_colors}. See
+"Details" for more about color specification.}
 
 \item{category_color_lookup}{an optional list of category names to colors
 to use for that category, wherever it appears in the data. This allows you
-to always see a category displayed in a specific color.}
+to always see a category displayed in a specific color. See
+"Details" for more about color specification.}
 
 \item{...}{additional metadata for the box, such as "title", "header", etc.}
 }
