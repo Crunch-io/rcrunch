@@ -64,6 +64,7 @@ test_that("color validator validates", {
     expect_equal(validHexColor("d3d3d3"), "#d3d3d3")
     expect_equal(validHexColor("#d3d3d3ff"), "#d3d3d3")
     expect_equal(validHexColor("d3d3d3ff"), "#d3d3d3")
+    expect_equal(validHexColor("aliceblue"), "#F0F8FF")
 })
 
 with_mock_crunch({
