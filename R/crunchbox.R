@@ -302,6 +302,9 @@ validHexColor <- function (color) {
         halt("A color must be a character, got ", class(color)," instead")
     }
 
+    # TODO: detect if it is an R color name like "aliceblue" and convert to hex?
+    # color_hex <- rgb(t(col2rgb("green")/255))
+
     # validate length and add hash if needed  and remove the last two chars if
     # given 8 digit version
     if (nchar(color) == 6 ) {
