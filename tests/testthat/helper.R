@@ -1,16 +1,34 @@
 Sys.setlocale("LC_COLLATE", "C") ## What CRAN does
 set.seed(666)
 
-## Our "test package" common harness code
-## `try` added because of some devtools::document weirdness
-try({
-    crunch_test_path <- system.file("crunch-test.R", package="crunch")
-    if (crunch_test_path == "") {
-        # hack for loadall
-        crunch_test_path <- "../../inst/crunch-test.R"
+# find a file starting with the current directory and looking (recursively) in parent folders limited to levels_up
+find_file <- function (file_name, levels_up = 3) {
+    for (i in 0:levels_up) {
+        if (i == 0) {
+            pth <- "."
+            
+        } else {
+            pth <- file.path(".", paste0(rep("..", i), collapse = "/"))
+        }
+        fls <- list.files(pth, recursive = TRUE)
+        fl <- fls[grepl(file_name, fls)]
+        if (length(fl) > 0) return(file.path(pth,fl))
     }
+    stop("Found no file named ", file_name, " Stopping tests because they will not function without ", file_name)
+}
+
+## Our "test package" common harness code
+crunch_test_path <- system.file("crunch-test.R", package="crunch")
+if (crunch_test_path == "") {
+    # hack for loadall
+    crunch_test_path <- find_file("crunch-test.R")
+}
+# only source crunch-test.R when the session is not interactive
+if (!interactive()) {
+    message("Loading helpers from: ", crunch_test_path)
     source(crunch_test_path)
-})
+}
+
 
 skip_on_jenkins <- function (...) {
     if (nchar(Sys.getenv("JENKINS_HOME"))) {
