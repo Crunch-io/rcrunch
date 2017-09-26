@@ -39,6 +39,37 @@ with_mock_crunch({
         })
         expect_identical(weightVariables(oldds), c())
     })
+    test_that("weightVariables can be assigned", {
+        body <- '{"element":"shoji:order","self":"https://app.crunch.io/api/datasets/1/variables/weights/","description":"Order of the weight variables for this dataset","graph":["https://app.crunch.io/api/datasets/1/variables/birthyr/"]} '
+        expect_PATCH(weightVariables(oldds) <- oldds$birthyr,
+            "https://app.crunch.io/api/datasets/1/variables/weights/",
+            body)
+        expect_PATCH(weightVariables(allVariables(oldds)) <- oldds$birthyr,
+            "https://app.crunch.io/api/datasets/1/variables/weights/",
+            body)
+    })
+    test_that("assigning incorrect entries to weightVariables errors correctly", {
+        expect_error(
+            weightVariables(mtcars) <- "apple",
+            "Left hand side is not a Crunch Dataset or Variable Catalog."
+        )
+        expect_error(
+            weightVariables(oldds) <- "notvar",
+            'notvar is not a numeric Crunch variable.'
+        )
+        expect_error(
+            weightVariables(oldds) <- oldds$gender,
+            'Gender is not a numeric Crunch variable.'
+        )
+        expect_error(
+            weightVariables(oldds) <- list(oldds$gender, oldds$birthyr),
+            'Gender is not a numeric Crunch variable.'
+        )
+        expect_error(
+            weightVariables(oldds) <- list(oldds$gender, oldds$textVar),
+            'Gender and Text variable ftw are not a numeric Crunch variables.'
+        )
+    })
 
     test_that("generateWeightEntry errors correctly", {
         expect_error(generateWeightEntry("bad_formula"),
@@ -153,6 +184,29 @@ with_test_authentication({
             ds$w2 <- 2:21
             weight(ds) <- ds$w2
             expect_equivalent(weight(ds), ds$w2)
+        })
+    })
+
+    with(test.dataset(df), {
+        test_that("We have a clean dataset", {
+            expect_null(weightVariables(ds))
+        })
+        test_that("weightVariables can be assigned", {
+            ds$weight22 <- ds$weight23 <- sample(c(.2, .8), 20, replace = TRUE)
+            ds$weight23 <- sample(c(.5, .5), 20, replace = TRUE)
+            weightVariables(ds) <- ds$weight23
+            expect_identical(
+                weightVariables(ds), "weight23"
+            )
+            weightVariables(ds) <- list(ds$weight23, ds$weight22)
+            expect_identical(
+                weightVariables(ds), c("weight22", "weight23")
+            )
+            weightVariables(ds) <- NULL
+            expect_identical(
+                weightVariables(ds), NULL
+            )
+
         })
     })
 

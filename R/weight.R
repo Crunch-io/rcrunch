@@ -12,7 +12,7 @@
 #' NULL. For the setter, x, modified accordingly. `weightVariables` returns
 #' the aliases (or names, according to `options(crunch.namekey.dataset)`),
 #' of the variables designated as weights.
-#' @aliases weightVariables
+#' @seealso [weightVariables()] [makeWeight()]
 #' @export
 weight <- function (x) {
     stopifnot(is.dataset(x))
@@ -47,12 +47,33 @@ weight <- function (x) {
     return(x)
 }
 
-#' @rdname weight
+
+#' Change which variables can be set as weights
+#'
+#' Editors can change which variables can be set as the weighting variable
+#' for a dataset. For instance if several weights have been calculated they
+#' can let the user choose which of those variables to use a weight, but prevent
+#' the user from choosing other variables as weight. This function allows you
+#' to get and set the `weightVariables` of a dataset, which are the variables which
+#' can be set as the dataset [weight()].
+#'
+#' @param x a dataset or variable catalog
+#' @param value For the setter a numeric Crunch variable, or list of numeric
+#' Crunch variables to set as the `weightVariables.`
+#'
+#' @return For the getter the variables which can be set as the dataset's weight. For
+#' the setter the dataset or variable catalog duly modified.
+#' @seealso [weight()] [makeWeight()]
+#' @name weightVariables
+#' @export
+NULL
+
+#' @rdname weightVariables
 #' @export
 setMethod("weightVariables", "CrunchDataset",
     function (x) weightVariables(allVariables(x)))
 
-#' @rdname weight
+#' @rdname weightVariables
 #' @export
 setMethod("weightVariables", "VariableCatalog", function (x) {
     ## Get weight variable order
@@ -68,29 +89,26 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
     }
 })
 
-
-#' Title
-#'
-#' @param x
-#' @param value
-#'
-#' @return
+#' @rdname weightVariables
 #' @export
-#'
-#' @examples
 `weightVariables<-` <- function(x, value) {
-    stopifnot(is.dataset(x))
-    varCat <- allVariables(x)
+    if (is.dataset(x)) {
+        varCat <- allVariables(x)
+    } else if (inherits(x,  "VariableCatalog")) {
+        varCat <- x
+    } else {
+        halt("Left hand side is not a Crunch Dataset or Variable Catalog.")
+    }
     current <- crGET(shojiURL(varCat, "orders", "weights"))
     new <- current
-    if(is.null(value)){
+    if (is.null(value)) {
         new$graph <- NULL
     } else {
         if (is.variable(value) || length(value) == 1) {
             value <- list(value)
         }
         var_names <- vapply(value, function(x){
-            if (is.variable(x)){
+            if (is.variable(x)) {
                 return(name(x))
             } else {
                 return(as.character(x))
@@ -106,9 +124,9 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
         }
         new$graph <- lapply(value, self)
     }
-    if(!identical(current, new)){
+    if (!identical(current, new)) {
         crPATCH(shojiURL(varCat, "orders", "weights"),
-            body=toJSON(new))
+            body = toJSON(new))
         x <- refresh(x)
     }
     return(x)
