@@ -7,7 +7,7 @@ try({
     crunch_test_path <- system.file("crunch-test.R", package="crunch")
     if (crunch_test_path == "") {
         # hack for loadall
-        crunch_test_path <- "./inst/crunch-test.R"
+        crunch_test_path <- "../../inst/crunch-test.R"
     }
     source(crunch_test_path)
 })
@@ -24,6 +24,11 @@ cacheLogSummary <- httpcache::cacheLogSummary
 requestLogSummary <- httpcache::requestLogSummary
 uncached <- httpcache::uncached
 newDataset <- function (...) suppressMessages(crunch::newDataset(...))
+
+loadCube <- function (filename) {
+    CrunchCube(fromJSON(filename, simplifyVector=FALSE)$value)
+}
+# print(loadCube("cubes/mr-by-cat-profiles-stats-weighted.json"))
 
 ## .onAttach stuff, for testthat to work right
 ## See other options in inst/crunch-test.R
