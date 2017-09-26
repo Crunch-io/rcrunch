@@ -1,3 +1,5 @@
+### crunch 1.18.3 (under development)
+
 ### crunch 1.18.2
 * `makeWeight` allows you to generate new weighting variables based on categorical variables (#80).
 * `cut`, equivalent to `base::cut`, allows you to generate a derived categorical variable based on a numeric variable (#93).
