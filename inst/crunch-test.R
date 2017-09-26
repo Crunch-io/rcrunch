@@ -1,12 +1,6 @@
 library(httptest)
 
-run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
-
-options(
-    crunch.api=crunch::envOrOption("test.api"),
-    crunch.email=crunch::envOrOption("test.user"),
-    crunch.pw=crunch::envOrOption("test.pw")
-)
+crunch::pointTo("local")
 
 skip_locally <- function (...) {
     if (substr(getOption("crunch.api"), 1, 12) == "http://local") {
