@@ -12,7 +12,11 @@ find_file <- function (file_name, levels_up = 3) {
         }
         fls <- list.files(pth, recursive = TRUE)
         fl <- fls[grepl(file_name, fls)]
-        if (length(fl) > 0) return(file.path(pth,fl))
+        if (length(fl) == 1) return(file.path(pth,fl))
+        if (length(fl)  > 1) {
+            warning("More than one file named ", file_name, " using the first one.")
+            return(file.path(pth,fl[1]))
+        }
     }
     stop("Found no file named ", file_name, " Stopping tests because they will not function without ", file_name)
 }
