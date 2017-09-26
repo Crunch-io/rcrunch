@@ -1,6 +1,6 @@
-### crunch 1.18.1 (under development)
+### crunch 1.18.2
 * `makeWeight` allows you to generate new weighting variables based on categorical variables (#80).
-* `cut`, equivalent to `base::cut`, allows you to generate a derived categorical variable based on a numeric variable (#93). 
+* `cut`, equivalent to `base::cut`, allows you to generate a derived categorical variable based on a numeric variable (#93).
 * Create a new Crunch dataset from a file by calling `newDataset` directly instead of `newDatasetFromFile`. Also, you can now create a dataset from a hosted file passing its URL to `newDataset(FromFile)`.
 * `as.data.frame()` method for `VariableCatalog` for a view of variable metadata (#75)
 * `crunchBox()` now allows you to specify colors for branding or even category-specific coloring.

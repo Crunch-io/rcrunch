@@ -5,7 +5,7 @@
 #' In addition to specifying the variables and filters to include in your
 #' CrunchBox, you can provide custom color palettes. The arguments
 #' `brand_colors`, `static_colors`, and `category_color_lookup` allow you to
-#' provide color lists to use. Colors should be either a valid hexidecimal
+#' provide color lists to use. Colors should be either a valid hexadecimal
 #' string representation, like "#fa1af1", or they may also be an R named color,
 #' such as "darkgreen".
 #'
@@ -46,6 +46,7 @@
 #'
 #' @seealso \code{\link{preCrunchBoxCheck}} to provide guidance on what you're including in the
 #' @export
+#' @importFrom grDevices col2rgb colors rgb
 crunchBox <- function (dataset, filters=crunch::filters(dataset),
                        brand_colors, static_colors,
                        category_color_lookup, ...) {

@@ -151,7 +151,7 @@ writePreparedData <- function (data, metadata=attr(data, "metadata"), file) {
 
 #' Write CSV to a compressed file
 #'
-#' @param x A data.frame or similar CSV-writeable object
+#' @param x A data.frame or similar CSV-writable object
 #' @param file character destination to write the gzipped CSV to
 #' @param na See [`utils::write.csv`]. This just changes the default
 #' to a Crunch-friendly empty string.

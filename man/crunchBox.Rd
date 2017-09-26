@@ -38,7 +38,7 @@ CrunchBoxes allow you to publish results to the world.
 In addition to specifying the variables and filters to include in your
 CrunchBox, you can provide custom color palettes. The arguments
 \code{brand_colors}, \code{static_colors}, and \code{category_color_lookup} allow you to
-provide color lists to use. Colors should be either a valid hexidecimal
+provide color lists to use. Colors should be either a valid hexadecimal
 string representation, like "#fa1af1", or they may also be an R named color,
 such as "darkgreen".
 }
@@ -63,6 +63,5 @@ crunchBox(ds[c("var1", "var2", "var3")],
 
 }
 \seealso{
-\code{\link[=preCrunchBoxCheck]{preCrunchBoxCheck()}} to provide guidance on what you're including
-in the CrunchBox
+\code{\link{preCrunchBoxCheck}} to provide guidance on what you're including in the
 }
