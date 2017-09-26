@@ -13,7 +13,7 @@ pointTo(place, api_url = "https://app.crunch.io/api/",
 \item{api_url}{a url to use by default: "https://app.crunch.io/api/"}
 
 \item{use_env_api_url}{should the api url from the environment variables be
-used? (default: \code{FALSE}, this will always be \code{FALSE} when chosing \code{prod = 'local'})}
+used? (default: \code{FALSE}, this will always be \code{FALSE} when choosing \code{prod = 'local'})}
 }
 \value{
 nothing
@@ -26,10 +26,10 @@ to connect to. You can select either:
 \itemize{
 \item 'local' to connect to a local (vagrant-based) backend. This will use the
 \code{test.user}, \code{test.pw}, and \code{test.api} options from your \code{.Rprofile} or
-corresponding environemnt variables.
+corresponding environment variables.
 \item 'prod' to connect to a hosted backend. This will use the \code{crunch.email},
 \code{crunch.pw}, and \code{crunch.api} options from your \code{.Rprofile} or corresponding
-environemnt variables.
+environment variables.
 }
 }
 \keyword{internal}
