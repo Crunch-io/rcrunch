@@ -33,7 +33,6 @@ if (!interactive()) {
     source(crunch_test_path)
 }
 
-
 skip_on_jenkins <- function (...) {
     if (nchar(Sys.getenv("JENKINS_HOME"))) {
         skip(...)

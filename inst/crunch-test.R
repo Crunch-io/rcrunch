@@ -2,22 +2,10 @@ library(httptest)
 
 run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
 
-envOrOption <- function (opt) {
-    ## .Rprofile options are like "test.api", while env vars are "R_TEST_API"
-    envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed=TRUE)))
-    envvar <- Sys.getenv(envvar.name)
-    if (nchar(envvar)) {
-        ## Let environment variable override .Rprofile, if defined
-        return(envvar)
-    } else {
-        return(getOption(opt))
-    }
-}
-
 options(
-    crunch.api=envOrOption("test.api"),
-    crunch.email=envOrOption("test.user"),
-    crunch.pw=envOrOption("test.pw")
+    crunch.api=crunch::envOrOption("test.api"),
+    crunch.email=crunch::envOrOption("test.user"),
+    crunch.pw=crunch::envOrOption("test.pw")
 )
 
 skip_locally <- function (...) {

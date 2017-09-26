@@ -155,3 +155,26 @@ vectorOrList <- function (obj, type) {
     }
     return(FALSE)
 }
+
+#' Grab either env variable or .Rprofile based option
+#' 
+#' .Rprofile options are like "test.api", while env vars are "R_TEST_API", 
+#'  this function will grab the environment variable if it is find, otherwise
+#'  it looks for the R-based option value.
+#' 
+#' @param opt the option to get
+#' 
+#' @return the value of the option
+#' 
+#' @export
+envOrOption <- function (opt) {
+    ## .Rprofile options are like "test.api", while env vars are "R_TEST_API"
+    envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed=TRUE)))
+    envvar <- Sys.getenv(envvar.name)
+    if (nchar(envvar)) {
+        ## Let environment variable override .Rprofile, if defined
+        return(envvar)
+    } else {
+        return(getOption(opt))
+    }
+}
