@@ -9,7 +9,7 @@ test_that("All test- files are ASCII (for CHECK)", {
     }
 })
 
-if (run.integration.tests) {
+if (getOption("run.integration.tests")) {
     ## Move the actual tests to a different file so that non-Unicode
     ## environments won't fail to parse (even if not running these tests)
     source("utftesting.R", local=TRUE)

@@ -48,7 +48,7 @@ test_that("retry", {
         "counter == 3 is not TRUE")
 })
 
-if (run.integration.tests) {
+if (getOption("run.integration.tests")) {
     test_that("Request headers", {
         skip_if_disconnected()
         r <- crGET("http://httpbin.org/gzip")

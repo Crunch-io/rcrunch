@@ -51,7 +51,7 @@ silencer <- temp.option(show.error.messages=FALSE)
 
 assign("entities.created", c(), envir=globalenv())
 with_test_authentication <- function (expr) {
-    if (run.integration.tests) {
+    if (getOption("run.integration.tests")) {
         env <- parent.frame()
         ## Authenticate.
         try(suppressMessages(login()))
