@@ -26,7 +26,7 @@ cannot officially recommend that you do so.
 }
 \details{
 Additionally, your email and password can be stored in and read from the
-environmental variables \code{R_crunch_email} and \code{R_crunch_pw} respectively.
+environmental variables \code{R_CRUNCH_EMAIL} and \code{R_CRUNCH_PW} respectively.
 
 If a password is not supplied (or, if no arguments are supplied and only
 the \code{crunch.email} is specified in .Rprofile), and you are in an

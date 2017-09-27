@@ -37,7 +37,7 @@ deleteSessionInfo <- function () {
 #' cannot officially recommend that you do so.
 #'
 #' Additionally, your email and password can be stored in and read from the 
-#' environmental variables `R_crunch_email` and `R_crunch_pw` respectively.
+#' environmental variables `R_CRUNCH_EMAIL` and `R_CRUNCH_PW` respectively.
 #'
 #' If a password is not supplied (or, if no arguments are supplied and only
 #' the `crunch.email` is specified in .Rprofile), and you are in an

@@ -158,7 +158,7 @@ vectorOrList <- function (obj, type) {
 
 #' Grab either env variable or option
 #' 
-#' .Rprofile options are like "test.api", while env vars are "R_TEST_API".
+#' .Rprofile options are like "crunch.api", while env vars are "R_CRUNCH_API".
 #' This function will use the environment variable if it is found, otherwise
 #' it looks for the R-based option value.
 #' 
@@ -169,7 +169,6 @@ vectorOrList <- function (obj, type) {
 #' @keywords internal
 #' @export
 envOrOption <- function (opt) {
-    ## .Rprofile options are like "test.api", while env vars are "R_TEST_API"
     envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed=TRUE)))
     envvar <- Sys.getenv(envvar.name)
     if (nchar(envvar)) {
