@@ -1,5 +1,4 @@
 library(httptest)
-
 if (nchar(Sys.getenv("JENKINS_HOME"))) {
     options(
         crunch.check.updates=FALSE,
