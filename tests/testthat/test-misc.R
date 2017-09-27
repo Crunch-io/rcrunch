@@ -119,10 +119,10 @@ test_that("vectorOrList", {
 })
 
 test_that("setCrunchAPI", {
-    old_crunch_api <- getOption("crunch.api")
-    setCrunchAPI('foobar')
-    expect_equal(getOption("crunch.api"), "https://foobar.crunch.io/api/")
-    setCrunchAPI('barfoo', 8888)
-    expect_equal(getOption("crunch.api"), "http://barfoo.crunch.io:8888/api/")
-    options("crunch.api" = old_crunch_api)
+    reset.option({
+        setCrunchAPI('foobar')
+        expect_equal(getOption("crunch.api"), "https://foobar.crunch.io/api/")
+        setCrunchAPI('barfoo', 8888)
+        expect_equal(getOption("crunch.api"), "http://barfoo.crunch.io:8888/api/")
+    })
 })
