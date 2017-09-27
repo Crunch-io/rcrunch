@@ -2,30 +2,19 @@
 % Please edit documentation in R/misc.R
 \name{envOrOption}
 \alias{envOrOption}
-\alias{envOrOption}
-\title{Grab either env variable or .Rprofile based option}
+\title{Grab either env variable or option}
 \usage{
-envOrOption(opt)
-
 envOrOption(opt)
 }
 \arguments{
 \item{opt}{the option to get}
-
-\item{opt}{the option to get}
 }
 \value{
 the value of the option
-
-the value of the option
 }
 \description{
-.Rprofile options are like "test.api", while env vars are "R_TEST_API",
-this function will grab the environment variable if it is find, otherwise
-it looks for the R-based option value.
-
-.Rprofile options are like "test.api", while env vars are "R_TEST_API",
-this function will grab the environment variable if it is find, otherwise
+.Rprofile options are like "test.api", while env vars are "R_TEST_API".
+This function will use the environment variable if it is found, otherwise
 it looks for the R-based option value.
 }
 \keyword{internal}

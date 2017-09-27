@@ -1,6 +1,11 @@
 library(httptest)
 
-crunch::pointTo("local")
+crunch::setCrunchAPI("local", 8080)
+options(
+    crunch.email=envOrOption("test.user"),
+    crunch.pw=envOrOption("test.pw"),
+    run.integration.tests=Sys.getenv("INTEGRATION") == "TRUE"
+)
 
 skip_locally <- function (...) {
     if (substr(getOption("crunch.api"), 1, 12) == "http://local") {
@@ -9,7 +14,6 @@ skip_locally <- function (...) {
 }
 
 ## Contexts
-
 with_mock_crunch <- function (expr) {
     env <- parent.frame()
     with(temp.options(crunch.api="https://app.crunch.io/api/",

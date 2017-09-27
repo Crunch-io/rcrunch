@@ -156,35 +156,11 @@ vectorOrList <- function (obj, type) {
     return(FALSE)
 }
 
-#' Grab either env variable or .Rprofile based option
+#' Grab either env variable or option
 #' 
-#' .Rprofile options are like "test.api", while env vars are "R_TEST_API", 
-#'  this function will grab the environment variable if it is find, otherwise
-#'  it looks for the R-based option value.
-#' 
-#' @param opt the option to get
-#' 
-#' @return the value of the option
-#' 
-#' @export
-envOrOption <- function (opt) {
-    ## .Rprofile options are like "test.api", while env vars are "R_TEST_API"
-    envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed=TRUE)))
-    envvar <- Sys.getenv(envvar.name)
-    if (nchar(envvar)) {
-        ## Let environment variable override .Rprofile, if defined
-        return(envvar)
-    } else {
-        return(getOption(opt))
-    }
-}
-
-
-#' Grab either env variable or .Rprofile based option
-#' 
-#' .Rprofile options are like "test.api", while env vars are "R_TEST_API", 
-#'  this function will grab the environment variable if it is find, otherwise
-#'  it looks for the R-based option value.
+#' .Rprofile options are like "test.api", while env vars are "R_TEST_API".
+#' This function will use the environment variable if it is found, otherwise
+#' it looks for the R-based option value.
 #' 
 #' @param opt the option to get
 #' 
@@ -207,53 +183,26 @@ envOrOption <- function (opt) {
 #' Change which server to point to
 #' 
 #' A convenience function for changing where you want the Crunch package to try
-#' to connect to. You can select either:
+#' to connect to.
 #' 
-#' * 'local' to connect to a local (vagrant-based) backend. This will use the 
-#' `test.user`, `test.pw`, and `test.api` options from your `.Rprofile` or 
-#' corresponding environment variables.
-#' 
-#' * 'prod' to connect to a hosted backend. This will use the `crunch.email`,
-#' `crunch.pw`, and `crunch.api` options from your `.Rprofile` or corresponding
-#'  environment variables.
-#' 
-#' @param place a place to point to (either 'local' or 'prod')
-#' @param api_url a url to use by default: "https://app.crunch.io/api/"
-#' @param use_env_api_url should the api url from the environment variables be
-#' used? (default: `FALSE`, this will always be `FALSE` when choosing `prod = 'local'`)
+#' @param subdomain the subdomain to use
+#' @param port on optional port to use
 #' 
 #' @return nothing
 #' 
+#' @examples 
+#' setCrunchAPI("local", 8080)
+#' setCrunchAPI("app")
+#' 
 #' @keywords internal
 #' @export
-pointTo <- function (place, api_url = "https://app.crunch.io/api/", use_env_api_url = FALSE) {
-    # re-read .Rprofile
-    # TODO: only grab options for crunch rather than re-running the whole thing?
-    try({source("~/.Rprofile")})
-        
-    if (place == "local") {
-        api_str <- "test.api"
-        user_str <- "test.user"
-        pw_str <- "test.pw"
-        use_env_api_url <- TRUE
-    } else if (place == "prod") {
-        api_str <- "crunch.api"
-        user_str <- "crunch.email"
-        pw_str <- "crunch.pw"
+setCrunchAPI <- function (subdomain, port=NULL) {
+    if (!is.null(port)) {
+        api <- paste0("http://", subdomain, ".crunch.io:", port, "/api/")
     } else {
-        halt("unknown place: ", place)
+        api <- paste0("https://", subdomain, ".crunch.io/api/")
     }
-    
-    if (use_env_api_url) {
-        api_url <- envOrOption(api_str)
-    }
-    
-    options(
-        crunch.api=api_url,
-        crunch.email=envOrOption(user_str),
-        crunch.pw=envOrOption(pw_str),
-        run.integration.tests=Sys.getenv("INTEGRATION") == "TRUE"
-    )
-    
+    options(crunch.api=api)
     return()
 }
+
