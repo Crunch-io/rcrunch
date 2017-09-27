@@ -1,9 +1,16 @@
 library(httptest)
 
-crunch::setCrunchAPI("local", 8080)
+# use test.api or R_TEST_API if it's available, if not use local
+if (!is.null(crunch::envOrOption("test.api"))) {
+    options(crunch.api=crunch::envOrOption("test.api"))
+} else {
+    crunch::setCrunchAPI("local", 8080)
+}
+
+# grab env or options
 options(
-    crunch.email=envOrOption("test.user"),
-    crunch.pw=envOrOption("test.pw"),
+    crunch.email=crunch::envOrOption("test.user"),
+    crunch.pw=crunch::envOrOption("test.pw"),
     run.integration.tests=Sys.getenv("INTEGRATION") == "TRUE"
 )
 
