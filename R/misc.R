@@ -203,6 +203,6 @@ setCrunchAPI <- function (subdomain, port=NULL) {
         api <- paste0("https://", subdomain, ".crunch.io/api/")
     }
     options(crunch.api=api)
-    return()
+    return(invisible())
 }
 
