@@ -41,18 +41,14 @@ with_mock_crunch({
     })
     test_that("weightVariables can be assigned", {
         body <- '{"element":"shoji:order","self":"https://app.crunch.io/api/datasets/1/variables/weights/","description":"Order of the weight variables for this dataset","graph":["https://app.crunch.io/api/datasets/1/variables/birthyr/"]} '
-        expect_PATCH(weightVariables(oldds) <- oldds$birthyr,
+        expect_PUT(weightVariables(oldds) <- oldds$birthyr,
             "https://app.crunch.io/api/datasets/1/variables/weights/",
             body)
-        expect_PATCH(weightVariables(allVariables(oldds)) <- oldds$birthyr,
+        expect_PUT(weightVariables(allVariables(oldds)) <- oldds$birthyr,
             "https://app.crunch.io/api/datasets/1/variables/weights/",
             body)
     })
     test_that("assigning incorrect entries to weightVariables errors correctly", {
-        expect_error(
-            weightVariables(mtcars) <- "apple",
-            "Left hand side is not a Crunch Dataset or Variable Catalog."
-        )
         expect_error(
             weightVariables(oldds) <- "notvar",
             'notvar is not a numeric Crunch variable.'

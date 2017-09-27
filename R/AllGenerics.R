@@ -122,6 +122,7 @@ setGeneric("groupClass", function (x) standardGeneric("groupClass"))
 setGeneric("entityClass", function (x) standardGeneric("entityClass"))
 setGeneric("entitiesInitializer", function (x) standardGeneric("entitiesInitializer"))
 setGeneric("weightVariables", function (x) standardGeneric("weightVariables"))
+setGeneric("weightVariables<-", function (x, value) standardGeneric("weightVariables<-"))
 
 setGeneric("owner", function (x) standardGeneric("owner"))
 setGeneric("owner<-", function (x, value) standardGeneric("owner<-"))

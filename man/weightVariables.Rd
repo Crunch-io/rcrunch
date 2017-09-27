@@ -5,14 +5,17 @@
 \alias{weightVariables}
 \alias{weightVariables,CrunchDataset-method}
 \alias{weightVariables,VariableCatalog-method}
-\alias{weightVariables<-}
+\alias{weightVariables<-,CrunchDataset-method}
+\alias{weightVariables<-,VariableCatalog-method}
 \title{Change which variables can be set as weights}
 \usage{
 \S4method{weightVariables}{CrunchDataset}(x)
 
 \S4method{weightVariables}{VariableCatalog}(x)
 
-weightVariables(x) <- value
+\S4method{weightVariables}{CrunchDataset}(x) <- value
+
+\S4method{weightVariables}{VariableCatalog}(x) <- value
 }
 \arguments{
 \item{x}{a dataset or variable catalog}

@@ -91,15 +91,16 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
 
 #' @rdname weightVariables
 #' @export
-`weightVariables<-` <- function(x, value) {
-    if (is.dataset(x)) {
-        varCat <- allVariables(x)
-    } else if (inherits(x,  "VariableCatalog")) {
-        varCat <- x
-    } else {
-        halt("Left hand side is not a Crunch Dataset or Variable Catalog.")
-    }
-    current <- crGET(shojiURL(varCat, "orders", "weights"))
+setMethod("weightVariables<-", "CrunchDataset", function(x, value) {
+    weightVariables(allVariables(x)) <- value
+    x <- refresh(x)
+    return(x)
+})
+
+#' @rdname weightVariables
+#' @export
+setMethod("weightVariables<-", "VariableCatalog", function(x, value) {
+    current <- crGET(shojiURL(x, "orders", "weights"))
     new <- current
     if (is.null(value)) {
         new$graph <- NULL
@@ -107,30 +108,31 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
         if (is.variable(value) || length(value) == 1) {
             value <- list(value)
         }
-        var_names <- vapply(value, function(x){
-            if (is.variable(x)) {
-                return(name(x))
-            } else {
-                return(as.character(x))
-            }
-            }, character(1))
         all_var <- vapply(value, is.Numeric, logical(1))
         if (!all(all_var)) {
+            var_names <- vapply(value, function(v){
+                if (is.variable(v)) {
+                    return(name(v))
+                } else {
+                    return(as.character(v))
+                }
+            }, character(1))
             err_text <- " is not a numeric Crunch variable."
             if ( sum(!all_var) > 1) {
                 err_text <- " are not a numeric Crunch variables."
             }
-            halt( paste0(serialPaste(var_names[!all_var]), err_text))
+            halt( serialPaste(var_names[!all_var]), err_text)
         }
         new$graph <- lapply(value, self)
     }
+
     if (!identical(current, new)) {
-        crPATCH(shojiURL(varCat, "orders", "weights"),
+        crPUT(shojiURL(x, "orders", "weights"),
             body = toJSON(new))
         x <- refresh(x)
     }
     return(x)
-}
+})
 
 #' Generate a weight variable
 #'
