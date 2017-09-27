@@ -1,35 +1,38 @@
 Sys.setlocale("LC_COLLATE", "C") ## What CRAN does
 set.seed(666)
 
-# find a file starting with the current directory and looking (recursively) in parent folders limited to levels_up
+# find a file starting with the current directory and looking in parent folders 
+# limited to levels_up for the file in file_name, additionally look inside the 
+# folder `inst` at each level looking for file_name as well.
 find_file <- function (file_name, levels_up = 3) {
     for (i in 0:levels_up) {
-        if (i == 0) {
-            pth <- "."
-            
-        } else {
-            pth <- file.path(".", paste0(rep("..", i), collapse = "/"))
-        }
-        fls <- list.files(pth, recursive = TRUE)
-        fl <- fls[grepl(file_name, fls)]
-        if (length(fl) == 1) return(file.path(pth,fl))
+        pths <- file.path(".",
+                          paste0(rep("..", i), collapse = .Platform$file.sep),
+                          c("", "inst"), file_name)
+        fl <- pths[file.exists(pths)]
+        if (length(fl) == 1) return(fl)
         if (length(fl)  > 1) {
-            warning("More than one file named ", file_name, " using the first one.")
-            return(file.path(pth,fl[1]))
+            warning("More than one file named ", file_name,
+                    " using the first one.")
+            return(fl[1])
         }
     }
-    stop("Found no file named ", file_name, " Stopping tests because they will not function without ", file_name)
+    stop("Found no file named ", file_name, 
+         " Stopping tests because they will not function without ", file_name)
 }
 
 ## Our "test package" common harness code
 crunch_test_path <- system.file("crunch-test.R", package="crunch")
 if (crunch_test_path == "") {
-    # hack for loadall
+    # hack for devtools::test / testthat::test_package
     crunch_test_path <- find_file("crunch-test.R")
 }
-# only source crunch-test.R when the session is not interactive
-if (!interactive()) {
-    message("Loading helpers from: ", crunch_test_path)
+
+# only source crunch-test.R when the this is not being called (as the top most
+# call) by devtools::load_all or crunchdev::load_all
+loaded_by_load_all <- sys.calls()[[1]][[1]] == quote(devtools::load_all) |
+    sys.calls()[[1]][[1]] == quote(crunchdev::load_all) %||% FALSE
+if (!loaded_by_load_all) {
     source(crunch_test_path)
 }
 
