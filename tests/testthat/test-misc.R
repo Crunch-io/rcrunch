@@ -119,7 +119,7 @@ test_that("vectorOrList", {
 })
 
 test_that("setCrunchAPI", {
-    reset.option({
+    with(reset.option("crunch.api"), {
         setCrunchAPI('foobar')
         expect_equal(getOption("crunch.api"), "https://foobar.crunch.io/api/")
         setCrunchAPI('barfoo', 8888)
