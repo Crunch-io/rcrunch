@@ -211,9 +211,15 @@ setMethod("round", "CrunchCube", function (x, digits=0) {
 #' @rdname cube-computing
 #' @export
 setMethod("bases", "CrunchCube", function (x, margin=NULL) {
-    if (length(dimensions(x)) == 0 || (length(margin) == 1 && margin == 0)) {
+    if (length(margin) == 1 && margin == 0) {
         ## Unlike margin.table. This just returns the "bases", without reducing
+        return(cubeToArray(x, ".unweighted_counts"))
+    } else if (length(dimensions(x)) == 0) {
         ## N dims == 0 is for univariate stats
+        if (!is.null(margin)) {
+            halt("Margin ", max(margin),
+                " exceeds Cube's number of dimensions (0)")
+        }
         return(cubeToArray(x, ".unweighted_counts"))
     } else {
         return(cubeMarginTable(x, margin, measure=".unweighted_counts"))

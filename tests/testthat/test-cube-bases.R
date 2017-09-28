@@ -52,5 +52,7 @@ with_mock_crunch({
 
     test_that("base for univariate stats", {
         expect_equal(bases(crtabs(max(birthyr) ~ 1, data=ds)), 25)
+        expect_error(bases(crtabs(max(birthyr) ~ 1, data=ds), 1),
+            "Margin 1 exceeds Cube's number of dimensions (0)", fixed=TRUE)
     })
 })
