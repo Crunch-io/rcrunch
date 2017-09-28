@@ -17,10 +17,17 @@ cubeDims <- function (cube) {
             missing=vapply(d, function (el) isTRUE(el$missing), logical(1))
         ))
     })
-    names(dimnames) <- vapply(cube$result$dimensions,
-        function (a) a$references$alias, character(1))
-    return(CubeDims(dimnames,
-        references=VariableCatalog(index=lapply(cube$result$dimensions, vget("references")))))
+    ## Collect the variable metadata about the dimensions
+    refs <- lapply(cube$result$dimensions, function (d) {
+        tuple <- d$references
+        tuple$type <- d$type$class
+        if (tuple$type == "enum" && "subreferences" %in% names(tuple)) {
+            tuple$type <- "multiple_response"
+        }
+        return(tuple)
+    })
+    names(dimnames) <- vapply(refs, vget("alias"), character(1))
+    return(CubeDims(dimnames, references=VariableCatalog(index=refs)))
 }
 
 elementName <- function (el) {
