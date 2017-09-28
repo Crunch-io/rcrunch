@@ -49,4 +49,8 @@ with_mock_crunch({
         expect_identical(bases(book1, 0)[[1]][[2]], b)
         expect_identical(bases(book1)[[1]][[2]], sum(b))
     })
+
+    test_that("base for univariate stats", {
+        expect_equal(bases(crtabs(max(birthyr) ~ 1, data=ds)), 25)
+    })
 })

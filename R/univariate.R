@@ -10,18 +10,11 @@
 NULL
 
 .summary.stat <- function (x, stat, na.rm=FALSE, ...) {
-    ## Get a single stat from the summary object
-    # summ <- getSummary(x)
-    # m <- summ[[stat]]
-    # if (!na.rm && summ[['missing_count']] > 0) {
-    #     m <- NA_real_
-    # }
-    # return(m)
-
     query <- list(
         query=toJSON(list(dimensions=list(),
             measures=list(q=registerCubeFunctions()[[stat]](x)))),
         filter=toJSON(zcl(activeFilter(x)))
+        ## TODO: this should explicitly specify the weight
     )
     cube <- CrunchCube(crGET(cubeURL(x), query=query))
     if (!na.rm && cube$result$measures$q[['n_missing']] > 0) {
