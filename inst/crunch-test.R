@@ -7,11 +7,12 @@ if (!is.null(crunch::envOrOption("test.api"))) {
     crunch::setCrunchAPI("local", 8080)
 }
 
+run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
+
 # grab env or options
 options(
     crunch.email=crunch::envOrOption("test.user"),
-    crunch.pw=crunch::envOrOption("test.pw"),
-    run.integration.tests=Sys.getenv("INTEGRATION") == "TRUE"
+    crunch.pw=crunch::envOrOption("test.pw")
 )
 
 skip_locally <- function (...) {
@@ -56,7 +57,7 @@ silencer <- temp.option(show.error.messages=FALSE)
 
 assign("entities.created", c(), envir=globalenv())
 with_test_authentication <- function (expr) {
-    if (getOption("run.integration.tests")) {
+    if (run.integration.tests) {
         env <- parent.frame()
         ## Authenticate.
         try(suppressMessages(login()))

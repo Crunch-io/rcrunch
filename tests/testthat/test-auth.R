@@ -29,7 +29,7 @@ with_mock_crunch({
     })
 })
 
-if (getOption("run.integration.tests")) {
+if (run.integration.tests) {
     test_that("login works if crunch is running", {
         deleteSessionInfo()
         suppressMessages(login())

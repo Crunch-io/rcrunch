@@ -126,7 +126,7 @@ with_mock_crunch({
     })
 })
 
-if (getOption("run.integration.tests")) {
+if (run.integration.tests) {
     test_that("Source file cannot be uploaded if not logged in", {
         logout()
         expect_error(createSource(testfile.csv),
