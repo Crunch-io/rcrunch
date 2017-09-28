@@ -14,19 +14,19 @@
 #' of the variables designated as weights.
 #' @seealso [weightVariables()] [makeWeight()]
 #' @export
-weight <- function (x) {
+weight <- function(x) {
     stopifnot(is.dataset(x))
     prefs <- ShojiEntity(crGET(shojiURL(x, "fragments", "preferences")))
     w <- prefs$weight
     if (!is.null(w)) {
-        w <- CrunchVariable(allVariables(x)[[w]], filter=activeFilter(x))
+        w <- CrunchVariable(allVariables(x)[[w]], filter = activeFilter(x))
     }
     return(w)
 }
 
 #' @rdname weight
 #' @export
-`weight<-` <- function (x, value) {
+`weight<-` <- function(x, value) {
     stopifnot(is.dataset(x))
 
     if (inherits(value, "VariableDefinition")) {
@@ -41,12 +41,39 @@ weight <- function (x) {
     currentWeight <- ShojiEntity(crGET(shojiURL(x, "fragments", "preferences")))$weight
     if (!identical(value, currentWeight)) {
         crPATCH(shojiURL(x, "fragments", "preferences"),
-            body=toJSON(list(weight=value)))
+            body = toJSON(list(weight = value)))
         x <- refresh(x)
     }
     return(x)
 }
 
+#' @rdname weight
+#' @export
+is.weight <- function(x){
+    if (is.variable(x)) {
+        ds <- loadDataset(datasetReference(self(x)))
+        return(identical(weight(ds), x))
+    } else {
+        return(FALSE)
+    }
+}
+
+#' @rdname weightVariables
+#' @export
+setMethod("is.weight<-", "NumericVariable", function(x, value) {
+    if (!(is.logical(value)  && length(value) == 1)) {
+        halt("Right hand side must be TRUE or FALSE")
+    }
+    ds <- loadDataset(datasetReference(self(x)))
+    varcat <- allVariables(ds)
+    if (value) {
+        weight(ds) <- x
+    } else {
+        weight(ds) <- NULL
+    }
+    x <- refresh(x)
+    return(x)
+})
 
 #' Change which variables can be set as weights
 #'
@@ -58,24 +85,39 @@ weight <- function (x) {
 #' can be set as the dataset [weight()].
 #'
 #' @param x a dataset or variable catalog
-#' @param value For the setter a numeric Crunch variable, or list of numeric
-#' Crunch variables to set as the `weightVariables.`
+#' @param value For the setter variables to set as the `weightVariables` this can
+#' be a numeric Crunch variable, list of numeric Crunch variables or
+#' a character vector with the aliases of numeric Crunch variables.
+#' @param type For `modifyWeightVariable` a character string determining how the weightVariables
+#' will be modified:
+#' -
 #'
 #' @return For the getter the variables which can be set as the dataset's weight. For
 #' the setter the dataset or variable catalog duly modified.
 #' @seealso [weight()] [makeWeight()]
 #' @name weightVariables
+#' @examples
+#' \dontrun{
+#' weightVariables(ds) <- ds$weight
+#' weightVariables(ds) <- list(ds$weight, ds$weight2)
+#' weightVariables(ds) <- NULL
+#' weightVariables(ds) <- c("weight", "weight2")
+#' #To append a weight to existing weights
+#' weightVariables(ds) <- c(weightVariables(ds), "weight3")
+#' #To remove a weight
+#' weightVariables(ds) <- setdiff(weightVariables(ds), "weight3)
+#' }
 #' @export
 NULL
 
 #' @rdname weightVariables
 #' @export
 setMethod("weightVariables", "CrunchDataset",
-    function (x) weightVariables(allVariables(x)))
+    function(x) weightVariables(allVariables(x)))
 
 #' @rdname weightVariables
 #' @export
-setMethod("weightVariables", "VariableCatalog", function (x) {
+setMethod("weightVariables", "VariableCatalog", function(x) {
     ## Get weight variable order
     ord <- VariableOrder(crGET(shojiURL(x, "orders", "weights")))
     ## Subset weight variable catalog with it
@@ -83,7 +125,7 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
     ## Return the names/aliases
     if (length(vars)) {
         return(sort(vapply(index(vars), vget(namekey(x)), character(1),
-            USE.NAMES=FALSE)))
+            USE.NAMES = FALSE)))
     } else {
         return(c())
     }
@@ -100,17 +142,59 @@ setMethod("weightVariables<-", "CrunchDataset", function(x, value) {
 #' @rdname weightVariables
 #' @export
 setMethod("weightVariables<-", "VariableCatalog", function(x, value) {
-    current <- crGET(shojiURL(x, "orders", "weights"))
+    modifyWeightVariables(x, value, type = "append")
+})
+
+#' @rdname modifyWeightVariables
+#' @export
+setMethod("modifyWeightVariables", "CrunchDataset", function(x, vars, type = "append") {
+    varcat <- allVariables(x)
+    modifyWeightVariables(varcat, vars, type)
+})
+
+#' @rdname modifyWeightVariables
+#' @export
+setMethod("modifyWeightVariables", "VariableCatalog", function(x, vars, type = "append") {
+    modifyWeightVariables(x, vars, type)
+})
+
+#' modifyWeightVariables
+#'
+#' Change which variables can be set as a dataset's weight.
+#'
+#' @param x a dataset or variable catalog
+#' @param vars Variables to add or remove  this can be a numeric Crunch variable,
+#' list of numeric Crunch variables or a character vector with the aliases of numeric Crunch variables.
+#' @param type a character string determining how the weightVariables
+#' will be modified:
+#' - `"append"` : add `vars` to the current weight variables
+#' - `"remove"` : remove `vars` from the current list of weight variables
+#' - `"replace"`: replace the curent weight variables with `vars`
+#'
+#' @export
+modifyWeightVariables <- function(x, vars, type = "append") {
+        current <- crGET(shojiURL(x, "orders", "weights"))
     new <- current
-    if (is.null(value)) {
+    if (is.null(vars)) {
         new$graph <- NULL
+        type = "remove"
     } else {
-        if (is.variable(value) || length(value) == 1) {
-            value <- list(value)
+        if (is.variable(vars) || (length(vars) == 1) & !is.character(vars)) {
+            vars <- list(vars)
         }
-        all_var <- vapply(value, is.Numeric, logical(1))
+        if (is.character(vars)) {
+            ds <- loadDataset(datasetReference(self(x)))
+            vars <- lapply(vars, function(v){
+                if (v %in% names(x)) {
+                    ds[[v]]
+                } else {
+                    v
+                }
+            })
+        }
+        all_var <- vapply(vars, is.Numeric, logical(1))
         if (!all(all_var)) {
-            var_names <- vapply(value, function(v){
+            var_names <- vapply(vars, function(v){
                 if (is.variable(v)) {
                     return(name(v))
                 } else {
@@ -123,14 +207,47 @@ setMethod("weightVariables<-", "VariableCatalog", function(x, value) {
             }
             halt( serialPaste(var_names[!all_var]), err_text)
         }
-        new$graph <- lapply(value, self)
+        if (type == "append") {
+            new$graph <- unique(c( current$graph, lapply(vars, self)))
+        } else if (type == "remove") {
+            new$graph <- setdiff( current$graph, lapply(vars, self))
+        } else if (type == "replace") {
+            new$graph <- lapply(vars, self)
+        }
     }
-
     if (!identical(current, new)) {
         crPUT(shojiURL(x, "orders", "weights"),
             body = toJSON(new))
         x <- refresh(x)
     }
+    return(x)
+}
+
+#' @rdname weightVariables
+#' @export
+is.weightVariable <- function(x){
+    if (is.variable(x)) {
+        ds <- loadDataset(datasetReference(self(x)))
+        return(alias(x) %in% weightVariables(ds))
+    } else {
+        return(FALSE)
+    }
+}
+
+#' @rdname weightVariables
+#' @export
+setMethod("is.weightVariable<-", "NumericVariable", function(x, value) {
+    if (!(is.logical(value)  && length(value) == 1)) {
+        halt("Right hand side must be TRUE or FALSE.")
+    }
+    ds <- loadDataset(datasetReference(self(x)))
+    varcat <- allVariables(ds)
+    if (value) {
+        modifyWeightVariables(varcat, x, "append")
+    } else {
+        modifyWeightVariables(varcat, x, "remove")
+    }
+    x <- refresh(x)
     return(x)
 })
 
@@ -180,7 +297,7 @@ setMethod("weightVariables<-", "VariableCatalog", function(x, value) {
 #' }
 #' @seealso [weight<-()]; [settings()] for the "default weight" for other
 #' dataset viewers.
-makeWeight <- function (..., name) {
+makeWeight <- function(..., name) {
     all_dots <- list(..., name = name)
     named_entries <- names(all_dots) != ""
     out       <- all_dots[named_entries]
@@ -209,8 +326,7 @@ makeWeight <- function (..., name) {
 #' \dontrun{
 #' validateWeightExpression(ds$var ~ c(10, 30, 60))
 #' }
-generateWeightEntry <- function (expr) {
-
+generateWeightEntry <- function(expr) {
     formula <- try(as.formula(expr), silent = TRUE)
     if (is.error(formula)) {
         halt(dQuote(substitute(expr)),
@@ -247,7 +363,7 @@ generateWeightEntry <- function (expr) {
         targets <- targets / 100
     }
 
-    target_list <- lapply(seq_along(targets), function (i) c(i, targets[i]))
+    target_list <- lapply(seq_along(targets), function(i) c(i, targets[i]))
 
     return(list(
         variable = self(var),

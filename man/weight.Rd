@@ -3,11 +3,14 @@
 \name{weight}
 \alias{weight}
 \alias{weight<-}
+\alias{is.weight}
 \title{Dataset weights}
 \usage{
 weight(x)
 
 weight(x) <- value
+
+is.weight(x)
 }
 \arguments{
 \item{x}{a Dataset}
