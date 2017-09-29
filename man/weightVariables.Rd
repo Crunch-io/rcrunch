@@ -3,6 +3,8 @@
 \docType{methods}
 \name{weightVariables}
 \alias{weightVariables}
+\alias{is.weightVariable<-}
+\alias{weightVariables<-}
 \alias{weightVariables,CrunchDataset-method}
 \alias{weightVariables,VariableCatalog-method}
 \alias{weightVariables<-,CrunchDataset-method}
@@ -41,6 +43,18 @@ can let the user choose which of those variables to use a weight, but prevent
 the user from choosing other variables as weight. This function allows you
 to get and set the \code{weightVariables} of a dataset, which are the variables which
 can be set as the dataset \code{\link[=weight]{weight()}}.
+}
+\examples{
+\dontrun{
+weightVariables(ds) <- ds$weight
+weightVariables(ds) <- list(ds$weight, ds$weight2)
+weightVariables(ds) <- NULL
+weightVariables(ds) <- c("weight", "weight2")
+#To append a weight to existing weights
+weightVariables(ds) <- c(weightVariables(ds), "weight3")
+#To remove a weight
+weightVariables(ds) <- setdiff(weightVariables(ds), "weight3")
+}
 }
 \seealso{
 \code{\link[=weight]{weight()}} \code{\link[=makeWeight]{makeWeight()}}

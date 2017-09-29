@@ -3,6 +3,7 @@
 \docType{methods}
 \name{weight}
 \alias{weight}
+\alias{is.weight<-}
 \alias{weight<-}
 \alias{is.weight}
 \alias{is.weight<-,NumericVariable-method}

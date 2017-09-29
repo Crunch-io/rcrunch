@@ -13,6 +13,8 @@
 #' the aliases (or names, according to `options(crunch.namekey.dataset)`),
 #' of the variables designated as weights.
 #' @seealso [weightVariables()] [makeWeight()]
+#' @name weight
+#' @aliases is.weight<-
 #' @export
 weight <- function(x) {
     stopifnot(is.dataset(x))
@@ -102,8 +104,11 @@ setMethod("is.weight<-", "NumericVariable", function(x, value) {
 #' #To append a weight to existing weights
 #' weightVariables(ds) <- c(weightVariables(ds), "weight3")
 #' #To remove a weight
-#' weightVariables(ds) <- setdiff(weightVariables(ds), "weight3)
+#' weightVariables(ds) <- setdiff(weightVariables(ds), "weight3")
 #' }
+#' @name weightVaraibles
+#' @aliases is.weightVariable<- weightVariables<-
+#' 
 #' @export
 NULL
 
