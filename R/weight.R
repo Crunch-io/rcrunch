@@ -58,7 +58,7 @@ is.weight <- function(x){
     }
 }
 
-#' @rdname weightVariables
+#' @rdname weight
 #' @export
 setMethod("is.weight<-", "NumericVariable", function(x, value) {
     if (!(is.logical(value)  && length(value) == 1)) {
@@ -88,9 +88,6 @@ setMethod("is.weight<-", "NumericVariable", function(x, value) {
 #' @param value For the setter variables to set as the `weightVariables` this can
 #' be a numeric Crunch variable, list of numeric Crunch variables or
 #' a character vector with the aliases of numeric Crunch variables.
-#' @param type For `modifyWeightVariable` a character string determining how the weightVariables
-#' will be modified:
-#' -
 #'
 #' @return For the getter the variables which can be set as the dataset's weight. For
 #' the setter the dataset or variable catalog duly modified.
@@ -169,7 +166,7 @@ setMethod("modifyWeightVariables", "VariableCatalog", function(x, vars, type = "
 #' will be modified:
 #' - `"append"` : add `vars` to the current weight variables
 #' - `"remove"` : remove `vars` from the current list of weight variables
-#' - `"replace"`: replace the curent weight variables with `vars`
+#' - `"replace"`: replace the current weight variables with `vars`
 #'
 #' @export
 modifyWeightVariables <- function(x, vars, type = "append") {
