@@ -88,9 +88,6 @@ setMethod("is.weight<-", "NumericVariable", function(x, value) {
 #' @param value For the setter variables to set as the `weightVariables` this can
 #' be a numeric Crunch variable, list of numeric Crunch variables or
 #' a character vector with the aliases of numeric Crunch variables.
-#' @param type For `modifyWeightVariable` a character string determining how the weightVariables
-#' will be modified:
-#' -
 #'
 #' @return For the getter the variables which can be set as the dataset's weight. For
 #' the setter the dataset or variable catalog duly modified.
@@ -145,17 +142,32 @@ setMethod("weightVariables<-", "VariableCatalog", function(x, value) {
     modifyWeightVariables(x, value, type = "append")
 })
 
-#' @rdname modifyWeightVariables
+#' @rdname weightVariables
 #' @export
-setMethod("modifyWeightVariables", "CrunchDataset", function(x, vars, type = "append") {
-    varcat <- allVariables(x)
-    modifyWeightVariables(varcat, vars, type)
-})
+is.weightVariable <- function(x){
+    if (is.variable(x)) {
+        ds <- loadDataset(datasetReference(self(x)))
+        return(alias(x) %in% weightVariables(ds))
+    } else {
+        return(FALSE)
+    }
+}
 
-#' @rdname modifyWeightVariables
+#' @rdname weightVariables
 #' @export
-setMethod("modifyWeightVariables", "VariableCatalog", function(x, vars, type = "append") {
-    modifyWeightVariables(x, vars, type)
+setMethod("is.weightVariable<-", "NumericVariable", function(x, value) {
+    if (!(is.logical(value)  && length(value) == 1)) {
+        halt("Right hand side must be TRUE or FALSE.")
+    }
+    ds <- loadDataset(datasetReference(self(x)))
+    varcat <- allVariables(ds)
+    if (value) {
+        modifyWeightVariables(varcat, x, "append")
+    } else {
+        modifyWeightVariables(varcat, x, "remove")
+    }
+    x <- refresh(x)
+    return(x)
 })
 
 #' modifyWeightVariables
@@ -223,32 +235,17 @@ modifyWeightVariables <- function(x, vars, type = "append") {
     return(x)
 }
 
-#' @rdname weightVariables
+#' @rdname modifyWeightVariables
 #' @export
-is.weightVariable <- function(x){
-    if (is.variable(x)) {
-        ds <- loadDataset(datasetReference(self(x)))
-        return(alias(x) %in% weightVariables(ds))
-    } else {
-        return(FALSE)
-    }
-}
+setMethod("modifyWeightVariables", "CrunchDataset", function(x, vars, type = "append") {
+    varcat <- allVariables(x)
+    modifyWeightVariables(varcat, vars, type)
+})
 
-#' @rdname weightVariables
+#' @rdname modifyWeightVariables
 #' @export
-setMethod("is.weightVariable<-", "NumericVariable", function(x, value) {
-    if (!(is.logical(value)  && length(value) == 1)) {
-        halt("Right hand side must be TRUE or FALSE.")
-    }
-    ds <- loadDataset(datasetReference(self(x)))
-    varcat <- allVariables(ds)
-    if (value) {
-        modifyWeightVariables(varcat, x, "append")
-    } else {
-        modifyWeightVariables(varcat, x, "remove")
-    }
-    x <- refresh(x)
-    return(x)
+setMethod("modifyWeightVariables", "VariableCatalog", function(x, vars, type = "append") {
+    modifyWeightVariables(x, vars, type)
 })
 
 #' Generate a weight variable

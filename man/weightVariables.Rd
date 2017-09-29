@@ -8,9 +8,6 @@
 \alias{weightVariables,VariableCatalog-method}
 \alias{weightVariables<-,CrunchDataset-method}
 \alias{weightVariables<-,VariableCatalog-method}
-\alias{modifyWeightVariables,CrunchDataset-method}
-\alias{modifyWeightVariables,VariableCatalog-method}
-\alias{modifyWeightVariables}
 \alias{is.weightVariable}
 \alias{is.weightVariable<-,NumericVariable-method}
 \title{Change which variables can be set as weights}
@@ -24,12 +21,6 @@
 \S4method{weightVariables}{CrunchDataset}(x) <- value
 
 \S4method{weightVariables}{VariableCatalog}(x) <- value
-
-\S4method{modifyWeightVariables}{CrunchDataset}(x, vars, type = "append")
-
-\S4method{modifyWeightVariables}{VariableCatalog}(x, vars, type = "append")
-
-modifyWeightVariables(x, vars, type = "append")
 
 is.weightVariable(x)
 
