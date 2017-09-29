@@ -28,11 +28,11 @@ if (crunch_test_path == "") {
     crunch_test_path <- find_file("crunch-test.R")
 }
 
-# only source crunch-test.R when the this is not being called (as the top most
-# call) by devtools::load_all or crunchdev::load_all
-loaded_by_load_all <- sys.calls()[[1]][[1]] == quote(devtools::load_all) |
-    sys.calls()[[1]][[1]] == quote(crunchdev::load_all) %||% FALSE
-if (!loaded_by_load_all) {
+# Source crunch-test.R when: R CMD check, devtools::test(), make test,
+# crunchdev::test_crunch()
+# Don't source crunch-test.R when: devtools::load_all() (interactively)
+# https://github.com/hadley/devtools/issues/1202 
+if (!interactive() || identical(Sys.getenv("NOT_CRAN"), "true")) {
     source(crunch_test_path)
 }
 
