@@ -96,7 +96,23 @@ anyOrNone <- function (x) {
 
 #' @rdname cube-methods
 #' @export
-setMethod("dimensions", "CrunchCube", function (x) x@dims)
+setMethod("dimensions", "CrunchCube", function (x) {
+    dims <- x@dims
+    selecteds <- is.selectedDimension(dims)
+    ## TODO: make this a [ method
+    return(CubeDims(dims@.Data[!selecteds],
+        names=dims@names[!selecteds],
+        references=dims@references[!selecteds]))
+})
+
+is.selectedDimension <- function (dims) {
+    is.it <- function (x, dim) {
+        x$type == "categorical" && length(dim$name) == 3 && dim$name[1] == "Selected"
+    }
+    selecteds <- mapply(is.it, x=index(dims@references), dim=dims@.Data)
+    names(selecteds) <- dims@names
+    return(selecteds)
+}
 
 #' @rdname cube-methods
 #' @export

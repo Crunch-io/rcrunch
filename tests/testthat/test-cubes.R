@@ -92,7 +92,8 @@ adims <- CubeDims(list(
     v4=list(name=c("B", "C"), any.or.none=rep(FALSE, 2),
         missing=rep(FALSE, 2)),
     v7=list(name=c("C", "D", "E", "No Data"), any.or.none=rep(FALSE, 4),
-        missing=c(rep(FALSE, 3), TRUE))))
+        missing=c(rep(FALSE, 3), TRUE))),
+    references=VariableCatalog(index=list(list(name="v4"), list(name="v7"))))
 a1 <- CrunchCube(arrays=list("count"=array(c(
         8, 6,
         3, 2,

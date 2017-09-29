@@ -28,7 +28,6 @@ newDataset <- function (...) suppressMessages(crunch::newDataset(...))
 loadCube <- function (filename) {
     CrunchCube(fromJSON(filename, simplifyVector=FALSE)$value)
 }
-# print(loadCube("cubes/mr-by-cat-profiles-stats-weighted.json"))
 
 ## .onAttach stuff, for testthat to work right
 ## See other options in inst/crunch-test.R

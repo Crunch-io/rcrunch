@@ -52,20 +52,48 @@ cubeToArray <- function (x, measure=1) {
     out <- x@arrays[[measure]]
     if (is.array(out)) {
         ## If "out" is just a scalar, skip this
-        dimnames(out) <- dimnames(x)
+        dimnames(out) <- dimnames(x@dims)
         out <- pruneCubeArray(out, x)
     }
     return(out)
 }
 
 pruneCubeArray <- function (x, cube) {
+    ## First, take the "Selected" slices, if any
+    selecteds <- is.selectedDimension(cube@dims)
+    if (any(selecteds)) {
+        drops <- lapply(selecteds, function (s) {
+            ## For "Selected" dimensions, we only want to return "Selected", the 1st element
+            if (s) {
+                return(1L)
+            } else {
+                ## Otherwise keep all
+                return(TRUE)
+            }
+        })
+        x <- subsetCubeArray(x, drops, selected_dims=selecteds)
+    }
+    ## Then, figure out which NA values to keep/drop/etc.
     keep.these <- evalUseNA(x, dimensions(cube), cube@useNA)
     return(subsetCubeArray(x, keep.these))
 }
 
-subsetCubeArray <- function (array, bools, drop=FALSE) {
+subsetCubeArray <- function (array, bools, drop=FALSE, selected_dims=FALSE) {
     ## Given a named list of logicals corresponding to the dims, extract
-    do.call("[", c(list(x=array, drop=drop), bools))
+    re_shape <- any(selected_dims) && !drop && length(selected_dims) == length(dim(array))
+    if (re_shape) {
+        ## subset with drop=TRUE to just keep the selected slice(s), then wrap in
+        ## array to set dims correctly (so that we don't accidentally drop some other
+        ## true length-1 dimension)
+        drop <- TRUE
+        newdim <- dim(array)[!selected_dims]
+        newdimnames <- dimnames(array)[!selected_dims]
+    }
+    out <- do.call("[", c(list(x=array, drop=drop), bools))
+    if (re_shape) {
+        out <- array(out, dim=newdim, dimnames=newdimnames)
+    }
+    return(out)
 }
 
 evalUseNA <- function (data, dims, useNA) {
@@ -106,35 +134,49 @@ keepWithNA <- function (dimension, marginal, useNA) {
 cubeMarginTable <- function (x, margin=NULL, measure=1) {
     ## Given a CrunchCube, get the right margin table for percentaging
     data <- x@arrays[[measure]]
-    dimnames(data) <- dimnames(x)
-    aon <- anyOrNone(dimensions(x))
-    missings <- is.na(dimensions(x))
+    dims <- x@dims
+    dimnames(data) <- dimnames(dims)
+    aon <- anyOrNone(dims)
+    missings <- is.na(dims)
 
-    if (!is.null(margin) && max(margin) > length(dim(data))) {
+    ## Check "margin" against number of dims (non-"selected" ones)
+    selecteds <- is.selectedDimension(dims)
+    if (!is.null(margin) && max(margin) > sum(!selecteds)) {
         ## Validate the input and give a useful error message.
         ## base::margin.table says:
         ## "Error in if (d2 == 0L) { : missing value where TRUE/FALSE needed"
         ## which is terrible.
         halt("Margin ", max(margin), " exceeds Cube's number of dimensions (",
-            length(dim(data)), ")")
+            sum(!selecteds), ")")
     }
 
     ## If multiple response, sum __any__ + __none__ (and missing, if included)
     ## (if ca, is there that on the other slice?)
     ## Else, sum all
+    which_selected <- which(selecteds)
+    margin_map <- which(!selecteds)
+    drop_na <- x@useNA == "no"
     args <- lapply(seq_along(aon), function (i) {
         a <- aon[[i]]
         out <- rep(TRUE, length(a))
-        if (!(i %in% margin)) {
+        if (i %in% which_selected) {
+            if ((i - 1) %in% margin_map[margin]) {
+                ## This is the "Selection" dimension that corresponds to the
+                ## previous "real" dim
+                out <- 1 ## Just keep "Selected"
+            } else if (drop_na) {
+                out <- !missings[[i]]
+            }
+        } else if (!(i %in% margin_map[margin])) {
             ## Default is keep all. But if not sweeping this margin,
             if (any(a)) {
                 ## Multiple response.
                 out <- a
                 ## Add missings if not "no"
-                if (x@useNA != "no") {
+                if (!drop_na) {
                     out <- out | missings[[i]]
                 }
-            } else if (x@useNA == "no") {
+            } else if (drop_na) {
                 ## Not multiple response. Exclude missings if we should
                 out <- !missings[[i]]
             }
@@ -143,12 +185,32 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     })
     names(args) <- names(aon)
     data <- subsetCubeArray(data, args)
+
+    ## Figure out which margins to actually keep.
+    mt_margins <- as_selected_margins(margin, selecteds)
     ## Sweep that
-    mt <- margin.table(data, margin)
+    mt <- margin.table(data, mt_margins)
     ## Now drop missings from the result
-    keep.these <- evalUseNA(mt, dimensions(x)[margin], x@useNA)
+    keep.these <- evalUseNA(mt, dims[mt_margins], x@useNA)
     out <- subsetCubeArray(mt, keep.these)
     return(out)
+}
+
+as_selected_margins <- function (margin, selecteds, before=TRUE) {
+    ## If there are "Selection" dimensions, we always want to include their
+    ## partner (position - 1) in the margin table dimensions
+    if (!any(selecteds)) {
+        ## If there aren't any, no-op
+        return(margin)
+    }
+    which_selected <- which(selecteds)
+    if (before) {
+        ## "before" means we're specifying margins of the "real" cube that
+        ## includes the selection dimensions in them. "after" is after dropping
+        ## the selection dimensions
+        margin <- which(!selecteds)[margin]
+    }
+    return(sort(union(margin, which_selected - 1)))
 }
 
 #' Work with CrunchCubes, MultitableResults, and TabBookResults
@@ -192,10 +254,12 @@ as.array.CrunchCube <- function (x, ...) cubeToArray(x, ...)
 setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
     out <- as.array(x)
     marg <- margin.table(x, margin)
-    if (length(margin)) {
-        out <- sweep(out, margin, marg, "/", check.margin=FALSE)
+    actual_margin <- as_selected_margins(margin, is.selectedDimension(x@dims),
+        before=FALSE)
+    if (length(actual_margin)) {
+        out <- sweep(out, actual_margin, marg, "/", check.margin=FALSE)
     } else {
-        ## Don't just do sum(out) like the default does.
+        ## Don't just divide by sum(out) like the default does.
         ## cubeMarginTable handles missingness, any/none, etc.
         out <- out/marg
     }
