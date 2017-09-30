@@ -118,14 +118,6 @@ arrayify <- function (data, dims) {
     array(data, dim=vapply(dn, length, integer(1), USE.NAMES=FALSE), dimnames=dn)
 }
 
-test_that("Cube print method", {
-    expect_output(a1,
-        paste("   v7",
-        "v4  C D E",
-        "  B 8 3 2",
-        "  C 6 2 3", sep="\n"))
-})
-
 test_that("simple margin.table", {
     expect_equivalent(margin.table(a1, 1), margin.table(a1@arrays[[1]], 1))
     expect_identical(margin.table(a1, 1),

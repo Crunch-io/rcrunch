@@ -53,6 +53,14 @@ test_that("useNA on bivariate cube", {
             )))
 })
 
+test_that("Cube print method", {
+    expect_output(v4_x_v7_ifany,
+        paste("   v7",
+              "v4  C D E",
+              "  B 5 3 2",
+              "  C 5 2 3", sep="\n"))
+})
+
 with_mock_crunch({
     ds <- loadDataset("test ds")
 

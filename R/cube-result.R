@@ -3,8 +3,11 @@ setMethod("initialize", "CrunchCube", function (.Object, ...) {
     ## Fill in these reshaped values if loading an API response
     if (!length(.Object@dims)) .Object@dims <- cubeDims(.Object)
     if (!length(.Object@arrays)) {
+        ## Get the "measures" from the response
         m <- .Object$result$measures
+        ## Add the "bases", which aren't included in "measures"
         m[[".unweighted_counts"]] <- list(data=.Object$result$counts)
+        ## Transform the flat arrays into N-d arrays for easier use
         .Object@arrays <- lapply(m, cToA, dims=.Object@dims)
     }
     return(.Object)
@@ -19,7 +22,15 @@ setMethod("dim", "CrunchCube", function (x) dim(dimensions(x)))
 setMethod("dimnames", "CrunchCube", function (x) dimnames(dimensions(x)))
 
 cToA <- function (x, dims) {
-    ## Just make an array from the cube "measure's" data. Nothing else
+    ## Just make an array from the cube "measure's" data. Nothing else.
+    ## This function takes a flat array from the JSON response and shapes it
+    ## into an N-dimensional `array` class object. It does not prune this array
+    ## in any way--any extra values that don't ever get displayed to users, and
+    ## any "missing" elements, which may or may not be displayed--remain.
+    ## Those extra values are sometimes needed to compute the correct margins
+    ## for percentaging, so they are kept at this point and removed before
+    ## display. But having the data in an array shape now will make those later
+    ## calculations more natural to do.
 
     d <- unlist(x$data)
     ## Identify missing values
@@ -45,22 +56,56 @@ cToA <- function (x, dims) {
         ap <- rev(ap)
         out <- aperm(out, ap)
     }
+    dimnames(out) <- dimnames(dims)
     return(out)
 }
 
 cubeToArray <- function (x, measure=1) {
+    ## This is the function behind the "as.array" method, as well as what
+    ## "bases" does with the ".unweighted_counts". It evaluates all of the logic
+    ## that takes the array in the cube response and selects the slices of that
+    ## that the human user thinks they're dealing with. This logic includes
+    ## two main things:
+    ##
+    ## (1) Missingness can be optionally included/shown, based on the
+    ## "useNA" slot/argument to `crtabs`. And since one value for "useNA" is
+    ## "ifany", whether or not NAs are shown may depend on the values in the
+    ## table, not just the category/element metadata.
+    ## (2) Multiple response. This variable type is presented to users as if
+    ## if were categorical, but its data structure isn't, and thus its
+    ## representation in the cube response is more complex. We need that
+    ## complexity so that we know how to compute percentages correctly, but
+    ## here we need to dump it. Multiple response (MR) extra features in the
+    ## cube come in two forms:
+    ## (a) For the "selected_array" method of computing (legacy), MR variables
+    ## return as one dimension in the output but have extra special
+    ## pseudo-categories "__any__" and "__none__", which tell you the rows that
+    ## have valid values (even if no responses are "selected"). This is what
+    ## we use for determining the denominator for percentage calculations, but
+    ## they are suppressed from display.
+    ## (b) For the "as_selected" method (new), MR variables return as two
+    ## dimensions, like a categorical array. The "category" dimension has been
+    ## reduced to special "Selected", "Not Selected", and "No Data" categories.
+    ## For reducing the display of the result back to the single dimension we
+    ## think of the data, we take the "Selected" slice from the categories
+    ## dimension.
     out <- x@arrays[[measure]]
+    ## If "out" is just a scalar, skip this
     if (is.array(out)) {
-        ## If "out" is just a scalar, skip this
-        dimnames(out) <- dimnames(x@dims)
-        out <- pruneCubeArray(out, x)
+        ## First, take the "Selected" slices, if any
+        out <- takeSelectedDimensions(out, x@dims)
+        ## Then, figure out which NA values to keep/drop/etc.
+        keep.these <- evalUseNA(out, dimensions(x), x@useNA)
+        out <- subsetCubeArray(out, keep.these)
     }
     return(out)
 }
 
-pruneCubeArray <- function (x, cube) {
-    ## First, take the "Selected" slices, if any
-    selecteds <- is.selectedDimension(cube@dims)
+takeSelectedDimensions <- function (x, dims) {
+    ## This function handles the "as_selected" multiple response feature,
+    ## dropping the slices other than "Selected". If no "as_selected" MR
+    ## variables are present in the cube dimensions, this function does nothing.
+    selecteds <- is.selectedDimension(dims)
     if (any(selecteds)) {
         drops <- lapply(selecteds, function (s) {
             ## For "Selected" dimensions, we only want to return "Selected", the 1st element
@@ -73,14 +118,14 @@ pruneCubeArray <- function (x, cube) {
         })
         x <- subsetCubeArray(x, drops, selected_dims=selecteds)
     }
-    ## Then, figure out which NA values to keep/drop/etc.
-    keep.these <- evalUseNA(x, dimensions(cube), cube@useNA)
-    return(subsetCubeArray(x, keep.these))
+    return(x)
 }
 
 subsetCubeArray <- function (array, bools, drop=FALSE, selected_dims=FALSE) {
-    ## Given a named list of logicals corresponding to the dims, extract
-    re_shape <- any(selected_dims) && !drop && length(selected_dims) == length(dim(array))
+    ## This is a convenience method around "[" for subsetting arrays,
+    ## given a named list of logicals corresponding to the dims.
+    re_shape <- any(selected_dims) &&
+                !drop && length(selected_dims) == length(dim(array))
     if (re_shape) {
         ## subset with drop=TRUE to just keep the selected slice(s), then wrap in
         ## array to set dims correctly (so that we don't accidentally drop some other
