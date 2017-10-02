@@ -207,6 +207,52 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
         filter=CrunchLogicalExpr(),
         tuple=DatasetTuple()))
 
+#' Abstract categories
+#'
+#' An abstract class that categories, elements, insertions, etc.
+#'
+#' @param data For the constructor functions `AbsCat` and
+#' `AbsCats`, you can either pass in attributes via `...` or you
+#' can create the objects with a fully defined `list` representation of
+#' the objects via the `data` argument. See the examples.
+#' @param x For the attribute getters and setters, an object of class
+#' AbsCat or AbsCats
+#' @param i For the `[` methods, just as with list extract methods
+#' @param j Invalid argument to `[`, but in the generic's signature
+#' @param ... additional arguments to `[`, ignored
+#' @param drop Invalid argument to `[`, but in the generic's signature
+#' @param value For `[<-`, the replacement AbsCat to insert
+#' @rdname abscat
+#' @aliases abscat
+#' @keywords internal
+#' @export
+setClass("AbsCats", contains="list")
+#' @rdname abscat
+#' @export
+AbsCats <- function (..., data=NULL) {
+    if (!is.null(data)) {
+        return(new("AbsCats", data))
+    } else {
+        return(new("AbsCats", list(...)))
+    }
+}
+
+#' @rdname abscat
+#' @export
+setClass("AbsCat", contains="namedList")
+
+#' @rdname abscat
+#' @export
+AbsCat <- function (..., data=NULL) {
+    if (!is.null(data)) {
+        return(new("AbsCat", data))
+    } else {
+        return(new("AbsCat", list(...)))
+    }
+}
+
+
+
 #' Categories in CategoricalVariables
 #'
 #' CategoricalVariables, as well as the array types composed from
@@ -237,7 +283,7 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
 #' cats.1 <- Categories(cat.a, cat.c)
 #' cats.2 <- Categories(data=list(cat.a, cat.c))
 #' identical(cats.1, cats.2)
-setClass("Categories", contains="list")
+setClass("Categories", contains="AbsCats")
 
 #' @rdname Categories
 #' @export
@@ -251,7 +297,7 @@ Categories <- function (..., data=NULL) {
 
 #' @rdname Categories
 #' @export
-setClass("Category", contains="namedList")
+setClass("Category", contains="AbsCat")
 
 #' @rdname Categories
 #' @export
@@ -262,6 +308,76 @@ Category <- function (..., data=NULL) {
         return(new("Category", list(...)))
     }
 }
+
+#' Insert categories in transformations
+#'
+#' Insertions allow you to insert new categories into a categorical-like response on a variable's [transform](Transforms).
+#'
+#' @param data For the constructor functions `Insertion` and
+#' `Insertions`, you can either pass in attributes via `...` or you
+#' can create the objects with a fully defined `list` representation of
+#' the objects via the `data` argument. See the examples.
+#' @param x For the attribute getters and setters, an object of class
+#' Insertion or Insertions
+#' @param ... additional arguments to `[`, ignored
+#' @param value For `[<-`, the replacement Insertion to insert
+#' @rdname Insertions
+#' @aliases anchor anchor<- combinations combinations<-
+#' @export
+setClass("Insertions", contains="AbsCats")
+#' @rdname Insertions
+#' @export
+Insertions <- function (..., data=NULL) {
+    if (!is.null(data)) {
+        return(new("Insertions", data))
+    } else {
+        return(new("Insertions", list(...)))
+    }
+}
+
+#' @rdname Insertions
+#' @export
+setClass("Insertion", contains="AbsCat")
+
+#' @rdname Insertions
+#' @export
+Insertion <- function (..., data=NULL) {
+    if (!is.null(data)) {
+        return(new("Insertion", data))
+    } else {
+        return(new("Insertion", list(...)))
+    }
+}
+
+
+#' Transformations of variable and cube views
+#'
+#' Transformations allow you to change how a variable or cube is displayed without changing the underlying data.
+#'
+#' @param ... For the constructor function `Transforms` you can pass
+#' in attributes via `...`
+#' @param x For the attribute getters and setters, an object of class
+#' Transforms
+#' @param value For `[<-`, the replacement Transforms to insert
+#' @rdname Transforms
+#' @aliases transforms transforms<-
+#' @export
+setClass("Transforms", contains="namedList")
+
+#' @rdname Transforms
+#' @export
+Transforms <- function (...) {
+    data <- list(...)
+    if (!is.null(data$insertions)) {
+        data$insertions <- Insertions(data = data$insertions)
+    }
+    if (!is.null(data$categories)) {
+        data$categories <- Categories(data = data$categories)
+    }
+    # TODO: add elements
+    return(new("Transforms", data))
+}
+
 
 #' @rdname Subvariables
 #' @export

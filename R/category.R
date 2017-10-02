@@ -1,7 +1,8 @@
 is.category <- function (x) inherits(x, "Category")
 
 setValidity("Category", function (object) {
-    is.cat <- all(c("id", "name") %in% names(object))
+    # is.cat <- all(c("id", "name") %in% names(object))
+    is.cat <- all(c("id") %in% names(object))
     if (!all(is.cat)) {
         val <- "Not a category"
     } else {
@@ -28,30 +29,6 @@ setMethod("initialize", "Category", init.Category)
     numeric_value=NULL,
     missing=TRUE
 )
-
-setName <- function (x, value) {
-    x[["name"]] <- validateNewName(value)
-    return(x)
-}
-
-validateNewName <- function (val) {
-    if (!is.character(val)) {
-        halt('Names must be of class "character"')
-    }
-    if (any(is.na(val))) {
-        halt('Names must be non-missing')
-    }
-    invisible(val)
-}
-
-setValue <- function (x, value) {
-    value_to_set <- suppressWarnings(as.numeric(value))
-    if (is.na(value_to_set) && !is.na(value)) {
-        halt("Category values must be numeric")
-    }
-    x[["numeric_value"]] <- value_to_set
-    return(x)
-}
 
 #' Access Category fields directly
 #'
@@ -90,44 +67,3 @@ setMethod("$<-", "Category", function (x, name, value) {
 #' @aliases value value<- id is.selected describe-category
 #' @seealso [`Categories`] [`dichotomize`]
 NULL
-
-#' @rdname describe-category
-#' @export
-setMethod("name", "Category", function (x) x[["name"]])
-#' @rdname describe-category
-#' @export
-setMethod("name<-", "Category", setName)
-#' @rdname describe-category
-#' @export
-setMethod("name<-", "NULL", function (x, value) {
-    halt('Cannot set name on NULL')
-})
-
-#' @rdname describe-category
-#' @export
-setMethod("value", "Category", function (x) {
-    v <- x[["numeric_value"]]
-    return(ifelse(is.null(v), NA_real_, as.numeric(v)))
-})
-#' @rdname describe-category
-#' @export
-setMethod("value<-", "Category", setValue)
-#' @rdname describe-category
-#' @export
-setMethod("id", "Category", function (x) as.integer(x[["id"]]))
-
-#' @rdname describe-category
-#' @export
-setMethod("is.selected", "Category", function (x) isTRUE(x$selected))
-
-#' @rdname is-na-categories
-#' @export
-setMethod("is.na", "Category", function (x) isTRUE(x$missing))
-
-#' @rdname is-na-categories
-#' @export
-setMethod("is.na<-", c("Category", "logical"), function (x, value) {
-    stopifnot(length(value) == 1)
-    x$missing <- isTRUE(value)
-    return(x)
-})

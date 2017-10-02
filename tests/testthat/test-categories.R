@@ -14,9 +14,9 @@ with_mock_crunch({
 
     test_that("Categories print method", {
         expect_output(cats[[1]],
-            get_output(data.frame(id=1, name="Male", value=1, missing=FALSE)))
+                      get_output(data.frame(id=1, name="Male", value=1, missing=FALSE)))
         expect_output(cats,
-            get_output(data.frame(id=c(1, 2, -1), name=c("Male", "Female", "No Data"), value=c(1, 2, NA), missing=c(FALSE, FALSE, TRUE))))
+                      get_output(data.frame(id=c(1, 2, -1), name=c("Male", "Female", "No Data"), value=c(1, 2, NA), missing=c(FALSE, FALSE, TRUE))))
     })
 
     test_that("Categories validation", {
@@ -38,15 +38,15 @@ with_mock_crunch({
         expect_error(cats[c("Female", "Male", "not a category")],
                      "subscript out of bounds: not a category")
         expect_error(cats[c(1, 2, 5)],
-            "subscript out of bounds: 5")
+                     "subscript out of bounds: 5")
         expect_error(cats[c(1, 2, 98, 99)],
-            "subscript out of bounds: 98 and 99")
+                     "subscript out of bounds: 98 and 99")
     })
 
     test_that("can use negative subscripts on Categories", {
         expect_true(is.categories(cats[-1]))
         expect_error(cats[c(1, -1)],
-            "only 0's may be mixed with negative subscripts")
+                     "only 0's may be mixed with negative subscripts")
     })
 
     test_that("categories to/fromJSON", {
@@ -94,59 +94,59 @@ with_mock_crunch({
 
     test_that("validation on category setting", {
         expect_error(cats[1] <- "new name",
-            "Invalid categories: 1 element is not a Crunch category object")
+                     "Invalid categories: 1 element is not a Crunch category object")
         expect_error(name(cats[[1]]) <- NULL,
-            'Names must be of class "character"')
+                     'Names must be of class "character"')
     })
 
     test_that("names(categories)<- input validation", {
         expect_identical(names(categories(ds$gender)),
-            c("Male", "Female", "No Data"))
+                         c("Male", "Female", "No Data"))
         expect_error(names(categories(ds$gender))[2] <- NULL,
-            "replacement has length zero") ## R default, good enough
+                     "replacement has length zero") ## R default, good enough
         expect_error(names(categories(ds$gender))[2] <- list(foo="1"),
-            'Names must be of class "character"')
+                     'Names must be of class "character"')
         expect_error(names(categories(ds$gender))[23] <- "cat",
-            "Invalid names: supplied 23 names for 3 categories")
-            ## Not ideal error message, but best we can do here
+                     "Invalid names: supplied 23 names for 3 categories")
+        ## Not ideal error message, but best we can do here
         expect_error(names(categories(ds$gender))[1] <- NA_character_,
-            "Category names must be non-missing")
+                     "Category names must be non-missing")
         ## Also for "No Data"
         expect_error(names(categories(ds$gender))[3] <- NA_character_,
-            "Category names must be non-missing")
+                     "Category names must be non-missing")
     })
 
     test_that("categories<- with invalid input gives helpful message", {
         expect_error(categories(ds$gender) <- 1:3,
-            paste("`categories(x) <- value` only accepts Categories,",
-                "not numeric. Did you mean",
-                "`values(categories(x)) <- value`?"),
-            fixed=TRUE)
+                     paste("`categories(x) <- value` only accepts Categories,",
+                           "not numeric. Did you mean",
+                           "`values(categories(x)) <- value`?"),
+                     fixed=TRUE)
         expect_error(categories(ds$gender) <- c("A", "B", "C"),
-            paste("`categories(x) <- value` only accepts Categories,",
-                "not character. Did you mean",
-                "`names(categories(x)) <- value`?"),
-            fixed=TRUE)
+                     paste("`categories(x) <- value` only accepts Categories,",
+                           "not character. Did you mean",
+                           "`names(categories(x)) <- value`?"),
+                     fixed=TRUE)
         expect_error(categories(ds$gender)[1] <- c("A", "B", "C"),
-            paste("Invalid categories: 3 elements are not Crunch",
-                "category objects"),
-            fixed=TRUE)
+                     paste("Invalid categories: 3 elements are not Crunch",
+                           "category objects"),
+                     fixed=TRUE)
         expect_error(categories(ds$gender)[1] <- list("A", "B", "C"),
-            paste("Invalid categories: 3 elements are not Crunch",
-                "category objects"),
-            fixed=TRUE)
+                     paste("Invalid categories: 3 elements are not Crunch",
+                           "category objects"),
+                     fixed=TRUE)
         expect_error(categories(ds$gender) <- list(),
-            "`categories(x) <- value` only accepts Categories, not list.",
-            fixed=TRUE)
+                     "`categories(x) <- value` only accepts Categories, not list.",
+                     fixed=TRUE)
         expect_error(categories(ds$birthyr) <- 1:3,
-            "category assignment not defined for NumericVariable")
+                     "category assignment not defined for NumericVariable")
         expect_error(categories(ds$gender) <- categories(ds$gender)[c(1, 2, 5)],
-            "subscript out of bounds: 5")
+                     "subscript out of bounds: 5")
     })
 
     test_that("categories ids cannot be set", {
         expect_error(ids(cats) <- rev(ids(cats)),
-            "Cannot modify category ids")
+                     "Cannot modify category ids")
     })
 
     test_that("dichotomize", {
@@ -178,7 +178,7 @@ with_mock_crunch({
 
     test_that("is.na", {
         expect_identical(is.na(cats), structure(c(FALSE, FALSE, TRUE),
-            .Names=c("Male", "Female", "No Data")))
+                                                .Names=c("Male", "Female", "No Data")))
         expect_true(is.na(cats[[3]]))
         expect_false(is.na(cats[[1]]))
     })
@@ -188,18 +188,18 @@ with_mock_crunch({
         try(is.na(cats) <- "Female")
         expect_true(is.categories(cats))
         expect_identical(is.na(cats), structure(c(FALSE, TRUE, TRUE),
-            .Names=c("Male", "Female", "No Data")))
+                                                .Names=c("Male", "Female", "No Data")))
         expect_error(is.na(cats) <- c("Male", "Prefer not to say"),
-            paste0("Category not found: ", dQuote("Prefer not to say")))
+                     paste0("Category not found: ", dQuote("Prefer not to say")))
         expect_identical(is.na(cats), structure(c(FALSE, TRUE, TRUE),
-            .Names=c("Male", "Female", "No Data")))
+                                                .Names=c("Male", "Female", "No Data")))
     })
     test_that("is.na<- by logical", {
         cats <- cats
         try(is.na(cats) <- c(TRUE, FALSE, FALSE))
         expect_true(is.categories(cats))
         expect_identical(is.na(cats), structure(c(TRUE, FALSE, FALSE),
-            .Names=c("Male", "Female", "No Data")))
+                                                .Names=c("Male", "Female", "No Data")))
     })
 
     test_that("na.omit", {
@@ -262,14 +262,14 @@ with_test_authentication({
         test_that("categories setters persist to the server", {
             expect_equal(names(categories(ds$v4)), c("B", "C", "No Data"))
             expect_equivalent(as.array(crtabs(~ v4, data=ds)),
-                array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
+                              array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
 
             names(categories(ds$v4))[1] <- "V"
             expect_equal(names(categories(ds$v4)), c("V", "C", "No Data"))
             expect_equivalent(as.array(crtabs(~ v4, data=ds)),
-                array(c(10, 10), dim=2L, dimnames=list(v4=c("V", "C"))))
+                              array(c(10, 10), dim=2L, dimnames=list(v4=c("V", "C"))))
             expect_identical(names(categories(ds$v4)),
-                names(categories(refresh(ds)$v4)))
+                             names(categories(refresh(ds)$v4)))
 
             categories(ds$v4)[1:2] <- categories(ds$v4)[2:1]
             expect_equal(names(categories(ds$v4)), c("C", "V", "No Data"))
@@ -277,90 +277,90 @@ with_test_authentication({
         test_that("Can add categories with c()", {
             ds$v4a <- df$v4 ## Another copy
             expect_identical(names(categories(ds$v4a)),
-                c("B", "C", "No Data"))
+                             c("B", "C", "No Data"))
             categories(ds$v4a) <- c(categories(ds$v4a),
-                Category(name="D", id=4))
+                                    Category(name="D", id=4))
             expect_identical(names(categories(ds$v4a)),
-                c("B", "C", "No Data", "D"))
+                             c("B", "C", "No Data", "D"))
         })
         test_that("Can insert a category in the middle", {
             ds$v4b <- df$v4
             expect_identical(names(categories(ds$v4b)),
-                c("B", "C", "No Data"))
+                             c("B", "C", "No Data"))
             categories(ds$v4b) <- c(categories(ds$v4b)[1:2],
-                Category(name="D", id=4), categories(ds$v4b)[3])
+                                    Category(name="D", id=4), categories(ds$v4b)[3])
             expect_identical(names(categories(ds$v4b)),
-                c("B", "C", "D", "No Data"))
+                             c("B", "C", "D", "No Data"))
         })
         test_that("Can add one to the end", {
             ds$v4c <- df$v4
             expect_identical(names(categories(ds$v4c)),
-                c("B", "C", "No Data"))
+                             c("B", "C", "No Data"))
             categories(ds$v4c)[[4]] <- Category(name="D", id=4)
             expect_identical(names(categories(ds$v4c)),
-                c("B", "C", "No Data", "D"))
+                             c("B", "C", "No Data", "D"))
         })
         test_that("Can't duplicate categories", {
             ds$v4d <- df$v4
             expect_identical(names(categories(ds$v4d)),
-                c("B", "C", "No Data"))
+                             c("B", "C", "No Data"))
             expect_error(categories(ds$v4) <- c(categories(ds$v4d),
-                categories(ds$v4d)))
+                                                categories(ds$v4d)))
         })
         test_that("Can delete a category that has no data", {
             ds$v4e <- df$v4
             categories(ds$v4e) <- c(categories(ds$v4e)[1:2],
-                Category(name="D", id=4), categories(ds$v4e)[3])
+                                    Category(name="D", id=4), categories(ds$v4e)[3])
             expect_identical(names(categories(ds$v4e)),
-                c("B", "C", "D", "No Data"))
+                             c("B", "C", "D", "No Data"))
             ## Reassign the data from C to D
             ds$v4e[ds$v4e == "C"] <- "D"
             expect_equivalent(as.array(crtabs(~ v4e, data=ds)),
-                array(c(10, 0, 10), dim=3L, dimnames=list(v4=c("B", "C", "D"))))
+                              array(c(10, 0, 10), dim=3L, dimnames=list(v4=c("B", "C", "D"))))
             ## Then delete B
             categories(ds$v4e) <- categories(ds$v4e)[-2]
             expect_identical(names(categories(ds$v4e)),
-                c("B", "D", "No Data"))
+                             c("B", "D", "No Data"))
             expect_equivalent(as.array(crtabs(~ v4e, data=ds)),
-                array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "D"))))
+                              array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "D"))))
         })
         test_that("Can't drop categories that have data", {
             ds <- refresh(ds)
             expect_identical(names(categories(ds$v4e)),
-                c("B", "D", "No Data"))
+                             c("B", "D", "No Data"))
             expect_equivalent(as.array(crtabs(~ v4e, data=ds)),
-                array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "D"))))
+                              array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "D"))))
             expect_error(categories(ds$v4e) <- categories(ds$v4e)[-2],
-                "Cannot delete categories: 4")
+                         "Cannot delete categories: 4")
             exclusion(ds) <- ds$v4e == "D"
             expect_equivalent(as.array(crtabs(~ v4e, data=ds)),
-                array(c(10, 0), dim=2L, dimnames=list(v4=c("B", "D"))))
+                              array(c(10, 0), dim=2L, dimnames=list(v4=c("B", "D"))))
             expect_error(categories(ds$v4e) <- categories(ds$v4e)[-2],
-                "Cannot delete categories: 4")
+                         "Cannot delete categories: 4")
             exclusion(ds) <- NULL
             expect_equivalent(as.array(crtabs(~ v4e, data=ds)),
-                array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "D"))))
+                              array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "D"))))
         })
 
         test_that("Can changeCategoryID", {
             ds$v4f <- df$v4
             expect_identical(names(categories(ds$v4f)),
-                c("B", "C", "No Data"))
+                             c("B", "C", "No Data"))
             expect_equal(ids(categories(ds$v4f)),
-                c(1, 2, -1))
+                         c(1, 2, -1))
             orig_vector <- as.vector(ds$v4f)
             expect_equal(as.vector(ds$v4f[1:4], mode="id"), c(1, 2, 1, 2))
-            
+
             expect_silent(ds$v4f <- changeCategoryID(ds$v4f, 2, 6))
             expect_identical(names(categories(ds$v4f)),
-                c("B", "C", "No Data"))
+                             c("B", "C", "No Data"))
             expect_equal(ids(categories(ds$v4f)),
-                c(1, 6, -1))
+                         c(1, 6, -1))
             expect_equal(as.vector(ds$v4f), orig_vector)
             expect_equal(as.vector(ds$v4f[1:4], mode="id"), c(1, 6, 1, 6))
             expect_equal(as.vector(ds$v4f[1:4], mode="numeric"), c(1, 6, 1, 6))
         })
-        
+
         test_that("Can changeCategoryID without changing values when value!=id", {
             ds$v4g <- df$v4
             values(categories(ds$v4g)) <- c(NA, 20, NA)
@@ -372,8 +372,8 @@ with_test_authentication({
                          c(NA, 20, NA))
             orig_vector <- as.vector(ds$v4g)
             expect_equal(as.vector(ds$v4g[1:4], mode="id"), c(1, 2, 1, 2))
-            
-            
+
+
             expect_silent(ds$v4g <- changeCategoryID(ds$v4g, 2, 6))
             expect_identical(names(categories(ds$v4g)),
                              c("B", "C", "No Data"))
@@ -384,7 +384,7 @@ with_test_authentication({
             expect_equal(as.vector(ds$v4g), orig_vector)
             expect_equal(as.vector(ds$v4g[1:4], mode="id"), c(1, 6, 1, 6))
             expect_equal(as.vector(ds$v4g[1:4], mode="numeric"), c(NA, 20, NA, 20))
-            
+
             # also try with an NA, make sure the NA is retained
             expect_silent(ds$v4g <- changeCategoryID(ds$v4g, 1, 10))
             expect_identical(names(categories(ds$v4g)),
@@ -448,28 +448,28 @@ with_test_authentication({
         })
         test_that("Editing array categories affects the subvariables too", {
             expect_identical(names(categories(ds$petloc)),
-                c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
+                             c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
             expect_identical(names(categories(ds$petloc$petloc_home)),
-                c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
+                             c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
             expect_identical(names(table(ds$petloc$petloc_home)),
-                c("Cat", "Dog", "Bird"))
+                             c("Cat", "Dog", "Bird"))
             names(categories(ds$petloc))[2] <- "Canine"
             expect_identical(names(categories(ds$petloc)),
-                c("Cat", "Canine", "Bird", "Skipped", "Not Asked"))
+                             c("Cat", "Canine", "Bird", "Skipped", "Not Asked"))
             expect_identical(names(table(ds$petloc$petloc_home)),
-                c("Cat", "Canine", "Bird"))
+                             c("Cat", "Canine", "Bird"))
             expect_identical(names(categories(ds$petloc$petloc_home)),
-                c("Cat", "Canine", "Bird", "Skipped", "Not Asked"))
+                             c("Cat", "Canine", "Bird", "Skipped", "Not Asked"))
         })
 
         test_that("Reordering array categories", {
             expect_identical(names(categories(ds$petloc)),
-                c("Cat", "Canine", "Bird", "Skipped", "Not Asked"))
+                             c("Cat", "Canine", "Bird", "Skipped", "Not Asked"))
             categories(ds$petloc) <- rev(categories(ds$petloc))
             expect_identical(names(categories(ds$petloc)),
-                c("Not Asked", "Skipped", "Bird", "Canine", "Cat"))
+                             c("Not Asked", "Skipped", "Bird", "Canine", "Cat"))
             expect_identical(names(categories(ds$petloc$petloc_home)),
-                c("Not Asked", "Skipped", "Bird", "Canine", "Cat"))
+                             c("Not Asked", "Skipped", "Bird", "Canine", "Cat"))
         })
     })
 })

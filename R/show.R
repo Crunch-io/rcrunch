@@ -38,11 +38,22 @@ setMethod("show", "Category", .showIt)
 setMethod("show", "Categories", .showIt)
 
 
+#' @rdname show-crunch
+#' @export
+setMethod("show", "Insertion", .showIt)
+
+#' @rdname show-crunch
+#' @export
+setMethod("show", "Insertions", .showIt)
+
 # Actual show methods
 
-showCategory <- function (x) data.frame(id=id(x), name=name(x), value=value(x), missing=is.na(x))
+showAbsCategory <- function (x) data.frame(id=id(x), name=name(x), value=value(x), missing=is.na(x))
+showAbsCategories <- function (x) do.call("rbind", lapply(x, showAbsCategory))
 
-showCategories <- function (x) do.call("rbind", lapply(x, showCategory))
+showInsertion <- function (x) data.frame(anchor=anchor(x), name=name(x), combine=paste(combinations(x), collapse = ', '))
+showInsertions <- function (x) do.call("rbind", lapply(x, showInsertion))
+
 
 showCrunchVariableTitle <- function (x) {
     out <- paste(getNameAndType(x), collapse=" ")
@@ -269,8 +280,10 @@ showMultitable <- function (x) {
 
 # More boilerplate
 
-setMethod("getShowContent", "Category", showCategory)
-setMethod("getShowContent", "Categories", showCategories)
+setMethod("getShowContent", "AbsCat", showAbsCategory)
+setMethod("getShowContent", "AbsCats", showAbsCategories)
+setMethod("getShowContent", "Insertion", showInsertion)
+setMethod("getShowContent", "Insertions", showInsertions)
 setMethod("getShowContent", "CrunchVariable", showCrunchVariable)
 setMethod("getShowContent", "CategoricalArrayVariable",
     showCategoricalArrayVariable)

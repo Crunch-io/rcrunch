@@ -16,13 +16,6 @@ setValidity("Categories", function (object) {
     return(TRUE)
 })
 
-setMethod("initialize", "Categories", function (.Object, ...) {
-    .Object@.Data <- lapply(..1,
-        function (x) try(Category(data=x), silent=TRUE))
-    validObject(.Object)
-    return(.Object)
-})
-
 is.categories <- function (x) inherits(x, "Categories")
 
 concatenateCategories <- function (...) {

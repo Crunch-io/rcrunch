@@ -49,7 +49,10 @@ setGeneric("transforms<-", function (x, value) standardGeneric("transforms<-"))
 setGeneric("geo", function (x) standardGeneric("geo"))
 setGeneric("geo<-", function (x, value) standardGeneric("geo<-"))
 setGeneric("fetchGeoFile", function (x) standardGeneric("fetchGeoFile"))
-
+setGeneric("anchor", function (x) standardGeneric("anchor"))
+setGeneric("anchor<-", function (x, value) standardGeneric("anchor<-"))
+setGeneric("combinations", function (x) standardGeneric("combinations"))
+setGeneric("combinations<-", function (x, value) standardGeneric("combinations<-"))
 
 setGeneric("types", function (x) standardGeneric("types"))
 setGeneric("timestamps", function (x) standardGeneric("timestamps"))
