@@ -27,6 +27,7 @@ crtabs <- function (formula, data, weight=crunch::weight(data),
     if (missing(data) || !is.dataset(data)) {
         halt(dQuote("data"), " must be a Dataset")
     }
+    useNA <- match.arg(useNA)
 
     query <- formulaToCubeQuery(formula, data)
 
@@ -47,5 +48,5 @@ crtabs <- function (formula, data, weight=crunch::weight(data),
     ## GET it.
     resp <- crGET(cubeURL(data),
         query=list(query=toJSON(query), filter=toJSON(f)))
-    return(CrunchCube(resp, useNA=match.arg(useNA)))
+    return(CrunchCube(resp, useNA=useNA))
 }

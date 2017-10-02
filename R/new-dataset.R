@@ -11,7 +11,8 @@
 #' used to read it into R.
 #'
 #' @param x a `data.frame` or other rectangular R data object, or a string
-#' file name or URL to upload to create a dataset.
+#' file name or URL to upload to create a dataset. The file may be a compressed
+#' Zip file containing a single file in CSV or SPSS format.
 #' @param name character name to give the new Crunch dataset. By default the
 #' function uses the name of the R object, or, if passing a file, the file name.
 #' @param ... additional arguments passed to [createDataset()]
@@ -19,6 +20,7 @@
 #' @examples
 #' \dontrun{
 #' ds <- newDataset(mtcars, "cars")
+#' ds <- newDataset("mysurvey.sav")
 #' }
 #' @export
 #' @seealso [newDatasetFromFile()]; [newDatasetByColumn()] for an alternate
@@ -151,7 +153,7 @@ writePreparedData <- function (data, metadata=attr(data, "metadata"), file) {
 
 #' Write CSV to a compressed file
 #'
-#' @param x A data.frame or similar CSV-writeable object
+#' @param x A data.frame or similar CSV-writable object
 #' @param file character destination to write the gzipped CSV to
 #' @param na See [`utils::write.csv`]. This just changes the default
 #' to a Crunch-friendly empty string.

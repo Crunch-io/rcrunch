@@ -7,7 +7,7 @@
 write.csv.gz(x, file, na = "", row.names = FALSE, ...)
 }
 \arguments{
-\item{x}{A data.frame or similar CSV-writeable object}
+\item{x}{A data.frame or similar CSV-writable object}
 
 \item{file}{character destination to write the gzipped CSV to}
 

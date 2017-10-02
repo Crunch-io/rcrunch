@@ -7,7 +7,7 @@ Description: The Crunch.io service <http://crunch.io/> provides a cloud-based
     datasets from within R. Importantly, this allows technical researchers to
     collaborate naturally with team members, managers, and clients who prefer a
     point-and-click interface.
-Version: 1.18.1
+Version: 1.18.3
 Authors@R: c(
     person("Neal", "Richardson", role=c("aut", "cre"), email="neal@crunch.io"),
     person("Jonathan", "Keane", role="ctb", email="jon.keane@crunch.io"),
@@ -18,11 +18,12 @@ License: LGPL (>= 3)
 Depends:
     R (>= 3.0.0)
 Imports:
+    curl,
+    grDevices,
     httr (>= 1.0.0),
     httpcache (>= 0.1.4),
     jsonlite (>= 0.9.15),
-    methods,
-    curl
+    methods
 Suggests:
     covr,
     devtools,
@@ -63,6 +64,7 @@ Collate:
     'cube-dims.R'
     'cube-query.R'
     'cube-result.R'
+    'cut.R'
     'dataset-catalog.R'
     'dataset-extract.R'
     'dataset-order.R'

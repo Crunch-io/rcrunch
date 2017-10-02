@@ -4,7 +4,6 @@ with_mock_crunch({
     ds <- loadDataset("test ds")
     varcat <- allVariables(ds)
     varorder <- ordering(varcat)
-
     test_that("VariableCatalog instantiates from Shoji", {
         expect_is(varcat, "VariableCatalog")
     })
@@ -100,6 +99,65 @@ with_mock_crunch({
                 name=c("Birth Year", "Gender", "Categorical Location", "mymrset"),
                 type=c("numeric", "categorical", "categorical", "multiple_response")
             )))
+    })
+
+    test_that("Variable Catagory as.data.frame method", {
+        expect_equal(as.data.frame(varcat[1:3]),
+            data.frame(
+                alias = c("birthyr", "gender", "location"),
+                name  = c("Birth Year", "Gender", "Categorical Location"),
+                type  = c("numeric", "categorical", "categorical"),
+                stringsAsFactors = FALSE
+            ))
+    })
+    test_that("as.data.frame method returns all fields when keys = 'all'", {
+        varDF <- as.data.frame(varcat, keys = "all")
+        expect_identical(
+            names(varDF),
+            c("name", "discarded", "alias", "type", "id", "description",
+                "notes", "subvariables", "subvariables_catalog", "resolution",
+                "rollup_resolution")
+        )
+        expect_identical(
+            varDF$subvariables[c(3,4,7)],
+            list(NA,
+                list("mymrset/subvariables/subvar2/",
+                    "mymrset/subvariables/subvar1/",
+                    "mymrset/subvariables/subvar3/"),
+                list("mymrset/subvariables/subvar2/",
+                    "mymrset/subvariables/subvar1/",
+                    "mymrset/subvariables/subvar3/"))
+        )
+    })
+    test_that("list columns are homogeneous type", {
+        skip("TODO: ensure something about the elements of a 'list column'")
+        vc2 <- varcat
+        vc2@index[[3]]$subvariables <- "just/one/subvar"
+        vc2DF <- as.data.frame(vc2, keys = "all")
+        expect_identical(
+            vc2DF$subvariables[c(3,4,7)],
+            list(list("just/one/subvar"),
+                list("mymrset/subvariables/subvar2/",
+                    "mymrset/subvariables/subvar1/",
+                    "mymrset/subvariables/subvar3/"),
+                list("mymrset/subvariables/subvar2/",
+                    "mymrset/subvariables/subvar1/",
+                    "mymrset/subvariables/subvar3/"))
+        )
+    })
+
+    test_that("As.data.frame method errors correctly", {
+        expect_error(as.data.frame(varcat[1:3], keys = "Not a field at all"),
+            paste(dQuote("Not a field at all"), "is an invalid key for catalogs of class VariableCatalog.")
+        )
+        expect_error(as.data.frame(varcat[1:3], keys = c("banana", "fooey")),
+            paste(
+                serialPaste(dQuote(c("banana", "fooey"))),
+                "are invalid keys for catalogs of class VariableCatalog.")
+        )
+        expect_error(as.data.frame(varcat[1:3], keys = c("name", "fooey")),
+            paste(dQuote("fooey"), "is an invalid key for catalogs of class VariableCatalog.")
+        )
     })
 })
 

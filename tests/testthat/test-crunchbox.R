@@ -53,6 +53,22 @@ test_that("Iframe code with title", {
         fixed=TRUE)
 })
 
+test_that("color validator validates", {
+    expect_error(validHexColor(1),
+                 "A color must be a character, got numeric instead")
+    expect_error(validHexColor("#ffeeaaffeeaa"),
+                 "is not a valid hex color")
+    expect_error(validHexColor("#zzzzzz"),
+                 paste0(dQuote("#zzzzzz"), " is not a valid hex color"))
+    expect_error(validHexColor("#aabbc"),
+                 paste0(dQuote("#aabbc"), " is not a valid hex color"))
+    expect_equal(validHexColor("#d3d3d3"), "#d3d3d3")
+    expect_equal(validHexColor("d3d3d3"), "#d3d3d3")
+    expect_equal(validHexColor("#d3d3d3ff"), "#d3d3d3")
+    expect_equal(validHexColor("d3d3d3ff"), "#d3d3d3")
+    expect_equal(validHexColor("aliceblue"), "#F0F8FF")
+})
+
 with_mock_crunch({
     ds <- loadDataset("test ds")
     ds3 <- loadDataset("ECON.sav")
@@ -111,12 +127,74 @@ with_mock_crunch({
             '{"element":"shoji:entity","body":{"filters":[',
             '{"filter":"https://app.crunch.io/api/datasets/1/filters/filter2/"}]}}')
     })
+    test_that("Boxes can have color palletes specified", {
+        expect_POST(crunchBox(ds, brand_colors = c("#ff0aa4", "#af17ff", "#260aff"),
+                          filters = NULL),
+                  'https://app.crunch.io/api/datasets/1/boxdata/',
+                  '{"element":"shoji:entity","body":{"filters":[]',
+                  ',"display_settings":{"palette":{"brand_colors":',
+                  '{"primary":"#ff0aa4","secondary":"#af17ff",',
+                  '"message":"#260aff"}}}}}')
+        expect_POST(crunchBox(ds, brand_colors = c(message="#ff0aa4", secondary="#af17ff", primary="#260aff"),
+                              filters = NULL),
+                    'https://app.crunch.io/api/datasets/1/boxdata/',
+                    '{"element":"shoji:entity","body":{"filters":[]',
+                    ',"display_settings":{"palette":{"brand_colors":',
+                    '{"message":"#ff0aa4","secondary":"#af17ff",',
+                    '"primary":"#260aff"}}}}}')
+        expect_POST(crunchBox(ds, brand_colors = list(secondary="#af17ff", message="#ff0aa4", primary="#260aff"),
+                              filters = NULL),
+                    'https://app.crunch.io/api/datasets/1/boxdata/',
+                    '{"element":"shoji:entity","body":{"filters":[]',
+                    ',"display_settings":{"palette":{"brand_colors":',
+                    '{"secondary":"#af17ff","message":"#ff0aa4",',
+                    '"primary":"#260aff"}}}}}')
+        expect_POST(crunchBox(ds, static_colors = list("#ff0aa4",
+                                               "#af17ff",
+                                               "#260aff"),
+                          filters = NULL),
+                  'https://app.crunch.io/api/datasets/1/boxdata/',
+                  '{"element":"shoji:entity","body":{"filters":[]',
+                  ',"display_settings":{"palette":{"static_colors":',
+                  '["#ff0aa4","#af17ff","#260aff"]}}}}')
+        expect_POST(crunchBox(ds, category_color_lookup =
+                              list("cat1"="#ff0aa4",
+                                 "cat2"="#af17ff",
+                                 "cat3"="#260aff"),
+                          filters = NULL),
+                  'https://app.crunch.io/api/datasets/1/boxdata/',
+                  '{"element":"shoji:entity","body":{"filters":[]',
+                  ',"display_settings":{"palette":{"category_lookup":',
+                  '{"cat1":"#ff0aa4","cat2":"#af17ff",',
+                  '"cat3":"#260aff"}}}}}')
+        })
+
     test_that("Input validation", {
         expect_error(crunchBox(), "'dataset' must be a CrunchDataset")
         expect_error(crunchBox(4), "'dataset' must be a CrunchDataset")
         expect_error(crunchBox(ds, 4),
             "'filters' should be a FilterCatalog or NULL")
-
+        expect_error(crunchBox(ds, brand_colors = c("#ff0aa4", "#af17ff",
+                                                    "#260aff", "#ff0aa4",
+                                                    "#af17ff", "#260aff")),
+                     paste0(
+                         sQuote("brand_colors"), " must be at most 3 elements long"))
+        expect_error(crunchBox(ds, brand_colors = 1),
+                     paste0(
+                         sQuote("brand_colors"), " must be character ",
+                         "vector or list of characters"))
+        expect_error(crunchBox(ds, brand_colors = list(a = "aabbcc")),
+                     paste0("If ", sQuote("brand_colors"),
+                            " is a named list, it must contain only ",
+                         serialPaste(dQuote(c("primary", "secondary", "message")),
+                                     collapse = "and")))
+        expect_error(crunchBox(ds, static_colors = 1),
+                     paste0(sQuote("static_colors"), " must be a vector or ",
+                            "list of characters"))
+        expect_error(crunchBox(ds, category_color_lookup = "a"),
+                     paste0(sQuote("category_color_lookup"), " must be a named list"))
+        expect_error(crunchBox(ds, category_color_lookup = list("a")),
+                     paste0(sQuote("category_color_lookup"), " must be a named list"))
     })
     test_that("Box too big message", {
         with_mock(`crunch:::.boxlimit`=function () -1, {

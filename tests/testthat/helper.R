@@ -25,6 +25,10 @@ requestLogSummary <- httpcache::requestLogSummary
 uncached <- httpcache::uncached
 newDataset <- function (...) suppressMessages(crunch::newDataset(...))
 
+loadCube <- function (filename) {
+    CrunchCube(fromJSON(filename, simplifyVector=FALSE)$value)
+}
+
 ## .onAttach stuff, for testthat to work right
 ## See other options in inst/crunch-test.R
 options(
@@ -41,6 +45,13 @@ set_crunch_config()
 
 ## Test serialize and deserialize
 cereal <- function (x) fromJSON(toJSON(x), simplifyVector=FALSE)
+
+cubify <- function (..., dims) {
+    ## Make readable test expectations for comparing cube output
+    data <- c(...)
+    d <- vapply(dims, length, integer(1), USE.NAMES=FALSE)
+    array(matrix(data, byrow=TRUE, nrow=d[1]), dim=d, dimnames=dims)
+}
 
 newDatasetFromFixture <- function (filename) {
     ## Grab csv and json from "dataset-fixtures" and make a dataset

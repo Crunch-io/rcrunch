@@ -143,3 +143,15 @@ alt.endsWith <- function (x, suffix) {
 if (!("endsWith" %in% basefuns)) {
     endsWith <- alt.endsWith
 }
+
+vectorOrList <- function (obj, type) {
+    if (is.vector(obj) && inherits(obj, type)) {
+        return(TRUE)
+    }
+    if (is.list(obj)) {
+        if (all(vapply(obj, inherits, logical(1), what = type))) {
+            return(TRUE)
+        }
+    }
+    return(FALSE)
+}
