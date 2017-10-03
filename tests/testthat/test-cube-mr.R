@@ -10,12 +10,6 @@ alldims <- list(
         "I don't mind paying more for products that are good for the environment")
 )
 
-cubify <- function (..., dims) {
-    data <- c(...)
-    d <- vapply(dims, length, integer(1), USE.NAMES=FALSE)
-    array(matrix(data, byrow=TRUE, nrow=d[1]), dim=d, dimnames=dims)
-}
-
 mr_x_cat_wt <- loadCube("cubes/selected-crosstab-4.json")
 
 test_that("properties of a cube with for as_selected x cat", {

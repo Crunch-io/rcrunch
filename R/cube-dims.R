@@ -1,5 +1,9 @@
 cubeDims <- function (cube) {
-    ## Grab the row/col/etc. labels from the cube
+    ## This function wraps up all of the quirks of the Crunch cube API and
+    ## standardizes the various ways that metadata about the dimensions is
+    ## represented in it.
+
+    ## First, grab the row/col/etc. labels from the cube
     dimnames <- lapply(cube$result$dimensions, function (a) {
         if (a$type$class == "boolean") {
             ## TODO: server should provide enumeration

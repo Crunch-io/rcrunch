@@ -1,7 +1,11 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Downloading and exporting data}
--->
+---
+title: "Exporting Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Exporting Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
 [Previous: filtering data](filter.md)
 
@@ -134,3 +138,5 @@ As with the `as.data.frame` methods, you can subset what you export by indexing 
 ```r
 write.csv(ds[ds$pid3 == "Democrat", c("age", "educ", "gender")], file="demo-demos.csv")
 ```
+
+[Next: Crunch internals](crunch-internals.md)
