@@ -15,6 +15,7 @@ with_test_authentication({
     test_that("changing a value carries", {
         ds$petloc$petloc_home[ds$petloc$petloc_home == "Dog"] <- "Cat"
 
+        expect_true(is.derived(ds$derivedarray))
         expect_equivalent(as.vector(ds$derivedarray), as.vector(ds$petloc))
         expect_equivalent(as.vector(ds$derivedarray, mode = "id"),
                           as.vector(ds$petloc, mode = "id"))
@@ -22,7 +23,8 @@ with_test_authentication({
     
     test_that("NAing a value carries", {
         ds$petloc$petloc_home[ds$petloc$petloc_home == "Bird"] <- NA
-
+        
+        expect_true(is.derived(ds$derivedarray))
         expect_equivalent(as.vector(ds$derivedarray), as.vector(ds$petloc))
         expect_equivalent(as.vector(ds$derivedarray, mode = "id"),
                           as.vector(ds$petloc, mode = "id"))
@@ -32,7 +34,9 @@ with_test_authentication({
         names(categories(ds$petloc)) <- c("Kat", "Dogz", "Bird",
                                                       "Skipped", "Not Asked",
                                                       "No Data")
+        ds <- refresh(ds) # must refresh to update the derived variable's metadata
         
+        expect_true(is.derived(ds$derivedarray))
         expect_equivalent(categories(ds$derivedarray),
                           categories(ds$petloc))
         expect_equivalent(categories(ds$derivedarray$`petloc_work#`),
@@ -46,17 +50,41 @@ with_test_authentication({
                           as.vector(ds$petloc$petloc_work, mode = "id"))
     })
     
-    test_that("changing category ids (values+metadata) carries", {
-        ds$petloc <- changeCategoryID(ds$petloc, 1, 10)
+    ds$petloc <- changeCategoryID(ds$petloc, 1, 10)
+    ds <- refresh(ds) # must refresh to update the derived variable's metadata
+    
+    test_that("changing cat ids (values+metadata) metadata", {
+        expect_true(is.derived(ds$derivedarray))
         expect_equivalent(categories(ds$derivedarray),
                           categories(ds$petloc))
         expect_equivalent(categories(ds$derivedarray$`petloc_work#`),
                           categories(ds$petloc$petloc_work))
-        
+        expect_equivalent(categories(ds$derivedarray$`petloc_work#`),
+                          categories(ds$petloc$petloc_work))
+    })
+   
+    test_that("changing cat ids (values+metadata) first subvar", {
+        # check the first subvar
+        expect_equivalent(as.vector(ds$derivedarray$`petloc_home#`),
+                          as.vector(ds$petloc$petloc_home))
+        expect_equivalent(as.vector(ds$derivedarray$`petloc_home#`, mode = "id"),
+                          as.vector(ds$petloc$petloc_home, mode = "id"))
+    })
+    
+    test_that("changing cat ids (values+metadata) second subvar", {        
+        # check the second subvar
         expect_equivalent(as.vector(ds$derivedarray$`petloc_work#`),
                           as.vector(ds$petloc$petloc_work))
         expect_equivalent(as.vector(ds$derivedarray$`petloc_work#`, mode = "id"),
                           as.vector(ds$petloc$petloc_work, mode = "id"))
+    })
+    
+    test_that("changing cat ids (values+metadata) whole array", {        
+        # check the whole array
+        expect_equivalent(as.vector(ds$derivedarray),
+                          as.vector(ds$petloc))
+        expect_equivalent(as.vector(ds$derivedarray, mode = "id"),
+                          as.vector(ds$petloc, mode = "id"))
     })
     
 })
