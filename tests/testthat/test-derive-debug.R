@@ -28,7 +28,7 @@ with_test_authentication({
                           as.vector(ds$petloc, mode = "id"))
     })
     
-    test_that("changing category metadata carries", {
+    test_that("changing category names in metadata carries", {
         names(categories(ds$petloc)) <- c("Kat", "Dogz", "Bird",
                                                       "Skipped", "Not Asked",
                                                       "No Data")
@@ -44,7 +44,9 @@ with_test_authentication({
                           as.vector(ds$petloc$petloc_work))
         expect_equivalent(as.vector(ds$derivedarray$`petloc_work#`, mode = "id"),
                           as.vector(ds$petloc$petloc_work, mode = "id"))
-        
+    })
+    
+    test_that("changing category ids (values+metadata) carries", {
         ds$petloc <- changeCategoryID(ds$petloc, 1, 10)
         expect_equivalent(categories(ds$derivedarray),
                           categories(ds$petloc))
