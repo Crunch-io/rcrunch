@@ -1,0 +1,98 @@
+{
+    "element": "shoji:entity",
+    "body": {
+        "name": "Example streaming dataset",
+        "streaming": "streaming",
+        "description": "A dataset to illustrate the streaming capabilities & restrictions of the API",
+        "table": {
+            "element": "crunch:table",
+            "metadata": {
+                "v1": {
+                    "name": "v1",
+                    "alias": "v1",
+                    "description": null,
+                    "type": "numeric"
+                },
+                "v2": {
+                    "name": "v2",
+                    "alias": "v2",
+                    "description": null,
+                    "type": "text"
+                },
+                "v3": {
+                    "name": "v3",
+                    "alias": "v3",
+                    "description": null,
+                    "type": "numeric"
+                },
+                "v4": {
+                    "name": "v4",
+                    "alias": "v4",
+                    "description": null,
+                    "type": "categorical",
+                    "categories": [
+                        {
+                            "name": "B",
+                            "id": 1,
+                            "numeric_value": 1,
+                            "missing": false
+                        },
+                        {
+                            "name": "C",
+                            "id": 2,
+                            "numeric_value": 2,
+                            "missing": false
+                        },
+                        {
+                            "name": "No Data",
+                            "id": -1,
+                            "numeric_value": null,
+                            "missing": true
+                        }
+                    ]
+                },
+                "v5": {
+                    "name": "v5",
+                    "alias": "v5",
+                    "description": null,
+                    "type": "datetime",
+                    "resolution": "D"
+                },
+                "v6": {
+                    "name": "v6",
+                    "alias": "v6",
+                    "description": null,
+                    "type": "categorical",
+                    "categories": [
+                        {
+                            "name": "True",
+                            "id": 1,
+                            "numeric_value": 1,
+                            "missing": false
+                        },
+                        {
+                            "name": "False",
+                            "id": 2,
+                            "numeric_value": 2,
+                            "missing": false
+                        },
+                        {
+                            "name": "No Data",
+                            "id": -1,
+                            "numeric_value": null,
+                            "missing": true
+                        }
+                    ]
+                }
+            },
+            "order": [
+                "v1",
+                "v2",
+                "v3",
+                "v4",
+                "v5",
+                "v6"
+            ]
+        }
+    }
+}
