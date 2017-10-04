@@ -18,7 +18,7 @@ with_test_authentication({
                           as.vector(ds$petloc, mode = "id"))
     })
     
-    test_that("changing a value in a subvar carries", {
+    test_that("changing a value in the first subvar carries", {
         ds$petloc$petloc_home[ds$petloc$petloc_home == "Dog"] <- "Cat"
 
         expect_true(is.derived(ds$derivedarray))
@@ -27,7 +27,7 @@ with_test_authentication({
                           as.vector(ds$petloc, mode = "id"))
     })
     
-    test_that("changing a value in the whole array carries", {
+    test_that("changing a value in the second subvar carries", {
         ds$petloc$petloc_work[ds$petloc$petloc_work == "Dog"] <- "Cat"
         
         expect_true(is.derived(ds$derivedarray))
