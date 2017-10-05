@@ -32,6 +32,22 @@
             "archived": false,
             "id": "95c0b45fe0af492594863f818cb913d2",
             "owner_id": "notme"
+        },
+        "1streaming/": {
+            "owner_display_name": "Fake User",
+            "name": "streaming test ds",
+            "description": "",
+            "archived": false,
+            "id": "5405313ab82d4d753bcf42f01d2e28f8",
+            "owner_id": "user1"
+        },
+        "streaming-no-msg/": {
+            "owner_display_name": "Fake User",
+            "name": "streaming no messages",
+            "description": "",
+            "archived": false,
+            "id": "5367caab4292e7ce4b8994bdce9dbb11",
+            "owner_id": "user1"
         }
     },
     "template": "{\"name\": \"Awesome Dataset\", \"description\": \"(optional) This dataset is awesome because I made it, and you can do it too.\"}"

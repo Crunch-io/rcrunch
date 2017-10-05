@@ -8,7 +8,8 @@ newDataset(x, name = NULL, ...)
 }
 \arguments{
 \item{x}{a \code{data.frame} or other rectangular R data object, or a string
-file name or URL to upload to create a dataset.}
+file name or URL to upload to create a dataset. The file may be a compressed
+Zip file containing a single file in CSV or SPSS format.}
 
 \item{name}{character name to give the new Crunch dataset. By default the
 function uses the name of the R object, or, if passing a file, the file name.}
@@ -33,6 +34,7 @@ used to read it into R.
 \examples{
 \dontrun{
 ds <- newDataset(mtcars, "cars")
+ds <- newDataset("mysurvey.sav")
 }
 }
 \seealso{
