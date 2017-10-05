@@ -8,6 +8,7 @@ vignette: >
 ---
 
 [Previous: transform and derive](derive.html)
+
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(crunch)
 load("vignettes.RData")
