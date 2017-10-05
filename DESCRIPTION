@@ -119,6 +119,7 @@ Collate:
     'variable-order.R'
     'variable-summary.R'
     'variable-to-R.R'
+    'variable-transform.R'
     'variable-transforms.R'
     'variable-type.R'
     'variable-update.R'

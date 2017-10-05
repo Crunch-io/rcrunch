@@ -22,4 +22,3 @@ test_that("Insertion and insertions show methods", {
                                         name=c("Low", "High"),
                                         combine=c("1, 2", "9, 10"))))
 })
-

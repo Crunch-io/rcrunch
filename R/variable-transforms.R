@@ -1,6 +1,28 @@
-#' @rdname Transforms
 #' @export
-setMethod("transforms", "CrunchVariable", function (x) {
+setMethod("showTransforms", "CrunchCube", function (x) {
+    browser()
+    #measure by measure?
+})
+
+showTransform <- function(x) {
+    trans <- transforms(x)
+    combos <- trans$insertions
+    var_cats <- categories(entity(variables(tst_cube)[[1]]))
+
+    adds <- vapply(combos, function (cmb) {
+        which.cats <- names(var_cats[ids(var_cats) %in% unlist(combinations(cmb))])
+        return(sum(x@arrays$count[which.cats]))
+    }, double(1), USE.NAMES = TRUE)
+    names(adds) <- names(combos)
+
+    # shuffle names around
+    dn <- dimnames(x@arrays$count)
+    dn[[1]] <- c(names(x@arrays$count), names(adds))
+    x@arrays$count <- array(c(x@arrays$count, adds), dimnames = dn)
+    return(x)
+}
+
+getTransforms <- function (x) {
     var_entity <- entity(x)
     trans <- var_entity@body$view$transform
 
@@ -12,7 +34,32 @@ setMethod("transforms", "CrunchVariable", function (x) {
                             categories = NULL,
                             elements = NULL)
     return(trans_out)
+}
+
+#' @rdname Transforms
+#' @export
+setMethod("transforms", "CrunchVariable", getTransforms)
+#' @rdname Transforms
+#' @export
+setMethod("transforms", "VariableTuple", getTransforms)
+#' @rdname Transforms
+#' @export
+setMethod("transforms", "CrunchCube", function (x) {
+    ## hack since variables(CrunchCube) is not subsettable
+    ref_vars <- variables(x)@index
+
+    trans <- vapply(ref_vars, function (v) v$view$transform)
+
+    if (is.null(trans)) {
+        return(NULL)
+    }
+
+    trans_out <- Transforms(insertions = Insertions(data=trans$insertions),
+                            categories = NULL,
+                            elements = NULL)
+    return(trans_out)
 })
+
 
 #' @rdname Transforms
 #' @export

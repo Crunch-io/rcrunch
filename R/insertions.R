@@ -35,6 +35,14 @@ setCombine <- function(x, value) {
 }
 
 
+
+#' @rdname Insertions
+#' @export
+setMethod("names", "Insertions", function (x) {
+    n <- vapply(x, name, character(1))
+    return(n)
+})
+
 #' @rdname Insertions
 #' @export
 setMethod("anchor", "Insertion", function (x) {

@@ -72,7 +72,7 @@ cubeToArray <- function (x, measure=1) {
     ## "ifany", whether or not NAs are shown may depend on the values in the
     ## table, not just the category/element metadata.
     ## (2) Multiple response. This variable type is presented to users as if
-    ## if were categorical, but its data structure isn't, and thus its
+    ## it were categorical, but its data structure isn't, and thus its
     ## representation in the cube response is more complex. We need that
     ## complexity so that we know how to compute percentages correctly, but
     ## here we need to dump it. Multiple response (MR) extra features in the

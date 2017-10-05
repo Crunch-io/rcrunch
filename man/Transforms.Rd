@@ -7,12 +7,18 @@
 \alias{transforms<-}
 \alias{Transforms}
 \alias{transforms,CrunchVariable-method}
+\alias{transforms,VariableTuple-method}
+\alias{transforms,CrunchCube-method}
 \alias{transforms<-,CrunchVariable-method}
 \title{Transformations of variable and cube views}
 \usage{
 Transforms(...)
 
 \S4method{transforms}{CrunchVariable}(x)
+
+\S4method{transforms}{VariableTuple}(x)
+
+\S4method{transforms}{CrunchCube}(x)
 
 \S4method{transforms}{CrunchVariable}(x) <- value
 }

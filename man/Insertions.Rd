@@ -10,6 +10,7 @@
 \alias{Insertions}
 \alias{Insertion-class}
 \alias{Insertion}
+\alias{names,Insertions-method}
 \alias{anchor,Insertion-method}
 \alias{anchor<-,Insertion-method}
 \alias{combinations,Insertion-method}
@@ -19,6 +20,8 @@
 Insertions(..., data = NULL)
 
 Insertion(..., data = NULL)
+
+\S4method{names}{Insertions}(x)
 
 \S4method{anchor}{Insertion}(x)
 
