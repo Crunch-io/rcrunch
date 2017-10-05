@@ -1,5 +1,9 @@
 cubeDims <- function (cube) {
-    ## Grab the row/col/etc. labels from the cube
+    ## This function wraps up all of the quirks of the Crunch cube API and
+    ## standardizes the various ways that metadata about the dimensions is
+    ## represented in it.
+
+    ## First, grab the row/col/etc. labels from the cube
     dimnames <- lapply(cube$result$dimensions, function (a) {
         if (a$type$class == "boolean") {
             ## TODO: server should provide enumeration
@@ -17,10 +21,17 @@ cubeDims <- function (cube) {
             missing=vapply(d, function (el) isTRUE(el$missing), logical(1))
         ))
     })
-    names(dimnames) <- vapply(cube$result$dimensions,
-        function (a) a$references$alias, character(1))
-    return(CubeDims(dimnames,
-        references=VariableCatalog(index=lapply(cube$result$dimensions, vget("references")))))
+    ## Collect the variable metadata about the dimensions
+    refs <- lapply(cube$result$dimensions, function (d) {
+        tuple <- d$references
+        tuple$type <- d$type$class
+        if (tuple$type == "enum" && "subreferences" %in% names(tuple)) {
+            tuple$type <- "multiple_response"
+        }
+        return(tuple)
+    })
+    names(dimnames) <- vapply(refs, vget("alias"), character(1))
+    return(CubeDims(dimnames, references=VariableCatalog(index=refs)))
 }
 
 elementName <- function (el) {
@@ -89,7 +100,23 @@ anyOrNone <- function (x) {
 
 #' @rdname cube-methods
 #' @export
-setMethod("dimensions", "CrunchCube", function (x) x@dims)
+setMethod("dimensions", "CrunchCube", function (x) {
+    dims <- x@dims
+    selecteds <- is.selectedDimension(dims)
+    ## TODO: make this a [ method
+    return(CubeDims(dims@.Data[!selecteds],
+        names=dims@names[!selecteds],
+        references=dims@references[!selecteds]))
+})
+
+is.selectedDimension <- function (dims) {
+    is.it <- function (x, dim) {
+        x$type == "categorical" && length(dim$name) == 3 && dim$name[1] == "Selected"
+    }
+    selecteds <- mapply(is.it, x=index(dims@references), dim=dims@.Data)
+    names(selecteds) <- dims@names
+    return(selecteds)
+}
 
 #' @rdname cube-methods
 #' @export

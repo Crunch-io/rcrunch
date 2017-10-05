@@ -1,0 +1,105 @@
+{
+    "element": "shoji:view",
+    "self": "https://stable.crunch.io/api/datasets/ab64eee04efb43d4ae9c13e0e71468c4/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fstable.crunch.io%2Fapi%2Fdatasets%2Fab64eee04efb43d4ae9c13e0e71468c4%2Fvariables%2F000003%2F%22%7D%2C%7B%22variable%22%3A%22https%3A%2F%2Fstable.crunch.io%2Fapi%2Fdatasets%2Fab64eee04efb43d4ae9c13e0e71468c4%2Fvariables%2F000006%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": []
+                }
+            },
+            "dimensions": [{
+                "variable": "https://stable.crunch.io/api/datasets/ab64eee04efb43d4ae9c13e0e71468c4/variables/000003/"
+            }, {
+                "variable": "https://stable.crunch.io/api/datasets/ab64eee04efb43d4ae9c13e0e71468c4/variables/000006/"
+            }],
+            "weight": null
+        },
+        "query_environment": {
+            "filter": []
+        },
+        "result": {
+            "dimensions": [{
+                "references": {
+                    "alias": "v4",
+                    "name": "v4"
+                },
+                "derived": false,
+                "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [{
+                        "numeric_value": 1,
+                        "missing": false,
+                        "id": 1,
+                        "name": "B"
+                    }, {
+                        "numeric_value": 2,
+                        "missing": false,
+                        "id": 2,
+                        "name": "C"
+                    }, {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                    }]
+                }
+            }, {
+                "references": {
+                    "alias": "v7",
+                    "name": "v7"
+                },
+                "derived": false,
+                "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [{
+                        "numeric_value": 1,
+                        "missing": false,
+                        "id": 1,
+                        "name": "C"
+                    }, {
+                        "numeric_value": 2,
+                        "missing": true,
+                        "id": 2,
+                        "name": "D"
+                    }, {
+                        "numeric_value": 3,
+                        "missing": false,
+                        "id": 3,
+                        "name": "E"
+                    }, {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                    }]
+                }
+            }],
+            "missing": 5,
+            "measures": {
+                "count": {
+                    "data": [5, 3, 2, 0, 5, 2, 3, 0, 0, 0, 0, 0],
+                    "n_missing": 5,
+                    "metadata": {
+                        "references": {},
+                        "derived": true,
+                        "type": {
+                            "integer": true,
+                            "missing_rules": {},
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "class": "numeric"
+                        }
+                    }
+                }
+            },
+            "element": "crunch:cube",
+            "counts": [5, 3, 2, 0, 5, 2, 3, 0, 0, 0, 0, 0],
+            "n": 20
+        }
+    }
+}

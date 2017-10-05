@@ -17,7 +17,7 @@ if (crunch_test_path == "") {
 # Source crunch-test.R when: R CMD check, devtools::test(), make test,
 # crunchdev::test_crunch()
 # Don't source crunch-test.R when: devtools::load_all() (interactively)
-# https://github.com/hadley/devtools/issues/1202 
+# https://github.com/hadley/devtools/issues/1202
 if (!interactive() || identical(Sys.getenv("NOT_CRAN"), "true")) {
     source(crunch_test_path)
 }
@@ -34,11 +34,6 @@ cacheLogSummary <- httpcache::cacheLogSummary
 requestLogSummary <- httpcache::requestLogSummary
 uncached <- httpcache::uncached
 newDataset <- function (...) suppressMessages(crunch::newDataset(...))
-
-loadCube <- function (filename) {
-    CrunchCube(fromJSON(filename, simplifyVector=FALSE)$value)
-}
-# print(loadCube("cubes/mr-by-cat-profiles-stats-weighted.json"))
 
 ## .onAttach stuff, for testthat to work right
 ## See other options in inst/crunch-test.R

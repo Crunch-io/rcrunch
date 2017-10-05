@@ -1,7 +1,11 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Array Variables}
--->
+---
+title: "Array Variables"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Array Variables}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
 [Previous: variables](variables.md)
 
@@ -25,8 +29,8 @@ grep("^imiss_", names(ds), value=TRUE)
 ```
 
 ```
-##  [1] "imiss_c" "imiss_q" "imiss_j" "imiss_r" "imiss_t" "imiss_m" "imiss_d"
-##  [8] "imiss_f" "imiss_p" "imiss_h" "imiss_s" "imiss_g" "imiss_b"
+##  [1] "imiss_b" "imiss_c" "imiss_d" "imiss_f" "imiss_g" "imiss_h" "imiss_j"
+##  [8] "imiss_m" "imiss_p" "imiss_q" "imiss_r" "imiss_s" "imiss_t"
 ```
 
 These correspond to a survey grid question about how important respondents view a set of issues. Examining one of them, we see
@@ -327,8 +331,8 @@ grep("boap", names(ds), value=TRUE)
 ```
 
 ```
-##  [1] "boap_3"  "boap_11" "boap_6"  "boap_2"  "boap_4"  "boap_14" "boap_9" 
-##  [8] "boap_5"  "boap_12" "boap_13" "boap_7"  "boap_10" "boap_8"
+##  [1] "boap_2"  "boap_3"  "boap_4"  "boap_5"  "boap_6"  "boap_7"  "boap_8" 
+##  [8] "boap_9"  "boap_10" "boap_11" "boap_12" "boap_13" "boap_14"
 ```
 
 [Next: variable organization](variable-order.md)
