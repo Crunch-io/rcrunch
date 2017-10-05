@@ -1,16 +1,26 @@
 Sys.setlocale("LC_COLLATE", "C") ## What CRAN does
 set.seed(666)
 
+# find a file that is either in the package root or inst folders while testing
+find_file <- function (file_name) {
+    pths <- file.path(testthat::test_path("..", ".."), c("", "inst"), file_name)
+    return(pths[file.exists(pths)])
+}
+
 ## Our "test package" common harness code
-## `try` added because of some devtools::document weirdness
-try({
-    crunch_test_path <- system.file("crunch-test.R", package="crunch")
-    if (crunch_test_path == "") {
-        # hack for loadall
-        crunch_test_path <- "../../inst/crunch-test.R"
-    }
+crunch_test_path <- system.file("crunch-test.R", package="crunch")
+if (crunch_test_path == "") {
+    # hack for devtools::test / testthat::test_package
+    crunch_test_path <- find_file("crunch-test.R")
+}
+
+# Source crunch-test.R when: R CMD check, devtools::test(), make test,
+# crunchdev::test_crunch()
+# Don't source crunch-test.R when: devtools::load_all() (interactively)
+# https://github.com/hadley/devtools/issues/1202 
+if (!interactive() || identical(Sys.getenv("NOT_CRAN"), "true")) {
     source(crunch_test_path)
-})
+}
 
 skip_on_jenkins <- function (...) {
     if (nchar(Sys.getenv("JENKINS_HOME"))) {

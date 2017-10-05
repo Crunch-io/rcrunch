@@ -29,6 +29,7 @@ Suggests:
     devtools,
     httptest (>= 2.0.0),
     knitr,
+    rmarkdown,
     rstudioapi,
     spelling
 VignetteBuilder: knitr
