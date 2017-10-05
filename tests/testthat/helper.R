@@ -1,24 +1,10 @@
 Sys.setlocale("LC_COLLATE", "C") ## What CRAN does
 set.seed(666)
 
-# find a file starting with the current directory and looking in parent folders 
-# limited to levels_up for the file in file_name, additionally look inside the 
-# folder `inst` at each level looking for file_name as well.
-find_file <- function (file_name, levels_up = 3) {
-    for (i in 0:levels_up) {
-        pths <- file.path(".",
-                          paste0(rep("..", i), collapse = .Platform$file.sep),
-                          c("", "inst"), file_name)
-        fl <- pths[file.exists(pths)]
-        if (length(fl) == 1) return(fl)
-        if (length(fl)  > 1) {
-            warning("More than one file named ", file_name,
-                    " using the first one.")
-            return(fl[1])
-        }
-    }
-    stop("Found no file named ", file_name, 
-         " Stopping tests because they will not function without ", file_name)
+# find a file that is either in the package root or inst folders while testing
+find_file <- function (file_name) {
+    pths <- file.path(testthat::test_path("..", ".."), c("", "inst"), file_name)
+    return(pths[file.exists(pths)])
 }
 
 ## Our "test package" common harness code
