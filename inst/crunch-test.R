@@ -21,6 +21,18 @@ skip_locally <- function (...) {
     }
 }
 
+loadCube <- function (filename) {
+    crunch:::CrunchCube(jsonlite::fromJSON(filename, simplifyVector=FALSE)$value)
+}
+
+cubify <- function (..., dims) {
+    ## Make readable test expectations for comparing cube output
+    data <- c(...)
+    d <- vapply(dims, length, integer(1), USE.NAMES=FALSE)
+    array(matrix(data, byrow=TRUE, nrow=d[1]), dim=d, dimnames=dims)
+}
+
+
 ## Contexts
 with_mock_crunch <- function (expr) {
     env <- parent.frame()
