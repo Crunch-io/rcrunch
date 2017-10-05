@@ -51,9 +51,9 @@ weight <- function(x) {
 
 #' @rdname weight
 #' @export
-is.weight <- function(x){
+is.weight <- function(x) {
     if (is.variable(x)) {
-        ds <- loadDataset(datasetReference(self(x)))
+        ds <- loadDataset(datasetReference(x))
         return(identical(weight(ds), x))
     } else {
         return(FALSE)
@@ -63,11 +63,8 @@ is.weight <- function(x){
 #' @rdname weight
 #' @export
 setMethod("is.weight<-", "NumericVariable", function(x, value) {
-    if (!(is.logical(value)  && length(value) == 1)) {
-        halt("Right hand side must be TRUE or FALSE")
-    }
+    validateValue(value)
     ds <- loadDataset(datasetReference(self(x)))
-    varcat <- allVariables(ds)
     if (value) {
         weight(ds) <- x
     } else {
@@ -108,7 +105,7 @@ setMethod("is.weight<-", "NumericVariable", function(x, value) {
 #' }
 #' @name weightVaraibles
 #' @aliases is.weightVariable<- weightVariables<-
-#' 
+#'
 #' @export
 NULL
 
@@ -147,18 +144,6 @@ setMethod("weightVariables<-", "VariableCatalog", function(x, value) {
     modifyWeightVariables(x, value, type = "append")
 })
 
-#' @rdname modifyWeightVariables
-#' @export
-setMethod("modifyWeightVariables", "CrunchDataset", function(x, vars, type = "append") {
-    varcat <- allVariables(x)
-    modifyWeightVariables(varcat, vars, type)
-})
-
-#' @rdname modifyWeightVariables
-#' @export
-setMethod("modifyWeightVariables", "VariableCatalog", function(x, vars, type = "append") {
-    modifyWeightVariables(x, vars, type)
-})
 
 #' modifyWeightVariables
 #'
@@ -175,18 +160,20 @@ setMethod("modifyWeightVariables", "VariableCatalog", function(x, vars, type = "
 #'
 #' @export
 modifyWeightVariables <- function(x, vars, type = "append") {
-        current <- crGET(shojiURL(x, "orders", "weights"))
-    new <- current
+    if (is.dataset(x)) {
+        x <- allVariables(x)
+    }
+    new <- old <- crGET(shojiURL(x, "orders", "weights"))
     if (is.null(vars)) {
         new$graph <- NULL
-        type = "remove"
+        type <- "remove"
     } else {
         if (is.variable(vars) || (length(vars) == 1) & !is.character(vars)) {
             vars <- list(vars)
         }
         if (is.character(vars)) {
             ds <- loadDataset(datasetReference(self(x)))
-            vars <- lapply(vars, function(v){
+            vars <- lapply(vars, function(v) {
                 if (v %in% names(x)) {
                     ds[[v]]
                 } else {
@@ -196,7 +183,7 @@ modifyWeightVariables <- function(x, vars, type = "append") {
         }
         all_var <- vapply(vars, is.Numeric, logical(1))
         if (!all(all_var)) {
-            var_names <- vapply(vars, function(v){
+            var_names <- vapply(vars, function(v) {
                 if (is.variable(v)) {
                     return(name(v))
                 } else {
@@ -204,20 +191,20 @@ modifyWeightVariables <- function(x, vars, type = "append") {
                 }
             }, character(1))
             err_text <- " is not a numeric Crunch variable."
-            if ( sum(!all_var) > 1) {
-                err_text <- " are not a numeric Crunch variables."
+            if (sum(!all_var) > 1) {
+                err_text <- " are not numeric Crunch variables."
             }
-            halt( serialPaste(var_names[!all_var]), err_text)
+            halt(serialPaste(var_names[!all_var]), err_text)
         }
         if (type == "append") {
-            new$graph <- unique(c( current$graph, lapply(vars, self)))
+            new$graph <- unique(c(old$graph, lapply(vars, self)))
         } else if (type == "remove") {
-            new$graph <- setdiff( current$graph, lapply(vars, self))
+            new$graph <- setdiff(old$graph, lapply(vars, self))
         } else if (type == "replace") {
             new$graph <- lapply(vars, self)
         }
     }
-    if (!identical(current, new)) {
+    if (!identical(old, new)) {
         crPUT(shojiURL(x, "orders", "weights"),
             body = toJSON(new))
         x <- refresh(x)
@@ -227,7 +214,7 @@ modifyWeightVariables <- function(x, vars, type = "append") {
 
 #' @rdname weightVariables
 #' @export
-is.weightVariable <- function(x){
+is.weightVariable <- function(x) {
     if (is.variable(x)) {
         ds <- loadDataset(datasetReference(self(x)))
         return(alias(x) %in% weightVariables(ds))
@@ -238,18 +225,11 @@ is.weightVariable <- function(x){
 
 #' @rdname weightVariables
 #' @export
-setMethod("is.weightVariable<-", "NumericVariable", function(x, value) {
-    if (!(is.logical(value)  && length(value) == 1)) {
-        halt("Right hand side must be TRUE or FALSE.")
-    }
+setMethod("is.weightVariable<-", "NumericVariable", function (x, value) {
+    validateValue(value)
     ds <- loadDataset(datasetReference(self(x)))
-    varcat <- allVariables(ds)
-    if (value) {
-        modifyWeightVariables(varcat, x, "append")
-    } else {
-        modifyWeightVariables(varcat, x, "remove")
-    }
-    x <- refresh(x)
+    action <- ifelse(value, "append", "remove")
+    modifyWeightVariables(ds, x, action)
     return(x)
 })
 
@@ -299,7 +279,7 @@ setMethod("is.weightVariable<-", "NumericVariable", function(x, value) {
 #' }
 #' @seealso [weight<-()]; [settings()] for the "default weight" for other
 #' dataset viewers.
-makeWeight <- function(..., name) {
+makeWeight <- function (..., name) {
     all_dots <- list(..., name = name)
     named_entries <- names(all_dots) != ""
     out       <- all_dots[named_entries]
@@ -371,4 +351,16 @@ generateWeightEntry <- function(expr) {
         variable = self(var),
         targets = target_list
     ))
+}
+
+#' Validate that a value is a logical vector of length 1
+#'
+#' @param value The right hand side of an assignment
+#' @keywords internal
+#' @return nothing, called for its side effects
+#'
+validateValue <-  function (value) {
+        if (!(is.logical(value) && length(value) == 1)) {
+        halt("Right hand side must be TRUE or FALSE")
+    }
 }

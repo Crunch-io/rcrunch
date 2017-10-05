@@ -25,7 +25,6 @@ with_mock_crunch({
             '{"weight":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}')
     })
     test_that("is.weight returns false when the variable is not a weight", {
-        expect_false(is.weight(oldds$birthyr))
         expect_false(is.weight("character"))
         expect_false(is.weight(mtcars))
         expect_false(is.weight(NULL))
@@ -98,7 +97,7 @@ with_mock_crunch({
         )
         expect_error(
             weightVariables(oldds) <- list(oldds$gender, oldds$textVar),
-            'Gender and Text variable ftw are not a numeric Crunch variables.'
+            'Gender and Text variable ftw are not numeric Crunch variables.'
         )
     })
 
