@@ -16,7 +16,7 @@
 #' @name weight
 #' @aliases is.weight<-
 #' @export
-weight <- function(x) {
+weight <- function (x) {
     stopifnot(is.dataset(x))
     prefs <- ShojiEntity(crGET(shojiURL(x, "fragments", "preferences")))
     w <- prefs$weight
@@ -28,7 +28,7 @@ weight <- function(x) {
 
 #' @rdname weight
 #' @export
-`weight<-` <- function(x, value) {
+`weight<-` <- function (x, value) {
     stopifnot(is.dataset(x))
 
     if (inherits(value, "VariableDefinition")) {
@@ -51,7 +51,7 @@ weight <- function(x) {
 
 #' @rdname weight
 #' @export
-is.weight <- function(x) {
+is.weight <- function (x) {
     if (is.variable(x)) {
         ds <- loadDataset(datasetReference(x))
         return(identical(weight(ds), x))
@@ -62,7 +62,7 @@ is.weight <- function(x) {
 
 #' @rdname weight
 #' @export
-setMethod("is.weight<-", "NumericVariable", function(x, value) {
+setMethod("is.weight<-", "NumericVariable", function (x, value) {
     validateValue(value)
     ds <- loadDataset(datasetReference(self(x)))
     if (value) {
@@ -112,11 +112,11 @@ NULL
 #' @rdname weightVariables
 #' @export
 setMethod("weightVariables", "CrunchDataset",
-    function(x) weightVariables(allVariables(x)))
+    function (x) weightVariables(allVariables(x)))
 
 #' @rdname weightVariables
 #' @export
-setMethod("weightVariables", "VariableCatalog", function(x) {
+setMethod("weightVariables", "VariableCatalog", function (x) {
     ## Get weight variable order
     ord <- VariableOrder(crGET(shojiURL(x, "orders", "weights")))
     ## Subset weight variable catalog with it
@@ -132,7 +132,7 @@ setMethod("weightVariables", "VariableCatalog", function(x) {
 
 #' @rdname weightVariables
 #' @export
-setMethod("weightVariables<-", "CrunchDataset", function(x, value) {
+setMethod("weightVariables<-", "CrunchDataset", function (x, value) {
     weightVariables(allVariables(x)) <- value
     x <- refresh(x)
     return(x)
@@ -140,7 +140,7 @@ setMethod("weightVariables<-", "CrunchDataset", function(x, value) {
 
 #' @rdname weightVariables
 #' @export
-setMethod("weightVariables<-", "VariableCatalog", function(x, value) {
+setMethod("weightVariables<-", "VariableCatalog", function (x, value) {
     modifyWeightVariables(x, value, type = "append")
 })
 
@@ -159,7 +159,7 @@ setMethod("weightVariables<-", "VariableCatalog", function(x, value) {
 #' - `"replace"`: replace the current weight variables with `vars`
 #'
 #' @export
-modifyWeightVariables <- function(x, vars, type = "append") {
+modifyWeightVariables <- function (x, vars, type = "append") {
     if (is.dataset(x)) {
         x <- allVariables(x)
     }
@@ -173,7 +173,7 @@ modifyWeightVariables <- function(x, vars, type = "append") {
         }
         if (is.character(vars)) {
             ds <- loadDataset(datasetReference(self(x)))
-            vars <- lapply(vars, function(v) {
+            vars <- lapply(vars, function (v) {
                 if (v %in% names(x)) {
                     ds[[v]]
                 } else {
@@ -183,7 +183,7 @@ modifyWeightVariables <- function(x, vars, type = "append") {
         }
         all_var <- vapply(vars, is.Numeric, logical(1))
         if (!all(all_var)) {
-            var_names <- vapply(vars, function(v) {
+            var_names <- vapply(vars, function (v) {
                 if (is.variable(v)) {
                     return(name(v))
                 } else {
@@ -214,7 +214,7 @@ modifyWeightVariables <- function(x, vars, type = "append") {
 
 #' @rdname weightVariables
 #' @export
-is.weightVariable <- function(x) {
+is.weightVariable <- function (x) {
     if (is.variable(x)) {
         ds <- loadDataset(datasetReference(self(x)))
         return(alias(x) %in% weightVariables(ds))
@@ -308,7 +308,7 @@ makeWeight <- function (..., name) {
 #' \dontrun{
 #' validateWeightExpression(ds$var ~ c(10, 30, 60))
 #' }
-generateWeightEntry <- function(expr) {
+generateWeightEntry <- function (expr) {
     formula <- try(as.formula(expr), silent = TRUE)
     if (is.error(formula)) {
         halt(dQuote(substitute(expr)),
@@ -345,7 +345,7 @@ generateWeightEntry <- function(expr) {
         targets <- targets / 100
     }
 
-    target_list <- lapply(seq_along(targets), function(i) c(i, targets[i]))
+    target_list <- lapply(seq_along(targets), function (i) c(i, targets[i]))
 
     return(list(
         variable = self(var),
