@@ -33,6 +33,28 @@
             "id": "95c0b45fe0af492594863f818cb913d2",
             "owner_id": "https://app.crunch.io/api/users/notme/",
             "is_published": false
+        },
+        "https://app.crunch.io/api/datasets/1streaming/": {
+            "owner_display_name": "Fake User",
+            "name": "streaming test ds",
+            "description": "",
+            "start_date":"2016-01-01",
+            "end_date":"2016-01-01",
+            "archived": false,
+            "id": "5405313ab82d4d753bcf42f01d2e28f8",
+            "owner_id": "https://app.crunch.io/api/users/user1/",
+            "is_published": true
+        },
+        "https://app.crunch.io/api/datasets/streaming-no-msg/": {
+            "owner_display_name": "Fake User",
+            "name": "streaming no messages",
+            "description": "",
+            "start_date":"2016-01-01",
+            "end_date":"2016-01-01",
+            "archived": false,
+            "id": "5367caab4292e7ce4b8994bdce9dbb11",
+            "owner_id": "https://app.crunch.io/api/users/user1/",
+            "is_published": true
         }
     },
     "views": {

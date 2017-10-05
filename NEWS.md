@@ -1,4 +1,5 @@
 ### crunch 1.18.3 (under development)
+* Now Crunch authentication email and password can be stored in and read from the environmental variables `R_CRUNCH_EMAIL` and `R_CRUNCH_PW` respectively.
 * Fix `bases()` when called on a univariate statistic (#124)
 
 ### crunch 1.18.2
