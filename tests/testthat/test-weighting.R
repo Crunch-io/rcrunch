@@ -61,13 +61,7 @@ with_mock_crunch({
         expect_PUT(weightVariables(oldds) <- oldds$birthyr,
             "https://app.crunch.io/api/datasets/1/variables/weights/",
             body)
-        expect_PUT(weightVariables(allVariables(oldds)) <- oldds$birthyr,
-            "https://app.crunch.io/api/datasets/1/variables/weights/",
-            body)
         expect_PUT(is.weightVariable(oldds$birthyr) <- TRUE,
-            "https://app.crunch.io/api/datasets/1/variables/weights/",
-            body)
-        expect_PUT(modifyWeightVariables(allVariables(oldds), oldds$birthyr),
             "https://app.crunch.io/api/datasets/1/variables/weights/",
             body)
     })
@@ -99,6 +93,18 @@ with_mock_crunch({
             weightVariables(oldds) <- list(oldds$gender, oldds$textVar),
             'Gender and Text variable ftw are not numeric Crunch variables.'
         )
+    })
+
+    test_that("validateWeightVariableValue errors correctly", {
+        expect_error(validateWeightVariableValue(TRUE), NA)
+        expect_error(validateWeightVariableValue(TRUE), NA)
+        expect_error(validateWeightVariableValue(FALSE), NA)
+        expect_error(validateWeightVariableValue("char"),
+            "Right hand side must be TRUE or FALSE"
+            )
+        expect_error(validateWeightVariableValue(NA),
+            "Right hand side must be TRUE or FALSE"
+            )
     })
 
     test_that("generateWeightEntry errors correctly", {
@@ -225,15 +231,14 @@ with_test_authentication({
         ds$weight22 <- sample(c(.2, .8), 20, replace = TRUE)
         ds$weight23 <- sample(c(.5, .5), 20, replace = TRUE)
         test_that("modifyWeightVariables appends, removes, and replaces", {
-            varcat <- allVariables(ds)
-            modifyWeightVariables(varcat, "weight")
-            expect_identical(weightVariables(varcat), "weight")
-            modifyWeightVariables(varcat, "weight22", "append")
-            expect_identical(weightVariables(varcat), c("weight", "weight22"))
-            modifyWeightVariables(varcat, "weight22", "remove")
-            expect_identical(weightVariables(varcat), c("weight"))
-            modifyWeightVariables(varcat, NULL, "replace")
-            expect_identical(weightVariables(varcat), NULL)
+            modifyWeightVariables(ds, "weight")
+            expect_identical(weightVariables(ds), "weight")
+            modifyWeightVariables(ds, "weight22", "append")
+            expect_identical(weightVariables(ds), c("weight", "weight22"))
+            modifyWeightVariables(ds, "weight22", "remove")
+            expect_identical(weightVariables(ds), c("weight"))
+            modifyWeightVariables(ds, NULL, "replace")
+            expect_identical(weightVariables(ds), NULL)
         })
         test_that("weightVariables can be assigned", {
             weightVariables(ds) <- ds$weight23

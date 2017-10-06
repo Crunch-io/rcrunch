@@ -8,7 +8,6 @@
 \alias{weightVariables,CrunchDataset-method}
 \alias{weightVariables,VariableCatalog-method}
 \alias{weightVariables<-,CrunchDataset-method}
-\alias{weightVariables<-,VariableCatalog-method}
 \alias{is.weightVariable}
 \alias{is.weightVariable<-,NumericVariable-method}
 \title{Change which variables can be set as weights}
@@ -19,14 +18,12 @@
 
 \S4method{weightVariables}{CrunchDataset}(x) <- value
 
-\S4method{weightVariables}{VariableCatalog}(x) <- value
-
 is.weightVariable(x)
 
 \S4method{is.weightVariable}{NumericVariable}(x) <- value
 }
 \arguments{
-\item{x}{a dataset or variable catalog}
+\item{x}{a CrunchDataset}
 
 \item{value}{For the setter variables to set as the \code{weightVariables} this can
 be a numeric Crunch variable, list of numeric Crunch variables or
@@ -34,7 +31,7 @@ a character vector with the aliases of numeric Crunch variables.}
 }
 \value{
 For the getter the variables which can be set as the dataset's weight. For
-the setter the dataset or variable catalog duly modified.
+the setter the dataset duly modified.
 }
 \description{
 Editors can change which variables can be set as the weighting variable

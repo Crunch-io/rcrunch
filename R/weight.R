@@ -63,14 +63,13 @@ is.weight <- function (x) {
 #' @rdname weight
 #' @export
 setMethod("is.weight<-", "NumericVariable", function (x, value) {
-    validateValue(value)
-    ds <- loadDataset(datasetReference(self(x)))
+    validateWeightVariableValue(value)
+    ds <- loadDataset(datasetReference(x))
     if (value) {
         weight(ds) <- x
     } else {
         weight(ds) <- NULL
     }
-    x <- refresh(x)
     return(x)
 })
 
@@ -83,13 +82,13 @@ setMethod("is.weight<-", "NumericVariable", function (x, value) {
 #' to get and set the `weightVariables` of a dataset, which are the variables which
 #' can be set as the dataset [weight()].
 #'
-#' @param x a dataset or variable catalog
+#' @param x a CrunchDataset
 #' @param value For the setter variables to set as the `weightVariables` this can
 #' be a numeric Crunch variable, list of numeric Crunch variables or
 #' a character vector with the aliases of numeric Crunch variables.
 #'
 #' @return For the getter the variables which can be set as the dataset's weight. For
-#' the setter the dataset or variable catalog duly modified.
+#' the setter the dataset duly modified.
 #' @seealso [weight()] [makeWeight()]
 #' @name weightVariables
 #' @examples
@@ -133,15 +132,8 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
 #' @rdname weightVariables
 #' @export
 setMethod("weightVariables<-", "CrunchDataset", function (x, value) {
-    weightVariables(allVariables(x)) <- value
-    x <- refresh(x)
-    return(x)
-})
-
-#' @rdname weightVariables
-#' @export
-setMethod("weightVariables<-", "VariableCatalog", function (x, value) {
     modifyWeightVariables(x, value, type = "append")
+    return(x)
 })
 
 
@@ -149,7 +141,7 @@ setMethod("weightVariables<-", "VariableCatalog", function (x, value) {
 #'
 #' Change which variables can be set as a dataset's weight.
 #'
-#' @param x a dataset or variable catalog
+#' @param x a CrunchDataset
 #' @param vars Variables to add or remove  this can be a numeric Crunch variable,
 #' list of numeric Crunch variables or a character vector with the aliases of numeric Crunch variables.
 #' @param type a character string determining how the weightVariables
@@ -157,13 +149,11 @@ setMethod("weightVariables<-", "VariableCatalog", function (x, value) {
 #' - `"append"` : add `vars` to the current weight variables
 #' - `"remove"` : remove `vars` from the current list of weight variables
 #' - `"replace"`: replace the current weight variables with `vars`
-#'
+#' @return a CrunchDataset
 #' @export
 modifyWeightVariables <- function (x, vars, type = "append") {
-    if (is.dataset(x)) {
-        x <- allVariables(x)
-    }
-    new <- old <- crGET(shojiURL(x, "orders", "weights"))
+    varcat <- allVariables(x)
+    new <- old <- crGET(shojiURL(varcat, "orders", "weights"))
     if (is.null(vars)) {
         new$graph <- NULL
         type <- "remove"
@@ -172,9 +162,9 @@ modifyWeightVariables <- function (x, vars, type = "append") {
             vars <- list(vars)
         }
         if (is.character(vars)) {
-            ds <- loadDataset(datasetReference(self(x)))
+            ds <- loadDataset(datasetReference(x))
             vars <- lapply(vars, function (v) {
-                if (v %in% names(x)) {
+                if (v %in% names(varcat)) {
                     ds[[v]]
                 } else {
                     v
@@ -205,9 +195,8 @@ modifyWeightVariables <- function (x, vars, type = "append") {
         }
     }
     if (!identical(old, new)) {
-        crPUT(shojiURL(x, "orders", "weights"),
+        crPUT(shojiURL(varcat, "orders", "weights"),
             body = toJSON(new))
-        x <- refresh(x)
     }
     return(x)
 }
@@ -226,7 +215,7 @@ is.weightVariable <- function (x) {
 #' @rdname weightVariables
 #' @export
 setMethod("is.weightVariable<-", "NumericVariable", function (x, value) {
-    validateValue(value)
+    validateWeightVariableValue(value)
     ds <- loadDataset(datasetReference(self(x)))
     action <- ifelse(value, "append", "remove")
     modifyWeightVariables(ds, x, action)
@@ -353,14 +342,14 @@ generateWeightEntry <- function (expr) {
     ))
 }
 
-#' Validate that a value is a logical vector of length 1
+#' Validate that a value is TRUE or FALSE
 #'
 #' @param value The right hand side of an assignment
 #' @keywords internal
 #' @return nothing, called for its side effects
 #'
-validateValue <-  function (value) {
-        if (!(is.logical(value) && length(value) == 1)) {
+validateWeightVariableValue <-  function (value) {
+    if (!(is.logical(value) && !is.na(value) && length(value) == 1)) {
         halt("Right hand side must be TRUE or FALSE")
     }
 }

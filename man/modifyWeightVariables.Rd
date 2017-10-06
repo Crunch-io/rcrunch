@@ -7,7 +7,7 @@
 modifyWeightVariables(x, vars, type = "append")
 }
 \arguments{
-\item{x}{a dataset or variable catalog}
+\item{x}{a CrunchDataset}
 
 \item{vars}{Variables to add or remove  this can be a numeric Crunch variable,
 list of numeric Crunch variables or a character vector with the aliases of numeric Crunch variables.}
@@ -19,6 +19,9 @@ will be modified:
 \item \code{"remove"} : remove \code{vars} from the current list of weight variables
 \item \code{"replace"}: replace the current weight variables with \code{vars}
 }}
+}
+\value{
+a CrunchDataset
 }
 \description{
 Change which variables can be set as a dataset's weight.
