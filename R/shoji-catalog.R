@@ -64,7 +64,7 @@ dirtyElements <- function (x, y) {
 #' @rdname catalog-extract
 #' @export
 setMethod("[", c("ShojiCatalog", "character"), function (x, i, ...) {
-    w <- whichNameOrURL(x, i)
+    w <- whichNameOrURL(x, i, ...)
     if (any(is.na(w))) {
         halt("Undefined elements selected: ", serialPaste(i[is.na(w)]))
     }
