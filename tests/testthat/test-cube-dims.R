@@ -30,6 +30,8 @@ with_mock_crunch({
             c("categorical", "multiple_response"))
     })
     test_that("Getting those additional variable attributes from the cube", {
+        print(cube)
+        print(variables(cube))
         expect_identical(names(cube), c("Pet", "All pets owned"))
         expect_identical(aliases(cube), c("q1", "allpets"))
         expect_identical(descriptions(cube),

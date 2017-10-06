@@ -1,3 +1,9 @@
+#' Show the variable transformations on a CrunchCube
+#'
+#' @param x a CrunchCube
+#'
+#' @return a CrunchCube, with any transformations applied.
+#'
 #' @export
 setMethod("showTransforms", "CrunchCube", function (x) {
     browser()

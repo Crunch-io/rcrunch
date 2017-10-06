@@ -124,13 +124,4 @@ setMethod("variables", "CubeDims", function (x) x@references)
 
 #' @rdname cube-methods
 #' @export
-setMethod("variables", "CrunchCube", function (x) {
-    out <- variables(dimensions(x))
-
-    # add variable names (needed for indexing)
-    names(index(out)) <- vapply(x@.Data[[1]]$dimensions, function(dm) {dm$variable}, character(1))
-    # add self hack
-    out@self <- "hack"
-
-    return(out)
-})
+setMethod("variables", "CrunchCube", function (x) variables(dimensions(x)))
