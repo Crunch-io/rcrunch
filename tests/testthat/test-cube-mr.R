@@ -12,10 +12,17 @@ alldims <- list(
 
 mr_x_cat_wt <- loadCube("cubes/selected-crosstab-4.json")
 
-test_that("properties of a cube with for as_selected x cat", {
+test_that("properties of a cube with for as_selected x cat: it looks 2D", {
     expect_equal(dim(mr_x_cat_wt), c(6L, 3L))
     expect_equal(names(dimnames(mr_x_cat_wt)),
         c("attitudes_recoded_klima_2", "pdl_gender"))
+    expect_equal(aliases(variables(mr_x_cat_wt)),
+        c("attitudes_recoded_klima_2", "pdl_gender"))
+    expect_equal(names(Categories(data=index(variables(mr_x_cat_wt))[[2]]$categories)),
+        c("Male", "Female", "No Data"))
+    skip("TODO: variables should return a catalog you can [[ from; also categories() method should check the tuple before loading entity")
+    expect_equal(names(categories(variables(mr_x_cat_wt)[[2]])),
+        c("Male", "Female", "No Data"))
 })
 
 test_that("as.array on cube with as_selected x cat", {
