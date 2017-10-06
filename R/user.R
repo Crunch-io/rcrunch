@@ -77,20 +77,22 @@ resetPassword <- function (email) {
 #' @rdname catalog-extract
 #' @export
 setMethod("[", c("UserCatalog", "character"), function (x, i, ...) {
-    if (is.null(list(...)[["secondary"]])) {
-        callNextMethod(x, i, secondary = emails(x), ...)
+    if (!("secondary" %in% names(list(...)))) {
+        secondary <- emails(x)
     } else {
-        callNextMethod(x, i, ...)
+        secondary <- list(...)[["secondary"]]
     }
+    callNextMethod(x, i, secondary=secondary)
 })
 
 #' @rdname catalog-extract
 #' @export
 setMethod("[[", c("UserCatalog", "character"), function (x, i, ...) {
-    if (is.null(list(...)[["secondary"]])) {
-        callNextMethod(x, i, secondary = emails(x), ...)
+    if (!("secondary" %in% names(list(...)))) {
+        secondary <- emails(x)
     } else {
-        callNextMethod(x, i, ...)
+        secondary <- list(...)[["secondary"]]
     }
+    callNextMethod(x, i, secondary=secondary)
 })
 
