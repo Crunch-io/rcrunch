@@ -73,6 +73,10 @@ elementIsAnyOrNone <- function (el) {
 #' object.
 #'
 #' @param x a CrunchCube or its CubeDims component.
+#' @param i used with `[` to extract a dimension
+#' @param j not used
+#' @param ... not used
+#' @param drop not used
 #'
 #' @return Generally, the same shape of result that each of these functions
 #' return when applied to an `array` object.
@@ -108,6 +112,8 @@ setMethod("dimensions", "CrunchCube", function (x) {
     return(dims[!selecteds])
 })
 
+#' @rdname cube-methods
+#' @export
 setMethod("[", "CubeDims", function (x, i, ...) {
     return(CubeDims(x@.Data[i], names=x@names[i]))
 })

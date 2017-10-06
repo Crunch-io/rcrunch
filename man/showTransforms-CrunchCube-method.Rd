@@ -3,6 +3,7 @@
 \docType{methods}
 \name{showTransforms,CrunchCube-method}
 \alias{showTransforms,CrunchCube-method}
+\alias{showTransforms}
 \title{Show the variable transformations on a CrunchCube}
 \usage{
 \S4method{showTransforms}{CrunchCube}(x)

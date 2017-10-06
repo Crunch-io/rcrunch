@@ -8,6 +8,7 @@
 \alias{dim,CubeDims-method}
 \alias{is.na,CubeDims-method}
 \alias{dimensions,CrunchCube-method}
+\alias{[,CubeDims,ANY,ANY-method}
 \alias{variables,CubeDims-method}
 \alias{variables,CrunchCube-method}
 \alias{dim,CrunchCube-method}
@@ -26,6 +27,8 @@
 \S4method{is.na}{CubeDims}(x)
 
 \S4method{dimensions}{CrunchCube}(x)
+
+\S4method{[}{CubeDims,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{variables}{CubeDims}(x)
 
@@ -47,6 +50,14 @@
 }
 \arguments{
 \item{x}{a CrunchCube or its CubeDims component.}
+
+\item{i}{used with \code{[} to extract a dimension}
+
+\item{j}{not used}
+
+\item{...}{not used}
+
+\item{drop}{not used}
 }
 \value{
 Generally, the same shape of result that each of these functions

@@ -3,6 +3,7 @@
 #' @param x a CrunchCube
 #'
 #' @return a CrunchCube, with any transformations applied.
+#' @aliases showTransforms
 #'
 #' @export
 setMethod("showTransforms", "CrunchCube", function (x) {
@@ -13,7 +14,7 @@ setMethod("showTransforms", "CrunchCube", function (x) {
 showTransform <- function(x) {
     trans <- transforms(x)
     combos <- trans$insertions
-    var_cats <- categories(entity(variables(tst_cube)[[1]]))
+    var_cats <- categories(entity(variables(x)[[1]]))
 
     adds <- vapply(combos, function (cmb) {
         which.cats <- names(var_cats[ids(var_cats) %in% unlist(combinations(cmb))])
