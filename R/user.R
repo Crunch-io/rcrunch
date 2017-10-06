@@ -72,3 +72,25 @@ resetPassword <- function (email) {
             url_base=absoluteURL("../password/change/${token}/", app)
         ))))
 }
+
+
+#' @rdname catalog-extract
+#' @export
+setMethod("[", c("UserCatalog", "character"), function (x, i, ...) {
+    if (is.null(list(...)[["secondary"]])) {
+        callNextMethod(x, i, secondary = emails(x), ...)
+    } else {
+        callNextMethod(x, i, ...)
+    }
+})
+
+#' @rdname catalog-extract
+#' @export
+setMethod("[[", c("UserCatalog", "character"), function (x, i, ...) {
+    if (is.null(list(...)[["secondary"]])) {
+        callNextMethod(x, i, secondary = emails(x), ...)
+    } else {
+        callNextMethod(x, i, ...)
+    }
+})
+

@@ -121,7 +121,7 @@ getEntity <- function (x, i, Constructor=ShojiEntity, ...) {
 #' @export
 setMethod("[[", c("ShojiCatalog", "character"), function (x, i, ...) {
     stopifnot(length(i) == 1L)
-    w <- whichNameOrURL(x, i)
+    w <- whichNameOrURL(x, i, ...)
     if (is.na(w)) {
         return(NULL)
     }

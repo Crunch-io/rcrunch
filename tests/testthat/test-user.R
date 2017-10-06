@@ -20,6 +20,12 @@ with_mock_crunch({
             c("fake.user@example.com",
               "william.user@example.io",
               "ruser@crunch.io"))
+        # default secondary is email
+        expect_equal(usercat["ruser@crunch.io"], usercat[3])
+        expect_equal(usercat[["ruser@crunch.io"]], usercat[[3]])
+        # but can override with names
+        expect_equal(usercat["Bill User", secondary = names(usercat)], usercat[2])
+        expect_equal(usercat[["Bill User", secondary = names(usercat)]], usercat[[2]])
     })
 
     test_that("Reset password", {
