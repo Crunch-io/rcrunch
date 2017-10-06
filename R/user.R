@@ -72,3 +72,10 @@ resetPassword <- function (email) {
             url_base=absoluteURL("../password/change/${token}/", app)
         ))))
 }
+
+expropriateUser <- function (from, to) {
+    u <- getAccountUserCatalog()
+    from <- UserEntity(crGET(urls(u)[emails(u) == from]))
+    crPOST(shojiURL(from, "fragments", "expropriate"),
+        body=toJSON(wrapEntity(owner=to)))
+}

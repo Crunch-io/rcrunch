@@ -38,6 +38,12 @@ with_mock_crunch({
             '"create_datasets":false},"first_name":"Me",',
             '"url_base":"/password/change/${token}/"}}')
     })
+
+    test_that("expropriateUser", {
+        expect_POST(expropriateUser("fake.user@example.com", "william.user@example.io"),
+            "https://app.crunch.io/api/users/user1/expropriate/",
+            '{"element":"shoji:entity","body":{"owner":"william.user@example.io"}}')
+    })
 })
 
 with_test_authentication({
