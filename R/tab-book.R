@@ -164,10 +164,8 @@ setMethod("initialize", "MultitableResult", function (.Object, ...) {
         ## that column is multitable var (3 -> 2), row is category of
         ## array (2 -> 1), subvar is "tab" (1 -> 3)
         if (length(dim(cube)) == 3L) {
-            ## TODO: CubeDims should get a [ method
             ## TODO: CrunchCube should get a dimensions<-
-            cube@dims <- CubeDims(dimensions(cube)[c(2, 3, 1)],
-                references=dimensions(cube)@references[c(2, 3, 1)])
+            cube@dims <- CubeDims(cube@dims[c(2, 3, 1)])
             cube@arrays <- lapply(cube@arrays, aperm, perm=c(2, 3, 1))
         }
         return(cube)

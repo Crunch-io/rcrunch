@@ -5,12 +5,21 @@ cubeDims <- function (cube) {
 
     ## First, grab the row/col/etc. labels from the cube
     dimnames <- lapply(cube$result$dimensions, function (a) {
-        if (a$type$class == "boolean") {
+        ## Collect the variable metadata about the dimensions
+        tuple <- a$references
+        tuple$type <- a$type$class
+        if (tuple$type == "enum" && "subreferences" %in% names(tuple)) {
+            tuple$type <- "multiple_response"
+        }
+        tuple$categories <- a$type$categories
+
+        if (tuple$type == "boolean") {
             ## TODO: server should provide enumeration
             return(list(
                 name=c("FALSE", "TRUE"),
                 any.or.none=c(FALSE, FALSE),
-                missing=c(FALSE, FALSE)
+                missing=c(FALSE, FALSE),
+                references=tuple
             ))
         }
         ## If enumerated, will be "elements", not "categories"
@@ -18,20 +27,13 @@ cubeDims <- function (cube) {
         return(list(
             name=vapply(d, elementName, character(1)),
             any.or.none=vapply(d, elementIsAnyOrNone, logical(1)),
-            missing=vapply(d, function (el) isTRUE(el$missing), logical(1))
+            missing=vapply(d, function (el) isTRUE(el$missing), logical(1)),
+            references=tuple
         ))
     })
-    ## Collect the variable metadata about the dimensions
-    refs <- lapply(cube$result$dimensions, function (d) {
-        tuple <- d$references
-        tuple$type <- d$type$class
-        if (tuple$type == "enum" && "subreferences" %in% names(tuple)) {
-            tuple$type <- "multiple_response"
-        }
-        return(tuple)
-    })
-    names(dimnames) <- vapply(refs, vget("alias"), character(1))
-    return(CubeDims(dimnames, references=VariableCatalog(index=refs)))
+    names(dimnames) <- vapply(dimnames, function (x) x$references$alias,
+        character(1))
+    return(CubeDims(dimnames))
 }
 
 elementName <- function (el) {
@@ -103,24 +105,27 @@ anyOrNone <- function (x) {
 setMethod("dimensions", "CrunchCube", function (x) {
     dims <- x@dims
     selecteds <- is.selectedDimension(dims)
-    ## TODO: make this a [ method
-    return(CubeDims(dims@.Data[!selecteds],
-        names=dims@names[!selecteds],
-        references=dims@references[!selecteds]))
+    return(dims[!selecteds])
+})
+
+setMethod("[", "CubeDims", function (x, i, ...) {
+    return(CubeDims(x@.Data[i], names=x@names[i]))
 })
 
 is.selectedDimension <- function (dims) {
     is.it <- function (x, dim) {
         x$type == "categorical" && length(dim$name) == 3 && dim$name[1] == "Selected"
     }
-    selecteds <- mapply(is.it, x=index(dims@references), dim=dims@.Data)
+    selecteds <- mapply(is.it, x=index(variables(dims)), dim=dims@.Data)
     names(selecteds) <- dims@names
     return(selecteds)
 }
 
 #' @rdname cube-methods
 #' @export
-setMethod("variables", "CubeDims", function (x) x@references)
+setMethod("variables", "CubeDims", function (x) {
+    VariableCatalog(index=lapply(x@.Data, vget("references")))
+})
 
 #' @rdname cube-methods
 #' @export
