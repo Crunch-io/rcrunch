@@ -40,11 +40,8 @@ test_that("ShojiCatalog", {
         "Subscript out of bounds: got 3 logicals, need 2")
     expect_identical(sho[TRUE], sho)
     expect_identical(sho["/a"], sho[1])
-    expect_identical(sho["/a"], sho[1])
     expect_error(sho[c("/a", "c")], "Undefined elements selected: c")
 })
-
-
 
 with_mock_crunch({
     full.urls <- DatasetCatalog(crGET("https://app.crunch.io/api/datasets/"))
