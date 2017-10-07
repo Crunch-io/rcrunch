@@ -97,7 +97,7 @@ setMethod("[[", c("UserCatalog", "character"), function (x, i, ...) {
 #' expropriated.
 #' 
 #' Expropriating requires confirmation. In an interactive session, you will be 
-#' asked to confirm. To avoid that prompt, or to exprorpriate datasets from a 
+#' asked to confirm. To avoid that prompt, or to expropriate datasets from a 
 #' non-interactive session, wrap the call in [with_consent()] to give your 
 #' permission to expropriate
 #' 

@@ -23,7 +23,7 @@ expropriated.
 }
 \details{
 Expropriating requires confirmation. In an interactive session, you will be
-asked to confirm. To avoid that prompt, or to exprorpriate datasets from a
+asked to confirm. To avoid that prompt, or to expropriate datasets from a
 non-interactive session, wrap the call in \code{\link[=with_consent]{with_consent()}} to give your
 permission to expropriate
 }
