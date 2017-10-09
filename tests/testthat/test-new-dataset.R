@@ -59,14 +59,11 @@ with_mock_crunch({
     })
     test_that("uploadData writes out a gzipped file", {
         ds <- loadDataset("test ds")
-        f <- tempfile()
-        with_mock(tempfile=function (...) f, {
-            expect_false(file.exists(f))
-            with_DELETE(NULL, {
-                ## with_DELETE to handle the cleanup so we can see the real error
-                expect_POST(uploadData(ds, data.frame(a=1)))
-            })
-            expect_true(file.exists(f))
+        with_DELETE(NULL, {
+            ## with_DELETE to handle the cleanup so we can see the real error
+            expect_POST(uploadData(ds, data.frame(a=1)),
+                "https://app.crunch.io/api/sources/",
+                "list(uploaded_file")
         })
     })
 

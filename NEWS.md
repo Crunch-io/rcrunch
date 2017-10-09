@@ -1,6 +1,7 @@
 ### crunch 1.18.3 (under development)
 * Now Crunch authentication email and password can be stored in and read from the environmental variables `R_CRUNCH_EMAIL` and `R_CRUNCH_PW` respectively.
 * Fix `bases()` when called on a univariate statistic (#124)
+* Update some tests and code to anticipate changes in an upcoming release of `testthat`
 
 ### crunch 1.18.2
 * `makeWeight` allows you to generate new weighting variables based on categorical variables (#80).

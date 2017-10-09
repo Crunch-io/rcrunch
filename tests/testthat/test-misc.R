@@ -126,3 +126,13 @@ test_that("setCrunchAPI", {
         expect_equal(getOption("crunch.api"), "http://barfoo.crunch.io:8888/api/")
     })
 })
+
+with(temp.option(foo.bar="no", foo.other="other"), {
+    withr::with_envvar(list(R_FOO_BAR="yes"), {
+        test_that("envOrOption gets the right thing", {
+            expect_identical(envOrOption("foo.bar"), "yes") ## Env var trumps option
+            expect_identical(envOrOption("foo.other"), "other") ## Option if there is no env var
+            expect_null(envOrOption("somethingelse")) ## Null if neither
+        })
+    })
+})
