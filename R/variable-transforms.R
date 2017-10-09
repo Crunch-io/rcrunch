@@ -7,27 +7,53 @@
 #'
 #' @export
 setMethod("showTransforms", "CrunchCube", function (x) {
-    browser()
-    #measure by measure?
+    ary <- x@arrays$count
+    trans <- tryCatch(Transforms(data=index(variables(x))[[1]]$view$transform), error = function(e) NULL)
+    var_cats <- Categories(data=index(variables(x))[[1]]$categories)
+    # TODO: calculate category/element changes
+    x@arrays$count <- calcTransform(ary, trans, var_cats)
+
+    return(x)
 })
 
-showTransform <- function(x) {
-    trans <- transforms(x)
-    combos <- trans$insertions
-    var_cats <- categories(entity(variables(x)[[1]]))
+# @param ary an array with all dimensions
+# @param trans a Transforms object to pull transformations from
+# @param var_cats the Categories object of the transform
+calcTransform <- function(ary, trans, var_cats) {
+    if (length(dim(ary)) > 1) {
+        halt("Calculating varaible transforms is not implemented for dimensions ",
+             "greater than 1.")
+    }
 
+    combos <- trans$insertions
     adds <- vapply(combos, function (cmb) {
         which.cats <- names(var_cats[ids(var_cats) %in% unlist(combinations(cmb))])
-        return(sum(x@arrays$count[which.cats]))
+        return(sum(ary[which.cats]))
     }, double(1), USE.NAMES = TRUE)
     names(adds) <- names(combos)
 
     # shuffle names around
-    dn <- dimnames(x@arrays$count)
-    dn[[1]] <- c(names(x@arrays$count), names(adds))
-    x@arrays$count <- array(c(x@arrays$count, adds), dimnames = dn)
-    return(x)
+    dn <- dimnames(ary)
+    dn[[1]] <- c(names(ary), names(adds))
+    ary <- array(c(ary, adds), dimnames = dn)
+    return(ary)
 }
+
+#' Show the variable transformations on a Categorical variable
+#'
+#' @param x a Categorical variable
+#'
+#' @return summary of the variable, with transforms applied
+#'
+#' @export
+setMethod("showTransforms", "CategoricalVariable", function (x) {
+    tab <- calcTransform(table(x), transforms(x), categories(x))
+    # tab <- tab[order(tab, decreasing=TRUE)]
+    class(tab) <- c("CategoricalVariableSummary", class(tab))
+    attr(tab, "varname") <- getNameAndType(x)
+
+    return(tab)
+})
 
 getTransforms <- function (x) {
     var_entity <- entity(x)
@@ -49,24 +75,6 @@ setMethod("transforms", "CrunchVariable", getTransforms)
 #' @rdname Transforms
 #' @export
 setMethod("transforms", "VariableTuple", getTransforms)
-#' @rdname Transforms
-#' @export
-setMethod("transforms", "CrunchCube", function (x) {
-    ## hack since variables(CrunchCube) is not subsettable
-    ref_vars <- variables(x)@index
-
-    trans <- vapply(ref_vars, function (v) v$view$transform)
-
-    if (is.null(trans)) {
-        return(NULL)
-    }
-
-    trans_out <- Transforms(insertions = Insertions(data=trans$insertions),
-                            categories = NULL,
-                            elements = NULL)
-    return(trans_out)
-})
-
 
 #' @rdname Transforms
 #' @export

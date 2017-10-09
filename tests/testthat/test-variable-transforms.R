@@ -27,6 +27,63 @@ test_that("Transforms validation", {
                         " object: Invalid categories: 1 element is not a Crunch category object\\."))
 })
 
+v7_trans <-  loadCube("cubes/univariate-categorical-with-trans.json")
+
+test_that("calcTransform univariate cube", {
+    expect_equal(
+        calcTransform(v7_trans@arrays$count,
+                      Transforms(data=index(variables(v7_trans))[[1]]$view$transform),
+                      Categories(data=index(variables(v7_trans))[[1]]$categories)
+        ),
+                 cubify(10, 5, 5, 0, 15, 10,
+                        dims=list(
+                            v7=c("C", "D", "E", "No Data", "C, E", "D, E")
+                        )))
+})
+
+v7 <- loadCube("cubes/univariate-categorical.json")
+
+test_that("if there are no transforms, return the cube as-is", {
+    expect_equal(as.array(showTransforms(v7)),
+                 cubify(10, 5,
+                        dims=list(
+                            v7=c("C", "E")
+                        )))
+})
+
+v7_always <- v7_ifany <- v7_trans
+v7_ifany@useNA <- "ifany"
+v7_always@useNA <- "always"
+
+test_that("showTransform univariate cube", {
+    skip("Cube transforms with categories as missing not implemented")
+    showTransforms(v7_trans)
+    expect_equal(as.array(showTransforms(v7_trans)),
+                 cubify(10, 5, 15, 5,
+                        dims=list(
+                            v7=c("C", "E", "C, E", "E alone")
+                        )))
+    expect_equal(as.array(showTransforms(v7_ifany)),
+                 cubify(10, 5, 5,
+                        dims=list(
+                            v7=c("C", "D", "E")
+                        )))
+    expect_equal(as.array(showTransforms(v7_always)),
+                 cubify(10, 5, 5, 0,
+                        dims=list(
+                            v7=c(LETTERS[3:5], "No Data")
+                        )))
+})
+
+v4_x_v7 <- v4_x_v7_ifany <- v4_x_v7_always <- loadCube("cubes/cat-x-cat.json")
+v4_x_v7_ifany@useNA <- "ifany"
+v4_x_v7_always@useNA <- "always"
+
+test_that("useNA on bivariate cube", {
+    expect_error(showTransforms(v4_x_v7),
+                 paste0("Calculating varaible transforms is not implemented ",
+                        "for dimensions greater than 1."))
+})
 
 
 with_mock_crunch({

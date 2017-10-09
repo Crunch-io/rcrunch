@@ -12,6 +12,10 @@ test_that("Insertion and insertion inheritence, base methods", {
     expect_equal(combinations(insrt), c(1, 2))
 })
 
+test_that("combinations returns NA when not found", {
+    expect_equal(combinations(Insertion(anchor='foo', name='bar')), NA)
+})
+
 test_that("Insertion and insertions show methods", {
     expect_output(insrt,
                   get_output(data.frame(anchor=c(6),

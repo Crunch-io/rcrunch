@@ -287,7 +287,7 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     ## Finally, drop missings from the result. Could we do this in one step,
     ## building this into the initial `lapply`? Maybe, but I think there's some
     ## combination of "selected_array" multiple response with useNA=="ifany"
-    ## for which that would do the wrong thing. 
+    ## for which that would do the wrong thing.
     keep.these <- evalUseNA(mt, dims[mt_margins], x@useNA)
     out <- subsetCubeArray(mt, keep.these)
     return(out)

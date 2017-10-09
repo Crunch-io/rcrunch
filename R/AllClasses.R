@@ -352,8 +352,12 @@ Insertion <- function (..., data=NULL) {
 
 #' Transformations of variable and cube views
 #'
-#' Transformations allow you to change how a variable or cube is displayed without changing the underlying data.
+#' Transformations allow you to change how a variable or cube is displayed
+#' without changing the underlying data.
 #'
+#' @param data For the constructor function `Transforms` you can either pass in
+#' attributes via `...` or you can create the objects with a fully defined
+#' `list` representation of the objects via the `data` argument. See the examples.
 #' @param ... For the constructor function `Transforms` you can pass
 #' in attributes via `...`
 #' @param x For the attribute getters and setters, an object of class
@@ -366,8 +370,11 @@ setClass("Transforms", contains="namedList")
 
 #' @rdname Transforms
 #' @export
-Transforms <- function (...) {
-    data <- list(...)
+Transforms <- function (..., data = NULL) {
+    if (is.null(data)) {
+        data <- list(...)
+    }
+
     if (!is.null(data$insertions)) {
         data$insertions <- Insertions(data = data$insertions)
     }

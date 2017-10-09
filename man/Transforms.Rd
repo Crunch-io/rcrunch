@@ -8,17 +8,14 @@
 \alias{Transforms}
 \alias{transforms,CrunchVariable-method}
 \alias{transforms,VariableTuple-method}
-\alias{transforms,CrunchCube-method}
 \alias{transforms<-,CrunchVariable-method}
 \title{Transformations of variable and cube views}
 \usage{
-Transforms(...)
+Transforms(..., data = NULL)
 
 \S4method{transforms}{CrunchVariable}(x)
 
 \S4method{transforms}{VariableTuple}(x)
-
-\S4method{transforms}{CrunchCube}(x)
 
 \S4method{transforms}{CrunchVariable}(x) <- value
 }
@@ -26,11 +23,16 @@ Transforms(...)
 \item{...}{For the constructor function \code{Transforms} you can pass
 in attributes via \code{...}}
 
+\item{data}{For the constructor function \code{Transforms} you can either pass in
+attributes via \code{...} or you can create the objects with a fully defined
+\code{list} representation of the objects via the \code{data} argument. See the examples.}
+
 \item{x}{For the attribute getters and setters, an object of class
 Transforms}
 
 \item{value}{For \code{[<-}, the replacement Transforms to insert}
 }
 \description{
-Transformations allow you to change how a variable or cube is displayed without changing the underlying data.
+Transformations allow you to change how a variable or cube is displayed
+without changing the underlying data.
 }
