@@ -144,7 +144,7 @@
 
 \item{j}{Invalid}
 
-\item{...}{additional arguments (eg \code{secondary} a vector of elements to match
+\item{...}{additional arguments (for example \code{secondary} a vector of elements to match
 against like \code{emails(x)} or \code{owners(x)} by default this is \code{names(x)})}
 
 \item{value}{For updating, an object of the appropriate class and size to

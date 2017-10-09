@@ -19,7 +19,8 @@ None
 If you want to transfer all teams, projects, and datasets owned by one user
 to another you can with \code{expropriateUser}. To use \code{expropriateUser} you must
 be an account admin and be from the same account as the user who is being
-expropriated.
+expropriated. This is useful if a user leaves your organization and you want
+to transfer all of the teams, projects, and datasets they own to someone else.
 }
 \details{
 Expropriating requires confirmation. In an interactive session, you will be

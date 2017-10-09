@@ -68,7 +68,7 @@ setMethod("is.published<-", c("DatasetCatalog", "logical"), function (x, value) 
 #' @param name for `$`, the same as `i` for `[[`
 #' @param j Invalid
 #' @param drop Invalid
-#' @param ... additional arguments (eg `secondary` a vector of elements to match
+#' @param ... additional arguments (for example `secondary` a vector of elements to match
 #' against like `emails(x)` or `owners(x)` by default this is `names(x)`)
 #' @param value For updating, an object of the appropriate class and size to
 #' insert
