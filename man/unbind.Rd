@@ -7,11 +7,11 @@
 unbind(x)
 }
 \arguments{
-\item{x}{a CategoricalArrayVariable or MultipleResponseVariable}
+\item{x}{a \code{CategoricalArrayVariable} or \code{MultipleResponseVariable}}
 }
 \value{
 invisibly, the API response from DELETEing the array variable
-definition. If you \code{\link{refresh}} the corresponding dataset after
+definition. If you \code{\link[=refresh]{refresh()}} the corresponding dataset after
 unbinding, you should see the array variable removed and its subvariables
 promoted to regular variables.
 }

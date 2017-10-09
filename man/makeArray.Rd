@@ -14,11 +14,10 @@ deriveArray(subvariables, name, selections, ...)
 }
 \arguments{
 \item{subvariables}{a list of Variable objects to bind together, or a
-Dataset object containing only the Variables to bind (as in from subsetting
-a Dataset)}
+Dataset subset which contains only the Variables to bind.}
 
 \item{name}{character, the name that the new Categorical Array variable
-should have. Required.}
+should have.}
 
 \item{...}{Optional additional attributes to set on the new variable.}
 
@@ -35,5 +34,9 @@ return an expression that "binds" variables together, removing them from
 independent existence.
 }
 \description{
-Make a Categorical Array or Multiple Response variable
+Array variables are composed of a set of "subvariables" bound
+together for display in the app. For example, you might have a set of
+survey questions that ask how the respondent would rate a tv show from
+1-5. Array variables allow you to display all of their ratings in a compact
+table rather than a set of distinct variables.
 }

@@ -7,15 +7,15 @@
 table(..., exclude, useNA = c("no", "ifany", "always"), dnn, deparse.level)
 }
 \arguments{
-\item{...}{things to tabulate}
+\item{...}{CrunchVariables to tabulate}
 
-\item{exclude}{see \code{\link[base]{table}}}
+\item{exclude}{see \code{\link[base:table]{base::table}}}
 
-\item{useNA}{see \code{\link[base]{table}}}
+\item{useNA}{see \code{\link[base:table]{base::table}}}
 
-\item{dnn}{see \code{\link[base]{table}}}
+\item{dnn}{see \code{\link[base:table]{base::table}}}
 
-\item{deparse.level}{see \code{\link[base]{table}}}
+\item{deparse.level}{see \code{\link[base:table]{base::table}}}
 }
 \value{
 a table object
@@ -24,5 +24,5 @@ a table object
 Table function for Crunch objects
 }
 \seealso{
-\code{\link[base]{table}}
+\code{\link[base:table]{base::table}}
 }

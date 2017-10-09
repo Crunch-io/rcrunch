@@ -12,5 +12,5 @@ if [ "${TRAVIS_PULL_REQUEST}" = "false" ] &&
     cd ../ta-da
     git add .
     git commit -m "Updating rcrunch pkgdown site (rcrunch build ${TRAVIS_BUILD_NUMBER})" || true
-    # git push origin src || true
+    git push origin src || true
 fi

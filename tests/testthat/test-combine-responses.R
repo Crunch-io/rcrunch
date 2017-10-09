@@ -63,15 +63,13 @@ with_mock_crunch({
     })
 })
 
-if (run.integration.tests) {
-    with_test_authentication({
-        with(test.dataset(newDatasetFromFixture("apidocs")), {
-            test_that("We can create a new MR by combining", {
-                ds$combined_allpets <- combine(ds$allpets, name="All pets (combined)",
-                    list(list(name="Mammals", responses=c("Cat", "Dog"))))
-                expect_identical(names(subvariables(ds$combined_allpets)),
-                    c("Mammals", "Bird"))
-            })
+with_test_authentication({
+    with(test.dataset(newDatasetFromFixture("apidocs")), {
+        test_that("We can create a new MR by combining", {
+            ds$combined_allpets <- combine(ds$allpets, name="All pets (combined)",
+                list(list(name="Mammals", responses=c("Cat", "Dog"))))
+            expect_identical(names(subvariables(ds$combined_allpets)),
+                c("Mammals", "Bird"))
         })
     })
-}
+})

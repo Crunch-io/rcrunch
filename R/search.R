@@ -1,9 +1,9 @@
 #' Search Crunch for datasets.
 #'
 #' `searchDatasets` searches datasets' metadata for matches to the `query`
-#' argument. This search will include variable names, aliases, categories, etc.
-#' The content of text variables for example will not be searched, however. See
-#' \url{http://docs.crunch.io/#search} for more information about searching Crunch.
+#' argument. This search will include variable names, aliases, categories, but not the content
+#' of text variables. See [the API Documentation](http://docs.crunch.io/#search) for more information
+#' about searching Crunch.
 #'
 #' @param query the text to search for in datasets and their variables (note:
 #' only alpha characters will be used, numbers and other characters will be discarded.)

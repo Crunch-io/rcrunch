@@ -29,15 +29,18 @@ deleteSessionInfo <- function () {
 #' Authenticate with the Crunch API
 #'
 #' Note that you can store your Crunch account info in your .Rprofile under
-#' "crunch.email" and "crunch.pw" for convenience. If you do so, you can simply
-#' \code{login()} to authenticate. For running batch jobs, this could be
+#' `crunch.email` and `crunch.pw` for convenience. If you do so, you can simply
+#' `login()` to authenticate. For running batch jobs, this could be
 #' particularly useful. However, be warned that storing your
 #' password in a plain text file such as .Rprofile is a security risk (though
 #' perhaps less so than in every .R script you write), and we
 #' cannot officially recommend that you do so.
 #'
+#' Additionally, your email and password can be stored in and read from the
+#' environmental variables `R_CRUNCH_EMAIL` and `R_CRUNCH_PW` respectively.
+#'
 #' If a password is not supplied (or, if no arguments are supplied and only
-#' the \code{crunch.email} is specified in .Rprofile), and you are in an
+#' the `crunch.email` is specified in .Rprofile), and you are in an
 #' interactive session, you will be prompted to enter your password. At
 #' present, this is the most secure practice as your password is not stored
 #' locally.
@@ -47,8 +50,8 @@ deleteSessionInfo <- function () {
 #' @param ... additional parameters passed in the authentication. Not
 #' currently supported by the Crunch API.
 #' @export
-login <- function (email=getOption("crunch.email"),
-                   password=getOption("crunch.pw"), ...) {
+login <- function (email=envOrOption("crunch.email"),
+                   password=envOrOption("crunch.pw"), ...) {
     logout()
     auth <- crunchAuth(email=email, password=password, ...)
 
@@ -71,6 +74,7 @@ login <- function (email=getOption("crunch.email"),
 #' @export
 session <- function () new("Session")
 
+#' @importFrom utils installed.packages
 crunchAuth <- function (email, password=NULL, ...) {
     ## Validate authentication inputs and then POST to the API
     if (is.null(email)) {
@@ -78,8 +82,15 @@ crunchAuth <- function (email, password=NULL, ...) {
     }
     if (is.null(password)) {
         if (is.interactive()) {
-            cat(paste0("Crunch.io password for ", email, ": "))
-            without_echo(password <- readline())
+            prompt <- paste0("Crunch.io password for ", email, ": ")
+            if ("rstudioapi" %in% rownames(installed.packages()) &&
+                rstudioapi::hasFun("askForPassword")) {
+
+                password <- rstudioapi::askForPassword(prompt)
+            } else {
+                cat(prompt)
+                without_echo(password <- read_input())
+            }
         } else {
             halt("Must supply a password")
         }
@@ -106,6 +117,10 @@ without_echo <- function (expr) {
     eval.parent(expr)
 }
 
+
+## Pass through for test mocking
+read_input <- function (...) readline(...)
+
 #' Add an auth token as a cookie manually
 #'
 #' Set the auth token rather than from a Set-Cookie response header. Also modify
@@ -115,9 +130,14 @@ without_echo <- function (expr) {
 #' @return Nothing; called for its side effects.
 #' @export
 #' @keywords internal
+#' @importFrom httr set_cookies
 tokenAuth <- function (token, ua="token") {
-    set_config(c(config(cookie=paste0("token=", token)),
-        add_headers(`user-agent`=crunchUserAgent(ua))))
+    set_crunch_config(
+        c(
+            set_cookies(token=token),
+            add_headers(`user-agent`=crunchUserAgent(ua))
+        ),
+        update=TRUE)
     warmSessionCache()
 }
 

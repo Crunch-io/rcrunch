@@ -1,12 +1,12 @@
 #' Context managers
 #'
-#' @param enter function to run before doing things
-#' @param exit function to run after doing things
+#' @param enter function to run before taking actions
+#' @param exit function to run after taking actions
 #' @param error optional function to run if an error is thrown
-#' @param as character optional way to specify a default name for assinging
+#' @param as character optional way to specify a default name for assigning
 #' the return of the enter function.
 #' @return an S3 class "contextManager" object
-#' @seealso \link{with-context-manager}
+#' @seealso `with-context-manager`
 #' @aliases contextManager
 #' @export
 ContextManager <- function (enter=function (){}, exit=function (){},
@@ -17,14 +17,14 @@ ContextManager <- function (enter=function (){}, exit=function (){},
 
 #' Context manager's "with" method
 #'
-#' @param data \code{\link{contextManager}}
+#' @param data [`contextManager`]
 #' @param expr code to evaluate within that context
 #' @param ... additional arguments. One additional supported argument is "as",
 #' which lets you assign the return of your "enter" function to an object you
 #' can access.
 #' @return Nothing.
 #' @name with-context-manager
-#' @seealso \link{ContextManager}
+#' @seealso [`ContextManager`]
 #' @export
 with.contextManager <- function (data, expr, ...) {
     env <- parent.frame()
@@ -47,7 +47,7 @@ with.contextManager <- function (data, expr, ...) {
 #'
 #' @param ... named options to set
 #' @return an S3 class "contextManager" object
-#' @seealso \link{with-context-manager} \link{ContextManager}
+#' @seealso [`with-context-manager`] [`ContextManager`]
 #' @export
 temp.options <- function (...) {
     new <- list(...)

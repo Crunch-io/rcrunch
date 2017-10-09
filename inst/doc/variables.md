@@ -1,7 +1,11 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Variables: cleaning and defining metadata}
--->
+---
+title: "Crunch Variables"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Crunch Variables}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
 [Previous: create and load datasets](datasets.md)
 
@@ -180,7 +184,7 @@ head(names(variables(ds)), 10)
 
 ## Categorical variables
 
-Many variables in survey data are categorial: respondents have a finite set of answers to the survey question, and the answers are first and foremost of a nominal, not quantitative nature. In R, this data type is represented as a `factor`. The response options, are contained in the factor's "levels" as a character vector. Manipulation of these levels is limited and often challenging.
+Many variables in survey data are categorical: respondents have a finite set of answers to the survey question, and the answers are first and foremost of a nominal, not quantitative nature. In R, this data type is represented as a `factor`. The response options, are contained in the factor's "levels" as a character vector. Manipulation of these levels is limited and often challenging.
 
 In Crunch, categorical variables' "categories" are objects with richer metadata.
 
@@ -207,7 +211,7 @@ categories(track.var)
 
 ### Category attributes
 
-Categories have `names`, the factor's levels; numeric `values` which can be used when interpreting the categorical variable as numeric; and `ids`, which are analogous to the integer values that underly an R factor. Categories also have their own "missing" status. Indeed, because Crunch supports more complex missing value support than does R, multiple categories can be marked as missing: there's not a single "NA" value.
+Categories have `names`, the factor's levels; numeric `values` which can be used when interpreting the categorical variable as numeric; and `ids`, which are analogous to the integer values that underlie an R factor. Categories also have their own "missing" status. Indeed, because Crunch supports more complex missing value support than does R, multiple categories can be marked as missing: there's not a single "NA" value.
 
 
 ```r

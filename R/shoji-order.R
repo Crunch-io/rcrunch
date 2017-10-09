@@ -131,7 +131,7 @@ setMethod("length", "ShojiOrder", function (x) length(entities(x)))
 #' @export
 setMethod("length", "OrderGroup", function (x) length(entities(x)))
 
-#' Extract and update in VariableOrder and VariableGroup
+#' Extract and update in VariableOrders and VariableGroups
 #'
 #' @param x a VariableOrder or VariableGroup
 #' @param i an index. Numeric and logical indexing supported for both classes;
@@ -143,10 +143,10 @@ setMethod("length", "OrderGroup", function (x) length(entities(x)))
 #' being updated
 #' @param ... additional arguments
 #' @param drop Ignored
-#' @return \code{[[} and \code{$} on a VariableOrder return the VariableGroup.
-#' \code{[[} on VariableGroup returns the entity within, either a character
-#' (URL) or nested VariableGroup. \code{[} and assignment methods return
-#' objects of the same class as \code{x}
+#' @return `[[` and `$` on a VariableOrder return the VariableGroup.
+#' `[[` on VariableGroup returns the entity within, either a character
+#' (URL) or nested VariableGroup. `[` and assignment methods return
+#' objects of the same class as `x`
 #' @name ShojiOrder-extract
 #' @aliases ShojiOrder-extract
 NULL
@@ -494,23 +494,21 @@ removeEmptyGroups <- function (x) {
     return(x)
 }
 
-#' Remove duplicated entites from an order/group
+#' Remove duplicated entities from an order/group
 #'
-#' This function recurses through a \code{ShojiOrder}/\code{OrderGroup} and
-#' removes any duplicate entities. As with the default of
-#' \code{\link[base]{duplicated}}, the first appearance of an entity is kept,
-#' and subsequent occurences are marked as duplicated and removed. (Unlike
-#' \code{duplicated}, however, there is no option to reverse that order.)
-#' "First" occurence of an entity is determined by the function's recursion:
+#' This function recurses through a `ShojiOrder` or `OrderGroup` and
+#' removes any duplicate entities. As with [`base::duplicated`],
+#' the first appearance of an entity is kept, and subsequent occurrences are marked as duplicated
+#' and removed. (Unlike `duplicated`, there is no option to reverse that order.)
+#' The first occurrence of an entity is determined by the function's recursion:
 #' within each group, nested groups are processed first, in order, and
-#' recursively their nested groups are processed. See the test suite, in
+#' their nested groups are processed recursively. See the test suite, in
 #' test-variable-order.R, for an example that illustrates which entities are
 #' dropped as duplicate.
 #'
 #' @param x VariableOrder, DatasetOrder, VariableGroup, or DatasetGroup
-#' @return \code{x} with duplicate entities removed.
-#' @seealso \code{\link{duplicates}}, which when set to \code{FALSE} also calls
-#' this function.
+#' @return `x` with duplicate entities removed.
+#' @seealso [`duplicates`], which when set to `FALSE` also calls this function.
 #' @export
 dedupeOrder <- function (x) {
     ## Collect seen urls outside, diff out urls, recurse into groups, update seen urls
@@ -545,11 +543,11 @@ dedupeOrder <- function (x) {
 #'
 #' This function reduces a potentially nested order to its flattened
 #' representation, containing no nested groups. Entities are ordered in the
-#' result by their first appearance in the order object passed as input.
+#' result by their first appearance in the order object.
 #'
 #' @param x VariableOrder, DatasetOrder, VariableGroup, or DatasetGroup; or a
-#' CrunchDataset or catalog that has an \code{ordering} property.
-#' @return \code{x}, or its order resource, flattened.
+#' CrunchDataset or catalog that has an `ordering` property.
+#' @return `x`, or its order resource, flattened.
 #' @export
 flattenOrder <- function (x) {
     if (!(inherits(x, "ShojiOrder") || inherits(x, "OrderGroup"))) {
@@ -560,14 +558,14 @@ flattenOrder <- function (x) {
     return(x)
 }
 
-#' Get un(grouped) OrderGroups
+#' Get grouped or ungrouped OrderGroups
 #'
-#' "ungrouped" is a magic OrderGroup that contains all entities not found
+#' "ungrouped" is an OrderGroup that contains all entities not found
 #' in groups at a given level of nesting.
 #' @param order.obj an subclass of ShojiOrder or OrderGroup
-#' @return For grouped(), an Order/Group, respectively, with "ungrouped"
-#' omitted. For ungrouped(), an OrderGroup subclass.
-#' @seealso \code{\link{VariableOrder}}
+#' @return For `grouped()`, an Order/Group, respectively, with "ungrouped"
+#' omitted. For `ungrouped()`, an OrderGroup subclass.
+#' @seealso [`VariableOrder`]
 #' @export
 grouped <- function (order.obj) {
     Filter(Negate(is.character), order.obj)
@@ -582,13 +580,17 @@ ungrouped <- function (order.obj) {
 
 #' Move entities to a group
 #'
+#' Shoji entities can be placed into groups, this is mostly used for grouping
+#' variables for display in the app, but is technically possible for any of the
+#' order catalogs. This function moves an entity to one of these groups.
+#'
 #' The function has two versions: a regular function and a setter. They do the
-#' same thing, but the setter probably results in less verbose code for you.
+#' same thing, but the setter is probably more succinct.
 #'
 #' @param x VariableGroup
 #' @param value Variable, VariableCatalog subset, or Dataset subset
-#' @return \code{x} with the entities in \code{value} appended to it. If the
-#' containing order object has duplicates=FALSE, the entities will be "moved"
+#' @return `x` with the entities in `value` appended to it. If the
+#' containing order object has `duplicates=FALSE`, the entities will be "moved"
 #' to this group. Otherwise, their references will be copied to the group.
 #' @examples
 #' \dontrun{
@@ -613,9 +615,9 @@ moveToGroup <- function (x, value) {
 #'
 #' @param x Variable or Dataset, depending on the type of order, or URL for it
 #' @param ord ShojiOrder (VariableOrder or DatasetOrder)
-#' @return If \code{x} is found in \code{ord}, a character vector of group names
+#' @return If `x` is found in `ord`, a character vector of group names
 #' that provide the "path" to the entity. The length of the vector corresponds
-#' to the depth of nesting. If not found, \code{NA} is returned
+#' to the depth of nesting. If not found, `NA` is returned
 #' @export
 locateEntity <- function (x, ord) {
     if (!is.character(x)) x <- self(x)

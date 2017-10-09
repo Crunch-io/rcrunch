@@ -3,6 +3,7 @@
 #' @return (invisibly) the Variable or VariableCatalog, hidden or unhidden
 #' @name hide
 #' @aliases hide unhide
+#' @seealso [`hideVariables`]
 NULL
 
 #' @rdname hide
@@ -27,13 +28,13 @@ setMethod("unhide", "VariableCatalog", function (x) {
     invisible(setIndexSlot(x, "discarded", FALSE))
 })
 
-#' Hide and Unhide Variables Within a Dataset
+#' Hide and unhide variables within a dataset
 #' @param dataset the Dataset to modify
-#' @param x same as \code{dataset}, for `hiddenVariables<-`
+#' @param x same as `dataset`, for `hiddenVariables<-`
 #' @param variables names or indices of variables to (un)hide
-#' @param value same as \code{variables}, for `hiddenVariables<-`
-#' @return (invisibly) \code{dataset} with the specified variables (un)hidden
-#' @seealso \code{\link{hide}}
+#' @param value same as `variables`, for `hiddenVariables<-`
+#' @return (invisibly) `dataset` with the specified variables (un)hidden
+#' @seealso [`hide`]
 #' @export
 hideVariables <- function (dataset, variables) {
     var.urls <- urls(allVariables(dataset[variables]))
@@ -62,10 +63,10 @@ unhideVariables <- function (dataset, variables) {
     invisible(dataset)
 }
 
-#' Show the names of hidden variables within the dataset
+#' Show the names of a dataset's hidden variables
 #' @param dataset the Dataset
 #' @param key the Variable attribute to return. Default is "alias", following
-#' \code{getOption("crunch.namekey.dataset")}.
+#' `getOption("crunch.namekey.dataset")`.
 #' @return a vector of the names of Variables marked as hidden.
 #' @export
 hiddenVariables <- function (dataset, key=namekey(dataset)) {

@@ -45,5 +45,5 @@ invisibly
 Show methods for Crunch objects
 }
 \seealso{
-\code{\link[methods]{show}}
+\code{\link[methods:show]{methods::show}}
 }

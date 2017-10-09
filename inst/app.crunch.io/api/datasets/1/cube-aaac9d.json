@@ -1,0 +1,48 @@
+{
+    "element": "shoji:view",
+    "self": "https://app.crunch.io/api/datasets/1/cube/?query=%7B%22measures%22%3A%7B%22max%22%3A%7B%22function%22%3A%22cube_max%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fbirthyr%2F%22%7D%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "q": {
+                    "function": "cube_max",
+                    "args": {
+                        "variable": "https://app.crunch.io/api/datasets/1/variables/birthyr/"
+                    }
+                }
+            },
+            "dimensions": [],
+            "weight": null
+        },
+        "query_environment": {
+            "filter": []
+        },
+        "result": {
+            "dimensions": [],
+            "missing": 0,
+            "measures": {
+                "q": {
+                    "data": 1.6662,
+                    "n_missing": 0,
+                    "metadata": {
+                        "references": {
+                            "alias": "birthyr",
+                            "name": "Birth Year"
+                        },
+                        "derived": false,
+                        "type": {
+                            "class": "numeric",
+                            "missing_rules": {},
+                            "missing_reasons": {
+                                "No Data": -1
+                            }
+                        }
+                    }
+                }
+            },
+            "element": "crunch:cube",
+            "counts": 25,
+            "n": 25
+        }
+    }
+}

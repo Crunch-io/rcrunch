@@ -1,23 +1,18 @@
 library(httptest)
 
-run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
-
-envOrOption <- function (opt) {
-    ## .Rprofile options are like "test.api", while env vars are "R_TEST_API"
-    envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed=TRUE)))
-    envvar <- Sys.getenv(envvar.name)
-    if (nchar(envvar)) {
-        ## Let environment variable override .Rprofile, if defined
-        return(envvar)
-    } else {
-        return(getOption(opt))
-    }
+# use test.api or R_TEST_API if it's available, if not use local
+if (!is.null(crunch::envOrOption("test.api"))) {
+    options(crunch.api=crunch::envOrOption("test.api"))
+} else {
+    crunch::setCrunchAPI("local", 8080)
 }
 
+run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
+
+# grab env or options
 options(
-    crunch.api=envOrOption("test.api"),
-    crunch.email=envOrOption("test.user"),
-    crunch.pw=envOrOption("test.pw")
+    crunch.email=crunch::envOrOption("test.user"),
+    crunch.pw=crunch::envOrOption("test.pw")
 )
 
 skip_locally <- function (...) {
@@ -26,8 +21,19 @@ skip_locally <- function (...) {
     }
 }
 
-## Contexts
+loadCube <- function (filename) {
+    crunch:::CrunchCube(jsonlite::fromJSON(filename, simplifyVector=FALSE)$value)
+}
 
+cubify <- function (..., dims) {
+    ## Make readable test expectations for comparing cube output
+    data <- c(...)
+    d <- vapply(dims, length, integer(1), USE.NAMES=FALSE)
+    array(matrix(data, byrow=TRUE, nrow=d[1]), dim=d, dimnames=dims)
+}
+
+
+## Contexts
 with_mock_crunch <- function (expr) {
     env <- parent.frame()
     with(temp.options(crunch.api="https://app.crunch.io/api/",
@@ -45,10 +51,16 @@ with_POST <- function (resp, expr) {
     with_mock(`crunch::crPOST`=function (...) resp, eval.parent(expr))
 }
 
+with_DELETE <- function (resp, expr) {
+    ## Mock a DELETE that returns something, or nothing
+    force(resp)
+    with_mock(`crunch::crDELETE`=function (...) resp, eval.parent(expr))
+}
+
 with_silent_progress <- function (expr) {
     with_mock(
-        `utils::txtProgressBar`=function (...) pipe(""),
-        `utils::setTxtProgressBar`=function (...) invisible(NULL),
+        `crunch:::setup_progress_bar`=function (...) pipe(""),
+        `crunch:::update_progress_bar`=function (...) invisible(NULL),
         eval.parent(expr)
     )
 }

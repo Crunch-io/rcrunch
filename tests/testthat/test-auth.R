@@ -19,9 +19,9 @@ test_that("without_echo doesn't crash on this OS", {
 
 with_mock_crunch({
     test_that("Jupyter helper sets up env", {
-        with(reset.option("httr_config"), {
+        with(reset.option("crunch.httr_config"), {
             jupyterLogin("test_token")
-            cfg <- getOption("httr_config")
+            cfg <- get_crunch_config()
             expect_identical(cfg$options$cookie, "token=test_token")
             expect_true(grepl("jupyter.crunch.io", cfg$headers[["user-agent"]]))
             expect_true(grepl("rcrunch", cfg$headers[["user-agent"]]))

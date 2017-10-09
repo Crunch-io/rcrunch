@@ -3,9 +3,12 @@ context("Retrieving dataset list and single datasets")
 with_mock_crunch({
     cr <- session()
     test_that("listDatasets lists", {
-        expect_identical(listDatasets(), c("ECON.sav", "test ds"))
+        expect_identical(listDatasets(), c("ECON.sav", "streaming no messages",
+                                           "streaming test ds", "test ds"))
         expect_identical(listDatasets("archived"), "an archived dataset")
-        expect_identical(listDatasets("all"), c("ECON.sav", "an archived dataset", "test ds"))
+        expect_identical(listDatasets("all"), c("ECON.sav", "an archived dataset",
+                                                "streaming no messages",
+                                                "streaming test ds",  "test ds"))
     })
 
     test_that("loadDataset loads", {
@@ -13,7 +16,7 @@ with_mock_crunch({
         ds <- loadDataset("test ds")
         expect_true(is.dataset(ds))
         expect_identical(name(ds), "test ds")
-        ds <- loadDataset(2)
+        ds <- loadDataset(4)
         expect_true(is.dataset(ds))
         expect_identical(name(ds), "test ds")
         expect_error(loadDataset(666), "subscript out of bounds")
@@ -53,7 +56,7 @@ with_mock_crunch({
             expect_DELETE(deleteDataset("test ds"), self(ds))
         })
         test_that("deleteDataset by index", {
-            expect_DELETE(deleteDataset(2), self(ds))
+            expect_DELETE(deleteDataset(4), self(ds))
         })
         test_that("deleteDataset on Dataset object", {
             expect_DELETE(deleteDataset(ds), self(ds))

@@ -7,8 +7,7 @@
 importMultitable(data, multitable, ...)
 }
 \arguments{
-\item{data}{an object of class \code{CrunchDataset} in which to create the
-multitable}
+\item{data}{a \code{CrunchDataset} in which to create the multitable}
 
 \item{multitable}{an object of class \code{Multitable} that you want copied
 to the new dataset}

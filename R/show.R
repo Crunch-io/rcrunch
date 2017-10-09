@@ -2,7 +2,7 @@
 #'
 #' @param object the object
 #' @return invisibly
-#' @seealso \code{\link[methods]{show}}
+#' @seealso [`methods::show`]
 #' @importFrom methods show
 #' @name show-crunch
 NULL

@@ -8,6 +8,7 @@ vignette: >
 ---
 
 [Previous: transform and derive](derive.html)
+
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(crunch)
 load("vignettes.RData")
@@ -141,7 +142,7 @@ round(100*prop.table(tab3mr, 2))
 Finally, just as we saw in the [array variables](array-variables.html) vignette, we can grab individual subvariables and crosstab with them:
 
 ```{r, eval=FALSE}
-crtabs(~ imiss$Education + gender, data=ds)
+crtabs(~ imiss$imiss_f + gender, data=ds)
 ```
 ```{r, echo=FALSE}
 tab3subvar

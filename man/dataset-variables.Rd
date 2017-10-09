@@ -40,6 +40,5 @@ more directly.
 }
 \details{
 \code{variables} gives just the active variables in the dataset, while
-\code{allVariables}, as the name suggests, yields all variables, including
-hidden variables.
+\code{allVariables} returns all variables, including hidden variables.
 }

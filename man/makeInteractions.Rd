@@ -2,7 +2,7 @@
 % Please edit documentation in R/interact.R
 \name{makeInteractions}
 \alias{makeInteractions}
-\title{Make case statments that define the interaction of two or more other variables}
+\title{Make case statements that define the interaction of two or more other variables}
 \usage{
 makeInteractions(..., sep)
 }
@@ -16,6 +16,6 @@ A list of cases that can be passed to \code{\link{makeCaseVariable}} to make
 the interaction variable.
 }
 \description{
-Make case statments that define the interaction of two or more other variables
+Make case statements that define the interaction of two or more other variables
 }
 \keyword{internal}

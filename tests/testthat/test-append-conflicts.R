@@ -20,7 +20,7 @@ with_test_authentication({
             comp <- compareDatasets(part1, part2)
             expect_output(summary(comp), "Type mismatch: 1")
         })
-        test_that("With autorollback, the append fails and reports conflict, and the batch is backed out", {
+        test_that("If the append fails and reports conflict, and the batch is backed out", {
             expect_output(batches(part1),
                 get_output(data.frame(id=c(0, 1),
                 status=c("imported", "imported"))))

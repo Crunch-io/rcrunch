@@ -1,4 +1,4 @@
-#' Make a variable that is the interaction of two or more other variables
+#' Create a variable by interacting categorical variables
 #'
 #' `interactVariables` takes two or more variables and creates a new one that
 #' is the cartesian product expansion of their unique values. For example, if
@@ -20,7 +20,7 @@
 #' ds$ethn_race <- interactVariables(ds$ethnicity, ds$race, name="Interaction of ethnicity and race")
 #' }
 #' @export
-interactVariables <- function(..., name, sep = ":") {
+interactVariables <- function (..., name, sep = ":") {
     dots <- list(...)
     vars <- Filter(is.variable, dots)
     other_dots <- Filter(Negate(is.variable), dots)
@@ -37,7 +37,7 @@ interactVariables <- function(..., name, sep = ":") {
     return(interactionVar)
 }
 
-#' Make case statments that define the interaction of two or more other variables
+#' Make case statements that define the interaction of two or more other variables
 #'
 #' @param ... A sequence of categorical variables to make an interaction of
 #' @param sep a character to separate the values of the individual variables
@@ -46,7 +46,7 @@ interactVariables <- function(..., name, sep = ":") {
 #' the interaction variable.
 #'
 #' @keywords internal
-makeInteractions <- function(..., sep) {
+makeInteractions <- function (..., sep) {
     vars <- list(...)
     names(vars) <- lapply(vars, alias)
 
@@ -66,7 +66,7 @@ makeInteractions <- function(..., sep) {
     return(cases=cases)
 }
 
-makeCase <- function(df, vars, sep) {
+makeCase <- function (df, vars, sep) {
     exprs <- mapply(function (cat, var) var == names(cat), df, vars)
     nms <- lapply(df, names)
     name <- paste(nms, collapse = sep)

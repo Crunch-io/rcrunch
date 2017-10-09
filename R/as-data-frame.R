@@ -1,28 +1,28 @@
 #' as.data.frame method for CrunchDataset
 #'
 #' This method is defined principally so that you can use a CrunchDataset as
-#' a `data` argument to other R functions (such as
-#' `[stats::lm]`). Unless you give it the `force==TRUE`
-#' argument, this function does not in fact return a `data.frame`: it
-#' returns an object with an interface like a data.frame, such that you get
-#' R vectors when you access its columns (unlike a CrunchDataset, which
-#' returns CrunchVariable objects). This allows modeling functions that
-#' require select columns of a dataset to retrieve only those variables from
+#' a `data` argument to other R functions (such as [stats::lm()]). By default,
+#' the function does not return a `data.frame` but instead `CrunchDataFrame`,  which
+#' behaves similarly to a `data.frame` without bringing the whole dataset into memory.
+#' When you access the variables of a `CrunchDataFrame`,
+#' you get an R vector, rather than a `CrunchVariable`. This allows modeling functions
+#' that require select columns of a dataset to retrieve only those variables from
 #' the remote server, rather than pulling the entire dataset into local
-#' memory.
+#' memory. You can override this behavior by passing `force = TRUE`, which will
+#' cause the function to return a traditional `data.frame`.
 #'
 #' @param x a CrunchDataset
 #' @param row.names part of as.data.frame signature. Ignored.
 #' @param optional part of as.data.frame signature. Ignored.
 #' @param force logical: actually coerce the dataset to `data.frame`, or
 #' leave the columns as unevaluated promises. Default is `FALSE`.
-#' @param row.order vector of indeces. Which, and their order, of the rows of 
+#' @param row.order vector of indices. Which, and their order, of the rows of 
 #'  the dataset should be presented as (default: `NULL`). If `NULL`, then the 
 #'  Crunch Dataset order will be used.
 #' @param categorical.mode what mode should categoricals be pulled as? One of 
 #' factor, numeric, id (default: factor)
 #' @param include.hidden should hidden variables be included? (default: `FALSE`)
-#' @param ... additional arguments passed to as.data.frame.default
+#' @param ... additional arguments passed to `as.data.frame` (default method).
 #' @return an object of class `CrunchDataFrame` unless `force`, in
 #' which case the return is a `data.frame`.
 #' @name dataset-to-R
@@ -60,4 +60,45 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
     names(out) <- var_names
     
     return(structure(out, class="data.frame", row.names=c(NA, -nrow(ds))))
+}
+
+
+#' as.data.frame method for VariableCatalog
+#'
+#' This method gives you a view of a `VariableCatalog` as a `data.frame` in
+#' order to facilitate further exploration.
+#'
+#' Modifying the `data.frame` produced by this function will not update the
+#' dataset on the Crunch server. Other methods exist for updating the metadata
+#' in the variable catalog. See `vingette("variables", package = "crunch")`.
+#'
+#' @param x A `VariableCatalog`, as produced by `variables(ds)`.
+#' @param row.names part of `as.data.frame` signature. Ignored.
+#' @param optional part of `as.data.frame` signature. Ignored.
+#' @param keys A character vector of the variable catalog attributes which you
+#' would like included in the data.frame. To include all attributes or see
+#' which ones are available, set keys to "all". By default, the function will
+#' return three fields: `c("alias", "name", "type")`.
+#' @param ... Additional arguments passed to `data.frame`
+#' @return A `data.frame` including metadata about each variable stored in the
+#' variable catalog. The fields in the data.frame match the `keys` argument
+#' provided to the function, and each row represents a variable.
+#' @examples
+#' \dontrun{
+#' ds <- loadDataset("iris")
+#' vars <- variables(ds)
+#' var_df <- as.data.frame(vars, keys = "all")
+#' }
+#'
+#' @rdname VariableCatalog-to-Data-Frame
+#' @export
+as.data.frame.VariableCatalog <- function (x, row.names = NULL,
+                                           optional = FALSE,
+                                           keys = c("alias", "name", "type"),
+                                           ...) {
+    if (identical(keys, "all")) {
+        keys <- TRUE
+    }
+
+    catalogToDataFrame(x, rownames = NA, keys = keys, ...)
 }

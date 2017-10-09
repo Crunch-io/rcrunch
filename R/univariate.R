@@ -1,27 +1,20 @@
 #' Univariate statistics on Crunch objects
 #'
-#' @param x a NumericVariable, or for \code{min} and \code{max}, possibly a
+#' @param x a NumericVariable, or for `min` and `max`, a NumericVariable or
 #' DatetimeVariable
-#' @param ... additional arguments to \code{mean}
+#' @param ... additional arguments to summary statistic function
 #' @param na.rm logical: exclude missings?
-#' @seealso \code{\link[base]{mean}} \code{\link[stats]{sd}} \code{\link[stats]{median}} \code{\link[base]{min}} \code{\link[base]{max}}
+#' @seealso [base::mean()] [stats::sd()] [stats::median()] [base::min()] [base::max()]
 #' @name crunch-uni
 #' @aliases mean sd median min max
 NULL
 
 .summary.stat <- function (x, stat, na.rm=FALSE, ...) {
-    ## Get a single stat from the summary object
-    # summ <- getSummary(x)
-    # m <- summ[[stat]]
-    # if (!na.rm && summ[['missing_count']] > 0) {
-    #     m <- NA_real_
-    # }
-    # return(m)
-
     query <- list(
         query=toJSON(list(dimensions=list(),
             measures=list(q=registerCubeFunctions()[[stat]](x)))),
         filter=toJSON(zcl(activeFilter(x)))
+        ## TODO: this should explicitly specify the weight
     )
     cube <- CrunchCube(crGET(cubeURL(x), query=query))
     if (!na.rm && cube$result$measures$q[['n_missing']] > 0) {

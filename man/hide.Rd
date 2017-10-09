@@ -27,3 +27,6 @@
 \description{
 Hide and Unhide Variables
 }
+\seealso{
+\code{\link{hideVariables}}
+}

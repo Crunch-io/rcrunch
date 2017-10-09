@@ -3,7 +3,7 @@
 \name{grouped}
 \alias{grouped}
 \alias{ungrouped}
-\title{Get un(grouped) OrderGroups}
+\title{Get grouped or ungrouped OrderGroups}
 \usage{
 grouped(order.obj)
 
@@ -13,11 +13,11 @@ ungrouped(order.obj)
 \item{order.obj}{an subclass of ShojiOrder or OrderGroup}
 }
 \value{
-For grouped(), an Order/Group, respectively, with "ungrouped"
-omitted. For ungrouped(), an OrderGroup subclass.
+For \code{grouped()}, an Order/Group, respectively, with "ungrouped"
+omitted. For \code{ungrouped()}, an OrderGroup subclass.
 }
 \description{
-"ungrouped" is a magic OrderGroup that contains all entities not found
+"ungrouped" is an OrderGroup that contains all entities not found
 in groups at a given level of nesting.
 }
 \seealso{

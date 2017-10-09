@@ -14,7 +14,7 @@ list(group, entities)}
 
 \item{...}{dataset entity metadata. "name" is required.}
 
-\item{return}{list suitiable for JSONing and POSTing to create a dataset}
+\item{return}{list suitable for JSONing and POSTing to create a dataset}
 }
 \description{
 Wrap variable metadata inside a dataset entity

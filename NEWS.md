@@ -1,5 +1,18 @@
-### crunch 1.18.1 (under development)
+### crunch 1.18.3 (under development)
+* Now Crunch authentication email and password can be stored in and read from the environmental variables `R_CRUNCH_EMAIL` and `R_CRUNCH_PW` respectively.
+* Fix `bases()` when called on a univariate statistic (#124)
+* Update some tests and code to anticipate changes in an upcoming release of `testthat`
+
+### crunch 1.18.2
+* `makeWeight` allows you to generate new weighting variables based on categorical variables (#80).
+* `cut`, equivalent to `base::cut`, allows you to generate a derived categorical variable based on a numeric variable (#93).
+* Create a new Crunch dataset from a file by calling `newDataset` directly instead of `newDatasetFromFile`. Also, you can now create a dataset from a hosted file passing its URL to `newDataset(FromFile)`.
+* `as.data.frame()` method for `VariableCatalog` for a view of variable metadata (#75)
+* `crunchBox()` now allows you to specify colors for branding or even category-specific coloring.
+* RStudio users will now be prompted for their password on `login` in a way that conceals the input.
 * Changed the behavior of `changeCategoryID()` to only update numeric values of the category having its id changed when the id and the numeric value are the same.
+* The `autorollback` argument of `appendDataset()` has been deprecated. The option no longer has any effect and a warning will be printed to notify users about the deprecation.
+* Long-deprecated `newDatasetByCSV` was removed.
 
 ## crunch 1.18.0
 
