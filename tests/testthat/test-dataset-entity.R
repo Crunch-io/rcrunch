@@ -114,10 +114,10 @@ with_mock_crunch({
 
     if (.Platform$OS.type == "unix") {
         with_mock(
-            `base::system2`=function (command, args, ...) args,
+            `crunch:::system_call`=function (command, args, ...) paste("SYSTEM CALL", args),
             test_that("Opening a dataset on the web", {
                 expect_identical(webApp(ds),
-                    "https://app.crunch.io/dataset/511a7c49778030653aab5963")
+                    "SYSTEM CALL https://app.crunch.io/dataset/511a7c49778030653aab5963")
             })
         )
     }

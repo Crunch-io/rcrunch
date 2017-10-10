@@ -1,7 +1,11 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Analyzing data with crunch}
--->
+---
+title: "Analyzing Crunch Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Analyzing Crunch Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
 [Previous: transform and derive](derive.md)
 
@@ -282,16 +286,16 @@ Finally, just as we saw in the [array variables](array-variables.md) vignette, w
 
 
 ```r
-crtabs(~ imiss$Education + gender, data=ds)
+crtabs(~ imiss$imiss_f + gender, data=ds)
 ```
 
 ```
 ##                     gender
-## imiss_h                  Male    Female
-##   Very Important     47.47270 70.032722
-##   Somewhat Important 46.51134 45.048457
-##   Not very Important 11.61341  6.944584
-##   Unimportant        15.95398  6.422805
+## imiss_f                  Male   Female
+##   Very Important     45.64391 63.89258
+##   Somewhat Important 42.62133 37.68492
+##   Not very Important 11.10782 14.61392
+##   Unimportant        19.92492 12.25715
 ```
 
 ### N-way tables

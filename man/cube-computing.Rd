@@ -6,6 +6,7 @@
 \alias{margin.table}
 \alias{prop.table}
 \alias{bases}
+\alias{round}
 \alias{margin.table,CrunchCube-method}
 \alias{prop.table,CrunchCube-method}
 \alias{round,CrunchCube-method}
@@ -36,24 +37,35 @@
 \item{x}{a CrunchCube}
 
 \item{margin}{index, or vector of indices to generate margin for. See
-\code{\link[base:prop.table]{base::prop.table()}}. \code{bases} accepts \code{0} as an additional valid
-value for \code{margin} which yields the unweighted counts for the
-query, without reducing the dimensionality.}
+\code{\link[base:prop.table]{base::prop.table()}}. \code{bases()} accepts \code{0} as an additional valid
+value for \code{margin}, which yields the unweighted counts for the
+query without reducing the dimensionality.}
 
-\item{digits}{see  \code{\link[base:round]{base::round()}}}
+\item{digits}{For \code{round}, the number of decimal places to round to. See
+\code{\link[base:round]{base::round()}}}
 }
 \value{
-The appropriate margin.table or prop.table. Calling prop.table on
+When called on CrunchCubes, these functions return an \code{array}.
+Calling prop.table on
 a MultitableResult returns a list of prop.tables of the CrunchCubes it
 contains. Likewise, prop.table on a TabBookResult returns a list of lists of
 prop.tables.
 }
 \description{
 These functions provide an interface like \code{\link[base:margin.table]{base::margin.table()}}
-and \code{\link[base:prop.table]{base::prop.table()}} for the CrunchCube object This handles special data
-types like array variables or MultitableResults.
+and \code{\link[base:prop.table]{base::prop.table()}} for the CrunchCube object. CrunchCubes contain
+richer metadata than standard R \code{array} objects, and they also conceal
+certain complexity in the data structures from the user. In particular,
+multiple-response variables are generally represented as single dimensions
+in result tables, but in the actual data, they may comprise two dimensions.
+These methods understand the subtleties in the Crunch data types and
+correctly compute margins and percentages off of them.
 }
 \details{
+These functions also generalize to MultitableResults and TabBookResults,
+which are returned from a \code{\link[=tabBook]{tabBook()}} request. When called on one of those
+objects, they effectively apply over each CrunchCube contained in them.
+
 \code{bases} is an additional method for CrunchCubes. When making weighted
 requests, \code{bases} allows you to access the unweighted counts for every
 cell in the resulting table (array). The \code{bases} function takes a
