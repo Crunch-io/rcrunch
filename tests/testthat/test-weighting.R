@@ -31,9 +31,9 @@ with_mock_crunch({
     })
     test_that("is weight assignment errors correctly", {
         expect_error(is.weight(oldds$birthyr) <- "char",
-            "Right hand side must be TRUE or FALSE")
+            "Value must be TRUE or FALSE")
         expect_error(is.weight(oldds$birthyr) <- c(TRUE, FALSE),
-            "Right hand side must be TRUE or FALSE")
+            "Value must be TRUE or FALSE")
     })
 
     test_that("No request is made to set a weight that already is your weight", {
@@ -95,15 +95,14 @@ with_mock_crunch({
         )
     })
 
-    test_that("validateWeightVariableValue errors correctly", {
-        expect_error(validateWeightVariableValue(TRUE), NA)
-        expect_error(validateWeightVariableValue(TRUE), NA)
-        expect_error(validateWeightVariableValue(FALSE), NA)
-        expect_error(validateWeightVariableValue("char"),
-            "Right hand side must be TRUE or FALSE"
+    test_that("isTRUEorFALSE errors correctly", {
+        expect_error(isTRUEorFALSE(TRUE), NA)
+        expect_error(isTRUEorFALSE(FALSE), NA)
+        expect_error(isTRUEorFALSE("char"),
+            "Value must be TRUE or FALSE"
             )
-        expect_error(validateWeightVariableValue(NA),
-            "Right hand side must be TRUE or FALSE"
+        expect_error(isTRUEorFALSE(NA),
+            "Value must be TRUE or FALSE"
             )
     })
 

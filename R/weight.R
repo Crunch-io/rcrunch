@@ -63,7 +63,7 @@ is.weight <- function (x) {
 #' @rdname weight
 #' @export
 setMethod("is.weight<-", "NumericVariable", function (x, value) {
-    validateWeightVariableValue(value)
+    isTRUEorFALSE(value)
     ds <- loadDataset(datasetReference(x))
     if (value) {
         weight(ds) <- x
@@ -97,12 +97,8 @@ setMethod("is.weight<-", "NumericVariable", function (x, value) {
 #' weightVariables(ds) <- list(ds$weight, ds$weight2)
 #' weightVariables(ds) <- NULL
 #' weightVariables(ds) <- c("weight", "weight2")
-#' #To append a weight to existing weights
-#' weightVariables(ds) <- c(weightVariables(ds), "weight3")
-#' #To remove a weight
-#' weightVariables(ds) <- setdiff(weightVariables(ds), "weight3")
 #' }
-#' @name weightVaraibles
+#' @name weightVariables
 #' @aliases is.weightVariable<- weightVariables<-
 #'
 #' @export
@@ -154,19 +150,29 @@ setMethod("weightVariables<-", "CrunchDataset", function (x, value) {
 modifyWeightVariables <- function (x, vars, type = "append") {
     varcat <- allVariables(x)
     new <- old <- crGET(shojiURL(varcat, "orders", "weights"))
+
+    ## Values can be NULL in order to clear the weight variables, a
+    ## character vector to indicate the aliases which should be set as weight variables,
+    ## a single variable to add to the list of weight variables or a list of the
+    ## variables that you want to set as weightVariable. This processes those
+    ## variaous inputs into a list of variables.
     if (is.null(vars)) {
+        #If NULL change type to replace to clear the weight variables
         new$graph <- NULL
-        type <- "remove"
+        type <- "replace"
     } else {
         if (is.variable(vars) || (length(vars) == 1) & !is.character(vars)) {
+            ## Wrap single variables in a list
             vars <- list(vars)
         }
         if (is.character(vars)) {
+            ## Get variables from aliases
             ds <- loadDataset(datasetReference(x))
             vars <- lapply(vars, function (v) {
                 if (v %in% names(varcat)) {
                     ds[[v]]
                 } else {
+                    ## strings which aren't aliases need to be returned for errors
                     v
                 }
             })
@@ -205,7 +211,7 @@ modifyWeightVariables <- function (x, vars, type = "append") {
 #' @export
 is.weightVariable <- function (x) {
     if (is.variable(x)) {
-        ds <- loadDataset(datasetReference(self(x)))
+        ds <- loadDataset(datasetReference(x))
         return(alias(x) %in% weightVariables(ds))
     } else {
         return(FALSE)
@@ -215,8 +221,8 @@ is.weightVariable <- function (x) {
 #' @rdname weightVariables
 #' @export
 setMethod("is.weightVariable<-", "NumericVariable", function (x, value) {
-    validateWeightVariableValue(value)
-    ds <- loadDataset(datasetReference(self(x)))
+    isTRUEorFALSE(value)
+    ds <- loadDataset(datasetReference(x))
     action <- ifelse(value, "append", "remove")
     modifyWeightVariables(ds, x, action)
     return(x)
@@ -342,14 +348,14 @@ generateWeightEntry <- function (expr) {
     ))
 }
 
-#' Validate that a value is TRUE or FALSE
+#' Check that a value is TRUE or FALSE
 #'
-#' @param value The right hand side of an assignment
+#' @param value Value to check
 #' @keywords internal
 #' @return nothing, called for its side effects
 #'
-validateWeightVariableValue <-  function (value) {
+isTRUEorFALSE <-  function (value) {
     if (!(is.logical(value) && !is.na(value) && length(value) == 1)) {
-        halt("Right hand side must be TRUE or FALSE")
+        halt("Value must be TRUE or FALSE")
     }
 }
