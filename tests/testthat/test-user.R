@@ -20,6 +20,12 @@ with_mock_crunch({
             c("fake.user@example.com",
               "william.user@example.io",
               "ruser@crunch.io"))
+        # default secondary is email
+        expect_equal(usercat["ruser@crunch.io"], usercat[3])
+        expect_equal(usercat[["ruser@crunch.io"]], usercat[[3]])
+        # but can override with names
+        expect_equal(usercat["Bill User", secondary = names(usercat)], usercat[2])
+        expect_equal(usercat[["Bill User", secondary = names(usercat)]], usercat[[2]])
     })
 
     test_that("Reset password", {
@@ -37,6 +43,18 @@ with_mock_crunch({
             '"account_permissions":{"alter_users":false,',
             '"create_datasets":false},"first_name":"Me",',
             '"url_base":"/password/change/${token}/"}}')
+    })
+
+    test_that("expropriateUser", {
+        expect_error(expropriateUser("fake.user@example.com",
+                                     "william.user@example.io"), "Must confirm")
+        
+        expect_POST(
+            with_consent({
+                expropriateUser("fake.user@example.com",
+                                "william.user@example.io")}),
+            "https://app.crunch.io/api/users/user1/expropriate/",
+            '{"element":"shoji:entity","body":{"owner":"william.user@example.io"}}')
     })
 })
 

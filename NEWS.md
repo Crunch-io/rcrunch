@@ -1,4 +1,7 @@
 ### crunch 1.18.3 (under development)
+* `expropriateUser()` for transferring teams, projects, and datasets owned by one user to another
+* `ShojiCatalog` subsetting methods (`[` and `[[`) now accept a `secondary` argument for setting an index to match against
+* `UserCatalogs` now index and are subsettable by email by default
 * Now Crunch authentication email and password can be stored in and read from the environmental variables `R_CRUNCH_EMAIL` and `R_CRUNCH_PW` respectively.
 * Fix `bases()` when called on a univariate statistic (#124)
 * Update some tests and code to anticipate changes in an upcoming release of `testthat`

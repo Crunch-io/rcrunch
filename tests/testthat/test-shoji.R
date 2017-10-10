@@ -50,6 +50,15 @@ with_mock_crunch({
         expect_identical(urls(full.urls), urls(rel.urls))
     })
 
+    test_that("ShojiCatalog can use any method it has to index", {
+        expect_equal(full.urls["https://app.crunch.io/api/users/notme/",
+                             secondary=owners(full.urls)],
+                     full.urls[1])
+        expect_equal(full.urls[["https://app.crunch.io/api/users/notme/",
+                               secondary=owners(full.urls)]],
+                     full.urls[[1]])
+    })
+    
     test_that("shojiURL", {
         ds <- loadDataset("test ds")
         expect_identical(shojiURL(ds, "catalogs", "variables"),
