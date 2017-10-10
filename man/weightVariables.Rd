@@ -3,56 +3,24 @@
 \docType{methods}
 \name{weightVariables}
 \alias{weightVariables}
-\alias{is.weightVariable<-}
-\alias{weightVariables<-}
 \alias{weightVariables,CrunchDataset-method}
 \alias{weightVariables,VariableCatalog-method}
-\alias{weightVariables<-,CrunchDataset-method}
-\alias{is.weightVariable}
-\alias{is.weightVariable<-,NumericVariable-method}
-\title{Change which variables can be set as weights}
+\title{Get a dataset's weightVariables}
 \usage{
 \S4method{weightVariables}{CrunchDataset}(x)
 
 \S4method{weightVariables}{VariableCatalog}(x)
-
-\S4method{weightVariables}{CrunchDataset}(x) <- value
-
-is.weightVariable(x)
-
-\S4method{is.weightVariable}{NumericVariable}(x) <- value
 }
 \arguments{
 \item{x}{a CrunchDataset}
-
-\item{value}{For the setter variables to set as the \code{weightVariables} this can
-be a numeric Crunch variable, list of numeric Crunch variables or
-a character vector with the aliases of numeric Crunch variables.}
 }
 \value{
-For the getter the variables which can be set as the dataset's weight. For
-the setter the dataset duly modified.
+\code{weightVariables} returns a character vector of the aliases of the
+variables that are eligible to be used as weights.
 }
 \description{
-Editors can change which variables can be set as the weighting variable
-for a dataset. For instance if several weights have been calculated they
-can let the user choose which of those variables to use a weight, but prevent
-the user from choosing other variables as weight. This function allows you
-to get and set the \code{weightVariables} of a dataset, which are the variables which
-can be set as the dataset \code{\link[=weight]{weight()}}.
-}
-\examples{
-\dontrun{
-weightVariables(ds) <- ds$weight
-weightVariables(ds) <- list(ds$weight, ds$weight2)
-weightVariables(ds) <- NULL
-weightVariables(ds) <- c("weight", "weight2")
-#To append a weight to existing weights
-weightVariables(ds) <- c(weightVariables(ds), "weight3")
-#To remove a weight
-weightVariables(ds) <- setdiff(weightVariables(ds), "weight3")
-}
+Get a dataset's weightVariables
 }
 \seealso{
-\code{\link[=weight]{weight()}} \code{\link[=makeWeight]{makeWeight()}}
+\code{\link[=weight]{weight()}} \code{\link[=makeWeight]{makeWeight()}} \code{\link[=modifyWeightVariables]{modifyWeightVariables()}}
 }

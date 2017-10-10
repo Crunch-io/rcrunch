@@ -73,33 +73,13 @@ setMethod("is.weight<-", "NumericVariable", function (x, value) {
     return(x)
 })
 
-#' Change which variables can be set as weights
-#'
-#' Editors can change which variables can be set as the weighting variable
-#' for a dataset. For instance if several weights have been calculated they
-#' can let the user choose which of those variables to use a weight, but prevent
-#' the user from choosing other variables as weight. This function allows you
-#' to get and set the `weightVariables` of a dataset, which are the variables which
-#' can be set as the dataset [weight()].
+#' Get a dataset's weightVariables
 #'
 #' @param x a CrunchDataset
-#' @param value For the setter variables to set as the `weightVariables` this can
-#' be a numeric Crunch variable, list of numeric Crunch variables or
-#' a character vector with the aliases of numeric Crunch variables.
-#'
-#' @return For the getter the variables which can be set as the dataset's weight. For
-#' the setter the dataset duly modified.
-#' @seealso [weight()] [makeWeight()]
+#' @return `weightVariables` returns a character vector of the aliases of the
+#' variables that are eligible to be used as weights.
+#' @seealso [weight()] [makeWeight()] [modifyWeightVariables()]
 #' @name weightVariables
-#' @examples
-#' \dontrun{
-#' weightVariables(ds) <- ds$weight
-#' weightVariables(ds) <- list(ds$weight, ds$weight2)
-#' weightVariables(ds) <- NULL
-#' weightVariables(ds) <- c("weight", "weight2")
-#' }
-#' @name weightVariables
-#' @aliases is.weightVariable<- weightVariables<-
 #'
 #' @export
 NULL
@@ -125,7 +105,7 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
     }
 })
 
-#' @rdname weightVariables
+#' @rdname modifyWeightVariables
 #' @export
 setMethod("weightVariables<-", "CrunchDataset", function (x, value) {
     modifyWeightVariables(x, value, type = "append")
@@ -133,19 +113,40 @@ setMethod("weightVariables<-", "CrunchDataset", function (x, value) {
 })
 
 
-#' modifyWeightVariables
-#'
 #' Change which variables can be set as a dataset's weight.
+#'
+#' `modifyWeightVariables` allows you to change the variables which are eligible
+#' to be used as a dataset's weight. You can also add variables to the weight variables
+#' catalog by assignment with `weightVariables(ds) <- "weight"` or
+#' `is.weightVariable(ds$weight) <- TRUE`.
+#'
+#' Editors can change which variables can be set as the weighting variable
+#' for a dataset. For instance if several weights have been calculated they
+#' can let the user choose which of those variables to use a weight, but prevent
+#' the user from choosing other variables as weight. This function allows you
+#' to change the `weightVariables` of a dataset.
 #'
 #' @param x a CrunchDataset
 #' @param vars Variables to add or remove  this can be a numeric Crunch variable,
-#' list of numeric Crunch variables or a character vector with the aliases of numeric Crunch variables.
+#' list of numeric Crunch variables or a character vector with the aliases of
+#' numeric Crunch variables. Setting vars to `NULL` clears a datasets `weightVariables`
+#' @param value For the `weightVariables()` and `is.weightVariable` setters the
+#' variables to append to a dataset's weightVariables.
 #' @param type a character string determining how the weightVariables
 #' will be modified:
 #' - `"append"` : add `vars` to the current weight variables
 #' - `"remove"` : remove `vars` from the current list of weight variables
 #' - `"replace"`: replace the current weight variables with `vars`
 #' @return a CrunchDataset
+#' @name modifyWeightVariables
+#' @aliases is.weightVariable<- weightVariables<-
+#' @examples \dontrun{
+#' modifyweightVariables(ds, "weight", "append")
+#' weightVariables(ds) <- list(ds$weight, ds$weight2)
+#' weightVariables(ds) <- NULL
+#' weightVariables(ds) <- c("weight", "weight2")
+#' is.weightVariables(ds$weight) <- TRUE
+#' }
 #' @export
 modifyWeightVariables <- function (x, vars, type = "append") {
     varcat <- allVariables(x)
@@ -167,10 +168,9 @@ modifyWeightVariables <- function (x, vars, type = "append") {
         }
         if (is.character(vars)) {
             ## Get variables from aliases
-            ds <- loadDataset(datasetReference(x))
             vars <- lapply(vars, function (v) {
                 if (v %in% names(varcat)) {
-                    ds[[v]]
+                    x[[v]]
                 } else {
                     ## strings which aren't aliases need to be returned for errors
                     v
@@ -207,7 +207,7 @@ modifyWeightVariables <- function (x, vars, type = "append") {
     return(x)
 }
 
-#' @rdname weightVariables
+#' @rdname modifyWeightVariables
 #' @export
 is.weightVariable <- function (x) {
     if (is.variable(x)) {
@@ -218,7 +218,7 @@ is.weightVariable <- function (x) {
     }
 }
 
-#' @rdname weightVariables
+#' @rdname modifyWeightVariables
 #' @export
 setMethod("is.weightVariable<-", "NumericVariable", function (x, value) {
     isTRUEorFALSE(value)
