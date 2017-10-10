@@ -75,7 +75,9 @@ VignetteEncoding
 VignetteEngine
 VignetteIndexEntry
 YouGov
+admin
 af
+api
 app
 aren
 auth
@@ -100,6 +102,7 @@ df
 didn
 dist
 doesn
+env
 es
 etc
 geo
@@ -110,6 +113,7 @@ gz
 gzipped
 hispanic
 http
+https
 httr
 i
 iframe
@@ -137,6 +141,7 @@ searchable
 shojiObject
 spss
 st
+subdomain
 subvariable
 subvariables
 symlink

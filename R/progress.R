@@ -1,5 +1,4 @@
 #' @importFrom httpcache uncached
-#' @importFrom utils txtProgressBar setTxtProgressBar
 pollProgress <- function (progress_url, wait=.5) {
     ## Configure polling interval. Will increase by rate (>1) until reaches max
     max.wait <- 30
@@ -11,20 +10,20 @@ pollProgress <- function (progress_url, wait=.5) {
         difftime(Sys.time(), since, units=units)
     }
     ## Set up the progress bar
-    pb <- txtProgressBar(0, 100, style=3)
+    pb <- setup_progress_bar(0, 100, style=3)
 
     prog <- uncached(crGET(progress_url))
     status <- prog$progress
-    setTxtProgressBar(pb, status)
+    update_progress_bar(pb, status)
     while (status >= 0 && status < 100 && timer(starttime) < timeout) {
         Sys.sleep(wait)
         prog <- uncached(crGET(progress_url))
         status <- prog$progress
-        setTxtProgressBar(pb, status)
+        update_progress_bar(pb, status)
         wait <- min(max.wait, wait * increase.by)
     }
     close(pb)
-    
+
     if (status < 0) {
         msg <- prog$message %||% "There was an error on the server. Please contact support@crunch.io"
         halt(msg)
@@ -35,6 +34,14 @@ pollProgress <- function (progress_url, wait=.5) {
     }
     return(status)
 }
+
+## Make these pass through so they can be mocked (silenced) in tests
+
+#' @importFrom utils txtProgressBar
+setup_progress_bar <- function (...) txtProgressBar(...)
+
+#' @importFrom utils setTxtProgressBar
+update_progress_bar <- function (...) setTxtProgressBar(...)
 
 crunchTimeout <- function () {
     opt <- getOption("crunch.timeout")

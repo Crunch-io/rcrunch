@@ -357,9 +357,12 @@ webApp <- function (dataset) {
     if (.Platform$OS.type == "unix") {
         cmd <- ifelse(grepl("apple", R.version$platform), "open", "xdg-open")
         url <- APIToWebURL(dataset)
-        system2(cmd, url)
+        system_call(cmd, url)
     }
 }
+
+## Pass through for test mocking
+system_call <- function (...) system2(...)
 
 #' as.environment method for CrunchDataset
 #'

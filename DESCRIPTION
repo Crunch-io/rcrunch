@@ -29,12 +29,13 @@ Suggests:
     devtools,
     httptest (>= 2.0.0),
     knitr,
+    rmarkdown,
     rstudioapi,
     spelling
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
-Collate:
+Collate: 
     'AllClasses.R'
     'AllGenerics.R'
     'variable-definition.R'

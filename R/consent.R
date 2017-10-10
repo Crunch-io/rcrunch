@@ -37,7 +37,7 @@ askForPermission <- function (prompt="") {
     prompt <- paste(prompt, "(y/n) ")
     proceed <- ""
     while (!(proceed %in% c("y", "n"))) {
-        proceed <- tolower(readline(prompt))
+        proceed <- tolower(read_input(prompt))
     }
     return(proceed == "y")
 }
