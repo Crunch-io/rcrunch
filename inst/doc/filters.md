@@ -1,7 +1,11 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Working with filters}
--->
+---
+title: "Filtering Data"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Filtering Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
 [Previous: analyzing data](analyze.md)
 
@@ -152,7 +156,7 @@ filters(ds)[["Young males"]]
 
 ```
 ## Crunch filter “Young males”
-## Expression: gender == "Male" & age < 30L
+## Expression: gender == "Male" & age < 30
 ```
 
 This new filter now appears in our filter catalog.
@@ -164,7 +168,7 @@ filters(ds)
 
 ```
 ##          name                               id is_public
-## 1 Young males 4a334e5db369469fa78d6fe13c750c6b     FALSE
+## 1 Young males 1b94c602c6cf49759566082fde3662aa     FALSE
 ```
 
 You could also have made the filter with the `newFilter` function:
@@ -184,7 +188,7 @@ filters(ds)
 
 ```
 ##          name                               id is_public
-## 1 Young males 4a334e5db369469fa78d6fe13c750c6b      TRUE
+## 1 Young males 1b94c602c6cf49759566082fde3662aa      TRUE
 ```
 
 You can also edit the filter expressions by assigning a new one in, like:
@@ -197,7 +201,7 @@ filters(ds)[["Young males"]]
 
 ```
 ## Crunch filter “Young males”
-## Expression: gender == "Male" & age < 35L
+## Expression: gender == "Male" & age < 35
 ```
 
 ## Exclusion filters
@@ -220,7 +224,7 @@ exclusion(ds)
 ```
 
 ```
-## Crunch logical expression: perc_skipped > 15L
+## Crunch logical expression: perc_skipped > 15
 ```
 
 

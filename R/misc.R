@@ -143,3 +143,65 @@ alt.endsWith <- function (x, suffix) {
 if (!("endsWith" %in% basefuns)) {
     endsWith <- alt.endsWith
 }
+
+vectorOrList <- function (obj, type) {
+    if (is.vector(obj) && inherits(obj, type)) {
+        return(TRUE)
+    }
+    if (is.list(obj)) {
+        if (all(vapply(obj, inherits, logical(1), what = type))) {
+            return(TRUE)
+        }
+    }
+    return(FALSE)
+}
+
+#' Grab either env variable or option
+#' 
+#' .Rprofile options are like "crunch.api", while env vars are "R_CRUNCH_API".
+#' This function will use the environment variable if it is found, otherwise
+#' it looks for the R-based option value.
+#' 
+#' @param opt the option to get
+#' 
+#' @return the value of the option
+#' 
+#' @keywords internal
+#' @export
+envOrOption <- function (opt) {
+    envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed=TRUE)))
+    envvar <- Sys.getenv(envvar.name)
+    if (nchar(envvar)) {
+        ## Let environment variable override .Rprofile, if defined
+        return(envvar)
+    } else {
+        return(getOption(opt))
+    }
+}
+
+#' Change which server to point to
+#' 
+#' A convenience function for changing where you want the Crunch package to try
+#' to connect to.
+#' 
+#' @param subdomain the subdomain to use
+#' @param port on optional port to use
+#' 
+#' @return nothing
+#' 
+#' @examples 
+#' setCrunchAPI("local", 8080)
+#' setCrunchAPI("app")
+#' 
+#' @keywords internal
+#' @export
+setCrunchAPI <- function (subdomain, port=NULL) {
+    if (!is.null(port)) {
+        api <- paste0("http://", subdomain, ".crunch.io:", port, "/api/")
+    } else {
+        api <- paste0("https://", subdomain, ".crunch.io/api/")
+    }
+    options(crunch.api=api)
+    return(invisible())
+}
+

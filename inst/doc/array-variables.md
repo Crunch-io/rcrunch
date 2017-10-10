@@ -1,7 +1,11 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Array Variables}
--->
+---
+title: "Array Variables"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Array Variables}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
 [Previous: variables](variables.md)
 

@@ -1,7 +1,11 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Getting started with crunch}
--->
+---
+title: "Getting Started"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
 # Getting started with `crunch`
 
@@ -42,4 +46,4 @@ The Crunch data store is built around datasets, which contain variables. Unlike 
 * [Computing on Crunch data](analyze.md): crosstabulation and more
 * [Filtering](filters.md): subsetting data, both in your R session and in the web interface
 * [Downloading and exporting](export.md): how to pull data from the server, both for use in R and file export
-* [Conditional variables](conditional-variables.md): how to create variables that depend on other variables
+* [Crunch internals](crunch-internals.md): an introduction to the Crunch API and concepts to help you make more complex and more efficient queries

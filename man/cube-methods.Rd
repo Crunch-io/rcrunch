@@ -15,6 +15,8 @@
 \alias{names,CrunchCube-method}
 \alias{aliases,CrunchCube-method}
 \alias{descriptions,CrunchCube-method}
+\alias{types,CrunchCube-method}
+\alias{notes,CrunchCube-method}
 \title{Methods on Cube objects}
 \usage{
 \S4method{dimnames}{CubeDims}(x)
@@ -38,6 +40,10 @@
 \S4method{aliases}{CrunchCube}(x)
 
 \S4method{descriptions}{CrunchCube}(x)
+
+\S4method{types}{CrunchCube}(x)
+
+\S4method{notes}{CrunchCube}(x)
 }
 \arguments{
 \item{x}{a CrunchCube or its CubeDims component.}
