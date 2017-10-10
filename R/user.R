@@ -111,8 +111,7 @@ setMethod("[[", c("UserCatalog", "character"), function (x, i, ...) {
 expropriateUser <- function (from, to) {
     if (!askForPermission(paste0("This will transfer ownership of all teams, ",
                                  "projects, and datasets from ", dQuote(from), 
-                                 " to ", dQuote(to), " Do you really want to ", 
-                                 "expropriate user ", dQuote(from), "?"))) {
+                                 " to ", dQuote(to), ". Proceed?"))) {
         halt("Must confirm expropriation of datasets")
     }
     u <- getAccountUserCatalog()
