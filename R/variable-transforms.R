@@ -34,6 +34,7 @@ calcTransform <- function(ary, trans, var_cats) {
 #'
 #' @return summary of the variable, with transforms applied
 #'
+#' @aliases showTransforms
 #' @export
 setMethod("showTransforms", "CategoricalVariable", function (x) {
     tab <- calcTransform(table(x), transforms(x), categories(x))

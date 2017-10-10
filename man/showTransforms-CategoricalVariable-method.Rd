@@ -3,6 +3,7 @@
 \docType{methods}
 \name{showTransforms,CategoricalVariable-method}
 \alias{showTransforms,CategoricalVariable-method}
+\alias{showTransforms}
 \title{Show the variable transformations on a Categorical variable}
 \usage{
 \S4method{showTransforms}{CategoricalVariable}(x)
