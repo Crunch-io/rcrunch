@@ -1,24 +1,13 @@
-#' Show the variable transformations on a CrunchCube
+#' Given an array and transforms, calculate the transformations.
 #'
-#' @param x a CrunchCube
+#' @param ary an array with all dimensions
+#' @param trans a Transforms object to pull transformations from
+#' @param var_cats the Categories object of the transform
 #'
-#' @return a CrunchCube, with any transformations applied.
-#' @aliases showTransforms
+#' @return the array given in `ary`, with any transformations specified in
+#' `trans` calculated
 #'
 #' @export
-setMethod("showTransforms", "CrunchCube", function (x) {
-    ary <- x@arrays$count
-    trans <- tryCatch(Transforms(data=index(variables(x))[[1]]$view$transform), error = function(e) NULL)
-    var_cats <- Categories(data=index(variables(x))[[1]]$categories)
-    # TODO: calculate category/element changes
-    x@arrays$count <- calcTransform(ary, trans, var_cats)
-
-    return(x)
-})
-
-# @param ary an array with all dimensions
-# @param trans a Transforms object to pull transformations from
-# @param var_cats the Categories object of the transform
 calcTransform <- function(ary, trans, var_cats) {
     if (length(dim(ary)) > 1) {
         halt("Calculating varaible transforms is not implemented for dimensions ",
