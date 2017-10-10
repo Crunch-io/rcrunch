@@ -1,7 +1,7 @@
 with_fake_input <- function (input, expr) {
     with_mock(
         `crunch:::is.interactive`=function () return(TRUE),
-        `base::readline`=function (...) input,
+        `crunch:::read_input`=function (...) input,
         eval.parent(expr)
     )
 }

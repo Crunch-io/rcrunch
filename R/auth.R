@@ -29,15 +29,18 @@ deleteSessionInfo <- function () {
 #' Authenticate with the Crunch API
 #'
 #' Note that you can store your Crunch account info in your .Rprofile under
-#' "crunch.email" and "crunch.pw" for convenience. If you do so, you can simply
-#' \code{login()} to authenticate. For running batch jobs, this could be
+#' `crunch.email` and `crunch.pw` for convenience. If you do so, you can simply
+#' `login()` to authenticate. For running batch jobs, this could be
 #' particularly useful. However, be warned that storing your
 #' password in a plain text file such as .Rprofile is a security risk (though
 #' perhaps less so than in every .R script you write), and we
 #' cannot officially recommend that you do so.
 #'
+#' Additionally, your email and password can be stored in and read from the
+#' environmental variables `R_CRUNCH_EMAIL` and `R_CRUNCH_PW` respectively.
+#'
 #' If a password is not supplied (or, if no arguments are supplied and only
-#' the \code{crunch.email} is specified in .Rprofile), and you are in an
+#' the `crunch.email` is specified in .Rprofile), and you are in an
 #' interactive session, you will be prompted to enter your password. At
 #' present, this is the most secure practice as your password is not stored
 #' locally.
@@ -47,8 +50,8 @@ deleteSessionInfo <- function () {
 #' @param ... additional parameters passed in the authentication. Not
 #' currently supported by the Crunch API.
 #' @export
-login <- function (email=getOption("crunch.email"),
-                   password=getOption("crunch.pw"), ...) {
+login <- function (email=envOrOption("crunch.email"),
+                   password=envOrOption("crunch.pw"), ...) {
     logout()
     auth <- crunchAuth(email=email, password=password, ...)
 
@@ -86,7 +89,7 @@ crunchAuth <- function (email, password=NULL, ...) {
                 password <- rstudioapi::askForPassword(prompt)
             } else {
                 cat(prompt)
-                without_echo(password <- readline())
+                without_echo(password <- read_input())
             }
         } else {
             halt("Must supply a password")
@@ -113,6 +116,10 @@ without_echo <- function (expr) {
     }
     eval.parent(expr)
 }
+
+
+## Pass through for test mocking
+read_input <- function (...) readline(...)
 
 #' Add an auth token as a cookie manually
 #'

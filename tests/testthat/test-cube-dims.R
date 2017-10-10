@@ -26,6 +26,8 @@ with_mock_crunch({
         expect_identical(descriptions(variables(d)),
             c("What is your favorite pet?",
             "Do you have any of these animals as pets? Please select all that apply."))
+        expect_identical(types(variables(d)),
+            c("categorical", "multiple_response"))
     })
     test_that("Getting those additional variable attributes from the cube", {
         expect_identical(names(cube), c("Pet", "All pets owned"))
@@ -33,6 +35,10 @@ with_mock_crunch({
         expect_identical(descriptions(cube),
             c("What is your favorite pet?",
             "Do you have any of these animals as pets? Please select all that apply."))
+        expect_identical(types(cube),
+            c("categorical", "multiple_response"))
+        expect_identical(notes(cube),
+            c(NA_character_, NA_character_))
     })
     test_that("Getting those attributes from MultitableResult (the column variables)", {
         expect_identical(names(book[[1]]), c("Total", "All pets owned", "Pet"))

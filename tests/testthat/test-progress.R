@@ -61,6 +61,15 @@ with_mock_crunch({
             expect_identical(logs$url,
                 c("app.crunch.io/api/progress/1.json", "app.crunch.io/api/progress/2.json"))
         }),
+        test_that("Progress silencing in tests", {
+            counter <<- 1
+            expect_silent(
+                with_silent_progress(
+                    expect_identical(handleAPIresponse(fakeProg("https://app.crunch.io/api/progress/")),
+                        "https://app.crunch.io/api/datasets/")
+                )
+            )
+        }),
         test_that("Auto-polling when progress reports failure", {
             counter <<- 1
             logfile <- tempfile()
