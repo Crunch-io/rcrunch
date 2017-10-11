@@ -40,7 +40,7 @@ Collate:
     'AllGenerics.R'
     'variable-definition.R'
     'R-to-variable.R'
-    'abastract-category.R'
+    'abstract-category.R'
     'add-subvariable.R'
     'add-variable.R'
     'api.R'
