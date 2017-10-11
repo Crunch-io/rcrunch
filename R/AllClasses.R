@@ -322,7 +322,7 @@ Category <- function (..., data=NULL) {
 #' @param ... additional arguments to `[`, ignored
 #' @param value For `[<-`, the replacement Insertion to insert
 #' @rdname Insertions
-#' @aliases anchor anchor<- combinations combinations<-
+#' @aliases anchor anchor<- subtotals subtotals<-
 #' @export
 setClass("Insertions", contains="AbsCats")
 #' @rdname Insertions

@@ -59,7 +59,6 @@ setValidity("Transforms", function (object) {
 setMethod("showTransforms", "CategoricalVariable", function (x) {
     tab <- calcTransform(table(x), transforms(x), categories(x))
     # tab <- tab[order(tab, decreasing=TRUE)]
-    class(tab) <- c("CategoricalVariableSummary", class(tab))
     attr(tab, "varname") <- getNameAndType(x)
 
     return(tab)
@@ -83,16 +82,20 @@ calcTransform <- function (ary, trans, var_cats) {
 
     inserts <- trans$insertions
     adds <- vapply(inserts, function (insert) {
-        # check if there are other functions
-        funcs <- names(insert[["function"]])
-        not_combines <- funcs != "combine"
-        if (any(not_combines)) {
-            warning("Transform functions other than combine are not supported.",
-                    " Applying only combines and ignoring ",
-                    serialPaste(funcs[not_combines]))
+        # if there is no function, return NA
+        if (is.null(insert[["function"]])) {
+            return(NA)
         }
 
-        combos <- unlist(combinations(insert))
+        # check if there are other functions
+        not_subtotal <- insert[["function"]] != "subtotal"
+        if (any(not_subtotal)) {
+            warning("Transform functions other than subtotal are not supported.",
+                    " Applying only subtotals and ignoring ", insert[["function"]])
+            return(NA)
+        }
+
+        combos <- unlist(subtotals(insert))
         which.cats <- names(var_cats[ids(var_cats) %in% combos])
         return(sum(ary[which.cats]))
     }, double(1), USE.NAMES = TRUE)

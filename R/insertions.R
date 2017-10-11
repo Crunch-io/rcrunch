@@ -10,6 +10,9 @@ setValidity("Insertion", function (object) {
     } else {
         val <- TRUE
     }
+
+    # TODO: validate if has a function, must also have an args
+
     return(val)
 })
 
@@ -43,16 +46,16 @@ setAnchor <- function (x, value) {
     return(x)
 }
 
-validateNewCombine <- function (comb) {
+validateNewSubtotal <- function (comb) {
     if (!is.numeric(comb)) {
-        halt("a combination must be a numeric")
+        halt("a subtotal must be a numeric")
     }
-
     return(comb)
 }
 
-setCombine <- function (x, value) {
-    x[["function"]][["combine"]] <- validateNewCombine(value)
+setSubtotal <- function (x, value) {
+    x[["args"]] <- validateNewSubtotal(value)
+    x[["function"]] <- "subtotal"
     return(x)
 }
 
@@ -68,13 +71,14 @@ setMethod("anchor<-", "Insertion", setAnchor)
 
 #' @rdname Insertions
 #' @export
-setMethod("combinations", "Insertion", function (x) {
-    n <- x[["function"]][["combine"]]
-    if (is.null(n)) {
+setMethod("subtotals", "Insertion", function (x) {
+    func <- x[["function"]]
+    if (is.null(func) || func != "subtotal") {
         return(NA)
     }
-    return(n)
+
+    return(x[["args"]])
 })
 #' @rdname Insertions
 #' @export
-setMethod("combinations<-", "Insertion", setCombine)
+setMethod("subtotals<-", "Insertion", setSubtotal)

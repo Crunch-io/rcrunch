@@ -5,15 +5,15 @@
 \alias{Insertions-class}
 \alias{anchor}
 \alias{anchor<-}
-\alias{combinations}
-\alias{combinations<-}
+\alias{subtotals}
+\alias{subtotals<-}
 \alias{Insertions}
 \alias{Insertion-class}
 \alias{Insertion}
 \alias{anchor,Insertion-method}
 \alias{anchor<-,Insertion-method}
-\alias{combinations,Insertion-method}
-\alias{combinations<-,Insertion-method}
+\alias{subtotals,Insertion-method}
+\alias{subtotals<-,Insertion-method}
 \title{Insert categories in transformations}
 \usage{
 Insertions(..., data = NULL)
@@ -24,9 +24,9 @@ Insertion(..., data = NULL)
 
 \S4method{anchor}{Insertion}(x) <- value
 
-\S4method{combinations}{Insertion}(x)
+\S4method{subtotals}{Insertion}(x)
 
-\S4method{combinations}{Insertion}(x) <- value
+\S4method{subtotals}{Insertion}(x) <- value
 }
 \arguments{
 \item{...}{additional arguments to \code{[}, ignored}

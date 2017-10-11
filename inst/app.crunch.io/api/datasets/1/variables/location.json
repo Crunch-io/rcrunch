@@ -48,9 +48,14 @@
             "column_width": null,
 			"transform": {
 				"insertions": [
-                	{"anchor": "3", "name": "London+Scotland", "function": {"combine": ["1", "2"]}}
+                	{
+                    "anchor": "3",
+                    "name": "London+Scotland",
+                    "function": "subtotal",
+                    "args": ["1", "2"]
+                   }
             	]
-        	}				
+        	}
         },
         "type": "categorical",
         "id": "loc"

@@ -1,9 +1,9 @@
 context("Variable transformations")
 
 insrts_list <- list(list(anchor = 6, name = "Low",
-                         `function` = list(combine = c(1, 2))),
+                         `function` = "subtotal", args = c(1, 2)),
                     list(anchor = 7, name = "High",
-                         `function` = list(combine = c(9, 10))))
+                         `function` = "subtotal", args = c(9, 10)))
 insrts <- Insertions(data=insrts_list)
 
 test_that("Can make a transforms object from Insertions or lists", {
@@ -35,17 +35,17 @@ cats_list <- mapply(function (i, n, m) list(id = i, name = n, missing = m),
 cats <- Categories(data = cats_list)
 
 insrts_list <- list(list(anchor = 0, name = "First one",
-                         `function` = list(combine = c(3, 4))),
+                         `function` = "subtotal", args = c(3, 4)),
                     list(anchor = 999, name = "Last one",
-                         `function` = list(combine = c(5, 6))),
+                         `function` = "subtotal", args = c(5, 6)),
                     list(anchor = 10, name = "High",
-                         `function` = list(combine = c(9, 10))),
+                         `function` = "subtotal", args = c(9, 10)),
                     list(anchor = 2, name = "Low",
-                         `function` = list(combine = c(1, 2))),
+                         `function` = "subtotal", args = c(1, 2)),
                     list(anchor = 8, name = "missing anchor",
-                         `function` = list(combine = c(2, 3))),
+                         `function` = "subtotal", args = c(2, 3)),
                     list(anchor = 4, name = "missing categories",
-                         `function` = list(combine = c(7, 8))))
+                         `function` = "subtotal", args = c(7, 8)))
 insrts <- Insertions(data=insrts_list)
 
 test_that("findInsertPosition", {
@@ -116,7 +116,7 @@ with_mock_crunch({
         expect_equivalent(transforms(ds$location),
                      Transforms(insertions = list(
                          list(anchor = "3", name = "London+Scotland",
-                              `function` = list(combine = c("1", "2")))),
+                              `function` = "subtotal", args = c("1", "2"))),
                                 categories = NULL,
                                 elements = NULL)
                      )
@@ -124,33 +124,32 @@ with_mock_crunch({
         loc_ary <- array(c(7, 10, 17),
                          dimnames = list("location" = c("London", "Scotland",
                                                         "London+Scotland")))
-        class(loc_ary) <- "CategoricalVariableSummary"
         expect_equivalent(showTransforms(ds$location), loc_ary)
 
         expect_null(transforms(ds$gender))
         expect_PATCH(transforms(ds$gender) <- Transforms(insertions = list(
             list(anchor = "3", name = "Male+Female",
-                 `function` = list(combine = c("1", "2"))))),
+                 `function` = "subtotal", args = c("1", "2")))),
             'https://app.crunch.io/api/datasets/1/variables/gender/',
             '{"element":"shoji:entity","body":{"view":{"transform":{',
             '"insertions":[{"anchor":"3","name":"Male+Female","function"',
-            ':{"combine":["1","2"]}}]}}}}')
+            ':"subtotal","args":["1","2"]}]}}}}')
     })
 
     test_that("Non-combine transform warns", {
         loc_var <- ds$location
         trns <- transforms(loc_var)
-        trns[['insertions']][[1]][['function']][['foobar']] <- 'baz'
+        trns[['insertions']][[1]][['function']] <- 'foobar'
 
-        loc_ary <- array(c(7, 10, 17),
+        loc_ary <- array(c(7, 10, NA),
                          dimnames = list("location" = c("London", "Scotland",
                                                         "London+Scotland")))
         expect_warning(
             expect_equivalent(calcTransform(table(loc_var), trns,
                                             categories(loc_var)), loc_ary),
-                              paste0("Transform functions other than combine ",
+                              paste0("Transform functions other than subtotal ",
                                      "are not supported. Applying only ",
-                                     "combines and ignoring foobar"))
+                                     "subtotals and ignoring foobar"))
     })
 
     test_that("Transform respects anchors", {
@@ -162,6 +161,20 @@ with_mock_crunch({
                          dimnames = list("location" = c("London",
                                                         "London+Scotland",
                                                         "Scotland")))
+        expect_equivalent(calcTransform(table(loc_var), trns,
+                                        categories(loc_var)),
+                          loc_ary)
+    })
+
+    test_that("Transform works without a function anchors", {
+        loc_var <- ds$location
+        trns <- transforms(loc_var)
+        trns[['insertions']][[1]][['function']] <- NULL
+
+        loc_ary <- array(c(7, 10, NA),
+                         dimnames = list("location" = c("London",
+                                                        "Scotland",
+                                                        "London+Scotland")))
         expect_equivalent(calcTransform(table(loc_var), trns,
                                         categories(loc_var)),
                           loc_ary)
@@ -186,7 +199,7 @@ with_test_authentication({
     test_that("Can get and set transforms", {
         trans <- Transforms(insertions = list(
             list(anchor = "3", name = "B+C",
-                 `function` = list(combine = c("1", "2")))))
+                 `function` = "subtotal", args = c("1", "2"))))
         expect_null(transforms(ds$v4))
         transforms(ds$v4) <- trans
         trans_resp <- trans
@@ -195,7 +208,6 @@ with_test_authentication({
         expect_json_equivalent(transforms(ds$v4), trans_resp)
 
         v4_ary <- array(c(10, 10, 20), dimnames = list("v4" = c("B", "C", "B+C")))
-        class(v4_ary) <- "CategoricalVariableSummary"
         expect_equivalent(showTransforms(ds$v4), v4_ary)
     })
 })
