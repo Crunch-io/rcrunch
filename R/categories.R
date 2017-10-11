@@ -52,34 +52,6 @@ c.Category <- concatenateCategories
 
 #' @rdname Categories
 #' @export
-setMethod("[", c("Categories", "ANY"), function (x, i, ...) {
-    x@.Data <- x@.Data[i]
-    return(x)
-})
-
-#' @rdname Categories
-#' @export
-setMethod("[", c("Categories", "character"), function (x, i, ...) {
-    indices <- match(i, names(x))
-    if (any(is.na(indices))) {
-        halt("subscript out of bounds: ", serialPaste(i[is.na(indices)]))
-    }
-    callNextMethod(x, i=indices)
-})
-
-#' @rdname Categories
-#' @export
-setMethod("[", c("Categories", "numeric"), function (x, i, ...) {
-    invalid.indices <- setdiff(abs(i), seq_along(x@.Data))
-    if (length(invalid.indices)) {
-        halt("subscript out of bounds: ", serialPaste(invalid.indices))
-    }
-    x@.Data <- x@.Data[i]
-    return(x)
-})
-
-#' @rdname Categories
-#' @export
 setMethod("[<-", c("Categories", "ANY"), function (x, i, ..., value) {
     x@.Data[i] <- Categories(data=value)
     return(x)
@@ -87,15 +59,7 @@ setMethod("[<-", c("Categories", "ANY"), function (x, i, ..., value) {
 
 #' @rdname Categories
 #' @export
-setMethod("names", "Categories", function (x) vapply(x, name, character(1)))
-
-#' @rdname Categories
-#' @export
 setMethod("values", "Categories", function (x) vapply(x, value, numeric(1)))
-
-#' @rdname Categories
-#' @export
-setMethod("ids", "Categories", function (x) vapply(x, id, integer(1)))
 
 setNames <- function (x, value) {
     if (is.null(value) || !is.character(value)) {
@@ -154,31 +118,6 @@ NULL
 setMethod("na.omit", "Categories", function (object, ...) {
     Categories(data=.na.omit.categories(object))
 })
-
-#' is.na for Categories
-#'
-#' Crunch categorical variables allow you to set multiple categories as missing.
-#' For instance, you might have "not answered" and "doesn't know" both coded as
-#' missing. This function returns a logical vector of all dataset entries that
-#' fall into any of the missing categories. It also allows you to append
-#' additional categories to the list of missing categories using the setter.
-#'
-#' @param x Categories or a single Category
-#' @param value To change the missingness of categories, supply either:
-#' 1. a logical vector of equal length of the categories (or length 1 for the
-#' Category method); or
-#' 1. the names of the categories to mark as missing.
-#' If supplying the latter, any categories already indicated as missing will
-#' remain missing.
-#' @return Getters return logical, a named vector in the case of the Categories
-#' method; setters return `x` duly modified.
-#' @name is-na-categories
-NULL
-
-#' @rdname is-na-categories
-#' @aliases is-na-categories
-#' @export
-setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical(1), USE.NAMES=FALSE), .Names=names(x)))
 
 n2i <- function (x, cats, strict=TRUE) {
     ## Convert x from category names to the corresponding category ids

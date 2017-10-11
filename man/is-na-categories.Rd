@@ -5,7 +5,7 @@
 \alias{is.na,AbsCat-method}
 \alias{is.na<-,AbsCat,logical-method}
 \alias{is-na-categories}
-\alias{is.na,Categories-method}
+\alias{is.na,AbsCats-method}
 \alias{is-na-categories}
 \alias{is.na<-,Categories,character-method}
 \alias{is.na<-,Categories,logical-method}
@@ -15,7 +15,7 @@
 
 \S4method{is.na}{AbsCat,logical}(x) <- value
 
-\S4method{is.na}{Categories}(x)
+\S4method{is.na}{AbsCats}(x)
 
 \S4method{is.na}{Categories,character}(x) <- value
 

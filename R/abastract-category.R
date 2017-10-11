@@ -44,15 +44,18 @@ setMethod("name<-", "NULL", function (x, value) {
 #' @rdname describe-category
 #' @export
 setMethod("value", "AbsCat", function (x) {
-    v <- x[["numeric_value"]]
-    return(ifelse(is.null(v), NA_real_, as.numeric(v)))
+    v <- as.numeric(x[["numeric_value"]])
+    return(ifelse(is.null(v), NA_real_, v))
 })
 #' @rdname describe-category
 #' @export
 setMethod("value<-", "AbsCat", setValue)
 #' @rdname describe-category
 #' @export
-setMethod("id", "AbsCat", function (x) as.integer(x[["id"]]))
+setMethod("id", "AbsCat", function (x) {
+    i <- as.integer(x[["id"]])
+    return(ifelse(is.null(i), NA_integer_, i))
+})
 
 #' @rdname describe-category
 #' @export
@@ -84,4 +87,81 @@ setMethod("initialize", "AbsCats", function (.Object, ...) {
     })
     validObject(.Object)
     return(.Object)
+})
+
+#' @rdname Categories
+#' @export
+setMethod("names", "AbsCats", function (x) {
+    n <- vapply(x, name, character(1))
+    return(n)
+})
+
+#' @rdname Categories
+#' @export
+setMethod("ids", "AbsCats", function (x) vapply(x, id, integer(1)))
+
+
+#' is.na for Categories
+#'
+#' Crunch categorical variables allow you to set multiple categories as missing.
+#' For instance, you might have "not answered" and "doesn't know" both coded as
+#' missing. This function returns a logical vector of all dataset entries that
+#' fall into any of the missing categories. It also allows you to append
+#' additional categories to the list of missing categories using the setter.
+#'
+#' @param x Categories or a single Category
+#' @param value To change the missingness of categories, supply either:
+#' 1. a logical vector of equal length of the categories (or length 1 for the
+#' Category method); or
+#' 1. the names of the categories to mark as missing.
+#' If supplying the latter, any categories already indicated as missing will
+#' remain missing.
+#' @return Getters return logical, a named vector in the case of the Categories
+#' method; setters return `x` duly modified.
+#' @name is-na-categories
+NULL
+
+#' @rdname is-na-categories
+#' @aliases is-na-categories
+#' @export
+setMethod("is.na", "AbsCats", function (x) structure(vapply(x, is.na, logical(1), USE.NAMES=FALSE), .Names=names(x)))
+
+
+
+#' @rdname Categories
+#' @export
+setMethod("[", c("AbsCats", "ANY"), function (x, i, ...) {
+    x@.Data <- x@.Data[i]
+    return(x)
+})
+
+#' @rdname Categories
+#' @export
+setMethod("[", c("AbsCats", "character"), function (x, i, ...) {
+    indices <- match(i, names(x))
+    if (any(is.na(indices))) {
+        halt("subscript out of bounds: ", serialPaste(i[is.na(indices)]))
+    }
+    callNextMethod(x, i=indices)
+})
+
+#' @rdname Categories
+#' @export
+setMethod("[", c("AbsCats", "numeric"), function (x, i, ...) {
+    invalid.indices <- setdiff(abs(i), seq_along(x@.Data))
+    if (length(invalid.indices)) {
+        halt("subscript out of bounds: ", serialPaste(invalid.indices))
+    }
+    x@.Data <- x@.Data[i]
+    return(x)
+})
+
+#' @rdname Categories
+#' @export
+setMethod("[[", c("AbsCats", "character"), function (x, i, ...) {
+    indices <- match(i, names(x))
+    if (any(is.na(indices))) {
+        halt("subscript out of bounds: ", serialPaste(i[is.na(indices)]))
+    }
+    callNextMethod(x, i=indices)
 })
