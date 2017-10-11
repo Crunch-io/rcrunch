@@ -9,9 +9,9 @@ calcTransform(ary, trans, var_cats)
 \arguments{
 \item{ary}{an array with all dimensions}
 
-\item{trans}{a Transforms object to pull transformations from}
+\item{trans}{a \code{Transforms} object to pull transformations from}
 
-\item{var_cats}{the Categories object of the transform}
+\item{var_cats}{the \code{Categories} object of the transform}
 }
 \value{
 the array given in \code{ary}, with any transformations specified in

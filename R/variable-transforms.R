@@ -67,8 +67,8 @@ setMethod("showTransforms", "CategoricalVariable", function (x) {
 #' Given an array and transforms, calculate the transformations.
 #'
 #' @param ary an array with all dimensions
-#' @param trans a Transforms object to pull transformations from
-#' @param var_cats the Categories object of the transform
+#' @param trans a `Transforms` object to pull transformations from
+#' @param var_cats the `Categories` object of the transform
 #'
 #' @return the array given in `ary`, with any transformations specified in
 #' `trans` calculated

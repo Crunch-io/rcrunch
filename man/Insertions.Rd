@@ -42,5 +42,6 @@ Insertion or Insertions}
 \item{value}{For \code{[<-}, the replacement Insertion to insert}
 }
 \description{
-Insertions allow you to insert new categories into a categorical-like response on a variable's \href{Transforms}{transform}.
+Insertions allow you to insert new categories into a categorical-like
+response on a variable's \href{Transforms}{transform}.
 }

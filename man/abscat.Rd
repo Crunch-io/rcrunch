@@ -33,6 +33,6 @@ AbsCat or AbsCats}
 \item{value}{For \code{[<-}, the replacement AbsCat to insert}
 }
 \description{
-An abstract class that categories, elements, insertions, etc.
+An abstract class that categories, elements, insertions, etc. fall under
 }
 \keyword{internal}

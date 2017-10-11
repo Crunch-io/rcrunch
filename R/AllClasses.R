@@ -209,7 +209,7 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
 
 #' Abstract categories
 #'
-#' An abstract class that categories, elements, insertions, etc.
+#' An abstract class that categories, elements, insertions, etc. fall under
 #'
 #' @param data For the constructor functions `AbsCat` and
 #' `AbsCats`, you can either pass in attributes via `...` or you
@@ -311,7 +311,8 @@ Category <- function (..., data=NULL) {
 
 #' Insert categories in transformations
 #'
-#' Insertions allow you to insert new categories into a categorical-like response on a variable's [transform](Transforms).
+#' Insertions allow you to insert new categories into a categorical-like
+#' response on a variable's [transform](Transforms).
 #'
 #' @param data For the constructor functions `Insertion` and
 #' `Insertions`, you can either pass in attributes via `...` or you
@@ -325,6 +326,7 @@ Category <- function (..., data=NULL) {
 #' @aliases anchor anchor<- subtotals subtotals<-
 #' @export
 setClass("Insertions", contains="AbsCats")
+
 #' @rdname Insertions
 #' @export
 Insertions <- function (..., data=NULL) {

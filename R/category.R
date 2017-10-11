@@ -1,8 +1,7 @@
 is.category <- function (x) inherits(x, "Category")
 
 setValidity("Category", function (object) {
-    # is.cat <- all(c("id", "name") %in% names(object))
-    is.cat <- all(c("id") %in% names(object))
+    is.cat <- all(c("id", "name") %in% names(object))
     if (!all(is.cat)) {
         val <- "Not a category"
     } else {

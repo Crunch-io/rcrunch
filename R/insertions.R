@@ -10,9 +10,7 @@ setValidity("Insertion", function (object) {
     } else {
         val <- TRUE
     }
-
     # TODO: validate if has a function, must also have an args
-
     return(val)
 })
 
