@@ -1,8 +1,7 @@
 context("Dataset catalog")
 
 with_mock_crunch({
-    cr <- session()
-    datcat <- cr$datasets
+    datcat <- datasets()
 
     test_that("DatasetCatalog instantiates from Shoji", {
         expect_is(datcat, "DatasetCatalog")

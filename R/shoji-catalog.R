@@ -242,6 +242,9 @@ as.list.ShojiCatalog <- function (x, ...) lapply(names(index(x)), function (i) x
 
 #' A utility to return a data.frame from a ShojiCatalog.
 #'
+#' This is an internal function called by the various `as.data.frame` methods.
+#' Use `as.data.frame` instead of calling this directly.
+#'
 #' Some of the attributes of a `ShojiCatalog` will not naturally fit in
 #' a conventional data.frame. For example, an array variable contains a list of
 #' subvariables, and these subvariables will not easily fit in a single row of a
@@ -256,14 +259,17 @@ as.list.ShojiCatalog <- function (x, ...) lapply(names(index(x)), function (i) x
 #' `NULL`, the resulting object will not have row names set. By default, row
 #' names will be the URLs of the catalog tuples.
 #' @param list_columns A character vector of the names of the attributes that
-#' should be stored in a list-column.
+#' should be stored in a list-column. Currently ignored.
 #' @param ... additional arguments passed to `data.frame`
 #' @return a `data.frame` view of the catalog
-#' @export
+#' @keywords internal
 catalogToDataFrame <- function (x, keys=TRUE, rownames = NULL,
     list_columns = c("subvariables", "subvariables_catalog"),
     ...) {
 
+    if (identical(keys, "all")) {
+        keys <- TRUE
+    }
     if (length(x) == 0) {
         ## If catalog is empty, bail
         return(data.frame())
@@ -273,7 +279,7 @@ catalogToDataFrame <- function (x, keys=TRUE, rownames = NULL,
         ################
         entry_list <- lapply(index, prepareCatalogEntry)
         names <- unique(unlist(lapply(entry_list, names)))
-        out <- data.frame(matrix(nrow = length(entry_list), ncol = length(names)))
+        out <- data.frame(matrix(nrow = length(entry_list), ncol = length(names)), ...)
         names(out) <- names
         for (i in seq_along(entry_list)) {
             for (j in names(entry_list[[i]])) {
@@ -282,7 +288,7 @@ catalogToDataFrame <- function (x, keys=TRUE, rownames = NULL,
         }
         #################
 
-        out <- as.data.frame(out, rownames = rownames, ...)
+        # out <- as.data.frame(out, ...)
 
         ## TODO: ensure something about the elements of a "list column".
         ## i.e. do better than:
@@ -296,7 +302,7 @@ catalogToDataFrame <- function (x, keys=TRUE, rownames = NULL,
         # .. ..$ : chr "mymrset/subvariables/subvar3/"
         # ..$ : chr NA
         # Note that the "list_columns" argument is no longer used
-        
+
         # When a bad key argument is passed to the the shoji index it returns a
         # data.frame with an NA value. This excludes those columns.
         exclude_cols <- grepl("^NA", names(out)) &
