@@ -267,9 +267,6 @@ catalogToDataFrame <- function (x, keys=TRUE, rownames = NULL,
     list_columns = c("subvariables", "subvariables_catalog"),
     ...) {
 
-    if (identical(keys, "all")) {
-        keys <- TRUE
-    }
     if (length(x) == 0) {
         ## If catalog is empty, bail
         return(data.frame())
@@ -287,8 +284,6 @@ catalogToDataFrame <- function (x, keys=TRUE, rownames = NULL,
             }
         }
         #################
-
-        # out <- as.data.frame(out, ...)
 
         ## TODO: ensure something about the elements of a "list column".
         ## i.e. do better than:
