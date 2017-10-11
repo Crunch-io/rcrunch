@@ -21,10 +21,92 @@ test_that("Transforms validation", {
                        serialPaste(dQuote(c("insertions", "categories", "elements")), "or")))
     expect_error(Transforms(insertions = "foo"),
                  paste0("invalid class ", dQuote("Insertions"),
-                        " object: Invalid insertions: 1 element is not a Crunch insertion object\\."))
+                        " object: Invalid insertions: 1 element is not a Crunch Insertion object\\."))
     expect_error(Transforms(categories = "foo"),
                  paste0("invalid class ", dQuote("Categories"),
                         " object: Invalid categories: 1 element is not a Crunch category object\\."))
+})
+
+cats_list <- mapply(function (i, n, m) list(id = i, name = n, missing = m),
+                    i = c(1:10), n = LETTERS[c(1:10)],
+                    m = c(rep(FALSE, 6), TRUE, TRUE, FALSE, FALSE),
+                    SIMPLIFY = FALSE)
+
+cats <- Categories(data = cats_list)
+
+insrts_list <- list(list(anchor = 0, name = "First one",
+                         `function` = list(combine = c(3, 4))),
+                    list(anchor = 999, name = "Last one",
+                         `function` = list(combine = c(5, 6))),
+                    list(anchor = 10, name = "High",
+                         `function` = list(combine = c(9, 10))),
+                    list(anchor = 2, name = "Low",
+                         `function` = list(combine = c(1, 2))),
+                    list(anchor = 8, name = "missing anchor",
+                         `function` = list(combine = c(2, 3))),
+                    list(anchor = 4, name = "missing categories",
+                         `function` = list(combine = c(7, 8))))
+insrts <- Insertions(data=insrts_list)
+
+test_that("findInsertPosition", {
+    expect_equal(findInsertPosition(insrts[["First one"]], cats), 0)
+    expect_equal(findInsertPosition(insrts[["Last one"]], cats), Inf)
+    expect_equal(findInsertPosition(insrts[["High"]], cats), 10)
+    expect_equal(findInsertPosition(insrts[["Low"]], cats), 2)
+    expect_equal(findInsertPosition(insrts[["missing anchor"]], cats), Inf)
+    expect_equal(findInsertPosition(insrts[["missing categories"]], cats), 4)
+
+})
+
+
+test_that("collateCats places at beginning", {
+    new_cats <- collateCats(Transforms(insertions=insrts["First one"]), cats)
+    expect_equivalent(new_cats[c(2:11)], cats)
+    expect_equivalent(new_cats[1], insrts["First one"])
+})
+
+test_that("collateCats places at end", {
+    new_cats <- collateCats(Transforms(insertions=insrts["Last one"]), cats)
+    expect_equivalent(new_cats[c(1:10)], cats)
+    expect_equivalent(new_cats[11], insrts["Last one"])
+})
+
+test_that("collateCats places at end if the id is improbably high", {
+    new_cats <- collateCats(Transforms(insertions=insrts["High"]), cats)
+    expect_equivalent(new_cats[c(1:10)], cats)
+    expect_equivalent(new_cats[11], insrts["High"])
+})
+
+test_that("collateCats places after index 2", {
+    new_cats <- collateCats(Transforms(insertions=insrts["Low"]), cats)
+    expect_equivalent(new_cats[c(1,2,4:11)], cats)
+    expect_equivalent(new_cats[3], insrts["Low"])
+})
+
+test_that("collateCats places a missing anchor at end", {
+    new_cats <- collateCats(Transforms(insertions=insrts["missing anchor"]), cats)
+    expect_equivalent(new_cats[c(1:10)], cats)
+    expect_equivalent(new_cats[11], insrts["missing anchor"])
+})
+
+test_that("collateCats places at an anchor even if the combo categories are na", {
+    new_cats <- collateCats(Transforms(insertions=insrts["missing categories"]), cats)
+    expect_equivalent(new_cats[c(1:4,6:11)], cats)
+    expect_equivalent(new_cats[5], insrts["missing categories"])
+})
+
+test_that("collateCats works all together", {
+    new_cats <- collateCats(Transforms(insertions=insrts), cats)
+    expect_length(new_cats, 16)
+    expect_equivalent(new_cats[c(2, 3, 5, 6, 8, 9, 10, 11, 12, 13)], cats)
+    expect_equivalent(new_cats[c(1, 15, 14, 4, 16, 7)], insrts)
+    # indices for new_cats to name map
+    # 1  - First one
+    # 15 - Last one
+    # 14 - High
+    # 4  - Low
+    # 16 - missing anchor
+    # 7  - missing categories
 })
 
 with_mock_crunch({
@@ -38,11 +120,11 @@ with_mock_crunch({
                                 categories = NULL,
                                 elements = NULL)
                      )
+
         loc_ary <- array(c(7, 10, 17),
                          dimnames = list("location" = c("London", "Scotland",
                                                         "London+Scotland")))
         class(loc_ary) <- "CategoricalVariableSummary"
-
         expect_equivalent(showTransforms(ds$location), loc_ary)
 
         expect_null(transforms(ds$gender))
@@ -54,6 +136,48 @@ with_mock_crunch({
             '"insertions":[{"anchor":"3","name":"Male+Female","function"',
             ':{"combine":["1","2"]}}]}}}}')
     })
+
+    test_that("Non-combine transform warns", {
+        loc_var <- ds$location
+        trns <- transforms(loc_var)
+        trns[['insertions']][[1]][['function']][['foobar']] <- 'baz'
+
+        loc_ary <- array(c(7, 10, 17),
+                         dimnames = list("location" = c("London", "Scotland",
+                                                        "London+Scotland")))
+        expect_warning(
+            expect_equivalent(calcTransform(table(loc_var), trns,
+                                            categories(loc_var)), loc_ary),
+                              paste0("Transform functions other than combine ",
+                                     "are not supported. Applying only ",
+                                     "combines and ignoring foobar"))
+    })
+
+    test_that("Transform respects anchors", {
+        loc_var <- ds$location
+        trns <- transforms(loc_var)
+        trns[['insertions']][[1]][['anchor']] <- 1
+
+        loc_ary <- array(c(7, 17, 10),
+                         dimnames = list("location" = c("London",
+                                                        "London+Scotland",
+                                                        "Scotland")))
+        expect_equivalent(calcTransform(table(loc_var), trns,
+                                        categories(loc_var)),
+                          loc_ary)
+    })
+
+    test_that("calcTransform rejects nd arrays", {
+        ary2d <- array(c(1, 2, 3, 4, 5, 6), dim = c(2, 3),
+                         dimnames = list("foo1" = c("bar", "baz"),
+                                         "foo2" = c("bar", "baz", "qux")))
+
+        expect_error(calcTransform(ary2d, Transforms(insertions=insrts),
+                                   Categories()),
+                     paste0("Calculating varaible transforms is not ",
+                            "implemented for dimensions greater than 1."))
+    })
+
 })
 
 with_test_authentication({

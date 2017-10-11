@@ -1,50 +1,3 @@
-#' Given an array and transforms, calculate the transformations.
-#'
-#' @param ary an array with all dimensions
-#' @param trans a Transforms object to pull transformations from
-#' @param var_cats the Categories object of the transform
-#'
-#' @return the array given in `ary`, with any transformations specified in
-#' `trans` calculated
-#'
-#' @export
-calcTransform <- function(ary, trans, var_cats) {
-    if (length(dim(ary)) > 1) {
-        halt("Calculating varaible transforms is not implemented for dimensions ",
-             "greater than 1.")
-    }
-
-    combos <- trans$insertions
-    adds <- vapply(combos, function (cmb) {
-        which.cats <- names(var_cats[ids(var_cats) %in% unlist(combinations(cmb))])
-        return(sum(ary[which.cats]))
-    }, double(1), USE.NAMES = TRUE)
-    names(adds) <- names(combos)
-
-    # shuffle names around
-    dn <- dimnames(ary)
-    dn[[1]] <- c(names(ary), names(adds))
-    ary <- array(c(ary, adds), dimnames = dn)
-    return(ary)
-}
-
-#' Show the variable transformations on a Categorical variable
-#'
-#' @param x a Categorical variable
-#'
-#' @return summary of the variable, with transforms applied
-#'
-#' @aliases showTransforms
-#' @export
-setMethod("showTransforms", "CategoricalVariable", function (x) {
-    tab <- calcTransform(table(x), transforms(x), categories(x))
-    # tab <- tab[order(tab, decreasing=TRUE)]
-    class(tab) <- c("CategoricalVariableSummary", class(tab))
-    attr(tab, "varname") <- getNameAndType(x)
-
-    return(tab)
-})
-
 getTransforms <- function (x) {
     var_entity <- entity(x)
     trans <- var_entity@body$view$transform
@@ -95,7 +48,93 @@ setValidity("Transforms", function (object) {
     return(val)
 })
 
-# transforms can be:
-# * categories (changing specific attributes about categories) (should just take a categories?)
-# * insertions (can be any function? `"function": { "combine": []}`)
-# * elements (metadata about subreferences in MR/arrays)
+#' Show the variable transformations on a Categorical variable
+#'
+#' @param x a Categorical variable
+#'
+#' @return summary of the variable, with transforms applied
+#'
+#' @aliases showTransforms
+#' @export
+setMethod("showTransforms", "CategoricalVariable", function (x) {
+    tab <- calcTransform(table(x), transforms(x), categories(x))
+    # tab <- tab[order(tab, decreasing=TRUE)]
+    class(tab) <- c("CategoricalVariableSummary", class(tab))
+    attr(tab, "varname") <- getNameAndType(x)
+
+    return(tab)
+})
+
+#' Given an array and transforms, calculate the transformations.
+#'
+#' @param ary an array with all dimensions
+#' @param trans a Transforms object to pull transformations from
+#' @param var_cats the Categories object of the transform
+#'
+#' @return the array given in `ary`, with any transformations specified in
+#' `trans` calculated
+#'
+#' @export
+calcTransform <- function (ary, trans, var_cats) {
+    if (length(dim(ary)) > 1) {
+        halt("Calculating varaible transforms is not implemented for dimensions ",
+             "greater than 1.")
+    }
+
+    inserts <- trans$insertions
+    adds <- vapply(inserts, function (insert) {
+        # check if there are other functions
+        funcs <- names(insert[["function"]])
+        not_combines <- funcs != "combine"
+        if (any(not_combines)) {
+            warning("Transform functions other than combine are not supported.",
+                    " Applying only combines and ignoring ",
+                    serialPaste(funcs[not_combines]))
+        }
+
+        combos <- unlist(combinations(insert))
+        which.cats <- names(var_cats[ids(var_cats) %in% combos])
+        return(sum(ary[which.cats]))
+    }, double(1), USE.NAMES = TRUE)
+    names(adds) <- names(inserts)
+
+    # shuffle names around
+    dn <- dimnames(ary)
+    dn[[1]] <- c(names(ary), names(adds))
+    ary <- array(c(ary, adds), dimnames = dn)
+
+    # reorder respecting anchors and missingness
+    cats_collated <- collateCats(trans, var_cats)
+    ary <- ary[names(cats_collated[!is.na(cats_collated)])]
+
+    return(ary)
+}
+
+collateCats <- function (trans, var_cats) {
+    # setup abstract categories to collate into
+    cats_out <- AbsCats(data=lapply(var_cats, as, "AbsCat"))
+    inserts <- trans$insertions
+    for (insert in inserts) {
+        pos <- findInsertPosition(insert, cats_out)
+        cats_out <- AbsCats(data = append(cats_out, list(as(insert, "AbsCat")), pos))
+    }
+    return(cats_out)
+}
+
+findInsertPosition <- function (insert, cats) {
+    anchr <- anchor(insert)
+    if (anchr == 0) {
+        return(0)
+    }
+    # if the anchor is the id of a non-missing category place after
+    if (anchr %in% ids(cats)) {
+        which_cat <- which(anchr == ids(cats))
+        if (!is.na(cats[[which_cat]])) {
+            return(which_cat)
+        }
+    }
+
+    # all other situations, put at the end
+    return(Inf)
+}
+

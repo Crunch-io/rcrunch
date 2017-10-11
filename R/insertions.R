@@ -1,9 +1,12 @@
 is.insertion <- function (x) inherits(x, "Insertion")
 
 setValidity("Insertion", function (object) {
-    is.cat <- all(c("anchor", "name") %in% names(object))
-    if (!all(is.cat)) {
-        val <- "Not an insertion"
+    reqs <- c("anchor", "name", "function")
+    mems <- reqs %in% names(object)
+    if (!all(mems)) {
+        val <- paste0("An Insertion must have at least ",
+                      serialPaste(dQuote(reqs)), ". Missing: ",
+                      serialPaste(dQuote(reqs[!mems])))
     } else {
         val <- TRUE
     }
@@ -16,8 +19,8 @@ setValidity("Insertions", function (object) {
         badcount <- sum(!are.inserts)
         return(paste0("Invalid insertions: ", badcount,
                       ifelse(badcount>1,
-                             " elements are not Crunch insertion objects.",
-                             " element is not a Crunch insertion object.")))
+                             " elements are not Crunch Insertion objects.",
+                             " element is not a Crunch Insertion object.")))
     }
     if (any(duplicated(names(object)))) {
         return("Invalid insertion names: must be unique")
@@ -27,21 +30,31 @@ setValidity("Insertions", function (object) {
 
 is.insertions <- function (x) inherits(x, "Insertions")
 
-setAnchor <- function(x, value) {
-    halt("not implemented yet.")
+validateNewAnchor <- function (anchor) {
+    if (!is.numeric(anchor)) {
+        halt("an anchor must be a numeric")
+    }
+
+    return(anchor)
 }
-setCombine <- function(x, value) {
-    halt("not implemented yet.")
+
+setAnchor <- function (x, value) {
+    x[["anchor"]] <- validateNewAnchor(value)
+    return(x)
 }
 
+validateNewCombine <- function (comb) {
+    if (!is.numeric(comb)) {
+        halt("a combination must be a numeric")
+    }
 
+    return(comb)
+}
 
-#' @rdname Insertions
-#' @export
-setMethod("names", "Insertions", function (x) {
-    n <- vapply(x, name, character(1))
-    return(n)
-})
+setCombine <- function (x, value) {
+    x[["function"]][["combine"]] <- validateNewCombine(value)
+    return(x)
+}
 
 #' @rdname Insertions
 #' @export

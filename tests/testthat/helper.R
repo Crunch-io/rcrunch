@@ -19,7 +19,10 @@ if (crunch_test_path == "") {
 # Don't source crunch-test.R when: devtools::load_all() (interactively)
 # https://github.com/hadley/devtools/issues/1202
 if (!interactive() || identical(Sys.getenv("NOT_CRAN"), "true")) {
-    source(crunch_test_path)
+    # hack to prevent second loading of helpers.
+    if (quote(withr::with_envvar) != sys.calls()[[2]][[1]]) {
+        source(crunch_test_path)
+    }
 }
 
 skip_on_jenkins <- function (...) {

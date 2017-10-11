@@ -12,8 +12,30 @@ test_that("Insertion and insertion inheritence, base methods", {
     expect_equal(combinations(insrt), c(1, 2))
 })
 
-test_that("combinations returns NA when not found", {
-    expect_equal(combinations(Insertion(anchor='foo', name='bar')), NA)
+insrt2 <- insrt
+
+test_that("Insertion setters", {
+    anchor(insrt2) <- 1
+    expect_equal(anchor(insrt2), 1)
+    name(insrt2) <- "Low low"
+    expect_equal(name(insrt2), "Low low")
+    combinations(insrt2) <- c(10, 20)
+    expect_equal(combinations(insrt2), c(10, 20))
+})
+
+test_that("Insertion setter validation", {
+    expect_error(anchor(insrt2) <- "one", "an anchor must be a numeric")
+    expect_error(name(insrt2) <- 2, 'Names must be of class "character"')
+    expect_error(combinations(insrt2) <- "3, 4", "a combination must be a numeric")
+})
+
+test_that("Insertion validation", {
+    expect_error(Insertion(anchor='foo', name='bar'),
+                 "invalid class .*Insertion.* object:.* Missing: .*function.*")
+    expect_error(Insertion(anchor='foo', `function`=list('baz')),
+                 "invalid class .*Insertion.* object:.* Missing: .*name*")
+    expect_error(Insertion(name='bar', `function`=list('baz')),
+                 "invalid class .*Insertion.* object:.* Missing: .*anchor*")
 })
 
 test_that("Insertion and insertions show methods", {
@@ -25,4 +47,9 @@ test_that("Insertion and insertions show methods", {
                   get_output(data.frame(anchor=c(6, 7),
                                         name=c("Low", "High"),
                                         combine=c("1, 2", "9, 10"))))
+})
+
+test_that("combinations returns NA when not found", {
+    expect_equal(combinations(Insertion(anchor='foo', name='bar',
+                                        `function`=list('baz'))), NA)
 })
