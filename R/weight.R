@@ -222,8 +222,8 @@ is.weightVariable <- function (x) {
 setMethod("is.weightVariable<-", "NumericVariable", function (x, value) {
     isTRUEorFALSE(value)
     ds <- loadDataset(datasetReference(x))
-    action <- ifelse(value, "append", "remove")
-    return(modifyWeightVariables(ds, x, action))
+    ds <- modifyWeightVariables(ds, x, ifelse(value, "append", "remove"))
+    return(x)
 })
 
 #' Generate a weight variable
