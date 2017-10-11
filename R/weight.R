@@ -67,7 +67,7 @@ setMethod("is.weight<-", "NumericVariable", function (x, value) {
     ds <- loadDataset(datasetReference(x))
     if (value) {
         weight(ds) <- x
-    } else {
+    } else if (is.weight(x)) {
         weight(ds) <- NULL
     }
     return(x)
@@ -108,8 +108,7 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
 #' @rdname modifyWeightVariables
 #' @export
 setMethod("weightVariables<-", "CrunchDataset", function (x, value) {
-    modifyWeightVariables(x, value, type = "append")
-    return(x)
+    return(modifyWeightVariables(x, value, type = "append"))
 })
 
 
@@ -224,8 +223,7 @@ setMethod("is.weightVariable<-", "NumericVariable", function (x, value) {
     isTRUEorFALSE(value)
     ds <- loadDataset(datasetReference(x))
     action <- ifelse(value, "append", "remove")
-    modifyWeightVariables(ds, x, action)
-    return(x)
+    return(modifyWeightVariables(ds, x, action))
 })
 
 #' Generate a weight variable

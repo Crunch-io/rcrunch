@@ -23,6 +23,7 @@ with_mock_crunch({
         expect_PATCH(is.weight(oldds$birthyr) <- TRUE,
             "https://app.crunch.io/api/datasets/1/preferences/",
             '{"weight":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}')
+        expect_silent(is.weight(oldds$birthyr) <- FALSE)
     })
     test_that("is.weight returns false when the variable is not a weight", {
         expect_false(is.weight("character"))
@@ -76,6 +77,7 @@ with_mock_crunch({
             body
         )
     })
+
     test_that("assigning incorrect entries to weightVariables errors correctly", {
         expect_error(
             weightVariables(oldds) <- "notvar",
@@ -263,6 +265,7 @@ with_test_authentication({
             is.weightVariable(ds$weight22) <- TRUE
             expect_true(is.weightVariable(ds$weight22))
             expect_identical(weightVariables(ds), c("weight22", "weight23"))
+            expect_false(is.weightVariable("notvar"))
         })
         test_that("is.weightVariable identifies weight variable and allows it to be set", {
             weight(ds) <- ds$weight22
