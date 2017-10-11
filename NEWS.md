@@ -5,7 +5,7 @@
 * Now Crunch authentication email and password can be stored in and read from the environmental variables `R_CRUNCH_EMAIL` and `R_CRUNCH_PW` respectively.
 * Fix `bases()` when called on a univariate statistic (#124)
 * Update some tests and code to anticipate changes in an upcoming release of `testthat`
-* Dataset weight variables can now be set with `modifyWeightVariables` or `is.weightVariables(ds$var) <- TRUE`
+* The list of dataset "weight variables" can now be set with `modifyWeightVariables`, `weightVariables(ds) <- ds$newWeight` or `is.weightVariables(ds$var) <- TRUE`
 
 ### crunch 1.18.2
 * `makeWeight` allows you to generate new weighting variables based on categorical variables (#80).

@@ -63,7 +63,7 @@ is.weight <- function (x) {
 #' @rdname weight
 #' @export
 setMethod("is.weight<-", "NumericVariable", function (x, value) {
-    isTRUEorFALSE(value)
+    stopifnot(is.TRUEorFALSE(value))
     ds <- loadDataset(datasetReference(x))
     if (value) {
         weight(ds) <- x
@@ -220,7 +220,7 @@ is.weightVariable <- function (x) {
 #' @rdname modifyWeightVariables
 #' @export
 setMethod("is.weightVariable<-", "NumericVariable", function (x, value) {
-    isTRUEorFALSE(value)
+    stopifnot(is.TRUEorFALSE(value))
     ds <- loadDataset(datasetReference(x))
     ds <- modifyWeightVariables(ds, x, ifelse(value, "append", "remove"))
     return(x)
@@ -350,10 +350,8 @@ generateWeightEntry <- function (expr) {
 #'
 #' @param value Value to check
 #' @keywords internal
-#' @return nothing, called for its side effects
+#' @return `TRUE` if `value` is either `TRUE` or `FALSE`, `FALSE` otherwise
 #'
-isTRUEorFALSE <-  function (value) {
-    if (!(is.logical(value) && !is.na(value) && length(value) == 1)) {
-        halt("Value must be TRUE or FALSE")
-    }
+is.TRUEorFALSE <-  function (value) {
+    return(is.logical(value) && !is.na(value) && length(value) == 1)
 }

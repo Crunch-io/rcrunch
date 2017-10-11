@@ -32,9 +32,9 @@ with_mock_crunch({
     })
     test_that("is weight assignment errors correctly", {
         expect_error(is.weight(oldds$birthyr) <- "char",
-            "Value must be TRUE or FALSE")
+            "is.TRUEorFALSE(value) is not TRUE", fixed=TRUE)
         expect_error(is.weight(oldds$birthyr) <- c(TRUE, FALSE),
-            "Value must be TRUE or FALSE")
+            "is.TRUEorFALSE(value) is not TRUE", fixed=TRUE)
     })
 
     test_that("No request is made to set a weight that already is your weight", {
@@ -97,15 +97,12 @@ with_mock_crunch({
         )
     })
 
-    test_that("isTRUEorFALSE errors correctly", {
-        expect_error(isTRUEorFALSE(TRUE), NA)
-        expect_error(isTRUEorFALSE(FALSE), NA)
-        expect_error(isTRUEorFALSE("char"),
-            "Value must be TRUE or FALSE"
-            )
-        expect_error(isTRUEorFALSE(NA),
-            "Value must be TRUE or FALSE"
-            )
+    test_that("is.TRUEorFALSE errors correctly", {
+        expect_true(is.TRUEorFALSE(TRUE))
+        expect_true(is.TRUEorFALSE(FALSE))
+        expect_false(is.TRUEorFALSE("char"))
+        expect_false(is.TRUEorFALSE(NA))
+        expect_false(is.TRUEorFALSE(c(TRUE, TRUE)))
     })
 
     test_that("generateWeightEntry errors correctly", {
