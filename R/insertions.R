@@ -1,7 +1,7 @@
 is.insertion <- function (x) inherits(x, "Insertion")
 
 setValidity("Insertion", function (object) {
-    reqs <- c("anchor", "name", "function")
+    reqs <- c("anchor", "name")
     mems <- reqs %in% names(object)
     if (!all(mems)) {
         val <- paste0("An Insertion must have at least ",

@@ -30,8 +30,6 @@ test_that("Insertion setter validation", {
 })
 
 test_that("Insertion validation", {
-    expect_error(Insertion(anchor='foo', name='bar'),
-                 "invalid class .*Insertion.* object:.* Missing: .*function.*")
     expect_error(Insertion(anchor='foo', `function`=list('baz')),
                  "invalid class .*Insertion.* object:.* Missing: .*name*")
     expect_error(Insertion(name='bar', `function`=list('baz')),
