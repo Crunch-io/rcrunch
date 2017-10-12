@@ -18,7 +18,10 @@ if (crunch_test_path == "") {
 # crunchdev::test_crunch()
 # Don't source crunch-test.R when: devtools::load_all() (interactively)
 # https://github.com/hadley/devtools/issues/1202
-if (!interactive() || identical(Sys.getenv("NOT_CRAN"), "true")) {
+source_if <- !interactive() || identical(Sys.getenv("NOT_CRAN"), "true")
+# And don't source it when running pkgdown
+source_if <- source_if && !identical(Sys.getenv("DEVTOOLS_LOAD"), "true")
+if (source_if) {
     source(crunch_test_path)
 }
 
