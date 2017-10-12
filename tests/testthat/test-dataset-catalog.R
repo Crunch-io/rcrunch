@@ -18,6 +18,15 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/")
     })
 
+    test_that("as.data.frame on DatasetCatalog", {
+        expect_identical(as.data.frame(datcat[1:2], keys=c("name", "description")),
+            data.frame(
+                name=c("ECON.sav", "an archived dataset"),
+                description=c("", "This dataset does not exist"),
+                stringsAsFactors=FALSE
+            ))
+    })
+
     test_that("active/archived getters", {
         ## NOTE: deferring the "shared" collection
         expect_is(active(datcat), "DatasetCatalog")
