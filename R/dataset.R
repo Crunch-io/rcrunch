@@ -468,6 +468,7 @@ setMethod("is.published", "CrunchDataset", function (x) tuple(x)$is_published %|
 #' @rdname archive-and-publish
 #' @export
 setMethod("is.archived<-", c("CrunchDataset", "logical"), function (x, value) {
+    stopifnot(is.TRUEorFALSE(value))
     setTupleSlot(x, "archived", value)
 })
 #' @rdname archive-and-publish
@@ -479,11 +480,13 @@ archive <- function (x) {
 #' @rdname archive-and-publish
 #' @export
 setMethod("is.draft<-", c("CrunchDataset", "logical"), function (x, value) {
+    stopifnot(is.TRUEorFALSE(value))
     setTupleSlot(x, "is_published", !value)
 })
 #' @rdname archive-and-publish
 #' @export
 setMethod("is.published<-", c("CrunchDataset", "logical"), function (x, value) {
+    stopifnot(is.TRUEorFALSE(value))
     setTupleSlot(x, "is_published", value)
 })
 #' @rdname archive-and-publish

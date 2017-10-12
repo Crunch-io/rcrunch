@@ -1,3 +1,4 @@
+BatchCatalog
 CategoricalVariable
 CategoricalVariables
 Categoricals
@@ -126,6 +127,7 @@ json
 knitr
 makeWeight
 modeling
+modifyWeightVariables
 multitable
 na
 newDataset
@@ -156,6 +158,7 @@ unshare
 varlabels
 ve
 votereg
+weightVariables
 writePreparedData
 xlsx
 xtabs

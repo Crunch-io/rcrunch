@@ -142,6 +142,19 @@ with_mock_crunch({
             "category assignment not defined for NumericVariable")
         expect_error(categories(ds$gender) <- categories(ds$gender)[c(1, 2, 5)],
             "subscript out of bounds: 5")
+        expect_error(categories(ds$catarray) <- 1:3,
+            paste("`categories(x) <- value` only accepts Categories,",
+                "not numeric. Did you mean",
+                "`values(categories(x)) <- value`?"),
+            fixed=TRUE)
+        expect_error(categories(ds$catarray) <- c("A", "B", "C"),
+            paste("`categories(x) <- value` only accepts Categories,",
+                "not character. Did you mean",
+                "`names(categories(x)) <- value`?"),
+            fixed=TRUE)
+        expect_error(categories(ds$catarray) <- list(),
+            "`categories(x) <- value` only accepts Categories, not list.",
+            fixed=TRUE)
     })
 
     test_that("categories ids cannot be set", {
@@ -350,7 +363,7 @@ with_test_authentication({
                 c(1, 2, -1))
             orig_vector <- as.vector(ds$v4f)
             expect_equal(as.vector(ds$v4f[1:4], mode="id"), c(1, 2, 1, 2))
-            
+
             expect_silent(ds$v4f <- changeCategoryID(ds$v4f, 2, 6))
             expect_identical(names(categories(ds$v4f)),
                 c("B", "C", "No Data"))
@@ -360,7 +373,7 @@ with_test_authentication({
             expect_equal(as.vector(ds$v4f[1:4], mode="id"), c(1, 6, 1, 6))
             expect_equal(as.vector(ds$v4f[1:4], mode="numeric"), c(1, 6, 1, 6))
         })
-        
+
         test_that("Can changeCategoryID without changing values when value!=id", {
             ds$v4g <- df$v4
             values(categories(ds$v4g)) <- c(NA, 20, NA)
@@ -372,8 +385,8 @@ with_test_authentication({
                          c(NA, 20, NA))
             orig_vector <- as.vector(ds$v4g)
             expect_equal(as.vector(ds$v4g[1:4], mode="id"), c(1, 2, 1, 2))
-            
-            
+
+
             expect_silent(ds$v4g <- changeCategoryID(ds$v4g, 2, 6))
             expect_identical(names(categories(ds$v4g)),
                              c("B", "C", "No Data"))
@@ -384,7 +397,7 @@ with_test_authentication({
             expect_equal(as.vector(ds$v4g), orig_vector)
             expect_equal(as.vector(ds$v4g[1:4], mode="id"), c(1, 6, 1, 6))
             expect_equal(as.vector(ds$v4g[1:4], mode="numeric"), c(NA, 20, NA, 20))
-            
+
             # also try with an NA, make sure the NA is retained
             expect_silent(ds$v4g <- changeCategoryID(ds$v4g, 1, 10))
             expect_identical(names(categories(ds$v4g)),

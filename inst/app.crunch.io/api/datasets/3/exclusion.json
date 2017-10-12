@@ -1,0 +1,6 @@
+{
+  "element": "shoji:entity",
+  "self": "https://app.crunch.io/api/datasets/3/exclusion/",
+  "description": "Detail information dataset's exclusion filter",
+  "body": {}
+}

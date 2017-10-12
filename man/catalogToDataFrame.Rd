@@ -19,7 +19,7 @@ argument. The difference here is that if \code{rownames} is explicitly set as
 names will be the URLs of the catalog tuples.}
 
 \item{list_columns}{A character vector of the names of the attributes that
-should be stored in a list-column.}
+should be stored in a list-column. Currently ignored.}
 
 \item{...}{additional arguments passed to \code{data.frame}}
 }
@@ -27,9 +27,14 @@ should be stored in a list-column.}
 a \code{data.frame} view of the catalog
 }
 \description{
+This is an internal function called by the various \code{as.data.frame} methods.
+Use \code{as.data.frame} instead of calling this directly.
+}
+\details{
 Some of the attributes of a \code{ShojiCatalog} will not naturally fit in
 a conventional data.frame. For example, an array variable contains a list of
 subvariables, and these subvariables will not easily fit in a single row of a
 data.frame. In this case, the list of subvariables are stored in a
 list-column in the resulting data.frame.
 }
+\keyword{internal}

@@ -1,8 +1,13 @@
-### crunch 1.18.3 (under development)
-* `expropriateUser()` for transferring teams, projects, and datasets owned by one user to another
-* `ShojiCatalog` subsetting methods (`[` and `[[`) now accept a `secondary` argument for setting an index to match against
-* `UserCatalogs` now index and are subsettable by email by default
-* Now Crunch authentication email and password can be stored in and read from the environmental variables `R_CRUNCH_EMAIL` and `R_CRUNCH_PW` respectively.
+### crunch 1.18.5 (under development)
+
+### crunch 1.18.4
+* All catalog objects now have an `as.data.frame` method.
+* The list of dataset "weight variables" can now be set with `modifyWeightVariables`, `weightVariables(ds) <- ds$newWeight` or `is.weightVariables(ds$var) <- TRUE`
+* Users with account admin privileges can now `expropriateUser()` to transfer datasets, projects, and other objects owned by one user to another, as when that user has left your organization.
+* Access members of user `UserCatalogs` by email (e.g. `catalog[["you@example.com"]]`) by default. All catalog extract methods (`[` and `[[`) now also accept a `secondary` argument for setting an index to match against to change that default.
+* Crunch authentication email and password can be stored in and read from the environmental variables `R_CRUNCH_EMAIL` and `R_CRUNCH_PW` respectively.
+* Cube queries with `as_selected` multiple-response variables have margin and prop.table methods
+* Cube `variables()` now contain additional metadata, including "type"
 * Fix `bases()` when called on a univariate statistic (#124)
 * Update some tests and code to anticipate changes in an upcoming release of `testthat`
 

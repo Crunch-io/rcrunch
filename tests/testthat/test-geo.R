@@ -47,6 +47,11 @@ with_mock_crunch({
                      '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
                      ',"feature_key":"properties.location","match_field":"name"}]}}'
         )
+        expect_PATCH(ds[[2]] <- geo_data,
+                     'https://app.crunch.io/api/datasets/1/variables/gender/',
+                     '{"view":{"geodata":[{"geodatum":"https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/"',
+                     ',"feature_key":"properties.location","match_field":"name"}]}}'
+        )
     })
 
     avail_features <- availableGeodataFeatures()
