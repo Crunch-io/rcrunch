@@ -28,6 +28,7 @@
     },
     "fragments": {
         "table": "https://app.crunch.io/api/datasets/1/table/",
+        "exclusion": "https://app.crunch.io/api/datasets/1/exclusion/",
         "preferences": "https://app.crunch.io/api/datasets/1/preferences/",
         "settings": "https://app.crunch.io/api/datasets/1/settings/",
         "pk": "https://app.crunch.io/api/datasets/1/pk/",

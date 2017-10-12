@@ -160,10 +160,8 @@ setMethod("appliedFilters", "CrunchDataset", function (x) {
 
 setMethod("appliedFilters<-", c("CrunchDataset", "CrunchFilter"),
     function (x, value) {
-        b <- toJSON(list(
-            graph=I(list(self(value)))
-        ))
-        crPUT(shojiURL(x, "views", "applied_filters"), body=b)
+        b <- list(graph=I(list(self(value))))
+        crPUT(shojiURL(x, "views", "applied_filters"), body=toJSON(b))
         return(x)
     })
 
@@ -249,7 +247,7 @@ exclusion <- function (x) {
         ## Server is returning variable IDs. Make them into URLs
         ## TODO: remove this
         e <- idsToURLs(e, variableCatalogURL(x))
-        return(CrunchLogicalExpr(expression=e))
+        return(CrunchLogicalExpr(expression=e, dataset_url=self(x)))
     } else {
         return(NULL)
     }
