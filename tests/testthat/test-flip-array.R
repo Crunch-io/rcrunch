@@ -5,14 +5,9 @@ with_test_authentication({
 
     ## Deep copy array, rename it, etc.
     ## Hey, let's add another subvar to it too!
-    pl2 <- copy(ds$petloc, deep=TRUE, name="Other pet loc")
-    pl2$subvariables[[3]] <- pl2$subvariables[[1]]
-    pl2$subvariables[[1]]$alias <- "pl2_a"
-    pl2$subvariables[[2]]$alias <- "pl2_b"
-    pl2$subvariables[[3]]$alias <- "pl2_c"
-    pl2$subvariables[[3]]$name <- "Pet store"
-    pl2$values <- cbind(pl2$values, pl2$values[,1])
-    ds$petloc2 <- pl2
+    ds$petloc2 <- copy(ds$petloc, deep=TRUE, name="Other pet loc")
+    aliases(subvariables(ds$petloc2)) <- c("p12_a", "p12_b")
+    ds$petloc2 <- addSubvariable(ds$petloc2, ds$q1)
 
     newvars <- flipArrays(ds[c("petloc", "petloc2")])
     test_that("We get VarDefs", {
@@ -22,11 +17,12 @@ with_test_authentication({
     })
     ds <- addVariables(ds, newvars)
     test_that("The flipped variables are created", {
-        expect_true(all(c("Home, flipped", "Work, flipped", "Pet store, flipped") %in% names(variables(ds))))
-        expect_true(all(c("Home, flipped", "Work, flipped", "Pet store, flipped") %in% names(ds)))
+        print(names(ds))
+        expect_true(all(c("Home, flipped", "Work, flipped", "Pet, flipped") %in% names(variables(ds))))
+        expect_true(all(c("Home, flipped", "Work, flipped", "Pet, flipped") %in% names(ds)))
         expect_identical(names(subvariables(ds[["Home, flipped"]])),
             c("Pets by location", "Other pet loc"))
-        expect_identical(names(subvariables(ds[["Pet store, flipped"]])),
+        expect_identical(names(subvariables(ds[["Pet, flipped"]])),
             "Other pet loc")
     })
 })
