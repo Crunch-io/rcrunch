@@ -44,10 +44,11 @@ options(
     crunch.timeout=20, ## In case an import fails to start, don't wait forever
     # httpcache.log="",
     crunch.require.confirmation=TRUE,
+    crunch.check.updates=FALSE,
     crunch.namekey.dataset="alias",
     crunch.namekey.array="alias"
 )
-set_crunch_config()
+crunch:::.onLoad()
 
 ## Test serialize and deserialize
 cereal <- function (x) fromJSON(toJSON(x), simplifyVector=FALSE)
