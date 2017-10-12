@@ -54,6 +54,11 @@ with_mock_crunch({
         expect_error(is.derived(ds$birthyr) <- TRUE,
             "can't change a non-derived variable into a derived one with is.derived().")
     })
+
+    test_that("What happens when you try to derive a logical", {
+        expect_error(ds$kids <- ds$birthyr > 2000,
+            "Cannot currently derive a logical variable")
+    })
 })
 
 with_test_authentication({
@@ -81,17 +86,6 @@ with_test_authentication({
         expect_null(derivation(ds$v3))
     })
 
-    test_that("derivation()<- input validation", {
-        expect_error(derivation(ds$v3) <- ds$v3 + 1,
-                     paste0("The variable ", dQuote("v3"),
-                            " must already be a derived variable."))
-        ds$v3c <- ds$v3 + 5
-        expect_true(is.derived(ds$v3c))
-        expect_error(derivation(ds$v3c) <- "not an expression",
-                     paste0("The value ", dQuote("not an expression"),
-                            " must be a CrunchExpr, got a character instead."))
-    })
-
     test_that("derivation()<- can change a derived variable", {
         ds$v3d <- ds$v3 + 10
         expect_true(is.derived(ds$v3d))
@@ -110,11 +104,6 @@ with_test_authentication({
     test_that("A derived numeric is updated when its source variable is modified", {
         expect_identical(as.vector(ds$v3a), as.vector(ds$v3) + 5)
         expect_equivalent(as.vector(ds$v3a), df$v3 + 12)
-    })
-
-    test_that("What happens when you try to derive a logical", {
-        expect_error(ds$v3b <- ds$v3 < 15,
-            "Cannot currently derive a logical variable")
     })
 
     test_that("derivation()<-NULL and is.derived()<-FALSE removes derivations and instantiates",{
