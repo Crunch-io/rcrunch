@@ -1,5 +1,7 @@
+### crunch 1.18.5 (under development)
+
 ### crunch 1.18.4
-* All catalog objects now have an `as.data.frame` method. 
+* All catalog objects now have an `as.data.frame` method.
 * The list of dataset "weight variables" can now be set with `modifyWeightVariables`, `weightVariables(ds) <- ds$newWeight` or `is.weightVariables(ds$var) <- TRUE`
 * Users with account admin privileges can now `expropriateUser()` to transfer datasets, projects, and other objects owned by one user to another, as when that user has left your organization.
 * Access members of user `UserCatalogs` by email (e.g. `catalog[["you@example.com"]]`) by default. All catalog extract methods (`[` and `[[`) now also accept a `secondary` argument for setting an index to match against to change that default.
