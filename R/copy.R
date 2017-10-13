@@ -33,27 +33,13 @@ copyVariable <- function (x, deep=FALSE, ...) {
 
     body <- modifyList(oldbody, newbody)
     body$id <- NULL
+    body$type <- NULL
+    body$derivation <- zfunc("copy_variable", x)
     if (deep) {
-        body$values <- as.vector(x, mode="id")
-        if (body$type %in% c("categorical", "categorical_array", "multiple_response")) {
-            body$categories <- jsonprep(categories(x))
-            if (body$type %in% c("categorical_array", "multiple_response")) {
-                body$subvariables_catalog <- NULL
-                body$subvariables <- lapply(names(subvariables(x)),
-                    function (n) list(name=n))
-                ## Turn values into a matrix, rather than data.frame
-                body$values <- matrix(do.call("c", body$values),
-                    nrow=nrow(body$values))
-            }
-        } else if (body$type == "datetime") {
-            body$resolution <- entity(x)@body$resolution
-        }
-    } else {
-        body$derivation <- zfunc("copy_variable", x)
-        body$type <- NULL
+        body$derived <- FALSE
     }
-
     class(body) <- "VariableDefinition"
+
     return(body)
 }
 
