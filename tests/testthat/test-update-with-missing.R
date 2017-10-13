@@ -102,13 +102,13 @@ with_test_authentication({
     test_that("If No Data isn't a category, it is added automatically to array", {
         ## Set up for next tests. Deep copy array, purge its missings,
         ## remove No Data category.
-        generate_catagorical <- function(){
+        generate_categorical <- function () {
             v <- VariableDefinition(factor(sample(c("cat", "dog"), 20, replace = TRUE)))
             v$categories <- v$categories[1:2]
             return(v)
         }
-        ds$sub1 <- generate_catagorical()
-        ds$sub2 <- generate_catagorical()
+        ds$sub1 <- generate_categorical()
+        ds$sub2 <- generate_categorical()
         ds$array <- makeArray(ds[, c("sub1", "sub2")], name = "array")
         expect_equal(ids(categories(ds$array)), c(1, 2))
         ds$array[[1]][5] <- NA
