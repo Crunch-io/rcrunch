@@ -10,6 +10,7 @@
 * Cube `variables()` now contain additional metadata, including "type"
 * Fix `bases()` when called on a univariate statistic (#124)
 * Update some tests and code to anticipate changes in an upcoming release of `testthat`
+* Deep copying with `copy` has been made more efficient
 
 ### crunch 1.18.2
 * `makeWeight` allows you to generate new weighting variables based on categorical variables (#80).
