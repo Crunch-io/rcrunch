@@ -1,4 +1,5 @@
 ### crunch 1.18.5 (under development)
+* Deep copying with `copy` has been made more efficient
 
 ### crunch 1.18.4
 * All catalog objects now have an `as.data.frame` method.

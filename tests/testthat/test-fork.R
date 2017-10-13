@@ -111,8 +111,8 @@ with_test_authentication({
     f1$v4[f1$v8 == 4] <- "F"
 
     # 7. Delete a variable and replace it with one of the same name
-    v1copy <- copy(f1$v1, name=name(f1$v1), alias=alias(f1$v1), deep=TRUE)
-    v1copy$values <- rev(v1copy$values) ## Same data, just reversed
+    new_vect <- rev(as.vector(f1$v1))
+    v1copy <- VariableDefinition(new_vect, name=name(f1$v1), alias=alias(f1$v1))
     test_that("Just asserting that the new var has the same name/alias as old", {
         expect_identical(name(f1$v1), v1copy$name)
         expect_identical(alias(f1$v1), v1copy$alias)
