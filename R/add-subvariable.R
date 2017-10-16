@@ -12,6 +12,32 @@
 #' }
 #' @export
 addSubvariable <- function (variable, subvariable) {
+    ## Input can be a variable, subvariable, dataset subset or
+    ## a mixed or uniform list of variables and subvariables
+    if (inherits(subvariable, "VariableDefinition") ||
+            is.variable(subvariable)) {
+        ## wrap single variables in list
+        subvariable <- list(subvariable)
+    }
+    vardefs <- vapply(subvariable,
+        function(x) inherits(x, "VariableDefinition"),
+        logical(1))
+    if (any(vardefs)) {
+
+        ds <- loadDataset(datasetReference(variable))
+        lapply(subvariable[vardefs], function(x) addVariables(ds, x))
+        ds <- refresh(ds)
+
+        subvariable <- lapply(subvariable[vardefs], function(x){
+            if (is.variable(x)) {
+                x
+            } else {
+                ds[[x$name]]
+            }
+        })
+    }
+
+    # message(all(vapply(subvariable, is.variable, logical(1))))
     ## Get subvariable URL or URLs, depending on how many supplied
     new.urls <- urls(subvariable)
 
@@ -28,7 +54,7 @@ addSubvariable <- function (variable, subvariable) {
 
     ## Refresh and return
     dropCache(datasetReference(variable))
-    invisible(refresh(variable))
+    return(invisible(refresh(variable)))
 }
 
 #' @rdname addSubvariable
