@@ -1,8 +1,7 @@
 context("Dataset catalog")
 
 with_mock_crunch({
-    cr <- session()
-    datcat <- cr$datasets
+    datcat <- datasets()
 
     test_that("DatasetCatalog instantiates from Shoji", {
         expect_is(datcat, "DatasetCatalog")
@@ -17,6 +16,15 @@ with_mock_crunch({
               "https://app.crunch.io/api/datasets/1/")) ## C sorting on names
         expect_identical(self(datcat),
             "https://app.crunch.io/api/datasets/")
+    })
+
+    test_that("as.data.frame on DatasetCatalog", {
+        expect_identical(as.data.frame(datcat[1:2], keys=c("name", "description")),
+            data.frame(
+                name=c("ECON.sav", "an archived dataset"),
+                description=c("", "This dataset does not exist"),
+                stringsAsFactors=FALSE
+            ))
     })
 
     test_that("active/archived getters", {

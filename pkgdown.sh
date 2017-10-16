@@ -11,6 +11,6 @@ if [ "${TRAVIS_PULL_REQUEST}" = "false" ] &&
     cp -r docs/. ../ta-da/static/r/crunch
     cd ../ta-da
     git add .
-    git commit -m "Updating rcrunch pkgdown site (rcrunch build ${TRAVIS_BUILD_NUMBER})" || true
+    git commit -m "Updating rcrunch pkgdown site (release ${TRAVIS_TAG})" || true
     git push origin src || true
 fi

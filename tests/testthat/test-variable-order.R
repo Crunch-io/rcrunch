@@ -328,6 +328,14 @@ with_mock_crunch({
                   sep="\n"),
             fixed=TRUE)
     })
+    test_that("Printing a single group doesn't fail (though it probably should do better than show URLs)", {
+        expect_output(nested.ord[[2]],
+            paste("[+] Group 2",
+                  "    https://app.crunch.io/api/datasets/1/variables/starttime/",
+                  "    https://app.crunch.io/api/datasets/1/variables/catarray/",
+                  sep="\n"),
+            fixed=TRUE)
+    })
 
     ord <- flattenOrder(test.ord)
     test_that("Composing a VariableOrder step by step: setup (flattenOrder)", {

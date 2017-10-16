@@ -1,0 +1,15 @@
+{
+  "element": "shoji:entity",
+  "self": "https://app.crunch.io/api/datasets/1/exclusion/",
+  "description": "Detail information dataset's exclusion filter",
+  "body": {
+    "expression": {
+      "function": "<",
+      "args": [{
+        "variable": "https://app.crunch.io/api/datasets/1/variables/birthyr/"
+      }, {
+        "value": 0
+      }]
+    }
+  }
+}

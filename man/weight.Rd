@@ -3,19 +3,19 @@
 \docType{methods}
 \name{weight}
 \alias{weight}
-\alias{weightVariables}
+\alias{is.weight<-}
 \alias{weight<-}
-\alias{weightVariables,CrunchDataset-method}
-\alias{weightVariables,VariableCatalog-method}
+\alias{is.weight}
+\alias{is.weight<-,NumericVariable-method}
 \title{Dataset weights}
 \usage{
 weight(x)
 
 weight(x) <- value
 
-\S4method{weightVariables}{CrunchDataset}(x)
+is.weight(x)
 
-\S4method{weightVariables}{VariableCatalog}(x)
+\S4method{is.weight}{NumericVariable}(x) <- value
 }
 \arguments{
 \item{x}{a Dataset}
@@ -35,4 +35,7 @@ of the variables designated as weights.
 \code{weight} lets you view and set your user's currently applied weight on the
 server. \code{weightVariables} lets you view all of the variables that have been
 designated as valid to use as weights.
+}
+\seealso{
+\code{\link[=weightVariables]{weightVariables()}} \code{\link[=makeWeight]{makeWeight()}}
 }

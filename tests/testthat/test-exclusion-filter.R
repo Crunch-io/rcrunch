@@ -2,6 +2,23 @@ context("Exclusion filters")
 
 with_mock_crunch({
     ds <- loadDataset("test ds")
+    ds2 <- loadDataset("ECON.sav")
+
+    test_that("Get exclusions", {
+        expect_equal(exclusion(ds), ds$birthyr < 0)
+        expect_null(exclusion(ds2))
+    })
+    test_that("Set exclusion", {
+        expect_PATCH(exclusion(ds) <- NULL,
+            "https://app.crunch.io/api/datasets/1/exclusion/",
+            '{"expression":{}}')
+        expect_PATCH(exclusion(ds) <- ds$birthyr == 1981,
+            "https://app.crunch.io/api/datasets/1/exclusion/",
+            '{"expression":{"function":"==","args":',
+            '[{"variable":"https://app.crunch.io/api/datasets/1/variables/birthyr/"},',
+            '{"value":1981}]}}')
+    })
+
     test_that("Validation for setting exclusion", {
         expect_error(exclusion(ds) <- "Not a filter",
             paste(dQuote("value"),

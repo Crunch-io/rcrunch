@@ -18,7 +18,10 @@ if (crunch_test_path == "") {
 # crunchdev::test_crunch()
 # Don't source crunch-test.R when: devtools::load_all() (interactively)
 # https://github.com/hadley/devtools/issues/1202
-if (!interactive() || identical(Sys.getenv("NOT_CRAN"), "true")) {
+source_if <- !interactive() || identical(Sys.getenv("NOT_CRAN"), "true")
+# And don't source it when running pkgdown
+source_if <- source_if && !identical(Sys.getenv("DEVTOOLS_LOAD"), "true")
+if (source_if) {
     source(crunch_test_path)
 }
 
@@ -44,10 +47,11 @@ options(
     crunch.timeout=20, ## In case an import fails to start, don't wait forever
     # httpcache.log="",
     crunch.require.confirmation=TRUE,
+    crunch.check.updates=FALSE,
     crunch.namekey.dataset="alias",
     crunch.namekey.array="alias"
 )
-set_crunch_config()
+crunch:::.onLoad()
 
 ## Test serialize and deserialize
 cereal <- function (x) fromJSON(toJSON(x), simplifyVector=FALSE)

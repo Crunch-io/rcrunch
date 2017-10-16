@@ -47,8 +47,7 @@ with_test_authentication({
     name.of.team1 <- now()
     test_that("Can create a team", {
         expect_false(name.of.team1 %in% names(t2))
-        expect_warning(t2[[name.of.team1]] <- list(),
-            "Teams are deprecated. Use projects instead.")
+        t2[[name.of.team1]] <- list()
         expect_true(name.of.team1 %in% names(t2))
         expect_true(length(t2) == nteams.0 + 1L)
         expect_is(t2[[name.of.team1]], "CrunchTeam")
@@ -62,8 +61,7 @@ with_test_authentication({
         nteams.2 <- length(t2)
         name.of.team2 <- now()
         expect_false(name.of.team2 %in% names(t2))
-        expect_warning(t2[[name.of.team2]] <- list(),
-            "Teams are deprecated. Use projects instead.")
+        t2[[name.of.team2]] <- list()
         expect_true(name.of.team2 %in% names(t2))
         expect_true(length(t2) == nteams.2 + 1L)
 
@@ -84,8 +82,7 @@ with_test_authentication({
         name.of.team2 <- now()
         expect_false(name.of.team2 %in% names(t2))
         u <- testUser()
-        expect_warning(t2[[name.of.team2]] <- list(members=email(u)),
-            "Teams are deprecated. Use projects instead.")
+        t2[[name.of.team2]] <- list(members=email(u))
         expect_true(name.of.team2 %in% names(t2))
         expect_true(length(t2) == nteams.2 + 1L)
         this.team <- t2[[name.of.team2]]
@@ -98,8 +95,7 @@ with_test_authentication({
         name.of.team3 <- now()
         expect_false(name.of.team3 %in% names(t2))
         u <- testUser()
-        expect_warning(t2[[name.of.team3]] <- list(),
-            "Teams are deprecated. Use projects instead.")
+        t2[[name.of.team3]] <- list()
         this.team <- t2[[name.of.team3]]
         expect_identical(names(members(this.team)), my.name)
         members(this.team) <- email(u)
@@ -112,8 +108,7 @@ with_test_authentication({
         name.of.team4 <- now()
         expect_false(name.of.team4 %in% names(t2))
         u <- testUser()
-        expect_warning(t2[[name.of.team4]] <- list(),
-            "Teams are deprecated. Use projects instead.")
+        t2[[name.of.team4]] <- list()
         this.team <- t2[[name.of.team4]]
         expect_identical(names(members(this.team)), my.name)
         members(this.team) <- email(u)

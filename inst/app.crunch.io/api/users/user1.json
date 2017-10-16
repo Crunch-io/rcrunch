@@ -16,5 +16,8 @@
     "urls": {
         "account_url": "https://app.crunch.io/api/accounts/account1/"
     },
+    "fragments": {
+        "expropriate": "https://app.crunch.io/api/users/user1/expropriate/"
+    },
     "some_other_key": {}
 }

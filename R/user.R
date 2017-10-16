@@ -72,3 +72,50 @@ resetPassword <- function (email) {
             url_base=absoluteURL("../password/change/${token}/", app)
         ))))
 }
+
+#' @rdname catalog-extract
+#' @export
+setMethod("[", c("UserCatalog", "character"), function (x, i, ...) {
+    dots <- list(x=x, i=i, secondary = emails(x))
+    dots <- modifyList(dots, list(...))
+    do.call("callNextMethod", dots)
+})
+
+#' @rdname catalog-extract
+#' @export
+setMethod("[[", c("UserCatalog", "character"), function (x, i, ...) {
+    dots <- list(x=x, i=i, secondary = emails(x))
+    dots <- modifyList(dots, list(...))
+    do.call("callNextMethod", dots)
+})
+
+#' Expropriate all Crunch objects from a user
+#' 
+#' If you want to transfer all teams, projects, and datasets owned by one user 
+#' to another you can with `expropriateUser`. To use `expropriateUser` you must 
+#' be an account admin and be from the same account as the user who is being 
+#' expropriated. This is useful if a user leaves your organization and you want
+#' to transfer all of the teams, projects, and datasets they own to someone else.
+#' 
+#' Expropriating requires confirmation. In an interactive session, you will be 
+#' asked to confirm. To avoid that prompt, or to expropriate datasets from a 
+#' non-interactive session, wrap the call in [with_consent()] to give your 
+#' permission to expropriate
+#' 
+#' @param from a character of the email address of the user to expropriate from
+#' @param to a character of the email address of the user who should be the new 
+#' owner
+#' 
+#' @return None
+#' @export
+expropriateUser <- function (from, to) {
+    if (!askForPermission(paste0("This will transfer ownership of all teams, ",
+                                 "projects, and datasets from ", dQuote(from), 
+                                 " to ", dQuote(to), ". Proceed?"))) {
+        halt("Must confirm expropriation of datasets")
+    }
+    u <- getAccountUserCatalog()
+    from <- UserEntity(crGET(urls(u)[emails(u) == from]))
+    crPOST(shojiURL(from, "fragments", "expropriate"),
+        body=toJSON(wrapEntity(owner=to)))
+}
