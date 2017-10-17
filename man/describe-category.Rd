@@ -14,6 +14,7 @@
 \alias{value<-,Category-method}
 \alias{id,Category-method}
 \alias{is.selected,Category-method}
+\alias{is.selected<-,Category-method}
 \title{Category attributes}
 \usage{
 \S4method{name}{Category}(x)
@@ -29,6 +30,8 @@
 \S4method{id}{Category}(x)
 
 \S4method{is.selected}{Category}(x)
+
+\S4method{is.selected}{Category}(x) <- value
 }
 \arguments{
 \item{x}{a Category}

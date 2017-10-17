@@ -187,6 +187,24 @@ NULL
 #' @export
 setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical(1), USE.NAMES=FALSE), .Names=names(x)))
 
+
+
+#' @rdname describe-categories
+#' @aliases is-na-categories
+#' @export
+setMethod("is.selected", "Categories", function (x) structure(vapply(x, is.selected, logical(1), USE.NAMES=FALSE), .Names=names(x)))
+
+#' @rdname describe-categories
+#' @aliases is-na-categories
+#' @export
+setMethod("is.selected<-", "Categories", function (x, value){
+    for (i in seq_along(x@.Data)) {
+        is.selected(x[[i]]) <- value[[i]]
+    }
+    return(x)
+})
+
+
 n2i <- function (x, cats, strict=TRUE) {
     ## Convert x from category names to the corresponding category ids
     out <- ids(cats)[match(x, names(cats))]
