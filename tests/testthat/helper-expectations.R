@@ -13,7 +13,7 @@ get_output <- function (x) {
 
 expect_length <- function(object, n) {
   stopifnot(is.numeric(n), length(n) == 1)
-  lab <- testthat:::label(object)
+  lab <- deparse(object)
 
   ## Forked from testthat because their version whitelists types and excludes
   ## S4 objects even if they have a length method defined
