@@ -55,9 +55,23 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
             "Consider subsetting it first")
     }
     var_names <- names(x)
-    # todo: something intelligent with modes
-    out <- lapply(var_names, function(var) x[[var]])
-    names(out) <- var_names
+    # TODO: something intelligent with modes
+    out <- lapply(var_names, function(var) {
+        values <- x[[var]]
+        
+        # Flatten all array variables, using only the subvariable name. We need 
+        # to create a list layer for non-dataframe values so that we can unlist 
+        # them later.
+        if (is.data.frame(values)) {
+            values <- as.list(values)
+        } else {
+            values <- list(values)
+            names(values) <- var
+        }
+        
+        return(values)
+    })
+    out <- unlist(out, recursive = FALSE)
     
     return(structure(out, class="data.frame", row.names=c(NA, -nrow(ds))))
 }
