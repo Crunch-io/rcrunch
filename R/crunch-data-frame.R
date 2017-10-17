@@ -1,21 +1,31 @@
 #' CrunchDataFrame
 #'
-#' CrunchDataFrames are designed to mimic the ways that [`data.frame`]s are used. They should be a drop-in replacement in many plaes where data.frames are used.
+#' CrunchDataFrames are designed to mimic the ways that [`data.frame`]s are used.
+#' They should be a drop-in replacement in many places where data.frames are used.
 #' 
-#'  CrunchDataFrames are generated not by downloading all of the variables from a dataset, but rather only the variables that are needed by subsequent functions. So, if you create a CrunchDataFrame, and then run a linear model using `lm()`, only the variables used by the linear model will be downloaded.
+#'  CrunchDataFrames are generated not by downloading all of the variables from 
+#'  a dataset, but rather only the variables that are needed by subsequent 
+#'  functions. So, if you create a CrunchDataFrame, and then run a linear model 
+#'  using `lm()`, only the variables used by the linear model will be downloaded.
 #'  
-#' CrunchDataFrames can be altered (that is: adding more columns, removing columns, subsetting rows, etc.) with the same `[`, `[[`, and `$` syntax as data.frames.
+#' CrunchDataFrames can be altered (that is: adding more columns, removing 
+#' columns, subsetting rows, etc.) with the same `[`, `[[`, and `$` syntax as 
+#' data.frames.
 #'
 #' @param x a CrunchDataFrame
 #' @param i indicators for rows (integers or logicals)
 #' @param j indicators for columns (names, integers, or logicals)
 #' @param value value to place (or replace) in the CrunchDataFrame
-#' @param drop logical. If `TRUE` the result is coerced to the lowest possible dimension. The default is to drop if only one column is left, but not to drop if only one row is left.
+#' @param drop logical. If `TRUE` the result is coerced to the lowest possible 
+#' dimension. The default is to drop if only one column is left, but not to drop
+#' if only one row is left.
 #'
 #' @name CrunchDataFrame
 NULL
 
-CrunchDataFrame <- function (dataset, row.order = NULL, categorical.mode = "factor", include.hidden = FALSE) {
+CrunchDataFrame <- function (dataset, row.order = NULL,
+                             categorical.mode = "factor",
+                             include.hidden = FALSE) {
     ## S3 constructor method for CrunchDataFrame. terms.formula doesn't seem
     ## to like S4 subclass of environment
     stopifnot(is.dataset(dataset))

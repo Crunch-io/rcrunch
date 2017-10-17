@@ -14,17 +14,21 @@
 #' if you specify `sort="x"` (the default) all rows of x will be present but
 #' rows in y that do not match with rows in x will not be present.
 #'
-#' Merging a CrunchDataFrame with a local dataframe is experiemental and might
+#' Merging a CrunchDataFrame with a local dataframe is experimental and might
 #' result in unexpected results. One known issue is that using `merge` on a
 #' CrunchDataFrame will change the both the CrunchDataFrame used as input as
 #' well as create a new CrunchDataFrame.
 #'
 #' @param x a CrunchDataFrame
 #' @param y a standard data.frame
-#' @param by name of the variable to match in both data sources (default: the intersection of the names of x and y)
+#' @param by name of the variable to match in both data sources (default: the 
+#' intersection of the names of x and y)
 #' @param by.x name of the variable to match in x
 #' @param by.y name of the variable to match in y
-#' @param sort character, either "x" or "y" (default: "x"). Which of the inputs should be used for the output order. Unlike merge.data.frame, merge.CrunchDataFrame will not re-sort the order of the output. It will use the order of either `x` or `y`.
+#' @param sort character, either "x" or "y" (default: "x"). Which of the inputs 
+#' should be used for the output order. Unlike merge.data.frame, 
+#' `merge.CrunchDataFrame` will not re-sort the order of the output. It will use
+#' the order of either `x` or `y`.
 #' @param ... ignored
 #' @name merge
 #'
@@ -40,7 +44,9 @@ merge.CrunchDataFrame  <- function (x, y, by=intersect(names(x), names(y)),
     # TODO: instead of not allowing use of `all`, allow it and do the right thing.
     if (any(startsWith(ls(list(...)), "all"))) {
         warning("options ", serialPaste(dQuote(c("all", "all.x", "all.y"))),
-                " are not currently supported by merge.CrunchDataFrame. The results will include all rows from whichever argument (x or y) is used to sort.")
+                " are not currently supported by merge.CrunchDataFrame. The ", 
+                "results will include all rows from whichever argument (x or y) ",
+                "is used to sort.")
     }
     
     # TODO: find a better way to subset the columns needed
@@ -52,7 +58,8 @@ merge.CrunchDataFrame  <- function (x, y, by=intersect(names(x), names(y)),
     y_index$y_index <- as.numeric(row.names(y_index))
     colnames(y_index) <- c(by.y, "y_index")
     
-    new_cols_map <- merge(x_index, y_index, by.x=by.x, by.y=by.y, all=TRUE, sort=FALSE)
+    new_cols_map <- merge(x_index, y_index, by.x=by.x, by.y=by.y,
+                          all=TRUE, sort=FALSE)
     
     # Re-create the crunchdataset. 
     # TODO: make sure to check for local variables!

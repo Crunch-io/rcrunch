@@ -87,6 +87,8 @@ categoricals
 compareDatasets
 config
 contextManager
+crdf
+crdfs
 createDataset
 createWithPreparedData
 crossbreaks
