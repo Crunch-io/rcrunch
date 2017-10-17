@@ -165,6 +165,19 @@ with_mock_crunch({
         expect_equal(ds_df$new_local_var, c(250, 24:2, 10))
         expect_equal(ds_df$new_local_var2, c(10, 2:24, 250))
         
+        # [<- overwritting recycles
+        expect_silent(
+            ds_df[c(1, 25), c("new_local_var", "new_local_var2")] <- 
+                c(250, 10))
+        expect_equal(ds_df$new_local_var, c(250, 24:2, 10))
+        expect_equal(ds_df$new_local_var2, c(250, 2:24, 10))
+        
+        # [<- recycling is not magic, and will fail if the numbers don't match up
+        expect_error(
+            ds_df[c(1, 25), c("new_local_var", "new_local_var2")] <- c(1, 2, 3),
+            "replacement has 3 items, need 4")
+        
+        
         # can add a new column with row indices
         expect_silent(
             ds_df[c(1, 25), "new_local_var3"] <- 

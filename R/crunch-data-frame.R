@@ -120,9 +120,22 @@ names.CrunchDataFrame <- function (x) attr(x, "col_names")
     j <- grabColNames(x, j)
     row_inds <- grabRowInd(x, i)
     
-    # TODO: check value length
+    # check value length, repeat if necessary
+    cells_to_fill <- length(row_inds) * length(j)
+    if (length(value) != cells_to_fill && cells_to_fill %% length(value) == 0) {
+        # if we can cleanly recycle values to get the number of cells, do so
+        value <- rep_len(value, cells_to_fill)
+    }
+    if (length(value) != cells_to_fill) {
+        # the number of values doesn't align with the number of cells to fill
+        halt("replacement has ", length(value), " items, need ", cells_to_fill)
+    }
     
-    # split value string by the length of row indicators
+    # split value into chunks, one for each column to replace into.
+    # this allows for the same behavior with (odd) insertions like:
+    # foo <- data.frame(foo=c(1, 2, 3, 4), bar=c(5, 6, 7, 8),
+    #                   baz = c(1, 2, 3, 4), qux = c(5, 6, 7, 8))
+    # foo[c(1, 2), c(3, 4)] <- c(10, 20, 30, 40)
     values <- split(value, ceiling(seq_along(value)/length(row_inds)))
     for (i in seq_along(j)) {
         col_name <- j[i]
@@ -148,11 +161,7 @@ grabColNames <- function (x, j, allow_logical = TRUE) {
     if (missing(j)) {
         # if there's no j, grab all columns
         j <- names(x)
-    } else if (is.logical(j)) {
-        # recycle logicals, grab only extant names
-        js <- rep(j, ceiling(ncol(x)/length(j)))
-        j <- names(x)[js[seq_len(ncol(x))]]
-    } else if (is.numeric(j)) {
+    } else if (is.numeric(j) | is.logical(j)) {
         j <- names(x)[j]
     } else if (!is.character(j)) {
         halt("column subsetting must be done with a numeric, character, or ",
@@ -262,7 +271,7 @@ setCrdfVar <- function (col_name, row_inds, crdf, value) {
     
     # if we are replacing some rows, fill in with NAs, or grab old vector
     if (length(row_inds) != nrow(crdf)) {
-        if (!{col_name %in% names(crdf)}) {
+        if (!(col_name %in% names(crdf))) {
             old_vector <- rep(NA, nrow(crdf))
         } else {
             old_vector <- get(col_name, crdf)
