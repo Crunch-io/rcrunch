@@ -98,7 +98,9 @@ with_mock_crunch({
         expect_equal(ncol(new_ds_df), 6)
         expect_silent(
             expect_equal(names(as.data.frame(new_ds_df)),
-                         aliases(variables(new_ds))))
+                         c("birthyr", "location", "subvar2", "subvar1", 
+                           "subvar3", "textVar", "starttime", "subvar2", 
+                           "subvar1", "subvar3")))
         
         # now we want the hidden vars to be includes
         new_ds_df <- as.data.frame(new_ds, include.hidden = TRUE)
@@ -107,7 +109,9 @@ with_mock_crunch({
         expect_equal(ncol(new_ds_df), 7)
         expect_warning(
             expect_equal(names(as.data.frame(new_ds_df)),
-                         aliases(allVariables(new_ds))),
+                         c("birthyr", "gender", "location", "subvar2", 
+                           "subvar1", "subvar3", "textVar", "starttime",
+                           "subvar2", "subvar1", "subvar3")),
             "Variable gender is hidden")
     })
     
@@ -127,6 +131,23 @@ with_mock_crunch({
         expect_identical(.crunchPageSize(ds$catarray), 66666L)
         expect_identical(.crunchPageSize(ds$starttime), 100000L)
         expect_identical(.crunchPageSize(2016 - ds$birthyr), 50000L)
+    })
+    
+    test.df <- as.data.frame(ds)
+    
+    test_that("model.frame thus works on CrunchDataset", {
+        expect_identical(model.frame(birthyr ~ gender, data=test.df),
+                         model.frame(birthyr ~ gender, data=ds))
+    })
+    
+    test_that("so lm() should work too", {
+        test.lm <- lm(birthyr ~ gender, data=ds)
+        expected <- lm(birthyr ~ gender, data=test.df)
+        expect_is(test.lm, "lm")
+        expect_identical(names(test.lm), names(expected))
+        for (i in setdiff(names(expected), "call")) {
+            expect_identical(test.lm[[i]], expected[[i]])
+        }
     })
 })
 
@@ -215,5 +236,22 @@ with_test_authentication({
                 expect_equivalent(v1, df$v1)
             })
         })
+    })
+    
+    test_that("model.frame thus works on CrunchDataset over API", {
+        ## would like this to be "identical" instead of "equivalent"
+        expect_equivalent(model.frame(v1 ~ v3, data=ds),
+                          model.frame(v1 ~ v3, data=df))
+    })
+    
+    test_that("so lm() should work too over the API", {
+        test.lm <- lm(v1 ~ v3, data=ds)
+        expected <- lm(v1 ~ v3, data=df)
+        expect_is(test.lm, "lm")
+        expect_identical(names(test.lm), names(expected))
+        ## would like this to be "identical" instead of "equivalent"
+        for (i in setdiff(names(expected), "call")) {
+            expect_equivalent(test.lm[[i]], expected[[i]])
+        }
     })
 })
