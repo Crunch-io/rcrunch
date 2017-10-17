@@ -35,7 +35,7 @@ Suggests:
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
-Collate:
+Collate: 
     'AllClasses.R'
     'AllGenerics.R'
     'variable-definition.R'
@@ -64,6 +64,7 @@ Collate:
     'cube-dims.R'
     'cube-query.R'
     'cube-result.R'
+    'cube-variables.R'
     'cut.R'
     'dataset-catalog.R'
     'dataset-extract.R'

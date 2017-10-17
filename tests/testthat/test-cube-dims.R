@@ -57,4 +57,9 @@ with_mock_crunch({
             "Name the kinds of pets you have at these locations.",
             NA))
     })
+
+    test_that("'measures' metadata", {
+        expect_identical(names(measures(crtabs(max(birthyr) ~ 1, data=ds))),
+            "Birth Year")
+    })
 })
