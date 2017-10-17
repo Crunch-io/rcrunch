@@ -5,6 +5,7 @@
 \name{cube-methods}
 \alias{cube-methods}
 \alias{dimensions}
+\alias{measures}
 \alias{dimnames,CubeDims-method}
 \alias{dim,CubeDims-method}
 \alias{is.na,CubeDims-method}
@@ -12,6 +13,7 @@
 \alias{dim,CrunchCube-method}
 \alias{dimnames,CrunchCube-method}
 \alias{variables,CubeDims-method}
+\alias{measures,CrunchCube-method}
 \alias{variables,CrunchCube-method}
 \alias{names,CrunchCube-method}
 \alias{aliases,CrunchCube-method}
@@ -33,6 +35,8 @@
 \S4method{dimnames}{CrunchCube}(x)
 
 \S4method{variables}{CubeDims}(x)
+
+\S4method{measures}{CrunchCube}(x)
 
 \S4method{variables}{CrunchCube}(x)
 

@@ -83,7 +83,7 @@ elementIsAnyOrNone <- function (el) {
 #' @return Generally, the same shape of result that each of these functions
 #' return when applied to an `array` object.
 #' @name cube-methods
-#' @aliases cube-methods dimensions
+#' @aliases cube-methods dimensions measures
 #' @seealso [`cube-computing`] [`base::array`]
 NULL
 
@@ -114,6 +114,8 @@ setMethod("dimensions", "CrunchCube", function (x) {
     return(dims[!selecteds])
 })
 
+#' @rdname catalog-extract
+#' @export
 setMethod("[", "CubeDims", function (x, i, ...) {
     return(CubeDims(x@.Data[i], names=x@names[i]))
 })
