@@ -19,6 +19,14 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/batches/3/")
     })
 
+    test_that("as.data.frame method for batch catalog", {
+        expect_identical(as.data.frame(batches(ds)),
+            data.frame(
+                id=c(0L, 2L, 3L),
+                status=c("imported", "imported", "conflict"),
+                stringsAsFactors=FALSE
+            ))
+    })
     test_that("show method for batch catalog", {
         expect_output(batches(ds),
             get_output(data.frame(id=c(0, 2, 3),

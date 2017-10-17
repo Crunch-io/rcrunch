@@ -77,42 +77,70 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
 }
 
 
-#' as.data.frame method for VariableCatalog
+#' as.data.frame method for catalog objects
 #'
-#' This method gives you a view of a `VariableCatalog` as a `data.frame` in
-#' order to facilitate further exploration.
+#' This method gives you a view of a catalog, such as a `VariableCatalog`, as a
+#' `data.frame` in order to facilitate further exploration.
 #'
 #' Modifying the `data.frame` produced by this function will not update the
-#' dataset on the Crunch server. Other methods exist for updating the metadata
-#' in the variable catalog. See `vingette("variables", package = "crunch")`.
+#' objects on the Crunch server. Other methods exist for updating the metadata
+#' in the variable catalog, for example. See `vingette("variables", package = "crunch")`.
 #'
-#' @param x A `VariableCatalog`, as produced by `variables(ds)`.
-#' @param row.names part of `as.data.frame` signature. Ignored.
+#' @param x A catalog object
+#' @param row.names A character vector of elements to use as row labels for the
+#' resulting data.frame, or `NULL`, the default, adds no row labels.
 #' @param optional part of `as.data.frame` signature. Ignored.
-#' @param keys A character vector of the variable catalog attributes which you
-#' would like included in the data.frame. To include all attributes or see
-#' which ones are available, set keys to "all". By default, the function will
-#' return three fields: `c("alias", "name", "type")`.
+#' @param keys A character vector of the catalog attributes that you
+#' would like included in the data.frame. To include all attributes, set keys to
+#' `TRUE`, which is the default for some catalogs. Other catalog classes specify
+#' a narrower default:
+#' * VariableCatalog: `c("alias", "name", "type")`
+#' * BatchCatalog: `c("id", "status")`
+#' * FilterCatalog: `c("name", "id", "is_public")`
 #' @param ... Additional arguments passed to `data.frame`
-#' @return A `data.frame` including metadata about each variable stored in the
-#' variable catalog. The fields in the data.frame match the `keys` argument
-#' provided to the function, and each row represents a variable.
+#' @return A `data.frame` including metadata about each entity contained in the
+#' catalog. The fields in the data.frame match the `keys` argument
+#' provided to the function, and each row represents a entity.
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("iris")
 #' vars <- variables(ds)
-#' var_df <- as.data.frame(vars, keys = "all")
+#' var_df <- as.data.frame(vars, keys = TRUE)
+#' # With row names
+#' as.data.frame(vars, row.names = urls(vars))
 #' }
 #'
-#' @rdname VariableCatalog-to-Data-Frame
+#' @rdname catalog-to-data-frame
 #' @export
 as.data.frame.VariableCatalog <- function (x, row.names = NULL,
                                            optional = FALSE,
                                            keys = c("alias", "name", "type"),
                                            ...) {
-    if (identical(keys, "all")) {
-        keys <- TRUE
-    }
+    catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
+}
 
-    catalogToDataFrame(x, rownames = NA, keys = keys, ...)
+#' @rdname catalog-to-data-frame
+#' @export
+as.data.frame.ShojiCatalog <- function (x, row.names = NULL,
+                                           optional = FALSE,
+                                           ...) {
+    catalogToDataFrame(x, row.names = row.names, ...)
+}
+
+#' @rdname catalog-to-data-frame
+#' @export
+as.data.frame.BatchCatalog <- function (x, row.names = NULL,
+                                           optional = FALSE,
+                                           keys = c("id", "status"),
+                                           ...) {
+    catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
+}
+
+#' @rdname catalog-to-data-frame
+#' @export
+as.data.frame.FilterCatalog <- function (x, row.names = NULL,
+                                           optional = FALSE,
+                                           keys = c("name", "id", "is_public"),
+                                           ...) {
+    catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
 }

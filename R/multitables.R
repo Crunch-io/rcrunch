@@ -111,6 +111,7 @@ setMethod("is.public", "Multitable", function (x) x@body$is_public)
 #' @rdname is-public
 #' @export
 setMethod("is.public<-", "Multitable", function (x, value) {
+    stopifnot(is.TRUEorFALSE(value))
     setEntitySlot(x, "is_public", value)
 })
 
