@@ -9,7 +9,7 @@ with_mock_crunch({
         gndr <- as.vector(ds$gender)
         expect_equal(nrow(ds_df), 25)
         # both reording and subsetting the dataset
-        new_order <- c(4,3,1,2)
+        new_order <- c(4, 3, 1, 2)
         attr(ds_df, "order") <- new_order
         expect_equal(ds_df$gender, gndr[new_order])
         expect_equal(nrow(ds_df), 4)
@@ -19,40 +19,67 @@ with_mock_crunch({
     })
     
     test_that("Extract methods work with CrunchDataFrames like they do with data.frames", {
-        ds_df <- as.data.frame(ds)
-        true_df <- as.data.frame(ds, force = TRUE)
+        ds_new <- loadDataset("test ds")
+        # remove array variables because they are not equivalent in crdf and 
+        # data.frames, since in the data.frames they have been flattened.
+        ds_new <- ds_new[!{names(ds_new) %in% c("mymrset", "catarray")}]
+        
+        ds_df <- as.data.frame(ds_new)
+        true_df <- as.data.frame(ds_new, force = TRUE)
+
         # single column/row extraction
-        expect_equivalent(ds_df[1,],true_df[1,])
-        expect_equivalent(ds_df[,1],true_df[,1])
+        expect_equivalent(ds_df[1,], true_df[1,])
+        expect_equivalent(ds_df[,1], true_df[,1])
         
         # multiple columns/rows
-        expect_equivalent(ds_df[c(1,2),],true_df[c(1,2),])
-        expect_equivalent(ds_df[,c(1,2)],true_df[,c(1,2)])
+        expect_equivalent(ds_df[c(1, 2),], true_df[c(1, 2),])
+        expect_equivalent(ds_df[,c(1, 2)], true_df[,c(1, 2)])
         
         # single column extraction with characters
-        expect_equivalent(ds_df[,"location"],true_df[,"location"])
+        expect_equivalent(ds_df[,"location"], true_df[,"location"])
         
         # multiple columns with characters
-        expect_equivalent(ds_df[,c("mymrset","textVar")],true_df[,c("mymrset","textVar")])
+        expect_equivalent(ds_df[,c("starttime", "textVar")],
+                          true_df[,c("starttime", "textVar")])
         
         # columns/rows with logicals
-        expect_equivalent(ds_df[,c(TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE)],
-                          true_df[,c(TRUE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE)])
+        expect_equivalent(ds_df[,c(TRUE, FALSE, TRUE, FALSE, TRUE)],
+                          true_df[,c(TRUE, FALSE, TRUE, FALSE, TRUE)])
         expect_equivalent(ds_df[c(TRUE, rep(FALSE, 23), TRUE),],
                           true_df[c(TRUE, rep(FALSE, 23), TRUE),])
         
+        # logicals recycle even at a variety of lengths
+        expect_equivalent(ds_df[,c(TRUE)],
+                          true_df[,c(TRUE)])
+        expect_equivalent(ds_df[c(TRUE),],
+                          true_df[c(TRUE),])
+        expect_equivalent(ds_df[,c(TRUE, FALSE)],
+                          true_df[,c(TRUE, FALSE)])
+        expect_equivalent(ds_df[c(TRUE, FALSE),],
+                          true_df[c(TRUE, FALSE),])
+        expect_equivalent(ds_df[,c(TRUE, FALSE, TRUE)],
+                          true_df[,c(TRUE, FALSE, TRUE)])
+        expect_equivalent(ds_df[c(TRUE, FALSE, TRUE),],
+                          true_df[c(TRUE, FALSE, TRUE),])
+        expect_equivalent(ds_df[,c(TRUE, FALSE, TRUE, FALSE)],
+                          true_df[,c(TRUE, FALSE, TRUE, FALSE)])
+        expect_equivalent(ds_df[c(TRUE, FALSE, TRUE, FALSE),],
+                          true_df[c(TRUE, FALSE, TRUE, FALSE),])
+                
+        
         # both rows and columns
-        expect_equivalent(ds_df[c(1,3,5),"location"],true_df[c(1,3,5),"location"])
+        expect_equivalent(ds_df[c(1, 3, 5), "location"],
+                          true_df[c(1, 3, 5), "location"])
         
         
         # $ methods
-        expect_equivalent(ds_df$starttime,true_df$starttime)
+        expect_equivalent(ds_df$starttime, true_df$starttime)
         
         # [[ methods
-        expect_equivalent(ds_df[[1]],true_df[[1]])
-        expect_equivalent(ds_df[["catarray"]],true_df[["catarray"]])
-        expect_equivalent(ds_df[[2]],true_df[[2]])
-        expect_equivalent(ds_df[["birthyr"]],true_df[["birthyr"]])
+        expect_equivalent(ds_df[[1]], true_df[[1]])
+        expect_equivalent(ds_df[["textVar"]], true_df[["textVar"]])
+        expect_equivalent(ds_df[[2]], true_df[[2]])
+        expect_equivalent(ds_df[["birthyr"]], true_df[["birthyr"]])
     })
     
     test_that("Extract methods input checking", {
@@ -61,54 +88,44 @@ with_mock_crunch({
         expect_error(ds_df["foo",],
                      "row subsetting must be done with either numeric or a logical")
         expect_error(ds_df[,list(list(1))], 
-                     "column subsetting must be done with either numeric or a character")
-        
-        expect_error(ds_df[c(TRUE),], 
-                     paste0("when using a logical to subset rows, the logical vector ",
-                            "must have the same length as the number of rows"))
-        expect_error(ds_df[,c(TRUE)],
-                     paste0("when using a logical to subset columns, the logical ",
-                            "vector must have the same length as the number of columns"))
+                     "column subsetting must be done with a numeric, character, or logical")
         
         expect_error(`$`(ds_df,1),
                      paste0("invalid subscript type 'double'"))
         
     })
     
-    test_that("get_var_from_server works with variables, including different modes for factors", {
+    test_that("getVarFromServer works with variables, including different modes for factors", {
         ds_df <- as.data.frame(ds)
         true_df <- as.data.frame(ds, force = TRUE)
         
-        expect_equal(get_var_from_server("textVar", ds_df),
+        expect_equal(getVarFromServer("textVar", ds_df),
                      true_df$textVar)
-        expect_equal(get_var_from_server("gender", ds_df, mode = 'factor'),
+        expect_equal(getVarFromServer("gender", ds_df, mode = 'factor'),
                      true_df$gender)
-        expect_equal(get_var_from_server("gender", ds_df, mode = 'id'),
+        expect_equal(getVarFromServer("gender", ds_df, mode = 'id'),
                      ifelse(is.na(true_df$gender), -1,
                             ifelse(true_df$gender == "Female", 2, 1)))
-        expect_equal(get_var_from_server("gender", ds_df, mode = 'numeric'),
+        expect_equal(getVarFromServer("gender", ds_df, mode = 'numeric'),
                      ifelse(true_df$gender == "Female", 2, 1))
     })
     
-    test_that("cdf column validators work", {
+    test_that("crdf column validators work", {
         ds_df <- as.data.frame(ds)
         expect_error(ds_df$new_local_var <- c(5:1),
                      "replacement has 5 rows, the CrunchDataFrame has 25")
         
-        expect_error(ds_df$new_local_var <- c(1,2),
+        expect_error(ds_df$new_local_var <- c(1, 2),
                      "replacement has 2 rows, the CrunchDataFrame has 25")
         
         expect_error(ds_df$new_local_var <- c(1:100),
                      "replacement has 100 rows, the CrunchDataFrame has 25")
     })
     
-    test_that("get_CDF_var input validation", {
+    test_that("getCrdfVar input validation", {
         ds_df <- as.data.frame(ds)
         
-        expect_error(get_CDF_var("textVar", data.frame(textVar = c(1,2))),
-                     paste("The cdf argument must be a CrunchDataFrame, got",
-                           "data.frame instead."))
-        expect_error(get_CDF_var("not_a_var", ds_df),
+        expect_error(getCrdfVar("not_a_var", ds_df),
                      paste("The variable", dQuote("not_a_var") ,
                            "is not found in the CrunchDataFrame."))
     })
@@ -121,7 +138,7 @@ with_mock_crunch({
         
     })
     
-    test_that("cdf column setters work", {
+    test_that("crdf column setters work", {
         ds_df <- as.data.frame(ds)
         
         expect_silent(ds_df$new_local_var <- c(25:1))
@@ -143,14 +160,14 @@ with_mock_crunch({
         
         # try overwritting with [<-
         expect_silent(
-            ds_df[c(1, 25),c("new_local_var", "new_local_var2")] <- 
+            ds_df[c(1, 25), c("new_local_var", "new_local_var2")] <- 
                 c(250, 10, 10, 250))
         expect_equal(ds_df$new_local_var, c(250, 24:2, 10))
         expect_equal(ds_df$new_local_var2, c(10, 2:24, 250))
         
         # can add a new column with row indices
         expect_silent(
-            ds_df[c(1, 25),"new_local_var3"] <- 
+            ds_df[c(1, 25), "new_local_var3"] <- 
                 c(1, 25))
         expect_equal(ds_df$new_local_var3, c(1, rep(NA, 23), 25))
         
@@ -172,13 +189,18 @@ with_mock_crunch({
         expect_silent(ds_df$gender <- NULL)
         expect_false("gender" %in% names(ds_df))
     })
-    
-    test_that("get_CDF_var input validation", {
-        ds_df <- as.data.frame(ds)
-        
-        expect_error(set_CDF_var(col_name = "new_local_var",
-                                 cdf = data.frame(textVar = c(1,2))),
-                     paste("The cdf argument must be a CrunchDataFrame, got",
-                           "data.frame instead."))
+})
+
+with_test_authentication({
+    ds <- mrdf.setup(newDataset(mrdf, name = "test-mrdfmr"), selections = "1.0")
+    ds_df <- as.data.frame(ds, force = TRUE)
+
+    test_that("Multiple response variables", {
+        expect_equal(ncol(ds_df), 4)
+        expect_equal(names(ds_df), c("mr_1", "mr_2", "mr_3", "v4"))
+        expect_equal(ds_df$mr_1, as.vector(ds$MR$mr_1))
+        expect_equal(ds_df$mr_2, as.vector(ds$MR$mr_2))
+        expect_equal(ds_df$mr_3, as.vector(ds$MR$mr_3))
+        expect_equal(ds_df$v4, as.vector(ds$v4))
     })
 })
