@@ -8,7 +8,8 @@ setMethod("variables", "CubeDims", function (x) {
 #' @rdname cube-methods
 #' @export
 setMethod("measures", "CrunchCube", function (x) {
-    ind <- Filter(Negate(is.null), ## Drop "count" measures, which lack metadata
+    ## Drop "count" measures, which lack metadata
+    ind <- Filter(function (a) !is.null(a) && !is.null(a$alias),
         lapply(x@arrays, attr, which="variable"))
     return(.pseudoCatalog(ind))
 })
@@ -21,7 +22,11 @@ setMethod("measures", "CrunchCube", function (x) {
 
 #' @rdname cube-methods
 #' @export
-setMethod("variables", "CrunchCube", function (x) variables(dimensions(x)))
+setMethod("variables", "CrunchCube", function (x) {
+    out <- variables(dimensions(x))
+    out@index <- c(out@index, measures(x)@index)
+    return(out)
+})
 
 #' @rdname cube-methods
 #' @export
