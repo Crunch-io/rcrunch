@@ -195,10 +195,17 @@ with_mock_crunch({
         )
     })
     test_that("is.selected assignment methods", {
+        true_body <- '{"categories":[{"id":1,"missing":false,"name":"0.0","numeric_value":0,"selected":true},{"id":2,"missing":false,"name":"1.0","numeric_value":1,"selected":true},{"id":-1,"missing":true,"name":"No Data","numeric_value":null,"selected":true}]}'
+
         expect_PATCH(
             is.selected(categories(ds$mymrset)) <- c(TRUE, TRUE, TRUE),
             'https://app.crunch.io/api/datasets/1/variables/mymrset/',
-            '{"categories":[{"id":1,"missing":false,"name":"0.0","numeric_value":0,"selected":true},{"id":2,"missing":false,"name":"1.0","numeric_value":1,"selected":true},{"id":-1,"missing":true,"name":"No Data","numeric_value":null,"selected":true}]}'
+            true_body
+        )
+        expect_PATCH(
+            is.selected(categories(ds$mymrset)) <- TRUE,
+            'https://app.crunch.io/api/datasets/1/variables/mymrset/',
+            true_body
         )
         expect_PATCH(
             is.selected(categories(ds$mymrset)[2]) <- TRUE,
@@ -516,7 +523,9 @@ with_test_authentication({
             is.selected(categories(ds$mr)) <- c(TRUE, TRUE, TRUE)
             expect_true(all(is.selected(categories(ds$mr))))
             is.selected(categories(ds$mr)[2]) <- FALSE
-            expect_false(is.selected(categories(ds$mr)[2]))
+            expect_identical(is.selected(categories(ds$mr)),
+                structure(c(TRUE, FALSE, TRUE), .Names = c("1", "2", "No Data"))
+            )
         })
     })
 })

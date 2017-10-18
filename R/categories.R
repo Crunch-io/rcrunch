@@ -189,7 +189,7 @@ setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical
 
 #' is.selected for Categories
 #'
-#' Crunch Multiple Response variables identify one or more categories as "selected"
+#' Crunch Multiple Response variables identify one or more categories as "selected".
 #' These methods allow you to get or set which categories should indicate a selection.
 #'
 #' @param x Categories or a single Category
@@ -210,12 +210,17 @@ setMethod("is.selected", "Categories", function (x) structure(vapply(x, is.selec
 #' @rdname is-selected-categories
 #' @export
 setMethod("is.selected<-", "Categories", function (x, value) {
+    if( is.TRUEorFALSE(value)) {
+        value <- rep(value, length(x))
+    }
     if (length(value) != length(x)) {
         halt("You supplied ", length(value), " logical values for ", length(x), " Categories.")
     }
-    for (i in seq_along(x@.Data)) {
-        is.selected(x[[i]]) <- value[[i]]
-    }
+
+    x@.Data <- mapply(function (x, value) {
+            is.selected(x) <- value
+            return(x)
+        }, x=x@.Data, value=value, USE.NAMES=FALSE, SIMPLIFY=FALSE)
     return(x)
 })
 
