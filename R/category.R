@@ -123,8 +123,8 @@ setMethod("is.selected", "Category", function (x) isTRUE(x$selected))
 #' @rdname describe-category
 #' @export
 setMethod("is.selected<-", "Category", function (x, value) {
-    if(!is.TRUEorFALSE(value)){
-        halt("Value must be either TRUE or FALSE")
+    if (!is.TRUEorFALSE(value)) {
+        halt("Value must be either TRUE or FALSE.")
     }
     x$selected <- value
     return(x)

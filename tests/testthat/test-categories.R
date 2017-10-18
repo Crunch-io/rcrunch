@@ -189,6 +189,28 @@ with_mock_crunch({
         expect_false(is.selected(cats2[[1]]))
     })
 
+    test_that("is.selected works on Categories", {
+        expect_identical(is.selected(categories(ds$mymrset)),
+            structure(c(FALSE, TRUE, FALSE), .Names = c("0.0", "1.0", "No Data"))
+        )
+    })
+    test_that("is.selected assignment methods", {
+        expect_PATCH(
+            is.selected(categories(ds$mymrset)) <- c(TRUE, TRUE, TRUE),
+            'https://app.crunch.io/api/datasets/1/variables/mymrset/',
+            '{"categories":[{"id":1,"missing":false,"name":"0.0","numeric_value":0,"selected":true},{"id":2,"missing":false,"name":"1.0","numeric_value":1,"selected":true},{"id":-1,"missing":true,"name":"No Data","numeric_value":null,"selected":true}]}'
+        )
+        expect_PATCH(
+            is.selected(categories(ds$mymrset)[2]) <- TRUE,
+            'https://app.crunch.io/api/datasets/1/variables/mymrset/',
+            '{"categories":[{"id":1,"missing":false,"name":"0.0","numeric_value":0,"selected":false},{"id":2,"missing":false,"name":"1.0","numeric_value":1,"selected":true},{"id":-1,"missing":true,"name":"No Data","numeric_value":null,"selected":false}]}'
+        )
+    })
+    test_that("is.selected assignment errors correctly", {
+        expect_error(is.selected(categories(ds$mymrset)[2]) <- "banana",
+            "Value must be either TRUE or FALSE.")
+    })
+
     test_that("is.na", {
         expect_identical(is.na(cats), structure(c(FALSE, FALSE, TRUE),
             .Names=c("Male", "Female", "No Data")))
@@ -483,6 +505,15 @@ with_test_authentication({
                 c("Not Asked", "Skipped", "Bird", "Canine", "Cat"))
             expect_identical(names(categories(ds$petloc$petloc_home)),
                 c("Not Asked", "Skipped", "Bird", "Canine", "Cat"))
+        })
+        test_that("is.selected method gets and set selection value",  {
+            ds$mr_sub1 <- factor(sample(1:2, nrow(ds), replace = TRUE))
+            ds$mr_sub2 <- factor(sample(1:2, nrow(ds), replace = TRUE))
+            ds$mr <- makeMR(ds[, c("mr_sub1", "mr_sub2")], selections = "1", name = "mr")
+            is.selected(categories(ds$mr)) <- c(TRUE, TRUE, TRUE)
+            expect_true(all(is.selected(categories(ds$mr))))
+            is.selected(categories(ds$mr)[2]) <- FALSE
+            expect_false(is.selected(categories(ds$mr)[2]))
         })
     })
 })
