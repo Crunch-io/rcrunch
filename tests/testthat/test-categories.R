@@ -209,6 +209,9 @@ with_mock_crunch({
     test_that("is.selected assignment errors correctly", {
         expect_error(is.selected(categories(ds$mymrset)[2]) <- "banana",
             "Value must be either TRUE or FALSE.")
+        expect_error(is.selected(categories(ds$mymrset)) <- c(TRUE, FALSE, TRUE, FALSE),
+            paste0("You supplied ", 4, " logical values for ", 3, " Categories.")
+        )
     })
 
     test_that("is.na", {

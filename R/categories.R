@@ -187,17 +187,32 @@ NULL
 #' @export
 setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical(1), USE.NAMES=FALSE), .Names=names(x)))
 
+#' is.selected for Categories
+#'
+#' Crunch Multiple Response variables identify one or more categories as "selected"
+#' These methods allow you to get or set which categories should indicate a selection.
+#'
+#' @param x Categories or a single Category
+#' @param value A logical vector indicating whether the category should be selected.
+#' For a single category the value should be either `TRUE` or `FALSE` to change the
+#' selection status for a `Categories` object, supply a logical vector which is the
+#' same length as the number of categories.
+#' @return Getters return a logical vector indicating selection status. Setters return
+#' the `Categories` or `Category` object, duly modified.
+#' @name is-selected-categories
+#' @aliases is.selected<-
+NULL
 
-
-#' @rdname describe-categories
-#' @aliases is-na-categories
+#' @rdname is-selected-categories
 #' @export
 setMethod("is.selected", "Categories", function (x) structure(vapply(x, is.selected, logical(1), USE.NAMES=FALSE), .Names=names(x)))
 
-#' @rdname describe-categories
-#' @aliases is-na-categories
+#' @rdname is-selected-categories
 #' @export
-setMethod("is.selected<-", "Categories", function (x, value){
+setMethod("is.selected<-", "Categories", function (x, value) {
+    if (length(value) != length(x)) {
+        halt("You supplied ", length(value), " logical values for ", length(x), " Categories.")
+    }
     for (i in seq_along(x@.Data)) {
         is.selected(x[[i]]) <- value[[i]]
     }
