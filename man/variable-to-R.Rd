@@ -37,6 +37,13 @@ something beyond what is currently supported, you can bring a variable's
 data into R with \code{as.vector(ds$var)} and work with it like any
 other R vector.
 }
+\details{
+\code{as.vector} transfers data from Crunch to a local R session. Note:
+\code{as.vector} returns the vector in the row order of the dataset. If filters
+are set that specify an order that is different from the row order of the
+dataset, the results will ignore that order. If you need the vector ordered
+in that way, use syntax like \code{as.vector(ds$var)[c(10, 5, 2)]} instead.
+}
 \seealso{
 \link[=as.data.frame.CrunchDataset]{as.data.frame} for another interface
 for (lazily) fetching data from the server as needed; \code{\link[=exportDataset]{exportDataset()}} for
