@@ -1,9 +1,9 @@
 #' Conditional transformation
 #'
 #' Create a new variable that has values when specific conditions are met.
-#' Conditions are specified using a series of formulas: the righthand side is
-#' the condition that must be true (a `CrunchLogicalExpr`) and the lefthand
-#' side is where to get the value if the condition on the righthand side is
+#' Conditions are specified using a series of formulas: the right-hand side is
+#' the condition that must be true (a `CrunchLogicalExpr`) and the left-hand
+#' side is where to get the value if the condition on the right-hand side is
 #' true. This is commonly a Crunch variable but may be a string or numeric
 #' value, depending on the type of variable you're constructing.
 #'
@@ -38,7 +38,8 @@
 #'                                        name = "Opinion of Cats")
 #' }
 #' @export
-conditionalTransform <- function (..., data, else_condition=NA, type="categorical", categories=NULL) {
+conditionalTransform <- function (..., data, else_condition=NA, type=NULL,
+                                  categories=NULL) {
     dots <- list(...)
     is_formula <- function (x) inherits(x, "formula")
     formulas <- Filter(is_formula, dots)
@@ -47,17 +48,32 @@ conditionalTransform <- function (..., data, else_condition=NA, type="categorica
     if (length(formulas) == 0) {
         halt("no conditions have been supplied; please supply formulas as conditions.")
     }
-    if (!type %in% c("categorical", "text", "numeric")){
-        halt("type must be either ", dQuote("categorical"), ", ", dQuote("text"), ", or ", dQuote("numeric"))
+    
+    if (!missing(type) && !type %in% c("categorical", "text", "numeric")){
+        halt("type must be either ", dQuote("categorical"), ", ",
+             dQuote("text"), ", or ", dQuote("numeric"))
     }
+    
+    conditional_vals <- makeConditionalValues(formulas, data, else_condition)
+    if (!missing(type)) {
+        if (type == "numeric") {
+            result <- as.numeric(conditional_vals$values)
+        } else {
+            result <- as.character(conditional_vals$values)
+        }
+    } else {
+        # determine type
+        result <- conditional_vals$values
+        type <- conditional_vals$type
+    }
+    
     if (type != "categorical" & !is.null(categories)){
-        halt("type is not ", dQuote("categorical"), " ignoring ", dQuote("categories"))
+        warning("type is not ", dQuote("categorical"), " ignoring ",
+                dQuote("categories"))
     }
-
-    result <- make_conditional_values(formulas, data, else_condition, type)
-
     var_def$type <- type
 
+    # add categories if necessary 
     if (type == "categorical") {
         # if categories are supplied and there are any
         if (missing(categories)) {
@@ -81,7 +97,8 @@ conditionalTransform <- function (..., data, else_condition=NA, type="categorica
             result <- factor(result, levels = names(categories))
         }
         categories <- ensureNoDataCategory(categories)
-        # make a category list to send with VariableDefinition and then store that and convert values to ids values
+        # make a category list to send with VariableDefinition and then store 
+        # that and convert values to ids values
         category_list <- categories
         var_def$categories <- category_list
         vals <- as.character(result)
@@ -95,19 +112,21 @@ conditionalTransform <- function (..., data, else_condition=NA, type="categorica
     return(var_def)
 }
 
-make_conditional_values <- function (formulas, data, else_condition, type) {
+makeConditionalValues <- function (formulas, data, else_condition) {
     n <- length(formulas)
     cases <- vector("list", n)
     values <- vector("list", n)
     for (i in seq_len(n)) {
         formula <- formulas[[i]]
         if (length(formula) != 3) {
-            halt("The case provided is not a proper formula: ", deparseAndFlatten(formula))
+            halt("The case provided is not a proper formula: ",
+                 deparseAndFlatten(formula))
         }
 
         cases[[i]] <- evalLHS(formula, data)
         if (!inherits(cases[[i]], "CrunchLogicalExpr")) {
-            halt("The LHS provided is not a CrunchLogicalExpr: ", LHS_string(formula))
+            halt("The left-hand side provided is not a CrunchLogicalExpr: ",
+                 LHS_string(formula))
         }
         values[[i]] <- evalRHS(formula, data)
     }
@@ -129,29 +148,53 @@ make_conditional_values <- function (formulas, data, else_condition, type) {
         setdiff(case_indices[[i]], unlist(case_indices[seq_len(i-1)]))
     })
 
-    if (type == "numeric") {
-        trans <- as.numeric
-    } else {
-        trans <- as.character
-    }
     # grab the values needed from source variables
     values_to_fill <- Map(function(ind, var) {
         if (inherits(var, c("CrunchVariable", "CrunchExpr"))) {
             # grab the variable contents at inds
-            return(trans(as.vector(var[ind])))
+            return(as.vector(var[ind]))
         } else {
             # if var isn't a crunch variable or expression, just return var
-            return(trans(var))
+            return(var)
         }
     }, ind = case_indices, var = values)
 
-    result <- rep(else_condition, n_rows)
+    # determine the types before collation (since factor coercion is less than 
+    # ideal, we need to do this before we collate)
+    pre_collation_types <- vapply(values, class, character(1))
+    values <- collateValues(values_to_fill, case_indices, else_condition, n_rows)
+    
+    if (all(pre_collation_types == "factor")) {
+        type <- "categorical"
+    } else if (is.numeric(values)) {
+        type <- "numeric"
+    } else {
+        # catch all, in case there are R types like logicals that Crunch would 
+        # treat as character or categorical
+        type <- "text"
+    }
+    
+    return(list(values = values, type = type))
+}
 
+# because factors by default coerce into their IDs, which is almost never what 
+# we want, we need to do some magic to collate the values together.
+collateValues <- function (values_to_fill, case_indices, else_condition,
+                           n_rows) {
+    result <- rep(else_condition, n_rows)
+    
     # fill values
     for (i in seq_along(case_indices)) {
         vals <- values_to_fill[[i]]
+        
+        # change all factors to characters temporarily to avoid accidental 
+        # coercion to ids (the default if result is not already a factor)
+        if (is.factor(vals)) {
+            vals <- as.character(vals)
+        }
+        
         result[case_indices[[i]]] <- vals
     }
-
+    
     return(result)
 }

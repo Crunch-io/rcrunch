@@ -4,7 +4,7 @@
 \alias{conditionalTransform}
 \title{Conditional transformation}
 \usage{
-conditionalTransform(..., data, else_condition = NA, type = "categorical",
+conditionalTransform(..., data, else_condition = NA, type = NULL,
   categories = NULL)
 }
 \arguments{
@@ -29,9 +29,9 @@ a Crunch \code{VariableDefinition}
 }
 \description{
 Create a new variable that has values when specific conditions are met.
-Conditions are specified using a series of formulas: the righthand side is
-the condition that must be true (a \code{CrunchLogicalExpr}) and the lefthand
-side is where to get the value if the condition on the righthand side is
+Conditions are specified using a series of formulas: the right-hand side is
+the condition that must be true (a \code{CrunchLogicalExpr}) and the left-hand
+side is where to get the value if the condition on the right-hand side is
 true. This is commonly a Crunch variable but may be a string or numeric
 value, depending on the type of variable you're constructing.
 }

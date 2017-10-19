@@ -124,7 +124,6 @@ io
 isn
 json
 knitr
-lefthand
 makeWeight
 modeling
 multitable
@@ -135,7 +134,6 @@ pid
 preemptively
 pw
 recurses
-righthand
 rmarkdown
 sav
 savepoints
