@@ -5,6 +5,7 @@
 \alias{var-categories}
 \alias{categories}
 \alias{categories<-}
+\alias{categories,VariableTuple-method}
 \alias{categories,CrunchVariable-method}
 \alias{categories,CategoricalVariable-method}
 \alias{categories,CategoricalArrayVariable-method}
@@ -20,6 +21,8 @@
 \alias{categories<-,CrunchVariable,ANY-method}
 \title{Get and set Categories on Variables}
 \usage{
+\S4method{categories}{VariableTuple}(x)
+
 \S4method{categories}{CrunchVariable}(x)
 
 \S4method{categories}{CategoricalVariable}(x)

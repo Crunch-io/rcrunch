@@ -147,6 +147,7 @@ setGeneric("round")
 
 setGeneric("bases", function (x, margin=NULL) standardGeneric("bases"))
 setGeneric("dimensions", function (x) standardGeneric("dimensions"))
+setGeneric("measures", function (x) standardGeneric("measures"))
 
 setGeneric("subset")
 setGeneric("which", signature="x")

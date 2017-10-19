@@ -1,0 +1,291 @@
+{
+  "element": "shoji:view",
+  "self": "https://app.crunch.io/api/datasets/1/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fgender%2F%22%7D%2C%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2FtextVar%2F%22%7D%5D%2C%22measures%22%3A%7B%22mean%22%3A%7B%22function%22%3A%22cube_mean%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fbirthyr%2F%22%7D%5D%7D%2C%22max%22%3A%7B%22function%22%3A%22cube_max%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fstarttime%2F%22%7D%5D%7D%7D%2C%22weight%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2F0001f2%2F%22%7D&filter=%7B%7D",
+  "value": {
+    "query": {
+      "measures": {
+        "max": {
+          "function": "cube_max",
+          "args": [{
+            "variable": "https://app.crunch.io/api/datasets/1/variables/starttime/"
+          }]
+        },
+        "mean": {
+          "function": "cube_mean",
+          "args": [{
+            "variable": "https://app.crunch.io/api/datasets/1/variables/birthyr/"
+          }]
+        }
+      },
+      "dimensions": [{
+        "variable": "https://app.crunch.io/api/datasets/1/variables/gender/"
+      }, {
+        "variable": "https://app.crunch.io/api/datasets/1/variables/textVar/"
+      }],
+      "weight": "https://app.crunch.io/api/datasets/1/variables/0001f2/"
+    },
+    "query_environment": {
+      "filter": []
+    },
+    "result": {
+      "dimensions": [{
+        "references": {
+          "discarded": false,
+          "alias": "gender",
+          "view": {
+            "show_counts": false,
+            "column_width": null,
+            "include_missing": false,
+            "show_numeric_values": false
+          },
+          "description": "",
+          "name": "Gender"
+        },
+        "derived": false,
+        "type": {
+          "ordinal": false,
+          "class": "categorical",
+          "categories": [{
+            "numeric_value": 1,
+            "missing": false,
+            "id": 1,
+            "name": "Male"
+          }, {
+            "numeric_value": 2,
+            "missing": false,
+            "id": 2,
+            "name": "Female"
+          }, {
+            "numeric_value": 8,
+            "missing": true,
+            "id": 8,
+            "name": "Skipped"
+          }, {
+            "numeric_value": 9,
+            "missing": true,
+            "id": 9,
+            "name": "Not Asked"
+          }, {
+            "numeric_value": null,
+            "missing": true,
+            "id": -1,
+            "name": "No Data"
+          }]
+        }
+      }, {
+        "references": {
+          "discarded": false,
+          "alias": "textVar",
+          "name": "Text variable ftw",
+          "description": ""
+        },
+        "derived": false,
+        "type": {
+          "ordinal": false,
+          "class": "categorical",
+          "categories": [{
+            "numeric_value": 1,
+            "missing": false,
+            "id": 1,
+            "name": "Strongly Approve"
+          }, {
+            "numeric_value": 2,
+            "missing": false,
+            "id": 2,
+            "name": "Somewhat Approve"
+          }, {
+            "numeric_value": 3,
+            "missing": false,
+            "id": 3,
+            "name": "Somewhat Disapprove"
+          }, {
+            "numeric_value": 4,
+            "missing": false,
+            "id": 4,
+            "name": "Strongly Disapprove"
+          }, {
+            "numeric_value": 5,
+            "missing": false,
+            "id": 5,
+            "name": "Not Sure"
+          }, {
+            "numeric_value": 8,
+            "missing": true,
+            "id": 8,
+            "name": "Skipped"
+          }, {
+            "numeric_value": 9,
+            "missing": true,
+            "id": 9,
+            "name": "Not Asked"
+          }, {
+            "numeric_value": null,
+            "missing": true,
+            "id": -1,
+            "name": "No Data"
+          }]
+        }
+      }],
+      "missing": 2,
+      "measures": {
+        "max": {
+          "data": ["2013-07-30T02:39:33", "2013-07-30T08:03:52", "2013-07-29T22:00:25", "2013-07-30T09:03:14", "2013-07-29T10:58:39", "2013-07-29T10:29:42", {
+            "?": -1
+          }, {
+            "?": -1
+          }, "2013-07-30T07:53:21", "2013-07-30T09:02:33", "2013-07-29T21:11:44", "2013-07-30T06:07:51", "2013-07-30T04:26:52", {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }, {
+            "?": -1
+          }],
+          "n_missing": 2,
+          "metadata": {
+            "derived": false,
+            "references": {
+              "discarded": false,
+              "alias": "starttime",
+              "name": "Interview Start Time",
+              "description": ""
+            },
+            "type": {
+              "resolution": "s",
+              "class": "datetime",
+              "missing_reasons": {
+                "No Data": -1
+              },
+              "missing_rules": {}
+            }
+          }
+        },
+        "mean": {
+          "data": [1967.6490522177871, 1971.3467224502538, 1968.7892553211107, 1963.1548100908244, 1981.2770228166314, 1976.3747475182413, {
+            "?": -8
+          }, {
+            "?": -8
+          }, 1966.1334247880734, 1972.6658745517657, 1972.9266945199975, 1963.482436195442, 1978.0975835651025, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }, {
+            "?": -8
+          }],
+          "n_missing": 2,
+          "metadata": {
+            "references": {},
+            "derived": true,
+            "type": {
+              "integer": false,
+              "missing_rules": {},
+              "missing_reasons": {
+                "No Data": -1,
+                "NaN": -8
+              },
+              "class": "numeric"
+            }
+          }
+        }
+      },
+      "element": "crunch:cube",
+      "counts": [65, 130, 46, 212, 12, 2, 0, 0, 93, 163, 78, 172, 27, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      "n": 1000
+    }
+  }
+}

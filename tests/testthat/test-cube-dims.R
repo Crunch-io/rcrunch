@@ -57,4 +57,27 @@ with_mock_crunch({
             "Name the kinds of pets you have at these locations.",
             NA))
     })
+
+    test_that("'measures' metadata", {
+        expect_identical(names(measures(crtabs(max(birthyr) ~ 1, data=ds))),
+            "Birth Year")
+        expect_identical(names(variables(crtabs(max(birthyr) ~ 1, data=ds))),
+            "Birth Year")
+        expect_length(measures(crtabs(~ gender + textVar, data=ds)), 0)
+        expect_identical(names(variables(crtabs(~ gender + textVar, data=ds))),
+            c("Gender", "Text variable ftw"))
+        skip("'mean' doesn't return variable metadata like 'max' does")
+        expect_identical(names(measures(crtabs(mean(birthyr) ~ gender + textVar, data=ds))),
+            "Birth Year")
+        expect_identical(names(variables(crtabs(mean(birthyr) ~ gender + textVar, data=ds))),
+            c("Gender", "Text variable ftw", "Birth Year"))
+        expect_identical(names(measures(crtabs(list(mean(birthyr), max(birthyr)) ~ gender + textVar, data=ds))),
+            c("Birth Year", "Birth Year"))
+        expect_identical(names(variables(crtabs(list(mean(birthyr), max(birthyr)) ~ gender + textVar, data=ds))),
+            c("Gender", "Text variable ftw", "Birth Year")) ## De-duped
+        expect_identical(names(measures(crtabs(list(mean(birthyr), max(starttime)) ~ gender + textVar, data=ds))),
+            c("Interview Start Time", "Birth Year")) ## Order in the JSON is reversed
+        expect_identical(names(variables(crtabs(list(mean(birthyr), max(starttime)) ~ gender + textVar, data=ds))),
+            c("Gender", "Text variable ftw", "Interview Start Time", "Birth Year"))
+    })
 })

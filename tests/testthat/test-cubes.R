@@ -90,10 +90,9 @@ with_mock_crunch({
 
 adims <- CubeDims(list(
     v4=list(name=c("B", "C"), any.or.none=rep(FALSE, 2),
-        missing=rep(FALSE, 2)),
+        missing=rep(FALSE, 2), references=list(name="v4")),
     v7=list(name=c("C", "D", "E", "No Data"), any.or.none=rep(FALSE, 4),
-        missing=c(rep(FALSE, 3), TRUE))),
-    references=VariableCatalog(index=list(list(name="v4"), list(name="v7"))))
+        missing=c(rep(FALSE, 3), TRUE), references=list(name="v7"))))
 a1 <- CrunchCube(arrays=list("count"=array(c(
         8, 6,
         3, 2,
