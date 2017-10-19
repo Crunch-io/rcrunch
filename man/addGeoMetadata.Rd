@@ -11,13 +11,25 @@ addGeoMetadata(variable)
 a text or a categorical variable.}
 }
 \value{
-a CrunchGeography object that can be assigned into \code{geo(variable)}
+a \code{[CrunchGeography]} object that can be assigned into \code{geo(variable)}
 }
 \description{
-Add geodata metadata to a crunch variable
+If the variable matches a single geographic shapefile hosted by crunch,
+\code{addGeoMetadata} will make the appropriate \code{[CrunchGeography]} to add to a
+variable's \code{geo()} metadata. It matches based on how well the contents of the
+variable match the feature properties that are in each shapefile.
+}
+\details{
+If more than one property of the same geographic shapefile has the same
+highest matching score, the first one will be used.
+
+If more than one geographic shapefile has the same highest matching score, an
+error will be printed listing the geographic shapefiles that matched.
+Information from this error can be used to setup an appropriate
+\code{[CrunchGeography]} by hand to connect a variable with the metadata needed.
 }
 \examples{
 \dontrun{
-geo(ds$state) <- addGeoMetadata("state", data=ds)
+geo(ds$state) <- addGeoMetadata(ds$state)
 }
 }

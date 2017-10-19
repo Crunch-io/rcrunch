@@ -69,16 +69,30 @@ setMethod("geo<-", c("CrunchVariable", "NULL"),
               crPATCH(self(x), body=toJSON(frmt))
               return(x)
           })
+
 #' Add geodata metadata to a crunch variable
+#'
+#' If the variable matches a single geographic shapefile hosted by crunch, 
+#' `addGeoMetadata` will make the appropriate `[CrunchGeography]` to add to a 
+#' variable's `geo()` metadata. It matches based on how well the contents of the
+#' variable match the feature properties that are in each shapefile.
+#' 
+#' If more than one property of the same geographic shapefile has the same
+#' highest matching score, the first one will be used.
+#' 
+#' If more than one geographic shapefile has the same highest matching score, an
+#' error will be printed listing the geographic shapefiles that matched. 
+#' Information from this error can be used to setup an appropriate 
+#' `[CrunchGeography]` by hand to connect a variable with the metadata needed.
 #'
 #' @param variable a Crunch variable to use for matching. This must be either
 #' a text or a categorical variable.
 #'
-#' @return a CrunchGeography object that can be assigned into `geo(variable)`
+#' @return a `[CrunchGeography]` object that can be assigned into `geo(variable)`
 #'
 #' @examples
 #' \dontrun{
-#' geo(ds$state) <- addGeoMetadata("state", data=ds)
+#' geo(ds$state) <- addGeoMetadata(ds$state)
 #' }
 #' @export
 addGeoMetadata <- function (variable) {
@@ -105,8 +119,25 @@ addGeoMetadata <- function (variable) {
              " wrong, or Crunch doesn't yet have geodata for this variable.")
     }
     if (nrow(match_scores) > 1) {
-        halt("There is more than one possible match. Please specify the geography manually:\n",
-             paste0(capture.output(print(match_scores[,c("value", "geodatum_name", "geodatum", "property")])), collapse = "\n"))
+        # if there is a single geodatum where multiple properties match equally 
+        # well then grab the first property and use that since they are likely 
+        # duplications of the same feature.
+        if (length(unique(match_scores$geodatum_name)) == 1 &
+            length(unique(match_scores$geodatum)) == 1) {
+            warning("The geodatum ", dQuote(unique(match_scores$geodatum_name)),
+                    " has multiple properties that match the variable (",
+                    serialPaste(dQuote(match_scores$property)),
+                    "). Using ", dQuote(match_scores$property[1]), ".")
+            match_scores <- match_scores[1,]
+        } else {
+            halt("There is more than one possible match. Please specify the ", 
+                 "geography manually:\n", paste0(
+                     capture.output(print(match_scores[,c("value", 
+                                                          "geodatum_name",
+                                                          "geodatum",
+                                                          "property")])),
+                     collapse = "\n"))   
+        }
     }
 
     match_geo <- CrunchGeography(geodatum=match_scores$geodatum,
