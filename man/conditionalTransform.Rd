@@ -17,8 +17,9 @@ properties to pass about the case variable (i.e. alias, description)}
 true (default: \code{NA})}
 
 \item{type}{a character that is either "categorical", "text", "numeric" what
-type of output should be returned? The source variables will be converted
-to this type if necessary}
+type of output should be returned? If \code{NULL}, the type of the source
+variable will be used. (default: \code{NULL}) The source variables will be
+converted to this type if necessary.}
 
 \item{categories}{a vector of characters if \code{type="categorical"}, these are
 all of the categories that should be in the resulting variable, in the order
@@ -36,6 +37,15 @@ true. This is commonly a Crunch variable but may be a string or numeric
 value, depending on the type of variable you're constructing.
 }
 \details{
+The type of the new variable can depend on the type(s) of the source
+variable(s).  By default (\code{type=NULL}), the type of the new variable will be
+the type of all of the source variables (that is, if all of the source
+variables are text, the new variable type will be text, if all of the
+source variables are categorical, the new variable will be categorical).
+If there are multiple types in the source variables, the result will be a
+text variable. The default behavior can be overridden by specifying
+\code{type = "categorical"}, \code{"text"}, or \code{"numeric"}.
+
 \code{conditionalTransform} is similar to \code{makeCaseVariable}; however,
 \code{conditionalTransform} can use other Crunch variables as a source of a
 variable, whereas, \code{makeCaseVariable} can only use characters. This

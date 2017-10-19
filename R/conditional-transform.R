@@ -6,6 +6,15 @@
 #' side is where to get the value if the condition on the right-hand side is
 #' true. This is commonly a Crunch variable but may be a string or numeric
 #' value, depending on the type of variable you're constructing.
+#' 
+#' The type of the new variable can depend on the type(s) of the source 
+#' variable(s).  By default (`type=NULL`), the type of the new variable will be 
+#' the type of all of the source variables (that is, if all of the source 
+#' variables are text, the new variable type will be text, if all of the 
+#' source variables are categorical, the new variable will be categorical).
+#' If there are multiple types in the source variables, the result will be a 
+#' text variable. The default behavior can be overridden by specifying 
+#' `type = "categorical"`, `"text"`, or `"numeric"`.
 #'
 #' `conditionalTransform` is similar to `makeCaseVariable`; however,
 #' `conditionalTransform` can use other Crunch variables as a source of a
@@ -21,8 +30,9 @@
 #' @param else_condition a default value to use if none of the conditions are
 #' true (default: `NA`)
 #' @param type a character that is either "categorical", "text", "numeric" what
-#'  type of output should be returned? The source variables will be converted
-#'  to this type if necessary
+#'  type of output should be returned? If `NULL`, the type of the source 
+#'  variable will be used. (default: `NULL`) The source variables will be 
+#'  converted to this type if necessary.
 #' @param categories a vector of characters if `type="categorical"`, these are
 #' all of the categories that should be in the resulting variable, in the order
 #' they should be in the resulting variable or a set of Crunch categories.
