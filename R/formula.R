@@ -225,16 +225,16 @@ evalSide <- function(formula_part, data, eval_env) {
 RHS_string <- function (f) {
     ## Return a string representation of the right-hand side of a formula
     ## (the stuff to the right of the ~)
-    sub("^ +", "", tail(formulaSide(f), 1))
+    sub("^ +", "", tail(splitFormula(f), 1))
 }
 
 LHS_string <- function (f) {
     ## Return a string representation of the left-hand side of a formula
     ## (the stuff to the left of the ~)
-    sub(" +$", "", head(formulaSide(f), 1))
+    sub(" +$", "", head(splitFormula(f), 1))
 }
 
-formulaSide <- function(f) {
+splitFormula <- function(f) {
     if (!is.character(f)) f <- paste(deparse(f), collapse=" ")
     unlist(strsplit(f, "~"))
 }
