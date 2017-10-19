@@ -23,6 +23,16 @@
             "owner_id": "8e01e9f7a8e944a7a2c88e50c2a2997d",
             "id": "0001",
             "metadata": { }
+        },
+        "https://app.crunch.io/api/geodata/duplicate_prop/": {
+            "description": "This geo has duplicate properties",
+            "created": "2015-12-07T23:49:19.566000+00:00",
+            "name": "Duplicate properties",
+            "location": "https://s.crunch.io/some/wrong/duplicate_prop.topojson",
+            "format": "topojson",
+            "owner_id": "8e01e9f7a8e944a7a2c88e50c2a2997d",
+            "id": "0002",
+            "metadata": { }
         }
     },
     "template": "{\"body\": {\"tag\": \"<string>\", \"location\": \"<string>\", \"created\": \"<string>\", \"name\": \"<string>\", \"description\": \"<string>\"}, \"element\": \"shoji:entity\"}"

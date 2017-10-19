@@ -58,11 +58,18 @@ with_mock_crunch({
     guesses <- c("foo", "bar", "Scotland", "North", "Midlands", "London")
     test_that("availableFeatures", {
         expect_is(avail_features, "data.frame")
-        expect_equal(dim(avail_features), c(15, 6))
+        expect_equal(dim(avail_features), c(51, 6))
         expect_equal(as.character(avail_features$value),
-                     c("UKH", "UKI", "UKL", "UKF", "UKJ", "UKC", "East",
+                     c(# GB Regions geodatum
+                       "UKH", "UKI", "UKL", "UKF", "UKJ", "UKC", "East",
                        "London", "Wales", "Scotland", "Northern Ireland",
-                       "Midlands", "South", "North", "test"))
+                       "Midlands", "South", "North",
+                       # new one geodatum
+                       "test", 
+                       # Duplicate properties geodatum
+                       rep(c("w", "n", "x", "b", "q", "s", "l", "v", "y", "m",
+                             "t", "e", "z", "k", "i", "h", "c"), 2),
+                       "totally", "different"))
 
     })
     test_that("scoreCatToFeat", {
@@ -88,7 +95,22 @@ with_mock_crunch({
         expect_equal(geo_to_add$geodatum,
         "https://app.crunch.io/api/geodata/8684c65ff11c4cc3b945c0cf1c9b2a7f/")
     })
-
+ 
+    test_that("addGeoMetadata adds the first property if more than one matches", {
+        # if there is more than one property on a single geodatum that matches, 
+        # just use the first property.
+        expect_warning(geo_to_add <- addGeoMetadata(ds$textVar), 
+                       paste0("The geodatum ", dQuote("Duplicate properties"),
+                             " has multiple properties that match the variable \\(",
+                             dQuote("first_name"), " and ", dQuote("second_name"),
+                             "\\). Using ", dQuote("first_name"), "\\."))
+        expect_is(geo_to_add, "CrunchGeography")
+        expect_equal(geo_to_add$feature_key, "properties.first_name")
+        expect_equal(geo_to_add$match_field, "name")
+        expect_equal(geo_to_add$geodatum,
+                     "https://app.crunch.io/api/geodata/duplicate_prop/")
+    })   
+    
     test_that("addGeoMetadata input validation", {
         # adding dQuote("ds$not_a_var") to error string inexplicably doesn't
         # match with testthat
