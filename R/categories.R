@@ -210,7 +210,7 @@ setMethod("is.selected", "Categories", function (x) structure(vapply(x, is.selec
 #' @rdname is-selected-categories
 #' @export
 setMethod("is.selected<-", "Categories", function (x, value) {
-    if( is.TRUEorFALSE(value)) {
+    if (is.TRUEorFALSE(value)) {
         value <- rep(value, length(x))
     }
     if (length(value) != length(x)) {

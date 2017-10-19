@@ -25,9 +25,7 @@ setMethod("is.dichotomized", "Categories",
 
 .dichotomize.categories <- function (x, i) {
     ## Internal method for dichtomizing Categories (or lists)
-    selections <- is.selected(x)
-    selections[i] <- TRUE
-    is.selected(x) <- selections
+    is.selected(x[i]) <- TRUE
     return(x)
 }
 
