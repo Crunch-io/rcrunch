@@ -4,6 +4,7 @@ setGeneric("values<-", function (x, value) standardGeneric("values<-"))
 
 setGeneric("id", function (x) standardGeneric("id"))
 setGeneric("is.selected", function (x) standardGeneric("is.selected"))
+setGeneric("is.selected<-", function (x, value) standardGeneric("is.selected<-"))
 
 setGeneric("ids", function (x) standardGeneric("ids"))
 setGeneric("ids<-", function (x, value) standardGeneric("ids<-"))
