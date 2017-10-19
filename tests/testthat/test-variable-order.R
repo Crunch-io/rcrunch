@@ -22,13 +22,13 @@ with_mock_crunch({
     test.ord <- ordering(ds)
     ent.urls <- urls(test.ord)
     varcat_url <- self(allVariables(ds))
-    nested.ord <- try(VariableOrder(
+    nested.ord <- VariableOrder(
         VariableGroup(name="Group 1",
             entities=list(ent.urls[1],
                         VariableGroup(name="Nested", entities=ent.urls[2:4]),
                         ent.urls[5])),
         VariableGroup(name="Group 2", entities=ent.urls[6:7]),
-        catalog_url=varcat_url))
+        catalog_url=varcat_url)
 
     test_that("Validation on entities<-", {
         expect_error(entities(ordering(ds)) <- NULL,
@@ -73,6 +73,21 @@ with_mock_crunch({
                     VariableGroup(name="Nested", entities=ent.urls[2:4]))))
         expect_error(nested.ord[["Group 1"]]["NOT A GROUP"],
             "Undefined groups selected: NOT A GROUP")
+    })
+
+    test_that("Extract with path vector", {
+        expect_identical(nested.ord[[c("Group 1", "Nested")]],
+            VariableGroup(name="Nested", entities=ent.urls[2:4]))
+    })
+    test_that("Extract with path string", {
+        expect_identical(nested.ord[["Group 1/Nested"]],
+            VariableGroup(name="Nested", entities=ent.urls[2:4]))
+    })
+    test_that("Extract with alternative path string", {
+        with(temp.option(crunch.delimiter="|"), {
+            expect_identical(nested.ord[["Group 1|Nested"]],
+                VariableGroup(name="Nested", entities=ent.urls[2:4]))
+        })
     })
 
     test_that("Can create nested groups", {
@@ -666,7 +681,7 @@ with_mock_crunch({
 
     test_that("copyOrder input validation", {
         expect_error(copyOrder(ds, "foo"),
-        "Both source and target must be Crunch datasets.")
+            "Both source and target must be Crunch datasets.")
     })
 })
 
