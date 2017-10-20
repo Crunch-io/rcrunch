@@ -31,32 +31,34 @@ cToA <- function (x, dims) {
     ## for percentaging, so they are kept at this point and removed before
     ## display. But having the data in an array shape now will make those later
     ## calculations more natural to do.
-
     d <- unlist(x$data)
     ## Identify missing values
     nas <- names(d) %in% "?"
     d[nas & d == -8] <- NaN
     d[nas & d != -8] <- NA
-    # d <- round(d) ## TODO digits should be an argument
-    ## and rounding should also depend on whether you're looking at count or not
 
     dimsizes <- dim(dims)
     ndims <- length(dims)
     if (ndims == 0) {
         ## It's a scalar. Just return it
-        return(d)
-    } else if (ndims > 1) {
-        ## Cube arrays come in row-col-etc. order, not column-major.
-        ## Keep the labels right here, then aperm the array back to order
-        dimsizes <- rev(dimsizes)
+        out <- d
+    } else {
+        if (ndims > 1) {
+            ## Cube arrays come in row-col-etc. order, not column-major.
+            ## Keep the labels right here, then aperm the array back to order
+            dimsizes <- rev(dimsizes)
+        }
+        out <- array(d, dim=dimsizes)
+        if (ndims > 1) {
+            ap <- seq_len(ndims)
+            ap <- rev(ap)
+            out <- aperm(out, ap)
+        }
+        dimnames(out) <- dimnames(dims)
     }
-    out <- array(d, dim=dimsizes)
-    if (ndims > 1) {
-        ap <- seq_len(ndims)
-        ap <- rev(ap)
-        out <- aperm(out, ap)
-    }
-    dimnames(out) <- dimnames(dims)
+    ## Stick any variable metadata we have in here as an attribute so that
+    ## `measures()` and `variables()` can access it
+    attr(out, "variable") <- cubeVarReferences(x$metadata)
     return(out)
 }
 
@@ -90,6 +92,8 @@ cubeToArray <- function (x, measure=1) {
     ## think of the data, we take the "Selected" slice from the categories
     ## dimension.
     out <- x@arrays[[measure]]
+    ## Remove the "variables" metadata stuck in there
+    attr(out, "variable") <- NULL
     ## If "out" is just a scalar, skip this
     if (is.array(out)) {
         ## First, take the "Selected" slices, if any
@@ -287,7 +291,7 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     ## Finally, drop missings from the result. Could we do this in one step,
     ## building this into the initial `lapply`? Maybe, but I think there's some
     ## combination of "selected_array" multiple response with useNA=="ifany"
-    ## for which that would do the wrong thing. 
+    ## for which that would do the wrong thing.
     keep.these <- evalUseNA(mt, dims[mt_margins], x@useNA)
     out <- subsetCubeArray(mt, keep.these)
     return(out)
@@ -397,23 +401,3 @@ setMethod("bases", "CrunchCube", function (x, margin=NULL) {
         return(cubeMarginTable(x, margin, measure=".unweighted_counts"))
     }
 })
-
-#' @rdname cube-methods
-#' @export
-setMethod("names", "CrunchCube", function (x) names(variables(x)))
-
-#' @rdname cube-methods
-#' @export
-setMethod("aliases", "CrunchCube", function (x) aliases(variables(x)))
-
-#' @rdname cube-methods
-#' @export
-setMethod("descriptions", "CrunchCube", function (x) descriptions(variables(x)))
-
-#' @rdname cube-methods
-#' @export
-setMethod("types", "CrunchCube", function (x) types(variables(x)))
-
-#' @rdname cube-methods
-#' @export
-setMethod("notes", "CrunchCube", function (x) notes(variables(x)))

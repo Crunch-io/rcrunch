@@ -1,4 +1,4 @@
-// Query: filter=%7B%7D&offset=0&limit=5000
+// Query: filter=%7B%22function%22%3A%22in%22%2C%22args%22%3A%5B%7B%22function%22%3A%22row%22%2C%22args%22%3A%5B%5D%7D%2C%7B%22column%22%3A%5B0%2C0%2C1%2C2%2C3%2C4%2C5%2C6%2C7%2C8%2C9%2C10%2C11%2C12%2C13%2C14%2C15%2C16%2C17%2C17%2C18%2C19%2C20%2C21%2C22%2C23%2C24%5D%7D%5D%7D&offset=0&limit=5000
 {
     "element": "shoji:view",
     "self": "https://app.crunch.io/api/datasets/1/variables/textVar/values/",

@@ -78,9 +78,9 @@ df <- data.frame(v1=c(rep(NA_real_, 5), rnorm(15)),
                  v6=TRUE,
                  stringsAsFactors=FALSE)
 
-mrdf <- data.frame(mr_1=c(1,0,1,NA_real_),
-                   mr_2=c(0,0,1,NA_real_),
-                   mr_3=c(0,0,1,NA_real_),
+mrdf <- data.frame(mr_1=c(1, 0, 1, NA_real_),
+                   mr_2=c(0, 0, 1, NA_real_),
+                   mr_3=c(0, 0, 1, NA_real_),
                    v4=as.factor(LETTERS[2:3]),
                    stringsAsFactors=FALSE)
 

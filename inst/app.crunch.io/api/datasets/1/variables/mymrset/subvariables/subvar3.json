@@ -23,8 +23,8 @@
         "id": "fff"
     },
     "views": {
-        "summary": "https://app.crunch.io/api/datasets/1/variables/subvar3/summary/",
-        "values": "https://app.crunch.io/api/datasets/1/variables/subvar3/values/"
+        "summary": "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar3/summary/",
+        "values": "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar3/values/"
     },
     "urls": {
         "dataset_url": "https://app.crunch.io/api/datasets/1/"
