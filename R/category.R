@@ -116,9 +116,19 @@ setMethod("value<-", "Category", setValue)
 #' @export
 setMethod("id", "Category", function (x) as.integer(x[["id"]]))
 
-#' @rdname describe-category
+#' @rdname is-selected-categories
 #' @export
 setMethod("is.selected", "Category", function (x) isTRUE(x$selected))
+
+#' @rdname is-selected-categories
+#' @export
+setMethod("is.selected<-", "Category", function (x, value) {
+    if (!is.TRUEorFALSE(value)) {
+        halt("Value must be either TRUE or FALSE.")
+    }
+    x$selected <- value
+    return(x)
+})
 
 #' @rdname is-na-categories
 #' @export

@@ -65,6 +65,7 @@ Collate:
     'cube-dims.R'
     'cube-query.R'
     'cube-result.R'
+    'cube-variables.R'
     'cut.R'
     'dataset-catalog.R'
     'dataset-extract.R'

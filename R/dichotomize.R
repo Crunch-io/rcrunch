@@ -25,10 +25,7 @@ setMethod("is.dichotomized", "Categories",
 
 .dichotomize.categories <- function (x, i) {
     ## Internal method for dichtomizing Categories (or lists)
-    x[i] <- lapply(x[i], function (a) {
-        a$selected <- TRUE
-        return(a)
-    })
+    is.selected(x[i]) <- TRUE
     return(x)
 }
 
@@ -51,10 +48,7 @@ setMethod("dichotomize", c("Categories", "character"), function (x, i) {
 #' @rdname dichotomize
 #' @export
 setMethod("undichotomize", "Categories", function (x) {
-    x[] <- lapply(x[], function (a) {
-        a$selected <- FALSE
-        return(a)
-    })
+    is.selected(x) <- FALSE
     return(x)
 })
 

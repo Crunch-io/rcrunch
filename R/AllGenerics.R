@@ -4,6 +4,7 @@ setGeneric("values<-", function (x, value) standardGeneric("values<-"))
 
 setGeneric("id", function (x) standardGeneric("id"))
 setGeneric("is.selected", function (x) standardGeneric("is.selected"))
+setGeneric("is.selected<-", function (x, value) standardGeneric("is.selected<-"))
 
 setGeneric("ids", function (x) standardGeneric("ids"))
 setGeneric("ids<-", function (x, value) standardGeneric("ids<-"))
@@ -147,6 +148,7 @@ setGeneric("round")
 
 setGeneric("bases", function (x, margin=NULL) standardGeneric("bases"))
 setGeneric("dimensions", function (x) standardGeneric("dimensions"))
+setGeneric("measures", function (x) standardGeneric("measures"))
 
 setGeneric("subset")
 setGeneric("which", signature="x")
