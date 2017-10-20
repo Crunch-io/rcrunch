@@ -31,6 +31,6 @@ Getters return a logical vector indicating selection status. Setters return
 the \code{Categories} or \code{Category} object, duly modified.
 }
 \description{
-Crunch Multiple Response variables identify one or more categories as "selected"
+Crunch Multiple Response variables identify one or more categories as "selected".
 These methods allow you to get or set which categories should indicate a selection.
 }
