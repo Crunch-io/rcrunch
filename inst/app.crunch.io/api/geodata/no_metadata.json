@@ -1,0 +1,11 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/geodata/no_metadata/",
+    "description": "Details for a type of geodata",
+    "body": {
+        "name": "Sans metadata (broken but possible state)",
+        "location": "https://s.crunch.io/some/wrong/path.geojson",
+        "format": "topojson",
+        "metadata": {}
+    }
+}
