@@ -27,26 +27,22 @@ test_that("Add more than one subvariable to an array", {
         expect_identical(names(subvariables(ds$allpets)),
             c("Cat", "Dog", "Bird", "Turtle", "Gerbil", "Coyote", "Cockroach"))
     })
+ds <- refresh(ds)
     test_that("Variable definitions can be added to an array", {
-        expect_identical(names(subvariables(ds$allpets)),
-            c("Cat", "Dog", "Bird"))
         sub1 <- toVariable(factor(1:nrow(ds)), name = "Ant")
         ds$allpets <- addSubvariables(ds$allpets, sub1)
         expect_true("Ant" %in% names(subvariables(ds$allpets)))
-    })
-print(ds$allpets)
-    test_that("Lists of variable definitions can be added to an array", {
+
         sub2 <- toVariable(factor(1:nrow(ds)), name = "Bee")
         sub3 <- toVariable(factor(1:nrow(ds)), name = "Mosquito")
         ds$allpets <- addSubvariables(ds$allpets, list(sub2, sub3))
         expect_identical(names(subvariables(ds$allpets)),
             c("Cat", "Dog", "Bird", "Turtle", "Gerbil", "Coyote", "Cockroach",
                 "Ant", "Bee", "Mosquito"))
-    })
-    test_that("Mixed lists of variables and subvariables can be added to an array", {
+
         sub4 <- toVariable(factor(1:nrow(ds)), name = "Fly")
-        ds$allpets_14 <- copy(ds$allpets$allpets_1, deep=TRUE, name="Aphid")
-        ds$allpets <- addSubvariables(ds$allpets, list(sub4, ds$allpets_14))
+        ds$Aphid <- factor(1:nrow(ds))
+        ds$allpets <- addSubvariables(ds$allpets, list(sub4, ds$Aphid), debug = TRUE)
         expect_identical(names(subvariables(ds$allpets)),
             c("Cat", "Dog", "Bird", "Turtle", "Gerbil", "Coyote", "Cockroach",
                 "Ant", "Bee", "Mosquito", "Fly", "Aphid"))
