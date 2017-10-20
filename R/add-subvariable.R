@@ -25,9 +25,8 @@ addSubvariable <- function (variable, subvariable) {
     if (any(vardefs)) {
 
         ds <- loadDataset(datasetReference(variable))
-        lapply(subvariable[vardefs], function(x) addVariables(ds, x))
+        addVariables(ds, subvariable[vardefs])
         ds <- refresh(ds)
-
         subvariable <- lapply(subvariable[vardefs], function(x){
             if (is.variable(x)) {
                 x
