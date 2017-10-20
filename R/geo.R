@@ -58,7 +58,7 @@ setMethod("geo<-", c("CrunchVariable", "CrunchGeography"),
               geodata <- list(geodata = list(value))
 
               ent <- setEntitySlot(entity(x), "view", geodata)
-              dropCache(cubeURL(x))
+              dropCache(datasetReference(x))
               return(x)
           })
 #' @rdname geo
