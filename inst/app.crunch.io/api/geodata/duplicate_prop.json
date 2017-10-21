@@ -1,0 +1,58 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/geodata/duplicate_prop/",
+    "description": "Details for a type of geodata",
+    "body": {
+        "name": "Duplicate properties",
+        "description": "This geo has duplicate properties",
+        "location": "https://s.crunch.io/some/wrong/duplicate_prop.topojson",
+        "format": "topojson",
+        "metadata": {
+            "status": "success",
+            "properties": {
+                "first_name": [
+                    "w",
+                    "n",
+                    "x",
+                    "b",
+                    "q",
+                    "s",
+                    "l",
+                    "v",
+                    "y",
+                    "m",
+                    "t",
+                    "e",
+                    "z",
+                    "k",
+                    "i",
+                    "h",
+                    "c"
+                ],
+                "second_name": [
+                    "w",
+                    "n",
+                    "x",
+                    "b",
+                    "q",
+                    "s",
+                    "l",
+                    "v",
+                    "y",
+                    "m",
+                    "t",
+                    "e",
+                    "z",
+                    "k",
+                    "i",
+                    "h",
+                    "c"
+                ],
+                "different_one": [
+                    "totally",
+                    "different"
+                ]
+            }
+        }
+    }
+}

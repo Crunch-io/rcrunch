@@ -74,6 +74,7 @@ reference:
   - flipArrays
   - importMultitable
   - makeArray
+  - is-selected-categories
   - unbind
 - title: Ordering
   contents:

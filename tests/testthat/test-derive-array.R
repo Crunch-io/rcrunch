@@ -78,10 +78,8 @@ with_test_authentication({
     })
 
     ## Deep copy array, rename it, etc.
-    pl2 <- copy(ds$petloc, deep=TRUE, name="Other pet loc")
-    pl2$subvariables[[1]]$alias <- "pl2_a"
-    pl2$subvariables[[2]]$alias <- "pl2_b"
-    ds$petloc2 <- pl2
+    ds$petloc2 <- copy(ds$petloc, deep=TRUE, name="Other pet loc")
+    aliases(subvariables(ds$petloc2)) <- c("pl2_a", "pl2_b")
 
     ## Make a "flipped" version of that and the original
     ds$petloc_a <- deriveArray(list(ds$petloc2$pl2_a, ds$petloc$petloc_home),

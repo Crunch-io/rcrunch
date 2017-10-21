@@ -4,6 +4,7 @@ setGeneric("values<-", function (x, value) standardGeneric("values<-"))
 
 setGeneric("id", function (x) standardGeneric("id"))
 setGeneric("is.selected", function (x) standardGeneric("is.selected"))
+setGeneric("is.selected<-", function (x, value) standardGeneric("is.selected<-"))
 
 setGeneric("ids", function (x) standardGeneric("ids"))
 setGeneric("ids<-", function (x, value) standardGeneric("ids<-"))
@@ -122,6 +123,9 @@ setGeneric("groupClass", function (x) standardGeneric("groupClass"))
 setGeneric("entityClass", function (x) standardGeneric("entityClass"))
 setGeneric("entitiesInitializer", function (x) standardGeneric("entitiesInitializer"))
 setGeneric("weightVariables", function (x) standardGeneric("weightVariables"))
+setGeneric("weightVariables<-", function (x, value) standardGeneric("weightVariables<-"))
+setGeneric("is.weightVariable<-", function (x, value) standardGeneric("is.weightVariable<-"))
+setGeneric("is.weight<-", function (x, value) standardGeneric("is.weight<-"))
 
 setGeneric("owner", function (x) standardGeneric("owner"))
 setGeneric("owner<-", function (x, value) standardGeneric("owner<-"))
@@ -144,6 +148,7 @@ setGeneric("round")
 
 setGeneric("bases", function (x, margin=NULL) standardGeneric("bases"))
 setGeneric("dimensions", function (x) standardGeneric("dimensions"))
+setGeneric("measures", function (x) standardGeneric("measures"))
 
 setGeneric("subset")
 setGeneric("which", signature="x")

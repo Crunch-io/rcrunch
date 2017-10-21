@@ -44,7 +44,9 @@
 #'                                        "don't know" = "#260aff"))
 #' }
 #'
-#' @seealso \code{\link{preCrunchBoxCheck}} to provide guidance on what you're including in the
+#' @seealso [`preCrunchBoxCheck()`] to provide guidance on what you're including in the
+#' @name CrunchBox
+#' @aliases crunchBox CrunchBox
 #' @export
 #' @importFrom grDevices col2rgb colors rgb
 crunchBox <- function (dataset, filters=crunch::filters(dataset),
@@ -128,6 +130,10 @@ crunchBox <- function (dataset, filters=crunch::filters(dataset),
     return(out)
 }
 
+#' @rdname CrunchBox
+#' @export
+CrunchBox <- crunchBox
+
 ## Make this a function so tests can mock it
 .boxlimit <- function () 60000L
 
@@ -144,7 +150,7 @@ boxTooBig <- function (nvars, nfilters) {
 #'
 #' @param dataset CrunchDataset, potentially subsetted on variables
 #' @return Invisibly, the dataset. Called for side-effect of printing things.
-#' @seealso \code{\link{crunchBox}}
+#' @seealso [`CrunchBox`]
 #' @export
 preCrunchBoxCheck <- function (dataset) {
     vm <- variableMetadata(dataset)[urls(variables(dataset))] ## [] for order of vars
@@ -259,10 +265,9 @@ demonstrativeCount <- function (n, noun="variable") {
 #' [crunchBox()] returns a URL to the box data that it generates, but
 #' in order to view it in a CrunchBox or to embed it on a website, you'll need
 #' to translate that to the Box's public URL and wrap it in some HTML. This function
-#' takes a crunchBox and returns the HTLM which you can embed in a website.
+#' takes a CrunchBox and returns the HTLM which you can embed in a website.
 #'
-#' @param box character URL of the box data, as returned by
-#' `crunchBox`
+#' @param box character URL of the box data, as returned by `crunchBox()`
 #' @param title character title for the Box, to appear above the iframe. Default
 #' is `NULL`, meaning no title shown
 #' @param logo character URL of a logo to show instead of a title. Default is

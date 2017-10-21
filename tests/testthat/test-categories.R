@@ -142,6 +142,19 @@ with_mock_crunch({
             "category assignment not defined for NumericVariable")
         expect_error(categories(ds$gender) <- categories(ds$gender)[c(1, 2, 5)],
             "subscript out of bounds: 5")
+        expect_error(categories(ds$catarray) <- 1:3,
+            paste("`categories(x) <- value` only accepts Categories,",
+                "not numeric. Did you mean",
+                "`values(categories(x)) <- value`?"),
+            fixed=TRUE)
+        expect_error(categories(ds$catarray) <- c("A", "B", "C"),
+            paste("`categories(x) <- value` only accepts Categories,",
+                "not character. Did you mean",
+                "`names(categories(x)) <- value`?"),
+            fixed=TRUE)
+        expect_error(categories(ds$catarray) <- list(),
+            "`categories(x) <- value` only accepts Categories, not list.",
+            fixed=TRUE)
     })
 
     test_that("categories ids cannot be set", {
@@ -174,6 +187,38 @@ with_mock_crunch({
         cats2 <- undichotomize(dcats)
         expect_false(is.dichotomized(cats2))
         expect_false(is.selected(cats2[[1]]))
+    })
+
+    test_that("is.selected works on Categories", {
+        expect_identical(is.selected(categories(ds$mymrset)),
+            structure(c(FALSE, TRUE, FALSE), .Names = c("0.0", "1.0", "No Data"))
+        )
+    })
+    test_that("is.selected assignment methods", {
+        true_body <- '{"categories":[{"id":1,"missing":false,"name":"0.0","numeric_value":0,"selected":true},{"id":2,"missing":false,"name":"1.0","numeric_value":1,"selected":true},{"id":-1,"missing":true,"name":"No Data","numeric_value":null,"selected":true}]}'
+
+        expect_PATCH(
+            is.selected(categories(ds$mymrset)) <- c(TRUE, TRUE, TRUE),
+            'https://app.crunch.io/api/datasets/1/variables/mymrset/',
+            true_body
+        )
+        expect_PATCH(
+            is.selected(categories(ds$mymrset)) <- TRUE,
+            'https://app.crunch.io/api/datasets/1/variables/mymrset/',
+            true_body
+        )
+        expect_PATCH(
+            is.selected(categories(ds$mymrset)[2]) <- TRUE,
+            'https://app.crunch.io/api/datasets/1/variables/mymrset/',
+            '{"categories":[{"id":1,"missing":false,"name":"0.0","numeric_value":0,"selected":false},{"id":2,"missing":false,"name":"1.0","numeric_value":1,"selected":true},{"id":-1,"missing":true,"name":"No Data","numeric_value":null,"selected":false}]}'
+        )
+    })
+    test_that("is.selected assignment errors correctly", {
+        expect_error(is.selected(categories(ds$mymrset)[2]) <- "banana",
+            "Value must be either TRUE or FALSE.")
+        expect_error(is.selected(categories(ds$mymrset)) <- c(TRUE, FALSE, TRUE, FALSE),
+            paste0("You supplied ", 4, " logical values for ", 3, " Categories.")
+        )
     })
 
     test_that("is.na", {
@@ -350,7 +395,7 @@ with_test_authentication({
                 c(1, 2, -1))
             orig_vector <- as.vector(ds$v4f)
             expect_equal(as.vector(ds$v4f[1:4], mode="id"), c(1, 2, 1, 2))
-            
+
             expect_silent(ds$v4f <- changeCategoryID(ds$v4f, 2, 6))
             expect_identical(names(categories(ds$v4f)),
                 c("B", "C", "No Data"))
@@ -360,7 +405,7 @@ with_test_authentication({
             expect_equal(as.vector(ds$v4f[1:4], mode="id"), c(1, 6, 1, 6))
             expect_equal(as.vector(ds$v4f[1:4], mode="numeric"), c(1, 6, 1, 6))
         })
-        
+
         test_that("Can changeCategoryID without changing values when value!=id", {
             ds$v4g <- df$v4
             values(categories(ds$v4g)) <- c(NA, 20, NA)
@@ -372,8 +417,8 @@ with_test_authentication({
                          c(NA, 20, NA))
             orig_vector <- as.vector(ds$v4g)
             expect_equal(as.vector(ds$v4g[1:4], mode="id"), c(1, 2, 1, 2))
-            
-            
+
+
             expect_silent(ds$v4g <- changeCategoryID(ds$v4g, 2, 6))
             expect_identical(names(categories(ds$v4g)),
                              c("B", "C", "No Data"))
@@ -384,7 +429,7 @@ with_test_authentication({
             expect_equal(as.vector(ds$v4g), orig_vector)
             expect_equal(as.vector(ds$v4g[1:4], mode="id"), c(1, 6, 1, 6))
             expect_equal(as.vector(ds$v4g[1:4], mode="numeric"), c(NA, 20, NA, 20))
-            
+
             # also try with an NA, make sure the NA is retained
             expect_silent(ds$v4g <- changeCategoryID(ds$v4g, 1, 10))
             expect_identical(names(categories(ds$v4g)),
@@ -470,6 +515,17 @@ with_test_authentication({
                 c("Not Asked", "Skipped", "Bird", "Canine", "Cat"))
             expect_identical(names(categories(ds$petloc$petloc_home)),
                 c("Not Asked", "Skipped", "Bird", "Canine", "Cat"))
+        })
+        test_that("is.selected method gets and set selection value",  {
+            ds$mr_sub1 <- factor(sample(1:2, nrow(ds), replace = TRUE))
+            ds$mr_sub2 <- factor(sample(1:2, nrow(ds), replace = TRUE))
+            ds$mr <- makeMR(ds[, c("mr_sub1", "mr_sub2")], selections = "1", name = "mr")
+            is.selected(categories(ds$mr)) <- c(TRUE, TRUE, TRUE)
+            expect_true(all(is.selected(categories(ds$mr))))
+            is.selected(categories(ds$mr)[2]) <- FALSE
+            expect_identical(is.selected(categories(ds$mr)),
+                structure(c(TRUE, FALSE, TRUE), .Names = c("1", "2", "No Data"))
+            )
         })
     })
 })

@@ -1,3 +1,4 @@
+BatchCatalog
 CategoricalVariable
 CategoricalVariables
 Categoricals
@@ -87,6 +88,8 @@ categoricals
 compareDatasets
 config
 contextManager
+crdf
+crdfs
 createDataset
 createWithPreparedData
 crossbreaks
@@ -126,6 +129,7 @@ json
 knitr
 makeWeight
 modeling
+modifyWeightVariables
 multitable
 na
 newDataset
@@ -138,6 +142,8 @@ rmarkdown
 sav
 savepoints
 searchable
+shapefile
+shapefiles
 shojiObject
 spss
 st
@@ -156,6 +162,7 @@ unshare
 varlabels
 ve
 votereg
+weightVariables
 writePreparedData
 xlsx
 xtabs

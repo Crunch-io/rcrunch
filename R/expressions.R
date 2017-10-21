@@ -163,6 +163,7 @@ setMethod("!", "CrunchExpr", function (x) zfuncExpr("not", x))
 
     if (is.numeric(table) &&
         length(table) > 2 &&
+        all(!is.na(table)) &&
         identical(as.numeric(head(table, 1):tail(table, 1)), as.numeric(table))) {
 
         # set beg(ining) and end appropriately in case we have been given a rev

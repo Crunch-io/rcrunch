@@ -19,6 +19,24 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/3/preferences/",
             '{"weight":null}')
     })
+    test_that("is.weight assignment method", {
+        expect_PATCH(is.weight(oldds$birthyr) <- TRUE,
+            "https://app.crunch.io/api/datasets/1/preferences/",
+            '{"weight":"https://app.crunch.io/api/datasets/1/variables/birthyr/"}')
+        expect_silent(is.weight(oldds$birthyr) <- FALSE)
+    })
+    test_that("is.weight returns false when the variable is not a weight", {
+        expect_false(is.weight("character"))
+        expect_false(is.weight(mtcars))
+        expect_false(is.weight(NULL))
+    })
+    test_that("is weight assignment errors correctly", {
+        expect_error(is.weight(oldds$birthyr) <- "char",
+            "is.TRUEorFALSE(value) is not TRUE", fixed=TRUE)
+        expect_error(is.weight(oldds$birthyr) <- c(TRUE, FALSE),
+            "is.TRUEorFALSE(value) is not TRUE", fixed=TRUE)
+    })
+
     test_that("No request is made to set a weight that already is your weight", {
         expect_no_request(weight(oldds) <- NULL)
         expect_warning(
@@ -38,6 +56,53 @@ with_mock_crunch({
             expect_identical(weightVariables(newds), "Birth Year")
         })
         expect_identical(weightVariables(oldds), c())
+    })
+    test_that("weightVariables can be assigned", {
+        body <- '{"element":"shoji:order","self":"https://app.crunch.io/api/datasets/1/variables/weights/","description":"Order of the weight variables for this dataset","graph":["https://app.crunch.io/api/datasets/1/variables/birthyr/"]} '
+        expect_PUT(weightVariables(oldds) <- oldds$birthyr,
+            "https://app.crunch.io/api/datasets/1/variables/weights/",
+            body)
+        expect_PUT(is.weightVariable(oldds$birthyr) <- TRUE,
+            "https://app.crunch.io/api/datasets/1/variables/weights/",
+            body)
+    })
+    test_that("is.weightVariable", {
+        expect_false(is.weightVariable(oldds$birthyr))
+    })
+    test_that("is.weightVariable assignment method", {
+        body <- '{"element":"shoji:order","self":"https://app.crunch.io/api/datasets/1/variables/weights/","description":"Order of the weight variables for this dataset","graph":["https://app.crunch.io/api/datasets/1/variables/birthyr/"]} '
+        expect_PUT(
+            is.weightVariable(oldds$birthyr) <- TRUE,
+            "https://app.crunch.io/api/datasets/1/variables/weights/",
+            body
+        )
+    })
+
+    test_that("assigning incorrect entries to weightVariables errors correctly", {
+        expect_error(
+            weightVariables(oldds) <- "notvar",
+            'notvar is not a numeric Crunch variable.'
+        )
+        expect_error(
+            weightVariables(oldds) <- oldds$gender,
+            'Gender is not a numeric Crunch variable.'
+        )
+        expect_error(
+            weightVariables(oldds) <- list(oldds$gender, oldds$birthyr),
+            'Gender is not a numeric Crunch variable.'
+        )
+        expect_error(
+            weightVariables(oldds) <- list(oldds$gender, oldds$textVar),
+            'Gender and Text variable ftw are not numeric Crunch variables.'
+        )
+    })
+
+    test_that("is.TRUEorFALSE errors correctly", {
+        expect_true(is.TRUEorFALSE(TRUE))
+        expect_true(is.TRUEorFALSE(FALSE))
+        expect_false(is.TRUEorFALSE("char"))
+        expect_false(is.TRUEorFALSE(NA))
+        expect_false(is.TRUEorFALSE(c(TRUE, TRUE)))
     })
 
     test_that("generateWeightEntry errors correctly", {
@@ -153,6 +218,59 @@ with_test_authentication({
             ds$w2 <- 2:21
             weight(ds) <- ds$w2
             expect_equivalent(weight(ds), ds$w2)
+        })
+    })
+
+    with(test.dataset(df), {
+        test_that("We have a clean dataset", {
+            expect_null(weightVariables(ds))
+        })
+        ds$weight   <- sample(c(.2, .8), 20, replace = TRUE)
+        ds$weight22 <- sample(c(.2, .8), 20, replace = TRUE)
+        ds$weight23 <- sample(c(.5, .5), 20, replace = TRUE)
+        test_that("modifyWeightVariables appends, removes, and replaces", {
+            modifyWeightVariables(ds, "weight")
+            expect_identical(weightVariables(ds), "weight")
+            modifyWeightVariables(ds, "weight22", "append")
+            expect_identical(weightVariables(ds), c("weight", "weight22"))
+            modifyWeightVariables(ds, "weight22", "remove")
+            expect_identical(weightVariables(ds), c("weight"))
+            modifyWeightVariables(ds, NULL, "replace")
+            expect_identical(weightVariables(ds), NULL)
+        })
+        test_that("weightVariables can be assigned", {
+            weightVariables(ds) <- ds$weight23
+            expect_identical(
+                weightVariables(ds), "weight23"
+            )
+            weightVariables(ds) <- list(ds$weight23, ds$weight22)
+            expect_identical(
+                weightVariables(ds), c("weight22", "weight23")
+            )
+            weightVariables(ds) <- NULL
+            expect_null(weightVariables(ds))
+            weightVariables(ds) <- c("weight22", "weight23")
+            expect_identical(
+                weightVariables(ds), c("weight22", "weight23")
+            )
+        })
+        test_that("is.weightVariable identifies weight variable and allows it to be set", {
+            expect_true(is.weightVariable(ds$weight22))
+            is.weightVariable(ds$weight22) <- FALSE
+            expect_false(is.weightVariable(ds$weight22))
+            expect_identical(weightVariables(ds), "weight23")
+            is.weightVariable(ds$weight22) <- TRUE
+            expect_true(is.weightVariable(ds$weight22))
+            expect_identical(weightVariables(ds), c("weight22", "weight23"))
+            expect_false(is.weightVariable("notvar"))
+        })
+        test_that("is.weightVariable identifies weight variable and allows it to be set", {
+            weight(ds) <- ds$weight22
+            expect_true(is.weight(ds$weight22))
+            is.weight(ds$weight22) <- FALSE
+            expect_false(is.weight(ds$weight22))
+            is.weight(ds$weight22) <- TRUE
+            expect_identical(weight(ds), ds$weight22)
         })
     })
 

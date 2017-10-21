@@ -80,15 +80,28 @@ NULL
 
 #' @rdname var-categories
 #' @export
-setMethod("categories", "CrunchVariable", function (x) NULL)
+setMethod("categories", "VariableTuple", function (x) {
+    ## VariableTuples from a regular VariableCatalog don't have categories.
+    ## But, from variableMetadata() and from variables(cube), they do. And
+    ## if they do, return them instead of making an entity() request.
+    cats <- x$categories
+    if (!is.null(cats)) {
+        cats <- Categories(data=cats)
+    }
+    return(cats)
+})
+
+#' @rdname var-categories
+#' @export
+setMethod("categories", "CrunchVariable", function (x) categories(tuple(x)))
 #' @rdname var-categories
 #' @export
 setMethod("categories", "CategoricalVariable",
-    function (x) categories(entity(x)))
+    function (x) callNextMethod(x) %||% categories(entity(x)))
 #' @rdname var-categories
 #' @export
 setMethod("categories", "CategoricalArrayVariable",
-    function (x) categories(entity(x)))
+    function (x) callNextMethod(x) %||% categories(entity(x)))
 
 #' @rdname var-categories
 #' @export
