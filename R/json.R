@@ -4,15 +4,14 @@ setMethod("jsonprep", "Categories", function (x, ...) jsonprep(I(x@.Data)))
 
 #' @rdname tojson-crunch
 #' @export
-setMethod("jsonprep", "list", function (x, ...) lapply(x, jsonprep, ...))
-
-#' @rdname tojson-crunch
-#' @export
-setMethod("jsonprep", "VariableDefinition", function (x, ...) lapply(x, jsonprep, ...))
-
-#' @rdname tojson-crunch
-#' @export
-setMethod("jsonprep", "ANY", function (x, ...) x)
+setMethod("jsonprep", "ANY", function (x, ...) {
+    if (is.list(x)) {
+        ## Do this so that any S3 objects are supported (they are is.list==TRUE
+        ## but don't dispatch S3/S4 methods as list)
+        x <- lapply(x, jsonprep, ...)
+    }
+    return(x)
+})
 
 
 .jsonprep.ordergroup <- function (x, ...) {
