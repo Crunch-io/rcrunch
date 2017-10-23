@@ -13,34 +13,9 @@
 #' }
 #' @export
 addSubvariable <- function (variable, subvariable) {
-    ## Input can be a variable, subvariable, dataset subset or
-    ## a mixed or uniform list of variables and subvariables this
-    ## wraps single entries in a list for type consistency.
-    if (inherits(subvariable, "VariableDefinition") ||
-            is.variable(subvariable)) {
-        ## wrap single variables in list
-        subvariable <- list(subvariable)
-    }
-    vardefs <- vapply(subvariable,
-        function(x) inherits(x, "VariableDefinition"),
-        logical(1))
+    subvariable <- add_subvar_def(variable, subvariable)
 
-    if (any(vardefs)) {
-        ds <- loadDataset(datasetReference(variable))
-        ds <- addVariables(ds, subvariable[vardefs])
-
-        ## Since this function accepts mixed lists of variables and definitions
-        ## we need to replace the definitions with the variables once they've been added.
-        subvariable[vardefs] <- lapply(subvariable[vardefs], function(x){
-            if (is.variable(x)) {
-                x
-            } else {
-                ds[[x$name]]
-            }
-        })
-    }
-
-    ## There is some inconsistency in the output order after patching the subvariables list
+    ## There is some inconsistency in the output order after patching the subvariable catalog
     ## this stores the proper order.
     order <- c(names(subvariables(variable)), vapply(subvariable, name, ""))
 
@@ -59,3 +34,34 @@ addSubvariable <- function (variable, subvariable) {
 #' @rdname addSubvariable
 #' @export
 addSubvariables <- addSubvariable
+
+add_subvar_def <- function(var, subvar){
+    ## Input can be a variable, subvariable, dataset subset or
+    ## a mixed or uniform list of variables and subvariables this
+    ## wraps single entries in a list for type consistency.
+    if (inherits(subvar, "VariableDefinition") ||
+            is.variable(subvar)) {
+        ## wrap single variables in list
+        subvar <- list(subvar)
+    }
+
+    vardefs <- vapply(subvar,
+        function(x) inherits(x, "VariableDefinition"),
+        logical(1))
+
+    if (any(vardefs)) {
+        ds <- loadDataset(datasetReference(var))
+        ds <- addVariables(ds, subvar[vardefs])
+
+        ## Since this function accepts mixed lists of variables and definitions
+        ## we need to replace the definitions with the variables once they've been added.
+        subvar[vardefs] <- lapply(subvar[vardefs], function(x){
+            if (is.variable(x)) {
+                x
+            } else {
+                ds[[x$name]]
+            }
+        })
+    }
+    return(subvar)
+}
