@@ -13,19 +13,20 @@
 #' }
 #' @export
 addSubvariable <- function (variable, subvariable) {
-    subvariable <- add_subvar_def(variable, subvariable)
 
-    ## There is some inconsistency in the output order after patching the subvariable catalog
-    ## this stores the proper order.
-    order <- c(names(subvariables(variable)), vapply(subvariable, name, ""))
+    new.urls <- addSubvarDef(variable, subvariable)
 
-    ## Get subvariable URL or URLs, depending on how many supplied
-    new.urls <- urls(subvariable)
+    ## Store these for post workaround
+    subvar.urls <- subvariables(tuple(variable))
+
     ## Do the adding
     crPATCH(shojiURL(variable, "catalogs", "subvariables"),
         body=toJSON(sapply(new.urls, emptyObject, simplify=FALSE)))
-    variable <- refresh(variable)
-    subvariables(variable) <- subvariables(variable)[order]
+
+        ## Workaround because apparently bind/rebind isn't retaining the order
+    crPATCH(self(variable),
+        body=toJSON(list(subvariables=I(c(subvar.urls, new.urls)))))
+
     ## Refresh and return
     dropCache(datasetReference(variable))
     return(invisible(refresh(variable)))
@@ -35,7 +36,7 @@ addSubvariable <- function (variable, subvariable) {
 #' @export
 addSubvariables <- addSubvariable
 
-add_subvar_def <- function(var, subvar){
+addSubvarDef <- function (var, subvar) {
     ## Input can be a variable, subvariable, dataset subset or
     ## a mixed or uniform list of variables and subvariables this
     ## wraps single entries in a list for type consistency.
@@ -49,19 +50,32 @@ add_subvar_def <- function(var, subvar){
         function(x) inherits(x, "VariableDefinition"),
         logical(1))
 
+    out <- vector("list", length(subvar))
+
     if (any(vardefs)) {
         ds <- loadDataset(datasetReference(var))
-        ds <- addVariables(ds, subvar[vardefs])
+        var_cat_url <- shojiURL(ds, "catalogs", "variables")
+        new_var_urls <- lapply(subvar[vardefs],
+            function (x) try(POSTNewVariable(var_cat_url, x), silent = TRUE)
+            )
+        ## Be silent so we can throw the errors together at the end
 
-        ## Since this function accepts mixed lists of variables and definitions
-        ## we need to replace the definitions with the variables once they've been added.
-        subvar[vardefs] <- lapply(subvar[vardefs], function(x){
-            if (is.variable(x)) {
-                x
-            } else {
-                ds[[x$name]]
+        ## Check for errors
+        errs <- vapply(new_var_urls, is.error, logical(1))
+        if (any(errs)) {
+            if (length(errs) == 1) {
+                ## Just one variable added. Throw its error.
+                rethrow(new_var_urls[[1]])
             }
-        })
+            halt("The following variable definition(s) errored on upload: ",
+                paste(which(errs), collapse=", "), "\n",
+                paste(unlist(lapply(new_var_urls[errs], errorMessage)), sep="\n"))
+        } else {
+            out[vardefs] <- new_var_urls
+        }
     }
-    return(subvar)
+    if (any(!vardefs)) {
+        out[!vardefs] <- urls(subvar[!vardefs])
+    }
+    return(as.character(out))
 }

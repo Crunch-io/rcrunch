@@ -42,7 +42,7 @@ ds <- refresh(ds)
 
         sub4 <- toVariable(factor(1:nrow(ds)), name = "Fly")
         ds$Aphid <- factor(1:nrow(ds))
-        ds$allpets <- addSubvariables(ds$allpets, list(sub4, ds$Aphid), debug = TRUE)
+        ds$allpets <- addSubvariable(ds$allpets, list(sub4, ds$Aphid))
         expect_identical(names(subvariables(ds$allpets)),
             c("Cat", "Dog", "Bird", "Turtle", "Gerbil", "Coyote", "Cockroach",
                 "Ant", "Bee", "Mosquito", "Fly", "Aphid"))
