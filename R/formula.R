@@ -13,54 +13,21 @@ formulaToQuery <- function (formula, data) {
         halt(dQuote("formula"), " is not a valid formula")
     }
 
-    ## Parse the formula
-    f <- terms(formula, allowDotAsName=TRUE) ## To catch "."
-    f.vars <- attr(f, "variables")
-    all.f.vars <- all.vars(f.vars)
-
-    ## More input validation
-    if ("." %in% all.f.vars) {
-        halt("crtabs does not support ", dQuote("."), " in formula")
-    }
-    if (!length(all.f.vars)) {
-        halt("Must supply one or more variables")
-    }
-
-    ## Find variables either in 'data' or in the calling environment
-    ## Evaluate the formula's terms in order to catch derived expressions
-    v.call <- do.call(substitute,
-        list(expr=f.vars, env=registerCubeFunctions(all.f.vars)))
-    if (missing(data)) {
-        vars <- eval(v.call, NULL, environment(formula))
-    } else {
-        vars <- eval(v.call, as.environment(data), environment(formula))
-    }
-
-    ## Validate that vars are non-null
-    nullvars <- vapply(vars, is.null, logical(1))
-    if (any(nullvars)) {
-        ## Get the NULL expressions.
-        ## Note the off-by-one problem:
-        ## If f.vars == language list(CA$mr_1, CA$NOTAVAR),
-        ## as.character(f.vars) == [1] "list"       "CA$mr_1"    "CA$NOTAVAR"
-        varexprs <- as.character(f.vars)[-1]
-        halt("Invalid cube dimension", ifelse(sum(nullvars) > 1, "s: ", ": "),
-            serialPaste(varexprs[nullvars]), " cannot be NULL")
-    }
+    # all lhs variables in list
+    vars <- parseTerms(formula, data, side = "RHS")
+    # all rhs variables in list
+    measures <- parseTerms(formula, data, side = "LHS")
 
     ## Construct the "measures", either from the formula or default "count"
-    resp <- attr(f, "response")
-    if (resp) {
-        ## Pop them off
-        measures <- vars[resp]
-        vars <- vars[-resp]
+    if (!length(measures)) {
+        # if measures is an empty list, there are none.
+        measures <- list(count=zfunc("cube_count"))
+    } else {
         ## Look for multiple measures, as passed by `list(f(x), g(x) ~ a + b)`
-        if (startsWith(as.character(f.vars[resp + 1]), "list(")) {
+        if (startsWith(as.character(formula)[2], "list(")){
             measures <- unlist(measures, recursive=FALSE)
         }
         measures <- lapply(measures, zcl)
-    } else {
-        measures <- list(count=zfunc("cube_count"))
     }
 
     ## Make "dimensions".
@@ -85,6 +52,56 @@ formulaToQuery <- function (formula, data) {
     }
 
     return(list(dimensions=dimensions, measures=measures))
+}
+
+parseTerms <- function(formula, data, side = "RHS") {
+    terms <- terms(formula, allowDotAsName=TRUE)
+    f.vars <- attr(terms, "variables")
+    all.f.vars <- all.vars(f.vars)
+
+    ## More input validation
+    if ("." %in% all.f.vars) {
+        halt("Crunch formulae do not support ", dQuote("."), " in formula")
+    }
+    if (!length(all.f.vars)) {
+        halt("Must supply one or more variables")
+    }
+
+    ## Find variables either in 'data' or in the calling environment
+    ## Evaluate the formula's terms in order to catch derived expressions
+    v.call <- do.call(substitute,
+                      list(expr=f.vars, env=registerCubeFunctions(all.f.vars)))
+    if (missing(data)) {
+        vars <- eval(v.call, NULL, environment(formula))
+    } else {
+        vars <- eval(v.call, as.environment(data), environment(formula))
+    }
+
+    ## Validate that vars are non-null
+    nullvars <- vapply(vars, is.null, logical(1))
+    if (any(nullvars)) {
+        ## Get the NULL expressions.
+        ## Note the off-by-one problem:
+        ## If f.vars == language list(CA$mr_1, CA$NOTAVAR),
+        ## as.character(f.vars) == [1] "list"       "CA$mr_1"    "CA$NOTAVAR"
+        varexprs <- as.character(f.vars)[-1]
+        halt("Invalid cube dimension", ifelse(sum(nullvars) > 1, "s: ", ": "),
+             serialPaste(varexprs[nullvars]), " cannot be NULL")
+    }
+
+    resp <- attr(terms, "response")
+    if (side == "RHS") {
+        if (resp > 0) {
+            # remove response vars only if there are any
+            vars <- vars[-resp]
+        }
+    } else if (side == "LHS") {
+        vars <- vars[resp]
+    } else {
+        halt("unknown side specification for parsing formulae.")
+    }
+
+    return(vars)
 }
 
 registerCubeFunctions <- function (varnames=c()) {
@@ -189,9 +206,35 @@ varToDim <- function (x) {
     }
 }
 
-formulaRHS <- function (f) {
+evalLHS <- function(formula, data) {
+    evalSide(formula[[2]], data, environment(formula))
+}
+
+evalRHS <- function(formula, data) {
+    evalSide(formula[[3]], data, environment(formula))
+}
+
+evalSide <- function(formula_part, data, eval_env) {
+    if (missing(data) || is.null(data)) {
+        return(eval(formula_part, NULL, eval_env))
+    } else {
+        return(eval(formula_part, as.environment(data), eval_env))
+    }
+}
+
+RHS_string <- function (f) {
     ## Return a string representation of the right-hand side of a formula
     ## (the stuff to the right of the ~)
+    sub("^ +", "", tail(splitFormula(f), 1))
+}
+
+LHS_string <- function (f) {
+    ## Return a string representation of the left-hand side of a formula
+    ## (the stuff to the left of the ~)
+    sub(" +$", "", head(splitFormula(f), 1))
+}
+
+splitFormula <- function(f) {
     if (!is.character(f)) f <- paste(deparse(f), collapse=" ")
-    sub("^ +", "", tail(unlist(strsplit(f, "~")), 1))
+    unlist(strsplit(f, "~"))
 }

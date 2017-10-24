@@ -169,7 +169,7 @@ newMultitable <- function (formula, data, name, ...) {
 
     template <- formulaToQuery(formula, data)
     if (missing(name)) {
-        name <- formulaRHS(formula)
+        name <- RHS_string(formula)
     }
 
     payload <- makeMultitablePayload(template = template, name = name)

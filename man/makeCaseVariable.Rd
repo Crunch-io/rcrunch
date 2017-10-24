@@ -4,7 +4,7 @@
 \alias{makeCaseVariable}
 \title{Make a case variable}
 \usage{
-makeCaseVariable(..., cases, name)
+makeCaseVariable(..., cases, data = NULL, name)
 }
 \arguments{
 \item{...}{a sequence of named expressions to use as cases as well as other
@@ -13,6 +13,9 @@ properties to pass about the case variable (i.e. alias, description)}
 \item{cases}{a list of lists with each case condition to use each must
 include at least a \code{name} and an \code{expression} element. Cases may also include
 \code{missing} (logical) and \code{numeric_value} (numeric).}
+
+\item{data}{(optional) a crunch dataset to use. Specifying this means you
+don't have to put \code{dataset$} in front of each variable name.}
 
 \item{name}{a character to use as the name of the case variable to create}
 }
@@ -58,5 +61,8 @@ makeCaseVariable(cases=list(list(expression=ds$v1 == 1, name="case1"),
                             list(expression="else", name="other")),
                  name="new case")
 makeCaseVariable(case1=ds$v1 == 1, case2=ds$v2 == 2, other="else", name="new case")
+
+# the dataset can be specified with data=
+makeCaseVariable(case1=v1 == 1, case2=v2 == 2, data=ds, name="new case")
 }
 }

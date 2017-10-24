@@ -179,7 +179,12 @@ setMethod("datasetReference", "CrunchVariable", function (x) {
     rootURL(x, "dataset") %||% datasetReference(self(x))
 })
 setMethod("datasetReference", "character", function (x) {
-    sub("(.*/datasets/.*?/).*", "\\1", x)
+    # check if the url has /datasets/.*/ in it.
+    if (grepl("(.*/datasets/.*?/).*", x)) {
+        sub("(.*/datasets/.*?/).*", "\\1", x)
+    } else {
+        NULL
+    }
 })
 setMethod("datasetReference", "ANY", function (x) NULL)
 

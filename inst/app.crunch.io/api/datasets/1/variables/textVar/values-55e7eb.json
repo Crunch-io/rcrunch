@@ -1,0 +1,6 @@
+// Query: filter={"function":"in","args":[{"function":"row","args":[]},{"column":[6,10,12,20,21,22,24]}]}&offset=0&limit=5000
+{
+    "element": "shoji:view",
+    "self": "https://app.crunch.io/api/datasets/1/variables/textVar/values/",
+    "value": [ "l", "m", "s", "h", "z", "m", "x" ]
+}

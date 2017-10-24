@@ -278,7 +278,7 @@ setMethod("is.na<-", c("Categories", "logical"), function (x, value) {
 })
 
 addNoDataCategory <- function (variable) {
-    cats <- c(categories(variable), Category(data=.no.data))
+    cats <- ensureNoDataCategory(categories(variable))
     if (is.subvariable(variable)) {
         ## Have to point at parent
         crPATCH(absoluteURL("../../", self(variable)),
@@ -288,6 +288,15 @@ addNoDataCategory <- function (variable) {
         categories(variable) <- cats
     }
     return(variable)
+}
+
+ensureNoDataCategory <- function (cats) {
+    if (-1 %in% ids(cats)) {
+        # check "No Data"?
+        return(cats)
+    } else {
+        return(c(cats, Category(data=.no.data)))
+    }
 }
 
 setMethod("lapply", "Categories", function (X, FUN, ...) {

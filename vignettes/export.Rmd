@@ -131,3 +131,4 @@ write.csv(ds[ds$pid3 == "Democrat", c("age", "educ", "gender")], file="demo-demo
 ```
 
 [Next: Crunch internals](crunch-internals.html)
+
