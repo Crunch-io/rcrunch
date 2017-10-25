@@ -49,7 +49,7 @@ test_that("toVariable handles duplicate factor levels", {
 test_that("categoriesFromLevels parses levels correctly", {
     expect_identical(categoriesFromLevels(levels(iris$Species)),
         list(list(id = 1L, name = "setosa", numeric_value = 1L, missing = FALSE),
-             list(id = 2L, name = "versicolor", numeric_value = 2L, missing = FALSE), 
+             list(id = 2L, name = "versicolor", numeric_value = 2L, missing = FALSE),
              list(id = 3L, name = "virginica", numeric_value = 3L, missing = FALSE))
       )
 })
@@ -105,6 +105,13 @@ with_mock_crunch({
             '{"values":5,"type":"numeric","name":"newvar","alias":"newvar"}')
     })
 })
+
+    test_that("checkVarDefErrors errors correctly", {
+        test_errs <- lapply(list("a", "b", 29), function(x) try(log(x), silent = TRUE))
+        expect_error(checkVarDefErrors(test_errs), "The following variable definitions errored on upload: 1, 2")
+        test_errs <- lapply(list(29, 23, 24), function(x) try(log(x), silent = TRUE))
+        expect_silent(checkVarDefErrors(test_errs))
+    })
 
 with_test_authentication({
     ds <- newDataset(df)

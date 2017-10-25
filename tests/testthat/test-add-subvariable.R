@@ -13,7 +13,7 @@ with_test_authentication({
             c("Home", "Work", "doggy daycare"))
     })
 
-test_that("Add more than one subvariable to an array", {
+    test_that("Add more than one subvariable to an array", {
         expect_identical(names(subvariables(ds$allpets)),
             c("Cat", "Dog", "Bird"))
         ds$allpets_7 <- copy(ds$allpets$allpets_1, deep=TRUE, name="Turtle")
@@ -27,7 +27,7 @@ test_that("Add more than one subvariable to an array", {
         expect_identical(names(subvariables(ds$allpets)),
             c("Cat", "Dog", "Bird", "Turtle", "Gerbil", "Coyote", "Cockroach"))
     })
-ds <- refresh(ds)
+    ds <- refresh(ds)
     test_that("Variable definitions can be added to an array", {
         sub1 <- toVariable(factor(1:nrow(ds)), name = "Ant")
         ds$allpets <- addSubvariables(ds$allpets, sub1)

@@ -23,7 +23,7 @@ addSubvariable <- function (variable, subvariable) {
     crPATCH(shojiURL(variable, "catalogs", "subvariables"),
         body=toJSON(sapply(new.urls, emptyObject, simplify=FALSE)))
 
-        ## Workaround because apparently bind/rebind isn't retaining the order
+    ## Workaround because apparently bind/rebind isn't retaining the order
     crPATCH(self(variable),
         body=toJSON(list(subvariables=I(c(subvar.urls, new.urls)))))
 
@@ -57,22 +57,9 @@ addSubvarDef <- function (var, subvar) {
         var_cat_url <- shojiURL(ds, "catalogs", "variables")
         new_var_urls <- lapply(subvar[vardefs],
             function (x) try(POSTNewVariable(var_cat_url, x), silent = TRUE)
-            )
-        ## Be silent so we can throw the errors together at the end
-
-        ## Check for errors
-        errs <- vapply(new_var_urls, is.error, logical(1))
-        if (any(errs)) {
-            if (length(errs) == 1) {
-                ## Just one variable added. Throw its error.
-                rethrow(new_var_urls[[1]])
-            }
-            halt("The following variable definition(s) errored on upload: ",
-                paste(which(errs), collapse=", "), "\n",
-                paste(unlist(lapply(new_var_urls[errs], errorMessage)), sep="\n"))
-        } else {
-            out[vardefs] <- new_var_urls
-        }
+        )
+        checkVarDefErrors(new_var_urls)
+        out[vardefs] <- new_var_urls
     }
     if (any(!vardefs)) {
         out[!vardefs] <- urls(subvar[!vardefs])
