@@ -199,7 +199,7 @@ with_test_authentication({
     test_that("Can get and set transforms", {
         trans <- Transforms(insertions = list(
             list(anchor = "3", name = "B+C",
-                 `function` = "subtotal", args = c("1", "2"))))
+                 `function` = "subtotal", args = c(1, 2))))
         expect_null(transforms(ds$v4))
         transforms(ds$v4) <- trans
         trans_resp <- trans

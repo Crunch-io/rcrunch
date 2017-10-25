@@ -338,6 +338,9 @@ as_selected_margins <- function (margin, selecteds, before=TRUE) {
 #' query without reducing the dimensionality.
 #' @param digits For `round`, the number of decimal places to round to. See
 #' [base::round()]
+#' @param transforms logical, should any view transformations (like subtotals
+#' and headings) be included in the output
+#'
 #' @return When called on CrunchCubes, these functions return an `array`.
 #' Calling prop.table on
 #' a MultitableResult returns a list of prop.tables of the CrunchCubes it
@@ -359,7 +362,7 @@ as.array.CrunchCube <- function (x, ...) cubeToArray(x, ...)
 
 #' @rdname cube-computing
 #' @export
-setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
+setMethod("prop.table", "CrunchCube", function (x, margin=NULL, transforms=TRUE) {
     out <- as.array(x)
     marg <- margin.table(x, margin)
     actual_margin <- as_selected_margins(margin, is.selectedDimension(x@dims),
@@ -370,6 +373,10 @@ setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
         ## Don't just divide by sum(out) like the default does.
         ## cubeMarginTable handles missingness, any/none, etc.
         out <- out/marg
+    }
+
+    if (transforms) {
+        out <- applyTransforms(x, ary = out)
     }
     return(out)
 })
