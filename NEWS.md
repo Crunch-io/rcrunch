@@ -2,6 +2,7 @@
 * Deep copying with `copy` has been made more efficient
 * `CrunchDataFrames` have been improved. You can now access and over-write values with standard `data.frame` methods like `crdf$variable1` or `crdf[,"variable1"]` and `crdf$variable1 <- 1` or `crdf[,"variable1"] <- 1`. `CrunchDataFrames` now also support adding arbitrary columns, although it should be noted that these columns are not stored in anyway on the Crunch server, so if you want to keep that data, you should send it back to your Dataset as a new variable.
 * `is.selected` is now vectorized to work with multiple categories. You can also now assign into the function. 
+* `addSubvariable` now accepts variable definitions
 
 ### crunch 1.18.4
 * All catalog objects now have an `as.data.frame` method.
