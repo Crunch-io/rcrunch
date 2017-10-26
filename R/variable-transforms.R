@@ -95,7 +95,7 @@ calcTransform <- function (ary, trans, var_cats) {
             return(NA)
         }
 
-        combos <- unlist(subtotals(insert))
+        combos <- unlist(args(insert))
         which.cats <- names(var_cats[ids(var_cats) %in% combos])
         return(sum(ary[which.cats]))
     }, double(1), USE.NAMES = TRUE)

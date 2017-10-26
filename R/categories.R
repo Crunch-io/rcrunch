@@ -184,11 +184,6 @@ addNoDataCategory <- function (variable) {
     return(variable)
 }
 
-setMethod("lapply", "Categories", function (X, FUN, ...) {
-    X@.Data <- lapply(X@.Data, FUN, ...)
-    return(X)
-})
-
 #' Change the id of a category for a categorical variable
 #'
 #' Changes the id of a category from an existing value to a new one.

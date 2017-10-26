@@ -51,7 +51,11 @@ setMethod("show", "Insertions", .showIt)
 showAbsCategory <- function (x) data.frame(id=id(x), name=name(x), value=value(x), missing=is.na(x))
 showAbsCategories <- function (x) do.call("rbind", lapply(x, showAbsCategory))
 
-showInsertion <- function (x) data.frame(anchor=anchor(x), name=name(x), subtotal=paste(subtotals(x), collapse = ', '))
+showInsertion <- function (x) {
+    df_out <- data.frame(anchor=anchor(x), name=name(x),
+               func=func(x),
+               args=serialPaste(args(x)))
+}
 showInsertions <- function (x) do.call("rbind", lapply(x, showInsertion))
 
 

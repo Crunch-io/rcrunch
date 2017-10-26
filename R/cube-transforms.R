@@ -7,11 +7,10 @@
 #' @export
 setMethod("showTransforms", "CrunchCube", function (x) applyTransforms(x))
 
-
 #' From a cube, calculate the transforms and return an array
 #'
 #' @param x a CrunchCube
-#' @param ary an array to use, if not using the cube itself. (Default: not used, pulls an array from the cube using [cubeToArray()])
+#' @param ary an array to use, if not using the cube itself. (Default: not used, pulls an array from the cube directly)
 #' @param ... arguments to pass to `cubeToArray`
 #'
 #' @return an array with any transformations applied
@@ -35,4 +34,35 @@ applyTransforms <- function (x, ary, ...) {
     }
 
     return(ary)
+}
+
+
+#' @rdname Transforms
+#' @export
+setMethod("transforms", "CrunchCube", function (x) {
+    trans <- tryCatch(Transforms(data=index(variables(x))[[1]]$view$transform), error = function(e) NULL)
+    return(trans)
+})
+
+#' @rdname Transforms
+#' @export
+setMethod("transforms<-", c("CrunchCube", "NULL"), function (x, value) {
+    # hacked access to delete the transforms. This should have a more systematic
+    # accessor
+    x@dims@.Data[[1]]$references$view$transform <- value
+    invisible(x)
+})
+
+#' Remove transformations from a cube
+#'
+#' This is useful if you don't want to see or use any transformations like Subtotals and Headings
+#'
+#' @param cube a CrunchCube
+#'
+#' @return the cube with no transformations
+#'
+#' @export
+noTransforms <- function (cube) {
+    transforms(cube) <- NULL
+    return(cube)
 }

@@ -323,7 +323,7 @@ Category <- function (..., data=NULL) {
 #' @param ... additional arguments to `[`, ignored
 #' @param value For `[<-`, the replacement Insertion to insert
 #' @rdname Insertions
-#' @aliases anchor anchor<- subtotals subtotals<-
+#' @aliases anchor anchor<- func func<- args args<-
 #' @export
 setClass("Insertions", contains="AbsCats")
 
@@ -351,6 +351,50 @@ Insertion <- function (..., data=NULL) {
     }
 }
 
+#' Subtotals and headings
+#'
+#' Subtotals and headings allow you to add subtotals and headings to variables
+#' or CrunchCubes. These are especially useful for making aggregates across
+#' multiple categories (sometimes referred to as _nets_, _top box_, or _top 2 box_).
+#'
+#' @param data For the constructor functions `Subtotal` and
+#' `Subtotal`, you can either pass in attributes via `...` or you
+#' can create the objects with a fully defined `list` representation of
+#' the objects via the `data` argument. See the examples.
+#' @param x For the attribute getters and setters, an object of class
+#' Subtotal
+#' @param ... additional arguments to `[`, ignored
+#' @param value For `[<-`, the replacement Subtotal to insert
+#' @param var the variable to use to make `Insertions`
+#' @rdname SubtotalsHeadings
+#' @aliases subtotals subtotals<- makeInsertion
+#' @export
+setClass("Subtotal", contains="AbsCat")
+
+#' @rdname SubtotalsHeadings
+#' @export
+Subtotal <- function (..., data=NULL) {
+    if (!is.null(data)) {
+        return(new("Subtotal", data))
+    } else {
+        return(new("Subtotal", list(...)))
+    }
+}
+
+
+#' @rdname SubtotalsHeadings
+#' @export
+setClass("Heading", contains="AbsCat")
+
+#' @rdname SubtotalsHeadings
+#' @export
+Heading <- function (..., data=NULL) {
+    if (!is.null(data)) {
+        return(new("Heading", data))
+    } else {
+        return(new("Heading", list(...)))
+    }
+}
 
 #' Transformations of variable and cube views
 #'

@@ -9,7 +9,7 @@ insrts <- Insertions(data=list(list(anchor = 6, name = "Low",
 test_that("Insertion and insertion inheritence, base methods", {
     expect_equal(anchor(insrt), 6)
     expect_equal(name(insrt), "Low")
-    expect_equal(subtotals(insrt), c(1, 2))
+    expect_equal(args(insrt), c(1, 2))
 })
 
 insrt2 <- insrt
@@ -20,7 +20,7 @@ test_that("Insertion setters", {
     name(insrt2) <- "Low low"
     expect_equal(name(insrt2), "Low low")
     subtotals(insrt2) <- c(10, 20)
-    expect_equal(subtotals(insrt2), c(10, 20))
+    expect_equal(args(insrt2), c(10, 20))
 })
 
 test_that("Insertion setter validation", {
@@ -30,9 +30,9 @@ test_that("Insertion setter validation", {
 })
 
 test_that("Insertion validation", {
-    expect_error(Insertion(anchor='foo', `function`=list('baz')),
+    expect_error(Insertion(anchor='foo', `function`='baz'),
                  "invalid class .*Insertion.* object:.* Missing: .*name*")
-    expect_error(Insertion(name='bar', `function`=list('baz')),
+    expect_error(Insertion(name='bar', `function`='baz'),
                  "invalid class .*Insertion.* object:.* Missing: .*anchor*")
 })
 
@@ -40,14 +40,16 @@ test_that("Insertion and insertions show methods", {
     expect_output(insrt,
                   get_output(data.frame(anchor=c(6),
                                         name=c("Low"),
-                                        subtotal=c("1, 2"))))
+                                        func=c("subtotal"),
+                                        args=c("1 and 2"))))
     expect_output(insrts,
                   get_output(data.frame(anchor=c(6, 7),
                                         name=c("Low", "High"),
-                                        subtotal=c("1, 2", "9, 10"))))
+                                        func=c("subtotal", "subtotal"),
+                                        args=c("1 and 2", "9 and 10"))))
 })
 
 test_that("subtotals returns NA when not found", {
-    expect_equal(subtotals(Insertion(anchor='foo', name='bar',
-                                        `function`=list('baz'))), NA)
+    expect_equal(args(Insertion(anchor='foo', name='bar',
+                                        `function`='baz')), NA)
 })

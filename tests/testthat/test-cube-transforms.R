@@ -8,9 +8,25 @@ test_that("Can show a simple cube with transform", {
     expect_equivalent(showTransforms(unicat_trans_cube), loc_ary)
 })
 
+test_that("can retrieve transformations from a cube", {
+    trans <- Transforms(insertions = Insertions(data=list(
+        list(anchor = 6, name = c("C, E"), `function` = "subtotal", args = c(1, 3)),
+        list(anchor = 7, name = c("D, E"), `function` = "subtotal", args = c(2, 3))
+    )))
+    expect_equivalent(transforms(unicat_trans_cube), trans)
+})
+
+test_that("can remove transformations from a cube", {
+    transforms(unicat_trans_cube) <- NULL
+    expect_null(transforms(unicat_trans_cube))
+
+    # alternatively
+    expect_null(transforms(noTransforms(unicat_trans_cube)))
+})
+
 complex_trans_cube <- loadCube("cubes/complex-categorical-with-trans.json")
 
-test_that("Can show a simple cube with transform", {
+test_that("Can show a complex cube with transform", {
     loc_ary <- array(c(40, 10, 20, 30, 30, 40, 50, 60, 70, 250,
                        80, 90, 100, 520, 150, NA),
                      dimnames = list("v7" = c("First!", "A", "B", "Top 2", "C",

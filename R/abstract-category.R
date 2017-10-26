@@ -1,5 +1,7 @@
 is.abstract.category <- function (x) inherits(x, "AbsCat")
 
+is.abstract.categories <- function (x) inherits(x, "AbsCats")
+
 setName <- function (x, value) {
     x[["name"]] <- validateNewName(value)
     return(x)
@@ -100,6 +102,10 @@ setMethod("names", "AbsCats", function (x) {
 #' @export
 setMethod("ids", "AbsCats", function (x) vapply(x, id, integer(1)))
 
+setMethod("lapply", "AbsCats", function (X, FUN, ...) {
+    X@.Data <- lapply(X@.Data, FUN, ...)
+    return(X)
+})
 
 #' is.na for Categories
 #'
@@ -158,6 +164,18 @@ setMethod("[", c("AbsCats", "numeric"), function (x, i, ...) {
 
 #' @rdname Categories
 #' @export
+setMethod("[<-", c("AbsCats", "character"), function (x, i, ..., value) {
+    indices <- match(i, names(x))
+    if (any(is.na(indices))) {
+        # if there are no matches, add it on to the end
+        indices <- i
+    }
+    x@.Data[indices] <- value
+    return(x)
+})
+
+#' @rdname Categories
+#' @export
 setMethod("[[", c("AbsCats", "character"), function (x, i, ...) {
     indices <- match(i, names(x))
     if (any(is.na(indices))) {
@@ -165,3 +183,28 @@ setMethod("[[", c("AbsCats", "character"), function (x, i, ...) {
     }
     callNextMethod(x, i=indices)
 })
+
+#' @rdname Categories
+#' @export
+setMethod("[[<-", c("AbsCats", "character"), function (x, i, ..., value) {
+    indices <- match(i, names(x))
+    if (any(is.na(indices))) {
+        # if there are no matches, add it on to the end
+        x@.Data[[i]] <- value
+        return(x)
+    }
+    callNextMethod(x, i=indices, value)
+})
+
+modifyCats <- function (x, val) {
+    # a version of modifyList that doesn't recurse into the absCats themselves
+    stopifnot(is.abstract.categories(x), is.abstract.categories(val))
+    xnames <- names(x)
+    vnames <- names(val)
+    vnames <- vnames[nzchar(vnames)]
+    for (v in vnames) {
+        x[[v]] <- val[[v]]
+    }
+
+    return(x)
+}

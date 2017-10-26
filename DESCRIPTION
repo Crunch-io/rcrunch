@@ -107,6 +107,7 @@ Collate:
     'shoji-order.R'
     'shoji.R'
     'show.R'
+    'subtotals-and-headings.R'
     'subvariables.R'
     'tab-book.R'
     'teams.R'
