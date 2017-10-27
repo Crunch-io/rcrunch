@@ -11,6 +11,7 @@
     },
     "catalogs": {
         "variables": "https://app.crunch.io/api/datasets/1/variables/",
+        "folders": "https://app.crunch.io/api/datasets/1/folders/",
         "savepoints": "https://app.crunch.io/api/datasets/1/savepoints/",
         "batches": "https://app.crunch.io/api/datasets/1/batches/",
         "permissions": "https://app.crunch.io/api/datasets/1/permissions/",

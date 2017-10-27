@@ -1,0 +1,35 @@
+{
+    "self": "https://app.crunch.io/api/datasets/1/folders/1/",
+    "element": "shoji:catalog",
+    "size": 5,
+    "body": {
+        "name": "Group 1"
+    },
+    "index": {
+        "../3/": {
+            "type": "folder",
+            "name": "Nested"
+        },
+        "../../variables/birthyr/": {
+            "name": "Birth Year",
+            "discarded": false,
+            "alias": "birthyr",
+            "type": "numeric",
+            "derived": false,
+            "id": "f78ca47313144b57adfb495893968e70",
+            "description": null,
+            "notes": "Asked instead of age"
+        },
+        "../../variables/textVar/": {
+            "name": "Text variable ftw",
+            "discarded": false,
+            "alias": "textVar",
+            "type": "text",
+            "derived": false,
+            "id": "textVar",
+            "description": "Budějovický Budvar",
+            "notes": ""
+        }
+    },
+    "graph": ["../../variables/birthyr/", "../3/", "../../variables/textVar/"]
+}
