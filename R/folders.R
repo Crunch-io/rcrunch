@@ -54,8 +54,12 @@ mkdir <- function (dataset, path, variables=NULL) {
     if (is.character(variables)) {
         ## Could be aliases, so extract from dataset
         variables <- dataset[variables]
+    } else if (is.variable(variables)) {
+        variables <- self(variables)
+    } else if (inherits(variables, "VariableGroup")) {
+        variables <- list(variables)
     }
-    ordering(ds) <- .mkdir.inner(ordering(ds), path, variables)
+    ordering(dataset) <- .mkdir.inner(ordering(dataset), path, variables)
     return(invisible(dataset))
 }
 
@@ -95,7 +99,6 @@ folder <- function (variable) {
 ## * generally use mv for moving variables' position within a folder? or some
 ##     other reordering function (dir<- ?)
 ## * cd() to return a folder object?
-## * make sure mv etc. can take folders as inputs
 ## * obviously, use the new API. Some of this might not be reasonable/feasible
 ##     with current API.
 ## * rmdir()? or just delete() for folders?

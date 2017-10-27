@@ -76,4 +76,32 @@ with_mock_crunch({
                   "    Cat Array",
                   sep="\n"))
     })
+    test_that(".mkdir.inner with folders", {
+        move_folder <- .mkdir.inner(nested.ord, c("Group 2"),
+            list(ordering(ds)[[c("Group 1", "Nested")]]))
+        skip("Empty folder left in old position. Just use new API")
+        expect_fixed_output(move_folder,
+            paste("[+] Group 1",
+                  "    Birth Year",
+                  "    Text variable ftw",
+                  "[+] Group 2",
+                  "    starttime",
+                  "    Cat Array",
+                  "    [+] Nested",
+                  "        Gender",
+                  "        Categorical Location",
+                  "        mymrset",
+                  sep="\n"))
+    })
+
+    test_that("folder()", {
+        expect_identical(folder(ds$gender), c("Group 1", "Nested"))
+    })
+
+    test_that("mv/mkdir make a PUT", {
+        expect_PUT(mv(ds, "gender", "Demographics/Personal"),
+            "https://app.crunch.io/api/datasets/1/variables/hierarchical/")
+        expect_PUT(folder(ds$gender) <-"Demographics/Personal",
+            "https://app.crunch.io/api/datasets/1/variables/hierarchical/")
+    })
 })
