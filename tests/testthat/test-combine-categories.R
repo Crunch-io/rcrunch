@@ -132,14 +132,15 @@ with_mock_crunch({
         expect_error(collapseCategories(ds$gender, "Male", c("young", "old")),
             "Destination category must be a character string of length 1.")
         expect_error(collapseCategories(ds$gender, 1, "young"),
-            paste0(sQuote('from'), " must be a character vector or logical expression."))
+            paste0(dQuote('from'), " must be a character vector."))
     })
-    test_that("collapseCategories produces the expected patch", {
+    test_that("collapseCategories updates categories when merging into a new category", {
         expect_PATCH(var <- collapseCategories(ds$location, c("London", "Scotland"), "GB"),
             "https://app.crunch.io/api/datasets/1/variables/location/",
-            '{"categories":[{"id":1,"missing":false,"name":"London","numeric_value":1},{"id":2,"missing":false,"name":"Scotland","numeric_value":2},{"id":-1,"missing":true,"name":"No Data","numeric_value":null},{"id":3,"name":"GB","numeric_value":3}]}'
-        )
-        expect_POST(var <- collapseCategories(ds$location, c("London", "Scotland"), "London"),
+            '{"categories":[{"id":1,"missing":false,"name":"London","numeric_value":1},{"id":2,"missing":false,"name":"Scotland","numeric_value":2},{"id":-1,"missing":true,"name":"No Data","numeric_value":null},{"id":3,"name":"GB"}]}'        )
+    })
+    test_that("collapseCategories updates the variable", {
+        expect_POST(var <- collapseCategories(ds$location, "Scotland", "London"),
             "https://app.crunch.io/api/datasets/1/table/",
             '{"command":"update","variables":{"https://app.crunch.io/api/datasets/1/variables/location/":{"value":1}},"filter":{"function":"==","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/location/"},{"value":2}]}}'
         )
@@ -192,16 +193,14 @@ with_test_authentication({
     })
 
     test_that("collapseCategories works on categorical variable", {
-        ds$cat <- factor(sample(c("cat", "Cat", "dog", "aphid"), nrow(ds), replace = TRUE))
-        var <- ds$cat
-        var <- collapseCategories(var, c("cat", "Cat"), "cat")
-        expect_identical(names(categories(var)), c("aphid", "cat", "dog", "No Data"))
-        var <- collapseCategories(var, c("cat", "aphid"), "nope")
-        expect_identical(names(categories(var)), c("dog", "No Data", "nope"))
-        var <- collapseCategories(var, var %in% "nope", "yup")
-        expect_identical(names(categories(var)), c("dog","No Data", "yup"))
-        var <- collapseCategories(var, c("dog", "yup"), "Has Data")
-        expect_identical(names(categories(var)), c("No Data", "Has Data"))
-        expect_identical(names(table(var, useNA = "always")), c("No Data", "Has Data"))
+        ds$cat <- factor(rep(c("cat", "Cat", "dog", "aphid"), 5))
+        expect_identical(names(categories(ds$cat)), c("Cat", "aphid", "cat", "dog", "No Data"))
+        ds$cat <- collapseCategories(ds$cat, c("cat", "Cat"), "cat")
+        expect_identical(names(categories(ds$cat)), c("aphid", "cat", "dog", "No Data"))
+        ds$cat <- collapseCategories(ds$cat, c("cat", "aphid"), "nope")
+        expect_identical(names(categories(ds$cat)), c("dog", "No Data", "nope"))
+        ds$cat <- collapseCategories(ds$cat, c("dog", "nope"), "Has Data")
+        expect_identical(names(categories(ds$cat)), c("No Data", "Has Data"))
+        expect_identical(names(table(ds$cat, useNA = "always")), c("No Data", "Has Data"))
     })
 })

@@ -221,26 +221,26 @@ collapseCategories <- function (var, from, to) {
     if (!(length(to) == 1 && is.character(to))) {
         halt("Destination category must be a character string of length 1.")
     }
-    if (!(is.character(from) || is.Expr(from))) {
-        halt(sQuote('from'), " must be a character vector or logical expression.")
+    if (!(is.character(from))) {
+        halt(dQuote('from'), " must be a character vector.")
+    }
+    if (identical(from, to)){
+        return(var)
     }
     cats <- names(categories(var))
     if (!(to %in% cats)) {
+        if (length(from) == 1) {
+            # This case is equivalent to renaming a category
+            names(categories)[from] <- to
+        }
         cats <- c(cats, to)
         categories(var) <- c(categories(var),
             Category(id = max(ids(categories(var))) + 1,
-                numeric_value = max(values(categories(var)), na.rm = TRUE) + 1,
-                name = to)
-            )
+            name = to)
+        )
     }
-    if (is.character(from)) {
-        from <- setdiff(from, to) #in case the user tries to collapse a category into itself
-        var[ var %in% from] <- to
-    } else if (is.Expr(from)) {
-        drop_cats <- table(var[from])
-        var[from] <- to
-        from <- names(drop_cats[drop_cats > 0])
-    }
+    from <- setdiff(from, to) #in case the user tries to collapse a category into itself
+    var[ var %in% from] <- to
     categories(var) <- categories(var)[!(cats %in% from)]
     return(var)
 }
