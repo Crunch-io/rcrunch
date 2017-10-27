@@ -12,7 +12,7 @@ Authors@R: c(
     person("Neal", "Richardson", role=c("aut", "cre"), email="neal@crunch.io"),
     person("Jonathan", "Keane", role="ctb", email="jon.keane@crunch.io"),
     person("Gordon", "Shotwell", role="ctb", email="gordon@crunch.io"))
-URL: https://github.com/Crunch-io/rcrunch
+URL: http://crunch.io/r/crunch/, https://github.com/Crunch-io/rcrunch
 BugReports: https://github.com/Crunch-io/rcrunch/issues
 License: LGPL (>= 3)
 Depends:
@@ -35,7 +35,7 @@ Suggests:
 VignetteBuilder: knitr
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
-Collate: 
+Collate:
     'AllClasses.R'
     'AllGenerics.R'
     'variable-definition.R'
