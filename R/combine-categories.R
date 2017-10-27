@@ -214,7 +214,7 @@ combResps <- function (subvars, combs) {
 #' @rdname combine
 #' @export
 #' @seealso [combine()]
-collapseCategories <- function(var, from, to){
+collapseCategories <- function (var, from, to) {
     if (!is.Categorical(var)) {
         halt("Variable must be a categorical.")
     }

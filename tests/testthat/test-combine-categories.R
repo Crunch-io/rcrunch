@@ -58,7 +58,7 @@ with_mock_crunch({
     test_that("combine() validation on variable type", {
         expect_error(combine(ds$birthyr),
             paste0("Cannot combine ", dQuote("Birth Year"), ": must be type ",
-                "categorical, categorical_array, or multiple_response"))
+            "categorical, categorical_array, or multiple_response"))
         expect_error(combine(ds$starttime),
             "categorical, categorical_array, or multiple_response")
     })
@@ -155,27 +155,27 @@ with_test_authentication({
             c("Mammals", "Bird", "Skipped", "Not Asked"))
         expect_equivalent(as.array(crtabs(~ q1, data=ds)),
             array(c(6, 4, 3), dim=3,
-                dimnames=list(q1=c("Cat", "Dog", "Bird"))))
+            dimnames=list(q1=c("Cat", "Dog", "Bird"))))
         expect_equivalent(as.array(crtabs(~ combined_pets, data=ds)),
             array(c(10, 3), dim=2,
-                dimnames=list(combined_pets=c("Mammals", "Bird"))))
+            dimnames=list(combined_pets=c("Mammals", "Bird"))))
     })
 
     test_that("Updating values in the parent variable updates in the derivation too", {
         ds$q1[is.na(ds$q1)] <- "Bird"
         expect_equivalent(as.array(crtabs(~ q1, data=ds)),
             array(c(6, 4, 10), dim=3,
-                dimnames=list(q1=c("Cat", "Dog", "Bird"))))
+            dimnames=list(q1=c("Cat", "Dog", "Bird"))))
         expect_equivalent(as.array(crtabs(~ combined_pets, data=ds)),
             array(c(10, 10), dim=2,
-                dimnames=list(combined_pets=c("Mammals", "Bird"))))
+            dimnames=list(combined_pets=c("Mammals", "Bird"))))
         ds <- releaseAndReload(ds)
         expect_equivalent(as.array(crtabs(~ q1, data=ds)),
             array(c(6, 4, 10), dim=3,
                 dimnames=list(q1=c("Cat", "Dog", "Bird"))))
         expect_equivalent(as.array(crtabs(~ combined_pets, data=ds)),
             array(c(10, 10), dim=2,
-                dimnames=list(combined_pets=c("Mammals", "Bird"))))
+            dimnames=list(combined_pets=c("Mammals", "Bird"))))
     })
 
     test_that("combine() with no combinations is effectively a copy", {
