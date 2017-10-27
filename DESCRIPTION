@@ -56,6 +56,7 @@ Collate:
     'compare-subvariables.R'
     'compare-variables.R'
     'compare.R'
+    'conditional-transform.R'
     'consent.R'
     'context-manager.R'
     'copy.R'

@@ -347,8 +347,7 @@ NULL
 
 #' @rdname which
 setMethod("which", "CrunchLogicalExpr", function (x, arr.ind, useNames) {
-    as.integer(as.vector(CrunchExpr(expression=zfunc("row"),
-        dataset_url=datasetReference(x) %||% "")[x])) + 1L
+    which(as.vector(x))
 })
 
 #' "duplicated" method for Crunch objects

@@ -4,20 +4,36 @@
 \alias{addGeoMetadata}
 \title{Add geodata metadata to a crunch variable}
 \usage{
-addGeoMetadata(variable)
+addGeoMetadata(variable, ...)
 }
 \arguments{
 \item{variable}{a Crunch variable to use for matching. This must be either
 a text or a categorical variable.}
+
+\item{...}{arguments passed on to \code{\link[=matchCatToFeat]{matchCatToFeat()}} for example a set of
+available geographic features as \code{all_features} if you want to limit the
+number of features to be considered.}
 }
 \value{
-a CrunchGeography object that can be assigned into \code{geo(variable)}
+a \code{\link{CrunchGeography}} object that can be assigned into \code{geo(variable)}
 }
 \description{
-Add geodata metadata to a crunch variable
+If the variable matches a single geographic shapefile hosted by crunch,
+\code{addGeoMetadata} will make the appropriate \code{\link{CrunchGeography}} to add to a
+variable's \code{\link[=geo]{geo()}} metadata. It matches based on how well the contents of the
+variable match the feature properties that are in each shapefile.
+}
+\details{
+If more than one property of the same geographic shapefile has the same
+highest matching score, the first one will be used.
+
+If more than one geographic shapefile has the same highest matching score, an
+error will be printed listing the geographic shapefiles that matched.
+Information from this error can be used to setup an appropriate
+\code{\link{CrunchGeography}} by hand to connect a variable with the metadata needed.
 }
 \examples{
 \dontrun{
-geo(ds$state) <- addGeoMetadata("state", data=ds)
+geo(ds$state) <- addGeoMetadata(ds$state)
 }
 }
