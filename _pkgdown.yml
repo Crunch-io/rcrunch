@@ -197,7 +197,7 @@ navbar:
     - text: Intro
       href: articles/getting-started.html
     - text: Reference
-      href: reference/index.html
+      href: reference/
     - text: Articles
       menu:
       -  text: Getting Started
@@ -218,3 +218,5 @@ navbar:
          href: articles/export.html
       -  text: Crunch Internals
          href: articles/crunch-internals.html
+    - text: News
+      href: news/
