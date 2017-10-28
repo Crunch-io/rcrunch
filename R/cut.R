@@ -35,7 +35,8 @@
 #' @param ... further arguments passed to [makeCaseVariable]
 #' @return a Crunch [`VariableDefinition`]. Assign it into the dataset to create
 #' it as a derived variable on the server.
-#' @export
+#' @name crunch-cut
+#' @aliases crunch-cut
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("mtcars")
@@ -46,6 +47,10 @@
 #'            c("Youth", "Adult", "Middle-aged", "Elderly"),
 #'            name = "Age (4 category)")
 #' }
+NULL
+
+#' @rdname crunch-cut
+#' @export
 setMethod("cut", "NumericVariable", function(x,
                                              breaks,
                                              labels = NULL,

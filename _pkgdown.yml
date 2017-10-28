@@ -37,6 +37,9 @@ reference:
   - saveVersion
   - versions
   - weight
+  - weightVariables
+  - settings
+  - lock
 - title: Multiple datasets
   contents:
   - appendDataset
@@ -51,8 +54,6 @@ reference:
   - c-categories
   - categoriesFromLevels
   - changeCategoryID
-  - combine
-  - copyVariable
   - dataset-variables
   - deleteVariables
   - derivations
@@ -61,12 +62,19 @@ reference:
   - hiddenVariables
   - hide
   - hideVariables
-  - interactVariables
-  - makeCaseVariable
   - na-omit-categories
   - type
   - var-categories
   - variableMetadata
+- title: Deriving variables
+  contents:
+  - combine
+  - copyVariable
+  - makeCaseVariable
+  - crunch-cut
+  - interactVariables
+  - conditionalTransform
+  - makeWeight
 - title: Array variables
   contents:
   - Subvariables-class
@@ -128,7 +136,6 @@ reference:
   - getTeams
   - is-public
   - is.editor
-  - lock
   - login
   - logout
   - me
@@ -138,10 +145,10 @@ reference:
   - project-icon
   - projects
   - resetPassword
-  - settings
   - share
   - 'members<-,CrunchTeam,MemberCatalog-method'
   - unshare
+  - expropriateUser
 - title: Catalogs
   contents:
   - catalog-length
