@@ -17,7 +17,7 @@
             "resolution": "D",
             "rollup_resolution": "s"
         },
-        "../../catarray/": {
+        "../../variables/catarray/": {
             "name": "Cat Array",
             "discarded": false,
             "alias": "catarray",
