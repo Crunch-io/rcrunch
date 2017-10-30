@@ -2,12 +2,9 @@
 % Please edit documentation in R/combine-categories.R
 \name{combine}
 \alias{combine}
-\alias{collapseCategories}
 \title{Combine categories or responses}
 \usage{
 combine(variable, combinations = list(), ...)
-
-collapseCategories(var, from, to)
 }
 \arguments{
 \item{variable}{Categorical, Categorical Array, or Multiple Response
@@ -24,30 +21,17 @@ essentially be a copy (but see \code{\link[=copy]{copy()}} for a more natural wa
 }}
 
 \item{...}{Additional variable metadata for the new derived variable}
-
-\item{var}{A categorical Crunch variable}
-
-\item{from}{The categories you want to combine. Either a character vector with
-the names of the categories you with to convert or a Crunch logical expression
-identifying the values which should be converted.}
-
-\item{to}{A character string with the destination category.}
 }
 \value{
 A \code{\link{VariableDefinition}} that will create the new combined-category or
 -response derived variable. Categories/responses not referenced in \code{combinations} will be
 appended to the end of the combinations.
-
-the variable duly modified
 }
 \description{
 Crunch allows you to create a new categorical variable by combining
 the categories of another variable. For instance, you might want to
 recode a categorical variable with three categories small, medium, and large
 to one that has just small and large.
-
-This function allows you to combine the categories of a variable without
-making a copy of the variable.
 }
 \examples{
 \dontrun{
@@ -57,7 +41,4 @@ ds$fav_pet2 <- combine(ds$fav_pet, name="Pets (combined)",
 ds$pets_owned2 <- combine(ds$allpets, name="Pets owned (collapsed)",
     combinations=list(list(name="Mammals", responses=c("Cat", "Dog"))))
 }
-}
-\seealso{
-\code{\link[=combine]{combine()}}
 }

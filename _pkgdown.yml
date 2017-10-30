@@ -51,6 +51,7 @@ reference:
   - categoriesFromLevels
   - changeCategoryID
   - combine
+  - collapseCategories
   - copyVariable
   - dataset-variables
   - deleteVariables

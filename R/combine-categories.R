@@ -206,12 +206,9 @@ combResps <- function (subvars, combs) {
 #' This function allows you to combine the categories of a variable without
 #' making a copy of the variable.
 #' @param var A categorical Crunch variable
-#' @param from The categories you want to combine. Either a character vector with
-#' the names of the categories you with to convert or a Crunch logical expression
-#' identifying the values which should be converted.
+#' @param from A character vector of categories you want to combine.
 #' @param to A character string with the destination category.
 #' @return the variable duly modified
-#' @rdname combine
 #' @export
 #' @seealso [combine()]
 collapseCategories <- function (var, from, to) {
