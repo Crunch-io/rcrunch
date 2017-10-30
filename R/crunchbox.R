@@ -45,7 +45,6 @@
 #' }
 #'
 #' @seealso [`preCrunchBoxCheck()`] to provide guidance on what you're including in the
-#' @name CrunchBox
 #' @aliases crunchBox CrunchBox
 #' @export
 #' @importFrom grDevices col2rgb colors rgb
@@ -130,7 +129,7 @@ crunchBox <- function (dataset, filters=crunch::filters(dataset),
     return(out)
 }
 
-#' @rdname CrunchBox
+#' @rdname crunchBox
 #' @export
 CrunchBox <- crunchBox
 

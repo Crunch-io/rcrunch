@@ -12,3 +12,4 @@ Nothing. Called for its side effects of resetting the cache.
 \description{
 Refreshes the local environment list of Crunch datasets. This function is deprecated.
 }
+\keyword{internal}

@@ -90,12 +90,14 @@ selectDatasetCatalog <- function (kind=c("active", "all", "archived"),
 #' @return Nothing. Called for its side effects of resetting the cache.
 #' @export
 #' @importFrom httpcache dropOnly
+#' @keywords internal
 updateDatasetList <- function () {
     warning("updateDatasetList is being deprecated.")
     dropOnly(sessionURL("datasets"))
 }
 
 #' Load a Crunch Dataset
+#'
 #' @param dataset character, the name of a Crunch dataset that you have access
 #' to, or a `DatasetTuple`.
 #' @param kind character specifying whether to look in active, archived, or all
@@ -108,11 +110,11 @@ updateDatasetList <- function () {
 #' datasets? Default is `FALSE`.
 #' @return An object of class `CrunchDataset`
 #'
-#'@examples
-#'\dontrun{
+#' @examples
+#' \dontrun{
 #' dsName <- listDatasets()[1]
 #' ds <- loadDatasets(dsName)
-#'}
+#' }
 #' @export
 loadDataset <- function (dataset, kind=c("active", "all", "archived"), project=NULL, refresh=FALSE) {
     if (!inherits(dataset, "DatasetTuple")) {

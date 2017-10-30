@@ -4,8 +4,6 @@ r:
 - oldrel
 - release
 - devel
-r_github_packages:
-- nealrichardson/httptest
 after_success:
 - Rscript -e 'covr::codecov()'
 - bash pkgdown.sh
