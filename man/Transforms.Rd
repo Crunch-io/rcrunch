@@ -12,6 +12,7 @@
 \alias{transforms,CrunchVariable-method}
 \alias{transforms,VariableTuple-method}
 \alias{transforms<-,CrunchVariable,ANY-method}
+\alias{transforms<-,CrunchVariable,NULL-method}
 \title{Transformations of variable and cube views}
 \usage{
 Transforms(..., data = NULL)
@@ -25,6 +26,8 @@ Transforms(..., data = NULL)
 \S4method{transforms}{VariableTuple}(x)
 
 \S4method{transforms}{CrunchVariable,ANY}(x) <- value
+
+\S4method{transforms}{CrunchVariable,`NULL`}(x) <- value
 }
 \arguments{
 \item{...}{For the constructor function \code{Transforms} you can pass

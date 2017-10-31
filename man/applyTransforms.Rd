@@ -9,9 +9,9 @@ applyTransforms(x, ary, ...)
 \arguments{
 \item{x}{a CrunchCube}
 
-\item{ary}{an array to use, if not using the cube itself. (Default: not used, pulls an array from the cube using \code{\link[=cubeToArray]{cubeToArray()}})}
+\item{ary}{an array to use, if not using the cube itself. (Default: not used, pulls an array from the cube directly)}
 
-\item{...}{arguments to pass to \code{\link[=cubeToArray]{cubeToArray()}}}
+\item{...}{arguments to pass to \code{cubeToArray}}
 }
 \value{
 an array with any transformations applied

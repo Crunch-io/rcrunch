@@ -120,7 +120,7 @@ setMethod("makeInsertion", "ANY", function (x, var) {
     }
 
     if (!is.null(x$categories) && is.character(x$categories)) {
-        x$categories <- ids(categories(var)[x$categories])
+        x$categories <- as.list(ids(categories(var)[x$categories]))
     }
 
     return(x)

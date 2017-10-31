@@ -2,7 +2,7 @@ getTransforms <- function (x) {
     var_entity <- entity(x)
     trans <- var_entity@body$view$transform
 
-    if (is.null(trans)) {
+    if (is.null(trans) || length(trans) == 0) {
         return(NULL)
     }
 
@@ -21,10 +21,18 @@ setMethod("transforms", "VariableTuple", getTransforms)
 
 #' @rdname Transforms
 #' @export
-setMethod("transforms<-", "CrunchVariable", function (x, value) {
+setMethod("transforms<-", c("CrunchVariable", "ANY"), function (x, value) {
     frmt <- wrapEntity("view" = list("transform" = value))
     crPATCH(self(x), body=toJSON(frmt))
-    invisible(x)
+    invisible(refresh(x))
+})
+
+#' @rdname Transforms
+#' @export
+setMethod("transforms<-", c("CrunchVariable", "NULL"), function (x, value) {
+    frmt <- wrapEntity("view" = list("transform" = emptyObject()))
+    crPATCH(self(x), body=toJSON(frmt))
+    invisible(refresh(x))
 })
 
 setValidity("Transforms", function (object) {
@@ -59,10 +67,32 @@ setValidity("Transforms", function (object) {
 setMethod("showTransforms", "CategoricalVariable", function (x) {
     tab <- calcTransform(table(x), transforms(x), categories(x))
     # tab <- tab[order(tab, decreasing=TRUE)]
-    attr(tab, "varname") <- getNameAndType(x)
-
-    return(tab)
+    # attr(tab, "varname") <- getNameAndType(x)
+    tab <- array(tab, dim = c(length(tab), 1), dimnames = list(names(tab), "Count"))
+    styles <- transformStyles(transforms(x), categories(x)[!is.na(categories(x))])
+    out <- prettyPrint2d(tab, row_styles = styles)
+    cat(unlist(out), sep="\n")
+    return(invisible(tab))
 })
+
+#' @importFrom crayon make_style italic
+headerStyle <- c(nonas, make_style("#a1c1e5", bg = TRUE)) # light blue box
+headerStyle <- c(nonas, make_style("#546499"), crayon::underline) # blue with underline
+subtotalStyle <- c(italic, make_style("#005e46"))
+
+transformStyles <- function (trans, cats) {
+    all_labs <- collateCats(trans, cats)
+    styles <- lapply(seq_along(all_labs), function (i) {
+        if (!is.null(all_labs[[i]]$func) && all_labs[[i]]$func == 'subtotal') {
+            return(subtotalStyle)
+        } else if (is.null(all_labs[[i]]$func) && !is.null(all_labs[[i]]$anchor) ) {
+            return(headerStyle)
+        } else {
+            return(NULL)
+        }
+    })
+    return(styles)
+}
 
 #' Given an array and transforms, calculate the transformations.
 #'

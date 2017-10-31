@@ -121,9 +121,9 @@ with_mock_crunch({
                                 elements = NULL)
                      )
 
-        loc_ary <- array(c(7, 10, 17),
-                         dimnames = list("location" = c("London", "Scotland",
-                                                        "London+Scotland")))
+        loc_ary <- array(c(7, 10, 17), dim = c(3, 1),
+                         dimnames = list(c("London", "Scotland",
+                                           "London+Scotland"), "Count"))
         expect_equivalent(showTransforms(ds$location), loc_ary)
 
         expect_null(transforms(ds$gender))
@@ -134,6 +134,12 @@ with_mock_crunch({
             '{"element":"shoji:entity","body":{"view":{"transform":{',
             '"insertions":[{"anchor":"3","name":"Male+Female","function"',
             ':"subtotal","args":["1","2"]}]}}}}')
+    })
+
+    test_that("Can delete transform", {
+        expect_PATCH(transforms(ds$location) <- NULL,
+            'https://app.crunch.io/api/datasets/1/variables/location/',
+            '{"element":"shoji:entity","body":{"view":{"transform":{}}}}')
     })
 
     test_that("Non-combine transform warns", {
@@ -207,7 +213,18 @@ with_test_authentication({
         trans_resp["elements"] <- list(NULL)
         expect_json_equivalent(transforms(ds$v4), trans_resp)
 
-        v4_ary <- array(c(10, 10, 20), dimnames = list("v4" = c("B", "C", "B+C")))
+        v4_ary <- array(c(10, 10, 20), dim = c(3, 1),
+                        dimnames = list(c("B", "C", "B+C"), "Count"))
         expect_equivalent(showTransforms(ds$v4), v4_ary)
+    })
+
+    test_that("Can remove transforms", {
+        transforms(ds$v4) <- NULL
+        v4_notrans <- array(c(10, 10), dim = c(2, 1),
+                        dimnames = list(c("B", "C"), "Count"))
+        ds <- refresh(ds)
+        print(transforms(ds$v4))
+        expect_null(transforms(ds$v4))
+        expect_equivalent(showTransforms(ds$v4), v4_notrans)
     })
 })

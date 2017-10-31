@@ -345,10 +345,16 @@ setClass("Insertion", contains="AbsCat")
 #' @export
 Insertion <- function (..., data=NULL) {
     if (!is.null(data)) {
-        return(new("Insertion", data))
+        out <- new("Insertion", data)
     } else {
-        return(new("Insertion", list(...)))
+        out <- new("Insertion", list(...))
     }
+    # ensure that args is a list, even if it is a single element
+    if (!is.null(out$args) && length(out$args) == 1) {
+        out$args <- as.list(out$args)
+    }
+
+    return(out)
 }
 
 #' Subtotals and headings

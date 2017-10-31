@@ -322,7 +322,7 @@ setMethod("getShowContent", "CrunchFilter",
     })
 #' @rdname show-crunch
 #' @export
-setMethod("show", "CrunchCube", function (object) show(showTransforms(object)))
+setMethod("show", "CrunchCube", function (object) showTransforms(object))
 
 #' @rdname show-crunch
 #' @export

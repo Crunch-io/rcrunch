@@ -52,7 +52,7 @@ with_mock_crunch({
         'https://app.crunch.io/api/datasets/1/variables/gender/',
         '{"element":"shoji:entity","body":{"view":{"transform":{"insertions":[',
         '{"anchor":2,"name":"Not men","function":"subtotal","args":[1,-1]},',
-        '{"anchor":4,"name":"Women","function":"subtotal","args":2},',
+        '{"anchor":4,"name":"Women","function":"subtotal","args":[2]},',
         '{"anchor":0,"name":"A subtitle"}]}}}}')
     })
 
@@ -66,8 +66,8 @@ with_mock_crunch({
         '{"element":"shoji:entity","body":{"view":{"transform":{"insertions":[',
         '{"anchor":"3","name":"London+Scotland","function":"subtotal","args":',
         '["1","2"]},',
-        '{"anchor":1,"name":"London alone","function":"subtotal","args":1},',
-        '{"anchor":2,"name":"Scotland alone","function":"subtotal","args":2},',
+        '{"anchor":1,"name":"London alone","function":"subtotal","args":[1]},',
+        '{"anchor":2,"name":"Scotland alone","function":"subtotal","args":[2]},',
         '{"anchor":0,"name":"A subtitle"}]}}}}')
     })
 
@@ -95,7 +95,7 @@ with_mock_crunch({
         '{"element":"shoji:entity","body":{"view":{"transform":{"insertions":[',
         '{"anchor":"3","name":"London+Scotland","function":"subtotal","args":',
         '["1","2"]},',
-        '{"anchor":1,"name":"London alone","function":"subtotal","args":1}]}}}}')
+        '{"anchor":1,"name":"London alone","function":"subtotal","args":[1]}]}}}}')
 
         expect_PATCH(subtotals(ds$location) <-
             Heading(name = "A subtitle", after = 0),
@@ -115,5 +115,38 @@ with_mock_crunch({
     test_that("subtotals and headers can be removed", {
         expect_error(subtotals(ds$location) <- list("1", "2"),
                      "value must be a list of Subtotals, Headings, or both.")
+    })
+})
+
+
+with_test_authentication({
+    ds <- newDataset(df)
+
+    test_that("Can get and set headings and subtotals", {
+        trans <- Transforms(insertions = list(
+            list(anchor = 0, name = "This is a subtitle"),
+            list(anchor = 1, name = "B alone",
+                 `function` = "subtotal", args = c(1)),
+            list(anchor = 2, name = "C alone",
+                 `function` = "subtotal", args = c(2)),
+            list(anchor = 999, name = "B+C",
+                 `function` = "subtotal", args = c(1, 2))))
+        expect_null(transforms(ds$v4))
+        subtotals(ds$v4) <- list(Heading(name = "This is a subtitle", after = 0),
+                                 Subtotal(name = "B alone", categories = c("B"),
+                                          after = 1),
+                                 Subtotal(name = "C alone", categories = c(2),
+                                          after = "C"),
+                                 Subtotal(name = "B+C", categories = c(1, 2),
+                                          after = 999))
+        trans_resp <- trans
+        trans_resp["categories"] <- list(NULL)
+        trans_resp["elements"] <- list(NULL)
+
+        expect_json_equivalent(transforms(ds$v4), trans_resp)
+
+        # v4_ary <- array(c(10, 10, 20), dim = c(3, 1),
+        #                 dimnames = list(c("B", "C", "B+C"), "Count"))
+        # expect_equivalent(showTransforms(ds$v4), v4_ary)
     })
 })

@@ -5,7 +5,25 @@
 #' @return an array with any transformations applied
 #'
 #' @export
-setMethod("showTransforms", "CrunchCube", function (x) applyTransforms(x))
+setMethod("showTransforms", "CrunchCube", function (x) {
+    if (is.null(transforms(x))) {
+        print(cubeToArray(x))
+        return(invisible(x))
+    } else {
+        appliedTrans <- applyTransforms(x)
+        row_cats <- Categories(data=index(variables(x))[[1]]$categories)
+        row_styles <- transformStyles(transforms(x), row_cats[!is.na(row_cats)])
+        if (length(dim(appliedTrans)) <= 2) {
+            out <- prettyPrint2d(appliedTrans, row_styles = row_styles)
+            cat(unlist(out), sep="\n")
+        } else {
+            # styling is hard
+            print(appliedTrans)
+        }
+
+        return(invisible(appliedTrans))
+    }
+})
 
 #' From a cube, calculate the transforms and return an array
 #'
@@ -20,17 +38,20 @@ applyTransforms <- function (x, ary, ...) {
     if (missing(ary)) {
         ary <- cubeToArray(x, ...)
     }
-
-    # if there are transforms, calculate them and display them
-    trans <- tryCatch(Transforms(data=index(variables(x))[[1]]$view$transform), error = function(e) NULL)
-    if (!is.null(trans)) {
+    # if there are row transforms, calculate them and display them
+    row_trans <- tryCatch(Transforms(data=index(variables(x))[[1]]$view$transform), error = function(e) NULL)
+    if (!is.null(row_trans)) {
         var_cats <- Categories(data=index(variables(x))[[1]]$categories)
         # TODO: calculate category/element changes
 
-        # NA missing cells
-        ary[names(var_cats[is.na(var_cats)])] <- NA
-
-        ary <- calcTransform(ary, trans, var_cats)
+        if (length(dim(ary)) > 1) {
+            off_margins <- seq_along(dim(ary))[-1]
+            dim_names  <- names(dimnames(ary))
+            ary <- apply(ary, off_margins, calcTransform, row_trans, var_cats)
+            names(dimnames(ary)) <- dim_names
+        } else {
+            ary <- calcTransform(ary, row_trans, var_cats)
+        }
     }
 
     return(ary)
