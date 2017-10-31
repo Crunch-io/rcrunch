@@ -5,7 +5,7 @@ unicat_trans_cube <- loadCube("cubes/univariate-categorical-with-trans.json")
 test_that("Can show a simple cube with transform", {
     loc_ary <- array(c(10, 5, 15, NA),
                      dimnames = list("v7" = c("C", "E", "C, E", "D, E")))
-    expect_equivalent(showTransforms(unicat_trans_cube), loc_ary)
+    expect_output(expect_equivalent(showTransforms(unicat_trans_cube), loc_ary))
 })
 
 test_that("can retrieve transformations from a cube", {
@@ -33,7 +33,7 @@ test_that("Can show a complex cube with transform", {
                                               "D", "E", "F", "G", "Middle 5",
                                               "H", "I", "J", "Bottom 8",
                                               "Middle 3 (missing anchor)", "J and can't see")))
-    expect_equivalent(showTransforms(complex_trans_cube), loc_ary)
+    expect_output(expect_equivalent(showTransforms(complex_trans_cube), loc_ary))
 })
 
 
@@ -70,7 +70,7 @@ with_test_authentication({
                              dim = 4,
                              dimnames = list(pets = c("Birds", "Catds",
                                                       "Dogs", "Lizards")))
-        expect_equivalent(showTransforms(ds$pets), cat_summary)
+        expect_output(expect_equivalent(showTransforms(ds$pets), cat_summary))
     })
 
     # add transforms
@@ -96,7 +96,7 @@ with_test_authentication({
                                  "Toward the end", "Cats+Birds (missing anch.)",
                                  "Rocks+Birds (incl. missing)")))
 
-        trans_pets <- showTransforms(ds$pets)
+        expect_output(trans_pets <- showTransforms(ds$pets))
         expect_is(trans_pets, "array")
         expect_equal(dim(trans_pets), 10)
         expect_equivalent(trans_pets, cat_show_trans)
@@ -111,7 +111,7 @@ with_test_authentication({
                                     "Rocks+Birds (incl. missing)")))
 
         pets_cube <- crtabs(~pets, ds)
-        trans_cube <- showTransforms(pets_cube)
+        expect_output(trans_cube <- showTransforms(pets_cube))
         expect_is(trans_cube, "array")
         expect_equal(dim(pets_cube), 6)
         expect_equal(dim(trans_cube), 10)

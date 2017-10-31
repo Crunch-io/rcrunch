@@ -124,7 +124,7 @@ with_mock_crunch({
         loc_ary <- array(c(7, 10, 17), dim = 3,
                          dimnames = list(c("London", "Scotland",
                                            "London+Scotland")))
-        expect_equivalent(showTransforms(ds$location), loc_ary)
+        expect_output(expect_equivalent(showTransforms(ds$location), loc_ary))
 
         expect_null(transforms(ds$gender))
         expect_PATCH(transforms(ds$gender) <- Transforms(insertions = list(
@@ -215,7 +215,7 @@ with_test_authentication({
 
         v4_ary <- array(c(10, 10, 20), dim = 3,
                         dimnames = list(c("B", "C", "B+C")))
-        expect_equivalent(showTransforms(ds$v4), v4_ary)
+        expect_output(expect_equivalent(showTransforms(ds$v4), v4_ary))
     })
 
     test_that("Can remove transforms", {
@@ -223,8 +223,7 @@ with_test_authentication({
         v4_notrans <- array(c(10, 10), dim = 2,
                         dimnames = list(c("B", "C")))
         ds <- refresh(ds)
-        print(transforms(ds$v4))
         expect_null(transforms(ds$v4))
-        expect_equivalent(showTransforms(ds$v4), v4_notrans)
+        expect_output(expect_equivalent(showTransforms(ds$v4), v4_notrans))
     })
 })
