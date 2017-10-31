@@ -80,7 +80,8 @@ setMethod("subtotals<-", c("CrunchVariable", "ANY"), function (x, value) {
 
     bd <- wrapEntity("view" = list("transform" = list("insertions" = inserts)))
     crPATCH(self(x), body=toJSON(bd))
-    invisible(x)
+    dropCache(cubeURL(x))
+    return(invisible(x))
 })
 
 #' @rdname SubtotalsHeadings
@@ -93,7 +94,8 @@ setMethod("subtotals<-", c("CrunchVariable", "NULL"), function (x, value) {
 
     bd <- wrapEntity("view" = list("transform" = list("insertions" = inserts)))
     crPATCH(self(x), body=toJSON(bd))
-    invisible(x)
+    dropCache(cubeURL(x))
+    return(invisible(x))
 })
 
 #' @rdname SubtotalsHeadings

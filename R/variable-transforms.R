@@ -24,7 +24,8 @@ setMethod("transforms", "VariableTuple", getTransforms)
 setMethod("transforms<-", c("CrunchVariable", "ANY"), function (x, value) {
     frmt <- wrapEntity("view" = list("transform" = value))
     crPATCH(self(x), body=toJSON(frmt))
-    invisible(refresh(x))
+    dropCache(cubeURL(x))
+    invisible(x)
 })
 
 #' @rdname Transforms
@@ -32,7 +33,8 @@ setMethod("transforms<-", c("CrunchVariable", "ANY"), function (x, value) {
 setMethod("transforms<-", c("CrunchVariable", "NULL"), function (x, value) {
     frmt <- wrapEntity("view" = list("transform" = emptyObject()))
     crPATCH(self(x), body=toJSON(frmt))
-    invisible(refresh(x))
+    dropCache(cubeURL(x))
+    invisible(x)
 })
 
 setValidity("Transforms", function (object) {
@@ -66,9 +68,7 @@ setValidity("Transforms", function (object) {
 #' @export
 setMethod("showTransforms", "CategoricalVariable", function (x) {
     tab <- calcTransform(table(x), transforms(x), categories(x))
-    # tab <- tab[order(tab, decreasing=TRUE)]
-    # attr(tab, "varname") <- getNameAndType(x)
-    tab <- array(tab, dim = c(length(tab), 1), dimnames = list(names(tab), "Count"))
+
     styles <- transformStyles(transforms(x), categories(x)[!is.na(categories(x))])
     out <- prettyPrint2d(tab, row_styles = styles)
     cat(unlist(out), sep="\n")

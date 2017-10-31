@@ -67,10 +67,9 @@ with_test_authentication({
     ## test variable-based methods
     test_that("showTransforms before a transform returns a the standard table", {
         cat_summary <- array(c(30, 45, 50, 25),
-                             dim = c(4,1),
+                             dim = 4,
                              dimnames = list(pets = c("Birds", "Catds",
-                                                      "Dogs", "Lizards"),
-                                             Count = NULL))
+                                                      "Dogs", "Lizards")))
         expect_equivalent(showTransforms(ds$pets), cat_summary)
     })
 
@@ -90,17 +89,16 @@ with_test_authentication({
 
     test_that("showTransforms works on a variable", {
         cat_show_trans <- array(c(75, 30, 45, 50, 95, 25, 55, 75, 75, NA),
-                                dim = c(10,1),
+                                dim = 10,
                                 dimnames = list(pets = c(
                                  "First one", "Birds", "Cats", "Dogs",
                                  "Dogs+Cats", "Lizards", "Birds+Lizards",
                                  "Toward the end", "Cats+Birds (missing anch.)",
-                                 "Rocks+Birds (incl. missing)"),
-                                 Count = NULL))
+                                 "Rocks+Birds (incl. missing)")))
 
         trans_pets <- showTransforms(ds$pets)
-        expect_is(trans_pets, "matrix")
-        expect_equal(dim(trans_pets), c(10, 1))
+        expect_is(trans_pets, "array")
+        expect_equal(dim(trans_pets), 10)
         expect_equivalent(trans_pets, cat_show_trans)
     })
 
