@@ -80,6 +80,69 @@ makeMR <- function (subvariables, name, selections, ...) {
     return(vardef)
 }
 
+
+#' Create Multiple Response Variable from Delimited
+#'
+#' Surveys often record multiple response questions in delimited lists where
+#' each respondent's selections are separated by a delimiter like `;` or `|`.
+#' This function breaks the delimited responses into subvariables, uploads those
+#' subvariables to crunch, and finally creates a multiple response variable from
+#' them.
+#'
+#' @param var The variable containing the delimited responses
+#' @param delim The delimiter separating the repsonses
+#' @param name The name of the resulting MR variable
+#' @param selected A character string used to indicate a selection
+#' @param not_selected Character string identifying non-selection
+#' @param unanswered Character string indicating non-response
+#' @param ... Other arguments to be passed on to [makeMR()]
+#'
+#' @return
+#' @export
+mrFromDelim <- function(var,
+    delim,
+    name,
+    selected = "selected",
+    not_selected = "not_selected",
+    unanswered = NA,
+    ...) {
+    if (missing(name)) {
+        halt("Must supply a name for the new variable")
+    }
+    if (is.Categorical(var) || is.Text(var)) {
+        v <- as.vector(var)
+    } else {
+        halt(dQuote("var"), " must be a Categorical or Text Crunch Variable.")
+    }
+    uniques <- unique(v[!is.na(v)])
+    cats <- unique(unlist(strsplit(uniques, delim)))
+    vardefs <- lapply(cats, function(x) createSubvarDef(v, x, delim,
+        selected, not_selected, unanswered_val = unanswered, missing = is.na(v)))
+    ds <- loadDataset(datasetReference(var))
+    addVariables(ds, vardefs)
+    ds <- refresh(ds)
+    return(makeMR(ds[, cats], name = name, selections = selected))
+}
+
+createSubvarDef <- function(var, str, delim, selected, not_selected, unanswered_val, missing) {
+    out <- values <- grepl(buildRegex(str, delim), var)
+    out[values] <- selected
+    out[!values] <- not_selected
+    out[missing] <- unanswered_val
+    return(toVariable(factor(out), name = str))
+}
+
+buildRegex <- function(str, delim){
+    delim <- paste0('\\', delim)
+    regex <- paste0(
+        "^", str, delim, "|",
+        delim, str, delim, "|",
+        delim, str, "$", "|",
+        "^", str, "$")
+    return(regex)
+}
+
+
 #' @rdname makeArray
 #' @export
 deriveArray <- function (subvariables, name, selections, ...) {
@@ -104,6 +167,7 @@ deriveArray <- function (subvariables, name, selections, ...) {
 
     return(VariableDefinition(derivation=derivation, name=name, ...))
 }
+
 
 #' Rearrange array subvariables
 #'

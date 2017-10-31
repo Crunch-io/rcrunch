@@ -57,6 +57,51 @@ with_mock_crunch({
             name="Gen"),
             "Undefined columns selected: NOTAVARIABLE")
     })
+
+    test_that("mrFromDelim errors correctly", {
+        expect_error(mrFromDelim(ds$var, "; ",),
+            "Must supply a name for the new variable")
+        expect_error(mrFromDelim(mtcars$cyl,  name = "name"),
+            paste0(dQuote("var"), " must be a Categorical or Text Crunch Variable."))
+    })
+
+    test_that("createSubvarDef generates the correct variable definition", {
+         v <- c("maple; birch", "oak; maple; birch", "birch; sugar maple", "maple butter; oak", NA)
+         expected <- structure(list(
+             values = c(-1L, -1L, -1L, -1L, -1L),
+             type = "categorical",
+             categories = list(
+                 structure(list(
+                     id = -1L,
+                     name = "No Data",
+                     numeric_value = NULL,
+                     missing = TRUE
+                     ),
+                     .Names = c("id", "name", "numeric_value", "missing")
+                     )
+                 ),
+             name = "oak"),
+             .Names = c("values", "type", "categories", "name"),
+             class = "VariableDefinition")
+         varDef <- crunch:::createSubvarDef(v, str = "oak",
+             delim = "; ",
+             selected = "Yes",
+             not_selected = "No",
+             unanswered_val = v[is.na(v)])
+         expect_equivalent(varDef, expected)
+    })
+    c("maple; birch", "oak; maple; birch", "birch; sugar maple", "maple butter; oak")
+    test_that("buildRegex generates the expected regular expression", {
+        rx <- buildRegex("maple", "; ")
+        expect_true(grepl(rx, "maple"))
+        expect_true(grepl(rx, "maple; birch"))
+        expect_true(grepl(rx, "oak; maple; birch"))
+        expect_true(grepl(rx, "birch; maple"))
+        expect_false(grepl(rx, "birch; sugar maple"))
+        expect_false(grepl(rx, "maple butter; oak"))
+        #test delimiters that are regex characters
+        expect_true(grepl(buildRegex("maple", "| "), "oak| maple| birch"))
+    })
 })
 
 with_test_authentication({
@@ -135,5 +180,20 @@ with_test_authentication({
         ds <- refresh(ds)
         expect_true(setequal(names(ds), names(mrdf)))
         expect_identical(ncol(ds), 4L)
+    })
+    whereas("mrFromDelim functions as expected", {
+        ds <- newDataset(mrdf)
+        v <- c("maple; birch", "oak; maple; birch", "birch; sugar maple", "maple butter; oak")
+        ds$delim <- c("maple; birch", "oak; maple; birch", "birch; sugar maple", "maple butter; oak")
+        test_that("mrFromDelim creates a variable", {
+            ds$mr_5 <- mrFromDelim(ds$delim, delim = "; ", name = "myMR")
+            expect_identical(names(subvariables(ds$mr_5)),
+                c("maple", "birch", "oak", "sugar maple", "maple butter"))
+            expect_identical(names(categories(ds$mr_5)),
+                c("not_selected", "selected", "No Data"))
+            expect_identical(as.vector(ds$mr_5$maple),
+                structure(c(2L, 2L, 1L, 1L), .Label = c("not_selected", "selected"
+                ), class = "factor"))
+        })
     })
 })
