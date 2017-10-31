@@ -1,5 +1,6 @@
 ---
 title: "Array Variables"
+description: "Crunch supports several types of 'array' variables, which group together multiple columns of data in ways common in survey research."
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Array Variables}
