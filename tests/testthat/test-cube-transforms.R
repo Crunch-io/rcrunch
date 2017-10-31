@@ -67,9 +67,10 @@ with_test_authentication({
     ## test variable-based methods
     test_that("showTransforms before a transform returns a the standard table", {
         cat_summary <- array(c(30, 45, 50, 25),
-                             dimnames = list("pets" = c("Birds", "Catds",
-                                                        "Dogs", "Lizards")))
-
+                             dim = c(4,1),
+                             dimnames = list(pets = c("Birds", "Catds",
+                                                      "Dogs", "Lizards"),
+                                             Count = NULL))
         expect_equivalent(showTransforms(ds$pets), cat_summary)
     })
 
@@ -78,8 +79,10 @@ with_test_authentication({
 
     test_that("summary still works after adding transforms", {
         cat_summary <- array(c(50, 45, 30, 25),
-                             dimnames = list("pets" = c("Dogs", "Catds",
-                                                        "Birds", "Lizards")))
+                             dim = c(4,1),
+                             dimnames = list(pets = c("Dogs", "Catds",
+                                                      "Birds", "Lizards"),
+                                             Count = NULL))
         class(cat_summary) <- "CategoricalVariableSummary"
 
         expect_equivalent(summary(ds$pets), cat_summary)
@@ -87,21 +90,23 @@ with_test_authentication({
 
     test_that("showTransforms works on a variable", {
         cat_show_trans <- array(c(75, 30, 45, 50, 95, 25, 55, 75, 75, NA),
-                             dimnames = list("pets" = c(
+                                dim = c(10,1),
+                                dimnames = list(pets = c(
                                  "First one", "Birds", "Cats", "Dogs",
                                  "Dogs+Cats", "Lizards", "Birds+Lizards",
                                  "Toward the end", "Cats+Birds (missing anch.)",
-                                 "Rocks+Birds (incl. missing)")))
+                                 "Rocks+Birds (incl. missing)"),
+                                 Count = NULL))
 
         trans_pets <- showTransforms(ds$pets)
-        expect_is(trans_pets, "array")
-        expect_equal(dim(trans_pets), 10)
+        expect_is(trans_pets, "matrix")
+        expect_equal(dim(trans_pets), c(10, 1))
         expect_equivalent(trans_pets, cat_show_trans)
     })
 
     test_that("showTransforms works on a variable", {
         cat_show_trans <- array(c(75, 30, 45, 50, 95, 25, 55, 75, 75, NA),
-                                dimnames = list("pets" = c(
+                                dimnames = list(pets = c(
                                     "First one", "Birds", "Cats", "Dogs",
                                     "Dogs+Cats", "Lizards", "Birds+Lizards",
                                     "Toward the end", "Cats+Birds (missing anch.)",
