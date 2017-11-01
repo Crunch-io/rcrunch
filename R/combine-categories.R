@@ -221,14 +221,25 @@ collapseCategories <- function (var, from, to) {
     if (!(is.character(from))) {
         halt(dQuote('from'), " must be a character vector.")
     }
-    if (identical(from, to)){
+    if (identical(from, to)) {
+        # If the user is collapsing categories into itself, no changes are
+        # neccesary so the variable is returned.
         return(var)
     }
     cats <- names(categories(var))
+    missing_origin <- !(from %in% cats)
+    if (any(missing_origin)) {
+        err <- ifelse(sum(missing_origin) > 1, " are ", " is ")
+        halt(serialPaste(from[missing_origin]),
+            err, "not present in variable categories.")
+    }
     if (!(to %in% cats)) {
         if (length(from) == 1) {
-            # This case is equivalent to renaming a category
-            names(categories)[from] <- to
+            #this case is equivalent to renaming a category
+            names <- names(categories(var))
+            names[names == from] <- to
+            names(categories(var)) <- names
+            return(var)
         }
         cats <- c(cats, to)
         categories(var) <- c(categories(var),
@@ -237,7 +248,7 @@ collapseCategories <- function (var, from, to) {
         )
     }
     from <- setdiff(from, to) #in case the user tries to collapse a category into itself
-    var[ var %in% from] <- to
+    var[var %in% from] <- to
     categories(var) <- categories(var)[!(cats %in% from)]
     return(var)
 }

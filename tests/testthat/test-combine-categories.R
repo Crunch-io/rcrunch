@@ -133,6 +133,11 @@ with_mock_crunch({
             "Destination category must be a character string of length 1.")
         expect_error(collapseCategories(ds$gender, 1, "young"),
             paste0(dQuote('from'), " must be a character vector."))
+        expect_error(collapseCategories(ds$gender, "female", "woman"),
+            "female is not present in variable categories.")
+    })
+    test_that("collapseCategories takes no action when from and to are the same", {
+        expect_no_request(collapseCategories(ds$location, "London", "London"))
     })
     test_that("collapseCategories updates categories when merging into a new category", {
         expect_PATCH(var <- collapseCategories(ds$location, c("London", "Scotland"), "GB"),
@@ -144,6 +149,11 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/table/",
             '{"command":"update","variables":{"https://app.crunch.io/api/datasets/1/variables/location/":{"value":1}},"filter":{"function":"==","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/location/"},{"value":2}]}}'
         )
+    })
+    test_that("collapseCategories modifies category name", {
+        expect_PATCH(categories(ds$gender) <- collapseCategories(ds$gender, "Female", "woman"),
+            'https://app.crunch.io/api/datasets/1/variables/gender/',
+            '{"categories":[{"id":1,"missing":false,"name":"Male","numeric_value":1},{"id":2,"missing":false,"name":"woman","numeric_value":2},{"id":-1,"missing":true,"name":"No Data","numeric_value":null}]}'        )
     })
 })
 
@@ -202,5 +212,10 @@ with_test_authentication({
         ds$cat <- collapseCategories(ds$cat, c("dog", "nope"), "Has Data")
         expect_identical(names(categories(ds$cat)), c("No Data", "Has Data"))
         expect_identical(names(table(ds$cat, useNA = "always")), c("No Data", "Has Data"))
+    })
+    test_that("collapseCategories renames variable", {
+        #when length(from) == 1 and to is not present in the categories, the categories are just renamed
+        ds$q1 <- collapseCategories(ds$q1, "Bird", "Tucan")
+        expect_identical(names(categories(ds$q1)), c("Cat", "Dog", "Tucan", "Skipped", "Not Asked"))
     })
 })
