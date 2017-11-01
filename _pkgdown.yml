@@ -54,6 +54,7 @@ reference:
   - c-categories
   - categoriesFromLevels
   - changeCategoryID
+  - collapseCategories
   - dataset-variables
   - deleteVariables
   - derivations
