@@ -54,5 +54,41 @@ Subtotal}
 \description{
 Subtotals and headings allow you to add subtotals and headings to variables
 or CrunchCubes. These are especially useful for making aggregates across
-multiple categories (sometimes referred to as \emph{nets}, \emph{top box}, or \emph{top 2 box}).
+multiple categories (sometimes referred to as \emph{nets}, \emph{top box}, or
+\emph{top 2 box}).
+}
+\details{
+To see the subtotals or headings set for a variable, use \code{subtotals(varaible)}
+
+Subtotals and headings can be added either by passing a list of \code{Subtotal}s
+or \code{Heading}s, or they can be added one at a time by passing \code{Subtotal} or
+\code{Heading} to \code{subtotals(variable)} alone.
+
+Adding subtotals or headings is additive; meaning that subtotals or headings
+that are already set on the variable are not removed when new subtotals or
+headings are added. To remove all subtotals and headings, set
+\code{subtotals(variable)} to \code{NULL}.
+}
+\examples{
+\dontrun{
+# given a variable ds$opinion, with categories: Strongly Agree, Somewhat
+# Agree, Neither Agree nor Disagree, Somewhat Disagree, and Strongly Disagree,
+# to make two subtotals for Agree and Disagree:
+subtotals(ds$opinion) <- list(
+    Subtotal(name = "Agree", categories = c("Strongly Agree", "Somewhat Agree"),
+             after = "Somewhat Agree"),
+    Subtotal(name = "Disagree", categories = c("Strongly Disagree", "Somewhat Disagree"),
+             after = "Strongly Disagree")
+)
+
+# headings can also be added:
+subtotals(ds$opinion) <- Heading(name = "All opinions", after = 0)
+
+# to see the subtotals and headings associated
+subtotals(ds$opinion)
+
+# to remove all subtotals and headings
+subtotals(ds$opinion) <- NULL
+}
+
 }

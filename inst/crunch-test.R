@@ -15,6 +15,12 @@ options(
     crunch.pw=crunch::envOrOption("test.pw")
 )
 
+# crayon options for testing on travis
+options(
+    crayon.enabled = TRUE,
+    crayon.colors = 256
+)
+
 skip_locally <- function (...) {
     if (substr(getOption("crunch.api"), 1, 12) == "http://local") {
         skip(...)

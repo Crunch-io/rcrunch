@@ -27,14 +27,25 @@ setMethod("showTransforms", "CrunchCube", function (x) {
 
 #' From a cube, calculate the transforms and return an array
 #'
+#' `applyTransforms` calculates transforms (e.g. subtotals) on a CrunchCube.
+#' Currently only the row transforms are supported. This is useful if you want
+#' to use the values from the subtotals of the CrunchCube in an analysis.
+#'
 #' @param x a CrunchCube
-#' @param ary an array to use, if not using the cube itself. (Default: not used, pulls an array from the cube directly)
+#' @param ary an array to use, if not using the default array from the cube
+#' itself. (Default: not used, pulls an array from the cube directly)
 #' @param ... arguments to pass to `cubeToArray`
 #'
 #' @return an array with any transformations applied
 #'
+#' @examples
+#' \dontrun{
+#' transformed_array <- applyTransforms(crtabs(~opinion, ds))
+#' }
+#'
 #' @export
 applyTransforms <- function (x, ary, ...) {
+    # TODO: add options for not adding headings, only return subtotals
     if (missing(ary)) {
         ary <- cubeToArray(x, ...)
     }

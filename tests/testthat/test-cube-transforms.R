@@ -36,7 +36,19 @@ test_that("Can show a complex cube with transform", {
     expect_output(expect_equivalent(showTransforms(complex_trans_cube), loc_ary))
 })
 
+pet_feelings <- loadCube("./cubes/feelings-pets.json")
 
+test_that("margins work with a simple cube and row transforms", {
+    feelings_margin <- array(c(14, 24, 38, 19, 20, 23, 43),
+                     dimnames = list("feelings" = c("extremely happy", "somewhat happy", "happy", "neutral", "somewhat unhappy", "extremely unhappy", "unhappy")))
+    expect_equivalent(margin.table(pet_feelings, 1), feelings_margin)
+
+    pets_margin <- array(c(54, 46),
+                             dimnames = list("animals" = c("cats", "dogs")))
+    expect_equivalent(margin.table(pet_feelings, 2), pets_margin)
+
+    expect_equivalent(margin.table(pet_feelings), 100)
+})
 
 with_test_authentication({
     df <- data.frame(pets=c(rep("Dogs", 50),

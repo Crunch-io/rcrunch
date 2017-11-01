@@ -9,7 +9,8 @@ applyTransforms(x, ary, ...)
 \arguments{
 \item{x}{a CrunchCube}
 
-\item{ary}{an array to use, if not using the cube itself. (Default: not used, pulls an array from the cube directly)}
+\item{ary}{an array to use, if not using the default array from the cube
+itself. (Default: not used, pulls an array from the cube directly)}
 
 \item{...}{arguments to pass to \code{cubeToArray}}
 }
@@ -17,5 +18,13 @@ applyTransforms(x, ary, ...)
 an array with any transformations applied
 }
 \description{
-From a cube, calculate the transforms and return an array
+\code{applyTransforms} calculates transforms (e.g. subtotals) on a CrunchCube.
+Currently only the row transforms are supported. This is useful if you want
+to use the values from the subtotals of the CrunchCube in an analysis.
+}
+\examples{
+\dontrun{
+transformed_array <- applyTransforms(crtabs(~opinion, ds))
+}
+
 }

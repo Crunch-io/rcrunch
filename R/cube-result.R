@@ -264,6 +264,7 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
                 out <- !missings[[i]]
             }
         }
+
         return(out)
     })
     names(args) <- names(aon)
@@ -290,6 +291,14 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     ## for which that would do the wrong thing.
     keep.these <- evalUseNA(mt, dims[mt_margins], x@useNA)
     out <- subsetCubeArray(mt, keep.these)
+
+    # only attempt to apply a transform if the margin is 1 rows for now.
+    if (!is.null(margin) && margin == 1) {
+        margin_trans <- dims[[mapped_margins]]$references$view$transform
+        if (!is.null(margin_trans)) {
+            out <- applyTransforms(x, ary = out)
+        }
+    }
     return(out)
 }
 
@@ -362,6 +371,7 @@ as.array.CrunchCube <- function (x, ...) cubeToArray(x, ...)
 #' @export
 setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
     out <- as.array(x)
+    out <- applyTransforms(x, ary = out)
     marg <- margin.table(x, margin)
     actual_margin <- as_selected_margins(margin, is.selectedDimension(x@dims),
         before=FALSE)
@@ -373,7 +383,6 @@ setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
         out <- out/marg
     }
 
-    out <- applyTransforms(x, ary = out)
     return(out)
 })
 
