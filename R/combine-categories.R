@@ -199,3 +199,56 @@ combResps <- function (subvars, combs) {
 
     return(combs)
 }
+
+
+#' Combine Categories in place
+#'
+#' This function allows you to combine the categories of a variable without
+#' making a copy of the variable.
+#' @param var A categorical Crunch variable
+#' @param from A character vector of categories you want to combine.
+#' @param to A character string with the destination category.
+#' @return the variable duly modified
+#' @export
+#' @seealso [combine()]
+collapseCategories <- function (var, from, to) {
+    if (!is.Categorical(var)) {
+        halt("Variable must be a categorical.")
+    }
+    if (!(length(to) == 1 && is.character(to))) {
+        halt("Destination category must be a character string of length 1.")
+    }
+    if (!(is.character(from))) {
+        halt(dQuote('from'), " must be a character vector.")
+    }
+    if (identical(from, to)) {
+        # If the user is collapsing categories into itself, no changes are
+        # neccesary so the variable is returned.
+        return(var)
+    }
+    cats <- names(categories(var))
+    missing_origin <- !(from %in% cats)
+    if (any(missing_origin)) {
+        err <- ifelse(sum(missing_origin) > 1, " are ", " is ")
+        halt(serialPaste(from[missing_origin]),
+            err, "not present in variable categories.")
+    }
+    if (!(to %in% cats)) {
+        if (length(from) == 1) {
+            #this case is equivalent to renaming a category
+            names <- names(categories(var))
+            names[names == from] <- to
+            names(categories(var)) <- names
+            return(var)
+        }
+        cats <- c(cats, to)
+        categories(var) <- c(categories(var),
+            Category(id = max(ids(categories(var))) + 1,
+            name = to)
+        )
+    }
+    from <- setdiff(from, to) #in case the user tries to collapse a category into itself
+    var[var %in% from] <- to
+    categories(var) <- categories(var)[!(cats %in% from)]
+    return(var)
+}

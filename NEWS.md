@@ -7,6 +7,7 @@
 * `CrunchDataFrames` have been improved to act more `data.frame`-like. You can now access and overwrite values with standard `data.frame` methods like `crdf$variable1` or `crdf[,"variable1"]` and `crdf$variable1 <- 1` or `crdf[,"variable1"] <- 1`. `CrunchDataFrames` now also support adding arbitrary columns, although it should be noted that these columns are not stored on the Crunch server, so if you want to keep that data outside of your current R session, you should send it back to your Dataset as a new variable.
 * `is.selected()` is now vectorized to work with Categories, as `is.na()` has always been. You can also now assign into the function. (#123)
 * `addSubvariable()` now accepts variable definitions directly (#72)
+* `collapseCategories()` allows you to combine categories in place without creating a new variable
 
 ### crunch 1.18.4
 * All catalog objects now have an `as.data.frame()` method.
