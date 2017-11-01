@@ -194,6 +194,7 @@ with_test_authentication({
             expect_identical(as.vector(ds$mr_5$maple),
                 structure(c(2L, 2L, 1L, 1L), .Label = c("not_selected", "selected"
                 ), class = "factor"))
+            expect_identical(hiddenVariables(ds), "delim")
         })
     })
 })

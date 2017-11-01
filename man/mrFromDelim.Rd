@@ -10,7 +10,7 @@ mrFromDelim(var, delim, name, selected = "selected",
 \arguments{
 \item{var}{The variable containing the delimited responses}
 
-\item{delim}{The delimiter separating the repsonses}
+\item{delim}{The delimiter separating the responses}
 
 \item{name}{The name of the resulting MR variable}
 

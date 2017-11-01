@@ -90,7 +90,7 @@ makeMR <- function (subvariables, name, selections, ...) {
 #' them.
 #'
 #' @param var The variable containing the delimited responses
-#' @param delim The delimiter separating the repsonses
+#' @param delim The delimiter separating the responses
 #' @param name The name of the resulting MR variable
 #' @param selected A character string used to indicate a selection
 #' @param not_selected Character string identifying non-selection
@@ -120,6 +120,7 @@ mrFromDelim <- function(var,
         selected, not_selected, unanswered_val = unanswered, missing = is.na(v)))
     ds <- loadDataset(datasetReference(var))
     addVariables(ds, vardefs)
+    hide(var)
     ds <- refresh(ds)
     return(makeMR(ds[, cats], name = name, selections = selected))
 }
