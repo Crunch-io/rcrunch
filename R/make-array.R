@@ -169,7 +169,6 @@ deriveArray <- function (subvariables, name, selections, ...) {
     return(VariableDefinition(derivation=derivation, name=name, ...))
 }
 
-
 #' Rearrange array subvariables
 #'
 #' Sometimes it is useful to group subvariables across arrays in order to
