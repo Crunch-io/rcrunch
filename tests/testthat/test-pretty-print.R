@@ -26,7 +26,6 @@ test_that("applyStyles applies styles", {
 })
 
 test_that("prettyPrint2d works with no styles", {
-    print(prettyPrint2d(tst_array))
     expect_equal(prettyPrint2d(tst_array),
                  list("        ",
                       "        A    B     C",
