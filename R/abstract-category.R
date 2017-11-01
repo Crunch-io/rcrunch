@@ -196,8 +196,8 @@ setMethod("[[<-", c("AbsCats", "character"), function (x, i, ..., value) {
     callNextMethod(x, i=indices, value)
 })
 
+# a version of modifyList that doesn't recurse into the absCats themselves
 modifyCats <- function (x, val) {
-    # a version of modifyList that doesn't recurse into the absCats themselves
     stopifnot(is.abstract.categories(x), is.abstract.categories(val))
     xnames <- names(x)
     vnames <- names(val)
