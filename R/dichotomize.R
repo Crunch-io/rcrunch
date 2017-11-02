@@ -7,8 +7,8 @@
 #' `undichotomize` strips that selection information. Dichotomize converts
 #' a Categorical Array to a Multiple Response, and undichotomize does the reverse.
 #'
-#' @param x Categories or a Variable subclass that has Categories
-#' @param i For the `dichotomize` methods, the numeric or logical indices
+#' @param categories Categories or a Variable subclass that has Categories
+#' @param selection For the `dichotomize` methods, the numeric or logical indices
 #' of the categories to mark as "selected", or if character, the Category
 #' "names". Note that unlike some other categorical variable methods,
 #' numeric indices are positional, not with reference to category ids.
@@ -16,17 +16,27 @@
 #' @name dichotomize
 #' @aliases dichotomize is.dichotomized undichotomize
 #' @seealso [`describe-category`]
+#' @examples
+#' \dontrun{
+#' ds$sub1 <-  factor(1:nrow(ds))
+#' ds$sub2 <-  factor(1:nrow(ds))
+#' ds$arr <- makeArray(ds[, c("sub1", "sub2")], "array")
+#' ds$arr <- dichotomize(ds$arr, 3)
+#' class(ds$arr)
+#' ds$arr <- undichotomize(ds$arr)
+#' class(ds$arr)
+#' }
 NULL
 
 #' @rdname dichotomize
 #' @export
 setMethod("is.dichotomized", "Categories",
-    function (x) any(vapply(x, is.selected, logical(1))))
+    function (categories) any(vapply(categories, is.selected, logical(1))))
 
-.dichotomize.categories <- function (x, i) {
+.dichotomize.categories <- function (categories, selection) {
     ## Internal method for dichtomizing Categories (or lists)
-    is.selected(x[i]) <- TRUE
-    return(x)
+    is.selected(categories[selection]) <- TRUE
+    return(categories)
 }
 
 #' @rdname dichotomize
@@ -37,35 +47,35 @@ setMethod("dichotomize", c("Categories", "numeric"), .dichotomize.categories)
 setMethod("dichotomize", c("Categories", "logical"), .dichotomize.categories)
 #' @rdname dichotomize
 #' @export
-setMethod("dichotomize", c("Categories", "character"), function (x, i) {
-    ind <- names(x) %in% i
+setMethod("dichotomize", c("Categories", "character"), function (categories, selection) {
+    ind <- names(categories) %in% selection
     if (!any(ind)) {
         halt("Category not found") ## make nicer error message
     }
-    return(dichotomize(x, ind))
+    return(dichotomize(categories, ind))
 })
 
 #' @rdname dichotomize
 #' @export
-setMethod("undichotomize", "Categories", function (x) {
-    is.selected(x) <- FALSE
-    return(x)
+setMethod("undichotomize", "Categories", function (categories) {
+    is.selected(categories) <- FALSE
+    return(categories)
 })
 
-.dichotomize.var <- function (x, i) {
-    newcats <- dichotomize(categories(x), i)
-    categories(x) <- newcats
+.dichotomize.var <- function (categories, selection) {
+    newcats <- dichotomize(categories(categories), selection)
+    categories(categories) <- newcats
     if (is.dichotomized(newcats)) {
         ## Do this to avoid needing to refresh the variable catalog
-        x@tuple@body$type <- "multiple_response"
+        categories@tuple@body$type <- "multiple_response"
     }
-    invisible(CrunchVariable(tuple(x)))
+    invisible(CrunchVariable(tuple(categories)))
 }
-.undichotomize.var <- function (x) {
-    categories(x) <- undichotomize(categories(x))
+.undichotomize.var <- function (categories) {
+    categories(categories) <- undichotomize(categories(categories))
     ## Do this to avoid needing to refresh the variable catalog
-    x@tuple@body$type <- "categorical_array"
-    invisible(CrunchVariable(tuple(x)))
+    categories@tuple@body$type <- "categorical_array"
+    invisible(CrunchVariable(tuple(categories)))
 }
 
 #' @rdname dichotomize
