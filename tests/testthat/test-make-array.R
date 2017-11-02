@@ -87,12 +87,12 @@ with_mock_crunch({
              delim = "; ",
              selected = "Yes",
              not_selected = "No",
-             unanswered_val = v[is.na(v)])
+             unanswered = v[is.na(v)])
          expect_equivalent(varDef, expected)
     })
     c("maple; birch", "oak; maple; birch", "birch; sugar maple", "maple butter; oak")
-    test_that("buildRegex generates the expected regular expression", {
-        rx <- buildRegex("maple", "; ")
+    test_that("buildDelimRegex generates the expected regular expression", {
+        rx <- buildDelimRegex("maple", "; ")
         expect_true(grepl(rx, "maple"))
         expect_true(grepl(rx, "maple; birch"))
         expect_true(grepl(rx, "oak; maple; birch"))
@@ -100,7 +100,8 @@ with_mock_crunch({
         expect_false(grepl(rx, "birch; sugar maple"))
         expect_false(grepl(rx, "maple butter; oak"))
         #test delimiters that are regex characters
-        expect_true(grepl(buildRegex("maple", "| "), "oak| maple| birch"))
+        expect_true(grepl(buildDelimRegex("maple", "| "), "oak| maple| birch"))
+        expect_false(grepl(buildDelimRegex("maple", "| "), "oak| sugar maple| birch"))
     })
 })
 

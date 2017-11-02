@@ -26,6 +26,6 @@ mrFromDelim(var, delim, name, selected = "selected",
 Surveys often record multiple response questions in delimited lists where
 each respondent's selections are separated by a delimiter like \code{;} or \code{|}.
 This function breaks the delimited responses into subvariables, uploads those
-subvariables to crunch, and finally creates a multiple response variable from
+subvariables to Crunch, and finally creates a multiple response variable from
 them.
 }

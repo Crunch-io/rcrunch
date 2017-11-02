@@ -86,7 +86,7 @@ makeMR <- function (subvariables, name, selections, ...) {
 #' Surveys often record multiple response questions in delimited lists where
 #' each respondent's selections are separated by a delimiter like `;` or `|`.
 #' This function breaks the delimited responses into subvariables, uploads those
-#' subvariables to crunch, and finally creates a multiple response variable from
+#' subvariables to Crunch, and finally creates a multiple response variable from
 #' them.
 #'
 #' @param var The variable containing the delimited responses
@@ -117,7 +117,7 @@ mrFromDelim <- function(var,
     uniques <- unique(v[!is.na(v)])
     cats <- unique(unlist(strsplit(uniques, delim)))
     vardefs <- lapply(cats, function(x) createSubvarDef(v, x, delim,
-        selected, not_selected, unanswered_val = unanswered, missing = is.na(v)))
+        selected, not_selected, unanswered, missing = is.na(v)))
     ds <- loadDataset(datasetReference(var))
     addVariables(ds, vardefs)
     hide(var)
@@ -125,16 +125,47 @@ mrFromDelim <- function(var,
     return(makeMR(ds[, cats], name = name, selections = selected))
 }
 
-createSubvarDef <- function(var, str, delim, selected, not_selected, unanswered_val, missing) {
-    out <- values <- grepl(buildRegex(str, delim), var)
+#' createSubvarDef
+#'
+#' This function creates a single subvariable definition based on a character string
+#' to search for and an originating variable. It uses regex to determine whether
+#' a string is present in a delimited list, then substitutes the user supplied values
+#' to indicate selection, non-selection, and missingness.
+#'
+#' TODO: When Crunch allows variable derivation to be created via regex, this should
+#' create a derivation instead of a definition with values.
+#'
+#' @inheritParams mrFromDelim
+#' @param str A string whose presence indicates a selection
+#' @param missing A logical vector indicating which variable entries are missing
+#' @keywords internal
+#'
+#' @return A VariableDefinition
+createSubvarDef <- function(var, str, delim, selected, not_selected, unanswered, missing) {
+    out <- values <- grepl(buildDelimRegex(str, delim), var)
     out[values] <- selected
     out[!values] <- not_selected
-    out[missing] <- unanswered_val
+    out[missing] <- unanswered
     return(toVariable(factor(out), name = str))
 }
 
-buildRegex <- function(str, delim){
-    delim <- paste0('\\', delim)
+#' Build Regex to find  delimited items.
+#'
+#' A delimited item can appear in a list in four ways
+#' 1. At the start of a list `maple; oak`
+#' 1. In the middle of a list `oak; maple; birch`
+#' 1. At the end of a list `oak; maple`
+#' 1. Alone with no delimiters `maple`
+#'
+#' This function builds a regex expression which captures those four values. It
+#' is mostly broken out of [createSubvarDef()] for testing purposes.
+#'
+#' @inheritParams createSubvarDef
+#'
+#' @return A character string
+#' @keywords internal
+buildDelimRegex <- function(str, delim){
+    delim <- paste0('\\', delim) # the delimeter needs to be escaped in case it's a regex character
     regex <- paste0(
         "^", str, delim, "|",
         delim, str, delim, "|",
