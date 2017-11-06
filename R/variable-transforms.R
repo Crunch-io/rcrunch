@@ -131,9 +131,6 @@ calcInsertions <- function (vec, inserts, var_cats) {
         }
 
         # check if there are other functions, warn and return NA
-        # not currently triggered, because non-subtotal insertions aren't
-        # typically in the cat_insert_map we should *check* in case the
-        # cat_insert_map is malformed
         not_subtotal <- insert[["function"]] != "subtotal"
         if (any(not_subtotal)) {
             warning("Transform functions other than subtotal are not supported.",
@@ -152,7 +149,7 @@ calcInsertions <- function (vec, inserts, var_cats) {
 }
 
 calcTransforms <- function (ary, trans, var_cats,
-                            include = c("subtotals", "headings", "cube_cells")) {
+                            include = c("subtotals", "headings", "cube_cells", "other_insertions")) {
     # TODO: other possible Transforms
 
     ### Insertions
@@ -178,6 +175,13 @@ mapInsertions <- function (inserts, var_cats, include) {
     if ("headings" %in% include) {
         new_inserts <- c(new_inserts, inserts[is.na(funcs(inserts))])
     }
+
+    # add non-subtotal insertions
+    if ("other_insertions" %in% include) {
+        nonsubtots <- inserts[!(is.na(funcs(inserts))) & "subtotal" != funcs(inserts)]
+        new_inserts <- c(new_inserts, nonsubtots)
+    }
+
     # make an insertions object
     new_inserts <- Insertions(data=new_inserts)
 

@@ -157,12 +157,13 @@ with_mock_crunch({
         trns <- transforms(loc_var)
         trns[['insertions']][[1]][['function']] <- 'foobar'
         trns[['insertions']][[1]][['args']] <- c(1, 2)
-
-        loc_ary <- array(c(7, 10, NA),
-                         dimnames = list("location" = c("London", "Scotland",
-                                                        "London+Scotland")))
-        expect_equivalent(calcTransforms(table(loc_var), trns,
-                                        categories(loc_var)), loc_ary)
+        loc_ary <- c(7, 10, NA)
+        names(loc_ary) <- c("London", "Scotland", "London+Scotland")
+        expect_warning(expect_equivalent(calcTransforms(table(loc_var), trns,
+                                        categories(loc_var)[!is.na(categories(loc_var))]), loc_ary),
+                       paste0("Transform functions other than subtotal are ",
+                              "not supported. Applying only subtotals and ",
+                              "ignoring foobar"))
     })
 
     test_that("Transform respects anchors", {
@@ -170,10 +171,8 @@ with_mock_crunch({
         trns <- transforms(loc_var)
         trns[['insertions']][[1]][['anchor']] <- 1
 
-        loc_ary <- array(c(7, 17, 10, NA),
-                         dimnames = list("location" = c("London",
-                                                        "London+Scotland",
-                                                        "Scotland", "No Data")))
+        loc_ary <- c(7, 17, 10, NA)
+        names(loc_ary) <- c("London", "London+Scotland", "Scotland", "No Data")
         expect_equivalent(calcTransforms(table(loc_var), trns,
                                         categories(loc_var)),
                           loc_ary)
@@ -184,11 +183,8 @@ with_mock_crunch({
         trns <- transforms(loc_var)
         trns[['insertions']][[1]][['function']] <- NULL
 
-        loc_ary <- array(c(7, 10, NA, NA),
-                         dimnames = list("location" = c("London",
-                                                        "Scotland",
-                                                        "London+Scotland",
-                                                        "No Data")))
+        loc_ary <- c(7, 10, NA, NA)
+        names(loc_ary) <- c("London", "Scotland", "London+Scotland", "No Data")
         expect_equivalent(calcTransforms(table(loc_var), trns,
                                         categories(loc_var)),
                           loc_ary)
