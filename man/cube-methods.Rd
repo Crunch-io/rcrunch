@@ -10,6 +10,7 @@
 \alias{dim,CubeDims-method}
 \alias{is.na,CubeDims-method}
 \alias{dimensions,CrunchCube-method}
+\alias{[,CubeDims,ANY,ANY-method}
 \alias{dim,CrunchCube-method}
 \alias{dimnames,CrunchCube-method}
 \alias{variables,CubeDims-method}
@@ -29,6 +30,8 @@
 \S4method{is.na}{CubeDims}(x)
 
 \S4method{dimensions}{CrunchCube}(x)
+
+\S4method{[}{CubeDims,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{dim}{CrunchCube}(x)
 

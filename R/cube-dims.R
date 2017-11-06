@@ -118,7 +118,7 @@ setMethod("dimensions", "CrunchCube", function (x) {
     return(dims[!selecteds])
 })
 
-#' @rdname catalog-extract
+#' @rdname cube-methods
 #' @export
 setMethod("[", "CubeDims", function (x, i, ...) {
     return(CubeDims(x@.Data[i], names=x@names[i]))
