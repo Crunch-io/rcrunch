@@ -4,7 +4,8 @@
 \name{subtotalArray,CrunchCube-method}
 \alias{subtotalArray,CrunchCube-method}
 \alias{applyTransforms}
-\title{From a cube, calculate the transforms and return an array}
+\alias{subtotalArray}
+\title{Calculate the transforms from a CrunchCube}
 \usage{
 \S4method{subtotalArray}{CrunchCube}(x, headings = FALSE)
 
@@ -13,8 +14,8 @@ applyTransforms(x, ary = cubeToArray(x), ...)
 \arguments{
 \item{x}{a CrunchCube}
 
-\item{headings}{a logical, for \code{subtotalArray}, should headings be included with the
-subtotals (default: \code{FALSE})}
+\item{headings}{for \code{subtotalArray}: a logical indicating if the headings
+should be included with the subtotals (default: \code{FALSE})}
 
 \item{ary}{an array to use, if not using the default array from the cube
 itself. (Default: not used, pulls an array from the cube directly)}

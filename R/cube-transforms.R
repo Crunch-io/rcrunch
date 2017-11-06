@@ -35,7 +35,7 @@ setMethod("subtotalArray", "CrunchCube", function(x, headings = FALSE) {
     applyTransforms(x, include = includes)
 })
 
-#' From a cube, calculate the transforms and return an array
+#' Calculate the transforms from a CrunchCube
 #'
 #' `applyTransforms` calculates transforms (e.g. subtotals) on a CrunchCube.
 #' Currently only the row transforms are supported. This is useful if you want
@@ -54,8 +54,8 @@ setMethod("subtotalArray", "CrunchCube", function(x, headings = FALSE) {
 #' @param ary an array to use, if not using the default array from the cube
 #' itself. (Default: not used, pulls an array from the cube directly)
 #' @param ... arguments to pass to `calcTransforms`, for example `include`
-#' @param headings a logical, for `subtotalArray`, should headings be included with the
-#' subtotals (default: `FALSE`)
+#' @param headings for `subtotalArray`: a logical indicating if the headings
+#' should be included with the subtotals (default: `FALSE`)
 #'
 #' @return an array with any transformations applied
 #'
@@ -67,6 +67,7 @@ setMethod("subtotalArray", "CrunchCube", function(x, headings = FALSE) {
 #' subtotalArray(crtabs(~opinion, ds))
 #' }
 #'
+#' @aliases subtotalArray
 #' @export
 applyTransforms <- function (x, ary = cubeToArray(x), ...) {
     # if there are row transforms, calculate them and display them
