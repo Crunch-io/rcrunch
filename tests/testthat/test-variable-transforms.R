@@ -34,6 +34,12 @@ cats_list <- mapply(function (i, n, m) list(id = i, name = n, missing = m),
 
 cats <- Categories(data = cats_list)
 
+# categories with class
+cats_post <- lapply(cats, function(x) {
+    x$class <- "Category"
+    x
+})
+
 insrts_list <- list(list(anchor = 0, name = "First one",
                          `function` = "subtotal", args = c(3, 4)),
                     list(anchor = 999, name = "Last one",
@@ -48,6 +54,11 @@ insrts_list <- list(list(anchor = 0, name = "First one",
                          `function` = "subtotal", args = c(7, 8)))
 insrts <- Insertions(data=insrts_list)
 
+insrts_post <- lapply(insrts, function(x) {
+    x$class <- "Insertion"
+    x
+})
+
 test_that("findInsertPosition", {
     expect_equal(findInsertPosition(insrts[["First one"]], cats), 0)
     expect_equal(findInsertPosition(insrts[["Last one"]], cats), Inf)
@@ -55,51 +66,50 @@ test_that("findInsertPosition", {
     expect_equal(findInsertPosition(insrts[["Low"]], cats), 2)
     expect_equal(findInsertPosition(insrts[["missing anchor"]], cats), Inf)
     expect_equal(findInsertPosition(insrts[["missing categories"]], cats), 4)
-
 })
 
 
 test_that("collateCats places at beginning", {
-    new_cats <- collateCats(Transforms(insertions=insrts["First one"]), cats)
-    expect_equivalent(new_cats[c(2:11)], cats)
-    expect_equivalent(new_cats[1], insrts["First one"])
+    new_cats <- collateCats(insrts["First one"], cats_post)
+    expect_equivalent(new_cats[c(2:11)], cats_post)
+    expect_equivalent(new_cats[1], insrts_post["First one"])
 })
 
 test_that("collateCats places at end", {
-    new_cats <- collateCats(Transforms(insertions=insrts["Last one"]), cats)
-    expect_equivalent(new_cats[c(1:10)], cats)
-    expect_equivalent(new_cats[11], insrts["Last one"])
+    new_cats <- collateCats(insrts["Last one"], cats)
+    expect_equivalent(new_cats[c(1:10)], cats_post)
+    expect_equivalent(new_cats[11], insrts_post["Last one"])
 })
 
 test_that("collateCats places at end if the id is improbably high", {
-    new_cats <- collateCats(Transforms(insertions=insrts["High"]), cats)
-    expect_equivalent(new_cats[c(1:10)], cats)
-    expect_equivalent(new_cats[11], insrts["High"])
+    new_cats <- collateCats(insrts["High"], cats)
+    expect_equivalent(new_cats[c(1:10)], cats_post)
+    expect_equivalent(new_cats[11], insrts_post["High"])
 })
 
 test_that("collateCats places after index 2", {
-    new_cats <- collateCats(Transforms(insertions=insrts["Low"]), cats)
-    expect_equivalent(new_cats[c(1,2,4:11)], cats)
-    expect_equivalent(new_cats[3], insrts["Low"])
+    new_cats <- collateCats(insrts["Low"], cats)
+    expect_equivalent(new_cats[c(1,2,4:11)], cats_post)
+    expect_equivalent(new_cats[3], insrts_post["Low"])
 })
 
 test_that("collateCats places a missing anchor at end", {
-    new_cats <- collateCats(Transforms(insertions=insrts["missing anchor"]), cats)
-    expect_equivalent(new_cats[c(1:10)], cats)
-    expect_equivalent(new_cats[11], insrts["missing anchor"])
+    new_cats <- collateCats(insrts["missing anchor"], cats)
+    expect_equivalent(new_cats[c(1:10)], cats_post)
+    expect_equivalent(new_cats[11], insrts_post["missing anchor"])
 })
 
 test_that("collateCats places at an anchor even if the combo categories are na", {
-    new_cats <- collateCats(Transforms(insertions=insrts["missing categories"]), cats)
-    expect_equivalent(new_cats[c(1:4,6:11)], cats)
-    expect_equivalent(new_cats[5], insrts["missing categories"])
+    new_cats <- collateCats(insrts["missing categories"], cats)
+    expect_equivalent(new_cats[c(1:4,6:11)], cats_post)
+    expect_equivalent(new_cats[5], insrts_post["missing categories"])
 })
 
 test_that("collateCats works all together", {
-    new_cats <- collateCats(Transforms(insertions=insrts), cats)
+    new_cats <- collateCats(insrts, cats)
     expect_length(new_cats, 16)
-    expect_equivalent(new_cats[c(2, 3, 5, 6, 8, 9, 10, 11, 12, 13)], cats)
-    expect_equivalent(new_cats[c(1, 15, 14, 4, 16, 7)], insrts)
+    expect_equivalent(new_cats[c(2, 3, 5, 6, 8, 9, 10, 11, 12, 13)], cats_post)
+    expect_equivalent(new_cats[c(1, 15, 14, 4, 16, 7)], insrts_post)
     # indices for new_cats to name map
     # 1  - First one
     # 15 - Last one
@@ -142,20 +152,17 @@ with_mock_crunch({
             '{"element":"shoji:entity","body":{"view":{"transform":{}}}}')
     })
 
-    test_that("Non-combine transform warns", {
+    test_that("Non-combine insertions are ignored", {
         loc_var <- ds$location
         trns <- transforms(loc_var)
         trns[['insertions']][[1]][['function']] <- 'foobar'
+        trns[['insertions']][[1]][['args']] <- c(1, 2)
 
         loc_ary <- array(c(7, 10, NA),
                          dimnames = list("location" = c("London", "Scotland",
                                                         "London+Scotland")))
-        expect_warning(
-            expect_equivalent(calcTransform(table(loc_var), trns,
-                                            categories(loc_var)), loc_ary),
-                              paste0("Transform functions other than subtotal ",
-                                     "are not supported. Applying only ",
-                                     "subtotals and ignoring foobar"))
+        expect_equivalent(calcTransforms(table(loc_var), trns,
+                                        categories(loc_var)), loc_ary)
     })
 
     test_that("Transform respects anchors", {
@@ -163,11 +170,11 @@ with_mock_crunch({
         trns <- transforms(loc_var)
         trns[['insertions']][[1]][['anchor']] <- 1
 
-        loc_ary <- array(c(7, 17, 10),
+        loc_ary <- array(c(7, 17, 10, NA),
                          dimnames = list("location" = c("London",
                                                         "London+Scotland",
-                                                        "Scotland")))
-        expect_equivalent(calcTransform(table(loc_var), trns,
+                                                        "Scotland", "No Data")))
+        expect_equivalent(calcTransforms(table(loc_var), trns,
                                         categories(loc_var)),
                           loc_ary)
     })
@@ -177,11 +184,12 @@ with_mock_crunch({
         trns <- transforms(loc_var)
         trns[['insertions']][[1]][['function']] <- NULL
 
-        loc_ary <- array(c(7, 10, NA),
+        loc_ary <- array(c(7, 10, NA, NA),
                          dimnames = list("location" = c("London",
                                                         "Scotland",
-                                                        "London+Scotland")))
-        expect_equivalent(calcTransform(table(loc_var), trns,
+                                                        "London+Scotland",
+                                                        "No Data")))
+        expect_equivalent(calcTransforms(table(loc_var), trns,
                                         categories(loc_var)),
                           loc_ary)
     })
@@ -191,7 +199,7 @@ with_mock_crunch({
                          dimnames = list("foo1" = c("bar", "baz"),
                                          "foo2" = c("bar", "baz", "qux")))
 
-        expect_error(calcTransform(ary2d, Transforms(insertions=insrts),
+        expect_error(calcTransforms(ary2d, Transforms(insertions=insrts),
                                    Categories()),
                      paste0("Calculating varaible transforms is not ",
                             "implemented for dimensions greater than 1."))

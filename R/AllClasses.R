@@ -323,7 +323,7 @@ Category <- function (..., data=NULL) {
 #' @param ... additional arguments to `[`, ignored
 #' @param value For `[<-`, the replacement Insertion to insert
 #' @rdname Insertions
-#' @aliases anchor anchor<- func func<- args args<-
+#' @aliases anchor anchor<- func func<- args args<- funcs
 #' @export
 setClass("Insertions", contains="AbsCats")
 
@@ -364,7 +364,7 @@ Insertion <- function (..., data=NULL) {
 #' multiple categories (sometimes referred to as _nets_, _top box_, or
 #' _top 2 box_).
 #'
-#' To see the subtotals or headings set for a variable, use `subtotals(varaible)`
+#' To see the subtotals or headings set for a variable, use `subtotals(variable)`
 #'
 #' Subtotals and headings can be added either by passing a list of `Subtotal`s
 #' or `Heading`s, or they can be added one at a time by passing `Subtotal` or
@@ -375,15 +375,18 @@ Insertion <- function (..., data=NULL) {
 #' headings are added. To remove all subtotals and headings, set
 #' `subtotals(variable)` to `NULL`.
 #'
+#' To get an array of just the subtotal rows from a CrunchCube, use the function
+#' `subtotalArray(CrunchCube)`.
+#'
 #' @param data For the constructor functions `Subtotal` and
 #' `Subtotal`, you can either pass in attributes via `...` or you
 #' can create the objects with a fully defined `list` representation of
 #' the objects via the `data` argument. See the examples.
-#' @param x For the attribute getters and setters, an object of class
-#' Subtotal
+#' @param x either a variable or CrunchCube object to add or get subtotal
+#' transforms for
 #' @param ... additional arguments to `[`, ignored
 #' @param value For `[<-`, the replacement Subtotal to insert
-#' @param var the variable to use to make `Insertions`
+#' @param var the variable to use to make `Insertions` from a `Subtotal` object
 #'
 #' @examples
 #' \dontrun{
@@ -400,7 +403,7 @@ Insertion <- function (..., data=NULL) {
 #' # headings can also be added:
 #' subtotals(ds$opinion) <- Heading(name = "All opinions", after = 0)
 #'
-#' # to see the subtotals and headings associated
+#' # to see the subtotals and headings associated with a variable
 #' subtotals(ds$opinion)
 #'
 #' # to remove all subtotals and headings

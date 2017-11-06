@@ -17,3 +17,9 @@ summary of the variable, with transforms applied
 \description{
 Show the variable transformations on a Categorical variable
 }
+\examples{
+\dontrun{
+showTransforms(ds$variable)
+}
+
+}

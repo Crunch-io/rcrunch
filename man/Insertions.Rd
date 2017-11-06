@@ -9,13 +9,16 @@
 \alias{func<-}
 \alias{args}
 \alias{args<-}
+\alias{funcs}
 \alias{Insertions}
 \alias{Insertion-class}
 \alias{Insertion}
 \alias{anchor,Insertion-method}
 \alias{anchor<-,Insertion-method}
-\alias{args,Insertion-method}
-\alias{func,Insertion-method}
+\alias{args,AbsCat-method}
+\alias{func,AbsCat-method}
+\alias{funcs,AbsCats-method}
+\alias{funcs,NULL-method}
 \alias{subtotals<-,Insertion,ANY-method}
 \title{Insert categories in transformations}
 \usage{
@@ -27,9 +30,13 @@ Insertion(..., data = NULL)
 
 \S4method{anchor}{Insertion}(x) <- value
 
-\S4method{args}{Insertion}(x)
+\S4method{args}{AbsCat}(x)
 
-\S4method{func}{Insertion}(x)
+\S4method{func}{AbsCat}(x)
+
+\S4method{funcs}{AbsCats}(x)
+
+\S4method{funcs}{`NULL`}(x)
 
 \S4method{subtotals}{Insertion,ANY}(x) <- value
 }

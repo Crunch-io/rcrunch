@@ -1,16 +1,21 @@
 is.insertion <- function (x) inherits(x, "Insertion")
 
 setValidity("Insertion", function (object) {
+    val <- TRUE
     reqs <- c("anchor", "name")
     mems <- reqs %in% names(object)
     if (!all(mems)) {
         val <- paste0("An Insertion must have at least ",
                       serialPaste(dQuote(reqs)), ". Missing: ",
                       serialPaste(dQuote(reqs[!mems])))
-    } else {
-        val <- TRUE
     }
-    # TODO: validate if has a function, must also have an args
+
+    if (!is.na(func(object)) && is.na(args(object))) {
+        # add checking so that args is either a vectorOrList of numerics
+        val <- paste0("If an Insertion has a ", dQuote("function"),
+                      " it must also have ", dQuote("args"))
+    }
+
     return(val)
 })
 
@@ -69,7 +74,7 @@ setMethod("anchor<-", "Insertion", setAnchor)
 
 #' @rdname Insertions
 #' @export
-setMethod("args", "Insertion", function (x) {
+setMethod("args", "AbsCat", function (x) {
     func <- function(x)
     if (is.null(func)) {
         return(NA)
@@ -81,11 +86,23 @@ setMethod("args", "Insertion", function (x) {
 })
 #' @rdname Insertions
 #' @export
-setMethod("func", "Insertion", function (x) {
+setMethod("func", "AbsCat", function (x) {
     f <- x[["function"]]
 
     return(ifelse(is.null(f), NA_character_, f))
 })
+
+
+#' @rdname Insertions
+#' @export
+setMethod("funcs", "AbsCats", function (x) {
+    f <- vapply(x, func, character(1))
+    return(f)
+})
+
+#' @rdname Insertions
+#' @export
+setMethod("funcs", "NULL", function (x) NA_character_)
 
 #' @rdname Insertions
 #' @export

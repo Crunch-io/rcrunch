@@ -36,9 +36,55 @@ test_that("Can show a complex cube with transform", {
     expect_output(expect_equivalent(showTransforms(complex_trans_cube), loc_ary))
 })
 
-pet_feelings <- loadCube("./cubes/feelings-pets.json")
+pet_feelings <- pet_feelings_headers <- loadCube("./cubes/feelings-pets.json")
 
-test_that("margins work with a simple cube and row transforms", {
+# add a header for some tests
+new_trans <- pet_feelings_headers@dims$feelings$references$view$transform
+new_trans$insertions <- c(new_trans$insertions, list(list(name = "Subtitle", anchor = 0)))
+pet_feelings_headers@dims$feelings$references$view$transform <- new_trans
+
+test_that("applyTransforms works with a simple cube and row transforms", {
+    all <- array(c(9, 12, 21, 12, 10, 11, 21,
+                   5, 12, 17, 7, 10, 12, 22),
+                 dim = c(7, 2),
+                 dimnames = list("feelings" =
+                                     c("extremely happy", "somewhat happy",
+                                       "happy", "neutral", "somewhat unhappy",
+                                       "extremely unhappy", "unhappy"),
+                                 "animals" = c("cats", "dogs")))
+    expect_equivalent(applyTransforms(pet_feelings), all)
+
+    # can apply to an array of the same shape
+    new_ary <- cubeToArray(pet_feelings)-1
+    new_all <- all - c(1, 1, 2, 1, 1, 1, 2) # msut subtract two from every subtotal
+    expect_equivalent(applyTransforms(pet_feelings, ary = new_ary), new_all)
+})
+
+test_that("applyTransforms can return everything", {
+    all <- array(c(NA, 9, 12, 21, 12, 10, 11, 21,
+                   NA, 5, 12, 17, 7, 10, 12, 22),
+                 dim = c(8, 2),
+                 dimnames = list("feelings" =
+                                     c("Subtitle", "extremely happy", "somewhat happy",
+                                       "happy", "neutral", "somewhat unhappy",
+                                       "extremely unhappy", "unhappy"),
+                                 "animals" = c("cats", "dogs")))
+
+    expect_equivalent(applyTransforms(pet_feelings_headers), all)
+
+    pet_ary <- cubeToArray(pet_feelings_headers)
+    feeling_cats <- Categories(data=index(variables(pet_feelings_headers))[[1]]$categories)
+    insert_map <- mapInsertions(transforms(pet_feelings_headers)$insertions,
+                                feeling_cats,
+                                include = c("subtotals", "headings"))
+    tst <- apply(pet_ary, 2, calcInsertions,
+                 insert_map,
+                 feeling_cats)
+    expect_equivalent(tst, all[c(1, 4, 8),])
+})
+
+
+test_that("margin.table works with a simple cube and row transforms", {
     feelings_margin <- array(c(14, 24, 38, 19, 20, 23, 43),
                      dimnames = list("feelings" = c("extremely happy", "somewhat happy", "happy", "neutral", "somewhat unhappy", "extremely unhappy", "unhappy")))
     expect_equivalent(margin.table(pet_feelings, 1), feelings_margin)
@@ -48,6 +94,62 @@ test_that("margins work with a simple cube and row transforms", {
     expect_equivalent(margin.table(pet_feelings, 2), pets_margin)
 
     expect_equivalent(margin.table(pet_feelings), 100)
+})
+
+test_that("prop.table works with a simple cube and row transforms", {
+    feelings_prop <- array(c(9/14, 12/24, 21/38, 12/19, 10/20, 11/23, 21/43,
+                               5/14, 12/24, 17/38, 7/19, 10/20, 12/23, 22/43),
+                             dim = c(7, 2),
+                             dimnames = list(
+                                 "feelings" =
+                                     c("extremely happy", "somewhat happy",
+                                       "happy", "neutral", "somewhat unhappy",
+                                       "extremely unhappy", "unhappy"),
+                                 "animals" = c("cats", "dogs")))
+    expect_equivalent(prop.table(pet_feelings, 1), feelings_prop)
+
+    pets_prop <- array(c(9/54, 12/54, 21/54, 12/54, 10/54, 11/54, 21/54,
+                         5/46, 12/46, 17/46, 7/46, 10/46, 12/46, 22/46),
+                       dim = c(7, 2),
+                       dimnames = list(
+                           "feelings" =
+                               c("extremely happy", "somewhat happy",
+                                 "happy", "neutral", "somewhat unhappy",
+                                 "extremely unhappy", "unhappy"),
+                           "animals" = c("cats", "dogs")))
+    expect_equivalent(prop.table(pet_feelings, 2), pets_prop)
+
+    all_prop <- array(c(9/100, 12/100, 21/100, 12/100, 10/100, 11/100, 21/100,
+                        5/100, 12/100, 17/100, 7/100, 10/100, 12/100, 22/100),
+                      dim = c(7, 2),
+                      dimnames = list(
+                          "feelings" =
+                              c("extremely happy", "somewhat happy",
+                                "happy", "neutral", "somewhat unhappy",
+                                "extremely unhappy", "unhappy"),
+                          "animals" = c("cats", "dogs")))
+    expect_equivalent(prop.table(pet_feelings), all_prop)
+})
+
+test_that("Can get subtotals alone", {
+    subtotes <- array(c(21, 21,
+                        17, 22),
+                 dim = c(2, 2),
+                 dimnames = list("feelings" =
+                                     c("happy", "unhappy"),
+                                 "animals" = c("cats", "dogs")))
+    expect_equivalent(subtotalArray(pet_feelings_headers), subtotes)
+})
+
+test_that("Can get subtotals with headers", {
+    subtotes <- array(c(NA, 21, 21,
+                        NA, 17, 22),
+                      dim = c(3, 2),
+                      dimnames = list("feelings" =
+                                          c("Subtitle", "happy", "unhappy"),
+                                      "animals" = c("cats", "dogs")))
+
+    expect_equivalent(subtotalArray(pet_feelings_headers, headings = TRUE), subtotes)
 })
 
 with_test_authentication({

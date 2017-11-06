@@ -44,12 +44,12 @@ Heading(..., data = NULL)
 can create the objects with a fully defined \code{list} representation of
 the objects via the \code{data} argument. See the examples.}
 
-\item{x}{For the attribute getters and setters, an object of class
-Subtotal}
+\item{x}{either a variable or CrunchCube object to add or get subtotal
+transforms for}
 
 \item{value}{For \code{[<-}, the replacement Subtotal to insert}
 
-\item{var}{the variable to use to make \code{Insertions}}
+\item{var}{the variable to use to make \code{Insertions} from a \code{Subtotal} object}
 }
 \description{
 Subtotals and headings allow you to add subtotals and headings to variables
@@ -58,7 +58,7 @@ multiple categories (sometimes referred to as \emph{nets}, \emph{top box}, or
 \emph{top 2 box}).
 }
 \details{
-To see the subtotals or headings set for a variable, use \code{subtotals(varaible)}
+To see the subtotals or headings set for a variable, use \code{subtotals(variable)}
 
 Subtotals and headings can be added either by passing a list of \code{Subtotal}s
 or \code{Heading}s, or they can be added one at a time by passing \code{Subtotal} or
@@ -68,6 +68,9 @@ Adding subtotals or headings is additive; meaning that subtotals or headings
 that are already set on the variable are not removed when new subtotals or
 headings are added. To remove all subtotals and headings, set
 \code{subtotals(variable)} to \code{NULL}.
+
+To get an array of just the subtotal rows from a CrunchCube, use the function
+\code{subtotalArray(CrunchCube)}.
 }
 \examples{
 \dontrun{
@@ -84,7 +87,7 @@ subtotals(ds$opinion) <- list(
 # headings can also be added:
 subtotals(ds$opinion) <- Heading(name = "All opinions", after = 0)
 
-# to see the subtotals and headings associated
+# to see the subtotals and headings associated with a variable
 subtotals(ds$opinion)
 
 # to remove all subtotals and headings

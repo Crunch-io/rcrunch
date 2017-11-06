@@ -30,10 +30,12 @@ test_that("Insertion setter validation", {
 })
 
 test_that("Insertion validation", {
-    expect_error(Insertion(anchor='foo', `function`='baz'),
+    expect_error(Insertion(anchor=0),
                  "invalid class .*Insertion.* object:.* Missing: .*name*")
-    expect_error(Insertion(name='bar', `function`='baz'),
+    expect_error(Insertion(name='bar'),
                  "invalid class .*Insertion.* object:.* Missing: .*anchor*")
+    expect_error(Insertion(anchor=0, name='bar', `function`='baz'),
+                 "If an Insertion has a .*function.* it must also have .*args.*")
 })
 
 test_that("Insertion and insertions show methods", {
@@ -49,7 +51,6 @@ test_that("Insertion and insertions show methods", {
                                         args=c("1 and 2", "9 and 10"))))
 })
 
-test_that("subtotals returns NA when not found", {
-    expect_equal(args(Insertion(anchor='foo', name='bar',
-                                        `function`='baz')), NA)
+test_that("args returns NA when not found", {
+    expect_equal(args(Insertion(anchor='foo', name='bar')), NA)
 })

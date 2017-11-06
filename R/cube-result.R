@@ -178,6 +178,8 @@ keepWithNA <- function (dimension, marginal, useNA) {
         ## But still drop __any__ or __none__
         out <- valid.cats & out
     }
+    # add names, so we know which categories are being kept
+    names(out) <- dimension$name
     return(out)
 }
 

@@ -2,17 +2,17 @@
 prettyPrint2d <- function (ary, row_styles = NULL, col_styles = NULL) {
     # TODO: warn if bold is used, since it messes up alignment?
 
+    # if the array is [n,1], enforce that explicitly:
+    if (length(dim(ary)) == 1) {
+        ary <- array(ary, dim = c(length(ary), 1),
+                     dimnames = c(dimnames(ary), NULL))
+    }
+
     if (!is.null(row_styles) && length(row_styles) != nrow(ary)) {
         halt("The number of row styles doesn't match the number of rows")
     }
     if (!is.null(col_styles) && length(col_styles) != ncol(ary)) {
         halt("The number of column styles doesn't match the number of columns")
-    }
-
-    # if the array is [n,1], enforce that explicitly:
-    if (length(dim(ary)) == 1) {
-        ary <- array(ary, dim = c(length(ary), 1),
-                     dimnames = c(dimnames(ary), NULL))
     }
 
     # calculate column widths including headers, calculate column var title
@@ -58,6 +58,7 @@ prettyPrint2d <- function (ary, row_styles = NULL, col_styles = NULL) {
 
 
     ### style rows
+    # TODO: left align headers?
     row_heads <- col_align(rownames(ary), row_header_width, align = "right")
     rows <- lapply(seq_len(nrow(padded_ary)), function (i) {
             rw <- c(row_heads[i], padded_ary[i,])
