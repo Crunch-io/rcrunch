@@ -13,7 +13,8 @@ addSubvariables(variable, subvariable)
 \item{variable}{the array variable to modify}
 
 \item{subvariable}{the subvariable to add, or a list of those to add, or a
-dataset subset}
+dataset subset. You can supply variables, variable definitions or lists of
+variables and variable definitions.}
 }
 \value{
 \code{variable} with the indicated subvariables added.
@@ -26,4 +27,7 @@ Add subvariable to an array
 ds$allpets <- addSubvariable(ds$allpets, ds$allpets_4)
 ds$petloc <- addSubvariables(ds$petloc, ds[c("petloc_school", "petloc_daycare")])
 }
+}
+\seealso{
+\code{\link{subvariables}}
 }

@@ -2,7 +2,7 @@
 #'
 #' @param object the object
 #' @return invisibly
-#' @seealso \code{\link[methods]{show}}
+#' @seealso [`methods::show`]
 #' @importFrom methods show
 #' @name show-crunch
 NULL
@@ -161,7 +161,7 @@ formatVersionCatalog <- function (x, from=Sys.time()) {
     )
 
 formatExpression <- function (expr) {
-    if (inherits(expr, "CrunchExpr")) {
+    if (is.CrunchExpr(expr)) {
         return(formatExpression(expr@expression))
     } else if ("function" %in% names(expr)) {
         func <- expr[["function"]]
@@ -178,7 +178,7 @@ formatExpression <- function (expr) {
         ## GET URL, get alias from that
         return(crGET(expr[["variable"]])$body$alias)
     } else if (length(intersect(c("column", "value"), names(expr)))) {
-        return(deparseAndTruncate(expressionValue(expr)))
+        return(deparseAndFlatten(expressionValue(expr)))
     } else {
         ## Dunno what this is
         return("[Complex expression]")
@@ -191,10 +191,15 @@ expressionValue <- function (expr) {
     unlist(expr$column %||% expr$value)
 }
 
-deparseAndTruncate <- function (x, ...) {
-    out <- deparse(x, ...)
+deparseAndFlatten <- function (x, max_length = NULL, control=NULL, ...) {
+    out <- deparse(x, control=control, ...)
     if (length(out) > 1) {
-        out <- paste0(out[1], "...")
+        out <- paste0(out, collapse="")
+    }
+    # if max_length is null, do nothing
+    # else return 1:max_length of out
+    if (!is.null(max_length)) {
+        out <- substr(out, 1, max_length)
     }
     return(out)
 }
@@ -230,7 +235,7 @@ formatExpressionValue <- function (val, cats=NULL) {
     } else {
         ## TODO: iterate over, replace {?:-1} with NA
     }
-    return(deparseAndTruncate(val))
+    return(deparseAndFlatten(val))
 }
 
 #' @rdname show-crunch
@@ -249,6 +254,19 @@ setMethod("show", "CrunchLogicalExpr", function (object) {
     invisible(object)
 })
 
+showMultitable <- function (x) {
+    out <- paste("Multitable", dQuote(name(x)))
+
+    # TODO: check variable types to alert users in a more friendly manner
+    # eg remove selected_array()
+    out <- c(out, "Column variables:",
+             vapply(x@body$template, function (expr) {
+                 paste0("  ", formatExpression(expr$query[[1]]))
+             }, character(1)))
+
+    return(c(out))
+}
+
 # More boilerplate
 
 setMethod("getShowContent", "Category", showCategory)
@@ -258,17 +276,11 @@ setMethod("getShowContent", "CategoricalArrayVariable",
     showCategoricalArrayVariable)
 setMethod("getShowContent", "CrunchDataset", showCrunchDataset)
 setMethod("getShowContent", "Subvariables", showSubvariables)
+setMethod("getShowContent", "Multitable", showMultitable)
 setMethod("getShowContent", "ShojiOrder", showShojiOrder)
 setMethod("getShowContent", "VariableOrder",
     function (x) showShojiOrder(x, key=namekey(x)))
-setMethod("getShowContent", "ShojiCatalog",
-    function (x) catalogToDataFrame(x, TRUE))
-setMethod("getShowContent", "BatchCatalog",
-    function (x) catalogToDataFrame(x, c("id", "status"), rownames=NULL))
-setMethod("getShowContent", "VariableCatalog",
-    function (x) catalogToDataFrame(x, c("alias", "name", "type"), rownames=NULL))
-setMethod("getShowContent", "FilterCatalog",
-    function (x) catalogToDataFrame(x, c("name", "id", "is_public"), rownames=NULL))
+setMethod("getShowContent", "ShojiCatalog", function (x) as.data.frame(x))
 setMethod("getShowContent", "VersionCatalog", formatVersionCatalog)
 setMethod("getShowContent", "MemberCatalog",
     function (x) {
@@ -284,11 +296,28 @@ setMethod("getShowContent", "CrunchFilter",
         return(c(paste("Crunch filter", dQuote(name(x))),
             paste("Expression:", formatExpression(expr(x)))))
     })
-
 #' @rdname show-crunch
 #' @export
 setMethod("show", "CrunchCube", function (object) show(cubeToArray(object)))
 
 #' @rdname show-crunch
 #' @export
-setMethod("show", "OrderGroup", function (object) cat(showOrderGroup(object, index=structure(lapply(urls(object), function (x) list(name=x)), .Names=urls(object)), key="name"), sep="\n"))
+setMethod("show", "OrderGroup", function (object) {
+    ind <- structure(lapply(urls(object), function (x) list(name=x)),
+        .Names=urls(object))
+    cat(showOrderGroup(object, index=ind, key="name"), sep="\n")
+})
+
+#' @rdname show-crunch
+#' @export
+setMethod("show", "CrunchGeography", function (object) {
+    geo_datum <- Geodata(crGET(object$geodatum))
+    cat("CrunchGeography metadata for variable \n",
+        "geodatum name: \t\t", name(geo_datum), "\n",
+        "geodatum description: \t", description(geo_datum), "\n",
+        "geodatum url: \t\t", object$geodatum, "\n",
+        "feature_key: \t\t", object$feature_key, "\n",
+        "match_field: \t\t", object$match_field, "\n",
+        sep="")
+    invisible(object)
+})

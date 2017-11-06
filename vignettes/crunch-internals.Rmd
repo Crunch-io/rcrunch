@@ -1,0 +1,36 @@
+---
+title: "Crunch Internals"
+description: "Here are some details on how the Crunch API works, which may be useful to know if you're looking to do complex actions or trying to understand how to improve performance of your R code."
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Crunch Internals}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+The Crunch web app and the `crunch` package are both built on a [REST API](http://docs.crunch.io/). Users can interact with very large datasets because most of the heavy computation is done on the Crunch servers and not on the users computer. In most cases, you don't need to know how the API works---the R package handles the HTTP requests and responses and presents meaningful objects and methods to you. To go beyond the basics, though, it can be useful to understand how the API works so that you can make more complex or more efficient (read: faster) operations.
+
+### Catalogs
+
+When you open a dataset in the Crunch web app, what happens is that the app sends an HTTP request to the Crunch server for information about that dataset. It gets the dataset description and a list of variables contained within that dataset, but the actual data is stored on the server and not sent to the app. The app only loads information about variables that are actually going to be displayed on the screen, which is why very large datasets load so quickly. You might have millions of rows in your dataset, but the web app only asks the server for the summary statistics it needs to display the variable card.
+
+This kind of minimally necessary information are stored in objects called catalogs. There is a `VariableCatalog`, which has information about a dataset's variables; a `DatasetCatalog`, which has information about your datasets, and many others. You can think of catalogs just like the Sears Catalog: they are lists of things and descriptions about those things, but they are not the things themselves. You might flip through a catalog looking for the couch, but you need to make a special order if you actually want the couch delivered.
+
+The R package relates to the Crunch API in more or less the same manner as the web app. When you load a Crunch dataset from the server you are not typically loading the actual data, but instead you are loading a catalog representation of that dataset which is stored in a list. This object includes things like the dataset identifier, the variable names and types, and the dataset dimensions, but the actual data stays on the server. When calculations are performed on that data, an HTTP request is sent to the server, the server calculates the answer, and the results are sent back to the R session. This is what allows you to calculate statistics on objects which don't fit in memory: the calculations are done remotely and only the result of that calculation is sent back to you.
+
+### Getters and Setters
+
+Many Crunch functions both retrieve information from the server and allow the user to set information. For instance if you want to retrieve a list of datasets associated with a project you could call the [datasets()] function like this:
+```
+proj <- projects()[["Project name"]]
+datasets(proj)
+```
+
+What happens under the hood when you run this code is that R sends an HTTP request to the server asking for the datasets associated with a particular project. This is the "getter" side of the `datasets()` function. However, the function also allows the user to change the datasets associated with that function using the assignment operator.
+
+```
+ds <- loadDataset(mydatasets[["Dataset name"]])
+datasets(proj) <- ds
+```
+
+Internally there is actually a second method `datasets<-` that takes the value on the right hand side of the `<-` operator and posts that value to the datasets attribute of the project catalog. The projects catalog will then update to reflect that a dataset belongs to a particular catalog, and that will be reflected in the web app. Similar patterns happen when you get and set attributes on objects, like "names".

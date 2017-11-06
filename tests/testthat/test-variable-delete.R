@@ -1,6 +1,6 @@
 context("Deleting variables")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("Assigning NULL doesn't ask you about deleting 0 variables", {
         expect_message(ds$NOTAVARIABLE <- df$NOTAVARIABLE,
@@ -38,6 +38,15 @@ with_mock_HTTP({
                 "https://app.crunch.io/api/datasets/1/variables/gender/")
             expect_DELETE(deleteVariables(ds, c("gender", "birthyr")),
                 "https://app.crunch.io/api/datasets/1/variables/gender/")
+        })
+
+        test_that("deleteSubvariable deletes the subvariable", {
+            expect_DELETE(deleteSubvariable(ds$mymrset, "subvar1"),
+                "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/")
+            expect_DELETE(deleteSubvariable(ds$mymrset, 2),
+                "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/")
+            expect_DELETE(deleteSubvariables(ds$mymrset, 2),
+                "https://app.crunch.io/api/datasets/1/variables/mymrset/subvariables/subvar1/")
         })
     })
 })

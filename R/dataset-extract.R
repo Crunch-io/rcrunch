@@ -1,21 +1,20 @@
 #' Subset datasets and extract variables
 #'
 #' @param x a CrunchDataset
-#' @param i As with a \code{data.frame}, there are two cases: (1) if no other
-#' arguments are supplied (i.e \code{x[i]}), \code{i} provides for
-#' \code{as.list} extraction: columns of the dataset rather than rows. If
+#' @param i As with a `data.frame`, there are two cases:
+#' 1. if no other arguments are supplied (i.e `x[i]`, `i` provides for
+#' `as.list` extraction: columns of the dataset rather than rows. If
 #' character, identifies variables to extract based on their aliases (by
-#' default: set \code{options(crunch.namekey.dataset="name")} to use variable
-#' names); if numeric or logical,
-#' extracts variables accordingly. Alternatively, (2) if \code{j} is specified
-#' (as either \code{x[i, j]} or \code{x[i,]}), \code{i} is an object of class
-#' \code{CrunchLogicalExpr} that will define a subset of rows.
+#' default: set `options(crunch.namekey.dataset="name")` to use variable
+#' names); if numeric or logical, extracts variables accordingly.
+#' 1. If `j` is specified as either `x[i, j]` or `x[i,]`), `i` is an object of class
+#' `CrunchLogicalExpr` that will define a subset of rows.
 #' @param j columnar extraction, as described above
-#' @param name columnar extraction for \code{$}
-#' @param drop logical: autmatically simplify a 1-column Dataset to a Variable?
+#' @param name columnar extraction for `$`
+#' @param drop logical: automatically simplify a 1-column Dataset to a Variable?
 #' Default is FALSE, and the TRUE option is in fact not implemented.
 #' @param ... additional arguments
-#' @return \code{[} yields a Dataset; \code{[[} and \code{$} return a Variable
+#' @return `[` yields a Dataset; `[[` and `$` return a Variable
 #' @name dataset-extract
 #' @aliases dataset-extract
 NULL
@@ -64,15 +63,14 @@ setMethod("[", c("CrunchDataset", "logical", "missing"), function (x, i, j, ...,
         ## If you reference a variable in a dataset that doesn't exist, you
         ## get NULL, and e.g. NULL == something becomes logical(0).
         ## That does awful things if you try to send to the server. So don't.
-        halt("Invalid expression: ", deparseAndTruncate(match.call()$i))
+        halt("Invalid expression: ", deparseAndFlatten(match.call()$i))
     }
     return(x)
 })
 #' @rdname dataset-extract
 #' @export
 setMethod("[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
-    allnames <- getIndexSlot(allVariables(x), namekey(x)) ## Include hidden
-    w <- match(i, allnames)
+    w <- findVariablesInDataset(x, i)
     if (any(is.na(w))) {
         halt("Undefined columns selected: ", serialPaste(i[is.na(w)]))
     }
@@ -113,7 +111,7 @@ setMethod("[", c("CrunchDataset", "missing", "ANY"), function (x, i, j, ..., dro
             activeFilter(i) <- activeFilter(f)
             i <- f & i
         } else {
-            callstring <- deparseAndTruncate(tail(sys.calls(), 1)[[1]])
+            callstring <- deparseAndFlatten(tail(sys.calls(), 1)[[1]])
             halt("In ", callstring, ", object and subsetting expression have different filter expressions")
         }
     }
@@ -170,28 +168,28 @@ setMethod("[[", c("CrunchDataset", "ANY"), function (x, i, ..., drop=FALSE) {
 #' @rdname dataset-extract
 #' @export
 setMethod("[[", c("CrunchDataset", "character"), function (x, i, ..., drop=FALSE) {
-    stopifnot(length(i) == 1)
-    n <- match(i, names(x))
-    if (is.na(n)) {
-        ## See if the variable in question is hidden
-        hvars <- hidden(x)
-        hnames <- getIndexSlot(hvars, namekey(x))
-        n <- match(i, hnames)
-        if (is.na(n)) {
-            return(NULL)
-        } else {
-            ## If so, return it with a warning
-            out <- hvars[[n]]
-            if (!is.null(out)) {
-                out <- CrunchVariable(out, filter=activeFilter(x))
-            }
-            warning("Variable ", i, " is hidden", call.=FALSE)
-            return(out)
+    out <- allVariables(x)[[findVariablesInDataset(x, i)]]
+    if (!is.null(out)) {
+        out <- CrunchVariable(out, filter=activeFilter(x))
+        if (tuple(out)$discarded) {
+            warning("Variable ", alias(out), " is hidden", call.=FALSE)
         }
-    } else {
-        return(callNextMethod(x, n, ..., drop=drop))
     }
+    return(out)
 })
 #' @rdname dataset-extract
 #' @export
 setMethod("$", "CrunchDataset", function (x, name) x[[name]])
+
+
+findVariablesInDataset <- function (x, i) {
+    allvars <- allVariables(x)
+    ## Handle "namekey", which should be deprecated
+    if (getOption("crunch.namekey.dataset", "alias") == "name") {
+        alt <- names(allvars)
+    } else {
+        alt <- aliases(allvars)
+    }
+
+    return(whichNameOrURL(allvars, i, alt))
+}

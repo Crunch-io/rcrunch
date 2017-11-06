@@ -1,17 +1,23 @@
 #' Make a Categorical Array or Multiple Response variable
 #'
+#' Array variables are composed of a set of "subvariables" bound
+#' together for display in the app. For example, you might have a set of
+#' survey questions that ask how the respondent would rate a tv show from
+#' 1-5. Array variables allow you to display all of their ratings in a compact
+#' table rather than a set of distinct variables.
+#'
 #' @param subvariables a list of Variable objects to bind together, or a
-#' Dataset object containing only the Variables to bind (as in from subsetting
-#' a Dataset)
+#' Dataset subset which contains only the Variables to bind.
 #' @param name character, the name that the new Categorical Array variable
-#' should have. Required.
-#' @param selections character, for \code{makeMR}, the names of the
+#' should have.
+#' @param selections character, for `makeMR` and `deriveArray` the names of the
 #' categories to mark as the dichotomous selections. Required for
-#' \code{makeMR}; ignored in \code{makeArray}.
+#' `makeMR`; optional for `deriveArray`; ignored in `makeArray`.
 #' @param ... Optional additional attributes to set on the new variable.
 #' @return A VariableDefinition that when added to a Dataset will create the
-#' categorical-array or multiple-response variable. \code{deriveArray} will
-#' make a derived array expression, while \code{makeArray} and \code{makeMR}
+#' categorical-array or multiple-response variable. `deriveArray` will
+#' make a derived array expression (or a derived multiple response expression
+#' if `selections` are supplied), while `makeArray` and `makeMR`
 #' return an expression that "binds" variables together, removing them from
 #' independent existence.
 #' @export
@@ -76,7 +82,7 @@ makeMR <- function (subvariables, name, selections, ...) {
 
 #' @rdname makeArray
 #' @export
-deriveArray <- function (subvariables, name, ...) {
+deriveArray <- function (subvariables, name, selections, ...) {
     ## Get subvariable URLs
     if (is.dataset(subvariables)) {
         ## as in, if the list of variables is a [ extraction from a Dataset
@@ -90,10 +96,16 @@ deriveArray <- function (subvariables, name, ...) {
             .Names=subvarids)),
         list(value=I(subvarids))))
 
+    if (!missing(selections)) {
+        # if there are selections, wrap the array function inside of a
+        # select_categories function
+        derivation <- zfunc("select_categories", derivation, list(value=I(selections)))
+    }
+
     return(VariableDefinition(derivation=derivation, name=name, ...))
 }
 
-#' Rearrange array subvariables into other configurations
+#' Rearrange array subvariables
 #'
 #' Sometimes it is useful to group subvariables across arrays in order to
 #' compare them more easily. This function generates a set of derived views of
@@ -101,16 +113,15 @@ deriveArray <- function (subvariables, name, ...) {
 #' with the underlying array variables, and they are thus automatically updated
 #' when new data is appended.
 #'
-#' @param variables List of variables, variable catalog, or dataset subset
+#' @param variables List of variables, a variable catalog, or a dataset subset
 #' containing the categorical array or multiple response variables you want to
 #' rearrange.
-#' @param suffix character string to append to the new variable names. Make it
-#' \code{""} if you don't want it to append anything.
+#' @param suffix character string to append to the new variable names. Pass
+#' `""` if you don't want it to append anything.
 #' @return A list of derived VariableDefinitions, one per unique subvariable
-#' name across all \code{variables}. Each variable (in \code{variables}) that
-#' contains this subvariable will appear
-#' as a subvariable in these new derived array definitions. Use
-#' \code{addVariables} to add these to your dataset.
+#' name across all `variables`. Each variable in `variables` that
+#' contains this subvariable will appear as a subvariable in these new derived
+#' array definitions. Use [`addVariables`] to add these to your dataset.
 #' @examples
 #' \dontrun{
 #' ds <- addVariables(ds, flipArrays(ds[c("petloc", "petloc2")], suffix=", rearranged"))

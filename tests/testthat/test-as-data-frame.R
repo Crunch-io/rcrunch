@@ -30,13 +30,13 @@ mr.ids <- data.frame(
     subvar3=c(1, -1, 1, 2, -1, 1, 2, -1, 1, -1, 2, 1, 1, 2,
         1, 1, 2, 1, -1, 1, 2, 1, 1, 1, 2))
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("setup", {
         expect_identical(dim(ds), c(nrow(ds), ncol(ds)))
-        expect_identical(dim(ds), c(25L, 6L))
+        expect_identical(dim(ds), c(25L, 7L))
         expect_identical(names(ds),
-            c("birthyr", "gender", "mymrset", "textVar", "starttime", "catarray"))
+            c("birthyr", "gender", "location", "mymrset", "textVar", "starttime", "catarray"))
     })
 
     test_that("as.vector on Variables", {
@@ -88,29 +88,39 @@ with_mock_HTTP({
         expect_true(is.data.frame(as.data.frame(ds, force=TRUE)))
     })
 
+    test_that("as.data.frame() works with hidden variables", {
+        new_ds <- loadDataset("test ds")
+        new_ds$gender@tuple[["discarded"]] <- TRUE
+        expect_equivalent(hiddenVariables(new_ds), "gender")
+        new_ds_df <- as.data.frame(new_ds)
+        expect_equal(names(new_ds_df),
+                     aliases(variables(new_ds)))
+        expect_equal(ncol(new_ds_df), 6)
+        expect_silent(
+            expect_equal(names(as.data.frame(new_ds_df)),
+                         c("birthyr", "location", "subvar2", "subvar1", 
+                           "subvar3", "textVar", "starttime", "subvar2", 
+                           "subvar1", "subvar3")))
+        
+        # now we want the hidden vars to be includes
+        new_ds_df <- as.data.frame(new_ds, include.hidden = TRUE)
+        expect_equal(names(new_ds_df),
+                     aliases(allVariables(new_ds)))
+        expect_equal(ncol(new_ds_df), 7)
+        expect_warning(
+            expect_equal(names(as.data.frame(new_ds_df)),
+                         c("birthyr", "gender", "location", "subvar2", 
+                           "subvar1", "subvar3", "textVar", "starttime",
+                           "subvar2", "subvar1", "subvar3")),
+            "Variable gender is hidden")
+    })
+    
     test_that("as.data.frame size limit", {
         with(temp.option(crunch.data.frame.limit=50), {
             expect_error(as.data.frame(ds, force=TRUE),
                 "Dataset too large to coerce")
             expect_true(is.data.frame(as.data.frame(ds[,1:2], force=TRUE)))
         })
-    })
-
-    test.df <- as.data.frame(ds)
-
-    test_that("model.frame thus works on CrunchDataset", {
-        expect_identical(model.frame(birthyr ~ gender, data=test.df),
-            model.frame(birthyr ~ gender, data=ds))
-    })
-
-    test_that("so lm() should work too", {
-        test.lm <- lm(birthyr ~ gender, data=ds)
-        expected <- lm(birthyr ~ gender, data=test.df)
-        expect_is(test.lm, "lm")
-        expect_identical(names(test.lm), names(expected))
-        for (i in setdiff(names(expected), "call")) {
-            expect_identical(test.lm[[i]], expected[[i]])
-        }
     })
 
     test_that(".crunchPageSize", {
@@ -121,6 +131,23 @@ with_mock_HTTP({
         expect_identical(.crunchPageSize(ds$catarray), 66666L)
         expect_identical(.crunchPageSize(ds$starttime), 100000L)
         expect_identical(.crunchPageSize(2016 - ds$birthyr), 50000L)
+    })
+    
+    test.df <- as.data.frame(ds)
+    
+    test_that("model.frame thus works on CrunchDataset", {
+        expect_identical(model.frame(birthyr ~ gender, data=test.df),
+                         model.frame(birthyr ~ gender, data=ds))
+    })
+    
+    test_that("so lm() should work too", {
+        test.lm <- lm(birthyr ~ gender, data=ds)
+        expected <- lm(birthyr ~ gender, data=test.df)
+        expect_is(test.lm, "lm")
+        expect_identical(names(test.lm), names(expected))
+        for (i in setdiff(names(expected), "call")) {
+            expect_identical(test.lm[[i]], expected[[i]])
+        }
     })
 })
 
@@ -192,23 +219,6 @@ with_test_authentication({
         expect_error(as.data.frame(ds, force=TRUE))
     })
 
-    test_that("model.frame thus works on CrunchDataset over API", {
-        ## would like this to be "identical" instead of "equivalent"
-        expect_equivalent(model.frame(v1 ~ v3, data=ds),
-            model.frame(v1 ~ v3, data=df))
-    })
-
-    test_that("so lm() should work too over the API", {
-        test.lm <- lm(v1 ~ v3, data=ds)
-        expected <- lm(v1 ~ v3, data=df)
-        expect_is(test.lm, "lm")
-        expect_identical(names(test.lm), names(expected))
-        ## would like this to be "identical" instead of "equivalent"
-        for (i in setdiff(names(expected), "call")) {
-            expect_equivalent(test.lm[[i]], expected[[i]])
-        }
-    })
-
     uncached({
         with_mock(`crunch::.crunchPageSize`=function (x) 5L, {
             with(temp.option(httpcache.log=""), {
@@ -226,5 +236,22 @@ with_test_authentication({
                 expect_equivalent(v1, df$v1)
             })
         })
+    })
+    
+    test_that("model.frame thus works on CrunchDataset over API", {
+        ## would like this to be "identical" instead of "equivalent"
+        expect_equivalent(model.frame(v1 ~ v3, data=ds),
+                          model.frame(v1 ~ v3, data=df))
+    })
+    
+    test_that("so lm() should work too over the API", {
+        test.lm <- lm(v1 ~ v3, data=ds)
+        expected <- lm(v1 ~ v3, data=df)
+        expect_is(test.lm, "lm")
+        expect_identical(names(test.lm), names(expected))
+        ## would like this to be "identical" instead of "equivalent"
+        for (i in setdiff(names(expected), "call")) {
+            expect_equivalent(test.lm[[i]], expected[[i]])
+        }
     })
 })

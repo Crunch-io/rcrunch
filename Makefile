@@ -9,14 +9,14 @@ test:
 	R --slave -e 'library(httptest); setwd(file.path(.libPaths()[1], "crunch", "tests")); options(crunch.check.updates=FALSE); system.time(test_check("crunch", filter="${file}", reporter=ifelse(nchar("${r}"), "${r}", "summary")))'
 
 deps:
-	R --slave -e 'install.packages(c("jsonlite", "curl", "httpcache", "codetools", "httptest", "devtools", "Rcpp"), repo="http://cran.at.r-project.org", lib=ifelse(nchar(Sys.getenv("R_LIB")), Sys.getenv("R_LIB"), .libPaths()[1]))'
+	R --slave -e 'cran <- "http://cran.at.r-project.org"; pkgs <- c("devtools", "Rcpp", "testthat", "jsonlite", "curl", "httpcache", "codetools", "httptest", "covr", "xml2", "spelling"); new <- setdiff(pkgs, dir(.libPaths()[1])); if (length(new)) install.packages(new, repo=cran); update.packages(.libPaths()[1], ask=FALSE, repo=cran)'
 
 install-ci: deps
-	R CMD INSTALL --install-tests -l $(R_LIB) .
-	R -e '.libPaths(Sys.getenv("R_LIB")); devtools::install_github("nealrichardson/testthat", ref="tap-file"); devtools::install_github("nealrichardson/httptest")'
+	R -e 'devtools::install_github("nealrichardson/testthat", ref="tap-file-option"); devtools::install_github("nealrichardson/httptest")'
+	R -e 'devtools::session_info(installed.packages()[, "Package"])'
 
 test-ci:
-	R --slave -e '.libPaths(Sys.getenv("R_LIB")); library(httptest); cwd <- getwd(); setwd(file.path(.libPaths()[1], "crunch", "tests")); options(crunch.check.updates=FALSE); test_check("crunch", reporter=MultiReporter$$new(list(SummaryReporter$$new(), TapReporter$$new(file.path(cwd, "rcrunch.tap")))))'
+	R --slave -e 'library(covr); to_cobertura(package_coverage(quiet=FALSE))'
 
 clean:
 	R --slave -e 'options(crunch.api=getOption("test.api"), crunch.email=getOption("test.user"), crunch.pw=getOption("test.pw")); library(crunch); login(); lapply(urls(datasets()), crDELETE)'
@@ -50,6 +50,9 @@ build-vignettes: md
 	cd inst/doc && ls | grep .html | xargs -n 1 sed -i '' 's/.md)/.html)/g'
 	# That sed isn't working, fwiw
 	open inst/doc/getting-started.html
+
+spell:
+	R --slave -e 'spelling::spell_check_package(vignettes=TRUE, lang="en_US")'
 
 covr:
 	R --slave -e 'Sys.setenv(R_TEST_USER=getOption("test.user"), R_TEST_PW=getOption("test.pw"), R_TEST_API=getOption("test.api")); library(covr); cv <- package_coverage(); df <- covr:::to_shiny_data(cv)[["file_stats"]]; cat("Line coverage:", round(100*sum(df[["Covered"]])/sum(df[["Relevant"]]), 1), "percent\\n"); shine(cv, browse=TRUE)'

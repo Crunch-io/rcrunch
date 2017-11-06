@@ -10,29 +10,33 @@ makeArray(subvariables, name, ...)
 
 makeMR(subvariables, name, selections, ...)
 
-deriveArray(subvariables, name, ...)
+deriveArray(subvariables, name, selections, ...)
 }
 \arguments{
 \item{subvariables}{a list of Variable objects to bind together, or a
-Dataset object containing only the Variables to bind (as in from subsetting
-a Dataset)}
+Dataset subset which contains only the Variables to bind.}
 
 \item{name}{character, the name that the new Categorical Array variable
-should have. Required.}
+should have.}
 
 \item{...}{Optional additional attributes to set on the new variable.}
 
-\item{selections}{character, for \code{makeMR}, the names of the
+\item{selections}{character, for \code{makeMR} and \code{deriveArray} the names of the
 categories to mark as the dichotomous selections. Required for
-\code{makeMR}; ignored in \code{makeArray}.}
+\code{makeMR}; optional for \code{deriveArray}; ignored in \code{makeArray}.}
 }
 \value{
 A VariableDefinition that when added to a Dataset will create the
 categorical-array or multiple-response variable. \code{deriveArray} will
-make a derived array expression, while \code{makeArray} and \code{makeMR}
+make a derived array expression (or a derived multiple response expression
+if \code{selections} are supplied), while \code{makeArray} and \code{makeMR}
 return an expression that "binds" variables together, removing them from
 independent existence.
 }
 \description{
-Make a Categorical Array or Multiple Response variable
+Array variables are composed of a set of "subvariables" bound
+together for display in the app. For example, you might have a set of
+survey questions that ask how the respondent would rate a tv show from
+1-5. Array variables allow you to display all of their ratings in a compact
+table rather than a set of distinct variables.
 }

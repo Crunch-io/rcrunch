@@ -16,23 +16,25 @@ settings(x) <- value
 }
 \value{
 The getter returns a settings object (\code{ShojiEntity}). The setter
-returns the dataset (\code{x}).
+returns the dataset (\code{x}), duly modified.
 }
 \description{
 These methods allow access and control over dataset settings. Currently
-supported settings include 'viewers_can_export', 'viewers_can_share', and
-'viewers_can_change_weight', which govern specific authorizations for users
-with view-only access to this datset; and 'weight', which is the default
-weight variable for the dataset, the one that will be set for newly shared
-users and the one that viewers will have always on if they are not authorized
-to change weights. Additional settings will be added in the future. See
-\url{http://docs.crunch.io/#fragments}, under 'Settings', for an up-to-date
+supported settings include:
+\itemize{
+\item User Authorizations for view-only users ('viewers_can_export', 'viewers_can_share', and
+'viewers_can_change_weight'); and
+\item 'weight', which determines the default weighting variable for the dataset
+Additional settings will be added in the future. See
+http://docs.crunch.io/#fragments, under 'Settings', for an up-to-date
 list of settings supported throughout the Crunch system. Clients may also
 provide and use custom settings if they choose.
+}
 }
 \examples{
 \dontrun{
 settings(ds)
 settings(ds)$viewers_can_export <- TRUE
+settings(ds)$weight <- ds$myWeightVariable
 }
 }

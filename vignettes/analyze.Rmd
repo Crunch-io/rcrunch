@@ -1,9 +1,15 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Analyzing data with crunch}
--->
+---
+title: "Analyzing Crunch Data"
+description: "With Crunch, you can harness the power of R to do computations with your datasets on the server that would be difficult or impossible to accomplish in a graphical user interface."
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Analyzing Crunch Data}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
 [Previous: transform and derive](derive.html)
+
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(crunch)
 load("vignettes.RData")
@@ -137,7 +143,7 @@ round(100*prop.table(tab3mr, 2))
 Finally, just as we saw in the [array variables](array-variables.html) vignette, we can grab individual subvariables and crosstab with them:
 
 ```{r, eval=FALSE}
-crtabs(~ imiss$Education + gender, data=ds)
+crtabs(~ imiss$imiss_f + gender, data=ds)
 ```
 ```{r, echo=FALSE}
 tab3subvar

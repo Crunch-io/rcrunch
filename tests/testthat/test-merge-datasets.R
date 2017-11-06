@@ -1,6 +1,6 @@
 context("Merge/extend dataset")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds1 <- loadDataset("test ds")
     ds2 <- loadDataset("ECON.sav")
 
@@ -183,6 +183,11 @@ with_test_authentication({
     })
 
     test_that("Similarly uncomplicated merge, but numeric and hidden key", {
+        # When merging datasets during jenkins run tests, the order of the
+        # variables is *sometimes* not copied (usually Pet Name/q3 is missing),
+        # which makes this test fail. The ordering should be fully copied
+        # during the merge operation. Reproduction of the bug on production or
+        # alpha did not yield errors with order. Repro. locally is possible
         ds1 <- newDatasetFromFixture("join-apidocs2-to-me")
         with_consent(ds1$allpets_1 <- NULL)
         type(ds1$id) <- "numeric"
@@ -227,16 +232,71 @@ with_test_authentication({
         with_consent(ds1$allpets_1 <- NULL)
         ds1 <- merge(ds1, ds2[ds2$stringid == "43805958", c("stringid", "q1", "petloc")],
             by.x="id", by.y="stringid")
+        expect_output(ordering(ds1),
+                      paste(c(
+                          "ID",
+                          "Join matches",
+                          "Another variable",
+                          paste0("[+] ", name(ds2)),
+                          paste("    ",
+                                c(
+                                    "[+] Key Pet Indicators",
+                                    "    Pet",
+                                    "    Pets by location",
+                                    "[+] Dog Metrics",
+                                    "    [+] Number of dogs by type",
+                                    "        (Empty group)",
+                                    "[+] Details",
+                                    "    (Empty group)",
+                                    "[+] Dimensions",
+                                    "    (Empty group)"
+                                ),
+                                sep="", collapse="\n")),
+                          collapse="\n"),
+                      fixed=TRUE)
         expect_identical(names(ds1),
             c("id", "matches", "other_var", "q1", "petloc"))
         expect_equal(sum(table(ds1$q1)), 1)
     })
 
     test_that("Can select rows to join", {
+        # When merging datasets during jenkins run tests, the order of the
+        # variables is *sometimes* not copied (usually Pet Name/q3 is missing),
+        # which makes this test fail. The ordering should be fully copied
+        # during the merge operation. Reproduction of the bug on production or
+        # alpha did not yield errors with order. Repro. locally is possible
         ds1 <- newDatasetFromFixture("join-apidocs2-to-me")
         with_consent(ds1$allpets_1 <- NULL)
         ds1 <- merge(ds1, ds2[ds2$stringid == "43805958",],
             by.x="id", by.y="stringid")
+        expect_output(ordering(ds1),
+                      paste(c(
+                          "ID",
+                          "Join matches",
+                          "Another variable",
+                          paste0("[+] ", name(ds2)),
+                          paste("    ",
+                                c(
+                                    "[+] Key Pet Indicators",
+                                    "    All pets owned",
+                                    "    Pet",
+                                    "    Pets by location",
+                                    "[+] Dog Metrics",
+                                    "    Number of dogs",
+                                    "    [+] Number of dogs by type",
+                                    "        Number of dogs -- With papers",
+                                    "        Number of dogs -- Mutts",
+                                    "[+] Details",
+                                    "    Pet name",
+                                    "[+] Dimensions",
+                                    "    Country",
+                                    "    Wave",
+                                    "Weight",
+                                    "Case ID"
+                                ),
+                                sep="", collapse="\n")),
+                          collapse="\n"),
+                      fixed=TRUE)
         expect_identical(names(ds1),
             c("id", "matches", "other_var", "allpets", "q1", "petloc", "ndogs",
             "ndogs_a", "ndogs_b", "q3", "country", "wave"))

@@ -1,19 +1,35 @@
-run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
 Sys.setlocale("LC_COLLATE", "C") ## What CRAN does
+set.seed(666)
+
+# find a file that is either in the package root or inst folders while testing
+find_file <- function (file_name) {
+    pths <- file.path(testthat::test_path("..", ".."), c("", "inst"), file_name)
+    return(pths[file.exists(pths)])
+}
+
+## Our "test package" common harness code
+crunch_test_path <- system.file("crunch-test.R", package="crunch")
+if (crunch_test_path == "") {
+    # hack for devtools::test / testthat::test_package
+    crunch_test_path <- find_file("crunch-test.R")
+}
+
+# Source crunch-test.R when: R CMD check, devtools::test(), make test,
+# crunchdev::test_crunch()
+# Don't source crunch-test.R when: devtools::load_all() (interactively)
+# https://github.com/hadley/devtools/issues/1202
+source_if <- !interactive() || identical(Sys.getenv("NOT_CRAN"), "true")
+# And don't source it when running pkgdown
+source_if <- source_if && !identical(Sys.getenv("DEVTOOLS_LOAD"), "true")
+if (source_if) {
+    source(crunch_test_path)
+}
 
 skip_on_jenkins <- function (...) {
     if (nchar(Sys.getenv("JENKINS_HOME"))) {
         skip(...)
     }
 }
-
-skip_locally <- function (...) {
-    if (startsWith(getOption("crunch.api"), "http://local")) {
-        skip(...)
-    }
-}
-
-set.seed(666)
 
 fromJSON <- jsonlite::fromJSON
 loadLogfile <- httpcache::loadLogfile
@@ -22,33 +38,20 @@ requestLogSummary <- httpcache::requestLogSummary
 uncached <- httpcache::uncached
 newDataset <- function (...) suppressMessages(crunch::newDataset(...))
 
-envOrOption <- function (opt) {
-    ## .Rprofile options are like "test.api", while env vars are "R_TEST_API"
-    envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed=TRUE)))
-    envvar <- Sys.getenv(envvar.name)
-    if (nchar(envvar)) {
-        ## Let environment variable override .Rprofile, if defined
-        return(envvar)
-    } else {
-        return(getOption(opt))
-    }
-}
-
 ## .onAttach stuff, for testthat to work right
+## See other options in inst/crunch-test.R
 options(
-    crunch.api=envOrOption("test.api"),
     warn=1,
     crunch.debug=FALSE,
     digits.secs=3,
-    crunch.timeout=15, ## In case an import fails to start, don't wait forever
+    crunch.timeout=20, ## In case an import fails to start, don't wait forever
     # httpcache.log="",
     crunch.require.confirmation=TRUE,
+    crunch.check.updates=FALSE,
     crunch.namekey.dataset="alias",
-    crunch.namekey.array="alias",
-    crunch.email=envOrOption("test.user"),
-    crunch.pw=envOrOption("test.pw")
+    crunch.namekey.array="alias"
 )
-httr::set_config(crunchConfig())
+crunch:::.onLoad()
 
 ## Test serialize and deserialize
 cereal <- function (x) fromJSON(toJSON(x), simplifyVector=FALSE)
@@ -75,9 +78,9 @@ df <- data.frame(v1=c(rep(NA_real_, 5), rnorm(15)),
                  v6=TRUE,
                  stringsAsFactors=FALSE)
 
-mrdf <- data.frame(mr_1=c(1,0,1,NA_real_),
-                   mr_2=c(0,0,1,NA_real_),
-                   mr_3=c(0,0,1,NA_real_),
+mrdf <- data.frame(mr_1=c(1, 0, 1, NA_real_),
+                   mr_2=c(0, 0, 1, NA_real_),
+                   mr_3=c(0, 0, 1, NA_real_),
                    v4=as.factor(LETTERS[2:3]),
                    stringsAsFactors=FALSE)
 
@@ -97,41 +100,3 @@ mrdf.setup <- function (dataset, pattern="mr_", name=ifelse(is.null(selections),
     }
     return(dataset)
 }
-
-## Global teardown
-bye <- new.env()
-with_test_authentication({
-    datasets.start <- urls(datasets())
-    users.start <- urls(getUserCatalog())
-    projects.start <- urls(session()$projects)
-})
-reg.finalizer(bye,
-    function (x) {
-        with_test_authentication({
-            datasets.end <- urls(datasets())
-            leftovers <- setdiff(datasets.end, datasets.start)
-            if (length(leftovers)) {
-                stop(length(leftovers),
-                    " dataset(s) created and not destroyed: ",
-                    serialPaste(dQuote(names(datasets()[leftovers]))),
-                    call.=FALSE)
-            }
-            users.end <- urls(getUserCatalog())
-            leftovers <- setdiff(users.end, users.start)
-            if (length(leftovers)) {
-                stop(length(leftovers),
-                    " users(s) created and not destroyed: ",
-                    serialPaste(dQuote(names(getUserCatalog()[leftovers]))),
-                    call.=FALSE)
-            }
-            projects.end <- urls(session()$projects)
-            leftovers <- setdiff(projects.end, projects.start)
-            if (length(leftovers)) {
-                stop(length(leftovers),
-                    " projects(s) created and not destroyed: ",
-                    serialPaste(dQuote(names(session()$projects[leftovers]))),
-                    call.=FALSE)
-            }
-        })
-    },
-    onexit=TRUE)

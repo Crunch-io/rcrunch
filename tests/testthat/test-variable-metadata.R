@@ -1,6 +1,6 @@
 context("All variable metadata")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("variableMetadata", {
         vm <- variableMetadata(ds)

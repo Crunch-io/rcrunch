@@ -3,7 +3,7 @@
 \name{VariableDefinition}
 \alias{VariableDefinition}
 \alias{VarDef}
-\title{Construct a variable definition with (optional) additional metadata}
+\title{Construct a variable definition}
 \usage{
 VariableDefinition(data, ...)
 
@@ -11,20 +11,24 @@ VarDef(data, ...)
 }
 \arguments{
 \item{data}{an R vector of data to convert to the Crunch payload format.
-See code{\link{toVariable}} for how R types are converted. If \code{data}
-is not supplied, you may instead supply \code{values}, which will not be
-converted in any way, nor will extra type information be supplied. Only
-send \code{values} if you know what you're doing. You may also omit both
-\code{data} and \code{values} to create an empty variable on the server
-(all values will be system missing "No Data").}
+See \link{toVariable} for how R data types are converted. This function can
+also be used to construct a \code{VariableDefinition} directly by passing
+attributes to \code{...}. This is only recommended for advanced users who are
+familiar with the Crunch API.}
 
-\item{...}{additional metadata attributes to send.}
+\item{...}{additional attributes to be included in the \code{VariableDefinition}}
 }
 \value{
 a \code{VariableDefinition} object, ready to POST to Crunch.
 }
 \description{
-Construct a variable definition with (optional) additional metadata
+Crunch variables are created by posting a \code{VariableDefinition} to the Crunch server.
+The \code{VariableDefinition} contains the information the server requires to
+calculate the variable. This can information can either be in the form
+of the actual data which you would like to include in the variable, or a derivation
+which tells the server how to derive the new variable from existing ones.
+This function converts an R vector or set of attributes into a variable definition which
+can be posted to the server.
 }
 \examples{
 VariableDefinition(rnorm(5), name="Some numbers",
@@ -34,5 +38,5 @@ VarDef(name="Integers", values=1:5, type="numeric",
     specify 'type', and categorical variables will require 'categories'.")
 }
 \seealso{
-\code{\link{toVariable}}
+\code{toVariable}
 }

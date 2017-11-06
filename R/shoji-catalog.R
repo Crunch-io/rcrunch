@@ -64,7 +64,7 @@ dirtyElements <- function (x, y) {
 #' @rdname catalog-extract
 #' @export
 setMethod("[", c("ShojiCatalog", "character"), function (x, i, ...) {
-    w <- whichNameOrURL(x, i)
+    w <- whichNameOrURL(x, i, ...)
     if (any(is.na(w))) {
         halt("Undefined elements selected: ", serialPaste(i[is.na(w)]))
     }
@@ -121,7 +121,7 @@ getEntity <- function (x, i, Constructor=ShojiEntity, ...) {
 #' @export
 setMethod("[[", c("ShojiCatalog", "character"), function (x, i, ...) {
     stopifnot(length(i) == 1L)
-    w <- whichNameOrURL(x, i)
+    w <- whichNameOrURL(x, i, ...)
     if (is.na(w)) {
         return(NULL)
     }
@@ -155,9 +155,11 @@ setMethod("[<-", c("ShojiCatalog", "ANY", "missing", "ShojiCatalog"),
 NULL
 
 whichNameOrURL <- function (x, i, secondary=names(x)) {
-    w <- match(i, secondary)
-    if (any(is.na(w))) {
-        w <- match(i, urls(x))
+    var_matches <- match(i, secondary)
+    if (any(is.na(var_matches))) {
+        url_matches <- match(i, urls(x))
+        # replace NAs in matches with the contents of URL match (either a match or NA)
+        var_matches[is.na(var_matches)] <- url_matches[is.na(var_matches)]
     } else {
         ## Warn if duplicated
         dups <- i %in% secondary[duplicated(secondary)]
@@ -169,7 +171,8 @@ whichNameOrURL <- function (x, i, secondary=names(x)) {
             warning(i, msg, call.=FALSE)
         }
     }
-    return(w)
+
+    return(var_matches)
 }
 
 #' @rdname catalog-length
@@ -185,15 +188,15 @@ setMethod("lapply", "ShojiCatalog", function (X, FUN, ...) lapply(index(X), FUN,
 #' @param value For the setters, an appropriate-length list to
 #' assign
 #' @return Getters return the list object in the "index" slot; setters
-#' return \code{x} duly modified.
+#' return `x` duly modified.
 #' @aliases index index<-
-#' @name index
+#' @name shoji-index
 NULL
 
-#' @rdname index
+#' @rdname shoji-index
 #' @export
 setMethod("index", "ShojiCatalog", function (x) x@index)
-#' @rdname index
+#' @rdname shoji-index
 #' @export
 setMethod("index<-", "ShojiCatalog", function (x, value) {
     x@index <- value
@@ -237,28 +240,92 @@ setMethod("emails", "ShojiCatalog", function (x) getIndexSlot(x, "email"))
 #' @export
 as.list.ShojiCatalog <- function (x, ...) lapply(names(index(x)), function (i) x[[i]])
 
-#' Utility to get a more human-readable view of a Shoji Catalog
+#' A utility to return a data.frame from a ShojiCatalog.
 #'
-#' @param x ShojiCatalog or subclass
+#' This is an internal function called by the various `as.data.frame` methods.
+#' Use `as.data.frame` instead of calling this directly.
+#'
+#' Some of the attributes of a `ShojiCatalog` will not naturally fit in
+#' a conventional data.frame. For example, an array variable contains a list of
+#' subvariables, and these subvariables will not easily fit in a single row of a
+#' data.frame. In this case, the list of subvariables are stored in a
+#' list-column in the resulting data.frame.
+#'
+#' @param x `ShojiCatalog` or subclass
 #' @param keys character vector of attribute names from each catalog tuple to
 #' include in the result. Default is TRUE, which means all.
-#' @param rownames See \code{\link[base]{data.frame}}, the \code{row.names}
-#' argument, to which this is passed in \code{data.frame}. The difference here
-#' is that if \code{rownames} is explicitly set as \code{NULL}, the resulting
-#' object will not have row names set. By default, row names will be the URLs
-#' of the catalog tuples.
-#' @param ... additional arguments passed to \code{data.frame}
-#' @return a \code{data.frame} view of the catalog
-#' @export
-catalogToDataFrame <- function (x, keys=TRUE, rownames, ...) {
-    default.rownames <- missing(rownames)
-    if (default.rownames) {
-        rownames <- NULL
+#' @param rownames See [base::data.frame()] for the `row.names`
+#' argument. The difference here is that if `rownames` is explicitly set as
+#' `NULL`, the resulting object will not have row names set. By default, row
+#' names will be the URLs of the catalog tuples.
+#' @param list_columns A character vector of the names of the attributes that
+#' should be stored in a list-column. Currently ignored.
+#' @param ... additional arguments passed to `data.frame`
+#' @return a `data.frame` view of the catalog
+#' @keywords internal
+catalogToDataFrame <- function (x, keys=TRUE, rownames = NULL,
+    list_columns = c("subvariables", "subvariables_catalog"),
+    ...) {
+
+    if (length(x) == 0) {
+        ## If catalog is empty, bail
+        return(data.frame())
+    } else {
+        index <- lapply(index(x), function (a) a[keys])
+        ### The following code is equivalent to out <- purrr::map_df(index, entry_to_df)
+        ################
+        entry_list <- lapply(index, prepareCatalogEntry)
+        names <- unique(unlist(lapply(entry_list, names)))
+        out <- data.frame(matrix(nrow = length(entry_list), ncol = length(names)), ...)
+        names(out) <- names
+        for (i in seq_along(entry_list)) {
+            for (j in names(entry_list[[i]])) {
+                out[[j]][i] <- entry_list[[i]][[j]]
+            }
+        }
+        #################
+
+        ## TODO: ensure something about the elements of a "list column".
+        ## i.e. do better than:
+        # $ subvariables        :List of 5
+        # ..$ : chr NA
+        # ..$ : chr NA
+        # ..$ : chr "just/one/subvar"
+        # ..$ :List of 3
+        # .. ..$ : chr "mymrset/subvariables/subvar2/"
+        # .. ..$ : chr "mymrset/subvariables/subvar1/"
+        # .. ..$ : chr "mymrset/subvariables/subvar3/"
+        # ..$ : chr NA
+        # Note that the "list_columns" argument is no longer used
+
+        # When a bad key argument is passed to the the shoji index it returns a
+        # data.frame with an NA value. This excludes those columns.
+        exclude_cols <- grepl("^NA", names(out)) &
+            vapply(out, function (x) all(is.na(x)), logical(1))
+        out <- out[, !exclude_cols, drop = FALSE]
+
+        if (!isTRUE(keys)) {
+            missing_keys <- setdiff(keys, names(out))
+            if (length(missing_keys)) {
+                if (length(missing_keys) == 1) {
+                    error_text <-  " is an invalid key for catalogs of class "
+                } else {
+                    error_text <- " are invalid keys for catalogs of class "
+                }
+                halt(serialPaste(dQuote(missing_keys)), error_text, class(x), ".")
+            }
+        }
+
+        # Reorder columns to match the order in which keys were supplied
+        out <- out[, keys, drop = FALSE]
+        return(out)
     }
-    out <- data.frame(do.call(rbind, lapply(index(x), function (a) a[keys])),
-        row.names=rownames, ...)
-    if (default.rownames) {
-        rownames(out) <- NULL
-    }
-    return(out)
+}
+
+prepareCatalogEntry <- function (entry) {
+    ## Do some standardization so that we can stack up catalog tuples
+    entry[vapply(entry, is.null, logical(1))] <- NA
+    list_cols <- vapply(entry, length, integer(1)) > 1
+    entry[list_cols] <- lapply(entry[list_cols], list)
+    return(entry)
 }

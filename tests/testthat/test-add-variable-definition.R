@@ -123,7 +123,7 @@ with_test_authentication({
             expect_error(addVariables(ds,
                 VarDef(ds$v3 + 4, name="v3plus4"),
                 VarDef(ds$v3 + 5, name="v3plus5")
-            ), "The following variable definition\\(s\\) errored on upload: 1, 2")
+            ), "The following variable definitions errored on upload: 1, 2")
         })
         ## Confirm that refresh(ds) is unchanged
         ds <- refresh(ds)

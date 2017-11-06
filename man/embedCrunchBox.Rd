@@ -7,16 +7,15 @@
 embedCrunchBox(box, title = NULL, logo = NULL, ...)
 }
 \arguments{
-\item{box}{character URL of the box data, as returned by
-\code{crunchBox}}
+\item{box}{character URL of the box data, as returned by \code{crunchBox()}}
 
 \item{title}{character title for the Box, to appear above the iframe. Default
 is \code{NULL}, meaning no title shown}
 
 \item{logo}{character URL of a logo to show instead of a title. Default is
-\code{NULL}, meaning no logo shown. If both logo and title are provided, only
-logo will be shown. Note also that logo must be a URL of an image hosted
-somewhere--it cannot be a path to a local file.}
+\code{NULL}, meaning no logo shown. If both logo and title are provided, only the
+logo will be shown. Note also that logo must be a URL of a hosted image: it
+cannot be a path to a local file.}
 
 \item{...}{Additional arguments, not currently used.}
 }
@@ -24,9 +23,10 @@ somewhere--it cannot be a path to a local file.}
 Prints the HTML markup to the screen and also returns it invisibly.
 }
 \description{
-\code{\link{crunchBox}} returns a URL to the box data that it generates, but
+\code{\link[=crunchBox]{crunchBox()}} returns a URL to the box data that it generates, but
 in order to view it in a CrunchBox or to embed it on a website, you'll need
-to translate that to the Box's public URL and wrap it in some HTML.
+to translate that to the Box's public URL and wrap it in some HTML. This function
+takes a CrunchBox and returns the HTLM which you can embed in a website.
 }
 \examples{
 \dontrun{
@@ -35,5 +35,5 @@ embedCrunchBox(box, logo="//myco.example/img/logo_200px.png")
 }
 }
 \seealso{
-\code{\link{crunchBox}}
+\code{\link[=crunchBox]{crunchBox()}}
 }

@@ -24,7 +24,7 @@ test_that("newDataset input validation", {
         "Can only make a Crunch dataset from a two-dimensional data")
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     test_that("Basic exercise of turning data.frame to Crunch payload", {
         expect_POST(newDataset(data.frame(a=1), name="Testing"),
             "https://app.crunch.io/api/datasets/",
@@ -33,10 +33,38 @@ with_mock_HTTP({
             '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"}},',
             '"order":["a"]}}}')
     })
+
+    test_that("Turning data.frame to Crunch payload without a name", {
+        expect_POST(newDataset(data.frame(a=1)),
+                    "https://app.crunch.io/api/datasets/",
+                    '{"element":"shoji:entity","body":{"name":"data.frame(a = 1)",',
+                    '"table":{"element":"crunch:table",',
+                    '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"}},',
+                    '"order":["a"]}}}')
+    })
+
+    test_that("Turning data.frame to Crunch payload with a long name", {
+        expect_POST(newDataset(data.frame(a=1, really_really_long_name=2)),
+                    "https://app.crunch.io/api/datasets/",
+                    '{"element":"shoji:entity","body":{"name":"data.frame(a = 1, really_really_long_nam",',
+                    '"table":{"element":"crunch:table",',
+                    '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"},"really_really_long_name":{"type":"numeric","name":"really_really_long_name","alias":"really_really_long_name"}},',
+                    '"order":["a","really_really_long_name"]}}}')
+    })
+
     test_that("createWithMetadataAndFile when metadata is file too", {
         expect_POST(newDatasetFromFixture("apidocs"),
             "https://app.crunch.io/api/datasets/",
             toJSON(fromJSON(file.path("dataset-fixtures", "apidocs.json"), simplifyVector=FALSE)))
+    })
+    test_that("uploadData writes out a gzipped file", {
+        ds <- loadDataset("test ds")
+        with_DELETE(NULL, {
+            ## with_DELETE to handle the cleanup so we can see the real error
+            expect_POST(uploadData(ds, data.frame(a=1)),
+                "https://app.crunch.io/api/sources/",
+                "list(uploaded_file")
+        })
     })
 
     test_that("createDataset with named args", {
@@ -49,30 +77,49 @@ with_mock_HTTP({
         with_POST("https://app.crunch.io/api/datasets/1/",
             expect_true(is.dataset(createDataset(name="Foo"))))
     })
-    test_that("newDatasetFromFile", {
-        expect_POST(newDatasetFromFile("helper.R"),
+    test_that("newDataset calls newDatasetFromFile if given a string", {
+        expect_POST(newDataset("helper.R"),
             "https://app.crunch.io/api/datasets/",
             '{"element":"shoji:entity","body":{"name":"helper.R"}}')
-        expect_error(newDatasetFromFile("NOTAFILE.exe"),
-            "File not found")
     })
-    test_that("newDatasetByCSV is deprecated", {
-        expect_warning(
-            expect_POST(
-                newDatasetByCSV(data.frame(a=1), name="Bam!"),
-                    "https://app.crunch.io/api/datasets/",
-                    '{"element":"shoji:entity","body":{"name":"Bam!",',
-                    '"table":{"element":"crunch:table",',
-                    '"metadata":{"a":{"type":"numeric","name":"a","alias":"a"}},',
-                    '"order":["a"]}}}'
-            ),
-            "newDatasetByCSV is deprecated"
-        )
+    test_that("newDataset(FromFile) cleans up the dataset entity if the file is invalid", {
+        with_POST("https://app.crunch.io/api/datasets/1/", {
+            expect_DELETE(newDataset("NOTAFILE.exe"),
+                "https://app.crunch.io/api/datasets/1/")
+            with_DELETE(NULL, {
+                expect_error(newDataset("NOTAFILE.exe"),
+                    "File not found")
+            })
+        })
     })
+    test_that("newDataset(FromFile) can take an s3 URL", {
+        with_DELETE(NULL, {
+            expect_POST(newDataset("s3://httpbin.org/get"),
+                'https://app.crunch.io/api/datasets/1/batches/',
+                '{"element":"shoji:entity",',
+                '"body":{"url":"s3://httpbin.org/get"}}')
+        })
+    })
+    test_that("newDataset(FromFile) can take an http(s) URL", {
+        with_DELETE(NULL, {
+            expect_POST(newDataset("https://httpbin.org/get"),
+                'https://app.crunch.io/api/sources/',
+                '{"element":"shoji:entity",',
+                '"body":{"location":"https://httpbin.org/get"}}')
+        })
+    })
+
     test_that("newDatasetByColumn", {
         expect_POST(newDatasetByColumn(data.frame(a=1), name="Bam!"),
             "https://app.crunch.io/api/datasets/",
             '{"element":"shoji:entity","body":{"name":"Bam!"}}')
+    })
+
+    test_that("createSource validation", {
+        expect_error(createSource("File not found"),
+            "File not found")
+        expect_error(createSource(name="x"),
+            "Must provide a file or url to createSource")
     })
 })
 
@@ -89,7 +136,7 @@ if (run.integration.tests) {
     })
 
     with_test_authentication({
-        whereas("The three methods for sending data", {
+        whereas("The two methods for sending data", {
             test_that("newDatasetFromFile creates a dataset", {
                 ds <- newDatasetFromFile(testfile.csv)
                 expect_true(is.dataset(ds))
@@ -104,12 +151,6 @@ if (run.integration.tests) {
                 expect_equivalent(mean(ds$v3), mean(df$v3))
                 expect_true(setequal(names(df), names(ds)))
                 expect_identical(names(df), names(ds))
-            })
-
-            test_that("newDataset via CSV + JSON", {
-                expect_warning(ds <- newDatasetByCSV(df),
-                    "newDatasetByCSV is deprecated")
-                expect_valid_df_import(ds)
             })
         })
 
@@ -158,7 +199,3 @@ if (run.integration.tests) {
         })
     })
 }
-
-## TODO:
-## 1) Test "cleanup" path, and perhaps broaden to all newDataset methods
-## 2) Test "strict" option, and perhaps move it to batch payload instead of query param

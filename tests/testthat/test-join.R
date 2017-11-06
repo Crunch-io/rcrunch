@@ -17,7 +17,7 @@ join <- function (...) {
     invisible(out)
 }
 
-with_mock_HTTP({
+with_mock_crunch({
     ds1 <- loadDataset("test ds")
     ds2 <- loadDataset("ECON.sav")
 
@@ -61,7 +61,7 @@ with_mock_HTTP({
         expect_error(join(ds1, ds2, by.x=ds1$birthyr, by.y=ds2$birthyr, all.y=TRUE),
             'Option "all.y" not supported.')
     })
-
+    
     test_that("Categorical and array variables can't be used as keys", {
         expect_error(join(ds1, ds2, by.x=ds1$gender, by.y=ds2$birthyr),
             "by.x must be type numeric or text")

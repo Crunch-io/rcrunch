@@ -7,7 +7,7 @@ test_that("Deprecated endpoints tell user to upgrade", {
               "Please upgrade crunch to the latest version."))
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     test_that("crunch.debug does not print if disabled", {
         expect_POST(
             expect_output(crPOST("https://app.crunch.io/api/", body='{"value":1}'),
@@ -28,12 +28,30 @@ with_mock_HTTP({
                 NA)
         })
     })
+    test_that("503 on GET with Retry-After is handled", {
+        expect_message(resp <- crGET("https://app.crunch.io/503/"),
+            "This request is taking longer than expected. Please stand by...")
+        expect_identical(resp, crGET("https://app.crunch.io/api/"))
+    })
+})
+
+test_that("retry", {
+    counter <- 0
+    f <- function () {
+        counter <<- counter + 1
+        stopifnot(counter == 3)
+        return(counter)
+    }
+    expect_identical(retry(f(), wait=.001), 3)
+    counter <- 0
+    expect_error(retry(f(), wait=.001, max.tries=2),
+        "counter == 3 is not TRUE")
 })
 
 if (run.integration.tests) {
     test_that("Request headers", {
-        skip_on_jenkins("Don't fail the build if httpbin is down")
-        r <- try(crGET("http://httpbin.org/gzip"))
+        skip_if_disconnected()
+        r <- crGET("http://httpbin.org/gzip")
         expect_true(r$gzipped)
         expect_true(grepl("gzip", r$headers[["Accept-Encoding"]]))
         expect_true(grepl("rcrunch", r$headers[["User-Agent"]]))

@@ -7,7 +7,7 @@
 projects(x = getAPIRoot())
 }
 \arguments{
-\item{x}{a \code{ShojiObject} that has a project catalog associated. If omitted,
+\item{x}{a \code{ShojiObject} that has an associated project catalog. If omitted,
 the default value for \code{x} means that you will load the user's primary
 project catalog. (Currently, there are no other project catalogs to load.)}
 }

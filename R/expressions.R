@@ -1,22 +1,21 @@
 #' Construct Crunch Expressions
 #'
-#' Crunch Expressions, i.e. \code{CrunchExpr} and \code{CrunchLogicalExpr},
-#' encapuslate derivations of Crunch variables, which are only evaluated when
-#' passed to a function like \code{as.vector}. They allow you to compose
+#' Crunch Expressions, i.e. `CrunchExpr` and `CrunchLogicalExpr`,
+#' encapsulate derivations of Crunch variables, which are only evaluated when
+#' passed to a function like `as.vector`. They allow you to compose
 #' functional expressions of variables and evaluate them against the server
 #' only when appropriate.
-#'
 #' @param x an input
 #' @param e1 an input
 #' @param e2 an input
-#' @param table For \code{\%in\%}. See \code{\link[base]{match}}
-#' @param resolution For \code{rollup}. Either \code{NULL} or a character in
+#' @param table For \code{\%in\%}. See [base::match()]
+#' @param resolution For `rollup`. Either `NULL` or a character in
 #' c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms") indicating the unit of
-#' time at which a Datetime variable should be aggregated. If \code{NULL},
+#' time at which a Datetime variable should be aggregated. If `NULL`,
 #' the server will determine an appropriate resolution based on the range of
 #' the data.
 #' @return Most functions return a CrunchExpr or CrunchLogicalExpr.
-#' \code{as.vector} returns an R vector.
+#' `as.vector` returns an R vector.
 #' @aliases expressions
 #' @name expressions
 NULL
@@ -59,7 +58,7 @@ math.exp <- function (e1, e2, operator) {
         ## Because of how this function is invoked, get the offending expression
         ## from the call before this one
         halt("Invalid expression (probably a reference to a variable that doesn't exist): ",
-            deparseAndTruncate(tail(sys.calls(), 2)[[1]]))
+             deparseAndFlatten(tail(sys.calls(), 2)[[1]]))
     }
     ex <- zfunc(operator, e1, e2)
     ds.url <- unique(unlist(lapply(list(e1, e2), datasetReference))) %||% ""
@@ -164,12 +163,23 @@ setMethod("!", "CrunchExpr", function (x) zfuncExpr("not", x))
 
     if (is.numeric(table) &&
         length(table) > 2 &&
+        all(!is.na(table)) &&
         identical(as.numeric(head(table, 1):tail(table, 1)), as.numeric(table))) {
+
+        # set beg(ining) and end appropriately in case we have been given a rev
+        # sequence (eg 20:1) ZCL returns nothing if asked for between 20 and 1
+        if (head(table, 1) < tail(table, 1)) {
+            beg <- head(table, 1)
+            end <- tail(table, 1)
+        } else {
+            beg <- tail(table, 1)
+            end <- head(table, 1)
+        }
 
         return(zfunc("between",
             x,
-            head(table, 1),
-            tail(table, 1) + 1))
+            beg,
+            end + 1))
             ## Add 1 because "between" by default doesn't include the upper
             ## bound and explicitly overriding that is failing. See #112089103.
             ## When that is fixed, we can do the following:
@@ -305,7 +315,7 @@ setMethod("[", c("CrunchExpr", "CrunchLogicalExpr"), .updateActiveFilter)
         ## If you reference a variable in a dataset that doesn't exist, you
         ## get NULL, and e.g. NULL == something becomes logical(0).
         ## That does awful things if you try to send to the server. So don't.
-        halt("Invalid expression: ", deparseAndTruncate(match.call()$i))
+        halt("Invalid expression: ", deparseAndFlatten(match.call()$i))
     }
 }
 
@@ -337,19 +347,18 @@ NULL
 
 #' @rdname which
 setMethod("which", "CrunchLogicalExpr", function (x, arr.ind, useNames) {
-    as.integer(as.vector(CrunchExpr(expression=zfunc("row"),
-        dataset_url=datasetReference(x) %||% "")[x])) + 1L
+    which(as.vector(x))
 })
 
 #' "duplicated" method for Crunch objects
 #'
-#' @param x CrunchVariable or CrunchExpr
+#' @param x `CrunchVariable` or `CrunchExpr`
 #' @param incomparables Ignored
 #' @param ... Ignored
-#' @return A CrunchLogicalExpr that evaluates \code{TRUE} for all repeated
+#' @return A `CrunchLogicalExpr` that evaluates `TRUE` for all repeated
 #' entries after the first occurrence of a value.
 #' @name duplicated
-#' @seealso \code{\link[base]{duplicated}}
+#' @seealso [base::duplicated()]
 #' @aliases duplicated
 #' @export
 NULL
@@ -365,3 +374,11 @@ setMethod("duplicated", "CrunchVariable", function (x, incomparables=FALSE, ...)
 setMethod("duplicated", "CrunchExpr", function (x, incomparables=FALSE, ...) {
     zfuncExpr("duplicates", x)
 })
+
+#' @rdname crunch-is
+#' @export
+is.CrunchExpr <- function (x) inherits(x, "CrunchExpr")
+
+#' @rdname crunch-is
+#' @export
+is.Expr <- is.CrunchExpr

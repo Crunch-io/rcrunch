@@ -1,6 +1,6 @@
 context("Dataset object and methods")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     ds2 <- loadDataset("ECON.sav")
     ds3 <- loadDataset("an archived dataset", kind="archived")
@@ -101,17 +101,32 @@ with_mock_HTTP({
             '{"https://app.crunch.io/api/datasets/1/":{"end_date":null}}')
     })
 
-    test_that("Dataset webURL", {
+    test_that("Dataset URLs", {
         with(temp.options(crunch.api="https://fake.crunch.io/api/v2/"), {
-            expect_identical(webURL(ds),
+            expect_identical(APIToWebURL(ds),
                 "https://fake.crunch.io/dataset/511a7c49778030653aab5963")
         })
+        expect_identical(webToAPIURL("https://app.crunch.io/dataset/b6c2325a8de9438ebab5d9a42d376b90/browse/eyJhcHBTdGF0ZVN0b3JlIjp0cnVlLCJhbmFseXplIjp7fSwidmFyaWFibGVzTmF2aWdhdG9yIjp7Iml0ZW0iOiIvZWU2NTI0YWFjMzFiNDkyZjk4M2ZiYzM0MGJjODYzYzkvIn19"),
+            "https://app.crunch.io/api/datasets/b6c2325a8de9438ebab5d9a42d376b90/")
+        expect_error(webToAPIURL("Not actually a URL"),
+            "Not a valid web app URL")
     })
+
+    if (.Platform$OS.type == "unix") {
+        with_mock(
+            `crunch:::system_call`=function (command, args, ...) paste("SYSTEM CALL", args),
+            test_that("Opening a dataset on the web", {
+                expect_identical(webApp(ds),
+                    "SYSTEM CALL https://app.crunch.io/dataset/511a7c49778030653aab5963")
+            })
+        )
+    }
 
     test_that("Dataset VariableCatalog index is ordered", {
         expect_identical(urls(variables(ds)),
             c("https://app.crunch.io/api/datasets/1/variables/birthyr/",
             "https://app.crunch.io/api/datasets/1/variables/gender/",
+            "https://app.crunch.io/api/datasets/1/variables/location/",
             "https://app.crunch.io/api/datasets/1/variables/mymrset/",
             "https://app.crunch.io/api/datasets/1/variables/textVar/",
             "https://app.crunch.io/api/datasets/1/variables/starttime/",
@@ -120,6 +135,7 @@ with_mock_HTTP({
         expect_identical(urls(allVariables(ds)),
             c("https://app.crunch.io/api/datasets/1/variables/birthyr/",
             "https://app.crunch.io/api/datasets/1/variables/gender/",
+            "https://app.crunch.io/api/datasets/1/variables/location/",
             "https://app.crunch.io/api/datasets/1/variables/mymrset/",
             "https://app.crunch.io/api/datasets/1/variables/textVar/",
             "https://app.crunch.io/api/datasets/1/variables/starttime/",
@@ -139,14 +155,14 @@ with_mock_HTTP({
             logs <- capture.output(nc <- ncol(ds))
         })
         expect_identical(logs, character(0))
-        expect_identical(nc, 6L)
-        expect_identical(dim(ds), c(25L, 6L))
+        expect_identical(nc, 7L)
+        expect_identical(dim(ds), c(25L, 7L))
     })
 
     test_that("Dataset has names() and extract methods work", {
         expect_false(is.null(names(ds)))
         expect_identical(names(ds),
-            c("birthyr", "gender", "mymrset", "textVar", "starttime", "catarray"))
+            c("birthyr", "gender", "location", "mymrset", "textVar", "starttime", "catarray"))
         expect_true(is.variable(ds[[1]]))
         expect_true("birthyr" %in% names(ds))
         expect_true(is.variable(ds$birthyr))
@@ -158,6 +174,20 @@ with_mock_HTTP({
         expect_identical(dim(ds[2]), c(25L, 1L))
         expect_null(ds$not.a.var.name)
         expect_error(ds[[999]], "subscript out of bounds")
+        expect_identical(ds[[self(ds$gender)]], ds$gender)
+    })
+
+    with(temp.option(crunch.namekey.dataset="name"), {
+        test_that("'namekey' feature (that should be deprecated) is respected", {
+            expect_true(is.Numeric(ds$`Birth Year`))
+            expect_null(ds$birthyr)
+        })
+    })
+
+    test_that("Variables can be extracted by url", {
+        url <- urls(variables(ds))[1]
+        expect_identical(ds[[url]], ds[['birthyr']])
+        expect_identical(ds[url], ds['birthyr'])
     })
 
     ## This is a start on a test that getting variables doesn't hit server.
@@ -207,10 +237,11 @@ with_mock_HTTP({
         expect_identical(getShowContent(ds),
             c(paste("Dataset", dQuote("test ds")),
             "",
-            "Contains 25 rows of 6 variables:",
+            "Contains 25 rows of 7 variables:",
             "",
             "$birthyr: Birth Year (numeric)",
             "$gender: Gender (categorical)",
+            "$location: Categorical Location (categorical)",
             "$mymrset: mymrset (multiple_response)",
             "$textVar: Text variable ftw (text)",
             "$starttime: starttime (datetime)",
@@ -262,6 +293,16 @@ with_mock_HTTP({
             "https://app.crunch.io/api/datasets/1/",
             '{"app_settings":{"whaam":',
             '{"dashboardUrl":"https://shiny.crunch.io/example/"}}}')
+    })
+
+    test_that("Primary key methods", {
+        expect_null(pk(ds2))
+        expect_identical(pk(ds), ds$birthyr)
+        expect_POST(pk(ds) <- ds$textVar,
+            'https://app.crunch.io/api/datasets/1/pk/',
+            '{"pk":["https://app.crunch.io/api/datasets/1/variables/textVar/"]}'
+        )
+        expect_DELETE(pk(ds2) <- NULL, 'https://app.crunch.io/api/datasets/3/pk/')
     })
 })
 
@@ -348,6 +389,14 @@ with_test_authentication({
             expect_true("name" %in% aliases(variables(ds)))
             expect_true("name" %in% names(ds))
             expect_true(is.Numeric(ds$name))
+        })
+
+        test_that("PK methods work", {
+            expect_null(pk(ds))
+            expect_silent(pk(ds) <- ds$name)
+            expect_equal(pk(ds), ds$name)
+            expect_silent(pk(ds) <- NULL)
+            expect_null(pk(ds))
         })
 
         test_that("Dataset settings (defaults)", {

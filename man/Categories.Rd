@@ -12,6 +12,7 @@
 \alias{Category-class}
 \alias{Category}
 \alias{[,Categories,ANY,ANY-method}
+\alias{[,Categories,character,ANY-method}
 \alias{[,Categories,numeric,ANY-method}
 \alias{[<-,Categories,ANY,ANY,ANY-method}
 \alias{names,Categories-method}
@@ -27,6 +28,8 @@ Categories(..., data = NULL)
 Category(..., data = NULL)
 
 \S4method{[}{Categories,ANY,ANY}(x, i, j, ..., drop = TRUE)
+
+\S4method{[}{Categories,character,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[}{Categories,numeric,ANY}(x, i, j, ..., drop = TRUE)
 
@@ -45,7 +48,7 @@ Category(..., data = NULL)
 \S4method{ids}{Categories}(x) <- value
 }
 \arguments{
-\item{...}{additional arguments to [, ignored}
+\item{...}{additional arguments to \code{[}, ignored}
 
 \item{data}{For the constructor functions \code{Category} and
 \code{Categories}, you can either pass in attributes via \code{...} or you
@@ -55,20 +58,20 @@ the objects via the \code{data} argument. See the examples.}
 \item{x}{For the attribute getters and setters, an object of class
 Category or Categories}
 
-\item{i}{For the [ methods, just as with list extract methods}
+\item{i}{For the \code{[} methods, just as with list extract methods}
 
-\item{j}{Invalid argument to [, but in the generic's signature}
+\item{j}{Invalid argument to \code{[}, but in the generic's signature}
 
-\item{drop}{Invalid argument to [, but in the generic's signature}
+\item{drop}{Invalid argument to \code{[}, but in the generic's signature}
 
-\item{value}{For [<-, the replacement Category to insert}
+\item{value}{For \code{[<-}, the replacement Category to insert}
 }
 \description{
 CategoricalVariables, as well as the array types composed from
 Categoricals, contain Categories. Categories are a subclass of list that
-contains only Category objects. Category objects themselves subclass list
-and contain the following fields: "name", "id", "numeric_value", "missing",
-and optionally "selected".
+contains only Category objects. Category objects are themselves subclasses of
+lists and contain the following fields: "name", "id", "numeric_value",
+"missing", and optionally "selected".
 }
 \examples{
 cat.a <- Category(name="First", id=1, numeric_value=1, missing=FALSE)

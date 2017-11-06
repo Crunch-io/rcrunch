@@ -1,20 +1,45 @@
 cubeDims <- function (cube) {
-    ## Grab the row/col/etc. labels from the cube
-    elements <- lapply(cube$result$dimensions, function (a) {
+    ## This function wraps up all of the quirks of the Crunch cube API and
+    ## standardizes the various ways that metadata about the dimensions is
+    ## represented in it.
+
+    ## First, grab the row/col/etc. labels from the cube
+    dimnames <- lapply(cube$result$dimensions, function (a) {
+        ## Collect the variable metadata about the dimensions
+        tuple <- cubeVarReferences(a)
+        if (tuple$type == "boolean") {
+            ## TODO: server should provide enumeration
+            return(list(
+                name=c("FALSE", "TRUE"),
+                any.or.none=c(FALSE, FALSE),
+                missing=c(FALSE, FALSE),
+                references=tuple
+            ))
+        }
         ## If enumerated, will be "elements", not "categories"
-        a$type$categories %||% a$type$elements
-    })
-    dimnames <- lapply(elements, function (d) {
-        list(
+        d <- a$type$categories %||% a$type$elements
+        return(list(
             name=vapply(d, elementName, character(1)),
             any.or.none=vapply(d, elementIsAnyOrNone, logical(1)),
-            missing=vapply(d, function (el) isTRUE(el$missing), logical(1))
-        )
+            missing=vapply(d, function (el) isTRUE(el$missing), logical(1)),
+            references=tuple
+        ))
     })
-    names(dimnames) <- vapply(cube$result$dimensions,
-        function (a) a$references$alias, character(1))
-    return(CubeDims(dimnames,
-        references=VariableCatalog(index=lapply(cube$result$dimensions, vget("references")))))
+    names(dimnames) <- vapply(dimnames, function (x) x$references$alias,
+        character(1))
+    return(CubeDims(dimnames))
+}
+
+cubeVarReferences <- function (x) {
+    ## Extract ZZ9-ish metadata from a cube dimension or measure and return
+    ## in a way that looks like what comes in a variable catalog
+    tuple <- x$references
+    tuple$type <- x$type$class
+    if (tuple$type == "enum" && "subreferences" %in% names(tuple)) {
+        tuple$type <- "multiple_response"
+    }
+    tuple$categories <- x$type$categories
+    return(tuple)
 }
 
 elementName <- function (el) {
@@ -50,16 +75,16 @@ elementIsAnyOrNone <- function (el) {
 
 #' Methods on Cube objects
 #'
-#' These methods provide an \code{array}-like interface to the CrunchCube
+#' These methods provide an `array`-like interface to the CrunchCube
 #' object.
 #'
 #' @param x a CrunchCube or its CubeDims component.
 #'
 #' @return Generally, the same shape of result that each of these functions
-#' return when applied to an \code{array} object.
+#' return when applied to an `array` object.
 #' @name cube-methods
-#' @aliases cube-methods dimensions
-#' @seealso \code{\link{cube-computing}}
+#' @aliases cube-methods dimensions measures
+#' @seealso [`cube-computing`] [`base::array`]
 NULL
 
 #' @rdname cube-methods
@@ -83,12 +108,23 @@ anyOrNone <- function (x) {
 
 #' @rdname cube-methods
 #' @export
-setMethod("dimensions", "CrunchCube", function (x) x@dims)
+setMethod("dimensions", "CrunchCube", function (x) {
+    dims <- x@dims
+    selecteds <- is.selectedDimension(dims)
+    return(dims[!selecteds])
+})
 
-#' @rdname cube-methods
+#' @rdname catalog-extract
 #' @export
-setMethod("variables", "CubeDims", function (x) x@references)
+setMethod("[", "CubeDims", function (x, i, ...) {
+    return(CubeDims(x@.Data[i], names=x@names[i]))
+})
 
-#' @rdname cube-methods
-#' @export
-setMethod("variables", "CrunchCube", function (x) variables(dimensions(x)))
+is.selectedDimension <- function (dims) {
+    is.it <- function (x, dim) {
+        x$type == "categorical" && length(dim$name) == 3 && dim$name[1] == "Selected"
+    }
+    selecteds <- mapply(is.it, x=index(variables(dims)), dim=dims@.Data)
+    names(selecteds) <- dims@names
+    return(selecteds)
+}

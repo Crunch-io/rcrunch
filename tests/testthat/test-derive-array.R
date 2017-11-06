@@ -1,5 +1,21 @@
 context("Deriving array variables")
 
+with_mock_crunch({
+    ds <- loadDataset("test ds")
+    test_that("deriveArray works with MR", {
+    expect_POST(ds$derived_mr <- deriveArray(list(ds$gender),
+                                             selections=list("Female"),
+                                             name="derivedMR"),
+                "https://app.crunch.io/api/datasets/1/variables/",
+                '{"derivation":{"function":"select_categories","args":',
+                '[{"function":"array","args":[{"function":"select","args":',
+                '[{"map":{"1":{"variable":"https://app.crunch.io/api/datasets',
+                '/1/variables/gender/"}}},{"value":["1"]}]}]},{"value":',
+                '["Female"]}]},"name":"derivedMR","alias":"derived_mr"}')
+    })
+})
+
+
 with_test_authentication({
     ds <- newDatasetFromFixture("apidocs")
 
@@ -29,6 +45,16 @@ with_test_authentication({
         expect_identical(as.vector(ds$derivedarray[[1]]), q1.values)
     })
 
+    ds$derivedmr <- deriveArray(list(ds$q1, ds$petloc$petloc_home), selections="Dog", name="Derived pets MR") # cat dog has id 2
+    test_that("deriveArray can also derive MRs", {
+        expect_true(is.MR(ds$derivedmr))
+        expect_identical(names(subvariables(ds$derivedmr)), c("Pet", "Home"))
+        expect_identical(names(categories(ds$derivedmr)),
+                         c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
+        expect_identical(as.vector(ds$derivedmr[[1]]), q1.values)
+        expect_true(is.selected(categories(ds$derivedmr)[[2]]))
+    })
+
     test_that("Can edit metadata of the derived array, and parents are unaffected", {
         aliases(subvariables(ds$derivedarray)) <- c("dsub1", "dsub2")
         expect_identical(aliases(subvariables(ds$derivedarray)),
@@ -52,10 +78,8 @@ with_test_authentication({
     })
 
     ## Deep copy array, rename it, etc.
-    pl2 <- copy(ds$petloc, deep=TRUE, name="Other pet loc")
-    pl2$subvariables[[1]]$alias <- "pl2_a"
-    pl2$subvariables[[2]]$alias <- "pl2_b"
-    ds$petloc2 <- pl2
+    ds$petloc2 <- copy(ds$petloc, deep=TRUE, name="Other pet loc")
+    aliases(subvariables(ds$petloc2)) <- c("pl2_a", "pl2_b")
 
     ## Make a "flipped" version of that and the original
     ds$petloc_a <- deriveArray(list(ds$petloc2$pl2_a, ds$petloc$petloc_home),

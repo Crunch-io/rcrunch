@@ -1,8 +1,12 @@
 language: r
 cache: packages
 r:
-  - oldrel
-  - release
-  - devel
+- oldrel
+- release
+- devel
 after_success:
-  - Rscript -e 'covr::codecov()'
+- Rscript -e 'covr::codecov()'
+- bash pkgdown.sh
+env:
+  global:
+    secure: BWvMPmOiTzFNfFz3Ok+WHk6FjNNjK8qV5QohBhS0bgsMgeCrx4Zu3IXp42cXaEzzCe/VEnnEyYYTkZROS3mdLRAlOHnEHvCJMtETOODOK6EFGUFDv+C7AXZyqbdoNPrGrW5QKppHAVbTuL/A9z+tnBaeyG68GhOmOFBk4mciHNc=

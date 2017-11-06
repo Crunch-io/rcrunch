@@ -4,13 +4,20 @@ test_that("show method exists", {
     expect_true(is.character(get_output(CrunchFilter())))
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     ds3 <- loadDataset("ECON.sav")
 
     test_that("Test dataset has 2 filters", {
         expect_is(filters(ds), "FilterCatalog")
         expect_length(filters(ds), 2)
+        expect_identical(as.data.frame(filters(ds)),
+            data.frame(
+                name=c("Occasional Political Interest", "Public filter"),
+                id=c("filter1", "filter2"),
+                is_public=c(FALSE, TRUE),
+                stringsAsFactors=FALSE
+            ))
         expect_output(filters(ds),
             get_output(data.frame(
                     name=c("Occasional Political Interest", "Public filter"),
@@ -56,7 +63,7 @@ with_mock_HTTP({
     })
 
     test_that("Create a filter by newFilter", {
-        expect_POST(newFilter("A filter", ds$gender=="Male", catalog=filters(ds)),
+        expect_POST(newFilter("A filter", ds$gender == "Male", catalog = filters(ds)),
             'https://app.crunch.io/api/datasets/1/filters/',
             '{"name":"A filter","expression":',
             '{"function":"==","args":[',
@@ -64,20 +71,20 @@ with_mock_HTTP({
             '{"value":1}]}}')
         with_POST("https://app.crunch.io/api/datasets/1/filters/filter1/", {
             ## Mock the return of that creation
-            f <- newFilter("A filter", ds$gender=="Male", catalog=filters(ds))
+            f <- newFilter("A filter", ds$gender == "Male", catalog = filters(ds))
             expect_is(f, "CrunchFilter")
             expect_false(is.public(f))
         })
     })
 
     test_that("newFilter without explicitly setting 'catalog'", {
-        expect_POST(newFilter("A filter", ds$gender=="Male", catalog=ds),
+        expect_POST(newFilter("A filter", ds$gender == "Male", catalog = ds),
             'https://app.crunch.io/api/datasets/1/filters/',
             '{"name":"A filter","expression":',
             '{"function":"==","args":[',
             '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
             '{"value":1}]}}')
-        expect_POST(newFilter("A filter", ds$gender=="Male"),
+        expect_POST(newFilter("A filter", ds$gender == "Male"),
             'https://app.crunch.io/api/datasets/1/filters/',
             '{"name":"A filter","expression":',
             '{"function":"==","args":[',
@@ -86,12 +93,12 @@ with_mock_HTTP({
     })
 
     test_that("newFilter on an invalid 'catalog'", {
-        expect_error(newFilter("A filter", ds$gender=="Male", catalog="Foo!"),
+        expect_error(newFilter("A filter", ds$gender == "Male", catalog = "Foo!"),
             "Cannot create a filter entity on an object of class character")
     })
 
     test_that("Create a filter by [[<-", {
-        expect_POST(filters(ds)[["A filter"]] <- ds$gender=="Male",
+        expect_POST(filters(ds)[["A filter"]] <- ds$gender == "Male",
             'https://app.crunch.io/api/datasets/1/filters/',
             '{"name":"A filter","expression":',
             '{"function":"==","args":[',
@@ -99,11 +106,20 @@ with_mock_HTTP({
             '{"value":1}]}}')
     })
 
+    test_that("Alter a filter by [[<-", {
+        expect_PATCH(filters(ds)[["Occasional Political Interest"]] <- ds$gender == "Female",
+                    'https://app.crunch.io/api/datasets/1/filters/filter1/',
+                    '{"expression":',
+                    '{"function":"==","args":[',
+                    '{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"},',
+                    '{"value":2}]}}')
+    })
+
     test_that("Print method for filter entity (debug)", {
         f <- CrunchFilter(crGET("a-filter/"))
         expect_is(f, "CrunchFilter")
         expect_fixed_output(f,
-            'starttime %in% c("2016-04-06", "2016-04-15", "2016-04-25", "2016-05-06", "2016-05-13", ... & gender %in% "Male"')
+            'starttime %in% c("2016-04-06", "2016-04-15", "2016-04-25", "2016-05-06", "2016-05-13", "2016-05-27", "2016-06-06", "2016-06-14", "2016-06-29") & gender %in% "Male"')
     })
 })
 

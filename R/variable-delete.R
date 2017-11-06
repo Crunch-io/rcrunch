@@ -1,14 +1,17 @@
 #' Delete Variables Within a Dataset
 #'
-#' Deleting requires confirmation. In an interactive session, you will be asked
-#' to confirm. To avoid that prompt, or to delete variables from a
-#' non-interactive session, wrap the call in \code{\link{with_consent}} to give
+#' This function permanently deletes a variable from a dataset. For a non-destructive
+#' alternative see [hide()].
+#'
+#' In an interactive session, you will be prompted to confirm that you
+#' wish to delete the variable. To avoid that prompt, or to delete variables from a
+#' non-interactive session, wrap the call in [with_consent()] to give
 #' your permission to delete.
 #' @param dataset the Dataset to modify
-#' @param variables aliases (following \code{crunch.namekey.dataset}) or indices
+#' @param variables aliases (following `crunch.namekey.dataset`) or indices
 #' of variables to delete.
-#' @return (invisibly) \code{dataset} with the specified variables deleted
-#' @seealso \code{\link{hide}}
+#' @return (invisibly) `dataset` with the specified variables deleted
+#' @seealso [`hide`]
 #' @export
 deleteVariables <- function (dataset, variables) {
     to.delete <- allVariables(dataset[variables])
@@ -50,22 +53,21 @@ setMethod("delete", "VariableTuple", function (x, ...) {
 
 #' Delete subvariables from an array
 #'
-#' This function conceals the dirty work in making this happen. The array
-#' gets unbound, the subvariables deleted, and then the remaining subvariable
-#' are rebound into a new array.
-#'
-#' Deleting requires confirmation. In an interactive session, you will be asked
+#' Deleting variables requires confirmation. In an interactive session, you will be asked
 #' to confirm. To avoid that prompt, or to delete subvariables from a
-#' non-interactive session, wrap the call in \code{\link{with_consent}} to give
+#' non-interactive session, wrap the call in [with_consent()] to give
 #' your permission to delete.
+#'
+#' To delete the subvariables the function unbinds the array, deletes the subvariable, and
+#' then binds the remaining subvariables into a new array.
 #' @param variable the array variable
-#' @param to.delete aliases (following \code{crunch.namekey.dataset}) or indices
+#' @param to.delete aliases (following `crunch.namekey.dataset`) or indices
 #' of variables to delete.
 #' @return a new version of variable without the indicated subvariables
 #' @export
 deleteSubvariables <- function (variable, to.delete) {
     ## Identify subvariable URLs
-    delete.these <- urls(variable[to.delete])
+    delete.these <- urls(variable[,to.delete])
 
     if (length(delete.these) == 1) {
         subvars <- subvariables(variable)

@@ -3,7 +3,7 @@ context("Combine responses")
 # expect_error(ds$combined_mr <- combine(ds$mymrset, name="MR combined",
 #     list(list(name="Extremes", responses=c("First", "Last")))),
 #     mr.payload, fixed=TRUE)
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
 
     extremes <- VariableDefinition(
@@ -63,15 +63,13 @@ with_mock_HTTP({
     })
 })
 
-if (run.integration.tests) {
-    with_test_authentication({
-        with(test.dataset(newDatasetFromFixture("apidocs")), {
-            test_that("We can create a new MR by combining", {
-                ds$combined_allpets <- combine(ds$allpets, name="All pets (combined)",
-                    list(list(name="Mammals", responses=c("Cat", "Dog"))))
-                expect_identical(names(subvariables(ds$combined_allpets)),
-                    c("Mammals", "Bird"))
-            })
+with_test_authentication({
+    with(test.dataset(newDatasetFromFixture("apidocs")), {
+        test_that("We can create a new MR by combining", {
+            ds$combined_allpets <- combine(ds$allpets, name="All pets (combined)",
+                list(list(name="Mammals", responses=c("Cat", "Dog"))))
+            expect_identical(names(subvariables(ds$combined_allpets)),
+                c("Mammals", "Bird"))
         })
     })
-}
+})

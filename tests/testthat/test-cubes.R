@@ -31,7 +31,7 @@ test_that("rollup resolution validation", {
         " is invalid. Valid values are NULL, ")
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     v <- ds$starttime
 
@@ -59,7 +59,7 @@ with_mock_HTTP({
                 dimensions=list(zcl(ds$gender)),
                 measures=list(mean=zfunc("cube_mean", ds$birthyr))
             ))
-        expect_identical(formulaToCubeQuery( ~ gender, data=ds),
+        expect_identical(formulaToCubeQuery(~ gender, data=ds),
             list(
                 dimensions=list(zcl(ds$gender)),
                 measures=list(count=zfunc("cube_count"))
@@ -90,9 +90,9 @@ with_mock_HTTP({
 
 adims <- CubeDims(list(
     v4=list(name=c("B", "C"), any.or.none=rep(FALSE, 2),
-        missing=rep(FALSE, 2)),
+        missing=rep(FALSE, 2), references=list(name="v4")),
     v7=list(name=c("C", "D", "E", "No Data"), any.or.none=rep(FALSE, 4),
-        missing=c(rep(FALSE, 3), TRUE))))
+        missing=c(rep(FALSE, 3), TRUE), references=list(name="v7"))))
 a1 <- CrunchCube(arrays=list("count"=array(c(
         8, 6,
         3, 2,
@@ -117,20 +117,12 @@ arrayify <- function (data, dims) {
     array(data, dim=vapply(dn, length, integer(1), USE.NAMES=FALSE), dimnames=dn)
 }
 
-test_that("Cube print method", {
-    expect_output(a1,
-        paste("   v7",
-        "v4  C D E",
-        "  B 8 3 2",
-        "  C 6 2 3", sep="\n"))
-})
-
 test_that("simple margin.table", {
     expect_equivalent(margin.table(a1, 1), margin.table(a1@arrays[[1]], 1))
     expect_identical(margin.table(a1, 1),
-        arrayify(c(13, 11), "v4"))
+        cubify(13, 11, dims=df.dims["v4"]))
     expect_identical(margin.table(a1, 2),
-        arrayify(c(14, 5, 5), "v7"))
+        cubify(14, 5, 5, dims=df.dims["v7"]))
     expect_equivalent(margin.table(a1), margin.table(a1@arrays[[1]]))
     expect_identical(margin.table(a1), 24)
 })
@@ -139,9 +131,9 @@ test_that("margin.table with any/none", {
     a2 <- a1
     a2@dims[[2]]$any.or.none[1] <- TRUE ## "C"
     expect_identical(margin.table(a2, 1),
-        arrayify(c(8, 6), "v4"))
+        cubify(8, 6, dims=df.dims["v4"]))
     expect_identical(margin.table(a2, 2),
-        array(c(5, 5), dim=2L, dimnames=list(v7=LETTERS[4:5])))
+        cubify(5, 5, dims=list(v7=LETTERS[4:5])))
     expect_identical(margin.table(a2), 14)
 })
 
@@ -150,25 +142,24 @@ test_that("margin.table with missing", {
     a2@dims[[2]]$missing[2] <- TRUE ## "D"
     expect_identical(a2@useNA, "no") ## The default.
     expect_identical(margin.table(a2, 1),
-        arrayify(c(10, 9), "v4"))
+        cubify(10, 9, dims=df.dims["v4"]))
     expect_identical(margin.table(a2, 2),
-        array(c(14, 5), dim=2L, dimnames=list(v7=c("C", "E"))))
+        cubify(14, 5, dims=list(v7=c("C", "E"))))
     expect_identical(margin.table(a2), 19)
 
     a2@useNA <- "ifany"
     ## Should be the same as first tests
     expect_identical(margin.table(a2, 1),
-        arrayify(c(13, 11), "v4"))
+        cubify(13, 11, dims=df.dims["v4"]))
     expect_identical(margin.table(a2, 2),
-        arrayify(c(14, 5, 5), "v7"))
+        cubify(14, 5, 5, dims=df.dims["v7"]))
     expect_identical(margin.table(a2), 24)
 
     a2@useNA <- "always"
     expect_identical(margin.table(a2, 1),
-        arrayify(c(13, 11), "v4"))
+        cubify(13, 11, dims=df.dims["v4"]))
     expect_identical(margin.table(a2, 2),
-        array(c(14, 5, 5, 0), dim=4L,
-            dimnames=list(v7=c(LETTERS[3:5], "No Data"))))
+        cubify(14, 5, 5, 0, dims=list(v7=c(LETTERS[3:5], "No Data"))))
     expect_identical(margin.table(a2), 24)
 })
 
@@ -181,7 +172,7 @@ with_test_authentication({
     test_that("We can get a univariate categorical cube", {
         kube <- crtabs(~ v7, data=ds)
         expect_is(kube, "CrunchCube")
-        expect_equivalent(as.array(kube), arrayify(c(10, 5, 5), "v7"))
+        expect_equal(as.array(kube), cubify(10, 5, 5, dims=df.dims["v7"]))
         ## Not sure why not identical, str makes them look the same
     })
 
@@ -189,58 +180,19 @@ with_test_authentication({
         kube <- crtabs(~ v4 + v7, data=ds)
         expect_is(kube, "CrunchCube")
         expect_identical(as.array(kube),
-            arrayify(c(5, 5, 3, 2, 2, 3), c("v4", "v7")))
+            cubify(
+                    5, 3, 2,
+                    5, 2, 3,
+                dims=list(
+                    v4=c("B", "C"),
+                    v7=c(LETTERS[3:5])
+                )))
     })
 
     ## Make a category with data be missing
     is.na(categories(ds$v7)) <- "D"
     ## Update it in the dimensions map
     df.dims$v7 <- c("C", "E")
-
-    test_that("useNA on univariate cube", {
-        expect_equivalent(as.array(crtabs(~ v7, data=ds)),
-            array(c(10, 5),
-                dim=2L,
-                dimnames=list(
-                    v7=c("C", "E")
-                )))
-        expect_equivalent(as.array(crtabs(~ v7, data=ds)),
-            arrayify(c(10, 5), "v7"))
-        expect_equivalent(as.array(crtabs(~ v7, data=ds, useNA="ifany")),
-            array(c(10, 5, 5),
-                dim=3L,
-                dimnames=list(
-                    v7=c("C", "D", "E")
-                )))
-        expect_equivalent(as.array(crtabs(~ v7, data=ds,
-            useNA="always")),
-            array(c(10, 5, 5, 0),
-                dim=4L,
-                dimnames=list(
-                    v7=c(LETTERS[3:5], "No Data")
-                )))
-    })
-    test_that("useNA on bivariate cube", {
-        expect_equivalent(as.array(crtabs(~ v4 + v7, data=ds)),
-            arrayify(c(5, 5, 2, 3), c("v4", "v7")))
-        expect_equivalent(as.array(crtabs(~ v4 + v7, data=ds, useNA="ifany")),
-            array(c(5, 5, 3, 2, 2, 3),
-                dim=c(2L, 3L),
-                dimnames=list(
-                    v4=c("B", "C"),
-                    v7=c(LETTERS[3:5])
-                )))
-        expect_equivalent(as.array(crtabs(~ v4 + v7, data=ds, useNA="always")),
-            array(c(5, 5, 0,
-                    3, 2, 0,
-                    2, 3, 0,
-                    0, 0, 0),
-                dim=c(3L, 4L),
-                dimnames=list(
-                    v4=c("B", "C", "No Data"),
-                    v7=c(LETTERS[3:5], "No Data")
-                )))
-    })
 
     test_that("univariate datetime cube", {
         kube <- crtabs(~ v8, data=ds)

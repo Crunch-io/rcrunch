@@ -4,7 +4,8 @@
     "description": "Detail for a given dataset",
     "body": {
         "owner_id": "https://app.crunch.io/api/users/notme/",
-        "id": "95c0b45fe0af492594863f818cb913d2"
+        "id": "95c0b45fe0af492594863f818cb913d2",
+        "streaming": "no"
     },
     "catalogs": {
         "variables": "https://app.crunch.io/api/datasets/3/variables/",
@@ -20,7 +21,10 @@
     },
     "fragments": {
         "table": "https://app.crunch.io/api/datasets/3/table/",
-        "preferences": "https://app.crunch.io/api/datasets/3/preferences/"
+        "exclusion": "https://app.crunch.io/api/datasets/3/exclusion/",
+        "preferences": "https://app.crunch.io/api/datasets/3/preferences/",
+        "pk": "https://app.crunch.io/api/datasets/3/pk/",
+        "stream": "https://app.crunch.io/api/datasets/3/stream/"
     },
     "some_other_key": {}
 }

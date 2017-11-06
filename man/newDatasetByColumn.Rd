@@ -4,7 +4,8 @@
 \alias{newDatasetByColumn}
 \title{Upload a data.frame column-by-column to make a new dataset}
 \usage{
-newDatasetByColumn(x, name = deparseAndTruncate(substitute(x)), ...)
+newDatasetByColumn(x, name = deparseAndFlatten(substitute(x), max_length =
+  40), ...)
 }
 \arguments{
 \item{x}{a data.frame or other rectangular R object}
@@ -12,15 +13,17 @@ newDatasetByColumn(x, name = deparseAndTruncate(substitute(x)), ...)
 \item{name}{character, the name to give the new Crunch dataset. Default is
 the name of the R object passed in \code{x}}
 
-\item{...}{additional arguments passed to \code{ \link{createDataset}}}
+\item{...}{additional arguments passed to \code{\link[=createDataset]{createDataset()}}}
 }
 \value{
 If successful, an object of class CrunchDataset.
 }
 \description{
 Use this version if you have lots of variables, under 1M rows, perhaps
-backed by ff or other memory-mapped files, and time to kill.
+backed by \code{ff} or other memory-mapped files, and time to kill. You really
+probably want \code{\link[=newDataset]{newDataset()}} instead.
 }
 \seealso{
-\code{\link{newDataset}}
+\code{\link[=newDataset]{newDataset()}}
 }
+\keyword{internal}

@@ -12,14 +12,14 @@ arrayify <- function (data, dims) {
     array(data, dim=vapply(dn, length, integer(1), USE.NAMES=FALSE), dimnames=dn)
 }
 
-with_mock_HTTP({
+with_mock_crunch({
     ## Load a ton of cube fixtures via the tab book feature
     ds <- loadDataset("test ds")
     m <- multitables(ds)[[1]]
-    with_POST("https://app.crunch.io/api/datasets/1/multitables/tabbook-result.json", {
+    with_POST("https://app.crunch.io/api/datasets/1/multitables/tabbook-result/", {
         book1 <- tabBook(m, data=ds, format="json")
     })
-    with_POST("https://app.crunch.io/api/datasets/1/multitables/tabbook-array-result.json", {
+    with_POST("https://app.crunch.io/api/datasets/1/multitables/tabbook-array-result/", {
         book2 <- tabBook(m, data=ds, format="json")
     })
 
@@ -48,5 +48,11 @@ with_mock_HTTP({
     test_that("bases methods exist for TabBookResult and MultitableResult", {
         expect_identical(bases(book1, 0)[[1]][[2]], b)
         expect_identical(bases(book1)[[1]][[2]], sum(b))
+    })
+
+    test_that("base for univariate stats", {
+        expect_equal(bases(crtabs(max(birthyr) ~ 1, data=ds)), 25)
+        expect_error(bases(crtabs(max(birthyr) ~ 1, data=ds), 1),
+            "Margin 1 exceeds Cube's number of dimensions (0)", fixed=TRUE)
     })
 })

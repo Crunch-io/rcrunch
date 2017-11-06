@@ -1,8 +1,7 @@
 context("Dataset catalog")
 
-with_mock_HTTP({
-    cr <- session()
-    datcat <- cr$datasets
+with_mock_crunch({
+    datcat <- datasets()
 
     test_that("DatasetCatalog instantiates from Shoji", {
         expect_is(datcat, "DatasetCatalog")
@@ -12,9 +11,20 @@ with_mock_HTTP({
         expect_identical(urls(datcat),
             c("https://app.crunch.io/api/datasets/3/",
               "https://app.crunch.io/api/datasets/2/",
+              "https://app.crunch.io/api/datasets/streaming-no-msg/",
+              "https://app.crunch.io/api/datasets/1streaming/",
               "https://app.crunch.io/api/datasets/1/")) ## C sorting on names
         expect_identical(self(datcat),
             "https://app.crunch.io/api/datasets/")
+    })
+
+    test_that("as.data.frame on DatasetCatalog", {
+        expect_identical(as.data.frame(datcat[1:2], keys=c("name", "description")),
+            data.frame(
+                name=c("ECON.sav", "an archived dataset"),
+                description=c("", "This dataset does not exist"),
+                stringsAsFactors=FALSE
+            ))
     })
 
     test_that("active/archived getters", {
@@ -22,12 +32,15 @@ with_mock_HTTP({
         expect_is(active(datcat), "DatasetCatalog")
         expect_is(archived(datcat), "DatasetCatalog")
         expect_identical(urls(active(datcat)),
-            c("https://app.crunch.io/api/datasets/3/", "https://app.crunch.io/api/datasets/1/"))
-        expect_length(active(datcat), 2)
+            c("https://app.crunch.io/api/datasets/3/",
+              "https://app.crunch.io/api/datasets/streaming-no-msg/",
+              "https://app.crunch.io/api/datasets/1streaming/",
+              "https://app.crunch.io/api/datasets/1/"))
+        expect_length(active(datcat), 4)
         expect_identical(urls(archived(datcat)),
             "https://app.crunch.io/api/datasets/2/")
         expect_length(archived(datcat), 1)
-        expect_length(datcat, 3)
+        expect_length(datcat, 5)
         expect_identical(active(archived(datcat)), archived(active(datcat)))
     })
 
@@ -41,28 +54,33 @@ with_mock_HTTP({
 
     test_that("names", {
         expect_identical(names(datcat),
-            c("ECON.sav", "an archived dataset", "test ds"))
+            c("ECON.sav", "an archived dataset", "streaming no messages",
+              "streaming test ds", "test ds"))
     })
     test_that("owners", {
         expect_identical(owners(datcat),
-            c("https://app.crunch.io/api/users/notme/", "https://app.crunch.io/api/users/user1/", "https://app.crunch.io/api/users/user1/"))
+            c("https://app.crunch.io/api/users/notme/",
+              "https://app.crunch.io/api/users/user1/",
+              "https://app.crunch.io/api/users/user1/",
+              "https://app.crunch.io/api/users/user1/",
+              "https://app.crunch.io/api/users/user1/"))
     })
     test_that("ownerNames", {
         expect_identical(ownerNames(datcat),
-            c("George", "Fake User", "Fake User"))
+            c("George", "Fake User", "Fake User", "Fake User", "Fake User"))
     })
     test_that("is.archived", {
-        expect_identical(is.archived(datcat), c(FALSE, TRUE, FALSE))
+        expect_identical(is.archived(datcat), c(FALSE, TRUE, FALSE, FALSE, FALSE))
     })
     test_that("is.published/draft", {
-        expect_identical(is.published(datcat), c(FALSE, TRUE, TRUE))
+        expect_identical(is.published(datcat), c(FALSE, TRUE, TRUE, TRUE, TRUE))
         expect_identical(is.draft(datcat), !is.published(datcat))
     })
     test_that("is.archived setter", {
         expect_PATCH(is.archived(datcat[1]) <- TRUE,
             'https://app.crunch.io/api/datasets/',
             '{"https://app.crunch.io/api/datasets/3/":{"archived":true}}')
-        expect_PATCH(archive(datcat[2:3]),
+        expect_PATCH(archive(datcat[c(2,5)]),
             'https://app.crunch.io/api/datasets/',
             '{"https://app.crunch.io/api/datasets/1/":{"archived":true}}')
     })
@@ -76,6 +94,8 @@ with_mock_HTTP({
         expect_PATCH(is.draft(datcat) <- TRUE,
             'https://app.crunch.io/api/datasets/',
             '{"https://app.crunch.io/api/datasets/2/":{"is_published":false},',
+            '"https://app.crunch.io/api/datasets/streaming-no-msg/":{"is_published":false},',
+            '"https://app.crunch.io/api/datasets/1streaming/":{"is_published":false},',
             '"https://app.crunch.io/api/datasets/1/":{"is_published":false}}')
     })
 

@@ -56,19 +56,12 @@ is.subvariable <- function (x) {
     grepl("subvariables", self(x))
 }
 
-#' @rdname crunch-is
-#' @export
-is.derived <- function (x) {
-    stopifnot(is.variable(x))
-    isTRUE(tuple(x)$derived)
-}
-
 CASTABLE_TYPES <- c("numeric", "text", "categorical") ## Add datetime when server supports
 
-#' Change the type of Crunch variables
+#' Change Crunch variable types
 #'
 #' Numeric, text, and categorical variables can be cast to one another by
-#' assigning them a new "type". This modifes the storage of the data on the
+#' assigning them a new "type". This modifies the storage of the data on the
 #' server and should only be done in narrow circumstances, as in when importing
 #' data from a different file format has resulted in incorrect types being
 #' specified.
@@ -76,7 +69,7 @@ CASTABLE_TYPES <- c("numeric", "text", "categorical") ## Add datetime when serve
 #' @param x a Variable
 #' @param value For the setter, a character value in c("numeric", "text",
 #' "categorical")
-#' @return Getter returns character; setter returns \code{x} duly modified.
+#' @return Getter returns character; setter returns `x` duly modified.
 #' @name type
 #' @aliases type type<-
 NULL

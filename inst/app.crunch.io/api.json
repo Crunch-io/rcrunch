@@ -8,7 +8,11 @@
         "accounts": "https://app.crunch.io/api/accounts/",
         "teams": "https://app.crunch.io/api/teams/",
         "projects": "https://app.crunch.io/api/projects/",
-        "public": "https://app.crunch.io/api/public/"
+        "public": "https://app.crunch.io/api/public/",
+        "geodata": "https://app.crunch.io/api/geodata/"
+    },
+    "views": {
+        "search": "https://app.crunch.io/api/search/"
     },
     "urls": {
         "user_url": "https://app.crunch.io/api/users/user1/",

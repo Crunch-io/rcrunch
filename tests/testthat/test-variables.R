@@ -1,6 +1,6 @@
 context("Variables")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     ds2 <- loadDataset("an archived dataset", "archived")
 
@@ -91,6 +91,20 @@ with_mock_HTTP({
     test_that("refresh", {
         expect_identical(ds$gender, refresh(ds$gender))
     })
+
+    test_that("can modify digits on var object", {
+        expect_identical(digits(ds$birthyr), 2L)
+        expect_PATCH(digits(ds$birthyr) <- 0,
+                     "https://app.crunch.io/api/datasets/1/variables/birthyr/",
+                     '{"element":"shoji:entity","body":{"format":{"data":',
+                     '{"digits":0}}}}')
+
+        expect_error(digits(ds$birthyr) <- -1, "digit specifications should be between 0 and 16")
+        expect_error(digits(ds$birthyr) <- 999, "digit specifications should be between 0 and 16")
+        expect_error(digits(ds$birthyr) <- 0.7, "digit specifications should be an integer")
+        expect_error(digits(ds$birthyr) <- "0.7", "digit specifications should be an integer")
+        expect_error(digits(ds$gender) <- 0, "digit specifications can only be set for numeric variables")
+    })
 })
 
 with_test_authentication({
@@ -158,5 +172,11 @@ with_test_authentication({
         expect_identical(name(v3), "alt")
         expect_identical(description(v3), "asdf")
         expect_identical(alias(v3), "Alias!")
+    })
+
+    test_that("can modify digits on var object", {
+        expect_identical(digits(ds$v3), 2L)
+        expect_silent(digits(ds$v3) <- 0)
+        expect_identical(digits(ds$v3), 0L)
     })
 })

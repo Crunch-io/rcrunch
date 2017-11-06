@@ -1,7 +1,12 @@
-<!--
-%\VignetteEngine{knitr::knitr}
-%\VignetteIndexEntry{Datasets: creating, loading, and manipulating}
--->
+---
+title: "Importing datasets"
+description: "Datasets are the primary unit of data in Crunch. Here's how to import data and load existing datasets in your R session."
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Importing datasets}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
 
 [Previous: Getting started](getting-started.html)
 
@@ -22,8 +27,6 @@ To get started working with Crunch datasets in R, we need to get a dataset in ou
 ## Uploading datasets
 
 To create new datasets, multiple paths exist. In the web application, you can upload files to create datasets. From `crunch`, there are two methods for creating datasets: one for `data.frames` and one for files of other (non-R) formats.
-
-### 1. newDataset
 
 The `crunch` package contains a sample dataset that we'll use throughout the vignettes: a sample drawn from a political survey fielded by YouGov on behalf of the _Economist_.
 
@@ -52,9 +55,7 @@ dim.ds
 * factor --> Categorical Variable
 * Date --> Datetime Variable
 
-### 2. newDatasetFromFile
-
-Alternatively, `newDatasetFromFile` essentially does what you would do in the web application: uploads your file and creates a dataset from it. If you have an SPSS or CSV file, you can upload it with that without first reading it into R.
+It takes a data.frame as its input; alternatively, if you have an SPSS or CSV file, you can upload it with that without first reading it into R by giving `newDataset` the file name. In this case, it essentially does what you would do in the web application: uploads your file and creates a dataset from it.
 
 ## Loading existing Crunch datasets
 

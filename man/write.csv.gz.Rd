@@ -7,20 +7,19 @@
 write.csv.gz(x, file, na = "", row.names = FALSE, ...)
 }
 \arguments{
-\item{x}{A data.frame or similar CSV-writeable object}
+\item{x}{A data.frame or similar CSV-writable object}
 
 \item{file}{character destination to write the gzipped CSV to}
 
-\item{na}{See \code{\link[utils]{write.csv}}. This just changes the default
+\item{na}{See \code{\link[utils:write.csv]{utils::write.csv}}. This just changes the default
 to a Crunch-friendly empty string.}
 
-\item{row.names}{logical: write out row names? See \code{write.csv}. This
-just sets a default of \code{FALSE}.}
+\item{row.names}{logical: write out row names? See \code{\link[utils:write.csv]{utils::write.csv}}.}
 
 \item{...}{Additional arguments passed to \code{write.csv}.}
 }
 \value{
-Whatever \code{write.csv} returns.
+A csv file written to dist
 }
 \description{
 Write CSV to a compressed file

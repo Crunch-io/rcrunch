@@ -20,7 +20,7 @@ getNrow <- function (dataset) {
     return(nrows)
 }
 
-#' Is it?
+#' Test whether a Crunch object belongs to a class
 #' @rdname crunch-is
 #' @param x an object
 #' @return logical
@@ -30,15 +30,15 @@ is.dataset <- function (x) inherits(x, "CrunchDataset")
 #' Name, alias, and description for Crunch objects
 #'
 #' @param x a Dataset or Variable.
-#' @param object Same as \code{x} but for the \code{alias} method, in order to
-#' match the generic from another package. Note that \code{alias} is only
-#' defined for Variables.
+#' @param object Same as `x` but for the `alias` method, in order to
+#' match the generic from another package. Note that `alias` and `digits` are
+#' only defined for Variables.
 #' @param value For the setters, a length-1 character vector to assign
 #' @return Getters return the character object in the specified slot; setters
-#' return \code{x} duly modified.
+#' return `x` duly modified.
 #' @name describe
-#' @aliases describe name name<- description description<- alias<- startDate startDate<- endDate endDate<- notes notes<-
-#' @seealso \code{\link{Categories}} \code{\link{describe-catalog}}
+#' @aliases describe name name<- description description<- alias<- startDate startDate<- endDate endDate<- notes notes<- digits digits<-
+#' @seealso [`Categories`] [`describe-catalog`]
 NULL
 
 #' @rdname describe
@@ -88,6 +88,48 @@ setMethod("notes<-", "CrunchDataset", function (x, value) {
     invisible(setEntitySlot(x, "notes", value))
 })
 
+
+#' Get and set the primary key for a Crunch dataset
+#'
+#' A primary key is a variable in a dataset that has a unique value for every
+#' row. A variable must be either numeric or text type and have no duplicate or
+#' missing values. A primary key on a dataset causes updates to that dataset
+#' that have the rows with the same primary key value(s) as the first dataset
+#' to update the existing rows rather than inserting new ones.
+#'
+#' @param x a Dataset
+#' @param value For the setter, a single Variable to use as the primary key or
+#' `NULL` to remove the primary key.
+#' @return Getter returns the Variable object that is used as the primary key
+#' (`NULL` if there is no primary key); setter returns `x` duly modified.
+#' @name pk
+#' @aliases pk pk<-
+NULL
+
+#' @rdname pk
+#' @export
+setMethod("pk", "CrunchDataset", function (x)  {
+    pk <- ShojiEntity(crGET(shojiURL(x, "fragments", "pk")))$pk
+    if (length(pk)) {
+        return(x[[pk[[1]]]])
+    } else {
+        return(NULL)
+    }
+})
+#' @rdname pk
+#' @export
+setMethod("pk<-", "CrunchDataset", function (x, value) {
+    if (is.null(value)) {
+        crDELETE(shojiURL(x, "fragments", "pk"))
+    } else {
+        payload <- toJSON(list(pk=I(self(value))))
+        crPOST(shojiURL(x, "fragments", "pk"), body=payload)
+    }
+
+    invisible(x)
+})
+
+
 trimISODate <- function (x) {
     ## Drop time from datestring if it's only a date
     if (is.character(x) && nchar(x) > 10 && endsWith(x, "T00:00:00+00:00")) {
@@ -108,7 +150,7 @@ as.dataset <- function (x, tuple=DatasetTuple()) {
 #' @return integer vector of length 2, indicating the number of rows and
 #' non-hidden variables in the dataset. Array subvariables are excluded from
 #' the column count.
-#' @seealso \code{\link[base]{dim}}
+#' @seealso [base::dim()]
 #' @name dim-dataset
 NULL
 
@@ -145,14 +187,15 @@ setMethod("tuple<-", "CrunchDataset", function (x, value) {
 
 #' Get a fresh copy from the server
 #'
-#' Crunch objects usually keep themselves in sync with the server when you
-#' manipulate them, but sometimes they can drift. Maybe someone else has
+#' Crunch objects generally keep themselves in sync with the server when you
+#' manipulate them, but some operations cause the local version to diverge from
+#' the version on the server. For instance, someone else may have
 #' modified the dataset you're working on, or maybe
 #' you have modified a variable outside of the context of its dataset.
 #' refresh() allows you to get back in sync.
 #'
 #' @param x pretty much any Crunch object
-#' @return a new version of \code{x}
+#' @return a new version of `x`
 #' @name refresh
 #' @aliases refresh
 #' @importFrom httpcache dropCache
@@ -186,17 +229,17 @@ setMethod("refresh", "CrunchDataset", function (x) {
 #'
 #' These methods delete entities, notably Datasets and Variables within them,
 #' from the server. This action is permanent and cannot be undone, so it
-#' should not be done lightly. Consider instead using \code{archive}
-#' for datasets and \code{\link{hide}} for variables.
+#' should not be done lightly. Consider instead using `archive`
+#' for datasets and `hide` for variables.
 #'
 #' Deleting requires confirmation. In an interactive session, you will be asked
 #' to confirm. To avoid that prompt, or to delete objects from a
-#' non-interactive session, wrap the call in \code{\link{with_consent}} to give
+#' non-interactive session, wrap the call in [with_consent()] to give
 #' your permission to delete.
 #'
 #' @param x a Crunch object
 #' @param ... additional arguments, in the generic
-#' @seealso \code{\link{hide}} \code{\link{deleteDataset}}
+#' @seealso [hide] [deleteDataset]
 #' @name delete
 #' @aliases delete
 NULL
@@ -215,8 +258,8 @@ as.list.CrunchDataset <- function (x, ...) {
 }
 
 #' See the appended batches of this dataset
-#' @param x a \code{CrunchDataset}
-#' @return a \code{BatchCatalog}
+#' @param x a `CrunchDataset`
+#' @return a `BatchCatalog`
 #' @export
 batches <- function (x) BatchCatalog(crGET(shojiURL(x, "catalogs", "batches")))
 
@@ -257,12 +300,11 @@ cubeURL <- function (x) {
 #' editing variables' metadata, it is helpful to access these variable catalogs
 #' more directly.
 #'
-#' \code{variables} gives just the active variables in the dataset, while
-#' \code{allVariables}, as the name suggests, yields all variables, including
-#' hidden variables.
+#' `variables` gives just the active variables in the dataset, while
+#' `allVariables` returns all variables, including hidden variables.
 #' @param x a Dataset
 #' @param value For the setters, a VariableCatalog to assign.
-#' @return Getters return VariableCatalog; setters return \code{x} duly
+#' @return Getters return VariableCatalog; setters return `x` duly
 #' modified.
 #' @name dataset-variables
 #' @aliases dataset-variables variables variables<- allVariables allVariables<-
@@ -286,15 +328,45 @@ setMethod("allVariables<-", c("CrunchDataset", "VariableCatalog"),
 setMethod("hidden", "CrunchDataset", function (x) hidden(allVariables(x)))
 
 
-webURL <- function (x) {
+APIToWebURL <- function (x) {
     ## URL to view this dataset in the web app
     stopifnot(is.dataset(x))
     return(paste0(absoluteURL("/", getOption("crunch.api")), "dataset/", id(x)))
 }
 
+webToAPIURL <- function (url) {
+    id <- sub("^https.*?/dataset/([0-9a-f]+)/.*$", "\\1", url)
+    if (identical(id, url)) {
+        halt("Not a valid web app URL")
+    }
+    path <- paste0("datasets/", id, "/")
+    return(absoluteURL(path, getOption("crunch.api")))
+}
+
+#' View a Dataset in the Web Application
+#'
+#' Convenience function that will use your system's "open" command to open
+#' a dataset in our web application in your default browser.
+#'
+#' Note that this function does not do anything on Windows.
+#'
+#' @param dataset a CrunchDataset
+#' @return Nothing; called for side effect of opening your web browser.
+#' @export
+webApp <- function (dataset) {
+    if (.Platform$OS.type == "unix") {
+        cmd <- ifelse(grepl("apple", R.version$platform), "open", "xdg-open")
+        url <- APIToWebURL(dataset)
+        system_call(cmd, url)
+    }
+}
+
+## Pass through for test mocking
+system_call <- function (...) system2(...)
+
 #' as.environment method for CrunchDataset
 #'
-#' This method allows you to \code{eval} within a Dataset.
+#' This method allows you to `eval` within a Dataset.
 #'
 #' @param x CrunchDataset
 #' @return an environment in which named objects are (promises that return)
@@ -316,11 +388,11 @@ setMethod("as.environment", "CrunchDataset", function (x) {
     crPOST(release_url, drop=dropCache(self(dataset)))
 }
 
-#' Change the owner of a dataset
+#' Get and set the owner of a dataset
 #'
 #' @param x CrunchDataset
 #' @param value For the setter, either a URL (character) or a Crunch object
-#' with a \code{self} method. Users and Projects are valid objects to assign
+#' with a `self` method. Users and Projects are valid objects to assign
 #' as dataset owners.
 #' @return The dataset.
 #' @name dataset-owner
@@ -348,11 +420,11 @@ setMethod("owner<-", "CrunchDataset", function (x, value) {
 #' Get and set "archived" and "published" status of a dataset
 #'
 #' "Archived" datasets are excluded from some views. "Draft" datasets are
-#' visible only to editors. "Published" is the inverse of "Draft", i.e.
-#' \code{is.draft(x)} entails \code{!is.published(x)}. These properties are
-#' accessed and set with the "is" methods. The verb functions \code{archive}
-#' and \code{publish} are alternate versions of the setters (at least in the
-#' \code{TRUE} direction).
+#' visible only to editors, while published datasets are available to all viewers.
+#' A dataset can either be published or in draft, but not both.
+#' These properties are accessed and set with the "is" methods. You can also
+#' set the properties by assigning into the function. The verb functions
+#' `archive` and `publish` are alternate versions of the setters.
 #'
 #' @param x CrunchDataset
 #' @param value logical
@@ -361,6 +433,26 @@ setMethod("owner<-", "CrunchDataset", function (x, value) {
 #' inverses. The setters return the dataset.
 #' @name archive-and-publish
 #' @aliases archive is.archived is.draft is.published is.archived<- is.draft<- is.published<- publish
+#' @examples
+#' \dontrun{
+#' ds <- loadDataset("mtcars")
+#' is.draft(ds)     # FALSE
+#' is.published(ds) # TRUE
+#' identical(is.draft(ds), !is.published(ds))
+#' # Can make a dataset a "draft" by:
+#' is.draft(ds) <- TRUE
+#' is.published(ds) # FALSE
+#' # Could also have set is.published(ds) <- FALSE
+#' # Now, can go the other way by setting is.draft, is.published, or:
+#' ds <- publish(ds)
+#' is.published(ds) # TRUE
+#'
+#' is.archived(ds)  # FALSE
+#' is.archived(ds) <- TRUE
+#' is.archived(ds)  # TRUE
+#' # Could have achieved the same effect by:
+#' ds <- archive(ds)
+#' }
 NULL
 
 #' @rdname archive-and-publish
@@ -376,6 +468,7 @@ setMethod("is.published", "CrunchDataset", function (x) tuple(x)$is_published %|
 #' @rdname archive-and-publish
 #' @export
 setMethod("is.archived<-", c("CrunchDataset", "logical"), function (x, value) {
+    stopifnot(is.TRUEorFALSE(value))
     setTupleSlot(x, "archived", value)
 })
 #' @rdname archive-and-publish
@@ -387,11 +480,13 @@ archive <- function (x) {
 #' @rdname archive-and-publish
 #' @export
 setMethod("is.draft<-", c("CrunchDataset", "logical"), function (x, value) {
+    stopifnot(is.TRUEorFALSE(value))
     setTupleSlot(x, "is_published", !value)
 })
 #' @rdname archive-and-publish
 #' @export
 setMethod("is.published<-", c("CrunchDataset", "logical"), function (x, value) {
+    stopifnot(is.TRUEorFALSE(value))
     setTupleSlot(x, "is_published", value)
 })
 #' @rdname archive-and-publish
@@ -404,23 +499,23 @@ publish <- function (x) {
 #' View and modify dataset-level settings
 #'
 #' These methods allow access and control over dataset settings. Currently
-#' supported settings include 'viewers_can_export', 'viewers_can_share', and
-#' 'viewers_can_change_weight', which govern specific authorizations for users
-#' with view-only access to this datset; and 'weight', which is the default
-#' weight variable for the dataset, the one that will be set for newly shared
-#' users and the one that viewers will have always on if they are not authorized
-#' to change weights. Additional settings will be added in the future. See
-#' \url{http://docs.crunch.io/#fragments}, under 'Settings', for an up-to-date
+#' supported settings include:
+#' * User Authorizations for view-only users ('viewers_can_export', 'viewers_can_share', and
+#' 'viewers_can_change_weight'); and
+#' * 'weight', which determines the default weighting variable for the dataset
+#'  Additional settings will be added in the future. See
+#' http://docs.crunch.io/#fragments, under 'Settings', for an up-to-date
 #' list of settings supported throughout the Crunch system. Clients may also
 #' provide and use custom settings if they choose.
 #' @param x CrunchDataset
 #' @param value A settings object (`ShojiEntity`), for the setter
 #' @return The getter returns a settings object (`ShojiEntity`). The setter
-#' returns the dataset (`x`).
+#' returns the dataset (`x`), duly modified.
 #' @examples
 #' \dontrun{
 #' settings(ds)
 #' settings(ds)$viewers_can_export <- TRUE
+#' settings(ds)$weight <- ds$myWeightVariable
 #' }
 #' @export
 settings <- function (x) {
@@ -440,7 +535,7 @@ settings <- function (x) {
 #'
 #' You can designate a dashboard that will show when the dataset is loaded in
 #' the Crunch web app. This dashboard could be a Crunch Shiny ("Crunchy") app,
-#' a CrunchBox, or something else.
+#' a CrunchBox, an RMarkdown website or something else.
 #'
 #' @param x CrunchDataset
 #' @param value For the setter, a URL (character) or `NULL` to unset the

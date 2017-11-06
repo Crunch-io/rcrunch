@@ -11,14 +11,13 @@
 #' @export
 #' @importFrom httpcache halt
 addVariables <- function (dataset, ...) {
-    var_catalog_url <- shojiURL(dataset, "catalogs", "variables")
-
+     var_catalog_url <- shojiURL(dataset, "catalogs", "variables")
     ## Get vardefs and validate
     vardefs <- list(...)
     ## Check for whether a list of vardefs passed
     if (length(vardefs) == 1 &&
-        is.list(vardefs[[1]]) &&
-        !inherits(vardefs[[1]], "VariableDefinition")) {
+            is.list(vardefs[[1]]) &&
+            !inherits(vardefs[[1]], "VariableDefinition")) {
 
         vardefs <- vardefs[[1]]
     }
@@ -36,23 +35,11 @@ addVariables <- function (dataset, ...) {
 
     ## Upload one at a time.
     ## TODO: Server should support bulk insert
+
     new_var_urls <- lapply(vardefs,
         function (x) try(POSTNewVariable(var_catalog_url, x), silent=TRUE))
-        ## Be silent so we can throw the errors together at the end
-
-    ## Check for errors
-    errs <- vapply(new_var_urls, is.error, logical(1))
-    if (any(errs)) {
-        if (length(errs) == 1) {
-            ## Just one variable added. Throw its error.
-            rethrow(new_var_urls[[1]])
-        }
-        halt("The following variable definition(s) errored on upload: ",
-            paste(which(errs), collapse=", "), "\n",
-            paste(unlist(lapply(new_var_urls[errs], errorMessage)), sep="\n"))
-        ## Could make better error message, return the URLs of the variables
-        ## that errored so that user can delete them and start over, etc.
-    }
+    ## Be silent so we can throw the errors together at the end
+    checkVarDefErrors(new_var_urls)
 
     dataset <- refresh(dataset)
     invisible(dataset)
@@ -130,4 +117,18 @@ POSTNewVariable <- function (catalog_url, variable) {
     }
     out <- do.POST(variable)
     invisible(out)
+}
+
+
+checkVarDefErrors <- function(new_var_urls) {
+    errs <- vapply(new_var_urls, is.error, logical(1))
+    if (any(errs)) {
+        if (length(errs) == 1) {
+            ## Just one variable added. Throw its error.
+            rethrow(new_var_urls[[1]])
+        }
+        halt("The following variable definitions errored on upload: ",
+            paste(which(errs), collapse = ", ")
+        )
+    }
 }

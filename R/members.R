@@ -60,8 +60,8 @@ setMethod("members<-", c("CrunchTeam", "character"), function (x, value) {
 #' @param x PermissionCatalog or MemberCatalog
 #' @param value For the setter, logical: should the indicated users be allowed
 #' to edit the associated object?
-#' @return \code{is.editor} returns a logical vector corresponding to whether
-#' the users in the catalog can edit or not. \code{is.editor<-} returns the
+#' @return `is.editor` returns a logical vector corresponding to whether
+#' the users in the catalog can edit or not.`is.editor<-` returns the
 #' catalog, modified.
 #' @name is.editor
 #' @aliases is.editor is.editor<-

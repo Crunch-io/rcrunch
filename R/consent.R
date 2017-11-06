@@ -2,13 +2,13 @@
 #'
 #' Potentially destructive actions require that you confirm that you really
 #' want to do them. If you're running a script and you know that you want to
-#' perform those actions, you can preemptively provide \code{consent}.
+#' perform those actions, you can preemptively provide `consent`.
 #'
 #' @param expr Code to evaluate with consent
-#' @return \code{consent} returns an S3 class "contextManager" object, which
-#' you can use with \code{with}. \code{with_consent} evaluates its arguments
-#' inside the \code{consent} context.
-#' @seealso \link{with-context-manager} \link{ContextManager}
+#' @return `consent` returns an S3 class "contextManager" object, which
+#' you can use with `with`. `with_consent` evaluates its arguments
+#' inside the `consent` context.
+#' @seealso [`with-context-manager`] [`ContextManager`]
 #' @examples
 #' \dontrun{
 #' with(consent(), delete(ds))
@@ -29,7 +29,7 @@ with_consent <- function (expr) {
 askForPermission <- function (prompt="") {
     ## If options explicitly say we don't need to ask, bail.
     ## Have to check that it's FALSE and not NULL. Silence doesn't mean consent.
-    must.confirm <- getOption("crunch.require.confirmation") %||% TRUE
+    must.confirm <- getOption("crunch.require.confirmation", TRUE)
     if (must.confirm == FALSE) return(TRUE)
 
     ## If we're here but not interactive, we can't give permission.
@@ -37,7 +37,7 @@ askForPermission <- function (prompt="") {
     prompt <- paste(prompt, "(y/n) ")
     proceed <- ""
     while (!(proceed %in% c("y", "n"))) {
-        proceed <- tolower(readline(prompt))
+        proceed <- tolower(read_input(prompt))
     }
     return(proceed == "y")
 }

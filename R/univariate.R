@@ -1,27 +1,20 @@
 #' Univariate statistics on Crunch objects
 #'
-#' @param x a NumericVariable, or for \code{min} and \code{max}, possibly a
+#' @param x a NumericVariable, or for `min` and `max`, a NumericVariable or
 #' DatetimeVariable
-#' @param ... additional arguments to \code{mean}
+#' @param ... additional arguments to summary statistic function
 #' @param na.rm logical: exclude missings?
-#' @seealso \code{\link[base]{mean}} \code{\link[stats]{sd}} \code{\link[stats]{median}} \code{\link[base]{min}} \code{\link[base]{max}}
+#' @seealso [base::mean()] [stats::sd()] [stats::median()] [base::min()] [base::max()]
 #' @name crunch-uni
 #' @aliases mean sd median min max
 NULL
 
 .summary.stat <- function (x, stat, na.rm=FALSE, ...) {
-    ## Get a single stat from the summary object
-    # summ <- getSummary(x)
-    # m <- summ[[stat]]
-    # if (!na.rm && summ[['missing_count']] > 0) {
-    #     m <- NA_real_
-    # }
-    # return(m)
-
     query <- list(
         query=toJSON(list(dimensions=list(),
             measures=list(q=registerCubeFunctions()[[stat]](x)))),
         filter=toJSON(zcl(activeFilter(x)))
+        ## TODO: this should explicitly specify the weight
     )
     cube <- CrunchCube(crGET(cubeURL(x), query=query))
     if (!na.rm && cube$result$measures$q[['n_missing']] > 0) {
@@ -56,17 +49,20 @@ setMethod("sd", "NumericVariable",
 ## Future-proofing for change to median signature in R >= 3.4
 is.R.3.4 <- "..." %in% names(formals(median))
 
-## Apparently these don't need to be exported?
-setMethod("median", "CrunchVariable", ifelse(is.R.3.4,
-    function (x, na.rm, ...) {
-        halt(dQuote('median'), " is not defined for ", class(x))
-    }, function (x, na.rm) {
-        halt(dQuote('median'), " is not defined for ", class(x))
-    }))
+no_median <- function (v) {
+    if (v) return(function (x, na.rm, ...) halt(dQuote('median'), " is not defined for ", class(x)))
+    return(function (x, na.rm) halt(dQuote('median'), " is not defined for ", class(x)))
+}
 
-setMethod("median", "NumericVariable", ifelse(is.R.3.4,
-    function (x, na.rm=FALSE, ...) .summary.stat(x, "median", na.rm=na.rm),
-    function (x, na.rm=FALSE) .summary.stat(x, "median", na.rm=na.rm)))
+yes_median <- function (v) {
+    if (v) return(function (x, na.rm=FALSE, ...) .summary.stat(x, "median", na.rm=na.rm))
+    return(function (x, na.rm=FALSE) .summary.stat(x, "median", na.rm=na.rm))
+}
+
+## Apparently these don't need to be exported?
+setMethod("median", "CrunchVariable", no_median(is.R.3.4))
+
+setMethod("median", "NumericVariable", yes_median(is.R.3.4))
 
 ## Can't do datetime apparently:
 # (400) Bad Request: The 'cube_quantile' function requires argument 0 be of

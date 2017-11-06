@@ -66,6 +66,16 @@ setMethod("[", c("Categories", "ANY"), function (x, i, ...) {
 
 #' @rdname Categories
 #' @export
+setMethod("[", c("Categories", "character"), function (x, i, ...) {
+    indices <- match(i, names(x))
+    if (any(is.na(indices))) {
+        halt("subscript out of bounds: ", serialPaste(i[is.na(indices)]))
+    }
+    callNextMethod(x, i=indices)
+})
+
+#' @rdname Categories
+#' @export
 setMethod("[", c("Categories", "numeric"), function (x, i, ...) {
     invalid.indices <- setdiff(abs(i), seq_along(x@.Data))
     if (length(invalid.indices)) {
@@ -154,14 +164,21 @@ setMethod("na.omit", "Categories", function (object, ...) {
 
 #' is.na for Categories
 #'
+#' Crunch categorical variables allow you to set multiple categories as missing.
+#' For instance, you might have "not answered" and "doesn't know" both coded as
+#' missing. This function returns a logical vector of all dataset entries that
+#' fall into any of the missing categories. It also allows you to append
+#' additional categories to the list of missing categories using the setter.
+#'
 #' @param x Categories or a single Category
-#' @param value To change the missingness of categories, supply either (1)
-#' a logical vector of equal length of the categories (or length 1 for the
-#' Category method), or (2) the names of the categories to mark as missing.
+#' @param value To change the missingness of categories, supply either:
+#' 1. a logical vector of equal length of the categories (or length 1 for the
+#' Category method); or
+#' 1. the names of the categories to mark as missing.
 #' If supplying the latter, any categories already indicated as missing will
 #' remain missing.
 #' @return Getters return logical, a named vector in the case of the Categories
-#' method; setters return \code{x} duly modified.
+#' method; setters return `x` duly modified.
 #' @name is-na-categories
 NULL
 
@@ -169,6 +186,44 @@ NULL
 #' @aliases is-na-categories
 #' @export
 setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical(1), USE.NAMES=FALSE), .Names=names(x)))
+
+#' is.selected for Categories
+#'
+#' Crunch Multiple Response variables identify one or more categories as "selected".
+#' These methods allow you to get or set which categories should indicate a selection.
+#'
+#' @param x Categories or a single Category
+#' @param value A logical vector indicating whether the category should be selected.
+#' For a single category the value should be either `TRUE` or `FALSE` to change the
+#' selection status for a `Categories` object, supply a logical vector which is the
+#' same length as the number of categories.
+#' @return Getters return a logical vector indicating selection status. Setters return
+#' the `Categories` or `Category` object, duly modified.
+#' @name is-selected-categories
+#' @aliases is.selected<-
+NULL
+
+#' @rdname is-selected-categories
+#' @export
+setMethod("is.selected", "Categories", function (x) structure(vapply(x, is.selected, logical(1), USE.NAMES=FALSE), .Names=names(x)))
+
+#' @rdname is-selected-categories
+#' @export
+setMethod("is.selected<-", "Categories", function (x, value) {
+    if (is.TRUEorFALSE(value)) {
+        value <- rep(value, length(x))
+    }
+    if (length(value) != length(x)) {
+        halt("You supplied ", length(value), " logical values for ", length(x), " Categories.")
+    }
+
+    x@.Data <- mapply(function (x, value) {
+            is.selected(x) <- value
+            return(x)
+        }, x=x@.Data, value=value, USE.NAMES=FALSE, SIMPLIFY=FALSE)
+    return(x)
+})
+
 
 n2i <- function (x, cats, strict=TRUE) {
     ## Convert x from category names to the corresponding category ids
@@ -223,7 +278,7 @@ setMethod("is.na<-", c("Categories", "logical"), function (x, value) {
 })
 
 addNoDataCategory <- function (variable) {
-    cats <- c(categories(variable), Category(data=.no.data))
+    cats <- ensureNoDataCategory(categories(variable))
     if (is.subvariable(variable)) {
         ## Have to point at parent
         crPATCH(absoluteURL("../../", self(variable)),
@@ -235,7 +290,88 @@ addNoDataCategory <- function (variable) {
     return(variable)
 }
 
+ensureNoDataCategory <- function (cats) {
+    if (-1 %in% ids(cats)) {
+        # check "No Data"?
+        return(cats)
+    } else {
+        return(c(cats, Category(data=.no.data)))
+    }
+}
+
 setMethod("lapply", "Categories", function (X, FUN, ...) {
     X@.Data <- lapply(X@.Data, FUN, ...)
     return(X)
 })
+
+#' Change the id of a category for a categorical variable
+#'
+#' Changes the id of a category from an existing value to a new one.
+#' The variable can be a categorical, categorical array, or multiple response
+#' variable. The category changed will have the same numeric value and missing
+#' status as before. The one exception to this is if the numeric value is the
+#' same as the id, then the new numeric value will be the same as the new id.
+#'
+#' @param variable the variable in a crunch dataset that will be changed (note: the variable must be categorical, categorical array, or multiple response)
+#' @param from the (old) id identifying the category you want to change
+#' @param to the (new) id for the category
+#' @return `variable` with category `from` and all associated data values mapped to id `to`
+#' @examples
+#' \dontrun{
+#' ds$country <- changeCategoryID(ds$country, 2, 6)
+#' }
+#' @export
+changeCategoryID <- function (variable, from, to) {
+    if (!has.categories(variable)) {
+        halt("The variable ", name(variable), " doesn't have categories.")
+    }
+
+    if (!is.numeric(from) & length(from) == 1) {
+        halt("from should be a single numeric")
+    }
+
+    if (!is.numeric(to) &  length(to) == 1) {
+        halt("to should be a single numeric")
+    }
+
+    pos.from <- match(from, ids(categories(variable)))
+    if (is.na(pos.from)) {
+        halt("No category with id ", from)
+    }
+
+    if (to %in% ids(categories(variable))) {
+        halt("Id ", to, " is already a category, please provide a new category id.")
+    }
+
+    ## Add new category
+    newcat <- categories(variable)[[pos.from]]
+    # if the old id matches the old numeric value, likely the user wants these
+    # to be the same, so change the new numeric value to be the same as the
+    # new id.
+    if (newcat$id == newcat$numeric_value %||% FALSE) {
+        newcat$numeric_value <- to
+    }
+    newcat$id <- to
+
+    names(categories(variable))[pos.from] <- "__TO_DELETE__"
+    categories(variable) <- c(categories(variable), newcat)
+
+    ## Move data to that new id
+    if (is.Categorical(variable)) {
+        variable[variable == from] <- to
+    } else if (is.Array(variable)) {
+        # If the variable is an array, then lapply over the subvariables
+        # TODO: change iteration over shojicatalogs to allow iterating over the variable directly
+        lapply(names(variable), function (subvarname) {
+            variable[[subvarname]][variable[[subvarname]] == from] <- to
+        })
+    }
+
+    ## Delete old category
+    keep <- seq_along(categories(variable))
+    keep[pos.from] <- length(keep)
+    keep <- keep[-length(keep)]
+    categories(variable) <- categories(variable)[keep]
+
+    invisible(variable)
+}

@@ -13,7 +13,6 @@
 \alias{value,Category-method}
 \alias{value<-,Category-method}
 \alias{id,Category-method}
-\alias{is.selected,Category-method}
 \title{Category attributes}
 \usage{
 \S4method{name}{Category}(x)
@@ -27,8 +26,6 @@
 \S4method{value}{Category}(x) <- value
 
 \S4method{id}{Category}(x)
-
-\S4method{is.selected}{Category}(x)
 }
 \arguments{
 \item{x}{a Category}
@@ -42,7 +39,7 @@ logical indicating whether this Category is a "selected" dichotomy. Setters
 return \code{x} duly modified.
 }
 \description{
-Category attributes
+Functions to access and set category attributes.
 }
 \seealso{
 \code{\link{Categories}} \code{\link{dichotomize}}

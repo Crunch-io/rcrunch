@@ -1,9 +1,9 @@
 #' Get the project catalog
 #'
-#' @param x a \code{ShojiObject} that has a project catalog associated. If omitted,
-#' the default value for \code{x} means that you will load the user's primary
+#' @param x a `ShojiObject` that has an associated project catalog. If omitted,
+#' the default value for `x` means that you will load the user's primary
 #' project catalog. (Currently, there are no other project catalogs to load.)
-#' @return An object of class \code{ProjectCatalog}.
+#' @return An object of class `ProjectCatalog`.
 #' @name projects
 #' @export
 #' @examples
@@ -46,10 +46,10 @@ setMethod("[[<-", c("ProjectCatalog", "character", "missing", "list"),
 #' @param members Optional character vector of emails or user URLs to add as
 #' project members.
 #' @param catalog ProjectCatalog in which to create the new project. There is
-#' only one project catalog currently, \code{projects()}, but this is left here
-#' so that all \code{new*} functions follow the same pattern.
+#' only one project catalog currently, [projects()], but this is left here
+#' so that all `new*` functions follow the same pattern.
 #' @param ... Additional project attributes to set
-#' @return A \code{CrunchProject} object.
+#' @return A `CrunchProject` object.
 #' @examples
 #' \dontrun{
 #' proj <- newProject("A project name")
@@ -148,9 +148,13 @@ setMethod("delete", "CrunchProject", function (x, ...) {
     return(x)
 }
 
-#' A project's icon
-#' @param x a \code{CrunchProject}
-#' @param value charcter file path of the icon image file to set
+#' Get or set a project's icon
+#'
+#' This function allows you to change a project's icon. Note that you
+#' must first upload the icon to a website, as this function does not
+#' allow you to upload a local file.
+#' @param x a `CrunchProject`
+#' @param value character file path of the icon image file to set
 #' @return The URL of the project's icon. The setter returns the
 #' project after having uploaded the specified file as the new icon.
 #' @name project-icon

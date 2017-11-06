@@ -7,7 +7,7 @@
 \title{Collection of Variables within a Dataset}
 \description{
 A VariableCatalog contains references to all variables in a dataset, plus
-some descriptive metadata about each. VariableCatalogs also contain a
+some descriptive metadata about each. Each VariableCatalog also contains a
 \code{\link{VariableOrder}} that governs how variables within it are
 organized.
 }

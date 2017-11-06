@@ -1,10 +1,9 @@
 context("Variable catalog")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     varcat <- allVariables(ds)
     varorder <- ordering(varcat)
-
     test_that("VariableCatalog instantiates from Shoji", {
         expect_is(varcat, "VariableCatalog")
     })
@@ -29,15 +28,16 @@ with_mock_HTTP({
         expect_is(hidden(varcat), "VariableCatalog")
         expect_identical(urls(active(varcat)),
             c("https://app.crunch.io/api/datasets/1/variables/gender/",
+            "https://app.crunch.io/api/datasets/1/variables/location/",
             "https://app.crunch.io/api/datasets/1/variables/mymrset/",
             "https://app.crunch.io/api/datasets/1/variables/textVar/",
             "https://app.crunch.io/api/datasets/1/variables/starttime/",
             "https://app.crunch.io/api/datasets/1/variables/catarray/"))
-        expect_length(active(varcat), 5)
+        expect_length(active(varcat), 6)
         expect_identical(urls(hidden(varcat)),
             "https://app.crunch.io/api/datasets/1/variables/birthyr/")
         expect_length(hidden(varcat), 1)
-        expect_length(varcat, 6)
+        expect_length(varcat, 7)
         expect_identical(active(hidden(varcat)), hidden(active(varcat)))
     })
 
@@ -70,34 +70,102 @@ with_mock_HTTP({
     })
 
     test_that("attribute getters", {
-        expect_identical(names(varcat)[1:3],
-            c("Birth Year", "Gender", "mymrset"))
+        expect_identical(names(varcat)[1:4],
+            c("Birth Year", "Gender", "Categorical Location", "mymrset"))
         expect_identical(aliases(varcat)[1:2], c("birthyr", "gender"))
-        expect_identical(types(varcat)[1:3],
-            c("numeric", "categorical", "multiple_response"))
-        expect_identical(descriptions(varcat[1:3]),
-            c(NA, "Gender", "Please select all that apply"))
-        expect_identical(notes(varcat[1:3]),
-            c("Asked instead of age", "", ""))
+        expect_identical(types(varcat)[1:4],
+            c("numeric", "categorical", "categorical", "multiple_response"))
+        expect_identical(descriptions(varcat[1:4]),
+            c(NA, "Gender", "Location test", "Please select all that apply"))
+        expect_identical(notes(varcat[1:4]),
+            c("Asked instead of age", "", "", ""))
     })
 
     test_that("attribute setters", {
-        expect_PATCH(names(varcat)[1:3] <- c("Year of birth", "Gender", "Start time"),
+        expect_PATCH(names(varcat)[1:4] <- c("Year of birth", "Gender", "Loc", "Start time"),
             "https://app.crunch.io/api/datasets/1/variables/",
             '{"https://app.crunch.io/api/datasets/1/variables/birthyr/":{"name":"Year of birth"},',
+            '"https://app.crunch.io/api/datasets/1/variables/location/":{"name":"Loc"},',
             '"https://app.crunch.io/api/datasets/1/variables/mymrset/":{"name":"Start time"}}')
-        expect_PATCH(notes(varcat)[1:3] <- c("Asked instead of age", "", "ms"),
+        expect_PATCH(notes(varcat)[1:4] <- c("Asked instead of age", "", "", "ms"),
             "https://app.crunch.io/api/datasets/1/variables/",
             '{"https://app.crunch.io/api/datasets/1/variables/mymrset/":{"notes":"ms"}}')
     })
 
     test_that("show method", {
-        expect_output(varcat[1:3],
+        expect_output(varcat[1:4],
             get_output(data.frame(
-                alias=c("birthyr", "gender", "mymrset"),
-                name=c("Birth Year", "Gender", "mymrset"),
-                type=c("numeric", "categorical", "multiple_response")
+                alias=c("birthyr", "gender", "location", "mymrset"),
+                name=c("Birth Year", "Gender", "Categorical Location", "mymrset"),
+                type=c("numeric", "categorical", "categorical", "multiple_response")
             )))
+    })
+
+    test_that("VariableCatalog as.data.frame method", {
+        expect_identical(as.data.frame(varcat[1:3]),
+            data.frame(
+                alias = c("birthyr", "gender", "location"),
+                name  = c("Birth Year", "Gender", "Categorical Location"),
+                type  = c("numeric", "categorical", "categorical"),
+                stringsAsFactors = FALSE
+            ))
+        expect_identical(as.data.frame(varcat[1:3], row.names=urls(varcat[1:3])),
+            data.frame(
+                alias = c("birthyr", "gender", "location"),
+                name  = c("Birth Year", "Gender", "Categorical Location"),
+                type  = c("numeric", "categorical", "categorical"),
+                row.names=urls(varcat[1:3]),
+                stringsAsFactors = FALSE
+            ))
+    })
+    test_that("as.data.frame method returns all fields when keys = TRUE", {
+        varDF <- as.data.frame(varcat, keys = TRUE)
+        expect_identical(
+            names(varDF),
+            c("name", "discarded", "alias", "type", "id", "description",
+                "notes", "subvariables", "subvariables_catalog", "resolution",
+                "rollup_resolution")
+        )
+        expect_identical(
+            varDF$subvariables[c(3,4,7)],
+            list(NA,
+                list("mymrset/subvariables/subvar2/",
+                    "mymrset/subvariables/subvar1/",
+                    "mymrset/subvariables/subvar3/"),
+                list("mymrset/subvariables/subvar2/",
+                    "mymrset/subvariables/subvar1/",
+                    "mymrset/subvariables/subvar3/"))
+        )
+    })
+    test_that("list columns are homogeneous type", {
+        skip("TODO: ensure something about the elements of a 'list column'")
+        vc2 <- varcat
+        vc2@index[[3]]$subvariables <- "just/one/subvar"
+        vc2DF <- as.data.frame(vc2, keys = "all")
+        expect_identical(
+            vc2DF$subvariables[c(3,4,7)],
+            list(list("just/one/subvar"),
+                list("mymrset/subvariables/subvar2/",
+                    "mymrset/subvariables/subvar1/",
+                    "mymrset/subvariables/subvar3/"),
+                list("mymrset/subvariables/subvar2/",
+                    "mymrset/subvariables/subvar1/",
+                    "mymrset/subvariables/subvar3/"))
+        )
+    })
+
+    test_that("As.data.frame method errors correctly", {
+        expect_error(as.data.frame(varcat[1:3], keys = "Not a field at all"),
+            paste(dQuote("Not a field at all"), "is an invalid key for catalogs of class VariableCatalog.")
+        )
+        expect_error(as.data.frame(varcat[1:3], keys = c("banana", "fooey")),
+            paste(
+                serialPaste(dQuote(c("banana", "fooey"))),
+                "are invalid keys for catalogs of class VariableCatalog.")
+        )
+        expect_error(as.data.frame(varcat[1:3], keys = c("name", "fooey")),
+            paste(dQuote("fooey"), "is an invalid key for catalogs of class VariableCatalog.")
+        )
     })
 })
 

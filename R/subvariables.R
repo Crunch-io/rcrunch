@@ -1,21 +1,22 @@
 #' Subvariables in Array Variables
 #'
-#' Multiple-response and categorical-array variables contain a set of
-#' subvariables within them. The Subvariables class encapsulates them.
+#' Multiple-response and categorical-array variables are higher order variables which
+#' are made up of sets of subvariables. These methods allow you to retrieve and change
+#' the subvariables of a multiple-response or categorical-array variable.
 #'
 #' Subvariables can be accessed from array variables (including multiple
-#' response) with the \code{subvariables} method. They can be assigned back
-#' with the \code{subvariables<-} setter, but there are limitations to what
+#' response) with the `subvariables` method. They can be assigned back
+#' with the `subvariables<-` setter, but there are limitations to what
 #' is supported. Specifically, you can reorder subvariables, but you cannot
-#' add or remove subvariables by \code{subvariables<-} assignment. See
-#' \code{\link{deleteSubvariable}} to remove subvariables from an array.
+#' add or remove subvariables by `subvariables<-` assignment. See
+#' [`deleteSubvariable`] to remove subvariables from an array.
 #'
-#' Subvariables have a \code{names} attribute that can be accessed, showing
+#' Subvariables have a `names` attribute that can be accessed, showing
 #' the display names of the subvariables. These can be set with the
-#' \code{names<-} method.
+#' `names<-` method.
 #'
 #' Finally, subvariables can be accessed as regular (categorical) variables
-#' with the \code{$} and \code{[[} extract methods.
+#' with the `$` and `[[` extract methods.
 #'
 #' See the vignette on array variables for further details and examples.
 #'
@@ -24,7 +25,7 @@
 #'
 #' @name Subvariables
 #' @aliases Subvariables subvariables subvariables<-
-#' @seealso \code{\link{subvars-extract}} \code{\link{describe-catalog}} \code{\link{deleteSubvariable}} \code{vignette("array-variables", package="crunch")}
+#' @seealso [`subvars-extract`] [`describe-catalog`] [`deleteSubvariable`] `vignette("array-variables", package="crunch")`
 NULL
 
 #' @rdname Subvariables
@@ -73,15 +74,15 @@ setMethod("subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
 
 #' Extract and modify subsets of subvariables
 #'
-#' @param x Subvariables or an array Variable (which contains subvariables)
+#' @param x Subvariables or an array Variable which contains subvariables
 #' @param i which subvariables to extract
-#' @param name For \code{$}, the name (not alias) of the subvariable to
+#' @param name For `$`, the name (not alias) of the subvariable to
 #' extract
 #' @param j Invalid
 #' @param drop Invalid
 #' @param ... additional arguments
 #' @param value For updating, a CrunchExpr
-#' @return A subset of \code{x} if extracting, otherwise \code{x} duly modified
+#' @return A subset of `x` if extracting, otherwise `x` duly modified
 #' @name subvars-extract
 NULL
 
@@ -195,15 +196,31 @@ setMethod("names", "CategoricalArrayVariable", function (x) {
     getIndexSlot(subvariables(x), namekey(x))
 })
 
+## NOTE:
+## (1) The [ method returns Subvariables, not a subsetted array variable
+## (2) As a result, you cannot filter and select subvariables
+## (e.g. ds$array[ds$gender == "Male", c("subvar1", "subvar3")])
+
 #' @rdname subvars-extract
 #' @export
 setMethod("[", c("CategoricalArrayVariable", "character"), function (x, i, ...) {
-    w <- match(i, names(x))
+    w <- match(i, names(x)) ## TODO: use whichNameOrURL
     if (any(is.na(w))) {
         halt("Undefined subvariables selected: ", serialPaste(i[is.na(w)]))
     }
     return(subvariables(x)[w, ...])
 })
+#' @rdname subvars-extract
+#' @export
+setMethod("[", c("CategoricalArrayVariable", "missing", "ANY"), function (x, i, j, ...) {
+    return(subvariables(x)[j, ...])
+})
+#' @rdname subvars-extract
+#' @export
+setMethod("[", c("CategoricalArrayVariable", "missing", "character"), function (x, i, j, ...) {
+    return(x[j])
+})
+
 #' @rdname subvars-extract
 #' @export
 setMethod("[[", c("CategoricalArrayVariable", "ANY"), function (x, i, ...) {

@@ -1,20 +1,23 @@
 #' Combine categories or responses
 #'
+#' Crunch allows you to create a new categorical variable by combining
+#' the categories of another variable. For instance, you might want to
+#' recode a categorical variable with three categories small, medium, and large
+#' to one that has just small and large.
+#'
 #' @param variable Categorical, Categorical Array, or Multiple Response
 #' variable
-#' @param combinations list of named lists containing (1) "categories":
-#' category ids or names for categorical types, or for multiple response,
-#' "responses": subvariable names, aliases, or positional indices; (2) a
-#' "name" for the new category or response; and (3) optionally, other category
-#' ("missing", "numeric_value") or subvariable ("alias", "description")
-#' attributes. If \code{combinations} is omitted, the resulting variable will
-#' essentially be a copy (but see \code{link{copy}} for a more natural way to
-#' do that, if desired).
+#' @param combinations list of named lists containing
+#' 1. "categories": category ids or names for categorical types, or for multiple response,
+#' "responses": subvariable names, aliases, or positional indices;
+#' 1. a "name" for the new category or response; and
+#' 1. optionally, other category ("missing", "numeric_value") or subvariable ("alias", "description")
+#' attributes. If `combinations` is omitted, the resulting variable will
+#' essentially be a copy (but see [copy()] for a more natural way to copy variables.
 #' @param ... Additional variable metadata for the new derived variable
-#' @return A \code{\link{VariableDefinition}} that will create the new
-#' comined-category or -response derived variable. Categories/responses not
-#' referenced in \code{combinations} will be appended to the end of the
-#' combinations.
+#' @return A [`VariableDefinition`] that will create the new combined-category or
+#' -response derived variable. Categories/responses not referenced in `combinations` will be
+#' appended to the end of the combinations.
 #' @examples
 #' \dontrun{
 #' ds$fav_pet2 <- combine(ds$fav_pet, name="Pets (combined)",
@@ -195,4 +198,57 @@ combResps <- function (subvars, combs) {
     }
 
     return(combs)
+}
+
+
+#' Combine Categories in place
+#'
+#' This function allows you to combine the categories of a variable without
+#' making a copy of the variable.
+#' @param var A categorical Crunch variable
+#' @param from A character vector of categories you want to combine.
+#' @param to A character string with the destination category.
+#' @return the variable duly modified
+#' @export
+#' @seealso [combine()]
+collapseCategories <- function (var, from, to) {
+    if (!is.Categorical(var)) {
+        halt("Variable must be a categorical.")
+    }
+    if (!(length(to) == 1 && is.character(to))) {
+        halt("Destination category must be a character string of length 1.")
+    }
+    if (!(is.character(from))) {
+        halt(dQuote('from'), " must be a character vector.")
+    }
+    if (identical(from, to)) {
+        # If the user is collapsing categories into itself, no changes are
+        # neccesary so the variable is returned.
+        return(var)
+    }
+    cats <- names(categories(var))
+    missing_origin <- !(from %in% cats)
+    if (any(missing_origin)) {
+        err <- ifelse(sum(missing_origin) > 1, " are ", " is ")
+        halt(serialPaste(from[missing_origin]),
+            err, "not present in variable categories.")
+    }
+    if (!(to %in% cats)) {
+        if (length(from) == 1) {
+            #this case is equivalent to renaming a category
+            names <- names(categories(var))
+            names[names == from] <- to
+            names(categories(var)) <- names
+            return(var)
+        }
+        cats <- c(cats, to)
+        categories(var) <- c(categories(var),
+            Category(id = max(ids(categories(var))) + 1,
+            name = to)
+        )
+    }
+    from <- setdiff(from, to) #in case the user tries to collapse a category into itself
+    var[var %in% from] <- to
+    categories(var) <- categories(var)[!(cats %in% from)]
+    return(var)
 }

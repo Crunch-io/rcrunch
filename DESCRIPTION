@@ -7,27 +7,124 @@ Description: The Crunch.io service <http://crunch.io/> provides a cloud-based
     datasets from within R. Importantly, this allows technical researchers to
     collaborate naturally with team members, managers, and clients who prefer a
     point-and-click interface.
-Version: 1.16.1
-Date: 2017-04-23
-Authors@R: c(person("Neal", "Richardson", role = c("aut", "cre"),
-    email = "neal@crunch.io"))
-Author: Neal Richardson [aut, cre]
-Maintainer: Neal Richardson <neal@crunch.io>
-URL: https://github.com/Crunch-io/rcrunch
+Version: 1.18.5
+Authors@R: c(
+    person("Neal", "Richardson", role=c("aut", "cre"), email="neal@crunch.io"),
+    person("Jonathan", "Keane", role="ctb", email="jon.keane@crunch.io"),
+    person("Gordon", "Shotwell", role="ctb", email="gordon@crunch.io"))
+URL: http://crunch.io/r/crunch/, https://github.com/Crunch-io/rcrunch
 BugReports: https://github.com/Crunch-io/rcrunch/issues
 License: LGPL (>= 3)
 Depends:
     R (>= 3.0.0)
 Imports:
+    curl,
+    grDevices,
     httr (>= 1.0.0),
     httpcache (>= 0.1.4),
     jsonlite (>= 0.9.15),
-    methods,
-    curl
+    methods
 Suggests:
     covr,
-    httptest (>= 1.3.0),
-    knitr
+    devtools,
+    httptest (>= 2.0.0),
+    knitr,
+    rmarkdown,
+    rstudioapi,
+    spelling
 VignetteBuilder: knitr
-RoxygenNote: 6.0.0
+RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
+Collate:
+    'AllClasses.R'
+    'AllGenerics.R'
+    'variable-definition.R'
+    'R-to-variable.R'
+    'add-subvariable.R'
+    'add-variable.R'
+    'api.R'
+    'append-dataset.R'
+    'as-data-frame.R'
+    'auth.R'
+    'batches.R'
+    'case-variables.R'
+    'categories.R'
+    'category.R'
+    'combine-categories.R'
+    'compare-categories.R'
+    'compare-datasets.R'
+    'compare-subvariables.R'
+    'compare-variables.R'
+    'compare.R'
+    'conditional-transform.R'
+    'consent.R'
+    'context-manager.R'
+    'copy.R'
+    'crunch-data-frame.R'
+    'crunch.R'
+    'crunchbox.R'
+    'cube-dims.R'
+    'cube-query.R'
+    'cube-result.R'
+    'cube-variables.R'
+    'cut.R'
+    'dataset-catalog.R'
+    'dataset-extract.R'
+    'dataset-order.R'
+    'dataset-stream.R'
+    'dataset-update.R'
+    'dataset.R'
+    'dichotomize.R'
+    'drop-rows.R'
+    'edit-lock.R'
+    'export-dataset.R'
+    'expressions.R'
+    'filters.R'
+    'folders.R'
+    'fork-and-merge.R'
+    'formula.R'
+    'geo.R'
+    'get-datasets.R'
+    'github.R'
+    'hide-variables.R'
+    'interact.R'
+    'join-dataset.R'
+    'json.R'
+    'make-array.R'
+    'members.R'
+    'merge-crunch-data-frame.R'
+    'misc.R'
+    'multitables.R'
+    'new-dataset.R'
+    'ordering.R'
+    'permission-catalog.R'
+    'progress.R'
+    'projects.R'
+    'search.R'
+    'session.R'
+    'share.R'
+    'shoji-catalog.R'
+    'shoji-entity.R'
+    'shoji-order-slots.R'
+    'shoji-order.R'
+    'shoji.R'
+    'show.R'
+    'subvariables.R'
+    'tab-book.R'
+    'teams.R'
+    'tuple.R'
+    'univariate.R'
+    'user.R'
+    'variable-catalog.R'
+    'variable-delete.R'
+    'variable-derivation.R'
+    'variable-metadata.R'
+    'variable-order.R'
+    'variable-summary.R'
+    'variable-to-R.R'
+    'variable-type.R'
+    'variable-update.R'
+    'variable.R'
+    'versions.R'
+    'weight.R'
+    'zcl.R'

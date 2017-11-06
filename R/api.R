@@ -1,30 +1,33 @@
 #' Main Crunch API handling function
 #' @param http.verb character in GET, PUT, POST, PATCH, DELETE
 #' @param url character URL to do the verb on
-#' @param ... additional arguments passed to \code{GET}, \code{PUT},
-#' \code{POST}, \code{PATCH}, or \code{DELETE}
+#' @param ... additional arguments passed to `GET`, `PUT`,
+#' `POST`, `PATCH`, or `DELETE`
 #' @param config list of config parameters. See httr documentation.
 #' @param status.handlers named list of specific HTTP statuses and a response
 #' function to call in the case where that status is returned. Passed to the
-#' \code{\link{handleAPIresponse}} function.
+#' [handleAPIresponse()] function.
 #' @keywords internal
 crunchAPI <- function (http.verb, url, config=list(), status.handlers=list(), ...) {
-    url ## force lazy eval of url before inserting in try() below
+    url ## force lazy eval of url
     if (isTRUE(getOption("crunch.debug"))) {
         ## TODO: work this into httpcache.log
         payload <- list(...)$body
         if (!is.null(payload)) try(cat("\n", payload, "\n"), silent=TRUE)
     }
     FUN <- get(http.verb, envir=asNamespace("httpcache"))
-    x <- FUN(url, ..., config=config)
+    x <- FUN(url, ..., config=c(get_crunch_config(), config))
     out <- handleAPIresponse(x, special.statuses=status.handlers)
     return(out)
 }
 
 #' HTTP methods for communicating with the Crunch API
 #'
-#' @param ... see \code{\link{crunchAPI}} for details. \code{url} is the first
-#' named argument and is required; \code{body} is also required for PUT,
+#' These methods let you communicate with the Crunch API, for more background
+#' see [Crunch Internals](http://crunch.io/r/crunch/articles/crunch-internals.html).
+#'
+#' @param ... see [`crunchAPI`] for details. `url` is the first
+#' named argument and is required; `body` is also required for PUT,
 #' PATCH, and POST.
 #' @return Depends on the response status of the HTTP request and any custom
 #' handlers.
@@ -102,6 +105,17 @@ handleAPIresponse <- function (response, special.statuses=list()) {
                 response$url,
                 " has moved permanently. Please upgrade crunch to the ",
                 "latest version.")
+        } else if (code == 503 && response$request$method == "GET" &&
+                   "retry-after" %in% tolower(names(response$headers))) {
+            ## Server is busy and telling us to retry the request again after
+            ## some period.
+            wait <- response$headers[[which(tolower(names(response$headers)) == "retry-after")]]
+            message("This request is taking longer than expected. Please stand by...",
+                call.=FALSE)
+            Sys.sleep(as.numeric(wait))
+            ## TODO: resend request headers? Or, include the request to evaluate
+            ## inside this function, do match.call at the beginning, and re-eval?
+            return(crGET(response$url))
         }
         msg <- http_status(response)$message
         msg2 <- try(content(response)$message, silent=TRUE)
@@ -120,10 +134,15 @@ locationHeader <- function (response) {
     return(loc)
 }
 
-#' @importFrom httr config add_headers
-crunchConfig <- function () {
-    return(c(config(verbose=isTRUE(getOption("crunch.debug")), postredir=3),
-        add_headers(`user-agent`=crunchUserAgent())))
+get_crunch_config <- function () getOption("crunch.httr_config")
+
+set_crunch_config <- function (cfg=c(config(postredir=3),
+                                add_headers(`user-agent`=crunchUserAgent())),
+                               update=FALSE) {
+    if (update) {
+        cfg <- c(get_crunch_config(), cfg)
+    }
+    options(crunch.httr_config=cfg)
 }
 
 #' @importFrom utils packageVersion
@@ -173,4 +192,32 @@ rootURL <- function (x, obj=session_store$root) {
     } else {
         return(NULL)
     }
+}
+
+retry <- function (expr, wait=.1, max.tries=10) {
+    ## Retry (e.g. a request)
+    e <- substitute(expr)
+    tries <- 0
+    while (tries < max.tries) {
+        out <- try(eval.parent(e), silent=TRUE)
+        if (inherits(out, "try-error")) {
+            tries <- tries + 1
+            Sys.sleep(wait)
+        } else {
+            tries <- max.tries
+        }
+    }
+    if (is.error(out)) {
+        stop(out)
+    }
+    return(out)
+}
+
+#' @importFrom httr write_disk
+crDownload <- function (url, file, ...) {
+    ## Retry is for delay in propagating the file to the CDN
+    ## TODO: consider only "retry" if `url` is in CDN (don't want to retry
+    ## necessarily on every url/server response)
+    retry(crGET(url, config=write_disk(file, overwrite=TRUE)))
+    return(file)
 }

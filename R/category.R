@@ -78,15 +78,17 @@ setMethod("$<-", "Category", function (x, name, value) {
 
 #' Category attributes
 #'
+#' Functions to access and set category attributes.
+#'
 #' @param x a Category
 #' @param value For the setters, an appropriate value to set
-#' @return \code{name} returns character; \code{value} and \code{id} return
-#' numeric; value but not id may be \code{NA}; \code{is.selected} returns
+#' @return `name` returns character; `value` and `id` return
+#' numeric; value but not id may be `NA`; `is.selected` returns
 #' logical indicating whether this Category is a "selected" dichotomy. Setters
-#' return \code{x} duly modified.
+#' return `x` duly modified.
 #' @name describe-category
 #' @aliases value value<- id is.selected describe-category
-#' @seealso \code{\link{Categories}} \code{\link{dichotomize}}
+#' @seealso [`Categories`] [`dichotomize`]
 NULL
 
 #' @rdname describe-category
@@ -114,9 +116,19 @@ setMethod("value<-", "Category", setValue)
 #' @export
 setMethod("id", "Category", function (x) as.integer(x[["id"]]))
 
-#' @rdname describe-category
+#' @rdname is-selected-categories
 #' @export
 setMethod("is.selected", "Category", function (x) isTRUE(x$selected))
+
+#' @rdname is-selected-categories
+#' @export
+setMethod("is.selected<-", "Category", function (x, value) {
+    if (!is.TRUEorFALSE(value)) {
+        halt("Value must be either TRUE or FALSE.")
+    }
+    x$selected <- value
+    return(x)
+})
 
 #' @rdname is-na-categories
 #' @export

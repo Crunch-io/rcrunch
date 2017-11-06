@@ -2,14 +2,55 @@
 #'
 #' CrunchBoxes allow you to publish results to the world.
 #'
-#' @param dataset CrunchDataset
-#' @param filters FilterCatalog, or \code{NULL} for no filters. Default all
-#' filters in your catalog, \code{filters(dataset)}.
+#' In addition to specifying the variables and filters to include in your
+#' CrunchBox, you can provide custom color palettes. The arguments
+#' `brand_colors`, `static_colors`, and `category_color_lookup` allow you to
+#' provide color lists to use. Colors should be either a valid hexadecimal
+#' string representation, like "#fa1af1", or they may also be an R named color,
+#' such as "darkgreen".
+#'
+#' @param dataset A CrunchDataset, potentially a selection of variables from it
+#' @param filters FilterCatalog, or `NULL` for no filters. Default all
+#' filters in your catalog, `filters(dataset)`.
+#' @param brand_colors an optional color vector of length 3 or less, or a named
+#' list with names 'primary', 'secondary', and 'message'. See "Details" for more
+#' about color specification.
+#' @param static_colors an optional vector of colors to use for categorical
+#' plots. Bars and lines are colored in the order of `static_colors`. See
+#' "Details" for more about color specification.
+#' @param category_color_lookup an optional list of category names to colors
+#' to use for that category, wherever it appears in the data. This allows you
+#' to always see a category displayed in a specific color. See
+#' "Details" for more about color specification.
 #' @param ... additional metadata for the box, such as "title", "header", etc.
 #' @return The URL to the newly created box.
-#' @seealso \code{\link{preCrunchBoxCheck}} to provide guidance on what you're including in the CrunchBox
+#'
+#' @examples
+#'
+#' \dontrun{
+#' # Creating a CrunchBox with three variables
+#' crunchBox(ds[c("var1", "var2", "var3")], title="New CrunchBox")
+#'
+#' # Creating a CrunchBox changing primary, secondary, and message brand colors
+#' crunchBox(ds[c("var1", "var2", "var3")],
+#'           title="Branded CrunchBox",
+#'           brand_colors = c("#ff0aa4", "#af17ff", "#260aff"))
+#'
+#' # Creating a CrunchBox changing category-specific colors
+#' crunchBox(ds[c("var1", "var2", "var3")],
+#'           title="CrunchBox with category colors",
+#'           category_color_lookup = list("agree" = "#ff0aa4",
+#'                                        "disagree" = "#af17ff",
+#'                                        "don't know" = "#260aff"))
+#' }
+#'
+#' @seealso [`preCrunchBoxCheck()`] to provide guidance on what you're including in the
+#' @aliases crunchBox CrunchBox
 #' @export
-crunchBox <- function (dataset, filters=crunch::filters(dataset), ...) {
+#' @importFrom grDevices col2rgb colors rgb
+crunchBox <- function (dataset, filters=crunch::filters(dataset),
+                       brand_colors, static_colors,
+                       category_color_lookup, ...) {
     ## Validate inputs
     if (missing(dataset) || !is.dataset(dataset)) {
         halt("'dataset' must be a CrunchDataset, potentially subsetted on variables")
@@ -41,12 +82,56 @@ crunchBox <- function (dataset, filters=crunch::filters(dataset), ...) {
     ## Add "where" after so that it no-ops if variablesFilter returns NULL (i.e. no filter)
     payload$where <- variablesFilter(dataset)
 
+    ## Add colors if they exist to the payload
+    brand_labels <- c("primary", "secondary", "message")
+    if (!missing(brand_colors)) {
+        if (!vectorOrList(brand_colors, "character")) {
+            halt(sQuote("brand_colors"), " must be character vector or list",
+                 " of characters")
+        }
+        if (length(brand_colors) > 3) {
+            halt(sQuote("brand_colors"), " must be at most 3 elements long")
+        }
+
+        # ensure is a list of valid colors
+        brand_colors <- lapply(brand_colors, validHexColor)
+
+        # if there are no names, name them according to position
+        # if there are names, check that they are the right ones.
+        if (is.null(names(brand_colors))) {
+            names(brand_colors) <- brand_labels[seq_along(brand_colors)]
+        } else if (any(!names(brand_colors) %in% brand_labels)) {
+            halt("If ", sQuote("brand_colors"), " is a named list, it must",
+                 " contain only ",
+                 serialPaste(dQuote(brand_labels), collapse = "and"))
+        }
+
+        payload$display_settings$palette$brand_colors <- brand_colors
+    }
+    if (!missing(static_colors)) {
+        if (!vectorOrList(static_colors, "character")) {
+            halt(sQuote("static_colors"), " must be a vector or list of characters")
+        }
+        static_colors <- lapply(static_colors, validHexColor)
+        payload$display_settings$palette$static_colors <- static_colors
+    }
+    if (!missing(category_color_lookup)) {
+        if (!is.list(category_color_lookup) || is.null(names(category_color_lookup))) {
+            halt(sQuote("category_color_lookup"), " must be a named list")
+        }
+        category_color_lookup <- lapply(category_color_lookup, validHexColor)
+        payload$display_settings$palette$category_lookup <- category_color_lookup
+    }
+
     ## Send it
     out <- crPOST(shojiURL(dataset, "catalogs", "boxdata"),
         body=toJSON(do.call("wrapEntity", payload)))
     return(out)
-    ## TODO: add function that maps the URL returned to the embed URL
 }
+
+#' @rdname crunchBox
+#' @export
+CrunchBox <- crunchBox
 
 ## Make this a function so tests can mock it
 .boxlimit <- function () 60000L
@@ -56,11 +141,15 @@ boxTooBig <- function (nvars, nfilters) {
     nvars * (nvars - 1) * (nfilters + 1) > .boxlimit()
 }
 
-#' Summarize any characteristics of a dataset that could make for an awkward CrunchBox
+#' Check if a dataset will make a good CrunchBox
+#'
+#' CrunchBoxes allows you to share data with the world in a simple, easy to embed format.
+#' However, not all datasets naturally translate to the CrunchBox format. This
+#' function checks your dataset to see if it
 #'
 #' @param dataset CrunchDataset, potentially subsetted on variables
-#' @return Invisbly, the dataset. Called for side-effect of printing things.
-#' @seealso \code{\link{crunchBox}}
+#' @return Invisibly, the dataset. Called for side-effect of printing things.
+#' @seealso [`CrunchBox`]
 #' @export
 preCrunchBoxCheck <- function (dataset) {
     vm <- variableMetadata(dataset)[urls(variables(dataset))] ## [] for order of vars
@@ -94,6 +183,7 @@ preCrunchBoxCheck <- function (dataset) {
     ## a. Too many categories won't plot well as bars. (Unless they define
     ## regions on a map.)
     ## Check threshold: 7 categories
+    ## TODO: add checking for category color specifications?
     num_cats <- vapply(vm, function (x) {
         cats <- x$categories
         if (is.null(cats)) return(0)
@@ -171,21 +261,21 @@ demonstrativeCount <- function (n, noun="variable") {
 
 #' Get HTML for embedding a CrunchBox
 #'
-#' \code{\link{crunchBox}} returns a URL to the box data that it generates, but
+#' [crunchBox()] returns a URL to the box data that it generates, but
 #' in order to view it in a CrunchBox or to embed it on a website, you'll need
-#' to translate that to the Box's public URL and wrap it in some HTML.
+#' to translate that to the Box's public URL and wrap it in some HTML. This function
+#' takes a CrunchBox and returns the HTLM which you can embed in a website.
 #'
-#' @param box character URL of the box data, as returned by
-#' \code{crunchBox}
+#' @param box character URL of the box data, as returned by `crunchBox()`
 #' @param title character title for the Box, to appear above the iframe. Default
-#' is \code{NULL}, meaning no title shown
+#' is `NULL`, meaning no title shown
 #' @param logo character URL of a logo to show instead of a title. Default is
-#' \code{NULL}, meaning no logo shown. If both logo and title are provided, only
-#' logo will be shown. Note also that logo must be a URL of an image hosted
-#' somewhere--it cannot be a path to a local file.
+#' `NULL`, meaning no logo shown. If both logo and title are provided, only the
+#' logo will be shown. Note also that logo must be a URL of a hosted image: it
+#' cannot be a path to a local file.
 #' @param ... Additional arguments, not currently used.
 #' @return Prints the HTML markup to the screen and also returns it invisibly.
-#' @seealso \code{\link{crunchBox}}
+#' @seealso [crunchBox()]
 #' @examples
 #' \dontrun{
 #' box <- crunchBox(ds)
@@ -224,4 +314,26 @@ boxfig <- function (...) {
         paste0("    ", c(...), "\n", collapse=""),
         '</figure>'
     )
+}
+
+validHexColor <- function (color) {
+    ## Given a color string, possibly an R color name, validate it and
+    ## standardize its formatting like `#AABBCC`
+    if (!is.character(color)) {
+        halt("A color must be a character, got ", class(color)," instead")
+    }
+
+    # if color is an R color name like "aliceblue" convert to hex
+    if (color %in% colors()) {
+        color <- rgb(t(col2rgb(color)/255))
+    } else {
+        if (!startsWith(color, "#")) {
+            color <- paste0("#", color)
+        }
+        if (!grepl("^#[[:xdigit:]]{6,8}$", color)) {
+            halt(dQuote(color), " is not a valid hex color.")
+        }
+    }
+    # remove the last two chars if given 8 digit version
+    return(substr(color, 1, 7))
 }

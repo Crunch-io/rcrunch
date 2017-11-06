@@ -20,7 +20,7 @@ with_test_authentication({
             comp <- compareDatasets(part1, part2)
             expect_output(summary(comp), "Type mismatch: 1")
         })
-        test_that("With autorollback, the append fails and reports conflict, and the batch is backed out", {
+        test_that("If the append fails and reports conflict, and the batch is backed out", {
             expect_output(batches(part1),
                 get_output(data.frame(id=c(0, 1),
                 status=c("imported", "imported"))))
@@ -31,23 +31,6 @@ with_test_authentication({
                 NA) ## No Result URL printed because autorollback=TRUE
 
             part1 <- refresh(part1)
-            expect_output(batches(part1),
-                get_output(data.frame(id=c(0, 1),
-                status=c("imported", "imported"))))
-        })
-        test_that("The append fails and reports conflict on type mismatch", {
-            expect_message(
-                expect_error(appendDataset(part1, part2, autorollback=FALSE),
-                    "Variable is array in one dataset and not the other"),
-                "Result URL")
-        })
-
-        part1 <- refresh(part1)
-        test_that("There is an 'error' batch, and cleanseBatches purges the errored batch", {
-            expect_output(batches(part1),
-                get_output(data.frame(id=c(0, 1, 2),
-                status=c("imported", "imported", "error"))))
-            part1 <- cleanseBatches(part1)
             expect_output(batches(part1),
                 get_output(data.frame(id=c(0, 1),
                 status=c("imported", "imported"))))

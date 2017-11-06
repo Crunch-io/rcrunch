@@ -1,0 +1,1 @@
+{"element": "shoji:entity", "self": "https://app.crunch.io/api/datasets/1/pk/", "description": "Allows a user to get and set the primary key for a dataset", "body": {"pk": ["https://app.crunch.io/api/datasets/1/variables/birthyr/"]}}

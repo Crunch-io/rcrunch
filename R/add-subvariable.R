@@ -2,8 +2,10 @@
 #'
 #' @param variable the array variable to modify
 #' @param subvariable the subvariable to add, or a list of those to add, or a
-#' dataset subset
-#' @return \code{variable} with the indicated subvariables added.
+#' dataset subset. You can supply variables, variable definitions or lists of
+#' variables and variable definitions.
+#' @return `variable` with the indicated subvariables added.
+#' @seealso [`subvariables`]
 #' @examples
 #' \dontrun{
 #' ds$allpets <- addSubvariable(ds$allpets, ds$allpets_4)
@@ -11,8 +13,8 @@
 #' }
 #' @export
 addSubvariable <- function (variable, subvariable) {
-    ## Get subvariable URL or URLs, depending on how many supplied
-    new.urls <- urls(subvariable)
+
+    new.urls <- addSubvarDef(variable, subvariable)
 
     ## Store these for post workaround
     subvar.urls <- subvariables(tuple(variable))
@@ -27,9 +29,40 @@ addSubvariable <- function (variable, subvariable) {
 
     ## Refresh and return
     dropCache(datasetReference(variable))
-    invisible(refresh(variable))
+    return(invisible(refresh(variable)))
 }
 
 #' @rdname addSubvariable
 #' @export
 addSubvariables <- addSubvariable
+
+addSubvarDef <- function (var, subvar) {
+    ## Input can be a variable, subvariable, dataset subset or
+    ## a mixed or uniform list of variables and subvariables this
+    ## wraps single entries in a list for type consistency.
+    if (inherits(subvar, "VariableDefinition") ||
+            is.variable(subvar)) {
+        ## wrap single variables in list
+        subvar <- list(subvar)
+    }
+
+    vardefs <- vapply(subvar,
+        function(x) inherits(x, "VariableDefinition"),
+        logical(1))
+
+    out <- vector("list", length(subvar))
+
+    if (any(vardefs)) {
+        ds <- loadDataset(datasetReference(var))
+        var_cat_url <- shojiURL(ds, "catalogs", "variables")
+        new_var_urls <- lapply(subvar[vardefs],
+            function (x) try(POSTNewVariable(var_cat_url, x), silent = TRUE)
+        )
+        checkVarDefErrors(new_var_urls)
+        out[vardefs] <- new_var_urls
+    }
+    if (any(!vardefs)) {
+        out[!vardefs] <- urls(subvar[!vardefs])
+    }
+    return(as.character(out))
+}

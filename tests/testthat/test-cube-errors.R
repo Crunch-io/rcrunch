@@ -1,6 +1,6 @@
 context("Cube error handling")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
 
     test_that("'formula' must be provided", {
@@ -14,7 +14,7 @@ with_mock_HTTP({
 
     test_that("formula '.' argument is not permitted", {
         expect_error(crtabs(~ ., data=ds),
-            paste("crtabs does not support", dQuote("."), "in formula"))
+            paste("Crunch formulae do not support", dQuote("."), "in formula"))
     })
 
     test_that("formula must have variables", {
@@ -76,6 +76,15 @@ with_mock_HTTP({
             "Invalid expression: ds$NOTAVARIABLE == 3", fixed=TRUE)
         expect_error(crtabs(~ gender, data=ds[ds$gender %in% "Male" | ds$NOTAVARIABLE == 3,]),
             "Invalid expression (probably a reference to a variable that doesn't exist): ds$gender %in% \"Male\" | ds$NOTAVARIABLE == 3", fixed=TRUE)
+    })
+
+    test_that("can't request NULL as subvariable (bad subvar ref)", {
+        expect_error(crtabs(~ catarray$subvar2 + catarray$NOTAVAR, data=ds),
+            "Invalid cube dimension: catarray$NOTAVAR cannot be NULL",
+            fixed=TRUE)
+        expect_error(crtabs(~ catarray$foo + catarray$subvar2 + catarray$NOTAVAR, data=ds),
+            "Invalid cube dimensions: catarray$foo and catarray$NOTAVAR cannot be NULL",
+            fixed=TRUE)
     })
 })
 

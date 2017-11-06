@@ -9,13 +9,13 @@ ContextManager(enter = function() { }, exit = function() { },
   error = NULL, as = NULL)
 }
 \arguments{
-\item{enter}{function to run before doing things}
+\item{enter}{function to run before taking actions}
 
-\item{exit}{function to run after doing things}
+\item{exit}{function to run after taking actions}
 
 \item{error}{optional function to run if an error is thrown}
 
-\item{as}{character optional way to specify a default name for assinging
+\item{as}{character optional way to specify a default name for assigning
 the return of the enter function.}
 }
 \value{
@@ -25,5 +25,5 @@ an S3 class "contextManager" object
 Context managers
 }
 \seealso{
-\link{with-context-manager}
+\code{with-context-manager}
 }

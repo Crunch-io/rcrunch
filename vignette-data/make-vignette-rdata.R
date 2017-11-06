@@ -23,9 +23,9 @@ categories(ds$track)[2:3] <- track.cats[c(3,2)]
 names(variables(ds))[aliases(variables(ds)) == "track"] <- "Direction of country"
 head2 <- head.of.variables <- head(names(variables(ds)), 10)
 head2[4:7] <- names(variables(ds))[4:7] <- c("Favorability of Edward Snowden",
-                               "Approval of Snowden's Leak",
-                               "Support for Prosecution of Snowden",
-                               "Penalty for Snowden")
+                                             "Approval of Snowden's Leak",
+                                             "Support for Prosecution of Snowden",
+                                             "Penalty for Snowden")
 
 message("4. Make array")
 start_make_array <- ds
@@ -37,9 +37,9 @@ show_imiss <- capture.output(print(ds$imiss))
 names_imiss_subvars <- names(subvariables(ds$imiss))
 
 newnames <- c("The economy", "Immigration",
-    "The environment", "Terrorism", "Gay rights", "Education",
-    "Health care", "Social security", "The budget deficit",
-    "The war in Afghanistan", "Taxes", "Medicare", "Abortion")
+              "The environment", "Terrorism", "Gay rights", "Education",
+              "Health care", "Social security", "The budget deficit",
+              "The war in Afghanistan", "Taxes", "Medicare", "Abortion")
 names(subvariables(ds$imiss)) <- newnames
 show_imiss_subvars2 <- crunch:::showSubvariables(subvariables(ds$imiss))
 sorting <- order(names(subvariables(ds$imiss)))
@@ -47,11 +47,11 @@ subvariables(ds$imiss) <- subvariables(ds$imiss)[sorting]
 show_imiss_subvars3 <- crunch:::showSubvariables(subvariables(ds$imiss))
 show_boap_4 <- capture.output(print(ds$boap_4))
 ds$boap <- makeMR(ds[grep("^boap_[0-9]+", names(ds))],
-    name="Approval of Obama on issues",
-    selections=c("Strongly approve", "Somewhat approve"))
+                  name="Approval of Obama on issues",
+                  selections=c("Strongly approve", "Somewhat approve"))
 show_boap_subvars <- crunch:::showSubvariables(subvariables(ds$boap))
 show_boap <- c(crunch:::showCrunchVariableTitle(ds$boap),
-    show_boap_subvars)
+               show_boap_subvars)
 ds$boap <- undichotomize(ds$boap)
 show_boap2 <- capture.output(print(ds$boap))
 ds$boap <- dichotomize(ds$boap, "Strongly approve")
@@ -61,10 +61,10 @@ message("5. Variable order")
 step0 <- ordering(ds)
 step0.print <- capture.output(print(step0))
 ordering(ds) <- VariableOrder(
-        VariableGroup("Demos", ds[c(1, 21:37)]),
-        VariableGroup("Tracking questions", ds[c(2,3, 11:20)]),
-        VariableGroup("This week", ds[4:11])
-    )
+    VariableGroup("Demos", ds[c(1, 21:37)]),
+    VariableGroup("Tracking questions", ds[c(2,3, 11:20)]),
+    VariableGroup("This week", ds[4:11])
+)
 step1 <- ordering(ds)
 step1.print <- capture.output(print(step1))
 names(ordering(ds))[1] <- "Demographics"
@@ -97,7 +97,7 @@ tab2weighted <- crtabs(~ educ + gender, data=ds)
 tab3 <- crtabs(~ imiss + gender, data=ds)
 ds$imiss <- dichotomize(ds$imiss, c("Very Important", "Somewhat Important"))
 tab3mr <- crtabs(~ imiss + gender, data=ds)
-tab3subvar <- crtabs(~ imiss$Education + gender, data=ds)
+tab3subvar <- crtabs(~ imiss$imiss_f + gender, data=ds)
 tab4 <- crtabs(~ imiss + educ + gender, data=ds)
 
 ### Numeric aggregations
@@ -132,4 +132,4 @@ dim.ds.excluded <- dim(ds)
 
 save.image(file="../vignettes/vignettes.RData")
 
-delete(ds) ## cleanup
+with_consent(delete(ds)) ## cleanup

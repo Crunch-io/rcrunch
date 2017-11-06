@@ -2,7 +2,8 @@ context("Add a variable to a dataset")
 
 test_that("toVariable parses R numerics", {
     expect_identical(toVariable(2L:4L, name="Numbers!", alias="num"),
-        structure(list(values=2L:4L, type="numeric", name="Numbers!", alias="num"), class="VariableDefinition"))
+        structure(list(values=2L:4L, type="numeric", name="Numbers!",
+                       alias="num"), class="VariableDefinition"))
     expect_equivalent(toVariable(2L:4L, name="Numbers!", alias="num"),
         list(values=2L:4L, type="numeric", name="Numbers!", alias="num"))
 })
@@ -18,6 +19,14 @@ test_that("toVariable parses factors", {
             list(id=2L, name="C", numeric_value=2L, missing=FALSE),
             list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
         ))) ## unclear why these aren't identical
+})
+test_that("toVariable parses AsIses", {
+    expect_identical(toVariable(I(1:5)),
+                     structure(list(values=1L:5L, type="numeric"),
+                               class="VariableDefinition"))
+    expect_identical(toVariable(I(letters[1:3])),
+                     structure(list(values=c("a", "b", "c"), type="text"),
+                               class="VariableDefinition"))
 })
 
 test_that("toVariable handles duplicate factor levels", {
@@ -37,7 +46,13 @@ test_that("toVariable handles duplicate factor levels", {
             ))),
         "Duplicate factor levels given: disambiguating them in translation to Categorical type")
 })
-
+test_that("categoriesFromLevels parses levels correctly", {
+    expect_identical(categoriesFromLevels(levels(iris$Species)),
+        list(list(id = 1L, name = "setosa", numeric_value = 1L, missing = FALSE),
+             list(id = 2L, name = "versicolor", numeric_value = 2L, missing = FALSE),
+             list(id = 3L, name = "virginica", numeric_value = 3L, missing = FALSE))
+      )
+})
 test_that("toVariable parses R Date class", {
     expect_equivalent(toVariable(as.Date(c("2014-12-16", "2014-12-17"))),
         list(values=c("2014-12-16", "2014-12-17"), type="datetime",
@@ -71,7 +86,7 @@ test_that("POSTNewVariable rejects invalid categories", {
         "Invalid category names: must be unique")
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("assignment restrictions", {
         expect_error(ds[[2]] <- 1:25,
@@ -90,6 +105,13 @@ with_mock_HTTP({
             '{"values":5,"type":"numeric","name":"newvar","alias":"newvar"}')
     })
 })
+
+    test_that("checkVarDefErrors errors correctly", {
+        test_errs <- lapply(list("a", "b", 29), function(x) try(log(x), silent = TRUE))
+        expect_error(checkVarDefErrors(test_errs), "The following variable definitions errored on upload: 1, 2")
+        test_errs <- lapply(list(29, 23, 24), function(x) try(log(x), silent = TRUE))
+        expect_silent(checkVarDefErrors(test_errs))
+    })
 
 with_test_authentication({
     ds <- newDataset(df)

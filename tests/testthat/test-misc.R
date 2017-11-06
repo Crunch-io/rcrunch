@@ -108,3 +108,31 @@ test_that("uniquify", {
     expect_identical(uniquify(c("b", "a", "a", "abcd", "a")),
         c("b", "a", "a  (1)", "abcd", "a  (2)"))
 })
+
+test_that("vectorOrList", {
+    expect_true(vectorOrList(c("a", "b", "c"), "character"))
+    expect_true(vectorOrList(list("a", "b", "c"), "character"))
+    expect_false(vectorOrList(c(1, 2, 3), "character"))
+    expect_false(vectorOrList(list("a", 1, "c"), "character"))
+    expect_true(vectorOrList(c(1, 2, 3), "numeric"))
+    expect_false(vectorOrList(list("a", 1, "c"), "numeric"))
+})
+
+test_that("setCrunchAPI", {
+    with(reset.option("crunch.api"), {
+        setCrunchAPI('foobar')
+        expect_equal(getOption("crunch.api"), "https://foobar.crunch.io/api/")
+        setCrunchAPI('barfoo', 8888)
+        expect_equal(getOption("crunch.api"), "http://barfoo.crunch.io:8888/api/")
+    })
+})
+
+with(temp.option(foo.bar="no", foo.other="other"), {
+    withr::with_envvar(list(R_FOO_BAR="yes"), {
+        test_that("envOrOption gets the right thing", {
+            expect_identical(envOrOption("foo.bar"), "yes") ## Env var trumps option
+            expect_identical(envOrOption("foo.other"), "other") ## Option if there is no env var
+            expect_null(envOrOption("somethingelse")) ## Null if neither
+        })
+    })
+})

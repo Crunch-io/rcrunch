@@ -33,9 +33,10 @@
 \value{
 For \code{is.public}, a logical value for whether the object is
 flagged as shared with all dataset viewers. (Its setter thus takes a
-logical value as well.) Catalogs return a vector of logicals corresponding
-to the length of the catalog, while entities return a single value.
+logical value as well.) Catalogs of datasets return a vector of logicals
+corresponding to the length of the catalog, while entities return a single value.
 }
 \description{
-View and modify "public" attribute
+View and modify whether all dataset viewers have access to the dataset. This
+will return \code{FALSE} if the dataset is in draft.
 }

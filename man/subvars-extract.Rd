@@ -14,6 +14,8 @@
 \alias{[<-,Subvariables,ANY,missing,Subvariables-method}
 \alias{[<-,Subvariables,ANY,missing,ANY-method}
 \alias{[,CategoricalArrayVariable,character,ANY-method}
+\alias{[,CategoricalArrayVariable,missing,ANY-method}
+\alias{[,CategoricalArrayVariable,missing,character-method}
 \alias{[[,CategoricalArrayVariable,ANY-method}
 \alias{[[,CategoricalArrayVariable,character-method}
 \alias{$,CategoricalArrayVariable-method}
@@ -45,6 +47,11 @@
 \S4method{[}{CategoricalArrayVariable,character,ANY}(x, i, j, ...,
   drop = TRUE)
 
+\S4method{[}{CategoricalArrayVariable,missing,ANY}(x, i, j, ..., drop = TRUE)
+
+\S4method{[}{CategoricalArrayVariable,missing,character}(x, i, j, ...,
+  drop = TRUE)
+
 \S4method{[[}{CategoricalArrayVariable,ANY}(x, i, j, ...)
 
 \S4method{[[}{CategoricalArrayVariable,character}(x, i, j, ...)
@@ -58,7 +65,7 @@
 \S4method{$}{CategoricalArrayVariable}(x, name) <- value
 }
 \arguments{
-\item{x}{Subvariables or an array Variable (which contains subvariables)}
+\item{x}{Subvariables or an array Variable which contains subvariables}
 
 \item{i}{which subvariables to extract}
 

@@ -1,6 +1,6 @@
 context("Update variables with NAs")
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     ds2 <- loadDataset("an archived dataset", kind="archived")
 
@@ -102,15 +102,18 @@ with_test_authentication({
     test_that("If No Data isn't a category, it is added automatically to array", {
         ## Set up for next tests. Deep copy array, purge its missings,
         ## remove No Data category.
-        pl2 <- copy(ds$petloc, deep=TRUE)
-        pl2$values[pl2$values < 0] <- 1
-        pl2$categories <- pl2$categories[-length(pl2$categories)]
-        ds$petloc2 <- pl2
-
-        expect_equal(ids(categories(ds$petloc2)), c(1, 2, 3, 8, 9))
-        ds$petloc2[[1]][5] <- NA
-        expect_equal(ids(categories(ds$petloc2)), c(1, 2, 3, 8, 9, -1))
-        expect_equal(as.vector(ds$petloc2[[1]][5], mode="id"), -1)
+        generate_categorical <- function () {
+            v <- VariableDefinition(factor(sample(c("cat", "dog"), 20, replace = TRUE)))
+            v$categories <- v$categories[1:2]
+            return(v)
+        }
+        ds$sub1 <- generate_categorical()
+        ds$sub2 <- generate_categorical()
+        ds$array <- makeArray(ds[, c("sub1", "sub2")], name = "array")
+        expect_equal(ids(categories(ds$array)), c(1, 2))
+        ds$array[[1]][5] <- NA
+        expect_equal(ids(categories(ds$array)), c(1, 2, -1))
+        expect_equal(as.vector(ds$array[[1]][5], mode="id"), -1)
     })
 
     ## Roll it back, do some more updating

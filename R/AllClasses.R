@@ -68,9 +68,9 @@ CrunchLogicalExpr <- setClass("CrunchLogicalExpr", contains="CrunchExpr")
 #' Variables in Crunch
 #'
 #' Variables are S4 objects. All inherit from the base class
-#' \code{CrunchVariable}.
-#' be persisted on the server? Default is \code{FALSE}
-#' @slot filter either \code{NULL} or \code{CrunchLogicalExpr}
+#' `CrunchVariable`.
+#' @slot filter either `NULL` or `CrunchLogicalExpr`
+#' @slot tuple `VariableTuple`
 #' @importFrom methods as callNextMethod new slot slot<- slotNames validObject
 #' @rdname CrunchVariable
 setClass("CrunchVariable",
@@ -132,7 +132,7 @@ MultipleResponseVariable <-setClass("MultipleResponseVariable",
 #' hierarchical list. These objects and methods allow you to modify that order
 #' from R.
 #'
-#' A VariableOrder object is a subclass of \code{list} that contains
+#' A VariableOrder object is a subclass of `list` that contains
 #' VariableGroups. VariableGroup objects contain a group name and an set of
 #' "entities", which can be variable references or other nested VariableGroups.
 #'
@@ -173,8 +173,8 @@ VariableGroup <- setClass("VariableGroup", contains="OrderGroup",
 #' Collection of Variables within a Dataset
 #'
 #' A VariableCatalog contains references to all variables in a dataset, plus
-#' some descriptive metadata about each. VariableCatalogs also contain a
-#' \code{\link{VariableOrder}} that governs how variables within it are
+#' some descriptive metadata about each. Each VariableCatalog also contains a
+#' [`VariableOrder`] that governs how variables within it are
 #' organized.
 #' @rdname VariableCatalog
 #' @aliases VariableCatalog
@@ -196,6 +196,7 @@ MultitableCatalog <- setClass("MultitableCatalog", contains="ShojiCatalog")
 #'
 #' @rdname CrunchDataset
 #' @export CrunchDataset
+#' @exportClass CrunchDataset
 CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
     slots=c(
         variables="VariableCatalog",
@@ -211,21 +212,21 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
 #'
 #' CategoricalVariables, as well as the array types composed from
 #' Categoricals, contain Categories. Categories are a subclass of list that
-#' contains only Category objects. Category objects themselves subclass list
-#' and contain the following fields: "name", "id", "numeric_value", "missing",
-#' and optionally "selected".
+#' contains only Category objects. Category objects are themselves subclasses of
+#' lists and contain the following fields: "name", "id", "numeric_value",
+#' "missing", and optionally "selected".
 #'
-#' @param data For the constructor functions \code{Category} and
-#' \code{Categories}, you can either pass in attributes via \code{...} or you
-#' can create the objects with a fully defined \code{list} representation of
-#' the objects via the \code{data} argument. See the examples.
+#' @param data For the constructor functions `Category` and
+#' `Categories`, you can either pass in attributes via `...` or you
+#' can create the objects with a fully defined `list` representation of
+#' the objects via the `data` argument. See the examples.
 #' @param x For the attribute getters and setters, an object of class
 #' Category or Categories
-#' @param i For the [ methods, just as with list extract methods
-#' @param j Invalid argument to [, but in the generic's signature
-#' @param ... additional arguments to [, ignored
-#' @param drop Invalid argument to [, but in the generic's signature
-#' @param value For [<-, the replacement Category to insert
+#' @param i For the `[` methods, just as with list extract methods
+#' @param j Invalid argument to `[`, but in the generic's signature
+#' @param ... additional arguments to `[`, ignored
+#' @param drop Invalid argument to `[`, but in the generic's signature
+#' @param value For `[<-`, the replacement Category to insert
 #' @rdname Categories
 #' @aliases Categories ids ids<- values values<-
 #' @export
@@ -273,9 +274,7 @@ Subvariables <- setClass("Subvariables", contains="VariableCatalog",
         filter=CrunchLogicalExpr()
     ))
 
-CubeDims <- setClass("CubeDims", contains="namedList",
-    slots=c(references="VariableCatalog"),
-    prototype=prototype(references=VariableCatalog()))
+CubeDims <- setClass("CubeDims", contains="namedList")
 
 CrunchCube <- setClass("CrunchCube", contains="list",
     slots=c(
@@ -288,9 +287,9 @@ CrunchTeam <- setClass("CrunchTeam", contains="ShojiObject")
 CrunchFilter <- setClass("CrunchFilter", contains="ShojiObject")
 Multitable <- setClass("Multitable", contains="ShojiObject")
 
-#' Organize Datsets
+#' Organize Datasets
 #'
-#' A DatasetOrder object is a subclass of \code{list} that contains
+#' A DatasetOrder object is a subclass of `list` that contains
 #' DatasetGroups. DatasetGroup objects contain a group name and an set of
 #' "entities", which can be dataset references or other nested DatasetGroups.
 #'
@@ -317,3 +316,19 @@ MultitableResult <- setClass("MultitableResult", contains="namedList")
 TabBookResult <- setClass("TabBookResult", contains="namedList")
 
 SearchResults <- setClass("SearchResults", contains="namedList")
+
+#' @rdname geo
+setClass("CrunchGeography", contains="namedList")
+#' @rdname geo
+#' @export
+CrunchGeography <- function (..., data=NULL) {
+    if (is.null(data)) {
+        data <- list(...)
+    }
+    return(new("CrunchGeography", data))
+}
+
+#' @rdname geo
+#' @export Geodata
+Geodata <- setClass("Geodata", contains="ShojiEntity")
+GeoCatalog <- setClass("GeoCatalog", contains="ShojiCatalog")

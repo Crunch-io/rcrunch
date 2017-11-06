@@ -1,6 +1,6 @@
 context("User stuff")
 
-with_mock_HTTP({
+with_mock_crunch({
     test_that("Getting user object", {
         expect_is(me(), "UserEntity")
         expect_identical(email(me()), "fake.user@example.com")
@@ -20,6 +20,41 @@ with_mock_HTTP({
             c("fake.user@example.com",
               "william.user@example.io",
               "ruser@crunch.io"))
+        # default secondary is email
+        expect_equal(usercat["ruser@crunch.io"], usercat[3])
+        expect_equal(usercat[["ruser@crunch.io"]], usercat[[3]])
+        # but can override with names
+        expect_equal(usercat["Bill User", secondary = names(usercat)], usercat[2])
+        expect_equal(usercat[["Bill User", secondary = names(usercat)]], usercat[[2]])
+    })
+
+    test_that("Reset password", {
+        expect_POST(resetPassword("me@example.com"),
+            "https://app.crunch.io/api/public/password_reset/",
+            '{"email":"me@example.com",',
+            '"url_base":"https://app.crunch.io/password/change/${token}/"}')
+    })
+
+    test_that("invite (not currently exported)", {
+        expect_POST(invite("me@example.com", name="Me"),
+            "https://app.crunch.io/api/accounts/account1/users/",
+            '{"element":"shoji:entity","body":{"email":"me@example.com",',
+            '"send_invite":true,"id_method":"pwhash",',
+            '"account_permissions":{"alter_users":false,',
+            '"create_datasets":false},"first_name":"Me",',
+            '"url_base":"/password/change/${token}/"}}')
+    })
+
+    test_that("expropriateUser", {
+        expect_error(expropriateUser("fake.user@example.com",
+                                     "william.user@example.io"), "Must confirm")
+        
+        expect_POST(
+            with_consent({
+                expropriateUser("fake.user@example.com",
+                                "william.user@example.io")}),
+            "https://app.crunch.io/api/users/user1/expropriate/",
+            '{"element":"shoji:entity","body":{"owner":"william.user@example.io"}}')
     })
 })
 

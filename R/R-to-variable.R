@@ -1,3 +1,6 @@
+#' @include variable-definition.R
+NULL
+
 #' @rdname toVariable
 #' @export
 setMethod("toVariable", "character", function (x, ...) {
@@ -37,6 +40,13 @@ setMethod("toVariable", "POSIXt", function (x, ...) {
 
 #' @rdname toVariable
 #' @export
+setMethod("toVariable", "AsIs", function (x, ...) {
+    class(x) <- class(x)[-match("AsIs", class(x))]
+    return(toVariable(x, ...))
+})
+
+#' @rdname toVariable
+#' @export
 setMethod("toVariable", "VariableDefinition", function (x, ...) {
     return(modifyList(x, list(...)))
 })
@@ -51,14 +61,32 @@ setMethod("toVariable", "logical", function (x, ...) {
     return(NAToCategory(out, useNA="always"))
 })
 
-categoriesFromLevels <- function (x) {
-    if (anyDuplicated(x)) {
+#' Convert a factor's levels into Crunch categories.
+#'
+#' Crunch categorical variables have slightly richer metadata than R's
+#' factor variables. This function generates a list of category data from
+#' a factor's levels which can then be further manipulated in R before being
+#' imported into Crunch.
+#'
+#' @param level_vect A character vector containing the levels of a factor. Usually
+#' obtained by running [base::levels()]
+#'
+#' @return A list with each category levels id, name, numeric_value, and missingness.
+#' @rdname categoriesFromLevels
+#' @export
+#'
+#' @examples
+#'
+#' categoriesFromLevels(levels(iris$Species))
+#' 
+categoriesFromLevels <- function (level_vect) {
+    if (anyDuplicated(level_vect)) {
         warning("Duplicate factor levels given: disambiguating them ",
             "in translation to Categorical type")
-        x <- uniquify(x)
+        level_vect <- uniquify(level_vect)
     }
-    return(lapply(seq_along(x), function (i) {
-        list(id=i, name=x[i], numeric_value=i, missing=FALSE)
+    return(lapply(seq_along(level_vect), function (i) {
+        list(id=i, name=level_vect[i], numeric_value=i, missing=FALSE)
     }))
 }
 

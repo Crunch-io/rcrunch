@@ -9,7 +9,7 @@ test_that("VariableGroup and Order objects can be made", {
         "VariableOrder")
 })
 
-with_mock_HTTP({
+with_mock_crunch({
     ds <- loadDataset("test ds")
     varcat <- allVariables(ds)
 
@@ -22,13 +22,13 @@ with_mock_HTTP({
     test.ord <- ordering(ds)
     ent.urls <- urls(test.ord)
     varcat_url <- self(allVariables(ds))
-    nested.ord <- try(VariableOrder(
+    nested.ord <- VariableOrder(
         VariableGroup(name="Group 1",
             entities=list(ent.urls[1],
-                        VariableGroup(name="Nested", entities=ent.urls[2:3]),
-                        ent.urls[4])),
-        VariableGroup(name="Group 2", entities=ent.urls[5:6]),
-        catalog_url=varcat_url))
+                        VariableGroup(name="Nested", entities=ent.urls[2:4]),
+                        ent.urls[5])),
+        VariableGroup(name="Group 2", entities=ent.urls[6:7]),
+        catalog_url=varcat_url)
 
     test_that("Validation on entities<-", {
         expect_error(entities(ordering(ds)) <- NULL,
@@ -45,15 +45,15 @@ with_mock_HTTP({
 
     test_that("Can extract group(s) by name", {
         expect_identical(nested.ord[["Group 2"]],
-            VariableGroup(name="Group 2", entities=ent.urls[5:6]))
+            VariableGroup(name="Group 2", entities=ent.urls[6:7]))
         expect_identical(nested.ord$`Group 2`,
-            VariableGroup(name="Group 2", entities=ent.urls[5:6]))
+            VariableGroup(name="Group 2", entities=ent.urls[6:7]))
     })
 
     test_that("Extract with [", {
         expect_identical(nested.ord["Group 2"],
             VariableOrder(
-                VariableGroup(name="Group 2", entities=ent.urls[5:6]),
+                VariableGroup(name="Group 2", entities=ent.urls[6:7]),
                 catalog_url=varcat_url))
         expect_error(nested.ord["NOT A GROUP"],
             "Undefined groups selected: NOT A GROUP")
@@ -61,7 +61,7 @@ with_mock_HTTP({
 
     test_that("Extract with [[ from Group", {
         expect_identical(nested.ord[["Group 1"]]$Nested,
-            VariableGroup(name="Nested", entities=ent.urls[2:3]))
+            VariableGroup(name="Nested", entities=ent.urls[2:4]))
         expect_error(nested.ord[["Group 1"]][["NOT A GROUP"]],
             "Undefined groups selected: NOT A GROUP")
     })
@@ -70,9 +70,24 @@ with_mock_HTTP({
         expect_identical(nested.ord[["Group 1"]]["Nested"],
             VariableGroup(name="Group 1",
                 entities=list(
-                    VariableGroup(name="Nested", entities=ent.urls[2:3]))))
+                    VariableGroup(name="Nested", entities=ent.urls[2:4]))))
         expect_error(nested.ord[["Group 1"]]["NOT A GROUP"],
             "Undefined groups selected: NOT A GROUP")
+    })
+
+    test_that("Extract with path vector", {
+        expect_identical(nested.ord[[c("Group 1", "Nested")]],
+            VariableGroup(name="Nested", entities=ent.urls[2:4]))
+    })
+    test_that("Extract with path string", {
+        expect_identical(nested.ord[["Group 1/Nested"]],
+            VariableGroup(name="Nested", entities=ent.urls[2:4]))
+    })
+    test_that("Extract with alternative path string", {
+        with(temp.option(crunch.delimiter="|"), {
+            expect_identical(nested.ord[["Group 1|Nested"]],
+                VariableGroup(name="Nested", entities=ent.urls[2:4]))
+        })
     })
 
     test_that("Can create nested groups", {
@@ -84,54 +99,54 @@ with_mock_HTTP({
         expect_identical(vglist, list(graph=list(
             list(`Group 1`=list(
                     ent.urls[1],
-                    list(`Nested`=as.list(ent.urls[2:3])),
-                    ent.urls[4]
+                    list(`Nested`=as.list(ent.urls[2:4])),
+                    ent.urls[5]
                     )
                 ),
-            list(`Group 2`=as.list(ent.urls[5:6]))
+            list(`Group 2`=as.list(ent.urls[6:7]))
         )))
     })
 
     ng <- list(ent.urls[1],
-                VariableGroup(name="Nested", entities=ent.urls[2:3]),
-                ent.urls[4])
+                VariableGroup(name="Nested", entities=ent.urls[2:4]),
+                ent.urls[5])
     test_that("can assign nested groups in entities", {
         to <- test.ord
         try(entities(to) <- ng)
         expect_identical(entities(to), entities(ng))
-        expect_identical(urls(to), ent.urls[1:4])
+        expect_identical(urls(to), ent.urls[1:5])
         expect_identical(to[[2]],
-            VariableGroup(name="Nested", entities=ent.urls[2:3]))
-        expect_identical(entities(to[[2]]), as.list(ent.urls[2:3]))
+            VariableGroup(name="Nested", entities=ent.urls[2:4]))
+        expect_identical(entities(to[[2]]), as.list(ent.urls[2:4]))
     })
     test_that("can assign group into order", {
         to <- test.ord
         try(to[[1]] <- VariableGroup(name="[[<-", entities=ng))
         expect_identical(entities(to[[1]]), ng)
         expect_identical(name(to[[1]]), "[[<-")
-        expect_identical(urls(to[[1]]), ent.urls[1:4])
+        expect_identical(urls(to[[1]]), ent.urls[1:5])
         expect_identical(to[[1]][[2]],
-            VariableGroup(name="Nested", entities=ent.urls[2:3]))
+            VariableGroup(name="Nested", entities=ent.urls[2:4]))
     })
     test_that("can assign NULL into order to remove a group", {
         no <- no2 <- no3 <- nested.ord
         no[[2]] <- NULL
         expect_identical(no, VariableOrder(
             VariableGroup(name="Group 1", entities=list(ent.urls[1],
-                VariableGroup(name="Nested", entities=ent.urls[2:3]),
-                ent.urls[4])),
+                VariableGroup(name="Nested", entities=ent.urls[2:4]),
+                ent.urls[5])),
             catalog_url=varcat_url))
         no2[["Group 2"]] <- NULL
         expect_identical(no2, VariableOrder(
             VariableGroup(name="Group 1", entities=list(ent.urls[1],
-                VariableGroup(name="Nested", entities=ent.urls[2:3]),
-                ent.urls[4])),
+                VariableGroup(name="Nested", entities=ent.urls[2:4]),
+                ent.urls[5])),
             catalog_url=varcat_url))
         no3$`Group 2` <- NULL
         expect_identical(no3, VariableOrder(
             VariableGroup(name="Group 1", entities=list(ent.urls[1],
-                VariableGroup(name="Nested", entities=ent.urls[2:3]),
-                ent.urls[4])),
+                VariableGroup(name="Nested", entities=ent.urls[2:4]),
+                ent.urls[5])),
             catalog_url=varcat_url))
     })
     test_that("Can assign NULL into a group to remove", {
@@ -140,28 +155,28 @@ with_mock_HTTP({
             VariableOrder(
                 VariableGroup(name="Group 1",
                     entities=list(ent.urls[1],
-                        VariableGroup(name="Nested", entities=ent.urls[2:3]),
-                        ent.urls[4]),
+                        VariableGroup(name="Nested", entities=ent.urls[2:4]),
+                        ent.urls[5]),
                 ),
-                VariableGroup(name="Group 2", entities=ent.urls[5:6]),
+                VariableGroup(name="Group 2", entities=ent.urls[6:7]),
                 catalog_url=varcat_url))
         no[[1]][[3]] <- NULL
         expect_identical(no,
             VariableOrder(
                 VariableGroup(name="Group 1",
                     entities=list(ent.urls[1],
-                        VariableGroup(name="Nested", entities=ent.urls[2:3])),
+                        VariableGroup(name="Nested", entities=ent.urls[2:4])),
                 ),
-                VariableGroup(name="Group 2", entities=ent.urls[5:6]),
+                VariableGroup(name="Group 2", entities=ent.urls[6:7]),
                 catalog_url=varcat_url))
         no[[1]][["Nested"]][[2]] <- NULL
         expect_identical(no,
             VariableOrder(
                 VariableGroup(name="Group 1",
                     entities=list(ent.urls[1],
-                        VariableGroup(name="Nested", entities=ent.urls[2])),
+                        VariableGroup(name="Nested", entities=ent.urls[c(2,4)])),
                 ),
-                VariableGroup(name="Group 2", entities=ent.urls[5:6]),
+                VariableGroup(name="Group 2", entities=ent.urls[6:7]),
                 catalog_url=varcat_url))
         no[[1]]$Nested <- NULL
         expect_identical(no,
@@ -169,7 +184,7 @@ with_mock_HTTP({
                 VariableGroup(name="Group 1",
                     entities=list(ent.urls[1]),
                 ),
-                VariableGroup(name="Group 2", entities=ent.urls[5:6]),
+                VariableGroup(name="Group 2", entities=ent.urls[6:7]),
                 catalog_url=varcat_url))
         expect_error(nested.ord[[2]][[-1]] <- NULL,
             "Illegal subscript")
@@ -185,9 +200,9 @@ with_mock_HTTP({
             entities=to[[1]][[1]]))
         expect_identical(entities(to[[1]]),
             list(VariableGroup(name="Nest2", entities=ent.urls[1]),
-                VariableGroup(name="Nested", entities=ent.urls[2:3]),
-                ent.urls[4]))
-        expect_identical(urls(to[[1]]), ent.urls[1:4])
+                VariableGroup(name="Nested", entities=ent.urls[2:4]),
+                ent.urls[5]))
+        expect_identical(urls(to[[1]]), ent.urls[1:5])
     })
     test_that("can assign into a nested group", {
         to <- test.ord
@@ -195,9 +210,9 @@ with_mock_HTTP({
         try(entities(to[[1]][[2]]) <- rev(entities(to[[1]][[2]])))
         expect_identical(entities(to[[1]]),
             list(ent.urls[1],
-                VariableGroup(name="Nested", entities=ent.urls[3:2]),
-                ent.urls[4]))
-        expect_identical(urls(to[[1]]), ent.urls[c(1,3,2,4)])
+                VariableGroup(name="Nested", entities=ent.urls[c(4,3,2)]),
+                ent.urls[5]))
+        expect_identical(urls(to[[1]]), ent.urls[c(1,4,3,2,5)])
         expect_identical(name(to[[1]]), "[[<-")
         try(name(to[[1]]) <- "Something better")
         expect_identical(name(to[[1]]), "Something better")
@@ -255,7 +270,8 @@ with_mock_HTTP({
             list(self(ds$gender)))
         ## Test duplicates option: gender should only be in "More nesting"
         expect_identical(nested.o[["Group 1"]]$Nested[[1]],
-            self(ds$mymrset))
+                         self(ds$location),
+                         self(ds$mymrset))
     })
 
     test_that("Assignment by new nested group name with duplicates", {
@@ -301,6 +317,7 @@ with_mock_HTTP({
                   "    Birth Year",
                   "    [+] Nested",
                   "        Gender",
+                  "        Categorical Location",
                   "        mymrset",
                   "    Text variable ftw",
                   "[+] Group 2",
@@ -315,6 +332,7 @@ with_mock_HTTP({
                   "    Birth Year",
                   "    [+] Nested",
                   "        Gender",
+                  "        Categorical Location",
                   "        mymrset",
                   "    Text variable ftw",
                   "[+] Group 2",
@@ -325,12 +343,21 @@ with_mock_HTTP({
                   sep="\n"),
             fixed=TRUE)
     })
+    test_that("Printing a single group doesn't fail (though it probably should do better than show URLs)", {
+        expect_output(nested.ord[[2]],
+            paste("[+] Group 2",
+                  "    https://app.crunch.io/api/datasets/1/variables/starttime/",
+                  "    https://app.crunch.io/api/datasets/1/variables/catarray/",
+                  sep="\n"),
+            fixed=TRUE)
+    })
 
     ord <- flattenOrder(test.ord)
     test_that("Composing a VariableOrder step by step: setup (flattenOrder)", {
         expect_output(ord,
             paste("Birth Year",
                   "Gender",
+                  "Categorical Location",
                   "mymrset",
                   "Text variable ftw",
                   "starttime",
@@ -341,7 +368,8 @@ with_mock_HTTP({
     test_that("Composing a VariableOrder step by step: group 1 by dataset", {
         ord$Demos <<- ds[c("gender", "birthyr")]
         expect_output(ord,
-            paste("mymrset",
+            paste("Categorical Location",
+                  "mymrset",
                   "Text variable ftw",
                   "starttime",
                   "Cat Array",
@@ -352,9 +380,10 @@ with_mock_HTTP({
             fixed=TRUE)
     })
     test_that("Composing a VariableOrder step by step: group by Order subset", {
-        ord$Arrays <<- ord[c(1, 4)] #ds[c("mymrset", "catarray")]
+        ord$Arrays <<- ord[c(2, 5)] #ds[c("mymrset", "catarray")]
         expect_output(ord,
-            paste("Text variable ftw",
+            paste("Categorical Location",
+                  "Text variable ftw",
                   "starttime",
                   "[+] Demos",
                   "    Gender",
@@ -368,7 +397,8 @@ with_mock_HTTP({
     test_that("Composing a VariableOrder step by step: nested group by dataset", {
         ord$Demos[["Others"]] <<- ds[c("birthyr", "textVar")]
         expect_output(ord,
-            paste("starttime",
+            paste("Categorical Location",
+                  "starttime",
                   "[+] Demos",
                   "    Gender",
                   "    [+] Others",
@@ -383,7 +413,8 @@ with_mock_HTTP({
     test_that("Composing a VariableOrder step by step: reorder group", {
         ord$Demos <<- ord$Demos[2:1]
         expect_output(ord,
-            paste("starttime",
+            paste("Categorical Location",
+                  "starttime",
                   "[+] Demos",
                   "    [+] Others",
                   "        Birth Year",
@@ -396,7 +427,7 @@ with_mock_HTTP({
             fixed=TRUE)
     })
     test_that("Composing a VariableOrder step by step: reorder order", {
-        ord <<- ord[3:1]
+        ord <<- ord[4:1]
         expect_output(ord,
             paste("[+] Arrays",
                   "    mymrset",
@@ -407,6 +438,7 @@ with_mock_HTTP({
                   "        Text variable ftw",
                   "    Gender",
                   "starttime",
+                  "Categorical Location",
                   sep="\n"),
             fixed=TRUE)
     })
@@ -423,6 +455,7 @@ with_mock_HTTP({
                   "        Text variable ftw",
                   "    Gender",
                   "starttime",
+                  "Categorical Location",
                   sep="\n"),
             fixed=TRUE)
     })
@@ -440,6 +473,7 @@ with_mock_HTTP({
                       "        textVar",
                       "    gender",
                       "starttime",
+                      "location",
                       sep="\n"),
                 fixed=TRUE)
         })
@@ -467,6 +501,7 @@ with_mock_HTTP({
                   "        Text variable ftw",
                   "        starttime",
                   "    Gender",
+                  "Categorical Location",
                   sep="\n"),
             fixed=TRUE)
     })
@@ -635,6 +670,18 @@ with_mock_HTTP({
                   "Birth Year",
                   sep="\n"),
             fixed=TRUE)
+    })
+
+    test_that("copyOrder returns the order of target as a VariableOrder", {
+        ds_again <- loadDataset("test ds")
+        expect_silent(new_order <- copyOrder(ds, ds_again))
+        expect_is(new_order, "VariableOrder")
+        expect_identical(entities(ordering(ds)), entities(new_order))
+    })
+
+    test_that("copyOrder input validation", {
+        expect_error(copyOrder(ds, "foo"),
+            "Both source and target must be Crunch datasets.")
     })
 })
 
@@ -829,5 +876,114 @@ with_test_authentication({
         moveToGroup(ordering(ds)[["Group 2.5"]]) <- ds["v6"]
         expect_identical(urls(ordering(ds)[["Group 2.5"]]),
             urls(variables(ds[c("v4", "v6")])))
+    })
+
+    test_that("copyOrder copies across datasets with simple order", {
+        ds_fork <- forkDataset(ds)
+        old_order <-  ordering(ds_fork)
+        new_order <- VariableOrder(self(ds$v1), self(ds$v2), self(ds$v5),
+                                   self(ds$v6), self(ds$v3), self(ds$v4))
+        new_order_fork <- VariableOrder(self(ds_fork$v1), self(ds_fork$v2),
+                                        self(ds_fork$v5), self(ds_fork$v6),
+                                        self(ds_fork$v3), self(ds_fork$v4))
+        ordering(ds) <- new_order
+
+        # test that ds has the new order
+        expect_identical(entities(ordering(ds)), entities(new_order))
+        # test that ds_fork has the old order still
+        expect_identical(entities(ordering(ds_fork)), entities(old_order))
+        expect_false(identical(entities(ordering(ds_fork)), entities(new_order_fork)))
+
+        # copy order, and check that ds_fork has the new order.
+        expect_silent(copied_order <- copyOrder(ds, ds_fork))
+        ordering(ds_fork) <- copied_order
+        expect_identical(entities(ordering(ds_fork)), entities(new_order_fork))
+    })
+
+    test_that("copyOrder copies across datasets with simple(-ish) order (and one nesting)", {
+        ds_fork <- forkDataset(ds)
+        old_order <-  ordering(ds_fork)
+        new_order <- VariableOrder(self(ds$v1), self(ds$v2), self(ds$v5),
+                                   self(ds$v6), VariableGroup("Group A",
+                                                              list(self(ds$v4), self(ds$v3))))
+        new_order_fork <- VariableOrder(self(ds_fork$v1), self(ds_fork$v2),
+                                        self(ds_fork$v5), self(ds_fork$v6),
+                                        VariableGroup("Group A",
+                                                      list(self(ds_fork$v4), self(ds_fork$v3))))
+        ordering(ds) <- new_order
+
+        # test that ds has the new order
+        expect_identical(entities(ordering(ds)), entities(new_order))
+        # test that ds_fork has the old order still
+        expect_identical(entities(ordering(ds_fork)), entities(old_order))
+        expect_false(identical(entities(ordering(ds_fork)), entities(new_order_fork)))
+
+        # copy order, and check that ds_fork has the new order.
+        expect_silent(copied_order <- copyOrder(ds, ds_fork))
+        ordering(ds_fork) <- copied_order
+        expect_identical(entities(ordering(ds_fork)), entities(new_order_fork))
+    })
+
+
+    test_that("copyOrder copies across datasets with nested hierarchical order", {
+        ds_fork <- forkDataset(ds)
+        old_order <-  ordering(ds_fork)
+        new_order <- VariableOrder(
+            VariableGroup("Group 1", list(self(ds$v1), self(ds$v2),
+                                          VariableGroup("Group 1.5", list(self(ds$v5), self(ds$v6))))),
+            VariableGroup("Group 2", list(self(ds$v4), self(ds$v3))))
+        new_order_fork <- VariableOrder(
+            VariableGroup("Group 1", list(self(ds_fork$v1), self(ds_fork$v2),
+                                               VariableGroup("Group 1.5", list(self(ds_fork$v5), self(ds_fork$v6))))),
+            VariableGroup("Group 2", list(self(ds_fork$v4), self(ds_fork$v3))))
+        ordering(ds) <- new_order
+
+        # test that ds has the new order
+        expect_identical(entities(ordering(ds)), entities(new_order))
+        # test that ds_fork has the old order still
+        expect_identical(entities(ordering(ds_fork)), entities(old_order))
+        expect_false(identical(entities(ordering(ds_fork)), entities(new_order_fork)))
+
+        # copy order, and check that ds_fork has the new order.
+        expect_silent(copied_order <- copyOrder(ds, ds_fork))
+        ordering(ds_fork) <- copied_order
+        expect_identical(entities(ordering(ds_fork)), entities(new_order_fork))
+    })
+
+    test_that("copyOrder copies across disparate datasets", {
+        # setup an alternative dataset that has some overlap with ds
+        df_alt <- df
+        df_alt$v12 <- df_alt$v1
+        df_alt$v1 <- NULL
+        df_alt$v2 <- NULL
+        df_alt$new_var <- 1
+        df_alt$new_var2 <- letters[20:1]
+        ds_alt <- newDataset(df_alt)
+
+        old_order <-  ordering(ds_alt)
+        new_order <- VariableOrder(self(ds$v1), self(ds$v2), self(ds$v5),
+                                   self(ds$v6), VariableGroup("Group A",
+                                                              list(self(ds$v4), self(ds$v3))))
+        new_order_alt <- VariableOrder(self(ds_alt$v5), self(ds_alt$v6),
+                                        VariableGroup("Group A",
+                                                      list(self(ds_alt$v4), self(ds_alt$v3))),
+                                       # the following variables do not overlap with ds,
+                                       # and therefor will be appended to the end,
+                                       # but their order will not be garuanteed
+                                       self(ds_alt$v12), self(ds_alt$new_var), self(ds_alt$new_var2))
+        ordering(ds) <- new_order
+
+        # test that ds has the new order
+        expect_identical(entities(ordering(ds)), entities(new_order))
+        # test that ds_alt has the old order still
+        expect_identical(entities(ordering(ds_alt)), entities(old_order))
+        expect_false(identical(entities(ordering(ds_alt)), entities(new_order_alt)))
+
+        # copy order, and check that ds_alt has the new order.
+        expect_silent(copied_order <- copyOrder(ds, ds_alt))
+        ordering(ds_alt) <- copied_order
+        # ignore the last three variables because their order was not specified
+        expect_identical(entities(ordering(ds_alt))[-c(4, 5, 6)],
+                         entities(new_order_alt)[-c(4, 5, 6)])
     })
 })

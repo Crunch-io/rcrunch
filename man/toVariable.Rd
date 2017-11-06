@@ -9,6 +9,7 @@
 \alias{toVariable,factor-method}
 \alias{toVariable,Date-method}
 \alias{toVariable,POSIXt-method}
+\alias{toVariable,AsIs-method}
 \alias{toVariable,VariableDefinition-method}
 \alias{toVariable,logical-method}
 \alias{toVariable,CrunchExpr-method}
@@ -26,6 +27,8 @@ toVariable(x, ...)
 
 \S4method{toVariable}{POSIXt}(x, ...)
 
+\S4method{toVariable}{AsIs}(x, ...)
+
 \S4method{toVariable}{VariableDefinition}(x, ...)
 
 \S4method{toVariable}{logical}(x, ...)
@@ -42,6 +45,19 @@ a list object suitable for POSTing to the Crunch API. See the API
 documentation for specifications.
 }
 \description{
+R objects are converted to Crunch objects using the following rules:
+}
+\details{
+\itemize{
+\item Character vectors are converted into Crunch text variables
+\item Numeric vectors are converted into Crunch numeric variables
+\item Factors are converted to categorical variables
+\item Date and POSIXt vectors are converted into Crunch datetime variables
+\item Logical vectors are converted to Crunch categorical variables
+\item \link{VariableDefinition}s are not converted, but the function can still append
+additional metadata
+}
+
 If you have other object types you wish to convert to Crunch variables,
 you can declare methods for \code{toVariable}
 }
