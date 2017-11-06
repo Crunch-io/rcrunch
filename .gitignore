@@ -14,3 +14,4 @@ vignettes/*.html
 *.Rproj*
 docs/
 \.Rprofile
+revdep/

@@ -177,16 +177,22 @@ with_test_authentication({
             })
         })
     })
-
+    
     test_that("Logical expressions evaluate", {
         e1 <- ds$v3 > 10
         expect_is(e1, "CrunchLogicalExpr")
-        skip("which isn't implemented correctly yet")
+        expect_identical(as.vector(e1), df$v3 > 10)
         expect_identical(which(e1), which(df$v3 > 10))
-        skip("select with logical expression not supported")
-        expect_identical(as.vector(e1), as.vector(ds$v3) > 10)
     })
 
+    test_that("Logical expressions with text variables evaluate", {
+        e2 <- try(ds$v2 == "a")
+        expect_is(e2, "CrunchLogicalExpr")
+        na_filt <- !is.na(df$v2) # Crunch and R evaluate NA == "a" differently
+        expect_identical(as.vector(e2)[na_filt], df[na_filt,]$v2 == "a")
+        expect_identical(which(e2), which(df$v2 == "a"))
+    })
+    
     test_that("R & Crunch logical together", {
         e1 <- ds$v3 < 10 | c(rep(FALSE, 15), rep(TRUE, 5))
         expect_equivalent(as.vector(ds$v3[e1]),
@@ -291,6 +297,12 @@ with_test_authentication({
         expect_equivalent(as.vector(ds$v3[3:18]), df$v3[3:18])
         # even if the range is reversed
         expect_equivalent(as.vector(ds$v3[18:3]), df$v3[3:18])
+    })
+    test_that("If R numeric filter has NAs there are no errors", {
+        expect_equivalent(as.vector(ds$v3[c(1, NA, 2)]), df$v3[c(1, 2)])
+        # even if the NAs are at the beginning or end
+        expect_equivalent(as.vector(ds$v3[c(1, 2, NA)]), df$v3[c(1, 2)])
+        expect_equivalent(as.vector(ds$v3[c(NA, 1, 2)]), df$v3[c(1, 2)])
     })
     test_that("R logical filter evaluates", {
         expect_identical(as.vector(ds$v3[df$v3 < 10]), c(8, 9))

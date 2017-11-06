@@ -2,9 +2,14 @@
 % Please edit documentation in R/crunchbox.R
 \name{crunchBox}
 \alias{crunchBox}
+\alias{CrunchBox}
+\alias{CrunchBox}
 \title{Make a CrunchBox}
 \usage{
 crunchBox(dataset, filters = crunch::filters(dataset), brand_colors,
+  static_colors, category_color_lookup, ...)
+
+CrunchBox(dataset, filters = crunch::filters(dataset), brand_colors,
   static_colors, category_color_lookup, ...)
 }
 \arguments{
@@ -63,5 +68,5 @@ crunchBox(ds[c("var1", "var2", "var3")],
 
 }
 \seealso{
-\code{\link{preCrunchBoxCheck}} to provide guidance on what you're including in the
+\code{\link[=preCrunchBoxCheck]{preCrunchBoxCheck()}} to provide guidance on what you're including in the
 }

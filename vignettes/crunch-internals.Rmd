@@ -1,5 +1,6 @@
 ---
 title: "Crunch Internals"
+description: "Here are some details on how the Crunch API works, which may be useful to know if you're looking to do complex actions or trying to understand how to improve performance of your R code."
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Crunch Internals}

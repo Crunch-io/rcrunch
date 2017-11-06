@@ -180,8 +180,13 @@ setMethod("[[", c("ShojiOrder", "ANY"), function (x, i, ...) {
 #' @rdname ShojiOrder-extract
 #' @export
 setMethod("[[", c("ShojiOrder", "character"), function (x, i, ...) {
-    w <- match(i, names(x))
-    callNextMethod(x, w, ..., drop=drop)
+    ## i may be a path string, so split on the delimiter (default is "/")
+    i <- parseFolderPath(i)
+    for (segment in i) {
+        ## since i may be a path vector, iterate over it
+        x <- x[[match(segment, names(x))]]
+    }
+    return(x)
 })
 
 #' @rdname ShojiOrder-extract
@@ -397,6 +402,10 @@ setMethod("$<-", "OrderGroup", function (x, name, value) {
 
 setdiff_entities <- function (x, ents, remove.na=FALSE) {
     ## Remove "ents" (entity references) anywhere they appear in x (Order)
+    if (!length(ents)) {
+        ## It's empty, so nothing to setdiff
+        return(x)
+    }
     if (!is.character(ents)) {
         ## Get just the entity URLs
         ents <- entities(ents, simplify=TRUE)

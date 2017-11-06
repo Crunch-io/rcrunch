@@ -36,7 +36,7 @@ deleteSessionInfo <- function () {
 #' perhaps less so than in every .R script you write), and we
 #' cannot officially recommend that you do so.
 #'
-#' Additionally, your email and password can be stored in and read from the 
+#' Additionally, your email and password can be stored in and read from the
 #' environmental variables `R_CRUNCH_EMAIL` and `R_CRUNCH_PW` respectively.
 #'
 #' If a password is not supplied (or, if no arguments are supplied and only
@@ -89,7 +89,7 @@ crunchAuth <- function (email, password=NULL, ...) {
                 password <- rstudioapi::askForPassword(prompt)
             } else {
                 cat(prompt)
-                without_echo(password <- readline())
+                without_echo(password <- read_input())
             }
         } else {
             halt("Must supply a password")
@@ -116,6 +116,10 @@ without_echo <- function (expr) {
     }
     eval.parent(expr)
 }
+
+
+## Pass through for test mocking
+read_input <- function (...) readline(...)
 
 #' Add an auth token as a cookie manually
 #'

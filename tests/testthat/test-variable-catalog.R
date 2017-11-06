@@ -101,17 +101,25 @@ with_mock_crunch({
             )))
     })
 
-    test_that("Variable Catagory as.data.frame method", {
-        expect_equal(as.data.frame(varcat[1:3]),
+    test_that("VariableCatalog as.data.frame method", {
+        expect_identical(as.data.frame(varcat[1:3]),
             data.frame(
                 alias = c("birthyr", "gender", "location"),
                 name  = c("Birth Year", "Gender", "Categorical Location"),
                 type  = c("numeric", "categorical", "categorical"),
                 stringsAsFactors = FALSE
             ))
+        expect_identical(as.data.frame(varcat[1:3], row.names=urls(varcat[1:3])),
+            data.frame(
+                alias = c("birthyr", "gender", "location"),
+                name  = c("Birth Year", "Gender", "Categorical Location"),
+                type  = c("numeric", "categorical", "categorical"),
+                row.names=urls(varcat[1:3]),
+                stringsAsFactors = FALSE
+            ))
     })
-    test_that("as.data.frame method returns all fields when keys = 'all'", {
-        varDF <- as.data.frame(varcat, keys = "all")
+    test_that("as.data.frame method returns all fields when keys = TRUE", {
+        varDF <- as.data.frame(varcat, keys = TRUE)
         expect_identical(
             names(varDF),
             c("name", "discarded", "alias", "type", "id", "description",

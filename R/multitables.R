@@ -111,6 +111,7 @@ setMethod("is.public", "Multitable", function (x) x@body$is_public)
 #' @rdname is-public
 #' @export
 setMethod("is.public<-", "Multitable", function (x, value) {
+    stopifnot(is.TRUEorFALSE(value))
     setEntitySlot(x, "is_public", value)
 })
 
@@ -168,7 +169,7 @@ newMultitable <- function (formula, data, name, ...) {
 
     template <- formulaToQuery(formula, data)
     if (missing(name)) {
-        name <- formulaRHS(formula)
+        name <- RHS_string(formula)
     }
 
     payload <- makeMultitablePayload(template = template, name = name)

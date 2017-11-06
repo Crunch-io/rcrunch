@@ -1,5 +1,6 @@
 ---
 title: "Getting Started"
+description: "Here's how to log in and get started working with the Crunch cloud data platform."
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Getting Started}

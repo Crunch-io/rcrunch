@@ -1,14 +1,32 @@
-### crunch 1.18.3 (under development)
-* Now Crunch authentication email and password can be stored in and read from the environmental variables `R_CRUNCH_EMAIL` and `R_CRUNCH_PW` respectively.
+## crunch 1.18.5 (under development)
+* Variable groups (folders) can now be referenced by "path": either a vector of nested folder names (as in `ordering(ds)[[c("Top folder", "Nested folder")]]`) or a single string with nested folders separated by a delimiter (as in `ordering(ds)[["Top folder/Nested folder"]]`). "/" is the default path delimiter, and this is configurable via `options(crunch.delimiter)`. If you have folders that actually contain "/" in the folder name, this may be a breaking change. If so, set `options(crunch.delimiter="|")` or some other string so that folder names are not incorrectly interpreted as paths.
+* Introduce new `mv()` and `mkdir()` functions for creating variable folders and moving variables into them. These take a Dataset as their argument and can be chained together for convenience/readability.
+* Other helper functions `folder()` and `folder<-` to locate a variable in the folder hierarchy and to move it to a new folder. `folder(ds$var) <- "New folder/subfolder"` is equivalent to `ds <- mv(ds, "var", c("New folder", "subfolder"))`.
+* Create new variables that take on different values when specific conditions are met using `conditionalTransform()` (#64)
+* Deep copying variables with `copy()` has been made more efficient
+* `CrunchDataFrames` have been improved to act more `data.frame`-like. You can now access and overwrite values with standard `data.frame` methods like `crdf$variable1` or `crdf[,"variable1"]` and `crdf$variable1 <- 1` or `crdf[,"variable1"] <- 1`. `CrunchDataFrames` now also support adding arbitrary columns, although it should be noted that these columns are not stored on the Crunch server, so if you want to keep that data outside of your current R session, you should send it back to your Dataset as a new variable.
+* `is.selected()` is now vectorized to work with Categories, as `is.na()` has always been. You can also now assign into the function. (#123)
+* `addSubvariable()` now accepts variable definitions directly (#72)
+* `collapseCategories()` allows you to combine categories in place without creating a new variable
+
+### crunch 1.18.4
+* All catalog objects now have an `as.data.frame()` method.
+* The list of dataset "weight variables" can now be set with `modifyWeightVariables()`, `weightVariables(ds) <- ds$newWeight` or `is.weightVariables(ds$var) <- TRUE`
+* Users with account admin privileges can now `expropriateUser()` to transfer datasets, projects, and other objects owned by one user to another, as when that user has left your organization.
+* Access members of user `UserCatalogs` by email (e.g. `catalog[["you@example.com"]]`) by default. All catalog extract methods (`[` and `[[`) now also accept a `secondary` argument for setting an index to match against to change that default.
+* Crunch authentication email and password can be stored in and read from the environmental variables `R_CRUNCH_EMAIL` and `R_CRUNCH_PW` respectively.
+* Cube queries with `as_selected` multiple-response variables have margin and prop.table methods
+* Cube `variables()` now contain additional metadata, including "type"
 * Fix `bases()` when called on a univariate statistic (#124)
+* Update some tests and code to anticipate changes in an upcoming release of `testthat`
 
 ### crunch 1.18.2
-* `makeWeight` allows you to generate new weighting variables based on categorical variables (#80).
-* `cut`, equivalent to `base::cut`, allows you to generate a derived categorical variable based on a numeric variable (#93).
-* Create a new Crunch dataset from a file by calling `newDataset` directly instead of `newDatasetFromFile`. Also, you can now create a dataset from a hosted file passing its URL to `newDataset(FromFile)`.
+* `makeWeight()` allows you to generate new weighting variables based on categorical variables (#80).
+* `cut()`, equivalent to `base::cut`, allows you to generate a derived categorical variable based on a numeric variable (#93).
+* Create a new Crunch dataset from a file by calling `newDataset()` directly instead of `newDatasetFromFile`. Also, you can now create a dataset from a hosted file passing its URL to `newDataset(FromFile)`.
 * `as.data.frame()` method for `VariableCatalog` for a view of variable metadata (#75)
 * `crunchBox()` now allows you to specify colors for branding or even category-specific coloring.
-* RStudio users will now be prompted for their password on `login` in a way that conceals the input.
+* RStudio users will now be prompted for their password on `login()` in a way that conceals the input.
 * Changed the behavior of `changeCategoryID()` to only update numeric values of the category having its id changed when the id and the numeric value are the same.
 * The `autorollback` argument of `appendDataset()` has been deprecated. The option no longer has any effect and a warning will be printed to notify users about the deprecation.
 * Long-deprecated `newDatasetByCSV` was removed.

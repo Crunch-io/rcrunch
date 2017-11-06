@@ -39,7 +39,7 @@ setMethod("entities", "list", function (x, simplify=FALSE) {
         nested.groups <- vapply(x, inherits, logical(1), what="OrderGroup")
         x[nested.groups] <- lapply(x[nested.groups],
             function (a) entities(a, simplify=TRUE))
-        x <- unique(unlist(x))
+        x <- unique(unlist(x)) %||% c() ## unique(unlist(list())) returns NULL
     }
     return(x)
 })

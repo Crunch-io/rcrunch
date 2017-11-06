@@ -26,6 +26,9 @@ with_mock_crunch({
         )
         expect_json_equivalent(copy(ds$gender), expected)
     })
+    test_that("deep copy creates a non-derived variable", {
+        expect_false(copy(ds$gender, deep = TRUE)$derived)
+    })
 })
 
 with_test_authentication({

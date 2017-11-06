@@ -119,6 +119,68 @@ setMethod("na.omit", "Categories", function (object, ...) {
     Categories(data=.na.omit.categories(object))
 })
 
+#' is.na for Categories
+#'
+#' Crunch categorical variables allow you to set multiple categories as missing.
+#' For instance, you might have "not answered" and "doesn't know" both coded as
+#' missing. This function returns a logical vector of all dataset entries that
+#' fall into any of the missing categories. It also allows you to append
+#' additional categories to the list of missing categories using the setter.
+#'
+#' @param x Categories or a single Category
+#' @param value To change the missingness of categories, supply either:
+#' 1. a logical vector of equal length of the categories (or length 1 for the
+#' Category method); or
+#' 1. the names of the categories to mark as missing.
+#' If supplying the latter, any categories already indicated as missing will
+#' remain missing.
+#' @return Getters return logical, a named vector in the case of the Categories
+#' method; setters return `x` duly modified.
+#' @name is-na-categories
+NULL
+
+#' @rdname is-na-categories
+#' @aliases is-na-categories
+#' @export
+setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical(1), USE.NAMES=FALSE), .Names=names(x)))
+
+#' is.selected for Categories
+#'
+#' Crunch Multiple Response variables identify one or more categories as "selected".
+#' These methods allow you to get or set which categories should indicate a selection.
+#'
+#' @param x Categories or a single Category
+#' @param value A logical vector indicating whether the category should be selected.
+#' For a single category the value should be either `TRUE` or `FALSE` to change the
+#' selection status for a `Categories` object, supply a logical vector which is the
+#' same length as the number of categories.
+#' @return Getters return a logical vector indicating selection status. Setters return
+#' the `Categories` or `Category` object, duly modified.
+#' @name is-selected-categories
+#' @aliases is.selected<-
+NULL
+
+#' @rdname is-selected-categories
+#' @export
+setMethod("is.selected", "Categories", function (x) structure(vapply(x, is.selected, logical(1), USE.NAMES=FALSE), .Names=names(x)))
+
+#' @rdname is-selected-categories
+#' @export
+setMethod("is.selected<-", "Categories", function (x, value) {
+    if (is.TRUEorFALSE(value)) {
+        value <- rep(value, length(x))
+    }
+    if (length(value) != length(x)) {
+        halt("You supplied ", length(value), " logical values for ", length(x), " Categories.")
+    }
+
+    x@.Data <- mapply(function (x, value) {
+            is.selected(x) <- value
+            return(x)
+        }, x=x@.Data, value=value, USE.NAMES=FALSE, SIMPLIFY=FALSE)
+    return(x)
+})
+
 n2i <- function (x, cats, strict=TRUE) {
     ## Convert x from category names to the corresponding category ids
     out <- ids(cats)[match(x, names(cats))]
@@ -172,7 +234,7 @@ setMethod("is.na<-", c("Categories", "logical"), function (x, value) {
 })
 
 addNoDataCategory <- function (variable) {
-    cats <- c(categories(variable), Category(data=.no.data))
+    cats <- ensureNoDataCategory(categories(variable))
     if (is.subvariable(variable)) {
         ## Have to point at parent
         crPATCH(absoluteURL("../../", self(variable)),
@@ -183,6 +245,20 @@ addNoDataCategory <- function (variable) {
     }
     return(variable)
 }
+
+ensureNoDataCategory <- function (cats) {
+    if (-1 %in% ids(cats)) {
+        # check "No Data"?
+        return(cats)
+    } else {
+        return(c(cats, Category(data=.no.data)))
+    }
+}
+
+setMethod("lapply", "Categories", function (X, FUN, ...) {
+    X@.Data <- lapply(X@.Data, FUN, ...)
+    return(X)
+})
 
 #' Change the id of a category for a categorical variable
 #'

@@ -6,13 +6,7 @@ cubeDims <- function (cube) {
     ## First, grab the row/col/etc. labels from the cube
     dimnames <- lapply(cube$result$dimensions, function (a) {
         ## Collect the variable metadata about the dimensions
-        tuple <- a$references
-        tuple$type <- a$type$class
-        if (tuple$type == "enum" && "subreferences" %in% names(tuple)) {
-            tuple$type <- "multiple_response"
-        }
-        tuple$categories <- a$type$categories
-
+        tuple <- cubeVarReferences(a)
         if (tuple$type == "boolean") {
             ## TODO: server should provide enumeration
             return(list(
@@ -34,6 +28,18 @@ cubeDims <- function (cube) {
     names(dimnames) <- vapply(dimnames, function (x) x$references$alias,
         character(1))
     return(CubeDims(dimnames))
+}
+
+cubeVarReferences <- function (x) {
+    ## Extract ZZ9-ish metadata from a cube dimension or measure and return
+    ## in a way that looks like what comes in a variable catalog
+    tuple <- x$references
+    tuple$type <- x$type$class
+    if (tuple$type == "enum" && "subreferences" %in% names(tuple)) {
+        tuple$type <- "multiple_response"
+    }
+    tuple$categories <- x$type$categories
+    return(tuple)
 }
 
 elementName <- function (el) {
@@ -81,7 +87,7 @@ elementIsAnyOrNone <- function (el) {
 #' @return Generally, the same shape of result that each of these functions
 #' return when applied to an `array` object.
 #' @name cube-methods
-#' @aliases cube-methods dimensions
+#' @aliases cube-methods dimensions measures
 #' @seealso [`cube-computing`] [`base::array`]
 NULL
 
@@ -112,7 +118,7 @@ setMethod("dimensions", "CrunchCube", function (x) {
     return(dims[!selecteds])
 })
 
-#' @rdname cube-methods
+#' @rdname catalog-extract
 #' @export
 setMethod("[", "CubeDims", function (x, i, ...) {
     return(CubeDims(x@.Data[i], names=x@names[i]))
@@ -126,13 +132,3 @@ is.selectedDimension <- function (dims) {
     names(selecteds) <- dims@names
     return(selecteds)
 }
-
-#' @rdname cube-methods
-#' @export
-setMethod("variables", "CubeDims", function (x) {
-    VariableCatalog(index=lapply(x@.Data, vget("references")))
-})
-
-#' @rdname cube-methods
-#' @export
-setMethod("variables", "CrunchCube", function (x) variables(dimensions(x)))

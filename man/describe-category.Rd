@@ -14,6 +14,12 @@
 \alias{value<-}
 \alias{id}
 \alias{is.selected}
+\alias{name,Category-method}
+\alias{name<-,Category-method}
+\alias{name<-,NULL-method}
+\alias{value,Category-method}
+\alias{value<-,Category-method}
+\alias{id,Category-method}
 \title{Category attributes}
 \usage{
 \S4method{name}{AbsCat}(x)
@@ -29,6 +35,18 @@
 \S4method{id}{AbsCat}(x)
 
 \S4method{is.selected}{AbsCat}(x)
+
+\S4method{name}{Category}(x)
+
+\S4method{name}{Category}(x) <- value
+
+\S4method{name}{`NULL`}(x) <- value
+
+\S4method{value}{Category}(x)
+
+\S4method{value}{Category}(x) <- value
+
+\S4method{id}{Category}(x)
 }
 \arguments{
 \item{x}{a Category}

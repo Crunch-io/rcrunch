@@ -1,3 +1,4 @@
+BatchCatalog
 CategoricalVariable
 CategoricalVariables
 Categoricals
@@ -75,6 +76,7 @@ VignetteEncoding
 VignetteEngine
 VignetteIndexEntry
 YouGov
+admin
 af
 api
 app
@@ -86,6 +88,8 @@ categoricals
 compareDatasets
 config
 contextManager
+crdf
+crdfs
 createDataset
 createWithPreparedData
 crossbreaks
@@ -125,6 +129,7 @@ json
 knitr
 makeWeight
 modeling
+modifyWeightVariables
 multitable
 na
 newDataset
@@ -137,6 +142,8 @@ rmarkdown
 sav
 savepoints
 searchable
+shapefile
+shapefiles
 shojiObject
 spss
 st
@@ -155,6 +162,7 @@ unshare
 varlabels
 ve
 votereg
+weightVariables
 writePreparedData
 xlsx
 xtabs

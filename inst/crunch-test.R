@@ -65,8 +65,8 @@ with_DELETE <- function (resp, expr) {
 
 with_silent_progress <- function (expr) {
     with_mock(
-        `utils::txtProgressBar`=function (...) pipe(""),
-        `utils::setTxtProgressBar`=function (...) invisible(NULL),
+        `crunch:::setup_progress_bar`=function (...) pipe(""),
+        `crunch:::update_progress_bar`=function (...) invisible(NULL),
         eval.parent(expr)
     )
 }

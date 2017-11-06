@@ -18,5 +18,5 @@ However, not all datasets naturally translate to the CrunchBox format. This
 function checks your dataset to see if it
 }
 \seealso{
-\code{\link{crunchBox}}
+\code{\link{CrunchBox}}
 }

@@ -7,7 +7,8 @@
 \title{as.data.frame method for CrunchDataset}
 \usage{
 \method{as.data.frame}{CrunchDataset}(x, row.names = NULL, optional = FALSE,
-  force = FALSE, row.order = NULL, ...)
+  force = FALSE, categorical.mode = "factor", include.hidden = FALSE,
+  row.order = NULL, ...)
 
 \method{as.data.frame}{CrunchDataFrame}(x, row.names = NULL,
   optional = FALSE, ...)
@@ -22,9 +23,14 @@
 \item{force}{logical: actually coerce the dataset to \code{data.frame}, or
 leave the columns as unevaluated promises. Default is \code{FALSE}.}
 
-\item{row.order}{vector of indices containing the order in which the rows of
-the dataset should be presented. If \code{NULL}, the Crunch Dataset order will be
-used.}
+\item{categorical.mode}{what mode should categoricals be pulled as? One of
+factor, numeric, id (default: factor)}
+
+\item{include.hidden}{should hidden variables be included? (default: \code{FALSE})}
+
+\item{row.order}{vector of indices. Which, and their order, of the rows of
+the dataset should be presented as (default: \code{NULL}). If \code{NULL}, then the
+Crunch Dataset order will be used.}
 
 \item{...}{additional arguments passed to \code{as.data.frame} (default method).}
 }

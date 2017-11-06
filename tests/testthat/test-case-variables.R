@@ -80,6 +80,12 @@ with_mock_crunch({
         )
     )
 
+    test_that("evalSide works with and without data", {
+        expect_equal(evalSide(expression(birthyr), ds, eval_env = environment()),
+                     ds$birthyr)
+        expect_equal(evalSide(expression(ds$birthyr), eval_env = environment()), ds$birthyr)
+    })
+
     test_that("Case variable definition", {
         expect_json_equivalent(
             makeCaseVariable(
@@ -87,7 +93,23 @@ with_mock_crunch({
                     list(expression=ds$gender == "Male", name="Dudes"),
                     list(expression=ds$birthyr < 1950, name="Old women")
                 ),
-                name="Super clever segmentation"),
+                name = "Super clever segmentation"),
+            case_output)
+        expect_json_equivalent(
+            makeCaseVariable(
+                cases = list(
+                    list(expression=gender == "Male", name="Dudes"),
+                    list(expression=birthyr < 1950, name="Old women")
+                ),
+                data = ds,
+                name = "Super clever segmentation"),
+            case_output)
+        expect_json_equivalent(
+            makeCaseVariable(
+                `Dudes` = gender == "Male",
+                `Old women` = birthyr < 1950,
+                data = ds,
+                name = "Super clever segmentation"),
             case_output)
     })
     test_that("makeCaseVariable works with ... specification", {
@@ -190,13 +212,13 @@ with_mock_crunch({
                                       cases=list(
             list(expression=ds$gender == "Male", name="Dudes")), name=""),
             paste("can't have case conditions both in", dQuote("..."),
-                "as well as in the", dQuote("cases"),
-                "argument, please use one or the other."))
+            "as well as in the", dQuote("cases"),
+            "argument, please use one or the other."))
         expect_error(makeCaseVariable(name="Dudes"),
             paste("must supply case conditions in either", dQuote("..."),
-                "or the", dQuote("cases"),
-                "argument, please use one or the other."))
-        expect_error(makeCaseVariable(cases=list(), name="Dudes"),
+            "or the", dQuote("cases"),
+            "argument, please use one or the other."))
+        expect_error(makeCaseVariable(name="Dudes"),
                      paste("must supply case conditions in either", dQuote("..."),
                      "or the", dQuote("cases"),
                      "argument, please use one or the other."))
@@ -209,25 +231,25 @@ with_mock_crunch({
             list(expression=ds$gender == "Female", name="Not Dudes"),
             list(expression="else", name="else1"))), name=""),
             paste("could not find names for a case; this might be because the",
-                "cases were embedded in too many lists."))
+            "cases were embedded in too many lists."))
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes"),
             list(expression='else', name='other'),
             list(expression='else', name='other2')),
             name=""),
             paste("you can only provide a single else case; you have more than",
-                "one in either"))
+            "one in either"))
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes"),
             list(expression="else", name="else1"),
             list(expression=ds$gender == "Female", name="Not Dudes")), name=""),
             paste("The else case must be the last element of", dQuote("cases"),
-                "or", dQuote("...")))
+                  "or", dQuote("...")))
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes"),
             list(expression="else", name="name", id=99999999)), name=""),
             paste("id must be less than 32,768, this might be a result of too",
-                "many cases being used."))
+            "many cases being used."))
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes"),
             list(expression="else", name="name", id=-10)), name=""),
@@ -256,7 +278,7 @@ with_mock_crunch({
                 ),
                 name="Super clever segmentation"),
             paste('there are duplicate condition expressions provided:',
-                'gender == "Male" and gender == "Male"'))
+                  'gender == "Male" and gender == "Male"'))
         expect_error(
             makeCaseVariable(
                 cases = list(

@@ -66,3 +66,54 @@ setMethod("$<-", "Category", function (x, name, value) {
 #' @aliases value value<- id is.selected describe-category
 #' @seealso [`Categories`] [`dichotomize`]
 NULL
+
+#' @rdname describe-category
+#' @export
+setMethod("name", "Category", function (x) x[["name"]])
+#' @rdname describe-category
+#' @export
+setMethod("name<-", "Category", setName)
+#' @rdname describe-category
+#' @export
+setMethod("name<-", "NULL", function (x, value) {
+    halt('Cannot set name on NULL')
+})
+
+#' @rdname describe-category
+#' @export
+setMethod("value", "Category", function (x) {
+    v <- x[["numeric_value"]]
+    return(ifelse(is.null(v), NA_real_, as.numeric(v)))
+})
+#' @rdname describe-category
+#' @export
+setMethod("value<-", "Category", setValue)
+#' @rdname describe-category
+#' @export
+setMethod("id", "Category", function (x) as.integer(x[["id"]]))
+
+#' @rdname is-selected-categories
+#' @export
+setMethod("is.selected", "Category", function (x) isTRUE(x$selected))
+
+#' @rdname is-selected-categories
+#' @export
+setMethod("is.selected<-", "Category", function (x, value) {
+    if (!is.TRUEorFALSE(value)) {
+        halt("Value must be either TRUE or FALSE.")
+    }
+    x$selected <- value
+    return(x)
+})
+
+#' @rdname is-na-categories
+#' @export
+setMethod("is.na", "Category", function (x) isTRUE(x$missing))
+
+#' @rdname is-na-categories
+#' @export
+setMethod("is.na<-", c("Category", "logical"), function (x, value) {
+    stopifnot(length(value) == 1)
+    x$missing <- isTRUE(value)
+    return(x)
+})

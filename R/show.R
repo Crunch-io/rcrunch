@@ -297,14 +297,7 @@ setMethod("getShowContent", "Multitable", showMultitable)
 setMethod("getShowContent", "ShojiOrder", showShojiOrder)
 setMethod("getShowContent", "VariableOrder",
     function (x) showShojiOrder(x, key=namekey(x)))
-setMethod("getShowContent", "ShojiCatalog",
-    function (x) catalogToDataFrame(x, TRUE))
-setMethod("getShowContent", "BatchCatalog",
-    function (x) catalogToDataFrame(x, c("id", "status"), rownames=NULL))
-setMethod("getShowContent", "VariableCatalog",
-    function (x) catalogToDataFrame(x, c("alias", "name", "type"), rownames=NULL))
-setMethod("getShowContent", "FilterCatalog",
-    function (x) catalogToDataFrame(x, c("name", "id", "is_public"), rownames=NULL))
+setMethod("getShowContent", "ShojiCatalog", function (x) as.data.frame(x))
 setMethod("getShowContent", "VersionCatalog", formatVersionCatalog)
 setMethod("getShowContent", "MemberCatalog",
     function (x) {
@@ -326,10 +319,11 @@ setMethod("show", "CrunchCube", function (object) showTransforms(object))
 
 #' @rdname show-crunch
 #' @export
-setMethod("show", "OrderGroup", function (object) cat(showOrderGroup(object, index=structure(lapply(urls(object), function (x) list(name=x)), .Names=urls(object)), key="name"), sep="\n"))
-
-
-
+setMethod("show", "OrderGroup", function (object) {
+    ind <- structure(lapply(urls(object), function (x) list(name=x)),
+        .Names=urls(object))
+    cat(showOrderGroup(object, index=ind, key="name"), sep="\n")
+})
 
 #' @rdname show-crunch
 #' @export
