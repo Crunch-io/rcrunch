@@ -4,11 +4,12 @@
 \docType{class}
 \name{Transforms-class}
 \alias{Transforms-class}
-\alias{transforms}
-\alias{transforms<-}
 \alias{Transforms}
 \alias{transforms,CrunchCube-method}
 \alias{transforms<-,CrunchCube,NULL-method}
+\alias{Transforms}
+\alias{transforms}
+\alias{transforms<-}
 \alias{transforms,CrunchVariable-method}
 \alias{transforms,VariableTuple-method}
 \alias{transforms<-,CrunchVariable,ANY-method}

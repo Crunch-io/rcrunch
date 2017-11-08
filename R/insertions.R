@@ -1,3 +1,21 @@
+#' Insert categories in transformations
+#'
+#' Insertions allow you to insert new categories into a categorical-like
+#' response on a variable's [transform](Transforms).
+#'
+#' @param data For the constructor functions `Insertion` and
+#' `Insertions`, you can either pass in attributes via `...` or you
+#' can create the objects with a fully defined `list` representation of
+#' the objects via the `data` argument. See the examples.
+#' @param x For the attribute getters and setters, an object of class
+#' Insertion or Insertions
+#' @param ... additional arguments to `[`, ignored
+#' @param value For `[<-`, the replacement Insertion to insert
+#' @name Insertions
+#' @aliases anchor anchor<- anchors func func<- funcs args args<-
+NULL
+
+
 is.insertion <- function (x) inherits(x, "Insertion")
 
 setValidity("Insertion", function (object) {

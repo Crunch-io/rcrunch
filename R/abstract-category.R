@@ -10,6 +10,10 @@ setMethod("$<-", "AbsCat", function (x, name, value) {
     return(x)
 })
 
+############################################
+## Abstract Category general methods
+############################################
+
 setName <- function (x, value) {
     x[["name"]] <- validateNewName(value)
     return(x)
@@ -23,15 +27,6 @@ validateNewName <- function (val) {
         halt('Names must be non-missing')
     }
     invisible(val)
-}
-
-setValue <- function (x, value) {
-    value_to_set <- suppressWarnings(as.numeric(value))
-    if (is.na(value_to_set) && !is.na(value)) {
-        halt("Category values must be numeric")
-    }
-    x[["numeric_value"]] <- value_to_set
-    return(x)
 }
 
 getName <- function (x) {
@@ -51,15 +46,30 @@ setMethod("name<-", "NULL", function (x, value) {
     halt('Cannot set name on NULL')
 })
 
+############################################
+## Category specific methods
+############################################
+
+setValue <- function (x, value) {
+    value_to_set <- suppressWarnings(as.numeric(value))
+    if (is.na(value_to_set) && !is.na(value)) {
+        halt("Category values must be numeric")
+    }
+    x[["numeric_value"]] <- value_to_set
+    return(x)
+}
+
 #' @rdname describe-category
 #' @export
 setMethod("value", "AbsCat", function (x) {
     v <- as.numeric(x[["numeric_value"]])
     return(ifelse(is.null(v), NA_real_, v))
 })
+
 #' @rdname describe-category
 #' @export
 setMethod("value<-", "AbsCat", setValue)
+
 #' @rdname describe-category
 #' @export
 setMethod("id", "AbsCat", function (x) {
@@ -80,7 +90,6 @@ setMethod("is.selected<-", "AbsCat", function (x, value) {
     return(x)
 })
 
-
 #' @rdname is-na-categories
 #' @export
 setMethod("is.na", "AbsCat", function (x) isTRUE(x$missing))
@@ -93,13 +102,13 @@ setMethod("is.na<-", c("AbsCat", "logical"), function (x, value) {
     return(x)
 })
 
+############################################
+## Insertion specific methods
+############################################
+
 #' @rdname Insertions
 #' @export
 setMethod("args", "AbsCat", function (x) {
-    func <- function(x)
-        if (is.null(func)) {
-            return(NA)
-        }
     if (all(is.null(x[["args"]]))) {
         return(NA)
     }
@@ -120,7 +129,6 @@ setMethod("func", "AbsCat", function (x) {
 
     return(ifelse(is.null(f), NA_character_, f))
 })
-
 
 #' @rdname Insertions
 #' @export

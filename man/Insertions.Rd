@@ -4,14 +4,6 @@
 \docType{class}
 \name{Insertions-class}
 \alias{Insertions-class}
-\alias{anchor}
-\alias{anchor<-}
-\alias{anchors}
-\alias{func}
-\alias{func<-}
-\alias{funcs}
-\alias{args}
-\alias{args<-}
 \alias{Insertions}
 \alias{Insertion-class}
 \alias{Insertion}
@@ -22,6 +14,15 @@
 \alias{func,AbsCat-method}
 \alias{func,NULL-method}
 \alias{anchor,NULL-method}
+\alias{Insertions}
+\alias{anchor}
+\alias{anchor<-}
+\alias{anchors}
+\alias{func}
+\alias{func<-}
+\alias{funcs}
+\alias{args}
+\alias{args<-}
 \alias{anchor<-,Insertion-method}
 \alias{subtotals<-,Insertion,ANY-method}
 \title{Insert categories in transformations}

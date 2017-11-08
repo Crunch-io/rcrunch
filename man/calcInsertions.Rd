@@ -4,14 +4,15 @@
 \alias{calcInsertions}
 \title{Given values from an array and transforms, calculate the insertions}
 \usage{
-calcInsertions(vec, inserts, var_cats)
+calcInsertions(vec, elements, var_cats)
 }
 \arguments{
-\item{vec}{values to transform (typically a single dimension of an array)}
+\item{vec}{values to transform (a single dimension of an array)}
+
+\item{elements}{AbsCats of both categories and insertions to calculate.
+Generally derived from \code{mapInsertions()}}
 
 \item{var_cats}{the \code{Categories} object of the transform}
-
-\item{inserst}{an \code{Insertions} object to pull transformations from}
 }
 \value{
 the values given in \code{vec}, with any insertions specified in

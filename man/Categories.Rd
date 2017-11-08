@@ -12,17 +12,17 @@
 \alias{Categories}
 \alias{Category-class}
 \alias{Category}
-\alias{values,AbsCats-method}
-\alias{names<-,AbsCats-method}
-\alias{values<-,AbsCats-method}
 \alias{names,AbsCats-method}
-\alias{ids,AbsCats-method}
+\alias{names<-,AbsCats-method}
 \alias{[,AbsCats,ANY,ANY-method}
 \alias{[,AbsCats,character,ANY-method}
 \alias{[,AbsCats,numeric,ANY-method}
 \alias{[<-,AbsCats,character,ANY,ANY-method}
 \alias{[[,AbsCats,character-method}
 \alias{[[<-,AbsCats,character,ANY,ANY-method}
+\alias{ids,AbsCats-method}
+\alias{values,AbsCats-method}
+\alias{values<-,AbsCats-method}
 \alias{[<-,Categories,ANY,ANY,ANY-method}
 \alias{ids<-,Categories-method}
 \title{Categories in CategoricalVariables}
@@ -31,15 +31,9 @@ Categories(..., data = NULL)
 
 Category(..., data = NULL)
 
-\S4method{values}{AbsCats}(x)
-
-\S4method{names}{AbsCats}(x) <- value
-
-\S4method{values}{AbsCats}(x) <- value
-
 \S4method{names}{AbsCats}(x)
 
-\S4method{ids}{AbsCats}(x)
+\S4method{names}{AbsCats}(x) <- value
 
 \S4method{[}{AbsCats,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
@@ -52,6 +46,12 @@ Category(..., data = NULL)
 \S4method{[[}{AbsCats,character}(x, i, j, ...)
 
 \S4method{[[}{AbsCats,character,ANY,ANY}(x, i, j, ...) <- value
+
+\S4method{ids}{AbsCats}(x)
+
+\S4method{values}{AbsCats}(x)
+
+\S4method{values}{AbsCats}(x) <- value
 
 \S4method{[}{Categories,ANY,ANY,ANY}(x, i, j, ...) <- value
 

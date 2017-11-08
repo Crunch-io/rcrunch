@@ -3,12 +3,13 @@
 \docType{class}
 \name{Subtotal-class}
 \alias{Subtotal-class}
-\alias{subtotals}
-\alias{subtotals<-}
-\alias{makeInsertion}
 \alias{Subtotal}
 \alias{Heading-class}
 \alias{Heading}
+\alias{SubtotalsHeadings}
+\alias{subtotals}
+\alias{subtotals<-}
+\alias{makeInsertion}
 \alias{subtotals,CrunchVariable-method}
 \alias{subtotals,VariableTuple-method}
 \alias{subtotals<-,CrunchVariable,ANY-method}
@@ -78,9 +79,11 @@ To get an array of just the subtotal rows from a CrunchCube, use the function
 # Agree, Neither Agree nor Disagree, Somewhat Disagree, and Strongly Disagree,
 # to make two subtotals for Agree and Disagree:
 subtotals(ds$opinion) <- list(
-    Subtotal(name = "Agree", categories = c("Strongly Agree", "Somewhat Agree"),
+    Subtotal(name = "Agree",
+             categories = c("Strongly Agree", "Somewhat Agree"),
              after = "Somewhat Agree"),
-    Subtotal(name = "Disagree", categories = c("Strongly Disagree", "Somewhat Disagree"),
+    Subtotal(name = "Disagree",
+             categories = c("Strongly Disagree", "Somewhat Disagree"),
              after = "Strongly Disagree")
 )
 
@@ -89,6 +92,13 @@ subtotals(ds$opinion) <- Heading(name = "All opinions", after = 0)
 
 # to see the subtotals and headings associated with a variable
 subtotals(ds$opinion)
+
+# when you use a variable with subtotals and headings in a cube, you see them
+# by default
+opinion_cube <- crtabs(~opinion, ds)
+
+# to get just the subtotals,
+subtotalArray(opinion_cube)
 
 # to remove all subtotals and headings
 subtotals(ds$opinion) <- NULL

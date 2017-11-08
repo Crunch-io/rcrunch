@@ -1,3 +1,21 @@
+#' Transformations of variable and cube views
+#'
+#' Transformations allow you to change how a variable or cube is displayed
+#' without changing the underlying data.
+#'
+#' @param data For the constructor function `Transforms` you can either pass in
+#' attributes via `...` or you can create the objects with a fully defined
+#' `list` representation of the objects via the `data` argument. See the examples.
+#' @param ... For the constructor function `Transforms` you can pass
+#' in attributes via `...`
+#' @param x For the attribute getters and setters, an object of class
+#' Transforms
+#' @param value For `[<-`, the replacement Transforms to insert
+#' @name Transforms
+#' @aliases transforms transforms<-
+NULL
+
+
 getTransforms <- function (x) {
     var_entity <- entity(x)
     trans <- var_entity@body$view$transform
@@ -146,7 +164,10 @@ is.abscat.category <- function (x) {
 
 # make styles based on transforms and categories
 transformStyles <- function (trans, cats) {
+    # collate categories and instertions
     all_labs <- collateCats(trans$insertions, cats)
+
+    # make a list of styles to apply
     styles <- lapply(all_labs, function (lab) {
         if (is.abscat.subtotal(lab)) {
             return(subtotalStyle)
@@ -165,51 +186,57 @@ subtotalStyle <- c(italic, make_style("#005e46"))
 
 #' Given values from an array and transforms, calculate the insertions
 #'
-#' @param vec values to transform (typically a single dimension of an array)
-#' @param inserst an `Insertions` object to pull transformations from
+#' @param vec values to transform (a single dimension of an array)
+#' @param elements AbsCats of both categories and insertions to calculate.
+#' Generally derived from `mapInsertions()`
 #' @param var_cats the `Categories` object of the transform
 #'
 #' @return the values given in `vec`, with any insertions specified in
 #' `trans` calculated
 #' @keywords internal
-calcInsertions <- function (vec, inserts, var_cats) {
+calcInsertions <- function (vec, elements, var_cats) {
+    # we always calculate insertions at the lowest dimension
     if (length(dim(vec)) > 1) {
         halt("Calculating varaible transforms is not implemented for dimensions ",
              "greater than 1.")
     }
 
-    vec_out <- vapply(inserts, function (insert) {
-        # if insert is a category, return value
-        if (is.abscat.category(insert)) {
-            return(vec[name(insert)])
+    vec_out <- vapply(elements, function (element) {
+        # if element is a category, return value
+        if (is.abscat.category(element)) {
+            return(vec[name(element)])
         }
 
-        # if insert is a heading return NA
-        if (is.abscat.heading(insert)) {
+        # if element is a heading return NA
+        if (is.abscat.heading(element)) {
             return(NA)
         }
 
-        # if insert is a subtotal, sum the things
-        if (is.abscat.subtotal(insert)) {
+        # if element is a subtotal, sum the things
+        if (is.abscat.subtotal(element)) {
             # grab category combinations, and then sum those categories.
-            combos <- unlist(args(insert))
+            combos <- unlist(args(element))
             which.cats <- names(var_cats[ids(var_cats) %in% combos])
             return(sum(vec[which.cats]))
         }
 
-        # finally, check if there are other functions, warn and return NA
-        not_subtotal <- insert[["function"]] != "subtotal"
+        # finally, check if there are other functions, if there are warn, and
+        # return NA
+        not_subtotal <- element[["function"]] != "subtotal"
         if (not_subtotal) {
             warning("Transform functions other than subtotal are not supported.",
-                    " Applying only subtotals and ignoring ", insert[["function"]])
+                    " Applying only subtotals and ignoring ", element[["function"]])
         }
         return(NA)
     }, double(1), USE.NAMES = TRUE)
-    names(vec_out) <- names(inserts)
+
+    # make sure that the vector is named appropriately
+    names(vec_out) <- names(elements)
 
     return(vec_out)
 }
 
+# calculcate transforms for an array.
 calcTransforms <- function (ary, trans, var_cats,
                             include = c("subtotals", "headings", "cube_cells", "other_insertions")) {
     # TODO: other possible Transforms
@@ -253,7 +280,10 @@ mapInsertions <- function (inserts, var_cats, include) {
     # aren't being requested)
     cats_collated <- collateCats(new_inserts, var_cats)
 
-    # remove cube_cells if not in include
+    # remove cube_cells if not in include. We need to add them and remove them
+    # again even if include doesn't have "cube_cells" in order to ensure that
+    # the insertions above are returned in a similar order as if there were
+    # cube_cells returned.
     if (!("cube_cells" %in% include)) {
         cats_collated <- cats_collated[!is.abscat.category(cats_collated)]
     }
@@ -266,6 +296,7 @@ collateCats <- function (inserts, var_cats) {
     # setup abstract categories to collate into
     cats_out <- AbsCats(data=lapply(var_cats, function(x) {
         new_abscat <- as(x, "AbsCat")
+        # save the original class for easy of iding former categories later.
         new_abscat$class <- class(x)
         return(new_abscat)
     }))

@@ -56,3 +56,8 @@ test_that("abstract category [[ setter", {
     insrts[["Low"]] <- old_insrt
     expect_equal(insrts[["Low"]], old_insrt)
 })
+
+test_that("When used with NULL, func and anchor return NA", {
+    expect_equal(func(NULL), NA_character_)
+    expect_equal(anchor(NULL), NA_character_)
+})

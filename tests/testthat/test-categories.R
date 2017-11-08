@@ -85,11 +85,12 @@ with_mock_crunch({
     test_that("categories setters", {
         new_names <- c("masculino", "femenino", "No Data")
         names(cats) <- new_names
-        expect_true(is.categories(cats))
         expect_equal(names(cats), new_names)
         names(cats)[2] <- "donne"
-        expect_true(is.categories(cats))
         expect_equal(names(cats)[1:2], c("masculino", "donne"))
+        values(cats)[c(1, 2)] <- c(42, 24)
+        expect_identical(values(cats), c(42, 24, NA))
+        expect_true(is.categories(cats))
     })
 
     test_that("validation on category setting", {
