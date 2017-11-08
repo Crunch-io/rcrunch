@@ -1,18 +1,18 @@
 context("Subtotals and headings ")
 
-insrts_list <- list(list(anchor = 0, name = "First one",
-                         `function` = "subtotal", args = c(3, 4)),
-                    list(anchor = 999, name = "Last one",
-                         `function` = "subtotal", args = c(5, 6)),
-                    list(anchor = 10, name = "High",
-                         `function` = "subtotal", args = c(9, 10)),
-                    list(anchor = 2, name = "Low",
-                         `function` = "subtotal", args = c(1, 2)),
-                    list(anchor = 8, name = "missing anchor",
-                         `function` = "subtotal", args = c(2, 3)),
-                    list(anchor = 4, name = "missing categories",
-                         `function` = "subtotal", args = c(7, 8)))
-trans <- Transforms(insertions = Insertions(data=insrts_list))
+test_that("Subtotal accepts a variety of inputs", {
+    subtot1 <- Subtotal(name = "Approval", categories = c(1, 2), after = 2)
+    expect_true(is.Subtotal(subtot1))
+
+    subtot2 <- Subtotal(name = "Approval", categories = list(1, 2), after = 2)
+    expect_true(is.Subtotal(subtot2))
+
+    subtot3 <- Subtotal(name = "Approval", categories = list(1:2), after = 2)
+    expect_true(is.Subtotal(subtot3))
+
+    expect_equal(subtot1, subtot2)
+    expect_equal(subtot2, subtot3)
+})
 
 test_that("Subtotal validates", {
     expect_error(Subtotal(categories = c(1, 2), after = 2),

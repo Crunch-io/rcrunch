@@ -21,6 +21,8 @@ if (crunch_test_path == "") {
 source_if <- !interactive() || identical(Sys.getenv("NOT_CRAN"), "true")
 # And don't source it when running pkgdown
 source_if <- source_if && !identical(Sys.getenv("DEVTOOLS_LOAD"), "true")
+# and don't double source
+source_if <- source_if && quote(withr::with_envvar) != sys.calls()[[2]][[1]]
 if (source_if) {
     source(crunch_test_path)
 }

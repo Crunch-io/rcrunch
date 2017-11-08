@@ -15,6 +15,14 @@ setValidity("Subtotal", function (object) {
     return(val)
 })
 
+init.Subtotal <- function (.Object, ...) {
+    .Object <- callNextMethod()
+    # unlist, to flatten user inputs like list(1:2)
+    .Object$categories <- unlist(.Object$categories)
+    return(.Object)
+}
+setMethod("initialize", "Subtotal", init.Subtotal)
+
 setValidity("Heading", function (object) {
     reqs <- c("name", "after")
     mems <- reqs %in% names(object)
