@@ -218,7 +218,6 @@ with_mock_crunch({
                      paste0("Calculating varaible transforms is not ",
                             "implemented for dimensions greater than 1."))
     })
-
 })
 
 with_test_authentication({
@@ -243,8 +242,8 @@ with_test_authentication({
     test_that("Can remove transforms", {
         transforms(ds$v4) <- NULL
         v4_notrans <- array(c(10, 10), dim = 2,
-                        dimnames = list(c("B", "C")))
-        ds <- refresh(ds)
+                            dimnames = list(c("B", "C")))
+
         expect_null(transforms(ds$v4))
         expect_output(expect_equivalent(showTransforms(ds$v4), v4_notrans))
     })

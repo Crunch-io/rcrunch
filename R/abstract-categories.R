@@ -192,7 +192,7 @@ setMethod("lapply", "AbsCats", function (X, FUN, ...) {
 
 #' @rdname Insertions
 #' @export
-setMethod("anchors", "ANY", function (x) {
+setMethod("anchors", "AbsCats", function (x) {
     f <- vapply(x, anchor, integer(1))
     return(f)
 })
@@ -200,10 +200,9 @@ setMethod("anchors", "ANY", function (x) {
 
 #' @rdname Insertions
 #' @export
-setMethod("funcs", "ANY", function (x) {
+setMethod("funcs", "AbsCats", function (x) {
     f <- vapply(x, func, character(1))
     return(f)
 })
-
 
 # TODO: concatenateAbsCats

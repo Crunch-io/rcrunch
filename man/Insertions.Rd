@@ -15,8 +15,8 @@
 \alias{Insertions}
 \alias{Insertion-class}
 \alias{Insertion}
-\alias{anchors,ANY-method}
-\alias{funcs,ANY-method}
+\alias{anchors,AbsCats-method}
+\alias{funcs,AbsCats-method}
 \alias{args,AbsCat-method}
 \alias{anchor,AbsCat-method}
 \alias{func,AbsCat-method}
@@ -30,9 +30,9 @@ Insertions(..., data = NULL)
 
 Insertion(..., data = NULL)
 
-\S4method{anchors}{ANY}(x)
+\S4method{anchors}{AbsCats}(x)
 
-\S4method{funcs}{ANY}(x)
+\S4method{funcs}{AbsCats}(x)
 
 \S4method{args}{AbsCat}(x)
 

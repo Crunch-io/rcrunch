@@ -219,9 +219,9 @@ calcTransforms <- function (ary, trans, var_cats,
     cat_insert_map <- mapInsertions(trans$insertions, var_cats, include = include)
 
     # calculate the insertions based on cat_insert_map
-    new_ary <- calcInsertions(ary, cat_insert_map, var_cats)
+    ary <- calcInsertions(ary, cat_insert_map, var_cats)
 
-    return(new_ary)
+    return(ary)
 }
 
 # make a map of insertions and categories to be calculated
@@ -238,9 +238,11 @@ mapInsertions <- function (inserts, var_cats, include) {
         new_inserts <- c(new_inserts, inserts[is.abscat.heading(inserts)])
     }
 
-    # add non-subtotal insertions
+    # add non-subtotal insertions we must check that inserts are not subtotals
+    # or headings
     if ("other_insertions" %in% include) {
-        nonsubtots <- inserts[!(is.na(funcs(inserts))) & "subtotal" != funcs(inserts)]
+        nonsubtots <- inserts[!is.abscat.subtotal(inserts) &
+                                  !is.abscat.heading(inserts)]
         new_inserts <- c(new_inserts, nonsubtots)
     }
 
