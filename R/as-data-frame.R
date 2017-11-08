@@ -47,33 +47,28 @@ as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE,
 #' @export
 as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE, ...) {
     ds <- attr(x, "crunchDataset")
-    default.stringsAsFactors <- function () FALSE
-    limit <- min(c(10000, getOption("crunch.data.frame.limit")))
-    if (nrow(ds) * ncol(ds) > limit) {
-        ## TODO: switch to downloading CSV and reading that?
-        halt("Dataset too large to coerce to data.frame. ",
-            "Consider subsetting it first")
+    tmp <- tempfile()
+    write.csv(ds, tmp)
+    out <- read.csv(tmp, stringsAsFactors = FALSE)
+    out[] <- unlist(lapply(ds, coerceVariable, out))
+    return(out)
+}
+
+coerceVariable <- function(var, df){
+    if (is.Array(var)) {
+        out <- lapply(subvariables(var), function(x){
+            factor(df[[x$name]], levels = names(categories(var)))
+        })
+    } else if (is.Numeric(var)) {
+        out <- list(as.numeric(df[[name(var)]]))
+    } else if (is.Categorical(var)) {
+        out <- list(factor(df[[name(var)]], levels = names(categories(var))))
+    } else if (is.Datetime(var)) {
+        out <- list(coercion_fun = as.Date(df[[name(var)]]))
+    } else if (is.Text(var)) {
+        out <- list(coercion_fun = as.character(df[[name(var)]]))
     }
-    var_names <- names(x)
-    # TODO: something intelligent with modes
-    out <- lapply(var_names, function(var) {
-        values <- x[[var]]
-        
-        # Flatten all array variables, using only the subvariable name. We need 
-        # to create a list layer for non-dataframe values so that we can unlist 
-        # them later.
-        if (is.data.frame(values)) {
-            values <- as.list(values)
-        } else {
-            values <- list(values)
-            names(values) <- var
-        }
-        
-        return(values)
-    })
-    out <- unlist(out, recursive = FALSE)
-    
-    return(structure(out, class="data.frame", row.names=c(NA, -nrow(ds))))
+    return(out)
 }
 
 

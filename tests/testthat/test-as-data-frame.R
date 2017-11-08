@@ -114,14 +114,6 @@ with_mock_crunch({
                            "subvar2", "subvar1", "subvar3")),
             "Variable gender is hidden")
     })
-    
-    test_that("as.data.frame size limit", {
-        with(temp.option(crunch.data.frame.limit=50), {
-            expect_error(as.data.frame(ds, force=TRUE),
-                "Dataset too large to coerce")
-            expect_true(is.data.frame(as.data.frame(ds[,1:2], force=TRUE)))
-        })
-    })
 
     test_that(".crunchPageSize", {
         expect_identical(.crunchPageSize(ds$birthyr), 100000L)
