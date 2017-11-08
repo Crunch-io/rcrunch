@@ -57,35 +57,7 @@ setMethod("[<-", c("Categories", "ANY"), function (x, i, ..., value) {
     return(x)
 })
 
-#' @rdname Categories
-#' @export
-setMethod("values", "Categories", function (x) vapply(x, value, numeric(1)))
 
-setNames <- function (x, value) {
-    if (is.null(value) || !is.character(value)) {
-        halt('Names must be of class "character"')
-    }
-    if (!identical(length(x), length(value))) {
-        halt("Invalid names: supplied ", length(value), " names for ",
-            length(x), " categories")
-    }
-    if (any(is.na(value))) {
-        halt("Category names must be non-missing")
-    }
-    x[] <- mapply(setName, x, value=value, SIMPLIFY=FALSE)
-    return(x)
-}
-setValues <- function (x, value) {
-    x[] <- mapply(setValue, x[], value=value, SIMPLIFY=FALSE)
-    return(x)
-}
-
-#' @rdname Categories
-#' @export
-setMethod("names<-", "Categories", setNames)
-#' @rdname Categories
-#' @export
-setMethod("values<-", "Categories", setValues)
 #' @rdname Categories
 #' @export
 setMethod("ids<-", "Categories", function (x, value) {
@@ -139,11 +111,6 @@ setMethod("na.omit", "Categories", function (object, ...) {
 #' @name is-na-categories
 NULL
 
-#' @rdname is-na-categories
-#' @aliases is-na-categories
-#' @export
-setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical(1), USE.NAMES=FALSE), .Names=names(x)))
-
 #' is.selected for Categories
 #'
 #' Crunch Multiple Response variables identify one or more categories as "selected".
@@ -159,27 +126,6 @@ setMethod("is.na", "Categories", function (x) structure(vapply(x, is.na, logical
 #' @name is-selected-categories
 #' @aliases is.selected<-
 NULL
-
-#' @rdname is-selected-categories
-#' @export
-setMethod("is.selected", "Categories", function (x) structure(vapply(x, is.selected, logical(1), USE.NAMES=FALSE), .Names=names(x)))
-
-#' @rdname is-selected-categories
-#' @export
-setMethod("is.selected<-", "Categories", function (x, value) {
-    if (is.TRUEorFALSE(value)) {
-        value <- rep(value, length(x))
-    }
-    if (length(value) != length(x)) {
-        halt("You supplied ", length(value), " logical values for ", length(x), " Categories.")
-    }
-
-    x@.Data <- mapply(function (x, value) {
-            is.selected(x) <- value
-            return(x)
-        }, x=x@.Data, value=value, USE.NAMES=FALSE, SIMPLIFY=FALSE)
-    return(x)
-})
 
 n2i <- function (x, cats, strict=TRUE) {
     ## Convert x from category names to the corresponding category ids
@@ -213,26 +159,6 @@ handleMissingCategoryLookup <- function (result, original, strict=TRUE) {
     return(result)
 }
 
-#' @rdname is-na-categories
-#' @export
-setMethod("is.na<-", c("Categories", "character"), function (x, value) {
-    ix <- match(value, names(x))
-    out <- handleMissingCategoryLookup(ix, value, strict=TRUE)
-    x[ix] <- lapply(x[ix], `is.na<-`, value=TRUE)
-    return(x)
-})
-
-#' @rdname is-na-categories
-#' @export
-setMethod("is.na<-", c("Categories", "logical"), function (x, value) {
-    stopifnot(length(x) == length(value))
-    x@.Data <- mapply(function (x, value) {
-            is.na(x) <- value
-            return(x)
-        }, x=x@.Data, value=value, USE.NAMES=FALSE, SIMPLIFY=FALSE)
-    return(x)
-})
-
 addNoDataCategory <- function (variable) {
     cats <- ensureNoDataCategory(categories(variable))
     if (is.subvariable(variable)) {
@@ -254,11 +180,6 @@ ensureNoDataCategory <- function (cats) {
         return(c(cats, Category(data=.no.data)))
     }
 }
-
-setMethod("lapply", "Categories", function (X, FUN, ...) {
-    X@.Data <- lapply(X@.Data, FUN, ...)
-    return(X)
-})
 
 #' Change the id of a category for a categorical variable
 #'

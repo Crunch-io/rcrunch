@@ -324,7 +324,7 @@ Category <- function (..., data=NULL) {
 #' @param ... additional arguments to `[`, ignored
 #' @param value For `[<-`, the replacement Insertion to insert
 #' @rdname Insertions
-#' @aliases anchor anchor<- func func<- args args<- funcs
+#' @aliases anchor anchor<- anchors func func<- funcs args args<-
 #' @export
 setClass("Insertions", contains="AbsCats")
 

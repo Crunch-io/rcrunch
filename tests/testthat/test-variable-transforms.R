@@ -119,6 +119,24 @@ test_that("collateCats works all together", {
     # 7  - missing categories
 })
 
+insrt_heads <- Insertions(data=list(list(name = "Subtitle", anchor = 0)))
+
+test_that("AbsCat type testers work", {
+    expect_true(is.abscat.subtotal(insrts[[1]]))
+    expect_true(is.abscat.heading(insrt_heads[[1]]))
+    expect_true(is.abscat.category(cats[[1]]))
+
+    expect_true(all(is.abscat.subtotal(insrts)))
+    expect_true(all(is.abscat.heading(insrt_heads)))
+    expect_true(all(is.abscat.category(cats)))
+
+    # collate and check
+    collated <- collateCats(c(insrts, insrt_heads), cats)
+    expect_true(all(is.abscat.subtotal(collated[c(2, 5, 8, 15, 16, 17)])))
+    expect_true(all(is.abscat.heading(collated[c(1)])))
+    expect_true(all(is.abscat.category(collated[c(3, 4, 6, 7, 9, 10,
+                                                  11, 12, 13, 14)])))})
+
 with_mock_crunch({
     ds <- loadDataset("test ds")
 
@@ -178,7 +196,7 @@ with_mock_crunch({
                           loc_ary)
     })
 
-    test_that("Transform works without a function anchors", {
+    test_that("Transform works without a function", {
         loc_var <- ds$location
         trns <- transforms(loc_var)
         trns[['insertions']][[1]][['function']] <- NULL

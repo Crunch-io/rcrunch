@@ -85,24 +85,83 @@ setMethod("showTransforms", "CategoricalVariable", function (x) {
     return(invisible(tab))
 })
 
-#' @importFrom crayon make_style italic underline
-headerStyle <- c(nonas, make_style("#546499"), underline) # blue with underline
-subtotalStyle <- c(italic, make_style("#005e46"))
+
+#' Test if an abstract category object is of a conceptual type
+#'
+#' Convenience functions to test if an abstract category (AbsCat) object is a
+#' specific type. These types are defined by the properties of the abstract
+#' category object.
+#'
+#' `is.abscat.subtotal` is `x` a subtotal insertion?
+#' `is.abscat.heading` is `x` a heading insertion?
+#' `is.abscat.category` is `x` a category?
+#'
+#' @param x an AbsCat object
+#'
+#' @return logical if the AbsCat object is
+#'
+#' @name AbsCat-type-tests
+#' @keywords internal
+NULL
+
+#' @rdname AbsCat-type-tests
+#' @export
+is.abscat.subtotal <- function (x) {
+    if (is.abstract.categories(x)) {
+        return(!(is.na(funcs(x))) & funcs(x) == 'subtotal')
+    }
+
+    return(!(is.na(func(x))) & func(x) == 'subtotal')
+}
+
+#' @rdname AbsCat-type-tests
+#' @export
+is.abscat.heading <- function (x) {
+    if (is.abstract.categories(x)) {
+        return(is.na(funcs(x)) & !is.na(anchors(x)))
+    }
+
+    return(is.na(func(x)) & !is.na(anchor(x)))
+}
+
+#' @rdname AbsCat-type-tests
+#' @export
+is.abscat.category <- function (x) {
+    # if the class has already been specified, use that.
+    if (!is.null(x$class)) {
+        return(x$class == "Category")
+    }
+
+    # Otherwise, check if the properties of x look like a category, since
+    # value is sometimes legitamately NA, just check id, missing, and name
+    if (is.abstract.categories(x)) {
+        all <- !is.na(ids(x)) & !is.na(is.na(x)) & !is.na(names(x))
+    }  else {
+        all <- !is.na(id(x)) & !is.na(is.na(x)) & !is.na(name(x))
+    }
+
+    return(all)
+}
+
 
 # make styles based on transforms and categories
 transformStyles <- function (trans, cats) {
     all_labs <- collateCats(trans$insertions, cats)
-    styles <- lapply(seq_along(all_labs), function (i) {
-        if (!is.null(all_labs[[i]]$func) && all_labs[[i]]$func == 'subtotal') {
+    styles <- lapply(all_labs, function (lab) {
+        if (is.abscat.subtotal(lab)) {
             return(subtotalStyle)
-        } else if (is.null(all_labs[[i]]$func) && !is.null(all_labs[[i]]$anchor) ) {
-            return(headerStyle)
+        } else if (is.abscat.heading(lab)) {
+            return(headingStyle)
         } else {
             return(NULL)
         }
     })
     return(styles)
 }
+
+#' @importFrom crayon make_style italic underline
+headingStyle <- c(nonas, make_style("#546499"), underline) # blue with underline
+subtotalStyle <- c(italic, make_style("#005e46"))
 
 #' Given values from an array and transforms, calculate the insertions
 #'
@@ -120,28 +179,31 @@ calcInsertions <- function (vec, inserts, var_cats) {
     }
 
     vec_out <- vapply(inserts, function (insert) {
-        # if there is a category, return value
-        if (insert$class == "Category") {
+        # if insert is a category, return value
+        if (is.abscat.category(insert)) {
             return(vec[name(insert)])
         }
 
-        # if there is no function, it is a heading return NA
-        if (is.null(insert[["function"]])) {
+        # if insert is a heading return NA
+        if (is.abscat.heading(insert)) {
             return(NA)
         }
 
-        # check if there are other functions, warn and return NA
+        # if insert is a subtotal, sum the things
+        if (is.abscat.subtotal(insert)) {
+            # grab category combinations, and then sum those categories.
+            combos <- unlist(args(insert))
+            which.cats <- names(var_cats[ids(var_cats) %in% combos])
+            return(sum(vec[which.cats]))
+        }
+
+        # finally, check if there are other functions, warn and return NA
         not_subtotal <- insert[["function"]] != "subtotal"
-        if (any(not_subtotal)) {
+        if (not_subtotal) {
             warning("Transform functions other than subtotal are not supported.",
                     " Applying only subtotals and ignoring ", insert[["function"]])
-            return(NA)
         }
-
-        # grab category combinations, and then sum those categories.
-        combos <- unlist(args(insert))
-        which.cats <- names(var_cats[ids(var_cats) %in% combos])
-        return(sum(vec[which.cats]))
+        return(NA)
     }, double(1), USE.NAMES = TRUE)
     names(vec_out) <- names(inserts)
 
@@ -167,13 +229,13 @@ mapInsertions <- function (inserts, var_cats, include) {
     new_inserts <- list()
     # add subtotals if they are found in include
     if ("subtotals" %in% include) {
-        subtots <- inserts[!(is.na(funcs(inserts))) & "subtotal" == funcs(inserts)]
+        subtots <- inserts[is.abscat.subtotal(inserts)]
         new_inserts <- c(new_inserts, subtots)
     }
 
     # add subtotals if they are in include
     if ("headings" %in% include) {
-        new_inserts <- c(new_inserts, inserts[is.na(funcs(inserts))])
+        new_inserts <- c(new_inserts, inserts[is.abscat.heading(inserts)])
     }
 
     # add non-subtotal insertions
@@ -191,9 +253,7 @@ mapInsertions <- function (inserts, var_cats, include) {
 
     # remove cube_cells if not in include
     if (!("cube_cells" %in% include)) {
-        cats_collated <- cats_collated[!vapply(cats_collated, function(x) {
-            x$class == "Category"
-        }, logical(1))]
+        cats_collated <- cats_collated[!is.abscat.category(cats_collated)]
     }
 
     return(cats_collated)

@@ -64,45 +64,7 @@ setSubtotal <- function (x, value) {
 
 #' @rdname Insertions
 #' @export
-setMethod("anchor", "Insertion", function (x) {
-    n <- x[["anchor"]]
-    return(ifelse(is.null(n), NA_character_, n))
-})
-#' @rdname Insertions
-#' @export
 setMethod("anchor<-", "Insertion", setAnchor)
-
-#' @rdname Insertions
-#' @export
-setMethod("args", "AbsCat", function (x) {
-    func <- function(x)
-    if (is.null(func)) {
-        return(NA)
-    }
-    if (all(is.null(x[["args"]]))) {
-        return(NA)
-    }
-    return(x[["args"]])
-})
-#' @rdname Insertions
-#' @export
-setMethod("func", "AbsCat", function (x) {
-    f <- x[["function"]]
-
-    return(ifelse(is.null(f), NA_character_, f))
-})
-
-
-#' @rdname Insertions
-#' @export
-setMethod("funcs", "AbsCats", function (x) {
-    f <- vapply(x, func, character(1))
-    return(f)
-})
-
-#' @rdname Insertions
-#' @export
-setMethod("funcs", "NULL", function (x) NA_character_)
 
 #' @rdname Insertions
 #' @export
