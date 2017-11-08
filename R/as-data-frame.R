@@ -16,10 +16,10 @@
 #' @param optional part of as.data.frame signature. Ignored.
 #' @param force logical: actually coerce the dataset to `data.frame`, or
 #' leave the columns as unevaluated promises. Default is `FALSE`.
-#' @param row.order vector of indices. Which, and their order, of the rows of 
-#'  the dataset should be presented as (default: `NULL`). If `NULL`, then the 
+#' @param row.order vector of indices. Which, and their order, of the rows of
+#'  the dataset should be presented as (default: `NULL`). If `NULL`, then the
 #'  Crunch Dataset order will be used.
-#' @param categorical.mode what mode should categoricals be pulled as? One of 
+#' @param categorical.mode what mode should categoricals be pulled as? One of
 #' factor, numeric, id (default: factor)
 #' @param include.hidden should hidden variables be included? (default: `FALSE`)
 #' @param ... additional arguments passed to `as.data.frame` (default method).
@@ -30,7 +30,7 @@ NULL
 
 #' @rdname dataset-to-R
 #' @export
-as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE,
+as.data.frame.CrunchDataset <- function (x, debug = FALSE, row.names = NULL, optional = FALSE,
                                         force=FALSE, categorical.mode = "factor",
                                         include.hidden = FALSE,
                                         row.order = NULL, ...) {
@@ -38,20 +38,38 @@ as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE,
                            categorical.mode = categorical.mode,
                            include.hidden = include.hidden)
     if (force) {
-        out <- as.data.frame(out)
+        out <- as.data.frame(out, debug = debug)
     }
     return(out)
 }
 
 #' @rdname dataset-to-R
 #' @export
-as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE, ...) {
+as.data.frame.CrunchDataFrame <- function (x, debug = FALSE,  row.names = NULL, optional = FALSE, ...) {
+    if(debug) browser()
     ds <- attr(x, "crunchDataset")
     tmp <- tempfile()
     write.csv(ds, tmp)
-    out <- read.csv(tmp, stringsAsFactors = FALSE)
-    out[] <- unlist(lapply(ds, coerceVariable, out))
-    return(out)
+    ds_out <- read.csv(tmp, stringsAsFactors = FALSE)
+    ds_out[] <- unlist(lapply(ds, coerceVariable, ds_out), recursive = FALSE)
+
+    var_names <- names(x)
+
+
+    ## Crunch Dataframes contain both server variables and local variables this
+    ## ensures that both are returned in the proper order.
+    out <- lapply(var_names, function(v){
+        if (v %in% names(ds_out)) {
+            if (tuple(ds[[v]])$discarded) {
+                warning("Variable ", v, " is hidden", call.=FALSE)
+            }
+            return(ds_out[[v]])
+        } else {
+            return(x[[v]])
+        }
+    })
+    names(out) <- var_names
+    return(structure(out, class="data.frame", row.names=c(NA, -nrow(ds))))
 }
 
 coerceVariable <- function(var, df){

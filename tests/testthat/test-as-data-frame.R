@@ -84,8 +84,9 @@ with_mock_crunch({
     })
 
     test_that("as.data.frame(as.data.frame())", {
-        expect_true(is.data.frame(as.data.frame(as.data.frame(ds))))
-        expect_true(is.data.frame(as.data.frame(ds, force=TRUE)))
+        expect_POST(write.csv(ds, file=""),
+            'https://app.crunch.io/api/datasets/1/export/csv/',
+            '{"filter":null,"options":{"use_category_ids":false}}')
     })
 
     test_that("as.data.frame() works with hidden variables", {
@@ -96,23 +97,12 @@ with_mock_crunch({
         expect_equal(names(new_ds_df),
                      aliases(variables(new_ds)))
         expect_equal(ncol(new_ds_df), 6)
-        expect_silent(
-            expect_equal(names(as.data.frame(new_ds_df)),
-                         c("birthyr", "location", "subvar2", "subvar1", 
-                           "subvar3", "textVar", "starttime", "subvar2", 
-                           "subvar1", "subvar3")))
-        
+
         # now we want the hidden vars to be includes
         new_ds_df <- as.data.frame(new_ds, include.hidden = TRUE)
         expect_equal(names(new_ds_df),
                      aliases(allVariables(new_ds)))
         expect_equal(ncol(new_ds_df), 7)
-        expect_warning(
-            expect_equal(names(as.data.frame(new_ds_df)),
-                         c("birthyr", "gender", "location", "subvar2", 
-                           "subvar1", "subvar3", "textVar", "starttime",
-                           "subvar2", "subvar1", "subvar3")),
-            "Variable gender is hidden")
     })
 
     test_that(".crunchPageSize", {
@@ -125,13 +115,16 @@ with_mock_crunch({
         expect_identical(.crunchPageSize(2016 - ds$birthyr), 50000L)
     })
     
+
     test.df <- as.data.frame(ds)
     
+
     test_that("model.frame thus works on CrunchDataset", {
         expect_identical(model.frame(birthyr ~ gender, data=test.df),
                          model.frame(birthyr ~ gender, data=ds))
     })
     
+
     test_that("so lm() should work too", {
         test.lm <- lm(birthyr ~ gender, data=ds)
         expected <- lm(birthyr ~ gender, data=test.df)
@@ -200,6 +193,23 @@ with_test_authentication({
     test_that("as.data.frame(force) with API", {
         expect_true(is.data.frame(as.data.frame(as.data.frame(ds))))
         expect_true(is.data.frame(as.data.frame(ds, force=TRUE)))
+    })
+
+    test_that("as.data.frame() works with hidden variables", {
+        new_ds <- newDataset(df)
+        new_ds$v1@tuple[["discarded"]] <- TRUE
+        new_ds_df <- as.data.frame(new_ds)
+        expect_silent(
+            expect_equal(names(as.data.frame(new_ds_df)),
+                c("v2", "v3", "v4", "v5", "v6"))
+        )
+        # now we want the hidden vars to be included
+        new_ds_df <- as.data.frame(new_ds, include.hidden = TRUE)
+        expect_warning(
+            expect_equal(names(as.data.frame(new_ds_df)),
+                c("v1", "v2", "v3", "v4", "v5", "v6"),
+            "Variable gender is hidden")
+        )
     })
 
     v2 <- ds$v2
