@@ -72,7 +72,8 @@ as.data.frame.CrunchDataFrame <- function (x, debug = FALSE,  row.names = NULL, 
     return(structure(out, class="data.frame", row.names=c(NA, -nrow(ds))))
 }
 
-coerceVariable <- function(var, df){
+coerceVariable <- function(var, df, debug = FALSE){
+    if(debug) browser()
     if (is.Array(var)) {
         out <- lapply(subvariables(var), function(x){
             factor(df[[x$name]], levels = names(categories(var)))
@@ -82,9 +83,9 @@ coerceVariable <- function(var, df){
     } else if (is.Categorical(var)) {
         out <- list(factor(df[[name(var)]], levels = names(categories(var))))
     } else if (is.Datetime(var)) {
-        out <- list(coercion_fun = as.Date(df[[name(var)]]))
+        out <- list(as.Date(df[[name(var)]]))
     } else if (is.Text(var)) {
-        out <- list(coercion_fun = as.character(df[[name(var)]]))
+        out <- list(as.character(df[[name(var)]]))
     }
     return(out)
 }

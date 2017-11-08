@@ -77,6 +77,19 @@ with_mock_crunch({
             as.vector(ds$gender))
     })
 
+    test_that("coerceVariable produces expected list entries", {
+        df <- lapply(ds, as.vector)
+        names(df) <- names(ds)
+        df[] <- lapply(df, as.character)
+        df <- structure(df, class = "data.frame", row.names=c(NA, -nrow(ds)))
+        expect_identical(class(coerceVariable(ds$birthyr, df)[[1]]), "numeric")
+        expect_identical(class(coerceVariable(ds$gender, df)[[1]]), "factor")
+        expect_identical(class(coerceVariable(ds$textVar, df)[[1]]), "character")
+        expect_identical(class(coerceVariable(ds$starttime, df)[[1]]), "Date")
+        expect_identical(class(coerceVariable(ds$mymrset, df)[[1]]), "factor")
+        expect_identical(class(coerceVariable(ds$catarray, df)[[1]]), "factor")
+    })
+
     test_that("as.data.frame when a variable has an apostrophe in its alias", {
         t2 <- ds
         t2@variables@index[[2]]$alias <- "Quote 'unquote' alias"
@@ -114,16 +127,16 @@ with_mock_crunch({
         expect_identical(.crunchPageSize(ds$starttime), 100000L)
         expect_identical(.crunchPageSize(2016 - ds$birthyr), 50000L)
     })
-    
+
 
     test.df <- as.data.frame(ds)
-    
+
 
     test_that("model.frame thus works on CrunchDataset", {
         expect_identical(model.frame(birthyr ~ gender, data=test.df),
                          model.frame(birthyr ~ gender, data=ds))
     })
-    
+
 
     test_that("so lm() should work too", {
         test.lm <- lm(birthyr ~ gender, data=ds)
@@ -195,7 +208,7 @@ with_test_authentication({
         expect_true(is.data.frame(as.data.frame(ds, force=TRUE)))
     })
 
-    test_that("as.data.frame() works with hidden variables", {
+    test_that("as.data.frame(force = TRUE) works with hidden variables", {
         new_ds <- newDataset(df)
         new_ds$v1@tuple[["discarded"]] <- TRUE
         new_ds_df <- as.data.frame(new_ds)
@@ -239,13 +252,13 @@ with_test_authentication({
             })
         })
     })
-    
+
     test_that("model.frame thus works on CrunchDataset over API", {
         ## would like this to be "identical" instead of "equivalent"
         expect_equivalent(model.frame(v1 ~ v3, data=ds),
                           model.frame(v1 ~ v3, data=df))
     })
-    
+
     test_that("so lm() should work too over the API", {
         test.lm <- lm(v1 ~ v3, data=ds)
         expected <- lm(v1 ~ v3, data=df)
