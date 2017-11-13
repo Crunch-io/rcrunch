@@ -108,6 +108,10 @@ setValidity("Heading", function (object) {
 
 getSubtotals <- function (x) {
     inserts <- transforms(x)$insertions
+    
+    if (is.null(transforms(x)) || is.null(inserts)) {
+        return(NULL)
+    }
 
     sub_heads <-lapply(inserts, function (insrt) {
         if (is.null(insrt$`function`) || insrt$`function` == "subtotal") {

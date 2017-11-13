@@ -42,6 +42,10 @@ with_mock_crunch({
                                    `function` = "subtotal", args = c("1", "2"))))
         )
     })
+    
+    test_that("subtotals returns null when there are no subtotals", {
+        expect_null(subtotals(ds$gender))
+    })
 
     test_that("Adding subtotals and headers to a variable that has none, works", {
         expect_PATCH(subtotals(ds$gender) <- list(
