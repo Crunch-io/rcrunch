@@ -1,5 +1,5 @@
 ## crunch 1.18.5 (under development)
-* Conditional transforms now respect dataset exclusions (#155).
+* Conditional transforms now respect dataset exclusions (#153).
 * Variable groups (folders) can now be referenced by "path": either a vector of nested folder names (as in `ordering(ds)[[c("Top folder", "Nested folder")]]`) or a single string with nested folders separated by a delimiter (as in `ordering(ds)[["Top folder/Nested folder"]]`). "/" is the default path delimiter, and this is configurable via `options(crunch.delimiter)`. If you have folders that actually contain "/" in the folder name, this may be a breaking change. If so, set `options(crunch.delimiter="|")` or some other string so that folder names are not incorrectly interpreted as paths.
 * Introduce new `mv()` and `mkdir()` functions for creating variable folders and moving variables into them. These take a Dataset as their argument and can be chained together for convenience/readability.
 * Other helper functions `folder()` and `folder<-` to locate a variable in the folder hierarchy and to move it to a new folder. `folder(ds$var) <- "New folder/subfolder"` is equivalent to `ds <- mv(ds, "var", c("New folder", "subfolder"))`.
