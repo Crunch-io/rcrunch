@@ -1,4 +1,5 @@
 ## crunch 1.18.5 (under development)
+* `makeCaseVariable()` has better errors when a user doesn't name all of the elements of their case elements (#158).
 * Conditional transforms now respect dataset exclusions (#153).
 * Variable groups (folders) can now be referenced by "path": either a vector of nested folder names (as in `ordering(ds)[[c("Top folder", "Nested folder")]]`) or a single string with nested folders separated by a delimiter (as in `ordering(ds)[["Top folder/Nested folder"]]`). "/" is the default path delimiter, and this is configurable via `options(crunch.delimiter)`. If you have folders that actually contain "/" in the folder name, this may be a breaking change. If so, set `options(crunch.delimiter="|")` or some other string so that folder names are not incorrectly interpreted as paths.
 * Introduce new `mv()` and `mkdir()` functions for creating variable folders and moving variables into them. These take a Dataset as their argument and can be chained together for convenience/readability.
