@@ -6,14 +6,14 @@
 #' side is where to get the value if the condition on the right-hand side is
 #' true. This is commonly a Crunch variable but may be a string or numeric
 #' value, depending on the type of variable you're constructing.
-#' 
-#' The type of the new variable can depend on the type(s) of the source 
-#' variable(s).  By default (`type=NULL`), the type of the new variable will be 
-#' the type of all of the source variables (that is, if all of the source 
-#' variables are text, the new variable type will be text, if all of the 
+#'
+#' The type of the new variable can depend on the type(s) of the source
+#' variable(s).  By default (`type=NULL`), the type of the new variable will be
+#' the type of all of the source variables (that is, if all of the source
+#' variables are text, the new variable type will be text, if all of the
 #' source variables are categorical, the new variable will be categorical).
-#' If there are multiple types in the source variables, the result will be a 
-#' text variable. The default behavior can be overridden by specifying 
+#' If there are multiple types in the source variables, the result will be a
+#' text variable. The default behavior can be overridden by specifying
 #' `type = "categorical"`, `"text"`, or `"numeric"`.
 #'
 #' `conditionalTransform` is similar to `makeCaseVariable`; however,
@@ -30,8 +30,8 @@
 #' @param else_condition a default value to use if none of the conditions are
 #' true (default: `NA`)
 #' @param type a character that is either "categorical", "text", "numeric" what
-#'  type of output should be returned? If `NULL`, the type of the source 
-#'  variable will be used. (default: `NULL`) The source variables will be 
+#'  type of output should be returned? If `NULL`, the type of the source
+#'  variable will be used. (default: `NULL`) The source variables will be
 #'  converted to this type if necessary.
 #' @param categories a vector of characters if `type="categorical"`, these are
 #' all of the categories that should be in the resulting variable, in the order
@@ -58,12 +58,12 @@ conditionalTransform <- function (..., data, else_condition=NA, type=NULL,
     if (length(formulas) == 0) {
         halt("no conditions have been supplied; please supply formulas as conditions.")
     }
-    
+
     if (!missing(type) && !type %in% c("categorical", "text", "numeric")){
         halt("type must be either ", dQuote("categorical"), ", ",
              dQuote("text"), ", or ", dQuote("numeric"))
     }
-    
+
     conditional_vals <- makeConditionalValues(formulas, data, else_condition)
     if (!missing(type)) {
         if (type == "numeric") {
@@ -76,14 +76,14 @@ conditionalTransform <- function (..., data, else_condition=NA, type=NULL,
         result <- conditional_vals$values
         type <- conditional_vals$type
     }
-    
+
     if (type != "categorical" & !is.null(categories)){
         warning("type is not ", dQuote("categorical"), " ignoring ",
                 dQuote("categories"))
     }
     var_def$type <- type
 
-    # add categories if necessary 
+    # add categories if necessary
     if (type == "categorical") {
         # if categories are supplied and there are any
         if (missing(categories)) {
@@ -107,7 +107,7 @@ conditionalTransform <- function (..., data, else_condition=NA, type=NULL,
             result <- factor(result, levels = names(categories))
         }
         categories <- ensureNoDataCategory(categories)
-        # make a category list to send with VariableDefinition and then store 
+        # make a category list to send with VariableDefinition and then store
         # that and convert values to ids values
         category_list <- categories
         var_def$categories <- category_list
@@ -161,50 +161,53 @@ makeConditionalValues <- function (formulas, data, else_condition) {
     # grab the values needed from source variables
     values_to_fill <- Map(function(ind, var) {
         if (inherits(var, c("CrunchVariable", "CrunchExpr"))) {
-            # grab the variable contents at inds
-            return(as.vector(var[ind]))
+            # grab the variable contents at inds we take inds after as.vector
+            # in case there is a filter applied. If the API allowed for
+            # returning values at specific indices, even when a dataset is
+            # filtered, this wouldn't be necessary (cf pivotal: #151013797)
+            return(as.vector(var)[ind])
         } else {
             # if var isn't a crunch variable or expression, just return var
             return(var)
         }
     }, ind = case_indices, var = values)
 
-    # determine the types before collation (since factor coercion is less than 
+    # determine the types before collation (since factor coercion is less than
     # ideal, we need to do this before we collate)
     pre_collation_types <- vapply(values, class, character(1))
     values <- collateValues(values_to_fill, case_indices, else_condition, n_rows)
-    
+
     if (all(pre_collation_types == "factor")) {
         type <- "categorical"
     } else if (is.numeric(values)) {
         type <- "numeric"
     } else {
-        # catch all, in case there are R types like logicals that Crunch would 
+        # catch all, in case there are R types like logicals that Crunch would
         # treat as character or categorical
         type <- "text"
     }
-    
+
     return(list(values = values, type = type))
 }
 
-# because factors by default coerce into their IDs, which is almost never what 
+# because factors by default coerce into their IDs, which is almost never what
 # we want, we need to do some magic to collate the values together.
 collateValues <- function (values_to_fill, case_indices, else_condition,
                            n_rows) {
     result <- rep(else_condition, n_rows)
-    
+
     # fill values
     for (i in seq_along(case_indices)) {
         vals <- values_to_fill[[i]]
-        
-        # change all factors to characters temporarily to avoid accidental 
+
+        # change all factors to characters temporarily to avoid accidental
         # coercion to ids (the default if result is not already a factor)
         if (is.factor(vals)) {
             vals <- as.character(vals)
         }
-        
+
         result[case_indices[[i]]] <- vals
     }
-    
+
     return(result)
 }
