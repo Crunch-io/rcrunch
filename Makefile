@@ -31,6 +31,10 @@ check: build
     # cat vignette-errors.log
     # rm vignette-errors.log
 
+release: build
+	-unset INTEGRATION && R CMD CHECK --as-cran crunch_$(VERSION).tar.gz
+	rm -rf crunch.Rcheck/
+
 vdata:
 	cd vignette-data && R -f make-vignette-rdata.R
 
