@@ -79,10 +79,7 @@ test_that("p-values can calculate to row margins - crunch-cube fixture (axis 1)"
                       -1.62846204e-01, -1.97051729e-02, 5.03375119e-12,
                       8.12870881e-01, -4.62833246e-01)),
                   nrow = 2, ncol = 8, byrow = TRUE)
-    expect_equivalent(2*pnorm(-abs(zScoresDep(mr_x_cat, 1))), abs(out))
-    expect_equivalent(2*(1-pnorm(abs(zScoresDep(mr_x_cat, 1)))), abs(out))
-    expect_equivalent(2*pnorm(abs(zScoresDep(mr_x_cat, 1)) , lower.tail = FALSE),
-                      abs(out))
+    expect_equivalent(p.values(mr_x_cat, 1), abs(out))
 })
 
 test_that("z-scores can calculate to column margins - crunch-cube fixture (axis 0)", {
@@ -93,10 +90,7 @@ test_that("z-scores can calculate to column margins - crunch-cube fixture (axis 
                       -1.53659627e-01, -1.57593387e-02, 7.31281702e-12,
                       8.25177718e-01, -4.69687167e-01)),
                   nrow = 2, ncol = 8, byrow = TRUE)
-    expect_equivalent(2*pnorm(-abs(zScoresDep(mr_x_cat, 2))), abs(out))
-    expect_equivalent(2*(1-pnorm(abs(zScoresDep(mr_x_cat, 2)))), abs(out))
-    expect_equivalent(2*pnorm(abs(zScoresDep(mr_x_cat, 2)) , lower.tail = FALSE),
-                      abs(out))
+    expect_equivalent(p.values(mr_x_cat, 2), abs(out))
 })
 
 
@@ -165,10 +159,7 @@ test_that("z-scores can calculate to row margins (unweighted) - whaam fixture (p
                       0.7213868916373223, -0.7405938153040896
                       )),
     nrow = 2, ncol = 8, byrow = TRUE)
-    expect_equivalent(2*pnorm(-abs(zScoresDep(mr_x_cat_unweighted, 1))), abs(out))
-    expect_equivalent(2*(1-pnorm(abs(zScoresDep(mr_x_cat_unweighted, 1)))), abs(out))
-    expect_equivalent(2*pnorm(abs(zScoresDep(mr_x_cat_unweighted, 1)),
-                              lower.tail = FALSE), abs(out))
+    expect_equivalent(p.values(mr_x_cat_unweighted, 1), abs(out))
 })
 
 test_that("z-scores can calculate to columns margins (unweighted) - whaam fixture (pvalues calc)", {
@@ -184,10 +175,7 @@ test_that("z-scores can calculate to columns margins (unweighted) - whaam fixtur
           0.7195376396263378, -0.7396284032210221
         )),
     nrow = 2, ncol = 8, byrow = TRUE)
-    expect_equivalent(2*pnorm(-abs(zScoresDep(mr_x_cat_unweighted, 2))), abs(out))
-    expect_equivalent(2*(1-pnorm(abs(zScoresDep(mr_x_cat_unweighted, 2)))), abs(out))
-    expect_equivalent(2*pnorm(abs(zScoresDep(mr_x_cat_unweighted, 2)),
-                              lower.tail = FALSE), abs(out))
+    expect_equivalent(p.values(mr_x_cat_unweighted, 2), abs(out))
 })
 
 ## p-values weighted
@@ -209,10 +197,7 @@ test_that("z-scores can calculate to row margins - whaam fixture (pvalues calc)"
                       # 0.812870916762612, -0.4628332216372071
                       )),
                     nrow = 2, ncol = 8, byrow = TRUE)
-    expect_equivalent(2*pnorm(-abs(zScoresDep(mr_x_cat, 1))), abs(out))
-    expect_equivalent(2*(1-pnorm(abs(zScoresDep(mr_x_cat, 1)))), abs(out))
-    expect_equivalent(2*pnorm(abs(zScoresDep(mr_x_cat, 1)), lower.tail = FALSE),
-                      abs(out))
+    expect_equivalent(p.values(mr_x_cat, 1), abs(out))
 })
 
 test_that("z-scores can calculate to columns margins - whaam fixture (pvalues calc)", {
@@ -234,8 +219,5 @@ test_that("z-scores can calculate to columns margins - whaam fixture (pvalues ca
                       )),
                   nrow = 2, ncol = 8, byrow = TRUE)
 
-    expect_equivalent(2*pnorm(-abs(zScoresDep(mr_x_cat, 2))), abs(out))
-    expect_equivalent(2*(1-pnorm(abs(zScoresDep(mr_x_cat, 2)))), abs(out))
-    expect_equivalent(2*pnorm(abs(zScoresDep(mr_x_cat, 2)) , lower.tail = FALSE),
-                      abs(out))
+    expect_equivalent(p.values(mr_x_cat, 2), abs(out))
 })
