@@ -66,6 +66,7 @@ z.table <- zScoresDep
 #'
 #' @return an array of p-values
 #' @export
+#' @importFrom stats pnorm
 p.values <- function (table, margin) {
     zeds <- z.table(table, margin)
     return(2*pnorm(abs(zeds), lower.tail = FALSE))
