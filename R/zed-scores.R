@@ -9,18 +9,22 @@ z.table <- function (table, margin) {
     other_margin <- 3 - margin ## Assumes 2-D
     # dims <- dim(sample_prop)
     sample_prop <- prop.table(table, margin)
-    off_margin <- prop.table(margin.table(table, other_margin)) # doug's C (for rows)
+    # doug's C (for rows)
+    off_margin <- prop.table(margin.table(table, other_margin))
 
     # adjust the denom only (for empty cells)
     adjusted_table <- bases(table, c(1, 2)) + 1
     n <- margin.table(adjusted_table)
     sample_prop_adj <- prop.table(adjusted_table, margin)
 
-    direct_margin <- prop.table(margin.table(adjusted_table, margin)) # doug's R (for rows)
+    # doug's R (for rows)
+    direct_margin <- prop.table(margin.table(adjusted_table, margin))
     if (margin == 1) {
-        expected_value <- direct_margin %*% (sample_prop_adj * (1 - sample_prop_adj)) # doug's ev.r (for rows)
+        # doug's ev.r (for rows)
+        expected_value <- direct_margin %*% (sample_prop_adj * (1 - sample_prop_adj))
     } else if (margin == 2) {
-        expected_value <- (sample_prop_adj * (1 - sample_prop_adj)) %*% direct_margin # doug's ev.r (for rows)
+        # doug's ev.r (for cols)
+        expected_value <- (sample_prop_adj * (1 - sample_prop_adj)) %*% direct_margin
     }
     magic_d <- (1 - 2 * direct_margin) / direct_margin # d.r
 
