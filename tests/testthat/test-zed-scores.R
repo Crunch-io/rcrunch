@@ -50,14 +50,8 @@ test_that("z-scores can calculate to row margins - crunch cube fixture (axis 1)"
           c(1.3528312160513, -3.38775031004662, -3.4656457377556,
             -1.39556275813377, -2.33191481595459, 6.90462247318263,
             0.236724043078395, -0.734189509622821)),
-        nrow = 2, ncol = 8, byrow = TRUE,
-        dimnames = list(
-            pdl_gender = c("männlich", "weiblich"),
-            pdl_holidays_taken_12_months =
-                c("ein Mal", "zwei Mal", "drei Mal", "vier Mal", "fünf Mal oder mehr",
-                  "kein Mal - ich war in den letzten zwölf Monaten nicht im Urlaub",
-                  "weiß nicht", "keine Angabe")))
-    expect_equal(z.table(mr_x_cat, 1), out)
+        nrow = 2, ncol = 8, byrow = TRUE)
+    expect_equivalent(z.table(mr_x_cat, 1), out)
 })
 
 test_that("p-values can calculate to columns margins - crunch cube fixture (axis 0)", {
@@ -67,16 +61,9 @@ test_that("p-values can calculate to columns margins - crunch cube fixture (axis
                     c(1.33325107235152, -3.41709851931311, -3.56231261682057,
                       -1.42672343792324, -2.41444184160409, 6.85140362038576,
                       0.220890470186742, -0.72298814533095)),
-                  nrow = 2, ncol = 8, byrow = TRUE,
-                  dimnames = list(
-                      pdl_gender = c("männlich", "weiblich"),
-                      pdl_holidays_taken_12_months =
-                          c("ein Mal", "zwei Mal", "drei Mal", "vier Mal",
-                            "fünf Mal oder mehr",
-                            "kein Mal - ich war in den letzten zwölf Monaten nicht im Urlaub",
-                            "weiß nicht", "keine Angabe")))
+                  nrow = 2, ncol = 8, byrow = TRUE)
 
-    expect_equal(z.table(mr_x_cat, 2), out)
+    expect_equivalent(z.table(mr_x_cat, 2), out)
 })
 
 test_that("p-values can calculate to row margins - crunch-cube fixture (axis 1)", {
@@ -86,16 +73,11 @@ test_that("p-values can calculate to row margins - crunch-cube fixture (axis 1)"
                     c(1.76109558e-01, -7.04683839e-04, -5.28959758e-04,
                       -1.62846204e-01, -1.97051729e-02, 5.03375119e-12,
                       8.12870881e-01, -4.62833246e-01)),
-                  nrow = 2, ncol = 8, byrow = TRUE,
-                  dimnames = list(pdl_gender = c("männlich", "weiblich"),
-                                  pdl_holidays_taken_12_months =
-                                      c("ein Mal", "zwei Mal", "drei Mal",
-                                        "vier Mal", "fünf Mal oder mehr",
-                                        "kein Mal - ich war in den letzten zwölf Monaten nicht im Urlaub",
-                                        "weiß nicht", "keine Angabe")))
-    expect_equal(2*pnorm(-abs(z.table(mr_x_cat, 1))), abs(out))
-    expect_equal(2*(1-pnorm(abs(z.table(mr_x_cat, 1)))), abs(out))
-    expect_equal(2*pnorm(abs(z.table(mr_x_cat, 1)) , lower.tail = FALSE), abs(out))
+                  nrow = 2, ncol = 8, byrow = TRUE)
+    expect_equivalent(2*pnorm(-abs(z.table(mr_x_cat, 1))), abs(out))
+    expect_equivalent(2*(1-pnorm(abs(z.table(mr_x_cat, 1)))), abs(out))
+    expect_equivalent(2*pnorm(abs(z.table(mr_x_cat, 1)) , lower.tail = FALSE),
+                      abs(out))
 })
 
 test_that("z-scores can calculate to column margins - crunch-cube fixture (axis 0)", {
@@ -105,16 +87,11 @@ test_that("z-scores can calculate to column margins - crunch-cube fixture (axis 
                     c(1.82449424e-01, -6.32923709e-04, -3.67602277e-04,
                       -1.53659627e-01, -1.57593387e-02, 7.31281702e-12,
                       8.25177718e-01, -4.69687167e-01)),
-                  nrow = 2, ncol = 8, byrow = TRUE,
-                  dimnames = list(pdl_gender = c("männlich", "weiblich"),
-                                  pdl_holidays_taken_12_months =
-                                      c("ein Mal", "zwei Mal", "drei Mal",
-                                        "vier Mal", "fünf Mal oder mehr",
-                                        "kein Mal - ich war in den letzten zwölf Monaten nicht im Urlaub",
-                                        "weiß nicht", "keine Angabe")))
-    expect_equal(2*pnorm(-abs(z.table(mr_x_cat, 2))), abs(out))
-    expect_equal(2*(1-pnorm(abs(z.table(mr_x_cat, 2)))), abs(out))
-    expect_equal(2*pnorm(abs(z.table(mr_x_cat, 2)) , lower.tail = FALSE), abs(out))
+                  nrow = 2, ncol = 8, byrow = TRUE)
+    expect_equivalent(2*pnorm(-abs(z.table(mr_x_cat, 2))), abs(out))
+    expect_equivalent(2*(1-pnorm(abs(z.table(mr_x_cat, 2)))), abs(out))
+    expect_equivalent(2*pnorm(abs(z.table(mr_x_cat, 2)) , lower.tail = FALSE),
+                      abs(out))
 })
 
 
@@ -182,16 +159,11 @@ test_that("z-scores can calculate to row margins (unweighted) - whaam fixture (p
                       -0.21920369941309148, 0.0000019862619564658957,
                       0.7213868916373223, -0.7405938153040896
                       )),
-    nrow = 2, ncol = 8, byrow = TRUE,
-    dimnames = list(
-        pdl_gender = c("männlich", "weiblich"),
-        pdl_holidays_taken_12_months =
-            c("ein Mal", "zwei Mal", "drei Mal", "vier Mal", "fünf Mal oder mehr",
-              "kein Mal - ich war in den letzten zwölf Monaten nicht im Urlaub",
-              "weiß nicht", "keine Angabe")))
-    expect_equal(2*pnorm(-abs(z.table(mr_x_cat_unweighted, 1))), abs(out))
-    expect_equal(2*(1-pnorm(abs(z.table(mr_x_cat_unweighted, 1)))), abs(out))
-    expect_equal(2*pnorm(abs(z.table(mr_x_cat_unweighted, 1)), lower.tail = FALSE), abs(out))
+    nrow = 2, ncol = 8, byrow = TRUE)
+    expect_equivalent(2*pnorm(-abs(z.table(mr_x_cat_unweighted, 1))), abs(out))
+    expect_equivalent(2*(1-pnorm(abs(z.table(mr_x_cat_unweighted, 1)))), abs(out))
+    expect_equivalent(2*pnorm(abs(z.table(mr_x_cat_unweighted, 1)),
+                              lower.tail = FALSE), abs(out))
 })
 
 test_that("z-scores can calculate to columns margins (unweighted) - whaam fixture (pvalues calc)", {
@@ -206,18 +178,11 @@ test_that("z-scores can calculate to columns margins (unweighted) - whaam fixtur
           -0.21852890322144547, 0.0000019638715096359505,
           0.7195376396263378, -0.7396284032210221
         )),
-    nrow = 2, ncol = 8, byrow = TRUE,
-    dimnames = list(
-        pdl_gender = c("männlich", "weiblich"),
-        pdl_holidays_taken_12_months =
-            c("ein Mal", "zwei Mal", "drei Mal", "vier Mal",
-              "fünf Mal oder mehr",
-              "kein Mal - ich war in den letzten zwölf Monaten nicht im Urlaub",
-              "weiß nicht", "keine Angabe")))
-
-    expect_equal(2*pnorm(-abs(z.table(mr_x_cat_unweighted, 2))), abs(out))
-    expect_equal(2*(1-pnorm(abs(z.table(mr_x_cat_unweighted, 2)))), abs(out))
-    expect_equal(2*pnorm(abs(z.table(mr_x_cat_unweighted, 2)) , lower.tail = FALSE), abs(out))
+    nrow = 2, ncol = 8, byrow = TRUE)
+    expect_equivalent(2*pnorm(-abs(z.table(mr_x_cat_unweighted, 2))), abs(out))
+    expect_equivalent(2*(1-pnorm(abs(z.table(mr_x_cat_unweighted, 2)))), abs(out))
+    expect_equivalent(2*pnorm(abs(z.table(mr_x_cat_unweighted, 2)),
+                              lower.tail = FALSE), abs(out))
 })
 
 ## p-values weighted
@@ -238,16 +203,11 @@ test_that("z-scores can calculate to row margins - whaam fixture (pvalues calc)"
                       # the values below are from whaam for posterity
                       # 0.812870916762612, -0.4628332216372071
                       )),
-                    nrow = 2, ncol = 8, byrow = TRUE,
-                    dimnames = list(
-                        pdl_gender = c("männlich", "weiblich"),
-                        pdl_holidays_taken_12_months =
-                            c("ein Mal", "zwei Mal", "drei Mal", "vier Mal", "fünf Mal oder mehr",
-                              "kein Mal - ich war in den letzten zwölf Monaten nicht im Urlaub",
-                              "weiß nicht", "keine Angabe")))
-    expect_equal(2*pnorm(-abs(z.table(mr_x_cat, 1))), abs(out))
-    expect_equal(2*(1-pnorm(abs(z.table(mr_x_cat, 1)))), abs(out))
-    expect_equal(2*pnorm(abs(z.table(mr_x_cat, 1)), lower.tail = FALSE), abs(out))
+                    nrow = 2, ncol = 8, byrow = TRUE)
+    expect_equivalent(2*pnorm(-abs(z.table(mr_x_cat, 1))), abs(out))
+    expect_equivalent(2*(1-pnorm(abs(z.table(mr_x_cat, 1)))), abs(out))
+    expect_equivalent(2*pnorm(abs(z.table(mr_x_cat, 1)), lower.tail = FALSE),
+                      abs(out))
 })
 
 test_that("z-scores can calculate to columns margins - whaam fixture (pvalues calc)", {
@@ -267,16 +227,10 @@ test_that("z-scores can calculate to columns margins - whaam fixture (pvalues ca
                       # the values below are from whaam for posterity
                       #0.8251777514259975, -0.46968714064862027
                       )),
-                  nrow = 2, ncol = 8, byrow = TRUE,
-                  dimnames = list(
-                      pdl_gender = c("männlich", "weiblich"),
-                      pdl_holidays_taken_12_months =
-                          c("ein Mal", "zwei Mal", "drei Mal", "vier Mal",
-                            "fünf Mal oder mehr",
-                            "kein Mal - ich war in den letzten zwölf Monaten nicht im Urlaub",
-                            "weiß nicht", "keine Angabe")))
+                  nrow = 2, ncol = 8, byrow = TRUE)
 
-    expect_equal(2*pnorm(-abs(z.table(mr_x_cat, 2))), abs(out))
-    expect_equal(2*(1-pnorm(abs(z.table(mr_x_cat, 2)))), abs(out))
-    expect_equal(2*pnorm(abs(z.table(mr_x_cat, 2)) , lower.tail = FALSE), abs(out))
+    expect_equivalent(2*pnorm(-abs(z.table(mr_x_cat, 2))), abs(out))
+    expect_equivalent(2*(1-pnorm(abs(z.table(mr_x_cat, 2)))), abs(out))
+    expect_equivalent(2*pnorm(abs(z.table(mr_x_cat, 2)) , lower.tail = FALSE),
+                      abs(out))
 })
