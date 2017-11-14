@@ -175,6 +175,7 @@ test_that("z-scores can calculate to columns margins (unweighted) - whaam fixtur
           0.7195376396263378, -0.7396284032210221
         )),
     nrow = 2, ncol = 8, byrow = TRUE)
+    print(p.values(mr_x_cat_unweighted, 2))
     expect_equivalent(p.values(mr_x_cat_unweighted, 2), abs(out))
 })
 
@@ -197,6 +198,7 @@ test_that("z-scores can calculate to row margins - whaam fixture (pvalues calc)"
                       # 0.812870916762612, -0.4628332216372071
                       )),
                     nrow = 2, ncol = 8, byrow = TRUE)
+    print(p.values(mr_x_cat_unweighted, 1))
     expect_equivalent(p.values(mr_x_cat, 1), abs(out))
 })
 
