@@ -58,3 +58,16 @@ zScoresDep <- function (table, margin) {
 #' @return an array of z-scores
 #' @export
 z.table <- zScoresDep
+
+#' Calculate p-values for a CrunchCube
+#'
+#' @param table A CrunchCube to calculate z-scores for
+#' @param margin which margin to test against (1 for rows, 2 for columns)
+#'
+#' @return an array of p-values
+#' @export
+p.values <- function (table, margin) {
+    zeds <- z.table(table, margin)
+    return(2*pnorm(abs(zeds), lower.tail = FALSE))
+}
+
