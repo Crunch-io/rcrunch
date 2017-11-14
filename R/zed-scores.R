@@ -1,11 +1,4 @@
-#' Calculate z-scores for a CrunchCube
-#'
-#' @param table A CrunchCube to calculate z-scores for
-#' @param margin which margin to test against (1 for rows, 2 for columns)
-#'
-#' @return an array of z-scores
-#' @export
-z.table <- function (table, margin) {
+zScoresDep <- function (table, margin) {
     other_margin <- 3 - margin ## Assumes 2-D
     # dims <- dim(sample_prop)
     sample_prop <- prop.table(table, margin)
@@ -56,3 +49,12 @@ z.table <- function (table, margin) {
 
     return(zed_score)
 }
+
+#' Calculate z-scores for a CrunchCube
+#'
+#' @param table A CrunchCube to calculate z-scores for
+#' @param margin which margin to test against (1 for rows, 2 for columns)
+#'
+#' @return an array of z-scores
+#' @export
+z.table <- zScoresDep
