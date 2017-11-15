@@ -2,12 +2,12 @@
 # replaced using the cross product of the margins for expected values.
 zScoresDep <- function (table, margin) {
     other_margin <- 3 - margin ## Assumes 2-D
-    # dims <- dim(sample_prop)
+
     sample_prop <- prop.table(table, margin)
     # doug's C (for rows)
     off_margin <- prop.table(margin.table(table, other_margin))
 
-    # adjust the denom only (for empty cells)
+    # adjusted (for empty cells), unweighted counts for the denom
     adjusted_table <- bases(table, c(1, 2)) + 1
     n <- margin.table(adjusted_table)
     sample_prop_adj <- prop.table(adjusted_table, margin)
