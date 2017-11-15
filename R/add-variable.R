@@ -11,7 +11,7 @@
 #' @export
 #' @importFrom httpcache halt
 addVariables <- function (dataset, ...) {
-     var_catalog_url <- shojiURL(dataset, "catalogs", "variables")
+    var_catalog_url <- shojiURL(dataset, "catalogs", "variables")
     ## Get vardefs and validate
     vardefs <- list(...)
     ## Check for whether a list of vardefs passed
@@ -42,6 +42,27 @@ addVariables <- function (dataset, ...) {
     checkVarDefErrors(new_var_urls)
 
     dataset <- refresh(dataset)
+
+    ## Check for any "replacement" variables
+    hides <- lapply(vardefs, attr, which=".hide")
+    todo <- vapply(hides, Negate(is.null), logical(1))
+    if (any(todo)) {
+        replacements <- new_var_urls[todo]
+        locations <- lapply(hides[todo],
+            function (u) locateEntity(u[1], ord=ordering(dataset)))
+        hides <- unlist(hides)
+        allVariables(dataset)[hides]<- hide(allVariables(dataset)[hides])
+        for (i in seq_along(locations)) {
+            loc <- locations[[i]]
+            if (length(loc)) {
+                ## If location is length 0, it is already at top level, so
+                ## no need to move
+                entities(ordering(dataset)[[loc]]) <- c(entities(ordering(dataset)[[loc]]), replacements[i])
+                ## TODO: make that be folder(dataset[[replacements[[i]]]]) <- loc
+            }
+        }
+    }
+
     invisible(dataset)
 }
 

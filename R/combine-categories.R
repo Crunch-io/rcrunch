@@ -1,23 +1,27 @@
 #' Combine categories or responses
 #'
-#' Crunch allows you to create a new categorical variable by combining
-#' the categories of another variable. For instance, you might want to
+#' Create a new categorical or multiple-response variable by collapsing
+#' the categories/responses of another. For instance, you might want to
 #' recode a categorical variable with three categories small, medium, and large
 #' to one that has just small and large.
 #'
 #' @param variable Categorical, Categorical Array, or Multiple Response
 #' variable
 #' @param combinations list of named lists containing
-#' 1. "categories": category ids or names for categorical types, or for multiple response,
-#' "responses": subvariable names, aliases, or positional indices;
+#' 1. "categories": category ids or names for categorical types, or for multiple
+#' response, "responses": subvariable names, aliases, or positional indices;
 #' 1. a "name" for the new category or response; and
-#' 1. optionally, other category ("missing", "numeric_value") or subvariable ("alias", "description")
-#' attributes. If `combinations` is omitted, the resulting variable will
-#' essentially be a copy (but see [copy()] for a more natural way to copy variables.
+#' 1. optionally, other category ("missing", "numeric_value") or subvariable
+#' ("alias", "description") attributes. If `combinations` is omitted, the
+#' resulting variable will essentially be a copy (but see [copy()] for a more
+#' natural way to copy variables.
 #' @param ... Additional variable metadata for the new derived variable
-#' @return A [`VariableDefinition`] that will create the new combined-category or
-#' -response derived variable. Categories/responses not referenced in `combinations` will be
-#' appended to the end of the combinations.
+#' @param replace Logical: should this derived variable, when added to the
+#' dataset, take the place of the input `variable`, i.e. same folder/location?
+#' If so, `variable` will also become "hidden".
+#' @return A [`VariableDefinition`] that will create the new combined-category
+#' or -response derived variable. Categories/responses not referenced in
+#' `combinations` will be appended to the end of the combinations.
 #' @examples
 #' \dontrun{
 #' ds$fav_pet2 <- combine(ds$fav_pet, name="Pets (combined)",
@@ -28,7 +32,7 @@
 #' }
 #' @export
 #' @importFrom utils modifyList
-combine <- function (variable, combinations=list(), ...) {
+combine <- function (variable, combinations=list(), ..., replace=FALSE) {
     ## Validate inputs
     if (!(type(variable) %in% c("categorical", "categorical_array", "multiple_response"))) {
         halt("Cannot combine ", dQuote(name(variable)), ": must be type ",
@@ -66,6 +70,10 @@ combine <- function (variable, combinations=list(), ...) {
             newvar$name <- paste0(newvar$name, " (", nvalidcats,
                 ifelse(nvalidcats == 1, " category)", " categories)"))
         }
+    }
+
+    if (replace) {
+        attr(newvar, ".hide") <- self(variable)
     }
     class(newvar) <- "VariableDefinition"
     return(newvar)
