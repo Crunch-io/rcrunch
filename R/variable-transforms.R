@@ -125,7 +125,7 @@ NULL
 #' @rdname AbsCat-type-tests
 #' @export
 is.abscat.subtotal <- function (x) {
-    if (is.abstract.categories(x)) {
+    if (is.AbsCats(x)) {
         return(!(is.na(funcs(x))) & funcs(x) == 'subtotal')
     }
 
@@ -135,7 +135,7 @@ is.abscat.subtotal <- function (x) {
 #' @rdname AbsCat-type-tests
 #' @export
 is.abscat.heading <- function (x) {
-    if (is.abstract.categories(x)) {
+    if (is.AbsCats(x)) {
         return(is.na(funcs(x)) & !is.na(anchors(x)))
     }
 
@@ -152,7 +152,7 @@ is.abscat.category <- function (x) {
 
     # Otherwise, check if the properties of x look like a category, since
     # value is sometimes legitamately NA, just check id, missing, and name
-    if (is.abstract.categories(x)) {
+    if (is.AbsCats(x)) {
         all <- !is.na(ids(x)) & !is.na(is.na(x)) & !is.na(names(x))
     }  else {
         all <- !is.na(id(x)) & !is.na(is.na(x)) & !is.na(name(x))

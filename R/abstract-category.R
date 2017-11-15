@@ -1,4 +1,4 @@
-is.abstract.category <- function (x) inherits(x, "AbsCat")
+is.AbsCat <- function (x) inherits(x, "AbsCat")
 
 #' @rdname category-extract
 #' @export

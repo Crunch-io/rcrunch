@@ -24,8 +24,8 @@ test_that("modifyCats works like modifyList", {
 })
 
 test_that("abstract category is.* functions", {
-    expect_true(is.abstract.categories(insrts))
-    expect_true(is.abstract.category(insrts[[1]]))
+    expect_true(is.AbsCats(insrts))
+    expect_true(is.AbsCat(insrts[[1]]))
 })
 
 test_that("abstract category [ and [[ getters", {

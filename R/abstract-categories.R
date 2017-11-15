@@ -1,15 +1,20 @@
-is.abstract.categories <- function (x) inherits(x, "AbsCats")
+is.AbsCats <- function (x) inherits(x, "AbsCats")
 
 setMethod("initialize", "AbsCats", function (.Object, ...) {
     # list of object constructors to use (based on the class being initialized)
     # for Categories, use Category
     # for Insertions use Insertion
-    cat_consts <- list(AbsCats = AbsCat,
-                       Categories = Category,
-                       Insertions = Insertion)
+    Constructor <- list(
+        AbsCats=AbsCat,
+        Categories=Category,
+        Insertions=Insertion,
+        Subtotals=Subtotal,
+        Headings=Heading
+    )[[class(.Object)]]
+    stopifnot(is.function(Constructor))
 
     .Object@.Data <- lapply(..1, function (x) {
-        try(cat_consts[[class(.Object)]](data=x), silent=TRUE)
+        try(Constructor(data=x), silent=TRUE)
     })
     validObject(.Object)
     return(.Object)
@@ -114,7 +119,7 @@ setMethod("[[<-", c("AbsCats", "character"), function (x, i, ..., value) {
 
 # a version of modifyList that doesn't recurse into the absCats themselves
 modifyCats <- function (x, val) {
-    stopifnot(is.abstract.categories(x), is.abstract.categories(val))
+    stopifnot(is.AbsCats(x), is.AbsCats(val))
     xnames <- names(x)
     vnames <- names(val)
     vnames <- vnames[nzchar(vnames)]
