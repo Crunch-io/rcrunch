@@ -45,7 +45,7 @@
                             {
                                 "numeric_value": null,
                                 "id": 1,
-                                "name": "männlich",
+                                "name": "maennlich",
                                 "missing": false
                             },
                             {
@@ -67,7 +67,7 @@
                     "derived": false,
                     "references": {
                         "alias": "pdl_holidays_taken_12_months",
-                        "description": "Wie oft waren Sie in den letzten 12 Monaten im Urlaub? <br/>Bitte berücksichtigen Sie hier alle Reisen innerhalb Deutschlands und ins Ausland, bei denen Sie mindestens *einmal übernachtet* haben, allerdings keine Dienstreisen oder Besuche bei Verwandten oder Freunden.",
+                        "description": "Wie oft waren Sie in den letzten 12 Monaten im Urlaub? <br/>Bitte beruecksichtigen Sie hier alle Reisen innerhalb Deutschlands und ins Ausland, bei denen Sie mindestens *einmal uebernachtet* haben, allerdings keine Dienstreisen oder Besuche bei Verwandten oder Freunden.",
                         "name": "Urlaub - Anzahl letzte 12 Monate",
                         "view": {
                             "roles": [
@@ -108,19 +108,19 @@
                             {
                                 "numeric_value": null,
                                 "id": 5,
-                                "name": "fünf Mal oder mehr",
+                                "name": "fuenf Mal oder mehr",
                                 "missing": false
                             },
                             {
                                 "numeric_value": null,
                                 "id": 666,
-                                "name": "kein Mal - ich war in den letzten zwölf Monaten nicht im Urlaub",
+                                "name": "kein Mal - ich war in den letzten zwoelf Monaten nicht im Urlaub",
                                 "missing": false
                             },
                             {
                                 "numeric_value": null,
                                 "id": 888,
-                                "name": "weiß nicht",
+                                "name": "weiss nicht",
                                 "missing": false
                             },
                             {
