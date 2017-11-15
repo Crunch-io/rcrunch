@@ -30,7 +30,7 @@ FilterCatalog
 Getter
 Getters
 GitHub
-HTLM
+HTML
 JSON
 JSONing
 Jaccard
@@ -109,6 +109,7 @@ df
 dichotomization
 dichotomize
 didn
+dimensionality
 dist
 doesn
 env
@@ -158,6 +159,7 @@ shapefiles
 shojiObject
 spss
 st
+subclasses
 subdomain
 subclasses
 subvariable
@@ -170,6 +172,7 @@ un
 undichotomize
 unevaluated
 ungrouped
+unhidden
 unhide
 unhidden
 unshare
