@@ -25,9 +25,12 @@ DatasetGroups
 DatasetOrder
 Datetime
 DatetimeVariable
+Dichotomize
 FilterCatalog
+Getter
+Getters
 GitHub
-HTLM
+HTML
 JSON
 JSONing
 Jaccard
@@ -52,6 +55,7 @@ RMarkdown
 Rprofile
 Savepoints
 SearchResults
+Shoji
 ShojiCatalog
 ShojiCatalogs
 ShojiObject
@@ -102,7 +106,10 @@ darkgreen
 datetime
 deserialization
 df
+dichotomization
+dichotomize
 didn
+dimensionality
 dist
 doesn
 env
@@ -111,6 +118,8 @@ etc
 geo
 geodata
 geodatum
+getter
+getters
 ggplot
 gz
 gzipped
@@ -125,6 +134,7 @@ indices
 ing
 io
 isn
+iteratively
 json
 knitr
 makeWeight
@@ -135,8 +145,10 @@ na
 newDataset
 newDatasetFromFile
 pid
+pipelining
 preemptively
 pw
+recode
 recurses
 rmarkdown
 sav
@@ -147,6 +159,7 @@ shapefiles
 shojiObject
 spss
 st
+subclasses
 subdomain
 subvariable
 subvariables
@@ -156,11 +169,14 @@ topo
 tv
 un
 undichotomize
+unevaluated
 ungrouped
+unhidden
 unhide
 unshare
 varlabels
 ve
+vectorized
 votereg
 weightVariables
 writePreparedData

@@ -215,13 +215,19 @@ with_mock_crunch({
             "as well as in the", dQuote("cases"),
             "argument, please use one or the other."))
         expect_error(makeCaseVariable(name="Dudes"),
-            paste("must supply case conditions in either", dQuote("..."),
-            "or the", dQuote("cases"),
-            "argument, please use one or the other."))
+                     paste("must supply case conditions in either", dQuote("..."),
+                           "or the", dQuote("cases"),
+                           "argument, please use one or the other."))
         expect_error(makeCaseVariable(name="Dudes"),
                      paste("must supply case conditions in either", dQuote("..."),
                      "or the", dQuote("cases"),
                      "argument, please use one or the other."))
+        expect_error(makeCaseVariable(cases=list(list(ds$gender == "Male", name="Dudes")),
+                                      name=""),
+                     paste("could not find correct names for a case; this",
+                           "might be because the cases were embedded in too",
+                           "many lists or because not all the elements of the",
+                           "cases have names. The first offending case is:.*"))
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes"),
             list(expression="else", name="name", id=0.8)), name=""),
@@ -230,8 +236,10 @@ with_mock_crunch({
             list(expression=ds$gender == "Male", name="Dudes"),
             list(expression=ds$gender == "Female", name="Not Dudes"),
             list(expression="else", name="else1"))), name=""),
-            paste("could not find names for a case; this might be because the",
-            "cases were embedded in too many lists."))
+            paste("could not find correct names for a case; this might be",
+                  "because the cases were embedded in too many lists or",
+                  "because not all the elements of the cases have names. The",
+                  "first offending case is:.*"))
         expect_error(makeCaseVariable(cases=list(
             list(expression=ds$gender == "Male", name="Dudes"),
             list(expression='else', name='other'),
