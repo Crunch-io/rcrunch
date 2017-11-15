@@ -1,17 +1,7 @@
 context("z-scores")
 
-test_that("broadcast broadcasts", {
-    expect_equal(broadcast(c(1, 2, 3, 4), nrow = 5),
-                 matrix(c(1, 1, 1, 1, 1, 2, 2, 2, 2, 2,
-                          3, 3, 3, 3, 3, 4, 4, 4, 4, 4), nrow = 5)
-    )
-    expect_equal(broadcast(c(1, 2, 3, 4), ncol = 5),
-                 matrix(c(1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4,
-                          1, 2, 3, 4, 1, 2, 3, 4), ncol = 5))
-})
-
 ##########################################
-## fixutres from crunch cube
+## fixtures from crunch cube
 ##########################################
 mr_x_cat <- loadCube(test_path("cubes/mr-by-cat-profiles-stats-weighted.json"))
 mr_x_cat_unweighted <- loadCube(test_path("cubes/mr-by-cat-profiles-stats.json"))
@@ -24,8 +14,8 @@ mr_x_cat_dims <- list(pdl_gender = c("maennlich", "weiblich"),
 gender_x_ideology <- loadCube(test_path("cubes/econ-gender-x-ideology-weighted.json"))
 
 test_that("z-scores are calculated by default with the deprecated method)", {
-    expect_equal(z.table(gender_x_ideology, 1), zScoresDep(gender_x_ideology, 1))
-    expect_equal(z.table(gender_x_ideology, 2), zScoresDep(gender_x_ideology, 2))
+    expect_equal(z.scores(gender_x_ideology, 1), z.scores(gender_x_ideology, 1))
+    expect_equal(z.scores(gender_x_ideology, 2), z.scores(gender_x_ideology, 2))
 })
 
 test_that("z-scores can calculate to row margins - crunch-cube fixture (axis 1)", {
@@ -37,7 +27,7 @@ test_that("z-scores can calculate to row margins - crunch-cube fixture (axis 1)"
                                       c("Very liberal", "Liberal", "Moderate",
                                         "Conservative", "Very Conservative",
                                         "Not sure")))
-    expect_equal(zScoresDep(gender_x_ideology, 1), out)
+    expect_equal(z.scores(gender_x_ideology, 1), out)
 })
 
 test_that("z-scores can calculate to column margins - crunch-cube fixture (axis 0)", {
@@ -49,7 +39,7 @@ test_that("z-scores can calculate to column margins - crunch-cube fixture (axis 
                                      c("Very liberal", "Liberal", "Moderate",
                                        "Conservative", "Very Conservative",
                                        "Not sure")))
-    expect_equal(zScoresDep(gender_x_ideology, 2), out)
+    expect_equal(z.scores(gender_x_ideology, 2), out)
 })
 
 
@@ -60,7 +50,7 @@ test_that("z-scores can calculate to row margins - crunch cube fixture (axis 1)"
                     -3.38775031004662, -3.4656457377556, -1.39556275813377,
                     -2.33191481595459, 6.90462247318263, 0.236724043078395,
                     -0.734189509622821), dims = mr_x_cat_dims)
-    expect_equivalent(zScoresDep(mr_x_cat, 1), out)
+    expect_equivalent(z.scores(mr_x_cat, 1), out)
 })
 
 test_that("z-scores can calculate to columns margins - crunch cube fixture (axis 0)", {
@@ -71,7 +61,7 @@ test_that("z-scores can calculate to columns margins - crunch cube fixture (axis
                       -1.42672343792324, -2.41444184160409, 6.85140362038576,
                       0.220890470186742, -0.72298814533095),
                   dims = mr_x_cat_dims)
-    expect_equivalent(zScoresDep(mr_x_cat, 2), out)
+    expect_equivalent(z.scores(mr_x_cat, 2), out)
 })
 
 test_that("p-values can calculate to row margins - crunch-cube fixture (axis 1)", {
@@ -98,7 +88,7 @@ test_that("p-values can calculate to column margins - crunch-cube fixture (axis 
 
 
 ##########################################
-## fixutres from whaam
+## fixtures from whaam
 ##########################################
 # whaam fixtures
 admit_by_dept_unweighted <- loadCube(test_path("cubes/admit-by-dept-unweighted.json"))
@@ -111,7 +101,7 @@ test_that("z-scores can calculate to row margins - whaam fixture", {
                      3.12195459533981, 7.72212901884083, 23.9134092110139),
                  dims = list(Admit = c("Admitted", "Rejected"),
                                  Dept = c("A", "B", "C", "D", "E", "F")))
-    expect_equal(zScoresDep(admit_by_dept_unweighted, 1), out)
+    expect_equal(z.scores(admit_by_dept_unweighted, 1), out)
 })
 
 test_that("z-scores can calculate to row margins - whaam fixture", {
@@ -119,7 +109,7 @@ test_that("z-scores can calculate to row margins - whaam fixture", {
                     -9.71107624617507, 9.71107624617506),
                  dims = list(Admit = c("Admitted", "Rejected"),
                                  Gender = c("Male", "Female")))
-    expect_equal(zScoresDep(admit_by_gender_weighted, 1), out)
+    expect_equal(z.scores(admit_by_gender_weighted, 1), out)
 })
 
 test_that("z-scores can calculate to column margins - whaam fixture", {
@@ -129,7 +119,7 @@ test_that("z-scores can calculate to column margins - whaam fixture", {
                     3.19261047229265, 8.09694682104735, 32.0139892315214),
                  dims = list(Admit = c("Admitted", "Rejected"),
                                  Dept = c("A", "B", "C", "D", "E", "F")))
-    expect_equal(zScoresDep(admit_by_dept_unweighted, 2), out)
+    expect_equal(z.scores(admit_by_dept_unweighted, 2), out)
 })
 
 test_that("z-scores can calculate to column margins - whaam fixture", {
@@ -137,7 +127,7 @@ test_that("z-scores can calculate to column margins - whaam fixture", {
                     -9.75089877074672, 9.72361434000117),
                  dims = list(Admit = c("Admitted", "Rejected"),
                                  Gender = c("Male", "Female")))
-    expect_equal(zScoresDep(admit_by_gender_weighted, 2), out)
+    expect_equal(z.scores(admit_by_gender_weighted, 2), out)
 })
 
 ## p-values unweighted

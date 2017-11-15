@@ -1,6 +1,6 @@
 {
     "element": "shoji:view",
-    "self": "https://stable.crunch.io/api/datasets/ab64eee04efb43d4ae9c13e0e71468c4/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fstable.crunch.io%2Fapi%2Fdatasets%2Fab64eee04efb43d4ae9c13e0e71468c4%2Fvariables%2F000003%2F%22%7D%2C%7B%22variable%22%3A%22https%3A%2F%2Fstable.crunch.io%2Fapi%2Fdatasets%2Fab64eee04efb43d4ae9c13e0e71468c4%2Fvariables%2F000006%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
+    "self": "https://app.crunch.io/api/datasets/ab64eee04efb43d4ae9c13e0e71468c4/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2Fab64eee04efb43d4ae9c13e0e71468c4%2Fvariables%2F000003%2F%22%7D%2C%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2Fab64eee04efb43d4ae9c13e0e71468c4%2Fvariables%2F000006%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
     "value": {
         "result": {
             "dimensions": [
