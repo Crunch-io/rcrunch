@@ -63,7 +63,7 @@ test_that("z-scores can calculate to row margins - crunch cube fixture (axis 1)"
     expect_equivalent(zScoresDep(mr_x_cat, 1), out)
 })
 
-test_that("p-values can calculate to columns margins - crunch cube fixture (axis 0)", {
+test_that("z-scores can calculate to columns margins - crunch cube fixture (axis 0)", {
     out <- cubify(c(-1.33325107235154, 3.4170985193131, 3.56231261682056,
                       1.42672343792323, 2.41444184160409, -6.85140362038577,
                       -0.220890470186746, 0.722988145330955,
@@ -85,7 +85,7 @@ test_that("p-values can calculate to row margins - crunch-cube fixture (axis 1)"
     expect_equivalent(p.values(mr_x_cat, 1), abs(out))
 })
 
-test_that("z-scores can calculate to column margins - crunch-cube fixture (axis 0)", {
+test_that("p-values can calculate to column margins - crunch-cube fixture (axis 0)", {
     out <- cubify(c(-1.82449424e-01, 6.32923709e-04, 3.67602277e-04,
                     1.53659627e-01, 1.57593387e-02, -7.31281702e-12,
                     -8.25177718e-01, 4.69687167e-01,
@@ -141,7 +141,7 @@ test_that("z-scores can calculate to column margins - whaam fixture", {
 })
 
 ## p-values unweighted
-test_that("z-scores can calculate to row margins (unweighted) - whaam fixture (pvalues calc)", {
+test_that("p-values can calculate to row margins (unweighted) - whaam fixture", {
     out <- cubify(c(-0.013867151154616897, 0.0009563833962253909,
                   0.0019487904594506222, 0.12924606532399752,
                   0.21918270942711926, -0.0000019841338991799518,
@@ -154,7 +154,7 @@ test_that("z-scores can calculate to row margins (unweighted) - whaam fixture (p
     expect_equal(p.values(mr_x_cat_unweighted, 1), abs(out))
 })
 
-test_that("z-scores can calculate to columns margins (unweighted) - whaam fixture (pvalues calc)", {
+test_that("p-values can calculate to columns margins (unweighted) - whaam fixture", {
     out <- cubify(c(-0.013861902224157063, 0.0009542912810769355,
                     0.0019299337340947798, 0.12876189755225131,
                     0.21852890322144702, -0.0000019638715096359505,
@@ -168,7 +168,7 @@ test_that("z-scores can calculate to columns margins (unweighted) - whaam fixtur
 })
 
 ## p-values weighted
-test_that("z-scores can calculate to row margins - whaam fixture (pvalues calc)", {
+test_that("p-values can calculate to row margins - whaam fixture", {
     out <- cubify(c(-0.17478090412248748, 0.0006783274445936183,
                       0.00050833069186762, 0.16155398180455305,
                       0.019330134162242496, -4.332090242087361e-12,
@@ -187,7 +187,7 @@ test_that("z-scores can calculate to row margins - whaam fixture (pvalues calc)"
     expect_equivalent(p.values(mr_x_cat, 1), abs(out))
 })
 
-test_that("z-scores can calculate to columns margins - whaam fixture (pvalues calc)", {
+test_that("p-values can calculate to columns margins - whaam fixture", {
     out <- cubify(c(-0.1824494335182465, 0.0006329237585269709,
                     0.0003676023086403024, 0.15365963167452468,
                     0.015759337556626285, -7.312817018600981e-12,
