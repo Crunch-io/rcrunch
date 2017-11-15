@@ -208,6 +208,15 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
         filter=CrunchLogicalExpr(),
         tuple=DatasetTuple()))
 
+GenericConstructor <- function (class) {
+    return(function (..., data=NULL) {
+        if (!is.null(data)) {
+            return(new(class, data))
+        } else {
+            return(new(class, list(...)))
+        }
+    })
+}
 #' Abstract categories
 #'
 #' An abstract class that categories, elements, insertions, etc. fall under
@@ -228,15 +237,11 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
 #' @keywords internal
 #' @export
 setClass("AbsCats", contains="list")
+
+
 #' @rdname abscat
 #' @export
-AbsCats <- function (..., data=NULL) {
-    if (!is.null(data)) {
-        return(new("AbsCats", data))
-    } else {
-        return(new("AbsCats", list(...)))
-    }
-}
+AbsCats <- GenericConstructor("AbsCats")
 
 #' @rdname abscat
 #' @export
@@ -244,13 +249,7 @@ setClass("AbsCat", contains="namedList")
 
 #' @rdname abscat
 #' @export
-AbsCat <- function (..., data=NULL) {
-    if (!is.null(data)) {
-        return(new("AbsCat", data))
-    } else {
-        return(new("AbsCat", list(...)))
-    }
-}
+AbsCat <- GenericConstructor("AbsCat")
 
 
 #' Categories in CategoricalVariables
@@ -287,13 +286,7 @@ setClass("Categories", contains="AbsCats")
 
 #' @rdname Categories
 #' @export
-Categories <- function (..., data=NULL) {
-    if (!is.null(data)) {
-        return(new("Categories", data))
-    } else {
-        return(new("Categories", list(...)))
-    }
-}
+Categories <- GenericConstructor("Categories")
 
 #' @rdname Categories
 #' @export
@@ -301,13 +294,7 @@ setClass("Category", contains="AbsCat")
 
 #' @rdname Categories
 #' @export
-Category <- function (..., data=NULL) {
-    if (!is.null(data)) {
-        return(new("Category", data))
-    } else {
-        return(new("Category", list(...)))
-    }
-}
+Category <- GenericConstructor("Category")
 
 
 #' @rdname Insertions
@@ -316,13 +303,7 @@ setClass("Insertions", contains="AbsCats")
 
 #' @rdname Insertions
 #' @export
-Insertions <- function (..., data=NULL) {
-    if (!is.null(data)) {
-        return(new("Insertions", data))
-    } else {
-        return(new("Insertions", list(...)))
-    }
-}
+Insertions <- GenericConstructor("Insertions")
 
 #' @rdname Insertions
 #' @export
@@ -331,11 +312,7 @@ setClass("Insertion", contains="AbsCat")
 #' @rdname Insertions
 #' @export
 Insertion <- function (..., data=NULL) {
-    if (!is.null(data)) {
-        out <- new("Insertion", data)
-    } else {
-        out <- new("Insertion", list(...))
-    }
+    out <- GenericConstructor("Insertion")(..., data=data)
     # ensure that args is a list, even if it is a single element
     if (!is.null(out$args) && length(out$args) == 1) {
         out$args <- as.list(out$args)
@@ -351,13 +328,7 @@ setClass("Subtotal", contains="AbsCat")
 
 #' @rdname SubtotalsHeadings
 #' @export
-Subtotal <- function (..., data=NULL) {
-    if (!is.null(data)) {
-        return(new("Subtotal", data))
-    } else {
-        return(new("Subtotal", list(...)))
-    }
-}
+Subtotal <- GenericConstructor("Subtotal")
 
 #' @rdname SubtotalsHeadings
 #' @export
@@ -365,13 +336,7 @@ setClass("Heading", contains="AbsCat")
 
 #' @rdname SubtotalsHeadings
 #' @export
-Heading <- function (..., data=NULL) {
-    if (!is.null(data)) {
-        return(new("Heading", data))
-    } else {
-        return(new("Heading", list(...)))
-    }
-}
+Heading <- GenericConstructor("Heading")
 
 
 #' @rdname Transforms
@@ -453,12 +418,7 @@ SearchResults <- setClass("SearchResults", contains="namedList")
 setClass("CrunchGeography", contains="namedList")
 #' @rdname geo
 #' @export
-CrunchGeography <- function (..., data=NULL) {
-    if (is.null(data)) {
-        data <- list(...)
-    }
-    return(new("CrunchGeography", data))
-}
+CrunchGeography <- GenericConstructor("CrunchGeography")
 
 #' @rdname geo
 #' @export Geodata
