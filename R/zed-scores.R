@@ -1,3 +1,5 @@
+# z-score calculations from Doug's tables pdf. This will soon be deprecated and
+# replaced using the cross product of the margins for expected values.
 zScoresDep <- function (table, margin) {
     other_margin <- 3 - margin ## Assumes 2-D
     # dims <- dim(sample_prop)
@@ -12,37 +14,31 @@ zScoresDep <- function (table, margin) {
 
     # doug's R (for rows)
     direct_margin <- prop.table(margin.table(adjusted_table, margin))
+    magic_d <- (1 - 2 * direct_margin) / direct_margin # d.r
     if (margin == 1) {
         # doug's ev.r (for rows)
         expected_value <- direct_margin %*% (sample_prop_adj * (1 - sample_prop_adj))
+        # make arrays
+        expected_value <- broadcast(expected_value, nrow = nrow(sample_prop_adj))
+        magic_d <- broadcast(magic_d, ncol = ncol(sample_prop_adj))
     } else if (margin == 2) {
         # doug's ev.r (for cols)
         expected_value <- (sample_prop_adj * (1 - sample_prop_adj)) %*% direct_margin
+        # make arrays
+        expected_value <- broadcast(expected_value, ncol = ncol(sample_prop_adj))
+        magic_d <- broadcast(magic_d, nrow = nrow(sample_prop_adj))
     }
-    magic_d <- (1 - 2 * direct_margin) / direct_margin # d.r
 
     ### denominator prep
     # use unweighted counts
-    # TODO: make less for-y
-    std_err <- matrix(nrow = nrow(adjusted_table), ncol = ncol(adjusted_table))
-    for(i in 1: nrow(adjusted_table)) {
-        for(j in 1: ncol(adjusted_table)) {
-            # swap expected value indicator
-            ev_ind <- ifelse(margin == 1, j, i)
-            md_ind <- ifelse(margin == 1, i, j)
-
-            std_err[i, j] <- magic_d[md_ind] * sample_prop_adj[i, j] * (1 - sample_prop_adj[i, j]) + expected_value[ev_ind]
-        }
-    }
+    std_err <- magic_d * sample_prop_adj * (1 - sample_prop_adj) + expected_value
     zed_denom <- sqrt(std_err / n)
 
     ### numerator prep
     if (margin == 1) {
-        zed_num <- (sample_prop - matrix(rep(off_margin, nrow(adjusted_table)),
-                                         byrow = TRUE, nrow = nrow(adjusted_table)))
+        zed_num <- sample_prop - broadcast(off_margin, nrow = nrow(adjusted_table))
     } else if (margin == 2) {
-        zed_num <- (sample_prop - matrix(rep(off_margin, ncol(adjusted_table)),
-                                         byrow = FALSE, nrow = nrow(adjusted_table)))
+        zed_num <- sample_prop - broadcast(off_margin, ncol = ncol(adjusted_table))
     }
 
     zed_score <- zed_num/zed_denom
@@ -51,6 +47,12 @@ zScoresDep <- function (table, margin) {
 }
 
 #' Calculate z-scores for a CrunchCube
+#'
+#' To get a z-score for the cells of a cube by comparing to the proportions on
+#' the row or column margin. When testing against row marigns compare the cell
+#' against the proprotion for all columns in that row. When testing against
+#' column marigns compare the cell against the proprotion for all rows in that
+#' column.
 #'
 #' @param table A CrunchCube to calculate z-scores for
 #' @param margin which margin to test against (1 for rows, 2 for columns)
@@ -72,3 +74,17 @@ p.values <- function (table, margin) {
     return(2*pnorm(abs(zeds), lower.tail = FALSE))
 }
 
+# broadcast a vector of values to a matrix with length(values) cols/rows and
+# ncol/nrow cols/rows.
+broadcast <- function (values, nrow, ncol) {
+    if (missing(nrow)) {
+        byrow <- FALSE
+        nrow <- length(values)
+    } else if (missing(ncol)) {
+        byrow <- TRUE
+        ncol <- length(values)
+    } else {
+        return(NULL)
+    }
+    return(matrix(values, byrow = byrow, ncol = ncol, nrow = nrow))
+}

@@ -1,5 +1,15 @@
 context("z-scores")
 
+test_that("broadcast broadcasts", {
+    expect_equal(broadcast(c(1, 2, 3, 4), nrow = 5),
+                 matrix(c(1, 1, 1, 1, 1, 2, 2, 2, 2, 2,
+                          3, 3, 3, 3, 3, 4, 4, 4, 4, 4), nrow = 5)
+    )
+    expect_equal(broadcast(c(1, 2, 3, 4), ncol = 5),
+                 matrix(c(1, 2, 3, 4, 1, 2, 3, 4, 1, 2, 3, 4,
+                          1, 2, 3, 4, 1, 2, 3, 4), ncol = 5))
+})
+
 ##########################################
 ## fixutres from crunch cube
 ##########################################
