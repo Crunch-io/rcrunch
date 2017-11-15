@@ -41,9 +41,9 @@ Heading(..., data = NULL)
 \item{...}{additional arguments to \code{[}, ignored}
 
 \item{data}{For the constructor functions \code{Subtotal} and
-\code{Subtotal}, you can either pass in attributes via \code{...} or you
+\code{Heading}, you can either pass in attributes via \code{...} or you
 can create the objects with a fully defined \code{list} representation of
-the objects via the \code{data} argument. See the examples.}
+the objects via the \code{data} argument.}
 
 \item{x}{either a variable or CrunchCube object to add or get subtotal
 transforms for}
@@ -53,8 +53,8 @@ transforms for}
 \item{var}{the variable to use to make \code{Insertions} from a \code{Subtotal} object}
 }
 \description{
-Subtotals and headings allow you to add subtotals and headings to variables
-or CrunchCubes. These are especially useful for making aggregates across
+Subtotals and headings for categorical Variables and
+CrunchCubes. These are especially useful for making aggregates across
 multiple categories (sometimes referred to as \emph{nets}, \emph{top box}, or
 \emph{top 2 box}).
 }
@@ -92,16 +92,46 @@ subtotals(ds$opinion) <- Heading(name = "All opinions", after = 0)
 
 # to see the subtotals and headings associated with a variable
 subtotals(ds$opinion)
+#        anchor         name     func    args
+# 1      2        Agree subtotal 1 and 2
+# 2      4     Disagree subtotal 4 and 5
+# 3      0 All opinions     <NA>      NA
 
 # when you use a variable with subtotals and headings in a cube, you see them
 # by default
 opinion_cube <- crtabs(~opinion, ds)
+opinion_cube
+#               All opinions   
+#             Strongly Agree 23
+#             Somewhat Agree 24
+#                      Agree 47
+# Neither Agree nor Disagree 18
+#          Strongly Disagree 19
+#                   Disagree 35
+#          Somewhat Disagree 16
+
 
 # to get just the subtotals,
 subtotalArray(opinion_cube)
+#    Agree Disagree 
+#       47       35 
 
 # to remove all subtotals and headings
 subtotals(ds$opinion) <- NULL
+crtabs(~opinion, ds)
+#             Strongly Agree 23
+#             Somewhat Agree 24
+# Neither Agree nor Disagree 18
+#          Strongly Disagree 19
+#          Somewhat Disagree 16
+
+
+# if you want to temporarily remove subtotals and headings, you can with `noTransforms`
+noTransforms(crtabs(~opinion, ds))
+#             Strongly Agree             Somewhat Agree Neither Agree nor Disagree 
+#                         23                         24                         18 
+#          Strongly Disagree          Somewhat Disagree 
+#                         19                         16 
 }
 
 }

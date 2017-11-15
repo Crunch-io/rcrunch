@@ -1,7 +1,7 @@
 #' Subtotals and headings
 #'
-#' Subtotals and headings allow you to add subtotals and headings to variables
-#' or CrunchCubes. These are especially useful for making aggregates across
+#' Subtotals and headings for categorical Variables and
+#' CrunchCubes. These are especially useful for making aggregates across
 #' multiple categories (sometimes referred to as _nets_, _top box_, or
 #' _top 2 box_).
 #'
@@ -19,12 +19,12 @@
 #' To get an array of just the subtotal rows from a CrunchCube, use the function
 #' `subtotalArray(CrunchCube)`.
 #'
-#' @param data For the constructor functions `Subtotal` and
-#' `Subtotal`, you can either pass in attributes via `...` or you
-#' can create the objects with a fully defined `list` representation of
-#' the objects via the `data` argument. See the examples.
 #' @param x either a variable or CrunchCube object to add or get subtotal
 #' transforms for
+#' @param data For the constructor functions `Subtotal` and
+#' `Heading`, you can either pass in attributes via `...` or you
+#' can create the objects with a fully defined `list` representation of
+#' the objects via the `data` argument.
 #' @param ... additional arguments to `[`, ignored
 #' @param value For `[<-`, the replacement Subtotal to insert
 #' @param var the variable to use to make `Insertions` from a `Subtotal` object
@@ -48,16 +48,46 @@
 #'
 #' # to see the subtotals and headings associated with a variable
 #' subtotals(ds$opinion)
+#' #        anchor         name     func    args
+#' # 1      2        Agree subtotal 1 and 2
+#' # 2      4     Disagree subtotal 4 and 5
+#' # 3      0 All opinions     <NA>      NA
 #'
 #' # when you use a variable with subtotals and headings in a cube, you see them
 #' # by default
 #' opinion_cube <- crtabs(~opinion, ds)
+#' opinion_cube
+#' #               All opinions   
+#' #             Strongly Agree 23
+#' #             Somewhat Agree 24
+#' #                      Agree 47
+#' # Neither Agree nor Disagree 18
+#' #          Strongly Disagree 19
+#' #                   Disagree 35
+#' #          Somewhat Disagree 16
+#' 
 #'
 #' # to get just the subtotals,
 #' subtotalArray(opinion_cube)
+#' #    Agree Disagree 
+#' #       47       35 
 #'
 #' # to remove all subtotals and headings
 #' subtotals(ds$opinion) <- NULL
+#' crtabs(~opinion, ds)
+#' #             Strongly Agree 23
+#' #             Somewhat Agree 24
+#' # Neither Agree nor Disagree 18
+#' #          Strongly Disagree 19
+#' #          Somewhat Disagree 16
+#' 
+#' 
+#' # if you want to temporarily remove subtotals and headings, you can with `noTransforms`
+#' noTransforms(crtabs(~opinion, ds))
+#' #             Strongly Agree             Somewhat Agree Neither Agree nor Disagree 
+#' #                         23                         24                         18 
+#' #          Strongly Disagree          Somewhat Disagree 
+#' #                         19                         16 
 #' }
 #'
 #' @name SubtotalsHeadings
