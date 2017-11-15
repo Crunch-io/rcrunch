@@ -49,7 +49,7 @@ zScoresDep <- function (table, margin) {
 #' Calculate z-scores for a CrunchCube
 #'
 #' To get a z-score for the cells of a cube by comparing to the proportions on
-#' the row or column margins. When testing against row marigns `z.table`
+#' the row or column margins. When testing against row margins `z.table`
 #' compares each cell against the proportion for all columns in that row. When
 #' testing against column margins `z.table` compares each cell against the
 #' proportion for all rows in that  column.
