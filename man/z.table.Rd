@@ -16,8 +16,8 @@ an array of z-scores
 }
 \description{
 To get a z-score for the cells of a cube by comparing to the proportions on
-the row or column margin. When testing against row marigns compare the cell
-against the proprotion for all columns in that row. When testing against
-column marigns compare the cell against the proprotion for all rows in that
-column.
+the row or column margins. When testing against row marigns \code{z.table}
+compares each cell against the proportion for all columns in that row. When
+testing against column margins \code{z.table} compares each cell against the
+proportion for all rows in that  column.
 }
