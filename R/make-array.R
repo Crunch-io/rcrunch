@@ -81,7 +81,7 @@ makeMR <- function (subvariables, name, selections, ...) {
 }
 
 
-#' Create Multiple Response Variable from Delimited
+#' Create Multiple Response Variable from Delimited lists
 #'
 #' Surveys often record multiple response questions in delimited lists where
 #' each respondent's selections are separated by a delimiter like `;` or `|`.
@@ -92,14 +92,14 @@ makeMR <- function (subvariables, name, selections, ...) {
 #' @param var The variable containing the delimited responses
 #' @param delim The delimiter separating the responses
 #' @param name The name of the resulting MR variable
-#' @param selected A character string used to indicate a selection
-#' @param not_selected Character string identifying non-selection
-#' @param unanswered Character string indicating non-response
+#' @param selected A character string used to indicate a selection, defaults to "selected
+#' @param not_selected Character string identifying non-selection, defaults to "not_selected"
+#' @param unanswered Character string indicating non-response, defaults to NA.
 #' @param ... Other arguments to be passed on to [makeMR()]
 #'
-#' @return
+#' @return a Multiple response variable definition
 #' @export
-mrFromDelim <- function(var,
+mrFromDelim <- function (var,
     delim,
     name,
     selected = "selected",
@@ -110,18 +110,16 @@ mrFromDelim <- function(var,
         halt("Must supply a name for the new variable")
     }
     if (is.Categorical(var) || is.Text(var)) {
-        v <- as.vector(var)
+        uniques <- names(table(var))
     } else {
-        halt(dQuote("var"), " must be a Categorical or Text Crunch Variable.")
+        halt(dQuote(substitute(var)), " must be a Categorical or Text Crunch Variable.")
     }
-    uniques <- unique(v[!is.na(v)])
     cats <- unique(unlist(strsplit(uniques, delim)))
-    vardefs <- lapply(cats, function(x) createSubvarDef(v, x, delim,
-        selected, not_selected, unanswered, missing = is.na(v)))
+    vardefs <- lapply(cats, function(x) createSubvarDef(var, x, delim,
+        selected, not_selected, unanswered))
     ds <- loadDataset(datasetReference(var))
-    addVariables(ds, vardefs)
-    hide(var)
-    ds <- refresh(ds)
+    ds <- addVariables(ds, vardefs)
+    var <- hide(var)
     return(makeMR(ds[, cats], name = name, selections = selected))
 }
 
@@ -132,8 +130,6 @@ mrFromDelim <- function(var,
 #' a string is present in a delimited list, then substitutes the user supplied values
 #' to indicate selection, non-selection, and missingness.
 #'
-#' TODO: When Crunch allows variable derivation to be created via regex, this should
-#' create a derivation instead of a definition with values.
 #'
 #' @inheritParams mrFromDelim
 #' @param str A string whose presence indicates a selection
@@ -141,12 +137,38 @@ mrFromDelim <- function(var,
 #' @keywords internal
 #'
 #' @return A VariableDefinition
-createSubvarDef <- function(var, str, delim, selected, not_selected, unanswered, missing) {
-    out <- values <- grepl(buildDelimRegex(str, delim), var)
-    out[values] <- selected
-    out[!values] <- not_selected
-    out[missing] <- unanswered
-    return(toVariable(factor(out), name = str))
+createSubvarDef <- function (var, str, delim, selected, not_selected, unanswered) {
+    if (is.na(unanswered)) {
+        unanswered <- "No Data"
+    }
+    browser()
+    new_cat_type <- list(
+        value = list(
+            class = "categorical",
+            categories = list(
+                # list("id" = 1,
+                #     "name" = unanswered,
+                #     "numeric_value" = NA,
+                #     "missing" = TRUE),
+                list("id" = 1,
+                    "name" = selected,
+                    "numeric_value" = NA,
+                    "missing" = FALSE),
+                list("id" = 2,
+                    "name" = not_selected,
+                    "numeric_value" = NA,
+                    "missing" = FALSE)
+             )
+        )
+    )
+    new_cat <- list(column = I(1:2), type = new_cat_type)
+    deriv <- zfunc("case", new_cat)
+    #deriv$args[[2]] <- zfunc("is_missing", var)
+    deriv$args[[2]] <- zfunc("~=", var, buildDelimRegex(str, delim))
+    out <- VariableDefinition(name = str, derivation = deriv)
+    ds$test3 <- out
+    ds$test2 <- NULL
+    return(out)
 }
 
 #' Build Regex to find  delimited items.
@@ -164,7 +186,7 @@ createSubvarDef <- function(var, str, delim, selected, not_selected, unanswered,
 #'
 #' @return A character string
 #' @keywords internal
-buildDelimRegex <- function(str, delim){
+buildDelimRegex <- function (str, delim){
     delim <- paste0('\\', delim) # the delimeter needs to be escaped in case it's a regex character
     regex <- paste0(
         "^", str, delim, "|",
