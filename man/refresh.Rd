@@ -26,5 +26,5 @@ manipulate them, but some operations cause the local version to diverge from
 the version on the server. For instance, someone else may have
 modified the dataset you're working on, or maybe
 you have modified a variable outside of the context of its dataset.
-refresh() allows you to get back in sync.
+\code{refresh()} allows you to get back in sync.
 }
