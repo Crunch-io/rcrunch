@@ -61,36 +61,65 @@ with_mock_crunch({
     test_that("mrFromDelim errors correctly", {
         expect_error(mrFromDelim(ds$var, "; ",),
             "Must supply a name for the new variable")
-        expect_error(mrFromDelim(mtcars$cyl,  name = "name"),
-            paste0(dQuote("var"), " must be a Categorical or Text Crunch Variable."))
+        expect_error(mrFromDelim("string",  name = "name"),
+            paste0(dQuote("string"), " must be a Categorical or Text Crunch Variable."))
     })
 
     test_that("createSubvarDef generates the correct variable definition", {
          v <- c("maple; birch", "oak; maple; birch", "birch; sugar maple", "maple butter; oak", NA)
-         expected <- structure(list(
-             values = c(-1L, -1L, -1L, -1L, -1L),
-             type = "categorical",
-             categories = list(
-                 structure(list(
-                     id = -1L,
-                     name = "No Data",
-                     numeric_value = NULL,
-                     missing = TRUE
-                     ),
-                     .Names = c("id", "name", "numeric_value", "missing")
+         expected <- list(
+             name = "oak",
+             derivation = list(
+                 `function` = "case",
+                 args = list(
+                     list(
+                         column = I(1:3),
+                         type = list(
+                             value = list(
+                                 class = "categorical",
+                                 categories = list(
+                                     list(id = 1,
+                                         name = "No Data",
+                                         numeric_value = NA,
+                                         missing = TRUE),
+                                     list(id = 2,
+                                         name = "Yes",
+                                         numeric_value = NA,
+                                         missing = FALSE),
+                                     list(id = 3,
+                                         name = "No",
+                                         numeric_value = NA,
+                                         missing = FALSE)
+                                     )
+                                 )
+                             )
+                         ),
+                     list(`function` = "is_missing",
+                         args = list(
+                             list(column = c("maple; birch", "oak; maple; birch",
+                             "birch; sugar maple", "maple butter; oak", NA)
+                                 )
+                             )
+                         ), list(
+                             `function` = "~=",
+                             args = list(list(column = c("maple; birch",
+                                 "oak; maple; birch", "birch; sugar maple", "maple butter; oak",
+                                 NA)
+                             ), list(value = "^oak\\; |\\; oak\\; |\\; oak$|^oak$")
+                                 )
+                             )
                      )
-                 ),
-             name = "oak"),
-             .Names = c("values", "type", "categories", "name"),
-             class = "VariableDefinition")
+                 )
+             )
+
          varDef <- crunch:::createSubvarDef(v, str = "oak",
              delim = "; ",
              selected = "Yes",
              not_selected = "No",
-             unanswered = v[is.na(v)])
+             unanswered = NA)
          expect_equivalent(varDef, expected)
     })
-    c("maple; birch", "oak; maple; birch", "birch; sugar maple", "maple butter; oak")
+
     test_that("buildDelimRegex generates the expected regular expression", {
         rx <- buildDelimRegex("maple", "; ")
         expect_true(grepl(rx, "maple"))

@@ -120,7 +120,7 @@ mrFromDelim <- function (var,
     ds <- loadDataset(datasetReference(var))
     ds <- addVariables(ds, vardefs)
     var <- hide(var)
-    return(makeMR(ds[, cats], name = name, selections = selected))
+    return(makeMR(ds[, cats], name = name, selections = selected, ...))
 }
 
 #' createSubvarDef
@@ -137,37 +137,35 @@ mrFromDelim <- function (var,
 #' @keywords internal
 #'
 #' @return A VariableDefinition
-createSubvarDef <- function (var, str, delim, selected, not_selected, unanswered) {
+createSubvarDef <- function (var, str, delim, selected, not_selected, unanswered, debug = FALSE) {
+    if(debug) browser()
     if (is.na(unanswered)) {
         unanswered <- "No Data"
     }
-    browser()
     new_cat_type <- list(
         value = list(
             class = "categorical",
             categories = list(
-                # list("id" = 1,
-                #     "name" = unanswered,
-                #     "numeric_value" = NA,
-                #     "missing" = TRUE),
                 list("id" = 1,
+                    "name" = unanswered,
+                    "numeric_value" = NA,
+                    "missing" = TRUE),
+                list("id" = 2,
                     "name" = selected,
                     "numeric_value" = NA,
                     "missing" = FALSE),
-                list("id" = 2,
+                list("id" = 3,
                     "name" = not_selected,
                     "numeric_value" = NA,
                     "missing" = FALSE)
              )
         )
     )
-    new_cat <- list(column = I(1:2), type = new_cat_type)
+    new_cat <- list(column = I(1:3), type = new_cat_type)
     deriv <- zfunc("case", new_cat)
-    #deriv$args[[2]] <- zfunc("is_missing", var)
-    deriv$args[[2]] <- zfunc("~=", var, buildDelimRegex(str, delim))
+    deriv$args[[2]] <- zfunc("is_missing", var)
+    deriv$args[[3]] <- zfunc("~=", var, buildDelimRegex(str, delim))
     out <- VariableDefinition(name = str, derivation = deriv)
-    ds$test3 <- out
-    ds$test2 <- NULL
     return(out)
 }
 
