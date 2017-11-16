@@ -39,8 +39,6 @@ prettyPrint2d <- function (ary, row_styles = NULL, col_styles = NULL) {
     padded_ary <- array(col_align(ary, cell_widths, align = "right"),
                         dim = dim(ary), dimnames = dimnames(ary))
 
-
-
     ### style columns
     # make headers
     col_heads <- col_align(colnames(ary), col_widths, align = "right")
@@ -55,7 +53,6 @@ prettyPrint2d <- function (ary, row_styles = NULL, col_styles = NULL) {
     # paste headers together
     col_var <- paste0(pad(row_header_width), col_var_name_padded, collapse = "")
     col_heads <- paste0(c(row_var_name_padded, col_heads), collapse = " ")
-
 
     ### style rows
     # TODO: left align headers?
@@ -102,5 +99,28 @@ applyStyles <- function(string, styles = NULL) {
 
     return(applyStyles(string, rest_styles))
 }
+
+
+# make styles based on transforms and categories
+transformStyles <- function (trans, cats) {
+    # collate categories and instertions
+    all_labs <- collateCats(trans$insertions, cats)
+
+    # make a list of styles to apply
+    styles <- lapply(all_labs, function (lab) {
+        if (is.abscat.subtotal(lab)) {
+            return(subtotalStyle)
+        } else if (is.abscat.heading(lab)) {
+            return(headingStyle)
+        } else {
+            return(NULL)
+        }
+    })
+    return(styles)
+}
+
+#' @importFrom crayon make_style italic underline
+headingStyle <- c(nonas, make_style("#546499"), underline) # blue with underline
+subtotalStyle <- c(italic, make_style("#005e46"))
 
 # pretty print for Crunch cube that translates transform into styles, and applies them

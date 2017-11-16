@@ -65,30 +65,30 @@ setMethod("subtotalArray", "CrunchCube", function(x, headings = FALSE) {
 #'
 #' # to get an array of just the subtotals
 #' subtotalArray(crtabs(~opinion, ds))
-#' #    Agree Disagree 
-#' #       47       35 
-#' 
+#' #    Agree Disagree
+#' #       47       35
+#'
 #' # to get the full array with the subtotals but not headings
 #' applyTransforms(crtabs(~opinion, ds), include = c("cube_cells", "subtotals"))
-#' #             Strongly Agree             Somewhat Agree                      Agree 
-#' #                         23                         24                         47 
-#' # Neither Agree nor Disagree          Strongly Disagree                   Disagree 
-#' #                         18                         19                         35 
-#' #          Somewhat Disagree 
-#' #                         16 
+#' #             Strongly Agree             Somewhat Agree                      Agree
+#' #                         23                         24                         47
+#' # Neither Agree nor Disagree          Strongly Disagree                   Disagree
+#' #                         18                         19                         35
+#' #          Somewhat Disagree
+#' #                         16
 #' # to get the full array with the headings but not subtotals
-#' applyTransforms(crtabs(~opinion, ds), include = c("cube_cells", "headings")) 
-#' #               All opinions             Strongly Agree             Somewhat Agree 
-#' #                         NA                         23                         24 
-#' # Neither Agree nor Disagree          Strongly Disagree          Somewhat Disagree 
-#' #                         18                         19                         16 
+#' applyTransforms(crtabs(~opinion, ds), include = c("cube_cells", "headings"))
+#' #               All opinions             Strongly Agree             Somewhat Agree
+#' #                         NA                         23                         24
+#' # Neither Agree nor Disagree          Strongly Disagree          Somewhat Disagree
+#' #                         18                         19                         16
 #' }
 #'
 #' @aliases subtotalArray
 #' @export
 applyTransforms <- function (x, ary = cubeToArray(x), ...) {
     # if there are row transforms, calculate them and display them
-    row_trans <- tryCatch(Transforms(data=index(variables(x))[[1]]$view$transform), error = function(e) NULL)
+    row_trans <- transforms(x)
     if (!is.null(row_trans)) {
         var_cats <- Categories(data=index(variables(x))[[1]]$categories)
 
@@ -107,8 +107,6 @@ applyTransforms <- function (x, ary = cubeToArray(x), ...) {
     }
 
     # TODO: calculate column transforms
-
-
     return(ary)
 }
 
@@ -149,8 +147,8 @@ subsetTransformedCube <- function (ary, cube) {
 #' @rdname Transforms
 #' @export
 setMethod("transforms", "CrunchCube", function (x) {
-    trans <- tryCatch(Transforms(data=index(variables(x))[[1]]$view$transform), error = function(e) NULL)
-    return(trans)
+    tryCatch(Transforms(data=index(variables(x))[[1]]$view$transform),
+        error = function (e) NULL)
 })
 
 #' @rdname Transforms
