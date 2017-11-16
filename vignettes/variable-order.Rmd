@@ -1,5 +1,6 @@
 ---
 title: "Reordering Variables"
+description: "Variables within datasets are organized in folders. The crunch package provides tools for creating folders and moving variables among them."
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Reordering Variables}

@@ -1,5 +1,6 @@
 ---
 title: "Exporting Data"
+description: "For times when you need to take data off the server, Crunch provides several means for exporting data, whether to various file formats or to objects in your R session."
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Exporting Data}
@@ -131,4 +132,3 @@ write.csv(ds[ds$pid3 == "Democrat", c("age", "educ", "gender")], file="demo-demo
 ```
 
 [Next: Crunch internals](crunch-internals.html)
-

@@ -31,6 +31,10 @@ check: build
     # cat vignette-errors.log
     # rm vignette-errors.log
 
+release: build
+	-unset INTEGRATION && R CMD CHECK --as-cran crunch_$(VERSION).tar.gz
+	rm -rf crunch.Rcheck/
+
 vdata:
 	cd vignette-data && R -f make-vignette-rdata.R
 
@@ -50,6 +54,9 @@ build-vignettes: md
 	cd inst/doc && ls | grep .html | xargs -n 1 sed -i '' 's/.md)/.html)/g'
 	# That sed isn't working, fwiw
 	open inst/doc/getting-started.html
+
+spell:
+	R --slave -e 'spelling::spell_check_package(vignettes=TRUE, lang="en_US")'
 
 covr:
 	R --slave -e 'Sys.setenv(R_TEST_USER=getOption("test.user"), R_TEST_PW=getOption("test.pw"), R_TEST_API=getOption("test.api")); library(covr); cv <- package_coverage(); df <- covr:::to_shiny_data(cv)[["file_stats"]]; cat("Line coverage:", round(100*sum(df[["Covered"]])/sum(df[["Relevant"]]), 1), "percent\\n"); shine(cv, browse=TRUE)'

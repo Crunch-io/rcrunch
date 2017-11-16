@@ -105,13 +105,6 @@ setMethod("weightVariables", "VariableCatalog", function (x) {
     }
 })
 
-#' @rdname modifyWeightVariables
-#' @export
-setMethod("weightVariables<-", "CrunchDataset", function (x, value) {
-    return(modifyWeightVariables(x, value, type = "append"))
-})
-
-
 #' Change which variables can be set as a dataset's weight.
 #'
 #' `modifyWeightVariables` allows you to change the variables which are eligible
@@ -205,6 +198,12 @@ modifyWeightVariables <- function (x, vars, type = "append") {
     }
     return(x)
 }
+
+#' @rdname modifyWeightVariables
+#' @export
+setMethod("weightVariables<-", "CrunchDataset", function (x, value) {
+    return(modifyWeightVariables(x, value, type = "append"))
+})
 
 #' @rdname modifyWeightVariables
 #' @export

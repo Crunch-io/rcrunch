@@ -264,7 +264,7 @@ demonstrativeCount <- function (n, noun="variable") {
 #' [crunchBox()] returns a URL to the box data that it generates, but
 #' in order to view it in a CrunchBox or to embed it on a website, you'll need
 #' to translate that to the Box's public URL and wrap it in some HTML. This function
-#' takes a CrunchBox and returns the HTLM which you can embed in a website.
+#' takes a CrunchBox and returns the HTML which you can embed in a website.
 #'
 #' @param box character URL of the box data, as returned by `crunchBox()`
 #' @param title character title for the Box, to appear above the iframe. Default
