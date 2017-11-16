@@ -66,53 +66,44 @@ with_mock_crunch({
     })
 
     test_that("createSubvarDef generates the correct variable definition", {
-         v <- c("maple; birch", "oak; maple; birch", "birch; sugar maple", "maple butter; oak", NA)
-         expected <- list(
-             name = "oak",
-             derivation = list(
-                 `function` = "case",
-                 args = list(
-                     list(
-                         column = I(1:3),
-                         type = list(
-                             value = list(
-                                 class = "categorical",
-                                 categories = list(
-                                     list(id = 1,
-                                         name = "No Data",
-                                         numeric_value = NA,
-                                         missing = TRUE),
-                                     list(id = 2,
-                                         name = "Yes",
-                                         numeric_value = NA,
-                                         missing = FALSE),
-                                     list(id = 3,
-                                         name = "No",
-                                         numeric_value = NA,
-                                         missing = FALSE)
-                                     )
-                                 )
-                             )
-                         ),
-                     list(`function` = "is_missing",
-                         args = list(
-                             list(column = c("maple; birch", "oak; maple; birch",
-                             "birch; sugar maple", "maple butter; oak", NA)
-                                 )
-                             )
-                         ), list(
-                             `function` = "~=",
-                             args = list(list(column = c("maple; birch",
-                                 "oak; maple; birch", "birch; sugar maple", "maple butter; oak",
-                                 NA)
-                             ), list(value = "^oak\\; |\\; oak\\; |\\; oak$|^oak$")
-                                 )
-                             )
-                     )
-                 )
-             )
-
-         varDef <- crunch:::createSubvarDef(v, str = "oak",
+        expected <- list(name = "textVar_oak",
+            derivation = list(
+                `function` = "case",
+                args = list(
+                    list(column = I(1:3),
+                        type = list(
+                            value = list(class = "categorical",
+                                categories = list(
+                                    list(id = 1,
+                                        name = "No Data",
+                                        numeric_value = NA,
+                                        missing = TRUE),
+                                    list(id = 2,
+                                        name = "Yes",
+                                        numeric_value = NA,
+                                        missing = FALSE),
+                                    list(id = 3,
+                                        name = "No",
+                                        numeric_value = NA,
+                                        missing = FALSE)
+                                )
+                            )
+                        )
+                    ),
+                    list(`function` = "is_missing",
+                        args = list(
+                            list(variable = "https://app.crunch.io/api/datasets/1/variables/textVar/")
+                        )
+                    ),
+                    list(`function` = "~=",
+                        args = list(
+                            list(variable = "https://app.crunch.io/api/datasets/1/variables/textVar/"),
+                            list(value = "^oak\\; |\\; oak\\; |\\; oak$|^oak$"))
+                    )
+                )
+            )
+        )
+         varDef <- createSubvarDef(ds$textVar, str = "oak",
              delim = "; ",
              selected = "Yes",
              not_selected = "No",

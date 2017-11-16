@@ -137,8 +137,7 @@ mrFromDelim <- function (var,
 #' @keywords internal
 #'
 #' @return A VariableDefinition
-createSubvarDef <- function (var, str, delim, selected, not_selected, unanswered, debug = FALSE) {
-    if(debug) browser()
+createSubvarDef <- function (var, str, delim, selected, not_selected, unanswered) {
     if (is.na(unanswered)) {
         unanswered <- "No Data"
     }
@@ -165,7 +164,7 @@ createSubvarDef <- function (var, str, delim, selected, not_selected, unanswered
     deriv <- zfunc("case", new_cat)
     deriv$args[[2]] <- zfunc("is_missing", var)
     deriv$args[[3]] <- zfunc("~=", var, buildDelimRegex(str, delim))
-    out <- VariableDefinition(name = str, derivation = deriv)
+    out <- VariableDefinition(name = paste0(alias(var), "_", str), derivation = deriv)
     return(out)
 }
 
