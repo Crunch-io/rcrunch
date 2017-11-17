@@ -253,6 +253,19 @@ with_mock_crunch({
         expect_identical(ds, refresh(ds))
     })
 
+    test_that("dataset refresh doesn't GET dataset catalog", {
+        with(temp.option(httpcache.log=""), {
+            logs <- capture.output({
+                d2 <- refresh(ds)
+            })
+        })
+        in_logs <- function (str, loglines) {
+            any(grepl(str, loglines, fixed=TRUE))
+        }
+        expect_false(in_logs("HTTP GET https://app.crunch.io/api/datasets/ 200", logs))
+        expect_true(in_logs("CACHE DROP ^https://app[.]crunch[.]io/api/datasets/", logs))
+    })
+
     test_that("Dataset settings", {
         expect_false(settings(ds)$viewers_can_export)
         expect_true(settings(ds)$viewers_can_change_weight)
@@ -336,7 +349,7 @@ with_test_authentication({
         test_that("Can set (and unset) startDate", {
             startDate(ds) <- "1985-11-05"
             expect_identical(startDate(ds), "1985-11-05")
-            expect_identical(startDate(refresh(ds)), "1985-11-05")
+            expect_identical(startDate(refresh(ds)), "1985-11-05T00:00:00")
             startDate(ds) <- NULL
             expect_null(startDate(ds))
             expect_null(startDate(refresh(ds)))
@@ -344,7 +357,7 @@ with_test_authentication({
         test_that("Can set (and unset) endDate", {
             endDate(ds) <- "1985-11-05"
             expect_identical(endDate(ds), "1985-11-05")
-            expect_identical(endDate(refresh(ds)), "1985-11-05")
+            expect_identical(endDate(refresh(ds)), "1985-11-05T00:00:00")
             endDate(ds) <- NULL
             expect_null(endDate(ds))
             expect_null(endDate(refresh(ds)))
