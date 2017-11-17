@@ -32,12 +32,39 @@ with_mock_crunch({
     test_that("Get a variable from a folder", {
         expect_is(g1[[1]], "NumericVariable")
         expect_identical(name(g1[[1]]), "Birth Year")
-        ## Not identical to ds$birthyr bc the catalog tuples have different contents
+        ## Not identical to ds$birthyr bc the catalog tuples have different
+        ## contents, but they work the same
+        expect_identical(self(g1[[1]]), self(ds$birthyr))
         expect_identical(summary(g1[[1]]), summary(ds$birthyr))
     })
+
+    test_that("Extract from a folder by path", {
+        expect_is(folders(ds)[["Group 1/Nested"]], "VariableFolder")
+        expect_identical(folders(ds)[["Group 1/Nested"]], g1$Nested)
+        expect_is(folders(ds)[["Group 1/Birth Year"]], "NumericVariable")
+        expect_identical(name(folders(ds)[["Group 1/Birth Year"]]), "Birth Year")
+    })
+
+    test_that("Set a folder's name", {
+        expect_PATCH(name(folders(ds)[[1]]) <- "First",
+            "https://app.crunch.io/api/datasets/1/folders/1/",
+            '{"name":"First"}')
+    })
+    test_that("But top-level folder doesn't have a name and you can't set it", {
+        skip("API needs to indicate which is top-level without URL sniffing")
+    })
+    test_that("Set a variable's name", {
+        ## Note that this patches the catalog (folder) instead of the entity.
+        ## Historical reasons, plus ensuring that name<- on entity and
+        ## names<- on catalog do the same thing
+        expect_PATCH(name(folders(ds)[["Group 1/Birth Year"]]) <- "Year of birth",
+            "https://app.crunch.io/api/datasets/1/folders/1/",
+            '{"https://app.crunch.io/api/datasets/1/variables/birthyr/":',
+            '{"name":"Year of birth"}}')
+    })
+
     ## TODO:
-    ## * paths
-    ## * get variable by alias, name, or URL
-    ## * name<- on folder
     ## * names<- on folder
+    ## * add to a folder
+    ## * reorder elements in a folder
 })

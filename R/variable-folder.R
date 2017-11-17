@@ -14,3 +14,5 @@ setMethod("folderExtraction", "VariableFolder", function (x, tuple) {
         return(CrunchVariable(tup))
     }
 })
+
+## TODO: get variable by alias, name, or URL?
