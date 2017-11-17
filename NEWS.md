@@ -1,3 +1,6 @@
+## crunch 1.19.1
+* `refresh()` for Datasets is now more efficient
+
 ## crunch 1.19.0
 
 ### New functions
