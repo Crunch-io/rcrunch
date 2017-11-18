@@ -45,13 +45,22 @@ with_mock_crunch({
         expect_identical(name(folders(ds)[["Group 1/Birth Year"]]), "Birth Year")
     })
 
+    test_that("Folder extract error handling", {
+        expect_null(folders(ds)[["foo"]])
+        expect_null(folders(ds)[["Group 1/foo"]])
+        expect_error(folders(ds)[["Group 1/foo/bar/baz"]],
+            '"Group 1/foo/bar/baz" is an invalid path: foo is not a folder')
+        expect_error(folders(ds)[["Group 1/Birth Year/bar/baz"]],
+            '"Group 1/Birth Year/bar/baz" is an invalid path: Birth Year is not a folder')
+    })
+
     test_that("Set a folder's name", {
         expect_PATCH(name(folders(ds)[[1]]) <- "First",
             "https://app.crunch.io/api/datasets/1/folders/1/",
             '{"name":"First"}')
     })
     test_that("But top-level folder doesn't have a name and you can't set it", {
-        skip("API needs to indicate which is top-level without URL sniffing")
+        skip("TODO")
     })
     test_that("Set a variable's name", {
         ## Note that this patches the catalog (folder) instead of the entity.
@@ -63,8 +72,33 @@ with_mock_crunch({
             '{"name":"Year of birth"}}')
     })
 
+    test_that("cd() returns a folder (and not a variable)", {
+        expect_identical(cd(ds, "Group 1/Nested"),
+            folders(ds)[["Group 1/Nested"]])
+    })
+    test_that("cd() can operate on a folder too", {
+        expect_identical(cd(cd(ds, "Group 1"), "Nested"),
+            folders(ds)[["Group 1/Nested"]])
+    })
+    test_that("cd() errors if the path isn't a folder or doesn't exist", {
+        expect_error(cd(ds, "Group 1/Birth Year"),
+            '"Group 1/Birth Year" is not a folder')
+        expect_error(cd(ds, "Group 1/foo"),
+            '"Group 1/foo" is not a folder')
+    })
+    test_that("cd attempts to create folders if create=TRUE", {
+        expect_POST(cd(ds, "Group 1/foo", create=TRUE),
+            "https://app.crunch.io/api/datasets/1/folders/1/",
+            '{"element":"shoji:catalog","body":{"name":"foo"}}')
+        expect_POST(cd(ds, "Group 1/foo/bar", create=TRUE),
+            "https://app.crunch.io/api/datasets/1/folders/1/",
+            '{"element":"shoji:catalog","body":{"name":"foo"}}')
+    })
+
     ## TODO:
+    ## * wire up mv, mkdir, etc.
     ## * names<- on folder
-    ## * add to a folder
     ## * reorder elements in a folder
+    ## * delete a folder
+    ## * cd ..
 })

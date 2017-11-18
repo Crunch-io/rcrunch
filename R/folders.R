@@ -43,7 +43,7 @@
 #' }
 #' @export
 mv <- function (dataset, variables, path) {
-    ## _as it turns out_, the behavior converges on the same thing as mkdir.
+    ## _as it turns out_, the behavior converges on almost the same thing as mkdir.
     mkdir(dataset, path, variables)
 }
 
@@ -61,6 +61,17 @@ mkdir <- function (dataset, path, variables=NULL) {
     }
     ordering(dataset) <- .mkdir.inner(ordering(dataset), path, variables)
     return(invisible(dataset))
+}
+
+cd <- function (x, path, create=FALSE) {
+    if (!is.folder(x)) {
+        x <- folders(x)
+    }
+    out <- x[[path, create=create]]
+    if (!inherits(out, "ShojiFolder")) {
+        halt(deparse(path), " is not a folder")
+    }
+    return(out)
 }
 
 #' Find and move variables to a new folder
@@ -98,7 +109,6 @@ folder <- function (variable) {
 ## * dir() and folders() listings
 ## * generally use mv for moving variables' position within a folder? or some
 ##     other reordering function (dir<- ?)
-## * cd() to return a folder object?
 ## * obviously, use the new API. Some of this might not be reasonable/feasible
 ##     with current API.
 ## * rmdir()? or just delete() for folders?

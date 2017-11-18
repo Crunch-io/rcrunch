@@ -31,5 +31,8 @@
             "notes": ""
         }
     },
-    "graph": ["../../variables/birthyr/", "../3/", "../../variables/textVar/"]
+    "graph": ["../../variables/birthyr/", "../3/", "../../variables/textVar/"],
+    "catalogs": {
+        "folder": "https://app.crunch.io/api/datasets/1/folders/"
+    }
 }

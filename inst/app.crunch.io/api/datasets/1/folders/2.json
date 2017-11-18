@@ -33,5 +33,8 @@
             "subvariables_catalog": "../../variables/mymrset/subvariables/"
         }
     },
-    "graph": ["../../variables/starttime/", "../../variables/catarray/"]
+    "graph": ["../../variables/starttime/", "../../variables/catarray/"],
+    "catalogs": {
+        "folder": "https://app.crunch.io/api/datasets/1/folders/"
+    }
 }

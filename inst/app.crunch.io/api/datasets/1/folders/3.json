@@ -40,5 +40,8 @@
             "notes": ""
         }
     },
-    "graph": ["../../variables/gender/", "../../variables/location/", "../../variables/mymrset/"]
+    "graph": ["../../variables/gender/", "../../variables/location/", "../../variables/mymrset/"],
+    "catalogs": {
+        "folder": "https://app.crunch.io/api/datasets/1/folders/1/"
+    }
 }
