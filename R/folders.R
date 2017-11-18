@@ -19,7 +19,7 @@
 #' Both functions take "dataset" as the first argument, so they naturally
 #' support pipelining (as with the \code{\%>\%} operator).
 #'
-#' @param dataset A Crunch dataset
+#' @param x A Crunch dataset or VariableFolder
 #' @param variables A Variable, selection of variables from `dataset`, or any
 #' other object that can be moved to a folder. For `mkdir`, `variables` is
 #' optional.
@@ -27,7 +27,7 @@
 #' vector of nested folder names or a single string with nested folders
 #' separated by a delimiter ("/" default, configurable via
 #' `options(crunch.delimiter)`)
-#' @return `dataset`, with the folder at `path` guaranteed to be created and
+#' @return `x`, with the folder at `path` guaranteed to be created and
 #' `variables`, if specified, moved into it.
 #' @seealso [folder()]
 #' @examples
@@ -42,28 +42,30 @@
 #'     mv(c("aware_y", "nps_y"), "Key Performance Indicators/Brand Y")
 #' }
 #' @export
-mv <- function (dataset, variables, path) {
-    ## _as it turns out_, the behavior converges on almost the same thing as mkdir.
-    mkdir(dataset, path, variables)
+mv <- function (x, variables, path) {
+    ## TODO: add an "after" argument, pass to addToFolder
+    if (is.character(variables)) {
+        ## TODO: extract from a folder, including with glob expressions? (*)
+        variables <- x[variables]
+    }
+    f <- cd(x, path, create=TRUE)
+    .moveToFolder(f, variables)
+    return(invisible(x))
 }
 
 #' @rdname mv
 #' @export
-mkdir <- function (dataset, path, variables=NULL) {
-    path <- parseFolderPath(path)
-    if (is.character(variables)) {
-        ## Could be aliases, so extract from dataset
-        variables <- dataset[variables]
-    } else if (is.variable(variables)) {
-        variables <- self(variables)
-    } else if (inherits(variables, "VariableGroup")) {
-        variables <- list(variables)
-    }
-    ordering(dataset) <- .mkdir.inner(ordering(dataset), path, variables)
-    return(invisible(dataset))
+mkdir <- function (x, path) {
+    ## TODO: add an "after" argument, move created folder there
+    f <- cd(x, path, create=TRUE)
+    return(invisible(x))
 }
 
 cd <- function (x, path, create=FALSE) {
+    if (is.folder(path)) {
+        ## Great! It's already the folder we wanted.
+        return(path)
+    }
     if (!is.folder(x)) {
         x <- folders(x)
     }
@@ -71,13 +73,14 @@ cd <- function (x, path, create=FALSE) {
     if (!inherits(out, "ShojiFolder")) {
         halt(deparse(path), " is not a folder")
     }
-    return(out)
+    return(invisible(out))
 }
 
 #' Find and move variables to a new folder
 #'
-#' @param variable For `folder`, a Variable to find
-#' @return `folder` returns the path to the Variable. `folder<-` returns the
+#' @param x For `folder`, a Variable to find. For folder assignment, a Variable, selection of variables in a
+#' Dataset, or any other object that can be moved to a folder.
+#' @return `folder` returns the parent folder of `x`, or `NULL` if the `x` is the root level. `folder<-` returns the
 #' `x` input, having been moved to the requested location.
 #' @export
 #' @examples
@@ -88,58 +91,64 @@ cd <- function (x, path, create=FALSE) {
 #' ## [1] "Demographics"    "Economic"
 #' }
 #' @seealso [mv()]
-folder <- function (variable) {
-    locateEntity(variable, ordering(loadDataset(datasetReference(variable))))
+folder <- function (x) {
+    ## NOTE: returns folder, not path. Add a `path()` function
+    ## TODO: update man page
+    if (is.folder(x)) {
+        ## Parent folder is of the same type
+        cls <- class(x)
+    } else if (is.variable(x)) {
+        cls <- "VariableFolder"
+    } else {
+        halt("No folder for object of class ", class(x))
+    }
+    u <- tryCatch(shojiURL(x, "catalogs", "folder"),
+        error=function (e) return(NULL))
+    if (is.null(u)) {
+        ## This has no parent. Root level, right?
+        return(NULL)
+    }
+    return(new(cls, crGET(u)))
 }
 
-#' @param x For folder assignment, a Variable, selection of variables in a
-#' Dataset, or any other object that can be moved to a folder.
 #' @param value For assignment, a character "path" to the folder: either a
 #' vector of nested folder names or a single string with nested folders
 #' separated by a delimiter ("/" default)
 #' @rdname folder
 `folder<-` <- function (x, value) {
-    ds <- mv(loadDataset(datasetReference(x)), x, value)
+    if (is.character(value)) {
+        ## Turn path into folder
+        ## TODO: should this be relative to folder(x) or assumed absolute?
+    }
+    .moveToFolder(value, x)
     return(x)
 }
 
+.moveToFolder <- function (folder, variables) {
+    if (is.dataset(variables)) {
+        variables <- allVariables(variables)
+    }
+    if (inherits(variables, "ShojiCatalog")) {
+        variables <- urls(variables)
+    }
+    ## No need to include vars that already exist in this folder
+    variables <- setdiff(variables, urls(folder))
+    if (length(variables)) {
+        ind <- sapply(variables, emptyObject, simplify=FALSE)
+        crPATCH(self(folder), body=toJSON(wrapCatalog(index=ind)))
+        ## Additional cache invalidation
+        ## Drop all variable entities because their catalogs.folder refs are stale
+        dropOnly(variables)
+        ## TODO: drop all folders
+        folder <- refresh(folder)
+    }
+    return(invisible(folder))
+}
+
 ## TODO:
-## * mv and mkdir should take an "after" argument for position within folder
-##     (and note that it means they'll need slightly different behavior)
-## * dir() and folders() listings
-## * generally use mv for moving variables' position within a folder? or some
-##     other reordering function (dir<- ?)
-## * obviously, use the new API. Some of this might not be reasonable/feasible
-##     with current API.
+## * print method for folders
+## * order entities within a folder (including e.g. mv(list of refs, ".")) ?
+## * star/regex/filter methods for folders (for e.g. mv("folder A/*", "folder B"))
+## * path() and path<-?
+## * dir() or something to get contents of a folder?
 ## * rmdir()? or just delete() for folders?
-
-.mkdir.inner <- function (ord, path, variables=NULL) {
-    ## Traverse the paths, creating each along the way if they do not already
-    ## exist (i.e. always recursive=TRUE)
-    segment <- path[1]
-    if (!(segment %in% names(ord))) {
-        ## Make the folder
-        ord[[segment]] <- list()
-    }
-    if (identical(segment, path)) {
-        ## We're at the final level
-        if (!is.null(variables)) {
-            ## Move the requested variables there
-            ## TODO: for mv, this should be additive
-            entities(ord[[segment]]) <- variables
-        }
-    } else {
-        ## Go deeper
-        ord[[segment]] <- .mkdir.inner(ord[[segment]], path[-1], variables)
-    }
-    return(ord)
-}
-
-parseFolderPath <- function (path) {
-    ## path can be "/" separated, and can change that delimiter with
-    ## options(crunch.delimiter="|") or something in case you have real "/"
-    if (length(path) == 1) {
-        path <- unlist(strsplit(path, getOption("crunch.delimiter", "/"), fixed=TRUE))
-    }
-    return(path)
-}

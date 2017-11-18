@@ -5,12 +5,12 @@
 \alias{mkdir}
 \title{Functions to manipulate variables' folder structure}
 \usage{
-mv(dataset, variables, path)
+mv(x, variables, path)
 
-mkdir(dataset, path, variables = NULL)
+mkdir(x, path)
 }
 \arguments{
-\item{dataset}{A Crunch dataset}
+\item{x}{A Crunch dataset or VariableFolder}
 
 \item{variables}{A Variable, selection of variables from \code{dataset}, or any
 other object that can be moved to a folder. For \code{mkdir}, \code{variables} is
@@ -22,7 +22,7 @@ separated by a delimiter ("/" default, configurable via
 \code{options(crunch.delimiter)})}
 }
 \value{
-\code{dataset}, with the folder at \code{path} guaranteed to be created and
+\code{x}, with the folder at \code{path} guaranteed to be created and
 \code{variables}, if specified, moved into it.
 }
 \description{

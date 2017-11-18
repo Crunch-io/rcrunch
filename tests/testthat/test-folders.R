@@ -9,99 +9,92 @@ test_that("parseFolderPath", {
         expect_identical(parseFolderPath(c("foo|bar")), c("foo", "bar"))
         expect_identical(parseFolderPath(c("foo/bar|blech")), c("foo/bar", "blech"))
     })
+    expect_identical(parseFolderPath("/"), "")
 })
 
 with_mock_crunch({
     ds <- loadDataset("test ds")
-    test.ord <- ordering(ds)
-    ent.urls <- urls(test.ord)
-    varcat_url <- self(allVariables(ds))
-    nested.ord <- VariableOrder(
-        VariableGroup(name="Group 1",
-            entities=list(ent.urls[1],
-                        VariableGroup(name="Nested", entities=ent.urls[2:4]),
-                        ent.urls[5])),
-        VariableGroup(name="Group 2", entities=ent.urls[6:7]),
-        catalog_url=varcat_url)
 
-    test_that("Setup: reminder of what those orders look like", {
-        expect_fixed_output(nested.ord,
-            paste("[+] Group 1",
-                  "    Birth Year",
-                  "    [+] Nested",
-                  "        Gender",
-                  "        Categorical Location",
-                  "        mymrset",
-                  "    Text variable ftw",
-                  "[+] Group 2",
-                  "    starttime",
-                  "    Cat Array",
-                  sep="\n"))
+    test_that("cd() returns a folder (and not a variable)", {
+        expect_identical(cd(ds, "Group 1/Nested"),
+            folders(ds)[["Group 1/Nested"]])
     })
-    test_that(".mkdir.inner (VariableOrder manipulation)", {
-        add_empty_dir <- .mkdir.inner(nested.ord, c("Group 1", "New group"))
-        expect_fixed_output(add_empty_dir,
-            paste("[+] Group 1",
-                  "    Birth Year",
-                  "    [+] Nested",
-                  "        Gender",
-                  "        Categorical Location",
-                  "        mymrset",
-                  "    Text variable ftw",
-                  "    [+] New group",
-                  "        (Empty group)",
-                  "[+] Group 2",
-                  "    starttime",
-                  "    Cat Array",
-                  sep="\n"))
-        ## This is to test that "New group" is only added once (expect_output
-        ## does pattern matching, so that string matches even if it's not
-        ## identical
-        expect_identical(grep("New group", capture.output(add_empty_dir)), 8L)
+    test_that("cd() can operate on a folder too", {
+        expect_identical(cd(cd(ds, "Group 1"), "Nested"),
+            folders(ds)[["Group 1/Nested"]])
     })
-    test_that(".mkdir.inner with variables (as aliases)", {
-        add_dir_w_vars <- .mkdir.inner(nested.ord, c("Group 1", "New group"),
-            ds[c("gender", "starttime")])
-        expect_fixed_output(add_dir_w_vars,
-            paste("[+] Group 1",
-                  "    Birth Year",
-                  "    [+] Nested",
-                  "        Categorical Location",
-                  "        mymrset",
-                  "    Text variable ftw",
-                  "    [+] New group",
-                  "        Gender",
-                  "        starttime",
-                  "[+] Group 2",
-                  "    Cat Array",
-                  sep="\n"))
+    test_that("cd() errors if the path isn't a folder or doesn't exist", {
+        expect_error(cd(ds, "Group 1/Birth Year"),
+            '"Group 1/Birth Year" is not a folder')
+        expect_error(cd(ds, "Group 1/foo"),
+            '"Group 1/foo" is not a folder')
     })
-    test_that(".mkdir.inner with folders", {
-        move_folder <- .mkdir.inner(nested.ord, c("Group 2"),
-            list(ordering(ds)[[c("Group 1", "Nested")]]))
-        skip("Empty folder left in old position. Just use new API")
-        expect_fixed_output(move_folder,
-            paste("[+] Group 1",
-                  "    Birth Year",
-                  "    Text variable ftw",
-                  "[+] Group 2",
-                  "    starttime",
-                  "    Cat Array",
-                  "    [+] Nested",
-                  "        Gender",
-                  "        Categorical Location",
-                  "        mymrset",
-                  sep="\n"))
+    test_that("cd attempts to create folders if create=TRUE", {
+        expect_POST(cd(ds, "Group 1/foo", create=TRUE),
+            "https://app.crunch.io/api/datasets/1/folders/1/",
+            '{"element":"shoji:catalog","body":{"name":"foo"}}')
+        expect_POST(cd(ds, "Group 1/foo/bar", create=TRUE),
+            "https://app.crunch.io/api/datasets/1/folders/1/",
+            '{"element":"shoji:catalog","body":{"name":"foo"}}')
+    })
+    test_that("cd ..", {
+        expect_identical(ds %>% cd("Group 1/Nested") %>% cd(".."),
+            cd(ds, "Group 1"))
+        expect_identical(ds %>% cd("Group 1") %>% cd(".."),
+            folders(ds))
+        expect_identical(ds %>% cd("Group 1/Nested") %>% cd("../.."),
+            folders(ds))
+        expect_error(folders(ds) %>% cd(".."), '".." is an invalid path')
+        expect_error(cd(ds, ".."), '".." is an invalid path')
+    })
+    test_that("cd /", {
+        expect_identical(ds %>% cd("/"), folders(ds))
+        expect_identical(ds %>% cd("Group 1") %>% cd("/Group 2"),
+            cd(ds, "Group 2"))
+        expect_identical(ds %>% cd("Group 1") %>% cd("/"),
+            folders(ds))
     })
 
-    test_that("folder()", {
-        expect_identical(folder(ds$gender), c("Group 1", "Nested"))
+    test_that("mv variables to existing folder, selecting from dataset", {
+        expect_PATCH(ds %>% mv(c("birthyr", "gender"), "Group 2"),
+            'https://app.crunch.io/api/datasets/1/folders/2/',
+            '{"element":"shoji:catalog","index":{',
+            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{},',
+            '"https://app.crunch.io/api/datasets/1/variables/gender/":{}}}')
     })
+    test_that("mv doesn't include vars that already exist in the folder in index patch", {
+        expect_PATCH(ds %>% mv(c("birthyr", "starttime"), "Group 2"),
+            'https://app.crunch.io/api/datasets/1/folders/2/',
+            '{"element":"shoji:catalog","index":{',
+            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{}}}')
+        expect_no_request(ds %>% mv("starttime", "Group 2"))
+    })
+    test_that("mkdir", {
+        expect_POST(ds %>% mkdir("Group 1/foo"),
+            "https://app.crunch.io/api/datasets/1/folders/1/",
+            '{"element":"shoji:catalog","body":{"name":"foo"}}')
+        expect_POST(ds %>% cd("Group 1") %>% mkdir("foo"),
+            "https://app.crunch.io/api/datasets/1/folders/1/",
+            '{"element":"shoji:catalog","body":{"name":"foo"}}')
+        expect_POST(ds %>% mkdir("bar"),
+            "https://app.crunch.io/api/datasets/1/folders/",
+            '{"element":"shoji:catalog","body":{"name":"bar"}}')
+    })
+    test_that("mv makes destination directory if it doesn't exist", {
+        expect_POST(ds %>% mv("birthyr", "Group 1/foo"),
+            "https://app.crunch.io/api/datasets/1/folders/1/",
+            '{"element":"shoji:catalog","body":{"name":"foo"}}')
+    })
+    test_that("mv to the folder() of an object", {
+        expect_PATCH(ds %>% mv("birthyr", folder(ds$starttime)),
+            'https://app.crunch.io/api/datasets/1/folders/2/',
+            '{"element":"shoji:catalog","index":{',
+            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{}}}')
+    })
+    test_that("cd then mv (relative path)", {
 
-    test_that("mv/mkdir make a PUT", {
-        expect_PUT(mv(ds, "gender", "Demographics/Personal"),
-            "https://app.crunch.io/api/datasets/1/variables/hierarchical/")
-        expect_PUT(folder(ds$gender) <-"Demographics/Personal",
-            "https://app.crunch.io/api/datasets/1/variables/hierarchical/")
+    })
+    test_that("mv folders", {
+
     })
 })

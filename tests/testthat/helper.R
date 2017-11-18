@@ -1,6 +1,8 @@
 Sys.setlocale("LC_COLLATE", "C") ## What CRAN does
 set.seed(666)
 
+"%>%" <- magrittr::`%>%`
+
 # find a file that is either in the package root or inst folders while testing
 find_file <- function (file_name) {
     pths <- file.path(testthat::test_path("..", ".."), c("", "inst"), file_name)

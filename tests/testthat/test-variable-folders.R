@@ -62,7 +62,7 @@ with_mock_crunch({
     test_that("But top-level folder doesn't have a name and you can't set it", {
         skip("TODO")
     })
-    test_that("Set a variable's name", {
+    test_that("Set a variable's name inside a folder", {
         ## Note that this patches the catalog (folder) instead of the entity.
         ## Historical reasons, plus ensuring that name<- on entity and
         ## names<- on catalog do the same thing
@@ -72,33 +72,23 @@ with_mock_crunch({
             '{"name":"Year of birth"}}')
     })
 
-    test_that("cd() returns a folder (and not a variable)", {
-        expect_identical(cd(ds, "Group 1/Nested"),
-            folders(ds)[["Group 1/Nested"]])
+    test_that("folder() finds the parent folder", {
+        expect_identical(ds %>% cd("Group 1") %>% folder(), folders(ds))
+        expect_identical(folder(cd(ds, "Group 1/Nested")), cd(ds, "Group 1"))
+        expect_identical(folder(folders(ds)[["Group 1/Birth Year"]]),
+            cd(ds, "Group 1"))
+        expect_null(folder(folders(ds)))
+        expect_error(folder("string"), "No folder for object of class character")
     })
-    test_that("cd() can operate on a folder too", {
-        expect_identical(cd(cd(ds, "Group 1"), "Nested"),
-            folders(ds)[["Group 1/Nested"]])
-    })
-    test_that("cd() errors if the path isn't a folder or doesn't exist", {
-        expect_error(cd(ds, "Group 1/Birth Year"),
-            '"Group 1/Birth Year" is not a folder')
-        expect_error(cd(ds, "Group 1/foo"),
-            '"Group 1/foo" is not a folder')
-    })
-    test_that("cd attempts to create folders if create=TRUE", {
-        expect_POST(cd(ds, "Group 1/foo", create=TRUE),
-            "https://app.crunch.io/api/datasets/1/folders/1/",
-            '{"element":"shoji:catalog","body":{"name":"foo"}}')
-        expect_POST(cd(ds, "Group 1/foo/bar", create=TRUE),
-            "https://app.crunch.io/api/datasets/1/folders/1/",
-            '{"element":"shoji:catalog","body":{"name":"foo"}}')
+
+    test_that("rootFolder() finds the top level", {
+        expect_identical(rootFolder(folders(ds)), folders(ds))
+        expect_identical(rootFolder(folders(ds)[["Group 1/Nested"]]), folders(ds))
+        expect_identical(rootFolder(ds$birthyr), folders(ds))
     })
 
     ## TODO:
-    ## * wire up mv, mkdir, etc.
     ## * names<- on folder
     ## * reorder elements in a folder
     ## * delete a folder
-    ## * cd ..
 })

@@ -25,42 +25,68 @@ setMethod("[[", c("ShojiFolder", "numeric"), function (x, i, ..., drop=FALSE) {
 #' @export
 setMethod("[[", c("ShojiFolder", "character"), function (x, i, ..., drop=FALSE) {
     path <- parseFolderPath(i)
+    if (nchar(path[1]) == 0) {
+        ## Go to root level
+        x <- rootFolder(x)
+        path <- path[-1]
+    }
     create <- isTRUE(list(...)$create)
     while (length(path)) {
         ## Recurse
         segment <- path[1]
-        this <- callNextMethod(x, segment)
-        if (is.null(this) && create) {
-            u <- createFolder(x, segment)
-            this <- new(class(x), crGET(u))
-        } else if (!is.folder(this) && length(path) > 1) {
-            ## Can't recurse deeper if this isn't a folder
-            halt(deparse(i), " is an invalid path: ", segment, " is not a folder")
+        if (segment == "..") {
+            ## Go up a level
+            this <- folder(x)
+            if (is.null(this)) {
+                halt(deparse(i), " is an invalid path")
+            }
+        } else {
+            this <- callNextMethod(x, segment)
+            if (is.null(this) && create) {
+                u <- createFolder(x, segment)
+                this <- new(class(x), crGET(u))
+            } else if (!is.folder(this) && length(path) > 1) {
+                ## Can't recurse deeper if this isn't a folder
+                halt(deparse(i), " is an invalid path: ", segment, " is not a folder")
+            }
         }
         path <- path[-1]
         x <- this
     }
-    return(this)
+    return(x)
 })
 
-#' @rdname describe
-#' @export
-setMethod("name<-", "ShojiFolder",
-    function (x, value) setEntitySlot(x, "name", value))
+parseFolderPath <- function (path) {
+    ## path can be "/" separated, and can change that delimiter with
+    ## options(crunch.delimiter="|") or something in case you have real "/"
+    if (length(path) == 1) {
+        path <- unlist(strsplit(path, getOption("crunch.delimiter", "/"), fixed=TRUE))
+    }
+    return(path)
+}
+
+rootFolder <- function (x) {
+    this <- folder(x)
+    ## If the parent of x is NULL, we're already at top level.
+    while (!is.null(this)) {
+        x <- this
+        this <- folder(x)
+    }
+    return(x)
+}
 
 createFolder <- function (where, name, index, ...) {
     ## TODO: include index of variables/folders in a single request;
     ## turn index into index + graph in payload
     ## TODO: also for reordering, function that takes a list (index) and returns
     ## list(index=index, graph=names(index))
-    crPOST(self(where), body=toJSON(list(
-        element="shoji:catalog",
-        body=list(
-            name=name,
-            ...
-        )
-    )))
+    crPOST(self(where), body=toJSON(wrapCatalog(body=list(name=name, ...))))
 }
+
+#' @rdname describe
+#' @export
+setMethod("name<-", "ShojiFolder",
+    function (x, value) setEntitySlot(x, "name", value))
 
 # setMethod("folderExtraction", "ShojiFolder", function (x, tuple) {
 #     ## Default method: return a folder of the same type

@@ -72,6 +72,7 @@ UserEntity
 VariableCatalog
 VariableDefinition
 VariableDefinitions
+VariableFolder
 VariableGroup
 VariableGroups
 VariableOrder
