@@ -15,7 +15,7 @@ test_that("parseFolderPath", {
 with_mock_crunch({
     ds <- loadDataset("test ds")
 
-    test_that("cd() returns a folder (and not a variable)", {
+    test_that("cd() returns a folder", {
         expect_identical(cd(ds, "Group 1/Nested"),
             folders(ds)[["Group 1/Nested"]])
     })
@@ -92,9 +92,57 @@ with_mock_crunch({
             '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{}}}')
     })
     test_that("cd then mv (relative path)", {
-
+        expect_PATCH(ds %>% cd("Group 1") %>% mv("Birth Year", "../Group 2"),
+            'https://app.crunch.io/api/datasets/1/folders/2/',
+            '{"element":"shoji:catalog","index":{',
+            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{}}}')
+    })
+    test_that("mv (contents of) a folder by specifying it as 'variables'", {
+        expect_PATCH(ds %>% mv(cd(ds, "Group 1"), "Group 2"),
+            'https://app.crunch.io/api/datasets/1/folders/2/',
+            '{"element":"shoji:catalog","index":{',
+            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{},',
+            '"https://app.crunch.io/api/datasets/1/folders/3/":{},',
+            '"https://app.crunch.io/api/datasets/1/variables/textVar/":{}}}')
+        ## Can use . to say current directory contents, but have to specify it twice
+        expect_PATCH(ds %>% cd("Group 1") %>% mv(., ., "../Group 2"),
+            'https://app.crunch.io/api/datasets/1/folders/2/',
+            '{"element":"shoji:catalog","index":{',
+            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{},',
+            '"https://app.crunch.io/api/datasets/1/folders/3/":{},',
+            '"https://app.crunch.io/api/datasets/1/variables/textVar/":{}}}')
+        expect_PATCH(ds %>% cd("Group 1") %>% mv(TRUE, "../Group 2"),
+            'https://app.crunch.io/api/datasets/1/folders/2/',
+            '{"element":"shoji:catalog","index":{',
+            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{},',
+            '"https://app.crunch.io/api/datasets/1/folders/3/":{},',
+            '"https://app.crunch.io/api/datasets/1/variables/textVar/":{}}}')
     })
     test_that("mv folders", {
+        expect_PATCH(ds %>% cd("Group 1") %>% mv("Nested", "../Group 2"),
+            'https://app.crunch.io/api/datasets/1/folders/2/',
+            '{"element":"shoji:catalog","index":{',
+            '"https://app.crunch.io/api/datasets/1/folders/3/":{}}}')
+    })
+    test_that("mv error handling", {
+        expect_error(ds %>% cd("Group 1") %>% mv("NOT A VARIABLE", "../Group 2"),
+            "Undefined elements selected: NOT A VARIABLE")
+    })
 
+    test_that("rmdir deletes", {
+        expect_error(ds %>% rmdir("Group 1/Nested"),
+            "Must confirm deleting folder")
+        with_consent({
+            expect_DELETE(ds %>% rmdir("Group 1/Nested"),
+                "https://app.crunch.io/api/datasets/1/folders/3/")
+            expect_DELETE(ds %>% cd("Group 1") %>% rmdir("Nested"),
+                "https://app.crunch.io/api/datasets/1/folders/3/")
+            expect_DELETE(ds %>% cd("Group 1") %>% rmdir("../Group 2"),
+                "https://app.crunch.io/api/datasets/1/folders/2/")
+        })
+        expect_error(ds %>% rmdir("/"),
+            "Cannot delete root folder")
     })
 })
+
+## TODO: crplyr hooks so that can do things like starts_with("Something") inside mv

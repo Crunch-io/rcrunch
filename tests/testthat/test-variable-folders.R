@@ -87,6 +87,17 @@ with_mock_crunch({
         expect_identical(rootFolder(ds$birthyr), folders(ds))
     })
 
+    test_that("delete folder", {
+        expect_error(delete(folders(ds)[["Group 1/Nested"]]),
+            "Must confirm deleting folder")
+        with_consent({
+            expect_DELETE(delete(folders(ds)[["Group 1/Nested"]]),
+                "https://app.crunch.io/api/datasets/1/folders/3/")
+        })
+        expect_error(delete(folders(ds)),
+            "Cannot delete root folder")
+    })
+
     ## TODO:
     ## * names<- on folder
     ## * reorder elements in a folder

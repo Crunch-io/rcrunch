@@ -65,6 +65,10 @@ parseFolderPath <- function (path) {
     return(path)
 }
 
+parentFolderURL <- function (x) {
+    tryCatch(shojiURL(x, "catalogs", "folder"), error=function (e) return(NULL))
+}
+
 rootFolder <- function (x) {
     this <- folder(x)
     ## If the parent of x is NULL, we're already at top level.
@@ -87,6 +91,20 @@ createFolder <- function (where, name, index, ...) {
 #' @export
 setMethod("name<-", "ShojiFolder",
     function (x, value) setEntitySlot(x, "name", value))
+
+#' @rdname delete
+#' @export
+setMethod("delete", "ShojiFolder", function (x, ...) {
+    if (is.null(parentFolderURL(x))) {
+        halt("Cannot delete root folder")
+    }
+    if (!askForPermission(paste0("Really delete ", name(x), "?"))) {
+        ## TODO: prompt should tell you how many elements (variables) are contained in it
+        halt("Must confirm deleting folder")
+    }
+    out <- crDELETE(self(x))
+    invisible(out)
+})
 
 # setMethod("folderExtraction", "ShojiFolder", function (x, tuple) {
 #     ## Default method: return a folder of the same type

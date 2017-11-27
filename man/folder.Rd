@@ -33,5 +33,5 @@ folder(ds$income)
 }
 }
 \seealso{
-\code{\link[=mv]{mv()}}
+\code{\link[=mv]{mv()}} \code{\link[=cd]{cd()}}
 }
