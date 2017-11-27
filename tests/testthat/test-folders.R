@@ -111,6 +111,7 @@ with_mock_crunch({
             '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{},',
             '"https://app.crunch.io/api/datasets/1/folders/3/":{},',
             '"https://app.crunch.io/api/datasets/1/variables/textVar/":{}}}')
+        ## Or can say "TRUE" to select all
         expect_PATCH(ds %>% cd("Group 1") %>% mv(TRUE, "../Group 2"),
             'https://app.crunch.io/api/datasets/1/folders/2/',
             '{"element":"shoji:catalog","index":{',
@@ -127,6 +128,26 @@ with_mock_crunch({
     test_that("mv error handling", {
         expect_error(ds %>% cd("Group 1") %>% mv("NOT A VARIABLE", "../Group 2"),
             "Undefined elements selected: NOT A VARIABLE")
+    })
+    test_that("mv with dplyr-esque utilities", {
+        expect_PATCH(ds %>% cd("Group 1") %>% mv(starts_with("Birth"), "../Group 2"),
+            'https://app.crunch.io/api/datasets/1/folders/2/',
+            '{"element":"shoji:catalog","index":{',
+            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{}}}')
+        expect_PATCH(ds %>% cd("Group 1") %>% mv(ends_with("Year"), "../Group 2"),
+            'https://app.crunch.io/api/datasets/1/folders/2/',
+            '{"element":"shoji:catalog","index":{',
+            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{}}}')
+        expect_PATCH(ds %>% cd("Group 1") %>% mv(c(starts_with("Birth"), contains("est")), "../Group 2"),
+            'https://app.crunch.io/api/datasets/1/folders/2/',
+            '{"element":"shoji:catalog","index":{',
+            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{},',
+            '"https://app.crunch.io/api/datasets/1/folders/3/":{}}}')
+        ## Duplicates are resolved
+        expect_PATCH(ds %>% cd("Group 1") %>% mv(c(starts_with("Birth"), ends_with("Year")), "../Group 2"),
+            'https://app.crunch.io/api/datasets/1/folders/2/',
+            '{"element":"shoji:catalog","index":{',
+            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{}}}')
     })
 
     test_that("rmdir deletes", {

@@ -1,9 +1,9 @@
 ---
-title: "Reordering Variables"
+title: "Variable Folders and Organization"
 description: "Variables within datasets are organized in folders. The crunch package provides tools for creating folders and moving variables among them."
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Reordering Variables}
+  %\VignetteIndexEntry{Variable Folders and Organization}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -16,28 +16,37 @@ load("vignettes.RData")
 options(width=120)
 ```
 
-# Variable Order and Organization
-
 In the web application, variables in a dataset are displayed in a list on the left side of the screen.
 
 <!-- screenshot -->
 
-Typically, when you import a dataset, the variable list is flat, but it can be organized into an accordion-like hierarchy. The variable organizer in the GUI allows you to perform this organization visually, but you can also manage this metadata from `crunch`.
+Typically, when you import a dataset, the variable list is flat, but it can be organized into an accordion-like hierarchy. The [variable organizer in the Crunch GUI](http://support.crunch.io/crunch/crunch_organizing-variables.html) allows you to organize your variables visually, but you can also manage this metadata from R using the `crunch` package.
 
-## Viewing the order
+## File-system like
 
-Picking up with the dataset we used in the [array variables vignette](array-variables.html), we can fetch the `ordering` property of the dataset to view the current organization:
+This variable hierarchy can be thought of like a file system on your computer, with files (variables) organized into directories (folders). As such, the main functions you use to manage it are reminiscent of a file system.
 
-```{r, eval=FALSE}
-ordering(ds)
+* `cd()` changes directories, i.e. selects a folder
+* `mkdir()` makes a directory, i.e. creates a folder
+* `mv()` moves variables and folders to a different folder
+* `rmdir()` removes a directory, i.e. deletes a folder
+
+These functions all take a dataset or a folder as the first argument, so they are designed to work with `magrittr`-style piping (`%>%`) for convenience.
+
+## Viewing the folders
+
+To get started, let's pick up the dataset we used in the [array variables vignette](array-variables.html) and view its starting layout. We can do that by changing to the root folder ("/") and printing it
+
+```{r}
+library(magrittr)
+ds %>%
+    cd("/")
 ```
-```{r, echo=FALSE}
-cat(step0.print, sep="\n")
-```
 
-It's flat. If you're importing data from a `data.frame` or a file, like an SPSS file, this is where you'll begin.
+It's flat---there are no folders here, only variables. If you're importing data from a `data.frame` or a file, like an SPSS file, this is where you'll begin.
 
-## Creating groups
+## Creating folders
+
 Since I know how this dataset is organized, I'm going quickly toss the variables into one of a small number of groups, instantiated with `VariableGroup`, and collect them in a container object called `VariableOrder`.
 
 ```{r, eval=FALSE}

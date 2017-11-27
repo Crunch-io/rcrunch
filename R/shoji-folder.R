@@ -110,3 +110,5 @@ setMethod("delete", "ShojiFolder", function (x, ...) {
 #     ## Default method: return a folder of the same type
 #     return(get(class(x))(crGET(names(tuple))))
 # })
+
+## TODO: show method (with optional depth argument, for recursing, and perhaps a verbose arg for returning a data.frame (like ls -al)). Use crayon

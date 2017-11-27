@@ -42,15 +42,30 @@
 #' ds %>% mv("nps_y", folder(ds$nps_x))
 #' }
 #' @export
-mv <- function (x, variables, path) {
+mv <- function (x, vars, path) {
     ## TODO: add an "after" argument, pass to addToFolder
-    if (!is.shojiObject(variables)) {
+
+    ## dplyr/tidyselect-ish functions, hacked in here (inspired by how pkgdown does it)
+    fns <- list(
+        starts_with=function (str, ...) grep(paste0("^", str), names(x), ...),
+        ends_with=function (str, ...) grep(paste0(str, "$"), names(x), ...),
+        matches=function (str, ...) grep(str, names(x), ...),
+        contains=function (str, ...) grep(str, names(x), ..., fixed=TRUE)
+    )
+    e2 <- substitute(substitute(zzz, fns), list(zzz=match.call()[["vars"]]))
+    vars <- eval.parent(eval(e2))
+    if (is.language(vars)) {
+        ## It's one of our fns. Eval it again
+        vars <- eval(vars)
+    }
+
+    if (!is.shojiObject(vars)) {
         ## Character, numeric, logical. Extract from the dataset/folder
         ## TODO: add a "*" special case for for ShojiFolder [ method
-        variables <- x[variables]
+        vars <- x[vars]
     }
     f <- cd(x, path, create=TRUE)
-    .moveToFolder(f, variables)
+    .moveToFolder(f, vars)
     return(invisible(x))
 }
 
@@ -103,7 +118,7 @@ cd <- function (x, path, create=FALSE) {
     if (!is.folder(out)) {
         halt(deparse(path), " is not a folder")
     }
-    return(invisible(out))
+    return(out)
 }
 
 #' Delete a folder
