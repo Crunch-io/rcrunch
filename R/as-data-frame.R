@@ -81,8 +81,9 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
 coerceVariable <- function(var, df){
     coerceFactor <- function(x){
         na_cats <- is.na(categories(var))
-        v <- factor(x, levels = names(categories(var))[!na_cats])
+        v <- as.vector(x)
         v[v %in% na_cats] <- NA
+        v <- factor(v, levels = names(categories(var))[!na_cats])
         return(v)
     }
     if (is.Array(var)) {

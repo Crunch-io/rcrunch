@@ -81,7 +81,6 @@ with_mock_crunch({
         df <- lapply(ds, as.vector)
         names(df) <- names(ds)
         df[] <- lapply(df, as.character)
-        browser()
         df <- structure(df, class = "data.frame", row.names=c(NA, -nrow(ds)))
         expect_is(coerceVariable(ds$birthyr, df)[[1]], "numeric")
         expect_is(coerceVariable(ds$location, df)[[1]], "factor")
