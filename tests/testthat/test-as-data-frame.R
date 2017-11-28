@@ -82,12 +82,12 @@ with_mock_crunch({
         names(df) <- names(ds)
         df[] <- lapply(df, as.character)
         df <- structure(df, class = "data.frame", row.names=c(NA, -nrow(ds)))
-        expect_identical(class(coerceVariable(ds$birthyr, df)[[1]]), "numeric")
-        expect_identical(class(coerceVariable(ds$gender, df)[[1]]), "factor")
-        expect_identical(class(coerceVariable(ds$textVar, df)[[1]]), "character")
-        expect_identical(class(coerceVariable(ds$starttime, df)[[1]]), "Date")
-        expect_identical(class(coerceVariable(ds$mymrset, df)[[1]]), "factor")
-        expect_identical(class(coerceVariable(ds$catarray, df)[[1]]), "factor")
+        expect_is(coerceVariable(ds$birthyr, df)[[1]], "numeric")
+        expect_is(coerceVariable(ds$gender, df)[[1]], "factor")
+        expect_is(coerceVariable(ds$textVar, df)[[1]], "character")
+        expect_is(coerceVariable(ds$starttime, df)[[1]], "Date")
+        expect_is(coerceVariable(ds$mymrset, df)[[1]], "factor")
+        expect_is(coerceVariable(ds$catarray, df)[[1]], "factor")
     })
 
     test_that("as.data.frame when a variable has an apostrophe in its alias", {
