@@ -220,9 +220,8 @@ with_test_authentication({
         new_ds_df <- as.data.frame(new_ds, include.hidden = TRUE)
         expect_warning(
             expect_equal(names(as.data.frame(new_ds_df)),
-                c("v1", "v2", "v3", "v4", "v5", "v6"),
-            "Variable gender is hidden")
-        )
+                c("v1", "v2", "v3", "v4", "v5", "v6")
+                ), "Variable v1 is hidden")
     })
 
     v2 <- ds$v2

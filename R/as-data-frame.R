@@ -38,7 +38,7 @@ as.data.frame.CrunchDataset <- function (x, debug = FALSE, row.names = NULL, opt
                            categorical.mode = categorical.mode,
                            include.hidden = include.hidden)
     if (force) {
-        out <- as.data.frame(out, debug = debug)
+        out <- as.data.frame(out)
     }
     return(out)
 }
@@ -46,21 +46,26 @@ as.data.frame.CrunchDataset <- function (x, debug = FALSE, row.names = NULL, opt
 #' @rdname dataset-to-R
 #' @export
 as.data.frame.CrunchDataFrame <- function (x, debug = FALSE,  row.names = NULL, optional = FALSE, ...) {
-    if(debug) browser()
     ds <- attr(x, "crunchDataset")
     tmp <- tempfile()
     write.csv(ds, tmp)
     ds_out <- read.csv(tmp, stringsAsFactors = FALSE)
     ds_out[] <- unlist(lapply(ds, coerceVariable, ds_out), recursive = FALSE)
 
-    var_names <- names(x)
-
+    var_names <- lapply(names(x), function(v){
+        if (is.Array(ds[[v]])) {
+            return(names(subvariables(ds[[v]])))
+        } else {
+            return(v)
+        }
+    })
+    var_names <- unlist(var_names)
 
     ## Crunch Dataframes contain both server variables and local variables this
     ## ensures that both are returned in the proper order.
     out <- lapply(var_names, function(v){
         if (v %in% names(ds_out)) {
-            if (tuple(ds[[v]])$discarded) {
+            if (v %in% names(ds) && tuple(ds[[v]])$discarded) {
                 warning("Variable ", v, " is hidden", call.=FALSE)
             }
             return(ds_out[[v]])
@@ -72,16 +77,19 @@ as.data.frame.CrunchDataFrame <- function (x, debug = FALSE,  row.names = NULL, 
     return(structure(out, class="data.frame", row.names=c(NA, -nrow(ds))))
 }
 
-coerceVariable <- function(var, df, debug = FALSE){
-    if(debug) browser()
+coerceVariable <- function(var, df){
+    coerceFactor <- function(x){
+        na_cats <- is.na(categories(var))
+        v <- factor(x, levels = names(categories(var))[!na_cats])
+        v[v %in% na_cats] <- NA
+        return(v)
+    }
     if (is.Array(var)) {
-        out <- lapply(subvariables(var), function(x){
-            factor(df[[x$name]], levels = names(categories(var)))
-        })
+        out <- lapply(names(subvariables(var)), function(x) coerceFactor(df[[x]]))
     } else if (is.Numeric(var)) {
         out <- list(as.numeric(df[[name(var)]]))
     } else if (is.Categorical(var)) {
-        out <- list(factor(df[[name(var)]], levels = names(categories(var))))
+        out <- list(coerceFactor(var))
     } else if (is.Datetime(var)) {
         out <- list(as.Date(df[[name(var)]]))
     } else if (is.Text(var)) {
