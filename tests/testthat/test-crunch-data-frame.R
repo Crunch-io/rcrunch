@@ -25,7 +25,7 @@ with_mock_crunch({
         ds_new <- ds_new[!{names(ds_new) %in% c("mymrset", "catarray")}]
 
         ds_df <- as.data.frame(ds_new)
-        true_df <- readRDS("test datasets/test ds.rds")
+        true_df <- readRDS("dataset-fixtures/test_ds.rds")
 
         # single column/row extraction
         expect_equivalent(ds_df[1,], true_df[1,])
@@ -97,7 +97,7 @@ with_mock_crunch({
 
     test_that("getVarFromServer works with variables, including different modes for factors", {
         ds_df <- as.data.frame(ds)
-        true_df <- readRDS("test datasets/test ds.rds")
+        true_df <- readRDS("dataset-fixtures/test_ds.rds")
 
         expect_equal(getVarFromServer("textVar", ds_df),
                      true_df$textVar)

@@ -30,7 +30,7 @@ NULL
 
 #' @rdname dataset-to-R
 #' @export
-as.data.frame.CrunchDataset <- function (x, debug = FALSE, row.names = NULL, optional = FALSE,
+as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE,
                                         force=FALSE, categorical.mode = "factor",
                                         include.hidden = FALSE,
                                         row.order = NULL, ...) {
@@ -44,8 +44,9 @@ as.data.frame.CrunchDataset <- function (x, debug = FALSE, row.names = NULL, opt
 }
 
 #' @rdname dataset-to-R
+#' @importFrom utils read.csv
 #' @export
-as.data.frame.CrunchDataFrame <- function (x, debug = FALSE,  row.names = NULL, optional = FALSE, ...) {
+as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE, ...) {
     ds <- attr(x, "crunchDataset")
     tmp <- tempfile()
     write.csv(ds, tmp)
@@ -87,11 +88,11 @@ coerceVariable <- function(var, df){
     if (is.Array(var)) {
         out <- lapply(names(subvariables(var)), function(x) coerceFactor(df[[x]]))
     } else if (is.Numeric(var)) {
-        out <- list(as.numeric(df[[name(var)]]))
+        out <- list(suppressWarnings(as.numeric(df[[name(var)]]))) # To prevent NA coercison message
     } else if (is.Categorical(var)) {
         out <- list(coerceFactor(var))
     } else if (is.Datetime(var)) {
-        out <- list(as.Date(df[[name(var)]]))
+        out <- list(suppressWarnings(as.Date(df[[name(var)]]))) # To prevent NA coercision warning
     } else if (is.Text(var)) {
         out <- list(as.character(df[[name(var)]]))
     }
