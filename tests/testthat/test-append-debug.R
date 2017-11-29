@@ -111,6 +111,6 @@ with_test_authentication({
         expect_equal(as.vector(ds$bar), c(df1$bar, df2$bar))
         expect_equal(as.character(as.vector(ds$new1)),
                      c(ifelse(df1$foo < 1, "less than one", "other"),
-                       rep(NA, 100)))
+                       rep("other", 100)))
     })
 })
