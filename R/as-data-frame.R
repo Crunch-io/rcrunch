@@ -31,12 +31,12 @@ NULL
 #' @rdname dataset-to-R
 #' @export
 as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE,
-                                        force=FALSE, categorical.mode = "factor",
-                                        include.hidden = FALSE,
-                                        row.order = NULL, ...) {
+    force=FALSE, categorical.mode = "factor",
+    include.hidden = FALSE,
+    row.order = NULL, ...) {
     out <- CrunchDataFrame(x, row.order = row.order,
-                           categorical.mode = categorical.mode,
-                           include.hidden = include.hidden)
+        categorical.mode = categorical.mode,
+        include.hidden = include.hidden)
     if (force) {
         out <- as.data.frame(out)
     }
@@ -46,14 +46,19 @@ as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE,
 #' @rdname dataset-to-R
 #' @importFrom utils read.csv
 #' @export
-as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE, ...) {
+as.data.frame.CrunchDataFrame <- function (x,
+    row.names = NULL,
+    optional = FALSE,
+    ...) {
     ds <- attr(x, "crunchDataset")
     tmp <- tempfile()
-    write.csv(ds, tmp)
+    csv_mode = ifelse(attr(x, "mode") == "factor", "name", "id")
+    write.csv(ds, tmp, categorical = csv_mode)
     ds_out <- read.csv(tmp, stringsAsFactors = FALSE)
-    ds_out[] <- unlist(lapply(ds, coerceVariable, ds_out), recursive = FALSE)
+    unlink(tmp)
+    ds_out[] <- unlist(lapply(ds, coerceVariable, ds_out, x), recursive = FALSE)
 
-    var_names <- lapply(names(x), function(v){
+    var_names <- lapply(names(x), function (v) {
         if (is.Array(ds[[v]])) {
             return(names(subvariables(ds[[v]])))
         } else {
@@ -64,10 +69,10 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
 
     ## Crunch Dataframes contain both server variables and local variables this
     ## ensures that both are returned in the proper order.
-    out <- lapply(var_names, function(v){
+    out <- lapply(var_names, function (v) {
         if (v %in% names(ds_out)) {
             if (v %in% names(ds) && tuple(ds[[v]])$discarded) {
-                warning("Variable ", v, " is hidden", call.=FALSE)
+                warning("Variable ", dQuote(v), " is hidden", call.=FALSE)
             }
             return(ds_out[[v]])
         } else {
@@ -78,24 +83,39 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
     return(structure(out, class="data.frame", row.names=c(NA, -nrow(ds))))
 }
 
-coerceVariable <- function(var, df){
-    coerceFactor <- function(x){
-        na_cats <- is.na(categories(var))
-        v <- as.vector(x)
-        v[v %in% na_cats] <- NA
-        v <- factor(v, levels = names(categories(var))[!na_cats])
-        return(v)
+coerceFactor <- function (var, df, cdf) {
+    # csv download doesn't accomodate numeric factor values, so in that case
+    # we need to call pull the variable in the typical way.
+    mode <- attr(cdf, "mode")
+    if (mode == "numeric") {
+        return (cdf[[alias(var)]])
     }
+    na_cats <- is.na(categories(var))
+    v <- df[[alias(var)]]
+    cats <- categories(var)
+    levs <- if (mode == "id") {
+        ids(cats)
+    } else {
+        names(cats)
+    }
+    v[v %in% levs[na_cats]] <- NA
+    v <- factor(v, levels = levs[!na_cats])
+    return(v)
+}
+
+coerceVariable <- function (var, df, cdf) {
     if (is.Array(var)) {
-        out <- lapply(names(subvariables(var)), function(x) coerceFactor(df[[x]]))
+        out <- lapply(subvariables(var), function (x) {
+            coerceFactor(x, var, df, cdf)
+            })
     } else if (is.Numeric(var)) {
-        out <- list(suppressWarnings(as.numeric(df[[name(var)]]))) # To prevent NA coercison message
+        out <- list(suppressWarnings(as.numeric(df[[alias(var)]]))) # To prevent NA coercion message
     } else if (is.Categorical(var)) {
-        out <- list(coerceFactor(var))
+        out <- list(coerceFactor(var, df, cdf))
     } else if (is.Datetime(var)) {
-        out <- list(suppressWarnings(as.Date(df[[name(var)]]))) # To prevent NA coercision warning
+        out <- list(suppressWarnings(as.Date(df[[alias(var)]]))) # To prevent NA coercion warning
     } else if (is.Text(var)) {
-        out <- list(as.character(df[[name(var)]]))
+        out <- list(as.character(df[[alias(var)]]))
     }
     return(out)
 }
@@ -137,34 +157,34 @@ coerceVariable <- function(var, df){
 #' @rdname catalog-to-data-frame
 #' @export
 as.data.frame.VariableCatalog <- function (x, row.names = NULL,
-                                           optional = FALSE,
-                                           keys = c("alias", "name", "type"),
-                                           ...) {
+    optional = FALSE,
+    keys = c("alias", "name", "type"),
+    ...) {
     catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
 }
 
 #' @rdname catalog-to-data-frame
 #' @export
 as.data.frame.ShojiCatalog <- function (x, row.names = NULL,
-                                           optional = FALSE,
-                                           ...) {
+    optional = FALSE,
+    ...) {
     catalogToDataFrame(x, row.names = row.names, ...)
 }
 
 #' @rdname catalog-to-data-frame
 #' @export
 as.data.frame.BatchCatalog <- function (x, row.names = NULL,
-                                           optional = FALSE,
-                                           keys = c("id", "status"),
-                                           ...) {
+    optional = FALSE,
+    keys = c("id", "status"),
+    ...) {
     catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
 }
 
 #' @rdname catalog-to-data-frame
 #' @export
 as.data.frame.FilterCatalog <- function (x, row.names = NULL,
-                                           optional = FALSE,
-                                           keys = c("name", "id", "is_public"),
-                                           ...) {
+    optional = FALSE,
+    keys = c("name", "id", "is_public"),
+    ...) {
     catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
 }

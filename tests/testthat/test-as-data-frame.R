@@ -82,11 +82,11 @@ with_mock_crunch({
         names(df) <- names(ds)
         df[] <- lapply(df, as.character)
         df <- structure(df, class = "data.frame", row.names=c(NA, -nrow(ds)))
-        expect_is(coerceVariable(ds$birthyr, df)[[1]], "numeric")
+        expect_is(coerceVariable(ds$mymrset, df)[[1]], "factor")
         expect_is(coerceVariable(ds$location, df)[[1]], "factor")
+        expect_is(coerceVariable(ds$birthyr, df)[[1]], "numeric")
         expect_is(coerceVariable(ds$textVar, df)[[1]], "character")
         expect_is(coerceVariable(ds$starttime, df)[[1]], "Date")
-        expect_is(coerceVariable(ds$mymrset, df)[[1]], "factor")
         expect_is(coerceVariable(ds$catarray, df)[[1]], "factor")
     })
 
@@ -220,8 +220,8 @@ with_test_authentication({
         new_ds_df <- as.data.frame(new_ds, include.hidden = TRUE)
         expect_warning(
             expect_equal(names(as.data.frame(new_ds_df)),
-                c("v1", "v2", "v3", "v4", "v5", "v6")
-                ), "Variable v1 is hidden")
+                c("v1", "v2", "v3", "v4", "v5", "v6")),
+            paste0("Variable ",dQuote("v1"), " is hidden"))
     })
 
     v2 <- ds$v2
