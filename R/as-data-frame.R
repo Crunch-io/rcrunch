@@ -54,64 +54,62 @@ as.data.frame.CrunchDataFrame <- function (x,
     tmp <- tempfile()
     csv_mode = ifelse(attr(x, "mode") == "factor", "name", "id")
     write.csv(ds, tmp, categorical = csv_mode)
-    ds_out <- read.csv(tmp, stringsAsFactors = FALSE)
+    ds_out <- read.csv(tmp, stringsAsFactors = FALSE, colClasses = "character")
     unlink(tmp)
-    ds_out[] <- unlist(lapply(ds, coerceVariable, ds_out, x), recursive = FALSE)
+    return(csvToDataFrame (ds_out, x))
+}
 
-    var_names <- lapply(names(x), function (v) {
+csvToDataFrame <- function(csv_df, cdf) {
+    ds <- attr(cdf, "crunchDataset")
+    csv_df[] <- unlist(lapply(ds[, names(ds)], coerceVariable, csv_df, cdf), recursive = FALSE)
+    var_names <- lapply(names(cdf), function (v) {
         if (is.Array(ds[[v]])) {
-            return(names(subvariables(ds[[v]])))
+            return(aliases(subvariables(ds[[v]])))
         } else {
             return(v)
         }
     })
     var_names <- unlist(var_names)
-
     ## Crunch Dataframes contain both server variables and local variables this
     ## ensures that both are returned in the proper order.
     out <- lapply(var_names, function (v) {
-        if (v %in% names(ds_out)) {
-            if (v %in% names(ds) && tuple(ds[[v]])$discarded) {
-                warning("Variable ", dQuote(v), " is hidden", call.=FALSE)
-            }
-            return(ds_out[[v]])
+        if (v %in% names(csv_df)) {
+            return(csv_df[[v]])
         } else {
-            return(x[[v]])
+            return(cdf[[v]])
         }
     })
     names(out) <- var_names
     return(structure(out, class="data.frame", row.names=c(NA, -nrow(ds))))
 }
 
-coerceFactor <- function (var, df, cdf) {
+coerceFactor <- function (var_alias, cats, df, cdf) {
     # csv download doesn't accomodate numeric factor values, so in that case
     # we need to call pull the variable in the typical way.
     mode <- attr(cdf, "mode")
     if (mode == "numeric") {
-        return (cdf[[alias(var)]])
-    }
-    na_cats <- is.na(categories(var))
-    v <- df[[alias(var)]]
-    cats <- categories(var)
-    levs <- if (mode == "id") {
-        ids(cats)
+        return(cdf[[var_alias]])
+    } else if (mode == "id") {
+        return(suppressWarnings(as.numeric(df[[var_alias]])))
     } else {
-        names(cats)
+        na_cats <- is.na(cats)
+        v <- df[[var_alias]]
+        levs <- names(cats)
+        v[v %in% levs[na_cats]] <- NA
+        v <- factor(v, levels = levs[!na_cats])
+        return(v)
     }
-    v[v %in% levs[na_cats]] <- NA
-    v <- factor(v, levels = levs[!na_cats])
-    return(v)
 }
 
 coerceVariable <- function (var, df, cdf) {
     if (is.Array(var)) {
         out <- lapply(subvariables(var), function (x) {
-            coerceFactor(x, var, df, cdf)
+            coerceFactor(x$alias, categories(var), df, cdf)
             })
     } else if (is.Numeric(var)) {
         out <- list(suppressWarnings(as.numeric(df[[alias(var)]]))) # To prevent NA coercion message
     } else if (is.Categorical(var)) {
-        out <- list(coerceFactor(var, df, cdf))
+        out <- list(coerceFactor(alias(var), categories(var), df, cdf))
     } else if (is.Datetime(var)) {
         out <- list(suppressWarnings(as.Date(df[[alias(var)]]))) # To prevent NA coercion warning
     } else if (is.Text(var)) {

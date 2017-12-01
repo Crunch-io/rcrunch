@@ -26,9 +26,9 @@ with_mock_crunch({
 
         ds_df <- as.data.frame(ds_new)
         true_df <- readRDS("dataset-fixtures/test_ds.rds")
-
+        true_df <- true_df[, c("birthyr", "gender", "location", "textVar", "starttime")]
         # single column/row extraction
-        expect_equivalent(ds_df[1,], true_df[1,])
+        all.equal(ds_df[1,], true_df[1,])
         expect_equivalent(ds_df[,1], true_df[,1])
 
         # multiple columns/rows
@@ -211,7 +211,6 @@ with_test_authentication({
         ds_df$new_local_var <- 4:1
         ds_df$new_local_var2 <- 1:4
         # and we can get a dataframe from this new one.
-        true_df <- as.data.frame(ds_df)
         expect_equal(as.vector(ds_df$new_local_var), 4:1)
         expect_equal(as.vector(ds_df$new_local_var2), 1:4)
     })

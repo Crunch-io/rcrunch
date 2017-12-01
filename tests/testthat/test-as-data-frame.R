@@ -76,18 +76,62 @@ with_mock_crunch({
         expect_identical(evalq(gender, as.data.frame(ds)),
             as.vector(ds$gender))
     })
+    csv_df <- read.csv("dataset-fixtures/test_ds.csv", stringsAsFactors = FALSE, colClasses = "character")
+    test_that("csvToDataFrame produces the correct data frame", {
+        expected <- readRDS("dataset-fixtures/test_ds.rds")
+        cdf <- as.data.frame(ds[, c("birthyr", "gender", "location", "mymrset", "textVar", "starttime")])
+        #test local CDF variables
+        cdf$newvar <- expected$newvar <- 1:25
+        expect_identical(csvToDataFrame(csv_df, cdf), expected)
+    })
 
-    test_that("coerceVariable produces expected list entries", {
+    test_that("csvToDataFrame handles hidden variables", {
+        new_ds <- loadDataset("test ds")[, c("birthyr", "gender", "location", "mymrset", "textVar", "starttime")]
+        new_ds$birthyr@tuple[["discarded"]] <- TRUE
+        new_ds_df <- as.data.frame(new_ds)
+        expect_silent(
+            expect_equal(names(csvToDataFrame(csv_df, new_ds_df)),
+                c("gender", "location", "subvar2", "subvar1", "subvar3", "textVar",
+                    "starttime"))
+        )
+        # now we want the hidden vars to be included
+        new_ds_df <- as.data.frame(new_ds, include.hidden = TRUE)
+        expect_warning(
+            expect_equal(names(csvToDataFrame(csv_df, new_ds_df)),
+                c("birthyr", "gender", "location", "subvar2", "subvar1", "subvar3", "textVar",
+                    "starttime")),
+            paste0("Variable birthyr is hidden"))
+    })
+
+
+
+    test_that("coerceVariable produces expected results", {
         df <- lapply(ds, as.vector)
         names(df) <- names(ds)
         df[] <- lapply(df, as.character)
+        cdf <- as.data.frame(ds)
         df <- structure(df, class = "data.frame", row.names=c(NA, -nrow(ds)))
-        expect_is(coerceVariable(ds$mymrset, df)[[1]], "factor")
-        expect_is(coerceVariable(ds$location, df)[[1]], "factor")
-        expect_is(coerceVariable(ds$birthyr, df)[[1]], "numeric")
-        expect_is(coerceVariable(ds$textVar, df)[[1]], "character")
-        expect_is(coerceVariable(ds$starttime, df)[[1]], "Date")
-        expect_is(coerceVariable(ds$catarray, df)[[1]], "factor")
+        expect_is(coerceVariable(ds$mymrset, df, cdf)[[1]], "factor")
+        expect_is(coerceVariable(ds$location, df, cdf)[[1]], "factor")
+        expect_is(coerceVariable(ds$birthyr, df, cdf)[[1]], "numeric")
+        expect_is(coerceVariable(ds$textVar, df, cdf)[[1]], "character")
+        expect_is(coerceVariable(ds$starttime, df, cdf)[[1]], "Date")
+        expect_is(coerceVariable(ds$catarray, df, cdf)[[1]], "factor")
+
+        # coerceVariable functions correctly under different modes
+        cdf <- as.data.frame(ds, categorical.mode = "factor")
+        expect_identical(coerceVariable(ds$gender, df, cdf)[[1]][1],
+            structure(2L, .Label = c("Male", "Female"), class = "factor"))
+
+        cdf <- as.data.frame(ds, categorical.mode = "id")
+        df$gender <- as.vector(ds$gender, mode = "id")
+        expect_identical(coerceVariable(ds$gender, df, cdf)[[1]][1:3], c(2, 2, -1))
+        expect_is(coerceVariable(ds$gender, df, cdf)[[1]], "numeric")
+
+        cdf <- as.data.frame(ds, categorical.mode = "numeric")
+        df$gender <- as.vector(ds$gender, mode = "numeric")
+        expect_identical(coerceVariable(ds$gender, df, cdf)[[1]][1:3], c(2, 2, NA))
+        expect_is(coerceVariable(ds$gender, df, cdf)[[1]], "numeric")
     })
 
     test_that("as.data.frame when a variable has an apostrophe in its alias", {
@@ -206,22 +250,6 @@ with_test_authentication({
     test_that("as.data.frame(force) with API", {
         expect_true(is.data.frame(as.data.frame(as.data.frame(ds))))
         expect_true(is.data.frame(as.data.frame(ds, force=TRUE)))
-    })
-
-    test_that("as.data.frame(force = TRUE) works with hidden variables", {
-        new_ds <- newDataset(df)
-        new_ds$v1@tuple[["discarded"]] <- TRUE
-        new_ds_df <- as.data.frame(new_ds)
-        expect_silent(
-            expect_equal(names(as.data.frame(new_ds_df)),
-                c("v2", "v3", "v4", "v5", "v6"))
-        )
-        # now we want the hidden vars to be included
-        new_ds_df <- as.data.frame(new_ds, include.hidden = TRUE)
-        expect_warning(
-            expect_equal(names(as.data.frame(new_ds_df)),
-                c("v1", "v2", "v3", "v4", "v5", "v6")),
-            paste0("Variable ",dQuote("v1"), " is hidden"))
     })
 
     v2 <- ds$v2
