@@ -24,14 +24,28 @@ Typically, when you import a dataset, the variable list is flat, but it can be o
 
 ## File-system like
 
-This variable hierarchy can be thought of like a file system on your computer, with files (variables) organized into directories (folders). As such, the main functions you use to manage it are reminiscent of a file system.
+This variable hierarchy can be thought of like a file system on your computer, with files (variables) organized into directories (folders). As such, the main functions you use to manage it are reminiscent of a file system, though they have more verbose aliases in case you're not familiar with the terse names.
 
-* `cd()` changes directories, i.e. selects a folder
-* `mkdir()` makes a directory, i.e. creates a folder
-* `mv()` moves variables and folders to a different folder
-* `rmdir()` removes a directory, i.e. deletes a folder
+* `cd()`, changes directories, i.e. selects a folder (aka `selectFolder()`)
+* `mkdir()` makes a directory, i.e. creates a folder (aka `makeFolder()`)
+* `mv()` moves variables and folders to a different folder (aka `moveToFolder()`)
+* `rmdir()` removes a directory, i.e. deletes a folder (aka `deleteFolder()`)
 
-These functions all take a dataset or a folder as the first argument, so they are designed to work with `magrittr`-style piping (`%>%`) for convenience.
+Like a file system, you can express the "path" to a folder as a string separated by a "/" delimiter, like this:
+
+```r
+cd(ds, "Brands/Cars and Trucks/Domestic")
+```
+
+If your folder names should legitimately have a "/" in them, you can set a different character to be the path separator. See `?cd` for details. You can also specify paths as a vector of path segments, like
+
+```r
+cd(ds, c("Brands", "Cars and Trucks", "Domestic"))
+```
+
+which is equivalent to the previous example. One or the other way may be more convenient, depending on what you're trying to accomplish.
+
+These four functions all take a dataset or a folder as the first argument, and they return the same object passed to it, except for `cd`, which returns the selected folder. As such, they are designed to work with `magrittr`-style piping (`%>%`) for convenience in chaining together steps, though they don't require that you do.
 
 ## Viewing the folders
 
@@ -47,77 +61,123 @@ It's flat---there are no folders here, only variables. If you're importing data 
 
 ## Creating folders
 
-Since I know how this dataset is organized, I'm going quickly toss the variables into one of a small number of groups, instantiated with `VariableGroup`, and collect them in a container object called `VariableOrder`.
+Let's make some folders and move some variables into them. To start, I know that the demographic variables are at the back of the dataset, so let's make a "Demos" folder and move variables 21 to 37 into it:
 
-```{r, eval=FALSE}
-ordering(ds) <- VariableOrder(
-        VariableGroup("Demos", ds[c(1, 21:37)]),
-        VariableGroup("Tracking questions", ds[c(2,3, 11:20)]),
-        VariableGroup("This week", ds[4:11])
-    )
+```{r}
+ds %>%
+    mkdir("Demos") %>%
+    mv(21:37, "Demos")
 ```
 
-Now, our variable tree has some structure:
+Now when I print the top-level directory again, I see a "Demos" folder and don't see those demographic variables:
 
-```{r, eval=FALSE}
-ordering(ds)
-```
-```{r, echo=FALSE}
-cat(step1.print, sep="\n")
+```{r}
+ds %>%
+    cd("/")
 ```
 
-Groups can be created with several kinds of inputs. You can specify a vector or list of variable references (URLs), as returned from the `self` method of variables. That list of references may also contain `VariableGroup` objects as well, which will nest those Groups inside the Group you're creating (see "Nested Groups" below). You can also provide a list of variable entities or, as in this example, a subset of a dataset entity (which can be thought of as a list of variables).
+`mv()` can reference variables or folders within a level in several ways. Numeric indices like we just did probably won't be the most common way you'll do it: names work just as well and are more transparent. Let's move the first variable, `perc_skipped`, into "Demos" as well
 
-## Group names
-We can use the `names` method to access and modify these group names:
-
-```{r, eval=FALSE}
-names(ordering(ds))
-```
-```{r, echo=FALSE}
-names(step1)
+```{r}
+ds %>%
+    mv("perc_skipped", "Demos") %>%
+    cd("Demos") ## To print the folder contents
 ```
 
-Let's rename the first group. No need to abbreviate "Demographics".
+Another way we can identify variables is by using the `dplyr`-like functions `starts_with`, `ends_with`, `matches`, and `contains`. Let's use `matches` to move all of the questions about Edward Snowden or Bradley (Chelsea) Manning to a folder for the topical questions in this week's survey:
 
-```{r, eval=FALSE}
-names(ordering(ds))[1] <- "Demographics"
-names(ordering(ds))
-```
-```{r, echo=FALSE}
-names(step2)
+```{r}
+ds %>%
+    mkdir("This week") %>%
+    mv(matches("manning|snowden", ignore.case = TRUE), "This week")
 ```
 
-## Reordering groups and entities
+We can also select all variables in a folder using the `variables` function (or all folders within a folder using `folders`). Let's move all remaining variables from the top level folder to a folder called "Tracking questions". To do this, we do need to explicitly change to the top level folder.
 
-`VariableOrder` and `VariableGroup` support standard R forms of indexing for extracting and reordering.
-
-Let's move "Demographics" to the end:
-
-```{r, eval=FALSE}
-ordering(ds) <- ordering(ds)[c(2, 3, 1)]
-names(ordering(ds))
-```
-```{r, echo=FALSE}
-names(step3)
+```{r}
+ds %>%
+    cd("/")
+    mkdir("Tracking questions") %>%
+    mv(., variables(.), "Tracking questions")
 ```
 
-## Nested groups
+(Curious about the "dot" notation? See the [magrittr docs](http://magrittr.tidyverse.org/articles/magrittr.html).)
+
+The reason we change to the top level folder here is that there is a subtle difference between passing `ds` to `mv()` versus `cd(ds, "/")`. Whatever object, dataset or folder, that is passed into `mv()` determines the scope from which the objects to move are selected. If you pass the dataset in, you can select any variables in the dataset, regardless of what folder they're in. If you pass in a folder, you're selecting just from that folder's contents. It can be convenient to find all variables that match some criteria across the whole dataset to move them, but sometimes we don't want that. In this case, we wanted only the variables sitting in the top level folder, not nested in other folders, so we wanted `variables(cd(ds, "/"))` and not `variables(ds)`.
+
+Now, our variable tree has some structure. Let's use `print(folder, depth = 1)` to see these folders and their contents one level deep:
+
+```{r}
+ds %>%
+    cd("/") %>%
+    print(depth = 1)
+```
+
+## Nested folders
 
 We can create groups within groups as well. In the "This week" group, we have a set of questions about Edward Snowden: the first four variables in the group. Let's nest them inside their own group inside "This week":
 
+```{r}
+ds %>%
+    cd("This week") %>%
+    mkdir("Snowden") %>%
+    mv(matches("snowden", ignore.case = TRUE), "Snowden") %>%
+    cd("..") %>%
+    print(depth = 2)
+```
+
+Note how we used `".."` to change folders up a level, as you can in a file system . We did that just so we can print the folder structure at the top level (and to illustrate that you can specify relative paths :).
+
+You could also do this using the full path segments. `mkdir` will recursively make all path segments it needs in order to ensure that the target folder exists.
+
 ```{r, eval=FALSE}
-ordering(ds)[["This week"]][["Snowden"]] <- ordering(ds)[["This week"]][1:4]
-ordering(ds)
+ds %>%
+    mkdir("This week/Snowden") %>%
+    mv(matches("snowden", ignore.case = TRUE), "This week/Snowden") %>%
+    cd("/") %>%
+    print(depth = 2)
 ```
-```{r, echo=FALSE}
-cat(step4.print, sep="\n")
+
+## Renaming folders and folder contents
+
+```{r}
+ds %>%
+    cd("Demos") %>%
+    setName("Demographics")
 ```
 
-Note a few things there. First, groups can be extracted by list-like indexing by name. `ordering(ds)[["This week"]]` gives us the `VariableGroup` named "This week".
+<!-- Show also setNames for folder contents -->
 
-Second, we can create a new group, nested or otherwise, by assigning in to an Order/Group by a new name. This is similar to extending a named list object by name in base R. In this case, we created a group called "Snowden" inside "This week", and we assigned into it the first four entries of the "This week" group.
+## Ordering within folders
 
-Third, the four variable references we put into "Snowden" were also removed from their positions in the "This week" group: they were "moved" rather than copied. This is what we might expect from a files-and-folders form of organization. If you wish to make copies, you can set `duplicates(ordering(ds)) <- TRUE`. If we had done that in this example, we'd have the four Snowden variables appearing both in the "This week" group and in the nested "Snowden" group. (More accurately, and keeping with the file-system metaphor, setting duplicates to `TRUE` lets you create symbolic links rather than actually copying the variables. Only the references are copied; there is only one variable behind them.)
+Unlike files in a file system, variables within folders are ordered.
+
+Let's move "Demographics" to the end. We can do that a couple of ways. One is using `mv()`, giving it the "after" argument
+
+```{r}
+ds %>%
+    cd("/") %>%
+    mv("Demographics", ".", after="Tracking questions")
+```
+
+This uses the `"."` folder "path" to indicate that you're "moving" the object to be in the current folder.
+
+<!-- Note that order of things to mv is preserved, so that does set order -->
+
+Another way to specify folder order is with the `setOrder` function. This lets you provide a specific order, but it requires you to specify all of the folder's contents. Let's use that function to put "Tracking questions" first:
+
+```{r}
+ds %>%
+    cd("/") %>%
+    setOrder(c("Tracking questions", "This week", "Demographics"))
+```
+
+## Finding a variable's folder
+
+<!-- folder(ds$var); can also mv to wherever that var is -->
+
+## Deleting folders
+
+<!-- rmdir(); deletes all variables contained within -->
 
 [Next: transforming and deriving](derive.html)
