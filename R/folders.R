@@ -23,7 +23,7 @@
 #' other object that can be moved to a folder.
 #' @return `x`, with the folder at `path` guaranteed to be created, and for
 #' `mv`, containing `variables` moved into it.
-#' @seealso [cd()] to select a folder by path; [rmdir()] to delete a folder; [folder()] to identify and set an object's parent folder.
+#' @seealso [cd()] to select a folder by path; [rmdir()] to delete a folder; [folder()] to identify and set an object's parent folder; [base::dir.create()] if you literally want to create a directory in your local file system, which `mkdir()` does not do
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("Example survey")
@@ -89,7 +89,7 @@ mkdir <- function (x, path) {
 #' the folder exists. You can call `cd` directly with `create=TRUE`, though that
 #' seems unnatural.
 #' @return A `VariableFolder`
-#' @seealso [mv()] to move entities to a folder; [rmdir()] to delete a folder
+#' @seealso [mv()] to move entities to a folder; [rmdir()] to delete a folder; [base::setwd()] if you literally want to change your working directory in your local file system, which `cd()` does not do
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("Example survey")
@@ -107,6 +107,11 @@ mkdir <- function (x, path) {
 #' }
 #' @export
 cd <- function (x, path, create=FALSE) {
+    if (is.character(x)) {
+        ## Probably user error
+        halt(dQuote("cd()"),
+            " requires a Crunch Dataset or Folder as its first argument")
+    }
     if (is.folder(path)) {
         ## Great! No lookup required
         return(path)
@@ -128,7 +133,7 @@ cd <- function (x, path, create=FALSE) {
 #'
 #' @inheritParams mv
 #' @return `NULL`
-#' @seealso [mv()] to move entities to a folder; [cd()] to select a folder
+#' @seealso [mv()] to move entities to a folder; [cd()] to select a folder; [base::file.remove()] if you literally want to delete a directory from your local file system, which `rmdir()` does not do
 #' @examples
 #' \dontrun{
 #' ds <- loadDataset("Example survey")

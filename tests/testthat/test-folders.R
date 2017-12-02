@@ -29,6 +29,11 @@ with_mock_crunch({
         expect_error(cd(ds, "Group 1/foo"),
             '"Group 1/foo" is not a folder')
     })
+    test_that("cd errors if it doesn't receive a dataset or folder as first arg", {
+        expect_error(cd("/"), paste(dQuote("cd()"),
+            "requires a Crunch Dataset or Folder as its first argument"),
+            fixed=TRUE)
+    })
     test_that("cd attempts to create folders if create=TRUE", {
         expect_POST(cd(ds, "Group 1/foo", create=TRUE),
             "https://app.crunch.io/api/datasets/1/folders/1/",

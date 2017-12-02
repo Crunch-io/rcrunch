@@ -24,23 +24,25 @@ Typically, when you import a dataset, the variable list is flat, but it can be o
 
 ## File-system like
 
-This variable hierarchy can be thought of like a file system on your computer, with files (variables) organized into directories (folders). As such, the main functions you use to manage it are reminiscent of a file system, though they have more verbose aliases in case you're not familiar with the terse names.
+This variable hierarchy can be thought of like a file system on your computer, with files (variables) organized into directories (folders). As such, the main functions you use to manage it are reminiscent of a file system.
 
-* `cd()`, changes directories, i.e. selects a folder (aka `selectFolder()`)
-* `mkdir()` makes a directory, i.e. creates a folder (aka `makeFolder()`)
-* `mv()` moves variables and folders to a different folder (aka `moveToFolder()`)
-* `rmdir()` removes a directory, i.e. deletes a folder (aka `deleteFolder()`)
+* `cd()`, changes directories, i.e. selects a folder
+* `mkdir()` makes a directory, i.e. creates a folder
+* `mv()` moves variables and folders to a different folder
+* `rmdir()` removes a directory, i.e. deletes a folder
 
 Like a file system, you can express the "path" to a folder as a string separated by a "/" delimiter, like this:
 
 ```r
-cd(ds, "Brands/Cars and Trucks/Domestic")
+mkdir(ds, "Brands/Cars and Trucks/Domestic")
 ```
 
-If your folder names should legitimately have a "/" in them, you can set a different character to be the path separator. See `?cd` for details. You can also specify paths as a vector of path segments, like
+If your folder names should legitimately have a "/" in them, you can set a different character to be the path separator. See `?mkdir` or any of the other functions' help files for details. Paths can be expressed relative to the current object---a folder, or in this case, the dataset, which translates to its top-level `"/"` root folder in path specification---and the file system's special path segments `".."` (go up a level) and `"."` (this level) are also supported. We'll use those in examples below.
+
+You can also specify paths as a vector of path segments, like
 
 ```r
-cd(ds, c("Brands", "Cars and Trucks", "Domestic"))
+mkdir(ds, c("Brands", "Cars and Trucks", "Domestic"))
 ```
 
 which is equivalent to the previous example. One or the other way may be more convenient, depending on what you're trying to accomplish.
@@ -49,13 +51,16 @@ These four functions all take a dataset or a folder as the first argument, and t
 
 ## Viewing the folders
 
-To get started, let's pick up the dataset we used in the [array variables vignette](array-variables.html) and view its starting layout. We can do that by changing to the root folder ("/") and printing it
+To get started, let's pick up the dataset we used in the [array variables vignette](array-variables.html) and view its starting layout. We can do that by selecting the root folder ("/") and printing it
 
 ```{r}
 library(magrittr)
 ds %>%
-    cd("/")
+    cd("/") %>%
+    print()
 ```
+
+(The `print()` isn't strictly necessary here as `cd` will return the folder and thus it will print by default, but we'll use different `print` arguments later, so it's included here both for explicitness and illustration.)
 
 It's flat---there are no folders here, only variables. If you're importing data from a `data.frame` or a file, like an SPSS file, this is where you'll begin.
 
@@ -83,6 +88,8 @@ ds %>%
     mv("perc_skipped", "Demos") %>%
     cd("Demos") ## To print the folder contents
 ```
+
+A side note: although the last step of that chain was `cd()`, we haven't changed state in our R session. There is no "working folder" set globally. `cd()` is a function that returns a folder; if we had assigned the return from the function (pipeline) to some object, we could then pass that in to another function to "start" in that folder.
 
 Another way we can identify variables is by using the `dplyr`-like functions `starts_with`, `ends_with`, `matches`, and `contains`. Let's use `matches` to move all of the questions about Edward Snowden or Bradley (Chelsea) Manning to a folder for the topical questions in this week's survey:
 
@@ -160,7 +167,7 @@ ds %>%
     mv("Demographics", ".", after="Tracking questions")
 ```
 
-This uses the `"."` folder "path" to indicate that you're "moving" the object to be in the current folder.
+This uses the `"."` folder "path" to indicate that you're "moving" the object to be in the current folder. Note that `"."` (the current folder) and `.` (the `magrittr` special value) aren't the same thing, though in this particular context, they would have similar implications.
 
 <!-- Note that order of things to mv is preserved, so that does set order -->
 

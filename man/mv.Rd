@@ -5,15 +5,12 @@
 \alias{mkdir}
 \title{Functions to manipulate variables' folder structure}
 \usage{
-mv(x, variables, path)
+mv(x, vars, path)
 
 mkdir(x, path)
 }
 \arguments{
 \item{x}{A \code{CrunchDataset} or \code{VariableFolder}}
-
-\item{variables}{A Variable, selection of variables from \code{dataset}, or any
-other object that can be moved to a folder.}
 
 \item{path}{A character "path" to the folder: either a
 vector of nested folder names or a single string with nested folders
@@ -21,6 +18,9 @@ separated by a delimiter ("/" default, configurable via
 \code{options(crunch.delimiter)}). The path is interpreted as
 relative to the location of the folder \code{x} (when \code{x} is a dataset, that
 means the root, top-level folder). \code{path} may also be a \code{VariableFolder} object.}
+
+\item{variables}{A Variable, selection of variables from \code{dataset}, or any
+other object that can be moved to a folder.}
 }
 \value{
 \code{x}, with the folder at \code{path} guaranteed to be created, and for
@@ -59,5 +59,5 @@ ds \%>\% mv("nps_y", folder(ds$nps_x))
 }
 }
 \seealso{
-\code{\link[=cd]{cd()}} to select a folder by path; \code{\link[=rmdir]{rmdir()}} to delete a folder; \code{\link[=folder]{folder()}} to identify and set an object's parent folder.
+\code{\link[=cd]{cd()}} to select a folder by path; \code{\link[=rmdir]{rmdir()}} to delete a folder; \code{\link[=folder]{folder()}} to identify and set an object's parent folder; \code{\link[base:dir.create]{base::dir.create()}} if you literally want to create a directory in your local file system, which \code{mkdir()} does not do
 }
