@@ -121,10 +121,20 @@ setMethod("[", "CubeDims", function (x, i, ...) {
 })
 
 is.selectedDimension <- function (dims) {
-    is.it <- function (x, dim) {
-        x$type == "categorical" && length(dim$name) == 3 && dim$name[1] == "Selected"
+    is.it <- function (x, dim, MRaliases) {
+        x$alias %in% MRaliases &&
+            x$type == "categorical" &&
+            length(dim$name) == 3 &&
+            dim$name[1] == "Selected"
     }
-    selecteds <- mapply(is.it, x=index(variables(dims)), dim=dims@.Data)
+    vars <- variables(dims)
+    # We only need to check if the categories are the magical Selected
+    # categories if there is an MR somewhere with the same alias
+    MRaliases <- aliases(vars)[types(vars) == "multiple_response"]
+
+    # determine which dimensions are selected MR dimensions
+    selecteds <- mapply(is.it, x=index(vars), dim=dims@.Data,
+                        MoreArgs=list(MRaliases=MRaliases))
     names(selecteds) <- dims@names
     return(selecteds)
 }

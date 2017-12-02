@@ -1,5 +1,6 @@
 ## crunch 1.19.1
 * `refresh()` for Datasets is now more efficient
+* fixed a bug where CrunchCubes with categorical variables that had categories "Selected", "Not selected", and "No data" might not display correctly. 
 
 ## crunch 1.19.0
 

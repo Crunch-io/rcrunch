@@ -10,7 +10,7 @@ alldims <- list(
         "I don't mind paying more for products that are good for the environment")
 )
 
-mr_x_cat_wt <- loadCube("cubes/selected-crosstab-4.json")
+mr_x_cat_wt <- loadCube(test_path("cubes/selected-crosstab-4.json"))
 
 test_that("properties of a cube with for as_selected x cat: it looks 2D", {
     expect_equal(dim(mr_x_cat_wt), c(6L, 3L))
