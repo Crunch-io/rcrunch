@@ -16,7 +16,7 @@ options(
 )
 
 skip_locally <- function (...) {
-    if (substr(getOption("crunch.api"), 1, 12) == "http://local") {
+    if (grepl("^https?://local\\.", getOption("crunch.api"))) {
         skip(...)
     }
 }

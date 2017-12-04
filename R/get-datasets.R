@@ -128,17 +128,23 @@ loadDataset <- function (dataset, kind=c("active", "all", "archived"), project=N
         if (is.null(dataset)) {
             ## Check to see if this is a URL, in which case, GET it
             if (startsWith(dsname, "http")) {
-                dataset <- CrunchDataset(crGET(dsname))
-                tuple(dataset) <- DatasetTuple(entity_url=self(dataset),
-                    body=dataset@body,
-                    index_url=shojiURL(dataset, "catalogs", "parent"))
-                return(dataset)
+                return(loadDatasetFromURL(dsname))
             }
             halt(dQuote(dsname), " not found")
         }
     }
     return(entity(dataset))
 }
+
+loadDatasetFromURL <- function (url) {
+    ## Load dataset without touching a dataset catalog
+    dataset <- CrunchDataset(crGET(url))
+    tuple(dataset) <- DatasetTuple(entity_url=self(dataset),
+        body=dataset@body,
+        index_url=shojiURL(dataset, "catalogs", "parent"))
+    return(dataset)
+}
+
 
 #' Delete a dataset from the dataset list
 #'
