@@ -11,6 +11,8 @@
 \alias{[,CrunchDataset,missing,ANY-method}
 \alias{[,CrunchDataset,CrunchLogicalExpr,missing-method}
 \alias{[,CrunchDataset,CrunchLogicalExpr,ANY-method}
+\alias{[,CrunchDataset,numeric,missing-method}
+\alias{[,CrunchDataset,numeric,ANY-method}
 \alias{subset,CrunchDataset-method}
 \alias{[[,CrunchDataset,ANY-method}
 \alias{[[,CrunchDataset,character-method}
@@ -33,6 +35,10 @@
   drop = FALSE)
 
 \S4method{[}{CrunchDataset,CrunchLogicalExpr,ANY}(x, i, j, ..., drop = FALSE)
+
+\S4method{[}{CrunchDataset,numeric,missing}(x, i, j, ..., drop = FALSE)
+
+\S4method{[}{CrunchDataset,numeric,ANY}(x, i, j, ..., drop = FALSE)
 
 \S4method{subset}{CrunchDataset}(x, ...)
 
