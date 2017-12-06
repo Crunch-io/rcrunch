@@ -1,26 +1,26 @@
 #' @importFrom crayon col_nchar has_style col_align
-prettyPrint2d <- function (ary, row_styles = NULL, col_styles = NULL) {
+prettyPrint2d <- function (array, row_styles = NULL, col_styles = NULL) {
     # TODO: warn if bold is used, since it messes up alignment?
 
     # if the array is [n,1], enforce that explicitly:
-    if (length(dim(ary)) == 1) {
-        ary <- array(ary, dim = c(length(ary), 1),
-                     dimnames = c(dimnames(ary), NULL))
+    if (length(dim(array)) == 1) {
+        array <- array(array, dim = c(length(array), 1),
+                     dimnames = c(dimnames(array), NULL))
     }
 
-    if (!is.null(row_styles) && length(row_styles) != nrow(ary)) {
+    if (!is.null(row_styles) && length(row_styles) != nrow(array)) {
         halt("The number of row styles doesn't match the number of rows")
     }
-    if (!is.null(col_styles) && length(col_styles) != ncol(ary)) {
+    if (!is.null(col_styles) && length(col_styles) != ncol(array)) {
         halt("The number of column styles doesn't match the number of columns")
     }
 
     # calculate column widths including headers, calculate column var title
-    col_var_name <- names(dimnames(ary))[2] %||% ""
+    col_var_name <- names(dimnames(array))[2] %||% ""
     col_var_name_width <- col_nchar(col_var_name)
 
-    col_widths <- apply(ary, 2, function(x) max(col_nchar(x), na.rm = TRUE))
-    col_names <- col_nchar(colnames(ary) %||% "")
+    col_widths <- apply(array, 2, function(x) max(col_nchar(x), na.rm = TRUE))
+    col_names <- col_nchar(colnames(array) %||% "")
     col_header_width <- max(col_names, na.rm = TRUE)
     col_widths <- pmax(col_widths, col_header_width,
                        c(col_var_name_width, rep(0, length(col_header_width)-1)),
@@ -29,23 +29,23 @@ prettyPrint2d <- function (ary, row_styles = NULL, col_styles = NULL) {
 
 
     # calculate row name widths,  calculate row var title
-    row_var_name <- names(dimnames(ary))[1] %||% ""
-    row_header_width <- max(col_nchar(c(rownames(ary), row_var_name)))
+    row_var_name <- names(dimnames(array))[1] %||% ""
+    row_header_width <- max(col_nchar(c(rownames(array), row_var_name)))
     row_var_name_padded <- col_align(row_var_name, row_header_width, align = "left")
 
     # format rows (before styling)
-    cell_widths <- matrix(col_widths, nrow = nrow(ary),
-                          ncol = ncol(ary), byrow = TRUE)
-    padded_ary <- array(col_align(ary, cell_widths, align = "right"),
-                        dim = dim(ary), dimnames = dimnames(ary))
+    cell_widths <- matrix(col_widths, nrow = nrow(array),
+                          ncol = ncol(array), byrow = TRUE)
+    padded_array <- array(col_align(array, cell_widths, align = "right"),
+                        dim = dim(array), dimnames = dimnames(array))
 
     ### style columns
     # make headers
-    col_heads <- col_align(colnames(ary), col_widths, align = "right")
-    for (i in seq_len(ncol(padded_ary))) {
+    col_heads <- col_align(colnames(array), col_widths, align = "right")
+    for (i in seq_len(ncol(padded_array))) {
         if (!is.null(col_styles[[i]])) {
             # style column
-            padded_ary[,i] <- applyStyles(padded_ary[,i], col_styles[[i]])
+            padded_array[,i] <- applyStyles(padded_array[,i], col_styles[[i]])
             # style header
             col_heads[i] <- applyStyles(col_heads[i], col_styles[[i]])
         }
@@ -56,9 +56,9 @@ prettyPrint2d <- function (ary, row_styles = NULL, col_styles = NULL) {
 
     ### style rows
     # TODO: left align headers?
-    row_heads <- col_align(rownames(ary), row_header_width, align = "right")
-    rows <- lapply(seq_len(nrow(padded_ary)), function (i) {
-            rw <- c(row_heads[i], padded_ary[i,])
+    row_heads <- col_align(rownames(array), row_header_width, align = "right")
+    rows <- lapply(seq_len(nrow(padded_array)), function (i) {
+            rw <- c(row_heads[i], padded_array[i,])
             rw <- paste0(rw, collapse = " ")
             if (!is.null(row_styles[i])) {
                 rw <- applyStyles(rw, row_styles[[i]])
@@ -108,9 +108,9 @@ transformStyles <- function (trans, cats) {
 
     # make a list of styles to apply
     styles <- lapply(all_labs, function (lab) {
-        if (is.abscat.subtotal(lab)) {
+        if (is.Subtotal(lab)) {
             return(subtotalStyle)
-        } else if (is.abscat.heading(lab)) {
+        } else if (is.Heading(lab)) {
             return(headingStyle)
         } else {
             return(NULL)
