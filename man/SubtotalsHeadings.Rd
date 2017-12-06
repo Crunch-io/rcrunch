@@ -9,19 +9,27 @@
 \alias{SubtotalsHeadings}
 \alias{subtotals}
 \alias{subtotals<-}
-\alias{makeInsertion}
+\alias{is.Subtotal}
+\alias{is.Heading}
+\alias{is.Subtotals}
+\alias{is.Headings}
 \alias{subtotals,CrunchVariable-method}
 \alias{subtotals,VariableTuple-method}
 \alias{subtotals<-,CrunchVariable,ANY-method}
 \alias{subtotals<-,CrunchVariable,NULL-method}
-\alias{makeInsertion,Subtotal-method}
-\alias{makeInsertion,Heading-method}
-\alias{makeInsertion,ANY-method}
 \title{Subtotals and headings}
 \usage{
 Subtotal(..., data = NULL)
 
 Heading(..., data = NULL)
+
+is.Subtotal(x)
+
+is.Heading(x)
+
+is.Subtotals(x)
+
+is.Headings(x)
 
 \S4method{subtotals}{CrunchVariable}(x)
 
@@ -30,12 +38,6 @@ Heading(..., data = NULL)
 \S4method{subtotals}{CrunchVariable,ANY}(x) <- value
 
 \S4method{subtotals}{CrunchVariable,`NULL`}(x) <- value
-
-\S4method{makeInsertion}{Subtotal}(x, var)
-
-\S4method{makeInsertion}{Heading}(x, var)
-
-\S4method{makeInsertion}{ANY}(x, var)
 }
 \arguments{
 \item{...}{additional arguments to \code{[}, ignored}
@@ -49,8 +51,6 @@ the objects via the \code{data} argument.}
 transforms for}
 
 \item{value}{For \code{[<-}, the replacement Subtotal to insert}
-
-\item{var}{the variable to use to make \code{Insertions} from a \code{Subtotal} object}
 }
 \description{
 Subtotals and headings for categorical Variables and

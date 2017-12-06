@@ -27,7 +27,6 @@
 #' the objects via the `data` argument.
 #' @param ... additional arguments to `[`, ignored
 #' @param value For `[<-`, the replacement Subtotal to insert
-#' @param var the variable to use to make `Insertions` from a `Subtotal` object
 #'
 #' @examples
 #' \dontrun{
@@ -91,11 +90,22 @@
 #' }
 #'
 #' @name SubtotalsHeadings
-#' @aliases subtotals subtotals<- makeInsertion
+#' @aliases subtotals subtotals<-
 NULL
 
-is.Subtotal <- function (x) inherits(x, "Subtotal")
-is.Heading <- function (x) inherits(x, "Heading")
+#' @rdname SubtotalsHeadings
+#' @export 
+is.Subtotal <- function (x) inherits(x, "Subtotal") %||% FALSE
+#' @rdname SubtotalsHeadings
+#' @export 
+is.Heading <- function (x) inherits(x, "Heading") %||% FALSE
+
+#' @rdname SubtotalsHeadings
+#' @export 
+is.Subtotals <- function (x) unlist(lapply(x, inherits, "Subtotal")) %||% FALSE
+#' @rdname SubtotalsHeadings
+#' @export 
+is.Headings <- function (x) unlist(lapply(x, inherits, "Heading")) %||% FALSE
 
 setValidity("Subtotal", function (object) {
     reqs <- c("name", "categories", "after")
@@ -111,13 +121,12 @@ setValidity("Subtotal", function (object) {
     return(val)
 })
 
-init.Subtotal <- function (.Object, ...) {
+setMethod("initialize", "Subtotal", function (.Object, ...) {
     .Object <- callNextMethod()
     # unlist, to flatten user inputs like list(1:2)
     .Object$categories <- unlist(.Object$categories)
     return(.Object)
-}
-setMethod("initialize", "Subtotal", init.Subtotal)
+})
 
 setValidity("Heading", function (object) {
     reqs <- c("name", "after")
@@ -176,12 +185,15 @@ setMethod("subtotals<-", c("CrunchVariable", "ANY"), function (x, value) {
         }, value)))) {
         halt("value must be a list of Subtotals, Headings, or both.")
     }
-
-    inserts = Insertions(data = lapply(value, makeInsertion, var = x))
+    inserts = Insertions(data = lapply(value,
+                                       makeInsertion,
+                                       var_categories = categories(x)))
 
     # grab the old inserts so they are not deleted, but modify the list so we
     # don't have *too* many extras
-    old_inserts <- transforms(x)$insertions
+    old_inserts <- Insertions(data = lapply(transforms(x)$insertions,
+                                            makeInsertion,
+                                            var_categories = categories(x)))
     if (!is.null(old_inserts)) {
         inserts <- modifyCats(old_inserts, inserts)
     }
@@ -206,32 +218,70 @@ setMethod("subtotals<-", c("CrunchVariable", "NULL"), function (x, value) {
     return(invisible(x))
 })
 
-#' @rdname SubtotalsHeadings
+#' Convert a child class of Insertion into a proper Insertion
+#' 
+#' The Crunch API expects that [Subtotals, Headings](SubtotalsHeadings), and 
+#' other insertions all have the same shape. Before sending insertions to the 
+#' server, we need to call `makeInsertion` on any insertions to make sure they 
+#' are proper `Insertion`s. This process sometimes requires a variable's 
+#' categories object (e.g. in order to convert from category names to category 
+#' ids)
+#' 
+#' @param x an object the is a child of [`Insertion`](Insertions) (e.g. `Subtotal`, `Heading`)
+#' @param var_categories categories (from `categories(variable)`) to used by 
+#' `makeInsertions` to make `Insertions` from a child object (e.g. `Subtotal` or
+#' `Heading`)
+#' 
+#' @return an Insertion object
+#' @name makeInsertion
+#' 
+#' @keywords internal
+NULL
+
+#' @rdname makeInsertion
 #' @export
-setMethod("makeInsertion", "Subtotal", function (x, var) {
-    x <- callNextMethod(x, var)
-    return(Insertion(anchor = x$after, name = x$name, `function` = "subtotal",
-                     args = x$categories))
+setMethod("makeInsertion", "Subtotal", function (x, var_categories) {
+    return(.Insertion(anchor = anchor(x, var_categories), name = name(x),
+                     `function` = "subtotal", args = args(x, var_categories)))
 })
 
-#' @rdname SubtotalsHeadings
+#' @rdname makeInsertion
 #' @export
-setMethod("makeInsertion", "Heading", function (x, var) {
-    x <- callNextMethod(x, var)
-    return(Insertion(anchor = x$after, name = x$name))
+setMethod("makeInsertion", "Heading", function (x, var_categories) {
+    return(.Insertion(anchor = anchor(x, var_categories), name = name(x)))
 })
 
-#' @rdname SubtotalsHeadings
+# makeInsertion(insertion) simply returns an insertion. 
+#' @rdname makeInsertion
 #' @export
-setMethod("makeInsertion", "ANY", function (x, var) {
-    # map chars/nums to ids
-    if (is.character(x$after)) {
-        x$after <- ids(categories(var)[x$after])
+setMethod("makeInsertion", "Insertion", function (x, var_categories) return(x))
+
+# convert from Insertions with only Insertion objects (the only kind that are 
+# available from the Crunch API) to the more user-friendly and user-facing
+# Subtotal and Heading object classes
+subtypeInsertions <- function (inserts) {
+    if (!inherits(inserts, "Insertions")) {
+        halt("Must provide an object of type Insertions")
     }
+    return(lapply(inserts, subtypeInsertion))
+}
 
-    if (!is.null(x$categories) && is.character(x$categories)) {
-        x$categories <- as.list(ids(categories(var)[x$categories]))
+subtypeInsertion <- function (insert) {
+    if (!inherits(insert, "Insertion")) {
+        halt("Must provide an object of type Insertion")
     }
-
-    return(x)
-})
+    if (inherits(insert, c("Subtotal", "Heading"))) {
+        # if the insert is already a sub class, return that.
+        return(insert)
+    }
+    if (!(is.na(func(insert))) & func(insert) == 'subtotal') {
+        # this is a subtotal, make it so
+        insert <- Subtotal(name = name(insert), after = anchor(insert),
+                           categories = args(insert))
+    } else if (is.na(func(insert)) & !is.na(anchor(insert))) {
+        # this is a heading, make it so
+        insert <- Heading(name = name(insert), after = anchor(insert)) 
+    }
+    # when all else fails, just return the insert as is
+    return(insert)
+}

@@ -272,7 +272,7 @@ AbsCat <- GenericConstructor("AbsCat")
 #' @param drop Invalid argument to `[`, but in the generic's signature
 #' @param value For `[<-`, the replacement Category to insert
 #' @rdname Categories
-#' @aliases Categories ids ids<- values values<-
+#' @aliases Categories ids ids<- values values<- id.AbsCat ids.AbsCats
 #' @export
 #' @examples
 #' cat.a <- Category(name="First", id=1, numeric_value=1, missing=FALSE)
@@ -311,8 +311,19 @@ setClass("Insertion", contains="AbsCat")
 
 #' @rdname Insertions
 #' @export
-Insertion <- function (..., data=NULL) {
+Insertion <- function (...) {
+    out <- .Insertion(...)
+    
+    # check validity (only when Insertion is called)
+    insertionValidity(out)
+    
+    return(out)
+}
+
+#' @rdname Insertions
+.Insertion <- function (..., data=NULL) {
     out <- GenericConstructor("Insertion")(..., data=data)
+
     # ensure that args is a list, even if it is a single element
     if (!is.null(out$args) && length(out$args) == 1) {
         out$args <- as.list(out$args)
@@ -324,7 +335,7 @@ Insertion <- function (..., data=NULL) {
 
 #' @rdname SubtotalsHeadings
 #' @export
-setClass("Subtotal", contains="AbsCat")
+setClass("Subtotal", contains="Insertion")
 
 #' @rdname SubtotalsHeadings
 #' @export
@@ -332,7 +343,7 @@ Subtotal <- GenericConstructor("Subtotal")
 
 #' @rdname SubtotalsHeadings
 #' @export
-setClass("Heading", contains="AbsCat")
+setClass("Heading", contains="Insertion")
 
 #' @rdname SubtotalsHeadings
 #' @export

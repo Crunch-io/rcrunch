@@ -56,3 +56,48 @@ NULL
 #' @aliases value value<- id is.selected describe-category
 #' @seealso [`Categories`] [`dichotomize`]
 NULL
+
+setValue <- function (x, value) {
+    value_to_set <- suppressWarnings(as.numeric(value))
+    if (is.na(value_to_set) && !is.na(value)) {
+        halt("Category values must be numeric")
+    }
+    x[["numeric_value"]] <- value_to_set
+    return(x)
+}
+
+#' @rdname describe-category
+#' @export
+setMethod("value", "Category", function (x) {
+    v <- as.numeric(x[["numeric_value"]])
+    return(ifelse(is.null(v), NA_real_, v))
+})
+
+#' @rdname describe-category
+#' @export
+setMethod("value<-", "Category", setValue)
+
+#' @rdname describe-category
+#' @export
+setMethod("is.selected", "Category", function (x) isTRUE(x$selected))
+#' @rdname is-selected-categories
+#' @export
+setMethod("is.selected<-", "Category", function (x, value) {
+    if (!is.TRUEorFALSE(value)) {
+        halt("Value must be either TRUE or FALSE.")
+    }
+    x$selected <- value
+    return(x)
+})
+
+#' @rdname is-na-categories
+#' @export
+setMethod("is.na", "Category", function (x) isTRUE(x$missing))
+
+#' @rdname is-na-categories
+#' @export
+setMethod("is.na<-", c("Category", "logical"), function (x, value) {
+    stopifnot(length(value) == 1)
+    x$missing <- isTRUE(value)
+    return(x)
+})

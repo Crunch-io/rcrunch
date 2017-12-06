@@ -9,31 +9,29 @@
 \alias{ids<-}
 \alias{values}
 \alias{values<-}
+\alias{id.AbsCat}
+\alias{ids.AbsCats}
 \alias{Categories}
 \alias{Category-class}
 \alias{Category}
-\alias{names,AbsCats-method}
-\alias{names<-,AbsCats-method}
 \alias{[,AbsCats,ANY,ANY-method}
 \alias{[,AbsCats,character,ANY-method}
 \alias{[,AbsCats,numeric,ANY-method}
 \alias{[<-,AbsCats,character,ANY,ANY-method}
 \alias{[[,AbsCats,character-method}
 \alias{[[<-,AbsCats,character,ANY,ANY-method}
+\alias{names,AbsCats-method}
+\alias{names<-,AbsCats-method}
 \alias{ids,AbsCats-method}
-\alias{values,AbsCats-method}
-\alias{values<-,AbsCats-method}
 \alias{[<-,Categories,ANY,ANY,ANY-method}
 \alias{ids<-,Categories-method}
+\alias{values,Categories-method}
+\alias{values<-,Categories-method}
 \title{Categories in CategoricalVariables}
 \usage{
 Categories(..., data = NULL)
 
 Category(..., data = NULL)
-
-\S4method{names}{AbsCats}(x)
-
-\S4method{names}{AbsCats}(x) <- value
 
 \S4method{[}{AbsCats,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
@@ -47,15 +45,19 @@ Category(..., data = NULL)
 
 \S4method{[[}{AbsCats,character,ANY,ANY}(x, i, j, ...) <- value
 
+\S4method{names}{AbsCats}(x)
+
+\S4method{names}{AbsCats}(x) <- value
+
 \S4method{ids}{AbsCats}(x)
-
-\S4method{values}{AbsCats}(x)
-
-\S4method{values}{AbsCats}(x) <- value
 
 \S4method{[}{Categories,ANY,ANY,ANY}(x, i, j, ...) <- value
 
 \S4method{ids}{Categories}(x) <- value
+
+\S4method{values}{Categories}(x)
+
+\S4method{values}{Categories}(x) <- value
 }
 \arguments{
 \item{...}{additional arguments to \code{[}, ignored}
@@ -68,13 +70,13 @@ the objects via the \code{data} argument. See the examples.}
 \item{x}{For the attribute getters and setters, an object of class
 Category or Categories}
 
-\item{value}{For \code{[<-}, the replacement Category to insert}
-
 \item{i}{For the \code{[} methods, just as with list extract methods}
 
 \item{j}{Invalid argument to \code{[}, but in the generic's signature}
 
 \item{drop}{Invalid argument to \code{[}, but in the generic's signature}
+
+\item{value}{For \code{[<-}, the replacement Category to insert}
 }
 \description{
 CategoricalVariables, as well as the array types composed from

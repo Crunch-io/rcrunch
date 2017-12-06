@@ -11,17 +11,24 @@
 #' Insertion or Insertions
 #' @param ... additional arguments to `[`, ignored
 #' @param value For `[<-`, the replacement Insertion to insert
+#' @param var_categories categories (from [categories()]) to used by `args` and 
+#' `anchor` methods when needed to translate between category names and category
+#' ids.
 #' @name Insertions
 #' @aliases anchor anchor<- anchors func func<- funcs args args<-
 NULL
 
 
-is.insertion <- function (x) inherits(x, "Insertion")
+is.Insertion <- function (x) inherits(x, "Insertion")
 
-setValidity("Insertion", function (object) {
+# check insertion validity only when a user creates an Insertion so that the 
+# child classes like Subtotal and Heading aren't also checked
+insertionValidity <- function (object) {
     val <- TRUE
+
     reqs <- c("anchor", "name")
     mems <- reqs %in% names(object)
+    
     if (!all(mems)) {
         val <- paste0("An Insertion must have at least ",
                       serialPaste(dQuote(reqs)), ". Missing: ",
@@ -33,12 +40,16 @@ setValidity("Insertion", function (object) {
         val <- paste0("If an Insertion has a ", dQuote("function"),
                       " it must also have ", dQuote("args"))
     }
+    
+    if (val != TRUE) {
+        halt("invalid class ", dQuote("Insertion"), " object: ", val)
+    }
+}
 
-    return(val)
-})
+is.Insertions <- function (x) inherits(x, "Insertions")
 
 setValidity("Insertions", function (object) {
-    are.inserts <- vapply(object, is.insertion, logical(1))
+    are.inserts <- vapply(object, is.Insertion, logical(1))
     if (!all(are.inserts)) {
         badcount <- sum(!are.inserts)
         return(paste0("Invalid insertions: ", badcount,
@@ -52,10 +63,8 @@ setValidity("Insertions", function (object) {
     return(TRUE)
 })
 
-is.insertions <- function (x) inherits(x, "Insertions")
-
 validateNewAnchor <- function (anchor) {
-    if (!is.numeric(anchor)) {
+    if (!is.whole(anchor)) {
         halt("an anchor must be a numeric")
     }
 
@@ -80,6 +89,10 @@ setSubtotal <- function (x, value) {
     return(x)
 }
 
+############################################
+## Insertion methods
+############################################
+
 #' @rdname Insertions
 #' @export
 setMethod("anchor<-", "Insertion", setAnchor)
@@ -87,3 +100,91 @@ setMethod("anchor<-", "Insertion", setAnchor)
 #' @rdname Insertions
 #' @export
 setMethod("subtotals<-", "Insertion", setSubtotal)
+
+#' @rdname Insertions
+#' @export
+setMethod("args", "Insertion", function (x) {
+    if (all(is.null(x[["args"]]))) {
+        return(NA)
+    }
+    return(x[["args"]])
+})
+
+# method for getting an anchor from a user-friendly abstracted Subtotal or Heading
+.convertArgs <- function (x, var_categories) {
+    if (!is.null(x$categories) && is.character(x$categories)) {
+        # TODO: better error if var is null
+        n <- ids(var_categories[x$categories])
+    } else {
+        n <- x$categories
+    }
+    return(n)
+}
+
+#' @rdname Insertions
+#' @export
+setMethod("args", "Subtotal", .convertArgs)
+
+#' @rdname Insertions
+#' @export
+setMethod("args", "Heading", .convertArgs)
+
+#' @rdname Insertions
+#' @export
+setMethod("anchor", "Insertion", function (x) {
+    n <- x[["anchor"]]
+    return(ifelse(is.null(n), NA_integer_, as.integer(n)))
+})
+
+# method for getting an anchor from a user-friendly abstracted Subtotal or Heading
+.convertAnchor <- function (x, var_categories) {
+    # map chars/nums to ids
+    if (is.character(x$after)) {
+        # TODO: better error if var is null
+        n <- ids(var_categories[x$after])
+    } else {
+        n <- x$after
+    }
+    return(ifelse(is.null(n), NA_integer_, as.integer(n)))
+}
+
+#' @rdname Insertions
+#' @export
+setMethod("anchor", "Subtotal", .convertAnchor)
+
+#' @rdname Insertions
+#' @export
+setMethod("anchor", "Heading", .convertAnchor)
+
+#' @rdname Insertions
+#' @export
+setMethod("func", "Insertion", function (x) {
+    f <- x[["function"]]
+    return(ifelse(is.null(f), NA_character_, f))
+})
+
+#' @rdname Insertions
+#' @export
+setMethod("func", "Subtotal", function (x) return("subtotal"))
+
+#' @rdname Insertions
+#' @export
+setMethod("func", "Heading", function (x) return(NULL))
+
+############################################
+## Insertions methods
+############################################
+
+#' @rdname Insertions
+#' @export
+setMethod("anchors", "Insertions", function (x) {
+    f <- vapply(x, anchor, integer(1))
+    return(f)
+})
+
+#' @rdname Insertions
+#' @export
+setMethod("funcs", "Insertions", function (x) {
+    f <- vapply(x, func, character(1))
+    return(f)
+})
