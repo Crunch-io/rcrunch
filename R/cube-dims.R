@@ -83,11 +83,13 @@ elementIsAnyOrNone <- function (el) {
 #' @param j not used
 #' @param ... not used
 #' @param drop not used
+#' @param value for `dimensions<-` a `CubeDims` object to overwrite a CrunchCube 
+#' dimensions
 #'
 #' @return Generally, the same shape of result that each of these functions
 #' return when applied to an `array` object.
 #' @name cube-methods
-#' @aliases cube-methods dimensions measures
+#' @aliases cube-methods dimensions dimensions<- measures
 #' @seealso [`cube-computing`] [`base::array`]
 NULL
 
@@ -116,6 +118,15 @@ setMethod("dimensions", "CrunchCube", function (x) {
     dims <- x@dims
     selecteds <- is.selectedDimension(dims)
     return(dims[!selecteds])
+})
+
+#' @rdname cube-methods
+#' @export
+setMethod("dimensions<-", c("CrunchCube", "CubeDims"), function (x, value) {
+    dims <- x@dims
+    selecteds <- is.selectedDimension(dims)
+    x@dims[!selecteds] <- value
+    return(invisible(x))
 })
 
 #' @rdname cube-methods
