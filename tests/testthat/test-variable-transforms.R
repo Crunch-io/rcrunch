@@ -7,8 +7,8 @@ insrts_list <- list(list(anchor = 6, name = "Low",
 insrts <- Insertions(data=insrts_list)
 
 test_that("Can make a transforms object from Insertions or lists", {
-    expect_true(is.insertions(insrts))
-    expect_true(is.list(insrts_list) & !is.insertions(insrts_list))
+    expect_true(is.Insertions(insrts))
+    expect_true(is.list(insrts_list) & !is.Insertions(insrts_list))
     trans <- Transforms(insertions = insrts)
 
     expect_equal(trans, Transforms(insertions = insrts_list))
@@ -34,12 +34,6 @@ cats_list <- mapply(function (i, n, m) list(id = i, name = n, missing = m),
 
 cats <- Categories(data = cats_list)
 
-# categories with class
-cats_post <- lapply(cats, function(x) {
-    x$class <- "Category"
-    x
-})
-
 insrts_list <- list(list(anchor = 0, name = "First one",
                          `function` = "subtotal", args = c(3, 4)),
                     list(anchor = 999, name = "Last one",
@@ -54,11 +48,6 @@ insrts_list <- list(list(anchor = 0, name = "First one",
                          `function` = "subtotal", args = c(7, 8)))
 insrts <- Insertions(data=insrts_list)
 
-insrts_post <- lapply(insrts, function(x) {
-    x$class <- "Insertion"
-    x
-})
-
 test_that("findInsertPosition", {
     expect_equal(findInsertPosition(insrts[["First one"]], cats), 0)
     expect_equal(findInsertPosition(insrts[["Last one"]], cats), Inf)
@@ -70,46 +59,46 @@ test_that("findInsertPosition", {
 
 
 test_that("collateCats places at beginning", {
-    new_cats <- collateCats(insrts["First one"], cats_post)
-    expect_equivalent(new_cats[c(2:11)], cats_post)
-    expect_equivalent(new_cats[1], insrts_post["First one"])
+    new_cats <- collateCats(insrts["First one"], cats)
+    expect_equivalent(new_cats[c(2:11)], cats)
+    expect_equivalent(new_cats[1], insrts["First one"])
 })
 
 test_that("collateCats places at end", {
     new_cats <- collateCats(insrts["Last one"], cats)
-    expect_equivalent(new_cats[c(1:10)], cats_post)
-    expect_equivalent(new_cats[11], insrts_post["Last one"])
+    expect_equivalent(new_cats[c(1:10)], cats)
+    expect_equivalent(new_cats[11], insrts["Last one"])
 })
 
 test_that("collateCats places at end if the id is improbably high", {
     new_cats <- collateCats(insrts["High"], cats)
-    expect_equivalent(new_cats[c(1:10)], cats_post)
-    expect_equivalent(new_cats[11], insrts_post["High"])
+    expect_equivalent(new_cats[c(1:10)], cats)
+    expect_equivalent(new_cats[11], insrts["High"])
 })
 
 test_that("collateCats places after index 2", {
     new_cats <- collateCats(insrts["Low"], cats)
-    expect_equivalent(new_cats[c(1,2,4:11)], cats_post)
-    expect_equivalent(new_cats[3], insrts_post["Low"])
+    expect_equivalent(new_cats[c(1,2,4:11)], cats)
+    expect_equivalent(new_cats[3], insrts["Low"])
 })
 
 test_that("collateCats places a missing anchor at end", {
     new_cats <- collateCats(insrts["missing anchor"], cats)
-    expect_equivalent(new_cats[c(1:10)], cats_post)
-    expect_equivalent(new_cats[11], insrts_post["missing anchor"])
+    expect_equivalent(new_cats[c(1:10)], cats)
+    expect_equivalent(new_cats[11], insrts["missing anchor"])
 })
 
 test_that("collateCats places at an anchor even if the combo categories are na", {
     new_cats <- collateCats(insrts["missing categories"], cats)
-    expect_equivalent(new_cats[c(1:4,6:11)], cats_post)
-    expect_equivalent(new_cats[5], insrts_post["missing categories"])
+    expect_equivalent(new_cats[c(1:4,6:11)], cats)
+    expect_equivalent(new_cats[5], insrts["missing categories"])
 })
 
 test_that("collateCats works all together", {
     new_cats <- collateCats(insrts, cats)
     expect_length(new_cats, 16)
-    expect_equivalent(new_cats[c(2, 3, 5, 6, 8, 9, 10, 11, 12, 13)], cats_post)
-    expect_equivalent(new_cats[c(1, 15, 14, 4, 16, 7)], insrts_post)
+    expect_equivalent(new_cats[c(2, 3, 5, 6, 8, 9, 10, 11, 12, 13)], cats)
+    expect_equivalent(new_cats[c(1, 15, 14, 4, 16, 7)], insrts)
     # indices for new_cats to name map
     # 1  - First one
     # 15 - Last one
@@ -120,31 +109,49 @@ test_that("collateCats works all together", {
 })
 
 insrt_heads <- Insertions(data=list(list(name = "Subtitle", anchor = 0)))
+# turn into subclassed insertions
 
-test_that("AbsCat type testers work", {
-    expect_true(is.abscat.subtotal(insrts[[1]]))
-    expect_true(is.abscat.heading(insrt_heads[[1]]))
-    expect_true(is.abscat.category(cats[[1]]))
-
-    expect_true(all(is.abscat.subtotal(insrts)))
-    expect_true(all(is.abscat.heading(insrt_heads)))
-    expect_true(all(is.abscat.category(cats)))
+test_that("Converting insertions to subtypes works", {
+    insrts_subtyped <- subtypeInsertions(insrts)
+    insrt_heads_subtyped  <- subtypeInsertions(insrt_heads)
+    
+    # the lengths are the same, we aren't missing anything
+    expect_equal(length(insrts), length(insrts_subtyped))
+    expect_equal(length(insrt_heads), length(insrt_heads_subtyped))
+    
+    # the types are correct
+    expect_true(is.Subtotal(insrts_subtyped[[1]]))
+    expect_true(is.Heading(insrt_heads_subtyped[[1]]))
+    expect_true(is.category(cats[[1]])) # we need cats for collation later
+    
+    # we can check the full object and get back a vector of logicals
+    expect_true(all(is.Subtotals(insrts_subtyped)))
+    expect_true(all(is.Headings(insrt_heads_subtyped)))
+    expect_true(all(unlist(lapply(cats, is.category))))
+    
+    # we can re-subtype with no harm
+    expect_true(all(is.Subtotals(subtypeInsertions(insrts_subtyped))))
+    expect_true(all(is.Headings(subtypeInsertions(insrt_heads_subtyped))))
 
     # collate and check
-    collated <- collateCats(c(insrts, insrt_heads), cats)
-    expect_true(all(is.abscat.subtotal(collated[c(2, 5, 8, 15, 16, 17)])))
-    expect_true(all(is.abscat.heading(collated[c(1)])))
-    expect_true(all(is.abscat.category(collated[c(3, 4, 6, 7, 9, 10,
-                                                  11, 12, 13, 14)])))})
+    collated <- collateCats(c(insrts_subtyped, insrt_heads_subtyped), cats)
+    expect_true(all(is.Subtotals(collated[c(2, 5, 8, 15, 16, 17)])))
+    expect_true(all(is.Headings(collated[c(1)])))
+    expect_true(all(unlist(lapply(collated[c(3, 4, 6, 7, 9, 10, 11, 12, 13, 14)],
+                           is.category))))
+    
+    expect_error(subtypeInsertion("foo"), "Must provide an object of type Insertion")
+    expect_error(subtypeInsertions("foo"), "Must provide an object of type Insertions")
+    })
 
 with_mock_crunch({
     ds <- loadDataset("test ds")
 
-    test_that("Can get and set transform", {
+    test_that("Can get transform", {
         expect_equivalent(transforms(ds$location),
                      Transforms(insertions = list(
-                         list(anchor = "3", name = "London+Scotland",
-                              `function` = "subtotal", args = c("1", "2"))),
+                         Subtotal(name = "London+Scotland", after = 3,
+                              categories = c(1, 2))),
                                 categories = NULL,
                                 elements = NULL)
                      )
@@ -153,17 +160,42 @@ with_mock_crunch({
                          dimnames = list(c("London", "Scotland",
                                            "London+Scotland")))
         expect_output(expect_equivalent(showTransforms(ds$location), loc_ary))
-
+    })
+    
+    test_that("Can set transform (with Insertions)", {
         expect_null(transforms(ds$gender))
-        expect_PATCH(transforms(ds$gender) <- Transforms(insertions = list(
-            list(anchor = "3", name = "Male+Female",
-                 `function` = "subtotal", args = c("1", "2")))),
+        trans_insert <- Transforms(insertions = Insertions(
+            Insertion(anchor = 3, name = "Male+Female",
+                      `function` = "subtotal", args = c(1, 2))))
+        expect_PATCH(transforms(ds$gender) <- trans_insert,
             'https://app.crunch.io/api/datasets/1/variables/gender/',
             '{"element":"shoji:entity","body":{"view":{"transform":{',
-            '"insertions":[{"anchor":"3","name":"Male+Female","function"',
-            ':"subtotal","args":["1","2"]}]}}}}')
+            '"insertions":[{"anchor":3,"name":"Male+Female","function"',
+            ':"subtotal","args":[1,2]}]}}}}')
     })
 
+    test_that("Can set transform (with Subtotal)", {
+        trans_insert <- Transforms(insertions = Insertions(
+            Subtotal(after = 3, name = "Male+Female",
+                      categories = c(1, 2))))
+        expect_PATCH(transforms(ds$gender) <- trans_insert,
+                     'https://app.crunch.io/api/datasets/1/variables/gender/',
+                     '{"element":"shoji:entity","body":{"view":{"transform":{',
+                     '"insertions":[{"anchor":3,"name":"Male+Female","function"',
+                     ':"subtotal","args":[1,2]}]}}}}')
+    })
+    
+    test_that("Can set transform (with Heading)", {
+        trans_insert <- Transforms(insertions = Insertions(
+            Heading(after = 3, name = "Male+Female")))
+        expect_PATCH(transforms(ds$gender) <- trans_insert,
+                     'https://app.crunch.io/api/datasets/1/variables/gender/',
+                     '{"element":"shoji:entity","body":{"view":{"transform":{',
+                     '"insertions":[{"anchor":3,"name":"Male+Female"}]}}}}')
+    })
+    
+    
+    
     test_that("Can delete transform", {
         expect_PATCH(transforms(ds$location) <- NULL,
             'https://app.crunch.io/api/datasets/1/variables/location/',
@@ -173,8 +205,9 @@ with_mock_crunch({
     test_that("Non-combine insertions are ignored", {
         loc_var <- ds$location
         trns <- transforms(loc_var)
-        trns[['insertions']][[1]][['function']] <- 'foobar'
-        trns[['insertions']][[1]][['args']] <- c(1, 2)
+        trns[['insertions']][[1]] <- Insertion(name = "London+Scotland",
+                                               anchor = 3, args = c(1,2),
+                                               `function` = "foobar")
         loc_ary <- c(7, 10, NA)
         names(loc_ary) <- c("London", "Scotland", "London+Scotland")
         expect_warning(expect_equivalent(calcTransforms(table(loc_var), trns,
@@ -187,7 +220,7 @@ with_mock_crunch({
     test_that("Transform respects anchors", {
         loc_var <- ds$location
         trns <- transforms(loc_var)
-        trns[['insertions']][[1]][['anchor']] <- 1
+        trns[['insertions']][[1]][['after']] <- 1
 
         loc_ary <- c(7, 17, 10, NA)
         names(loc_ary) <- c("London", "London+Scotland", "Scotland", "No Data")
@@ -196,10 +229,10 @@ with_mock_crunch({
                           loc_ary)
     })
 
-    test_that("Transform works without a function", {
+    test_that("Transform works without a function (that is, with a heading)", {
         loc_var <- ds$location
         trns <- transforms(loc_var)
-        trns[['insertions']][[1]][['function']] <- NULL
+        trns[['insertions']][[1]] <- Heading(name = "London+Scotland", after = 3)
 
         loc_ary <- c(7, 10, NA, NA)
         names(loc_ary) <- c("London", "Scotland", "London+Scotland", "No Data")
@@ -225,8 +258,8 @@ with_test_authentication({
 
     test_that("Can get and set transforms", {
         trans <- Transforms(insertions = list(
-            list(anchor = "3", name = "B+C",
-                 `function` = "subtotal", args = c(1, 2))))
+            Subtotal(after = 3, name = "B+C",
+                 categories = c(1, 2))))
         expect_null(transforms(ds$v4))
         transforms(ds$v4) <- trans
         trans_resp <- trans

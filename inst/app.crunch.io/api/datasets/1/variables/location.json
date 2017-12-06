@@ -49,10 +49,10 @@
 			"transform": {
 				"insertions": [
                 	{
-                    "anchor": "3",
+                    "anchor": 3,
                     "name": "London+Scotland",
                     "function": "subtotal",
-                    "args": ["1", "2"]
+                    "args": [1, 2]
                    }
             	]
         	}

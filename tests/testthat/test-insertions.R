@@ -10,6 +10,9 @@ test_that("Insertion and insertion inheritence, base methods", {
     expect_equal(anchor(insrt), 6)
     expect_equal(name(insrt), "Low")
     expect_equal(args(insrt), c(1, 2))
+    
+    expect_equal(anchors(insrts), c(6, 7))
+    expect_equal(funcs(insrts), c('subtotal', 'subtotal'))
 })
 
 insrt2 <- insrt

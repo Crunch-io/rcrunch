@@ -3,16 +3,18 @@ context("Cube transformations")
 unicat_trans_cube <- loadCube("cubes/univariate-categorical-with-trans.json")
 
 test_that("Can show a simple cube with transform", {
-    loc_ary <- array(c(10, 5, 15, NA),
+    loc_array <- array(c(10, 5, 15, NA),
                      dimnames = list("v7" = c("C", "E", "C, E", "D, E")))
-    expect_output(expect_equivalent(showTransforms(unicat_trans_cube), loc_ary))
+    expect_output(expect_equivalent(showTransforms(unicat_trans_cube), loc_array))
 })
 
 test_that("can retrieve transformations from a cube", {
-    trans <- Transforms(insertions = Insertions(data=list(
-        list(anchor = 6, name = c("C, E"), `function` = "subtotal", args = c(1, 3)),
-        list(anchor = 7, name = c("D, E"), `function` = "subtotal", args = c(2, 3))
-    )))
+    trans <- list(
+        'v7' = Transforms(insertions = Insertions(
+            Subtotal(name = c("C, E"), after = 6, categories = c(1, 3)),
+            Subtotal(name = c("D, E"), after = 7, categories = c(2, 3))),
+            categories = NULL,
+            elements = NULL))
     expect_equivalent(transforms(unicat_trans_cube), trans)
 })
 
@@ -27,13 +29,13 @@ test_that("can remove transformations from a cube", {
 complex_trans_cube <- loadCube("cubes/complex-categorical-with-trans.json")
 
 test_that("Can show a complex cube with transform", {
-    loc_ary <- array(c(40, 10, 20, 30, 30, 40, 50, 60, 70, 250,
+    loc_array <- array(c(40, 10, 20, 30, 30, 40, 50, 60, 70, 250,
                        80, 90, 100, 520, 150, NA),
                      dimnames = list("v7" = c("First!", "A", "B", "Top 2", "C",
                                               "D", "E", "F", "G", "Middle 5",
                                               "H", "I", "J", "Bottom 8",
                                               "Middle 3 (missing anchor)", "J and can't see")))
-    expect_output(expect_equivalent(showTransforms(complex_trans_cube), loc_ary))
+    expect_output(expect_equivalent(showTransforms(complex_trans_cube), loc_array))
 })
 
 pet_feelings <- pet_feelings_headers <- loadCube("./cubes/feelings-pets.json")
@@ -55,12 +57,12 @@ test_that("applyTransforms works with a simple cube and row transforms", {
     expect_equivalent(applyTransforms(pet_feelings), all)
 
     # can apply to an array of the same shape
-    new_ary <- cubeToArray(pet_feelings)-1
+    new_array <- cubeToArray(pet_feelings)-1
     new_all <- all - c(1, 1, 2, 1, 1, 1, 2) # msut subtract two from every subtotal
-    expect_equivalent(applyTransforms(pet_feelings, ary = new_ary), new_all)
+    expect_equivalent(applyTransforms(pet_feelings, array = new_array), new_all)
 })
 
-test_that("applyTransforms can return everything", {
+test_that("applyTransforms can return what is asked for", {
     all <- array(c(NA, 9, 12, 21, 12, 10, 11, 21,
                    NA, 5, 12, 17, 7, 10, 12, 22),
                  dim = c(8, 2),
@@ -72,12 +74,12 @@ test_that("applyTransforms can return everything", {
 
     expect_equivalent(applyTransforms(pet_feelings_headers), all)
 
-    pet_ary <- cubeToArray(pet_feelings_headers)
+    pet_array <- cubeToArray(pet_feelings_headers)
     feeling_cats <- Categories(data=index(variables(pet_feelings_headers))[[1]]$categories)
-    insert_map <- mapInsertions(transforms(pet_feelings_headers)$insertions,
+    insert_map <- mapInsertions(transforms(pet_feelings_headers)[[1]]$insertions,
                                 feeling_cats,
                                 include = c("subtotals", "headings"))
-    tst <- apply(pet_ary, 2, calcInsertions,
+    tst <- apply(pet_array, 2, calcInsertions,
                  insert_map,
                  feeling_cats)
     expect_equivalent(tst, all[c(1, 4, 8),])
@@ -86,7 +88,10 @@ test_that("applyTransforms can return everything", {
 
 test_that("margin.table works with a simple cube and row transforms", {
     feelings_margin <- array(c(14, 24, 38, 19, 20, 23, 43),
-                     dimnames = list("feelings" = c("extremely happy", "somewhat happy", "happy", "neutral", "somewhat unhappy", "extremely unhappy", "unhappy")))
+                     dimnames = list("feelings" = c("extremely happy", 
+                                                    "somewhat happy", "happy", 
+                                                    "neutral", "somewhat unhappy",
+                                                    "extremely unhappy", "unhappy")))
     expect_equivalent(margin.table(pet_feelings, 1), feelings_margin)
 
     pets_margin <- array(c(54, 46),
@@ -209,8 +214,22 @@ with_test_authentication({
                                  "Dogs+Cats", "Lizards", "Birds+Lizards",
                                  "Toward the end", "Cats+Birds (missing anch.)",
                                  "Rocks+Birds (incl. missing)")))
-
-        expect_output(trans_pets <- showTransforms(ds$pets))
+        expect_output(trans_pets <- showTransforms(ds$pets),
+                      paste(
+            "                             ",
+            "                           ",
+            "\033[30m\033[3m                  First one 75\033[23m\033[39m",
+            "                      Birds 30",
+            "                       Cats 45",
+            "                       Dogs 50",
+            "\033[30m\033[3m                  Dogs+Cats 95\033[23m\033[39m",
+            "                    Lizards 25",
+            "\033[30m\033[3m              Birds+Lizards 55\033[23m\033[39m",
+            "\033[30m\033[3m             Toward the end 75\033[23m\033[39m",
+            "\033[30m\033[3m Cats+Birds (missing anch.) 75\033[23m\033[39m",
+            "\033[30m\033[3mRocks+Birds (incl. missing) NA\033[23m\033[39m",
+            sep = "\n"),
+            fixed = TRUE)
         expect_is(trans_pets, "array")
         expect_equal(dim(trans_pets), 10)
         expect_equivalent(trans_pets, cat_show_trans)
@@ -225,7 +244,22 @@ with_test_authentication({
                                     "Rocks+Birds (incl. missing)")))
 
         pets_cube <- crtabs(~pets, ds)
-        expect_output(trans_cube <- showTransforms(pets_cube))
+        expect_output(trans_cube <- showTransforms(pets_cube),
+                      paste(
+              "                             ",
+              "                           ",
+              "\033[30m\033[3m                  First one 75\033[23m\033[39m",
+              "                      Birds 30",
+              "                       Cats 45",
+              "                       Dogs 50",
+              "\033[30m\033[3m                  Dogs+Cats 95\033[23m\033[39m",
+              "                    Lizards 25",
+              "\033[30m\033[3m              Birds+Lizards 55\033[23m\033[39m",
+              "\033[30m\033[3m             Toward the end 75\033[23m\033[39m",
+              "\033[30m\033[3m Cats+Birds (missing anch.) 75\033[23m\033[39m",
+              "\033[30m\033[3mRocks+Birds (incl. missing) NA\033[23m\033[39m",
+              sep = "\n"),
+              fixed = TRUE)
         expect_is(trans_cube, "array")
         expect_equal(dim(pets_cube), 6)
         expect_equal(dim(trans_cube), 10)

@@ -32,14 +32,23 @@ test_that("Heading validates", {
                  "A Heading cannot have .*categories.*. Did you mean to make a Subtotal?")
 })
 
+test_that("Subtotal/Heading getters", {
+    subtot <- Subtotal(name = "a subtotal", after = 1, categories = c(1, 2))
+    heading <- Heading(name = "a heading", after = 0)
+    
+    expect_equal(func(subtot), "subtotal")
+    expect_null(func(heading))
+})
+
+
 with_mock_crunch({
     ds <- loadDataset("test ds")
 
     test_that("subtotals retrievs the subtotals and headings Insertions", {
         expect_equivalent(subtotals(ds$location),
                           Insertions(data=list(
-                              list(anchor = "3", name = "London+Scotland",
-                                   `function` = "subtotal", args = c("1", "2"))))
+                              Subtotal(name = "London+Scotland", after = 3, 
+                                   categories = c(1, 2))))
         )
     })
     
@@ -68,8 +77,8 @@ with_mock_crunch({
         ),
         'https://app.crunch.io/api/datasets/1/variables/location/',
         '{"element":"shoji:entity","body":{"view":{"transform":{"insertions":[',
-        '{"anchor":"3","name":"London+Scotland","function":"subtotal","args":',
-        '["1","2"]},',
+        '{"anchor":3,"name":"London+Scotland","function":"subtotal","args":',
+        '[1,2]},',
         '{"anchor":1,"name":"London alone","function":"subtotal","args":[1]},',
         '{"anchor":2,"name":"Scotland alone","function":"subtotal","args":[2]},',
         '{"anchor":0,"name":"A subtitle"}]}}}}')
@@ -97,16 +106,16 @@ with_mock_crunch({
             Subtotal(name = "London alone", categories = c(1), after = "London"),
         'https://app.crunch.io/api/datasets/1/variables/location/',
         '{"element":"shoji:entity","body":{"view":{"transform":{"insertions":[',
-        '{"anchor":"3","name":"London+Scotland","function":"subtotal","args":',
-        '["1","2"]},',
+        '{"anchor":3,"name":"London+Scotland","function":"subtotal","args":',
+        '[1,2]},',
         '{"anchor":1,"name":"London alone","function":"subtotal","args":[1]}]}}}}')
 
         expect_PATCH(subtotals(ds$location) <-
             Heading(name = "A subtitle", after = 0),
         'https://app.crunch.io/api/datasets/1/variables/location/',
         '{"element":"shoji:entity","body":{"view":{"transform":{"insertions":[',
-        '{"anchor":"3","name":"London+Scotland","function":"subtotal","args":',
-        '["1","2"]},',
+        '{"anchor":3,"name":"London+Scotland","function":"subtotal","args":',
+        '[1,2]},',
         '{"anchor":0,"name":"A subtitle"}]}}}}')
     })
 
@@ -128,13 +137,13 @@ with_test_authentication({
 
     test_that("Can get and set headings and subtotals", {
         trans <- Transforms(insertions = list(
-            list(anchor = 0, name = "This is a subtitle"),
-            list(anchor = 1, name = "B alone",
-                 `function` = "subtotal", args = c(1)),
-            list(anchor = 2, name = "C alone",
-                 `function` = "subtotal", args = c(2)),
-            list(anchor = 999, name = "B+C",
-                 `function` = "subtotal", args = c(1, 2))))
+            Heading(after = 0, name = "This is a subtitle"),
+            Subtotal(after = 1, name = "B alone",
+                 categories = c(1)),
+            Subtotal(after = 2, name = "C alone",
+                 categories = c(2)),
+            Subtotal(after = 999, name = "B+C",
+                 categories = c(1, 2))))
         expect_null(transforms(ds$v4))
         subtotals(ds$v4) <- list(Heading(name = "This is a subtitle", after = 0),
                                  Subtotal(name = "B alone", categories = c("B"),
