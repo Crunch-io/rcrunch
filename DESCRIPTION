@@ -53,6 +53,7 @@ Collate:
     'case-variables.R'
     'categories.R'
     'category.R'
+    'change-category-id.R'
     'combine-categories.R'
     'compare-categories.R'
     'compare-datasets.R'
