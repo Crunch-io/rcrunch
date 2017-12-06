@@ -11,7 +11,7 @@ setMethod("showTransforms", "CrunchCube", function (x) {
     } else {
         appliedTrans <- applyTransforms(x)
         row_cats <- Categories(data=index(variables(x))[[1]]$categories)
-        row_styles <- transformStyles(transforms(x), row_cats[!is.na(row_cats)])
+        row_styles <- transformStyles(transforms(x)[[1]], row_cats[!is.na(row_cats)])
 
         if (length(dim(appliedTrans)) <= 2) {
             out <- prettyPrint2d(appliedTrans, row_styles = row_styles)
@@ -51,7 +51,7 @@ setMethod("subtotalArray", "CrunchCube", function(x, headings = FALSE) {
 #' `applyTransforms(cube, include = c("subtotals"))`
 #'
 #' @param x a CrunchCube
-#' @param ary an array to use, if not using the default array from the cube
+#' @param array an array to use, if not using the default array from the cube
 #' itself. (Default: not used, pulls an array from the cube directly)
 #' @param ... arguments to pass to `calcTransforms`, for example `include`
 #' @param headings for `subtotalArray`: a logical indicating if the headings
@@ -86,41 +86,41 @@ setMethod("subtotalArray", "CrunchCube", function(x, headings = FALSE) {
 #'
 #' @aliases subtotalArray
 #' @export
-applyTransforms <- function (x, ary = cubeToArray(x), ...) {
+applyTransforms <- function (x, array = cubeToArray(x), ...) {
     # if there are row transforms, calculate them and display them
-    row_trans <- transforms(x)
+    row_trans <- transforms(x)[[1]]
     if (!is.null(row_trans)) {
         var_cats <- Categories(data=index(variables(x))[[1]]$categories)
 
         # TODO: calculate category/element changes
 
-        if (length(dim(ary)) > 1) {
-            off_margins <- seq_along(dim(ary))[-1]
-            dim_names  <- names(dimnames(ary))
-            ary <- apply(ary, off_margins, calcTransforms, row_trans, var_cats, ...)
-            names(dimnames(ary)) <- dim_names
+        if (length(dim(array)) > 1) {
+            off_margins <- seq_along(dim(array))[-1]
+            dim_names  <- names(dimnames(array))
+            array <- apply(array, off_margins, calcTransforms, row_trans, var_cats, ...)
+            names(dimnames(array)) <- dim_names
         } else {
-            ary <- as.array(calcTransforms(ary, row_trans, var_cats, ...))
+            array <- as.array(calcTransforms(array, row_trans, var_cats, ...))
         }
 
-        ary <- subsetTransformedCube(ary, x)
+        array <- subsetTransformedCube(array, x)
     }
 
     # TODO: calculate column transforms
-    return(ary)
+    return(array)
 }
 
-subsetTransformedCube <- function (ary, cube) {
+subsetTransformedCube <- function (array, cube) {
     # subset variable categories to only include non-na
-    dims <- dim(ary)
+    dims <- dim(array)
     keep_all <- lapply(seq_along(dims),
                        function (i) {
                            out <- rep(TRUE, dims[i])
-                           names(out) <- dimnames(ary)[[i]]
+                           names(out) <- dimnames(array)[[i]]
                            return(out)
                        })
     names(keep_all) <- names(dimensions(cube))[seq_along(keep_all)]
-    keep_these_cube_dims <- evalUseNA(ary, dimensions(cube)[seq_along(keep_all)], cube@useNA)
+    keep_these_cube_dims <- evalUseNA(array, dimensions(cube)[seq_along(keep_all)], cube@useNA)
 
     # remove the categories determined to be removable above
     keep_these <- mapply(function(x, y) {
@@ -132,32 +132,60 @@ subsetTransformedCube <- function (ary, cube) {
     SIMPLIFY=FALSE,
     USE.NAMES=TRUE)
 
-    # match up those in keep_these that are already in ary
-    ary_dimnames <- dimnames(ary)
-    for (i in seq_along(ary_dimnames)) {
-        to_keep <- names(keep_these[[i]]) %in% ary_dimnames[[i]]
+    # match up those in keep_these that are already in array
+    array_dimnames <- dimnames(array)
+    for (i in seq_along(array_dimnames)) {
+        to_keep <- names(keep_these[[i]]) %in% array_dimnames[[i]]
         keep_these[[i]] <- keep_these[[i]][to_keep]
     }
 
-    ary <- subsetCubeArray(ary, keep_these)
+    array <- subsetCubeArray(array, keep_these)
 
-    return(ary)
+    return(array)
 }
 
 #' @rdname Transforms
 #' @export
-setMethod("transforms", "CrunchCube", function (x) {
-    tryCatch(Transforms(data=index(variables(x))[[1]]$view$transform),
-        error = function (e) NULL)
+setMethod("transforms", "CrunchCube", function(x) { transforms(variables(x)) })
+
+#' @rdname Transforms
+#' @export
+setMethod("transforms", "VariableCatalog", function (x) {
+    transes <- lapply(x, function (i) {i$view$transform})
+    
+    if (all(unlist(lapply(transes, is.null)))) {
+        return(NULL)
+    }
+
+    transes_out <- lapply(transes, function (i) {
+        # get the insertions
+        inserts <- Insertions(data=i$insertions)
+        # subtype insertions so that Subtotal, Heading, etc. are their rightful selves
+        inserts <- subtypeInsertions(inserts)
+        
+        Transforms(insertions = inserts,
+                   categories = NULL,
+                   elements = NULL)
+    })
+    
+    names(transes_out) <- aliases(x)
+    return(transes_out)
 })
 
 #' @rdname Transforms
 #' @export
 setMethod("transforms<-", c("CrunchCube", "NULL"), function (x, value) {
-    # hacked access to delete the transforms. This should have a more systematic
-    # accessor
-    x@dims@.Data[[1]]$references$view$transform <- value
-    invisible(x)
+    dims <- dimensions(x)
+    dimnames <- names(dims)
+    dims <- CubeDims(lapply(dims, function (x) {
+        if (!is.null(x$references$view$transform)) {
+            x$references$view$transform <- value
+        }
+        return(x)
+    }))
+    names(dims) <- dimnames
+    dimensions(x) <- dims
+    return(invisible(x))
 })
 
 #' Remove transformations from a cube
@@ -167,6 +195,15 @@ setMethod("transforms<-", c("CrunchCube", "NULL"), function (x, value) {
 #' @param cube a CrunchCube
 #'
 #' @return the cube with no transformations
+#'
+#' @examples 
+#' \dontrun{
+#' noTransforms(crtabs(~opinion, ds))
+#' #             Strongly Agree             Somewhat Agree Neither Agree nor Disagree 
+#' #                         23                         24                         18 
+#' #          Strongly Disagree          Somewhat Disagree 
+#' #                         19                         16 
+#' }
 #'
 #' @export
 noTransforms <- function (cube) {

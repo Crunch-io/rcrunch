@@ -2,23 +2,24 @@
 % Please edit documentation in R/transform-calculate.R
 \name{calcInsertions}
 \alias{calcInsertions}
-\title{Given values from an array and transforms, calculate the insertions}
+\title{Given a vector of values and elements, calculate the insertions}
 \usage{
 calcInsertions(vec, elements, var_cats)
 }
 \arguments{
 \item{vec}{values to transform (a single dimension of an array)}
 
-\item{elements}{AbsCats of both categories and insertions to calculate.
+\item{elements}{AbsCats of both \code{Category}s and \code{Insertion}s to calculate.
 Generally derived from \code{mapInsertions()}}
 
-\item{var_cats}{the \code{Categories} object of the transform}
+\item{var_cats}{the \code{Categories} object tat corresponds to the vector in
+\code{vec} of the transform}
 }
 \value{
 the values given in \code{vec}, with any insertions specified in
-\code{trans} calculated
+\code{trans} calculated and inserted
 }
 \description{
-Given values from an array and transforms, calculate the insertions
+Given a vector of values and elements, calculate the insertions
 }
 \keyword{internal}

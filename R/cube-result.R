@@ -300,10 +300,7 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
 
     # only attempt to apply a transform if the margin is 1 rows for now.
     if (!is.null(margin) && margin == 1) {
-        margin_trans <- dims[[mapped_margins]]$references$view$transform
-        if (!is.null(margin_trans)) {
-            out <- applyTransforms(x, ary = out)
-        }
+        out <- applyTransforms(x, array = out)
     }
     return(out)
 }
@@ -377,7 +374,7 @@ as.array.CrunchCube <- function (x, ...) cubeToArray(x, ...)
 #' @export
 setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
     out <- as.array(x)
-    out <- applyTransforms(x, ary = out)
+    out <- applyTransforms(x, array = out)
     marg <- margin.table(x, margin)
     actual_margin <- as_selected_margins(margin, is.selectedDimension(x@dims),
         before=FALSE)

@@ -23,7 +23,12 @@ getTransforms <- function (x) {
         return(NULL)
     }
 
-    trans_out <- Transforms(insertions = Insertions(data=trans$insertions),
+    # get the insertions
+    inserts <- Insertions(data=trans$insertions)
+    # subtype insertions so that Subtotal, Heading, etc. are their rightful selves
+    inserts <- subtypeInsertions(inserts)
+    
+    trans_out <- Transforms(insertions = Insertions(data=inserts),
                             categories = NULL,
                             elements = NULL)
     return(trans_out)
@@ -36,13 +41,17 @@ setMethod("transforms", "CrunchVariable", getTransforms)
 #' @export
 setMethod("transforms", "VariableTuple", getTransforms)
 
+
 #' @rdname Transforms
 #' @export
-setMethod("transforms<-", c("CrunchVariable", "ANY"), function (x, value) {
+setMethod("transforms<-", c("CrunchVariable", "Transforms"), function (x, value) {
+    # ensure that the value is all insertions, and only insertions
+    value$insertions <- lapply(value$insertions, makeInsertion, var = x)
+
     frmt <- wrapEntity("view" = list("transform" = value))
     crPATCH(self(x), body=toJSON(frmt))
     dropCache(cubeURL(x))
-    invisible(x)
+    return(invisible(x))
 })
 
 #' @rdname Transforms
@@ -51,7 +60,7 @@ setMethod("transforms<-", c("CrunchVariable", "NULL"), function (x, value) {
     frmt <- wrapEntity("view" = list("transform" = emptyObject()))
     crPATCH(self(x), body=toJSON(frmt))
     dropCache(cubeURL(x))
-    invisible(x)
+    return(invisible(x))
 })
 
 setValidity("Transforms", function (object) {
@@ -62,7 +71,7 @@ setValidity("Transforms", function (object) {
         val <- TRUE
     }
 
-    if (!is.null(object[["insertions"]]) && !is.insertions(object[["insertions"]])) {
+    if (!is.null(object[["insertions"]]) && !is.Insertions(object[["insertions"]])) {
         val <- "Transforms insertions element must be of class Insertions"
     }
     if (!is.null(object[["categories"]])) {
@@ -101,61 +110,3 @@ setMethod("showTransforms", "CategoricalVariable", function (x) {
     cat(unlist(out), sep="\n")
     return(invisible(tab))
 })
-
-
-#' Test if an abstract category object is of a conceptual type
-#'
-#' Convenience functions to test if an abstract category (AbsCat) object is a
-#' specific type. These types are defined by the properties of the abstract
-#' category object.
-#'
-#' `is.abscat.subtotal` is `x` a subtotal insertion?
-#' `is.abscat.heading` is `x` a heading insertion?
-#' `is.abscat.category` is `x` a category?
-#'
-#' @param x an AbsCat object
-#'
-#' @return logical if the AbsCat object is
-#'
-#' @name AbsCat-type-tests
-#' @keywords internal
-NULL
-
-#' @rdname AbsCat-type-tests
-#' @export
-is.abscat.subtotal <- function (x) {
-    if (is.AbsCats(x)) {
-        return(!(is.na(funcs(x))) & funcs(x) == 'subtotal')
-    }
-
-    return(!(is.na(func(x))) & func(x) == 'subtotal')
-}
-
-#' @rdname AbsCat-type-tests
-#' @export
-is.abscat.heading <- function (x) {
-    if (is.AbsCats(x)) {
-        return(is.na(funcs(x)) & !is.na(anchors(x)))
-    }
-
-    return(is.na(func(x)) & !is.na(anchor(x)))
-}
-
-#' @rdname AbsCat-type-tests
-#' @export
-is.abscat.category <- function (x) {
-    # if the class has already been specified, use that.
-    if (!is.null(x$class)) {
-        return(x$class == "Category")
-    }
-
-    # Otherwise, check if the properties of x look like a category, since
-    # value is sometimes legitamately NA, just check id, missing, and name
-    if (is.AbsCats(x)) {
-        all <- !is.na(ids(x)) & !is.na(is.na(x)) & !is.na(names(x))
-    }  else {
-        all <- !is.na(id(x)) & !is.na(is.na(x)) & !is.na(name(x))
-    }
-
-    return(all)
-}

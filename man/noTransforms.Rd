@@ -15,3 +15,13 @@ the cube with no transformations
 \description{
 This is useful if you don't want to see or use any transformations like Subtotals and Headings
 }
+\examples{
+\dontrun{
+noTransforms(crtabs(~opinion, ds))
+#             Strongly Agree             Somewhat Agree Neither Agree nor Disagree 
+#                         23                         24                         18 
+#          Strongly Disagree          Somewhat Disagree 
+#                         19                         16 
+}
+
+}

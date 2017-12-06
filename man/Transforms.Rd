@@ -6,13 +6,14 @@
 \alias{Transforms-class}
 \alias{Transforms}
 \alias{transforms,CrunchCube-method}
+\alias{transforms,VariableCatalog-method}
 \alias{transforms<-,CrunchCube,NULL-method}
 \alias{Transforms}
 \alias{transforms}
 \alias{transforms<-}
 \alias{transforms,CrunchVariable-method}
 \alias{transforms,VariableTuple-method}
-\alias{transforms<-,CrunchVariable,ANY-method}
+\alias{transforms<-,CrunchVariable,Transforms-method}
 \alias{transforms<-,CrunchVariable,NULL-method}
 \title{Transformations of variable and cube views}
 \usage{
@@ -20,13 +21,15 @@ Transforms(..., data = NULL)
 
 \S4method{transforms}{CrunchCube}(x)
 
+\S4method{transforms}{VariableCatalog}(x)
+
 \S4method{transforms}{CrunchCube,`NULL`}(x) <- value
 
 \S4method{transforms}{CrunchVariable}(x)
 
 \S4method{transforms}{VariableTuple}(x)
 
-\S4method{transforms}{CrunchVariable,ANY}(x) <- value
+\S4method{transforms}{CrunchVariable,Transforms}(x) <- value
 
 \S4method{transforms}{CrunchVariable,`NULL`}(x) <- value
 }

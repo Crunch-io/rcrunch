@@ -9,7 +9,7 @@
 \usage{
 \S4method{subtotalArray}{CrunchCube}(x, headings = FALSE)
 
-applyTransforms(x, ary = cubeToArray(x), ...)
+applyTransforms(x, array = cubeToArray(x), ...)
 }
 \arguments{
 \item{x}{a CrunchCube}
@@ -17,7 +17,7 @@ applyTransforms(x, ary = cubeToArray(x), ...)
 \item{headings}{for \code{subtotalArray}: a logical indicating if the headings
 should be included with the subtotals (default: \code{FALSE})}
 
-\item{ary}{an array to use, if not using the default array from the cube
+\item{array}{an array to use, if not using the default array from the cube
 itself. (Default: not used, pulls an array from the cube directly)}
 
 \item{...}{arguments to pass to \code{calcTransforms}, for example \code{include}}
@@ -46,23 +46,23 @@ transformed_array <- applyTransforms(crtabs(~opinion, ds))
 
 # to get an array of just the subtotals
 subtotalArray(crtabs(~opinion, ds))
-#    Agree Disagree 
-#       47       35 
+#    Agree Disagree
+#       47       35
 
 # to get the full array with the subtotals but not headings
 applyTransforms(crtabs(~opinion, ds), include = c("cube_cells", "subtotals"))
-#             Strongly Agree             Somewhat Agree                      Agree 
-#                         23                         24                         47 
-# Neither Agree nor Disagree          Strongly Disagree                   Disagree 
-#                         18                         19                         35 
-#          Somewhat Disagree 
-#                         16 
+#             Strongly Agree             Somewhat Agree                      Agree
+#                         23                         24                         47
+# Neither Agree nor Disagree          Strongly Disagree                   Disagree
+#                         18                         19                         35
+#          Somewhat Disagree
+#                         16
 # to get the full array with the headings but not subtotals
-applyTransforms(crtabs(~opinion, ds), include = c("cube_cells", "headings")) 
-#               All opinions             Strongly Agree             Somewhat Agree 
-#                         NA                         23                         24 
-# Neither Agree nor Disagree          Strongly Disagree          Somewhat Disagree 
-#                         18                         19                         16 
+applyTransforms(crtabs(~opinion, ds), include = c("cube_cells", "headings"))
+#               All opinions             Strongly Agree             Somewhat Agree
+#                         NA                         23                         24
+# Neither Agree nor Disagree          Strongly Disagree          Somewhat Disagree
+#                         18                         19                         16
 }
 
 }
