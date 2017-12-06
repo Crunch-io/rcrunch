@@ -221,35 +221,35 @@ GenericConstructor <- function (class) {
 #'
 #' An abstract class that categories, elements, insertions, etc. fall under
 #'
-#' @param data For the constructor functions `AbsCat` and
-#' `AbsCats`, you can either pass in attributes via `...` or you
+#' @param data For the constructor functions `AbstractCategory` and
+#' `AbstractCategories`, you can either pass in attributes via `...` or you
 #' can create the objects with a fully defined `list` representation of
 #' the objects via the `data` argument. See the examples.
 #' @param x For the attribute getters and setters, an object of class
-#' AbsCat or AbsCats
+#' AbstractCategory or AbstractCategories
 #' @param i For the `[` methods, just as with list extract methods
 #' @param j Invalid argument to `[`, but in the generic's signature
 #' @param ... additional arguments to `[`, ignored
 #' @param drop Invalid argument to `[`, but in the generic's signature
-#' @param value For `[<-`, the replacement AbsCat to insert
-#' @rdname abscat
-#' @aliases abscat
+#' @param value For `[<-`, the replacement AbstractCategory to insert
+#' @rdname AbstractCategory
+#' @aliases AbstractCategory
 #' @keywords internal
 #' @export
-setClass("AbsCats", contains="list")
+setClass("AbstractCategories", contains="list")
 
 
-#' @rdname abscat
+#' @rdname AbstractCategory
 #' @export
-AbsCats <- GenericConstructor("AbsCats")
+AbstractCategories <- GenericConstructor("AbstractCategories")
 
-#' @rdname abscat
+#' @rdname AbstractCategory
 #' @export
-setClass("AbsCat", contains="namedList")
+setClass("AbstractCategory", contains="namedList")
 
-#' @rdname abscat
+#' @rdname AbstractCategory
 #' @export
-AbsCat <- GenericConstructor("AbsCat")
+AbstractCategory <- GenericConstructor("AbstractCategory")
 
 
 #' Categories in CategoricalVariables
@@ -272,7 +272,7 @@ AbsCat <- GenericConstructor("AbsCat")
 #' @param drop Invalid argument to `[`, but in the generic's signature
 #' @param value For `[<-`, the replacement Category to insert
 #' @rdname Categories
-#' @aliases Categories ids ids<- values values<- id.AbsCat ids.AbsCats
+#' @aliases Categories ids ids<- values values<- id.AbstractCategory ids.AbstractCategories
 #' @export
 #' @examples
 #' cat.a <- Category(name="First", id=1, numeric_value=1, missing=FALSE)
@@ -282,7 +282,7 @@ AbsCat <- GenericConstructor("AbsCat")
 #' cats.1 <- Categories(cat.a, cat.c)
 #' cats.2 <- Categories(data=list(cat.a, cat.c))
 #' identical(cats.1, cats.2)
-setClass("Categories", contains="AbsCats")
+setClass("Categories", contains="AbstractCategories")
 
 #' @rdname Categories
 #' @export
@@ -290,7 +290,7 @@ Categories <- GenericConstructor("Categories")
 
 #' @rdname Categories
 #' @export
-setClass("Category", contains="AbsCat")
+setClass("Category", contains="AbstractCategory")
 
 #' @rdname Categories
 #' @export
@@ -299,7 +299,7 @@ Category <- GenericConstructor("Category")
 
 #' @rdname Insertions
 #' @export
-setClass("Insertions", contains="AbsCats")
+setClass("Insertions", contains="AbstractCategories")
 
 #' @rdname Insertions
 #' @export
@@ -307,7 +307,7 @@ Insertions <- GenericConstructor("Insertions")
 
 #' @rdname Insertions
 #' @export
-setClass("Insertion", contains="AbsCat")
+setClass("Insertion", contains="AbstractCategory")
 
 #' @rdname Insertions
 #' @export

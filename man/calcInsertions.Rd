@@ -9,8 +9,8 @@ calcInsertions(vec, elements, var_cats)
 \arguments{
 \item{vec}{values to transform (a single dimension of an array)}
 
-\item{elements}{AbsCats of both \code{Category}s and \code{Insertion}s to calculate.
-Generally derived from \code{mapInsertions()}}
+\item{elements}{AbstractCategories of both \code{Category}s and \code{Insertion}s to
+calculate. Generally derived from \code{mapInsertions()}}
 
 \item{var_cats}{the \code{Categories} object tat corresponds to the vector in
 \code{vec} of the transform}

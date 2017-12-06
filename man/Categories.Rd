@@ -9,20 +9,20 @@
 \alias{ids<-}
 \alias{values}
 \alias{values<-}
-\alias{id.AbsCat}
-\alias{ids.AbsCats}
+\alias{id.AbstractCategory}
+\alias{ids.AbstractCategories}
 \alias{Categories}
 \alias{Category-class}
 \alias{Category}
-\alias{[,AbsCats,ANY,ANY-method}
-\alias{[,AbsCats,character,ANY-method}
-\alias{[,AbsCats,numeric,ANY-method}
-\alias{[<-,AbsCats,character,ANY,ANY-method}
-\alias{[[,AbsCats,character-method}
-\alias{[[<-,AbsCats,character,ANY,ANY-method}
-\alias{names,AbsCats-method}
-\alias{names<-,AbsCats-method}
-\alias{ids,AbsCats-method}
+\alias{[,AbstractCategories,ANY,ANY-method}
+\alias{[,AbstractCategories,character,ANY-method}
+\alias{[,AbstractCategories,numeric,ANY-method}
+\alias{[<-,AbstractCategories,character,ANY,ANY-method}
+\alias{[[,AbstractCategories,character-method}
+\alias{[[<-,AbstractCategories,character,ANY,ANY-method}
+\alias{names,AbstractCategories-method}
+\alias{names<-,AbstractCategories-method}
+\alias{ids,AbstractCategories-method}
 \alias{[<-,Categories,ANY,ANY,ANY-method}
 \alias{ids<-,Categories-method}
 \alias{values,Categories-method}
@@ -33,23 +33,23 @@ Categories(..., data = NULL)
 
 Category(..., data = NULL)
 
-\S4method{[}{AbsCats,ANY,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{AbstractCategories,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{AbsCats,character,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{AbstractCategories,character,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{AbsCats,numeric,ANY}(x, i, j, ..., drop = TRUE)
+\S4method{[}{AbstractCategories,numeric,ANY}(x, i, j, ..., drop = TRUE)
 
-\S4method{[}{AbsCats,character,ANY,ANY}(x, i, j, ...) <- value
+\S4method{[}{AbstractCategories,character,ANY,ANY}(x, i, j, ...) <- value
 
-\S4method{[[}{AbsCats,character}(x, i, j, ...)
+\S4method{[[}{AbstractCategories,character}(x, i, j, ...)
 
-\S4method{[[}{AbsCats,character,ANY,ANY}(x, i, j, ...) <- value
+\S4method{[[}{AbstractCategories,character,ANY,ANY}(x, i, j, ...) <- value
 
-\S4method{names}{AbsCats}(x)
+\S4method{names}{AbstractCategories}(x)
 
-\S4method{names}{AbsCats}(x) <- value
+\S4method{names}{AbstractCategories}(x) <- value
 
-\S4method{ids}{AbsCats}(x)
+\S4method{ids}{AbstractCategories}(x)
 
 \S4method{[}{Categories,ANY,ANY,ANY}(x, i, j, ...) <- value
 

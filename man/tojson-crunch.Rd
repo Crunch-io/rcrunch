@@ -4,7 +4,7 @@
 \name{tojson-crunch}
 \alias{tojson-crunch}
 \alias{jsonprep}
-\alias{jsonprep,AbsCats-method}
+\alias{jsonprep,AbstractCategories-method}
 \alias{jsonprep,ANY-method}
 \alias{jsonprep,ShojiOrder-method}
 \alias{jsonprep,OrderGroup-method}
@@ -13,7 +13,7 @@
 \usage{
 jsonprep(x, ...)
 
-\S4method{jsonprep}{AbsCats}(x, ...)
+\S4method{jsonprep}{AbstractCategories}(x, ...)
 
 \S4method{jsonprep}{ANY}(x, ...)
 

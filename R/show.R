@@ -284,8 +284,8 @@ showMultitable <- function (x) {
 
 # More boilerplate
 
-setMethod("getShowContent", "AbsCat", showAbsCategory)
-setMethod("getShowContent", "AbsCats", showAbsCategories)
+setMethod("getShowContent", "AbstractCategory", showAbsCategory)
+setMethod("getShowContent", "AbstractCategories", showAbsCategories)
 setMethod("getShowContent", "Insertion", showInsertion)
 setMethod("getShowContent", "Insertions", showInsertions)
 setMethod("getShowContent", "CrunchVariable", showCrunchVariable)

@@ -1,11 +1,11 @@
-is.AbsCat <- function (x) inherits(x, "AbsCat")
+is.AbstractCategory <- function (x) inherits(x, "AbstractCategory")
 
 #' @rdname category-extract
 #' @export
-setMethod("$", "AbsCat", function (x, name) x[[name]])
+setMethod("$", "AbstractCategory", function (x, name) x[[name]])
 #' @rdname category-extract
 #' @export
-setMethod("$<-", "AbsCat", function (x, name, value) {
+setMethod("$<-", "AbstractCategory", function (x, name, value) {
     x[[name]] <- value
     return(x)
 })
@@ -36,10 +36,10 @@ getName <- function (x) {
 
 #' @rdname describe-category
 #' @export
-setMethod("name", "AbsCat", getName)
+setMethod("name", "AbstractCategory", getName)
 #' @rdname describe-category
 #' @export
-setMethod("name<-", "AbsCat", setName)
+setMethod("name<-", "AbstractCategory", setName)
 #' @rdname describe-category
 #' @export
 setMethod("name<-", "NULL", function (x, value) {
@@ -48,7 +48,7 @@ setMethod("name<-", "NULL", function (x, value) {
 
 #' @rdname describe-category
 #' @export
-setMethod("id", "AbsCat", function (x) {
+setMethod("id", "AbstractCategory", function (x) {
     i <- as.integer(x[["id"]])
     return(ifelse(is.null(i), NA_integer_, i))
 })

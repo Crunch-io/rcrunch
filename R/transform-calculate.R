@@ -84,7 +84,7 @@ mapInsertions <- function (inserts, var_cats, include) {
 # of AbstractCategories which includes both `Category`s and `Insertion`s
 collateCats <- function (inserts, var_cats) {
     # setup an empty AbstractCategories object to collate into
-    cats_out <- AbsCats()
+    cats_out <- AbstractCategories()
     cats_out@.Data <- var_cats
 
     # for each insert, find the position for its anchor, and add the insertion
@@ -121,8 +121,8 @@ findInsertPosition <- function (insert, cats) {
 #' Given a vector of values and elements, calculate the insertions
 #'
 #' @param vec values to transform (a single dimension of an array)
-#' @param elements AbsCats of both `Category`s and `Insertion`s to calculate.
-#' Generally derived from `mapInsertions()`
+#' @param elements AbstractCategories of both `Category`s and `Insertion`s to 
+#' calculate. Generally derived from `mapInsertions()`
 #' @param var_cats the `Categories` object tat corresponds to the vector in 
 #' `vec` of the transform
 #'
