@@ -54,6 +54,7 @@ setMethod("[", c("CrunchDataset", "logical", "missing"), function (x, i, j, ...,
             }
             i <- CrunchLogicalExpr(dataset_url=datasetReference(x),
                 expression=.dispatchFilter(i))
+            activeFilter(i) <- activeFilter(x)
             return(x[i,])
         } else {
             halt("Logical filter vector is length ", length(i),
@@ -134,12 +135,17 @@ setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "ANY"), function (x, i, j
 #' @rdname dataset-extract
 #' @export
 setMethod("[", c("CrunchDataset", "numeric", "missing"), function (x, i, j, ..., drop=FALSE) {
-    f <- activeFilter(x) ## TODO: IMPLEMENT ME
-    if (length(zcl(f))) {
-        i <- f & i
+    filt <- activeFilter(x)
+    if(!is.null(filt)){
+        filt_lgl <- as.vector()
+        unfiltered <- x
+        activeFilter(unfiltered) <- NULL
+        out <- unfiltered[seq_len(nrow(unfiltered)) %in% which(f_lgl)[i], ]
+        activeFilter(out) <- activeFilter(x) & activeFilter(out)
+    } else {
+        out <- x[seq_len(nrow(x)) %in% i, ]
     }
-    activeFilter(x) <- i
-    return(x)
+    return(out)
 })
 
 #' @rdname dataset-extract
