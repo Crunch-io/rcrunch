@@ -145,6 +145,7 @@ modeling
 modifyWeightVariables
 multitable
 na
+nd
 newDataset
 newDatasetFromFile
 pid
@@ -153,6 +154,7 @@ preemptively
 programmatically
 pw
 recode
+recurse
 recurses
 rmarkdown
 sav
@@ -165,6 +167,7 @@ spss
 st
 subclasses
 subdomain
+subtypes
 subvariable
 subvariables
 symlink
