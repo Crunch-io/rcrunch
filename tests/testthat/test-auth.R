@@ -45,19 +45,9 @@ if (run.integration.tests) {
             "Unable to authenticate lkjasdfksdfkjhl")
     })
 
-    test_that("session URLs can be retrieved", {
-        suppressMessages(login())
-            expect_true(is.character(sessionURL("datasets")))
-        logout()
-        expect_error(sessionURL("datasets"),
-            "You must authenticate before making this request")
-    })
-
     test_that("login returns a session object", {
         cr <- suppressMessages(login())
             expect_true(is.list(cr))
         logout()
-        expect_error(sessionURL("datasets"),
-            "You must authenticate before making this request")
     })
 }

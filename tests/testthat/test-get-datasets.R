@@ -33,8 +33,10 @@ with_mock_crunch({
 
     test_that("loadDataset by URL when in main catalog", {
         ds <- loadDataset("test ds")
-        ## This URL is found in dataset <- dscat[[dataset]] because of getNameOrURL
-        expect_identical(ds, loadDataset(self(ds)))
+        ds_by_url <- loadDataset(self(ds))
+        expect_is(ds_by_url, "CrunchDataset")
+        expect_identical(name(ds), name(ds_by_url))
+        expect_identical(self(ds), self(ds_by_url))
     })
     test_that("loadDataset by URL when not in main catalog", {
         ds2 <- loadDataset("https://app.crunch.io/api/datasets/four/")
