@@ -8,6 +8,10 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+```{r, results='hide', echo=FALSE, message=FALSE}
+library(crunch)
+```
+
 There are number of areas where Crunch needs to represent an object as belonging to one of many categories. The simplest and most common example of this is the categories of a categorical variable. For a categorical variable, the values of the variable can be one of a limited set of categories and those categories are specified in the Crunch API as metadata about the variable. These categoricals are similar to R's `factor`s but are richer because Crunch categoricals can have any number of missing values (compared to just `NA` for `factor`s), as well as a numeric representation that is separate from the category ids (which is useful for things like income bins, where you might put the middle of the bin as the value).
 
 Moving beyond just categorical variables, we have a need to be able to represent a number of different properties, transformations, etc. in a category-like way. One concrete example is used heavily in order to add subtotals and headings to representations of categorical variables. In order to do this, we have two families of [S4 classes](http://adv-r.had.co.nz/S4.html): `AbstractCategory` and `AbstractCategories` Although subtotals and headings was the initial motivation for the new classes, they will allow for other types of representations and manipulations in the future.
@@ -133,7 +137,7 @@ Since the Crunch API does not have a distinction between `Subtotal`s `Heading`s,
 
 Using the examples we used before, we can see how this works:
 ```{r}
-feeling_insertions <- lapply(feeling_subtotals, makeInsertion, var_categories = feeling_cats)
+feeling_insertions <- Insertions(data = lapply(feeling_subtotals, makeInsertion, var_categories = feeling_cats))
 ```
 Now, all of the `Subtotal`s and `Heading` from `feeling_subtotals` are proper `Insertion`s:
 ```{r}
@@ -165,43 +169,44 @@ sapply(feeling_subtotals_again, class)
 ```
 
 ## Inheritance
+There are two sets of inheritance: one for containers and one for members: Classes inherit from those immediately to their left
 
 |            | top-level classes    | 1st children | 2nd children |
 |------------|----------------------|--------------|--------------|
 | containers | `AnstractCategories` | `Categories` |              |
-|            |                      | `Insertions` |              |
-|------------|----------------------|--------------|--------------|
+|            | `AnstractCategories` | `Insertions` |              |
+|            |                      |              |              |
 | members    | `AbstractCategory`   | `Category`   |              |
-|            |                      | `Insertion`  | `Subtotal`   |
-|            |                      |              | `Heading`    |
+|            | `AbstractCategory`   | `Insertion`  | `Subtotal`   |
+|            | `AbstractCategory`   | `Insertion`  | `Heading`    |
 
 ## Shared methods chart
-The methods are listed as row labels and the classes are column labels. If a method is implemented, it is marked "implemented".
+The methods are listed as row labels and the classes are column labels. If a method is implemented, it is marked "impl.".
 
 ### Containers
 |               | AbstractCategories | Categories  | Insertions  |
 |---------------|--------------------|-------------|-------------|
-| `names`       | implemented        | implemented | implemented |
-| `ids`         | implemented        | implemented | implemented |
-| `values`      |                    | implemented |             |
-| `is.na`       |                    | implemented |             |
-| `is.selected` |                    | implemented |             |
-| `anchors`     |                    |             | implemented |
-| `funcs`       |                    |             | implemented |
-| `args`        |                    |             | implemented |
+| `names`       | impl.              | impl.       | impl.       |
+| `ids`         | impl.              | impl.       | impl.       |
+| `values`      |                    | impl.       |             |
+| `is.na`       |                    | impl.       |             |
+| `is.selected` |                    | impl.       |             |
+| `anchors`     |                    |             | impl.       |
+| `funcs`       |                    |             | impl.       |
+| `args`        |                    |             | impl.       |
 
 ### Members
 
 |               | AbstractCategory | Category    | Insertion   | Subtotal    | Heading     |
 |---------------|------------------|-------------|-------------|-------------|-------------|
-| `name`        | implemented      | implemented | implemented | implemented | implemented |
-| `id`          | implemented      | implemented | implemented | implemented | implemented |
-| `value`       |                  | implemented |             |             |             |
-| `is.na`       |                  | implemented |             |             |             |
-| `is.selected` |                  | implemented |             |             |             |
-| `anchor`      |                  |             | implemented | implemented | implemented |
-| `func`        |                  |             | implemented | implemented | implemented |
-| `args`        |                  |             | implemented | implemented | implemented |
+| `name`        | impl.            | impl.       | impl.       | impl.       | impl.       |
+| `id`          | impl.            | impl.       | impl.       | impl.       | impl.       |
+| `value`       |                  | impl.       |             |             |             |
+| `is.na`       |                  | impl.       |             |             |             |
+| `is.selected` |                  | impl.       |             |             |             |
+| `anchor`      |                  |             | impl.       | impl.       | impl.       |
+| `func`        |                  |             | impl.       | impl.       | impl.       |
+| `args`        |                  |             | impl.       | impl.       | impl.       |
 
 ## Transforms
 The `Transforms` class and set of functions is not an abstract category at all, but rather it mirrors the Crunch API's set of transformations that are allowed on a variable or CrunchCube. One of the possible transformations are insertions (which is where `Insertions` are stored). Currently the `crunch` package doesn't support other transformations.

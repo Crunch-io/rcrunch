@@ -270,9 +270,25 @@ setMethod("makeInsertion", "Heading", function (x, var_categories) {
 #' @export
 setMethod("makeInsertion", "Insertion", function (x, var_categories) return(x))
 
-# convert from Insertions with only Insertion objects (the only kind that are 
-# available from the Crunch API) to the more user-friendly and user-facing
-# Subtotal and Heading object classes
+
+#' Convert from Insertion to Insertion subtypes
+#' 
+#' Convert from Insertions with only Insertion objects (the only kind that are 
+#' available from the Crunch API) to the more user-friendly and user-facing 
+#' Subtotal and Heading object classes.
+#' 
+#' @param inserts an `Insertions` object for `subtypeInsertions`
+#' @param insert a single `Insertion` object for `subtypeInsertion`
+#' 
+#' @return an `Insertions` object with members subtyped for `subtypeInsertions` 
+#' or a `Subtotal`, `Heading`, or `Insertion` for `subtypeInsertion`
+#' 
+#' @name subtypeInsertion
+#' @keywords internal
+NULL
+
+#' @rdname subtypeInsertion
+#' @export
 subtypeInsertions <- function (inserts) {
     if (!inherits(inserts, "Insertions")) {
         halt("Must provide an object of type Insertions")
@@ -280,6 +296,8 @@ subtypeInsertions <- function (inserts) {
     return(lapply(inserts, subtypeInsertion))
 }
 
+#' @rdname subtypeInsertion
+#' @export
 subtypeInsertion <- function (insert) {
     if (!inherits(insert, "Insertion")) {
         halt("Must provide an object of type Insertion")
