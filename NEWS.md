@@ -1,4 +1,6 @@
 ## crunch 1.19.1
+* Improved efficiency when loading a dataset from URL.
+* Subtotals and headings on categorical variables and CrunchCubes. Use `subtotals(variable)` to see subtotals set for a variable. Subtotals can be set with `subtotals(variable) <- Subtotal(name = 'subtotal', categories = c(1, 2))`. Subtotals and headings are displayed for rows in CrunchCubes when they are set. See `?subtotals` for more information. 
 * `refresh()` for Datasets is now more efficient
 * fixed a bug where CrunchCubes with categorical variables that had categories "Selected", "Not selected", and "No data" might not display correctly. 
 
