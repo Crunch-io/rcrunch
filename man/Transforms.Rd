@@ -50,3 +50,31 @@ Transforms}
 Transformations allow you to change how a variable or cube is displayed
 without changing the underlying data.
 }
+\section{Getting transformations}{
+
+The \code{transforms(x)} methods can be used with Variables and CrunchCubes to get
+what transformations are currently set. For variables, they return a single
+\code{Transforms} object that includes all transformations for the variable. For
+CrunchCubes, it returns a named list with the same length as the number of
+dimensions of the cube with each dimension's transformations.
+
+Currently, \link{Insertions} (e.g. \link[=SubtotalsHeadings]{Subtotal()} and
+\link[=SubtotalsHeadings]{Heading()}) are the only type of transformations that are
+supported.
+}
+
+\section{Setting transformations}{
+
+The \code{transforms(x) <- value} methods can be used to assign transformations
+for a specific variable (this will not yet work on a CrunchCube). \code{value}
+must be a \code{Transforms} object. This allows you to set transformations on
+categorical variables. These transformations will automatically show up in
+any new CrunchCubes that contain this variable.
+}
+
+\section{Removing transformations}{
+
+To remove transformations from a variable or CrunchCube, use
+\code{transforms(x) <- NULL}.
+}
+

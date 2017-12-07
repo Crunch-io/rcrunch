@@ -15,7 +15,8 @@
 \S4method{makeInsertion}{Insertion}(x, var_categories)
 }
 \arguments{
-\item{x}{an object the is a child of \href{Insertions}{Insertion} (e.g. \code{Subtotal}, \code{Heading})}
+\item{x}{an object the is a child of \link[=Insertions]{Insertion} (e.g.
+\code{Subtotal}, \code{Heading})}
 
 \item{var_categories}{categories (from \code{categories(variable)}) to used by
 \code{makeInsertions} to make \code{Insertions} from a child object (e.g. \code{Subtotal} or
@@ -25,7 +26,7 @@
 an Insertion object
 }
 \description{
-The Crunch API expects that \href{SubtotalsHeadings}{Subtotals, Headings}, and
+The Crunch API expects that \link[=SubtotalsHeadings]{Subtotals, Headings}, and
 other insertions all have the same shape. Before sending insertions to the
 server, we need to call \code{makeInsertion} on any insertions to make sure they
 are proper \code{Insertion}s. This process sometimes requires a variable's

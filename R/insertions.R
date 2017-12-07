@@ -1,7 +1,34 @@
 #' Insert categories in transformations
 #'
 #' Insertions allow you to insert new categories into a categorical-like
-#' response on a variable's [transform](Transforms).
+#' response on a variable's [transformations][Transforms].
+#' 
+#' @section Working with Insertions: 
+#' Insertions are used to add information about a variable or CrunchCube that
+#' extends the data in the dataset but does not alter it. This new data 
+#' includes: aggregations like [subtotals][SubtotalsHeadings] that sum the count
+#' of more than on category together or [headings][SubtotalsHeadings] which can 
+#' be added between categories. 
+#' 
+#' `Insertions` objects are containers for individual `Insertion` objects. The 
+#' individual `Insertion`s contain all the information needed to calculate, 
+#' apply, and display insertions to CrunchCubes and categorical variables.
+#' 
+#' An `Insertion` must have two properties: 
+#' * `anchor` - which is the id of the category the insertion should follow
+#' * `name` - the string to display
+#' 
+#' Additionally, `Insertions` may also have the following two properties (though 
+#' if they have one, they must have the other):
+#' * `function` - the function to use to aggregate (e.g. "subtotal")
+#' * `args` - the category ids to use as operands to the `function` above.
+#' 
+#' Although it is possible to make both subtotals and headings using `Insertion`
+#' alone, it is much easier and safer to use the functions 
+#' [Subtotal()][SubtotalsHeadings] and [Heading()][SubtotalsHeadings] instead. 
+#' Not only are they more transparent, they also are quicker to type, accept 
+#' both category names as well as ids, and have easier to remember argument 
+#' names.
 #'
 #' @param data For the constructor functions `Insertion` and
 #' `Insertions`, you can either pass in attributes via `...` or you
@@ -11,9 +38,9 @@
 #' Insertion or Insertions
 #' @param ... additional arguments to `[`, ignored
 #' @param value For `[<-`, the replacement Insertion to insert
-#' @param var_categories categories (from [categories()]) to used by `args` and 
-#' `anchor` methods when needed to translate between category names and category
-#' ids.
+#' @param var_categories categories (from [categories()]) to used by the `args` 
+#' and  `anchor` methods when needed to translate between category names and 
+#' category ids.
 #' @name Insertions
 #' @aliases anchor anchor<- anchors func func<- funcs args args<-
 NULL
@@ -127,7 +154,7 @@ setMethod("args", "Subtotal", .convertArgs)
 
 #' @rdname Insertions
 #' @export
-setMethod("args", "Heading", .convertArgs)
+setMethod("args", "Heading", function(x) NA)
 
 #' @rdname Insertions
 #' @export
@@ -169,7 +196,7 @@ setMethod("func", "Subtotal", function (x) return("subtotal"))
 
 #' @rdname Insertions
 #' @export
-setMethod("func", "Heading", function (x) return(NULL))
+setMethod("func", "Heading", function (x) return(NA))
 
 ############################################
 ## Insertions methods

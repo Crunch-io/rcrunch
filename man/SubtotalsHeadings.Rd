@@ -11,8 +11,8 @@
 \alias{subtotals<-}
 \alias{is.Subtotal}
 \alias{is.Heading}
-\alias{is.Subtotals}
-\alias{is.Headings}
+\alias{are.Subtotals}
+\alias{are.Headings}
 \alias{subtotals,CrunchVariable-method}
 \alias{subtotals,VariableTuple-method}
 \alias{subtotals<-,CrunchVariable,ANY-method}
@@ -27,9 +27,9 @@ is.Subtotal(x)
 
 is.Heading(x)
 
-is.Subtotals(x)
+are.Subtotals(x)
 
-is.Headings(x)
+are.Headings(x)
 
 \S4method{subtotals}{CrunchVariable}(x)
 
@@ -60,6 +60,8 @@ multiple categories (sometimes referred to as \emph{nets}, \emph{top box}, or
 }
 \details{
 To see the subtotals or headings set for a variable, use \code{subtotals(variable)}
+}
+\section{Adding Subtotals and Headings}{
 
 Subtotals and headings can be added either by passing a list of \code{Subtotal}s
 or \code{Heading}s, or they can be added one at a time by passing \code{Subtotal} or
@@ -73,6 +75,26 @@ headings are added. To remove all subtotals and headings, set
 To get an array of just the subtotal rows from a CrunchCube, use the function
 \code{subtotalArray(CrunchCube)}.
 }
+
+\section{Working with Subtotals and headings}{
+
+When interacting programmatically with Subtotals and Headings, it can be
+useful to be able to tell if something is a Subtotal or a Heading. The \code{is.*}
+family of methods are useful here: the singular versions (\code{is.Subtotal} and
+\code{is.Heading}) take a single object and returns \code{TRUE} if the object is either
+a Subtotal or a Heading and \code{FALSE} if not; the plural versions
+(\code{are.Subtotals} and \code{are.Headings}) take a list of objects (including an
+\code{Insertions} object) and returns a vector of \code{TRUE}/\code{FALSE}s.
+}
+
+\section{Removing transforms}{
+
+\code{noTransforms()} is useful if you don't want to see or use any transformations like
+Subtotals and Headings. This action only applies to the CrunchCube object in
+R: it doesn't actually change the variables on Crunch servers or the query
+that generated the CrunchCube.
+}
+
 \examples{
 \dontrun{
 # given a variable ds$opinion, with categories: Strongly Agree, Somewhat
@@ -106,9 +128,9 @@ opinion_cube
 #             Somewhat Agree 24
 #                      Agree 47
 # Neither Agree nor Disagree 18
+#          Somewhat Disagree 16
 #          Strongly Disagree 19
 #                   Disagree 35
-#          Somewhat Disagree 16
 
 
 # to get just the subtotals,
@@ -122,16 +144,15 @@ crtabs(~opinion, ds)
 #             Strongly Agree 23
 #             Somewhat Agree 24
 # Neither Agree nor Disagree 18
-#          Strongly Disagree 19
 #          Somewhat Disagree 16
-
+#          Strongly Disagree 19
 
 # if you want to temporarily remove subtotals and headings, you can with `noTransforms`
 noTransforms(crtabs(~opinion, ds))
 #             Strongly Agree             Somewhat Agree Neither Agree nor Disagree 
 #                         23                         24                         18 
-#          Strongly Disagree          Somewhat Disagree 
-#                         19                         16 
+#          Somewhat Disagree          Strongly Disagree 
+#                         16                         19 
 }
 
 }

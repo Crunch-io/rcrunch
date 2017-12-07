@@ -104,6 +104,7 @@ crosstabbing
 crosstabulation
 crunchBox
 csv
+customizations
 darkgreen
 datetime
 deserialization
@@ -149,6 +150,7 @@ newDatasetFromFile
 pid
 pipelining
 preemptively
+programmatically
 pw
 recode
 recurses

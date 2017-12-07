@@ -45,7 +45,7 @@ Insertion(...)
 
 \S4method{args}{Subtotal}(x, var_categories)
 
-\S4method{args}{Heading}(x, var_categories)
+\S4method{args}{Heading}(x)
 
 \S4method{anchor}{Insertion}(x)
 
@@ -76,11 +76,44 @@ Insertion or Insertions}
 
 \item{value}{For \code{[<-}, the replacement Insertion to insert}
 
-\item{var_categories}{categories (from \code{\link[=categories]{categories()}}) to used by \code{args} and
-\code{anchor} methods when needed to translate between category names and category
-ids.}
+\item{var_categories}{categories (from \code{\link[=categories]{categories()}}) to used by the \code{args}
+and  \code{anchor} methods when needed to translate between category names and
+category ids.}
 }
 \description{
 Insertions allow you to insert new categories into a categorical-like
-response on a variable's \href{Transforms}{transform}.
+response on a variable's \link[=Transforms]{transformations}.
 }
+\section{Working with Insertions}{
+
+Insertions are used to add information about a variable or CrunchCube that
+extends the data in the dataset but does not alter it. This new data
+includes: aggregations like \link[=SubtotalsHeadings]{subtotals} that sum the count
+of more than on category together or \link[=SubtotalsHeadings]{headings} which can
+be added between categories.
+
+\code{Insertions} objects are containers for individual \code{Insertion} objects. The
+individual \code{Insertion}s contain all the information needed to calculate,
+apply, and display insertions to CrunchCubes and categorical variables.
+
+An \code{Insertion} must have two properties:
+\itemize{
+\item \code{anchor} - which is the id of the category the insertion should follow
+\item \code{name} - the string to display
+}
+
+Additionally, \code{Insertions} may also have the following two properties (though
+if they have one, they must have the other):
+\itemize{
+\item \code{function} - the function to use to aggregate (e.g. "subtotal")
+\item \code{args} - the category ids to use as operands to the \code{function} above.
+}
+
+Although it is possible to make both subtotals and headings using \code{Insertion}
+alone, it is much easier and safer to use the functions
+\link[=SubtotalsHeadings]{Subtotal()} and \link[=SubtotalsHeadings]{Heading()} instead.
+Not only are they more transparent, they also are quicker to type, accept
+both category names as well as ids, and have easier to remember argument
+names.
+}
+

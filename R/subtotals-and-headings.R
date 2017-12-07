@@ -7,6 +7,7 @@
 #'
 #' To see the subtotals or headings set for a variable, use `subtotals(variable)`
 #'
+#' @section Adding Subtotals and Headings:
 #' Subtotals and headings can be added either by passing a list of `Subtotal`s
 #' or `Heading`s, or they can be added one at a time by passing `Subtotal` or
 #' `Heading` to `subtotals(variable)` alone.
@@ -18,6 +19,17 @@
 #'
 #' To get an array of just the subtotal rows from a CrunchCube, use the function
 #' `subtotalArray(CrunchCube)`.
+#' 
+#' @inheritSection noTransforms Removing transforms 
+#' 
+#' @section Working with Subtotals and headings:
+#' When interacting programmatically with Subtotals and Headings, it can be 
+#' useful to be able to tell if something is a Subtotal or a Heading. The `is.*`
+#' family of methods are useful here: the singular versions (`is.Subtotal` and 
+#' `is.Heading`) take a single object and returns `TRUE` if the object is either
+#'  a Subtotal or a Heading and `FALSE` if not; the plural versions 
+#'  (`are.Subtotals` and `are.Headings`) take a list of objects (including an 
+#'  `Insertions` object) and returns a vector of `TRUE`/`FALSE`s.
 #'
 #' @param x either a variable or CrunchCube object to add or get subtotal
 #' transforms for
@@ -61,9 +73,9 @@
 #' #             Somewhat Agree 24
 #' #                      Agree 47
 #' # Neither Agree nor Disagree 18
+#' #          Somewhat Disagree 16
 #' #          Strongly Disagree 19
 #' #                   Disagree 35
-#' #          Somewhat Disagree 16
 #' 
 #'
 #' # to get just the subtotals,
@@ -77,16 +89,15 @@
 #' #             Strongly Agree 23
 #' #             Somewhat Agree 24
 #' # Neither Agree nor Disagree 18
-#' #          Strongly Disagree 19
 #' #          Somewhat Disagree 16
-#' 
+#' #          Strongly Disagree 19
 #' 
 #' # if you want to temporarily remove subtotals and headings, you can with `noTransforms`
 #' noTransforms(crtabs(~opinion, ds))
 #' #             Strongly Agree             Somewhat Agree Neither Agree nor Disagree 
 #' #                         23                         24                         18 
-#' #          Strongly Disagree          Somewhat Disagree 
-#' #                         19                         16 
+#' #          Somewhat Disagree          Strongly Disagree 
+#' #                         16                         19 
 #' }
 #'
 #' @name SubtotalsHeadings
@@ -102,10 +113,10 @@ is.Heading <- function (x) inherits(x, "Heading") %||% FALSE
 
 #' @rdname SubtotalsHeadings
 #' @export 
-is.Subtotals <- function (x) unlist(lapply(x, inherits, "Subtotal")) %||% FALSE
+are.Subtotals <- function (x) unlist(lapply(x, inherits, "Subtotal")) %||% FALSE
 #' @rdname SubtotalsHeadings
 #' @export 
-is.Headings <- function (x) unlist(lapply(x, inherits, "Heading")) %||% FALSE
+are.Headings <- function (x) unlist(lapply(x, inherits, "Heading")) %||% FALSE
 
 setValidity("Subtotal", function (object) {
     reqs <- c("name", "categories", "after")
@@ -220,20 +231,23 @@ setMethod("subtotals<-", c("CrunchVariable", "NULL"), function (x, value) {
 
 #' Convert a child class of Insertion into a proper Insertion
 #' 
-#' The Crunch API expects that [Subtotals, Headings](SubtotalsHeadings), and 
+#' The Crunch API expects that [Subtotals, Headings][SubtotalsHeadings], and 
 #' other insertions all have the same shape. Before sending insertions to the 
 #' server, we need to call `makeInsertion` on any insertions to make sure they 
 #' are proper `Insertion`s. This process sometimes requires a variable's 
 #' categories object (e.g. in order to convert from category names to category 
 #' ids)
 #' 
-#' @param x an object the is a child of [`Insertion`](Insertions) (e.g. `Subtotal`, `Heading`)
+#' @param x an object the is a child of [Insertion][Insertions] (e.g. 
+#' `Subtotal`, `Heading`)
 #' @param var_categories categories (from `categories(variable)`) to used by 
 #' `makeInsertions` to make `Insertions` from a child object (e.g. `Subtotal` or
 #' `Heading`)
 #' 
 #' @return an Insertion object
+#' 
 #' @name makeInsertion
+#' @aliases makeInsertion
 #' 
 #' @keywords internal
 NULL

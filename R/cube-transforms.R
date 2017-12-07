@@ -1,9 +1,5 @@
-#' Show the variable transformations on a CrunchCube
-#'
-#' @param x a CrunchCube
-#'
-#' @return an array with any transformations applied
-#'
+#' @rdname showTransforms
+#' @export
 setMethod("showTransforms", "CrunchCube", function (x) {
     if (is.null(transforms(x))) {
         print(cubeToArray(x))
@@ -37,7 +33,7 @@ setMethod("subtotalArray", "CrunchCube", function(x, headings = FALSE) {
 
 #' Calculate the transforms from a CrunchCube
 #'
-#' `applyTransforms` calculates transforms (e.g. subtotals) on a CrunchCube.
+#' `applyTransforms` calculates transforms (e.g. [Subtotals][SubtotalsHeadings]) on a CrunchCube.
 #' Currently only the row transforms are supported. This is useful if you want
 #' to use the values from the subtotals of the CrunchCube in an analysis.
 #'
@@ -61,8 +57,6 @@ setMethod("subtotalArray", "CrunchCube", function(x, headings = FALSE) {
 #'
 #' @examples
 #' \dontrun{
-#' transformed_array <- applyTransforms(crtabs(~opinion, ds))
-#'
 #' # to get an array of just the subtotals
 #' subtotalArray(crtabs(~opinion, ds))
 #' #    Agree Disagree
@@ -188,21 +182,36 @@ setMethod("transforms<-", c("CrunchCube", "NULL"), function (x, value) {
     return(invisible(x))
 })
 
-#' Remove transformations from a cube
+#' Remove transformations from a CrunchCube
 #'
-#' This is useful if you don't want to see or use any transformations like Subtotals and Headings
+#' @section Removing transforms:
+#' `noTransforms()` is useful if you don't want to see or use any transformations like 
+#' Subtotals and Headings. This action only applies to the CrunchCube object in 
+#' R: it doesn't actually change the variables on Crunch servers or the query 
+#' that generated the CrunchCube.
 #'
 #' @param cube a CrunchCube
 #'
-#' @return the cube with no transformations
+#' @return the CrunchCube with no transformations
 #'
 #' @examples 
 #' \dontrun{
+#' # A CrunchCube with a heading and subtotals
+#' crtabs(~opinion, ds)
+#' #               All opinions   
+#' #             Strongly Agree 23
+#' #             Somewhat Agree 24
+#' #                      Agree 47
+#' # Neither Agree nor Disagree 18
+#' #          Somewhat Disagree 16
+#' #          Strongly Disagree 19
+#' #                   Disagree 35
+#' 
 #' noTransforms(crtabs(~opinion, ds))
 #' #             Strongly Agree             Somewhat Agree Neither Agree nor Disagree 
 #' #                         23                         24                         18 
-#' #          Strongly Disagree          Somewhat Disagree 
-#' #                         19                         16 
+#' #          Somewhat Disagree          Strongly Disagree 
+#' #                         16                         19 
 #' }
 #'
 #' @export

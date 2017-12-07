@@ -37,7 +37,8 @@ test_that("Subtotal/Heading getters", {
     heading <- Heading(name = "a heading", after = 0)
     
     expect_equal(func(subtot), "subtotal")
-    expect_null(func(heading))
+    expect_equal(func(heading), NA)
+    expect_equal(args(heading), NA)
 })
 
 

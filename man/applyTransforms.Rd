@@ -26,7 +26,7 @@ itself. (Default: not used, pulls an array from the cube directly)}
 an array with any transformations applied
 }
 \description{
-\code{applyTransforms} calculates transforms (e.g. subtotals) on a CrunchCube.
+\code{applyTransforms} calculates transforms (e.g. \link[=SubtotalsHeadings]{Subtotals}) on a CrunchCube.
 Currently only the row transforms are supported. This is useful if you want
 to use the values from the subtotals of the CrunchCube in an analysis.
 }
@@ -42,8 +42,6 @@ combination of these can be given, by default all will be given.
 }
 \examples{
 \dontrun{
-transformed_array <- applyTransforms(crtabs(~opinion, ds))
-
 # to get an array of just the subtotals
 subtotalArray(crtabs(~opinion, ds))
 #    Agree Disagree

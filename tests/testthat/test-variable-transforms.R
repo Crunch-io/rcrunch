@@ -125,18 +125,18 @@ test_that("Converting insertions to subtypes works", {
     expect_true(is.category(cats[[1]])) # we need cats for collation later
     
     # we can check the full object and get back a vector of logicals
-    expect_true(all(is.Subtotals(insrts_subtyped)))
-    expect_true(all(is.Headings(insrt_heads_subtyped)))
+    expect_true(all(are.Subtotals(insrts_subtyped)))
+    expect_true(all(are.Headings(insrt_heads_subtyped)))
     expect_true(all(unlist(lapply(cats, is.category))))
     
     # we can re-subtype with no harm
-    expect_true(all(is.Subtotals(subtypeInsertions(insrts_subtyped))))
-    expect_true(all(is.Headings(subtypeInsertions(insrt_heads_subtyped))))
+    expect_true(all(are.Subtotals(subtypeInsertions(insrts_subtyped))))
+    expect_true(all(are.Headings(subtypeInsertions(insrt_heads_subtyped))))
 
     # collate and check
     collated <- collateCats(c(insrts_subtyped, insrt_heads_subtyped), cats)
-    expect_true(all(is.Subtotals(collated[c(2, 5, 8, 15, 16, 17)])))
-    expect_true(all(is.Headings(collated[c(1)])))
+    expect_true(all(are.Subtotals(collated[c(2, 5, 8, 15, 16, 17)])))
+    expect_true(all(are.Headings(collated[c(1)])))
     expect_true(all(unlist(lapply(collated[c(3, 4, 6, 7, 9, 10, 11, 12, 13, 14)],
                            is.category))))
     

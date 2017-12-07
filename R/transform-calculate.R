@@ -42,20 +42,20 @@ mapInsertions <- function (inserts, var_cats, include) {
 
     # add subtotals if they are found in include
     if ("subtotals" %in% include) {
-        subtots <- inserts[is.Subtotals(inserts)]
+        subtots <- inserts[are.Subtotals(inserts)]
         new_inserts <- c(new_inserts, subtots)
     }
 
     # add subtotals if they are in include
     if ("headings" %in% include) {
-        new_inserts <- c(new_inserts, inserts[is.Headings(inserts)])
+        new_inserts <- c(new_inserts, inserts[are.Headings(inserts)])
     }
 
     # add non-subtotal insertions we must check that inserts are not subtotals
     # or headings
     if ("other_insertions" %in% include) {
-        nonsubtots <- inserts[!is.Subtotals(inserts) &
-                                  !is.Headings(inserts)]
+        nonsubtots <- inserts[!are.Subtotals(inserts) &
+                                  !are.Headings(inserts)]
         new_inserts <- c(new_inserts, nonsubtots)
     }
 

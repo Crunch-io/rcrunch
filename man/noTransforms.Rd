@@ -2,7 +2,7 @@
 % Please edit documentation in R/cube-transforms.R
 \name{noTransforms}
 \alias{noTransforms}
-\title{Remove transformations from a cube}
+\title{Remove transformations from a CrunchCube}
 \usage{
 noTransforms(cube)
 }
@@ -10,18 +10,37 @@ noTransforms(cube)
 \item{cube}{a CrunchCube}
 }
 \value{
-the cube with no transformations
+the CrunchCube with no transformations
 }
 \description{
-This is useful if you don't want to see or use any transformations like Subtotals and Headings
+Remove transformations from a CrunchCube
 }
+\section{Removing transforms}{
+
+\code{noTransforms()} is useful if you don't want to see or use any transformations like
+Subtotals and Headings. This action only applies to the CrunchCube object in
+R: it doesn't actually change the variables on Crunch servers or the query
+that generated the CrunchCube.
+}
+
 \examples{
 \dontrun{
+# A CrunchCube with a heading and subtotals
+crtabs(~opinion, ds)
+#               All opinions   
+#             Strongly Agree 23
+#             Somewhat Agree 24
+#                      Agree 47
+# Neither Agree nor Disagree 18
+#          Somewhat Disagree 16
+#          Strongly Disagree 19
+#                   Disagree 35
+
 noTransforms(crtabs(~opinion, ds))
 #             Strongly Agree             Somewhat Agree Neither Agree nor Disagree 
 #                         23                         24                         18 
-#          Strongly Disagree          Somewhat Disagree 
-#                         19                         16 
+#          Somewhat Disagree          Strongly Disagree 
+#                         16                         19 
 }
 
 }
