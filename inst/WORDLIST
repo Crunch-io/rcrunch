@@ -1,3 +1,5 @@
+AbstractCategories
+AbstractCategory
 BatchCatalog
 CategoricalVariable
 CategoricalVariables
@@ -102,6 +104,7 @@ crosstabbing
 crosstabulation
 crunchBox
 csv
+customizations
 darkgreen
 datetime
 deserialization
@@ -130,6 +133,7 @@ httr
 i
 iframe
 imiss
+impl
 indices
 ing
 io
@@ -142,13 +146,16 @@ modeling
 modifyWeightVariables
 multitable
 na
+nd
 newDataset
 newDatasetFromFile
 pid
 pipelining
 preemptively
+programmatically
 pw
 recode
+recurse
 recurses
 rmarkdown
 sav
@@ -161,6 +168,8 @@ spss
 st
 subclasses
 subdomain
+subtyped
+subtypes
 subvariable
 subvariables
 symlink
@@ -174,6 +183,7 @@ ungrouped
 unhidden
 unhide
 unshare
+untransformed
 varlabels
 ve
 vectorized

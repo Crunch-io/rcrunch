@@ -113,6 +113,14 @@ reference:
   - newMultitable
   - table
   - 'as.vector,CrunchExpr-method'
+- title: Data presentation 
+  contents:
+  - Subtotal-class
+  - 'subtotalArray,CrunchCube-method'
+  - noTransforms
+  - showTransforms
+  - Insertions-class
+  - Transforms-class
 - title: Export
   contents:
   - crunchBox
@@ -226,5 +234,7 @@ navbar:
          href: articles/export.html
       -  text: Crunch Internals
          href: articles/crunch-internals.html
+      -  text: Abstract Categories
+         href: articles/abstract-categories.html
     - text: News
       href: news/
