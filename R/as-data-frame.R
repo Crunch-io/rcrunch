@@ -16,10 +16,10 @@
 #' @param optional part of as.data.frame signature. Ignored.
 #' @param force logical: actually coerce the dataset to `data.frame`, or
 #' leave the columns as unevaluated promises. Default is `FALSE`.
-#' @param row.order vector of indices. Which, and their order, of the rows of 
-#'  the dataset should be presented as (default: `NULL`). If `NULL`, then the 
+#' @param row.order vector of indices. Which, and their order, of the rows of
+#'  the dataset should be presented as (default: `NULL`). If `NULL`, then the
 #'  Crunch Dataset order will be used.
-#' @param categorical.mode what mode should categoricals be pulled as? One of 
+#' @param categorical.mode what mode should categoricals be pulled as? One of
 #' factor, numeric, id (default: factor)
 #' @param include.hidden should hidden variables be included? (default: `FALSE`)
 #' @param ... additional arguments passed to `as.data.frame` (default method).
@@ -58,9 +58,9 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
     # TODO: something intelligent with modes
     out <- lapply(var_names, function(var) {
         values <- x[[var]]
-        
-        # Flatten all array variables, using only the subvariable name. We need 
-        # to create a list layer for non-dataframe values so that we can unlist 
+
+        # Flatten all array variables, using only the subvariable name. We need
+        # to create a list layer for non-dataframe values so that we can unlist
         # them later.
         if (is.data.frame(values)) {
             values <- as.list(values)
@@ -150,16 +150,12 @@ setMethod("head", "CrunchDataset", function (x, n=6L, ...) {
 })
 
 setMethod("head", "CrunchDataFrame", function (x, n=6L, ...) {
-    x$.crunchDataset <- x$.crunchDataset[head(seq_len(nrow(x)), n),]
-    as.data.frame(x)
+    ds <- attr(x, "crunchDataset")
+    return(as.data.frame(ds[head(seq_len(nrow(x)), n),], force = TRUE))
 })
 
 setMethod("head", "CrunchVariable", function (x, n=6L, ...) {
-    as.vector(x[head(seq_len(length(x)), n)], ...)  ## Does variable have length?
-})
-
-setMethod("head", "CrunchExpr", function (x, n=6L, ...) {
-    as.vector(x[head(seq_len(length(x)), n)], ...)  ## Does expr have length?
+    as.vector(x[head(seq_len(length(x)), n)], ...)
 })
 
 setMethod("tail", "CrunchDataset", function (x, n=6L, ...) {
@@ -167,13 +163,10 @@ setMethod("tail", "CrunchDataset", function (x, n=6L, ...) {
 })
 
 setMethod("tail", "CrunchDataFrame", function (x, n=6L, ...) {
-    as.data.frame(x[tail(seq_len(nrow(x)), n),], force=TRUE)
+    ds <- attr(x, "crunchDataset")
+    return(as.data.frame(ds[tail(seq_len(nrow(x)), n),], force = TRUE))
 })
 
 setMethod("tail", "CrunchVariable", function (x, n=6L, ...) {
-    as.vector(x[tail(seq_len(length(x)), n)], ...)  ## Does variable have length?
-})
-
-setMethod("tail", "CrunchExpr", function (x, n=6L, ...) {
-    as.vector(x[tail(seq_len(length(x)), n)], ...)  ## Does expr have length?
+    as.vector(x[tail(seq_len(length(x)), n)], ...)
 })

@@ -69,6 +69,14 @@ setMethod("digits<-", "CrunchVariable", function (x, value) {
     halt("digit specifications can only be set for numeric variables")
 })
 
+#' @rdname length
+#' @export
+setMethod("length", "CrunchVariable", function (x) {
+    ds <- loadDataset(datasetReference(x))
+    return(nrow(ds))
+})
+
+
 #' Get and set Categories on Variables
 #'
 #' @param x a Variable

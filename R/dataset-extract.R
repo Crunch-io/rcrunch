@@ -135,13 +135,13 @@ setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "ANY"), function (x, i, j
 #' @rdname dataset-extract
 #' @export
 setMethod("[", c("CrunchDataset", "numeric", "missing"), function (x, i, j, ..., drop=FALSE) {
-    filt <- activeFilter(x)
-    if(!is.null(filt)){
-        filt_lgl <- as.vector()
+        filt <- activeFilter(x)
+    if (!is.null(filt)) {
+        filt_lgl <- as.vector(filt)
         unfiltered <- x
         activeFilter(unfiltered) <- NULL
-        out <- unfiltered[seq_len(nrow(unfiltered)) %in% which(f_lgl)[i], ]
-        activeFilter(out) <- activeFilter(x) & activeFilter(out)
+        out <- unfiltered[seq_len(nrow(unfiltered)) %in% which(filt_lgl)[i], ]
+        activeFilter(out) <- filt & activeFilter(out)
     } else {
         out <- x[seq_len(nrow(x)) %in% i, ]
     }
