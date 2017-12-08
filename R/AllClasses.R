@@ -309,6 +309,10 @@ Insertions <- GenericConstructor("Insertions")
 #' @export
 setClass("Insertion", contains="AbstractCategory")
 
+# Make a constructor with a user-facing and package internal versions instead of 
+# simply setMethod("initialize", "Insertions") so that the user-facing version
+# preforms validation, but the internal version does not. This is needed for 
+# making heterogenous insertions that include classes Subtotal and Heading.
 #' @rdname Insertions
 #' @export
 Insertion <- function (...) {

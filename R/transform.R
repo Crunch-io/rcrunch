@@ -40,17 +40,26 @@ NULL
 getTransforms <- function (x) {
     var_entity <- entity(x)
     trans <- var_entity@body$view$transform
-
     if (is.null(trans) || length(trans) == 0) {
         return(NULL)
     }
 
-    # get the insertions
-    inserts <- Insertions(data=trans$insertions)
-    # subtype insertions so that Subtotal, Heading, etc. are their rightful selves
-    inserts <- subtypeInsertions(inserts)
+    if (is.null(trans$insertions) || length(trans$insertions) == 0) {
+        inserts <- NULL
+    } else {
+        inserts <- Insertions(data=trans$insertions)
+        # subtype insertions so that Subtotal, Heading, etc. are their rightful 
+        # selves
+        inserts <- subtypeInsertions(inserts)
+    }
     
-    trans_out <- Transforms(insertions = Insertions(data=inserts),
+    # if insertions are null return NULL
+    # TODO: when other transforms are implemented, this should check those too.
+    if (is.null(inserts)) {
+        return(NULL)
+    }
+    
+    trans_out <- Transforms(insertions = inserts,
                             categories = NULL,
                             elements = NULL)
     return(trans_out)
