@@ -115,6 +115,46 @@ test_that("categorical arrays with transforms don't error and display cube cells
                   "    CA\nCA    A  B\nmr_1  1  2\nmr_2  2  1\nmr_3  2  1")
 })
 
+test_that("can set transforms on a cube", {
+    transforms(pet_feelings) <- NULL
+    expect_null(transforms(pet_feelings))
+    # transforms(pet_feelings) <- Heading(name = "Fabulous new header", after = 0)
+    # transforms(pet_feelings) <- Subtotal(name = "Fabulous new subtotal",
+    #                                      after = 4,
+    #                                      categories = c("somewhat happy", 
+    #                                                     "neutral",
+    #                                                     "somewhat unhappy"))
+    transforms(pet_feelings) <- list("feelings" = Transforms(
+        insertions = Insertions(
+            Heading(name = "Fabulous new header", after = 0),
+            Subtotal(name = "moderately happy",
+                     after = "somewhat unhappy", 
+                     categories = c("somewhat happy", "neutral",
+                                    "somewhat unhappy"))
+        )))
+
+    all <- array(c(NA, 9, 12, 12, 10, 34, 11,
+                   NA, 5, 12, 7, 10, 29, 12),
+                 dim = c(7, 2),
+                 dimnames = list("feelings" =
+                                     c("Fabulous new header", "extremely happy",
+                                       "somewhat happy", "neutral",
+                                       "somewhat unhappy", "moderately happy",
+                                       "extremely unhappy"),
+                                 "animals" = c("cats", "dogs")))
+    expect_equivalent(applyTransforms(pet_feelings), all)
+    
+    expect_error(
+        transforms(pet_feelings) <- list("not in the var" = Transforms(
+            insertions = Insertions(
+                Heading(name = "Fabulous new header", after = 0),
+                Subtotal(name = "subtotal", after = 2, categories = c(1, 2))
+            ))),
+        paste0("The names of the transforms supplied to not match the ",
+               "dimension names of the cube.")
+    )
+})
+
 test_that("margin.table works with a simple cube and row transforms", {
     feelings_margin <- array(c(14, 24, 38, 19, 20, 23, 43),
                      dimnames = list("feelings" = c("extremely happy", 

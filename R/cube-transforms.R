@@ -188,6 +188,41 @@ setMethod("transforms", "VariableCatalog", function (x) {
 
 #' @rdname Transforms
 #' @export
+setMethod("transforms<-", c("CrunchCube", "list"), function (x, value) {
+    dims <- dimensions(x)
+    dimnames <- names(dims)
+    
+    # check if the names of the dimensions and the names of the transforms line up
+    if (any(!names(value) %in% dimnames)) {
+        halt("The names of the transforms supplied to not match the dimension ",
+             "names of the cube.")
+    }
+
+    
+    # replace the transforms for each dimension
+    dims <- CubeDims(lapply(dimnames, function (dim_name) {
+        dim_out <- dims[[dim_name]]
+        if (dim_name %in% names(value)) {
+            # grab the proper insertions, make sure they are proper Insertions
+            # and then add them to the dimensions to return.
+            one_trans <- value[[dim_name]]
+            one_trans$insertions <- Insertions(
+                data = lapply(one_trans$insertions, makeInsertion,
+                              var_categories = categories(variables(x)[[dim_name]]))
+            )
+            dim_out$references$view$transform <- jsonprep(one_trans)
+        }
+        return(dim_out)
+    }))
+    
+    # rename, replace the dimensions and return the cube
+    names(dims) <- dimnames
+    dimensions(x) <- dims
+    return(invisible(x))
+})
+
+#' @rdname Transforms
+#' @export
 setMethod("transforms<-", c("CrunchCube", "NULL"), function (x, value) {
     dims <- dimensions(x)
     dimnames <- names(dims)
