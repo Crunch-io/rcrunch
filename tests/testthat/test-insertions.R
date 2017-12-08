@@ -54,6 +54,21 @@ test_that("Insertion and insertions show methods", {
                                         args=c("1 and 2", "9 and 10"))))
 })
 
+test_that("Insertion and insertions show methods with hetrogeneous insertions", {
+    insrts <- Insertions(Subtotal(name = "Cats A+B", after = "B",
+                                  categories = c("A", "B")),
+                         Heading(name = "The end", after = "D"))
+    
+    expect_output(insrts,
+                  get_output(data.frame(
+                     anchor = c("B", "D"),
+                     name = c("Cats A+B", "The end"),
+                     func = c("subtotal", NA),
+                     # NA is a string because we serialPaste them
+                     args = c("A and B", "NA"))),
+                  fixed = TRUE)
+})
+
 test_that("args returns NA when not found", {
     expect_equal(args(Insertion(anchor='foo', name='bar')), NA)
 })
