@@ -21,6 +21,7 @@
 * `is.selected()` is now vectorized to work with Categories, as `is.na()` has always been. You can also now assign into the function (#123)
 * `addSubvariable()` now accepts variable definitions directly (#72)
 * `makeCaseVariable()` has better errors when a user doesn't name all of their case definitions (#158).
+* The size limit on `as.data.frame()` when `force = TRUE` has been removed (#150)
 
 ### crunch 1.18.4
 * All catalog objects now have an `as.data.frame()` method.

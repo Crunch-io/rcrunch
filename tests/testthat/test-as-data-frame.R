@@ -123,7 +123,7 @@ with_mock_crunch({
             length(coerceVariable(ds$mymrset, df, cdf)),
             length(subvariables(ds$mymrset))
             )
-        expect_identical(length(coerceVariable(ds$location, df, cdf)), 1)
+        expect_equal(length(coerceVariable(ds$location, df, cdf)), 1)
 
         expect_is(coerceVariable(ds$mymrset, df, cdf)[[1]], "factor")
         expect_is(coerceVariable(ds$location, df, cdf)[[1]], "factor")
