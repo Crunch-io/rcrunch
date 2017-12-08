@@ -198,12 +198,11 @@ setMethod("transforms<-", c("CrunchCube", "list"), function (x, value) {
              "names of the cube.")
     }
 
-    
     # replace the transforms for each dimension
     dims <- CubeDims(lapply(dimnames, function (dim_name) {
         dim_out <- dims[[dim_name]]
         if (dim_name %in% names(value)) {
-            # grab the proper insertions, make sure they are proper Insertions
+            # grab the matching insertions, make sure they are proper Insertions
             # and then add them to the dimensions to return.
             one_trans <- value[[dim_name]]
             one_trans$insertions <- Insertions(
