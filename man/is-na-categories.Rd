@@ -5,12 +5,16 @@
 \alias{is-na-categories}
 \alias{is.na,Categories-method}
 \alias{is-na-categories}
+\alias{is.na,Categories-method}
+\alias{is-na-categories}
 \alias{is.na<-,Categories,character-method}
 \alias{is.na<-,Categories,logical-method}
 \alias{is.na,Category-method}
 \alias{is.na<-,Category,logical-method}
 \title{is.na for Categories}
 \usage{
+\S4method{is.na}{Categories}(x)
+
 \S4method{is.na}{Categories}(x)
 
 \S4method{is.na}{Categories,character}(x) <- value

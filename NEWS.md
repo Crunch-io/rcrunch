@@ -1,13 +1,26 @@
-## crunch 1.18.5 (under development)
+## crunch 1.19.1
+* Improved efficiency when loading a dataset from URL.
+* Subtotals and headings on categorical variables and CrunchCubes. Use `subtotals(variable)` to see subtotals set for a variable. Subtotals can be set with `subtotals(variable) <- Subtotal(name = 'subtotal', categories = c(1, 2))`. Subtotals and headings are displayed for rows in CrunchCubes when they are set. See `?subtotals` for more information. 
+* `refresh()` for Datasets is now more efficient
+* fixed a bug where CrunchCubes with categorical variables that had categories "Selected", "Not selected", and "No data" might not display correctly. 
+
+## crunch 1.19.0
+
+### New functions
+
 * Variable groups (folders) can now be referenced by "path": either a vector of nested folder names (as in `ordering(ds)[[c("Top folder", "Nested folder")]]`) or a single string with nested folders separated by a delimiter (as in `ordering(ds)[["Top folder/Nested folder"]]`). "/" is the default path delimiter, and this is configurable via `options(crunch.delimiter)`. If you have folders that actually contain "/" in the folder name, this may be a breaking change. If so, set `options(crunch.delimiter="|")` or some other string so that folder names are not incorrectly interpreted as paths.
 * Introduce new `mv()` and `mkdir()` functions for creating variable folders and moving variables into them. These take a Dataset as their argument and can be chained together for convenience/readability.
 * Other helper functions `folder()` and `folder<-` to locate a variable in the folder hierarchy and to move it to a new folder. `folder(ds$var) <- "New folder/subfolder"` is equivalent to `ds <- mv(ds, "var", c("New folder", "subfolder"))`.
-* Create new variables that take on different values when specific conditions are met using `conditionalTransform()` (#64)
+* Create new variables that take on different values when specific conditions are met using `conditionalTransform()` (#64, #153)
+* `collapseCategories()` allows you to combine categories in place without creating a new variable
+
+### Enhancements and fixes
+
 * Deep copying variables with `copy()` has been made more efficient
 * `CrunchDataFrames` have been improved to act more `data.frame`-like. You can now access and overwrite values with standard `data.frame` methods like `crdf$variable1` or `crdf[,"variable1"]` and `crdf$variable1 <- 1` or `crdf[,"variable1"] <- 1`. `CrunchDataFrames` now also support adding arbitrary columns, although it should be noted that these columns are not stored on the Crunch server, so if you want to keep that data outside of your current R session, you should send it back to your Dataset as a new variable.
-* `is.selected()` is now vectorized to work with Categories, as `is.na()` has always been. You can also now assign into the function. (#123)
+* `is.selected()` is now vectorized to work with Categories, as `is.na()` has always been. You can also now assign into the function (#123)
 * `addSubvariable()` now accepts variable definitions directly (#72)
-* `collapseCategories()` allows you to combine categories in place without creating a new variable
+* `makeCaseVariable()` has better errors when a user doesn't name all of their case definitions (#158).
 
 ### crunch 1.18.4
 * All catalog objects now have an `as.data.frame()` method.

@@ -79,11 +79,17 @@ elementIsAnyOrNone <- function (el) {
 #' object.
 #'
 #' @param x a CrunchCube or its CubeDims component.
+#' @param i used with `[` to extract a dimension
+#' @param j not used
+#' @param ... not used
+#' @param drop not used
+#' @param value for `dimensions<-` a `CubeDims` object to overwrite a CrunchCube 
+#' dimensions
 #'
 #' @return Generally, the same shape of result that each of these functions
 #' return when applied to an `array` object.
 #' @name cube-methods
-#' @aliases cube-methods dimensions measures
+#' @aliases cube-methods dimensions dimensions<- measures
 #' @seealso [`cube-computing`] [`base::array`]
 NULL
 
@@ -114,17 +120,36 @@ setMethod("dimensions", "CrunchCube", function (x) {
     return(dims[!selecteds])
 })
 
-#' @rdname catalog-extract
+#' @rdname cube-methods
+#' @export
+setMethod("dimensions<-", c("CrunchCube", "CubeDims"), function (x, value) {
+    dims <- x@dims
+    selecteds <- is.selectedDimension(dims)
+    x@dims[!selecteds] <- value
+    return(invisible(x))
+})
+
+#' @rdname cube-methods
 #' @export
 setMethod("[", "CubeDims", function (x, i, ...) {
     return(CubeDims(x@.Data[i], names=x@names[i]))
 })
 
 is.selectedDimension <- function (dims) {
-    is.it <- function (x, dim) {
-        x$type == "categorical" && length(dim$name) == 3 && dim$name[1] == "Selected"
+    is.it <- function (x, dim, MRaliases) {
+        x$alias %in% MRaliases &&
+            x$type == "categorical" &&
+            length(dim$name) == 3 &&
+            dim$name[1] == "Selected"
     }
-    selecteds <- mapply(is.it, x=index(variables(dims)), dim=dims@.Data)
+    vars <- variables(dims)
+    # We only need to check if the categories are the magical Selected
+    # categories if there is an MR somewhere with the same alias
+    MRaliases <- aliases(vars)[types(vars) == "multiple_response"]
+
+    # determine which dimensions are selected MR dimensions
+    selecteds <- mapply(is.it, x=index(vars), dim=dims@.Data,
+                        MoreArgs=list(MRaliases=MRaliases))
     names(selecteds) <- dims@names
     return(selecteds)
 }

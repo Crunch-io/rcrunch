@@ -1,0 +1,119 @@
+{
+    "element": "shoji:view",
+    "self": "https://app.crunch.io/api/datasets/1/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22ht",
+    "value": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": []
+                }
+            },
+            "dimensions": [
+                {
+                    "variable": "https://app.crunch.io/api/datasets/1/variables/location/"
+                }
+            ],
+            "weight": null
+        },
+        "query_environment": {
+            "filter": []
+        },
+        "result": {
+            "dimensions": [{
+                    "derived": false,
+                    "references": {
+                        "alias": "v4",
+                        "name": "v4",
+                        "view": {
+                            "show_counts": false,
+                            "show_numeric_values": false,
+                            "transform": {
+                                "insertions": [
+                                    {
+                                        "function": {
+                                            "combine": [
+                                                1,
+                                                2
+                                            ]
+                                        },
+                                        "anchor": 6,
+                                        "name": "B, C"
+                                    },
+                                    {
+                                        "function": {
+                                            "combine": 1
+                                        },
+                                        "anchor": 7,
+                                        "name": "B alone"
+                                    },
+                                    {
+                                        "function": {
+                                            "combine": 2
+                                        },
+                                        "anchor": 7,
+                                        "name": "C alone"
+                                    }
+                                ]
+                            },
+                            "include_missing": false,
+                            "column_width": null
+                        }
+                    },
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "id": 1,
+                                "name": "London",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 2,
+                                "id": 2,
+                                "name": "Scotland",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": null,
+                                "id": -1,
+                                "name": "No Data",
+                                "missing": true
+                            }
+                        ]
+                    }
+                }
+            ],
+            "missing": 0,
+            "measures": {
+                "count": {
+                    "data": [
+                        7,
+                        10
+                    ],
+                    "n_missing": 8,
+                    "metadata": {
+                        "references": {},
+                        "derived": true,
+                        "type": {
+                            "integer": true,
+                            "missing_rules": {},
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "class": "numeric"
+                        }
+                    }
+                }
+            },
+            "element": "crunch:cube",
+            "counts": [
+                7,
+                10
+            ],
+            "n": 25
+        }
+    }
+}

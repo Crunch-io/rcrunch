@@ -117,28 +117,33 @@ updateDatasetList <- function () {
 #' }
 #' @export
 loadDataset <- function (dataset, kind=c("active", "all", "archived"), project=NULL, refresh=FALSE) {
-    if (!inherits(dataset, "DatasetTuple")) {
-        dscat <- selectDatasetCatalog(kind, project, refresh)
-        if (is.character(dataset) && startsWith(dataset, "http") && !grepl("/api/", dataset)) {
+    if (is.character(dataset) && startsWith(dataset, "http")) {
+        ## Check to see if this is a URL, in which case, GET it
+        if (!grepl("/api/", dataset)) {
             ## It's a web app URL, probably. Turn it into an API URL
             dataset <- webToAPIURL(dataset)
         }
+        return(loadDatasetFromURL(dataset))
+    } else if (!inherits(dataset, "DatasetTuple")) {
+        dscat <- selectDatasetCatalog(kind, project, refresh)
         dsname <- dataset
         dataset <- dscat[[dataset]]
         if (is.null(dataset)) {
-            ## Check to see if this is a URL, in which case, GET it
-            if (startsWith(dsname, "http")) {
-                dataset <- CrunchDataset(crGET(dsname))
-                tuple(dataset) <- DatasetTuple(entity_url=self(dataset),
-                    body=dataset@body,
-                    index_url=shojiURL(dataset, "catalogs", "parent"))
-                return(dataset)
-            }
             halt(dQuote(dsname), " not found")
         }
     }
     return(entity(dataset))
 }
+
+loadDatasetFromURL <- function (url) {
+    ## Load dataset without touching a dataset catalog
+    dataset <- CrunchDataset(crGET(url))
+    tuple(dataset) <- DatasetTuple(entity_url=self(dataset),
+        body=dataset@body,
+        index_url=shojiURL(dataset, "catalogs", "parent"))
+    return(dataset)
+}
+
 
 #' Delete a dataset from the dataset list
 #'

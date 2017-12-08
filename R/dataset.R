@@ -192,7 +192,7 @@ setMethod("tuple<-", "CrunchDataset", function (x, value) {
 #' the version on the server. For instance, someone else may have
 #' modified the dataset you're working on, or maybe
 #' you have modified a variable outside of the context of its dataset.
-#' refresh() allows you to get back in sync.
+#' `refresh()` allows you to get back in sync.
 #'
 #' @param x pretty much any Crunch object
 #' @return a new version of `x`
@@ -204,15 +204,18 @@ NULL
 #' @rdname refresh
 #' @export
 setMethod("refresh", "CrunchDataset", function (x) {
-    ## Because dataset may have changed catalogs, get the entity url,
-    ## check for its parent catalog, get that, and then assemble.
     url <- self(x)
     dropCache(url)
-    ent <- crGET(self(x))
-    catalog_url <- ent$catalogs$parent %||% tuple(x)@index_url ## %||% for backwards comp.
-    dropCache(catalog_url)
-    catalog <- DatasetCatalog(crGET(catalog_url))
-    out <- as.dataset(ent, tuple=catalog[[url]])
+    dropOnly(shojiURL(x, "catalogs", "parent"))
+    out <- loadDatasetFromURL(url)
+    ## Because dataset may have changed catalogs, check this cache too
+    dropOnly(shojiURL(out, "catalogs", "parent"))
+
+    ## So that they test correctly, prune entity body attributes from the tuple
+    old_tuple <- tuple(x)@body
+    new_tuple <- tuple(out)@body
+    tuple(out)@body <- modifyList(old_tuple,
+        new_tuple[intersect(names(new_tuple), names(old_tuple))])
 
     ## Keep settings in sync
     duplicates(allVariables(out)) <- duplicates(allVariables(x))

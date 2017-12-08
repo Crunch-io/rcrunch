@@ -1,9 +1,9 @@
 context("Basic cube methods")
 
-v7 <- v7_ifany <- v7_always <- loadCube("cubes/univariate-categorical.json")
+v7 <- v7_ifany <- v7_always <- loadCube(test_path("cubes/univariate-categorical.json"))
 v7_ifany@useNA <- "ifany"
 v7_always@useNA <- "always"
-v4_x_v7 <- v4_x_v7_ifany <- v4_x_v7_always <- loadCube("cubes/cat-x-cat.json")
+v4_x_v7 <- v4_x_v7_ifany <- v4_x_v7_always <- loadCube(test_path("cubes/cat-x-cat.json"))
 v4_x_v7_ifany@useNA <- "ifany"
 v4_x_v7_always@useNA <- "always"
 
@@ -59,6 +59,19 @@ test_that("Cube print method", {
               "v4  C D E",
               "  B 5 3 2",
               "  C 5 2 3", sep="\n"))
+})
+
+selected_subvar <- loadCube(test_path("cubes/univariate-categorical-like-selected.json"))
+
+test_that("Categorical with categories Selected, Not selected", {
+    # when detecting if a dimension is selected, we look at the categories. This
+    # breaks if one tries to display a categorical that just so happens to have
+    # Selected and Not selected as categories
+    expect_output(selected_subvar,
+                  paste("selected_like",
+                        "    Selected Not selected ",
+                        "          10            5 ",
+                        sep="\n"))
 })
 
 with_mock_crunch({

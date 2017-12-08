@@ -166,17 +166,18 @@ ensureValidCase <- function (case) {
     defaults <- list(id=NULL, name=NULL, expression=NULL,
                      numeric_value=NULL, missing=FALSE)
     wrong_case_names <- setdiff(names(case), names(defaults))
-    if (length(wrong_case_names) > 0) {
-        halt("each case must have at most an id, name, expression, ",
-             "numeric_value, and missing element. The errant arguments were: ",
-             serialPaste(wrong_case_names))
-    } else if (is.null(wrong_case_names)) {
+    if (is.null(wrong_case_names) || "" %in% names(case)) {
         # if no names are found, some thing is wrong with the format of cases.
         # one possibility is that someone is trying to embed the cases too
         # many times, or that else_cases has more than one case.
-        halt("could not find names for a case; this might be because the ",
-             "cases were embedded in too many lists. The first offending ",
-             "case is:\n", case)
+        halt("could not find correct names for a case; this might be because ",
+             "the cases were embedded in too many lists or because not all ",
+             "the elements of the cases have names. The first offending case ",
+             "is:\n", case)
+    } else if (length(wrong_case_names) > 0) {
+        halt("each case must have at most an id, name, expression, ",
+             "numeric_value, and missing element. The errant arguments were: ",
+             serialPaste(wrong_case_names))
     }
     # set defaults
     case <- modifyList(defaults, case)

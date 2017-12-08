@@ -48,7 +48,7 @@ with_mock_crunch({
     test_that("expropriateUser", {
         expect_error(expropriateUser("fake.user@example.com",
                                      "william.user@example.io"), "Must confirm")
-        
+
         expect_POST(
             with_consent({
                 expropriateUser("fake.user@example.com",
@@ -98,10 +98,4 @@ with_test_authentication({
         expect_true(user$account_permissions$create_datasets)
         expect_true(user$account_permissions$alter_users)
     })
-})
-
-test_that("User cannot be fetched if logged out", {
-    logout()
-    expect_error(me(),
-        "You must authenticate before making this request")
 })
