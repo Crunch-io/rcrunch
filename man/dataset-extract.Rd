@@ -12,6 +12,7 @@
 \alias{[,CrunchDataset,CrunchLogicalExpr,missing-method}
 \alias{[,CrunchDataset,CrunchLogicalExpr,ANY-method}
 \alias{[,CrunchDataset,numeric,missing-method}
+\alias{harmonizeFilters}
 \alias{[,CrunchDataset,numeric,ANY-method}
 \alias{subset,CrunchDataset-method}
 \alias{[[,CrunchDataset,ANY-method}
@@ -37,6 +38,8 @@
 \S4method{[}{CrunchDataset,CrunchLogicalExpr,ANY}(x, i, j, ..., drop = FALSE)
 
 \S4method{[}{CrunchDataset,numeric,missing}(x, i, j, ..., drop = FALSE)
+
+harmonizeFilters(x, filt, num)
 
 \S4method{[}{CrunchDataset,numeric,ANY}(x, i, j, ..., drop = FALSE)
 
@@ -69,11 +72,27 @@ names); if numeric or logical, extracts variables accordingly.
 \item{drop}{logical: automatically simplify a 1-column Dataset to a Variable?
 Default is FALSE, and the TRUE option is in fact not implemented.}
 
+\item{filt}{the object's filter}
+
 \item{name}{columnar extraction for \code{$}}
+
+\item{x}{a filtered Dataset or vector}
+
+\item{i}{A numeric vector to harmonize with that filter}
 }
 \value{
 \code{[} yields a Dataset; \code{[[} and \code{$} return a Variable
+
+a properly filtered dataset or vector
 }
 \description{
 Subset datasets and extract variables
+
+Sometimes you want to subset a filtered object using a numeric vector. In order
+to do this on a crunch object we need to first get the rows which match the filter
+and then apply the numeric vector. For instance if you have a dataset filter such
+that \code{ds_filt <- ds[ds$var == 5, ]} then \code{ds_filt[1:5]} should return the first
+five rows where \code{ds$var == 5}. This function takes a filtered object and returns
+the correctly subsetted filtered objet.
 }
+\keyword{internal}

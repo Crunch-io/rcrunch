@@ -73,6 +73,7 @@ setMethod("digits<-", "CrunchVariable", function (x, value) {
 #' @export
 setMethod("length", "CrunchVariable", function (x) {
     ds <- loadDataset(datasetReference(x))
+    activeFilter(ds) <- activeFilter(x)
     return(nrow(ds))
 })
 
@@ -234,9 +235,12 @@ setMethod("[", c("CrunchVariable", "CrunchExpr"), .updateActiveFilter)
 #' @rdname variable-extract
 #' @export
 setMethod("[", c("CrunchVariable", "numeric"), function (x, i, ...) {
-    i <- CrunchLogicalExpr(dataset_url=datasetReference(x),
-        expression=.dispatchFilter(i))
-    return(x[i])
+    filt <- activeFilter(x)
+    if (!is.null(filt)) {
+        return(harmonizeFilters(x, filt, i))
+    } else {
+        return(x[seq_len(length(x)) %in% i])
+    }
 })
 #' @rdname variable-extract
 #' @export
