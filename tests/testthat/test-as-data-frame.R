@@ -76,6 +76,12 @@ with_mock_crunch({
         expect_identical(evalq(gender, as.data.frame(ds)),
             as.vector(ds$gender))
     })
+
+    test_that("as.data.frame(force = TRUE) generates a post call", {
+        expect_POST(as.data.frame(ds, force = TRUE),
+            'https://app.crunch.io/api/datasets/1/export/csv/',
+            '{"filter":null,"options":{"use_category_ids":false}}')
+    })
     csv_df <- read.csv("dataset-fixtures/test_ds.csv", stringsAsFactors = FALSE, colClasses = "character")
     test_that("csvToDataFrame produces the correct data frame", {
         expected <- readRDS("dataset-fixtures/test_ds.rds")
@@ -111,6 +117,14 @@ with_mock_crunch({
         df[] <- lapply(df, as.character)
         cdf <- as.data.frame(ds)
         df <- structure(df, class = "data.frame", row.names=c(NA, -nrow(ds)))
+        # When coerced, array variables return a list whose length is the same as
+        # the number of subvariables.
+        expect_identical(
+            length(coerceVariable(ds$mymrset, df, cdf)),
+            length(subvariables(ds$mymrset))
+            )
+        expect_identical(length(coerceVariable(ds$location, df, cdf)), 1)
+
         expect_is(coerceVariable(ds$mymrset, df, cdf)[[1]], "factor")
         expect_is(coerceVariable(ds$location, df, cdf)[[1]], "factor")
         expect_is(coerceVariable(ds$birthyr, df, cdf)[[1]], "numeric")

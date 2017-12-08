@@ -56,7 +56,7 @@ as.data.frame.CrunchDataFrame <- function (x,
     write.csv(ds, tmp, categorical = csv_mode)
     ds_out <- read.csv(tmp, stringsAsFactors = FALSE, colClasses = "character")
     unlink(tmp)
-    return(csvToDataFrame (ds_out, x))
+    return(csvToDataFrame(ds_out, x))
 }
 
 csvToDataFrame <- function(csv_df, cdf) {
