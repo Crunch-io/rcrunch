@@ -39,7 +39,7 @@
 
 \S4method{[}{CrunchDataset,numeric,missing}(x, i, j, ..., drop = FALSE)
 
-harmonizeFilters(x, filt, num)
+harmonizeFilters(x, filt, i)
 
 \S4method{[}{CrunchDataset,numeric,ANY}(x, i, j, ..., drop = FALSE)
 
