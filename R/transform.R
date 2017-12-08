@@ -14,12 +14,20 @@
 #' [Heading()][SubtotalsHeadings]) are the only type of transformations that are
 #' supported.
 #' 
-#' @section Setting transformations:
+#' @section Setting transformations on a variable:
 #' The `transforms(x) <- value` methods can be used to assign transformations 
-#' for a specific variable (this will not yet work on a CrunchCube). `value` 
+#' for a specific variable. `value` 
 #' must be a `Transforms` object. This allows you to set transformations on 
 #' categorical variables. These transformations will automatically show up in 
 #' any new CrunchCubes that contain this variable.
+#' 
+#' @section Setting transformations on a CrunchCube:
+#' The `transforms(x) <- value` methods can also be used to assign 
+#' transformations to a CrunchCube that has already been calculated. `value` 
+#' must be a named list of `Transforms` objects. The names of this list must 
+#' correspond to dimensions in the cube (those dimensions correspondences are 
+#' matched based on variable aliases). You don't have to provide an entry for
+#' each dimension, but any dimension you do provide will be overwritten fully.
 #' 
 #' @section Removing transformations:
 #' To remove transformations from a variable or CrunchCube, use 
@@ -34,7 +42,7 @@
 #' Transforms
 #' @param value For `[<-`, the replacement Transforms to insert
 #' @name Transforms
-#' @aliases transforms transforms<-
+#' @aliases transforms transforms<- 
 NULL
 
 getTransforms <- function (x) {
