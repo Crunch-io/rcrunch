@@ -102,7 +102,7 @@ test_that("applyTransforms with a cube that has transform but no insertions", {
 test_that("categorical arrays with transforms don't error and display cube cells", {
     # TODO: when column display is available, these should be replaced with 
     # proper expectations
-    cat_array_cube <- loadCube(test_path("./cubes/catarray-with-transforms.json"))
+    cat_array_cube <- loadCube("./cubes/catarray-with-transforms.json")
     
     all <- array(c(1, 2, 2, 2, 1, 1),
                  dim = c(3, 2),
