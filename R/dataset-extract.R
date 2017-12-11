@@ -135,6 +135,11 @@ setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "ANY"), function (x, i, j
 #' @rdname dataset-extract
 #' @export
 setMethod("[", c("CrunchDataset", "numeric", "missing"), function (x, i, j, ..., drop=FALSE) {
+    if (nargs() == 2L) {
+        ## x[i]. So subset the variables, list-wise
+        x@variables <- variables(x)[i]
+        return(x)
+    }
     filt <- activeFilter(x)
     if (!is.null(filt)) {
         return(harmonizeFilters(x, filt, i))
