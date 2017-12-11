@@ -101,6 +101,19 @@ test_that("prop.table(cell) for as_selected x cat", {
                 0.262843097025161,  0.27608279697761,
             dims=alldims[c("attitudes_recoded_klima_2", "pdl_gender")]))
 })
+test_that("Z scores for multiple response", {
+    expect_equal(rstandard(mr_x_cat_wt),
+        cubify(-13.182395959138121, 12.66492362237706,
+               6.4287938522781225, -6.573744520068897,
+               -9.869824194649016, 9.643285281046749,
+               -7.924650495764432, 7.778310108124912,
+               25.0140502980659, -28.84750562605764,
+               -1.5750837041986907, 1.5641704884687515,
+            dims=alldims[c("attitudes_recoded_klima_2", "pdl_gender")]))
+})
+test_that("Z scores for MR x MR", {
+    
+})
 
 test_that("as_selected_margins adds margins in the right cases", {
     selecteds <- c(FALSE, TRUE, FALSE)
