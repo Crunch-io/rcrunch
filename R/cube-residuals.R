@@ -30,17 +30,26 @@ standardizedMRResiduals <- function(cube, types){
 
 #' Calculate standardized residuals from a CrunchCube
 #'
-#' To get a z-score for the cells of a cube by comparing to the proportions on
-#' the row or column margins. When testing against row margins `z.table`
-#' compares each cell against the proportion for all columns in that row. When
-#' testing against column margins `z.table` compares each cell against the
-#' proportion for all rows in that  column.
+#' Standardized residuals, \code{(observed - expected) / sqrt(V)}, where \code{V} 
+#' is the residual cell variance (Agresti, 2007, section 2.4.5). Special care is taken
+#' for multiple-response variables which are in effect a series of separate tables where
+#' \sQuote{not selected} cells for each item are are hidden.
+#' 
+#' @param model A CrunchCube representing a contingency table
 #'
-#' @param table A CrunchCube to calculate z-scores for
-#'
-#' @return an array of z-scores for each cell
+#' @return an array of standardized residuals or Z-scores from the hypothesis being tested.
+#' The default method is that the joint distributions of (weighted) counts are equal to the
+#' marginal distributions of the table.
+#' 
+#' @seealso [stats::chisq.test]
+#' @references
+#' Agresti, A. (2007)
+#' \emph{An Introduction to Categorical Data Analysis, 2nd ed.},
+#' New York: John Wiley & Sons. Page 38.
 #' @importFrom stats chisq.test
-#' @export
+#' @name cube-residuals
+#' @aliases rstandard,CrunchCube-method cube-residuals
+#' @exportMethod rstandard
 setMethod('rstandard', 'CrunchCube', function(model){
     types <- vapply(dimensions(model), function(dim) dim$references$type, character(1))
     if(any(types == 'multiple_response')){
