@@ -65,6 +65,7 @@ Collate:
     'crunchbox.R'
     'cube-dims.R'
     'cube-query.R'
+    'cube-residuals.R'
     'cube-result.R'
     'cube-variables.R'
     'cut.R'
@@ -128,4 +129,3 @@ Collate:
     'versions.R'
     'weight.R'
     'zcl.R'
-    'zed-scores.R'
