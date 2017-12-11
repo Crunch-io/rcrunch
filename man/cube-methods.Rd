@@ -5,11 +5,14 @@
 \name{cube-methods}
 \alias{cube-methods}
 \alias{dimensions}
+\alias{dimensions<-}
 \alias{measures}
 \alias{dimnames,CubeDims-method}
 \alias{dim,CubeDims-method}
 \alias{is.na,CubeDims-method}
 \alias{dimensions,CrunchCube-method}
+\alias{dimensions<-,CrunchCube,CubeDims-method}
+\alias{[,CubeDims,ANY,ANY-method}
 \alias{dim,CrunchCube-method}
 \alias{dimnames,CrunchCube-method}
 \alias{variables,CubeDims-method}
@@ -29,6 +32,10 @@
 \S4method{is.na}{CubeDims}(x)
 
 \S4method{dimensions}{CrunchCube}(x)
+
+\S4method{dimensions}{CrunchCube,CubeDims}(x) <- value
+
+\S4method{[}{CubeDims,ANY,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{dim}{CrunchCube}(x)
 
@@ -52,6 +59,17 @@
 }
 \arguments{
 \item{x}{a CrunchCube or its CubeDims component.}
+
+\item{value}{for \code{dimensions<-} a \code{CubeDims} object to overwrite a CrunchCube
+dimensions}
+
+\item{i}{used with \code{[} to extract a dimension}
+
+\item{j}{not used}
+
+\item{...}{not used}
+
+\item{drop}{not used}
 }
 \value{
 Generally, the same shape of result that each of these functions

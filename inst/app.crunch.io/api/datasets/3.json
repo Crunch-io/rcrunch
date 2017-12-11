@@ -5,11 +5,14 @@
     "body": {
         "owner_id": "https://app.crunch.io/api/users/notme/",
         "id": "95c0b45fe0af492594863f818cb913d2",
+        "name": "ECON.sav",
+        "description": "",
         "streaming": "no"
     },
     "catalogs": {
         "variables": "https://app.crunch.io/api/datasets/3/variables/",
         "savepoints": "https://app.crunch.io/api/datasets/3/savepoints/",
+        "parent": "https://app.crunch.io/api/datasets/",
         "batches": "https://app.crunch.io/api/datasets/3/batches/",
         "filters": "https://app.crunch.io/api/datasets/3/filters/",
         "boxdata": "https://app.crunch.io/api/datasets/3/boxdata/",

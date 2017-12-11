@@ -1,6 +1,6 @@
 #' @rdname tojson-crunch
 #' @export
-setMethod("jsonprep", "Categories", function (x, ...) jsonprep(I(x@.Data)))
+setMethod("jsonprep", "AbstractCategories", function (x, ...) jsonprep(I(x@.Data)))
 
 #' @rdname tojson-crunch
 #' @export
