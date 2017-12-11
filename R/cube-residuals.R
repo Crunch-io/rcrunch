@@ -39,6 +39,7 @@ standardizedMRResiduals <- function(cube, types){
 #' @param table A CrunchCube to calculate z-scores for
 #'
 #' @return an array of z-scores for each cell
+#' @importFrom stats chisq.test
 #' @export
 setMethod('rstandard', 'CrunchCube', function(model){
     types <- vapply(dimensions(model), function(dim) dim$references$type, character(1))
