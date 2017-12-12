@@ -118,12 +118,6 @@ test_that("categorical arrays with transforms don't error and display cube cells
 test_that("can set transforms on a cube", {
     transforms(pet_feelings) <- NULL
     expect_null(transforms(pet_feelings))
-    # transforms(pet_feelings) <- Heading(name = "Fabulous new header", after = 0)
-    # transforms(pet_feelings) <- Subtotal(name = "Fabulous new subtotal",
-    #                                      after = 4,
-    #                                      categories = c("somewhat happy", 
-    #                                                     "neutral",
-    #                                                     "somewhat unhappy"))
     transforms(pet_feelings) <- list("feelings" = Transforms(
         insertions = Insertions(
             Heading(name = "Fabulous new header", after = 0),
@@ -150,8 +144,9 @@ test_that("can set transforms on a cube", {
                 Heading(name = "Fabulous new header", after = 0),
                 Subtotal(name = "subtotal", after = 2, categories = c(1, 2))
             ))),
-        paste0("The names of the transforms supplied to not match the ",
-               "dimension names of the cube.")
+        paste0("The names of the transforms supplied .*not in the var.* to not", 
+               " match the dimension names .*feelings.* and .*animals.* of the", 
+               " cube.")
     )
 })
 

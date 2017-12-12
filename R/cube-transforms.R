@@ -165,8 +165,9 @@ setMethod("transforms", "VariableCatalog", function (x) {
         return(NULL)
     }
     transes_out <- lapply(transes, function (i) {
-        # if insertions are null return NULL
         # TODO: when other transforms are implemented, this should check those too.
+
+        # if insertions are null return NULL
         if (is.null(i$insertions) || length(i$insertions) == 0) {
             return(NULL)
         }
@@ -193,9 +194,11 @@ setMethod("transforms<-", c("CrunchCube", "list"), function (x, value) {
     dimnames <- names(dims)
     
     # check if the names of the dimensions and the names of the transforms line up
-    if (any(!names(value) %in% dimnames)) {
-        halt("The names of the transforms supplied to not match the dimension ",
-             "names of the cube.")
+    if (any(!(names(value) %in% dimnames))) {
+        halt("The names of the transforms supplied (", 
+             serialPaste(dQuote(names(value)))
+             ,") to not match the dimension names (",
+             serialPaste(dQuote(dimnames)) ,") of the cube.")
     }
 
     # replace the transforms for each dimension

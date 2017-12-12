@@ -61,8 +61,9 @@ getTransforms <- function (x) {
         inserts <- subtypeInsertions(inserts)
     }
     
-    # if insertions are null return NULL
     # TODO: when other transforms are implemented, this should check those too.
+
+    # if insertions are null return NULL
     if (is.null(inserts)) {
         return(NULL)
     }
