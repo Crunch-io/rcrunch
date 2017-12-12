@@ -93,6 +93,6 @@ to do this on a crunch object we need to first get the rows which match the filt
 and then apply the numeric vector. For instance if you have a dataset filter such
 that \code{ds_filt <- ds[ds$var == 5, ]} then \code{ds_filt[1:5]} should return the first
 five rows where \code{ds$var == 5}. This function takes a filtered object and returns
-the correctly subsetted filtered objet.
+the correctly subsetted filtered object.
 }
 \keyword{internal}

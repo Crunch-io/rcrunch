@@ -154,7 +154,7 @@ setMethod("[", c("CrunchDataset", "numeric", "missing"), function (x, i, j, ...,
 #' and then apply the numeric vector. For instance if you have a dataset filter such
 #' that `ds_filt <- ds[ds$var == 5, ]` then `ds_filt[1:5]` should return the first
 #' five rows where `ds$var == 5`. This function takes a filtered object and returns
-#' the correctly subsetted filtered objet.
+#' the correctly subsetted filtered object.
 #' @rdname dataset-extract
 #' @keywords internal
 #' @param x a filtered Dataset or vector
