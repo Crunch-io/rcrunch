@@ -69,7 +69,7 @@ setMethod("digits<-", "CrunchVariable", function (x, value) {
     halt("digit specifications can only be set for numeric variables")
 })
 
-#' @rdname length
+#' @rdname describe
 #' @export
 setMethod("length", "CrunchVariable", function (x) {
     ds <- loadDataset(datasetReference(x))
