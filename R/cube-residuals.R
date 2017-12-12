@@ -3,28 +3,23 @@
 # the more abstract 'margin' (specifically cubeMarginTable) to
 # get the right numbers for multiple response.
 standardizedMRResiduals <- function(cube, types){
-    if(all(types == "multiple_response")){
-        n <- margin.table(cube)
-        r <- margin.table(cube, 1)
-        c <- margin.table(cube, 2)
-        E <- r * c / n
-        V <- r * c * (n-r) * (n-c) / n^3
-    } else {
-        MRdim <- which(types=="multiple_response")
-        nonMRdim <- 3 - MRdim
-        margins <- marginComplement <- vector("list", 2)
-        n <- apply(margin.table(cube, nonMRdim), MRdim, sum)
-        margins[[MRdim]] <- margin.table(cube, nonMRdim)
-        margins[[nonMRdim]] <- margin.table(cube, MRdim)
-        marginComplement[[MRdim]] <- sweep(margins[[MRdim]], MRdim, n, '-')
-        marginComplement[[nonMRdim]] <- margins[[nonMRdim]] - n
-        E <- V <- sweep(margins[[MRdim]], MRdim, margins[[nonMRdim]], '*')
-        E <- sweep(E, MRdim, n, '/')
-        # Cell variance:  (c * r * (n - r) * (n - c)) / n^3
-        V <- V * marginComplement[[MRdim]]
-        V <- sweep(V, MRdim, marginComplement[[nonMRdim]], '*')
-        V <- sweep(V, MRdim, n^3, '/')
-    }
+    # grab the dims from as.array because sometimes cat x MR has one too many
+    cube_dims <- dim(as.array(cube))
+    
+    # get counts for table, this will end up being a table because there are MRs
+    n <- broadcast(margin.table(cube), dims = cube_dims)
+    # get row values, broadcast in case this is a non-MR dimension
+    r <- broadcast(margin.table(cube, 1), dims = cube_dims)
+    # get column values, broadcast in case this is a non-MR dimension
+    c <- broadcast(margin.table(cube, 2), dims = cube_dims)
+    
+    # These formulae follow Agresti, 2007 (section 2.4.5), but use count instead
+    # of proportion space (cf the source for `chisq.test`, as of R 3.4.2)
+    # calculate expected values 
+    E <- r * c / n
+    # calculate variance
+    V <- r * c * (n-r) * (n-c) / n^3
+
     return((as.array(cube) - E) / sqrt(V))
 }
 
@@ -61,3 +56,67 @@ setMethod('rstandard', 'CrunchCube', function(model){
         return(chisq.test(as.array(model))$stdres)
     }
 })
+
+
+
+# broadcast a vector of values to a matrix with dimensions dims. 
+# If values is a vector: you only need to supply either nrow or ncol to 
+# broadcast in that direction (ie the other direction will be = length(values)).
+# If values is a matrix: if the dims match, then return the matrix (no 
+# broadcasting needed).
+# Finally, if both dimensions are provided, check to see which dimension 
+# length(values) matches, and make a matrix 
+# Examples:
+# broadcast(c(1, 2, 3), nrow = 3)
+# [,1] [,2] [,3]
+# [1,]    1    2    3
+# [2,]    1    2    3
+# [3,]    1    2    3
+#
+# broadcast(c(1, 2, 3), ncol = 2)
+# [,1] [,2]
+# [1,]    1    1
+# [2,]    2    2
+# [3,]    3    3
+#
+# broadcast(c(1, 2, 3), dims = c(3, 2))
+#      [,1] [,2]
+# [1,]    1    1
+# [2,]    2    2
+# [3,]    3    3
+#
+# broadcast(c(1, 2, 3), dims = c(2, 3))
+# [,1] [,2] [,3]
+# [1,]    1    2    3
+# [2,]    1    2    3
+broadcast <- function (values, dims = c(NULL, NULL), nrow = dims[1], ncol = dims[2]) {
+    # if values is already the correct shape, then return values immediately
+    if (!is.null(dim(values)) & all(dim(values) == c(nrow, ncol))) {
+        return(values)
+    }
+    
+    # if there's only one nrow/ncol, use that alone (matching length of values)
+    if (is.null(nrow)) {
+        byrow <- FALSE
+        nrow <- length(values)
+    } else if (is.null(ncol)) {
+        byrow <- TRUE
+        ncol <- length(values)
+    } 
+    
+    # if both dimensions are specified, then we need to check which dimension
+    # length(values) matches, and fill by the opposite.
+    if (length(values) == ncol) {
+        byrow <- TRUE
+    } else if (length(values) == nrow) {
+        byrow <- FALSE
+    } 
+    
+    if (!exists("byrow")) {
+        halt("Something has gone wrong broadcasting the vector ", 
+             dQuote(substitute(values)), " to the dimensions c(",nrow, ", ", 
+             ncol, ")")
+    }
+    
+    return(matrix(values, byrow = byrow, ncol = ncol, nrow = nrow))
+}
