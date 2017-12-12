@@ -22,6 +22,12 @@ mr_by_mr <- loadCube((test_path("cubes/selected-by-selected.json")))
 mr_by_mr_dims <- list(zoo = c("alligator", "oryx", "capybara", "Any"),
                      zoo = c("alligator", "oryx", "capybara", "Any"))
 
+mr_by_mr_heterogeneous <- loadCube((test_path("cubes/mr-by-mr-different-mrs.json")))
+mr_by_mr_heterogeneous_dims <- list(opinion_mr = c("food_opinion", "rest_opinion", "play_opinion"),
+                                    feeling_mr = c("cat_feeling", "dog_feeling"))
+
+mr_by_mr_by_too_many <- loadCube((test_path("cubes/mr-by-mr-too-many-dims.json")))
+
 gender_x_ideology <- loadCube(test_path("cubes/econ-gender-x-ideology-weighted.json"))
 
 test_that("rstandard for CrunchCube normal contingency table is chisq standardized residuals", {
@@ -84,4 +90,19 @@ test_that("residuals for MR by MR", {
         4.156824868149565, 5.694768173489977, 9.2929498417063, 15.379818568557937),
         dims = mr_by_mr_dims)
     expect_equal(rstandard(mr_by_mr), out)
+})
+
+test_that("residuals for MR by MR (disparate MRs)", {
+    out <- cubify(
+        c(-0.172383926892779,38.5164653199407,
+          0.102711744395378,-39.1122969318395,
+          -0.26443563922932,-39.6750394717687),
+        dims = mr_by_mr_heterogeneous_dims)
+    expect_equal(rstandard(mr_by_mr_heterogeneous), out)
+})
+
+test_that("residuals for MR by MR by anything errors", {
+    expect_error(rstandard(mr_by_mr_by_too_many), 
+                 "Cannot compute residuals with more than two MR dims. Pick a ",
+                 "slice to evaluate")
 })
