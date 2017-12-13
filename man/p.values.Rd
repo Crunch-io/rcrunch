@@ -4,10 +4,10 @@
 \alias{p.values}
 \title{Calculate p-values for a CrunchCube}
 \usage{
-p.values(table, margin)
+p.values(cube, margin)
 }
 \arguments{
-\item{table}{A CrunchCube to calculate z-scores for}
+\item{cube}{A CrunchCube to calculate z-scores for}
 
 \item{margin}{which margin to test against (1 for rows, 2 for columns)}
 }

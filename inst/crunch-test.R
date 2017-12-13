@@ -29,7 +29,15 @@ cubify <- function (..., dims) {
     ## Make readable test expectations for comparing cube output
     data <- c(...)
     d <- vapply(dims, length, integer(1), USE.NAMES=FALSE)
-    array(matrix(data, byrow=TRUE, nrow=d[1]), dim=d, dimnames=dims)
+
+    # if the cube is of more than 2 dimensions, fill it in by columns instead
+    if (length(d) > 2) {
+        byrow <- FALSE
+    } else {
+        byrow <- TRUE
+    }
+
+    array(matrix(data, byrow=byrow, nrow=d[1]), dim=d, dimnames=dims)
 }
 
 

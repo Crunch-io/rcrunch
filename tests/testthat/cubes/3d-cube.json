@@ -1,0 +1,402 @@
+{
+    "element": "shoji:view",
+    "self": "https://app.crunch.io/api/datasets/ed4bb61788464a729f1104b5bd5e0c1b/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22http%3A%2F%2Flocal.crunch.io%3A8080%2Fapi%2Fdatasets%2Fed4bb61788464a729f1104b5bd5e0c1b%2Fvariables%2F000003%2F%22%7D%2C%7B%22variable%22%3A%22http%3A%2F%2Flocal.crunch.io%3A8080%2Fapi%2Fdatasets%2Fed4bb61788464a729f1104b5bd5e0c1b%2Fvariables%2F000000%2F%22%7D%2C%7B%22variable%22%3A%22http%3A%2F%2Flocal.crunch.io%3A8080%2Fapi%2Fdatasets%2Fed4bb61788464a729f1104b5bd5e0c1b%2Fvariables%2F000001%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": []
+                }
+            },
+            "dimensions": [
+                {
+                    "variable": "https://app.crunch.io/api/datasets/ed4bb61788464a729f1104b5bd5e0c1b/variables/000003/"
+                },
+                {
+                    "variable": "https://app.crunch.io/api/datasets/ed4bb61788464a729f1104b5bd5e0c1b/variables/000000/"
+                },
+                {
+                    "variable": "https://app.crunch.io/api/datasets/ed4bb61788464a729f1104b5bd5e0c1b/variables/000001/"
+                }
+            ],
+            "weight": null
+        },
+        "query_environment": {
+            "filter": []
+        },
+        "result": {
+            "dimensions": [
+                {
+                    "derived": false,
+                    "references": {
+                        "alias": "feelings",
+                        "name": "feelings"
+                    },
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "id": 1,
+                                "name": "Extremely Happy",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 2,
+                                "id": 2,
+                                "name": "Somewhat Happy",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 3,
+                                "id": 3,
+                                "name": "Neutral",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 4,
+                                "id": 4,
+                                "name": "Somewhat Unhappy",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 5,
+                                "id": 5,
+                                "name": "Extremely Unhappy",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": null,
+                                "id": -1,
+                                "name": "No Data",
+                                "missing": true
+                            }
+                        ]
+                    }
+                },
+                {
+                    "derived": false,
+                    "references": {
+                        "alias": "opinion",
+                        "name": "opinion"
+                    },
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "id": 1,
+                                "name": "Strongly Agree",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 2,
+                                "id": 2,
+                                "name": "Somewhat Agree",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 3,
+                                "id": 3,
+                                "name": "Neither Agree nor Disagree",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 4,
+                                "id": 4,
+                                "name": "Strongly Disagree",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 5,
+                                "id": 5,
+                                "name": "Somewhat Disagree",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": null,
+                                "id": -1,
+                                "name": "No Data",
+                                "missing": true
+                            }
+                        ]
+                    }
+                },
+                {
+                    "derived": false,
+                    "references": {
+                        "alias": "animal",
+                        "name": "animal"
+                    },
+                    "type": {
+                        "ordinal": false,
+                        "class": "categorical",
+                        "categories": [
+                            {
+                                "numeric_value": 1,
+                                "id": 1,
+                                "name": "cats",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": 2,
+                                "id": 2,
+                                "name": "dogs",
+                                "missing": false
+                            },
+                            {
+                                "numeric_value": null,
+                                "id": -1,
+                                "name": "No Data",
+                                "missing": true
+                            }
+                        ]
+                    }
+                }
+            ],
+            "missing": 0,
+            "measures": {
+                "count": {
+                    "data": [
+                        2,
+                        1,
+                        0,
+                        4,
+                        3,
+                        0,
+                        2,
+                        2,
+                        0,
+                        0,
+                        2,
+                        0,
+                        1,
+                        2,
+                        0,
+                        0,
+                        0,
+                        0,
+                        1,
+                        2,
+                        0,
+                        2,
+                        1,
+                        0,
+                        1,
+                        2,
+                        0,
+                        4,
+                        3,
+                        0,
+                        3,
+                        1,
+                        0,
+                        0,
+                        0,
+                        0,
+                        2,
+                        2,
+                        0,
+                        4,
+                        3,
+                        0,
+                        0,
+                        3,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        2,
+                        0,
+                        0,
+                        0,
+                        0,
+                        3,
+                        3,
+                        0,
+                        1,
+                        2,
+                        0,
+                        4,
+                        2,
+                        0,
+                        3,
+                        2,
+                        0,
+                        0,
+                        2,
+                        0,
+                        0,
+                        0,
+                        0,
+                        4,
+                        3,
+                        0,
+                        2,
+                        3,
+                        0,
+                        4,
+                        0,
+                        0,
+                        2,
+                        5,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0,
+                        0
+                    ],
+                    "n_missing": 0,
+                    "metadata": {
+                        "references": {},
+                        "derived": true,
+                        "type": {
+                            "integer": true,
+                            "missing_rules": {},
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "class": "numeric"
+                        }
+                    }
+                }
+            },
+            "element": "crunch:cube",
+            "counts": [
+                2,
+                1,
+                0,
+                4,
+                3,
+                0,
+                2,
+                2,
+                0,
+                0,
+                2,
+                0,
+                1,
+                2,
+                0,
+                0,
+                0,
+                0,
+                1,
+                2,
+                0,
+                2,
+                1,
+                0,
+                1,
+                2,
+                0,
+                4,
+                3,
+                0,
+                3,
+                1,
+                0,
+                0,
+                0,
+                0,
+                2,
+                2,
+                0,
+                4,
+                3,
+                0,
+                0,
+                3,
+                0,
+                0,
+                0,
+                0,
+                0,
+                2,
+                0,
+                0,
+                0,
+                0,
+                3,
+                3,
+                0,
+                1,
+                2,
+                0,
+                4,
+                2,
+                0,
+                3,
+                2,
+                0,
+                0,
+                2,
+                0,
+                0,
+                0,
+                0,
+                4,
+                3,
+                0,
+                2,
+                3,
+                0,
+                4,
+                0,
+                0,
+                2,
+                5,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0,
+                0
+            ],
+            "n": 100
+        }
+    }
+}
