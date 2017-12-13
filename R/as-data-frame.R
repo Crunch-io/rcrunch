@@ -145,28 +145,34 @@ as.data.frame.FilterCatalog <- function (x, row.names = NULL,
     catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
 }
 
+#' @export
 setMethod("head", "CrunchDataset", function (x, n=6L, ...) {
     as.data.frame(x[head(seq_len(nrow(x)), n),], force=TRUE)
 })
 
+#' @export
 setMethod("head", "CrunchDataFrame", function (x, n=6L, ...) {
     ds <- attr(x, "crunchDataset")
     return(as.data.frame(ds[head(seq_len(nrow(x)), n),], force = TRUE))
 })
 
+#' @export
 setMethod("head", "CrunchVariable", function (x, n=6L, ...) {
     as.vector(x[head(seq_len(length(x)), n)], ...)
 })
 
+#' @export
 setMethod("tail", "CrunchDataset", function (x, n=6L, ...) {
     as.data.frame(x[tail(seq_len(nrow(x)), n),], force=TRUE)
 })
 
+#' @export
 setMethod("tail", "CrunchDataFrame", function (x, n=6L, ...) {
     ds <- attr(x, "crunchDataset")
     return(as.data.frame(ds[tail(seq_len(nrow(x)), n),], force = TRUE))
 })
 
+#' @export
 setMethod("tail", "CrunchVariable", function (x, n=6L, ...) {
     as.vector(x[tail(seq_len(length(x)), n)], ...)
 })
