@@ -3,13 +3,6 @@
 # the more abstract 'margin' (specifically cubeMarginTable) to
 # get the right numbers for multiple response.
 standardizedMRResiduals <- function(cube, types){
-    if (any(vapply(dimensions(cube), is.selectedArrayDim, logical(1)))) {
-        # TODO: remove the reference to `as_selected` when that becomes default
-        halt("rstandard is not implemented with CrunchCubes that use selected ",
-             "arrays. Selected arrays have been deprecated, please recreate ", 
-             "your cube using `as_selected()` around multiple response variables.")
-    }
-
     # grab the dims from as.array because sometimes cat x MR has one too many
     cube_dims <- dim(as.array(cube))
     
@@ -53,11 +46,23 @@ standardizedMRResiduals <- function(cube, types){
 #' @aliases rstandard,CrunchCube-method cube-residuals
 #' @exportMethod rstandard
 setMethod('rstandard', 'CrunchCube', function(model){
+    if(length(dimensions(model)) > 2){
+        halt("Cannot compute residuals with more than two dimensions. Pick a ", 
+             "slice to evaluate.")
+    }
+
+    if (any(vapply(dimensions(model), is.selectedArrayDim, logical(1)))) {
+        # TODO: remove the reference to `as_selected` when that becomes default
+        halt("rstandard is not implemented with CrunchCubes that use selected ",
+             "arrays. Selected arrays have been deprecated, please recreate ", 
+             "your cube using `as_selected()` around multiple response variables.")
+    }
+        
+    # determine which dimensinos are multiple response, and treat those special
+    # TODO: make this specific to multiple response rather than both cat array and MR
     types <- vapply(dimensions(model), function(dim) dim$references$type, character(1))
-    if(any(types == 'multiple_response')){
-        if(length(types) > 2){
-            stop("Cannot compute residuals with more than two MR dims. Pick a slice to evaluate.")
-        }
+    
+    if(any(types == 'subvariable_items')){
         return(standardizedMRResiduals(model, types))
     } else {
         return(chisq.test(as.array(model))$stdres)

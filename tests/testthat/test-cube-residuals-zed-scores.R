@@ -3,12 +3,12 @@ context("cube standardized residuals")
 ##########################################
 ## fixutres from crunch cube
 ##########################################
-cat_by_mr <- loadCube(test_path("cubes/selected-crosstab-array-last.json"))
+cat_by_mr <- loadCube("cubes/selected-crosstab-array-last.json")
 cat_by_mr_dims <- list(
     fruit = c("rambutan", "satsuma"),
     zoo = c("alligator", "oryx", "capybara")
 )
-mr_by_cat <- loadCube(test_path("cubes/selected-crosstab-4.json"))
+mr_by_cat <- loadCube("cubes/selected-crosstab-4.json")
 mr_by_cat_dims <- list(
     attitudes_recoded_klima_2=c("Climate change is the biggest threat to civilisation",
                                 "Electric cars are the future of the motor industry",
@@ -18,18 +18,33 @@ mr_by_cat_dims <- list(
                                 "I don't mind paying more for products that are good for the environment"),
     pdl_gender=c("Male", "Female")
 )
-mr_by_mr <- loadCube((test_path("cubes/selected-by-selected.json")))
+mr_by_mr <- loadCube("cubes/selected-by-selected.json")
 mr_by_mr_dims <- list(zoo = c("alligator", "oryx", "capybara", "Any"),
                      zoo = c("alligator", "oryx", "capybara", "Any"))
 
-mr_by_mr_heterogeneous <- loadCube((test_path("cubes/mr-by-mr-different-mrs.json")))
+mr_by_mr_heterogeneous <- loadCube("cubes/mr-by-mr-different-mrs.json")
 mr_by_mr_heterogeneous_dims <- list(opinion_mr = c("food_opinion", "rest_opinion", "play_opinion"),
                                     feeling_mr = c("cat_feeling", "dog_feeling"))
 
-mr_by_mr_by_too_many <- loadCube((test_path("cubes/mr-by-mr-too-many-dims.json")))
-mr_by_cat_selected_array <- loadCube((test_path("cubes/mr-x-cat-selected-array.json")))
+mr_by_mr_by_too_many <- loadCube("cubes/mr-by-mr-too-many-dims.json")
+mr_by_cat_selected_array <- loadCube("cubes/mr-x-cat-selected-array.json")
 
-gender_x_ideology <- loadCube(test_path("cubes/econ-gender-x-ideology-weighted.json"))
+catarray <- loadCube("cubes/cat-array.json")
+catarray_dims <- list("feeling_ca" = c("cat_feeling", "dog_feeling"),
+                      "feeling_ca" = c("Extremely Happy", "Somewhat Happy", "Neutral", "Somewhat Unhappy", "Extremely Unhappy"))
+
+catarray_by_cat <- loadCube("cubes/catarray-x-cat.json")
+catarray_by_cat_dims <- list("feeling_ca" = c("cat_feeling", "dog_feeling"),
+                        "feeling_ca" = c("Extremely Happy", "Somewhat Happy", "Neutral", "Somewhat Unhappy", "Extremely Unhappy"),
+                        "animal" = c("cats", "dog"))
+
+catarray_by_mr <- loadCube("cubes/catarray-x-mr.json")
+catarray_by_mr_dims <- list("feeling_ca" = c("cat_feeling", "dog_feeling"),
+                       "feeling_ca" = c("Extremely Happy", "Somewhat Happy", "Neutral", "Somewhat Unhappy", "Extremely Unhappy"),
+                       "opinion_mr" = c("food_opinion", "rest_opinion", "play_opinion"))
+
+
+gender_x_ideology <- loadCube("cubes/econ-gender-x-ideology-weighted.json")
 
 test_that("rstandard for CrunchCube normal contingency table is chisq standardized residuals", {
     # values from crunch-cube tests
@@ -41,9 +56,9 @@ test_that("rstandard for CrunchCube normal contingency table is chisq standardiz
 ## fixutres from whaam
 ##########################################
 # whaam fixtures
-admit_by_dept_unweighted <- loadCube(test_path("cubes/admit-by-dept-unweighted.json"))
-admit_by_gender_weighted <- loadCube(test_path("cubes/admit-by-gender-weighted.json"))
-mr_by_cat_2 <- loadCube(test_path("cubes/selected-crosstab-array-first.json"))
+admit_by_dept_unweighted <- loadCube("cubes/admit-by-dept-unweighted.json")
+admit_by_gender_weighted <- loadCube("cubes/admit-by-gender-weighted.json")
+mr_by_cat_2 <- loadCube("cubes/selected-crosstab-array-first.json")
 
 test_that("z-scores for unweighted normal crosstab", {
     out <- chisq.test(as.array(admit_by_dept_unweighted))$stdres
@@ -103,9 +118,9 @@ test_that("residuals for MR by MR (disparate MRs)", {
 })
 
 test_that("residuals for MR by MR by anything errors", {
-    expect_error(rstandard(mr_by_mr_by_too_many), 
-                 "Cannot compute residuals with more than two MR dims. Pick a ",
-                 "slice to evaluate")
+    expect_error(rstandard(mr_by_mr_by_too_many),  paste0(
+                 "Cannot compute residuals with more than two dimensions. Pick ",
+                 "a slice to evaluate"))
 })
 
 test_that("residuals for MR with (old style) selected arrays errors helpfully", {
@@ -116,3 +131,26 @@ test_that("residuals for MR with (old style) selected arrays errors helpfully", 
 })
 
 
+test_that("residuals for catarray", {
+    out <- cubify(
+        c(-34.1520876574262, 29.5334359815399, 27.2221020075088,
+          28.64461124699, -34.3223793320432,
+          34.1520876574262,-29.5334359815399,-27.2221020075088,
+          -28.64461124699,34.3223793320432),
+        dims = catarray_dims)
+    expect_equal(rstandard(catarray), out)
+})
+
+test_that("residuals for catarray by cat", {
+    expect_error(rstandard(catarray_by_cat), paste0(
+                 "Cannot compute residuals with more than two dimensions. Pick ",
+                 "a slice to evaluate"))
+    # TODO: check a slice
+})
+
+test_that("residuals for catarray", {
+    expect_error(rstandard(catarray_by_mr), paste0(
+                 "Cannot compute residuals with more than two dimensions. Pick ",
+                 "a slice to evaluate"))
+    # TODO: check a slice
+})
