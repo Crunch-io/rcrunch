@@ -234,6 +234,8 @@ GenericConstructor <- function (class) {
 #' @param value For `[<-`, the replacement AbstractCategory to insert
 #' @rdname AbstractCategory
 #' @aliases AbstractCategory
+#' 
+#' @importFrom methods coerce as<- coerce<-
 #' @keywords internal
 #' @export
 setClass("AbstractCategories", contains="list")
@@ -309,6 +311,10 @@ Insertions <- GenericConstructor("Insertions")
 #' @export
 setClass("Insertion", contains="AbstractCategory")
 
+# Make a constructor with user-facing and package internal versions instead of 
+# simply setMethod("initialize", "Insertions") so that the user-facing version
+# preforms validation, but the internal version does not. This is needed for 
+# making heterogenous insertions that include classes Subtotal and Heading.
 #' @rdname Insertions
 #' @export
 Insertion <- function (...) {

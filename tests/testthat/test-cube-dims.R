@@ -27,7 +27,7 @@ with_mock_crunch({
             c("What is your favorite pet?",
             "Do you have any of these animals as pets? Please select all that apply."))
         expect_identical(types(variables(d)),
-            c("categorical", "multiple_response"))
+            c("categorical", "subvariable_items"))
     })
     test_that("Getting those additional variable attributes from the cube", {
         expect_identical(names(cube), c("Pet", "All pets owned"))
@@ -36,7 +36,7 @@ with_mock_crunch({
             c("What is your favorite pet?",
             "Do you have any of these animals as pets? Please select all that apply."))
         expect_identical(types(cube),
-            c("categorical", "multiple_response"))
+            c("categorical", "subvariable_items"))
         expect_identical(notes(cube),
             c(NA_character_, NA_character_))
     })
