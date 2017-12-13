@@ -68,11 +68,11 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
             values <- list(values)
             names(values) <- var
         }
-        
+
         return(values)
     })
     out <- unlist(out, recursive = FALSE)
-    
+
     return(structure(out, class="data.frame", row.names=c(NA, -nrow(ds))))
 }
 
@@ -152,8 +152,7 @@ setMethod("head", "CrunchDataset", function (x, n=6L, ...) {
 
 #' @export
 setMethod("head", "CrunchDataFrame", function (x, n=6L, ...) {
-    ds <- attr(x, "crunchDataset")
-    return(as.data.frame(ds[head(seq_len(nrow(x)), n),], force = TRUE))
+    return(head(attr(x, "crunchDataset")))
 })
 
 #' @export
@@ -168,8 +167,7 @@ setMethod("tail", "CrunchDataset", function (x, n=6L, ...) {
 
 #' @export
 setMethod("tail", "CrunchDataFrame", function (x, n=6L, ...) {
-    ds <- attr(x, "crunchDataset")
-    return(as.data.frame(ds[tail(seq_len(nrow(x)), n),], force = TRUE))
+    return(tail(attr(x, "crunchDataset")))
 })
 
 #' @export
