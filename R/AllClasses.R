@@ -234,6 +234,8 @@ GenericConstructor <- function (class) {
 #' @param value For `[<-`, the replacement AbstractCategory to insert
 #' @rdname AbstractCategory
 #' @aliases AbstractCategory
+#' 
+#' @importFrom methods coerce as<- coerce<-
 #' @keywords internal
 #' @export
 setClass("AbstractCategories", contains="list")
