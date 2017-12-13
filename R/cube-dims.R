@@ -27,6 +27,7 @@ cubeDims <- function (cube) {
     })
     names(dimnames) <- vapply(dimnames, function (x) x$references$alias,
         character(1))
+    
     return(CubeDims(dimnames))
 }
 
@@ -152,4 +153,13 @@ is.selectedDimension <- function (dims) {
                         MoreArgs=list(MRaliases=MRaliases))
     names(selecteds) <- dims@names
     return(selecteds)
+}
+
+# determine if a dimension is from the selected_array of a multiple response
+is.selectedArrayDim <- function (dim) {
+    if (!is.null(dim$any.or.none)) {
+        return(any(dim$any.or.none))
+    }
+    
+    return(FALSE)
 }

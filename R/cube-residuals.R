@@ -3,6 +3,13 @@
 # the more abstract 'margin' (specifically cubeMarginTable) to
 # get the right numbers for multiple response.
 standardizedMRResiduals <- function(cube, types){
+    if (any(vapply(dimensions(cube), is.selectedArrayDim, logical(1)))) {
+        # TODO: remove the reference to `as_selected` when that becomes default
+        halt("rstandard is not implemented with CrunchCubes that use selected ",
+             "arrays. Selected arrays have been deprecated, please recreate ", 
+             "your cube using `as_selected()` around multiple response variables.")
+    }
+
     # grab the dims from as.array because sometimes cat x MR has one too many
     cube_dims <- dim(as.array(cube))
     
@@ -59,7 +66,8 @@ setMethod('rstandard', 'CrunchCube', function(model){
 
 
 
-# broadcast a vector of values to a matrix with dimensions dims. 
+# broadcast a vector of values to a matrix with dimensions dims. Similar to 
+# but not exactly the same as numpy's `broadcast_to` method.
 # If values is a vector: you only need to supply either nrow or ncol to 
 # broadcast in that direction (ie the other direction will be = length(values)).
 # If values is a matrix: if the dims match, then return the matrix (no 
@@ -91,7 +99,7 @@ setMethod('rstandard', 'CrunchCube', function(model){
 # [2,]    1    2    3
 broadcast <- function (values, dims = c(NULL, NULL), nrow = dims[1], ncol = dims[2]) {
     # if values is already the correct shape, then return values immediately
-    if (!is.null(dim(values)) & all(dim(values) == c(nrow, ncol))) {
+    if (!is.null(dim(values)) & identical(dim(values), as.integer(c(nrow, ncol)))) {
         return(values)
     }
     
@@ -113,9 +121,15 @@ broadcast <- function (values, dims = c(NULL, NULL), nrow = dims[1], ncol = dims
     } 
     
     if (!exists("byrow")) {
-        halt("Something has gone wrong broadcasting the vector ", 
-             dQuote(substitute(values)), " to the dimensions c(",nrow, ", ", 
-             ncol, ")")
+        if (length(values) == 1) {
+            # if the values is one, then set byrow, and move on for a matrix of
+            # all of that one value.
+            byrow <- FALSE
+        } else {
+            halt("Something has gone wrong broadcasting the vector ", 
+                 dQuote(substitute(values)), " to the dimensions c(",nrow, ", ", 
+                 ncol, ")")
+        }
     }
     
     return(matrix(values, byrow = byrow, ncol = ncol, nrow = nrow))

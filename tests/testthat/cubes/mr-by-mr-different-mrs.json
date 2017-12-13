@@ -1,6 +1,6 @@
 {
   "element": "shoji:view",
-  "self": "api/datasets/123/cube/?query=%7B%22dimensions%22%3A%5B%7B%22each%22%3A%22api%2Fdatasets%2F123%2Fvariables%2Fvar1%2F%22%7D%2C%7B%22function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22api%2Fdatasets%2F123%2Fvariables%2Fvar1%2F%22%7D%5D%7D%2C%7B%22function%22%3A%22selected_array%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22api%2Fdatasets%2F123%2Fvariables%2Fvar2%2F%22%7D%5D%7D%2C%7B%22each%22%3A%22api%2Fdatasets%2F123%2Fvariables%2Fvar2%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
+  "self": "api/datasets/123/cube/?query=%7B%22dimensions%22%3A%5B%7B%22each%22%3A%22api%2Fdatasets%2F123%2Fvariables%2Fvar1%2F%22%7D%2C%7B%22function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22api%2Fdatasets%2F123%2Fvariables%2Fvar1%2F%22%7D%5D%7D%2C%7B%22each%22%3A%22api%2Fdatasets%2F123%2Fvariables%2Fvar2%2F%22%7D%2C%7B%22function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22api%2Fdatasets%2F123%2Fvariables%2Fvar2%2F%22%7D%5D%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
   "value": {
     "query": {
       "measures": {
@@ -22,15 +22,15 @@
           ]
         },
         {
-          "function": "selected_array",
+          "each": "api/datasets/123/variables/var2/"
+        },
+        {
+          "function": "as_selected",
           "args": [
             {
               "variable": "api/datasets/123/variables/var2/"
             }
           ]
-        },
-        {
-          "each": "api/datasets/123/variables/var2/"
         }
       ],
       "weight": null
@@ -274,10 +274,7 @@
               {
                 "alias": "dog_feeling#",
                 "name": "dog_feeling"
-              },
-              {},
-              {},
-              {}
+              }
             ],
             "notes": "",
             "discarded": false,
@@ -304,7 +301,29 @@
                   },
                   "id": "000001",
                   "type": {
-                    "class": "boolean"
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [
+                      {
+                        "numeric_value": 1,
+                        "selected": true,
+                        "id": 1,
+                        "missing": false,
+                        "name": "Selected"
+                      },
+                      {
+                        "numeric_value": 0,
+                        "missing": false,
+                        "id": 0,
+                        "name": "Not Selected"
+                      },
+                      {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                      }
+                    ]
                   }
                 },
                 "missing": false
@@ -319,42 +338,94 @@
                   },
                   "id": "000004",
                   "type": {
-                    "class": "boolean"
-                  }
-                },
-                "missing": false
-              },
-              {
-                "id": -1,
-                "value": null,
-                "missing": true
-              },
-              {
-                "id": -127,
-                "value": {
-                  "derived": false,
-                  "references": {},
-                  "id": "__none__",
-                  "type": {
-                    "class": "boolean"
-                  }
-                },
-                "missing": false
-              },
-              {
-                "id": 0,
-                "value": {
-                  "derived": false,
-                  "references": {},
-                  "id": "__any__",
-                  "type": {
-                    "class": "boolean"
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [
+                      {
+                        "numeric_value": 1,
+                        "selected": true,
+                        "id": 1,
+                        "missing": false,
+                        "name": "Selected"
+                      },
+                      {
+                        "numeric_value": 0,
+                        "missing": false,
+                        "id": 0,
+                        "name": "Not Selected"
+                      },
+                      {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                      }
+                    ]
                   }
                 },
                 "missing": false
               }
             ],
             "class": "enum"
+          }
+        },
+        {
+          "references": {
+            "description": "",
+            "format": {
+              "summary": {
+                "digits": 0
+              }
+            },
+            "subreferences": [
+              {
+                "alias": "cat_feeling#",
+                "name": "cat_feeling"
+              },
+              {
+                "alias": "dog_feeling#",
+                "name": "dog_feeling"
+              }
+            ],
+            "notes": "",
+            "name": "feeling MR",
+            "discarded": false,
+            "alias": "feeling_mr",
+            "view": {
+              "show_counts": false,
+              "include_missing": false,
+              "column_width": null
+            }
+          },
+          "derived": true,
+          "type": {
+            "ordinal": false,
+            "subvariables": [
+              "000001",
+              "000004"
+            ],
+            "class": "categorical",
+            "categories": [
+              {
+                "numeric_value": 1,
+                "selected": true,
+                "id": 1,
+                "missing": false,
+                "name": "Selected"
+              },
+              {
+                "numeric_value": 0,
+                "missing": false,
+                "id": 0,
+                "name": "Not Selected"
+              },
+              {
+                "numeric_value": null,
+                "missing": true,
+                "id": -1,
+                "name": "No Data"
+              }
+            ]
           }
         }
       ],
@@ -363,45 +434,54 @@
         "count": {
           "data": [
             1374,
+            5617,
+            0,
             3681,
+            3310,
             0,
-            2678,
-            4313,
             2570,
-            3307,
+            10439,
             0,
-            7789,
-            5220,
+            3307,
+            9702,
+            0,
+            0,
             0,
             0,
             0,
             0,
             0,
             1380,
+            5604,
+            0,
             1183,
+            5801,
             0,
-            4672,
-            2312,
             2564,
-            5805,
+            10452,
             0,
-            5795,
-            7221,
+            5805,
+            7211,
+            0,
+            0,
             0,
             0,
             0,
             0,
             0,
             1367,
+            5601,
+            0,
             1160,
+            5808,
             0,
-            4686,
-            2282,
             2577,
-            5828,
+            10455,
             0,
-            5781,
-            7251,
+            5828,
+            7204,
+            0,
+            0,
             0,
             0,
             0,
@@ -426,45 +506,54 @@
       "element": "crunch:cube",
       "counts": [
         1374,
+        5617,
+        0,
         3681,
+        3310,
         0,
-        2678,
-        4313,
         2570,
-        3307,
+        10439,
         0,
-        7789,
-        5220,
+        3307,
+        9702,
+        0,
+        0,
         0,
         0,
         0,
         0,
         0,
         1380,
+        5604,
+        0,
         1183,
+        5801,
         0,
-        4672,
-        2312,
         2564,
-        5805,
+        10452,
         0,
-        5795,
-        7221,
+        5805,
+        7211,
+        0,
+        0,
         0,
         0,
         0,
         0,
         0,
         1367,
+        5601,
+        0,
         1160,
+        5808,
         0,
-        4686,
-        2282,
         2577,
-        5828,
+        10455,
         0,
-        5781,
-        7251,
+        5828,
+        7204,
+        0,
+        0,
         0,
         0,
         0,
