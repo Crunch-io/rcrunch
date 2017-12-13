@@ -124,6 +124,7 @@ Collate:
     'transform.R'
     'tuple.R'
     'univariate.R'
+    'user-access.R'
     'user.R'
     'variable-catalog.R'
     'variable-delete.R'
