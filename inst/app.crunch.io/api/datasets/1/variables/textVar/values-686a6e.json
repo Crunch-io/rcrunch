@@ -1,0 +1,5 @@
+{
+    "element": "shoji:view",
+    "self": "https://app.crunch.io/api/datasets/1/variables/textVar/values/?filter=%7B%22function%22%3A%22between%22%2C%22args%22%3A%5B%7B%22function%22%3A%22row%22%2C%22args%22%3A%5B%5D%7D%2C%7B%22value%22%3A0%7D%2C%7B%22value%22%3A6%7D%5D%7D&offset=0&limit=5000",
+    "value": ["w", "n", "x", "b", "q", "s"]
+}
