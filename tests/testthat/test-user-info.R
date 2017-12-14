@@ -38,33 +38,4 @@ with_mock_crunch({
         # show method works
         expect_output(user_cat, user_cat_output)
     })
-
-
-    ### Last accessed functions
-    test_that("last_accessed works with dataset entities from catalogs", {
-        last_accessed_df <- lastAccessed(ds_cat)
-
-        expect_length(last_accessed_df, 5)
-        expect_equal(nrow(last_accessed_df), 2)
-        expect_equal(colnames(last_accessed_df),
-                     c("name", "email", "access_time", "dataset", "dataset_id"))
-    })
-
-    test_that("last_accessed works with dataset objects", {
-        last_accessed_df <- lastAccessed(ds)
-
-        expect_length(last_accessed_df, 5)
-        expect_equal(nrow(last_accessed_df), 2)
-        expect_equal(colnames(last_accessed_df),
-                     c("name", "email", "access_time", "dataset", "dataset_id"))
-    })
-
-
-    test_that("last_accessed_for_projects", {
-        last_accessed_df <- lastAccessed(projects()[[1]])
-        expect_length(last_accessed_df, 5)
-        expect_equal(nrow(last_accessed_df), 2)
-        expect_equal(colnames(last_accessed_df),
-                     c("name", "email", "access_time", "dataset", "dataset_id"))
-    })
 })

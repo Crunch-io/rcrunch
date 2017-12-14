@@ -178,6 +178,7 @@ whichNameOrURL <- function (x, i, secondary=names(x)) {
 #' @rdname catalog-length
 #' @export
 setMethod("length", "ShojiCatalog", function (x) length(index(x)))
+setMethod("lapply", "ShojiCatalog", function (X, FUN, ...) lapply(index(X), FUN, ...))
 
 #' Get the body of a Catalog
 #'
