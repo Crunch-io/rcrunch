@@ -16,10 +16,10 @@
 #' @param optional part of as.data.frame signature. Ignored.
 #' @param force logical: actually coerce the dataset to `data.frame`, or
 #' leave the columns as unevaluated promises. Default is `FALSE`.
-#' @param row.order vector of indices. Which, and their order, of the rows of 
-#'  the dataset should be presented as (default: `NULL`). If `NULL`, then the 
+#' @param row.order vector of indices. Which, and their order, of the rows of
+#'  the dataset should be presented as (default: `NULL`). If `NULL`, then the
 #'  Crunch Dataset order will be used.
-#' @param categorical.mode what mode should categoricals be pulled as? One of 
+#' @param categorical.mode what mode should categoricals be pulled as? One of
 #' factor, numeric, id (default: factor)
 #' @param include.hidden should hidden variables be included? (default: `FALSE`)
 #' @param ... additional arguments passed to `as.data.frame` (default method).
@@ -58,9 +58,9 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
     # TODO: something intelligent with modes
     out <- lapply(var_names, function(var) {
         values <- x[[var]]
-        
-        # Flatten all array variables, using only the subvariable name. We need 
-        # to create a list layer for non-dataframe values so that we can unlist 
+
+        # Flatten all array variables, using only the subvariable name. We need
+        # to create a list layer for non-dataframe values so that we can unlist
         # them later.
         if (is.data.frame(values)) {
             values <- as.list(values)
@@ -68,11 +68,11 @@ as.data.frame.CrunchDataFrame <- function (x, row.names = NULL, optional = FALSE
             values <- list(values)
             names(values) <- var
         }
-        
+
         return(values)
     })
     out <- unlist(out, recursive = FALSE)
-    
+
     return(structure(out, class="data.frame", row.names=c(NA, -nrow(ds))))
 }
 
@@ -142,5 +142,14 @@ as.data.frame.FilterCatalog <- function (x, row.names = NULL,
                                            optional = FALSE,
                                            keys = c("name", "id", "is_public"),
                                            ...) {
+    catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
+}
+
+#' @rdname catalog-to-data-frame
+#' @export
+as.data.frame.UserCatalog <- function (x, row.names = NULL,
+                                       optional = FALSE,
+                                       keys = c("name", "email", "teams", "collaborator"),
+                                       ...) {
     catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
 }
