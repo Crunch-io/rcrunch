@@ -26,7 +26,7 @@
       "name": "Roger User",
       "access_time": "2016-10-13T08:09:19.111000+00:00",
       "teams": [],
-      "collaborator": false,
+      "collaborator": true,
       "email": "ruser@crunch.io",
       "coalesced_permissions": {
         "edit": false,

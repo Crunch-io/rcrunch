@@ -84,7 +84,6 @@ setGeneric("unhide", function (x) standardGeneric("unhide"))
 setGeneric("derivation", function (x) standardGeneric("derivation"))
 setGeneric("derivation<-", function (x, value) standardGeneric("derivation<-"))
 
-
 setGeneric("urls", function (x) standardGeneric("urls"))
 setGeneric("self", function (x) standardGeneric("self"))
 setGeneric("refresh", function (x) standardGeneric("refresh"))
@@ -141,6 +140,8 @@ setGeneric("is.weight<-", function (x, value) standardGeneric("is.weight<-"))
 
 setGeneric("owner", function (x) standardGeneric("owner"))
 setGeneric("owner<-", function (x, value) standardGeneric("owner<-"))
+setGeneric("users", function (x) standardGeneric("users"))
+
 
 setGeneric("dim")
 setGeneric("ncol")

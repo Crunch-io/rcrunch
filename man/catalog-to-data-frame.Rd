@@ -5,6 +5,7 @@
 \alias{as.data.frame.ShojiCatalog}
 \alias{as.data.frame.BatchCatalog}
 \alias{as.data.frame.FilterCatalog}
+\alias{as.data.frame.UserCatalog}
 \title{as.data.frame method for catalog objects}
 \usage{
 \method{as.data.frame}{VariableCatalog}(x, row.names = NULL,
@@ -18,6 +19,9 @@
 
 \method{as.data.frame}{FilterCatalog}(x, row.names = NULL, optional = FALSE,
   keys = c("name", "id", "is_public"), ...)
+
+\method{as.data.frame}{UserCatalog}(x, row.names = NULL, optional = FALSE,
+  keys = c("name", "email", "teams", "collaborator"), ...)
 }
 \arguments{
 \item{x}{A catalog object}

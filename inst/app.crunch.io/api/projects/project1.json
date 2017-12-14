@@ -3,6 +3,7 @@
     "self": "https://app.crunch.io/api/projects/project1/",
     "catalogs": {
         "datasets": "https://app.crunch.io/api/projects/project1/datasets/",
+        "users": "https://app.crunch.io/api/projects/project1/users/",
         "members": "https://app.crunch.io/api/projects/project1/members/"
     },
     "description": "Details for a specific project",

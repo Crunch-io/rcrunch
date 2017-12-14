@@ -113,7 +113,7 @@ reference:
   - newMultitable
   - table
   - 'as.vector,CrunchExpr-method'
-- title: Data presentation 
+- title: Data presentation
   contents:
   - Subtotal-class
   - 'subtotalArray,CrunchCube-method'
@@ -148,6 +148,8 @@ reference:
   - login
   - logout
   - me
+  - users
+  - lastAccessed
   - newProject
   - owners
   - permissions

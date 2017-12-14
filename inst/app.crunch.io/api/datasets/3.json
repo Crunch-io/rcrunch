@@ -17,7 +17,8 @@
         "filters": "https://app.crunch.io/api/datasets/3/filters/",
         "boxdata": "https://app.crunch.io/api/datasets/3/boxdata/",
         "multitables": "https://app.crunch.io/api/datasets/3/multitables/",
-        "permissions": "https://app.crunch.io/api/datasets/3/permissions/"
+        "permissions": "https://app.crunch.io/api/datasets/3/permissions/",
+        "users": "https://app.crunch.io/api/datasets/3/users/"
     },
     "views": {
         "summary": "https://app.crunch.io/api/datasets/3/summary/"
