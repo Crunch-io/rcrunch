@@ -178,7 +178,6 @@ whichNameOrURL <- function (x, i, secondary=names(x)) {
 #' @rdname catalog-length
 #' @export
 setMethod("length", "ShojiCatalog", function (x) length(index(x)))
-setMethod("lapply", "ShojiCatalog", function (X, FUN, ...) lapply(index(X), FUN, ...))
 
 #' Get the body of a Catalog
 #'
@@ -280,7 +279,11 @@ catalogToDataFrame <- function (x, keys=TRUE, rownames = NULL,
         names(out) <- names
         for (i in seq_along(entry_list)) {
             for (j in names(entry_list[[i]])) {
-                out[[j]][i] <- entry_list[[i]][[j]]
+                val <- entry_list[[i]][[j]]
+                if (identical(val, list())) {
+                    val <- NA
+                }
+                out[[j]][i] <- val
             }
         }
         #################
