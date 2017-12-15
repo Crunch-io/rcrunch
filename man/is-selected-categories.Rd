@@ -6,15 +6,12 @@
 \alias{is.selected<-}
 \alias{is.selected,Categories-method}
 \alias{is.selected<-,Categories-method}
-\alias{is.selected,Category-method}
 \alias{is.selected<-,Category-method}
 \title{is.selected for Categories}
 \usage{
 \S4method{is.selected}{Categories}(x)
 
 \S4method{is.selected}{Categories}(x) <- value
-
-\S4method{is.selected}{Category}(x)
 
 \S4method{is.selected}{Category}(x) <- value
 }

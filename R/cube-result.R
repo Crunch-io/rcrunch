@@ -74,7 +74,7 @@ cubeToArray <- function (x, measure=1) {
     ## "ifany", whether or not NAs are shown may depend on the values in the
     ## table, not just the category/element metadata.
     ## (2) Multiple response. This variable type is presented to users as if
-    ## if were categorical, but its data structure isn't, and thus its
+    ## it were categorical, but its data structure isn't, and thus its
     ## representation in the cube response is more complex. We need that
     ## complexity so that we know how to compute percentages correctly, but
     ## here we need to dump it. Multiple response (MR) extra features in the
@@ -182,6 +182,8 @@ keepWithNA <- function (dimension, marginal, useNA) {
         ## But still drop __any__ or __none__
         out <- valid.cats & out
     }
+    # add names, so we know which categories are being kept
+    names(out) <- dimension$name
     return(out)
 }
 
@@ -268,6 +270,7 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
                 out <- !missings[[i]]
             }
         }
+
         return(out)
     })
     names(args) <- names(aon)
@@ -294,6 +297,11 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     ## for which that would do the wrong thing.
     keep.these <- evalUseNA(mt, dims[mt_margins], x@useNA)
     out <- subsetCubeArray(mt, keep.these)
+
+    # only attempt to apply a transform if the margin is 1 rows for now.
+    if (!is.null(margin) && margin == 1) {
+        out <- applyTransforms(x, array = out)
+    }
     return(out)
 }
 
@@ -342,6 +350,7 @@ as_selected_margins <- function (margin, selecteds, before=TRUE) {
 #' query without reducing the dimensionality.
 #' @param digits For `round`, the number of decimal places to round to. See
 #' [base::round()]
+#'
 #' @return When called on CrunchCubes, these functions return an `array`.
 #' Calling prop.table on
 #' a MultitableResult returns a list of prop.tables of the CrunchCubes it
@@ -365,6 +374,7 @@ as.array.CrunchCube <- function (x, ...) cubeToArray(x, ...)
 #' @export
 setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
     out <- as.array(x)
+    out <- applyTransforms(x, array = out)
     marg <- margin.table(x, margin)
     actual_margin <- as_selected_margins(margin, is.selectedDimension(x@dims),
         before=FALSE)
@@ -375,6 +385,7 @@ setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
         ## cubeMarginTable handles missingness, any/none, etc.
         out <- out/marg
     }
+
     return(out)
 })
 

@@ -20,8 +20,8 @@
         "result": {
             "dimensions": [{
                 "references": {
-                    "alias": "v7",
-                    "name": "v7"
+                    "alias": "selected_like",
+                    "name": "selected_like"
                 },
                 "derived": false,
                 "type": {
@@ -31,17 +31,12 @@
                         "numeric_value": 1,
                         "missing": false,
                         "id": 1,
-                        "name": "C"
+                        "name": "Selected"
                     }, {
                         "numeric_value": 2,
-                        "missing": true,
-                        "id": 2,
-                        "name": "D"
-                    }, {
-                        "numeric_value": 3,
                         "missing": false,
-                        "id": 3,
-                        "name": "E"
+                        "id": 2,
+                        "name": "Not selected"
                     }, {
                         "numeric_value": null,
                         "missing": true,
@@ -53,7 +48,7 @@
             "missing": 5,
             "measures": {
                 "count": {
-                    "data": [10, 5, 5, 0],
+                    "data": [10, 5, 0],
                     "n_missing": 5,
                     "metadata": {
                         "references": {},
@@ -70,8 +65,8 @@
                 }
             },
             "element": "crunch:cube",
-            "counts": [10, 5, 5, 0],
-            "n": 20
+            "counts": [10, 5, 0],
+            "n": 15
         }
     }
 }

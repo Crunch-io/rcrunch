@@ -208,6 +208,52 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
         filter=CrunchLogicalExpr(),
         tuple=DatasetTuple()))
 
+GenericConstructor <- function (class) {
+    return(function (..., data=NULL) {
+        if (!is.null(data)) {
+            return(new(class, data))
+        } else {
+            return(new(class, list(...)))
+        }
+    })
+}
+#' Abstract categories
+#'
+#' An abstract class that categories, elements, insertions, etc. fall under
+#'
+#' @param data For the constructor functions `AbstractCategory` and
+#' `AbstractCategories`, you can either pass in attributes via `...` or you
+#' can create the objects with a fully defined `list` representation of
+#' the objects via the `data` argument. See the examples.
+#' @param x For the attribute getters and setters, an object of class
+#' AbstractCategory or AbstractCategories
+#' @param i For the `[` methods, just as with list extract methods
+#' @param j Invalid argument to `[`, but in the generic's signature
+#' @param ... additional arguments to `[`, ignored
+#' @param drop Invalid argument to `[`, but in the generic's signature
+#' @param value For `[<-`, the replacement AbstractCategory to insert
+#' @rdname AbstractCategory
+#' @aliases AbstractCategory
+#' 
+#' @importFrom methods coerce as<- coerce<-
+#' @keywords internal
+#' @export
+setClass("AbstractCategories", contains="list")
+
+
+#' @rdname AbstractCategory
+#' @export
+AbstractCategories <- GenericConstructor("AbstractCategories")
+
+#' @rdname AbstractCategory
+#' @export
+setClass("AbstractCategory", contains="namedList")
+
+#' @rdname AbstractCategory
+#' @export
+AbstractCategory <- GenericConstructor("AbstractCategory")
+
+
 #' Categories in CategoricalVariables
 #'
 #' CategoricalVariables, as well as the array types composed from
@@ -228,7 +274,7 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
 #' @param drop Invalid argument to `[`, but in the generic's signature
 #' @param value For `[<-`, the replacement Category to insert
 #' @rdname Categories
-#' @aliases Categories ids ids<- values values<-
+#' @aliases Categories ids ids<- values values<- id.AbstractCategory ids.AbstractCategories
 #' @export
 #' @examples
 #' cat.a <- Category(name="First", id=1, numeric_value=1, missing=FALSE)
@@ -238,31 +284,99 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
 #' cats.1 <- Categories(cat.a, cat.c)
 #' cats.2 <- Categories(data=list(cat.a, cat.c))
 #' identical(cats.1, cats.2)
-setClass("Categories", contains="list")
+setClass("Categories", contains="AbstractCategories")
 
 #' @rdname Categories
 #' @export
-Categories <- function (..., data=NULL) {
-    if (!is.null(data)) {
-        return(new("Categories", data))
-    } else {
-        return(new("Categories", list(...)))
-    }
+Categories <- GenericConstructor("Categories")
+
+#' @rdname Categories
+#' @export
+setClass("Category", contains="AbstractCategory")
+
+#' @rdname Categories
+#' @export
+Category <- GenericConstructor("Category")
+
+
+#' @rdname Insertions
+#' @export
+setClass("Insertions", contains="AbstractCategories")
+
+#' @rdname Insertions
+#' @export
+Insertions <- GenericConstructor("Insertions")
+
+#' @rdname Insertions
+#' @export
+setClass("Insertion", contains="AbstractCategory")
+
+# Make a constructor with user-facing and package internal versions instead of 
+# simply setMethod("initialize", "Insertions") so that the user-facing version
+# preforms validation, but the internal version does not. This is needed for 
+# making heterogenous insertions that include classes Subtotal and Heading.
+#' @rdname Insertions
+#' @export
+Insertion <- function (...) {
+    out <- .Insertion(...)
+    
+    # check validity (only when Insertion is called)
+    insertionValidity(out)
+    
+    return(out)
 }
 
-#' @rdname Categories
-#' @export
-setClass("Category", contains="namedList")
+#' @rdname Insertions
+.Insertion <- function (..., data=NULL) {
+    out <- GenericConstructor("Insertion")(..., data=data)
 
-#' @rdname Categories
-#' @export
-Category <- function (..., data=NULL) {
-    if (!is.null(data)) {
-        return(new("Category", data))
-    } else {
-        return(new("Category", list(...)))
+    # ensure that args is a list, even if it is a single element
+    if (!is.null(out$args) && length(out$args) == 1) {
+        out$args <- as.list(out$args)
     }
+
+    return(out)
 }
+
+
+#' @rdname SubtotalsHeadings
+#' @export
+setClass("Subtotal", contains="Insertion")
+
+#' @rdname SubtotalsHeadings
+#' @export
+Subtotal <- GenericConstructor("Subtotal")
+
+#' @rdname SubtotalsHeadings
+#' @export
+setClass("Heading", contains="Insertion")
+
+#' @rdname SubtotalsHeadings
+#' @export
+Heading <- GenericConstructor("Heading")
+
+
+#' @rdname Transforms
+#' @export
+setClass("Transforms", contains="namedList")
+
+#' @rdname Transforms
+#' @export
+Transforms <- function (..., data = NULL) {
+    if (is.null(data)) {
+        data <- list(...)
+    }
+
+    if (!is.null(data$insertions)) {
+        data$insertions <- Insertions(data = data$insertions)
+    }
+    if (!is.null(data$categories)) {
+        data$categories <- Categories(data = data$categories)
+    }
+    # TODO: add elements
+    return(new("Transforms", data))
+}
+
 
 #' @rdname Subvariables
 #' @export
@@ -321,12 +435,7 @@ SearchResults <- setClass("SearchResults", contains="namedList")
 setClass("CrunchGeography", contains="namedList")
 #' @rdname geo
 #' @export
-CrunchGeography <- function (..., data=NULL) {
-    if (is.null(data)) {
-        data <- list(...)
-    }
-    return(new("CrunchGeography", data))
-}
+CrunchGeography <- GenericConstructor("CrunchGeography")
 
 #' @rdname geo
 #' @export Geodata

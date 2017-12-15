@@ -38,11 +38,35 @@ setMethod("show", "Category", .showIt)
 setMethod("show", "Categories", .showIt)
 
 
+#' @rdname show-crunch
+#' @export
+setMethod("show", "Insertion", .showIt)
+
+#' @rdname show-crunch
+#' @export
+setMethod("show", "Insertions", .showIt)
+
 # Actual show methods
 
-showCategory <- function (x) data.frame(id=id(x), name=name(x), value=value(x), missing=is.na(x))
+showAbsCategory <- function (x) data.frame(id=id(x), name=name(x), value=value(x), missing=is.na(x))
+showAbsCategories <- function (x) do.call("rbind", lapply(x, showAbsCategory))
 
-showCategories <- function (x) do.call("rbind", lapply(x, showCategory))
+showInsertion <- function (x) {
+    df_out <- data.frame(anchor=anchor(x), name=name(x),
+               func=func(x), args=serialPaste(args(x)))
+}
+showInsertions <- function (x) do.call("rbind", lapply(x, getShowContent))
+
+showSubtotalHeading <- function (x) {
+    # if anchor or args error because a categories object is not available to 
+    # translate from category names to ids, then show the names without error 
+    # for the show method only.
+    anchor <- tryCatch(anchor(x), error = function(e) {return(x$after)})
+    args <- tryCatch(args(x), error = function(e) {return(x$categories)})
+    df_out <- data.frame(anchor=anchor, name=name(x),
+                         func=func(x), args=serialPaste(args))
+}
+
 
 showCrunchVariableTitle <- function (x) {
     out <- paste(getNameAndType(x), collapse=" ")
@@ -269,8 +293,12 @@ showMultitable <- function (x) {
 
 # More boilerplate
 
-setMethod("getShowContent", "Category", showCategory)
-setMethod("getShowContent", "Categories", showCategories)
+setMethod("getShowContent", "AbstractCategory", showAbsCategory)
+setMethod("getShowContent", "AbstractCategories", showAbsCategories)
+setMethod("getShowContent", "Insertion", showInsertion)
+setMethod("getShowContent", "Insertions", showInsertions)
+setMethod("getShowContent", "Subtotal", showSubtotalHeading)
+setMethod("getShowContent", "Heading", showSubtotalHeading)
 setMethod("getShowContent", "CrunchVariable", showCrunchVariable)
 setMethod("getShowContent", "CategoricalArrayVariable",
     showCategoricalArrayVariable)
@@ -298,7 +326,7 @@ setMethod("getShowContent", "CrunchFilter",
     })
 #' @rdname show-crunch
 #' @export
-setMethod("show", "CrunchCube", function (object) show(cubeToArray(object)))
+setMethod("show", "CrunchCube", function (object) showTransforms(object))
 
 #' @rdname show-crunch
 #' @export
