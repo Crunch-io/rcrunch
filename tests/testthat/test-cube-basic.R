@@ -1,9 +1,9 @@
 context("Basic cube methods")
 
-v7 <- v7_ifany <- v7_always <- loadCube(test_path("cubes/univariate-categorical.json"))
+v7 <- v7_ifany <- v7_always <- loadCube("cubes/univariate-categorical.json")
 v7_ifany@useNA <- "ifany"
 v7_always@useNA <- "always"
-v4_x_v7 <- v4_x_v7_ifany <- v4_x_v7_always <- loadCube(test_path("cubes/cat-x-cat.json"))
+v4_x_v7 <- v4_x_v7_ifany <- v4_x_v7_always <- loadCube("cubes/cat-x-cat.json")
 v4_x_v7_ifany@useNA <- "ifany"
 v4_x_v7_always@useNA <- "always"
 
@@ -61,7 +61,7 @@ test_that("Cube print method", {
               "  C 5 2 3", sep="\n"))
 })
 
-selected_subvar <- loadCube(test_path("cubes/univariate-categorical-like-selected.json"))
+selected_subvar <- loadCube("cubes/univariate-categorical-like-selected.json")
 
 test_that("Categorical with categories Selected, Not selected", {
     # when detecting if a dimension is selected, we look at the categories. This

@@ -14,12 +14,20 @@
 #' [Heading()][SubtotalsHeadings]) are the only type of transformations that are
 #' supported.
 #' 
-#' @section Setting transformations:
+#' @section Setting transformations on a variable:
 #' The `transforms(x) <- value` methods can be used to assign transformations 
-#' for a specific variable (this will not yet work on a CrunchCube). `value` 
+#' for a specific variable. `value` 
 #' must be a `Transforms` object. This allows you to set transformations on 
 #' categorical variables. These transformations will automatically show up in 
 #' any new CrunchCubes that contain this variable.
+#' 
+#' @section Setting transformations on a CrunchCube:
+#' The `transforms(x) <- value` methods can also be used to assign 
+#' transformations to a CrunchCube that has already been calculated. `value` 
+#' must be a named list of `Transforms` objects. The names of this list must 
+#' correspond to dimensions in the cube (those dimensions correspondences are 
+#' matched based on variable aliases). You don't have to provide an entry for
+#' each dimension, but any dimension you do provide will be overwritten fully.
 #' 
 #' @section Removing transformations:
 #' To remove transformations from a variable or CrunchCube, use 
@@ -34,23 +42,33 @@
 #' Transforms
 #' @param value For `[<-`, the replacement Transforms to insert
 #' @name Transforms
-#' @aliases transforms transforms<-
+#' @aliases transforms transforms<- 
 NULL
 
 getTransforms <- function (x) {
     var_entity <- entity(x)
     trans <- var_entity@body$view$transform
-
     if (is.null(trans) || length(trans) == 0) {
         return(NULL)
     }
 
-    # get the insertions
-    inserts <- Insertions(data=trans$insertions)
-    # subtype insertions so that Subtotal, Heading, etc. are their rightful selves
-    inserts <- subtypeInsertions(inserts)
+    if (is.null(trans$insertions) || length(trans$insertions) == 0) {
+        inserts <- NULL
+    } else {
+        inserts <- Insertions(data=trans$insertions)
+        # subtype insertions so that Subtotal, Heading, etc. are their rightful 
+        # selves
+        inserts <- subtypeInsertions(inserts)
+    }
     
-    trans_out <- Transforms(insertions = Insertions(data=inserts),
+    # TODO: when other transforms are implemented, this should check those too.
+
+    # if insertions are null return NULL
+    if (is.null(inserts)) {
+        return(NULL)
+    }
+    
+    trans_out <- Transforms(insertions = inserts,
                             categories = NULL,
                             elements = NULL)
     return(trans_out)
