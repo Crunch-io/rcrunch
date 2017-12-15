@@ -58,7 +58,7 @@ test_that("applyTransforms works with a simple cube and row transforms", {
 
     # can apply to an array of the same shape
     new_array <- cubeToArray(pet_feelings)-1
-    new_all <- all - c(1, 1, 2, 1, 1, 1, 2) # msut subtract two from every subtotal
+    new_all <- all - c(1, 1, 2, 1, 1, 1, 2) # must subtract two from every subtotal
     expect_equivalent(applyTransforms(pet_feelings, array = new_array), new_all)
 })
 
@@ -85,6 +85,70 @@ test_that("applyTransforms can return what is asked for", {
     expect_equivalent(tst, all[c(1, 4, 8),])
 })
 
+test_that("applyTransforms with a cube that has transform but no insertions", {
+    pet_feelings@dims$feelings$references$view$transform$insertions <- list()
+
+    all <- array(c(9, 12, 12, 10, 11,
+                   5, 12, 7, 10, 12),
+                 dim = c(5, 2),
+                 dimnames = list("feelings" =
+                                     c("extremely happy", "somewhat happy",
+                                       "neutral", "somewhat unhappy",
+                                       "extremely unhappy"),
+                                 "animals" = c("cats", "dogs")))
+    expect_equivalent(applyTransforms(pet_feelings), all)
+})
+
+test_that("categorical arrays with transforms don't error and display cube cells", {
+    # TODO: when column display is available, these should be replaced with 
+    # proper expectations
+    cat_array_cube <- loadCube("./cubes/catarray-with-transforms.json")
+    
+    all <- array(c(1, 2, 2, 2, 1, 1),
+                 dim = c(3, 2),
+                 dimnames = list("CA" =
+                                     c("mr_1", "mr_2", "mr_3"),
+                                 "CA" = c("A", "B")))
+    
+    expect_equivalent(applyTransforms(cat_array_cube), all)
+    expect_output(cat_array_cube, 
+                  "    CA\nCA    A  B\nmr_1  1  2\nmr_2  2  1\nmr_3  2  1")
+})
+
+test_that("can set transforms on a cube", {
+    transforms(pet_feelings) <- NULL
+    expect_null(transforms(pet_feelings))
+    transforms(pet_feelings) <- list("feelings" = Transforms(
+        insertions = Insertions(
+            Heading(name = "Fabulous new header", after = 0),
+            Subtotal(name = "moderately happy",
+                     after = "somewhat unhappy", 
+                     categories = c("somewhat happy", "neutral",
+                                    "somewhat unhappy"))
+        )))
+
+    all <- array(c(NA, 9, 12, 12, 10, 34, 11,
+                   NA, 5, 12, 7, 10, 29, 12),
+                 dim = c(7, 2),
+                 dimnames = list("feelings" =
+                                     c("Fabulous new header", "extremely happy",
+                                       "somewhat happy", "neutral",
+                                       "somewhat unhappy", "moderately happy",
+                                       "extremely unhappy"),
+                                 "animals" = c("cats", "dogs")))
+    expect_equivalent(applyTransforms(pet_feelings), all)
+    
+    expect_error(
+        transforms(pet_feelings) <- list("not in the var" = Transforms(
+            insertions = Insertions(
+                Heading(name = "Fabulous new header", after = 0),
+                Subtotal(name = "subtotal", after = 2, categories = c(1, 2))
+            ))),
+        paste0("The names of the transforms supplied .*not in the var.* to not", 
+               " match the dimension names .*feelings.* and .*animals.* of the", 
+               " cube.")
+    )
+})
 
 test_that("margin.table works with a simple cube and row transforms", {
     feelings_margin <- array(c(14, 24, 38, 19, 20, 23, 43),

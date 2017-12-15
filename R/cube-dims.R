@@ -36,7 +36,7 @@ cubeVarReferences <- function (x) {
     tuple <- x$references
     tuple$type <- x$type$class
     if (tuple$type == "enum" && "subreferences" %in% names(tuple)) {
-        tuple$type <- "multiple_response"
+        tuple$type <- "subvariable_items"
     }
     tuple$categories <- x$type$categories
     return(tuple)
@@ -145,7 +145,7 @@ is.selectedDimension <- function (dims) {
     vars <- variables(dims)
     # We only need to check if the categories are the magical Selected
     # categories if there is an MR somewhere with the same alias
-    MRaliases <- aliases(vars)[types(vars) == "multiple_response"]
+    MRaliases <- aliases(vars)[types(vars) == "subvariable_items"]
 
     # determine which dimensions are selected MR dimensions
     selecteds <- mapply(is.it, x=index(vars), dim=dims@.Data,

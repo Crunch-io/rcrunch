@@ -7,6 +7,7 @@
 \alias{Transforms}
 \alias{transforms,CrunchCube-method}
 \alias{transforms,VariableCatalog-method}
+\alias{transforms<-,CrunchCube,list-method}
 \alias{transforms<-,CrunchCube,NULL-method}
 \alias{Transforms}
 \alias{transforms}
@@ -22,6 +23,8 @@ Transforms(..., data = NULL)
 \S4method{transforms}{CrunchCube}(x)
 
 \S4method{transforms}{VariableCatalog}(x)
+
+\S4method{transforms}{CrunchCube,list}(x) <- value
 
 \S4method{transforms}{CrunchCube,`NULL`}(x) <- value
 
@@ -63,13 +66,23 @@ Currently, \link{Insertions} (e.g. \link[=SubtotalsHeadings]{Subtotal()} and
 supported.
 }
 
-\section{Setting transformations}{
+\section{Setting transformations on a variable}{
 
 The \code{transforms(x) <- value} methods can be used to assign transformations
-for a specific variable (this will not yet work on a CrunchCube). \code{value}
+for a specific variable. \code{value}
 must be a \code{Transforms} object. This allows you to set transformations on
 categorical variables. These transformations will automatically show up in
 any new CrunchCubes that contain this variable.
+}
+
+\section{Setting transformations on a CrunchCube}{
+
+The \code{transforms(x) <- value} methods can also be used to assign
+transformations to a CrunchCube that has already been calculated. \code{value}
+must be a named list of \code{Transforms} objects. The names of this list must
+correspond to dimensions in the cube (those dimensions correspondences are
+matched based on variable aliases). You don't have to provide an entry for
+each dimension, but any dimension you do provide will be overwritten fully.
 }
 
 \section{Removing transformations}{

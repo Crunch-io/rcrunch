@@ -1,13 +1,19 @@
 #' @rdname showTransforms
 #' @export
 setMethod("showTransforms", "CrunchCube", function (x) {
-    if (is.null(transforms(x))) {
+    if (is.null(transforms(x)[[1]])) {
         print(cubeToArray(x))
         return(invisible(x))
     } else {
         appliedTrans <- applyTransforms(x)
-        row_cats <- Categories(data=index(variables(x))[[1]]$categories)
-        row_styles <- transformStyles(transforms(x)[[1]], row_cats[!is.na(row_cats)])
+        # if the row dimension is categorical, make styles
+        if (index(variables(x))[[1]]$type == "categorical") {
+            row_cats <- Categories(data=index(variables(x))[[1]]$categories)
+            row_styles <- transformStyles(transforms(x)[[1]], row_cats[!is.na(row_cats)])            
+        } else {
+            # otherwise punt, because this is an array or MR var.
+            row_styles <- NULL
+        }
 
         if (length(dim(appliedTrans)) <= 2) {
             out <- prettyPrint2d(appliedTrans, row_styles = row_styles)
@@ -81,6 +87,14 @@ setMethod("subtotalArray", "CrunchCube", function(x, headings = FALSE) {
 #' @aliases subtotalArray
 #' @export
 applyTransforms <- function (x, array = cubeToArray(x), ...) {
+    # if any of the dimensions are subvariables, don't even attempt to calculate
+    # transforms or insertions.
+    if (any(unlist(lapply(variables(x), function(x) {
+       x$type == "subvariable_items"
+    })))) {
+        return(array)
+    }
+    
     # if there are row transforms, calculate them and display them
     row_trans <- transforms(x)[[1]]
     if (!is.null(row_trans)) {
@@ -150,20 +164,63 @@ setMethod("transforms", "VariableCatalog", function (x) {
     if (all(unlist(lapply(transes, is.null)))) {
         return(NULL)
     }
-
     transes_out <- lapply(transes, function (i) {
+        # TODO: when other transforms are implemented, this should check those too.
+
+        # if insertions are null return NULL
+        if (is.null(i$insertions) || length(i$insertions) == 0) {
+            return(NULL)
+        }
+        
         # get the insertions
         inserts <- Insertions(data=i$insertions)
         # subtype insertions so that Subtotal, Heading, etc. are their rightful selves
         inserts <- subtypeInsertions(inserts)
         
-        Transforms(insertions = inserts,
-                   categories = NULL,
-                   elements = NULL)
+        return(Transforms(insertions = inserts,
+                          categories = NULL,
+                          elements = NULL)
+        )
     })
     
     names(transes_out) <- aliases(x)
     return(transes_out)
+})
+
+#' @rdname Transforms
+#' @export
+setMethod("transforms<-", c("CrunchCube", "list"), function (x, value) {
+    dims <- dimensions(x)
+    dimnames <- names(dims)
+    
+    # check if the names of the dimensions and the names of the transforms line up
+    if (any(!(names(value) %in% dimnames))) {
+        halt("The names of the transforms supplied (", 
+             serialPaste(dQuote(names(value)))
+             ,") to not match the dimension names (",
+             serialPaste(dQuote(dimnames)) ,") of the cube.")
+    }
+
+    # replace the transforms for each dimension
+    dims <- CubeDims(lapply(dimnames, function (dim_name) {
+        dim_out <- dims[[dim_name]]
+        if (dim_name %in% names(value)) {
+            # grab the matching insertions, make sure they are proper Insertions
+            # and then add them to the dimensions to return.
+            one_trans <- value[[dim_name]]
+            one_trans$insertions <- Insertions(
+                data = lapply(one_trans$insertions, makeInsertion,
+                              var_categories = categories(variables(x)[[dim_name]]))
+            )
+            dim_out$references$view$transform <- jsonprep(one_trans)
+        }
+        return(dim_out)
+    }))
+    
+    # rename, replace the dimensions and return the cube
+    names(dims) <- dimnames
+    dimensions(x) <- dims
+    return(invisible(x))
 })
 
 #' @rdname Transforms

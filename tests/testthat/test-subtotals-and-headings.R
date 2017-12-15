@@ -45,7 +45,7 @@ test_that("Subtotal/Heading getters", {
 with_mock_crunch({
     ds <- loadDataset("test ds")
 
-    test_that("subtotals retrievs the subtotals and headings Insertions", {
+    test_that("subtotals retrieves the subtotals and headings Insertions", {
         expect_equivalent(subtotals(ds$location),
                           Insertions(data=list(
                               Subtotal(name = "London+Scotland", after = 3, 
