@@ -29,7 +29,7 @@ with_mock_crunch({
         true_df <- true_df[, c("birthyr", "gender", "location", "textVar", "starttime")]
         # single column/row extraction
         all.equal(ds_df[1,], true_df[1,])
-        expect_equivalent(ds_df[,1], true_df[,1])
+        expect_equal(ds_df[,1], true_df[,1])
 
         # multiple columns/rows
         expect_equivalent(ds_df[c(1, 2),], true_df[c(1, 2),])

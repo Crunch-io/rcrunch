@@ -59,10 +59,10 @@ as.data.frame.CrunchDataFrame <- function (x,
     return(csvToDataFrame(ds_out, x))
 }
 
-csvToDataFrame <- function(csv_df, cdf) {
-    ds <- attr(cdf, "crunchDataset")
-    csv_df[] <- unlist(lapply(ds[, names(ds)], coerceVariable, csv_df, cdf), recursive = FALSE)
-    var_names <- lapply(names(cdf), function (v) {
+csvToDataFrame <- function(csv_df, crdf) {
+    ds <- attr(crdf, "crunchDataset")
+    csv_df[] <- unlist(lapply(ds[, names(ds)], coerceVariable, csv_df, crdf), recursive = FALSE)
+    var_names <- lapply(names(crdf), function (v) {
         if (is.Array(ds[[v]])) {
             return(aliases(subvariables(ds[[v]])))
         } else {
@@ -76,7 +76,7 @@ csvToDataFrame <- function(csv_df, cdf) {
         if (v %in% names(csv_df)) {
             return(csv_df[[v]])
         } else {
-            return(cdf[[v]])
+            return(crdf[[v]])
         }
     })
     names(out) <- var_names
@@ -85,7 +85,7 @@ csvToDataFrame <- function(csv_df, cdf) {
 
 coerceFactor <- function (var_alias, cats, df, cdf) {
     # csv download doesn't accomodate numeric factor values, so in that case
-    # we need to call pull the variable in the typical way.
+    # we need to pull the variable in the typical way.
     mode <- attr(cdf, "mode")
     if (mode == "numeric") {
         return(cdf[[var_alias]])
