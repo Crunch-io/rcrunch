@@ -347,7 +347,7 @@ as_selected_margins <- function (margin, selecteds, before=TRUE) {
 #' @param margin index, or vector of indices to generate margin for. See
 #' [base::prop.table()]. `bases()` accepts `0` as an additional valid
 #' value for `margin`, which yields the unweighted counts for the
-#' query without reducing the dimensionality.
+#' query.
 #' @param digits For `round`, the number of decimal places to round to. See
 #' [base::round()]
 #'
