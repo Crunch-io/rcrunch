@@ -14,7 +14,7 @@
   optional = FALSE, ...)
 }
 \arguments{
-\item{x}{a CrunchDataset}
+\item{x}{a CrunchDataset or Dataframe}
 
 \item{row.names}{part of as.data.frame signature. Ignored.}
 
@@ -36,7 +36,8 @@ Crunch Dataset order will be used.}
 }
 \value{
 an object of class \code{CrunchDataFrame} unless \code{force}, in
-which case the return is a \code{data.frame}.
+which case the return is a \code{data.frame}. For \code{CrunchDataFrame} the function returns
+a regular dataframe.
 }
 \description{
 This method is defined principally so that you can use a CrunchDataset as
@@ -49,4 +50,17 @@ that require select columns of a dataset to retrieve only those variables from
 the remote server, rather than pulling the entire dataset into local
 memory. You can override this behavior by passing \code{force = TRUE}, which will
 cause the function to return a traditional \code{data.frame}.
+}
+\details{
+When a traditional \code{data.frame} is returned the function coerces Crunch Variable
+values into their R equivalents using the following rules:
+\itemize{
+\item Numeric variables become numeric vectors
+\item Text variables become character vectors
+\item Categorical, Multiple Response, and Catagorical Arrays are coerced to factors whose
+levels match the Crunch Variable's categories
+\item Array variables are decomposed into their constituent subvariables. So if an
+array variable had three subvariables it will be decomposed into three factor
+columns in the resulting dataframe
+}
 }
