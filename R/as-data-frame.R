@@ -11,7 +11,18 @@
 #' memory. You can override this behavior by passing `force = TRUE`, which will
 #' cause the function to return a traditional `data.frame`.
 #'
-#' @param x a CrunchDataset
+#' When a traditional `data.frame` is returned the function coerces Crunch Variable
+#' values into their R equivalents using the following rules:
+#'
+#' * Numeric variables become numeric vectors
+#' * Text variables become character vectors
+#' * Categorical, Multiple Response, and Catagorical Arrays are coerced to factors whose
+#' levels match the Crunch Variable's categories
+#' * Array variables are decomposed into their constituent subvariables. So if an
+#' array variable had three subvariables it will be decomposed into three factor
+#' columns in the resulting dataframe
+#'
+#' @param x a CrunchDataset or Dataframe
 #' @param row.names part of as.data.frame signature. Ignored.
 #' @param optional part of as.data.frame signature. Ignored.
 #' @param force logical: actually coerce the dataset to `data.frame`, or
@@ -24,7 +35,8 @@
 #' @param include.hidden should hidden variables be included? (default: `FALSE`)
 #' @param ... additional arguments passed to `as.data.frame` (default method).
 #' @return an object of class `CrunchDataFrame` unless `force`, in
-#' which case the return is a `data.frame`.
+#' which case the return is a `data.frame`. For `CrunchDataFrame` the function returns
+#' a regular dataframe.
 #' @name dataset-to-R
 NULL
 
