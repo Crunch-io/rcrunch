@@ -52,16 +52,28 @@ as.data.frame.CrunchDataFrame <- function (x,
     ...) {
     ds <- attr(x, "crunchDataset")
     tmp <- tempfile()
-    csv_mode = ifelse(attr(x, "mode") == "factor", "name", "id")
-    write.csv(ds, tmp, categorical = csv_mode)
-    ds_out <- read.csv(tmp, stringsAsFactors = FALSE, colClasses = "character")
-    unlink(tmp)
+    on.exit(unlink(tmp))
+    write.csv(ds, tmp, categorical = "id")
+    # TODO: use variable metadata to provide all `colClasses`?
+    # meta <- variableMetadata(ds)
+    ds_out <- read.csv(tmp, stringsAsFactors = FALSE)
     return(csvToDataFrame(ds_out, x))
 }
 
-csvToDataFrame <- function(csv_df, crdf) {
+csvToDataFrame <- function (csv_df, crdf) {
     ds <- attr(crdf, "crunchDataset")
-    csv_df[] <- unlist(lapply(ds[, names(ds)], coerceVariable, csv_df, crdf), recursive = FALSE)
+    mode <- attr(crdf, "mode")
+    # TODO: fetch variableMetadata (at least if mode != "id") so that we don't
+    # do a GET on each variable entity for categories
+    csv_df[] <- unlist(lapply(ds[, names(ds)], function (v) {
+            if (is.Array(v)) {
+                cp <- columnParser("categorical")
+                return(lapply(csv_df[aliases(subvariables(v))], cp, v, mode))
+            } else {
+                cp <- columnParser(type(v))
+                return(list(cp(csv_df[[alias(v)]], v, mode)))
+            }
+        }), recursive=FALSE)
     var_names <- lapply(names(crdf), function (v) {
         if (is.Array(ds[[v]])) {
             return(aliases(subvariables(ds[[v]])))
@@ -82,42 +94,6 @@ csvToDataFrame <- function(csv_df, crdf) {
     names(out) <- var_names
     return(structure(out, class="data.frame", row.names=c(NA, -nrow(ds))))
 }
-
-coerceFactor <- function (var_alias, cats, df, cdf) {
-    # csv download doesn't accomodate numeric factor values, so in that case
-    # we need to pull the variable in the typical way.
-    mode <- attr(cdf, "mode")
-    if (mode == "numeric") {
-        return(cdf[[var_alias]])
-    } else if (mode == "id") {
-        return(suppressWarnings(as.numeric(df[[var_alias]])))
-    } else {
-        na_cats <- is.na(cats)
-        v <- df[[var_alias]]
-        levs <- names(cats)
-        v[v %in% levs[na_cats]] <- NA
-        v <- factor(v, levels = levs[!na_cats])
-        return(v)
-    }
-}
-
-coerceVariable <- function (var, df, cdf) {
-    if (is.Array(var)) {
-        out <- lapply(subvariables(var), function (x) {
-            coerceFactor(x$alias, categories(var), df, cdf)
-            })
-    } else if (is.Numeric(var)) {
-        out <- list(suppressWarnings(as.numeric(df[[alias(var)]]))) # To prevent NA coercion message
-    } else if (is.Categorical(var)) {
-        out <- list(coerceFactor(alias(var), categories(var), df, cdf))
-    } else if (is.Datetime(var)) {
-        out <- list(suppressWarnings(as.Date(df[[alias(var)]]))) # To prevent NA coercion warning
-    } else if (is.Text(var)) {
-        out <- list(as.character(df[[alias(var)]]))
-    }
-    return(out)
-}
-
 
 #' as.data.frame method for catalog objects
 #'
