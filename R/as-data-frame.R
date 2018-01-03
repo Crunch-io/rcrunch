@@ -56,10 +56,14 @@ NULL
 
 #' @rdname dataset-to-R
 #' @export
-as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE,
-    force=FALSE, categorical.mode = "factor",
-    include.hidden = FALSE,
-    row.order = NULL, ...) {
+as.data.frame.CrunchDataset <- function (x,
+                                         row.names = NULL,
+                                         optional = FALSE,
+                                         force=FALSE,
+                                         categorical.mode = "factor",
+                                         include.hidden = FALSE,
+                                         row.order = NULL,
+                                         ...) {
     out <- CrunchDataFrame(x, row.order = row.order,
         categorical.mode = categorical.mode,
         include.hidden = include.hidden)
@@ -73,9 +77,9 @@ as.data.frame.CrunchDataset <- function (x, row.names = NULL, optional = FALSE,
 #' @importFrom utils read.csv
 #' @export
 as.data.frame.CrunchDataFrame <- function (x,
-    row.names = NULL,
-    optional = FALSE,
-    ...) {
+                                           row.names = NULL,
+                                           optional = FALSE,
+                                           ...) {
     ds <- attr(x, "crunchDataset")
     tmp <- tempfile()
     on.exit(unlink(tmp))
@@ -158,35 +162,39 @@ csvToDataFrame <- function (csv_df, crdf) {
 #'
 #' @rdname catalog-to-data-frame
 #' @export
-as.data.frame.VariableCatalog <- function (x, row.names = NULL,
-    optional = FALSE,
-    keys = c("alias", "name", "type"),
-    ...) {
+as.data.frame.VariableCatalog <- function (x,
+                                           row.names = NULL,
+                                           optional = FALSE,
+                                           keys = c("alias", "name", "type"),
+                                           ...) {
     catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
 }
 
 #' @rdname catalog-to-data-frame
 #' @export
-as.data.frame.ShojiCatalog <- function (x, row.names = NULL,
-    optional = FALSE,
-    ...) {
+as.data.frame.ShojiCatalog <- function (x,
+                                        row.names = NULL,
+                                        optional = FALSE,
+                                        ...) {
     catalogToDataFrame(x, row.names = row.names, ...)
 }
 
 #' @rdname catalog-to-data-frame
 #' @export
-as.data.frame.BatchCatalog <- function (x, row.names = NULL,
-    optional = FALSE,
-    keys = c("id", "status"),
-    ...) {
+as.data.frame.BatchCatalog <- function (x,
+                                        row.names = NULL,
+                                        optional = FALSE,
+                                        keys = c("id", "status"),
+                                        ...) {
     catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
 }
 
 #' @rdname catalog-to-data-frame
 #' @export
-as.data.frame.FilterCatalog <- function (x, row.names = NULL,
-    optional = FALSE,
-    keys = c("name", "id", "is_public"),
-    ...) {
+as.data.frame.FilterCatalog <- function (x,
+                                         row.names = NULL,
+                                         optional = FALSE,
+                                         keys = c("name", "id", "is_public"),
+                                         ...) {
     catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
 }
