@@ -78,5 +78,5 @@ for example, will result in three columns in the \code{data.frame}.
 Column names in the \code{data.frame} are the variable/subvariable aliases.
 }
 \seealso{
-\code{\link[crunch:as.vector]{crunch::as.vector()}}
+\code{\link[=as.vector]{as.vector()}}
 }

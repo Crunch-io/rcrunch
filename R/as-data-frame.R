@@ -50,7 +50,7 @@
 #' @return When called on a `CrunchDataset`, the method returns an object of
 #' class `CrunchDataFrame` unless `force = TRUE`, in which case the return is a
 #' `data.frame`. For `CrunchDataFrame`, the method returns a `data.frame`.
-#' @seealso [crunch::as.vector()]
+#' @seealso [as.vector()]
 #' @name dataset-to-R
 NULL
 
