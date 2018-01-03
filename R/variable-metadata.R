@@ -8,7 +8,7 @@
 #' @return A VariableCatalog with all variable properties, including categories
 #' and subvariables.
 #' @export
-variableMetadata <- function(dataset) {
+variableMetadata <- function (dataset) {
     ## 1) Start with the variables catalog
     varcat <- allVariables(dataset)
 

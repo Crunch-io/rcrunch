@@ -1,30 +1,43 @@
 #' as.data.frame method for CrunchDataset
 #'
-#' This method is defined principally so that you can use a CrunchDataset as
-#' a `data` argument to other R functions (such as [stats::lm()]). By default,
-#' the function does not return a `data.frame` but instead `CrunchDataFrame`,  which
-#' behaves similarly to a `data.frame` without bringing the whole dataset into memory.
+#' This method is defined principally so that you can use a `CrunchDataset` as
+#' a `data` argument to other R functions (such as [stats::lm()]) without
+#' needing to download the whole dataset. You can, however, choose to download
+#' a true `data.frame`.
+#'
+#' By default, the `as.data.frame` method for `CrunchDataset` does not return a
+#' `data.frame` but instead `CrunchDataFrame`, which behaves like  a
+#' `data.frame` without bringing the whole dataset into memory.
 #' When you access the variables of a `CrunchDataFrame`,
 #' you get an R vector, rather than a `CrunchVariable`. This allows modeling functions
 #' that require select columns of a dataset to retrieve only those variables from
 #' the remote server, rather than pulling the entire dataset into local
-#' memory. You can override this behavior by passing `force = TRUE`, which will
-#' cause the function to return a traditional `data.frame`.
+#' memory.
 #'
-#' When a traditional `data.frame` is returned the function coerces Crunch Variable
+#' If you call `as.data.frame` on a `CrunchDataset` with `force = TRUE`, you
+#' will instead get a true `data.frame`. You can also get this `data.frame` by
+#' calling `as.data.frame` on a `CrunchDataFrame` (effectively calling
+#' `as.data.frame` on the dataset twice)
+#'
+#' When a `data.frame` is returned, the function coerces Crunch Variable
 #' values into their R equivalents using the following rules:
 #'
 #' * Numeric variables become numeric vectors
 #' * Text variables become character vectors
-#' * Categorical, Multiple Response, and Catagorical Arrays are coerced to factors whose
-#' levels match the Crunch Variable's categories
-#' * Array variables are decomposed into their constituent subvariables. So if an
-#' array variable had three subvariables it will be decomposed into three factor
-#' columns in the resulting dataframe
+#' * Datetime variables become either `Date` or `POSIXt` vectors
+#' * Categorical variables become either factors with
+#' levels matching the Crunch Variable's categories (the default), or, if
+#' `categorical.mode` is specified as "id" or "numeric", a numeric vector of
+#' category ids or numeric values, respectively
+#' * Array variables (Categorical Array, Multiple Response) are decomposed into
+#' their constituent categorical subvariables. An array with three subvariables,
+#' for example, will result in three columns in the `data.frame`.
 #'
-#' @param x a CrunchDataset or Dataframe
-#' @param row.names part of as.data.frame signature. Ignored.
-#' @param optional part of as.data.frame signature. Ignored.
+#' Column names in the `data.frame` are the variable/subvariable aliases.
+#'
+#' @param x a `CrunchDataset` or `CrunchDataFrame`
+#' @param row.names part of `as.data.frame` signature. Ignored.
+#' @param optional part of `as.data.frame` signature. Ignored.
 #' @param force logical: actually coerce the dataset to `data.frame`, or
 #' leave the columns as unevaluated promises. Default is `FALSE`.
 #' @param row.order vector of indices. Which, and their order, of the rows of
@@ -32,11 +45,12 @@
 #'  Crunch Dataset order will be used.
 #' @param categorical.mode what mode should categoricals be pulled as? One of
 #' factor, numeric, id (default: factor)
-#' @param include.hidden should hidden variables be included? (default: `FALSE`)
+#' @param include.hidden logical: should hidden variables be included? (default: `FALSE`)
 #' @param ... additional arguments passed to `as.data.frame` (default method).
-#' @return an object of class `CrunchDataFrame` unless `force`, in
-#' which case the return is a `data.frame`. For `CrunchDataFrame` the function returns
-#' a regular dataframe.
+#' @return When called on a `CrunchDataset`, the method returns an object of
+#' class `CrunchDataFrame` unless `force = TRUE`, in which case the return is a
+#' `data.frame`. For `CrunchDataFrame`, the method returns a `data.frame`.
+#' @seealso [crunch::as.vector()]
 #' @name dataset-to-R
 NULL
 
@@ -66,7 +80,7 @@ as.data.frame.CrunchDataFrame <- function (x,
     tmp <- tempfile()
     on.exit(unlink(tmp))
     write.csv(ds, tmp, categorical = "id")
-    # TODO: use variable metadata to provide all `colClasses`?
+    # TODO: use variableMetadata to provide all `colClasses`?
     # meta <- variableMetadata(ds)
     ds_out <- read.csv(tmp, stringsAsFactors = FALSE)
     return(csvToDataFrame(ds_out, x))
@@ -75,8 +89,10 @@ as.data.frame.CrunchDataFrame <- function (x,
 csvToDataFrame <- function (csv_df, crdf) {
     ds <- attr(crdf, "crunchDataset")
     mode <- attr(crdf, "mode")
-    # TODO: fetch variableMetadata (at least if mode != "id") so that we don't
-    # do a GET on each variable entity for categories
+    # So that we don't do a GET on each variable entity for categories
+    # Subset variableMetadata on the urls of the variables in the ds in case
+    # `ds` has only a subset of variables
+    ds@variables <- variableMetadata(ds)[urls(allVariables(ds))]
     csv_df[] <- unlist(lapply(ds[, names(ds)], function (v) {
             if (is.Array(v)) {
                 cp <- columnParser("categorical")

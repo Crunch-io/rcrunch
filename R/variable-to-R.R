@@ -1,6 +1,5 @@
 parse_column <- list(
     numeric=function (col, variable, mode) {
-        # print(str(col))
         missings <- vapply(col, Negate(is.numeric), logical(1))
         col[missings] <- NA_real_
         return(as.numeric(unlist(col)))

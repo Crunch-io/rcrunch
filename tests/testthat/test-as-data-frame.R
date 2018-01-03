@@ -77,7 +77,7 @@ with_mock_crunch({
             as.vector(ds$gender))
     })
 
-    test_that("as.data.frame(force = TRUE) generates a post call", {
+    test_that("as.data.frame(force = TRUE) generates a POST", {
         expect_POST(as.data.frame(ds, force = TRUE),
             'https://app.crunch.io/api/datasets/1/export/csv/',
             '{"filter":null,"options":{"use_category_ids":true}}')

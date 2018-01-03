@@ -14,11 +14,11 @@
   optional = FALSE, ...)
 }
 \arguments{
-\item{x}{a CrunchDataset or Dataframe}
+\item{x}{a \code{CrunchDataset} or \code{CrunchDataFrame}}
 
-\item{row.names}{part of as.data.frame signature. Ignored.}
+\item{row.names}{part of \code{as.data.frame} signature. Ignored.}
 
-\item{optional}{part of as.data.frame signature. Ignored.}
+\item{optional}{part of \code{as.data.frame} signature. Ignored.}
 
 \item{force}{logical: actually coerce the dataset to \code{data.frame}, or
 leave the columns as unevaluated promises. Default is \code{FALSE}.}
@@ -26,7 +26,7 @@ leave the columns as unevaluated promises. Default is \code{FALSE}.}
 \item{categorical.mode}{what mode should categoricals be pulled as? One of
 factor, numeric, id (default: factor)}
 
-\item{include.hidden}{should hidden variables be included? (default: \code{FALSE})}
+\item{include.hidden}{logical: should hidden variables be included? (default: \code{FALSE})}
 
 \item{row.order}{vector of indices. Which, and their order, of the rows of
 the dataset should be presented as (default: \code{NULL}). If \code{NULL}, then the
@@ -35,32 +35,48 @@ Crunch Dataset order will be used.}
 \item{...}{additional arguments passed to \code{as.data.frame} (default method).}
 }
 \value{
-an object of class \code{CrunchDataFrame} unless \code{force}, in
-which case the return is a \code{data.frame}. For \code{CrunchDataFrame} the function returns
-a regular dataframe.
+When called on a \code{CrunchDataset}, the method returns an object of
+class \code{CrunchDataFrame} unless \code{force = TRUE}, in which case the return is a
+\code{data.frame}. For \code{CrunchDataFrame}, the method returns a \code{data.frame}.
 }
 \description{
-This method is defined principally so that you can use a CrunchDataset as
-a \code{data} argument to other R functions (such as \code{\link[stats:lm]{stats::lm()}}). By default,
-the function does not return a \code{data.frame} but instead \code{CrunchDataFrame},  which
-behaves similarly to a \code{data.frame} without bringing the whole dataset into memory.
+This method is defined principally so that you can use a \code{CrunchDataset} as
+a \code{data} argument to other R functions (such as \code{\link[stats:lm]{stats::lm()}}) without
+needing to download the whole dataset. You can, however, choose to download
+a true \code{data.frame}.
+}
+\details{
+By default, the \code{as.data.frame} method for \code{CrunchDataset} does not return a
+\code{data.frame} but instead \code{CrunchDataFrame}, which behaves like  a
+\code{data.frame} without bringing the whole dataset into memory.
 When you access the variables of a \code{CrunchDataFrame},
 you get an R vector, rather than a \code{CrunchVariable}. This allows modeling functions
 that require select columns of a dataset to retrieve only those variables from
 the remote server, rather than pulling the entire dataset into local
-memory. You can override this behavior by passing \code{force = TRUE}, which will
-cause the function to return a traditional \code{data.frame}.
-}
-\details{
-When a traditional \code{data.frame} is returned the function coerces Crunch Variable
+memory.
+
+If you call \code{as.data.frame} on a \code{CrunchDataset} with \code{force = TRUE}, you
+will instead get a true \code{data.frame}. You can also get this \code{data.frame} by
+calling \code{as.data.frame} on a \code{CrunchDataFrame} (effectively calling
+\code{as.data.frame} on the dataset twice)
+
+When a \code{data.frame} is returned, the function coerces Crunch Variable
 values into their R equivalents using the following rules:
 \itemize{
 \item Numeric variables become numeric vectors
 \item Text variables become character vectors
-\item Categorical, Multiple Response, and Catagorical Arrays are coerced to factors whose
-levels match the Crunch Variable's categories
-\item Array variables are decomposed into their constituent subvariables. So if an
-array variable had three subvariables it will be decomposed into three factor
-columns in the resulting dataframe
+\item Datetime variables become either \code{Date} or \code{POSIXt} vectors
+\item Categorical variables become either factors with
+levels matching the Crunch Variable's categories (the default), or, if
+\code{categorical.mode} is specified as "id" or "numeric", a numeric vector of
+category ids or numeric values, respectively
+\item Array variables (Categorical Array, Multiple Response) are decomposed into
+their constituent categorical subvariables. An array with three subvariables,
+for example, will result in three columns in the \code{data.frame}.
 }
+
+Column names in the \code{data.frame} are the variable/subvariable aliases.
+}
+\seealso{
+\code{\link[crunch:as.vector]{crunch::as.vector()}}
 }
