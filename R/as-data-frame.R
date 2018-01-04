@@ -59,7 +59,7 @@ NULL
 as.data.frame.CrunchDataset <- function (x,
                                          row.names = NULL,
                                          optional = FALSE,
-                                         force=FALSE,
+                                         force = FALSE,
                                          categorical.mode = "factor",
                                          include.hidden = FALSE,
                                          row.order = NULL,
@@ -93,37 +93,31 @@ as.data.frame.CrunchDataFrame <- function (x,
 csvToDataFrame <- function (csv_df, crdf) {
     ds <- attr(crdf, "crunchDataset")
     mode <- attr(crdf, "mode")
-    # So that we don't do a GET on each variable entity for categories
-    # Subset variableMetadata on the urls of the variables in the ds in case
-    # `ds` has only a subset of variables
+    ## Use `variableMetadata` to avoid a GET on each variable entity for
+    ## categories and subvariables
+    ## Subset variableMetadata on the urls of the variables in the ds in case
+    ## `ds` has only a subset of variables
     ds@variables <- variableMetadata(ds)[urls(allVariables(ds))]
-    csv_df[] <- unlist(lapply(ds[, names(ds)], function (v) {
-            if (is.Array(v)) {
-                cp <- columnParser("categorical")
-                return(lapply(csv_df[aliases(subvariables(v))], cp, v, mode))
-            } else {
-                cp <- columnParser(type(v))
-                return(list(cp(csv_df[[alias(v)]], v, mode)))
-            }
-        }), recursive=FALSE)
-    var_names <- lapply(names(crdf), function (v) {
-        if (is.Array(ds[[v]])) {
-            return(aliases(subvariables(ds[[v]])))
+    ## CrunchDataFrames contain both server variables and local variables.
+    ## Iterate over the names of crdf to preserve the desired order.
+    ## Nest individual columns in a list and then unlist all because array
+    ## variables can return multiple columns
+    out <- unlist(lapply(names(crdf), function (a) {
+        v <- ds[[a]]
+        if (is.null(v)) {
+            ## Not in the dataset, so it exists only in the CRDF. Get it there.
+            return(structure(list(crdf[[a]]), .Names=a))
+        } else if (is.Array(v)) {
+            ## Find the subvar columns in the csv_df and parse them as categorical
+            cp <- columnParser("categorical")
+            sub_a <- aliases(subvariables(v))
+            return(structure(lapply(csv_df[sub_a], cp, v, mode), .Names=sub_a))
         } else {
-            return(v)
+            cp <- columnParser(type(v))
+            return(structure(list(cp(csv_df[[a]], v, mode)), .Names=a))
         }
-    })
-    var_names <- unlist(var_names)
-    ## Crunch Dataframes contain both server variables and local variables this
-    ## ensures that both are returned in the proper order.
-    out <- lapply(var_names, function (v) {
-        if (v %in% names(csv_df)) {
-            return(csv_df[[v]])
-        } else {
-            return(crdf[[v]])
-        }
-    })
-    names(out) <- var_names
+    }), recursive=FALSE)
+    ## Wrap that list of columns in a data.frame structure
     return(structure(out, class="data.frame", row.names=c(NA, -nrow(ds))))
 }
 
