@@ -175,18 +175,11 @@ getAPIRoot <- function (x=getOption("crunch.api")) {
 }
 
 sessionURL <- function (key, collection="catalogs") {
-    if (is.authenticated()) {
-        return(shojiURL(session_store$root, collection, key))
-    } else {
-        halt("You must authenticate before making this request")
-    }
+    return(shojiURL(session_store$root, collection, key))
 }
 
 rootURL <- function (x, obj=session_store$root) {
     ## DEPRECATE ME
-    if (!is.authenticated()) {
-        halt("You must authenticate before making this request")
-    }
     if (is.shojiObject(obj)) {
         return(obj@urls[[paste0(x, "_url")]])
     } else {

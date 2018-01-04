@@ -45,7 +45,17 @@
             "include_missing": false,
             "show_counts": false,
             "show_codes": false,
-            "column_width": null
+            "column_width": null,
+			"transform": {
+				"insertions": [
+                	{
+                    "anchor": 3,
+                    "name": "London+Scotland",
+                    "function": "subtotal",
+                    "args": [1, 2]
+                   }
+            	]
+        	}
         },
         "type": "categorical",
         "id": "loc"

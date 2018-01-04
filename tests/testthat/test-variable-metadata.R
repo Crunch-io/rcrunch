@@ -17,6 +17,11 @@ with_mock_crunch({
             list(list(name="First", alias="subvar2", description=NULL),
                 list(name="Second", alias="subvar1", description=NULL),
                 list(name="Last", alias="subvar3", description=NULL)))
+        ## Test the subvariables method that doesn't need to do a GET
+        ds2 <- ds
+        ds2@variables <- vm
+        expect_identical(names(subvariables(ds2$catarray)),
+            c("First", "Second", "Last"))
     })
 })
 

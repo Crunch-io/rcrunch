@@ -18,6 +18,7 @@ License: LGPL (>= 3)
 Depends:
     R (>= 3.0.0)
 Imports:
+    crayon,
     curl,
     grDevices,
     httr (>= 1.0.0),
@@ -34,13 +35,16 @@ Suggests:
     rstudioapi,
     spelling
 VignetteBuilder: knitr
+Language: en-US
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
-Collate:
+Collate: 
     'AllClasses.R'
     'AllGenerics.R'
     'variable-definition.R'
     'R-to-variable.R'
+    'abstract-categories.R'
+    'abstract-category.R'
     'add-subvariable.R'
     'add-variable.R'
     'api.R'
@@ -51,6 +55,7 @@ Collate:
     'case-variables.R'
     'categories.R'
     'category.R'
+    'change-category-id.R'
     'combine-categories.R'
     'compare-categories.R'
     'compare-datasets.R'
@@ -67,6 +72,7 @@ Collate:
     'cube-dims.R'
     'cube-query.R'
     'cube-result.R'
+    'cube-transforms.R'
     'cube-variables.R'
     'cut.R'
     'dataset-catalog.R'
@@ -88,6 +94,7 @@ Collate:
     'get-datasets.R'
     'github.R'
     'hide-variables.R'
+    'insertions.R'
     'interact.R'
     'join-dataset.R'
     'json.R'
@@ -99,6 +106,7 @@ Collate:
     'new-dataset.R'
     'ordering.R'
     'permission-catalog.R'
+    'pretty-print.R'
     'progress.R'
     'projects.R'
     'search.R'
@@ -111,9 +119,12 @@ Collate:
     'shoji-order.R'
     'shoji.R'
     'show.R'
+    'subtotals-and-headings.R'
     'subvariables.R'
     'tab-book.R'
     'teams.R'
+    'transform-calculate.R'
+    'transform.R'
     'tuple.R'
     'univariate.R'
     'user.R'

@@ -7,6 +7,8 @@
 \alias{show,CrunchVariable-method}
 \alias{show,Category-method}
 \alias{show,Categories-method}
+\alias{show,Insertion-method}
+\alias{show,Insertions-method}
 \alias{show,CrunchExpr-method}
 \alias{show,CrunchLogicalExpr-method}
 \alias{show,CrunchCube-method}
@@ -22,6 +24,10 @@
 \S4method{show}{Category}(object)
 
 \S4method{show}{Categories}(object)
+
+\S4method{show}{Insertion}(object)
+
+\S4method{show}{Insertions}(object)
 
 \S4method{show}{CrunchExpr}(object)
 
