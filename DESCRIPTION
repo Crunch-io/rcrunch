@@ -35,6 +35,7 @@ Suggests:
     spelling,
     testthat (>= 2.0.0)
 VignetteBuilder: knitr
+Language: en-US
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
 Collate:
