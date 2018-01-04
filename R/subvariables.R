@@ -33,8 +33,16 @@ NULL
 setMethod("subvariables", "CategoricalArrayVariable", function (x) {
     tup <- tuple(x)
     catalog_url <- absoluteURL(tup$subvariables_catalog, base=tup@index_url)
-    vars <- VariableCatalog(crGET(catalog_url))
-    out <- Subvariables(vars[subvariables(tup)])
+    if (!is.null(tup$subreferences)) {
+        ## This is from a rich `variableMetadata` catalog. Don't do any more GETs
+        out <- Subvariables(
+            index=structure(tup$subreferences, .Names=tup$subvariables),
+            self=catalog_url
+        )
+    } else {
+        vars <- VariableCatalog(crGET(catalog_url))
+        out <- Subvariables(vars[subvariables(tup)])
+    }
     activeFilter(out) <- activeFilter(x)
     return(out)
 })
