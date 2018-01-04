@@ -35,8 +35,11 @@ setMethod("subvariables", "CategoricalArrayVariable", function (x) {
     catalog_url <- absoluteURL(tup$subvariables_catalog, base=tup@index_url)
     if (!is.null(tup$subreferences)) {
         ## This is from a rich `variableMetadata` catalog. Don't do any more GETs
+        subvars <- tup$subreferences
+        ## Subreferences names are ids. Convert to URLs
+        names(subvars) <- paste0(absoluteURL(names(subvars), base=catalog_url), "/")
         out <- Subvariables(
-            index=structure(tup$subreferences, .Names=tup$subvariables),
+            index=subvars[tup$subvariables],
             self=catalog_url
         )
     } else {

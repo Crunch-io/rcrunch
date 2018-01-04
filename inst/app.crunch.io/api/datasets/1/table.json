@@ -51,23 +51,23 @@
                 {"numeric_value": null, "name": "No Data", "missing": true, "selected": false, "id": -1}
             ],
             "description": "Please select all that apply",
-            "subreferences": [
-                {
-                    "name": "First",
-                    "alias": "subvar2",
-                    "description": null
-                },
-                {
+            "subreferences": {
+                "subvar1": {
                     "name": "Second",
                     "alias": "subvar1",
                     "description": null
                 },
-                {
+                "subvar2": {
+                    "name": "First",
+                    "alias": "subvar2",
+                    "description": null
+                },
+                "subvar3": {
                     "name": "Last",
                     "alias": "subvar3",
                     "description": null
                 }
-            ],
+            },
             "subvariables": [
                 "subvar2",
                 "subvar1",
@@ -84,23 +84,23 @@
                 {"numeric_value": null, "name": "No Data", "missing": true, "id": -1}
             ],
             "description": "An array of cats",
-            "subreferences": [
-                {
-                    "name": "First",
-                    "alias": "subvar2",
-                    "description": null
-                },
-                {
+            "subreferences": {
+                "subvar1": {
                     "name": "Second",
                     "alias": "subvar1",
                     "description": null
                 },
-                {
+                "subvar2": {
+                    "name": "First",
+                    "alias": "subvar2",
+                    "description": null
+                },
+                "subvar3": {
                     "name": "Last",
                     "alias": "subvar3",
                     "description": null
                 }
-            ],
+            },
             "subvariables": [
                 "subvar2",
                 "subvar1",
