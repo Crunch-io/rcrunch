@@ -39,7 +39,7 @@
 \item{margin}{index, or vector of indices to generate margin for. See
 \code{\link[base:prop.table]{base::prop.table()}}. \code{bases()} accepts \code{0} as an additional valid
 value for \code{margin}, which yields the unweighted counts for the
-query without reducing the dimensionality.}
+query.}
 
 \item{digits}{For \code{round}, the number of decimal places to round to. See
 \code{\link[base:round]{base::round()}}}
