@@ -86,13 +86,13 @@ test_that("residuals for MR by categorical unweighted", {
 test_that("residuals for MR by cat from app", {
     out <- cubify(c(
         0.8013419145312314, -0.8013419145312314, 0.604556055828044,
-        -0.6045560558280446, -0.3088424703459705, 0.30884247034596934), 
+        -0.6045560558280446, -0.3088424703459705, 0.30884247034596934),
                   dims=rev(cat_by_mr_dims))
     expect_equal(rstandard(mr_by_cat_2), out)
 })
 test_that("residuals for categorical by MR, should be transpose of above", {
     out <- cubify(c(0.8013419145312314, 0.604556055828044, -0.3088424703459705,
-                    -0.8013419145312314, -0.6045560558280446, 0.30884247034596934), 
+                    -0.8013419145312314, -0.6045560558280446, 0.30884247034596934),
                   dims=cat_by_mr_dims)
     expect_equal(rstandard(cat_by_mr), out)
 })
@@ -126,31 +126,20 @@ test_that("residuals for MR by MR by anything errors", {
 test_that("residuals for MR with (old style) selected arrays errors helpfully", {
     expect_error(rstandard(mr_by_cat_selected_array), paste0(
         "rstandard is not implemented with CrunchCubes that use selected ",
-        "arrays. Selected arrays have been deprecated, please recreate ", 
+        "arrays. Selected arrays have been deprecated, please recreate ",
         "your cube using `as_selected\\(\\)` around multiple response variables."))
-})
-
-
-test_that("residuals for catarray", {
-    out <- cubify(
-        c(-34.1520876574262, 29.5334359815399, 27.2221020075088,
-          28.64461124699, -34.3223793320432,
-          34.1520876574262,-29.5334359815399,-27.2221020075088,
-          -28.64461124699,34.3223793320432),
-        dims = catarray_dims)
-    expect_equal(rstandard(catarray), out)
 })
 
 test_that("residuals for catarray by cat", {
     expect_error(rstandard(catarray_by_cat), paste0(
                  "Cannot compute residuals with more than two dimensions. Pick ",
                  "a slice to evaluate"))
-    # TODO: check a slice
+    # TODO: Implement [.CrunchCube. Then check a slice
 })
 
 test_that("residuals for catarray", {
     expect_error(rstandard(catarray_by_mr), paste0(
                  "Cannot compute residuals with more than two dimensions. Pick ",
                  "a slice to evaluate"))
-    # TODO: check a slice
+    # TODO: Implement [.CrunchCube. Then check a slice
 })
