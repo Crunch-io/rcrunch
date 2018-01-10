@@ -160,6 +160,7 @@ subtotals(ds$snowdenleakapp) <- approve_subtotals
 subtotals(ds$congapp) <- approve_subtotals
 sub_snowdon <- subtotals(ds$snowdenleakapp)
 sub_con <- subtotals(ds$congapp)
-save.image(file="../vignettes/vignettes.RData")
+sub_crtab <- crtabs(~congapp + gender, ds)
 
+save.image(file="../vignettes/vignettes.RData")
 with_consent(delete(ds)) ## cleanup

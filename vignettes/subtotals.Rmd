@@ -117,3 +117,33 @@ sub_snowdon
 sub_con
 ```
 
+ 
+# CrunchCubes and subtotals
+ 
+Now that we have set subtotals on the congressional approval question, if we use it in a CrunchCube we can see the subtotals. Currently this is limited to the row variable in the CrunchCube, but we have plans to expand this in the future. 
+```{r show subtotals, eval= FALSE}
+crtabs(~congapp + gender, data = ds)
+```
+```{r show subtotals out, echo = FALSE}
+sub_crtab
+```
+ 
+We can even get just the subtotals as an array from the cube if we want to ignore the constituent groups and compute specific statistics about the subtotals:
+```{r show subtotals only, eval = FALSE}
+subtotalArray(crtabs(~congapp + gender, data = ds))
+```
+```{r show subtotals only out, echo = FALSE}
+subtotalArray(sub_crtab)
+```
+
+If you don't want to see the subtotals as part of these summaries for some reason, you can suppress the suppress them with the `noTransforms()` function like so: 
+
+```{r noTransforms, eval = FALSE}
+noTransforms(crtabs(~congapp + gender, data = ds))
+```
+```{r, echo = FALSE}
+noTransforms(sub_crtab)
+
+```
+
+
