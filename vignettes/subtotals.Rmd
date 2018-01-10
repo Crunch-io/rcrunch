@@ -54,7 +54,7 @@ subtotals(ds$manningknowledge)
 sub_subtotals1
 ```
 
-This shows up in the crunch app as a bolded subtotal in the variable card. 
+This shows up in the Categorical variable car like so: 
 
 ```{r crunch app output, echo = FALSE}
 knitr::include_graphics("images/manning_knowledge_subtotals.png") 
