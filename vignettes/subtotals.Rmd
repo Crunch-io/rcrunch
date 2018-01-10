@@ -1,15 +1,12 @@
 ---
 title: "Subtotals"
-date: "`r Sys.Date()`"
+description: "Modify subtotals and headings from R"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteIndexEntry{Subtotals}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
-
-# Setting subtotals in R
-
 ```{r load data, include=FALSE}
 ## Because the vignette tasks require communicating with a remote host,
 ## we do all the work ahead of time and save a workspace, which we load here.
