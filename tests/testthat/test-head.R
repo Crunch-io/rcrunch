@@ -1,21 +1,23 @@
 context("head and tail")
 
 with_mock_crunch({
-    ds <- loadDataset("test ds")
-    with_mock(`crunch:::crDownload`=function (url, file) {
-        resp <- GET(url)
-        return(resp$content)
-    }, {
-        test_that("head method works on CrunchDatasets", {
-            head_df <- head(ds)
-            expect_is(head_df, "data.frame")
-            expect_equal(nrow(head_df), 6)
-            expect_identical(head_df$textVar, c("w", "n", "x", "b", "q", "s"))
-        })
-        test_that("tail generates the correct request", {
-            expect_POST(tail(as.data.frame(ds)),
-                'https://app.crunch.io/api/datasets/1/export/csv/',
-                '{"filter":{"function":"between","args":[{"function":"row","args":[]},{"value":19},{"value":25}]},"options":{"use_category_ids":true}')
+    with_silent_progress({
+        ds <- loadDataset("test ds")
+        with_mock(`crunch:::crDownload`=function (url, file) {
+            resp <- GET(url)
+            return(resp$content)
+        }, {
+            test_that("head method works on CrunchDatasets", {
+                head_df <- head(ds[,c("birthyr", "gender", "location", "mymrset", "textVar", "starttime")])
+                expect_is(head_df, "data.frame")
+                expect_equal(nrow(head_df), 6)
+                expect_identical(head_df$textVar, c("w", "n", "x", "b", "q", "s"))
+            })
+            test_that("tail generates the correct request", {
+                expect_POST(tail(as.data.frame(ds)),
+                    'https://app.crunch.io/api/datasets/1/export/csv/',
+                    '{"filter":{"function":"between","args":[{"function":"row","args":[]},{"value":19},{"value":25}]},"options":{"use_category_ids":true}')
+            })
         })
     })
 })
