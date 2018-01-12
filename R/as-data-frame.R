@@ -83,7 +83,7 @@ as.data.frame.CrunchDataFrame <- function (x,
     ds <- attr(x, "crunchDataset")
     tmp <- tempfile()
     on.exit(unlink(tmp))
-    write.csv(ds, tmp, categorical = "id")
+    tmp <- write.csv(ds, tmp, categorical = "id")
     # TODO: use variableMetadata to provide all `colClasses`?
     # meta <- variableMetadata(ds)
     ds_out <- read.csv(tmp, stringsAsFactors = FALSE)
