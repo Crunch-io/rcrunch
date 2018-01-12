@@ -227,6 +227,17 @@ with_test_authentication({
         expect_true(is.data.frame(as.data.frame(ds, force=TRUE)))
     })
 
+    mrds <- mrdf.setup(newDataset(mrdf, name = "test-mrdfmr"), selections = "1.0")
+    mrds_df <- as.data.frame(mrds, force = TRUE)
+    test_that("Multiple response variables in as.data.frame(force=TRUE)", {
+        expect_equal(ncol(mrds_df), 4)
+        expect_equal(names(mrds_df), c("mr_1", "mr_2", "mr_3", "v4"))
+        expect_equal(mrds_df$mr_1, as.vector(mrds$MR$mr_1))
+        expect_equal(mrds_df$mr_2, as.vector(mrds$MR$mr_2))
+        expect_equal(mrds_df$mr_3, as.vector(mrds$MR$mr_3))
+        expect_equal(mrds_df$v4, as.vector(mrds$v4))
+    })
+
     v2 <- ds$v2
     with_consent(delete(v2))
     test_that("CrunchDataFrame lazily fetches columns", {

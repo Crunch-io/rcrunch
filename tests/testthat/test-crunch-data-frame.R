@@ -194,24 +194,3 @@ with_mock_crunch({
         expect_false("gender" %in% names(ds_df))
     })
 })
-
-with_test_authentication({
-    ds <- mrdf.setup(newDataset(mrdf, name = "test-mrdfmr"), selections = "1.0")
-    ds_df <- as.data.frame(ds, force = TRUE)
-    test_that("Multiple response variables", {
-        expect_equal(ncol(ds_df), 4)
-        expect_equal(names(ds_df), c("mr_1", "mr_2", "mr_3", "v4"))
-        expect_equal(ds_df$mr_1, as.vector(ds$MR$mr_1))
-        expect_equal(ds_df$mr_2, as.vector(ds$MR$mr_2))
-        expect_equal(ds_df$mr_3, as.vector(ds$MR$mr_3))
-        expect_equal(ds_df$v4, as.vector(ds$v4))
-    })
-
-    test_that("CDF with assigned variables returns dataframe", {
-        ds_df$new_local_var <- 4:1
-        ds_df$new_local_var2 <- 1:4
-        # and we can get a dataframe from this new one.
-        expect_equal(as.vector(ds_df$new_local_var), 4:1)
-        expect_equal(as.vector(ds_df$new_local_var2), 1:4)
-    })
-})
