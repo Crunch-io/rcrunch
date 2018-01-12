@@ -48,7 +48,7 @@ Heading(name, position = c("relative", "top", "bottom"), after = NULL)
 \S4method{subtotals}{CrunchVariable,`NULL`}(x) <- value
 }
 \arguments{
-\item{name}{character the name of the subotal or heading}
+\item{name}{character the name of the subtotal or heading}
 
 \item{categories}{character or numeric the category names or ids for subtotal
 only}
@@ -64,11 +64,6 @@ category name or id to position the subtotal or heading after}
 transforms for}
 
 \item{value}{For \code{[<-}, the replacement Subtotal to insert}
-
-\item{data}{For the constructor functions \code{Subtotal} and
-\code{Heading}, you can either pass in attributes via \code{...} or you
-can create the objects with a fully defined \code{list} representation of
-the objects via the \code{data} argument.}
 
 \item{...}{additional arguments to \code{[}, ignored}
 }

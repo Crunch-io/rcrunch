@@ -33,13 +33,9 @@
 #'
 #' @param x either a variable or CrunchCube object to add or get subtotal
 #' transforms for
-#' @param data For the constructor functions `Subtotal` and
-#' `Heading`, you can either pass in attributes via `...` or you
-#' can create the objects with a fully defined `list` representation of
-#' the objects via the `data` argument.
 #' @param ... additional arguments to `[`, ignored
 #' @param value For `[<-`, the replacement Subtotal to insert
-#' @param name character the name of the subotal or heading
+#' @param name character the name of the subtotal or heading
 #' @param categories character or numeric the category names or ids for subtotal
 #' only
 #' @param position character one of "relative", "top", or "bottom". Determines
