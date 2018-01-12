@@ -1,4 +1,4 @@
-structure(list(url = "https://player-crunch-io.s3.amazonaws.com/export/dataset_exports/24de0ff501aa3225958678898cd26d08/test-ds.csv?Signature=SKknqNLKd2vJu3EcxKhOJxOjp4c%3D&Expires=1515770593&AWSAccessKeyId=AKIAJT4CEBNJXNPF3NZA",
+structure(list(url = "dataset_exports/test-ds.csv?Signature=SKknqNLKd2vJu3EcxKhOJxOjp4c%3D&Expires=1515770593&AWSAccessKeyId=AKIAJT4CEBNJXNPF3NZA",
     status_code = 200L, headers = structure(list(`x-amz-id-2` = "hbf4NE2bXWgrKx543IbIkQWBNYuW2cYQJUA4IgyRMdh5kx+ycRWH4xpUePxeFf3NCqmTHYcLtjk=",
         `x-amz-request-id` = "2FB86A9B8DC42D74", date = "Fri, 12 Jan 2018 14:23:14 GMT",
         `last-modified` = "Fri, 12 Jan 2018 14:14:28 GMT", etag = "\"bcb13d034df67ff81550e9cf42e858ab\"",
@@ -20,12 +20,12 @@ structure(list(url = "https://player-crunch-io.s3.amazonaws.com/export/dataset_e
         path = logical(0), secure = logical(0), expiration = structure(numeric(0), class = c("POSIXct",
         "POSIXt")), name = logical(0), value = logical(0)), .Names = c("domain",
     "flag", "path", "secure", "expiration", "name", "value"), row.names = integer(0), class = "data.frame"),
-    content = structure(httptest:::findMockFile( "player-crunch-io.s3.amazonaws.com/export/dataset_exports/24de0ff501aa3225958678898cd26d08/test-ds.csv-eadc36.R-FILE"), class = "path"),
+    content = structure(httptest:::findMockFile("dataset_exports/test-ds.csv-eadc36.R-FILE"), class = "path"),
     date = structure(1515766994, class = c("POSIXct", "POSIXt"
     ), tzone = "GMT"), times = structure(c(0, 0.009498, 0.040893,
     0.121405, 0.173366, 0.173382), .Names = c("redirect", "namelookup",
     "connect", "pretransfer", "starttransfer", "total")), request = structure(list(
-        method = "GET", url = "https://player-crunch-io.s3.amazonaws.com/export/dataset_exports/24de0ff501aa3225958678898cd26d08/test-ds.csv?Signature=SKknqNLKd2vJu3EcxKhOJxOjp4c%3D&Expires=1515770593&AWSAccessKeyId=AKIAJT4CEBNJXNPF3NZA",
+        method = "GET", url = "dataset_exports/test-ds.csv?Signature=SKknqNLKd2vJu3EcxKhOJxOjp4c%3D&Expires=1515770593&AWSAccessKeyId=AKIAJT4CEBNJXNPF3NZA",
         headers = structure(c("application/json, text/xml, application/xml, */*",
         "libcurl/7.54.0 curl/3.0 httr/1.3.1 rcrunch/1.19.1"), .Names = c("Accept",
         "user-agent")), fields = NULL, options = structure(list(
