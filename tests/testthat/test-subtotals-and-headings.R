@@ -12,30 +12,45 @@ test_that("Subtotal accepts a variety of inputs", {
 
     expect_equal(subtot1, subtot2)
     expect_equal(subtot2, subtot3)
+
+    subtot_top <- Subtotal(name = "Approval", categories = c(1, 2), position = "top")
+    subtot_top <- Subtotal(name = "Approval", categories = c(1, 2), position = "bottom")
 })
 
 test_that("Subtotal validates", {
     expect_error(Subtotal(categories = c(1, 2), after = 2),
-                 "A Subtotal must have at least .* Missing: .*name.*")
+                 "argument \"name\" is missing, with no default")
     expect_error(Subtotal(name = "Total Approval", after = 2),
-                 "A Subtotal must have at least .* Missing: .*categories.*")
+                 "argument \"categories\" is missing, with no default")
     expect_error(Subtotal(name = "Total Approval", categories = c(1, 2)),
-                 "A Subtotal must have at least .* Missing: .*after.*")
+                 paste0("If position is relative, you must supply a category ",
+                        "id or name to the .*after.* argument"))
+})
+
+test_that("Subtotal validates with fixed positions", {
+    expect_error(Subtotal(categories = c(1, 2), after = 2, position = "top"),
+        paste0("If position is not relative, you cannot supply a category id ",
+               "or name to the .*after.* argument"))
+    expect_error(Subtotal(name = "Total Approval", categories = c(1, 2),
+        position = "not a position"),
+        "'arg' should be one of .*relative.*, .*top.*, .*bottom.*")
+
 })
 
 test_that("Heading validates", {
     expect_error(Heading(after = 2),
-                 "A Heading must have at least .* Missing: .*name.*")
+                 "argument \"name\" is missing, with no default")
     expect_error(Heading(name = "All the approves"),
-                 "A Heading must have at least .* Missing: .*after.*")
+                 paste0("If position is relative, you must supply a category ",
+                        "id or name to the .*after.* argument"))
     expect_error(Heading(name = "All the approves", after = 2, categories = c(1, 2)),
-                 "A Heading cannot have .*categories.*. Did you mean to make a Subtotal?")
+                 "unused argument (categories = c(1, 2))", fixed = TRUE)
 })
 
 test_that("Subtotal/Heading getters", {
     subtot <- Subtotal(name = "a subtotal", after = 1, categories = c(1, 2))
     heading <- Heading(name = "a heading", after = 0)
-    
+
     expect_equal(func(subtot), "subtotal")
     expect_equal(func(heading), NA)
     expect_equal(args(heading), NA)
@@ -48,11 +63,11 @@ with_mock_crunch({
     test_that("subtotals retrieves the subtotals and headings Insertions", {
         expect_equivalent(subtotals(ds$location),
                           Insertions(data=list(
-                              Subtotal(name = "London+Scotland", after = 3, 
+                              Subtotal(name = "London+Scotland", after = 3,
                                    categories = c(1, 2))))
         )
     })
-    
+
     test_that("subtotals returns null when there are no subtotals", {
         expect_null(subtotals(ds$gender))
     })
