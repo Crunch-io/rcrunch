@@ -2,22 +2,17 @@ context("head and tail")
 
 with_mock_crunch({
     ds <- loadDataset("test ds")
-    ds2 <- ds[, "textVar"]
     test_that("head method works on CrunchDatasets", {
-        head_df <- head(ds2)
+        head_df <- head(ds)
         expect_is(head_df, "data.frame")
         expect_equal(nrow(head_df), 6)
         expect_identical(head_df$textVar, c("w", "n", "x", "b", "q", "s"))
     })
-    test_that("head method works on CrunchDataFrame", {
-        expect_identical(head(ds2), head(as.data.frame(ds2)))
-    })
     test_that("tail generates the correct request", {
-        expect_GET(tail(as.data.frame(ds)),
-            'https://app.crunch.io/api/datasets/1/variables/birthyr/values',
-            '?filter=%7B%22function%22%3A%22between%22%2C%22args%22%3A%5B%7B%22function%22%3A%22row%22%2C%22args%22%3A%5B%5D%7D%2C%7B%22value%22%3A19%7D%2C%7B%22value%22%3A25%7D%5D%7D&offset=0&limit=100000')
+        expect_POST(tail(as.data.frame(ds)),
+            'https://app.crunch.io/api/datasets/1/export/csv/',
+            '{"filter":{"function":"between","args":[{"function":"row","args":[]},{"value":19},{"value":25}]},"options":{"use_category_ids":true}')
     })
-    expect_identical(tail(ds$textVar), c("i", "h", "z", "m", "c", "x"))
 })
 
 with_test_authentication({
