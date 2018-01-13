@@ -125,7 +125,7 @@ subtotals(ds$opinion) <- list(
 )
 
 # headings can also be added:
-subtotals(ds$opinion) <- Heading(name = "All opinions", after = 0)
+subtotals(ds$opinion) <- Heading(name = "All opinions", position = "top")
 
 # to see the subtotals and headings associated with a variable
 subtotals(ds$opinion)

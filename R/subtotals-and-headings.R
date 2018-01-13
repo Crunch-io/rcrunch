@@ -59,7 +59,7 @@
 #' )
 #'
 #' # headings can also be added:
-#' subtotals(ds$opinion) <- Heading(name = "All opinions", after = 0)
+#' subtotals(ds$opinion) <- Heading(name = "All opinions", position = "top")
 #'
 #' # to see the subtotals and headings associated with a variable
 #' subtotals(ds$opinion)
@@ -325,13 +325,24 @@ subtypeInsertion <- function (insert) {
         # if the insert is already a sub class, return that.
         return(insert)
     }
+
+    anch <- anchor(insert)
+    if (anch %in% c("top", "bottom")) {
+        after <- NULL
+        position <- anch
+    } else {
+        after <- anch
+        position <- "relative"
+    }
+
     if (!(is.na(func(insert))) & func(insert) == 'subtotal') {
         # this is a subtotal, make it so
-        insert <- Subtotal(name = name(insert), after = anchor(insert),
-                           categories = args(insert))
+        insert <- Subtotal(name = name(insert), after = after,
+                           position = position, categories = args(insert))
     } else if (is.na(func(insert)) & !is.na(anchor(insert))) {
         # this is a heading, make it so
-        insert <- Heading(name = name(insert), after = anchor(insert))
+        insert <- Heading(name = name(insert), after = after,
+                          position = position)
     }
     # when all else fails, just return the insert as is
     return(insert)

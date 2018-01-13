@@ -26,8 +26,7 @@ test_that("Insertion setters", {
     expect_equal(args(insrt2), c(10, 20))
 })
 
-
-test_that("Insertion can take an anchor of int, top,  or bottom", {
+test_that("Insertion can take an anchor of int, top, or bottom", {
     anchor(insrt2) <- "top"
     expect_equal(anchor(insrt2), "top")
 
@@ -36,6 +35,17 @@ test_that("Insertion can take an anchor of int, top,  or bottom", {
 
     anchor(insrt2) <- 4
     expect_equal(anchor(insrt2), 4)
+})
+
+test_that("Anchors can be converted from subtotal/header to insertion", {
+    sub <- Subtotal(name = "name", categories = c(1, 2), after = 1)
+    sub_top <- Subtotal(name = "name", categories = c(1, 2), position = "top")
+    sub_bottom <- Subtotal(name = "name", categories = c(1, 2), position = "bottom")
+    # TODO: check category names with a categories object
+
+    expect_equal(anchor(sub), 1)
+    expect_equal(anchor(sub_top), "top")
+    expect_equal(anchor(sub_bottom), "bottom")
 })
 
 test_that("Insertion setter validation", {

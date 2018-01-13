@@ -170,6 +170,10 @@ setMethod("anchor", "Insertion", function (x) {
 
 # method for getting an anchor from a user-friendly abstracted Subtotal or Heading
 .convertAnchor <- function (x, var_categories) {
+    if (x$position != "relative") {
+        return(x$position)
+    }
+
     # map chars/nums to ids
     if (is.character(x$after)) {
         # TODO: better error if var is null
@@ -177,7 +181,7 @@ setMethod("anchor", "Insertion", function (x) {
     } else {
         n <- x$after
     }
-    return(ifelse(is.null(n), NA_integer_, as.integer(n)))
+    return(ifelse(is.null(n), NA_integer_, n))
 }
 
 #' @rdname Insertions
