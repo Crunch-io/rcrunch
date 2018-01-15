@@ -214,7 +214,9 @@ setMethod("func", "Heading", function (x) return(NA))
 #' @rdname Insertions
 #' @export
 setMethod("anchors", "Insertions", function (x) {
-    f <- vapply(x, anchor, 1)
+    # Since anchors can be either integers or characters top/bottom we can't use
+    # vapply(..., integer(1)) or vapply(..., character(1)) here
+    f <- unlist(lapply(x, anchor))
     return(f)
 })
 

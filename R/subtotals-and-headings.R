@@ -127,13 +127,13 @@ Subtotal <- function (name,
 validatePosition <- function (position, after) {
     if (position == "relative") {
         # if position is realtive, make sure there is an after
-        if(is.null(after)) {
+        if (is.null(after)) {
             halt("If position is relative, you must supply a category id or ",
                  "name to the ", dQuote("after"), " argument")
         }
     } else {
         # if position is realtive, make sure there is not an after
-        if(!is.null(after)) {
+        if (!is.null(after)) {
             halt("If position is not relative, you cannot supply a category id",
                  " or name to the ", dQuote("after"), " argument")
         }
@@ -166,7 +166,6 @@ setMethod("initialize", "Subtotal", function (.Object, ...) {
 Heading <- function (name,
                      position = c("relative", "top", "bottom"),
                      after = NULL) {
-    # match.args position
     position <- match.arg(position)
     validatePosition(position, after)
 
