@@ -18,6 +18,10 @@ with_mock_crunch({
                     'https://app.crunch.io/api/datasets/1/export/csv/',
                     '{"filter":{"function":"between","args":[{"function":"row","args":[]},{"value":19},{"value":25}]},"options":{"use_category_ids":true}')
             })
+            test_that("head and tail work on CrunchVariables", {
+                expect_identical(head(ds$textVar),  c("w", "n", "x", "b", "q", "s"))
+                expect_identical(tail(ds$textVar), c("i", "h", "z", "m", "c", "x"))
+            })
         })
     })
 })
