@@ -3,6 +3,7 @@
 ^Makefile$
 ^assets$
 ^vignette-data$
+^data-raw$
 ^crunch.*\.tar\.gz$
 ^crunch\.Rcheck$
 ^\.travis\.yml$
