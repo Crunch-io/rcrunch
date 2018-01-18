@@ -1,7 +1,7 @@
 #' R users who responded to the 2017 Stack Overflow developer survey
 #'
 #' A slightly modified version of the 2017 Stack Overflow developer survey. The
-#' dataset is filtered to only include respondants who have used R before, and to
+#' dataset is filtered to only include respondents who have used R before, and to
 #' include illustrative variable types. Additionally the `TimeSpentLang*` variables
 #' are manufactured to illustrate a common survey form.
 #'
@@ -32,7 +32,7 @@
 #'     \item{WantWorkLanguage}{Which of the following languages have you done extensive development work in over the past year, and which do you want to work in over the next year?}
 #'     \item{HaveWorkedLanguage}{Which of the following languages have you done extensive development work in over the past year, and which do you want to work in over the next year?}
 #'     \item{TimeSpentLang1}{Simulated amount of time spent using the first language listed in `HaveWorkLanguage`}
-#'     \item{TimeSpentLang2}{Simulated amount of time spent using the seoncd language listed in `HaveWorkLanguage`}
+#'     \item{TimeSpentLang2}{Simulated amount of time spent using the second language listed in `HaveWorkLanguage`}
 #'     \item{TimeSpentLang3}{Simulated amount of time spent using the third language listed in `HaveWorkLanguage`}
 #'     \item{TimeSpentLang4}{Simulated amount of time spent using the fourth language listed in `HaveWorkLanguage`}
 #'     \item{TimeSpentLang5}{Simulated amount of time spent using the fifth language listed in `HaveWorkLanguage`}
