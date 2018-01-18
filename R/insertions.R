@@ -2,32 +2,32 @@
 #'
 #' Insertions allow you to insert new categories into a categorical-like
 #' response on a variable's [transformations][Transforms].
-#' 
-#' @section Working with Insertions: 
+#'
+#' @section Working with Insertions:
 #' Insertions are used to add information about a variable or CrunchCube that
-#' extends the data in the dataset but does not alter it. This new data 
+#' extends the data in the dataset but does not alter it. This new data
 #' includes: aggregations like [subtotals][SubtotalsHeadings] that sum the count
-#' of more than on category together or [headings][SubtotalsHeadings] which can 
-#' be added between categories. 
-#' 
-#' `Insertions` objects are containers for individual `Insertion` objects. The 
-#' individual `Insertion`s contain all the information needed to calculate, 
+#' of more than on category together or [headings][SubtotalsHeadings] which can
+#' be added between categories.
+#'
+#' `Insertions` objects are containers for individual `Insertion` objects. The
+#' individual `Insertion`s contain all the information needed to calculate,
 #' apply, and display insertions to CrunchCubes and categorical variables.
-#' 
-#' An `Insertion` must have two properties: 
+#'
+#' An `Insertion` must have two properties:
 #' * `anchor` - which is the id of the category the insertion should follow
 #' * `name` - the string to display
-#' 
-#' Additionally, `Insertions` may also have the following two properties (though 
+#'
+#' Additionally, `Insertions` may also have the following two properties (though
 #' if they have one, they must have the other):
 #' * `function` - the function to use to aggregate (e.g. "subtotal")
 #' * `args` - the category ids to use as operands to the `function` above.
-#' 
+#'
 #' Although it is possible to make both subtotals and headings using `Insertion`
-#' alone, it is much easier and safer to use the functions 
-#' [Subtotal()][SubtotalsHeadings] and [Heading()][SubtotalsHeadings] instead. 
-#' Not only are they more transparent, they also are quicker to type, accept 
-#' both category names as well as ids, and have easier to remember argument 
+#' alone, it is much easier and safer to use the functions
+#' [Subtotal()][SubtotalsHeadings] and [Heading()][SubtotalsHeadings] instead.
+#' Not only are they more transparent, they also are quicker to type, accept
+#' both category names as well as ids, and have easier to remember argument
 #' names.
 #'
 #' @param data For the constructor functions `Insertion` and
@@ -38,8 +38,8 @@
 #' Insertion or Insertions
 #' @param ... additional arguments to `[`, ignored
 #' @param value For `[<-`, the replacement Insertion to insert
-#' @param var_categories categories (from [categories()]) to used by the `args` 
-#' and  `anchor` methods when needed to translate between category names and 
+#' @param var_categories categories (from [categories()]) to used by the `args`
+#' and  `anchor` methods when needed to translate between category names and
 #' category ids.
 #' @name Insertions
 #' @aliases anchor anchor<- anchors func func<- funcs args args<-
@@ -48,14 +48,14 @@ NULL
 
 is.Insertion <- function (x) inherits(x, "Insertion")
 
-# check insertion validity only when a user creates an Insertion so that the 
+# check insertion validity only when a user creates an Insertion so that the
 # child classes like Subtotal and Heading aren't also checked
 insertionValidity <- function (object) {
     val <- TRUE
 
     reqs <- c("anchor", "name")
     mems <- reqs %in% names(object)
-    
+
     if (!all(mems)) {
         val <- paste0("An Insertion must have at least ",
                       serialPaste(dQuote(reqs)), ". Missing: ",
@@ -67,7 +67,7 @@ insertionValidity <- function (object) {
         val <- paste0("If an Insertion has a ", dQuote("function"),
                       " it must also have ", dQuote("args"))
     }
-    
+
     if (val != TRUE) {
         halt("invalid class ", dQuote("Insertion"), " object: ", val)
     }
@@ -91,11 +91,16 @@ setValidity("Insertions", function (object) {
 })
 
 validateNewAnchor <- function (anchor) {
-    if (!is.whole(anchor)) {
-        halt("an anchor must be a numeric")
+    if (is.whole(anchor)) {
+        return(anchor)
     }
 
-    return(anchor)
+    if (is.character(anchor) && (anchor == "top" | anchor == "bottom") ) {
+        return(anchor)
+    }
+
+    halt("an anchor must be a numeric or the character ", dQuote("top"),
+        " or ", dQuote("bottom"))
 }
 
 setAnchor <- function (x, value) {
@@ -160,11 +165,15 @@ setMethod("args", "Heading", function(x) NA)
 #' @export
 setMethod("anchor", "Insertion", function (x) {
     n <- x[["anchor"]]
-    return(ifelse(is.null(n), NA_integer_, as.integer(n)))
+    return(ifelse(is.null(n), NA_integer_, n))
 })
 
 # method for getting an anchor from a user-friendly abstracted Subtotal or Heading
 .convertAnchor <- function (x, var_categories) {
+    if (x$position != "relative") {
+        return(x$position)
+    }
+
     # map chars/nums to ids
     if (is.character(x$after)) {
         # TODO: better error if var is null
@@ -172,7 +181,7 @@ setMethod("anchor", "Insertion", function (x) {
     } else {
         n <- x$after
     }
-    return(ifelse(is.null(n), NA_integer_, as.integer(n)))
+    return(ifelse(is.null(n), NA_integer_, n))
 }
 
 #' @rdname Insertions
@@ -205,7 +214,9 @@ setMethod("func", "Heading", function (x) return(NA))
 #' @rdname Insertions
 #' @export
 setMethod("anchors", "Insertions", function (x) {
-    f <- vapply(x, anchor, integer(1))
+    # Since anchors can be either integers or characters top/bottom we can't use
+    # vapply(..., integer(1)) or vapply(..., character(1)) here
+    f <- unlist(lapply(x, anchor))
     return(f)
 })
 
