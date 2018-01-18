@@ -19,7 +19,7 @@ options(width=120)
 
 A common task in the Market research world is to collapse two or more categories together to see how the collapsed categories compare to one another. For example, if you asked people to rate their preference on a scale of 1-10 you might want to see how the people who provide a rating between 1 and 5 compare to those who rated it between 6 and 10. This goes by a number of names like _Top Box_, _Top Two Box_, or _Nets_. But in Crunch it is called _Subtotals_
 
-Subtotals can be applied to any Categorical Crunch Variables, and we can check if a variable has subtotals with the `subtotals()` function. If it returns `NULL`, there are no subtotals.
+Subtotals can be applied to any Categorical Crunch Variable, and we can check if a variable has subtotals with the `subtotals()` function. If there are no subtotals the function will return `NULL`, otherwise it will return a subtotals object. 
 
 ```{r no subtotals, eval=FALSE}
 subtotals(ds$obamaapp)
@@ -31,8 +31,9 @@ sub_initial_subtotals
 To add subtotals, we can save a list of `Subtotal` objects. Each `Subtotal` object has three things:
 
 * `name` the label to identify the subtotal
-* `categoires` the categories to add subtotal (here you can use either category names or category ids)
-* `after` the category that the subtotal should follow (again, either category names or category ids)
+* `categories` the categories to add subtotal (here you can use either category names or category ids)
+* `after` the category that the subtotal should follow (again, either category names or category ids). This is ignored if `position` is not `relative`
+* `position` should the subtotal be displayed `relative` to an existing category, at the `beginning` of the category list or at the `end` of that list
 
 ```{r add some subtotals, eval = FALSE}
 subtotals(ds$DiversityImportant) <- list(
@@ -54,7 +55,7 @@ subtotals(ds$manningknowledge)
 sub_subtotals1
 ```
 
-This shows up in the Categorical variable card like so: 
+This shows up in the Categorical variable card on the web app like so: 
 
 ```{r crunch app output, echo = FALSE}
 knitr::include_graphics("images/manning_knowledge_subtotals.png") 
@@ -106,7 +107,7 @@ subtotals(ds$snowdenleakapp) <- approve_subtotals
 subtotals(ds$congapp) <- approve_subtotals
 ```
 
-Notice here, because each of the categories for these variables has slightly different ids, the `args` in the output differs slightly. But, because we used category names when we were constructing our list of subtotals, when we store them on the variable itself Crunch does the right things and converts them over to the correct ids.
+Notice here, because each of the categories for these variables has slightly different ids, the `args` in the output differs slightly. But, because we used category names when we were constructing our list of subtotals, when we store them on the variable itself Crunch does the right thing and converts them over to the correct ids.
 
 ```{r show some categories, eval = FALSE}
 subtotals(ds$snowdenleakapp)
