@@ -7,6 +7,8 @@ vignette: >
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+[Previous: exporting data](export.html)
 ```{r load data, include=FALSE}
 ## Because the vignette tasks require communicating with a remote host,
 ## we do all the work ahead of time and save a workspace, which we load here.
@@ -154,5 +156,7 @@ noTransforms(crtabs(~congapp + gender, data = ds))
 noTransforms(sub_crtab)
 
 ```
+
+[Next: Crunch internals](crunch-internals.html)
 
 

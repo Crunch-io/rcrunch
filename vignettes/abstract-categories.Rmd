@@ -8,6 +8,8 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
+[Previous: Crunch internals](crunch-internals.html)
+
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(crunch)
 ```
