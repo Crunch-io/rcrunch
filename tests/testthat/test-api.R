@@ -1,7 +1,7 @@
 context("API calling")
 
 test_that("Deprecated endpoints tell user to upgrade", {
-    fake410 <- fakeResponse("http://crunch.io/410", status_code=410)
+    fake410 <- fake_response("http://crunch.io/410", status_code=410)
     expect_error(handleAPIresponse(fake410),
         paste("The API resource at http://crunch.io/410 has moved permanently.",
               "Please upgrade crunch to the latest version."))

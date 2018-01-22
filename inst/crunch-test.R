@@ -44,7 +44,7 @@ with_mock_crunch <- function (expr) {
     env <- parent.frame()
     with(temp.options(crunch.api="https://app.crunch.io/api/",
                       httptest.mock.paths=c(".", "../inst/", system.file(package="crunch"))), {
-        with_mock_API({
+        with_mock_api({
             try(crunch:::warmSessionCache())
             eval(expr, envir=env)
         })
