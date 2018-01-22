@@ -53,7 +53,7 @@ These four functions all take a dataset or a folder as the first argument, and t
 
 To get started, let's pick up the dataset we used in the [array variables vignette](array-variables.html) and view its starting layout. We can do that by selecting the root folder ("/") and printing it
 
-```{r}
+```r
 library(magrittr)
 ds %>%
     cd("/") %>%
@@ -68,7 +68,7 @@ It's flat---there are no folders here, only variables. If you're importing data 
 
 Let's make some folders and move some variables into them. To start, I know that the demographic variables are at the back of the dataset, so let's make a "Demos" folder and move variables 21 to 37 into it:
 
-```{r}
+```r
 ds %>%
     mkdir("Demos") %>%
     mv(21:37, "Demos")
@@ -76,14 +76,14 @@ ds %>%
 
 Now when I print the top-level directory again, I see a "Demos" folder and don't see those demographic variables:
 
-```{r}
+```r
 ds %>%
     cd("/")
 ```
 
 `mv()` can reference variables or folders within a level in several ways. Numeric indices like we just did probably won't be the most common way you'll do it: names work just as well and are more transparent. Let's move the first variable, `perc_skipped`, into "Demos" as well
 
-```{r}
+```r
 ds %>%
     mv("perc_skipped", "Demos") %>%
     cd("Demos") ## To print the folder contents
@@ -93,7 +93,7 @@ A side note: although the last step of that chain was `cd()`, we haven't changed
 
 Another way we can identify variables is by using the `dplyr`-like functions `starts_with`, `ends_with`, `matches`, and `contains`. Let's use `matches` to move all of the questions about Edward Snowden or Bradley (Chelsea) Manning to a folder for the topical questions in this week's survey:
 
-```{r}
+```r
 ds %>%
     mkdir("This week") %>%
     mv(matches("manning|snowden", ignore.case = TRUE), "This week")
@@ -101,7 +101,7 @@ ds %>%
 
 We can also select all variables in a folder using the `variables` function (or all folders within a folder using `folders`). Let's move all remaining variables from the top level folder to a folder called "Tracking questions". To do this, we do need to explicitly change to the top level folder.
 
-```{r}
+```r
 ds %>%
     cd("/")
     mkdir("Tracking questions") %>%
@@ -114,7 +114,7 @@ The reason we change to the top level folder here is that there is a subtle diff
 
 Now, our variable tree has some structure. Let's use `print(folder, depth = 1)` to see these folders and their contents one level deep:
 
-```{r}
+```r
 ds %>%
     cd("/") %>%
     print(depth = 1)
@@ -124,7 +124,7 @@ ds %>%
 
 We can create groups within groups as well. In the "This week" group, we have a set of questions about Edward Snowden: the first four variables in the group. Let's nest them inside their own group inside "This week":
 
-```{r}
+```r
 ds %>%
     cd("This week") %>%
     mkdir("Snowden") %>%
@@ -147,7 +147,7 @@ ds %>%
 
 ## Renaming folders and folder contents
 
-```{r}
+```r
 ds %>%
     cd("Demos") %>%
     setName("Demographics")
@@ -161,7 +161,7 @@ Unlike files in a file system, variables within folders are ordered.
 
 Let's move "Demographics" to the end. We can do that a couple of ways. One is using `mv()`, giving it the "after" argument
 
-```{r}
+```r
 ds %>%
     cd("/") %>%
     mv("Demographics", ".", after="Tracking questions")
@@ -173,7 +173,7 @@ This uses the `"."` folder "path" to indicate that you're "moving" the object to
 
 Another way to specify folder order is with the `setOrder` function. This lets you provide a specific order, but it requires you to specify all of the folder's contents. Let's use that function to put "Tracking questions" first:
 
-```{r}
+```r
 ds %>%
     cd("/") %>%
     setOrder(c("Tracking questions", "This week", "Demographics"))
