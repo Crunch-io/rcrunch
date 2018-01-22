@@ -40,7 +40,9 @@ with_test_authentication({
         })
         out <- suppressMessages(try(appendDataset(part1, part2)))
         test_that("Dataset #2 isn't modified by appending to another", {
-            expect_identical(refresh(part2), part2)
+            part2 <- refresh(part2)
+            expect_null(part2$MR)
+            expect_true(is.Categorical(part2$mr_1))
         })
         test_that("the unbound subvariables get lined up", {
             expect_true(is.dataset(out))

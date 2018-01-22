@@ -33,12 +33,13 @@ Suggests:
     magrittr,
     rmarkdown,
     rstudioapi,
-    spelling
+    spelling,
+    testthat (>= 2.0.0)
 VignetteBuilder: knitr
 Language: en-US
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
-Collate: 
+Collate:
     'AllClasses.R'
     'AllGenerics.R'
     'variable-definition.R'
@@ -71,6 +72,7 @@ Collate:
     'crunchbox.R'
     'cube-dims.R'
     'cube-query.R'
+    'cube-residuals.R'
     'cube-result.R'
     'cube-transforms.R'
     'cube-variables.R'
