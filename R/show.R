@@ -58,8 +58,8 @@ showInsertion <- function (x) {
 showInsertions <- function (x) do.call("rbind", lapply(x, getShowContent))
 
 showSubtotalHeading <- function (x) {
-    # if anchor or args error because a categories object is not available to 
-    # translate from category names to ids, then show the names without error 
+    # if anchor or args error because a categories object is not available to
+    # translate from category names to ids, then show the names without error
     # for the show method only.
     anchor <- tryCatch(anchor(x), error = function(e) {return(x$after)})
     args <- tryCatch(args(x), error = function(e) {return(x$categories)})
@@ -348,4 +348,8 @@ setMethod("show", "CrunchGeography", function (object) {
         "match_field: \t\t", object$match_field, "\n",
         sep="")
     invisible(object)
+})
+
+setMethod("getShowContent", "ShojiFolder", function (x) {
+    paste0(ifelse(types(x) == "folder", "[+] ", ""), names(x))
 })

@@ -11,7 +11,7 @@
 #' @export
 #' @importFrom httpcache halt
 addVariables <- function (dataset, ...) {
-     var_catalog_url <- shojiURL(dataset, "catalogs", "variables")
+    var_catalog_url <- shojiURL(dataset, "catalogs", "variables")
     ## Get vardefs and validate
     vardefs <- list(...)
     ## Check for whether a list of vardefs passed

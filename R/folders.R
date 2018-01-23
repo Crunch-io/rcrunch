@@ -208,16 +208,12 @@ folder <- function (x) {
         ## Additional cache invalidation
         ## Drop all variable entities because their catalogs.folder refs are stale
         dropOnly(variables)
-        ## TODO: drop all folders
+        ## Drop all folders
+        ## Hard to be smarter about figuring out which folders are dirty without
+        ## doing a bunch of GETs.
+        ## TODO: should API provide a catalogs.parent for folders so we don't ../
+        dropCache(absoluteURL("../", self(folder)))
         folder <- refresh(folder)
     }
     return(invisible(folder))
 }
-
-## TODO:
-## * order entities within a folder (including e.g. mv(list of refs, ".")) ?
-## * confirm that setName(s) work on folders
-## * print method for folders
-## * star/regex/filter methods for folders (for e.g. mv("folder A/*", "folder B"))
-## * path() and path<-?
-## * dir() or something to get contents of a folder?
