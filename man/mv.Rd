@@ -5,12 +5,15 @@
 \alias{mkdir}
 \title{Functions to manipulate variables' folder structure}
 \usage{
-mv(x, vars, path)
+mv(x, variables, path)
 
 mkdir(x, path)
 }
 \arguments{
 \item{x}{A \code{CrunchDataset} or \code{VariableFolder}}
+
+\item{variables}{A Variable, selection of variables from \code{dataset}, or any
+other object that can be moved to a folder.}
 
 \item{path}{A character "path" to the folder: either a
 vector of nested folder names or a single string with nested folders
@@ -18,9 +21,6 @@ separated by a delimiter ("/" default, configurable via
 \code{options(crunch.delimiter)}). The path is interpreted as
 relative to the location of the folder \code{x} (when \code{x} is a dataset, that
 means the root, top-level folder). \code{path} may also be a \code{VariableFolder} object.}
-
-\item{variables}{A Variable, selection of variables from \code{dataset}, or any
-other object that can be moved to a folder.}
 }
 \value{
 \code{x}, with the folder at \code{path} guaranteed to be created, and for

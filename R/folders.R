@@ -42,7 +42,7 @@
 #' ds %>% mv("nps_y", folder(ds$nps_x))
 #' }
 #' @export
-mv <- function (x, vars, path) {
+mv <- function (x, variables, path) {
     ## TODO: add an "after" argument, pass to addToFolder
 
     ## dplyr/tidyselect-ish functions, hacked in here (inspired by how pkgdown does it)
@@ -52,20 +52,20 @@ mv <- function (x, vars, path) {
         matches=function (str, ...) grep(str, names(x), ...),
         contains=function (str, ...) grep(str, names(x), ..., fixed=TRUE)
     )
-    e2 <- substitute(substitute(zzz, fns), list(zzz=match.call()[["vars"]]))
-    vars <- eval.parent(eval(e2))
-    if (is.language(vars)) {
+    e2 <- substitute(substitute(zzz, fns), list(zzz=match.call()[["variables"]]))
+    variables <- eval.parent(eval(e2))
+    if (is.language(variables)) {
         ## It's one of our fns. Eval it again
-        vars <- eval(vars)
+        variables <- eval(variables)
     }
 
-    if (!is.shojiObject(vars)) {
+    if (!is.shojiObject(variables)) {
         ## Character, numeric, logical. Extract from the dataset/folder
         ## TODO: add a "*" special case for for ShojiFolder [ method
-        vars <- x[vars]
+        variables <- x[variables]
     }
     f <- cd(x, path, create=TRUE)
-    .moveToFolder(f, vars)
+    .moveToFolder(f, variables)
     return(invisible(x))
 }
 
