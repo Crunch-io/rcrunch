@@ -62,6 +62,16 @@ with_mock_crunch({
     test_that("But top-level folder doesn't have a name and you can't set it", {
         skip("TODO")
     })
+    test_that("Set names of objects inside a folder", {
+        expect_PATCH(names(folders(ds)[[1]]) <- c("Year of Birth", "A folder in a folder", "Plain text"),
+            "https://app.crunch.io/api/datasets/1/folders/1/",
+            '{"https://app.crunch.io/api/datasets/1/variables/birthyr/":',
+            '{"name":"Year of Birth"},',
+            '"https://app.crunch.io/api/datasets/1/folders/3/":',
+            '{"name":"A folder in a folder"},',
+            '"https://app.crunch.io/api/datasets/1/variables/textVar/":',
+            '{"name":"Plain text"}}')
+    })
     test_that("Set a variable's name inside a folder", {
         ## Note that this patches the catalog (folder) instead of the entity.
         ## Historical reasons, plus ensuring that name<- on entity and
@@ -101,5 +111,4 @@ with_mock_crunch({
     ## TODO:
     ## * names<- on folder
     ## * reorder elements in a folder
-    ## * delete a folder
 })
