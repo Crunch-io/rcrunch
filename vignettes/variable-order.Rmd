@@ -159,7 +159,16 @@ ds %>%
 
 Unlike files in a file system, variables within folders are ordered.
 
-Let's move "Demographics" to the end. We can do that a couple of ways. One is using `mv()`, giving it the "after" argument
+Let's move "Demographics" to the end. One way to do that is with the `setOrder` function. This lets you provide a specific order, but it requires you to specify all of the folder's contents. Let's use that function to put "Tracking questions" first:
+
+```r
+ds %>%
+    cd("/") %>%
+    setOrder(c("Tracking questions", "This week", "Demographics"))
+```
+
+<!--
+We can do that a couple of ways. One is using `mv()`, giving it the "after" argument
 
 ```r
 ds %>%
@@ -169,19 +178,11 @@ ds %>%
 
 This uses the `"."` folder "path" to indicate that you're "moving" the object to be in the current folder. Note that `"."` (the current folder) and `.` (the `magrittr` special value) aren't the same thing, though in this particular context, they would have similar implications.
 
-<!-- Note that order of things to mv is preserved, so that does set order -->
-
-Another way to specify folder order is with the `setOrder` function. This lets you provide a specific order, but it requires you to specify all of the folder's contents. Let's use that function to put "Tracking questions" first:
-
-```r
-ds %>%
-    cd("/") %>%
-    setOrder(c("Tracking questions", "This week", "Demographics"))
-```
+ Note that order of things to mv is preserved, so that does set order
 
 ## Finding a variable's folder
 
-<!-- folder(ds$var); can also mv to wherever that var is -->
+folder(ds$var); can also mv to wherever that var is -->
 
 ## Deleting folders
 
