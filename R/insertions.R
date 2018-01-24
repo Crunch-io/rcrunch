@@ -38,11 +38,11 @@
 #' Insertion or Insertions
 #' @param ... additional arguments to `[`, ignored
 #' @param value For `[<-`, the replacement Insertion to insert
-#' @param var_categories categories (from [categories()]) to used by the `args`
-#' and  `anchor` methods when needed to translate between category names and
-#' category ids.
+#' @param var_categories categories (from [categories()]) to used by the 
+#' `arguments` and `anchor` methods when needed to translate between category 
+#' names and category ids.
 #' @name Insertions
-#' @aliases anchor anchor<- anchors func func<- funcs args args<-
+#' @aliases anchor anchor<- anchors func func<- funcs arguments arguments<-
 NULL
 
 

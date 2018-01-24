@@ -14,8 +14,8 @@
 \alias{func}
 \alias{func<-}
 \alias{funcs}
-\alias{args}
-\alias{args<-}
+\alias{arguments}
+\alias{arguments<-}
 \alias{anchor<-,Insertion-method}
 \alias{subtotals<-,Insertion,ANY-method}
 \alias{arguments,Insertion-method}
@@ -76,9 +76,9 @@ Insertion or Insertions}
 
 \item{value}{For \code{[<-}, the replacement Insertion to insert}
 
-\item{var_categories}{categories (from \code{\link[=categories]{categories()}}) to used by the \code{args}
-and  \code{anchor} methods when needed to translate between category names and
-category ids.}
+\item{var_categories}{categories (from \code{\link[=categories]{categories()}}) to used by the
+\code{arguments} and \code{anchor} methods when needed to translate between category
+names and category ids.}
 }
 \description{
 Insertions allow you to insert new categories into a categorical-like
