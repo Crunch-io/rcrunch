@@ -53,7 +53,7 @@ test_that("Subtotal/Heading getters", {
 
     expect_equal(func(subtot), "subtotal")
     expect_equal(func(heading), NA)
-    expect_equal(args(heading), NA)
+    expect_equal(arguments(heading), NA)
 })
 
 

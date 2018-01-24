@@ -274,7 +274,8 @@ NULL
 #' @export
 setMethod("makeInsertion", "Subtotal", function (x, var_categories) {
     return(.Insertion(anchor = anchor(x, var_categories), name = name(x),
-                     `function` = "subtotal", args = args(x, var_categories)))
+                     `function` = "subtotal",
+                     args = arguments(x, var_categories)))
 })
 
 #' @rdname makeInsertion
@@ -337,7 +338,7 @@ subtypeInsertion <- function (insert) {
     if (!(is.na(func(insert))) & func(insert) == 'subtotal') {
         # this is a subtotal, make it so
         insert <- Subtotal(name = name(insert), after = after,
-                           position = position, categories = args(insert))
+                           position = position, categories = arguments(insert))
     } else if (is.na(func(insert)) & !is.na(anchor(insert))) {
         # this is a heading, make it so
         insert <- Heading(name = name(insert), after = after,
