@@ -9,7 +9,7 @@ insrts <- Insertions(data=list(list(anchor = 6, name = "Low",
 test_that("Insertion and insertion inheritence, base methods", {
     expect_equal(anchor(insrt), 6)
     expect_equal(name(insrt), "Low")
-    expect_equal(args(insrt), c(1, 2))
+    expect_equal(arguments(insrt), c(1, 2))
 
     expect_equal(anchors(insrts), c(6, 7))
     expect_equal(funcs(insrts), c('subtotal', 'subtotal'))
@@ -23,7 +23,7 @@ test_that("Insertion setters", {
     name(insrt2) <- "Low low"
     expect_equal(name(insrt2), "Low low")
     subtotals(insrt2) <- c(10, 20)
-    expect_equal(args(insrt2), c(10, 20))
+    expect_equal(arguments(insrt2), c(10, 20))
 })
 
 test_that("Insertion can take an anchor of int, top, or bottom", {
@@ -94,5 +94,5 @@ test_that("Insertion and insertions show methods with hetrogeneous insertions", 
 })
 
 test_that("args returns NA when not found", {
-    expect_equal(args(Insertion(anchor='foo', name='bar')), NA)
+    expect_equal(arguments(Insertion(anchor='foo', name='bar')), NA)
 })

@@ -14,13 +14,13 @@
 \alias{func}
 \alias{func<-}
 \alias{funcs}
-\alias{args}
-\alias{args<-}
+\alias{arguments}
+\alias{arguments<-}
 \alias{anchor<-,Insertion-method}
 \alias{subtotals<-,Insertion,ANY-method}
-\alias{args,Insertion-method}
-\alias{args,Subtotal-method}
-\alias{args,Heading-method}
+\alias{arguments,Insertion-method}
+\alias{arguments,Subtotal-method}
+\alias{arguments,Heading-method}
 \alias{anchor,Insertion-method}
 \alias{anchor,Subtotal-method}
 \alias{anchor,Heading-method}
@@ -41,11 +41,11 @@ Insertion(...)
 
 \S4method{subtotals}{Insertion,ANY}(x) <- value
 
-\S4method{args}{Insertion}(x)
+\S4method{arguments}{Insertion}(x)
 
-\S4method{args}{Subtotal}(x, var_categories)
+\S4method{arguments}{Subtotal}(x, var_categories)
 
-\S4method{args}{Heading}(x)
+\S4method{arguments}{Heading}(x)
 
 \S4method{anchor}{Insertion}(x)
 
@@ -76,9 +76,9 @@ Insertion or Insertions}
 
 \item{value}{For \code{[<-}, the replacement Insertion to insert}
 
-\item{var_categories}{categories (from \code{\link[=categories]{categories()}}) to used by the \code{args}
-and  \code{anchor} methods when needed to translate between category names and
-category ids.}
+\item{var_categories}{categories (from \code{\link[=categories]{categories()}}) to used by the
+\code{arguments} and \code{anchor} methods when needed to translate between category
+names and category ids.}
 }
 \description{
 Insertions allow you to insert new categories into a categorical-like

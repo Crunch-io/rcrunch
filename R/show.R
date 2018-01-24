@@ -53,7 +53,7 @@ showAbsCategories <- function (x) do.call("rbind", lapply(x, showAbsCategory))
 
 showInsertion <- function (x) {
     df_out <- data.frame(anchor=anchor(x), name=name(x),
-               func=func(x), args=serialPaste(args(x)))
+               func=func(x), args=serialPaste(arguments(x)))
 }
 showInsertions <- function (x) do.call("rbind", lapply(x, getShowContent))
 
@@ -62,7 +62,7 @@ showSubtotalHeading <- function (x) {
     # translate from category names to ids, then show the names without error 
     # for the show method only.
     anchor <- tryCatch(anchor(x), error = function(e) {return(x$after)})
-    args <- tryCatch(args(x), error = function(e) {return(x$categories)})
+    args <- tryCatch(arguments(x), error = function(e) {return(x$categories)})
     df_out <- data.frame(anchor=anchor, name=name(x),
                          func=func(x), args=serialPaste(args))
 }
