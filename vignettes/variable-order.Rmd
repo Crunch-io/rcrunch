@@ -122,7 +122,7 @@ ds %>%
 
 ## Nested folders
 
-We can create groups within groups as well. In the "This week" group, we have a set of questions about Edward Snowden: the first four variables in the group. Let's nest them inside their own group inside "This week":
+We can create folders within folders as well. In the "This week" folder, we have a set of questions about Edward Snowden. Let's nest them inside their own subfolder inside "This week":
 
 ```r
 ds %>%
