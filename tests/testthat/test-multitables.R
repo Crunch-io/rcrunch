@@ -81,9 +81,9 @@ with_mock_crunch({
             'https://app.crunch.io/api/datasets/1/multitables/',
             '{"element":"shoji:entity","body":{',
             '"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
-            '{"query":[{"function":"selected_array",',
-            '"args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]},',
-            '{"each":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}]',
+            '{"query":[{"each":"https://app.crunch.io/api/datasets/1/variables/mymrset/"},',
+            '{"function":"as_selected","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}',
+            ']}]',
             ',"name":"New multitable"}}')
         with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
             mtable <- newMultitable(~ gender + mymrset, data=ds,
@@ -97,9 +97,9 @@ with_mock_crunch({
             'https://app.crunch.io/api/datasets/1/multitables/',
             '{"element":"shoji:entity","body":{',
             '"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
-            '{"query":[{"function":"selected_array",',
-            '"args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]},',
-            '{"each":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}]',
+            '{"query":[{"each":"https://app.crunch.io/api/datasets/1/variables/mymrset/"},',
+            '{"function":"as_selected","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}',
+            ']}]',
             ',"name":"gender + mymrset"}}')
         with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
             mtable <- newMultitable(~ gender + mymrset, data=ds,
@@ -271,7 +271,7 @@ with_test_authentication({
         expect_identical(name(m), "allpets + q1")
         expect_identical(getShowContent(m), c(paste0("Multitable ", dQuote("allpets + q1")),
                                               "Column variables:",
-                                              "  selected_array(allpets)",
+                                              "  as_selected(allpets)",
                                               "  q1"))
     })
 
@@ -328,7 +328,7 @@ with_test_authentication({
         expect_true(is.public(refresh(m)))
         expect_identical(getShowContent(m), c(paste0("Multitable ", dQuote("copied_multitable")),
                                               "Column variables:",
-                                              "  selected_array(allpets)",
+                                              "  as_selected(allpets)",
                                               "  q1"))
     })
 

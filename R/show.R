@@ -58,8 +58,8 @@ showInsertion <- function (x) {
 showInsertions <- function (x) do.call("rbind", lapply(x, getShowContent))
 
 showSubtotalHeading <- function (x) {
-    # if anchor or args error because a categories object is not available to 
-    # translate from category names to ids, then show the names without error 
+    # if anchor or args error because a categories object is not available to
+    # translate from category names to ids, then show the names without error
     # for the show method only.
     anchor <- tryCatch(anchor(x), error = function(e) {return(x$after)})
     args <- tryCatch(args(x), error = function(e) {return(x$categories)})
@@ -285,7 +285,13 @@ showMultitable <- function (x) {
     # eg remove selected_array()
     out <- c(out, "Column variables:",
              vapply(x@body$template, function (expr) {
-                 paste0("  ", formatExpression(expr$query[[1]]))
+                 if (names(expr$query[[1]]) == "each") {
+                     # if the first element of the query is each, then this is
+                     # an MR so take the second argument instead.
+                     return(paste0("  ", formatExpression(expr$query[[2]])))
+                 }
+
+                 return(paste0("  ", formatExpression(expr$query[[1]])))
              }, character(1)))
 
     return(c(out))
