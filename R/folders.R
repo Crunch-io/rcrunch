@@ -144,7 +144,10 @@ cd <- function (x, path, create=FALSE) {
 #'     rmdir("Demographics")
 #' }
 #' @export
-rmdir <- function (x, path) delete(cd(x, path))
+rmdir <- function (x, path) {
+    delete(cd(x, path))
+    invisible(refresh(x))
+}
 
 #' Find and move variables to a new folder
 #'
