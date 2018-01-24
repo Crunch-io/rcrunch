@@ -169,6 +169,45 @@ with_mock_crunch({
         expect_error(ds %>% rmdir("/"),
             "Cannot delete root folder")
     })
+
+    test_that("setOrder", {
+        expect_identical(ds %>% cd("Group 1") %>% names(),
+            c("Birth Year", "Nested", "Text variable ftw"))
+        expect_PATCH(ds %>% cd("Group 1") %>% setOrder(c(2, 1, 3)),
+            'https://app.crunch.io/api/datasets/1/folders/1/',
+            '{"element":"shoji:catalog","graph":[',
+            '"https://app.crunch.io/api/datasets/1/folders/3/",',
+            '"https://app.crunch.io/api/datasets/1/variables/birthyr/",',
+            '"https://app.crunch.io/api/datasets/1/variables/textVar/"]}')
+        with_PATCH(NULL, {
+            ## Since we reorder in place without doing a GET to refresh, check
+            ## that that matches our expectations, ignoring the PATCH request
+            expect_identical(ds %>% cd("Group 1") %>% setOrder(c(2, 1, 3)) %>% names(),
+                c("Nested", "Birth Year", "Text variable ftw"))
+            expect_identical(
+                ds %>%
+                    cd("Group 1") %>%
+                    setOrder(., sort(names(.), decreasing=TRUE)) %>%
+                    names(),
+                c("Text variable ftw", "Nested", "Birth Year"))
+        })
+    })
+    test_that("setOrder makes no request if the order does not change", {
+        expect_no_request(ds %>% cd("Group 1") %>% setOrder(1:3))
+    })
+    test_that("setOrder validation", {
+        g1 <- cd(ds, "Group 1")
+        expect_error(setOrder(g1, c("Birth Year", "NOTAFOLDER")),
+            "Invalid value: NOTAFOLDER")
+        expect_error(setOrder(g1, NULL),
+            "Order values must be character or numeric, not NULL")
+        expect_error(setOrder(g1, -3),
+            "Invalid value: -3")
+        expect_error(setOrder(g1, c(NA, 2, -4)),
+            "Invalid values: NA, -4")
+        expect_error(setOrder(g1, c(2, 1, 1, 3)),
+            "Order values must be unique: 1 is duplicated")
+    })
 })
 
 with_test_authentication({

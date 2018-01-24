@@ -3,6 +3,10 @@ folders <- function (x) {
     return(VariableFolder(crGET(shojiURL(x, "catalogs", "folders"))))
 }
 
+#' @export
+#' @rdname describe-catalog
+setMethod("aliases", "VariableFolder", function (x) getIndexSlot(x, "alias"))
+
 setMethod("folderExtraction", "VariableFolder", function (x, tuple) {
     ## "tuple" is a list of length 1, name is URL, contents is the actual tuple
     url <- names(tuple)

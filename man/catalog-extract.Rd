@@ -13,7 +13,6 @@
 \alias{[[<-,FilterCatalog,character,missing,CrunchFilter-method}
 \alias{[[<-,FilterCatalog,numeric,missing,CrunchFilter-method}
 \alias{[[,MemberCatalog,character-method}
-\alias{[,MemberCatalog,character,ANY-method}
 \alias{[[<-,MemberCatalog,ANY,missing,ANY-method}
 \alias{[[<-,MemberCatalog,character,missing,NULL-method}
 \alias{[[,MultitableCatalog,numeric-method}
@@ -21,7 +20,6 @@
 \alias{[[<-,MultitableCatalog,numeric,missing,formula-method}
 \alias{[[<-,MultitableCatalog,ANY,missing,NULL-method}
 \alias{[[,PermissionCatalog,character-method}
-\alias{[,PermissionCatalog,character,ANY-method}
 \alias{[[,ProjectCatalog,numeric-method}
 \alias{[[<-,ProjectCatalog,character,missing,list-method}
 \alias{[[<-,ProjectCatalog,character,missing,CrunchProject-method}
@@ -68,8 +66,6 @@
 
 \S4method{[[}{MemberCatalog,character}(x, i, j, ...)
 
-\S4method{[}{MemberCatalog,character,ANY}(x, i, j, ..., drop = TRUE)
-
 \S4method{[[}{MemberCatalog,ANY,missing,ANY}(x, i, j) <- value
 
 \S4method{[[}{MemberCatalog,character,missing,`NULL`}(x, i, j) <- value
@@ -83,8 +79,6 @@
 \S4method{[[}{MultitableCatalog,ANY,missing,`NULL`}(x, i, j) <- value
 
 \S4method{[[}{PermissionCatalog,character}(x, i, j, ...)
-
-\S4method{[}{PermissionCatalog,character,ANY}(x, i, j, ..., drop = TRUE)
 
 \S4method{[[}{ProjectCatalog,numeric}(x, i, j, ...)
 

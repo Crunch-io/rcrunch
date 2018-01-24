@@ -11,10 +11,6 @@ is.folder <- function (x) inherits(x, "ShojiFolder")
 #' @rdname describe-catalog
 setMethod("types", "ShojiFolder", function (x) getIndexSlot(x, "type"))
 
-#' @export
-#' @rdname describe-catalog
-setMethod("aliases", "ShojiFolder", function (x) getIndexSlot(x, "alias"))
-
 #' @rdname catalog-extract
 #' @export
 setMethod("[[", c("ShojiFolder", "numeric"), function (x, i, ..., drop=FALSE) {
@@ -110,21 +106,54 @@ setMethod("delete", "ShojiFolder", function (x, ...) {
     invisible(out)
 })
 
-setOrder <- function (x, ord) {
+#' Change the order of entities in folder
+#'
+#' @param folder A `VariableFolder` or other `*Folder` object
+#' @param ord A vector of integer indices or character references to objects
+#' contained in the folder
+#' @return `folder` with the order dictated by `ord`. The function also persists
+#' that order on the server.
+#' @export
+setOrder <- function (folder, ord) {
     # If ord is character, match against names/aliases/urls
     if (is.character(ord)) {
-        ord <- whichCatalogEntry(x, ord)
+        nums <- whichCatalogEntry(folder, ord)
         # Validate that none are NA
+        bads <- is.na(nums)
+        if (any(bads)) {
+            halt(ifelse(sum(bads) > 1, "Invalid values: ", "Invalid value: "),
+                paste(ord[bads], collapse=", "))
+        }
+        ord <- nums
     }
-    stopifnot(is.numeric(ord))
+    if (!is.numeric(ord)) {
+        halt("Order values must be character or numeric, not ", class(ord))
+    }
     # Allow for omitted values, and validate
-    valid <- seq_len(length(x))
+    valid <- seq_len(length(folder))
     bad <- setdiff(ord, valid)
     if (length(bad)) {
-        halt("Invalid values: ", bad)
+        halt(ifelse(length(bad) > 1, "Invalid values: ", "Invalid value: "),
+            paste(bad, collapse=", "))
+    }
+    dupes <- duplicated(ord)
+    if (any(dupes)) {
+        halt(
+            "Order values must be unique: ",
+            paste(unique(ord[dupes]), collapse=", "),
+            ifelse(sum(dupes) > 1, " are", " is"), " duplicated"
+        )
     }
     ord <- c(ord, setdiff(valid, ord))
-    # PATCH graph
+    # Only send an update if there's a change
+    if (!all(ord == valid)) {
+        # Update folder in place
+        index(folder) <- index(folder)[ord]
+        folder@graph <- as.list(urls(folder))
+        # PATCH graph
+        crPATCH(self(folder), body=toJSON(wrapCatalog(graph=urls(folder))))
+    }
+    return(folder)
 }
 
 # setMethod("folderExtraction", "ShojiFolder", function (x, tuple) {

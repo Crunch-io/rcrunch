@@ -57,6 +57,12 @@ with_POST <- function (resp, expr) {
     with_mock(`crunch::crPOST`=function (...) resp, eval.parent(expr))
 }
 
+with_PATCH <- function (resp, expr) {
+    ## Mock a PATCH that returns something, or nothing
+    force(resp)
+    with_mock(`crunch::crPATCH`=function (...) resp, eval.parent(expr))
+}
+
 with_DELETE <- function (resp, expr) {
     ## Mock a DELETE that returns something, or nothing
     force(resp)
