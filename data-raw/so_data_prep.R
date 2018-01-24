@@ -10,7 +10,7 @@ r_df <- stack_df[uses_r, ] %>%
 
 classes <- data_frame(name = names(r_df),
     class = map_chr(r_df, class))
-crunch_exemplar <- r_df %>%
+SO_survey <- r_df %>%
     select(
         Respondent,
         Professional,
@@ -28,17 +28,5 @@ crunch_exemplar <- r_df %>%
         WantWorkLanguage,
         HaveWorkedLanguage
     )
-
-mock_lang_percents <- function(x){
-    langs <- unlist(strsplit(x, "; "))
-    out <- data.frame(matrix(nrow = 1, ncol = min(6, length(langs))))
-    names(out) <- paste0("TimeSpentLang", 1:ncol(out))
-    x <- runif(ncol(out))
-    out[1, ] <- round(x/sum(x), 2)
-    out
-}
-
-percent_df <- map_df(crunch_exemplar$HaveWorkedLanguage, mock_lang_percents)
-SO_survey <- cbind(crunch_exemplar, percent_df)
 
 save(SO_survey, file = "data/SO_survey.rda")
