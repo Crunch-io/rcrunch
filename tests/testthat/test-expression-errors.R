@@ -10,10 +10,8 @@ with_mock_crunch({
             "Invalid expression: ds$NOTAVARIABLE == 3", fixed=TRUE)
         expect_error(ds[badexpr,],
             "Invalid expression: badexpr", fixed=TRUE)
-        expect_warning(
-            expect_error(ds[!is.na(ds$NOTAVARIABLE),],
-                "Invalid expression: !is.na(ds$NOTAVARIABLE)", fixed=TRUE),
-            "is.na() applied to non-(list or vector) of type 'NULL'", fixed=TRUE)
+        expect_error(suppressWarnings(ds[!is.na(ds$NOTAVARIABLE),]),
+            "Invalid expression: !is.na(ds$NOTAVARIABLE)", fixed=TRUE)
         expect_error(ds[!duplicated(ds$NOTAVARIABLE),],
             "Invalid expression: !duplicated(ds$NOTAVARIABLE)", fixed=TRUE)
     })
@@ -23,10 +21,8 @@ with_mock_crunch({
             "Invalid expression: ds$NOTAVARIABLE == 3", fixed=TRUE)
         expect_error(ds$gender[badexpr],
             "Invalid expression: badexpr", fixed=TRUE)
-        expect_warning(
-            expect_error(ds$gender[!is.na(ds$NOTAVARIABLE)],
-                "Invalid expression: !is.na(ds$NOTAVARIABLE)", fixed=TRUE),
-            "is.na() applied to non-(list or vector) of type 'NULL'", fixed=TRUE)
+        expect_error(suppressWarnings(ds$gender[!is.na(ds$NOTAVARIABLE)]),
+            "Invalid expression: !is.na(ds$NOTAVARIABLE)", fixed=TRUE)
         expect_error(ds$gender[!duplicated(ds$NOTAVARIABLE)],
             "Invalid expression: !duplicated(ds$NOTAVARIABLE)", fixed=TRUE)
     })
@@ -36,10 +32,8 @@ with_mock_crunch({
             "Invalid expression: ds$NOTAVARIABLE == 3", fixed=TRUE)
         expect_error(age[badexpr],
             "Invalid expression: badexpr", fixed=TRUE)
-        expect_warning(
-            expect_error(age[!is.na(ds$NOTAVARIABLE)],
-                "Invalid expression: !is.na(ds$NOTAVARIABLE)", fixed=TRUE),
-            "is.na() applied to non-(list or vector) of type 'NULL'", fixed=TRUE)
+        expect_error(suppressWarnings(age[!is.na(ds$NOTAVARIABLE)]),
+            "Invalid expression: !is.na(ds$NOTAVARIABLE)", fixed=TRUE)
         expect_error(age[!duplicated(ds$NOTAVARIABLE)],
             "Invalid expression: !duplicated(ds$NOTAVARIABLE)", fixed=TRUE)
     })
@@ -59,10 +53,8 @@ with_mock_crunch({
             "object 'NOTAVARIABLE' not found") ## Base R error
         expect_error(ds$NOTAVARIABLE %in% 3 | ds$gender %in% "Male",
             "Invalid expression (probably a reference to a variable that doesn't exist): ds$NOTAVARIABLE %in% 3 | ds$gender %in% \"Male\"", fixed=TRUE)
-        expect_warning(
-            expect_error(is.na(ds$NOTAVARIABLE) | ds$gender %in% "Male",
-                "Invalid expression (probably a reference to a variable that doesn't exist): is.na(ds$NOTAVARIABLE) | ds$gender %in% \"Male\"",
-                fixed=TRUE),
-            "is.na() applied to non-(list or vector) of type 'NULL'", fixed=TRUE)
+        expect_error(suppressWarnings(is.na(ds$NOTAVARIABLE) | ds$gender %in% "Male"),
+            "Invalid expression (probably a reference to a variable that doesn't exist): is.na(ds$NOTAVARIABLE) | ds$gender %in% \"Male\"",
+            fixed=TRUE)
     })
 })

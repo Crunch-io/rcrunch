@@ -151,10 +151,10 @@ calcInsertions <- function (vec, elements, var_cats) {
         }
 
         # if element is a subtotal, sum the things it corresponds to which are
-        # found with args()
+        # found with arguments()
         if (is.Subtotal(element)) {
             # grab category combinations, and then sum those categories.
-            combos <- unlist(args(element, var_cats))
+            combos <- unlist(arguments(element, var_cats))
             which.cats <- names(var_cats[ids(var_cats) %in% combos])
             return(sum(vec[which.cats]))
         }

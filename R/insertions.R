@@ -38,11 +38,11 @@
 #' Insertion or Insertions
 #' @param ... additional arguments to `[`, ignored
 #' @param value For `[<-`, the replacement Insertion to insert
-#' @param var_categories categories (from [categories()]) to used by the `args`
-#' and  `anchor` methods when needed to translate between category names and
-#' category ids.
+#' @param var_categories categories (from [categories()]) to used by the 
+#' `arguments` and `anchor` methods when needed to translate between category 
+#' names and category ids.
 #' @name Insertions
-#' @aliases anchor anchor<- anchors func func<- funcs args args<-
+#' @aliases anchor anchor<- anchors func func<- funcs arguments arguments<-
 NULL
 
 
@@ -62,7 +62,7 @@ insertionValidity <- function (object) {
                       serialPaste(dQuote(reqs[!mems])))
     }
 
-    if (!is.na(func(object)) && is.na(args(object))) {
+    if (!is.na(func(object)) && is.na(arguments(object))) {
         # add checking so that args is either a vectorOrList of numerics
         val <- paste0("If an Insertion has a ", dQuote("function"),
                       " it must also have ", dQuote("args"))
@@ -135,7 +135,7 @@ setMethod("subtotals<-", "Insertion", setSubtotal)
 
 #' @rdname Insertions
 #' @export
-setMethod("args", "Insertion", function (x) {
+setMethod("arguments", "Insertion", function (x) {
     if (all(is.null(x[["args"]]))) {
         return(NA)
     }
@@ -155,11 +155,11 @@ setMethod("args", "Insertion", function (x) {
 
 #' @rdname Insertions
 #' @export
-setMethod("args", "Subtotal", .convertArgs)
+setMethod("arguments", "Subtotal", .convertArgs)
 
 #' @rdname Insertions
 #' @export
-setMethod("args", "Heading", function(x) NA)
+setMethod("arguments", "Heading", function(x) NA)
 
 #' @rdname Insertions
 #' @export
