@@ -11,6 +11,10 @@ is.folder <- function (x) inherits(x, "ShojiFolder")
 #' @rdname describe-catalog
 setMethod("types", "ShojiFolder", function (x) getIndexSlot(x, "type"))
 
+#' @export
+#' @rdname describe-catalog
+setMethod("aliases", "ShojiFolder", function (x) getIndexSlot(x, "alias"))
+
 #' @rdname catalog-extract
 #' @export
 setMethod("[[", c("ShojiFolder", "numeric"), function (x, i, ..., drop=FALSE) {
@@ -41,7 +45,7 @@ setMethod("[[", c("ShojiFolder", "character"), function (x, i, ..., drop=FALSE) 
                 halt(deparse(i), " is an invalid path")
             }
         } else {
-            this <- callNextMethod(x, segment)
+            this <- x[[whichCatalogEntry(x, segment)]]
             if (is.null(this) && create) {
                 u <- createFolder(x, segment)
                 this <- new(class(x), crGET(u))
@@ -106,9 +110,24 @@ setMethod("delete", "ShojiFolder", function (x, ...) {
     invisible(out)
 })
 
+setOrder <- function (x, ord) {
+    # If ord is character, match against names/aliases/urls
+    if (is.character(ord)) {
+        ord <- whichCatalogEntry(x, ord)
+        # Validate that none are NA
+    }
+    stopifnot(is.numeric(ord))
+    # Allow for omitted values, and validate
+    valid <- seq_len(length(x))
+    bad <- setdiff(ord, valid)
+    if (length(bad)) {
+        halt("Invalid values: ", bad)
+    }
+    ord <- c(ord, setdiff(valid, ord))
+    # PATCH graph
+}
+
 # setMethod("folderExtraction", "ShojiFolder", function (x, tuple) {
 #     ## Default method: return a folder of the same type
 #     return(get(class(x))(crGET(names(tuple))))
 # })
-
-## TODO: show method (with optional depth argument, for recursing, and perhaps a verbose arg for returning a data.frame (like ls -al)). Use crayon

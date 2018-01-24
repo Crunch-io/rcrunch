@@ -24,6 +24,10 @@ with_mock_crunch({
     test_that("Folder with heterogeneous types", {
         expect_identical(names(g1), c("Birth Year", "Nested", "Text variable ftw"))
         expect_identical(types(g1), c("numeric", "folder", "text"))
+        expect_identical(aliases(g1), c("birthyr", NA, "textVar"))
+        # Extracting by alias
+        expect_identical(names(g1[c("birthyr", "textVar")]),
+            c("Birth Year", "Text variable ftw"))
     })
     test_that("Get folder from a folder (via $)", {
         expect_is(g1$Nested, "VariableFolder")
@@ -43,6 +47,7 @@ with_mock_crunch({
         expect_identical(folders(ds)[["Group 1/Nested"]], g1$Nested)
         expect_is(folders(ds)[["Group 1/Birth Year"]], "NumericVariable")
         expect_identical(name(folders(ds)[["Group 1/Birth Year"]]), "Birth Year")
+        expect_is(folders(ds)[["Group 1/birthyr"]], "NumericVariable")
     })
 
     test_that("Folder extract error handling", {
@@ -52,6 +57,8 @@ with_mock_crunch({
             '"Group 1/foo/bar/baz" is an invalid path: foo is not a folder')
         expect_error(folders(ds)[["Group 1/Birth Year/bar/baz"]],
             '"Group 1/Birth Year/bar/baz" is an invalid path: Birth Year is not a folder')
+        expect_error(folders(ds)[["Group 1/birthyr/bar/baz"]],
+            '"Group 1/birthyr/bar/baz" is an invalid path: birthyr is not a folder')
     })
 
     test_that("Set a folder's name", {
@@ -107,8 +114,4 @@ with_mock_crunch({
         expect_error(delete(folders(ds)),
             "Cannot delete root folder")
     })
-
-    ## TODO:
-    ## * names<- on folder
-    ## * reorder elements in a folder
 })

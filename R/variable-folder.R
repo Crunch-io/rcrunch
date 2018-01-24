@@ -15,4 +15,17 @@ setMethod("folderExtraction", "VariableFolder", function (x, tuple) {
     }
 })
 
-## TODO: get variable by alias, name, or URL?
+## Get variable by alias, name, or URL
+whichFolderEntry <- function (x, i) {
+    ## First check URLs and names()
+    out <- whichNameOrURL(x, i, names(x))
+    ## Now check variable aliases, if any missing
+    not_found <- is.na(out)
+    if (any(not_found)) {
+        out[not_found] <- match(i[not_found], aliases(x))
+    }
+    return(out)
+}
+
+setMethod("whichCatalogEntry", "VariableFolder",
+    function (x, i, ...) whichFolderEntry(x, i))

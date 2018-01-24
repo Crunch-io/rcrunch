@@ -61,10 +61,13 @@ dirtyElements <- function (x, y) {
     !mapply(identical, x, y, USE.NAMES=FALSE, SIMPLIFY=TRUE)
 }
 
+setMethod("whichCatalogEntry", "ShojiCatalog",
+    function (x, i, ...) whichNameOrURL(x, i, ...))
+
 #' @rdname catalog-extract
 #' @export
 setMethod("[", c("ShojiCatalog", "character"), function (x, i, ...) {
-    w <- whichNameOrURL(x, i, ...)
+    w <- whichCatalogEntry(x, i, ...)
     if (any(is.na(w))) {
         halt("Undefined elements selected: ", serialPaste(i[is.na(w)]))
     }
@@ -121,7 +124,7 @@ getEntity <- function (x, i, Constructor=ShojiEntity, ...) {
 #' @export
 setMethod("[[", c("ShojiCatalog", "character"), function (x, i, ...) {
     stopifnot(length(i) == 1L)
-    w <- whichNameOrURL(x, i, ...)
+    w <- whichCatalogEntry(x, i, ...)
     if (is.na(w)) {
         return(NULL)
     }
@@ -154,7 +157,7 @@ setMethod("[<-", c("ShojiCatalog", "ANY", "missing", "ShojiCatalog"),
 #' @name catalog-length
 NULL
 
-whichNameOrURL <- function (x, i, secondary=names(x)) {
+whichNameOrURL <- function (x, i, secondary=names(x), ...) {
     var_matches <- match(i, secondary)
     if (any(is.na(var_matches))) {
         url_matches <- match(i, urls(x))

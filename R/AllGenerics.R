@@ -139,6 +139,7 @@ setGeneric("weightVariables", function (x) standardGeneric("weightVariables"))
 setGeneric("weightVariables<-", function (x, value) standardGeneric("weightVariables<-"))
 setGeneric("is.weightVariable<-", function (x, value) standardGeneric("is.weightVariable<-"))
 setGeneric("is.weight<-", function (x, value) standardGeneric("is.weight<-"))
+setGeneric("whichCatalogEntry", function (x, i, ...) standardGeneric("whichCatalogEntry"))
 
 setGeneric("owner", function (x) standardGeneric("owner"))
 setGeneric("owner<-", function (x, value) standardGeneric("owner<-"))
