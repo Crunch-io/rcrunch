@@ -400,7 +400,6 @@ with_test_authentication({
     })
 
     test_that("conditionalTransform with an exclusion set with a text varaible", {
-        skip("Will fail until bug https://www.pivotaltracker.com/story/show/152700750 is fixed")
         exclusion(ds) <- ds$ndogs > 2
         ds$new10 <- conditionalTransform(ndogs < 1 ~ "lonely",
                                         ndogs == 1 ~ q3,
