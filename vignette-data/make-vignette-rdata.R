@@ -1,8 +1,8 @@
 library(crunch)
-options(crunch.api=getOption("test.api"),
-        crunch.debug=FALSE,
-        crunch.email=getOption("test.user"),
-        crunch.pw=getOption("test.pw"))
+# options(crunch.api=getOption("test.api"),
+#         crunch.debug=FALSE,
+#         crunch.email=getOption("test.user"),
+#         crunch.pw=getOption("test.pw"))
 login()
 
 ## 1. Getting started
@@ -35,6 +35,7 @@ ds$imiss <- makeArray(ds[grep("^imiss_", names(ds))], name="Issue importance")
 show_imiss_subvars <- crunch:::showSubvariables(subvariables(ds$imiss))
 show_imiss <- capture.output(print(ds$imiss))
 names_imiss_subvars <- names(subvariables(ds$imiss))
+imiss.cats <- categories(ds$imiss)
 
 newnames <- c("The economy", "Immigration",
               "The environment", "Terrorism", "Gay rights", "Education",
@@ -45,6 +46,13 @@ show_imiss_subvars2 <- crunch:::showSubvariables(subvariables(ds$imiss))
 sorting <- order(names(subvariables(ds$imiss)))
 subvariables(ds$imiss) <- subvariables(ds$imiss)[sorting]
 show_imiss_subvars3 <- crunch:::showSubvariables(subvariables(ds$imiss))
+ds$imiss_topboxes <- combine(ds$imiss, name="Issue Importance (Top Boxes)", 
+  combinations=list(
+    list(name="Important", categories=c("Very Important", "Somewhat Important")),
+    list(name="Not Important", categories=c("Not very Important", "Unimportant"))
+  ))
+imiss_topboxes.cats <- categories(ds$imiss_topboxes)
+
 show_boap_4 <- capture.output(print(ds$boap_4))
 ds$boap <- makeMR(ds[grep("^boap_[0-9]+", names(ds))],
                   name="Approval of Obama on issues",
@@ -52,6 +60,15 @@ ds$boap <- makeMR(ds[grep("^boap_[0-9]+", names(ds))],
 show_boap_subvars <- crunch:::showSubvariables(subvariables(ds$boap))
 show_boap <- c(crunch:::showCrunchVariableTitle(ds$boap),
                show_boap_subvars)
+ds$boap_combined <- combine(ds$boap, name="Approval of Obama on issues (Combined Subvariables)", 
+  combinations=list(
+    list(name="All Others", responses=c('boap_2', 'boap_3', 'boap_4', 'boap_5', 'boap_6',
+      'boap_7', 'boap_8', 'boap_9', 'boap_10', 'boap_11'))
+  ))
+show_boap_combined_subvars <- crunch:::showSubvariables(subvariables(ds$boap_combined))
+show_boap_combined <- c(crunch:::showCrunchVariableTitle(ds$boap_combined),
+  show_boap_combined_subvars)
+
 ds$boap <- undichotomize(ds$boap)
 show_boap2 <- capture.output(print(ds$boap))
 ds$boap <- dichotomize(ds$boap, "Strongly approve")
@@ -130,37 +147,26 @@ exclusion(ds) <- ds$perc_skipped > 15
 high_perc_skipped <- capture.output(print(exclusion(ds)))
 dim.ds.excluded <- dim(ds)
 
-message("subtotals")
-sub_initial_subtotals <- subtotals(ds$manningknowledge)
-subtotals(ds$manningknowledge) <- list(
-    Subtotal(name = "Follows closely",
-             categories = c("Somewhat closely", "Very closely"),
-             after = "Somewhat closely"),
-    Subtotal(name = "Doesn't Follow Closely",
-             categories = c("Not very closely", "Not at all"),
-             after = "Not at all"))
-sub_subtotals1 <- subtotals(ds$manningknowledge)
-subtotals(ds$obamaapp) <- list(
-    Heading(name = "Approves",
-            after = 0),
-    Heading(name = "Disapprove",
-            after = "Somewhat Approve"),
-    Heading(name = "No Answer",
-            after = "Strongly Disapprove"))
-sub_headings <- subtotals(ds$obamaapp)
-subtotals(ds$obamaapp) <- NULL
-approve_subtotals <- list(
-    Subtotal(name = "Approves",
-            categories = c("Somewhat approve", "Strongly approve"),
-            after = "Somewhat approve"),
-    Subtotal(name = "Disapprove",
-            categories = c("Somewhat disapprove", "Strongly disapprove"),
-            after = "Strongly disapprove"))
-subtotals(ds$snowdenleakapp) <- approve_subtotals
-subtotals(ds$congapp) <- approve_subtotals
-sub_snowdon <- subtotals(ds$snowdenleakapp)
-sub_con <- subtotals(ds$congapp)
-sub_crtab <- crtabs(~congapp + gender, ds)
+message("10. Re-Combining Answers and Variables")
+ds$age4 <- cut(ds$age, name="Age (4 categories)",
+  breaks=c(17,29,44,64,100), labels=c('18-29', '30-44', '45-64', '65+'))
+age4.var <- ds$age4
+summary.age4.var <- capture.output(print(age4.var))
+age4.cats <- categories(ds$age4)
+ds$age3 <- combine(ds$age4, name="Age (3 categories)", 
+  combinations=list(
+    list(name="18-44", categories=c('18-29', '30-44'))
+  ))
+age3.var <- ds$age3
+summary.age3.var <- capture.output(print(age3.var))
+age3.cats <- categories(ds$age3)
+gender.var <- ds$gender
+summary.gender.var <- capture.output(print(gender.var))
+ds$gender_by_age <- interactVariables(ds$gender, ds$age3, name="Gender by Age")
+gender_by_age.var <- ds$gender_by_age
+summary.gender_by_age.var <- capture.output(print(gender_by_age.var))
+gender_by_age.cats <- categories(ds$gender_by_age)
 
 save.image(file="../vignettes/vignettes.RData")
+
 with_consent(delete(ds)) ## cleanup
