@@ -1,9 +1,9 @@
 #' Conditional transformation
 #'
 #' Create a new variable that has values when specific conditions are met.
-#' Conditions are specified using a series of formulas: the right-hand side is
-#' the condition that must be true (a `CrunchLogicalExpr`) and the left-hand
-#' side is where to get the value if the condition on the right-hand side is
+#' Conditions are specified using a series of formulas: the left-hand side is
+#' the condition that must be true (a `CrunchLogicalExpr`) and the right-hand
+#' side is where to get the value if the condition on the left-hand side is
 #' true. This is commonly a Crunch variable but may be a string or numeric
 #' value, depending on the type of variable you're constructing.
 #'
@@ -24,8 +24,8 @@
 #' to/from the local R session. `conditionalTransform` on the other hand will
 #' download the data necessary to construct the new variable.
 #'
-#' @param ... a list of cases to evaluate as well as other
-#' properties to pass about the case variable (i.e. alias, description)
+#' @param ... a list of conditions to evaluate (as formulas, see Details) as well as
+#' other properties to pass to the new conditional variable (i.e. alias, description)
 #' @param data a Crunch dataset object to use
 #' @param else_condition a default value to use if none of the conditions are
 #' true (default: `NA`)
@@ -36,6 +36,8 @@
 #' @param categories a vector of characters if `type="categorical"`, these are
 #' all of the categories that should be in the resulting variable, in the order
 #' they should be in the resulting variable or a set of Crunch categories.
+#' @param formulas a list of conditions to evaluate (as formulas, see Details). If
+#' specified, `...` must not contain other formulas specifying conditions.
 #'
 #' @return a Crunch `VariableDefinition`
 #' @examples
@@ -49,14 +51,24 @@
 #' }
 #' @export
 conditionalTransform <- function (..., data, else_condition=NA, type=NULL,
-                                  categories=NULL) {
+                                  categories=NULL, formulas = NULL) {
     dots <- list(...)
     is_formula <- function (x) inherits(x, "formula")
-    formulas <- Filter(is_formula, dots)
+    dot_formulas <- Filter(is_formula, dots)
+
+    if (length(dot_formulas) > 0) {
+        if (!is.null(formulas)) {
+            halt("must not supply conditions in both the ", dQuote("formulas"),
+                 "argument and ...\n","Please supply conditions in only one.")
+        }
+        formulas <- dot_formulas
+    }
     var_def <- Filter(Negate(is_formula), dots)
 
     if (length(formulas) == 0) {
-        halt("no conditions have been supplied; please supply formulas as conditions.")
+        halt("conditions must been supplied\n",
+             "Please supply formulas as conditions in either the ",
+             dQuote("formulas"), " argument, or through ", dQuote("..."), ".")
     }
 
     if (!missing(type) && !type %in% c("categorical", "text", "numeric")){
@@ -129,7 +141,7 @@ makeConditionalValues <- function (formulas, data, else_condition) {
     for (i in seq_len(n)) {
         formula <- formulas[[i]]
         if (length(formula) != 3) {
-            halt("The case provided is not a proper formula: ",
+            halt("The condition provided is not a proper formula: ",
                  deparseAndFlatten(formula))
         }
 

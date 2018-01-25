@@ -6,7 +6,9 @@ with_mock_crunch({
 
     test_that("conditionalTransform input validation", {
         expect_error(conditionalTransform("gender", data = ds),
-                     'no conditions have been supplied; please supply formulas as conditions.')
+                     paste0('conditions must been supplied\nPlease supply ',
+                            'formulas as conditions in either the .*formulas.*',
+                            ' argument, or through'))
         expect_error(conditionalTransform("bar" ~ "foo", data = ds),
                      'The left-hand side provided is not a CrunchLogicalExpr: "bar"')
 
@@ -31,12 +33,35 @@ with_mock_crunch({
                                           type="categorical",
                                           categories = c("l", "m", "s", "h", "z")),
                      "there were categories in the results \\(x\\) that were not specified in categories")
+
+        # we can't provide conditions in both ... and formulas
+        expect_error(conditionalTransform(gender == "Male" ~ textVar,
+                                          data = ds,
+                                          type="categorical",
+                                          categories = c("l", "m", "s", "h", "z"),
+                                          formulas = list(
+                                              gender == "Male" ~ textVar
+                                          )),
+                     paste0("must not supply conditions in both the ",
+                            dQuote("formulas"), "argument and ...\n",
+                            "Please supply conditions in only one."))
     })
 
     test_that("conditionalTransform works with categories", {
         expect_silent(new_var <- conditionalTransform(gender == "Male" ~ textVar,
                                                       data = ds,
                                                       type = "categorical"))
+        expect_equal(new_var$values, c(-1, -1, -1, -1, -1, -1, 2, -1, -1, -1,
+                                       3, -1, 4, -1, -1, -1, -1, -1, -1, -1, 1,
+                                       6, 3, -1, 5))
+        expect_equal(new_var$type, "categorical")
+
+        # and we can use the formulas arg
+        expect_silent(new_var <- conditionalTransform(data = ds,
+                                                      type = "categorical",
+                                                      formulas = list(
+                                                          gender == "Male" ~ textVar
+                                                      )))
         expect_equal(new_var$values, c(-1, -1, -1, -1, -1, -1, 2, -1, -1, -1,
                                        3, -1, 4, -1, -1, -1, -1, -1, -1, -1, 1,
                                        6, 3, -1, 5))
@@ -266,6 +291,17 @@ with_test_authentication({
         expect_equal(as.vector(ds$new1), c("Jasmine", "other", "2", "3", "Zeus", "2", "2", "3",
                                    "2", "2", "2", "other", "3", "Belgium", "6", "Fluffy",
                                    "other", "Austria", "other", "2"))
+    })
+    test_that("conditionalTransform with else_condition and formula lsit", {
+        ds$new1_again <- conditionalTransform(data = ds, else_condition = "other",
+                                        formulas = list(
+                                            ndogs < 1 ~ country,
+                                            ndogs == 1 ~ q3,
+                                            ndogs > 1 ~ ndogs
+                                        ))
+        expect_equal(as.vector(ds$new1_again), c("Jasmine", "other", "2", "3", "Zeus", "2", "2", "3",
+                                           "2", "2", "2", "other", "3", "Belgium", "6", "Fluffy",
+                                           "other", "Austria", "other", "2"))
     })
     test_that("conditionalTransform with text", {
         ds$new2 <- conditionalTransform(ndogs < 1 ~ country,
