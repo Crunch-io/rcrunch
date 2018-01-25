@@ -37,7 +37,9 @@ Like a file system, you can express the "path" to a folder as a string separated
 mkdir(ds, "Brands/Cars and Trucks/Domestic")
 ```
 
-If your folder names should legitimately have a "/" in them, you can set a different character to be the path separator. See `?mkdir` or any of the other functions' help files for details. Paths can be expressed relative to the current object---a folder, or in this case, the dataset, which translates to its top-level `"/"` root folder in path specification---and the file system's special path segments `".."` (go up a level) and `"."` (this level) are also supported. We'll use those in examples below.
+If your folder names should legitimately have a "/" in them, you can set a different character to be the path separator. See `?mkdir` or any of the other functions' help files for details.
+
+Paths can be expressed relative to the current object---a folder, or in this case, the dataset, which translates to its top-level `"/"` root folder in path specification---and the file system's special path segments `".."` (go up a level) and `"."` (this level) are also supported. We'll use those in examples below.
 
 You can also specify paths as a vector of path segments, like
 
@@ -89,7 +91,7 @@ ds %>%
     cd("Demos") ## To print the folder contents
 ```
 
-A side note: although the last step of that chain was `cd()`, we haven't changed state in our R session. There is no "working folder" set globally. `cd()` is a function that returns a folder; if we had assigned the return from the function (pipeline) to some object, we could then pass that in to another function to "start" in that folder.
+> A side note: although the last step of that chain was `cd()`, we haven't changed state in our R session. There is no "working folder" set globally. `cd()` is a function that returns a folder; if we had assigned the return from the function (pipeline) to some object, we could then pass that in to another function to "start" in that folder.
 
 Another way we can identify variables is by using the `dplyr`-like functions `starts_with`, `ends_with`, `matches`, and `contains`. Let's use `matches` to move all of the questions about Edward Snowden or Bradley (Chelsea) Manning to a folder for the topical questions in this week's survey:
 
@@ -108,7 +110,7 @@ ds %>%
     mv(., variables(.), "Tracking questions")
 ```
 
-(Curious about the "dot" notation? See the [magrittr docs](http://magrittr.tidyverse.org/articles/magrittr.html).)
+> (Curious about the "dot" notation? See the [magrittr docs](http://magrittr.tidyverse.org/articles/magrittr.html).)
 
 The reason we change to the top level folder here is that there is a subtle difference between passing `ds` to `mv()` versus `cd(ds, "/")`. Whatever object, dataset or folder, that is passed into `mv()` determines the scope from which the objects to move are selected. If you pass the dataset in, you can select any variables in the dataset, regardless of what folder they're in. If you pass in a folder, you're selecting just from that folder's contents. It can be convenient to find all variables that match some criteria across the whole dataset to move them, but sometimes we don't want that. In this case, we wanted only the variables sitting in the top level folder, not nested in other folders, so we wanted `variables(cd(ds, "/"))` and not `variables(ds)`.
 
@@ -147,13 +149,15 @@ ds %>%
 
 ## Renaming folders and folder contents
 
+Folders themselves have names, which we can set with `setName()`:
+
 ```r
 ds %>%
     cd("Demos") %>%
     setName("Demographics")
 ```
 
-<!-- Show also setNames for folder contents -->
+We can also set the names of the objects contained in a folder with `setNames()`.
 
 ## Ordering within folders
 
@@ -186,6 +190,13 @@ folder(ds$var); can also mv to wherever that var is -->
 
 ## Deleting folders
 
-<!-- rmdir(); deletes all variables contained within -->
+The cleanest way to delete a folder is with `rmdir()`:
+
+```r
+ds %>%
+    rmdir("This week/Snowden")
+```
+
+This deletes the folder and all variables contained within it.
 
 [Next: transforming and deriving](derive.html)
