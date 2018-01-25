@@ -116,7 +116,7 @@ feeling_cats
 And make some subtotals and headings to use as insertions:
 ```{r}
 feeling_subtotals <- Insertions(
-    Heading(name = "How I feel about cheese", after = 0),
+    Heading(name = "How I feel about cheese", position = "top"),
     Subtotal(name = "Generally Happy", after = "Somewhat Happy", 
         categories = c("Very Happy", "Somewhat Happy")),
     Subtotal(name = "Generally Unhappy", after = 5, 
