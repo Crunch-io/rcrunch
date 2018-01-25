@@ -6,33 +6,36 @@ with_mock_crunch({
 
     test_that("conditionalTransform input validation", {
         expect_error(conditionalTransform("gender", data = ds),
-                     paste0('conditions must been supplied\nPlease supply ',
-                            'formulas as conditions in either the .*formulas.*',
-                            ' argument, or through'))
+                     paste0("Conditions must be supplied: Have you forgotten ",
+                            "to supply conditions as formulas in either the",
+                            " .*formulas.* argument, or through .*....*"))
         expect_error(conditionalTransform("bar" ~ "foo", data = ds),
-                     'The left-hand side provided is not a CrunchLogicalExpr: "bar"')
+                     "The left-hand side provided must be a CrunchLogicalExpr: .*bar.*")
 
         expect_error(conditionalTransform(gender ~ "foo", data = ds, type="unknown"),
-                     paste0("type must be either ", dQuote("categorical"), ", ",
+                     paste0("Type must be either ", dQuote("categorical"), ", ",
                             dQuote("text"), ", or ", dQuote("numeric")))
 
         expect_warning(conditionalTransform(gender == 'Male' ~ "foo", data = ds, type="text",
                                           categories=c("foo", "bar")),
-                     paste0("type is not ", dQuote("categorical"), " ignoring ",
+                     paste0("Type is not ", dQuote("categorical"), " ignoring ",
                      dQuote("categories")))
         # check that we can't reference two different datasets
         expect_error(conditionalTransform(ds$gender == 'Male' ~ "foo",
                                           ds2$gender == 'Male' ~ "foo",
                                           name = "new"),
-                     paste0("There is more than one dataset referenced. Please ",
-                            "supply only one."))
+                     paste0("There must be only one dataset referenced. Did ",
+                            "you accidentally supply more than one?"))
 
         # updated to use a categorical variable as the source
         expect_error(conditionalTransform(gender == "Male" ~ textVar,
                                           data = ds,
                                           type="categorical",
                                           categories = c("l", "m", "s", "h", "z")),
-                     "there were categories in the results \\(x\\) that were not specified in categories")
+                     paste0("When specifying categories, all categories in the",
+                            " results must be included. These categories are ",
+                            "in the results that were not specified in ",
+                            "categories: x"))
 
         # we can't provide conditions in both ... and formulas
         expect_error(conditionalTransform(gender == "Male" ~ textVar,
@@ -42,9 +45,8 @@ with_mock_crunch({
                                           formulas = list(
                                               gender == "Male" ~ textVar
                                           )),
-                     paste0("must not supply conditions in both the ",
-                            ".*formulas.* argument and .*....*\n",
-                            "Please supply conditions in only one."))
+                     paste0("Must not supply conditions in both the ",
+                            ".*formulas.* argument and .*....*"))
     })
 
     test_that("conditionalTransform works with categories", {
@@ -148,7 +150,7 @@ with_mock_crunch({
         expect_warning(new_var <- conditionalTransform(gender == "Male" ~ textVar,
                                                       data = ds,
                                                       categories = textVarCats),
-                       paste0("type is not ", dQuote("categorical"),
+                       paste0("Type is not ", dQuote("categorical"),
                               " ignoring ", dQuote("categories")))
         expect_equal(new_var$values, c(NA, NA, NA, NA, NA, NA, "l", NA, NA, NA, "m",
                                        NA, "s", NA, NA, NA, NA, NA, NA, NA, "h", "z",

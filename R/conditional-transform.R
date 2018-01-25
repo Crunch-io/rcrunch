@@ -58,22 +58,21 @@ conditionalTransform <- function (..., data, else_condition=NA, type=NULL,
 
     if (length(dot_formulas) > 0) {
         if (!is.null(formulas)) {
-            halt("must not supply conditions in both the ", dQuote("formulas"),
-                 " argument and ", dQuote("...")
-                 ,"\n","Please supply conditions in only one.")
+            halt("Must not supply conditions in both the ", dQuote("formulas"),
+                 " argument and ", dQuote("..."))
         }
         formulas <- dot_formulas
     }
     var_def <- Filter(Negate(is_formula), dots)
 
     if (length(formulas) == 0) {
-        halt("conditions must been supplied\n",
-             "Please supply formulas as conditions in either the ",
-             dQuote("formulas"), " argument, or through ", dQuote("..."), ".")
+        halt("Conditions must be supplied: ",
+             "Have you forgotten to supply conditions as formulas in either the ",
+             dQuote("formulas"), " argument, or through ", dQuote("..."), "")
     }
 
     if (!missing(type) && !type %in% c("categorical", "text", "numeric")){
-        halt("type must be either ", dQuote("categorical"), ", ",
+        halt("Type must be either ", dQuote("categorical"), ", ",
              dQuote("text"), ", or ", dQuote("numeric"))
     }
 
@@ -91,7 +90,7 @@ conditionalTransform <- function (..., data, else_condition=NA, type=NULL,
     }
 
     if (type != "categorical" & !is.null(categories)){
-        warning("type is not ", dQuote("categorical"), " ignoring ",
+        warning("Type is not ", dQuote("categorical"), " ignoring ",
                 dQuote("categories"))
     }
     var_def$type <- type
@@ -113,9 +112,10 @@ conditionalTransform <- function (..., data, else_condition=NA, type=NULL,
             uni_results <- unique(result[!is.na(result)])
             results_not_categories <- !uni_results %in% names(categories)
             if (any(results_not_categories)) {
-                halt("there were categories in the results (",
-                     serialPaste(uni_results[results_not_categories]),
-                     ") that were not specified in categories")
+                halt("When specifying categories, all categories in the ",
+                     "results must be included. These categories are in the ",
+                     "results that were not specified in categories: "
+                     , serialPaste(uni_results[results_not_categories]))
             }
             result <- factor(result, levels = names(categories))
         }
@@ -142,14 +142,14 @@ makeConditionalValues <- function (formulas, data, else_condition) {
     for (i in seq_len(n)) {
         formula <- formulas[[i]]
         if (length(formula) != 3) {
-            halt("The condition provided is not a proper formula: ",
+            halt("The condition provided must be a proper formula: ",
                  deparseAndFlatten(formula))
         }
 
         cases[[i]] <- evalLHS(formula, data)
         if (!inherits(cases[[i]], "CrunchLogicalExpr")) {
-            halt("The left-hand side provided is not a CrunchLogicalExpr: ",
-                 LHS_string(formula))
+            halt("The left-hand side provided must be a CrunchLogicalExpr: ",
+                 dQuote(LHS_string(formula)))
         }
         values[[i]] <- evalRHS(formula, data)
     }
@@ -158,8 +158,8 @@ makeConditionalValues <- function (formulas, data, else_condition) {
     # check all datasets are the same and get the reference from the unique one
     ds_refs <- unlist(unique(lapply(cases, datasetReference)))
     if (length(ds_refs) > 1) {
-        halt("There is more than one dataset referenced. Please ",
-             "supply only one.")
+        halt("There must be only one dataset referenced. Did you accidentally ",
+             "supply more than one?")
     }
     n_rows <- nrow(CrunchDataset(crGET(ds_refs)))
 
