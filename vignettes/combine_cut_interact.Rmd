@@ -1,10 +1,11 @@
 ---
 title: "Re-Combining Answers and Variables"
-author: "B Law"
-date: "1/19/2018"
-output:
-  html_document: default
-  pdf_document: default
+description: "Vignette showing you how to take existing variables and recombine their answers or other variables."
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Adding Variables}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r, results='hide', echo=FALSE, message=FALSE}
