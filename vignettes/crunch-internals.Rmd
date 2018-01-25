@@ -37,5 +37,4 @@ datasets(proj) <- ds
 
 Internally there is actually a second method `datasets<-` that takes the value on the right hand side of the `<-` operator and posts that value to the datasets attribute of the project catalog. The projects catalog will then update to reflect that a dataset belongs to a particular catalog, and that will be reflected in the web app. Similar patterns happen when you get and set attributes on objects, like "names".
 
-[Next: abstract categories](abstract-categories.html)
-
+[Next: Category objects](abstract-categories.html)

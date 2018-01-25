@@ -49,4 +49,4 @@ The Crunch data store is built around datasets, which contain variables. Unlike 
 * [Downloading and exporting](export.html): how to pull data from the server, both for use in R and file export
 * [Subtotals and headings](subtotals.html): how to set and get subtotals and headings for categorical variables
 * [Crunch internals](crunch-internals.html): an introduction to the Crunch API and concepts to help you make more complex and more efficient queries
-* [Abstract categories](abstract-categories.html): an introduction to the S4 classes that power categories and category-like representations in the package
+* [Category objects](abstract-categories.html): an introduction to the S4 classes that power categories and category-like representations in the package
