@@ -59,7 +59,8 @@ conditionalTransform <- function (..., data, else_condition=NA, type=NULL,
     if (length(dot_formulas) > 0) {
         if (!is.null(formulas)) {
             halt("must not supply conditions in both the ", dQuote("formulas"),
-                 "argument and ...\n","Please supply conditions in only one.")
+                 " argument and ", dQuote("...")
+                 ,"\n","Please supply conditions in only one.")
         }
         formulas <- dot_formulas
     }

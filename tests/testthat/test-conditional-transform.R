@@ -43,7 +43,7 @@ with_mock_crunch({
                                               gender == "Male" ~ textVar
                                           )),
                      paste0("must not supply conditions in both the ",
-                            dQuote("formulas"), "argument and ...\n",
+                            ".*formulas.* argument and .*....*\n",
                             "Please supply conditions in only one."))
     })
 
