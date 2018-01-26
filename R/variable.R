@@ -120,8 +120,8 @@ setMethod("categories<-", c("CategoricalVariable", "Categories"),
 #' @export
 setMethod("categories<-", c("CategoricalArrayVariable", "Categories"),
     function (x, value) {
-        lapply(subvariables(tuple(x)), dropCache) ## Subvariables will update too
         ent <- setEntitySlot(entity(x), "categories", value)
+        lapply(subvariables(tuple(x)), dropCache) ## Subvariables will update too
         dropCache(cubeURL(x))
         return(x)
     })
