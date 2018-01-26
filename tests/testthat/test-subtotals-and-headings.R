@@ -57,29 +57,29 @@ test_that("Subtotal/Heading getters", {
 
 test_that("Subtotal/Heading setters", {
     # names
-    expect_silent(name(subtot) <- "new name")
+    name(subtot) <- "new name"
     expect_equal(name(subtot), "new name")
-    expect_silent(name(heading) <- "new head")
+    name(heading) <- "new head"
     expect_equal(name(heading), "new head")
 
     # arguments
-    expect_silent(arguments(subtot) <- c(2, 3))
+    arguments(subtot) <- c(2, 3)
     expect_equal(arguments(subtot), c(2, 3))
     expect_error(arguments(heading) <- c(2, 3),
                  "Cannot set arguments on Headings.")
 
     # anchors
-    expect_silent(anchor(subtot) <- 2)
+    anchor(subtot) <- 2
     expect_equal(anchor(subtot), 2)
     expect_equal(subtot$position, "relative")
-    expect_silent(anchor(subtot) <- "bottom")
+    anchor(subtot) <- "bottom"
     # anchor grabs position when after is null
     expect_equal(anchor(subtot), "bottom")
     expect_equal(subtot$position, "bottom")
     # after is null when position is anything other than relative
     expect_null(subtot$after)
 
-    expect_silent(anchor(heading) <- 1)
+    anchor(heading) <- 1
     expect_equal(anchor(heading), 1)
     expect_equal(heading$position, "relative")
 })
@@ -246,26 +246,26 @@ with_test_authentication({
         expect_equal(arguments(subtotals(ds$v4)[[4]]), c(1,2))
 
         # changing names
-        expect_silent(name(subtotals(ds$v4)[[1]]) <- "The new subtitle")
+        name(subtotals(ds$v4)[[1]]) <- "The new subtitle"
         expect_equal(name(subtotals(ds$v4)[[1]]), "The new subtitle")
-        expect_silent(name(subtotals(ds$v4)[[2]]) <- "C and B")
+        name(subtotals(ds$v4)[[2]]) <- "C and B"
         expect_equal(name(subtotals(ds$v4)[[2]]), "C and B")
 
         # changing anchors
-        expect_silent(anchor(subtotals(ds$v4)[[2]]) <- 2)
+        anchor(subtotals(ds$v4)[[2]]) <- 2
         expect_equal(anchor(subtotals(ds$v4)[[2]]), 2)
-        expect_silent(anchor(subtotals(ds$v4)[[2]]) <- "B")
+        anchor(subtotals(ds$v4)[[2]]) <- "B"
         expect_equal(anchor(subtotals(ds$v4)[[2]]), 1)
-        expect_silent(anchor(subtotals(ds$v4)[[3]]) <- 1)
+        anchor(subtotals(ds$v4)[[3]]) <- 1
         expect_equal(anchor(subtotals(ds$v4)[[3]]), 1)
-        expect_silent(anchor(subtotals(ds$v4)[[1]]) <- "bottom")
+        anchor(subtotals(ds$v4)[[1]]) <- "bottom"
         expect_equal(anchor(subtotals(ds$v4)[[1]]), "bottom")
 
         # changing arguments
-        expect_silent(arguments(subtotals(ds$v4)[[2]]) <- c(1, 2))
+        arguments(subtotals(ds$v4)[[2]]) <- c(1, 2)
         expect_equal(arguments(subtotals(ds$v4)[[2]]), c(1, 2))
 
-        expect_silent(arguments(subtotals(ds$v4)[[2]]) <- c("C", "B"))
+        arguments(subtotals(ds$v4)[[2]]) <- c("C", "B")
         expect_equal(arguments(subtotals(ds$v4)[[2]]), c(2, 1))
 
         # refresh to ensure that the changes have stuck
