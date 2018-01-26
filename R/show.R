@@ -285,10 +285,19 @@ showMultitable <- function (x) {
     # eg remove selected_array()
     out <- c(out, "Column variables:",
              vapply(x@body$template, function (expr) {
-                 if (names(expr$query[[1]]) == "each") {
+                 if ("each" %in% names(expr$query[[1]])) {
                      # if the first element of the query is each, then this is
-                     # an MR so take the second argument instead.
-                     return(paste0("  ", formatExpression(expr$query[[2]])))
+                     # an array so take the second argument instead.
+                     exprToFormat <- expr$query[[2]]
+
+                     # if the second arg is a as_selected or selected_array take
+                     # the variable from that to display var only
+                     mr_funcs <- c("as_selected", "selected_array")
+                     if ((exprToFormat[["function"]] %||% "") %in% mr_funcs ) {
+                         exprToFormat <- exprToFormat$args[[1]]
+                     }
+
+                     return(paste0("  ", formatExpression(exprToFormat)))
                  }
 
                  return(paste0("  ", formatExpression(expr$query[[1]])))

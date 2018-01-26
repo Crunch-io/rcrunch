@@ -271,8 +271,31 @@ with_test_authentication({
         expect_identical(name(m), "allpets + q1")
         expect_identical(getShowContent(m), c(paste0("Multitable ", dQuote("allpets + q1")),
                                               "Column variables:",
-                                              "  as_selected(allpets)",
+                                              "  allpets",
                                               "  q1"))
+    })
+
+    test_that("Can make a multitable perserving zcl functions", {
+        m <- newMultitable(~ rollup(wave, "M") + q1, data=ds)
+        expect_identical(name(m), "rollup(wave, \"M\") + q1")
+        expect_identical(getShowContent(m), c(paste0("Multitable ", dQuote("rollup(wave, \"M\") + q1")),
+                                              "Column variables:",
+                                              "  rollup(wave, \"M\")",
+                                              "  q1"))
+        # cleanup
+        with_consent(delete(m))
+    })
+
+    test_that("Can make a multitable with a cat array", {
+        print(ds)
+        m <- newMultitable(~ petloc + q1, data=ds)
+        expect_identical(name(m), "petloc + q1")
+        expect_identical(getShowContent(m), c(paste0("Multitable ", dQuote("petloc + q1")),
+                                              "Column variables:",
+                                              "  petloc",
+                                              "  q1"))
+        # cleanup
+        with_consent(delete(m))
     })
 
     test_that("Can make a multitable with list methods", {
@@ -328,7 +351,7 @@ with_test_authentication({
         expect_true(is.public(refresh(m)))
         expect_identical(getShowContent(m), c(paste0("Multitable ", dQuote("copied_multitable")),
                                               "Column variables:",
-                                              "  as_selected(allpets)",
+                                              "  allpets",
                                               "  q1"))
     })
 
