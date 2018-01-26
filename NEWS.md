@@ -1,4 +1,5 @@
 ## crunch 1.19.1
+* Fixed a bug where Subtotal and Headings anchors weren't changeable with `anchor(subtotal)<-`. 
 * Subtotals and headings can now have a fixed top or bottom position with the option `position = "top"` or `position = "bottom"`. 
 * Improved efficiency when loading a dataset from URL.
 * Subtotals and headings on categorical variables and CrunchCubes. Use `subtotals(variable)` to see subtotals set for a variable. Subtotals can be set with `subtotals(variable) <- Subtotal(name = 'subtotal', categories = c(1, 2))`. Subtotals and headings are displayed for rows in CrunchCubes when they are set. See `?subtotals` for more information. 
