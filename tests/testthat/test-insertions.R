@@ -24,6 +24,8 @@ test_that("Insertion setters", {
     expect_equal(name(insrt2), "Low low")
     subtotals(insrt2) <- c(10, 20)
     expect_equal(arguments(insrt2), c(10, 20))
+    arguments(insrt2) <- c(100, 200)
+    expect_equal(arguments(insrt2), c(100, 200))
 })
 
 test_that("Insertion can take an anchor of int, top, or bottom", {
