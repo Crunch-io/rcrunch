@@ -42,25 +42,6 @@ with_test_authentication({
                                   1, 0, 0), dim=c(3L, 3L),
                                 dimnames=list(v4=c("B", "C", "No Data"),
                                               MR=c("mr_1", "mr_2", "mr_3"))))
-
-        # the output with select_array and useNA other than no differs slightly
-        with(temp.options(crunch.mr.selection="selected_array"), {
-            kube <- crtabs(~ v4 + MR, data=mrds, useNA="ifany")
-            expect_is(kube, "CrunchCube")
-            expect_equivalent(as.array(kube),
-                array(c(2, 0, 1, 0, 1, 0, 0, 1), dim=c(2L, 4L),
-                    dimnames=list(v4=c("B", "C"),
-                    MR=c("mr_1", "mr_2", "mr_3", "<NA>"))))
-
-            kube@useNA <- "always"
-            expect_equivalent(as.array(kube),
-                array(c(2, 0, 0,
-                        1, 0, 0,
-                        1, 0, 0,
-                        0, 1, 0), dim=c(3L, 4L),
-                    dimnames=list(v4=c("B", "C", "No Data"),
-                    MR=c("mr_1", "mr_2", "mr_3", "<NA>"))))
-        })
     })
 
     c1 <- crtabs(~ MR, data=mrds)
@@ -75,25 +56,6 @@ with_test_authentication({
         expect_equivalent(prop.table(c2),
             array(c(.5, .25, .25), dim=c(3L),
                 dimnames=list(MR=c("mr_1", "mr_2", "mr_3"))))
-    })
-
-
-    ## selected_array equivalents
-    with(temp.options(crunch.mr.selection="selected_array"), {
-        c1 <- crtabs(~ MR, data=mrds)
-    })
-
-    test_that("prop.table on univariate MR without NAs", {
-        expect_equivalent(prop.table(c1),
-                          array(c(2/3, 1/3, 1/3), dim=c(3L),
-                                dimnames=list(MR=c("mr_1", "mr_2", "mr_3"))))
-    })
-    test_that("prop.table on univariate MR, useNA=always", {
-        c2 <- c1
-        c2@useNA <- "always"
-        expect_equivalent(prop.table(c2),
-                          array(c(.5, .25, .25, .25), dim=c(4L),
-                                dimnames=list(MR=c("mr_1", "mr_2", "mr_3", "<NA>"))))
     })
 
     c1 <- crtabs(~ v5 + MR, data=mrds)
