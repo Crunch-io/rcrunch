@@ -159,4 +159,4 @@ noTransforms(sub_crtab)
 
 This does not modify the variable---the subtotals are still defined and visible in the web app---but they are removed from the current analysis.
 
-[Next: Crunch internals](crunch-internals.html)
+[Next: Combining answers and variables](combine-cut-interact.html)
