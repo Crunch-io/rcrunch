@@ -38,8 +38,8 @@
 #' Insertion or Insertions
 #' @param ... additional arguments to `[`, ignored
 #' @param value For `[<-`, the replacement Insertion to insert
-#' @param var_categories categories (from [categories()]) to used by the 
-#' `arguments` and `anchor` methods when needed to translate between category 
+#' @param var_categories categories (from [categories()]) to used by the
+#' `arguments` and `anchor` methods when needed to translate between category
 #' names and category ids.
 #' @name Insertions
 #' @aliases anchor anchor<- anchors func func<- funcs arguments arguments<-
@@ -108,6 +108,19 @@ setAnchor <- function (x, value) {
     return(x)
 }
 
+setAfter <- function (x, value) {
+    # if the value is top/bottom set position instead of after
+    if (value %in% c("top", "bottom")) {
+        x[["position"]] <- value
+        value <- NULL
+    } else {
+        x[["position"]] <- "relative"
+    }
+
+    x[["after"]] <- value
+    return(x)
+}
+
 validateNewSubtotal <- function (comb) {
     if (!is.numeric(comb)) {
         halt("a subtotal must be a numeric")
@@ -131,7 +144,37 @@ setMethod("anchor<-", "Insertion", setAnchor)
 
 #' @rdname Insertions
 #' @export
+setMethod("anchor<-", "Subtotal", setAfter)
+
+#' @rdname Insertions
+#' @export
+setMethod("anchor<-", "Heading", setAfter)
+
+#' @rdname Insertions
+#' @export
 setMethod("subtotals<-", "Insertion", setSubtotal)
+
+#' @rdname Insertions
+#' @export
+setMethod("arguments<-", "Insertion", function (x, value) {
+    # TODO: validate that the arguments are valid
+    x[["args"]] <- value
+    return(x)
+})
+
+#' @rdname Insertions
+#' @export
+setMethod("arguments<-", "Subtotal", function (x, value) {
+    # TODO: validate that the arguments are valid
+    x[["categories"]] <- value
+    return(x)
+})
+
+#' @rdname Insertions
+#' @export
+setMethod("arguments<-", "Heading", function (x, value) {
+    halt("Cannot set arguments on Headings.")
+})
 
 #' @rdname Insertions
 #' @export
