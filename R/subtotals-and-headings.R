@@ -219,9 +219,9 @@ setMethod("subtotals<-", c("CrunchVariable", "ANY"), function (x, value) {
                                        var_categories = categories(x)))
 
     dropCache(cubeURL(x))
-    bd_value <- list("transform" = list("insertions" = inserts))
-    # # setEntitySlot manages old inserts so they are not duplicated
-    ent <- setEntitySlot(entity(x), "view", bd_value)
+    bd <- list("transform" = list("insertions" = inserts))
+    # setEntitySlot manages old inserts so they are not duplicated
+    ent <- setEntitySlot(entity(x), "view", bd)
     return(invisible(x))
 })
 
@@ -234,8 +234,8 @@ setMethod("subtotals<-", c("CrunchVariable", "NULL"), function (x, value) {
     inserts <- setdiff(old_inserts, subtots)
 
     dropCache(cubeURL(x))
-    bd_value <- list("transform" = list("insertions" = inserts))
-    ent <- setEntitySlot(entity(x), "view", bd_value)
+    bd <- list("transform" = list("insertions" = inserts))
+    ent <- setEntitySlot(entity(x), "view", bd)
     return(invisible(x))
 })
 
