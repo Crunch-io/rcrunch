@@ -55,7 +55,6 @@ test_that("Subtotal/Heading getters", {
     expect_equal(arguments(heading), NA)
 })
 
-
 test_that("Subtotal/Heading setters", {
     # names
     expect_silent(name(subtot) <- "new name")
