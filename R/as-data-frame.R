@@ -154,7 +154,7 @@ csvToDataFrame <- function (csv_df, crdf) {
 #' as.data.frame(vars, row.names = urls(vars))
 #' }
 #'
-#' @name as.data.frame.catalog-method
+#' @name catalog-dataframes
 #' @export
 as.data.frame.VariableCatalog <- function (x,
                                            row.names = NULL,
@@ -164,7 +164,7 @@ as.data.frame.VariableCatalog <- function (x,
     catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
 }
 
-#' @rdname as.data.frame.catalog-method
+#' @rdname catalog-dataframes
 #' @export
 as.data.frame.ShojiCatalog <- function (x,
                                         row.names = NULL,
@@ -173,7 +173,7 @@ as.data.frame.ShojiCatalog <- function (x,
     catalogToDataFrame(x, row.names = row.names, ...)
 }
 
-#' @rdname as.data.frame.catalog-method
+#' @rdname catalog-dataframes
 #' @export
 as.data.frame.BatchCatalog <- function (x,
                                         row.names = NULL,
@@ -183,7 +183,7 @@ as.data.frame.BatchCatalog <- function (x,
     catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
 }
 
-#' @rdname as.data.frame.catalog-method
+#' @rdname catalog-dataframes
 #' @export
 as.data.frame.FilterCatalog <- function (x,
                                          row.names = NULL,
