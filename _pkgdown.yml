@@ -164,6 +164,7 @@ reference:
   contents:
   - catalog-length
   - catalogToDataFrame
+  - as.data.frame.catalog-method
   - 'names,BatchCatalog-method'
   - shoji-index
 - title: Crunch options
