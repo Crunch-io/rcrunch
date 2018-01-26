@@ -42,7 +42,7 @@ cat(summary.age4.var, sep="\n")
 
 And now we have a new Categorical type variable with the alias `age4`, the name "Age (4 categories)", and it's made of 4 categories.
 
-# Re-Combining Answer Choices
+# Combining Answer Choices
 ## Categorical Type Variables
 Sometimes we want to create subtotals (aka "nets" or "top boxes") for a Categorical type variable, where we preserve all of the original categories and collapse two or more categories together and for those cases we should use the `subtotals()` function (for more information and details about these, see [the subtotals vignette](subtotals.html)). But other times we do *not* want to preserve all the original categories and instead combine them into a smaller set of categories. To do that we use the `combine()` function.
 
@@ -122,8 +122,8 @@ show_boap_combined
 
 We have created a new Multiple Response type variable with the alias `boap_combined`, the name "Approval of Obama on issues (Combined Subvariables)", which has 4 subvariables instead of the original 13.
 
-# Re-Combining Variables
-Besides re-combining answer choices, we can also re-combine variables. For example, if our dataset has a categorical type variable for gender and another categorical type variable for Age, then we can cross these two together into a new variable using the `interactVariables()` function (named after the use of 'interaction terms' in regression). 
+# Combining Variables
+Besides combining answer choices, we can also combine variables. For example, in our survey we asked people their gender and age. For our analysis we'd also like to have a third variable that combines gender and age together so that people are categorized as "Females, 18-25", "Females, 25+", "Males, 18-25", etc. We can cross gender and age to create a new variable using the `interactVariables()` function (named after 'interaction terms' in regression analysis).
 
 ```{r interact 2 cats, eval = FALSE}
 ds$gender_by_age <- interactVariables(ds$gender, ds$age3, name="Gender by Age")
