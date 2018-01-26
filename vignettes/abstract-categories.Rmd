@@ -82,7 +82,7 @@ The `Insertion` class has two child classes: `Subtotal` and `Heading`. The `Inse
 ### Methods
 * `anchors` and `anchor` return the anchor property from `Insertions` or a single `Insertion` respectively.
 * `funcs` and `func` return the function property from `Insertions` or a single `Insertion` respectively.
-* `args` returns the `args` property from `Insertions` or a single `Insertion` respectively.
+* `arguments` returns the `args` property from a single `Insertion`.
 
 ## Subtotals and Headings
 Subtotals and headings are both _types_ of insertions. Because of this `Subtotal` and `Heading` classes inherit from `Insertion` rather than directly from `AbstractCategory`. These classes are designed to hold known types of Insertions to make it easier to work with Insertions (for example: testing which insertion to style in what way when using `prettyPrint` functions). Additionally, these classes have slightly more user-friendly names (e.g. `after` instead of `anchor`), and they accept either `id`s or `name`s to refer to specific `Category`s.
@@ -93,13 +93,13 @@ A `Subtotal` must have `name`, `after`, and `categories` properties. `name` is t
 #### Methods
 The same as `Insertion`, however some have customizations: 
 * `func` always returns the string `"subtotal"` (because by definition a `Subtotal` object is an `Insertion` with `function="subtotal"`)
-* `anchor` and `args` both have an option `var_categories` which is required if the `Subtotal` is using category names instead of ids in the `after` or `categories` properties. Supplying the categories is required in order to translate from category `name`s to `id`s which are required to be a well-formed `Insertion`.
+* `anchor` and `arguments` both have an option `var_categories` which is required if the `Subtotal` is using category names instead of ids in the `after` or `categories` properties. Supplying the categories is required in order to translate from category `name`s to `id`s which are required to be a well-formed `Insertion`.
 
 ### Heading
 A `Heading` must have `name` and `after` properties. Both of which have the same interpretation as `Subtotal` above.
 
 #### Methods
-The same as to `Subtotal` for `anchor`. `func` and `args` return `NA`
+The same as `Subtotal` for `anchor`. `func` and `arguments` return `NA`
 
 As a concrete example, let's take the following categories:
 ```{r}
@@ -195,7 +195,6 @@ The methods are listed as row labels and the classes are column labels. If a met
 | `is.selected` |                    | impl.       |             |
 | `anchors`     |                    |             | impl.       |
 | `funcs`       |                    |             | impl.       |
-| `args`        |                    |             | impl.       |
 
 ### Members
 
@@ -208,7 +207,7 @@ The methods are listed as row labels and the classes are column labels. If a met
 | `is.selected` |                  | impl.       |             |             |             |
 | `anchor`      |                  |             | impl.       | impl.       | impl.       |
 | `func`        |                  |             | impl.       | impl.       | impl.       |
-| `args`        |                  |             | impl.       | impl.       | impl.       |
+| `arguments`   |                  |             | impl.       | impl.       | impl.       |
 
 ## Transforms
 The `Transforms` class and set of functions is not an abstract category at all, but rather it mirrors the Crunch API's set of transformations that are allowed on a variable or CrunchCube. One of the possible transformations are insertions (which is where `Insertions` are stored). Currently the `crunch` package doesn't support other transformations.
