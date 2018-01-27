@@ -1,8 +1,27 @@
 context("Cubes with categorical array and multiple response (deprecated selected_array)")
-# Duplicate tests and expectations from test-cube-with-array, to ensure that
-# uses seeing the option crunch.mr.selection="selected_array" get the results
-# they expect.
+# Duplicate tests and expectations from test-cube-with-array (as well one 
+# test_that block (the first one) from test-cube-mr, and the last block from 
+# test-multitables), to ensure that uses seeing the option 
+# crunch.mr.selection="selected_array" get the results they expect.
 
+
+with_mock_crunch({
+    with(temp.options(crunch.mr.selection="selected_array"), {
+        ds <- loadDataset("test ds")
+        
+        test_that("users can change the crunch.mr.selection option", {
+            expect_GET(crtabs(~mymrset, data = ds),
+                       "https://app.crunch.io/api/datasets/1/cube/?query=%7B%22dimensions%22%3A%5B%7B%22function%22%3A%22selected_array%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fmymrset%2F%22%7D%5D%7D%2C%7B%22each%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fmymrset%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D")
+        with(temp.options(crunch.mr.selection="not_a_selection_method"), {
+            expect_error(crtabs(~mymrset, data = ds),
+                         paste0("The option ", dQuote("crunch.mr.selection"),
+                                " must be either ", dQuote("as_selected"),
+                                " (the default) or ", dQuote("selected_array")),
+                         fixed = TRUE)
+            })
+        })
+    })
+})
 
 with_test_authentication({
     with(temp.options(crunch.mr.selection="selected_array"), {
@@ -154,5 +173,23 @@ with_test_authentication({
                                     dimnames=list(mr_1=c("0.0", "1.0", "No Data"),
                                                   mr_2=c("0.0", "1.0", "No Data"))))
         })
+        
+        
+        test_that("We can get an json tab book", {
+            skip_locally("Vagrant host doesn't serve files correctly")
+            ds <- newDatasetFromFixture("apidocs")
+            m <- newMultitable(~ allpets + q1, data=ds)
+            book <- tabBook(m, data=ds)
+            expect_is(book, "TabBookResult")
+            expect_identical(dim(book), c(ncol(ds), 3L))
+            expect_identical(names(book), names(variables(ds)))  
+
+            m <- newMultitable(~ petloc + q1, data=ds)
+            book <- tabBook(m, data=ds)
+            expect_is(book, "TabBookResult")
+            expect_identical(dim(book), c(ncol(ds), 3L))
+            expect_identical(names(book), names(variables(ds)))  
+            })
+
     })
 })
