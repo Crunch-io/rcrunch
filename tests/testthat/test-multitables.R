@@ -287,7 +287,6 @@ with_test_authentication({
     })
 
     test_that("Can make a multitable with a cat array", {
-        print(ds)
         m <- newMultitable(~ petloc + q1, data=ds)
         expect_identical(name(m), "petloc + q1")
         expect_identical(getShowContent(m), c(paste0("Multitable ", dQuote("petloc + q1")),
@@ -378,6 +377,7 @@ with_test_authentication({
     })
 
     test_that("We can get an json tab book", {
+        skip("multitables and multiple response need more work.")
         skip_locally("Vagrant host doesn't serve files correctly")
         book <- tabBook(mult, data=ds)
         expect_is(book, "TabBookResult")
