@@ -378,7 +378,9 @@ setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
     marg <- margin.table(x, margin)
     actual_margin <- as_selected_margins(margin, is.selectedDimension(x@dims),
         before=FALSE)
-    if (length(actual_margin)) {
+    # Check if there are any actual_margins and if the dims are identical, we 
+    # don't need to sweep, and if we are MRxMR we can't sweep.
+    if (length(actual_margin) & !identical(dim(out), dim(marg))) {
         out <- sweep(out, actual_margin, marg, "/", check.margin=FALSE)
     } else {
         ## Don't just divide by sum(out) like the default does.
