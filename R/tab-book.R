@@ -160,13 +160,19 @@ setMethod("initialize", "MultitableResult", function (.Object, ...) {
         )))
     .Object$result <- lapply(.Object$result, function (cube) {
         cube <- CrunchCube(cube)
-        ## If cubes are 3D (categorical array x multitable), aperm the cubes so
-        ## that column is multitable var (3 -> 2), row is category of
-        ## array (2 -> 1), subvar is "tab" (1 -> 3)
-        if (length(dim(cube)) == 3L) {
-            ## TODO: CrunchCube should get a dimensions<-
-            cube@dims <- CubeDims(cube@dims[c(2, 3, 1)])
-            cube@arrays <- lapply(cube@arrays, aperm, perm=c(2, 3, 1))
+        
+        # hack, only use aperm on selected_array cubes with 3 dimensions. For 
+        # as_selected, those need to retain keep all of the dimensions in place.
+        is.selected.array <- any(unlist(lapply(dimensions(cube), is.selectedArrayDim)))
+        if (is.selected.array) {
+            ## If cubes are 3D (categorical array x multitable), aperm the cubes so
+            ## that column is multitable var (3 -> 2), row is category of
+            ## array (2 -> 1), subvar is "tab" (1 -> 3)
+            if (length(dim(cube)) == 3L) {
+                ## TODO: CrunchCube should get a dimensions<-
+                cube@dims <- CubeDims(cube@dims[c(2, 3, 1)])
+                cube@arrays <- lapply(cube@arrays, aperm, perm=c(2, 3, 1))
+            }
         }
         return(cube)
     })
@@ -202,6 +208,25 @@ setMethod("descriptions", "MultitableResult", function (x) {
 #' @rdname show-crunch
 #' @export
 setMethod("show", "MultitableResult", function (object) {
+    # in order to combine multi-dimensional tables together like they would in 
+    # excel, we need to rbind each of the row dimensions and then cbind those 
+    # together. Added complication to account for the first total column in the
+    # correct shape
+    if (length(dim(object[[2]])) > 2) {
+        out <- do.call("cbind", lapply(object, function (x) {
+                do.call("rbind",
+                        lapply(seq_len(dim(x)[1]),
+                               function(i) {
+                                   if (dim(x)[3] == 1) {
+                                       cubeArray <- cubeToArray(x)[i,,]
+                                       return(broadcast(cubeArray, c(length(cubeArray), 1)))
+                                   }
+                                   return(cubeToArray(x)[i,,])
+                               }))
+            }))
+        return(show(out))
+    } 
+    
     show(do.call("cbind", lapply(object, cubeToArray)))
 })
 
