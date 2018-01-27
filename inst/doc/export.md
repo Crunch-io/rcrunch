@@ -1,5 +1,6 @@
 ---
 title: "Exporting Data"
+description: "For times when you need to take data off the server, Crunch provides several means for exporting data, whether to various file formats or to objects in your R session."
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Exporting Data}
@@ -7,7 +8,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-[Previous: filtering data](filter.md)
+[Previous: filtering data](filters.md)
 
 
 # Downloading and exporting data
@@ -139,4 +140,4 @@ As with the `as.data.frame` methods, you can subset what you export by indexing 
 write.csv(ds[ds$pid3 == "Democrat", c("age", "educ", "gender")], file="demo-demos.csv")
 ```
 
-[Next: Crunch internals](crunch-internals.md)
+[Next: subtotals](subtotals.md)
