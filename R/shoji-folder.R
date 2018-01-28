@@ -60,10 +60,12 @@ parseFolderPath <- function (path) {
     ## path can be "/" separated, and can change that delimiter with
     ## options(crunch.delimiter="|") or something in case you have real "/"
     if (length(path) == 1) {
-        path <- unlist(strsplit(path, getOption("crunch.delimiter", "/"), fixed=TRUE))
+        path <- unlist(strsplit(path, folderDelimiter(), fixed=TRUE))
     }
     return(path)
 }
+
+folderDelimiter <- function () getOption("crunch.delimiter", "/")
 
 parentFolderURL <- function (x) {
     tryCatch(shojiURL(x, "catalogs", "folder"), error=function (e) return(NULL))
@@ -154,6 +156,22 @@ setOrder <- function (folder, ord) {
         crPATCH(self(folder), body=toJSON(wrapCatalog(graph=urls(folder))))
     }
     return(folder)
+}
+
+path <- function (x) {
+    out <- name(x)
+    parent <- folder(x)
+    ## If the parent of x is NULL, we're already at top level.
+    while (!is.null(parent)) {
+        out <- c(name(parent), out)
+        parent <- folder(parent)
+    }
+    out <- paste(out, collapse=folderDelimiter())
+    if (nchar(out) == 0) {
+        ## Root
+        out <- folderDelimiter()
+    }
+    return(out)
 }
 
 # setMethod("folderExtraction", "ShojiFolder", function (x, tuple) {
