@@ -163,7 +163,6 @@ newMultitable <- function (formula, data, name, ...) {
     if (missing(formula)) {
         halt("Must provide a formula")
     }
-    
     if (missing(data) || !is.dataset(data)) {
         halt(dQuote("data"), " must be a Dataset")
     }

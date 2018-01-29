@@ -185,7 +185,6 @@ varToDim <- function (x) {
                  "either ", dQuote("as_selected"), " (the default) or ",
                  dQuote("selected_array"))
         }
-        
         return(list(list(each=self(x)), zfunc(selectionMethod, v)))
     } else if (is.CA(x)) {
         ## Categorical array gets the var reference and "each"
