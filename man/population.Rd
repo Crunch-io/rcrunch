@@ -5,27 +5,34 @@
 \alias{population}
 \alias{population<-}
 \alias{popSize,CrunchDataset-method}
-\alias{popSize<-,CrunchDataset-method}
+\alias{setPopulation,CrunchDataset-method}
 \alias{popMagnitude,CrunchDataset-method}
-\alias{popMagnitude<-,CrunchDataset-method}
+\alias{pk}
+\alias{pk<-}
 \title{Get and set the market size for Crucn}
 \usage{
 \S4method{popSize}{CrunchDataset}(x)
 
-\S4method{popSize}{CrunchDataset}(x) <- value
+\S4method{setPopulation}{CrunchDataset}(x, size, magnitude)
 
 \S4method{popMagnitude}{CrunchDataset}(x)
-
-\S4method{popMagnitude}{CrunchDataset}(x) <- value
 }
 \arguments{
 \item{x}{a Dataset}
 
 \item{value}{For the setters, a length-1 character vector to assign}
+
+\item{x}{a Dataset}
+
+\item{value}{For the setter, a single Variable to use as the primary key or
+\code{NULL} to remove the primary key.}
 }
 \value{
 Getters return the character object in the specified slot; setters
 return \code{x} duly modified.
+
+Getter returns the Variable object that is used as the primary key
+(\code{NULL} if there is no primary key); setter returns \code{x} duly modified.
 }
 \description{
 Get and set the market size for Crucn

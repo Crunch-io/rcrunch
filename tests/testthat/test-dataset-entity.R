@@ -27,6 +27,11 @@ with_mock_crunch({
             '{"notes":"Ancillary information"}')
     })
 
+    test_that("Population setting", {
+        browser()
+        popSize(ds)
+    })
+
     test_that("Name setting validation", {
         expect_error(name(ds) <- 3.14,
             'Names must be of class "character"')
@@ -334,6 +339,17 @@ with_test_authentication({
             expect_identical(notes(ds), "On Her Majesty's Secret Service")
             expect_identical(notes(refresh(d2)),
                 "On Her Majesty's Secret Service")
+        })
+        test_that("population setters push to server", {
+            ds <- setPopulation(ds, 12345, 1000)
+            expect_equal(popSize(ds), 12345)
+            expect_equal(popMagnitude(ds), 1000)
+            ds <- setPopulation(ds, 54321)
+            expect_equal(popSize(ds), 54321)
+            expect_equal(popMagnitude(ds), 1000)
+            ds <- setPopulation(ds, magnitude = 1e6)
+            expect_equal(popSize(ds), 54321)
+            expect_equal(popMagnitude(ds), 1e6)
         })
 
         test_that("Can unset notes and description", {

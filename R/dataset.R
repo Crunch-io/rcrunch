@@ -104,18 +104,6 @@ setMethod("popSize", "CrunchDataset", function (x) {
     prefs <- ShojiEntity(crGET(shojiURL(x, "fragments", "settings")))
     return(prefs@body$population$size)
 })
-#' @rdname population
-#' @export
-setMethod("popSize<-", "CrunchDataset", function (x, value) {
-    prefs <- crGET(shojiURL(x, "fragments", "settings"))$body
-    if (!identical(value, prefs$population$size)) {
-        prefs$population$size <- value
-        crPATCH(shojiURL(x, "fragments", "settings"),
-            body = toJSON(prefs))
-        x <- refresh(x)
-    }
-    invisible(return(x))
-})
 
 #' @rdname population
 #' @export
@@ -123,21 +111,37 @@ setMethod("popMagnitude", "CrunchDataset", function (x) {
     prefs <- ShojiEntity(crGET(shojiURL(x, "fragments", "settings")))
     return(prefs@body$population$magnitude)
 })
+
 #' @rdname population
 #' @export
-setMethod("popMagnitude<-", "CrunchDataset", function (x, value) {
-    if (!(value %in% c(1e3, 1e6, 1e9))){
+setMethod("setPopulation", "CrunchDataset", function (x, size, magnitude) {
+    prefs <- crGET(shojiURL(x, "fragments", "settings"))$body
+    if (missing(magnitude)) {
+        if (is.null(prefs$population$magnitude)) {
+            stop("Dataset does not have a magnitude, please supply one")
+        }
+        magnitude <- prefs$population$magnitude
+    }
+    if (missing(size)) {
+        if (is.null(prefs$population$size)) {
+            stop("Dataset does not have a population, please supply one")
+        }
+        size <- prefs$population$size
+    }
+    if (!(magnitude %in% c(1e3, 1e6, 1e9))){
         stop("Magnitude must be one of 1e3, 1e6, or 1e9")
     }
-    prefs <- crGET(shojiURL(x, "fragments", "settings"))$body
-    if (!identical(value, prefs$population$magnitude)) {
-        prefs$population$magnitude <- value
+    if (!identical(size, prefs$population$size) |
+        !identical(magnitude, prefs$population$magnitude)) {
+        prefs$population$size <- size
+        prefs$population$magnitude <- magnitude
         crPATCH(shojiURL(x, "fragments", "settings"),
             body = toJSON(prefs))
         x <- refresh(x)
     }
     invisible(return(x))
 })
+
 
 #' Get and set the primary key for a Crunch dataset
 #'
