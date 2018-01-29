@@ -88,6 +88,56 @@ setMethod("notes<-", "CrunchDataset", function (x, value) {
     invisible(setEntitySlot(x, "notes", value))
 })
 
+#' Get and set the market size for Crucn
+#'
+#' @param x a Dataset
+#' @param value For the setters, a length-1 character vector to assign
+#' @return Getters return the character object in the specified slot; setters
+#' return `x` duly modified.
+#' @name population
+#' @aliases population population<-
+NULL
+
+#' @rdname population
+#' @export
+setMethod("popSize", "CrunchDataset", function (x) {
+    prefs <- ShojiEntity(crGET(shojiURL(x, "fragments", "settings")))
+    return(prefs@body$population$size)
+})
+#' @rdname population
+#' @export
+setMethod("popSize<-", "CrunchDataset", function (x, value) {
+    prefs <- crGET(shojiURL(x, "fragments", "settings"))$body
+    if (!identical(value, prefs$population$size)) {
+        prefs$population$size <- value
+        crPATCH(shojiURL(x, "fragments", "settings"),
+            body = toJSON(prefs))
+        x <- refresh(x)
+    }
+    invisible(return(x))
+})
+
+#' @rdname population
+#' @export
+setMethod("popMagnitude", "CrunchDataset", function (x) {
+    prefs <- ShojiEntity(crGET(shojiURL(x, "fragments", "settings")))
+    return(prefs@body$population$magnitude)
+})
+#' @rdname population
+#' @export
+setMethod("popMagnitude<-", "CrunchDataset", function (x, value) {
+    if (!(value %in% c(1e3, 1e6, 1e9))){
+        stop("Magnitude must be one of 1e3, 1e6, or 1e9")
+    }
+    prefs <- crGET(shojiURL(x, "fragments", "settings"))$body
+    if (!identical(value, prefs$population$magnitude)) {
+        prefs$population$magnitude <- value
+        crPATCH(shojiURL(x, "fragments", "settings"),
+            body = toJSON(prefs))
+        x <- refresh(x)
+    }
+    invisible(return(x))
+})
 
 #' Get and set the primary key for a Crunch dataset
 #'
