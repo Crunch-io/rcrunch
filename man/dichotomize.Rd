@@ -16,28 +16,28 @@
 \alias{undichotomize,CategoricalArrayVariable-method}
 \title{Indicate how categories represent a dichotomized value}
 \usage{
-\S4method{is.dichotomized}{Categories}(x)
+\S4method{is.dichotomized}{Categories}(categories)
 
-\S4method{dichotomize}{Categories,numeric}(x, i)
+\S4method{dichotomize}{Categories,numeric}(categories, selection)
 
-\S4method{dichotomize}{Categories,logical}(x, i)
+\S4method{dichotomize}{Categories,logical}(categories, selection)
 
-\S4method{dichotomize}{Categories,character}(x, i)
+\S4method{dichotomize}{Categories,character}(categories, selection)
 
-\S4method{undichotomize}{Categories}(x)
+\S4method{undichotomize}{Categories}(categories)
 
-\S4method{dichotomize}{CategoricalVariable,ANY}(x, i)
+\S4method{dichotomize}{CategoricalVariable,ANY}(categories, selection)
 
-\S4method{dichotomize}{CategoricalArrayVariable,ANY}(x, i)
+\S4method{dichotomize}{CategoricalArrayVariable,ANY}(categories, selection)
 
-\S4method{undichotomize}{CategoricalVariable}(x)
+\S4method{undichotomize}{CategoricalVariable}(categories)
 
-\S4method{undichotomize}{CategoricalArrayVariable}(x)
+\S4method{undichotomize}{CategoricalArrayVariable}(categories)
 }
 \arguments{
-\item{x}{Categories or a Variable subclass that has Categories}
+\item{categories}{Categories or a Variable subclass that has Categories}
 
-\item{i}{For the \code{dichotomize} methods, the numeric or logical indices
+\item{selection}{For the \code{dichotomize} methods, the numeric or logical indices
 of the categories to mark as "selected", or if character, the Category
 "names". Note that unlike some other categorical variable methods,
 numeric indices are positional, not with reference to category ids.}
@@ -53,6 +53,17 @@ or more categories are set as "selected". These methods allow you set that state
 \code{dichotomize} lets you specify which categories are "selected", while
 \code{undichotomize} strips that selection information. Dichotomize converts
 a Categorical Array to a Multiple Response, and undichotomize does the reverse.
+}
+\examples{
+\dontrun{
+ds$sub1 <-  factor(1:nrow(ds))
+ds$sub2 <-  factor(1:nrow(ds))
+ds$arr <- makeArray(ds[, c("sub1", "sub2")], "array")
+ds$arr <- dichotomize(ds$arr, 3)
+class(ds$arr)
+ds$arr <- undichotomize(ds$arr)
+class(ds$arr)
+}
 }
 \seealso{
 \code{\link{describe-category}}
