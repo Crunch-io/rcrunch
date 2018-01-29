@@ -8,21 +8,20 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-[Previous: Crunch internals](crunch-internals.html)
+[Previous: Crunch internals](crunch-internals.md)
 
-```{r, results='hide', echo=FALSE, message=FALSE}
-library(crunch)
-```
+
 
 There are number of areas where Crunch needs to represent an object as belonging to one of many categories. The simplest and most common example of this is the categories of a categorical variable. For a categorical variable, the values of the variable can be one of a limited set of categories and those categories are specified in the Crunch API as metadata about the variable. These categoricals are similar to R's `factor`s but are richer because Crunch categoricals can have any number of missing values (compared to just `NA` for `factor`s), as well as a numeric representation that is separate from the category ids (which is useful for things like income bins, where you might put the middle of the bin as the value).
 
-Moving beyond just categorical variables, we have a need to be able to represent a number of different properties, transformations, etc. in a category-like way. One concrete example is used heavily in order to add subtotals and headings to representations of categorical variables. In order to do this, we have two families of [S4 classes](http://adv-r.had.co.nz/S4.html): `AbstractCategory` and `AbstractCategories` Although subtotals and headings was the initial motivation for the new classes, they will allow for other types of representations and manipulations in the future.
+Moving beyond just categorical variables, we have a need to be able to represent a number of different properties, transformations, etc. in a category-like way. One concrete example is used heavily in order to add subtotals and headings to representations of categorical variables. In order to do this, we have two families of [S4 classes](http://adv-r.had.co.nz/S4.md): `AbstractCategory` and `AbstractCategories` Although subtotals and headings was the initial motivation for the new classes, they will allow for other types of representations and manipulations in the future.
 
 ## AbstractCategories
 
 The core classes that all other classes inherit from are `AbstractCategory` and `AbstractCategories`. The first, `AbstractCategory`, is designed to represent a single category, which might have a number of properties about it (what those are will be explained in more detail below). The second, `AbstractCategories` is designed to hold more than one `AbstractCategory` together to form a coherent group. As a simple, example: an `AbstractCategories` for binned income could have 5 `AbstractCategory`s: <\$25,000, \$25,000-\$49,999, \$50,000-\$99,999, \$100,000-\$199,999, >\$200,000. This could be represented in R as:
 
-```{r}
+
+```r
 income <- AbstractCategories(AbstractCategory(name = "<$25,000"),
                              AbstractCategory(name = "$25,000-$49,999"),
                              AbstractCategory(name = "$50,000-$99,999"),
@@ -32,7 +31,8 @@ income <- AbstractCategories(AbstractCategory(name = "<$25,000"),
 
 An alternate (and less typing) way to instantiate this same `AbstractCategories` is to send lists, and the constructor takes care of calling the `AbstractCategory` class on each (as below). Each of the child-classes of `AbstractCategories` (described in the sections below) have their own mapping of plural container to singular entity constructor in the same way, so passing `Categories` a list will result in a `Categories` object full of `Category` objects.
 
-```{r}
+
+```r
 income <- AbstractCategories(list(name = "<$25,000"),
                              list(name = "$25,000-$49,999"),
                              list(name = "$50,000-$99,999"),
@@ -42,7 +42,8 @@ income <- AbstractCategories(list(name = "<$25,000"),
 
 Finally, there's a `data` argument, if you already have a list of `AbstractCategory`s (or simply named lists!) you want to pass in (the same thing could also be accomplished with `do.call`): 
 
-```{r}
+
+```r
 income_list <- list(list(name = "<$25,000"),
                     list(name = "$25,000-$49,999"),
                     list(name = "$50,000-$99,999"),
@@ -102,7 +103,8 @@ A `Heading` must have `name` and `after` properties. Both of which have the same
 The same as `Subtotal` for `anchor`. `func` and `arguments` return `NA`
 
 As a concrete example, let's take the following categories:
-```{r}
+
+```r
 feeling_cats <- Categories(
     list(name = "Very Happy", id = 1),
     list(name = "Somewhat Happy", id = 2),
@@ -113,8 +115,18 @@ feeling_cats <- Categories(
 feeling_cats
 ```
 
+```
+##   id                      name value missing
+## 1  1                Very Happy    NA   FALSE
+## 2  2            Somewhat Happy    NA   FALSE
+## 3  3 Neither Happy nor Unhappy    NA   FALSE
+## 4  4          Somewhat Unhappy    NA   FALSE
+## 5  5              Very Unhappy    NA   FALSE
+```
+
 And make some subtotals and headings to use as insertions:
-```{r}
+
+```r
 feeling_subtotals <- Insertions(
     Heading(name = "How I feel about cheese", position = "top"),
     Subtotal(name = "Generally Happy", after = "Somewhat Happy", 
@@ -124,39 +136,100 @@ feeling_subtotals <- Insertions(
 )
 ```
 Notice that the "Generally Happy" subtotal is made specifying category `name`s for `after` and `categories`:
-```{r}
+
+```r
 feeling_subtotals[[2]]$after
+```
+
+```
+## [1] "Somewhat Happy"
+```
+
+```r
 feeling_subtotals[[2]]$categories
 ```
+
+```
+## [1] "Very Happy"     "Somewhat Happy"
+```
 Where as the "Generally Unhappy" subtotal uses `id`s:
-```{r}
+
+```r
 feeling_subtotals[[3]]$after
+```
+
+```
+## [1] 5
+```
+
+```r
 feeling_subtotals[[3]]$categories
+```
+
+```
+## [1] 4 5
 ```
 
 ### Converting from Subtotal/Heading to Insertion
 Since the Crunch API does not have a distinction between `Subtotal`s `Heading`s, and other `Insertion`s, we sometimes need to convert from `Subtotal`s or `Heading`s to `Insertion`s. This is accomplished with the method `makeInsertion()`. This method takes a `Subtotal` or `Heading` and returns a valid `Insertion`. If the `Subtotal` or `Heading` has category `name` references instead of `id`s, then you must include a `Categories` object as the `var_categories` argument. In general, this is only needed before sending a heterogeneous set of `Insertions` to the Crunch API.
 
 Using the examples we used before, we can see how this works:
-```{r}
+
+```r
 feeling_insertions <- Insertions(data = lapply(feeling_subtotals, makeInsertion, var_categories = feeling_cats))
 ```
 Now, all of the `Subtotal`s and `Heading` from `feeling_subtotals` are proper `Insertion`s:
-```{r}
+
+```r
 sapply(feeling_insertions, class)
 ```
 
+```
+## [1] "Insertion" "Insertion" "Insertion"
+```
+
 This means that the `after` property has been translated into `anchor`, and the `function` and `args` properties have been filled in appropriately:
-```{r}
+
+```r
 feeling_insertions[[3]]$anchor
+```
+
+```
+## [1] 5
+```
+
+```r
 feeling_insertions[[3]]$`function`
+```
+
+```
+## [1] "subtotal"
+```
+
+```r
 feeling_insertions[[3]]$args
 ```
 
+```
+## [1] 4 5
+```
+
 Because `Insertion`s are required to use category `id`s only, the new all-`Insertion`s `feeling_insertions` has translated the "Generally Happy" subtotal's category `name`s to `id`s:
-```{r}
+
+```r
 feeling_insertions[[2]]$anchor
+```
+
+```
+## [1] 2
+```
+
+```r
 feeling_insertions[[2]]$args
+```
+
+```
+## [1] 1 2
 ```
 
 ### Converting from Insertion to Subtotal/Heading
@@ -165,9 +238,14 @@ Since the Crunch API does not have a distinction between `Subtotal`s `Heading`s,
 These functions work by inspecting the `Insertion` and determining if it can be identified as one of the known child classes of `Insertion` (namely: `Subtotal` or `Heading`).
 
 Using the same example above, we can convert back from all `Insertion`s to the subtypes:
-```{r}
+
+```r
 feeling_subtotals_again <- subtypeInsertions(feeling_insertions)
 sapply(feeling_subtotals_again, class)
+```
+
+```
+## [1] "Heading"  "Subtotal" "Subtotal"
 ```
 
 ## Inheritance

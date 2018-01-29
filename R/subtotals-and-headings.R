@@ -218,17 +218,9 @@ setMethod("subtotals<-", c("CrunchVariable", "ANY"), function (x, value) {
                                        makeInsertion,
                                        var_categories = categories(x)))
 
-    # grab the old inserts so they are not deleted, but modify the list so we
-    # don't have *too* many extras
-    old_inserts <- Insertions(data = lapply(transforms(x)$insertions,
-                                            makeInsertion,
-                                            var_categories = categories(x)))
-    if (!is.null(old_inserts)) {
-        inserts <- modifyCats(old_inserts, inserts)
-    }
-
-    bd <- wrapEntity("view" = list("transform" = list("insertions" = inserts)))
-    crPATCH(self(x), body=toJSON(bd))
+    bd <- list("transform" = list("insertions" = inserts))
+    # setEntitySlot manages old inserts so they are not duplicated
+    ent <- setEntitySlot(entity(x), "view", bd)
     dropCache(cubeURL(x))
     return(invisible(x))
 })
@@ -241,8 +233,8 @@ setMethod("subtotals<-", c("CrunchVariable", "NULL"), function (x, value) {
     subtots <- subtotals(x)
     inserts <- setdiff(old_inserts, subtots)
 
-    bd <- wrapEntity("view" = list("transform" = list("insertions" = inserts)))
-    crPATCH(self(x), body=toJSON(bd))
+    bd <- list("transform" = list("insertions" = inserts))
+    ent <- setEntitySlot(entity(x), "view", bd)
     dropCache(cubeURL(x))
     return(invisible(x))
 })

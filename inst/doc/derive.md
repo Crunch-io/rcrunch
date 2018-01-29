@@ -1,5 +1,6 @@
 ---
 title: "Adding Variables"
+description: "The crunch package makes it easy for you to derive new variables in your dataset. These derived variables retain their functional connection on the server, such that changes to the input variables automatically propagate to the derived variable."
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Adding Variables}
