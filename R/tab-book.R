@@ -38,6 +38,16 @@
 tabBook <- function (multitable, dataset, weight=crunch::weight(dataset),
                     format=c("json", "xlsx"), file, ...) {
 
+    # check if the multitable query has any selected_array in it
+    # once selected_array is gone forever, this can be removed.
+    if (has.selected.array(multitable@body$template[[1]]$query)) {
+        halt("`tabBook` does not support multitables that use deprecated ",
+             "multiple response functions. Do you have `options(crunch.mr.",
+             "selection = \"selected_array\")` set? If so, please change it",
+             " to `options(crunch.mr.selection = \"as_selected\")` and try ",
+             "to create the multitable and then tab book over again.")
+    }
+    
     f <- match.arg(format)
     accept <- list(
         json="application/json",
@@ -158,24 +168,7 @@ setMethod("initialize", "MultitableResult", function (.Object, ...) {
                 name="Total"
             )
         )))
-    .Object$result <- lapply(.Object$result, function (cube) {
-        cube <- CrunchCube(cube)
-        
-        # hack, only use aperm on selected_array cubes with 3 dimensions. For 
-        # as_selected, those need to retain keep all of the dimensions in place.
-        is.selected.array <- any(unlist(lapply(dimensions(cube), is.selectedArrayDim)))
-        if (is.selected.array) {
-            ## If cubes are 3D (categorical array x multitable), aperm the cubes so
-            ## that column is multitable var (3 -> 2), row is category of
-            ## array (2 -> 1), subvar is "tab" (1 -> 3)
-            if (length(dim(cube)) == 3L) {
-                ## TODO: CrunchCube should get a dimensions<-
-                cube@dims <- CubeDims(cube@dims[c(2, 3, 1)])
-                cube@arrays <- lapply(cube@arrays, aperm, perm=c(2, 3, 1))
-            }
-        }
-        return(cube)
-    })
+    .Object$result <- lapply(.Object$result, CrunchCube)
     return(.Object)
 })
 #' @rdname tabbook-methods
@@ -208,25 +201,6 @@ setMethod("descriptions", "MultitableResult", function (x) {
 #' @rdname show-crunch
 #' @export
 setMethod("show", "MultitableResult", function (object) {
-    # in order to combine multi-dimensional tables together like they would in 
-    # excel, we need to rbind each of the row dimensions and then cbind those 
-    # together. Added complication to account for the first total column in the
-    # correct shape
-    if (length(dim(object[[2]])) > 2) {
-        out <- do.call("cbind", lapply(object, function (x) {
-                do.call("rbind",
-                        lapply(seq_len(dim(x)[1]),
-                               function(i) {
-                                   if (dim(x)[3] == 1) {
-                                       cubeArray <- cubeToArray(x)[i,,]
-                                       return(broadcast(cubeArray, c(length(cubeArray), 1)))
-                                   }
-                                   return(cubeToArray(x)[i,,])
-                               }))
-            }))
-        return(show(out))
-    } 
-    
     show(do.call("cbind", lapply(object, cubeToArray)))
 })
 

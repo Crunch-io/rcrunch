@@ -11,7 +11,7 @@ with_mock_crunch({
         
         test_that("users can change the crunch.mr.selection option", {
             expect_GET(crtabs(~mymrset, data = ds),
-                       "https://app.crunch.io/api/datasets/1/cube/?query=%7B%22dimensions%22%3A%5B%7B%22function%22%3A%22selected_array%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fmymrset%2F%22%7D%5D%7D%2C%7B%22each%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fmymrset%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D")
+                       "https://app.crunch.io/api/datasets/1/cube/?query=%7B%22dimensions%22%3A%5B%7B%22each%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fmymrset%2F%22%7D%2C%7B%22function%22%3A%22selected_array%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fmymrset%2F%22%7D%5D%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D")
         with(temp.options(crunch.mr.selection="not_a_selection_method"), {
             expect_error(crtabs(~mymrset, data = ds),
                          paste0("The option ", dQuote("crunch.mr.selection"),
@@ -176,14 +176,28 @@ with_test_authentication({
         
         
         test_that("We can get an json tab book", {
-            skip_locally("Vagrant host doesn't serve files correctly")
             ds <- newDatasetFromFixture("apidocs")
-            m <- newMultitable(~ allpets + q1, data=ds)
-            book <- tabBook(m, data=ds)
-            expect_is(book, "TabBookResult")
-            expect_identical(dim(book), c(ncol(ds), 3L))
-            expect_identical(names(book), names(variables(ds)))  
+            expect_error(m <- newMultitable(~ allpets + q1, data=ds), paste0(
+                "Multitables do not support specifications that use deprecated",
+                " multiple response functions. Do you have `options(crunch.mr.",
+                "selection = \"selected_array\")` set? If so, please change it",
+                " to `options(crunch.mr.selection = \"as_selected\")` and try ",
+                "to create the multitable over again."
+            ), fixed = TRUE)
+            
+            skip_locally("Vagrant host doesn't serve files correctly")
+            # fake the multitable to have selected_array (which shouldn't exist, but just in case!)
+            m_hacked <- newMultitable(~ petloc + q1, data=ds)
+            m_hacked@body$template[[1]]$query[[2]] <- zfunc("selected_array", ds$allpets)
+            expect_error(book <- tabBook(m_hacked, data=ds), paste0(
+                "`tabBook` does not support multitables that use deprecated ",
+                "multiple response functions. Do you have `options(crunch.mr.",
+                "selection = \"selected_array\")` set? If so, please change it",
+                " to `options(crunch.mr.selection = \"as_selected\")` and try ",
+                "to create the multitable and then tab book over again."
+            ), fixed = TRUE)
 
+            # but non-MR multitables work fine.
             m <- newMultitable(~ petloc + q1, data=ds)
             book <- tabBook(m, data=ds)
             expect_is(book, "TabBookResult")

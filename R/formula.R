@@ -186,12 +186,6 @@ varToDim <- function (x) {
                  dQuote("selected_array"))
         }
         
-        # hack for selected_array the order must be list(function, each) but 
-        # for as_selected it *should* be list(each, selected).
-        if (selectionMethod == "selected_array") {
-            return(list(zfunc(selectionMethod, v), list(each=self(x))))
-        }
-        
         return(list(list(each=self(x)), zfunc(selectionMethod, v)))
     } else if (is.CA(x)) {
         ## Categorical array gets the var reference and "each"
