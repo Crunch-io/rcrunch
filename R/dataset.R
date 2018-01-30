@@ -90,11 +90,14 @@ setMethod("notes<-", "CrunchDataset", function (x, value) {
 
 #' Get and set the market size for Crunch datasets
 #'
-#' @param x a Dataset
-#' @param size the population size
+#' Crunch Datasets allow you to set a target population size in order to extrapolate
+#' population estimates from survery percentages. This function lets you work with
+#' the population size and magnitude.
+#' @param x a Crunch Dataset
+#' @param size the target population size
 #' @param magnitude the order of magnitude with which to display the population
-#' size. Must be either 3, 6, or 9 for thousands, millions, and billions respectively.
-#' @return `popSize` and `popMagnitude` return the respective population size and
+#' size. Must be either `3`, `6`, or `9` for thousands, millions, and billions respectively.
+#' @return `popSize` and `popMagnitude` return the population size or
 #' magnitude. `setPopultion` returns the modified dataset.
 #' @name population
 #' @aliases popSize popMagnitude setPopulation

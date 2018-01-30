@@ -18,17 +18,19 @@
 \S4method{setPopulation}{CrunchDataset}(x, size, magnitude)
 }
 \arguments{
-\item{x}{a Dataset}
+\item{x}{a Crunch Dataset}
 
-\item{size}{the population size}
+\item{size}{the target population size}
 
 \item{magnitude}{the order of magnitude with which to display the population
-size. Must be either 3, 6, or 9 for thousands, millions, and billions respectively.}
+size. Must be either \code{3}, \code{6}, or \code{9} for thousands, millions, and billions respectively.}
 }
 \value{
-\code{popSize} and \code{popMagnitude} return the respective population size and
+\code{popSize} and \code{popMagnitude} return the population size or
 magnitude. \code{setPopultion} returns the modified dataset.
 }
 \description{
-Get and set the market size for Crunch datasets
+Crunch Datasets allow you to set a target population size in order to extrapolate
+population estimates from survery percentages. This function lets you work with
+the population size and magnitude.
 }
