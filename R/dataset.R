@@ -94,7 +94,7 @@ setMethod("notes<-", "CrunchDataset", function (x, value) {
 #' @param size the population size
 #' @param magnitude the order of magnitude with which to display the population
 #' size. Must be either 3, 6, or 9 for thousands, millions, and billions respectively.
-#' @return `popSize` and `popMagnitude` return the respective poulation size and
+#' @return `popSize` and `popMagnitude` return the respective population size and
 #' magnitude. `setPopultion` returns the modified dataset.
 #' @name population
 #' @aliases popSize popMagnitude setPopulation

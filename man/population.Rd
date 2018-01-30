@@ -26,7 +26,7 @@
 size. Must be either 3, 6, or 9 for thousands, millions, and billions respectively.}
 }
 \value{
-\code{popSize} and \code{popMagnitude} return the respective poulation size and
+\code{popSize} and \code{popMagnitude} return the respective population size and
 magnitude. \code{setPopultion} returns the modified dataset.
 }
 \description{
