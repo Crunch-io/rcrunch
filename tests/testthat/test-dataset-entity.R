@@ -28,7 +28,6 @@ with_mock_crunch({
     })
 
     test_that("Population setting", {
-        browser()
         expect_equal(popSize(ds), 90000000)
         expect_equal(popMagnitude(ds), 3)
         expect_silent(setPopulation(ds, popSize(ds), popMagnitude(ds)))
