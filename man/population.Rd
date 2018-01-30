@@ -31,6 +31,6 @@ magnitude. \code{setPopultion} returns the modified dataset.
 }
 \description{
 Crunch Datasets allow you to set a target population size in order to extrapolate
-population estimates from survery percentages. This function lets you work with
+population estimates from survey percentages. This function lets you work with
 the population size and magnitude.
 }
