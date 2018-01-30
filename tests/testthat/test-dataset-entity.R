@@ -29,7 +29,23 @@ with_mock_crunch({
 
     test_that("Population setting", {
         browser()
-        popSize(ds)
+        expect_equal(popSize(ds), 90000000)
+        expect_equal(popMagnitude(ds), 3)
+        expect_silent(setPopulation(ds, popSize(ds), popMagnitude(ds)))
+        expect_PATCH(setPopulation(ds, size = 6000),
+            "https://app.crunch.io/api/datasets/1/settings/",
+            '{"viewers_can_export":false,"viewers_can_change_weight":true,"weight":"https://app.crunch.io/api/datasets/1/variables/birthyr/","population":{"magnitude":3,"size":6000}}'
+            )
+        expect_PATCH(setPopulation(ds, magnitude = 6),
+            "https://app.crunch.io/api/datasets/1/settings/",
+            '{"viewers_can_export":false,"viewers_can_change_weight":true,"weight":"https://app.crunch.io/api/datasets/1/variables/birthyr/","population":{"magnitude":6,"size":90000000}}'
+            )
+        expect_PATCH(setPopulation(ds, size = 6000, magnitude = 6),
+            "https://app.crunch.io/api/datasets/1/settings/",
+            '{"viewers_can_export":false,"viewers_can_change_weight":true,"weight":"https://app.crunch.io/api/datasets/1/variables/birthyr/","population":{"magnitude":6,"size":6000}}'
+            )
+        expect_error(setPopulation(ds, magnitude  = 1000),
+            "Magnitude must be either 3, 6, or 9")
     })
 
     test_that("Name setting validation", {
@@ -341,15 +357,15 @@ with_test_authentication({
                 "On Her Majesty's Secret Service")
         })
         test_that("population setters push to server", {
-            ds <- setPopulation(ds, 12345, 1000)
+            ds <- setPopulation(ds, 12345, 3)
             expect_equal(popSize(ds), 12345)
-            expect_equal(popMagnitude(ds), 1000)
+            expect_equal(popMagnitude(ds), 3)
             ds <- setPopulation(ds, 54321)
             expect_equal(popSize(ds), 54321)
-            expect_equal(popMagnitude(ds), 1000)
-            ds <- setPopulation(ds, magnitude = 1e6)
+            expect_equal(popMagnitude(ds), 3)
+            ds <- setPopulation(ds, magnitude = 6)
             expect_equal(popSize(ds), 54321)
-            expect_equal(popMagnitude(ds), 1e6)
+            expect_equal(popMagnitude(ds), 6)
         })
 
         test_that("Can unset notes and description", {

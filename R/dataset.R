@@ -88,14 +88,16 @@ setMethod("notes<-", "CrunchDataset", function (x, value) {
     invisible(setEntitySlot(x, "notes", value))
 })
 
-#' Get and set the market size for Crucn
+#' Get and set the market size for Crunch datasets
 #'
 #' @param x a Dataset
-#' @param value For the setters, a length-1 character vector to assign
-#' @return Getters return the character object in the specified slot; setters
-#' return `x` duly modified.
+#' @param size the population size
+#' @param magnitude the order of magnitude with which to display the population
+#' size. Must be either 3, 6, or 9 for thousands, millions, and billions respectively.
+#' @return `popSize` and `popMagnitude` return the respective poulation size and
+#' magnitude. `setPopultion` returns the modified dataset.
 #' @name population
-#' @aliases population population<-
+#' @aliases popSize popMagnitude setPopulation
 NULL
 
 #' @rdname population
@@ -128,8 +130,8 @@ setMethod("setPopulation", "CrunchDataset", function (x, size, magnitude) {
         }
         size <- prefs$population$size
     }
-    if (!(magnitude %in% c(1e3, 1e6, 1e9))){
-        stop("Magnitude must be one of 1e3, 1e6, or 1e9")
+    if (!(magnitude %in% c(3, 6, 9))){
+        stop("Magnitude must be either 3, 6, or 9")
     }
     if (!identical(size, prefs$population$size) |
         !identical(magnitude, prefs$population$magnitude)) {
