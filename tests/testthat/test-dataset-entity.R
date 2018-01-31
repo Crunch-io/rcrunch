@@ -33,15 +33,15 @@ with_mock_crunch({
         expect_silent(setPopulation(ds, popSize(ds), popMagnitude(ds)))
         expect_PATCH(setPopulation(ds, size = 6000),
             "https://app.crunch.io/api/datasets/1/settings/",
-            '{"viewers_can_export":false,"viewers_can_change_weight":true,"weight":"https://app.crunch.io/api/datasets/1/variables/birthyr/","population":{"magnitude":3,"size":6000}}'
+            '{"population":{"magnitude":3,"size":6000}}'
             )
         expect_PATCH(setPopulation(ds, magnitude = 6),
             "https://app.crunch.io/api/datasets/1/settings/",
-            '{"viewers_can_export":false,"viewers_can_change_weight":true,"weight":"https://app.crunch.io/api/datasets/1/variables/birthyr/","population":{"magnitude":6,"size":90000000}}'
+            '{"population":{"magnitude":6,"size":90000000}}'
             )
         expect_PATCH(setPopulation(ds, size = 6000, magnitude = 6),
             "https://app.crunch.io/api/datasets/1/settings/",
-            '{"viewers_can_export":false,"viewers_can_change_weight":true,"weight":"https://app.crunch.io/api/datasets/1/variables/birthyr/","population":{"magnitude":6,"size":6000}}'
+            '{"population":{"magnitude":6,"size":6000}}'
             )
         expect_error(setPopulation(ds, magnitude  = 1000),
             "Magnitude must be either 3, 6, or 9")

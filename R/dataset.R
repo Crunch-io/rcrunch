@@ -106,43 +106,37 @@ NULL
 #' @rdname population
 #' @export
 setMethod("popSize", "CrunchDataset", function (x) {
-    prefs <- ShojiEntity(crGET(shojiURL(x, "fragments", "settings")))
-    return(prefs@body$population$size)
+    return(settings(x)$population$size)
 })
 
 #' @rdname population
 #' @export
 setMethod("popMagnitude", "CrunchDataset", function (x) {
-    prefs <- ShojiEntity(crGET(shojiURL(x, "fragments", "settings")))
-    return(prefs@body$population$magnitude)
+    return(settings(x)$population$magnitude)
 })
 
 #' @rdname population
 #' @export
 setMethod("setPopulation", "CrunchDataset", function (x, size, magnitude) {
-    prefs <- crGET(shojiURL(x, "fragments", "settings"))$body
+    pop <- settings(x)$population
     if (missing(magnitude)) {
-        if (is.null(prefs$population$magnitude)) {
+        if (is.null(pop$magnitude)) {
             stop("Dataset does not have a magnitude, please supply one")
         }
-        magnitude <- prefs$population$magnitude
+        magnitude <- pop$magnitude
     }
     if (missing(size)) {
-        if (is.null(prefs$population$size)) {
+        if (is.null(pop$size)) {
             stop("Dataset does not have a population, please supply one")
         }
-        size <- prefs$population$size
+        size <- pop$size
     }
     if (!(magnitude %in% c(3, 6, 9))){
         stop("Magnitude must be either 3, 6, or 9")
     }
-    if (!identical(size, prefs$population$size) |
-        !identical(magnitude, prefs$population$magnitude)) {
-        prefs$population$size <- size
-        prefs$population$magnitude <- magnitude
-        crPATCH(shojiURL(x, "fragments", "settings"),
-            body = toJSON(prefs))
-        x <- refresh(x)
+    if (!identical(size, pop$size) |
+        !identical(magnitude, pop$magnitude)) {
+        settings(x)$population <- list(magnitude = magnitude, size = size)
     }
     invisible(return(x))
 })
