@@ -81,9 +81,9 @@ with_mock_crunch({
             'https://app.crunch.io/api/datasets/1/multitables/',
             '{"element":"shoji:entity","body":{',
             '"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
-            '{"query":[{"function":"selected_array",',
-            '"args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]},',
-            '{"each":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}]',
+            '{"query":[{"each":"https://app.crunch.io/api/datasets/1/variables/mymrset/"},',
+            '{"function":"as_selected","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}',
+            ']}]',
             ',"name":"New multitable"}}')
         with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
             mtable <- newMultitable(~ gender + mymrset, data=ds,
@@ -97,9 +97,9 @@ with_mock_crunch({
             'https://app.crunch.io/api/datasets/1/multitables/',
             '{"element":"shoji:entity","body":{',
             '"template":[{"query":[{"variable":"https://app.crunch.io/api/datasets/1/variables/gender/"}]},',
-            '{"query":[{"function":"selected_array",',
-            '"args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]},',
-            '{"each":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}]',
+            '{"query":[{"each":"https://app.crunch.io/api/datasets/1/variables/mymrset/"},',
+            '{"function":"as_selected","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/mymrset/"}]}',
+            ']}]',
             ',"name":"gender + mymrset"}}')
         with_POST("https://app.crunch.io/api/datasets/1/multitables/4de322/", {
             mtable <- newMultitable(~ gender + mymrset, data=ds,
@@ -228,6 +228,66 @@ with_mock_crunch({
         })
         ## TODO: something more with variable metadata? For cubes more generally?
         ## --> are descriptions coming from backend if they exist?
+        
+        with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-mr-ca-tabbook/", {
+            ## This mock was taken from the integration test below
+            book <- tabBook(m, data=ds, format="json")
+            test_that("tabBook JSON returns TabBookResult", {
+                expect_is(book, "TabBookResult")
+            })
+            test_that("TabBookResult and MultitableResult size/extract methods", {
+                expect_length(book, 1)
+                expect_is(book[[1]], "MultitableResult")
+                expect_length(book[[1]], 2)
+                expect_identical(dim(book), c(1L, 2L))
+                expect_is(book[[1]][[1]], "CrunchCube")
+            })
+            test_that("tab book print methods", {
+                ## TODO: print method for TabBookResult
+            })
+            test_that("The first result in a MultitableResult has 3 dimensions", {
+                expect_identical(dim(book[[1]][[1]]), c(5L, 1L, 2L))
+            })
+            test_that("dim names", {
+                print(names(book[[1]][[1]]))
+                expect_identical(names(book[[1]][[1]]),
+                                 c("Pets by location", "Total", "Pets by location"))
+                print(names(book[[1]][[2]]))
+                expect_identical(names(book[[1]][[2]]),
+                                 c("Pets by location", "All pets owned",
+                                   "Pets by location"))
+            })
+        })
+        
+        with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-ca-mr-tabbook/", {
+            ## This mock was taken from the integration test below
+            book <- tabBook(m, data=ds, format="json")
+            test_that("tabBook JSON returns TabBookResult", {
+                expect_is(book, "TabBookResult")
+            })
+            test_that("TabBookResult and MultitableResult size/extract methods", {
+                expect_length(book, 1)
+                expect_is(book[[1]], "MultitableResult")
+                expect_length(book[[1]], 2)
+                expect_identical(dim(book), c(1L, 2L))
+                expect_is(book[[1]][[1]], "CrunchCube")
+            })
+            test_that("tab book print methods", {
+                ## TODO: print method for TabBookResult
+            })
+            test_that("The first result in a MultitableResult has 3 dimensions", {
+                expect_identical(dim(book[[1]][[1]]), c(3L, 1L))
+            })
+            test_that("dim names", {
+                print(names(book[[1]][[1]]))
+                expect_identical(names(book[[1]][[1]]),
+                                 c("All pets owned", "Total"))
+                print(names(book[[1]][[2]]))
+                expect_identical(names(book[[1]][[2]]),
+                                 c("Pets by location", "Pets by location",
+                                   "All pets owned"))
+            })
+        })
     })
 
     with_POST("https://app.crunch.io/api/datasets/1/multitables/tabbook-array-result/", {
@@ -271,8 +331,30 @@ with_test_authentication({
         expect_identical(name(m), "allpets + q1")
         expect_identical(getShowContent(m), c(paste0("Multitable ", dQuote("allpets + q1")),
                                               "Column variables:",
-                                              "  selected_array(allpets)",
+                                              "  allpets",
                                               "  q1"))
+    })
+
+    test_that("Can make a multitable perserving zcl functions", {
+        m <- newMultitable(~ rollup(wave, "M") + q1, data=ds)
+        expect_identical(name(m), "rollup(wave, \"M\") + q1")
+        expect_identical(getShowContent(m), c(paste0("Multitable ", dQuote("rollup(wave, \"M\") + q1")),
+                                              "Column variables:",
+                                              "  rollup(wave, \"M\")",
+                                              "  q1"))
+        # cleanup
+        with_consent(delete(m))
+    })
+
+    test_that("Can make a multitable with a cat array", {
+        m <- newMultitable(~ petloc + q1, data=ds)
+        expect_identical(name(m), "petloc + q1")
+        expect_identical(getShowContent(m), c(paste0("Multitable ", dQuote("petloc + q1")),
+                                              "Column variables:",
+                                              "  petloc",
+                                              "  q1"))
+        # cleanup
+        with_consent(delete(m))
     })
 
     test_that("Can make a multitable with list methods", {
@@ -328,7 +410,7 @@ with_test_authentication({
         expect_true(is.public(refresh(m)))
         expect_identical(getShowContent(m), c(paste0("Multitable ", dQuote("copied_multitable")),
                                               "Column variables:",
-                                              "  selected_array(allpets)",
+                                              "  allpets",
                                               "  q1"))
     })
 
@@ -355,6 +437,7 @@ with_test_authentication({
     })
 
     test_that("We can get an json tab book", {
+        skip("multitables and multiple response need more work.")
         skip_locally("Vagrant host doesn't serve files correctly")
         book <- tabBook(mult, data=ds)
         expect_is(book, "TabBookResult")

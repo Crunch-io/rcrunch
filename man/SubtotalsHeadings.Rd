@@ -9,19 +9,25 @@
 \alias{SubtotalsHeadings}
 \alias{subtotals}
 \alias{subtotals<-}
+\alias{Subtotal}
 \alias{is.Subtotal}
 \alias{is.Heading}
 \alias{are.Subtotals}
 \alias{are.Headings}
+\alias{Heading}
 \alias{subtotals,CrunchVariable-method}
 \alias{subtotals,VariableTuple-method}
 \alias{subtotals<-,CrunchVariable,ANY-method}
 \alias{subtotals<-,CrunchVariable,NULL-method}
 \title{Subtotals and headings}
 \usage{
-Subtotal(..., data = NULL)
+Subtotal(name, categories, position = c("relative", "top", "bottom"),
+  after = NULL)
 
-Heading(..., data = NULL)
+Heading(name, position = c("relative", "top", "bottom"), after = NULL)
+
+Subtotal(name, categories, position = c("relative", "top", "bottom"),
+  after = NULL)
 
 is.Subtotal(x)
 
@@ -30,6 +36,8 @@ is.Heading(x)
 are.Subtotals(x)
 
 are.Headings(x)
+
+Heading(name, position = c("relative", "top", "bottom"), after = NULL)
 
 \S4method{subtotals}{CrunchVariable}(x)
 
@@ -40,17 +48,24 @@ are.Headings(x)
 \S4method{subtotals}{CrunchVariable,`NULL`}(x) <- value
 }
 \arguments{
-\item{...}{additional arguments to \code{[}, ignored}
+\item{name}{character the name of the subtotal or heading}
 
-\item{data}{For the constructor functions \code{Subtotal} and
-\code{Heading}, you can either pass in attributes via \code{...} or you
-can create the objects with a fully defined \code{list} representation of
-the objects via the \code{data} argument.}
+\item{categories}{character or numeric the category names or ids for subtotal
+only}
+
+\item{position}{character one of "relative", "top", or "bottom". Determines
+the position of the subtotal or heading, either at the top, bottom, or
+relative to another category in the cube (default).}
+
+\item{after}{character or numeric if \code{position} is "relative", then the
+category name or id to position the subtotal or heading after}
 
 \item{x}{either a variable or CrunchCube object to add or get subtotal
 transforms for}
 
 \item{value}{For \code{[<-}, the replacement Subtotal to insert}
+
+\item{...}{additional arguments to \code{[}, ignored}
 }
 \description{
 Subtotals and headings for categorical Variables and
@@ -110,7 +125,7 @@ subtotals(ds$opinion) <- list(
 )
 
 # headings can also be added:
-subtotals(ds$opinion) <- Heading(name = "All opinions", after = 0)
+subtotals(ds$opinion) <- Heading(name = "All opinions", position = "top")
 
 # to see the subtotals and headings associated with a variable
 subtotals(ds$opinion)
@@ -123,7 +138,7 @@ subtotals(ds$opinion)
 # by default
 opinion_cube <- crtabs(~opinion, ds)
 opinion_cube
-#               All opinions   
+#               All opinions
 #             Strongly Agree 23
 #             Somewhat Agree 24
 #                      Agree 47
@@ -135,8 +150,8 @@ opinion_cube
 
 # to get just the subtotals,
 subtotalArray(opinion_cube)
-#    Agree Disagree 
-#       47       35 
+#    Agree Disagree
+#       47       35
 
 # to remove all subtotals and headings
 subtotals(ds$opinion) <- NULL
@@ -149,10 +164,10 @@ crtabs(~opinion, ds)
 
 # if you want to temporarily remove subtotals and headings, you can with `noTransforms`
 noTransforms(crtabs(~opinion, ds))
-#             Strongly Agree             Somewhat Agree Neither Agree nor Disagree 
-#                         23                         24                         18 
-#          Somewhat Disagree          Strongly Disagree 
-#                         16                         19 
+#             Strongly Agree             Somewhat Agree Neither Agree nor Disagree
+#                         23                         24                         18
+#          Somewhat Disagree          Strongly Disagree
+#                         16                         19
 }
 
 }
