@@ -134,21 +134,6 @@ with_mock_crunch({
         expect_GET(crtabs(~mymrset+location, data = ds),
                    "https://app.crunch.io/api/datasets/1/cube/?query=%7B%22dimensions%22%3A%5B%7B%22each%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fmymrset%2F%22%7D%2C%7B%22function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fmymrset%2F%22%7D%5D%7D%2C%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Flocation%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D")
     })
-
-    test_that("users can change the crunch.mr.selection option", {
-        with(temp.options(crunch.mr.selection="selected_array"), {
-            expect_GET(crtabs(~mymrset, data = ds),
-                       "https://app.crunch.io/api/datasets/1/cube/?query=%7B%22dimensions%22%3A%5B%7B%22each%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fmymrset%2F%22%7D%2C%7B%22function%22%3A%22selected_array%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fmymrset%2F%22%7D%5D%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D")
-            })
-
-        with(temp.options(crunch.mr.selection="not_an_MR_selection"), {
-            expect_error(crtabs(~mymrset, data = ds),
-                         paste0("The option ", dQuote("crunch.mr.selection"),
-                                " must be either ", dQuote("as_selected"),
-                                " (the default) or ", dQuote("selected_array")),
-                         fixed = TRUE)
-        })
-    })
 })
 
 with_test_authentication({
