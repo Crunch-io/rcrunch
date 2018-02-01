@@ -134,10 +134,7 @@ setMethod("setPopulation", "CrunchDataset", function (x, size, magnitude) {
     if (!(magnitude %in% c(3, 6, 9))){
         stop("Magnitude must be either 3, 6, or 9")
     }
-    if (!identical(size, pop$size) |
-        !identical(magnitude, pop$magnitude)) {
-        settings(x)$population <- list(magnitude = magnitude, size = size)
-    }
+    settings(x)$population <- list(magnitude = magnitude, size = size)
     invisible(return(x))
 })
 
