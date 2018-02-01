@@ -168,7 +168,6 @@ setMethod("initialize", "MultitableResult", function (.Object, ...) {
                 name="Total"
             )
         )))
-    # .Object$result <- lapply(.Object$result, CrunchCube)
     .Object$result <- lapply(.Object$result, function (cube) {
         cube <- CrunchCube(cube)
         ## TODO: refactor with CrunchCubep-native methods (eg, dimensions<-, aperm)
