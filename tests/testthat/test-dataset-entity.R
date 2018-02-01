@@ -43,7 +43,23 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/settings/",
             '{"population":{"magnitude":6,"size":6000}}'
             )
+        expect_PATCH(setPopulation(ds, size = NULL, magnitude = 6),
+            "https://app.crunch.io/api/datasets/1/settings/",
+            '{"population":{"magnitude":6,"size":0}}'
+            )
+        expect_PATCH(popSize(ds) <- 6000,
+            "https://app.crunch.io/api/datasets/1/settings/",
+            '{"population":{"magnitude":3,"size":6000}}'
+            )
+        expect_PATCH(popMagnitude(ds) <- 6,
+            "https://app.crunch.io/api/datasets/1/settings/",
+            '{"population":{"magnitude":6,"size":90000000}}'
+        )
+    })
+    test_that( "setPopulation errors correctly", {
         expect_error(setPopulation(ds, magnitude  = 1000),
+            "Magnitude must be either 3, 6, or 9")
+        expect_error(setPopulation(ds, magnitude  = NULL),
             "Magnitude must be either 3, 6, or 9")
     })
 

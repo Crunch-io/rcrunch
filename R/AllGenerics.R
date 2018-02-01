@@ -17,6 +17,8 @@ setGeneric("name", function (x) standardGeneric("name"))
 setGeneric("name<-", function (x, value) standardGeneric("name<-"))
 setGeneric("popSize", function (x) standardGeneric("popSize"))
 setGeneric("popMagnitude", function (x) standardGeneric("popMagnitude"))
+setGeneric("popSize<-", function (x, value) standardGeneric("popSize<-"))
+setGeneric("popMagnitude<-", function (x, value) standardGeneric("popMagnitude<-"))
 setGeneric("setPopulation", function (x, size, magnitude) standardGeneric("setPopulation"))
 
 setGeneric("expr", function (x) standardGeneric("expr"))

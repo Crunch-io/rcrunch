@@ -93,20 +93,30 @@ setMethod("notes<-", "CrunchDataset", function (x, value) {
 #' Crunch Datasets allow you to set a target population size in order to extrapolate
 #' population estimates from survey percentages. This function lets you work with
 #' the population size and magnitude.
+#'
 #' @param x a Crunch Dataset
-#' @param size the target population size
+#' @param value For the setters, the `size` or `magnitude` to be set
+#' @param size the target population size, to remove a population set to `NULL`
 #' @param magnitude the order of magnitude with which to display the population
 #' size. Must be either `3`, `6`, or `9` for thousands, millions, and billions respectively.
 #' @return `popSize` and `popMagnitude` return the population size or
 #' magnitude. `setPopultion` returns the modified dataset.
 #' @name population
-#' @aliases popSize popMagnitude setPopulation
+#' @aliases popSize popMagnitude setPopulation popSize<- popMagnitude<-
 NULL
 
 #' @rdname population
 #' @export
 setMethod("popSize", "CrunchDataset", function (x) {
-    return(settings(x)$population$size)
+    size <- settings(x)$population$size
+    return(ifelse(size == 0, NULL, size)) #the API value 0 stands for "No Population set"
+})
+
+#' @rdname population
+#' @export
+
+setMethod("popSize<-", "CrunchDataset", function (x, value) {
+    setPopulation(x, size = value)
 })
 
 #' @rdname population
@@ -117,21 +127,32 @@ setMethod("popMagnitude", "CrunchDataset", function (x) {
 
 #' @rdname population
 #' @export
+setMethod("popMagnitude<-", "CrunchDataset", function (x, value) {
+   setPopulation(x, magnitude = value)
+})
+
+#' @rdname population
+#' @export
 setMethod("setPopulation", "CrunchDataset", function (x, size, magnitude) {
     pop <- settings(x)$population
     if (missing(magnitude)) {
         if (is.null(pop$magnitude)) {
-            stop("Dataset does not have a magnitude, please supply one")
+            warning("Dataset magnitude not set, defaulting to thousands")
+            magnitude <- 3
+        } else {
+            magnitude <- pop$magnitude
         }
-        magnitude <- pop$magnitude
     }
     if (missing(size)) {
         if (is.null(pop$size)) {
-            stop("Dataset does not have a population, please supply one")
+            stop("Dataset does not have a population, please set one before attempting to change magnitude")
         }
         size <- pop$size
     }
-    if (!(magnitude %in% c(3, 6, 9))){
+    if (is.null(size)) {
+        size <- 0
+    }
+    if (is.null(magnitude) || !(magnitude %in% c(3, 6, 9))){
         stop("Magnitude must be either 3, 6, or 9")
     }
     settings(x)$population <- list(magnitude = magnitude, size = size)

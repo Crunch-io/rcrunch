@@ -6,21 +6,31 @@
 \alias{popSize}
 \alias{popMagnitude}
 \alias{setPopulation}
+\alias{popSize<-}
+\alias{popMagnitude<-}
 \alias{popSize,CrunchDataset-method}
+\alias{popSize<-,CrunchDataset-method}
 \alias{popMagnitude,CrunchDataset-method}
+\alias{popMagnitude<-,CrunchDataset-method}
 \alias{setPopulation,CrunchDataset-method}
 \title{Get and set the market size for Crunch datasets}
 \usage{
 \S4method{popSize}{CrunchDataset}(x)
 
+\S4method{popSize}{CrunchDataset}(x) <- value
+
 \S4method{popMagnitude}{CrunchDataset}(x)
+
+\S4method{popMagnitude}{CrunchDataset}(x) <- value
 
 \S4method{setPopulation}{CrunchDataset}(x, size, magnitude)
 }
 \arguments{
 \item{x}{a Crunch Dataset}
 
-\item{size}{the target population size}
+\item{value}{For the setters, the \code{size} or \code{magnitude} to be set}
+
+\item{size}{the target population size, to remove a population set to \code{NULL}}
 
 \item{magnitude}{the order of magnitude with which to display the population
 size. Must be either \code{3}, \code{6}, or \code{9} for thousands, millions, and billions respectively.}
