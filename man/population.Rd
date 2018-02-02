@@ -37,7 +37,7 @@ size. Must be either \code{3}, \code{6}, or \code{9} for thousands, millions, an
 }
 \value{
 \code{popSize} and \code{popMagnitude} return the population size or
-magnitude. \code{setPopultion} returns the modified dataset.
+magnitude. \code{setPopulation} returns the modified dataset.
 }
 \description{
 Crunch Datasets allow you to set a target population size in order to extrapolate

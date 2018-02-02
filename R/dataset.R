@@ -100,7 +100,7 @@ setMethod("notes<-", "CrunchDataset", function (x, value) {
 #' @param magnitude the order of magnitude with which to display the population
 #' size. Must be either `3`, `6`, or `9` for thousands, millions, and billions respectively.
 #' @return `popSize` and `popMagnitude` return the population size or
-#' magnitude. `setPopultion` returns the modified dataset.
+#' magnitude. `setPopulation` returns the modified dataset.
 #' @name population
 #' @aliases popSize popMagnitude setPopulation popSize<- popMagnitude<-
 NULL
@@ -145,7 +145,7 @@ setMethod("setPopulation", "CrunchDataset", function (x, size, magnitude) {
     }
     if (missing(size)) {
         if (is.null(pop$size)) {
-            stop("Dataset does not have a population, please set one before attempting to change magnitude")
+            halt("Dataset does not have a population, please set one before attempting to change magnitude")
         }
         size <- pop$size
     }
@@ -153,7 +153,7 @@ setMethod("setPopulation", "CrunchDataset", function (x, size, magnitude) {
         size <- 0
     }
     if (is.null(magnitude) || !(magnitude %in% c(3, 6, 9))){
-        stop("Magnitude must be either 3, 6, or 9")
+        halt("Magnitude must be either 3, 6, or 9")
     }
     settings(x)$population <- list(magnitude = magnitude, size = size)
     invisible(return(x))
