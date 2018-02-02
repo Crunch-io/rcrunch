@@ -18,8 +18,11 @@ ShojiEntity <- setClass("ShojiEntity", contains="ShojiObject")
 ShojiCatalog <- setClass("ShojiCatalog", contains="ShojiObject",
     slots=c(
         index="list",
-        orders="list"
+        orders="list",
+        graph="list"
     ))
+ShojiFolder <- setClass("ShojiFolder", contains="ShojiCatalog")
+VariableFolder <- setClass("VariableFolder", contains="ShojiFolder")
 ShojiOrder <- setClass("ShojiOrder", contains="ShojiObject",
     slots=c(
         graph="list",
@@ -80,19 +83,20 @@ setClass("CrunchVariable",
     ),
     prototype=prototype(filter=CrunchLogicalExpr(), tuple=VariableTuple()))
 
+.variableClasses <- list(
+    categorical="CategoricalVariable",
+    numeric="NumericVariable",
+    text="TextVariable",
+    datetime="DatetimeVariable",
+    multiple_response="MultipleResponseVariable",
+    categorical_array="CategoricalArrayVariable"
+)
+
 CrunchVariable <- function (tuple, filter=NULL, ...) {
     ## Slight cheat: this isn't the "CrunchVariable" constructor. Instead
     ## returns a subclass of CrunchVariable
 
-    classes <- list(
-        categorical="CategoricalVariable",
-        numeric="NumericVariable",
-        text="TextVariable",
-        datetime="DatetimeVariable",
-        multiple_response="MultipleResponseVariable",
-        categorical_array="CategoricalArrayVariable"
-    )
-    cls <- classes[[type(tuple)]] %||% "CrunchVariable"
+    cls <- .variableClasses[[type(tuple)]] %||% "CrunchVariable"
     if (is.null(filter)) {
         filter <- CrunchLogicalExpr()
     }

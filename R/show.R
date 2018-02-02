@@ -366,3 +366,7 @@ setMethod("show", "CrunchGeography", function (object) {
         sep="")
     invisible(object)
 })
+
+setMethod("getShowContent", "ShojiFolder", function (x) {
+    paste0(ifelse(types(x) == "folder", "[+] ", ""), names(x))
+})

@@ -69,8 +69,7 @@ with_mock_crunch({
         expect_identical(emails(m), c("fake.user@example.com", "roger.user@example.com"))
         expect_identical(name(m[["roger.user@example.com"]]),
             "Roger User")
-        expect_error(m[["NOTAUSER@example.com"]],
-            "Subscript out of bounds: NOTAUSER@example.com")
+        expect_null(m[["NOTAUSER@example.com"]])
         expect_identical(names(m["roger.user@example.com"]),
             "Roger User")
         expect_error(m["NOTAUSER@example.com"],

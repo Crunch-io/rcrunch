@@ -30,6 +30,7 @@ Suggests:
     devtools,
     httptest (>= 3.0.0),
     knitr,
+    magrittr,
     rmarkdown,
     rstudioapi,
     spelling,
@@ -115,6 +116,7 @@ Collate:
     'share.R'
     'shoji-catalog.R'
     'shoji-entity.R'
+    'shoji-folder.R'
     'shoji-order-slots.R'
     'shoji-order.R'
     'shoji.R'
@@ -131,6 +133,7 @@ Collate:
     'variable-catalog.R'
     'variable-delete.R'
     'variable-derivation.R'
+    'variable-folder.R'
     'variable-metadata.R'
     'variable-order.R'
     'variable-summary.R'

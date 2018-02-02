@@ -74,7 +74,7 @@ pad <- function (n, char = " ") strrep(char, n)
 # available in a more efficient implementation, with type checking in R>=3.3.0
 # TODO: when it's reasonable / other requirements require R>=3.3.0 switch to R's
 # implementation
-strrep <- function(char, n) paste0(rep(char, n), collapse = "")
+strrep <- function (char, n) paste0(rep(char, n), collapse = "")
 
 # Remove NAs from crayon styled strings
 nonas <- function (string, to_remove = c("NA")) {
@@ -128,4 +128,101 @@ transformStyles <- function (trans, cats) {
 headingStyle <- c(nonas, make_style("#546499"), underline) # blue with underline
 subtotalStyle <- c(italic, make_style("#005e46"))
 
-# pretty print for Crunch cube that translates transform into styles, and applies them
+print_tree <- function (x, prefix="", depth=100, current_depth=0) {
+    len <- length(x)
+    what <- types(x)
+    these <- colorize_folder_contents(names(x), what)
+    tree <- lapply(seq_len(len), function (i) {
+        ## Iterate over the indices so we can distinguish the last one, which
+        ## gets different treatment
+        last <- i == len
+        ## Alternate ASCII representation in comments, for readability (fallback?)
+        # node <- ifelse(last, "`-- ", "|-- ")
+        node <- ifelse(last, "\u2514\u2500\u2500 ", "\u251C\u2500\u2500 ")
+        # pass <- ifelse(last, "    ", "|   ")
+        pass <- ifelse(last, "    ", "\u2502   ")
+        ## Prepare the current node
+        out <- paste0(prefix, node, these[i])
+        if (what[i] == "folder") {
+            ## If this one is a folder, indicate that it is
+            out <- paste0(out, folderDelimiter())
+            if (depth > current_depth) {
+                ## And if we're not at our max depth, recurse into the folder,
+                ## adding "pass" as our "prefix", and bumping our "current_depth"
+                out <- c(out,
+                    print_tree(
+                        x[[i]],
+                        paste0(prefix, pass),
+                        depth=depth,
+                        current_depth + 1
+                    )
+                )
+            }
+        }
+        return(out)
+    })
+    return(unlist(tree))
+}
+
+#' @rdname show-crunch
+#' @export
+setMethod("show", "ShojiFolder", function (object) {
+    cat(formatFolderTitle(object), "\n")
+    colored_print(names(object), function (x) colorize_folder_contents(x, types(object)))
+})
+
+colored_print <- function (x, styler=force) {
+    ## Simulate the print.default method, which doesn't handle crayon right
+    len <- length(x)
+    ## The header is like "[12345] ". Find its theoretical max width based on
+    ## the max value (len) + 3 for "[] "
+    header_width <- nchar(len) + 3L
+    ## Each "cell" is as wide as the widest one, plus 1 for padding and 2 for ""
+    w <- max(nchar(x)) + 3L
+    ## Find out how many we can fit on a line, allowing for the header
+    n <- (getOption("width") - header_width) %/% w
+    ## And thus how many rows we need
+    rows <- ceiling(len / n)
+
+    ## Quote and pad
+    x <- col_align(paste0('"', x, '"'), w)
+    ## Color
+    x <- styler(x)
+    ## Print
+    for (i in seq_len(rows)) {
+        start <- 1L + n * (i - 1)
+        cat(col_align(paste0("[", start, "] "), header_width, "right"))
+        cat(x[start:min(n * i, len)], sep="")
+        cat("\n")
+    }
+}
+
+#' @export
+print.ShojiFolder <- function (x, depth=0, verbose=FALSE, pretty=!verbose & depth > 0, ...) {
+    if (pretty) {
+        out <- c(formatFolderTitle(x), print_tree(x, depth=depth))
+        cat(out, sep="\n")
+    } else {
+        ## Default: like a vector of names, but with color
+        show(x)
+    }
+}
+
+formatFolderTitle <- function (folder) {
+    sep <- folderDelimiter()
+    p <- path(folder)
+    if (identical(p, sep)) {
+        ## Root. Return (uncolored) "/" (or whatever delimiter)
+        return(sep)
+    }
+    return(paste0(bold$red(p), sep))
+}
+
+#' @importFrom crayon bold cyan red
+colorize_folder_contents <- function (contents, types) {
+    folders <- types %in% "folder"
+    contents[folders] <- bold$red(contents[folders])
+    arrays <- types %in% c("multiple_response", "categorical_array")
+    contents[arrays] <- cyan(contents[arrays])
+    return(contents)
+}

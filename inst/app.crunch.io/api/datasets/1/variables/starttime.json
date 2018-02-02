@@ -21,6 +21,9 @@
         "summary": "https://app.crunch.io/api/datasets/1/variables/starttime/summary/",
         "values": "https://app.crunch.io/api/datasets/1/variables/starttime/values/"
     },
+    "catalogs": {
+        "folder": "https://app.crunch.io/api/datasets/1/folders/2/"
+    },
     "urls": {
         "dataset_url": "https://app.crunch.io/api/datasets/1/"
     },
