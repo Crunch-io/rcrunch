@@ -29,30 +29,6 @@ setMethod("initialize", "Category", init.Category)
     missing=TRUE
 )
 
-setName <- function (x, value) {
-    x[["name"]] <- validateNewName(value)
-    return(x)
-}
-
-validateNewName <- function (val) {
-    if (!is.character(val)) {
-        halt('Names must be of class "character"')
-    }
-    if (any(is.na(val))) {
-        halt('Names must be non-missing')
-    }
-    invisible(val)
-}
-
-setValue <- function (x, value) {
-    value_to_set <- suppressWarnings(as.numeric(value))
-    if (is.na(value_to_set) && !is.na(value)) {
-        halt("Category values must be numeric")
-    }
-    x[["numeric_value"]] <- value_to_set
-    return(x)
-}
-
 #' Access Category fields directly
 #'
 #' Don't do this. Instead, use the category setters.
@@ -65,16 +41,6 @@ setValue <- function (x, value) {
 #' @seealso \code{\link{describe-category}}
 #' @name category-extract
 NULL
-
-#' @rdname category-extract
-#' @export
-setMethod("$", "Category", function (x, name) x[[name]])
-#' @rdname category-extract
-#' @export
-setMethod("$<-", "Category", function (x, name, value) {
-    x[[name]] <- value
-    return(x)
-})
 
 #' Category attributes
 #'
@@ -91,35 +57,29 @@ setMethod("$<-", "Category", function (x, name, value) {
 #' @seealso [`Categories`] [`dichotomize`]
 NULL
 
-#' @rdname describe-category
-#' @export
-setMethod("name", "Category", function (x) x[["name"]])
-#' @rdname describe-category
-#' @export
-setMethod("name<-", "Category", setName)
-#' @rdname describe-category
-#' @export
-setMethod("name<-", "NULL", function (x, value) {
-    halt('Cannot set name on NULL')
-})
+setValue <- function (x, value) {
+    value_to_set <- suppressWarnings(as.numeric(value))
+    if (is.na(value_to_set) && !is.na(value)) {
+        halt("Category values must be numeric")
+    }
+    x[["numeric_value"]] <- value_to_set
+    return(x)
+}
 
 #' @rdname describe-category
 #' @export
 setMethod("value", "Category", function (x) {
-    v <- x[["numeric_value"]]
-    return(ifelse(is.null(v), NA_real_, as.numeric(v)))
+    v <- as.numeric(x[["numeric_value"]])
+    return(ifelse(is.null(v), NA_real_, v))
 })
+
 #' @rdname describe-category
 #' @export
 setMethod("value<-", "Category", setValue)
+
 #' @rdname describe-category
 #' @export
-setMethod("id", "Category", function (x) as.integer(x[["id"]]))
-
-#' @rdname is-selected-categories
-#' @export
 setMethod("is.selected", "Category", function (x) isTRUE(x$selected))
-
 #' @rdname is-selected-categories
 #' @export
 setMethod("is.selected<-", "Category", function (x, value) {

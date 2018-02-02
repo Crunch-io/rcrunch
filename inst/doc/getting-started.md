@@ -1,5 +1,6 @@
 ---
 title: "Getting Started"
+description: "Here's how to log in and get started working with the Crunch cloud data platform."
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Getting Started}
@@ -46,4 +47,6 @@ The Crunch data store is built around datasets, which contain variables. Unlike 
 * [Computing on Crunch data](analyze.md): crosstabulation and more
 * [Filtering](filters.md): subsetting data, both in your R session and in the web interface
 * [Downloading and exporting](export.md): how to pull data from the server, both for use in R and file export
+* [Subtotals and headings](subtotals.md): how to set and get subtotals and headings for categorical variables
 * [Crunch internals](crunch-internals.md): an introduction to the Crunch API and concepts to help you make more complex and more efficient queries
+* [Category objects](abstract-categories.md): an introduction to the S4 classes that power categories and category-like representations in the package

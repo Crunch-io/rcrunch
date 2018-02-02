@@ -1,0 +1,691 @@
+{
+  "element": "shoji:view",
+  "self": "api/datasets/123/cube/?query=%7B%22dimensions%22%3A%5B%7B%22each%22%3A%22api%2Fdatasets%2F123%2Fvariables%2Fvar1%2F%22%7D%2C%7B%22function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22api%2Fdatasets%2F123%2Fvariables%2Fvar1%2F%22%7D%5D%7D%2C%7B%22function%22%3A%22selected_array%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22api%2Fdatasets%2F123%2Fvariables%2Fvar2%2F%22%7D%5D%7D%2C%7B%22each%22%3A%22api%2Fdatasets%2F123%2Fvariables%2Fvar2%2F%22%7D%2C%7B%22variable%22%3A%22api%2Fdatasets%2F123%2Fvariables%2F000003%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
+  "value": {
+    "query": {
+      "measures": {
+        "count": {
+          "function": "cube_count",
+          "args": []
+        }
+      },
+      "dimensions": [
+        {
+          "each": "api/datasets/123/variables/var1/"
+        },
+        {
+          "function": "as_selected",
+          "args": [
+            {
+              "variable": "api/datasets/123/variables/var1/"
+            }
+          ]
+        },
+        {
+          "function": "selected_array",
+          "args": [
+            {
+              "variable": "api/datasets/123/variables/var2/"
+            }
+          ]
+        },
+        {
+          "each": "api/datasets/123/variables/var2/"
+        },
+        {
+          "variable": "api/datasets/123/variables/000003/"
+        }
+      ],
+      "weight": null
+    },
+    "query_environment": {
+      "filter": []
+    },
+    "result": {
+      "dimensions": [
+        {
+          "derived": true,
+          "references": {
+            "description": "",
+            "format": {
+              "summary": {
+                "digits": 0
+              }
+            },
+            "subreferences": [
+              {
+                "alias": "food_opinion#",
+                "name": "food_opinion"
+              },
+              {
+                "alias": "rest_opinion#",
+                "name": "rest_opinion"
+              },
+              {
+                "alias": "play_opinion#",
+                "name": "play_opinion"
+              }
+            ],
+            "notes": "",
+            "discarded": false,
+            "alias": "opinion_mr",
+            "view": {
+              "show_counts": false,
+              "include_missing": false,
+              "column_width": null
+            },
+            "name": "opinion MR"
+          },
+          "type": {
+            "subtype": {
+              "class": "variable"
+            },
+            "elements": [
+              {
+                "id": 1,
+                "value": {
+                  "derived": false,
+                  "references": {
+                    "alias": "food_opinion#",
+                    "name": "food_opinion"
+                  },
+                  "id": "000002",
+                  "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [
+                      {
+                        "numeric_value": 1,
+                        "selected": true,
+                        "id": 1,
+                        "missing": false,
+                        "name": "Selected"
+                      },
+                      {
+                        "numeric_value": 0,
+                        "missing": false,
+                        "id": 0,
+                        "name": "Not Selected"
+                      },
+                      {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                      }
+                    ]
+                  }
+                },
+                "missing": false
+              },
+              {
+                "id": 2,
+                "value": {
+                  "derived": false,
+                  "references": {
+                    "alias": "rest_opinion#",
+                    "name": "rest_opinion"
+                  },
+                  "id": "000000",
+                  "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [
+                      {
+                        "numeric_value": 1,
+                        "selected": true,
+                        "id": 1,
+                        "missing": false,
+                        "name": "Selected"
+                      },
+                      {
+                        "numeric_value": 0,
+                        "missing": false,
+                        "id": 0,
+                        "name": "Not Selected"
+                      },
+                      {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                      }
+                    ]
+                  }
+                },
+                "missing": false
+              },
+              {
+                "id": 3,
+                "value": {
+                  "derived": false,
+                  "references": {
+                    "alias": "play_opinion#",
+                    "name": "play_opinion"
+                  },
+                  "id": "000005",
+                  "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [
+                      {
+                        "numeric_value": 1,
+                        "selected": true,
+                        "id": 1,
+                        "missing": false,
+                        "name": "Selected"
+                      },
+                      {
+                        "numeric_value": 0,
+                        "missing": false,
+                        "id": 0,
+                        "name": "Not Selected"
+                      },
+                      {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                      }
+                    ]
+                  }
+                },
+                "missing": false
+              }
+            ],
+            "class": "enum"
+          }
+        },
+        {
+          "references": {
+            "description": "",
+            "format": {
+              "summary": {
+                "digits": 0
+              }
+            },
+            "subreferences": [
+              {
+                "alias": "food_opinion#",
+                "name": "food_opinion"
+              },
+              {
+                "alias": "rest_opinion#",
+                "name": "rest_opinion"
+              },
+              {
+                "alias": "play_opinion#",
+                "name": "play_opinion"
+              }
+            ],
+            "notes": "",
+            "name": "opinion MR",
+            "discarded": false,
+            "alias": "opinion_mr",
+            "view": {
+              "show_counts": false,
+              "include_missing": false,
+              "column_width": null
+            }
+          },
+          "derived": true,
+          "type": {
+            "ordinal": false,
+            "subvariables": [
+              "000002",
+              "000000",
+              "000005"
+            ],
+            "class": "categorical",
+            "categories": [
+              {
+                "numeric_value": 1,
+                "selected": true,
+                "id": 1,
+                "missing": false,
+                "name": "Selected"
+              },
+              {
+                "numeric_value": 0,
+                "missing": false,
+                "id": 0,
+                "name": "Not Selected"
+              },
+              {
+                "numeric_value": null,
+                "missing": true,
+                "id": -1,
+                "name": "No Data"
+              }
+            ]
+          }
+        },
+        {
+          "derived": true,
+          "references": {
+            "description": "",
+            "format": {
+              "summary": {
+                "digits": 0
+              }
+            },
+            "subreferences": [
+              {
+                "alias": "cat_feeling#",
+                "name": "cat_feeling"
+              },
+              {
+                "alias": "dog_feeling#",
+                "name": "dog_feeling"
+              },
+              {},
+              {},
+              {}
+            ],
+            "notes": "",
+            "discarded": false,
+            "alias": "feeling_mr",
+            "view": {
+              "show_counts": false,
+              "include_missing": false,
+              "column_width": null
+            },
+            "name": "feeling MR"
+          },
+          "type": {
+            "subtype": {
+              "class": "variable"
+            },
+            "elements": [
+              {
+                "id": 1,
+                "value": {
+                  "derived": false,
+                  "references": {
+                    "alias": "cat_feeling#",
+                    "name": "cat_feeling"
+                  },
+                  "id": "000001",
+                  "type": {
+                    "class": "boolean"
+                  }
+                },
+                "missing": false
+              },
+              {
+                "id": 2,
+                "value": {
+                  "derived": false,
+                  "references": {
+                    "alias": "dog_feeling#",
+                    "name": "dog_feeling"
+                  },
+                  "id": "000004",
+                  "type": {
+                    "class": "boolean"
+                  }
+                },
+                "missing": false
+              },
+              {
+                "id": -1,
+                "value": null,
+                "missing": true
+              },
+              {
+                "id": -127,
+                "value": {
+                  "derived": false,
+                  "references": {},
+                  "id": "__none__",
+                  "type": {
+                    "class": "boolean"
+                  }
+                },
+                "missing": false
+              },
+              {
+                "id": 0,
+                "value": {
+                  "derived": false,
+                  "references": {},
+                  "id": "__any__",
+                  "type": {
+                    "class": "boolean"
+                  }
+                },
+                "missing": false
+              }
+            ],
+            "class": "enum"
+          }
+        },
+        {
+          "derived": false,
+          "references": {
+            "alias": "animal",
+            "name": "animal"
+          },
+          "type": {
+            "ordinal": false,
+            "class": "categorical",
+            "categories": [
+              {
+                "numeric_value": 1,
+                "id": 1,
+                "name": "cats",
+                "missing": false
+              },
+              {
+                "numeric_value": 2,
+                "id": 2,
+                "name": "dogs",
+                "missing": false
+              },
+              {
+                "numeric_value": null,
+                "id": -1,
+                "name": "No Data",
+                "missing": true
+              }
+            ]
+          }
+        }
+      ],
+      "missing": 0,
+      "measures": {
+        "count": {
+          "data": [
+            1166,
+            208,
+            0,
+            3576,
+            105,
+            0,
+            0,
+            0,
+            0,
+            1954,
+            724,
+            0,
+            4026,
+            287,
+            0,
+            799,
+            1771,
+            0,
+            2442,
+            865,
+            0,
+            0,
+            0,
+            0,
+            1256,
+            6533,
+            0,
+            2764,
+            2456,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            197,
+            1183,
+            0,
+            608,
+            575,
+            0,
+            0,
+            0,
+            0,
+            328,
+            4344,
+            0,
+            680,
+            1632,
+            0,
+            1768,
+            796,
+            0,
+            5410,
+            395,
+            0,
+            0,
+            0,
+            0,
+            2882,
+            2913,
+            0,
+            6110,
+            1111,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            201,
+            1166,
+            0,
+            577,
+            583,
+            0,
+            0,
+            0,
+            0,
+            334,
+            4352,
+            0,
+            660,
+            1622,
+            0,
+            1764,
+            813,
+            0,
+            5441,
+            387,
+            0,
+            0,
+            0,
+            0,
+            2876,
+            2905,
+            0,
+            6130,
+            1121,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "n_missing": 0,
+          "metadata": {
+            "references": {},
+            "derived": true,
+            "type": {
+              "integer": true,
+              "missing_rules": {},
+              "missing_reasons": {
+                "No Data": -1
+              },
+              "class": "numeric"
+            }
+          }
+        }
+      },
+      "element": "crunch:cube",
+      "counts": [
+        1166,
+        208,
+        0,
+        3576,
+        105,
+        0,
+        0,
+        0,
+        0,
+        1954,
+        724,
+        0,
+        4026,
+        287,
+        0,
+        799,
+        1771,
+        0,
+        2442,
+        865,
+        0,
+        0,
+        0,
+        0,
+        1256,
+        6533,
+        0,
+        2764,
+        2456,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        197,
+        1183,
+        0,
+        608,
+        575,
+        0,
+        0,
+        0,
+        0,
+        328,
+        4344,
+        0,
+        680,
+        1632,
+        0,
+        1768,
+        796,
+        0,
+        5410,
+        395,
+        0,
+        0,
+        0,
+        0,
+        2882,
+        2913,
+        0,
+        6110,
+        1111,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        201,
+        1166,
+        0,
+        577,
+        583,
+        0,
+        0,
+        0,
+        0,
+        334,
+        4352,
+        0,
+        660,
+        1622,
+        0,
+        1764,
+        813,
+        0,
+        5441,
+        387,
+        0,
+        0,
+        0,
+        0,
+        2876,
+        2905,
+        0,
+        6130,
+        1121,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "n": 20000
+    }
+  }
+}

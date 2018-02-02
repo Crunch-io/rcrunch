@@ -38,6 +38,16 @@
 tabBook <- function (multitable, dataset, weight=crunch::weight(dataset),
                     format=c("json", "xlsx"), file, ...) {
 
+    # check if the multitable query has any selected_array in it
+    # once selected_array is gone forever, this can be removed.
+    if (has.selected.array(multitable@body$template[[1]]$query)) {
+        halt("`tabBook` does not support multitables that use deprecated ",
+             "multiple response functions. Do you have `options(crunch.mr.",
+             "selection = \"selected_array\")` set? If so, please change it",
+             " to `options(crunch.mr.selection = \"as_selected\")` and try ",
+             "to create the multitable and then tab book over again.")
+    }
+    
     f <- match.arg(format)
     accept <- list(
         json="application/json",
@@ -160,16 +170,33 @@ setMethod("initialize", "MultitableResult", function (.Object, ...) {
         )))
     .Object$result <- lapply(.Object$result, function (cube) {
         cube <- CrunchCube(cube)
-        ## If cubes are 3D (categorical array x multitable), aperm the cubes so
-        ## that column is multitable var (3 -> 2), row is category of
-        ## array (2 -> 1), subvar is "tab" (1 -> 3)
+        ## TODO: refactor with CrunchCubep-native methods (eg, dimensions<-, aperm)
         if (length(dim(cube)) == 3L) {
-            ## TODO: CrunchCube should get a dimensions<-
-            cube@dims <- CubeDims(cube@dims[c(2, 3, 1)])
-            cube@arrays <- lapply(cube@arrays, aperm, perm=c(2, 3, 1))
+            ## check if there is an MR, in which case there are actually 4 dims 
+            ## underlyingly, not 3 dims
+            selecteds <- is.selectedDimension(cube@dims)
+            if (any(which(selecteds) %in% c(3, 4))) {
+                ## the selected dimension is in the second half of the cube, so 
+                ## the MR is in the multitable
+                cube@dims <- CubeDims(cube@dims[c(2, 3, 4, 1)])
+                cube@arrays <- lapply(cube@arrays, aperm, perm=c(2, 3, 4, 1))
+            } else if (any(which(selecteds) %in% c(1, 2))) {
+                ## the selected dimension is in the first half of the cube, so 
+                ## the array is in the multitable
+                cube@dims <- CubeDims(cube@dims[c(4, 3, 1, 2)])
+                cube@arrays <- lapply(cube@arrays, aperm, perm=c(4, 3, 1, 2))
+            } else {
+                ## If cubes are 3D (categorical array x multitable), aperm the 
+                ## cubes so that column is multitable var (3 -> 2), row is 
+                ## category of array (2 -> 1), subvar is "tab" (1 -> 3)
+                ## TODO: check if it is cat by multitable catarray?
+                cube@dims <- CubeDims(cube@dims[c(2, 3, 1)])
+                cube@arrays <- lapply(cube@arrays, aperm, perm=c(2, 3, 1))
+            }
         }
         return(cube)
     })
+    
     return(.Object)
 })
 #' @rdname tabbook-methods

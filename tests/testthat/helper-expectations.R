@@ -11,22 +11,6 @@ get_output <- function (x) {
     paste(capture.output(print(x)), collapse="\n")
 }
 
-expect_length <- function(object, n) {
-  stopifnot(is.numeric(n), length(n) == 1)
-  lab <- deparse(object)
-
-  ## Forked from testthat because their version whitelists types and excludes
-  ## S4 objects even if they have a length method defined
-  len <- length(object)
-
-  expect(
-    len == n,
-    sprintf("%s has length %i, not length %i.", lab, length(object), n)
-  )
-
-  invisible(object)
-}
-
 expect_valid_df_import <- function (ds) {
     ## Pull out common tests that "df" was imported correctly
     expect_true(is.dataset(ds))

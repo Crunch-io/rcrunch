@@ -95,4 +95,22 @@ with_test_authentication({
             expect_length(aliases(subvariables(out$comb)), 2)
         })
     })
+
+    test_that("Derivations with comparison operators can be appended", {
+        df1 <- data.frame(foo = rnorm(100), bar = c(1:100))
+        ds1 <- newDataset(df1)
+
+        df2 <- data.frame(bar = c(100:1))
+        ds2 <- newDataset(df2)
+
+        ds1$new1 <- makeCaseVariable(`less than one`=ds1$foo < 1, other="else", name = "new one")
+        ds <- appendDataset(ds1, ds2)
+
+        expect_equal(nrow(ds), 200)
+        expect_equal(as.vector(ds$foo), c(df1$foo, rep(NA, 100)))
+        expect_equal(as.vector(ds$bar), c(df1$bar, df2$bar))
+        expect_equal(as.character(as.vector(ds$new1)),
+                     c(ifelse(df1$foo < 1, "less than one", "other"),
+                       rep("other", 100)))
+    })
 })

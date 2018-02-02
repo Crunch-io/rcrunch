@@ -15,8 +15,14 @@ options(
     crunch.pw=crunch::envOrOption("test.pw")
 )
 
+# crayon options for testing on travis
+options(
+    crayon.enabled = TRUE,
+    crayon.colors = 256
+)
+
 skip_locally <- function (...) {
-    if (substr(getOption("crunch.api"), 1, 12) == "http://local") {
+    if (grepl("^https?://local\\.", getOption("crunch.api"))) {
         skip(...)
     }
 }
@@ -38,7 +44,7 @@ with_mock_crunch <- function (expr) {
     env <- parent.frame()
     with(temp.options(crunch.api="https://app.crunch.io/api/",
                       httptest.mock.paths=c(".", "../inst/", system.file(package="crunch"))), {
-        with_mock_API({
+        with_mock_api({
             try(crunch:::warmSessionCache())
             eval(expr, envir=env)
         })

@@ -16,7 +16,7 @@ with_mock_crunch({
 
     ## Setup to test the auto-polling
     fakeProg <- function (progress_url) {
-        return(fakeResponse(progress_url,
+        return(fake_response(progress_url,
             status_code=202,
             headers=list(
                 location="https://app.crunch.io/api/datasets/",
@@ -30,9 +30,9 @@ with_mock_crunch({
         ## GET something slightly different each time through so we can
         ## approximate polling a changing resource
         `httr::GET`=function (url, ...) {
-            url <- httptest::buildMockURL(paste0(url, counter)) ## Add counter
+            url <- build_mock_url(paste0(url, counter)) ## Add counter
             counter <<- counter + 1 ## Increment
-            return(fakeResponse(url, "GET",
+            return(fake_response(url, "GET",
                 content=readBin(url, "raw", 4096), ## Assumes mock is under 4K
                 status_code=200, headers=list(`Content-Type`="application/json")))
         },

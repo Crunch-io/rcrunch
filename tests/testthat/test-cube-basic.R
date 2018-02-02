@@ -61,6 +61,19 @@ test_that("Cube print method", {
               "  C 5 2 3", sep="\n"))
 })
 
+selected_subvar <- loadCube("cubes/univariate-categorical-like-selected.json")
+
+test_that("Categorical with categories Selected, Not selected", {
+    # when detecting if a dimension is selected, we look at the categories. This
+    # breaks if one tries to display a categorical that just so happens to have
+    # Selected and Not selected as categories
+    expect_output(selected_subvar,
+                  paste("selected_like",
+                        "    Selected Not selected ",
+                        "          10            5 ",
+                        sep="\n"))
+})
+
 with_mock_crunch({
     ds <- loadDataset("test ds")
 

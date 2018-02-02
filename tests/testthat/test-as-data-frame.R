@@ -77,6 +77,38 @@ with_mock_crunch({
             as.vector(ds$gender))
     })
 
+    test_that("as.data.frame(force = TRUE) generates a POST", {
+        expect_POST(as.data.frame(ds, force = TRUE),
+            'https://app.crunch.io/api/datasets/1/export/csv/',
+            '{"filter":null,"options":{"use_category_ids":true}}')
+    })
+    csv_df <- read.csv("dataset-fixtures/test_ds.csv", stringsAsFactors = FALSE)
+    test_that("csvToDataFrame produces the correct data frame", {
+        expected <- readRDS("dataset-fixtures/test_ds.rds")
+        cdf <- as.data.frame(ds[, c("birthyr", "gender", "location", "mymrset", "textVar", "starttime")])
+        #test local CDF variables
+        cdf$newvar <- expected$newvar <- 1:25
+        expect_identical(csvToDataFrame(csv_df, cdf), expected)
+    })
+
+    test_that("csvToDataFrame handles hidden variables", {
+        new_ds <- loadDataset("test ds")[, c("birthyr", "gender", "location", "mymrset", "textVar", "starttime")]
+        new_ds$birthyr@tuple[["discarded"]] <- TRUE
+        new_ds_df <- as.data.frame(new_ds)
+        expect_silent(
+            expect_equal(names(csvToDataFrame(csv_df, new_ds_df)),
+                c("gender", "location", "subvar2", "subvar1", "subvar3", "textVar",
+                    "starttime"))
+        )
+        # now we want the hidden vars to be included
+        new_ds_df <- as.data.frame(new_ds, include.hidden = TRUE)
+        expect_warning(
+            expect_equal(names(csvToDataFrame(csv_df, new_ds_df)),
+                c("birthyr", "gender", "location", "subvar2", "subvar1", "subvar3", "textVar",
+                    "starttime")),
+            paste0("Variable birthyr is hidden"))
+    })
+
     test_that("as.data.frame when a variable has an apostrophe in its alias", {
         t2 <- ds
         t2@variables@index[[2]]$alias <- "Quote 'unquote' alias"
@@ -84,8 +116,9 @@ with_mock_crunch({
     })
 
     test_that("as.data.frame(as.data.frame())", {
-        expect_true(is.data.frame(as.data.frame(as.data.frame(ds))))
-        expect_true(is.data.frame(as.data.frame(ds, force=TRUE)))
+        expect_POST(write.csv(ds, file=""),
+            'https://app.crunch.io/api/datasets/1/export/csv/',
+            '{"filter":null,"options":{"use_category_ids":false}}')
     })
 
     test_that("as.data.frame() works with hidden variables", {
@@ -96,31 +129,12 @@ with_mock_crunch({
         expect_equal(names(new_ds_df),
                      aliases(variables(new_ds)))
         expect_equal(ncol(new_ds_df), 6)
-        expect_silent(
-            expect_equal(names(as.data.frame(new_ds_df)),
-                         c("birthyr", "location", "subvar2", "subvar1", 
-                           "subvar3", "textVar", "starttime", "subvar2", 
-                           "subvar1", "subvar3")))
-        
+
         # now we want the hidden vars to be includes
         new_ds_df <- as.data.frame(new_ds, include.hidden = TRUE)
         expect_equal(names(new_ds_df),
                      aliases(allVariables(new_ds)))
         expect_equal(ncol(new_ds_df), 7)
-        expect_warning(
-            expect_equal(names(as.data.frame(new_ds_df)),
-                         c("birthyr", "gender", "location", "subvar2", 
-                           "subvar1", "subvar3", "textVar", "starttime",
-                           "subvar2", "subvar1", "subvar3")),
-            "Variable gender is hidden")
-    })
-    
-    test_that("as.data.frame size limit", {
-        with(temp.option(crunch.data.frame.limit=50), {
-            expect_error(as.data.frame(ds, force=TRUE),
-                "Dataset too large to coerce")
-            expect_true(is.data.frame(as.data.frame(ds[,1:2], force=TRUE)))
-        })
     })
 
     test_that(".crunchPageSize", {
@@ -132,14 +146,17 @@ with_mock_crunch({
         expect_identical(.crunchPageSize(ds$starttime), 100000L)
         expect_identical(.crunchPageSize(2016 - ds$birthyr), 50000L)
     })
-    
+
+
     test.df <- as.data.frame(ds)
-    
+
+
     test_that("model.frame thus works on CrunchDataset", {
         expect_identical(model.frame(birthyr ~ gender, data=test.df),
                          model.frame(birthyr ~ gender, data=ds))
     })
-    
+
+
     test_that("so lm() should work too", {
         test.lm <- lm(birthyr ~ gender, data=ds)
         expected <- lm(birthyr ~ gender, data=test.df)
@@ -206,8 +223,21 @@ with_test_authentication({
     })
 
     test_that("as.data.frame(force) with API", {
+        skip_locally("Vagrant host doesn't serve files correctly")
         expect_true(is.data.frame(as.data.frame(as.data.frame(ds))))
         expect_true(is.data.frame(as.data.frame(ds, force=TRUE)))
+    })
+
+    test_that("Multiple response variables in as.data.frame(force=TRUE)", {
+        skip_locally("Vagrant host doesn't serve files correctly")
+        mrds <- mrdf.setup(newDataset(mrdf, name = "test-mrdfmr"), selections = "1.0")
+        mrds_df <- as.data.frame(mrds, force = TRUE)
+        expect_equal(ncol(mrds_df), 4)
+        expect_equal(names(mrds_df), c("mr_1", "mr_2", "mr_3", "v4"))
+        expect_equal(mrds_df$mr_1, as.vector(mrds$MR$mr_1))
+        expect_equal(mrds_df$mr_2, as.vector(mrds$MR$mr_2))
+        expect_equal(mrds_df$mr_3, as.vector(mrds$MR$mr_3))
+        expect_equal(mrds_df$v4, as.vector(mrds$v4))
     })
 
     v2 <- ds$v2
@@ -237,13 +267,13 @@ with_test_authentication({
             })
         })
     })
-    
+
     test_that("model.frame thus works on CrunchDataset over API", {
         ## would like this to be "identical" instead of "equivalent"
         expect_equivalent(model.frame(v1 ~ v3, data=ds),
                           model.frame(v1 ~ v3, data=df))
     })
-    
+
     test_that("so lm() should work too over the API", {
         test.lm <- lm(v1 ~ v3, data=ds)
         expected <- lm(v1 ~ v3, data=df)
