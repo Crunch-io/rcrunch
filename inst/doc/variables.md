@@ -1,5 +1,6 @@
 ---
 title: "Crunch Variables"
+description: "Datasets contain variables, which in Crunch contain rich metadata so that they display and export with human-friendly labeling. This set of tools enables you to clean and refine that metadata."
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Crunch Variables}

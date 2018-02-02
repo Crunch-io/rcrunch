@@ -38,6 +38,7 @@ reference:
   - versions
   - weight
   - weightVariables
+  - modifyWeightVariables
   - settings
   - lock
 - title: Multiple datasets
@@ -103,6 +104,7 @@ reference:
   - crunch-uni
   - cube-computing
   - cube-methods
+  - cube-residuals
   - dashboard
   - duplicated
   - filter-catalog
@@ -113,7 +115,7 @@ reference:
   - newMultitable
   - table
   - 'as.vector,CrunchExpr-method'
-- title: Data presentation 
+- title: Data presentation
   contents:
   - Subtotal-class
   - 'subtotalArray,CrunchCube-method'
@@ -161,7 +163,7 @@ reference:
 - title: Catalogs
   contents:
   - catalog-length
-  - catalogToDataFrame
+  - catalog-dataframes
   - 'names,BatchCatalog-method'
   - shoji-index
 - title: Crunch options
@@ -232,6 +234,8 @@ navbar:
          href: articles/filters.html
       -  text: Export Data
          href: articles/export.html
+      -  text: Subtotals and Headings
+         href: articles/subtotals.html
       -  text: Crunch Internals
          href: articles/crunch-internals.html
       -  text: Abstract Categories
