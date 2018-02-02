@@ -228,7 +228,7 @@ with_mock_crunch({
         })
         ## TODO: something more with variable metadata? For cubes more generally?
         ## --> are descriptions coming from backend if they exist?
-        
+
         with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-mr-ca-tabbook/", {
             ## This mock was taken from the integration test below
             book <- tabBook(m, data=ds, format="json")
@@ -249,16 +249,14 @@ with_mock_crunch({
                 expect_identical(dim(book[[1]][[1]]), c(5L, 1L, 2L))
             })
             test_that("dim names", {
-                print(names(book[[1]][[1]]))
                 expect_identical(names(book[[1]][[1]]),
                                  c("Pets by location", "Total", "Pets by location"))
-                print(names(book[[1]][[2]]))
                 expect_identical(names(book[[1]][[2]]),
                                  c("Pets by location", "All pets owned",
                                    "Pets by location"))
             })
         })
-        
+
         with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-ca-mr-tabbook/", {
             ## This mock was taken from the integration test below
             book <- tabBook(m, data=ds, format="json")
@@ -279,10 +277,8 @@ with_mock_crunch({
                 expect_identical(dim(book[[1]][[1]]), c(3L, 1L))
             })
             test_that("dim names", {
-                print(names(book[[1]][[1]]))
                 expect_identical(names(book[[1]][[1]]),
                                  c("All pets owned", "Total"))
-                print(names(book[[1]][[2]]))
                 expect_identical(names(book[[1]][[2]]),
                                  c("Pets by location", "Pets by location",
                                    "All pets owned"))

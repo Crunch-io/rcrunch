@@ -28,7 +28,7 @@ Imports:
 Suggests:
     covr,
     devtools,
-    httptest (>= 2.0.0),
+    httptest (>= 3.0.0),
     knitr,
     rmarkdown,
     rstudioapi,
