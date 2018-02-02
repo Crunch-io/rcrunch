@@ -59,51 +59,50 @@ with_mock_crunch({
     })
 
     test_that("mrFromDelim errors correctly", {
-        expect_error(mrFromDelim(ds$var, "; ",),
+        expect_error(mrFromDelim(ds$var, "; "),
             "Must supply a name for the new variable")
         expect_error(mrFromDelim("string",  name = "name"),
             paste0(dQuote("string"), " must be a Categorical or Text Crunch Variable."))
     })
 
-    test_that("createSubvarDef generates the correct variable definition", {
-        expected <- list(name = "textVar_oak",
-            derivation = list(
-                `function` = "case",
-                args = list(
-                    list(column = I(1:3),
-                        type = list(
-                            value = list(class = "categorical",
-                                categories = list(
-                                    list(id = 1,
-                                        name = "No Data",
-                                        numeric_value = NA,
-                                        missing = TRUE),
-                                    list(id = 2,
-                                        name = "Yes",
-                                        numeric_value = NA,
-                                        missing = FALSE),
-                                    list(id = 3,
-                                        name = "No",
-                                        numeric_value = NA,
-                                        missing = FALSE)
-                                )
-                            )
-                        )
-                    ),
-                    list(`function` = "is_missing",
-                        args = list(
-                            list(variable = "https://app.crunch.io/api/datasets/1/variables/textVar/")
-                        )
-                    ),
-                    list(`function` = "~=",
-                        args = list(
-                            list(variable = "https://app.crunch.io/api/datasets/1/variables/textVar/"),
-                            list(value = "^oak\\; |\\; oak\\; |\\; oak$|^oak$"))
-                    )
+    test_that("createSubvarDeriv generates the correct variable definition", {
+        expected <- list(
+            `function` = "case",
+            args = list(
+                list(column = I(1:3),
+                     type = list(
+                         value = list(class = "categorical",
+                                      categories = list(
+                                          list(id = 1,
+                                               name = "No Data",
+                                               numeric_value = NA,
+                                               missing = TRUE),
+                                          list(id = 2,
+                                               name = "Yes",
+                                               numeric_value = NA,
+                                               missing = FALSE),
+                                          list(id = 3,
+                                               name = "No",
+                                               numeric_value = NA,
+                                               missing = FALSE)
+                                      )
+                         )
+                     )
+                ),
+                list(`function` = "is_missing",
+                     args = list(
+                         list(variable = "https://app.crunch.io/api/datasets/1/variables/textVar/")
+                     )
+                ),
+                list(`function` = "~=",
+                     args = list(
+                         list(variable = "https://app.crunch.io/api/datasets/1/variables/textVar/"),
+                         list(value = "^oak\\; |\\; oak\\; |\\; oak$|^oak$"))
                 )
-            )
+            ),
+            references = list(name = "oak", alias = "textVar_oak")
         )
-         varDef <- createSubvarDef(ds$textVar, str = "oak",
+         varDef <- createSubvarDeriv(ds$textVar, str = "oak",
              delim = "; ",
              selected = "Yes",
              not_selected = "No",
@@ -122,6 +121,35 @@ with_mock_crunch({
         #test delimiters that are regex characters
         expect_true(grepl(buildDelimRegex("maple", "| "), "oak| maple| birch"))
         expect_false(grepl(buildDelimRegex("maple", "| "), "oak| sugar maple| birch"))
+    })
+    
+    test_that("mrFromDelim sends the correct variable derivation", {
+        ds2 <- loadDataset("https://app.crunch.io/api/datasets/mr_from_delim/")
+        trees <- c("birch", "sugar maple", "maple butter", "oak", "maple")
+        expected <- VariableDefinition(
+            derivation=zfunc(
+                "select_categories", zfunc(
+                    "array",  zfunc(
+                        "select",
+                        list(map=lapply(trees, function (tree) {
+                            return(createSubvarDeriv(ds2$delimed_text,
+                                                   str = tree,
+                                                   delim = "; ",
+                                                   selected = "Yes",
+                                                   not_selected = "No",
+                                                   unanswered = NA))
+                        })),
+                        list(value=I(c(1, 2, 3, 4, 5)))
+                    )
+                ),
+                list(value=I("selected"))),
+            name="New Mr")
+        varDef <- mrFromDelim(ds2$delimed_text, delim = "; ",
+                              name = "New Mr",
+                              selected = "Yes",
+                              not_selected = "No",
+                              unanswered = NA)
+        expect_equivalent(varDef, expected)
     })
 })
 
@@ -208,14 +236,8 @@ with_test_authentication({
         ds$delim <- c("maple; birch", "oak; maple; birch", "birch; sugar maple", "maple butter; oak")
         test_that("mrFromDelim creates a variable", {
             ds$mr_5 <- mrFromDelim(ds$delim, delim = "; ", name = "myMR")
-            expect_identical(names(subvariables(ds$mr_5)),
-                c("maple", "birch", "oak", "sugar maple", "maple butter"))
-            expect_identical(names(categories(ds$mr_5)),
-                c("not_selected", "selected", "No Data"))
-            expect_identical(as.vector(ds$mr_5$maple),
-                structure(c(2L, 2L, 1L, 1L), .Label = c("not_selected", "selected"
-                ), class = "factor"))
-            expect_identical(hiddenVariables(ds), "delim")
+            expect_true(is.derived(ds$mr_5))
+            # TODO: assert shape of as.vector, etc.
         })
     })
 })

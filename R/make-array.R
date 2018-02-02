@@ -92,38 +92,53 @@ makeMR <- function (subvariables, name, selections, ...) {
 #' @param var The variable containing the delimited responses
 #' @param delim The delimiter separating the responses
 #' @param name The name of the resulting MR variable
-#' @param selected A character string used to indicate a selection, defaults to "selected
-#' @param not_selected Character string identifying non-selection, defaults to "not_selected"
+#' @param selected A character string used to indicate a selection, defaults to 
+#' "selected"
+#' @param not_selected Character string identifying non-selection, defaults to 
+#' "not_selected"
 #' @param unanswered Character string indicating non-response, defaults to NA.
 #' @param ... Other arguments to be passed on to [makeMR()]
 #'
 #' @return a Multiple response variable definition
 #' @export
 mrFromDelim <- function (var,
-    delim,
-    name,
-    selected = "selected",
-    not_selected = "not_selected",
-    unanswered = NA,
-    ...) {
+                         delim,
+                         name,
+                         selected = "selected",
+                         not_selected = "not_selected",
+                         unanswered = NA,
+                         ...) {
     if (missing(name)) {
         halt("Must supply a name for the new variable")
     }
     if (is.Categorical(var) || is.Text(var)) {
         uniques <- names(table(var))
     } else {
-        halt(dQuote(substitute(var)), " must be a Categorical or Text Crunch Variable.")
+        halt(dQuote(substitute(var)),
+             " must be a Categorical or Text Crunch Variable.")
     }
-    cats <- unique(unlist(strsplit(uniques, delim)))
-    vardefs <- lapply(cats, function(x) createSubvarDef(var, x, delim,
+    items <- unique(unlist(strsplit(uniques, delim)))
+    
+    # make a derivation expression for each unique item 
+    subvarderivs <- lapply(items, function(x) createSubvarDeriv(var, x, delim,
         selected, not_selected, unanswered))
-    ds <- loadDataset(datasetReference(var))
-    ds <- addVariables(ds, vardefs)
+    names(subvarderivs) <- items
+    
+    # generate the ZCL to make an array from the subvariable derivations, and 
+    # then do selection magic to make an MR
+    derivation <- zfunc("select_categories",
+                        zfunc("array", 
+                              zfunc("select", list(map=subvarderivs),
+                                    list(value=I(c(1, 2, 3, 4, 5))))),
+                        list(value=I("selected")))
+    
+    # hide the original variable
     var <- hide(var)
-    return(makeMR(ds[, cats], name = name, selections = selected, ...))
+    
+    return(VariableDefinition(derivation=derivation, name=name, ...))
 }
 
-#' createSubvarDef
+#' createSubvarDeriv
 #'
 #' This function creates a single subvariable definition based on a character string
 #' to search for and an originating variable. It uses regex to determine whether
@@ -137,7 +152,8 @@ mrFromDelim <- function (var,
 #' @keywords internal
 #'
 #' @return A VariableDefinition
-createSubvarDef <- function (var, str, delim, selected, not_selected, unanswered) {
+createSubvarDeriv <- function (var, str, delim, selected, not_selected,
+                               unanswered) {
     if (is.na(unanswered)) {
         unanswered <- "No Data"
     }
@@ -164,8 +180,8 @@ createSubvarDef <- function (var, str, delim, selected, not_selected, unanswered
     deriv <- zfunc("case", new_cat)
     deriv$args[[2]] <- zfunc("is_missing", var)
     deriv$args[[3]] <- zfunc("~=", var, buildDelimRegex(str, delim))
-    out <- VariableDefinition(name = paste0(alias(var), "_", str), derivation = deriv)
-    return(out)
+    deriv$references <- list(name = str, alias = paste0(alias(var), "_", str))
+    return(deriv)
 }
 
 #' Build Regex to find  delimited items.
@@ -177,14 +193,15 @@ createSubvarDef <- function (var, str, delim, selected, not_selected, unanswered
 #' 1. Alone with no delimiters `maple`
 #'
 #' This function builds a regex expression which captures those four values. It
-#' is mostly broken out of [createSubvarDef()] for testing purposes.
+#' is mostly broken out of [createSubvarDeriv()] for testing purposes.
 #'
-#' @inheritParams createSubvarDef
+#' @inheritParams createSubvarDeriv
 #'
 #' @return A character string
 #' @keywords internal
 buildDelimRegex <- function (str, delim){
-    delim <- paste0('\\', delim) # the delimeter needs to be escaped in case it's a regex character
+    # the delimeter needs to be escaped in case it's a regex character
+    delim <- paste0('\\', delim)
     regex <- paste0(
         "^", str, delim, "|",
         delim, str, delim, "|",
