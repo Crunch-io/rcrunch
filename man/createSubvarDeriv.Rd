@@ -2,7 +2,7 @@
 % Please edit documentation in R/make-array.R
 \name{createSubvarDeriv}
 \alias{createSubvarDeriv}
-\title{createSubvarDeriv}
+\title{Create subvariable derivation expressions}
 \usage{
 createSubvarDeriv(var, str, delim, selected, not_selected, unanswered)
 }

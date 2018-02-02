@@ -138,7 +138,7 @@ mrFromDelim <- function (var,
     return(VariableDefinition(derivation=derivation, name=name, ...))
 }
 
-#' createSubvarDeriv
+#' Create subvariable derivation expressions
 #'
 #' This function creates a single subvariable definition based on a character string
 #' to search for and an originating variable. It uses regex to determine whether
