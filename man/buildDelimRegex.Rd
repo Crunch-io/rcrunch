@@ -25,6 +25,6 @@ A delimited item can appear in a list in four ways
 }
 \details{
 This function builds a regex expression which captures those four values. It
-is mostly broken out of \code{\link[=createSubvarDef]{createSubvarDef()}} for testing purposes.
+is mostly broken out of \code{\link[=createSubvarDeriv]{createSubvarDeriv()}} for testing purposes.
 }
 \keyword{internal}

@@ -2,7 +2,7 @@
 % Please edit documentation in R/make-array.R
 \name{mrFromDelim}
 \alias{mrFromDelim}
-\title{Create Multiple Response Variable from Delimited}
+\title{Create Multiple Response Variable from Delimited lists}
 \usage{
 mrFromDelim(var, delim, name, selected = "selected",
   not_selected = "not_selected", unanswered = NA, ...)
@@ -14,13 +14,18 @@ mrFromDelim(var, delim, name, selected = "selected",
 
 \item{name}{The name of the resulting MR variable}
 
-\item{selected}{A character string used to indicate a selection}
+\item{selected}{A character string used to indicate a selection, defaults to
+"selected"}
 
-\item{not_selected}{Character string identifying non-selection}
+\item{not_selected}{Character string identifying non-selection, defaults to
+"not_selected"}
 
-\item{unanswered}{Character string indicating non-response}
+\item{unanswered}{Character string indicating non-response, defaults to NA.}
 
 \item{...}{Other arguments to be passed on to \code{\link[=makeMR]{makeMR()}}}
+}
+\value{
+a Multiple response variable definition
 }
 \description{
 Surveys often record multiple response questions in delimited lists where
