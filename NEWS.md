@@ -1,25 +1,22 @@
-## crunch 1.19.1
+## crunch 1.20.0
 
 ### Subtotals and Headings
-* Added support for subtotals and headings on categorical variables and CrunchCubes.
-* Subtotals can be set with `subtotals(variable) <- Subtotal(name = 'subtotal', categories = c(1, 2), after = 2)`. Use `subtotals(variable)` to check if and what subtotals set for a variable.
-* By default, subtotals will be displayed on CrunchCubes. Arrays consisting of subtotals can be created using `subtotalArray([cube])`
-* See `?subtotals` or the new subtotals vignette for more information. 
+* Added support for subtotals and headings on categorical variables and CrunchCubes. Subtotals can be set with `subtotals(variable) <- Subtotal(name = 'subtotal', categories = c(1, 2), after = 2)`. Use `subtotals(variable)` to see what subtotals are set for a variable.
+* By default, subtotals will be displayed on CrunchCube results. Arrays consisting of only subtotals can be created using `subtotalArray([cube])`
+* See `?subtotals` or `vignette("subtotals", package="crunch")` for more information.
 
 ### Multiple response in CrunchCubes
-* The default method for including multiple response variables in CrunchCubes has changed. Multiple response variables now use the `as_selected` function instead of the now deprecated `selected_array`. This change brings a number of benefits, including better handling of variables with varying amounts of missingness across subvariables.
-* For a limited time, the old method of using `selected_array` can be restored by setting `options(crunch.mr.selection = "selected_array")`.
+* The default method for including multiple response variables in CrunchCubes has changed, allowing for better handling of variables with different missingness across subvariables. (Internally: queries with multiple response variables now use the `as_selected` function instead of `selected_array`, which is now deprecated).
+* For now, the deprecated method can be restored by setting `options(crunch.mr.selection = "selected_array")`.
 
 ### Improvements to `conditionalTransform()`
-* `conditionalTransform()` now has a `formulas` argument to specify a list of conditions to be used. 
+* `conditionalTransform()` now has a `formulas` argument to specify a list of conditions to be used.
 * Errors and warnings are now more helpful when using `conditionalTransform()`.
 
-### Improved efficiency
+### Optimizations and bugfixes
 * Improved efficiency when loading a dataset from URL.
 * `refresh()` for Datasets is now more efficient.
-
-### CrunchCube bugfix
-* Fixed a bug where CrunchCubes with categorical variables that had categories "Selected", "Not selected", and "No data" might not display correctly. 
+* Fixed a bug where CrunchCubes with categorical variables that had categories "Selected", "Not selected", and "No data" might not display correctly.
 
 ## crunch 1.19.0
 
