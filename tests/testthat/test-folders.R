@@ -213,6 +213,7 @@ with_mock_crunch({
 with_test_authentication({
     ds <- newDataset(mtcars)
     test_that("Basic folder integration test", {
+        skip_on_jenkins("Needs feature flag enabled")
         ds <- mkdir(ds, "test")
         expect_true("test" %in% names(cd(ds, "/")))
         ds <- mv(ds, "mpg", "test")
