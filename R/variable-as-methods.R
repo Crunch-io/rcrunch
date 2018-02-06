@@ -3,17 +3,19 @@
 #' Use the as.* family of functions to make a derived copy of a variable that 
 #' has been converted into a new type.
 #' 
-#' Each type of Crunch Variable (Text, Numeric, Categorical, etc.) has an `as.*`
+#' Each type of Crunch variable (text, numeric, categorical, etc.) has an `as.*`
 #' function (`as.Text`, `as.Numeric`, and `as.Categorical` respectively) that 
 #' takes the input given as `x`, and makes a new derived variable that is now of 
-#' the type specified. See the examples for a detailed example.
+#' the type specified. See below for detailed examples.
 #' 
 #' For `as.Text` and `as.Numeric`, aliases to the R-native functions 
-#' `as.character` and `as.numeric` have been made for convenience.
+#' `as.character` and `as.numeric` are provided for convenience.
 #'
-#' @param x a Crunch variable to 
+#' @param x a Crunch variable to derive and convert to a new type
 #' @param format for `as.Datetime`, when the variable in `x` is a text or 
-#' categorical variable, the format that the datetime is formatted in (default: 
+#' categorical variable, the format that the date-time is formatted in (default: 
+#' \code{"\%Y-\%m-\%d \%H:\%M:\%S"}); for `as.Text` and `as.Categorical`, the 
+#' format that the datetime should be formatted as (default: 
 #' \code{"\%Y-\%m-\%d \%H:\%M:\%S"}).
 #' @param resolution for `as.Datetime`, when the variable in `x` is a numeric 
 #' variable, the resolution of the number (e.g. `"ms"` for milliseconds, `"s"` 
@@ -33,11 +35,10 @@
 #' as.vector(ds$v1)
 #' # [1] "32"   "8"    "4096" "1024"
 #' 
-#' # to convert this to a numeric variable with the alias `v1_numeric`
+#' # convert this to a numeric variable with the alias `v1_numeric`
 #' ds$v1_numeric <- as.Numeric(ds$v1)
 #' 
-#' # we can see the values are the same, but are now numerics and the type is
-#' # Numeric
+#' # the values are the same, but are now numerics and the type is Numeric
 #' as.vector(ds$v1_numeric)
 #' # [1]   32    8 4096 1024
 #' is.Numeric(ds$v1_numeric)
@@ -88,7 +89,7 @@ setMethod("as.Categorical", "CrunchVariable",
     
     # datetimes are special
     if (is.Datetime(x)) {
-        # no direct datetime ZCL function, but can just case the string.
+        # no direct datetime to cat ZCL function, but can just cast the string
         return(zfuncExpr("cast",
                          zfunc("format_datetime", x, list(value = format)),
                          "categorical"))
@@ -102,7 +103,7 @@ setMethod("as.Categorical", "CrunchVariable",
 setMethod("as.Datetime", "CrunchVariable", function (x, format, resolution) {
     haltIfArray(x, callingFunc = "as.Datetime()")
     
-    # datetimes are special, so each source type must be inspected
+    # datetimes are special, so each source type must be determined
     if (is.Numeric(x)) {
         # TODO: validate resolution
         return(zfuncExpr("numeric_to_datetime", x, list(value = resolution)))

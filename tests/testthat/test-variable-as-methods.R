@@ -39,7 +39,7 @@ with_mock_crunch({
         var_def <- as.Text(ds$birthyr)
         expect_is(var_def, "CrunchExpr")
         expect_equal(var_def, zfuncExpr("cast", ds$birthyr, "text"))
-        
+        # check the as.character alias
         expect_equal(var_def, as.character(ds$birthyr))
     })
     
@@ -47,7 +47,7 @@ with_mock_crunch({
         var_def <- as.Numeric(ds$textVar)
         expect_is(var_def, "CrunchExpr")
         expect_equal(var_def, zfuncExpr("cast", ds$textVar, "numeric"))
-        
+        # check the as.numeric alias
         expect_equal(var_def, as.numeric(ds$textVar))
     })
     
@@ -108,14 +108,7 @@ with_mock_crunch({
 
 with_test_authentication({
     ds <- newDataset(df)
-    # ds$v1 # numeric 
-    # ds$v2 # text 
-    # ds$v3 # numeric 
-    # ds$v4 # categorical 
-    # ds$v5 # datetime 
-    # make a text variable with numbers
-    ds$num_as_text <- as.character(c(1:20))
-    
+
     test_that("numeric to text", {
         ds$v1_text <- as.Text(ds$v1)
         expect_true(is.derived(ds$v1_text))
@@ -128,6 +121,9 @@ with_test_authentication({
     })
     
     test_that("text to numeric", {
+        # make a text variable with numbers
+        ds$num_as_text <- as.character(c(1:20))
+        
         ds$num_as_text_num <- as.Numeric(ds$num_as_text)
         expect_true(is.derived(ds$num_as_text_num))
         expect_true(is.Numeric(ds$num_as_text_num))
@@ -210,7 +206,7 @@ with_test_authentication({
         ds$times_from_years <- as.Datetime(ds$num_times_years, resolution = "Y")
         expect_true(is.derived(ds$times_from_years))
         expect_true(is.Datetime(ds$times_from_years))
-        # need rollup() here because the package doesn't currently support other rollups
+        # need rollup() here because as.vector doesn't currently support other rollups
         expect_equal(as.vector(rollup(ds$times_from_years, "D")), 
                      as.Date(rep("1971-01-01", 20)))
     }) 

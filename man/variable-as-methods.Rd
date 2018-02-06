@@ -30,10 +30,12 @@
 \method{as.character}{CrunchVariable}(x, ...)
 }
 \arguments{
-\item{x}{a Crunch variable to}
+\item{x}{a Crunch variable to derive and convert to a new type}
 
 \item{format}{for \code{as.Datetime}, when the variable in \code{x} is a text or
-categorical variable, the format that the datetime is formatted in (default:
+categorical variable, the format that the date-time is formatted in (default:
+\code{"\%Y-\%m-\%d \%H:\%M:\%S"}); for \code{as.Text} and \code{as.Categorical}, the
+format that the datetime should be formatted as (default:
 \code{"\%Y-\%m-\%d \%H:\%M:\%S"}).}
 
 \item{resolution}{for \code{as.Datetime}, when the variable in \code{x} is a numeric
@@ -51,13 +53,13 @@ Use the as.* family of functions to make a derived copy of a variable that
 has been converted into a new type.
 }
 \details{
-Each type of Crunch Variable (Text, Numeric, Categorical, etc.) has an \code{as.*}
+Each type of Crunch variable (text, numeric, categorical, etc.) has an \code{as.*}
 function (\code{as.Text}, \code{as.Numeric}, and \code{as.Categorical} respectively) that
 takes the input given as \code{x}, and makes a new derived variable that is now of
-the type specified. See the examples for a detailed example.
+the type specified. See below for detailed examples.
 
 For \code{as.Text} and \code{as.Numeric}, aliases to the R-native functions
-\code{as.character} and \code{as.numeric} have been made for convenience.
+\code{as.character} and \code{as.numeric} are provided for convenience.
 }
 \examples{
 \dontrun{
@@ -69,11 +71,10 @@ is.Text(ds$v1)
 as.vector(ds$v1)
 # [1] "32"   "8"    "4096" "1024"
 
-# to convert this to a numeric variable with the alias `v1_numeric`
+# convert this to a numeric variable with the alias `v1_numeric`
 ds$v1_numeric <- as.Numeric(ds$v1)
 
-# we can see the values are the same, but are now numerics and the type is
-# Numeric
+# the values are the same, but are now numerics and the type is Numeric
 as.vector(ds$v1_numeric)
 # [1]   32    8 4096 1024
 is.Numeric(ds$v1_numeric)
