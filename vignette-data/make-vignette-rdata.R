@@ -201,6 +201,12 @@ gender_by_age.var <- ds$gender_by_age
 summary.gender_by_age.var <- capture.output(print(gender_by_age.var))
 gender_by_age.cats <- categories(ds$gender_by_age)
 
+message("11. Versions, Permissions, Sharing")
+summary.versions_1 <- capture.output(print(versions(ds)))
+startDate(ds) <- '2018-01-01'
+saveVersion(ds, "After give start date, before re-ordered variables")
+summary.versions_2 <- capture.output(print(versions(ds)))
+
 save.image(file="../vignettes/vignettes.RData")
 
 with_consent(delete(ds)) ## cleanup
