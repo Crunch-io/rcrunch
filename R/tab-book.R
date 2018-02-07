@@ -40,7 +40,7 @@ tabBook <- function (multitable, dataset, weight=crunch::weight(dataset),
 
     # check if the multitable query has any selected_array in it
     # once selected_array is gone forever, this can be removed.
-    if (has.selected.array(multitable@body$template[[1]]$query)) {
+    if (has.function(multitable@body$template[[1]]$query, "selected_array")) {
         halt("`tabBook` does not support multitables that use deprecated ",
              "multiple response functions. Do you have `options(crunch.mr.",
              "selection = \"selected_array\")` set? If so, please change it",

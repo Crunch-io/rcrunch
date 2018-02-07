@@ -205,3 +205,47 @@ setCrunchAPI <- function (subdomain, port=NULL) {
     return(invisible())
 }
 
+
+# halt if variable is an array variable. If callingFunc is provided, provide the function that
+# the user used to get to this point. 
+haltIfArray <- function (variable, callingFunc) {
+    # if the variable is not an array type, return quickly
+    # TODO: should this also short-circuit if variable is not a variable?
+    if (!is.Array(variable)) {
+        return(TRUE)
+    }
+    
+    # Add the callingFunc in, if present
+    if (!missing(callingFunc)) {
+        halt("Array-like variables can't be used with function `",
+             callingFunc, "`.")
+    }
+    
+    # can't determine the function or haltIfArray is being called directly,
+    # still error
+    halt("Array-like variables can't be used.")
+}
+
+# validate that rollup resolutions are what are allowed by Crunch
+validateResolution <- function (resolution) {
+    valid_res <- c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms")
+    
+    if (!is.null(resolution) && !(resolution %in% valid_res)) {
+        halt(dQuote("resolution"), " is invalid. Valid values are NULL, ",
+             serialPaste(valid_res))
+    }
+}
+
+# check if a template or query has a selected_array somewhere in it recursively.
+has.function <- function (query, funcs) {
+    query <- unlist(query, recursive = TRUE)
+    
+    func_names <- grepl("function$", names(query))
+    func_names <- names(query)[func_names]
+    
+    if (any(query[func_names] %in% funcs)) {
+        return(TRUE)
+    }
+    
+    return(FALSE)
+}
