@@ -13,13 +13,17 @@
 #'
 #' @param x a Crunch variable to derive and convert to a new type
 #' @param format for `as.Datetime`, when the variable in `x` is a text or 
-#' categorical variable, the format that the date-time is formatted in (default: 
-#' \code{"\%Y-\%m-\%d \%H:\%M:\%S"}); for `as.Text` and `as.Categorical`, the 
-#' format that the datetime should be formatted as (default: 
-#' \code{"\%Y-\%m-\%d \%H:\%M:\%S"}).
+#' categorical variable, `format` is the typographical format that the datetime
+#' is already formatted in that needs to be parse from (default: 
+#' \code{"\%Y-\%m-\%d \%H:\%M:\%S"}); for `as.Text` and  `as.Categorical`, is 
+#' the typographical format that the datetime is to be formatted as (e.g. 
+#' "2018-01-08 12:39:57" default: \code{"\%Y-\%m-\%d \%H:\%M:\%S"}).
 #' @param resolution for `as.Datetime`, when the variable in `x` is a numeric 
 #' variable, the resolution of the number (e.g. `"ms"` for milliseconds, `"s"` 
-#' for seconds, etc. link)
+#' for seconds, etc. see [expressions] for more information about valid values.)
+#' @param offset for `as.Datetime`, when the variable in `x` is a numeric the, a 
+#' character of the offset to count from in the shape "2018-01-08 12:39:57". If 
+#' not supplied, Crunch's default of 1970-01-01 00:00:00 will be used.
 #' @param ... additional arguments for `as.character` and `as.numeric`, ignored when used with 
 #' Crunch variables 
 #'
@@ -100,13 +104,19 @@ setMethod("as.Categorical", "CrunchVariable",
 
 #' @rdname variable-as-methods
 #' @export
-setMethod("as.Datetime", "CrunchVariable", function (x, format, resolution) {
+setMethod("as.Datetime", "CrunchVariable", function (x, format, resolution, offset) {
     haltIfArray(x, callingFunc = "as.Datetime()")
     
     # datetimes are special, so each source type must be determined
     if (is.Numeric(x)) {
-        # TODO: validate resolution
-        return(zfuncExpr("numeric_to_datetime", x, list(value = resolution)))
+        validateResolution(resolution)
+        
+        args <- list("numeric_to_datetime", x, list(value = resolution))
+        if (!missing(offset)) {
+            args <- append(args, list(list(value = offset)))
+        }
+
+        return(do.call(zfuncExpr, args))
     } else if (is.Text(x) | is.Categorical(x)) {
         return(zfuncExpr("parse_datetime", x, list(value = format)))
     }
@@ -121,23 +131,3 @@ as.double.CrunchVariable <- function (x, ...) as.Numeric(x)
 #' @rdname variable-as-methods
 #' @export
 as.character.CrunchVariable <- function (x, ...) as.Text(x)
-
-# halt if variable is an array variable. If callingFunc is provided, provide the function that
-# the user used to get to this point. 
-haltIfArray <- function (variable, callingFunc) {
-    # if the variable is not an array type, return quickly
-    # TODO: should this also short-circuit if variable is not a variable?
-    if (!is.Array(variable)) {
-        return(TRUE)
-    }
-    
-    # Add the callingFunc in, if present
-    if (!missing(callingFunc)) {
-        halt("Array-like variables can't be used with function `",
-             callingFunc, "`.")
-    }
-    
-    # can't determine the function or haltIfArray is being called directly,
-    # still error
-    halt("Array-like variables can't be used.")
-}

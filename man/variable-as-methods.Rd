@@ -23,7 +23,7 @@
   format = "\%Y-\%m-\%d \%H:\%M:\%S")
 
 \S4method{as.Datetime}{CrunchVariable}(x, format = "\%Y-\%m-\%d \%H:\%M:\%S",
-  resolution)
+  resolution, offset)
 
 \method{as.double}{CrunchVariable}(x, ...)
 
@@ -33,14 +33,19 @@
 \item{x}{a Crunch variable to derive and convert to a new type}
 
 \item{format}{for \code{as.Datetime}, when the variable in \code{x} is a text or
-categorical variable, the format that the date-time is formatted in (default:
-\code{"\%Y-\%m-\%d \%H:\%M:\%S"}); for \code{as.Text} and \code{as.Categorical}, the
-format that the datetime should be formatted as (default:
-\code{"\%Y-\%m-\%d \%H:\%M:\%S"}).}
+categorical variable, \code{format} is the typographical format that the datetime
+is already formatted in that needs to be parse from (default:
+\code{"\%Y-\%m-\%d \%H:\%M:\%S"}); for \code{as.Text} and  \code{as.Categorical}, is
+the typographical format that the datetime is to be formatted as (e.g.
+"2018-01-08 12:39:57" default: \code{"\%Y-\%m-\%d \%H:\%M:\%S"}).}
 
 \item{resolution}{for \code{as.Datetime}, when the variable in \code{x} is a numeric
 variable, the resolution of the number (e.g. \code{"ms"} for milliseconds, \code{"s"}
-for seconds, etc. link)}
+for seconds, etc. see \link{expressions} for more information about valid values.)}
+
+\item{offset}{for \code{as.Datetime}, when the variable in \code{x} is a numeric the, a
+character of the offset to count from in the shape "2018-01-08 12:39:57". If
+not supplied, Crunch's default of 1970-01-01 00:00:00 will be used.}
 
 \item{...}{additional arguments for \code{as.character} and \code{as.numeric}, ignored when used with
 Crunch variables}

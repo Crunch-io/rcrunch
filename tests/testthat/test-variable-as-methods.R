@@ -3,16 +3,12 @@ context("Make a derived variable with a new type")
 with_mock_crunch({
     ds <- loadDataset("test ds")
 
-    test_that("haltIfArray", {
-        expect_true(haltIfArray(ds$birthyr))
-        expect_error(haltIfArray(ds$mymrset),
-                     "Array-like variables can't be used.")
-        
-        expect_error(haltIfArray(ds$mymrset, "embed_func()"),
-                     "Array-like variables can't be used with function `embed_func()`.",
-                     fixed = TRUE)
-    })
-
+    save_over_error <- paste0(
+        "A variable cannot be updated with a derivation that changes its ",
+        "type. Are you trying to overwrite a variable with a derivation ",
+        "of itself to change the type? If so, you might want to use ",
+        "`type(ds$variable)<-` instead.")
+    
     test_that("as.* catches arrays", {
         # arrays are incompatible on the server, but the error message isn't helpful
         expect_error(as.Text(ds$mymrset),
@@ -39,22 +35,30 @@ with_mock_crunch({
         var_def <- as.Text(ds$birthyr)
         expect_is(var_def, "CrunchExpr")
         expect_equal(var_def, zfuncExpr("cast", ds$birthyr, "text"))
+        
         # check the as.character alias
         expect_equal(var_def, as.character(ds$birthyr))
+        
+        expect_error(ds$birthyr <- var_def, save_over_error, fixed = TRUE)
     })
     
     test_that("text to numeric", {
         var_def <- as.Numeric(ds$textVar)
         expect_is(var_def, "CrunchExpr")
         expect_equal(var_def, zfuncExpr("cast", ds$textVar, "numeric"))
+        
         # check the as.numeric alias
         expect_equal(var_def, as.numeric(ds$textVar))
+        
+        expect_error(ds$textVar <- var_def, save_over_error, fixed = TRUE)
     })
     
     test_that("text to categorical", {
         var_def <- as.Categorical(ds$textVar)
         expect_is(var_def, "CrunchExpr")
         expect_equal(var_def, zfuncExpr("cast", ds$textVar, "categorical"))
+        
+        expect_error(ds$textVar <- var_def, save_over_error, fixed = TRUE)
     })
     
     test_that("datetime to categorical", {
@@ -65,12 +69,16 @@ with_mock_crunch({
                                zfunc("format_datetime", ds$starttime,
                                      list(value = "%Y-%m-%d %H:%M:%S")),
                                "categorical"))
+        
+        expect_error(ds$starttime <- var_def, save_over_error, fixed = TRUE)
     })
     
     test_that("datetime to numeric", {
         var_def <- as.Numeric(ds$starttime)
         expect_is(var_def, "CrunchExpr")
         expect_equal(var_def, zfuncExpr("datetime_to_numeric", ds$starttime))
+        
+        expect_error(ds$starttime <- var_def, save_over_error, fixed = TRUE)
     })
     
     test_that("datetime to text", {
@@ -83,6 +91,8 @@ with_mock_crunch({
         expect_is(var_def, "CrunchExpr")
         expect_equal(var_def, zfuncExpr("format_datetime", ds$starttime, 
                                              list(value = "%Y-%m-%d")))
+        
+        expect_error(ds$starttime <- var_def, save_over_error, fixed = TRUE)
     })
     
     
@@ -91,6 +101,8 @@ with_mock_crunch({
         expect_is(var_def, "CrunchExpr")
         expect_equal(var_def, zfuncExpr("numeric_to_datetime", ds$birthyr, 
                                         list(value = "Y")))
+        
+        expect_error(ds$birthyr <- var_def, save_over_error, fixed = TRUE)
     })
     
     test_that("text to datetime", {
@@ -103,6 +115,8 @@ with_mock_crunch({
         expect_is(var_def, "CrunchExpr")
         expect_equal(var_def, zfuncExpr("parse_datetime", ds$textVar, 
                                         list(value = "%Y")))
+        
+        expect_error(ds$textVar <- var_def, save_over_error, fixed = TRUE)
     })
 })
 
@@ -194,13 +208,14 @@ with_test_authentication({
         expect_equal(as.vector(ds$times_from_num), 
                      as.vector(ds$v5))
  
-        # different resolutions change the result
+        # different resolutions and offsets change the result
         ds$num_times_secs <- rep(365*24*60*60, 20)
-        ds$times_from_secs <- as.Datetime(ds$num_times_secs, resolution = "s")
+        ds$times_from_secs <- as.Datetime(ds$num_times_secs, resolution = "s",
+                                          offset = "1975-01-01")
         expect_true(is.derived(ds$times_from_secs))
         expect_true(is.Datetime(ds$times_from_secs))
         expect_equal(as.vector(ds$times_from_secs), 
-                     as.POSIXlt(rep("1971-01-01", 20), tz = "UTC"))  
+                     as.POSIXlt(rep("1976-01-01", 20), tz = "UTC"))  
         
         ds$num_times_years <- rep(1, 20)
         ds$times_from_years <- as.Datetime(ds$num_times_years, resolution = "Y")
