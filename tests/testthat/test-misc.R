@@ -136,3 +136,38 @@ with(temp.option(foo.bar="no", foo.other="other"), {
         })
     })
 })
+
+with_mock_crunch({
+    ds <- loadDataset("test ds")
+
+    test_that("haltIfArray", {
+        expect_true(haltIfArray(ds$birthyr))
+        expect_error(haltIfArray(ds$mymrset),
+                     "Array-like variables can't be used.")
+        
+        expect_error(haltIfArray(ds$mymrset, "embed_func()"),
+                     "Array-like variables can't be used with function `embed_func()`.",
+                     fixed = TRUE)
+    })
+    
+    test_that("has.function", {
+        func <- zfunc("cast", ds$birthyr, "text")
+        expect_true(has.function(func, "cast"))
+        expect_false(has.function(func, "case"))
+        
+        func <- zfunc("case",
+                      zfunc("cast", ds$birthyr, "text"),
+                      list(args = list()))
+        expect_true(has.function(func, "cast"))
+        expect_true(has.function(func, "case"))
+        expect_false(has.function(func, "selected_array"))
+        
+        func <- zfunc("case", zfunc("cast",
+                                    zfunc("selected_array", ds$birthyr, "text"),
+                                    "text"))
+        expect_true(has.function(func, "cast"))
+        expect_true(has.function(func, "case"))
+        expect_true(has.function(func, "selected_array"))
+    })
+    
+})
