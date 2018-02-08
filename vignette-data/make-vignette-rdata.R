@@ -207,6 +207,25 @@ startDate(ds) <- '2018-01-01'
 saveVersion(ds, "After give start date, before re-ordered variables")
 summary.versions_2 <- capture.output(print(versions(ds)))
 
+message("11. NPS scores")
+tmp <- round(rnorm(n=nrow(ds), mean=5, sd=2))
+tmp[tmp < 0 ] <- 0; tmp[tmp > 10 ] <- 10
+ds$sat <- VarDef(data=tmp, name="Customer Satisfaction", type="numeric")
+type.sat <- capture.output(print(type(ds$sat)))
+tmp_f <- factor(tmp, levels=c('0', '1', '2','3','4','5','6','7','8','9','10'))
+ds$sat_cat <- VarDef(data=tmp_f, name="Customer Satisfaction (categories)", type="categorical")
+sat.cats <- categories(ds$sat_cat)
+ds$nps <- combine(ds$sat_cat, name="NPS", 
+  combinations=list(
+    list(name="Detractors", categories=c('0', '1', '2', '3', '4', '5', '6')),
+    list(name="Neutral", categories=c('7', '8')),
+    list(name="Promoters", categories=c('9', '10'))
+  ))
+nps.cats <- categories(ds$nps)
+values(categories(ds$nps)) <- c('-100', '0', '100', NA)
+nps.cats_values <- categories(ds$nps)
+nps_tab <- crtabs(mean(nps)~1, ds)
+
 save.image(file="../vignettes/vignettes.RData")
 
 with_consent(delete(ds)) ## cleanup

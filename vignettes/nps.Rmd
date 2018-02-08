@@ -1,0 +1,81 @@
+---
+title: "Net Promotor Scores (NPS)"
+description: "Vignette showing you how to create NPS scores using Crunch's ability to calculate the mean"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Adding Variables}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+[Previous: subtotals](subtotals.html)
+
+```{r, results='hide', echo=FALSE, message=FALSE}
+## Because the vignette tasks require communicating with a remote host,
+## we do all the work ahead of time and save a workspace, which we load here.
+## We'll then reference saved objects in that as if we had just retrieved them
+## from the server
+library(crunch)
+load("vignettes.RData")
+options(width=120)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# What is NPS
+The Net Promotor Score (NPS) is a technique to take a more granular measure of customer satisfaction and boil it down to three simple categories: detractor, neutral (or passive), and promoter. We can create NPS scores in Crunch in a few steps.
+
+# Creating an NPS Score in Crunch
+This assumes your dataset has a measure of customer satisfaction from which you would like to create an NPS score. If the satisfaction question is a variable of type `numeric`, then please convert it to type categorical using the `type()` function (or make a copy of the variable and make that categorical). If the satisfaction variable is already type `categorical` then you can skip this step.
+
+```{r, eval = FALSE}
+type(ds$sat)
+```
+```{r, echo = FALSE}
+cat(type.sat, sep="\n")
+```
+```{r, eval = FALSE}
+type(ds$sat) <- "categorical"
+```
+
+Next we will take our categorical satisfaction question and create a new variable that combines the categories into the three groups mentioned earlier: detractors, neutral, and promoters using the `combine()` function. The general rule for this recoding is to put anyone who answered a zero to six in the detractors group, answers of seven or eight into the neutral group, and answers of nine or ten into the promoters group. 
+
+```{r, eval = FALSE}
+categories(ds$sat)
+```
+```{r, echo = FALSE}
+sat.cats
+```
+```{r, eval = FALSE}
+ds$nps <- combine(ds$sat, name="NPS", 
+  combinations=list(
+    list(name="Detractors", categories=c('0', '1', '2', '3', '4', '5', '6')),
+    list(name="Neutral", categories=c('7', '8')),
+    list(name="Promoters", categories=c('9', '10'))
+  ))
+```
+```{r, eval = FALSE}
+categories(ds$nps)
+```
+```{r, echo = FALSE}
+nps.cats
+```
+
+Lastly, we will change the values that correspond to each category so that when we take the mean of our new NPS variable, we will see the NPS score in the form we expect, i.e. ranging from -100 to 100. Remember that each category within a categorical variable has a name, an id number, and a value. For example, above we can see how the detractors category has the id of `1`, the name `detractors`, and the value of `NA`. We cannot change a category's id but we can the name and value. 
+```{r, eval = FALSE}
+values(categories(ds$nps)) <- c('-100', '0', '100', NA)
+```
+```{r, echo = FALSE}
+nps.cats_values
+```
+
+Now we can get the NPS score. To do so via R, let's use the `crtabs()` function along with `mean`. To see the NPS score in the web app, find the NPS variable and then in the control bar, on the right edge are three vertical dots, click on those and select "Show Means". 
+```{r, eval = FALSE}
+crtabs(mean(nps)~1, ds)
+```
+```{r, echo = FALSE}
+nps_tab
+```
+
+[Next: Crunch internals](crunch-internals.html)
