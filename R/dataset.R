@@ -109,7 +109,10 @@ NULL
 #' @export
 setMethod("popSize", "CrunchDataset", function (x) {
     size <- settings(x)$population$size
-    return(ifelse(size == 0, NULL, size)) #the API value 0 stands for "No Population set"
+    if (size == 0) {
+        return(NULL)
+    }
+    return(size) #the API value 0 stands for "No Population set"
 })
 
 #' @rdname population
