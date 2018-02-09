@@ -108,11 +108,7 @@ NULL
 #' @rdname population
 #' @export
 setMethod("popSize", "CrunchDataset", function (x) {
-    size <- settings(x)$population$size
-    if (size == 0) {
-        return(NULL)
-    }
-    return(size) #the API value 0 stands for "No Population set"
+    return(settings(x)$population$size)
 })
 
 #' @rdname population
@@ -137,6 +133,14 @@ setMethod("popMagnitude<-", "CrunchDataset", function (x, value) {
 #' @rdname population
 #' @export
 setMethod("setPopulation", "CrunchDataset", function (x, size, magnitude) {
+    # Population and magnitude can be an integer, NULL or missing. Moreover if
+    # a dataset doesn't have a population both population size and magnitude need
+    # to be sent together. The logic for setting magnitude is:
+    # If either size or magnitude are missing attempt to set the other value
+    # If either are NULL clear population
+    # If magnitude is missing and hasn't been set, default to thousands
+    # If size is missing and hasn't been set, error
+
     pop <- settings(x)$population
     if (missing(magnitude)) {
         if (is.null(pop$magnitude)) {
@@ -145,23 +149,25 @@ setMethod("setPopulation", "CrunchDataset", function (x, size, magnitude) {
         } else {
             magnitude <- pop$magnitude
         }
+    } else if (is.null(magnitude)) {
+        settings(x)$population <- NULL
+        invisible(return(x))
     }
     if (missing(size)) {
         if (is.null(pop$size)) {
             halt("Dataset does not have a population, please set one before attempting to change magnitude")
         }
         size <- pop$size
+    } else if( is.null(size)) {
+        settings(x)$population <- NULL
+        invisible(return(x))
     }
-    if (is.null(size)) {
-        size <- 0
-    }
-    if (is.null(magnitude) || !(magnitude %in% c(3, 6, 9))){
+    if (!(magnitude %in% c(3, 6, 9))){
         halt("Magnitude must be either 3, 6, or 9")
     }
     settings(x)$population <- list(magnitude = magnitude, size = size)
     invisible(return(x))
 })
-
 
 #' Get and set the primary key for a Crunch dataset
 #'
