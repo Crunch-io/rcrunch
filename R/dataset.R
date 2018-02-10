@@ -338,7 +338,7 @@ APIToWebURL <- function (x) {
 }
 
 webToAPIURL <- function (url) {
-    id <- sub("^https.*?/dataset/([0-9a-f]+)/.*$", "\\1", url)
+    id <- sub("^https.*?/dataset/([0-9a-f]+)/?.*$", "\\1", url)
     if (identical(id, url)) {
         halt("Not a valid web app URL")
     }
