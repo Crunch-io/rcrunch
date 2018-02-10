@@ -216,6 +216,8 @@ folder <- function (x) {
         ## doing a bunch of GETs.
         ## TODO: should API provide a catalogs.parent for folders so we don't ../
         dropCache(absoluteURL("../", self(folder)))
+        ## Also drop the old hierarchical order (forgive the ugly rel path)
+        dropCache(absoluteURL("../../variables/hier/", self(folder)))
         folder <- refresh(folder)
     }
     return(invisible(folder))
