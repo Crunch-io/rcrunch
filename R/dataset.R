@@ -91,7 +91,7 @@ setMethod("notes<-", "CrunchDataset", function (x, value) {
 #' Get and set the market size for Crunch datasets
 #'
 #' Crunch Datasets allow you to set a target population size in order to extrapolate
-#' population estimates from survey percentages. This function lets you work with
+#' population estimates from survey percentages. These functions let you work with
 #' the population size and magnitude.
 #'
 #' @param x a Crunch Dataset
@@ -137,10 +137,9 @@ setMethod("setPopulation", "CrunchDataset", function (x, size, magnitude) {
     # a dataset doesn't have a population both population size and magnitude need
     # to be sent together. The logic for setting magnitude is:
     # If either size or magnitude are missing attempt to set the other value
-    # If either are NULL clear population
+    # If size is NULL clear population
     # If magnitude is missing and hasn't been set, default to thousands
     # If size is missing and hasn't been set, error
-
     pop <- settings(x)$population
     if (missing(magnitude)) {
         if (is.null(pop$magnitude)) {
@@ -149,20 +148,18 @@ setMethod("setPopulation", "CrunchDataset", function (x, size, magnitude) {
         } else {
             magnitude <- pop$magnitude
         }
-    } else if (is.null(magnitude)) {
-        settings(x)$population <- NULL
-        invisible(return(x))
     }
     if (missing(size)) {
         if (is.null(pop$size)) {
             halt("Dataset does not have a population, please set one before attempting to change magnitude")
         }
         size <- pop$size
-    } else if( is.null(size)) {
+    } else if (is.null(size)) {
         settings(x)$population <- NULL
         invisible(return(x))
     }
-    if (!(magnitude %in% c(3, 6, 9))){
+
+    if (!(magnitude %in% c(3, 6, 9))) {
         halt("Magnitude must be either 3, 6, or 9")
     }
     settings(x)$population <- list(magnitude = magnitude, size = size)

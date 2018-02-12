@@ -51,10 +51,6 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/settings/",
             '{"population":null}'
             )
-         expect_PATCH(setPopulation(ds, magnitude = NULL),
-            "https://app.crunch.io/api/datasets/1/settings/",
-            '{"population":null}'
-            )
         expect_PATCH(popSize(ds) <- 6000,
             "https://app.crunch.io/api/datasets/1/settings/",
             '{"population":{"magnitude":3,"size":6000}}'
@@ -68,6 +64,20 @@ with_mock_crunch({
         expect_error(setPopulation(ds, magnitude  = 1000),
             "Magnitude must be either 3, 6, or 9")
     })
+    test_that("setPopulation handles datasets with no population values", {
+        expect_error(setPopulation(ds2, magnitude = 3),
+            "Dataset does not have a population, please set one before attempting to change magnitude"
+            )
+         expect_warning(
+             expect_PATCH(popSize(ds2) <- 6000,
+                 "https://app.crunch.io/api/datasets/3/settings/",
+                 '{"population":{"magnitude":3,"size":6000}}'
+             ),
+             "Dataset magnitude not set, defaulting to thousands"
+         )
+    })
+
+
 
     test_that("Name setting validation", {
         expect_error(name(ds) <- 3.14,
