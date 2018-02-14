@@ -92,9 +92,9 @@ makeMR <- function (subvariables, name, selections, ...) {
 #' @param var The variable containing the delimited responses
 #' @param delim The delimiter separating the responses
 #' @param name The name of the resulting MR variable
-#' @param selected A character string used to indicate a selection, defaults to 
+#' @param selected A character string used to indicate a selection, defaults to
 #' "selected"
-#' @param not_selected Character string identifying non-selection, defaults to 
+#' @param not_selected Character string identifying non-selection, defaults to
 #' "not_selected"
 #' @param unanswered Character string indicating non-response, defaults to NA.
 #' @param ... Other arguments to be passed on to [makeMR()]
@@ -118,23 +118,21 @@ mrFromDelim <- function (var,
              " must be a Categorical or Text Crunch Variable.")
     }
     items <- unique(unlist(strsplit(uniques, delim)))
-    
-    # make a derivation expression for each unique item 
+    # make a derivation expression for each unique item
     subvarderivs <- lapply(items, function(x) createSubvarDeriv(var, x, delim,
         selected, not_selected, unanswered))
-    names(subvarderivs) <- items
-    
-    # generate the ZCL to make an array from the subvariable derivations, and 
+    names(subvarderivs) <- gsub("\\.", "_", items) # mongo errors if there are dots in the names
+
+    # generate the ZCL to make an array from the subvariable derivations, and
     # then do selection magic to make an MR
     derivation <- zfunc("select_categories",
-                        zfunc("array", 
+                        zfunc("array",
                               zfunc("select", list(map=subvarderivs),
                                     list(value=I(c(1, 2, 3, 4, 5))))),
                         list(value=I("selected")))
-    
+
     # hide the original variable
     var <- hide(var)
-    
     return(VariableDefinition(derivation=derivation, name=name, ...))
 }
 
@@ -180,19 +178,20 @@ createSubvarDeriv <- function (var, str, delim, selected, not_selected,
     deriv <- zfunc("case", new_cat)
     deriv$args[[2]] <- zfunc("is_missing", var)
     deriv$args[[3]] <- zfunc("~=", var, buildDelimRegex(str, delim))
-    deriv$references <- list(name = str, alias = paste0(alias(var), "_", str))
+    new_alias <- paste0(alias(var), "_", gsub("\\.", "_", str)) # Mongo doesn't allow aliases with dots
+    deriv$references <- list(name = str, alias = new_alias)
     return(deriv)
 }
 
 #' Build Regex to find  delimited items.
 #'
-#' A delimited item can appear in a list in four ways
+#' A delimited item `maple` can appear in a list in four ways
 #' 1. At the start of a list `maple; oak`
 #' 1. In the middle of a list `oak; maple; birch`
 #' 1. At the end of a list `oak; maple`
 #' 1. Alone with no delimiters `maple`
 #'
-#' This function builds a regex expression which captures those four values. It
+#' This function builds a regex expression which captures those four cases It
 #' is mostly broken out of [createSubvarDeriv()] for testing purposes.
 #'
 #' @inheritParams createSubvarDeriv
@@ -201,7 +200,8 @@ createSubvarDeriv <- function (var, str, delim, selected, not_selected,
 #' @keywords internal
 buildDelimRegex <- function (str, delim){
     # the delimeter needs to be escaped in case it's a regex character
-    delim <- paste0('\\', delim)
+    delim <- escapeRegex(delim)
+    str <- escapeRegex(str)
     regex <- paste0(
         "^", str, delim, "|",
         delim, str, delim, "|",

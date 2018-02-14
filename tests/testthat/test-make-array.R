@@ -97,7 +97,7 @@ with_mock_crunch({
                 list(`function` = "~=",
                      args = list(
                          list(variable = "https://app.crunch.io/api/datasets/1/variables/textVar/"),
-                         list(value = "^oak\\; |\\; oak\\; |\\; oak$|^oak$"))
+                         list(value = "^oak; |; oak; |; oak$|^oak$"))
                 )
             ),
             references = list(name = "oak", alias = "textVar_oak")
@@ -108,6 +108,13 @@ with_mock_crunch({
              not_selected = "No",
              unanswered = NA)
          expect_equivalent(varDef, expected)
+    })
+
+    test_that("escapeRegex escapes all metacharacters", {
+        metachars <- c(".", "^", "$", "*", "+", "?", "{", "}", "[", "]", "\\", "|", "(", ")")
+        str <- paste0("vb", metachars, "net")
+        expect_identical(escapeRegex(str), paste0("vb\\", metachars, "net"))
+        expect_identical(escapeRegex("vb.a|net"), "vb\\.a\\|net")
     })
 
     test_that("buildDelimRegex generates the expected regular expression", {
@@ -122,7 +129,7 @@ with_mock_crunch({
         expect_true(grepl(buildDelimRegex("maple", "| "), "oak| maple| birch"))
         expect_false(grepl(buildDelimRegex("maple", "| "), "oak| sugar maple| birch"))
     })
-    
+
     test_that("mrFromDelim sends the correct variable derivation", {
         ds2 <- loadDataset("https://app.crunch.io/api/datasets/mr_from_delim/")
         trees <- c("birch", "sugar maple", "maple butter", "oak", "maple")
@@ -232,12 +239,12 @@ with_test_authentication({
     })
     whereas("mrFromDelim functions as expected", {
         ds <- newDataset(mrdf)
-        v <- c("maple; birch", "oak; maple; birch", "birch; sugar maple", "maple butter; oak")
-        ds$delim <- c("maple; birch", "oak; maple; birch", "birch; sugar maple", "maple butter; oak")
+        v <- c("ma.ple; birch", "oak; ma.ple; birch", "birch; sugar maple", "maple butter; oak")
+        ds$delim <- c("ma.ple; birch", "oak; ma.ple; birch", "birch; sugar maple", "maple butter; oak")
         test_that("mrFromDelim creates a variable", {
             ds$mr_5 <- mrFromDelim(ds$delim, delim = "; ", name = "myMR")
             expect_true(is.derived(ds$mr_5))
-            # TODO: assert shape of as.vector, etc.
+            expect_identical(dim(as.vector(ds$mr_5)), c(nrow(ds), 5))
         })
     })
 })
