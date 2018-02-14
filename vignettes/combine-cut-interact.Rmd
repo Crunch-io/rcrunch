@@ -37,14 +37,17 @@ This vignette goes through examples of each of these functions to show how they 
 Say we have a numeric type variable `age`, which is in years from 18-99, and we want to place each answer into one of a few categories: 18-29, 30-44, etc. We can use the `cut()` function to do just that and _cut_ the numeric variable into a new Categorical type variable. We designed this function to match the way that base R's `cut()` function works. 
 
 ```{r, eval = FALSE}
-ds$age4 <- cut(ds$age, name="Age (4 categories)",
-  breaks=c(17,29,44,64,100), labels=c('18-29', '30-44', '45-64', '65+'))
+ds$age4 <- cut(ds$age, 
+    name = "Age (4 categories)",
+    breaks = c(17, 29, 44, 64, 100), 
+    labels = c('18-29', '30-44', '45-64', '65+')
+)
 ```
 ```{r, eval = FALSE}
 categories(ds$age4)
 ```
 ```{r, echo = FALSE}
-cat(summary.age4.var, sep="\n")
+cat(summary.age4.var, sep = "\n")
 ```
 
 And now we have a new Categorical variable with the alias `age4` and the name "Age (4 categories)". The variable has four categories based on the breaks we supplied to `cut`.
@@ -62,10 +65,12 @@ categories(ds$age4)
 age4.cats
 ```
 ```{r, eval = FALSE}
-ds$age3 <- combine(ds$age4, name="Age (3 categories)", 
-  combinations=list(
-    list(name="18-44", categories=c('18-29', '30-44'))
-  ))
+ds$age3 <- combine(ds$age4, 
+    name="Age (3 categories)", 
+    combinations=list(
+        list(name="18-44", categories=c('18-29', '30-44'))
+    )
+)
 ```
 ```{r, eval = FALSE}
 categories(ds$age3)
@@ -89,11 +94,13 @@ categories(ds$imiss)
 imiss.cats
 ```
 ```{r, eval = FALSE}
-ds$imiss_topboxes <- combine(ds$imiss, name="Issue Importance (Top Boxes)", 
-  combinations=list(
-    list(name="Important", categories=c("Very Important", "Somewhat Important")),
-    list(name="Not Important", categories=c("Not very Important", "Unimportant"))
-  ))
+ds$imiss_topboxes <- combine(ds$imiss, 
+    name ="Issue Importance (Top Boxes)", 
+    combinations = list(
+        list(name = "Important", categories = c("Very Important", "Somewhat Important")),
+        list(name = "Not Important", categories = c("Not very Important", "Unimportant"))
+    )
+)
 ```
 ```{r, eval = FALSE}
 categories(ds$imiss_topboxes)
@@ -114,11 +121,14 @@ ds$boap
 show_boap
 ```
 ```{r, eval = FALSE}
-ds$boap_combined <- combine(ds$boap, name="Approval of Obama on issues (Combined Subvariables)", 
-  combinations=list(
-    list(name="All Others", responses=c('boap_2', 'boap_3', 'boap_4', 'boap_5', 'boap_6',
-      'boap_7', 'boap_8', 'boap_9', 'boap_10', 'boap_11'))
-  ))
+ds$boap_combined <- combine(ds$boap, 
+    name="Approval of Obama on issues (Combined Subvariables)", 
+    combinations=list(
+        list(name = "All Others", 
+            responses = c('boap_2', 'boap_3', 'boap_4', 'boap_5', 'boap_6',
+            'boap_7', 'boap_8', 'boap_9', 'boap_10', 'boap_11'))
+    )
+)
 ```
 ```{r, eval = FALSE}
 ds$boap_combined
@@ -133,10 +143,10 @@ We have created a new Multiple Response type variable with the alias `boap_combi
 Besides combining answer choices, we can also combine variables. For example, in our survey we asked people their gender and age. For our analysis we'd also like to have a third variable that combines gender and age together so that people are categorized as "Females, 18-25", "Females, 25+", "Males, 18-25", etc. We can cross gender and age to create a new variable using the `interactVariables()` function (named after 'interaction terms' in regression analysis).
 
 ```{r interact 2 cats, eval = FALSE}
-ds$gender_by_age <- interactVariables(ds$gender, ds$age3, name="Gender by Age")
+ds$gender_by_age <- interactVariables(ds$gender, ds$age3, name = "Gender by Age")
 ```
 ```{r, eval = FALSE}
-categories(ds$gender_by_age
+categories(ds$gender_by_age)
 ```
 ```{r interaction var, echo = FALSE}
 gender_by_age.cats
