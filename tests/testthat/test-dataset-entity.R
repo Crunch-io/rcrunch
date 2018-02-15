@@ -60,7 +60,7 @@ with_mock_crunch({
             '{"population":{"magnitude":6,"size":90000000}}'
         )
     })
-    test_that( "setPopulation errors correctly", {
+    test_that("setPopulation errors correctly", {
         expect_error(setPopulation(ds, magnitude = 1000),
             "Magnitude must be either 3, 6, or 9")
         expect_error(popMagnitude(ds) <- NULL,
@@ -76,6 +76,12 @@ with_mock_crunch({
 
         # setting a population to null that is already null does nothing.
         expect_no_request(popSize(ds2) <- NULL)
+
+        expect_error(ds <- setPopulation(ds, size = 12345, magnitude = NULL),
+                     paste0("Magnitude cannot be set to `NULL`. Did you mean ",
+                            "to remove population size with `popSize(x) <- ",
+                            "NULL`?"),
+                     fixed = TRUE)
     })
     test_that("setPopulation handles datasets with no population values", {
         expect_error(setPopulation(ds2, magnitude = 3),
@@ -413,12 +419,6 @@ with_test_authentication({
             ds <- setPopulation(ds, size = NULL, magnitude = 6)
             expect_null(popSize(ds))
             expect_null(popMagnitude(ds))
-
-            expect_error(ds <- setPopulation(ds, size = 12345, magnitude = NULL),
-                         paste0("Magnitude cannot be set to `NULL`. Did you mean ",
-                                "to remove population size with `popSize(x) <- ",
-                                "NULL`?"),
-                         fixed = TRUE)
         })
 
         test_that("Can unset notes and description", {
