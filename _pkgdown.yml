@@ -73,7 +73,7 @@ reference:
   - combine
   - copyVariable
   - makeCaseVariable
-  - crunch-cut
+  - cut
   - interactVariables
   - conditionalTransform
   - makeWeight
