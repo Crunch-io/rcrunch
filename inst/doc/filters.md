@@ -169,7 +169,7 @@ filters(ds)
 
 ```
 ##          name                               id is_public
-## 1 Young males fe5a713cbb2043a4ab88237da5ea6cb6     FALSE
+## 1 Young males 57678750b7ce4a3182afabc19a7347f5     FALSE
 ```
 
 You could also have made the filter with the `newFilter` function:
@@ -189,7 +189,7 @@ filters(ds)
 
 ```
 ##          name                               id is_public
-## 1 Young males fe5a713cbb2043a4ab88237da5ea6cb6      TRUE
+## 1 Young males 57678750b7ce4a3182afabc19a7347f5      TRUE
 ```
 
 You can also edit the filter expressions by assigning a new one in, like:
