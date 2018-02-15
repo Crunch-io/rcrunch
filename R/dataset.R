@@ -113,7 +113,6 @@ setMethod("popSize", "CrunchDataset", function (x) {
 
 #' @rdname population
 #' @export
-
 setMethod("popSize<-", "CrunchDataset", function (x, value) {
     setPopulation(x, size = value)
 })
@@ -141,6 +140,16 @@ setMethod("setPopulation", "CrunchDataset", function (x, size, magnitude) {
     # If magnitude is missing and hasn't been set, default to thousands
     # If size is missing and hasn't been set, error
     pop <- settings(x)$population
+    if (missing(size)) {
+        if (is.null(pop$size)) {
+            halt("Dataset does not have a population, please set one before attempting to change magnitude")
+        }
+        size <- pop$size
+    } else if (is.null(size)) {
+        settings(x)$population <- NULL
+        return(invisible(x))
+    }
+
     if (missing(magnitude)) {
         if (is.null(pop$magnitude)) {
             warning("Dataset magnitude not set, defaulting to thousands")
@@ -149,21 +158,17 @@ setMethod("setPopulation", "CrunchDataset", function (x, size, magnitude) {
             magnitude <- pop$magnitude
         }
     }
-    if (missing(size)) {
-        if (is.null(pop$size)) {
-            halt("Dataset does not have a population, please set one before attempting to change magnitude")
-        }
-        size <- pop$size
-    } else if (is.null(size)) {
-        settings(x)$population <- NULL
-        invisible(return(x))
-    }
 
+    if (is.null(magnitude)) {
+        halt("Magnitude cannot be set to `NULL`. Did you mean to remove ",
+             "population size with `popSize(x) <- NULL`?")
+    }
     if (!(magnitude %in% c(3, 6, 9))) {
         halt("Magnitude must be either 3, 6, or 9")
     }
+
     settings(x)$population <- list(magnitude = magnitude, size = size)
-    invisible(return(x))
+    return(invisible(x))
 })
 
 #' Get and set the primary key for a Crunch dataset
