@@ -8,21 +8,11 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-[Previous: subtotals](subtotals.html)
+[Previous: Subtotals](subtotals.md)
 
-```{r, results='hide', echo=FALSE, message=FALSE}
-## Because the vignette tasks require communicating with a remote host,
-## we do all the work ahead of time and save a workspace, which we load here.
-## We'll then reference saved objects in that as if we had just retrieved them
-## from the server
-library(crunch)
-load("vignettes.RData")
-options(width=120)
-```
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
+
+
 
 Many common data cleaning steps involve grouping a number of categories or values together for easier analysis. Crunch provides a number of functions which make this kind of work easy: 
 
@@ -35,35 +25,51 @@ These functions are especially useful because they are non-destructive: instead 
 # Cutting a Numeric Variable into Categories
 Say we have a numeric type variable `age`, which is in years from 18-99, and we want to place each answer into one of a few categories: 18-29, 30-44, etc. We can use the `cut()` function to do just that and _cut_ the numeric variable into a new Categorical type variable. We designed this function to match the way that base R's `base::cut()` function works. 
 
-```{r, eval = FALSE}
+
+```r
 ds$age4 <- cut(ds$age, 
     name = "Age (4 categories)",
     breaks = c(17, 29, 44, 64, 100), 
     labels = c('18-29', '30-44', '45-64', '65+')
 )
 ```
-```{r, eval = FALSE}
+
+```r
 categories(ds$age4)
 ```
-```{r, echo = FALSE}
-cat(summary.age4.var, sep = "\n")
+
+```
+## Age (4 categories) (categorical)
+## 
+##       Count
+## 45-64    99
+## 30-44    70
+## 65+      41
+## 18-29    19
 ```
 
 And now we have a new Categorical variable with the alias `age4` and the name "Age (4 categories)". The variable has four categories based on the breaks we supplied to `cut()`.
 
 # Combining Answer Choices
 ## Categorical Type Variables
-Sometimes we want to create subtotals (aka "nets" or "top boxes") for a Categorical type variable, where we preserve all of the original categories and collapse two or more categories together and for those cases we should use the `subtotals()` function (for more information and details about these, see [the subtotals vignette](subtotals.html)). But other times we do *not* want to preserve all the original categories and instead combine them into a smaller set of categories. To do that we use the `combine()` function.
+Sometimes we want to create subtotals (aka "nets" or "top boxes") for a Categorical type variable, where we preserve all of the original categories and collapse two or more categories together and for those cases we should use the `subtotals()` function (for more information and details about these, see [the subtotals vignette](subtotals.md)). But other times we do *not* want to preserve all the original categories and instead combine them into a smaller set of categories. To do that we use the `combine()` function.
 
 Let's take the variable "Age (4 categories)" and combine the two youngest categories to create a new variable we will call "Age (3 categories)".
 
-```{r, eval = FALSE}
+
+```r
 categories(ds$age4)
 ```
-```{r, echo = FALSE}
-age4.cats
+
 ```
-```{r, eval = FALSE}
+##   id  name value missing
+## 1  1 18-29    NA   FALSE
+## 2  2 30-44    NA   FALSE
+## 3  3 45-64    NA   FALSE
+## 4  4   65+    NA   FALSE
+```
+
+```r
 ds$age3 <- combine(ds$age4, 
     name="Age (3 categories)", 
     combinations=list(
@@ -71,11 +77,16 @@ ds$age3 <- combine(ds$age4,
     )
 )
 ```
-```{r, eval = FALSE}
+
+```r
 categories(ds$age3)
 ```
-```{r, echo = FALSE}
-age3.cats
+
+```
+##   id  name value missing
+## 1  1 18-44    NA   FALSE
+## 2  3 45-64    NA   FALSE
+## 3  4   65+    NA   FALSE
 ```
 And now we have a new variable with the alias `age3`, the name "Age (3 categories)", and a category that combines 18 to 44 year-olds.
 
@@ -86,13 +97,21 @@ We can use the `combine()` function to combine Categorical Arrays in the same wa
 
 Let's take the variable "Issue Importance (categorical array)", which has the alias `imiss` and 11 subvariables with 4 categories: Very Important, Somewhat Important, Not very Important, and Unimportant. We would like to create a new Categorical Array variable that combines the two Important categories together and another that combines the two Not Important.
 
-```{r, eval = FALSE}
+
+```r
 categories(ds$imiss)
 ```
-```{r, echo = FALSE}
-imiss.cats
+
 ```
-```{r, eval = FALSE}
+##   id               name value missing
+## 1  1     Very Important     1   FALSE
+## 2  2 Somewhat Important     2   FALSE
+## 3  3 Not very Important     3   FALSE
+## 4  4        Unimportant     4   FALSE
+## 5 -1            No Data    NA    TRUE
+```
+
+```r
 ds$imiss_topboxes <- combine(ds$imiss, 
     name ="Issue Importance (Top Boxes)", 
     combinations = list(
@@ -101,11 +120,16 @@ ds$imiss_topboxes <- combine(ds$imiss,
     )
 )
 ```
-```{r, eval = FALSE}
+
+```r
 categories(ds$imiss_topboxes)
 ```
-```{r, echo = FALSE}
-imiss_topboxes.cats
+
+```
+##   id          name value missing
+## 1  1     Important    NA   FALSE
+## 2  2 Not Important    NA   FALSE
+## 3 -1       No Data    NA    TRUE
 ```
 We have created a new Categorical Array variable with the alias `imiss_topboxes`, the name "Issue Importance (Top Boxes)", and 2 categories instead of the original variable's 4.
 
@@ -113,13 +137,30 @@ We have created a new Categorical Array variable with the alias `imiss_topboxes`
 ## Multiple Response Type Variables
 At first it might not seem that we can use the `combine()` function with Multiple Response type variables because each subvariable in the multiple response has already been reduced down to the categories that are "selected" or "not selected". However, there is an option that allows us to combine the subvariables (aka responses) in a multiple response similar to how we combined the categories in a categorical variable.  
 
-```{r, eval = FALSE}
+
+```r
 ds$boap
 ```
-```{r, echo = FALSE}
-cat(show_boap, sep = "\n")
+
 ```
-```{r, eval = FALSE}
+## Approval of Obama on issues (multiple_response)
+## Subvariables:
+##   $`boap_2`
+##   $`boap_3`
+##   $`boap_4`
+##   $`boap_5`
+##   $`boap_6`
+##   $`boap_7`
+##   $`boap_8`
+##   $`boap_9`
+##   $`boap_10`
+##   $`boap_11`
+##   $`boap_12`
+##   $`boap_13`
+##   $`boap_14`
+```
+
+```r
 ds$boap_combined <- combine(ds$boap, 
     name="Approval of Obama on issues (Combined Subvariables)", 
     combinations=list(
@@ -129,45 +170,74 @@ ds$boap_combined <- combine(ds$boap,
     )
 )
 ```
-```{r, eval = FALSE}
+
+```r
 ds$boap_combined
 ```
-```{r, echo = FALSE}
-cat(show_boap_combined, sep = "\n")
+
+```
+## Approval of Obama on issues (Combined Subvariables) (multiple_response)
+## Subvariables:
+##   $`All Others`
+##   $`boap_12`
+##   $`boap_13`
+##   $`boap_14`
 ```
 
 We have created a new Multiple Response type variable with the alias `boap_combined`, the name "Approval of Obama on issues (Combined Subvariables)", which has 4 subvariables instead of the original 13. And we can see how this change is reflected in a CrunchCube analysis by comparing `boap` and `boap_combined`.
 
 The original has all 13 responses:
 
-```{r, eval = FALSE}
+
+```r
 crtabs(~boap, ds)
 ```
-```{r, echo = FALSE}
-cat(boap_tabs, sep = "\n")
+
+```
+## boap
+##  boap_2  boap_3  boap_4  boap_5  boap_6  boap_7  boap_8  boap_9 boap_10 boap_11 
+##      26      35      23      44      54      28      55      25      34      18 
+## boap_12 boap_13 boap_14 
+##      28      26      34
 ```
 
 But the new, combined variable has just 4. Note that because we are dealing with a multiple response variable, the "All Others" response is not simply a sum of the counts of "boap_2"–"boap_11", but rather it's the number of responses that has at least one of "boap_2"–"boap_11" marked as selected.
-```{r, eval = FALSE}
+
+```r
 crtabs(~boap_combined, ds)
 ```
-```{r, echo = FALSE}
-cat(boap_combined_tabs, sep = "\n")
+
+```
+## boap_combined
+## All Others    boap_12    boap_13    boap_14 
+##         82         28         26         34
 ```
 
 # Combining Variables
 Besides combining answer choices, we can also combine variables. For example, in our survey we asked people their gender and age. For our analysis we'd also like to have a third variable that combines gender and age together so that people are categorized as "Females, 18-25", "Females, 25+", "Males, 18-25", etc. We can cross gender and age to create a new variable using the `interactVariables()` function (named after 'interaction terms' in regression analysis).
 
-```{r interact 2 cats, eval = FALSE}
+
+```r
 ds$gender_by_age <- interactVariables(ds$gender, ds$age3, name = "Gender by Age")
 ```
-```{r, eval = FALSE}
+
+```r
 categories(ds$gender_by_age)
 ```
-```{r interaction var, echo = FALSE}
-gender_by_age.cats
+
+```
+##   id          name value missing
+## 1  1    Male:18-44    NA   FALSE
+## 2  2  Female:18-44    NA   FALSE
+## 3  3 No Data:18-44    NA    TRUE
+## 4  4    Male:45-64    NA   FALSE
+## 5  5  Female:45-64    NA   FALSE
+## 6  6 No Data:45-64    NA    TRUE
+## 7  7      Male:65+    NA   FALSE
+## 8  8    Female:65+    NA   FALSE
+## 9  9   No Data:65+    NA    TRUE
 ```
 
 This generates a new Categorical variable with a category for each possible combination of the 2 input variables, in this case it created a new category for each combination of gender and age group. 
 
-[Next: Crunch internals](crunch-internals.html)
+[Next: Crunch internals](crunch-internals.md)
