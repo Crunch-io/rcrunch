@@ -1,9 +1,24 @@
-## crunch 1.19.1
-* Subtotals and headings can now have a fixed top or bottom position with the option `position = "top"` or `position = "bottom"`. 
+## crunch 1.20.1 (under development)
+
+## crunch 1.20.0
+
+### Subtotals and Headings
+* Added support for subtotals and headings on categorical variables and CrunchCubes. Subtotals can be set with `subtotals(variable) <- Subtotal(name = 'subtotal', categories = c(1, 2), after = 2)`. Use `subtotals(variable)` to see what subtotals are set for a variable.
+* By default, subtotals will be displayed on CrunchCube results. Arrays consisting of only subtotals can be created using `subtotalArray([cube])`
+* See `?subtotals` or `vignette("subtotals", package="crunch")` for more information.
+
+### Multiple response in CrunchCubes
+* The default method for including multiple response variables in CrunchCubes has changed, allowing for better handling of variables with different missingness across subvariables. (Internally: queries with multiple response variables now use the `as_selected` function instead of `selected_array`, which is now deprecated).
+* For now, the deprecated method can be restored by setting `options(crunch.mr.selection = "selected_array")`.
+
+### Improvements to `conditionalTransform()`
+* `conditionalTransform()` now has a `formulas` argument to specify a list of conditions to be used.
+* Errors and warnings are now more helpful when using `conditionalTransform()`.
+
+### Optimizations and bugfixes
 * Improved efficiency when loading a dataset from URL.
-* Subtotals and headings on categorical variables and CrunchCubes. Use `subtotals(variable)` to see subtotals set for a variable. Subtotals can be set with `subtotals(variable) <- Subtotal(name = 'subtotal', categories = c(1, 2))`. Subtotals and headings are displayed for rows in CrunchCubes when they are set. See `?subtotals` for more information. 
-* `refresh()` for Datasets is now more efficient
-* fixed a bug where CrunchCubes with categorical variables that had categories "Selected", "Not selected", and "No data" might not display correctly. 
+* `refresh()` for Datasets is now more efficient.
+* Fixed a bug where CrunchCubes with categorical variables that had categories "Selected", "Not selected", and "No data" might not display correctly.
 
 ## crunch 1.19.0
 

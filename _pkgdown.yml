@@ -38,6 +38,7 @@ reference:
   - versions
   - weight
   - weightVariables
+  - modifyWeightVariables
   - settings
   - lock
 - title: Multiple datasets
@@ -103,6 +104,7 @@ reference:
   - crunch-uni
   - cube-computing
   - cube-methods
+  - cube-residuals
   - dashboard
   - duplicated
   - filter-catalog
@@ -161,7 +163,7 @@ reference:
 - title: Catalogs
   contents:
   - catalog-length
-  - catalogToDataFrame
+  - catalog-dataframes
   - 'names,BatchCatalog-method'
   - shoji-index
 - title: Crunch options
@@ -224,7 +226,7 @@ navbar:
          href: articles/variables.html
       -  text: Array Variables
          href: articles/array-variables.html
-      -  text: Reorder Variables
+      -  text: Organize Variables
          href: articles/variable-order.html
       -  text: Derive Variables
          href: articles/derive.html

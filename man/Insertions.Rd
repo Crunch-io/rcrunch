@@ -17,7 +17,12 @@
 \alias{arguments}
 \alias{arguments<-}
 \alias{anchor<-,Insertion-method}
+\alias{anchor<-,Subtotal-method}
+\alias{anchor<-,Heading-method}
 \alias{subtotals<-,Insertion,ANY-method}
+\alias{arguments<-,Insertion-method}
+\alias{arguments<-,Subtotal-method}
+\alias{arguments<-,Heading-method}
 \alias{arguments,Insertion-method}
 \alias{arguments,Subtotal-method}
 \alias{arguments,Heading-method}
@@ -39,7 +44,17 @@ Insertion(...)
 
 \S4method{anchor}{Insertion}(x) <- value
 
+\S4method{anchor}{Subtotal}(x) <- value
+
+\S4method{anchor}{Heading}(x) <- value
+
 \S4method{subtotals}{Insertion,ANY}(x) <- value
+
+\S4method{arguments}{Insertion}(x) <- value
+
+\S4method{arguments}{Subtotal}(x) <- value
+
+\S4method{arguments}{Heading}(x) <- value
 
 \S4method{arguments}{Insertion}(x)
 

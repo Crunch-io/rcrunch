@@ -44,7 +44,7 @@ with_mock_crunch <- function (expr) {
     env <- parent.frame()
     with(temp.options(crunch.api="https://app.crunch.io/api/",
                       httptest.mock.paths=c(".", "../inst/", system.file(package="crunch"))), {
-        with_mock_API({
+        with_mock_api({
             try(crunch:::warmSessionCache())
             eval(expr, envir=env)
         })
@@ -55,6 +55,12 @@ with_POST <- function (resp, expr) {
     ## Mock a POST that returns something, like a Location header pulled from 201
     force(resp)
     with_mock(`crunch::crPOST`=function (...) resp, eval.parent(expr))
+}
+
+with_PATCH <- function (resp, expr) {
+    ## Mock a PATCH that returns something, or nothing
+    force(resp)
+    with_mock(`crunch::crPATCH`=function (...) resp, eval.parent(expr))
 }
 
 with_DELETE <- function (resp, expr) {

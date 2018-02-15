@@ -47,6 +47,8 @@ setMethod("ordering<-", "VariableCatalog", function (x, value) {
         order_url <- shojiURL(x, "orders", "hier")
         ## Update on server
         crPUT(order_url, body=toJSON(value))
+        ## Drop cache for dataset folders
+        dropCache(paste0(datasetReference(x), "folders/"))
         ## Refresh
         x@order <- VariableOrder(crGET(order_url))
     }
@@ -162,4 +164,3 @@ copyOrderGroup <- function (group, source_map, target_map) {
 
     return(VariableGroup(name(group), ents))
 }
-

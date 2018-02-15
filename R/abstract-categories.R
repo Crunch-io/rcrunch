@@ -15,11 +15,11 @@ setMethod("initialize", "AbstractCategories", function (.Object, ...) {
 
     .Object@.Data <- lapply(..1, function (x) {
         # only reconstruct if we don't have an AbstractCategory already
-        # this allows for Insertions to inclue elements of class: Insertion, 
+        # this allows for Insertions to inclue elements of class: Insertion,
         # Subtotal, and Heading
         if (!is.AbstractCategory(x)) {
             x <- try(Constructor(data=x), silent=TRUE)
-        } 
+        }
         return(x)
     })
 
@@ -107,7 +107,7 @@ modifyCats <- function (x, val) {
     for (v in vnames) {
         x[[v]] <- val[[v]]
     }
-    
+
     return(x)
 }
 
@@ -115,7 +115,16 @@ modifyCats <- function (x, val) {
 ## Abstract Categories named get/set methods
 ###############################################################
 
-setNames <- function (x, value) {
+#' @rdname Categories
+#' @export
+setMethod("names", "AbstractCategories", function (x) {
+    n <- vapply(x, name, character(1))
+    return(n)
+})
+
+#' @rdname Categories
+#' @export
+setMethod("names<-", "AbstractCategories", function (x, value) {
     if (is.null(value) || !is.character(value)) {
         halt('Names must be of class "character"')
     }
@@ -128,18 +137,7 @@ setNames <- function (x, value) {
     }
     x[] <- mapply(setName, x, value=value, SIMPLIFY=FALSE)
     return(x)
-}
-
-#' @rdname Categories
-#' @export
-setMethod("names", "AbstractCategories", function (x) {
-    n <- vapply(x, name, character(1))
-    return(n)
 })
-
-#' @rdname Categories
-#' @export
-setMethod("names<-", "AbstractCategories", setNames)
 
 
 #' @rdname Categories

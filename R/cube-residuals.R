@@ -44,7 +44,10 @@ standardizedMRResiduals <- function (cube, types) {
 #' @importFrom stats chisq.test
 #' @name cube-residuals
 #' @aliases rstandard,CrunchCube-method cube-residuals
-#' @exportMethod rstandard
+NULL
+
+#' @rdname cube-residuals
+#' @export
 setMethod('rstandard', 'CrunchCube', function (model) {
     if (length(dimensions(model)) > 2) {
         halt("Cannot compute residuals with more than two dimensions. Pick a ",
