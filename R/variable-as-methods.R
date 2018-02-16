@@ -19,7 +19,7 @@
 #' the typographical format that the datetime is to be formatted as (e.g.
 #' \code{"\%Y-\%m-\%d \%H:\%M:\%S"} for "2018-01-08 12:39:57", the default if
 #' no rollup resolution is specified on the source variable. If a rollup
-#' resolution is speicified, a reasonable default will be used.).
+#' resolution is specified, a reasonable default will be used.).
 #' @param resolution for `as.Datetime`, when the variable in `x` is a numeric
 #' variable, the resolution of the number (e.g. `"ms"` for milliseconds, `"s"`
 #' for seconds, etc. see [expressions] for more information about valid values.)
