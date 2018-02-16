@@ -17,10 +17,9 @@
 \usage{
 \S4method{as.Numeric}{CrunchVariable}(x)
 
-\S4method{as.Text}{CrunchVariable}(x, format = "\%Y-\%m-\%d \%H:\%M:\%S")
+\S4method{as.Text}{CrunchVariable}(x, format)
 
-\S4method{as.Categorical}{CrunchVariable}(x,
-  format = "\%Y-\%m-\%d \%H:\%M:\%S")
+\S4method{as.Categorical}{CrunchVariable}(x, format)
 
 \S4method{as.Datetime}{CrunchVariable}(x, format = "\%Y-\%m-\%d \%H:\%M:\%S",
   resolution, offset)
@@ -37,7 +36,9 @@ categorical variable, \code{format} is the typographical format that the datetim
 is already formatted in that needs to be parse from (default:
 \code{"\%Y-\%m-\%d \%H:\%M:\%S"}); for \code{as.Text} and  \code{as.Categorical}, is
 the typographical format that the datetime is to be formatted as (e.g.
-"2018-01-08 12:39:57" default: \code{"\%Y-\%m-\%d \%H:\%M:\%S"}).}
+\code{"\%Y-\%m-\%d \%H:\%M:\%S"} for "2018-01-08 12:39:57", the default if
+no rollup resolution is specified on the source variable. If a rollup
+resolution is speicified, a reasonable default will be used.).}
 
 \item{resolution}{for \code{as.Datetime}, when the variable in \code{x} is a numeric
 variable, the resolution of the number (e.g. \code{"ms"} for milliseconds, \code{"s"}
