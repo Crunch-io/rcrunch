@@ -243,9 +243,9 @@ datetimeFormater <- function (resolution) {
                     # there is no %q in python strftime, so can't print quarters
                     "Q" = "%Y-%m-%d",
                     "M" = "%Y-%m",
-                    "W" = "%Y week %W",
+                    "W" = "%Y W%W",
                     "D" = "%Y-%m-%d",
-                    "h" = "%Y-%m-%d %H",
+                    "h" = "%Y-%m-%d %H:00",
                     "m" = "%Y-%m-%d %H:%M",
                     "s" = "%Y-%m-%d %H:%M:%S",
                     "ms" = "%Y-%m-%d %H:%M:%S.%f")

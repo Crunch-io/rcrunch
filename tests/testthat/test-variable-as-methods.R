@@ -104,7 +104,7 @@ with_mock_crunch({
         var_def <- as.Text(var_ref)
         expect_is(var_def, "CrunchExpr")
         expect_equal(var_def, zfuncExpr("format_datetime", var_ref,
-                                        list(value = "%Y week %W")))
+                                        list(value = "%Y W%W")))
 
         expect_error(ds$starttime <- var_def, save_over_error, fixed = TRUE)
     })
