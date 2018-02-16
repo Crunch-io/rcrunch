@@ -4,6 +4,7 @@
     "body": {
         "viewers_can_export": false,
         "viewers_can_change_weight": true,
-        "weight": "https://app.crunch.io/api/datasets/1/variables/birthyr/"
+        "weight": "https://app.crunch.io/api/datasets/1/variables/birthyr/",
+        "population": {"magnitude": 3, "size": 90000000}
     }
 }

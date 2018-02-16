@@ -88,6 +88,88 @@ setMethod("notes<-", "CrunchDataset", function (x, value) {
     invisible(setEntitySlot(x, "notes", value))
 })
 
+#' Get and set the market size for Crunch datasets
+#'
+#' Crunch Datasets allow you to set a target population size in order to extrapolate
+#' population estimates from survey percentages. These functions let you work with
+#' the population size and magnitude.
+#'
+#' @param x a Crunch Dataset
+#' @param value For the setters, the `size` or `magnitude` to be set
+#' @param size the target population size, to remove a population set to `NULL`
+#' @param magnitude the order of magnitude with which to display the population
+#' size. Must be either `3`, `6`, or `9` for thousands, millions, and billions respectively.
+#' @return `popSize` and `popMagnitude` return the population size or
+#' magnitude. `setPopulation` returns the modified dataset.
+#' @name population
+#' @aliases popSize popMagnitude setPopulation popSize<- popMagnitude<-
+NULL
+
+#' @rdname population
+#' @export
+setMethod("popSize", "CrunchDataset", function (x) {
+    return(settings(x)$population$size)
+})
+
+#' @rdname population
+#' @export
+setMethod("popSize<-", "CrunchDataset", function (x, value) {
+    setPopulation(x, size = value)
+})
+
+#' @rdname population
+#' @export
+setMethod("popMagnitude", "CrunchDataset", function (x) {
+    return(settings(x)$population$magnitude)
+})
+
+#' @rdname population
+#' @export
+setMethod("popMagnitude<-", "CrunchDataset", function (x, value) {
+   setPopulation(x, magnitude = value)
+})
+
+#' @rdname population
+#' @export
+setMethod("setPopulation", "CrunchDataset", function (x, size, magnitude) {
+    # Population and magnitude can be an integer, NULL or missing. Moreover if
+    # a dataset doesn't have a population both population size and magnitude need
+    # to be sent together. The logic for setting magnitude is:
+    # If either size or magnitude are missing attempt to set the other value
+    # If size is NULL clear population
+    # If magnitude is missing and hasn't been set, default to thousands
+    # If size is missing and hasn't been set, error
+    pop <- settings(x)$population
+    if (missing(size)) {
+        if (is.null(pop$size)) {
+            halt("Dataset does not have a population, please set one before attempting to change magnitude")
+        }
+        size <- pop$size
+    } else if (is.null(size)) {
+        settings(x)$population <- NULL
+        return(invisible(x))
+    }
+
+    if (missing(magnitude)) {
+        if (is.null(pop$magnitude)) {
+            warning("Dataset magnitude not set, defaulting to thousands")
+            magnitude <- 3
+        } else {
+            magnitude <- pop$magnitude
+        }
+    }
+
+    if (is.null(magnitude)) {
+        halt("Magnitude cannot be set to `NULL`. Did you mean to remove ",
+             "population size with `popSize(x) <- NULL`?")
+    }
+    if (!(magnitude %in% c(3, 6, 9))) {
+        halt("Magnitude must be either 3, 6, or 9")
+    }
+
+    settings(x)$population <- list(magnitude = magnitude, size = size)
+    return(invisible(x))
+})
 
 #' Get and set the primary key for a Crunch dataset
 #'

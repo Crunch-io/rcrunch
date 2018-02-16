@@ -27,6 +27,77 @@ with_mock_crunch({
             '{"notes":"Ancillary information"}')
     })
 
+    test_that("Population setting", {
+        expect_equal(popSize(ds), 90000000)
+        expect_equal(popMagnitude(ds), 3)
+        expect_no_request(setPopulation(ds, popSize(ds), popMagnitude(ds)))
+        expect_PATCH(setPopulation(ds, size = 6000),
+            "https://app.crunch.io/api/datasets/1/settings/",
+            '{"population":{"magnitude":3,"size":6000}}'
+            )
+        expect_PATCH(setPopulation(ds, magnitude = 6),
+            "https://app.crunch.io/api/datasets/1/settings/",
+            '{"population":{"magnitude":6,"size":90000000}}'
+            )
+        expect_PATCH(setPopulation(ds, size = 6000, magnitude = 6),
+            "https://app.crunch.io/api/datasets/1/settings/",
+            '{"population":{"magnitude":6,"size":6000}}'
+            )
+        expect_PATCH(setPopulation(ds, size = NULL, magnitude = 6),
+            "https://app.crunch.io/api/datasets/1/settings/",
+            '{"population":null}'
+            )
+        expect_PATCH(setPopulation(ds, size = NULL),
+            "https://app.crunch.io/api/datasets/1/settings/",
+            '{"population":null}'
+            )
+        expect_PATCH(popSize(ds) <- 6000,
+            "https://app.crunch.io/api/datasets/1/settings/",
+            '{"population":{"magnitude":3,"size":6000}}'
+            )
+        expect_PATCH(popMagnitude(ds) <- 6,
+            "https://app.crunch.io/api/datasets/1/settings/",
+            '{"population":{"magnitude":6,"size":90000000}}'
+        )
+    })
+    test_that("setPopulation errors correctly", {
+        expect_error(setPopulation(ds, magnitude = 1000),
+            "Magnitude must be either 3, 6, or 9")
+        expect_error(popMagnitude(ds) <- NULL,
+                     paste0("Magnitude cannot be set to `NULL`. Did you mean ",
+                            "to remove population size with `popSize(x) <- ",
+                            "NULL`?"),
+                     fixed = TRUE)
+        expect_error(setPopulation(ds, size = 1000, magnitude = NULL),
+                     paste0("Magnitude cannot be set to `NULL`. Did you mean ",
+                            "to remove population size with `popSize(x) <- ",
+                            "NULL`?"),
+                     fixed = TRUE)
+
+        # setting a population to null that is already null does nothing.
+        expect_no_request(popSize(ds2) <- NULL)
+
+        expect_error(ds <- setPopulation(ds, size = 12345, magnitude = NULL),
+                     paste0("Magnitude cannot be set to `NULL`. Did you mean ",
+                            "to remove population size with `popSize(x) <- ",
+                            "NULL`?"),
+                     fixed = TRUE)
+    })
+    test_that("setPopulation handles datasets with no population values", {
+        expect_error(setPopulation(ds2, magnitude = 3),
+            "Dataset does not have a population, please set one before attempting to change magnitude"
+            )
+         expect_warning(
+             expect_PATCH(popSize(ds2) <- 6000,
+                 "https://app.crunch.io/api/datasets/3/settings/",
+                 '{"population":{"magnitude":3,"size":6000}}'
+             ),
+             "Dataset magnitude not set, defaulting to thousands"
+         )
+    })
+
+
+
     test_that("Name setting validation", {
         expect_error(name(ds) <- 3.14,
             'Names must be of class "character"')
@@ -336,6 +407,20 @@ with_test_authentication({
             expect_identical(notes(ds), "On Her Majesty's Secret Service")
             expect_identical(notes(refresh(d2)),
                 "On Her Majesty's Secret Service")
+        })
+        test_that("population setters push to server", {
+            ds <- setPopulation(ds, 12345, 3)
+            expect_equal(popSize(ds), 12345)
+            expect_equal(popMagnitude(ds), 3)
+            ds <- setPopulation(ds, 54321)
+            expect_equal(popSize(ds), 54321)
+            expect_equal(popMagnitude(ds), 3)
+            ds <- setPopulation(ds, magnitude = 6)
+            expect_equal(popSize(ds), 54321)
+            expect_equal(popMagnitude(ds), 6)
+            ds <- setPopulation(ds, size = NULL, magnitude = 6)
+            expect_null(popSize(ds))
+            expect_null(popMagnitude(ds))
         })
 
         test_that("Can unset notes and description", {
