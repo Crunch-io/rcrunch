@@ -136,3 +136,55 @@ with(temp.option(foo.bar="no", foo.other="other"), {
         })
     })
 })
+
+test_that("default date formater", {
+    expect_error(datetimeFormater("not a resolution"),
+                 paste0(dQuote("resolution"), " is invalid. Valid values are ",
+                        serialPaste(c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms"),
+                                    collapse = "or")))
+    expect_equal(datetimeFormater("Y"), "%Y")
+    expect_equal(datetimeFormater("Q"), "%Y-%m-%d")
+    expect_equal(datetimeFormater("M"), "%Y-%m")
+    expect_equal(datetimeFormater("W"), "%Y W%W")
+    expect_equal(datetimeFormater("D"), "%Y-%m-%d")
+    expect_equal(datetimeFormater("h"), "%Y-%m-%d %H:00")
+    expect_equal(datetimeFormater("m"), "%Y-%m-%d %H:%M")
+    expect_equal(datetimeFormater("s"), "%Y-%m-%d %H:%M:%S")
+    expect_equal(datetimeFormater("ms"), "%Y-%m-%d %H:%M:%S.%f")
+    expect_equal(datetimeFormater(NULL), "%Y-%m-%d %H:%M:%S")
+})
+
+with_mock_crunch({
+    ds <- loadDataset("test ds")
+
+    test_that("haltIfArray", {
+        expect_true(haltIfArray(ds$birthyr))
+        expect_error(haltIfArray(ds$mymrset),
+                     "Array-like variables can't be used.")
+
+        expect_error(haltIfArray(ds$mymrset, "embed_func()"),
+                     "Array-like variables can't be used with function `embed_func()`.",
+                     fixed = TRUE)
+    })
+
+    test_that("has.function", {
+        func <- zfunc("cast", ds$birthyr, "text")
+        expect_true(has.function(func, "cast"))
+        expect_false(has.function(func, "case"))
+
+        func <- zfunc("case",
+                      zfunc("cast", ds$birthyr, "text"),
+                      list(args = list()))
+        expect_true(has.function(func, "cast"))
+        expect_true(has.function(func, "case"))
+        expect_false(has.function(func, "selected_array"))
+
+        func <- zfunc("case", zfunc("cast",
+                                    zfunc("selected_array", ds$birthyr, "text"),
+                                    "text"))
+        expect_true(has.function(func, "cast"))
+        expect_true(has.function(func, "case"))
+        expect_true(has.function(func, "selected_array"))
+    })
+
+})

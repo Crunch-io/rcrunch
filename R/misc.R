@@ -157,15 +157,15 @@ vectorOrList <- function (obj, type) {
 }
 
 #' Grab either env variable or option
-#' 
+#'
 #' .Rprofile options are like "crunch.api", while env vars are "R_CRUNCH_API".
 #' This function will use the environment variable if it is found, otherwise
 #' it looks for the R-based option value.
-#' 
+#'
 #' @param opt the option to get
-#' 
+#'
 #' @return the value of the option
-#' 
+#'
 #' @keywords internal
 #' @export
 envOrOption <- function (opt) {
@@ -180,19 +180,19 @@ envOrOption <- function (opt) {
 }
 
 #' Change which server to point to
-#' 
+#'
 #' A convenience function for changing where you want the Crunch package to try
 #' to connect to.
-#' 
+#'
 #' @param subdomain the subdomain to use
 #' @param port on optional port to use
-#' 
+#'
 #' @return nothing
-#' 
-#' @examples 
+#'
+#' @examples
 #' setCrunchAPI("local", 8080)
 #' setCrunchAPI("app")
-#' 
+#'
 #' @keywords internal
 #' @export
 setCrunchAPI <- function (subdomain, port=NULL) {
@@ -205,3 +205,64 @@ setCrunchAPI <- function (subdomain, port=NULL) {
     return(invisible())
 }
 
+
+# halt if variable is an array variable. If callingFunc is provided, provide the function that
+# the user used to get to this point.
+haltIfArray <- function (variable, callingFunc) {
+    # if the variable is not an array type, return quickly
+    # TODO: should this also short-circuit if variable is not a variable?
+    if (!is.Array(variable)) {
+        return(TRUE)
+    }
+
+    # Add the callingFunc in, if present
+    if (!missing(callingFunc)) {
+        halt("Array-like variables can't be used with function `",
+             callingFunc, "`.")
+    }
+
+    # can't determine the function or haltIfArray is being called directly,
+    # still error
+    halt("Array-like variables can't be used.")
+}
+
+# validate that rollup resolutions are what are allowed by Crunch
+validateResolution <- function (resolution) {
+    valid_res <- c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms")
+
+    if (!is.null(resolution) && !(resolution %in% valid_res)) {
+        halt(dQuote("resolution"), " is invalid. Valid values are ",
+             serialPaste(valid_res, collapse = "or"))
+    }
+}
+
+# default formats for various resolutions
+datetimeFormater <- function (resolution) {
+    validateResolution(resolution)
+    formats <- list("Y" = "%Y",
+                    # there is no %q in python strftime, so can't print quarters
+                    "Q" = "%Y-%m-%d",
+                    "M" = "%Y-%m",
+                    "W" = "%Y W%W",
+                    "D" = "%Y-%m-%d",
+                    "h" = "%Y-%m-%d %H:00",
+                    "m" = "%Y-%m-%d %H:%M",
+                    "s" = "%Y-%m-%d %H:%M:%S",
+                    "ms" = "%Y-%m-%d %H:%M:%S.%f")
+    # return format based on rollup or default of "s"
+    return(formats[[resolution %||% "s"]])
+}
+
+# check if a template or query has a selected_array somewhere in it recursively.
+has.function <- function (query, funcs) {
+    query <- unlist(query, recursive = TRUE)
+
+    func_names <- grepl("function$", names(query))
+    func_names <- names(query)[func_names]
+
+    if (any(query[func_names] %in% funcs)) {
+        return(TRUE)
+    }
+
+    return(FALSE)
+}

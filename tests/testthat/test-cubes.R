@@ -26,9 +26,9 @@ test_that("rollup CrunchExpr from zcl variable", {
 
 test_that("rollup resolution validation", {
     expect_error(rollup("a", resolution="Invalid"),
-        " is invalid. Valid values are NULL, ")
+        " is invalid. Valid values are ")
     expect_error(rollup("a", resolution=42),
-        " is invalid. Valid values are NULL, ")
+        " is invalid. Valid values are ")
 })
 
 with_mock_crunch({

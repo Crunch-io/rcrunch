@@ -78,6 +78,7 @@ reference:
   - interactVariables
   - conditionalTransform
   - makeWeight
+  - variable-as-methods
 - title: Array variables
   contents:
   - Subvariables-class
