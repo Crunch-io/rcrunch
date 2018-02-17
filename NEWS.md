@@ -1,5 +1,6 @@
 ## crunch 1.20.1 (under development)
-* added support for setting population sizes on datasets with `setPopulation(ds, size = 24.13e6, magnitude = 3)` and for getting population sizes (or magnitudes) with `popSize(ds)` and `popMagnitude(ds)` respectively. 
+* Variables can now be converted from one type to another with server-side derivations. Have a text input that is only numbers, and want to have a variables that is a true numeric? Simple, just use `ds$id_var_numeric <- as.Numeric(ds$id_var)`. There Are `as.*` methods for all Crunch data types except for array-like variables. 
+* Added support for setting population sizes on datasets with `setPopulation(ds, size = 24.13e6, magnitude = 3)` and for getting population sizes (or magnitudes) with `popSize(ds)` and `popMagnitude(ds)` respectively. 
 
 ## crunch 1.20.0
 
