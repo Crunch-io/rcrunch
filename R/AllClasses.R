@@ -359,11 +359,11 @@ setClass("Heading", contains="Insertion")
 #' @export
 Heading <- GenericConstructor("Heading")
 
-#' @rdname SummaryStatInsertions
+#' @rdname SummaryStat
 #' @export
 setClass("SummaryStat", contains="Insertion")
 
-#' @rdname SummaryStatInsertions
+#' @rdname SummaryStat
 #' @export
 SummaryStat <- GenericConstructor("SummaryStat")
 

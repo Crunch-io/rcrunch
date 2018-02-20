@@ -122,6 +122,8 @@ reference:
   - 'subtotalArray,CrunchCube-method'
   - noTransforms
   - showTransforms
+  - addSummaryStat
+  - SummaryStat-class
   - Insertions-class
   - Transforms-class
 - title: Export

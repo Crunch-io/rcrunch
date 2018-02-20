@@ -4,8 +4,7 @@
 \name{SummaryStat-class}
 \alias{SummaryStat-class}
 \alias{SummaryStat}
-\alias{SummaryStatInsertions}
-\alias{summaryStat}
+\alias{SummaryStat}
 \alias{SummaryStat}
 \alias{is.SummaryStat}
 \alias{are.SummaryStats}
@@ -31,7 +30,7 @@ included in the summary statistic, if empty all categories}
 
 \item{position}{character one of "relative", "top", or "bottom". Determines
 the position of the subtotal or heading, either at the top, bottom, or
-relative to another category in the cube (default).}
+relative to another category in the cube (default)}
 
 \item{after}{character or numeric if \code{position} is "relative", then the
 category name or id to position the subtotal or heading after}
@@ -42,8 +41,19 @@ category name or id to position the subtotal or heading after}
 it is a \code{SummaryStat} object}
 }
 \description{
-Just like \href{SubtotalsHeadings}{subtotals and headings}, summary statistics can
-be inserted into cubes.
+Just like \href{SubtotalsHeadings.html}{subtotals and headings}, summary statistics can
+be inserted into cubes. \code{SummaryStat()} makes an object of type \code{SummaryStat}
+which can be added on to a CrunchCube's \code{insertions} to add the specified
+summary statistic. Currently only \code{mean} and \code{median} are supported; both
+use weighted algorithms to go from counts and numeric values of
+categories to the expected statistic. Although \code{SummaryStat} objects can be
+made by hand, it is recommended instead to use the \code{addSummaryStat()}
+function which is much quicker and easier to simply add a summary
+statistic to an existing CrunchCube.
+}
+\details{
+Summary statistics are intended only for CrunchCube objects, and are not able
+to be set on Crunch variables.
 }
 \section{Removing transforms}{
 
