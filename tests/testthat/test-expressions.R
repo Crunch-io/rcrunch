@@ -144,6 +144,13 @@ with_mock_crunch({
         print(ds$birthyr * 3 + 5)
         print(3 * (ds$birthyr + 5))
     })
+
+    test_that("rollup functions generate expected requests", {
+        expect_identical(rollupResolution(ds$starttime), "s")
+        expect_PATCH(rollupResolution(ds$starttime) <- "M",
+            'https://app.crunch.io/api/datasets/1/variables/starttime/',
+            '{"view":{"rollup_resolution":"M"}}')
+    })
 })
 
 with_test_authentication({

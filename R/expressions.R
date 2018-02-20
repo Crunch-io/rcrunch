@@ -14,9 +14,11 @@
 #' time at which a Datetime variable should be aggregated. If `NULL`,
 #' the server will determine an appropriate resolution based on the range of
 #' the data.
+#' @param value for the `rollupResolution()` setter, the default resolution for
+#' this variable.
 #' @return Most functions return a CrunchExpr or CrunchLogicalExpr.
 #' `as.vector` returns an R vector.
-#' @aliases expressions
+#' @aliases expressions rollupResolution<-
 #' @name expressions
 NULL
 
@@ -290,6 +292,8 @@ rollup <- function (x, resolution=rollupResolution(x)) {
     return(zfuncExpr("rollup", x, list(value=resolution)))
 }
 
+#' @rdname expressions
+#' @export
 rollupResolution <- function (x) {
     if (is.Datetime(x)) {
         return(tuple(x)$rollup_resolution)
@@ -297,6 +301,16 @@ rollupResolution <- function (x) {
         return(NULL)
     }
 }
+
+#' @rdname expressions
+#' @export
+setMethod("rollupResolution<-",  "DatetimeVariable",
+    function(x, value = c('Y', 'M', 'D', 'h', 'm', 's', 'ms')) {
+        value <- match.arg(value)
+        setEntitySlot(entity(x), "view", list(rollup_resolution = value))
+        return(refresh(x))
+})
+
 
 #' @rdname variable-extract
 #' @export
