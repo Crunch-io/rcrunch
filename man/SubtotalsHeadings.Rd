@@ -61,7 +61,8 @@ relative to another category in the cube (default).}
 category name or id to position the subtotal or heading after}
 
 \item{x}{either a variable or CrunchCube object to add or get subtotal
-transforms for}
+transforms for, for \code{is.Subtotal()} and \code{is.Heading()} an object to test if
+it is either a Subtotal or Heading}
 
 \item{value}{For \code{[<-}, the replacement Subtotal to insert}
 

@@ -39,7 +39,7 @@ VignetteBuilder: knitr
 Language: en-US
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
-Collate:
+Collate: 
     'AllClasses.R'
     'AllGenerics.R'
     'variable-definition.R'
@@ -123,6 +123,7 @@ Collate:
     'show.R'
     'subtotals-and-headings.R'
     'subvariables.R'
+    'summary-insertions.R'
     'tab-book.R'
     'teams.R'
     'transform-calculate.R'

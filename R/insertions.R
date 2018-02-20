@@ -152,6 +152,10 @@ setMethod("anchor<-", "Heading", setAfter)
 
 #' @rdname Insertions
 #' @export
+setMethod("anchor<-", "SummaryStat", setAfter)
+
+#' @rdname Insertions
+#' @export
 setMethod("subtotals<-", "Insertion", setSubtotal)
 
 #' @rdname Insertions
@@ -174,6 +178,15 @@ setMethod("arguments<-", "Subtotal", function (x, value) {
 #' @export
 setMethod("arguments<-", "Heading", function (x, value) {
     halt("Cannot set arguments on Headings.")
+})
+
+
+#' @rdname Insertions
+#' @export
+setMethod("arguments<-", "SummaryStat", function (x, value) {
+    # TODO: validate that the arguments are valid
+    x[["categories"]] <- value
+    return(x)
 })
 
 #' @rdname Insertions
@@ -203,6 +216,24 @@ setMethod("arguments", "Subtotal", .convertArgs)
 #' @rdname Insertions
 #' @export
 setMethod("arguments", "Heading", function(x) NA)
+
+#' @rdname Insertions
+#' @export
+setMethod("arguments", "SummaryStat", function (x, var_categories) {
+    if (is.null(x[["categories"]])) {
+        # if var_categories is not provided, return the string all this should
+        # only happen when showing insertion objects and not when calculating
+        if (missing(var_categories)) {
+            return("all")
+        }
+
+        x[["categories"]] <- ids(var_categories)
+    }
+
+    # grab the arguments from the call so that we can optionally pass var_cats
+    .args <- as.list(match.call()[-1])
+    return(do.call(.convertArgs, .args))
+})
 
 #' @rdname Insertions
 #' @export
@@ -237,6 +268,10 @@ setMethod("anchor", "Heading", .convertAnchor)
 
 #' @rdname Insertions
 #' @export
+setMethod("anchor", "SummaryStat", .convertAnchor)
+
+#' @rdname Insertions
+#' @export
 setMethod("func", "Insertion", function (x) {
     f <- x[["function"]]
     return(ifelse(is.null(f), NA_character_, f))
@@ -249,6 +284,10 @@ setMethod("func", "Subtotal", function (x) return("subtotal"))
 #' @rdname Insertions
 #' @export
 setMethod("func", "Heading", function (x) return(NA))
+
+#' @rdname Insertions
+#' @export
+setMethod("func", "SummaryStat", function (x) return(x[["stat"]]))
 
 ############################################
 ## Insertions methods

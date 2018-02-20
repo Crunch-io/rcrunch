@@ -32,7 +32,8 @@
 #'  `Insertions` object) and returns a vector of `TRUE`/`FALSE`s.
 #'
 #' @param x either a variable or CrunchCube object to add or get subtotal
-#' transforms for
+#' transforms for, for `is.Subtotal()` and `is.Heading()` an object to test if
+#' it is either a Subtotal or Heading
 #' @param ... additional arguments to `[`, ignored
 #' @param value For `[<-`, the replacement Subtotal to insert
 #' @param name character the name of the subtotal or heading
@@ -313,7 +314,7 @@ subtypeInsertion <- function (insert) {
     if (!inherits(insert, "Insertion")) {
         halt("Must provide an object of type Insertion")
     }
-    if (inherits(insert, c("Subtotal", "Heading"))) {
+    if (inherits(insert, c("Subtotal", "Heading", "SummaryStat"))) {
         # if the insert is already a sub class, return that.
         return(insert)
     }
@@ -327,10 +328,23 @@ subtypeInsertion <- function (insert) {
         position <- "relative"
     }
 
-    if (!(is.na(func(insert))) & func(insert) == 'subtotal') {
-        # this is a subtotal, make it so
-        insert <- Subtotal(name = name(insert), after = after,
-                           position = position, categories = arguments(insert))
+    if (!(is.na(func(insert)))) {
+        # there is a function, check the kind.
+        if (func(insert) == 'subtotal') {
+            # this is a subtotal, make it so
+            insert <- Subtotal(name = name(insert), after = after,
+                               position = position, categories = arguments(insert))
+        }
+        if (func(insert) %in% names(summaryStatInsertions)) {
+            # this is a summary statistic, make it so
+            insert <- SummaryStat(name = name(insert),
+                                  stat = func(insert),
+                                  after = after,
+                                  position = position,
+                                  categories = arguments(insert),
+                                  includeNA = insert$includeNA)
+        }
+
     } else if (is.na(func(insert)) & !is.na(anchor(insert))) {
         # this is a heading, make it so
         insert <- Heading(name = name(insert), after = after,
