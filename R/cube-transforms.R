@@ -194,12 +194,7 @@ setMethod("transforms<-", c("CrunchCube", "list"), function (x, value) {
     dimnames <- names(dims)
 
     # check if the names of the dimensions and the names of the transforms line up
-    if (any(!(names(value) %in% dimnames))) {
-        halt("The names of the transforms supplied (",
-             serialPaste(dQuote(names(value)))
-             ,") to not match the dimension names (",
-             serialPaste(dQuote(dimnames)) ,") of the cube.")
-    }
+    namesInDims(names(value), x)
 
     # replace the transforms for each dimension
     dims <- CubeDims(lapply(dimnames, function (dim_name) {
@@ -224,6 +219,20 @@ setMethod("transforms<-", c("CrunchCube", "list"), function (x, value) {
     dimensions(x) <- dims
     return(invisible(x))
 })
+
+# error iff the names are not a dimension in the cube provided
+namesInDims <- function (names, cube) {
+    dimnames <- names(dimensions(cube))
+
+    # check if the names of the dimensions and the names of the transforms line up
+    if (any(!(names %in% dimnames))) {
+        halt("The names of the transforms supplied (",
+             serialPaste(dQuote(names))
+             ,") do not match the dimension names (",
+             serialPaste(dQuote(dimnames)) ,") of the cube.")
+    }
+}
+
 
 #' @rdname Transforms
 #' @export
