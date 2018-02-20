@@ -69,7 +69,6 @@ test_that("SummaryStat setters", {
 pet_feelings <- loadCube(test_path("./cubes/feelings-pets.json"))
 pet_feelings_w <- loadCube(test_path("./cubes/feelings-pets-weighted.json"))
 
-
 test_that("can set and calc a mean insertion", {
     # remove subtotals
     transforms(pet_feelings) <- NULL
@@ -79,16 +78,15 @@ test_that("can set and calc a mean insertion", {
     expect_null(transforms(pet_feelings))
 
     # add transforms
+    pet_feelings <- addSummaryStat(pet_feelings, stat = "mean", var = "feelings")
+    pet_feelings_w <- addSummaryStat(pet_feelings_w, stat = "mean", var = "feelings")
+
+
     feelings_trans <- Transforms(insertions = Insertions(
-        SummaryStat(name = "mean", stat = "mean", position = "bottom")))
-    transforms(pet_feelings) <- list("feelings" = feelings_trans)
-    transforms(pet_feelings_w) <- list("feelings" = feelings_trans)
-
-    # add empty elements/categories
-    feelings_trans["elements"] <- feelings_trans["categories"] <- list(NULL)
-
-    # convert to category ids
-    feelings_trans$insertions[["mean"]]$categories <- c(1L, 4L, 3L, 5L, 2L, -1L)
+        SummaryStat(name = "mean", stat = "mean", position = "bottom",
+                    categories = c(1L, 4L, 3L, 5L, 2L, -1L))),
+        elements = NULL,
+        categories = NULL)
 
     expect_json_equivalent(transforms(pet_feelings),
                            list("feelings" = feelings_trans, "animals" = NULL))
@@ -119,16 +117,17 @@ test_that("can set and calc a median insertion", {
     expect_null(transforms(pet_feelings))
 
     # add transforms
+    pet_feelings <- addSummaryStat(pet_feelings, stat = "median", var = "feelings")
+    pet_feelings_w <- addSummaryStat(pet_feelings_w, stat = "median", var = "feelings")
+
+    # make expectations object
     feelings_trans <- Transforms(insertions = Insertions(
-        SummaryStat(name = "median", stat = "median", position = "bottom")))
-    transforms(pet_feelings) <- list("feelings" = feelings_trans)
-    transforms(pet_feelings_w) <- list("feelings" = feelings_trans)
+        SummaryStat(name = "median", stat = "median",
+                    categories = c(1L, 4L, 3L, 5L, 2L, -1L),
+                    position = "bottom")),
+        elements = NULL,
+        categories = NULL)
 
-    # add empty elements/categories
-    feelings_trans["elements"] <- feelings_trans["categories"] <- list(NULL)
-
-    # convert to category ids
-    feelings_trans$insertions[["median"]]$categories <- c(1L, 4L, 3L, 5L, 2L, -1L)
 
     expect_json_equivalent(transforms(pet_feelings),
                            list("feelings" = feelings_trans, "animals" = NULL))
@@ -153,8 +152,8 @@ test_that("can set and calc a mean insertion, and maintain subtotals", {
     expect_length(transforms(pet_feelings)[[1]]$insertions, 2)
 
     # add transforms
-    mean_stat <- SummaryStat(name = "mean", stat = "mean", position = "bottom")
-    transforms(pet_feelings)[[1]]$insertions[[3]] <- mean_stat
+    pet_feelings <- addSummaryStat(pet_feelings, stat = "mean",
+                                   var = "feelings")
     expect_length(transforms(pet_feelings)[[1]]$insertions, 3)
     stat_insert <- transforms(pet_feelings)[[1]]$insertions[[3]]
     expect_equal(name(stat_insert), "mean")
@@ -194,6 +193,16 @@ test_that("can set and calc a mean insertion, and maintain subtotals", {
                                                           "unhappy",
                                                           "mean"),
                                         "animals" = list("cats", "dogs"))))
+})
+
+test_that("aaddSummaryStat validates", {
+    expect_error(addSummaryStat(pet_feelings, stat = "not a stat",
+                                var = "feelings"),
+                 "'arg' should be one of .*mean.*, .*median.*")
+    expect_error(addSummaryStat(pet_feelings, var = "not a dim"),
+                 paste0("The names of the transforms supplied (.*not a dim.*) ",
+                        "do not match the dimension names (.*feelings.* and ",
+                        ".*animals.*) of the cube."))
 })
 
 test_that("meanInsert function calculates weighted means", {
