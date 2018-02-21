@@ -283,7 +283,7 @@ bin <- function (x) zfuncExpr("bin", x)
 
 #' @rdname expressions
 #' @export
-rollup <- function (x, resolution=rollupResolution(x)) {
+rollup <- function (x, resolution = rollupResolution(x)) {
     validateResolution(force(resolution))
     
     if (is.variable(x) && !is.Datetime(x)) {
@@ -304,9 +304,8 @@ rollupResolution <- function (x) {
 
 #' @rdname expressions
 #' @export
-setMethod("rollupResolution<-",  "DatetimeVariable",
-    function(x, value = c('Y', 'M', 'D', 'h', 'm', 's', 'ms')) {
-        value <- match.arg(value)
+setMethod("rollupResolution<-",  "DatetimeVariable", function(x, value) {
+        validateResolution(force(value))
         setEntitySlot(entity(x), "view", list(rollup_resolution = value))
         return(refresh(x))
 })

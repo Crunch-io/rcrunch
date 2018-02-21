@@ -145,7 +145,7 @@ with_mock_crunch({
         print(3 * (ds$birthyr + 5))
     })
 
-    test_that("rollup functions generate expected requests", {
+    test_that("rollupResolution functions generate expected requests", {
         expect_identical(rollupResolution(ds$starttime), "s")
         expect_PATCH(rollupResolution(ds$starttime) <- "M",
             'https://app.crunch.io/api/datasets/1/variables/starttime/',
@@ -326,5 +326,11 @@ with_test_authentication({
         expect_identical(which(duplicated(ds$v3 + 4)), integer(0))
         skip("'which' isn't implemented correctly")
         expect_identical(which(duplicated(ds$v4)), 3:20)
+    })
+
+    test_that("rollupResolution can be set", {
+        expect_null(rollupResolution(ds$v5))
+        expect_silent(rollupResolution(ds$v5) <- "M")
+        expect_identical(rollupResolution(ds$v5), "M")
     })
 })
