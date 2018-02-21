@@ -44,18 +44,22 @@ datasets <- function (x=getAPIRoot()) {
 #' the primary dataset catalog for the user will be used.
 #' @param refresh logical: should the function check the Crunch API for new
 #' datasets? Default is FALSE.
+#' @param shiny logical: launch a shiny gadget to help select the right dataset
 #' @return Character vector of dataset names, each of which would be a valid
 #' input for [loadDataset()]
 #' @export
 listDatasets <- function (kind=c("active", "all", "archived"), project=NULL,
-                          refresh=FALSE) {
-    dscat <- selectDatasetCatalog(kind, project, refresh)
-    return(names(dscat))
+    refresh=FALSE, shiny = FALSE) {
+    if (shiny) {
+        listDatasetGadget(kind, selected_project = project, refresh)
+    } else {
+        dscat <- selectDatasetCatalog(kind, project, refresh)
+        return(names(dscat))
+    }
 }
 
 selectDatasetCatalog <- function (kind=c("active", "all", "archived"),
                                   project=NULL, refresh=FALSE) {
-
     Call <- match.call()
     if (is.null(project)) {
         ## Default: we'll get the dataset catalog from the API root

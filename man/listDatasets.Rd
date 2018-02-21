@@ -5,7 +5,7 @@
 \title{Show the names of all Crunch datasets associated with a catalog}
 \usage{
 listDatasets(kind = c("active", "all", "archived"), project = NULL,
-  refresh = FALSE)
+  refresh = FALSE, shiny = FALSE)
 }
 \arguments{
 \item{kind}{character specifying whether to look in active, archived, or all
@@ -18,6 +18,8 @@ the primary dataset catalog for the user will be used.}
 
 \item{refresh}{logical: should the function check the Crunch API for new
 datasets? Default is FALSE.}
+
+\item{shiny}{logical: launch a shiny gadget to help select the right dataset}
 }
 \value{
 Character vector of dataset names, each of which would be a valid
