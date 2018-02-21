@@ -4,6 +4,28 @@ template:
   params:
     bootswatch: flatly
     ganalytics: UA-50332119-2
+articles:
+- title: Getting started
+  desc: How to find, import, and clean data in Crunch
+  contents:
+  - crunch
+  - datasets
+  - variables
+  - array-variables
+  - variable-order
+- title: Exploring and analyzing
+  desc: ~
+  contents:
+  - derive
+  - analyze
+  - filters
+  - subtotals
+  - export
+- title: Going deeper
+  desc: Details on the Crunch API and objects
+  contents:
+  - crunch-internals
+  - abstract-categories
 reference:
 - title: Upload
   contents:
