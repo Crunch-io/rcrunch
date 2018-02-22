@@ -25,7 +25,7 @@ listDatasetGadget <- function(kind=c("active", "all", "archived"),
             shiny::column(width = 6,
                 shiny::selectInput("project",
                     "Select Project",
-                    projects,
+                    names(datasets),
                     selected = selected_project)),
             shiny::column(width = 6,
                 shiny::uiOutput("dataset"))
@@ -37,10 +37,14 @@ listDatasetGadget <- function(kind=c("active", "all", "archived"),
             shiny::selectInput("dataset", "Select Dataset", datasets[[input$project]])
         })
         shiny::observeEvent(input$done, {
-            code <- paste0("loadDataset('",
-                input$dataset, "',
-                project = '",
-                input$project, "')" )
+            if( input$project == "Personal Project") {
+                code <- paste0("loadDataset('", input$dataset,"')")
+            } else {
+                code <- paste0("loadDataset('",
+                    input$dataset,
+                    "', project = '",
+                    input$project, "')" )
+            }
             shiny::stopApp(returnValue = rstudioapi::insertText(text = code))
         })
     }
