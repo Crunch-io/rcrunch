@@ -40,7 +40,6 @@ listDatasetGadget <- function(kind=c("active", "all", "archived"),
                 selections)
         })
         shiny::observeEvent(input$done, {
-
             assignment <- ifelse(nchar(input$ds_name) > 0,
                 paste0(input$ds_name, " <- "),
                 "")
