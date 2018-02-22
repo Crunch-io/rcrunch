@@ -19,7 +19,8 @@ the primary dataset catalog for the user will be used.}
 \item{refresh}{logical: should the function check the Crunch API for new
 datasets? Default is FALSE.}
 
-\item{shiny}{logical: launch a shiny gadget to help select the right dataset}
+\item{shiny}{logical: launch a shiny gadget to help select the right dataset. The
+gadget will return a valid \code{loadDataset()} call which loads the selected dataset.}
 }
 \value{
 Character vector of dataset names, each of which would be a valid

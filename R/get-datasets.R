@@ -44,14 +44,19 @@ datasets <- function (x=getAPIRoot()) {
 #' the primary dataset catalog for the user will be used.
 #' @param refresh logical: should the function check the Crunch API for new
 #' datasets? Default is FALSE.
-#' @param shiny logical: launch a shiny gadget to help select the right dataset
+#' @param shiny logical: launch a shiny gadget to help select the right dataset. The
+#' gadget will return a valid `loadDataset()` call which loads the selected dataset.
 #' @return Character vector of dataset names, each of which would be a valid
 #' input for [loadDataset()]
 #' @export
 listDatasets <- function (kind=c("active", "all", "archived"), project=NULL,
     refresh=FALSE, shiny = FALSE) {
     if (shiny) {
-        listDatasetGadget(kind, selected_project = project, refresh)
+        if (rstudioapi::isAvailable("0.99.878")) {
+            listDatasetGadget(kind, selected_project = project, refresh)
+        } else {
+            halt("Dataset viewer can only be accessed from RStudio versions 0.99.878 or later.")
+        }
     } else {
         dscat <- selectDatasetCatalog(kind, project, refresh)
         return(names(dscat))
