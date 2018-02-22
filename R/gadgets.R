@@ -4,43 +4,50 @@
 #' projects and datasets. This is useful if you can't remember a dataset's project
 #' and also saves typing long dataset names.
 #'
-#' @param selected_project Specifies the default project for the gadget
 #' @inheritParams listDatasets
 #' @return A `listDatasets()` call is pasted into your RStudio session`
 #' @export
 listDatasetGadget <- function(kind=c("active", "all", "archived"),
-    selected_project = "Personal Project",
     refresh = FALSE){
-    projects <- names(projects())
-    datasets <- lapply(projects, function(x) {
-        listDatasets(project = x, kind = kind, refresh = refresh)
-    })
-    names(datasets) <- projects
-    #the default project is not returned by projects()
-    datasets[["Personal Project"]] <- listDatasets(kind = kind, refresh = refresh)
+    projects <- c("Personal Project", names(projects()))
+    personal_datasets <- listDatasets(kind = kind, refresh = refresh)
 
     ui <- miniUI::miniPage(
-        miniUI::gadgetTitleBar("Drag to select points"),
+        miniUI::gadgetTitleBar("Select Dataset"),
         miniUI::miniContentPanel(
-            shiny::column(width = 6,
+            shiny::column(width = 3,
                 shiny::selectInput("project",
                     "Select Project",
-                    names(datasets),
-                    selected = selected_project)),
-            shiny::column(width = 6,
-                shiny::uiOutput("dataset"))
+                    projects)),
+            shiny::column(width = 3,
+                shiny::uiOutput("dataset")
+            ),
+            shiny::column(width = 3,
+                shiny::textInput("ds_name", "Object Name (Optional)")
+            )
         )
     )
 
     server <- function(input, output, session) {
         output$dataset <- shiny::renderUI({
-            shiny::selectInput("dataset", "Select Dataset", datasets[[input$project]])
+            if (input$project == "Personal Project") {
+                selections <- personal_datasets
+            } else {
+                selections <- listDatasets(project = input$project, kind = kind, refresh = refresh)
+            }
+            shiny::selectInput("dataset",
+                "Select Dataset",
+                selections)
         })
         shiny::observeEvent(input$done, {
-            if( input$project == "Personal Project") {
-                code <- paste0("loadDataset('", input$dataset,"')")
+
+            assignment <- ifelse(nchar(input$ds_name) > 0,
+                paste0(input$ds_name, " <- "),
+                "")
+            if (input$project == "Personal Project") {
+                code <- paste0(assignment, "loadDataset('", input$dataset,"')")
             } else {
-                code <- paste0("loadDataset('",
+                code <- paste0(assignment, "loadDataset('",
                     input$dataset,
                     "', project = '",
                     input$project, "')" )
@@ -50,4 +57,3 @@ listDatasetGadget <- function(kind=c("active", "all", "archived"),
     }
     shiny::runGadget(ui, server)
 }
-

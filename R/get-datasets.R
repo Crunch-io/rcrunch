@@ -53,7 +53,7 @@ listDatasets <- function (kind=c("active", "all", "archived"), project=NULL,
     refresh=FALSE, shiny = FALSE) {
     if (shiny) {
         if (rstudioapi::isAvailable("0.99.878")) {
-            listDatasetGadget(kind, selected_project = project, refresh)
+            listDatasetGadget(kind, refresh)
         } else {
             halt("Dataset viewer can only be accessed from RStudio versions 0.99.878 or later.")
         }

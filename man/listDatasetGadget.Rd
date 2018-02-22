@@ -4,14 +4,11 @@
 \alias{listDatasetGadget}
 \title{Open dataset selector}
 \usage{
-listDatasetGadget(kind = c("active", "all", "archived"),
-  selected_project = "Personal Project", refresh = FALSE)
+listDatasetGadget(kind = c("active", "all", "archived"), refresh = FALSE)
 }
 \arguments{
 \item{kind}{character specifying whether to look in active, archived, or all
 datasets. Default is "active", i.e. non-archived.}
-
-\item{selected_project}{Specifies the default project for the gadget}
 
 \item{refresh}{logical: should the function check the Crunch API for new
 datasets? Default is FALSE.}
