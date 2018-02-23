@@ -10,7 +10,7 @@ with_mock_crunch({
                     "|================"),
                 paste('Your process is still running on the server. It is',
                     'currently 23% complete. Check',
-                    '`httpcache::uncached(crGET("https://app.crunch.io/api/progress/1/"))`',
+                    '`pollProgress("https://app.crunch.io/api/progress/1/")`',
                     'until it reports 100% complete'),
                 fixed=TRUE)
         })

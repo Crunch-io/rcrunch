@@ -1,3 +1,16 @@
+#' Check a Crunch progress URL until it finishes
+#'
+#' You'll probably only call this function if progress polling times out and its
+#' error message tells you to call `pollProgress` to resume.
+#'
+#' @param progress_url A Crunch progress URL
+#' @param wait Number of seconds to wait between polling. This time is increased
+#' 20 percent on each poll.
+#' @return The percent completed of the progress. Assuming the
+#' `options(crunch.timeout)` (default: 15 minutes) hasn't been reached, this
+#' will be 100. If the timeout is reached, it will be the last reported progress
+#' value.
+#' @export
 #' @importFrom httpcache uncached
 pollProgress <- function (progress_url, wait=.5) {
     ## Configure polling interval. Will increase by rate (>1) until reaches max
@@ -30,8 +43,8 @@ pollProgress <- function (progress_url, wait=.5) {
     } else if (status != 100) {
         ## TODO: export pollProgress and reference it in the message below
         halt('Your process is still running on the server. It is currently ',
-            round(status), '% complete. Check `httpcache::uncached(crGET("',
-            progress_url, '"))` until it reports 100% complete')
+            round(status), '% complete. Check `pollProgress("',
+            progress_url, '")` until it reports 100% complete')
     }
     return(status)
 }
