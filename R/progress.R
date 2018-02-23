@@ -28,6 +28,7 @@ pollProgress <- function (progress_url, wait=.5) {
         msg <- prog$message %||% "There was an error on the server. Please contact support@crunch.io"
         halt(msg)
     } else if (status != 100) {
+        ## TODO: export pollProgress and reference it in the message below
         halt('Your process is still running on the server. It is currently ',
             round(status), '% complete. Check `httpcache::uncached(crGET("',
             progress_url, '"))` until it reports 100% complete')
@@ -35,13 +36,15 @@ pollProgress <- function (progress_url, wait=.5) {
     return(status)
 }
 
-## Make these pass through so they can be mocked (silenced) in tests
-
 #' @importFrom utils txtProgressBar
-setup_progress_bar <- function (...) txtProgressBar(...)
+setup_progress_bar <- function (...) {
+    if (isTRUE(getOption("crunch.show.progress", TRUE))) txtProgressBar(...)
+}
 
 #' @importFrom utils setTxtProgressBar
-update_progress_bar <- function (...) setTxtProgressBar(...)
+update_progress_bar <- function (...) {
+    if (isTRUE(getOption("crunch.show.progress", TRUE))) setTxtProgressBar(...)
+}
 
 crunchTimeout <- function () {
     opt <- getOption("crunch.timeout")
