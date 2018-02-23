@@ -41,7 +41,6 @@ pollProgress <- function (progress_url, wait=.5) {
         msg <- prog$message %||% "There was an error on the server. Please contact support@crunch.io"
         halt(msg)
     } else if (status != 100) {
-        ## TODO: export pollProgress and reference it in the message below
         halt('Your process is still running on the server. It is currently ',
             round(status), '% complete. Check `pollProgress("',
             progress_url, '")` until it reports 100% complete')
