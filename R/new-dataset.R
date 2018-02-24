@@ -89,9 +89,7 @@ createDataset <- function (name, body, ...) {
 #' @export
 prepareDataForCrunch <- function (data, ...) {
     ## Get all the things
-    if (isTRUE(getOption("crunch.show.progress", TRUE))) {
-        message("Processing the data")
-    }
+    progressMessage("Processing the data")
     vars <- lapply(names(data),
         function (i) toVariable(data[[i]], name=i, alias=i))
     names(vars) <- names(data)
