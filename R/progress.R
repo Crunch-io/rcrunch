@@ -63,3 +63,9 @@ crunchTimeout <- function () {
     if (!is.numeric(opt)) opt <- 900
     return(opt)
 }
+
+progressMessage <- function (msg) {
+    if (isTRUE(getOption("crunch.show.progress", TRUE))) {
+        message(msg)
+    }
+}
