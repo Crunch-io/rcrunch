@@ -1,5 +1,12 @@
 context("Polling progress")
 
+test_that("progressMessage", {
+    expect_silent(progressMessage("Message!"))
+    with(temp.option(crunch.show.progress=NULL), {
+        expect_message(progressMessage("Message!"), "Message!")
+    })
+})
+
 with_mock_crunch({
     options(crunch.show.progress=NULL)
     on.exit(options(crunch.show.progress=FALSE))
@@ -48,6 +55,17 @@ with_mock_crunch({
             expect_equal(length(out), 2)
             expect_match(out[1], "=| 100%", fixed=TRUE)
             expect_match(out[2], "command on next line", fixed=TRUE)
+        }),
+        test_that("Progress polling goes until 100 when silent", {
+            counter <<- 1
+            with(temp.option(crunch.show.progress=FALSE), {
+                expect_silent(
+                    expect_equal(pollProgress("https://app.crunch.io/api/progress/",
+                                              wait=.001),
+                        100
+                    )
+                )
+            })
         }),
         test_that("Auto-polling with a progress resource", {
             counter <<- 1

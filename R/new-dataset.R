@@ -89,9 +89,7 @@ createDataset <- function (name, body, ...) {
 #' @export
 prepareDataForCrunch <- function (data, ...) {
     ## Get all the things
-    if (isTRUE(getOption("crunch.show.progress", TRUE))) {
-        message("Processing the data")
-    }
+    progressMessage("Processing the data")
     vars <- lapply(names(data),
         function (i) toVariable(data[[i]], name=i, alias=i))
     names(vars) <- names(data)
@@ -187,17 +185,13 @@ write.csv.gz <- function (x, file, na="", row.names=FALSE, ...) {
 createWithMetadataAndFile <- function (metadata, file, strict=TRUE) {
     ds <- uploadMetadata(metadata)
     ds <- uploadData(ds, file, strict, first_batch=TRUE)
-    if (isTRUE(getOption("crunch.show.progress", TRUE))) {
-        message("Done!")
-    }
+    progressMessage("Done!")
     return(ds)
 }
 
 #' @importFrom jsonlite fromJSON
 uploadMetadata <- function (metadata) {
-    if (isTRUE(getOption("crunch.show.progress", TRUE))) {
-        message("Uploading metadata")
-    }
+    progressMessage("Uploading metadata")
     if (is.character(metadata)) {
         ## File name. Read it in.
         metadata <- fromJSON(metadata, simplifyVector=FALSE)
@@ -206,9 +200,7 @@ uploadMetadata <- function (metadata) {
 }
 
 uploadData <- function (dataset, data, strict=TRUE, first_batch=TRUE) {
-    if (isTRUE(getOption("crunch.show.progress", TRUE))) {
-        message("Uploading data")
-    }
+    progressMessage("Uploading data")
     if (!is.character(data)) {
         ## It's a data.frame. Write it out to a file.
         f <- tempfile()
