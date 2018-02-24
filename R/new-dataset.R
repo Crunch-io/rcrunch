@@ -69,7 +69,7 @@ createDataset <- function (name, body, ...) {
         body <- wrapEntity(name=name, ...)
     }
     dataset_url <- crPOST(sessionURL("datasets"), body=toJSON(body))
-    invisible(loadDataset(dataset_url))
+    invisible(loadDatasetFromURL(dataset_url))
 }
 
 #' Translate a data.frame to Crunch format

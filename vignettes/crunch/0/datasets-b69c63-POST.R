@@ -1,0 +1,28 @@
+structure(list(url = "/datasets/", status_code = 201L, headers = structure(list(
+    allow = "GET, HEAD, OPTIONS, PATCH, POST", `content-encoding` = "gzip", 
+    `content-type` = "application/json;charset=utf-8", date = "Sat, 24 Feb 2018 04:33:10 GMT", 
+    location = "/datasets/e6ee31/", server = "nginx", `set-cookie` = "REDACTED", 
+    vary = "Cookie, Accept-Encoding", `x-timing` = "", `content-length` = "24", 
+    connection = "keep-alive"), .Names = c("allow", "content-encoding", 
+"content-type", "date", "location", "server", "set-cookie", "vary", 
+"x-timing", "content-length", "connection"), class = c("insensitive", 
+"list")), all_headers = list(structure(list(status = 201L, version = "HTTP/1.1", 
+    headers = structure(list(allow = "GET, HEAD, OPTIONS, PATCH, POST", 
+        `content-encoding` = "gzip", `content-type` = "application/json;charset=utf-8", 
+        date = "Sat, 24 Feb 2018 04:33:10 GMT", location = "/datasets/e6ee31/", 
+        server = "nginx", `set-cookie` = "REDACTED", vary = "Cookie, Accept-Encoding", 
+        `x-timing` = "", `content-length` = "24", connection = "keep-alive"), .Names = c("allow", 
+    "content-encoding", "content-type", "date", "location", "server", 
+    "set-cookie", "vary", "x-timing", "content-length", "connection"
+    ), class = c("insensitive", "list"))), .Names = c("status", 
+"version", "headers"))), cookies = structure(list(domain = ".crunch.io", 
+    flag = TRUE, path = "/", secure = FALSE, expiration = structure(1550982791, class = c("POSIXct", 
+    "POSIXt")), name = "token", value = "REDACTED"), .Names = c("domain", 
+"flag", "path", "secure", "expiration", "name", "value"), row.names = c(NA, 
+-1L), class = "data.frame"), content = as.raw(c(0x6e, 0x75, 0x6c, 
+0x6c)), date = structure(1519446790, class = c("POSIXct", "POSIXt"
+), tzone = "GMT"), times = structure(c(0, 3.3e-05, 3.4e-05, 9.8e-05, 
+0.00011, 3.905019), .Names = c("redirect", "namelookup", "connect", 
+"pretransfer", "starttransfer", "total"))), .Names = c("url", 
+"status_code", "headers", "all_headers", "cookies", "content", 
+"date", "times"), class = "response")
