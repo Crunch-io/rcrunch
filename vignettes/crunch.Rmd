@@ -15,7 +15,10 @@ library(crunch)
 ```
 
 ```{r, results='hide', echo=FALSE, message=FALSE}
-options(width=120)
+options(
+    width=120,
+    crunch.show.progress=FALSE
+)
 try(login(), silent=TRUE) ## Log in before recording; if mocking, doesn't matter
 library(httptest)
 library(magrittr)
