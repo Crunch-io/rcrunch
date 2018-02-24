@@ -56,6 +56,17 @@ with_mock_crunch({
             expect_match(out[1], "=| 100%", fixed=TRUE)
             expect_match(out[2], "command on next line", fixed=TRUE)
         }),
+        test_that("Progress polling goes until 100 when silent", {
+            counter <<- 1
+            with(temp.option(crunch.show.progress=FALSE), {
+                expect_silent(
+                    expect_equal(pollProgress("https://app.crunch.io/api/progress/",
+                                              wait=.001),
+                        100
+                    )
+                )
+            })
+        }),
         test_that("Auto-polling with a progress resource", {
             counter <<- 1
             logfile <- tempfile()
