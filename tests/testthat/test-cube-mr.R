@@ -109,37 +109,35 @@ cat_x_mr_x_mr_dims$animal <- cat_x_mr_x_mr_dims$animal[cat_x_mr_x_mr_dims$animal
 
 test_that("prop.table(row) for cat x MR x MR", {
     expect_equal(prop.table(cat_x_mr_x_mr, 1),
-                 cubify(
-                     c(c(0.1159,0.3597),
-                       c(0.0197,0.0604),
-                       c(0.0192,0.0582)),
-                     c(c(0.0159,0.0094),
-                       c(0.1182,0.0625),
-                       c(0.1142,0.0623)),
-                     dims=cat_x_mr_x_mr_dims))
+                 cubify(0.1159,0.3597,
+                        0.0197,0.0604,
+                        0.0192,0.0582,
+                        0.0159,0.0094,
+                        0.1182,0.0625,
+                        0.1142,0.0623,
+                        dims=cat_x_mr_x_mr_dims))
+
 })
 test_that("prop.table(col) for cat x MR x MR", {
     expect_equal(prop.table(cat_x_mr_x_mr, 2),
-                 cubify(
-                     c(c(0.166284074605452,0.516068866571019),
-                       c(0.0280267463366055,0.0859297197325366),
-                       c(0.0276657060518732,0.0838616714697406)),
-                     c(c(0.0228120516499283,0.0134863701578192),
-                       c(0.168160478019633,0.0889173424384692),
-                       c(0.164553314121037,0.0897694524495677)),
-                     dims=cat_x_mr_x_mr_dims))
+                 cubify(0.166284074605452,0.516068866571019,
+                        0.0280267463366055,0.0859297197325366,
+                        0.0276657060518732,0.0838616714697406,
+                        0.0228120516499283,0.0134863701578192,
+                        0.168160478019633,0.0889173424384692,
+                        0.164553314121037,0.0897694524495677,
+                        dims=cat_x_mr_x_mr_dims))
+
 })
 test_that("prop.table(cell) for as_selected x cat", {
     expect_equal(prop.table(cat_x_mr_x_mr),
-                 cubify(
-                     c(c(0.05795,0.17985),
-                       c(0.00985,0.0302),
-                       c(0.0096,0.0291)),
-                     c(c(0.00795,0.0047),
-                       c(0.0591,0.03125),
-                       c(0.0571,0.03115)),
-                     dims=cat_x_mr_x_mr_dims)
-                 )
+                 cubify(0.05795,0.17985,
+                        0.00985,0.0302,
+                        0.0096,0.0291,
+                        0.00795,0.0047,
+                        0.0591,0.03125,
+                        0.0571,0.03115,
+                        dims=cat_x_mr_x_mr_dims))
 })
 
 
@@ -161,6 +159,11 @@ test_that("as_selected_margins adds margins in the right cases", {
     expect_equal(as_selected_margins(2, selecteds), c(2, 4))
     expect_equal(as_selected_margins(3, selecteds), c(2, 4))
     expect_equal(as_selected_margins(NULL, selecteds), c(2, 4))
+    selecteds <- c(FALSE, TRUE, FALSE, FALSE, TRUE) # MR by cat by MR
+    expect_equal(as_selected_margins(1, selecteds), c(1, 4))
+    expect_equal(as_selected_margins(2, selecteds), c(1, 3, 4))
+    expect_equal(as_selected_margins(3, selecteds), c(1, 4))
+    expect_equal(as_selected_margins(NULL, selecteds), c(1, 4))
     selecteds <- c(FALSE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE) # cat by MR*3
     expect_equal(as_selected_margins(1, selecteds), c(1, 2, 4, 6))
     expect_equal(as_selected_margins(2, selecteds), c(2, 4, 6))
@@ -187,6 +190,11 @@ test_that("as_selected_margins with before=FALSE", {
     expect_equal(as_selected_margins(2, selecteds, before=FALSE), c(2, 3))
     expect_equal(as_selected_margins(3, selecteds, before=FALSE), c(2, 3))
     expect_equal(as_selected_margins(NULL, selecteds, before=FALSE), c(2, 3))
+    selecteds <- c(FALSE, TRUE, FALSE, FALSE, TRUE) # MR by cat by MR
+    expect_equal(as_selected_margins(1, selecteds, before=FALSE), c(1, 3))
+    expect_equal(as_selected_margins(2, selecteds, before=FALSE), c(1, 2, 3))
+    expect_equal(as_selected_margins(3, selecteds, before=FALSE), c(1, 3))
+    expect_equal(as_selected_margins(NULL, selecteds, before=FALSE), c(1, 3))
     selecteds <- c(FALSE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE) # cat by MR*3
     expect_equal(as_selected_margins(1, selecteds, before=FALSE), c(1, 2, 3, 4))
     expect_equal(as_selected_margins(2, selecteds, before=FALSE), c(2, 3, 4))
