@@ -1,12 +1,7 @@
 #' Open dataset selector
 #'
-#' This function launches a shiny gadget which allows you to navigate your Crunch
-#' projects and datasets. This is useful if you can't remember a dataset's project
-#' and also saves typing long dataset names.
-#'
 #' @inheritParams listDatasets
-#' @return A `listDatasets()` call is pasted into your RStudio session`
-#' @export
+#' @return A `loadDataset()` call is pasted into your RStudio session`
 listDatasetGadget <- function(kind=c("active", "all", "archived"),
     refresh = FALSE){
     projects <- c("Personal Project", names(projects()))
@@ -40,19 +35,27 @@ listDatasetGadget <- function(kind=c("active", "all", "archived"),
                 selections)
         })
         shiny::observeEvent(input$done, {
-            assignment <- ifelse(nchar(input$ds_name) > 0,
-                paste0(input$ds_name, " <- "),
-                "")
-            if (input$project == "Personal Project") {
-                code <- paste0(assignment, "loadDataset('", input$dataset,"')")
-            } else {
-                code <- paste0(assignment, "loadDataset('",
-                    input$dataset,
-                    "', project = '",
-                    input$project, "')" )
-            }
+            code <- buildLoadDatasetCall(project = input$project,
+                dataset = input$dataset,
+                ds_name = input$ds_name)
             shiny::stopApp(returnValue = rstudioapi::insertText(text = code))
         })
     }
     shiny::runGadget(ui, server)
+}
+
+buildLoadDatasetCall <- function(project, dataset, ds_name = "") {
+    dataset <- escapeQuotes(dataset)
+    assignment <- ifelse(nchar(ds_name) > 0,
+                paste0(ds_name, " <- "),
+                "")
+            if (project == "Personal Project") {
+                code <- paste0(assignment, "loadDataset('", dataset,"')")
+            } else {
+                code <- paste0(assignment, "loadDataset('",
+                    dataset,
+                    "', project = '",
+                    escapeQuotes(project), "')" )
+            }
+    return(code)
 }

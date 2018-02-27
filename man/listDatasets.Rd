@@ -27,5 +27,7 @@ Character vector of dataset names, each of which would be a valid
 input for \code{\link[=loadDataset]{loadDataset()}}
 }
 \description{
-Show the names of all Crunch datasets associated with a catalog
+If \code{shiny} is TRUE the function launches a shiny gadget which allows you to
+navigate your Crunch projects and datasets. This is useful if you can't
+remember a dataset's project and also saves typing long dataset names.
 }

@@ -36,6 +36,10 @@ datasets <- function (x=getAPIRoot()) {
 
 #' Show the names of all Crunch datasets associated with a catalog
 #'
+#' If `shiny` is TRUE the function launches a shiny gadget which allows you to
+#' navigate your Crunch projects and datasets. This is useful if you can't
+#' remember a dataset's project and also saves typing long dataset names.
+#'
 #' @param kind character specifying whether to look in active, archived, or all
 #' datasets. Default is "active", i.e. non-archived.
 #' @param project `CrunchProject` entity, character name of a project, or
@@ -52,7 +56,8 @@ datasets <- function (x=getAPIRoot()) {
 listDatasets <- function (kind=c("active", "all", "archived"), project=NULL,
     refresh=FALSE, shiny = FALSE) {
     if (shiny) {
-        if (rstudioapi::isAvailable("0.99.878")) {
+        if (all(c("rstudioapi", "shiny", "miniUI") %in% rownames(installed.packages())) &&
+                rstudioapi::isAvailable("0.99.878")) {
             listDatasetGadget(kind, refresh)
         } else {
             halt("Dataset viewer can only be accessed from RStudio versions 0.99.878 or later.")

@@ -266,3 +266,8 @@ has.function <- function (query, funcs) {
 
     return(FALSE)
 }
+
+escapeQuotes <- function(str) {
+    str <- gsub("'", "\\\\'", str)
+    gsub('\"', '\\\\"', str)
+}

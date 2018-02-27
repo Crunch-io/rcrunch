@@ -14,10 +14,8 @@ datasets. Default is "active", i.e. non-archived.}
 datasets? Default is FALSE.}
 }
 \value{
-A \code{listDatasets()} call is pasted into your RStudio session`
+A \code{loadDataset()} call is pasted into your RStudio session`
 }
 \description{
-This function launches a shiny gadget which allows you to navigate your Crunch
-projects and datasets. This is useful if you can't remember a dataset's project
-and also saves typing long dataset names.
+Open dataset selector
 }
