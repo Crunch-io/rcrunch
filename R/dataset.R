@@ -425,12 +425,12 @@ webToAPIURL <- function (url) {
     return(absoluteURL(path, getOption("crunch.api")))
 }
 
-#' View a Crunch Obect in the Web Application
+#' View a Crunch Object in the Web Application
 #'
 #' Convenience function that will use your system's "open" command to open
 #' a Crunch object in our web application in your default browser.
 #'
-#' @param x a Crunch Dataset, Variable or Multitable
+#' @param x a Crunch Dataset or Variable
 #' @return Nothing; called for side effect of opening your web browser.
 #' @name webApp
 #' @export
