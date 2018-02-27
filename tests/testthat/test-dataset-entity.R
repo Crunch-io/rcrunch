@@ -185,16 +185,6 @@ with_mock_crunch({
             "Not a valid web app URL")
     })
 
-    if (.Platform$OS.type == "unix") {
-        with_mock(
-            `crunch:::system_call`=function (command, args, ...) paste("SYSTEM CALL", args),
-            test_that("Opening a dataset on the web", {
-                expect_identical(webApp(ds),
-                    "SYSTEM CALL https://app.crunch.io/dataset/511a7c49778030653aab5963")
-            })
-        )
-    }
-
     test_that("Dataset VariableCatalog index is ordered", {
         expect_identical(urls(variables(ds)),
             c("https://app.crunch.io/api/datasets/1/variables/birthyr/",

@@ -105,6 +105,11 @@ with_mock_crunch({
         expect_error(digits(ds$birthyr) <- "0.7", "digit specifications should be an integer")
         expect_error(digits(ds$gender) <- 0, "digit specifications can only be set for numeric variables")
     })
+
+    test_that("APIToURL generates correct URL", {
+        expect_identical(APIToWebURL(ds$gender),
+            "https://app.crunch.io/dataset/1/browse?variableId=gender")
+    })
 })
 
 with_test_authentication({
