@@ -34,11 +34,20 @@ loadCube <- function (filename) {
 
 cubify <- function (..., dims) {
     ## Make readable test expectations for comparing cube output
+    ## Borrowed from Cube arrays, fixtures and cubes come in row-col-etc. order,
+    ## not column-major. Make array, then aperm the array back to order
     data <- c(...)
-    d <- vapply(dims, length, integer(1), USE.NAMES=FALSE)
-    array(matrix(data, byrow=TRUE, nrow=d[1]), dim=d, dimnames=dims)
-}
+    d <- rev(vapply(dims, length, integer(1), USE.NAMES=FALSE))
 
+    out <- array(data, dim=d)
+    if (length(dims) > 1) {
+        ap <- seq_len(length(dims))
+        ap <- rev(ap)
+        out <- aperm(out, ap)
+    }
+    dimnames(out) <- dims
+    return(out)
+}
 
 ## Contexts
 with_mock_crunch <- function (expr) {
