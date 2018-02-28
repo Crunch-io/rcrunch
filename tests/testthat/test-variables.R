@@ -52,6 +52,7 @@ with_mock_crunch({
         expect_identical(name(ds$gender), "Gender")
         expect_identical(description(ds$starttime), "Interview Start Time")
         expect_identical(alias(ds$gender), "gender")
+        expect_identical(id(ds$gender), "66ae9881e3524f7db84970d556c34552")
         expect_identical(notes(ds$gender), "")
         expect_identical(notes(ds$birthyr), "Asked instead of age")
     })
@@ -105,11 +106,6 @@ with_mock_crunch({
         expect_error(digits(ds$birthyr) <- "0.7", "digit specifications should be an integer")
         expect_error(digits(ds$gender) <- 0, "digit specifications can only be set for numeric variables")
     })
-
-    test_that("APIToURL generates correct URL", {
-        expect_identical(APIToWebURL(ds$gender),
-            "https://app.crunch.io/dataset/1/browse?variableId=gender")
-    })
 })
 
 with_test_authentication({
@@ -135,7 +131,6 @@ with_test_authentication({
     test_that("before modifying", {
         expect_identical(name(ds$v1), "v1")
         expect_identical(description(ds$v2), "")
-        expect_identical(alias(ds$v1), "v1")
         expect_identical(name(ds$v3), "v3")
         expect_identical(alias(ds$v3), "v3")
         expect_identical(notes(ds$v1), "")

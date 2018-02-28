@@ -151,7 +151,6 @@ setGeneric("weightVariables<-", function (x, value) standardGeneric("weightVaria
 setGeneric("is.weightVariable<-", function (x, value) standardGeneric("is.weightVariable<-"))
 setGeneric("is.weight<-", function (x, value) standardGeneric("is.weight<-"))
 setGeneric("whichCatalogEntry", function (x, i, ...) standardGeneric("whichCatalogEntry"))
-setGeneric("webApp", function(x) standardGeneric("webApp"))
 setGeneric("APIToWebURL", function(x) standardGeneric("APIToWebURL"))
 
 setGeneric("owner", function (x) standardGeneric("owner"))

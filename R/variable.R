@@ -23,6 +23,11 @@ setMethod("name<-", "CrunchVariable",
     function (x, value) setTupleSlot(x, "name", validateNewName(value)))
 #' @rdname describe
 #' @export
+setMethod("id", "CrunchVariable", function (x) {
+    return(x@tuple@body$id)
+})
+#' @rdname describe
+#' @export
 setMethod("description", "CrunchVariable", function (x) tuple(x)$description)
 #' @rdname describe
 #' @export
@@ -205,15 +210,9 @@ unbind <- function (x) {
     invisible(out)
 }
 
-#' @rdname webApp
-#' @export
-#' @importFrom utils browseURL
-setMethod("webApp", "CrunchVariable", function (x) browseURL(APIToWebURL(x)))
-
 setMethod("APIToWebURL", "CrunchVariable", function (x) {
-    url <- gsub("(app.crunch.io\\/api\\/datasets)", "app.crunch.io/dataset", self(x))
-    url <- gsub("\\/variables\\/", "\\/browse?variableId=", url)
-    return(gsub("\\/$", "", url))
+    ds_url <- gsub("(/api/datasets)", "/dataset", datasetReference(x))
+    return(paste0(ds_url, "browse?variableId=", id(x)))
 })
 
 #' "Subset" a Variable

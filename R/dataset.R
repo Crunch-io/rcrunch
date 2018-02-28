@@ -433,16 +433,15 @@ webToAPIURL <- function (url) {
 #' @param x a Crunch Dataset or Variable
 #' @return Nothing; called for side effect of opening your web browser.
 #' @name webApp
-#' @export
-NULL
-
-#' @rdname webApp
-#' @export
 #' @importFrom utils browseURL
-setMethod("webApp", "CrunchDataset", function (x) browseURL(APIToWebURL(x)))
-
-## Pass through for test mocking
-system_call <- function (...) system2(...)
+#' @export
+webApp <- function(x) {
+    url <- try(APIToWebURL(x), silent = TRUE)
+    if (inherits(url, "try-error")) {
+        stop("webApp is not available for objects of class ", class(x))
+    }
+    browseURL(url)
+}
 
 #' as.environment method for CrunchDataset
 #'
