@@ -438,7 +438,7 @@ webToAPIURL <- function (url) {
 webApp <- function(x) {
     url <- try(APIToWebURL(x), silent = TRUE)
     if (inherits(url, "try-error")) {
-        stop("webApp is not available for objects of class ", class(x))
+        halt("webApp is not available for objects of class ", class(x))
     }
     browseURL(url)
 }
