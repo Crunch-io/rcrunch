@@ -4,7 +4,7 @@ with_mock_crunch({
     test_that("If progress polling gives up, it tells you what to do", {
         with(temp.option(crunch.timeout=0.0005), {
             expect_error(
-                expect_output(pollProgress("https://app.crunch.io/api/progress/1/", wait=0.001),
+                expect_prints(pollProgress("https://app.crunch.io/api/progress/1/", wait=0.001),
                     "|================"),
                 paste('Your process is still running on the server. It is',
                     'currently 23% complete. Check',
@@ -37,7 +37,7 @@ with_mock_crunch({
                 status_code=200, headers=list(`Content-Type`="application/json")))
         },
         test_that("Progress polling goes until 100 and has a newline", {
-            ## Use capture.output rather than expect_output because the latter
+            ## Use capture.output rather than expect_prints because the latter
             ## concatenates things together and does not easily capture the effect
             ## of closing the progress bar, which is another item on the buffer.
             out <- capture.output(
@@ -51,7 +51,7 @@ with_mock_crunch({
             counter <<- 1
             logfile <- tempfile()
             with(temp.option(httpcache.log=logfile), {
-                expect_output(
+                expect_prints(
                     expect_identical(handleAPIresponse(fakeProg("https://app.crunch.io/api/progress/")),
                         "https://app.crunch.io/api/datasets/"),
                     "=| 100%", fixed=TRUE)
@@ -74,7 +74,7 @@ with_mock_crunch({
             counter <<- 1
             logfile <- tempfile()
             with(temp.option(httpcache.log=logfile), {
-                expect_output(
+                expect_prints(
                     expect_message(
                         expect_error(handleAPIresponse(fakeProg("https://app.crunch.io/api/progress2/")),
                             paste("Education, Commerce, and, uh, oops."), fixed=TRUE),

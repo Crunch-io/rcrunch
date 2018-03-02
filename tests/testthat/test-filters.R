@@ -18,7 +18,7 @@ with_mock_crunch({
                 is_public=c(FALSE, TRUE),
                 stringsAsFactors=FALSE
             ))
-        expect_output(filters(ds),
+        expect_prints(filters(ds),
             get_output(data.frame(
                     name=c("Occasional Political Interest", "Public filter"),
                     id=c("filter1", "filter2"),
@@ -29,7 +29,7 @@ with_mock_crunch({
     test_that("Empty filter catalog", {
         expect_is(filters(ds3), "FilterCatalog")
         expect_length(filters(ds3), 0)
-        expect_output(filters(ds3), get_output(data.frame()))
+        expect_prints(filters(ds3), get_output(data.frame()))
     })
 
     test_that("Filter catalog methods", {
@@ -118,7 +118,7 @@ with_mock_crunch({
     test_that("Print method for filter entity (debug)", {
         f <- CrunchFilter(crGET("a-filter/"))
         expect_is(f, "CrunchFilter")
-        expect_fixed_output(f,
+        expect_prints(f,
             'starttime %in% c("2016-04-06", "2016-04-15", "2016-04-25", "2016-05-06", "2016-05-13", "2016-05-27", "2016-06-06", "2016-06-14", "2016-06-29") & gender %in% "Male"')
     })
 })
@@ -137,13 +137,13 @@ with_test_authentication({
         expect_identical(name(filters(ds)[[1]]), "Test filter")
     })
     test_that("Show methods for filter and filter catalog", {
-        expect_output(filters(ds),
+        expect_prints(filters(ds),
             get_output(data.frame(
                     name="Test filter",
                     id=filters(ds)[["Test filter"]]@body$id,
                     is_public=FALSE
                 )), fixed=TRUE)
-        expect_output(filters(ds)[["Test filter"]],
+        expect_prints(filters(ds)[["Test filter"]],
             paste0('Crunch filter ', dQuote("Test filter"),
                 '\nExpression: v4 == "B"'))
     })

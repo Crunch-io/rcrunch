@@ -292,7 +292,7 @@ with_mock_crunch({
         expect_null(activeFilter(ds[rep(TRUE, nrow(ds)),]))
         expect_error(ds[c(TRUE, FALSE),],
             "Logical filter vector is length 2, but dataset has 25 rows")
-        expect_fixed_output(toJSON(activeFilter(ds[c(rep(FALSE, 4), TRUE,
+        expect_prints(toJSON(activeFilter(ds[c(rep(FALSE, 4), TRUE,
             rep(FALSE, 20)),])),
             paste0('{"function":"==","args":[{"function":"row",',
             '"args":[]},{"value":4}]}'))
