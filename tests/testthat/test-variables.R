@@ -131,6 +131,7 @@ with_test_authentication({
     test_that("before modifying", {
         expect_identical(name(ds$v1), "v1")
         expect_identical(description(ds$v2), "")
+        expect_identical(alias(ds$v1), "v1")
         expect_identical(name(ds$v3), "v3")
         expect_identical(alias(ds$v3), "v3")
         expect_identical(notes(ds$v1), "")
