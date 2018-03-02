@@ -215,7 +215,8 @@ setMethod("subtotals<-", c("CrunchVariable", "ANY"), function (x, value) {
             } else {
                 var_cats <- names(categories(x))
             }
-            ordered_cats <- a$categories[order(match( a$categories, var_cats))]
+            sub_cats <- a$categories[a$categories %in% var_cats]
+            ordered_cats <- sub_cats[order(match(sub_cats, var_cats))]
             a$after <- rev(ordered_cats)[1]
             return(a)
         } else {

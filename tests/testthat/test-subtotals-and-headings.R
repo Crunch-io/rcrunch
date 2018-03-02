@@ -133,6 +133,16 @@ with_mock_crunch({
             '{"view":{"transform":{"insertions":[',
             '{"anchor":-1,"name":"Not men","function":"subtotal","args":[-1,1]},',
             '{"anchor":2,"name":"Women","function":"subtotal","args":[2]}]}}}')
+
+        # one supplied category (23) isn't a real category, after should still be -1
+        expect_PATCH(subtotals(ds$gender) <- list(
+            Subtotal(name = "Not men", categories = c(-1, 1, 23)), # categories supplied in reverse order
+            Subtotal(name = "Women", categories = "Female")
+        ),
+            'https://app.crunch.io/api/datasets/1/variables/gender/',
+            '{"view":{"transform":{"insertions":[',
+            '{"anchor":-1,"name":"Not men","function":"subtotal","args":[-1,1,23]},',
+            '{"anchor":2,"name":"Women","function":"subtotal","args":[2]}]}}}')
     })
 
     test_that("subtotals and headers to a variable that has some, appends", {
