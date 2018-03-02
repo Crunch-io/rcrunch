@@ -276,3 +276,34 @@ noTransforms <- function (cube) {
     transforms(cube) <- NULL
     return(cube)
 }
+
+#' An experimental function to melt a crunch cube into a long dataframe
+#'
+#' As cubes become more complex, and especially as they involve several multiple
+#' response variables, it gets increasingly difficult to reason about them. The
+#' reason is that while crunch variables are one dimensional (adding a variable to
+#' a cube adds one dimension), MR variables have two dimensions: the value of the selction
+#' and whether that value is in fact selected. This means that when you add an MR
+#' to a cube you are adding two dimensions, not one. However when we display these
+#' cubes to the user we pretend that MRs are just like other variables. This means
+#' we have to keep track of two high dimensional arrays. The one the user sees and the
+#' one we program with.
+#'
+#' This function outputs a long data.frame with the same information as the cube.
+#' Additional dimensions are represented by additional columns in the data frame.
+#' This means that it's easier to feed the output into other packages which require
+#' tabular data structures, and might make it easier to validate expectations because
+#' you can approach the output just like a database.
+#'
+#' @param cube a Crunch Cube
+#' @export
+cubeToLongDF <- function(cube) {
+    arr <- cube@arrays$count
+    for (i in seq_along(dimnames(arr))) {
+        #TODO need more robust way of identifying MR selections
+        if (all( c("Selected", "Not Selected") %in% dimnames(arr)[[i]])) {
+            names(dimnames(arr))[i] <- paste0(names(dimnames(arr))[i], "_select")
+        }
+    }
+    return(arrayhelpers::array2df(arr, label.x = "value"))
+}

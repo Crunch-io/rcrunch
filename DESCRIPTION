@@ -26,6 +26,7 @@ Imports:
     jsonlite (>= 0.9.15),
     methods
 Suggests:
+    arrayhelpers,
     covr,
     devtools,
     httptest (>= 3.0.0),
