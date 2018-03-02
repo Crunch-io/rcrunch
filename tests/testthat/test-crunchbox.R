@@ -15,8 +15,6 @@ test_that("Embed URL", {
 })
 
 test_that("Iframe code (prints and returns invisibly)", {
-    ## Use the testthat version of expect_prints because the crunch version
-    ## calls print explicitly
     expect_output(
         expect_identical(embedCrunchBox("http://cf.example/d/stuff/1a1577c91fbb2c1cbd3800e181188508/dataset.json"),
             '<iframe src="//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c1cbd3800e181188508/" width="600" height="480" style="border: 1px solid #d3d3d3;"></iframe>'),
