@@ -10,46 +10,12 @@ vignette: >
 
 [Crunch.io](http://crunch.io/) provides a cloud-based data store and analytic engine. It has a [web client](https://app.crunch.io/) for interactive data exploration and visualization. The **crunch** package for R allows analysts to interact with and manipulate Crunch datasets from within R. Importantly, this allows technical researchers to collaborate naturally with team members, managers, and clients who prefer a point-and-click interface: because all connect to the same dataset in the cloud, there is no need to email files back and forth continually to share results.
 
-```{r, message=FALSE}
+
+```r
 library(crunch)
 ```
 
-```{r, results='hide', echo=FALSE, message=FALSE}
-options(
-    width=120,
-    ## For real auth, pass in creds via env vars. This makes login() not error when mocking
-    crunch.email="fake",
-    crunch.pw="fake",
-    crunch.show.progress=FALSE
-)
-library(httptest)
-library(magrittr)
-set_redactor(function (response) {
-    ## Remove multipart form fields because POST sources/ sends a tmpfile path
-    ## that's different every time, so the request will never match.
-    response$request$fields <- NULL
-    ## So that the login request isn't tied to one user's creds, ignore it in mocks
-    if (response$url == "https://app.crunch.io/api/public/login/") {
-        response$request$options[["postfields"]] <- NULL
-    }
-    response %>%
-        redact_auth() %>%
-        gsub_response("([0-9a-f]{6})[0-9a-f]{26}", "\\1") %>% ## Prune UUIDs
-        gsub_response("https.//app.crunch.io/api/progress/.*?/",
-            "https://app.crunch.io/api/progress/") %>%        ## Progress is meaningless in mocks
-        gsub_response("https.//app.crunch.io/api", "")        ## Shorten URL
-})
-set_requester(function (request) {
-    request$fields <- NULL
-    if (request$url == "https://app.crunch.io/api/public/login/") {
-        request$options[["postfields"]] <- NULL
-    }
-    request %>%
-        gsub_request("https.//app.crunch.io/api", "")        ## Shorten URL
-})
-start_vignette("crunch")
-login()
-```
+
 
 Both **crunch** and the Crunch web application communicate with the same application programming interface (API), served over secure HTTP. Within an R script or interactive session, the **crunch** package allows you to interact with your data in Crunch with expressive, idiomatic R. Functions in crunch handle the translation between R objects and API requests and responses, so you can typically interact with your datasets as if they were local `data.frames` (with some additional metadata), not data on a remote server.
 
@@ -57,7 +23,8 @@ Both **crunch** and the Crunch web application communicate with the same applica
 
 All work with data in Crunch requires authentication. Thus, the first step after loading the **crunch** package is to log in. In an interactive R session, provide the email address associated with your Crunch account, and you will be prompted to give your password safely:
 
-```{r, eval=FALSE}
+
+```r
 login("xkcd@crunch.io")
 ```
 ```
@@ -81,16 +48,26 @@ To create new datasets, multiple paths exist. In the web application, you can up
 
 We've included with the package a sample from the [2017 Stack Overflow developer survey](https://insights.stackoverflow.com/survey/), filtered on those respondents who reported having been R users and selecting 25 variables.
 
-```{r}
+
+```r
 data(SO_survey)
 dim(SO_survey)
 ```
 
+```
+## [1] 1634   23
+```
+
 You can create a dataset from any `data.frame` you have in your R session with `newDataset`. Let's use that sample dataset:
 
-```{r}
+
+```r
 ds <- newDataset(SO_survey, name="Stack Overflow Developer Survey 2017")
 dim(ds)
+```
+
+```
+## [1] 1634   25
 ```
 
 `newDataset` translates R data types into their analogous types in Crunch.
@@ -116,37 +93,50 @@ What this vignette should do. Tell a complete story of getting your data in (and
 
 Dataset have metadata beyond what a `data.frame` has. Datasets have a human-readable `name`, which you specified when you created it, and a `description`.
 
-```{r}
+
+```r
 name(ds)
+```
+
+```
+## [1] "Stack Overflow Developer Survey 2017"
+```
+
+```r
 description(ds)
+```
+
+```
+## [1] ""
 ```
 
 Both can be set with `<-` assignment. Let's give our dataset an informative description:
 
-```{r, echo=FALSE}
-change_state()
-```
 
-```{r}
+
+
+```r
 description(ds) <- "U.S. nationally representative sample, 1000 respondents"
 description(ds)
+```
+
+```
+## [1] "U.S. nationally representative sample, 1000 respondents"
 ```
 
 ## Archiving and deleting datasets
 
 Datasets can also be deleted permanently. This action cannot be undone, so it should not be done lightly. `crunch` provides two ways to delete a dataset: a `delete()` method on a dataset object, like
 
-```{r, eval=FALSE}
+
+```r
 ## Not run
 delete(ds)
 ```
 
 The second way to delete is `deleteDataset()`: you supply a dataset name. This way is faster if you have not already loaded the dataset object into your R session: no need to fetch something from the server just to then tell the server to delete it.
 
-```{r, include=FALSE}
-logout()
-end_vignette()
-```
+
 
 <!-- * [Datasets](datasets.html): creating, loading, and manipulating datasets in Crunch
 * [Variables](variables.html): cleaning and defining variable metadata

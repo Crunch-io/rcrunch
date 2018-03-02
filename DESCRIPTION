@@ -39,11 +39,12 @@ VignetteBuilder: knitr
 Language: en-US
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
-Collate: 
+Collate:
     'AllClasses.R'
     'AllGenerics.R'
     'variable-definition.R'
     'R-to-variable.R'
+    'SO-survey.R'
     'abstract-categories.R'
     'abstract-category.R'
     'add-subvariable.R'
