@@ -1,0 +1,1 @@
+{"element": "shoji:view", "self": "/api/progress/", "views": {"result": "/api/progress/result/"}, "value": {"progress": 100, "message": "complete"}}

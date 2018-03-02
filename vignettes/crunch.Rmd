@@ -37,7 +37,7 @@ set_redactor(function (response) {
         gsub_response("([0-9a-f]{6})[0-9a-f]{26}", "\\1") %>% ## Prune UUIDs
         gsub_response("https.//app.crunch.io/api/progress/.*?/",
             "https://app.crunch.io/api/progress/") %>%        ## Progress is meaningless in mocks
-        gsub_response("https.//app.crunch.io/api", "")        ## Shorten URL
+        gsub_response("https.//app.crunch.io", "")        ## Shorten URL
 })
 set_requester(function (request) {
     request$fields <- NULL
@@ -45,7 +45,7 @@ set_requester(function (request) {
         request$options[["postfields"]] <- NULL
     }
     request %>%
-        gsub_request("https.//app.crunch.io/api", "")        ## Shorten URL
+        gsub_request("https.//app.crunch.io", "")        ## Shorten URL
 })
 start_vignette("crunch")
 login()
