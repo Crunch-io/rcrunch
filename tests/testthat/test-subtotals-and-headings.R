@@ -216,7 +216,7 @@ with_test_authentication({
 
         expect_json_equivalent(transforms(ds$v4), trans_resp)
 
-        expect_output(subtotals(ds$v4),
+        expect_prints(subtotals(ds$v4),
                       get_output(data.frame(
                           anchor = c("top", 1, 2, "bottom"),
                           name = c("This is a subtitle","B alone","C alone", "B+C"),
