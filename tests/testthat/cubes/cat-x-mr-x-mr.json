@@ -1,0 +1,816 @@
+{
+  "element": "shoji:view",
+  "self": "https://api/datasets/123/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapi%2Fdatasets%2F123%2F000003%2F%22%7D%2C%7B%22each%22%3A%22https%3A%2F%2Fapi%2Fdatasets%2F123%2F000013%2F%22%7D%2C%7B%22function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapi%2Fdatasets%2F123%2F000013%2F%22%7D%5D%7D%2C%7B%22each%22%3A%22https%3A%2F%2Fapi%2Fdatasets%2F123%2F000014%2F%22%7D%2C%7B%22function%22%3A%22as_selected%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapi%2Fdatasets%2F123%2F000014%2F%22%7D%5D%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
+  "value": {
+    "query": {
+      "measures": {
+        "count": {
+          "function": "cube_count",
+          "args": []
+        }
+      },
+      "dimensions": [
+        {
+          "variable": "https://api/datasets/123/variables/000003/"
+        },
+        {
+          "each": "https://api/datasets/123/variables/000013/"
+        },
+        {
+          "function": "as_selected",
+          "args": [
+            {
+              "variable": "https://api/datasets/123/variables/000013/"
+            }
+          ]
+        },
+        {
+          "each": "https://api/datasets/123/variables/000014/"
+        },
+        {
+          "function": "as_selected",
+          "args": [
+            {
+              "variable": "https://api/datasets/123/variables/000014/"
+            }
+          ]
+        }
+      ],
+      "weight": null
+    },
+    "query_environment": {
+      "filter": []
+    },
+    "result": {
+      "dimensions": [
+        {
+          "references": {
+            "alias": "animal",
+            "name": "animal"
+          },
+          "derived": false,
+          "type": {
+            "ordinal": false,
+            "class": "categorical",
+            "categories": [
+              {
+                "numeric_value": 1,
+                "missing": false,
+                "id": 1,
+                "name": "cats"
+              },
+              {
+                "numeric_value": null,
+                "missing": true,
+                "id": -1,
+                "name": "No Data"
+              },
+              {
+                "numeric_value": 2,
+                "missing": false,
+                "id": 2,
+                "name": "dogs"
+              }
+            ]
+          }
+        },
+        {
+          "derived": true,
+          "references": {
+            "description": "",
+            "format": {
+              "summary": {
+                "digits": 0
+              }
+            },
+            "subreferences": [
+              {
+                "alias": "food_opinion#",
+                "name": "food_opinion"
+              },
+              {
+                "alias": "rest_opinion#",
+                "name": "rest_opinion"
+              },
+              {
+                "alias": "play_opinion#",
+                "name": "play_opinion"
+              }
+            ],
+            "notes": "",
+            "name": "opinion MR",
+            "discarded": false,
+            "alias": "opinion_mr",
+            "view": {
+              "show_counts": false,
+              "include_missing": false,
+              "column_width": null
+            }
+          },
+          "type": {
+            "subtype": {
+              "class": "variable"
+            },
+            "elements": [
+              {
+                "id": 1,
+                "value": {
+                  "derived": false,
+                  "references": {
+                    "alias": "food_opinion#",
+                    "name": "food_opinion"
+                  },
+                  "id": "000002",
+                  "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [
+                      {
+                        "numeric_value": 1,
+                        "selected": true,
+                        "id": 1,
+                        "missing": false,
+                        "name": "Selected"
+                      },
+                      {
+                        "numeric_value": 0,
+                        "missing": false,
+                        "id": 0,
+                        "name": "Not Selected"
+                      },
+                      {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                      }
+                    ]
+                  }
+                },
+                "missing": false
+              },
+              {
+                "id": 2,
+                "value": {
+                  "derived": false,
+                  "references": {
+                    "alias": "rest_opinion#",
+                    "name": "rest_opinion"
+                  },
+                  "id": "000000",
+                  "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [
+                      {
+                        "numeric_value": 1,
+                        "selected": true,
+                        "id": 1,
+                        "missing": false,
+                        "name": "Selected"
+                      },
+                      {
+                        "numeric_value": 0,
+                        "missing": false,
+                        "id": 0,
+                        "name": "Not Selected"
+                      },
+                      {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                      }
+                    ]
+                  }
+                },
+                "missing": false
+              },
+              {
+                "id": 3,
+                "value": {
+                  "derived": false,
+                  "references": {
+                    "alias": "play_opinion#",
+                    "name": "play_opinion"
+                  },
+                  "id": "000005",
+                  "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [
+                      {
+                        "numeric_value": 1,
+                        "selected": true,
+                        "id": 1,
+                        "missing": false,
+                        "name": "Selected"
+                      },
+                      {
+                        "numeric_value": 0,
+                        "missing": false,
+                        "id": 0,
+                        "name": "Not Selected"
+                      },
+                      {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                      }
+                    ]
+                  }
+                },
+                "missing": false
+              }
+            ],
+            "class": "enum"
+          }
+        },
+        {
+          "references": {
+            "description": "",
+            "format": {
+              "summary": {
+                "digits": 0
+              }
+            },
+            "subreferences": [
+              {
+                "alias": "food_opinion#",
+                "name": "food_opinion"
+              },
+              {
+                "alias": "rest_opinion#",
+                "name": "rest_opinion"
+              },
+              {
+                "alias": "play_opinion#",
+                "name": "play_opinion"
+              }
+            ],
+            "notes": "",
+            "discarded": false,
+            "alias": "opinion_mr",
+            "view": {
+              "show_counts": false,
+              "include_missing": false,
+              "column_width": null
+            },
+            "name": "opinion MR"
+          },
+          "derived": true,
+          "type": {
+            "ordinal": false,
+            "subvariables": [
+              "000002",
+              "000000",
+              "000005"
+            ],
+            "class": "categorical",
+            "categories": [
+              {
+                "numeric_value": 1,
+                "selected": true,
+                "id": 1,
+                "missing": false,
+                "name": "Selected"
+              },
+              {
+                "numeric_value": 0,
+                "missing": false,
+                "id": 0,
+                "name": "Not Selected"
+              },
+              {
+                "numeric_value": null,
+                "missing": true,
+                "id": -1,
+                "name": "No Data"
+              }
+            ]
+          }
+        },
+        {
+          "derived": true,
+          "references": {
+            "description": "",
+            "format": {
+              "summary": {
+                "digits": 0
+              }
+            },
+            "subreferences": [
+              {
+                "alias": "cat_feeling#",
+                "name": "cat_feeling"
+              },
+              {
+                "alias": "dog_feeling#",
+                "name": "dog_feeling"
+              }
+            ],
+            "notes": "",
+            "name": "feeling MR",
+            "discarded": false,
+            "alias": "feeling_mr",
+            "view": {
+              "show_counts": false,
+              "include_missing": false,
+              "column_width": null
+            }
+          },
+          "type": {
+            "subtype": {
+              "class": "variable"
+            },
+            "elements": [
+              {
+                "id": 1,
+                "value": {
+                  "derived": false,
+                  "references": {
+                    "alias": "cat_feeling#",
+                    "name": "cat_feeling"
+                  },
+                  "id": "000001",
+                  "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [
+                      {
+                        "numeric_value": 1,
+                        "selected": true,
+                        "id": 1,
+                        "missing": false,
+                        "name": "Selected"
+                      },
+                      {
+                        "numeric_value": 0,
+                        "missing": false,
+                        "id": 0,
+                        "name": "Not Selected"
+                      },
+                      {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                      }
+                    ]
+                  }
+                },
+                "missing": false
+              },
+              {
+                "id": 2,
+                "value": {
+                  "derived": false,
+                  "references": {
+                    "alias": "dog_feeling#",
+                    "name": "dog_feeling"
+                  },
+                  "id": "000004",
+                  "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [
+                      {
+                        "numeric_value": 1,
+                        "selected": true,
+                        "id": 1,
+                        "missing": false,
+                        "name": "Selected"
+                      },
+                      {
+                        "numeric_value": 0,
+                        "missing": false,
+                        "id": 0,
+                        "name": "Not Selected"
+                      },
+                      {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                      }
+                    ]
+                  }
+                },
+                "missing": false
+              }
+            ],
+            "class": "enum"
+          }
+        },
+        {
+          "references": {
+            "description": "",
+            "format": {
+              "summary": {
+                "digits": 0
+              }
+            },
+            "subreferences": [
+              {
+                "alias": "cat_feeling#",
+                "name": "cat_feeling"
+              },
+              {
+                "alias": "dog_feeling#",
+                "name": "dog_feeling"
+              }
+            ],
+            "notes": "",
+            "discarded": false,
+            "alias": "feeling_mr",
+            "view": {
+              "show_counts": false,
+              "include_missing": false,
+              "column_width": null
+            },
+            "name": "feeling MR"
+          },
+          "derived": true,
+          "type": {
+            "ordinal": false,
+            "subvariables": [
+              "000001",
+              "000004"
+            ],
+            "class": "categorical",
+            "categories": [
+              {
+                "numeric_value": 1,
+                "selected": true,
+                "id": 1,
+                "missing": false,
+                "name": "Selected"
+              },
+              {
+                "numeric_value": 0,
+                "missing": false,
+                "id": 0,
+                "name": "Not Selected"
+              },
+              {
+                "numeric_value": null,
+                "missing": true,
+                "id": -1,
+                "name": "No Data"
+              }
+            ]
+          }
+        }
+      ],
+      "missing": 0,
+      "measures": {
+        "count": {
+          "data": [
+            1159,
+            4887,
+            0,
+            3597,
+            2449,
+            0,
+            755,
+            3199,
+            0,
+            2361,
+            1593,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            197,
+            811,
+            0,
+            604,
+            404,
+            0,
+            1717,
+            7275,
+            0,
+            5354,
+            3638,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            192,
+            782,
+            0,
+            582,
+            392,
+            0,
+            1722,
+            7304,
+            0,
+            5376,
+            3650,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            159,
+            765,
+            0,
+            94,
+            830,
+            0,
+            1794,
+            7282,
+            0,
+            950,
+            8126,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1182,
+            4839,
+            0,
+            625,
+            5396,
+            0,
+            771,
+            3208,
+            0,
+            419,
+            3560,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            1142,
+            4824,
+            0,
+            623,
+            5343,
+            0,
+            811,
+            3223,
+            0,
+            421,
+            3613,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0,
+            0
+          ],
+          "n_missing": 0,
+          "metadata": {
+            "references": {},
+            "derived": true,
+            "type": {
+              "integer": true,
+              "missing_rules": {},
+              "missing_reasons": {
+                "No Data": -1
+              },
+              "class": "numeric"
+            }
+          }
+        }
+      },
+      "element": "crunch:cube",
+      "counts": [
+        1159,
+        4887,
+        0,
+        3597,
+        2449,
+        0,
+        755,
+        3199,
+        0,
+        2361,
+        1593,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        197,
+        811,
+        0,
+        604,
+        404,
+        0,
+        1717,
+        7275,
+        0,
+        5354,
+        3638,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        192,
+        782,
+        0,
+        582,
+        392,
+        0,
+        1722,
+        7304,
+        0,
+        5376,
+        3650,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        159,
+        765,
+        0,
+        94,
+        830,
+        0,
+        1794,
+        7282,
+        0,
+        950,
+        8126,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1182,
+        4839,
+        0,
+        625,
+        5396,
+        0,
+        771,
+        3208,
+        0,
+        419,
+        3560,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        1142,
+        4824,
+        0,
+        623,
+        5343,
+        0,
+        811,
+        3223,
+        0,
+        421,
+        3613,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "n": 20000
+    }
+  }
+}
