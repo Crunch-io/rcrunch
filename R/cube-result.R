@@ -20,7 +20,13 @@ setMethod("[", "CrunchCube", function (x, i, j, ...) {
     translated_subset <- translateCubeIndex(x, subset)
     out <- x
     out@arrays$count <- subsetArray(out@arrays$count, translated_subset)
-    out@arrays$.unweighted_counts <- subsetArray(out@arrays$.unweighted_counts, translated_subset)
+    out@arrays$.unweighted_counts <- subsetArray(out@arrays$.unweighted_counts,
+        translated_subset)
+
+    out@dims[] <- mapply(subsetArrayDimension,
+        dim = x@dims,
+        idx = translated_subset,
+        SIMPLIFY = FALSE)
 
     keep_args <- vapply(translated_subset, function(out) {
         length(out) != 1 || isTRUE(out)}, FUN.VALUE = logical(1))
@@ -31,6 +37,11 @@ setMethod("[", "CrunchCube", function (x, i, j, ...) {
 
 subsetArray <- function(arr, arglist){
     do.call('[', c(list(x =arr), arglist))
+}
+subsetArrayDimension <- function(dim, idx){
+    dim$any.or.none <- dim$any.or.none[idx]
+    dim$missing <- dim$missing[idx]
+    return(dim)
 }
 
 translateCubeIndex <- function(x, subset) {
