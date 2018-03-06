@@ -56,8 +56,8 @@ datasets <- function (x=getAPIRoot()) {
 listDatasets <- function (kind=c("active", "all", "archived"), project=NULL,
     refresh=FALSE, shiny = FALSE) {
     if (shiny) {
-        if (all(c("rstudioapi", "shiny", "miniUI") %in% rownames(installed.packages())) &&
-                rstudioapi::isAvailable("0.99.878")) {
+        checkInstalledPackages(c("rstudioapi", "shiny", "miniUI"))
+        if (rstudioapi::isAvailable("0.99.878")) {
             listDatasetGadget(kind, refresh)
         } else {
             halt("Dataset viewer can only be accessed from RStudio versions 0.99.878 or later.")

@@ -271,3 +271,15 @@ escapeQuotes <- function(str) {
     str <- gsub("'", "\\\\'", str)
     gsub('\"', '\\\\"', str)
 }
+
+#' Check if a user has packages installed
+#'
+#' @param pkgs a character vector of package names to check.
+#'
+#' @return nothing, called for side effects
+checkInstalledPackages <- function(pkgs){
+    installed <- pkgs %in% rownames(installed.packages())
+    if (!all(installed)){
+        halt("Missing required packages: ", serialPaste(dQuote(pkgs[!installed])))
+    }
+}
