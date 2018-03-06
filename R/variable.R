@@ -24,7 +24,7 @@ setMethod("name<-", "CrunchVariable",
 #' @rdname describe
 #' @export
 setMethod("id", "CrunchVariable", function (x) {
-    return(x@tuple@body$id)
+    return(tuple(x)$id)
 })
 #' @rdname describe
 #' @export
@@ -211,7 +211,7 @@ unbind <- function (x) {
 }
 
 setMethod("APIToWebURL", "CrunchVariable", function (x) {
-    ds_url <- gsub("(/api/datasets)", "/dataset", datasetReference(x))
+    ds_url <- gsub("/api/datasets", "/dataset", datasetReference(x))
     return(paste0(ds_url, "browse?variableId=", id(x)))
 })
 

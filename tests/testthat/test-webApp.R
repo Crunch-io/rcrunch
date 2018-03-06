@@ -20,6 +20,6 @@ with_mock_crunch({
             "https://app.crunch.io/dataset/1/browse?variableId=66ae9881e3524f7db84970d556c34552")
     })
     test_that("webApp errors correctly", {
-        expect_error(webApp(mtcars), "webApp is not available for objects of class data.frame")
+        expect_error(webApp(mtcars), "Web URL is not available for objects of class data.frame")
     })
 })

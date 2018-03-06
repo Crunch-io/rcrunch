@@ -412,6 +412,9 @@ setMethod("allVariables<-", c("CrunchDataset", "VariableCatalog"),
 
 setMethod("hidden", "CrunchDataset", function (x) hidden(allVariables(x)))
 
+setMethod("APIToWebURL", "ANY", function (x) {
+    halt("Web URL is not available for objects of class ", class(x))
+})
 setMethod("APIToWebURL", "CrunchDataset", function (x) {
     return(paste0(absoluteURL("/", getOption("crunch.api")), "dataset/", id(x)))
 })
@@ -435,13 +438,7 @@ webToAPIURL <- function (url) {
 #' @name webApp
 #' @importFrom utils browseURL
 #' @export
-webApp <- function(x) {
-    url <- try(APIToWebURL(x), silent = TRUE)
-    if (inherits(url, "try-error")) {
-        halt("webApp is not available for objects of class ", class(x))
-    }
-    browseURL(url)
-}
+webApp <- function(x) browseURL(APIToWebURL(x))
 
 #' as.environment method for CrunchDataset
 #'
