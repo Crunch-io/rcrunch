@@ -15,6 +15,39 @@ setMethod("initialize", "CrunchCube", function (.Object, ...) {
 
 #' @rdname cube-methods
 #' @export
+setMethod("[", "CrunchCube", function (x, i, j, ...) {
+    subset <- list(i, j, ...)
+    translated_subset <- translateCubeIndex(x, subset)
+    out <- x
+    out@arrays$count <- subsetArray(out@arrays$count, translated_subset)
+    out@arrays$.unweighted_counts <- subsetArray(out@arrays$.unweighted_counts, translated_subset)
+
+    keep_args <- vapply(translated_subset, function(out) {
+        length(out) != 1 || isTRUE(out)}, FUN.VALUE = logical(1))
+    keep_dims <- names(dimnames(out@arrays$count))[keep_args]
+    out@dims <- out@dims[(names(out@dims) %in% keep_dims)]
+    return(out)
+})
+
+subsetArray <- function(arr, arglist){
+    do.call('[', c(list(x =arr), arglist))
+}
+
+translateCubeIndex <- function(x, subset) {
+    user_names <- names(dimnames(as.array(x))) #the user facing cube
+    prog_names <- names(dimnames(x@arrays$count)) #the higher dimensional internal cube
+    out <- as.list(rep(TRUE, length(prog_names)))
+    # MR variables are represented by two dimensions, one is the indicator dimension
+    # and the second is the selection dimension (selected/not selected). The selection
+    # dimension comes after the indicator dimension, so we can use match to identify
+    # the first occurance of the mr_name in the cube.
+    out[match(user_names, prog_names)] <- subset
+    return(out)
+}
+
+
+#' @rdname cube-methods
+#' @export
 setMethod("dim", "CrunchCube", function (x) dim(dimensions(x)))
 
 #' @rdname cube-methods
