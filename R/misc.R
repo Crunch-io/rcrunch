@@ -268,8 +268,7 @@ has.function <- function (query, funcs) {
 }
 
 escapeQuotes <- function(str) {
-    str <- gsub("'", "\\\\'", str)
-    gsub('\"', '\\\\"', str)
+    gsub("'", "\\\\'", str)
 }
 
 #' Check if a user has packages installed

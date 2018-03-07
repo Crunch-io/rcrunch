@@ -15,8 +15,6 @@ test_that("buildLoadDatasetCall", {
 
 test_that("escapeQuotes", {
     expect_identical(escapeQuotes("test's tests"), "test\\'s tests")
-    expect_identical(escapeQuotes('test "the test" tests'), "test \\\"the test\\\" tests")
-    expect_identical(escapeQuotes("Mr. roger's \"neighborhood\""), "Mr. roger\\'s \\\"neighborhood\\\"")
     str <- "no quotes"
     expect_identical(escapeQuotes(str), str)
 }

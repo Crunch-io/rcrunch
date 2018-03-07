@@ -2,7 +2,7 @@
 #'
 #' @inheritParams listDatasets
 #' @return A `loadDataset()` call is pasted into your RStudio session`
-listDatasetGadget <- function(kind=c("active", "all", "archived"),
+listDatasetGadget <- function (kind=c("active", "all", "archived"),
     refresh = FALSE){
     projects <- c("Personal Project", names(projects()))
     personal_datasets <- listDatasets(kind = kind, refresh = refresh)
@@ -23,7 +23,7 @@ listDatasetGadget <- function(kind=c("active", "all", "archived"),
         )
     )
 
-    server <- function(input, output, session) {
+    server <- function (input, output, session) {
         output$dataset <- shiny::renderUI({
             if (input$project == "Personal Project") {
                 selections <- personal_datasets
@@ -44,18 +44,18 @@ listDatasetGadget <- function(kind=c("active", "all", "archived"),
     shiny::runGadget(ui, server)
 }
 
-buildLoadDatasetCall <- function(project, dataset, ds_name = "") {
+buildLoadDatasetCall <- function (project, dataset, ds_name = "") {
     dataset <- escapeQuotes(dataset)
     assignment <- ifelse(nchar(ds_name) > 0,
-                paste0(ds_name, " <- "),
-                "")
-            if (project == "Personal Project") {
-                code <- paste0(assignment, "loadDataset('", dataset,"')")
-            } else {
-                code <- paste0(assignment, "loadDataset('",
-                    dataset,
-                    "', project = '",
-                    escapeQuotes(project), "')" )
-            }
+        paste0(ds_name, " <- "),
+        "")
+    if (project == "Personal Project") {
+        code <- paste0(assignment, "loadDataset('", dataset,"')")
+    } else {
+        code <- paste0(assignment, "loadDataset('",
+            dataset,
+            "', project = '",
+            escapeQuotes(project), "')" )
+    }
     return(code)
 }
