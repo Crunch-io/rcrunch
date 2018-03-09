@@ -17,6 +17,8 @@
 \alias{notes<-}
 \alias{digits}
 \alias{digits<-}
+\alias{uniformBasis}
+\alias{uniformBasis<-}
 \alias{name,CrunchDataset-method}
 \alias{name<-,CrunchDataset-method}
 \alias{description,CrunchDataset-method}
