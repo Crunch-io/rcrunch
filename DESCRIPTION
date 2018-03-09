@@ -71,6 +71,7 @@ Collate:
     'crunch.R'
     'crunchbox.R'
     'cube-dims.R'
+    'cube-index-table.R'
     'cube-query.R'
     'cube-residuals.R'
     'cube-result.R'
