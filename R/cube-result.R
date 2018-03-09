@@ -14,45 +14,96 @@ setMethod("initialize", "CrunchCube", function (.Object, ...) {
 })
 
 #' @rdname cube-methods
-#' @export
-setMethod("[", "CrunchCube", function (x, i, j, ...) {
-    subset <- list(i, j, ...)
-    translated_subset <- translateCubeIndex(x, subset)
+#' @export'
+setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
+    subset <- eval(substitute(alist(i, j, ...)))
+    subset <- replaceMissingWithTRUE(subset)
+    translated_subset <- translateCubeIndex(x, subset, drop)
+
     out <- x
-    out@arrays$count <- subsetArray(out@arrays$count, translated_subset)
-    out@arrays$.unweighted_counts <- subsetArray(out@arrays$.unweighted_counts,
-        translated_subset)
+    out@arrays$count <- subsetByList(out@arrays$count, translated_subset, drop)
+    out@arrays$.unweighted_counts <- subsetByList(out@arrays$.unweighted_counts,
+        translated_subset, drop)
 
     out@dims[] <- mapply(subsetArrayDimension,
         dim = x@dims,
         idx = translated_subset,
         SIMPLIFY = FALSE)
 
-    keep_args <- vapply(translated_subset, function(out) {
-        length(out) != 1 || isTRUE(out)}, FUN.VALUE = logical(1))
-    keep_dims <- names(dimnames(out@arrays$count))[keep_args]
-    out@dims <- out@dims[(names(out@dims) %in% keep_dims)]
+    if (drop) {
+        keep_args <- vapply(translated_subset, function(out) {
+            length(out) != 1 || isTRUE(out)}, FUN.VALUE = logical(1))
+        keep_dims <- names(dimnames(x@arrays$count))[keep_args]
+        out@dims <- out@dims[(names(out@dims) %in% keep_dims)]
+    }
     return(out)
 })
 
-subsetArray <- function(arr, arglist){
-    do.call('[', c(list(x =arr), arglist))
+replaceMissingWithTRUE <- function(l){
+    # It turns out that missing no longer works if the argument is in a list
+    # the tryCatch approach was the only way I could see to check missingness
+    # once the dots have been captured into a list.
+    out <- lapply(l, function(x){
+        if (is.symbol(x)) {
+            x <- tryCatch(eval(x), error = function(c){
+                msg <- conditionMessage(c)
+                if (msg == "argument is missing, with no default") {
+                    return(TRUE)
+                } else {
+                    stop(c)
+                }
+            })
+        }
+        return(eval(x))
+    })
+    return(out)
 }
+
+subsetByList <- function(arr, arglist, drop){
+    #suppresses "named arguments other than drop are discouraged" warning
+    suppressWarnings(
+        do.call('[', c(list(x = arr, drop = drop), arglist))
+        )
+}
+
 subsetArrayDimension <- function(dim, idx){
     dim$any.or.none <- dim$any.or.none[idx]
     dim$missing <- dim$missing[idx]
+    dim$name <- dim$name[idx]
     return(dim)
 }
 
-translateCubeIndex <- function(x, subset) {
+translateCubeIndex <- function(x, subset, drop) {
     user_names <- names(dimnames(as.array(x))) #the user facing cube
+    if (length(subset) != length(user_names)) {
+        halt("You supplied ",
+            length(subset),
+            " dimensions to subset a ",
+            length(user_names),
+            " dimensional cube.")
+    }
     prog_names <- names(dimnames(x@arrays$count)) #the higher dimensional internal cube
+    if (length(prog_names) == length(user_names)) {
+        #no MR variables so no need to translate the subset
+        return(subset)
+    }
     out <- as.list(rep(TRUE, length(prog_names)))
-    # MR variables are represented by two dimensions, one is the indicator dimension
-    # and the second is the selection dimension (selected/not selected). The selection
-    # dimension comes after the indicator dimension, so we can use match to identify
-    # the first occurance of the mr_name in the cube.
     out[match(user_names, prog_names)] <- subset
+    vars <- as.data.frame(variables(x))
+    mr_vars <- vars$alias[vars$type == "subvariable_items"]
+    if (drop) {
+        for (i in seq_along(prog_names)) {
+            if (i == 1) {
+                next
+            }
+            if (prog_names[i] %in% mr_vars &&             # Check if MR variable
+                    prog_names[i] == prog_names[i - 1] && # Check if MR selection variable
+                    length(out[[i - 1]]) == 1 &&          # Check if MR indicator variable is a single number
+                    !isTRUE(out[[i - 1]])) {
+                out[i] <- 1 #assign subset value to "Selected" along the mr_selection dimension
+            }
+        }
+    }
     return(out)
 }
 
