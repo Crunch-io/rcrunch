@@ -43,6 +43,8 @@
 \alias{digits,CrunchVariable-method}
 \alias{digits<-,NumericVariable-method}
 \alias{digits<-,CrunchVariable-method}
+\alias{uniformBasis,MultipleResponseVariable-method}
+\alias{uniformBasis<-,MultipleResponseVariable-method}
 \title{Name, alias, and description for Crunch objects}
 \usage{
 \S4method{name}{CrunchDataset}(x)
@@ -96,6 +98,10 @@
 \S4method{digits}{NumericVariable}(x) <- value
 
 \S4method{digits}{CrunchVariable}(x) <- value
+
+\S4method{uniformBasis}{MultipleResponseVariable}(x)
+
+\S4method{uniformBasis}{MultipleResponseVariable}(x) <- value
 }
 \arguments{
 \item{x}{a Dataset or Variable.}

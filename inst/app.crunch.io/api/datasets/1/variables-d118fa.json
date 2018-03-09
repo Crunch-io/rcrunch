@@ -42,6 +42,7 @@
             "id": "949d2dc7e7a24e6090cc88bb92e1d2fb",
             "description": "Please select all that apply",
             "notes": "",
+            "uniform_basis": false,
             "subvariables": [
                 "mymrset/subvariables/subvar2/",
                 "mymrset/subvariables/subvar1/",
