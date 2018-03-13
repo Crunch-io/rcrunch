@@ -1,4 +1,9 @@
 Sys.setlocale("LC_COLLATE", "C") ## What CRAN does
+
+if (rstudioapi::isAvailable()){
+    source("../../inst/crunch-test.R", local = environment())
+}
+
 set.seed(666)
 
 "%>%" <- magrittr::`%>%`

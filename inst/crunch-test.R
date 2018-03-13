@@ -1,4 +1,5 @@
 library(httptest)
+test_env <- environment()
 
 # use test.api or R_TEST_API if it's available, if not use local
 if (!is.null(crunch::envOrOption("test.api"))) {
@@ -81,7 +82,7 @@ with_DELETE <- function (resp, expr) {
 
 silencer <- temp.option(show.error.messages=FALSE)
 
-assign("entities.created", c(), envir=globalenv())
+assign("entities.created", c(), envir=test_env)
 with_test_authentication <- function (expr) {
     if (run.integration.tests) {
         env <- parent.frame()
@@ -95,10 +96,10 @@ with_test_authentication <- function (expr) {
         ## Any time an object is created (201 Location responts), store that URL
         tracer <- quote({
             if (!is.null(loc)) {
-                seen <- get("entities.created", envir=globalenv())
+                seen <- get("entities.created", envir=test_env)
                 assign("entities.created",
                     c(seen, loc),
-                    envir=globalenv())
+                    envir=test_env)
             }
         })
         with_trace("locationHeader", exit=tracer, where=crGET, expr={
@@ -115,7 +116,7 @@ with_test_authentication <- function (expr) {
 }
 
 purgeEntitiesCreated <- function () {
-    seen <- get("entities.created", envir=globalenv())
+    seen <- get("entities.created", envir=test_env)
     ds.urls <- grep("/datasets/(.*?)/$", seen, value=TRUE)
     if (length(ds.urls)) {
         ignore <- Reduce("|", lapply(ds.urls, function (x) {
@@ -128,7 +129,7 @@ purgeEntitiesCreated <- function () {
         ## since we're going to delete the datasets
         try(crDELETE(u), silent=TRUE)
     }
-    assign("entities.created", c(), envir=globalenv())
+    assign("entities.created", c(), envir=test_env)
     invisible()
 }
 
