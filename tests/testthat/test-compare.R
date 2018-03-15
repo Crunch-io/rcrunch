@@ -31,7 +31,7 @@ test_that("summarizeCompareCategories", {
 })
 
 test_that("print compareCategory summary", {
-    expect_output(summary(compareCategories(cat1, cat2)),
+    expect_prints(summary(compareCategories(cat1, cat2)),
         paste(
             "Total categories: 4 ",
             "",
@@ -45,7 +45,7 @@ test_that("print compareCategory summary", {
 
 test_that("print compareCategory summary when categories are equivalent", {
     summary(compareCategories(cat1, cat1))
-    expect_output(summary(compareCategories(cat1, cat1)),
+    expect_prints(summary(compareCategories(cat1, cat1)),
         paste(
             "Total categories: 3 ",
             "All good :)",
@@ -64,7 +64,7 @@ with_mock_crunch({
     })
 
     test_that("print compareVariables", {
-        expect_output(summary(compareVariables(allVariables(ds1), allVariables(ds2))),
+        expect_prints(summary(compareVariables(allVariables(ds1), allVariables(ds2))),
             paste(
                 "Total variables: 9 ",
                 "",
@@ -81,7 +81,7 @@ with_mock_crunch({
                 ))
     })
     test_that("compareVariables when everything is ok", {
-        expect_output(summary(compareVariables(allVariables(ds1), allVariables(ds1))),
+        expect_prints(summary(compareVariables(allVariables(ds1), allVariables(ds1))),
             paste(
                 "Total variables: 7 ",
                 "No type or name mismatches.",
@@ -95,7 +95,7 @@ with_mock_crunch({
 
     test_that("compareDatasets", {
         compareDatasets(ds1, ds2)
-        expect_output(summary(compareDatasets(ds1, ds2)),
+        expect_prints(summary(compareDatasets(ds1, ds2)),
             paste(
                 "Total variables: 9 ",
                 "",
@@ -148,7 +148,7 @@ with_mock_crunch({
     })
 
     test_that("compareDatasets when everything is ok", {
-        expect_output(summary(compareDatasets(ds2, ds2)),
+        expect_prints(summary(compareDatasets(ds2, ds2)),
             paste(
                 "Total variables: 5 ",
                 "All good :)",

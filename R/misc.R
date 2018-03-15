@@ -266,3 +266,33 @@ has.function <- function (query, funcs) {
 
     return(FALSE)
 }
+
+escapeQuotes <- function(str) {
+    gsub("'", "\\\\'", str)
+}
+
+#' Check if a user has packages installed
+#'
+#' @param pkgs a character vector of package names to check.
+#'
+#' @return nothing, called for side effects
+checkInstalledPackages <- function(pkgs){
+    installed <- pkgs %in% rownames(installed.packages())
+    if (!all(installed)){
+        halt("Missing required packages: ", serialPaste(dQuote(pkgs[!installed])))
+    }
+}
+#' escape Regex
+#'
+#' This function takes a string and escapes all of the special characters in the string.
+#' So VB.NET becomes VB\.NET. Note that R will print this as VB\\.NET, but `cat` reveals
+#' that there's only one `\`.
+#' @param string
+#'
+#' @kerwords internal
+#' escapeRegex("Tom&Jerry")
+#' escapeRegex(".Net)
+escapeRegex <- function(string) {
+    out <- gsub("([.|()\\^{}+$*?])", "\\\\\\1", string)
+    return(gsub("(\\[|\\])", "\\\\\\1", out))
+}

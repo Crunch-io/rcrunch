@@ -36,6 +36,10 @@ datasets <- function (x=getAPIRoot()) {
 
 #' Show the names of all Crunch datasets associated with a catalog
 #'
+#' If `shiny` is TRUE the function launches a shiny gadget which allows you to
+#' navigate your Crunch projects and datasets. This is useful if you can't
+#' remember a dataset's project and also saves typing long dataset names.
+#'
 #' @param kind character specifying whether to look in active, archived, or all
 #' datasets. Default is "active", i.e. non-archived.
 #' @param project `CrunchProject` entity, character name of a project, or
@@ -44,18 +48,25 @@ datasets <- function (x=getAPIRoot()) {
 #' the primary dataset catalog for the user will be used.
 #' @param refresh logical: should the function check the Crunch API for new
 #' datasets? Default is FALSE.
+#' @param shiny logical: launch a shiny gadget to help select the right dataset. The
+#' gadget will return a valid `loadDataset()` call which loads the selected dataset.
 #' @return Character vector of dataset names, each of which would be a valid
 #' input for [loadDataset()]
 #' @export
 listDatasets <- function (kind=c("active", "all", "archived"), project=NULL,
-                          refresh=FALSE) {
-    dscat <- selectDatasetCatalog(kind, project, refresh)
-    return(names(dscat))
+    refresh=FALSE, shiny = FALSE) {
+    if (shiny) {
+        checkInstalledPackages(c("rstudioapi", "shiny", "miniUI"))
+        rstudioapi::verifyAvailable("0.99.878")
+        listDatasetGadget(kind, refresh)
+    } else {
+        dscat <- selectDatasetCatalog(kind, project, refresh)
+        return(names(dscat))
+    }
 }
 
 selectDatasetCatalog <- function (kind=c("active", "all", "archived"),
                                   project=NULL, refresh=FALSE) {
-
     Call <- match.call()
     if (is.null(project)) {
         ## Default: we'll get the dataset catalog from the API root

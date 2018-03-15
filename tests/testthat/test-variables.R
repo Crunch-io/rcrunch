@@ -52,6 +52,7 @@ with_mock_crunch({
         expect_identical(name(ds$gender), "Gender")
         expect_identical(description(ds$starttime), "Interview Start Time")
         expect_identical(alias(ds$gender), "gender")
+        expect_identical(id(ds$gender), "66ae9881e3524f7db84970d556c34552")
         expect_identical(notes(ds$gender), "")
         expect_identical(notes(ds$birthyr), "Asked instead of age")
     })

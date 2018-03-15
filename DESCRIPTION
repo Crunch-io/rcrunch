@@ -31,8 +31,10 @@ Suggests:
     httptest (>= 3.0.0),
     knitr,
     magrittr,
+    miniUI,
     rmarkdown,
     rstudioapi,
+    shiny,
     spelling,
     testthat (>= 2.0.0)
 VignetteBuilder: knitr
@@ -92,6 +94,7 @@ Collate:
     'folders.R'
     'fork-and-merge.R'
     'formula.R'
+    'gadgets.R'
     'geo.R'
     'get-datasets.R'
     'github.R'
