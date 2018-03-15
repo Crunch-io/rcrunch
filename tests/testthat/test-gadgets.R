@@ -17,5 +17,21 @@ test_that("escapeQuotes", {
     expect_identical(escapeQuotes("test's tests"), "test\\'s tests")
     str <- "no quotes"
     expect_identical(escapeQuotes(str), str)
-}
-)
+})
+
+with_mock_crunch({
+    test_that("buildArrayCall", {
+        browser()
+        buildArrayCall(ds, TRUE, object = "",
+            vars_selected = c("a", "b"), mr_selection = "selected")
+    })
+})
+
+
+with_test_authentication({
+    test_that("gadget doesn't error", {
+        listDatasetGadget(autoclose = TRUE)
+    })
+})
+
+
