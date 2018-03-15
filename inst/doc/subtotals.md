@@ -195,4 +195,4 @@ noTransforms(crtabs(~congapp + gender, data = ds))
 
 This does not modify the variable---the subtotals are still defined and visible in the web app---but they are removed from the current analysis.
 
-[Next: Crunch internals](crunch-internals.md)
+[Next: combining answers and variables](combine-cut-interact.md)

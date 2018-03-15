@@ -8,7 +8,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-[Previous: Getting started](getting-started.md)
+[Previous: getting started](getting-started.md)
 
 
 
