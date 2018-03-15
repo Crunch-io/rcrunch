@@ -194,6 +194,12 @@ test_that("Cubify works with many dimensions", {
 })
 
 
+test_that("checkInstalledPackages", {
+    expect_error(checkInstalledPackages(c("not", "installed")),
+        paste0("Missing required packages: ", dQuote("not"), " and ", dQuote("installed")))
+    expect_silent(checkInstalledPackages("stats"))
+})
+
 with_mock_crunch({
     ds <- loadDataset("test ds")
 
