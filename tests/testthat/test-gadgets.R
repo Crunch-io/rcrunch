@@ -19,3 +19,10 @@ test_that("escapeQuotes", {
     expect_identical(escapeQuotes(str), str)
 }
 )
+
+with_mock_crunch({
+    test_that("listDatasets gets expected input from other Crunch functions", {
+        expect_is(names(projects()), "character")
+        expect_is(listDatasets(), "character")
+    })
+})
