@@ -22,9 +22,6 @@ test_that("Subtotal validates", {
                  "argument \"name\" is missing, with no default")
     expect_error(Subtotal(name = "Total Approval", after = 2),
                  "argument \"categories\" is missing, with no default")
-    expect_error(Subtotal(name = "Total Approval", categories = c(1, 2)),
-                 paste0("If position is relative, you must supply a category ",
-                        "id or name to the .*after.* argument"))
 })
 
 test_that("Subtotal validates with fixed positions", {
@@ -39,9 +36,6 @@ test_that("Subtotal validates with fixed positions", {
 test_that("Heading validates", {
     expect_error(Heading(after = 2),
                  "argument \"name\" is missing, with no default")
-    expect_error(Heading(name = "All the approves"),
-                 paste0("If position is relative, you must supply a category ",
-                        "id or name to the .*after.* argument"))
     expect_error(Heading(name = "All the approves", after = 2, categories = c(1, 2)),
                  "unused argument (categories = c(1, 2))", fixed = TRUE)
 })
@@ -128,6 +122,27 @@ with_mock_crunch({
         '{"anchor":2,"name":"Not men","function":"subtotal","args":[1,-1]},',
         '{"anchor":4,"name":"Women","function":"subtotal","args":[2]},',
         '{"anchor":"top","name":"A subtitle"}]}}}')
+    })
+
+    test_that("When after is not supplied, it defauls to follow the last category", {
+        expect_PATCH(subtotals(ds$gender) <- list(
+            Subtotal(name = "Not men", categories = c(-1, 1)), # categories supplied in reverse order
+            Subtotal(name = "Women", categories = "Female")
+        ),
+            'https://app.crunch.io/api/datasets/1/variables/gender/',
+            '{"view":{"transform":{"insertions":[',
+            '{"anchor":-1,"name":"Not men","function":"subtotal","args":[-1,1]},',
+            '{"anchor":2,"name":"Women","function":"subtotal","args":[2]}]}}}')
+
+        # one supplied category (23) isn't a real category, after should still be -1
+        expect_PATCH(subtotals(ds$gender) <- list(
+            Subtotal(name = "Not men", categories = c(-1, 1, 23)), # categories supplied in reverse order
+            Subtotal(name = "Women", categories = "Female")
+        ),
+            'https://app.crunch.io/api/datasets/1/variables/gender/',
+            '{"view":{"transform":{"insertions":[',
+            '{"anchor":-1,"name":"Not men","function":"subtotal","args":[-1,1,23]},',
+            '{"anchor":2,"name":"Women","function":"subtotal","args":[2]}]}}}')
     })
 
     test_that("subtotals and headers to a variable that has some, appends", {

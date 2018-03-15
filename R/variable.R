@@ -23,6 +23,11 @@ setMethod("name<-", "CrunchVariable",
     function (x, value) setTupleSlot(x, "name", validateNewName(value)))
 #' @rdname describe
 #' @export
+setMethod("id", "CrunchVariable", function (x) {
+    return(tuple(x)$id)
+})
+#' @rdname describe
+#' @export
 setMethod("description", "CrunchVariable", function (x) tuple(x)$description)
 #' @rdname describe
 #' @export
@@ -204,6 +209,11 @@ unbind <- function (x) {
     dropCache(datasetReference(u))
     invisible(out)
 }
+
+setMethod("APIToWebURL", "CrunchVariable", function (x) {
+    ds_url <- gsub("/api/datasets", "/dataset", datasetReference(x))
+    return(paste0(ds_url, "browse?variableId=", id(x)))
+})
 
 #' "Subset" a Variable
 #'

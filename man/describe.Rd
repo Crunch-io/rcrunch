@@ -36,6 +36,7 @@
 \alias{name,ShojiObject-method}
 \alias{name,CrunchVariable-method}
 \alias{name<-,CrunchVariable-method}
+\alias{id,CrunchVariable-method}
 \alias{description,CrunchVariable-method}
 \alias{description<-,CrunchVariable-method}
 \alias{alias,CrunchVariable-method}
@@ -82,6 +83,8 @@
 \S4method{name}{CrunchVariable}(x)
 
 \S4method{name}{CrunchVariable}(x) <- value
+
+\S4method{id}{CrunchVariable}(x)
 
 \S4method{description}{CrunchVariable}(x)
 
