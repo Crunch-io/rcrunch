@@ -12,7 +12,7 @@ with_mock_crunch({
     test_that("derivation pulls the derivation", {
         expect_is(derivation(birthyrPlus), "CrunchExpr")
         expect_true(is.derived(birthyrPlus))
-        expect_fixed_output(derivation(birthyrPlus), "Crunch expression: birthyr + 100")
+        expect_prints(derivation(birthyrPlus), "Crunch expression: birthyr + 100")
     })
 
     test_that("derivation returns NULL if the variable is not derived", {
@@ -79,7 +79,7 @@ with_test_authentication({
 
     test_that("derivation pulls the derivation", {
         expect_is(derivation(ds$v3a), "CrunchExpr")
-        expect_fixed_output(derivation(ds$v3a), "Crunch expression: v3 + 5")
+        expect_prints(derivation(ds$v3a), "Crunch expression: v3 + 5")
     })
 
     test_that("derivation returns NULL if the variable is not derived", {
@@ -89,10 +89,10 @@ with_test_authentication({
     test_that("derivation()<- can change a derived variable", {
         ds$v3d <- ds$v3 + 10
         expect_true(is.derived(ds$v3d))
-        expect_fixed_output(derivation(ds$v3d), "Crunch expression: v3 + 10")
+        expect_prints(derivation(ds$v3d), "Crunch expression: v3 + 10")
         derivation(ds$v3d) <- ds$v3 + 1
         expect_true(is.derived(ds$v3d))
-        expect_fixed_output(derivation(ds$v3d), "Crunch expression: v3 + 1")
+        expect_prints(derivation(ds$v3d), "Crunch expression: v3 + 1")
     })
 
     ## Now update v3's values and confirm that v3a is still linked

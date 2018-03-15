@@ -93,7 +93,7 @@ with_mock_crunch({
     })
 
     test_that("show method", {
-        expect_output(varcat[1:4],
+        expect_prints(varcat[1:4],
             get_output(data.frame(
                 alias=c("birthyr", "gender", "location", "mymrset"),
                 name=c("Birth Year", "Gender", "Categorical Location", "mymrset"),

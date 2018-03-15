@@ -282,12 +282,8 @@ bin <- function (x) zfuncExpr("bin", x)
 #' @rdname expressions
 #' @export
 rollup <- function (x, resolution=rollupResolution(x)) {
-    valid_res <- c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms")
-    force(resolution)
-    if (!is.null(resolution) && !(resolution %in% valid_res)) {
-        halt(dQuote("resolution"), " is invalid. Valid values are NULL, ",
-            serialPaste(valid_res))
-    }
+    validateResolution(force(resolution))
+    
     if (is.variable(x) && !is.Datetime(x)) {
         halt("Cannot rollup a variable of type ", dQuote(type(x)))
     }

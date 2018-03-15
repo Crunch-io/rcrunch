@@ -164,7 +164,7 @@ with_test_authentication({
     })
 
     test_that("activeFilter appears in print method for dataset", {
-        expect_output(ds3, "Filtered by v3 > 11")
+        expect_prints(ds3, "Filtered by v3 > 11")
         expect_false(any(grepl("Filtered by", get_output(ds))))
     })
 
@@ -178,7 +178,7 @@ with_test_authentication({
     })
 
     test_that("activeFilter appears in print method for variables", {
-        expect_output(ds3$v3, "Filtered by v3 > 11")
+        expect_prints(ds3$v3, "Filtered by v3 > 11")
     })
 
     test_that("as.data.frame when filtered", {

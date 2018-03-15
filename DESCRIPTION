@@ -39,7 +39,7 @@ VignetteBuilder: knitr
 Language: en-US
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
-Collate:
+Collate: 
     'AllClasses.R'
     'AllGenerics.R'
     'variable-definition.R'
@@ -130,6 +130,7 @@ Collate:
     'tuple.R'
     'univariate.R'
     'user.R'
+    'variable-as-methods.R'
     'variable-catalog.R'
     'variable-delete.R'
     'variable-derivation.R'

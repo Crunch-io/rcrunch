@@ -159,7 +159,7 @@ with_mock_crunch({
         loc_ary <- array(c(7, 10, 17), dim = 3,
                          dimnames = list(c("London", "Scotland",
                                            "London+Scotland")))
-        expect_output(expect_equivalent(showTransforms(ds$location), loc_ary))
+        expect_prints(expect_equivalent(showTransforms(ds$location), loc_ary))
     })
     
     test_that("Can set transform (with Insertions)", {
@@ -269,7 +269,7 @@ with_test_authentication({
 
         v4_ary <- array(c(10, 10, 20), dim = 3,
                         dimnames = list(c("B", "C", "B+C")))
-        expect_output(expect_equivalent(showTransforms(ds$v4), v4_ary))
+        expect_prints(expect_equivalent(showTransforms(ds$v4), v4_ary))
     })
 
     test_that("Can remove transforms", {
@@ -278,6 +278,6 @@ with_test_authentication({
                             dimnames = list(c("B", "C")))
 
         expect_null(transforms(ds$v4))
-        expect_output(expect_equivalent(showTransforms(ds$v4), v4_notrans))
+        expect_prints(expect_equivalent(showTransforms(ds$v4), v4_notrans))
     })
 })

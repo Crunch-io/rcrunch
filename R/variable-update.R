@@ -1,4 +1,20 @@
 .updateVariable <- function (variable, value, filter=NULL) {
+    ## if the value is an expression, check that the value is not a derivation, 
+    ## those can be dangerous if they change the variable type.
+    ## only needed until https://www.pivotaltracker.com/story/show/154982045 is
+    ## resolved
+    if (is.Expr(value)) {
+        castFuncs <- c("cast", "format_datetime", "parse_datetime",
+                       "numeric_to_datetime", "datetime_to_numeric")
+        
+        if (has.function(value@expression, castFuncs)) {
+            halt("A variable cannot be updated with a derivation that changes ",
+                 "its type. Are you trying to overwrite a variable with a ",
+                 "derivation of itself to change the type? If so, you might ",
+                 "want to use `type(ds$variable)<-` instead.")
+        }
+    }
+    
     ## Construct a ZCL update payload, then POST it
     payload <- list(command="update",
         variables=.updatePayload(variable, value))

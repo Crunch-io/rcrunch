@@ -150,7 +150,7 @@ with_test_authentication({
     with_consent(ds1$allpets_1 <- NULL)
     ds2 <- newDatasetFromFixture("apidocs2")
     test_that("Shape of apidocs2", {
-        expect_output(ordering(ds2),
+        expect_prints(ordering(ds2),
             paste(printed_order_apidocs2, collapse="\n"), fixed=TRUE)
         expect_identical(names(ds2), c("allpets", "q1", "petloc", "ndogs",
             "ndogs_a", "ndogs_b", "q3", "country", "wave", "stringid"))
@@ -165,7 +165,7 @@ with_test_authentication({
         ds1 <- merge(ds1, ds2, by.x=ds1$id, by.y=ds2$stringid)
         expect_is(ds1, "CrunchDataset")
         expect_identical(dim(ds1), c(14L, 12L))
-        expect_output(ordering(ds1),
+        expect_prints(ordering(ds1),
             paste(c(
                 "ID",
                 "Join matches",
@@ -196,7 +196,7 @@ with_test_authentication({
             "Variable caseid is hidden")
         expect_is(ds1, "CrunchDataset")
         expect_identical(dim(ds1), c(14L, 13L))
-        expect_output(ordering(ds1),
+        expect_prints(ordering(ds1),
             paste(c(
                 "ID",
                 "Join matches",
@@ -232,7 +232,7 @@ with_test_authentication({
         with_consent(ds1$allpets_1 <- NULL)
         ds1 <- merge(ds1, ds2[ds2$stringid == "43805958", c("stringid", "q1", "petloc")],
             by.x="id", by.y="stringid")
-        expect_output(ordering(ds1),
+        expect_prints(ordering(ds1),
                       paste(c(
                           "ID",
                           "Join matches",
@@ -269,7 +269,7 @@ with_test_authentication({
         with_consent(ds1$allpets_1 <- NULL)
         ds1 <- merge(ds1, ds2[ds2$stringid == "43805958",],
             by.x="id", by.y="stringid")
-        expect_output(ordering(ds1),
+        expect_prints(ordering(ds1),
                       paste(c(
                           "ID",
                           "Join matches",

@@ -40,6 +40,7 @@ reference:
   - weightVariables
   - modifyWeightVariables
   - settings
+  - population
   - lock
 - title: Multiple datasets
   contents:
@@ -77,6 +78,7 @@ reference:
   - interactVariables
   - conditionalTransform
   - makeWeight
+  - variable-as-methods
 - title: Array variables
   contents:
   - Subvariables-class

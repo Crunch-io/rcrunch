@@ -125,7 +125,7 @@ with_mock_crunch({
         with(temp.option(crayon.enabled=FALSE), {
             ## Coloring aside, the default print method should look like you
             ## printed the vector of names (plus the path printed above)
-            testthat::expect_output(print(folders(ds)),
+            expect_output(print(folders(ds)),
                 capture.output(print(names(folders(ds)))), fixed=TRUE)
             ## These are obfuscated because of archaic restrictions on UTF-8
             skip_on_cran()
