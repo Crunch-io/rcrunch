@@ -3,6 +3,7 @@
 * Added support for setting population sizes on datasets with `setPopulation(ds, size = 24.13e6, magnitude = 3)` and for getting population sizes (or magnitudes) with `popSize(ds)` and `popMagnitude(ds)` respectively.
 * Add `options(crunch.show.progress)` to govern whether to report progress of long-running requests. Default is `TRUE`, but set it to `FALSE` to run quietly.
 * Export `pollProgress()` and recommend using that when a long-running request fails to complete within the local timeout.
+* `listDatasets(shiny = TRUE)` launches an RStudio addin which allows you to select your dataset in order to generate a valid `loadDataset()` call. You can also associate this addin with a hotkey using in RStudio through `Tools` > `Modify Keyboard Shortcuts`. 
 
 ## crunch 1.20.0
 
