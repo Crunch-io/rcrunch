@@ -243,3 +243,17 @@ setMethod("[", c("CrunchVariable", "numeric"), function (x, i, ...) {
 #' @rdname variable-extract
 #' @export
 setMethod("[", c("CrunchVariable", "logical"), .updateActiveFilterLogical)
+
+
+# for getting and setting the uniform_basis property of multiple response variables.
+#' @rdname describe
+#' @export
+setMethod("uniformBasis", "MultipleResponseVariable", function (x) tuple(x)$uniform_basis)
+#' @rdname describe
+#' @export
+setMethod("uniformBasis<-", "MultipleResponseVariable", function (x, value) {
+    stopifnot(is.TRUEorFALSE(value))
+    # drop cube cache, since this will change the way they are executed
+    dropCache(cubeURL(datasetReference(x)))
+    return(setTupleSlot(x, "uniform_basis", value))
+})

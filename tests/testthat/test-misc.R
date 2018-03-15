@@ -193,6 +193,13 @@ test_that("Cubify works with many dimensions", {
     expect_length(dim(cube@arrays$count), 5)
 })
 
+test_that("is.TRUEorFALSE errors correctly", {
+    expect_true(is.TRUEorFALSE(TRUE))
+    expect_true(is.TRUEorFALSE(FALSE))
+    expect_false(is.TRUEorFALSE("char"))
+    expect_false(is.TRUEorFALSE(NA))
+    expect_false(is.TRUEorFALSE(c(TRUE, TRUE)))
+})
 
 test_that("checkInstalledPackages", {
     expect_error(checkInstalledPackages(c("not", "installed")),

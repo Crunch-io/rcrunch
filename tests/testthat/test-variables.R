@@ -55,15 +55,19 @@ with_mock_crunch({
         expect_identical(id(ds$gender), "66ae9881e3524f7db84970d556c34552")
         expect_identical(notes(ds$gender), "")
         expect_identical(notes(ds$birthyr), "Asked instead of age")
+        expect_false(uniformBasis(ds$mymrset))
     })
 
     test_that("Variable setter requests", {
         expect_PATCH(name(ds$gender) <- "Sex",
-            "https://app.crunch.io/api/datasets/1/variables/",
-            '{"https://app.crunch.io/api/datasets/1/variables/gender/":{"name":"Sex"}}')
+                     "https://app.crunch.io/api/datasets/1/variables/",
+                     '{"https://app.crunch.io/api/datasets/1/variables/gender/":{"name":"Sex"}}')
         expect_PATCH(notes(ds$gender) <- "extra info",
-            "https://app.crunch.io/api/datasets/1/variables/",
-            '{"https://app.crunch.io/api/datasets/1/variables/gender/":{"notes":"extra info"}}')
+                     "https://app.crunch.io/api/datasets/1/variables/",
+                     '{"https://app.crunch.io/api/datasets/1/variables/gender/":{"notes":"extra info"}}')
+        expect_PATCH(uniformBasis(ds$mymrset) <- TRUE,
+                     "https://app.crunch.io/api/datasets/1/variables/",
+                     '{"https://app.crunch.io/api/datasets/1/variables/mymrset/":{"uniform_basis":true}}')
     })
 
     test_that("Variable setters don't hit server if data not changed", {
