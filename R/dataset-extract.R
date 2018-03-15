@@ -54,6 +54,7 @@ setMethod("[", c("CrunchDataset", "logical", "missing"), function (x, i, j, ...,
             }
             i <- CrunchLogicalExpr(dataset_url=datasetReference(x),
                 expression=.dispatchFilter(i))
+            activeFilter(i) <- activeFilter(x)
             return(x[i,])
         } else {
             halt("Logical filter vector is length ", length(i),
@@ -126,6 +127,58 @@ setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "missing"), .updateActive
 #' @rdname dataset-extract
 #' @export
 setMethod("[", c("CrunchDataset", "CrunchLogicalExpr", "ANY"), function (x, i, j, ..., drop=FALSE) {
+    ## Do the filtering of rows, then cols
+    x <- x[i,]
+    return(x[j])
+})
+
+#' @rdname dataset-extract
+#' @export
+setMethod("[", c("CrunchDataset", "numeric", "missing"), function (x, i, j, ..., drop=FALSE) {
+    if (nargs() == 2L) {
+        ## x[i]. So subset the variables, list-wise
+        x@variables <- variables(x)[i]
+        return(x)
+    }
+    filt <- activeFilter(x)
+    if (!is.null(filt)) {
+        return(harmonizeFilters(x, filt, i))
+    } else {
+        return(x[seq_len(nrow(x)) %in% i, ])
+    }
+})
+
+
+#' Sometimes you want to subset a filtered object using a numeric vector. In order
+#' to do this on a crunch object we need to first get the rows which match the filter
+#' and then apply the numeric vector. For instance if you have a dataset filter such
+#' that `ds_filt <- ds[ds$var == 5, ]` then `ds_filt[1:5]` should return the first
+#' five rows where `ds$var == 5`. This function takes a filtered object and returns
+#' the correctly subsetted filtered object.
+#' @rdname dataset-extract
+#' @keywords internal
+#' @param x a filtered Dataset or vector
+#' @param filt the object's filter
+#' @param i A numeric vector to harmonize with that filter
+#' @return a properly filtered dataset or vector
+harmonizeFilters <- function (x, filt, i){
+    filt_lgl <- as.vector(filt)
+    unfiltered <- x
+    activeFilter(unfiltered) <- NULL
+    if (is.dataset(x)){
+        out <- unfiltered[seq_len(nrow(unfiltered)) %in% which(filt_lgl)[i], ]
+    } else if (is.variable(x)) {
+        out <- unfiltered[seq_len(length(unfiltered)) %in% which(filt_lgl)[i]]
+    } else {
+        halt("Unsupported object type")
+    }
+    activeFilter(out) <- filt & activeFilter(out)
+    return(out)
+}
+
+#' @rdname dataset-extract
+#' @export
+setMethod("[", c("CrunchDataset", "numeric", "ANY"), function (x, i, j, ..., drop=FALSE) {
     ## Do the filtering of rows, then cols
     x <- x[i,]
     return(x[j])

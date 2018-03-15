@@ -46,6 +46,9 @@ with_mock_crunch({
     test_that("min", {
         expect_equal(min(ds$birthyr), -1.4967)
     })
+    test_that("length", {
+        expect_identical(length(ds$birthyr), nrow(ds))
+    })
 })
 
 with_test_authentication({

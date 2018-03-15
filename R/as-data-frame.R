@@ -83,7 +83,7 @@ as.data.frame.CrunchDataFrame <- function (x,
     ds <- attr(x, "crunchDataset")
     tmp <- tempfile()
     on.exit(unlink(tmp))
-    write.csv(ds, tmp, categorical = "id")
+    tmp <- write.csv(ds, tmp, categorical = "id")
     # TODO: use variableMetadata to provide all `colClasses`?
     # meta <- variableMetadata(ds)
     ds_out <- read.csv(tmp, stringsAsFactors = FALSE)
@@ -192,3 +192,48 @@ as.data.frame.FilterCatalog <- function (x,
                                          ...) {
     catalogToDataFrame(x, keys = keys, row.names = row.names, ...)
 }
+
+#' Head and tail methods for Crunch objects. See [utils::head()] for more details.
+#'
+#' @param x a CrunchDataset, CrunchDataFrame, or CrunchVariable
+#' @param n a single integer representing the length of the returning object.
+#' @param ... ignored
+#' @name head-tail
+#' @aliases head tail
+NULL
+
+#' @rdname head-tail
+#' @export
+setMethod("head", "CrunchDataset", function (x, n=6L, ...) {
+    as.data.frame(x[head(seq_len(nrow(x)), n),], force=TRUE)
+})
+
+#' @rdname head-tail
+#' @export
+setMethod("head", "CrunchDataFrame", function (x, n=6L, ...) {
+    return(head(attr(x, "crunchDataset")))
+})
+
+#' @rdname head-tail
+#' @export
+setMethod("head", "CrunchVariable", function (x, n=6L, ...) {
+    as.vector(x[head(seq_len(length(x)), n)], ...)
+})
+
+#' @rdname head-tail
+#' @export
+setMethod("tail", "CrunchDataset", function (x, n=6L, ...) {
+    as.data.frame(x[tail(seq_len(nrow(x)), n),], force=TRUE)
+})
+
+#' @rdname head-tail
+#' @export
+setMethod("tail", "CrunchDataFrame", function (x, n=6L, ...) {
+    return(tail(attr(x, "crunchDataset")))
+})
+
+#' @rdname head-tail
+#' @export
+setMethod("tail", "CrunchVariable", function (x, n=6L, ...) {
+    as.vector(x[tail(seq_len(length(x)), n)])
+})

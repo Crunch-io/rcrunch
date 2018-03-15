@@ -156,6 +156,8 @@ setGeneric("APIToWebURL", function(x) standardGeneric("APIToWebURL"))
 setGeneric("owner", function (x) standardGeneric("owner"))
 setGeneric("owner<-", function (x, value) standardGeneric("owner<-"))
 
+setGeneric("head", function(x, n=6L, ...) utils::head(x, n, ...))
+setGeneric("tail", function(x, n=6L, ...) utils::tail(x, n, ...))
 setGeneric("dim")
 setGeneric("ncol")
 setGeneric("mean")

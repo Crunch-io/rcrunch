@@ -44,6 +44,7 @@
 \alias{digits,CrunchVariable-method}
 \alias{digits<-,NumericVariable-method}
 \alias{digits<-,CrunchVariable-method}
+\alias{length,CrunchVariable-method}
 \title{Name, alias, and description for Crunch objects}
 \usage{
 \S4method{name}{CrunchDataset}(x)
@@ -99,6 +100,8 @@
 \S4method{digits}{NumericVariable}(x) <- value
 
 \S4method{digits}{CrunchVariable}(x) <- value
+
+\S4method{length}{CrunchVariable}(x)
 }
 \arguments{
 \item{x}{a Dataset or Variable.}
