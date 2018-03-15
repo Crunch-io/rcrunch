@@ -1,0 +1,73 @@
+---
+title: "Versions, Permissions and Sharing Datasets"
+description: "Vignette showing you how to save versions of a dataset as well as how to share a dataset."
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Adding Variables}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+[Previous: subtotals](subtotals.html)
+
+```{r, results='hide', echo=FALSE, message=FALSE}
+## Because the vignette tasks require communicating with a remote host,
+## we do all the work ahead of time and save a workspace, which we load here.
+## We'll then reference saved objects in that as if we had just retrieved them
+## from the server
+library(crunch)
+load("vignettes.RData")
+options(width=120)
+```
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+# Saving Versions of a Crunch dataset
+We have all heard horror stories about the importance of saving your work. In Crunch you can also save versions of a dataset using the `saveVersions()` function, which has similar benefits to saving a document. However, if you do restore back to an earlier version of a Crunch dataset then you will lose any changes made from the save point forward.
+
+First, let's look at what versions already exist in our dataset.
+```{r, eval = FALSE}
+versions(ds)
+```
+```{r, echo = FALSE}
+cat(summary.versions_1, sep="\n")
+```
+
+Now if we make any kind of change, then we can save a new version anytime we'd like with a message that names or describes the dataset at this save point.
+```{r, eval = FALSE}
+startDate(ds) <- "2018-01-01"
+saveVersion(ds, "After give start date, before re-ordered variables")
+versions(ds)
+```
+```{r, echo = FALSE}
+cat(summary.versions_2, sep="\n")
+```
+
+To restore the dataset back to the exact state it was at an earlier saved version (any of the versions) then we can run a line like below. Remember that this is destructive though and so once you restore to an earlier save point then any changes you made after that point cannot be restored.
+```{r, eval = FALSE}
+restoreVersion(ds, 2)
+versions(ds)
+```
+```{r, echo = FALSE}
+cat(summary.versions_1, sep="\n")
+```
+
+# Sharing a Dataset
+We share a dataset with users via the `share()` function. There are options that allow us to specify whether the people we share a dataset with get an email notification, and importantly, whether they will be an `editor` or a `viewer` on the dataset. The section below discusses permissions in greater detail.
+
+```{r, eval = FALSE}
+share(ds, c('bruce.wayne@wayneenterprises.com'), edit=FALSE, notify=TRUE)
+```
+
+# Permissions on a Dataset
+There are two levels of permissions on each crunch dataset: editor and viewer. An editor can choose whether or not to push changes that all other users on that dataset will see, e.g. a new variable the editor creates. A viewer on the other hand can make new variables, filters, multi-tables, etc.. but cannot choose to make those changes visible to other users on the dataset. In general it is wise to make users on a dataset a viewer and only give editor-level permissions to a select group since editors can push big changes including deleting the dataset. Also note that editor and viewer permissions are set on a dataset basis and so you may be an editor on one dataset and a viewer on another.
+
+Related, we can dicatate whether viewers do or do not have the ability to: export the dataset, change the `weight` variable, or share the dataset. For each of these we can set the value to be either TRUE or FALSE.
+```{r, eval = FALSE}
+settings(ds)$viewers_can_export <- TRUE
+settings(ds)$viewers_can_change_weight <- FALSE
+settings(ds)$viewers_can_share <- TRUE
+```
+
+[Next: Crunch internals](crunch-internals.html)
