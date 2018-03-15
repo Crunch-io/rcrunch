@@ -154,6 +154,46 @@ test_that("default date formater", {
     expect_equal(datetimeFormater(NULL), "%Y-%m-%d %H:%M:%S")
 })
 
+
+test_that("Cubify works with many dimensions", {
+    # 1d
+    cube_json <- fromJSON(test_path("cubes/univariate-categorical.json"))
+    cube <- loadCube(test_path("cubes/univariate-categorical.json"))
+
+    dn <- dimnames(cube@arrays$count)
+    raw_values <- cube_json$value$result$measures$count$data
+    expect_equivalent(cube@arrays$count, cubify(raw_values, dims = dn))
+    expect_length(dim(cube@arrays$count), 1)
+
+    # 2d
+    cube_json <- fromJSON(test_path("cubes/cat-array.json"))
+    cube <- loadCube(test_path("cubes/cat-array.json"))
+
+    dn <- dimnames(cube@arrays$count)
+    raw_values <- cube_json$value$result$measures$count$data
+    expect_equivalent(cube@arrays$count, cubify(raw_values, dims = dn))
+    expect_length(dim(cube@arrays$count), 2)
+
+    # 3d
+    cube_json <- fromJSON(test_path("cubes/selected-crosstab-4.json"))
+    cube <- loadCube(test_path("cubes/selected-crosstab-4.json"))
+
+    dn <- dimnames(cube@arrays$count)
+    raw_values <- cube_json$value$result$measures$count$data
+    expect_equivalent(cube@arrays$count, cubify(raw_values, dims = dn))
+    expect_length(dim(cube@arrays$count), 3)
+
+    # 3+d
+    cube_json <- fromJSON(test_path("cubes/cat-x-mr-x-mr.json"))
+    cube <- loadCube(test_path("cubes/cat-x-mr-x-mr.json"))
+
+    dn <- dimnames(cube@arrays$count)
+    raw_values <- cube_json$value$result$measures$count$data
+    expect_equivalent(cube@arrays$count, cubify(raw_values, dims = dn))
+    expect_length(dim(cube@arrays$count), 5)
+})
+
+
 test_that("checkInstalledPackages", {
     expect_error(checkInstalledPackages(c("not", "installed")),
         paste0("Missing required packages: ", dQuote("not"), " and ", dQuote("installed")))

@@ -41,7 +41,7 @@ with_test_authentication({
             ## Test that the filter is set correctly. Objects not identical
             ## because JSON objects are unordered.
             expect_json_equivalent(zcl(exclusion(ds)), zcl(ds$v4 == "C"))
-            expect_output(exclusion(ds),
+            expect_prints(exclusion(ds),
                 'Crunch logical expression: v4 == "C"')
 
             expect_identical(nrow(ds), 10L)
