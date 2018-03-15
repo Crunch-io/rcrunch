@@ -58,10 +58,10 @@ with_mock_crunch({
             "Undefined columns selected: NOTAVARIABLE")
     })
 
-    test_that("mrFromDelim errors correctly", {
-        expect_error(mrFromDelim(ds$var, "; "),
+    test_that("makeMRFromText errors correctly", {
+        expect_error(makeMRFromText(ds$var, "; "),
             "Must supply a name for the new variable")
-        expect_error(mrFromDelim("string",  name = "name"),
+        expect_error(makeMRFromText("string",  name = "name"),
             paste0(dQuote("string"), " must be a Categorical or Text Crunch Variable."))
     })
 
@@ -130,7 +130,7 @@ with_mock_crunch({
         expect_false(grepl(buildDelimRegex("maple", "| "), "oak| sugar maple| birch"))
     })
 
-    test_that("mrFromDelim sends the correct variable derivation", {
+    test_that("makeMRFromText sends the correct variable derivation", {
         ds2 <- loadDataset("https://app.crunch.io/api/datasets/mr_from_delim/")
         trees <- c("birch", "sugar maple", "maple butter", "oak", "maple")
         expected <- VariableDefinition(
@@ -151,7 +151,7 @@ with_mock_crunch({
                 ),
                 list(value=I("selected"))),
             name="New Mr")
-        varDef <- mrFromDelim(ds2$delimed_text, delim = "; ",
+        varDef <- makeMRFromText(ds2$delimed_text, delim = "; ",
                               name = "New Mr",
                               selected = "Yes",
                               not_selected = "No",
@@ -237,12 +237,12 @@ with_test_authentication({
         expect_true(setequal(names(ds), names(mrdf)))
         expect_identical(ncol(ds), 4L)
     })
-    whereas("mrFromDelim functions as expected", {
+    whereas("makeMRFromText functions as expected", {
         ds <- newDataset(mrdf)
         v <- c("ma.ple; birch", "oak; ma.ple; birch", "birch; sugar maple", "maple butter; oak")
         ds$delim <- c("ma.ple; birch", "oak; ma.ple; birch", "birch; sugar maple", "maple butter; oak")
-        test_that("mrFromDelim creates a variable", {
-            ds$mr_5 <- mrFromDelim(ds$delim, delim = "; ", name = "myMR")
+        test_that("makeMRFromText creates a variable", {
+            ds$mr_5 <- makeMRFromText(ds$delim, delim = "; ", name = "myMR")
             expect_true(is.derived(ds$mr_5))
             expect_identical(dim(as.vector(ds$mr_5)), c(nrow(ds), 5))
         })

@@ -101,7 +101,7 @@ makeMR <- function (subvariables, name, selections, ...) {
 #'
 #' @return a Multiple response variable definition
 #' @export
-mrFromDelim <- function (var,
+makeMRFromText <- function (var,
                          delim,
                          name,
                          selected = "selected",
@@ -144,7 +144,7 @@ mrFromDelim <- function (var,
 #' to indicate selection, non-selection, and missingness.
 #'
 #'
-#' @inheritParams mrFromDelim
+#' @inheritParams makeMRFromText
 #' @param str A string whose presence indicates a selection
 #' @param missing A logical vector indicating which variable entries are missing
 #' @keywords internal
