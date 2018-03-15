@@ -266,3 +266,13 @@ has.function <- function (query, funcs) {
 
     return(FALSE)
 }
+
+#' Check that a value is TRUE or FALSE
+#'
+#' @param value Value to check
+#' @keywords internal
+#' @return `TRUE` if `value` is either `TRUE` or `FALSE`, `FALSE` otherwise
+#'
+is.TRUEorFALSE <- function (value) {
+    return(is.logical(value) && !is.na(value) && length(value) == 1)
+}

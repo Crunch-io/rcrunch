@@ -242,7 +242,7 @@ setMethod("uniformBasis", "MultipleResponseVariable", function (x) tuple(x)$unif
 #' @rdname describe
 #' @export
 setMethod("uniformBasis<-", "MultipleResponseVariable", function (x, value) {
-    stopifnot(is.logical(value))
+    stopifnot(is.TRUEorFALSE(value))
     # drop cube cache, since this will change the way they are executed
     dropCache(cubeURL(datasetReference(x)))
     return(setTupleSlot(x, "uniform_basis", value))
