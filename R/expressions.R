@@ -289,7 +289,7 @@ rollup <- function (x, resolution = rollupResolution(x)) {
     if (is.variable(x) && !is.Datetime(x)) {
         halt("Cannot rollup a variable of type ", dQuote(type(x)))
     }
-    return(zfuncExpr("rollup", x, list(value=resolution)))
+    return(zfuncExpr("rollup", x, list(value = resolution)))
 }
 
 #' @rdname expressions
