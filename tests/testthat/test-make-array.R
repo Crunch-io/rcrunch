@@ -244,7 +244,7 @@ with_test_authentication({
         test_that("makeMRFromText creates a variable", {
             ds$mr_5 <- makeMRFromText(ds$delim, delim = "; ", name = "myMR")
             expect_true(is.derived(ds$mr_5))
-            expect_identical(dim(as.vector(ds$mr_5)), c(nrow(ds), 5))
+            expect_equivalent(dim(as.vector(ds$mr_5)), c(nrow(ds), 5))
         })
     })
 })
