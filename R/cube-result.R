@@ -14,7 +14,8 @@ setMethod("initialize", "CrunchCube", function (.Object, ...) {
 })
 
 #' @rdname cube-methods
-#' @export'
+#' @export
+
 setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
     subset <- eval(substitute(alist(i, j, ...)))
     subset <- replaceMissingWithTRUE(subset)
@@ -25,7 +26,7 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
     out@arrays$.unweighted_counts <- subsetByList(out@arrays$.unweighted_counts,
         translated_subset, drop)
 
-    out@dims[] <- mapply(subsetArrayDimension,
+        out@dims[] <- mapply(subsetArrayDimension,
         dim = x@dims,
         idx = translated_subset,
         SIMPLIFY = FALSE)
@@ -39,10 +40,16 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
     return(out)
 })
 
+#' Replace missing elements with TRUE
+#'
+#' When subsetting missingness stands in for selecting all of the elements of that
+#' dimension. This gets tricky when you are selecting n dimensions and so need to
+#' capture the dimensions with `...`.  This function checks if an element of a list
+#' is missing and replaces that element with `TRUE` in order to handle this case.
+#'
+#' @param l a list
+#' @return a list
 replaceMissingWithTRUE <- function(l){
-    # It turns out that missing no longer works if the argument is in a list
-    # the tryCatch approach was the only way I could see to check missingness
-    # once the dots have been captured into a list.
     out <- lapply(l, function(x){
         if (is.symbol(x)) {
             x <- tryCatch(eval(x), error = function(c){
@@ -73,6 +80,28 @@ subsetArrayDimension <- function(dim, idx){
     return(dim)
 }
 
+#' Translate user facing cube subset to programmatic cube subset
+#'
+#' Cubes that include MRs create a special kind of complexity. Multiple response
+#' variables are actually 2d arrays with the selections along one dimension (`cat`, `dog`, fish)
+#' and the selection status along the second dimension (`selected`, `not_selected`).
+#' When an MR variable is crossed with a categorical variable it creates a 3d array
+#' with the categorical variable's categories along one dimension and the MR dimensions
+#' on the other two.
+#'
+#' The complexity is that while the real MR cube includes two dimensions per MR,
+#' we only show the user one dimension per MR which represents only the `selected` cases.
+#' This means that every cube has two different representations, the low dimensional user
+#' cube, and the higher dimensional programmatic cube. This function translates user cube subsets
+#' into the higher dimensional subset. In the case above, the user would see a 2d cube
+#' and subset it with `user_cube[1:2, 1:2]` in order to subset the programmatic cube
+#' we need to translate this to `prog_cube[1:2, 1:2, ]` in order to select the right variables
+#' of the high dimensional cube.
+#' @param x  a Crunch Cube
+#' @param subset a list
+#' @param drop whether to drop unnecessary dimensions.
+#'
+#' @return a list
 translateCubeIndex <- function(x, subset, drop) {
     user_names <- names(dimnames(as.array(x))) #the user facing cube
     if (length(subset) != length(user_names)) {
