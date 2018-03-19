@@ -26,7 +26,7 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
     out@arrays$.unweighted_counts <- subsetByList(out@arrays$.unweighted_counts,
         translated_subset, drop)
 
-        out@dims[] <- mapply(subsetArrayDimension,
+    out@dims[] <- mapply(subsetArrayDimension,
         dim = x@dims,
         idx = translated_subset,
         SIMPLIFY = FALSE)
@@ -82,8 +82,8 @@ subsetArrayDimension <- function(dim, idx){
 
 #' Translate user facing cube subset to programmatic cube subset
 #'
-#' Cubes that include MRs create a special kind of complexity. Multiple response
-#' variables are actually 2d arrays with the selections along one dimension (`cat`, `dog`, fish)
+#' Cubes that include multiple response variables create a special kind of complexity.
+#' Multiple response variables are actually 2d arrays with the selections along one dimension (`cat`, `dog`, `fish``)
 #' and the selection status along the second dimension (`selected`, `not_selected`).
 #' When an MR variable is crossed with a categorical variable it creates a 3d array
 #' with the categorical variable's categories along one dimension and the MR dimensions

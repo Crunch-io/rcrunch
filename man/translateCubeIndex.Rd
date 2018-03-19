@@ -17,9 +17,8 @@ translateCubeIndex(x, subset, drop)
 a list
 }
 \description{
-Cubes that include MRs create a special kind of complexity. Multiple response
-variables are actually 2d arrays with the selections along one dimension (\code{cat}, \code{dog}, fish)
-and the selection status along the second dimension (\code{selected}, \code{not_selected}).
+Cubes that include multiple response variables create a special kind of complexity.
+Multiple response variables are actually 2d arrays with the selections along one dimension (\code{cat}, \code{dog}, \code{fish``) and the selection status along the second dimension (}selected\code{,}not_selected`).
 When an MR variable is crossed with a categorical variable it creates a 3d array
 with the categorical variable's categories along one dimension and the MR dimensions
 on the other two.
