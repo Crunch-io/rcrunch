@@ -163,19 +163,22 @@ vectorOrList <- function (obj, type) {
 #' it looks for the R-based option value.
 #'
 #' @param opt the option to get
+#' @param default if the specified option is not set in either the option or as
+#' an environment variable, use this instead.
 #'
 #' @return the value of the option
 #'
 #' @keywords internal
 #' @export
-envOrOption <- function (opt) {
+envOrOption <- function (opt, default = NULL) {
     envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed=TRUE)))
     envvar <- Sys.getenv(envvar.name)
+    
     if (nchar(envvar)) {
         ## Let environment variable override .Rprofile, if defined
         return(envvar)
     } else {
-        return(getOption(opt))
+        return(getOption(opt, default))
     }
 }
 
