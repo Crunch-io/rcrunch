@@ -144,6 +144,22 @@ with_mock_crunch({
         print(ds$birthyr * 3 + 5)
         print(3 * (ds$birthyr + 5))
     })
+
+    test_that("findExpressionVariables", {
+        expect_identical(findExpressionVariables(ds$birthyr + 3),
+            self(ds$birthyr))
+        expect_true(setequal(findExpressionVariables(ds$birthyr + ds$gender),
+            urls(variables(ds[c("birthyr", "gender")]))))
+        expect_true(setequal(findExpressionVariables(ds$birthyr > 1 & ds$gender != "Male" & ds$starttime == "2015-01-01"),
+            urls(variables(ds[c("birthyr", "gender", "starttime")]))))
+    })
+
+    test_that("validFilterForExpr", {
+        expect_prints(validFilterForExpr(ds$birthyr > 1 & ds$gender != "Male" & ds$starttime == "2015-01-01"),
+            "!is.na(birthyr) & !is.na(gender) & !is.na(starttime)")
+        expect_prints(validFilterForExpr(ds$birthyr > 1),
+            "!is.na(birthyr)")
+    })
 })
 
 with_test_authentication({
@@ -177,7 +193,7 @@ with_test_authentication({
             })
         })
     })
-    
+
     test_that("Logical expressions evaluate", {
         e1 <- ds$v3 > 10
         expect_is(e1, "CrunchLogicalExpr")
@@ -192,7 +208,7 @@ with_test_authentication({
         expect_identical(as.vector(e2)[na_filt], df[na_filt,]$v2 == "a")
         expect_identical(which(e2), which(df$v2 == "a"))
     })
-    
+
     test_that("R & Crunch logical together", {
         e1 <- ds$v3 < 10 | c(rep(FALSE, 15), rep(TRUE, 5))
         expect_equivalent(as.vector(ds$v3[e1]),

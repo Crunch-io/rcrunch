@@ -276,6 +276,10 @@ setMethod("is.na", "CrunchVariable", function (x) zfuncExpr("is_missing", x))
 
 #' @rdname expressions
 #' @export
+setMethod("is.na", "CrunchExpr", function (x) zfuncExpr("is_missing", x))
+
+#' @rdname expressions
+#' @export
 bin <- function (x) zfuncExpr("bin", x)
 
 
@@ -283,7 +287,7 @@ bin <- function (x) zfuncExpr("bin", x)
 #' @export
 rollup <- function (x, resolution=rollupResolution(x)) {
     validateResolution(force(resolution))
-    
+
     if (is.variable(x) && !is.Datetime(x)) {
         halt("Cannot rollup a variable of type ", dQuote(type(x)))
     }
