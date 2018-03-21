@@ -1,3 +1,4 @@
+# List Datasets ----
 #' Open dataset selector
 #'
 #' @inheritParams listDatasets
@@ -60,108 +61,181 @@ buildLoadDatasetCall <- function (project, dataset, ds_name = "") {
     }
     return(code)
 }
-#
-#
-# makeArrayGadget <- function(ds, is_mr = FALSE){
-#     vars <- names(variables(ds))
-#     ui <- miniUI::miniPage(
-#         tags$head(
-#             tags$style(HTML("
-#      .multicol {
-#        -webkit-column-count: 3; /* Chrome, Safari, Opera */
-#        -moz-column-count: 3; /* Firefox */
-#        column-count: 3;
-#      }
-#    "
-#             )
-#             )
-#         ),
-#         miniUI::gadgetTitleBar("Select Dataset"),
-#         miniUI::miniContentPanel(
-#             shiny::fluidRow(
-#                 shiny::column( width = 3,
-#                     shiny::textInput("regex", "Regex")
-#                 ),
-#                 shiny::column( width = 3,
-#                     shiny::textInput("name", "Variable Name"))
-#                 shiny::uiOutput("mr_selection"),
-#                 shiny::column( width = 3,
-#                     shiny::textInput("obj_name", "Object Name (Optional)")
-#                 )
-#             ),
-#             shiny::h4("Select Subvariables"),
-#             shiny::fluidRow(
-#                 shiny::column(width = 4,
-#                     shiny::checkboxInput("select_all", "Select All")
-#                 )
-#             ),
-#             shiny::fluidRow(
-#                 tags$div(class = "multicol",
-#                     shiny::column(width = 12,
-#                         shiny::uiOutput("variables")
-#                     )
-#                 )
-#             )
-#         )
-#     )
-#
-#     server <- function (input, output, session) {
-#
-#         output$mr_selection <- shiny::renderUI({
-#             if (is_mr) {
-#                 shiny::column(width = 3,
-#                     shiny::textInput("selection", "Selection")
-#                 )
-#             }
-#         })
-#
-#         output$variables <- shiny::renderUI({
-#             var_subset <- vars[grep(input$regex, vars)]
-#             selections <- if(input$select_all) {
-#                 var_subset
-#             } else {
-#                 ""}
-#             shiny::checkboxGroupInput("selected_vars",
-#                 NULL,
-#                 choices = var_subset,
-#                 selected =  selections
-#             )
-#         })
-#     }
-#     shiny::runGadget(ui,
-#         server,
-#         viewer = shiny::dialogViewer("MR Builder", width = 800))
-# }
-#
-# #makeArrayGadget(ds, is_mr = FALSE)
-#
-#
-# buildArrayCall <- function(ds,
-#     is_mr,
-#     object,
-#     vars_selected,
-#     mr_selection){
-#     if (is_mr) {
-#         f <- 'makeMR('
-#         sel <- mr_selection
-#     } else {
-#         f <- 'makeArray('
-#         sel <- ''
-#     }
-#
-#     if(object != "") {
-#         assign <- paste0(" <- ", object)
-#     } else {
-#         assign <- ""
-#     }
-# browser()
-#     call <- paste0(
-#         assign,
-#         f,
-#         name(ds),
-#         "[, c(",
-#         paste0("'", escapeQuotes(vars_selected), "'", collapse = ", "),
-#         ")])")
-#     return(call)
-# }
-#
+# Array builder ----
+makeArrayGadget <- function(ds) {
+    #display categorical variables
+    vars <- names(variables(ds))[vapply(ds, is.Categorical, FUN.VALUE = logical(1))]
+    currently_selected <- ""
+    ui <- miniUI::miniPage(
+        shiny::tags$head(
+            shiny::tags$style(shiny::HTML("
+                 .multicol {
+                   -webkit-column-count: 3; /* Chrome, Safari, Opera */
+                   -moz-column-count: 3; /* Firefox */
+                   column-count: 3;
+                 }
+               "
+            )
+            )
+        ),
+        miniUI::miniTabstripPanel(id ="tabstrip",
+            miniUI::miniTabPanel(id = "var_select",
+                title = "Select Subvariables",
+                icon = shiny::icon("check-square"),
+                miniUI::gadgetTitleBar("Select SubVariables",
+                    right = NULL,
+                    left = NULL),
+                miniUI::miniContentPanel(
+                    shiny::fluidRow(
+                        shiny::column( width = 4,
+                            shiny::textInput("search", "Search")
+                        )
+                    ),
+                    shiny::h4("Select Subvariables"),
+                    shiny::fluidRow(
+                        shiny::column(width = 4,
+                            shiny::actionButton("select_all", "Select All"),
+                            shiny::actionButton("clear_all", "Clear")
+                        )
+                    ),
+                    shiny::fluidRow(
+                        shiny::tags$div(class = "multicol",
+                            shiny::column(width = 12,
+                                shiny::uiOutput("variables")
+                            )
+                        )
+                    )
+                )
+            ),
+            miniUI::miniTabPanel(id = "builder",
+                title = "Build Array Variable",
+                icon = shiny::icon("edit"),
+                miniUI::gadgetTitleBar("Build Variable"),
+                miniUI::miniContentPanel(
+                    shiny::textInput("obj_name", "Object Name (Optional)"),
+                    shiny::textInput("var_name", "Variable Name"),
+                    shiny::radioButtons("array_type", "Array Type",
+                        choices = c("Categorical Array", "Multiple Response")),
+                    shiny::uiOutput("select_categories")
+                )
+            )
+        )
+    )
+
+    server <- function (input, output, session) {
+
+        values <- shiny::reactiveValues(currently_selected = "")
+        var_subset <- shiny::reactive({vars[grep(input$search, vars)]})
+
+        # We need to keep track of which values have been selected even when
+        # the variables which can be selected change because of the search bar. This
+        # observer creates a list which keeps track of whatever has been selected or intentionally
+        # deseledcted.
+        shiny::observe({
+            values$currently_selected <- union(
+                shiny::isolate(
+                    values$currently_selected[!(values$currently_selected %in% var_subset())]
+                ),
+                input$selected_vars
+            )
+        })
+        shiny::observeEvent(input$select_all,
+            shiny::updateCheckboxGroupInput(session, "selected_vars", selected = var_subset())
+        )
+        shiny::observeEvent(input$clear_all,
+            shiny::updateCheckboxGroupInput(session, "selected_vars", selected = "")
+        )
+
+        output$variables <- shiny::renderUI({
+            shiny::checkboxGroupInput("selected_vars",
+                NULL,
+                choices = var_subset(),
+                selected =  shiny::isolate(values$currently_selected)
+            )
+        })
+
+        output$select_categories <- shiny::renderUI({
+            generateCategoryCheckboxes(ds, input$selected_vars, input$array_type)
+        })
+        shiny::observeEvent(input$done, {
+            browser()
+            code <- buildArrayCall(
+                ds,
+                input$array_type,
+                input$obj_name,
+                input$var_name,
+                input$selected_vars,
+                input$mr_selection
+            )
+            shiny::stopApp(returnValue = rstudioapi::insertText(text = code))
+        })
+    }
+    crGET(getOption("crunch.api"))
+    shiny::runGadget(ui,
+        server,
+        viewer = shiny::dialogViewer("MR Builder", width = 800),
+    )
+}
+
+generateCategoryCheckboxes <- function (ds, selected_vars, array_type) {
+    cats <- lapply(selected_vars, function(x) {
+        names(categories(ds[[x]]))
+    })
+    cats_consistent <- vapply(cats, function(x) {
+        identical(cats[[1]], x)
+    }, FUN.VALUE = logical(1))
+    if (length(selected_vars) == 0) {
+        shiny::p("Error: No variables selected.",
+            style = "color:red")
+    } else if (!all(cats_consistent)) {
+        shiny::p("Error: selected variables have inconsistent categories.",
+            style = "color:red")
+    } else if (array_type == "Multiple Response") {
+        shiny::checkboxGroupInput("mr_selection",
+            "Selection Categories",
+            choices = cats[[1]]
+        )
+    }
+}
+
+buildArrayCall <- function(ds,
+    array_type,
+    object_name = "",
+    array_var_name,
+    vars_selected,
+    mr_selection){
+    if (array_type == "Multiple Response") {
+        f <- 'makeMR('
+        sel <- paste0(", ", "selections = ", as_char_vector(mr_selection))
+    } else {
+        f <- 'makeArray('
+        sel <- ''
+    }
+
+    if(object_name != "") {
+        assign <- paste0(object_name, " <- ")
+    } else {
+        assign <- ""
+    }
+
+
+    call <-
+        paste0(
+            assign,
+            f,
+            as.character(substitute(ds)),
+            "[ ,",
+            as_char_vector(vars_selected),
+            "], ",
+            "name = ",
+            array_var_name,
+            sel,
+            ")")
+    return(call)
+}
+
+as_char_vector <- function(v) {
+    paste0("c(",
+        paste0(paste0("'", v, "'"), collapse = ", "),
+        ")")
+}
