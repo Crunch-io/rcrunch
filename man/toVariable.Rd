@@ -12,6 +12,7 @@
 \alias{toVariable,AsIs-method}
 \alias{toVariable,VariableDefinition-method}
 \alias{toVariable,logical-method}
+\alias{toVariable,labelled-method}
 \alias{toVariable,labelled_spss-method}
 \alias{toVariable,CrunchExpr-method}
 \title{Generic method for converting objects to Crunch representations}
@@ -33,6 +34,8 @@ toVariable(x, ...)
 \S4method{toVariable}{VariableDefinition}(x, ...)
 
 \S4method{toVariable}{logical}(x, ...)
+
+\S4method{toVariable}{labelled}(x, ...)
 
 \S4method{toVariable}{labelled_spss}(x, ...)
 
