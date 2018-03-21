@@ -28,6 +28,7 @@ Imports:
 Suggests:
     covr,
     devtools,
+    haven, 
     httptest (>= 3.0.0),
     knitr,
     magrittr,
