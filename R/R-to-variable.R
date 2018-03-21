@@ -62,6 +62,15 @@ setMethod("toVariable", "logical", function (x, ...) {
 })
 
 # haven::labelled* are S3 classes, so we have to register them
+setOldClass("labelled")
+#' @rdname toVariable
+#' @export
+setMethod("toVariable", "labelled", function (x, ...) {
+    # TODO: what if the values are numeric? Is it possible to tell these apart
+    # from the labelled object?
+    return(toVariable(as.factor(x), ...))
+})
+
 setOldClass("labelled_spss")
 #' @rdname toVariable
 #' @export
