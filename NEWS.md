@@ -1,11 +1,12 @@
 ## crunch 1.20.1 (under development)
-* Variables can now be converted from one type to another with server-side derivations. Have a text input that is only numbers, and want to have a variables that is a true numeric? Simple, just use `ds$id_var_numeric <- as.Numeric(ds$id_var)`. There Are `as.*` methods for all Crunch data types except for array-like variables.
-* `makeMRFromText()` to take a variable imported as delimited strings, parse the multiple-response options, and return a (derived) multiple_response variable.
+* New functions for organizing variables in a dataset, modeled on file system operations: `cd()`, `mv()`, `mkdir()`, `rmdir()`. These functions use a new API for variable folders (unlike the experimental versions of some that were introduced in the 1.19.0 package release). This API is currently in a beta testing phase. See `vignettes("variable-order", package="crunch")` for examples and details.
+* `listDatasets(shiny = TRUE)` launches an RStudio addin which allows you to select your dataset in order to generate a valid `loadDataset()` call. You can also associate this addin with a hotkey using in RStudio through `Tools` > `Modify Keyboard Shortcuts`.
+* Create a derived view of a variable as another type without altering the underlying data. Have a text input that is only numbers, such as an ID, and want to have a variable that is a true numeric, but you also want to make sure that new (text) values can be appended to the dataset? Use `ds$id_var_numeric <- as.Numeric(ds$id_var)`. There are `as.*` methods for all Crunch data types except for array-like variables.
+* `makeMRFromText()` to take a variable imported as delimited strings, parse the multiple-response options, and return a (derived) `multiple_response` variable.
 * Added support for setting population sizes on datasets with `setPopulation(ds, size = 24.13e6, magnitude = 3)` and for getting population sizes (or magnitudes) with `popSize(ds)` and `popMagnitude(ds)` respectively.
+* `webApp()` now works for Crunch variables: it will take you to the "browse" view of the web application with the given variable card loaded on screen.
 * Add `options(crunch.show.progress)` to govern whether to report progress of long-running requests. Default is `TRUE`, but set it to `FALSE` to run quietly.
 * Export `pollProgress()` and recommend using that when a long-running request fails to complete within the local timeout.
-* `webApp()` now works for Crunch Variables.
-* `listDatasets(shiny = TRUE)` launches an RStudio addin which allows you to select your dataset in order to generate a valid `loadDataset()` call. You can also associate this addin with a hotkey using in RStudio through `Tools` > `Modify Keyboard Shortcuts`. 
 
 ## crunch 1.20.0
 
