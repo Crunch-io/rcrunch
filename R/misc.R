@@ -286,24 +286,26 @@ escapeQuotes <- function(str) {
 #' @param pkgs a character vector of package names to check.
 #'
 #' @return nothing, called for side effects
-checkInstalledPackages <- function(pkgs){
+checkInstalledPackages <- function (pkgs) {
     installed <- pkgs %in% rownames(installed.packages())
     if (!all(installed)){
         halt("Missing required packages: ", serialPaste(dQuote(pkgs[!installed])))
     }
 }
-#' escape Regex
+
+#' Escape a regular expression
 #'
-#' This function takes a string and escapes all of the special characters in the string.
-#' So VB.NET becomes VB\.NET. Note that R will print this as VB\\.NET, but `cat` reveals
-#' that there's only one `\`.
-#' @param string
+#' This function takes a string and escapes all of the special characters in the
+#' string. For example, the `.` in `VB.NET` will be escaped with a slash (though
+#' regular R printing will make it look like there are two slashes).
 #'
-#' @kerwords internal
+#' @param string A regular expression to escape
+#' @return `string`, escaped.
+#' @keywords internal
+#' @examples
 #' escapeRegex("Tom&Jerry")
-#' escapeRegex(".Net)
-escapeRegex <- function(string) {
+#' escapeRegex(".Net")
+escapeRegex <- function (string) {
     out <- gsub("([.|()\\^{}+$*?])", "\\\\\\1", string)
     return(gsub("(\\[|\\])", "\\\\\\1", out))
 }
-

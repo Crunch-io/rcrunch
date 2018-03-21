@@ -192,17 +192,33 @@ setGeneric("which", signature="x")
 #' - Factors are converted to categorical variables
 #' - Date and POSIXt vectors are converted into Crunch datetime variables
 #' - Logical vectors are converted to Crunch categorical variables
-#' - [VariableDefinition]s are not converted, but the function can still append
-#' additional metadata
+#' - [VariableDefinition()]s are not converted, but the function can still
+#' append additional metadata
 #'
 #' If you have other object types you wish to convert to Crunch variables,
-#' you can declare methods for `toVariable`
-#' @param x the object
-#' @param ... additional arguments
-#' @return a list object suitable for POSTing to the Crunch API. See the API
-#' documentation for specifications.
+#' you can declare methods for `toVariable`.
+#' @param x An R vector you want to turn into a Crunch variable
+#' @param ... Additional metadata fields for the variable, such as "name" and
+#' "description". See the [API
+#' documentation](http://docs.crunch.io/endpoint-reference/endpoint-variable.html#post-catalog)
+#' for a complete list of valid attributes.
+#' @return A `VariableDefinition` object. To add this to a dataset, either
+#' assign it into the dataset (like `ds$newvar <- toVariable(...)`) or call
+#' [addVariable()]. If you're adding a column of data to a dataset, it must be
+#' as long as the number of rows in the dataset, or it may be a single value to
+#' be recycled for all rows.
 #' @rdname toVariable
 #' @aliases toVariable
+#' @seealso [VariableDefinition()] [addVariables()]
+#' @examples
+#' var1 <- rnorm(10)
+#' toVariable(var1)
+#' toVariable(var1, name="Random", description="Generated in R")
+#' \dontrun{
+#' ds$random <- toVariable(var1, name="Random")
+#' # Or, this way:
+#' ds <- addVariables(ds, toVariable(var1, name="Random"))
+#' }
 #' @export
 setGeneric("toVariable", function (x, ...) standardGeneric("toVariable"))
 

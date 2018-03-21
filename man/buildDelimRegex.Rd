@@ -15,7 +15,7 @@ buildDelimRegex(str, delim)
 A character string
 }
 \description{
-A delimited item can appear in a list in four ways
+A delimited item \code{maple} can appear in a list in four ways
 \enumerate{
 \item At the start of a list \code{maple; oak}
 \item In the middle of a list \code{oak; maple; birch}
@@ -24,7 +24,7 @@ A delimited item can appear in a list in four ways
 }
 }
 \details{
-This function builds a regex expression which captures those four values. It
+This function builds a regex expression which captures those four cases It
 is mostly broken out of \code{\link[=createSubvarDeriv]{createSubvarDeriv()}} for testing purposes.
 }
 \keyword{internal}
