@@ -19,5 +19,27 @@ Index tables are percentages of percentages. They take the percentage from
 \code{prop.table()} and divide that by the proportions of the other margin.
 }
 \details{
-\code{index.table()} is only implemented for 2 dimensional cubes.
+\code{index.table()} is only implemented for 2 dimensional cubes. If you need to
+calculate indexes for a higher dimension Cube, please slice the cube first.
+}
+\examples{
+\dontrun{
+ cube_object
+ #    v7
+ # v4  C E
+ #   B 5 2
+ #   C 5 3
+ index.table(cube_object, 1)
+ #    v7
+ # v4         C         E
+ #   B 1.071429 0.8571429
+ #   C 0.937500 1.1250000
+ index.table(cube_object, 2)
+ #    v7
+ # v4         C         E
+ #   B 1.071429 0.8571429
+ #   C 0.937500 1.1250000
+ #
+}
+
 }
