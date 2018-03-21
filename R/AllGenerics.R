@@ -199,12 +199,11 @@ setGeneric("which", signature="x")
 #' you can declare methods for `toVariable`.
 #' @param x An R vector you want to turn into a Crunch variable
 #' @param ... Additional metadata fields for the variable, such as "name" and
-#' "description". See the [API
-#' documentation](http://docs.crunch.io/endpoint-reference/endpoint-variable.html#post-catalog)
+#' "description". See the [API documentation](http://docs.crunch.io/endpoint-reference/endpoint-variable.html#post-catalog)
 #' for a complete list of valid attributes.
 #' @return A `VariableDefinition` object. To add this to a dataset, either
 #' assign it into the dataset (like `ds$newvar <- toVariable(...)`) or call
-#' [addVariable()]. If you're adding a column of data to a dataset, it must be
+#' [addVariables()]. If you're adding a column of data to a dataset, it must be
 #' as long as the number of rows in the dataset, or it may be a single value to
 #' be recycled for all rows.
 #' @rdname toVariable

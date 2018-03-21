@@ -13,11 +13,14 @@ escapeRegex(string)
 \code{string}, escaped.
 }
 \description{
-This function takes a string and escapes all of the special characters in the string.
-For example, the \code{.} in \code{VB.NET} will be escaped with a slash (though regular R printing will make it look like there are two slashes).
+This function takes a string and escapes all of the special characters in the
+string. For example, the \code{.} in \code{VB.NET} will be escaped with a slash (though
+regular R printing will make it look like there are two slashes).
 }
 \examples{
+\dontrun{
 escapeRegex("Tom&Jerry")
 escapeRegex(".Net")
+}
 }
 \keyword{internal}

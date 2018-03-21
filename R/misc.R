@@ -303,8 +303,10 @@ checkInstalledPackages <- function (pkgs) {
 #' @return `string`, escaped.
 #' @keywords internal
 #' @examples
+#' \dontrun{
 #' escapeRegex("Tom&Jerry")
 #' escapeRegex(".Net")
+#' }
 escapeRegex <- function (string) {
     out <- gsub("([.|()\\^{}+$*?])", "\\\\\\1", string)
     return(gsub("(\\[|\\])", "\\\\\\1", out))
