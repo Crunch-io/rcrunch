@@ -1,5 +1,4 @@
 library(httptest)
-test_env <- environment()
 
 run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
 
@@ -132,6 +131,7 @@ whereas <- function (...) {
     on.exit(purgeEntitiesCreated())
     eval.parent(...)
 }
+
 
 ## Global teardown
 with_test_authentication({
