@@ -296,12 +296,16 @@ checkInstalledPackages <- function(pkgs){
 #'
 #' This function takes a string and escapes all of the special characters in the string.
 #' So VB.NET becomes VB\.NET. Note that R will print this as VB\\.NET, but `cat` reveals
-#' that there's only one `\`.
+#' that there's only one \code{\}.
 #' @param string
 #'
-#' @kerwords internal
+#' @keywords internal
+#'
+#' @examples
+#' \dontrun{
 #' escapeRegex("Tom&Jerry")
-#' escapeRegex(".Net)
+#' escapeRegex(".Net")
+#' }
 escapeRegex <- function(string) {
     out <- gsub("([.|()\\^{}+$*?])", "\\\\\\1", string)
     return(gsub("(\\[|\\])", "\\\\\\1", out))

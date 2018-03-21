@@ -61,6 +61,36 @@ setMethod("toVariable", "logical", function (x, ...) {
     return(NAToCategory(out, useNA="always"))
 })
 
+# haven::labelled* are S3 classes, so we have to register them
+setOldClass("labelled_spss")
+#' @rdname toVariable
+#' @export
+setMethod("toVariable", "labelled_spss", function (x, ...) {
+    # TODO: what if the values are numeric? Is it possible to tell these apart
+    # from the labelled object?
+
+    # convert to factor quickly (the recommended workflow for labelled objects
+    # from haven, since there are few methods for labelled objects)
+    x_factor <- as.factor(x)
+    nlevels <- length(levels(x_factor))
+    categories <- categoriesFromLevels(levels(x_factor))
+    # grab the user missing levels
+    user_missings <- levels(droplevels(x_factor[is.na(x)]))
+    # we aren't
+    categories <- lapply(categories, function (cat) {
+        if (cat$name %in% user_missings) {
+            cat$missing <- TRUE
+        }
+        return(cat)
+    })
+
+    out <- structure(list(values=as.integer(x_factor), type="categorical",
+                          categories=categories, ...),
+                     class="VariableDefinition")
+    return(NAToCategory(out, useNA="always"))
+})
+
+
 #' Convert a factor's levels into Crunch categories.
 #'
 #' Crunch categorical variables have slightly richer metadata than R's
@@ -78,7 +108,7 @@ setMethod("toVariable", "logical", function (x, ...) {
 #' @examples
 #'
 #' categoriesFromLevels(levels(iris$Species))
-#' 
+#'
 categoriesFromLevels <- function (level_vect) {
     if (anyDuplicated(level_vect)) {
         warning("Duplicate factor levels given: disambiguating them ",
