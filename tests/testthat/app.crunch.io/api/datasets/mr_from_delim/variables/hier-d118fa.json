@@ -1,0 +1,6 @@
+{
+    "element": "shoji:order",
+    "self": "https://app.crunch.io/api/datasets/four/variables/hier/?relative=on",
+    "description": "Hierarchical order of dataset variables",
+    "graph": ["../000001/", "../000010/", "../000000/", "../000006/", "../000003/", "../000008/", "../000004/", "../000007/", "../000005/", "../000002/", "../000009/"]
+}

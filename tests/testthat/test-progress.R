@@ -1,6 +1,15 @@
 context("Polling progress")
 
+test_that("progressMessage", {
+    expect_silent(progressMessage("Message!"))
+    with(temp.option(crunch.show.progress=NULL), {
+        expect_message(progressMessage("Message!"), "Message!")
+    })
+})
+
 with_mock_crunch({
+    options(crunch.show.progress=NULL)
+    on.exit(options(crunch.show.progress=FALSE))
     test_that("If progress polling gives up, it tells you what to do", {
         with(temp.option(crunch.timeout=0.0005), {
             expect_error(
@@ -8,7 +17,7 @@ with_mock_crunch({
                     "|================"),
                 paste('Your process is still running on the server. It is',
                     'currently 23% complete. Check',
-                    '`httpcache::uncached(crGET("https://app.crunch.io/api/progress/1/"))`',
+                    '`pollProgress("https://app.crunch.io/api/progress/1/")`',
                     'until it reports 100% complete'),
                 fixed=TRUE)
         })
@@ -47,6 +56,17 @@ with_mock_crunch({
             expect_match(out[1], "=| 100%", fixed=TRUE)
             expect_match(out[2], "command on next line", fixed=TRUE)
         }),
+        test_that("Progress polling goes until 100 when silent", {
+            counter <<- 1
+            with(temp.option(crunch.show.progress=FALSE), {
+                expect_silent(
+                    expect_equal(pollProgress("https://app.crunch.io/api/progress/",
+                                              wait=.001),
+                        100
+                    )
+                )
+            })
+        }),
         test_that("Auto-polling with a progress resource", {
             counter <<- 1
             logfile <- tempfile()
@@ -60,15 +80,6 @@ with_mock_crunch({
             expect_identical(logs$verb, c("GET", "GET"))
             expect_identical(logs$url,
                 c("app.crunch.io/api/progress/1.json", "app.crunch.io/api/progress/2.json"))
-        }),
-        test_that("Progress silencing in tests", {
-            counter <<- 1
-            expect_silent(
-                with_silent_progress(
-                    expect_identical(handleAPIresponse(fakeProg("https://app.crunch.io/api/progress/")),
-                        "https://app.crunch.io/api/datasets/")
-                )
-            )
         }),
         test_that("Auto-polling when progress reports failure", {
             counter <<- 1

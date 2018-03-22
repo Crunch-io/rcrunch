@@ -15,6 +15,8 @@ setGeneric("value", function (x) standardGeneric("value"))
 setGeneric("value<-", function (x, value) standardGeneric("value<-"))
 setGeneric("name", function (x) standardGeneric("name"))
 setGeneric("name<-", function (x, value) standardGeneric("name<-"))
+setGeneric("uniformBasis", function (x) standardGeneric("uniformBasis"))
+setGeneric("uniformBasis<-", function (x, value) standardGeneric("uniformBasis<-"))
 setGeneric("popSize", function (x) standardGeneric("popSize"))
 setGeneric("popMagnitude", function (x) standardGeneric("popMagnitude"))
 setGeneric("popSize<-", function (x, value) standardGeneric("popSize<-"))
@@ -152,6 +154,7 @@ setGeneric("weightVariables<-", function (x, value) standardGeneric("weightVaria
 setGeneric("is.weightVariable<-", function (x, value) standardGeneric("is.weightVariable<-"))
 setGeneric("is.weight<-", function (x, value) standardGeneric("is.weight<-"))
 setGeneric("whichCatalogEntry", function (x, i, ...) standardGeneric("whichCatalogEntry"))
+setGeneric("APIToWebURL", function(x) standardGeneric("APIToWebURL"))
 
 setGeneric("owner", function (x) standardGeneric("owner"))
 setGeneric("owner<-", function (x, value) standardGeneric("owner<-"))
@@ -190,17 +193,32 @@ setGeneric("which", signature="x")
 #' - Factors are converted to categorical variables
 #' - Date and POSIXt vectors are converted into Crunch datetime variables
 #' - Logical vectors are converted to Crunch categorical variables
-#' - [VariableDefinition]s are not converted, but the function can still append
-#' additional metadata
+#' - [VariableDefinition()]s are not converted, but the function can still
+#' append additional metadata
 #'
 #' If you have other object types you wish to convert to Crunch variables,
-#' you can declare methods for `toVariable`
-#' @param x the object
-#' @param ... additional arguments
-#' @return a list object suitable for POSTing to the Crunch API. See the API
-#' documentation for specifications.
+#' you can declare methods for `toVariable`.
+#' @param x An R vector you want to turn into a Crunch variable
+#' @param ... Additional metadata fields for the variable, such as "name" and
+#' "description". See the [API documentation](http://docs.crunch.io/endpoint-reference/endpoint-variable.html#post-catalog)
+#' for a complete list of valid attributes.
+#' @return A `VariableDefinition` object. To add this to a dataset, either
+#' assign it into the dataset (like `ds$newvar <- toVariable(...)`) or call
+#' [addVariables()]. If you're adding a column of data to a dataset, it must be
+#' as long as the number of rows in the dataset, or it may be a single value to
+#' be recycled for all rows.
 #' @rdname toVariable
 #' @aliases toVariable
+#' @seealso [VariableDefinition()] [addVariables()]
+#' @examples
+#' var1 <- rnorm(10)
+#' toVariable(var1)
+#' toVariable(var1, name="Random", description="Generated in R")
+#' \dontrun{
+#' ds$random <- toVariable(var1, name="Random")
+#' # Or, this way:
+#' ds <- addVariables(ds, toVariable(var1, name="Random"))
+#' }
 #' @export
 setGeneric("toVariable", function (x, ...) standardGeneric("toVariable"))
 

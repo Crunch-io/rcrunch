@@ -68,12 +68,12 @@ test_that("Insertion validation", {
 })
 
 test_that("Insertion and insertions show methods", {
-    expect_output(insrt,
+    expect_prints(insrt,
                   get_output(data.frame(anchor=c(6),
                                         name=c("Low"),
                                         func=c("subtotal"),
                                         args=c("1 and 2"))))
-    expect_output(insrts,
+    expect_prints(insrts,
                   get_output(data.frame(anchor=c(6, 7),
                                         name=c("Low", "High"),
                                         func=c("subtotal", "subtotal"),
@@ -85,7 +85,7 @@ test_that("Insertion and insertions show methods with hetrogeneous insertions", 
                                   categories = c("A", "B")),
                          Heading(name = "The end", after = "D"))
 
-    expect_output(insrts,
+    expect_prints(insrts,
                   get_output(data.frame(
                      anchor = c("B", "D"),
                      name = c("Cats A+B", "The end"),

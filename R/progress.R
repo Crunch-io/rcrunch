@@ -1,3 +1,16 @@
+#' Check a Crunch progress URL until it finishes
+#'
+#' You'll probably only call this function if progress polling times out and its
+#' error message tells you to call `pollProgress` to resume.
+#'
+#' @param progress_url A Crunch progress URL
+#' @param wait Number of seconds to wait between polling. This time is increased
+#' 20 percent on each poll.
+#' @return The percent completed of the progress. Assuming the
+#' `options(crunch.timeout)` (default: 15 minutes) hasn't been reached, this
+#' will be 100. If the timeout is reached, it will be the last reported progress
+#' value.
+#' @export
 #' @importFrom httpcache uncached
 pollProgress <- function (progress_url, wait=.5) {
     ## Configure polling interval. Will increase by rate (>1) until reaches max
@@ -29,22 +42,35 @@ pollProgress <- function (progress_url, wait=.5) {
         halt(msg)
     } else if (status != 100) {
         halt('Your process is still running on the server. It is currently ',
-            round(status), '% complete. Check `httpcache::uncached(crGET("',
-            progress_url, '"))` until it reports 100% complete')
+            round(status), '% complete. Check `pollProgress("',
+            progress_url, '")` until it reports 100% complete')
     }
     return(status)
 }
 
-## Make these pass through so they can be mocked (silenced) in tests
-
 #' @importFrom utils txtProgressBar
-setup_progress_bar <- function (...) txtProgressBar(...)
+setup_progress_bar <- function (...) {
+    if (isTRUE(getOption("crunch.show.progress", TRUE))) {
+        return(txtProgressBar(...))
+    } else {
+        ## Need to return a connection so that `close()` works in silent mode
+        return(pipe(""))
+    }
+}
 
 #' @importFrom utils setTxtProgressBar
-update_progress_bar <- function (...) setTxtProgressBar(...)
+update_progress_bar <- function (...) {
+    if (isTRUE(getOption("crunch.show.progress", TRUE))) setTxtProgressBar(...)
+}
 
 crunchTimeout <- function () {
     opt <- getOption("crunch.timeout")
     if (!is.numeric(opt)) opt <- 900
     return(opt)
+}
+
+progressMessage <- function (msg) {
+    if (isTRUE(getOption("crunch.show.progress", TRUE))) {
+        message(msg)
+    }
 }
