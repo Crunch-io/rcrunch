@@ -72,21 +72,46 @@ with_mock_crunch({
     })
     test_that("generateCategoryCheckboxes produces correct HTML", {
         tag <- generateCategoryCheckboxes(ds, "location", "Multiple Response")
-        expected_html <- c("<div id=\"mr_selection\" class=\"form-group shiny-input-checkboxgroup shiny-input-container\">",
+        expected_html <- c(
+            "<div id=\"mr_selection\" class=\"form-group shiny-input-checkboxgroup shiny-input-container\">",
             "  <label class=\"control-label\" for=\"mr_selection\">Selection Categories</label>",
-            "  <div class=\"shiny-options-group\">", "    <div class=\"checkbox\">",
-            "      <label>", "        <input type=\"checkbox\" name=\"mr_selection\" value=\"London\"/>",
-            "        <span>London</span>", "      </label>", "    </div>",
-            "    <div class=\"checkbox\">", "      <label>", "        <input type=\"checkbox\" name=\"mr_selection\" value=\"Scotland\"/>",
-            "        <span>Scotland</span>", "      </label>", "    </div>",
-            "    <div class=\"checkbox\">", "      <label>", "        <input type=\"checkbox\" name=\"mr_selection\" value=\"No Data\"/>",
-            "        <span>No Data</span>", "      </label>", "    </div>",
-            "  </div>", "</div>")
+            "  <div class=\"shiny-options-group\">",
+            "    <div class=\"checkbox\">",
+            "      <label>",
+            "        <input type=\"checkbox\" name=\"mr_selection\" value=\"London\"/>",
+            "        <span>London</span>",
+            "      </label>",
+            "    </div>",
+            "    <div class=\"checkbox\">",
+            "      <label>",
+            "        <input type=\"checkbox\" name=\"mr_selection\" value=\"Scotland\"/>",
+            "        <span>Scotland</span>",
+            "      </label>",
+            "    </div>",
+            "    <div class=\"checkbox\">",
+            "      <label>",
+            "        <input type=\"checkbox\" name=\"mr_selection\" value=\"No Data\"/>",
+            "        <span>No Data</span>",
+            "      </label>",
+            "    </div>",
+            "  </div>",
+            "</div>")
         expect_is(tag, "shiny.tag")
         expect_identical(capture.output(tag), expected_html)
 
         tag <- generateCategoryCheckboxes(ds, c("location", "gender"), "Multiple Response")
-        expected_html <- "<p style=\"color:red\">Error: selected variables have inconsistent categories.</p>"
+        expected_html <- c(
+            "<div id=\"mr_selection\" class=\"form-group shiny-input-checkboxgroup shiny-input-container\">",
+            "  <label class=\"control-label\" for=\"mr_selection\">Selection Categories</label>",
+            "  <div class=\"shiny-options-group\">",
+            "    <div class=\"checkbox\">",
+            "      <label>",
+            "        <input type=\"checkbox\" name=\"mr_selection\" value=\"No Data\"/>",
+            "        <span>No Data</span>",
+            "      </label>",
+            "    </div>",
+            "  </div>",
+            "</div>")
         expect_is(tag, "shiny.tag")
         expect_identical(capture.output(tag), expected_html)
 

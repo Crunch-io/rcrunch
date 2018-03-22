@@ -202,23 +202,24 @@ makeArrayGadget <- function() {
 }
 
 generateCategoryCheckboxes <- function (ds, selected_vars, array_type) {
-    cats <- lapply(selected_vars, function(x) {
-        names(categories(ds[[x]]))
-    })
-    cats_consistent <- vapply(cats, function(x) {
-        identical(cats[[1]], x)
-    }, FUN.VALUE = logical(1))
     if (length(selected_vars) == 0) {
         shiny::p("Error: No variables selected.",
             style = "color:red")
-    } else if (!all(cats_consistent)) {
-        shiny::p("Error: selected variables have inconsistent categories.",
-            style = "color:red")
     } else if (array_type == "Multiple Response") {
-        shiny::checkboxGroupInput("mr_selection",
-            "Selection Categories",
-            choices = cats[[1]]
-        )
+        cats <- lapply(selected_vars, function(x) {
+            names(categories(ds[[x]]))
+        })
+        mr_options <- Reduce(intersect, cats)
+
+        if (length(mr_options) == 0) {
+            shiny::p("Error: selected variables have no common categories.",
+                style = "color:red")
+        } else {
+            shiny::checkboxGroupInput("mr_selection",
+                "Selection Categories",
+                choices = mr_options
+            )
+        }
     }
 }
 
