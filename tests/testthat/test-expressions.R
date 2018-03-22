@@ -332,13 +332,8 @@ with_test_authentication({
     })
 
     test_that("rollupResolution can be set", {
-        #ensure that only the rollup resolution changes
-        body <- ds$v5@tuple@body
         expect_null(rollupResolution(ds$v5))
         rollupResolution(ds$v5) <- "M"
         expect_identical(rollupResolution(ds$v5), "M")
-        comp <- mapply(identical, body, ds$v5@tuple@body, SIMPLIFY = TRUE)
-        expect_equal(sum(comp), 9)
-        expect_false(comp[names(body) == "rollup_resolution"])
     })
 })
