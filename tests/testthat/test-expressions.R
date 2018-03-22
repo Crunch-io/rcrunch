@@ -144,6 +144,16 @@ with_mock_crunch({
         print(ds$birthyr * 3 + 5)
         print(3 * (ds$birthyr + 5))
     })
+
+    test_that("rollupResolution functions generate expected requests", {
+        expect_identical(rollupResolution(ds$starttime), "s")
+        expect_PATCH(rollupResolution(ds$starttime) <- "M",
+            'https://app.crunch.io/api/datasets/1/variables/starttime/',
+            '{"view":{"rollup_resolution":"M"}}')
+        expect_error(rollupResolution(ds$starttime) <- "invalid_rollup",
+            paste0(dQuote("resolution"), " is invalid. Valid values are Y, Q, M, W, D, h, m, s, or ms")
+        )
+    })
 })
 
 with_test_authentication({
@@ -319,5 +329,11 @@ with_test_authentication({
         expect_identical(which(duplicated(ds$v3 + 4)), integer(0))
         skip("'which' isn't implemented correctly")
         expect_identical(which(duplicated(ds$v4)), 3:20)
+    })
+
+    test_that("rollupResolution can be set", {
+        expect_null(rollupResolution(ds$v5))
+        rollupResolution(ds$v5) <- "M"
+        expect_identical(rollupResolution(ds$v5), "M")
     })
 })
