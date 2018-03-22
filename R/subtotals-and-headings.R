@@ -42,7 +42,8 @@
 #' the position of the subtotal or heading, either at the top, bottom, or
 #' relative to another category in the cube (default).
 #' @param after character or numeric if `position` is "relative", then the
-#' category name or id to position the subtotal or heading after
+#' category name or id to position the subtotal or heading after. If not supplied
+#' this defaults to the last of the `categories` supplied to `Subtotal`.
 #'
 #' @examples
 #' \dontrun{
@@ -125,18 +126,9 @@ Subtotal <- function (name,
 }
 
 validatePosition <- function (position, after) {
-    if (position == "relative") {
-        # if position is realtive, make sure there is an after
-        if (is.null(after)) {
-            halt("If position is relative, you must supply a category id or ",
-                 "name to the ", dQuote("after"), " argument")
-        }
-    } else {
-        # if position is realtive, make sure there is not an after
-        if (!is.null(after)) {
-            halt("If position is not relative, you cannot supply a category id",
-                 " or name to the ", dQuote("after"), " argument")
-        }
+    if (position != "relative" && !is.null(after)) {
+        halt("If position is not relative, you cannot supply a category id",
+            " or name to the ", dQuote("after"), " argument")
     }
 }
 
@@ -214,6 +206,23 @@ setMethod("subtotals<-", c("CrunchVariable", "ANY"), function (x, value) {
         }, value)))) {
         halt("value must be a list of Subtotals, Headings, or both.")
     }
+    # If position is relative we default to setting after to be the last category
+    # in the Subtotal category.
+    value <- lapply(value, function(a){
+        if (is.null(a$after) && a$position == "relative") {
+            if (is.numeric(a$categories)) {
+                var_cats <- ids(categories(x))
+            } else {
+                var_cats <- names(categories(x))
+            }
+            sub_cats <- a$categories[a$categories %in% var_cats]
+            ordered_cats <- sub_cats[order(match(sub_cats, var_cats))]
+            a$after <- rev(ordered_cats)[1]
+            return(a)
+        } else {
+            return(a)
+        }
+    })
     inserts = Insertions(data = lapply(value,
                                        makeInsertion,
                                        var_categories = categories(x)))

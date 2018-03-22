@@ -11,6 +11,7 @@ run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
 
 # grab env or options
 options(
+    crunch.show.progress=FALSE,
     crunch.email=crunch::envOrOption("test.user"),
     crunch.pw=crunch::envOrOption("test.pw")
 )
@@ -33,11 +34,20 @@ loadCube <- function (filename) {
 
 cubify <- function (..., dims) {
     ## Make readable test expectations for comparing cube output
+    ## Borrowed from Cube arrays, fixtures and cubes come in row-col-etc. order,
+    ## not column-major. Make array, then aperm the array back to order
     data <- c(...)
-    d <- vapply(dims, length, integer(1), USE.NAMES=FALSE)
-    array(matrix(data, byrow=TRUE, nrow=d[1]), dim=d, dimnames=dims)
-}
+    d <- rev(vapply(dims, length, integer(1), USE.NAMES=FALSE))
 
+    out <- array(data, dim=d)
+    if (length(dims) > 1) {
+        ap <- seq_len(length(dims))
+        ap <- rev(ap)
+        out <- aperm(out, ap)
+    }
+    dimnames(out) <- dims
+    return(out)
+}
 
 ## Contexts
 with_mock_crunch <- function (expr) {
@@ -69,14 +79,6 @@ with_DELETE <- function (resp, expr) {
     with_mock(`crunch::crDELETE`=function (...) resp, eval.parent(expr))
 }
 
-with_silent_progress <- function (expr) {
-    with_mock(
-        `crunch:::setup_progress_bar`=function (...) pipe(""),
-        `crunch:::update_progress_bar`=function (...) invisible(NULL),
-        eval.parent(expr)
-    )
-}
-
 silencer <- temp.option(show.error.messages=FALSE)
 
 assign("entities.created", c(), envir=globalenv())
@@ -102,7 +104,7 @@ with_test_authentication <- function (expr) {
         with_trace("locationHeader", exit=tracer, where=crGET, expr={
             ## Wrap this so that we can generate a test failure if there's an error
             ## rather than just halt the process
-            tryCatch(eval(with_silent_progress(expr), envir=env),
+            tryCatch(eval(expr, envir=env),
                 error=function (e) {
                     test_that("There are no test code errors", {
                         expect_error(stop(e$message), NA)

@@ -15,9 +15,7 @@ test_that("Embed URL", {
 })
 
 test_that("Iframe code (prints and returns invisibly)", {
-    ## Use the testthat version of expect_output because the crunch version
-    ## calls print explicitly
-    testthat::expect_output(
+    expect_output(
         expect_identical(embedCrunchBox("http://cf.example/d/stuff/1a1577c91fbb2c1cbd3800e181188508/dataset.json"),
             '<iframe src="//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c1cbd3800e181188508/" width="600" height="480" style="border: 1px solid #d3d3d3;"></iframe>'),
         '<iframe src="//s.crunch.io/widget/index.html#/ds/1a1577c91fbb2c1cbd3800e181188508/" width="600" height="480" style="border: 1px solid #d3d3d3;"></iframe>',
@@ -38,7 +36,7 @@ iframe_with_title <- '<figure style="text-align: left;" class="content-list-comp
 
 
 test_that("Iframe code with logo", {
-    testthat::expect_output(
+    expect_output(
         expect_identical(embedCrunchBox("http://cf.example/d/stuff/1a1577c91fbb2c1cbd3800e181188508/dataset.json", logo="//s.crunch.io/public/branding/example.gif"),
             iframe_with_logo),
         iframe_with_logo,
@@ -46,7 +44,7 @@ test_that("Iframe code with logo", {
 })
 
 test_that("Iframe code with title", {
-    testthat::expect_output(
+    expect_output(
         expect_identical(embedCrunchBox("http://cf.example/d/stuff/1a1577c91fbb2c1cbd3800e181188508/dataset.json", title="Example title here"),
             iframe_with_title),
         iframe_with_title,
@@ -74,7 +72,7 @@ with_mock_crunch({
     ds3 <- loadDataset("ECON.sav")
 
     test_that("preCrunchBoxCheck does not error", {
-        expect_output(preCrunchBoxCheck(ds),
+        expect_prints(preCrunchBoxCheck(ds),
             "We recommend using only categorical and multiple_response variables. These 4 variables have an unsupported type")
     })
 
@@ -218,7 +216,7 @@ with_test_authentication({
     names(categories(ds$cat))[2] <- "Extra long category name because we check those too"
 
     test_that("check box catches the various cases", {
-        expect_output(preCrunchBoxCheck(ds),
+        expect_prints(preCrunchBoxCheck(ds),
             "Shorter variable names will display in the menus better. This variable has a name longer than 40 characters")
     })
 

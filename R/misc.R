@@ -267,6 +267,16 @@ has.function <- function (query, funcs) {
     return(FALSE)
 }
 
+#' Check that a value is TRUE or FALSE
+#'
+#' @param value Value to check
+#' @keywords internal
+#' @return `TRUE` if `value` is either `TRUE` or `FALSE`, `FALSE` otherwise
+#'
+is.TRUEorFALSE <- function (value) {
+    return(is.logical(value) && !is.na(value) && length(value) == 1)
+}
+
 escapeQuotes <- function(str) {
     gsub("'", "\\\\'", str)
 }
@@ -276,9 +286,28 @@ escapeQuotes <- function(str) {
 #' @param pkgs a character vector of package names to check.
 #'
 #' @return nothing, called for side effects
-checkInstalledPackages <- function(pkgs){
+checkInstalledPackages <- function (pkgs) {
     installed <- pkgs %in% rownames(installed.packages())
     if (!all(installed)){
         halt("Missing required packages: ", serialPaste(dQuote(pkgs[!installed])))
     }
+}
+
+#' Escape a regular expression
+#'
+#' This function takes a string and escapes all of the special characters in the
+#' string. For example, the `.` in `VB.NET` will be escaped with a slash (though
+#' regular R printing will make it look like there are two slashes).
+#'
+#' @param string A regular expression to escape
+#' @return `string`, escaped.
+#' @keywords internal
+#' @examples
+#' \dontrun{
+#' escapeRegex("Tom&Jerry")
+#' escapeRegex(".Net")
+#' }
+escapeRegex <- function (string) {
+    out <- gsub("([.|()\\^{}+$*?])", "\\\\\\1", string)
+    return(gsub("(\\[|\\])", "\\\\\\1", out))
 }

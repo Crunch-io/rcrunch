@@ -1,13 +1,9 @@
-expect_output <- function (object, ...) {
-    testthat::expect_output(print(object), ...)
-}
-
-expect_fixed_output <- function (object, ...) {
-    expect_output(object, ..., fixed=TRUE)
+expect_prints <- function (object, ..., fixed=TRUE) {
+    expect_output(print(object), ..., fixed=fixed)
 }
 
 get_output <- function (x) {
-    ## For comparing print output in expect_output
+    ## For comparing print output in expect_prints
     paste(capture.output(print(x)), collapse="\n")
 }
 
