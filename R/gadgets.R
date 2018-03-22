@@ -20,7 +20,7 @@ listDatasetGadget <- function (kind=c("active", "all", "archived"),
                 shiny::uiOutput("dataset")
             ),
             shiny::column(width = 3,
-                shiny::textInput("ds_name", "Object Name (Optional)")
+                shiny::textInput("obj_name", "Object Name (Optional)")
             )
         )
     )
@@ -62,10 +62,21 @@ buildLoadDatasetCall <- function (project, dataset, ds_name = "") {
     return(code)
 }
 # Array builder ----
-makeArrayGadget <- function(ds) {
-    #display categorical variables
-    vars <- names(variables(ds))[vapply(ds, is.Categorical, FUN.VALUE = logical(1))]
-    currently_selected <- ""
+
+#' Launch array builder gadget
+#'
+#' Categorical Array and Multiple Response variables can be difficult to
+#' construct without being able to investigate the available variables, and
+#' their categories. This shiny gadget lets you select subvariables from the
+#' dataset list, and ensures that those variables have consistent categories. To
+#' use the gadget you must have at least one CrunchDataset loaded into the global
+#' environment.
+#'
+#' @return a valid call to `makeArray()` or `makeMR()`
+#' @export
+makeArrayGadget <- function() {
+    crGET(getOption("crunch.api")) # check login status
+    dataset_list <- getCrunchDatasets()
     ui <- miniUI::miniPage(
         shiny::tags$head(
             shiny::tags$style(shiny::HTML("
@@ -78,7 +89,7 @@ makeArrayGadget <- function(ds) {
             )
             )
         ),
-        miniUI::miniTabstripPanel(id ="tabstrip",
+        miniUI::miniTabstripPanel(id = "tabstrip",
             miniUI::miniTabPanel(id = "var_select",
                 title = "Select Subvariables",
                 icon = shiny::icon("check-square"),
@@ -87,11 +98,17 @@ makeArrayGadget <- function(ds) {
                     left = NULL),
                 miniUI::miniContentPanel(
                     shiny::fluidRow(
-                        shiny::column( width = 4,
+                        shiny::column(width = 4,
+                            shiny::selectInput("dataset",
+                                "Select Dataset",
+                                choices = names(dataset_list)
+                            )
+                        ),
+                        shiny::column(width = 4,
                             shiny::textInput("search", "Search")
                         )
                     ),
-                    shiny::h4("Select Subvariables"),
+                    shiny::h6("Select Subvariables"),
                     shiny::fluidRow(
                         shiny::column(width = 4,
                             shiny::actionButton("select_all", "Select All"),
@@ -114,7 +131,7 @@ makeArrayGadget <- function(ds) {
                 miniUI::miniContentPanel(
                     shiny::textInput("obj_name", "Object Name (Optional)"),
                     shiny::textInput("var_name", "Variable Name"),
-                    shiny::radioButtons("array_type", "Array Type",
+                    shiny::radioButtons("array_type", "Variable Type",
                         choices = c("Categorical Array", "Multiple Response")),
                     shiny::uiOutput("select_categories")
                 )
@@ -123,14 +140,19 @@ makeArrayGadget <- function(ds) {
     )
 
     server <- function (input, output, session) {
+        ds <- shiny::reactive(dataset_list[[shiny::req(input$dataset)]])
+        vars <- shiny::reactive (
+            names(variables(ds()))[vapply(ds(), is.Categorical, FUN.VALUE = logical(1))]
+        )
+        var_subset <- shiny::reactive(
+            vars()[grep(input$search, vars())]
+        )
 
-        values <- shiny::reactiveValues(currently_selected = "")
-        var_subset <- shiny::reactive({vars[grep(input$search, vars)]})
-
-        # We need to keep track of which values have been selected even when
-        # the variables which can be selected change because of the search bar. This
-        # observer creates a list which keeps track of whatever has been selected or intentionally
-        # deseledcted.
+        # We need to keep track of which values have been selected even when the
+        # variables which can be selected change because of the search bar. This
+        # observer creates a list which keeps track of whatever has been
+        # selected or intentionally deseledcted.
+        values <- shiny::reactiveValues(currently_selected = character(0))
         shiny::observe({
             values$currently_selected <- union(
                 shiny::isolate(
@@ -155,25 +177,28 @@ makeArrayGadget <- function(ds) {
         })
 
         output$select_categories <- shiny::renderUI({
-            generateCategoryCheckboxes(ds, input$selected_vars, input$array_type)
+            generateCategoryCheckboxes(ds(),
+                values$currently_selected,
+                input$array_type
+            )
         })
+
         shiny::observeEvent(input$done, {
-            browser()
             code <- buildArrayCall(
-                ds,
+                input$dataset,
                 input$array_type,
                 input$obj_name,
                 input$var_name,
-                input$selected_vars,
+                values$currently_selected,
                 input$mr_selection
             )
             shiny::stopApp(returnValue = rstudioapi::insertText(text = code))
         })
     }
-    crGET(getOption("crunch.api"))
+
     shiny::runGadget(ui,
         server,
-        viewer = shiny::dialogViewer("MR Builder", width = 800),
+        viewer = shiny::dialogViewer("MR Builder", width = 800)
     )
 }
 
@@ -198,7 +223,7 @@ generateCategoryCheckboxes <- function (ds, selected_vars, array_type) {
     }
 }
 
-buildArrayCall <- function(ds,
+buildArrayCall <- function(ds_name,
     array_type,
     object_name = "",
     array_var_name,
@@ -206,36 +231,46 @@ buildArrayCall <- function(ds,
     mr_selection){
     if (array_type == "Multiple Response") {
         f <- 'makeMR('
-        sel <- paste0(", ", "selections = ", as_char_vector(mr_selection))
+        sel <- paste0(", ", "selections = ", asCharVector(mr_selection))
     } else {
         f <- 'makeArray('
         sel <- ''
     }
 
-    if(object_name != "") {
+    if (object_name != "") {
         assign <- paste0(object_name, " <- ")
     } else {
         assign <- ""
     }
 
-
-    call <-
-        paste0(
-            assign,
-            f,
-            as.character(substitute(ds)),
-            "[ ,",
-            as_char_vector(vars_selected),
-            "], ",
-            "name = ",
-            array_var_name,
-            sel,
-            ")")
+    call <- paste0(
+        assign,
+        f,
+        ds_name,
+        "[ ,",
+        asCharVector(vars_selected),
+        "], ",
+        "name = '",
+        array_var_name,
+        "'",
+        sel,
+        ")")
     return(call)
 }
 
-as_char_vector <- function(v) {
+asCharVector <- function(v) {
     paste0("c(",
         paste0(paste0("'", v, "'"), collapse = ", "),
         ")")
+}
+
+getCrunchDatasets <- function(env = globalenv()) {
+    l <- ls(envir = env)
+    out <- lapply(l, function(x) get(x, envir = env))
+    names(out) <- l
+    out <- out[vapply(out, is.dataset, FUN.VALUE = logical(1))]
+    if (length(out) == 0) {
+        halt("No CrunchDatasets detected.")
+    }
+    return(out)
 }
