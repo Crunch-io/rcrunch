@@ -27,7 +27,6 @@ with_mock_crunch({
         expect_is(listDatasets(), "character")
     })
 })
-})
 
 test_that("buildArrayCall", {
     expect_identical(

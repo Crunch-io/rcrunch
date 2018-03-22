@@ -4,8 +4,7 @@
 #' @inheritParams listDatasets
 #' @return A `loadDataset()` call is pasted into your RStudio session`
 listDatasetGadget <- function (kind=c("active", "all", "archived"),
-    refresh = FALSE,
-    autoclose = FALSE){
+    refresh = FALSE){
     projects <- c("Personal Project", names(projects()))
     personal_datasets <- listDatasets(kind = kind, refresh = refresh)
 

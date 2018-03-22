@@ -13,5 +13,7 @@ a valid call to \code{makeArray()} or \code{makeMR()}
 Categorical Array and Multiple Response variables can be difficult to
 construct without being able to investigate the available variables, and
 their categories. This shiny gadget lets you select subvariables from the
-dataset list, and ensures that those variables have consistent categories.
+dataset list, and ensures that those variables have consistent categories. To
+use the gadget you must have at least one CrunchDataset loaded into the global
+environment.
 }
