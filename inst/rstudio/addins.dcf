@@ -5,5 +5,5 @@ Interactive: true
 
 Name: Build Array or MR Variable
 Description: Launch gadget to help build valid Multiple Response or Categorical Array Variable
-Binding: crunch::makeArrayGadget()
+Binding: makeArrayGadget()
 Interactive: true
