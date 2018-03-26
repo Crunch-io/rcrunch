@@ -132,6 +132,47 @@ test_that("toVariable parses haven::labelled_spss", {
                       )))
 })
 
+test_that("toVariable parses haven::labelled integration", {
+    data <- haven::read_spss(test_path("./dataset-fixtures/simple_alltypes.sav"))
+    data_userNA <- haven::read_spss(test_path("./dataset-fixtures/simple_alltypes.sav"), user_na = TRUE)
+
+    expect_equivalent(toVariable(data$x),
+                      list(values=c(1:4, -1, 5), type="categorical", categories=list(
+                          list(id=1L, name="red", numeric_value=1L, missing=FALSE),
+                          list(id=2L, name="green", numeric_value=2L, missing=FALSE),
+                          list(id=3L, name="blue", numeric_value=3L, missing=FALSE),
+                          list(id=4L, name="4", numeric_value=4L, missing=FALSE),
+                          list(id=5L, name="9", numeric_value=9L, missing=FALSE),
+                          list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+                      )))
+    expect_equivalent(toVariable(data_userNA$x),
+                      list(values=c(1:6), type="categorical", categories=list(
+                          list(id=1L, name="red", numeric_value=1L, missing=FALSE),
+                          list(id=2L, name="green", numeric_value=2L, missing=FALSE),
+                          list(id=3L, name="blue", numeric_value=3L, missing=FALSE),
+                          list(id=4L, name="4", numeric_value=4L, missing=FALSE),
+                          list(id=5L, name="8", numeric_value=8L, missing=TRUE),
+                          list(id=6L, name="9", numeric_value=9L, missing=FALSE),
+                          list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+                      )))
+
+    expect_equivalent(toVariable(data$z),
+                      list(values=c(-1, -1, 1, -1, 2, -1), type="categorical", categories=list(
+                          list(id=1L, name="1.234", numeric_value=1.23400, missing=FALSE),
+                          list(id=2L, name="3.14159", numeric_value=3.14159, missing=FALSE),
+                          list(id=999L, name="skipped", numeric_value=NULL, missing=FALSE),
+                          list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+                      )))
+    expect_equivalent(toVariable(data_userNA$z),
+                      list(values=c(-1, -1, 2, 4, 3, -1), type="categorical", categories=list(
+                          list(id=1L, name="-9", numeric_value=-9, missing=FALSE),
+                          list(id=2L, name="1.234", numeric_value=1.23400, missing=FALSE),
+                          list(id=3L, name="3.14159", numeric_value=3.14159, missing=FALSE),
+                          list(id=999L, name="skipped", numeric_value=NULL, missing=TRUE),
+                          list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+                      )))
+})
+
 test_that("toVariable handles duplicate factor levels", {
     ## Duplicate factor labels were deprecated and are forbidden in the `factor`
     ## constructor function starting in R 3.4.0, but create one anyway in case

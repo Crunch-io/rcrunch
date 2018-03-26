@@ -75,6 +75,9 @@ labelledToVariable <- function (x, ...) {
 
     if (is.numeric(x_values)) {
         numeric_values <- unique(x_values)
+        # don't keep any of the NAs
+        # TODO: see if this will work with user-missing
+        numeric_values <- numeric_values[!is.na(numeric_values)]
     } else {
         numeric_values <- NULL
     }
