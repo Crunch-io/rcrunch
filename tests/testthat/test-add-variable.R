@@ -52,16 +52,42 @@ test_that("toVariable parses haven::labelled", {
                       )))
 
 
-    # If the values are numeric, we still get a categorical
+    # a mixture of labelled and unlabelled will defer to the labels when available
     labelled <- haven::labelled(rep(1:3, 3),
-                                     structure(2,
-                                               names = LETTERS[2]))
+                                structure(2,
+                                          names = LETTERS[2]))
     expect_equivalent(toVariable(labelled),
                       list(values=rep(1:3, 3), type="categorical", categories=list(
                           list(id=1L, name="1", numeric_value=1L, missing=FALSE),
-                          list(id=2L, name="2", numeric_value=2L, missing=FALSE),
+                          list(id=2L, name="B", numeric_value=2L, missing=FALSE),
                           list(id=3L, name="3", numeric_value=3L, missing=FALSE),
                           list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+                      )))
+
+    # If the values are numeric, we still get a categorical
+    labelled <- haven::labelled(rep(1:3, 3),
+                                     structure(c(1, 2, 3),
+                                               names = LETTERS[1:3]))
+    expect_equivalent(toVariable(labelled),
+                      list(values=rep(1:3, 3), type="categorical", categories=list(
+                          list(id=1L, name="A", numeric_value=1L, missing=FALSE),
+                          list(id=2L, name="B", numeric_value=2L, missing=FALSE),
+                          list(id=3L, name="C", numeric_value=3L, missing=FALSE),
+                          list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+                      )))
+
+    # If the values are numeric,
+    labelled <- haven::labelled(c(0, 2, 4, 6, 8, 10),
+                                structure(c(0, 10),
+                                          names = LETTERS[1:2]))
+    expect_equivalent(toVariable(labelled),
+                      list(values=c(1:6), type="categorical", categories=list(
+                          list(id=1L, name="A", numeric_value=0L, missing=FALSE),
+                          list(id=2L, name="2", numeric_value=2L, missing=FALSE),
+                          list(id=3L, name="4", numeric_value=4L, missing=FALSE),
+                          list(id=4L, name="6", numeric_value=6L, missing=FALSE),
+                          list(id=5L, name="8", numeric_value=8L, missing=FALSE),
+                          list(id=6L, name="B", numeric_value=10L, missing=FALSE),                          list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
                       )))
 })
 
@@ -100,7 +126,7 @@ test_that("toVariable parses haven::labelled_spss", {
     expect_equivalent(toVariable(labelled),
                       list(values=rep(1:3, 3), type="categorical", categories=list(
                           list(id=1L, name="1", numeric_value=1L, missing=TRUE),
-                          list(id=2L, name="2", numeric_value=2L, missing=FALSE),
+                          list(id=2L, name="B", numeric_value=2L, missing=FALSE),
                           list(id=3L, name="3", numeric_value=3L, missing=FALSE),
                           list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
                       )))

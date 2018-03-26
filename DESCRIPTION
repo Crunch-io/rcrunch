@@ -28,6 +28,7 @@ Imports:
 Suggests:
     covr,
     devtools,
+    forcats,
     haven, 
     httptest (>= 3.0.0),
     knitr,

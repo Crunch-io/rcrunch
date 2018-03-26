@@ -61,44 +61,45 @@ setMethod("toVariable", "logical", function (x, ...) {
     return(NAToCategory(out, useNA="always"))
 })
 
+labelledToVariable <- function (x, ...) {
+    # TODO: check that forcats is installed
+
+    x_values <- as.vector(x)
+    x_factor <- forcats::as_factor(x)
+    # grab the user missing levels
+    user_missings <- levels(droplevels(x_factor[is.na(x)]))
+
+    if (length(user_missings) == 0) {
+        user_missings <- NULL
+    }
+
+    if (is.numeric(x_values)) {
+        numeric_values <- unique(x_values)
+    } else {
+        numeric_values <- NULL
+    }
+
+    out <- structure(
+        list(values=as.integer(x_factor), type="categorical",
+             categories=categoriesFromLevels(
+                 levels(x_factor),
+                 numeric_values = numeric_values,
+                 missing_levels = user_missings),
+             ...),
+        class="VariableDefinition")
+    return(NAToCategory(out, useNA="always"))
+}
+
 # haven::labelled* are S3 classes, so we have to register them
 setOldClass("labelled")
 #' @rdname toVariable
 #' @export
-setMethod("toVariable", "labelled", function (x, ...) {
-    # TODO: what if the values are numeric? Is it possible to tell these apart
-    # from the labelled object?
-    return(toVariable(as.factor(x), ...))
-})
+setMethod("toVariable", "labelled", labelledToVariable)
 
 setOldClass("labelled_spss")
 #' @rdname toVariable
 #' @export
-setMethod("toVariable", "labelled_spss", function (x, ...) {
-    # TODO: what if the values are numeric? Is it possible to tell these apart
-    # from the labelled object?
-
-    # convert to factor quickly (the recommended workflow for labelled objects
-    # from haven, since there are few methods for labelled objects)
-    x_factor <- as.factor(x)
-    nlevels <- length(levels(x_factor))
-    categories <- categoriesFromLevels(levels(x_factor))
-    # grab the user missing levels
-    user_missings <- levels(droplevels(x_factor[is.na(x)]))
-    # we aren't
-    categories <- lapply(categories, function (cat) {
-        if (cat$name %in% user_missings) {
-            cat$missing <- TRUE
-        }
-        return(cat)
-    })
-
-    out <- structure(list(values=as.integer(x_factor), type="categorical",
-                          categories=categories, ...),
-                     class="VariableDefinition")
-    return(NAToCategory(out, useNA="always"))
-})
-
+setMethod("toVariable", "labelled_spss", labelledToVariable)
 
 #' Convert a factor's levels into Crunch categories.
 #'
@@ -109,6 +110,10 @@ setMethod("toVariable", "labelled_spss", function (x, ...) {
 #'
 #' @param level_vect A character vector containing the levels of a factor. Usually
 #' obtained by running [base::levels()]
+#' @param numeric_values A numeric vector containing the numeric values to be
+#' used. (Default: `NULL`, which will use the ids as default numeric values)
+#' @param missing_levels A character vector containing any of the levels that
+#' should be marked missing (Default: `NULL`, which will mark none missing)
 #'
 #' @return A list with each category levels id, name, numeric_value, and missingness.
 #' @rdname categoriesFromLevels
@@ -118,15 +123,34 @@ setMethod("toVariable", "labelled_spss", function (x, ...) {
 #'
 #' categoriesFromLevels(levels(iris$Species))
 #'
-categoriesFromLevels <- function (level_vect) {
+categoriesFromLevels <- function (level_vect,
+                                  numeric_values = NULL,
+                                  missing_levels = NULL) {
     if (anyDuplicated(level_vect)) {
         warning("Duplicate factor levels given: disambiguating them ",
             "in translation to Categorical type")
         level_vect <- uniquify(level_vect)
     }
-    return(lapply(seq_along(level_vect), function (i) {
-        list(id=i, name=level_vect[i], numeric_value=i, missing=FALSE)
-    }))
+
+    # TODO: check if lengths of numeric_values and missing are the same.
+    if (is.null(numeric_values)) {
+        numeric_values <- seq_along(level_vect)
+    }
+
+    if (is.null(missing_levels)) {
+        missings <- FALSE
+    } else {
+        missings <- level_vect %in% missing_levels
+    }
+
+    cat_metadata <- mapply(
+        function (i, n, m) {
+            list(id=i, name=level_vect[i], numeric_value=n, missing=m)
+        },
+        i = seq_along(level_vect), n = numeric_values, m = missings,
+        SIMPLIFY = FALSE)
+
+    return(cat_metadata)
 }
 
 NAToCategory <- function (var.metadata, useNA=c("ifany", "always")) {
