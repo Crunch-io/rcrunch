@@ -13,7 +13,8 @@ run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
 options(
     crunch.show.progress=FALSE,
     crunch.email=crunch::envOrOption("test.user"),
-    crunch.pw=crunch::envOrOption("test.pw")
+    crunch.pw=crunch::envOrOption("test.pw"),
+    folders.enabled = TRUE
 )
 
 # crayon options for testing on travis

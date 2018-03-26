@@ -69,7 +69,15 @@ createDataset <- function (name, body, ...) {
         body <- wrapEntity(name=name, ...)
     }
     dataset_url <- crPOST(sessionURL("datasets"), body=toJSON(body))
-    invisible(loadDataset(dataset_url))
+
+    ds <- loadDataset(dataset_url)
+
+    # TODO: remove this when the future folders API is default
+    if (envOrOption("folders.enabled") %||% FALSE) {
+        settings(ds)$variable_folders <- TRUE
+    }
+
+    return(invisible(ds))
 }
 
 #' Translate a data.frame to Crunch format
