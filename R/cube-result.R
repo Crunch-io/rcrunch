@@ -17,9 +17,11 @@ setMethod("initialize", "CrunchCube", function (.Object, ...) {
 #' @export
 
 setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
+
     subset <- eval(substitute(alist(i, j, ...)))
     subset <- replaceMissingWithTRUE(subset)
     translated_subset <- translateCubeIndex(x, subset, drop)
+    #translated_subset <- skipMissingCategories(x, translated_subset)
 
     out <- x
     out@arrays$count <- subsetByList(out@arrays$count, translated_subset, drop)
@@ -32,10 +34,12 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
         SIMPLIFY = FALSE)
 
     if (drop) {
-        keep_args <- vapply(translated_subset, function(out) {
-            length(out) != 1 || isTRUE(out)}, FUN.VALUE = logical(1))
-        keep_dims <- names(dimnames(x@arrays$count))[keep_args]
-        out@dims <- out@dims[(names(out@dims) %in% keep_dims)]
+
+        keep_args <- vapply(translated_subset, function(a) {
+            length(a) != 1 || isTRUE(a)}, FUN.VALUE = logical(1))
+        #keep_dims <- names(dimnames(x@arrays$count))[keep_args]
+        #out@dims <- out@dims[(names(out@dims) %in% keep_dims)]
+        out@dims <- out@dims[keep_args]
     }
     return(out)
 })
@@ -134,6 +138,16 @@ translateCubeIndex <- function(x, subset, drop) {
         }
     }
     return(out)
+}
+
+skipMissingCategories <- function(cube, subset){
+    missing <- lapply(cube@dims, function(x) x$missing)
+    mapply(function(miss, sub){
+        if (length)
+        out <- miss
+        out[!miss][sub] <- rep(TRUE, length(sub))
+        return(out)
+    }, miss = missing, sub = subset)
 }
 
 

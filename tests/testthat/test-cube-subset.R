@@ -85,13 +85,14 @@ test_that("[ method for cat by cat cubes", {
     expect_equal(as.array(subset_cube_withNA), as.array(cube_withNA)[c(1, 3),])
 
     # drop, selecting a missing category on columns
-    drop_cube <- cube[1, 1:2]
+    drop_cube <- cube[1:2, 1:2]
     expect_is(subset_cube, "CrunchCube")
-    expect_equal(dim(drop_cube), 2)
+    expect_equal(dim(drop_cube), c(2, 2))
+
     # fails because the second item in columns is actually hidden. The
     # subsetting selected it and then useNA isn't being respected. The first
     # expect_equal below is the one I thought should work
-    expect_equal(as.array(drop_cube), as.array(cube)[1, 1])
+    expect_equal(as.array(drop_cube), as.array(cube)[1:2, 1, drop = FALSE])
 
     # no drop, selecting a missing category on columns
     no_drop_cube <- cube[1, 1:2, drop = FALSE]
