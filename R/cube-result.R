@@ -150,10 +150,23 @@ skipMissingCategories <- function(cube, subset){
     }, miss = missing, sub = subset)
 }
 
+literal <- function(cube){
+    out <- cube
+    out@useNA <- "always"
+    return(out)
+}
 
 #' @rdname cube-methods
 #' @export
-setMethod("dim", "CrunchCube", function (x) dim(dimensions(x)))
+setMethod("dim", "CrunchCube", function (x) {
+    if (x@useNA == "no"){
+        dims <- vapply(x@dims, function(a) sum(!a$missing),
+            FUN.VALUE = numeric(1), USE.NAMES = FALSE)
+        return(dims)
+    } else {
+        return(dim(dimensions(x)))
+    }
+})
 
 #' @rdname cube-methods
 #' @export
