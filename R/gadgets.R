@@ -2,6 +2,7 @@
 #'
 #' @inheritParams listDatasets
 #' @return A `loadDataset()` call is pasted into your RStudio session`
+#' @keywords internal
 listDatasetGadget <- function (kind=c("active", "all", "archived"),
     refresh = FALSE){
     projects <- c("Personal Project", names(projects()))
