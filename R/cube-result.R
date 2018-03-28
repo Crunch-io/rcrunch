@@ -17,11 +17,34 @@ setMethod("initialize", "CrunchCube", function (.Object, ...) {
 #' @export
 
 setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
-
     subset <- eval(substitute(alist(i, j, ...)))
     subset <- replaceMissingWithTRUE(subset)
+    dims <- dim(x)
+    if (length(subset) != length(dims)) {
+        halt("You supplied ",
+            length(subset),
+            " dimensions to subset a ",
+            length(dims),
+            " dimensional cube.")
+    }
+    isValid <- function(idx, dim) {
+        if (is.numeric(idx) || is.logical(idx) && !is.TRUE(idx)) {
+            return(length(idx) <= dim)
+        }
+        # Assume other subsets are valid and trust that the array subsetting
+        # method will fail if they are invalid.
+        return (TRUE)
+    }
+
+    valid_subsets <- unlist(mapply(isValid, idx = subset, dim = dims, SIMPLIFY = logical(1)))
+    if (!all(valid_subsets)) {
+        halt("Invalid subset at position ", serialPaste(which(!valid_subsets)))
+    }
+
     translated_subset <- translateCubeIndex(x, subset, drop)
-    #translated_subset <- skipMissingCategories(x, translated_subset)
+    if (x@useNA == "no") {
+        translated_subset <- skipMissingCategories(x, translated_subset)
+    }
 
     out <- x
     out@arrays$count <- subsetByList(out@arrays$count, translated_subset, drop)
@@ -34,7 +57,6 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
         SIMPLIFY = FALSE)
 
     if (drop) {
-
         keep_args <- vapply(translated_subset, function(a) {
             length(a) != 1 || isTRUE(a)}, FUN.VALUE = logical(1))
         #keep_dims <- names(dimnames(x@arrays$count))[keep_args]
@@ -108,13 +130,6 @@ subsetArrayDimension <- function(dim, idx){
 #' @return a list
 translateCubeIndex <- function(x, subset, drop) {
     user_names <- names(dimnames(as.array(x))) #the user facing cube
-    if (length(subset) != length(user_names)) {
-        halt("You supplied ",
-            length(subset),
-            " dimensions to subset a ",
-            length(user_names),
-            " dimensional cube.")
-    }
     prog_names <- names(dimnames(x@arrays$count)) #the higher dimensional internal cube
     if (length(prog_names) == length(user_names)) {
         #no MR variables so no need to translate the subset
@@ -143,18 +158,16 @@ translateCubeIndex <- function(x, subset, drop) {
 skipMissingCategories <- function(cube, subset){
     missing <- lapply(cube@dims, function(x) x$missing)
     mapply(function(miss, sub){
-        if (length)
         out <- miss
-        out[!miss][sub] <- rep(TRUE, length(sub))
-        return(out)
-    }, miss = missing, sub = subset)
+        out[!miss][sub] <- rep(TRUE, length(sub))}, miss = missing, sub = subset)
 }
 
-literal <- function(cube){
+
+setMethod("showMissing", "CrunchCube", function(cube){
     out <- cube
     out@useNA <- "always"
     return(out)
-}
+})
 
 #' @rdname cube-methods
 #' @export

@@ -27,7 +27,7 @@ cubeDims <- function (cube) {
     })
     names(dimnames) <- vapply(dimnames, function (x) x$references$alias,
         character(1))
-    
+
     return(CubeDims(dimnames))
 }
 
@@ -84,7 +84,7 @@ elementIsAnyOrNone <- function (el) {
 #' @param j not used
 #' @param ... not used
 #' @param drop not used
-#' @param value for `dimensions<-` a `CubeDims` object to overwrite a CrunchCube 
+#' @param value for `dimensions<-` a `CubeDims` object to overwrite a CrunchCube
 #' dimensions
 #'
 #' @return Generally, the same shape of result that each of these functions
@@ -160,6 +160,6 @@ is.selectedArrayDim <- function (dim) {
     if (!is.null(dim$any.or.none)) {
         return(any(dim$any.or.none))
     }
-    
+
     return(FALSE)
 }
