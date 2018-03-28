@@ -1,5 +1,4 @@
 @import url("http://crunch.io/css/fonts/proximanova.css");
-@import url('https://fonts.googleapis.com/css?family=Libre+Baskerville:400,400i');
 
 body {
     color: #1D1D26;
@@ -9,6 +8,7 @@ body {
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: antialiased;
+    background-color: #fff;
 }
 
 h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
@@ -48,9 +48,15 @@ ul,  ol {
 }
 
 #sidebar h2 {
-    font-family: 'Libre Baskerville', serif;
     color: #1D1D26;
-    font-size: 22px;
+    font-weight: 700;
+}
+
+.navbar-default {
+    color: #444444;
+    padding: 8px 0;
+    font-size: 16px;
+    border: 0;
 }
 
 .navbar-default .navbar-nav>li>a:hover,
@@ -78,12 +84,6 @@ ul,  ol {
 .dropdown-menu>.active>a:focus {
     color: #444444;
     background-color: #f9f9f9;
-}
-
-.navbar-default {
-    color: #444444;
-    padding: 8px 0;
-    font-size: 16px;
 }
 
 .nav-pills>li.active>a,
