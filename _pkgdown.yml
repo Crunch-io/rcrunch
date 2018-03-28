@@ -2,7 +2,7 @@ url: http://crunch.io/r/crunch/
 title: Crunch
 template:
   params:
-    bootswatch: flatly
+    bootswatch: simplex
     ganalytics: UA-50332119-2
 reference:
 - title: Upload
