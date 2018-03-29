@@ -172,29 +172,6 @@ with_mock_crunch({
             '{"https://app.crunch.io/api/datasets/1/":{"end_date":null}}')
     })
 
-    test_that("Dataset URLs", {
-        with(temp.options(crunch.api="https://fake.crunch.io/api/v2/"), {
-            expect_identical(APIToWebURL(ds),
-                "https://fake.crunch.io/dataset/511a7c49778030653aab5963")
-        })
-        expect_identical(webToAPIURL("https://app.crunch.io/dataset/b6c2325a8de9438ebab5d9a42d376b90/browse/eyJhcHBTdGF0ZVN0b3JlIjp0cnVlLCJhbmFseXplIjp7fSwidmFyaWFibGVzTmF2aWdhdG9yIjp7Iml0ZW0iOiIvZWU2NTI0YWFjMzFiNDkyZjk4M2ZiYzM0MGJjODYzYzkvIn19"),
-            "https://app.crunch.io/api/datasets/b6c2325a8de9438ebab5d9a42d376b90/")
-        expect_identical(webToAPIURL("https://app.crunch.io/dataset/3f57d1924a914176b24969bc6cc9059d?variableId=000194"),
-            "https://app.crunch.io/api/datasets/3f57d1924a914176b24969bc6cc9059d/")
-        expect_error(webToAPIURL("Not actually a URL"),
-            "Not a valid web app URL")
-    })
-
-    if (.Platform$OS.type == "unix") {
-        with_mock(
-            `crunch:::system_call`=function (command, args, ...) paste("SYSTEM CALL", args),
-            test_that("Opening a dataset on the web", {
-                expect_identical(webApp(ds),
-                    "SYSTEM CALL https://app.crunch.io/dataset/511a7c49778030653aab5963")
-            })
-        )
-    }
-
     test_that("Dataset VariableCatalog index is ordered", {
         expect_identical(urls(variables(ds)),
             c("https://app.crunch.io/api/datasets/1/variables/birthyr/",

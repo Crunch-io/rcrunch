@@ -123,7 +123,7 @@ with_mock_crunch({
         expect_identical(
             names(varDF),
             c("name", "discarded", "alias", "type", "id", "description",
-                "notes", "subvariables", "subvariables_catalog", "resolution",
+                "notes", "uniform_basis", "subvariables", "subvariables_catalog", "resolution",
                 "rollup_resolution")
         )
         expect_identical(

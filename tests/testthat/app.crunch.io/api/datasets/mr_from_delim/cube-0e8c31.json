@@ -1,0 +1,98 @@
+{
+  "element": "shoji:view",
+  "self": "https://app.crunch.io/api/datasets/mr_from_delim/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22http%3A%2F%2Flocal.crunch.io%3A8080%2Fapi%2Fdatasets%2F85ca8c595bc94a5f8e15bd94bfb8c5e7%2Fvariables%2F000001%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%7D&filter=%7B%7D",
+  "value": {
+    "query": {
+      "measures": {
+        "count": {
+          "function": "cube_count",
+          "args": []
+        }
+      },
+      "dimensions": [
+        {
+          "variable": "https://app.crunch.io/api/datasets/mr_from_delim/variables/000001/"
+        }
+      ],
+      "weight": null
+    },
+    "query_environment": {
+      "filter": []
+    },
+    "result": {
+      "dimensions": [
+        {
+          "references": {
+            "alias": "delim",
+            "name": "delim"
+          },
+          "derived": true,
+          "type": {
+            "subtype": {
+              "class": "text",
+              "missing_reasons": {
+                "No Data": -1
+              },
+              "missing_rules": {}
+            },
+            "elements": [
+              {
+                "id": 0,
+                "value": "birch; sugar maple",
+                "missing": false
+              },
+              {
+                "id": 1,
+                "value": "maple butter; oak",
+                "missing": false
+              },
+              {
+                "id": 2,
+                "value": "maple; birch",
+                "missing": false
+              },
+              {
+                "id": 3,
+                "value": "oak; maple; birch",
+                "missing": false
+              }
+            ],
+            "class": "enum"
+          }
+        }
+      ],
+      "missing": 0,
+      "measures": {
+        "count": {
+          "data": [
+            1,
+            1,
+            1,
+            1
+          ],
+          "n_missing": 0,
+          "metadata": {
+            "references": {},
+            "derived": true,
+            "type": {
+              "integer": true,
+              "missing_rules": {},
+              "missing_reasons": {
+                "No Data": -1
+              },
+              "class": "numeric"
+            }
+          }
+        }
+      },
+      "element": "crunch:cube",
+      "counts": [
+        1,
+        1,
+        1,
+        1
+      ],
+      "n": 4
+    }
+  }
+}

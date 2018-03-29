@@ -3,10 +3,10 @@
 #' CrunchDataFrames are designed to mimic the ways that [`data.frame`]s are used.
 #' They should be a drop-in replacement in many places where data.frames are used.
 #' 
-#'  CrunchDataFrames are generated not by downloading all of the variables from 
-#'  a dataset, but rather only the variables that are needed by subsequent 
-#'  functions. So, if you create a CrunchDataFrame, and then run a linear model 
-#'  using `lm()`, only the variables used by the linear model will be downloaded.
+#' CrunchDataFrames are generated not by downloading all of the variables from 
+#' a dataset, but rather only the variables that are needed by subsequent 
+#' functions. So, if you create a CrunchDataFrame, and then run a linear model 
+#' using `lm()`, only the variables used by the linear model will be downloaded.
 #'  
 #' CrunchDataFrames can be altered (that is: adding more columns, removing 
 #' columns, subsetting rows, etc.) with the same `[`, `[[`, and `$` syntax as 

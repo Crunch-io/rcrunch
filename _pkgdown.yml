@@ -32,7 +32,6 @@ reference:
   - dim-dataset
   - dropRows
   - exclusion
-  - ordering
   - restoreVersion
   - saveVersion
   - versions
@@ -47,7 +46,6 @@ reference:
   - appendDataset
   - compareDatasets
   - joinDatasets
-  - merge.CrunchDataFrame
   - forkDataset
   - mergeFork
   - searchDatasets
@@ -87,10 +85,12 @@ reference:
   - flipArrays
   - importMultitable
   - makeArray
+  - makeMRFromText
   - is-selected-categories
   - unbind
 - title: Ordering
   contents:
+  - ordering
   - ShojiOrder-length
   - ShojiOrder-slots
   - copyOrder
@@ -100,6 +100,11 @@ reference:
   - locateEntity
   - moveToGroup
   - removeEmptyGroups
+  - folder
+  - mv
+  - cd
+  - rmdir
+  - setOrder
 - title: Analysis
   contents:
   - crtabs
@@ -134,6 +139,9 @@ reference:
   - tabBook
   - write.csv.gz
   - writePreparedData
+  - pollProgress
+  - CrunchDataFrame
+  - merge.CrunchDataFrame
 - title: Geodata
   contents:
   - addGeoMetadata
