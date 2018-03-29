@@ -1,11 +1,15 @@
 # Setup is executed when tests are run, but not when loadall is run
 
-# Our "test package" common harness code
-crunch_test_path <- system.file("crunch-test.R", package="crunch")
-if (crunch_test_path == "") {
-    # hack for devtools::test / testthat::test_package
-    crunch_test_path <- find_file("crunch-test.R")
+# find a file that is either in the package root or inst folders while testing
+find_file <- function (file_name) {
+    pth <- system.file(file_name, package="crunch")
+    if (nchar(pth)) {
+        return(pth)
+    }
+    ## Else, look for it. hack for devtools::test / testthat::test_package
+    pths <- file.path(testthat::test_path("..", ".."), c("", "inst"), file_name)
+    return(pths[file.exists(pths)])
 }
 
-source(crunch_test_path, local = TRUE)
-
+# Our "test package" common harness code
+source(find_file("crunch-test.R"), local = TRUE)

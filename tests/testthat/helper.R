@@ -3,12 +3,6 @@ set.seed(666)
 
 "%>%" <- magrittr::`%>%`
 
-# find a file that is either in the package root or inst folders while testing
-find_file <- function (file_name) {
-    pths <- file.path(testthat::test_path("..", ".."), c("", "inst"), file_name)
-    return(pths[file.exists(pths)])
-}
-
 skip_on_jenkins <- function (...) {
     if (nchar(Sys.getenv("JENKINS_HOME"))) {
         skip(...)
@@ -20,7 +14,6 @@ loadLogfile <- httpcache::loadLogfile
 cacheLogSummary <- httpcache::cacheLogSummary
 requestLogSummary <- httpcache::requestLogSummary
 uncached <- httpcache::uncached
-newDataset <- function (...) suppressMessages(crunch::newDataset(...))
 
 ## .onAttach stuff, for testthat to work right
 ## See other options in inst/crunch-test.R
@@ -70,9 +63,6 @@ mrdf <- data.frame(mr_1=c(1, 0, 1, NA_real_),
                    mr_3=c(0, 0, 1, NA_real_),
                    v4=as.factor(LETTERS[2:3]),
                    stringsAsFactors=FALSE)
-
-testfile.csv <- "fake.csv"
-testfile.df <- read.csv(testfile.csv)
 
 mrdf.setup <- function (dataset, pattern="mr_", name=ifelse(is.null(selections),
                         "CA", "MR"), selections=NULL) {

@@ -59,19 +59,17 @@ with_DELETE <- function (resp, expr) {
     with_mock(`crunch::crDELETE`=function (...) resp, eval.parent(expr))
 }
 
-silencer <- temp.option(show.error.messages=FALSE)
-
 assign("entities.created", c(), envir=globalenv())
 with_test_authentication <- function (expr) {
     if (run.integration.tests) {
         env <- parent.frame()
-        
+
         with(temp.options(
             # grab env or options
             # use test.api or R_TEST_API if it's available, if not use local
             crunch.api=crunch::envOrOption("test.api",
                                            "http://local.crunch.io:8080/api/"),
-            
+
             crunch.email=crunch::envOrOption("test.user"),
             crunch.pw=crunch::envOrOption("test.pw"),
             crunch.show.progress=FALSE
@@ -94,7 +92,7 @@ with_test_authentication <- function (expr) {
                 }
             })
             with_trace("locationHeader", exit=tracer, where=crGET, expr={
-                ## Wrap this so that we can generate a test failure if 
+                ## Wrap this so that we can generate a test failure if
                 ## there's an error rather than just halt the process
                 tryCatch(eval(expr, envir=env),
                          error=function (e) {
@@ -102,7 +100,7 @@ with_test_authentication <- function (expr) {
                                  expect_error(stop(e$message), NA)
                              })
                          })
-            })   
+            })
         })
     }
 }
@@ -133,39 +131,38 @@ whereas <- function (...) {
 }
 
 
-## Global teardown
+## Global teardown code
 with_test_authentication({
     datasets.start <- urls(datasets())
     users.start <- urls(crunch:::getUserCatalog())
     projects.start <- urls(projects())
 })
 
-crunch_test_cleanup <- function () {
-                  with_test_authentication({
-                      datasets.end <- urls(datasets())
-                      leftovers <- setdiff(datasets.end, datasets.start)
-                      if (length(leftovers)) {
-                          stop(length(leftovers),
-                               " dataset(s) created and not destroyed: ",
-                               crunch:::serialPaste(dQuote(names(datasets()[leftovers]))),
-                               call.=FALSE)
-                      }
-                      users.end <- urls(crunch:::getUserCatalog())
-                      leftovers <- setdiff(users.end, users.start)
-                      if (length(leftovers)) {
-                          stop(length(leftovers),
-                               " users(s) created and not destroyed: ",
-                               crunch:::serialPaste(dQuote(names(crunch:::getUserCatalog()[leftovers]))),
-                               call.=FALSE)
-                      }
-                      projects.end <- urls(session()$projects)
-                      leftovers <- setdiff(projects.end, projects.start)
-                      if (length(leftovers)) {
-                          stop(length(leftovers),
-                               " projects(s) created and not destroyed: ",
-                               crunch:::serialPaste(dQuote(names(projects()[leftovers]))),
-                               call.=FALSE)
-                      }
-                  })}
-bye <- new.env()
-reg.finalizer(bye, crunch_test_cleanup)
+crunch_test_teardown_check <- function () {
+    with_test_authentication({
+        datasets.end <- urls(datasets())
+        leftovers <- setdiff(datasets.end, datasets.start)
+        if (length(leftovers)) {
+            stop(length(leftovers),
+                 " dataset(s) created and not destroyed: ",
+                 crunch:::serialPaste(dQuote(names(datasets()[leftovers]))),
+                 call.=FALSE)
+        }
+        users.end <- urls(crunch:::getUserCatalog())
+        leftovers <- setdiff(users.end, users.start)
+        if (length(leftovers)) {
+            stop(length(leftovers),
+                 " users(s) created and not destroyed: ",
+                 crunch:::serialPaste(dQuote(names(crunch:::getUserCatalog()[leftovers]))),
+                 call.=FALSE)
+        }
+        projects.end <- urls(projects())
+        leftovers <- setdiff(projects.end, projects.start)
+        if (length(leftovers)) {
+            stop(length(leftovers),
+                 " projects(s) created and not destroyed: ",
+                 crunch:::serialPaste(dQuote(names(projects()[leftovers]))),
+                 call.=FALSE)
+        }
+    })
+}
