@@ -15,3 +15,4 @@ nothing, called for side effects
 \description{
 Check if a user has packages installed
 }
+\keyword{internal}

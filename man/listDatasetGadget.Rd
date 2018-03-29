@@ -19,3 +19,4 @@ A \code{loadDataset()} call is pasted into your RStudio session`
 \description{
 Open dataset selector
 }
+\keyword{internal}

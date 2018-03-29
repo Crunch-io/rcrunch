@@ -270,9 +270,10 @@ has.function <- function (query, funcs) {
 #' Check that a value is TRUE or FALSE
 #'
 #' @param value Value to check
-#' @keywords internal
+#' 
 #' @return `TRUE` if `value` is either `TRUE` or `FALSE`, `FALSE` otherwise
 #'
+#' @keywords internal
 is.TRUEorFALSE <- function (value) {
     return(is.logical(value) && !is.na(value) && length(value) == 1)
 }
@@ -286,6 +287,8 @@ escapeQuotes <- function(str) {
 #' @param pkgs a character vector of package names to check.
 #'
 #' @return nothing, called for side effects
+#' 
+#' @keywords internal
 checkInstalledPackages <- function (pkgs) {
     installed <- pkgs %in% rownames(installed.packages())
     if (!all(installed)){
