@@ -10,8 +10,8 @@ test_that("subset by list", {
 test_that("replaceMissingWithTRUE", {
     expect_identical(replaceMissingWithTRUE(alist(, 1)),
         list(TRUE, 1))
-    expect_error(replaceMissingWithTRUE(alist(, a))[[2]],
-        "object 'a' not found")
+    expect_error(replaceMissingWithTRUE(alist(, non_object))[[2]],
+        "object 'non_object' not found")
 })
 
 cat_x_mr_x_mr <- loadCube(test_path("cubes/cat-x-mr-x-mr.json"))
@@ -54,31 +54,34 @@ test_that("translateCubeIndex", {
         alist(1:2, 1, TRUE, 2, TRUE))
     # MR selection entries are set to index 1 when the indicator is dropped
     expect_identical(translateCubeIndex(cat_x_mr_x_mr, alist(1:2, 1, 2), drop = TRUE),
-        alist(1:2, 1, 1, 2, 1))
+        alist(1:2, 1, "mr_select_drop", 2, "mr_select_drop"))
     expect_identical(
         translateCubeIndex(cat_x_mr_x_mr,
             alist(c(TRUE, FALSE, TRUE), c(TRUE, FALSE, TRUE), c(TRUE, FALSE) ), drop = TRUE),
         alist(c(TRUE, FALSE, TRUE), c(TRUE, FALSE, TRUE), TRUE,c(TRUE, FALSE), TRUE))
-    expect_error( translateCubeIndex(cat_x_mr_x_mr, alist(1, 1)),
-        "You supplied 2 dimensions to subset a 3 dimensional cube.")
 })
 
 test_that("[ method for cat by cat cubes", {
+
     cube <- cube_withNA <- loadCube(test_path("cubes/cat-x-cat.json"))
     cube_withNA@useNA <- "always"
-    subset_cube <- cube[1:2,] # drop the No Data row
+
+    subset_cube <- showMissing(cube)[1:2,] # drop the No Data row
     expect_is(subset_cube, "CrunchCube")
     expect_equal(dim(subset_cube), c(2, 4))
-    expect_equal(as.array(subset_cube), as.array(cube)[1:2, ])
+
+    expect_equal(dim(subset_cube), c(2, 4))
+    expect_equal(as.array(subset_cube), as.array(showMissing(cube))[1:2, ])
 
     # drop a non-missing row
-    subset_cube <- cube[c(1, 3),] # drop the second row (C)
+    subset_cube <- cube[1,] # drop the second row (C)
     expect_is(subset_cube, "CrunchCube")
-    expect_equal(dim(subset_cube), c(2, 4))
+    expect_equal(dim(subset_cube), 2)
+
     # since the cube retains the missing dimension, it defaults behavior to
     # `drop = FALSE`, though this isn't true of the the array since only one
     # element is being selected from that dimension
-    expect_equal(as.array(subset_cube), as.array(cube)[1, , drop = FALSE])
+    expect_equal(as.array(subset_cube), as.array(cube)[1, ])
 
     # check that useNA doesn't impact
     subset_cube_withNA <- cube_withNA[c(1, 3),] # drop the second row (C)
@@ -89,31 +92,22 @@ test_that("[ method for cat by cat cubes", {
     expect_is(subset_cube, "CrunchCube")
     expect_equal(dim(drop_cube), c(2, 2))
 
-    # fails because the second item in columns is actually hidden. The
-    # subsetting selected it and then useNA isn't being respected. The first
-    # expect_equal below is the one I thought should work
-    expect_equal(as.array(drop_cube), as.array(cube)[1:2, 1, drop = FALSE])
+    expect_equal(as.array(drop_cube), as.array(cube)[1:2, 1:2, drop = FALSE])
 
     # no drop, selecting a missing category on columns
     no_drop_cube <- cube[1, 1:2, drop = FALSE]
     expect_is(no_drop_cube, "CrunchCube")
     expect_equal(dim(no_drop_cube), c(1, 2))
-    expect_equal(as.array(no_drop_cube), as.array(cube)[1, 1, drop = FALSE])
-
-    # no drop, selecting a non-missing categories on columns
-    no_drop_cube <- cube[1, c(1,3), drop = FALSE]
-    expect_is(no_drop_cube, "CrunchCube")
-    expect_equal(dim(no_drop_cube), c(1, 2))
     expect_equal(as.array(no_drop_cube), as.array(cube)[1, 1:2, drop = FALSE])
+
 })
 
 test_that("[ method for MR cubes", {
     cat_x_mr_x_mr_withNA <- cat_x_mr_x_mr
     cat_x_mr_x_mr_withNA@useNA <- "always"
-
     # subset rows
     # drop the No Data row which is #2 here!
-    subset_cat_x_mr_x_mr <- cat_x_mr_x_mr[c(1,3), , ]
+    subset_cat_x_mr_x_mr <- showMissing(cat_x_mr_x_mr)[c(1,3), , ]
     expect_is(subset_cat_x_mr_x_mr, "CrunchCube")
     expect_equal(dim(subset_cat_x_mr_x_mr), c(2, 3, 2))
     expect_equal(as.array(subset_cat_x_mr_x_mr), as.array(cat_x_mr_x_mr)[1:2, , ])
@@ -127,7 +121,8 @@ test_that("[ method for MR cubes", {
     # drop the No Data row which is #2 here!
     subset_cat_x_mr_x_mr <- cat_x_mr_x_mr[, c(1,3), ]
     expect_is(subset_cat_x_mr_x_mr, "CrunchCube")
-    expect_equal(dim(subset_cat_x_mr_x_mr), c(3, 2, 2))
+    expect_equal(dim(showMissing(subset_cat_x_mr_x_mr)), c(3, 2, 2))
+
     expect_equal(as.array(subset_cat_x_mr_x_mr), as.array(cat_x_mr_x_mr)[, c(1,3), ])
 
     subset_cat_x_mr_x_mr_withNA <- cat_x_mr_x_mr_withNA[, c(1, 3), ]
@@ -138,7 +133,7 @@ test_that("[ method for MR cubes", {
     # subset cols with drop
     subset_cat_x_mr_x_mr <- cat_x_mr_x_mr[, 3, ]
     expect_is(subset_cat_x_mr_x_mr, "CrunchCube")
-    expect_equal(dim(subset_cat_x_mr_x_mr), c(3, 2))
+    expect_equal(dim(subset_cat_x_mr_x_mr), c(2, 2))
     expect_equal(as.array(subset_cat_x_mr_x_mr), as.array(cat_x_mr_x_mr)[, 3, ])
 
     subset_cat_x_mr_x_mr_withNA <- cat_x_mr_x_mr_withNA[, 3, ]
@@ -149,7 +144,7 @@ test_that("[ method for MR cubes", {
     # subset slices
     subset_cat_x_mr_x_mr <- cat_x_mr_x_mr[, , 2]
     expect_is(subset_cat_x_mr_x_mr, "CrunchCube")
-    expect_equal(dim(subset_cat_x_mr_x_mr), c(3, 3))
+    expect_equal(dim(subset_cat_x_mr_x_mr), c(2, 3))
     expect_equal(as.array(subset_cat_x_mr_x_mr), as.array(cat_x_mr_x_mr)[, , 2])
 
     subset_cat_x_mr_x_mr_withNA <- cat_x_mr_x_mr_withNA[, , 2]
@@ -164,7 +159,7 @@ test_that("[ method for cat array cubes", {
     # drop the No Data row which is #2 here!
     subset_cube <- cube[2, , ]
     expect_is(subset_cube, "CrunchCube")
-    expect_equal(dim(subset_cube), c(6, 3))
+    expect_equal(dim(subset_cube), c(5, 2))
     expect_equal(as.array(subset_cube), as.array(cube)[2, , ])
 
     subset_cube_withNA <- cube_withNA[2, , ]
@@ -173,7 +168,7 @@ test_that("[ method for cat array cubes", {
     # subset cols
     subset_cube <- cube[, c(1,3), ]
     expect_is(subset_cube, "CrunchCube")
-    expect_equal(dim(subset_cube), c(2, 2, 3))
+    expect_equal(dim(subset_cube), c(2, 2, 2))
     expect_equal(as.array(subset_cube), as.array(cube)[, c(1,3), ])
 
     subset_cube_withNA <- cube_withNA[, c(1, 3), ]
@@ -184,18 +179,18 @@ test_that("[ method for cat array cubes", {
     # subset cols with drop
     subset_cube <- cube[, 3, ]
     expect_is(subset_cube, "CrunchCube")
-    expect_equal(dim(subset_cube), c(2, 3))
+    expect_equal(dim(subset_cube), c(2, 2))
     expect_equal(as.array(subset_cube), as.array(cube)[, 3, ])
 
     subset_cube_withNA <- cube_withNA[, 3, ]
     expect_equal(as.array(subset_cube_withNA), as.array(cube_withNA)[, 3, ])
 
 
-
     # subset slices
     subset_cube <- cube[, , 1:2]
     expect_is(subset_cube, "CrunchCube")
-    expect_equal(dim(subset_cube), c(2, 6, 2))
+    expect_equal(dim(subset_cube), c(2, 5, 2))
+    expect_equal(dim(showMissing(subset_cube)), c(2, 6, 2))
     expect_equal(as.array(subset_cube), as.array(cube)[, , 1:2])
 
     subset_cube_withNA <- cube_withNA[, , 1:2]

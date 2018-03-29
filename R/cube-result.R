@@ -13,6 +13,8 @@ setMethod("initialize", "CrunchCube", function (.Object, ...) {
     return(.Object)
 })
 
+# ---- Cube Subset ----
+
 #' @rdname cube-methods
 #' @export
 
@@ -28,7 +30,10 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
             " dimensional cube.")
     }
     isValid <- function(idx, dim) {
-        if (is.numeric(idx) || is.logical(idx) && !is.TRUE(idx)) {
+        if (is.numeric(idx)) {
+            return(max(idx) <= dim)
+
+        } else if (is.logical(idx) && !isTRUE(idx)) {
             return(length(idx) <= dim)
         }
         # Assume other subsets are valid and trust that the array subsetting
@@ -58,9 +63,12 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
 
     if (drop) {
         keep_args <- vapply(translated_subset, function(a) {
-            length(a) != 1 || isTRUE(a)}, FUN.VALUE = logical(1))
-        #keep_dims <- names(dimnames(x@arrays$count))[keep_args]
-        #out@dims <- out@dims[(names(out@dims) %in% keep_dims)]
+            if (is.logical(a)) {
+                return(sum(a) != 1 || isTRUE(a))
+            } else {
+                return(length(a) != 1)
+            }
+        }, FUN.VALUE = logical(1))
         out@dims <- out@dims[keep_args]
     }
     return(out)
@@ -96,7 +104,7 @@ subsetByList <- function(arr, arglist, drop){
     #suppresses "named arguments other than drop are discouraged" warning
     suppressWarnings(
         do.call('[', c(list(x = arr, drop = drop), arglist))
-        )
+    )
 }
 
 subsetArrayDimension <- function(dim, idx){
@@ -148,7 +156,12 @@ translateCubeIndex <- function(x, subset, drop) {
                     prog_names[i] == prog_names[i - 1] && # Check if MR selection variable
                     length(out[[i - 1]]) == 1 &&          # Check if MR indicator variable is a single number
                     !isTRUE(out[[i - 1]])) {
-                out[i] <- 1 #assign subset value to "Selected" along the mr_selection dimension
+
+                if (x@useNA == "no") {
+                    out[i] <- "mr_select_drop"
+                } else {
+                    out[i] <- 1 #assign subset value to "Selected" along the mr_selection dimension
+                }
             }
         }
     }
@@ -158,28 +171,45 @@ translateCubeIndex <- function(x, subset, drop) {
 skipMissingCategories <- function(cube, subset){
     missing <- lapply(cube@dims, function(x) x$missing)
     mapply(function(miss, sub){
-        out <- miss
-        out[!miss][sub] <- rep(TRUE, length(sub))}, miss = missing, sub = subset)
+        if (identical(sub, "mr_select_drop")) {
+            # select the "Selected" element of the selection dimension.
+            return(c(TRUE, FALSE, FALSE))
+        }
+        if (isTRUE(sub)) {
+            out <- rep(TRUE, length(miss))
+            len <- sum(!miss)
+        } else {
+            out <- rep(FALSE, length(miss))
+            out[!miss][sub] <- rep(TRUE, length(sub))
+        }
+        return(out)}, miss = missing, sub = subset)
 }
 
 
-setMethod("showMissing", "CrunchCube", function(cube){
+setMethod("showMissing", "CrunchCube", function(cube) setCubeNA(cube, "always"))
+
+setMethod("hideMissing", "CrunchCube", function(cube) setCubeNA(cube, "no"))
+
+setCubeNA <- function(cube, value){
     out <- cube
-    out@useNA <- "always"
+    out@useNA <- value
     return(out)
-})
+}
 
 #' @rdname cube-methods
 #' @export
 setMethod("dim", "CrunchCube", function (x) {
     if (x@useNA == "no"){
-        dims <- vapply(x@dims, function(a) sum(!a$missing),
+        dims <- x@dims[!is.selectedDimension(x@dims)]
+        dims <- vapply(dims, function(a) sum(!a$missing),
             FUN.VALUE = numeric(1), USE.NAMES = FALSE)
         return(dims)
     } else {
         return(dim(dimensions(x)))
     }
 })
+
+# ---- Cube To Array ----
 
 #' @rdname cube-methods
 #' @export
@@ -265,6 +295,8 @@ cubeToArray <- function (x, measure=1) {
         ## Then, figure out which NA values to keep/drop/etc.
         keep.these <- evalUseNA(out, dimensions(x), x@useNA)
         out <- subsetCubeArray(out, keep.these)
+    } else if (length(x@dims) == 1 && x@useNA == "no") {
+        out <- out[!x@dims[[1]]$missing]
     }
     return(out)
 }

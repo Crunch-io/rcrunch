@@ -155,6 +155,9 @@ setGeneric("whichCatalogEntry", function (x, i, ...) standardGeneric("whichCatal
 setGeneric("owner", function (x) standardGeneric("owner"))
 setGeneric("owner<-", function (x, value) standardGeneric("owner<-"))
 
+setGeneric("showMissing", function(cube) standardGeneric("showMissing"))
+setGeneric("hideMissing", function(cube) standardGeneric("hideMissing"))
+
 setGeneric("dim")
 setGeneric("ncol")
 setGeneric("mean")
