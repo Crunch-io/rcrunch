@@ -22,27 +22,42 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
     subset <- replaceMissingWithTRUE(subset)
     dims <- dim(x)
     if (length(subset) != length(dims)) {
-        halt("You supplied ",
+        halt("You must supply ",
             length(subset),
             " dimensions to subset a ",
             length(dims),
             " dimensional cube.")
     }
-    isValid <- function(idx, dim) {
-        if (is.numeric(idx)) {
-            return(max(idx) <= dim)
 
+    err_subsets <- lapply(subset, function(idx) {
+        if (is.numeric(idx)) {
+            return(max(idx))
         } else if (is.logical(idx) && !isTRUE(idx)) {
-            return(length(idx) <= dim)
+            return(length(idx))
         }
         # Assume other subsets are valid and trust that the array subsetting
         # method will fail if they are invalid.
         return (TRUE)
+    })
+
+    isInValid <- function(idx, dim) {
+        if (isTRUE(idx)) {
+            return(FALSE)
+        }
+        return(idx > dim)
     }
 
-    valid_subsets <- unlist(mapply(isValid, idx = subset, dim = dims, SIMPLIFY = logical(1)))
-    if (!all(valid_subsets)) {
-        halt("Invalid subset at position ", serialPaste(which(!valid_subsets)))
+    invalid_subsets <- unlist(mapply(isInValid, idx = err_subsets, dim = dims, SIMPLIFY = logical(1)))
+    if (any(invalid_subsets)) {
+        errs <- paste("- At position", which(invalid_subsets),
+            "you tried to select element",
+            err_subsets[invalid_subsets],
+            "when the dimension has",
+            dims[invalid_subsets],
+            "elements."
+        )
+        halt("Invalid subset:\n",
+            paste0(errs[1:min(sum(invalid_subsets), 5)], collapse = "\n"))
     }
 
     translated_subset <- translateCubeIndex(x, subset, drop)
@@ -142,13 +157,13 @@ translateCubeIndex <- function(x, subset, drop) {
                 next
             }
             if (is_selected[i] && #check if MR selection dimension
-                length(out[[i - 1]]) == 1 && # MR response variable is a single number
-                !isTRUE(out[[i - 1]])) {
+                    length(out[[i - 1]]) == 1 && # MR response variable is a single number
+                    !isTRUE(out[[i - 1]])) {
                 if (x@useNA == "no") {
                     # This is used by skipMissingCategories below
                     out[i] <- "mr_select_drop"
                 } else {
-                     # assign subset value to "Selected" along the mr_selection dimension
+                    # assign subset value to "Selected" along the mr_selection dimension
                     out[i] <- 1
                 }
             }

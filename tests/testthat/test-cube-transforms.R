@@ -325,7 +325,7 @@ with_test_authentication({
               sep = "\n"),
               fixed = TRUE)
         expect_is(trans_cube, "array")
-        expect_equal(dim(pets_cube), 6)
+        expect_equal(dim((showMissing(pets_cube))), 6)
         expect_equal(dim(trans_cube), 10)
         expect_equivalent(trans_cube, cat_show_trans)
     })
