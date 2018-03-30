@@ -100,20 +100,6 @@ replaceMissingWithTRUE <- function(l){
     return(out)
 }
 
-subsetByList <- function(arr, arglist, drop){
-    #suppresses "named arguments other than drop are discouraged" warning
-    suppressWarnings(
-        do.call('[', c(list(x = arr, drop = drop), arglist))
-    )
-}
-
-subsetArrayDimension <- function(dim, idx){
-    dim$any.or.none <- dim$any.or.none[idx]
-    dim$missing <- dim$missing[idx]
-    dim$name <- dim$name[idx]
-    return(dim)
-}
-
 #' Translate user facing cube subset to programmatic cube subset
 #'
 #' Cubes that include multiple response variables create a special kind of complexity.
@@ -185,9 +171,25 @@ skipMissingCategories <- function(cube, subset){
         return(out)}, miss = missing, sub = subset)
 }
 
+subsetByList <- function(arr, arglist, drop){
+    #suppresses "named arguments other than drop are discouraged" warning
+    suppressWarnings(
+        do.call('[', c(list(x = arr, drop = drop), arglist))
+    )
+}
 
+subsetArrayDimension <- function(dim, idx){
+    dim$any.or.none <- dim$any.or.none[idx]
+    dim$missing <- dim$missing[idx]
+    dim$name <- dim$name[idx]
+    return(dim)
+}
+
+#' @rdname cube-methods
+#' @export
 setMethod("showMissing", "CrunchCube", function(cube) setCubeNA(cube, "always"))
-
+#' @rdname cube-methods
+#' @export
 setMethod("hideMissing", "CrunchCube", function(cube) setCubeNA(cube, "no"))
 
 setCubeNA <- function(cube, value){
