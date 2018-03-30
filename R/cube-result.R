@@ -17,7 +17,6 @@ setMethod("initialize", "CrunchCube", function (.Object, ...) {
 
 #' @rdname cube-methods
 #' @export
-
 setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
     subset <- eval(substitute(alist(i, j, ...)))
     subset <- replaceMissingWithTRUE(subset)
@@ -52,9 +51,9 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
     }
 
     out <- x
-    out@arrays$count <- subsetByList(out@arrays$count, translated_subset, drop)
-    out@arrays$.unweighted_counts <- subsetByList(out@arrays$.unweighted_counts,
-        translated_subset, drop)
+    out@arrays[] <- lapply(out@arrays, function(arr){
+        subsetByList(arr, translated_subset, drop)
+    })
 
     out@dims[] <- mapply(subsetArrayDimension,
         dim = x@dims,
@@ -83,6 +82,7 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
 #'
 #' @param l a list
 #' @return a list
+#' @keywords internal
 replaceMissingWithTRUE <- function(l){
     out <- lapply(l, function(x){
         if (is.symbol(x)) {
@@ -102,51 +102,54 @@ replaceMissingWithTRUE <- function(l){
 
 #' Translate user facing cube subset to programmatic cube subset
 #'
-#' Cubes that include multiple response variables create a special kind of complexity.
-#' Multiple response variables are actually 2d arrays with the selections along one dimension (`cat`, `dog`, `fish``)
-#' and the selection status along the second dimension (`selected`, `not_selected`).
-#' When an MR variable is crossed with a categorical variable it creates a 3d array
-#' with the categorical variable's categories along one dimension and the MR dimensions
-#' on the other two.
+#' Cubes that include multiple response variables create a special kind of
+#' complexity. Multiple response variables are actually 2d arrays with the
+#' responses along one dimension (`cat`, `dog`, `fish`) and the selection
+#' status along the second dimension (`selected`, `not_selected`). When an MR
+#' variable is crossed with a categorical variable it creates a 3d array with
+#' the categorical variable's categories along one dimension and the MR
+#' dimensions on the other two.
 #'
 #' The complexity is that while the real MR cube includes two dimensions per MR,
-#' we only show the user one dimension per MR which represents only the `selected` cases.
-#' This means that every cube has two different representations, the low dimensional user
-#' cube, and the higher dimensional programmatic cube. This function translates user cube subsets
-#' into the higher dimensional subset. In the case above, the user would see a 2d cube
-#' and subset it with `user_cube[1:2, 1:2]` in order to subset the programmatic cube
-#' we need to translate this to `prog_cube[1:2, 1:2, ]` in order to select the right variables
-#' of the high dimensional cube.
+#' we only show the user one dimension per MR which represents only the
+#' `selected` items. This means that every cube has two different
+#' representations, the low dimensional user cube, and the higher dimensional
+#' programmatic cube. This function translates user cube subsets into the higher
+#' dimensional subset. In the case above, the user would see a 2d cube and
+#' subset it with `user_cube[1:2, 1:2]` in order to subset the programmatic cube
+#' we need to translate this to `prog_cube[1:2, 1:2, ]` in order to select the
+#' right variables of the high dimensional cube.
 #' @param x  a Crunch Cube
 #' @param subset a list
 #' @param drop whether to drop unnecessary dimensions.
-#'
+#' @keywords internal
 #' @return a list
 translateCubeIndex <- function(x, subset, drop) {
-    user_names <- names(dimnames(as.array(x))) #the user facing cube
-    prog_names <- names(dimnames(x@arrays$count)) #the higher dimensional internal cube
+    is_selected <- is.selectedDimension(x@dims)
+    prog_names <- names(is_selected) #the real cube
+    # the user facing cube
+    user_names <- prog_names[!is_selected]
     if (length(prog_names) == length(user_names)) {
         #no MR variables so no need to translate the subset
         return(subset)
     }
     out <- as.list(rep(TRUE, length(prog_names)))
     out[match(user_names, prog_names)] <- subset
-    vars <- as.data.frame(variables(x))
-    mr_vars <- vars$alias[vars$type == "subvariable_items"]
+
     if (drop) {
         for (i in seq_along(prog_names)) {
             if (i == 1) {
                 next
             }
-            if (prog_names[i] %in% mr_vars &&             # Check if MR variable
-                    prog_names[i] == prog_names[i - 1] && # Check if MR selection variable
-                    length(out[[i - 1]]) == 1 &&          # Check if MR indicator variable is a single number
-                    !isTRUE(out[[i - 1]])) {
-
+            if (is_selected[i] && #check if MR selection dimension
+                length(out[[i - 1]]) == 1 && # MR response variable is a single number
+                !isTRUE(out[[i - 1]])) {
                 if (x@useNA == "no") {
+                    # This is used by skipMissingCategories below
                     out[i] <- "mr_select_drop"
                 } else {
-                    out[i] <- 1 #assign subset value to "Selected" along the mr_selection dimension
+                     # assign subset value to "Selected" along the mr_selection dimension
+                    out[i] <- 1
                 }
             }
         }
@@ -154,6 +157,20 @@ translateCubeIndex <- function(x, subset, drop) {
     return(out)
 }
 
+
+#' Handle missing categories in CrunchCube
+#'
+#' By default we don't display missing categories. The result is that when the
+#' user subsets a cube with a missing category, we need to translate that subset
+#' to only refer to the non-missing categories. This only occrs if
+#' `cube@useMissing` is set to `"no"`. This function handles this behaviour by
+#' translating the user supplied subsets to logical vectors.
+#'
+#' @param cube a CrunchCube
+#' @param subset a subset of the real cube which was generated by
+#'   `translateCubeSubset()`
+#' @return A list of logical vectors
+#' @keywords internal
 skipMissingCategories <- function(cube, subset){
     missing <- lapply(cube@dims, function(x) x$missing)
     mapply(function(miss, sub){
@@ -185,10 +202,22 @@ subsetArrayDimension <- function(dim, idx){
     return(dim)
 }
 
-#' @rdname cube-methods
+#' Modify cube missing behavior
+#'
+#' By default, CrunchCubes do not show entries for missing categories. You can
+#' include missing values in a `cube` with `showMissing(cube)` and hide them
+#' again with `hideMissing(cube)`.
+#'
+#' @param cube a CrunchCube
+#' @name cube-missingness
+#' @aliases showMissing hideMissing
+NULL
+
+#' @rdname cube-missingness
 #' @export
 setMethod("showMissing", "CrunchCube", function(cube) setCubeNA(cube, "always"))
-#' @rdname cube-methods
+
+#' @rdname cube-missingness
 #' @export
 setMethod("hideMissing", "CrunchCube", function(cube) setCubeNA(cube, "no"))
 
@@ -330,7 +359,7 @@ subsetCubeArray <- function (array, bools, drop=FALSE, selected_dims=FALSE) {
     ## "drop" that dimension but not necessarily "drop" any other dimensions
     ## that are length-1.
     re_shape <- any(selected_dims) &&
-                !drop && length(selected_dims) == length(dim(array))
+        !drop && length(selected_dims) == length(dim(array))
     if (re_shape) {
         ## subset with drop=TRUE to just keep the selected slice(s), then wrap in
         ## array to set dims correctly (so that we don't accidentally drop some other
@@ -448,9 +477,9 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
                 ## and filter them accordingly.
                 out <- !missings[[i]]
             }
-        ## Next, for non-selection dimensions, it matters if "i" is in the
-        ## user's margin selection. The default, as we said up front, is keep
-        ## all, but not if we're sweeping this margin.
+            ## Next, for non-selection dimensions, it matters if "i" is in the
+            ## user's margin selection. The default, as we said up front, is keep
+            ## all, but not if we're sweeping this margin.
         } else if (!(i %in% mapped_margins)) {
             if (any(a)) {
                 ## Any "any-or-none" means we have the other form of MR query.

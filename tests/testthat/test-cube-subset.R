@@ -61,6 +61,15 @@ test_that("translateCubeIndex", {
         alist(c(TRUE, FALSE, TRUE), c(TRUE, FALSE, TRUE), TRUE,c(TRUE, FALSE), TRUE))
 })
 
+test_that("cube [ method errors correctly", {
+    cube <- cat_x_mr_x_mr
+    expect_equal(length(dim(cube)), 3)
+    expect_error(cube[1,2,3,4,5,6], "You supplied 6 dimensions to subset a 3 dimensional cube.")
+    expect_error(cube[3,1,1], "Invalid subset at position 1")
+    expect_error(cube[rep(TRUE, 3), , ], "Invalid subset at position 1")
+    expect_silent(showMissing(cube)[3,1,1])
+})
+
 test_that("[ method for cat by cat cubes", {
 
     cube <- cube_withNA <- loadCube(test_path("cubes/cat-x-cat.json"))
