@@ -43,8 +43,8 @@ index.table <- function (x, margin) {
 
     if (identical(dim(tab), dim(marg))) {
         # if the dimensions are the same, use direct division, needed for MRs
-        return(tab/marg)
+        return(tab/marg * 100)
     } else {
-        return(sweep(tab, other_margin, marg, "/"))
+        return(sweep(tab, other_margin, marg, "/") * 100)
     }
 }
