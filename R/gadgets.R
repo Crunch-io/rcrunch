@@ -73,9 +73,16 @@ buildLoadDatasetCall <- function (project, dataset, ds_name = "") {
 #'
 #' @return a valid call to `makeArray()` or `makeMR()`
 #' @export
-makeArrayGadget <- function() {
+makeArrayGadget <- function(env = globalenv()){
+    shiny::runGadget(app = .makeArrayGadget(env),
+        viewer = shiny::dialogViewer("MR Builder", width = 800)
+    )
+
+}
+
+.makeArrayGadget <- function(env) {
     crGET(getOption("crunch.api")) # check login status
-    dataset_list <- getCrunchDatasets()
+    dataset_list <- getCrunchDatasets(env)
     ui <- miniUI::miniPage(
         shiny::tags$head(
             shiny::tags$style(shiny::HTML("
@@ -194,11 +201,7 @@ makeArrayGadget <- function() {
             shiny::stopApp(returnValue = rstudioapi::insertText(text = code))
         })
     }
-
-    shiny::runGadget(ui,
-        server,
-        viewer = shiny::dialogViewer("MR Builder", width = 800)
-    )
+    return(shiny::shinyApp(ui, server))
 }
 
 generateCategoryCheckboxes <- function (ds, selected_vars, array_type) {
@@ -264,7 +267,7 @@ asCharVector <- function(v) {
         ")")
 }
 
-getCrunchDatasets <- function(env = globalenv()) {
+getCrunchDatasets <- function(env) {
     l <- ls(envir = env)
     out <- lapply(l, function(x) get(x, envir = env))
     names(out) <- l

@@ -21,13 +21,6 @@ test_that("escapeQuotes", {
 }
 )
 
-with_mock_crunch({
-    test_that("listDatasets gets expected input from other Crunch functions", {
-        expect_is(names(projects()), "character")
-        expect_is(listDatasets(), "character")
-    })
-})
-
 test_that("buildArrayCall", {
     expect_identical(
         buildArrayCall(ds_name = "mtcars",
@@ -57,7 +50,21 @@ test_that("buildArrayCall", {
 
 # Mock tests ----
 
+# Even though this is an integration test it goes outside opf
+# with_mock_crunch because that function is called in gadgets/makeArrayGadget/app.R
+test_that("makeArrayGadget passes shiny tests", {
+    skip_on_cran()
+    shinytest::expect_pass(
+        shinytest::testApp("gadgets/makeArrayGadget/", compareImages = FALSE))
+})
+
 with_mock_crunch({
+
+    test_that("listDatasets gets expected input from other Crunch functions", {
+        expect_is(names(projects()), "character")
+        expect_is(listDatasets(), "character")
+    })
+
     test_that("getCrunchDataset errors", {
         expect_error(getCrunchDatasets(parent.env(environment()),
             "No CrunchDatasets detected.")

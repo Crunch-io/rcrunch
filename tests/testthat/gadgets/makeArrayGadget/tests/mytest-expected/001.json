@@ -1,0 +1,25 @@
+{
+  "input": {
+    "array_type": "Categorical Array",
+    "cancel": 0,
+    "clear_all": 0,
+    "dataset": "ds",
+    "done": 0,
+    "obj_name": "",
+    "search": "G",
+    "select_all": 0,
+    "selected_vars": null,
+    "var_name": ""
+  },
+  "output": {
+    "variables": {
+      "html": "<div id=\"selected_vars\" class=\"form-group shiny-input-checkboxgroup shiny-input-container\">\n  <div class=\"shiny-options-group\">\n    <div class=\"checkbox\">\n      <label>\n        <input type=\"checkbox\" name=\"selected_vars\" value=\"Gender\"/>\n        <span>Gender<\/span>\n      <\/label>\n    <\/div>\n  <\/div>\n<\/div>",
+      "deps": [
+
+      ]
+    }
+  },
+  "export": {
+
+  }
+}
