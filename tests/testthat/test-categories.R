@@ -521,6 +521,7 @@ with_test_authentication({
             ds$mr_sub1 <- factor(sample(1:2, nrow(ds), replace = TRUE))
             ds$mr_sub2 <- factor(sample(1:2, nrow(ds), replace = TRUE))
             ds$mr <- makeMR(ds[, c("mr_sub1", "mr_sub2")], selections = "1", name = "mr")
+            expect_false(uniformBasis(ds$mr))
             is.selected(categories(ds$mr)) <- c(TRUE, TRUE, TRUE)
             expect_true(all(is.selected(categories(ds$mr))))
             is.selected(categories(ds$mr)[2]) <- FALSE
