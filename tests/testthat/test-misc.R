@@ -133,6 +133,9 @@ with(temp.option(foo.bar="no", foo.other="other"), {
             expect_identical(envOrOption("foo.bar"), "yes") ## Env var trumps option
             expect_identical(envOrOption("foo.other"), "other") ## Option if there is no env var
             expect_null(envOrOption("somethingelse")) ## Null if neither
+            ## default works
+            expect_identical(envOrOption("somethingelse", "I'm a default"),
+                             "I'm a default") 
         })
     })
 })
