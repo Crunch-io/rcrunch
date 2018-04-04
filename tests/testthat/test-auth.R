@@ -29,25 +29,27 @@ with_mock_crunch({
     })
 })
 
-with_test_authentication({
-    test_that("login works if crunch is running", {
-        deleteSessionInfo()
-        suppressMessages(login())
-            expect_true("root" %in% ls(envir=session_store))
-            expect_true(is.authenticated())
-        logout()
-        expect_false(is.authenticated())
-    })
+if (run.integration.tests) {
+    with(test_options, {
+        test_that("login works if crunch is running", {
+            deleteSessionInfo()
+            suppressMessages(login())
+                expect_true("root" %in% ls(envir=session_store))
+                expect_true(is.authenticated())
+            logout()
+            expect_false(is.authenticated())
+        })
 
-    test_that("crunchAuth succeeds when it should and not when it shouldn't", {
-        logout()
-        expect_error(crunchAuth("lkjasdfksdfkjhl", password="w23nrnsod"),
-            "Unable to authenticate lkjasdfksdfkjhl")
-    })
+        test_that("crunchAuth succeeds when it should and not when it shouldn't", {
+            logout()
+            expect_error(crunchAuth("lkjasdfksdfkjhl", password="w23nrnsod"),
+                "Unable to authenticate lkjasdfksdfkjhl")
+        })
 
-    test_that("login returns a session object", {
-        cr <- suppressMessages(login())
-            expect_true(is.list(cr))
-        logout()
+        test_that("login returns a session object", {
+            cr <- suppressMessages(login())
+                expect_true(is.list(cr))
+            logout()
+        })
     })
-})
+}

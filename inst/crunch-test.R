@@ -60,20 +60,23 @@ with_DELETE <- function (resp, expr) {
 }
 
 assign("entities.created", c(), envir=globalenv())
+
+test_options <- temp.options(
+    # grab env or options
+    # use test.api or R_TEST_API if it's available, if not use local
+    crunch.api=crunch::envOrOption("test.api",
+                                   "http://local.crunch.io:8080/api/"),
+
+    crunch.email=crunch::envOrOption("test.user"),
+    crunch.pw=crunch::envOrOption("test.pw"),
+    crunch.show.progress=FALSE
+)
+
 with_test_authentication <- function (expr) {
     if (run.integration.tests) {
         env <- parent.frame()
 
-        with(temp.options(
-            # grab env or options
-            # use test.api or R_TEST_API if it's available, if not use local
-            crunch.api=crunch::envOrOption("test.api",
-                                           "http://local.crunch.io:8080/api/"),
-
-            crunch.email=crunch::envOrOption("test.user"),
-            crunch.pw=crunch::envOrOption("test.pw"),
-            crunch.show.progress=FALSE
-        ), {
+        with(test_options, {
             ## Authenticate.
             try(suppressMessages(login()))
             on.exit({
