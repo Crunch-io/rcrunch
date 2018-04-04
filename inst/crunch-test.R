@@ -146,26 +146,23 @@ crunch_test_teardown_check <- function () {
         datasets.end <- urls(datasets())
         leftovers <- setdiff(datasets.end, datasets.start)
         if (length(leftovers)) {
-            stop(length(leftovers),
+            message(length(leftovers),
                  " dataset(s) created and not destroyed: ",
-                 crunch:::serialPaste(dQuote(names(datasets()[leftovers]))),
-                 call.=FALSE)
+                 crunch:::serialPaste(dQuote(names(datasets()[leftovers]))))
         }
         users.end <- urls(crunch:::getUserCatalog())
         leftovers <- setdiff(users.end, users.start)
         if (length(leftovers)) {
-            stop(length(leftovers),
+            message(length(leftovers),
                  " users(s) created and not destroyed: ",
-                 crunch:::serialPaste(dQuote(names(crunch:::getUserCatalog()[leftovers]))),
-                 call.=FALSE)
+                 crunch:::serialPaste(dQuote(names(crunch:::getUserCatalog()[leftovers]))))
         }
         projects.end <- urls(projects())
         leftovers <- setdiff(projects.end, projects.start)
         if (length(leftovers)) {
-            stop(length(leftovers),
+            message(length(leftovers),
                  " projects(s) created and not destroyed: ",
-                 crunch:::serialPaste(dQuote(names(projects()[leftovers]))),
-                 call.=FALSE)
+                 crunch:::serialPaste(dQuote(names(projects()[leftovers]))))
         }
     })
 }
