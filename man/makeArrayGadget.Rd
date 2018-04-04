@@ -4,7 +4,10 @@
 \alias{makeArrayGadget}
 \title{Launch array builder gadget}
 \usage{
-makeArrayGadget()
+makeArrayGadget(env = globalenv())
+}
+\arguments{
+\item{env}{the environment to run the gadget}
 }
 \value{
 a valid call to \code{makeArray()} or \code{makeMR()}

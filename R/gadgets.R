@@ -72,6 +72,7 @@ buildLoadDatasetCall <- function (project, dataset, ds_name = "") {
 #' environment.
 #'
 #' @return a valid call to `makeArray()` or `makeMR()`
+#' @param env the environment to run the gadget
 #' @export
 makeArrayGadget <- function(env = globalenv()){
     shiny::runGadget(app = .makeArrayGadget(env),
