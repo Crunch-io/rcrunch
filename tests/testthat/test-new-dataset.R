@@ -170,6 +170,7 @@ with_test_authentication({
             expect_identical(dim(ds), dim(ds2))
             expect_identical(as.vector(ds$q1), as.vector(ds2$q1))
             ## Could add more assertions
+            expect_false(uniformBasis(ds$allpets))
         })
     })
 
