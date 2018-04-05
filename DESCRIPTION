@@ -25,10 +25,12 @@ Imports:
     httpcache (>= 0.1.4),
     jsonlite (>= 0.9.15),
     methods
+Remotes:
+    nealrichardson/httptest
 Suggests:
     covr,
     devtools,
-    haven, 
+    haven,
     httptest (>= 3.0.0),
     knitr,
     magrittr,
