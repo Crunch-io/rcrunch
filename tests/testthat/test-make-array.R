@@ -206,7 +206,8 @@ with_test_authentication({
             var <- dichotomize(var, 1)
             expect_true(is.Multiple(var))
             expect_true(is.Multiple(refresh(var)))
-            expect_false(uniformBasis(var)) # ensure that uniformBasis defaults to FALSE
+            # ensure that uniformBasis defaults to FALSE
+            expect_false(uniformBasis(refresh(var)))
             var <- undichotomize(var)
             expect_true(is.CA(var))
             expect_true(is.CA(refresh(var)))
@@ -216,6 +217,8 @@ with_test_authentication({
             ds$arrayVar <- dichotomize(ds$arrayVar, 1)
             expect_true(is.Multiple(ds$arrayVar))
             expect_true(is.Multiple(refresh(ds)$arrayVar))
+            # ensure that uniformBasis defaults to FALSE
+            expect_false(uniformBasis(refresh(ds)$arrayVar))
             ds$arrayVar <- undichotomize(ds$arrayVar)
             expect_true(is.CA(ds$arrayVar))
             expect_true(is.CA(refresh(ds)$arrayVar))
