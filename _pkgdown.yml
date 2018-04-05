@@ -115,6 +115,7 @@ reference:
   - cube-computing
   - cube-methods
   - cube-residuals
+  - index.table
   - dashboard
   - duplicated
   - filter-catalog
