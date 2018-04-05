@@ -20,8 +20,6 @@ load("vignettes.RData")
 options(width=120)
 ```
 
-# Datasets in `crunch`
-
 To get started working with Crunch datasets in R, we need to get a dataset in our local R session. This means we either need to create a new one or load an existing dataset.
 
 ## Uploading datasets

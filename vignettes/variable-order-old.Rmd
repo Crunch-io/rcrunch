@@ -18,8 +18,6 @@ options(width=120)
 
 > This ordering API is being phased out in favor of the new "variable folders" API, which is currently in a beta testing phase. This vignette is left here for reference, but you are encouraged to try the new methods. See [the new vignette](variable-order.html) for details.
 
-# Variable Order and Organization
-
 In the web application, variables in a dataset are displayed in a list on the left side of the screen.
 
 <!-- screenshot -->

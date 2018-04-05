@@ -4,6 +4,9 @@ template:
   params:
     bootswatch: flatly
     ganalytics: UA-50332119-2
+    docsearch:
+      api_key: 9fbcb3ae4d05600402e31f66b9b9501e
+      index_name: crunch
 reference:
 - title: Upload
   contents:
