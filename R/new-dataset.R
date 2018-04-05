@@ -73,7 +73,7 @@ createDataset <- function (name, body, ...) {
     ds <- loadDataset(dataset_url)
 
     # TODO: remove this when the future folders API is default
-    if (envOrOption("folders.enabled") %||% FALSE) {
+    if (envOrOption("folders.enabled", FALSE)) {
         settings(ds)$variable_folders <- TRUE
     }
 
