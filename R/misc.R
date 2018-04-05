@@ -163,19 +163,22 @@ vectorOrList <- function (obj, type) {
 #' it looks for the R-based option value.
 #'
 #' @param opt the option to get
+#' @param default if the specified option is not set in either the option or as
+#' an environment variable, use this instead.
 #'
 #' @return the value of the option
 #'
 #' @keywords internal
 #' @export
-envOrOption <- function (opt) {
+envOrOption <- function (opt, default = NULL) {
     envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed=TRUE)))
     envvar <- Sys.getenv(envvar.name)
+    
     if (nchar(envvar)) {
         ## Let environment variable override .Rprofile, if defined
         return(envvar)
     } else {
-        return(getOption(opt))
+        return(getOption(opt, default))
     }
 }
 
@@ -265,4 +268,52 @@ has.function <- function (query, funcs) {
     }
 
     return(FALSE)
+}
+
+#' Check that a value is TRUE or FALSE
+#'
+#' @param value Value to check
+#' 
+#' @return `TRUE` if `value` is either `TRUE` or `FALSE`, `FALSE` otherwise
+#'
+#' @keywords internal
+is.TRUEorFALSE <- function (value) {
+    return(is.logical(value) && !is.na(value) && length(value) == 1)
+}
+
+escapeQuotes <- function(str) {
+    gsub("'", "\\\\'", str)
+}
+
+#' Check if a user has packages installed
+#'
+#' @param pkgs a character vector of package names to check.
+#'
+#' @return nothing, called for side effects
+#' 
+#' @keywords internal
+checkInstalledPackages <- function (pkgs) {
+    installed <- pkgs %in% rownames(installed.packages())
+    if (!all(installed)){
+        halt("Missing required packages: ", serialPaste(dQuote(pkgs[!installed])))
+    }
+}
+
+#' Escape a regular expression
+#'
+#' This function takes a string and escapes all of the special characters in the
+#' string. For example, the `.` in `VB.NET` will be escaped with a slash (though
+#' regular R printing will make it look like there are two slashes).
+#'
+#' @param string A regular expression to escape
+#' @return `string`, escaped.
+#' @keywords internal
+#' @examples
+#' \dontrun{
+#' escapeRegex("Tom&Jerry")
+#' escapeRegex(".Net")
+#' }
+escapeRegex <- function (string) {
+    out <- gsub("([.|()\\^{}+$*?])", "\\\\\\1", string)
+    return(gsub("(\\[|\\])", "\\\\\\1", out))
 }

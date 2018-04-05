@@ -7,7 +7,7 @@ Description: The Crunch.io service <http://crunch.io/> provides a cloud-based
     datasets from within R. Importantly, this allows technical researchers to
     collaborate naturally with team members, managers, and clients who prefer a
     point-and-click interface.
-Version: 1.20.1
+Version: 1.21.0
 Authors@R: c(
     person("Neal", "Richardson", role=c("aut", "cre"), email="neal@crunch.io"),
     person("Jonathan", "Keane", role="ctb", email="jon.keane@crunch.io"),
@@ -28,11 +28,14 @@ Imports:
 Suggests:
     covr,
     devtools,
+    haven, 
     httptest (>= 3.0.0),
     knitr,
     magrittr,
+    miniUI,
     rmarkdown,
     rstudioapi,
+    shiny,
     spelling,
     testthat (>= 2.0.0)
 VignetteBuilder: knitr
@@ -72,6 +75,7 @@ Collate:
     'crunch.R'
     'crunchbox.R'
     'cube-dims.R'
+    'cube-index-table.R'
     'cube-query.R'
     'cube-residuals.R'
     'cube-result.R'
@@ -93,6 +97,7 @@ Collate:
     'folders.R'
     'fork-and-merge.R'
     'formula.R'
+    'gadgets.R'
     'geo.R'
     'get-datasets.R'
     'github.R'

@@ -1,7 +1,9 @@
 context("Polling progress")
 
 test_that("progressMessage", {
-    expect_silent(progressMessage("Message!"))
+    with(temp.option(crunch.show.progress=FALSE), {
+        expect_silent(progressMessage("Message!"))
+    })
     with(temp.option(crunch.show.progress=NULL), {
         expect_message(progressMessage("Message!"), "Message!")
     })

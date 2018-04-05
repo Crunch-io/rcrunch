@@ -1,6 +1,13 @@
 folders <- function (x) {
     stopifnot(is.dataset(x))
-    return(VariableFolder(crGET(shojiURL(x, "catalogs", "folders"))))
+    ## Temporary behavior while folders are feature-flagged on the server
+    folder_url <- try(shojiURL(x, "catalogs", "folders"), silent=TRUE)
+    if (is.error(folder_url)) {
+        ## Turn on folders and try again
+        settings(x)$variable_folders <- TRUE
+        folder_url <- shojiURL(x, "catalogs", "folders")
+    }
+    return(VariableFolder(crGET(folder_url)))
 }
 
 #' @export

@@ -1,5 +1,8 @@
 context("Multiple response cube specialness")
 
+##########################################
+### MR x CAT
+##########################################
 alldims <- list(
     pdl_gender=c("Male", "Female"),
     attitudes_recoded_klima_2=c("Climate change is the biggest threat to civilisation",
@@ -10,7 +13,7 @@ alldims <- list(
         "I don't mind paying more for products that are good for the environment")
 )
 
-mr_x_cat_wt <- loadCube("cubes/selected-crosstab-4.json")
+mr_x_cat_wt <- loadCube(test_path("cubes/selected-crosstab-4.json"))
 
 test_that("properties of a cube with for as_selected x cat: it looks 2D", {
     expect_equal(dim(mr_x_cat_wt), c(6L, 3L))
@@ -102,26 +105,159 @@ test_that("prop.table(cell) for as_selected x cat", {
             dims=alldims[c("attitudes_recoded_klima_2", "pdl_gender")]))
 })
 
+##########################################
+### CAT x MR
+##########################################
+cat_x_mr <- loadCube(test_path("cubes/selected-crosstab-array-last.json"))
+cat_x_mr_dims <- dimnames(cat_x_mr)
+# drop the "No Data" category in animal
+cat_x_mr_dims$fruit <- cat_x_mr_dims$fruit[cat_x_mr_dims$fruit != "No Data"]
+
+
+test_that("margin.table for cat x as_selected", {
+    expect_equal(margin.table(cat_x_mr, 1),
+                 cubify(
+                     49.3701228167475, 48.4562012457907, 56.931621579619,
+                     116.632067482127, 93.411479439707, 124.061990989576,
+                     dims=cat_x_mr_dims))
+    expect_equal(margin.table(cat_x_mr, 2),
+                 cubify(22.9672704148528, 45.7789165449064, 86.9728287914322,
+                        dims=cat_x_mr_dims["zoo"]))
+    ## NULL margin is the same shape as margin 1 here but is sum of selected + not
+    expect_equal(margin.table(cat_x_mr),
+                 cubify(
+                     166.002190298874, 141.867680685498, 180.993612569195,
+                     dims=cat_x_mr_dims["zoo"]))
+})
+
+test_that("prop.table(row) for cat x as_selected", {
+    expect_equal(prop.table(cat_x_mr, 1),
+                 cubify(
+                     0.17136174576676, 0.355633666090444, 0.463598595422233,
+                     0.124383630449479,0.305596916163552,0.488299506632138,
+                     dims=cat_x_mr_dims))
+})
+test_that("prop.table(col) for cat x as_selected", {
+    expect_equal(prop.table(cat_x_mr, 2),
+                 cubify(
+                     0.368356808701398,0.376432161231965,0.303467418114167,
+                     0.631643191298602,0.623567838768035,0.696532581885833,
+                     dims=cat_x_mr_dims))
+})
+test_that("prop.table(cell) for cat x as_selected", {
+    ## Note: not based on expectation from JS tests
+    expect_equal(prop.table(cat_x_mr),
+                 cubify(
+                     0.0509640892048795,0.121469924725558,0.145825145013507,
+                     0.0873911359490897,0.201217500089628,0.334704678977833,
+                     dims=cat_x_mr_dims))
+})
+
+
+##########################################
+### CAT x MR x MR
+##########################################
+cat_x_mr_x_mr <- loadCube(test_path("cubes/cat-x-mr-x-mr.json"))
+cat_x_mr_x_mr_dims <- dimnames(cat_x_mr_x_mr)
+# drop the "No Data" category in animal
+cat_x_mr_x_mr_dims$animal <- cat_x_mr_x_mr_dims$animal[cat_x_mr_x_mr_dims$animal != "No Data"]
+
+test_that("prop.table(row) for cat x MR x MR", {
+    expect_equal(prop.table(cat_x_mr_x_mr, 1),
+                 cubify(0.1159,0.3597,
+                        0.0197,0.0604,
+                        0.0192,0.0582,
+                        0.0159,0.0094,
+                        0.1182,0.0625,
+                        0.1142,0.0623,
+                        dims=cat_x_mr_x_mr_dims))
+
+})
+test_that("prop.table(col) for cat x MR x MR", {
+    expect_equal(prop.table(cat_x_mr_x_mr, 2),
+                 cubify(0.166284074605452,0.516068866571019,
+                        0.0280267463366055,0.0859297197325366,
+                        0.0276657060518732,0.0838616714697406,
+                        0.0228120516499283,0.0134863701578192,
+                        0.168160478019633,0.0889173424384692,
+                        0.164553314121037,0.0897694524495677,
+                        dims=cat_x_mr_x_mr_dims))
+
+})
+test_that("prop.table(cell) for cat x MR x MR", {
+    expect_equal(prop.table(cat_x_mr_x_mr),
+                 cubify(0.05795,0.17985,
+                        0.00985,0.0302,
+                        0.0096,0.0291,
+                        0.00795,0.0047,
+                        0.0591,0.03125,
+                        0.0571,0.03115,
+                        dims=cat_x_mr_x_mr_dims))
+})
+
+##########################################
+### Internal function tests
+##########################################
 test_that("as_selected_margins adds margins in the right cases", {
-    selecteds <- c(FALSE, TRUE, FALSE)
-    expect_equal(as_selected_margins(1, selecteds), 1)
-    expect_equal(as_selected_margins(2, selecteds), c(1, 3))
-    expect_equal(as_selected_margins(NULL, selecteds), 1)
-    nothing_selected <- c(FALSE, FALSE)
+    nothing_selected <- c(FALSE, FALSE) # cat by cat
     expect_equal(as_selected_margins(1, nothing_selected), 1)
     expect_equal(as_selected_margins(2, nothing_selected), 2)
     expect_equal(as_selected_margins(NULL, nothing_selected), NULL)
+    selecteds <- c(FALSE, TRUE, FALSE) # MR by cat
+    expect_equal(as_selected_margins(1, selecteds), 1)
+    expect_equal(as_selected_margins(2, selecteds), c(1, 3))
+    expect_equal(as_selected_margins(NULL, selecteds), 1)
+    selecteds <- c(FALSE, FALSE, TRUE) # cat by MR
+    expect_equal(as_selected_margins(1, selecteds), c(1, 2))
+    expect_equal(as_selected_margins(2, selecteds), 2)
+    expect_equal(as_selected_margins(NULL, selecteds), 2)
+    selecteds <- c(FALSE, FALSE, TRUE, FALSE, TRUE) # cat by MR by MR
+    expect_equal(as_selected_margins(1, selecteds), c(1, 2, 4))
+    expect_equal(as_selected_margins(2, selecteds), c(2, 4))
+    expect_equal(as_selected_margins(3, selecteds), c(2, 4))
+    expect_equal(as_selected_margins(NULL, selecteds), c(2, 4))
+    selecteds <- c(FALSE, TRUE, FALSE, FALSE, TRUE) # MR by cat by MR
+    expect_equal(as_selected_margins(1, selecteds), c(1, 4))
+    expect_equal(as_selected_margins(2, selecteds), c(1, 3, 4))
+    expect_equal(as_selected_margins(3, selecteds), c(1, 4))
+    expect_equal(as_selected_margins(NULL, selecteds), c(1, 4))
+    selecteds <- c(FALSE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE) # cat by MR*3
+    expect_equal(as_selected_margins(1, selecteds), c(1, 2, 4, 6))
+    expect_equal(as_selected_margins(2, selecteds), c(2, 4, 6))
+    expect_equal(as_selected_margins(3, selecteds), c(2, 4, 6))
+    expect_equal(as_selected_margins(4, selecteds), c(2, 4, 6))
+    expect_equal(as_selected_margins(NULL, selecteds), c(2, 4, 6))
 })
 
 test_that("as_selected_margins with before=FALSE", {
-    selecteds <- c(FALSE, TRUE, FALSE)
-    expect_equal(as_selected_margins(1, selecteds, before=FALSE), 1)
-    expect_equal(as_selected_margins(2, selecteds, before=FALSE), c(1, 2))
-    expect_equal(as_selected_margins(NULL, selecteds, before=FALSE), 1)
-    nothing_selected <- c(FALSE, FALSE)
+    nothing_selected <- c(FALSE, FALSE)# cat by cat
     expect_equal(as_selected_margins(1, nothing_selected, before=FALSE), 1)
     expect_equal(as_selected_margins(2, nothing_selected, before=FALSE), 2)
     expect_equal(as_selected_margins(NULL, nothing_selected, before=FALSE), NULL)
+    selecteds <- c(FALSE, TRUE, FALSE) # MR by cat
+    expect_equal(as_selected_margins(1, selecteds, before=FALSE), 1)
+    expect_equal(as_selected_margins(2, selecteds, before=FALSE), c(1, 2))
+    expect_equal(as_selected_margins(NULL, selecteds, before=FALSE), 1)
+    selecteds <- c(FALSE, FALSE, TRUE) # cat by MR
+    expect_equal(as_selected_margins(1, selecteds, before=FALSE), c(1, 2))
+    expect_equal(as_selected_margins(2, selecteds, before=FALSE), 2)
+    expect_equal(as_selected_margins(NULL, selecteds, before=FALSE), 2)
+    selecteds <- c(FALSE, FALSE, TRUE, FALSE, TRUE) # cat by MR by MR
+    expect_equal(as_selected_margins(1, selecteds, before=FALSE), c(1, 2, 3))
+    expect_equal(as_selected_margins(2, selecteds, before=FALSE), c(2, 3))
+    expect_equal(as_selected_margins(3, selecteds, before=FALSE), c(2, 3))
+    expect_equal(as_selected_margins(NULL, selecteds, before=FALSE), c(2, 3))
+    selecteds <- c(FALSE, TRUE, FALSE, FALSE, TRUE) # MR by cat by MR
+    expect_equal(as_selected_margins(1, selecteds, before=FALSE), c(1, 3))
+    expect_equal(as_selected_margins(2, selecteds, before=FALSE), c(1, 2, 3))
+    expect_equal(as_selected_margins(3, selecteds, before=FALSE), c(1, 3))
+    expect_equal(as_selected_margins(NULL, selecteds, before=FALSE), c(1, 3))
+    selecteds <- c(FALSE, FALSE, TRUE, FALSE, TRUE, FALSE, TRUE) # cat by MR*3
+    expect_equal(as_selected_margins(1, selecteds, before=FALSE), c(1, 2, 3, 4))
+    expect_equal(as_selected_margins(2, selecteds, before=FALSE), c(2, 3, 4))
+    expect_equal(as_selected_margins(3, selecteds, before=FALSE), c(2, 3, 4))
+    expect_equal(as_selected_margins(4, selecteds, before=FALSE), c(2, 3, 4))
+    expect_equal(as_selected_margins(NULL, selecteds, before=FALSE), c(2, 3, 4))
 })
 
 with_mock_crunch({
