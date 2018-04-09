@@ -37,11 +37,11 @@ test_that("subsetArrayDimension", {
                     missing = FALSE,
                     id = 2L,
                     name = "dogs")
-                )
             )
         )
+    )
     expect_identical(subsetArrayDimension(cat_x_mr_x_mr@dims$animal, 1:2), expected)
-    })
+})
 
 test_that("translateCubeIndex", {
     expect_identical(translateCubeIndex(cat_x_mr_x_mr, alist(1, ,), drop = FALSE),
@@ -87,14 +87,14 @@ test_that("[ method for cat by cat cubes", {
     expect_equal(as.array(subset_cube), as.array(showMissing(cube))[1:2, ])
 
     # drop a non-missing row
-    subset_cube <- cube[1,] # drop the second row (C)
+    subset_cube <- cube[1, , drop = FALSE] # drop the second row (C)
     expect_is(subset_cube, "CrunchCube")
-    expect_equal(dim(subset_cube), 2)
+    expect_equal(dim(subset_cube), c(1, 2))
 
     # since the cube retains the missing dimension, it defaults behavior to
     # `drop = FALSE`, though this isn't true of the the array since only one
     # element is being selected from that dimension
-    expect_equal(as.array(subset_cube), as.array(cube)[1, ])
+    expect_equal(as.array(subset_cube), as.array(cube)[1, , drop = FALSE])
 
     # check that useNA doesn't impact
     subset_cube_withNA <- cube_withNA[c(1, 3),] # drop the second row (C)
@@ -119,7 +119,7 @@ test_that("[ method for MR cubes", {
     cat_x_mr_x_mr_withNA <- cat_x_mr_x_mr
     cat_x_mr_x_mr_withNA@useNA <- "always"
     # subset rows
-    # drop the No Data row which is #2 here!
+    # drop the No Data row which is #2 here! d
     subset_cat_x_mr_x_mr <- showMissing(cat_x_mr_x_mr)[c(1,3), , ]
     expect_is(subset_cat_x_mr_x_mr, "CrunchCube")
     expect_equal(dim(subset_cat_x_mr_x_mr), c(2, 3, 2))
@@ -208,4 +208,22 @@ test_that("[ method for cat array cubes", {
 
     subset_cube_withNA <- cube_withNA[, , 1:2]
     expect_equal(as.array(subset_cube_withNA), as.array(cube_withNA)[, , 1:2])
+})
+
+test_that("subsetting works when @useNA == 'ifany'", {
+    cube <- loadCube("cubes/univariate-categorical.json")
+    expect_equal(dim(cube), 2)
+    cube_ifany <- showIfAny(cube)
+    expect_equal(dim(cube_ifany), 3)
+    expect_equal(as.array(cube_ifany[1]), as.array(cube_ifany)[1])
+    expect_equal(as.array(cube_ifany[1:2]), as.array(cube_ifany)[1:2])
+
+    #multivariate
+    cube <- loadCube("cubes/cat-x-cat.json")
+    expect_equal(dim(cube), c(2,2))
+    cube_ifany <- showIfAny(cube)
+    expect_equal(dim(cube_ifany), c(2,3))
+    browser()
+    expect_equal(as.array(cube_ifany[1, ]), as.array(cube_ifany)[1, ])
+    expect_equal(as.array(cube_ifany[1:2, 1]), as.array(cube_ifany)[1:2, 1])
 })

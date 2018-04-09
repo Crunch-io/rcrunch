@@ -5,13 +5,17 @@
 \alias{cube-missingness}
 \alias{showMissing}
 \alias{hideMissing}
+\alias{showIfAny}
 \alias{showMissing,CrunchCube-method}
 \alias{hideMissing,CrunchCube-method}
+\alias{showIfAny,CrunchCube-method}
 \title{Modify cube missing behavior}
 \usage{
 \S4method{showMissing}{CrunchCube}(cube)
 
 \S4method{hideMissing}{CrunchCube}(cube)
+
+\S4method{showIfAny}{CrunchCube}(cube)
 }
 \arguments{
 \item{cube}{a CrunchCube}

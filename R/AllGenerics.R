@@ -157,6 +157,7 @@ setGeneric("owner<-", function (x, value) standardGeneric("owner<-"))
 
 setGeneric("showMissing", function(cube) standardGeneric("showMissing"))
 setGeneric("hideMissing", function(cube) standardGeneric("hideMissing"))
+setGeneric("showIfAny", function(cube) standardGeneric("showIfAny"))
 
 setGeneric("dim")
 setGeneric("ncol")

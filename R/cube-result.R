@@ -18,7 +18,11 @@ setMethod("initialize", "CrunchCube", function (.Object, ...) {
 #' @rdname cube-methods
 #' @export
 setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
-    index <- eval(substitute(alist(i, j, ...)))
+    if (nargs() == 2) {
+        index <- eval(substitute(alist(i)))
+    } else {
+        index <- eval(substitute(alist(i, j, ...)))
+    }
     index <- replaceMissingWithTRUE(index)
     dims <- dim(x)
     if (length(index) != length(dims)) {
@@ -61,6 +65,7 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
     }
 
     translated_index <- translateCubeIndex(x, index, drop)
+    browser()
     if (x@useNA == "no") {
         translated_index <- skipMissingCategories(x, translated_index)
     }
@@ -177,8 +182,8 @@ translateCubeIndex <- function(x, subset, drop) {
 #'
 #' By default we don't display missing categories. The result is that when the
 #' user subsets a cube with a missing category, we need to translate that subset
-#' to only refer to the non-missing categories. This only occrs if
-#' `cube@useMissing` is set to `"no"`. This function handles this behaviour by
+#' to only refer to the non-missing categories. This only occurs if
+#' `cube@useMissing` is set to `"no"`. This function handles this behavior by
 #' translating the user supplied indices to logical vectors.
 #'
 #' @param cube a CrunchCube
@@ -200,7 +205,7 @@ skipMissingCategories <- function(cube, index){
             out <- rep(FALSE, length(miss))
             out[!miss][sub] <- rep(TRUE, length(sub))
         }
-        return(out)}, miss = missing, sub = index)
+        return(out)}, miss = missing, sub = index, SIMPLIFY = FALSE)
 }
 
 subsetByList <- function(arr, arglist, drop){
@@ -225,7 +230,7 @@ subsetArrayDimension <- function(dim, idx){
 #'
 #' @param cube a CrunchCube
 #' @name cube-missingness
-#' @aliases showMissing hideMissing
+#' @aliases showMissing hideMissing showIfAny
 NULL
 
 #' @rdname cube-missingness
@@ -236,24 +241,19 @@ setMethod("showMissing", "CrunchCube", function(cube) setCubeNA(cube, "always"))
 #' @export
 setMethod("hideMissing", "CrunchCube", function(cube) setCubeNA(cube, "no"))
 
-setCubeNA <- function(cube, value){
-    out <- cube
-    out@useNA <- value
-    return(out)
+#' @rdname cube-missingness
+#' @export
+setMethod("showIfAny", "CrunchCube", function(cube) setCubeNA(cube, "ifany"))
+
+setCubeNA <- function(cube, value = c("always", "no", "ifany")){
+    match.arg(value)
+    cube@useNA <- value
+    return(cube)
 }
 
 #' @rdname cube-methods
 #' @export
-setMethod("dim", "CrunchCube", function (x) {
-    if (x@useNA == "no"){
-        dims <- x@dims[!is.selectedDimension(x@dims)]
-        dims <- vapply(dims, function(a) sum(!a$missing),
-            FUN.VALUE = numeric(1), USE.NAMES = FALSE)
-        return(dims)
-    } else {
-        return(dim(dimensions(x)))
-    }
-})
+setMethod("dim", "CrunchCube", function (x) dim(as.array(x)))
 
 # ---- Cube To Array ----
 

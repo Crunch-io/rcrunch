@@ -17,19 +17,23 @@ translateCubeIndex(x, subset, drop)
 a list
 }
 \description{
-Cubes that include multiple response variables create a special kind of complexity.
-Multiple response variables are actually 2d arrays with the selections along one dimension (\code{cat}, \code{dog}, \code{fish``) and the selection status along the second dimension (}selected\code{,}not_selected`).
-When an MR variable is crossed with a categorical variable it creates a 3d array
-with the categorical variable's categories along one dimension and the MR dimensions
-on the other two.
+Cubes that include multiple response variables create a special kind of
+complexity. Multiple response variables are actually 2d arrays with the
+responses along one dimension (\code{cat}, \code{dog}, \code{fish}) and the selection
+status along the second dimension (\code{selected}, \code{not_selected}). When an MR
+variable is crossed with a categorical variable it creates a 3d array with
+the categorical variable's categories along one dimension and the MR
+dimensions on the other two.
 }
 \details{
 The complexity is that while the real MR cube includes two dimensions per MR,
-we only show the user one dimension per MR which represents only the \code{selected} cases.
-This means that every cube has two different representations, the low dimensional user
-cube, and the higher dimensional programmatic cube. This function translates user cube subsets
-into the higher dimensional subset. In the case above, the user would see a 2d cube
-and subset it with \code{user_cube[1:2, 1:2]} in order to subset the programmatic cube
-we need to translate this to \code{prog_cube[1:2, 1:2, ]} in order to select the right variables
-of the high dimensional cube.
+we only show the user one dimension per MR which represents only the
+\code{selected} items. This means that every cube has two different
+representations, the low dimensional user cube, and the higher dimensional
+programmatic cube. This function translates user cube subsets into the higher
+dimensional subset. In the case above, the user would see a 2d cube and
+subset it with \code{user_cube[1:2, 1:2]} in order to subset the programmatic cube
+we need to translate this to \code{prog_cube[1:2, 1:2, ]} in order to select the
+right variables of the high dimensional cube.
 }
+\keyword{internal}
