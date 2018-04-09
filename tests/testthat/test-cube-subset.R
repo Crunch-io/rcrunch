@@ -223,7 +223,10 @@ test_that("subsetting works when @useNA == 'ifany'", {
     expect_equal(dim(cube), c(2,2))
     cube_ifany <- showIfAny(cube)
     expect_equal(dim(cube_ifany), c(2,3))
-    browser()
-    expect_equal(as.array(cube_ifany[1, ]), as.array(cube_ifany)[1, ])
+    expect_equal(as.array(cube_ifany[1:2, ]), as.array(cube_ifany)[1:2, ])
     expect_equal(as.array(cube_ifany[1:2, 1]), as.array(cube_ifany)[1:2, 1])
+
+    #make sure hidden categories are not displayed when output is a vector
+    expect_equal(as.array(cube_ifany[1, ]), as.array(cube_ifany)[1, ])
+    expect_equal(as.array(cube[1, ]), as.array(cube)[1, ])
 })

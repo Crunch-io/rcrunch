@@ -65,8 +65,8 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
     }
 
     translated_index <- translateCubeIndex(x, index, drop)
-    browser()
-    if (x@useNA == "no") {
+
+    if (x@useNA != "always") {
         translated_index <- skipMissingCategories(x, translated_index)
     }
 
@@ -192,20 +192,19 @@ translateCubeIndex <- function(x, subset, drop) {
 #' @return A list of logical vectors
 #' @keywords internal
 skipMissingCategories <- function(cube, index){
-    missing <- lapply(cube@dims, function(x) x$missing)
-    mapply(function(miss, sub){
+    visible_cats <- evalUseNA(cube@arrays$count, dims = cube@dims, useNA = cube@useNA)
+    mapply(function(visable, sub){
         if (identical(sub, "mr_select_drop")) {
             # select the "Selected" element of the selection dimension.
             return(c(TRUE, FALSE, FALSE))
         }
         if (isTRUE(sub)) {
-            out <- rep(TRUE, length(miss))
-            len <- sum(!miss)
+            out <- rep(TRUE, length(visable))
         } else {
-            out <- rep(FALSE, length(miss))
-            out[!miss][sub] <- rep(TRUE, length(sub))
+            out <- rep(FALSE, length(visable))
+            out[visable][sub] <- rep(TRUE, length(sub))
         }
-        return(out)}, miss = missing, sub = index, SIMPLIFY = FALSE)
+        return(out)}, visable = visible_cats, sub = index, SIMPLIFY = FALSE)
 }
 
 subsetByList <- function(arr, arglist, drop){
@@ -341,8 +340,13 @@ cubeToArray <- function (x, measure=1) {
         ## Then, figure out which NA values to keep/drop/etc.
         keep.these <- evalUseNA(out, dimensions(x), x@useNA)
         out <- subsetCubeArray(out, keep.these)
-    } else if (length(x@dims) == 1 && x@useNA == "no") {
-        out <- out[!x@dims[[1]]$missing]
+    } else if (length(x@dims) == 1) {
+        missing <- x@dims[[1]]$missing
+        if (x@useNA == "no") {
+            out <- out[!missing]
+        } else if (x@useNA == "ifany") {
+            out <- out[out > 0 | !missing]
+        }
     }
     return(out)
 }
