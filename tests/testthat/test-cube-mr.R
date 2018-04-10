@@ -14,6 +14,7 @@ mr_x_cat_wt <- loadCube(test_path("cubes/selected-crosstab-4.json"))
 
 test_that("properties of a cube with for as_selected x cat: it looks 2D", {
     expect_equal(dim(showMissing(mr_x_cat_wt)), c(6L, 3L))
+    expect_equal(dim(mr_x_cat_wt), c(6, 2))
     expect_equal(names(dimnames(mr_x_cat_wt)),
         c("attitudes_recoded_klima_2", "pdl_gender"))
     expect_equal(aliases(variables(mr_x_cat_wt)),
