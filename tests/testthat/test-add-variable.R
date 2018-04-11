@@ -125,10 +125,13 @@ test_that("toVariable handles duplicate factor levels", {
 })
 test_that("categoriesFromLevels parses levels correctly", {
     expect_identical(categoriesFromLevels(levels(iris$Species)),
-        list(list(id = 1L, name = "setosa", numeric_value = 1L, missing = FALSE),
-             list(id = 2L, name = "versicolor", numeric_value = 2L, missing = FALSE),
-             list(id = 3L, name = "virginica", numeric_value = 3L, missing = FALSE))
-      )
+        list(
+            list(id = 1L, name = "setosa", numeric_value = 1L, missing = FALSE),
+            list(id = 2L, name = "versicolor", numeric_value = 2L, missing = FALSE),
+            list(id = 3L, name = "virginica", numeric_value = 3L, missing = FALSE),
+            .no.data
+        )
+    )
 })
 test_that("toVariable parses R Date class", {
     expect_equivalent(toVariable(as.Date(c("2014-12-16", "2014-12-17"))),
