@@ -285,7 +285,7 @@ bin <- function (x) zfuncExpr("bin", x)
 #' @export
 rollup <- function (x, resolution = rollupResolution(x)) {
     validateResolution(force(resolution))
-    
+
     if (is.variable(x) && !is.Datetime(x)) {
         halt("Cannot rollup a variable of type ", dQuote(type(x)))
     }
@@ -342,8 +342,6 @@ setMethod("[", c("CrunchExpr", "numeric"), function (x, i, ...) {
 
 #' "which" method for CrunchLogicalExpr
 #'
-#' NOTE: this isn't correct. Don't use it yet.
-#'
 #' @param x CrunchLogicalExpr
 #' @param arr.ind Ignored
 #' @param useNames Ignored
@@ -356,7 +354,12 @@ NULL
 
 #' @rdname which
 setMethod("which", "CrunchLogicalExpr", function (x, arr.ind, useNames) {
-    which(as.vector(x))
+    vec <- as.vector(x)
+    if (is.factor(vec)) {
+        ## 3VL
+        vec <- vec == "Selected"
+    }
+    which(vec)
 })
 
 #' "duplicated" method for Crunch objects
