@@ -158,7 +158,7 @@ setMethod("is.selected<-", "Categories", function (x, value) {
     if (length(value) != length(x)) {
         halt("You supplied ", length(value), " logical values for ", length(x), " Categories.")
     }
-    
+
     x@.Data <- mapply(function (x, value) {
         is.selected(x) <- value
         return(x)
@@ -244,3 +244,27 @@ ensureNoDataCategory <- function (cats) {
         return(c(cats, Category(data=.no.data)))
     }
 }
+
+.no.data <- list(
+    id=-1L,
+    name="No Data",
+    numeric_value=NULL,
+    missing=TRUE
+)
+
+.selected.cats <- list(
+    list(
+        id=1L,
+        name="Selected",
+        numeric_value=1,
+        missing=FALSE,
+        selected=TRUE
+    ),
+    list(
+        id=0L,
+        name="Not Selected",
+        numeric_value=0,
+        missing=FALSE
+    ),
+    .no.data
+)

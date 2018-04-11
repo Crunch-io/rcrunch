@@ -46,10 +46,11 @@ setMethod("toVariable", "VariableDefinition", function (x, ...) {
 #' @rdname toVariable
 #' @export
 setMethod("toVariable", "logical", function (x, ...) {
-    ## Make it categorical
-    return(VariableDefinition(values=2L-as.integer(x), type="categorical",
-        categories=categoriesFromLevels(c("True", "False")),
-        ...))
+    ## Make it 3VL categorical
+    vals <- as.integer(x)
+    vals[is.na(vals)] <- -1L
+    return(VariableDefinition(values=vals, type="categorical",
+        categories=.selected.cats, ...))
 })
 
 # haven::labelled* are S3 classes, so we have to register them
