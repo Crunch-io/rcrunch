@@ -46,11 +46,17 @@ setMethod("toVariable", "VariableDefinition", function (x, ...) {
 #' @rdname toVariable
 #' @export
 setMethod("toVariable", "logical", function (x, ...) {
-    ## Make it 3VL categorical
-    vals <- as.integer(x)
-    vals[is.na(vals)] <- -1L
-    return(VariableDefinition(values=vals, type="categorical",
-        categories=.selected.cats, ...))
+    if (getOption("crunch.3vl", FALSE)) {
+        ## Make it 3VL categorical
+        vals <- as.integer(x)
+        vals[is.na(vals)] <- -1L
+        return(VariableDefinition(values=vals, type="categorical",
+            categories=.selected.cats, ...))
+    } else {
+        ## Pre-3VL actual categorical
+        return(VariableDefinition(values=2L-as.integer(x), type="categorical",
+            categories=categoriesFromLevels(c("True", "False")), ...))
+    }
 })
 
 # haven::labelled* are S3 classes, so we have to register them

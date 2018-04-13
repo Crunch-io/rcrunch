@@ -268,3 +268,12 @@ ensureNoDataCategory <- function (cats) {
     ),
     .no.data
 )
+
+is.3vl <- function (cats) {
+    ## Infer whether these categories are from a Three-Valued Logic categorical
+    if (is.variable(cats)) {
+        cats <- categories(cats)
+    }
+    cat_ids <- ids(cats)
+    return(setequal(cat_ids, c(-1, 0, 1)) && is.selected(cats)[cat_ids == 1])
+}

@@ -24,6 +24,10 @@ parse_column <- list(
     },
     categorical_factor=function (col, variable, mode=NULL) {
         out <- columnParser("numeric")(col)
+        if (getOption("crunch.3vl", FALSE) && is.3vl(variable)) {
+            ## 3VL: return R logical vector
+            return(as.logical(out))
+        }
         cats <- na.omit(categories(variable))
         out <- factor(names(cats)[match(out, ids(cats))], levels=names(cats))
         return(out)

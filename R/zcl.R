@@ -26,8 +26,15 @@ setMethod("zcl", "Date", r2zcl)
 setMethod("zcl", "POSIXt", r2zcl)
 setMethod("zcl", "logical", function (x) {
     if (length(x)) {
-        out <- r2zcl(x)
-        out$type <- list(class="categorical", categories=.selected.cats)
+        if (getOption("crunch.3vl", FALSE)) {
+            ## 3VL categorical
+            out <- r2zcl(x)
+            out$type <- list(class="categorical", categories=.selected.cats)
+        } else {
+            ## Boolean
+            x[is.na(x)] <- FALSE
+            out <- list(column=I(x), type=list(class="boolean"))
+        }
         return(out)
     } else {
         ## If you reference a variable in a dataset that doesn't exist, you

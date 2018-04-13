@@ -354,12 +354,7 @@ NULL
 
 #' @rdname which
 setMethod("which", "CrunchLogicalExpr", function (x, arr.ind, useNames) {
-    vec <- as.vector(x)
-    if (is.factor(vec)) {
-        ## 3VL
-        vec <- vec == "Selected"
-    }
-    which(vec)
+    which(as.vector(x))
 })
 
 #' "duplicated" method for Crunch objects
