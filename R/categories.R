@@ -271,7 +271,7 @@ ensureNoDataCategory <- function (cats) {
 
 is.3vl <- function (cats) {
     ## Infer whether these categories are from a Three-Valued Logic categorical
-    if (is.variable(cats)) {
+    if (!is.categories(cats)) {
         cats <- categories(cats)
     }
     cat_ids <- ids(cats)
