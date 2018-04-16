@@ -262,7 +262,7 @@ ensureNoDataCategory <- function (cats) {
     ),
     list(
         id=0L,
-        name="Not Selected",
+        name="Other",
         numeric_value=0,
         missing=FALSE
     ),

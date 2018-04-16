@@ -156,7 +156,7 @@ with_test_authentication({
     ## Logical -> Categorical
     test_that("Category names for logical-as-categorical", {
         expect_identical(names(categories(ds$v6)),
-            c("True", "False", "No Data"))
+            c("Selected", "Other", "No Data"))
     })
     test_that("Can edit values of a logical-as-categorical with logical", {
         ds$v6[c(2, 5)] <- FALSE
