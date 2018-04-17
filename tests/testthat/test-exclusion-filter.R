@@ -144,15 +144,15 @@ with_test_authentication({
             expect_valid_apidocs_import(ds)
         })
 
-        ## Create a variable to update with rows to exclude
+        ## Create a variable to update witfh rows to exclude
         ds$keep <- TRUE
         test_that("'keep' was created correctly, i.e. all 'True'", {
             expect_identical(as.array(crtabs(~ keep, data=ds)),
                 array(c(20, 0), dim=2L,
-                dimnames=list(keep=c("True", "False"))))
+                dimnames=list(keep=c("Selected", "Other"))))
         })
         ## Set the exclusion filter
-        exclusion(ds) <- ds$keep == "False"
+        exclusion(ds) <- ds$keep == "Other"
         test_that("We still have nrow=20, i.e. all rows", {
             expect_identical(nrow(ds), 20L)
         })
@@ -179,7 +179,7 @@ with_test_authentication({
 
         ## Update "keep" as "False" (i.e. excluded) where "allpets" is
         ## missing for all responses.
-        ds$keep[is.na(ds$allpets)] <- "False"
+        ds$keep[is.na(ds$allpets)] <- FALSE
         test_that("The exclusion filter drops those three rows", {
             expect_identical(nrow(ds), 17L)
             ## And we can confirm that those three rows are the ones
@@ -224,10 +224,10 @@ with_test_authentication({
         ## Notice there is one value that is missing for both (Skipped on
         ## one, Not Asked on the other).
         test_that("is.na on array is TRUE where all subvars are missing", {
-            expect_equivalent(as.array(crtabs(~ is.na(petloc), data=ds))["TRUE"], 1)
+            expect_equivalent(as.array(crtabs(~ is.na(petloc), data=ds))["Selected"], 1)
         })
         ## Update "keep" with that expression
-        ds$keep[is.na(ds$petloc)] <- "False"
+        ds$keep[is.na(ds$petloc)] <- FALSE
         test_that("The exclusion filter now drops that row too", {
             expect_identical(nrow(ds), 16L)
         })
@@ -261,7 +261,7 @@ with_test_authentication({
                     dimnames=list(ndogs=c(0, 2, 3))))
         })
         ## So let's also drop rows corresponding to Austrians with >0 dogs:
-        ds$keep[ds$country == "Austria" & ds$ndogs > 0] <- "False"
+        ds$keep[ds$country == "Austria" & ds$ndogs > 0] <- FALSE
         test_that("The excluded nrow goes down by 2", {
             expect_identical(nrow(ds), 14L)
         })

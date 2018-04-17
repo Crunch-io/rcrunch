@@ -223,8 +223,13 @@ setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
             out <- .updateVariable(x, value, filter=.dispatchFilter(i))
             return(x)
         } else if (has.categories(x) &&
-            all(names(categories(x)) %in% c("True", "False", "No Data"))) {
-
+                   getOption("crunch.3vl", FALSE) &&
+                   is.3vl(x)) {
+            ## This is the new 3vl, so we can take TRUE/FALSE values
+            value <- c("Selected", "Other")[2L - as.integer(value)]
+            return(.categorical.update[["character"]](x, i, j, value))
+        } else if (has.categories(x) &&
+                   all(names(categories(x)) %in% c("True", "False", "No Data"))) {
             ## This is "logical-as-categorical", so we can take TRUE/FALSE values
             value <- c("True", "False")[2L - as.integer(value)]
             return(.categorical.update[["character"]](x, i, j, value))
