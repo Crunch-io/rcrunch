@@ -274,6 +274,9 @@ is.3vl <- function (cats) {
     if (!is.categories(cats)) {
         cats <- categories(cats)
     }
-    cat_ids <- ids(cats)
-    return(setequal(cat_ids, c(-1, 0, 1)) && is.selected(cats)[cat_ids == 1])
+    return(
+        setequal(ids(cats), c(-1, 0, 1)) &&
+        sum(is.selected(cats)) == 1 &&
+        sum(is.na(cats)) == 1
+    )
 }
