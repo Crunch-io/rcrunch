@@ -1,8 +1,50 @@
-## crunch 1.19.1
+## crunch 1.21.1
+* `index.table()` to return tables indexed to a margin
+* Fix bug in assigning `subtotals(var) <- NULL` when it already was `NULL` (#231)
+* Consistently return `""` for variable metadata fields if no value is set (#232)
+
+## crunch 1.21.0
+### Variable organization
+
+* New functions for organizing variables in a dataset, modeled on file system operations: `cd()`, `mv()`, `mkdir()`, `rmdir()`. These functions use a new API for variable folders (unlike the experimental versions of some that were introduced in the 1.19.0 package release). This API is currently in a beta testing phase. See `vignettes("variable-order", package="crunch")` for examples and details.
+
+### Loading and navigating
+
+* `listDatasets(shiny = TRUE)` launches an RStudio addin which allows you to select your dataset in order to generate a valid `loadDataset()` call. You can also associate this addin with a hotkey using in RStudio through `Tools` > `Modify Keyboard Shortcuts`.
+* `webApp()` now works for Crunch variables: it will take you to the "browse" view of the web application with the given variable card loaded on screen.
+
+### New variable creation and derivation
+
+* Create a derived view of a variable as another type without altering the underlying data. Have a text input that is only numbers, such as an ID, and want to have a variable that is a true numeric, but you also want to make sure that new (text) values can be appended to the dataset? Use `ds$id_var_numeric <- as.Numeric(ds$id_var)`. There are `as.*` methods for all Crunch data types except for array-like variables.
+* Preliminary support for `haven`’s `labelled` class when converting to Crunch variable types.
+* `makeMRFromText()` to take a variable imported as delimited strings, parse the multiple-response options, and return a (derived) `multiple_response` variable.
+
+### Miscellaneous
+
+* Added support for setting population sizes on datasets with `setPopulation(ds, size = 24.13e6, magnitude = 3)` and for getting population sizes (or magnitudes) with `popSize(ds)` and `popMagnitude(ds)` respectively.
+* Added support for getting and setting rollup resolutions for displaying Datetime variables. Get resolution with `rollupResolution(ds$datetime)` and set with `rollupResolution(ds$datetime) <- "M"`.
+* Add `options(crunch.show.progress)` to govern whether to report progress of long-running requests. Default is `TRUE`, but set it to `FALSE` to run quietly.
+* Export `pollProgress()` and recommend using that when a long-running request fails to complete within the local timeout.
+
+## crunch 1.20.0
+
+### Subtotals and Headings
+* Added support for subtotals and headings on categorical variables and CrunchCubes. Subtotals can be set with `subtotals(variable) <- Subtotal(name = 'subtotal', categories = c(1, 2), after = 2)`. Use `subtotals(variable)` to see what subtotals are set for a variable.
+* By default, subtotals will be displayed on CrunchCube results. Arrays consisting of only subtotals can be created using `subtotalArray([cube])`
+* See `?subtotals` or `vignette("subtotals", package="crunch")` for more information.
+
+### Multiple response in CrunchCubes
+* The default method for including multiple response variables in CrunchCubes has changed, allowing for better handling of variables with different missingness across subvariables. (Internally: queries with multiple response variables now use the `as_selected` function instead of `selected_array`, which is now deprecated).
+* For now, the deprecated method can be restored by setting `options(crunch.mr.selection = "selected_array")`.
+
+### Improvements to `conditionalTransform()`
+* `conditionalTransform()` now has a `formulas` argument to specify a list of conditions to be used.
+* Errors and warnings are now more helpful when using `conditionalTransform()`.
+
+### Optimizations and bugfixes
 * Improved efficiency when loading a dataset from URL.
-* Subtotals and headings on categorical variables and CrunchCubes. Use `subtotals(variable)` to see subtotals set for a variable. Subtotals can be set with `subtotals(variable) <- Subtotal(name = 'subtotal', categories = c(1, 2))`. Subtotals and headings are displayed for rows in CrunchCubes when they are set. See `?subtotals` for more information. 
-* `refresh()` for Datasets is now more efficient
-* fixed a bug where CrunchCubes with categorical variables that had categories "Selected", "Not selected", and "No data" might not display correctly. 
+* `refresh()` for Datasets is now more efficient.
+* Fixed a bug where CrunchCubes with categorical variables that had categories "Selected", "Not selected", and "No data" might not display correctly.
 
 ## crunch 1.19.0
 

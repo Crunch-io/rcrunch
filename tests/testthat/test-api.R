@@ -1,7 +1,7 @@
 context("API calling")
 
 test_that("Deprecated endpoints tell user to upgrade", {
-    fake410 <- fakeResponse("http://crunch.io/410", status_code=410)
+    fake410 <- fake_response("http://crunch.io/410", status_code=410)
     expect_error(handleAPIresponse(fake410),
         paste("The API resource at http://crunch.io/410 has moved permanently.",
               "Please upgrade crunch to the latest version."))
@@ -10,7 +10,7 @@ test_that("Deprecated endpoints tell user to upgrade", {
 with_mock_crunch({
     test_that("crunch.debug does not print if disabled", {
         expect_POST(
-            expect_output(crPOST("https://app.crunch.io/api/", body='{"value":1}'),
+            expect_prints(crPOST("https://app.crunch.io/api/", body='{"value":1}'),
                 NA),
             "https://app.crunch.io/api/",
             '{"value":1}')
@@ -18,13 +18,13 @@ with_mock_crunch({
     test_that("crunch.debug logging if enabled", {
         with(temp.option(crunch.debug=TRUE), {
             expect_POST(
-                expect_output(crPOST("https://app.crunch.io/api/", body='{"value":1}'),
+                expect_prints(crPOST("https://app.crunch.io/api/", body='{"value":1}'),
                     '\n {"value":1} \n',
                     fixed=TRUE),
                 "https://app.crunch.io/api/",
                 '{"value":1}')
             ## Use testthat:: so that it doesn't print ds. Check for log printing
-            testthat::expect_output(ds <- loadDataset("test ds"),
+            expect_output(ds <- loadDataset("test ds"),
                 NA)
         })
     })

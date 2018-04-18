@@ -41,7 +41,7 @@ with_test_authentication({
             ## Test that the filter is set correctly. Objects not identical
             ## because JSON objects are unordered.
             expect_json_equivalent(zcl(exclusion(ds)), zcl(ds$v4 == "C"))
-            expect_output(exclusion(ds),
+            expect_prints(exclusion(ds),
                 'Crunch logical expression: v4 == "C"')
 
             expect_identical(nrow(ds), 10L)
@@ -156,13 +156,27 @@ with_test_authentication({
         test_that("We still have nrow=20, i.e. all rows", {
             expect_identical(nrow(ds), 20L)
         })
+
+
+        ## check with new cube behavior
         ## Let's look at "allpets", a multiple response variable
         test_that("allpets", {
             expect_identical(as.array(crtabs(~ allpets, data=ds,
-                useNA="ifany")),
-                array(c(4, 5, 5, 3), dim=4L,
-                    dimnames=list(allpets=c("Cat", "Dog", "Bird", "<NA>"))))
+                                             useNA="ifany")),
+                             array(c(4, 5, 5), dim=3L,
+                                   dimnames=list(allpets=c("Cat", "Dog", "Bird"))))
         })
+        ## check old behavior
+        with(temp.options(crunch.mr.selection="selected_array"), {
+            ## Let's look at "allpets", a multiple response variable
+            test_that("allpets", {
+                expect_identical(as.array(crtabs(~ allpets, data=ds,
+                                                 useNA="ifany")),
+                                 array(c(4, 5, 5, 3), dim=4L,
+                                       dimnames=list(allpets=c("Cat", "Dog", "Bird", "<NA>"))))
+            })
+        })
+
         ## Update "keep" as "False" (i.e. excluded) where "allpets" is
         ## missing for all responses.
         ds$keep[is.na(ds$allpets)] <- "False"
@@ -171,9 +185,22 @@ with_test_authentication({
             ## And we can confirm that those three rows are the ones
             ## dropped:
             expect_identical(as.array(crtabs(~ allpets, data=ds,
-                useNA="always")),
-                array(c(4, 5, 5, 0), dim=4L,
-                    dimnames=list(allpets=c("Cat", "Dog", "Bird", "<NA>"))))
+                                             useNA="always")),
+                             array(c(4, 5, 5), dim=3L,
+                                   dimnames=list(allpets=c("Cat", "Dog", "Bird"))))
+        })
+
+        ## check old behavior
+        with(temp.options(crunch.mr.selection="selected_array"), {
+            test_that("The exclusion filter drops those three rows", {
+                expect_identical(nrow(ds), 17L)
+                ## And we can confirm that those three rows are the ones
+                ## dropped:
+                expect_identical(as.array(crtabs(~ allpets, data=ds,
+                    useNA="always")),
+                    array(c(4, 5, 5, 0), dim=4L,
+                        dimnames=list(allpets=c("Cat", "Dog", "Bird", "<NA>"))))
+            })
         })
 
         ## We can do the same for categorical array. petloc has two

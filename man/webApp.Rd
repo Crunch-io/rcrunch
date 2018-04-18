@@ -2,20 +2,17 @@
 % Please edit documentation in R/dataset.R
 \name{webApp}
 \alias{webApp}
-\title{View a Dataset in the Web Application}
+\title{View a Crunch Object in the Web Application}
 \usage{
-webApp(dataset)
+webApp(x)
 }
 \arguments{
-\item{dataset}{a CrunchDataset}
+\item{x}{a Crunch Dataset or Variable}
 }
 \value{
 Nothing; called for side effect of opening your web browser.
 }
 \description{
 Convenience function that will use your system's "open" command to open
-a dataset in our web application in your default browser.
-}
-\details{
-Note that this function does not do anything on Windows.
+a Crunch object in our web application in your default browser.
 }

@@ -5,25 +5,26 @@
 \alias{mkdir}
 \title{Functions to manipulate variables' folder structure}
 \usage{
-mv(dataset, variables, path)
+mv(x, variables, path)
 
-mkdir(dataset, path, variables = NULL)
+mkdir(x, path)
 }
 \arguments{
-\item{dataset}{A Crunch dataset}
+\item{x}{A \code{CrunchDataset} or \code{VariableFolder}}
 
 \item{variables}{A Variable, selection of variables from \code{dataset}, or any
-other object that can be moved to a folder. For \code{mkdir}, \code{variables} is
-optional.}
+other object that can be moved to a folder.}
 
 \item{path}{A character "path" to the folder: either a
 vector of nested folder names or a single string with nested folders
 separated by a delimiter ("/" default, configurable via
-\code{options(crunch.delimiter)})}
+\code{options(crunch.delimiter)}). The path is interpreted as
+relative to the location of the folder \code{x} (when \code{x} is a dataset, that
+means the root, top-level folder). \code{path} may also be a \code{VariableFolder} object.}
 }
 \value{
-\code{dataset}, with the folder at \code{path} guaranteed to be created and
-\code{variables}, if specified, moved into it.
+\code{x}, with the folder at \code{path} guaranteed to be created, and for
+\code{mv}, containing \code{variables} moved into it.
 }
 \description{
 Variables in Crunch datasets are organized into folders, like in a file
@@ -36,15 +37,8 @@ The functions have some differences from the strict behavior of their Unix
 ancestors. For one, they work recursively, without additional arguments:
 \code{mkdir} will make every directory necessary to construct the requested path,
 even if all parent directories didn't already exist; and \code{mv} doesn't
-require that the directory to move to already exist. \code{mkdir} also takes an
-optional \code{variables} argument, which allows you to say "make this directory
-\strong{and} put these variables in it" in one command. As a result of these
-behaviors, \code{mv} and \code{mkdir} here are essentially the same, just with
-arguments in reverse order: \code{mv} is move "variables" to "path", while \code{mkdir}
-is create "path" and put "variables" in it.
-
-Both functions take "dataset" as the first argument, so they naturally
-support pipelining (as with the \code{\%>\%} operator).
+require that the directory to move to already exist---it will effectively
+call \code{mkdir} along the way.
 }
 \examples{
 \dontrun{
@@ -56,8 +50,14 @@ require(magrittr)
 ds <- ds \%>\%
     mv(c("aware_x", "nps_x"), "Key Performance Indicators/Brand X") \%>\%
     mv(c("aware_y", "nps_y"), "Key Performance Indicators/Brand Y")
+# Can combine with cd() and move things with relative paths
+ds \%>\%
+    cd("Key Performance Indicators/Brand X") \%>\%
+    mv("nps_x", "../Net Promoters")
+# Can combine with folder() to move objects to the same place as something else
+ds \%>\% mv("nps_y", folder(ds$nps_x))
 }
 }
 \seealso{
-\code{\link[=folder]{folder()}}
+\code{\link[=cd]{cd()}} to select a folder by path; \code{\link[=rmdir]{rmdir()}} to delete a folder; \code{\link[=folder]{folder()}} to identify and set an object's parent folder; \code{\link[base:dir.create]{base::dir.create()}} if you literally want to create a directory in your local file system, which \code{mkdir()} does not do
 }

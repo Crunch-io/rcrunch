@@ -69,8 +69,7 @@ with_mock_crunch({
         expect_identical(emails(m), c("fake.user@example.com", "roger.user@example.com"))
         expect_identical(name(m[["roger.user@example.com"]]),
             "Roger User")
-        expect_error(m[["NOTAUSER@example.com"]],
-            "Subscript out of bounds: NOTAUSER@example.com")
+        expect_null(m[["NOTAUSER@example.com"]])
         expect_identical(names(m["roger.user@example.com"]),
             "Roger User")
         expect_error(m["NOTAUSER@example.com"],
@@ -110,7 +109,7 @@ with_mock_crunch({
     })
 
     test_that("Print method for MemberCatalog", {
-        expect_output(m,
+        expect_prints(m,
             get_output(data.frame(
                 name=c("Fake User", "Roger User"),
                 email=c("fake.user@example.com", "roger.user@example.com"),
@@ -144,7 +143,7 @@ with_mock_crunch({
         expect_is(do, "DatasetOrder")
         expect_identical(do@graph,
             list(DatasetGroup("Group 1", "https://app.crunch.io/api/datasets/3/")))
-        expect_output(do,
+        expect_prints(do,
             paste("[+] Group 1", "    ECON.sav", sep="\n"), fixed=TRUE)
     })
 
@@ -312,7 +311,7 @@ with_test_authentication({
         expect_identical(ordering(datasets(tp))@graph[[1]],
             DatasetGroup(name="A group of two",
             entities=c(self(ds), self(ds3))))
-        expect_output(ordering(datasets(tp)),
+        expect_prints(ordering(datasets(tp)),
             paste("[+] A group of two",
                   paste0("    ", name(ds)),
                   paste0("    ", name(ds3)),
@@ -335,7 +334,7 @@ with_test_authentication({
 
     test_that("Can create a Group by assigning by name", {
         ordering(datasets(tp))[["New group three"]] <- self(ds)
-        expect_output(ordering(datasets(tp)),
+        expect_prints(ordering(datasets(tp)),
             paste("[+] G1",
                   paste0("    ", name(ds3)),
                   "[+] G2",

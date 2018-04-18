@@ -1,0 +1,112 @@
+{
+    "element": "shoji:view",
+    "self": "/api/datasets/123/cube/?filter=%5B%5D&query=%7B%22dimensions%22:%5B%7B%22variable%22:%22/api/datasets/123%2Fvariables%2F000000%2F%22%7D,%7B%22variable%22:%22/api/datasets/123%2Fvariables%2F000002%2F%22%7D%5D,%22measures%22:%7B%22count%22:%7B%22function%22:%22cube_count%22,%22args%22:%5B%5D%7D%7D,%22weight%22:null%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": []
+                }
+            },
+            "dimensions": [{
+                "variable": "/api/datasets/123/variables/000000/"
+            }, {
+                "variable": "/api/datasets/123/variables/000002/"
+            }],
+            "weight": null
+        },
+        "query_environment": {
+            "filter": []
+        },
+        "result": {
+            "dimensions": [{
+                "derived": false,
+                "references": {
+                    "alias": "Admit",
+                    "name": "Admit",
+                    "description": null
+                },
+                "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [{
+                        "numeric_value": null,
+                        "id": 1,
+                        "name": "Admitted",
+                        "missing": false
+                    }, {
+                        "numeric_value": null,
+                        "missing": false,
+                        "id": 2,
+                        "name": "Rejected"
+                    }]
+                }
+            }, {
+                "derived": false,
+                "references": {
+                    "alias": "Dept",
+                    "name": "Dept",
+                    "description": null
+                },
+                "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [{
+                        "numeric_value": null,
+                        "id": 1,
+                        "name": "A",
+                        "missing": false
+                    }, {
+                        "numeric_value": null,
+                        "missing": false,
+                        "id": 2,
+                        "name": "B"
+                    }, {
+                        "numeric_value": null,
+                        "missing": false,
+                        "id": 3,
+                        "name": "C"
+                    }, {
+                        "numeric_value": null,
+                        "missing": false,
+                        "id": 4,
+                        "name": "D"
+                    }, {
+                        "numeric_value": null,
+                        "missing": false,
+                        "id": 5,
+                        "name": "E"
+                    }, {
+                        "numeric_value": null,
+                        "missing": false,
+                        "id": 6,
+                        "name": "F"
+                    }]
+                }
+            }],
+            "missing": 0,
+            "measures": {
+                "count": {
+                    "data": [601, 370, 322, 269, 147, 46, 332, 215, 596, 523, 437, 668],
+                    "n_missing": 0,
+                    "metadata": {
+                        "references": {},
+                        "derived": true,
+                        "type": {
+                            "integer": true,
+                            "missing_rules": {},
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "class": "numeric"
+                        }
+                    }
+                }
+            },
+            "element": "crunch:cube",
+            "counts": [601, 370, 322, 269, 147, 46, 332, 215, 596, 523, 437, 668],
+            "n": 4526
+        }
+    }
+}

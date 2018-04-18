@@ -308,18 +308,24 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
 as_selected_margins <- function (margin, selecteds, before=TRUE) {
     ## If there are "Selection" dimensions, we always want to include their
     ## partner (position - 1) in the margin table dimensions
+    ## margin is always the "real" full cube dimensions even if before=TRUE
     if (!any(selecteds)) {
         ## If there aren't any, no-op
         return(margin)
     }
     which_selected <- which(selecteds)
     if (before) {
-        ## "before" means we're specifying margins of the "real" cube that
-        ## includes the selection dimensions in them. "after" is after dropping
-        ## the selection dimensions
+        ## "before" means we're returning margins of the "real" cube that
+        ## includes the selection dimensions in them.
         margin <- which(!selecteds)[margin]
+        mr_margins <- which_selected - 1
+    } else {
+        ## "after" is after dropping the selection dimensions, so we need to
+        ## subtract more than one for each subsiquent MR encountered
+        mr_margins <- which_selected - seq_along(which_selected)
     }
-    return(sort(union(margin, which_selected - 1)))
+
+    return(sort(union(margin, mr_margins)))
 }
 
 #' Work with CrunchCubes, MultitableResults, and TabBookResults
@@ -378,7 +384,9 @@ setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
     marg <- margin.table(x, margin)
     actual_margin <- as_selected_margins(margin, is.selectedDimension(x@dims),
         before=FALSE)
-    if (length(actual_margin)) {
+    # Check if there are any actual_margins and if the dims are identical, we
+    # don't need to sweep, and if we are MRxMR we can't sweep.
+    if (length(actual_margin) & !identical(dim(out), dim(marg))) {
         out <- sweep(out, actual_margin, marg, "/", check.margin=FALSE)
     } else {
         ## Don't just divide by sum(out) like the default does.

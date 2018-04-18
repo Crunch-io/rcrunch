@@ -1,0 +1,47 @@
+{
+    "self": "https://app.crunch.io/api/datasets/1/folders/3/",
+    "element": "shoji:catalog",
+    "size": 3,
+    "body": {
+        "name": "Nested"
+    },
+    "index": {
+        "../../variables/gender/": {
+            "name": "Gender",
+            "discarded": false,
+            "alias": "gender",
+            "type": "categorical",
+            "id": "66ae9881e3524f7db84970d556c34552",
+            "notes": "",
+            "description": "Gender"
+        },
+        "../../variables/mymrset/": {
+            "name": "mymrset",
+            "discarded": false,
+            "alias": "mymrset",
+            "type": "multiple_response",
+            "id": "949d2dc7e7a24e6090cc88bb92e1d2fb",
+            "description": "Please select all that apply",
+            "notes": "",
+            "subvariables": [
+                "../../variables/mymrset/subvariables/subvar2/",
+                "../../variables/mymrset/subvariables/subvar1/",
+                "../../variables/mymrset/subvariables/subvar3/"
+            ],
+            "subvariables_catalog": "../../variables/mymrset/subvariables/"
+        },
+        "../../variables/location/": {
+            "name": "Categorical Location",
+            "discarded": false,
+            "alias": "location",
+            "type": "categorical",
+            "id": "loc",
+            "description": "Location test",
+            "notes": ""
+        }
+    },
+    "graph": ["../../variables/gender/", "../../variables/location/", "../../variables/mymrset/"],
+    "catalogs": {
+        "folder": "https://app.crunch.io/api/datasets/1/folders/1/"
+    }
+}

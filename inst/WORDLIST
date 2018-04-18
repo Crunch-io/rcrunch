@@ -1,6 +1,7 @@
 AbstractCategories
 AbstractCategory
 af
+Agresti
 api
 API's
 auth
@@ -81,6 +82,7 @@ json
 JSON
 JSONing
 knitr
+magrittr
 makeWeight
 MemberCatalog
 multitable
@@ -107,7 +109,9 @@ recode
 recurse
 recurses
 rmarkdown
+RStudio
 RMarkdown
+rollup
 Rprofile
 sav
 savepoints
@@ -124,6 +128,7 @@ Snowden
 Snowden's
 spss
 subclasses
+subfolder
 subtyped
 subtypes
 subvariable

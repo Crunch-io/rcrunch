@@ -7,7 +7,7 @@ Description: The Crunch.io service <http://crunch.io/> provides a cloud-based
     datasets from within R. Importantly, this allows technical researchers to
     collaborate naturally with team members, managers, and clients who prefer a
     point-and-click interface.
-Version: 1.19.1
+Version: 1.21.1
 Authors@R: c(
     person("Neal", "Richardson", role=c("aut", "cre"), email="neal@crunch.io"),
     person("Jonathan", "Keane", role="ctb", email="jon.keane@crunch.io"),
@@ -28,10 +28,14 @@ Imports:
 Suggests:
     covr,
     devtools,
-    httptest (>= 2.0.0),
+    haven,
+    httptest (>= 3.0.0),
     knitr,
+    magrittr,
+    miniUI,
     rmarkdown,
     rstudioapi,
+    shiny,
     spelling,
     testthat (>= 2.0.0)
 VignetteBuilder: knitr
@@ -70,7 +74,9 @@ Collate:
     'crunch.R'
     'crunchbox.R'
     'cube-dims.R'
+    'cube-index-table.R'
     'cube-query.R'
+    'cube-residuals.R'
     'cube-result.R'
     'cube-transforms.R'
     'cube-variables.R'
@@ -90,6 +96,7 @@ Collate:
     'folders.R'
     'fork-and-merge.R'
     'formula.R'
+    'gadgets.R'
     'geo.R'
     'get-datasets.R'
     'github.R'
@@ -114,6 +121,7 @@ Collate:
     'share.R'
     'shoji-catalog.R'
     'shoji-entity.R'
+    'shoji-folder.R'
     'shoji-order-slots.R'
     'shoji-order.R'
     'shoji.R'
@@ -127,9 +135,11 @@ Collate:
     'tuple.R'
     'univariate.R'
     'user.R'
+    'variable-as-methods.R'
     'variable-catalog.R'
     'variable-delete.R'
     'variable-derivation.R'
+    'variable-folder.R'
     'variable-metadata.R'
     'variable-order.R'
     'variable-summary.R'

@@ -1,11 +1,14 @@
 ---
 title: "Crunch Internals"
+description: "Here are some details on how the Crunch API works, which may be useful to know if you're looking to do complex actions or trying to understand how to improve performance of your R code."
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Crunch Internals}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
+
+[Previous: subtotals](subtotals.md)
 
 The Crunch web app and the `crunch` package are both built on a [REST API](http://docs.crunch.io/). Users can interact with very large datasets because most of the heavy computation is done on the Crunch servers and not on the users computer. In most cases, you don't need to know how the API works---the R package handles the HTTP requests and responses and presents meaningful objects and methods to you. To go beyond the basics, though, it can be useful to understand how the API works so that you can make more complex or more efficient (read: faster) operations.
 
@@ -33,3 +36,5 @@ datasets(proj) <- ds
 ```
 
 Internally there is actually a second method `datasets<-` that takes the value on the right hand side of the `<-` operator and posts that value to the datasets attribute of the project catalog. The projects catalog will then update to reflect that a dataset belongs to a particular catalog, and that will be reflected in the web app. Similar patterns happen when you get and set attributes on objects, like "names".
+
+[Next: Category objects](abstract-categories.md)

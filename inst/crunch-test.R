@@ -1,25 +1,6 @@
 library(httptest)
 
-# use test.api or R_TEST_API if it's available, if not use local
-if (!is.null(crunch::envOrOption("test.api"))) {
-    options(crunch.api=crunch::envOrOption("test.api"))
-} else {
-    crunch::setCrunchAPI("local", 8080)
-}
-
 run.integration.tests <- Sys.getenv("INTEGRATION") == "TRUE"
-
-# grab env or options
-options(
-    crunch.email=crunch::envOrOption("test.user"),
-    crunch.pw=crunch::envOrOption("test.pw")
-)
-
-# crayon options for testing on travis
-options(
-    crayon.enabled = TRUE,
-    crayon.colors = 256
-)
 
 skip_locally <- function (...) {
     if (grepl("^https?://local\\.", getOption("crunch.api"))) {
@@ -33,11 +14,20 @@ loadCube <- function (filename) {
 
 cubify <- function (..., dims) {
     ## Make readable test expectations for comparing cube output
+    ## Borrowed from Cube arrays, fixtures and cubes come in row-col-etc. order,
+    ## not column-major. Make array, then aperm the array back to order
     data <- c(...)
-    d <- vapply(dims, length, integer(1), USE.NAMES=FALSE)
-    array(matrix(data, byrow=TRUE, nrow=d[1]), dim=d, dimnames=dims)
-}
+    d <- rev(vapply(dims, length, integer(1), USE.NAMES=FALSE))
 
+    out <- array(data, dim=d)
+    if (length(dims) > 1) {
+        ap <- seq_len(length(dims))
+        ap <- rev(ap)
+        out <- aperm(out, ap)
+    }
+    dimnames(out) <- dims
+    return(out)
+}
 
 ## Contexts
 with_mock_crunch <- function (expr) {
@@ -55,51 +45,63 @@ with_POST <- function (resp, expr) {
     with_mock(`crunch::crPOST`=function (...) resp, eval.parent(expr))
 }
 
+with_PATCH <- function (resp, expr) {
+    ## Mock a PATCH that returns something, or nothing
+    force(resp)
+    with_mock(`crunch::crPATCH`=function (...) resp, eval.parent(expr))
+}
+
 with_DELETE <- function (resp, expr) {
     ## Mock a DELETE that returns something, or nothing
     force(resp)
     with_mock(`crunch::crDELETE`=function (...) resp, eval.parent(expr))
 }
 
-with_silent_progress <- function (expr) {
-    with_mock(
-        `crunch:::setup_progress_bar`=function (...) pipe(""),
-        `crunch:::update_progress_bar`=function (...) invisible(NULL),
-        eval.parent(expr)
-    )
-}
-
-silencer <- temp.option(show.error.messages=FALSE)
-
 assign("entities.created", c(), envir=globalenv())
+
+test_options <- temp.options(
+    # grab env or options
+    # use test.api or R_TEST_API if it's available, if not use local
+    crunch.api=crunch::envOrOption("test.api",
+                                   "http://local.crunch.io:8080/api/"),
+
+    crunch.email=crunch::envOrOption("test.user"),
+    crunch.pw=crunch::envOrOption("test.pw"),
+    crunch.show.progress=FALSE
+)
+
 with_test_authentication <- function (expr) {
     if (run.integration.tests) {
         env <- parent.frame()
-        ## Authenticate.
-        try(suppressMessages(login()))
-        on.exit({
-            ## Delete our seen things
-            purgeEntitiesCreated()
-            logout()
-        })
-        ## Any time an object is created (201 Location responts), store that URL
-        tracer <- quote({
-            if (!is.null(loc)) {
-                seen <- get("entities.created", envir=globalenv())
-                assign("entities.created",
-                    c(seen, loc),
-                    envir=globalenv())
-            }
-        })
-        with_trace("locationHeader", exit=tracer, where=crGET, expr={
-            ## Wrap this so that we can generate a test failure if there's an error
-            ## rather than just halt the process
-            tryCatch(eval(with_silent_progress(expr), envir=env),
-                error=function (e) {
-                    test_that("There are no test code errors", {
-                        expect_error(stop(e$message), NA)
-                    })
-                })
+
+        with(test_options, {
+            ## Authenticate.
+            try(suppressMessages(login()))
+            on.exit({
+                ## Delete our seen things
+                purgeEntitiesCreated()
+                logout()
+            })
+            ## Any time an object is created (201 Location responts), store
+            ## that URL
+            tracer <- quote({
+                if (!is.null(loc)) {
+                    seen <- get("entities.created", envir=globalenv())
+                    assign("entities.created",
+                           c(seen, loc),
+                           envir=globalenv())
+                }
+            })
+            with_trace("locationHeader", exit=tracer, where=crGET, expr={
+                ## Wrap this so that we can generate a test failure if
+                ## there's an error rather than just halt the process
+                tryCatch(eval(expr, envir=env),
+                         error=function (e) {
+                             test_that("There are no test code errors", {
+                                 expect_error(stop(e$message), NA)
+                             })
+                         })
+            })
         })
     }
 }
@@ -130,40 +132,35 @@ whereas <- function (...) {
 }
 
 
-## Global teardown
-bye <- new.env()
+## Global teardown code
 with_test_authentication({
     datasets.start <- urls(datasets())
     users.start <- urls(crunch:::getUserCatalog())
     projects.start <- urls(projects())
 })
-reg.finalizer(bye,
-    function (x) {
-        with_test_authentication({
-            datasets.end <- urls(datasets())
-            leftovers <- setdiff(datasets.end, datasets.start)
-            if (length(leftovers)) {
-                stop(length(leftovers),
-                    " dataset(s) created and not destroyed: ",
-                    crunch:::serialPaste(dQuote(names(datasets()[leftovers]))),
-                    call.=FALSE)
-            }
-            users.end <- urls(crunch:::getUserCatalog())
-            leftovers <- setdiff(users.end, users.start)
-            if (length(leftovers)) {
-                stop(length(leftovers),
-                    " users(s) created and not destroyed: ",
-                    crunch:::serialPaste(dQuote(names(crunch:::getUserCatalog()[leftovers]))),
-                    call.=FALSE)
-            }
-            projects.end <- urls(session()$projects)
-            leftovers <- setdiff(projects.end, projects.start)
-            if (length(leftovers)) {
-                stop(length(leftovers),
-                    " projects(s) created and not destroyed: ",
-                    crunch:::serialPaste(dQuote(names(projects()[leftovers]))),
-                    call.=FALSE)
-            }
-        })
-    },
-    onexit=TRUE)
+
+crunch_test_teardown_check <- function () {
+    with_test_authentication({
+        datasets.end <- urls(datasets())
+        leftovers <- setdiff(datasets.end, datasets.start)
+        if (length(leftovers)) {
+            message(length(leftovers),
+                 " dataset(s) created and not destroyed: ",
+                 crunch:::serialPaste(dQuote(names(datasets()[leftovers]))))
+        }
+        users.end <- urls(crunch:::getUserCatalog())
+        leftovers <- setdiff(users.end, users.start)
+        if (length(leftovers)) {
+            message(length(leftovers),
+                 " users(s) created and not destroyed: ",
+                 crunch:::serialPaste(dQuote(names(crunch:::getUserCatalog()[leftovers]))))
+        }
+        projects.end <- urls(projects())
+        leftovers <- setdiff(projects.end, projects.start)
+        if (length(leftovers)) {
+            message(length(leftovers),
+                 " projects(s) created and not destroyed: ",
+                 crunch:::serialPaste(dQuote(names(projects()[leftovers]))))
+        }
+    })
+}

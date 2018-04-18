@@ -26,15 +26,17 @@ with_mock_crunch({
 })
 
 if (run.integration.tests) {
-    test_that("crunchAuth succeeds when it should and not when it shouldn't", {
-        logout()
-        expect_error(crunchAuth("lkjasdfksdfkjhl", password="w23nrnsod"),
-            "Unable to authenticate lkjasdfksdfkjhl")
-    })
+    with(test_options, {
+        test_that("crunchAuth succeeds when it should and not when it shouldn't", {
+            logout()
+            expect_error(crunchAuth("lkjasdfksdfkjhl", password="w23nrnsod"),
+                "Unable to authenticate lkjasdfksdfkjhl")
+        })
 
-    test_that("login returns a session object", {
-        cr <- suppressMessages(login())
-            expect_true(is.list(cr))
-        logout()
+        test_that("login returns a session object", {
+            cr <- suppressMessages(login())
+                expect_true(is.list(cr))
+            logout()
+        })
     })
 }

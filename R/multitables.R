@@ -168,6 +168,14 @@ newMultitable <- function (formula, data, name, ...) {
     }
 
     template <- formulaToQuery(formula, data)
+    if (has.function(template, "selected_array")) {
+        halt("Multitables do not support specifications that use deprecated",
+             " multiple response functions. Do you have `options(crunch.mr.",
+             "selection = \"selected_array\")` set? If so, please change it",
+             " to `options(crunch.mr.selection = \"as_selected\")` and try ",
+             "to create the multitable over again.")
+    }
+    
     if (missing(name)) {
         name <- RHS_string(formula)
     }

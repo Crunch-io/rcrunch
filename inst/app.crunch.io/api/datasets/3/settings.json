@@ -1,0 +1,14 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/3/settings/",
+    "body": {
+        "viewers_can_export": false,
+        "weight": null,
+        "viewers_can_change_weight": true,
+        "min_base_size": 0,
+        "dashboard_deck": null,
+        "variable_folders": false,
+        "population": null,
+        "viewers_can_share": true
+        }
+}

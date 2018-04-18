@@ -37,7 +37,7 @@ is.dataset <- function (x) inherits(x, "CrunchDataset")
 #' @return Getters return the character object in the specified slot; setters
 #' return `x` duly modified.
 #' @name describe
-#' @aliases describe name name<- description description<- alias<- startDate startDate<- endDate endDate<- notes notes<- digits digits<-
+#' @aliases describe name name<- description description<- alias<- startDate startDate<- endDate endDate<- notes notes<- digits digits<- uniformBasis uniformBasis<-
 #' @seealso [`Categories`] [`describe-catalog`]
 NULL
 
@@ -88,6 +88,88 @@ setMethod("notes<-", "CrunchDataset", function (x, value) {
     invisible(setEntitySlot(x, "notes", value))
 })
 
+#' Get and set the market size for Crunch datasets
+#'
+#' Crunch Datasets allow you to set a target population size in order to extrapolate
+#' population estimates from survey percentages. These functions let you work with
+#' the population size and magnitude.
+#'
+#' @param x a Crunch Dataset
+#' @param value For the setters, the `size` or `magnitude` to be set
+#' @param size the target population size, to remove a population set to `NULL`
+#' @param magnitude the order of magnitude with which to display the population
+#' size. Must be either `3`, `6`, or `9` for thousands, millions, and billions respectively.
+#' @return `popSize` and `popMagnitude` return the population size or
+#' magnitude. `setPopulation` returns the modified dataset.
+#' @name population
+#' @aliases popSize popMagnitude setPopulation popSize<- popMagnitude<-
+NULL
+
+#' @rdname population
+#' @export
+setMethod("popSize", "CrunchDataset", function (x) {
+    return(settings(x)$population$size)
+})
+
+#' @rdname population
+#' @export
+setMethod("popSize<-", "CrunchDataset", function (x, value) {
+    setPopulation(x, size = value)
+})
+
+#' @rdname population
+#' @export
+setMethod("popMagnitude", "CrunchDataset", function (x) {
+    return(settings(x)$population$magnitude)
+})
+
+#' @rdname population
+#' @export
+setMethod("popMagnitude<-", "CrunchDataset", function (x, value) {
+   setPopulation(x, magnitude = value)
+})
+
+#' @rdname population
+#' @export
+setMethod("setPopulation", "CrunchDataset", function (x, size, magnitude) {
+    # Population and magnitude can be an integer, NULL or missing. Moreover if
+    # a dataset doesn't have a population both population size and magnitude need
+    # to be sent together. The logic for setting magnitude is:
+    # If either size or magnitude are missing attempt to set the other value
+    # If size is NULL clear population
+    # If magnitude is missing and hasn't been set, default to thousands
+    # If size is missing and hasn't been set, error
+    pop <- settings(x)$population
+    if (missing(size)) {
+        if (is.null(pop$size)) {
+            halt("Dataset does not have a population, please set one before attempting to change magnitude")
+        }
+        size <- pop$size
+    } else if (is.null(size)) {
+        settings(x)$population <- NULL
+        return(invisible(x))
+    }
+
+    if (missing(magnitude)) {
+        if (is.null(pop$magnitude)) {
+            warning("Dataset magnitude not set, defaulting to thousands")
+            magnitude <- 3
+        } else {
+            magnitude <- pop$magnitude
+        }
+    }
+
+    if (is.null(magnitude)) {
+        halt("Magnitude cannot be set to `NULL`. Did you mean to remove ",
+             "population size with `popSize(x) <- NULL`?")
+    }
+    if (!(magnitude %in% c(3, 6, 9))) {
+        halt("Magnitude must be either 3, 6, or 9")
+    }
+
+    settings(x)$population <- list(magnitude = magnitude, size = size)
+    return(invisible(x))
+})
 
 #' Get and set the primary key for a Crunch dataset
 #'
@@ -330,15 +412,15 @@ setMethod("allVariables<-", c("CrunchDataset", "VariableCatalog"),
 
 setMethod("hidden", "CrunchDataset", function (x) hidden(allVariables(x)))
 
-
-APIToWebURL <- function (x) {
-    ## URL to view this dataset in the web app
-    stopifnot(is.dataset(x))
+setMethod("APIToWebURL", "ANY", function (x) {
+    halt("Web URL is not available for objects of class ", class(x))
+})
+setMethod("APIToWebURL", "CrunchDataset", function (x) {
     return(paste0(absoluteURL("/", getOption("crunch.api")), "dataset/", id(x)))
-}
+})
 
 webToAPIURL <- function (url) {
-    id <- sub("^https.*?/dataset/([0-9a-f]+)/.*$", "\\1", url)
+    id <- sub("^https.*?/dataset/([0-9a-f]+)/?.*$", "\\1", url)
     if (identical(id, url)) {
         halt("Not a valid web app URL")
     }
@@ -346,26 +428,17 @@ webToAPIURL <- function (url) {
     return(absoluteURL(path, getOption("crunch.api")))
 }
 
-#' View a Dataset in the Web Application
+#' View a Crunch Object in the Web Application
 #'
 #' Convenience function that will use your system's "open" command to open
-#' a dataset in our web application in your default browser.
+#' a Crunch object in our web application in your default browser.
 #'
-#' Note that this function does not do anything on Windows.
-#'
-#' @param dataset a CrunchDataset
+#' @param x a Crunch Dataset or Variable
 #' @return Nothing; called for side effect of opening your web browser.
+#' @name webApp
+#' @importFrom utils browseURL
 #' @export
-webApp <- function (dataset) {
-    if (.Platform$OS.type == "unix") {
-        cmd <- ifelse(grepl("apple", R.version$platform), "open", "xdg-open")
-        url <- APIToWebURL(dataset)
-        system_call(cmd, url)
-    }
-}
-
-## Pass through for test mocking
-system_call <- function (...) system2(...)
+webApp <- function(x) browseURL(APIToWebURL(x))
 
 #' as.environment method for CrunchDataset
 #'

@@ -1,19 +1,19 @@
-#' Calculate transforms for an array 
-#' 
-#' Given an array and transforms calculate values based on the transforms and 
+#' Calculate transforms for an array
+#'
+#' Given an array and transforms calculate values based on the transforms and
 #' then return the values calculated that are specified.
-#' 
+#'
 #' @param array the array to use (this is most likely from a `CrunchCube`` object).
 #' The cells from this array are the cube_cells referred to in `include`
 #' @param trans a `Transform` object to get the transformations to calculate
-#' @param var_cats a `Categories` object that are the categories for the 
+#' @param var_cats a `Categories` object that are the categories for the
 #' variable the transforms are being calculated for
-#' @param include what values should be included in the output? (default: "subtotals", "headings", "cube_cells", "other_insertions") 
+#' @param include what values should be included in the output? (default: "subtotals", "headings", "cube_cells", "other_insertions")
 #' * cube_cells -- the values from the array given in `array`
 #' * subtotals -- insertions that have the function subtotal
 #' * headings -- insertions that have no function specified
 #' * other_insertions -- any other insertion that is present in the transforms
-#' 
+#'
 #' @return an array with transforms calculated and added or applied
 #' @keywords internal
 calcTransforms <- function (array, trans, var_cats,
@@ -33,8 +33,8 @@ calcTransforms <- function (array, trans, var_cats,
 }
 
 # make a map of insertions and categories to be calculated
-# this map is a collation of the categories with the insertions that are 
-# specified the output is an abstract category object with both `Category`s and 
+# this map is a collation of the categories with the insertions that are
+# specified the output is an abstract category object with both `Category`s and
 # `Insertion`s in it, in the order we want.
 mapInsertions <- function (inserts, var_cats, include) {
     # make an empty list to store the insertions in
@@ -59,7 +59,7 @@ mapInsertions <- function (inserts, var_cats, include) {
         new_inserts <- c(new_inserts, nonsubtots)
     }
 
-    # make an insertions object that includes only the insertions that were 
+    # make an insertions object that includes only the insertions that were
     # requested in include
     new_inserts <- Insertions(data=new_inserts)
 
@@ -80,7 +80,7 @@ mapInsertions <- function (inserts, var_cats, include) {
 }
 
 # collate insertions and categories together
-# given a set of insertions and categories, collate together into a single set 
+# given a set of insertions and categories, collate together into a single set
 # of AbstractCategories which includes both `Category`s and `Insertion`s
 collateCats <- function (inserts, var_cats) {
     # setup an empty AbstractCategories object to collate into
@@ -102,10 +102,10 @@ collateCats <- function (inserts, var_cats) {
 findInsertPosition <- function (insert, cats) {
     anchr <- anchor(insert)
     # if the anchor is 0, put at the beginning
-    if (anchr == 0) {
+    if (anchr == 0 | anchr == "top") {
         return(0)
     }
-    
+
     # if the anchor is the id of a non-missing category put it after that cat
     if (anchr %in% ids(cats)) {
         which_cat <- which(anchr == ids(cats))
@@ -121,22 +121,22 @@ findInsertPosition <- function (insert, cats) {
 #' Given a vector of values and elements, calculate the insertions
 #'
 #' @param vec values to transform (a single dimension of an array)
-#' @param elements AbstractCategories of both `Category`s and `Insertion`s to 
+#' @param elements AbstractCategories of both `Category`s and `Insertion`s to
 #' calculate. Generally derived from `mapInsertions()`
-#' @param var_cats the `Categories` object tat corresponds to the vector in 
+#' @param var_cats the `Categories` object tat corresponds to the vector in
 #' `vec` of the transform
 #'
 #' @return the values given in `vec`, with any insertions specified in
 #' `trans` calculated and inserted
 #' @keywords internal
 calcInsertions <- function (vec, elements, var_cats) {
-    # we always calculate insertions at the lowest dimension so warn if there is 
+    # we always calculate insertions at the lowest dimension so warn if there is
     # more than one dimension.
     if (length(dim(vec)) > 1) {
         halt("Calculating varaible transforms is not implemented for dimensions ",
              "greater than 1.")
     }
-    
+
     # make the actual calculations and insertions
     vec_out <- vapply(elements, function (element) {
         # if element is a category, simply return the value
@@ -144,17 +144,17 @@ calcInsertions <- function (vec, elements, var_cats) {
             return(vec[name(element)])
         }
 
-        # if element is a heading return NA (since there is no value to be 
+        # if element is a heading return NA (since there is no value to be
         # calculated but we need a placeholder non-number)
         if (is.Heading(element)) {
             return(NA)
         }
 
-        # if element is a subtotal, sum the things it corresponds to which are 
-        # found with args()
+        # if element is a subtotal, sum the things it corresponds to which are
+        # found with arguments()
         if (is.Subtotal(element)) {
             # grab category combinations, and then sum those categories.
-            combos <- unlist(args(element, var_cats))
+            combos <- unlist(arguments(element, var_cats))
             which.cats <- names(var_cats[ids(var_cats) %in% combos])
             return(sum(vec[which.cats]))
         }

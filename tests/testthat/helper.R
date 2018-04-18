@@ -1,29 +1,7 @@
 Sys.setlocale("LC_COLLATE", "C") ## What CRAN does
 set.seed(666)
 
-# find a file that is either in the package root or inst folders while testing
-find_file <- function (file_name) {
-    pths <- file.path(testthat::test_path("..", ".."), c("", "inst"), file_name)
-    return(pths[file.exists(pths)])
-}
-
-## Our "test package" common harness code
-crunch_test_path <- system.file("crunch-test.R", package="crunch")
-if (crunch_test_path == "") {
-    # hack for devtools::test / testthat::test_package
-    crunch_test_path <- find_file("crunch-test.R")
-}
-
-# Source crunch-test.R when: R CMD check, devtools::test(), make test,
-# crunchdev::test_crunch()
-# Don't source crunch-test.R when: devtools::load_all() (interactively)
-# https://github.com/hadley/devtools/issues/1202
-source_if <- !interactive() || identical(Sys.getenv("NOT_CRAN"), "true")
-# And don't source it when running pkgdown
-source_if <- source_if && !identical(Sys.getenv("DEVTOOLS_LOAD"), "true")
-if (source_if) {
-    source(crunch_test_path)
-}
+"%>%" <- magrittr::`%>%`
 
 skip_on_jenkins <- function (...) {
     if (nchar(Sys.getenv("JENKINS_HOME"))) {
@@ -36,7 +14,6 @@ loadLogfile <- httpcache::loadLogfile
 cacheLogSummary <- httpcache::cacheLogSummary
 requestLogSummary <- httpcache::requestLogSummary
 uncached <- httpcache::uncached
-newDataset <- function (...) suppressMessages(crunch::newDataset(...))
 
 ## .onAttach stuff, for testthat to work right
 ## See other options in inst/crunch-test.R
@@ -49,7 +26,10 @@ options(
     crunch.require.confirmation=TRUE,
     crunch.check.updates=FALSE,
     crunch.namekey.dataset="alias",
-    crunch.namekey.array="alias"
+    crunch.namekey.array="alias",
+    # crayon options for testing on travis
+    crayon.enabled = TRUE,
+    crayon.colors = 256
 )
 crunch:::.onLoad()
 
@@ -83,9 +63,6 @@ mrdf <- data.frame(mr_1=c(1, 0, 1, NA_real_),
                    mr_3=c(0, 0, 1, NA_real_),
                    v4=as.factor(LETTERS[2:3]),
                    stringsAsFactors=FALSE)
-
-testfile.csv <- "fake.csv"
-testfile.df <- read.csv(testfile.csv)
 
 mrdf.setup <- function (dataset, pattern="mr_", name=ifelse(is.null(selections),
                         "CA", "MR"), selections=NULL) {
