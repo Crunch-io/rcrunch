@@ -7,6 +7,7 @@
 \alias{prop.table}
 \alias{bases}
 \alias{round}
+\alias{unconditional.margin}
 \alias{margin.table,CrunchCube-method}
 \alias{unconditional.margin,CrunchCube-method}
 \alias{prop.table,CrunchCube-method}
@@ -74,6 +75,14 @@ requests, \code{bases} allows you to access the unweighted counts for every
 cell in the resulting table (array). The \code{bases} function takes a
 "margin" argument to work like \code{margin.table}, or with \code{margin=0}
 gives all cell counts.
+
+\code{unconditional.margin} is similar to \code{margin.table}, however instead of only
+returning the non-missing or valid counts for all dimensions, it returns the
+non-missing counts in the direction of the margin, but includes the missing
+counts from all other directions. This is useful if you want to get counts
+that are equivalent to a univariate cube from a multivariate cube. For example
+\code{unconditional.margin(crtabs(~ fruit + pets, ds), 1)} will be equal to
+\code{crtabs(~ fruit, ds)}.
 }
 \seealso{
 \code{\link[base:margin.table]{base::margin.table()}} \code{\link[base:prop.table]{base::prop.table()}}

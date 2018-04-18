@@ -369,7 +369,13 @@ as_selected_margins <- function (margin, selecteds, before=TRUE) {
 #' "margin" argument to work like `margin.table`, or with `margin=0`
 #' gives all cell counts.
 #' 
-#' `unconditional.margin` 
+#' `unconditional.margin` is similar to `margin.table`, however instead of only
+#' returning the non-missing or valid counts for all dimensions, it returns the 
+#' non-missing counts in the direction of the margin, but includes the missing 
+#' counts from all other directions. This is useful if you want to get counts 
+#' that are equivalent to a univariate cube from a multivariate cube. For example
+#' `unconditional.margin(crtabs(~ fruit + pets, ds), 1)` will be equal to 
+#' `crtabs(~ fruit, ds)`.
 #'
 #' @param x a CrunchCube
 #' @param margin index, or vector of indices to generate margin for. See
@@ -385,7 +391,7 @@ as_selected_margins <- function (margin, selecteds, before=TRUE) {
 #' contains. Likewise, prop.table on a TabBookResult returns a list of lists of
 #' prop.tables.
 #' @name cube-computing
-#' @aliases cube-computing margin.table prop.table bases round
+#' @aliases cube-computing margin.table prop.table bases round unconditional.margin
 #' @seealso [base::margin.table()] [base::prop.table()]
 NULL
 
