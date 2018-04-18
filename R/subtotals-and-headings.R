@@ -7,7 +7,7 @@
 #'
 #' To see the subtotals or headings set for a variable, use `subtotals(variable)`
 #'
-#' @section Adding Subtotals anfd Headings:
+#' @section Adding Subtotals and Headings:
 #' Subtotals and headings can be added either by passing a list of `Subtotal`s
 #' or `Heading`s, or they can be added one at a time by passing `Subtotal` or
 #' `Heading` to `subtotals(variable)` alone.

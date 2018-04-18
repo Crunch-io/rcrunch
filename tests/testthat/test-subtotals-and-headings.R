@@ -1,7 +1,5 @@
 context("Subtotals and headings ")
 
-
-
 test_that("Subtotal accepts a variety of inputs", {
     subtot1 <- Subtotal(name = "Approval", categories = c(1, 2), after = 2)
     expect_true(is.Subtotal(subtot1))
