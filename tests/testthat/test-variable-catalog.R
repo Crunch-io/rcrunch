@@ -76,7 +76,7 @@ with_mock_crunch({
         expect_identical(types(varcat)[1:4],
             c("numeric", "categorical", "categorical", "multiple_response"))
         expect_identical(descriptions(varcat[1:4]),
-            c(NA, "Gender", "Location test", "Please select all that apply"))
+            c("", "Gender", "Location test", "Please select all that apply"))
         expect_identical(notes(varcat[1:4]),
             c("Asked instead of age", "", "", ""))
     })
