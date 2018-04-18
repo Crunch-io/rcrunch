@@ -64,7 +64,12 @@ math.exp <- function (e1, e2, operator) {
     }
     ex <- zfunc(operator, e1, e2)
     ds.url <- unique(unlist(lapply(list(e1, e2), datasetReference))) %||% ""
+    out <- ExprConstructor(operator)(expression=ex, dataset_url=ds.url)
+    activeFilter(out) <- getOperationFilter(e1, e2)
+    return(out)
+}
 
+getOperationFilter <- function (e1, e2) {
     ## If either e1 or e2 are Crunch objects with filters, pass those along,
     ## and if both do, make sure that they're the same
     f1 <- try(activeFilter(e1), silent=TRUE)
@@ -85,9 +90,7 @@ math.exp <- function (e1, e2, operator) {
         }
         filt <- f1
     }
-    out <- ExprConstructor(operator)(expression=ex, dataset_url=ds.url)
-    activeFilter(out) <- filt
-    return(out)
+    return(filt)
 }
 
 ExprConstructor <- function (operator) {
@@ -143,7 +146,6 @@ setMethod("|", c("CrunchExpr", "CrunchExpr"), crunch.ops("or"))
 setMethod("|", c("logical", "CrunchExpr"), crunch.ops("or"))
 setMethod("|", c("CrunchExpr", "logical"), crunch.ops("or"))
 
-
 zfuncExpr <- function (fun, x, ...) {
     ## Wrap zfunc(fun, x) in a way that preserves x's active filter
     ## Returns CrunchExpr instead of zcl/list
@@ -191,10 +193,7 @@ setMethod("!", "CrunchExpr", function (x) zfuncExpr("not", x))
     }
 }
 
-.inCrunch <- function (x, table) {
-    ## TODO: bring in .seqCrunch here, once it is working
-    math.exp(x, table, ifelse(length(table) == 1L, "==", "in"))
-}
+.inCrunch <- function (x, table) math.exp(x, table, "in")
 
 #' @rdname expressions
 #' @export
@@ -243,27 +242,21 @@ for (i in c("==", "!=")) {
     setMethod(i, c("CrunchVariable", "CrunchExpr"), crunch.ops(i))
 }
 
-## Use %in% because it handles the possibility that e2 is not a valid category
-
 #' @rdname expressions
 #' @export
-setMethod("==", c("CategoricalVariable", "character"),
-    function (e1, e2) e1 %in% e2)
+setMethod("==", c("CategoricalVariable", "character"), function (e1, e2) {
+    e2 <- n2i(e2, categories(e1), strict=FALSE)
+    return(math.exp(e1, e2, "=="))
+})
 #' @rdname expressions
 #' @export
 setMethod("==", c("CategoricalVariable", "factor"),
-    function (e1, e2) e1 %in% e2)
+    function (e1, e2) e1 == as.character(e2))
 #' @rdname expressions
 #' @export
 setMethod("!=", c("CategoricalVariable", "character"), function (e1, e2) {
     e2 <- n2i(e2, categories(e1), strict=FALSE)
-    neq <- length(e2) == 1
-    out <- math.exp(e1, e2, ifelse(neq, "!=", "in"))
-    if (!neq) {
-        ## We did "in" above, so make that "not in"
-        out <- !out
-    }
-    return(out)
+    return(math.exp(e1, e2, "!="))
 })
 #' @rdname expressions
 #' @export
@@ -280,12 +273,10 @@ setMethod("is.na", "CrunchVariable", function (x) zfuncExpr("is_missing", x))
 #' @export
 bin <- function (x) zfuncExpr("bin", x)
 
-
 #' @rdname expressions
 #' @export
 rollup <- function (x, resolution = rollupResolution(x)) {
     validateResolution(force(resolution))
-    
     if (is.variable(x) && !is.Datetime(x)) {
         halt("Cannot rollup a variable of type ", dQuote(type(x)))
     }
@@ -305,9 +296,9 @@ rollupResolution <- function (x) {
 #' @rdname expressions
 #' @export
 setMethod("rollupResolution<-",  "DatetimeVariable", function(x, value) {
-        validateResolution(force(value))
-        setEntitySlot(entity(x), "view", list(rollup_resolution = value))
-        return(refresh(x))
+    validateResolution(force(value))
+    setEntitySlot(entity(x), "view", list(rollup_resolution = value))
+    return(refresh(x))
 })
 
 

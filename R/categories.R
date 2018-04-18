@@ -158,7 +158,7 @@ setMethod("is.selected<-", "Categories", function (x, value) {
     if (length(value) != length(x)) {
         halt("You supplied ", length(value), " logical values for ", length(x), " Categories.")
     }
-    
+
     x@.Data <- mapply(function (x, value) {
         is.selected(x) <- value
         return(x)
@@ -194,6 +194,7 @@ setMethod("is.na<-", c("Categories", "logical"), function (x, value) {
 n2i <- function (x, cats, strict=TRUE) {
     ## Convert x from category names to the corresponding category ids
     out <- ids(cats)[match(x, names(cats))]
+    ## TODO hack: don't drop missing cats, fill with like -1970. see if server chokes
     out <- handleMissingCategoryLookup(out, x, strict)
     return(out)
 }
