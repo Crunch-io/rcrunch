@@ -8,7 +8,9 @@ test_that("replaceMissingWithTRUE", {
 })
 
 cat_x_mr_x_mr <- loadCube(test_path("cubes/cat-x-mr-x-mr.json"))
-test_that("subsetArrayDimension", {
+catarray_x_mr <- loadCube(test_path("cubes/catarray-x-mr.json"))
+
+test_that("subsetArrayDimension categorical dimension", {
     expected <- list(
         name = c("cats", "No Data"),
         any.or.none = c(FALSE, FALSE
@@ -25,15 +27,83 @@ test_that("subsetArrayDimension", {
                 list(numeric_value = NULL,
                     missing = TRUE,
                     id = -1L,
-                    name = "No Data"),
-                list(numeric_value = 2L,
-                    missing = FALSE,
-                    id = 2L,
-                    name = "dogs")
+                    name = "No Data")
             )
         )
     )
-    expect_identical(subsetArrayDimension(cat_x_mr_x_mr@dims$animal, 1:2), expected)
+    expect_identical(subsetArrayDimension(cat_x_mr_x_mr@dims[[1]], 1:2), expected)
+})
+
+test_that("subsetArrayDimension MR dimension", {
+    expected <- list(
+        name = c("rest_opinion","play_opinion"),
+        any.or.none = c(FALSE, FALSE),
+        missing = c(FALSE, FALSE),
+        references = list(
+            description = "",
+            format = list(
+                summary = list(digits = 0L)
+            ),
+            subreferences = list(
+                list(alias = "rest_opinion#", name = "rest_opinion"),
+                list(alias = "play_opinion#", name = "play_opinion")
+            ),
+            notes = "",
+            name = "opinion MR",
+            discarded = FALSE,
+            alias = "opinion_mr",
+            view = list(
+                show_counts = FALSE,
+                include_missing = FALSE,
+                column_width = NULL
+            ),
+            type = "subvariable_items"
+        )
+    )
+    expect_identical(subsetArrayDimension(cat_x_mr_x_mr@dims[[2]], 2:3), expected)
+})
+
+test_that("subsetArrayDimension categorical array dimension", {
+    expected <- list(
+        name = c("cat_feeling"),
+        any.or.none = c(FALSE),
+        missing = c(FALSE),
+        references = list(
+            subreferences = list(
+                list(alias = "cat_feeling", name = "cat_feeling")
+            ),
+            name = "feeling CA",
+            alias = "feeling_ca",
+            type = "subvariable_items"
+        )
+    )
+    expect_identical(subsetArrayDimension(catarray_x_mr@dims[[1]], 1), expected)
+
+    expected <- list(
+        name = c("Somewhat Happy", "Neutral"),
+        any.or.none = c(FALSE, FALSE),
+        missing = c(FALSE, FALSE),
+        references = list(
+            subreferences = list(
+                list(alias = "cat_feeling", name = "cat_feeling"),
+                list(alias = "dog_feeling", name = "dog_feeling")
+            ),
+            name = "feeling CA",
+            alias = "feeling_ca",
+            type = "categorical",
+            categories = list(
+                list(numeric_value = 2L,
+                     id = 2L,
+                     name = "Somewhat Happy",
+                     missing = FALSE),
+                list(numeric_value = 3L,
+                     id = 3L,
+                     name = "Neutral",
+                     missing = FALSE)
+            )
+        )
+    )
+    expect_identical(subsetArrayDimension(catarray_x_mr@dims[[2]], c(2:3)), expected)
 })
 
 test_that("translateCubeIndex", {

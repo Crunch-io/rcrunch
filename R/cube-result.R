@@ -213,6 +213,14 @@ subsetArrayDimension <- function(dim, idx){
     dim$any.or.none <- dim$any.or.none[idx]
     dim$missing <- dim$missing[idx]
     dim$name <- dim$name[idx]
+
+    # subset the category or item metadata
+    if (dim$references$type == "categorical") {
+        dim$references$categories <- dim$references$categories[idx]
+    } else if (dim$references$type == "subvariable_items") {
+        dim$references$subreferences <- dim$references$subreferences[idx]
+    }
+
     return(dim)
 }
 
