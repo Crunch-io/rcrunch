@@ -57,7 +57,9 @@ test_that("translateCubeIndex", {
 test_that("cube [ method errors correctly", {
     cube <- cat_x_mr_x_mr
     expect_equal(length(dim(cube)), 3)
-    expect_error(cube[1,2,3,4,5,6], "You must supply 6 dimensions to subset a 3 dimensional cube.")
+    expect_error(cube[1,2,3,4,5,6],
+                 paste0("You must supply 3 dimensions to subset a 3 ",
+                        "dimensional cube; you supplied 6."))
     err <- paste0(c("Invalid subset:",
         "- At position 1 you tried to select element 3 when the dimension has 2 elements.",
         "- At position 2 you tried to select element 4 when the dimension has 3 elements."),

@@ -27,10 +27,12 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
     dims <- dim(x)
     if (length(index) != length(dims)) {
         halt("You must supply ",
-            length(index),
+             length(dims),
             " dimensions to subset a ",
             length(dims),
-            " dimensional cube.")
+            " dimensional cube; you supplied ",
+            length(index),
+            ".")
     }
 
     err_indices <- lapply(index, function(idx) {
