@@ -194,7 +194,6 @@ setMethod("is.na<-", c("Categories", "logical"), function (x, value) {
 n2i <- function (x, cats, strict=TRUE) {
     ## Convert x from category names to the corresponding category ids
     out <- ids(cats)[match(x, names(cats))]
-    ## TODO hack: don't drop missing cats, fill with like -1970. see if server chokes
     out <- handleMissingCategoryLookup(out, x, strict)
     return(out)
 }

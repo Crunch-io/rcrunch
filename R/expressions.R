@@ -190,7 +190,7 @@ setMethod("!", "CrunchExpr", function (x) zfuncExpr("not", x))
             ## When that is fixed, we can do the following:
             #rep(TRUE, 2L))) ## Inclusive on both sides
     } else {
-        return(zfunc(ifelse(length(table) == 1, "==", "in"), x, table))
+        return(zfunc(ifelse(length(table) == 1L, "==", "in"), x, table))
     }
 }
 
