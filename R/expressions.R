@@ -95,7 +95,8 @@ getOperationFilter <- function (e1, e2) {
 
 ExprConstructor <- function (operator) {
     ## Based on the operator function, make either CrunchExpr or CrunchLogicalExpr
-    logics <- c("in", "<", ">", ">=", "<=", "==", "!=", "and", "or", "not", "is_missing", "duplicates")
+    logics <- c("in", "<", ">", ">=", "<=", "==", "!=", "and", "or", "not",
+        "is_missing", "duplicates", "selected", "not_selected")
     if (operator %in% logics) {
         Constructor <- CrunchLogicalExpr
     } else {
@@ -189,11 +190,11 @@ setMethod("!", "CrunchExpr", function (x) zfuncExpr("not", x))
             ## When that is fixed, we can do the following:
             #rep(TRUE, 2L))) ## Inclusive on both sides
     } else {
-        return(zfunc(ifelse(length(table) == 1L, "==", "in"), x, table))
+        return(zfunc(ifelse(length(table) == 1, "==", "in"), x, table))
     }
 }
 
-.inCrunch <- function (x, table) math.exp(x, table, "in")
+.inCrunch <- function (x, table) math.exp(x, r2zcl(I(table)), "in")
 
 #' @rdname expressions
 #' @export
@@ -244,19 +245,41 @@ for (i in c("==", "!=")) {
 
 #' @rdname expressions
 #' @export
+setMethod("==", c("CategoricalVariable", "numeric"), function (e1, e2) {
+    if (length(e2) == 0) {
+        ## The specified category was doesn't exist. But ``== BAD` breaks server
+        ## However, "in []" is fine
+        return(math.exp(e1, e2, "in"))
+    }
+    return(math.exp(e1, e2, "=="))
+})
+
+#' @rdname expressions
+#' @export
 setMethod("==", c("CategoricalVariable", "character"), function (e1, e2) {
     e2 <- n2i(e2, categories(e1), strict=FALSE)
-    return(math.exp(e1, e2, "=="))
+    return(e1 == e2)
 })
 #' @rdname expressions
 #' @export
 setMethod("==", c("CategoricalVariable", "factor"),
     function (e1, e2) e1 == as.character(e2))
+
+#' @rdname expressions
+#' @export
+setMethod("!=", c("CategoricalVariable", "numeric"), function (e1, e2) {
+    if (length(e2) == 0) {
+        ## The specified category was doesn't exist. But `== BAD` breaks server
+        ## However, "in []" is fine. So do `not (in [])`
+        return(!math.exp(e1, e2, "in"))
+    }
+    return(math.exp(e1, e2, "!="))
+})
 #' @rdname expressions
 #' @export
 setMethod("!=", c("CategoricalVariable", "character"), function (e1, e2) {
     e2 <- n2i(e2, categories(e1), strict=FALSE)
-    return(math.exp(e1, e2, "!="))
+    return(e1 != e2)
 })
 #' @rdname expressions
 #' @export
@@ -295,7 +318,7 @@ rollupResolution <- function (x) {
 
 #' @rdname expressions
 #' @export
-setMethod("rollupResolution<-",  "DatetimeVariable", function(x, value) {
+setMethod("rollupResolution<-",  "DatetimeVariable", function (x, value) {
     validateResolution(force(value))
     setEntitySlot(entity(x), "view", list(rollup_resolution = value))
     return(refresh(x))

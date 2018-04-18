@@ -6,15 +6,18 @@ r2zcl <- function (x) {
     v <- toVariable(x)
     attributes(v$values) <- NULL
 
-    ## If there is a single value, call it "value". Else it is a "column" array
-    if (length(x) == 1) {
-        out <- list(value=v$values)
+    ## "column" if we're sending an array. If scalar, it is "value"
+    if (length(x) != 1) {
+        out <- as.zcl(column=v$values)
+    } else if (inherits(x, "AsIs")) {
+        out <- as.zcl(column=I(v$values))
     } else {
-        out <- list(column=v$values)
+        out <- as.zcl(value=v$values)
     }
-
     return(out)
 }
+
+as.zcl <- function (...) structure(list(...), class="zcl")
 
 ## Methods to convert various objects to ZCL
 setMethod("zcl", "CrunchExpr", function (x) x@expression)

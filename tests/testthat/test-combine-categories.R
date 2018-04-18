@@ -147,7 +147,11 @@ with_mock_crunch({
     test_that("collapseCategories updates the variable", {
         expect_POST(var <- collapseCategories(ds$location, "Scotland", "London"),
             "https://app.crunch.io/api/datasets/1/table/",
-            '{"command":"update","variables":{"https://app.crunch.io/api/datasets/1/variables/location/":{"value":1}},"filter":{"function":"==","args":[{"variable":"https://app.crunch.io/api/datasets/1/variables/location/"},{"value":2}]}}'
+            '{"command":"update","variables":{',
+            '"https://app.crunch.io/api/datasets/1/variables/location/":{"value":1}},',
+            '"filter":{"function":"in","args":[',
+            '{"variable":"https://app.crunch.io/api/datasets/1/variables/location/"},',
+            '{"column":[2]}]}}'
         )
     })
     test_that("collapseCategories modifies category name", {
