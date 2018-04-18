@@ -9,12 +9,12 @@ translateCubeIndex(x, subset, drop)
 \arguments{
 \item{x}{a Crunch Cube}
 
-\item{subset}{a list}
+\item{subset}{a list of array extent indices (for the user-cube)}
 
 \item{drop}{whether to drop unnecessary dimensions.}
 }
 \value{
-a list
+a list of array extent indices (for the real-cube)
 }
 \description{
 Cubes that include multiple response variables create a special kind of

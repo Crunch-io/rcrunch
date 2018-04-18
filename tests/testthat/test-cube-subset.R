@@ -1,12 +1,5 @@
 context("Cube subsets")
 
-test_that("subset by list", {
-    expect_identical(subsetByList(mtcars, list(1,1), drop = FALSE),
-        mtcars[1,1, drop = FALSE])
-    expect_identical(subsetByList(mtcars, alist(,1), drop = TRUE),
-        mtcars[,1, drop = TRUE])
-})
-
 test_that("replaceMissingWithTRUE", {
     expect_identical(replaceMissingWithTRUE(alist(, 1)),
         list(TRUE, 1))

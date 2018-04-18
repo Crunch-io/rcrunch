@@ -72,7 +72,7 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
 
     out <- x
     out@arrays[] <- lapply(out@arrays, function(arr){
-        subsetByList(arr, translated_index, drop)
+        subsetCubeArray(arr, translated_index, drop, selected_dims = FALSE)
     })
 
     out@dims[] <- mapply(subsetArrayDimension,
@@ -140,10 +140,10 @@ replaceMissingWithTRUE <- function(l){
 #' we need to translate this to `prog_cube[1:2, 1:2, ]` in order to select the
 #' right variables of the high dimensional cube.
 #' @param x  a Crunch Cube
-#' @param subset a list
+#' @param subset a list of array extent indices (for the user-cube)
 #' @param drop whether to drop unnecessary dimensions.
 #' @keywords internal
-#' @return a list
+#' @return a list of array extent indices (for the real-cube)
 translateCubeIndex <- function(x, subset, drop) {
     is_selected <- is.selectedDimension(x@dims)
     prog_names <- names(is_selected) #the real cube
@@ -205,13 +205,6 @@ skipMissingCategories <- function(cube, index){
             out[visable][sub] <- rep(TRUE, length(sub))
         }
         return(out)}, visable = visible_cats, sub = index, SIMPLIFY = FALSE)
-}
-
-subsetByList <- function(arr, arglist, drop){
-    #suppresses "named arguments other than drop are discouraged" warning
-    suppressWarnings(
-        do.call('[', c(list(x = arr, drop = drop), arglist))
-    )
 }
 
 subsetArrayDimension <- function(dim, idx){
