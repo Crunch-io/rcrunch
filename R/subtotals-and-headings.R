@@ -7,7 +7,7 @@
 #'
 #' To see the subtotals or headings set for a variable, use `subtotals(variable)`
 #'
-#' @section Adding Subtotals and Headings:
+#' @section Adding Subtotals anfd Headings:
 #' Subtotals and headings can be added either by passing a list of `Subtotal`s
 #' or `Heading`s, or they can be added one at a time by passing `Subtotal` or
 #' `Heading` to `subtotals(variable)` alone.
@@ -240,11 +240,14 @@ setMethod("subtotals<-", c("CrunchVariable", "NULL"), function (x, value) {
     # maintain any non-subtotal insertions
     old_inserts <- transforms(x)$insertions
     subtots <- subtotals(x)
-    inserts <- setdiff(old_inserts, subtots)
+    ## If assigning NULL but we already are NULL, there's nothing to do
+    if (!is.null(subtots)) {
+        inserts <- setdiff(old_inserts, subtots)
 
-    bd <- list("transform" = list("insertions" = inserts))
-    ent <- setEntitySlot(entity(x), "view", bd)
-    dropCache(cubeURL(x))
+        bd <- list("transform" = list("insertions" = inserts))
+        ent <- setEntitySlot(entity(x), "view", bd)
+        dropCache(cubeURL(x))
+    }
     return(invisible(x))
 })
 

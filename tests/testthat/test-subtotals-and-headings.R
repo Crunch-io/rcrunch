@@ -1,5 +1,7 @@
 context("Subtotals and headings ")
 
+
+
 test_that("Subtotal accepts a variety of inputs", {
     subtot1 <- Subtotal(name = "Approval", categories = c(1, 2), after = 2)
     expect_true(is.Subtotal(subtot1))
@@ -109,6 +111,9 @@ with_mock_crunch({
 
     test_that("subtotals returns null when there are no subtotals", {
         expect_null(subtotals(ds$gender))
+    })
+    test_that("Assigning NULL if already NULL does nothing", {
+        expect_no_request(subtotals(ds$gender) <- NULL)
     })
 
     test_that("Adding subtotals and headers to a variable that has none, works", {
