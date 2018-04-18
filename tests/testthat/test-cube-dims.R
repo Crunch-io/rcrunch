@@ -58,6 +58,21 @@ with_mock_crunch({
             ""))
     })
 
+    test_that("subvariable/subrefrence methods", {
+        catarray_x_mr <- loadCube(test_path("cubes/catarray-x-mr.json"))
+        cat_array_var <- variables(catarray_x_mr)[[1]]
+        expect_equal(aliases(subvariables(cat_array_var)),
+                     c("cat_feeling", "dog_feeling"))
+        expect_equal(names(subvariables(cat_array_var)),
+                     c("cat_feeling", "dog_feeling"))
+
+        mr_var <- variables(catarray_x_mr)[[3]]
+        expect_equal(aliases(subvariables(mr_var)),
+                     c("food_opinion#", "rest_opinion#", "play_opinion#"))
+        expect_equal(names(subvariables(mr_var)),
+                     c("food_opinion", "rest_opinion", "play_opinion"))
+    })
+
     test_that("'measures' metadata", {
         expect_identical(names(measures(crtabs(max(birthyr) ~ 1, data=ds))),
             "Birth Year")

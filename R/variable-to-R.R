@@ -78,7 +78,7 @@ columnParser <- function (vartype) {
         if (is.Array(variable)) {
             ## It's effectively categorical, so let's just divide by number
             ## of subvars
-            return(categorical.size %/% length(subvariables(tuple(variable))))
+            return(categorical.size %/% length(subvariableURLs(tuple(variable))))
         } else if (vartype == "categorical") {
             return(categorical.size)
         } else if (vartype %in% c("numeric", "datetime")) {

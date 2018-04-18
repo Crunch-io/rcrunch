@@ -44,17 +44,42 @@ setMethod("subvariables", "CategoricalArrayVariable", function (x) {
         )
     } else {
         vars <- VariableCatalog(crGET(catalog_url))
-        out <- Subvariables(vars[subvariables(tup)])
+        out <- Subvariables(vars[subvariableURLs(tup)])
     }
     activeFilter(out) <- activeFilter(x)
     return(out)
 })
 
+subvariableURLs <- function (x) {
+    return(absoluteURL(unlist(x$subvariables), base=x@index_url))
+}
+
 #' @rdname Subvariables
 #' @export
 setMethod("subvariables", "VariableTuple", function (x) {
-    ## Return subvariable *urls* from a Tuple, properly formatted and absolute
-    return(absoluteURL(unlist(x$subvariables), base=x@index_url))
+    catalog_url <- absoluteURL(x$subvariables_catalog, base=x@index_url) %||% ""
+    if (!is.null(x$subreferences)) {
+        ## This is from a rich `variableMetadata` catalog. Don't do any more GETs
+        subvars <- x$subreferences
+        ## Subreferences names are ids. Convert to URLs
+        if (!is.null(x$subvariables)) {
+            # if there is a subvariable element, we need to use that for ordering
+            names(subvars) <- paste0(absoluteURL(names(subvars), base=catalog_url), "/")
+            out <- Subvariables(
+                index=subvars[x$subvariables],
+                self=catalog_url
+            )
+        } else {
+            # if there is no subvariable element, this might be from a
+            # CrunchCube which doesn't have a subvariables member, though the
+            # order *might* not be deterministic, checking zz9 source still.
+            out <- Subvariables(
+                index=subvars,
+                self=catalog_url
+            )
+        }
+    }
+    return(out)
 })
 
 #' @rdname Subvariables
@@ -67,7 +92,7 @@ setMethod("subvariables<-", c("CategoricalArrayVariable", "ANY"),
 #' @export
 setMethod("subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
     function (x, value) {
-        old <- subvariables(tuple(x))
+        old <- subvariableURLs(tuple(x))
         new <- urls(value)
         if (!setequal(old, new)) {
             halt("Can only reorder, not change, subvariables")
