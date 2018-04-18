@@ -8,6 +8,7 @@
 \alias{bases}
 \alias{round}
 \alias{margin.table,CrunchCube-method}
+\alias{unconditional.margin,CrunchCube-method}
 \alias{prop.table,CrunchCube-method}
 \alias{round,CrunchCube-method}
 \alias{bases,CrunchCube-method}
@@ -18,6 +19,8 @@
 \title{Work with CrunchCubes, MultitableResults, and TabBookResults}
 \usage{
 \S4method{margin.table}{CrunchCube}(x, margin = NULL)
+
+\S4method{unconditional.margin}{CrunchCube}(x, margin = NULL)
 
 \S4method{prop.table}{CrunchCube}(x, margin = NULL)
 

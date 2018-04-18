@@ -195,6 +195,76 @@ test_that("prop.table(cell) for cat x MR x MR", {
                         dims=cat_x_mr_x_mr_dims))
 })
 
+
+######################################################################
+### Getting an indexable all column MR x MR (from profiles)
+######################################################################
+mr_x_mr <- loadCube(test_path("cubes/full-cube.json"))
+mr_x_mr_dims <- dimnames(mr_x_mr)
+
+test_that("unconditional.margin(mr_x_mr)", {
+    expect_equivalent(unconditional.margin(mr_x_mr, 1),
+                      cubify(19935.9325550077,
+                             8815.06513916879,
+                             12015.5649554376,
+                             7967.67530412789,
+                             25379.6151957024,
+                             5130.6201930451,
+                             604.39533293168,
+                             1757.81059587395,
+                             3140.06957091528,
+                             dims=mr_x_mr_dims["offal"]))
+    
+    expect_equivalent(unconditional.margin(mr_x_mr, 2),
+                      # note this is a 1-d output, condensed here for space
+                      cubify(13068.9587689331, 20954.7013096216,
+                             6650.64488216886, 9401.03672837049,
+                             22030.3153523541, 28510.504501164,
+                             8638.7700564883, 19611.6905531398,
+                             17341.5840147774, 19639.4826050037,
+                             14457.4508268457, 9384.25096497542,
+                             12949.8527858053, 21053.7004299784,
+                             16873.4231466009, 8805.6717582668,
+                             9704.93506952685, 11520.0756377588,
+                             22750.5942352494, 13060.1623918338,
+                             17343.0337039009, 9312.51198396474,
+                             15122.0959929982, 23391.9651645574,
+                             25919.8945071622, 18011.9795313661,
+                             24395.8900036815,
+                             dims=mr_x_mr_dims["letters"]))
+    
+    # check against a univariate cube with the same data to confirm this is 
+    # actually the univariate, unconditional margin
+    mr_x_self <- loadCube(test_path("cubes/natrep-cube.json"))
+    expect_equivalent(unconditional.margin(mr_x_mr, 1),
+                      as.array(mr_x_self))   
+})
+
+
+test_that("unconditional.margin(cat_x_mr)", {
+    expect_equivalent(unconditional.margin(cat_x_mr, 1),
+                      cubify(84.7731562534069, 169.017244048007,
+                             dims=cat_x_mr_dims["fruit"]))
+    
+    expect_equivalent(unconditional.margin(cat_x_mr, 2),
+                      cubify(22.9672704148528, 45.7789165449064, 86.9728287914322,
+                             dims=cat_x_mr_dims["zoo"]))
+})
+
+test_that("unconditional.margin(cat_x_mr_x_mr)", {
+    expect_equivalent(unconditional.margin(cat_x_mr_x_mr, 1),
+                      cubify(10000, 10000,
+                             dims=cat_x_mr_x_mr_dims["animal"]))
+    
+    expect_equivalent(unconditional.margin(cat_x_mr_x_mr, 2),
+                      cubify(6970, 7029, 6940,
+                             dims=cat_x_mr_x_mr_dims["opinion_mr"]))
+    
+    expect_equivalent(unconditional.margin(cat_x_mr_x_mr, 3),
+                      cubify(3867, 7002,
+                             dims=cat_x_mr_x_mr_dims["feeling_mr"]))
+})
+
 ##########################################
 ### Internal function tests
 ##########################################
@@ -280,5 +350,15 @@ with_test_authentication({
             list(
                 allpets=c("Cat", "Dog", "Bird")
             ))
+    })
+    
+    test_that("unconditional.margin(~x+y, 1) == unconditional.margin(~x)", {
+        bivariate_cube <- crtabs(~ allpets + q1, data=ds)
+        univariate_allpets <- crtabs(~ allpets, data=ds)
+        univariate_q1 <- crtabs(~ q1, data=ds)
+        expect_equivalent(unconditional.margin(bivariate_cube, 1),
+                          as.array(univariate_allpets))
+        expect_equivalent(unconditional.margin(bivariate_cube, 2),
+                          as.array(univariate_q1))
     })
 })

@@ -187,7 +187,7 @@ keepWithNA <- function (dimension, marginal, useNA) {
     return(out)
 }
 
-cubeMarginTable <- function (x, margin=NULL, measure=1) {
+cubeMarginTable <- function (x, margin=NULL, measure=1, include_missing=FALSE) {
     ## Given a CrunchCube, get the right margin table for percentaging
     ##
     ## This is the function that `margin.table` calls internally, and like
@@ -221,8 +221,16 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     ## translates to dim 3 in the "real" array. The `margin_map` translates
     ## user dims to "real" dims.
     mapped_margins <- margin_map[margin]
+    
     drop_na <- x@useNA == "no"
 
+    if (include_missing) {
+        # if include_missing, then never drop missings (since we need them to 
+        # calculate) but only override drop_na, since we don't want the NAs to
+        # be kept after margin calculation
+        drop_na <- FALSE
+    }
+    
     ## This is the core of the function, in which we select the subset of the
     ## "real" cube that we want to aggregate to generate the margin table.
     ## The result of this lapply is a dimnames-shaped list of logical vectors
@@ -298,6 +306,18 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     keep.these <- evalUseNA(mt, dims[mt_margins], x@useNA)
     out <- subsetCubeArray(mt, keep.these)
 
+    if (include_missing) {
+        # if we include_missing is TRUE, then we need to take the mean of the
+        # margin because we must collapse across all of the MR dimensions 
+        # because they include missing, the will have ~the same numbers, with 
+        # slight variations due to floating point fluctuation on the server.
+        mr_to_collapse <- which(as_selected_margins(margin, selecteds,
+                                                    before = FALSE) == margin)
+        if (length(mr_to_collapse)) {
+            out <- apply(out, mr_to_collapse, mean)
+        }
+    }
+    
     # only attempt to apply a transform if the margin is 1 rows for now.
     if (!is.null(margin) && margin == 1) {
         out <- applyTransforms(x, array = out)
@@ -348,6 +368,8 @@ as_selected_margins <- function (margin, selecteds, before=TRUE) {
 #' cell in the resulting table (array). The `bases` function takes a
 #' "margin" argument to work like `margin.table`, or with `margin=0`
 #' gives all cell counts.
+#' 
+#' `unconditional.margin` 
 #'
 #' @param x a CrunchCube
 #' @param margin index, or vector of indices to generate margin for. See
@@ -371,6 +393,12 @@ NULL
 #' @export
 setMethod("margin.table", "CrunchCube", function (x, margin=NULL) {
     cubeMarginTable(x, margin)
+})
+
+#' @rdname cube-computing
+#' @export
+setMethod("unconditional.margin", "CrunchCube", function (x, margin=NULL) {
+    cubeMarginTable(x, margin, include_missing = TRUE)
 })
 
 #' @export
