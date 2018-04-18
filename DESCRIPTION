@@ -74,6 +74,7 @@ Collate:
     'cube-query.R'
     'cube-residuals.R'
     'cube-result.R'
+    'cube-subset.R'
     'cube-transforms.R'
     'cube-variables.R'
     'cut.R'
