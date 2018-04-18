@@ -13,8 +13,10 @@
 \alias{\%in\%,DatetimeVariable,POSIXt-method}
 \alias{\%in\%,DatetimeVariable,character-method}
 \alias{\%in\%,CategoricalVariable,numeric-method}
+\alias{==,CategoricalVariable,numeric-method}
 \alias{==,CategoricalVariable,character-method}
 \alias{==,CategoricalVariable,factor-method}
+\alias{!=,CategoricalVariable,numeric-method}
 \alias{!=,CategoricalVariable,character-method}
 \alias{!=,CategoricalVariable,factor-method}
 \alias{is.na,CrunchVariable-method}
@@ -42,9 +44,13 @@
 
 \S4method{\%in\%}{CategoricalVariable,numeric}(x, table)
 
+\S4method{==}{CategoricalVariable,numeric}(e1, e2)
+
 \S4method{==}{CategoricalVariable,character}(e1, e2)
 
 \S4method{==}{CategoricalVariable,factor}(e1, e2)
+
+\S4method{!=}{CategoricalVariable,numeric}(e1, e2)
 
 \S4method{!=}{CategoricalVariable,character}(e1, e2)
 
