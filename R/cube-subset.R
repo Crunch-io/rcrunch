@@ -57,12 +57,13 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
              paste0(errs[1:min(sum(invalid_indices), 5)], collapse = "\n"))
     }
 
-    # We then translate the index which the user supplied of the user cube
-    # to the dimensionality of the real cube. See documentation to translateCubeIndex
+    # We then translate the index which the user supplied of the user cube to
+    # the dimensionality of the real cube. See documentation to
+    # translateCubeIndex
     translated_index <- translateCubeIndex(x, index, drop)
 
     # The index needs to be further transformed to skip over missing categories.
-    # See the "Subsetting Crunch Cubes" vignette for more on this.
+    # See the "Crunch Internals" vignette for more on this.
     if (x@useNA != "always") {
         translated_index <- skipMissingCategories(x, translated_index)
     }
@@ -161,9 +162,10 @@ translateCubeIndex <- function(x, subset, drop) {
     out <- as.list(rep(TRUE, length(prog_names)))
     out[match(user_names, prog_names)] <- subset
 
-    # Dropping MR variables is a bit special. Whenever the user drops the MR dimension
-    # the MR selection dimension is also dropped. This checks if it's an MR dimension
-    # which is being dropped, and assigns an appropriate index value.
+    # Dropping MR variables is a bit special. Whenever the user drops the MR
+    # dimension the MR selection dimension is also dropped. This checks if it's
+    # an MR dimension which is being dropped, and assigns an appropriate index
+    # value.
     if (drop) {
         for (i in seq_along(prog_names)) {
             if (i == 1) {
@@ -230,3 +232,4 @@ subsetArrayDimension <- function(dim, idx){
 
     return(dim)
 }
+
