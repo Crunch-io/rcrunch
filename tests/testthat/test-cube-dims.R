@@ -4,7 +4,7 @@ with_mock_crunch({
     ## Load a ton of cube fixtures via the tab book feature
     ds <- loadDataset("test ds")
     m <- multitables(ds)[[1]]
-    with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-tabbook/", {
+    with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-as_selected-tabbook/", {
         book <- tabBook(m, data=ds)
     })
     cube <- book[[2]][[2]]
@@ -16,7 +16,7 @@ with_mock_crunch({
         expect_identical(dimnames(d),
             list(
                 q1=c("Cat", "Dog", "Bird", "Skipped", "Not Asked"),
-                allpets=c("Cat", "Dog", "Bird", "<NA>", "<NA>", "<NA>")
+                allpets=c("Cat", "Dog", "Bird")
             ))
         expect_identical(names(dimnames(d)), c("q1", "allpets"))
     })
