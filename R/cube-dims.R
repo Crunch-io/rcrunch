@@ -27,7 +27,7 @@ cubeDims <- function (cube) {
     })
     names(dimnames) <- vapply(dimnames, function (x) x$references$alias,
         character(1))
-    
+
     return(CubeDims(dimnames))
 }
 
@@ -39,6 +39,25 @@ cubeVarReferences <- function (x) {
     if (tuple$type == "enum" && "subreferences" %in% names(tuple)) {
         tuple$type <- "subvariable_items"
     }
+
+    if (!is.null(tuple$subreferences)) {
+        # inject subreference names into the tuple if they exist. Default to ""
+        # if null (for backwards compatibilitiy with cubes that have __any__
+        # __all__ and __none__)
+        tuple$subvariables <- vapply(tuple$subreferences,
+                                     function (x) x$alias %||% "",
+                                     character(1))
+
+        if (is.null(names(tuple$subreferences))) {
+            # if there are no names for the subvariable elements, fake urls from
+            # the aliases
+            names(tuple$subreferences) <- tuple$subvariables
+        }
+
+        # add a trailling slash to match how urls will look.
+        tuple$subvariables <- paste0(tuple$subvariables, "/")
+    }
+
     tuple$categories <- x$type$categories
     return(tuple)
 }
@@ -84,7 +103,7 @@ elementIsAnyOrNone <- function (el) {
 #' @param j not used
 #' @param ... not used
 #' @param drop not used
-#' @param value for `dimensions<-` a `CubeDims` object to overwrite a CrunchCube 
+#' @param value for `dimensions<-` a `CubeDims` object to overwrite a CrunchCube
 #' dimensions
 #'
 #' @return Generally, the same shape of result that each of these functions
@@ -160,6 +179,6 @@ is.selectedArrayDim <- function (dim) {
     if (!is.null(dim$any.or.none)) {
         return(any(dim$any.or.none))
     }
-    
+
     return(FALSE)
 }

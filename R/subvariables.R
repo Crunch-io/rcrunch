@@ -51,26 +51,12 @@ subvariableURLs <- function (x) {
 #' @export
 setMethod("subvariables", "VariableTuple", function (x) {
     catalog_url <- absoluteURL(x$subvariables_catalog, base=x@index_url) %||% ""
-    if (!is.null(x$subreferences)) {
         subvars <- x$subreferences
-        if (!is.null(x$subvariables)) {
-            # if there is a subvariable element, we need to use that for ordering
-            names(subvars) <- paste0(absoluteURL(names(subvars), base=catalog_url), "/")
-            out <- Subvariables(
-                index=subvars[x$subvariables],
-                self=catalog_url
-            )
-        } else {
-            # if there is no subvariable element, this might be from a
-            # CrunchCube which doesn't have a subvariables member, though the
-            # order *might* not be deterministic, checking zz9 source still.
-            out <- Subvariables(
-                index=subvars,
-                self=catalog_url
-            )
-        }
-    }
-    return(out)
+
+        # if there is a subvariable element, we need to use that for ordering
+        names(subvars) <- paste0(absoluteURL(names(subvars), base=catalog_url), "/")
+
+    return(Subvariables(index=subvars[x$subvariables], self=catalog_url))
 })
 
 #' @rdname Subvariables
