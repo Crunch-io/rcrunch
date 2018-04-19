@@ -98,7 +98,6 @@ OrderGroup
 OrderGroups
 PermissionCatalog
 pid
-pipelining
 POSIXt
 POSTed
 POSTing
@@ -108,11 +107,12 @@ ProjectCatalog
 recode
 recurse
 recurses
+repo
 rmarkdown
-RStudio
 RMarkdown
 rollup
 Rprofile
+RStudio
 sav
 savepoints
 Savepoints
