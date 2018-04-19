@@ -46,7 +46,7 @@ _Multiple response_
 Multiple response variables are themselves 2d arrays with the items or responses on one dimension and the selection status on the second dimension. The result is that a categorical-by-MR cube ends up with three dimensions: the categorical variable categories, the MR items/responses, and the MR selection status.
 
 _Categorical array_
-Categorical arrays are also represented cubes as 2d arrays. With the items/responses (ie the subvariable labels) on one dimension, and their categories on another dimension. 
+Categorical arrays are also represented cubes as 2d arrays. With the items/responses (the subvariable labels) on one dimension, and their categories on another dimension. 
 
 ### Cube to Array
 
@@ -58,14 +58,14 @@ The main feature of representing these counts as high dimensional arrays is that
 
 The user cube differs from the real cube in that it doesn’t include MR selection dimensions. We assume that when the user is including an MR in a cube, they really only care about the parts of the cube where the MR is selected. So the 5d real cube listed above would become a 3d user cube with 300 entries (`5 * 6 * 10`) because we are selecting the slices of the cube where each MR selection dimension is equal to “Selected” and are able to drop the selections dimensions
 
-The printed cube differs from the user cube in that it doesn’t include missing categories. We assume that the user mostly wants to look at categories which are not-missing, and that they don’t care that much about the parts of the cube which represent missing categories. If the categorical variable above had two missing categories: “No Data” and “Not Answered” it would reduce the number of entries to 240 (`5 * 6 * 8`) . This behaviour can be changed by setting the `cube@useNA` slot to `“always”`.  
+The printed cube differs from the user cube in that it doesn’t include missing categories. We assume that the user mostly wants to look at categories which are not-missing, and that they don’t care that much about the parts of the cube which represent missing categories. If the categorical variable above had two missing categories: “No Data” and “Not Answered” it would reduce the number of entries to 240 (`5 * 6 * 8`) . This behavior can be changed by setting the `cube@useNA` slot to `“always”`.  
 
 
 ### Cube subsetting
 
 This structure gets a little tricky when we subset the cube. For instance the cube we’ve been working with has 5 dimensions, but to the user appears to only have 3, so should they subset it as a 5 dimensional array like `cube[1, 1,  2:3, 1, 5]` or a 3 dimensional array `cube[1, 2:3, 5]`. Similarly, if a dimension is missing, should that be included in the subset. For example if a cube has three entries A, B, C, along one dimension, and B is hidden, should `cube[ , 1:2]` return A, A & B, or A &C? Similarly should `dim(cube)` show the dimensions of the real cube or the printed cube? 
 
-We resolve this problem by allowing the user to select whether they want the cube to represent the user cube or the printed cube, and make all of the behaviour of those cubes consistent. The `cube@useNA` controls whether the user wanted to interact with the printed cube or the user cube and they can `showMissing()` and `hideMissing()` functions to control which cube they are interacting with 
+We resolve this problem by allowing the user to select whether they want the cube to represent the user cube or the printed cube, and make all of the behavior of those cubes consistent. The `cube@useNA` controls whether the user wanted to interact with the printed cube or the user cube and they can `showMissing()` and `hideMissing()` functions to control which cube they are interacting with 
 
 ```
 > dim(cube)
