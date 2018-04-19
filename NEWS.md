@@ -2,6 +2,7 @@
 * `index.table()` to return tables indexed to a margin
 * Fix bug in assigning `subtotals(var) <- NULL` when it already was `NULL` (#231)
 * Consistently return `""` for variable metadata fields if no value is set (#232)
+* `%in%` and `==` on Crunch objects now follow R semantics much more closely.
 
 ## crunch 1.21.0
 ### Variable organization

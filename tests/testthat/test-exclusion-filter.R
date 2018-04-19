@@ -5,7 +5,7 @@ with_mock_crunch({
     ds2 <- loadDataset("ECON.sav")
 
     test_that("Get exclusions", {
-        expect_equal(exclusion(ds), ds$birthyr < 0)
+        expect_equivalent(exclusion(ds), ds$birthyr < 0)
         expect_null(exclusion(ds2))
     })
     test_that("Set exclusion", {
