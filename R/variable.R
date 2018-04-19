@@ -126,7 +126,7 @@ setMethod("categories<-", c("CategoricalVariable", "Categories"),
 setMethod("categories<-", c("CategoricalArrayVariable", "Categories"),
     function (x, value) {
         ent <- setEntitySlot(entity(x), "categories", value)
-        lapply(subvariables(tuple(x)), dropCache) ## Subvariables will update too
+        lapply(subvariableURLs(tuple(x)), dropCache) ## Subvariables will update too
         dropCache(cubeURL(x))
         return(x)
     })
