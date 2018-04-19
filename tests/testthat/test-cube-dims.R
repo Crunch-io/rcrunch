@@ -38,13 +38,13 @@ with_mock_crunch({
         expect_identical(types(cube),
             c("categorical", "subvariable_items"))
         expect_identical(notes(cube),
-            c(NA_character_, NA_character_))
+            c("", ""))
     })
     test_that("Getting those attributes from MultitableResult (the column variables)", {
         expect_identical(names(book[[1]]), c("Total", "All pets owned", "Pet"))
         expect_identical(aliases(book[[1]]), c("total", "allpets", "q1"))
         expect_identical(descriptions(book[[1]]),
-            c(NA,
+            c("",
             "Do you have any of these animals as pets? Please select all that apply.",
             "What is your favorite pet?"))
     })
@@ -55,7 +55,7 @@ with_mock_crunch({
         expect_identical(descriptions(book)[2:4],
             c("What is your favorite pet?",
             "Name the kinds of pets you have at these locations.",
-            NA))
+            ""))
     })
 
     test_that("'measures' metadata", {
@@ -80,4 +80,20 @@ with_mock_crunch({
         expect_identical(names(variables(crtabs(list(mean(birthyr), max(starttime)) ~ gender + textVar, data=ds))),
             c("Gender", "Text variable ftw", "Interview Start Time", "Birth Year"))
     })
+})
+
+with_test_authentication({
+    ds <- newDataset(data.frame(x=c(LETTERS[1:10])), name = 'test for notes')
+
+    test_that("empty variable description are empty string", {
+        expect_equal(description(ds$x), "")
+        expect_equal(notes(ds$x), "")
+    })
+
+    test_that("empty variable description are empty string in a cube too", {
+        cube <- crtabs(~ x, ds)
+        expect_equal(descriptions(variables(cube)), description(ds$x))
+        expect_equal(notes(variables(cube)), notes(ds$x))
+    })
+
 })

@@ -1,5 +1,11 @@
-## crunch 1.21.0 
-### Variable organization 
+## crunch 1.21.1
+* `index.table()` to return tables indexed to a margin
+* Fix bug in assigning `subtotals(var) <- NULL` when it already was `NULL` (#231)
+* Consistently return `""` for variable metadata fields if no value is set (#232)
+* `%in%` and `==` on Crunch objects now follow R semantics much more closely.
+
+## crunch 1.21.0
+### Variable organization
 
 * New functions for organizing variables in a dataset, modeled on file system operations: `cd()`, `mv()`, `mkdir()`, `rmdir()`. These functions use a new API for variable folders (unlike the experimental versions of some that were introduced in the 1.19.0 package release). This API is currently in a beta testing phase. See `vignettes("variable-order", package="crunch")` for examples and details.
 

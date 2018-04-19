@@ -32,7 +32,7 @@ with_mock_crunch({
                 list(value=5)
             )
         )
-        expect_identical(zcl(e1), zexp)
+        expect_equivalent(zcl(e1), zexp)
         expect_prints(e1, "Crunch expression: birthyr + 5")
         e2 <- 5 + ds$birthyr
         expect_is(e2, "CrunchExpr")
@@ -80,9 +80,9 @@ with_mock_crunch({
         expect_prints(ds$gender == as.factor("Male"),
             'Crunch logical expression: gender == "Male"')
         expect_prints(ds$gender %in% "Male",
-            'Crunch logical expression: gender == "Male"')
+            'Crunch logical expression: gender %in% "Male"')
         expect_prints(ds$gender %in% as.factor("Male"),
-            'Crunch logical expression: gender == "Male"')
+            'Crunch logical expression: gender %in% "Male"')
         expect_prints(ds$gender %in% c("Male", "Female"),
             'Crunch logical expression: gender %in% c("Male", "Female")')
         expect_prints(ds$gender %in% as.factor(c("Male", "Female")),
@@ -99,7 +99,7 @@ with_mock_crunch({
             paste("Category not found:", dQuote("other")))
         expect_warning(
             expect_prints(ds$gender %in% c("other", "Male", "another"),
-                'Crunch logical expression: gender == "Male"'),
+                'Crunch logical expression: gender %in% "Male"'),
             paste("Categories not found:", dQuote("other"), "and",
                 dQuote("another")))
         expect_warning(
@@ -116,7 +116,7 @@ with_mock_crunch({
         expect_prints(ds$birthyr == 1945 | ds$birthyr < 1941,
             'birthyr == 1945 | birthyr < 1941')
         expect_prints(ds$gender %in% "Male" & !is.na(ds$birthyr),
-            'gender == "Male" & !is.na(birthyr)')
+            'gender %in% "Male" & !is.na(birthyr)')
         expect_prints(!(ds$gender == "Male"),
             'Crunch logical expression: !gender == "Male"')
             ## TODO: better parentheses for ^^
@@ -187,7 +187,7 @@ with_test_authentication({
             })
         })
     })
-    
+
     test_that("Logical expressions evaluate", {
         e1 <- ds$v3 > 10
         expect_is(e1, "CrunchLogicalExpr")
@@ -202,7 +202,7 @@ with_test_authentication({
         expect_identical(as.vector(e2)[na_filt], df[na_filt,]$v2 == "a")
         expect_identical(which(e2), which(df$v2 == "a"))
     })
-    
+
     test_that("R & Crunch logical together", {
         e1 <- ds$v3 < 10 | c(rep(FALSE, 15), rep(TRUE, 5))
         expect_equivalent(as.vector(ds$v3[e1]),
@@ -215,7 +215,7 @@ with_test_authentication({
             c(8, 10, 12))
     })
 
-    test_that("expressions on expresssions evaluate", {
+    test_that("expressions on expressions evaluate", {
         e3 <- ds$v3 + ds$v3 + 10
         expect_is(e3, "CrunchExpr")
         expect_prints(e3, "Crunch expression: v3 + v3 + 10")
