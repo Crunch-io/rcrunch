@@ -215,7 +215,7 @@ with_test_authentication({
             c(8, 10, 12))
     })
 
-    test_that("expressions on expresssions evaluate", {
+    test_that("expressions on expressions evaluate", {
         e3 <- ds$v3 + ds$v3 + 10
         expect_is(e3, "CrunchExpr")
         expect_prints(e3, "Crunch expression: v3 + v3 + 10")
