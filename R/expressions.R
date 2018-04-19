@@ -247,7 +247,7 @@ for (i in c("==", "!=")) {
 #' @export
 setMethod("==", c("CategoricalVariable", "numeric"), function (e1, e2) {
     if (length(e2) == 0) {
-        ## The specified category was doesn't exist. But ``== BAD` breaks server
+        ## The specified category doesn't exist. But `== BAD` breaks server
         ## However, "in []" is fine
         return(math.exp(e1, e2, "in"))
     }
