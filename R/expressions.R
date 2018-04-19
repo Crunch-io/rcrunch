@@ -194,7 +194,7 @@ setMethod("!", "CrunchExpr", function (x) zfuncExpr("not", x))
     }
 }
 
-.inCrunch <- function (x, table) math.exp(x, r2zcl(I(table)), "in")
+.inCrunch <- function (x, table) zfuncExpr("selected", math.exp(x, r2zcl(I(table)), "in"))
 
 #' @rdname expressions
 #' @export
