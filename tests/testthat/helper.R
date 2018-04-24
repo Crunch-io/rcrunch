@@ -28,8 +28,7 @@ options(
     crunch.namekey.array="alias",
     # crayon options for testing on travis
     crayon.enabled = TRUE,
-    crayon.colors = 256,
-    crunch.3vl=TRUE
+    crayon.colors = 256
 )
 crunch:::.onLoad()
 

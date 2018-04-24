@@ -160,10 +160,10 @@ with_test_authentication({
     })
     test_that("Can edit values of a logical-as-categorical with logical", {
         ds$v6[c(2, 5)] <- FALSE
-        expect_equal(as.vector(ds$v6[1:5], "id"), c(1, 0, 1, 1, 0))
+        expect_equal(as.vector(ds$v6[1:5], "id"), c(1, 2, 1, 1, 2))
         ds$v6[c(6, 9)] <- c(FALSE, NA)
         expect_equal(as.vector(ds$v6[1:10], "id"),
-            c(1, 0, 1, 1, 0, 0, 1, 1, -1, 1))
+            c(1, 2, 1, 1, 2, 2, 1, 1, -1, 1))
     })
     test_that("Can't edit a regular categorical with logical", {
         expect_error(ds$v4[5] <- TRUE,
