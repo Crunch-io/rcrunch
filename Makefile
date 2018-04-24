@@ -53,7 +53,7 @@ build-vignettes: md
 	R -e 'setwd("inst/doc"); lapply(dir(pattern="md"), function(x) markdown::markdownToHTML(x, output=sub("\\\\.md", ".html", x)))'
 	cd inst/doc && ls | grep .html | xargs -n 1 sed -i '' 's/.md)/.html)/g'
 	# That sed isn't working, fwiw
-	open inst/doc/getting-started.html
+	open inst/doc/crunch.html
 
 spell:
 	R --slave -e 'spelling::spell_check_package(vignettes=TRUE, lang="en_US")'

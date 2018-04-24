@@ -1,0 +1,130 @@
+---
+title: "Getting Started"
+description: "Here's how to log in and get started working with the Crunch cloud data platform."
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+[Crunch.io](http://crunch.io/) provides a cloud-based data store and analytic engine. It has a [web client](https://app.crunch.io/) for interactive data exploration and visualization. The **crunch** package for R allows analysts to interact with and manipulate Crunch datasets from within R. Importantly, this allows technical researchers to collaborate naturally with team members, managers, and clients who prefer a point-and-click interface: because all connect to the same dataset in the cloud, there is no need to email files back and forth continually to share results.
+
+```{r, message=FALSE}
+library(crunch)
+```
+
+```{r, results='hide', echo=FALSE, message=FALSE}
+library(httptest)
+start_vignette("crunch")
+login()
+```
+
+Both **crunch** and the Crunch web application communicate with the same application programming interface (API), served over secure HTTP. Within an R script or interactive session, the **crunch** package allows you to interact with your data in Crunch with expressive, idiomatic R. Functions in crunch handle the translation between R objects and API requests and responses, so you can typically interact with your datasets as if they were local `data.frames` (with some additional metadata), not data on a remote server.
+
+# Authentication
+
+All work with data in Crunch requires authentication. Thus, the first step after loading the **crunch** package is to log in. In an interactive R session, provide the email address associated with your Crunch account, and you will be prompted to give your password safely:
+
+```{r, eval=FALSE}
+login("xkcd@crunch.io")
+```
+```
+Crunch.io password for xkcd@crunch.io: *enter your password here*
+## Logged into crunch.io as xkcd@crunch.io
+```
+
+If you use an OAuth provider, such as Google, to log into the Crunch web application, you'll need to first set a Crunch password for use here. Do `resetPassword("xkcd@crunch.io")` with your email address, and you'll receive an email with password setting instructions.  
+
+Your email and Crunch password can be set either as R `options` in your .Rprofile (`crunch.email` and `crunch.pw`) or as environment variables (`R_CRUNCH_EMAIL` and `R_CRUNCH_PW`) so that you can simply `login()`. See `?login` for details.
+
+# Datasets
+
+The Crunch data store is built around datasets, which contain variables. Unlike R `data.frames` and vectors, Crunch datasets and variables contain additional metadata. And, to the extent possible, the functions and methods in **crunch** work to keep all of the data on the server, only pulling metadata and aggregations when requested. That way, you can explore datasets much larger than you can comfortably load on your laptop.
+
+To get started, we're going to import a dataset from R to Crunch. If you already have a dataset---perhaps someone has invited you to collaborate on one already---see `vignette("datasets", package="crunch")` for how to find and load it.
+
+## Importing data to Crunch
+
+To create new datasets, multiple paths exist. In the web application, you can upload files to create datasets. From `crunch`, there are two methods for creating datasets: one for `data.frames` and one for files of other (non-R) formats.
+
+We've included with the package a sample from the [2017 Stack Overflow developer survey](https://insights.stackoverflow.com/survey/), filtered on those respondents who reported having been R users and selecting 25 variables.
+
+```{r}
+data(SO_survey)
+dim(SO_survey)
+```
+
+You can create a dataset from any `data.frame` you have in your R session with `newDataset`. Let's use that sample dataset:
+
+```{r}
+ds <- newDataset(SO_survey, name="Stack Overflow Developer Survey 2017")
+dim(ds)
+```
+
+`newDataset` translates R data types into their analogous types in Crunch.
+
+* character --> Text Variable
+* numeric, integer --> Numeric Variable
+* factor --> Categorical Variable
+* Date --> Datetime Variable
+
+It takes a data.frame as its input; alternatively, if you have an SPSS or CSV file, you can upload it with that without first reading it into R by giving `newDataset` the file name or URL. In this case, it essentially does what you would do in the web application: uploads your file and creates a dataset from it.
+
+<!-- TODO: host that CSV on our website, give example -->
+
+What this vignette should do. Tell a complete story of getting your data in (and doing something with it?)
+
+* Import dataset (show from data.frame or from file/URL)
+* Dataset metadata (take from datasets.Rmd)
+* Find variables, etc. (take from variables.Rmd)
+* Edit variable metadata using schema file
+* Link to other vignettes and help files eagerly
+
+## Dataset properties
+
+Dataset have metadata beyond what a `data.frame` has. Datasets have a human-readable `name`, which you specified when you created it, and a `description`.
+
+```{r}
+name(ds)
+description(ds)
+```
+
+Both can be set with `<-` assignment. Let's give our dataset an informative description:
+
+```{r, echo=FALSE}
+change_state()
+```
+
+```{r}
+description(ds) <- "U.S. nationally representative sample, 1000 respondents"
+description(ds)
+```
+
+## Archiving and deleting datasets
+
+Datasets can also be deleted permanently. This action cannot be undone, so it should not be done lightly. `crunch` provides two ways to delete a dataset: a `delete()` method on a dataset object, like
+
+```{r, eval=FALSE}
+## Not run
+delete(ds)
+```
+
+The second way to delete is `deleteDataset()`: you supply a dataset name. This way is faster if you have not already loaded the dataset object into your R session: no need to fetch something from the server just to then tell the server to delete it.
+
+```{r, include=FALSE}
+logout()
+end_vignette()
+```
+
+<!-- * [Datasets](datasets.html): creating, loading, and manipulating datasets in Crunch
+* [Variables](variables.html): cleaning and defining variable metadata
+* [Array variables](array-variables.html): how to create and manipulate categorical-array and multiple-response variables
+* [Variable organization](variable-order.html): defining a hierarchy and arranging variables within it
+* [Transformations and derivations](derive.html): alter values within a dataset and create new variables as a function of others
+* [Computing on Crunch data](analyze.html): crosstabulation and more
+* [Filtering](filters.html): subsetting data, both in your R session and in the web interface
+* [Downloading and exporting](export.html): how to pull data from the server, both for use in R and file export
+* [Subtotals and headings](subtotals.html): how to set and get subtotals and headings for categorical variables
+* [Crunch internals](crunch-internals.html): an introduction to the Crunch API and concepts to help you make more complex and more efficient queries
+* [Category objects](abstract-categories.html): an introduction to the S4 classes that power categories and category-like representations in the package -->

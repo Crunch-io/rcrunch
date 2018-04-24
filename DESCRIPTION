@@ -25,6 +25,8 @@ Imports:
     httpcache (>= 0.1.4),
     jsonlite (>= 0.9.15),
     methods
+Remotes:
+    nealrichardson/httptest
 Suggests:
     covr,
     devtools,
@@ -48,6 +50,7 @@ Collate:
     'AllGenerics.R'
     'variable-definition.R'
     'R-to-variable.R'
+    'SO-survey.R'
     'abstract-categories.R'
     'abstract-category.R'
     'add-subvariable.R'
