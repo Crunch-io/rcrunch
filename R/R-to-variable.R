@@ -50,6 +50,9 @@ setMethod("toVariable", "logical", function (x, ...) {
     vals[is.na(vals)] <- -1L
     cats <- .selected.cats
     ## Pre-3VL category names
+    ## Note that with the extra strict definition of `is.3vl`, this won't
+    ## register as a "logical" type yet and so as.vector will continue to return
+    ## this as categorical, not logical
     cats[[1]]$name <- "True"
     cats[[2]]$name <- "False"
     return(VariableDefinition(values=vals, type="categorical",
