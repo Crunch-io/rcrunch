@@ -1,11 +1,42 @@
 @import url("http://crunch.io/css/fonts/proximanova.css");
 
 body {
-    color: #565656;
+    color: #1D1D26;
     font-family: ProximaNova, Lato, sans-serif;
     font-weight: 400;
-    font-size: 19px;
-    line-height: 1.4;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: antialiased;
+    background-color: #fff;
+}
+
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: ProximaNova, Lato, sans-serif;
+    color: #0064a4;
+}
+
+h1, .h1 {
+    font-weight: 700;
+    font-size: 2em;
+}
+
+h2, .h2, h3, .h3 {
+    color: #107f65;
+    font-size: 24px;
+}
+
+a {
+    color: #0064a4;
+}
+
+a:hover,
+.navbar-default .navbar-link:hover {
+    color: #0064a4;
+}
+
+ul,  ol {
+    margin-bottom: 20px;
 }
 
 #sidebar {
@@ -16,28 +47,62 @@ body {
     font-size: 16px
 }
 
-h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
-    font-family: ProximaNova, Lato, sans-serif;
-    color: #0064a4;
-}
-
-a {
-    color: #0064a4;
-}
-
-a:hover {
-    color: #0064a4;
-}
-
-.navbar-default .navbar-nav>li>a:hover {
-    color: #0064a4;
+#sidebar h2 {
+    color: #1D1D26;
+    font-weight: 700;
 }
 
 .navbar-default {
-    background-color: #000;
+    color: #444444;
+    padding: 8px 0;
+    font-size: 16px;
+    border: 0;
+}
+
+.navbar-default .navbar-nav>li>a:hover,
+.navbar-default .navbar-nav>li>a:focus,
+.navbar-default .navbar-nav>.active>a,
+.navbar-default .navbar-nav>.active>a:hover,
+.navbar-default .navbar-nav>.active>a:focus {
+    color: #0064a4;
+}
+
+.navbar-default .navbar-nav>.open>a,
+.navbar-default .navbar-nav>.open>a:hover,
+.navbar-default .navbar-nav>.open>a:focus {
+    color: #0064a4;
+}
+
+.dropdown-menu>li>a:hover,
+.dropdown-menu>li>a:focus {
+    color: #444444;
+    background-color: #f9f9f9;
+}
+
+.dropdown-menu>.active>a,
+.dropdown-menu>.active>a:hover,
+.dropdown-menu>.active>a:focus {
+    color: #444444;
+    background-color: #f9f9f9;
+}
+
+.nav-pills>li.active>a,
+.nav-pills>li.active>a:hover,
+.nav-pills>li.active>a:focus {
+    background-color: #107f65;
+}
+
+pre, code {
+    background-color: #f1f1f1;
+    border: 0;
 }
 
 code {
     font-size: 85%;
     border-radius: 0;
+}
+
+footer {
+    font-size: 14px;
+    padding-top: 25px;
 }
