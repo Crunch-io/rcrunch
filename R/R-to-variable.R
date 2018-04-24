@@ -49,11 +49,9 @@ setMethod("toVariable", "logical", function (x, ...) {
     vals <- as.integer(x)
     vals[is.na(vals)] <- -1L
     cats <- .selected.cats
-    if (!getOption("crunch.3vl", FALSE)) {
-        ## Pre-3VL category names
-        cats[[1]]$name <- "True"
-        cats[[2]]$name <- "False"
-    }
+    ## Pre-3VL category names
+    cats[[1]]$name <- "True"
+    cats[[2]]$name <- "False"
     return(VariableDefinition(values=vals, type="categorical",
         categories=cats, ...))
 })

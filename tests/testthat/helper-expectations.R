@@ -30,7 +30,7 @@ expect_valid_df_import <- function (ds) {
     expect_equivalent(as.vector(ds$v4), df$v4)
     expect_true(is.Datetime(ds$v5))
     expect_true(is.Categorical(ds$v6))
-    expect_identical(names(categories(ds$v6)), c("Selected", "Other", "No Data"))
+    expect_identical(names(categories(ds$v6)), c("True", "False", "No Data"))
     expect_identical(showShojiOrder(ordering(ds)), names(variables(ds)))
     expect_identical(names(versions(ds)), "initial import")
 }
