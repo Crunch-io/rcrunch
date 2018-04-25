@@ -18,7 +18,9 @@ cubeDims <- function (cube) {
         }
         ## If enumerated, will be "elements", not "categories"
         d <- a$type$categories %||% a$type$elements
-        if (is.3vl(Categories(data=d))) {
+        ## Sniff for 3VL
+        cats <- try(Categories(data=d), silent=TRUE)
+        if (is.categories(cats) && is.3vl(cats)) {
             ## Make this look like an R logical does when it is tabulated
             d[[1]]$name <- "TRUE"
             d[[2]]$name <- "FALSE"
