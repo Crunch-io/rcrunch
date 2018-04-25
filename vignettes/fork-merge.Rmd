@@ -1,0 +1,131 @@
+---
+title: "Fork and Merge a Dataset"
+description: "How to safely edit a live dataset"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+One of the main benefits of Crunch is that it lets analysts and clients work with the same datasets. Instead of emailing datasets to clients you can update the live dataset and ensure that the client is seeing the most up-to-date information. The problem with this setup is that it can become difficult to make provisional changes to the dataset without publishing it to the client. Sometimes an analyst wants to investigate or experiment with a dataset without the risk of sending incorrect or confusing information to the client. This is why we implemented a fork-edit-merge workflow for CrunchDatasets. 
+
+"Fork" originates in computer version control systems and just means to take a copy of a piece of software with the intention of making some changes to the copy, and then incorporating those changes back into the original. To see how this works lets first upload a new dataset to Crunch. 
+
+```{r, results='hide', echo=FALSE, message=FALSE}
+library(httptest)
+start_vignette("fork-and-merge")
+```
+
+```{r, loadDataset}
+library(crunch)
+login()
+ds <- newDataset(SO_survey, "stackoverflow_survey")
+```
+
+Imagine that this dataset is shared with several users, and you want to update it without affecting their usage. You might also want to consult with other analyst to make sure that the data is accurate before sharing it with clients. To do this you call `forkDataset` to create a copy of the dataset. 
+
+```{r fork dataset}
+forked_ds <- forkDataset(ds)
+```
+
+You now have an copied dataset which is identical to the original, and are free to make changes without fear of disrupting the client's experience. Feel free to add or remove variables, or delete records with impunity. These changes will be isolated to your local fork until you decide to merge the dataset back into the original data. 
+
+In this case, let's create a new categorical array variable. 
+
+```{r create Multiple Response Variable}
+ds$ImportantHiringCA <- makeArray(ds[, c("ImportantHiringTechExp", "ImportantHiringPMExp")], 
+    name = "importantCatArray") 
+```
+
+Our forked dataset has diverged from the original dataset. Which we can see by comparing their names. 
+
+```{r compare datasets}
+all(names(ds) %in% names(forked_ds))
+```
+
+You can work with the forked dataset as long as you like, if you want to work with it in the webApp or share it with other analysts you can call `webApp(forked_ds)`. You might create many forks and discard most of them without merging them into the original dataset. 
+
+If you do end up with changes to the forked dataset that you want to include. in the original dataset you can do so with the `mergeFork()` function. 
+
+```{r merging}
+ds <- mergeFork(ds, forked_ds)
+```
+
+Now the dataset has the categorical array variable which we created on the fork. 
+
+```{r check successful merge}
+ds$ImportantHiringCA
+```
+
+## Appending data
+
+Another good use of the fork-edit-merge workflow is when you want to append data to an existing dataset because you probably want to check that the append operation completed successfully before publishing the data to users. This might come up if you are adding a second wave of a survey. The first step is to upload the second survey wave as its own dataset. 
+
+```{r upload wave 2}
+wave2 <- newDataset(SO_survey, "SO_survey_wave2")
+wave2$ImportantHiringCA <- makeArray(wave2[, c("ImportantHiringTechExp", "ImportantHiringPMExp")], 
+    name = "importantCatArray")
+```
+
+We then fork the original dataset and append the new wave onto the forked dataet. 
+
+```{r fork-and-append}
+ds_fork <- forkDataset(ds)
+ds_fork <- appendDataset(ds_fork, wave2)
+```
+`ds_fork` now has twice as many rows as `ds` which we can verify with `nrow`:
+
+```{r}
+nrow(ds)
+nrow(ds_fork)
+```
+
+Once we've confirmed that the append completed successfully we can merge the forked dataset back into the original one. 
+```{r}
+ds <- mergeFork(ds, ds_fork)
+```
+
+`ds` now has the additional rows. 
+
+```{r}
+nrow(ds)
+```
+
+## Merging datasets
+
+Merging two datasets together can often be the source of bugs or data corruption so it's a good candidate for this workflow. Let's create a toy dataset to merge onto the original one. 
+
+```{r create recode data}
+house_table <- data.frame(Respondent = unique(as.vector(ds$Respondent)))
+house_table$HouseholdSize <- sample(
+    1:5,
+    nrow(house_table),
+    TRUE
+)
+house_ds <- newDataset(house_table, "House Size")
+```
+
+There are a few reasons why we might not want to merge this new table onto our user facing data. For instance we might make a mistake in constructing the table, or have some category names which don't quite match up. Merging the data onto a forked dataset again gives us the safety to make changes and verify accuracy without affecing client-facing data. 
+
+```{r fork and merge recode}
+ds_fork <- forkDataset(ds)
+ds_fork <- merge(ds_fork, house_ds, by = "Respondent")
+```
+
+Before merging the fork back into the original dataset, we can check that everything went well with the join. 
+
+```{r check new data}
+crtabs(~ TabsSpaces + householdSize, ds_fork)
+```
+
+And finally once we're comfortable that everything went as expected we can send the data to the client by merging the fork back to the original dataset. 
+
+```{r final mergeFork}
+ds <- mergeFork(ds, ds_fork)
+ds$HouseholdSize
+```
+
+```{r, results='hide', echo=FALSE, message=FALSE}
+end_vignette()
+```
