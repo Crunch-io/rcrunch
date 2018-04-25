@@ -41,13 +41,13 @@ cubeVarReferences <- function (x) {
     }
     tuple$categories <- x$type$categories
     ## Sniff for 3VL
-    cats <- try(Categories(data=tuple$categories), silent=TRUE)
-    if (is.categories(cats) && is.3vl(cats)) {
+    if (!is.null(tuple$categories) && is.3vl(Categories(data=tuple$categories))) {
         ## Make this look like an R logical does when it is tabulated
         tuple$categories[[1]]$name <- "TRUE"
         tuple$categories[[2]]$name <- "FALSE"
-        ## Put FALSE first, like in R
-        tuple$categories <- tuple$categories[c(2, 1, 3)]
+        ## TODO: Put FALSE first, like in R
+        ## But note that you'd also have to aperm the data arrays...
+        # tuple$categories <- tuple$categories[c(2, 1, 3)]
     }
     return(tuple)
 }
