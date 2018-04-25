@@ -12,12 +12,14 @@ parse_column <- list(
     categorical=function (col, variable, mode=NULL) {
         vartype <- "categorical_factor"
         ## Deal with mode. Valid modes: factor (default), numeric, id
-        if (!is.null(mode)) {
-            if (mode == "numeric") {
-                vartype <- "categorical_numeric_values"
-            } else if (mode == "id") {
-                vartype <- "categorical_ids" ## The numeric parser will return ids, right?
-            }
+        if (is.null(mode)) {
+            ## Default from the base method is "any", which means nothing to us
+            mode <- "any"
+        }
+        if (mode == "numeric") {
+            vartype <- "categorical_numeric_values"
+        } else if (mode == "id") {
+            vartype <- "categorical_ids"
         } else if (type(variable) == "categorical" && is.3vl(variable)) {
             ## Temporary: restrict on type==categorical so MRs don't get
             ## turned into logicals (until we're ready to flip that switch)

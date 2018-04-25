@@ -8,7 +8,7 @@ cubeDims <- function (cube) {
         ## Collect the variable metadata about the dimensions
         tuple <- cubeVarReferences(a)
         if (tuple$type == "boolean") {
-            ## TODO: server should provide enumeration
+            ## TODO: delete this when boolean support is removed
             return(list(
                 name=c("FALSE", "TRUE"),
                 any.or.none=c(FALSE, FALSE),
@@ -18,6 +18,11 @@ cubeDims <- function (cube) {
         }
         ## If enumerated, will be "elements", not "categories"
         d <- a$type$categories %||% a$type$elements
+        if (is.3vl(Categories(data=d))) {
+            ## Make this look like an R logical does when it is tabulated
+            d[[1]]$name <- "TRUE"
+            d[[2]]$name <- "FALSE"
+        }
         return(list(
             name=vapply(d, elementName, character(1)),
             any.or.none=vapply(d, elementIsAnyOrNone, logical(1)),
@@ -27,7 +32,7 @@ cubeDims <- function (cube) {
     })
     names(dimnames) <- vapply(dimnames, function (x) x$references$alias,
         character(1))
-    
+
     return(CubeDims(dimnames))
 }
 
@@ -40,6 +45,7 @@ cubeVarReferences <- function (x) {
         tuple$type <- "subvariable_items"
     }
     tuple$categories <- x$type$categories
+    ## TODO: move 3VL munge in here
     return(tuple)
 }
 
@@ -84,7 +90,7 @@ elementIsAnyOrNone <- function (el) {
 #' @param j not used
 #' @param ... not used
 #' @param drop not used
-#' @param value for `dimensions<-` a `CubeDims` object to overwrite a CrunchCube 
+#' @param value for `dimensions<-` a `CubeDims` object to overwrite a CrunchCube
 #' dimensions
 #'
 #' @return Generally, the same shape of result that each of these functions
@@ -160,6 +166,6 @@ is.selectedArrayDim <- function (dim) {
     if (!is.null(dim$any.or.none)) {
         return(any(dim$any.or.none))
     }
-    
+
     return(FALSE)
 }
