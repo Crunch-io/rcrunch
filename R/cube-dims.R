@@ -17,14 +17,7 @@ cubeDims <- function (cube) {
             ))
         }
         ## If enumerated, will be "elements", not "categories"
-        d <- a$type$categories %||% a$type$elements
-        ## Sniff for 3VL
-        cats <- try(Categories(data=d), silent=TRUE)
-        if (is.categories(cats) && is.3vl(cats)) {
-            ## Make this look like an R logical does when it is tabulated
-            d[[1]]$name <- "TRUE"
-            d[[2]]$name <- "FALSE"
-        }
+        d <- tuple$categories %||% a$type$elements
         return(list(
             name=vapply(d, elementName, character(1)),
             any.or.none=vapply(d, elementIsAnyOrNone, logical(1)),
@@ -47,7 +40,15 @@ cubeVarReferences <- function (x) {
         tuple$type <- "subvariable_items"
     }
     tuple$categories <- x$type$categories
-    ## TODO: move 3VL munge in here
+    ## Sniff for 3VL
+    cats <- try(Categories(data=tuple$categories), silent=TRUE)
+    if (is.categories(cats) && is.3vl(cats)) {
+        ## Make this look like an R logical does when it is tabulated
+        tuple$categories[[1]]$name <- "TRUE"
+        tuple$categories[[2]]$name <- "FALSE"
+        ## Put FALSE first, like in R
+        tuple$categories <- tuple$categories[c(2, 1, 3)]
+    }
     return(tuple)
 }
 
@@ -146,10 +147,18 @@ setMethod("[", "CubeDims", function (x, i, ...) {
 
 is.selectedDimension <- function (dims) {
     is.it <- function (x, dim, MRaliases) {
-        x$alias %in% MRaliases &&
+        maybe <- x$alias %in% MRaliases &&
             x$type == "categorical" &&
-            length(dim$name) == 3 &&
-            dim$name[1] == "Selected"
+            length(dim$name) == 3
+        if (maybe) {
+            cats <- Categories(data=x$categories)
+            ## Unlike the strict is.3vl, this doesn't compare cat names because
+            ## they've already been munged to TRUE/FALSE
+            maybe <- setequal(ids(cats), c(-1, 0, 1)) &&
+                sum(is.selected(cats)) == 1 &&
+                sum(is.na(cats)) == 1
+        }
+        return(maybe)
     }
     vars <- variables(dims)
     # We only need to check if the categories are the magical Selected
