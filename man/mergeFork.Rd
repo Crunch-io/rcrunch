@@ -9,22 +9,35 @@ mergeFork(dataset, fork, autorollback = TRUE, force = FALSE)
 \arguments{
 \item{dataset}{The \code{CrunchDataset} to merge to}
 
-\item{fork}{The \code{CrunchDataset}, perhaps forked from \code{dataset},
-that is to be merged in.}
+\item{fork}{The \code{CrunchDataset}, perhaps forked from \code{dataset}, that is to be
+merged in.}
 
-\item{autorollback}{logical If the merge fails, should \code{dataset} be
-restored to its state prior to the merge, or should it be left in its
-partially merged state for debugging and manual fixing? Default is
-\code{TRUE}.}
+\item{autorollback}{logical If the merge fails, should \code{dataset} be restored
+to its state prior to the merge, or should it be left in its partially
+merged state for debugging and manual fixing? Default is \code{TRUE}.}
 
-\item{force}{logical Attempt to push through merge conflicts by dropping
-all changes to \code{dataset} that occurred after \code{fork} diverged from and take only
-the changes from \code{fork}? Default is \code{FALSE}. You should only use force=TRUE after
-first attempting and failing to merge without forcing.}
+\item{force}{logical Attempt to push through merge conflicts by dropping all
+changes to \code{dataset} that occurred after \code{fork} diverged from and take only
+the changes from \code{fork}? Default is \code{FALSE}. You should only use force=TRUE
+after first attempting and failing to merge without forcing.}
 }
 \value{
 \code{dataset} with changes from \code{fork} merged to it.
 }
 \description{
-Merge changes to a dataset from a fork
+Crunch datasets include information about the dataset's revision history. For
+instance if you add a variable to the dataset there's a record of the action
+of adding that variable. The sum of these records is a dataset's revision
+history and it's possible to combine two datasets together by merging their
+revision histories.
+}
+\details{
+This function combines the revision history of two datasets into a single
+dataset. It is most often used in conjunction with \code{forkDataset()} to create a
+copy of a dataset, make some changes to that copy, and then merge the changes
+back into the original dataset. For more on this workflow see
+\code{vignette("fork-and-merge", package = "crunch")}.
+}
+\seealso{
+\code{\link[=forkDataset]{forkDataset()}}
 }

@@ -21,5 +21,17 @@ a filter expression on the rows and a selection of variables on the columns.}
 variables, appended to it.
 }
 \description{
-Append one Crunch dataset to another
+Crunch allows you to add additional rows to a dataset by appending a second
+dataset to the bottom of the original dataset. The app attempts to make intelligent
+guesses about the two datasets to do things like match the variables in the two
+datasets or harmonize the categories of categorical or array variables. However you
+will get the best results if you ensure that the two datasets have the same variable names and types,
+and that their categorical and array varariables have consistent categories.
+}
+\details{
+We recommend using the fork-edit-merge workflow to append datasets. To do this
+fork the dataset with \code{forkDataset()} append the new data to the forked dataset,
+ensure that the append worked as expected, and merge it back to the original dataset
+with \code{mergeFork()}. For more see \code{vignette("fork-and-merge", package
+= "crunch")}.
 }

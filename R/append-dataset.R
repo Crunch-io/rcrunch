@@ -1,5 +1,18 @@
 #' Append one Crunch dataset to another
 #'
+#' Crunch allows you to add additional rows to a dataset by appending a second
+#' dataset to the bottom of the original dataset. The app attempts to make intelligent
+#' guesses about the two datasets to do things like match the variables in the two
+#' datasets or harmonize the categories of categorical or array variables. However you
+#' will get the best results if you ensure that the two datasets have the same variable names and types,
+#' and that their categorical and array varariables have consistent categories.
+#'
+#' We recommend using the fork-edit-merge workflow to append datasets. To do this
+#' fork the dataset with `forkDataset()` append the new data to the forked dataset,
+#' ensure that the append worked as expected, and merge it back to the original dataset
+#' with `mergeFork()`. For more see \code{vignette("fork-and-merge", package
+#' = "crunch")}.
+#'
 #' @param dataset1 a CrunchDataset
 #' @param dataset2 another CrunchDataset, or possibly a data.frame. If
 #' `dataset2` is not a Crunch dataset, it will be uploaded as a new
