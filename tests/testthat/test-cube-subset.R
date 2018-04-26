@@ -45,8 +45,8 @@ test_that("subsetArrayDimension MR dimension", {
                 summary = list(digits = 0L)
             ),
             subreferences = list(
-                list(alias = "rest_opinion#", name = "rest_opinion"),
-                list(alias = "play_opinion#", name = "play_opinion")
+                "rest_opinion#" = list(alias = "rest_opinion#", name = "rest_opinion"),
+                "play_opinion#" = list(alias = "play_opinion#", name = "play_opinion")
             ),
             notes = "",
             name = "opinion MR",
@@ -57,7 +57,8 @@ test_that("subsetArrayDimension MR dimension", {
                 include_missing = FALSE,
                 column_width = NULL
             ),
-            type = "subvariable_items"
+            type = "subvariable_items",
+            subvariables = c("food_opinion#/", "rest_opinion#/", "play_opinion#/")
         )
     )
     expect_identical(subsetArrayDimension(cat_x_mr_x_mr@dims[[2]], 2:3), expected)
@@ -70,11 +71,12 @@ test_that("subsetArrayDimension categorical array dimension", {
         missing = c(FALSE),
         references = list(
             subreferences = list(
-                list(alias = "cat_feeling", name = "cat_feeling")
+                "cat_feeling" = list(alias = "cat_feeling", name = "cat_feeling")
             ),
             name = "feeling CA",
             alias = "feeling_ca",
-            type = "subvariable_items"
+            type = "subvariable_items",
+            subvariables = c("cat_feeling/", "dog_feeling/")
         )
     )
     expect_identical(subsetArrayDimension(catarray_x_mr@dims[[1]], 1), expected)
@@ -85,12 +87,13 @@ test_that("subsetArrayDimension categorical array dimension", {
         missing = c(FALSE, FALSE),
         references = list(
             subreferences = list(
-                list(alias = "cat_feeling", name = "cat_feeling"),
-                list(alias = "dog_feeling", name = "dog_feeling")
+                "cat_feeling" = list(alias = "cat_feeling", name = "cat_feeling"),
+                "dog_feeling" = list(alias = "dog_feeling", name = "dog_feeling")
             ),
             name = "feeling CA",
             alias = "feeling_ca",
             type = "categorical",
+            subvariables = c("cat_feeling/", "dog_feeling/"),
             categories = list(
                 list(numeric_value = 2L,
                      id = 2L,
