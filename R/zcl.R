@@ -6,15 +6,18 @@ r2zcl <- function (x) {
     v <- toVariable(x)
     attributes(v$values) <- NULL
 
-    ## If there is a single value, call it "value". Else it is a "column" array
-    if (length(x) == 1) {
-        out <- list(value=v$values)
+    ## "column" if we're sending an array. If scalar, it is "value"
+    if (length(x) != 1) {
+        out <- as.zcl(column=v$values)
+    } else if (inherits(x, "AsIs")) {
+        out <- as.zcl(column=I(v$values))
     } else {
-        out <- list(column=v$values)
+        out <- as.zcl(value=v$values)
     }
-
     return(out)
 }
+
+as.zcl <- function (...) structure(list(...), class="zcl")
 
 ## Methods to convert various objects to ZCL
 setMethod("zcl", "CrunchExpr", function (x) x@expression)
@@ -26,8 +29,15 @@ setMethod("zcl", "Date", r2zcl)
 setMethod("zcl", "POSIXt", r2zcl)
 setMethod("zcl", "logical", function (x) {
     if (length(x)) {
-        x[is.na(x)] <- FALSE
-        out <- list(column=I(x), type=list(class="boolean"))
+        if (getOption("crunch.3vl", FALSE)) {
+            ## 3VL categorical
+            out <- r2zcl(x)
+            out$type <- list(class="categorical", categories=.selected.cats)
+        } else {
+            ## Boolean
+            x[is.na(x)] <- FALSE
+            out <- list(column=I(x), type=list(class="boolean"))
+        }
         return(out)
     } else {
         ## If you reference a variable in a dataset that doesn't exist, you

@@ -10,15 +10,20 @@ parse_column <- list(
         return(as.character(unlist(col)))
     },
     categorical=function (col, variable, mode=NULL) {
+        vartype <- "categorical_factor"
         ## Deal with mode. Valid modes: factor (default), numeric, id
-        if (!is.null(mode)) {
-            if (mode == "numeric") {
-                vartype <- "categorical_numeric_values"
-            } else if (mode == "id") {
-                vartype <- "categorical_ids" ## The numeric parser will return ids, right?
-            } else {
-                vartype <- "categorical_factor"
-            }
+        if (is.null(mode)) {
+            ## Default from the base method is "any", which means nothing to us
+            mode <- "any"
+        }
+        if (mode == "numeric") {
+            vartype <- "categorical_numeric_values"
+        } else if (mode == "id") {
+            vartype <- "categorical_ids"
+        } else if (type(variable) == "categorical" && is.3vl(variable)) {
+            ## Temporary: restrict on type==categorical so MRs don't get
+            ## turned into logicals (until we're ready to flip that switch)
+            vartype <- "logical"
         }
         return(columnParser(vartype)(col, variable))
     },
@@ -38,6 +43,10 @@ parse_column <- list(
         cats <- na.omit(categories(variable))
         out <- values(cats)[match(out, ids(cats))]
         return(out)
+    },
+    logical=function (col, variable, mode=NULL) {
+        out <- columnParser("numeric")(col)
+        return(as.logical(out))
     },
     categorical_array=function (col, variable, mode) {
         out <- columnParser("categorical")(unlist(col), variable, mode)

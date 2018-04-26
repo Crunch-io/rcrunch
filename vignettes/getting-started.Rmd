@@ -8,8 +8,6 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-# Getting started with `crunch`
-
 ```{r, results='hide', echo=FALSE, message=FALSE}
 options(width=120)
 ```

@@ -31,6 +31,14 @@ test_that("rollup resolution validation", {
         " is invalid. Valid values are ")
 })
 
+test_that("cube missing functions set @useNA", {
+    cube <- loadCube(test_path("cubes/cat-x-mr-x-mr.json"))
+    expect_equal(cube@useNA, "no")
+    cube <- showMissing(cube)
+    expect_equal(cube@useNA, "always")
+    expect_equal(hideMissing(cube)@useNA, "no")
+})
+
 with_mock_crunch({
     ds <- loadDataset("test ds")
     v <- ds$starttime

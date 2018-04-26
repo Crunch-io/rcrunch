@@ -214,6 +214,7 @@ with_mock_crunch({
             expect_prints(print(book[[1]]), get_output(out))
             ## TODO: print method for TabBookResult
         })
+
         test_that("The first result in a MultitableResult has 2 dimensions", {
             expect_identical(dim(book[[1]][[1]]), c(2L, 1L))
         })
@@ -245,8 +246,9 @@ with_mock_crunch({
             test_that("tab book print methods", {
                 ## TODO: print method for TabBookResult
             })
+
             test_that("The first result in a MultitableResult has 3 dimensions", {
-                expect_identical(dim(book[[1]][[1]]), c(5L, 1L, 2L))
+                expect_identical(dim(showMissing(book[[1]][[1]])), c(5L, 1L, 2L))
             })
             test_that("dim names", {
                 expect_identical(names(book[[1]][[1]]),
@@ -274,7 +276,7 @@ with_mock_crunch({
                 ## TODO: print method for TabBookResult
             })
             test_that("The first result in a MultitableResult has 3 dimensions", {
-                expect_identical(dim(book[[1]][[1]]), c(3L, 1L))
+                expect_identical(dim(showMissing(book[[1]][[1]])), c(3L, 1L))
             })
             test_that("dim names", {
                 expect_identical(names(book[[1]][[1]]),

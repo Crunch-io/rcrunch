@@ -213,19 +213,17 @@ with_mock_crunch({
 with_test_authentication({
     ds <- newDataset(mtcars)
     test_that("Basic folder integration test", {
-        with(temp.option(folders.enabled=TRUE, {
-            ds <- mkdir(ds, "test")
-            expect_true("test" %in% names(cd(ds, "/")))
-            ds <- mv(ds, "mpg", "test")
-            # Variable is in `names`
-            expect_true("mpg" %in% names(ds))
-            # But it's not at the top level
-            expect_false("mpg" %in% names(cd(ds, "/")))
-            expect_true("mpg" %in% names(cd(ds, "test")))
-            skip("Backend bug in deleting folders")
-            with_consent(ds <- rmdir(ds, "test"))
-            expect_false("test" %in% names(cd(ds, "/")))
-            expect_false("mpg" %in% names(ds))
-        }))
+        ds <- mkdir(ds, "test")
+        expect_true("test" %in% names(cd(ds, "/")))
+        ds <- mv(ds, "mpg", "test")
+        # Variable is in `names`
+        expect_true("mpg" %in% names(ds))
+        # But it's not at the top level
+        expect_false("mpg" %in% names(cd(ds, "/")))
+        expect_true("mpg" %in% names(cd(ds, "test")))
+        with_consent(ds <- rmdir(ds, "test"))
+        expect_false("test" %in% names(cd(ds, "/")))
+        skip("Backend bug in deleting folders")
+        expect_false("mpg" %in% names(ds))
     })
 })

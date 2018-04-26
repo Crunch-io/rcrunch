@@ -20,8 +20,7 @@ NULL
 
 #' @rdname dichotomize
 #' @export
-setMethod("is.dichotomized", "Categories",
-    function (x) any(vapply(x, is.selected, logical(1))))
+setMethod("is.dichotomized", "Categories", function (x) any(is.selected(x)))
 
 .dichotomize.categories <- function (x, i) {
     ## Internal method for dichtomizing Categories (or lists)

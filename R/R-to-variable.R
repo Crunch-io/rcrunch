@@ -4,38 +4,31 @@ NULL
 #' @rdname toVariable
 #' @export
 setMethod("toVariable", "character", function (x, ...) {
-    return(structure(list(values=x, type="text", ...),
-        class="VariableDefinition"))
+    return(VariableDefinition(values=x, type="text", ...))
 })
 #' @rdname toVariable
 #' @export
 setMethod("toVariable", "numeric", function (x, ...) {
-    return(structure(list(values=x, type="numeric", ...),
-        class="VariableDefinition"))
+    return(VariableDefinition(values=x, type="numeric", ...))
 })
 #' @rdname toVariable
 #' @export
 setMethod("toVariable", "factor", function (x, ...) {
-    nlevels <- length(levels(x))
-    out <- structure(list(values=as.integer(x), type="categorical",
-        categories=categoriesFromLevels(levels(x)), ...),
-        class="VariableDefinition")
-    return(NAToCategory(out, useNA="always"))
+    return(VariableDefinition(values=as.integer(x), type="categorical",
+        categories=categoriesFromLevels(levels(x)), ...))
 })
 #' @rdname toVariable
 #' @export
 setMethod("toVariable", "Date", function (x, ...) {
-    return(structure(list(values=as.character(x), type="datetime",
-        resolution="D", ...),
-        class="VariableDefinition"))
+    return(VariableDefinition(values=as.character(x), type="datetime",
+        resolution="D", ...))
 })
 #' @rdname toVariable
 #' @export
 setMethod("toVariable", "POSIXt", function (x, ...) {
-    return(structure(list(values=strftime(x, "%Y-%m-%dT%H:%M:%OS3"),
+    return(VariableDefinition(values=strftime(x, "%Y-%m-%dT%H:%M:%OS3"),
         type="datetime",
-        resolution="ms", ...),
-        class="VariableDefinition"))
+        resolution="ms", ...))
 })
 
 #' @rdname toVariable
@@ -53,12 +46,17 @@ setMethod("toVariable", "VariableDefinition", function (x, ...) {
 #' @rdname toVariable
 #' @export
 setMethod("toVariable", "logical", function (x, ...) {
-    ## Make it categorical
-    out <- structure(list(values=2L-as.integer(x), type="categorical",
-        categories=categoriesFromLevels(c("True", "False")),
-        ...),
-        class="VariableDefinition")
-    return(NAToCategory(out, useNA="always"))
+    vals <- as.integer(x)
+    vals[is.na(vals)] <- -1L
+    cats <- .selected.cats
+    ## Pre-3VL category names
+    ## Note that with the extra strict definition of `is.3vl`, this won't
+    ## register as a "logical" type yet and so as.vector will continue to return
+    ## this as categorical, not logical
+    cats[[1]]$name <- "True"
+    cats[[2]]$name <- "False"
+    return(VariableDefinition(values=vals, type="categorical",
+        categories=cats, ...))
 })
 
 # haven::labelled* are S3 classes, so we have to register them
@@ -93,10 +91,8 @@ setMethod("toVariable", "labelled_spss", function (x, ...) {
         return(cat)
     })
 
-    out <- structure(list(values=as.integer(x_factor), type="categorical",
-                          categories=categories, ...),
-                     class="VariableDefinition")
-    return(NAToCategory(out, useNA="always"))
+    return(VariableDefinition(values=as.integer(x_factor), type="categorical",
+                          categories=categories, ...))
 })
 
 
@@ -124,16 +120,7 @@ categoriesFromLevels <- function (level_vect) {
             "in translation to Categorical type")
         level_vect <- uniquify(level_vect)
     }
-    return(lapply(seq_along(level_vect), function (i) {
+    return(c(lapply(seq_along(level_vect), function (i) {
         list(id=i, name=level_vect[i], numeric_value=i, missing=FALSE)
-    }))
-}
-
-NAToCategory <- function (var.metadata, useNA=c("ifany", "always")) {
-    useNA <- match.arg(useNA)
-    if (useNA == "always" || any(is.na(var.metadata$values))) {
-        var.metadata$values[is.na(var.metadata$values)] <- -1L
-        var.metadata$categories[[length(var.metadata$categories)+1]] <- .no.data
-    }
-    return(var.metadata)
+    }), list(.no.data)))
 }
