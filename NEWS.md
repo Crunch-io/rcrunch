@@ -5,6 +5,7 @@
 * `%in%` and `==` on Crunch objects now follow R semantics more closely with regards to missing data
 * Add some forward-compatible code to prepare for API changes to logical variables. This led to a couple of trivial changes to internals around boolean types that should not affect package users.
 * Export GitHub package version checking function so that other `crunch*` packages can use it
+* `CrunchCube`s can now be subset just like R arrays using the `[` method. 
 
 ## crunch 1.21.0
 ### Variable organization
