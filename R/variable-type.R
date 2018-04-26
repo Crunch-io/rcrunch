@@ -78,6 +78,10 @@ NULL
 #' @export
 setMethod("type", "CrunchVariable", function (x) type(tuple(x)))
 
+#' @rdname type
+#' @export
+setMethod("type", "VariableEntity", function (x) x@body$type)
+
 castVariable <- function (x, value) {
     if (!(type(x) %in% CASTABLE_TYPES)) {
         halt("Cannot change the type of a ", class(x), " by type<-")
