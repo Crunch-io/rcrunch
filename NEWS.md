@@ -3,6 +3,7 @@
 * Fix bug in assigning `subtotals(var) <- NULL` when it already was `NULL` (#231)
 * Consistently return `""` for variable metadata fields if no value is set (#232)
 * `%in%` and `==` on Crunch objects now follow R semantics much more closely.
+* `CrunchCube`s can now be subset just like R arrays using the `[` method. 
 
 ## crunch 1.21.0
 ### Variable organization
