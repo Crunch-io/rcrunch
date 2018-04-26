@@ -40,7 +40,7 @@ with_test_authentication({
         })
         test_that("compareDatasets catches that parent mismatch", {
             comp <- compareDatasets(part1, part2)
-            expect_output(summary(comp),
+            expect_prints(summary(comp),
                 "Contains subvariables found in other arrays after matching: CA2")
         })
         test_that("The append fails", {

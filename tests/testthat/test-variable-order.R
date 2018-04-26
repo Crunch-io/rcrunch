@@ -307,12 +307,12 @@ with_mock_crunch({
 
     ds3 <- loadDataset("ECON.sav")
     test_that("Show method for VO handles relative URLs correctly", {
-        expect_output(ordering(ds3),
+        expect_prints(ordering(ds3),
             "Gender\nBirth Year\nstarttime")
     })
 
     test_that("VariableOrder/Group show methods", {
-        expect_output(nested.ord,
+        expect_prints(nested.ord,
             paste("[+] Group 1",
                   "    Birth Year",
                   "    [+] Nested",
@@ -327,7 +327,7 @@ with_mock_crunch({
             fixed=TRUE)
         no <- nested.ord
         no[[3]] <- VariableGroup("Group 3", entities=list())
-        expect_output(no,
+        expect_prints(no,
             paste("[+] Group 1",
                   "    Birth Year",
                   "    [+] Nested",
@@ -344,7 +344,7 @@ with_mock_crunch({
             fixed=TRUE)
     })
     test_that("Printing a single group doesn't fail (though it probably should do better than show URLs)", {
-        expect_output(nested.ord[[2]],
+        expect_prints(nested.ord[[2]],
             paste("[+] Group 2",
                   "    https://app.crunch.io/api/datasets/1/variables/starttime/",
                   "    https://app.crunch.io/api/datasets/1/variables/catarray/",
@@ -354,7 +354,7 @@ with_mock_crunch({
 
     ord <- flattenOrder(test.ord)
     test_that("Composing a VariableOrder step by step: setup (flattenOrder)", {
-        expect_output(ord,
+        expect_prints(ord,
             paste("Birth Year",
                   "Gender",
                   "Categorical Location",
@@ -367,7 +367,7 @@ with_mock_crunch({
     })
     test_that("Composing a VariableOrder step by step: group 1 by dataset", {
         ord$Demos <<- ds[c("gender", "birthyr")]
-        expect_output(ord,
+        expect_prints(ord,
             paste("Categorical Location",
                   "mymrset",
                   "Text variable ftw",
@@ -381,7 +381,7 @@ with_mock_crunch({
     })
     test_that("Composing a VariableOrder step by step: group by Order subset", {
         ord$Arrays <<- ord[c(2, 5)] #ds[c("mymrset", "catarray")]
-        expect_output(ord,
+        expect_prints(ord,
             paste("Categorical Location",
                   "Text variable ftw",
                   "starttime",
@@ -396,7 +396,7 @@ with_mock_crunch({
     })
     test_that("Composing a VariableOrder step by step: nested group by dataset", {
         ord$Demos[["Others"]] <<- ds[c("birthyr", "textVar")]
-        expect_output(ord,
+        expect_prints(ord,
             paste("Categorical Location",
                   "starttime",
                   "[+] Demos",
@@ -412,7 +412,7 @@ with_mock_crunch({
     })
     test_that("Composing a VariableOrder step by step: reorder group", {
         ord$Demos <<- ord$Demos[2:1]
-        expect_output(ord,
+        expect_prints(ord,
             paste("Categorical Location",
                   "starttime",
                   "[+] Demos",
@@ -428,7 +428,7 @@ with_mock_crunch({
     })
     test_that("Composing a VariableOrder step by step: reorder order", {
         ord <<- ord[4:1]
-        expect_output(ord,
+        expect_prints(ord,
             paste("[+] Arrays",
                   "    mymrset",
                   "    Cat Array",
@@ -444,7 +444,7 @@ with_mock_crunch({
     })
     test_that("Composing a VariableOrder step by step: nested group by Group", {
         ord$Arrays$MR <<- ord$Arrays[1]
-        expect_output(ord,
+        expect_prints(ord,
             paste("[+] Arrays",
                   "    Cat Array",
                   "    [+] MR",
@@ -462,7 +462,7 @@ with_mock_crunch({
 
     test_that("Order print method follows namekey", {
         with(temp.option(crunch.namekey.variableorder="alias"), {
-            expect_output(ord,
+            expect_prints(ord,
                 paste("[+] Arrays",
                       "    catarray",
                       "    [+] MR",
@@ -490,7 +490,7 @@ with_mock_crunch({
 
     test_that("Composing a VariableOrder step by step: moveToGroup", {
         moveToGroup(ord$Demos$Others) <<- ds$starttime
-        expect_output(ord,
+        expect_prints(ord,
             paste("[+] Arrays",
                   "    Cat Array",
                   "    [+] MR",
@@ -509,7 +509,7 @@ with_mock_crunch({
     test_that("moveToGroup with groups", {
         moveToGroup(ord$Demos) <<- ord$Arrays
         ord <- removeEmptyGroups(ord)
-        expect_output(ord,
+        expect_prints(ord,
             paste("[+] Demos",
                   "    [+] Others",
                   "        Birth Year",
@@ -526,7 +526,7 @@ with_mock_crunch({
     test_that("moveToGroup with dataset subset", {
         moveToGroup(ord$Demos$Arrays) <<- ds[c("birthyr", "gender")]
         ord <- removeEmptyGroups(ord)
-        expect_output(ord,
+        expect_prints(ord,
             paste("[+] Demos",
                   "    [+] Others",
                   "        Text variable ftw",
@@ -541,7 +541,7 @@ with_mock_crunch({
             fixed=TRUE)
     })
     test_that("flattenOrder on that composed order", {
-        expect_output(flattenOrder(ord),
+        expect_prints(flattenOrder(ord),
             paste("Text variable ftw",
                   "starttime",
                   "Cat Array",
@@ -575,7 +575,7 @@ with_mock_crunch({
         catalog_url=varcat_url
     )
     test_that("Complex order with duplicates", {
-        expect_output(ord,
+        expect_prints(ord,
             paste("[+] Alpha",
                   "    Gender",
                   "    [+] Bravo",
@@ -602,7 +602,7 @@ with_mock_crunch({
             fixed=TRUE)
     })
     test_that("dedupeOrder removes duplicate entries", {
-        expect_output(dedupeOrder(ord),
+        expect_prints(dedupeOrder(ord),
             paste("[+] Alpha",
                   "    [+] Bravo",
                   "        [+] Charlie",
@@ -619,7 +619,7 @@ with_mock_crunch({
             fixed=TRUE)
     })
     test_that("dedupeOrder doesn't mutate an order that's already deduped", {
-        expect_output(dedupeOrder(dedupeOrder(ord)),
+        expect_prints(dedupeOrder(dedupeOrder(ord)),
             paste("[+] Alpha",
                   "    [+] Bravo",
                   "        [+] Charlie",
@@ -637,7 +637,7 @@ with_mock_crunch({
     })
     test_that("Setting duplicates <- FALSE triggers dedupeOrder", {
         duplicates(ord) <- FALSE
-        expect_output(ord,
+        expect_prints(ord,
             paste("[+] Alpha",
                   "    [+] Bravo",
                   "        [+] Charlie",
@@ -654,7 +654,7 @@ with_mock_crunch({
             fixed=TRUE)
     })
     test_that("intersect_entities", {
-        expect_output(intersect_entities(ord, ds[c("birthyr", "starttime")]),
+        expect_prints(intersect_entities(ord, ds[c("birthyr", "starttime")]),
             paste("[+] Alpha",
                   "    [+] Bravo",
                   "        [+] Charlie",

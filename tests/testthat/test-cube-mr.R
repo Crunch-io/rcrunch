@@ -1,5 +1,8 @@
 context("Multiple response cube specialness")
 
+##########################################
+### MR x CAT
+##########################################
 alldims <- list(
     pdl_gender=c("Male", "Female"),
     attitudes_recoded_klima_2=c("Climate change is the biggest threat to civilisation",
@@ -103,6 +106,58 @@ test_that("prop.table(cell) for as_selected x cat", {
             dims=alldims[c("attitudes_recoded_klima_2", "pdl_gender")]))
 })
 
+##########################################
+### CAT x MR
+##########################################
+cat_x_mr <- loadCube(test_path("cubes/selected-crosstab-array-last.json"))
+cat_x_mr_dims <- dimnames(cat_x_mr)
+# drop the "No Data" category in animal
+cat_x_mr_dims$fruit <- cat_x_mr_dims$fruit[cat_x_mr_dims$fruit != "No Data"]
+
+
+test_that("margin.table for cat x as_selected", {
+    expect_equal(margin.table(cat_x_mr, 1),
+                 cubify(
+                     49.3701228167475, 48.4562012457907, 56.931621579619,
+                     116.632067482127, 93.411479439707, 124.061990989576,
+                     dims=cat_x_mr_dims))
+    expect_equal(margin.table(cat_x_mr, 2),
+                 cubify(22.9672704148528, 45.7789165449064, 86.9728287914322,
+                        dims=cat_x_mr_dims["zoo"]))
+    ## NULL margin is the same shape as margin 1 here but is sum of selected + not
+    expect_equal(margin.table(cat_x_mr),
+                 cubify(
+                     166.002190298874, 141.867680685498, 180.993612569195,
+                     dims=cat_x_mr_dims["zoo"]))
+})
+
+test_that("prop.table(row) for cat x as_selected", {
+    expect_equal(prop.table(cat_x_mr, 1),
+                 cubify(
+                     0.17136174576676, 0.355633666090444, 0.463598595422233,
+                     0.124383630449479,0.305596916163552,0.488299506632138,
+                     dims=cat_x_mr_dims))
+})
+test_that("prop.table(col) for cat x as_selected", {
+    expect_equal(prop.table(cat_x_mr, 2),
+                 cubify(
+                     0.368356808701398,0.376432161231965,0.303467418114167,
+                     0.631643191298602,0.623567838768035,0.696532581885833,
+                     dims=cat_x_mr_dims))
+})
+test_that("prop.table(cell) for cat x as_selected", {
+    ## Note: not based on expectation from JS tests
+    expect_equal(prop.table(cat_x_mr),
+                 cubify(
+                     0.0509640892048795,0.121469924725558,0.145825145013507,
+                     0.0873911359490897,0.201217500089628,0.334704678977833,
+                     dims=cat_x_mr_dims))
+})
+
+
+##########################################
+### CAT x MR x MR
+##########################################
 cat_x_mr_x_mr <- loadCube(test_path("cubes/cat-x-mr-x-mr.json"))
 cat_x_mr_x_mr_dims <- dimnames(cat_x_mr_x_mr)
 # drop the "No Data" category in animal
@@ -130,7 +185,7 @@ test_that("prop.table(col) for cat x MR x MR", {
                         dims=cat_x_mr_x_mr_dims))
 
 })
-test_that("prop.table(cell) for as_selected x cat", {
+test_that("prop.table(cell) for cat x MR x MR", {
     expect_equal(prop.table(cat_x_mr_x_mr),
                  cubify(0.05795,0.17985,
                         0.00985,0.0302,
@@ -141,7 +196,9 @@ test_that("prop.table(cell) for as_selected x cat", {
                         dims=cat_x_mr_x_mr_dims))
 })
 
-
+##########################################
+### Internal function tests
+##########################################
 test_that("as_selected_margins adds margins in the right cases", {
     nothing_selected <- c(FALSE, FALSE) # cat by cat
     expect_equal(as_selected_margins(1, nothing_selected), 1)

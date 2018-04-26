@@ -4,10 +4,13 @@
 \alias{envOrOption}
 \title{Grab either env variable or option}
 \usage{
-envOrOption(opt)
+envOrOption(opt, default = NULL)
 }
 \arguments{
 \item{opt}{the option to get}
+
+\item{default}{if the specified option is not set in either the option or as
+an environment variable, use this instead.}
 }
 \value{
 the value of the option

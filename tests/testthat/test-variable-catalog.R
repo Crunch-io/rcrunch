@@ -76,7 +76,7 @@ with_mock_crunch({
         expect_identical(types(varcat)[1:4],
             c("numeric", "categorical", "categorical", "multiple_response"))
         expect_identical(descriptions(varcat[1:4]),
-            c(NA, "Gender", "Location test", "Please select all that apply"))
+            c("", "Gender", "Location test", "Please select all that apply"))
         expect_identical(notes(varcat[1:4]),
             c("Asked instead of age", "", "", ""))
     })
@@ -93,7 +93,7 @@ with_mock_crunch({
     })
 
     test_that("show method", {
-        expect_output(varcat[1:4],
+        expect_prints(varcat[1:4],
             get_output(data.frame(
                 alias=c("birthyr", "gender", "location", "mymrset"),
                 name=c("Birth Year", "Gender", "Categorical Location", "mymrset"),
@@ -123,7 +123,7 @@ with_mock_crunch({
         expect_identical(
             names(varDF),
             c("name", "discarded", "alias", "type", "id", "description",
-                "notes", "subvariables", "subvariables_catalog", "resolution",
+                "notes", "uniform_basis", "subvariables", "subvariables_catalog", "resolution",
                 "rollup_resolution")
         )
         expect_identical(

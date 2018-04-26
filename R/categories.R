@@ -158,7 +158,7 @@ setMethod("is.selected<-", "Categories", function (x, value) {
     if (length(value) != length(x)) {
         halt("You supplied ", length(value), " logical values for ", length(x), " Categories.")
     }
-    
+
     x@.Data <- mapply(function (x, value) {
         is.selected(x) <- value
         return(x)

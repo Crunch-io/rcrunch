@@ -1,14 +1,14 @@
 context("Expressions")
 
 test_that(".dispatchFilter uses right numeric function", {
-    ## Use expect_output because toJSON returns class "json" but prints correctly
-    expect_fixed_output(toJSON(.dispatchFilter(5)),
+    ## Use expect_prints because toJSON returns class "json" but prints correctly
+    expect_prints(toJSON(.dispatchFilter(5)),
         paste0('{"function":"==","args":[{"function":"row",',
         '"args":[]},{"value":4}]}'))
-    expect_fixed_output(toJSON(.dispatchFilter(c(5, 7))),
+    expect_prints(toJSON(.dispatchFilter(c(5, 7))),
         paste0('{"function":"in","args":[{"function":"row",',
         '"args":[]},{"column":[4,6]}]}'))
-    expect_fixed_output(toJSON(.dispatchFilter(5:7)),
+    expect_prints(toJSON(.dispatchFilter(5:7)),
         paste0('{"function":"between","args":[{"function":"row",',
         '"args":[]},{"value":4},',
         '{"value":7}]}'))
@@ -32,23 +32,23 @@ with_mock_crunch({
                 list(value=5)
             )
         )
-        expect_identical(zcl(e1), zexp)
-        expect_fixed_output(e1, "Crunch expression: birthyr + 5")
+        expect_equivalent(zcl(e1), zexp)
+        expect_prints(e1, "Crunch expression: birthyr + 5")
         e2 <- 5 + ds$birthyr
         expect_is(e2, "CrunchExpr")
-        expect_fixed_output(e2, "Crunch expression: 5 + birthyr")
+        expect_prints(e2, "Crunch expression: 5 + birthyr")
     })
 
     test_that("Integer printing removes L", {
         e1 <- ds$birthyr + 1L
         expect_is(e1, "CrunchExpr")
-        expect_fixed_output(e1, "Crunch expression: birthyr + 1")
+        expect_prints(e1, "Crunch expression: birthyr + 1")
     })
 
     test_that("Logic generates expressions", {
         e1 <- ds$birthyr < 0
         expect_is(e1, "CrunchLogicalExpr")
-        expect_fixed_output(e1, "Crunch logical expression: birthyr < 0")
+        expect_prints(e1, "Crunch logical expression: birthyr < 0")
     })
 
     test_that("R logical & CrunchLogicalExpr", {
@@ -63,66 +63,66 @@ with_mock_crunch({
     })
 
     test_that("Datetime operations: logical", {
-        expect_fixed_output(ds$starttime == "2015-01-01",
+        expect_prints(ds$starttime == "2015-01-01",
             'Crunch logical expression: starttime == "2015-01-01"')
-        expect_fixed_output(ds$starttime > "2015-01-01",
+        expect_prints(ds$starttime > "2015-01-01",
             'Crunch logical expression: starttime > "2015-01-01"')
-        expect_fixed_output(ds$starttime == as.Date("2015-01-01"),
+        expect_prints(ds$starttime == as.Date("2015-01-01"),
             'Crunch logical expression: starttime == "2015-01-01"')
-        expect_fixed_output(ds$starttime > as.Date("2015-01-01"),
+        expect_prints(ds$starttime > as.Date("2015-01-01"),
             'Crunch logical expression: starttime > "2015-01-01"')
     })
 
     test_that("Logical expr with categoricals", {
         expect_is(ds$gender == "Male", "CrunchLogicalExpr")
-        expect_fixed_output(ds$gender == "Male",
+        expect_prints(ds$gender == "Male",
             'Crunch logical expression: gender == "Male"')
-        expect_fixed_output(ds$gender == as.factor("Male"),
+        expect_prints(ds$gender == as.factor("Male"),
             'Crunch logical expression: gender == "Male"')
-        expect_fixed_output(ds$gender %in% "Male",
-            'Crunch logical expression: gender == "Male"')
-        expect_fixed_output(ds$gender %in% as.factor("Male"),
-            'Crunch logical expression: gender == "Male"')
-        expect_fixed_output(ds$gender %in% c("Male", "Female"),
+        expect_prints(ds$gender %in% "Male",
+            'Crunch logical expression: gender %in% "Male"')
+        expect_prints(ds$gender %in% as.factor("Male"),
+            'Crunch logical expression: gender %in% "Male"')
+        expect_prints(ds$gender %in% c("Male", "Female"),
             'Crunch logical expression: gender %in% c("Male", "Female")')
-        expect_fixed_output(ds$gender %in% as.factor(c("Male", "Female")),
+        expect_prints(ds$gender %in% as.factor(c("Male", "Female")),
             'Crunch logical expression: gender %in% c("Male", "Female")')
-        expect_fixed_output(ds$gender != "Female",
+        expect_prints(ds$gender != "Female",
             'Crunch logical expression: gender != "Female"')
-        expect_fixed_output(ds$gender != as.factor("Female"),
+        expect_prints(ds$gender != as.factor("Female"),
             'Crunch logical expression: gender != "Female"')
     })
     test_that("Referencing category names that don't exist warns and drops", {
         expect_warning(
-            expect_fixed_output(ds$gender == "other",
+            expect_prints(ds$gender == "other",
                 'Crunch logical expression: gender %in% character(0)'),
             paste("Category not found:", dQuote("other")))
         expect_warning(
-            expect_fixed_output(ds$gender %in% c("other", "Male", "another"),
-                'Crunch logical expression: gender == "Male"'),
+            expect_prints(ds$gender %in% c("other", "Male", "another"),
+                'Crunch logical expression: gender %in% "Male"'),
             paste("Categories not found:", dQuote("other"), "and",
                 dQuote("another")))
         expect_warning(
-            expect_fixed_output(ds$gender != "other",
+            expect_prints(ds$gender != "other",
                 'Crunch logical expression: !gender %in% character(0)'),
             paste("Category not found:", dQuote("other")))
     })
 
     test_that("Show method for logical expressions", {
-        expect_fixed_output(ds$gender %in% c("Male", "Female"),
+        expect_prints(ds$gender %in% c("Male", "Female"),
             'Crunch logical expression: gender %in% c("Male", "Female"')
-        expect_fixed_output(ds$gender %in% 1:2,
+        expect_prints(ds$gender %in% 1:2,
             'Crunch logical expression: gender %in% c("Male", "Female"')
-        expect_fixed_output(ds$birthyr == 1945 | ds$birthyr < 1941,
+        expect_prints(ds$birthyr == 1945 | ds$birthyr < 1941,
             'birthyr == 1945 | birthyr < 1941')
-        expect_fixed_output(ds$gender %in% "Male" & !is.na(ds$birthyr),
-            'gender == "Male" & !is.na(birthyr)')
-        expect_fixed_output(!(ds$gender == "Male"),
+        expect_prints(ds$gender %in% "Male" & !is.na(ds$birthyr),
+            'gender %in% "Male" & !is.na(birthyr)')
+        expect_prints(!(ds$gender == "Male"),
             'Crunch logical expression: !gender == "Male"')
             ## TODO: better parentheses for ^^
-        expect_fixed_output(duplicated(ds$gender),
+        expect_prints(duplicated(ds$gender),
             'Crunch logical expression: duplicated(gender)')
-        expect_fixed_output(duplicated(ds$gender == "Male"),
+        expect_prints(duplicated(ds$gender == "Male"),
             'Crunch logical expression: duplicated(gender == "Male")')
     })
 
@@ -130,11 +130,11 @@ with_mock_crunch({
         age <- 2016 - ds$birthyr
         ## Note: no check for correct number of rows
         expect_is(age[c(TRUE, FALSE, TRUE)], "CrunchExpr")
-        expect_fixed_output(toJSON(activeFilter(age[c(TRUE, FALSE, TRUE)])),
+        expect_prints(toJSON(activeFilter(age[c(TRUE, FALSE, TRUE)])),
             paste0('{"function":"in","args":[{"function":"row",',
             '"args":[]},{"column":[0,2]}]}'))
         expect_is(age[c(1, 3)], "CrunchExpr")
-        expect_fixed_output(toJSON(activeFilter(age[c(1, 3)])),
+        expect_prints(toJSON(activeFilter(age[c(1, 3)])),
             paste0('{"function":"in","args":[{"function":"row",',
             '"args":[]},{"column":[0,2]}]}'))
     })
@@ -143,6 +143,16 @@ with_mock_crunch({
         skip("TODO: something intelligent with parentheses and order of operations (GH issue #99)")
         print(ds$birthyr * 3 + 5)
         print(3 * (ds$birthyr + 5))
+    })
+
+    test_that("rollupResolution functions generate expected requests", {
+        expect_identical(rollupResolution(ds$starttime), "s")
+        expect_PATCH(rollupResolution(ds$starttime) <- "M",
+            'https://app.crunch.io/api/datasets/1/variables/starttime/',
+            '{"view":{"rollup_resolution":"M"}}')
+        expect_error(rollupResolution(ds$starttime) <- "invalid_rollup",
+            paste0(dQuote("resolution"), " is invalid. Valid values are Y, Q, M, W, D, h, m, s, or ms")
+        )
     })
 })
 
@@ -177,7 +187,7 @@ with_test_authentication({
             })
         })
     })
-    
+
     test_that("Logical expressions evaluate", {
         e1 <- ds$v3 > 10
         expect_is(e1, "CrunchLogicalExpr")
@@ -192,7 +202,7 @@ with_test_authentication({
         expect_identical(as.vector(e2)[na_filt], df[na_filt,]$v2 == "a")
         expect_identical(which(e2), which(df$v2 == "a"))
     })
-    
+
     test_that("R & Crunch logical together", {
         e1 <- ds$v3 < 10 | c(rep(FALSE, 15), rep(TRUE, 5))
         expect_equivalent(as.vector(ds$v3[e1]),
@@ -205,14 +215,14 @@ with_test_authentication({
             c(8, 10, 12))
     })
 
-    test_that("expressions on expresssions evaluate", {
+    test_that("expressions on expressions evaluate", {
         e3 <- ds$v3 + ds$v3 + 10
         expect_is(e3, "CrunchExpr")
-        expect_fixed_output(e3, "Crunch expression: v3 + v3 + 10")
+        expect_prints(e3, "Crunch expression: v3 + v3 + 10")
         expect_identical(as.vector(e3), 2*df$v3 + 10)
         e4 <- ds$v3 + ds$v3 * 2
         expect_is(e4, "CrunchExpr")
-        expect_fixed_output(e4, "Crunch expression: v3 + v3 * 2")
+        expect_prints(e4, "Crunch expression: v3 + v3 * 2")
         expect_identical(as.vector(e4), 3*df$v3)
     })
 
@@ -319,5 +329,11 @@ with_test_authentication({
         expect_identical(which(duplicated(ds$v3 + 4)), integer(0))
         skip("'which' isn't implemented correctly")
         expect_identical(which(duplicated(ds$v4)), 3:20)
+    })
+
+    test_that("rollupResolution can be set", {
+        expect_null(rollupResolution(ds$v5))
+        rollupResolution(ds$v5) <- "M"
+        expect_identical(rollupResolution(ds$v5), "M")
     })
 })

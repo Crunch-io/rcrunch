@@ -13,9 +13,9 @@ with_mock_crunch({
     })
 
     test_that("Categories print method", {
-        expect_output(cats[[1]],
+        expect_prints(cats[[1]],
                       get_output(data.frame(id=1, name="Male", value=1, missing=FALSE)))
-        expect_output(cats,
+        expect_prints(cats,
                       get_output(data.frame(id=c(1, 2, -1), name=c("Male", "Female", "No Data"), value=c(1, 2, NA), missing=c(FALSE, FALSE, TRUE))))
     })
 

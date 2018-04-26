@@ -21,7 +21,7 @@ with_test_authentication({
             expect_length(batches(part2), 2)
         })
         test_that("compareDatasets says they're all good", {
-            expect_output(summary(compareDatasets(part1, part2)),
+            expect_prints(summary(compareDatasets(part1, part2)),
                 "All good :)")
         })
         test_that("they append successfully", {
@@ -45,7 +45,7 @@ with_test_authentication({
                             mr_2=c(rep(NA, 995), 0, 1, 1, 1, 0),
                             v4=as.factor(LETTERS[2:3]))))
         test_that("compareDatasets identifies the category id mismatch", {
-            expect_output(summary(compareDatasets(part1, part2)),
+            expect_prints(summary(compareDatasets(part1, part2)),
                 paste(
                     "Mismatched ids: 4 ",
                     " id.A name id.B",
@@ -80,7 +80,7 @@ with_test_authentication({
         ## Aliases are c("mr_1", "mr_2", "alt")
 
         test_that("compareDatasets sees the mismatch", {
-            expect_output(summary(compareDatasets(part1, part2)),
+            expect_prints(summary(compareDatasets(part1, part2)),
                 paste(
                     "Mismatched names: 2 ",
                     " name.A alias name.B",

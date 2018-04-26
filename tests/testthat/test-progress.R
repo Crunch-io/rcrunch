@@ -1,7 +1,9 @@
 context("Polling progress")
 
 test_that("progressMessage", {
-    expect_silent(progressMessage("Message!"))
+    with(temp.option(crunch.show.progress=FALSE), {
+        expect_silent(progressMessage("Message!"))
+    })
     with(temp.option(crunch.show.progress=NULL), {
         expect_message(progressMessage("Message!"), "Message!")
     })
@@ -42,7 +44,7 @@ with_mock_crunch({
             url <- build_mock_url(paste0(url, counter)) ## Add counter
             counter <<- counter + 1 ## Increment
             return(fake_response(url, "GET",
-                content=readBin(url, "raw", 4096), ## Assumes mock is under 4K
+                content=readBin(find_mock_file(url), "raw", 4096), ## Assumes mock is under 4K
                 status_code=200, headers=list(`Content-Type`="application/json")))
         },
         test_that("Progress polling goes until 100 and has a newline", {
@@ -78,8 +80,8 @@ with_mock_crunch({
             })
             logs <- loadLogfile(logfile)
             expect_identical(logs$verb, c("GET", "GET"))
-            expect_identical(logs$url,
-                c("app.crunch.io/api/progress/1.json", "app.crunch.io/api/progress/2.json"))
+            expect_identical(sub("\\.json$", "", logs$url),
+                c("app.crunch.io/api/progress/1", "app.crunch.io/api/progress/2"))
         }),
         test_that("Auto-polling when progress reports failure", {
             counter <<- 1
@@ -94,8 +96,8 @@ with_mock_crunch({
             })
             logs <- loadLogfile(logfile)
             expect_identical(logs$verb, c("GET", "GET"))
-            expect_identical(logs$url,
-                c("app.crunch.io/api/progress2/1.json", "app.crunch.io/api/progress2/2.json"))
+            expect_identical(sub("\\.json$", "", logs$url),
+                c("app.crunch.io/api/progress2/1", "app.crunch.io/api/progress2/2"))
         })
     )
 })

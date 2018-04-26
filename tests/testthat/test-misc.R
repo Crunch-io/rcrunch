@@ -133,6 +133,9 @@ with(temp.option(foo.bar="no", foo.other="other"), {
             expect_identical(envOrOption("foo.bar"), "yes") ## Env var trumps option
             expect_identical(envOrOption("foo.other"), "other") ## Option if there is no env var
             expect_null(envOrOption("somethingelse")) ## Null if neither
+            ## default works
+            expect_identical(envOrOption("somethingelse", "I'm a default"),
+                             "I'm a default") 
         })
     })
 })
@@ -193,6 +196,19 @@ test_that("Cubify works with many dimensions", {
     expect_length(dim(cube@arrays$count), 5)
 })
 
+test_that("is.TRUEorFALSE errors correctly", {
+    expect_true(is.TRUEorFALSE(TRUE))
+    expect_true(is.TRUEorFALSE(FALSE))
+    expect_false(is.TRUEorFALSE("char"))
+    expect_false(is.TRUEorFALSE(NA))
+    expect_false(is.TRUEorFALSE(c(TRUE, TRUE)))
+})
+
+test_that("checkInstalledPackages", {
+    expect_error(checkInstalledPackages(c("not", "installed")),
+        paste0("Missing required packages: ", dQuote("not"), " and ", dQuote("installed")))
+    expect_silent(checkInstalledPackages("stats"))
+})
 
 with_mock_crunch({
     ds <- loadDataset("test ds")

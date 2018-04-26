@@ -127,7 +127,7 @@ with_mock_crunch({
                                     name="Shared multitable")
             expect_is(mtable, "Multitable")
         })
-        expect_output(mtable,
+        expect_prints(mtable,
                       paste(paste0("Multitable ", dQuote("Shared multitable")),
                                    "Column variables:",
                                    "  gender",
@@ -211,7 +211,7 @@ with_mock_crunch({
                 .Dimnames=list(
                     c("Admitted", "Rejected"),
                     c("", "A", "B", "C", "D", "E", "F", "Male", "Female")))
-            expect_output(print(book[[1]]), get_output(out))
+            expect_prints(print(book[[1]]), get_output(out))
             ## TODO: print method for TabBookResult
         })
 
