@@ -197,6 +197,9 @@ formatExpression <- function (expr) {
             return(paste0("!", args[1]))
         } else if (func %in% .operators) {
             return(paste(args[1], func, args[2]))
+        } else if (func == "selected" && grepl("%in%", args[1])) {
+            ## R's %in% is Crunch's selected(in()) wrt missing data handling
+            return(args[1])
         } else {
             return(paste0(func, "(", paste(args, collapse=", "), ")"))
         }

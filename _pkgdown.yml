@@ -2,8 +2,11 @@ url: http://crunch.io/r/crunch/
 title: Crunch
 template:
   params:
-    bootswatch: flatly
+    bootswatch: simplex
     ganalytics: UA-50332119-2
+    docsearch:
+      api_key: 9fbcb3ae4d05600402e31f66b9b9501e
+      index_name: crunch
 articles:
 - title: Getting started
   desc: How to find, import, and clean data in Crunch
@@ -134,6 +137,7 @@ reference:
   - cube-computing
   - cube-methods
   - cube-residuals
+  - index.table
   - dashboard
   - duplicated
   - filter-catalog

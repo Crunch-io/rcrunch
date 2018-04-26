@@ -15,7 +15,6 @@ vignette: >
 library(crunch)
 load("vignettes.RData")
 ```
-# Array Variables
 
 Crunch supports more types of variables than many of the data formats from which you can create datasets. Plain-text .csv files, for example, can't express that some columns are actually indicator matrices of multiple selections (Multiple Response Variables). Most SPSS .sav files do not indicate Categorical Arrays (otherwise known as "grids") as being part of a group---they are simply several categorical variables. The same is true for an R `data.frame`.
 

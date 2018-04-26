@@ -111,12 +111,13 @@ ProjectCatalog
 recode
 recurse
 recurses
+repo
 rmarkdown
-RStudio
 RMarkdown
 Rmd
 rollup
 Rprofile
+RStudio
 sav
 savepoints
 Savepoints

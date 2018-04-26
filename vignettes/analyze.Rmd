@@ -16,7 +16,6 @@ load("vignettes.RData")
 options(width=120)
 ```
 
-# Computing with R and Crunch
 With `crunch`, you can harness the power of R to do computations with your datasets in Crunch that would be difficult or impossible to accomplish in a graphical user interface.
 
 ## Crosstabbing
