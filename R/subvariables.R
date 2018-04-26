@@ -51,10 +51,10 @@ subvariableURLs <- function (x) {
 #' @export
 setMethod("subvariables", "VariableTuple", function (x) {
     catalog_url <- absoluteURL(x$subvariables_catalog, base=x@index_url) %||% ""
-        subvars <- x$subreferences
+    subvars <- x$subreferences
 
-        # if there is a subvariable element, we need to use that for ordering
-        names(subvars) <- paste0(absoluteURL(names(subvars), base=catalog_url), "/")
+    # if there is a subvariable element, we need to use that for ordering
+    names(subvars) <- paste0(absoluteURL(names(subvars), base=catalog_url), "/")
 
     return(Subvariables(index=subvars[x$subvariables], self=catalog_url))
 })
