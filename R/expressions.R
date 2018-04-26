@@ -356,8 +356,6 @@ setMethod("[", c("CrunchExpr", "numeric"), function (x, i, ...) {
 
 #' "which" method for CrunchLogicalExpr
 #'
-#' NOTE: this isn't correct. Don't use it yet.
-#'
 #' @param x CrunchLogicalExpr
 #' @param arr.ind Ignored
 #' @param useNames Ignored

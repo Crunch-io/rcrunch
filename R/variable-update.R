@@ -224,7 +224,7 @@ setMethod("[<-", c("CrunchVariable", "ANY", "missing", "logical"),
             return(x)
         } else if (has.categories(x) &&
             all(names(categories(x)) %in% c("True", "False", "No Data"))) {
-
+            ## TODO: next, make this more 3VL-aware
             ## This is "logical-as-categorical", so we can take TRUE/FALSE values
             value <- c("True", "False")[2L - as.integer(value)]
             return(.categorical.update[["character"]](x, i, j, value))

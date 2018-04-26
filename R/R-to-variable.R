@@ -46,10 +46,17 @@ setMethod("toVariable", "VariableDefinition", function (x, ...) {
 #' @rdname toVariable
 #' @export
 setMethod("toVariable", "logical", function (x, ...) {
-    ## Make it categorical
-    return(VariableDefinition(values=2L-as.integer(x), type="categorical",
-        categories=categoriesFromLevels(c("True", "False")),
-        ...))
+    vals <- as.integer(x)
+    vals[is.na(vals)] <- -1L
+    cats <- .selected.cats
+    ## Pre-3VL category names
+    ## Note that with the extra strict definition of `is.3vl`, this won't
+    ## register as a "logical" type yet and so as.vector will continue to return
+    ## this as categorical, not logical
+    cats[[1]]$name <- "True"
+    cats[[2]]$name <- "False"
+    return(VariableDefinition(values=vals, type="categorical",
+        categories=cats, ...))
 })
 
 # haven::labelled* are S3 classes, so we have to register them
