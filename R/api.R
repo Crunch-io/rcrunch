@@ -175,10 +175,10 @@ getAPIRoot <- function (x=getOption("crunch.api")) {
 }
 
 sessionURL <- function (key, collection="catalogs") {
-    return(shojiURL(session_store$root, collection, key))
+    return(shojiURL(getAPIRoot(), collection, key))
 }
 
-rootURL <- function (x, obj=session_store$root) {
+rootURL <- function (x, obj=getAPIRoot()) {
     ## DEPRECATE ME
     if (is.shojiObject(obj)) {
         return(obj@urls[[paste0(x, "_url")]])

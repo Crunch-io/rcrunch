@@ -40,6 +40,7 @@ Suggests:
     testthat (>= 2.0.0)
 VignetteBuilder: knitr
 Language: en-US
+Encoding: UTF-8
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
 Collate:
@@ -78,6 +79,7 @@ Collate:
     'cube-query.R'
     'cube-residuals.R'
     'cube-result.R'
+    'cube-subset.R'
     'cube-transforms.R'
     'cube-variables.R'
     'cut.R'

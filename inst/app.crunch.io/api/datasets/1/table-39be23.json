@@ -1,0 +1,33 @@
+{
+    "self": "https://app.crunch.io/api/datasets/1/table/?query=%7B%22out%22%3A%7B%22function%22%3A%22or%22%2C%22args%22%3A%5B%7B%22function%22%3A%22%3D%3D%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fbirthyr%2F%22%7D%2C%7B%22value%22%3A1945%7D%5D%7D%2C%7B%22function%22%3A%22%3C%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22https%3A%2F%2Fapp.crunch.io%2Fapi%2Fdatasets%2F1%2Fvariables%2Fbirthyr%2F%22%7D%2C%7B%22value%22%3A1941%7D%5D%7D%5D%7D%7D&filter=%7B%7D&offset=0&limit=50000",
+    "element": "crunch:table",
+    "data": {
+        "out": [0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1]
+    },
+    "description": "A Crunch Table of data for this dataset.",
+    "metadata": {
+        "out": {
+            "alias": null,
+            "type": "categorical",
+            "name": null,
+            "categories": [{
+                "numeric_value": 1,
+                "selected": true,
+                "id": 1,
+                "missing": false,
+                "name": "Selected"
+            }, {
+                "numeric_value": 0,
+                "missing": false,
+                "id": 0,
+                "name": "Other"
+            }, {
+                "numeric_value": null,
+                "missing": true,
+                "id": -1,
+                "name": "No Data"
+            }],
+            "description": ""
+        }
+    }
+}
