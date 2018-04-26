@@ -1,4 +1,4 @@
-stack_df <- read.csv("data-raw//survey_results_public.csv") ## This file is big and not checked into git
+stack_df <- read.csv("data-raw/survey_results_public.csv") ## This file is big and not checked into git
 
 r_users <- grep("R;|R$", stack_df$HaveWorkedLanguage)
 keepvars <- c(
