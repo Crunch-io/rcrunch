@@ -39,7 +39,7 @@ Internally there is actually a second method `datasets<-` that takes the value o
 
 ## Cube Subsetting
 
-Crunch cubes are mostly used to cross tabulate different variables in a crunch dataset. For instance if you cross tabulate two variables with `crtabs(~cyl + gear, data = ds)`, you get a 2 dimensional cube which looks just like a matrix. Cross tabbing three variables leads to a 3d cube, etc. This simple case gets quite a bit more complicated when you add array variables to the cube: 
+Crunch cubes are generally used to cross tabulate different variables in a crunch dataset. For instance if you cross tabulate two variables with `crtabs(~cyl + gear, data = ds)`, you get a 2 dimensional cube which looks just like a matrix. Cross tabbing three variables leads to a 3d cube, etc. This simple case gets quite a bit more complicated when you add array variables to the cube: 
 
 _Multiple response_
 
@@ -58,7 +58,7 @@ The main feature of representing these counts as high dimensional arrays is that
 
 The user cube differs from the real cube in that it doesn’t include MR selection dimensions. We assume that when the user is including an MR in a cube, they really only care about the parts of the cube where the MR is selected. So the 5d real cube listed above would become a 3d user cube with 300 entries (`5 * 6 * 10`) because we are selecting the slices of the cube where each MR selection dimension is equal to “Selected” and are able to drop the selections dimensions
 
-The printed cube differs from the user cube in that it doesn’t include missing categories. We assume that the user mostly wants to look at categories which are not-missing, and that they don’t care that much about the parts of the cube which represent missing categories. If the categorical variable above had two missing categories: “No Data” and “Not Answered” it would reduce the number of entries to 240 (`5 * 6 * 8`) . This behavior can be changed by setting the `cube@useNA` slot to `“always”`.  
+The printed cube differs from the user cube in that it doesn’t include missing categories. We assume that the user mostly wants to look at categories which are not-missing, and that they don’t care that much about the parts of the cube which represent missing categories. If the categorical variable above had two missing categories: “No Data” and “Not Answered” it would reduce the number of entries to 240 (`5 * 6 * 8`) . This behavior can be changed by setting the `cube@useNA` slot to `“always”`. The function `setCubeNa()` handles setting this slot on the cube.
 
 
 ### Cube subsetting
@@ -74,7 +74,7 @@ We resolve this problem by allowing the user to select whether they want the cub
 [1] 5 6 10
 ```
 
-This makes subsetting a bit easier because we can enforce the dimensions of the printed or literal cube. For instance
+This makes subsetting a bit easier because we can enforce the dimensions of the printed cube. For instance
 
 ```
 cube[5, 6, 10] 
@@ -82,7 +82,7 @@ cube[5, 6, 10]
  Errors because the user supplied the wrong number of dimensions while
 
 ```
-showMissing(cube)[cube[5, 3, 6, 3, 10] 
+showMissing(cube)[cube[5, 6, 10] 
 ```
 Returns the correct data they were looking for. 
 
@@ -92,7 +92,7 @@ There are two cases for dropping dimensions from the printed and user cubes whic
 
 _Dropping MR variable_
 
-The two MR dimensions are always dropped together. For instance if the first dimension of a cube is an MR and the user asks for `cube[1, ]` both MR dimensions are dropped and a one dimensional cube is returned. 
+The two MR dimensions are always dropped together. Consider a cube composed of a multiple response variable and a categorical varible. The real cube has three dimensions, and the printed cube has two, the first of which represents the multiple response variable. If the user asks for `cube[1, ]` both MR dimensions are dropped and a one dimensional cube is returned. 
 
 _Subsetting dimensions with missing values_
 

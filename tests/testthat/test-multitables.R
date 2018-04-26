@@ -216,7 +216,7 @@ with_mock_crunch({
         })
 
         test_that("The first result in a MultitableResult has 2 dimensions", {
-            expect_equal(dim(book[[1]][[1]]), c(2, 1))
+            expect_identical(dim(book[[1]][[1]]), c(2L, 1L))
         })
         test_that("prop.table methods", {
             ## prop.table on a TabBookResult returns a list of lists of prop.tables
@@ -248,7 +248,7 @@ with_mock_crunch({
             })
 
             test_that("The first result in a MultitableResult has 3 dimensions", {
-                expect_equal(dim(showMissing(book[[1]][[1]])), c(5, 1, 2))
+                expect_identical(dim(showMissing(book[[1]][[1]])), c(5L, 1L, 2L))
             })
             test_that("dim names", {
                 expect_identical(names(book[[1]][[1]]),

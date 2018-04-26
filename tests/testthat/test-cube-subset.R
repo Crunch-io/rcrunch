@@ -111,8 +111,6 @@ test_that("translateCubeIndex", {
         alist(1, , TRUE, , TRUE))
     expect_identical(translateCubeIndex(cat_x_mr_x_mr, alist(1:2, 1:2, 1:2), drop = FALSE),
         alist(1:2, 1:2, TRUE, 1:2, TRUE))
-    expect_identical(translateCubeIndex(cat_x_mr_x_mr, alist(1:2, 1:2, 1:2), drop = FALSE),
-        alist(1:2, 1:2, TRUE, 1:2, TRUE))
     expect_identical(translateCubeIndex(cat_x_mr_x_mr, alist(1:2, 1, 2), drop = FALSE),
         alist(1:2, 1, TRUE, 2, TRUE))
     # MR selection entries are set to index 1 when the indicator is dropped
@@ -134,9 +132,9 @@ test_that("cube [ method errors correctly", {
         "- At position 1 you tried to select element 3 when the dimension has 2 elements.",
         "- At position 2 you tried to select element 4 when the dimension has 3 elements."),
         collapse = "\n")
-    expect_error(cube[3, 4,1], err)
+    expect_error(cube[3, 4, 1], err)
     expect_error(cube[rep(TRUE, 3), 4 , 1], err)
-    expect_silent(showMissing(cube)[3,1,1])
+    expect_silent(showMissing(cube)[3, 1, 1])
 })
 
 test_that("[ method for cat by cat cubes", {
