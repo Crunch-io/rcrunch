@@ -137,8 +137,7 @@ with_mock_crunch({
 
 with_test_authentication({
     ds <- createDataset(name=now())
-
-    test_that("folders are enabled by default", {
+    test_that("folders are enabled by default in the tests", {
         expect_true(settings(ds)$variable_folders)
     })
 })

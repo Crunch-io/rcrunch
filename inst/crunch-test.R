@@ -68,7 +68,7 @@ test_options <- temp.options(
     crunch.email=crunch::envOrOption("test.user"),
     crunch.pw=crunch::envOrOption("test.pw"),
     crunch.show.progress=FALSE,
-    folders.enabled = TRUE
+    crunch.variable.folders=TRUE
 )
 
 with_test_authentication <- function (expr) {
