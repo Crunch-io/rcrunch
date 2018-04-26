@@ -31,14 +31,12 @@ cubify <- function (..., dims) {
 
 ## Contexts
 with_mock_crunch <- function (expr) {
-    env <- parent.frame()
-    with(temp.options(crunch.api="https://app.crunch.io/api/",
-                      httptest.mock.paths=c(".", "../inst/", system.file(package="crunch"))), {
-        with_mock_api({
-            try(crunch:::warmSessionCache())
-            eval(expr, envir=env)
-        })
-    })
+    opts <- temp.options(
+        crunch.api="https://app.crunch.io/api/",
+        httptest.mock.paths=c(".", "../inst/", system.file(package="crunch"))
+    )
+    with(opts,
+        with_mock_API(expr))
 }
 
 with_POST <- function (resp, expr) {
