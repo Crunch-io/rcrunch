@@ -8,7 +8,7 @@ vignette: >
   %\VignetteEncoding{UTF-8}
 ---
 
-[Crunch.io](http://crunch.io/) provides a cloud-based data store and analytic engine. It has a [web client](https://app.crunch.io/) for interactive data exploration and visualization. The **crunch** package for R allows analysts to interact with and manipulate Crunch datasets from within R. Importantly, this allows technical researchers to collaborate naturally with team members, managers, and clients who prefer a point-and-click interface: because all connect to the same dataset in the cloud, there is no need to email files back and forth continually to share results.
+[Crunch.io](http://crunch.io/) provides a cloud-based data store and analytic engine. It has a [web client](https://app.crunch.io/) for interactive data exploration and visualization. The **crunch** package for R allows analysts to interact with and manipulate Crunch datasets from within R. Importantly, this allows technical researchers to collaborate naturally with team members, managers, and clients who prefer a point-and-click interface. Because every user connects to the same dataset in the cloud, there is no need to email files back and forth continually to share results.
 
 ```{r, message=FALSE}
 library(crunch)
@@ -16,7 +16,7 @@ library(crunch)
 
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(httptest)
-start_vignette("crunch")
+#start_vignette("crunch")
 login()
 ```
 
@@ -26,7 +26,7 @@ Both **crunch** and the Crunch web application communicate with the same applica
 
 All work with data in Crunch requires authentication. Thus, the first step after loading the **crunch** package is to log in. In an interactive R session, provide the email address associated with your Crunch account, and you will be prompted to give your password safely:
 
-```{r, eval=FALSE}
+```{r login, eval=FALSE}
 login("xkcd@crunch.io")
 ```
 ```
@@ -46,30 +46,29 @@ To get started, we're going to import a dataset from R to Crunch. If you already
 
 ## Importing data to Crunch
 
-To create new datasets, multiple paths exist. In the web application, you can upload files to create datasets. From `crunch`, there are two methods for creating datasets: one for `data.frames` and one for files of other (non-R) formats.
+There are multiple ways to create a new dataset. In the web application, you can upload files to create datasets using the file loader. From `crunch`, there are two methods for creating datasets: one for `data.frames` and one for files of other (non-R) formats.
 
-We've included with the package a sample from the [2017 Stack Overflow developer survey](https://insights.stackoverflow.com/survey/), filtered on those respondents who reported having been R users and selecting 25 variables.
+We've included with the package a sample from the [2017 Stack Overflow developer survey](https://insights.stackoverflow.com/survey/) which is filtered on those respondents who reported having been R users and selecting 25 variables.
 
-```{r}
-data(SO_survey)
+```{r dimensions}
 dim(SO_survey)
 ```
 
 You can create a dataset from any `data.frame` you have in your R session with `newDataset`. Let's use that sample dataset:
 
-```{r}
+```{r load dataset}
 ds <- newDataset(SO_survey, name="Stack Overflow Developer Survey 2017")
 dim(ds)
 ```
 
-`newDataset` translates R data types into their analogous types in Crunch.
+`newDataset` takes a data.frame as it's input and translates R data types into their analogous types in Crunch.
 
 * character --> Text Variable
 * numeric, integer --> Numeric Variable
 * factor --> Categorical Variable
 * Date --> Datetime Variable
 
-It takes a data.frame as its input; alternatively, if you have an SPSS or CSV file, you can upload it with that without first reading it into R by giving `newDataset` the file name or URL. In this case, it essentially does what you would do in the web application: uploads your file and creates a dataset from it.
+If you have an SPSS or CSV file, you can upload it with that without first reading it into R by giving `newDataset` the file name or URL. In this case, it essentially does what you would do in the web application: uploads your file and creates a dataset from it.
 
 <!-- TODO: host that CSV on our website, give example -->
 
@@ -85,21 +84,107 @@ What this vignette should do. Tell a complete story of getting your data in (and
 
 Dataset have metadata beyond what a `data.frame` has. Datasets have a human-readable `name`, which you specified when you created it, and a `description`.
 
-```{r}
+```{r get dataset description}
 name(ds)
 description(ds)
 ```
 
 Both can be set with `<-` assignment. Let's give our dataset an informative description:
 
-```{r, echo=FALSE}
+```{r state change2, echo=FALSE}
 change_state()
 ```
 
-```{r}
+```{r set description}
 description(ds) <- "U.S. nationally representative sample, 1000 respondents"
 description(ds)
 ```
+
+## Variables
+
+Crunch Variables can be accessed just like variables in R using the `$` or `[]` operators. 
+
+```{r variable examples}
+ds$TabsSpaces
+ds[, "CompanySize"]
+```
+
+For the most part, the **crunch** package will bring the mininum amount of data down from the server. Most statistics and methods work by calculating the values on the server, and then tramitting the results to R rather than sending all the data. In this case the server calculates and transmits the variable summary instead of sending the data. If you ever want to actually access the data in the variable you can call `as.vector(var)`.
+
+Crunch also allows you to store additional metadata in the variable metadata. For instance we can add the survey questions from the scheme to the variable description like this: 
+
+```{r add descriptions}
+descriptions(variables(ds)) <- SO_schema$Question
+description(ds$CompanySize)
+```
+
+Since the R package and the web app use the same API to interact with Crunch datasets you can always check that your R code has produced the right results by opening the dataset in the web app. For convenience the package includes a `webApp` function to open a dataset or variable. 
+
+```{r open variable, eval = FALSE}
+webApp(ds$CompanySize)
+```
+```{r open variable screen, echo = FALSE}
+knitr::include_graphics("../vignettes/images/crunch-companySize-screen.png")
+```
+
+## Array Variables
+
+Crunch is desgigned for survey data and includes two unique data structures to help analyse survey data: Categorical Arrays and Multiple Response variables. 
+
+#### Categorical Arrays
+
+Surveys commonly asks sets of related questions. For instnace the stack overflow survey includes several questions about the importance of various factors for hiring. Conceptually these questions go together, but because of the limitations of storing data in a table they are presented as separate questions. 
+```{r categorical arrays}
+ds$ImportantHiringCompanies
+ds$ImportantHiringAlgorithms
+```
+
+Crunch allows you to package these related questions together into a _Categorical Array_. This is immensely useful when you want to analyse or communicate information about the array of questions. For instance you can use the whole array in a cross tab without having to process dosens of individual variables. 
+
+To create a Categorical Array variable from R we can use the `makeArray` function. 
+
+```{r makeArray}
+ds$ImportantHiring <- makeArray(ds[, grep("^ImportantHiring", names(ds))], name = "ImportantHiring")
+```
+```{r View array, eval = FALSE}
+webApp(ds$ImportantHiring)
+```
+```{r View array screen, echo = false}
+knitr::include_graphics("images/crunch-importantHiringCA.png")
+```
+
+The variables we included in the array have been converted into subvariables of the categorical array, and are still accessible using the `subvariables()` function. 
+
+```{r}
+subvariables(ds$ImportantHiring)
+```
+
+We can now work with this array variable just like any other variable. For instance we can generate a cross-tab of all the subvariables and another categorical variable. 
+
+```{r generate cross tab}
+crtabs(~ ImportantHiring + TabsSpaces, ds)
+```
+
+#### Multiple Response
+
+Crunch also has a special variable type for Multiple Response questions. These are questions that give users a set of options and allow them to select more than one of them. An example of this from the stack overflow survey is asking which language a respodant has worked with. the responses are stored in a single variable with each language delimited by semi colons: 
+
+```{r}
+knitr::kable(SO_survey[1:5, "HaveWorkedLanguage", drop = FALSE], row.names = FALSE)
+```
+
+To analyse this data without Crunch you would usually go through some data cleaning process to split it up into its constituent parts, and then reshape it into a format which is more amenable to analysis. However, since this is a common way of storing survey answers, Crunch allows you to create a variable directly from the 
+
+```{r makeMRFromText}
+
+ds$HaveWorkedLanguageMR <- 
+    
+    der <- makeMRFromText(ds$WantWorkLanguage, 
+    delim = "; ", 
+    name = "WantWorkedMR")
+
+```
+
 
 ## Archiving and deleting datasets
 
