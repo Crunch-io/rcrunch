@@ -18,9 +18,10 @@ A list of logical vectors
 \description{
 By default we don't display missing categories. The result is that when the
 user subsets a cube with a missing category, we need to translate that subset
-to only refer to the non-missing categories. This only occurs if
-\code{cube@useMissing} is set to \code{"no"}. This function handles this behavior by
-translating the user supplied indices to logical vectors which accounts for the
-missing values.
+to only refer to the non-missing categories. This occurs if \code{cube@useNA} is
+set to \code{"no"}. It can also occur if \code{useNA = "ifAny"} and there are no non-0
+missing categories This function handles this behavior by translating the
+user supplied indices to logical vectors which accounts for the missing
+values.
 }
 \keyword{internal}

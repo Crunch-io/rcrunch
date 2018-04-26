@@ -92,7 +92,7 @@ There are two cases for dropping dimensions from the printed and user cubes whic
 
 _Dropping MR variable_
 
-The two MR dimensions are always dropped together. Consider a cube composed of a multiple response variable and a categorical varible. The real cube has three dimensions, and the printed cube has two, the first of which represents the multiple response variable. If the user asks for `cube[1, ]` both MR dimensions are dropped and a one dimensional cube is returned. 
+MR dimensions are always dropped together. Consider a cube composed of a multiple response variable and a categorical variable. The real cube has three dimensions, and the printed cube has two, the first of which represents the multiple response variable. If the user asks for `cube[1, ]` both MR dimensions are dropped and a one dimensional cube is returned. 
 
 _Subsetting dimensions with missing values_
 

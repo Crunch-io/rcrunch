@@ -30,7 +30,7 @@ The complexity is that while the real MR cube includes two dimensions per MR,
 we only show the user one dimension per MR which represents only the
 \code{selected} items. This means that every cube has two different
 representations, the low dimensional user cube, and the higher dimensional
-programmatic cube. This function translates user cube subsets into the higher
+real cube. This function translates user cube subsets into the higher
 dimensional subset. In the case above, the user would see a 2d cube and
 subset it with \code{user_cube[1:2, 1:2]} in order to subset the programmatic cube
 we need to translate this to \code{prog_cube[1:2, 1:2, ]} in order to select the
