@@ -52,6 +52,8 @@ with_mock_crunch({
         expect_PATCH(subvariables(mr) <- subvariables(mr)[c(3, 1, 2)])
         expect_error(subvariables(mr) <- 42,
             "Can only assign an object of class Subvariables")
+        expect_error(subvariables(mr) <- NULL,
+            "Can only assign an object of class Subvariables")
     })
 
     test_that("Assinging in with no changes does not make PATCH request", {
@@ -130,180 +132,164 @@ with_mock_crunch({
 })
 
 with_test_authentication({
-    with(test.dataset(mrdf), {
-        ds <- mrdf.setup(ds, selections="1.0")
-        var <- ds$MR
-        test_that("setup test case 2", {
-            expect_true(is.Multiple(var))
-            expect_identical(names(subvariables(var)),
-                c("mr_1", "mr_2", "mr_3"))
-        })
-
-        test_that("can rename subvariables", {
-            names(subvariables(var))[2] <- "M.R. Two"
-            expect_identical(names(subvariables(var)),
-                c("mr_1", "M.R. Two", "mr_3"))
-        })
-
-        test_that("can rename one subvariable", {
-            name(subvariables(var)[[2]]) <- "Due"
-            expect_identical(names(subvariables(var)),
-                c("mr_1", "Due", "mr_3"))
-            expect_identical(names(subvariables(refresh(var))),
-                c("mr_1", "Due", "mr_3"))
-            sv <- subvariables(var)
-            name(sv[[2]]) <- "M.R. Two"
-            expect_identical(names(sv),
-                c("mr_1", "M.R. Two", "mr_3"))
-        })
-        test_that("can rename some subvariables", {
-            names(subvariables(var)[2:3]) <- c("Dois", "Tres")
-            expect_identical(names(subvariables(var)),
-                c("mr_1", "Dois", "Tres"))
-            sv <- subvariables(var)
-            names(sv[2:3]) <- c("M.R. Two", "mr_3")
-            expect_identical(names(sv),
-                c("mr_1", "M.R. Two", "mr_3"))
-        })
-        test_that("subvariables aliases", {
-            expect_identical(aliases(subvariables(var)),
-                c("mr_1", "mr_2", "mr_3"))
-            aliases(subvariables(var)) <- paste0("mr_", 5:7)
-            expect_identical(aliases(subvariables(var)),
-                c("mr_5", "mr_6", "mr_7"))
-            expect_identical(aliases(subvariables(refresh(var))),
-                c("mr_5", "mr_6", "mr_7"))
-        })
+    ds <- mrdf.setup(newDataset(mrdf), selections="1.0")
+    var <- ds$MR
+    test_that("setup test case 2", {
+        expect_true(is.Multiple(var))
+        expect_identical(names(subvariables(var)),
+            c("mr_1", "mr_2", "mr_3"))
+        expect_equivalent(table(ds$MR),
+            structure(array(c(2, 1, 1),
+                dimnames=list(MR=c("mr_1", "mr_2", "mr_3"))),
+                class="table"))
     })
 
-    with(test.dataset(mrdf), {
-        ds <- mrdf.setup(ds, selections="1.0")
-
-        test_that("Initial subvariable order and counts", {
-            expect_identical(names(subvariables(ds$MR)),
-                c("mr_1", "mr_2", "mr_3"))
-            expect_equivalent(table(ds$MR),
-                structure(array(c(2, 1, 1),
-                    dimnames=list(MR=c("mr_1", "mr_2", "mr_3"))),
-                    class="table"))
-        })
-
-        ## Reorder them
-        subvariables(ds$MR) <- subvariables(ds$MR)[c(3,1,2)]
-
-        test_that("Can reorder subvariables", {
-            expect_identical(names(subvariables(ds$MR)),
-                c("mr_3", "mr_1", "mr_2"))
-            expect_equivalent(table(ds$MR),
-                structure(array(c(1, 2, 1),
-                    dimnames=list(MR=c("mr_3", "mr_1", "mr_2"))),
-                    class="table"))
-        })
-
-        ## Refresh the dataset and confirm the metadata change
-        ds <- refresh(ds)
-
-        test_that("Reordering of subvars persists on refresh", {
-            expect_identical(names(subvariables(ds$MR)),
-                c("mr_3", "mr_1", "mr_2"))
-            expect_equivalent(table(ds$MR),
-                structure(array(c(1, 2, 1),
-                    dimnames=list(MR=c("mr_3", "mr_1", "mr_2"))),
-                    class="table"))
-        })
-
-        ## Check that that persisted on release/reload
-        ds <- releaseAndReload(ds)
-
-        test_that("Reordering of subvars persists on release", {
-            expect_identical(names(subvariables(ds$MR)),
-                c("mr_3", "mr_1", "mr_2"))
-            expect_equivalent(as.array(crtabs(~ MR, data=ds)),
-                structure(array(c(1, 2, 1),
-                    dimnames=list(MR=c("mr_3", "mr_1", "mr_2")))))
-        })
+    test_that("can rename subvariables", {
+        names(subvariables(var))[2] <- "M.R. Two"
+        expect_identical(names(subvariables(var)),
+            c("mr_1", "M.R. Two", "mr_3"))
     })
 
-    with(test.dataset(mrdf), {
-        ds <- mrdf.setup(ds, selections="1.0")
-        ds$MRcopy <- copy(ds$MR)
+    test_that("can rename one subvariable", {
+        name(subvariables(var)[[2]]) <- "Due"
+        expect_identical(names(subvariables(var)),
+            c("mr_1", "Due", "mr_3"))
+        expect_identical(names(subvariables(refresh(var))),
+            c("mr_1", "Due", "mr_3"))
+        sv <- subvariables(var)
+        name(sv[[2]]) <- "M.R. Two"
+        expect_identical(names(sv),
+            c("mr_1", "M.R. Two", "mr_3"))
+    })
+    test_that("can rename some subvariables", {
+        names(subvariables(var)[2:3]) <- c("Dois", "Tres")
+        expect_identical(names(subvariables(var)),
+            c("mr_1", "Dois", "Tres"))
+        sv <- subvariables(var)
+        names(sv[2:3]) <- c("M.R. Two", "mr_3")
+        expect_identical(names(sv),
+            c("mr_1", "M.R. Two", "mr_3"))
+    })
+    test_that("subvariables aliases", {
+        expect_identical(aliases(subvariables(var)),
+            c("mr_1", "mr_2", "mr_3"))
+        aliases(subvariables(var)) <- paste0("mr_", 5:7)
+        expect_identical(aliases(subvariables(var)),
+            c("mr_5", "mr_6", "mr_7"))
+        expect_identical(aliases(subvariables(refresh(var))),
+            c("mr_5", "mr_6", "mr_7"))
+    })
 
-        test_that("Initial subvariable orders and counts", {
-            expect_identical(names(subvariables(ds$MR)),
-                c("mr_1", "mr_2", "mr_3"))
+    subvariables(ds$MR) <- subvariables(ds$MR)[c(3, 1, 2)]
+    test_that("Can reorder subvariables", {
+        expect_identical(names(subvariables(ds$MR)),
+            c("mr_3", "mr_1", "M.R. Two"))
+        expect_equivalent(table(ds$MR),
+            structure(array(c(1, 2, 1),
+                dimnames=list(MR=c("mr_3", "mr_1", "M.R. Two"))),
+                class="table"))
+    })
+
+    ## Refresh the dataset and confirm the metadata change
+    ds <- refresh(ds)
+    test_that("Reordering of subvars persists on refresh", {
+        expect_identical(names(subvariables(ds$MR)),
+            c("mr_3", "mr_1", "M.R. Two"))
+        expect_equivalent(table(ds$MR),
+            structure(array(c(1, 2, 1),
+                dimnames=list(MR=c("mr_3", "mr_1", "M.R. Two"))),
+                class="table"))
+    })
+
+    ## Check that that persisted on release/reload
+    ds <- releaseAndReload(ds)
+    test_that("Reordering of subvars persists on release", {
+        expect_identical(names(subvariables(ds$MR)),
+            c("mr_3", "mr_1", "M.R. Two"))
+        expect_equivalent(table(ds$MR),
+            structure(array(c(1, 2, 1),
+                dimnames=list(MR=c("mr_3", "mr_1", "M.R. Two"))),
+                class="table"))
+    })
+
+    subvariables(ds$MR)[1:2] <- subvariables(ds$MR)[c(2,1)]
+    test_that("Can reorder a subset of subvariables", {
+        expect_identical(names(subvariables(ds$MR)),
+            c("mr_1", "mr_3", "M.R. Two"))
+    })
+
+    name(ds$MR$mr_5) <- "MR Five"
+    test_that("Can edit name of subvariable with variable setter", {
+        expect_identical(names(subvariables(ds$MR)),
+            c("MR Five", "mr_3", "M.R. Two"))
+    })
+
+    test_that("Can edit alias of subvariable with variable setter", {
+        expect_identical(aliases(subvariables(ds$MR)),
+            c("mr_5", "mr_7", "mr_6"))
+        alias(ds$MR$mr_5) <- "mr_five"
+        expect_identical(aliases(subvariables(ds$MR)),
+            c("mr_five", "mr_7", "mr_6"))
+    })
+
+    ds <- mrdf.setup(restoreVersion(ds, "initial import"), selections="1.0")
+    ds$MRcopy <- copy(ds$MR)
+
+    test_that("Initial subvariable orders and counts", {
+        expect_identical(names(subvariables(ds$MR)),
+            c("mr_1", "mr_2", "mr_3"))
+        expect_equivalent(as.array(crtabs(~ MR, data=ds)),
+            structure(array(c(2, 1, 1),
+                dimnames=list(MR=c("mr_1", "mr_2", "mr_3")))))
+        expect_equivalent(as.array(crtabs(~ MRcopy, data=ds)),
+            structure(array(c(2, 1, 1),
+                dimnames=list(MR=c("mr_1", "mr_2", "mr_3")))))
+    })
+
+    subvariables(ds$MRcopy) <- subvariables(ds$MRcopy)[c(2, 3, 1)]
+    test_that("Can reorder the copy", {
+        expect_equivalent(as.array(crtabs(~ MR, data=ds)),
+            structure(array(c(2, 1, 1),
+                dimnames=list(MR=c("mr_1", "mr_2", "mr_3")))))
+        expect_equivalent(as.array(crtabs(~ MRcopy, data=ds)),
+            structure(array(c(1, 1, 2),
+                dimnames=list(MR=c("mr_2", "mr_3", "mr_1")))))
+    })
+
+    ds <- releaseAndReload(ds)
+    test_that("Still reordered on release", {
+        expect_equivalent(as.array(crtabs(~ MR, data=ds)),
+            structure(array(c(2, 1, 1),
+                dimnames=list(MR=c("mr_1", "mr_2", "mr_3")))))
+        expect_equivalent(as.array(crtabs(~ MRcopy, data=ds)),
+            structure(array(c(1, 1, 2),
+                dimnames=list(MR=c("mr_2", "mr_3", "mr_1")))))
+    })
+
+    test_that("Can append after reordering", {
+        with(test.dataset(mrdf, "part2"), {
+            part2 <- mrdf.setup(part2, selections="1.0")
+            ds <- appendDataset(ds, part2)
             expect_equivalent(as.array(crtabs(~ MR, data=ds)),
-                structure(array(c(2, 1, 1),
-                    dimnames=list(MR=c("mr_1", "mr_2", "mr_3")))))
-            expect_equivalent(as.array(crtabs(~ MRcopy, data=ds)),
-                structure(array(c(2, 1, 1),
-                    dimnames=list(MR=c("mr_1", "mr_2", "mr_3")))))
-        })
-
-        subvariables(ds$MRcopy) <- subvariables(ds$MRcopy)[c(2, 3, 1)]
-        test_that("Can reorder the copy", {
-            expect_equivalent(as.array(crtabs(~ MR, data=ds)),
-                structure(array(c(2, 1, 1),
-                    dimnames=list(MR=c("mr_1", "mr_2", "mr_3")))))
-            expect_equivalent(as.array(crtabs(~ MRcopy, data=ds)),
-                structure(array(c(1, 1, 2),
-                    dimnames=list(MR=c("mr_2", "mr_3", "mr_1")))))
-        })
-
-        ds <- releaseAndReload(ds)
-        test_that("Still reordered on release", {
-            expect_equivalent(as.array(crtabs(~ MR, data=ds)),
-                structure(array(c(2, 1, 1),
-                    dimnames=list(MR=c("mr_1", "mr_2", "mr_3")))))
-            expect_equivalent(as.array(crtabs(~ MRcopy, data=ds)),
-                structure(array(c(1, 1, 2),
-                    dimnames=list(MR=c("mr_2", "mr_3", "mr_1")))))
-        })
-
-        test_that("Can append after reordering", {
-            with(test.dataset(mrdf, "part2"), {
-                part2 <- mrdf.setup(part2, selections="1.0")
-                ds <- appendDataset(ds, part2)
-                expect_equivalent(as.array(crtabs(~ MR, data=ds)),
-                    structure(array(c(4, 2, 2),
-                        dimnames=list(MR=c("mr_1", "mr_2", "mr_3")))))
-                expect_equivalent(as.array(crtabs(~ MRcopy, data=ds)),
-                    structure(array(c(2, 2, 4),
-                        dimnames=list(MR=c("mr_2", "mr_3", "mr_1")))))
-            })
-        })
-
-        test_that("Can copy again after appending", {
-            ds$MRcopy2 <- copy(ds$MR, name="Mister copy two")
-            ds$MRcopy3 <- copy(ds$MRcopy, name="Mister copy three")
-            ds$v4copy <- copy(ds$v4)
-            expect_equivalent(as.array(crtabs(~ MRcopy2, data=ds)),
                 structure(array(c(4, 2, 2),
                     dimnames=list(MR=c("mr_1", "mr_2", "mr_3")))))
-            expect_equivalent(as.array(crtabs(~ MRcopy3, data=ds)),
+            expect_equivalent(as.array(crtabs(~ MRcopy, data=ds)),
                 structure(array(c(2, 2, 4),
                     dimnames=list(MR=c("mr_2", "mr_3", "mr_1")))))
-            expect_identical(as.vector(ds$v4copy), as.vector(ds$v4))
         })
     })
 
-    with(test.dataset(mrdf), {
-        ds <- mrdf.setup(ds, selections="1.0")
-        test_that("Can reorder a subset of subvariables", {
-            subvariables(ds$MR)[1:2] <- subvariables(ds$MR)[c(2,1)]
-            expect_identical(names(subvariables(ds$MR)),
-                c("mr_2", "mr_1", "mr_3"))
-        })
-        test_that("can't (yet) otherwise modify subvariables", {
-            expect_error(subvariables(ds$MR) <- NULL,
-                "Can only assign an object of class Subvariables")
-            with(test.dataset(df, "other.ds"), {
-                fake <- Subvariables(allVariables(other.ds)[1:3])
-                expect_error(subvariables(ds$MR) <- fake,
-                    "Can only reorder, not change, subvariables")
-                expect_error(subvariables(ds$MR)[1:2] <- fake[1:2],
-                    "Cannot add or remove subvariables")
-            })
-        })
+    test_that("Can copy again after appending", {
+        ds$MRcopy2 <- copy(ds$MR, name="Mister copy two")
+        ds$MRcopy3 <- copy(ds$MRcopy, name="Mister copy three")
+        ds$v4copy <- copy(ds$v4)
+        expect_equivalent(as.array(crtabs(~ MRcopy2, data=ds)),
+            structure(array(c(4, 2, 2),
+                dimnames=list(MR=c("mr_1", "mr_2", "mr_3")))))
+        expect_equivalent(as.array(crtabs(~ MRcopy3, data=ds)),
+            structure(array(c(2, 2, 4),
+                dimnames=list(MR=c("mr_2", "mr_3", "mr_1")))))
+        expect_identical(as.vector(ds$v4copy), as.vector(ds$v4))
     })
 
     with(test.dataset(mrdf["mr_1"]), {
@@ -325,23 +311,6 @@ with_test_authentication({
         test_that("Can edit name of single-subvar", {
             names(subvariables(ds$CA)) <- "MR_1"
             expect_identical(names(subvariables(ds$CA)), "MR_1")
-        })
-    })
-
-    with(test.dataset(newDatasetFromFixture("apidocs")), {
-        test_that("Can edit name of subvariable with variable setter", {
-            expect_identical(names(subvariables(ds$petloc)),
-                c("Home", "Work"))
-            name(ds$petloc$petloc_home) <- "En casa"
-            expect_identical(names(subvariables(ds$petloc)),
-                c("En casa", "Work"))
-        })
-        test_that("Can edit alias of subvariable with variable setter", {
-            expect_identical(aliases(subvariables(ds$petloc)),
-                c("petloc_home", "petloc_work"))
-            alias(ds$petloc$petloc_work) <- "plw"
-            expect_identical(aliases(subvariables(ds$petloc)),
-                c("petloc_home", "plw"))
         })
     })
 })
