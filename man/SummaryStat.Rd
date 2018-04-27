@@ -41,7 +41,7 @@ category name or id to position the subtotal or heading after}
 it is a \code{SummaryStat} object}
 }
 \description{
-Just like \href{SubtotalsHeadings.html}{subtotals and headings}, summary statistics can
+Just like \code{subtotals()}s, summary statistics can
 be inserted into cubes. \code{SummaryStat()} makes an object of type \code{SummaryStat}
 which can be added on to a CrunchCube's \code{insertions} to add the specified
 summary statistic. Currently only \code{mean} and \code{median} are supported; both

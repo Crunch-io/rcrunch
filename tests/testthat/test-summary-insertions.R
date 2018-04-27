@@ -195,14 +195,14 @@ test_that("can set and calc a mean insertion, and maintain subtotals", {
                                         "animals" = list("cats", "dogs"))))
 })
 
-test_that("aaddSummaryStat validates", {
+test_that("addSummaryStat validates", {
     expect_error(addSummaryStat(pet_feelings, stat = "not a stat",
                                 var = "feelings"),
                  "'arg' should be one of .*mean.*, .*median.*")
     expect_error(addSummaryStat(pet_feelings, var = "not a dim"),
-                 paste0("The names of the transforms supplied (.*not a dim.*) ",
-                        "do not match the dimension names (.*feelings.* and ",
-                        ".*animals.*) of the cube."))
+                 paste0("The names of the variables supplied (.*not a dim.*) ",
+                        "do not match the dimensions of the cube (.*feelings.* and ",
+                        ".*animals.*)."))
 })
 
 test_that("meanInsert function calculates weighted means", {

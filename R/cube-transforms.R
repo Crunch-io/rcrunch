@@ -194,7 +194,7 @@ setMethod("transforms<-", c("CrunchCube", "list"), function (x, value) {
     dimnames <- names(dims)
 
     # check if the names of the dimensions and the names of the transforms line up
-    namesInDims(names(value), x)
+    validateNamesInDims(names(value), x, what = "transforms")
 
     # replace the transforms for each dimension
     dims <- CubeDims(lapply(dimnames, function (dim_name) {
@@ -220,16 +220,23 @@ setMethod("transforms<-", c("CrunchCube", "list"), function (x, value) {
     return(invisible(x))
 })
 
-# error iff the names are not a dimension in the cube provided
-namesInDims <- function (names, cube) {
+#' error iff the names are not a dimension in the cube provided
+#'
+#' @param names the names to check for in the cube
+#' @param cube a CrunchCube object to check
+#' @param what a character describing what is being checked (default: transforms
+#' ) to include in the error to make it easier for users to see what is failing.
+#' 
+#' @keywords internal
+validateNamesInDims <- function (names, cube, what = "transforms") {
     dimnames <- names(dimensions(cube))
 
     # check if the names of the dimensions and the names of the transforms line up
     if (any(!(names %in% dimnames))) {
-        halt("The names of the transforms supplied (",
+        halt("The names of the ", what, " supplied (",
              serialPaste(dQuote(names))
-             ,") do not match the dimension names (",
-             serialPaste(dQuote(dimnames)) ,") of the cube.")
+             ,") do not match the dimensions of the cube (",
+             serialPaste(dQuote(dimnames)) ,").")
     }
 }
 

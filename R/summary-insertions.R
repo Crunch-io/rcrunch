@@ -1,6 +1,6 @@
 #' Summary insertions
 #'
-#' Just like [subtotals and headings](SubtotalsHeadings.html), summary statistics can
+#' Just like `subtotals()`s, summary statistics can
 #' be inserted into cubes. `SummaryStat()` makes an object of type `SummaryStat`
 #' which can be added on to a CrunchCube's `insertions` to add the specified
 #' summary statistic. Currently only `mean` and `median` are supported; both
@@ -237,7 +237,7 @@ setMethod("makeInsertion", "SummaryStat", function (x, var_categories) {
 addSummaryStat <- function (cube, stat = c("mean", "median"), var, ...) {
     stat = match.arg(stat)
 
-    namesInDims(var, cube)
+    validateNamesInDims(var, cube, what = "variables")
 
     # setup default options
     opts <- list(..., stat = stat)

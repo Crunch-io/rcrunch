@@ -158,8 +158,7 @@ test_that("can set transforms on a cube", {
                 Subtotal(name = "subtotal", after = 2, categories = c(1, 2))
             ))),
         paste0("The names of the transforms supplied .*not in the var.* do not",
-               " match the dimension names .*feelings.* and .*animals.* of the",
-               " cube.")
+               " match the dimensions of the cube .*feelings.* and .*animals.*")
     )
 })
 
