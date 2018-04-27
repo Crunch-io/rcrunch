@@ -28,7 +28,7 @@ with_mock_crunch({
             ))
     })
     test_that("show method for batch catalog", {
-        expect_output(batches(ds),
+        expect_prints(batches(ds),
             get_output(data.frame(id=c(0, 2, 3),
             status=c("imported", "imported", "conflict"))))
     })

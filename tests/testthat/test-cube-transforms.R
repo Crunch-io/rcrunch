@@ -5,7 +5,7 @@ unicat_trans_cube <- loadCube(test_path("cubes/univariate-categorical-with-trans
 test_that("Can show a simple cube with transform", {
     loc_array <- array(c(10, 5, 15, NA),
                      dimnames = list("v7" = c("C", "E", "C, E", "D, E")))
-    expect_output(expect_equivalent(showTransforms(unicat_trans_cube), loc_array))
+    expect_prints(expect_equivalent(showTransforms(unicat_trans_cube), loc_array))
 })
 
 test_that("can retrieve transformations from a cube", {
@@ -35,7 +35,7 @@ test_that("Can show a complex cube with transform", {
                                               "D", "E", "F", "G", "Middle 5",
                                               "H", "I", "J", "Bottom 8",
                                               "Middle 3 (missing anchor)", "J and can't see")))
-    expect_output(expect_equivalent(showTransforms(complex_trans_cube), loc_array))
+    expect_prints(expect_equivalent(showTransforms(complex_trans_cube), loc_array))
 })
 
 pet_feelings <- pet_feelings_headers <- loadCube(test_path("./cubes/feelings-pets.json"))
@@ -111,7 +111,7 @@ test_that("categorical arrays with transforms don't error and display cube cells
                                  "CA" = c("A", "B")))
 
     expect_equivalent(applyTransforms(cat_array_cube), all)
-    expect_output(cat_array_cube,
+    expect_prints(cat_array_cube,
                   "    CA\nCA    A  B\nmr_1  1  2\nmr_2  2  1\nmr_3  2  1")
 })
 
@@ -265,7 +265,7 @@ with_test_authentication({
                              dim = 4,
                              dimnames = list(pets = c("Birds", "Catds",
                                                       "Dogs", "Lizards")))
-        expect_output(expect_equivalent(showTransforms(ds$pets), cat_summary))
+        expect_prints(expect_equivalent(showTransforms(ds$pets), cat_summary))
     })
 
     # add transforms
@@ -290,7 +290,7 @@ with_test_authentication({
                                  "Dogs+Cats", "Lizards", "Birds+Lizards",
                                  "Toward the end", "Cats+Birds (missing anch.)",
                                  "Rocks+Birds (incl. missing)")))
-        expect_output(trans_pets <- showTransforms(ds$pets),
+        expect_prints(trans_pets <- showTransforms(ds$pets),
                       paste(
             "                             ",
             "                           ",
@@ -320,7 +320,7 @@ with_test_authentication({
                                     "Rocks+Birds (incl. missing)")))
 
         pets_cube <- crtabs(~pets, ds)
-        expect_output(trans_cube <- showTransforms(pets_cube),
+        expect_prints(trans_cube <- showTransforms(pets_cube),
                       paste(
               "                             ",
               "                           ",
@@ -337,7 +337,7 @@ with_test_authentication({
               sep = "\n"),
               fixed = TRUE)
         expect_is(trans_cube, "array")
-        expect_equal(dim(pets_cube), 6)
+        expect_equal(dim(showMissing(pets_cube)), 6)
         expect_equal(dim(trans_cube), 10)
         expect_equivalent(trans_cube, cat_show_trans)
     })

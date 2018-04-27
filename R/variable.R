@@ -23,6 +23,11 @@ setMethod("name<-", "CrunchVariable",
     function (x, value) setTupleSlot(x, "name", validateNewName(value)))
 #' @rdname describe
 #' @export
+setMethod("id", "CrunchVariable", function (x) {
+    return(tuple(x)$id)
+})
+#' @rdname describe
+#' @export
 setMethod("description", "CrunchVariable", function (x) tuple(x)$description)
 #' @rdname describe
 #' @export
@@ -121,7 +126,7 @@ setMethod("categories<-", c("CategoricalVariable", "Categories"),
 setMethod("categories<-", c("CategoricalArrayVariable", "Categories"),
     function (x, value) {
         ent <- setEntitySlot(entity(x), "categories", value)
-        lapply(subvariables(tuple(x)), dropCache) ## Subvariables will update too
+        lapply(subvariableURLs(tuple(x)), dropCache) ## Subvariables will update too
         dropCache(cubeURL(x))
         return(x)
     })
@@ -205,6 +210,11 @@ unbind <- function (x) {
     invisible(out)
 }
 
+setMethod("APIToWebURL", "CrunchVariable", function (x) {
+    ds_url <- gsub("/api/datasets", "/dataset", datasetReference(x))
+    return(paste0(ds_url, "browse?variableId=", id(x)))
+})
+
 #' "Subset" a Variable
 #'
 #' These methods subset variables by creating Expressions, which can be
@@ -233,3 +243,17 @@ setMethod("[", c("CrunchVariable", "numeric"), function (x, i, ...) {
 #' @rdname variable-extract
 #' @export
 setMethod("[", c("CrunchVariable", "logical"), .updateActiveFilterLogical)
+
+
+# for getting and setting the uniform_basis property of multiple response variables.
+#' @rdname describe
+#' @export
+setMethod("uniformBasis", "MultipleResponseVariable", function (x) tuple(x)$uniform_basis)
+#' @rdname describe
+#' @export
+setMethod("uniformBasis<-", "MultipleResponseVariable", function (x, value) {
+    stopifnot(is.TRUEorFALSE(value))
+    # drop cube cache, since this will change the way they are executed
+    dropCache(cubeURL(datasetReference(x)))
+    return(setTupleSlot(x, "uniform_basis", value))
+})

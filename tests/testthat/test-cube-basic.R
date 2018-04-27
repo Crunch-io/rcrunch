@@ -54,7 +54,7 @@ test_that("useNA on bivariate cube", {
 })
 
 test_that("Cube print method", {
-    expect_output(v4_x_v7_ifany,
+    expect_prints(v4_x_v7_ifany,
         paste("   v7",
               "v4  C D E",
               "  B 5 3 2",
@@ -67,7 +67,7 @@ test_that("Categorical with categories Selected, Not selected", {
     # when detecting if a dimension is selected, we look at the categories. This
     # breaks if one tries to display a categorical that just so happens to have
     # Selected and Not selected as categories
-    expect_output(selected_subvar,
+    expect_prints(selected_subvar,
                   paste("selected_like",
                         "    Selected Not selected ",
                         "          10            5 ",

@@ -2,8 +2,11 @@ url: http://crunch.io/r/crunch/
 title: Crunch
 template:
   params:
-    bootswatch: flatly
+    bootswatch: simplex
     ganalytics: UA-50332119-2
+    docsearch:
+      api_key: 9fbcb3ae4d05600402e31f66b9b9501e
+      index_name: crunch
 reference:
 - title: Upload
   contents:
@@ -32,7 +35,6 @@ reference:
   - dim-dataset
   - dropRows
   - exclusion
-  - ordering
   - restoreVersion
   - saveVersion
   - versions
@@ -47,7 +49,6 @@ reference:
   - appendDataset
   - compareDatasets
   - joinDatasets
-  - merge.CrunchDataFrame
   - forkDataset
   - mergeFork
   - searchDatasets
@@ -78,6 +79,7 @@ reference:
   - interactVariables
   - conditionalTransform
   - makeWeight
+  - variable-as-methods
 - title: Array variables
   contents:
   - Subvariables-class
@@ -86,10 +88,12 @@ reference:
   - flipArrays
   - importMultitable
   - makeArray
+  - makeMRFromText
   - is-selected-categories
   - unbind
 - title: Ordering
   contents:
+  - ordering
   - ShojiOrder-length
   - ShojiOrder-slots
   - copyOrder
@@ -99,6 +103,11 @@ reference:
   - locateEntity
   - moveToGroup
   - removeEmptyGroups
+  - folder
+  - mv
+  - cd
+  - rmdir
+  - setOrder
 - title: Analysis
   contents:
   - crtabs
@@ -106,6 +115,7 @@ reference:
   - cube-computing
   - cube-methods
   - cube-residuals
+  - index.table
   - dashboard
   - duplicated
   - filter-catalog
@@ -135,6 +145,9 @@ reference:
   - tabBook
   - write.csv.gz
   - writePreparedData
+  - pollProgress
+  - CrunchDataFrame
+  - merge.CrunchDataFrame
 - title: Geodata
   contents:
   - addGeoMetadata

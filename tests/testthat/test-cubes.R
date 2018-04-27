@@ -26,9 +26,17 @@ test_that("rollup CrunchExpr from zcl variable", {
 
 test_that("rollup resolution validation", {
     expect_error(rollup("a", resolution="Invalid"),
-        " is invalid. Valid values are NULL, ")
+        " is invalid. Valid values are ")
     expect_error(rollup("a", resolution=42),
-        " is invalid. Valid values are NULL, ")
+        " is invalid. Valid values are ")
+})
+
+test_that("cube missing functions set @useNA", {
+    cube <- loadCube(test_path("cubes/cat-x-mr-x-mr.json"))
+    expect_equal(cube@useNA, "no")
+    cube <- showMissing(cube)
+    expect_equal(cube@useNA, "always")
+    expect_equal(hideMissing(cube)@useNA, "no")
 })
 
 with_mock_crunch({

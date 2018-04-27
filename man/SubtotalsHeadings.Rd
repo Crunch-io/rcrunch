@@ -58,7 +58,8 @@ the position of the subtotal or heading, either at the top, bottom, or
 relative to another category in the cube (default).}
 
 \item{after}{character or numeric if \code{position} is "relative", then the
-category name or id to position the subtotal or heading after}
+category name or id to position the subtotal or heading after. If not supplied
+this defaults to the last of the \code{categories} supplied to \code{Subtotal}.}
 
 \item{x}{either a variable or CrunchCube object to add or get subtotal
 transforms for, for \code{is.Subtotal()} and \code{is.Heading()} an object to test if

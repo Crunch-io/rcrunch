@@ -16,6 +16,8 @@ load("vignettes.RData")
 options(width=120)
 ```
 
+> This is the new variable folder API, which replaces the old "ordering" API. It is currently in a beta testing phase. Feedback on your experience working with it is greatly appreciated. During this beta period, both old and new APIs are available. For details on the old methods, see [the old vignette](variable-order-old.html).
+
 In the web application, variables in a dataset are displayed in a list on the left side of the screen.
 
 <!-- screenshot -->

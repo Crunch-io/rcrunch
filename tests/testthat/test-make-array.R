@@ -57,6 +57,108 @@ with_mock_crunch({
             name="Gen"),
             "Undefined columns selected: NOTAVARIABLE")
     })
+
+    test_that("makeMRFromText errors correctly", {
+        expect_error(makeMRFromText(ds$var, "; "),
+            "Must supply a name for the new variable")
+        expect_error(makeMRFromText(ds$birthyr,  name = "name"),
+            paste0(dQuote("ds$birthyr"), " is of class NumericVariable, it must be a Crunch TextVariable."),
+            fixed = TRUE)
+    })
+
+    test_that("createSubvarDeriv generates the correct variable definition", {
+        expected <- list(
+            `function` = "case",
+            args = list(
+                list(column = I(1:3),
+                     type = list(
+                         value = list(class = "categorical",
+                                      categories = list(
+                                          list(id = 1,
+                                               name = "No Data",
+                                               numeric_value = NA,
+                                               missing = TRUE),
+                                          list(id = 2,
+                                               name = "Yes",
+                                               numeric_value = NA,
+                                               missing = FALSE),
+                                          list(id = 3,
+                                               name = "No",
+                                               numeric_value = NA,
+                                               missing = FALSE)
+                                      )
+                         )
+                     )
+                ),
+                list(`function` = "is_missing",
+                     args = list(
+                         list(variable = "https://app.crunch.io/api/datasets/1/variables/textVar/")
+                     )
+                ),
+                list(`function` = "~=",
+                     args = list(
+                         list(variable = "https://app.crunch.io/api/datasets/1/variables/textVar/"),
+                         list(value = "^oak; |; oak; |; oak$|^oak$"))
+                )
+            ),
+            references = list(name = "oak", alias = "textVar_oak")
+        )
+         varDef <- createSubvarDeriv(ds$textVar, str = "oak",
+             delim = "; ",
+             selected = "Yes",
+             not_selected = "No",
+             unanswered = NA)
+         expect_equivalent(varDef, expected)
+    })
+
+    test_that("escapeRegex escapes all metacharacters", {
+        metachars <- c(".", "^", "$", "*", "+", "?", "{", "}", "[", "]", "\\", "|", "(", ")")
+        str <- paste0("vb", metachars, "net")
+        expect_identical(escapeRegex(str), paste0("vb\\", metachars, "net"))
+        expect_identical(escapeRegex("vb.a|net"), "vb\\.a\\|net")
+    })
+
+    test_that("buildDelimRegex generates the expected regular expression", {
+        rx <- buildDelimRegex("maple", "; ")
+        expect_true(grepl(rx, "maple"))
+        expect_true(grepl(rx, "maple; birch"))
+        expect_true(grepl(rx, "oak; maple; birch"))
+        expect_true(grepl(rx, "birch; maple"))
+        expect_false(grepl(rx, "birch; sugar maple"))
+        expect_false(grepl(rx, "maple butter; oak"))
+        #test delimiters that are regex characters
+        expect_true(grepl(buildDelimRegex("maple", "| "), "oak| maple| birch"))
+        expect_false(grepl(buildDelimRegex("maple", "| "), "oak| sugar maple| birch"))
+    })
+
+    test_that("makeMRFromText sends the correct variable derivation", {
+        ds2 <- loadDataset("https://app.crunch.io/api/datasets/mr_from_delim/")
+        trees <- c("birch", "sugar maple", "maple butter", "oak", "maple")
+        expected <- VariableDefinition(
+            derivation=zfunc(
+                "select_categories", zfunc(
+                    "array",  zfunc(
+                        "select",
+                        list(map=lapply(trees, function (tree) {
+                            return(createSubvarDeriv(ds2$delimed_text,
+                                                   str = tree,
+                                                   delim = "; ",
+                                                   selected = "Yes",
+                                                   not_selected = "No",
+                                                   unanswered = NA))
+                        })),
+                        list(value=I(c(1, 2, 3, 4, 5)))
+                    )
+                ),
+                list(value=I("selected"))),
+            name="New Mr")
+        varDef <- makeMRFromText(ds2$delimed_text, delim = "; ",
+                              name = "New Mr",
+                              selected = "Yes",
+                              not_selected = "No",
+                              unanswered = NA)
+        expect_equivalent(varDef, expected)
+    })
 })
 
 with_test_authentication({
@@ -135,5 +237,15 @@ with_test_authentication({
         ds <- refresh(ds)
         expect_true(setequal(names(ds), names(mrdf)))
         expect_identical(ncol(ds), 4L)
+    })
+    whereas("makeMRFromText functions as expected", {
+        ds <- newDataset(mrdf)
+        v <- c("ma.ple; birch", "oak; ma.ple; birch", "birch; sugar maple", "maple butter; oak")
+        ds$delim <- c("ma.ple; birch", "oak; ma.ple; birch", "birch; sugar maple", "maple butter; oak")
+        test_that("makeMRFromText creates a variable", {
+            ds$mr_5 <- makeMRFromText(ds$delim, delim = "; ", name = "myMR")
+            expect_true(is.derived(ds$mr_5))
+            expect_equivalent(dim(as.vector(ds$mr_5)), c(nrow(ds), 5))
+        })
     })
 })

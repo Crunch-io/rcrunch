@@ -1,9 +1,5 @@
 context("Making a new dataset")
 
-test_that("fake.csv is what we expect", {
-    expect_identical(dim(testfile.df), c(20L, 6L))
-})
-
 test_that("write.csv.gz gzips a csv", {
     df <- data.frame(a=1:1000)
     f <- tempfile()
@@ -125,8 +121,14 @@ with_mock_crunch({
 
 with_test_authentication({
     whereas("The two methods for sending data", {
-        test_that("newDatasetFromFile creates a dataset", {
-            ds <- newDatasetFromFile(testfile.csv)
+        testfile.csv <- "fake.csv"
+        testfile.df <- read.csv(testfile.csv)
+        test_that("fake.csv is what we expect", {
+            expect_identical(dim(testfile.df), c(20L, 6L))
+        })
+
+        test_that("newDataset creates a dataset if given a file", {
+            ds <- newDataset(testfile.csv)
             expect_true(is.dataset(ds))
             expect_identical(nrow(ds), 20L)
             expect_identical(ncol(ds), 6L)

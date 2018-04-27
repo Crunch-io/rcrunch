@@ -35,7 +35,7 @@ with_test_authentication({
         expect_identical(Categories(data=vm[[i]]$categories),
             categories(ds$allpets))
         expect_identical(vm[[i]]$subvariables,
-            subvariables(tuple(ds$allpets)))
+            subvariableURLs(tuple(ds$allpets)))
         expect_true(all(grepl("^http", urls(vm))))
         expect_true(!any(is.na(getIndexSlot(vm, "id"))))
     })

@@ -5,7 +5,7 @@ with_mock_crunch({
     ds2 <- loadDataset("ECON.sav")
 
     test_that("Get exclusions", {
-        expect_equal(exclusion(ds), ds$birthyr < 0)
+        expect_equivalent(exclusion(ds), ds$birthyr < 0)
         expect_null(exclusion(ds2))
     })
     test_that("Set exclusion", {
@@ -41,7 +41,7 @@ with_test_authentication({
             ## Test that the filter is set correctly. Objects not identical
             ## because JSON objects are unordered.
             expect_json_equivalent(zcl(exclusion(ds)), zcl(ds$v4 == "C"))
-            expect_output(exclusion(ds),
+            expect_prints(exclusion(ds),
                 'Crunch logical expression: v4 == "C"')
 
             expect_identical(nrow(ds), 10L)

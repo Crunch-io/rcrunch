@@ -74,9 +74,8 @@ with_mock_crunch({
         }))
 })
 
-me <- getOption("crunch.email")
-
 with_test_authentication({
+    me <- getOption("crunch.email")
     ds <- createDataset(name=now())
     test_that("PermissionsCatalog from real dataset", {
         expect_is(permissions(ds), "PermissionCatalog")

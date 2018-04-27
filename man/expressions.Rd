@@ -3,6 +3,7 @@
 \docType{methods}
 \name{expressions}
 \alias{expressions}
+\alias{rollupResolution<-}
 \alias{!,CrunchExpr-method}
 \alias{\%in\%,CategoricalVariable,character-method}
 \alias{\%in\%,CategoricalVariable,factor-method}
@@ -12,13 +13,17 @@
 \alias{\%in\%,DatetimeVariable,POSIXt-method}
 \alias{\%in\%,DatetimeVariable,character-method}
 \alias{\%in\%,CategoricalVariable,numeric-method}
+\alias{==,CategoricalVariable,numeric-method}
 \alias{==,CategoricalVariable,character-method}
 \alias{==,CategoricalVariable,factor-method}
+\alias{!=,CategoricalVariable,numeric-method}
 \alias{!=,CategoricalVariable,character-method}
 \alias{!=,CategoricalVariable,factor-method}
 \alias{is.na,CrunchVariable-method}
 \alias{bin}
 \alias{rollup}
+\alias{rollupResolution}
+\alias{rollupResolution<-,DatetimeVariable-method}
 \title{Construct Crunch Expressions}
 \usage{
 \S4method{!}{CrunchExpr}(x)
@@ -39,9 +44,13 @@
 
 \S4method{\%in\%}{CategoricalVariable,numeric}(x, table)
 
+\S4method{==}{CategoricalVariable,numeric}(e1, e2)
+
 \S4method{==}{CategoricalVariable,character}(e1, e2)
 
 \S4method{==}{CategoricalVariable,factor}(e1, e2)
+
+\S4method{!=}{CategoricalVariable,numeric}(e1, e2)
 
 \S4method{!=}{CategoricalVariable,character}(e1, e2)
 
@@ -52,6 +61,10 @@
 bin(x)
 
 rollup(x, resolution = rollupResolution(x))
+
+rollupResolution(x)
+
+\S4method{rollupResolution}{DatetimeVariable}(x) <- value
 }
 \arguments{
 \item{x}{an input}
@@ -67,6 +80,9 @@ c("Y", "Q", "M", "W", "D", "h", "m", "s", "ms") indicating the unit of
 time at which a Datetime variable should be aggregated. If \code{NULL},
 the server will determine an appropriate resolution based on the range of
 the data.}
+
+\item{value}{for the \code{rollupResolution()} setter, the default resolution for
+this variable.}
 }
 \value{
 Most functions return a CrunchExpr or CrunchLogicalExpr.

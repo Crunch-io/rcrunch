@@ -59,8 +59,8 @@ with_test_authentication({
     })
 
     test_that("Forking preserves exclusion filters", {
-        expect_output(exclusion(f1), "v3 < 11")
-        expect_output(exclusion(f2), "v3 < 11")
+        expect_prints(exclusion(f1), "v3 < 11")
+        expect_prints(exclusion(f2), "v3 < 11")
         expect_identical(nrow(f2), 17L)
         expect_identical(dim(f1), dim(f2))
     })
@@ -122,7 +122,7 @@ with_test_authentication({
 
     ## Assert those things
     expect_fork_edits <- function (dataset) {
-        expect_output(exclusion(dataset), "v3 < 11")
+        expect_prints(exclusion(dataset), "v3 < 11")
         expect_identical(dim(dataset), c(17L, 8L))
         expect_identical(names(na.omit(categories(dataset$v4))),
             c("d", "e", "F"))

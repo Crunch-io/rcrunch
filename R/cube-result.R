@@ -13,9 +13,40 @@ setMethod("initialize", "CrunchCube", function (.Object, ...) {
     return(.Object)
 })
 
+#' Modify cube missing behavior
+#'
+#' By default, CrunchCubes do not show entries for missing categories. You can
+#' include missing values in a `cube` with `showMissing(cube)` and hide them
+#' again with `hideMissing(cube)`.
+#'
+#' @param cube a CrunchCube
+#' @name cube-missingness
+#' @aliases showMissing hideMissing showIfAny
+NULL
+
+#' @rdname cube-missingness
+#' @export
+setMethod("showMissing", "CrunchCube", function(cube) setCubeNA(cube, "always"))
+
+#' @rdname cube-missingness
+#' @export
+setMethod("hideMissing", "CrunchCube", function(cube) setCubeNA(cube, "no"))
+
+#' @rdname cube-missingness
+#' @export
+setMethod("showIfAny", "CrunchCube", function(cube) setCubeNA(cube, "ifany"))
+
+setCubeNA <- function(cube, value = c("always", "no", "ifany")){
+    value <- match.arg(value)
+    cube@useNA <- value
+    return(cube)
+}
+
 #' @rdname cube-methods
 #' @export
-setMethod("dim", "CrunchCube", function (x) dim(dimensions(x)))
+setMethod("dim", "CrunchCube", function (x) dim(as.array(x)))
+
+# ---- Cube To Array ----
 
 #' @rdname cube-methods
 #' @export
@@ -101,6 +132,13 @@ cubeToArray <- function (x, measure=1) {
         ## Then, figure out which NA values to keep/drop/etc.
         keep.these <- evalUseNA(out, dimensions(x), x@useNA)
         out <- subsetCubeArray(out, keep.these)
+    } else if (length(x@dims) == 1) {
+        missing <- x@dims[[1]]$missing
+        if (x@useNA == "no") {
+            out <- out[!missing]
+        } else if (x@useNA == "ifany") {
+            out <- out[out > 0 | !missing]
+        }
     }
     return(out)
 }
@@ -132,7 +170,7 @@ subsetCubeArray <- function (array, bools, drop=FALSE, selected_dims=FALSE) {
     ## "drop" that dimension but not necessarily "drop" any other dimensions
     ## that are length-1.
     re_shape <- any(selected_dims) &&
-                !drop && length(selected_dims) == length(dim(array))
+        !drop && length(selected_dims) == length(dim(array))
     if (re_shape) {
         ## subset with drop=TRUE to just keep the selected slice(s), then wrap in
         ## array to set dims correctly (so that we don't accidentally drop some other
@@ -250,9 +288,9 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
                 ## and filter them accordingly.
                 out <- !missings[[i]]
             }
-        ## Next, for non-selection dimensions, it matters if "i" is in the
-        ## user's margin selection. The default, as we said up front, is keep
-        ## all, but not if we're sweeping this margin.
+            ## Next, for non-selection dimensions, it matters if "i" is in the
+            ## user's margin selection. The default, as we said up front, is keep
+            ## all, but not if we're sweeping this margin.
         } else if (!(i %in% mapped_margins)) {
             if (any(a)) {
                 ## Any "any-or-none" means we have the other form of MR query.
@@ -308,18 +346,24 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
 as_selected_margins <- function (margin, selecteds, before=TRUE) {
     ## If there are "Selection" dimensions, we always want to include their
     ## partner (position - 1) in the margin table dimensions
+    ## margin is always the "real" full cube dimensions even if before=TRUE
     if (!any(selecteds)) {
         ## If there aren't any, no-op
         return(margin)
     }
     which_selected <- which(selecteds)
     if (before) {
-        ## "before" means we're specifying margins of the "real" cube that
-        ## includes the selection dimensions in them. "after" is after dropping
-        ## the selection dimensions
+        ## "before" means we're returning margins of the "real" cube that
+        ## includes the selection dimensions in them.
         margin <- which(!selecteds)[margin]
+        mr_margins <- which_selected - 1
+    } else {
+        ## "after" is after dropping the selection dimensions, so we need to
+        ## subtract more than one for each subsiquent MR encountered
+        mr_margins <- which_selected - seq_along(which_selected)
     }
-    return(sort(union(margin, which_selected - 1)))
+
+    return(sort(union(margin, mr_margins)))
 }
 
 #' Work with CrunchCubes, MultitableResults, and TabBookResults
@@ -378,7 +422,7 @@ setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
     marg <- margin.table(x, margin)
     actual_margin <- as_selected_margins(margin, is.selectedDimension(x@dims),
         before=FALSE)
-    # Check if there are any actual_margins and if the dims are identical, we 
+    # Check if there are any actual_margins and if the dims are identical, we
     # don't need to sweep, and if we are MRxMR we can't sweep.
     if (length(actual_margin) & !identical(dim(out), dim(marg))) {
         out <- sweep(out, actual_margin, marg, "/", check.margin=FALSE)

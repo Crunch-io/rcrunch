@@ -13,12 +13,20 @@ test_that("toVariable parses R characters", {
         class="VariableDefinition"))
 })
 test_that("toVariable parses factors", {
-    expect_equivalent(toVariable(as.factor(rep(LETTERS[2:3], 3))),
-        list(values=rep(1:2, 3), type="categorical", categories=list(
+    expect_identical(toVariable(as.factor(rep(LETTERS[2:3], 3))),
+        VarDef(values=rep(1:2, 3), type="categorical", categories=list(
             list(id=1L, name="B", numeric_value=1L, missing=FALSE),
             list(id=2L, name="C", numeric_value=2L, missing=FALSE),
             list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
-        ))) ## unclear why these aren't identical
+        )))
+})
+test_that("toVariable parses logical", {
+    expect_equivalent(toVariable(c(TRUE, FALSE, FALSE, NA, TRUE)),
+        VarDef(values=c(1L, 0L, 0L, -1L, 1L), type="categorical", categories=list(
+            list(id=1L, name="True", numeric_value=1L, missing=FALSE, selected=TRUE),
+            list(id=0L, name="False", numeric_value=0L, missing=FALSE),
+            list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+        )))
 })
 test_that("toVariable parses AsIses", {
     expect_identical(toVariable(I(1:5)),
@@ -27,6 +35,83 @@ test_that("toVariable parses AsIses", {
     expect_identical(toVariable(I(letters[1:3])),
                      structure(list(values=c("a", "b", "c"), type="text"),
                                class="VariableDefinition"))
+})
+
+test_that("toVariable parses haven::labelled", {
+    labelled <- haven::labelled(rep(LETTERS[1:3], 3),
+                                structure(LETTERS[1:3], names = LETTERS[1:3]))
+    expect_equivalent(toVariable(labelled),
+                      list(values=rep(1:3, 3), type="categorical", categories=list(
+                          list(id=1L, name="A", numeric_value=1L, missing=FALSE),
+                          list(id=2L, name="B", numeric_value=2L, missing=FALSE),
+                          list(id=3L, name="C", numeric_value=3L, missing=FALSE),
+                          list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+                      )))
+
+    # even if only some values are labelled, the values are still used
+    labelled <- haven::labelled(rep(LETTERS[1:3], 3),
+                                structure(LETTERS[2], names = LETTERS[2]))
+    expect_equivalent(toVariable(labelled),
+                      list(values=rep(1:3, 3), type="categorical", categories=list(
+                          list(id=1L, name="A", numeric_value=1L, missing=FALSE),
+                          list(id=2L, name="B", numeric_value=2L, missing=FALSE),
+                          list(id=3L, name="C", numeric_value=3L, missing=FALSE),
+                          list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+                      )))
+
+
+    # If the values are numeric, we still get a categorical
+    labelled <- haven::labelled(rep(1:3, 3),
+                                     structure(2,
+                                               names = LETTERS[2]))
+    expect_equivalent(toVariable(labelled),
+                      list(values=rep(1:3, 3), type="categorical", categories=list(
+                          list(id=1L, name="1", numeric_value=1L, missing=FALSE),
+                          list(id=2L, name="2", numeric_value=2L, missing=FALSE),
+                          list(id=3L, name="3", numeric_value=3L, missing=FALSE),
+                          list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+                      )))
+})
+
+test_that("toVariable parses haven::labelled_spss", {
+    labelled <- haven::labelled_spss(rep(LETTERS[1:3], 3),
+                                     structure(LETTERS[2:3],
+                                               names = LETTERS[2:3]),
+                                               na_values = LETTERS[1])
+    expect_equivalent(toVariable(labelled),
+                      list(values=rep(1:3, 3), type="categorical", categories=list(
+                          list(id=1L, name="A", numeric_value=1L, missing=TRUE),
+                          list(id=2L, name="B", numeric_value=2L, missing=FALSE),
+                          list(id=3L, name="C", numeric_value=3L, missing=FALSE),
+                          list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+                      )))
+
+    # even if only some values are labelled, the values are still used
+    labelled <- haven::labelled_spss(rep(LETTERS[1:3], 3),
+                                     structure(LETTERS[2],
+                                               names = LETTERS[2]),
+                                     na_values = LETTERS[1])
+    expect_equivalent(toVariable(labelled),
+                      list(values=rep(1:3, 3), type="categorical", categories=list(
+                          list(id=1L, name="A", numeric_value=1L, missing=TRUE),
+                          list(id=2L, name="B", numeric_value=2L, missing=FALSE),
+                          list(id=3L, name="C", numeric_value=3L, missing=FALSE),
+                          list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+                      )))
+
+
+    # If the values are numeric, we still get a categorical
+    labelled <- haven::labelled_spss(rep(1:3, 3),
+                                     structure(2,
+                                               names = LETTERS[2]),
+                                     na_values = 1)
+    expect_equivalent(toVariable(labelled),
+                      list(values=rep(1:3, 3), type="categorical", categories=list(
+                          list(id=1L, name="1", numeric_value=1L, missing=TRUE),
+                          list(id=2L, name="2", numeric_value=2L, missing=FALSE),
+                          list(id=3L, name="3", numeric_value=3L, missing=FALSE),
+                          list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+                      )))
 })
 
 test_that("toVariable handles duplicate factor levels", {
@@ -48,10 +133,13 @@ test_that("toVariable handles duplicate factor levels", {
 })
 test_that("categoriesFromLevels parses levels correctly", {
     expect_identical(categoriesFromLevels(levels(iris$Species)),
-        list(list(id = 1L, name = "setosa", numeric_value = 1L, missing = FALSE),
-             list(id = 2L, name = "versicolor", numeric_value = 2L, missing = FALSE),
-             list(id = 3L, name = "virginica", numeric_value = 3L, missing = FALSE))
-      )
+        list(
+            list(id = 1L, name = "setosa", numeric_value = 1L, missing = FALSE),
+            list(id = 2L, name = "versicolor", numeric_value = 2L, missing = FALSE),
+            list(id = 3L, name = "virginica", numeric_value = 3L, missing = FALSE),
+            .no.data
+        )
+    )
 })
 test_that("toVariable parses R Date class", {
     expect_equivalent(toVariable(as.Date(c("2014-12-16", "2014-12-17"))),

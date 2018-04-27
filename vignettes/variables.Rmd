@@ -20,8 +20,6 @@ load("vignettes.RData")
 options(width=120)
 ```
 
-# Manipulating variables within datasets
-
 Once you've uploaded data to Crunch, you'll likely want to spend some time cleaning up the metadata associated with your dataset. Legacy statistical programs offer only limited support for variable metadata, both in type and quality. Because Crunch facilitates data visualization, collaboration, and sharing results with others, making your dataset presentation-quality is worthwhile, and this often requires additional work after uploading a data file.
 
 Most of the operations described below can also be accomplished in the web client. However, users comfortable with scripting may find it faster or easier to automate these actions with `crunch`. Such edits made within R are carried out on the remote Crunch dataset, thereby keeping data in sync across all client applications.

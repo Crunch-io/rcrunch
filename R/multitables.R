@@ -168,7 +168,7 @@ newMultitable <- function (formula, data, name, ...) {
     }
 
     template <- formulaToQuery(formula, data)
-    if (has.selected.array(template)) {
+    if (has.function(template, "selected_array")) {
         halt("Multitables do not support specifications that use deprecated",
              " multiple response functions. Do you have `options(crunch.mr.",
              "selection = \"selected_array\")` set? If so, please change it",
@@ -185,21 +185,6 @@ newMultitable <- function (formula, data, name, ...) {
                 body=toJSON(payload))
 
     invisible(Multitable(crGET(u)))
-}
-
-# check if a template or query has a selected_array somewhere in it recursively.
-has.selected.array <- function (query) {
-    clauses <- lapply(query, function (clause) {
-        if (!is.list(clause)) {
-            # there are no more levels to traverse
-            return(FALSE)
-        } else if (clause[["function"]] %||% FALSE == "selected_array") {
-            return(TRUE)
-        } 
-        return(lapply(clause, has.selected.array))
-    })
-    
-    return(any(unlist(clauses)))
 }
 
 #' Import a Multitable
