@@ -5,14 +5,23 @@ test_that("SummaryStats accepts a variety of inputs", {
                       categories = c(1, 2), after = 2)
     expect_true(is.SummaryStat(mean1))
 
-    mean2 <- SummaryStat(name = "Approval", stat = "mean", after = 2)
+    mean2 <- SummaryStat(name = "Approval2", stat = "mean", after = 2)
     expect_true(is.SummaryStat(mean2))
 
-    median1 <- SummaryStat(name = "Approval", stat = "median",
+    mean3 <- SummaryStat(name = "mean", stat = "mean",
+                         categories = c(1, 2))
+    expect_true(is.SummaryStat(mean3))
+    expect_message(expect_equal(anchor(mean3), NA_integer_),
+                   paste0("Can't determine the anchor position without a ",
+                          "variable. However, when this is added to a Crunch ",
+                          "variable or CrunchCube it will follow the last ",
+                          "category given"))
+    
+    median1 <- SummaryStat(name = "Approval3", stat = "median",
                         categories = c(2, 3), after = 2)
     expect_true(is.SummaryStat(median1))
-
-    expect_condition(are.SummaryStats(Insertions(mean1, mean2, median3)))
+    
+    expect_true(all(are.SummaryStats(Insertions(mean1, mean2, median1))))
 })
 
 test_that("SummaryStat validates", {
@@ -20,11 +29,7 @@ test_that("SummaryStat validates", {
                  "argument \"name\" is missing, with no default")
     expect_error(SummaryStat(name = "mean", categories = c(1, 2), after = 2),
                  "argument \"stat\" is missing, with no default")
-    expect_error(SummaryStat(name = "mean", stat = "mean",
-                             categories = c(1, 2)),
-                 paste0("If position is relative, you must supply a category ",
-                        "id or name to the .*after.* argument"))
-
+    
     expect_error(SummaryStat(name = "not a stat", stat = "not a stat",
                              after = 2),
                  paste0(".*not a stat.* is not a known summary statistic for ",
@@ -214,7 +219,13 @@ test_that("meanInsert function calculates weighted means", {
 
 })
 
-test_that("medianInsert function calculates weighted means", {
+test_that("SummaryStat defaults to following the last category given (like subtotals)", {
+    insertion <- SummaryStat(name = "mean", stat = "mean", categories = c(1, 2))
+    var_cats <- categories(variables(pet_feelings)[["feelings"]])
+    expect_equal(anchor(insertion, var_cats), 2)
+})
+
+test_that("medianInsert function calculates weighted medians", {
     insertion <- SummaryStat(name = "median", stat = "median", position = "top")
     var_cats <- categories(variables(pet_feelings)[["feelings"]])
     vector_from_cube <- as.array(pet_feelings)[,1]

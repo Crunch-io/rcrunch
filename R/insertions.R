@@ -248,9 +248,33 @@ setMethod("anchor", "Insertion", function (x) {
         return(x$position)
     }
 
+    # If after is null (and position is relative) we default to setting after to
+    # be the last category in the Subtotal category.
+    if (is.null(x$after)) {
+        if (missing(var_categories)) {
+            # we don't have the variable this insertion will attach to, so we
+            # can't determine which is the last category to use as the anchor.
+            # This will be filled in when this insertion is added to a variable
+            # (either on the server or in a cube)
+            message("Can't determine the anchor position without a ",
+                    "variable. However, when this is added to a Crunch ",
+                    "variable or CrunchCube it will follow the last ",
+                    "category given")
+            return(NA_integer_)
+        }
+        if (is.numeric(x$categories)) {
+            var_cats <- ids(var_categories)
+        } else {
+            var_cats <- names(var_categories)
+        }
+        sub_cats <- x$categories[x$categories %in% var_cats]
+        ordered_cats <- sub_cats[order(match(sub_cats, var_cats))]
+        x$after <- rev(ordered_cats)[1]
+    }
+    
     # map chars/nums to ids
     if (is.character(x$after)) {
-        # TODO: better error if var is null
+        # TODO: better error handling if var_categories is null
         n <- ids(var_categories[x$after])
     } else {
         n <- x$after

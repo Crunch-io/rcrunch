@@ -207,23 +207,7 @@ setMethod("subtotals<-", c("CrunchVariable", "ANY"), function (x, value) {
         }, value)))) {
         halt("value must be a list of Subtotals, Headings, or both.")
     }
-    # If position is relative we default to setting after to be the last category
-    # in the Subtotal category.
-    value <- lapply(value, function(a){
-        if (is.null(a$after) && a$position == "relative") {
-            if (is.numeric(a$categories)) {
-                var_cats <- ids(categories(x))
-            } else {
-                var_cats <- names(categories(x))
-            }
-            sub_cats <- a$categories[a$categories %in% var_cats]
-            ordered_cats <- sub_cats[order(match(sub_cats, var_cats))]
-            a$after <- rev(ordered_cats)[1]
-            return(a)
-        } else {
-            return(a)
-        }
-    })
+
     inserts = Insertions(data = lapply(value,
                                        makeInsertion,
                                        var_categories = categories(x)))

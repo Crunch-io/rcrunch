@@ -14,7 +14,14 @@ test_that("Subtotal accepts a variety of inputs", {
     expect_equal(subtot2, subtot3)
 
     subtot_top <- Subtotal(name = "Approval", categories = c(1, 2), position = "top")
-    subtot_top <- Subtotal(name = "Approval", categories = c(1, 2), position = "bottom")
+    subtot_bottom <- Subtotal(name = "Approval", categories = c(1, 2), position = "bottom")
+
+    subtot_after_last_cat <- Subtotal(name = "Approval", categories = c(1, 2))
+    expect_message(expect_equal(anchor(subtot_after_last_cat), NA_integer_),
+                   paste0("Can't determine the anchor position without a ",
+                          "variable. However, when this is added to a Crunch ",
+                          "variable or CrunchCube it will follow the last ",
+                          "category given"))
 })
 
 test_that("Subtotal validates", {
