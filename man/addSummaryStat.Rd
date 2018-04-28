@@ -69,6 +69,11 @@ class(pet_feelings)
 #attr(,"package")
 #[1] "crunch"
 
+# Since `pet_feelings` is a CrunchCube, although it has similar properties 
+# and behaviors to arrays, it is not a R array: 
+is.array(pet_feelings)
+#[1] FALSE
+
 # cleanup transforms
 transforms(pet_feelings) <- NULL
 # add a median summary statistic to a CrunchCube
@@ -97,9 +102,9 @@ pet_feelings_array
 #extremely unhappy      11      12
 #           median       5       5
 
-# and we can see that this is a matrix, and no longer a CrunchCube
-class(pet_feelings_array)
-#[1] "matrix"
+# and we can see that this is an array and no longer a CrunchCube
+is.array(pet_feelings_array)
+#[1] TRUE
 }
 
 }
