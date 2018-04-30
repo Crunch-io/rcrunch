@@ -14,9 +14,11 @@ vignette: >
 library(crunch)
 ```
 
-```{r, results='hide', echo=FALSE, message=FALSE}
+```{r, results='hide', include = FALSE}
 library(httptest)
 start_vignette("crunch")
+# You need to explicitly enter your crednetial to record new mocks, knitr
+# has trouble with getOption is seems
 login()
 ```
 
@@ -40,13 +42,13 @@ Your email and Crunch password can be set either as R `options` in your .Rprofil
 
 # Datasets
 
-The Crunch data store is built around datasets, which contain variables. Unlike R `data.frames` and vectors, Crunch datasets and variables contain additional metadata. And, to the extent possible, the functions and methods in **crunch** work to keep all of the data on the server, only pulling metadata and aggregations when requested. That way, you can explore datasets much larger than you can comfortably load on your laptop.
+The Crunch data store is built around datasets, which contain variables. Crunch datasets and variables contain more metadata than R `data.frames` and `vectors` and if possible the functions and methods in **crunch** work to keep all of the data on the server, only pulling metadata and aggregations when requested. That way, you can explore datasets much larger than you can comfortably load on your laptop.
 
 To get started, we're going to import a dataset from R to Crunch. If you already have a dataset---perhaps someone has invited you to collaborate on one already---see `vignette("datasets", package="crunch")` for how to find and load it.
 
 ## Importing data to Crunch
 
-There are multiple ways to create a new dataset. In the web application, you can upload files to create datasets using the file loader. From `crunch`, there are two methods for creating datasets: one for `data.frames` and one for files of other (non-R) formats.
+There are multiple ways to create a new dataset. In the web application, you can upload files to create datasets using the file loader. From **crunch**, there are two methods for creating datasets: one for `data.frames` and one for files of other (non-R) formats.
 
 We've included with the package a sample from the [2017 Stack Overflow developer survey](https://insights.stackoverflow.com/survey/) which is filtered on those respondents who reported having been R users and selecting 25 variables.
 
@@ -72,17 +74,9 @@ If you have an SPSS or CSV file, you can upload it with that without first readi
 
 <!-- TODO: host that CSV on our website, give example -->
 
-What this vignette should do. Tell a complete story of getting your data in (and doing something with it?)
-
-* Import dataset (show from data.frame or from file/URL)
-* Dataset metadata (take from datasets.Rmd)
-* Find variables, etc. (take from variables.Rmd)
-* Edit variable metadata using schema file
-* Link to other vignettes and help files eagerly
-
 ## Dataset properties
 
-Dataset have metadata beyond what a `data.frame` has. Datasets have a human-readable `name`, which you specified when you created it, and a `description`.
+Datasets allow you to provide e a human-readable `name` is specified when the dataset is uploaded, and a `description`.
 
 ```{r get dataset description}
 name(ds)
@@ -96,11 +90,6 @@ description(ds) <- "U.S. nationally representative sample, 1000 respondents"
 description(ds)
 ```
 
-
-```{r state change2, echo=FALSE}
-change_state()
-```
-
 ## Variables
 
 Crunch Variables can be accessed just like variables in R using the `$` or `[]` operators. 
@@ -110,10 +99,13 @@ ds$TabsSpaces
 ds[, "CompanySize"]
 ```
 
-For the most part, the **crunch** package will bring the mininum amount of data down from the server. Most statistics and methods work by calculating the values on the server, and then tramitting the results to R rather than sending all the data. In this case the server calculates and transmits the variable summary instead of sending the data. If you ever want to actually access the data in the variable you can call `as.vector(var)`.
+For the most part, the **crunch** package will bring the mininum amount of data down from the server. Most of the methods work by calculating  values on the server, and then transmitting the results to you R session instead of transmitting all the data. In this case the server calculates and transmits the variable summary instead of sending the data. If you ever want to actually access the data in the variable you can call `as.vector(var)`.
 
-Crunch also allows you to store additional metadata in the variable metadata. For instance we can add the survey questions from the scheme to the variable description like this: 
+Crunch also allows you to store additional metadata in the variables. For instance we can add the survey questions from the schema to the variable description like this: 
 
+```{r state change2, echo=FALSE}
+change_state()
+```
 ```{r add descriptions}
 descriptions(variables(ds)) <- SO_schema$Question
 ```
@@ -121,7 +113,6 @@ descriptions(variables(ds)) <- SO_schema$Question
 ```{r state change3, echo=FALSE}
 change_state()
 ```
-
 ```{r retrieve descriptions}
 description(ds$CompanySize)
 ```
@@ -141,7 +132,7 @@ Crunch is desgigned for survey data and includes two unique data structures to h
 
 #### Categorical Arrays
 
-Surveys commonly asks sets of related questions. For instnace the stack overflow survey includes several questions about the importance of various factors for hiring. Conceptually these questions go together, but because of the limitations of storing data in a table they are presented as separate questions. 
+Surveys commonly asks sets of related questions. For instnace the Stack Overflow survey includes several questions about the importance of various factors for hiring. Conceptually these questions go together, but because of the limitations of storing data in a table they are presented as separate variables. 
 ```{r categorical arrays}
 ds$ImportantHiringCompanies
 ```
@@ -152,22 +143,20 @@ ds$ImportantHiringAlgorithms
 Crunch allows you to bundle these related questions together into a _Categorical Array_. This is immensely useful when you want to analyse or communicate information about the set of questions. For instance you can use the whole array in a cross-tab without having to process dosens of individual variables. 
 
 To create a Categorical Array variable from R we can use the `makeArray` function. 
-
+```{r state change4, echo=FALSE}
+change_state()
+```
 ```{r makeArray}
 ds$ImportantHiring <- makeArray(ds[, grep("^ImportantHiring", names(ds))], name = "ImportantHiring")
 ```
 ```{r View array, eval = FALSE}
 webApp(ds$ImportantHiring)
 ```
-```{r View array screen, echo = false}
+```{r View array screen, echo = FALSE}
 knitr::include_graphics("images/crunch-importantHiringCA.png")
 ```
 
 The variables we included in the array have been converted into subvariables of the categorical array, and are still accessible using the `subvariables()` function. 
-
-```{r state change4, echo=FALSE}
-change_state()
-```
 
 ```{r}
 subvariables(ds$ImportantHiring)
@@ -182,15 +171,17 @@ Crunch also has a special variable type for Multiple Response questions. These a
 knitr::kable(SO_survey[1:5, "HaveWorkedLanguage", drop = FALSE], row.names = FALSE)
 ```
 
-To analyse this data without Crunch you would usually go through an elaborate data cleaning process to split it up into its constituent parts, and then reshape it into a format which is more amenable to analysis. With Crunch you can make use of multiple response variables to store it in a compact variable, and analyse it just like any other variable. Since delimited text this is such a common way of storing this kind of answer, Crunch allows you to create a variable directly from the text. This function creates a _derived variable_ which means that if you make changes to the initial variable, the derived variable will change along with it. 
+To analyse this data without Crunch you would usually go through an elaborate data cleaning process to split the delimited variable up into its constituent parts, and then reshape it into a format which is more amenable to analysis. With Crunch you can make use of multiple response variables to store it in a compact form, and analyze it just like any other variable. Since delimited text is such a common way of storing this kind of answer, Crunch allows you to create a variable directly from the text. This function creates a _derived variable_ which means that if you make changes to the initial variable, the derived variable will change along with it. 
 
+```{r state change5, echo=FALSE}
+change_state()
+```
 ```{r makeMRFromText}
 ds$WantWorkedLanguageMR <- makeMRFromText(ds$WantWorkLanguage, 
     delim = "; ", 
     name = "WantWorkedMR")
 ```
 ```{r echo = FALSE}
-webApp(ds$WantWorkedLanguageMR)
 knitr::include_graphics("images/wantWorkMR.png")
 ```
 
