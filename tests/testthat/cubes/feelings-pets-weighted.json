@@ -1,6 +1,6 @@
 {
     "element": "shoji:view",
-    "self": "api/datasets/123/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22http%3A%2F%2Flocal.crunch.io%3A8080%2Fapi%2Fdatasets%2F123%2Fvariables%2F000001%2F%22%7D%2C%7B%22variable%22%3A%22http%3A%2F%2Flocal.crunch.io%3A8080%2Fapi%2Fdatasets%2F123%2Fvariables%2F000000%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
+    "self": "api/datasets/123/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22api%2Fdatasets%2F123%2Fvariables%2F000001%2F%22%7D%2C%7B%22variable%22%3A%22api%2Fdatasets%2F123%2Fvariables%2F000000%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Aapi%2Fdatasets%2F123%2Fvariables%2F000003%2F%7D&filter=%7B%7D",
     "value": {
         "query": {
             "measures": {
@@ -17,7 +17,7 @@
                     "variable": "api/datasets/123/variables/000000/"
                 }
             ],
-            "weight": null
+            "weight": "ap/Fdatasets/12/Fvariables/000003/"
         },
         "query_environment": {
             "filter": []
@@ -137,7 +137,7 @@
             "measures": {
                 "count": {
                     "data": [
-                        9,
+                        119,
                         5,
                         0,
                         12,
@@ -150,7 +150,7 @@
                         10,
                         0,
                         11,
-                        12,
+                        112,
                         0,
                         0,
                         0,

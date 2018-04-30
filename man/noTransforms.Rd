@@ -27,7 +27,7 @@ that generated the CrunchCube.
 \dontrun{
 # A CrunchCube with a heading and subtotals
 crtabs(~opinion, ds)
-#               All opinions   
+#               All opinions
 #             Strongly Agree 23
 #             Somewhat Agree 24
 #                      Agree 47
@@ -37,10 +37,10 @@ crtabs(~opinion, ds)
 #                   Disagree 35
 
 noTransforms(crtabs(~opinion, ds))
-#             Strongly Agree             Somewhat Agree Neither Agree nor Disagree 
-#                         23                         24                         18 
-#          Somewhat Disagree          Strongly Disagree 
-#                         16                         19 
+#             Strongly Agree             Somewhat Agree Neither Agree nor Disagree
+#                         23                         24                         18
+#          Somewhat Disagree          Strongly Disagree
+#                         16                         19
 }
 
 }
