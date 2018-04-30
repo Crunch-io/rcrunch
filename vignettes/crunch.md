@@ -10,15 +10,12 @@ vignette: >
 
 [Crunch.io](http://crunch.io/) provides a cloud-based data store and analytic engine. It has a [web client](https://app.crunch.io/) for interactive data exploration and visualization. The **crunch** package for R allows analysts to interact with and manipulate Crunch datasets from within R. Importantly, this allows technical researchers to collaborate naturally with team members, managers, and clients who prefer a point-and-click interface. Because every user connects to the same dataset in the cloud, there is no need to email files back and forth continually to share results.
 
-```{r, message=FALSE}
+
+```r
 library(crunch)
 ```
 
-```{r, results='hide', include = FALSE}
-library(httptest)
-start_vignette("crunch")
-login()
-```
+
 
 Both **crunch** and the Crunch web application communicate with the same application programming interface (API), served over secure HTTP. Within an R script or interactive session, the **crunch** package allows you to interact with your data in Crunch with expressive, idiomatic R. Functions in crunch handle the translation between R objects and API requests and responses, so you can typically interact with your datasets as if they were local `data.frames` (with some additional metadata), not data on a remote server.
 
@@ -26,7 +23,8 @@ Both **crunch** and the Crunch web application communicate with the same applica
 
 All work with data in Crunch requires authentication. Thus, the first step after loading the **crunch** package is to log in. In an interactive R session, provide the email address associated with your Crunch account, and you will be prompted to give your password safely:
 
-```{r login, eval=FALSE}
+
+```r
 login("xkcd@crunch.io")
 ```
 ```
@@ -50,15 +48,25 @@ There are multiple ways to create a new dataset. In the web application, you can
 
 We've included with the package a sample from the [2017 Stack Overflow developer survey](https://insights.stackoverflow.com/survey/) which is filtered on those respondents who reported having been R users and selecting 25 variables.
 
-```{r dimensions}
+
+```r
 dim(SO_survey)
+```
+
+```
+## [1] 1634   23
 ```
 
 You can create a dataset from any `data.frame` you have in your R session with `newDataset`. Let's use that sample dataset:
 
-```{r load dataset, message=FALSE}
+
+```r
 ds <- newDataset(SO_survey, name="Stack Overflow Developer Survey 2017")
 dim(ds)
+```
+
+```
+## [1] 1634   23
 ```
 
 `newDataset` takes a data.frame as it's input and translates R data types into their analogous types in Crunch.
@@ -76,52 +84,91 @@ If you have an SPSS or CSV file, you can upload it with that without first readi
 
 Datasets allow you to provide e a human-readable `name` is specified when the dataset is uploaded, and a `description`.
 
-```{r get dataset description}
+
+```r
 name(ds)
+```
+
+```
+## [1] "Stack Overflow Developer Survey 2017"
+```
+
+```r
 description(ds)
+```
+
+```
+## [1] ""
 ```
 
 Both can be set with `<-` assignment. Let's give our dataset an informative description:
 
-```{r state change2, echo=FALSE}
-change_state()
-```
 
-```{r set description}
+
+
+```r
 description(ds) <- "U.S. nationally representative sample, 1000 respondents"
 description(ds)
+```
+
+```
+## [1] "U.S. nationally representative sample, 1000 respondents"
 ```
 
 ## Variables
 
 Crunch Variables can be accessed just like variables in R using the `$` or `[]` operators.
 
-```{r variable examples}
+
+```r
 ds$TabsSpaces
+```
+
+```
+## TabsSpaces (categorical)
+## 
+##        Count
+## Tabs     698
+## Spaces   631
+## Both     293
+```
+
+```r
 ds[, "CompanySize"]
+```
+
+```
+## Dataset "Stack Overflow Developer Survey 2017"
+## U.S. nationally representative sample, 1000 respondents
+## 
+## Contains 1634 rows of 1 variables:
+## 
+## $CompanySize: CompanySize (categorical)
 ```
 
 For the most part, the **crunch** package will bring the minimum amount of data down from the server. Most of the methods work by calculating values on the server, and then transmitting the results to you R session instead of transmitting all the data. In this case the server calculates and transmits the variable summary instead of sending the data. If you ever want to actually access the data in the variable you can call `as.vector(var)`.
 
 Crunch also allows you to store additional metadata in the variables. For instance we can add the survey questions from the schema to the variable description like this:
 
-```{r state change3, echo=FALSE}
-change_state()
-```
 
-```{r variable descriptions}
+
+
+```r
 descriptions(variables(ds)) <- SO_schema$Question
 description(ds$CompanySize)
 ```
 
+```
+## [1] "In terms of the number of employees, how large is the company or organization you work for?"
+```
+
 Since the R package and the web app use the same API to interact with Crunch datasets you can always check that your R code has produced the right results by opening the dataset in the web app. For convenience the package includes a `webApp` function to open a dataset or variable.
 
-```{r open variable, eval = FALSE}
+
+```r
 webApp(ds$CompanySize)
 ```
-```{r open variable screen, echo = FALSE}
-knitr::include_graphics("../vignettes/images/crunch-companySize-screen.png")
-```
+![plot of chunk open variable screen](../vignettes/images/crunch-companySize-screen.png)
 
 ## Array Variables
 
@@ -131,39 +178,89 @@ Crunch is designed for survey data and includes two unique data structures to he
 
 Surveys commonly asks sets of related questions. For instance the Stack Overflow survey includes several questions about the importance of various factors for hiring. Conceptually these questions go together, but because of the limitations of storing data in a table they are presented as separate variables.
 
-```{r categorical arrays}
+
+```r
 ds$ImportantHiringCompanies
+```
+
+```
+## ImportantHiringCompanies (categorical)
+## Congratulations! You've just been put in charge of technical recruiting at Globex, a multinational high- tech firm. This job comes with a corner office, and you have an experienced staff of recruiters at your disposal. They want to know what they should prioritize when recruiting software developers. How important should each of the following be in Globex's hiring process? Previous companies worked at
+## 
+##                      Count
+## Somewhat important     511
+## Not very important     316
+## Important              230
+## Not at all important    63
+## Very important          43
+```
+
+```r
 ds$ImportantHiringAlgorithms
+```
+
+```
+## ImportantHiringAlgorithms (categorical)
+## Congratulations! You've just been put in charge of technical recruiting at Globex, a multinational high- tech firm. This job comes with a corner office, and you have an experienced staff of recruiters at your disposal. They want to know what they should prioritize when recruiting software developers. How important should each of the following be in Globex's hiring process? Knowledge of algorithms and data structures
+## 
+##                      Count
+## Important              502
+## Very important         320
+## Somewhat important     281
+## Not very important      50
+## Not at all important    14
 ```
 
 Crunch allows you to bundle these related questions together into a _Categorical Array_. This is immensely useful when you want to analyze or communicate information about the set of questions. For instance you can use the whole array in a cross-tab without having to process dozens of individual variables.
 
 To create a Categorical Array variable from R, we can use the `makeArray` function. We'll pass to that function a selection of variables to bind together into an array, along with any additional metadata we want to provide. Fortunately here, the variables we want to select have a common naming convention, so we can `grep` for them:
 
-```{r grep subvars}
+
+```r
 imphire <- grep("^ImportantHiring", names(ds), value = TRUE)
 imphire
 ```
 
+```
+##  [1] "ImportantHiringAlgorithms"        "ImportantHiringTechExp"          
+##  [3] "ImportantHiringCommunication"     "ImportantHiringOpenSource"       
+##  [5] "ImportantHiringPMExp"             "ImportantHiringCompanies"        
+##  [7] "ImportantHiringTitles"            "ImportantHiringEducation"        
+##  [9] "ImportantHiringRep"               "ImportantHiringGettingThingsDone"
+```
+
 Now we can use that selection in `makeArray`:
 
-```{r state change4, echo=FALSE}
-change_state()
-```
-```{r makeArray}
+
+
+```r
 ds$ImportantHiring <- makeArray(ds[imphire], name = "ImportantHiring")
 ```
-```{r View array, eval = FALSE}
+
+```r
 webApp(ds$ImportantHiring)
 ```
-```{r View array screen, echo = FALSE}
-knitr::include_graphics("images/crunch-importantHiringCA.png")
-```
+![plot of chunk View array screen](images/crunch-importantHiringCA.png)
 
 The variables we included in the array have been converted into subvariables of the categorical array, and are still accessible using the `subvariables()` function.
 
-```{r}
+
+```r
 subvariables(ds$ImportantHiring)
+```
+
+```
+## Subvariables:
+##   $`ImportantHiringAlgorithms`
+##   $`ImportantHiringTechExp`
+##   $`ImportantHiringCommunication`
+##   $`ImportantHiringOpenSource`
+##   $`ImportantHiringPMExp`
+##   $`ImportantHiringCompanies`
+##   $`ImportantHiringTitles`
+##   $`ImportantHiringEducation`
+##   $`ImportantHiringRep`
+##   $`ImportantHiringGettingThingsDone`
 ```
 
 
@@ -171,50 +268,55 @@ subvariables(ds$ImportantHiring)
 
 Crunch also has a special variable type for Multiple Response questions. These are questions that give users a set of options and allow them to select more than one of them. An example of this from the Stack Overflow survey is asking which language a respodant wanted to work with. the responses are stored in a single variable with each language delimited by semi colons:
 
-```{r}
+
+```r
 knitr::kable(SO_survey[1:5, "HaveWorkedLanguage", drop = FALSE], row.names = FALSE)
 ```
 
+
+
+|HaveWorkedLanguage                 |
+|:----------------------------------|
+|Matlab; Python; R; SQL             |
+|R; SQL                             |
+|C#; JavaScript; Matlab; Python; R  |
+|Java; JavaScript; Lua; PHP; R; SQL |
+|C++; Matlab; Python; R; VBA        |
+
 To analyse this data without Crunch you would usually go through an elaborate data cleaning process to split the delimited variable up into its constituent parts, and then reshape it into a format which is more amenable to analysis. With Crunch you can make use of multiple response variables to store it in a compact form, and analyze it just like any other variable. Since delimited text is such a common way of storing this kind of answer, Crunch allows you to create a variable directly from the text. This function creates a _derived variable_ which means that if you make changes to the initial variable, the derived variable will change along with it.
 
-```{r state change5, echo=FALSE}
-change_state()
-```
-```{r makeMRFromText}
+
+
+```r
 ds$WantWorkedLanguageMR <- makeMRFromText(ds$WantWorkLanguage,
     delim = "; ",
     name = "WantWorkedMR")
 ```
-```{r echo = FALSE}
-knitr::include_graphics("images/wantWorkMR.png")
-```
+![plot of chunk unnamed-chunk-5](images/wantWorkMR.png)
 
 The variable card now shows the number of times each language was selected, the sum of these numbers will be bigger than the number of respondents because people were allowed to select more than one language. We can reorder the subvariables to make this card easier to read.
 
-```{r reorder subvariables}
+
+```r
 counts <- as.array(crtabs(~ WantWorkedLanguageMR, ds))
 counts <- counts[rev(order(counts))]
 subvariables(ds$WantWorkedLanguageMR) <- subvariables(ds$WantWorkedLanguageMR)[names(counts)]
 ```
-```{r echo = FALSE}
-knitr::include_graphics("images/WantWorkMRReodered.png")
-```
+![plot of chunk unnamed-chunk-6](images/WantWorkMRReodered.png)
 
 ## Archiving and deleting datasets
 
 Datasets can also be deleted permanently. This action cannot be undone, so it should not be done lightly. `crunch` provides two ways to delete a dataset: a `delete()` method on a dataset object, like
 
-```{r, eval=FALSE}
+
+```r
 ## Not run
 delete(ds)
 ```
 
 The second way to delete is `deleteDataset()`: you supply a dataset name. This way is faster if you have not already loaded the dataset object into your R session: no need to fetch something from the server just to then tell the server to delete it.
 
-```{r, include=FALSE}
-logout()
-end_vignette()
-```
+
 
 <!-- * [Datasets](datasets.html): creating, loading, and manipulating datasets in Crunch
 * [Variables](variables.html): cleaning and defining variable metadata

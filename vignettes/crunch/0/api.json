@@ -20,11 +20,11 @@
         "feature_flag": "/api/feature_flag/",
         "migration": "/api/migration/",
         "account": "/api/account/",
-        "user": "/api/users/7bbff9/"
+        "user": "/api/users/518278c707a7d8253b685722/"
     },
     "xlsx": "/api/xlsx/",
     "urls": {
-        "user_url": "/api/users/7bbff9/",
+        "user_url": "/api/users/518278c707a7d8253b685722/",
         "account_roles_url": "/api/roles/accounts/",
         "notebook_url": "https://jupyter.crunch.io/",
         "logout_url": "/api/logout/",
