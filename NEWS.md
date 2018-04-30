@@ -1,12 +1,20 @@
 ## crunch 1.21.1
-* Added initial support for adding summary statistics to CrunchCubes that have categorical variables that represent scales (or any that have numeric values specified). See `?addSummaryStat` for more information.
-* `index.table()` to return tables indexed to a margin
-* Fix bug in assigning `subtotals(var) <- NULL` when it already was `NULL` (#231)
-* Consistently return `""` for variable metadata fields if no value is set (#232)
-* `%in%` and `==` on Crunch objects now follow R semantics more closely with regards to missing data
-* Add some forward-compatible code to prepare for API changes to logical variables. This led to a couple of trivial changes to internals around boolean types that should not affect package users.
-* Export GitHub package version checking function so that other `crunch*` packages can use it
+### CrunchCube improvements
 * `CrunchCube`s can now be subset just like R arrays using the `[` method. 
+* Added initial support for adding summary statistics to CrunchCubes that have categorical variables that represent scales (or any that have numeric values specified). See `?addSummaryStat` for more information.
+* `index.table()` to return tables indexed to a margin.
+
+### New features and improvements in anticipation of API changes for evaluating boolean logic with missingness 
+* `%in%` and `==` on Crunch objects now follow R semantics more closely with regards to missing data.
+* Add some forward-compatible code to prepare for API changes to logical variables. This led to a couple of trivial changes to internals around boolean types that should not affect package users.
+
+### Bug fixes and method additions
+* Fix bug in assigning `subtotals(var) <- NULL` when it already was `NULL` (#231).
+* Consistently return `""` for variable metadata fields if no value is set (#232).
+* VariableTuples now have a `subvariables` is compatible with `aliases` and `names` which improves metadata extraction from CrunchCubes (#215).
+* Clarified the error message when using `makeMRFromText()` with a categorical variable.
+* Export GitHub package version checking function so that other `crunch*` packages can use it.
+
 
 ## crunch 1.21.0
 ### Variable organization
