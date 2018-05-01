@@ -1,4 +1,4 @@
-## crunch 1.21.1
+## crunch 1.22.0
 
 ### Analysis methods
 * `CrunchCube`s can now be subset just like R arrays using the `[` method.
