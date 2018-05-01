@@ -22,7 +22,7 @@ login()
 
 Both **crunch** and the Crunch web application communicate with the same application programming interface (API), served over secure HTTP. Within an R script or interactive session, the **crunch** package allows you to interact with your data in Crunch with expressive, idiomatic R. Functions in crunch handle the translation between R objects and API requests and responses, so you can typically interact with your datasets as if they were local `data.frames` (with some additional metadata), not data on a remote server.
 
-# Authentication
+## Authentication
 
 All work with data in Crunch requires authentication. Thus, the first step after loading the **crunch** package is to log in. In an interactive R session, provide the email address associated with your Crunch account, and you will be prompted to give your password safely:
 
@@ -38,9 +38,9 @@ If you use an OAuth provider, such as Google, to log into the Crunch web applica
 
 Your email and Crunch password can be set either as R `options` in your .Rprofile (`crunch.email` and `crunch.pw`) or as environment variables (`R_CRUNCH_EMAIL` and `R_CRUNCH_PW`) so that you can simply `login()`. See `?login` for details.
 
-# Datasets
+## Datasets
 
-The Crunch data store is built around datasets, which contain variables. Crunch datasets and variables contain more metadata than R `data.frames` and `vectors` and if possible the functions and methods in **crunch** work to keep all of the data on the server, only pulling metadata and aggregations when requested. That way, you can explore datasets much larger than you can comfortably load on your laptop.
+The Crunch data store is built around datasets, which contain variables. Crunch datasets and variables include more metadata than R `data.frames` and `vectors` and if possible the functions and methods in **crunch** work to keep all of the data on the server, only pulling metadata and aggregations when requested. That way, you can explore datasets much larger than you can comfortably load on your laptop.
 
 To get started, we're going to import a dataset from R to Crunch. If you already have a dataset---perhaps someone has invited you to collaborate on one already---see `vignette("datasets", package="crunch")` for how to find and load it.
 
@@ -120,7 +120,7 @@ Since the R package and the web app use the same API to interact with Crunch dat
 webApp(ds$CompanySize)
 ```
 ```{r open variable screen, echo = FALSE}
-knitr::include_graphics("../vignettes/images/crunch-companySize-screen.png")
+knitr::include_graphics("images/crunch-companySize-screen.png")
 ```
 
 ## Array Variables

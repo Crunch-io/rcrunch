@@ -255,7 +255,7 @@ navbar:
     - text: Articles
       menu:
       -  text: Getting Started
-         href: articles/getting-started.html
+         href: articles/crunch.html
       -  text: Datasets
          href: articles/datasets.html
       -  text: Variables
