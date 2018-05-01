@@ -296,9 +296,12 @@ with_mock_crunch({
         expect_error(ds$gender <- changeCategoryID(ds$gender, 8, 9),
                      "No category with id 8")
         expect_PATCH(changeCategoryID(ds$gender, 2, 6),
-                     'https://app.crunch.io/api/datasets/1/variables/gender/',
-                     '{"categories":[{"id":1,"missing":false,"name":"Male","numeric_value":1},{"id":2,"missing":false,"name":"__TO_DELETE__","numeric_value":2},{"id":-1,"missing":true,"name":"No Data","numeric_value":null}]}')
-    })
+                 'https://app.crunch.io/api/datasets/1/variables/gender/',
+                 paste0('{"categories":[{"id":1,"missing":false,"name":"Male",',
+                        '"numeric_value":1},{"id":2,"missing":false,"name":',
+                        '"__TO_DELETE__","numeric_value":2},{"id":-1,',
+                        '"missing":true,"name":"No Data","numeric_value":null}]}'))
+        })
 })
 
 
@@ -405,6 +408,36 @@ with_test_authentication({
             expect_equal(as.vector(ds$v4f), orig_vector)
             expect_equal(as.vector(ds$v4f[1:4], mode="id"), c(1, 6, 1, 6))
             expect_equal(as.vector(ds$v4f[1:4], mode="numeric"), c(1, 6, 1, 6))
+        })
+        
+        test_that("Can changeCategoryID with an exclusion", {
+            ds <- newDataset(data.frame(
+                one = factor(rep(LETTERS[3:1], 10), levels = LETTERS[3:1]),
+                two = factor(c(rep(LETTERS[1], 10),
+                               rep(LETTERS[2], 10),
+                               rep(LETTERS[3], 10)))
+                ), name = "ds with exclusion")
+            
+            # set exclusion
+            exclusion(ds) <- ds$two == "C"
+            expect_identical(names(categories(ds$one)),
+                             c("C", "B", "A", "No Data"))
+            expect_equal(ids(categories(ds$one)),
+                         c(1, 2, 3, -1))
+            orig_vector <- as.vector(ds$one)
+            expect_equal(as.vector(ds$one[1:3], mode="id"),
+                         c(1, 2, 3))
+            
+            expect_silent(ds$one <- changeCategoryID(ds$one, 2, 4))
+            expect_identical(names(categories(ds$one)),
+                             c("C", "B", "A", "No Data"))
+            expect_equal(ids(categories(ds$one)),
+                         c(1, 4, 3, -1))
+            orig_vector <- as.vector(ds$one)
+            expect_equal(as.vector(ds$one[1:3], mode="id"),
+                         c(1, 4, 3))
+            # and finally, the exclusion is back
+            expect_equivalent(exclusion(ds),  ds$two == "C")
         })
 
         test_that("Can changeCategoryID without changing values when value!=id", {

@@ -37,6 +37,15 @@ changeCategoryID <- function (variable, from, to) {
         halt("Id ", to, " is already a category, please provide a new category id.")
     }
     
+    # If there is an exlcusion, unset it, or else the updated values below will
+    # not include all rows
+    ds <- loadDataset(datasetReference(variable))
+    if (!is.null(exclusion(ds))) {
+        old_exclusion <- exclusion(ds)
+        exclusion(ds) <- NULL
+        on.exit(exclusion(ds) <- old_exclusion)
+    }
+    
     ## Add new category
     newcat <- categories(variable)[[pos.from]]
     # if the old id matches the old numeric value, likely the user wants these
