@@ -37,15 +37,6 @@ changeCategoryID <- function (variable, from, to) {
         halt("Id ", to, " is already a category, please provide a new category id.")
     }
     
-    # If there is an exlcusion, unset it, or else the updated values below will
-    # not include all rows
-    ds <- loadDataset(datasetReference(variable))
-    if (!is.null(exclusion(ds))) {
-        old_exclusion <- exclusion(ds)
-        exclusion(ds) <- NULL
-        on.exit(exclusion(ds) <- old_exclusion)
-    }
-    
     ## Add new category
     newcat <- categories(variable)[[pos.from]]
     # if the old id matches the old numeric value, likely the user wants these
@@ -60,21 +51,44 @@ changeCategoryID <- function (variable, from, to) {
     categories(variable) <- c(categories(variable), newcat)
     
     ## Move data to that new id
-    if (is.Categorical(variable)) {
-        variable[variable == from] <- to
-    } else if (is.Array(variable)) {
-        # If the variable is an array, then lapply over the subvariables
-        # TODO: change iteration over shojicatalogs to allow iterating over the variable directly
-        lapply(names(variable), function (subvarname) {
-            variable[[subvarname]][variable[[subvarname]] == from] <- to
-        })
+    moveTheData <- function(variable, from, to) {
+        if (is.Categorical(variable)) {
+            variable[variable == from] <- to
+        } else if (is.Array(variable)) {
+            # If the variable is an array, then lapply over the subvariables
+            # TODO: change iteration over shojicatalogs to allow iterating over the variable directly
+            lapply(names(variable), function (subvarname) {
+                variable[[subvarname]][variable[[subvarname]] == from] <- to
+            })
+        }
+        return(variable)
     }
+    moveTheData(variable, from, to)
     
     ## Delete old category
     keep <- seq_along(categories(variable))
     keep[pos.from] <- length(keep)
     keep <- keep[-length(keep)]
-    categories(variable) <- categories(variable)[keep]
+    tryCatch(categories(variable) <- categories(variable)[keep],
+             error = function(e) {
+                 msg <- conditionMessage(e)
+                 if (grepl("Cannot delete categories", msg)) {
+                     # If dropping the to-be-dropped category failed, it could
+                     # be because there's an exlcusion. If so unset it, or else
+                     # the updated values below will not include all rows
+                     ds <- loadDataset(datasetReference(variable))
+                     if (!is.null(exclusion(ds))) {
+                         old_exclusion <- exclusion(ds)
+                         exclusion(ds) <- NULL
+                         on.exit(exclusion(ds) <- old_exclusion)
+                     }
+                     
+                     moveTheData(variable, from, to)
+                     categories(variable) <- categories(variable)[keep]
+                 } else {
+                     stop(e)
+                 }
+             })
     
     invisible(variable)
 }
