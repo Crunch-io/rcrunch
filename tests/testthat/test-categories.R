@@ -296,18 +296,12 @@ with_mock_crunch({
         expect_error(ds$gender <- changeCategoryID(ds$gender, 8, 9),
                      "No category with id 8")
     })
-    
-    # fake that the dataset can have its exclusion nulled
-    with(temp.options(httptest.mock.paths=c("alt-mocks/", ".", "../inst/",
-                                            system.file(package="crunch"))), {
-        ds <- loadDataset("test ds")
-        expect_PATCH(changeCategoryID(ds$gender, 2, 6),
-                 'https://app.crunch.io/api/datasets/1/variables/gender/',
-                 paste0('{"categories":[{"id":1,"missing":false,"name":"Male",',
-                        '"numeric_value":1},{"id":2,"missing":false,"name":',
-                        '"__TO_DELETE__","numeric_value":2},{"id":-1,',
-                        '"missing":true,"name":"No Data","numeric_value":null}]}'))
-    })
+    expect_PATCH(changeCategoryID(ds$gender, 2, 6),
+             'https://app.crunch.io/api/datasets/1/variables/gender/',
+             paste0('{"categories":[{"id":1,"missing":false,"name":"Male",',
+                    '"numeric_value":1},{"id":2,"missing":false,"name":',
+                    '"__TO_DELETE__","numeric_value":2},{"id":-1,',
+                    '"missing":true,"name":"No Data","numeric_value":null}]}'))
 })
 
 
