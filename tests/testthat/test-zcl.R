@@ -14,3 +14,26 @@ test_that("zcl(logical)", {
         expect_identical(z2$type$class, "categorical")
     })
 })
+
+with_mock_crunch({
+    ds <- loadDataset("test ds")
+    test_that("has.function", {
+        func <- zfunc("cast", ds$birthyr, "text")
+        expect_true(has.function(func, "cast"))
+        expect_false(has.function(func, "case"))
+
+        func <- zfunc("case",
+                      zfunc("cast", ds$birthyr, "text"),
+                      list(args = list()))
+        expect_true(has.function(func, "cast"))
+        expect_true(has.function(func, "case"))
+        expect_false(has.function(func, "cube_mean"))
+
+        func <- zfunc("case", zfunc("cast",
+                                    zfunc("cube_mean", ds$birthyr),
+                                    "text"))
+        expect_true(has.function(func, "cast"))
+        expect_true(has.function(func, "case"))
+        expect_true(has.function(func, "cube_mean"))
+    })
+})

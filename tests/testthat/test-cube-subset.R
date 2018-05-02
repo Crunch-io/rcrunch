@@ -13,8 +13,6 @@ catarray_x_mr <- loadCube(test_path("cubes/catarray-x-mr.json"))
 test_that("subsetArrayDimension categorical dimension", {
     expected <- list(
         name = c("cats", "No Data"),
-        any.or.none = c(FALSE, FALSE
-        ),
         missing = c(FALSE, TRUE),
         references = list(
             alias = "animal",
@@ -37,7 +35,6 @@ test_that("subsetArrayDimension categorical dimension", {
 test_that("subsetArrayDimension MR dimension", {
     expected <- list(
         name = c("rest_opinion","play_opinion"),
-        any.or.none = c(FALSE, FALSE),
         missing = c(FALSE, FALSE),
         references = list(
             description = "",
@@ -67,7 +64,6 @@ test_that("subsetArrayDimension MR dimension", {
 test_that("subsetArrayDimension categorical array dimension", {
     expected <- list(
         name = c("cat_feeling"),
-        any.or.none = c(FALSE),
         missing = c(FALSE),
         references = list(
             subreferences = list(
@@ -83,7 +79,6 @@ test_that("subsetArrayDimension categorical array dimension", {
 
     expected <- list(
         name = c("Somewhat Happy", "Neutral"),
-        any.or.none = c(FALSE, FALSE),
         missing = c(FALSE, FALSE),
         references = list(
             subreferences = list(
