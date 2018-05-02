@@ -108,17 +108,9 @@ cubeToArray <- function (x, measure=1) {
     ## it were categorical, but its data structure isn't, and thus its
     ## representation in the cube response is more complex. We need that
     ## complexity so that we know how to compute percentages correctly, but
-    ## here we need to dump it. Multiple response (MR) extra features in the
-    ## cube come in two forms:
-    ## (a) For the "selected_array" method of computing (legacy), MR variables
-    ## return as one dimension in the output but have extra special
-    ## pseudo-categories "__any__" and "__none__", which tell you the rows that
-    ## have valid values (even if no responses are "selected"). This is what
-    ## we use for determining the denominator for percentage calculations, but
-    ## they are suppressed from display.
-    ## (b) For the "as_selected" method (new), MR variables return as two
+    ## here we need to dump it. MR variables return as two
     ## dimensions, like a categorical array. The "category" dimension has been
-    ## reduced to special "Selected", "Not Selected", and "No Data" categories.
+    ## reduced to special "Selected", "Other", and "No Data" categories.
     ## For reducing the display of the result back to the single dimension we
     ## think of the data, we take the "Selected" slice from the categories
     ## dimension.
@@ -151,6 +143,7 @@ takeSelectedDimensions <- function (x, dims) {
     if (any(selecteds)) {
         drops <- lapply(selecteds, function (s) {
             ## For "Selected" dimensions, we only want to return "Selected", the 1st element
+            ## TODO: this could be brittle; consider an is.selected attr/vector
             if (s) {
                 return(1L)
             } else {
@@ -205,20 +198,16 @@ evalUseNA <- function (data, dims, useNA) {
 
 keepWithNA <- function (dimension, marginal, useNA) {
     ## Returns logicals of which rows/cols/etc. should be kept
-
-    ## Always drop __any__ and __none__, regardless of other missingness
-    out <- !dimension$any.or.none
-
-    if (useNA != "always") {
+    if (useNA == "always") {
+        out <- rep(TRUE, length(dimension$missing))
+    } else {
         ## !always means either drop missing always, or only keep if there are any
-        valid.cats <- !dimension$missing
+        out <- !dimension$missing
         if (useNA == "ifany") {
             ## Compare against "marginal", the counts, to know which missing
             ## elements have "any"
-            valid.cats <- valid.cats | marginal > 0
+            out <- out | marginal > 0
         }
-        ## But still drop __any__ or __none__
-        out <- valid.cats & out
     }
     # add names, so we know which categories are being kept
     names(out) <- dimension$name
@@ -234,7 +223,6 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     data <- x@arrays[[measure]]
     dims <- x@dims
     dimnames(data) <- dimnames(dims)
-    aon <- anyOrNone(dims)
     missings <- is.na(dims)
 
     ## Check "margin" against number of (non-"selected" invisible MR) dims
@@ -265,13 +253,11 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     ## "real" cube that we want to aggregate to generate the margin table.
     ## The result of this lapply is a dimnames-shaped list of logical vectors
     ## (like what `evalUseNA` returns).
-    ## If multiple response, sum __any__ + __none__ (and missing, if included)
-    ## Else, sum all
-    args <- lapply(seq_along(aon), function (i) {
+    args <- lapply(seq_along(missings), function (i) {
         ## Iterating over each dimension i,
-        a <- aon[[i]]
+        m <- missings[[i]]
         ## Start with all TRUE
-        out <- rep(TRUE, length(a))
+        out <- rep(TRUE, length(m))
         ## First, check whether "i" is a "Selection" (pseudo-)dimension
         if (i %in% which_selected) {
             ## If so, switch behavior based on whether the user has requested
@@ -282,36 +268,24 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
             if ((i - 1) %in% mapped_margins) {
                 ## This is the "Selection" dimension that corresponds to the
                 ## previous "real" dim
+                ## TODO: this could be brittle; consider an is.selected attr/vector
                 out <- 1 ## Just keep "Selected"
             } else if (drop_na) {
                 ## Otherwise, check if we're only keeping non-missing entries,
                 ## and filter them accordingly.
-                out <- !missings[[i]]
+                out <- !m
             }
             ## Next, for non-selection dimensions, it matters if "i" is in the
             ## user's margin selection. The default, as we said up front, is keep
             ## all, but not if we're sweeping this margin.
-        } else if (!(i %in% mapped_margins)) {
-            if (any(a)) {
-                ## Any "any-or-none" means we have the other form of MR query.
-                ## If this is not a margin we're requesting a table for, that
-                ## means we just want the valid counts for this dimension. That
-                ## means "any selected" + "none selected", or the value of
-                ## `anyOrNone(dim)`
-                out <- a
-                ## Add missings if not "no"
-                if (!drop_na) {
-                    out <- out | missings[[i]]
-                }
-            } else if (drop_na) {
-                ## Not multiple response. Exclude missings if we should
-                out <- !missings[[i]]
-            }
+        } else if (drop_na && !(i %in% mapped_margins)) {
+            ## Not multiple response. Exclude missings if we should
+            out <- !m
         }
 
         return(out)
     })
-    names(args) <- names(aon)
+    names(args) <- names(missings)
     data <- subsetCubeArray(data, args)
     ## Now we have data in a reasonable shape that R's native methods can
     ## handle.
@@ -330,9 +304,9 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     ## base `margin.table` method with those.
     mt <- margin.table(data, mt_margins)
     ## Finally, drop missings from the result. Could we do this in one step,
-    ## building this into the initial `lapply`? Maybe, but I think there's some
-    ## combination of "selected_array" multiple response with useNA=="ifany"
-    ## for which that would do the wrong thing.
+    ## building this into the initial `lapply`? Maybe we can now that we've
+    ## removed "selected_array"!
+    ## TODO: try to do that.
     keep.these <- evalUseNA(mt, dims[mt_margins], x@useNA)
     out <- subsetCubeArray(mt, keep.these)
 

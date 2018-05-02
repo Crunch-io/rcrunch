@@ -205,22 +205,24 @@ translateCubeIndex <- function(x, subset, drop) {
 #' @keywords internal
 skipMissingCategories <- function(cube, index){
     visible_cats <- evalUseNA(cube@arrays$count, dims = cube@dims, useNA = cube@useNA)
-    mapply(function(visable, sub){
-        if (identical(sub, "mr_select_drop")) {
-            # select the "Selected" element of the selection dimension.
-            return(c(TRUE, FALSE, FALSE))
-        }
-        if (isTRUE(sub)) {
-            out <- rep(TRUE, length(visable))
-        } else {
-            out <- rep(FALSE, length(visable))
-            out[visable][sub] <- rep(TRUE, length(sub))
-        }
-        return(out)}, visable = visible_cats, sub = index, SIMPLIFY = FALSE)
+    mapply(
+        function (visible, sub) {
+            if (identical(sub, "mr_select_drop")) {
+                # select the "Selected" element of the selection dimension.
+                ## TODO: this could be brittle; consider an is.selected attr/vector
+                return(c(TRUE, FALSE, FALSE))
+            }
+            if (isTRUE(sub)) {
+                out <- rep(TRUE, length(visible))
+            } else {
+                out <- rep(FALSE, length(visible))
+                out[visible][sub] <- rep(TRUE, length(sub))
+            }
+            return(out)
+        }, visible = visible_cats, sub = index, SIMPLIFY = FALSE)
 }
 
 subsetArrayDimension <- function(dim, idx){
-    dim$any.or.none <- dim$any.or.none[idx]
     dim$missing <- dim$missing[idx]
     dim$name <- dim$name[idx]
 
@@ -233,4 +235,3 @@ subsetArrayDimension <- function(dim, idx){
 
     return(dim)
 }
-
