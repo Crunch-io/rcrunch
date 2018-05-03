@@ -191,10 +191,6 @@ is.selectedDimension <- function (dims) {
     return(selecteds)
 }
 
-is.CategoricalArraySelected <- function(dims) {
-    vars <- variables(cube@dims)
-
-}
 
 # determine if a dimension is from the selected_array of a multiple response
 is.selectedArrayDim <- function (dim) {
@@ -206,25 +202,50 @@ is.selectedArrayDim <- function (dim) {
 }
 
 
-setMethod("getCubeDimType", "CrunchCube", function (x) {
-    return(getCubeDimType(x@dims))
+#' Get dimension type
+#'
+#' This function returns the specific type of each cube dimension. This is useful
+#' when cubes contain categorical array or multiple response variables because it
+#' identifies the dimensions of the cube which refer to the differ parts of
+#' array variable:
+#' - `ca_items`: Categorical array items
+#' - `ca_categories`: The categories of the categorical array
+#' - `mr_items`: Multiple response options or items
+#' - `mr_selections`: The selection status for a multiple response variable
+#'
+#' @return A character vector. This is identical to `types()` except that
+#' the array variable types are more specific.
+#' @param CrunchCube
+#'
+#' @return a character vector of dimension types
+#' @export
+#' @keywords internal
+#' @name dimType
+NULL
+
+#' @rdname dimType
+#' @export
+setMethod("dimType", "CrunchCube", function (x) {
+    return(dimType(x@dims))
 })
 
-setMethod("getCubeDimType", "CubeDims", function (x, i, ...) {
-        vars <- variables(dims)
+#' @rdname dimType
+#' @export
+setMethod("dimType", "CubeDims", function (x) {
+    vars <- variables(x)
     out <- types(vars)
-    out[is.selectedDimension(dims)] <- "mr_selection"
+    out[is.selectedDimension(x)] <- "mr_selections"
     for (i in seq_along(vars)) {
         if (i == length(vars)) {
             break
         }
-        if (out[i + 1] == "mr_selection") {
-            out[i] <- "mr_indicator"
+        if (out[i + 1] == "mr_selections") {
+            out[i] <- "mr_items"
             next
         }
         if (out[i] == "subvariable_items") {
-            out[i] <- "ca_indicator"
-            out[i + 1] <- "ca_selection"
+            out[i] <- "ca_items"
+            out[i + 1] <- "ca_categories"
         }
     }
     names(out) <- names(vars)
