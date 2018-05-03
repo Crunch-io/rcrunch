@@ -16,8 +16,28 @@ getListSlot <- function (x, i, what=character(1), ifnot=NA_character_) {
 }
 
 setIndexSlot <- function (x, i, value, unique=FALSE) {
-    if (length(value) == 1) value <- rep(value, length(x))
-    stopifnot(length(x) == length(value))
+    scalar_value <- length(value) == 1
+    if (!scalar_value) {
+        stopifnot(length(x) == length(value))
+    }
+
+    duples <- duplicated(urls(x))
+    if (any(duples)) {
+        ## This is probably a mistake, a selection from a catalog that wasn't
+        ## unique. Make sure that the user isn't trying to assign different
+        ## values for the duplicated entries, and if not, clean it up
+        if (!scalar_value && !identical(duples, duplicated(paste(urls(x), value)))) {
+            halt("Can't update an index with duplicated entries")
+        }
+        x <- x[!duples]
+        if (!scalar_value) {
+            value <- value[!duples]
+        }
+    }
+
+    if (scalar_value) {
+        value <- rep(value, length(x))
+    }
 
     old <- index(x)
     index(x) <- mapply(function (a, v) {

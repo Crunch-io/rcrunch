@@ -91,6 +91,19 @@ with_mock_crunch({
             "https://app.crunch.io/api/datasets/1/variables/",
             '{"https://app.crunch.io/api/datasets/1/variables/mymrset/":{"notes":"ms"}}')
     })
+    test_that("attribute setters with duplication", {
+        ## In the first case, the first element is duplicated, but it's getting
+        ## the same value, so we can ignore it
+        expect_PATCH(names(varcat[c(1, 1:4)]) <- c("Year of birth", "Year of birth", "Gender", "Loc", "Start time"),
+            "https://app.crunch.io/api/datasets/1/variables/",
+            '{"https://app.crunch.io/api/datasets/1/variables/birthyr/":{"name":"Year of birth"},',
+            '"https://app.crunch.io/api/datasets/1/variables/location/":{"name":"Loc"},',
+            '"https://app.crunch.io/api/datasets/1/variables/mymrset/":{"name":"Start time"}}')
+        ## In the second case, the first element of the catalog is getting
+        ## assigned two different new values, so that errors.
+        expect_error(names(varcat[c(1, 1:4)]) <- c("Year of birth", "BY", "Gender", "Loc", "Start time"),
+            "Can't update an index with duplicated entries")
+    })
 
     test_that("show method", {
         expect_prints(varcat[1:4],
