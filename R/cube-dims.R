@@ -191,6 +191,11 @@ is.selectedDimension <- function (dims) {
     return(selecteds)
 }
 
+is.CategoricalArraySelected <- function(dims) {
+    vars <- variables(cube@dims)
+
+}
+
 # determine if a dimension is from the selected_array of a multiple response
 is.selectedArrayDim <- function (dim) {
     if (!is.null(dim$any.or.none)) {
@@ -199,3 +204,29 @@ is.selectedArrayDim <- function (dim) {
 
     return(FALSE)
 }
+
+
+setMethod("getCubeDimType", "CrunchCube", function (x) {
+    return(getCubeDimType(x@dims))
+})
+
+setMethod("getCubeDimType", "CubeDims", function (x, i, ...) {
+        vars <- variables(dims)
+    out <- types(vars)
+    out[is.selectedDimension(dims)] <- "mr_selection"
+    for (i in seq_along(vars)) {
+        if (i == length(vars)) {
+            break
+        }
+        if (out[i + 1] == "mr_selection") {
+            out[i] <- "mr_indicator"
+            next
+        }
+        if (out[i] == "subvariable_items") {
+            out[i] <- "ca_indicator"
+            out[i + 1] <- "ca_selection"
+        }
+    }
+    names(out) <- names(vars)
+    return(out)
+})
