@@ -215,23 +215,15 @@ is.selectedArrayDim <- function (dim) {
 #'
 #' @return A character vector. This is identical to `types()` except that
 #' the array variable types are more specific.
-#' @param CrunchCube
+#' @param x a CrunchCube or CubeDims object
 #'
 #' @return a character vector of dimension types
 #' @export
 #' @keywords internal
-#' @name dimType
-NULL
-
-#' @rdname dimType
-#' @export
-setMethod("dimType", "CrunchCube", function (x) {
-    return(dimType(x@dims))
-})
-
-#' @rdname dimType
-#' @export
-setMethod("dimType", "CubeDims", function (x) {
+getDimType <-  function (x) {
+    if (inherits(x, "CrunchCube")) {
+        x <- x@dims
+    }
     vars <- variables(x)
     out <- types(vars)
     out[is.selectedDimension(x)] <- "mr_selections"
@@ -250,4 +242,4 @@ setMethod("dimType", "CubeDims", function (x) {
     }
     names(out) <- names(vars)
     return(out)
-})
+}

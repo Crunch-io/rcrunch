@@ -183,7 +183,6 @@ setGeneric("rstandard")
 setGeneric("bases", function (x, margin=NULL) standardGeneric("bases"))
 setGeneric("dimensions", function (x) standardGeneric("dimensions"))
 setGeneric("dimensions<-", function (x, value) standardGeneric("dimensions<-"))
-setGeneric("dimType", function(x) standardGeneric("dimType"))
 setGeneric("measures", function (x) standardGeneric("measures"))
 
 setGeneric("subset")
