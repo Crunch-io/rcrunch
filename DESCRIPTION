@@ -36,8 +36,11 @@ Suggests:
     rmarkdown,
     rstudioapi,
     shiny,
+    shinytest,
     spelling,
     testthat (>= 2.0.0)
+Remotes:
+    rstudio/shinytest
 VignetteBuilder: knitr
 Language: en-US
 Encoding: UTF-8

@@ -1,5 +1,9 @@
 Name: Crunch Datasets
 Description: Select Crunch Dataset
-Binding: listDatasets(shiny = TRUE)
+Binding: crunch::listDatasets(shiny = TRUE)
 Interactive: true
 
+Name: Build Array or MR Variable
+Description: Launch gadget to help build valid Multiple Response or Categorical Array Variable
+Binding: makeArrayGadget()
+Interactive: true
