@@ -170,6 +170,21 @@ with_mock_crunch({
             '{"graph":["https://app.crunch.io/api/datasets/3/",',
             '{"new group":[{"nested":["https://app.crunch.io/api/datasets/3/"]}]}]}')
     })
+
+    test_that("Organize datasets cleans up unexpected entries", {
+        neword <- DatasetOrder(
+            DatasetGroup("new group",
+                c("https://app.crunch.io/api/datasets/3/",
+                  "https://app.crunch.io/api/datasets/1/")
+            )
+        )
+        expect_warning(
+            expect_PUT(ordering(datasets(aproject)) <- neword,
+                'https://app.crunch.io/api/projects/project1/datasets/order/',
+                '{"graph":[{"new group":["https://app.crunch.io/api/datasets/3/"]}]}'),
+            "Order contained dataset URL not found in the catalog. It has been automatically cleaned."
+        )
+    })
 })
 
 with_test_authentication({
