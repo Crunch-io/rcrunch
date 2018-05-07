@@ -86,40 +86,23 @@ setMethod("ordering<-", "DatasetCatalog", function (x, value) {
         ## Validate.
         bad.entities <- setdiff(urls(value), urls(x))
         if (length(bad.entities)) {
-            halt("Dataset URL", ifelse(length(bad.entities) > 1, "s", ""),
-                " referenced in Order not present in catalog: ",
-                serialPaste(bad.entities))
+            ## Due to some unidentified bug, we sometimes see order refs that
+            ## should have been removed but haven't been. So let's drop them
+            ## ourselves from the payload.
+            plural <- length(bad.entities) > 1
+            warning(
+                "Order contained dataset URL", ifelse(plural, "s", ""),
+                " not found in the catalog. ",
+                ifelse(plural, "They have", "It has"),
+                " been automatically cleaned."
+            )
+            value <- setdiff_entities(value, bad.entities, remove.na=TRUE)
         }
         ## Update on server
         crPUT(shojiURL(x, "orders", "order"), body=toJSON(value))
     }
     return(x)
 })
-
-
-# #' Move a variable to after another variable
-# #'
-# #' @param x the variable group that `after` is in
-# #' @param value the variable or dataset subset you would like to move
-# #' @param after the variable you want to precede `value`
-# #' @return returns a variable group
-# #' @examples
-# #' \dontrun{
-# #' ordering(ds)[['Demographics']] <- moveToAfter(ordering(ds)[['Grp A']], ds['age'], ds$educ)
-# #' }
-# moveToAfter <- function (x, value, after) {
-#     if (!inherits(after, "OrderGroup")) {
-#         after <- urls(after)
-#     }
-#     if (!inherits(value, "OrderGroup")) {
-#         value <- urls(value)
-#     }
-#     whi <- ifelse(inherits(after, "OrderGroup"), which(names(x) %in% name(after)), which(entities(x) %in% after))
-#     if ((inherits(value, "OrderGroup") && !name(value) %in% names(x)) || (!inherits(value, "OrderGroup") && !value %in% entities(x))) entities(x) <- c(entities(x), value)
-#     whi2 <- ifelse(inherits(value, "OrderGroup"), which(names(x) %in% name(value)), which(entities(x) %in% value))
-#     entities(x) <- entities(x)[c(setdiff(1:whi, whi2), whi2, setdiff((whi+1):length(entities(x)), whi2))]
-#     return(x)
-# }
 
 #' Copy the variable order from one dataset to another.
 #'
