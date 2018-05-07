@@ -1,15 +1,24 @@
 #' Change the id of a category for a categorical variable
 #'
-#' Changes the id of a category from an existing value to a new one.
-#' The variable can be a categorical, categorical array, or multiple response
+#' Changes the id of a category from an existing value to a new one. The
+#' variable can be a categorical, categorical array, or multiple response
 #' variable. The category changed will have the same numeric value and missing
 #' status as before. The one exception to this is if the numeric value is the
 #' same as the id, then the new numeric value will be the same as the new id.
 #'
-#' @param variable the variable in a crunch dataset that will be changed (note: the variable must be categorical, categorical array, or multiple response)
+#' It is highly recommended to disable any exclusion filter before using
+#' `changeCategoryID`, especially if it is being called multiple times in quick
+#' succession (e.g. as part of an automated script). If a problematic exclusion
+#' is encountered `changeCategoryID` will attempt to disable and re-enable the
+#' exclusion, but that process will be repeated for every call made which could
+#' have adverse consequences (not to mention slow down processing time).
+#'
+#' @param variable the variable in a crunch dataset that will be changed (note:
+#'   the variable must be categorical, categorical array, or multiple response)
 #' @param from the (old) id identifying the category you want to change
 #' @param to the (new) id for the category
-#' @return `variable` with category `from` and all associated data values mapped to id `to`
+#' @return `variable` with category `from` and all associated data values mapped
+#'   to id `to`
 #' @examples
 #' \dontrun{
 #' ds$country <- changeCategoryID(ds$country, 2, 6)
@@ -81,11 +90,23 @@ changeCategoryID <- function (variable, from, to) {
                          old_exclusion <- exclusion(ds)
                          exclusion(ds) <- NULL
                          on.exit(exclusion(ds) <- old_exclusion)
+                     } else {
+                         # if there is no exclusion, we don't have an easy fix,
+                         # so return the error
+                         stop(e)
                      }
                      
+                     # warn the user what's up
+                     warning("Temporarily disabling the exclusion while ",
+                             "changing category IDs. See `?changeCategoryID` ",
+                             "for more information.")
+                     
+                     # retry the move and category update without the exclusion
                      moveTheData(variable, from, to)
                      categories(variable) <- categories(variable)[keep]
                  } else {
+                     # if the error was not that a category couldn't be deleted,
+                     # we don't have an easy fix, so return the error.
                      stop(e)
                  }
              })

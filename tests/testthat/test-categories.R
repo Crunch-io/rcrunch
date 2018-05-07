@@ -428,7 +428,11 @@ with_test_authentication({
             expect_equal(as.vector(ds$one[1:3], mode="id"),
                          c(1, 2, 3))
             
-            expect_silent(ds$one <- changeCategoryID(ds$one, 2, 4))
+            expect_warning(ds$one <- changeCategoryID(ds$one, 2, 4),
+                           paste0("Temporarily disabling the exclusion while ",
+                                  "changing category IDs. See ",
+                                  "`?changeCategoryID` for more information."),
+                           fixed = TRUE)
             expect_identical(names(categories(ds$one)),
                              c("C", "B", "A", "No Data"))
             expect_equal(ids(categories(ds$one)),
