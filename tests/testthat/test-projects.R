@@ -313,12 +313,6 @@ with_test_authentication({
     ds3 <- createDataset(name=now())
     ord2 <- DatasetOrder(DatasetGroup("A group of two",
         c(self(ds), self(ds3))))
-    test_that("Have to add dataset to project before organizing it", {
-        expect_error(ordering(datasets(tp)) <- ord2,
-            "Dataset URL referenced in Order not present in catalog")
-        expect_identical(ordering(datasets(tp))@graph[[1]],
-            DatasetGroup(name="A group of one", entities=self(ds)))
-    })
     owner(ds3) <- tp
     tp <- refresh(tp)
     test_that("Can reorganize datasets", {
