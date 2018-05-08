@@ -1,4 +1,5 @@
 ## crunch 1.22.1 (under development)
+* `changeCategoryID()` tries to unset then reset the dataset exclusion if that impacts its progress. Best practice is to disable exclusions before running `changeCategoryID()` if at all possible.
 
 ## crunch 1.22.0
 

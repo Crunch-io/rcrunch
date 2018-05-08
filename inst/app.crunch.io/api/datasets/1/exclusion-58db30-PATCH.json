@@ -1,0 +1,13 @@
+{
+  "expression": {
+    "function": "<",
+    "args": [
+      {
+        "variable": "https://app.crunch.io/api/datasets/1/variables/birthyr/"
+      },
+      {
+        "value": 0
+      }
+    ]
+  }
+}
