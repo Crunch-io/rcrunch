@@ -27,7 +27,7 @@ setIndexSlot <- function (x, i, value, unique=FALSE) {
         ## unique. Make sure that the user isn't trying to assign different
         ## values for the duplicated entries, and if not, clean it up
         if (!scalar_value && !identical(duples, duplicated(paste(urls(x), value)))) {
-            halt("Can't update an index with duplicated entries")
+            halt("Can't update the same index item with more than one entry")
         }
         x <- x[!duples]
         if (!scalar_value) {

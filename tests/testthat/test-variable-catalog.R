@@ -102,7 +102,7 @@ with_mock_crunch({
         ## In the second case, the first element of the catalog is getting
         ## assigned two different new values, so that errors.
         expect_error(names(varcat[c(1, 1:4)]) <- c("Year of birth", "BY", "Gender", "Loc", "Start time"),
-            "Can't update an index with duplicated entries")
+            "Can't update the same index item with more than one entry")
     })
 
     test_that("show method", {
