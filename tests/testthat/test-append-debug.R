@@ -35,7 +35,7 @@ with_test_authentication({
         })
         test_that("The append fails", {
             expect_error(appendDataset(part1, part2),
-                "Subvariable mr_1 cannot be bound to both arrays 'CA2' and 'CA1'.")
+                "Subvariable 'mr_1' cannot be bound to both arrays 'CA2' and 'CA1'.")
         })
         part1 <- cleanseBatches(part1)
 
