@@ -114,8 +114,9 @@ test_that("residuals for MR by MR (disparate MRs)", {
     expect_equal(rstandard(mr_by_mr_heterogeneous), out)
 })
 
+mr_by_mr_by_too_many <- loadCube("cubes/mr-by-mr-too-many-dims.json")
+
 test_that("residuals for MR by MR by anything errors", {
-    skip("TODO: replace with a non-selected_array fixture")
     expect_error(rstandard(mr_by_mr_by_too_many),  paste0(
                  "Cannot compute residuals with more than two dimensions. Pick ",
                  "a slice to evaluate"))
