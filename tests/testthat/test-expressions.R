@@ -154,6 +154,12 @@ with_mock_crunch({
             paste0(dQuote("resolution"), " is invalid. Valid values are Y, Q, M, W, D, h, m, s, or ms")
         )
     })
+
+    test_that("as.vector for 3VL CrunchLogicalExpr returns R logical", {
+        vals <- as.vector(ds$birthyr == 1945 | ds$birthyr < 1941)
+        expect_true(is.logical(vals))
+        expect_equal(which(ds$birthyr == 1945 | ds$birthyr < 1941), 4:20)
+    })
 })
 
 with_test_authentication({

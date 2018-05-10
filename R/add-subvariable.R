@@ -17,7 +17,7 @@ addSubvariable <- function (variable, subvariable) {
     new.urls <- addSubvarDef(variable, subvariable)
 
     ## Store these for post workaround
-    subvar.urls <- subvariables(tuple(variable))
+    subvar.urls <- subvariableURLs(tuple(variable))
 
     ## Do the adding
     crPATCH(shojiURL(variable, "catalogs", "subvariables"),

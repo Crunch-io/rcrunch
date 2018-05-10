@@ -152,6 +152,10 @@ setMethod("anchor<-", "Heading", setAfter)
 
 #' @rdname Insertions
 #' @export
+setMethod("anchor<-", "SummaryStat", setAfter)
+
+#' @rdname Insertions
+#' @export
 setMethod("subtotals<-", "Insertion", setSubtotal)
 
 #' @rdname Insertions
@@ -174,6 +178,15 @@ setMethod("arguments<-", "Subtotal", function (x, value) {
 #' @export
 setMethod("arguments<-", "Heading", function (x, value) {
     halt("Cannot set arguments on Headings.")
+})
+
+
+#' @rdname Insertions
+#' @export
+setMethod("arguments<-", "SummaryStat", function (x, value) {
+    # TODO: validate that the arguments are valid
+    x[["categories"]] <- value
+    return(x)
 })
 
 #' @rdname Insertions
@@ -206,6 +219,24 @@ setMethod("arguments", "Heading", function(x) NA)
 
 #' @rdname Insertions
 #' @export
+setMethod("arguments", "SummaryStat", function (x, var_categories) {
+    if (is.null(x[["categories"]])) {
+        # if var_categories is not provided, return the string all this should
+        # only happen when showing insertion objects and not when calculating
+        if (missing(var_categories)) {
+            return("all")
+        }
+
+        x[["categories"]] <- ids(var_categories)
+    }
+
+    # grab the arguments from the call so that we can optionally pass var_cats
+    .args <- as.list(match.call()[-1])
+    return(do.call(.convertArgs, .args))
+})
+
+#' @rdname Insertions
+#' @export
 setMethod("anchor", "Insertion", function (x) {
     n <- x[["anchor"]]
     return(ifelse(is.null(n), NA_integer_, n))
@@ -217,9 +248,33 @@ setMethod("anchor", "Insertion", function (x) {
         return(x$position)
     }
 
+    # If after is null (and position is relative) we default to setting after to
+    # be the last category in the Subtotal category.
+    if (is.null(x$after)) {
+        if (missing(var_categories)) {
+            # we don't have the variable this insertion will attach to, so we
+            # can't determine which is the last category to use as the anchor.
+            # This will be filled in when this insertion is added to a variable
+            # (either on the server or in a cube)
+            message("Can't determine the anchor position without a ",
+                    "variable. However, when this is added to a Crunch ",
+                    "variable or CrunchCube it will follow the last ",
+                    "category given")
+            return(NA_integer_)
+        }
+        if (is.numeric(x$categories)) {
+            var_cats <- ids(var_categories)
+        } else {
+            var_cats <- names(var_categories)
+        }
+        sub_cats <- x$categories[x$categories %in% var_cats]
+        ordered_cats <- sub_cats[order(match(sub_cats, var_cats))]
+        x$after <- rev(ordered_cats)[1]
+    }
+    
     # map chars/nums to ids
     if (is.character(x$after)) {
-        # TODO: better error if var is null
+        # TODO: better error handling if var_categories is null
         n <- ids(var_categories[x$after])
     } else {
         n <- x$after
@@ -237,6 +292,10 @@ setMethod("anchor", "Heading", .convertAnchor)
 
 #' @rdname Insertions
 #' @export
+setMethod("anchor", "SummaryStat", .convertAnchor)
+
+#' @rdname Insertions
+#' @export
 setMethod("func", "Insertion", function (x) {
     f <- x[["function"]]
     return(ifelse(is.null(f), NA_character_, f))
@@ -249,6 +308,10 @@ setMethod("func", "Subtotal", function (x) return("subtotal"))
 #' @rdname Insertions
 #' @export
 setMethod("func", "Heading", function (x) return(NA))
+
+#' @rdname Insertions
+#' @export
+setMethod("func", "SummaryStat", function (x) return(x[["stat"]]))
 
 ############################################
 ## Insertions methods

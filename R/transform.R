@@ -86,7 +86,8 @@ setMethod("transforms", "VariableTuple", getTransforms)
 #' @export
 setMethod("transforms<-", c("CrunchVariable", "Transforms"), function (x, value) {
     # ensure that the value is all insertions, and only insertions
-    value$insertions <- lapply(value$insertions, makeInsertion, var = x)
+    value$insertions <- lapply(value$insertions, makeInsertion,
+                               var_categories = categories(x))
 
     frmt <- wrapEntity("view" = list("transform" = value))
     crPATCH(self(x), body=toJSON(frmt))

@@ -111,11 +111,12 @@ makeMRFromText <- function (var,
     if (missing(name)) {
         halt("Must supply a name for the new variable")
     }
-    if (is.Categorical(var) || is.Text(var)) {
+    if (is.Text(var)) {
         uniques <- names(table(var))
     } else {
-        halt(dQuote(substitute(var)),
-             " must be a Categorical or Text Crunch Variable.")
+        halt(dQuote(deparse(substitute(var))),
+            " is of class ", class(var),
+             ", it must be a Crunch TextVariable.")
     }
     items <- unique(unlist(strsplit(uniques, delim)))
     # make a derivation expression for each unique item

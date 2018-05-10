@@ -15,7 +15,7 @@ NULL
     if (!is.character(out)) {
         ## Catalog show content is a data.frame unless otherwise indicated.
         ## Print it, but capture the output so we can return the character output.
-        out <- capture.output(print(getShowContent(object)))
+        out <- capture.output(print(out))
     }
     cat(out, sep="\n")
     invisible(out)
@@ -52,9 +52,11 @@ showAbsCategory <- function (x) data.frame(id=id(x), name=name(x), value=value(x
 showAbsCategories <- function (x) do.call("rbind", lapply(x, showAbsCategory))
 
 showInsertion <- function (x) {
-    df_out <- data.frame(anchor=anchor(x), name=name(x),
-               func=func(x), args=serialPaste(arguments(x)), stringsAsFactors = FALSE)
+    return(data.frame(anchor=anchor(x), name=name(x),
+                      func=func(x), args=serialPaste(arguments(x)),
+                      stringsAsFactors = FALSE))
 }
+
 showInsertions <- function (x) do.call("rbind",
                                        c(lapply(x, getShowContent),
                                          stringsAsFactors = FALSE))
@@ -65,8 +67,9 @@ showSubtotalHeading <- function (x) {
     # for the show method only.
     anchor <- tryCatch(anchor(x), error = function(e) {return(x$after)})
     args <- tryCatch(arguments(x), error = function(e) {return(x$categories)})
-    df_out <- data.frame(anchor=anchor, name=name(x),
-                         func=func(x), args=serialPaste(args), stringsAsFactors = FALSE)
+    return(data.frame(anchor=anchor, name=name(x),
+                      func=func(x), args=serialPaste(args),
+                      stringsAsFactors = FALSE))
 }
 
 
@@ -319,6 +322,7 @@ setMethod("getShowContent", "Insertion", showInsertion)
 setMethod("getShowContent", "Insertions", showInsertions)
 setMethod("getShowContent", "Subtotal", showSubtotalHeading)
 setMethod("getShowContent", "Heading", showSubtotalHeading)
+setMethod("getShowContent", "SummaryStat", showSubtotalHeading)
 setMethod("getShowContent", "CrunchVariable", showCrunchVariable)
 setMethod("getShowContent", "CategoricalArrayVariable",
     showCategoricalArrayVariable)

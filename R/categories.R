@@ -244,3 +244,42 @@ ensureNoDataCategory <- function (cats) {
         return(c(cats, Category(data=.no.data)))
     }
 }
+
+.no.data <- list(
+    id=-1L,
+    name="No Data",
+    numeric_value=NULL,
+    missing=TRUE
+)
+
+.selected.cats <- list(
+    list(
+        id=1L,
+        name="Selected",
+        numeric_value=1,
+        missing=FALSE,
+        selected=TRUE
+    ),
+    list(
+        id=0L,
+        name="Other",
+        numeric_value=0,
+        missing=FALSE
+    ),
+    .no.data
+)
+
+is.3vl <- function (cats) {
+    ## Infer whether these categories are from a Three-Valued Logic categorical
+    ## This is temporarily stricter than we want so that only formerly boolean
+    ## types are detected as logical, not MR subvars or other "selected" vars
+    if (!is.categories(cats)) {
+        cats <- categories(cats)
+    }
+    return(
+        setequal(ids(cats), c(-1, 0, 1)) &&
+        setequal(names(cats), c("Selected", "Other", "No Data")) &&
+        sum(is.selected(cats)) == 1 &&
+        sum(is.na(cats)) == 1
+    )
+}

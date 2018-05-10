@@ -63,31 +63,31 @@
                         "class": "categorical",
                         "categories": [
                             {
-                                "numeric_value": 1,
+                                "numeric_value": 10,
                                 "missing": false,
                                 "id": 1,
                                 "name": "extremely happy"
                             },
                             {
-                                "numeric_value": 4,
+                                "numeric_value": 7.5,
                                 "missing": false,
                                 "id": 4,
                                 "name": "somewhat happy"
                             },
                             {
-                                "numeric_value": 3,
+                                "numeric_value": 5,
                                 "missing": false,
                                 "id": 3,
                                 "name": "neutral"
                             },
                             {
-                                "numeric_value": 5,
+                                "numeric_value": 2.5,
                                 "missing": false,
                                 "id": 5,
                                 "name": "somewhat unhappy"
                             },
                             {
-                                "numeric_value": 2,
+                                "numeric_value": 0,
                                 "missing": false,
                                 "id": 2,
                                 "name": "extremely unhappy"

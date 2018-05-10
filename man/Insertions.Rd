@@ -19,19 +19,24 @@
 \alias{anchor<-,Insertion-method}
 \alias{anchor<-,Subtotal-method}
 \alias{anchor<-,Heading-method}
+\alias{anchor<-,SummaryStat-method}
 \alias{subtotals<-,Insertion,ANY-method}
 \alias{arguments<-,Insertion-method}
 \alias{arguments<-,Subtotal-method}
 \alias{arguments<-,Heading-method}
+\alias{arguments<-,SummaryStat-method}
 \alias{arguments,Insertion-method}
 \alias{arguments,Subtotal-method}
 \alias{arguments,Heading-method}
+\alias{arguments,SummaryStat-method}
 \alias{anchor,Insertion-method}
 \alias{anchor,Subtotal-method}
 \alias{anchor,Heading-method}
+\alias{anchor,SummaryStat-method}
 \alias{func,Insertion-method}
 \alias{func,Subtotal-method}
 \alias{func,Heading-method}
+\alias{func,SummaryStat-method}
 \alias{anchors,Insertions-method}
 \alias{funcs,Insertions-method}
 \title{Insert categories in transformations}
@@ -48,6 +53,8 @@ Insertion(...)
 
 \S4method{anchor}{Heading}(x) <- value
 
+\S4method{anchor}{SummaryStat}(x) <- value
+
 \S4method{subtotals}{Insertion,ANY}(x) <- value
 
 \S4method{arguments}{Insertion}(x) <- value
@@ -56,11 +63,15 @@ Insertion(...)
 
 \S4method{arguments}{Heading}(x) <- value
 
+\S4method{arguments}{SummaryStat}(x) <- value
+
 \S4method{arguments}{Insertion}(x)
 
 \S4method{arguments}{Subtotal}(x, var_categories)
 
 \S4method{arguments}{Heading}(x)
+
+\S4method{arguments}{SummaryStat}(x, var_categories)
 
 \S4method{anchor}{Insertion}(x)
 
@@ -68,11 +79,15 @@ Insertion(...)
 
 \S4method{anchor}{Heading}(x, var_categories)
 
+\S4method{anchor}{SummaryStat}(x, var_categories)
+
 \S4method{func}{Insertion}(x)
 
 \S4method{func}{Subtotal}(x)
 
 \S4method{func}{Heading}(x)
+
+\S4method{func}{SummaryStat}(x)
 
 \S4method{anchors}{Insertions}(x)
 
