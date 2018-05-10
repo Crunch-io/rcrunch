@@ -34,27 +34,29 @@ setMethod("subvariables", "CategoricalArrayVariable", function (x) {
     tup <- tuple(x)
     catalog_url <- absoluteURL(tup$subvariables_catalog, base=tup@index_url)
     if (!is.null(tup$subreferences)) {
-        ## This is from a rich `variableMetadata` catalog. Don't do any more GETs
-        subvars <- tup$subreferences
-        ## Subreferences names are ids. Convert to URLs
-        names(subvars) <- paste0(absoluteURL(names(subvars), base=catalog_url), "/")
-        out <- Subvariables(
-            index=subvars[tup$subvariables],
-            self=catalog_url
-        )
+        out <- subvariables(tup)
     } else {
         vars <- VariableCatalog(crGET(catalog_url))
-        out <- Subvariables(vars[subvariables(tup)])
+        out <- Subvariables(vars[subvariableURLs(tup)])
     }
     activeFilter(out) <- activeFilter(x)
     return(out)
 })
 
+subvariableURLs <- function (x) {
+    return(absoluteURL(unlist(x$subvariables), base=x@index_url))
+}
+
 #' @rdname Subvariables
 #' @export
 setMethod("subvariables", "VariableTuple", function (x) {
-    ## Return subvariable *urls* from a Tuple, properly formatted and absolute
-    return(absoluteURL(unlist(x$subvariables), base=x@index_url))
+    catalog_url <- absoluteURL(x$subvariables_catalog, base=x@index_url) %||% ""
+    subvars <- x$subreferences
+
+    # if there is a subvariable element, we need to use that for ordering
+    names(subvars) <- paste0(absoluteURL(names(subvars), base=catalog_url), "/")
+
+    return(Subvariables(index=subvars[x$subvariables], self=catalog_url))
 })
 
 #' @rdname Subvariables
@@ -67,7 +69,7 @@ setMethod("subvariables<-", c("CategoricalArrayVariable", "ANY"),
 #' @export
 setMethod("subvariables<-", c("CategoricalArrayVariable", "Subvariables"),
     function (x, value) {
-        old <- subvariables(tuple(x))
+        old <- subvariableURLs(tuple(x))
         new <- urls(value)
         if (!setequal(old, new)) {
             halt("Can only reorder, not change, subvariables")

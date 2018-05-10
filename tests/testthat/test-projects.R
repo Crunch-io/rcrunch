@@ -170,6 +170,21 @@ with_mock_crunch({
             '{"graph":["https://app.crunch.io/api/datasets/3/",',
             '{"new group":[{"nested":["https://app.crunch.io/api/datasets/3/"]}]}]}')
     })
+
+    test_that("Organize datasets cleans up unexpected entries", {
+        neword <- DatasetOrder(
+            DatasetGroup("new group",
+                c("https://app.crunch.io/api/datasets/3/",
+                  "https://app.crunch.io/api/datasets/1/")
+            )
+        )
+        expect_warning(
+            expect_PUT(ordering(datasets(aproject)) <- neword,
+                'https://app.crunch.io/api/projects/project1/datasets/order/',
+                '{"graph":[{"new group":["https://app.crunch.io/api/datasets/3/"]}]}'),
+            "Order contained dataset URL not found in the catalog. It has been automatically cleaned."
+        )
+    })
 })
 
 with_test_authentication({
@@ -298,12 +313,6 @@ with_test_authentication({
     ds3 <- createDataset(name=now())
     ord2 <- DatasetOrder(DatasetGroup("A group of two",
         c(self(ds), self(ds3))))
-    test_that("Have to add dataset to project before organizing it", {
-        expect_error(ordering(datasets(tp)) <- ord2,
-            "Dataset URL referenced in Order not present in catalog")
-        expect_identical(ordering(datasets(tp))@graph[[1]],
-            DatasetGroup(name="A group of one", entities=self(ds)))
-    })
     owner(ds3) <- tp
     tp <- refresh(tp)
     test_that("Can reorganize datasets", {

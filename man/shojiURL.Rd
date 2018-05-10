@@ -9,7 +9,7 @@ shojiURL(x, collection = c("catalogs", "views", "fragments", "orders"), key)
 \arguments{
 \item{x}{a shojiObject}
 
-\item{collection}{one of c("catalogs", "views", "fragments")}
+\item{collection}{one of c("catalogs", "views", "fragments", "orders")}
 
 \item{key}{character name of the URL to get from \code{collection}}
 }

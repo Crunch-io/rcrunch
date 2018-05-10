@@ -113,7 +113,8 @@ transformStyles <- function (trans, cats) {
 
     # make a list of styles to apply
     styles <- lapply(all_labs, function (lab) {
-        if (is.Subtotal(lab)) {
+        if (is.Subtotal(lab) | is.SummaryStat(lab)) {
+            # if subtotal or a summary stat, use the subtotal style
             return(subtotalStyle)
         } else if (is.Heading(lab)) {
             return(headingStyle)
@@ -132,7 +133,7 @@ print_tree <- function (x, prefix="", depth=100, current_depth=0) {
     ## Temporary: don't show hidden variables (which soon won't be here at all)
     ## cf active() method in variable-catalog.R
     index(x) <- Filter(Negate(.discardedTuple), index(x))
-    
+
     len <- length(x)
     what <- types(x)
     these <- colorize_folder_contents(names(x), what)

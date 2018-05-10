@@ -4,7 +4,7 @@ with_mock_crunch({
     ## Load a ton of cube fixtures via the tab book feature
     ds <- loadDataset("test ds")
     m <- multitables(ds)[[1]]
-    with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-tabbook/", {
+    with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-as_selected-tabbook/", {
         book <- tabBook(m, data=ds)
     })
     cube <- book[[2]][[2]]
@@ -16,7 +16,7 @@ with_mock_crunch({
         expect_identical(dimnames(d),
             list(
                 q1=c("Cat", "Dog", "Bird", "Skipped", "Not Asked"),
-                allpets=c("Cat", "Dog", "Bird", "<NA>", "<NA>", "<NA>")
+                allpets=c("Cat", "Dog", "Bird")
             ))
         expect_identical(names(dimnames(d)), c("q1", "allpets"))
     })
@@ -56,6 +56,21 @@ with_mock_crunch({
             c("What is your favorite pet?",
             "Name the kinds of pets you have at these locations.",
             ""))
+    })
+
+    test_that("subvariable/subrefrence methods", {
+        catarray_x_mr <- loadCube(test_path("cubes/catarray-x-mr.json"))
+        cat_array_var <- variables(catarray_x_mr)[[1]]
+        expect_equal(aliases(subvariables(cat_array_var)),
+                     c("cat_feeling", "dog_feeling"))
+        expect_equal(names(subvariables(cat_array_var)),
+                     c("cat_feeling", "dog_feeling"))
+
+        mr_var <- variables(catarray_x_mr)[[3]]
+        expect_equal(aliases(subvariables(mr_var)),
+                     c("food_opinion#", "rest_opinion#", "play_opinion#"))
+        expect_equal(names(subvariables(mr_var)),
+                     c("food_opinion", "rest_opinion", "play_opinion"))
     })
 
     test_that("'measures' metadata", {

@@ -5,10 +5,13 @@
 \alias{type}
 \alias{type<-}
 \alias{type,CrunchVariable-method}
+\alias{type,VariableEntity-method}
 \alias{type<-,CrunchVariable-method}
 \title{Change Crunch variable types}
 \usage{
 \S4method{type}{CrunchVariable}(x)
+
+\S4method{type}{VariableEntity}(x)
 
 \S4method{type}{CrunchVariable}(x) <- value
 }

@@ -1,13 +1,40 @@
 folders <- function (x) {
     stopifnot(is.dataset(x))
-    ## Temporary behavior while folders are feature-flagged on the server
-    folder_url <- try(shojiURL(x, "catalogs", "folders"), silent=TRUE)
-    if (is.error(folder_url)) {
-        ## Turn on folders and try again
-        settings(x)$variable_folders <- TRUE
-        folder_url <- shojiURL(x, "catalogs", "folders")
-    }
+    # folder_url <- try(shojiURL(x, "catalogs", "folders"), silent=TRUE)
+    folder_url <- getRootFolderURL(x)
     return(VariableFolder(crGET(folder_url)))
+}
+
+getRootFolderURL <- function (dataset) {
+    ## Temporary behavior while folders are feature-flagged on the server. We
+    ## want to turn on the flag whenever a user attempts to access folders, if
+    ## folders aren't already enabled.
+    ## Three scenarios:
+    ## 1) Everything has folders and there is no more feature flag anymore
+    ## 2) Folder flag is already enabled but `dataset` hasn't been refreshed to
+    ## have the URL yet
+    ## 3) Folder flag is not yet enabled.
+
+    ## First, check for the root folder URL. This will error if there is no
+    ## such URL on `dataset`, which there won't be unless the flag was on when
+    ## the dataset was loaded.
+    folder_url <- try(shojiURL(dataset, "catalogs", "folders"), silent=TRUE)
+    if (is.error(folder_url)) {
+        ## Next, check flag. It's possible we set the flag in a previous call
+        ## to this function, but `dataset` is stale because this function can't
+        ## return a modified version of `dataset`.
+        if (!isTRUE(settings(dataset)$variable_folders)) {
+            ## If the flag is off, turn it on and bust cache on dataset entity
+            settings(dataset)$variable_folders <- TRUE
+            dropOnly(self(dataset))
+        }
+        ## GET a fresh dataset entity, which should have the URLs now. This will
+        ## read from HTTP cache except the first time after the flag is set
+        ## because that drops the cache (L23 above)
+        dataset <- ShojiEntity(crGET(self(dataset)))
+        folder_url <- shojiURL(dataset, "catalogs", "folders")
+    }
+    return(folder_url)
 }
 
 #' @export

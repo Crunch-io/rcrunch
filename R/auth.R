@@ -1,29 +1,13 @@
-#' Stay authenticated.
-#'
-#' The auth store keeps the session token after authentication so that all
-#' API calls can use it. We can also store other things in it.
-#'
-#' @format An environment.
-#' @keywords internal
-session_store <- NULL
-makeSessionStore <- function () {
-    session_store <<- new.env(hash = TRUE, parent = emptyenv())
-    session_store$.globals <- list(prompt=getOption("prompt"))
-}
-makeSessionStore()
-
 #' Kill the active Crunch session
 #' @export
-logout <- function () {
-    if (is.authenticated()) try(crGET(rootURL("logout")), silent=TRUE)
-    deleteSessionInfo()
-    options(prompt = session_store$.globals$prompt)
-}
-
 #' @importFrom httpcache clearCache
-deleteSessionInfo <- function () {
-    rm(list=setdiff(ls(envir=session_store), ".globals"), envir=session_store)
+logout <- function () {
+    try(crGET(rootURL("logout")), silent=TRUE)
     clearCache()
+    old.prompt <- getOption("crunch.old.prompt")
+    if (!is.null(old.prompt)) {
+        options(prompt=old.prompt, crunch.old.prompt=NULL)
+    }
 }
 
 #' Authenticate with the Crunch API
@@ -52,13 +36,18 @@ deleteSessionInfo <- function () {
 #' @export
 login <- function (email=envOrOption("crunch.email"),
                    password=envOrOption("crunch.pw"), ...) {
-    logout()
+
+    old.prompt <- getOption("crunch.old.prompt")
+    if (!is.null(old.prompt)) {
+        ## We may already be logged in. Log out first.
+        logout()
+    }
     auth <- crunchAuth(email=email, password=password, ...)
-
-    warmSessionCache()
-
+    options(
+        prompt=paste("[crunch]", getOption("prompt")),
+        crunch.old.prompt=getOption("prompt")
+    )
     message("Logged into crunch.io as ", email)
-    options(prompt = paste("[crunch]", session_store$.globals$prompt))
     ## Return a Session object
     invisible(session())
 }
@@ -117,7 +106,6 @@ without_echo <- function (expr) {
     eval.parent(expr)
 }
 
-
 ## Pass through for test mocking
 read_input <- function (...) readline(...)
 
@@ -138,13 +126,6 @@ tokenAuth <- function (token, ua="token") {
             add_headers(`user-agent`=crunchUserAgent(ua))
         ),
         update=TRUE)
-    warmSessionCache()
 }
 
 jupyterLogin <- function (token) tokenAuth(token, ua="jupyter.crunch.io")
-
-warmSessionCache <- function () {
-    session_store$root <- getAPIRoot()
-}
-
-is.authenticated <- function () !is.null(session_store$root)

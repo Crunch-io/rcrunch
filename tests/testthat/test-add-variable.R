@@ -13,12 +13,20 @@ test_that("toVariable parses R characters", {
         class="VariableDefinition"))
 })
 test_that("toVariable parses factors", {
-    expect_equivalent(toVariable(as.factor(rep(LETTERS[2:3], 3))),
-        list(values=rep(1:2, 3), type="categorical", categories=list(
+    expect_identical(toVariable(as.factor(rep(LETTERS[2:3], 3))),
+        VarDef(values=rep(1:2, 3), type="categorical", categories=list(
             list(id=1L, name="B", numeric_value=1L, missing=FALSE),
             list(id=2L, name="C", numeric_value=2L, missing=FALSE),
             list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
-        ))) ## unclear why these aren't identical
+        )))
+})
+test_that("toVariable parses logical", {
+    expect_equivalent(toVariable(c(TRUE, FALSE, FALSE, NA, TRUE)),
+        VarDef(values=c(1L, 0L, 0L, -1L, 1L), type="categorical", categories=list(
+            list(id=1L, name="True", numeric_value=1L, missing=FALSE, selected=TRUE),
+            list(id=0L, name="False", numeric_value=0L, missing=FALSE),
+            list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+        )))
 })
 test_that("toVariable parses AsIses", {
     expect_identical(toVariable(I(1:5)),
