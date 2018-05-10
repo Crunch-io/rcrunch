@@ -46,8 +46,7 @@ setMethod("toVariable", "VariableDefinition", function (x, ...) {
 #' @rdname toVariable
 #' @export
 setMethod("toVariable", "logical", function (x, ...) {
-    vals <- as.integer(x)
-    vals[is.na(vals)] <- -1L
+    vals <- as.categorical.values(x)
     cats <- .selected.cats
     ## Pre-3VL category names
     ## Note that with the extra strict definition of `is.3vl`, this won't
