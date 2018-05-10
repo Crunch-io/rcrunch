@@ -210,7 +210,7 @@ logout()
 end_vignette()
 ```
 
-<!-- * [Datasets](datasets.html): creating, loading, and manipulating datasets in Crunch
+* [Datasets](datasets.html): creating, loading, and manipulating datasets in Crunch
 * [Variables](variables.html): cleaning and defining variable metadata
 * [Array variables](array-variables.html): how to create and manipulate categorical-array and multiple-response variables
 * [Variable organization](variable-order.html): defining a hierarchy and arranging variables within it
@@ -220,4 +220,4 @@ end_vignette()
 * [Downloading and exporting](export.html): how to pull data from the server, both for use in R and file export
 * [Subtotals and headings](subtotals.html): how to set and get subtotals and headings for categorical variables
 * [Crunch internals](crunch-internals.html): an introduction to the Crunch API and concepts to help you make more complex and more efficient queries
-* [Category objects](abstract-categories.html): an introduction to the S4 classes that power categories and category-like representations in the package -->
+* [Category objects](abstract-categories.html): an introduction to the S4 classes that power categories and category-like representations in the package 
