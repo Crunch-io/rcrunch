@@ -44,7 +44,7 @@ The Crunch data store is built around datasets, which contain variables. Unlike 
 * [Array variables](array-variables.md): how to create and manipulate categorical-array and multiple-response variables
 * [Variable organization](variable-order.md): defining a hierarchy and arranging variables within it
 * [Transformations and derivations](derive.md): alter values within a dataset and create new variables as a function of others
-* [Computing on Crunch data](analyze.md): crosstabulation and more
+* [Computing on Crunch data](analyze.md): crosstabbing and more
 * [Filtering](filters.md): subsetting data, both in your R session and in the web interface
 * [Downloading and exporting](export.md): how to pull data from the server, both for use in R and file export
 * [Subtotals and headings](subtotals.md): how to set and get subtotals and headings for categorical variables

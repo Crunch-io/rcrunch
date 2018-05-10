@@ -230,7 +230,7 @@ end_vignette()
 * [Array variables](array-variables.html): how to create and manipulate categorical-array and multiple-response variables
 * [Variable organization](variable-order.html): defining a hierarchy and arranging variables within it
 * [Transformations and derivations](derive.html): alter values within a dataset and create new variables as a function of others
-* [Computing on Crunch data](analyze.html): crosstabulation and more
+* [Computing on Crunch data](analyze.html): crosstabbing and more
 * [Filtering](filters.html): subsetting data, both in your R session and in the web interface
 * [Downloading and exporting](export.html): how to pull data from the server, both for use in R and file export
 * [Subtotals and headings](subtotals.html): how to set and get subtotals and headings for categorical variables
