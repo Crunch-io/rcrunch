@@ -13,19 +13,13 @@ test_that("toVariable parses R characters", {
         class="VariableDefinition"))
 })
 test_that("toVariable parses factors", {
-    expect_identical(toVariable(as.factor(c(rep(LETTERS[2:3], 3), NA))),
-        VarDef(
-            values=c(1L, 2L, 1L, 2L, 1L, 2L, -1L),
-            type="categorical",
-            categories=list(
-                list(id=1L, name="B", numeric_value=1L, missing=FALSE),
-                list(id=2L, name="C", numeric_value=2L, missing=FALSE),
-                list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
-            )
-        )
-    )
+    expect_identical(toVariable(as.factor(rep(LETTERS[2:3], 3))),
+        VarDef(values=rep(1:2, 3), type="categorical", categories=list(
+            list(id=1L, name="B", numeric_value=1L, missing=FALSE),
+            list(id=2L, name="C", numeric_value=2L, missing=FALSE),
+            list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+        )))
 })
-
 test_that("toVariable parses logical", {
     expect_equivalent(toVariable(c(TRUE, FALSE, FALSE, NA, TRUE)),
         VarDef(values=c(1L, 0L, 0L, -1L, 1L), type="categorical", categories=list(
