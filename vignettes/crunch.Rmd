@@ -61,7 +61,7 @@ ds <- newDataset(SO_survey, name="Stack Overflow Developer Survey 2017")
 dim(ds)
 ```
 
-`newDataset` takes a data.frame as it's input and translates R data types into their analogous types in Crunch.
+`newDataset` takes a `data.frame` as it's input and translates R data types into their analogous types in Crunch.
 
 * character --> Text Variable
 * numeric, integer --> Numeric Variable
@@ -74,7 +74,7 @@ If you have an SPSS or CSV file, you can upload it with that without first readi
 
 ## Dataset properties
 
-Datasets allow you to provide e a human-readable `name` is specified when the dataset is uploaded, and a `description`.
+Datasets allow you to provide a human-readable `name` is specified when the dataset is uploaded, and a `description`.
 
 ```{r get dataset description}
 name(ds)
@@ -83,7 +83,7 @@ description(ds)
 
 Both can be set with `<-` assignment. Let's give our dataset an informative description:
 
-```{r state change2, echo=FALSE}
+```{r state change2, include=FALSE}
 change_state()
 ```
 
@@ -105,7 +105,7 @@ For the most part, the **crunch** package will bring the minimum amount of data 
 
 Crunch also allows you to store additional metadata in the variables. For instance we can add the survey questions from the schema to the variable description like this:
 
-```{r state change3, echo=FALSE}
+```{r state change3, include=FALSE}
 change_state()
 ```
 
@@ -147,7 +147,7 @@ imphire
 
 Now we can use that selection in `makeArray`:
 
-```{r state change4, echo=FALSE}
+```{r state change4, include=FALSE}
 change_state()
 ```
 ```{r makeArray}
@@ -177,7 +177,7 @@ knitr::kable(SO_survey[1:5, "HaveWorkedLanguage", drop = FALSE], row.names = FAL
 
 To analyze this data without Crunch you would usually go through an elaborate data cleaning process to split the delimited variable up into its constituent parts, and then reshape it into a format which is more amenable to analysis. With Crunch you can make use of multiple response variables to store it in a compact form, and analyze it just like any other variable. Since delimited text is such a common way of storing this kind of answer, Crunch allows you to create a variable directly from the text. This function creates a _derived variable_ which means that if you make changes to the initial variable, the derived variable will change along with it.
 
-```{r state change5, echo=FALSE}
+```{r state change5, include=FALSE}
 change_state()
 ```
 ```{r makeMRFromText}
@@ -200,16 +200,10 @@ subvariables(ds$WantWorkedLanguageMR) <- subvariables(ds$WantWorkedLanguageMR)[n
 knitr::include_graphics("images/WantWorkMRReodered.png")
 ```
 
-## Archiving and deleting datasets
+#### Conclusion
 
-Datasets can also be deleted permanently. This action cannot be undone, so it should not be done lightly. `crunch` provides two ways to delete a dataset: a `delete()` method on a dataset object, like
+This vignette has gone through some of the basics of working with crunch in R including loading data, manipulating dataset properties, and creating array variables. The **crunch** package provides an extensive set of tools for working with survey data and nearly everything that can be done in the crunch web app can be accomplished programatically using R. To learn more about specific use cases, check out some of the other articles: 
 
-```{r, eval=FALSE}
-## Not run
-delete(ds)
-```
-
-The second way to delete is `deleteDataset()`: you supply a dataset name. This way is faster if you have not already loaded the dataset object into your R session: no need to fetch something from the server just to then tell the server to delete it.
 
 ```{r, include=FALSE}
 logout()
