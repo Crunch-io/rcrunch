@@ -202,7 +202,7 @@ knitr::include_graphics("images/WantWorkMRReodered.png")
 
 #### Conclusion
 
-This vignette has gone through some of the basics of working with crunch in R including loading data, manipulating dataset properties, and creating array variables. The **crunch** package provides an extensive set of tools for working with survey data and nearly everything that can be done in the crunch web app can be accomplished programatically using R. To learn more about specific use cases, check out some of the other articles: 
+This vignette has gone through some of the basics of working with crunch in R including loading data, manipulating dataset properties, and creating array variables. The **crunch** package provides an extensive set of tools for working with survey data and nearly everything that can be done in the crunch web app can be accomplished programmatically using R. To learn more about specific use cases, check out some of the other articles: 
 
 
 ```{r, include=FALSE}
