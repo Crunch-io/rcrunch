@@ -94,7 +94,7 @@ description(ds)
 
 ## Variables
 
-Just as a `data.frame` has columns you can access with the `$` and `[]` operators, you can get variables from a Crunch dataset the same way.
+Just as a `data.frame` has columns you can access with the `$` and `[` operators, you can get variables from a Crunch dataset the same way.
 
 ```{r variable examples}
 ds$TabsSpaces
@@ -125,7 +125,7 @@ knitr::include_graphics("images/crunch-companySize-screen.png")
 
 ## Array Variables
 
-Crunch is designed for survey data, and it includes native support for two data structures common in survey data: categorical arrays (or "grids") and multiple-response variables. In R, these would typically be represented either as multiple, separate columns in a `data.frame` or as some other data structure that needs processing before you can analyze it. Crunch makes it so you don't have to think about the underlying data structures in order to do exploratory analysis.
+Crunch is designed for survey data, and it includes native support for two data structures common in survey data: categorical arrays (or "grids") and multiple response. In R, these would typically be represented either as multiple, separate columns in a `data.frame` or as some other data structure that needs processing before you can analyze it. Crunch makes it so you don't have to think about the underlying data structures in order to do exploratory analysis.
 
 #### Categorical Arrays
 
@@ -151,7 +151,7 @@ Now we can use that selection in `makeArray`:
 change_state()
 ```
 ```{r makeArray}
-ds$ImportantHiring <- makeArray(ds[imphire], name = "ImportantHiring")
+ds$ImportantHiring <- makeArray(ds[imphire], name = "Importance in Hiring Process")
 ```
 ```{r View array, eval = FALSE}
 webApp(ds$ImportantHiring)
@@ -166,6 +166,21 @@ The variables we included in the array have been converted into subvariables of 
 subvariables(ds$ImportantHiring)
 ```
 
+Those names aren't that pretty. As we saw above, though, we have better names for them appended to the question wording we read in from the schema. Each subvariable `description` has the full question wording, which really should be the `description` of the parent array variable, and then after the question mark, the response label.
+
+Let's use some regular expressions to clean that up. We can pull the part before the question mark from one of the subvariables and add that to the parent, and then prune the question wording from all and use that as the "names":
+
+```{r state change5, include=FALSE}
+change_state()
+```
+```{r}
+description(ds$ImportantHiring) <- sub("^(.*\\?).*$", "\\1",
+    descriptions(subvariables(ds$ImportantHiring))[1])
+names(subvariables(ds$ImportantHiring)) <- sub("^.*\\? (.*)$", "\\1",
+    descriptions(subvariables(ds$ImportantHiring)))
+
+subvariables(ds$ImportantHiring)
+```
 
 #### Multiple Response
 
@@ -177,13 +192,14 @@ knitr::kable(SO_survey[1:5, "HaveWorkedLanguage", drop = FALSE], row.names = FAL
 
 To analyze this data without Crunch you would usually go through an elaborate data cleaning process to split the delimited variable up into its constituent parts, and then reshape it into a format which is more amenable to analysis. With Crunch, you can make use of multiple response variables to store it in a compact form, and analyze it just like any other variable. Since delimited text is such a common way of storing this kind of answer, Crunch allows you to create a variable directly from the text. This function creates a _derived variable_, which means that if you make changes to the data in the initial variable, the derived variable will change along with it.
 
-```{r state change5, include=FALSE}
+```{r state change6, include=FALSE}
 change_state()
 ```
 ```{r makeMRFromText}
-ds$WantWorkedLanguageMR <- makeMRFromText(ds$WantWorkLanguage,
+ds$WantWorkLanguageMR <- makeMRFromText(ds$WantWorkLanguage,
     delim = "; ",
-    name = "WantWorkedMR")
+    name = "Languages Desired for Work",
+    description = description(ds$WantWorkLanguage))
 ```
 ```{r echo = FALSE}
 knitr::include_graphics("images/wantWorkMR.png")
@@ -192,9 +208,8 @@ knitr::include_graphics("images/wantWorkMR.png")
 The variable card now shows the number of times each language was selected, the sum of these numbers will be bigger than the number of respondents because people were allowed to select more than one language. We can reorder the subvariables to make this card easier to read. Let's sort them by frequency.
 
 ```{r reorder subvariables}
-counts <- as.array(crtabs(~ WantWorkedLanguageMR, ds))
-counts <- counts[rev(order(counts))]
-subvariables(ds$WantWorkedLanguageMR) <- subvariables(ds$WantWorkedLanguageMR)[names(counts)]
+counts <- sort(table(ds$WantWorkLanguageMR), decreasing = TRUE)
+subvariables(ds$WantWorkLanguageMR) <- subvariables(ds$WantWorkLanguageMR)[names(counts)]
 ```
 ```{r echo = FALSE}
 knitr::include_graphics("images/WantWorkMRReodered.png")
@@ -202,7 +217,7 @@ knitr::include_graphics("images/WantWorkMRReodered.png")
 
 #### Conclusion
 
-This vignette has gone through some of the basics of working with crunch in R including loading data, manipulating dataset properties, and creating array variables. The **crunch** package provides an extensive set of tools for working with survey data and nearly everything that can be done in the crunch web app can be accomplished programmatically using R. To learn more about specific use cases, check out some of the other articles: 
+This vignette has gone through some of the basics of working with crunch in R including loading data, manipulating dataset properties, and creating array variables. The **crunch** package provides an extensive set of tools for working with survey data and nearly everything that can be done in the crunch web app can be accomplished programmatically using R. To learn more about specific use cases, check out some of the other articles:
 
 
 ```{r, include=FALSE}
@@ -220,4 +235,4 @@ end_vignette()
 * [Downloading and exporting](export.html): how to pull data from the server, both for use in R and file export
 * [Subtotals and headings](subtotals.html): how to set and get subtotals and headings for categorical variables
 * [Crunch internals](crunch-internals.html): an introduction to the Crunch API and concepts to help you make more complex and more efficient queries
-* [Category objects](abstract-categories.html): an introduction to the S4 classes that power categories and category-like representations in the package 
+* [Category objects](abstract-categories.html): an introduction to the S4 classes that power categories and category-like representations in the package
