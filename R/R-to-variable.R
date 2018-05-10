@@ -14,7 +14,7 @@ setMethod("toVariable", "numeric", function (x, ...) {
 #' @rdname toVariable
 #' @export
 setMethod("toVariable", "factor", function (x, ...) {
-    return(VariableDefinition(values=as.integer(x), type="categorical",
+    return(VariableDefinition(values=as.categorical.values(x), type="categorical",
         categories=categoriesFromLevels(levels(x)), ...))
 })
 #' @rdname toVariable
@@ -91,10 +91,19 @@ setMethod("toVariable", "labelled_spss", function (x, ...) {
         return(cat)
     })
 
-    return(VariableDefinition(values=as.integer(x_factor), type="categorical",
-                          categories=categories, ...))
+    return(VariableDefinition(
+        values=as.categorical.values(x_factor),
+        type="categorical",
+        categories=categories,
+        ...
+    ))
 })
 
+as.categorical.values <- function (x) {
+    vals <- as.integer(x)
+    vals[is.na(vals)] <- -1L
+    return(vals)
+}
 
 #' Convert a factor's levels into Crunch categories.
 #'
