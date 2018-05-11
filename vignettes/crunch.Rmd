@@ -42,7 +42,7 @@ Your email and Crunch password can be set either as R `options` in your .Rprofil
 
 The Crunch data store is built around datasets, which contain variables. Crunch datasets and variables include more metadata than R `data.frames` and `vectors` and if possible the functions and methods in **crunch** work to keep all of the data on the server, only pulling metadata and aggregations when requested. That way, you can explore datasets much larger than you can comfortably load on your laptop.
 
-To get started, we're going to import a dataset from R to Crunch. If you already have a dataset---perhaps someone has invited you to collaborate on one already---see `vignette("datasets", package="crunch")` for how to find and load it.
+To get started, we're going to import a dataset from R to Crunch. If you already have a dataset---perhaps someone has invited you to collaborate on one already---see `listDatasets()` or `loadDataset()` for information on how to find and load it.
 
 ## Importing data to Crunch
 
