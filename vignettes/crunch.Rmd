@@ -225,7 +225,6 @@ logout()
 end_vignette()
 ```
 
-* [Datasets](datasets.html): creating, loading, and manipulating datasets in Crunch
 * [Variables](variables.html): cleaning and defining variable metadata
 * [Array variables](array-variables.html): how to create and manipulate categorical-array and multiple-response variables
 * [Variable organization](variable-order.html): defining a hierarchy and arranging variables within it
