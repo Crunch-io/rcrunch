@@ -290,7 +290,6 @@ showMultitable <- function (x) {
     out <- paste("Multitable", dQuote(name(x)))
 
     # TODO: check variable types to alert users in a more friendly manner
-    # eg remove selected_array()
     out <- c(out, "Column variables:",
              vapply(x@body$template, function (expr) {
                  if ("each" %in% names(expr$query[[1]])) {
@@ -298,10 +297,9 @@ showMultitable <- function (x) {
                      # an array so take the second argument instead.
                      exprToFormat <- expr$query[[2]]
 
-                     # if the second arg is a as_selected or selected_array take
-                     # the variable from that to display var only
-                     mr_funcs <- c("as_selected", "selected_array")
-                     if ((exprToFormat[["function"]] %||% "") %in% mr_funcs ) {
+                     # if the second arg is a as_selected take the variable from
+                     # that to display var only
+                     if ((exprToFormat[["function"]] %||% "")  == "as_selected" ) {
                          exprToFormat <- exprToFormat$args[[1]]
                      }
 

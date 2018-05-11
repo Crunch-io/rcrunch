@@ -173,7 +173,7 @@ vectorOrList <- function (obj, type) {
 envOrOption <- function (opt, default = NULL) {
     envvar.name <- paste0("R_", toupper(gsub(".", "_", opt, fixed=TRUE)))
     envvar <- Sys.getenv(envvar.name)
-    
+
     if (nchar(envvar)) {
         ## Let environment variable override .Rprofile, if defined
         return(envvar)
@@ -256,24 +256,10 @@ datetimeFormater <- function (resolution) {
     return(formats[[resolution %||% "s"]])
 }
 
-# check if a template or query has a selected_array somewhere in it recursively.
-has.function <- function (query, funcs) {
-    query <- unlist(query, recursive = TRUE)
-
-    func_names <- grepl("function$", names(query))
-    func_names <- names(query)[func_names]
-
-    if (any(query[func_names] %in% funcs)) {
-        return(TRUE)
-    }
-
-    return(FALSE)
-}
-
 #' Check that a value is TRUE or FALSE
 #'
 #' @param value Value to check
-#' 
+#'
 #' @return `TRUE` if `value` is either `TRUE` or `FALSE`, `FALSE` otherwise
 #'
 #' @keywords internal
@@ -290,7 +276,7 @@ escapeQuotes <- function(str) {
 #' @param pkgs a character vector of package names to check.
 #'
 #' @return nothing, called for side effects
-#' 
+#'
 #' @keywords internal
 checkInstalledPackages <- function (pkgs) {
     installed <- pkgs %in% rownames(installed.packages())

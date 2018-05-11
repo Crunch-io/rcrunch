@@ -11,7 +11,6 @@ cubeDims <- function (cube) {
             ## TODO: delete this when boolean support is removed
             return(list(
                 name=c("FALSE", "TRUE"),
-                any.or.none=c(FALSE, FALSE),
                 missing=c(FALSE, FALSE),
                 references=tuple
             ))
@@ -20,7 +19,6 @@ cubeDims <- function (cube) {
         d <- tuple$categories %||% a$type$elements
         return(list(
             name=vapply(d, elementName, character(1)),
-            any.or.none=vapply(d, elementIsAnyOrNone, logical(1)),
             missing=vapply(d, function (el) isTRUE(el$missing), logical(1)),
             references=tuple
         ))
@@ -41,9 +39,7 @@ cubeVarReferences <- function (x) {
     }
 
     if (!is.null(tuple$subreferences)) {
-        # inject subreference names into the tuple if they exist. Default to ""
-        # if null (for backwards compatibilitiy with cubes that have __any__
-        # __all__ and __none__)
+        # Inject subreference names into the tuple if they exist.
         tuple$subvariables <- vapply(tuple$subreferences,
                                      function (x) x$alias %||% "",
                                      character(1))
@@ -86,20 +82,8 @@ elementName <- function (el) {
             out <- out$references$name
         }
     }
-    if (is.null(out)) {
-        ## Damn. You may be here because you're hitting missing values in an
-        ## array or multiple response, or the __any__ or __none__ values.
-        ## Bail out.
-        out <- "<NA>"
-    }
-    out <- as.character(out)
+    out <- as.character(out %||% "<NA>")
     return(out)
-}
-
-elementIsAnyOrNone <- function (el) {
-    is.list(el$value) && ## Element has $value and value is a list
-        "id" %in% names(el$value) && ## "value" has names (is not bin)
-        el$value$id %in% c("__any__", "__none__")
 }
 
 #' Methods on Cube objects
@@ -136,10 +120,6 @@ setMethod("dim", "CubeDims",
 #' @rdname cube-methods
 #' @export
 setMethod("is.na", "CubeDims", function (x) lapply(x, function (a) a$missing))
-
-anyOrNone <- function (x) {
-    lapply(x, function (a) a$any.or.none)
-}
 
 #' @rdname cube-methods
 #' @export
@@ -189,13 +169,4 @@ is.selectedDimension <- function (dims) {
                         MoreArgs=list(MRaliases=MRaliases))
     names(selecteds) <- dims@names
     return(selecteds)
-}
-
-# determine if a dimension is from the selected_array of a multiple response
-is.selectedArrayDim <- function (dim) {
-    if (!is.null(dim$any.or.none)) {
-        return(any(dim$any.or.none))
-    }
-
-    return(FALSE)
 }

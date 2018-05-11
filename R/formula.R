@@ -179,13 +179,7 @@ varToDim <- function (x) {
     v <- zcl(x)
     if (is.MR(x)) {
         ## Multiple response gets "as_selected" by default and "each"
-        selectionMethod <- getOption("crunch.mr.selection", default = "as_selected")
-        if (!(selectionMethod %in% c("as_selected", "selected_array"))) {
-            halt("The option ", dQuote("crunch.mr.selection"), " must be ",
-                 "either ", dQuote("as_selected"), " (the default) or ",
-                 dQuote("selected_array"))
-        }
-        return(list(list(each=self(x)), zfunc(selectionMethod, v)))
+        return(list(list(each=self(x)), zfunc("as_selected", v)))
     } else if (is.CA(x)) {
         ## Categorical array gets the var reference and "each"
         ## Put "each" first so that the rows, not columns, are subvars
