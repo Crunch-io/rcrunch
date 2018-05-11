@@ -1,4 +1,5 @@
-## crunch 1.22.1 (under development)
+## crunch 1.22.2
+* New introductory vignette: `vignette("crunch")`
 * `changeCategoryID()` tries to unset then reset the dataset exclusion if that impacts its progress. Best practice is to disable exclusions before running `changeCategoryID()` if at all possible.
 * Setting the `ordering<-` of datasets within a project will now drop any invalid entries with a warning, rather than error.
 * Fix a bug introduced in 1.22.0 in creating categorical variables from factors with missing values.
