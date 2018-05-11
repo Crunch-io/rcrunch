@@ -2,6 +2,7 @@
 * `changeCategoryID()` tries to unset then reset the dataset exclusion if that impacts its progress. Best practice is to disable exclusions before running `changeCategoryID()` if at all possible.
 * Setting the `ordering<-` of datasets within a project will now drop any invalid entries with a warning, rather than error.
 * Fix a bug introduced in 1.22.0 in creating categorical variables from factors with missing values.
+* Internal: support for the "selected_array" method of multiple response calculation, deprecated since 1.20.0, has been removed.
 
 ## crunch 1.22.0
 
