@@ -25,6 +25,8 @@ Imports:
     httpcache (>= 0.1.4),
     jsonlite (>= 0.9.15),
     methods
+Remotes:
+    nealrichardson/httptest
 Suggests:
     covr,
     devtools,
@@ -43,11 +45,13 @@ Language: en-US
 Encoding: UTF-8
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
-Collate: 
+LazyData: true
+Collate:
     'AllClasses.R'
     'AllGenerics.R'
     'variable-definition.R'
     'R-to-variable.R'
+    'SO-survey.R'
     'abstract-categories.R'
     'abstract-category.R'
     'add-subvariable.R'

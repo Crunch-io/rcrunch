@@ -7,6 +7,28 @@ template:
     docsearch:
       api_key: 9fbcb3ae4d05600402e31f66b9b9501e
       index_name: crunch
+articles:
+- title: Getting started
+  desc: How to find, import, and clean data in Crunch
+  contents:
+  - crunch
+  - datasets
+  - variables
+  - array-variables
+  - variable-order
+- title: Exploring and analyzing
+  desc: ~
+  contents:
+  - derive
+  - analyze
+  - filters
+  - subtotals
+  - export
+- title: Going deeper
+  desc: Details on the Crunch API and objects
+  contents:
+  - crunch-internals
+  - abstract-categories
 reference:
 - title: Upload
   contents:
@@ -235,7 +257,7 @@ navbar:
     - text: Articles
       menu:
       -  text: Getting Started
-         href: articles/getting-started.html
+         href: articles/crunch.html
       -  text: Datasets
          href: articles/datasets.html
       -  text: Variables
