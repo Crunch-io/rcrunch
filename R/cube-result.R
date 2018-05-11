@@ -417,8 +417,7 @@ as.array.CrunchCube <- function (x, ...) cubeToArray(x, ...)
 #' @rdname cube-computing
 #' @export
 setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
-    out <- as.array(x)
-    out <- applyTransforms(x, array = out)
+    out <- applyTransforms(x)
     marg <- margin.table(x, margin)
     actual_margin <- as_selected_margins(margin, is.selectedDimension(x@dims),
         before=FALSE)
@@ -438,7 +437,7 @@ setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
 #' @rdname cube-computing
 #' @export
 setMethod("round", "CrunchCube", function (x, digits=0) {
-    round(as.array(x), digits)
+    return(round(applyTransforms(x), digits))
 })
 
 #' @rdname cube-computing

@@ -29,7 +29,7 @@
               "transform": {
                 "insertions": [
                   {
-                    "anchor": 6,
+                    "anchor": 3,
                     "name": "C, E",
                     "function": "subtotal",
                     "args": [
@@ -38,7 +38,7 @@
                     ]
                   },
                   {
-                    "anchor": 7,
+                    "anchor": 3,
                     "name": "D, E",
                     "function": "subtotal",
                     "args": [

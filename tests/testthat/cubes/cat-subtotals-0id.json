@@ -1,0 +1,160 @@
+{
+  "element": "shoji:view",
+  "self": "/api/datasets/d028c5/cube/?query=%7B%22dimensions%22%3A%5B%7B%22variable%22%3A%22%2Fapi%2Fdatasets%2Fd028c5%2Fvariables%2F000067%2F%22%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3A%22%2Fapi%2Fdatasets%2Fd028c5%2Fvariables%2F0000d0%2F%22%7D&filter=%7B%7D",
+  "value": {
+    "query": {
+      "measures": {
+        "count": {
+          "function": "cube_count",
+          "args": []
+        }
+      },
+      "dimensions": [
+        {
+          "variable": "/api/datasets/d028c5/variables/000067/"
+        }
+      ],
+      "weight": "/api/datasets/d028c5/variables/0000d0/"
+    },
+    "query_environment": {
+      "filter": []
+    },
+    "result": {
+      "dimensions": [
+        {
+          "references": {
+            "alias": "food_groups",
+            "notes": "A categorical variable where the missing categories are interspersed throughout the non-missing categories",
+            "view": {
+              "show_counts": false,
+              "show_numeric_values": false,
+              "transform": {
+                "insertions": [
+                  {
+                    "function": "subtotal",
+                    "args": [
+                      4
+                    ],
+                    "anchor": 4,
+                    "name": "animal-based"
+                  },
+                  {
+                    "function": "subtotal",
+                    "args": [
+                      2,
+                      0,
+                      5
+                    ],
+                    "anchor": 4,
+                    "name": "plant-based again, after animal-based"
+                  },
+                  {
+                    "function": "subtotal",
+                    "args": [
+                      2,
+                      0,
+                      5
+                    ],
+                    "anchor": 0,
+                    "name": "plant-based"
+                  }
+                ]
+              },
+              "include_missing": false,
+              "column_width": null
+            },
+            "description": "Four of the five USDA food groups",
+            "name": "Food groups"
+          },
+          "derived": false,
+          "type": {
+            "ordinal": false,
+            "class": "categorical",
+            "categories": [
+              {
+                "numeric_value": 0,
+                "missing": false,
+                "id": 0,
+                "name": "Vegetables"
+              },
+              {
+                "numeric_value": 32766,
+                "missing": true,
+                "id": 32766,
+                "name": "Don't know"
+              },
+              {
+                "numeric_value": 2,
+                "missing": false,
+                "id": 2,
+                "name": "Fruit"
+              },
+              {
+                "numeric_value": 5,
+                "missing": false,
+                "id": 5,
+                "name": "Grain"
+              },
+              {
+                "numeric_value": null,
+                "missing": true,
+                "id": -1,
+                "name": "No Data"
+              },
+              {
+                "numeric_value": 4,
+                "missing": false,
+                "id": 4,
+                "name": "Meat"
+              },
+              {
+                "numeric_value": 32767,
+                "missing": true,
+                "id": 32767,
+                "name": "Not asked"
+              }
+            ]
+          }
+        }
+      ],
+      "missing": 6,
+      "measures": {
+        "count": {
+          "data": [
+            376.7752188001393,
+            9.939703601443028,
+            485.5892106354386,
+            318.1745587340344,
+            0,
+            471.52130822894793,
+            0
+          ],
+          "n_missing": 6,
+          "metadata": {
+            "references": {},
+            "derived": true,
+            "type": {
+              "integer": false,
+              "missing_rules": {},
+              "missing_reasons": {
+                "No Data": -1
+              },
+              "class": "numeric"
+            }
+          }
+        }
+      },
+      "element": "crunch:cube",
+      "counts": [
+        434,
+        6,
+        495,
+        294,
+        0,
+        433,
+        0
+      ],
+      "n": 1662
+    }
+  }
+}

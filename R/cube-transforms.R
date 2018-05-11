@@ -87,32 +87,26 @@ setMethod("subtotalArray", "CrunchCube", function(x, headings = FALSE) {
 #' @aliases subtotalArray
 #' @export
 applyTransforms <- function (x, array = cubeToArray(x), ...) {
-    # if any of the dimensions are subvariables, don't even attempt to calculate
-    # transforms or insertions.
-    if (any(unlist(lapply(variables(x), function(x) {
-       x$type == "subvariable_items"
-    })))) {
-        return(array)
-    }
-
-    # if there are row transforms, calculate them and display them
-    row_trans <- transforms(x)[[1]]
-    if (!is.null(row_trans)) {
-        var_cats <- Categories(data=index(variables(x))[[1]]$categories)
-
-        # TODO: calculate category/element changes
-
-        if (length(dim(array)) > 1) {
-            off_margins <- seq_along(dim(array))[-1]
-            dim_names  <- names(dimnames(array))
-            array <- apply(array, off_margins, calcTransforms, row_trans, var_cats, ...)
-            names(dimnames(array)) <- dim_names
-        } else {
-            array <- as.array(calcTransforms(array, row_trans, var_cats, ...))
+    # Try to calculate the transforms, but fail silently if they aren't calcuable
+    try({
+        row_trans <- transforms(x)[[1]]
+        if (!is.null(row_trans)) {
+            var_cats <- Categories(data=index(variables(x))[[1]]$categories)
+            
+            # TODO: calculate category/element changes
+            
+            if (length(dim(array)) > 1) {
+                off_margins <- seq_along(dim(array))[-1]
+                dim_names  <- names(dimnames(array))
+                array <- apply(array, off_margins, calcTransforms, row_trans, var_cats, ...)
+                names(dimnames(array)) <- dim_names
+            } else {
+                array <- as.array(calcTransforms(array, row_trans, var_cats, ...))
+            }
+            
+            array <- subsetTransformedCube(array, x)
         }
-
-        array <- subsetTransformedCube(array, x)
-    }
+    }, silent = TRUE)
 
     # TODO: calculate column transforms
     return(array)
