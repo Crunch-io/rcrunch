@@ -209,7 +209,7 @@ skipMissingCategories <- function(cube, index){
         function (visible, sub) {
             if (identical(sub, "mr_select_drop")) {
                 # select the "Selected" element of the selection dimension.
-                ## TODO: this could be brittle; consider an is.selected attr/vector
+                ## TODO: Don't assume "selected" is position 1; consider an is.selected attr/vector
                 return(c(TRUE, FALSE, FALSE))
             }
             if (isTRUE(sub)) {
