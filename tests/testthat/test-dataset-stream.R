@@ -27,10 +27,10 @@ with_mock_crunch({
                     '"textVar":"a","starttime":"1955-12-28"}\n',
                     '{"birthyr":0.5775,"gender":1,"subvar1":2,"subvar2":1,"subvar3":1,',
                     '"textVar":"b","starttime":"1955-12-29"}')
-        expect_POST(streamRows(ds[1,], data=mock_stream_rows),
+        expect_POST(streamRows(ds, data=mock_stream_rows[2,]),
                     'https://app.crunch.io/api/datasets/1streaming/stream/',
-                    '{"birthyr":0.5775,"gender":2,"subvar1":2,"subvar2":1,"subvar3":1,',
-                    '"textVar":"a","starttime":"1955-12-28"}')
+                    '{"birthyr":0.5775,"gender":1,"subvar1":2,"subvar2":1,"subvar3":1,',
+                    '"textVar":"b","starttime":"1955-12-29"}')
     })
 
     test_that("appendStream", {
