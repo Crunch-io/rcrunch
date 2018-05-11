@@ -237,17 +237,19 @@ test_that("Can get subtotals with headers", {
     expect_equivalent(subtotalArray(pet_feelings_headers, headings = TRUE), subtotes)
 })
 
+
+
+cat <- loadCube(test_path("cubes/cat-subtotals-0id.json"))
+cat_dims <- dimnames(cat)
+# drop no data categories, and add in the subtotals
+cat_dims$food_groups <- cat_dims$food_groups[!(cat_dims$food_groups %in% c("Don't know", "No Data", "Not asked"))]
+cat_dims_subtotals <- cat_dims
+cat_dims_subtotals$food_groups <- c(
+    cat_dims_subtotals$food_groups[1], "plant-based",
+    cat_dims_subtotals$food_groups[c(2, 3, 4)], "animal-based",
+    "plant-based again, after animal-based")
+
 test_that("subtotals with 0 anchor attach to 0 and not top", {
-          cat <- loadCube(test_path("cubes/cat-subtotals-0id.json"))
-          cat_dims <- dimnames(cat)
-          # drop no data categories, and add in the subtotals
-          cat_dims$food_groups <- cat_dims$food_groups[!(cat_dims$food_groups %in% c("Don't know", "No Data", "Not asked"))]
-          cat_dims_subtotals <- cat_dims
-          cat_dims_subtotals$food_groups <- c(
-              cat_dims_subtotals$food_groups[1], "plant-based",
-              cat_dims_subtotals$food_groups[c(2, 3, 4)], "animal-based",
-              "plant-based again, after animal-based")
-          
           all <- cubify(
               376.775218800139,
               1180.53898816961,
@@ -260,6 +262,20 @@ test_that("subtotals with 0 anchor attach to 0 and not top", {
           expect_equivalent(applyTransforms(cat), all)
 })
 
+
+test_that("subtotals with bases on weighted cube", {
+    unweighted_counts <- cubify(
+        434,
+        1223,
+        495,
+        294,
+        433,
+        433,
+        1223,
+        dims = cat_dims_subtotals)
+    expect_equivalent(bases(cat, 0), unweighted_counts)
+    expect_equivalent(bases(cat), 1656)
+})
 
 test_that("cat by mr, where the cat has subtotals works", {
     # cat by mr with subtotals fixture
