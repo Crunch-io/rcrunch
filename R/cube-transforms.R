@@ -87,27 +87,58 @@ setMethod("subtotalArray", "CrunchCube", function(x, headings = FALSE) {
 #' @aliases subtotalArray
 #' @export
 applyTransforms <- function (x, array = cubeToArray(x), ...) {
-    # Try to calculate the transforms, but fail silently if they aren't calcuable
+    dim_names  <- names(dimnames(array))
+
+    if (length(dim(array)) == 1) {
+        try({
+            match_ind <- which(aliases(variables(x)) == dim_names[[1]])
+            row_trans <- transforms(x)[[match_ind]]
+            if (!is.null(row_trans)) {
+                var_cats <- Categories(data=variables(x)[[match_ind]]$categories)
+                array <- as.array(calcTransforms(array, row_trans, var_cats, ...))
+                array <- subsetTransformedCube(array, x)
+            }
+        })
+        return(array)
+    } 
+    
+    # Try to calculate the transforms for rows, but fail silently if they aren't calcuable
     try({
-        row_trans <- transforms(x)[[1]]
+        match_ind <- which(aliases(variables(x)) == dim_names[[1]])
+        row_trans <- transforms(x)[[match_ind]]
         if (!is.null(row_trans)) {
-            var_cats <- Categories(data=index(variables(x))[[1]]$categories)
+            var_cats <- Categories(data=variables(x)[[match_ind]]$categories)
             
             # TODO: calculate category/element changes
             
-            if (length(dim(array)) > 1) {
-                off_margins <- seq_along(dim(array))[-1]
-                dim_names  <- names(dimnames(array))
-                array <- apply(array, off_margins, calcTransforms, row_trans, var_cats, ...)
-                names(dimnames(array)) <- dim_names
-            } else {
-                array <- as.array(calcTransforms(array, row_trans, var_cats, ...))
-            }
+            off_margins <- seq_along(dim(array))[-1]
+
+            array <- apply(array, off_margins, calcTransforms, row_trans, var_cats, ...)
+            names(dimnames(array)) <- dim_names
             
             array <- subsetTransformedCube(array, x)
         }
     }, silent = TRUE)
 
+    # Try to calculate the transforms for columns, but fail silently if they aren't calcuable
+    try({
+        match_ind <- which(aliases(variables(x)) == dim_names[[2]])
+        
+        col_trans <- transforms(x)[[match_ind]]
+        if (!is.null(col_trans)) {
+            var_cats <- Categories(data=variables(x)[[match_ind]]$categories)
+            
+            # TODO: calculate category/element changes
+        
+            off_margins <- seq_along(dim(array))[-2]
+
+            array <- t(apply(array, off_margins, calcTransforms, col_trans, var_cats, ...))
+            names(dimnames(array)) <- dim_names
+
+            array <- subsetTransformedCube(array, x)
+        }
+    }, silent = TRUE)
+    
     # TODO: calculate column transforms
     return(array)
 }
