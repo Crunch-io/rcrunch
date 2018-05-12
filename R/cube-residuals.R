@@ -3,7 +3,7 @@
 # the more abstract 'margin' (specifically cubeMarginTable) to
 # get the right numbers for multiple response.
 standardizedMRResiduals <- function (cube, types) {
-    cube_array <- as.array(cube)
+    cube_array <- as.array(noTransforms(cube))
     cube_dims <- dim(cube_array)
 
     # get counts for table, this will end up being a table because there are MRs
@@ -68,7 +68,7 @@ setMethod('rstandard', 'CrunchCube', function (model) {
     if (any(types == 'subvariable_items')) {
         return(standardizedMRResiduals(model, types))
     } else {
-        return(chisq.test(as.array(model))$stdres)
+        return(chisq.test(as.array(noTransforms(model)))$stdres)
     }
 })
 
