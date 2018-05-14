@@ -1,0 +1,83 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/15e30f/",
+    "catalogs": {
+        "batches": "https://app.crunch.io/api/datasets/15e30f/batches/",
+        "users": "https://app.crunch.io/api/datasets/15e30f/users/",
+        "variables": "https://app.crunch.io/api/datasets/15e30f/variables/",
+        "actions": "https://app.crunch.io/api/datasets/15e30f/actions/",
+        "savepoints": "https://app.crunch.io/api/datasets/15e30f/savepoints/",
+        "boxdata": "https://app.crunch.io/api/datasets/15e30f/boxdata/",
+        "filters": "https://app.crunch.io/api/datasets/15e30f/filters/",
+        "multitables": "https://app.crunch.io/api/datasets/15e30f/multitables/",
+        "forks": "https://app.crunch.io/api/datasets/15e30f/forks/",
+        "permissions": "https://app.crunch.io/api/datasets/15e30f/permissions/",
+        "joins": "https://app.crunch.io/api/datasets/15e30f/joins/",
+        "decks": "https://app.crunch.io/api/datasets/15e30f/decks/",
+        "parent": "https://app.crunch.io/api/datasets/",
+        "variables_private": "https://app.crunch.io/api/datasets/15e30f/variables/private/"
+    },
+    "fragments": {
+        "state": "https://app.crunch.io/api/datasets/15e30f/state/",
+        "exclusion": "https://app.crunch.io/api/datasets/15e30f/exclusion/",
+        "stream": "https://app.crunch.io/api/datasets/15e30f/stream/",
+        "settings": "https://app.crunch.io/api/datasets/15e30f/settings/",
+        "pk": "https://app.crunch.io/api/datasets/15e30f/pk/",
+        "table": "https://app.crunch.io/api/datasets/15e30f/table/",
+        "preferences": "https://app.crunch.io/api/datasets/15e30f/preferences/"
+    },
+    "views": {
+        "cube": "https://app.crunch.io/api/datasets/15e30f/cube/",
+        "export": "https://app.crunch.io/api/datasets/15e30f/export/",
+        "summary": "https://app.crunch.io/api/datasets/15e30f/summary/",
+        "applied_filters": "https://app.crunch.io/api/datasets/15e30f/filters/applied/"
+    },
+    "specification": "https://app.crunch.io/api/specifications/datasets/",
+    "description": "Detail for a given dataset",
+    "body": {
+        "size": {
+            "rows": 1634,
+            "unfiltered_rows": 1634,
+            "columns": 23
+        },
+        "current_editor_name": "Gordon Shotwell",
+        "owner_name": "Gordon Shotwell",
+        "maintainer": "https://app.crunch.io/api/users/7bbff9/",
+        "name": "Fork of stackoverflow_survey",
+        "end_date": null,
+        "modification_time": "2018-05-14T15:11:28.265000",
+        "access_time": "1970-01-01T00:00:00",
+        "notes": "",
+        "current_editor": "https://app.crunch.io/api/users/7bbff9/",
+        "creation_time": "2018-05-14T15:11:28.245000",
+        "archived": false,
+        "start_date": null,
+        "streaming": "no",
+        "app_settings": {
+            "crunch": {
+                "discarded_to_hidden": true,
+                "deleted_rogue_vp": true
+            }
+        },
+        "owner": "https://app.crunch.io/api/users/7bbff9/",
+        "permissions": {
+            "edit": true,
+            "admin": true,
+            "change_permissions": true,
+            "view": true
+        },
+        "is_published": true,
+        "id": "15e30f",
+        "description": ""
+    },
+    "orders": {
+        "variables_weights": "https://app.crunch.io/api/datasets/15e30f/variables/weights/",
+        "variables_hier": "https://app.crunch.io/api/datasets/15e30f/variables/hier/",
+        "variables_personal": "https://app.crunch.io/api/datasets/15e30f/variables/personal/"
+    },
+    "urls": {
+        "owner_url": "https://app.crunch.io/api/users/7bbff9/",
+        "editor_url": "https://app.crunch.io/api/users/7bbff9/",
+        "user_url": "https://app.crunch.io/api/users/7bbff9/"
+    }
+}

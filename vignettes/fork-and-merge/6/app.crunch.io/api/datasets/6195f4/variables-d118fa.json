@@ -1,0 +1,36 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/6195f4/variables/?relative=on",
+    "catalogs": {
+        "private": "https://app.crunch.io/api/datasets/6195f4/variables/private/"
+    },
+    "orders": {
+        "personal": "https://app.crunch.io/api/datasets/6195f4/variables/personal/",
+        "weights": "https://app.crunch.io/api/datasets/6195f4/variables/weights/",
+        "hier": "https://app.crunch.io/api/datasets/6195f4/variables/hier/"
+    },
+    "specification": "https://app.crunch.io/api/specifications/variables/",
+    "description": "List of Variables of this dataset",
+    "index": {
+        "000000/": {
+            "discarded": false,
+            "alias": "Respondent",
+            "name": "Respondent",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "id": "000000",
+            "description": ""
+        },
+        "000001/": {
+            "discarded": false,
+            "alias": "HouseholdSize",
+            "name": "HouseholdSize",
+            "type": "numeric",
+            "notes": "",
+            "derived": false,
+            "id": "000001",
+            "description": ""
+        }
+    }
+}

@@ -1,0 +1,83 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/6195f4/",
+    "catalogs": {
+        "batches": "https://app.crunch.io/api/datasets/6195f4/batches/",
+        "users": "https://app.crunch.io/api/datasets/6195f4/users/",
+        "variables": "https://app.crunch.io/api/datasets/6195f4/variables/",
+        "actions": "https://app.crunch.io/api/datasets/6195f4/actions/",
+        "savepoints": "https://app.crunch.io/api/datasets/6195f4/savepoints/",
+        "boxdata": "https://app.crunch.io/api/datasets/6195f4/boxdata/",
+        "filters": "https://app.crunch.io/api/datasets/6195f4/filters/",
+        "multitables": "https://app.crunch.io/api/datasets/6195f4/multitables/",
+        "forks": "https://app.crunch.io/api/datasets/6195f4/forks/",
+        "permissions": "https://app.crunch.io/api/datasets/6195f4/permissions/",
+        "joins": "https://app.crunch.io/api/datasets/6195f4/joins/",
+        "decks": "https://app.crunch.io/api/datasets/6195f4/decks/",
+        "parent": "https://app.crunch.io/api/datasets/",
+        "variables_private": "https://app.crunch.io/api/datasets/6195f4/variables/private/"
+    },
+    "fragments": {
+        "state": "https://app.crunch.io/api/datasets/6195f4/state/",
+        "exclusion": "https://app.crunch.io/api/datasets/6195f4/exclusion/",
+        "stream": "https://app.crunch.io/api/datasets/6195f4/stream/",
+        "settings": "https://app.crunch.io/api/datasets/6195f4/settings/",
+        "pk": "https://app.crunch.io/api/datasets/6195f4/pk/",
+        "table": "https://app.crunch.io/api/datasets/6195f4/table/",
+        "preferences": "https://app.crunch.io/api/datasets/6195f4/preferences/"
+    },
+    "views": {
+        "cube": "https://app.crunch.io/api/datasets/6195f4/cube/",
+        "export": "https://app.crunch.io/api/datasets/6195f4/export/",
+        "summary": "https://app.crunch.io/api/datasets/6195f4/summary/",
+        "applied_filters": "https://app.crunch.io/api/datasets/6195f4/filters/applied/"
+    },
+    "specification": "https://app.crunch.io/api/specifications/datasets/",
+    "description": "Detail for a given dataset",
+    "body": {
+        "size": {
+            "rows": 1634,
+            "unfiltered_rows": 1634,
+            "columns": 2
+        },
+        "current_editor_name": "Gordon Shotwell",
+        "owner_name": "Gordon Shotwell",
+        "maintainer": "https://app.crunch.io/api/users/7bbff9/",
+        "name": "House Size",
+        "end_date": null,
+        "modification_time": "2018-05-14T15:11:58.954000",
+        "access_time": "2018-05-14T15:11:57.227000",
+        "notes": "",
+        "current_editor": "https://app.crunch.io/api/users/7bbff9/",
+        "creation_time": "2018-05-14T15:11:57.477000",
+        "archived": false,
+        "start_date": null,
+        "streaming": "no",
+        "app_settings": {
+            "crunch": {
+                "discarded_to_hidden": true,
+                "deleted_rogue_vp": true
+            }
+        },
+        "owner": "https://app.crunch.io/api/users/7bbff9/",
+        "permissions": {
+            "edit": true,
+            "admin": true,
+            "change_permissions": true,
+            "view": true
+        },
+        "is_published": true,
+        "id": "6195f4",
+        "description": ""
+    },
+    "orders": {
+        "variables_weights": "https://app.crunch.io/api/datasets/6195f4/variables/weights/",
+        "variables_hier": "https://app.crunch.io/api/datasets/6195f4/variables/hier/",
+        "variables_personal": "https://app.crunch.io/api/datasets/6195f4/variables/personal/"
+    },
+    "urls": {
+        "owner_url": "https://app.crunch.io/api/users/7bbff9/",
+        "editor_url": "https://app.crunch.io/api/users/7bbff9/",
+        "user_url": "https://app.crunch.io/api/users/7bbff9/"
+    }
+}

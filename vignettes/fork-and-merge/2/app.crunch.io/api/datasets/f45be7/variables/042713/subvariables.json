@@ -1,0 +1,29 @@
+{
+    "element": "shoji:catalog",
+    "self": "https://app.crunch.io/api/datasets/f45be7/variables/042713/subvariables/",
+    "description": "Contains the subvariables for this array variable.",
+    "index": {
+        "https://app.crunch.io/api/datasets/f45be7/variables/042713/subvariables/000002/": {
+            "discarded": false,
+            "alias": "ImportantHiringPMExp",
+            "scale": "interval",
+            "name": "ImportantHiringPMExp",
+            "type": "categorical",
+            "notes": "",
+            "derived": false,
+            "id": "000002",
+            "description": ""
+        },
+        "https://app.crunch.io/api/datasets/f45be7/variables/042713/subvariables/000022/": {
+            "discarded": false,
+            "alias": "ImportantHiringTechExp",
+            "scale": "interval",
+            "name": "ImportantHiringTechExp",
+            "type": "categorical",
+            "notes": "",
+            "derived": false,
+            "id": "000022",
+            "description": ""
+        }
+    }
+}

@@ -1,0 +1,53 @@
+{
+    "element": "shoji:entity",
+    "self": "https://app.crunch.io/api/datasets/f45be7/variables/000001X/",
+    "catalogs": {
+        "parent": "https://app.crunch.io/api/datasets/f45be7/variables/"
+    },
+    "fragments": {
+        "missing_rules": "https://app.crunch.io/api/datasets/f45be7/variables/000001X/missing_rules/",
+        "user_settings": "https://app.crunch.io/api/datasets/f45be7/variables/000001X/user_settings/",
+        "dataset": "https://app.crunch.io/api/datasets/f45be7/"
+    },
+    "views": {
+        "frequencies": "https://app.crunch.io/api/datasets/f45be7/variables/000001X/frequencies/",
+        "summary": "https://app.crunch.io/api/datasets/f45be7/variables/000001X/summary/",
+        "values": "https://app.crunch.io/api/datasets/f45be7/variables/000001X/values/",
+        "cast": "https://app.crunch.io/api/datasets/f45be7/variables/000001X/cast/"
+    },
+    "body": {
+        "name": "HouseholdSize",
+        "format": {
+            "data": {
+                "digits": 2
+            },
+            "summary": {
+                "digits": 2
+            }
+        },
+        "notes": "",
+        "derived": false,
+        "missing_reasons": {
+            "No Data": -1
+        },
+        "private": false,
+        "discarded": false,
+        "alias": "HouseholdSize",
+        "owner": null,
+        "dataset_id": "f45be7",
+        "view": {
+            "column_width": null
+        },
+        "type": "numeric",
+        "id": "000001X",
+        "categories": [
+
+        ],
+        "description": ""
+    },
+    "specification": "https://app.crunch.io/api/specifications/numeric_variables/",
+    "description": "Details for a given Variable",
+    "urls": {
+        "dataset_url": "https://app.crunch.io/api/datasets/f45be7/"
+    }
+}

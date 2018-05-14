@@ -1,0 +1,272 @@
+[
+    {
+        "name": "1.22.2",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.22.2",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.22.2",
+        "commit": {
+            "sha": "db4aa35b9ba7141422411b8cd84463b8dc95079e",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/db4aa35b9ba7141422411b8cd84463b8dc95079e"
+        }
+    },
+    {
+        "name": "1.22.0",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.22.0",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.22.0",
+        "commit": {
+            "sha": "efd8aca63b596dc7a7c6ab46a34abe0b0cb2f715",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/efd8aca63b596dc7a7c6ab46a34abe0b0cb2f715"
+        }
+    },
+    {
+        "name": "1.21.0",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.21.0",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.21.0",
+        "commit": {
+            "sha": "81b88bd9cc1c9d6de7e2143075f66bdc0c9a062b",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/81b88bd9cc1c9d6de7e2143075f66bdc0c9a062b"
+        }
+    },
+    {
+        "name": "1.20.0",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.20.0",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.20.0",
+        "commit": {
+            "sha": "122718f8e205b178343998f871df7f554e10d078",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/122718f8e205b178343998f871df7f554e10d078"
+        }
+    },
+    {
+        "name": "1.19.0",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.19.0",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.19.0",
+        "commit": {
+            "sha": "ad6a5c40527092fbd45bcc36c6d0e7ca5415c54a",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/ad6a5c40527092fbd45bcc36c6d0e7ca5415c54a"
+        }
+    },
+    {
+        "name": "1.18.4",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.18.4",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.18.4",
+        "commit": {
+            "sha": "39aed93ad8a8dc7c9d46cefa6678c68705087b1b",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/39aed93ad8a8dc7c9d46cefa6678c68705087b1b"
+        }
+    },
+    {
+        "name": "1.18.2",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.18.2",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.18.2",
+        "commit": {
+            "sha": "ba8bb06be42a81bd13a48265e81253ab59addd89",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/ba8bb06be42a81bd13a48265e81253ab59addd89"
+        }
+    },
+    {
+        "name": "1.18.0",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.18.0",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.18.0",
+        "commit": {
+            "sha": "154172c9523824749f7f50d1b64f27778b70cd86",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/154172c9523824749f7f50d1b64f27778b70cd86"
+        }
+    },
+    {
+        "name": "1.17.8",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.17.8",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.17.8",
+        "commit": {
+            "sha": "919b1a57a05e6bdc03e3e8978e1c9470c99c1b3f",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/919b1a57a05e6bdc03e3e8978e1c9470c99c1b3f"
+        }
+    },
+    {
+        "name": "1.17.6",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.17.6",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.17.6",
+        "commit": {
+            "sha": "4200bc95b185589c5b1f0a31f1338574cdae1850",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/4200bc95b185589c5b1f0a31f1338574cdae1850"
+        }
+    },
+    {
+        "name": "1.17.4",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.17.4",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.17.4",
+        "commit": {
+            "sha": "97950f75ffd2d2a142cb8bb3cded565f03ab22b6",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/97950f75ffd2d2a142cb8bb3cded565f03ab22b6"
+        }
+    },
+    {
+        "name": "1.17.2",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.17.2",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.17.2",
+        "commit": {
+            "sha": "c523d4ae7a711b78196b931dc9e1014563c3a376",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/c523d4ae7a711b78196b931dc9e1014563c3a376"
+        }
+    },
+    {
+        "name": "1.17.0",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.17.0",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.17.0",
+        "commit": {
+            "sha": "81b02b9636fcce2ec8342ca3aab3529b15ab3044",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/81b02b9636fcce2ec8342ca3aab3529b15ab3044"
+        }
+    },
+    {
+        "name": "1.16.0",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.16.0",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.16.0",
+        "commit": {
+            "sha": "23f7e380cdaef007000783966d9290ed9a3d13ad",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/23f7e380cdaef007000783966d9290ed9a3d13ad"
+        }
+    },
+    {
+        "name": "1.15.2",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.15.2",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.15.2",
+        "commit": {
+            "sha": "0e8e20d790095538717807857177378950781e3c",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/0e8e20d790095538717807857177378950781e3c"
+        }
+    },
+    {
+        "name": "1.15.0",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.15.0",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.15.0",
+        "commit": {
+            "sha": "465d5860647b7bc67e2a97f81912e6f2727de191",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/465d5860647b7bc67e2a97f81912e6f2727de191"
+        }
+    },
+    {
+        "name": "1.14.4",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.14.4",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.14.4",
+        "commit": {
+            "sha": "fc135161b2c4963599bb0634e0814702b545c37a",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/fc135161b2c4963599bb0634e0814702b545c37a"
+        }
+    },
+    {
+        "name": "1.14.2",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.14.2",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.14.2",
+        "commit": {
+            "sha": "d84e8f9798c55d89587dfb993bdbd00a96f0be71",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/d84e8f9798c55d89587dfb993bdbd00a96f0be71"
+        }
+    },
+    {
+        "name": "1.14.0",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.14.0",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.14.0",
+        "commit": {
+            "sha": "ee497e8be46703fcbc4ff96922ba25fdaeecf1c5",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/ee497e8be46703fcbc4ff96922ba25fdaeecf1c5"
+        }
+    },
+    {
+        "name": "1.13.8",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.13.8",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.13.8",
+        "commit": {
+            "sha": "83bcf92ce11f933e5f21bd41590a24bfddc26163",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/83bcf92ce11f933e5f21bd41590a24bfddc26163"
+        }
+    },
+    {
+        "name": "1.13.6",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.13.6",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.13.6",
+        "commit": {
+            "sha": "41c585d3bc48097d697fe9b93ab4ba318eb25488",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/41c585d3bc48097d697fe9b93ab4ba318eb25488"
+        }
+    },
+    {
+        "name": "1.13.4",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.13.4",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.13.4",
+        "commit": {
+            "sha": "15e9ab3304158ae518ec8ec5b10d9b74242ac291",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/15e9ab3304158ae518ec8ec5b10d9b74242ac291"
+        }
+    },
+    {
+        "name": "1.13.2",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.13.2",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.13.2",
+        "commit": {
+            "sha": "41e779f89cf08df60ba5dc1205ddaefd6c66ba9f",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/41e779f89cf08df60ba5dc1205ddaefd6c66ba9f"
+        }
+    },
+    {
+        "name": "1.13.0",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.13.0",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.13.0",
+        "commit": {
+            "sha": "9be59a446a86b29d1b8eaf871b0dba172454f763",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/9be59a446a86b29d1b8eaf871b0dba172454f763"
+        }
+    },
+    {
+        "name": "1.12.2",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.12.2",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.12.2",
+        "commit": {
+            "sha": "1ede8764b710dd548ce7543eabacd5cf0a98be04",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/1ede8764b710dd548ce7543eabacd5cf0a98be04"
+        }
+    },
+    {
+        "name": "1.12.0",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.12.0",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.12.0",
+        "commit": {
+            "sha": "8c1f62a30b77ab0097d5b09ded306e44c3853bfa",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/8c1f62a30b77ab0097d5b09ded306e44c3853bfa"
+        }
+    },
+    {
+        "name": "1.11.2",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.11.2",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.11.2",
+        "commit": {
+            "sha": "7d07141b7d4ca0a533b866112174f7c77da13576",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/7d07141b7d4ca0a533b866112174f7c77da13576"
+        }
+    },
+    {
+        "name": "1.11.0",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.11.0",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.11.0",
+        "commit": {
+            "sha": "583e8ca116403a7da2795f0fe9e3016c787c7599",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/583e8ca116403a7da2795f0fe9e3016c787c7599"
+        }
+    },
+    {
+        "name": "1.10.6",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.10.6",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.10.6",
+        "commit": {
+            "sha": "af8725f5a0c625eda79efdbd2f8acb9fe21f56ee",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/af8725f5a0c625eda79efdbd2f8acb9fe21f56ee"
+        }
+    },
+    {
+        "name": "1.10.4",
+        "zipball_url": "https://api.github.com/repos/Crunch-io/rcrunch/zipball/1.10.4",
+        "tarball_url": "https://api.github.com/repos/Crunch-io/rcrunch/tarball/1.10.4",
+        "commit": {
+            "sha": "8da05d3d60927d6212ff271b168f75eef04bea3e",
+            "url": "https://api.github.com/repos/Crunch-io/rcrunch/commits/8da05d3d60927d6212ff271b168f75eef04bea3e"
+        }
+    }
+]
