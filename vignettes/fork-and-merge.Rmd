@@ -12,14 +12,16 @@ One of the main benefits of Crunch is that it lets analysts and clients work wit
 
 "Fork" originates in computer version control systems and just means to take a copy of something with the intention of making some changes to the copy, and then incorporating those changes back into the original. To see how this works lets first upload a new dataset to Crunch. 
 
+```{r, message=FALSE}
+library(crunch)
+```
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(httptest)
+login()
 start_vignette("fork-and-merge")
 ```
 
 ```{r message=FALSE, results='hide'}
-library(crunch)
-login()
 ds <- newDataset(SO_survey, "stackoverflow_survey")
 ```
 
