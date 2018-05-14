@@ -1,0 +1,93 @@
+{
+    "element": "shoji:view",
+    "self": "http://local.crunch.io:8080/api/datasets/bb6aabe91a7248fd985165217f60c67c/cube/?query=%7B%22dimensions%22%3A%5B%7B%22function%22%3A%22and%22%2C%22args%22%3A%5B%7B%22function%22%3A%22%21%3D%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22http%3A%2F%2Flocal.crunch.io%3A8080%2Fapi%2Fdatasets%2Fbb6aabe91a7248fd985165217f60c67c%2Fvariables%2F000000%2F%22%7D%2C%7B%22value%22%3A1%7D%5D%7D%2C%7B%22function%22%3A%22not%22%2C%22args%22%3A%5B%7B%22function%22%3A%22is_missing%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22http%3A%2F%2Flocal.crunch.io%3A8080%2Fapi%2Fdatasets%2Fbb6aabe91a7248fd985165217f60c67c%2Fvariables%2F000000%2F%22%7D%5D%7D%5D%7D%5D%2C%22references%22%3A%7B%22name%22%3A%22q1%20%21%3D%20%5C%22Cat%5C%22%20%26%20%21is.na%28q1%29%22%2C%22alias%22%3A%22q1%20%21%3D%20%5C%22Cat%5C%22%20%26%20%21is.na%28q1%29%22%7D%7D%5D%2C%22measures%22%3A%7B%22count%22%3A%7B%22function%22%3A%22cube_count%22%2C%22args%22%3A%5B%5D%7D%7D%2C%22weight%22%3Anull%7D&filter=%7B%7D",
+    "value": {
+        "query": {
+            "measures": {
+                "count": {
+                    "function": "cube_count",
+                    "args": []
+                }
+            },
+            "dimensions": [{
+                "function": "and",
+                "args": [{
+                    "function": "!=",
+                    "args": [{
+                        "variable": "http://local.crunch.io:8080/api/datasets/bb6aabe91a7248fd985165217f60c67c/variables/000000/"
+                    }, {
+                        "value": 1
+                    }]
+                }, {
+                    "function": "not",
+                    "args": [{
+                        "function": "is_missing",
+                        "args": [{
+                            "variable": "http://local.crunch.io:8080/api/datasets/bb6aabe91a7248fd985165217f60c67c/variables/000000/"
+                        }]
+                    }]
+                }],
+                "references": {
+                    "alias": "q1 != \"Cat\" & !is.na(q1)",
+                    "name": "q1 != \"Cat\" & !is.na(q1)"
+                }
+            }],
+            "weight": null
+        },
+        "query_environment": {
+            "filter": []
+        },
+        "result": {
+            "dimensions": [{
+                "derived": false,
+                "references": {
+                    "alias": "q1 != \"Cat\" & !is.na(q1)",
+                    "name": "q1 != \"Cat\" & !is.na(q1)"
+                },
+                "type": {
+                    "ordinal": false,
+                    "class": "categorical",
+                    "categories": [{
+                        "numeric_value": 1,
+                        "selected": true,
+                        "id": 1,
+                        "missing": false,
+                        "name": "Selected"
+                    }, {
+                        "numeric_value": 0,
+                        "missing": false,
+                        "id": 0,
+                        "name": "Other"
+                    }, {
+                        "numeric_value": null,
+                        "missing": true,
+                        "id": -1,
+                        "name": "No Data"
+                    }]
+                }
+            }],
+            "missing": 7,
+            "measures": {
+                "count": {
+                    "data": [7, 6, 7],
+                    "n_missing": 7,
+                    "metadata": {
+                        "references": {},
+                        "derived": true,
+                        "type": {
+                            "integer": true,
+                            "missing_rules": {},
+                            "missing_reasons": {
+                                "No Data": -1
+                            },
+                            "class": "numeric"
+                        }
+                    }
+                }
+            },
+            "element": "crunch:cube",
+            "counts": [7, 6, 7],
+            "n": 20
+        }
+    }
+}

@@ -31,6 +31,14 @@ test_that("rollup resolution validation", {
         " is invalid. Valid values are ")
 })
 
+test_that("cube missing functions set @useNA", {
+    cube <- loadCube(test_path("cubes/cat-x-mr-x-mr.json"))
+    expect_equal(cube@useNA, "no")
+    cube <- showMissing(cube)
+    expect_equal(cube@useNA, "always")
+    expect_equal(hideMissing(cube)@useNA, "no")
+})
+
 with_mock_crunch({
     ds <- loadDataset("test ds")
     v <- ds$starttime
@@ -89,9 +97,9 @@ with_mock_crunch({
 })
 
 adims <- CubeDims(list(
-    v4=list(name=c("B", "C"), any.or.none=rep(FALSE, 2),
+    v4=list(name=c("B", "C"),
         missing=rep(FALSE, 2), references=list(name="v4")),
-    v7=list(name=c("C", "D", "E", "No Data"), any.or.none=rep(FALSE, 4),
+    v7=list(name=c("C", "D", "E", "No Data"),
         missing=c(rep(FALSE, 3), TRUE), references=list(name="v7"))))
 a1 <- CrunchCube(arrays=list("count"=array(c(
         8, 6,
@@ -125,16 +133,6 @@ test_that("simple margin.table", {
         cubify(14, 5, 5, dims=df.dims["v7"]))
     expect_equivalent(margin.table(a1), margin.table(a1@arrays[[1]]))
     expect_identical(margin.table(a1), 24)
-})
-
-test_that("margin.table with any/none", {
-    a2 <- a1
-    a2@dims[[2]]$any.or.none[1] <- TRUE ## "C"
-    expect_identical(margin.table(a2, 1),
-        cubify(8, 6, dims=df.dims["v4"]))
-    expect_identical(margin.table(a2, 2),
-        cubify(5, 5, dims=list(v7=LETTERS[4:5])))
-    expect_identical(margin.table(a2), 14)
 })
 
 test_that("margin.table with missing", {

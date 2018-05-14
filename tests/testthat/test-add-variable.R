@@ -13,12 +13,26 @@ test_that("toVariable parses R characters", {
         class="VariableDefinition"))
 })
 test_that("toVariable parses factors", {
-    expect_equivalent(toVariable(as.factor(rep(LETTERS[2:3], 3))),
-        list(values=rep(1:2, 3), type="categorical", categories=list(
-            list(id=1L, name="B", numeric_value=1L, missing=FALSE),
-            list(id=2L, name="C", numeric_value=2L, missing=FALSE),
+    expect_identical(toVariable(as.factor(c(rep(LETTERS[2:3], 3), NA))),
+        VarDef(
+            values=c(1L, 2L, 1L, 2L, 1L, 2L, -1L),
+            type="categorical",
+            categories=list(
+                list(id=1L, name="B", numeric_value=1L, missing=FALSE),
+                list(id=2L, name="C", numeric_value=2L, missing=FALSE),
+                list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
+            )
+        )
+    )
+})
+
+test_that("toVariable parses logical", {
+    expect_equivalent(toVariable(c(TRUE, FALSE, FALSE, NA, TRUE)),
+        VarDef(values=c(1L, 0L, 0L, -1L, 1L), type="categorical", categories=list(
+            list(id=1L, name="True", numeric_value=1L, missing=FALSE, selected=TRUE),
+            list(id=0L, name="False", numeric_value=0L, missing=FALSE),
             list(id=-1L, name="No Data", numeric_value=NULL, missing=TRUE)
-        ))) ## unclear why these aren't identical
+        )))
 })
 test_that("toVariable parses AsIses", {
     expect_identical(toVariable(I(1:5)),
@@ -166,6 +180,13 @@ test_that("POSTNewVariable rejects invalid categories", {
         "Invalid category names: must be unique")
 })
 
+test_that("checkVarDefErrors errors correctly", {
+    test_errs <- lapply(list("a", "b", 29), function(x) try(log(x), silent = TRUE))
+    expect_error(checkVarDefErrors(test_errs), "The following variable definitions errored on upload: 1, 2")
+    test_errs <- lapply(list(29, 23, 24), function(x) try(log(x), silent = TRUE))
+    expect_silent(checkVarDefErrors(test_errs))
+})
+
 with_mock_crunch({
     ds <- loadDataset("test ds")
     test_that("assignment restrictions", {
@@ -184,14 +205,16 @@ with_mock_crunch({
             'https://app.crunch.io/api/datasets/1/variables/',
             '{"values":5,"type":"numeric","name":"newvar","alias":"newvar"}')
     })
-})
 
-    test_that("checkVarDefErrors errors correctly", {
-        test_errs <- lapply(list("a", "b", 29), function(x) try(log(x), silent = TRUE))
-        expect_error(checkVarDefErrors(test_errs), "The following variable definitions errored on upload: 1, 2")
-        test_errs <- lapply(list(29, 23, 24), function(x) try(log(x), silent = TRUE))
-        expect_silent(checkVarDefErrors(test_errs))
+    test_that("Adding a variable with all missing doesn't send 'values'", {
+        expect_POST(ds$newvar <- NA_real_,
+            'https://app.crunch.io/api/datasets/1/variables/',
+            '{"type":"numeric","name":"newvar","alias":"newvar"}')
+        expect_POST(ds$newvar <- rep(NA_real_, 25),
+            'https://app.crunch.io/api/datasets/1/variables/',
+            '{"type":"numeric","name":"newvar","alias":"newvar"}')
     })
+})
 
 with_test_authentication({
     ds <- newDataset(df)

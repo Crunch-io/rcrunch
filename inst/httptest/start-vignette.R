@@ -18,7 +18,8 @@ set_redactor(function (response) {
         gsub_response("([0-9a-f]{6})[0-9a-f]{26}", "\\1") %>% ## Prune UUIDs
         gsub_response("https.//app.crunch.io/api/progress/.*?/",
             "https://app.crunch.io/api/progress/") %>%        ## Progress is meaningless in mocks
-        gsub_response("https.//app.crunch.io", "")        ## Shorten URL
+        gsub_response("https.//app.crunch.io", "") %>%    ## Shorten URL
+        gsub_response("https%3A%2F%2Fapp.crunch.io", "")  ## Shorten encoded URL
 })
 set_requester(function (request) {
     request$fields <- NULL

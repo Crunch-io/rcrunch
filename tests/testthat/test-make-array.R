@@ -61,8 +61,9 @@ with_mock_crunch({
     test_that("makeMRFromText errors correctly", {
         expect_error(makeMRFromText(ds$var, "; "),
             "Must supply a name for the new variable")
-        expect_error(makeMRFromText("string",  name = "name"),
-            paste0(dQuote("string"), " must be a Categorical or Text Crunch Variable."))
+        expect_error(makeMRFromText(ds$birthyr,  name = "name"),
+            paste0(dQuote("ds$birthyr"), " is of class NumericVariable, it must be a Crunch TextVariable."),
+            fixed = TRUE)
     })
 
     test_that("createSubvarDeriv generates the correct variable definition", {

@@ -7,21 +7,31 @@
 changeCategoryID(variable, from, to)
 }
 \arguments{
-\item{variable}{the variable in a crunch dataset that will be changed (note: the variable must be categorical, categorical array, or multiple response)}
+\item{variable}{the variable in a crunch dataset that will be changed (note:
+the variable must be categorical, categorical array, or multiple response)}
 
 \item{from}{the (old) id identifying the category you want to change}
 
 \item{to}{the (new) id for the category}
 }
 \value{
-\code{variable} with category \code{from} and all associated data values mapped to id \code{to}
+\code{variable} with category \code{from} and all associated data values mapped
+to id \code{to}
 }
 \description{
-Changes the id of a category from an existing value to a new one.
-The variable can be a categorical, categorical array, or multiple response
+Changes the id of a category from an existing value to a new one. The
+variable can be a categorical, categorical array, or multiple response
 variable. The category changed will have the same numeric value and missing
 status as before. The one exception to this is if the numeric value is the
 same as the id, then the new numeric value will be the same as the new id.
+}
+\details{
+It is highly recommended to disable any exclusion filter before using
+\code{changeCategoryID}, especially if it is being called multiple times in quick
+succession (e.g. as part of an automated script). If a problematic exclusion
+is encountered \code{changeCategoryID} will attempt to disable and re-enable the
+exclusion, but that process will be repeated for every call made which could
+have adverse consequences (not to mention slow down processing time).
 }
 \examples{
 \dontrun{

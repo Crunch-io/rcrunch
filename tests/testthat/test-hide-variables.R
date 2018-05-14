@@ -38,6 +38,10 @@ with_mock_crunch({
         expect_PATCH(ds <- hideVariables(ds, "gender"),
             "https://app.crunch.io/api/datasets/3/variables/",
             '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}')
+        ## Duplicates are handled
+        expect_PATCH(ds <- hideVariables(ds, c("gender", "gender")),
+            "https://app.crunch.io/api/datasets/3/variables/",
+            '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}')
         expect_PATCH(ds <- hideVariables(ds, c("gender", "birthyr")),
             "https://app.crunch.io/api/datasets/3/variables/",
             '{"https://app.crunch.io/api/datasets/3/variables/gender/":{"discarded":true}}') ## same

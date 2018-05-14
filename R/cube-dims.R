@@ -8,26 +8,24 @@ cubeDims <- function (cube) {
         ## Collect the variable metadata about the dimensions
         tuple <- cubeVarReferences(a)
         if (tuple$type == "boolean") {
-            ## TODO: server should provide enumeration
+            ## TODO: delete this when boolean support is removed
             return(list(
                 name=c("FALSE", "TRUE"),
-                any.or.none=c(FALSE, FALSE),
                 missing=c(FALSE, FALSE),
                 references=tuple
             ))
         }
         ## If enumerated, will be "elements", not "categories"
-        d <- a$type$categories %||% a$type$elements
+        d <- tuple$categories %||% a$type$elements
         return(list(
             name=vapply(d, elementName, character(1)),
-            any.or.none=vapply(d, elementIsAnyOrNone, logical(1)),
             missing=vapply(d, function (el) isTRUE(el$missing), logical(1)),
             references=tuple
         ))
     })
     names(dimnames) <- vapply(dimnames, function (x) x$references$alias,
         character(1))
-    
+
     return(CubeDims(dimnames))
 }
 
@@ -39,7 +37,33 @@ cubeVarReferences <- function (x) {
     if (tuple$type == "enum" && "subreferences" %in% names(tuple)) {
         tuple$type <- "subvariable_items"
     }
+
+    if (!is.null(tuple$subreferences)) {
+        # Inject subreference names into the tuple if they exist.
+        tuple$subvariables <- vapply(tuple$subreferences,
+                                     function (x) x$alias %||% "",
+                                     character(1))
+
+        if (is.null(names(tuple$subreferences))) {
+            # if there are no names for the subvariable elements, fake urls from
+            # the aliases
+            names(tuple$subreferences) <- tuple$subvariables
+        }
+
+        # add a trailling slash to match how urls will look.
+        tuple$subvariables <- paste0(tuple$subvariables, "/")
+    }
+
     tuple$categories <- x$type$categories
+    ## Sniff for 3VL
+    if (!is.null(tuple$categories) && is.3vl(Categories(data=tuple$categories))) {
+        ## Make this look like an R logical does when it is tabulated
+        tuple$categories[[1]]$name <- "TRUE"
+        tuple$categories[[2]]$name <- "FALSE"
+        ## TODO: Put FALSE first, like in R
+        ## But note that you'd also have to aperm the data arrays...
+        # tuple$categories <- tuple$categories[c(2, 1, 3)]
+    }
     return(tuple)
 }
 
@@ -58,20 +82,8 @@ elementName <- function (el) {
             out <- out$references$name
         }
     }
-    if (is.null(out)) {
-        ## Damn. You may be here because you're hitting missing values in an
-        ## array or multiple response, or the __any__ or __none__ values.
-        ## Bail out.
-        out <- "<NA>"
-    }
-    out <- as.character(out)
+    out <- as.character(out %||% "<NA>")
     return(out)
-}
-
-elementIsAnyOrNone <- function (el) {
-    is.list(el$value) && ## Element has $value and value is a list
-        "id" %in% names(el$value) && ## "value" has names (is not bin)
-        el$value$id %in% c("__any__", "__none__")
 }
 
 #' Methods on Cube objects
@@ -84,7 +96,7 @@ elementIsAnyOrNone <- function (el) {
 #' @param j not used
 #' @param ... not used
 #' @param drop not used
-#' @param value for `dimensions<-` a `CubeDims` object to overwrite a CrunchCube 
+#' @param value for `dimensions<-` a `CubeDims` object to overwrite a CrunchCube
 #' dimensions
 #'
 #' @return Generally, the same shape of result that each of these functions
@@ -108,10 +120,6 @@ setMethod("dim", "CubeDims",
 #' @rdname cube-methods
 #' @export
 setMethod("is.na", "CubeDims", function (x) lapply(x, function (a) a$missing))
-
-anyOrNone <- function (x) {
-    lapply(x, function (a) a$any.or.none)
-}
 
 #' @rdname cube-methods
 #' @export
@@ -138,10 +146,18 @@ setMethod("[", "CubeDims", function (x, i, ...) {
 
 is.selectedDimension <- function (dims) {
     is.it <- function (x, dim, MRaliases) {
-        x$alias %in% MRaliases &&
+        maybe <- x$alias %in% MRaliases &&
             x$type == "categorical" &&
-            length(dim$name) == 3 &&
-            dim$name[1] == "Selected"
+            length(dim$name) == 3
+        if (maybe) {
+            cats <- Categories(data=x$categories)
+            ## Unlike the strict is.3vl, this doesn't compare cat names because
+            ## they've already been munged to TRUE/FALSE
+            maybe <- setequal(ids(cats), c(-1, 0, 1)) &&
+                sum(is.selected(cats)) == 1 &&
+                sum(is.na(cats)) == 1
+        }
+        return(maybe)
     }
     vars <- variables(dims)
     # We only need to check if the categories are the magical Selected
@@ -153,13 +169,4 @@ is.selectedDimension <- function (dims) {
                         MoreArgs=list(MRaliases=MRaliases))
     names(selecteds) <- dims@names
     return(selecteds)
-}
-
-# determine if a dimension is from the selected_array of a multiple response
-is.selectedArrayDim <- function (dim) {
-    if (!is.null(dim$any.or.none)) {
-        return(any(dim$any.or.none))
-    }
-    
-    return(FALSE)
 }

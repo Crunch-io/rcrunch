@@ -1,8 +1,27 @@
-## crunch 1.21.1
-* `index.table()` to return tables indexed to a margin
-* Fix bug in assigning `subtotals(var) <- NULL` when it already was `NULL` (#231)
-* Consistently return `""` for variable metadata fields if no value is set (#232)
-* `%in%` and `==` on Crunch objects now follow R semantics much more closely.
+## crunch 1.22.2
+* New introductory vignette: `vignette("crunch")`
+* `changeCategoryID()` tries to unset then reset the dataset exclusion if that impacts its progress. Best practice is to disable exclusions before running `changeCategoryID()` if at all possible.
+* Setting the `ordering<-` of datasets within a project will now drop any invalid entries with a warning, rather than error.
+* Fix a bug introduced in 1.22.0 in creating categorical variables from factors with missing values.
+* Fix a similar yet unrelated bug in creating numeric and other types of variables with all-`NA` data.
+* Fix `streamRows()` for case when sending only one row (#253).
+* Internal: support for the "selected_array" method of multiple response calculation, deprecated since 1.20.0, has been removed.
+
+## crunch 1.22.0
+
+### Analysis methods
+* `CrunchCube`s can now be subset just like R arrays using the `[` method.
+* Add summary statistics to CrunchCubes that have categorical variables with scale values (`numeric_values`). See `?addSummaryStat` for more information.
+* `index.table()` to return tables indexed to a margin.
+
+### Bug fixes and other enhancements
+* Fix bug in assigning `subtotals(var) <- NULL` when it already was `NULL` (#231).
+* Consistently return `""` for variable metadata fields if no value is set (#232).
+* Better subvariable metadata methods for CrunchCubes (#215).
+* Clarified the error message when using `makeMRFromText()` with a categorical variable.
+* Export GitHub package version checking function so that other `crunch*` packages can use it.
+* `%in%` and `==` on Crunch objects now follow R semantics more closely with regards to missing data.
+* Add some forward-compatible code to prepare for API changes to logical variables. This led to a couple of trivial changes to internals around boolean types that should not affect package users.
 
 ## crunch 1.21.0
 ### Variable organization

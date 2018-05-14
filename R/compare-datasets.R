@@ -73,12 +73,12 @@ compareDatasets <- function (A, B) {
             function (x) {
                 ## Pull together the union of aliases
                 if (x %in% names(a2uA)) {
-                    aa <- aliases(fvarsA[subvariables(varsA[[a2uA[x]]])])
+                    aa <- aliases(fvarsA[subvariableURLs(varsA[[a2uA[x]]])])
                 } else {
                     aa <- c()
                 }
                 if (x %in% names(a2uB)) {
-                    ab <- aliases(fvarsB[subvariables(varsB[[a2uB[x]]])])
+                    ab <- aliases(fvarsB[subvariableURLs(varsB[[a2uB[x]]])])
                 } else {
                     ab <- c()
                 }

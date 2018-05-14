@@ -9,7 +9,7 @@ setMethod("showTransforms", "CrunchCube", function (x) {
         # if the row dimension is categorical, make styles
         if (index(variables(x))[[1]]$type == "categorical") {
             row_cats <- Categories(data=index(variables(x))[[1]]$categories)
-            row_styles <- transformStyles(transforms(x)[[1]], row_cats[!is.na(row_cats)])            
+            row_styles <- transformStyles(transforms(x)[[1]], row_cats[!is.na(row_cats)])
         } else {
             # otherwise punt, because this is an array or MR var.
             row_styles <- NULL
@@ -94,7 +94,7 @@ applyTransforms <- function (x, array = cubeToArray(x), ...) {
     })))) {
         return(array)
     }
-    
+
     # if there are row transforms, calculate them and display them
     row_trans <- transforms(x)[[1]]
     if (!is.null(row_trans)) {
@@ -160,7 +160,7 @@ setMethod("transforms", "CrunchCube", function(x) { transforms(variables(x)) })
 #' @export
 setMethod("transforms", "VariableCatalog", function (x) {
     transes <- lapply(x, function (i) {i$view$transform})
-    
+
     if (all(unlist(lapply(transes, is.null)))) {
         return(NULL)
     }
@@ -171,18 +171,18 @@ setMethod("transforms", "VariableCatalog", function (x) {
         if (is.null(i$insertions) || length(i$insertions) == 0) {
             return(NULL)
         }
-        
+
         # get the insertions
         inserts <- Insertions(data=i$insertions)
         # subtype insertions so that Subtotal, Heading, etc. are their rightful selves
         inserts <- subtypeInsertions(inserts)
-        
+
         return(Transforms(insertions = inserts,
                           categories = NULL,
                           elements = NULL)
         )
     })
-    
+
     names(transes_out) <- aliases(x)
     return(transes_out)
 })
@@ -192,14 +192,9 @@ setMethod("transforms", "VariableCatalog", function (x) {
 setMethod("transforms<-", c("CrunchCube", "list"), function (x, value) {
     dims <- dimensions(x)
     dimnames <- names(dims)
-    
+
     # check if the names of the dimensions and the names of the transforms line up
-    if (any(!(names(value) %in% dimnames))) {
-        halt("The names of the transforms supplied (", 
-             serialPaste(dQuote(names(value)))
-             ,") to not match the dimension names (",
-             serialPaste(dQuote(dimnames)) ,") of the cube.")
-    }
+    validateNamesInDims(names(value), x, what = "transforms")
 
     # replace the transforms for each dimension
     dims <- CubeDims(lapply(dimnames, function (dim_name) {
@@ -208,20 +203,43 @@ setMethod("transforms<-", c("CrunchCube", "list"), function (x, value) {
             # grab the matching insertions, make sure they are proper Insertions
             # and then add them to the dimensions to return.
             one_trans <- value[[dim_name]]
+            vars <- variables(x)
+            cats <- categories(vars[[which(aliases(vars) == dim_name)]])
             one_trans$insertions <- Insertions(
                 data = lapply(one_trans$insertions, makeInsertion,
-                              var_categories = categories(variables(x)[[dim_name]]))
+                              var_categories = cats)
             )
             dim_out$references$view$transform <- jsonprep(one_trans)
         }
         return(dim_out)
     }))
-    
+
     # rename, replace the dimensions and return the cube
     names(dims) <- dimnames
     dimensions(x) <- dims
     return(invisible(x))
 })
+
+#' error iff the names are not a dimension in the cube provided
+#'
+#' @param names the names to check for in the cube
+#' @param cube a CrunchCube object to check
+#' @param what a character describing what is being checked (default: transforms
+#' ) to include in the error to make it easier for users to see what is failing.
+#' 
+#' @keywords internal
+validateNamesInDims <- function (names, cube, what = "transforms") {
+    dimnames <- names(dimensions(cube))
+
+    # check if the names of the dimensions and the names of the transforms line up
+    if (any(!(names %in% dimnames))) {
+        halt("The names of the ", what, " supplied (",
+             serialPaste(dQuote(names))
+             ,") do not match the dimensions of the cube (",
+             serialPaste(dQuote(dimnames)) ,").")
+    }
+}
+
 
 #' @rdname Transforms
 #' @export
@@ -239,23 +257,25 @@ setMethod("transforms<-", c("CrunchCube", "NULL"), function (x, value) {
     return(invisible(x))
 })
 
+# TODO: add an easy way to append insertions, etc. to a cube's transforms
+
 #' Remove transformations from a CrunchCube
 #'
 #' @section Removing transforms:
-#' `noTransforms()` is useful if you don't want to see or use any transformations like 
-#' Subtotals and Headings. This action only applies to the CrunchCube object in 
-#' R: it doesn't actually change the variables on Crunch servers or the query 
+#' `noTransforms()` is useful if you don't want to see or use any transformations like
+#' Subtotals and Headings. This action only applies to the CrunchCube object in
+#' R: it doesn't actually change the variables on Crunch servers or the query
 #' that generated the CrunchCube.
 #'
 #' @param cube a CrunchCube
 #'
 #' @return the CrunchCube with no transformations
 #'
-#' @examples 
+#' @examples
 #' \dontrun{
 #' # A CrunchCube with a heading and subtotals
 #' crtabs(~opinion, ds)
-#' #               All opinions   
+#' #               All opinions
 #' #             Strongly Agree 23
 #' #             Somewhat Agree 24
 #' #                      Agree 47
@@ -263,12 +283,12 @@ setMethod("transforms<-", c("CrunchCube", "NULL"), function (x, value) {
 #' #          Somewhat Disagree 16
 #' #          Strongly Disagree 19
 #' #                   Disagree 35
-#' 
+#'
 #' noTransforms(crtabs(~opinion, ds))
-#' #             Strongly Agree             Somewhat Agree Neither Agree nor Disagree 
-#' #                         23                         24                         18 
-#' #          Somewhat Disagree          Strongly Disagree 
-#' #                         16                         19 
+#' #             Strongly Agree             Somewhat Agree Neither Agree nor Disagree
+#' #                         23                         24                         18
+#' #          Somewhat Disagree          Strongly Disagree
+#' #                         16                         19
 #' }
 #'
 #' @export

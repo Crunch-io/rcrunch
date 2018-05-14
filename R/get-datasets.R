@@ -149,6 +149,11 @@ loadDataset <- function (dataset, kind=c("active", "all", "archived"), project=N
 loadDatasetFromURL <- function (url) {
     ## Load dataset without touching a dataset catalog
     dataset <- CrunchDataset(crGET(url))
+    if (isTRUE(getOption("crunch.variable.folders", FALSE))) {
+        ## Call getRootFolderURL(), which will turn on folders and bust cache as needed
+        getRootFolderURL(dataset)
+        dataset <- CrunchDataset(crGET(url))
+    }
     tuple(dataset) <- DatasetTuple(entity_url=self(dataset),
         body=dataset@body,
         index_url=shojiURL(dataset, "catalogs", "parent"))

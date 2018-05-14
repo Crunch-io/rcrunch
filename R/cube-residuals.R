@@ -54,16 +54,9 @@ setMethod('rstandard', 'CrunchCube', function (model) {
              "slice to evaluate.")
     }
 
-    if (any(vapply(dimensions(model), is.selectedArrayDim, logical(1)))) {
-        # TODO: remove the reference to `as_selected` when that becomes default
-        halt("rstandard is not implemented with CrunchCubes that use selected ",
-             "arrays. Selected arrays have been deprecated, please recreate ",
-             "your cube using `as_selected()` around multiple response variables.")
-    }
-
-    # determine which dimensinos are multiple response, and treat those special
+    # determine which dimensions are multiple response, and treat those special
     # TODO: make this specific to multiple response rather than both cat array and MR
-    types <- vapply(dimensions(model), function(dim) dim$references$type, character(1))
+    types <- vapply(dimensions(model), function (dim) dim$references$type, character(1))
 
     if (any(types == 'subvariable_items')) {
         return(standardizedMRResiduals(model, types))
@@ -71,8 +64,6 @@ setMethod('rstandard', 'CrunchCube', function (model) {
         return(chisq.test(as.array(model))$stdres)
     }
 })
-
-
 
 # broadcast a vector of values to a matrix with dimensions dims. Similar to
 # but not exactly the same as numpy's `broadcast_to` method.

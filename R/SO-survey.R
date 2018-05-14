@@ -32,3 +32,14 @@
 #' }
 #' @source \url{https://insights.stackoverflow.com/survey/}
 "SO_survey"
+
+#'Schema for the 2017 Stack Overflow developer survey
+#'
+#'Survey questions and variable names for the 2017 Stack Overflow Developers
+#'Survey #'
+#' @format A data frame with 23 rows and 2 variables.
+#' \describe{
+#'     \item{Column}{The column name of the survey data frame}
+#'     \item{Question}{Question asked of respondents}
+#' }
+"SO_schema"

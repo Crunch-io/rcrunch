@@ -26,9 +26,6 @@ mr_by_mr_heterogeneous <- loadCube("cubes/mr-by-mr-different-mrs.json")
 mr_by_mr_heterogeneous_dims <- list(opinion_mr = c("food_opinion", "rest_opinion", "play_opinion"),
                                     feeling_mr = c("cat_feeling", "dog_feeling"))
 
-mr_by_mr_by_too_many <- loadCube("cubes/mr-by-mr-too-many-dims.json")
-mr_by_cat_selected_array <- loadCube("cubes/mr-x-cat-selected-array.json")
-
 catarray <- loadCube("cubes/cat-array.json")
 catarray_dims <- list("feeling_ca" = c("cat_feeling", "dog_feeling"),
                       "feeling_ca" = c("Extremely Happy", "Somewhat Happy", "Neutral", "Somewhat Unhappy", "Extremely Unhappy"))
@@ -117,17 +114,12 @@ test_that("residuals for MR by MR (disparate MRs)", {
     expect_equal(rstandard(mr_by_mr_heterogeneous), out)
 })
 
+mr_by_mr_by_too_many <- loadCube("cubes/mr-by-mr-too-many-dims.json")
+
 test_that("residuals for MR by MR by anything errors", {
     expect_error(rstandard(mr_by_mr_by_too_many),  paste0(
                  "Cannot compute residuals with more than two dimensions. Pick ",
                  "a slice to evaluate"))
-})
-
-test_that("residuals for MR with (old style) selected arrays errors helpfully", {
-    expect_error(rstandard(mr_by_cat_selected_array), paste0(
-        "rstandard is not implemented with CrunchCubes that use selected ",
-        "arrays. Selected arrays have been deprecated, please recreate ",
-        "your cube using `as_selected\\(\\)` around multiple response variables."))
 })
 
 test_that("residuals for catarray by cat", {
