@@ -1,6 +1,6 @@
 ---
 title: "Getting Started"
-description: "Here's how to log in and get started working with the Crunch cloud data platform."
+description: "Here's how to log in to Crunch, import some data, and do some basic cleaning so that you have a beautiful, easily explorable dataset."
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Getting Started}
@@ -237,11 +237,6 @@ Now we can use that selection in `makeArray`:
 ds$ImportantHiring <- makeArray(ds[imphire], name = "Importance in Hiring Process")
 ```
 
-```r
-webApp(ds$ImportantHiring)
-```
-![plot of chunk View array screen](images/crunch-importantHiringCA.png)
-
 The variables we included in the array have been converted into subvariables of the categorical array, and are still accessible using the `subvariables()` function.
 
 
@@ -292,6 +287,12 @@ subvariables(ds$ImportantHiring)
 ##   $`Track record of getting things done`
 ```
 
+
+```r
+webApp(ds$ImportantHiring)
+```
+![plot of chunk View array screen](images/crunch-importantHiringCA.png)
+
 #### Multiple Response
 
 Crunch also has a special variable type for multiple-response data. These are survey questions that give users a set of options and allow them to select more than one of them. An example of this from the Stack Overflow survey is asking which language a respondent wanted to work with. In this dataset, the responses are stored in a single column with each language delimited by semicolon:
@@ -321,16 +322,43 @@ ds$WantWorkLanguageMR <- makeMRFromText(ds$WantWorkLanguage,
     name = "Languages Desired for Work",
     description = description(ds$WantWorkLanguage))
 ```
-![plot of chunk unnamed-chunk-6](images/wantWorkMR.png)
 
-The variable card now shows the number of times each language was selected, the sum of these numbers will be bigger than the number of respondents because people were allowed to select more than one language. We can reorder the subvariables to make this card easier to read. Let's sort them by frequency.
+To see what this looks like, let's do a simple `table()` of the new variable and see the counts:
+
+
+```r
+table(ds$WantWorkLanguageMR)
+```
+
+```
+## WantWorkLanguageMR
+##            VBA     TypeScript           Java          Scala     JavaScript 
+##             44            170            418            257            591 
+##           Perl            Lua         Matlab         Erlang       Assembly 
+##             65             69            120             67             89 
+##         VB.NET         Python    Common Lisp           Dart   CoffeeScript 
+##             24            915             44             22             51 
+##         Elixir           Ruby         Groovy              C             F# 
+##             70            143             43            255             88 
+##           Hack            C++    Objective-C              R        Clojure 
+##             18            420             65            815             82 
+##           Rust          Swift          Julia        Haskell Visual Basic 6 
+##            105            148            155            150             23 
+##            SQL             Go            PHP      Smalltalk 
+##            594            289            149             24
+```
+
+Since this is multiple-response data, the sum of these numbers may be bigger than the number of respondents because people were allowed to select more than one.
+
+We can reorder the subvariables to make this card easier to read. Let's sort them by frequency.
 
 
 ```r
 counts <- sort(table(ds$WantWorkLanguageMR), decreasing = TRUE)
 subvariables(ds$WantWorkLanguageMR) <- subvariables(ds$WantWorkLanguageMR)[names(counts)]
 ```
-![plot of chunk unnamed-chunk-7](images/WantWorkMRReodered.png)
+
+![plot of chunk unnamed-chunk-6](images/WantWorkMRReodered.png)
 
 #### Conclusion
 
@@ -339,13 +367,13 @@ This vignette has gone through some of the basics of working with crunch in R in
 
 
 
-* [Variables](variables.md): cleaning and defining variable metadata
-* [Array variables](array-variables.md): how to create and manipulate categorical-array and multiple-response variables
-* [Variable organization](variable-order.md): defining a hierarchy and arranging variables within it
-* [Transformations and derivations](derive.md): alter values within a dataset and create new variables as a function of others
-* [Computing on Crunch data](analyze.md): crosstabbing and more
-* [Filtering](filters.md): subsetting data, both in your R session and in the web interface
-* [Downloading and exporting](export.md): how to pull data from the server, both for use in R and file export
-* [Subtotals and headings](subtotals.md): how to set and get subtotals and headings for categorical variables
-* [Crunch internals](crunch-internals.md): an introduction to the Crunch API and concepts to help you make more complex and more efficient queries
-* [Category objects](abstract-categories.md): an introduction to the S4 classes that power categories and category-like representations in the package
+* [Variables](variables.html): cleaning and defining variable metadata
+* [Array variables](array-variables.html): how to create and manipulate categorical-array and multiple-response variables
+* [Variable organization](variable-order.html): defining a hierarchy and arranging variables within it
+* [Transformations and derivations](derive.html): alter values within a dataset and create new variables as a function of others
+* [Computing on Crunch data](analyze.html): crosstabbing and more
+* [Filtering](filters.html): subsetting data, both in your R session and in the web interface
+* [Downloading and exporting](export.html): how to pull data from the server, both for use in R and file export
+* [Subtotals and headings](subtotals.html): how to set and get subtotals and headings for categorical variables
+* [Crunch internals](crunch-internals.html): an introduction to the Crunch API and concepts to help you make more complex and more efficient queries
+* [Category objects](abstract-categories.html): an introduction to the S4 classes that power categories and category-like representations in the package
