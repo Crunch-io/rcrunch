@@ -46,7 +46,6 @@ Language: en-US
 Encoding: UTF-8
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
-LazyData: true
 Collate:
     'AllClasses.R'
     'AllGenerics.R'

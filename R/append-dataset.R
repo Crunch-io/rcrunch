@@ -5,7 +5,7 @@
 #' guesses about the two datasets to do things like match the variables in the two
 #' datasets or harmonize the categories of categorical or array variables. However you
 #' will get the best results if you ensure that the two datasets have the same variable names and types,
-#' and that their categorical and array varariables have consistent categories.
+#' and that their categorical and array variables have consistent categories.
 #'
 #' We recommend using the fork-edit-merge workflow to append datasets. To do this
 #' fork the dataset with `forkDataset()` append the new data to the forked dataset,

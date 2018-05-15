@@ -4,7 +4,7 @@
 #' matches rows based on a specified key variable, and adds columns from one to
 #' the other.
 #'
-#' Since joinging two datasets can sometimes produce unexpected results if the
+#' Since joining two datasets can sometimes produce unexpected results if the
 #' keys differ between the two datasets, we recommend that you follow the
 #' fork-edit-merge workflow for this operation. To do this fork the dataset with
 #' `forkDataset()` join the new data to the forked dataset, ensure that the

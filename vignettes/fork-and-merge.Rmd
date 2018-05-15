@@ -17,7 +17,6 @@ library(crunch)
 ```
 ```{r, results='hide', echo=FALSE, message=FALSE}
 library(httptest)
-login()
 start_vignette("fork-and-merge")
 ```
 
@@ -25,7 +24,7 @@ start_vignette("fork-and-merge")
 ds <- newDataset(SO_survey, "stackoverflow_survey")
 ```
 
-Imagine that this dataset is shared with several users, and you want to update it without affecting their usage. You might also want to consult with other analysts or decisionmakers to make sure that the data is accurate before sharing it with clients. To do this you call `forkDataset()` to create a copy of the dataset. 
+Imagine that this dataset is shared with several users, and you want to update it without affecting their usage. You might also want to consult with other analysts or decision makers to make sure that the data is accurate before sharing it with clients. To do this you call `forkDataset()` to create a copy of the dataset. 
 
 ```{r fork dataset}
 forked_ds <- forkDataset(ds)
@@ -71,15 +70,14 @@ It's possible to to make changes to a fork which can't be easily merged into the
 
 ## Appending data
 
-Another good use of the fork-edit-merge workflow is when you want to append data to an existing dataset. When appending data you usually want to check that the append operation completed successfully before publishing the data to users. This might come up if you are adding a second wave of a survey, or including some additional data which came in after the dataset was initially sent to clients. The first step is to upload the second survey wave as its own dataset. It's also helpful, though not strictly necessary in every case, to make the new dataset look as much as possible like the dataset we are appending to. In this case we can do this by recreating the array variable on the new dataset. 
+Another good use of the fork-edit-merge workflow is when you want to append data to an existing dataset. When appending data you usually want to check that the append operation completed successfully before publishing the data to users. This might come up if you are adding a second wave of a survey, or including some additional data which came in after the dataset was initially sent to clients. The first step is to upload the second survey wave as its own dataset. 
 
 ```{r state change3, include=FALSE}
 change_state()
 ```
 ```{r upload wave 2, message=FALSE, results='hide'}
 wave2 <- newDataset(SO_survey, "SO_survey_wave2")
-wave2$ImportantHiringCA <- makeArray(wave2[, c("ImportantHiringTechExp", "ImportantHiringPMExp")], 
-    name = "importantCatArray")
+
 ```
 
 We then fork the original dataset and append the new wave onto the forked dataset. 

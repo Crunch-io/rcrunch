@@ -26,7 +26,7 @@ dataset to the bottom of the original dataset. The app attempts to make intellig
 guesses about the two datasets to do things like match the variables in the two
 datasets or harmonize the categories of categorical or array variables. However you
 will get the best results if you ensure that the two datasets have the same variable names and types,
-and that their categorical and array varariables have consistent categories.
+and that their categorical and array variables have consistent categories.
 }
 \details{
 We recommend using the fork-edit-merge workflow to append datasets. To do this
