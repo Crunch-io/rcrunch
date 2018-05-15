@@ -21,17 +21,33 @@ a filter expression on the rows and a selection of variables on the columns.}
 variables, appended to it.
 }
 \description{
-Crunch allows you to add additional rows to a dataset by appending a second
-dataset to the bottom of the original dataset. The app attempts to make intelligent
-guesses about the two datasets to do things like match the variables in the two
-datasets or harmonize the categories of categorical or array variables. However you
-will get the best results if you ensure that the two datasets have the same variable names and types,
-and that their categorical and array variables have consistent categories.
+With Crunch, you can add additional rows to a dataset by appending a second
+dataset to the bottom of the original dataset. Crunch makes intelligent
+guesses to align the variables between the two datasets and to harmonize the
+categories and subvariables of variables, as appropriate.
 }
 \details{
-We recommend using the fork-edit-merge workflow to append datasets. To do this
-fork the dataset with \code{forkDataset()} append the new data to the forked dataset,
-ensure that the append worked as expected, and merge it back to the original dataset
-with \code{mergeFork()}. For more see \code{vignette("fork-and-merge", package
-= "crunch")}.
+Variables are matched between datasets based on their aliases. Variables
+present in only one of the two datasets are fine; they're handled by filling
+in with missing values for the rows corresponding to the dataset where they
+don't exist. For variables present in both datasets, you will have best
+results if you ensure that the two datasets have the same variable names
+and types, and that their categorical and array variables have consistent
+categories. To preview how datasets will align when appended, see
+\code{\link[=compareDatasets]{compareDatasets()}}.
+
+Particularly if you're appending to datasets that are already shared with
+others, you may want to use the fork-edit-merge workflow when appending
+datasets. This allows you to verify your changes before releasing them to
+the other viewers of the dataset. To do this fork the dataset with
+\code{\link[=forkDataset]{forkDataset()}}, append the new data to the fork, ensure that the append
+worked as expected, and then merge the fork back to the original dataset
+with \code{mergeFork()}. For more, see \code{vignette("fork-and-merge", package = "crunch")}.
+}
+\examples{
+\dontrun{
+ds <- loadDataset("Survey, 2016")
+new_wave <- loadDataset("Survey, 2017")
+ds <- appendDataset(ds, new_wave)
+}
 }
