@@ -15,7 +15,6 @@ Authors@R: c(
 URL: http://crunch.io/r/crunch/, https://github.com/Crunch-io/rcrunch
 BugReports: https://github.com/Crunch-io/rcrunch/issues
 License: LGPL (>= 3)
-LazyData: true
 Depends:
     R (>= 3.0.0)
 Imports:
@@ -46,6 +45,7 @@ Language: en-US
 Encoding: UTF-8
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
+LazyData: true
 Collate:
     'AllClasses.R'
     'AllGenerics.R'
