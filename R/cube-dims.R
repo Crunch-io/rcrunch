@@ -206,7 +206,7 @@ is.selectedArrayDim <- function (dim) {
 #'
 #' This function returns the specific type of each cube dimension. This is useful
 #' when cubes contain categorical array or multiple response variables because it
-#' identifies the dimensions of the cube which refer to the differ parts of
+#' identifies the dimensions of the cube which refer to the different parts of
 #' array variable:
 #' - `ca_items`: Categorical array items
 #' - `ca_categories`: The categories of the categorical array
@@ -227,19 +227,25 @@ getDimType <-  function (x) {
     vars <- variables(x)
     out <- types(vars)
     out[is.selectedDimension(x)] <- "mr_selections"
-    for (i in seq_along(vars)) {
-        if (i == length(vars)) {
-            break
+    
+    out <- unlist(lapply(seq_along(out), function (i) {
+        # detect if we are the first or last
+        first <- i == 1
+        last <- i == length(out)
+        
+        if (!last && out[i + 1] == "mr_selections") return("mr_items")
+        if (out[i] == "subvariable_items") return("ca_items")
+        if (
+            !first &&
+            out[i] == "categorical" &&
+            out[i - 1] == "subvariable_items"
+        ) {
+            return("ca_categories")
         }
-        if (out[i + 1] == "mr_selections") {
-            out[i] <- "mr_items"
-            next
-        }
-        if (out[i] == "subvariable_items") {
-            out[i] <- "ca_items"
-            out[i + 1] <- "ca_categories"
-        }
-    }
+        
+        return(out[i])
+    }))
+
     names(out) <- names(vars)
     return(out)
 }
