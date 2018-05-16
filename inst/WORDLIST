@@ -24,7 +24,6 @@ crosstab
 Crosstab
 crosstabbing
 Crosstabbing
-crosstabulation
 CrunchBox
 CrunchBoxes
 CrunchCube
@@ -58,6 +57,7 @@ dichotomization
 dichotomize
 Dichotomize
 env
+explorable
 FilterCatalog
 geo
 geodata
@@ -67,6 +67,8 @@ Getter
 getters
 Getters
 ggplot
+Globex
+Globex's
 gz
 gzipped
 hispanic
@@ -83,6 +85,8 @@ json
 JSON
 JSONing
 knitr
+listDatasets
+loadDataset
 magrittr
 makeWeight
 MemberCatalog
@@ -95,6 +99,7 @@ Multitables
 na
 nd
 NumericVariable
+OAuth
 OrderGroup
 OrderGroups
 PermissionCatalog
@@ -111,12 +116,14 @@ recurses
 repo
 rmarkdown
 RMarkdown
+Rmd
 rollup
 Rprofile
 RStudio
 sav
 savepoints
 Savepoints
+searchDatasets
 SearchResults
 Shoji
 ShojiCatalog
@@ -170,4 +177,3 @@ weightVariables
 writePreparedData
 xlsx
 xtabs
-YouGov

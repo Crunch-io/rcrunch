@@ -135,7 +135,7 @@ with(temp.option(foo.bar="no", foo.other="other"), {
             expect_null(envOrOption("somethingelse")) ## Null if neither
             ## default works
             expect_identical(envOrOption("somethingelse", "I'm a default"),
-                             "I'm a default") 
+                             "I'm a default")
         })
     })
 })
@@ -222,25 +222,4 @@ with_mock_crunch({
                      "Array-like variables can't be used with function `embed_func()`.",
                      fixed = TRUE)
     })
-
-    test_that("has.function", {
-        func <- zfunc("cast", ds$birthyr, "text")
-        expect_true(has.function(func, "cast"))
-        expect_false(has.function(func, "case"))
-
-        func <- zfunc("case",
-                      zfunc("cast", ds$birthyr, "text"),
-                      list(args = list()))
-        expect_true(has.function(func, "cast"))
-        expect_true(has.function(func, "case"))
-        expect_false(has.function(func, "selected_array"))
-
-        func <- zfunc("case", zfunc("cast",
-                                    zfunc("selected_array", ds$birthyr, "text"),
-                                    "text"))
-        expect_true(has.function(func, "cast"))
-        expect_true(has.function(func, "case"))
-        expect_true(has.function(func, "selected_array"))
-    })
-
 })

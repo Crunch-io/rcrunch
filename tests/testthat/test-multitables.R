@@ -258,7 +258,7 @@ with_mock_crunch({
                                    "Pets by location"))
             })
         })
-
+        
         with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-ca-mr-tabbook/", {
             ## This mock was taken from the integration test below
             book <- tabBook(m, data=ds, format="json")
@@ -288,11 +288,11 @@ with_mock_crunch({
         })
     })
 
-    with_POST("https://app.crunch.io/api/datasets/1/multitables/tabbook-array-result/", {
+    with_POST("https://app.crunch.io/api/datasets/1/multitables/tabbook-result/", {
         book <- tabBook(m, data=ds, format="json")
         test_that("tabBook JSON with arrays returns TabBookResult", {
             expect_is(book, "TabBookResult")
-            expect_identical(dim(book), c(3L, 3L))
+            expect_identical(dim(book), c(2L, 3L))
             expect_identical(prop.table(book, 2)[[2]][[2]],
                 prop.table(book[[2]][[2]], 2))
         })

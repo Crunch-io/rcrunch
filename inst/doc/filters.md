@@ -11,8 +11,6 @@ vignette: >
 [Previous: analyzing data](analyze.md)
 
 
-# Working with Filters
-
 Sometimes you only want to work with a subset of your data. With the `crunch` package, you can both filter the views of data you work with in your R session and manage the filters that you and your collaborators see in the web application.
 
 ## Filtering and subsetting in R
