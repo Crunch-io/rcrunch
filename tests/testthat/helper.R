@@ -26,6 +26,7 @@ options(
     crunch.check.updates=FALSE,
     crunch.namekey.dataset="alias",
     crunch.namekey.array="alias",
+    crunch.already.shown.folders.msg=TRUE,
     # crayon options for testing on travis
     crayon.enabled = TRUE,
     crayon.colors = 256

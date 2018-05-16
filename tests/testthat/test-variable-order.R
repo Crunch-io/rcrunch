@@ -37,6 +37,19 @@ with_mock_crunch({
             "environment is an invalid input for entities")
     })
 
+    test_that("Warning that you should be using folders instead", {
+        options(crunch.already.shown.folders.msg=NULL)
+        expect_warning(
+            expect_PUT(ordering(ds) <- nested.ord[2:1]),
+            "Hey!"
+        )
+        ## Second time it doesn't warn. One nag per session
+        expect_warning(
+            expect_PUT(ordering(ds) <- nested.ord[2:1]),
+            NA
+        )
+    })
+
     test_that("length methods", {
         expect_length(nested.ord, 2)
         expect_length(nested.ord[[1]], 3)
