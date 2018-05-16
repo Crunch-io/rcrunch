@@ -191,6 +191,7 @@ is.selectedDimension <- function (dims) {
     return(selecteds)
 }
 
+
 # determine if a dimension is from the selected_array of a multiple response
 is.selectedArrayDim <- function (dim) {
     if (!is.null(dim$any.or.none)) {
@@ -198,4 +199,47 @@ is.selectedArrayDim <- function (dim) {
     }
 
     return(FALSE)
+}
+
+
+#' Get dimension type
+#'
+#' This function returns the specific type of each cube dimension. This is useful
+#' when cubes contain categorical array or multiple response variables because it
+#' identifies the dimensions of the cube which refer to the differ parts of
+#' array variable:
+#' - `ca_items`: Categorical array items
+#' - `ca_categories`: The categories of the categorical array
+#' - `mr_items`: Multiple response options or items
+#' - `mr_selections`: The selection status for a multiple response variable
+#'
+#' @return A character vector. This is identical to `types()` except that
+#' the array variable types are more specific.
+#' @param x a CrunchCube or CubeDims object
+#'
+#' @return a character vector of dimension types
+#' @export
+#' @keywords internal
+getDimType <-  function (x) {
+    if (inherits(x, "CrunchCube")) {
+        x <- x@dims
+    }
+    vars <- variables(x)
+    out <- types(vars)
+    out[is.selectedDimension(x)] <- "mr_selections"
+    for (i in seq_along(vars)) {
+        if (i == length(vars)) {
+            break
+        }
+        if (out[i + 1] == "mr_selections") {
+            out[i] <- "mr_items"
+            next
+        }
+        if (out[i] == "subvariable_items") {
+            out[i] <- "ca_items"
+            out[i + 1] <- "ca_categories"
+        }
+    }
+    names(out) <- names(vars)
+    return(out)
 }
