@@ -144,7 +144,7 @@ setMethod("[", "CubeDims", function (x, i, ...) {
     return(CubeDims(x@.Data[i], names=x@names[i]))
 })
 
-is.selectedDimension <- function (dims) getDimType(dims) == "mr_selections"
+is.selectedDimension <- function (dims) getDimTypes(dims) == "mr_selections"
 
 #' Get dimension type
 #'
@@ -164,7 +164,7 @@ is.selectedDimension <- function (dims) getDimType(dims) == "mr_selections"
 #' @return a character vector of dimension types
 #' @export
 #' @keywords internal
-getDimType <-  function (x) {
+getDimTypes <-  function (x) {
     if (inherits(x, "CrunchCube")) {
         x <- x@dims
     }

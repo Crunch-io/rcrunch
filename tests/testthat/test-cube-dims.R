@@ -1,21 +1,21 @@
 context("Cube dimensions")
 
-test_that("getDimType returns the expected cube dimension types", {
+test_that("getDimTypes returns the expected cube dimension types", {
     ca_mr <- loadCube(test_path("cubes/catarray-x-mr.json"))
-    expect_equivalent(getDimType(ca_mr),
+    expect_equivalent(getDimTypes(ca_mr),
         c("ca_items", "ca_categories", "mr_items", "mr_selections"
         ))
     cat_cat <- loadCube(test_path("cubes/cat-x-cat.json"))
-    expect_equivalent(getDimType(cat_cat), c("categorical", "categorical"))
+    expect_equivalent(getDimTypes(cat_cat), c("categorical", "categorical"))
     ca <- loadCube(test_path("cubes/cat-array.json"))
-    expect_equivalent(getDimType(ca), c("ca_items", "ca_categories"))
+    expect_equivalent(getDimTypes(ca), c("ca_items", "ca_categories"))
     cat_mr_mr <- loadCube(test_path("cubes/cat-x-mr-x-mr.json"))
-    expect_equivalent(getDimType(cat_mr_mr),
+    expect_equivalent(getDimTypes(cat_mr_mr),
         c("categorical", "mr_items", "mr_selections", "mr_items",
             "mr_selections")
     )
     cattarray_cat <- loadCube(test_path("cubes/catarray-x-cat.json"))
-    expect_equivalent(getDimType(cattarray_cat),
+    expect_equivalent(getDimTypes(cattarray_cat),
         c("ca_items", "ca_categories", "categorical")
     )
 })
