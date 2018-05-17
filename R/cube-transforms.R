@@ -7,7 +7,7 @@ setMethod("showTransforms", "CrunchCube", function (x) {
     } else {
         appliedTrans <- applyTransforms(x)
         # if the row dimension is categorical, make styles
-        if (index(variables(x))[[1]]$type == "categorical") {
+        if (getDimTypes(x)[1] == "categorical") {
             row_cats <- Categories(data=index(variables(x))[[1]]$categories)
             row_styles <- transformStyles(transforms(x)[[1]], row_cats[!is.na(row_cats)])
         } else {
@@ -16,7 +16,7 @@ setMethod("showTransforms", "CrunchCube", function (x) {
         }
 
         # if the columns dimension is categorical, make styles
-        if (length(dim(x)) > 1 && index(variables(x))[[2]]$type == "categorical") {
+        if (length(dim(x)) > 1 && getDimTypes(x)[2] == "categorical") {
             col_cats <- Categories(data=index(variables(x))[[2]]$categories)
             col_styles <- transformStyles(transforms(x)[[2]], col_cats[!is.na(col_cats)])
         } else {
@@ -114,6 +114,7 @@ applyTransforms <- function (x, array = cubeToArray(x), ...) {
                 array <- subsetTransformedCube(array, x)
             }
         })
+        
         return(array)
     } 
 
@@ -124,11 +125,15 @@ applyTransforms <- function (x, array = cubeToArray(x), ...) {
     # but that would add a dependency
     for (d in seq_len(ndims)) {
         try({
-            match_ind <- which(aliases(variables(x)) == dim_names[[d]])
-            
-            trans <- transforms(x)[[match_ind]]
+            # if we have an mr or categorical array items, we return quickly
+            if (getDimTypes(x)[[d]] %in%
+                c("mr_items", "mr_selections", "ca_items")) {
+                next
+            }
+
+            trans <- transforms(x)[[d]]
             if (!is.null(trans)) {
-                var_cats <- Categories(data=variables(x)[[match_ind]]$categories)
+                var_cats <- Categories(data=variables(x)[[d]]$categories)
                 
                 # TODO: calculate category/element changes
                 

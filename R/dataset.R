@@ -31,13 +31,13 @@ is.dataset <- function (x) inherits(x, "CrunchDataset")
 #'
 #' @param x a Dataset or Variable.
 #' @param object Same as `x` but for the `alias` method, in order to
-#' match the generic from another package. Note that `alias` and `digits` are
+#' match the generic from another package. Note that `digits` is
 #' only defined for Variables.
 #' @param value For the setters, a length-1 character vector to assign
 #' @return Getters return the character object in the specified slot; setters
 #' return `x` duly modified.
 #' @name describe
-#' @aliases describe name name<- description description<- alias<- startDate startDate<- endDate endDate<- notes notes<- digits digits<- uniformBasis uniformBasis<-
+#' @aliases describe name name<- description description<- alias alias<- startDate startDate<- endDate endDate<- notes notes<- digits digits<- uniformBasis uniformBasis<-
 #' @seealso [`Categories`] [`describe-catalog`]
 NULL
 

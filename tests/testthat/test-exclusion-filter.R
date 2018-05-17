@@ -161,16 +161,6 @@ with_test_authentication({
                              array(c(4, 5, 5), dim=3L,
                                    dimnames=list(allpets=c("Cat", "Dog", "Bird"))))
         })
-        ## check old behavior
-        with(temp.options(crunch.mr.selection="selected_array"), {
-            ## Let's look at "allpets", a multiple response variable
-            test_that("allpets", {
-                expect_identical(as.array(crtabs(~ allpets, data=ds,
-                                                 useNA="ifany")),
-                                 array(c(4, 5, 5, 3), dim=4L,
-                                       dimnames=list(allpets=c("Cat", "Dog", "Bird", "<NA>"))))
-            })
-        })
 
         ## Update "keep" as "False" (i.e. excluded) where "allpets" is
         ## missing for all responses.
@@ -183,19 +173,6 @@ with_test_authentication({
                                              useNA="always")),
                              array(c(4, 5, 5), dim=3L,
                                    dimnames=list(allpets=c("Cat", "Dog", "Bird"))))
-        })
-
-        ## check old behavior
-        with(temp.options(crunch.mr.selection="selected_array"), {
-            test_that("The exclusion filter drops those three rows", {
-                expect_identical(nrow(ds), 17L)
-                ## And we can confirm that those three rows are the ones
-                ## dropped:
-                expect_identical(as.array(crtabs(~ allpets, data=ds,
-                    useNA="always")),
-                    array(c(4, 5, 5, 0), dim=4L,
-                        dimnames=list(allpets=c("Cat", "Dog", "Bird", "<NA>"))))
-            })
         })
 
         ## We can do the same for categorical array. petloc has two

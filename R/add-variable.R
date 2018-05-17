@@ -48,6 +48,7 @@ addVariables <- function (dataset, ...) {
 validateVarDefRows <- function (vardef, numrows) {
     ## Pre-check the column length being sent to the server to confirm that
     ## the number of rows matches what's already in the dataset.
+    ## Also compact the values being sent, if possible
     if (!any(c("expr", "derivation", "subvariables") %in% names(vardef))) {
         new <- length(vardef$values)
         if (new == 0) {
@@ -55,12 +56,21 @@ validateVarDefRows <- function (vardef, numrows) {
         } else if (numrows > 0 && new > 1 && new != numrows) {
             halt("replacement has ", new, " rows, data has ", numrows)
         }
-        uniques <- unique(vardef$values)
-        if (numrows > 0 && length(uniques) == 1) {
-            ## Just send the unique value to save bandwidth
+        if (all(is.na(vardef$values))) {
+            ## Don't send them at all--same thing.
+            ## Server will (oddly) reject if you send "values": null.
+            ## (400) Bad Request: If 'values' is included, it cannot be null
             ## TODO: Move this somewhere else so that it's not a side effect
             ## of "validation"
-            vardef$values <- uniques
+            vardef$values <- NULL
+        } else {
+            uniques <- unique(vardef$values)
+            if (numrows > 0 && length(uniques) == 1) {
+                ## Just send the unique value to save bandwidth
+                ## TODO: Move this somewhere else so that it's not a side effect
+                ## of "validation"
+                vardef$values <- uniques
+            }
         }
     }
     return(vardef)

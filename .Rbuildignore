@@ -12,6 +12,7 @@
 ^\.Rproj\.user$
 ^.*\.orig$
 ^_pkgdown\.yml$
+^data-raw$
 ^docs$
 ^pkgdown.sh$
 ^pkgdown$

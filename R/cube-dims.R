@@ -11,7 +11,6 @@ cubeDims <- function (cube) {
             ## TODO: delete this when boolean support is removed
             return(list(
                 name=c("FALSE", "TRUE"),
-                any.or.none=c(FALSE, FALSE),
                 missing=c(FALSE, FALSE),
                 references=tuple
             ))
@@ -20,7 +19,6 @@ cubeDims <- function (cube) {
         d <- tuple$categories %||% a$type$elements
         return(list(
             name=vapply(d, elementName, character(1)),
-            any.or.none=vapply(d, elementIsAnyOrNone, logical(1)),
             missing=vapply(d, function (el) isTRUE(el$missing), logical(1)),
             references=tuple
         ))
@@ -41,9 +39,7 @@ cubeVarReferences <- function (x) {
     }
 
     if (!is.null(tuple$subreferences)) {
-        # inject subreference names into the tuple if they exist. Default to ""
-        # if null (for backwards compatibilitiy with cubes that have __any__
-        # __all__ and __none__)
+        # Inject subreference names into the tuple if they exist.
         tuple$subvariables <- vapply(tuple$subreferences,
                                      function (x) x$alias %||% "",
                                      character(1))
@@ -86,20 +82,8 @@ elementName <- function (el) {
             out <- out$references$name
         }
     }
-    if (is.null(out)) {
-        ## Damn. You may be here because you're hitting missing values in an
-        ## array or multiple response, or the __any__ or __none__ values.
-        ## Bail out.
-        out <- "<NA>"
-    }
-    out <- as.character(out)
+    out <- as.character(out %||% "<NA>")
     return(out)
-}
-
-elementIsAnyOrNone <- function (el) {
-    is.list(el$value) && ## Element has $value and value is a list
-        "id" %in% names(el$value) && ## "value" has names (is not bin)
-        el$value$id %in% c("__any__", "__none__")
 }
 
 #' Methods on Cube objects
@@ -137,10 +121,6 @@ setMethod("dim", "CubeDims",
 #' @export
 setMethod("is.na", "CubeDims", function (x) lapply(x, function (a) a$missing))
 
-anyOrNone <- function (x) {
-    lapply(x, function (a) a$any.or.none)
-}
-
 #' @rdname cube-methods
 #' @export
 setMethod("dimensions", "CrunchCube", function (x) {
@@ -164,49 +144,13 @@ setMethod("[", "CubeDims", function (x, i, ...) {
     return(CubeDims(x@.Data[i], names=x@names[i]))
 })
 
-is.selectedDimension <- function (dims) {
-    is.it <- function (x, dim, MRaliases) {
-        maybe <- x$alias %in% MRaliases &&
-            x$type == "categorical" &&
-            length(dim$name) == 3
-        if (maybe) {
-            cats <- Categories(data=x$categories)
-            ## Unlike the strict is.3vl, this doesn't compare cat names because
-            ## they've already been munged to TRUE/FALSE
-            maybe <- setequal(ids(cats), c(-1, 0, 1)) &&
-                sum(is.selected(cats)) == 1 &&
-                sum(is.na(cats)) == 1
-        }
-        return(maybe)
-    }
-    vars <- variables(dims)
-    # We only need to check if the categories are the magical Selected
-    # categories if there is an MR somewhere with the same alias
-    MRaliases <- aliases(vars)[types(vars) == "subvariable_items"]
-
-    # determine which dimensions are selected MR dimensions
-    selecteds <- mapply(is.it, x=index(vars), dim=dims@.Data,
-                        MoreArgs=list(MRaliases=MRaliases))
-    names(selecteds) <- dims@names
-    return(selecteds)
-}
-
-
-# determine if a dimension is from the selected_array of a multiple response
-is.selectedArrayDim <- function (dim) {
-    if (!is.null(dim$any.or.none)) {
-        return(any(dim$any.or.none))
-    }
-
-    return(FALSE)
-}
-
+is.selectedDimension <- function (dims) getDimTypes(dims) == "mr_selections"
 
 #' Get dimension type
 #'
 #' This function returns the specific type of each cube dimension. This is useful
 #' when cubes contain categorical array or multiple response variables because it
-#' identifies the dimensions of the cube which refer to the differ parts of
+#' identifies the dimensions of the cube which refer to the different parts of
 #' array variable:
 #' - `ca_items`: Categorical array items
 #' - `ca_categories`: The categories of the categorical array
@@ -220,26 +164,64 @@ is.selectedArrayDim <- function (dim) {
 #' @return a character vector of dimension types
 #' @export
 #' @keywords internal
-getDimType <-  function (x) {
+getDimTypes <-  function (x) {
     if (inherits(x, "CrunchCube")) {
         x <- x@dims
     }
-    vars <- variables(x)
-    out <- types(vars)
-    out[is.selectedDimension(x)] <- "mr_selections"
-    for (i in seq_along(vars)) {
-        if (i == length(vars)) {
-            break
+
+    what_dim_is_it <- function (one_var, array_aliases) {
+        dim_type <- type(one_var)
+        
+        if (alias(one_var) %in% array_aliases) {
+            # we are in an array, we need to figure out if this is a multiple
+            # response or not
+            array_cat_dim <- vars[aliases(vars) == alias(one_var) & types(vars) == "categorical"]
+
+            # if we can't find the matching categories dimension we might have a
+            # subset cube, so simply return the dim_type un-identified (this
+            # might could actually just be "ca_items")
+            if (length(array_cat_dim) < 1) {
+                return(dim_type)
+            }
+            
+            # if this is a variable crossed by itself, then array_cat_dim will
+            # actually have two copies of the categories dimension. We take the
+            # first one becasue it should be identical to all the others. If it
+            # isn't this might produce weird results. 
+            # TODO: Investigate checking by ID
+            array_cats <- categories(array_cat_dim[[1]])
+            
+            # if we meet these conditions, we are actually a multiple response
+            # and should label ourself as such.
+            # Unlike the strict is.3vl, this doesn't compare cat names because
+            # they've already been munged to TRUE/FALSE
+            is.MR <- length(array_cats) == 3 &&
+                setequal(ids(array_cats), c(-1, 0, 1)) &&
+                sum(is.selected(array_cats)) == 1 &&
+                sum(is.na(array_cats)) == 1
+            
+            if (is.MR && dim_type == "subvariable_items") {
+                dim_type <- "mr_items"
+            }
+            if (is.MR && dim_type == "categorical") {
+                dim_type <- "mr_selections"
+            }
+            if (!is.MR && dim_type == "subvariable_items") {
+                dim_type <- "ca_items"
+            }
+            if (!is.MR && dim_type == "categorical") {
+                dim_type <- "ca_categories"
+            }
         }
-        if (out[i + 1] == "mr_selections") {
-            out[i] <- "mr_items"
-            next
-        }
-        if (out[i] == "subvariable_items") {
-            out[i] <- "ca_items"
-            out[i + 1] <- "ca_categories"
-        }
+        
+        return(dim_type)
     }
+  
+    vars <- variables(x)
+    array_aliases <- aliases(vars)[types(vars) == "subvariable_items"]  
+    # vapply becuase lapply on a VariableCatalog yields lists (not tuples)
+    out <- unlist(vapply(vars, what_dim_is_it, character(1), array_aliases))
+
     names(out) <- names(vars)
     return(out)
 }

@@ -20,7 +20,7 @@ pendingStream <- function (ds) {
 #'  names or numeric_values)
 #' @keywords internal
 streamRows <- function (ds, data) {
-    if (nrow(data) > 1) {
+    if (nrow(data)) {
         payload <- by(data, seq_len(nrow(data)), function (row) toJSON(row))
         payload <- paste0(payload, collapse = "\n")
         crPOST(shojiURL(ds, "fragments", "stream"), body=payload)

@@ -1,7 +1,11 @@
-## crunch 1.22.1 (under development)
+## crunch 1.22.2
+* New introductory vignette: `vignette("crunch")`
 * `changeCategoryID()` tries to unset then reset the dataset exclusion if that impacts its progress. Best practice is to disable exclusions before running `changeCategoryID()` if at all possible.
 * Setting the `ordering<-` of datasets within a project will now drop any invalid entries with a warning, rather than error.
 * Fix a bug introduced in 1.22.0 in creating categorical variables from factors with missing values.
+* Fix a similar yet unrelated bug in creating numeric and other types of variables with all-`NA` data.
+* Fix `streamRows()` for case when sending only one row (#253).
+* Internal: support for the "selected_array" method of multiple response calculation, deprecated since 1.20.0, has been removed.
 
 ## crunch 1.22.0
 

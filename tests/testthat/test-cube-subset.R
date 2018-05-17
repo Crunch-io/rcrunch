@@ -13,8 +13,6 @@ catarray_x_mr <- loadCube(test_path("cubes/catarray-x-mr.json"))
 test_that("subsetArrayDimension categorical dimension", {
     expected <- list(
         name = c("cats", "No Data"),
-        any.or.none = c(FALSE, FALSE
-        ),
         missing = c(FALSE, TRUE),
         references = list(
             alias = "animal",
@@ -31,13 +29,12 @@ test_that("subsetArrayDimension categorical dimension", {
             )
         )
     )
-    expect_identical(subsetArrayDimension(cat_x_mr_x_mr@dims[[1]], 1:2), expected)
+    expect_identical(subsetArrayDimension(cat_x_mr_x_mr@dims[[1]], 1:2, "categorical"), expected)
 })
 
 test_that("subsetArrayDimension MR dimension", {
     expected <- list(
         name = c("rest_opinion","play_opinion"),
-        any.or.none = c(FALSE, FALSE),
         missing = c(FALSE, FALSE),
         references = list(
             description = "",
@@ -61,13 +58,12 @@ test_that("subsetArrayDimension MR dimension", {
             subvariables = c("food_opinion#/", "rest_opinion#/", "play_opinion#/")
         )
     )
-    expect_identical(subsetArrayDimension(cat_x_mr_x_mr@dims[[2]], 2:3), expected)
+    expect_identical(subsetArrayDimension(cat_x_mr_x_mr@dims[[2]], 2:3, "mr_items"), expected)
 })
 
 test_that("subsetArrayDimension categorical array dimension", {
     expected <- list(
         name = c("cat_feeling"),
-        any.or.none = c(FALSE),
         missing = c(FALSE),
         references = list(
             subreferences = list(
@@ -79,11 +75,10 @@ test_that("subsetArrayDimension categorical array dimension", {
             subvariables = c("cat_feeling/", "dog_feeling/")
         )
     )
-    expect_identical(subsetArrayDimension(catarray_x_mr@dims[[1]], 1), expected)
+    expect_identical(subsetArrayDimension(catarray_x_mr@dims[[1]], 1, "ca_items"), expected)
 
     expected <- list(
         name = c("Somewhat Happy", "Neutral"),
-        any.or.none = c(FALSE, FALSE),
         missing = c(FALSE, FALSE),
         references = list(
             subreferences = list(
@@ -106,7 +101,7 @@ test_that("subsetArrayDimension categorical array dimension", {
             )
         )
     )
-    expect_identical(subsetArrayDimension(catarray_x_mr@dims[[2]], c(2:3)), expected)
+    expect_identical(subsetArrayDimension(catarray_x_mr@dims[[2]], c(2:3), "ca_categories"), expected)
 })
 
 test_that("translateCubeIndex", {

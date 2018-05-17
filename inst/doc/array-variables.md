@@ -12,7 +12,6 @@ vignette: >
 
 
 
-# Array Variables
 
 Crunch supports more types of variables than many of the data formats from which you can create datasets. Plain-text .csv files, for example, can't express that some columns are actually indicator matrices of multiple selections (Multiple Response Variables). Most SPSS .sav files do not indicate Categorical Arrays (otherwise known as "grids") as being part of a group---they are simply several categorical variables. The same is true for an R `data.frame`.
 
@@ -79,7 +78,7 @@ ds$imiss
 
 The set of "important issue" variables have gone from thirteen separate categorical variable cards to just one, where the subvariables are shown as rows, and the common categories across all of them are shown as columns. Categorical array variables look something like this in the web application:
 
-![Categorical Array variable card](http://support.crunch.io/crunch/images/VariableCardArray.png)
+<!-- ![Categorical Array variable card](http://support.crunch.io/crunch/images/VariableCardArray.png) -->
 
 In our example dataset, the categorical variables `imiss_*` are now not visible in the dataset directly, but we can access them as "subvariables" of the array we just created.
 
