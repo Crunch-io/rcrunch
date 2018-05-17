@@ -78,9 +78,26 @@ with_mock_crunch({
                 ""))
     })
 
-    test_that("subvariable/subrefrence methods", {
+    test_that("Variable metadata retrieved from tuples works on the tuples ", {
+        expect_identical(name(ds$gender), "Gender")
+        expect_identical(description(ds$starttime), "Interview Start Time")
+        expect_identical(alias(ds$gender), "gender")
+        expect_identical(id(ds$gender), "66ae9881e3524f7db84970d556c34552")
+        expect_identical(notes(ds$gender), "")
+        expect_identical(notes(ds$birthyr), "Asked instead of age")
+        expect_false(uniformBasis(ds$mymrset))
+    })
+    
+    test_that("Variable metadata from cubes works on the tuples", {
         catarray_x_mr <- loadCube(test_path("cubes/catarray-x-mr.json"))
         cat_array_var <- variables(catarray_x_mr)[[1]]
+        mr_var <- variables(catarray_x_mr)[[3]]
+        
+        expect_identical(name(cat_array_var), "feeling CA")
+        expect_identical(alias(cat_array_var), "feeling_ca")
+        expect_identical(description(cat_array_var), "")
+        expect_identical(notes(cat_array_var), "")
+
         expect_equal(aliases(subvariables(cat_array_var)),
             c("cat_feeling", "dog_feeling"))
         expect_equal(names(subvariables(cat_array_var)),

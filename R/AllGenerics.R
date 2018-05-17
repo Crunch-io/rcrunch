@@ -35,7 +35,7 @@ function (x, value) standardGeneric("startDate<-"), signature="x")
 setGeneric("endDate", function (x) standardGeneric("endDate"))
 setGeneric("endDate<-",
     function (x, value) standardGeneric("endDate<-"), signature="x")
-setGeneric("alias")
+setGeneric("alias", function (object) standardGeneric("alias"))
 setGeneric("alias<-", function (x, value) standardGeneric("alias<-"),
     signature="x")
 setGeneric("aliases", function (x) standardGeneric("aliases"))

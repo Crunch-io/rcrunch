@@ -8,6 +8,7 @@
 \alias{name<-}
 \alias{description}
 \alias{description<-}
+\alias{alias}
 \alias{alias<-}
 \alias{startDate}
 \alias{startDate<-}
@@ -114,7 +115,7 @@
 \item{value}{For the setters, a length-1 character vector to assign}
 
 \item{object}{Same as \code{x} but for the \code{alias} method, in order to
-match the generic from another package. Note that \code{alias} and \code{digits} are
+match the generic from another package. Note that \code{digits} is
 only defined for Variables.}
 }
 \value{

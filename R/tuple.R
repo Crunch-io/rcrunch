@@ -4,6 +4,8 @@
 #' used.
 #'
 #' @param x a Tuple
+#' @param object Same as `x` but for the `alias` method, in order to
+#' match the generic from another package.
 #' @param name a Tuple slot to get or set
 #' @param i In [[, a Tuple slot to get
 #' @param ... additional arguments to [[, ignored
@@ -101,6 +103,18 @@ setMethod("delete", "DatasetTuple", function (x, ...) {
 #' @rdname tuple-methods
 #' @export
 setMethod("name", "ShojiTuple", vget("name"))
+
+#' @rdname tuple-methods
+#' @export
+setMethod("alias", "ShojiTuple", function(object) vget("alias")(object))
+
+#' @rdname tuple-methods
+#' @export
+setMethod("description", "ShojiTuple", function(x) vget("description")(x) %||% "")
+
+#' @rdname tuple-methods
+#' @export
+setMethod("notes", "ShojiTuple", function(x) vget("notes")(x) %||% "")
 
 #' @rdname tuple-methods
 #' @export
