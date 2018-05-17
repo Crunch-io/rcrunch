@@ -187,7 +187,8 @@ getDimTypes <-  function (x) {
             # if this is a variable crossed by itself, then array_cat_dim will
             # actually have two copies of the categories dimension. We take the
             # first one becasue it should be identical to all the others. If it
-            # isn't this might produce weird results. Investigate checking by ID
+            # isn't this might produce weird results. 
+            # TODO: Investigate checking by ID
             array_cats <- categories(array_cat_dim[[1]])
             
             # if we meet these conditions, we are actually a multiple response
