@@ -18,7 +18,7 @@ a character vector of dimension types
 \description{
 This function returns the specific type of each cube dimension. This is useful
 when cubes contain categorical array or multiple response variables because it
-identifies the dimensions of the cube which refer to the differ parts of
+identifies the dimensions of the cube which refer to the different parts of
 array variable:
 \itemize{
 \item \code{ca_items}: Categorical array items
