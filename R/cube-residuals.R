@@ -2,7 +2,7 @@
 # the internal chisq tests use rowSums and colSums, but we need
 # the more abstract 'margin' (specifically cubeMarginTable) to
 # get the right numbers for multiple response.
-standardizedMRResiduals <- function (cube, types) {
+standardizedMRResiduals <- function (cube) {
     cube_array <- as.array(cube)
     cube_dims <- dim(cube_array)
 
@@ -54,12 +54,8 @@ setMethod('rstandard', 'CrunchCube', function (model) {
              "slice to evaluate.")
     }
 
-    # determine which dimensions are multiple response, and treat those special
-    # TODO: make this specific to multiple response rather than both cat array and MR
-    types <- vapply(dimensions(model), function (dim) dim$references$type, character(1))
-
-    if (any(types == 'subvariable_items')) {
-        return(standardizedMRResiduals(model, types))
+    if (any(grepl("^mr_", getDimTypes(model)))) {
+        return(standardizedMRResiduals(model))
     } else {
         return(chisq.test(as.array(model))$stdres)
     }

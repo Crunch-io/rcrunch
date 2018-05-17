@@ -89,9 +89,7 @@ setMethod("subtotalArray", "CrunchCube", function(x, headings = FALSE) {
 applyTransforms <- function (x, array = cubeToArray(x), ...) {
     # if any of the dimensions are subvariables, don't even attempt to calculate
     # transforms or insertions.
-    if (any(unlist(lapply(variables(x), function(x) {
-       x$type == "subvariable_items"
-    })))) {
+    if (any(getDimTypes(x) == "ca_items")) {
         return(array)
     }
 

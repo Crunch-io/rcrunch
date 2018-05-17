@@ -29,7 +29,7 @@ test_that("subsetArrayDimension categorical dimension", {
             )
         )
     )
-    expect_identical(subsetArrayDimension(cat_x_mr_x_mr@dims[[1]], 1:2), expected)
+    expect_identical(subsetArrayDimension(cat_x_mr_x_mr@dims[[1]], 1:2, "categorical"), expected)
 })
 
 test_that("subsetArrayDimension MR dimension", {
@@ -58,7 +58,7 @@ test_that("subsetArrayDimension MR dimension", {
             subvariables = c("food_opinion#/", "rest_opinion#/", "play_opinion#/")
         )
     )
-    expect_identical(subsetArrayDimension(cat_x_mr_x_mr@dims[[2]], 2:3), expected)
+    expect_identical(subsetArrayDimension(cat_x_mr_x_mr@dims[[2]], 2:3, "mr_items"), expected)
 })
 
 test_that("subsetArrayDimension categorical array dimension", {
@@ -75,7 +75,7 @@ test_that("subsetArrayDimension categorical array dimension", {
             subvariables = c("cat_feeling/", "dog_feeling/")
         )
     )
-    expect_identical(subsetArrayDimension(catarray_x_mr@dims[[1]], 1), expected)
+    expect_identical(subsetArrayDimension(catarray_x_mr@dims[[1]], 1, "ca_items"), expected)
 
     expected <- list(
         name = c("Somewhat Happy", "Neutral"),
@@ -101,7 +101,7 @@ test_that("subsetArrayDimension categorical array dimension", {
             )
         )
     )
-    expect_identical(subsetArrayDimension(catarray_x_mr@dims[[2]], c(2:3)), expected)
+    expect_identical(subsetArrayDimension(catarray_x_mr@dims[[2]], c(2:3), "ca_categories"), expected)
 })
 
 test_that("translateCubeIndex", {
