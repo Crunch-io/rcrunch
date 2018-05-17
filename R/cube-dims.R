@@ -192,6 +192,8 @@ getDimType <-  function (x) {
             
             # if we meet these conditions, we are actually a multiple response
             # and should label ourself as such.
+            # Unlike the strict is.3vl, this doesn't compare cat names because
+            # they've already been munged to TRUE/FALSE
             is.MR <- length(array_cats) == 3 &&
                 setequal(ids(array_cats), c(-1, 0, 1)) &&
                 sum(is.selected(array_cats)) == 1 &&
@@ -216,7 +218,7 @@ getDimType <-  function (x) {
   
     vars <- variables(x)
     array_aliases <- aliases(vars)[types(vars) == "subvariable_items"]  
-    # need to vapply becuase lapply on a VariableCatalogs returns lists and not tuples
+    # vapply becuase lapply on a VariableCatalog yields lists (not tuples)
     out <- unlist(vapply(vars, what_dim_is_it, character(1), array_aliases))
 
     names(out) <- names(vars)
