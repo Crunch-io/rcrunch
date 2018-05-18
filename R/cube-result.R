@@ -316,7 +316,7 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     out <- applyTransforms(
         array = out, 
         transforms_list = transforms(x)[mt_margins],
-        dims = dimensions(x)[mt_margins],
+        dims_list = dimensions(x)[mt_margins],
         useNA = x@useNA
     )
     

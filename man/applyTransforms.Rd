@@ -9,7 +9,8 @@
 \usage{
 \S4method{subtotalArray}{CrunchCube}(x, headings = FALSE)
 
-applyTransforms(x, array = cubeToArray(x), ...)
+applyTransforms(x, array = cubeToArray(x), transforms_list = transforms(x),
+  dims_list = dimensions(x), useNA = x@useNA, ...)
 }
 \arguments{
 \item{x}{a CrunchCube}
@@ -19,6 +20,15 @@ should be included with the subtotals (default: \code{FALSE})}
 
 \item{array}{an array to use, if not using the default array from the cube
 itself. (Default: not used, pulls an array from the cube directly)}
+
+\item{transforms_list}{list of transforms to be applied (default:
+\code{transforms(x)})}
+
+\item{dims_list}{list of dimensions that correspond to \code{array} (default:
+\code{dimensions(x)})}
+
+\item{useNA}{\code{useNA} parameter from the CrunchCube to use (default:
+\code{x@useNA})}
 
 \item{...}{arguments to pass to \code{calcTransforms}, for example \code{include}}
 }

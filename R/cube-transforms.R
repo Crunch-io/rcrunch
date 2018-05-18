@@ -68,6 +68,12 @@ setMethod("subtotalArray", "CrunchCube", function(x, headings = FALSE) {
 #' @param x a CrunchCube
 #' @param array an array to use, if not using the default array from the cube
 #' itself. (Default: not used, pulls an array from the cube directly)
+#' @param transforms_list list of transforms to be applied (default: 
+#' `transforms(x)`)
+#' @param dims_list list of dimensions that correspond to `array` (default: 
+#' `dimensions(x)`)
+#' @param useNA `useNA` parameter from the CrunchCube to use (default: 
+#' `x@useNA`)
 #' @param ... arguments to pass to `calcTransforms`, for example `include`
 #' @param headings for `subtotalArray`: a logical indicating if the headings
 #' should be included with the subtotals (default: `FALSE`)
