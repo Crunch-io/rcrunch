@@ -125,7 +125,32 @@ test_that("categorical arrays with transforms don't error and display cube cells
         )
     )
     
-    # TODO: add margins, formatting, etc.
+    margin_1 <- array(
+        c(3, 3, 3),
+        dim = c(3),
+        dimnames = list("CA" = c("mr_1", "mr_2", "mr_3"))
+    )
+    expect_equivalent(margin.table(cat_array_cube, 1), margin_1)
+    
+    margin_2 <- array(
+        c(5, 4, 9),
+        dim = c(3),
+        dimnames = list("CA" = c("A", "B", "A+B"))
+    )
+    expect_equivalent(margin.table(cat_array_cube, 2), margin_2)
+    
+    
+    expect_equivalent(
+        prop.table(cat_array_cube, 1),
+        applyTransforms(cat_array_cube)/broadcast(t(margin_1), ncol = 3)
+    )
+    
+    expect_equivalent(
+        prop.table(cat_array_cube, 2),
+        applyTransforms(cat_array_cube)/broadcast(margin_2, dims = c(3,3))
+    )
+    
+    # TODO: formatting
 })
 
 test_that("can set transforms on a cube", {

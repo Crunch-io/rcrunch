@@ -310,8 +310,15 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     keep.these <- evalUseNA(mt, dims[mt_margins], x@useNA)
     out <- subsetCubeArray(mt, keep.these)
 
-    # only attempt to apply a transform if the margin is 1 rows for now.
-    out <- applyTransforms(x, array = out)
+    # apply a transform, but don't use the full cube dimentions, rather use
+    # subset transforms lists, dims, etc. because we have fewer dimensions than
+    # the full cube.
+    out <- applyTransforms(
+        array = out, 
+        transforms_list = transforms(x)[mt_margins],
+        dims = dimensions(x)[mt_margins],
+        useNA = x@useNA
+    )
     
     return(out)
 }

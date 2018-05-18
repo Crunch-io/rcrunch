@@ -99,21 +99,33 @@ setMethod("subtotalArray", "CrunchCube", function(x, headings = FALSE) {
 #'
 #' @aliases subtotalArray
 #' @export
-applyTransforms <- function (x, array = cubeToArray(x), ...) {
+applyTransforms <- function (x,
+                             array = cubeToArray(x),
+                             transforms_list = transforms(x),
+                             dims_list = dimensions(x),
+                             useNA = x@useNA,
+                             ...) {
+    
     dim_names  <- names(dimnames(array))
     ndims <- length(dim(array))
-    
+ 
     # 1 dimensional cubes are special, and need to be t
     if (ndims == 1) {
+        # if we have an mr or categorical array items, we return quickly
+        if (getDimTypes(dims_list)[[1]] %in%
+            c("mr_items", "mr_selections", "ca_items")) {
+            return(array)
+        }
+        
         try({
-            match_ind <- which(aliases(variables(x)) == dim_names[[1]])
-            row_trans <- transforms(x)[[match_ind]]
+            row_trans <- transforms_list[[1]]
             if (!is.null(row_trans)) {
-                var_cats <- Categories(data=variables(x)[[match_ind]]$categories)
+                var_cats <- Categories(data=variables(dims_list)[[1]]$categories)
+
                 array <- as.array(calcTransforms(array, row_trans, var_cats, ...))
-                array <- subsetTransformedCube(array, x)
+                array <- subsetTransformedCube(array, dims_list, useNA)
             }
-        })
+        }, silent = TRUE)
         
         return(array)
     } 
@@ -125,15 +137,15 @@ applyTransforms <- function (x, array = cubeToArray(x), ...) {
     # but that would add a dependency
     for (d in seq_len(ndims)) {
         try({
-            # if we have an mr or categorical array items, we return quickly
-            if (getDimTypes(x)[[d]] %in%
+            # if we have an mr or categorical array items, we skip quickly
+            if (getDimTypes(dims_list)[[d]] %in%
                 c("mr_items", "mr_selections", "ca_items")) {
                 next
             }
 
-            trans <- transforms(x)[[d]]
+            trans <- transforms_list[[d]]
             if (!is.null(trans)) {
-                var_cats <- Categories(data=variables(x)[[d]]$categories)
+                var_cats <- Categories(data=variables(dims_list)[[d]]$categories)
                 
                 # TODO: calculate category/element changes
                 
@@ -152,7 +164,7 @@ applyTransforms <- function (x, array = cubeToArray(x), ...) {
                 # re-attach names 
                 names(dimnames(array)) <- dim_names
                 
-                array <- subsetTransformedCube(array, x)
+                array <- subsetTransformedCube(array, dims_list, useNA)
             }
         }, silent = TRUE)
     }
@@ -160,7 +172,7 @@ applyTransforms <- function (x, array = cubeToArray(x), ...) {
     return(array)
 }
 
-subsetTransformedCube <- function (array, cube) {
+subsetTransformedCube <- function (array, dimensions, useNA) {
     # subset variable categories to only include non-na
     dims <- dim(array)
     keep_all <- lapply(seq_along(dims),
@@ -169,8 +181,8 @@ subsetTransformedCube <- function (array, cube) {
                            names(out) <- dimnames(array)[[i]]
                            return(out)
                        })
-    names(keep_all) <- names(dimensions(cube))[seq_along(keep_all)]
-    keep_these_cube_dims <- evalUseNA(array, dimensions(cube)[seq_along(keep_all)], cube@useNA)
+    names(keep_all) <- names(dimensions)[seq_along(keep_all)]
+    keep_these_cube_dims <- evalUseNA(array, dimensions[seq_along(keep_all)], useNA)
 
     # remove the categories determined to be removable above
     keep_these <- mapply(function(x, y) {
