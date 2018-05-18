@@ -46,7 +46,7 @@ Encoding: UTF-8
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
 LazyData: true
-Collate:
+Collate: 
     'AllClasses.R'
     'AllGenerics.R'
     'variable-definition.R'
@@ -99,6 +99,7 @@ Collate:
     'export-dataset.R'
     'expressions.R'
     'filters.R'
+    'folders-projects.R'
     'folders.R'
     'fork-and-merge.R'
     'formula.R'

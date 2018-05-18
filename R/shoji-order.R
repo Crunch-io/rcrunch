@@ -93,6 +93,7 @@ setMethod("entitiesInitializer", "ShojiOrder", orderEntitiesInit)
 setMethod("entitiesInitializer", "OrderGroup", orderEntitiesInit)
 
 .setNestedGroupByName <- function (x, i, j, value) {
+    ## TODO: update to accept `i` as a path
     ents <- entitiesInitializer(x)
     w <- match(i, names(x))
     value <- ents(value)

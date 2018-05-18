@@ -45,6 +45,10 @@
 mv <- function (x, variables, path) {
     ## TODO: add an "after" argument, pass to addToFolder
 
+    if (inherits(x, "CrunchProject")) {
+        ## Temporary? call a different function
+        return(mv.project(x, variables, path))
+    }
     ## dplyr/tidyselect-ish functions, hacked in here (inspired by how pkgdown does it)
     fns <- list(
         starts_with=function (str, ...) grep(paste0("^", str), names(x), ...),
@@ -73,6 +77,10 @@ mv <- function (x, variables, path) {
 #' @export
 mkdir <- function (x, path) {
     ## TODO: add an "after" argument, move created folder there
+    if (inherits(x, "CrunchProject")) {
+        ## Temporary? call a different function
+        return(mkdir.project(x, path))
+    }
     f <- cd(x, path, create=TRUE)
     return(invisible(x))
 }

@@ -79,6 +79,12 @@ setMethod("ordering", "DatasetCatalog", function (x) {
 
 #' @rdname ordering
 #' @export
+setMethod("ordering", "CrunchProject", function (x) {
+    return(ordering(datasets(x)))
+})
+
+#' @rdname ordering
+#' @export
 setMethod("ordering<-", "DatasetCatalog", function (x, value) {
     stopifnot(inherits(value, "DatasetOrder"))
 
@@ -101,6 +107,13 @@ setMethod("ordering<-", "DatasetCatalog", function (x, value) {
         ## Update on server
         crPUT(shojiURL(x, "orders", "order"), body=toJSON(value))
     }
+    return(x)
+})
+
+#' @rdname ordering
+#' @export
+setMethod("ordering<-", "CrunchProject", function (x, value) {
+    ordering(datasets(x)) <- value
     return(x)
 })
 

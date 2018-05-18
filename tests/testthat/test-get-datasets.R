@@ -52,6 +52,15 @@ with_mock_crunch({
         expect_identical(name(ds3), "ECON.sav")
     })
 
+    test_that("loadDataset by path", {
+        ds3 <- loadDataset("Project One/Group 1/ECON.sav")
+        expect_is(ds3, "CrunchDataset")
+        expect_identical(name(ds3), "ECON.sav")
+        ds1 <- loadDataset("~/test ds")
+        expect_is(ds1, "CrunchDataset")
+        expect_identical(name(ds1), "test ds")
+    })
+
     ds <- loadDataset("test ds")
     with_consent({
         test_that("deleteDataset by name", {
