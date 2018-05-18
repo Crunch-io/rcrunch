@@ -142,8 +142,9 @@ printed_order_apidocs2 <- c(
     "    Country",
     "    Wave",
     "Person ID",
-    "Weight",
-    "Case ID"
+    "[+] __hidden__",
+    "    Weight",
+    "    Case ID"
 )
 
 printed_order_apidocs2_merge_by_stringid <- c(
@@ -161,8 +162,10 @@ printed_order_apidocs2_merge_by_stringid <- c(
     "    [+] Dimensions",
     "        Country",
     "        Wave",
-    "Weight",
-    "Case ID"
+    "[+] __hidden__",
+    "    [+] Example dataset",
+    "        Case ID",
+    "        Weight"
 )
 
 printed_order_apidocs2_merge_by_caseid <- c(
@@ -181,7 +184,9 @@ printed_order_apidocs2_merge_by_caseid <- c(
     "        Country",
     "        Wave",
     "    Person ID",
-    "Weight"
+    "[+] __hidden__",
+    "    [+] Example dataset",
+    "        Weight"
 )
 
 with_test_authentication({
