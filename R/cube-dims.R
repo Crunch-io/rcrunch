@@ -218,7 +218,6 @@ getDimTypes <-  function (x) {
   
     vars <- variables(x)
     array_aliases <- aliases(vars)[types(vars) == "subvariable_items"]  
-    # vapply becuase lapply on a VariableCatalog yields lists (not tuples)
     out <- vapply(vars, what_dim_is_it, character(1), array_aliases)
 
     names(out) <- names(vars)
