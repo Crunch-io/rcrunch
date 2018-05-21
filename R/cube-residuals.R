@@ -54,7 +54,7 @@ setMethod('rstandard', 'CrunchCube', function (model) {
              "slice to evaluate.")
     }
 
-    if (any(grepl("^mr_", getDimTypes(model)))) {
+    if (any(startsWith(getDimTypes(model), "mr_"))) {
         return(standardizedMRResiduals(model))
     } else {
         return(chisq.test(as.array(model))$stdres)

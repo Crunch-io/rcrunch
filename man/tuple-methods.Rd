@@ -21,9 +21,6 @@
 \alias{delete,ShojiTuple-method}
 \alias{delete,DatasetTuple-method}
 \alias{name,ShojiTuple-method}
-\alias{alias,ShojiTuple-method}
-\alias{description,ShojiTuple-method}
-\alias{notes,ShojiTuple-method}
 \alias{name<-,ShojiTuple-method}
 \alias{type,ShojiTuple-method}
 \title{Methods for ShojiTuples}
@@ -61,12 +58,6 @@
 \S4method{delete}{DatasetTuple}(x, ...)
 
 \S4method{name}{ShojiTuple}(x)
-
-\S4method{alias}{ShojiTuple}(object)
-
-\S4method{description}{ShojiTuple}(x)
-
-\S4method{notes}{ShojiTuple}(x)
 
 \S4method{name}{ShojiTuple}(x) <- value
 

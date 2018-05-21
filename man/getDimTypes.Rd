@@ -10,10 +10,8 @@ getDimTypes(x)
 \item{x}{a CrunchCube or CubeDims object}
 }
 \value{
-A character vector. This is identical to \code{types()} except that
+a character vector of dimension types, similar to \code{types()}, except that
 the array variable types are more specific.
-
-a character vector of dimension types
 }
 \description{
 This function returns the specific type of each cube dimension. This is useful

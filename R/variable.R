@@ -74,6 +74,20 @@ setMethod("digits<-", "CrunchVariable", function (x, value) {
     halt("digit specifications can only be set for numeric variables")
 })
 
+
+#' @rdname describe
+#' @export
+setMethod("alias", "VariableTuple", function(object) vget("alias")(object))
+
+#' @rdname describe
+#' @export
+setMethod("description", "VariableTuple", function(x) vget("description")(x) %||% "")
+
+#' @rdname describe
+#' @export
+setMethod("notes", "VariableTuple", function(x) vget("notes")(x) %||% "")
+
+
 #' Get and set Categories on Variables
 #'
 #' @param x a Variable

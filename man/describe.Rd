@@ -47,6 +47,9 @@
 \alias{digits,CrunchVariable-method}
 \alias{digits<-,NumericVariable-method}
 \alias{digits<-,CrunchVariable-method}
+\alias{alias,VariableTuple-method}
+\alias{description,VariableTuple-method}
+\alias{notes,VariableTuple-method}
 \alias{uniformBasis,MultipleResponseVariable-method}
 \alias{uniformBasis<-,MultipleResponseVariable-method}
 \title{Name, alias, and description for Crunch objects}
@@ -105,6 +108,12 @@
 
 \S4method{digits}{CrunchVariable}(x) <- value
 
+\S4method{alias}{VariableTuple}(object)
+
+\S4method{description}{VariableTuple}(x)
+
+\S4method{notes}{VariableTuple}(x)
+
 \S4method{uniformBasis}{MultipleResponseVariable}(x)
 
 \S4method{uniformBasis}{MultipleResponseVariable}(x) <- value
@@ -115,7 +124,7 @@
 \item{value}{For the setters, a length-1 character vector to assign}
 
 \item{object}{Same as \code{x} but for the \code{alias} method, in order to
-match the generic from another package. Note that \code{digits} is
+match the generic from another package. Note that \code{alias} and \code{digits} are
 only defined for Variables.}
 }
 \value{

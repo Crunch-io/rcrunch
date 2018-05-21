@@ -157,11 +157,10 @@ is.selectedDimension <- function (dims) getDimTypes(dims) == "mr_selections"
 #' - `mr_items`: Multiple response options or items
 #' - `mr_selections`: The selection status for a multiple response variable
 #'
-#' @return A character vector. This is identical to `types()` except that
-#' the array variable types are more specific.
 #' @param x a CrunchCube or CubeDims object
 #'
-#' @return a character vector of dimension types
+#' @return a character vector of dimension types, similar to `types()`, except that
+#' the array variable types are more specific.
 #' @export
 #' @keywords internal
 getDimTypes <-  function (x) {
@@ -220,7 +219,7 @@ getDimTypes <-  function (x) {
     vars <- variables(x)
     array_aliases <- aliases(vars)[types(vars) == "subvariable_items"]  
     # vapply becuase lapply on a VariableCatalog yields lists (not tuples)
-    out <- unlist(vapply(vars, what_dim_is_it, character(1), array_aliases))
+    out <- vapply(vars, what_dim_is_it, character(1), array_aliases)
 
     names(out) <- names(vars)
     return(out)
