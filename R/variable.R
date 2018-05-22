@@ -16,7 +16,17 @@ setMethod("refresh", "CrunchVariable", function (x) {
 
 #' @rdname describe
 #' @export
-setMethod("name", "CrunchVariable", function (x) tuple(x)$name)
+setMethod("alias", "VariableTuple", function(object) object$alias)
+#' @rdname describe
+#' @export
+setMethod("description", "VariableTuple", function(x) x$description %||% "")
+#' @rdname describe
+#' @export
+setMethod("notes", "VariableTuple", function(x) x$notes %||% "")
+
+#' @rdname describe
+#' @export
+setMethod("name", "CrunchVariable", function (x) name(tuple(x)))
 #' @rdname describe
 #' @export
 setMethod("name<-", "CrunchVariable",
@@ -28,21 +38,21 @@ setMethod("id", "CrunchVariable", function (x) {
 })
 #' @rdname describe
 #' @export
-setMethod("description", "CrunchVariable", function (x) tuple(x)$description)
+setMethod("description", "CrunchVariable", function (x) description(tuple(x)))
 #' @rdname describe
 #' @export
 setMethod("description<-", "CrunchVariable",
     function (x, value) setTupleSlot(x, "description", value %||% ""))
 #' @rdname describe
 #' @export
-setMethod("alias", "CrunchVariable", function (object) tuple(object)$alias)
+setMethod("alias", "CrunchVariable", function (object) alias(tuple(object)))
 #' @rdname describe
 #' @export
 setMethod("alias<-", "CrunchVariable",
     function (x, value) setTupleSlot(x, "alias", validateNewName(value)))
 #' @rdname describe
 #' @export
-setMethod("notes", "CrunchVariable", function (x) tuple(x)$notes)
+setMethod("notes", "CrunchVariable", function (x) notes(tuple(x)))
 #' @rdname describe
 #' @export
 setMethod("notes<-", "CrunchVariable",
@@ -73,19 +83,6 @@ setMethod("digits<-", "NumericVariable", function (x, value) {
 setMethod("digits<-", "CrunchVariable", function (x, value) {
     halt("digit specifications can only be set for numeric variables")
 })
-
-
-#' @rdname describe
-#' @export
-setMethod("alias", "VariableTuple", function(object) vget("alias")(object))
-
-#' @rdname describe
-#' @export
-setMethod("description", "VariableTuple", function(x) vget("description")(x) %||% "")
-
-#' @rdname describe
-#' @export
-setMethod("notes", "VariableTuple", function(x) vget("notes")(x) %||% "")
 
 
 #' Get and set Categories on Variables

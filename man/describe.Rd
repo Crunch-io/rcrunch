@@ -35,6 +35,9 @@
 \alias{name<-,Multitable-method}
 \alias{name<-,ShojiFolder-method}
 \alias{name,ShojiObject-method}
+\alias{alias,VariableTuple-method}
+\alias{description,VariableTuple-method}
+\alias{notes,VariableTuple-method}
 \alias{name,CrunchVariable-method}
 \alias{name<-,CrunchVariable-method}
 \alias{id,CrunchVariable-method}
@@ -47,9 +50,6 @@
 \alias{digits,CrunchVariable-method}
 \alias{digits<-,NumericVariable-method}
 \alias{digits<-,CrunchVariable-method}
-\alias{alias,VariableTuple-method}
-\alias{description,VariableTuple-method}
-\alias{notes,VariableTuple-method}
 \alias{uniformBasis,MultipleResponseVariable-method}
 \alias{uniformBasis<-,MultipleResponseVariable-method}
 \title{Name, alias, and description for Crunch objects}
@@ -84,6 +84,12 @@
 
 \S4method{name}{ShojiObject}(x)
 
+\S4method{alias}{VariableTuple}(object)
+
+\S4method{description}{VariableTuple}(x)
+
+\S4method{notes}{VariableTuple}(x)
+
 \S4method{name}{CrunchVariable}(x)
 
 \S4method{name}{CrunchVariable}(x) <- value
@@ -107,12 +113,6 @@
 \S4method{digits}{NumericVariable}(x) <- value
 
 \S4method{digits}{CrunchVariable}(x) <- value
-
-\S4method{alias}{VariableTuple}(object)
-
-\S4method{description}{VariableTuple}(x)
-
-\S4method{notes}{VariableTuple}(x)
 
 \S4method{uniformBasis}{MultipleResponseVariable}(x)
 

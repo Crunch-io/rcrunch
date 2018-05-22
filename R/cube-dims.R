@@ -199,17 +199,20 @@ getDimTypes <-  function (x) {
                 sum(is.selected(array_cats)) == 1 &&
                 sum(is.na(array_cats)) == 1
             
-            if (is.MR && dim_type == "subvariable_items") {
-                dim_type <- "mr_items"
-            }
-            if (is.MR && dim_type == "categorical") {
-                dim_type <- "mr_selections"
-            }
-            if (!is.MR && dim_type == "subvariable_items") {
-                dim_type <- "ca_items"
-            }
-            if (!is.MR && dim_type == "categorical") {
-                dim_type <- "ca_categories"
+            if (is.MR) {
+                # MRs have mr_items or mr_selections
+                if (dim_type == "subvariable_items") {
+                    dim_type <- "mr_items"
+                } else if (dim_type == "categorical") {
+                    dim_type <- "mr_selections"
+                }
+            } else {
+                # categorical arrays have ca_items or ca_categories
+                if (dim_type == "subvariable_items") {
+                    dim_type <- "ca_items"
+                } else if (dim_type == "categorical") {
+                    dim_type <- "ca_categories"
+                }
             }
         }
         
