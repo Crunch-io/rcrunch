@@ -228,7 +228,7 @@ subsetArrayDimension <- function(dim, idx, dim_type){
     dim$name <- dim$name[idx]
 
     # subset the category or item metadata
-    if (dim_type %in% c("categorical", "ca_categories")) {
+    if (dim_type %in% c("categorical", "ca_categories", "mr_selections")) {
         dim$references$categories <- dim$references$categories[idx]
     } else if (dim_type %in% c("mr_items", "ca_items")) {
         dim$references$subreferences <- dim$references$subreferences[idx]

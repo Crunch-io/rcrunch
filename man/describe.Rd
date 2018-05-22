@@ -35,6 +35,9 @@
 \alias{name<-,Multitable-method}
 \alias{name<-,ShojiFolder-method}
 \alias{name,ShojiObject-method}
+\alias{alias,VariableTuple-method}
+\alias{description,VariableTuple-method}
+\alias{notes,VariableTuple-method}
 \alias{name,CrunchVariable-method}
 \alias{name<-,CrunchVariable-method}
 \alias{id,CrunchVariable-method}
@@ -81,6 +84,12 @@
 
 \S4method{name}{ShojiObject}(x)
 
+\S4method{alias}{VariableTuple}(object)
+
+\S4method{description}{VariableTuple}(x)
+
+\S4method{notes}{VariableTuple}(x)
+
 \S4method{name}{CrunchVariable}(x)
 
 \S4method{name}{CrunchVariable}(x) <- value
@@ -115,7 +124,7 @@
 \item{value}{For the setters, a length-1 character vector to assign}
 
 \item{object}{Same as \code{x} but for the \code{alias} method, in order to
-match the generic from another package. Note that \code{digits} is
+match the generic from another package. Note that \code{alias} and \code{digits} are
 only defined for Variables.}
 }
 \value{

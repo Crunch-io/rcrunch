@@ -157,11 +157,10 @@ is.selectedDimension <- function (dims) getDimTypes(dims) == "mr_selections"
 #' - `mr_items`: Multiple response options or items
 #' - `mr_selections`: The selection status for a multiple response variable
 #'
-#' @return A character vector. This is identical to `types()` except that
-#' the array variable types are more specific.
 #' @param x a CrunchCube or CubeDims object
 #'
-#' @return a character vector of dimension types
+#' @return a character vector of dimension types, similar to `types()`, except that
+#' the array variable types are more specific.
 #' @export
 #' @keywords internal
 getDimTypes <-  function (x) {
@@ -200,17 +199,20 @@ getDimTypes <-  function (x) {
                 sum(is.selected(array_cats)) == 1 &&
                 sum(is.na(array_cats)) == 1
             
-            if (is.MR && dim_type == "subvariable_items") {
-                dim_type <- "mr_items"
-            }
-            if (is.MR && dim_type == "categorical") {
-                dim_type <- "mr_selections"
-            }
-            if (!is.MR && dim_type == "subvariable_items") {
-                dim_type <- "ca_items"
-            }
-            if (!is.MR && dim_type == "categorical") {
-                dim_type <- "ca_categories"
+            if (is.MR) {
+                # MRs have mr_items or mr_selections
+                if (dim_type == "subvariable_items") {
+                    dim_type <- "mr_items"
+                } else if (dim_type == "categorical") {
+                    dim_type <- "mr_selections"
+                }
+            } else {
+                # categorical arrays have ca_items or ca_categories
+                if (dim_type == "subvariable_items") {
+                    dim_type <- "ca_items"
+                } else if (dim_type == "categorical") {
+                    dim_type <- "ca_categories"
+                }
             }
         }
         
@@ -219,8 +221,7 @@ getDimTypes <-  function (x) {
   
     vars <- variables(x)
     array_aliases <- aliases(vars)[types(vars) == "subvariable_items"]  
-    # vapply becuase lapply on a VariableCatalog yields lists (not tuples)
-    out <- unlist(vapply(vars, what_dim_is_it, character(1), array_aliases))
+    out <- vapply(vars, what_dim_is_it, character(1), array_aliases)
 
     names(out) <- names(vars)
     return(out)
