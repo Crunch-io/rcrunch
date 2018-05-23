@@ -111,71 +111,167 @@ applyTransforms <- function (x,
                              dims_list = dimensions(x),
                              useNA = x@useNA,
                              ...) {
-    
-    dim_names  <- names(dimnames(array))
-    ndims <- length(dim(array))
- 
-    # 1 dimensional cubes are special, and need to be t
-    if (ndims == 1) {
-        # if we have an mr or categorical array items, we return quickly
-        if (getDimTypes(dims_list)[[1]] %in%
-            c("mr_items", "mr_selections", "ca_items")) {
-            return(array)
-        }
-        
-        try({
-            row_trans <- transforms_list[[1]]
-            if (!is.null(row_trans)) {
-                var_cats <- Categories(data=variables(dims_list)[[1]]$categories)
-
-                array <- as.array(calcTransforms(array, row_trans, var_cats, ...))
-                array <- subsetTransformedCube(array, dims_list, useNA)
-            }
-        }, silent = TRUE)
-        
-        return(array)
-    } 
-
     # Try to calculate the transforms for any dimensiton that have them, but
     # fail silently if they aren't calcuable. We use a for loop so that failing
     # one dimension doesn't break others. We could possibly use something like
     # abind::abind here and bind together the insertion vectors in array form,
     # but that would add a dependency
-    for (d in seq_len(ndims)) {
+    for (d in seq_along(dim(array))) {
         try({
-            # if we have an mr or categorical array items, we skip quickly
-            if (getDimTypes(dims_list)[[d]] %in%
-                c("mr_items", "mr_selections", "ca_items")) {
+            # if we have an mr or categorical array items, we skip quickly. We
+            # include all _items here (including subvariable_items) here because
+            # we might be getting a subset of dimensions and only have
+            # subvariable_items without the corresponding dim to correctly
+            # identify
+            if (
+                endsWith(getDimTypes(dims_list)[[d]], "_items") |
+                endsWith(getDimTypes(dims_list)[[d]], "_selections")
+            ) {
                 next
             }
-
+            
             trans <- transforms_list[[d]]
             if (!is.null(trans)) {
                 var_cats <- Categories(data=variables(dims_list)[[d]]$categories)
                 
                 # TODO: calculate category/element changes
-                
-                # find the off-margins to calculate over
-                off_margins <- seq_along(dim(array))[-d]
-                
-                # calculate the transforms
-                array <- apply(array, off_margins, calcTransforms, trans, var_cats, ...)
-                
-                # aperm necesary because anything other than when off_margins is
-                # not c(2), c(2,3), etc. will return in an incorrect order
-                # microbenchmarking indicates that aperm is not particularly
-                # expensive even on large arrays
-                array <- aperm(array, append(2:ndims, 1, after=d-1))
-                
-                # re-attach names 
-                names(dimnames(array)) <- dim_names
-                
-                array <- subsetTransformedCube(array, dims_list, useNA)
+
+                array <- applyAgainst(array, d, calcTransforms, trans, var_cats, ...)
             }
+        })
+    }
+    
+    # if there are any transforms, then we need to subset the output.
+    if (any(!vapply(transforms_list, is.null, logical(1)))) {
+        try({
+            array <- subsetTransformedCube(array, dims_list, useNA)
         }, silent = TRUE)
     }
     
     return(array)
+}
+
+
+#' apply a function against a dimension
+#'
+#' Similar to other `apply` functions, this takes an array and applies the function against the  dimensions (specified in the `MARGIN` argument). These dimensions must be a single number (unlike many `apply` functions). See the examples below, where we use the function `add_one_hundred` to add `100` on to the end of each `MARGIN`. 
+#' 
+#'
+#' @param X an array
+#' @param MARGIN the dimension to apply the function against 
+#' @param FUN the function to be applied
+#' @param ... optional arguments to `FUN``
+#'
+#' @return an array with the function applied
+#' @keywords internal
+#' 
+#' @examples
+#' array <- array(c(1:24), dim = c(4,3,2))
+#' array
+#' # , , 1
+#' # 
+#' #      [,1] [,2] [,3]
+#' # [1,]    1    5    9
+#' # [2,]    2    6   10
+#' # [3,]    3    7   11
+#' # [4,]    4    8   12
+#' # 
+#' # , , 2
+#' # 
+#' #      [,1] [,2] [,3]
+#' # [1,]   13   17   21
+#' # [2,]   14   18   22
+#' # [3,]   15   19   23
+#' # [4,]   16   20   24
+#' 
+#' add_one_hundred <- function (x) c(x, 100)
+#'
+#' crunch:::applyAgainst(array, 1,  add_one_hundred)
+#' # , , 1
+#' # 
+#' #      [,1] [,2] [,3]
+#' # [1,]    1    5    9
+#' # [2,]    2    6   10
+#' # [3,]    3    7   11
+#' # [4,]    4    8   12
+#' # [5,]  100  100  100
+#' # 
+#' # , , 2
+#' # 
+#' #      [,1] [,2] [,3]
+#' # [1,]   13   17   21
+#' # [2,]   14   18   22
+#' # [3,]   15   19   23
+#' # [4,]   16   20   24
+#' # [5,]  100  100  100
+#'  
+#' crunch:::applyAgainst(array, 2,  add_one_hundred)
+#' # , , 1
+#' # 
+#' #      [,1] [,2] [,3] [,4]
+#' # [1,]    1    5    9  100
+#' # [2,]    2    6   10  100
+#' # [3,]    3    7   11  100
+#' # [4,]    4    8   12  100
+#' # 
+#' # , , 2
+#' # 
+#' #      [,1] [,2] [,3] [,4]
+#' # [1,]   13   17   21  100
+#' # [2,]   14   18   22  100
+#' # [3,]   15   19   23  100
+#' # [4,]   16   20   24  100
+#'  
+#' crunch:::applyAgainst(array, 3,  add_one_hundred)
+#' # , , 1
+#' # 
+#' #      [,1] [,2] [,3]
+#' # [1,]    1    5    9
+#' # [2,]    2    6   10
+#' # [3,]    3    7   11
+#' # [4,]    4    8   12
+#' # 
+#' # , , 2
+#' # 
+#' #      [,1] [,2] [,3]
+#' # [1,]   13   17   21
+#' # [2,]   14   18   22
+#' # [3,]   15   19   23
+#' # [4,]   16   20   24
+#' # 
+#' # , , 3
+#' # 
+#' #      [,1] [,2] [,3]
+#' # [1,]  100  100  100
+#' # [2,]  100  100  100
+#' # [3,]  100  100  100
+#' # [4,]  100  100  100
+applyAgainst <- function (X, MARGIN, FUN, ...) {
+    names_of_dims <- names(dimnames(X))
+    ndims <- length(dim(X))
+    
+    # find the off-margins to calculate over
+    if (ndims < 2) {
+        # We only have one dimension to apply over, do so quickly without
+        # futzing with off_margins, etc.
+        return(as.array(FUN(X, ...)))
+    } 
+    
+    off_margins <- seq_along(dim(X))[-MARGIN]
+    
+    # calculate the FUN
+    X <- apply(X, off_margins, FUN, ...)
+    
+    # aperm necesary because anything other than when off_margins is
+    # not c(2), c(2,3), etc. will return in an incorrect order
+    # microbenchmarking indicates that aperm is not particularly
+    # expensive even on large arrays
+    X <- aperm(X, append(2:ndims, 1, after=MARGIN-1))
+    
+    # re-attach names 
+    names(dimnames(X)) <- names_of_dims
+    
+    return(X)
 }
 
 subsetTransformedCube <- function (array, dimensions, useNA) {
