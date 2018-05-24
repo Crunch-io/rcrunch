@@ -303,20 +303,15 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     ## OK. Now we have an array of data and translated margins. We can call the
     ## base `margin.table` method with those.
     mt <- margin.table(data, mt_margins)
-    ## Finally, drop missings from the result. Could we do this in one step,
-    ## building this into the initial `lapply`? Maybe we can now that we've
-    ## removed "selected_array"!
-    ## TODO: try to do that.
-    keep.these <- evalUseNA(mt, dims[mt_margins], x@useNA)
-    out <- subsetCubeArray(mt, keep.these)
 
-    # apply a transform, but don't use the full cube dimentions, rather use
-    # subset transforms lists, dims, etc. because we have fewer dimensions than
-    # the full cube.
+    # apply possible transforms, but don't use the full cube dimentions, rather
+    # use subset transforms lists, dims, etc. because we have fewer dimensions
+    # than the full cube. This will also drop missings from the result, so we
+    # don't need to do that explicitly
     out <- applyTransforms(
-        array = out, 
+        array = mt, 
         transforms_list = transforms(x)[mt_margins],
-        dims_list = dimensions(x)[mt_margins],
+        dims_list = dims[mt_margins], # dims and not dimensions beca
         useNA = x@useNA
     )
     
