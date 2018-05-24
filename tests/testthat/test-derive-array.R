@@ -138,7 +138,7 @@ with_test_authentication({
     test_that("When appending, derived arrays get data (or missing, as appropriate)", {
         ## No Data is added to the categories here
         expect_identical(names(categories(ds$metapetloc)),
-            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "No Data", "one", "two"))
+            c("Cat", "Dog", "Bird", "Skipped", "Not Asked", "one", "two", "No Data"))
         ## metapetloc: subvar 1 is derived from petloc$petloc_home
         expect_identical(as.numeric(table(ds$metapetloc[[1]])),
             2 * c(5, 3, 3, 0, 0))
