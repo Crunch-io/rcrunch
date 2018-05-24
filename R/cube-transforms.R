@@ -7,7 +7,7 @@ setMethod("showTransforms", "CrunchCube", function (x) {
     } else {
         appliedTrans <- applyTransforms(x)
         # if the row dimension is categorical, make styles
-        if (getDimTypes(x)[1] == "categorical") {
+        if (getDimTypes(x)[1] %in% c("categorical", "ca_categories")) {
             row_cats <- Categories(data=index(variables(x))[[1]]$categories)
             row_styles <- transformStyles(transforms(x)[[1]], row_cats[!is.na(row_cats)])
         } else {
@@ -16,21 +16,26 @@ setMethod("showTransforms", "CrunchCube", function (x) {
         }
 
         # if the columns dimension is categorical, make styles
-        if (length(dim(x)) > 1 && getDimTypes(x)[2] == "categorical") {
+        if (length(dim(x)) > 1 && getDimTypes(x)[2] %in% c("categorical", "ca_categories")) {
             col_cats <- Categories(data=index(variables(x))[[2]]$categories)
             col_styles <- transformStyles(transforms(x)[[2]], col_cats[!is.na(col_cats)])
         } else {
             # otherwise punt, because this is an array or MR var.
             col_styles <- NULL
         }        
-        
-        if (length(dim(appliedTrans)) <= 2) {
-            out <- prettyPrint2d(
-                appliedTrans,
-                row_styles = row_styles,
-                col_styles = col_styles
-            )
-            cat(unlist(out), sep="\n")
+
+        if (length(dim(appliedTrans)) > 0 & length(dim(appliedTrans)) <= 2) {
+            tryCatch({
+                out <- prettyPrint2d(
+                    appliedTrans,
+                    row_styles = row_styles,
+                    col_styles = col_styles
+                )
+                cat(unlist(out), sep="\n")
+            }, error = function(e) {
+                # if prettyPrinting doesn't work, just print without prettiness
+                print(appliedTrans)
+            })
         } else {
             # styling is hard
             print(appliedTrans)
@@ -111,12 +116,14 @@ applyTransforms <- function (x,
                              dims_list = dimensions(x),
                              useNA = x@useNA,
                              ...) {
+    trans_indices <- which(vapply(transforms_list, Negate(is.null), logical(1)))
+    
     # Try to calculate the transforms for any dimensiton that have them, but
     # fail silently if they aren't calcuable. We use a for loop so that failing
     # one dimension doesn't break others. We could possibly use something like
     # abind::abind here and bind together the insertion vectors in array form,
     # but that would add a dependency
-    for (d in seq_along(dim(array))) {
+    for (d in trans_indices) {
         try({
             # if we have an mr or categorical array items, we skip quickly. We
             # include all _items here (including subvariable_items) here because
@@ -130,117 +137,126 @@ applyTransforms <- function (x,
                 next
             }
             
-            trans <- transforms_list[[d]]
-            if (!is.null(trans)) {
-                var_cats <- Categories(data=variables(dims_list)[[d]]$categories)
-                
-                # TODO: calculate category/element changes
+            var_cats <- Categories(data=variables(dims_list)[[d]]$categories)
+            
+            # TODO: calculate category/element changes
 
-                array <- applyAgainst(array, d, calcTransforms, trans, var_cats, ...)
-            }
+            array <- applyAgainst(
+                X = array, 
+                MARGIN = d, 
+                FUN = calcTransforms, 
+                trans = transforms_list[[d]], 
+                var_cats = var_cats,
+                ...)
         })
     }
     
     # if there are any transforms, then we need to subset the output.
-    if (any(!vapply(transforms_list, is.null, logical(1)))) {
-        try({
-            array <- subsetTransformedCube(array, dims_list, useNA)
-        }, silent = TRUE)
-    }
-    
+    try({
+        array <- subsetTransformedCube(array, dims_list, useNA)
+    })
+
     return(array)
 }
 
 
 #' apply a function against a dimension
 #'
-#' Similar to other `apply` functions, this takes an array and applies the function against the  dimensions (specified in the `MARGIN` argument). These dimensions must be a single number (unlike many `apply` functions). See the examples below, where we use the function `add_one_hundred` to add `100` on to the end of each `MARGIN`. 
-#' 
+#' Similar to other `apply` functions, this takes an array and applies the
+#' function against the  dimensions (specified in the `MARGIN` argument). These
+#' dimensions must be a single number (unlike many `apply` functions). See the
+#' examples below, where we use the function `add_one_hundred` to add `100` on
+#' to the end of each `MARGIN`.
+#'
+#' `FUN` can be any function that takes a vector and returns a vector, but one
+#' common use case is a function that adds new entries to the vector,
+#' effectively expanding the array in the dimension given.
+#'
 #'
 #' @param X an array
-#' @param MARGIN the dimension to apply the function against 
+#' @param MARGIN the dimension to apply the function against
 #' @param FUN the function to be applied
 #' @param ... optional arguments to `FUN``
 #'
 #' @return an array with the function applied
 #' @keywords internal
-#' 
+#'
 #' @examples
 #' array <- array(c(1:24), dim = c(4,3,2))
 #' array
 #' # , , 1
-#' # 
+#' #
 #' #      [,1] [,2] [,3]
 #' # [1,]    1    5    9
 #' # [2,]    2    6   10
 #' # [3,]    3    7   11
 #' # [4,]    4    8   12
-#' # 
+#' #
 #' # , , 2
-#' # 
+#' #
 #' #      [,1] [,2] [,3]
 #' # [1,]   13   17   21
 #' # [2,]   14   18   22
 #' # [3,]   15   19   23
 #' # [4,]   16   20   24
-#' 
+#'
 #' add_one_hundred <- function (x) c(x, 100)
 #'
 #' crunch:::applyAgainst(array, 1,  add_one_hundred)
 #' # , , 1
-#' # 
+#' #
 #' #      [,1] [,2] [,3]
 #' # [1,]    1    5    9
 #' # [2,]    2    6   10
 #' # [3,]    3    7   11
 #' # [4,]    4    8   12
 #' # [5,]  100  100  100
-#' # 
+#' #
 #' # , , 2
-#' # 
+#' #
 #' #      [,1] [,2] [,3]
 #' # [1,]   13   17   21
 #' # [2,]   14   18   22
 #' # [3,]   15   19   23
 #' # [4,]   16   20   24
 #' # [5,]  100  100  100
-#'  
+#'
 #' crunch:::applyAgainst(array, 2,  add_one_hundred)
 #' # , , 1
-#' # 
+#' #
 #' #      [,1] [,2] [,3] [,4]
 #' # [1,]    1    5    9  100
 #' # [2,]    2    6   10  100
 #' # [3,]    3    7   11  100
 #' # [4,]    4    8   12  100
-#' # 
+#' #
 #' # , , 2
-#' # 
+#' #
 #' #      [,1] [,2] [,3] [,4]
 #' # [1,]   13   17   21  100
 #' # [2,]   14   18   22  100
 #' # [3,]   15   19   23  100
 #' # [4,]   16   20   24  100
-#'  
+#'
 #' crunch:::applyAgainst(array, 3,  add_one_hundred)
 #' # , , 1
-#' # 
+#' #
 #' #      [,1] [,2] [,3]
 #' # [1,]    1    5    9
 #' # [2,]    2    6   10
 #' # [3,]    3    7   11
 #' # [4,]    4    8   12
-#' # 
+#' #
 #' # , , 2
-#' # 
+#' #
 #' #      [,1] [,2] [,3]
 #' # [1,]   13   17   21
 #' # [2,]   14   18   22
 #' # [3,]   15   19   23
 #' # [4,]   16   20   24
-#' # 
+#' #
 #' # , , 3
-#' # 
+#' #
 #' #      [,1] [,2] [,3]
 #' # [1,]  100  100  100
 #' # [2,]  100  100  100
