@@ -19,21 +19,30 @@ applyAgainst(X, MARGIN, FUN, ...)
 an array with the function applied
 }
 \description{
-Similar to other \code{apply} functions, this takes an array and applies the function against the  dimensions (specified in the \code{MARGIN} argument). These dimensions must be a single number (unlike many \code{apply} functions). See the examples below, where we use the function \code{add_one_hundred} to add \code{100} on to the end of each \code{MARGIN}.
+Similar to other \code{apply} functions, this takes an array and applies the
+function against the  dimensions (specified in the \code{MARGIN} argument). These
+dimensions must be a single number (unlike many \code{apply} functions). See the
+examples below, where we use the function \code{add_one_hundred} to add \code{100} on
+to the end of each \code{MARGIN}.
+}
+\details{
+\code{FUN} can be any function that takes a vector and returns a vector, but one
+common use case is a function that adds new entries to the vector,
+effectively expanding the array in the dimension given.
 }
 \examples{
 array <- array(c(1:24), dim = c(4,3,2))
 array
 # , , 1
-# 
+#
 #      [,1] [,2] [,3]
 # [1,]    1    5    9
 # [2,]    2    6   10
 # [3,]    3    7   11
 # [4,]    4    8   12
-# 
+#
 # , , 2
-# 
+#
 #      [,1] [,2] [,3]
 # [1,]   13   17   21
 # [2,]   14   18   22
@@ -44,59 +53,59 @@ add_one_hundred <- function (x) c(x, 100)
 
 crunch:::applyAgainst(array, 1,  add_one_hundred)
 # , , 1
-# 
+#
 #      [,1] [,2] [,3]
 # [1,]    1    5    9
 # [2,]    2    6   10
 # [3,]    3    7   11
 # [4,]    4    8   12
 # [5,]  100  100  100
-# 
+#
 # , , 2
-# 
+#
 #      [,1] [,2] [,3]
 # [1,]   13   17   21
 # [2,]   14   18   22
 # [3,]   15   19   23
 # [4,]   16   20   24
 # [5,]  100  100  100
- 
+
 crunch:::applyAgainst(array, 2,  add_one_hundred)
 # , , 1
-# 
+#
 #      [,1] [,2] [,3] [,4]
 # [1,]    1    5    9  100
 # [2,]    2    6   10  100
 # [3,]    3    7   11  100
 # [4,]    4    8   12  100
-# 
+#
 # , , 2
-# 
+#
 #      [,1] [,2] [,3] [,4]
 # [1,]   13   17   21  100
 # [2,]   14   18   22  100
 # [3,]   15   19   23  100
 # [4,]   16   20   24  100
- 
+
 crunch:::applyAgainst(array, 3,  add_one_hundred)
 # , , 1
-# 
+#
 #      [,1] [,2] [,3]
 # [1,]    1    5    9
 # [2,]    2    6   10
 # [3,]    3    7   11
 # [4,]    4    8   12
-# 
+#
 # , , 2
-# 
+#
 #      [,1] [,2] [,3]
 # [1,]   13   17   21
 # [2,]   14   18   22
 # [3,]   15   19   23
 # [4,]   16   20   24
-# 
+#
 # , , 3
-# 
+#
 #      [,1] [,2] [,3]
 # [1,]  100  100  100
 # [2,]  100  100  100
