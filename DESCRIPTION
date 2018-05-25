@@ -7,11 +7,11 @@ Description: The Crunch.io service <http://crunch.io/> provides a cloud-based
     datasets from within R. Importantly, this allows technical researchers to
     collaborate naturally with team members, managers, and clients who prefer a
     point-and-click interface.
-Version: 1.21.0
+Version: 1.22.2
 Authors@R: c(
     person("Neal", "Richardson", role=c("aut", "cre"), email="neal@crunch.io"),
-    person("Jonathan", "Keane", role="ctb", email="jon.keane@crunch.io"),
-    person("Gordon", "Shotwell", role="ctb", email="gordon@crunch.io"))
+    person("Jonathan", "Keane", role="aut", email="jon.keane@crunch.io"),
+    person("Gordon", "Shotwell", role="aut", email="gordon@crunch.io"))
 URL: http://crunch.io/r/crunch/, https://github.com/Crunch-io/rcrunch
 BugReports: https://github.com/Crunch-io/rcrunch/issues
 License: LGPL (>= 3)
@@ -25,6 +25,8 @@ Imports:
     httpcache (>= 0.1.4),
     jsonlite (>= 0.9.15),
     methods
+Remotes:
+    nealrichardson/httptest
 Suggests:
     covr,
     devtools,
@@ -37,16 +39,20 @@ Suggests:
     rstudioapi,
     shiny,
     spelling,
-    testthat (>= 2.0.0)
+    testthat (>= 2.0.0),
+    withr
 VignetteBuilder: knitr
 Language: en-US
+Encoding: UTF-8
 RoxygenNote: 6.0.1
 Roxygen: list(markdown = TRUE)
+LazyData: true
 Collate:
     'AllClasses.R'
     'AllGenerics.R'
     'variable-definition.R'
     'R-to-variable.R'
+    'SO-survey.R'
     'abstract-categories.R'
     'abstract-category.R'
     'add-subvariable.R'
@@ -78,6 +84,7 @@ Collate:
     'cube-query.R'
     'cube-residuals.R'
     'cube-result.R'
+    'cube-subset.R'
     'cube-transforms.R'
     'cube-variables.R'
     'cut.R'
@@ -128,6 +135,7 @@ Collate:
     'show.R'
     'subtotals-and-headings.R'
     'subvariables.R'
+    'summary-insertions.R'
     'tab-book.R'
     'teams.R'
     'transform-calculate.R'

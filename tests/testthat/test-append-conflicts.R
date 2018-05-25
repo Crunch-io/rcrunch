@@ -27,7 +27,7 @@ with_test_authentication({
 
             expect_message(
                 expect_error(part1 <- appendDataset(part1, part2),
-                    "Variable is array in one dataset and not the other"),
+                    "Variable 'CA' is an array in one dataset and not the other"),
                 NA) ## No Result URL printed because autorollback=TRUE
 
             part1 <- refresh(part1)
@@ -48,7 +48,7 @@ with_test_authentication({
         })
         test_that("Append detects text/numeric type mismatch", {
             expect_error(appendDataset(part1, part2),
-                "Type of 000001 does not match target 000000 and cannot be converted.")
+                "Type of 'v2' does not match target and cannot be converted.")
         })
     })
 })

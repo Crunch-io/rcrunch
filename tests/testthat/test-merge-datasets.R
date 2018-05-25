@@ -141,8 +141,52 @@ printed_order_apidocs2 <- c(
     "[+] Dimensions",
     "    Country",
     "    Wave",
-    "Weight",
-    "Person ID"
+    "Person ID",
+    "[+] __hidden__",
+    "    Weight",
+    "    Case ID"
+)
+
+printed_order_apidocs2_merge_by_stringid <- c(
+    "    [+] Key Pet Indicators",
+    "        All pets owned",
+    "        Pet",
+    "        Pets by location",
+    "    [+] Dog Metrics",
+    "        Number of dogs",
+    "        [+] Number of dogs by type",
+    "            Number of dogs -- With papers",
+    "            Number of dogs -- Mutts",
+    "    [+] Details",
+    "        Pet name",
+    "    [+] Dimensions",
+    "        Country",
+    "        Wave",
+    "[+] __hidden__",
+    "    [+] Example dataset",
+    "        Case ID",
+    "        Weight"
+)
+
+printed_order_apidocs2_merge_by_caseid <- c(
+    "    [+] Key Pet Indicators",
+    "        All pets owned",
+    "        Pet",
+    "        Pets by location",
+    "    [+] Dog Metrics",
+    "        Number of dogs",
+    "        [+] Number of dogs by type",
+    "            Number of dogs -- With papers",
+    "            Number of dogs -- Mutts",
+    "    [+] Details",
+    "        Pet name",
+    "    [+] Dimensions",
+    "        Country",
+    "        Wave",
+    "    Person ID",
+    "[+] __hidden__",
+    "    [+] Example dataset",
+    "        Weight"
 )
 
 with_test_authentication({
@@ -171,9 +215,7 @@ with_test_authentication({
                 "Join matches",
                 "Another variable",
                 paste0("[+] ", name(ds2)),
-                paste("    ",
-                    printed_order_apidocs2[-length(printed_order_apidocs2)],
-                    sep="", collapse="\n")),
+                paste0(printed_order_apidocs2_merge_by_stringid)),
                 collapse="\n"),
             fixed=TRUE)
         expect_identical(names(ds1),
@@ -202,9 +244,7 @@ with_test_authentication({
                 "Join matches",
                 "Another variable",
                 paste0("[+] ", name(ds2)),
-                paste("    ",
-                    printed_order_apidocs2,
-                    sep="", collapse="\n")),
+                paste0(printed_order_apidocs2_merge_by_caseid)),
                 collapse="\n"),
             fixed=TRUE)
         expect_identical(names(ds1),
@@ -270,33 +310,14 @@ with_test_authentication({
         ds1 <- merge(ds1, ds2[ds2$stringid == "43805958",],
             by.x="id", by.y="stringid")
         expect_prints(ordering(ds1),
-                      paste(c(
-                          "ID",
-                          "Join matches",
-                          "Another variable",
-                          paste0("[+] ", name(ds2)),
-                          paste("    ",
-                                c(
-                                    "[+] Key Pet Indicators",
-                                    "    All pets owned",
-                                    "    Pet",
-                                    "    Pets by location",
-                                    "[+] Dog Metrics",
-                                    "    Number of dogs",
-                                    "    [+] Number of dogs by type",
-                                    "        Number of dogs -- With papers",
-                                    "        Number of dogs -- Mutts",
-                                    "[+] Details",
-                                    "    Pet name",
-                                    "[+] Dimensions",
-                                    "    Country",
-                                    "    Wave",
-                                    "Weight",
-                                    "Case ID"
-                                ),
-                                sep="", collapse="\n")),
-                          collapse="\n"),
-                      fixed=TRUE)
+            paste(c(
+                "ID",
+                "Join matches",
+                "Another variable",
+                paste0("[+] ", name(ds2)),
+                paste0(printed_order_apidocs2_merge_by_stringid)),
+                collapse="\n"),
+            fixed=TRUE)
         expect_identical(names(ds1),
             c("id", "matches", "other_var", "allpets", "q1", "petloc", "ndogs",
             "ndogs_a", "ndogs_b", "q3", "country", "wave"))

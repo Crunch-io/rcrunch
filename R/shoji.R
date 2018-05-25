@@ -89,7 +89,7 @@ setEntitySlot <- function (x, i, value) {
 
 #' Get a resource URL from a Shoji Object
 #' @param x a shojiObject
-#' @param collection one of c("catalogs", "views", "fragments")
+#' @param collection one of c("catalogs", "views", "fragments", "orders")
 #' @param key character name of the URL to get from \code{collection}
 #' @return character URL
 #' @export

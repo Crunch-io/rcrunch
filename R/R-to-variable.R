@@ -14,7 +14,7 @@ setMethod("toVariable", "numeric", function (x, ...) {
 #' @rdname toVariable
 #' @export
 setMethod("toVariable", "factor", function (x, ...) {
-    return(VariableDefinition(values=as.integer(x), type="categorical",
+    return(VariableDefinition(values=as.categorical.values(x), type="categorical",
         categories=categoriesFromLevels(levels(x)), ...))
 })
 #' @rdname toVariable
@@ -46,10 +46,16 @@ setMethod("toVariable", "VariableDefinition", function (x, ...) {
 #' @rdname toVariable
 #' @export
 setMethod("toVariable", "logical", function (x, ...) {
-    ## Make it categorical
-    return(VariableDefinition(values=2L-as.integer(x), type="categorical",
-        categories=categoriesFromLevels(c("True", "False")),
-        ...))
+    vals <- as.categorical.values(x)
+    cats <- .selected.cats
+    ## Pre-3VL category names
+    ## Note that with the extra strict definition of `is.3vl`, this won't
+    ## register as a "logical" type yet and so as.vector will continue to return
+    ## this as categorical, not logical
+    cats[[1]]$name <- "True"
+    cats[[2]]$name <- "False"
+    return(VariableDefinition(values=vals, type="categorical",
+        categories=cats, ...))
 })
 
 # haven::labelled* are S3 classes, so we have to register them
@@ -84,10 +90,19 @@ setMethod("toVariable", "labelled_spss", function (x, ...) {
         return(cat)
     })
 
-    return(VariableDefinition(values=as.integer(x_factor), type="categorical",
-                          categories=categories, ...))
+    return(VariableDefinition(
+        values=as.categorical.values(x_factor),
+        type="categorical",
+        categories=categories,
+        ...
+    ))
 })
 
+as.categorical.values <- function (x) {
+    vals <- as.integer(x)
+    vals[is.na(vals)] <- -1L
+    return(vals)
+}
 
 #' Convert a factor's levels into Crunch categories.
 #'

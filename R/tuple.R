@@ -4,6 +4,8 @@
 #' used.
 #'
 #' @param x a Tuple
+#' @param object Same as `x` but for the `alias` method, in order to
+#' match the generic from another package.
 #' @param name a Tuple slot to get or set
 #' @param i In [[, a Tuple slot to get
 #' @param ... additional arguments to [[, ignored

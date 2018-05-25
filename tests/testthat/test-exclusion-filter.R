@@ -5,7 +5,7 @@ with_mock_crunch({
     ds2 <- loadDataset("ECON.sav")
 
     test_that("Get exclusions", {
-        expect_equal(exclusion(ds), ds$birthyr < 0)
+        expect_equivalent(exclusion(ds), ds$birthyr < 0)
         expect_null(exclusion(ds2))
     })
     test_that("Set exclusion", {
@@ -54,9 +54,8 @@ with_test_authentication({
             expect_equivalent(as.array(crtabs(~ v4, data=ds)),
                 array(c(10, 10), dim=2L, dimnames=list(v4=c("B", "C"))))
         })
-    })
+        ds <- refresh(ds)
 
-    with(test.dataset(df), {
         test_that("Exclusion setup", {
             expect_identical(nrow(ds), 20L)
             exclusion(ds) <<- ds$v4 == "C"
@@ -140,10 +139,6 @@ with_test_authentication({
     })
 
     with(test.dataset(newDatasetFromFixture("apidocs")), {
-        test_that("Assert what is in the test dataset", {
-            expect_valid_apidocs_import(ds)
-        })
-
         ## Create a variable to update with rows to exclude
         ds$keep <- TRUE
         test_that("'keep' was created correctly, i.e. all 'True'", {
@@ -166,16 +161,6 @@ with_test_authentication({
                              array(c(4, 5, 5), dim=3L,
                                    dimnames=list(allpets=c("Cat", "Dog", "Bird"))))
         })
-        ## check old behavior
-        with(temp.options(crunch.mr.selection="selected_array"), {
-            ## Let's look at "allpets", a multiple response variable
-            test_that("allpets", {
-                expect_identical(as.array(crtabs(~ allpets, data=ds,
-                                                 useNA="ifany")),
-                                 array(c(4, 5, 5, 3), dim=4L,
-                                       dimnames=list(allpets=c("Cat", "Dog", "Bird", "<NA>"))))
-            })
-        })
 
         ## Update "keep" as "False" (i.e. excluded) where "allpets" is
         ## missing for all responses.
@@ -188,19 +173,6 @@ with_test_authentication({
                                              useNA="always")),
                              array(c(4, 5, 5), dim=3L,
                                    dimnames=list(allpets=c("Cat", "Dog", "Bird"))))
-        })
-
-        ## check old behavior
-        with(temp.options(crunch.mr.selection="selected_array"), {
-            test_that("The exclusion filter drops those three rows", {
-                expect_identical(nrow(ds), 17L)
-                ## And we can confirm that those three rows are the ones
-                ## dropped:
-                expect_identical(as.array(crtabs(~ allpets, data=ds,
-                    useNA="always")),
-                    array(c(4, 5, 5, 0), dim=4L,
-                        dimnames=list(allpets=c("Cat", "Dog", "Bird", "<NA>"))))
-            })
         })
 
         ## We can do the same for categorical array. petloc has two
@@ -280,19 +252,16 @@ with_test_authentication({
             expect_null(exclusion(ds))
             expect_identical(nrow(ds), 20L)
         })
-    })
 
-    with(test.dataset(df), {
+        ds <- refresh(ds)
         ds$keep <- rep(1:4, 5)
         exclusion(ds) <- ds$keep == 2
         test_that("Exclusion is set", {
             expect_identical(nrow(ds), 15L)
-            expect_equivalent(as.vector(ds$v3),
-                c(8, 10:12, 14:16, 18:20, 22:24, 26, 27))
         })
         ds <- restoreVersion(ds, 1)
         test_that("No problem reverting to before exclusion var made", {
-            expect_valid_df_import(ds)
+            expect_valid_apidocs_import(ds)
             expect_null(ds$keep)
             expect_null(exclusion(ds))
         })

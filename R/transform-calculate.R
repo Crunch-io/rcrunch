@@ -46,7 +46,7 @@ mapInsertions <- function (inserts, var_cats, include) {
         new_inserts <- c(new_inserts, subtots)
     }
 
-    # add subtotals if they are in include
+    # add headings if they are in include
     if ("headings" %in% include) {
         new_inserts <- c(new_inserts, inserts[are.Headings(inserts)])
     }
@@ -159,10 +159,17 @@ calcInsertions <- function (vec, elements, var_cats) {
             return(sum(vec[which.cats]))
         }
 
+        # if element is a summaryStat, grab the function from summaryStatInsertions
+        # to use.
+        if (is.SummaryStat(element)) {
+            statFunc <- summaryStatInsertions[[func(element)]]
+            return(statFunc(element, var_cats, vec))
+        }
+
         # finally, check if there are other functions, if there are warn, and
         # then return NA
-        not_subtotal <- element[["function"]] != "subtotal"
-        if (not_subtotal) {
+        unknown_funcs <- !(element[["function"]] %in% c("subtotal", names(summaryStatInsertions)))
+        if (unknown_funcs) {
             warning("Transform functions other than subtotal are not supported.",
                     " Applying only subtotals and ignoring ", element[["function"]])
         }

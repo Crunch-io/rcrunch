@@ -19,9 +19,6 @@ with_mock_crunch({
     with_POST("https://app.crunch.io/api/datasets/1/multitables/tabbook-result/", {
         book1 <- tabBook(m, data=ds, format="json")
     })
-    with_POST("https://app.crunch.io/api/datasets/1/multitables/tabbook-array-result/", {
-        book2 <- tabBook(m, data=ds, format="json")
-    })
 
     admit.dept <- book1[[1]][[2]]
     b <- arrayify(c(

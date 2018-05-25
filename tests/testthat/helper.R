@@ -18,7 +18,6 @@ uncached <- httpcache::uncached
 ## .onAttach stuff, for testthat to work right
 ## See other options in inst/crunch-test.R
 options(
-    warn=1,
     crunch.debug=FALSE,
     digits.secs=3,
     crunch.timeout=20, ## In case an import fails to start, don't wait forever
@@ -27,6 +26,7 @@ options(
     crunch.check.updates=FALSE,
     crunch.namekey.dataset="alias",
     crunch.namekey.array="alias",
+    crunch.already.shown.folders.msg=TRUE,
     # crayon options for testing on travis
     crayon.enabled = TRUE,
     crayon.colors = 256

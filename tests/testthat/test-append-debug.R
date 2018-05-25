@@ -18,16 +18,6 @@ with_test_authentication({
         })
     })
 
-    test_that("Datasets with more rows append (sparseness test)", {
-        sparse1 <- newDataset(data.frame(A=factor(c("A", "B")), B=1:1000))
-        sparse2 <- newDataset(data.frame(B=1:1000, C=factor(c("C", "D"))))
-        out <- appendDataset(sparse1, sparse2)
-        expect_identical(mean(out$B), 1001/2)
-        expect_length(as.vector(out$C), 2000)
-        expect_identical(as.vector(out$C),
-            factor(c(rep(NA, 1000), rep(c("C", "D"), 500))))
-    })
-
     whereas("When appending different arrays containing the same subvars", {
         part1 <- mrdf.setup(newDataset(mrdf), name="CA1")
         part2 <- mrdf.setup(newDataset(mrdf), name="CA2")
@@ -45,7 +35,7 @@ with_test_authentication({
         })
         test_that("The append fails", {
             expect_error(appendDataset(part1, part2),
-                "Subvariable mr_1 cannot be bound to both arrays 'CA2' and 'CA1'.")
+                "Subvariable 'mr_1' cannot be bound to both arrays 'CA2' and 'CA1'.")
         })
         part1 <- cleanseBatches(part1)
 

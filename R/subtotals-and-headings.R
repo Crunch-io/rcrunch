@@ -32,7 +32,8 @@
 #'  `Insertions` object) and returns a vector of `TRUE`/`FALSE`s.
 #'
 #' @param x either a variable or CrunchCube object to add or get subtotal
-#' transforms for
+#' transforms for, for `is.Subtotal()` and `is.Heading()` an object to test if
+#' it is either a Subtotal or Heading
 #' @param ... additional arguments to `[`, ignored
 #' @param value For `[<-`, the replacement Subtotal to insert
 #' @param name character the name of the subtotal or heading
@@ -206,23 +207,7 @@ setMethod("subtotals<-", c("CrunchVariable", "ANY"), function (x, value) {
         }, value)))) {
         halt("value must be a list of Subtotals, Headings, or both.")
     }
-    # If position is relative we default to setting after to be the last category
-    # in the Subtotal category.
-    value <- lapply(value, function(a){
-        if (is.null(a$after) && a$position == "relative") {
-            if (is.numeric(a$categories)) {
-                var_cats <- ids(categories(x))
-            } else {
-                var_cats <- names(categories(x))
-            }
-            sub_cats <- a$categories[a$categories %in% var_cats]
-            ordered_cats <- sub_cats[order(match(sub_cats, var_cats))]
-            a$after <- rev(ordered_cats)[1]
-            return(a)
-        } else {
-            return(a)
-        }
-    })
+
     inserts = Insertions(data = lapply(value,
                                        makeInsertion,
                                        var_categories = categories(x)))
@@ -240,11 +225,14 @@ setMethod("subtotals<-", c("CrunchVariable", "NULL"), function (x, value) {
     # maintain any non-subtotal insertions
     old_inserts <- transforms(x)$insertions
     subtots <- subtotals(x)
-    inserts <- setdiff(old_inserts, subtots)
+    ## If assigning NULL but we already are NULL, there's nothing to do
+    if (!is.null(subtots)) {
+        inserts <- setdiff(old_inserts, subtots)
 
-    bd <- list("transform" = list("insertions" = inserts))
-    ent <- setEntitySlot(entity(x), "view", bd)
-    dropCache(cubeURL(x))
+        bd <- list("transform" = list("insertions" = inserts))
+        ent <- setEntitySlot(entity(x), "view", bd)
+        dropCache(cubeURL(x))
+    }
     return(invisible(x))
 })
 
@@ -322,7 +310,7 @@ subtypeInsertion <- function (insert) {
     if (!inherits(insert, "Insertion")) {
         halt("Must provide an object of type Insertion")
     }
-    if (inherits(insert, c("Subtotal", "Heading"))) {
+    if (inherits(insert, c("Subtotal", "Heading", "SummaryStat"))) {
         # if the insert is already a sub class, return that.
         return(insert)
     }
@@ -336,10 +324,23 @@ subtypeInsertion <- function (insert) {
         position <- "relative"
     }
 
-    if (!(is.na(func(insert))) & func(insert) == 'subtotal') {
-        # this is a subtotal, make it so
-        insert <- Subtotal(name = name(insert), after = after,
-                           position = position, categories = arguments(insert))
+    if (!(is.na(func(insert)))) {
+        # there is a function, check the kind.
+        if (func(insert) == 'subtotal') {
+            # this is a subtotal, make it so
+            insert <- Subtotal(name = name(insert), after = after,
+                               position = position, categories = arguments(insert))
+        }
+        if (func(insert) %in% names(summaryStatInsertions)) {
+            # this is a summary statistic, make it so
+            insert <- SummaryStat(name = name(insert),
+                                  stat = func(insert),
+                                  after = after,
+                                  position = position,
+                                  categories = arguments(insert),
+                                  includeNA = insert$includeNA)
+        }
+
     } else if (is.na(func(insert)) & !is.na(anchor(insert))) {
         # this is a heading, make it so
         insert <- Heading(name = name(insert), after = after,

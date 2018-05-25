@@ -15,7 +15,7 @@ NULL
     if (!is.character(out)) {
         ## Catalog show content is a data.frame unless otherwise indicated.
         ## Print it, but capture the output so we can return the character output.
-        out <- capture.output(print(getShowContent(object)))
+        out <- capture.output(print(out))
     }
     cat(out, sep="\n")
     invisible(out)
@@ -52,9 +52,11 @@ showAbsCategory <- function (x) data.frame(id=id(x), name=name(x), value=value(x
 showAbsCategories <- function (x) do.call("rbind", lapply(x, showAbsCategory))
 
 showInsertion <- function (x) {
-    df_out <- data.frame(anchor=anchor(x), name=name(x),
-               func=func(x), args=serialPaste(arguments(x)), stringsAsFactors = FALSE)
+    return(data.frame(anchor=anchor(x), name=name(x),
+                      func=func(x), args=serialPaste(arguments(x)),
+                      stringsAsFactors = FALSE))
 }
+
 showInsertions <- function (x) do.call("rbind",
                                        c(lapply(x, getShowContent),
                                          stringsAsFactors = FALSE))
@@ -65,8 +67,9 @@ showSubtotalHeading <- function (x) {
     # for the show method only.
     anchor <- tryCatch(anchor(x), error = function(e) {return(x$after)})
     args <- tryCatch(arguments(x), error = function(e) {return(x$categories)})
-    df_out <- data.frame(anchor=anchor, name=name(x),
-                         func=func(x), args=serialPaste(args), stringsAsFactors = FALSE)
+    return(data.frame(anchor=anchor, name=name(x),
+                      func=func(x), args=serialPaste(args),
+                      stringsAsFactors = FALSE))
 }
 
 
@@ -197,6 +200,9 @@ formatExpression <- function (expr) {
             return(paste0("!", args[1]))
         } else if (func %in% .operators) {
             return(paste(args[1], func, args[2]))
+        } else if (func == "selected" && grepl("%in%", args[1])) {
+            ## R's %in% is Crunch's selected(in()) wrt missing data handling
+            return(args[1])
         } else {
             return(paste0(func, "(", paste(args, collapse=", "), ")"))
         }
@@ -284,7 +290,6 @@ showMultitable <- function (x) {
     out <- paste("Multitable", dQuote(name(x)))
 
     # TODO: check variable types to alert users in a more friendly manner
-    # eg remove selected_array()
     out <- c(out, "Column variables:",
              vapply(x@body$template, function (expr) {
                  if ("each" %in% names(expr$query[[1]])) {
@@ -292,10 +297,9 @@ showMultitable <- function (x) {
                      # an array so take the second argument instead.
                      exprToFormat <- expr$query[[2]]
 
-                     # if the second arg is a as_selected or selected_array take
-                     # the variable from that to display var only
-                     mr_funcs <- c("as_selected", "selected_array")
-                     if ((exprToFormat[["function"]] %||% "") %in% mr_funcs ) {
+                     # if the second arg is a as_selected take the variable from
+                     # that to display var only
+                     if ((exprToFormat[["function"]] %||% "")  == "as_selected" ) {
                          exprToFormat <- exprToFormat$args[[1]]
                      }
 
@@ -316,6 +320,7 @@ setMethod("getShowContent", "Insertion", showInsertion)
 setMethod("getShowContent", "Insertions", showInsertions)
 setMethod("getShowContent", "Subtotal", showSubtotalHeading)
 setMethod("getShowContent", "Heading", showSubtotalHeading)
+setMethod("getShowContent", "SummaryStat", showSubtotalHeading)
 setMethod("getShowContent", "CrunchVariable", showCrunchVariable)
 setMethod("getShowContent", "CategoricalArrayVariable",
     showCategoricalArrayVariable)

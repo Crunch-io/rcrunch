@@ -22,13 +22,6 @@ init.Category <- function (.Object, ...) {
 }
 setMethod("initialize", "Category", init.Category)
 
-.no.data <- list(
-    id=-1L,
-    name="No Data",
-    numeric_value=NULL,
-    missing=TRUE
-)
-
 #' Access Category fields directly
 #'
 #' Don't do this. Instead, use the category setters.
