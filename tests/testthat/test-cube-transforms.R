@@ -480,6 +480,59 @@ test_that("categorical arrays with transforms work", {
     )
 })
 
+test_that("subtotals after cube subsetting", {
+    first_two_rows <- cubify(
+        c( 9,  9,  5, 14,
+           12, 12, 12, 24,
+           21, 21, 17, 38,
+           0,  0,  0,  0),
+        dims = list(
+            "feelings" =
+                c("extremely happy", "somewhat happy", "happy", "unhappy"),
+            "animals" = c("cats", "felines", "dogs", "both"))
+    )
+    
+    expect_equivalent(applyTransforms(pet_feeling_both[c(1,2),]), first_two_rows)
+    
+    one_col <- cubify(
+        c(5,  0,  5,
+          12, 0, 12,
+          17, 0, 17,
+           7, 0,  7,
+          10, 0, 10, 
+          12, 0, 12,
+          22, 0, 22),
+        dims = list(
+            "feelings" =
+                c("extremely happy", "somewhat happy", "happy", "neutral",
+                  "somewhat unhappy", "extremely unhappy", "unhappy"),
+            "animals" = c("dogs", "felines", "both"))
+    )
+    
+    # need drop = FALSE to maintain the columns dimension since selection 1
+    # usually removes the dimension
+    expect_equivalent(
+        applyTransforms(pet_feeling_both[, c(2), drop = FALSE]),
+        one_col
+    )
+    
+    one_col_withdrop <- cubify(
+        c(5, 
+          12,
+          17,
+          7, 
+          10, 
+          12, 
+          22),
+        dims = list(
+            "feelings" =
+                c("extremely happy", "somewhat happy", "happy", "neutral",
+                  "somewhat unhappy", "extremely unhappy", "unhappy"))
+    )
+    
+    expect_equivalent(applyTransforms(pet_feeling_both[, 2]), one_col_withdrop)    
+})
+
 test_that("can set transforms on a cube", {
     transforms(pet_feelings) <- NULL
     expect_null(transforms(pet_feelings))
