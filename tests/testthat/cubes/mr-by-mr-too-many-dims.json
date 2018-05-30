@@ -97,7 +97,6 @@
             ],
             "notes": "A multiple response variable",
             "alias": "ec",
-            "is_dichotomous": true,
             "name": "Founding Members of the European Coal and Steel Community"
           },
           "type": {
@@ -504,7 +503,6 @@
             ],
             "notes": "A multiple response variable",
             "alias": "ec",
-            "is_dichotomous": true,
             "name": "Founding Members of the European Coal and Steel Community"
           },
           "derived": true,
@@ -579,7 +577,6 @@
             ],
             "notes": "A multiple response variable",
             "alias": "nordics",
-            "is_dichotomous": true,
             "name": "Nordic countries"
           },
           "type": {
@@ -814,7 +811,6 @@
             ],
             "notes": "A multiple response variable",
             "alias": "nordics",
-            "is_dichotomous": true,
             "name": "Nordic countries"
           },
           "derived": true,
