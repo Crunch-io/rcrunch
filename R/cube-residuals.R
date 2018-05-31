@@ -57,7 +57,8 @@ setMethod('rstandard', 'CrunchCube', function (model) {
     if (any(startsWith(getDimTypes(model), "mr_"))) {
         return(standardizedMRResiduals(model))
     } else {
-        return(chisq.test(as.array(noTransforms(model)))$stdres)
+        array_to_test <- as.array(noTransforms(model))
+        return(chisq.test(array_to_test)$stdres)
     }
 })
 

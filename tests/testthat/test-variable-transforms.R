@@ -108,6 +108,12 @@ test_that("collateCats works all together", {
     # 7  - missing categories
 })
 
+test_that("collateCats errors when given bad input", {
+    expect_error(
+        collateCats(insrts["missing categories"], Categories()),
+        "Can't collateCats with less than one categories")
+})
+
 insrt_heads <- Insertions(data=list(list(name = "Subtitle", anchor = "top")))
 # turn into subclassed insertions
 

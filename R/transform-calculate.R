@@ -87,6 +87,10 @@ collateCats <- function (inserts, var_cats) {
     cats_out <- AbstractCategories()
     cats_out@.Data <- var_cats
     
+    if (length(var_cats) < 1) {
+        halt("Can't collateCats with less than one categories.")
+    }
+    
     last_category <- tail(ids(var_cats), 1)
 
     # for each insert, find the position for its anchor, and add the insertion
