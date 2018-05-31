@@ -16,10 +16,8 @@ mv.project <- function (x, move_this, path) {
         halt("Must provide a Dataset or Dataset group to mv()")
     }
 
-    ## TODO: need to handle / path to move to top level
     ord <- .ensure.group.path(ordering(dscat), path)
-    ## TODO: this [[<- method needs to learn about paths
-    entities(ord[[path]]) <- c(entities(ord[[path]]), move_this)
+    entities(ord[[path]]) <- c(setdiff_entities(entities(ord[[path]]), move_this), move_this)
     ## with(temp.option(dont.warn.about.dataset.order)),
     ordering(dscat) <- ord
     return(x)
@@ -38,16 +36,24 @@ mkdir.project <- function (x, path) {
     fun <- function (x, path) {
         ## Recursive function for internal use
         if (!(path[1] %in% names(x))) {
-            ## TODO: use groupClass, or fuggetaboutit?
-            entities(x) <- c(entities(x), DatasetGroup(name=path[1], entities=list()))
+            x[[path[1]]] <- list()
         }
         if (length(path) > 1) {
             x[[path[1]]] <- fun(x[[path[1]]], path[-1])
         }
         return(x)
     }
-    ord <- fun(ord, path)
+    if (nchar(path[1]) == 0) {
+        ## Means the path starts with "/", so we're going to start at the top
+        ## level. And since this is a ShojiOrder, we're already at the top level
+        ## so just pop the segment off
+        path <- path[-1]
+    }
+    if (length(path)) {
+        ord <- fun(ord, path)
+    }
     return(ord)
+    # .setNestedGroupByName(ord, i=path, value=list())
 }
 
 rmdir.project <- function (x, path) {

@@ -93,19 +93,46 @@ setMethod("entitiesInitializer", "ShojiOrder", orderEntitiesInit)
 setMethod("entitiesInitializer", "OrderGroup", orderEntitiesInit)
 
 .setNestedGroupByName <- function (x, i, j, value) {
-    ## TODO: update to accept `i` as a path
-    ents <- entitiesInitializer(x)
-    w <- match(i, names(x))
-    value <- ents(value)
+    grp <- groupClass(x)
+    if (!inherits(value, "OrderGroup")) {
+        ents <- entitiesInitializer(x)
+        value <- ents(value)
+    }
     if (!duplicates(x)) {
         x <- setdiff_entities(x, value)
     }
-    if (any(is.na(w))) {
-        ## New group.
-        entities(x) <- c(entities(x), do.call(groupClass(x), list(name=i, entities=value)))
+
+    i <- parseFolderPath(i)
+    if (nchar(i[1]) == 0) {
+        ## Means the path starts with "/", so we're going to start at the top
+        ## level. And since this is a ShojiOrder, we're already at the top level
+        ## so just pop the segment off
+        i <- i[-1]
+    }
+    fun <- function (ord, path, val) {
+        ## Recursive function for internal use
+        if (!(path[1] %in% names(ord))) {
+            ## Create an empty folder
+            entities(ord) <- c(entities(ord), do.call(grp, list(name=path[1], entities=val)))
+        } else if (length(path) == 1) {
+            w <- match(path[1], names(ord))
+            if (inherits(val, "OrderGroup")) {
+                entities(ord[[w]]) <- entities(val)
+            } else {
+                entities(ord[[w]]) <- val
+            }
+        }
+        if (length(path) > 1) {
+            ## Recurse.
+            ord[[match(path[1], names(ord))]] <- fun(ord[[path[1]]], path[-1], val)
+        }
+        return(ord)
+    }
+    if (length(i)) {
+        x <- fun(x, i, value)
     } else {
-        ## Existing group. Assign entities
-        entities(x[[w]]) <- value
+        ## Moving to root level
+        entities(x) <- value
     }
     ## Ensure duplicates setting persists
     duplicates(x) <- duplicates(x)
@@ -183,6 +210,12 @@ setMethod("[[", c("ShojiOrder", "ANY"), function (x, i, ...) {
 setMethod("[[", c("ShojiOrder", "character"), function (x, i, ...) {
     ## i may be a path string, so split on the delimiter (default is "/")
     i <- parseFolderPath(i)
+    if (nchar(i[1]) == 0) {
+        ## Means the path starts with "/", so we're going to start at the top
+        ## level. And since this is a ShojiOrder, we're already at the top level
+        ## so just pop the segment off
+        i <- i[-1]
+    }
     for (segment in i) {
         ## since i may be a path vector, iterate over it
         x <- x[[match(segment, names(x))]]
@@ -233,14 +266,7 @@ setMethod("[[<-", c("ShojiOrder", "character", "missing", "character"),
 #' @rdname ShojiOrder-extract
 #' @export
 setMethod("[[<-", c("ShojiOrder", "character", "missing", "OrderGroup"),
-    function (x, i, j, value) {
-        w <- match(i, names(x))
-        if (any(is.na(w))) {
-            halt("Undefined group selected: ", serialPaste(i[is.na(w)]))
-        }
-        ## NextMethod: c("ShojiOrder", "ANY", "missing", "OrderGroup")
-        callNextMethod(x, w, value=value)
-    })
+    .setNestedGroupByName)
 
 #' @rdname ShojiOrder-extract
 #' @export

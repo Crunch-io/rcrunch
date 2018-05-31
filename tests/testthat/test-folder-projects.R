@@ -65,6 +65,15 @@ with_mock_crunch({
             '{"graph":[{"Group 1":[]},"https://app.crunch.io/api/datasets/3/"]}'
         )
     })
+    test_that("mv a dataset with absolute path", {
+        expect_PUT(
+            proj %>%
+                mv(ds, "/Group 2/Nested"),
+            "https://app.crunch.io/api/projects/project1/datasets/order/",
+            '{"graph":[{"Group 1":[]},',
+            '{"Group 2":[{"Nested":["https://app.crunch.io/api/datasets/3/"]}]}]}'
+        )
+    })
 
     test_that("Adding a dataset to a project by mv", {
         expect_PATCH(
