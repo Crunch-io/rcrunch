@@ -39,7 +39,8 @@ Suggests:
     rstudioapi,
     shiny,
     spelling,
-    testthat (>= 2.0.0)
+    testthat (>= 2.0.0),
+    withr
 VignetteBuilder: knitr
 Language: en-US
 Encoding: UTF-8

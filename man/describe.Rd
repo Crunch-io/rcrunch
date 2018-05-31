@@ -8,6 +8,7 @@
 \alias{name<-}
 \alias{description}
 \alias{description<-}
+\alias{alias}
 \alias{alias<-}
 \alias{startDate}
 \alias{startDate<-}
@@ -34,6 +35,9 @@
 \alias{name<-,Multitable-method}
 \alias{name<-,ShojiFolder-method}
 \alias{name,ShojiObject-method}
+\alias{alias,VariableTuple-method}
+\alias{description,VariableTuple-method}
+\alias{notes,VariableTuple-method}
 \alias{name,CrunchVariable-method}
 \alias{name<-,CrunchVariable-method}
 \alias{id,CrunchVariable-method}
@@ -79,6 +83,12 @@
 \S4method{name}{ShojiFolder}(x) <- value
 
 \S4method{name}{ShojiObject}(x)
+
+\S4method{alias}{VariableTuple}(object)
+
+\S4method{description}{VariableTuple}(x)
+
+\S4method{notes}{VariableTuple}(x)
 
 \S4method{name}{CrunchVariable}(x)
 
