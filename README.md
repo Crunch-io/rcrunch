@@ -33,7 +33,7 @@ Connecting to Crunch and working with datasets is simple: load the `crunch` pack
     [crunch] >
     ...
 
-If you use OAuth to log into the web application, you'll need to create a Crunch password to use with the R package. To set one, load the package, call `resetPassword("your.email@example.com")`, and check your email for instructions.
+If you use OAuth to log into the web application, you'll need to create a Crunch password to use with the R package. To set one, load the package, call `resetPassword("your.email@example.com")`, and check your email for instructions. You may need to log out of your current web app session before you click the link in that email to set your Crunch password.
 
 Once you've logged in, check out `listDatasets()` to see the names of your existing datasets, which you can load like `ds <- loadDataset("The name of my dataset")`. New Crunch datasets can be made from a `data.frame`, a .csv or .sav file, or a URL to a file with `newDataset()`. See the help for these functions or [`vignette("crunch")`](inst/doc/crunch.md) for more information.
 
