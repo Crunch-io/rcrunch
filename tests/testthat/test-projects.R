@@ -155,20 +155,29 @@ with_mock_crunch({
     })
 
     test_that("Organize datasets", {
+        options(crunch.already.shown.ds.order.msg=NULL) ## To make sure the warning fires
         expect_identical(DatasetOrder(DatasetGroup("new group", datasets(aproject))),
             DatasetOrder(DatasetGroup("new group", "https://app.crunch.io/api/datasets/3/")))
-        expect_PUT(ordering(datasets(aproject)) <- DatasetOrder(DatasetGroup("new group",
-            datasets(aproject))),
-            'https://app.crunch.io/api/projects/project1/datasets/order/',
-            '{"graph":[{"new group":["https://app.crunch.io/api/datasets/3/"]}]}')
+        expect_warning(
+            expect_PUT(ordering(datasets(aproject)) <- DatasetOrder(DatasetGroup("new group",
+                datasets(aproject))),
+                'https://app.crunch.io/api/projects/project1/datasets/order/',
+                '{"graph":[{"new group":["https://app.crunch.io/api/datasets/3/"]}]}'),
+            "Greetings!"
+        )
         nested.ord <- DatasetOrder("https://app.crunch.io/api/datasets/3/",
             DatasetGroup("new group",
                 list(DatasetGroup("nested", "https://app.crunch.io/api/datasets/3/"))),
             duplicates=TRUE)
-        expect_PUT(ordering(datasets(aproject)) <- nested.ord,
-            'https://app.crunch.io/api/projects/project1/datasets/order/',
-            '{"graph":["https://app.crunch.io/api/datasets/3/",',
-            '{"new group":[{"nested":["https://app.crunch.io/api/datasets/3/"]}]}]}')
+        ## Can also set on the project directly too
+        expect_warning(
+            expect_PUT(ordering(aproject) <- nested.ord,
+                'https://app.crunch.io/api/projects/project1/datasets/order/',
+                '{"graph":["https://app.crunch.io/api/datasets/3/",',
+                '{"new group":[{"nested":["https://app.crunch.io/api/datasets/3/"]}]}]}'),
+            ## This one doesn't warn because it only warns the first time!
+            NA
+        )
     })
 
     test_that("Organize datasets cleans up unexpected entries", {

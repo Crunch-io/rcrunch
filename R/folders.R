@@ -153,6 +153,10 @@ cd <- function (x, path, create=FALSE) {
 #' }
 #' @export
 rmdir <- function (x, path) {
+    if (inherits(x, "CrunchProject")) {
+        ## Temporary? call a different function
+        return(rmdir.project(x, path))
+    }
     delete(cd(x, path))
     invisible(refresh(x))
 }
