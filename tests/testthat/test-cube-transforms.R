@@ -782,7 +782,7 @@ with_test_authentication({
         cat_summary <- cubify(c(50, 45, 30, 25),
                              dims = list(pets = c("Dogs", "Catds",
                                                       "Birds", "Lizards"),
-                                             Count = NULL))
+                                             "Count"))
         class(cat_summary) <- "CategoricalVariableSummary"
 
         expect_equivalent(summary(ds$pets), cat_summary)
