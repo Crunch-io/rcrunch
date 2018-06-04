@@ -7,7 +7,7 @@ context("Cube transformations")
 unicat_trans_cube <- loadCube(test_path("cubes/univariate-categorical-with-trans.json"))
 
 test_that("Can show a simple cube with transform", {
-    loc_array <- cubify(c(10, 5, 15, NA),
+    loc_array <- cubify(c(10, 5, 15, 10),
                      dims = list("v7" = c("C", "E", "C, E", "D, E")))
     expect_prints(expect_equivalent(showTransforms(unicat_trans_cube), loc_array))
 })
@@ -19,7 +19,7 @@ test_that("Can show a complex cube with transform", {
     # anchor that doesn't exist (and so the insertion should be at the end)
     loc_array <- cubify(
         c(40, 10, 20, 30, 30, 40, 50, 60, 70, 250, 250, 80, 90,
-          100, 520, 150, NA),
+          100, 520, 150, 145),
         dims = list("v7" = c("First!", "A", "B", "Top 2", "C",
                                  "D", "E", "F", "G", "Middle 5",
                                  "Middle 5 (again)", "H", "I", "J",
@@ -169,6 +169,75 @@ test_that("applyTransforms with a cube that has transform but no insertions", {
                         "animals" = c("cats", "dogs")))
     expect_equivalent(applyTransforms(pet_feelings), all)
 })
+
+test_that("applyTransforms handles useNA", {
+    # change neutral to missing
+    # TODO: setter methods for variables(cube_object)
+    pet_feelings@dims$feelings$references$categories[[3]]$missing <- TRUE
+    pet_feelings@dims@.Data[[1]]$missing[[3]] <- TRUE
+    pet_feelings@.Data[[3]]$dimensions[[1]]$type$categories[[3]]$missing <- TRUE
+    
+    all_no <- cubify(
+        c(9, 5,
+          12, 12,
+          21, 17,
+          10, 10,
+          11, 12,
+          21, 22),
+        dims = list("feelings" =
+                        c("extremely happy", "somewhat happy",
+                          "happy", "somewhat unhappy",
+                          "extremely unhappy", "unhappy"),
+                    "animals" = c("cats", "dogs")))
+    # expect silent to catch any warnings that are not raised because of `try`
+    expect_silent(
+        expect_equivalent(applyTransforms(pet_feelings), all_no)
+    )    
+    
+    all_ifany <- cubify(
+        c(9, 5,
+          12, 12,
+          21, 17,
+          12, 7,
+          10, 10,
+          11, 12,
+          21, 22),
+        dims = list("feelings" =
+                        c("extremely happy", "somewhat happy",
+                          "happy", "neutral", "somewhat unhappy",
+                          "extremely unhappy", "unhappy"),
+                    "animals" = c("cats", "dogs")))
+    
+    pet_feelings@useNA <- "ifany"
+    # expect silent to catch any warnings that are not raised because of `try`
+    expect_silent(
+        expect_equivalent(applyTransforms(pet_feelings), all_ifany)
+    )
+
+    all_always <- cubify(
+        c(9,  5,  0,
+          12, 12, 0,
+          21, 17, 0,
+          12, 7,  0,
+          10, 10, 0,
+          11, 12, 0,
+          21, 22, 0,
+          0,  0,  0),
+        dims = list("feelings" =
+                        c("extremely happy", "somewhat happy",
+                          "happy", "neutral", "somewhat unhappy",
+                          "extremely unhappy", "unhappy", "No Data"),
+                    "animals" = c("cats", "dogs", "No Data")))
+    
+    pet_feelings@useNA <- "always"
+    # expect silent to catch any warnings that are not raised because of `try`
+    expect_silent(
+        expect_equivalent(applyTransforms(pet_feelings), all_always)
+    )
+})
+
+
+
 
 # cat by mr with subtotals fixture
 cat_by_cat <- loadCube(test_path("cubes/cat-by-cat-col-subtotals.json"))
@@ -817,7 +886,7 @@ with_test_authentication({
     })
 
     test_that("showTransforms works on a variable", {
-        cat_show_trans <- cubify(c(75, 30, 45, 50, 95, 25, 55, 75, 75, NA),
+        cat_show_trans <- cubify(c(75, 30, 45, 50, 95, 25, 55, 75, 75, 35),
                                 dims = list(pets = c(
                                     "First one", "Birds", "Cats", "Dogs",
                                     "Dogs+Cats", "Lizards", "Birds+Lizards",
@@ -838,7 +907,7 @@ with_test_authentication({
               "\033[30m\033[3m              Birds+Lizards 55\033[23m\033[39m",
               "\033[30m\033[3m             Toward the end 75\033[23m\033[39m",
               "\033[30m\033[3m Cats+Birds (missing anch.) 75\033[23m\033[39m",
-              "\033[30m\033[3mRocks+Birds (incl. missing) NA\033[23m\033[39m",
+              "\033[30m\033[3mRocks+Birds (incl. missing) 35\033[23m\033[39m",
               sep = "\n"),
               fixed = TRUE)
         expect_is(trans_cube, "array")

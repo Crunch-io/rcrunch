@@ -6,10 +6,16 @@ setMethod("showTransforms", "CrunchCube", function (x) {
         return(invisible(x))
     } else {
         appliedTrans <- applyTransforms(x)
+        
+        # evaluate which categories should be kept
+        keep_cats <- evalUseNA(as.array(x), dimensions(x), useNA = x@useNA)
+        
         # if the row dimension is categorical, make styles
         if (getDimTypes(x)[1] %in% c("categorical", "ca_categories")) {
             row_cats <- Categories(data=index(variables(x))[[1]]$categories)
-            row_styles <- transformStyles(transforms(x)[[1]], row_cats[!is.na(row_cats)])
+            # subset the categories by those that evaleUseNA thinks we should keep:
+            row_cats <- row_cats[which(keep_cats[[1]])]
+            row_styles <- transformStyles(transforms(x)[[1]], row_cats)
         } else {
             # otherwise punt, because this is an array or MR var.
             row_styles <- NULL
@@ -18,7 +24,9 @@ setMethod("showTransforms", "CrunchCube", function (x) {
         # if the columns dimension is categorical, make styles
         if (length(dim(x)) > 1 && getDimTypes(x)[2] %in% c("categorical", "ca_categories")) {
             col_cats <- Categories(data=index(variables(x))[[2]]$categories)
-            col_styles <- transformStyles(transforms(x)[[2]], col_cats[!is.na(col_cats)])
+            # subset the categories by those that evaleUseNA thinks we should keep:
+            col_cats <- col_cats[which(keep_cats[[2]])]
+            col_styles <- transformStyles(transforms(x)[[2]], col_cats)
         } else {
             # otherwise punt, because this is an array or MR var.
             col_styles <- NULL
@@ -111,7 +119,7 @@ setMethod("subtotalArray", "CrunchCube", function(x, headings = FALSE) {
 #' @aliases subtotalArray
 #' @export
 applyTransforms <- function (x,
-                             array = cubeToArray(x),
+                             array = cubeToArray(showMissing(x)),
                              transforms_list = transforms(x),
                              dims_list = dimensions(x),
                              useNA = x@useNA,

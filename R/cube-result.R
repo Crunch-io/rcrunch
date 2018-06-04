@@ -203,10 +203,12 @@ keepWithNA <- function (dimension, marginal, useNA) {
     } else {
         ## !always means either drop missing always, or only keep if there are any
         out <- !dimension$missing
+        names(out) <- dimension$name
         if (useNA == "ifany") {
             ## Compare against "marginal", the counts, to know which missing
-            ## elements have "any"
-            out <- out | marginal > 0
+            ## elements have "any". We need to subset by name here because the
+            ## margin might include insertions
+            out <- out | marginal[names(out)] > 0
         }
     }
     # add names, so we know which categories are being kept
