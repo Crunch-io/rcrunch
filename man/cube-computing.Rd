@@ -7,9 +7,9 @@
 \alias{prop.table}
 \alias{bases}
 \alias{round}
-\alias{unconditional.margin}
+\alias{collapse.dimensions}
 \alias{margin.table,CrunchCube-method}
-\alias{unconditional.margin,CrunchCube-method}
+\alias{collapse.dimensions,CrunchCube-method}
 \alias{prop.table,CrunchCube-method}
 \alias{round,CrunchCube-method}
 \alias{bases,CrunchCube-method}
@@ -21,7 +21,7 @@
 \usage{
 \S4method{margin.table}{CrunchCube}(x, margin = NULL)
 
-\S4method{unconditional.margin}{CrunchCube}(x, margin = NULL)
+\S4method{collapse.dimensions}{CrunchCube}(x, margin = NULL)
 
 \S4method{prop.table}{CrunchCube}(x, margin = NULL)
 
@@ -41,27 +41,25 @@
 \item{x}{a CrunchCube}
 
 \item{margin}{index, or vector of indices to generate margin for. See
-\code{\link[base:prop.table]{base::prop.table()}}. \code{bases()} accepts \code{0} as an additional valid
-value for \code{margin}, which yields the unweighted counts for the
-query.}
+\code{\link[base:prop.table]{base::prop.table()}}. \code{bases()} accepts \code{0} as an additional valid value
+for \code{margin}, which yields the unweighted counts for the query.}
 
 \item{digits}{For \code{round}, the number of decimal places to round to. See
 \code{\link[base:round]{base::round()}}}
 }
 \value{
 When called on CrunchCubes, these functions return an \code{array}.
-Calling prop.table on
-a MultitableResult returns a list of prop.tables of the CrunchCubes it
-contains. Likewise, prop.table on a TabBookResult returns a list of lists of
-prop.tables.
+Calling prop.table on a MultitableResult returns a list of prop.tables of
+the CrunchCubes it contains. Likewise, prop.table on a TabBookResult
+returns a list of lists of prop.tables.
 }
 \description{
-These functions provide an interface like \code{\link[base:margin.table]{base::margin.table()}}
-and \code{\link[base:prop.table]{base::prop.table()}} for the CrunchCube object. CrunchCubes contain
-richer metadata than standard R \code{array} objects, and they also conceal
-certain complexity in the data structures from the user. In particular,
-multiple-response variables are generally represented as single dimensions
-in result tables, but in the actual data, they may comprise two dimensions.
+These functions provide an interface like \code{\link[base:margin.table]{base::margin.table()}} and
+\code{\link[base:prop.table]{base::prop.table()}} for the CrunchCube object. CrunchCubes contain richer
+metadata than standard R \code{array} objects, and they also conceal certain
+complexity in the data structures from the user. In particular,
+multiple-response variables are generally represented as single dimensions in
+result tables, but in the actual data, they may comprise two dimensions.
 These methods understand the subtleties in the Crunch data types and
 correctly compute margins and percentages off of them.
 }
@@ -71,17 +69,15 @@ which are returned from a \code{\link[=tabBook]{tabBook()}} request. When called
 objects, they effectively apply over each CrunchCube contained in them.
 
 \code{bases} is an additional method for CrunchCubes. When making weighted
-requests, \code{bases} allows you to access the unweighted counts for every
-cell in the resulting table (array). The \code{bases} function takes a
-"margin" argument to work like \code{margin.table}, or with \code{margin=0}
-gives all cell counts.
+requests, \code{bases} allows you to access the unweighted counts for every cell
+in the resulting table (array). The \code{bases} function takes a "margin"
+argument to work like \code{margin.table}, or with \code{margin=0} gives all cell
+counts.
 
-\code{unconditional.margin} is similar to \code{margin.table}, however instead of only
-returning the non-missing or valid counts for all dimensions, it returns the
-non-missing counts in the direction of the margin, but includes the missing
-counts from all other directions. This is useful if you want to get counts
-that are equivalent to a univariate cube from a multivariate cube. For example
-\code{unconditional.margin(crtabs(~ fruit + pets, ds), 1)} will be equal to
+\code{collapse.dimensions} returns a cube that collapses all dimensions but the one
+given in \code{margin}. This is useful if you want to get counts that are
+equivalent to a univariate cube from a multivariate cube. For example
+\code{collapse.dimensions(crtabs(~ fruit + pets, ds), 1)} will be equal to
 \code{crtabs(~ fruit, ds)}.
 }
 \seealso{

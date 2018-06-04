@@ -214,7 +214,7 @@ keepWithNA <- function (dimension, marginal, useNA) {
     return(out)
 }
 
-cubeMarginTable <- function (x, margin=NULL, measure=1, include_missing=FALSE) {
+cubeMarginTable <- function (x, margin=NULL, measure=1) {
     ## Given a CrunchCube, get the right margin table for percentaging
     ##
     ## This is the function that `margin.table` calls internally, and like
@@ -227,14 +227,7 @@ cubeMarginTable <- function (x, margin=NULL, measure=1, include_missing=FALSE) {
 
     ## Check "margin" against number of (non-"selected" invisible MR) dims
     selecteds <- is.selectedDimension(dims)
-    if (!is.null(margin) && max(margin) > sum(!selecteds)) {
-        ## Validate the input and give a useful error message.
-        ## base::margin.table says:
-        ## "Error in if (d2 == 0L) { : missing value where TRUE/FALSE needed"
-        ## which is terrible.
-        halt("Margin ", max(margin), " exceeds Cube's number of dimensions (",
-            sum(!selecteds), ")")
-    }
+    check_margins(margin, selecteds)
 
     which_selected <- which(selecteds)
     margin_map <- which(!selecteds)
@@ -249,13 +242,6 @@ cubeMarginTable <- function (x, margin=NULL, measure=1, include_missing=FALSE) {
     mapped_margins <- margin_map[margin]
     
     drop_na <- x@useNA == "no"
-
-    if (include_missing) {
-        # if include_missing, then never drop missings (since we need them to 
-        # calculate) but only override drop_na, since we don't want the NAs to
-        # be kept after margin calculation
-        drop_na <- FALSE
-    }
     
     ## This is the core of the function, in which we select the subset of the
     ## "real" cube that we want to aggregate to generate the margin table.
@@ -317,24 +303,36 @@ cubeMarginTable <- function (x, margin=NULL, measure=1, include_missing=FALSE) {
     ## TODO: try to do that.
     keep.these <- evalUseNA(mt, dims[mt_margins], x@useNA)
     out <- subsetCubeArray(mt, keep.these)
-
-    if (include_missing) {
-        # if we include_missing is TRUE, then we need to take the mean of the
-        # margin because we must collapse across all of the MR dimensions 
-        # because they include missing, the will have ~the same numbers, with 
-        # slight variations due to floating point fluctuation on the server.
-        mr_to_collapse <- which(as_selected_margins(margin, selecteds,
-                                                    before = FALSE) == margin)
-        if (length(mr_to_collapse)) {
-            out <- apply(out, mr_to_collapse, mean)
-        }
-    }
     
     # only attempt to apply a transform if the margin is 1 rows for now.
     if (!is.null(margin) && margin == 1) {
         out <- applyTransforms(x, array = out)
     }
     return(out)
+}
+
+
+#' Check validity of margins
+#'
+#' A helper function to check if margins supplied are compatible with the
+#' dimensions
+#'
+#' @param selecteds which dimensions are selected
+#' @param margin the margin(s) being specified
+#'
+#' @return None
+#' @export
+#'
+#' @keywords internal
+check_margins <- function (margin, selecteds) {
+    if (!is.null(margin) && max(margin) > sum(!selecteds)) {
+        ## Validate the input and give a useful error message.
+        ## base::margin.table says:
+        ## "Error in if (d2 == 0L) { : missing value where TRUE/FALSE needed"
+        ## which is terrible.
+        halt("Margin ", max(margin), " exceeds Cube's number of dimensions (",
+             sum(!selecteds), ")")
+    }
 }
 
 as_selected_margins <- function (margin, selecteds, before=TRUE) {
@@ -362,12 +360,12 @@ as_selected_margins <- function (margin, selecteds, before=TRUE) {
 
 #' Work with CrunchCubes, MultitableResults, and TabBookResults
 #'
-#' These functions provide an interface like [base::margin.table()]
-#' and [base::prop.table()] for the CrunchCube object. CrunchCubes contain
-#' richer metadata than standard R `array` objects, and they also conceal
-#' certain complexity in the data structures from the user. In particular,
-#' multiple-response variables are generally represented as single dimensions
-#' in result tables, but in the actual data, they may comprise two dimensions.
+#' These functions provide an interface like [base::margin.table()] and
+#' [base::prop.table()] for the CrunchCube object. CrunchCubes contain richer
+#' metadata than standard R `array` objects, and they also conceal certain
+#' complexity in the data structures from the user. In particular,
+#' multiple-response variables are generally represented as single dimensions in
+#' result tables, but in the actual data, they may comprise two dimensions.
 #' These methods understand the subtleties in the Crunch data types and
 #' correctly compute margins and percentages off of them.
 #'
@@ -376,34 +374,30 @@ as_selected_margins <- function (margin, selecteds, before=TRUE) {
 #' objects, they effectively apply over each CrunchCube contained in them.
 #'
 #' `bases` is an additional method for CrunchCubes. When making weighted
-#' requests, `bases` allows you to access the unweighted counts for every
-#' cell in the resulting table (array). The `bases` function takes a
-#' "margin" argument to work like `margin.table`, or with `margin=0`
-#' gives all cell counts.
-#' 
-#' `unconditional.margin` is similar to `margin.table`, however instead of only
-#' returning the non-missing or valid counts for all dimensions, it returns the 
-#' non-missing counts in the direction of the margin, but includes the missing 
-#' counts from all other directions. This is useful if you want to get counts 
-#' that are equivalent to a univariate cube from a multivariate cube. For example
-#' `unconditional.margin(crtabs(~ fruit + pets, ds), 1)` will be equal to 
+#' requests, `bases` allows you to access the unweighted counts for every cell
+#' in the resulting table (array). The `bases` function takes a "margin"
+#' argument to work like `margin.table`, or with `margin=0` gives all cell
+#' counts.
+#'
+#' `collapse.dimensions` returns a cube that collapses all dimensions but the one
+#' given in `margin`. This is useful if you want to get counts that are
+#' equivalent to a univariate cube from a multivariate cube. For example
+#' `collapse.dimensions(crtabs(~ fruit + pets, ds), 1)` will be equal to 
 #' `crtabs(~ fruit, ds)`.
 #'
 #' @param x a CrunchCube
 #' @param margin index, or vector of indices to generate margin for. See
-#' [base::prop.table()]. `bases()` accepts `0` as an additional valid
-#' value for `margin`, which yields the unweighted counts for the
-#' query.
+#'   [base::prop.table()]. `bases()` accepts `0` as an additional valid value
+#'   for `margin`, which yields the unweighted counts for the query.
 #' @param digits For `round`, the number of decimal places to round to. See
-#' [base::round()]
+#'   [base::round()]
 #'
 #' @return When called on CrunchCubes, these functions return an `array`.
-#' Calling prop.table on
-#' a MultitableResult returns a list of prop.tables of the CrunchCubes it
-#' contains. Likewise, prop.table on a TabBookResult returns a list of lists of
-#' prop.tables.
+#'   Calling prop.table on a MultitableResult returns a list of prop.tables of
+#'   the CrunchCubes it contains. Likewise, prop.table on a TabBookResult
+#'   returns a list of lists of prop.tables.
 #' @name cube-computing
-#' @aliases cube-computing margin.table prop.table bases round unconditional.margin
+#' @aliases cube-computing margin.table prop.table bases round collapse.dimensions
 #' @seealso [base::margin.table()] [base::prop.table()]
 NULL
 
@@ -415,8 +409,54 @@ setMethod("margin.table", "CrunchCube", function (x, margin=NULL) {
 
 #' @rdname cube-computing
 #' @export
-setMethod("unconditional.margin", "CrunchCube", function (x, margin=NULL) {
-    cubeMarginTable(x, margin, include_missing = TRUE)
+setMethod("collapse.dimensions", "CrunchCube", function (x, margin=NULL) {
+    ## Check "margin" against number of (non-"selected" invisible MR) dims
+    selecteds <- is.selectedDimension(x@dims)
+    check_margins(margin, selecteds)
+    
+    # TODO: clean up this hacky code and put it into a helper function
+    selects <- which(is.selectedDimension(x@dims)) - seq_along(which(is.selectedDimension(x@dims)))
+    non_selects <- which(!is.selectedDimension(x@dims)) - (seq_along(which(is.selectedDimension(x@dims))) - 1)
+    map <- seq_along(sort(c(selects, non_selects)))
+    names(map) <- sort(c(selects, non_selects))
+
+    margin_with_MR <- which(names(map) %in% margin)
+    
+    all_margins <- seq_along(x@dims)
+    off_margins <- setdiff(all_margins, margin_with_MR)
+    
+    # MR specialness
+    margin_selected <- is.selectedDimension(x@dims)[margin_with_MR]
+    if (any(margin_selected)) {
+        this_is_an_MR <- TRUE
+        off_margins <- sort(c(off_margins, margin_with_MR[!margin_selected]))
+    } else {
+        this_is_an_MR <- FALSE
+    }
+ 
+    out <- x
+    out@arrays[] <- lapply(out@arrays, function(arr){
+        array <- apply(arr, off_margins, sum)
+        if (this_is_an_MR) {
+            # MR specialness
+            browser()
+            ## First, take the "Selected" slices, if any
+            array <- takeSelectedDimensions(array, x@dims[off_margins])
+            
+            if (margin == 1) {
+                array <- apply(array, 2, mean)
+            } else if (margin == 2) {
+                array <- apply(array, 1, mean)
+            } else {
+                halt("this needs to be")
+            }
+        }
+        return(array)
+    })
+    
+    out@dims <- out@dims[off_margins]
+    
+    return(out)
 })
 
 #' @export

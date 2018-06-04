@@ -203,20 +203,8 @@ test_that("prop.table(cell) for cat x MR x MR", {
 mr_x_mr <- loadCube(test_path("cubes/full-cube.json"))
 mr_x_mr_dims <- dimnames(mr_x_mr)
 
-test_that("unconditional.margin(mr_x_mr)", {
-    expect_equivalent(unconditional.margin(mr_x_mr, 1),
-                      cubify(19935.9325550077,
-                             8815.06513916879,
-                             12015.5649554376,
-                             7967.67530412789,
-                             25379.6151957024,
-                             5130.6201930451,
-                             604.39533293168,
-                             1757.81059587395,
-                             3140.06957091528,
-                             dims=mr_x_mr_dims["offal"]))
-    
-    expect_equivalent(unconditional.margin(mr_x_mr, 2),
+test_that("collapse.dimensions(mr_x_mr)", {
+    expect_equivalent(as.array(collapse.dimensions(mr_x_mr, 1)),
                       # note this is a 1-d output, condensed here for space
                       cubify(13068.9587689331, 20954.7013096216,
                              6650.64488216886, 9401.03672837049,
@@ -234,34 +222,46 @@ test_that("unconditional.margin(mr_x_mr)", {
                              24395.8900036815,
                              dims=mr_x_mr_dims["letters"]))
     
+        expect_equivalent(as.array(collapse.dimensions(mr_x_mr, 2)),
+                      cubify(19935.9325550077,
+                             8815.06513916879,
+                             12015.5649554376,
+                             7967.67530412789,
+                             25379.6151957024,
+                             5130.6201930451,
+                             604.39533293168,
+                             1757.81059587395,
+                             3140.06957091528,
+                             dims=mr_x_mr_dims["offal"]))
+    
     # check against a univariate cube with the same data to confirm this is 
     # actually the univariate, unconditional margin
     mr_x_self <- loadCube(test_path("cubes/natrep-cube.json"))
-    expect_equivalent(unconditional.margin(mr_x_mr, 1),
-                      as.array(mr_x_self))   
+    expect_equivalent(collapse.dimensions(mr_x_mr, 2),
+                      mr_x_self)  
 })
 
 
-test_that("unconditional.margin(cat_x_mr)", {
-    expect_equivalent(unconditional.margin(cat_x_mr, 1),
-                      cubify(84.7731562534069, 169.017244048007,
-                             dims=cat_x_mr_dims["fruit"]))
-    
-    expect_equivalent(unconditional.margin(cat_x_mr, 2),
+test_that("collapse.dimensions(cat_x_mr)", {
+    expect_equivalent(as.array(collapse.dimensions(cat_x_mr, 1)),
                       cubify(22.9672704148528, 45.7789165449064, 86.9728287914322,
                              dims=cat_x_mr_dims["zoo"]))
+    
+    expect_equivalent(as.array(collapse.dimensions(cat_x_mr, 2)),
+                      cubify(84.7731562534069, 169.017244048007,
+                             dims=cat_x_mr_dims["fruit"]))
 })
 
-test_that("unconditional.margin(cat_x_mr_x_mr)", {
-    expect_equivalent(unconditional.margin(cat_x_mr_x_mr, 1),
+test_that("collapse.dimensions(cat_x_mr_x_mr)", {
+    expect_equivalent(as.array(collapse.dimensions(cat_x_mr_x_mr, c(2, 3))),
                       cubify(10000, 10000,
                              dims=cat_x_mr_x_mr_dims["animal"]))
     
-    expect_equivalent(unconditional.margin(cat_x_mr_x_mr, 2),
+    expect_equivalent(as.array(collapse.dimensions(cat_x_mr_x_mr, c(1, 3))),
                       cubify(6970, 7029, 6940,
                              dims=cat_x_mr_x_mr_dims["opinion_mr"]))
     
-    expect_equivalent(unconditional.margin(cat_x_mr_x_mr, 3),
+    expect_equivalent(as.array(collapse.dimensions(cat_x_mr_x_mr, c(1,2))),
                       cubify(3867, 7002,
                              dims=cat_x_mr_x_mr_dims["feeling_mr"]))
 })
@@ -353,13 +353,13 @@ with_test_authentication({
             ))
     })
     
-    test_that("unconditional.margin(~x+y, 1) == unconditional.margin(~x)", {
+    test_that("collapse.dimensions(~x+y, 1) == collapse.dimensions(~x)", {
         bivariate_cube <- crtabs(~ allpets + q1, data=ds)
         univariate_allpets <- crtabs(~ allpets, data=ds)
         univariate_q1 <- crtabs(~ q1, data=ds)
-        expect_equivalent(unconditional.margin(bivariate_cube, 1),
-                          as.array(univariate_allpets))
-        expect_equivalent(unconditional.margin(bivariate_cube, 2),
-                          as.array(univariate_q1))
+        expect_equivalent(collapse.dimensions(bivariate_cube, 1),
+                          univariate_allpets)
+        expect_equivalent(collapse.dimensions(bivariate_cube, 2),
+                          univariate_q1)
     })
 })
