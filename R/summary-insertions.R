@@ -89,16 +89,20 @@ medianInsert <- function (element, var_cats, vec, includeNA = FALSE) {
     num_values <- num_values[o]
     counts <- counts[o]
     perc <- cumsum(counts)/sum(counts)
-
     # if any of the bins are 0.5, return the mean of that and the one above it.
-    if (any(perc == 0.5)) {
+    if (any(!is.na(perc) & perc == 0.5)) {
         n <- which(perc == 0.5)
         return((num_values[n]+num_values[n+1])/2)
     }
 
     # otherwise return the first bin that is more than 50%
     over0.5 <- which(perc > 0.5)
-    return(num_values[min(over0.5)])
+    if (length(over0.5 > 0)) {
+        out <- num_values[min(over0.5)]
+    } else {
+        out <- NA
+    }
+    return(out)
 }
 
 summaryStatInsertions <- list(
