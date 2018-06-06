@@ -110,6 +110,7 @@ reference:
   - importMultitable
   - makeArray
   - makeMRFromText
+  - makeArrayGadget
   - is-selected-categories
   - unbind
 - title: Ordering

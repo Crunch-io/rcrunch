@@ -29,6 +29,7 @@ Remotes:
     nealrichardson/httptest
 Suggests:
     covr,
+    crunchy,
     devtools,
     haven,
     httptest (>= 3.0.0),
