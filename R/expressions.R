@@ -286,6 +286,7 @@ setMethod("!=", c("CategoricalVariable", "character"), function (e1, e2) {
 setMethod("!=", c("CategoricalVariable", "factor"),
     function (e1, e2) e1 != as.character(e2))
 
+#' @rdname dataset-reference
 setMethod("datasetReference", "CrunchExpr", function (x) x@dataset_url)
 
 #' @rdname expressions
