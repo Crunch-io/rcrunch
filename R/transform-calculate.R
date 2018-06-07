@@ -88,7 +88,7 @@ collateCats <- function (inserts, var_cats) {
     cats_out@.Data <- var_cats
     
     if (length(var_cats) < 1) {
-        halt("Can't collateCats with less than one categories.")
+        halt("Can't collateCats with no categories.")
     }
     
     last_category <- tail(ids(var_cats), 1)

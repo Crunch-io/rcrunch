@@ -111,7 +111,7 @@ test_that("collateCats works all together", {
 test_that("collateCats errors when given bad input", {
     expect_error(
         collateCats(insrts["missing categories"], Categories()),
-        "Can't collateCats with less than one categories")
+        "Can't collateCats with no categories")
 })
 
 insrt_heads <- Insertions(data=list(list(name = "Subtitle", anchor = "top")))
@@ -142,7 +142,7 @@ test_that("Converting insertions to subtypes works", {
     # collate and check
     collated <- collateCats(c(insrts_subtyped, insrt_heads_subtyped), cats)
     expect_true(all(are.Subtotals(collated[c(1, 5, 8, 15, 16, 17)])))
-    expect_true(all(are.Headings(collated[c(2)])))
+    expect_true(all(are.Headings(collated[2])))
     expect_true(all(unlist(lapply(collated[c(3, 4, 6, 7, 9, 10, 11, 12, 13, 14)],
                            is.category))))
     
