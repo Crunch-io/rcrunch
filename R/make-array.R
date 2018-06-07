@@ -94,8 +94,7 @@ makeMR <- function (subvariables, name, selections, ...) {
 #' @return a valid call to `makeArray()` or `makeMR()`
 #' @export
 makeArrayGadget <- function(){
-    ns <- readLines(system.file("NAMESPACE", package = "crunchy"))
-    if ("export(makeArrayGadget)" %in% ns) {
+    if ("makeArrayGadget" %in% ls(envir = asNamespace("crunchy"))) {
         crunchy::makeArrayGadget()
     } else {
         stop("Please install the latest version of crunchy to access this function.")
