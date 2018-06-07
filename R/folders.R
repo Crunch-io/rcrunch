@@ -207,7 +207,8 @@ folder <- function (x) {
     variables <- setdiff(variables, urls(folder))
     if (length(variables)) {
         ind <- sapply(variables, emptyObject, simplify=FALSE)
-        crPATCH(self(folder), body=toJSON(wrapCatalog(index=ind)))
+        crPATCH(self(folder), body=toJSON(wrapCatalog(index=ind,
+            graph=I(c(urls(folder), variables)))))
         ## Additional cache invalidation
         ## Drop all variable entities because their catalogs.folder refs are stale
         dropOnly(variables)
