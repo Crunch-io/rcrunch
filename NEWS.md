@@ -1,3 +1,9 @@
+## crunch 1.22.3 (under development)
+* Fix order of variables when using `mv()` to move them to a folder.
+* Internal: `getDimTypes()` returns a richer set of cube dimension types differentiating multiple response from categorical array dimensions.
+* Internal: Added support for `alias`, `description`, and `notes` on `VariableTuples`
+* Resolve missing `Suggests` reference for test packages, following new `check` requirement.
+
 ## crunch 1.22.2
 * New introductory vignette: `vignette("crunch")`
 * `changeCategoryID()` tries to unset then reset the dataset exclusion if that impacts its progress. Best practice is to disable exclusions before running `changeCategoryID()` if at all possible.
@@ -5,10 +11,7 @@
 * Fix a bug introduced in 1.22.0 in creating categorical variables from factors with missing values.
 * Fix a similar yet unrelated bug in creating numeric and other types of variables with all-`NA` data.
 * Fix `streamRows()` for case when sending only one row (#253).
-* Fix order of variables when using `mv()` to move them to a folder.
 * Internal: support for the "selected_array" method of multiple response calculation, deprecated since 1.20.0, has been removed.
-* Internal: `getDimTypes()` returns a richer set of cube dimension types differentiating multiple response from categorical array dimensions.
-* Internal: Added support for `alias`, `description`, and `notes` on `VariableTuples`
 
 ## crunch 1.22.0
 
