@@ -60,18 +60,33 @@ with_mock_crunch({
             folders(ds))
     })
 
+    add_birthyr_to_group2 <- paste0(
+        'https://app.crunch.io/api/datasets/1/folders/2/',
+        ' ',
+        '{"element":"shoji:catalog","index":{',
+        '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{}},',
+        '"graph":[',
+        '"https://app.crunch.io/api/datasets/1/variables/starttime/",',
+        '"https://app.crunch.io/api/datasets/1/variables/catarray/",',
+        '"https://app.crunch.io/api/datasets/1/variables/birthyr/"',
+        ']}'
+    )
     test_that("mv variables to existing folder, selecting from dataset", {
         expect_PATCH(ds %>% mv(c("birthyr", "gender"), "Group 2"),
             'https://app.crunch.io/api/datasets/1/folders/2/',
             '{"element":"shoji:catalog","index":{',
             '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{},',
-            '"https://app.crunch.io/api/datasets/1/variables/gender/":{}}}')
+            '"https://app.crunch.io/api/datasets/1/variables/gender/":{}},',
+            '"graph":[',
+            '"https://app.crunch.io/api/datasets/1/variables/starttime/",',
+            '"https://app.crunch.io/api/datasets/1/variables/catarray/",',
+            '"https://app.crunch.io/api/datasets/1/variables/birthyr/",',
+            '"https://app.crunch.io/api/datasets/1/variables/gender/"',
+            ']}')
     })
     test_that("mv doesn't include vars that already exist in the folder in index patch", {
         expect_PATCH(ds %>% mv(c("birthyr", "starttime"), "Group 2"),
-            'https://app.crunch.io/api/datasets/1/folders/2/',
-            '{"element":"shoji:catalog","index":{',
-            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{}}}')
+            add_birthyr_to_group2)
         expect_no_request(ds %>% mv("starttime", "Group 2"))
     })
     test_that("mkdir", {
@@ -92,43 +107,47 @@ with_mock_crunch({
     })
     test_that("mv to the folder() of an object", {
         expect_PATCH(ds %>% mv("birthyr", folder(ds$starttime)),
-            'https://app.crunch.io/api/datasets/1/folders/2/',
-            '{"element":"shoji:catalog","index":{',
-            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{}}}')
+            add_birthyr_to_group2)
     })
     test_that("cd then mv (relative path)", {
         expect_PATCH(ds %>% cd("Group 1") %>% mv("Birth Year", "../Group 2"),
-            'https://app.crunch.io/api/datasets/1/folders/2/',
-            '{"element":"shoji:catalog","index":{',
-            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{}}}')
+            add_birthyr_to_group2)
     })
     test_that("mv (contents of) a folder by specifying it as 'variables'", {
-        expect_PATCH(ds %>% mv(cd(ds, "Group 1"), "Group 2"),
+        expected_patch <- paste0(
             'https://app.crunch.io/api/datasets/1/folders/2/',
+            ' ',
             '{"element":"shoji:catalog","index":{',
             '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{},',
             '"https://app.crunch.io/api/datasets/1/folders/3/":{},',
-            '"https://app.crunch.io/api/datasets/1/variables/textVar/":{}}}')
+            '"https://app.crunch.io/api/datasets/1/variables/textVar/":{}},',
+            '"graph":[',
+            '"https://app.crunch.io/api/datasets/1/variables/starttime/",',
+            '"https://app.crunch.io/api/datasets/1/variables/catarray/",',
+            '"https://app.crunch.io/api/datasets/1/variables/birthyr/",',
+            '"https://app.crunch.io/api/datasets/1/folders/3/",',
+            '"https://app.crunch.io/api/datasets/1/variables/textVar/"',
+            ']}'
+        )
+        expect_PATCH(ds %>% mv(cd(ds, "Group 1"), "Group 2"),
+            expected_patch)
         ## Can use . to say current directory contents, but have to specify it twice
         expect_PATCH(ds %>% cd("Group 1") %>% mv(., ., "../Group 2"),
-            'https://app.crunch.io/api/datasets/1/folders/2/',
-            '{"element":"shoji:catalog","index":{',
-            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{},',
-            '"https://app.crunch.io/api/datasets/1/folders/3/":{},',
-            '"https://app.crunch.io/api/datasets/1/variables/textVar/":{}}}')
+            expected_patch)
         ## Or can say "TRUE" to select all
         expect_PATCH(ds %>% cd("Group 1") %>% mv(TRUE, "../Group 2"),
-            'https://app.crunch.io/api/datasets/1/folders/2/',
-            '{"element":"shoji:catalog","index":{',
-            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{},',
-            '"https://app.crunch.io/api/datasets/1/folders/3/":{},',
-            '"https://app.crunch.io/api/datasets/1/variables/textVar/":{}}}')
+            expected_patch)
     })
     test_that("mv folders", {
         expect_PATCH(ds %>% cd("Group 1") %>% mv("Nested", "../Group 2"),
             'https://app.crunch.io/api/datasets/1/folders/2/',
             '{"element":"shoji:catalog","index":{',
-            '"https://app.crunch.io/api/datasets/1/folders/3/":{}}}')
+            '"https://app.crunch.io/api/datasets/1/folders/3/":{}},',
+            '"graph":[',
+            '"https://app.crunch.io/api/datasets/1/variables/starttime/",',
+            '"https://app.crunch.io/api/datasets/1/variables/catarray/",',
+            '"https://app.crunch.io/api/datasets/1/folders/3/"',
+            ']}')
     })
     test_that("mv error handling", {
         expect_error(ds %>% cd("Group 1") %>% mv("NOT A VARIABLE", "../Group 2"),
@@ -136,23 +155,23 @@ with_mock_crunch({
     })
     test_that("mv with dplyr-esque utilities", {
         expect_PATCH(ds %>% cd("Group 1") %>% mv(starts_with("Birth"), "../Group 2"),
-            'https://app.crunch.io/api/datasets/1/folders/2/',
-            '{"element":"shoji:catalog","index":{',
-            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{}}}')
+            add_birthyr_to_group2)
         expect_PATCH(ds %>% cd("Group 1") %>% mv(ends_with("Year"), "../Group 2"),
-            'https://app.crunch.io/api/datasets/1/folders/2/',
-            '{"element":"shoji:catalog","index":{',
-            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{}}}')
+            add_birthyr_to_group2)
+        ## Duplicates are resolved
+        expect_PATCH(ds %>% cd("Group 1") %>% mv(c(starts_with("Birth"), ends_with("Year")), "../Group 2"),
+            add_birthyr_to_group2)
         expect_PATCH(ds %>% cd("Group 1") %>% mv(c(starts_with("Birth"), contains("est")), "../Group 2"),
             'https://app.crunch.io/api/datasets/1/folders/2/',
             '{"element":"shoji:catalog","index":{',
             '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{},',
-            '"https://app.crunch.io/api/datasets/1/folders/3/":{}}}')
-        ## Duplicates are resolved
-        expect_PATCH(ds %>% cd("Group 1") %>% mv(c(starts_with("Birth"), ends_with("Year")), "../Group 2"),
-            'https://app.crunch.io/api/datasets/1/folders/2/',
-            '{"element":"shoji:catalog","index":{',
-            '"https://app.crunch.io/api/datasets/1/variables/birthyr/":{}}}')
+            '"https://app.crunch.io/api/datasets/1/folders/3/":{}},',
+            '"graph":[',
+            '"https://app.crunch.io/api/datasets/1/variables/starttime/",',
+            '"https://app.crunch.io/api/datasets/1/variables/catarray/",',
+            '"https://app.crunch.io/api/datasets/1/variables/birthyr/",',
+            '"https://app.crunch.io/api/datasets/1/folders/3/"',
+            ']}')
     })
 
     test_that("rmdir deletes", {
@@ -223,7 +242,11 @@ with_test_authentication({
         expect_true("mpg" %in% names(cd(ds, "test")))
         with_consent(ds <- rmdir(ds, "test"))
         expect_false("test" %in% names(cd(ds, "/")))
-        skip("Backend bug in deleting folders")
         expect_false("mpg" %in% names(ds))
+    })
+
+    test_that("mv preserves order of variables", {
+        ds <- mv(ds, c("qsec", "drat", "vs", "wt"), "newdir")
+        expect_identical(names(cd(ds, "newdir")), c("qsec", "drat", "vs", "wt"))
     })
 })
