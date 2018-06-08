@@ -8,6 +8,12 @@ with_mock_crunch({
         expect_identical(names(projects), c("Project One", "Project Two"))
     })
 
+    test_that("ProjectCatalog print (as.data.frame) method", {
+        expect_identical(dim(as.data.frame(projects)), c(2L, 3L))
+        expect_identical(names(as.data.frame(projects)),
+            c("name", "id", "description"))
+    })
+
     aproject <- projects[["Project One"]]
     test_that("Getting project from catalog", {
         expect_is(projects[[1]], "CrunchProject")

@@ -5,12 +5,16 @@
         "https://app.crunch.io/api/projects/project1/": {
             "name": "Project One",
             "description": "Long description text",
-            "icon": ""
+            "icon": "",
+            "permissions": {},
+            "id": "project1"
         },
         "https://app.crunch.io/api/projects/project2/": {
             "name": "Project Two",
             "description": "Long description text here as well",
-            "icon": ""
+            "icon": "",
+            "permissions": {},
+            "id": "project2"
         }
     }
 }

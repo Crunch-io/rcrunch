@@ -1,75 +1,96 @@
 ---
-title: "Variable Folders and Organization"
-description: "Variables within datasets are organized in folders. The crunch package provides tools for creating folders and moving variables among them."
+title: "Organizing Datasets in Projects"
+description: '"Projects" are like folders for your datasets. They allow you to organize datasets into groups and manage access to those bundles of datasets.'
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Variable Folders and Organization}
+  %\VignetteIndexEntry{Organizing Datasets in Projects}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-[Previous: array variables](array-variables.html)
+> The APIs for projects and organizing datasets within them are currently under development. What is documented here is what currently works, and it will continue to work. There are other methods which work today but that are being deprecated; these methods are not mentioned here. And there may be actions that logically seem like they should work but don't today; they will be supported once the new APIs are completed. Watch this vignette for updates as the APIs evolve.
 
-```{r, results='hide', echo=FALSE, message=FALSE}
-library(crunch)
-options(width=120)
+## Projects
+
+Projects are used to organize datasets into groups and manage access to those bundles of datasets. View your top-level projects with `projects()`:
+
+```r
+projects()
+
+##                             name                               id description
+## 1                  Daily Surveys 1093171cd5a746b283adf8b7444bebe7            
+## 2      Stack Overflow Dev Survey 84f740d53da14a5b8001ac97c8925813            
+## 3                 Crunch.io Devs 80c51523fc31446396f6c915a02c77de            
 ```
 
-> This is the new variable folder API, which replaces the old "ordering" API. It is currently in a beta testing phase. Feedback on your experience working with it is greatly appreciated. During this beta period, both old and new APIs are available. For details on the old methods, see [the old vignette](variable-order-old.html).
+To select a project, use standard R list extraction methods.
 
-In the web application, variables in a dataset are displayed in a list on the left side of the screen.
+```r
+proj <- projects()[["Crunch.io Devs"]]
+```
 
-<!-- screenshot -->
+`newProject()` creates a new top-level project.
 
-Typically, when you import a dataset, the variable list is flat, but it can be organized into an accordion-like hierarchy. The [variable organizer in the Crunch GUI](http://support.crunch.io/crunch/crunch_organizing-variables.html) allows you to organize your variables visually, but you can also manage this metadata from R using the `crunch` package.
+```r
+proj <- newProject(name="A new start")
+projects()
+
+
+##                             name                               id description
+## 1                  Daily Surveys 1093171cd5a746b283adf8b7444bebe7            
+## 2      Stack Overflow Dev Survey 84f740d53da14a5b8001ac97c8925813            
+## 3                 Crunch.io Devs 80c51523fc31446396f6c915a02c77de   
+## 4                    A new start 23deb438a9dde2340091dec23abbbb43
+```
+
+Once you have a project in hand, you can put datasets in it and organize them into groups.
 
 ## File-system like
 
-This variable hierarchy can be thought of like a file system on your computer, with files (variables) organized into directories (folders). As such, the main functions you use to manage it are reminiscent of a file system.
+Datasets can be organized hierarchically inside of projects. You can think of this like a file system on your computer, with files (datasets) organized into directories (projects, or groups). As such, the main functions you use to manage it are reminiscent of a file system.
 
-* `cd()`, changes directories, i.e. selects a folder
-* `mkdir()` makes a directory, i.e. creates a folder
-* `mv()` moves variables and folders to a different folder
-* `rmdir()` removes a directory, i.e. deletes a folder
+* `mkdir()` makes a directory, i.e. creates a group in a project
+* `mv()` moves datasets and groups to a different place in the project
+* `rmdir()` removes a directory, i.e. deletes a group
 
 Like a file system, you can express the "path" to a folder as a string separated by a "/" delimiter, like this:
 
 ```r
-mkdir(ds, "Brands/Cars and Trucks/Domestic")
+mkdir(proj, "Tracking studies/Domestic/Automotive")
 ```
 
 If your folder names should legitimately have a "/" in them, you can set a different character to be the path separator. See `?mkdir` or any of the other functions' help files for details.
 
-Paths can be expressed relative to the current object---a folder, or in this case, the dataset, which translates to its top-level `"/"` root folder in path specification---and the file system's special path segments `".."` (go up a level) and `"."` (this level) are also supported. We'll use those in examples below.
-
 You can also specify paths as a vector of path segments, like
 
 ```r
-mkdir(ds, c("Brands", "Cars and Trucks", "Domestic"))
+mkdir(proj, c("Tracking studies", "Domestic", "Automotive"))
 ```
 
 which is equivalent to the previous example. One or the other way may be more convenient, depending on what you're trying to accomplish.
 
-These four functions all take a dataset or a folder as the first argument, and they return the same object passed to it, except for `cd`, which returns the selected folder. As such, they are designed to work with `magrittr`-style piping (`%>%`) for convenience in chaining together steps, though they don't require that you do.
+These functions all take a project as the first argument, and they return the same object passed to it. As such, they are designed to work with `magrittr`-style piping (`%>%`) for convenience in chaining together steps, though they don't require that you do.
 
-## Viewing the folders
+## Viewing the groups
 
-To get started, let's pick up the dataset we used in the [array variables vignette](array-variables.html) and view its starting layout. We can do that by selecting the root folder ("/") and printing it
+> During this period of API transition, we'll refer to the organization of datasets into "groups" inside a project as that more accurately reflects the current API and its limited capabilities. In the new API, "projects" will contain other "projects".
+
+To get started, let's look at the contents of our "Crunch.io Devs" project.
 
 ```r
-library(magrittr)
-ds %>%
-    cd("/") %>%
-    print()
+proj <- projects()[["Crunch.io Devs"]]
+proj
+
+## TODO: print method, and print output
 ```
 
-(The `print()` isn't strictly necessary here as `cd` will return the folder and thus it will print by default, but we'll use different `print` arguments later, so it's included here both for explicitness and illustration.)
-
-It's flat---there are no folders here, only variables. If you're importing data from a `data.frame` or a file, like an SPSS file, this is where you'll begin.
+It's flat---there are no groups here, only datasets.
 
 ## Creating folders
 
-Let's make some folders and move some variables into them. To start, I know that the demographic variables are at the back of the dataset, so let's make a "Demos" folder and move variables 21 to 37 into it:
+Let's make some groups and move some datasets into them. To start, ... . We could call `mkdir()` and then `mv()`, but for convenience, `mv()` will create the group specified by your path if it doesn't already exist, so we can create the group and put
+
+<!-- Stuff below here is copypasta from variable-order.Rmd for reference. -->
 
 ```r
 ds %>%
@@ -80,8 +101,9 @@ ds %>%
 Now when I print the top-level directory again, I see a "Demos" folder and don't see those demographic variables:
 
 ```r
-ds %>%
-    cd("/")
+proj
+
+## TODO: print output
 ```
 
 `mv()` can reference variables or folders within a level in several ways. Numeric indices like we just did probably won't be the most common way you'll do it: names work just as well and are more transparent. Let's move the first variable, `perc_skipped`, into "Demos" as well
