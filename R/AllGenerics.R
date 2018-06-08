@@ -95,6 +95,12 @@ setGeneric("subvariables", function (x) standardGeneric("subvariables"))
 setGeneric("subvariables<-",
     function (x, value) standardGeneric("subvariables<-"))
 
+#' Get a Crunch object's dataset
+#'
+#' @param x a Crunch object
+#' @return The url of the dataset which contains that object
+#' @keywords internal
+#' @rdname dataset-reference
 #' @export
 setGeneric("datasetReference", function (x) standardGeneric("datasetReference"))
 setGeneric("hide", function (x) standardGeneric("hide"))
