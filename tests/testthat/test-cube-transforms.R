@@ -412,7 +412,6 @@ test_that("cat by cat with both column and row subtotals", {
             sep = "\n"),
         fixed = TRUE
     )
-    
 })
     
 test_that("cat by cat with both column and row subtotals (margins and proportions)", {
@@ -478,6 +477,77 @@ test_that("cat by cat with both column and row subtotals (margins and proportion
                   "extremely unhappy", "unhappy"),
             "animals" = c("cats", "felines", "dogs", "both")))
     expect_equivalent(prop.table(pet_feeling_both), all_prop)
+})
+
+test_that("one bad transform doesn't disable all", {
+    pet_feeling_bad_feelings <- pet_feeling_bad_animals <- pet_feeling_both
+    only_feelings <- cubify(
+        c(9, 9, 5, 14,
+          12, 12, 12, 24,
+          12, 12, 7, 19,
+          10, 10, 10, 20,
+          11, 11, 12, 23),
+        dims = list(
+            "feelings" =
+                c("extremely happy", "somewhat happy", "neutral",
+                  "somewhat unhappy", "extremely unhappy"),
+            "animals" = c("cats", "felines", "dogs", "both"))
+    )
+    
+    # malform the transform for animals only
+    pet_feeling_bad_feelings@dims$feelings$references$view$transform$insertions[[2]]$anchor <- NA
+    expect_equivalent(applyTransforms(pet_feeling_bad_feelings), only_feelings)
+    
+    # pretty printing
+    expect_prints(
+        pet_feeling_bad_feelings,
+        paste(
+            "                 animals",
+            "feelings             cats \033[30m\033[3mfelines\033[23m\033[39m    dogs \033[30m\033[3m   both\033[23m\033[39m",
+            "  extremely happy       9 \033[30m\033[3m      9\033[23m\033[39m       5 \033[30m\033[3m     14\033[23m\033[39m",
+            "   somewhat happy      12 \033[30m\033[3m     12\033[23m\033[39m      12 \033[30m\033[3m     24\033[23m\033[39m",
+            "          neutral      12 \033[30m\033[3m     12\033[23m\033[39m       7 \033[30m\033[3m     19\033[23m\033[39m",
+            " somewhat unhappy      10 \033[30m\033[3m     10\033[23m\033[39m      10 \033[30m\033[3m     20\033[23m\033[39m",
+            "extremely unhappy      11 \033[30m\033[3m     11\033[23m\033[39m      12 \033[30m\033[3m     23\033[23m\033[39m",
+            sep = "\n"),
+        fixed = TRUE
+    )
+    
+    only_animals <- cubify(
+        c(9, 5,
+          12, 12,
+          21, 17,
+          12, 7,
+          10, 10,
+          11, 12,
+          21, 22),
+        dims = list(
+            "feelings" =
+                c("extremely happy", "somewhat happy", "happy", "neutral",
+                  "somewhat unhappy", "extremely unhappy", "unhappy"),
+            "animals" = c("cats", "dogs"))
+    )
+    
+    # malform the transform for animals only
+    pet_feeling_bad_animals@dims$animals$references$view$transform$insertions[[2]]$anchor <- NA
+    expect_equivalent(applyTransforms(pet_feeling_bad_animals), only_animals)
+    
+    # pretty printing
+    expect_prints(
+        pet_feeling_bad_animals,
+        paste(
+            "                 animals",
+            "feelings             cats    dogs",
+            "  extremely happy       9       5",
+            "   somewhat happy      12      12",
+            "\033[30m\033[3m            happy      21      17\033[23m\033[39m",
+            "          neutral      12       7",
+            " somewhat unhappy      10      10",
+            "extremely unhappy      11      12",                                    
+            "\033[30m\033[3m          unhappy      21      22\033[23m\033[39m",
+            sep = "\n"),
+        fixed = TRUE
+    )
 })
 
 

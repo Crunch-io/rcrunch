@@ -12,26 +12,33 @@ setMethod("showTransforms", "CrunchCube", function (x) {
         
         # if the row dimension is categorical, make styles
         if (getDimTypes(x)[1] %in% c("categorical", "ca_categories")) {
-            row_cats <- Categories(data=index(variables(x))[[1]]$categories)
-            # subset the categories by those that evaleUseNA thinks we should keep:
-            row_cats <- row_cats[which(keep_cats[[1]])]
-            row_styles <- transformStyles(transforms(x)[[1]], row_cats)
-        } else {
-            # otherwise punt, because this is an array or MR var.
+            try({
+                row_cats <- Categories(data=index(variables(x))[[1]]$categories)
+                # subset the categories by those that evaleUseNA thinks we should keep:
+                row_cats <- row_cats[which(keep_cats[[1]])]
+                row_styles <- transformStyles(transforms(x)[[1]], row_cats)
+            }, silent = TRUE)
+        }
+        # If row_styles doesn't exist, make it null
+        if (!exists("row_styles")) {
             row_styles <- NULL
         }
 
         # if the columns dimension is categorical, make styles
         if (length(dim(x)) > 1 && getDimTypes(x)[2] %in% c("categorical", "ca_categories")) {
-            col_cats <- Categories(data=index(variables(x))[[2]]$categories)
-            # subset the categories by those that evaleUseNA thinks we should keep:
-            col_cats <- col_cats[which(keep_cats[[2]])]
-            col_styles <- transformStyles(transforms(x)[[2]], col_cats)
-        } else {
-            # otherwise punt, because this is an array or MR var.
+            try({
+                col_cats <- Categories(data=index(variables(x))[[2]]$categories)
+                # subset the categories by those that evaleUseNA thinks we should keep:
+                col_cats <- col_cats[which(keep_cats[[2]])]
+                col_styles <- transformStyles(transforms(x)[[2]], col_cats)
+            }, silent = TRUE)
+        } 
+        # If col_styles doesn't exist, make it null
+        if (!exists("col_styles")) {
             col_styles <- NULL
-        }        
-
+        }
+        
+        
         if (length(dim(appliedTrans)) > 0 & length(dim(appliedTrans)) <= 2) {
             tryCatch({
                 out <- prettyPrint2d(
@@ -160,9 +167,7 @@ applyTransforms <- function (x,
     }
     
     # if there are any transforms, then we need to subset the output.
-    try({
-        array <- subsetTransformedCube(array, dims_list, useNA)
-    })
+    array <- subsetTransformedCube(array, dims_list, useNA)
 
     return(array)
 }
