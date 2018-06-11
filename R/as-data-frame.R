@@ -112,6 +112,11 @@ csvToDataFrame <- function (csv_df, crdf) {
             cp <- columnParser("categorical")
             sub_a <- aliases(subvariables(v))
             return(structure(lapply(csv_df[sub_a], cp, v, mode), .Names=sub_a))
+        } else if (is.Numeric(v)) {
+            # We use this to coerce the missing entries to NA, so that warning is
+            # suppressed.
+            df_vect <- suppressWarnings(as.numeric(csv_df[[a]]))
+            return(structure(list(df_vect), .Names=a))
         } else {
             cp <- columnParser(type(v))
             return(structure(list(cp(csv_df[[a]], v, mode)), .Names=a))
