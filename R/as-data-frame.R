@@ -113,8 +113,14 @@ csvToDataFrame <- function (csv_df, crdf) {
             sub_a <- aliases(subvariables(v))
             return(structure(lapply(csv_df[sub_a], cp, v, mode), .Names=sub_a))
         } else if (is.Numeric(v)) {
-            # We use this to coerce the missing entries to NA, so that warning is
-            # suppressed.
+            # When data is downloaded using write.csv it includes the name of
+            # the No Data category instead of a missing value, and this is read
+            # into R as a character vector. The data needs to be downloaded in
+            # this form to preserve the missing categories for categorical data.
+            # We use as.numeric to convert this to numeric and coerce the "No
+            # Data" elements to NA. So c("1", "No Data", "2.7") becomes c(1, NA,
+            # 2.7). as.numeric issues a warning when coercion creates NAs, and
+            # because we expect that, we suppress the warning.
             df_vect <- suppressWarnings(as.numeric(csv_df[[a]]))
             return(structure(list(df_vect), .Names=a))
         } else {
