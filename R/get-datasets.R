@@ -56,15 +56,16 @@ datasets <- function (x=getAPIRoot()) {
 listDatasets <- function (kind=c("active", "all", "archived"), project=NULL,
     refresh=FALSE, shiny = FALSE) {
     if (shiny) {
-        checkInstalledPackages(c("rstudioapi", "shiny", "miniUI"))
-        rstudioapi::verifyAvailable("0.99.878")
-        listDatasetGadget(kind, refresh)
+        if (packageHasFunction("listDatasetGadget", "crunchy")) {
+            crunchy::listDatasetGadget()
+        } else {
+            halt("Please install a recent version of crunchy to use this feature.")
+        }
     } else {
         dscat <- selectDatasetCatalog(kind, project, refresh)
         return(names(dscat))
     }
 }
-
 selectDatasetCatalog <- function (kind=c("active", "all", "archived"),
                                   project=NULL, refresh=FALSE) {
     Call <- match.call()
