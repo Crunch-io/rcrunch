@@ -236,6 +236,7 @@ test_that("collapse.dimensions(mr_x_mr)", {
     
     # check against a univariate cube with the same data to confirm this is 
     # actually the univariate, unconditional margin
+    # it's the @.Data[[3]] portion of the metadata that's problematic
     mr_x_self <- loadCube(test_path("cubes/natrep-cube.json"))
     expect_equivalent(collapse.dimensions(mr_x_mr, 2),
                       mr_x_self)  
@@ -249,7 +250,7 @@ test_that("collapse.dimensions(cat_x_mr)", {
     
     expect_equivalent(as.array(collapse.dimensions(cat_x_mr, 2)),
                       cubify(84.7731562534069, 169.017244048007,
-                             dims=cat_x_mr_dims["fruit"]))
+                             dims=list(fruit = list("rambutan", "satsuma"))))
 })
 
 test_that("collapse.dimensions(cat_x_mr_x_mr)", {
@@ -331,6 +332,43 @@ test_that("as_selected_margins with before=FALSE", {
     expect_equal(as_selected_margins(NULL, selecteds, before=FALSE), c(2, 3, 4))
 })
 
+
+test_that("user2real translates cube margins with two categoricals", {
+    cat_cat <- loadCube(test_path("cubes/cat-x-cat.json"))
+    expect_equal(user2real(1, cube = cat_cat), 1)
+    expect_equal(user2real(2, cube = cat_cat), 2)
+    expect_equal(user2real(c(1, 2), cube = cat_cat), c(1, 2))
+    expect_null(user2real(NULL, cube = cat_cat))
+})
+
+test_that("user2real translates cube margins with cat by mr by mr", {
+    mr_cat <- loadCube(test_path("cubes/selected-crosstab-array-first.json"))
+    expect_equal(user2real(1, cube = mr_cat), c(1, 2))
+    expect_equal(user2real(2, cube = mr_cat), 3)
+    expect_equal(user2real(c(1, 2), cube = mr_cat), c(1, 2, 3))
+    expect_null(user2real(NULL, cube = mr_cat))
+})
+
+test_that("user2real translates cube margins with cat by mr by mr", {
+    cat_mr_mr <- loadCube(test_path("cubes/cat-x-mr-x-mr.json"))
+    expect_equal(user2real(1, cube = cat_mr_mr), 1)
+    expect_equal(user2real(2, cube = cat_mr_mr), c(2, 3))
+    expect_equal(user2real(c(1, 2), cube = cat_mr_mr), c(1, 2, 3))
+    expect_equal(user2real(3, cube = cat_mr_mr), c(4, 5))
+    expect_null(user2real(NULL, cube = cat_mr_mr))
+})
+
+test_that("user2real translates cube margins with catarray by mr", {
+    ca_mr <- loadCube(test_path("cubes/catarray-x-mr.json"))
+    expect_equal(user2real(1, cube = ca_mr), 1)
+    expect_equal(user2real(2, cube = ca_mr), 2)
+    expect_equal(user2real(3, cube = ca_mr), c(3, 4))
+    expect_equal(user2real(c(1, 2), cube = ca_mr), c(1, 2))
+    expect_equal(user2real(3, cube = ca_mr), c(3, 4))
+    expect_null(user2real(NULL, cube = ca_mr))   
+})
+
+
 with_mock_crunch({
     ds <- loadDataset("test ds")
 
@@ -358,8 +396,8 @@ with_test_authentication({
         univariate_allpets <- crtabs(~ allpets, data=ds)
         univariate_q1 <- crtabs(~ q1, data=ds)
         expect_equivalent(collapse.dimensions(bivariate_cube, 1),
-                          univariate_allpets)
-        expect_equivalent(collapse.dimensions(bivariate_cube, 2),
                           univariate_q1)
+        expect_equivalent(collapse.dimensions(bivariate_cube, 2),
+                          univariate_allpets)
     })
 })

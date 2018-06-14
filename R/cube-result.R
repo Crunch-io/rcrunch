@@ -413,51 +413,87 @@ setMethod("collapse.dimensions", "CrunchCube", function (x, margin=NULL) {
     ## Check "margin" against number of (non-"selected" invisible MR) dims
     selecteds <- is.selectedDimension(x@dims)
     check_margins(margin, selecteds)
-    
-    # TODO: clean up this hacky code and put it into a helper function
-    selects <- which(is.selectedDimension(x@dims)) - seq_along(which(is.selectedDimension(x@dims)))
-    non_selects <- which(!is.selectedDimension(x@dims)) - (seq_along(which(is.selectedDimension(x@dims))) - 1)
-    map <- seq_along(sort(c(selects, non_selects)))
-    names(map) <- sort(c(selects, non_selects))
+    margins_to_collapse <- user2real(margin, cube = x)
 
-    margin_with_MR <- which(names(map) %in% margin)
+    margins_to_keep <- setdiff(seq_along(x@dims), margins_to_collapse)
     
-    all_margins <- seq_along(x@dims)
-    off_margins <- setdiff(all_margins, margin_with_MR)
-    
-    # MR specialness
-    margin_selected <- is.selectedDimension(x@dims)[margin_with_MR]
-    if (any(margin_selected)) {
-        this_is_an_MR <- TRUE
-        off_margins <- sort(c(off_margins, margin_with_MR[!margin_selected]))
-    } else {
-        this_is_an_MR <- FALSE
-    }
- 
+    # if there are any _items in the margin to collapse, be wary!
+    has_items <- endsWith(getDimTypes(x)[margins_to_collapse], "_items")
+
     out <- x
     out@arrays[] <- lapply(out@arrays, function(arr){
+        off_margins <- margins_to_keep
+        if (any(has_items)) {
+            # mean across any items dimension
+            items_to_collapse <- margins_to_collapse[has_items]
+            off_margins <- sort(c(off_margins, items_to_collapse))
+        }
+        
         array <- apply(arr, off_margins, sum)
-        if (this_is_an_MR) {
-            # MR specialness
-            browser()
-            ## First, take the "Selected" slices, if any
-            array <- takeSelectedDimensions(array, x@dims[off_margins])
-            
-            if (margin == 1) {
-                array <- apply(array, 2, mean)
-            } else if (margin == 2) {
-                array <- apply(array, 1, mean)
-            } else {
-                halt("this needs to be")
-            }
+        
+        if (any(has_items)) {
+            # mean across any items dimension
+            result_dim <- seq_along(dim(array))
+            array <- apply(array, setdiff(result_dim, which(off_margins %in% items_to_collapse)), mean)
         }
         return(array)
     })
+
+    # we needed to include the selected dim of MRs in off_margins above, but
+    # when subsetting dimensions we definitely do not want them to be included.
+    out@dims <- out@dims[margins_to_keep]
+    out$query$dimensions <- out$query$dimensions[margins_to_keep]
+    out$result$dimensions <- out$result$dimensions[margins_to_keep]
+    # names???
     
-    out@dims <- out@dims[off_margins]
-    
+    # subset the missing dimensions to try and get the n missing correct
+    unweighted_counts <- as.array(out@arrays$.unweighted_counts)
+    missings <- lapply(
+        evalUseNA(unweighted_counts, out@dims, "no"),
+        function(x) {
+            if (all(x)) {
+                # if all are TRUE, return all TRUE so we don't eliminate all
+                # cells
+                return(x)
+            } else {
+                # otherwise, return the opposite because we only want
+                # missings
+                return(!x)
+            }
+        })
+    all_missings <- subsetCubeArray(unweighted_counts, missings)
+
+    # sum across non-item dimensions, mean across item dimensions 
+    out_dims <- seq_along(out@dims)
+    out_other <- out_dims[!endsWith(getDimTypes(out), "_items")]
+
+    all_missings <- apply(all_missings, out_other, mean)
+    all_missings <- sum(all_missings)
+    out$result$missing <- all_missings 
+                                                            
+    # update measures
+    ap <- rev(out_dims)
+    out$result$measures$count$data <-  as.list(aperm(out@arrays$count, ap))
+    out$result$measures$count$n_missing <- out$result$missing
+    out$result$counts <-  as.list(aperm(out@arrays$.unweighted_counts, ap))
+
     return(out)
 })
+
+
+user2real <- function(margin, dimTypes = getDimTypes(cube), cube) {
+    if (is.null(margin)) { 
+        # If margin is null, return null
+        return(NULL)
+    }
+    full_margins <- seq_along(dimTypes)
+    narrow_margins <- seq_along(dimTypes[dimTypes != "mr_selections"])
+    which_selected <- which(dimTypes == "mr_selections")
+    # things?
+    mr_margins <- which_selected - seq_along(which_selected)
+    margin_map <- sort(c(narrow_margins, mr_margins))
+    return(which(margin_map %in% margin))
+}
 
 #' @export
 as.array.CrunchCube <- function (x, ...) cubeToArray(x, ...)
