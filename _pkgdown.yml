@@ -23,6 +23,7 @@ articles:
   - filters
   - subtotals
   - export
+  - fork-and-merge
 - title: Going deeper
   desc: Details on the Crunch API and objects
   contents:
@@ -274,6 +275,8 @@ navbar:
          href: articles/filters.html
       -  text: Export Data
          href: articles/export.html
+      -  text: Fork and Merge
+         href: articles/fork-and-merge.html
       -  text: Subtotals and Headings
          href: articles/subtotals.html
       -  text: Crunch Internals
