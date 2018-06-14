@@ -444,38 +444,31 @@ setMethod("collapse.dimensions", "CrunchCube", function (x, margin=NULL) {
     out@dims <- out@dims[margins_to_keep]
     out$query$dimensions <- out$query$dimensions[margins_to_keep]
     out$result$dimensions <- out$result$dimensions[margins_to_keep]
-    # names???
-    
-    # subset the missing dimensions to try and get the n missing correct
+    # TODO: fix names???
+
+    # Need to calculate the total missing to fill in, to do this, set all
+    # non-missing cells to zero, and then sum across all dimensions (with the
+    # exception of `_items` dimensions)
     unweighted_counts <- as.array(out@arrays$.unweighted_counts)
-    missings <- lapply(
-        evalUseNA(unweighted_counts, out@dims, "no"),
-        function(x) {
-            if (all(x)) {
-                # if all are TRUE, return all TRUE so we don't eliminate all
-                # cells
-                return(x)
-            } else {
-                # otherwise, return the opposite because we only want
-                # missings
-                return(!x)
-            }
-        })
-    all_missings <- subsetCubeArray(unweighted_counts, missings)
+    non_missing <- evalUseNA(unweighted_counts, out@dims, "no")
+    all_missings <- do.call("[<-", c(list(x=unweighted_counts), non_missing, value = 0))
 
     # sum across non-item dimensions, mean across item dimensions 
     out_dims <- seq_along(out@dims)
     out_other <- out_dims[!endsWith(getDimTypes(out), "_items")]
-
+    # mean across any item dimensions so as not to double count them
     all_missings <- apply(all_missings, out_other, mean)
+    # now sum across all other dimensions to get the total number of missings
     all_missings <- sum(all_missings)
     out$result$missing <- all_missings 
                                                             
-    # update measures
+    # update measures which require reversing the dimensions to match what we
+    # would get from the API.
+    # TODO: iterate over all measures
     ap <- rev(out_dims)
-    out$result$measures$count$data <-  as.list(aperm(out@arrays$count, ap))
+    out$result$measures$count$data <-  as.list(aperm(as.array(out@arrays$count), ap))
     out$result$measures$count$n_missing <- out$result$missing
-    out$result$counts <-  as.list(aperm(out@arrays$.unweighted_counts, ap))
+    out$result$counts <-  as.list(aperm(as.array(out@arrays$.unweighted_counts), ap))
 
     return(out)
 })

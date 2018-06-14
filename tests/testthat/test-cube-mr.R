@@ -399,5 +399,21 @@ with_test_authentication({
                           univariate_q1)
         expect_equivalent(collapse.dimensions(bivariate_cube, 2),
                           univariate_allpets)
+        
+        
+        trivariate_cube <- crtabs(~ country + allpets + q1, data=ds)
+        expect_equivalent(collapse.dimensions(trivariate_cube, 1),
+                          crtabs(~ allpets + q1, data=ds))
+        expect_equivalent(collapse.dimensions(trivariate_cube, 2),
+                          crtabs(~ country + q1, data=ds))
+        expect_equivalent(collapse.dimensions(trivariate_cube, 3),
+                          crtabs(~ country + allpets, data=ds))
+        
+        expect_equivalent(collapse.dimensions(trivariate_cube, c(1, 2)),
+                          crtabs(~ q1, data=ds))
+        expect_equivalent(collapse.dimensions(trivariate_cube, c(2, 3)),
+                          crtabs(~ country, data=ds))
+        expect_equivalent(collapse.dimensions(trivariate_cube, c(1, 3)),
+                          crtabs(~ allpets, data=ds))
     })
 })
