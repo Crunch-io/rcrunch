@@ -290,12 +290,12 @@ checkInstalledPackages <- function (pkgs) {
 #' This is useful for handling if the user has the correct version of a suggested
 #' package installed.
 #'
-#' @param fun
-#' @param pkg
-#'
+#' @param fun Character string of the function to search for
+#' @param pkg The package name
+#' @keywords internal
 #' @return Logical
 packageHasFunction <- function(fun, pkg) {
-    fun %in% ls(envir = asNamespace(pkg))
+    all(fun %in% ls(envir = asNamespace(pkg)))
 }
 
 #' Escape a regular expression
