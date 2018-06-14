@@ -1,16 +1,16 @@
 #' Add columns from one dataset to another, joining on a key
 #'
-#' As `base::merge` does for `data.frame`s, this function takes two datasets,
+#' As [base::merge()] does for `data.frame`s, this function takes two datasets,
 #' matches rows based on a specified key variable, and adds columns from one to
 #' the other.
 #'
 #' Since joining two datasets can sometimes produce unexpected results if the
-#' keys differ between the two datasets, we recommend that you follow the
-#' fork-edit-merge workflow for this operation. To do this fork the dataset with
-#' `forkDataset()` join the new data to the forked dataset, ensure that the
-#' resulting dataset is correct, and merge it back to the original dataset with
-#' `mergeFork()`. For more see \code{vignette("fork-and-merge", package =
-#' "crunch")}.
+#' keys differ between the two datasets, you may want to follow the
+#' fork-edit-merge workflow for this operation. To do this, fork the dataset
+#' with [forkDataset()], join the new data to the fork, ensure that
+#' the resulting dataset is correct, and merge it back to the original dataset
+#' with [mergeFork()]. For more, see
+#' `vignette("fork-and-merge", package = "crunch")`.
 #'
 #' @param x CrunchDataset to add data to
 #' @param y CrunchDataset to copy data from. May be filtered by rows and/or
@@ -34,7 +34,7 @@
 #' `TRUE`, which means materialized. Virtual joins are experimental and
 #' not advised.
 #' @param ... additional arguments, ignored
-#' @return `x`` extended by the columns of `y`, matched on the "by"
+#' @return `x` extended by the columns of `y`, matched on the "by"
 #' variables.
 #' @export
 joinDatasets <- function (x, y, by=intersect(names(x), names(y)), by.x=by,

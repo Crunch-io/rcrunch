@@ -49,20 +49,20 @@ not advised.}
 \item{...}{additional arguments, ignored}
 }
 \value{
-\code{x`` extended by the columns of}y`, matched on the "by"
+\code{x} extended by the columns of \code{y}, matched on the "by"
 variables.
 }
 \description{
-As \code{base::merge} does for \code{data.frame}s, this function takes two datasets,
+As \code{\link[base:merge]{base::merge()}} does for \code{data.frame}s, this function takes two datasets,
 matches rows based on a specified key variable, and adds columns from one to
 the other.
 }
 \details{
 Since joining two datasets can sometimes produce unexpected results if the
-keys differ between the two datasets, we recommend that you follow the
-fork-edit-merge workflow for this operation. To do this fork the dataset with
-\code{forkDataset()} join the new data to the forked dataset, ensure that the
-resulting dataset is correct, and merge it back to the original dataset with
-\code{mergeFork()}. For more see \code{vignette("fork-and-merge", package =
-"crunch")}.
+keys differ between the two datasets, you may want to follow the
+fork-edit-merge workflow for this operation. To do this, fork the dataset
+with \code{\link[=forkDataset]{forkDataset()}}, join the new data to the fork, ensure that
+the resulting dataset is correct, and merge it back to the original dataset
+with \code{\link[=mergeFork]{mergeFork()}}. For more, see
+\code{vignette("fork-and-merge", package = "crunch")}.
 }
