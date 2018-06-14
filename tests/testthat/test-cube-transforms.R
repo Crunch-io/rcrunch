@@ -23,7 +23,7 @@ test_that("Can show a complex cube with transform", {
         dims = list("v7" = c("First!", "A", "B", "Top 2", "C",
                                  "D", "E", "F", "G", "Middle 5",
                                  "Middle 5 (again)", "H", "I", "J",
-                                 "Bottom 8", 
+                                 "Bottom 8",
                                  "Middle 3 (missing anchor)",
                                  "J and can't see")))
     expect_prints(expect_equivalent(showTransforms(complex_trans_cube), loc_array))
@@ -68,18 +68,18 @@ test_that("simple with row subtotals (margins and proportions)", {
                                    "neutral", "somewhat unhappy",
                                    "extremely unhappy", "unhappy")))
     expect_equivalent(margin.table(pet_feelings, 1), feelings_margin)
-    
+
     pets_margin <- cubify(c(54, 46),
                          dims = list("animals" = c("cats", "dogs")))
     expect_equivalent(margin.table(pet_feelings, 2), pets_margin)
-    
+
     expect_equivalent(margin.table(pet_feelings), 100)
 
     feelings_prop <- cubify(
         c( 9/14,  5/14,
           12/24, 12/24,
           21/38, 17/38,
-          12/19,  7/19, 
+          12/19,  7/19,
           10/20, 10/20,
           11/23, 12/23,
           21/43, 22/43),
@@ -90,12 +90,12 @@ test_that("simple with row subtotals (margins and proportions)", {
                   "extremely unhappy", "unhappy"),
             "animals" = c("cats", "dogs")))
     expect_equivalent(prop.table(pet_feelings, 1), feelings_prop)
-    
+
     pets_prop <- cubify(
         c( 9/54,  5/46,
           12/54, 12/46,
           21/54, 17/46,
-          12/54,  7/46, 
+          12/54,  7/46,
           10/54, 10/46,
           11/54, 12/46,
           21/54, 22/46),
@@ -106,12 +106,12 @@ test_that("simple with row subtotals (margins and proportions)", {
                   "extremely unhappy", "unhappy"),
             "animals" = c("cats", "dogs")))
     expect_equivalent(prop.table(pet_feelings, 2), pets_prop)
-    
+
     all_prop <- cubify(
         c( 9/100,  5/100,
           12/100, 12/100,
           21/100, 17/100,
-          12/100,  7/100, 
+          12/100,  7/100,
           10/100, 10/100,
           11/100, 12/100,
           21/100, 22/100),
@@ -176,7 +176,7 @@ test_that("applyTransforms handles useNA", {
     pet_feelings@dims$feelings$references$categories[[3]]$missing <- TRUE
     pet_feelings@dims@.Data[[1]]$missing[[3]] <- TRUE
     pet_feelings@.Data[[3]]$dimensions[[1]]$type$categories[[3]]$missing <- TRUE
-    
+
     all_no <- cubify(
         c(9, 5,
           12, 12,
@@ -192,8 +192,8 @@ test_that("applyTransforms handles useNA", {
     # expect silent to catch any warnings that are not raised because of `try`
     expect_silent(
         expect_equivalent(applyTransforms(pet_feelings), all_no)
-    )    
-    
+    )
+
     all_ifany <- cubify(
         c(9, 5,
           12, 12,
@@ -207,7 +207,7 @@ test_that("applyTransforms handles useNA", {
                           "happy", "neutral", "somewhat unhappy",
                           "extremely unhappy", "unhappy"),
                     "animals" = c("cats", "dogs")))
-    
+
     pet_feelings@useNA <- "ifany"
     # expect silent to catch any warnings that are not raised because of `try`
     expect_silent(
@@ -228,7 +228,7 @@ test_that("applyTransforms handles useNA", {
                           "happy", "neutral", "somewhat unhappy",
                           "extremely unhappy", "unhappy", "No Data"),
                     "animals" = c("cats", "dogs", "No Data")))
-    
+
     pet_feelings@useNA <- "always"
     # expect silent to catch any warnings that are not raised because of `try`
     expect_silent(
@@ -271,14 +271,14 @@ test_that("cat by cat with column subtotals", {
         6.05492419458171, 19.2847236651074, 7.74346718665446, 5.48633228387126, # Tongue
         11.4481940114737, 11.4481940114737, 19.2847236651074,
         dims = cat_by_cat_dims_subtotals)
-    
+
     expect_equivalent(applyTransforms(cat_by_cat), all)
-    
+
     # pretty printing tests are large and mostly unreadable for this cube, but
     # column pretty printing is covered by categorical array tests and row+col
     # subtotals test
 })
-    
+
 test_that("cat by cat with column subtotals (margins and proportions)", {
     row_margin <- cubify(
         500.393709832618, # Liver
@@ -291,7 +291,7 @@ test_that("cat by cat with column subtotals (margins and proportions)", {
         30.7329176765812, # Tongue
         dims = cat_by_cat_dims_subtotals["offal"])
     expect_equivalent(margin.table(cat_by_cat, 1), row_margin)
-    
+
     col_margin <- cubify(
         346.731339012888, # Vegetables
         1098.22750178836, # plant-based
@@ -302,11 +302,11 @@ test_that("cat by cat with column subtotals (margins and proportions)", {
         1098.22750178836, # plant-based (again)
         dims = cat_by_cat_dims_subtotals["food_groups"])
     expect_equivalent(margin.table(cat_by_cat, 2), col_margin)
-    
-    expect_equivalent(margin.table(cat_by_cat), 1555.54337034209)        
+
+    expect_equivalent(margin.table(cat_by_cat), 1555.54337034209)
     expect_equivalent(margin.table(cat_by_cat),
-                      margin.table(noTransforms(cat_by_cat)))    
-    
+                      margin.table(noTransforms(cat_by_cat)))
+
     row_prop <- cubify(
         # Vegetables        plant-based         Fruit               Grain
         # Meat              animal-based        plant-based (again)
@@ -327,7 +327,7 @@ test_that("cat by cat with column subtotals (margins and proportions)", {
         0.372505927746567, 0.372505927746567, 0.627494072253433,
         dims = cat_by_cat_dims_subtotals)
     expect_equivalent(prop.table(cat_by_cat, 1), row_prop)
-    
+
     col_prop <- cubify(
         # Vegetables        plant-based         Fruit               Grain
         # Meat              animal-based        plant-based (again)
@@ -348,25 +348,25 @@ test_that("cat by cat with column subtotals (margins and proportions)", {
         0.0250334501789297, 0.0250334501789297, 0.0175598622632416,
         dims = cat_by_cat_dims_subtotals)
     expect_equivalent(prop.table(cat_by_cat, 2), col_prop)
-    
+
     table_prop <- cubify(
         0.0744639870053551,  0.234125177670194,  0.0986263338072625,  0.0610348568575762,
         0.0875590128018301, 0.0875590128018301, 0.234125177670194,
         0.0241534208970731,  0.0822025767530559, 0.0312522187279856,  0.0267969371279971,
         0.0220741112826385, 0.0220741112826385, 0.0822025767530559,
         0,0,0,0,0,0,0,
-        0.0192251153623287,  0.0833606180100561, 0.0451442033856779,  0.0189912992620495,  
+        0.0192251153623287,  0.0833606180100561, 0.0451442033856779,  0.0189912992620495,
         0.0302262445368676, 0.0302262445368676, 0.0833606180100561,
-        0.0427994422390015,  0.132009849799403,  0.0469618275374473,  0.0422485800229538,  
+        0.0427994422390015,  0.132009849799403,  0.0469618275374473,  0.0422485800229538,
         0.0993144264564057, 0.0993144264564057, 0.132009849799403,
-        0.036607883893292,   0.0988901818344959, 0.0402365805202915,  0.0220457174209124,  
+        0.036607883893292,   0.0988901818344959, 0.0402365805202915,  0.0220457174209124,
         0.0281266733235066, 0.0281266733235066, 0.0988901818344959,
-        0.02175813283837,    0.0630231008861898, 0.0208970124357787,  0.0203679556120411,  
+        0.02175813283837,    0.0630231008861898, 0.0208970124357787,  0.0203679556120411,
         0.0193309962323626, 0.0193309962323626, 0.0630231008861898,
-        0.00389248175912327, 0.0123974194694851, 0.00497798218570502, 0.00352695552465678, 
+        0.00389248175912327, 0.0123974194694851, 0.00497798218570502, 0.00352695552465678,
         0.0073596109435098, 0.0073596109435098, 0.0123974194694851,
         dims = cat_by_cat_dims_subtotals)
-    expect_equivalent(prop.table(cat_by_cat), table_prop) 
+    expect_equivalent(prop.table(cat_by_cat), table_prop)
 })
 
 transforms(pet_feeling_both) <- list(
@@ -393,9 +393,9 @@ test_that("cat by cat with both column and row subtotals", {
                   "somewhat unhappy", "extremely unhappy", "unhappy"),
             "animals" = c("cats", "felines", "dogs", "both"))
     )
-    
+
     expect_equivalent(applyTransforms(pet_feeling_both), all)
-    
+
     # pretty printing
     expect_prints(
         pet_feeling_both,
@@ -413,7 +413,7 @@ test_that("cat by cat with both column and row subtotals", {
         fixed = TRUE
     )
 })
-    
+
 test_that("cat by cat with both column and row subtotals (margins and proportions)", {
     feelings_margin <- cubify(
         c(14, 24, 38, 19, 20, 23, 43),
@@ -422,12 +422,12 @@ test_that("cat by cat with both column and row subtotals (margins and proportion
                                    "neutral", "somewhat unhappy",
                                    "extremely unhappy", "unhappy")))
     expect_equivalent(margin.table(pet_feeling_both, 1), feelings_margin)
-    
+
     pets_margin <- cubify(
         c(54, 54, 46, 100),
         dims = list("animals" = c("cats", "felines", "dogs", "both")))
     expect_equivalent(margin.table(pet_feeling_both, 2), pets_margin)
-    
+
     expect_equivalent(margin.table(pet_feeling_both), 100)
 
     feelings_prop <- cubify(
@@ -445,7 +445,7 @@ test_that("cat by cat with both column and row subtotals (margins and proportion
                   "extremely unhappy", "unhappy"),
             "animals" = c("cats", "felines", "dogs", "both")))
     expect_equivalent(prop.table(pet_feeling_both, 1), feelings_prop)
-    
+
     pets_prop <- cubify(
         c(9/54, 9/54, 5/46, 14/100,
           12/54, 12/54, 12/46, 24/100,
@@ -461,7 +461,7 @@ test_that("cat by cat with both column and row subtotals (margins and proportion
                   "extremely unhappy", "unhappy"),
             "animals" = c("cats", "felines", "dogs", "both")))
     expect_equivalent(prop.table(pet_feeling_both, 2), pets_prop)
-    
+
     all_prop <- cubify(
         c(9/100, 9/100, 5/100, 14/100,
           12/100, 12/100, 12/100, 24/100,
@@ -493,13 +493,16 @@ test_that("one bad transform doesn't disable all", {
                   "somewhat unhappy", "extremely unhappy"),
             "animals" = c("cats", "felines", "dogs", "both"))
     )
-    
+
     # malform the transform for animals only
     pet_feeling_bad_feelings@dims$feelings$references$view$transform$insertions[[2]]$anchor <- NA
-    expect_equivalent(applyTransforms(pet_feeling_bad_feelings), only_feelings)
-    
+    expect_warning(
+        expect_equivalent(applyTransforms(pet_feeling_bad_feelings), only_feelings),
+        "Transforms for dimensions 1 were malformed and have been ignored."
+    )
+
     # pretty printing
-    expect_prints(
+    expect_warning(expect_prints(
         pet_feeling_bad_feelings,
         paste(
             "                 animals",
@@ -511,8 +514,8 @@ test_that("one bad transform doesn't disable all", {
             "extremely unhappy      11 \033[30m\033[3m     11\033[23m\033[39m      12 \033[30m\033[3m     23\033[23m\033[39m",
             sep = "\n"),
         fixed = TRUE
-    )
-    
+    ), "Transforms for dimensions 1 were malformed and have been ignored.")
+
     only_animals <- cubify(
         c(9, 5,
           12, 12,
@@ -527,13 +530,16 @@ test_that("one bad transform doesn't disable all", {
                   "somewhat unhappy", "extremely unhappy", "unhappy"),
             "animals" = c("cats", "dogs"))
     )
-    
+
     # malform the transform for animals only
     pet_feeling_bad_animals@dims$animals$references$view$transform$insertions[[2]]$anchor <- NA
-    expect_equivalent(applyTransforms(pet_feeling_bad_animals), only_animals)
-    
+    expect_warning(
+        expect_equivalent(applyTransforms(pet_feeling_bad_animals), only_animals),
+        "Transforms for dimension(s) 2 were malformed and have been ignored."
+    )
+
     # pretty printing
-    expect_prints(
+    expect_warning(expect_prints(
         pet_feeling_bad_animals,
         paste(
             "                 animals",
@@ -543,10 +549,31 @@ test_that("one bad transform doesn't disable all", {
             "\033[30m\033[3m            happy      21      17\033[23m\033[39m",
             "          neutral      12       7",
             " somewhat unhappy      10      10",
-            "extremely unhappy      11      12",                                    
+            "extremely unhappy      11      12",
             "\033[30m\033[3m          unhappy      21      22\033[23m\033[39m",
             sep = "\n"),
         fixed = TRUE
+    ), "Transforms for dimension(s) 2 were malformed and have been ignored.")
+
+    only_cube <- cubify(
+        c(9, 5,
+          12, 12,
+          12, 7,
+          10, 10,
+          11, 12),
+        dims = list(
+            "feelings" =
+                c("extremely happy", "somewhat happy", "neutral",
+                  "somewhat unhappy", "extremely unhappy"),
+            "animals" = c("cats", "dogs"))
+    )
+
+    # malform the transform for both
+    pet_feeling_both@dims$feelings$references$view$transform$insertions[[2]]$anchor <- NA
+    pet_feeling_both@dims$animals$references$view$transform$insertions[[2]]$anchor <- NA
+    expect_warning(
+        expect_equivalent(applyTransforms(pet_feeling_both), only_cube),
+        "Transforms for dimension(s) 1 and 2 were malformed and have been ignored."
     )
 })
 
@@ -571,25 +598,25 @@ test_that("cat by mr, with cat subtotals", {
         12.217223612475,  42.1476791820657, 89.3309048228944, 218.631137785724, 171.129707467715,
         dims = cat_mr_dims_subtotals)
     expect_equivalent(applyTransforms(cat_mr), all)
-    
+
     # can apply to an array of the same shape
     new_array <- cubeToArray(cat_mr)-1
     # must subtract one for each category in the subtotal
-    new_all <- all - c(1, 3, 1, 1, 1, 1) 
+    new_all <- all - c(1, 3, 1, 1, 1, 1)
     expect_equivalent(applyTransforms(cat_mr, array = new_array), new_all)
 })
 
 test_that("cat by mr, with cat subtotals (margins and proportions)", {
     row_margin <- cubify(
         51.911366492838,   69.0306061146165,  70.6657653721693,  142.042366487671, 253.602877279968,
-        197.750644752234, 263.820951392254,  276.216370215392,   509.242733468184, 726.557193538396,         
-        93.7790931477866, 121.118408249056,  130.06549190286,    231.730645711963, 279.991871527124,         
-        52.0601851116097,  73.6719370285819,  75.4851129403625, 135.46972126855,   192.962444731304,         
+        197.750644752234, 263.820951392254,  276.216370215392,   509.242733468184, 726.557193538396,
+        93.7790931477866, 121.118408249056,  130.06549190286,    231.730645711963, 279.991871527124,
+        52.0601851116097,  73.6719370285819,  75.4851129403625, 135.46972126855,   192.962444731304,
         70.2849657255216,  94.3678915294494, 135.475226421184,  251.200447977195,  215.124923979429,
         70.2849657255216,  94.3678915294494, 135.475226421184,  251.200447977195,  215.124923979429,
         dims = cat_mr_dims_subtotals)
     expect_equivalent(margin.table(cat_mr, 1), row_margin)
-    
+
     col_margin <- cubify(
         40.6102887465943,
         142.054812957694,
@@ -598,7 +625,7 @@ test_that("cat by mr, with cat subtotals (margins and proportions)", {
         798.062186185185,
         dims = cat_mr_dims_subtotals['nordics'])
     expect_equivalent(margin.table(cat_mr, 2), col_margin)
-    
+
     table_margin <- cubify(
         268.035610477756,
         358.188842921703,
@@ -606,7 +633,7 @@ test_that("cat by mr, with cat subtotals (margins and proportions)", {
         760.44318144538,
         941.682117517826,
         dims = cat_mr_dims_subtotals['nordics'])
-    expect_equivalent(margin.table(cat_mr), table_margin)        
+    expect_equivalent(margin.table(cat_mr), table_margin)
 
     row_prop <- cubify(
         0.136663674865857,  0.433765442860944, 0.376342587283855, 0.733896246595956, 0.927657892394531,
@@ -614,10 +641,10 @@ test_that("cat by mr, with cat subtotals (margins and proportions)", {
         0.175650305779438,  0.34286582410684,  0.450266980285526, 0.793440777306508, 0.838761093389815,
         0.0927069434045541, 0.385990658471605, 0.48127576558786,  0.822979086554057, 0.812746127832161,
         0.173824138439307,  0.44663156608636,  0.659389226965898, 0.870345333960438, 0.795489914892794,
-        0.173824138439307,  0.44663156608636,  0.659389226965898, 0.870345333960438, 0.795489914892794, 
+        0.173824138439307,  0.44663156608636,  0.659389226965898, 0.870345333960438, 0.795489914892794,
         dims = cat_mr_dims_subtotals)
     expect_equivalent(prop.table(cat_mr, 1), row_prop)
-    
+
     col_prop <- cubify(
         0.174694599107339, 0.210785476456778, 0.12614879593551,  0.168617769920104, 0.294784936205628,
         0.699159400497994, 0.703299886117777, 0.576266881620586, 0.646358853161181, 0.785568455152935,
@@ -627,7 +654,7 @@ test_that("cat by mr, with cat subtotals (margins and proportions)", {
         0.300840599502006, 0.296700113882224, 0.423733118379414, 0.353641146838819, 0.214431544847065,
         dims = cat_mr_dims_subtotals)
     expect_equivalent(prop.table(cat_mr, 2), col_prop)
-    
+
     table_prop <- cubify(
         0.0264681177981324, 0.0835958238900571, 0.064598202124666,  0.137083692991725, 0.249826036054328,
         0.105930197422315,  0.278923075773934,  0.295094409903907,  0.525479957605977, 0.66575808020014,
@@ -636,7 +663,7 @@ test_that("cat by mr, with cat subtotals (margins and proportions)", {
         0.0455805987521531, 0.117668877786008,  0.216985009052181,  0.287504895987324, 0.181727681012776,
         0.0455805987521531, 0.117668877786008,  0.216985009052181,  0.287504895987324, 0.181727681012776,
         dims = cat_mr_dims_subtotals)
-    expect_equivalent(prop.table(cat_mr), table_prop) 
+    expect_equivalent(prop.table(cat_mr), table_prop)
 })
 
 cat_array_cube <- loadCube(test_path("./cubes/catarray-with-transforms.json"))
@@ -671,7 +698,7 @@ test_that("categorical arrays with subtotals (margins and proportions)", {
         dims = list("CA" = c("mr_1", "mr_2", "mr_3"))
     )
     expect_equivalent(margin.table(cat_array_cube, 1), margin_1)
-    
+
     margin_2 <- cubify(
         c(5, 4, 9),
         dims = list("CA" = c("A", "B", "A+B"))
@@ -682,7 +709,7 @@ test_that("categorical arrays with subtotals (margins and proportions)", {
         prop.table(cat_array_cube, 1),
         applyTransforms(cat_array_cube)/broadcast(t(margin_1), ncol = 3)
     )
-    
+
     expect_equivalent(
         prop.table(cat_array_cube, 2),
         applyTransforms(cat_array_cube)/broadcast(margin_2, dims = c(3,3))
@@ -700,15 +727,15 @@ test_that("subtotals after cube subsetting", {
                 c("extremely happy", "somewhat happy", "happy", "unhappy"),
             "animals" = c("cats", "felines", "dogs", "both"))
     )
-    
+
     expect_equivalent(applyTransforms(pet_feeling_both[c(1,2),]), first_two_rows)
-    
+
     one_col <- cubify(
         c(5,  0,  5,
           12, 0, 12,
           17, 0, 17,
            7, 0,  7,
-          10, 0, 10, 
+          10, 0, 10,
           12, 0, 12,
           22, 0, 22),
         dims = list(
@@ -717,35 +744,35 @@ test_that("subtotals after cube subsetting", {
                   "somewhat unhappy", "extremely unhappy", "unhappy"),
             "animals" = c("dogs", "felines", "both"))
     )
-    
+
     # need drop = FALSE to maintain the columns dimension since selection 1
     # usually removes the dimension
     expect_equivalent(
         applyTransforms(pet_feeling_both[, c(2), drop = FALSE]),
         one_col
     )
-    
+
     one_col_withdrop <- cubify(
-        c(5, 
+        c(5,
           12,
           17,
-          7, 
-          10, 
-          12, 
+          7,
+          10,
+          12,
           22),
         dims = list(
             "feelings" =
                 c("extremely happy", "somewhat happy", "happy", "neutral",
                   "somewhat unhappy", "extremely unhappy", "unhappy"))
     )
-    
-    expect_equivalent(applyTransforms(pet_feeling_both[, 2]), one_col_withdrop)    
+
+    expect_equivalent(applyTransforms(pet_feeling_both[, 2]), one_col_withdrop)
 })
 
 
 test_that("Can get subtotals alone", {
     subtotes <- cubify(
-        c(21, 17, 
+        c(21, 17,
           21, 22),
         dims = list(
             "feelings" = c("happy", "unhappy"),
@@ -761,7 +788,7 @@ test_that("Can get subtotals with headers", {
         dims = list(
             "feelings" = c("Subtitle", "happy", "unhappy"),
             "animals" = c("cats", "dogs")))
-    
+
     expect_equivalent(subtotalArray(pet_feelings_headers, headings = TRUE), subtotes)
 })
 
@@ -806,7 +833,7 @@ test_that("can retrieve transformations from a cube", {
 test_that("can remove transformations from a cube", {
     transforms(unicat_trans_cube) <- NULL
     expect_null(transforms(unicat_trans_cube))
-    
+
     # alternatively
     expect_null(transforms(noTransforms(unicat_trans_cube)))
 })
@@ -843,7 +870,7 @@ test_that("can set transforms on a cube", {
           12, 7,
           10, 10,
           34, 29,
-          11, 12),        
+          11, 12),
         dims = list("feelings" =
                             c("Fabulous new header", "extremely happy",
                               "somewhat happy", "neutral",
