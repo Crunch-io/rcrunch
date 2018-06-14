@@ -79,6 +79,7 @@ setMethod("[", "CrunchCube", function (x, i, j, ..., drop = TRUE) {
     # This is so that other cube methods, like as.array, don't get confused.
     out@dims[] <- mapply(subsetArrayDimension,
                          dim = x@dims,
+                         dim_type = getDimTypes(x), 
                          idx = translated_index,
                          SIMPLIFY = FALSE)
     # Some dimensions need to be dropped because they were dropped from the
@@ -222,14 +223,14 @@ skipMissingCategories <- function(cube, index){
         }, visible = visible_cats, sub = index, SIMPLIFY = FALSE)
 }
 
-subsetArrayDimension <- function(dim, idx){
+subsetArrayDimension <- function(dim, idx, dim_type){
     dim$missing <- dim$missing[idx]
     dim$name <- dim$name[idx]
 
     # subset the category or item metadata
-    if (dim$references$type == "categorical") {
+    if (dim_type %in% c("categorical", "ca_categories", "mr_selections")) {
         dim$references$categories <- dim$references$categories[idx]
-    } else if (dim$references$type == "subvariable_items") {
+    } else if (dim_type %in% c("mr_items", "ca_items")) {
         dim$references$subreferences <- dim$references$subreferences[idx]
     }
 

@@ -1,6 +1,6 @@
 ---
 title: "Getting Started"
-description: "Here's how to log in and get started working with the Crunch cloud data platform."
+description: "Here's how to log in to Crunch, import some data, and do some basic cleaning so that you have a beautiful, easily explorable dataset."
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{Getting Started}
@@ -153,12 +153,6 @@ change_state()
 ```{r makeArray}
 ds$ImportantHiring <- makeArray(ds[imphire], name = "Importance in Hiring Process")
 ```
-```{r View array, eval = FALSE}
-webApp(ds$ImportantHiring)
-```
-```{r View array screen, echo = FALSE}
-knitr::include_graphics("images/crunch-importantHiringCA.png")
-```
 
 The variables we included in the array have been converted into subvariables of the categorical array, and are still accessible using the `subvariables()` function.
 
@@ -182,6 +176,13 @@ names(subvariables(ds$ImportantHiring)) <- sub("^.*\\? (.*)$", "\\1",
 subvariables(ds$ImportantHiring)
 ```
 
+```{r View array, eval = FALSE}
+webApp(ds$ImportantHiring)
+```
+```{r View array screen, echo = FALSE}
+knitr::include_graphics("images/crunch-importantHiringCA.png")
+```
+
 #### Multiple Response
 
 Crunch also has a special variable type for multiple-response data. These are survey questions that give users a set of options and allow them to select more than one of them. An example of this from the Stack Overflow survey is asking which language a respondent wanted to work with. In this dataset, the responses are stored in a single column with each language delimited by semicolon:
@@ -201,16 +202,22 @@ ds$WantWorkLanguageMR <- makeMRFromText(ds$WantWorkLanguage,
     name = "Languages Desired for Work",
     description = description(ds$WantWorkLanguage))
 ```
-```{r echo = FALSE}
-knitr::include_graphics("images/wantWorkMR.png")
+
+To see what this looks like, let's do a simple `table()` of the new variable and see the counts:
+
+```{r MR table}
+table(ds$WantWorkLanguageMR)
 ```
 
-The variable card now shows the number of times each language was selected, the sum of these numbers will be bigger than the number of respondents because people were allowed to select more than one language. We can reorder the subvariables to make this card easier to read. Let's sort them by frequency.
+Since this is multiple-response data, the sum of these numbers may be bigger than the number of respondents because people were allowed to select more than one.
+
+We can reorder the subvariables to make this card easier to read. Let's sort them by frequency.
 
 ```{r reorder subvariables}
 counts <- sort(table(ds$WantWorkLanguageMR), decreasing = TRUE)
 subvariables(ds$WantWorkLanguageMR) <- subvariables(ds$WantWorkLanguageMR)[names(counts)]
 ```
+
 ```{r echo = FALSE}
 knitr::include_graphics("images/WantWorkMRReodered.png")
 ```

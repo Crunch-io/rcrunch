@@ -12,7 +12,6 @@ articles:
   desc: How to find, import, and clean data in Crunch
   contents:
   - crunch
-  - datasets
   - variables
   - array-variables
   - variable-order
@@ -188,6 +187,7 @@ reference:
   - login
   - logout
   - me
+  - email
   - newProject
   - owners
   - permissions
@@ -251,7 +251,7 @@ reference:
 navbar:
   left:
     - text: Intro
-      href: articles/getting-started.html
+      href: articles/crunch.html
     - text: Reference
       href: reference/
     - text: Articles
@@ -268,6 +268,8 @@ navbar:
          href: articles/variable-order.html
       -  text: Derive Variables
          href: articles/derive.html
+      -  text: Analyze Data
+         href: articles/analyze.html
       -  text: Filter Data
          href: articles/filters.html
       -  text: Export Data

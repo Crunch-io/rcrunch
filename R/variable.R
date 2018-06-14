@@ -16,7 +16,17 @@ setMethod("refresh", "CrunchVariable", function (x) {
 
 #' @rdname describe
 #' @export
-setMethod("name", "CrunchVariable", function (x) tuple(x)$name)
+setMethod("alias", "VariableTuple", function(object) object$alias)
+#' @rdname describe
+#' @export
+setMethod("description", "VariableTuple", function(x) x$description %||% "")
+#' @rdname describe
+#' @export
+setMethod("notes", "VariableTuple", function(x) x$notes %||% "")
+
+#' @rdname describe
+#' @export
+setMethod("name", "CrunchVariable", function (x) name(tuple(x)))
 #' @rdname describe
 #' @export
 setMethod("name<-", "CrunchVariable",
@@ -28,21 +38,21 @@ setMethod("id", "CrunchVariable", function (x) {
 })
 #' @rdname describe
 #' @export
-setMethod("description", "CrunchVariable", function (x) tuple(x)$description)
+setMethod("description", "CrunchVariable", function (x) description(tuple(x)))
 #' @rdname describe
 #' @export
 setMethod("description<-", "CrunchVariable",
     function (x, value) setTupleSlot(x, "description", value %||% ""))
 #' @rdname describe
 #' @export
-setMethod("alias", "CrunchVariable", function (object) tuple(object)$alias)
+setMethod("alias", "CrunchVariable", function (object) alias(tuple(object)))
 #' @rdname describe
 #' @export
 setMethod("alias<-", "CrunchVariable",
     function (x, value) setTupleSlot(x, "alias", validateNewName(value)))
 #' @rdname describe
 #' @export
-setMethod("notes", "CrunchVariable", function (x) tuple(x)$notes)
+setMethod("notes", "CrunchVariable", function (x) notes(tuple(x)))
 #' @rdname describe
 #' @export
 setMethod("notes<-", "CrunchVariable",
@@ -73,6 +83,7 @@ setMethod("digits<-", "NumericVariable", function (x, value) {
 setMethod("digits<-", "CrunchVariable", function (x, value) {
     halt("digit specifications can only be set for numeric variables")
 })
+
 
 #' Get and set Categories on Variables
 #'
@@ -179,10 +190,12 @@ setMethod("categories<-", c("CrunchVariable", "ANY"),
         halt("category assignment not defined for ", class(x))
     })
 
+#' @rdname dataset-reference
 setMethod("datasetReference", "CrunchVariable", function (x) {
     # x@urls$dataset_url
     rootURL(x, "dataset") %||% datasetReference(self(x))
 })
+#' @rdname dataset-reference
 setMethod("datasetReference", "character", function (x) {
     # check if the url has /datasets/.*/ in it.
     if (grepl("(.*/datasets/.*?/).*", x)) {
@@ -191,6 +204,8 @@ setMethod("datasetReference", "character", function (x) {
         NULL
     }
 })
+
+#' @rdname dataset-reference
 setMethod("datasetReference", "ANY", function (x) NULL)
 
 #' Split an array or multiple-response variable into its CategoricalVariables
