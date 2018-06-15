@@ -8,6 +8,8 @@
 * Internal: support for the "selected_array" method of multiple response calculation, deprecated since 1.20.0, has been removed.
 * Internal: `getDimTypes()` returns a richer set of cube dimension types differentiating multiple response from categorical array dimensions. 
 * Internal: Added support for `alias`, `description`, and `notes` on `VariableTuples`
+* `makeArrayGadget()` launches a an RStudio to help you build valid categorical arrays
+and multiple response variables. 
 
 ## crunch 1.22.0
 
