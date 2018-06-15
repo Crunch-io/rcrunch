@@ -18,4 +18,11 @@ with_mock_crunch({
         expect_identical(names(variables(results)),
             c("gender", "pp_gender", "Weight (gender)", "Sex", "Gender x Marstat"))
     })
+
+    test_that("Search input validation", {
+        expect_error(searchDatasets(variables(results)),
+            "Search query must be a string, not VariableCatalog")
+        expect_error(searchDatasets(c("one", "two")),
+            "Search query must be a single string, not a length-2 character vector")
+    })
 })
