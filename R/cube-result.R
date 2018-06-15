@@ -321,7 +321,6 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
 #' @param margin the margin(s) being specified
 #'
 #' @return None
-#' @export
 #'
 #' @keywords internal
 check_margins <- function (margin, selecteds) {
@@ -410,31 +409,48 @@ setMethod("margin.table", "CrunchCube", function (x, margin=NULL) {
 #' @rdname cube-computing
 #' @export
 setMethod("collapse.dimensions", "CrunchCube", function (x, margin=NULL) {
-    ## Check "margin" against number of (non-"selected" invisible MR) dims
+    # ensure that we have sensible margin input
     selecteds <- is.selectedDimension(x@dims)
     check_margins(margin, selecteds)
+    
+    # translate from user-cube margins to real-cube margins and establish the
+    # two groups of margins: those to collapse and those to keep
     margins_to_collapse <- user2real(margin, cube = x)
-
     margins_to_keep <- setdiff(seq_along(x@dims), margins_to_collapse)
     
     # if there are any _items in the margin to collapse, be wary!
-    has_items <- endsWith(getDimTypes(x)[margins_to_collapse], "_items")
+    collapsed_items <- endsWith(getDimTypes(x)[margins_to_collapse], "_items")
 
+    # grab the old cube structure and over-write it with new subset data.
     out <- x
+    
+    # iterate through measures, collapsing the dimension(s) specified.
     out@arrays[] <- lapply(out@arrays, function(arr){
+        # off_margins here are the margins that we want to keep, however because
+        # we treat items dimensions differently, we need to add them to the
+        # off_margins, and deal with them after we collapse by summing
         off_margins <- margins_to_keep
-        if (any(has_items)) {
+        if (any(collapsed_items)) {
             # mean across any items dimension
-            items_to_collapse <- margins_to_collapse[has_items]
+            items_to_collapse <- margins_to_collapse[collapsed_items]
             off_margins <- sort(c(off_margins, items_to_collapse))
         }
         
+        # collapse the margins to collapse by summing across them
         array <- apply(arr, off_margins, sum)
         
-        if (any(has_items)) {
+        # now, we need to get rid of the extra items dimensions that we want to
+        # collapse across. We cannot simply sum across them because they
+        # represent more than one observation per row; and we don't want to
+        # double/triple/etc. count those observations. Instead we take the mean.
+        # Another option would be to just take the unique value or first value
+        # (since they should all be the same at this point given that they have
+        # been collapsed above), however there are tiny differences due to
+        # floating-point precision and weighting in the calculation in ZZ9.
+        if (any(collapsed_items)) {
             # mean across any items dimension
             result_dim <- seq_along(dim(array))
-            array <- apply(array, setdiff(result_dim, which(off_margins %in% items_to_collapse)), mean)
+            array <- apply(array, setdiff(result_dim, which(off_margins %in% items_to_collapse)), mean, na.rm = TRUE)
         }
         return(array)
     })
@@ -444,7 +460,6 @@ setMethod("collapse.dimensions", "CrunchCube", function (x, margin=NULL) {
     out@dims <- out@dims[margins_to_keep]
     out$query$dimensions <- out$query$dimensions[margins_to_keep]
     out$result$dimensions <- out$result$dimensions[margins_to_keep]
-    # TODO: fix names???
 
     # Need to calculate the total missing to fill in, to do this, set all
     # non-missing cells to zero, and then sum across all dimensions (with the
@@ -474,6 +489,20 @@ setMethod("collapse.dimensions", "CrunchCube", function (x, margin=NULL) {
 })
 
 
+#' Convert from user margins to real cube margins
+#'
+#' It is helpful to programmatically move from user-specified margins to real
+#' cube margins that apply to the higher-dimensional real cube.
+#'
+#' @param margin the margin or margins for the user cube to be translated
+#' @param dimTypes dimension types from `getDimTypes()` (by default:
+#'   `getDimTypes(cube)`)
+#' @param cube the cube to translate the margin for (optional if `dimTypes` is
+#'   explicitly supplied)
+#'
+#' @return margin or margins in the higher-dimension real cube
+#'
+#' @keywords internal
 user2real <- function(margin, dimTypes = getDimTypes(cube), cube) {
     if (is.null(margin)) { 
         # If margin is null, return null
