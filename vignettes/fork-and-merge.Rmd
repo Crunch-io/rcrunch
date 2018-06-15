@@ -113,7 +113,7 @@ nrow(ds)
 
 ## Merging datasets
 
-Merging two datasets together can often be the source of unexpected behaviour like misaligning or overwriting variables, and so it's a good candidate for this workflow. Let's create a fake dataset with household size to merge onto the original one. 
+Merging two datasets together can often be the source of unexpected behavior like misaligning or overwriting variables, and so it's a good candidate for this workflow. Let's create a fake dataset with household size to merge onto the original one. 
 ```{r state change6, include=FALSE}
 change_state()
 ```
