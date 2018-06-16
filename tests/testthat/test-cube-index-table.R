@@ -25,8 +25,8 @@ test_that("index table on a bivariate cube", {
 
     expect_equal(
         index.table(catXcat_cube, 2),
-        cubify(107.142857142857, 85.7142857142857,
-               93.75, 112.5,
+        cubify(100, 80,
+               100, 120,
                dims = catXcat_names)
     )
 })
@@ -38,12 +38,12 @@ mrXcat_names$pdl_gender <- mrXcat_names$pdl_gender[mrXcat_names$pdl_gender != "N
 test_that("index table on a bivariate cube with mr", {
     expect_equal(
         index.table(mrXcat_cube, 1),
-        cubify(95.8651525855387, 103.859044435659,
-               102.305106635277, 97.8432045727022,
-               97.6031146323114, 102.24274029149,
-               98.1029444304978, 101.829068203842,
-               114.466510106092, 86.0656684647625,
-               99.2925720053358, 100.682933745397,
+        cubify(95.3416155822363, 104.394053238208,
+               101.879419344372, 98.2272247381305,
+               97.1985863211465, 102.642452778304,
+               99.2098729346168, 100.745292805163,
+               115.700063998356, 85.1908063256891,
+               100.477252947149, 99.5498278652431,
                dims = mrXcat_names)
         )
 
@@ -56,4 +56,15 @@ test_that("index table on a bivariate cube with mr", {
                114.466510106092, 86.0656684647625,
                99.2925720053358, 100.682933745397,
                dims = mrXcat_names)
-    )})
+    )
+})
+
+test_that("index table on an mr x mr compared to calculation with mr cube", {
+    mr_x_mr <- loadCube(test_path("cubes/full-cube.json"))
+    mr_alone <- loadCube(test_path("cubes/natrep-cube.json"))
+
+    expect_equal(
+        index.table(mr_x_mr, 2),
+        prop.table(mr_x_mr, 2)/broadcast(prop.table(mr_alone), dim = dim(mr_x_mr))*100
+    )
+})

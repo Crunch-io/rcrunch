@@ -437,8 +437,8 @@ setMethod("collapse.dimensions", "CrunchCube", function (x, margin=NULL) {
         }
         
         # collapse the margins to collapse by summing across them
-        array <- apply(arr, off_margins, sum)
-        
+        array <- as.array(apply(arr, off_margins, sum))
+
         # now, we need to get rid of the extra items dimensions that we want to
         # collapse across. We cannot simply sum across them because they
         # represent more than one observation per row; and we don't want to
@@ -450,11 +450,16 @@ setMethod("collapse.dimensions", "CrunchCube", function (x, margin=NULL) {
         if (any(collapsed_items)) {
             # mean across any items dimension
             result_dim <- seq_along(dim(array))
-            array <- apply(array, setdiff(result_dim, which(off_margins %in% items_to_collapse)), mean, na.rm = TRUE)
+            final_names <- dimnames(array)[which(!off_margins %in% items_to_collapse)]
+            array <- as.array(apply(array, setdiff(result_dim, which(off_margins %in% items_to_collapse)), mean, na.rm = TRUE))
+            dimnames(array) <- final_names
         }
+        
+        # add attributes
+        attributes(array)$variable$type <- attributes(arr)$variable$type
+        
         return(array)
     })
-
     # we needed to include the selected dim of MRs in off_margins above, but
     # when subsetting dimensions we definitely do not want them to be included.
     out@dims <- out@dims[margins_to_keep]
@@ -475,15 +480,15 @@ setMethod("collapse.dimensions", "CrunchCube", function (x, margin=NULL) {
     all_missings <- apply(all_missings, out_other, mean)
     # now sum across all other dimensions to get the total number of missings
     all_missings <- sum(all_missings)
-    out$result$missing <- all_missings 
+    out$result$missing <- as.integer(all_missings)
                                                             
     # update measures which require reversing the dimensions to match what we
     # would get from the API.
     # TODO: iterate over all measures
     ap <- rev(out_dims)
-    out$result$measures$count$data <-  as.list(aperm(as.array(out@arrays$count), ap))
+    out$result$measures$count$data <-  as.list(unname(aperm(as.array(out@arrays$count), ap)))
     out$result$measures$count$n_missing <- out$result$missing
-    out$result$counts <-  as.list(aperm(as.array(out@arrays$.unweighted_counts), ap))
+    out$result$counts <-  as.list(unname(aperm(as.array(out@arrays$.unweighted_counts), ap)))
 
     return(out)
 })
