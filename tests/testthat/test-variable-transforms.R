@@ -34,9 +34,9 @@ cats_list <- mapply(function (i, n, m) list(id = i, name = n, missing = m),
 
 cats <- Categories(data = cats_list)
 
-insrts_list <- list(list(anchor = 0, name = "First one",
+insrts_list <- list(list(anchor = "top", name = "First one",
                          `function` = "subtotal", args = c(3, 4)),
-                    list(anchor = 999, name = "Last one",
+                    list(anchor = "bottom", name = "Last one",
                          `function` = "subtotal", args = c(5, 6)),
                     list(anchor = 10, name = "High",
                          `function` = "subtotal", args = c(9, 10)),
@@ -49,12 +49,12 @@ insrts_list <- list(list(anchor = 0, name = "First one",
 insrts <- Insertions(data=insrts_list)
 
 test_that("findInsertPosition", {
-    expect_equal(findInsertPosition(insrts[["First one"]], cats), 0)
-    expect_equal(findInsertPosition(insrts[["Last one"]], cats), Inf)
-    expect_equal(findInsertPosition(insrts[["High"]], cats), 10)
-    expect_equal(findInsertPosition(insrts[["Low"]], cats), 2)
-    expect_equal(findInsertPosition(insrts[["missing anchor"]], cats), Inf)
-    expect_equal(findInsertPosition(insrts[["missing categories"]], cats), 4)
+    expect_equal(findInsertPosition(insrts[["First one"]], cats, last_category = 10), 0)
+    expect_equal(findInsertPosition(insrts[["Last one"]], cats, last_category = 10), 10)
+    expect_equal(findInsertPosition(insrts[["High"]], cats, last_category = 10), 10)
+    expect_equal(findInsertPosition(insrts[["Low"]], cats, last_category = 10), 2)
+    expect_equal(findInsertPosition(insrts[["missing anchor"]], cats, last_category = 10), 10)
+    expect_equal(findInsertPosition(insrts[["missing categories"]], cats, last_category = 10), 4)
 })
 
 
@@ -98,17 +98,23 @@ test_that("collateCats works all together", {
     new_cats <- collateCats(insrts, cats)
     expect_length(new_cats, 16)
     expect_equivalent(new_cats[c(2, 3, 5, 6, 8, 9, 10, 11, 12, 13)], cats)
-    expect_equivalent(new_cats[c(1, 15, 14, 4, 16, 7)], insrts)
+    expect_equivalent(new_cats[c(1, 14, 15, 4, 16, 7)], insrts)
     # indices for new_cats to name map
     # 1  - First one
-    # 15 - Last one
-    # 14 - High
+    # 14 - Last one
+    # 15 - High
     # 4  - Low
     # 16 - missing anchor
     # 7  - missing categories
 })
 
-insrt_heads <- Insertions(data=list(list(name = "Subtitle", anchor = 0)))
+test_that("collateCats errors when given bad input", {
+    expect_error(
+        collateCats(insrts["missing categories"], Categories()),
+        "Can't collateCats with no categories")
+})
+
+insrt_heads <- Insertions(data=list(list(name = "Subtitle", anchor = "top")))
 # turn into subclassed insertions
 
 test_that("Converting insertions to subtypes works", {
@@ -135,14 +141,27 @@ test_that("Converting insertions to subtypes works", {
 
     # collate and check
     collated <- collateCats(c(insrts_subtyped, insrt_heads_subtyped), cats)
-    expect_true(all(are.Subtotals(collated[c(2, 5, 8, 15, 16, 17)])))
-    expect_true(all(are.Headings(collated[c(1)])))
+    expect_true(all(are.Subtotals(collated[c(1, 5, 8, 15, 16, 17)])))
+    expect_true(all(are.Headings(collated[2])))
     expect_true(all(unlist(lapply(collated[c(3, 4, 6, 7, 9, 10, 11, 12, 13, 14)],
                            is.category))))
     
     expect_error(subtypeInsertion("foo"), "Must provide an object of type Insertion")
     expect_error(subtypeInsertions("foo"), "Must provide an object of type Insertions")
-    })
+})
+
+test_that("calcTransform rejects nd arrays", {
+    ary2d <- array(c(1, 2, 3, 4, 5, 6), dim = c(2, 3),
+                   dimnames = list("foo1" = c("bar", "baz"),
+                                   "foo2" = c("bar", "baz", "qux")))
+    
+    expect_error(calcTransforms(ary2d, Transforms(insertions=insrts),
+                                Categories(list(name = "one", id = 1),
+                                           list(name = "two", id = 2))),
+                 paste0("Calculating varaible transforms is not ",
+                        "implemented for dimensions greater than 1."))
+})
+
 
 with_mock_crunch({
     ds <- loadDataset("test ds")
@@ -239,17 +258,6 @@ with_mock_crunch({
         expect_equivalent(calcTransforms(table(loc_var), trns,
                                         categories(loc_var)),
                           loc_ary)
-    })
-
-    test_that("calcTransform rejects nd arrays", {
-        ary2d <- array(c(1, 2, 3, 4, 5, 6), dim = c(2, 3),
-                         dimnames = list("foo1" = c("bar", "baz"),
-                                         "foo2" = c("bar", "baz", "qux")))
-
-        expect_error(calcTransforms(ary2d, Transforms(insertions=insrts),
-                                   Categories()),
-                     paste0("Calculating varaible transforms is not ",
-                            "implemented for dimensions greater than 1."))
     })
 })
 

@@ -29,7 +29,7 @@
               "transform": {
                 "insertions": [
                   {
-                    "anchor": 0,
+                    "anchor": "top",
                     "name": "First!",
                     "function": "subtotal",
                     "args": [
@@ -63,6 +63,14 @@
                     ]
                   },
                   {
+                    "anchor": 7,
+                    "name": "middle 5 (again)",
+                    "function": "subtotal",
+                    "args": [
+                      3, 4, 5, 6, 7
+                    ]
+                  },
+                  {
                     "anchor": 11,
                     "name": "Middle 3 (missing anchor)",
                     "function": "subtotal",
@@ -71,7 +79,7 @@
                     ]
                   },
                   {
-                    "anchor": 99,
+                    "anchor": "bottom",
                     "name": "J and can't see",
                     "function": "subtotal",
                     "args": [
