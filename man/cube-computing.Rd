@@ -74,11 +74,11 @@ in the resulting table (array). The \code{bases} function takes a "margin"
 argument to work like \code{margin.table}, or with \code{margin=0} gives all cell
 counts.
 
-\code{collapse.dimensions} returns a cube that collapses all dimensions but the one
-given in \code{margin}. This is useful if you want to get counts that are
-equivalent to a univariate cube from a multivariate cube. For example
-\code{collapse.dimensions(crtabs(~ fruit + pets, ds), 1)} will be equal to
-\code{crtabs(~ fruit, ds)}.
+\code{collapse.dimensions} returns a cube that collapses the dimensions given in
+\code{margin}. This is useful if you want to get counts that are equivalent to a
+univariate cube from a multivariate cube. For example
+\code{collapse.dimensions(crtabs(~ fruit + pets, ds), 2)} will be equal to
+\code{crtabs(~ fruit, ds)} and \code{collapse.dimensions(crtabs(~ fruit + pets, ds), 1)} will be equal to \code{crtabs(~ pets, ds)}.
 }
 \seealso{
 \code{\link[base:margin.table]{base::margin.table()}} \code{\link[base:prop.table]{base::prop.table()}}

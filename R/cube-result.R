@@ -378,11 +378,12 @@ as_selected_margins <- function (margin, selecteds, before=TRUE) {
 #' argument to work like `margin.table`, or with `margin=0` gives all cell
 #' counts.
 #'
-#' `collapse.dimensions` returns a cube that collapses all dimensions but the one
-#' given in `margin`. This is useful if you want to get counts that are
-#' equivalent to a univariate cube from a multivariate cube. For example
-#' `collapse.dimensions(crtabs(~ fruit + pets, ds), 1)` will be equal to 
-#' `crtabs(~ fruit, ds)`.
+#' `collapse.dimensions` returns a cube that collapses the dimensions given in
+#' `margin`. This is useful if you want to get counts that are equivalent to a
+#' univariate cube from a multivariate cube. For example
+#' `collapse.dimensions(crtabs(~ fruit + pets, ds), 2)` will be equal to
+#' `crtabs(~ fruit, ds)` and `collapse.dimensions(crtabs(~ fruit + pets, ds),
+#' 1)` will be equal to `crtabs(~ pets, ds)`.
 #'
 #' @param x a CrunchCube
 #' @param margin index, or vector of indices to generate margin for. See
@@ -396,7 +397,8 @@ as_selected_margins <- function (margin, selecteds, before=TRUE) {
 #'   the CrunchCubes it contains. Likewise, prop.table on a TabBookResult
 #'   returns a list of lists of prop.tables.
 #' @name cube-computing
-#' @aliases cube-computing margin.table prop.table bases round collapse.dimensions
+#' @aliases cube-computing margin.table prop.table bases round
+#'   collapse.dimensions
 #' @seealso [base::margin.table()] [base::prop.table()]
 NULL
 
