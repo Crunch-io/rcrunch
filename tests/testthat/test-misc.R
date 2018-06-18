@@ -210,6 +210,11 @@ test_that("checkInstalledPackages", {
     expect_silent(checkInstalledPackages("stats"))
 })
 
+test_that("hasFunction", {
+    expect_true(hasFunction("makeArray", "crunch"))
+    expect_false(hasFunction("Totally_not_a_function", "crunch"))
+})
+
 with_mock_crunch({
     ds <- loadDataset("test ds")
 

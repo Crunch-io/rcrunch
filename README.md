@@ -18,7 +18,7 @@
 The pre-release version of the package can be pulled from GitHub using the [devtools](https://github.com/hadley/devtools) package:
 
     # install.packages("devtools")
-    devtools::install_github("Crunch-io/rcrunch", build_vignettes=TRUE)
+    devtools::install_github("Crunch-io/rcrunch")
 
 ## Getting started
 

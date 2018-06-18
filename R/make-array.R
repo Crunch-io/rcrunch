@@ -80,6 +80,26 @@ makeMR <- function (subvariables, name, selections, ...) {
     return(vardef)
 }
 
+#' Array builder
+#'
+#' Launch array builder gadget
+#'
+#' Categorical Array and Multiple Response variables can be difficult to
+#' construct without being able to investigate the available variables, and
+#' their categories. This shiny gadget lets you select subvariables from the
+#' dataset list, and ensures that those variables have consistent categories. To
+#' use the gadget you must have at least one CrunchDataset loaded into the global
+#' environment.
+#'
+#' @return a valid call to `makeArray()` or `makeMR()`
+#' @export
+makeArrayGadget <- function(){
+    if (hasFunction("makeArrayGadget", "crunchy")) {
+        crunchy::makeArrayGadget()
+    } else {
+        halt("Please install the latest version of crunchy to access this function.")
+    }
+}
 
 #' Create Multiple Response Variable from Delimited lists
 #'
