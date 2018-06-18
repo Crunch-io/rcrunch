@@ -11,6 +11,13 @@
 #' @return If successful, an object of class SearchResults
 #' @export
 searchDatasets <- function (query, ...) {
+    if (!is.character(query)) {
+        halt("Search query must be a string, not ", class(query))
+    }
+    if (length(query) != 1) {
+        halt("Search query must be a single string, not a length-",
+            length(query), " character vector")
+    }
     search_url <- sessionURL("search", "views")
     results <- SearchResults(crGET(search_url, query=list(q=query, grouping="datasets", ...)))
     ## Grab useful things out of the (odd) API response

@@ -100,11 +100,17 @@ test_that("prettyPrint2d works with both styles", {
                      ))
 })
 
-test_that("prettyPrint2d input validation", {
-    expect_error(prettyPrint2d(tst_array, row_styles = list(crayon::bgBlack)),
-                 "The number of row styles doesn't match the number of rows")
-    expect_error(prettyPrint2d(tst_array, col_styles = list(crayon::bgWhite)),
-                 "The number of column styles doesn't match the number of columns")
+test_that("prettyPrint2d warns and returns an unformatted array on mismatch", {
+    expect_warning(expect_equal(
+        prettyPrint2d(tst_array, row_styles = list(crayon::bgBlack)),
+        prettyPrint2d(tst_array)
+        ),
+        "The number of row styles doesn't match the number of rows")
+    expect_warning(expect_equal(
+        prettyPrint2d(tst_array, col_styles = list(crayon::bgWhite)),
+        prettyPrint2d(tst_array)
+        ),
+        "The number of column styles doesn't match the number of columns")
 })
 
 test_that("prettyPrint2d works with row styles and 1d", {

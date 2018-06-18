@@ -18,6 +18,8 @@ getAccount <- function (x=rootURL("account", me())) {
     ShojiObject(crGET(x))
 }
 
+#' @rdname user-email
+#' @export
 setMethod("email", "UserEntity", function (x) x@body$email)
 
 #' Find all users on your account

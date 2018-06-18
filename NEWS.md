@@ -1,3 +1,19 @@
+## crunch 1.22.3 (under development)
+
+### Improved support for subtotals
+* CrunchCubes can now be displayed with subtotals on any axis (not just rows). 
+* Subtotals in CrunchCubes have been improved and stabalised, and should work in many more places than they did before (e.g. `margin.table`, `prop.table`, etc.)
+
+### Bugfixes
+* Fix order of variables when using `mv()` to move them to a folder.
+* Resolved a but when using `as.data.frame(..., force = TRUE)` with numeric variables that have missing values.
+* Resolve missing `Suggests` reference for test packages, following new `check` requirement.
+
+### Internal improvements
+* Internal: `getDimTypes()` returns a richer set of cube dimension types differentiating multiple response from categorical array dimensions.
+* Internal: Added support for `alias`, `description`, and `notes` on `VariableTuples`
+
+
 ## crunch 1.22.2
 * New introductory vignette: `vignette("crunch")`
 * `changeCategoryID()` tries to unset then reset the dataset exclusion if that impacts its progress. Best practice is to disable exclusions before running `changeCategoryID()` if at all possible.
@@ -8,6 +24,8 @@
 * Internal: support for the "selected_array" method of multiple response calculation, deprecated since 1.20.0, has been removed.
 * Internal: `getDimTypes()` returns a richer set of cube dimension types differentiating multiple response from categorical array dimensions. 
 * Internal: Added support for `alias`, `description`, and `notes` on `VariableTuples`
+* `makeArrayGadget()` launches a an RStudio to help you build valid categorical arrays
+and multiple response variables. 
 
 ## crunch 1.22.0
 
