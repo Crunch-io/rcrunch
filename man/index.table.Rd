@@ -18,7 +18,7 @@ an array of percentages indexed to the margin provided
 }
 \description{
 Index tables are percentages of percentages. They take the percentage from
-\code{prop.table()} and divide that by the proportions of the other margin.
+\code{prop.table(cube, margin)} and, by default, divide that by the proportions of the other margin. The \code{baseline} argument can be used to provide baseline proportions to compare against.
 }
 \details{
 \code{index.table()} is only implemented for 2 dimensional cubes. If you need to
@@ -41,6 +41,11 @@ calculate indexes for a higher dimension Cube, please slice the cube first.
  # v4    C   E
  #   B 100  80
  #   C 100 120
+ index.table(cube_object, 2, c(0.6, 0.4))
+ #    v7
+ # v4          C         E
+ #   B  83.33333  66.66667
+ #   C 125.00000 150.00000
 }
 
 }
