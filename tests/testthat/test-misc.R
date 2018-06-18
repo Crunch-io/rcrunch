@@ -205,8 +205,8 @@ test_that("is.TRUEorFALSE errors correctly", {
 })
 
 test_that("checkInstalledPackages", {
-    expect_error(checkInstalledPackages(c("not", "installed")),
-        paste0("Missing required packages: ", dQuote("not"), " and ", dQuote("installed")))
+    expect_error(checkInstalledPackages(c("NoTaPaCkAgE", "NoRtHiSoNe")),
+        paste0("Missing required packages: ", dQuote("NoTaPaCkAgE"), " and ", dQuote("NoRtHiSoNe")))
     expect_silent(checkInstalledPackages("stats"))
 })
 
