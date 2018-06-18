@@ -290,8 +290,8 @@ checkInstalledPackages <- function (pkgs) {
 #' This is useful for handling if the user has the correct version of a suggested
 #' package installed.
 #'
-#' @param fun
-#' @param pkg
+#' @param fun a string, name of the function to search for
+#' @param pkg a string, the package to search for the function in
 #'
 #' @return Logical
 hasFunction <- function(fun, pkg) {
