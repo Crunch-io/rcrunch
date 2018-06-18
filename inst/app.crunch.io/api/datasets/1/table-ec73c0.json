@@ -1,1 +1,33 @@
-{"self": "http://local.crunch.io:8080/api/datasets/1/table/?query=%7B%22out%22%3A%7B%22function%22%3A%22%3D%3D%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22http%3A%2F%2Flocal.crunch.io%3A8080%2Fapi%2Fdatasets%2F1%2Fvariables%2Fgender%2F%22%7D%2C%7B%22value%22%3A1%7D%5D%7D%7D%26filter%3D%7B%7D%26offset%3D0%26limit%3D50000", "element": "crunch:table", "data": {"out": [false, false, false, false, false, false, true, false, false, false, true, false, true, false, false, false, false, false, false, false, true, true, true, false, true]}, "description": "A Crunch Table of data for this dataset.", "metadata": {"out": {"alias": null, "type": "boolean", "name": null, "missing_reasons": {}, "description": ""}}}
+{
+    "self": "http://local.crunch.io:8080/api/datasets/1/table/?query=%7B%22out%22%3A%7B%22function%22%3A%22%3D%3D%22%2C%22args%22%3A%5B%7B%22variable%22%3A%22http%3A%2F%2Flocal.crunch.io%3A8080%2Fapi%2Fdatasets%2F1%2Fvariables%2Fgender%2F%22%7D%2C%7B%22value%22%3A1%7D%5D%7D%7D%26filter%3D%7B%7D%26offset%3D0%26limit%3D50000",
+    "element": "crunch:table",
+    "data": {
+        "out": [0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 0, 1]
+    },
+    "description": "A Crunch Table of data for this dataset.",
+    "metadata": {
+        "out": {
+            "alias": null,
+            "type": "categorical",
+            "name": null,
+            "categories": [{
+                "numeric_value": 1,
+                "selected": true,
+                "id": 1,
+                "missing": false,
+                "name": "Selected"
+            }, {
+                "numeric_value": 0,
+                "missing": false,
+                "id": 0,
+                "name": "Other"
+            }, {
+                "numeric_value": null,
+                "missing": true,
+                "id": -1,
+                "name": "No Data"
+            }],
+            "description": ""
+        }
+    }
+}
