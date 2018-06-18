@@ -51,6 +51,16 @@ test_that("index table with baseline", {
             125, 150,
             dims = catXcat_names)
     )
+    
+    expect_equal(
+        index.table(
+            catXcat_cube, 2,
+            array(c(0.6, 0.4, 0.4, 0.6), dim = c(2, 2))),
+        cubify(
+            83.3333333333333, 100,
+            125, 100,
+            dims = catXcat_names)
+    )
 })
 
 mrXcat_cube <- loadCube(test_path("cubes/selected-crosstab-4.json"))
