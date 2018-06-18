@@ -6,6 +6,7 @@
 
 ### Bugfixes
 * Fix order of variables when using `mv()` to move them to a folder.
+* `deleteVariables()` no longer tries to delete duplicate varaibles.
 * Resolved a but when using `as.data.frame(..., force = TRUE)` with numeric variables that have missing values.
 * Resolve missing `Suggests` reference for test packages, following new `check` requirement.
 
