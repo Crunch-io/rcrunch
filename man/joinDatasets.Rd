@@ -26,11 +26,11 @@ columns.}
 datasets.}
 
 \item{by.x}{CrunchVariable in \code{x} on which to join, or the alias
-(following \code{crunch.namekey.dataset}) of a variable. Must be type
+(following \code{crunch.namekey.dataset} of a variable. Must be type
 numeric or text and have all unique, non-missing values.}
 
 \item{by.y}{CrunchVariable in \code{y} on which to join, or the alias
-(following \code{crunch.namekey.dataset}) of a variable. Must be type
+(following \code{crunch.namekey.dataset} of a variable. Must be type
 numeric or text and have all unique, non-missing values.}
 
 \item{all}{logical: should all rows in x and y be kept, i.e. a "full outer"
@@ -53,7 +53,16 @@ not advised.}
 variables.
 }
 \description{
-As \code{\link[base]{merge}} does for \code{data.frame}s, this function
-takes two datasets, matches rows based on a specified key variable, and
-adds columns from one to the other.
+As \code{\link[base:merge]{base::merge()}} does for \code{data.frame}s, this function takes two datasets,
+matches rows based on a specified key variable, and adds columns from one to
+the other.
+}
+\details{
+Since joining two datasets can sometimes produce unexpected results if the
+keys differ between the two datasets, you may want to follow the
+fork-edit-merge workflow for this operation. To do this, fork the dataset
+with \code{\link[=forkDataset]{forkDataset()}}, join the new data to the fork, ensure that
+the resulting dataset is correct, and merge it back to the original dataset
+with \code{\link[=mergeFork]{mergeFork()}}. For more, see
+\code{vignette("fork-and-merge", package = "crunch")}.
 }

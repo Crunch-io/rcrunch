@@ -87,7 +87,7 @@ with_mock_crunch({
         expected <- readRDS("dataset-fixtures/test_ds.rds")
         cdf <- as.data.frame(ds[, c("birthyr", "gender", "location", "mymrset", "textVar", "starttime")])
         #test local CDF variables
-        cdf$newvar <- expected$newvar <- 1:25
+        cdf$newvar <- expected$newvar <- c(1:24, NA)
         expect_identical(csvToDataFrame(csv_df, cdf), expected)
     })
 

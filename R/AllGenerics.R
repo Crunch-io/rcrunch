@@ -45,7 +45,14 @@ setGeneric("descriptions", function (x) standardGeneric("descriptions"))
 setGeneric("descriptions<-",
     function (x, value) standardGeneric("descriptions<-"), signature="x")
 setGeneric("emails", function (x) standardGeneric("emails"))
+
+#' Extract the email from a User Entity
+#'
+#' @param x a UserEntity returned from `me()`
+#' @return a character string of the user's email
+#' @rdname user-email
 setGeneric("email", function (x) standardGeneric("email"))
+
 setGeneric("notes", function (x) standardGeneric("notes"))
 setGeneric("notes<-", function (x, value) standardGeneric("notes<-"),
     signature="x")
@@ -87,6 +94,14 @@ setGeneric("allVariables<-",
 setGeneric("subvariables", function (x) standardGeneric("subvariables"))
 setGeneric("subvariables<-",
     function (x, value) standardGeneric("subvariables<-"))
+
+#' Get a Crunch object's dataset
+#'
+#' @param x a Crunch object
+#' @return The url of the dataset which contains that object
+#' @keywords internal
+#' @rdname dataset-reference
+#' @export
 setGeneric("datasetReference", function (x) standardGeneric("datasetReference"))
 setGeneric("hide", function (x) standardGeneric("hide"))
 setGeneric("unhide", function (x) standardGeneric("unhide"))

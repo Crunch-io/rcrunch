@@ -357,6 +357,7 @@ setDatasetVariables <- function (x, value) {
     return(x)
 }
 
+#' @rdname dataset-reference
 setMethod("datasetReference", "CrunchDataset", function (x) self(x))
 
 variableCatalogURL <- function (dataset) {

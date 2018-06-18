@@ -190,10 +190,12 @@ setMethod("categories<-", c("CrunchVariable", "ANY"),
         halt("category assignment not defined for ", class(x))
     })
 
+#' @rdname dataset-reference
 setMethod("datasetReference", "CrunchVariable", function (x) {
     # x@urls$dataset_url
     rootURL(x, "dataset") %||% datasetReference(self(x))
 })
+#' @rdname dataset-reference
 setMethod("datasetReference", "character", function (x) {
     # check if the url has /datasets/.*/ in it.
     if (grepl("(.*/datasets/.*?/).*", x)) {
@@ -202,6 +204,8 @@ setMethod("datasetReference", "character", function (x) {
         NULL
     }
 })
+
+#' @rdname dataset-reference
 setMethod("datasetReference", "ANY", function (x) NULL)
 
 #' Split an array or multiple-response variable into its CategoricalVariables

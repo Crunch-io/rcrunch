@@ -125,10 +125,12 @@ setMethod("delete", "Multitable", function (x, ...) {
     invisible(out)
 })
 
+#' @rdname dataset-reference
 setMethod("datasetReference", "Multitable", function (x) {
     datasetReference(self(x))
 })
 
+#' @rdname dataset-reference
 setMethod("datasetReference", "MultitableCatalog", function (x) {
     datasetReference(self(x))
 })
@@ -167,7 +169,7 @@ newMultitable <- function (formula, data, name, ...) {
         halt(dQuote("data"), " must be a Dataset")
     }
 
-    template <- formulaToQuery(formula, data)    
+    template <- formulaToQuery(formula, data)
     if (missing(name)) {
         name <- RHS_string(formula)
     }
