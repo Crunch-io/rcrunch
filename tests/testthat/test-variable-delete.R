@@ -68,6 +68,11 @@ with_test_authentication({
                 "Variable not found. It may have been deleted.")
         })
 
+        with_consent(ds <- deleteVariable(ds, c("v6", "v6", "v5")))
+        test_that("deleteVariables ignores duplicates variables", {
+            expect_false(any(c("v6", "v5") %in% names(ds)))
+        })
+
         with_consent(ds$v3 <- NULL)
         test_that("Assigning NULL removes variables", {
             expect_null(ds$v3)

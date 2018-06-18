@@ -24,7 +24,7 @@ deleteVariables <- function (dataset, variables) {
     if (!askForPermission(prompt)) {
         halt("Must confirm deleting variable(s)")
     }
-    out <- lapply(urls(to.delete), crDELETE)
+    out <- lapply(unique(urls(to.delete)), crDELETE)
     dropCache(self(to.delete))
     invisible(refresh(dataset))
 }
