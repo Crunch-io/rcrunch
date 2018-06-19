@@ -9,10 +9,12 @@ prettyPrint2d <- function (array, row_styles = NULL, col_styles = NULL) {
     }
 
     if (!is.null(row_styles) && length(row_styles) != nrow(array)) {
-        halt("The number of row styles doesn't match the number of rows")
+        row_styles <- NULL
+        warning("The number of row styles doesn't match the number of rows")
     }
     if (!is.null(col_styles) && length(col_styles) != ncol(array)) {
-        halt("The number of column styles doesn't match the number of columns")
+        col_styles <- NULL
+        warning("The number of column styles doesn't match the number of columns")
     }
 
     # calculate column widths including headers, calculate column var title

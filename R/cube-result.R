@@ -203,10 +203,12 @@ keepWithNA <- function (dimension, marginal, useNA) {
     } else {
         ## !always means either drop missing always, or only keep if there are any
         out <- !dimension$missing
+        names(out) <- dimension$name
         if (useNA == "ifany") {
             ## Compare against "marginal", the counts, to know which missing
-            ## elements have "any"
-            out <- out | marginal > 0
+            ## elements have "any". We need to subset by name here because the
+            ## margin might include insertions
+            out <- out | marginal[names(out)] > 0
         }
     }
     # add names, so we know which categories are being kept
@@ -303,17 +305,18 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     ## OK. Now we have an array of data and translated margins. We can call the
     ## base `margin.table` method with those.
     mt <- margin.table(data, mt_margins)
-    ## Finally, drop missings from the result. Could we do this in one step,
-    ## building this into the initial `lapply`? Maybe we can now that we've
-    ## removed "selected_array"!
-    ## TODO: try to do that.
-    keep.these <- evalUseNA(mt, dims[mt_margins], x@useNA)
-    out <- subsetCubeArray(mt, keep.these)
 
-    # only attempt to apply a transform if the margin is 1 rows for now.
-    if (!is.null(margin) && margin == 1) {
-        out <- applyTransforms(x, array = out)
-    }
+    # apply possible transforms, but don't use the full cube dimentions, rather
+    # use subset transforms lists, dims, etc. because we have fewer dimensions
+    # than the full cube. This will also drop missings from the result, so we
+    # don't need to do that explicitly
+    out <- applyTransforms(
+        array = mt, 
+        transforms_list = transforms(x)[mt_margins],
+        dims_list = dims[mt_margins],
+        useNA = x@useNA
+    )
+    
     return(out)
 }
 
@@ -391,8 +394,7 @@ as.array.CrunchCube <- function (x, ...) cubeToArray(x, ...)
 #' @rdname cube-computing
 #' @export
 setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
-    out <- as.array(x)
-    out <- applyTransforms(x, array = out)
+    out <- applyTransforms(x)
     marg <- margin.table(x, margin)
     actual_margin <- as_selected_margins(margin, is.selectedDimension(x@dims),
         before=FALSE)
@@ -412,7 +414,7 @@ setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
 #' @rdname cube-computing
 #' @export
 setMethod("round", "CrunchCube", function (x, digits=0) {
-    round(as.array(x), digits)
+    return(round(applyTransforms(x), digits))
 })
 
 #' @rdname cube-computing
@@ -420,14 +422,14 @@ setMethod("round", "CrunchCube", function (x, digits=0) {
 setMethod("bases", "CrunchCube", function (x, margin=NULL) {
     if (length(margin) == 1 && margin == 0) {
         ## Unlike margin.table. This just returns the "bases", without reducing
-        return(cubeToArray(x, ".unweighted_counts"))
+        return(applyTransforms(x, array = cubeToArray(x, ".unweighted_counts")))
     } else if (length(dimensions(x)) == 0) {
         ## N dims == 0 is for univariate stats
         if (!is.null(margin)) {
             halt("Margin ", max(margin),
                 " exceeds Cube's number of dimensions (0)")
         }
-        return(cubeToArray(x, ".unweighted_counts"))
+        return(applyTransforms(x, array = cubeToArray(x, ".unweighted_counts")))
     } else {
         return(cubeMarginTable(x, margin, measure=".unweighted_counts"))
     }
