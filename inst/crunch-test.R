@@ -9,8 +9,7 @@ skip_locally <- function (...) {
 }
 
 loadCube <- function (filename) {
-    file <- sub('.*\\/', '', filename)
-    file <- system.file(paste0("cubes/", file), package = "crunch")
+    file <- system.file(filename, package = "crunch")
     if (nchar(file) > 0) {
         filename <- file
     }
