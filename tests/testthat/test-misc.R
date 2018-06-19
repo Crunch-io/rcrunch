@@ -160,7 +160,7 @@ test_that("default date formater", {
 
 test_that("Cubify works with many dimensions", {
     # 1d
-    cube_json <- fromJSON(test_path("cubes/univariate-categorical.json"))
+    cube_json <- fromJSON(paste0(path.package("crunch"), "/inst/cubes/univariate-categorical.json"))
     cube <- loadCube(test_path("cubes/univariate-categorical.json"))
 
     dn <- dimnames(cube@arrays$count)

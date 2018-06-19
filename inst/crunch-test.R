@@ -9,6 +9,11 @@ skip_locally <- function (...) {
 }
 
 loadCube <- function (filename) {
+    file <- sub('.*\\/', '', filename)
+    path <- paste0(path.package("crunch"), "/inst/cubes")
+    if (file %in% list.files(path)) {
+        filename <- paste0(path, "/", file)
+    }
     crunch:::CrunchCube(jsonlite::fromJSON(filename, simplifyVector=FALSE)$value)
 }
 
