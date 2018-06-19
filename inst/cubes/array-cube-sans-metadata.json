@@ -1,0 +1,273 @@
+{
+    "query": {
+        "measures": {
+            "count": {
+                "function": "cube_count",
+                "args": []
+            }
+        },
+        "weight": null,
+        "dimensions": [
+            {
+                "each": "/api/datasets/2d23c8f3899146eaafd5fa88e6b1aa6b/variables/16d81aa442db4152a8d8e13879a3b8f0/"
+            },
+            {
+                "variable": "/api/datasets/2d23c8f3899146eaafd5fa88e6b1aa6b/variables/16d81aa442db4152a8d8e13879a3b8f0/"
+            }
+        ],
+        "filters": []
+    },
+    "result": {
+        "dimensions": [
+            {
+                "references": {
+                    "discarded": false,
+                    "alias": "a",
+                    "name": "a",
+                    "header_order": 0,
+                    "description": ""
+                },
+                "derived": true,
+                "type": {
+                    "subtype": {
+                        "class": "variable"
+                    },
+                    "elements": [
+                        {
+                            "id": 1,
+                            "value": {
+                                "derived": false,
+                                "references": {
+                                    "name": "X",
+                                    "discarded": false,
+                                    "alias": "X",
+                                    "is_subvar": true,
+                                    "header_order": 0,
+                                    "description": ""
+                                },
+                                "id": "10ba27adfa1f4f47a9b365de8cb8d96d",
+                                "type": {
+                                    "ordinal": false,
+                                    "class": "categorical",
+                                    "categories": [
+                                        {
+                                            "numeric_value": null,
+                                            "missing": false,
+                                            "id": 1,
+                                            "name": "a"
+                                        },
+                                        {
+                                            "numeric_value": null,
+                                            "missing": false,
+                                            "id": 2,
+                                            "name": "b"
+                                        },
+                                        {
+                                            "numeric_value": null,
+                                            "missing": false,
+                                            "id": 3,
+                                            "name": "c"
+                                        },
+                                        {
+                                            "numeric_value": null,
+                                            "missing": false,
+                                            "id": 4,
+                                            "name": "NA"
+                                        }
+                                    ]
+                                }
+                            },
+                            "missing": false
+                        },
+                        {
+                            "id": 2,
+                            "value": {
+                                "derived": false,
+                                "references": {
+                                    "name": "Y",
+                                    "discarded": false,
+                                    "alias": "Y",
+                                    "is_subvar": true,
+                                    "header_order": 1,
+                                    "description": ""
+                                },
+                                "id": "05d47d446a37444faed8a08584f56106",
+                                "type": {
+                                    "ordinal": false,
+                                    "class": "categorical",
+                                    "categories": [
+                                        {
+                                            "numeric_value": null,
+                                            "missing": false,
+                                            "id": 1,
+                                            "name": "a"
+                                        },
+                                        {
+                                            "numeric_value": null,
+                                            "missing": false,
+                                            "id": 2,
+                                            "name": "b"
+                                        },
+                                        {
+                                            "numeric_value": null,
+                                            "missing": false,
+                                            "id": 3,
+                                            "name": "c"
+                                        },
+                                        {
+                                            "numeric_value": null,
+                                            "missing": false,
+                                            "id": 4,
+                                            "name": "NA"
+                                        }
+                                    ]
+                                }
+                            },
+                            "missing": false
+                        },
+                        {
+                            "id": 3,
+                            "value": {
+                                "derived": false,
+                                "references": {
+                                    "name": "Z",
+                                    "discarded": false,
+                                    "alias": "Z",
+                                    "is_subvar": true,
+                                    "header_order": 2,
+                                    "description": ""
+                                },
+                                "id": "93f8ff9f53d045729f3486494002b863",
+                                "type": {
+                                    "ordinal": false,
+                                    "class": "categorical",
+                                    "categories": [
+                                        {
+                                            "numeric_value": null,
+                                            "missing": false,
+                                            "id": 1,
+                                            "name": "a"
+                                        },
+                                        {
+                                            "numeric_value": null,
+                                            "missing": false,
+                                            "id": 2,
+                                            "name": "b"
+                                        },
+                                        {
+                                            "numeric_value": null,
+                                            "missing": false,
+                                            "id": 3,
+                                            "name": "c"
+                                        },
+                                        {
+                                            "numeric_value": null,
+                                            "missing": false,
+                                            "id": 4,
+                                            "name": "NA"
+                                        }
+                                    ]
+                                }
+                            },
+                            "missing": false
+                        }
+                    ],
+                    "class": "enum"
+                }
+            },
+            {
+                "references": {
+                    "discarded": false,
+                    "alias": "a",
+                    "name": "a",
+                    "header_order": 0,
+                    "description": ""
+                },
+                "derived": true,
+                "type": {
+                    "ordinal": false,
+                    "matrix": [
+                        "10ba27adfa1f4f47a9b365de8cb8d96d",
+                        "05d47d446a37444faed8a08584f56106",
+                        "93f8ff9f53d045729f3486494002b863"
+                    ],
+                    "categories": [
+                        {
+                            "numeric_value": null,
+                            "missing": false,
+                            "id": 1,
+                            "name": "a"
+                        },
+                        {
+                            "numeric_value": null,
+                            "missing": false,
+                            "id": 2,
+                            "name": "b"
+                        },
+                        {
+                            "numeric_value": null,
+                            "missing": false,
+                            "id": 3,
+                            "name": "c"
+                        },
+                        {
+                            "numeric_value": null,
+                            "missing": false,
+                            "id": 4,
+                            "name": "NA"
+                        }
+                    ],
+                    "class": "categorical"
+                }
+            }
+        ],
+        "missing": 0,
+        "measures": {
+            "count": {
+                "data": [
+                    2,
+                    1,
+                    0,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    0,
+                    2,
+                    1,
+                    1
+                ],
+                "n_missing": 0,
+                "metadata": {
+                    "references": {},
+                    "derived": true,
+                    "type": {
+                        "integer": true,
+                        "class": "numeric",
+                        "missing_reasons": {
+                            "No Data": -1
+                        },
+                        "missing_rules": {}
+                    }
+                }
+            }
+        },
+        "element": "crunch:cube",
+        "n": 4,
+        "counts": [
+            2,
+            1,
+            0,
+            1,
+            1,
+            1,
+            1,
+            1,
+            0,
+            2,
+            1,
+            1
+        ]
+    }
+}

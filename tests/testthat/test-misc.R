@@ -157,6 +157,11 @@ test_that("default date formater", {
     expect_equal(datetimeFormater(NULL), "%Y-%m-%d %H:%M:%S")
 })
 
+test_that("loadCube can handle a number of locations", {
+    # loadCube can load old fixtures that lack element/self/value metadata
+    cube <- loadCube("cubes/array-cube-sans-metadata.json")
+    expect_is(cube, "CrunchCube")
+})
 
 test_that("Cubify works with many dimensions", {
     # 1d

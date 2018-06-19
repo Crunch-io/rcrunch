@@ -13,7 +13,17 @@ loadCube <- function (filename) {
     if (nchar(file) > 0) {
         filename <- file
     }
-    crunch:::CrunchCube(jsonlite::fromJSON(filename, simplifyVector=FALSE)$value)
+
+    cube_json <- jsonlite::fromJSON(filename, simplifyVector=FALSE)
+
+    cube <- tryCatch({
+        return(crunch:::CrunchCube(cube_json$value))
+    }, error = function(e) {
+        # if there's a parsing error check if this is a cube without the header metadata
+        return(crunch:::CrunchCube(cube_json))
+    })
+
+    return(cube)
 }
 
 cubify <- function (..., dims) {
