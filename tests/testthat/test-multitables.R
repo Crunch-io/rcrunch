@@ -183,40 +183,33 @@ with_mock_crunch({
 
     ## TODO: test the query shape
 
-    with_POST("https://app.crunch.io/api/datasets/1/multitables/tabbook-result/", {
+    with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-tabbook/", {
         book <- tabBook(m, data=ds, format="json")
         test_that("tabBook JSON returns TabBookResult", {
             expect_is(book, "TabBookResult")
         })
         test_that("TabBookResult and MultitableResult size/extract methods", {
-            expect_length(book, 2)
+            expect_length(book, 4)
             expect_is(book[[1]], "MultitableResult")
             expect_length(book[[1]], 3)
-            expect_identical(dim(book), c(2L, 3L))
+            expect_identical(dim(book), c(4L, 3L))
             expect_is(book[[1]][[1]], "CrunchCube")
         })
         test_that("tab book print methods", {
             ## Print method for MultitableResult cbinds together the Cubes
-            out <- structure(
-                c(1716.8015767569, 2735.1538620464,
-                  572.8103823945, 324.958269652,
-                  367.0225567043, 209.9176698914,
-                  318.2739139279, 586.5329524502,
-                  265.3917388913, 512.5016544579,
-                  151.0637898576, 433.6789928332,
-                  42.2391949812, 667.5643227616,
-                  1169.7863186983, 1473.8095477065,
-                  547.0152580586, 1261.3443143399),
-                .Dim=c(2L, 9L),
-                .Dimnames=list(
-                    c("Admitted", "Rejected"),
-                    c("", "A", "B", "C", "D", "E", "F", "Male", "Female")))
+            out <- cubify(
+                4, 4, 0, 1, 0, 1, 1,
+                5, 0, 5, 3, 2, 1, 1,
+                5, 1, 3, 5, 2, 1, 1,
+            dims=list(
+                c("Cat", "Dog", "Bird"),
+                c("", "Cat", "Dog", "Bird", "Cat", "Dog", "Bird")))
             expect_prints(print(book[[1]]), get_output(out))
             ## TODO: print method for TabBookResult
         })
 
         test_that("The first result in a MultitableResult has 2 dimensions", {
-            expect_identical(dim(book[[1]][[1]]), c(2L, 1L))
+            expect_identical(dim(book[[1]][[1]]), c(3L, 1L))
         })
         test_that("prop.table methods", {
             ## prop.table on a TabBookResult returns a list of lists of prop.tables
@@ -258,7 +251,7 @@ with_mock_crunch({
                                    "Pets by location"))
             })
         })
-        
+
         with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-ca-mr-tabbook/", {
             ## This mock was taken from the integration test below
             book <- tabBook(m, data=ds, format="json")
@@ -288,22 +281,12 @@ with_mock_crunch({
         })
     })
 
-    with_POST("https://app.crunch.io/api/datasets/1/multitables/tabbook-result/", {
-        book <- tabBook(m, data=ds, format="json")
-        test_that("tabBook JSON with arrays returns TabBookResult", {
-            expect_is(book, "TabBookResult")
-            expect_identical(dim(book), c(2L, 3L))
-            expect_identical(prop.table(book, 2)[[2]][[2]],
-                prop.table(book[[2]][[2]], 2))
-        })
-    })
-
     with_POST("https://app.crunch.io/api/datasets/1/multitables/apidocs-tabbook/", {
         ## This mock was taken from the integration test below
         book <- tabBook(m, data=ds)
         test_that("tabBook from apidocs dataset (mock)", {
             expect_is(book, "TabBookResult")
-            expect_identical(dim(book), c(9L, 3L))
+            expect_identical(dim(book), c(4L, 3L))
             expect_identical(prop.table(book, 2)[[2]][[2]],
                 prop.table(book[[2]][[2]], 2))
         })
@@ -312,6 +295,12 @@ with_mock_crunch({
                 c("All pets owned", "Pet", "Pets by location", "Number of dogs"))
             expect_is(book[["Pet"]], "MultitableResult")
             expect_null(book[["NOTVALID"]])
+        })
+        test_that("tabBook JSON with arrays returns TabBookResult", {
+            expect_is(book, "TabBookResult")
+            expect_identical(
+                prop.table(book, 2)[[3]][[2]],
+                prop.table(book[[3]][[2]], 2))
         })
     })
 })

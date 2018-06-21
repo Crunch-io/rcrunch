@@ -138,6 +138,7 @@ reference:
   - cube-computing
   - cube-methods
   - cube-residuals
+  - cube-missingness
   - index.table
   - dashboard
   - duplicated
@@ -250,6 +251,10 @@ reference:
   - temp.options
   - which
   - with-context-manager
+- title: Data
+  contents:
+  - SO_schema
+  - SO_survey
 navbar:
   left:
     - text: Intro
