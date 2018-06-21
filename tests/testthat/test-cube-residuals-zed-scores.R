@@ -114,7 +114,7 @@ test_that("residuals for MR by MR (disparate MRs)", {
     expect_equal(rstandard(mr_by_mr_heterogeneous), out)
 })
 
-mr_by_mr_by_too_many <- loadCube("cubes/mr-by-mr-too-many-dims.json")
+mr_by_mr_by_too_many <- loadCube("cubes/cat-x-mr-x-mr.json")
 
 test_that("residuals for MR by MR by anything errors", {
     expect_error(rstandard(mr_by_mr_by_too_many),  paste0(
