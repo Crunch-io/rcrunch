@@ -51,6 +51,7 @@ with_test_authentication({
         expect_identical(names(subvariables(ds$derivedmr)), c("Pet", "Home"))
         expect_identical(names(categories(ds$derivedmr)),
                          c("Cat", "Dog", "Bird", "Skipped", "Not Asked"))
+        expect_false(uniformBasis(ds$derivedmr))
         expect_identical(as.vector(ds$derivedmr[[1]]), q1.values)
         expect_true(is.selected(categories(ds$derivedmr)[[2]]))
     })

@@ -197,6 +197,7 @@ with_test_authentication({
         test_that("can make MultipleResponse from CategoricalArray by dichotomizing categories (and back by undichotomize)", {
             categories(var) <- dichotomize(categories(var), 1)
             var <- refresh(var) ## Refresh required if changing type by editing categories
+            expect_false(uniformBasis(var)) # ensure that uniformBasis defaults to FALSE
             expect_true(is.Multiple(var))
             categories(var) <- undichotomize(categories(var))
             var <- refresh(var) ## Refresh required if changing type by editing categories
@@ -206,6 +207,8 @@ with_test_authentication({
             var <- dichotomize(var, 1)
             expect_true(is.Multiple(var))
             expect_true(is.Multiple(refresh(var)))
+            # ensure that uniformBasis defaults to FALSE
+            expect_false(uniformBasis(refresh(var)))
             var <- undichotomize(var)
             expect_true(is.CA(var))
             expect_true(is.CA(refresh(var)))
@@ -215,6 +218,8 @@ with_test_authentication({
             ds$arrayVar <- dichotomize(ds$arrayVar, 1)
             expect_true(is.Multiple(ds$arrayVar))
             expect_true(is.Multiple(refresh(ds)$arrayVar))
+            # ensure that uniformBasis defaults to FALSE
+            expect_false(uniformBasis(refresh(ds)$arrayVar))
             ds$arrayVar <- undichotomize(ds$arrayVar)
             expect_true(is.CA(ds$arrayVar))
             expect_true(is.CA(refresh(ds)$arrayVar))
