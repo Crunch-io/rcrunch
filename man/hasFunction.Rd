@@ -18,3 +18,4 @@ Logical
 This is useful for handling if the user has the correct version of a suggested
 package installed.
 }
+\keyword{internal}

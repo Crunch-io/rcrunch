@@ -251,7 +251,6 @@ reference:
   - temp.options
   - which
   - with-context-manager
-  - hasFunction
 - title: Data
   contents:
   - SO_schema

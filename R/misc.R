@@ -292,6 +292,7 @@ checkInstalledPackages <- function (pkgs) {
 #'
 #' @param fun a string, name of the function to search for
 #' @param pkg a string, the package to search for the function in
+#' @keywords internal
 #'
 #' @return Logical
 hasFunction <- function(fun, pkg) {
