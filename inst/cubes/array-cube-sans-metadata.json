@@ -9,10 +9,10 @@
         "weight": null,
         "dimensions": [
             {
-                "each": "/api/datasets/2d23c8f3899146eaafd5fa88e6b1aa6b/variables/16d81aa442db4152a8d8e13879a3b8f0/"
+                "each": "/api/datasets/2d23c8/variables/16d81a/"
             },
             {
-                "variable": "/api/datasets/2d23c8f3899146eaafd5fa88e6b1aa6b/variables/16d81aa442db4152a8d8e13879a3b8f0/"
+                "variable": "/api/datasets/2d23c8/variables/16d81a/"
             }
         ],
         "filters": []
@@ -45,7 +45,7 @@
                                     "header_order": 0,
                                     "description": ""
                                 },
-                                "id": "10ba27adfa1f4f47a9b365de8cb8d96d",
+                                "id": "10ba27",
                                 "type": {
                                     "ordinal": false,
                                     "class": "categorical",
@@ -91,7 +91,7 @@
                                     "header_order": 1,
                                     "description": ""
                                 },
-                                "id": "05d47d446a37444faed8a08584f56106",
+                                "id": "05d47d",
                                 "type": {
                                     "ordinal": false,
                                     "class": "categorical",
@@ -137,7 +137,7 @@
                                     "header_order": 2,
                                     "description": ""
                                 },
-                                "id": "93f8ff9f53d045729f3486494002b863",
+                                "id": "93f8ff",
                                 "type": {
                                     "ordinal": false,
                                     "class": "categorical",
@@ -187,9 +187,9 @@
                 "type": {
                     "ordinal": false,
                     "matrix": [
-                        "10ba27adfa1f4f47a9b365de8cb8d96d",
-                        "05d47d446a37444faed8a08584f56106",
-                        "93f8ff9f53d045729f3486494002b863"
+                        "10ba27",
+                        "05d47d",
+                        "93f8ff"
                     ],
                     "categories": [
                         {

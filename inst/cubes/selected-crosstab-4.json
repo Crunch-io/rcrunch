@@ -30,22 +30,22 @@
                     "alias": "shower_thoughts_klima_2",
                     "uniform_basis": false,
                     "subreferences": [{
-                        "alias": "shower_thoughts_65f074a0_a7d8_11e5_adbc_005056904df0",
+                        "alias": "shower_thoughts_65f",
                         "name": "Cupcakes are the best cakes"
                     }, {
-                        "alias": "shower_thoughts_6b4ed090_a7d8_11e5_adbc_005056904df0",
+                        "alias": "shower_thoughts_6b4",
                         "name": "Corgis are the future of dog shows"
                     }, {
-                        "alias": "shower_thoughts_7041c080_a7d8_11e5_adbc_005056904df0",
+                        "alias": "shower_thoughts_704",
                         "name": "I always ride a penny-farthing"
                     }, {
-                        "alias": "shower_thoughts_20e02250_a7e4_11e5_adbc_005056904df0",
+                        "alias": "shower_thoughts_20e",
                         "name": "I never look at eclipses"
                     }, {
-                        "alias": "shower_thoughts_9c0ed360_a7d8_11e5_adbc_005056904df0",
+                        "alias": "shower_thoughts_9c0",
                         "name": "I never mess with Texas"
                     }, {
-                        "alias": "shower_thoughts_a37c6040_a7d8_11e5_adbc_005056904df0",
+                        "alias": "shower_thoughts_a37",
                         "name": "I don't mind pickles on my burger"
                     }],
                     "name": "Statements agreed with about Corgis",
@@ -62,7 +62,7 @@
                         "id": 1,
                         "value": {
                             "references": {
-                                "alias": "shower_thoughts_65f074a0_a7d8_11e5_adbc_005056904df0",
+                                "alias": "shower_thoughts_65f",
                                 "name": "Cupcakes are the best cakes"
                             },
                             "derived": false,
@@ -94,7 +94,7 @@
                         "id": 2,
                         "value": {
                             "references": {
-                                "alias": "shower_thoughts_6b4ed090_a7d8_11e5_adbc_005056904df0",
+                                "alias": "shower_thoughts_6b4",
                                 "name": "Corgis are the future of dog shows"
                             },
                             "derived": false,
@@ -126,7 +126,7 @@
                         "id": 3,
                         "value": {
                             "references": {
-                                "alias": "shower_thoughts_7041c080_a7d8_11e5_adbc_005056904df0",
+                                "alias": "shower_thoughts_704",
                                 "name": "I always ride a penny-farthing"
                             },
                             "derived": false,
@@ -158,7 +158,7 @@
                         "id": 4,
                         "value": {
                             "references": {
-                                "alias": "shower_thoughts_20e02250_a7e4_11e5_adbc_005056904df0",
+                                "alias": "shower_thoughts_20e",
                                 "name": "I never look at eclipses"
                             },
                             "derived": false,
@@ -190,7 +190,7 @@
                         "id": 5,
                         "value": {
                             "references": {
-                                "alias": "shower_thoughts_9c0ed360_a7d8_11e5_adbc_005056904df0",
+                                "alias": "shower_thoughts_9c0",
                                 "name": "I never mess with Texas"
                             },
                             "derived": false,
@@ -222,7 +222,7 @@
                         "id": 6,
                         "value": {
                             "references": {
-                                "alias": "shower_thoughts_a37c6040_a7d8_11e5_adbc_005056904df0",
+                                "alias": "shower_thoughts_a37",
                                 "name": "I don't mind pickles on my burger"
                             },
                             "derived": false,
@@ -262,22 +262,22 @@
                     },
                     "name": "Statements agreed with about Corgis",
                     "subreferences": [{
-                        "alias": "shower_thoughts_65f074a0_a7d8_11e5_adbc_005056904df0",
+                        "alias": "shower_thoughts_65f",
                         "name": "Cupcakes are the best cakes"
                     }, {
-                        "alias": "shower_thoughts_6b4ed090_a7d8_11e5_adbc_005056904df0",
+                        "alias": "shower_thoughts_6b4",
                         "name": "Corgis are the future of dog shows"
                     }, {
-                        "alias": "shower_thoughts_7041c080_a7d8_11e5_adbc_005056904df0",
+                        "alias": "shower_thoughts_704",
                         "name": "I always ride a penny-farthing"
                     }, {
-                        "alias": "shower_thoughts_20e02250_a7e4_11e5_adbc_005056904df0",
+                        "alias": "shower_thoughts_20e",
                         "name": "I never look at eclipses"
                     }, {
-                        "alias": "shower_thoughts_9c0ed360_a7d8_11e5_adbc_005056904df0",
+                        "alias": "shower_thoughts_9c0",
                         "name": "I never mess with Texas"
                     }, {
-                        "alias": "shower_thoughts_a37c6040_a7d8_11e5_adbc_005056904df0",
+                        "alias": "shower_thoughts_a37",
                         "name": "I don't mind pickles on my burger"
                     }]
                 },
