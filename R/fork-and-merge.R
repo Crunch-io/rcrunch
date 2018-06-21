@@ -32,7 +32,7 @@ forkDataset <- function (dataset, name=defaultForkName(dataset), draft=FALSE, ..
     fork_url <- crPOST(shojiURL(dataset, "catalogs", "forks"),
         body=toJSON(wrapEntity(name=name, is_published=!draft, ...)))
     dropOnly(sessionURL("datasets"))
-    invisible(entity(datasets()[[fork_url]]))
+    invisible(loadDatasetFromURL(fork_url))
 }
 
 defaultForkName <- function (dataset) {
