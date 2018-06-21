@@ -45,23 +45,20 @@ and multiple response variables.
 * Add some forward-compatible code to prepare for API changes to logical variables. This led to a couple of trivial changes to internals around boolean types that should not affect package users.
 
 # crunch 1.21.0
-## Variable organization
 
+## Variable organization
 * New functions for organizing variables in a dataset, modeled on file system operations: `cd()`, `mv()`, `mkdir()`, `rmdir()`. These functions use a new API for variable folders (unlike the experimental versions of some that were introduced in the 1.19.0 package release). This API is currently in a beta testing phase. See `vignettes("variable-order", package="crunch")` for examples and details.
 
 ## Loading and navigating
-
 * `listDatasets(shiny = TRUE)` launches an RStudio addin which allows you to select your dataset in order to generate a valid `loadDataset()` call. You can also associate this addin with a hotkey using in RStudio through `Tools` > `Modify Keyboard Shortcuts`.
 * `webApp()` now works for Crunch variables: it will take you to the "browse" view of the web application with the given variable card loaded on screen.
 
 ## New variable creation and derivation
-
 * Create a derived view of a variable as another type without altering the underlying data. Have a text input that is only numbers, such as an ID, and want to have a variable that is a true numeric, but you also want to make sure that new (text) values can be appended to the dataset? Use `ds$id_var_numeric <- as.Numeric(ds$id_var)`. There are `as.*` methods for all Crunch data types except for array-like variables.
 * Preliminary support for `haven`’s `labelled` class when converting to Crunch variable types.
 * `makeMRFromText()` to take a variable imported as delimited strings, parse the multiple-response options, and return a (derived) `multiple_response` variable.
 
 ## Miscellaneous
-
 * Added support for setting population sizes on datasets with `setPopulation(ds, size = 24.13e6, magnitude = 3)` and for getting population sizes (or magnitudes) with `popSize(ds)` and `popMagnitude(ds)` respectively.
 * Added support for getting and setting rollup resolutions for displaying Datetime variables. Get resolution with `rollupResolution(ds$datetime)` and set with `rollupResolution(ds$datetime) <- "M"`.
 * Add `options(crunch.show.progress)` to govern whether to report progress of long-running requests. Default is `TRUE`, but set it to `FALSE` to run quietly.
@@ -90,7 +87,6 @@ and multiple response variables.
 # crunch 1.19.0
 
 ## New functions
-
 * Variable groups (folders) can now be referenced by "path": either a vector of nested folder names (as in `ordering(ds)[[c("Top folder", "Nested folder")]]`) or a single string with nested folders separated by a delimiter (as in `ordering(ds)[["Top folder/Nested folder"]]`). "/" is the default path delimiter, and this is configurable via `options(crunch.delimiter)`. If you have folders that actually contain "/" in the folder name, this may be a breaking change. If so, set `options(crunch.delimiter="|")` or some other string so that folder names are not incorrectly interpreted as paths.
 * Introduce new `mv()` and `mkdir()` functions for creating variable folders and moving variables into them. These take a Dataset as their argument and can be chained together for convenience/readability.
 * Other helper functions `folder()` and `folder<-` to locate a variable in the folder hierarchy and to move it to a new folder. `folder(ds$var) <- "New folder/subfolder"` is equivalent to `ds <- mv(ds, "var", c("New folder", "subfolder"))`.
@@ -98,7 +94,6 @@ and multiple response variables.
 * `collapseCategories()` allows you to combine categories in place without creating a new variable
 
 ## Enhancements and fixes
-
 * Deep copying variables with `copy()` has been made more efficient
 * `CrunchDataFrames` have been improved to act more `data.frame`-like. You can now access and overwrite values with standard `data.frame` methods like `crdf$variable1` or `crdf[,"variable1"]` and `crdf$variable1 <- 1` or `crdf[,"variable1"] <- 1`. `CrunchDataFrames` now also support adding arbitrary columns, although it should be noted that these columns are not stored on the Crunch server, so if you want to keep that data outside of your current R session, you should send it back to your Dataset as a new variable.
 * `is.selected()` is now vectorized to work with Categories, as `is.na()` has always been. You can also now assign into the function (#123)
@@ -106,7 +101,7 @@ and multiple response variables.
 * `makeCaseVariable()` has better errors when a user doesn't name all of their case definitions (#158).
 * The size limit on `as.data.frame()` when `force = TRUE` has been removed (#150)
 
-## crunch 1.18.4
+# crunch 1.18.4
 * All catalog objects now have an `as.data.frame()` method.
 * The list of dataset "weight variables" can now be set with `modifyWeightVariables()`, `weightVariables(ds) <- ds$newWeight` or `is.weightVariables(ds$var) <- TRUE`
 * Users with account admin privileges can now `expropriateUser()` to transfer datasets, projects, and other objects owned by one user to another, as when that user has left your organization.
@@ -117,7 +112,7 @@ and multiple response variables.
 * Fix `bases()` when called on a univariate statistic (#124)
 * Update some tests and code to anticipate changes in an upcoming release of `testthat`
 
-## crunch 1.18.2
+# crunch 1.18.2
 * `makeWeight()` allows you to generate new weighting variables based on categorical variables (#80).
 * `cut()`, equivalent to `base::cut`, allows you to generate a derived categorical variable based on a numeric variable (#93).
 * Create a new Crunch dataset from a file by calling `newDataset()` directly instead of `newDatasetFromFile`. Also, you can now create a dataset from a hosted file passing its URL to `newDataset(FromFile)`.
@@ -152,30 +147,29 @@ and multiple response variables.
 * Allow deep copying of multiple-response type variables
 * Experimental support for merging `CrunchDataFrame`s with standard `data.frame`s
 
-## crunch 1.17.8
+# crunch 1.17.8
 Two attempts to fix download issues introduced by 1.17.4:
 
 * Changed file downloads to `crGET` with `httr::write_disk()` to hopefully work around issues caused by `utils::download.file` with method "libcurl".
 * Add a `retry` for downloads to hopefully work around a delay in CDN population.
 
-## crunch 1.17.6
+# crunch 1.17.6
 * `searchDatasets()` to use the Crunch search API.
 * Added support for viewing and changing the number of digits after the decimal place to be printed with `digits()` (useful when exporting to SPSS files).
 * `crtabs` and `table` where a dimension is a `CrunchLogicalExpr` now return a boolean dimension with names "FALSE" and "TRUE", rather than the previous behavior of dropping the dimension and only returning the `TRUE` value.
 
-## crunch 1.17.4
+# crunch 1.17.4
 * Added support for case variables (#36): `makeCaseVariable()` takes a sequence of case statements to derive a new variable based on the values from other variables.
 * Added a function to create interactions of variables (#42): `interactVariables()` takes two or more categorical variables and derives a new variable with the combination of each.
-* Fixed a bug where exports (data and tab book) might not work on Windows. If you're using a version of R older than 3.3, and you *now- have problems downloading, and you're not on Windows, try `options(download.file.method="curl")`.
+* Fixed a bug where exports (data and tab book) might not work on Windows. If you're using a version of R older than 3.3, and you *now* have problems downloading, and you're not on Windows, try `options(download.file.method="curl")`.
 
-## crunch 1.17.2
+# crunch 1.17.2
 * Support for streaming data: check for received data with `pendingStream()`; append that pending stream data to the dataset with `appendStream()` (#40)
 * Multitables can now be updated with `multitables(ds)[["Multitable name"]] <- ~ var1 + var2` syntax. Similarly, multitables can be deleted with `multitables(ds)[["Multitable name"]] <- NULL`. Multitables also have new `name()` and `delete()` methods.
 * `toVariable()` now accepts (and then strips) arguments of class `AsIs` (#44)
 * Fixed a bug where `changeCategoryID()` failed on multiple response variables.
 
 # crunch 1.17.0
-
 * `dashboard` and `dashboard<-` methods to view and set a dashboard URL on a dataset
 * `changeCategoryID` function to map categorical data to a new "id" and value in the data (#38, #47)
 * Added `importMultitable()` to copy a multitable form one dataset to another. Additionally, `Multitable`s now have a show method showing its name and column variables.
@@ -189,26 +183,23 @@ Two attempts to fix download issues introduced by 1.17.4:
 # crunch 1.16.0
 
 ## Cube and tab book improvements
-
 * Reshape TabBookResults that contain categorical array variables so that `prop.table` computations line up with those not containing array variables (i.e. move subvariables to the third array dimension in the result).
 * Add `names`, `aliases`, and `descriptions` methods to `CrunchCube` (corresponding to variables of the dimensions in the cube), `MultitableResult` (corresponding to the "column" variables of the cubes in the result), and `TabBookResult` (corresponding to the "row"/"sheet" variables in each multitable result).
 * Fix `names` method for TabBookResults following an API change.
 * Extend `crtabs` formula parsing to support multiple, potentially named, measures
 
 ## Other new features
-
 * `weightVariables` method to display the set of variables designated as valid weights. (Works like `hiddenVariables`.)
 * In `appendDataset`, allow specifying a subset of rows to append (in addition to the already supported selection of variables)
 * `loadDataset` can now load a dataset by its URL.
 
 ## Housekeeping
-
 * Remove "confirm" argument from various delete functions (deprecated since 1.14.4) and the "cleanup" argument to append (deprecated since 1.13.4)
 * All destructive actions now require 'consent', even in non-interactive mode. See `?with_consent` for more details.
 * Improvements to validation when updating values in a dataset.
 * Move mock API fixtures to `inst/` so that other packages depending on this package can access them more easily.
 
-## crunch 1.15.2
+# crunch 1.15.2
 * Support for additional dataset export arguments
 * Add `is.derived` method for Variables
 * Allow a 'message' when sharing a dataset (#27)
@@ -222,7 +213,7 @@ Two attempts to fix download issues introduced by 1.17.4:
 * Handle case of attempting to `saveVersion` when there are no changes since the last saved version.
 * Update to work with [roxygen2 6.0.0 release](https://github.com/klutometis/roxygen/issues/568)
 
-## crunch 1.14.4
+# crunch 1.14.4
 * `newFilter` and `newProject` functions to create those objects more directly, rather than by assigning into their respective catalogs.
 * Require confirmation before doing a "force" merge in `mergeFork`.
 * Add `with_consent` as an alternative to `with(consent(), ...)`
@@ -230,7 +221,7 @@ Two attempts to fix download issues introduced by 1.17.4:
 * Add deprecation warning that destructive actions will soon also require consent when running in a non-interactive R session.
 * Use [httptest](https://github.com/nealrichardson/httptest) for mocking HTTP and the Crunch API.
 
-## crunch 1.14.2
+# crunch 1.14.2
 * Trivial change to DESCRIPTION to meet new, hidden CRAN requirement
 
 # crunch 1.14.0
@@ -244,7 +235,7 @@ Two attempts to fix download issues introduced by 1.17.4:
 * Fix behavior and validation for subsetting datasets/variables that are already subsetted by a Crunch expression object.
 * Allow setting a variable entity to `settings(ds)$weight` and not just its `self` URL.
 
-## crunch 1.13.8
+# crunch 1.13.8
 * `crunchBox` to make a public, embeddable analysis widget
 * `settings` and `settings<-` to view and modify dataset-level controls, such as default "weight" and viewer permissions ("viewers_can_change_weight", "viewers_can_export")
 * `flattenOrder` to strip out nested groups from an order
@@ -253,13 +244,13 @@ Two attempts to fix download issues introduced by 1.17.4:
 * Copying and deriving variables now bring in the "notes" attribute.
 * Improve error handling when attempting to `loadDataset` from a nonexistent project.
 
-## crunch 1.13.6
+# crunch 1.13.6
 * More utility functions for working with order objects: `dedupeOrder`, `removeEmptyGroups`
 * `appendDataset` can now append a subset of variables
 * Update to changes in the dataset version API
 * Fix bug in assigning NA to an array subvariable that didn't already have the "No Data" category
 
-## crunch 1.13.4
+# crunch 1.13.4
 * `flipArrays` function to generate derived views of array subvariables
 * Add "autorollback" argument to `appendDataset`, defaulted to `TRUE`, which ensures that a failed append leaves the dataset in a clean state.
 * `allVariables` is now ordered by the variable catalog's order, just as `variables` has always been.
@@ -267,7 +258,7 @@ Two attempts to fix download issues introduced by 1.17.4:
 * Support an `as_array` (pseudo-)function in `crtabs` that allows crosstabbing a multiple-response variable as if it were a categorical array.
 * Fix bug in dataset export when attempting to export a single variable
 
-## crunch 1.13.2
+# crunch 1.13.2
 * Support deep copying of categorical array variables.
 * Join (`merge`) a subset of variables and/or rows of a dataset.
 * `moveToGroup` function and setter for easier adding of variables to existing groups.
@@ -286,7 +277,7 @@ Two attempts to fix download issues introduced by 1.17.4:
 * [New vignette](inst/doc/export.md) on downloading data to your local R session and exporting datasets to file formats.
 * Preparation for upcoming API changes.
 
-## crunch 1.12.2
+# crunch 1.12.2
 * Patch a test for handling duplicate factor levels, which is deprecated in current R releases but converted to an error in the upcoming release.
 
 # crunch 1.12.0
@@ -301,7 +292,7 @@ Two attempts to fix download issues introduced by 1.17.4:
 * Fix dataset import via `newDataset` when passing a `data.frame` or similar that has spaces in the column names.
 * Handle the (deprecated in R) case of duplicate factor levels when translating to categorical in `toVariable`
 
-## crunch 1.11.2
+# crunch 1.11.2
 * Fix issue with sharing datasets owned by a project.
 * Support updating Categorical variables created from R logical-type vectors with logical values
 * Remove "crunch.max.categories" option to govern converting factors to Crunch categorical variables only if fewer than that threshold. Use `as.character` if you have a factor and want it to be imported as type Text.
@@ -316,20 +307,20 @@ Two attempts to fix download issues introduced by 1.17.4:
 * Support computing numeric aggregates (mean, max, etc.) of categorical variables with numeric values in `crtabs`
 * Allow `NULL` assignment into Variable/DatasetGroups to remove elements
 
-## crunch 1.10.6
+# crunch 1.10.6
 * Fix refresh method for Datasets that have been transferred to a Project.
 * (Re-)improve print method for expressions involving categorical variables
 * Improve handling of filters when composing complex expressions of `CrunchExpr`, Variable, and Dataset objects
 * Add expression support for operations involving a `DatetimeVariable` and a character vector, assumed to be ISO-8601 formatted.
 * Export a `permissions` method for Datasets to work directly with sharing privileges.
 
-## crunch 1.10.4
+# crunch 1.10.4
 * Fix `as.data.frame`/`as.environment` for `CrunchDataset` when a variable alias contained an apostrophe.
 * Better print method for project `MemberCatalog`.
 * Fix for [change in 'jsonlite' API](https://github.com/jeroenooms/jsonlite/issues/130#issuecomment-225971209) in its v0.9.22
 * Progress polling now returns the error message, if given, if a job fails.
 
-## crunch 1.10.2
+# crunch 1.10.2
 * `exportDataset` to download a CSV or SAV file of a dataset. `write.csv` convenience method for CSV export.
 * Correctly parse datetimes that don't include timezone information.
 * Add `icon` and `icon<-` methods for Projects to read the project's current icon URL and to set a new icon by supplying a local file name to upload.
@@ -340,35 +331,33 @@ Two attempts to fix download issues introduced by 1.17.4:
 
 # crunch 1.10.0
 
-### New support for working with users and their permissions on datasets and projects
-
+## New support for working with users and their permissions on datasets and projects
 * Add `owner` and `owner<-` for datasets to read and modify the owner
 * Add `owners` and `ownerNames` for DatasetCatalog
 * `is.editor` and `is.editor<-` for project MemberCatalog
 * `me` function to get the user entity for yourself
 
-### Other changes
-
+## Other changes
 * Add missing print method for DatasetOrder
 * Support creating OrderGroups (for both Datasets and Variables) by assigning URLs into a new group name
 * Improve support for parsing datetime data values
 * Fix bug in setting nested groups inside DatasetOrder
 * Fix failure on interactive login in R.app on OS X
 
-## crunch 1.9.12
+# crunch 1.9.12
 * Generalize and update to new Progress API. Add a progress bar.
 * Remove deprecated query parameter on variable catalog
 
-## crunch 1.9.10
+# crunch 1.9.10
 * `variableMetadata` function to export all variable metadata associated with the dataset
 
-## crunch 1.9.8
+# crunch 1.9.8
 * Better support for deleting hidden variables
 * Allow subsetting of datasets to include hidden variables
 * Require that version names must be a single string value
 * Fix bug in print method for VariableOrder that manifested when fixing the variable catalog's relative URL API
 
-## crunch 1.9.6
+# crunch 1.9.6
 * Add warning that the `pattern` argument for functions including `makeArray`, `makeMR`, `deleteVariables`, and `hideVariables` is being deprecated. The help pages for those functions advise you to grep for or otherwise identify your variables outside of these functions.
 * `unshare` to revoke access of a user or a team to a dataset.
 * Support for DatasetOrder, in particular for datasets within a project.
@@ -376,7 +365,7 @@ Two attempts to fix download issues introduced by 1.17.4:
 * Make paginated requests to GET /table/ (for `CrunchExpr`s) for greater reliability
 * Finally fix bug that prevented sharing datasets with non-editors when the dataset had already been shared with a team.
 
-## crunch 1.9.4
+# crunch 1.9.4
 * Add a "session" object, retrievable by either `session()` or returned from `login()`, containing the various catalog resources (Datasets, etc.).
 * Additional methods on the dataset catalog, such as `names<-`.
 * Extract from most catalogs either by URL or name.
@@ -387,21 +376,21 @@ Two attempts to fix download issues introduced by 1.17.4:
 * New Progress API for checking status of pending, long-running server jobs.
 * Switch `as.vector` for `CrunchExpr` to GET rather than POST.
 
-## crunch 1.9.2
+# crunch 1.9.2
 * `forkDataset` to make a fork (copy) of a dataset; `mergeFork` to merge changes from a fork back to its parent (or vice versa)
 * Remove a duplicate request made when setting variable order
 * Update to new API to get a datetime variable's rollup resolution and save a request
 
 # crunch 1.9.0
 
-### Major changes
+## Major changes
 * Pull HTTP query cache out to the [httpcache](https://github.com/nealrichardson/httpcache) package and take dependency on that. Remove dependency on `digest` package (httpcache depends on it instead).
 * New vignette on [filters and exclusions](inst/doc/filters.md)
 * `combine` categories of categorical and categorical-array variables, and responses of multiple-response variables, into new derived variables
 * `startDate` and `endDate` attributes and setters for dataset entities (#10, #11)
 * Allow editing of filter expressions in UI filter objects (`CrunchFilter`)
 
-### Other changes
+## Other changes
 * Improved validation for "name" setting, especially for categories
 * Speed up `ncol(ds)` by removing a server request
 * Speed up variable catalog editing by avoiding unnecessary updates to the variable order
@@ -417,31 +406,31 @@ Two attempts to fix download issues introduced by 1.17.4:
 * Fix overly rigid validation in `share`
 * Update API usage to always send full variable URLs in queries
 
-## crunch 1.7.12
+# crunch 1.7.12
 * Add method for R logical &/| Crunch expression
 * Upgrade for compatibility with httr 1.1
 
-## crunch 1.7.10
+# crunch 1.7.10
 * `addSubvariable` function to add to array and multiple response variables (#7)
 * Make paginated requests to GET /values/ for greater reliability
 
-## crunch 1.7.8
+# crunch 1.7.8
 * Update to match changes in filter API
 
-## crunch 1.7.6
+# crunch 1.7.6
 * `dropRows` to permanently delete rows from a dataset.
 * Better print method for catalog resources, using the new `catalogToDataFrame` function.
 * Export a few more functions (`shojiURL`, `batches`)
 
-## crunch 1.7.4
+# crunch 1.7.4
 * Catch `NULL` in cube dimension when referencing subvariable that does not exist (as when using alias instead of name) and return a useful message.
 * Fix for unintended substring matching in `%in%` expression translation.
 * Internal change to match user catalog API update
 
-## crunch 1.7.3
+# crunch 1.7.3
 * Update docs to conform to R-devel changes to `as.vector`'s signature.
 
-## crunch 1.7.2
+# crunch 1.7.2
 * `addVariables` function to add multiple variables to a dataset efficiently
 * Support aggregating with `CrunchExpr`s and filtered variables in `table`
 * Save a variable catalog refresh on (un)dichotomize. Slight speedup as a result.
@@ -452,7 +441,7 @@ Two attempts to fix download issues introduced by 1.17.4:
 * Also speed up loading of variable catalogs by deferring resolution of relative subvariable URLs until requested. Eliminates significant load time for datasets with lots of array variables.
 * Fix bug in results from `crtabs` when requesting a crosstab of three or more dimensions.
 
-## crunch 1.6.1
+# crunch 1.6.1
 * `VariableDefinition` (or `VarDef`) function and class for creating variable definitions with more metadata (rather than assigning R vectors into a dataset and having to add metadata after).
 * Reworked various new variable functions, including `copy`, `makeArray`, and `makeMR`, to return `VariableDefinition`s rather than creating the new variables themselves. Creation happens on assignment into the dataset.
 * Support adding No Data (`NA` for categoricals) even if No Data doesn't already exist
@@ -466,25 +455,25 @@ Two attempts to fix download issues introduced by 1.17.4:
 * Handle case of assigning `NULL` into a dataset when the referenced variable (alias) does not exist.
 * More support for `NA` assignment into variables.
 
-## crunch 1.5.4
+# crunch 1.5.4
 * Gradually slow the polling of `/batches/` while waiting for an append to complete. Improves the performance of the append operation.
 * New `c` method for Categories, plus support for creating and adding new categories to variables. See `?Categories` and `?"c-categories"`
 * Get category ids or numeric values from `as.vector` by specifying a "mode" of "id" or "numeric", respectively. See `?"variable-to-R"`
 * Set values as missing by assigning `NA` into variables.
 
-## crunch 1.5.3
+# crunch 1.5.3
 * Always send No Data category when creating Categorical Variables.
 * Fixed minor bugs in `margin.table` on `CrunchCube` objects.
 * Better validation of category subsetting.
 
-## crunch 1.5.2
+# crunch 1.5.2
 * Add Python-esque context manager for use in `with` statements. Use it to give `consent()` to delete things.
 * Delete variables by `<- NULL` into a dataset (like removing a column from a data.frame). Requires consent. Also create `deleteVariable(s)` functions that also return the dataset object. Use either method to prevent your dataset from getting out of sync with the server when you delete variables.
 * Delete subvariables from within array variables with `deleteSubvariable(s)`.
 * Better evaluation of formulas within `crtabs` to allow you to crosstab array subvariables.
 * Update to new exclusion API.
 
-## crunch 1.5.1
+# crunch 1.5.1
 * Validate inputs on making filter expressions with categorical variables
 * Very basic print methods for all Crunch objects
 
@@ -494,14 +483,14 @@ Two attempts to fix download issues introduced by 1.17.4:
 * Fix some inconsistent handling in R of filters that are set on the server (i.e. for persistent viewing in the web application)
 * `(un)lock` datasets for editing when there are multiple editors
 
-## crunch 1.4.3
+# crunch 1.4.3
 * Send better emails when sharing datasets
 
-## crunch 1.4.2
+# crunch 1.4.2
 * Support for auto-login in Jupyter notebooks
 * One more CRANdated import
 
-## crunch 1.4.1
+# crunch 1.4.1
 * Import functions from methods, stats, and utils, per change in CRAN policy.
 
 # crunch 1.4.0
@@ -527,10 +516,10 @@ Two attempts to fix download issues introduced by 1.17.4:
 * Adapt to minor updates in append API
 * Fix bug in updating an array with only one subvariable.
 
-## crunch 1.2.2
+# crunch 1.2.2
 * Add `types` method to VariableCatalog.
 
-## crunch 1.2.1
+# crunch 1.2.1
 * Additional methods for working with VariableOrder and VariableGroup. You can create new Groups by assigning into an Order or Group with a new name. And, with the new `duplicates` parameter, which is `FALSE` by default, adding new Groups to an Order "moves" the variable references to the new Group, rather than creating copies. See the [variable order vignette](inst/doc/variable-order.md) for more details.
 * Add `share` function for sharing a dataset with other users.
 
@@ -539,7 +528,7 @@ Two attempts to fix download issues introduced by 1.17.4:
 
 * Update appending workflow to support new API.
 
-## crunch 1.1.1
+# crunch 1.1.1
 * Remove all non-ASCII from test files so that tests will run on Solaris.
 
 # crunch 1.1.0
