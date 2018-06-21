@@ -27,30 +27,30 @@
         "result": {
             "dimensions": [{
                 "references": {
-                    "alias": "attitudes_recoded_klima_2",
+                    "alias": "shower_thoughts_klima_2",
                     "uniform_basis": false,
                     "subreferences": [{
-                        "alias": "attitudes_recoded_65f074a0_a7d8_11e5_adbc_005056904df0",
-                        "name": "Climate change is the biggest threat to civilisation"
+                        "alias": "shower_thoughts_65f",
+                        "name": "Cupcakes are the best cakes"
                     }, {
-                        "alias": "attitudes_recoded_6b4ed090_a7d8_11e5_adbc_005056904df0",
-                        "name": "Electric cars are the future of the motor industry"
+                        "alias": "shower_thoughts_6b4",
+                        "name": "Corgis are the future of dog shows"
                     }, {
-                        "alias": "attitudes_recoded_7041c080_a7d8_11e5_adbc_005056904df0",
-                        "name": "I always make an effort to recycle"
+                        "alias": "shower_thoughts_704",
+                        "name": "I always ride a penny-farthing"
                     }, {
-                        "alias": "attitudes_recoded_20e02250_a7e4_11e5_adbc_005056904df0",
-                        "name": "I always make sure I turn lights off when I leave a room"
+                        "alias": "shower_thoughts_20e",
+                        "name": "I never look at eclipses"
                     }, {
-                        "alias": "attitudes_recoded_9c0ed360_a7d8_11e5_adbc_005056904df0",
-                        "name": "I don't care what my carbon footprint is"
+                        "alias": "shower_thoughts_9c0",
+                        "name": "I never mess with Texas"
                     }, {
-                        "alias": "attitudes_recoded_a37c6040_a7d8_11e5_adbc_005056904df0",
-                        "name": "I don't mind paying more for products that are good for the environment"
+                        "alias": "shower_thoughts_a37",
+                        "name": "I don't mind pickles on my burger"
                     }],
-                    "name": "Statements agreed with about Climate",
+                    "name": "Statements agreed with about Corgis",
                     "view": {
-                        "roles": ["market_sizing", "group_definition", "profiles_datapoints"]
+                        "roles": ["Role 1", "Role 2", "Role 3"]
                     }
                 },
                 "derived": true,
@@ -62,8 +62,8 @@
                         "id": 1,
                         "value": {
                             "references": {
-                                "alias": "attitudes_recoded_65f074a0_a7d8_11e5_adbc_005056904df0",
-                                "name": "Climate change is the biggest threat to civilisation"
+                                "alias": "shower_thoughts_65f",
+                                "name": "Cupcakes are the best cakes"
                             },
                             "derived": false,
                             "id": "0001",
@@ -94,8 +94,8 @@
                         "id": 2,
                         "value": {
                             "references": {
-                                "alias": "attitudes_recoded_6b4ed090_a7d8_11e5_adbc_005056904df0",
-                                "name": "Electric cars are the future of the motor industry"
+                                "alias": "shower_thoughts_6b4",
+                                "name": "Corgis are the future of dog shows"
                             },
                             "derived": false,
                             "id": "0002",
@@ -126,8 +126,8 @@
                         "id": 3,
                         "value": {
                             "references": {
-                                "alias": "attitudes_recoded_7041c080_a7d8_11e5_adbc_005056904df0",
-                                "name": "I always make an effort to recycle"
+                                "alias": "shower_thoughts_704",
+                                "name": "I always ride a penny-farthing"
                             },
                             "derived": false,
                             "id": "0003",
@@ -158,8 +158,8 @@
                         "id": 4,
                         "value": {
                             "references": {
-                                "alias": "attitudes_recoded_20e02250_a7e4_11e5_adbc_005056904df0",
-                                "name": "I always make sure I turn lights off when I leave a room"
+                                "alias": "shower_thoughts_20e",
+                                "name": "I never look at eclipses"
                             },
                             "derived": false,
                             "id": "0004",
@@ -190,8 +190,8 @@
                         "id": 5,
                         "value": {
                             "references": {
-                                "alias": "attitudes_recoded_9c0ed360_a7d8_11e5_adbc_005056904df0",
-                                "name": "I don't care what my carbon footprint is"
+                                "alias": "shower_thoughts_9c0",
+                                "name": "I never mess with Texas"
                             },
                             "derived": false,
                             "id": "0005",
@@ -222,8 +222,8 @@
                         "id": 6,
                         "value": {
                             "references": {
-                                "alias": "attitudes_recoded_a37c6040_a7d8_11e5_adbc_005056904df0",
-                                "name": "I don't mind paying more for products that are good for the environment"
+                                "alias": "shower_thoughts_a37",
+                                "name": "I don't mind pickles on my burger"
                             },
                             "derived": false,
                             "id": "0006",
@@ -255,30 +255,30 @@
                 }
             }, {
                 "references": {
-                    "alias": "attitudes_recoded_klima_2",
+                    "alias": "shower_thoughts_klima_2",
                     "uniform_basis": false,
                     "view": {
-                        "roles": ["market_sizing", "group_definition", "profiles_datapoints"]
+                        "roles": ["Role 1", "Role 2", "Role 3"]
                     },
-                    "name": "Statements agreed with about Climate",
+                    "name": "Statements agreed with about Corgis",
                     "subreferences": [{
-                        "alias": "attitudes_recoded_65f074a0_a7d8_11e5_adbc_005056904df0",
-                        "name": "Climate change is the biggest threat to civilisation"
+                        "alias": "shower_thoughts_65f",
+                        "name": "Cupcakes are the best cakes"
                     }, {
-                        "alias": "attitudes_recoded_6b4ed090_a7d8_11e5_adbc_005056904df0",
-                        "name": "Electric cars are the future of the motor industry"
+                        "alias": "shower_thoughts_6b4",
+                        "name": "Corgis are the future of dog shows"
                     }, {
-                        "alias": "attitudes_recoded_7041c080_a7d8_11e5_adbc_005056904df0",
-                        "name": "I always make an effort to recycle"
+                        "alias": "shower_thoughts_704",
+                        "name": "I always ride a penny-farthing"
                     }, {
-                        "alias": "attitudes_recoded_20e02250_a7e4_11e5_adbc_005056904df0",
-                        "name": "I always make sure I turn lights off when I leave a room"
+                        "alias": "shower_thoughts_20e",
+                        "name": "I never look at eclipses"
                     }, {
-                        "alias": "attitudes_recoded_9c0ed360_a7d8_11e5_adbc_005056904df0",
-                        "name": "I don't care what my carbon footprint is"
+                        "alias": "shower_thoughts_9c0",
+                        "name": "I never mess with Texas"
                     }, {
-                        "alias": "attitudes_recoded_a37c6040_a7d8_11e5_adbc_005056904df0",
-                        "name": "I don't mind paying more for products that are good for the environment"
+                        "alias": "shower_thoughts_a37",
+                        "name": "I don't mind pickles on my burger"
                     }]
                 },
                 "derived": true,
@@ -308,7 +308,7 @@
                 "references": {
                     "alias": "pdl_gender",
                     "view": {
-                        "roles": ["market_sizing", "group_definition", "profiles_datapoints"]
+                        "roles": ["Role 1", "Role 2", "Role 3"]
                     },
                     "description": "Gender",
                     "name": "Gender"
