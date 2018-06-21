@@ -9,7 +9,19 @@ skip_locally <- function (...) {
 }
 
 loadCube <- function (filename) {
-    crunch:::CrunchCube(jsonlite::fromJSON(filename, simplifyVector=FALSE)$value)
+    file <- system.file(filename, package = "crunch")
+    if (nchar(file) > 0) {
+        filename <- file
+    }
+
+    # if the cube json has a value name, it has full metadata and we need to
+    # extract only the value
+    cube_json <- jsonlite::fromJSON(filename, simplifyVector=FALSE)
+    if ("value" %in% names(cube_json)) {
+        cube_json <- cube_json$value
+    }
+
+    return(crunch:::CrunchCube(cube_json))
 }
 
 cubify <- function (..., dims) {

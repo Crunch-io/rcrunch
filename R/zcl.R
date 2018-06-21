@@ -29,7 +29,7 @@ setMethod("zcl", "Date", r2zcl)
 setMethod("zcl", "POSIXt", r2zcl)
 setMethod("zcl", "logical", function (x) {
     if (length(x)) {
-        if (getOption("crunch.3vl", FALSE)) {
+        if (getOption("crunch.3vl", TRUE)) {
             ## 3VL categorical
             out <- r2zcl(x)
             out$type <- list(class="categorical", categories=.selected.cats)

@@ -5,12 +5,12 @@ context("Multiple response cube specialness")
 ##########################################
 alldims <- list(
     pdl_gender=c("Male", "Female"),
-    attitudes_recoded_klima_2=c("Climate change is the biggest threat to civilisation",
-        "Electric cars are the future of the motor industry",
-        "I always make an effort to recycle",
-        "I always make sure I turn lights off when I leave a room",
-        "I don't care what my carbon footprint is",
-        "I don't mind paying more for products that are good for the environment")
+    shower_thoughts_klima_2=c("Cupcakes are the best cakes",
+        "Corgis are the future of dog shows",
+        "I always ride a penny-farthing",
+        "I never look at eclipses",
+        "I never mess with Texas",
+        "I don't mind pickles on my burger")
 )
 
 mr_x_cat_wt <- loadCube(test_path("cubes/selected-crosstab-4.json"))
@@ -19,9 +19,9 @@ test_that("properties of a cube with for as_selected x cat: it looks 2D", {
     expect_equal(dim(showMissing(mr_x_cat_wt)), c(6L, 3L))
     expect_equal(dim(mr_x_cat_wt), c(6, 2))
     expect_equal(names(dimnames(mr_x_cat_wt)),
-        c("attitudes_recoded_klima_2", "pdl_gender"))
+        c("shower_thoughts_klima_2", "pdl_gender"))
     expect_equal(aliases(variables(mr_x_cat_wt)),
-        c("attitudes_recoded_klima_2", "pdl_gender"))
+        c("shower_thoughts_klima_2", "pdl_gender"))
     expect_equal(names(categories(variables(mr_x_cat_wt)[[2]])),
         c("Male", "Female", "No Data"))
 })
@@ -35,7 +35,7 @@ test_that("as.array on cube with as_selected x cat", {
                 9782.8995547749, 10531.918128023966,
                 4417.596222134318, 3448.380316269752,
                 6179.175512581436, 6490.427474934746,
-            dims=alldims[c("attitudes_recoded_klima_2", "pdl_gender")]))
+            dims=alldims[c("shower_thoughts_klima_2", "pdl_gender")]))
 })
 
 test_that("margin.table for as_selected x cat", {
@@ -47,7 +47,7 @@ test_that("margin.table for as_selected x cat", {
                 20314.817682798865,
                 7865.976538404069,
                 12669.602987516182,
-            dims=alldims["attitudes_recoded_klima_2"]))
+            dims=alldims["shower_thoughts_klima_2"]))
     expect_equal(margin.table(mr_x_cat_wt, 2),
         cubify(14566.261567907562, 15607.301233922663,
                  14456.513325488017, 15450.609903833058,
@@ -55,7 +55,7 @@ test_that("margin.table for as_selected x cat", {
                  11485.661204663904, 11912.588886491172,
                  11664.69933815247, 12110.196347286023,
                  11547.413553551738, 11961.575582997419,
-            dims=alldims[c("attitudes_recoded_klima_2", "pdl_gender")]))
+            dims=alldims[c("shower_thoughts_klima_2", "pdl_gender")]))
     expect_error(margin.table(mr_x_cat_wt, 3),
         "Margin 3 exceeds Cube's number of dimensions (2)", fixed=TRUE)
     ## NULL margin is the same shape as margin 1 here but is sum of selected + not
@@ -68,7 +68,7 @@ test_that("margin.table for as_selected x cat", {
                 23398.2500911551,
                 23774.8956854385,
                 23508.9891365492,
-            dims=alldims["attitudes_recoded_klima_2"]))
+            dims=alldims["shower_thoughts_klima_2"]))
 })
 
 test_that("prop.table(row) for as_selected x cat", {
@@ -80,7 +80,7 @@ test_that("prop.table(row) for as_selected x cat", {
                 0.481564723224583, 0.5184352767754171,
                 0.5616081106479636, 0.4383918893520365,
                 0.48771658580541166, 0.5122834141945883,
-            dims=alldims[c("attitudes_recoded_klima_2", "pdl_gender")]))
+            dims=alldims[c("shower_thoughts_klima_2", "pdl_gender")]))
 })
 test_that("prop.table(col) for as_selected x cat", {
     expect_equal(prop.table(mr_x_cat_wt, 2),
@@ -91,7 +91,7 @@ test_that("prop.table(col) for as_selected x cat", {
                 0.8517489224566737, 0.8840998567462627,
                 0.3787149667617584, 0.28475015741941767,
                 0.535113381358101, 0.5426064007955989,
-            dims=alldims[c("attitudes_recoded_klima_2", "pdl_gender")]))
+            dims=alldims[c("shower_thoughts_klima_2", "pdl_gender")]))
 })
 test_that("prop.table(cell) for as_selected x cat", {
     ## Note: not based on expectation from JS tests
@@ -103,7 +103,7 @@ test_that("prop.table(cell) for as_selected x cat", {
                 0.418103897371069,  0.450115632023491,
                 0.185809278853744, 0.14504292098248,
                 0.262843097025161,  0.27608279697761,
-            dims=alldims[c("attitudes_recoded_klima_2", "pdl_gender")]))
+            dims=alldims[c("shower_thoughts_klima_2", "pdl_gender")]))
 })
 
 ##########################################
