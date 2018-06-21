@@ -10,12 +10,12 @@ cat_by_mr_dims <- list(
 )
 mr_by_cat <- loadCube("cubes/selected-crosstab-4.json")
 mr_by_cat_dims <- list(
-    attitudes_recoded_klima_2=c("Climate change is the biggest threat to civilisation",
-                                "Electric cars are the future of the motor industry",
-                                "I always make an effort to recycle",
-                                "I always make sure I turn lights off when I leave a room",
-                                "I don't care what my carbon footprint is",
-                                "I don't mind paying more for products that are good for the environment"),
+    shower_thoughts_klima_2=c("Cupcakes are the best cakes",
+                                "Corgis are the future of dog shows",
+                                "I always ride a penny-farthing",
+                                "I never look at eclipses",
+                                "I never mess with Texas",
+                                "I don't mind pickles on my burger"),
     pdl_gender=c("Male", "Female")
 )
 mr_by_mr <- loadCube("cubes/selected-by-selected.json")
