@@ -189,10 +189,10 @@ with_mock_crunch({
             expect_is(book, "TabBookResult")
         })
         test_that("TabBookResult and MultitableResult size/extract methods", {
-            expect_length(book, 4)
+            expect_length(book, 9)
             expect_is(book[[1]], "MultitableResult")
             expect_length(book[[1]], 3)
-            expect_identical(dim(book), c(4L, 3L))
+            expect_identical(dim(book), c(9L, 3L))
             expect_is(book[[1]][[1]], "CrunchCube")
         })
         test_that("tab book print methods", {
@@ -286,7 +286,7 @@ with_mock_crunch({
         book <- tabBook(m, data=ds)
         test_that("tabBook from apidocs dataset (mock)", {
             expect_is(book, "TabBookResult")
-            expect_identical(dim(book), c(4L, 3L))
+            expect_identical(dim(book), c(9L, 3L))
             expect_identical(prop.table(book, 2)[[2]][[2]],
                 prop.table(book[[2]][[2]], 2))
         })
