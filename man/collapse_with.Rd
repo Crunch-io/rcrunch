@@ -22,7 +22,7 @@ a duly-collapsed array
 \description{
 Typically when collapsing a crosstab you can just sum across the dimensions
 that you want to collapse across. However, because we have array-type
-questions/dimensions we have to be a little bit smarter. We cannot summ
+questions/dimensions we have to be a little bit smarter. We cannot sum
 across any subvariable dimension (dimension types ending with "_items")
 because that would inflate the number of respondents by approximately the
 number of subvariables. Instead, we take the mean across any "_items"
