@@ -295,7 +295,7 @@ cubeMarginTable <- function (x, margin=NULL, measure=1) {
     ## each subvariable in the MR has a separate "valid" count associated.
     ## It's mind-bending, I know. But we bend our minds so our users don't have
     ## to as much.
-    mt_margins <- as_selected_margins(margin, selecteds)
+    mt_margins <- mr_items_margins(margin, cube = x)
     ## OK. Now we have an array of data and translated margins. We can call the
     ## base `margin.table` method with those.
     mt <- margin.table(data, mt_margins)
@@ -337,28 +337,96 @@ check_margins <- function (margin, selecteds) {
     }
 }
 
-as_selected_margins <- function (margin, selecteds, before=TRUE) {
-    ## If there are "Selection" dimensions, we always want to include their
-    ## partner (position - 1) in the margin table dimensions
-    ## margin is always the "real" full cube dimensions even if before=TRUE
-    if (!any(selecteds)) {
-        ## If there aren't any, no-op
-        return(margin)
+# as_selected_margins <- function (margin, selecteds, before=TRUE) {
+#     ## If there are "Selection" dimensions, we always want to include their
+#     ## partner (position - 1) in the margin table dimensions
+#     ## margin is always the "real" full cube dimensions even if before=TRUE
+#     if (!any(selecteds)) {
+#         ## If there aren't any, no-op
+#         return(margin)
+#     }
+#     which_selected <- which(selecteds)
+#     if (before) {
+#         ## "before" means we're returning margins of the "real" cube that
+#         ## includes the selection dimensions in them.
+#         margin <- which(!selecteds)[margin]
+#         mr_margins <- which_selected - 1
+#     } else {
+#         ## "after" is after dropping the selection dimensions, so we need to
+#         ## subtract more than one for each subsiquent MR encountered
+#         mr_margins <- which_selected - seq_along(which_selected)
+#     }
+# 
+#     return(sort(union(margin, mr_margins)))
+# }
+
+mr_items_margins <- function(margin, dimTypes = getDimTypes(cube), cube, user_dims = FALSE) {
+    margin_out <- user2real(margin, dimTypes = dimTypes)
+    # remove the selections dimension, if it was asked for
+    margin_out <- margin_out[dimTypes[margin_out] != "mr_selections"]
+    
+    # add MR items dimensions
+    mr_items <- which(dimTypes == "mr_items")
+    margin_out <- sort(unique(c(margin_out, mr_items)))
+    
+    if (user_dims) {
+        margin_out <- real2user(margin_out, dimTypes = dimTypes)
     }
-    which_selected <- which(selecteds)
-    if (before) {
-        ## "before" means we're returning margins of the "real" cube that
-        ## includes the selection dimensions in them.
-        margin <- which(!selecteds)[margin]
-        mr_margins <- which_selected - 1
+ 
+    if (length(margin_out) == 0) {
+        return(NULL)
+    }
+    
+    return(margin_out)
+}
+
+#' @export
+as.array.CrunchCube <- function (x, ...) cubeToArray(x, ...)
+
+#' @rdname cube-computing
+#' @export
+setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
+    out <- applyTransforms(x)
+    marg <- margin.table(x, margin)
+    actual_margin <- mr_items_margins(margin, cube = x, user_dims = TRUE)
+    # Check if there are any actual_margins and if the dims are identical, we
+    # don't need to sweep, and if we are MRxMR we can't sweep.
+    if (!is.null(actual_margin) & !identical(dim(out), dim(marg))) {
+        out <- sweep(out, actual_margin, marg, "/", check.margin=FALSE)
     } else {
-        ## "after" is after dropping the selection dimensions, so we need to
-        ## subtract more than one for each subsiquent MR encountered
-        mr_margins <- which_selected - seq_along(which_selected)
+        ## Don't just divide by sum(out) like the default does.
+        ## cubeMarginTable handles missingness, any/none, etc.
+        out <- out/marg
     }
 
-    return(sort(union(margin, mr_margins)))
-}
+    return(out)
+})
+
+#' @rdname cube-computing
+#' @export
+setMethod("round", "CrunchCube", function (x, digits=0) {
+    return(round(applyTransforms(x), digits))
+})
+
+#' @rdname cube-computing
+#' @export
+setMethod("bases", "CrunchCube", function (x, margin=NULL) {
+    if (length(margin) == 1 && margin == 0) {
+        ## Unlike margin.table. This just returns the "bases", without reducing
+        return(applyTransforms(x, array = cubeToArray(x, ".unweighted_counts")))
+    } else if (length(dimensions(x)) == 0) {
+        ## N dims == 0 is for univariate stats
+        if (!is.null(margin)) {
+            halt("Margin ", max(margin),
+                " exceeds Cube's number of dimensions (0)")
+        }
+        return(applyTransforms(x, array = cubeToArray(x, ".unweighted_counts")))
+    } else {
+        return(cubeMarginTable(x, margin, measure=".unweighted_counts"))
+    }
+})
+
+
 
 #' Work with CrunchCubes, MultitableResults, and TabBookResults
 #'
@@ -411,165 +479,91 @@ setMethod("margin.table", "CrunchCube", function (x, margin=NULL) {
     cubeMarginTable(x, margin)
 })
 
-#' @rdname cube-computing
-#' @export
-setMethod("collapse.dimensions", "CrunchCube", function (x, margin=NULL) {
-    # ensure that we have sensible margin input
-    selecteds <- is.selectedDimension(x@dims)
-    check_margins(margin, selecteds)
-    
-    # translate from user-cube margins to real-cube margins and establish the
-    # two groups of margins: those to collapse and those to keep
-    margins_to_collapse <- user2real(margin, cube = x)
-    margins_to_keep <- setdiff(seq_along(x@dims), margins_to_collapse)
-    
-    # if there are any _items in the margin to collapse, be wary!
-    collapsed_items <- endsWith(getDimTypes(x)[margins_to_collapse], "_items")
-
-    # grab the old cube structure and over-write it with new subset data.
-    out <- x
-    
-    # iterate through measures, collapsing the dimension(s) specified.
-    out@arrays[] <- lapply(out@arrays, function(arr){
-        # off_margins here are the margins that we want to keep, however because
-        # we treat items dimensions differently, we need to add them to the
-        # off_margins, and deal with them after we collapse by summing
-        off_margins <- margins_to_keep
-        if (any(collapsed_items)) {
-            # mean across any items dimension
-            items_to_collapse <- margins_to_collapse[collapsed_items]
-            off_margins <- sort(c(off_margins, items_to_collapse))
-        }
-        
-        # collapse the margins to collapse by summing across them
-        array <- as.array(apply(arr, off_margins, sum))
-
-        # now, we need to get rid of the extra items dimensions that we want to
-        # collapse across. We cannot simply sum across them because they
-        # represent more than one observation per row; and we don't want to
-        # double/triple/etc. count those observations. Instead we take the mean.
-        # Another option would be to just take the unique value or first value
-        # (since they should all be the same at this point given that they have
-        # been collapsed above), however there are tiny differences due to
-        # floating-point precision and weighting in the calculation in ZZ9.
-        if (any(collapsed_items)) {
-            # mean across any items dimension
-            result_dim <- seq_along(dim(array))
-            final_names <- dimnames(array)[which(!off_margins %in% items_to_collapse)]
-            array <- as.array(apply(array, setdiff(result_dim, which(off_margins %in% items_to_collapse)), mean, na.rm = TRUE))
-            dimnames(array) <- final_names
-        }
-        
-        # add attributes
-        attributes(array)$variable$type <- attributes(arr)$variable$type
-        
-        return(array)
-    })
-    # we needed to include the selected dim of MRs in off_margins above, but
-    # when subsetting dimensions we definitely do not want them to be included.
-    out@dims <- out@dims[margins_to_keep]
-    out$query$dimensions <- out$query$dimensions[margins_to_keep]
-    out$result$dimensions <- out$result$dimensions[margins_to_keep]
-
-    # Need to calculate the total missing to fill in, to do this, set all
-    # non-missing cells to zero, and then sum across all dimensions (with the
-    # exception of `_items` dimensions)
-    unweighted_counts <- as.array(out@arrays$.unweighted_counts)
-    non_missing <- evalUseNA(unweighted_counts, out@dims, "no")
-    all_missings <- do.call("[<-", c(list(x=unweighted_counts), non_missing, value = 0))
-
-    # sum across non-item dimensions, mean across item dimensions 
-    out_dims <- seq_along(out@dims)
-    out_other <- out_dims[!endsWith(getDimTypes(out), "_items")]
-    # mean across any item dimensions so as not to double count them
-    all_missings <- apply(all_missings, out_other, mean)
-    # now sum across all other dimensions to get the total number of missings
-    all_missings <- sum(all_missings)
-    out$result$missing <- as.integer(all_missings)
-                                                            
-    # update measures which require reversing the dimensions to match what we
-    # would get from the API.
-    # TODO: iterate over all measures
-    ap <- rev(out_dims)
-    out$result$measures$count$data <-  as.list(unname(aperm(as.array(out@arrays$count), ap)))
-    out$result$measures$count$n_missing <- out$result$missing
-    out$result$counts <-  as.list(unname(aperm(as.array(out@arrays$.unweighted_counts), ap)))
-
-    return(out)
-})
-
-
-#' Convert from user margins to real cube margins
+#' Convert from user margins to real cube margins or vice versa
 #'
 #' It is helpful to programmatically move from user-specified margins to real
-#' cube margins that apply to the higher-dimensional real cube.
+#' cube margins that apply to the higher-dimensional real cube (with
+#' `user2real`). Or to move from the higher-dimensional real cube to user cube
+#' (with `real2user`).
 #'
 #' @param margin the margin or margins for the user cube to be translated
 #' @param dimTypes dimension types from `getDimTypes()` (by default:
 #'   `getDimTypes(cube)`)
 #' @param cube the cube to translate the margin for (optional if `dimTypes` is
 #'   explicitly supplied)
+#' @param dedupe logical, should the user dimensions in the result be
+#'   deduplicated (for real2user only)
 #'
 #' @return margin or margins in the higher-dimension real cube
 #'
 #' @keywords internal
+#'
+#' @name margin-translation
+NULL
+
+#' @rdname margin-translation
 user2real <- function(margin, dimTypes = getDimTypes(cube), cube) {
     if (is.null(margin)) { 
         # If margin is null, return null
         return(NULL)
     }
-    full_margins <- seq_along(dimTypes)
-    narrow_margins <- seq_along(dimTypes[dimTypes != "mr_selections"])
-    which_selected <- which(dimTypes == "mr_selections")
-    # things?
-    mr_margins <- which_selected - seq_along(which_selected)
-    margin_map <- sort(c(narrow_margins, mr_margins))
+    margin_map <- makeMarginMap(dimTypes)
+    
     return(which(margin_map %in% margin))
 }
 
-#' @export
-as.array.CrunchCube <- function (x, ...) cubeToArray(x, ...)
-
-#' @rdname cube-computing
-#' @export
-setMethod("prop.table", "CrunchCube", function (x, margin=NULL) {
-    out <- applyTransforms(x)
-    marg <- margin.table(x, margin)
-    actual_margin <- as_selected_margins(margin, is.selectedDimension(x@dims),
-        before=FALSE)
-    # Check if there are any actual_margins and if the dims are identical, we
-    # don't need to sweep, and if we are MRxMR we can't sweep.
-    if (length(actual_margin) & !identical(dim(out), dim(marg))) {
-        out <- sweep(out, actual_margin, marg, "/", check.margin=FALSE)
-    } else {
-        ## Don't just divide by sum(out) like the default does.
-        ## cubeMarginTable handles missingness, any/none, etc.
-        out <- out/marg
+#' @rdname margin-translation
+real2user <- function(margin, dimTypes = getDimTypes(cube), cube, dedupe = TRUE) {
+    if (is.null(margin)) { 
+        # If margin is null, return null
+        return(NULL)
     }
-
-    return(out)
-})
-
-#' @rdname cube-computing
-#' @export
-setMethod("round", "CrunchCube", function (x, digits=0) {
-    return(round(applyTransforms(x), digits))
-})
-
-#' @rdname cube-computing
-#' @export
-setMethod("bases", "CrunchCube", function (x, margin=NULL) {
-    if (length(margin) == 1 && margin == 0) {
-        ## Unlike margin.table. This just returns the "bases", without reducing
-        return(applyTransforms(x, array = cubeToArray(x, ".unweighted_counts")))
-    } else if (length(dimensions(x)) == 0) {
-        ## N dims == 0 is for univariate stats
-        if (!is.null(margin)) {
-            halt("Margin ", max(margin),
-                " exceeds Cube's number of dimensions (0)")
-        }
-        return(applyTransforms(x, array = cubeToArray(x, ".unweighted_counts")))
+    
+    margin_map <- makeMarginMap(dimTypes)
+    
+    if (dedupe) {
+        margin_out <- unique(margin_map[margin])
     } else {
-        return(cubeMarginTable(x, margin, measure=".unweighted_counts"))
+        margin_out <- margin_map[margin]
     }
-})
+    
+    return(margin_out)   
+}
+
+#' Make a map of margins
+#'
+#' Useful when converting to and from user and real cube dimension indexes.
+#'
+#' @param dimTypes dimension types from `getDimTypes()`
+#'
+#' @return a vector of margins, the length of which is the length of the real
+#'   cube, the values are the user cube dimensions
+#'
+#' @examples
+#' 
+#' \dontrun{
+#' makeMarginMap(getDimTypes(cat_by_cat_cube))
+#' # 1 2
+#' 
+#' makeMarginMap(getDimTypes(MR_by_cat_cube))
+#' # 1 1 2
+#' 
+#' makeMarginMap(getDimTypes(cat_by_MR_cube))
+#' # 1 2 2
+#' 
+#' makeMarginMap(getDimTypes(MR_by_MR_cube))
+#' # 1 1 2 2
+#' }
+#'
+#' @keywords internal
+makeMarginMap <- function (dimTypes) {
+    non_mr_margins <- seq_along(dimTypes[dimTypes != "mr_selections"])
+    
+    # adjust multiple response margins
+    which_selected <- which(dimTypes == "mr_selections")
+    mr_margins <- which_selected - seq_along(which_selected)
+    margin_map <- sort(c(non_mr_margins, mr_margins))
+    names(margin_map) <- NULL # TODO: fix having to remove names
+    
+    return(margin_map)
+}
