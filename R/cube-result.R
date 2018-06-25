@@ -563,7 +563,9 @@ makeMarginMap <- function (dimTypes) {
     which_selected <- which(dimTypes == "mr_selections")
     mr_margins <- which_selected - seq_along(which_selected)
     margin_map <- sort(c(non_mr_margins, mr_margins))
-    names(margin_map) <- NULL # TODO: fix having to remove names
+    
+    # we don't need names on the margin map, so remove them.
+    names(margin_map) <- NULL
     
     return(margin_map)
 }
