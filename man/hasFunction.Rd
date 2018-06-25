@@ -7,7 +7,9 @@
 hasFunction(fun, pkg)
 }
 \arguments{
-\item{pkg}{}
+\item{fun}{a string, name of the function to search for}
+
+\item{pkg}{a string, the package to search for the function in}
 }
 \value{
 Logical
@@ -16,3 +18,4 @@ Logical
 This is useful for handling if the user has the correct version of a suggested
 package installed.
 }
+\keyword{internal}

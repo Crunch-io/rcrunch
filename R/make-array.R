@@ -93,9 +93,9 @@ makeMR <- function (subvariables, name, selections, ...) {
 #'
 #' @return a valid call to `makeArray()` or `makeMR()`
 #' @export
-makeArrayGadget <- function(){
+makeArrayGadget <- function () {
     if (hasFunction("makeArrayGadget", "crunchy")) {
-        crunchy::makeArrayGadget()
+        get("makeArrayGadget", asNamespace("crunchy"))()
     } else {
         halt("Please install the latest version of crunchy to access this function.")
     }
