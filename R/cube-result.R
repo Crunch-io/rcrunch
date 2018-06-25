@@ -337,29 +337,6 @@ check_margins <- function (margin, selecteds) {
     }
 }
 
-# as_selected_margins <- function (margin, selecteds, before=TRUE) {
-#     ## If there are "Selection" dimensions, we always want to include their
-#     ## partner (position - 1) in the margin table dimensions
-#     ## margin is always the "real" full cube dimensions even if before=TRUE
-#     if (!any(selecteds)) {
-#         ## If there aren't any, no-op
-#         return(margin)
-#     }
-#     which_selected <- which(selecteds)
-#     if (before) {
-#         ## "before" means we're returning margins of the "real" cube that
-#         ## includes the selection dimensions in them.
-#         margin <- which(!selecteds)[margin]
-#         mr_margins <- which_selected - 1
-#     } else {
-#         ## "after" is after dropping the selection dimensions, so we need to
-#         ## subtract more than one for each subsiquent MR encountered
-#         mr_margins <- which_selected - seq_along(which_selected)
-#     }
-# 
-#     return(sort(union(margin, mr_margins)))
-# }
-
 mr_items_margins <- function(margin, dimTypes = getDimTypes(cube), cube, user_dims = FALSE) {
     margin_out <- user2real(margin, dimTypes = dimTypes)
     # remove the selections dimension, if it was asked for
