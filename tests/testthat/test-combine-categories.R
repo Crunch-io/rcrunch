@@ -198,6 +198,18 @@ with_test_authentication({
         expect_identical(as.vector(ds$combined_pets2), as.vector(ds$q1))
     })
 
+    test_that("combine with replace=TRUE hides the original and puts new var in same folder", {
+        # Setup
+        ds <- refresh(ds)
+        folder(ds$combined_pets2) <- "A folder"
+        expect_identical(folder(ds$combined_pets2), "A folder")
+        expect_false("combined_pets2" %in% hiddenVariables(ds))
+
+        ds$comb3 <- combine(ds$combined_pets2, replace=TRUE)
+        expect_identical(folder(ds$comb3), "A folder")
+        expect_true("combined_pets2" %in% hiddenVariables(ds))
+    })
+
     test_that("combine() with categorical array", {
         ds$combined_petloc <- combine(ds$petloc,
             name="Pet locations (combined)",

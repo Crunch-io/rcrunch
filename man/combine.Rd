@@ -4,7 +4,7 @@
 \alias{combine}
 \title{Combine categories or responses}
 \usage{
-combine(variable, combinations = list(), ...)
+combine(variable, combinations = list(), ..., replace = FALSE)
 }
 \arguments{
 \item{variable}{Categorical, Categorical Array, or Multiple Response
@@ -12,24 +12,29 @@ variable}
 
 \item{combinations}{list of named lists containing
 \enumerate{
-\item "categories": category ids or names for categorical types, or for multiple response,
-"responses": subvariable names, aliases, or positional indices;
+\item "categories": category ids or names for categorical types, or for multiple
+response, "responses": subvariable names, aliases, or positional indices;
 \item a "name" for the new category or response; and
-\item optionally, other category ("missing", "numeric_value") or subvariable ("alias", "description")
-attributes. If \code{combinations} is omitted, the resulting variable will
-essentially be a copy (but see \code{\link[=copy]{copy()}} for a more natural way to copy variables.
+\item optionally, other category ("missing", "numeric_value") or subvariable
+("alias", "description") attributes. If \code{combinations} is omitted, the
+resulting variable will essentially be a copy (but see \code{\link[=copy]{copy()}} for a more
+natural way to copy variables.
 }}
 
 \item{...}{Additional variable metadata for the new derived variable}
+
+\item{replace}{Logical: should this derived variable, when added to the
+dataset, take the place of the input \code{variable}, i.e. same folder/location?
+If so, \code{variable} will also become "hidden".}
 }
 \value{
-A \code{\link{VariableDefinition}} that will create the new combined-category or
--response derived variable. Categories/responses not referenced in \code{combinations} will be
-appended to the end of the combinations.
+A \code{\link{VariableDefinition}} that will create the new combined-category
+or -response derived variable. Categories/responses not referenced in
+\code{combinations} will be appended to the end of the combinations.
 }
 \description{
-Crunch allows you to create a new categorical variable by combining
-the categories of another variable. For instance, you might want to
+Create a new categorical or multiple-response variable by collapsing
+the categories/responses of another. For instance, you might want to
 recode a categorical variable with three categories small, medium, and large
 to one that has just small and large.
 }
