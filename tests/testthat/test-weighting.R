@@ -123,7 +123,7 @@ with_mock_crunch({
             args = list(
                 list(
                     variable = "https://app.crunch.io/api/datasets/1/variables/gender/",
-                    targets = list(c(1, 0.2), c(2, 0.3), c(3, 0.5)
+                    targets = list(c(1, 0.4), c(2, 0.6), c(-1, 0)
                 )
             )
         )
@@ -136,18 +136,18 @@ with_mock_crunch({
             args = list(
                 list(
                     variable = "https://app.crunch.io/api/datasets/1/variables/gender/",
-                    targets = list(c(1, 0.2), c(2, 0.3), c(3, 0.5)
+                    targets = list(c(1, 0.4), c(2, 0.6), c(-1, 0)
                 )
             )
         )
     ))
 
     test_that("makeWeight generates the expected VariableDefinition", {
-        expect_equivalent(makeWeight(oldds$gender ~ c(20, 30, 50), name = "weight"),
+        expect_equivalent(makeWeight(oldds$gender ~ c(40, 60, 0), name = "weight"),
             expected_weight_definition)
     })
     test_that("makeWeight allows decimal target input",{
-        expect_equivalent(makeWeight(oldds$gender ~ c(.2, .3, .5), name = "weight"),
+        expect_equivalent(makeWeight(oldds$gender ~ c(.4, .6, 0), name = "weight"),
             expected_weight_definition)
     })
     test_that("You can provide two targets to a variable with three categories", {
@@ -156,7 +156,7 @@ with_mock_crunch({
         )
     })
     test_that("makeWeight allows user to specify variable definition attributes", {
-        expect_equivalent(makeWeight(oldds$gender ~ c(20, 30, 50),
+        expect_equivalent(makeWeight(oldds$gender ~ c(40, 60, 0),
             name = "weight", alias = "test_alias"),
             expected_attribute_definition)
     })
