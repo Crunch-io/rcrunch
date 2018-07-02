@@ -1,3 +1,6 @@
+# crunch 1.23.1 (under development)
+* fixed a bug when using the `makeWeight()` function with categorical variables that had non-sequential IDs.
+
 # crunch 1.23.0
 
 ## Improved support for subtotals
