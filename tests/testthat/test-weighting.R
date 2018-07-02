@@ -123,7 +123,7 @@ with_mock_crunch({
             args = list(
                 list(
                     variable = "https://app.crunch.io/api/datasets/1/variables/gender/",
-                    targets = list(c(1, 0.2), c(2, 0.3), c(3, 0.5)
+                    targets = list(c(1, 0.2), c(2, 0.3), c(-1, 0.5)
                 )
             )
         )
@@ -136,7 +136,7 @@ with_mock_crunch({
             args = list(
                 list(
                     variable = "https://app.crunch.io/api/datasets/1/variables/gender/",
-                    targets = list(c(1, 0.2), c(2, 0.3), c(3, 0.5)
+                    targets = list(c(1, 0.2), c(2, 0.3), c(-1, 0.5)
                 )
             )
         )
