@@ -93,6 +93,7 @@ Collate:
     'dataset-stream.R'
     'dataset-update.R'
     'dataset.R'
+    'decks.R'
     'dichotomize.R'
     'drop-rows.R'
     'edit-lock.R'

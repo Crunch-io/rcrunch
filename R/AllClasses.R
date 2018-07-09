@@ -212,6 +212,12 @@ CrunchDataset <- setClass("CrunchDataset", contains=c("ShojiObject"),
         filter=CrunchLogicalExpr(),
         tuple=DatasetTuple()))
 
+DeckCatalog <- setClass("DeckCatalog", contains = "ShojiCatalog")
+CrunchDeck <- setClass("CrunchDeck", contains = "ShojiObject")
+SlideCatalog <- setClass("SlideCatalog", contains = "ShojiCatalog")
+CrunchSlide <- setClass("CrunchSlide", contains = "ShojiObject")
+AnalysisCatalog <- setClass("AnalysisCatalog", contains = "ShojiCatalog")
+
 GenericConstructor <- function (class) {
     return(function (..., data=NULL) {
         if (!is.null(data)) {
