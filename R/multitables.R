@@ -125,16 +125,6 @@ setMethod("delete", "Multitable", function (x, ...) {
     invisible(out)
 })
 
-#' @rdname dataset-reference
-setMethod("datasetReference", "Multitable", function (x) {
-    datasetReference(self(x))
-})
-
-#' @rdname dataset-reference
-setMethod("datasetReference", "MultitableCatalog", function (x) {
-    datasetReference(self(x))
-})
-
 #' Create a new Multitable
 #'
 #' Multitables, or "banners" or "crossbreaks", define a set of variables or
