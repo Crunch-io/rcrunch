@@ -9,6 +9,28 @@ setMethod("[[", "DeckCatalog",  function (x, i, ...) {
     getEntity(x, i, CrunchDeck, ...)
 })
 
+setMethod("[[<-", c("DeckCatalog", "ANY", "missing", "NULL"),
+          function (x, i, j, value) {
+              stopifnot(length(i) == 1)
+              if (is.character(i) && !i %in% names(x)) {
+                  return()
+              } else if (is.numeric(i) && !i %in% seq_along(urls(x))) {
+                  return()
+              }
+              delete(x[[i]])
+              invisible(NULL)
+          })
+
+#' @rdname delete
+#' @export
+setMethod("delete", "CrunchDeck", function (x, ...) {
+    if (!askForPermission(paste0("Really delete deck ", dQuote(name(x)), "?"))) {
+        halt("Must confirm deleting multitable")
+    }
+    out <- crDELETE(self(x))
+    invisible(out)
+})
+
 setMethod("slides", "CrunchDeck", function (x) {
     SlideCatalog(crGET(shojiURL(x, "catalogs", "slides")))
 })
@@ -17,10 +39,15 @@ setMethod("name", "CrunchDeck", function(x) x@body$name)
 setMethod("name<-", "CrunchDeck", function(x, value) {
     stopifnot(is.character(value))
     stopifnot(length(value) == 1)
-    x@body$name <- value
-    crPATCH(self(x), body = toJSON(x@body))
-    invisible(refresh(x))
+    setEntitySlot(x, "name", value)
     })
+
+setMethod("is.public", "CrunchDeck", function(x) deck@body$is_public)
+setMethod("is.public<-", "CrunchDeck", function(x, value) {
+    stopifnot(is.logical(value))
+    stopifnot(length(value) == 1)
+    setEntitySlot(x, "is_public", value)
+})
 
 setMethod("titles", "CrunchDeck", function (x){
     titles(slides(x))
@@ -41,6 +68,32 @@ setMethod("subtitles<-", "CrunchDeck", function (x, value){
     subtitles(slides) <- value
     invisible(refresh(x))
 })
+
+exportDeck <- function(deck, file, type = c("xlsx", "json")) {
+    if (!inherits(deck, "CrunchDeck")) {
+        halt("exportDeck is only available for CrunchDecks.")
+    }
+    url <- deck@views$export
+    type <- match.arg(type)
+    if (type == "json") {
+        dl_link <- crPOST(url, config = add_headers(`Accept`="application/json"))
+        ext <- ".json"
+    } else {
+        dl_link <- crPOST(
+            url,
+            config = add_headers(`Accept` = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            )
+        ext <- ".xlsx"
+    }
+    if (missing(file)) {
+        file <-  paste0(name(deck), ext)
+    }
+    crDownload(dl_link, file)
+}
+
+# Slide Catalog -----------------------------------------------------------
+
+
 setMethod("titles", "SlideCatalog", function (x){
     as.character(lapply(x@index, function(x) x$title))
 })
