@@ -1,13 +1,29 @@
 
 setMethod("initialize", "DeckCatalog", init.sortCatalog)
 
+# Deck Catalog ------------------------------------------------------------
+
+
 setMethod("decks", "CrunchDataset", function (x) {
     DeckCatalog(crGET(shojiURL(x, "catalogs", "decks")))
 })
 
+# CrunchDeck --------------------------------------------------------------
+
 setMethod("[[", "DeckCatalog",  function (x, i, ...) {
     getEntity(x, i, CrunchDeck, ...)
 })
+
+setMethod("[[<-", c("DeckCatalog", "character", "ANY", "CrunchDeck"),
+          function (x, i, j, value) {
+              payload <- value@body[c("name", "description", "is_public", "team")]
+              payload$name <- i
+              payload <- payload[vapply(payload, function(x)is.character(x) | is.logical(x), logical(1))]
+              browser()
+              new_deck <- crPOST(self(x), body = toJSON(payload))
+              new_deck <- SlideCatalog(crGET(new_deck))
+              invisible(refresh(x))
+          })
 
 setMethod("[[<-", c("DeckCatalog", "ANY", "missing", "NULL"),
           function (x, i, j, value) {
@@ -120,16 +136,46 @@ updateSlideTitle <- function(x, value, type) {
     invisible(refresh(x))
 }
 
-setMethod("export", "CrunchDeck", function (x, path) {
-    # This is to avoid having a default argument in the generic
-    if (missing(path)) {
-        path <- ""
-    }
-    dl_link <- crPOST(x@urls$export_url, config = add_headers(`Accept`="application/json"))
-    download.file(dl_link, paste0(path, name(x), ".json"))
-})
-
 setMethod("[[", "SlideCatalog", function (x, i, ...) {
   getEntity(x, i, CrunchSlide)
 })
+
+
+# Slide -------------------------------------------------------------------
+
+setMethod("analyses", "CrunchSlide", {
+    function (x) {
+        AnalysisCatalog(crGET(shojiURL(x, "catalogs", "analyses")))
+    }
+})
+setMethod("analysis", "CrunchSlide", {
+    function (x) {
+        out <- AnalysisCatalog(crGET(shojiURL(x, "catalogs", "analyses")))
+        out[[1]]
+    }
+})
+
+setMethod("cubes", "CrunchSlide", function(x) cubes(analyses(x)))
+
+
+# Analyses ----------------------------------------------------------------
+
+setMethod("[[", "AnalysisCatalog", function (x, i, ...) {
+  getEntity(x, i, Analysis)
+})
+
+setMethod("cubes", "AnalysisCatalog", function(x) {
+    lapply(seq_along(x@index), function(i) cube(x[[i]]))
+})
+
+setMethod("cube", "Analysis", function (x) {
+CrunchCube(crGET(cubeURL(x),
+    query=list(query=toJSON(x@body$query)),
+    filter=toJSON(x@body$query_environment$filter))
+    )
+})
+
+
+
+
 
