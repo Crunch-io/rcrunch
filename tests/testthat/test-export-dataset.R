@@ -70,20 +70,41 @@ with_mock_crunch({
             "Duplicate variable references: gender and birthyr")
     })
 
+    url <- 'https://app.crunch.io/api/datasets/3/export/csv/'
+    post_request <- '{"filter":null,"where":{"function":"select","args":[{"map":{"66ae9881e3524f7db84970d556c34552":{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},"f78ca47313144b57adfb495893968e70":{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"},"d7c21314ca9e453c93069168681a285c":{"variable":"https://app.crunch.io/api/datasets/3/variables/starttime/"}}}]'
+
     test_that("exporting hidden variables", {
         ds <- loadDataset("ECON.sav")
-        post_request <- '{"filter":null,"where":{"function":"select","args":[{"map":{"66ae9881e3524f7db84970d556c34552":{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},"f78ca47313144b57adfb495893968e70":{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"},"d7c21314ca9e453c93069168681a285c":{"variable":"https://app.crunch.io/api/datasets/3/variables/starttime/"}}}]'
-        url <- 'https://app.crunch.io/api/datasets/3/export/csv/'
-
         expect_POST(write.csv(ds, file = "", include.hidden = TRUE),
             url,
             post_request)
+        # Hidden variables can be exported by name without include.hidden
+        expect_identical(hiddenVariables(ds, "name"), "Birth Year")
 
         # ensure that include.hidden is passed down from as.data.frame to write.csv
         expect_POST(as.data.frame(ds, include.hidden = TRUE, force = TRUE),
             url,
             post_request)
 
+        subset_post <- '{"filter":null,"where":{"function":"select","args":[{"map":{"66ae9881e3524f7db84970d556c34552":{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},"f78ca47313144b57adfb495893968e70":{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"}}}]}'
+        expect_POST(write.csv(ds[, c("gender", "birthyr")], file = ""),
+            url,
+            subset_post)
+        expect_POST(as.data.frame(ds[, c("gender", "birthyr")], force = TRUE),
+            url,
+            subset_post)
+    })
+    test_that("users can specify all variables by name and get the hidden variables", {
+        skip("TODO modify variablesFilter to distinguish between a fully specified variable subset and the original dataset")
+        # Currently the API makes us send hidden variables as a where clause to
+        # the export API. We work around this by asking for hidden variables when
+        # the user specifies them in the variable subset. We don't currently have a
+        # good way to do this when the user subsets the dataset with all the variable
+        # names. This problem could also go away if the export endpoint allowed us
+        # to pass hidden variable names like regular variable names.
+        expect_POST(write.csv(ds[, c("gender", "birthyr", "starttime")], file = ""),
+            url,
+            post_request)
     })
 })
 
@@ -174,4 +195,21 @@ with_test_authentication({
         expect_identical(names(df2), c("v1", "v2", "v4"))
         expect_identical(is.na(df2$v1), is.na(df$v1))
     })
+
+    test_that("We can export hidden variables", {
+        skip_locally("Vagrant host doesn't serve files correctly")
+        ds$hidden_var <- 1:20
+        ds <- hideVariables(ds, "hidden_var")
+        filename <- tempfile()
+
+        write.csv(ds, file = filename, include.hidden = TRUE)
+        df <- read.csv(filename)
+        expect_true("hidden_var" %in% names(df))
+
+        # When variable is specified but include.hidden is ommitted
+        write.csv(ds[, "hidden_var"], file = filename)
+        df <- read.csv(filename)
+        expect_true("hidden_var" %in% names(df))
+    })
+
 })

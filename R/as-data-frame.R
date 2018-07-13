@@ -45,7 +45,7 @@
 #'  Crunch Dataset order will be used.
 #' @param categorical.mode what mode should categoricals be pulled as? One of
 #' factor, numeric, id (default: factor)
-#' @param include.hidden logical: should hidden variables be included? (default: `FALSE`)
+#' @param include.hidden logical: should hidden variables be included?
 #' @param ... additional arguments passed to `as.data.frame` (default method).
 #' @return When called on a `CrunchDataset`, the method returns an object of
 #' class `CrunchDataFrame` unless `force = TRUE`, in which case the return is a
@@ -61,14 +61,15 @@ as.data.frame.CrunchDataset <- function (x,
                                          optional = FALSE,
                                          force = FALSE,
                                          categorical.mode = "factor",
-                                         include.hidden = FALSE,
                                          row.order = NULL,
+                                         include.hidden,
                                          ...) {
+
     out <- CrunchDataFrame(x, row.order = row.order,
         categorical.mode = categorical.mode,
         include.hidden = include.hidden)
     if (force) {
-        out <- as.data.frame(out, include.hidden = include.hidden)
+        out <- as.data.frame(out)
     }
     return(out)
 }

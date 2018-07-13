@@ -24,41 +24,55 @@
 NULL
 
 CrunchDataFrame <- function (dataset, row.order = NULL,
-                             categorical.mode = "factor",
-                             include.hidden = FALSE) {
+    categorical.mode = "factor",
+    include.hidden ) {
     ## S3 constructor method for CrunchDataFrame. terms.formula doesn't seem
     ## to like S4 subclass of environment
     stopifnot(is.dataset(dataset))
-    
-    if (include.hidden) {
-        var_names <- aliases(allVariables(dataset))
-    } else {
-        var_names <- aliases(variables(dataset))
-    }
-    
-    out <- new.env()
-    attr(out, "crunchDataset") <- dataset
-    attr(out, "col_names") <- var_names
-    attr(out, "mode") <- categorical.mode
-    attr(out, "include.hidden") <- include.hidden
 
-    with(out, {
-        ## Note the difference from as.environment: wrapped in as.vector
-        for (.a in var_names) {
-            eval(substitute(delayedAssign(v, {
-                getVarFromServer(col_name = v, crdf = ds, mode = mode)
-            }),
-            list(v=.a, ds=out, mode = attr(out, "mode"))))
+    # When a user asks for a hidden variable with ds[, "hidden_var_name"] we should
+    # give it to them, but they should be able to override this with include.hidden = FALSE.
+    allvars <- allVariables(dataset)
+    dsvars <- ShojiCatalog(crGET(self(allvars), query=list(relative="on")))
+    if (missing(include.hidden)) {
+        if (length(allvars) != length(dsvars) && # check that dataset has avariable subset
+            length(hiddenVariables(dataset)) > 0  # check that user is asking for hidden variable
+            ) {
+            include.hidden <- TRUE
+        } else {
+            include.hidden <- FALSE
         }
-    })
-    
-    # set the order of the dataset based on row.order, if no row.order is 
-    # given return all rows in the dataset in the order they appear
-    attr(out, "order") <- row.order
-    
-    # TODO: add "data.frame" here too
-    class(out) <- "CrunchDataFrame"
-    return(out)
+    }
+
+        if (include.hidden) {
+            var_names <- aliases(allVariables(dataset))
+        } else {
+            var_names <- aliases(variables(dataset))
+        }
+
+        out <- new.env()
+        attr(out, "crunchDataset") <- dataset
+        attr(out, "col_names") <- var_names
+        attr(out, "mode") <- categorical.mode
+        attr(out, "include.hidden") <- include.hidden
+
+        with(out, {
+            ## Note the difference from as.environment: wrapped in as.vector
+            for (.a in var_names) {
+                eval(substitute(delayedAssign(v, {
+                    getVarFromServer(col_name = v, crdf = ds, mode = mode)
+                }),
+                    list(v=.a, ds=out, mode = attr(out, "mode"))))
+            }
+        })
+
+        # set the order of the dataset based on row.order, if no row.order is
+        # given return all rows in the dataset in the order they appear
+        attr(out, "order") <- row.order
+
+        # TODO: add "data.frame" here too
+        class(out) <- "CrunchDataFrame"
+        return(out)
 }
 
 setOldClass("CrunchDataFrame")

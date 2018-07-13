@@ -94,7 +94,7 @@ with_mock_crunch({
     test_that("csvToDataFrame handles hidden variables", {
         new_ds <- loadDataset("test ds")[, c("birthyr", "gender", "location", "mymrset", "textVar", "starttime")]
         new_ds$birthyr@tuple[["discarded"]] <- TRUE
-        new_ds_df <- as.data.frame(new_ds)
+        new_ds_df <- as.data.frame(new_ds, include.hidden = FALSE)
         expect_silent(
             expect_equal(names(csvToDataFrame(csv_df, new_ds_df)),
                 c("gender", "location", "subvar2", "subvar1", "subvar3", "textVar",
@@ -226,6 +226,27 @@ with_test_authentication({
         skip_locally("Vagrant host doesn't serve files correctly")
         expect_true(is.data.frame(as.data.frame(as.data.frame(ds))))
         expect_true(is.data.frame(as.data.frame(ds, force=TRUE)))
+    })
+
+    ds$hidden_var <- 1:20
+    ds <- hideVariables(ds, "hidden_var")
+
+    test_that("as.data.frame(force) pulls hidden variables when include.hidden is set", {
+        skip_locally("Vagrant host doesn't serve files correctly")
+        expect_equal(hiddenVariables(ds), "hidden_var")
+
+        df <- as.data.frame(ds, force = TRUE)
+        expect_equal(names(df), c("v1", "v2", "v3", "v4", "v5", "v6"))
+
+        df <- as.data.frame(ds, force = TRUE, include.hidden = TRUE)
+        expect_equal(names(df), c("v1", "v2", "v3", "v4", "v5", "v6", "hidden_var"))
+    })
+
+    test_that("as.data.frame(force) includes  hidden variables when specified and include.hidden isn't set", {
+        skip_locally("Vagrant host doesn't serve files correctly")
+        expect_equal(hiddenVariables(ds), "hidden_var")
+        expect_equal(names(as.data.frame(ds[, c("v1", "hidden_var")], force = TRUE)),
+            c("v1", "hidden_var"))
     })
 
     test_that("Multiple response variables in as.data.frame(force=TRUE)", {
