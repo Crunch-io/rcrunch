@@ -69,6 +69,22 @@ with_mock_crunch({
         expect_error(write.csv(ds[c("gender", "birthyr", "gender", "gender", "birthyr")], file=""),
             "Duplicate variable references: gender and birthyr")
     })
+
+    test_that("exporting hidden variables", {
+        ds <- loadDataset("ECON.sav")
+        post_request <- '{"filter":null,"where":{"function":"select","args":[{"map":{"66ae9881e3524f7db84970d556c34552":{"variable":"https://app.crunch.io/api/datasets/3/variables/gender/"},"f78ca47313144b57adfb495893968e70":{"variable":"https://app.crunch.io/api/datasets/3/variables/birthyr/"},"d7c21314ca9e453c93069168681a285c":{"variable":"https://app.crunch.io/api/datasets/3/variables/starttime/"}}}]'
+        url <- 'https://app.crunch.io/api/datasets/3/export/csv/'
+
+        expect_POST(write.csv(ds, file = "", include.hidden = TRUE),
+            url,
+            post_request)
+
+        # ensure that include.hidden is passed down from as.data.frame to write.csv
+        expect_POST(as.data.frame(ds, include.hidden = TRUE, force = TRUE),
+            url,
+            post_request)
+
+    })
 })
 
 validExport <- function (df2) {

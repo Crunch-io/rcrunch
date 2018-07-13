@@ -11,7 +11,7 @@
   row.order = NULL, ...)
 
 \method{as.data.frame}{CrunchDataFrame}(x, row.names = NULL,
-  optional = FALSE, ...)
+  optional = FALSE, include.hidden = FALSE, ...)
 }
 \arguments{
 \item{x}{a \code{CrunchDataset} or \code{CrunchDataFrame}}

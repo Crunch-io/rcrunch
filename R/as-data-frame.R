@@ -68,7 +68,7 @@ as.data.frame.CrunchDataset <- function (x,
         categorical.mode = categorical.mode,
         include.hidden = include.hidden)
     if (force) {
-        out <- as.data.frame(out)
+        out <- as.data.frame(out, include.hidden = include.hidden)
     }
     return(out)
 }
@@ -79,11 +79,12 @@ as.data.frame.CrunchDataset <- function (x,
 as.data.frame.CrunchDataFrame <- function (x,
                                            row.names = NULL,
                                            optional = FALSE,
+                                           include.hidden = FALSE,
                                            ...) {
     ds <- attr(x, "crunchDataset")
     tmp <- tempfile()
     on.exit(unlink(tmp))
-    write.csv(ds, tmp, categorical = "id")
+    write.csv(ds, tmp, categorical = "id", include.hidden = include.hidden)
     # TODO: use variableMetadata to provide all `colClasses`?
     # meta <- variableMetadata(ds)
     ds_out <- read.csv(tmp, stringsAsFactors = FALSE)

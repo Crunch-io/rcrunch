@@ -20,6 +20,7 @@
 #' @param varlabel For SPSS export, which Crunch metadata field should be used
 #' as variable labels? Default is "name", but "description" is another valid
 #' value.
+#' @param include.hidden logical: should hidden variables be included? (default: `FALSE`)
 #' @param ... additional options. See the API documentation. Currently supported
 #' boolean options include 'include_personal' for personal variables (default:
 #' `FALSE`) and 'prefix_subvariables' for SPSS format: whether to include
@@ -34,7 +35,8 @@
 #' @export
 exportDataset <- function (dataset, file, format=c("csv", "spss"),
                            categorical=c("name", "id"), na=NULL,
-                           varlabel=c("name", "description"), ...) {
+                           varlabel=c("name", "description"),
+                           include.hidden = FALSE, ...) {
 
     exporters <- crGET(shojiURL(dataset, "views", "export"))
     format <- match.arg(format, choices=names(exporters))
@@ -42,8 +44,7 @@ exportDataset <- function (dataset, file, format=c("csv", "spss"),
 
     body <- list(filter=zcl(activeFilter(dataset)))
     ## Add this after so that if it is NULL, the "where" key isn't present
-    body$where <- variablesFilter(dataset)
-
+    body$where <- variablesFilter(dataset, include.hidden)
     ## Assemble options
     opts <- list(...)
     if (format == "csv") {
@@ -65,14 +66,14 @@ exportDataset <- function (dataset, file, format=c("csv", "spss"),
     invisible(file)
 }
 
-variablesFilter <- function (dataset) {
+variablesFilter <- function (dataset, include.hidden = FALSE) {
     ## Check to see if we have a subset of variables in `dataset`.
     ## If so, return a Crunch expression to filter them
     allvars <- allVariables(dataset)
     ## TODO: fix Variable catalog so that it doesn't pop off its "relative"
     ## query from self. Adding it here so that we hit cache.
     dsvars <- ShojiCatalog(crGET(self(allvars), query=list(relative="on")))
-    if (length(allvars) != length(dsvars)) {
+    if (include.hidden || (length(allvars) != length(dsvars))) {
         v <- structure(lapply(urls(allvars), function (x) list(variable=x)),
             .Names=ids(allvars))
         ## Make sure that duplicate variables haven't been referenced (surely
