@@ -32,9 +32,9 @@ CrunchDataFrame <- function (dataset, row.order = NULL,
 
     # When a user asks for a hidden variable with ds[, "hidden_var_name"] we should
     # give it to them, but they should be able to override this with include.hidden = FALSE.
-    allvars <- allVariables(dataset)
-    dsvars <- ShojiCatalog(crGET(self(allvars), query=list(relative="on")))
     if (missing(include.hidden)) {
+            allvars <- allVariables(dataset)
+            dsvars <- ShojiCatalog(crGET(self(allvars), query=list(relative="on")))
         if (length(allvars) != length(dsvars) && # check that dataset has avariable subset
             length(hiddenVariables(dataset)) > 0  # check that user is asking for hidden variable
             ) {

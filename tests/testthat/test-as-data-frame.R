@@ -238,14 +238,21 @@ with_test_authentication({
         df <- as.data.frame(ds, force = TRUE)
         expect_equal(names(df), c("v1", "v2", "v3", "v4", "v5", "v6"))
 
-        df <- as.data.frame(ds, force = TRUE, include.hidden = TRUE)
+        expect_warning(
+            df <- as.data.frame(ds, force = TRUE, include.hidden = TRUE),
+            "Variable hidden_var is hidden"
+        )
         expect_equal(names(df), c("v1", "v2", "v3", "v4", "v5", "v6", "hidden_var"))
     })
 
     test_that("as.data.frame(force) includes  hidden variables when specified and include.hidden isn't set", {
         skip_locally("Vagrant host doesn't serve files correctly")
         expect_equal(hiddenVariables(ds), "hidden_var")
-        expect_equal(names(as.data.frame(ds[, c("v1", "hidden_var")], force = TRUE)),
+        expect_warning(
+            df <- as.data.frame(ds[, c("v1", "hidden_var")], force = TRUE),
+            "Variable hidden_var is hidden"
+        )
+        expect_equal(names(df),
             c("v1", "hidden_var"))
     })
 
