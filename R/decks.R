@@ -148,6 +148,7 @@ setMethod("analyses", "CrunchSlide", {
         AnalysisCatalog(crGET(shojiURL(x, "catalogs", "analyses")))
     }
 })
+
 setMethod("analysis", "CrunchSlide", {
     function (x) {
         out <- AnalysisCatalog(crGET(shojiURL(x, "catalogs", "analyses")))
@@ -164,6 +165,29 @@ setMethod("[[", "AnalysisCatalog", function (x, i, ...) {
   getEntity(x, i, Analysis)
 })
 
+setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "formula"), function (x, i, j, value) {
+  if (i <= length(x)) {
+      analysis <- x[[i]]
+      analysis <- value
+  } else {
+      #TODO allow users to post new analyses.
+      halt("Index out of bounds, you can only assign a formula to an existing analysis.")
+  }
+})
+
+setMethod("[[<-", c("AnalysisCatalog", "numeric", "missing", "list"), function (x, i, j, value) {
+  all_fmla <- vapply(value, function(x) inherits(x, "fmla"), logical(1))
+  if (any(!all_fmla)) {
+      halt("Entry", which(!all_fmla), "is not a formula")
+  }
+  if (length(i) != length(value)) {
+      halt("Invalid assignment. You tried to assign ", length(value), " formulas to ", length(i), "entries.")
+  }
+  mapply(function(analysis, fmla){
+      analysis <- fmls
+  }, analysis = x[[i]], fmla = value)
+})
+
 setMethod("cubes", "AnalysisCatalog", function(x) {
     lapply(seq_along(x@index), function(i) cube(x[[i]]))
 })
@@ -175,7 +199,9 @@ CrunchCube(crGET(cubeURL(x),
     )
 })
 
-
-
-
+setMethod("analysis<-", c("Analysis", "formula"), function(x, value) {
+    ds <- loadDataset(datasetReference(analysis))
+    analysis@body$query <- formulaToCubeQuery(fmla, data = ds)
+    crPATCH(self(analysis), body = toJSON(analysis@body))
+})
 
